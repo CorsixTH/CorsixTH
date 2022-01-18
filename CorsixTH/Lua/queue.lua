@@ -313,16 +313,22 @@ function Queue:movePatient(index, new_index)
 end
 
 --! Called when reception desk is destroyed, or when a room is destroyed from a crashed machine.
-function Queue:rerouteAllPatients(action)
+--!param room_id Id of the room to reroute to, 'nil' for reception.
+function Queue:rerouteAllPatients(room_id)
   for _, humanoid in ipairs(self) do
     -- check by class type as staff/vips shouldn't get a SeekRoomAction
     if class.is(humanoid, Patient) then
       -- slight delay so the desk is really destroyed before rerouting
       humanoid:setNextAction(IdleAction():setCount(1))
-      -- Don't queue the same action table, but clone it for each patient.
-      local clone = {}
-      for k, v in pairs(action) do clone[k] = v end
-      humanoid:queueAction(clone)
+
+      local action
+      if room_id then
+        action = SeekRoomAction(room_id)
+      else
+        action = SeekReceptionAction()
+      end
+      humanoid:queueAction(action)
+
     elseif class.is(humanoid, Staff) then
       -- likewise believe we need action here to stop
       humanoid:setNextAction(IdleAction():setCount(1))
