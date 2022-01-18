@@ -474,6 +474,7 @@ errors = {
   fractured_bones = "BEACHTEN SIE: Die Animation für weibliche Patienten mit gebrochenen Knochen ist nicht perfekt.",
   load_quick_save = "Fehler: Der Schnellspeicherspielstand konnte nicht geladen werden, weil er nicht existiert. Kein Grund zur Sorge, wir haben nun einen für Sie erzeugt!",
   alien_dna = "BEACHTEN SIE: Für außerirdische Patienten gibt es keine Animationen für das Sitzen, das Öffnen von Türen, das Anklopfen, usw. Daher werden sie, wie bei Theme Hospital, normal aussehen und sich dann wieder zurückverwandeln. Patienten mit außerirdischer DNA werden nur auftauchen, wenn sie in der Leveldatei gesetzt sind.",
+  dialog_empty_queue = "Entschuldigung, eine Person hat keine weiteren Aktionen geplant und weiß nicht weiter. Weitere Details hierzu können der Konsole entnommen werden. Soll die Person das Krankenhaus verlassen?",
 }
 
 confirmation = {

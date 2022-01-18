@@ -344,7 +344,7 @@ local string_01 = [=[
 -- the game was paused. That is the default setting in CorsixTH too, but by
 -- setting this to true everything is allowed while the game is paused.
 --]=] .. '\n' ..
-'allow_user_actions_while_paused = ' .. tostring(config_defaults.allow_user_actions_while_paused) .. '\n' .. [=[
+'allow_user_actions_while_paused = ' .. tostring(config_values.allow_user_actions_while_paused) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- VOLUME CONTROL IS OPENING THE DRUG CASEBOOK?

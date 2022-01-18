@@ -2187,6 +2187,7 @@ errors = {
   alien_dna = "LET OP: Er zijn geen animaties voor alien patiënten die zitten, op deuren kloppenen, deuren openen, enz. Daarom veranderen ze naar een normaal mens als ze dit doen en veranderen dan weer terug, net als in Them Hospital.  Patiënten met alien-DNA verschijnen alleen wanneer dit in het level is toegestaan.",
   fractured_bones = "LET OP: De animatie voor vrouwelijke patiënten met gebrokken botten is niet goed.",
   no_games_to_contine = "Er zijn geen opgeslagen spellen.",
+  dialog_empty_queue = "Een mensachtige is de weg helemaal kwijt, er was geen informatie meer wat vervolgens te gaan doen. Meer gedetailleerde informatie kun je vinden in het kommando scherm. Een window met deze mensachtige is geopend, wil je dat ze het ziekenhuis verlaten?",
 }
 diseases = {
   diag_ward = {
