@@ -75,7 +75,7 @@ end
 --!param state (boolean) Whether the cheat is being enabled or disabled
 --!return Adviser message for cheat on or off (or nothing)
 function Cheats._getAdviserMessage(name, state)
-  -- Declare any adviser messages assosciated with the cheat toggles, using the same name reference
+  -- Declare any adviser messages associated with the cheat toggles, using the same name reference
   local adviser_msgs = {
     ["spawn_rate_cheat"] = {
       on = _A.cheats.roujin_on_cheat,
