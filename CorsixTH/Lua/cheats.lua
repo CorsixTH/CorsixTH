@@ -94,7 +94,7 @@ function Cheats._getAdviserMessage(name, state)
     end
   end
 end
-  
+
 --! Performs a cheat from the cheat_list
 --!param num (integer) The cheat from the cheat_list called
 --!return true if cheat was successful, false otherwise
@@ -115,7 +115,7 @@ function Cheats:processCheatCode(num)
   end
   return -- cheat not found
 end
-  
+
 
 --! Performs a cheat from fax_cheats
 --!param name (string) The cheat called from the list
@@ -125,9 +125,11 @@ function Cheats:toggleCheat(name)
   local cheatWindow = ui:getWindow(UICheats)
   local speech
   if not self.hospital.active_cheats[name] then
+    cheat.enable(self)
     speech = self._getAdviserMessage(name, true)
     self:announceCheat(speech)
   else
+    cheat.disable(self)
     speech = self._getAdviserMessage(name, false)
     self:announceCheat(speech)
   end

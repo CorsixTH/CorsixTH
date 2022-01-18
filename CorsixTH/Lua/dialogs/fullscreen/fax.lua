@@ -269,8 +269,7 @@ function UIFax:validate()
     -- no valid cheat code entered
     self.ui:playSound("fax_no.wav")
     return
-  else
-    -- Cheat executed, nothing to do here.
+  -- else Cheat executed, nothing to do here
   end
   self.ui:playSound("fax_yes.wav")
 
