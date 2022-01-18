@@ -252,16 +252,6 @@ function Cheats:cheatDecreasePrices()
   end
 end
 
---! Cheat fax function
-function Cheats:cheatUsingFaxMachine()
-  local cheatWindow = self.hospital.world.ui:getWindow(UICheats)
-  self:announceCheat()
-  -- If a cheats window is open, make sure the UI is updated
-  if cheatWindow then
-    cheatWindow:updateCheatedStatus()
-  end
-end
-
 --[[Cheats operated through Faxes go here]]
 
 --! Enable Roujin's challenge (spawn rate cheat)
