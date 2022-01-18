@@ -253,6 +253,7 @@ function UIFax:validate()
   self.code = ""
   local code_n = (tonumber(code) or 0) / 10^5
   local x = math.abs((code_n ^ 5.00001 - code_n ^ 5) * 10^5 - code_n ^ 5)
+  local cheats = self.ui.hospital.hosp_cheats
   print("Code typed on fax:", code)
   if code == "24328" then
     -- Original game cheat code
@@ -262,16 +263,14 @@ function UIFax:validate()
     -- simple, unobfuscated cheat for everyone :)
     -- not that critical, but we want to make to make sure it's played fairly soon
     self.ui:playAnnouncement("rand*.wav", AnnouncementPriority.Critical)
-  elseif 27868.3 < x and x < 27868.4 then
-    local cheat = self.ui.hospital.hosp_cheats
-    cheat:cheatRoujin()
-  elseif 185.5 < x and x < 185.6 then
-    local cheat = self.ui.hospital.hosp_cheats
-    cheat:cheatNoRest()
-  else
-    -- no valid cheat entered
+
+  -- Pass cheat code to the Cheats system to handle
+  elseif not cheats:processCheatCode(x) then
+    -- no valid cheat code entered
     self.ui:playSound("fax_no.wav")
     return
+  else
+    -- Cheat executed, nothing to do here.
   end
   self.ui:playSound("fax_yes.wav")
 

@@ -573,9 +573,9 @@ function PlayerHospital:afterLoad(old, new)
   if old < 159 then
     self.adviser_data.reception_advice = self.adviser_data.reception_advice or self.receptionist_msg
   end
-  if old < 165 then
+  if old < 166 then
     self.active_cheats = {}
-    self.active_cheats.spawn_rate_cheat = self.spawn_rate_cheat
+    self.active_cheats["spawn_rate_cheat"] = self.spawn_rate_cheat
     self.spawn_rate_cheat = nil
   end
 

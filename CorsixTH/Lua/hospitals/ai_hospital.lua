@@ -51,7 +51,7 @@ function AIHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = nil
   end
-  if old < 165 then
+  if old < 166 then
     self.active_cheats = {}
   end
 

@@ -50,8 +50,51 @@ function Cheats:Cheats(hospital)
     {name = "increase_prices", func = self.cheatIncreasePrices},
     {name = "decrease_prices", func = self.cheatDecreasePrices},
   }
+
+  --[[ Fax cheats are purely toggle based, aren't generated in the UI, and need
+  their own list. Adviser strings can not be persisted, add them to the
+  adviser_msgs in the _getAdviserMessage function ]]--
+  self.fax_cheats = {
+    ["spawn_rate_cheat"] = {
+      enable = self.roujinOn,
+      disable = self.roujinOff,
+      lower = 27868.3,
+      upper = 27868.4,
+    },
+    ["no_rest"] = {
+      enable = self.noRestOn,
+      disable = self.noRestOff,
+      lower = 185.5,
+      upper = 185.6,
+    },
+  }
 end
 
+--! Private function to return adviser message for a cheat, if any
+--!param name (string) The name of the cheat
+--!param state (boolean) Whether the cheat is being enabled or disabled
+--!return Adviser message for cheat on or off (or nothing)
+function Cheats._getAdviserMessage(name, state)
+  -- Declare any adviser messages assosciated with the cheat toggles, using the same name reference
+  local adviser_msgs = {
+    ["spawn_rate_cheat"] = {
+      on = _A.cheats.roujin_on_cheat,
+      off = _A.cheats.roujin_off_cheat,
+    },
+    ["no_rest"] = {
+      on = _A.cheats.norest_on_cheat,
+      off = _A.cheats.norest_off_cheat,
+    },
+  }
+  if adviser_msgs[name] then
+    if state then
+      return adviser_msgs[name].on
+    else
+      return adviser_msgs[name].off
+    end
+  end
+end
+  
 --! Performs a cheat from the cheat_list
 --!param num (integer) The cheat from the cheat_list called
 --!return true if cheat was successful, false otherwise
@@ -60,11 +103,50 @@ function Cheats:performCheat(num)
   return cheat_success and self.cheat_list[num].name ~= "lose_level"
 end
 
+--! Checks the obfuscated cheat code for a match and executes it
+--!param num (number) The obfuscated cheat value
+--!return Returns name of the cheat executed from the lookup table, or nil
+function Cheats:processCheatCode(num)
+  for name, data in pairs(self.fax_cheats) do
+    if data.lower < num and data.upper > num then
+      self:toggleCheat(name)
+      return name
+    end
+  end
+  return -- cheat not found
+end
+  
+
+--! Performs a cheat from fax_cheats
+--!param name (string) The cheat called from the list
+function Cheats:toggleCheat(name)
+  local ui = self.hospital.world.ui
+  local cheat = self.fax_cheats[name]
+  local cheatWindow = ui:getWindow(UICheats)
+  local speech
+  if not self.hospital.active_cheats[name] then
+    speech = self._getAdviserMessage(name, true)
+    self:announceCheat(speech)
+  else
+    speech = self._getAdviserMessage(name, false)
+    self:announceCheat(speech)
+  end
+  -- If a cheats window is open, make sure the UI is updated
+  if cheatWindow then
+    cheatWindow:updateCheatedStatus()
+  end
+end
+
 --! Updates the cheated status of the player, with a matching announcement
-function Cheats:announceCheat()
+--!param speech (string) Optional text for the adviser to say
+function Cheats:announceCheat(speech)
   local announcements = self.hospital.world.cheat_announcements
+  local ui = self.hospital.world.ui
   if announcements then
-    self.hospital.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
+    ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
+  end
+  if speech then
+    ui.adviser:say(speech)
   end
   self.hospital.cheated = true
 end
@@ -181,38 +263,30 @@ function Cheats:cheatUsingFaxMachine()
 end
 
 --[[Cheats operated through Faxes go here]]
---! Cheat that disables/enables Roujin's challenge (spawn rate cheat)
-function Cheats:cheatRoujin()
-  -- Roujin's challenge cheat
-  local hosp = self.hospital
-  local ui = hosp.world.ui
-  if not hosp.active_cheats.spawn_rate_cheat then
-    ui.adviser:say(_A.cheats.roujin_on_cheat)
-    hosp.active_cheats.spawn_rate_cheat = true
-    self:cheatUsingFaxMachine()
-  else
-    ui.adviser:say(_A.cheats.roujin_off_cheat)
-    -- Clear the current month's spawns to give the player a break
-    hosp.world.spawn_dates = {}
-    hosp.active_cheats.spawn_rate_cheat = nil
-  end
+
+--! Enable Roujin's challenge (spawn rate cheat)
+function Cheats:roujinOn()
+  self.hospital.active_cheats["spawn_rate_cheat"] = true
 end
 
---! Cheat that disables/enables need to rest and set walking speed to maximum
-function Cheats:cheatNoRest()
-  local hosp = self.hospital
-  local ui = hosp.world.ui
-  if not hosp.active_cheats.no_rest_cheat then
-    for _, staff in ipairs(self.hospital.staff) do
-      if staff.attributes["fatigue"] then
-        staff:wake(staff.attributes["fatigue"])
-      end
+--! Disable Roujin's challenge (spawn rate cheat)
+function Cheats:roujinOff()
+  -- Clear the current month's spawns to give the player a break
+  self.hospital.world.spawn_dates = {}
+  self.hospital.active_cheats["spawn_rate_cheat"] = nil
+end
+
+--! Enables no rest cheat (staff do not tire, fast movement)
+function Cheats:noRestOn()
+  for _, staff in ipairs(self.hospital.staff) do
+    if staff.attributes["fatigue"] then
+      staff:wake(staff.attributes["fatigue"])
     end
-    ui.adviser:say(_A.cheats.norest_on_cheat)
-    hosp.active_cheats.no_rest_cheat = true
-    self:cheatUsingFaxMachine()
-  else
-    ui.adviser:say(_A.cheats.norest_off_cheat)
-    hosp.active_cheats.no_rest_cheat = nil
   end
+  self.hospital.active_cheats["no_rest_cheat"] = true
+end
+
+--! Disable no rest cheat (re-enable staff fatigue, and normal movement)
+function Cheats:noRestOff()
+  self.hospital.active_cheats["no_rest_cheat"] = nil
 end
