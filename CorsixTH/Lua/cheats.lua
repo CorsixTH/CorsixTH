@@ -103,7 +103,7 @@ function Cheats:processCheatCode(num)
 end
 
 
---! Performs a cheat from fax_cheats
+--! Performs a cheat from toggle_cheats
 --!param name (string) The cheat called from the list
 function Cheats:toggleCheat(name)
   local ui = self.hospital.world.ui
