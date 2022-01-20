@@ -51,51 +51,36 @@ function Cheats:Cheats(hospital)
     {name = "decrease_prices", func = self.cheatDecreasePrices},
   }
 
-  --[[ Fax cheats are purely toggle based, aren't generated in the UI, and need
-  their own list. Adviser strings can not be persisted, add them to the
-  adviser_msgs in the _getAdviserMessage function ]]--
-  self.fax_cheats = {
-    ["spawn_rate_cheat"] = {
+  --[[ Toggle-based cheats are found in below function ]]
+end
+
+--! A private function to return the toggle_cheats list (code operated cheats)
+--! These cheats do not appear in the Cheat UI menu, and are only accessed from fax code inputs currently.
+--! They contain adviser strings, so cannot be persisted.
+--!return the cheat list
+function Cheats:_toggleCheatList()
+  local toggle_cheats = {
+      ["spawn_rate_cheat"] = {
       enable = self.roujinOn,
       disable = self.roujinOff,
+      enableAnnouncement = _A.cheats.roujin_on_cheat,
+      disableAnnouncement = _A.cheats.roujin_off_cheat,
       lower = 27868.3,
       upper = 27868.4,
     },
-    ["no_rest"] = {
+    ["no_rest_cheat"] = {
       enable = self.noRestOn,
       disable = self.noRestOff,
+      enableAnnouncement = _A.cheats.norest_on_cheat,
+      disableAnnouncement = _A.cheats.norest_off_cheat,
       lower = 185.5,
       upper = 185.6,
     },
   }
+  return toggle_cheats
 end
 
---! Private function to return adviser message for a cheat, if any
---!param name (string) The name of the cheat
---!param state (boolean) Whether the cheat is being enabled or disabled
---!return Adviser message for cheat on or off (or nothing)
-function Cheats._getAdviserMessage(name, state)
-  -- Declare any adviser messages associated with the cheat toggles, using the same name reference
-  local adviser_msgs = {
-    ["spawn_rate_cheat"] = {
-      on = _A.cheats.roujin_on_cheat,
-      off = _A.cheats.roujin_off_cheat,
-    },
-    ["no_rest"] = {
-      on = _A.cheats.norest_on_cheat,
-      off = _A.cheats.norest_off_cheat,
-    },
-  }
-  if adviser_msgs[name] then
-    if state then
-      return adviser_msgs[name].on
-    else
-      return adviser_msgs[name].off
-    end
-  end
-end
-
---! Performs a cheat from the cheat_list
+--! Performs a cheat from the cheat_list (menu cheats)
 --!param num (integer) The cheat from the cheat_list called
 --!return true if cheat was successful, false otherwise
 function Cheats:performCheat(num)
@@ -107,7 +92,8 @@ end
 --!param num (number) The obfuscated cheat value
 --!return Returns name of the cheat executed from the lookup table, or nil
 function Cheats:processCheatCode(num)
-  for name, data in pairs(self.fax_cheats) do
+  local cheat_list = self:_toggleCheatList()
+  for name, data in pairs(cheat_list) do
     if data.lower < num and data.upper > num then
       self:toggleCheat(name)
       return name
@@ -121,16 +107,17 @@ end
 --!param name (string) The cheat called from the list
 function Cheats:toggleCheat(name)
   local ui = self.hospital.world.ui
-  local cheat = self.fax_cheats[name]
+  local cheat_list = self:_toggleCheatList()
+  local cheat = cheat_list[name]
   local cheatWindow = ui:getWindow(UICheats)
   local speech
   if not self.hospital.active_cheats[name] then
     cheat.enable(self)
-    speech = self._getAdviserMessage(name, true)
+    speech = cheat.enableAnnouncement
     self:announceCheat(speech)
   else
     cheat.disable(self)
-    speech = self._getAdviserMessage(name, false)
+    speech = cheat.disableAnnouncement
     self:announceCheat(speech)
   end
   -- If a cheats window is open, make sure the UI is updated
