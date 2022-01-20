@@ -58,19 +58,19 @@ end
 --! These cheats do not appear in the Cheat UI menu, and are only accessed from fax code inputs currently.
 --! They contain adviser strings, so cannot be persisted.
 --!return the cheat list
-function Cheats:_toggleCheatList()
+function Cheats._toggleCheatList()
   local toggle_cheats = {
       ["spawn_rate_cheat"] = {
-      enable = self.roujinOn,
-      disable = self.roujinOff,
+      enable = Cheats.roujinOn,
+      disable = Cheats.roujinOff,
       enableAnnouncement = _A.cheats.roujin_on_cheat,
       disableAnnouncement = _A.cheats.roujin_off_cheat,
       lower = 27868.3,
       upper = 27868.4,
     },
     ["no_rest_cheat"] = {
-      enable = self.noRestOn,
-      disable = self.noRestOff,
+      enable = Cheats.noRestOn,
+      disable = Cheats.noRestOff,
       enableAnnouncement = _A.cheats.norest_on_cheat,
       disableAnnouncement = _A.cheats.norest_off_cheat,
       lower = 185.5,
@@ -92,7 +92,7 @@ end
 --!param num (number) The obfuscated cheat value
 --!return Returns name of the cheat executed from the lookup table, or nil
 function Cheats:processCheatCode(num)
-  local cheat_list = self:_toggleCheatList()
+  local cheat_list = self._toggleCheatList()
   for name, data in pairs(cheat_list) do
     if data.lower < num and data.upper > num then
       self:toggleCheat(name)
@@ -101,25 +101,22 @@ function Cheats:processCheatCode(num)
   end
   return -- cheat not found
 end
-
-
 --! Performs a cheat from toggle_cheats
 --!param name (string) The cheat called from the list
 function Cheats:toggleCheat(name)
   local ui = self.hospital.world.ui
-  local cheat_list = self:_toggleCheatList()
+  local cheat_list = self._toggleCheatList()
   local cheat = cheat_list[name]
   local cheatWindow = ui:getWindow(UICheats)
   local speech
   if not self.hospital.active_cheats[name] then
     cheat.enable(self)
     speech = cheat.enableAnnouncement
-    self:announceCheat(speech)
   else
     cheat.disable(self)
     speech = cheat.disableAnnouncement
-    self:announceCheat(speech)
   end
+  self:announceCheat(speech)
   -- If a cheats window is open, make sure the UI is updated
   if cheatWindow then
     cheatWindow:updateCheatedStatus()
