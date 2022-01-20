@@ -260,6 +260,8 @@ adviser = {
     th_cheat = "Congratulations, you have unlocked cheats!",
     roujin_on_cheat = "Roujin's challenge activated! Good luck in the coming months...",
     roujin_off_cheat = "Roujin's challenge deactivated. Everything will be back to normal soon.",
+    norest_on_cheat = "Oh no! It appears your staff have consumed too much caffeine and no longer feel a need to rest.",
+    norest_off_cheat = "Phew! Looks like that buzz finally wore off. Your staff will now rest properly.",
   },
 }
 
