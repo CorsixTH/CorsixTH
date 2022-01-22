@@ -267,7 +267,7 @@ function LoadGame(data)
   local objtable = MakePermanentObjectsTable(true)
   local state = assert(persist.load(data, objtable))
   -- Check the game we're loading is compatible with program
-  if not TheApp:checkCompatibility(state.world.savegame_version) then return end
+  if not TheApp:checkCompatibility(state.world.savegame_version, state.world.demo) then return end
   state.ui:resync(TheApp.ui)
   TheApp.ui = state.ui
   TheApp.world = state.world

@@ -98,6 +98,7 @@ function App:init()
   print("")
   print("---------------------------------------------------------------")
   print("")
+
   -- Prereq 1: Config file (for screen width / height / TH folder)
   -- Note: These errors cannot be translated, as the config file specifies the language
   local conf_path = self.command_line["config-file"] or "config.txt"
@@ -644,6 +645,9 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
   if campaign_data then
     self.world:setCampaignData(campaign_data)
   end
+
+  -- For compatibility, flag the game if we're playing with demo files
+  self.world.demo = self.using_demo_files
 end
 
 -- This is a useful debug and development aid
@@ -1531,15 +1535,26 @@ end
 
 --! Function to check the loaded game is compatible with the program
 --!param save_version (num)
+--!param demo_flag (bool)
 --!return true if compatible, otherwise false
-function App:checkCompatibility(save_version)
+function App:checkCompatibility(save_version, demo_flag)
   local app_version = self.savegame_version
-  if app_version >= save_version or self.config.debug then
+  local err
+
+  -- First check the demo flag matches with the game files
+  if (demo_flag and not self.using_demo_files) then
+    err = _S.errors.compatibility_error.demo_in_full
+  elseif (not demo_flag and self.using_demo_files) then
+    err = _S.errors.compatibility_error.full_in_demo
+  
+  -- if that's all good, check the save and app version  
+  elseif app_version >= save_version or self.config.debug then
     return true
-  else
-    UILoadGame:loadError(_S.errors.compatibility_error)
-    return false
+  else -- savegame newer than application
+    err = _S.errors.compatibility_error.new_in_old
   end
+  UILoadGame:loadError(err)
+  return false
 end
 
 --! Restarts the current level (offers confirmation window first)
