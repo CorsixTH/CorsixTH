@@ -1546,8 +1546,8 @@ function App:checkCompatibility(save_version, demo_flag)
     err = _S.errors.compatibility_error.demo_in_full
   elseif (not demo_flag and self.using_demo_files) then
     err = _S.errors.compatibility_error.full_in_demo
-  
-  -- if that's all good, check the save and app version  
+
+  -- if that's all good, check the save and app version
   elseif app_version >= save_version or self.config.debug then
     return true
   else -- savegame newer than application
