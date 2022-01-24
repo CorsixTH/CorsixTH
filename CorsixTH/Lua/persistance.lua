@@ -266,8 +266,10 @@ function LoadGame(data)
   --local status, res = xpcall(function()
   local objtable = MakePermanentObjectsTable(true)
   local state = assert(persist.load(data, objtable))
+  -- Graphics set types were defined in savegame version 166+.
+  if not state.world.gfx_set then TheApp:configureGraphicsSetFlag(state) end
   -- Check the game we're loading is compatible with program
-  if not TheApp:checkCompatibility(state.world.savegame_version, state.world.demo) then return end
+  if not TheApp:checkCompatibility(state.world.savegame_version, state.world.gfx_set) then return end
   state.ui:resync(TheApp.ui)
   TheApp.ui = state.ui
   TheApp.world = state.world

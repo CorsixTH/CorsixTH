@@ -28,7 +28,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 165 -- Add 'KnockDoorAction.humanoid' field.
+local SAVEGAME_VERSION = 166 -- Defines the graphics set used.
 
 class "App"
 
@@ -646,8 +646,9 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
     self.world:setCampaignData(campaign_data)
   end
 
-  -- For compatibility, flag the game if we're playing with demo files
-  self.world.demo = self.using_demo_files
+  -- Log if we're playing with the demo or full graphics set
+  -- TODO: Adjust for new_gfx set when implemented
+  self.world.gfx_set = self.using_demo_files and "demo" or "full"
 end
 
 -- This is a useful debug and development aid
@@ -1535,16 +1536,16 @@ end
 
 --! Function to check the loaded game is compatible with the program
 --!param save_version (num)
---!param demo_flag (bool)
+--!param gfx_set (string) What graphics set is used
 --!return true if compatible, otherwise false
-function App:checkCompatibility(save_version, demo_flag)
+function App:checkCompatibility(save_version, gfx_set)
   local app_version = self.savegame_version
   local err
 
-  -- First check the demo flag matches with the game files
-  if (demo_flag and not self.using_demo_files) then
+  -- First check the graphics set matches with the game files
+  if (gfx_set == "demo" and not self.using_demo_files) then
     err = _S.errors.compatibility_error.demo_in_full
-  elseif (not demo_flag and self.using_demo_files) then
+  elseif (gfx_set == "full" and self.using_demo_files) then
     err = _S.errors.compatibility_error.full_in_demo
 
   -- if that's all good, check the save and app version
@@ -1553,8 +1554,30 @@ function App:checkCompatibility(save_version, demo_flag)
   else -- savegame newer than application
     err = _S.errors.compatibility_error.new_in_old
   end
+
   UILoadGame:loadError(err)
   return false
+end
+
+--! Compatibility function to work out the game's graphics set
+--!param state The savegame data
+function App:configureGraphicsSetFlag(state)
+  -- First eliminate all but the first campaign level (same in demo and full)
+  local self = state
+  local toxicity = tostring(_S.level_names[1]:upper())
+  local level_name = tostring(self.map.level_name)
+  if level_name ~= toxicity then
+    self.world.gfx_set = "full"
+    return
+  end
+  -- Now check a disease only in the demo (baldness)
+  for _, disease in ipairs(self.world.available_diseases) do
+    if disease.id == "baldness" then
+      self.world.gfx_set = "demo"
+      return
+    end
+  end
+  self.world.gfx_set = "full"
 end
 
 --! Restarts the current level (offers confirmation window first)
@@ -1652,6 +1675,15 @@ function App:afterLoad()
     self.objects[rathole_type.id] = rathole_type
     self.world:newObjectType(rathole_type)
   end
+
+    --[[Information only:
+  if old < 166 then
+    Graphics set type was introduced at this version.
+    Nothing to do here as it is handled by persistance.
+    However, it introduces compatibility limitations between the demo and full game
+    and should be noted.
+  end
+  ]]--
 
   self.map:afterLoad(old, new)
   self.ui:afterLoad(old, new)

@@ -703,7 +703,7 @@ errors = {
   dialog_empty_queue = "Sorry, a humanoid just had an empty action queue, which means that they didn't know what to do next. Please consult the command window for more detailed information. A dialog with the offending humanoid has been opened. Would you like them to leave the hospital?",
   compatibility_error = {
     new_in_old = "Sorry, this save was created with a newer version of CorsixTH and is not compatible. Please update to a more recent version.",
-    demo_in_full = "Sorry, you can't open a demo savegame with the full game files loaded. The update your TH Data folder setting.",
+    demo_in_full = "Sorry, you can't open a demo savegame with the full game files loaded. Please update your TH Data folder setting.",
     full_in_demo = "Sorry, you can't open a full game save with the demo files loaded. Please update your TH Data folder setting.",
   },
 }
