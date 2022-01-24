@@ -1562,7 +1562,7 @@ end
 
 --! Compatibility function to work out the game's graphics set
 --!param state The savegame data
-function App:configureGraphicsSetFlag(state)
+function App.configureGraphicsSetFlag(state)
   -- First eliminate all but the first campaign level (same in demo and full)
   local self = state
   local toxicity = tostring(_S.level_names[1]:upper())
