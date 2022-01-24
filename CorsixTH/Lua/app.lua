@@ -27,6 +27,7 @@ local runDebugger = corsixth.require("run_debugger")
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
+-- Recommended: Also replace/Update the summary comment
 
 local SAVEGAME_VERSION = 166 -- Defines the graphics set used.
 
