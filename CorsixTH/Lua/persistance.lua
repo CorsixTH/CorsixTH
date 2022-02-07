@@ -260,6 +260,25 @@ function SaveGameFile(filename)
   f:close()
 end
 
+--! Compatibility function to work out the game's graphics set
+--!param map The savegame map data
+--!param world The savegame world data
+local function gfxSetHeuristic(map, world)
+  -- First eliminate all but the first campaign level (same in demo and full)
+  local toxicity = tostring(_S.level_names[1]:upper())
+  local level_name = tostring(map.level_name)
+  if level_name ~= toxicity then
+    return "full"
+  end
+  -- Now check a disease only in the demo (baldness)
+  for _, disease in ipairs(world.available_diseases) do
+    if disease.id == "baldness" then
+      return "demo"
+    end
+  end
+  return "full"
+end
+
 --! Puts loaded file into the game
 --!param data The file
 function LoadGame(data)
@@ -267,7 +286,9 @@ function LoadGame(data)
   local objtable = MakePermanentObjectsTable(true)
   local state = assert(persist.load(data, objtable))
   -- Graphics set types were defined in savegame version 166+.
-  if not state.world.gfx_set then TheApp.configureGraphicsSetFlag(state) end
+  if not state.world.gfx_set then
+    state.world.gfx_set = gfxSetHeuristic(state.map, state.world)
+  end
   -- Check the game we're loading is compatible with program
   if not TheApp:checkCompatibility(state.world.savegame_version, state.world.gfx_set) then return end
   state.ui:resync(TheApp.ui)

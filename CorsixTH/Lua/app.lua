@@ -1560,27 +1560,6 @@ function App:checkCompatibility(save_version, gfx_set)
   return false
 end
 
---! Compatibility function to work out the game's graphics set
---!param state The savegame data
-function App.configureGraphicsSetFlag(state)
-  -- First eliminate all but the first campaign level (same in demo and full)
-  local self = state
-  local toxicity = tostring(_S.level_names[1]:upper())
-  local level_name = tostring(self.map.level_name)
-  if level_name ~= toxicity then
-    self.world.gfx_set = "full"
-    return
-  end
-  -- Now check a disease only in the demo (baldness)
-  for _, disease in ipairs(self.world.available_diseases) do
-    if disease.id == "baldness" then
-      self.world.gfx_set = "demo"
-      return
-    end
-  end
-  self.world.gfx_set = "full"
-end
-
 --! Restarts the current level (offers confirmation window first)
 function App:restart()
   assert(self.map, "Trying to restart while no map is loaded.")
