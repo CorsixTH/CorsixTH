@@ -27,8 +27,9 @@ local runDebugger = corsixth.require("run_debugger")
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
+-- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 165 -- Add 'KnockDoorAction.humanoid' field.
+local SAVEGAME_VERSION = 166 -- Defines the graphics set used.
 
 class "App"
 
@@ -98,6 +99,7 @@ function App:init()
   print("")
   print("---------------------------------------------------------------")
   print("")
+
   -- Prereq 1: Config file (for screen width / height / TH folder)
   -- Note: These errors cannot be translated, as the config file specifies the language
   local conf_path = self.command_line["config-file"] or "config.txt"
@@ -644,6 +646,10 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
   if campaign_data then
     self.world:setCampaignData(campaign_data)
   end
+
+  -- Log if we're playing with the demo or full graphics set
+  -- TODO: Adjust for new_gfx set when implemented
+  self.world.gfx_set = self.using_demo_files and "demo" or "full"
 end
 
 -- This is a useful debug and development aid
@@ -1531,15 +1537,27 @@ end
 
 --! Function to check the loaded game is compatible with the program
 --!param save_version (num)
+--!param gfx_set (string) What graphics set is used
 --!return true if compatible, otherwise false
-function App:checkCompatibility(save_version)
+function App:checkCompatibility(save_version, gfx_set)
   local app_version = self.savegame_version
-  if app_version >= save_version or self.config.debug then
+  local err
+
+  -- First check the graphics set matches with the game files
+  if (gfx_set == "demo" and not self.using_demo_files) then
+    err = _S.errors.compatibility_error.demo_in_full
+  elseif (gfx_set == "full" and self.using_demo_files) then
+    err = _S.errors.compatibility_error.full_in_demo
+
+  -- if that's all good, check the save and app version
+  elseif app_version >= save_version or self.config.debug then
     return true
-  else
-    UILoadGame:loadError(_S.errors.compatibility_error)
-    return false
+  else -- savegame newer than application
+    err = _S.errors.compatibility_error.new_in_old
   end
+
+  UILoadGame:loadError(err)
+  return false
 end
 
 --! Restarts the current level (offers confirmation window first)
@@ -1637,6 +1655,15 @@ function App:afterLoad()
     self.objects[rathole_type.id] = rathole_type
     self.world:newObjectType(rathole_type)
   end
+
+    --[[Information only:
+  if old < 166 then
+    Graphics set type was introduced at this version.
+    Nothing to do here as it is handled by persistance.
+    However, it introduces compatibility limitations between the demo and full game
+    and should be noted.
+  end
+  ]]--
 
   self.map:afterLoad(old, new)
   self.ui:afterLoad(old, new)
