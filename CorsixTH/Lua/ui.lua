@@ -593,6 +593,7 @@ function UI:onChangeResolution()
   for _, window in ipairs(self.windows) do
     window:onChangeResolution()
   end
+  self.app.audio:setSoundStage()
 end
 
 function UI:registerTextBox(box)
