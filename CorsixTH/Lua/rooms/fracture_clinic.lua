@@ -65,7 +65,11 @@ function FractureRoom:commandEnteringPatient(patient)
     patient:setLayer(2, 0) -- Remove casts
     patient:setLayer(3, 0)
     patient:setLayer(4, 0)
-    staff:setNextAction(MeanderAction())
+    if #staff.action_queue == 1 then
+      staff:setNextAction(MeanderAction())
+    else
+      staff:finishAction(staff:getCurrentAction())
+    end
     self:dealtWithPatient(patient)
   end
 

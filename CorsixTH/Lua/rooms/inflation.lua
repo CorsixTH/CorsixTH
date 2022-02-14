@@ -63,7 +63,11 @@ function InflationRoom:commandEnteringPatient(patient)
 
   local inflation_after_use = --[[persistable:inflation_after_use]] function()
     patient:setLayer(0, patient.layers[0] - 10) -- Change to normal head
-    staff:setNextAction(MeanderAction())
+    if #staff.action_queue == 1 then
+      staff:setNextAction(MeanderAction())
+    else
+      staff:finishAction(staff:getCurrentAction())
+    end
     self:dealtWithPatient(patient)
   end
 

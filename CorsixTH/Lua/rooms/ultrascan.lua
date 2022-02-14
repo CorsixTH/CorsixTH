@@ -62,7 +62,11 @@ function UltrascanRoom:commandEnteringPatient(patient)
   patient:setNextAction(WalkAction(pat_x, pat_y))
 
   local after_use_scan = --[[persistable:ultrascan_after_use]] function()
-    staff:setNextAction(MeanderAction())
+    if #staff.action_queue == 1 then
+      staff:setNextAction(MeanderAction())
+    else
+      staff:finishAction(staff:getCurrentAction())
+    end
     self:dealtWithPatient(patient)
   end
 

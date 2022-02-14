@@ -67,7 +67,11 @@ function SlackTongueRoom:commandEnteringPatient(patient)
     else
       patient:setLayer(0, patient.layers[0] - 8) -- Change to normal head
     end
-    staff:setNextAction(MeanderAction())
+    if #staff.action_queue == 1 then
+      staff:setNextAction(MeanderAction())
+    else
+      staff:finishAction(staff:getCurrentAction())
+    end
     self:dealtWithPatient(patient)
   end
 
