@@ -51,33 +51,7 @@ function Cheats:Cheats(hospital)
     {name = "decrease_prices", func = self.cheatDecreasePrices},
   }
 
-  --[[ Toggle-based cheats are found in below function ]]
-end
-
---! A private function to return the toggle_cheats list (code operated cheats)
---! These cheats do not appear in the Cheat UI menu, and are only accessed from fax code inputs currently.
---! They contain adviser strings, so cannot be persisted.
---!return the cheat list
-function Cheats._toggleCheatList()
-  local toggle_cheats = {
-      ["spawn_rate_cheat"] = {
-      enable = Cheats.roujinOn,
-      disable = Cheats.roujinOff,
-      enableAnnouncement = _A.cheats.roujin_on_cheat,
-      disableAnnouncement = _A.cheats.roujin_off_cheat,
-      lower = 27868.3,
-      upper = 27868.4,
-    },
-    ["no_rest_cheat"] = {
-      enable = Cheats.noRestOn,
-      disable = Cheats.noRestOff,
-      enableAnnouncement = _A.cheats.norest_on_cheat,
-      disableAnnouncement = _A.cheats.norest_off_cheat,
-      lower = 185.5,
-      upper = 185.6,
-    },
-  }
-  return toggle_cheats
+  --[[ Toggle-based cheats are found at bottom of file]]
 end
 
 --! Performs a cheat from the cheat_list (menu cheats)
@@ -86,41 +60,6 @@ end
 function Cheats:performCheat(num)
   local cheat_success = self.cheat_list[num].func(self) ~= false
   return cheat_success and self.cheat_list[num].name ~= "lose_level"
-end
-
---! Checks the obfuscated cheat code for a match and executes it
---!param num (number) The obfuscated cheat value
---!return Returns name of the cheat executed from the lookup table, or nil
-function Cheats:processCheatCode(num)
-  local cheat_list = self._toggleCheatList()
-  for name, data in pairs(cheat_list) do
-    if data.lower < num and data.upper > num then
-      self:toggleCheat(name)
-      return name
-    end
-  end
-  return -- cheat not found
-end
---! Performs a cheat from toggle_cheats
---!param name (string) The cheat called from the list
-function Cheats:toggleCheat(name)
-  local ui = self.hospital.world.ui
-  local cheat_list = self._toggleCheatList()
-  local cheat = cheat_list[name]
-  local cheatWindow = ui:getWindow(UICheats)
-  local speech
-  if not self.hospital.active_cheats[name] then
-    cheat.enable(self)
-    speech = cheat.enableAnnouncement
-  else
-    cheat.disable(self)
-    speech = cheat.disableAnnouncement
-  end
-  self:announceCheat(speech)
-  -- If a cheats window is open, make sure the UI is updated
-  if cheatWindow then
-    cheatWindow:updateCheatedStatus()
-  end
 end
 
 --! Updates the cheated status of the player, with a matching announcement
@@ -169,7 +108,7 @@ end
 --[[ Before an epidemic has been revealed toggle the infected icons
 to easily distinguish the infected patients -- will toggle icons
 for ALL future epidemics you cannot distinguish between epidemics
-by disease ]]
+by disease ]]--
 function Cheats:cheatToggleInfected()
   local hosp = self.hospital
   if hosp.future_epidemics_pool and #hosp.future_epidemics_pool > 0 then
@@ -238,7 +177,7 @@ function Cheats:cheatDecreasePrices()
   end
 end
 
---[[Cheats operated through Faxes go here]]
+--[[Begin toggle-based cheat functions]]
 
 --! Enable Roujin's challenge (spawn rate cheat)
 function Cheats:roujinOn()
@@ -265,4 +204,67 @@ end
 --! Disable no rest cheat (re-enable staff fatigue, and normal movement)
 function Cheats:noRestOff()
   self.hospital.active_cheats["no_rest_cheat"] = nil
+end
+
+--[[End toggle-based cheat functions]]
+
+--[[ The toggle_cheats list (code operated cheats)
+These cheats do not appear in the Cheat UI menu, and are only accessed from fax code inputs currently.
+They contain adviser strings, so cannot be persisted.
+]]--
+local toggle_cheats = {
+    ["spawn_rate_cheat"] = {
+    enable = Cheats.roujinOn,
+    disable = Cheats.roujinOff,
+    enableAnnouncement = _A.cheats.roujin_on_cheat,
+    disableAnnouncement = _A.cheats.roujin_off_cheat,
+    lower = 27868.3,
+    upper = 27868.4,
+  },
+  ["no_rest_cheat"] = {
+    enable = Cheats.noRestOn,
+    disable = Cheats.noRestOff,
+    enableAnnouncement = _A.cheats.norest_on_cheat,
+    disableAnnouncement = _A.cheats.norest_off_cheat,
+    lower = 185.5,
+    upper = 185.6,
+  },
+}
+
+--! Checks the obfuscated cheat code for a match and executes it
+--!param num (number) The obfuscated cheat value
+--!return Returns name of the cheat executed from the lookup table, or nil
+function Cheats:processCheatCode(num)
+  local cheat_list = toggle_cheats
+  for name, data in pairs(cheat_list) do
+    if data.lower < num and data.upper > num then
+      self:toggleCheat(name)
+      return name
+    end
+  end
+  return -- cheat not found
+end
+
+
+--! Performs a cheat from fax_cheats
+--!param name (string) The cheat called from the list
+function Cheats:toggleCheat(name)
+  local ui = self.hospital.world.ui
+  local cheat_list = toggle_cheats
+  local cheat = cheat_list[name]
+  local cheatWindow = ui:getWindow(UICheats)
+  local speech
+  if not self.hospital.active_cheats[name] then
+    cheat.enable(self)
+    speech = cheat.enableAnnouncement
+    self:announceCheat(speech)
+  else
+    cheat.disable(self)
+    speech = cheat.disableAnnouncement
+    self:announceCheat(speech)
+  end
+  -- If a cheats window is open, make sure the UI is updated
+  if cheatWindow then
+    cheatWindow:updateCheatedStatus()
+  end
 end
