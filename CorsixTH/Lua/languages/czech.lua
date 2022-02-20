@@ -2655,11 +2655,9 @@ errors = {
   no_games_to_contine = "Žádné uložené hry.",
   could_not_load_campaign = "Nelze načíst kampaň: %s",
   could_not_find_first_campaign_level = "Nelze načíst první úroveň této kampaně: %s",
+  compatibility_error = "Pozor! Tato hra byla uložena v novější verzi CorsixTH a není kompatibilní. Pro hraní aktualizujte na novější verzi CorsixTH.",
   save_to_tmp = "Soubor %s nemohl být použit. Hra byla proto uložena do %s. Chyba: %s",
   dialog_empty_queue = "Postava aktuálně nemá nic na práci ve své řadě úloh, a tak neví, co má dělat dále. Zkontrolujte příkazové okno pro více informací. Jednáme s tímto potížistou. Chcete ho z nemocnice vyhodit?",
-  compatibility_error = {
-    new_in_old = "Pozor! Tato hra byla uložena v novější verzi CorsixTH a není kompatibilní. Pro hraní aktualizujte na novější verzi CorsixTH.",
-  },
 }
 menu = {
   charts = "  GRAFY  ",

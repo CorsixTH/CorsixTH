@@ -692,6 +692,7 @@ errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",
   load_prefix = "Error while loading game: ",
+  compatibility_error = "Sorry, this save was created with a newer version of CorsixTH and is not compatible. Please update to a more recent version.",
   no_games_to_contine = "There are no saved games.",
   load_quick_save = "Error, cannot load the quicksave as it does not exist, not to worry as we have now created one for you!",
   map_file_missing = "Could not find the map file %s for this level!",
@@ -703,11 +704,6 @@ errors = {
   could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
   save_to_tmp = "The file at %s could not be used. The game has been saved to %s. Error: %s",
   dialog_empty_queue = "Sorry, a humanoid just had an empty action queue, which means that they didn't know what to do next. Please consult the command window for more detailed information. A dialog with the offending humanoid has been opened. Would you like them to leave the hospital?",
-  compatibility_error = {
-    new_in_old = "Sorry, this save was created with a newer version of CorsixTH and is not compatible. Please update to a more recent version.",
-    demo_in_full = "Sorry, you can't open a demo savegame with the full game files loaded. Please update your TH Data folder setting.",
-    full_in_demo = "Sorry, you can't open a full game save with the demo files loaded. Please update your TH Data folder setting.",
-  },
 }
 
 warnings = {
