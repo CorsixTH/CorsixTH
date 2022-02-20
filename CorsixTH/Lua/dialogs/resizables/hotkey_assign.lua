@@ -503,7 +503,7 @@ end
 
 function UIHotkeyAssign:buttonDefaults()
   -- Copy the default hotkeys into the app's current hotkey table.
-  self.app.hotkeys = shallow_clone(select(5, corsixth.require("config_finder")))
+  self.app.hotkeys = shallow_clone(select(6, corsixth.require("config_finder")))
 
   -- Reload all hotkey boxes' text.
   for k, _ in pairs(self.hotkey_buttons) do
