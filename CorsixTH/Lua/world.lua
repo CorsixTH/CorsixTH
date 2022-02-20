@@ -961,7 +961,7 @@ function World:setSpeed(speed)
   end
 
   -- Set the blue filter according to whether the user can build or not.
-  TheApp.video:setBlueFilterActive(not self.user_actions_allowed)
+  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self.ui:checkForMustPauseWindows())
   return false
 end
 
