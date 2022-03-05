@@ -355,6 +355,19 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
             "ingame_gamespeed_thensome",
             "ingame_gamespeed_speedup" }}}},
     {
+      id = "scroll",
+      title = _S.hotkey_window.panel_scrollKeys,
+      tooltip = _S.hotkey_window.panel_scrollKeys,
+      sections = {{
+          title = _S.hotkey_window.panel_scrollKeys,
+          keys = {
+            "ingame_scroll_up",
+            "ingame_scroll_down",
+            "ingame_scroll_left",
+            "ingame_scroll_right",
+            "ingame_scroll_shift"
+          }}}},
+    {
       id = "zoom",
       title = _S.hotkey_window.panel_zoomKeys,
       tooltip = _S.hotkey_window.panel_generalInGameKeys,
