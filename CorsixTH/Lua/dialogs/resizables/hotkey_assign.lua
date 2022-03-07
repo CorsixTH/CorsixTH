@@ -519,8 +519,8 @@ function UIHotkeyAssign:buttonDefaults()
   self.app.hotkeys = shallow_clone(select(6, corsixth.require("config_finder")))
 
   -- Reload all hotkey boxes' text.
-  for k, _ in pairs(self.hotkey_buttons) do
-    self.hotkey_buttons[k]:setText( string.upper(array_join(self.app.hotkeys[k], "+")) )
+  for _, v in pairs(self.key_windows) do
+    v.window:resetAllButtonText(self.app.hotkeys)
   end
 end
 
@@ -613,4 +613,10 @@ end
 
 function UIHotkeyAssignKeyPane:confirm_func(hotkey)
   hotkey_input(hotkey, self.hotkey_buttons, _G.TheApp)
+end
+
+function UIHotkeyAssignKeyPane:resetAllButtonText(app_hotkeys)
+  for k, _ in pairs(self.hotkey_buttons) do
+    self.hotkey_buttons[k]:setText(string.upper(array_join(app_hotkeys[k], "+")))
+  end
 end
