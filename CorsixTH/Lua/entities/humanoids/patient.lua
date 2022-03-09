@@ -341,9 +341,11 @@ function Patient:die()
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
 end
 
+-- Actions we can interrupt for in the canPeeOrPuke function
+local good_actions = {walk=true, idle=true, seek_room=true, queue=true}
+
 function Patient:canPeeOrPuke(current)
-  local good_actions = {walk=true, idle=true, seek_room=true, queue=true}
-  if not good_actions[current] then return false end
+  if not good_actions[current.name] then return false end
   if self.going_home then return false end
 
   local th = self.world.map.th
