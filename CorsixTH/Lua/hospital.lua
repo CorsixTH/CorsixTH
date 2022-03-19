@@ -1094,7 +1094,7 @@ function Hospital:createEmergency(emergency)
       room_name = nil
     end
 
-    local casebook = self.disease_casebook[random_disease.id]
+    local casebook = self.disease_casebook[emergency.disease.id]
     local added_info = casebook.drug and
         _S.fax.emergency.cure_possible_drug_name_efficiency:format(emergency.disease.name, casebook.cure_effectiveness)
         or _S.fax.emergency.cure_possible
