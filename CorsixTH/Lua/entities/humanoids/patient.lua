@@ -588,7 +588,7 @@ function Patient:tickDay()
     self:changeAttribute("happiness", -0.0002) -- waiting too long will make you sad
     -- There is a 1/3 chance that the patient will get fed up and leave
     -- note, this is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
-    if math.random(1,30) == 1 then
+    if not self:getRoom() and math.random(1, 30) == 1 then
       self:updateDynamicInfo(_S.dynamic_info.patient.actions.fed_up)
       self:setMood("sad2", "deactivate")
       self:goHome("kicked")
@@ -974,16 +974,14 @@ function Patient:updateDynamicInfo(action_string)
   end
   -- Set the centre line of dynamic info based on contagiousness, if appropriate
   local epidemic = self.hospital and self.hospital.epidemic
-  if epidemic and epidemic.coverup_in_progress then
-    if self.infected and not self.vaccinated then
-      self:setDynamicInfo('text',
-        {action_string, _S.dynamic_info.patient.actions.epidemic_contagious, info})
-    elseif self.vaccinated then
+  if epidemic and self.infected and epidemic.coverup_in_progress then
+    if self.vaccinated then
       self:setDynamicInfo('text',
         {action_string, _S.dynamic_info.patient.actions.epidemic_vaccinated, info})
     else
-      self:setDynamicInfo('text', {action_string, "", info})
-    end
+      self:setDynamicInfo('text',
+        {action_string, _S.dynamic_info.patient.actions.epidemic_contagious, info})
+	end
   else
     self:setDynamicInfo('text', {action_string, "", info})
   end
