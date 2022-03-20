@@ -34,8 +34,6 @@ fax.vip_visit_query.choices.invite = "Lassen Sie dem V.I.P. eine offizielle Einl
 
 fax.vip_visit_query.choices.refuse = "Speisen Sie den V.I.P. mit einer Entschuldigung ab." -- text was missing
 
---fax.vip_visit_result.remarks.super[1] = "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste Mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here  --FIXME is supposedly unused
-
 fax.vip_visit_result.vip_remarked_name = "%s hat Ihr Krankenhaus besucht."
 fax.vip_visit_result.cash_grant = "Ihnen wurde ein Geldbonus von %d gewährt."
 fax.vip_visit_result.rep_boost = "Ihr Ruf in der Öffentlichkeit hat sich gebessert."
@@ -124,12 +122,9 @@ tooltip.staff_window.center_view = "Linksklick, um zur Person zu springen, Recht
 -- These strings are missing in some versions of TH (unpatched?)
 confirmation.restart_level = "Sind Sie sicher, dass Sie das aktuelle Level von vorne beginnen möchten?"
 
--- remove hyphen since it makes it use the wrong font. again, the case cannot be fixed
-casebook = {
-  deaths = "ablebensfälle", --the ä looks weird
-}
 
--- reported as missing, although they are in OVERRIDE section of english.lua
+
+-- reported as missing, although they are only in OVERRIDE section of english.lua
 level_progress.hospital_value_enough = "Halten Sie den Wert des Krankenhauses über %d und kümmern Sie sich um ihre anderen Probleme um das Level zu gewinnen."
 level_progress.cured_enough_patients = "Sie haben genug Patienten geheilt, aber die Qualität des Krankenhauses muss zunehmen um das Level zu gewinnen."
 
@@ -146,6 +141,21 @@ disease_discovered_patient_choice.need_to_employ = "Stellen Sie eine(n) %s ein u
 policy = {
   diag_termination = "diagnoseerstellung",
   diag_procedure = "diagnoseverfahren",
+}
+
+-- remove hyphen since it makes it use the wrong font. again, the case cannot be fixed
+casebook = {
+  deaths = "ablebensfälle", --the ä looks weird as well
+}
+
+-- only drug_improved_1 is in OVERRIDE section of english.lua
+-- ..._1 is used to prevent 'the the squits' 
+-- FIXME check how this behaves in the translated version
+adviser = {
+  research = {
+    drug_improved = "Die Effektivität Ihres %s-Medikaments wurde von Ihrer Forschungsabteilung verbessert.",
+    drug_improved_1 = "Das Medikament %s wurde von Ihrer Forschungsabteilung verbessert.",
+  },
 }
 
 -------------------------------  NEW STRINGS  -------------------------------
@@ -298,10 +308,7 @@ adviser = {
     fair_prices = "Die Behandlungskosten für %s sind fair und angemessen.",
     patient_not_paying = "Ein Patient ist gegangen ohne für %s zu bezahlen weil es zu teuer ist!",
   },
-  research = { -- FIXME this is not in english.lua
-    drug_improved = "Die Effektivität Ihres %s-Medikaments wurde von Ihrer Forschungsabteilung verbessert.",
-    drug_improved_1 = "Das Medikament %s wurde von Ihrer Forschungsabteilung verbessert.",
-  },
+
   cheats = {
     th_cheat = "Gratulation, Sie haben die Cheats aktiviert!",
     roujin_on_cheat = "Roujins Herausforderungs-Cheat aktiviert! Viel Glück ...",
@@ -462,12 +469,12 @@ options_window = {
   customise = "Spezialeinstellungen",
   folder = "Pfade", --"Verzeichnisse",
   language = "Spielsprache",
-  apply = "Akzeptieren",
+  apply = "Übernehmen",
   cancel = "Abbrechen",
   back = "Zurück",
-  scrollspeed = "Scrollen", --"Scroll-Geschwindigkeit",
-  shift_scrollspeed = "Scrollen (Mod.)", --"schnelles Scrollen", --"Umschalt-Scroll-Geschwindigkeit",
-  zoom_speed = "Zoomen", --"Zoom-Geschwindigkeit",
+  scrollspeed = "Scrollen", -- "Scroll-Geschwindigkeit" is too long
+  shift_scrollspeed = "Scrollen (Mod.)", --"schnelles Scrollen" or "Umschalt-Scroll-Geschwindigkeit" are worse
+  zoom_speed = "Zoomen", --"Zoom-Geschwindigkeit" is too long
   hotkey = "Tastenkürzel",
 }
 
@@ -479,7 +486,7 @@ tooltip.options_window = {
   capture_mouse = "Ein- bzw. Ausschalten, ob der Mauszeiger das Fenster verlassen kann",
   width = "Gewünschte Bildschirmbreite eingeben",
   height = "Gewünschte Bildschirmhöhe eingeben",
-  apply = "Die eingegebene Auflösung akzeptieren",
+  apply = "Die eingegebene Auflösung übernehmen",
   cancel = "Zurückkehren, ohne die Auflösung zu ändern",
   audio_button = "Sämtliche Toneffekte im Spiel ein- bzw. ausschalten",
   audio_toggle = "Ein- oder ausschalten",
@@ -489,15 +496,15 @@ tooltip.options_window = {
   select_language = "Die Spielsprache ändern",
   language_dropdown_item = "%s als Sprache auswählen",
   back = "Das Optionsfenster schließen",
-  scrollspeed = "Scroll-Geschwindigkeit von 1 (langsamste) bis 10 (schnellste) setzen. Standard: 2.",
-  shift_scrollspeed = "Scroll-Geschwindigkeit während der Modifikator (Standard: Umschalttaste) gedrückt wird setzen. 1 (langsamste) bis 10 (schnellste). Standard: 4.", -- "Scroll-Geschwindigkeit während die Umschalttaste gedrückt wird setzen. 1 (langsamste) bis 10 (schnellste). Standard: 4.",
-  zoom_speed = "Zoom-Geschwindigkeit der Kamera von 10 (langsamste) bis 1000 (schnellste) setzen. Standard: 80.",
+  scrollspeed = "Scroll-Geschwindigkeit von 1 (langsamste) bis 10 (schnellste) einstellen. Standard ist 2.",
+  shift_scrollspeed = "Scroll-Geschwindigkeit während der Modifikator (Standard: Umschalttaste) gedrückt wird einstellen. 1 (langsamste) bis 10 (schnellste). Standard ist 4.",
+  zoom_speed = "Zoom-Geschwindigkeit der Kamera von 10 (langsamste) bis 1000 (schnellste) einstellen. Standard ist 80.",
   apply_scrollspeed = "Eingegebene Scroll-Geschwindigkeit anwenden.",
-  cancel_scrollspeed = "Ohne geänderte Scroll-Geschwindigkeit zurückkehren.",
-  apply_shift_scrollspeed = "Eingegebene Modifikator-Scroll-Geschwindigkeit anwenden.", --"Eingegebene Umschalt-Scroll-Geschwindigkeit anwenden.",
-  cancel_shift_scrollspeed = "Ohne geänderte Modifikator-Scroll-Geschwindigkeit zurückkehren.", --"Ohne geänderte Umschalt-Scroll-Geschwindigkeit zurückkehren.",
+  cancel_scrollspeed = "Ohne Änderung der Scroll-Geschwindigkeit zurückkehren.",
+  apply_shift_scrollspeed = "Eingegebene Modifikator-Scroll-Geschwindigkeit anwenden.",
+  cancel_shift_scrollspeed = "Ohne Änderung der Modifikator-Scroll-Geschwindigkeit zurückkehren.",
   apply_zoomspeed = "Eingegebene Zoom-Geschwindigkeit anwenden.",
-  cancel_zoomspeed = "Ohne geänderte Zoom-Geschwindigkeit zurückkehren.",
+  cancel_zoomspeed = "Ohne Änderung der Zoom-Geschwindigkeit zurückkehren.",
   hotkey = "Tastenkürzel ändern.",
 }
 
@@ -524,22 +531,22 @@ tooltip.customise_window = {
   aliens = "Aufgrund des Fehlens einer anständigen Animation haben wir standardmäßig Patienten mit außerirdischer DNA deaktiviert, damit sie nur zu einem Notfall kommen. Um Patienten mit außerirdischer DNA es zu erlauben, Ihr Krankenhaus nicht nur bei Notfällen zu besuchen, schalten Sie dies ab.",
   fractured_bones = "Aufgrund einer armseligen Animation haben wir uns entschieden, dass es standardmäßig keine weiblichen Patienten mit gebrochenen Knochen gibt. Wenn weibliche Patienten mit gebrochenen Knochen ihr Krankenhaus besuchen sollen, dann schalten Sie dies ab.",
   average_contents = "Wenn Sie möchten, dass sich das Spiel merkt, welche zusätzlichen Objekte Sie üblicherweise beim Gebäudebau hinzufügen, dann schalten Sie diese Option ein.",
-  remove_destroyed_rooms = "If you would like to be able to remove destroyed rooms, for a fee, turn this option on", --FIXME
+  remove_destroyed_rooms = "Aktivieren Sie diese Option wenn Sie wollen, dass zerstörte Räume nach Zahlung einer Gebühr entfernen können.",
   back = "Dieses Menü schließen und zum Einstellungsmenü zurückkehren",
 }
 
 folders_window = {
-  caption = "Pfade", --FIXME argh  Verzeichnisort
+  caption = "Pfade",
   data_label = "TH-Daten",
   font_label = "Schrift",
-  music_label = "Musik", --MP3s
+  music_label = "Musik",
   savegames_label = "Spielstände",
   screenshots_label = "Screenshots",
   --
   new_th_location = "Hier können Sie ein neues Theme-Hospital-Installationsverzeichnis auswählen. Sobald Sie das neue Verzeichnis auswählen, wird das Spiel neu gestartet.",
-  savegames_location = "Wählen Sie das Verzeichnis, welches Sie für Spielstände benutzen möchten, aus.",
-  music_location = "Wählen Sie hier das Verzeichnis, welches Sie für Ihre Musik benutzen möchten, aus.",
-  screenshots_location = "Wählen Sie das Verzeichnis, welches Sie für Screenshots benutzen möchten, aus.",
+  savegames_location = "Wählen Sie das Verzeichnis aus, das für Spielstände benutzt werden soll.", --welches Sie für Spielstände benutzen möchten
+  music_location = "Wählen Sie hier das Verzeichnis aus, in dem sich Ihre Musik befindet.", --welches Sie für Ihre Musik benutzen möchten
+  screenshots_location = "Wählen Sie das Verzeichnis aus, das für Screenshots benutzt werden soll.", --welches Sie für Screenshots benutzen möchten
   back = "Zurück",
 }
 
@@ -566,8 +573,8 @@ tooltip.folders_window = {
 hotkey_window = {
   caption_main = "Tastenkürzel-Zuweisungen",
   caption_panels = "Panel-Tasten",
-  button_accept = "Akzeptieren",
-  button_defaults = "Einstellungen zurücksetzen", --"Zu Standard-Einstellungen zurücksetzen",
+  button_accept = "Übernehmen",
+  button_defaults = "Einstellungen zurücksetzen", --was "Zu Standard-Einstellungen zurücksetzen",
   button_cancel = "Abbrechen",
   button_back = "Zurück",
   button_toggleKeys = "Toggle-Tasten", --FIXME
@@ -601,7 +608,7 @@ hotkey_window = {
   ingame_scroll_down = "Nach unten scrollen",
   ingame_scroll_left = "Nach links scrollen",
   ingame_scroll_right = "Nach rechts scrollen",
-  ingame_scroll_shift = "Geschwindigkeitsmodifikator", --FIXME
+  ingame_scroll_shift = "Geschwindigkeitsmodifikator",
   ingame_zoom_in = "Herein zoomen",
   ingame_zoom_in_more = "Weiter herein zoomen",
   ingame_zoom_out = "Heraus zoomen",
@@ -628,7 +635,7 @@ hotkey_window = {
   ingame_panel_research = "Forschung",
   ingame_panel_status = "Status",
   ingame_panel_charts = "Diagramme",
-  ingame_panel_policy = "Einstellungen", --FIXME: wirklich? ist so aber vorgegeben
+  ingame_panel_policy = "Einstellungen",
   ingame_panel_map_alt = "Übersichtskarte 2",
   ingame_panel_research_alt = "Forschung 2",
   ingame_panel_casebook_alt = "Behandlungsmappe 2",
@@ -674,7 +681,7 @@ hotkey_window = {
 }
 
 tooltip.hotkey_window = {
-  button_accept = "Tastenkürzel-Zuweisungen akzeptieren und speichern",
+  button_accept = "Tastenkürzel-Zuweisungen übernehmen und speichern",
   button_defaults = "Alle Tastenkürzel auf Standard zurücksetzen",
   button_cancel = "Zuweisung abbrechen und zum Options-Menü zurückkehren",
   caption_panels = "Fenster zur Zuweisung von Panel-Tasten öffnen",
@@ -684,7 +691,7 @@ tooltip.hotkey_window = {
 }
 
 font_location_window = {
-  caption = "Schrift auswählen (%1%)",
+  caption = "Schrift wählen (%1%)", -- too long for containing box, was "Schrift auswählen (%1%)"
 }
 
 handyman_window = {
@@ -809,7 +816,7 @@ totd_window = {
     "Patienten werden beim Warten durstig, besonders wenn die Heizungen aufgedreht sind! Strategisch platzierte Getränkeautomaten sind eine nette zusätzliche Einnahmequelle.",
     "Sie können die Diagnose für einen Patienten vorzeitig abbrechen und ihn direkt zur Behandlung schicken, falls seine Krankheit zuvor schon entdeckt wurde. Allerdings erhöht sich dadurch das Risiko, dass das Heilmittel falsch ist und der Patient stirbt.",
     "Notfälle können eine gute Einnahmequelle abgeben, sofern genügend Kapazitäten vorhanden sind, um die Notfallpatienten rechtzeitig zu behandeln.",
-    "Wussten Sie, dass sie Handlangern spezifische Grundstücke zuweisen können? Klicken Sie einfach auf den Alle Grundstücke Text im Personalprofil um zwischen ihnen zu wechseln!", -- FIXME 
+    "Wussten Sie, dass sie Handlangern spezifische Grundstücke zuweisen können? Klicken Sie einfach auf den Text 'Alle Grundstücke' im Personalprofil um zwischen ihnen zu wechseln!",
   },
   previous = "Vorheriger Tipp",
   next = "Nächster Tipp",
