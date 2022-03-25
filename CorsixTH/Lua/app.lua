@@ -1701,7 +1701,7 @@ function App:checkForUpdates()
   print("Checking for CorsixTH updates...")
   local update_body, status, _ = http.request(update_url)
 
-  if not update_body or not (status == 200) then
+  if not update_body or (status ~= 200) then
     print("Couldn't check for updates. Server returned code: " .. status)
     print("Check that you have an active internet connection and that CorsixTH is allowed in your firewall.")
     return
