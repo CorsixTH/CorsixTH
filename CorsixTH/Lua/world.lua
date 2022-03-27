@@ -1025,7 +1025,7 @@ function World:onTick()
       self.autosave_next_tick = nil
       local pathsep = package.config:sub(1, 1)
       local dir = TheApp.savegame_dir
-      if not dir:sub(-1, -1) == pathsep then
+      if dir:sub(-1, -1) ~= pathsep then
         dir = dir .. pathsep
       end
       if not lfs.attributes(dir .. "Autosaves", "modification") then
