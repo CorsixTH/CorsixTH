@@ -29,7 +29,7 @@ Inherit("original_strings", 2)
 -------------------------------  OVERRIDE  ----------------------------------
 diseases.broken_wind.cure = " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt für Windstille." -- original string mentioned inflation, which is plain wrong.
 diseases.corrugated_ankles.cure = "Therapie: Eine Schwester verabreicht dem Patienten ein leicht toxisches Gebräu, welches das Bein wieder strafft." -- original string mentioned applying a cast, which is wrong and misleads people to think of fracture clinic
-fax.vip_visit_query.vip_name = "%s hat den Wunsch geäußert, ihr Krankenhaus besuchen zu wollen." -- text was missing
+fax.vip_visit_query.vip_name = "%s hat den Wunsch geäußert, Ihr Krankenhaus besuchen zu wollen." -- text was missing
 fax.vip_visit_query.choices.invite = "Lassen Sie dem V.I.P. eine offizielle Einladung zukommen." -- text was ferusing instead of inviting
 
 fax.vip_visit_query.choices.refuse = "Speisen Sie den V.I.P. mit einer Entschuldigung ab." -- text was missing
@@ -93,7 +93,7 @@ fax.epidemic_result.succeeded.part_2 = "Allerdings hat er dafür keine Beweise f
 fax.epidemic_result.compensation_amount = "Die Behörden haben beschlossen, Sie für die entstandene Rufschädigung mit %d zu entschädigen."
 fax.epidemic_result.fine_amount = "Die Behörden haben den nationalen Notstand ausgerufen und sie zu einer Geldstrafe von %d verurteilt."
 fax.epidemic_result.rep_loss_fine_amount = "Die Zeitungen haben Wind von der Epidemie bekommen und ziehen Ihren Ruf in den Dreck. Darüber hinaus hat man zu einer Geldstrafe von %d verurteilt."
-fax.epidemic_result.hospital_evacuated = "Die Behörden haben keine andere Wahl, als ihr Krankenhaus zu evakuieren."
+fax.epidemic_result.hospital_evacuated = "Die Behörden haben keine andere Wahl, als Ihr Krankenhaus zu evakuieren."
 
 dynamic_info.patient.actions.dying = "Ins Jenseits befördert!" -- wrong verb case
 dynamic_info.patient.actions.epidemic_vaccinated = "Ich bin nicht mehr infiziert."
@@ -167,7 +167,7 @@ object.litter = "Müll"
 tooltip.objects.litter = "Müll: Wurde von einem Patienten fallen gelassen, nachdem er keinen Mülleimer fand."
 
 object.rathole = "Rattenloch"
-tooltip.objects.rathole = "Heimat einer Rattenfamilie, die ihr Krankenhaus dreckig genug fand um hier zu leben."
+tooltip.objects.rathole = "Heimat einer Rattenfamilie, die Ihr Krankenhaus dreckig genug fand um hier zu leben."
 
 tooltip.fax.close = "Das Fenster schließen, ohne die Nachricht zu löschen"
 tooltip.message.button = "Linksklick, um die Nachricht zu öffnen"
@@ -530,7 +530,7 @@ tooltip.customise_window = {
   paused = "In Theme Hospital würde es dem Spieler während der Pause nur gestattet sein, das obere Menü zu benutzen. Dies ist in CorsixTH ebenfalls die Standardeinstellung, aber wenn Sie dies einschalten, ist alles in der Pause erlaubt.",
   volume = "Wenn die Leiser-Taste auch das Fallbuch öffnet, dann schalten Sie dies ein, um die Schnellzugriffstaste für das Fallbuch auf Umschalt + C zu wechseln.",
   aliens = "Aufgrund des Fehlens einer anständigen Animation haben wir standardmäßig Patienten mit außerirdischer DNA deaktiviert, damit sie nur zu einem Notfall kommen. Um Patienten mit außerirdischer DNA es zu erlauben, Ihr Krankenhaus nicht nur bei Notfällen zu besuchen, schalten Sie dies ab.",
-  fractured_bones = "Aufgrund einer armseligen Animation haben wir uns entschieden, dass es standardmäßig keine weiblichen Patienten mit gebrochenen Knochen gibt. Wenn weibliche Patienten mit gebrochenen Knochen ihr Krankenhaus besuchen sollen, dann schalten Sie dies ab.",
+  fractured_bones = "Aufgrund einer armseligen Animation haben wir uns entschieden, dass es standardmäßig keine weiblichen Patienten mit gebrochenen Knochen gibt. Wenn weibliche Patienten mit gebrochenen Knochen Ihr Krankenhaus besuchen sollen, dann schalten Sie dies ab.",
   average_contents = "Wenn Sie möchten, dass sich das Spiel merkt, welche zusätzlichen Objekte Sie üblicherweise beim Gebäudebau hinzufügen, dann schalten Sie diese Option ein.",
   remove_destroyed_rooms = "Aktivieren Sie diese Option wenn Sie wollen, dass zerstörte Räume nach Zahlung einer Gebühr entfernt werden können.",
   back = "Dieses Menü schließen und zum Einstellungsmenü zurückkehren",
