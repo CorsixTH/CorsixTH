@@ -149,7 +149,7 @@ casebook = {
 }
 
 -- only drug_improved_1 is in OVERRIDE section of english.lua
--- ..._1 is used to prevent 'the the squits' 
+-- ..._1 is used to prevent 'the the squits'
 -- FIXME check how this behaves in the translated version
 adviser = {
   research = {
@@ -164,7 +164,7 @@ date_format = {
 }
 
 object.litter = "Müll"
-tooltip.objects.litter = "Müll: Wurde von einem Patienten fallengelassen, nachdem er keinen Mülleimer fand."
+tooltip.objects.litter = "Müll: Wurde von einem Patienten fallen gelassen, nachdem er keinen Mülleimer fand."
 
 object.rathole = "Rattenloch"
 tooltip.objects.rathole = "Heimat einer Rattenfamilie, die ihr Krankenhaus dreckig genug fand um hier zu leben."
@@ -368,7 +368,7 @@ misc.cant_treat_emergency = "Ihr Krankenhaus kann diesen Notfall nicht behandeln
 
 main_menu = {
   new_game = "Kampagne",
-  custom_campaign = "Benutzerdef. Kampagne",
+  custom_campaign = "Benutzerdef. Kampagne", -- everything sensible is too long
   custom_level = "Einzelnes Level",
   continue = "Spiel fortsetzen",
   load_game = "Spiel laden",
@@ -409,7 +409,7 @@ custom_game_window = {
 
 tooltip.custom_game_window = {
   choose_game = "Ein Level auswählen, um mehr über es zu erfahren",
-  free_build = "Auswählen, um ohne Geld und Sieg-/Niederlagebedingungen zu spielen",
+  free_build = "Auswählen, um mit unbegrenztem Geld und ohne Sieg- bzw. Niederlagebedingungen zu spielen",
   load_selected_level = "Ausgewähltes Level laden und spielen",
 }
 
@@ -455,6 +455,7 @@ tooltip.menu_list_window = {
   back = "Das Fenster schließen",
 }
 
+-- Scroll vs Scrolling: I would tend to use Scroll, but Duden suggests Scrolling
 options_window = {
   caption = "Einstellungen",
   option_on = "Ein",
@@ -465,15 +466,15 @@ options_window = {
   custom_resolution = "Benutzerdefiniert...",
   width = "Breite",
   height = "Höhe",
-  audio = "Audio", --Globales Audio
+  audio = "Audio", -- "Globale Audio-Einstellungen" would match eng, but it's too long
   customise = "Spezialeinstellungen",
-  folder = "Pfade", --"Verzeichnisse",
+  folder = "Pfade",
   language = "Spielsprache",
   apply = "Übernehmen",
   cancel = "Abbrechen",
   back = "Zurück",
-  scrollspeed = "Scrollen", -- "Scroll-Geschwindigkeit" is too long
-  shift_scrollspeed = "Scrollen (Mod.)", --"schnelles Scrollen" or "Umschalt-Scroll-Geschwindigkeit" are worse
+  scrollspeed = "Scrolling", -- "Scrolling-Geschwindigkeit" is too long
+  shift_scrollspeed = "Scrolling (Mod.)", --"schnelles Scrollen" or "Umschalt-Scrolling-Geschwindigkeit" are worse
   zoom_speed = "Zoomen", --"Zoom-Geschwindigkeit" is too long
   hotkey = "Tastenkürzel",
 }
@@ -488,7 +489,7 @@ tooltip.options_window = {
   height = "Gewünschte Bildschirmhöhe eingeben",
   apply = "Die eingegebene Auflösung übernehmen",
   cancel = "Zurückkehren, ohne die Auflösung zu ändern",
-  audio_button = "Sämtliche Toneffekte im Spiel ein- bzw. ausschalten",
+  audio_button = "Sämtliche Toneffekte des Spiels ein- bzw. ausschalten",
   audio_toggle = "Ein- oder ausschalten",
   customise_button = "Weitere Einstellungen, die Sie ändern können, um Ihr Spielerlebnis anzupassen",
   folder_button = "Verzeichniseinstellungen",
@@ -496,13 +497,13 @@ tooltip.options_window = {
   select_language = "Die Spielsprache ändern",
   language_dropdown_item = "%s als Sprache auswählen",
   back = "Das Optionsfenster schließen",
-  scrollspeed = "Scroll-Geschwindigkeit von 1 (langsamste) bis 10 (schnellste) einstellen. Standard ist 2.",
-  shift_scrollspeed = "Scroll-Geschwindigkeit während der Modifikator (Standard: Umschalttaste) gedrückt wird einstellen. 1 (langsamste) bis 10 (schnellste). Standard ist 4.",
+  scrollspeed = "Scrolling-Geschwindigkeit von 1 (langsamste) bis 10 (schnellste) einstellen. Standard ist 2.",
+  shift_scrollspeed = "Scrolling-Geschwindigkeit während der Modifikator (Standard: Umschalttaste) gedrückt wird einstellen. 1 (langsamste) bis 10 (schnellste). Standard ist 4.",
   zoom_speed = "Zoom-Geschwindigkeit der Kamera von 10 (langsamste) bis 1000 (schnellste) einstellen. Standard ist 80.",
-  apply_scrollspeed = "Eingegebene Scroll-Geschwindigkeit anwenden.",
-  cancel_scrollspeed = "Ohne Änderung der Scroll-Geschwindigkeit zurückkehren.",
-  apply_shift_scrollspeed = "Eingegebene Modifikator-Scroll-Geschwindigkeit anwenden.",
-  cancel_shift_scrollspeed = "Ohne Änderung der Modifikator-Scroll-Geschwindigkeit zurückkehren.",
+  apply_scrollspeed = "Eingegebene Scrolling-Geschwindigkeit anwenden.",
+  cancel_scrollspeed = "Ohne Änderung der Scrolling-Geschwindigkeit zurückkehren.",
+  apply_shift_scrollspeed = "Eingegebene Modifikator-Scrolling-Geschwindigkeit anwenden.",
+  cancel_shift_scrollspeed = "Ohne Änderung der Modifikator-Scrolling-Geschwindigkeit zurückkehren.",
   apply_zoomspeed = "Eingegebene Zoom-Geschwindigkeit anwenden.",
   cancel_zoomspeed = "Ohne Änderung der Zoom-Geschwindigkeit zurückkehren.",
   hotkey = "Tastenkürzel ändern.",
@@ -517,10 +518,10 @@ customise_window = {
   intro = "Introfilm abspielen",
   paused = "In Pause bauen",
   volume = "Leiser-Taste",
-  aliens = "Außerird. Patienten",
+  aliens = "Alien-Patienten", -- "Außerirdische Patienten"/"Ex­t­ra­ter­res­t­risch Patienten" is too long
   fractured_bones = "Gebrochene Knochen",
   average_contents = "Einrichtung merken",
-  remove_destroyed_rooms = "Entfernbare zerstörte Räume", --FIXME
+  remove_destroyed_rooms = "Behebbare Zerstörung", -- "Entfernbare zerstörte Räume" is too long
 }
 
 tooltip.customise_window = {
@@ -531,7 +532,7 @@ tooltip.customise_window = {
   aliens = "Aufgrund des Fehlens einer anständigen Animation haben wir standardmäßig Patienten mit außerirdischer DNA deaktiviert, damit sie nur zu einem Notfall kommen. Um Patienten mit außerirdischer DNA es zu erlauben, Ihr Krankenhaus nicht nur bei Notfällen zu besuchen, schalten Sie dies ab.",
   fractured_bones = "Aufgrund einer armseligen Animation haben wir uns entschieden, dass es standardmäßig keine weiblichen Patienten mit gebrochenen Knochen gibt. Wenn weibliche Patienten mit gebrochenen Knochen ihr Krankenhaus besuchen sollen, dann schalten Sie dies ab.",
   average_contents = "Wenn Sie möchten, dass sich das Spiel merkt, welche zusätzlichen Objekte Sie üblicherweise beim Gebäudebau hinzufügen, dann schalten Sie diese Option ein.",
-  remove_destroyed_rooms = "Aktivieren Sie diese Option wenn Sie wollen, dass zerstörte Räume nach Zahlung einer Gebühr entfernen können.",
+  remove_destroyed_rooms = "Aktivieren Sie diese Option wenn Sie wollen, dass zerstörte Räume nach Zahlung einer Gebühr entfernt werden können.",
   back = "Dieses Menü schließen und zum Einstellungsmenü zurückkehren",
 }
 
@@ -544,27 +545,27 @@ folders_window = {
   screenshots_label = "Screenshots",
   --
   new_th_location = "Hier können Sie ein neues Theme-Hospital-Installationsverzeichnis auswählen. Sobald Sie das neue Verzeichnis auswählen, wird das Spiel neu gestartet.",
-  savegames_location = "Wählen Sie das Verzeichnis aus, das für Spielstände benutzt werden soll.", --welches Sie für Spielstände benutzen möchten
-  music_location = "Wählen Sie hier das Verzeichnis aus, in dem sich Ihre Musik befindet.", --welches Sie für Ihre Musik benutzen möchten
-  screenshots_location = "Wählen Sie das Verzeichnis aus, das für Screenshots benutzt werden soll.", --welches Sie für Screenshots benutzen möchten
+  savegames_location = "Wählen Sie das Verzeichnis aus, das für Spielstände benutzt werden soll.",
+  music_location = "Wählen Sie hier das Verzeichnis aus, in dem sich Ihre Musik befindet.",
+  screenshots_location = "Wählen Sie das Verzeichnis aus, das für Screenshots benutzt werden soll.",
   back = "Zurück",
 }
 
 tooltip.folders_window = {
   browse = "Nach einem Verzeichnis durchsuchen",
-  data_location = "Das Verzeichnis der Original-Theme-Hospital-Installation, welche benötigt wird, um CorsixTH zu spielen",
+  data_location = "Das Verzeichnis der original Theme-Hospital-Installation, die benötigt wird, um CorsixTH zu spielen",
   font_location = "Pfad einer Schrift-Datei, die Unicode-Zeichen Ihrer Sprache unterstützt. Wenn diese Einstellung nicht vorgenommen wird, können Sie keine Sprachen auswählen, die mehr Zeichen benötigen, als das Originalspiel unterstützt. Beispiel: Russisch und Chinesisch.",
   savegames_location = "Standardmäßig wird das Spielstandsverzeichnis im selben Verzeichnis wie die Konfigurationsdatei gespeichert und es wird benutzt, um die Spielstände darin abzuspeichern. Sollte das nicht erwünscht sein, können Sie sich ihr eigenes Verzeichnis aussuchen, wählen Sie einfach das Verzeichnis, das Sie verwenden möchten",
   screenshots_location = "Standardmäßig wird das Screenshotverzeichnis im selben Verzeichnis wie die Konfigurationsdatei gespeichert. Sollte das nicht erwünscht sein, können Sie sich ihr eigenes Verzeichnis aussuchen, wählen Sie einfach das Verzeichnis, das Sie verwenden möchten",
-  music_location = "Wählen Sie einen Ort für ihre MP3-Musikddateien aus. Sie müssen dieses Verzeichnis bereits erstellt haben, dann wählen Sie ebendieses Verzeichnis aus.",
+  music_location = "Wählen Sie einen Ort für ihre Musikddateien aus. Das Verzeichnis muss bereits vorhanden sein.",
   browse_data = "Nach einem anderem Ort einer Theme-Hospital-Installation durchsuchen (aktueller Ort: %1%)",
   browse_font = "Nach einer anderen Schriftdatei suchen (aktueller Ort: %1%)",
   browse_saves = "Nach einem anderem Ort für Ihr Spielstandsverzeichnis durchsuchen (aktueller Ort: %1%)",
   browse_screenshots = "Nach einem anderem Ort für ihr Screenshotverzeichnis suchen (aktueller Ort: %1%)",
   browse_music = "Nach einem anderem Ort für Ihr Musikverzeichnis durchsuchen (aktueller Ort: %1%)",
-  no_font_specified = "Kein Schriftverzeichnis festgelegt!", --"Es wurde kein Schriftverzeichnis festgelegt!",
-  not_specified = "Kein Verzeichnis festgelegt!", -- "Es wurde kein Verzeichnis festgelegt!",
-  default = "Standard", --"Standardort",
+  no_font_specified = "Kein Schriftverzeichnis festgelegt!",
+  not_specified = "Kein Verzeichnis festgelegt!",
+  default = "Standard",
   reset_to_default = "Das Verzeichnis zur Standardeinstellung zurücksetzen",
   --
   back = "Dieses Menü schließen und zum Einstellungsmenü zurückkehren",
@@ -572,24 +573,24 @@ tooltip.folders_window = {
 
 hotkey_window = {
   caption_main = "Tastenkürzel-Zuweisungen",
-  caption_panels = "Panel-Tasten",
+  caption_panels = "Dialog-Tasten",
   button_accept = "Übernehmen",
-  button_defaults = "Einstellungen zurücksetzen", --was "Zu Standard-Einstellungen zurücksetzen",
+  button_defaults = "Einstellungen zurücksetzen",
   button_cancel = "Abbrechen",
   button_back = "Zurück",
-  button_toggleKeys = "Toggle-Tasten", --FIXME
+  button_toggleKeys = "Umschalt-Tasten",
   button_gameSpeedKeys = "Spielgeschwindigkeits-Tasten",
   button_recallPosKeys = "Positions-Tasten",
   panel_globalKeys = "Globale Tasten",
   panel_generalInGameKeys = "Generelle Tasten",
-  panel_scrollKeys = "Scroll-Tasten",
+  panel_scrollKeys = "Scrolling-Tasten",
   panel_zoomKeys = "Zoom-Tasten",
   panel_gameSpeedKeys = "Spielgeschwindigkeits-Tasten",
   panel_toggleKeys = "Umschalt-Tasten",
   panel_debugKeys = "Debug-Tasten",
   panel_storePosKeys = "Position merken",
   panel_recallPosKeys = "Position abrufen",
-  panel_altPanelKeys = "Alternative Panel-Tasten",
+  panel_altPanelKeys = "Alternative Dialog-Tasten",
   global_confirm = "Bestätigen",
   global_confirm_alt = "Bestätigen (alternativ)",
   global_cancel = "Abbrechen",
@@ -599,7 +600,7 @@ hotkey_window = {
   global_resetApp = "App zurücksetzen",
   global_releaseMouse = "Mauszeiger freigeben",
   global_connectDebugger = "Debugger",
-  global_showLuaConsole = "Lua Konsole",
+  global_showLuaConsole = "Lua-Konsole",
   global_runDebugScript = "Skript debuggen",
   global_screenshot = "Screenshot",
   global_stop_movie_alt = "Film abbrechen",
@@ -647,7 +648,7 @@ hotkey_window = {
   ingame_rotateobject = "Gegenstand rotieren",
   ingame_quickSave = "Schnellspeichern",
   ingame_quickLoad = "Schnellladen",
-  ingame_restartLevel = "Level neustarten",
+  ingame_restartLevel = "Level zurücksetzen",
   ingame_quitLevel = "Level verlassen",
   ingame_setTransparent = "Transparenz",
   ingame_toggleAnnouncements = "Durchsagen",
@@ -655,8 +656,8 @@ hotkey_window = {
   ingame_toggleMusic = "Musik",
   ingame_toggleAdvisor = "Ratgeber",
   ingame_toggleInfo = "Info",
-  ingame_poopLog = "Protokoll Dump",
-  ingame_poopStrings = "Zeichenketten Strings",
+  ingame_poopLog = "Protokoll-Dump", -- Duden says it's okay
+  ingame_poopStrings = "Übersetzungs-Dump",
   ingame_patient_gohome = "Nach Hause schicken",
   ingame_storePosition_1 = "1",
   ingame_storePosition_2 = "2",
@@ -683,15 +684,15 @@ hotkey_window = {
 tooltip.hotkey_window = {
   button_accept = "Tastenkürzel-Zuweisungen übernehmen und speichern",
   button_defaults = "Alle Tastenkürzel auf Standard zurücksetzen",
-  button_cancel = "Zuweisung abbrechen und zum Options-Menü zurückkehren",
-  caption_panels = "Fenster zur Zuweisung von Panel-Tasten öffnen",
+  button_cancel = "Zuweisung abbrechen und zum Optionsmenü zurückkehren",
+  caption_panels = "Fenster zur Zuweisung von Dialog-Tasten öffnen",
   button_gameSpeedKeys = "Fenster zur Zuweisung von Tasten zur Steuerung der Spielgeschwindigkeit öffnen",
   button_recallPosKeys = "Fenster zur Zuweisung von Tasten zum Merken und Abrufen der Kameraposition öffnen",
   button_back_02 = "Zurück zum generellen Tastenkürzel-Fenster. Geänderte Tastenkürzel aus diesem Fenster können dort akzeptiert werden",
 }
 
 font_location_window = {
-  caption = "Schrift wählen (%1%)", -- too long for containing box, was "Schrift auswählen (%1%)"
+  caption = "Schrift wählen (%1%)",
 }
 
 handyman_window = {
@@ -712,7 +713,7 @@ new_game_window = {
   easy = "AIP (Einfach)",
   medium = "Arzt (Mittel)",
   hard = "Berater (Schwer)",
-  tutorial = "Einführung",
+  tutorial = "Tutorial", -- Duden says it's okay
   start = "Start",
   cancel = "Abbrechen",
 }
@@ -781,14 +782,14 @@ information = {
   cannot_restart = "Leider wurde dieses eigene Level vor Implementierung des Neustart-Features gespeichert.",
   very_old_save = "Seit dieses Level gestartet wurde, wurden einige Änderungen am Spiel durchgeführt. Sie sollten ein neues Spiel starten, damit alle Änderungen wirksam werden.",
   level_lost = {
-    "So ein Mist! Sie haben das Level leider nicht geschafft. Vielleicht klappts ja beim nächsten Mal!",
+    "So ein Mist! Sie haben das Level leider nicht geschafft. Vielleicht klappt's ja beim nächsten Mal!",
     "Der Grund, warum Sie verloren haben:",
     reputation = "Ihr Ruf ist unter %d gesunken.",
     balance = "Ihr Kontostand ist unter %d gesunken.",
     percentage_killed = "Sie haben mehr als %d Prozent der Patienten getötet.",
-    cheat = "Sie haben das selbst so gewollt. Oder haben Sie etwa auf den falschen Knopf gedrückt? Sie können also nichtmal richtig cheaten. Traurig.",
+    cheat = "Sie haben das selbst so gewollt. Oder haben Sie etwa auf den falschen Knopf gedrückt? Sie können also nicht mal richtig schummeln. Traurig.",
   },
-  cheat_not_possible = "Dieser Cheat ist in diesem Level nicht verfügbar. Sogar beim Cheaten versagen Sie, wie armselig!",
+  cheat_not_possible = "Dieser Cheat ist in diesem Level nicht verfügbar. Sogar beim Schummeln versagen Sie, wie armselig!",
 }
 
 tooltip.information = {
@@ -804,14 +805,14 @@ totd_window = {
     "Der Fähigkeiten-Level eines Arztes beeinflusst die Qualität und Geschwindigkeit seiner Diagnosen deutlich. Ein geübter Arzt in der Allgemeinmedizin erspart so manchen zusätzlichen Diagnoseraum.",
     "AIPler und Ärzte können ihre Fähigkeiten verbessern, indem sie in der Ausbildung von Beratern lernen. Wenn der Berater eine zusätzliche Qualifikation (Chirurg, Psychiater oder Forscher) besitzt, gibt er dieses Wissen ebenfalls weiter.",
     "Haben Sie schon versucht, die europäische Notruf-Nummer (112) in das Faxgerät einzugeben? Schalten Sie vorher den Sound an!",
-    "Im Options-Menü hier im Hauptmenü oder im laufenden Spiel können Einstellungen wie die Auflösung oder die Sprache geändert werden.",
+    "Im Optionsmenü hier im Hauptmenü oder im laufenden Spiel können Einstellungen wie die Auflösung oder die Sprache geändert werden.",
     "Haben Sie eine andere Sprache als Englisch ausgewählt, aber es erscheinen englische Texte? Helfen Sie uns, die Übersetzung zu vervollständigen, indem Sie fehlende Texte in Ihre Sprache übersetzten!",
-    "Das CorsixTH-Team sucht Verstärkung! Haben Sie Interesse, beim Programmieren, Übersetzen oder der Grafikerstellung zu helfen? Kontaktieren Sie uns in unserem Forum, der Mailing-Liste oder unserem IRC-Channel (#Corsix-TH auf Freenode).",
+    "Das CorsixTH-Team sucht Verstärkung! Haben Sie Interesse, beim Programmieren, Übersetzen oder der Grafikerstellung zu helfen? Kontaktieren Sie uns in unserem Forum, der Mailing-Liste oder unserem IRC-Kanal (#Corsix-TH auf Freenode).",
     "Wenn Sie einen Bug finden, bitte melden Sie ihn in unserem Bug-Tracker: th-issues.corsix.org",
     "In jedem Level müssen bestimmte Voraussetzungen erfüllt werden, bevor man zum Nächsten wechseln kann. Im Status-Fenster können Sie Ihren Fortschritt bezüglich der Levelziele sehen.",
     "Um existierende Räume zu bearbeiten oder gar zu löschen, kann man den Raum-Bearbeiten-Knopf in der unteren Werkzeugleiste verwenden.",
     "Um aus einer Horde wartender Patienten diejenigen zu finden, die für einen bestimmten Raum warten, einfach mit dem Mauszeiger über den entsprechenden Raum fahren.",
-    "Klicken Sie auf die Tür eines Raumes, um seine Warteschlange zu sehen. Hier kann man nützliche Feineinstellungen vornehmen, wie etwa die Warteschlange umzusortieren oder einen Patienten zu einem anderen Raum zu senden.",
+    "Klicken Sie auf die Tür eines Raumes, um seine Warteschlange zu sehen. Hier kann man nützliche Feineinstellungen vornehmen, wie etwa die Warteschlange umsortieren oder einen Patienten zu einem anderen Raum senden.",
     "Unglückliches Personal verlangt öfter Gehaltserhöhungen. Gestalten Sie die Arbeitsumgebung Ihres Personals möglichst angenehm, um dies zu verhindern.",
     "Patienten werden beim Warten durstig, besonders wenn die Heizungen aufgedreht sind! Strategisch platzierte Getränkeautomaten sind eine nette zusätzliche Einnahmequelle.",
     "Sie können die Diagnose für einen Patienten vorzeitig abbrechen und ihn direkt zur Behandlung schicken, falls seine Krankheit zuvor schon entdeckt wurde. Allerdings erhöht sich dadurch das Risiko, dass das Heilmittel falsch ist und der Patient stirbt.",
