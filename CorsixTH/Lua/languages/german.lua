@@ -149,12 +149,12 @@ casebook = {
 }
 
 -- only drug_improved_1 is in OVERRIDE section of english.lua
--- ..._1 is used to prevent 'the the squits'
--- FIXME check how this behaves in the translated version
+-- ..._1 is used to prevent 'the the squits' AKA orig [4,30], which is simply "Durchfall"
+-- so the sane thing is to duplicate drug_improved
 adviser = {
   research = {
     drug_improved = "Die Effektivität Ihres %s-Medikaments wurde von Ihrer Forschungsabteilung verbessert.",
-    drug_improved_1 = "Das Medikament %s wurde von Ihrer Forschungsabteilung verbessert.",
+    drug_improved_1 = "Die Effektivität Ihres %s-Medikaments wurde von Ihrer Forschungsabteilung verbessert.",
   },
 }
 
