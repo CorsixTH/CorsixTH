@@ -370,7 +370,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     {
       id = "zoom",
       title = _S.hotkey_window.panel_zoomKeys,
-      tooltip = _S.hotkey_window.panel_generalInGameKeys,
+      tooltip = _S.hotkey_window.panel_zoomKeys,
       sections = {{
           title = _S.hotkey_window.panel_zoomKeys,
           keys = {
