@@ -321,6 +321,7 @@ dynamic_info.staff.actions.heading_for = "Geht zu: %s"
 dynamic_info.staff.actions.fired = "Gefeuert"
 dynamic_info.staff.actions.vaccine = "Impft einen Patienten"
 dynamic_info.patient.actions.epidemic_vaccinated = "Ich bin nicht mehr ansteckend"
+dynamic_info.object.strength_extra_info = "Stärke %d (Regenerierbar zu %d)" -- literal translation would be "erweiterbar"
 
 progress_report.free_build = "FREIES SPIEL"
 
@@ -346,7 +347,7 @@ fax = {
 }
 
 letter = {
-  dear_player = "Hallo %s",
+  dear_player = "Hallo %s\n",
   custom_level_completed = "Gut gemacht! Sie haben alle Ziele dieses eigenen Levels erreicht!",
   return_to_main_menu = "Möchten Sie ins Hauptmenü zurückkehren, oder weiterspielen?",
   campaign_level_completed = "Gute Arbeit! Sie haben das Level geschafft. Aber es ist noch nicht vorbei!\n Möchten Sie eine Position im %s Krankenhaus?",
