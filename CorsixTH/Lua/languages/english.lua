@@ -316,9 +316,12 @@ install = {
   cancel = "Cancel",
 }
 
-misc.not_yet_implemented = "(not yet implemented)"
-misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map. It might be that you need to build a reception desk and hire a receptionist"
-misc.cant_treat_emergency = "Your hospital cannot treat this emergency because its disease has not been discovered. Feel free to try again."
+misc = {
+  not_yet_implemented = "(not yet implemented)",
+  no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map. It might be that you need to build a reception desk and hire a receptionist",
+  cant_treat_emergency = "Your hospital cannot treat this emergency because its disease has not been discovered. Feel free to try again.",
+  epidemic_no_icon_to_toggle = "Unable to show/hide infected icons - no epidemics in progress that are not revealed",
+}
 
 main_menu = {
   new_game = "Campaign",
@@ -816,7 +819,7 @@ cheats_window = {
     vip = "Create VIP",
     earthquake = "Create Earthquake",
     epidemic = "Spawn contagious patient",
-    toggle_infected = "Toggle infected icons",
+    show_infected = "Show or hide infected icons",
     create_patient = "Create Patient",
     end_month = "End of Month",
     end_year = "End of Year",
@@ -839,7 +842,7 @@ tooltip.cheats_window = {
     vip = "Creates a VIP",
     earthquake = "Creates an earthquake",
     epidemic = "Creates a contagious patient who may cause an epidemic to happen",
-    toggle_infected = "Toggle the infected icons for the active, discovered epidemic",
+    show_infected = "Show/hide the infected icons for the active, discovered epidemic",
     create_patient = "Creates a Patient at the map border",
     end_month = "Jumps to the end of the month",
     end_year = "Jumps to the end of the year",

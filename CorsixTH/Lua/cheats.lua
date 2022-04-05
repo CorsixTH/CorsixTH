@@ -37,8 +37,8 @@ function Cheats:Cheats(hospital)
     {name = "money",          func = self.cheatMoney},
     {name = "all_research",   func = self.cheatResearch},
     {name = "emergency",      func = self.cheatEmergency},
+    {name = "show_infected",  func = self.cheatShowInfected},
     {name = "epidemic",       func = self.cheatEpidemic},
-    {name = "toggle_infected", func = self.cheatToggleInfected},
     {name = "vip",            func = self.cheatVip},
     {name = "earthquake",     func = self.cheatEarthquake},
     {name = "create_patient", func = self.cheatPatient},
@@ -102,16 +102,11 @@ function Cheats:cheatEmergency()
   end
 end
 
---[[ Creates a new contagious patient in the hospital - potentially an epidemic]]
-function Cheats:cheatEpidemic()
-  self.hospital:spawnContagiousPatient()
-end
-
---[[ Before an epidemic has been revealed toggle the infected icons
-to easily distinguish the infected patients -- will toggle icons
+--[[ Before an epidemic has been revealed, show/hide the infected mood icons
+to easily distinguish the infected patients. This will show/hide icons
 for ALL future epidemics you cannot distinguish between epidemics
 by disease ]]--
-function Cheats:cheatToggleInfected()
+function Cheats:cheatShowInfected()
   local hosp = self.hospital
   if hosp.future_epidemics_pool and #hosp.future_epidemics_pool > 0 then
     for _, future_epidemic in ipairs(hosp.future_epidemics_pool) do
@@ -123,8 +118,13 @@ function Cheats:cheatToggleInfected()
       end
     end
   else
-    self.hospital.world:gameLog("Unable to toggle icons - no epidemics in progress that are not revealed")
+    return false, _S.misc.epidemic_no_icon_to_toggle
   end
+end
+
+--[[ Creates a new contagious patient in the hospital - potentially an epidemic]]
+function Cheats:cheatEpidemic()
+  self.hospital:spawnContagiousPatient()
 end
 
 function Cheats:cheatVip()

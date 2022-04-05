@@ -1168,7 +1168,8 @@ end
  see @Hospital:determineIfContagious() to see how epidemics are typically started]]
 function Hospital:spawnContagiousPatient()
   --[[ Gets the available non-visual disease in the current world
-    @return non_visuals (table) table of available non-visual diseases]]
+    @return non_visuals (table) table of available non-visual diseases or
+      false if the patient cannot be spawned]]
   local function get_available_contagious_diseases()
     local contagious = {}
     for _, disease in ipairs(self.world.available_diseases) do
@@ -1192,9 +1193,11 @@ function Hospital:spawnContagiousPatient()
       self:addToEpidemic(patient)
     else
       print("Cannot create epidemic - no contagious diseases available")
+      return false
     end
   else
     print("Cannot create epidemic - no staffed reception desk")
+    return false
   end
 end
 
