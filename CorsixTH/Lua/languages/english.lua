@@ -268,6 +268,7 @@ dynamic_info.staff.actions.heading_for = "Heading for %s"
 dynamic_info.staff.actions.fired = "Fired"
 dynamic_info.staff.actions.vaccine = "Vaccinating a patient"
 dynamic_info.patient.actions.epidemic_vaccinated = "I am no longer contagious"
+dynamic_info.object.strength_extra_info = "Strength %d (Upgradeable to %d)"
 
 progress_report.free_build = "FREE BUILD"
 
