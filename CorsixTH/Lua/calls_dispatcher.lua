@@ -539,7 +539,7 @@ function CallsDispatcher.sendStaffToRoom(room, staff)
     staff:setNextAction(room:createEnterAction(staff))
     CallsDispatcher.queueCallCheckpointAction(staff, CallsDispatcher.staffActionInterruptHandler)
   end
-  staff:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
+  staff:updateDynamicInfo(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
 end
 
 function CallsDispatcher.staffActionInterruptHandler(action, humanoid, high_priority)

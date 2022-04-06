@@ -42,7 +42,7 @@ local function seek_staffroom_action_start(action, humanoid)
   if room then
     local task = room:createEnterAction(humanoid):setMustHappen(true):setIsLeaving(true)
     humanoid:queueAction(task, 0)
-    humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
+    humanoid:updateDynamicInfo(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
   else
     -- This should happen only in rare cases, e.g. if the target staff room was removed while heading there and none other exists
     print("No staff room found in seek_staffroom action")

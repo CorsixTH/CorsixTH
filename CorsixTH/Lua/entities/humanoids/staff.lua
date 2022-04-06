@@ -250,7 +250,7 @@ function Staff:fire()
       .. self.profile:getFullName())
   self.world.ui:playSound("sack.wav")
   self:setMood("exit", "activate")
-  self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
+  self:updateDynamicInfo(_S.dynamic_info.staff.actions.fired)
   self.fired = true
   self.going_home = true
   self.hospital:changeReputation("kicked")
@@ -585,19 +585,34 @@ function Staff:increaseWage(amount)
   end
 end
 
+--! Orphaned function for active action_queue items that rely on this existing.
+--! Sets dynamic info text before the dynamic info update
+--!param text (string) the string to append
 function Staff:setDynamicInfoText(text)
   self.dynamic_text = text
   self:updateDynamicInfo()
 end
 
-function Staff:updateDynamicInfo()
+--! Updates a staff member's dynamic info
+--!param dynamic_text (string) The string to append
+function Staff:updateDynamicInfo(dynamic_text)
+  -- Retain the old text if only an update is wanted, i.e. no new string is supplied.
+  if dynamic_text == nil then
+    if self.dynamic_text then
+      dynamic_text = self.dynamic_text
+    else
+      dynamic_text = ""
+    end
+  else
+    self.dynamic_text = dynamic_text
+  end
   local fatigue_text = _S.dynamic_info.staff.tiredness
   if not self.attributes["fatigue"] then
     fatigue_text = nil
   end
   self:setDynamicInfo('text', {
     self.profile.profession,
-    self.dynamic_text and self.dynamic_text or "",
+    dynamic_text,
     fatigue_text,
   })
   self:setDynamicInfo('progress', self.attributes["fatigue"])
@@ -671,6 +686,7 @@ function Staff:afterLoad(old, new)
     return
   end
 
+  self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
 end
 

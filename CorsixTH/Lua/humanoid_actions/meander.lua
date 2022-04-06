@@ -50,7 +50,7 @@ local function meander_action_start(action, humanoid)
       if last_room and last_room.is_active and
           last_room:testStaffCriteria(last_room:getMaximumStaffCriteria(), humanoid) then
         humanoid:queueAction(last_room:createEnterAction(humanoid))
-        humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for
+        humanoid:updateDynamicInfo(_S.dynamic_info.staff.actions.heading_for
             :format(last_room.room_info.name))
         humanoid:finishAction()
         return
@@ -62,7 +62,7 @@ local function meander_action_start(action, humanoid)
   -- Just wandering around
   if humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Nurse" then
     if not room then
-      humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.wandering)
+      humanoid:updateDynamicInfo(_S.dynamic_info.staff.actions.wandering)
     end
   end
   local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,

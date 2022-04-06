@@ -934,6 +934,8 @@ function Patient:addToTreatmentHistory(room)
   end
 end
 
+--! Updates a patient's dynamic info
+--!param action_string (string) The text to be appended
 function Patient:updateDynamicInfo(action_string)
   -- Retain the old text if only an update is wanted, i.e. no new string is supplied.
   if action_string == nil then
@@ -1107,6 +1109,7 @@ function Patient:afterLoad(old, new)
       self.th:setPatientEffect(AnimationEffect.None)
     end
   end
+  self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
 end
 

@@ -54,6 +54,7 @@ function Door:getRoom()
   return self.room
 end
 
+--! Updates a door's dynamic info
 function Door:updateDynamicInfo()
   if self.room and self.queue then
     if not self.room:hasQueueDialog() then
@@ -191,5 +192,6 @@ function Door:afterLoad(old, new)
       map:setCellFlags(self.tile_x, self.tile_y - 1, flags_to_set)
     end
   end
+  self:updateDynamicInfo()
 end
 return object

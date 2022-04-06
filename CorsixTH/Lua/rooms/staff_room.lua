@@ -49,7 +49,7 @@ end
 function StaffRoom:onHumanoidEnter(humanoid)
   self.humanoids[humanoid] = true
   self:tryAdvanceQueue()
-  humanoid:setDynamicInfoText("")
+  humanoid:updateDynamicInfo("")
   if class.is(humanoid, Staff) then
     -- Receptionists cannot enter, so we do not have to worry about them
     -- If it is a handyman and he is here to do a job, let him pass
