@@ -2439,3 +2439,7 @@ end
 --! Makes the fax which may spawn a VIP
 function Hospital:createVip()
 end
+
+--! Remove any message (fax) relating to this humanoid
+function Hospital:removeMessage(humanoid)
+end

@@ -193,9 +193,7 @@ local function action_seek_room_start(action, humanoid)
     local room = action_seek_room_find_room(action, humanoid)
     -- if we have the room but not the staff we shouldn't seek out the room either
     if room then
-      if humanoid.message then
-        TheApp.ui.bottom_panel:removeMessage(humanoid)
-      end
+      humanoid.hospital:removeMessage(humanoid)
       action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
       return
     end
@@ -207,9 +205,7 @@ local function action_seek_room_start(action, humanoid)
     local room = action_seek_room_find_room(action, humanoid)
     -- if we have the room but not the staff we shouldn't seek out the room either
     if room and (not req or not action.treatment_room) then
-      if humanoid.message then
-        TheApp.ui.bottom_panel:removeMessage(humanoid)
-      end
+      humanoid.hospital:removeMessage(humanoid)
       action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
       return
     end
@@ -243,7 +239,7 @@ local function action_seek_room_start(action, humanoid)
       if not staff.fired and not room_req then
         local room = action_seek_room_find_room(action, humanoid)
         if room then
-          TheApp.ui.bottom_panel:removeMessage(humanoid)
+          humanoid.hospital:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
           humanoid:unregisterRoomRemoveCallback(remove_callback)
           humanoid:unregisterStaffChangeCallback(staff_change_callback)
@@ -265,7 +261,7 @@ local function action_seek_room_start(action, humanoid)
         -- So the room that we're going to is not actually the room we waited for to be built.
         -- Example: Will go to ward, but is waiting for the operating theatre.
         -- Clean up and start over to find the room we actually want to go to.
-        TheApp.ui.bottom_panel:removeMessage(humanoid)
+        humanoid.hospital:removeMessage(humanoid)
         humanoid:unregisterRoomBuildCallback(build_callback)
         humanoid:unregisterRoomRemoveCallback(remove_callback)
         humanoid:unregisterStaffChangeCallback(staff_change_callback)
@@ -289,7 +285,7 @@ local function action_seek_room_start(action, humanoid)
         -- get required staff
         if not humanoid.diagnosed or (not room_req or not action.treatment_room) then
           action_seek_room_goto_room(rm, humanoid, action.diagnosis_room)
-          TheApp.ui.bottom_panel:removeMessage(humanoid)
+          humanoid.hospital:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
           humanoid:unregisterRoomRemoveCallback(remove_callback)
           humanoid:unregisterStaffChangeCallback(staff_change_callback)
