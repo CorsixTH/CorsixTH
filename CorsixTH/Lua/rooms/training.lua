@@ -206,6 +206,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
         humanoid:queueAction(UseObjectAction(obj))
         humanoid:queueAction(MeanderAction())
       else
+        self.hospital:giveAdvice({_A.staff_place_advice.not_enough_lecture_chairs})
         humanoid:setNextAction(self:createLeaveAction())
         humanoid:queueAction(MeanderAction())
         humanoid.last_room = nil
