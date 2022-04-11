@@ -178,7 +178,7 @@ function ResearchRoom:commandEnteringPatient(patient)
     end
     if autopsy_discovered then
       hosp:changeReputation("autopsy_discovered")
-      hosp.world.ui.adviser:say(_A.research.autopsy_discovered_rep_loss)
+      hosp:giveAdvice({_A.research.autopsy_discovered_rep_loss})
     end
     if patient.hospital then
       hosp:removePatient(patient)

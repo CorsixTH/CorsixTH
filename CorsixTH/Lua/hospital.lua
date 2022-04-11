@@ -834,9 +834,9 @@ function Hospital:_fixBoiler()
     -- It's fixed, restore previous settings.
     heat_vars.radiator_heat = heat_vars.saved_radiator_heat
     heat_vars.heating_broke = false
-    if num_radiators > 0 and self:isPlayerHospital() then
+    if num_radiators > 0 then
       -- Only tell the player about fix if there is at least one radiator.
-      self.world.ui.adviser:say(_A.boiler_issue.resolved)
+      self.hospital:giveAdvice({ _A.boiler_issue.resolved })
     end
   end
 end
