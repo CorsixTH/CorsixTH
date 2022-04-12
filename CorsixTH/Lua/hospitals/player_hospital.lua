@@ -675,6 +675,20 @@ function PlayerHospital:makeEmergencyEndFax(rescued_patients, total, max_bonus, 
   self.world.ui.bottom_panel:queueMessage("report", message, nil, Date.hoursPerDay() * 25, 1)
 end
 
+--! Makes the fax which may spawn a VIP
+function PlayerHospital:createVip()
+  local vipName = _S.vip_names[math.random(1,10)]
+  local message = {
+    {text = _S.fax.vip_visit_query.vip_name:format(vipName)},
+    choices = {
+      {text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip", additionalInfo = {name=vipName}},
+      {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip", additionalInfo = {name=vipName}}
+    },
+  }
+  -- Automatically refuse after 20 days
+  self.world.ui.bottom_panel:queueMessage("personality", message, nil, Date.hoursPerDay() * 20, 2)
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)

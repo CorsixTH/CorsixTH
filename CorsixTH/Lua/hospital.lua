@@ -1127,16 +1127,8 @@ function Hospital:checkEmergencyOver()
   end
 end
 
--- Creates VIP and sends a FAX to query the user.
 function Hospital:createVip()
-  local vipName =  _S.vip_names[math.random(1,10)]
-  local message = {
-    {text = _S.fax.vip_visit_query.vip_name:format(vipName)},
-    choices = {{text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip", additionalInfo = {name=vipName}},
-               {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip", additionalInfo = {name=vipName}}}
-  }
-  -- auto-refuse after 20 days
-  self.world.ui.bottom_panel:queueMessage("personality", message, nil, 24*20, 2)
+  -- Nothing to do, override in a derived class.
 end
 
 --[[ Creates a new epidemic by creating a new contagious patient with
