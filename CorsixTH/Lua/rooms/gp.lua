@@ -161,8 +161,6 @@ function GPRoom:dealtWithPatient(patient)
   if self.staff_member then
     self:setStaffMembersAttribute("dealing_with_patient", false)
   end
-  -- Maybe the staff member can go somewhere else
-  self:findWorkForStaff()
 end
 
 function GPRoom:sendPatientToNextDiagnosisRoom(patient)

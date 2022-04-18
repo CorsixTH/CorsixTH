@@ -518,6 +518,12 @@ function PlayerHospital:onEndDay()
     end
   end
 
+  for _, staff in ipairs(self.staff) do
+    if staff:isIdle() then
+      self.world.dispatcher:answerCall(staff)
+    end
+  end
+
   Hospital.onEndDay(self)
 end
 
