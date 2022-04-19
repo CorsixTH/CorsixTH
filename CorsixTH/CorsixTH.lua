@@ -11,8 +11,8 @@ end
 
 -- Set a large enough cstacklimit to load complex saves in stack based
 -- versions of lua, such as 5.4.[01]
-if debug.setcstacklimit then
-  debug.setcstacklimit(30000)
+if debug.setcstacklimit then -- luacheck: ignore 143 luacheck is missing 5.4 debug functions
+  debug.setcstacklimit(30000) -- luacheck: ignore 143
 end
 
 -- Parse script parameters:

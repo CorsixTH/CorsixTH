@@ -219,4 +219,3 @@ add_ignore("CorsixTH/Lua/world.lua", "112")
 add_ignore("CorsixTH/Lua/world.lua", "212")
 add_ignore("CorsixTH/Luatest/non_strict.lua", "212")
 add_ignore("CorsixTH/Luatest/spec/utility_spec.lua", "121")
-add_ignore("CorsixTH/CorsixTH.lua", "143") -- luacheck is missing 5.4 debug functions
