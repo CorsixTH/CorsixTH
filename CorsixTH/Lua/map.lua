@@ -660,7 +660,7 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
         break
       elseif screenY > -32 then
         repeat
-          if screenX < -32 then
+          if screenX < -32 then -- luacheck: ignore 542
           elseif screenX < sw + 32 then
             local xy = y * self.width + x
             local xpos = dx + screenX - 32

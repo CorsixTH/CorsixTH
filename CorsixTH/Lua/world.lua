@@ -1840,7 +1840,7 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
     object = obj
     ox = x
     oy = y
-    if which == "far" then
+    if which == "far" then -- luacheck: ignore 542
       -- just take the last found object, so don't ever abort
     elseif which == "near" then
       -- abort at each item with 50% probability

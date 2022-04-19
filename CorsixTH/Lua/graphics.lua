@@ -430,7 +430,7 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
 
   local use_bitmap_font = true
   -- Force bitmap font for the moneybar (Font05V)
-  if not sprite_table:isVisible(46) or load_font == "Font05V" then -- uppercase M
+  if not sprite_table:isVisible(46) or load_font == "Font05V" then -- luacheck: ignore 542
     -- The font doesn't contain an uppercase M, so (in all likelihood) is used
     -- for drawing special symbols rather than text, so the original bitmap
     -- font should be used.

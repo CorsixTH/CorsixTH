@@ -138,13 +138,10 @@ add_ignore("CorsixTH/Lua/rooms/operating_theatre.lua", "wait_for_ready")
 
 -- W111: setting non-standard global variable XYZ
 -- W113: accessing undefined variable XYZ
--- W121: setting read-only global variable XYZ
 -- W122: mutating read-only global variable XYZ
--- W211: unused variable XYZ
 -- W212: unused argument XYZ
 -- W231: variable XYZ is never accessed
--- W542: empty if branch
-add_ignore("CorsixTH/CorsixTH.lua", "121")
+
 add_ignore("CorsixTH/Lua/app.lua", "122")
 add_ignore("CorsixTH/Lua/app.lua", "212")
 add_ignore("CorsixTH/Lua/calls_dispatcher.lua", "212")
@@ -179,7 +176,6 @@ add_ignore("CorsixTH/Lua/dialogs/staff_rise.lua", "542")
 add_ignore("CorsixTH/Lua/entities/machine.lua", "212")
 add_ignore("CorsixTH/Lua/entities/humanoids/grim_reaper.lua", "212")
 add_ignore("CorsixTH/Lua/entities/humanoids/patient.lua", "212")
-add_ignore("CorsixTH/Lua/entities/humanoids/patient.lua", "542")
 add_ignore("CorsixTH/Lua/filesystem.lua", "212")
 add_ignore("CorsixTH/Lua/graphics.lua", "542")
 add_ignore("CorsixTH/Lua/humanoid_action.lua", "212")
@@ -195,11 +191,9 @@ add_ignore("CorsixTH/Lua/humanoid_actions/vaccinate.lua", "212")
 add_ignore("CorsixTH/Lua/humanoid_actions/vip_go_to_next_room.lua", "212")
 add_ignore("CorsixTH/Lua/map.lua", "212")
 add_ignore("CorsixTH/Lua/map.lua", "542")
-add_ignore("CorsixTH/Lua/movie_player.lua", "542")
 add_ignore("CorsixTH/Lua/objects/analyser.lua", "212")
 add_ignore("CorsixTH/Lua/objects/door.lua", "212")
 add_ignore("CorsixTH/Lua/objects/litter.lua", "212")
-add_ignore("CorsixTH/Lua/objects/machines/operating_table.lua", "542")
 add_ignore("CorsixTH/Lua/persistance.lua", "231") -- th_getupvalue assignments in lua5.2/5.3 code
 add_ignore("CorsixTH/Lua/research_department.lua", "212")
 add_ignore("CorsixTH/Lua/room.lua", "212")
@@ -209,7 +203,6 @@ add_ignore("CorsixTH/Lua/rooms/psych.lua", "212")
 add_ignore("CorsixTH/Lua/rooms/research.lua", "212")
 add_ignore("CorsixTH/Lua/rooms/scanner_room.lua", "212")
 add_ignore("CorsixTH/Lua/rooms/staff_room.lua", "212")
-add_ignore("CorsixTH/Lua/rooms/staff_room.lua", "542")
 add_ignore("CorsixTH/Lua/rooms/ward.lua", "111")
 add_ignore("CorsixTH/Lua/rooms/ward.lua", "113")
 add_ignore("CorsixTH/Lua/rooms/ward.lua", "211")
@@ -223,11 +216,9 @@ add_ignore("CorsixTH/Lua/ui.lua", "212")
 add_ignore("CorsixTH/Lua/utility.lua", "111") -- defining hasBit and bitOr
 add_ignore("CorsixTH/Lua/utility.lua", "121")
 add_ignore("CorsixTH/Lua/window.lua", "212")
-add_ignore("CorsixTH/Lua/window.lua", "542")
 add_ignore("CorsixTH/Lua/world.lua", "111")
 add_ignore("CorsixTH/Lua/world.lua", "112")
 add_ignore("CorsixTH/Lua/world.lua", "212")
-add_ignore("CorsixTH/Lua/world.lua", "542")
 add_ignore("CorsixTH/Luatest/non_strict.lua", "212")
 add_ignore("CorsixTH/Luatest/spec/utility_spec.lua", "121")
 add_ignore("CorsixTH/CorsixTH.lua", "143") -- luacheck is missing 5.4 debug functions

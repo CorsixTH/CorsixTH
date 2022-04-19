@@ -462,7 +462,7 @@ function UIPlaceObjects:onMouseUp(button, x, y)
     repaint = true
   elseif button == "left" then
     if #self.objects > 0 then
-      if 0 <= x and x < self.width and 0 <= y and y < self.height then
+      if 0 <= x and x < self.width and 0 <= y and y < self.height then -- luacheck: ignore 542
         -- Click within window - do nothing
       elseif self.object_cell_x and self.object_cell_y and self.object_blueprint_good then
         self:placeObject()
