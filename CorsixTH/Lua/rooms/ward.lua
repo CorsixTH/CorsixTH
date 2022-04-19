@@ -162,7 +162,7 @@ function WardRoom:commandEnteringPatient(patient)
     if length <= 0 then
       action.prolonged_usage = false
     end
-    length = length - 1
+    length = length - 1 -- luacheck: ignore 111
   end
   -- New callback
   local --[[persistable:ward_loop_callback2]] function loop_callback(action)
