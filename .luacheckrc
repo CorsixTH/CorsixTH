@@ -140,7 +140,6 @@ add_ignore("CorsixTH/Lua/rooms/operating_theatre.lua", "wait_for_ready")
 -- W113: accessing undefined variable XYZ
 -- W122: mutating read-only global variable XYZ
 -- W212: unused argument XYZ
--- W231: variable XYZ is never accessed
 
 add_ignore("CorsixTH/Lua/app.lua", "122")
 add_ignore("CorsixTH/Lua/app.lua", "212")
@@ -194,7 +193,6 @@ add_ignore("CorsixTH/Lua/map.lua", "542")
 add_ignore("CorsixTH/Lua/objects/analyser.lua", "212")
 add_ignore("CorsixTH/Lua/objects/door.lua", "212")
 add_ignore("CorsixTH/Lua/objects/litter.lua", "212")
-add_ignore("CorsixTH/Lua/persistance.lua", "231") -- th_getupvalue assignments in lua5.2/5.3 code
 add_ignore("CorsixTH/Lua/research_department.lua", "212")
 add_ignore("CorsixTH/Lua/room.lua", "212")
 add_ignore("CorsixTH/Lua/rooms/cardiogram.lua", "212")
