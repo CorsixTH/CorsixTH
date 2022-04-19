@@ -212,10 +212,8 @@ add_ignore("CorsixTH/Lua/strings.lua", "122")
 add_ignore("CorsixTH/Lua/ui.lua", "111") -- _ is set in debug code
 add_ignore("CorsixTH/Lua/ui.lua", "212")
 add_ignore("CorsixTH/Lua/utility.lua", "111") -- defining hasBit and bitOr
-add_ignore("CorsixTH/Lua/utility.lua", "121")
 add_ignore("CorsixTH/Lua/window.lua", "212")
 add_ignore("CorsixTH/Lua/world.lua", "111")
 add_ignore("CorsixTH/Lua/world.lua", "112")
 add_ignore("CorsixTH/Lua/world.lua", "212")
 add_ignore("CorsixTH/Luatest/non_strict.lua", "212")
-add_ignore("CorsixTH/Luatest/spec/utility_spec.lua", "121")

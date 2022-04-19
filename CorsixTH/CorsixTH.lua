@@ -90,7 +90,7 @@ end
 if _VERSION ~= "Lua 5.1" then
   if _VERSION == "Lua 5.2" or _VERSION == "Lua 5.3" or _VERSION == "Lua 5.4" then
     -- Compatibility: Keep the global unpack function
-    unpack = table.unpack
+    unpack = table.unpack -- luacheck: ignore 121
     -- Compatibility: Provide a replacement for deprecated ipairs()
     -- NB: It might be wiser to migrate away from ipairs entirely, but the
     -- following works as an immediate band-aid
@@ -103,7 +103,7 @@ if _VERSION ~= "Lua 5.1" then
           return i, v
         end
       end
-      function ipairs(t)
+      function ipairs(t) -- luacheck: ignore 121
         if type(t) ~= "table" then
           error("table expected, got " .. type(t))
         end
@@ -120,8 +120,8 @@ end
 
 -- Enable strict mode
 corsixth.require("strict")
-require = destrict(require)
-dofile = destrict(dofile)
+require = destrict(require) -- luacheck: ignore 121
+dofile = destrict(dofile) -- luacheck: ignore 121
 
 -- Load the class system (required for App)
 corsixth.require("class")

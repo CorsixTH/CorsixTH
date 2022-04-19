@@ -146,7 +146,7 @@ do
   if not metamethod_called then
     local next = next
     local getmetatable = getmetatable
-    pairs = function(t)
+    pairs = function(t) -- luacheck: ignore 121
       local mt = getmetatable(t)
       if mt then
         local __pairs = mt.__pairs
@@ -161,7 +161,7 @@ do
   ipairs(setmetatable({}, {__ipairs = function() metamethod_called = true end}))
   if not metamethod_called then
     local ipairs_orig = ipairs
-    ipairs = function(t)
+    ipairs = function(t) -- luacheck: ignore 121
       local mt = getmetatable(t)
       if mt then
         local __ipairs = mt.__ipairs
