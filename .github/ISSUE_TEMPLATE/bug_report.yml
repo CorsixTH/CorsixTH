@@ -1,0 +1,111 @@
+### CorsixTH Bug Report Template ###
+### Headers
+name: Bug report
+description: Create a report to help us improve
+title: "[Bug] Give a summary of the problem"
+labels: ["bug"]
+### Questions
+# What happened?
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Describe the issue
+      placeholder: Provide as much detail as you can
+    validations:
+      required: true
+# Reproducing Steps
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Break down as clearly as possible how to reproduce the error. If you cannot reproduce describe best how it happened
+      value: |
+        1. *Load save game attached to this ticket*
+        
+        2. 
+        
+        3.
+    validations:
+      required: true
+# Expected Behaviour
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behaviour
+      description: What did you expect to happen in the game?
+    validations:
+      required: true
+# Save Game Upload
+  - type: textarea
+    id: savegame
+    attributes: 
+      label: Save Game
+      # Insert two blank lines for a new line
+      description: >
+        It is often useful for us if you have a save game from shortly before the issue occurs
+        that can be used to recreate the problem. Sometimes a save that shows the issue happening
+        may be useful as well.
+        
+        
+        You can upload your save by putting it in zip file, then copy/pasting it directly into
+        this text area. You can also click the "Attach files by dragging & dropping, selecting or
+        pasting them" text at the bottom to upload the zip file.
+        
+        
+        Alternatively, you can use an external source such as Google Drive, Dropbox, or OneDrive and
+        sharing the public link below to access your save game. The most important thing is to not
+        remove these files after you upload them.
+      value: "Save game attached to report: Yes/No"
+## System Information Questions
+  - type: markdown
+    attributes:
+      value: "Please provide some details about your system and game data"
+  - type: input
+    id: corsix-version
+    attributes:
+      label: CorsixTH Version
+      placeholder: e.g. 0.65 (release version) or 7d886f35ca (if built from master)
+    validations:
+      required: true
+  - type: input
+    id: os-ver
+    attributes:
+      label: Operating System
+      placeholder: e.g. Windows 10 / Mac OS Monteray / Ubuntu 20.04 LTS
+    validations:
+      required: true
+  - type: dropdown
+    id: th-ver
+    attributes:
+      label: Theme Hospital Version
+      description: "CorsixTH requires a copy of Theme Hospital to run as we use its game assets."
+      options:
+        - CD
+        - GOG.com
+        - Origin
+        - Demo
+    validations:
+      required: true
+##
+# Gamelog
+  - type: textarea
+    id: gamelog
+    attributes:
+      label: Gamelog.txt
+      # Insert two blank lines for a new line
+      description: >
+        __Where do I find the gamelog file?__
+        
+        
+        Information about the configuration file can be found [here](https://github.com/CorsixTH/CorsixTH/wiki/Configuration-File).
+        You can find gamelog.txt at the same location as the config file.
+      placeholder: Paste gamelog.txt output here
+      render: bash
+# Extra Info
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional Information
+      description: Paste any screen shots or other additional information that might help illustrate the problem.
+###
