@@ -1015,9 +1015,7 @@ function UIEditRoom:onMouseDown(button, x, y)
           if self.move_rect then
             self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
             self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
-          elseif self.resize_rect then
-            -- nothing to do
-          else
+          elseif not self.resize_rect then
             self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
           end
         end

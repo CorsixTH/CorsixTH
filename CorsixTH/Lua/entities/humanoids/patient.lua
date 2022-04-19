@@ -1027,8 +1027,7 @@ function Patient:updateMessage(choice)
         -- no requirements missing
         enabled = false
       end
-    else -- if choice == "guess_cure" then
-      -- TODO: implement
+    -- TODO: implement choice == "guess_cure"
     end
 
     for _, c in ipairs(self.message.choices) do
