@@ -102,7 +102,7 @@ end
 
 -- Function stub for dialogs to override. This function is called each time a button is clicked.
 --!param num (integer) Number of the button pressed.
-function UIMenuList:buttonClicked(num)
+function UIMenuList:buttonClicked(num) -- luacheck: ignore 212 keep args from parent class
 end
 
 -- Updates buttons when scrolling.

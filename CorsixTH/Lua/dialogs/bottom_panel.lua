@@ -203,7 +203,7 @@ function UIBottomPanel:draw(canvas, x, y)
   self:drawReputationMeter(canvas, x + 55, y + 35)
 end
 
-function UIBottomPanel:setPosition(x, y)
+function UIBottomPanel:setPosition(x, y) -- luacheck: ignore 212 keep y from parent class
   -- Lock to bottom of screen
   return Window.setPosition(self, x, -0.1)
 end

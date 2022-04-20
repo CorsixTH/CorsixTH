@@ -140,7 +140,8 @@ function Doctor:setProfile(profile)
   self:updateStaffTitle()
 end
 
-function Doctor:updateSkill(consultant, trait, amount) -- luacheck: no unused args
+function Doctor:updateSkill(consultant, trait, amount) -- luacheck: ignore 212
+-- consultant is kept for todo detailed in Doctor:trainSkill
   local old_profile = {
     is_junior = self.profile.is_junior,
     is_consultant = self.profile.is_consultant
