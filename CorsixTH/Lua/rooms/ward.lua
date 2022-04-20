@@ -115,7 +115,7 @@ function WardRoom:doStaffUseCycle(humanoid)
   end
 
   local num_meanders = math.random(2, 4)
-  local meanders_loop = --[[persistable:ward_meander_loop_callback]] function(action)
+  local meanders_loop = --[[persistable:ward_meander_loop_callback]] function()
     num_meanders = num_meanders - 1
     if num_meanders == 0 then
       self:doStaffUseCycle(humanoid)

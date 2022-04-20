@@ -126,8 +126,7 @@ function UIQueue:onMouseDown(button, x, y)
     return Window.onMouseDown(self, button, x, y)
   end
   local x_min = 219
-  local y_min = 15
-  self.hovered = self:getHoveredPatient(x - x_min, y - y_min)
+  self.hovered = self:getHoveredPatient(x - x_min)
   -- Select patient to drag - if left clicking.
   if button == "left" then
     self.dragged = self.hovered
@@ -218,7 +217,6 @@ end
 
 function UIQueue:onMouseMove(x, y, dx, dy)
   local x_min = 219
-  local y_min = 15
   if self.dragged then
     self.dragged.x = x + self.x
     self.dragged.y = y + self.y
@@ -237,7 +235,7 @@ function UIQueue:onMouseMove(x, y, dx, dy)
   end
 
   -- Update hovered patient
-  self.hovered = self:getHoveredPatient(x - x_min, y - y_min)
+  self.hovered = self:getHoveredPatient(x - x_min)
   Window:onMouseMove(x, y, dx, dy)
 end
 
@@ -250,7 +248,7 @@ function UIQueue:close()
   Window.close(self)
 end
 
-function UIQueue:getHoveredPatient(x, y)
+function UIQueue:getHoveredPatient(x)
   local queue = self.queue
   local num_patients = queue:reportedSize()
   local width = 276

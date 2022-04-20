@@ -55,7 +55,7 @@ function UIStaffManagement:UIStaffManagement(ui)
   self:addPanel(0, 603, 443):makeButton(0, 0, 26, 26, 10, self.close):setTooltip(_S.tooltip.staff_list.close)
 
   -- Top categories
-  local --[[persistable:staff_management_category]] function category(name, state, btn)
+  local --[[persistable:staff_management_category]] function category(name)
     self:setCategory(name)
   end
   self.categories = {

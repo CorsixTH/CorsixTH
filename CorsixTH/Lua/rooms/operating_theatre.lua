@@ -181,7 +181,7 @@ end
 --!param operation_table (OperatingTable): master object representing
 --! the operation table.
 function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_table)
-  local loop_callback_multi_use = --[[persistable:operatring_theatre_multi_use_callback]] function(_)
+  local loop_callback_multi_use = --[[persistable:operatring_theatre_multi_use_callback]] function()
     -- dirty hack to make the truncated animation work
     surgeon1.animation_idx = nil
   end

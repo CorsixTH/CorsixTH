@@ -52,7 +52,7 @@ function Entity:playSound(name, played_callback, played_callback_delay)
   end
 end
 
-function Entity:setWaitingForSoundEffectsToBeTurnedOn(state)
+function Entity:setWaitingForSoundEffectsToBeTurnedOn()
   self.waiting_for_sound_effects_to_be_turned_on = true
 end
 

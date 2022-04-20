@@ -1742,7 +1742,7 @@ function World:findAllObjectsNear(x, y, distance, object_type_name)
     thob = obj_type.thob
   end
 
-  local callback = function(xpos, ypos, d)
+  local callback = function(xpos, ypos)
     local obj = self:getObject(xpos, ypos, object_type_name)
     if obj then
       objects[obj] = true

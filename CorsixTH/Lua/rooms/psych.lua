@@ -67,7 +67,7 @@ function PsychRoom:commandEnteringStaff(staff)
     staff:walkTo(ox, oy)
     staff:queueAction(UseObjectAction(obj))
     local num_meanders = math.random(2, 8)
-    local loop_callback_meanders = --[[persistable:psych_meander_loop_callback]] function(action)
+    local loop_callback_meanders = --[[persistable:psych_meander_loop_callback]] function()
       num_meanders = num_meanders - 1
       if num_meanders == 0 then
         self:commandEnteringStaff(staff)

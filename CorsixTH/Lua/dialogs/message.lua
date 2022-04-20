@@ -44,7 +44,7 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeo
       owner:message_callback(true) -- There can be only one message per owner, just remove any existing one
     end
     assert(owner.message_callback == nil)
-    owner.message_callback = --[[persistable:owner_of_message_callback]] function(humanoid, do_remove)
+    owner.message_callback = --[[persistable:owner_of_message_callback]] function(_, do_remove)
       if do_remove then
         self:removeMessage()
       else

@@ -53,7 +53,7 @@ class "Litter" (Entity)
 ---@type Litter
 local Litter = _G["Litter"]
 
-function Litter:Litter(hospital, object_type, x, y, direction, etc)
+function Litter:Litter(hospital, object_type, x, y)
   local th = TH.animation()
   self:Entity(th)
   self.ticks = object_type.ticks

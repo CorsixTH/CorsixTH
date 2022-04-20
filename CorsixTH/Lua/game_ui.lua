@@ -968,7 +968,7 @@ function UI:togglePlayAnnouncements()
   self.app:saveConfig()
 end
 
-function UI:togglePlayMusic(item)
+function UI:togglePlayMusic()
   if not self.app.audio.background_music then
     self.app.config.play_music = true
     self.app.audio:playRandomBackgroundTrack() -- play
@@ -1099,7 +1099,7 @@ tutorial_phases = {
   },
 }
 end
-tutorial_phases = setmetatable({}, {__index = function(t, k)
+tutorial_phases = setmetatable({}, {__index = function(_, k)
   make_tutorial_phases()
   return tutorial_phases[k]
 end})
