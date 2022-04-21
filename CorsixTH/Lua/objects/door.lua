@@ -191,5 +191,6 @@ function Door:afterLoad(old, new)
       map:setCellFlags(self.tile_x, self.tile_y - 1, flags_to_set)
     end
   end
+  Object.afterLoad(self, old, new)
 end
 return object
