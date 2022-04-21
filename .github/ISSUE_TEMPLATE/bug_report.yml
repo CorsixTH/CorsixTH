@@ -94,12 +94,12 @@ body:
     attributes:
       label: Gamelog.txt
       # Insert two blank lines for a new line
-      description: >
-        __Where do I find the gamelog file?__
+      description:
+        "### Where do I find the gamelog file?
         
         
         Information about the configuration file can be found [here](https://github.com/CorsixTH/CorsixTH/wiki/Configuration-File).
-        You can find gamelog.txt at the same location as the config file.
+        You can find gamelog.txt at the same location as the config file."
       placeholder: Paste gamelog.txt output here
       render: bash
 # Extra Info
