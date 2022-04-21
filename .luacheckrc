@@ -28,7 +28,7 @@ globals = { -- Globals
             "lfs", "list_to_set", "loadfile_envcall", "loadstring_envcall",
             "permanent", "print_table", "rangeMapLookup", "rnc",
             "strict_declare_global", "table_length", "unpermanent", "values",
-            "serialize","array_join","shallow_clone",
+            "serialize","array_join","shallow_clone","staff_initials_cache",
 
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
@@ -228,7 +228,6 @@ add_ignore("CorsixTH/Lua/rooms/ward.lua", "113")
 add_ignore("CorsixTH/Lua/rooms/ward.lua", "211")
 add_ignore("CorsixTH/Lua/rooms/ward.lua", "212")
 add_ignore("CorsixTH/Lua/sprite_viewer.lua", "212")
-add_ignore("CorsixTH/Lua/staff_profile.lua", "113")
 add_ignore("CorsixTH/Lua/strict.lua", "212")
 add_ignore("CorsixTH/Lua/strings.lua", "212")
 add_ignore("CorsixTH/Lua/strings.lua", "122")
@@ -240,7 +239,6 @@ add_ignore("CorsixTH/Lua/window.lua", "212")
 add_ignore("CorsixTH/Lua/window.lua", "542")
 add_ignore("CorsixTH/Lua/world.lua", "111")
 add_ignore("CorsixTH/Lua/world.lua", "112")
-add_ignore("CorsixTH/Lua/world.lua", "113")
 add_ignore("CorsixTH/Lua/world.lua", "212")
 add_ignore("CorsixTH/Lua/world.lua", "542")
 add_ignore("CorsixTH/Luatest/non_strict.lua", "212")
