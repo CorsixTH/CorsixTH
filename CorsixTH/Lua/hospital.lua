@@ -2460,3 +2460,19 @@ end
 --! Play a sound file
 function Hospital:playSound(sound)
 end
+
+--! Return reputation value for disease or hospital
+--!param disease id (string) - name of the disease
+--!return reputation (int)
+function Hospital:getDiseaseReputation(disease)
+  return self.disease_casebook[disease].reputation or self.reputation
+end
+
+--! Calculate value to influence spawn chance based on the price relative to reputation
+--!param disease id (string) - name of the disease
+--!return (float) Multiplier to apply for spawn chance
+function Hospital:getDiseaseReputationPriceFactor(disease)
+  local reputation = self.disease_casebook[disease].reputation or self.reputation
+  local percentage = self.disease_casebook[disease].price
+  return math.min(1.5, math.max(0.5, reputation / 500 / percentage))
+end
