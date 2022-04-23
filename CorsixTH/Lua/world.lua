@@ -494,9 +494,8 @@ function World:spawnPatient(hospital, disease)
 
   -- Still need to count them even though you haven't got a staffed desk
   -- and you also don't want to spawn them on the map
+  hospital.population = hospital.population + 1
   if not hospital:hasStaffedDesk() then
-    hospital.num_visitors = hospital.num_visitors + 1
-    hospital.num_visitors_ty = hospital.num_visitors_ty + 1
     return
   end
 
@@ -2893,10 +2892,11 @@ end
 function World:chooseHospitalForPatient(disease)
   -- round robin if less than gbvAllocDelay
   if self.map.level_config.gbv.AllocDelay and self.game_date:monthOfGame() <= self.map.level_config.gbv.AllocDelay then
-    self.total_population = self.total_population or 0
-    local hospital_index = self.total_population % 4 + 1
-    self.total_population = self.total_population + 1
-    return self.hospitals[hospital_index]
+    local total_population = 0
+    for _, hospital in ipairs(self.hospitals) do
+      total_population = total_population + hospital.population
+    end
+    return self.hospitals[total_population % 4 + 1]
   end
 
   -- sometimes randomly choose a hospital
