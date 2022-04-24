@@ -2297,7 +2297,7 @@ function Hospital:computePriceLevelImpact(patient, casebook)
   end
 end
 
-function Hospital:advisePriceLevelImpact()
+function Hospital:advisePriceLevelImpact(judgment, name)
   -- Nothing to do, override in a derived class.
 end
 
@@ -2357,19 +2357,19 @@ function Hospital:getRandomBusyRoom()
   if #chosen_room.door.queue >= busy_threshold then return chosen_room end
 end
 
-function Hospital:giveAdvice()
+function Hospital:giveAdvice(msgs, rnd_frac, stay_up)
   -- Nothing to do, override in a derived class.
 end
 
-function Hospital:adviseDiscoverDisease()
+function Hospital:adviseDiscoverDisease(disease)
   -- Nothing to do, override in a derived class.
 end
 
-function Hospital:makeRaiseRequest()
+function Hospital:makeRaiseRequest(amount, staff)
   -- Nothing to do, override in a derived class.
 end
 
-function Hospital:announceRepair()
+function Hospital:announceRepair(room)
   -- Nothing to do, override in a derived class.
 end
 
@@ -2377,7 +2377,7 @@ function Hospital:onSpawnVIP()
   -- Nothing to do, override in a derived class.
 end
 
-function Hospital:announceStaffLeave()
+function Hospital:announceStaffLeave(staff)
   -- Nothing to do, override in a derived class.
 end
 
