@@ -144,6 +144,13 @@ function Epidemic:infectOtherPatients()
     -- Patient is not infectious.
     if patient.cured or patient.vaccinated then return false end
 
+    -- Don't allow infection outside the hospital grounds
+    -- Also check both patients to prevent infecting through outer walls
+    local ppx, ppy = patient.tile_x, patient.tile_y
+    if ppx and ppy and not self.hospital:isInHospital(ppx, ppy) then return false end
+    local opx, opy = other.tile_x, other.tile_y
+    if opx and opy and not self.hospital:isInHospital(opx, opy) then return false end
+
     -- 'other' is already infected or is going home.
     if other.infected or other.cured or other.vaccinated then return false end
     if other.is_emergency then return false end -- Don't interact with emergencies.
