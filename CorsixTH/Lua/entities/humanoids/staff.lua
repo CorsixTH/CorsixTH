@@ -594,17 +594,17 @@ function Staff:setDynamicInfoText(text)
 end
 
 --! Updates a staff member's dynamic info
---!param dynamic_text (string) The string to append
-function Staff:updateDynamicInfo(dynamic_text)
+--!param action_string (string) The string to append
+function Staff:updateDynamicInfo(action_string)
   -- Retain the old text if only an update is wanted, i.e. no new string is supplied.
-  if dynamic_text == nil then
+  if action_string == nil then
     if self.dynamic_text then
-      dynamic_text = self.dynamic_text
+      action_string = self.dynamic_text
     else
-      dynamic_text = ""
+      action_string = ""
     end
   else
-    self.dynamic_text = dynamic_text
+    self.dynamic_text = action_string
   end
   local fatigue_text = _S.dynamic_info.staff.tiredness
   if not self.attributes["fatigue"] then
@@ -612,7 +612,7 @@ function Staff:updateDynamicInfo(dynamic_text)
   end
   self:setDynamicInfo('text', {
     self.profile.profession,
-    dynamic_text,
+    action_string,
     fatigue_text,
   })
   self:setDynamicInfo('progress', self.attributes["fatigue"])
