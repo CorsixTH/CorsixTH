@@ -77,14 +77,6 @@ function World:World(app)
   self.entities = {} -- List of entities in the world.
   self.dispatcher = CallsDispatcher(self)
   self.objects = {}
-  self.object_counts = {
-    extinguisher = 0,
-    radiator = 0,
-    plant = 0,
-    reception_desk = 0,
-    bench = 0,
-    general = 0,
-  }
   self.objects_notify_occupants = {}
   self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
   self.entity_map = EntityMap(self.map)
@@ -2179,10 +2171,7 @@ function World:removeObjectFromTile(object, x, y)
       if v == object then
         table_remove(objects, k)
         self.map.th:removeObjectType(x, y, thob)
-        local count_cat = object.object_type.count_category
-        if count_cat then
-          self.object_counts[count_cat] = self.object_counts[count_cat] - 1
-        end
+        object.hospital:removeTileObject(object.object_type.count_category)
         return true
       end
     end
@@ -2206,10 +2195,7 @@ function World:addObjectToTile(object, x, y)
     self.objects[index] = objects
     self.map.th:setCellFlags(x, y, {thob = object.object_type.thob})
   end
-  local count_cat = object.object_type.count_category
-  if count_cat then
-    self.object_counts[count_cat] = self.object_counts[count_cat] + 1
-  end
+  object.hospital:addTileObject(object.object_type.count_category)
   return true
 end
 
@@ -2780,6 +2766,10 @@ function World:afterLoad(old, new)
         end
       end
     end
+  end
+
+  if old < 167 then
+    self.object_counts = nil -- Moved to Hospital.tile_object_counts
   end
 
   -- Fix the initial of staff names

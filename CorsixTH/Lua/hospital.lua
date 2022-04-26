@@ -109,6 +109,16 @@ function Hospital:Hospital(world, avail_rooms, name)
     heating_broke = false -- (bool) Whether the heating system is broken down currently.
   }
 
+  -- Number of tile objects of each category in the hospital.
+  self.tile_object_counts = {
+    extinguisher = 0,
+    radiator = 0,
+    plant = 0,
+    reception_desk = 0,
+    bench = 0,
+    general = 0,
+  }
+
   self.num_visitors = 0
   self.num_deaths = 0
   self.num_deaths_this_year = 0
@@ -647,6 +657,31 @@ function Hospital:afterLoad(old, new)
     self.receptionist_msg = nil
   end
 
+  if old < 167 then
+    -- Count tile objects of this hospital from scratch.
+    self.tile_object_counts = {
+      extinguisher = 0,
+      radiator = 0,
+      plant = 0,
+      reception_desk = 0,
+      bench = 0,
+      general = 0,
+    }
+    local width, height = self.world.map.th:size()
+    for x = 1, width do
+      for y = 1, height do
+        local objects = self.world:getObjects(x, y)
+        if objects then
+          for _, object in ipairs(objects) do
+            if object.hospital == self then
+              self:addTileObject(object.object_type.count_category)
+            end
+          end
+        end
+      end
+    end
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
@@ -1024,11 +1059,10 @@ end
 --! Collect the reception desks in the hospital.
 --!return (list) The reception desks in the hospital.
 function Hospital:findReceptionDesks()
-  -- TODO Breaks in multiplayer mode.
   local reception_desks = {}
   for _, obj_list in pairs(self.world.objects) do
     for _, obj in ipairs(obj_list) do
-      if obj.object_type.id == "reception_desk" then
+      if obj.hosptial == self and obj.object_type.id == "reception_desk" then
         reception_desks[#reception_desks + 1] = obj
       end
     end
@@ -1641,39 +1675,54 @@ function Hospital:countRoomOfType(type, max_count)
   return result
 end
 
+--! Update tile object counts for adding an object.
+--! See also 'Hospital:removeTileObject'
+--!param object_category Category of the tile object.
+function Hospital:addTileObject(object_category)
+  if object_category then
+    local current_count = self.tile_object_counts[object_category]
+    self.tile_object_counts[object_category] = current_count + 1
+  end
+end
+
+--! Update tile object counts for removing an object.
+--! See also 'Hospital:addTileObject'
+--!param object_category Category of the tile object.
+function Hospital:removeTileObject(object_category)
+  if object_category then
+    local current_count = self.tile_object_counts[object_category]
+    self.tile_object_counts[object_category] = current_count - 1
+  end
+end
+
 --! Get the number of reception desks in the hospital.
 --!return (int) Number of reception desks in the hospital.
 function Hospital:countReceptionDesks()
-  -- TODO Breaks in multiplayer mode.
-  return self.world.object_counts["reception_desk"]
+  return self.tile_object_counts["reception_desk"]
 end
 
 --! Get the number of radiators in the hospital.
 --!return (int) Number of radiators in the hospital.
 function Hospital:countRadiators()
-  -- TODO Breaks in multiplayer mode.
-  return self.world.object_counts["radiator"]
+  return self.tile_object_counts["radiator"]
 end
 
 --! Get the number of plants in the hospital.
 --!return (int) Number of plants in the hospital.
 function Hospital:countPlants()
-  -- TODO Breaks in multiplayer mode.
-  return self.world.object_counts["plant"]
+  return self.tile_object_counts["plant"]
 end
 
 --! Get the number of fire extinguishers in the hospital.
 --!return (int) Number of fire extinguishers in the hospital.
 function Hospital:countFireExtinguishers()
-  -- TODO Breaks in multiplayer mode.
-  return self.world.object_counts["extinguisher"]
+  return self.tile_object_counts["extinguisher"]
 end
 
 --! Get the number of general objects in the hospital.
 --!return (int) Number of general objects in the hospital.
 function Hospital:countGeneralObjects()
-  -- TODO Breaks in multiplayer mode.
-  return self.world.object_counts["general"]
+  return self.tile_object_counts["general"]
 end
 
 --! A new object has been placed in the hospital.
@@ -1686,9 +1735,11 @@ function Hospital:objectPlaced(entity, id)
     local w, h = self.world.map.th:size()
     for tx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
       for ty = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
-        for _, patient in ipairs(self.world.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
-          if class.is(patient, Patient) then
-            patient:notifyNewObject(id)
+        if self:isInHospital(tx, ty) then -- Only patients of this hospital should be warned.
+          for _, patient in ipairs(self.world.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
+            if class.is(patient, Patient) then
+              patient:notifyNewObject(id)
+            end
           end
         end
       end
