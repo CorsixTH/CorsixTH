@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 167 -- Let hospitals count their tile objects.
+local SAVEGAME_VERSION = 168 -- Sanitize knock-door callback
 
 class "App"
 
