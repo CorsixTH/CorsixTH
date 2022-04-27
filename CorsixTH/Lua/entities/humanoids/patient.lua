@@ -425,7 +425,7 @@ function Patient:pee()
     self:changeAttribute("happiness", -0.02) -- not being able to find a loo and doing it in the corridor will make you sad too
     if not self.hospital.did_it_on_floor then
       self.hospital.did_it_on_floor = true
-      self.world.ui.adviser:say(_A.warnings.people_did_it_on_the_floor)
+      self.hospital:giveAdvice({_A.warnings.people_did_it_on_the_floor})
     end
   else
     return
@@ -488,7 +488,7 @@ function Patient:goHome(reason, disease_id)
     self:changeAttribute("happiness", -0.5)
 
     local treatment_name = self.hospital.disease_casebook[disease_id].disease.name
-    self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(treatment_name))
+    self.hospital:giveAdvice({_A.warnings.patient_not_paying:format(treatment_name)})
     hosp:updateNotCuredCounts(self, reason)
     self:clearDynamicInfo()
     self:setDynamicInfo('text', {"", _S.dynamic_info.patient.actions.prices_too_high})
@@ -886,7 +886,7 @@ function Patient:setTile(x, y)
 
           -- A callout is only needed if there are no handymen employed
           if self.hospital:countStaffOfCategory("Handyman", 1) == 0 then
-            self.world.ui.adviser:say(_A.staff_advice.need_handyman_litter)
+            self.hospital:giveAdvice({_A.staff_advice.need_handyman_litter})
           end
         end
       end
