@@ -169,9 +169,9 @@
  <a href="_0_1_hospital.html#_0_1_hospital_1create_emergency">createEmergency</a>(<span class="p">emergency</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_hospital.html#_0_1_hospital_1create_vip">createVip</a>()
- (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ <li class="self">
+ <a href="_0_1_player_hospital.html#_0_1_player_hospital_1create_vip">createVip</a>()
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1create_vip">Hospital:createVip</a>)
  </li>
  <li class="self">
  <a href="_0_1_player_hospital.html#_0_1_player_hospital_1daily_advice_checks">dailyAdviceChecks</a>()
@@ -291,6 +291,22 @@
  <li class="inherited">
  <a href="_0_1_hospital.html#_0_1_hospital_1log_transaction">logTransaction</a>(<span class="p">transaction</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_player_hospital.html#_0_1_player_hospital_1make_emergency_end_fax">makeEmergencyEndFax</a>(<span class="p">rescued_patients</span>, <span class="p">total</span>, <span class="p">max_bonus</span>, <span class="p">earned</span>)
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1make_emergency_end_fax">Hospital:makeEmergencyEndFax</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_player_hospital.html#_0_1_player_hospital_1make_emergency_start_fax">makeEmergencyStartFax</a>()
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1make_emergency_start_fax">Hospital:makeEmergencyStartFax</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_player_hospital.html#_0_1_player_hospital_1make_no_diagnosis_room_fax">makeNoDiagnosisRoomFax</a>(<span class="p">patient</span>)
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1make_no_diagnosis_room_fax">Hospital:makeNoDiagnosisRoomFax</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_player_hospital.html#_0_1_player_hospital_1make_no_treatment_room_fax">makeNoTreatmentRoomFax</a>(<span class="p">patient</span>)
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1make_no_treatment_room_fax">Hospital:makeNoTreatmentRoomFax</a>)
  </li>
  <li class="self">
  <a href="_0_1_player_hospital.html#_0_1_player_hospital_1make_raise_request">makeRaiseRequest</a>(<span class="p">amount</span>, <span class="p">staff</span>)
@@ -529,10 +545,8 @@
  (*)
  </li>
  <li><span class="p">disease_casebook</span>
- (*)
  </li>
  <li><span class="p">emergency</span>
- (*)
  </li>
  <li><span class="p">emergency_patients</span>
  (*)
@@ -882,7 +896,7 @@ from Hospital:computePriceLevelImpact</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1after_load">Hospital:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L550">line 550 of Lua/hospitals/player_hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L692">line 692 of Lua/hospitals/player_hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -941,6 +955,14 @@ from Hospital:computePriceLevelImpact</td>
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_player_hospital_1create_vip">function PlayerHospital:createVip()</a></h5>
+ <p>
+ Makes the fax which may spawn a VIP<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1create_vip">Hospital:createVip</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L678">line 678 of Lua/hospitals/player_hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_player_hospital_1daily_advice_checks">function PlayerHospital:dailyAdviceChecks()</a></h5>
  <p>
  Give advice to the player at the end of a day.<br/><br/>
@@ -973,6 +995,80 @@ call actually says something.</td>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1give_advice">Hospital:giveAdvice</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L334">line 334 of Lua/hospitals/player_hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_player_hospital_1make_emergency_end_fax">function PlayerHospital:makeEmergencyEndFax(<span class="p">rescued_patients</span>, <span class="p">total</span>, <span class="p">max_bonus</span>, <span class="p">earned</span>)</a></h5>
+ <p>
+ Makes the fax at the end of an emergency<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">rescued_patients</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">total</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">max_bonus</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">earned</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1make_emergency_end_fax">Hospital:makeEmergencyEndFax</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L665">line 665 of Lua/hospitals/player_hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_player_hospital_1make_emergency_start_fax">function PlayerHospital:makeEmergencyStartFax()</a></h5>
+ <p>
+ Makes the fax at the start of an emergency<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1make_emergency_start_fax">Hospital:makeEmergencyStartFax</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L610">line 610 of Lua/hospitals/player_hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_player_hospital_1make_no_diagnosis_room_fax">function PlayerHospital:makeNoDiagnosisRoomFax(<span class="p">patient</span>)</a></h5>
+ <p>
+ Makes the fax requesting player action for the patient who needs a diagnosis room<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">table</td>
+ <td class="d"></td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1make_no_diagnosis_room_fax">Hospital:makeNoDiagnosisRoomFax</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L588">line 588 of Lua/hospitals/player_hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_player_hospital_1make_no_treatment_room_fax">function PlayerHospital:makeNoTreatmentRoomFax(<span class="p">patient</span>)</a></h5>
+ <p>
+ Makes the fax requesting player action for the patient who needs a diagnosis room<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">table</td>
+ <td class="d"></td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1make_no_treatment_room_fax">Hospital:makeNoTreatmentRoomFax</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L550">line 550 of Lua/hospitals/player_hospital.lua</a>.
  </p>
  </div>
  <div class="method">
