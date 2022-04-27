@@ -1114,51 +1114,7 @@ function Hospital:createEmergency(emergency)
     end
 
     self.emergency = emergency
-    -- The last room in the list of treatment rooms is considered when checking for availability.
-    -- It works for all original diseases, but if we introduce new multiple room diseases it might break.
-    -- TODO: Make it work for all kinds of lists of treatment rooms.
-    -- TODO: Change to make use of Hospital:checkDiseaseRequirements
-    local no_rooms = #emergency.disease.treatment_rooms
-    local room_name, required_staff, staff_name =
-      self.world:getRoomNameAndRequiredStaffName(emergency.disease.treatment_rooms[no_rooms])
-
-    local staff_available = self:countStaffOfCategory(required_staff) > 0
-    -- Check so that all rooms in the list are available
-    if self:countRoomOfType(emergency.disease.treatment_rooms[no_rooms], 1) > 0 then
-      room_name = nil
-    end
-
-    local casebook = self.disease_casebook[emergency.disease.id]
-    local added_info = casebook.drug and
-        _S.fax.emergency.cure_possible_drug_name_efficiency:format(emergency.disease.name, casebook.cure_effectiveness)
-        or _S.fax.emergency.cure_possible
-    if room_name then
-      if staff_available then
-        added_info = _S.fax.emergency.cure_not_possible_build:format(room_name) .. "."
-      else
-        added_info = _S.fax.emergency.cure_not_possible_build_and_employ:format(room_name, staff_name) .. "."
-      end
-    elseif not staff_available then
-      added_info = _S.fax.emergency.cure_not_possible_employ:format(staff_name) .. "."
-    end
-
-    local one_or_many_victims_msg
-    if emergency.victims == 1 then
-      one_or_many_victims_msg = _S.fax.emergency.num_disease_singular:format(emergency.disease.name)
-    else
-      one_or_many_victims_msg = _S.fax.emergency.num_disease:format(emergency.victims, emergency.disease.name)
-    end
-    local message = {
-      {text = _S.fax.emergency.location:format(_S.fax.emergency.locations[math.random(1,9)])},
-      {text = one_or_many_victims_msg },
-      {text = added_info},
-      {text = self.world.free_build_mode and _S.fax.emergency.free_build or _S.fax.emergency.bonus:format(emergency.bonus*emergency.victims)},
-      choices = {
-        {text = _S.fax.emergency.choices.accept, choice = "accept_emergency"},
-        {text = _S.fax.emergency.choices.refuse, choice = "refuse_emergency"},
-      },
-    }
-    self.world.ui.bottom_panel:queueMessage("emergency", message, nil, Date.hoursPerDay() * 16, 2) -- automatically refuse after 16 days
+    self:makeEmergencyStartFax()
     return -- successfully created
   end
   return "no heliport"
@@ -1181,15 +1137,7 @@ function Hospital:resolveEmergency()
   if emergency_success then
     earned = emer.bonus * rescued_patients
   end
-  local message = {
-    {text = _S.fax.emergency_result.saved_people
-      :format(rescued_patients, total)},
-    {text = self.world.free_build_mode and "" or _S.fax.emergency_result.earned_money:format(max_bonus, earned)},
-    choices = {
-      {text = _S.fax.emergency_result.close_text, choice = "close"},
-    },
-  }
-  self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*25, 1)
+  self:makeEmergencyEndFax(rescued_patients, total, max_bonus, earned)
   if emergency_success then -- Reputation increased
     self:changeReputation("emergency_success", emer.disease)
     self:receiveMoney(earned, _S.transactions.emergency_bonus)
@@ -1213,16 +1161,8 @@ function Hospital:checkEmergencyOver()
   end
 end
 
--- Creates VIP and sends a FAX to query the user.
 function Hospital:createVip()
-  local vipName =  _S.vip_names[math.random(1,10)]
-  local message = {
-    {text = _S.fax.vip_visit_query.vip_name:format(vipName)},
-    choices = {{text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip", additionalInfo = {name=vipName}},
-               {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip", additionalInfo = {name=vipName}}}
-  }
-  -- auto-refuse after 20 days
-  self.world.ui.bottom_panel:queueMessage("personality", message, nil, 24*20, 2)
+  -- Nothing to do, override in a derived class.
 end
 
 --[[ Creates a new epidemic by creating a new contagious patient with
@@ -2408,7 +2348,7 @@ function Hospital:computePriceLevelImpact(patient, casebook)
   end
 end
 
-function Hospital:advisePriceLevelImpact()
+function Hospital:advisePriceLevelImpact(judgment, name)
   -- Nothing to do, override in a derived class.
 end
 
@@ -2468,19 +2408,19 @@ function Hospital:getRandomBusyRoom()
   if #chosen_room.door.queue >= busy_threshold then return chosen_room end
 end
 
-function Hospital:giveAdvice()
+function Hospital:giveAdvice(msgs, rnd_frac, stay_up)
   -- Nothing to do, override in a derived class.
 end
 
-function Hospital:adviseDiscoverDisease()
+function Hospital:adviseDiscoverDisease(disease)
   -- Nothing to do, override in a derived class.
 end
 
-function Hospital:makeRaiseRequest()
+function Hospital:makeRaiseRequest(amount, staff)
   -- Nothing to do, override in a derived class.
 end
 
-function Hospital:announceRepair()
+function Hospital:announceRepair(room)
   -- Nothing to do, override in a derived class.
 end
 
@@ -2488,6 +2428,22 @@ function Hospital:onSpawnVIP()
   -- Nothing to do, override in a derived class.
 end
 
-function Hospital:announceStaffLeave()
+function Hospital:announceStaffLeave(staff)
+  -- Nothing to do, override in a derived class.
+end
+
+function Hospital:makeNoTreatmentRoomFax(patient)
+  -- Nothing to do, override in a derived class.
+end
+
+function Hospital:makeNoDiagnosisRoomFax(patient)
+  -- Nothing to do, override in a derived class.
+end
+
+function Hospital:makeEmergencyStartFax()
+  -- Nothing to do, override in a derived class.
+end
+
+function Hospital:makeEmergencyEndFax(rescued_patients, total, max_bonus, earned)
   -- Nothing to do, override in a derived class.
 end
