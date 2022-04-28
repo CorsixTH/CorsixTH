@@ -34,7 +34,6 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
   self:Hospital(world, avail_rooms, name)
   -- The player hospital in single player can access the Cheat System should they wish to.
   self.hosp_cheats = Cheats(self)
-  self.active_cheats = {} -- records any active toggle-based cheats
 
   self.adviser_data = { -- Variables handling player advice.
     temperature_advice = nil, -- Whether the player received advice about room temp.
@@ -573,9 +572,9 @@ function PlayerHospital:afterLoad(old, new)
   if old < 159 then
     self.adviser_data.reception_advice = self.adviser_data.reception_advice or self.receptionist_msg
   end
-  if old < 166 then
-    self.active_cheats = {}
-    self.active_cheats["spawn_rate_cheat"] = self.spawn_rate_cheat
+  if old < 169 then
+    self.hosp_cheats.active_cheats = {}
+    self.hosp_cheats.active_cheats["spawn_rate_cheat"] = self.spawn_rate_cheat
     self.spawn_rate_cheat = nil
   end
 
