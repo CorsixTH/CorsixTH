@@ -355,9 +355,22 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
             "ingame_gamespeed_thensome",
             "ingame_gamespeed_speedup" }}}},
     {
+      id = "scroll",
+      title = _S.hotkey_window.panel_scrollKeys,
+      tooltip = _S.hotkey_window.panel_scrollKeys,
+      sections = {{
+          title = _S.hotkey_window.panel_scrollKeys,
+          keys = {
+            "ingame_scroll_up",
+            "ingame_scroll_down",
+            "ingame_scroll_left",
+            "ingame_scroll_right",
+            "ingame_scroll_shift"
+          }}}},
+    {
       id = "zoom",
       title = _S.hotkey_window.panel_zoomKeys,
-      tooltip = _S.hotkey_window.panel_generalInGameKeys,
+      tooltip = _S.hotkey_window.panel_zoomKeys,
       sections = {{
           title = _S.hotkey_window.panel_zoomKeys,
           keys = {
@@ -503,11 +516,11 @@ end
 
 function UIHotkeyAssign:buttonDefaults()
   -- Copy the default hotkeys into the app's current hotkey table.
-  self.app.hotkeys = shallow_clone(select(5, corsixth.require("config_finder")))
+  self.app.hotkeys = shallow_clone(select(6, corsixth.require("config_finder")))
 
   -- Reload all hotkey boxes' text.
-  for k, _ in pairs(self.hotkey_buttons) do
-    self.hotkey_buttons[k]:setText( string.upper(array_join(self.app.hotkeys[k], "+")) )
+  for _, v in pairs(self.key_windows) do
+    v.window:resetAllButtonText(self.app.hotkeys)
   end
 end
 
@@ -600,4 +613,10 @@ end
 
 function UIHotkeyAssignKeyPane:confirm_func(hotkey)
   hotkey_input(hotkey, self.hotkey_buttons, _G.TheApp)
+end
+
+function UIHotkeyAssignKeyPane:resetAllButtonText(app_hotkeys)
+  for k, _ in pairs(self.hotkey_buttons) do
+    self.hotkey_buttons[k]:setText(string.upper(array_join(app_hotkeys[k], "+")))
+  end
 end

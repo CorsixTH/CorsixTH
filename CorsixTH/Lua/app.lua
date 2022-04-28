@@ -805,7 +805,7 @@ end
 
 function App:fixConfig()
   -- Fill in default values for things which don't exist
-  local config_defaults = select(2, corsixth.require("config_finder"))
+  local config_defaults = select(3, corsixth.require("config_finder"))
   for k, v in pairs(config_defaults) do
     if self.config[k] == nil then
       self.config[k] = v
@@ -925,7 +925,7 @@ end
 
 function App:fixHotkeys()
   -- Fill in default values for things which don't exist
-  local hotkeys_defaults = select(4, corsixth.require("config_finder"))
+  local hotkeys_defaults = select(6, corsixth.require("config_finder"))
 
   for k, v in pairs(hotkeys_defaults) do
     if self.hotkeys[k] == nil then
@@ -1701,7 +1701,7 @@ function App:checkForUpdates()
   print("Checking for CorsixTH updates...")
   local update_body, status, _ = http.request(update_url)
 
-  if not update_body or not (status == 200) then
+  if not update_body or (status ~= 200) then
     print("Couldn't check for updates. Server returned code: " .. status)
     print("Check that you have an active internet connection and that CorsixTH is allowed in your firewall.")
     return

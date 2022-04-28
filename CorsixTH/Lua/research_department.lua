@@ -478,11 +478,31 @@ function ResearchDepartment:improveMachine(machine)
     research_info.start_strength = research_info.start_strength
       + improve_rate
     research_info.strength_imp = research_info.strength_imp + 1
+    if self.world.ui.app.config.new_machine_extra_info then
+      self:updateMachinesDynamicInfo(machine.id)
+    end
   end
   -- Tell the player that something has been improved
   if self.hospital:isPlayerHospital() then
     self.world.ui.adviser:say(_A.research.machine_improved
     :format(machine.name))
+  end
+end
+
+--[[ Updates the dynamic info for each matching machine found in the player's
+hospital rooms.
+!param machine_id The machine ID for determining matches.
+--]]
+function ResearchDepartment:updateMachinesDynamicInfo(machine_id)
+  for _, room in pairs(self.world.rooms) do
+    if room.hospital == self.hospital then
+      for obj, _ in pairs(room.objects) do
+        if obj.object_type.id == machine_id then
+          obj:updateDynamicInfo(true)
+          break
+        end
+      end
+    end
   end
 end
 

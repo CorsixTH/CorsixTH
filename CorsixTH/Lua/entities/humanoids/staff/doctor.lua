@@ -235,7 +235,7 @@ function Doctor:setCrazy(crazy)
   else
     -- make doctor sane
     if self.is_crazy then
-      if not (self.layers[5] < 5) then
+      if self.layers[5] >= 5 then
         self:setLayer(5, self.layers[5] - 4)
         self.is_crazy = false
       end
