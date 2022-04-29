@@ -51,6 +51,7 @@ function Cheats:Cheats(hospital)
     {name = "decrease_prices", func = self.cheatDecreasePrices},
   }
 
+  self.active_cheats = {} -- Toggle cheat status
   --[[ Toggle-based cheats are found at bottom of file]]
 end
 
@@ -181,14 +182,14 @@ end
 
 --! Enable Roujin's challenge (spawn rate cheat)
 function Cheats:roujinOn()
-  self.hospital.active_cheats["spawn_rate_cheat"] = true
+  self.active_cheats["spawn_rate_cheat"] = true
 end
 
 --! Disable Roujin's challenge (spawn rate cheat)
 function Cheats:roujinOff()
   -- Clear the current month's spawns to give the player a break
   self.hospital.world.spawn_dates = {}
-  self.hospital.active_cheats["spawn_rate_cheat"] = nil
+  self.active_cheats["spawn_rate_cheat"] = nil
 end
 
 --! Enables no rest cheat (staff do not tire, fast movement)
@@ -198,12 +199,12 @@ function Cheats:noRestOn()
       staff:wake(staff.attributes["fatigue"])
     end
   end
-  self.hospital.active_cheats["no_rest_cheat"] = true
+  self.active_cheats["no_rest_cheat"] = true
 end
 
 --! Disable no rest cheat (re-enable staff fatigue, and normal movement)
 function Cheats:noRestOff()
-  self.hospital.active_cheats["no_rest_cheat"] = nil
+  self.active_cheats["no_rest_cheat"] = nil
 end
 
 --[[End toggle-based cheat functions]]
@@ -231,6 +232,13 @@ local toggle_cheats = {
   },
 }
 
+--! Checks if a toggle cheat is activated
+--!param name (string) Name of cheat to check
+--!return Returns true if active
+function Cheats:isCheatActive(name)
+  return self.active_cheats[name]
+end
+
 --! Checks the obfuscated cheat code for a match and executes it
 --!param num (number) The obfuscated cheat value
 --!return Returns name of the cheat executed from the lookup table, or nil
@@ -254,7 +262,7 @@ function Cheats:toggleCheat(name)
   local cheat = cheat_list[name]
   local cheatWindow = ui:getWindow(UICheats)
   local speech
-  if not self.hospital.active_cheats[name] then
+  if not self:isCheatActive(name) then
     cheat.enable(self)
     speech = cheat.enableAnnouncement
     self:announceCheat(speech)

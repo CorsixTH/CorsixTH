@@ -36,7 +36,6 @@ function AIHospital:AIHospital(competitor, world, avail_rooms, name)
 
   -- AI Hospitals can't cheat, so don't let them
   self.hosp_cheats = nil
-  self.active_cheats = {} -- intentionally empty container
 end
 
 function AIHospital:spawnPatient()
@@ -50,9 +49,6 @@ end
 function AIHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = nil
-  end
-  if old < 166 then
-    self.active_cheats = {}
   end
 
   Hospital.afterLoad(self, old, new)

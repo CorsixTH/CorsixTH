@@ -117,7 +117,8 @@ function UICheats:updateCheatedStatus()
 end
 
 function UICheats:buttonClicked(num)
-  if self.ui.hospital.world:isUserActionProhibited() then
+  -- If the menu was opened by fax code, allow player to use it
+  if self.ui.hospital.world:isUserActionProhibited() and not self.ui:getWindow(UIFax) then
     --TODO: Prevent selectx.wav playing with this
     return self.ui:playSound("wrong2.wav")
   end

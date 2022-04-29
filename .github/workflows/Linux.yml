@@ -35,7 +35,7 @@ jobs:
             catch2: -DENABLE_UNIT_TESTS=ON
     name: Linux and Tests on ${{ matrix.lua }}
     steps:
-      - uses: actions/checkout@v2  # Keeps the git OAuth token after checkout
+      - uses: actions/checkout@v3  # Keeps the git OAuth token after checkout
       - name: Install ${{ matrix.lua }} ${{ matrix.animview }}
         run: |
           sudo apt-get update

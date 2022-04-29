@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 -- This is an extra configuration file loaded at level 8 from the original game.
--- The win and lose on repution would appear to be the wrong way round
+-- The win and lose on reputation would appear to be the wrong way round
 
 #win_criteria[0].Criteria.MaxMin.Value.Group.Bound 2 1 300000 1 0
 #win_criteria[1].Criteria.MaxMin.Value.Group.Bound	3 1 55 1 0

@@ -77,14 +77,6 @@ function World:World(app)
   self.entities = {} -- List of entities in the world.
   self.dispatcher = CallsDispatcher(self)
   self.objects = {}
-  self.object_counts = {
-    extinguisher = 0,
-    radiator = 0,
-    plant = 0,
-    reception_desk = 0,
-    bench = 0,
-    general = 0,
-  }
   self.objects_notify_occupants = {}
   self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
   self.entity_map = EntityMap(self.map)
@@ -961,7 +953,7 @@ function World:setSpeed(speed)
   end
 
   -- Set the blue filter according to whether the user can build or not.
-  TheApp.video:setBlueFilterActive(not self.user_actions_allowed)
+  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self.ui:checkForMustPauseWindows())
   return false
 end
 
@@ -1025,7 +1017,7 @@ function World:onTick()
       self.autosave_next_tick = nil
       local pathsep = package.config:sub(1, 1)
       local dir = TheApp.savegame_dir
-      if not dir:sub(-1, -1) == pathsep then
+      if dir:sub(-1, -1) ~= pathsep then
         dir = dir .. pathsep
       end
       if not lfs.attributes(dir .. "Autosaves", "modification") then
@@ -1276,7 +1268,7 @@ function World:updateSpawnDates()
   -- Set dates when people arrive
   local no_of_spawns = math.n_random(self.spawn_rate, 2)
   -- If Roujin's Challenge is on, override spawn rate
-  if local_hospital.active_cheats["spawn_rate_cheat"] then
+  if local_hospital.hosp_cheats and local_hospital.hosp_cheats:isCheatActive("spawn_rate_cheat") then
     no_of_spawns = 40
   end
   -- Use ceil so that at least one patient arrives (unless population = 0)
@@ -1963,7 +1955,7 @@ function World:newObject(id, x, y, flags, name)
     entity = Machine(hospital, object_type, x, y, flags, name)
     -- Tell the player if there is no handyman to take care of the new machinery.
     if hospital:countStaffOfCategory("Handyman", 1) == 0 then
-      self.ui.adviser:say(_A.staff_advice.need_handyman_machines)
+      self.hospital:giveAdvice({_A.staff_advice.need_handyman_machines})
     end
   else
     entity = Object(hospital, object_type, x, y, flags, name)
@@ -2179,10 +2171,7 @@ function World:removeObjectFromTile(object, x, y)
       if v == object then
         table_remove(objects, k)
         self.map.th:removeObjectType(x, y, thob)
-        local count_cat = object.object_type.count_category
-        if count_cat then
-          self.object_counts[count_cat] = self.object_counts[count_cat] - 1
-        end
+        object.hospital:removeTileObject(object.object_type.count_category)
         return true
       end
     end
@@ -2206,10 +2195,7 @@ function World:addObjectToTile(object, x, y)
     self.objects[index] = objects
     self.map.th:setCellFlags(x, y, {thob = object.object_type.thob})
   end
-  local count_cat = object.object_type.count_category
-  if count_cat then
-    self.object_counts[count_cat] = self.object_counts[count_cat] + 1
-  end
+  object.hospital:addTileObject(object.object_type.count_category)
   return true
 end
 
@@ -2780,6 +2766,10 @@ function World:afterLoad(old, new)
         end
       end
     end
+  end
+
+  if old < 167 then
+    self.object_counts = nil -- Moved to Hospital.tile_object_counts
   end
 
   -- Fix the initial of staff names
