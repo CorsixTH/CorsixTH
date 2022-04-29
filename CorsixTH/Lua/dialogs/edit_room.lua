@@ -1447,9 +1447,9 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
         self.move_rect = false
         self.resize_rect = {
           n = (wy == rect.y),
-          s = (wy == rect.y + rect.h - 1) and (wy ~= rect.y),
+          s = (wy == rect.y + rect.h - 1) and not (wy == rect.y),
           w = (wx == rect.x),
-          e = (wx == rect.x + rect.w - 1) and (wx ~= rect.x),
+          e = (wx == rect.x + rect.w - 1) and not (wx == rect.x),
         }
 
         if (self.resize_rect.w or self.resize_rect.e) and (self.resize_rect.n or self.resize_rect.s) then

@@ -20,7 +20,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <array>
 #include <cctype>
 #include <cstring>
 #include <map>
@@ -32,7 +31,7 @@ SOFTWARE.
 
 namespace {
 
-std::array<int, 1000> played_sound_callback_ids;
+int played_sound_callback_ids[1000];
 int played_sound_callback_index = 0;
 std::map<int, SDL_TimerID> map_sound_timers;
 
@@ -231,7 +230,7 @@ int l_soundfx_play(lua_State* L) {
     if (!lua_isnil(L, 7))
       iPlayedCallbackDelay = static_cast<int>(luaL_checknumber(L, 7));
 
-    if (played_sound_callback_index == played_sound_callback_ids.size())
+    if (played_sound_callback_index == sizeof(played_sound_callback_ids))
       played_sound_callback_index = 0;
 
     played_sound_callback_ids[played_sound_callback_index] =

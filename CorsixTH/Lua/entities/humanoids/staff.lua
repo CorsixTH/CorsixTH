@@ -333,7 +333,7 @@ end
 -- so amounts here should be appropriately small comma values.
 function Staff:tire(amount)
   -- The no rest cheat overrides tiring effects
-  if self.hospital.hosp_cheats and self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then return end
+  if self.hospital.active_cheats["no_rest_cheat"] then return end
 
   self:changeAttribute("fatigue", amount)
   self:updateDynamicInfo()
@@ -357,7 +357,7 @@ function Staff:updateSpeed()
   local room = self:getRoom()
   if room and room.room_info.id == "training" and self:fulfillsCriterion("Doctor") then
     level = 1
-  elseif self.hospital and self.hospital.hosp_cheats and self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then
+  elseif self.hospital and self.hospital.active_cheats["no_rest_cheat"] then
     level = 3 -- Cheat makes everyone speedy
   elseif self.attributes["fatigue"] then
     if self.attributes["fatigue"] >= 0.8 then

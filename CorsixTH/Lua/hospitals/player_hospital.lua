@@ -34,6 +34,7 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
   self:Hospital(world, avail_rooms, name)
   -- The player hospital in single player can access the Cheat System should they wish to.
   self.hosp_cheats = Cheats(self)
+  self.active_cheats = {} -- records any active toggle-based cheats
 
   self.adviser_data = { -- Variables handling player advice.
     temperature_advice = nil, -- Whether the player received advice about room temp.
@@ -547,148 +548,6 @@ function PlayerHospital:announceStaffLeave(staff)
   self.world.ui:playRandomAnnouncement(staff.leave_sounds, staff.leave_priority)
 end
 
---! Makes the fax requesting player action for the patient who needs a diagnosis room
---!param patient (table)
-function PlayerHospital:makeNoTreatmentRoomFax(patient)
-  local strings = _S.fax.disease_discovered_patient_choice
-  -- Can this room be built right now? What is then missing?
-  local output_text = strings.can_not_cure
-  local req = self:checkDiseaseRequirements(patient.disease.id)
-  local research_enabled = false
-  if req then
-    research_enabled = (self:countRoomOfType("research", 1) > 0 and
-                        self:countStaffOfCategory("Researcher", 1) > 0)
-    if #req.rooms == 1 then
-      local room_name, required_staff, staff_name = self.world:getRoomNameAndRequiredStaffName(req.rooms[1])
-      if req.staff[required_staff] or 0 > 0 then
-        output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
-      else
-        output_text = strings.need_to_build:format(room_name)
-      end
-    elseif #req.rooms == 0 and next(req.staff) then
-      output_text = strings.need_to_employ:format(StaffProfile.translateStaffClass(next(req.staff)))
-    end
-  end
-
-  local message = {
-    {text = strings.disease_name:format(patient.disease.name)},
-    {text = " "},
-    {text = output_text},
-    {text = strings.what_to_do_question},
-    choices = {
-      {text = strings.choices.send_home, choice = "send_home"},
-      {text = strings.choices.wait,      choice = "wait"},
-      {text = strings.choices.research,  choice = "research", enabled = research_enabled},
-    },
-  }
-  -- Ok, send the message in all channels.
-  self.world.ui.bottom_panel:queueMessage("information", message, patient)
-end
-
---! Makes the fax requesting player action for the patient who needs a diagnosis room
---!param patient (table)
-function PlayerHospital:makeNoDiagnosisRoomFax(patient)
-  local guess_enabled = self.disease_casebook[patient.disease.id].discovered
-  local diag_failed = _S.fax.diagnosis_failed
-  local message = {
-    {text = diag_failed.situation},
-    {text = " "},
-    {text = diag_failed.what_to_do_question},
-    choices = {
-      {text = diag_failed.choices.send_home,   choice = "send_home"},
-      {text = diag_failed.choices.take_chance, choice = "guess_cure", enabled = guess_enabled},
-      {text = diag_failed.choices.wait,        choice = "wait"},
-    },
-  }
-  if guess_enabled then
-    table.insert(message, 3, {text = diag_failed.partial_diagnosis_percentage_name
-      :format(math.round(patient.diagnosis_progress * 100), patient.disease.name)})
-  end
-  self.world.ui.bottom_panel:queueMessage("information", message, patient)
-end
-
---! Makes the fax at the start of an emergency
-function PlayerHospital:makeEmergencyStartFax()
-  -- The last room in the list of treatment rooms is considered when checking for availability.
-  -- It works for all original diseases, but if we introduce new multiple room diseases it might break.
-  -- TODO: Make it work for all kinds of lists of treatment rooms.
-  -- TODO: Change to make use of Hospital:checkDiseaseRequirements
-  local no_rooms = #self.emergency.disease.treatment_rooms
-  local room_name, required_staff, staff_name = self.world
-    :getRoomNameAndRequiredStaffName(self.emergency.disease.treatment_rooms[no_rooms])
-
-  local staff_available = self:countStaffOfCategory(required_staff) > 0
-  -- Check so that all rooms in the list are available
-  if self:countRoomOfType(self.emergency.disease.treatment_rooms[no_rooms], 1) > 0 then
-    room_name = nil
-  end
-
-  local casebook = self.disease_casebook[self.emergency.disease.id]
-  local added_info = casebook.drug and
-      _S.fax.emergency.cure_possible_drug_name_efficiency
-        :format(self.emergency.disease.name, casebook.cure_effectiveness)
-      or _S.fax.emergency.cure_possible
-  if room_name then
-    if staff_available then
-      added_info = _S.fax.emergency.cure_not_possible_build:format(room_name) .. "."
-    else
-      added_info = _S.fax.emergency.cure_not_possible_build_and_employ:
-        format(room_name, staff_name) .. "."
-    end
-  elseif not staff_available then
-    added_info = _S.fax.emergency.cure_not_possible_employ:format(staff_name) .. "."
-  end
-
-  local one_or_many_victims_msg
-  if self.emergency.victims == 1 then
-    one_or_many_victims_msg = _S.fax.emergency.num_disease_singular
-      :format(self.emergency.disease.name)
-  else
-    one_or_many_victims_msg = _S.fax.emergency.num_disease
-      :format(self.emergency.victims, self.emergency.disease.name)
-  end
-  local message = {
-    {text = _S.fax.emergency.location:format(_S.fax.emergency.locations[math.random(1,9)])},
-    {text = one_or_many_victims_msg },
-    {text = added_info},
-    {text = self.world.free_build_mode and _S.fax.emergency.free_build or
-        _S.fax.emergency.bonus:format(self.emergency.bonus * self.emergency.victims)},
-    choices = {
-      {text = _S.fax.emergency.choices.accept, choice = "accept_emergency"},
-      {text = _S.fax.emergency.choices.refuse, choice = "refuse_emergency"},
-    },
-  }
-  -- Automatically refuse after 16 days
-  self.world.ui.bottom_panel:queueMessage("emergency", message, nil, Date.hoursPerDay() * 16, 2)
-end
-
---! Makes the fax at the end of an emergency
-function PlayerHospital:makeEmergencyEndFax(rescued_patients, total, max_bonus, earned)
-  local message = {
-    {text = _S.fax.emergency_result.saved_people:format(rescued_patients, total)},
-    {text = self.world.free_build_mode and "" or _S.fax.emergency_result.earned_money
-      :format(max_bonus, earned)},
-    choices = {
-      {text = _S.fax.emergency_result.close_text, choice = "close"},
-    },
-  }
-  self.world.ui.bottom_panel:queueMessage("report", message, nil, Date.hoursPerDay() * 25, 1)
-end
-
---! Makes the fax which may spawn a VIP
-function PlayerHospital:createVip()
-  local vipName = _S.vip_names[math.random(1,10)]
-  local message = {
-    {text = _S.fax.vip_visit_query.vip_name:format(vipName)},
-    choices = {
-      {text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip", additionalInfo = {name=vipName}},
-      {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip", additionalInfo = {name=vipName}}
-    },
-  }
-  -- Automatically refuse after 20 days
-  self.world.ui.bottom_panel:queueMessage("personality", message, nil, Date.hoursPerDay() * 20, 2)
-end
-
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)
@@ -714,9 +573,9 @@ function PlayerHospital:afterLoad(old, new)
   if old < 159 then
     self.adviser_data.reception_advice = self.adviser_data.reception_advice or self.receptionist_msg
   end
-  if old < 169 then
-    self.hosp_cheats.active_cheats = {}
-    self.hosp_cheats.active_cheats["spawn_rate_cheat"] = self.spawn_rate_cheat
+  if old < 166 then
+    self.active_cheats = {}
+    self.active_cheats["spawn_rate_cheat"] = self.spawn_rate_cheat
     self.spawn_rate_cheat = nil
   end
 

@@ -27,9 +27,8 @@ local runDebugger = corsixth.require("run_debugger")
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
--- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 169 -- Changes cheat system structure and adds "no rest" cheat
+local SAVEGAME_VERSION = 166 -- Changes cheat system structure and adds "no rest" cheat
 
 class "App"
 
@@ -99,7 +98,6 @@ function App:init()
   print("")
   print("---------------------------------------------------------------")
   print("")
-
   -- Prereq 1: Config file (for screen width / height / TH folder)
   -- Note: These errors cannot be translated, as the config file specifies the language
   local conf_path = self.command_line["config-file"] or "config.txt"
@@ -646,10 +644,6 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
   if campaign_data then
     self.world:setCampaignData(campaign_data)
   end
-
-  -- Log if we're playing with the demo or full graphics set
-  -- TODO: Adjust for new_gfx set when implemented
-  self.world.gfx_set = self.using_demo_files and "demo" or "full"
 end
 
 -- This is a useful debug and development aid
@@ -805,7 +799,7 @@ end
 
 function App:fixConfig()
   -- Fill in default values for things which don't exist
-  local config_defaults = select(3, corsixth.require("config_finder"))
+  local config_defaults = select(2, corsixth.require("config_finder"))
   for k, v in pairs(config_defaults) do
     if self.config[k] == nil then
       self.config[k] = v
@@ -925,7 +919,7 @@ end
 
 function App:fixHotkeys()
   -- Fill in default values for things which don't exist
-  local hotkeys_defaults = select(6, corsixth.require("config_finder"))
+  local hotkeys_defaults = select(4, corsixth.require("config_finder"))
 
   for k, v in pairs(hotkeys_defaults) do
     if self.hotkeys[k] == nil then
@@ -1537,27 +1531,15 @@ end
 
 --! Function to check the loaded game is compatible with the program
 --!param save_version (num)
---!param gfx_set (string) What graphics set is used
 --!return true if compatible, otherwise false
-function App:checkCompatibility(save_version, gfx_set)
+function App:checkCompatibility(save_version)
   local app_version = self.savegame_version
-  local err
-
-  -- First check the graphics set matches with the game files
-  if (gfx_set == "demo" and not self.using_demo_files) then
-    err = _S.errors.compatibility_error.demo_in_full
-  elseif (gfx_set == "full" and self.using_demo_files) then
-    err = _S.errors.compatibility_error.full_in_demo
-
-  -- if that's all good, check the save and app version
-  elseif app_version >= save_version or self.config.debug then
+  if app_version >= save_version or self.config.debug then
     return true
-  else -- savegame newer than application
-    err = _S.errors.compatibility_error.new_in_old
+  else
+    UILoadGame:loadError(_S.errors.compatibility_error)
+    return false
   end
-
-  UILoadGame:loadError(err)
-  return false
 end
 
 --! Restarts the current level (offers confirmation window first)
@@ -1656,15 +1638,6 @@ function App:afterLoad()
     self.world:newObjectType(rathole_type)
   end
 
-    --[[Information only:
-  if old < 166 then
-    Graphics set type was introduced at this version.
-    Nothing to do here as it is handled by persistance.
-    However, it introduces compatibility limitations between the demo and full game
-    and should be noted.
-  end
-  ]]--
-
   self.map:afterLoad(old, new)
   self.ui:afterLoad(old, new)
   self.world:afterLoad(old, new)
@@ -1701,7 +1674,7 @@ function App:checkForUpdates()
   print("Checking for CorsixTH updates...")
   local update_body, status, _ = http.request(update_url)
 
-  if not update_body or (status ~= 200) then
+  if not update_body or not (status == 200) then
     print("Couldn't check for updates. Server returned code: " .. status)
     print("Check that you have an active internet connection and that CorsixTH is allowed in your firewall.")
     return

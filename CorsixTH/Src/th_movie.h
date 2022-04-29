@@ -50,12 +50,6 @@ extern "C" {
 #include <libswscale/swscale.h>
 }
 
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59, 0, 100)
-using av_codec_ptr = AVCodec*;
-#else
-using av_codec_ptr = const AVCodec*;
-#endif
-
 //! \brief Functor for deleting AVPackets
 //!
 //! Deletes AVPacket pointers that are allocated with av_malloc
@@ -365,7 +359,7 @@ class movie_player {
 
   //! Get the AVCodecContext associated with a given stream
   av_codec_context_unique_ptr get_codec_context_for_stream(
-      av_codec_ptr codec, AVStream* stream) const;
+      AVCodec* codec, AVStream* stream) const;
 
   //! Get the time the given frame should be played (from the start of the
   //! stream)

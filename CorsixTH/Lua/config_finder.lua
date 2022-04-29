@@ -855,4 +855,4 @@ for k, str_val in pairs(hotkeys_values) do
   end
 end
 
-return config_filename, config_values, config_defaults, hotkeys_filename, hotkeys_values, hotkeys_defaults, config_data
+return config_filename, config_values, hotkeys_filename, hotkeys_values, hotkeys_defaults, config_data

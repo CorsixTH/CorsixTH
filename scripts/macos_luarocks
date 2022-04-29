@@ -65,11 +65,10 @@ else
 fi
 
 rsync -r "lib/lua/$lua/"lpeg.so "lib/lua/$lua/"lfs.so .
-rsync -r "share/lua/$lua/"re.lua ./Lua/
+rsync -r "share/lua/$lua/"re.lua .
 set +e # Luasocket and Luasec are optional
 rsync -r "lib/lua/$lua/"ssl.so "lib/lua/$lua/"mime . 2>/dev/null
 rsync -r "lib/lua/$lua/socket/core.so" socket/ 2>/dev/null
-rsync -r "share/lua/$lua/"ltn12.lua "share/lua/$lua/"mime.lua "share/lua/$lua/"socket.lua  "share/lua/$lua/"ssl \
-  "share/lua/$lua/"ssl.lua ./Lua/ 2>/dev/null
-rsync -r "share/lua/$lua/"socket/*.lua ./Lua/socket 2>/dev/null
+rsync -r "share/lua/$lua/"ltn12.lua "share/lua/$lua/"mime.lua "share/lua/$lua/"socket "share/lua/$lua/"ssl \
+  "share/lua/$lua/"ssl.lua . 2>/dev/null
 rm -rf lib/ share/

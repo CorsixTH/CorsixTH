@@ -228,17 +228,10 @@ function Audio:initSpeech(speech_file)
       self.speech_file_name = speech_file
       self.sound_fx = TH.soundEffects()
       self.sound_fx:setSoundArchive(self.sound_archive)
-      self:setSoundStage()
+      local w, h = self.app.config.width / 2, self.app.config.height / 2
+      self.sound_fx:setCamera(math.floor(w), math.floor(h), math.floor((w^2 + h^2)^0.5))
       --self:dumpSoundArchive[[E:\CPP\2K8\CorsixTH\DataRaw\Sound\]]
     end
-  end
-end
-
---! Set the visual area for sound effects playback
-function Audio:setSoundStage()
-  if self.sound_fx then
-    local w, h = self.app.config.width / 2, self.app.config.height / 2
-    self.sound_fx:setCamera(math.floor(w), math.floor(h), math.floor((w^2 + h^2)^0.5))
   end
 end
 

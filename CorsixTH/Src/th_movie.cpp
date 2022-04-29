@@ -338,7 +338,7 @@ bool movie_player::load(const char* szFilepath) {
     return false;
   }
 
-  av_codec_ptr video_decoder;  // unowned, do not free
+  AVCodec* video_decoder;  // unowned, do not free
   video_stream_index = av_find_best_stream(format_context, AVMEDIA_TYPE_VIDEO,
                                            -1, -1, &video_decoder, 0);
   if (video_stream_index < 0) {
@@ -350,7 +350,7 @@ bool movie_player::load(const char* szFilepath) {
       video_decoder, format_context->streams[video_stream_index]);
   avcodec_open2(video_codec_context.get(), video_decoder, nullptr);
 
-  av_codec_ptr audio_decoder;  // unowned, do not free
+  AVCodec* audio_decoder;  // unowned, do not free
   audio_stream_index = av_find_best_stream(format_context, AVMEDIA_TYPE_AUDIO,
                                            -1, -1, &audio_decoder, 0);
   if (audio_stream_index >= 0) {
@@ -363,7 +363,7 @@ bool movie_player::load(const char* szFilepath) {
 }
 
 av_codec_context_unique_ptr movie_player::get_codec_context_for_stream(
-    av_codec_ptr codec, AVStream* stream) const {
+    AVCodec* codec, AVStream* stream) const {
   av_codec_context_unique_ptr ctx(avcodec_alloc_context3(codec));
   avcodec_parameters_to_context(ctx.get(), stream->codecpar);
   return ctx;

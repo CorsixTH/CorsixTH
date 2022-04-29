@@ -29,7 +29,7 @@ local function path(tbl)
 end
 
 local config_path = path({"CorsixTH", "Lua", "config_finder.lua"})
-local config_data = select(7, dofile(config_path))
+local config_data = select(6, dofile(config_path))
 
 local template_path = path({"WindowsInstaller", "config_template.txt"})
 local f, err = io.open(template_path, "w")

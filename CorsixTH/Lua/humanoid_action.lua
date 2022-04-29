@@ -110,11 +110,4 @@ function HumanoidAction:afterLoad(old, new)
       self.is_entering = not not self.is_entering
     end
   end
-
-  if old < 168 and class.type(self) == "KnockDoorAction" then
-    -- When the knock-door animation is running in the action at the time of
-    -- save, the callback at the end of the animation doesn't have a valid
-    -- state variable and crashes.
-    if not self.state then self.state = 1 end
-  end
 end
