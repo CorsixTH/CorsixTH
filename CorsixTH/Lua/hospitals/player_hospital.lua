@@ -32,8 +32,6 @@ local ratio_interval = 2 -- Measurement interval in days.
 
 function PlayerHospital:PlayerHospital(world, avail_rooms, name)
   self:Hospital(world, avail_rooms, name)
-  -- The player hospital in single player can access the Cheat System should they wish to.
-  self.hosp_cheats = Cheats(self)
 
   self.adviser_data = { -- Variables handling player advice.
     temperature_advice = nil, -- Whether the player received advice about room temp.

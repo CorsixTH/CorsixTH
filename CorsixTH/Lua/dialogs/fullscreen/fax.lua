@@ -253,6 +253,7 @@ function UIFax:validate()
   self.code = ""
   local code_n = (tonumber(code) or 0) / 10^5
   local x = math.abs((code_n ^ 5.00001 - code_n ^ 5) * 10^5 - code_n ^ 5)
+  local cheats = self.ui.hospital.hosp_cheats
   print("Code typed on fax:", code)
   if code == "24328" then
     -- Original game cheat code
@@ -262,37 +263,17 @@ function UIFax:validate()
     -- simple, unobfuscated cheat for everyone :)
     -- not that critical, but we want to make to make sure it's played fairly soon
     self.ui:playAnnouncement("rand*.wav", AnnouncementPriority.Critical)
-  elseif 27868.3 < x and x < 27868.4 then
-    -- Roujin's challenge cheat
-    local hosp = self.ui.hospital
-    if not hosp.spawn_rate_cheat then
-      self.ui.adviser:say(_A.cheats.roujin_on_cheat)
-      hosp.spawn_rate_cheat = true
-      self:cheatByFax()
-    else
-      self.ui.adviser:say(_A.cheats.roujin_off_cheat)
-      -- Clear the current month's spawns to give the player a break
-      self.ui.app.world.spawn_dates = {}
-      hosp.spawn_rate_cheat = nil
-    end
-  else
-    -- no valid cheat entered
+
+  -- Pass cheat code to the Cheats system to handle
+  elseif not cheats:processCheatCode(x) then
+    -- no valid cheat code entered
     self.ui:playSound("fax_no.wav")
     return
+  -- else Cheat executed, nothing to do here
   end
   self.ui:playSound("fax_yes.wav")
 
   -- TODO: Other cheats (preferably with slight obfuscation, as above)
-end
-
-function UIFax:cheatByFax()
-  local cheatWindow = self.ui:getWindow(UICheats)
-  local cheat = self.ui.hospital.hosp_cheats
-  cheat:announceCheat()
-  -- If a cheats window is open, make sure the UI is updated
-  if cheatWindow then
-    cheatWindow:updateCheatedStatus()
-  end
 end
 
 function UIFax:appendNumber(number)

@@ -1268,7 +1268,7 @@ function World:updateSpawnDates()
   -- Set dates when people arrive
   local no_of_spawns = math.n_random(self.spawn_rate, 2)
   -- If Roujin's Challenge is on, override spawn rate
-  if local_hospital.spawn_rate_cheat then
+  if local_hospital.hosp_cheats:isCheatActive("spawn_rate_cheat") then
     no_of_spawns = 40
   end
   -- Use ceil so that at least one patient arrives (unless population = 0)

@@ -176,6 +176,9 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.policies = {}
   self.discovered_diseases = {} -- a list
 
+  -- Create a cheats instance for each hospital. AIHospitals don't know how to cheat (we hope!)
+  self.hosp_cheats = Cheats(self)
+
   -- Make a table containing available rooms for the level, and its discovery status (room, discovery_status)
   -- Index is the room's id e.g. gp
   self.room_discoveries = {}
@@ -680,6 +683,15 @@ function Hospital:afterLoad(old, new)
         end
       end
     end
+  end
+
+  if old < 169 then
+    -- AIHospital previously did not have a cheats instance, now it should
+    if not self.hosp_cheats then self.hosp_cheats = Cheats(self) end
+    -- Move toggle cheat triggers to Cheats
+    self.hosp_cheats.active_cheats = {}
+    self.hosp_cheats.active_cheats["spawn_rate_cheat"] = self.spawn_rate_cheat
+    self.spawn_rate_cheat = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
