@@ -95,7 +95,7 @@ std::string search_script_file(lua_State* L) {
       int iProgramPathLengthReal = wai_getExecutablePath(
           sProgramDir, iProgramPathLength, &iProgramDirLength);
       if (iProgramPathLengthReal != iProgramPathLength ||
-          iProgramPathLength >= iProgramDirLength) {
+          iProgramPathLength <= iProgramDirLength) {
         if (iProgramPathLengthReal != iProgramPathLength)
           std::fprintf(stderr,
                        "Path length of CorsixTH binary changed?!?! "
@@ -110,7 +110,7 @@ std::string search_script_file(lua_State* L) {
         std::fflush(stderr);
         exit(255);
       }
-      // relace me with C++17 std::filesystem::path::preferred_separator
+      // replace me with C++17 std::filesystem::path::preferred_separator
       sProgramDir[iProgramDirLength] = '/';
       sProgramDir[iProgramDirLength + 1] = '\0';
       strProgramDir = sProgramDir;
