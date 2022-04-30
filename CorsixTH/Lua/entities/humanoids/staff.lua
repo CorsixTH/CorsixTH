@@ -74,20 +74,20 @@ function Staff:tickDay()
     end
   end)
   -- It always makes you happy to see you are in safe place
-  self.world:findObjectNear(self, "extinguisher", 2, function(x, y)
+  self.world:findObjectNear(self, "extinguisher", 2, function()
     self:changeAttribute("happiness", 0.002)
   end)
   -- Extra room items add to your happiness (some more than others)
-  self.world:findObjectNear(self, "bin", 2, function(x, y)
+  self.world:findObjectNear(self, "bin", 2, function()
     self:changeAttribute("happiness", 0.001)
   end)
-  self.world:findObjectNear(self, "bookcase", 2, function(x, y)
+  self.world:findObjectNear(self, "bookcase", 2, function()
     self:changeAttribute("happiness", 0.003)
   end)
-  self.world:findObjectNear(self, "skeleton", 2, function(x, y)
+  self.world:findObjectNear(self, "skeleton", 2, function()
     self:changeAttribute("happiness", 0.002)
   end)
-  self.world:findObjectNear(self, "tv", 2, function(x, y)
+  self.world:findObjectNear(self, "tv", 2, function()
     self:changeAttribute("happiness", 0.0005)
   end)
   -- Being able to rest from work and play the video game or pool will make you happy
@@ -465,7 +465,7 @@ end
 
 -- Helper function to decide if Staff fulfills a criterion
 -- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman", "Receptionist", "Junior", "Consultant")
-function Staff:fulfillsCriterion(criterion)
+function Staff:fulfillsCriterion(criterion) -- luacheck: ignore 212 keep args from parent class
   return false
 end
 
@@ -702,4 +702,4 @@ function Staff:tostring()
 end
 
 -- Dummy callback for savegame compatibility
-local callbackNewRoom = --[[persistable:staff_build_staff_room_callback]] function(room) end
+local callbackNewRoom = --[[persistable:staff_build_staff_room_callback]] function() end

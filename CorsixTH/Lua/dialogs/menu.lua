@@ -631,7 +631,7 @@ function UIMenuBar:makeGameMenu(app)
       self.ui:togglePlayMusic(item)
     end,
     nil,
-    function(musicStatus)
+    function()
       return app.config.play_music
     end)
 

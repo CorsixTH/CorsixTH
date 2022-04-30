@@ -276,16 +276,6 @@ function Hospital:isRoomDiscovered(room_id)
   return self.room_discoveries[room_id].is_discovered
 end
 
---! Give the user possibly a message about a cured patient.
-function Hospital:msgCured()
-  -- Nothing to do, override in a derived class.
-end
-
---! Give the user possibly a message about a dead patient.
-function Hospital:msgKilled()
-  -- Nothing to do, override in a derived class.
-end
-
 --! Update the loaded game with version 'old' to the version 'new'.
 --!param old Version of the loaded game.
 --!param new Version of the code being executed.
@@ -773,10 +763,6 @@ function Hospital:purchasePlot(plot_number)
   return false
 end
 
-function Hospital:adviseCannotAffordPlot()
-  -- Nothing to do, override in a derived class.
-end
-
 function Hospital:getPlayerIndex()
   -- TODO: In multiplayer, return 2 or 3 or 4
   return 1
@@ -841,11 +827,6 @@ function Hospital:boilerBreakdown(broken_heat)
 
   -- Warn the player of the boiler's breakdown
   self:adviseBoilerBreakdown(broken_heat)
-end
-
---! Select a relevant message to be displayed to the user
-function Hospital:adviseBoilerBreakdown()
-  -- Nothing to do, override in a sub-class.
 end
 
 --! Boiler broke down and work is done to get it fixed.
@@ -1159,10 +1140,6 @@ function Hospital:checkEmergencyOver()
       window:onCountdownEnd()
     end
   end
-end
-
-function Hospital:createVip()
-  -- Nothing to do, override in a derived class.
 end
 
 --[[ Creates a new epidemic by creating a new contagious patient with
@@ -1701,32 +1678,6 @@ function Hospital:objectPlaced(entity, id)
     self:showGatesToHell(entity)
     return
   end
-end
-
---! Give advice to the user about the need to buy the first reception desk.
-function Hospital:msgNeedFirstReceptionDesk()
-  -- Nothing to do, override in a sub-class.
-end
-
---! Give advice to the user about having bought a reception desk.
-function Hospital:msgReceptionDesk()
-  -- Nothing to do, override in a sub-class.
-end
-
---! Give advice about having more desks.
-function Hospital:msgMultiReceptionDesks()
-  -- Nothing to do, override in a sub-class.
-end
-
---! Give advice to the user about maintenance of plants.
-function Hospital:msgPlant()
-  -- Nothing to do, override in a sub-class.
-end
-
---! Show the 'Gates to hell' animation.
---!param _entity (Entity) Gates to hell.
-function Hospital:showGatesToHell(_entity)
-  -- Nothing to do, override in a sub-class.
 end
 
 --! Remove the first entry with a given value from a table.
@@ -2348,10 +2299,6 @@ function Hospital:computePriceLevelImpact(patient, casebook)
   end
 end
 
-function Hospital:advisePriceLevelImpact(judgment, name)
-  -- Nothing to do, override in a derived class.
-end
-
 --! Notify patients of a change to hospital staff members
 --!param staff (Staff) Changed staff member subject of notification
 function Hospital:notifyOfStaffChange(staff)
@@ -2408,42 +2355,87 @@ function Hospital:getRandomBusyRoom()
   if #chosen_room.door.queue >= busy_threshold then return chosen_room end
 end
 
+---- Stubs section - these functions have nothing to do here, are overridden in a derived class.
+-- luacheck: ignore 212 keep args for child class
+
+--! Give advice to the user about the need to buy the first reception desk.
+function Hospital:msgNeedFirstReceptionDesk()
+end
+
+--! Give advice to the user about having bought a reception desk.
+function Hospital:msgReceptionDesk()
+end
+
+--! Give advice about having more desks.
+function Hospital:msgMultiReceptionDesks()
+end
+
+--! Give advice to the user about maintenance of plants.
+function Hospital:msgPlant()
+end
+
+--! Show the 'Gates to hell' animation.
+function Hospital:showGatesToHell(entity)
+end
+
+--! Advises the player.
 function Hospital:giveAdvice(msgs, rnd_frac, stay_up)
-  -- Nothing to do, override in a derived class.
+end
+
+--! Give the user possibly a message about a cured patient.
+function Hospital:msgCured()
+end
+
+--! Give the user possibly a message about a dead patient.
+function Hospital:msgKilled()
 end
 
 function Hospital:adviseDiscoverDisease(disease)
-  -- Nothing to do, override in a derived class.
 end
 
-function Hospital:makeRaiseRequest(amount, staff)
-  -- Nothing to do, override in a derived class.
+--! Select a relevant message to be displayed to the user
+function Hospital:adviseBoilerBreakdown()
 end
 
+--! Announces a machine needing repair
 function Hospital:announceRepair(room)
-  -- Nothing to do, override in a derived class.
 end
 
 function Hospital:onSpawnVIP()
-  -- Nothing to do, override in a derived class.
 end
 
+--! Give visual warning that player doesn't have enough $ to build
+function Hospital:adviseCannotAffordPlot()
+end
+
+--! Tell the player, through the advisor, about the impact of casebook prices
+function Hospital:advisePriceLevelImpact(judgment, name)
+end
+
+--! Makes the raise request for a staff member
+function Hospital:makeRaiseRequest(amount, staff)
+end
+
+--! Announce to the player that a staff member is leaving the hospital
 function Hospital:announceStaffLeave(staff)
-  -- Nothing to do, override in a derived class.
 end
 
+--! Makes the fax requesting player action for the patient who needs a diagnosis room
 function Hospital:makeNoTreatmentRoomFax(patient)
-  -- Nothing to do, override in a derived class.
 end
 
+--! Makes the fax requesting player action for the patient who needs a diagnosis room
 function Hospital:makeNoDiagnosisRoomFax(patient)
-  -- Nothing to do, override in a derived class.
 end
 
+--! Makes the fax at the start of an emergency
 function Hospital:makeEmergencyStartFax()
-  -- Nothing to do, override in a derived class.
 end
 
+--! Makes the fax at the end of an emergency
 function Hospital:makeEmergencyEndFax(rescued_patients, total, max_bonus, earned)
-  -- Nothing to do, override in a derived class.
+end
+
+--! Makes the fax which may spawn a VIP
+function Hospital:createVip()
 end

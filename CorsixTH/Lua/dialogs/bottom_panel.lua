@@ -203,7 +203,7 @@ function UIBottomPanel:draw(canvas, x, y)
   self:drawReputationMeter(canvas, x + 55, y + 35)
 end
 
-function UIBottomPanel:setPosition(x, y)
+function UIBottomPanel:setPosition(x, y) -- luacheck: ignore 212 keep y from parent class
   -- Lock to bottom of screen
   return Window.setPosition(self, x, -0.1)
 end
@@ -463,7 +463,7 @@ end
 --! Pop the message with the given index from the message queue and turn it into an actual
 -- message window; if no index is provided the first message in the queue is popped.
 function UIBottomPanel:createMessageWindow(index)
-  local --[[persistable:bottom_panel_message_window_close]] function onClose(window, out_of_time)
+  local --[[persistable:bottom_panel_message_window_close]] function onClose(window)
     local index_to_remove
     for i, win in ipairs(self.message_windows) do
       if index_to_remove ~= nil then

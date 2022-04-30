@@ -104,7 +104,7 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
   end
 
   local num_meanders = math.random(2, 4)
-  local loop_callback_meander = --[[persistable:research_meander_loop_callback]] function(action)
+  local loop_callback_meander = --[[persistable:research_meander_loop_callback]] function()
     num_meanders = num_meanders - 1
     if num_meanders == 0 then
       self:doStaffUseCycle(staff)

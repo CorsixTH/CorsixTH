@@ -301,7 +301,7 @@ function UIOptions:buttonFullscreen()
   self.fullscreen_panel:setLabel(self.ui.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
 end
 
-function UIOptions:buttonMouseCapture(checked)
+function UIOptions:buttonMouseCapture()
   local app = self.ui.app
   app.config.capture_mouse = not app.config.capture_mouse
   app:saveConfig()
@@ -336,7 +336,7 @@ function UIOptions:buttonBrowseForTHInstall()
   self.ui:addWindow(browser)
 end
 
-function UIOptions:buttonAudioGlobal(checked)
+function UIOptions:buttonAudioGlobal()
   local app = self.ui.app
   app.config.audio = not app.config.audio
   app:saveConfig()

@@ -703,7 +703,7 @@ function Patient:tickDay()
     end
   end)
   -- It always makes you happy to see you are in safe place
-  self.world:findObjectNear(self, "extinguisher", 2, function(x, y)
+  self.world:findObjectNear(self, "extinguisher", 2, function()
     self:changeAttribute("happiness", 0.0002)
   end)
   -- sitting makes you happy whilst standing and walking does not
@@ -1164,4 +1164,4 @@ function Patient:interruptAndRequeueAction(current_action, queue_pos, meander_be
 end
 
 -- Dummy callback for savegame compatibility
-local callbackNewRoom = --[[persistable:patient_toilet_build_callback]] function(room) end
+local callbackNewRoom = --[[persistable:patient_toilet_build_callback]] function() end

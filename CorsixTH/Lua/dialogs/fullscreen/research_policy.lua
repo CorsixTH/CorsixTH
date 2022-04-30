@@ -50,7 +50,7 @@ function UIResearch:UIResearch(ui)
   self.research = ui.hospital.research
 
   -- stubs for backwards compatibility
-  local --[[persistable:research_policy_adjust]] function adjust(name) end
+  local --[[persistable:research_policy_adjust]] function adjust() end
   local --[[persistable:research_less_stub]] function less_stub() end
   local --[[persistable:research_more_stub]] function more_stub() end
 
