@@ -209,5 +209,6 @@ function ResearchRoom:afterLoad(old, new)
   if old < 56 then
     self.hospital.research_dep_built = true
   end
+  Room.afterLoad(self, old, new)
 end
 return room
