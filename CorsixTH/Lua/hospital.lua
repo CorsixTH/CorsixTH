@@ -1062,7 +1062,7 @@ function Hospital:findReceptionDesks()
   local reception_desks = {}
   for _, obj_list in pairs(self.world.objects) do
     for _, obj in ipairs(obj_list) do
-      if obj.hosptial == self and obj.object_type.id == "reception_desk" then
+      if obj.hospital == self and obj.object_type.id == "reception_desk" then
         reception_desks[#reception_desks + 1] = obj
       end
     end
