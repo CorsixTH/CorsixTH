@@ -104,7 +104,7 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
   end
 
   local num_meanders = math.random(2, 4)
-  local loop_callback_meander = --[[persistable:research_meander_loop_callback]] function(action)
+  local loop_callback_meander = --[[persistable:research_meander_loop_callback]] function()
     num_meanders = num_meanders - 1
     if num_meanders == 0 then
       self:doStaffUseCycle(staff)
@@ -131,12 +131,12 @@ function ResearchRoom:roomFinished()
   -- Is this the first research department built?
   if not self.hospital.research_dep_built and not TheApp.using_demo_files then
     self.hospital.research_dep_built = true
-    self.world.ui.adviser:say(_A.information.initial_general_advice
-    .research_now_available)
+    self.hospital:giveAdvice({_A.information.initial_general_advice
+      .research_now_available})
   end
   -- Also check if it would be good to hire a researcher.
   if self.hospital:countStaffOfCategory("Researcher", 1) == 0 then
-    self.world.ui.adviser:say(_A.room_requirements.research_room_need_researcher)
+    self.hospital:giveAdvice({_A.room_requirements.research_room_need_researcher})
   end
   return Room.roomFinished(self)
 end
@@ -178,7 +178,7 @@ function ResearchRoom:commandEnteringPatient(patient)
     end
     if autopsy_discovered then
       hosp:changeReputation("autopsy_discovered")
-      hosp.world.ui.adviser:say(_A.research.autopsy_discovered_rep_loss)
+      hosp:giveAdvice({_A.research.autopsy_discovered_rep_loss})
     end
     if patient.hospital then
       hosp:removePatient(patient)
@@ -209,5 +209,6 @@ function ResearchRoom:afterLoad(old, new)
   if old < 56 then
     self.hospital.research_dep_built = true
   end
+  Room.afterLoad(self, old, new)
 end
 return room

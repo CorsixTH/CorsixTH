@@ -35,7 +35,7 @@ function Inspector:Inspector(...)
 end
 
 --[[ Labels the inspector as the "Health Inspector" ]]
-function Inspector:updateDynamicInfo(action_string)
+function Inspector:updateDynamicInfo(action_string) -- luacheck: ignore 212 keep args from parent class
   self:setDynamicInfo('text', {_S.dynamic_info.health_inspector})
 end
 

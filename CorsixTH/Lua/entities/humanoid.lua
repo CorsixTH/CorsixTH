@@ -353,7 +353,7 @@ end
 -- Function which is called when the user clicks on the `Humanoid`.
 --!param ui (GameUI) The UI which the user in question is using.
 --!param button (string) One of: "left", "middle", "right".
-function Humanoid:onClick(ui, button)
+function Humanoid:onClick(ui, button) -- luacheck: ignore 212 keep args from parent class
   if TheApp.config.debug then
     self:dump()
   end
@@ -690,10 +690,10 @@ end
 
 -- Stub functions for handling fatigue. These are overridden by the staff subclass,
 -- but also defined here, so we can just call it on any humanoid
-function Humanoid:tire(amount)
+function Humanoid:tire(amount) -- luacheck: ignore 212 keep args for child class
 end
 
-function Humanoid:wake(amount)
+function Humanoid:wake(amount) -- luacheck: ignore 212 keep args for child class
 end
 
 function Humanoid:updateSpeed()

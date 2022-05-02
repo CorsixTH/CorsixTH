@@ -109,6 +109,16 @@ function Hospital:Hospital(world, avail_rooms, name)
     heating_broke = false -- (bool) Whether the heating system is broken down currently.
   }
 
+  -- Number of tile objects of each category in the hospital.
+  self.tile_object_counts = {
+    extinguisher = 0,
+    radiator = 0,
+    plant = 0,
+    reception_desk = 0,
+    bench = 0,
+    general = 0,
+  }
+
   self.num_visitors = 0
   self.num_deaths = 0
   self.num_deaths_this_year = 0
@@ -264,16 +274,6 @@ end
 --!return (boolean) true if discovered, otherwise false
 function Hospital:isRoomDiscovered(room_id)
   return self.room_discoveries[room_id].is_discovered
-end
-
---! Give the user possibly a message about a cured patient.
-function Hospital:msgCured()
-  -- Nothing to do, override in a derived class.
-end
-
---! Give the user possibly a message about a dead patient.
-function Hospital:msgKilled()
-  -- Nothing to do, override in a derived class.
 end
 
 --! Update the loaded game with version 'old' to the version 'new'.
@@ -647,6 +647,31 @@ function Hospital:afterLoad(old, new)
     self.receptionist_msg = nil
   end
 
+  if old < 167 then
+    -- Count tile objects of this hospital from scratch.
+    self.tile_object_counts = {
+      extinguisher = 0,
+      radiator = 0,
+      plant = 0,
+      reception_desk = 0,
+      bench = 0,
+      general = 0,
+    }
+    local width, height = self.world.map.th:size()
+    for x = 1, width do
+      for y = 1, height do
+        local objects = self.world:getObjects(x, y)
+        if objects then
+          for _, object in ipairs(objects) do
+            if object.hospital == self then
+              self:addTileObject(object.object_type.count_category)
+            end
+          end
+        end
+      end
+    end
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
@@ -738,10 +763,6 @@ function Hospital:purchasePlot(plot_number)
   return false
 end
 
-function Hospital:adviseCannotAffordPlot()
-  -- Nothing to do, override in a derived class.
-end
-
 function Hospital:getPlayerIndex()
   -- TODO: In multiplayer, return 2 or 3 or 4
   return 1
@@ -808,11 +829,6 @@ function Hospital:boilerBreakdown(broken_heat)
   self:adviseBoilerBreakdown(broken_heat)
 end
 
---! Select a relevant message to be displayed to the user
-function Hospital:adviseBoilerBreakdown()
-  -- Nothing to do, override in a sub-class.
-end
-
 --! Boiler broke down and work is done to get it fixed.
 function Hospital:_fixBoiler()
   local heat_vars = self.heating
@@ -834,9 +850,9 @@ function Hospital:_fixBoiler()
     -- It's fixed, restore previous settings.
     heat_vars.radiator_heat = heat_vars.saved_radiator_heat
     heat_vars.heating_broke = false
-    if num_radiators > 0 and self:isPlayerHospital() then
+    if num_radiators > 0 then
       -- Only tell the player about fix if there is at least one radiator.
-      self.world.ui.adviser:say(_A.boiler_issue.resolved)
+      self.hospital:giveAdvice({ _A.boiler_issue.resolved })
     end
   end
 end
@@ -1024,11 +1040,10 @@ end
 --! Collect the reception desks in the hospital.
 --!return (list) The reception desks in the hospital.
 function Hospital:findReceptionDesks()
-  -- TODO Breaks in multiplayer mode.
   local reception_desks = {}
   for _, obj_list in pairs(self.world.objects) do
     for _, obj in ipairs(obj_list) do
-      if obj.object_type.id == "reception_desk" then
+      if obj.hospital == self and obj.object_type.id == "reception_desk" then
         reception_desks[#reception_desks + 1] = obj
       end
     end
@@ -1080,51 +1095,7 @@ function Hospital:createEmergency(emergency)
     end
 
     self.emergency = emergency
-    -- The last room in the list of treatment rooms is considered when checking for availability.
-    -- It works for all original diseases, but if we introduce new multiple room diseases it might break.
-    -- TODO: Make it work for all kinds of lists of treatment rooms.
-    -- TODO: Change to make use of Hospital:checkDiseaseRequirements
-    local no_rooms = #emergency.disease.treatment_rooms
-    local room_name, required_staff, staff_name =
-      self.world:getRoomNameAndRequiredStaffName(emergency.disease.treatment_rooms[no_rooms])
-
-    local staff_available = self:countStaffOfCategory(required_staff) > 0
-    -- Check so that all rooms in the list are available
-    if self:countRoomOfType(emergency.disease.treatment_rooms[no_rooms], 1) > 0 then
-      room_name = nil
-    end
-
-    local casebook = self.disease_casebook[emergency.disease.id]
-    local added_info = casebook.drug and
-        _S.fax.emergency.cure_possible_drug_name_efficiency:format(emergency.disease.name, casebook.cure_effectiveness)
-        or _S.fax.emergency.cure_possible
-    if room_name then
-      if staff_available then
-        added_info = _S.fax.emergency.cure_not_possible_build:format(room_name) .. "."
-      else
-        added_info = _S.fax.emergency.cure_not_possible_build_and_employ:format(room_name, staff_name) .. "."
-      end
-    elseif not staff_available then
-      added_info = _S.fax.emergency.cure_not_possible_employ:format(staff_name) .. "."
-    end
-
-    local one_or_many_victims_msg
-    if emergency.victims == 1 then
-      one_or_many_victims_msg = _S.fax.emergency.num_disease_singular:format(emergency.disease.name)
-    else
-      one_or_many_victims_msg = _S.fax.emergency.num_disease:format(emergency.victims, emergency.disease.name)
-    end
-    local message = {
-      {text = _S.fax.emergency.location:format(_S.fax.emergency.locations[math.random(1,9)])},
-      {text = one_or_many_victims_msg },
-      {text = added_info},
-      {text = self.world.free_build_mode and _S.fax.emergency.free_build or _S.fax.emergency.bonus:format(emergency.bonus*emergency.victims)},
-      choices = {
-        {text = _S.fax.emergency.choices.accept, choice = "accept_emergency"},
-        {text = _S.fax.emergency.choices.refuse, choice = "refuse_emergency"},
-      },
-    }
-    self.world.ui.bottom_panel:queueMessage("emergency", message, nil, Date.hoursPerDay() * 16, 2) -- automatically refuse after 16 days
+    self:makeEmergencyStartFax()
     return -- successfully created
   end
   return "no heliport"
@@ -1147,15 +1118,7 @@ function Hospital:resolveEmergency()
   if emergency_success then
     earned = emer.bonus * rescued_patients
   end
-  local message = {
-    {text = _S.fax.emergency_result.saved_people
-      :format(rescued_patients, total)},
-    {text = self.world.free_build_mode and "" or _S.fax.emergency_result.earned_money:format(max_bonus, earned)},
-    choices = {
-      {text = _S.fax.emergency_result.close_text, choice = "close"},
-    },
-  }
-  self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*25, 1)
+  self:makeEmergencyEndFax(rescued_patients, total, max_bonus, earned)
   if emergency_success then -- Reputation increased
     self:changeReputation("emergency_success", emer.disease)
     self:receiveMoney(earned, _S.transactions.emergency_bonus)
@@ -1177,18 +1140,6 @@ function Hospital:checkEmergencyOver()
       window:onCountdownEnd()
     end
   end
-end
-
--- Creates VIP and sends a FAX to query the user.
-function Hospital:createVip()
-  local vipName =  _S.vip_names[math.random(1,10)]
-  local message = {
-    {text = _S.fax.vip_visit_query.vip_name:format(vipName)},
-    choices = {{text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip", additionalInfo = {name=vipName}},
-               {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip", additionalInfo = {name=vipName}}}
-  }
-  -- auto-refuse after 20 days
-  self.world.ui.bottom_panel:queueMessage("personality", message, nil, 24*20, 2)
 end
 
 --[[ Creates a new epidemic by creating a new contagious patient with
@@ -1641,39 +1592,54 @@ function Hospital:countRoomOfType(type, max_count)
   return result
 end
 
+--! Update tile object counts for adding an object.
+--! See also 'Hospital:removeTileObject'
+--!param object_category Category of the tile object.
+function Hospital:addTileObject(object_category)
+  if object_category then
+    local current_count = self.tile_object_counts[object_category]
+    self.tile_object_counts[object_category] = current_count + 1
+  end
+end
+
+--! Update tile object counts for removing an object.
+--! See also 'Hospital:addTileObject'
+--!param object_category Category of the tile object.
+function Hospital:removeTileObject(object_category)
+  if object_category then
+    local current_count = self.tile_object_counts[object_category]
+    self.tile_object_counts[object_category] = current_count - 1
+  end
+end
+
 --! Get the number of reception desks in the hospital.
 --!return (int) Number of reception desks in the hospital.
 function Hospital:countReceptionDesks()
-  -- TODO Breaks in multiplayer mode.
-  return self.world.object_counts["reception_desk"]
+  return self.tile_object_counts["reception_desk"]
 end
 
 --! Get the number of radiators in the hospital.
 --!return (int) Number of radiators in the hospital.
 function Hospital:countRadiators()
-  -- TODO Breaks in multiplayer mode.
-  return self.world.object_counts["radiator"]
+  return self.tile_object_counts["radiator"]
 end
 
 --! Get the number of plants in the hospital.
 --!return (int) Number of plants in the hospital.
 function Hospital:countPlants()
-  -- TODO Breaks in multiplayer mode.
-  return self.world.object_counts["plant"]
+  return self.tile_object_counts["plant"]
 end
 
 --! Get the number of fire extinguishers in the hospital.
 --!return (int) Number of fire extinguishers in the hospital.
 function Hospital:countFireExtinguishers()
-  -- TODO Breaks in multiplayer mode.
-  return self.world.object_counts["extinguisher"]
+  return self.tile_object_counts["extinguisher"]
 end
 
 --! Get the number of general objects in the hospital.
 --!return (int) Number of general objects in the hospital.
 function Hospital:countGeneralObjects()
-  -- TODO Breaks in multiplayer mode.
-  return self.world.object_counts["general"]
+  return self.tile_object_counts["general"]
 end
 
 --! A new object has been placed in the hospital.
@@ -1686,9 +1652,11 @@ function Hospital:objectPlaced(entity, id)
     local w, h = self.world.map.th:size()
     for tx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
       for ty = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
-        for _, patient in ipairs(self.world.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
-          if class.is(patient, Patient) then
-            patient:notifyNewObject(id)
+        if self:isInHospital(tx, ty) then -- Only patients of this hospital should be warned.
+          for _, patient in ipairs(self.world.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
+            if class.is(patient, Patient) then
+              patient:notifyNewObject(id)
+            end
           end
         end
       end
@@ -1710,32 +1678,6 @@ function Hospital:objectPlaced(entity, id)
     self:showGatesToHell(entity)
     return
   end
-end
-
---! Give advice to the user about the need to buy the first reception desk.
-function Hospital:msgNeedFirstReceptionDesk()
-  -- Nothing to do, override in a sub-class.
-end
-
---! Give advice to the user about having bought a reception desk.
-function Hospital:msgReceptionDesk()
-  -- Nothing to do, override in a sub-class.
-end
-
---! Give advice about having more desks.
-function Hospital:msgMultiReceptionDesks()
-  -- Nothing to do, override in a sub-class.
-end
-
---! Give advice to the user about maintenance of plants.
-function Hospital:msgPlant()
-  -- Nothing to do, override in a sub-class.
-end
-
---! Show the 'Gates to hell' animation.
---!param _entity (Entity) Gates to hell.
-function Hospital:showGatesToHell(_entity)
-  -- Nothing to do, override in a sub-class.
 end
 
 --! Remove the first entry with a given value from a table.
@@ -2357,10 +2299,6 @@ function Hospital:computePriceLevelImpact(patient, casebook)
   end
 end
 
-function Hospital:advisePriceLevelImpact()
-  -- Nothing to do, override in a derived class.
-end
-
 --! Notify patients of a change to hospital staff members
 --!param staff (Staff) Changed staff member subject of notification
 function Hospital:notifyOfStaffChange(staff)
@@ -2417,26 +2355,87 @@ function Hospital:getRandomBusyRoom()
   if #chosen_room.door.queue >= busy_threshold then return chosen_room end
 end
 
-function Hospital:giveAdvice()
-  -- Nothing to do, override in a derived class.
+---- Stubs section - these functions have nothing to do here, are overridden in a derived class.
+-- luacheck: ignore 212 keep args for child class
+
+--! Give advice to the user about the need to buy the first reception desk.
+function Hospital:msgNeedFirstReceptionDesk()
 end
 
-function Hospital:adviseDiscoverDisease()
-  -- Nothing to do, override in a derived class.
+--! Give advice to the user about having bought a reception desk.
+function Hospital:msgReceptionDesk()
 end
 
-function Hospital:makeRaiseRequest()
-  -- Nothing to do, override in a derived class.
+--! Give advice about having more desks.
+function Hospital:msgMultiReceptionDesks()
 end
 
-function Hospital:announceRepair()
-  -- Nothing to do, override in a derived class.
+--! Give advice to the user about maintenance of plants.
+function Hospital:msgPlant()
+end
+
+--! Show the 'Gates to hell' animation.
+function Hospital:showGatesToHell(entity)
+end
+
+--! Advises the player.
+function Hospital:giveAdvice(msgs, rnd_frac, stay_up)
+end
+
+--! Give the user possibly a message about a cured patient.
+function Hospital:msgCured()
+end
+
+--! Give the user possibly a message about a dead patient.
+function Hospital:msgKilled()
+end
+
+function Hospital:adviseDiscoverDisease(disease)
+end
+
+--! Select a relevant message to be displayed to the user
+function Hospital:adviseBoilerBreakdown()
+end
+
+--! Announces a machine needing repair
+function Hospital:announceRepair(room)
 end
 
 function Hospital:onSpawnVIP()
-  -- Nothing to do, override in a derived class.
 end
 
-function Hospital:announceStaffLeave()
-  -- Nothing to do, override in a derived class.
+--! Give visual warning that player doesn't have enough $ to build
+function Hospital:adviseCannotAffordPlot()
+end
+
+--! Tell the player, through the advisor, about the impact of casebook prices
+function Hospital:advisePriceLevelImpact(judgment, name)
+end
+
+--! Makes the raise request for a staff member
+function Hospital:makeRaiseRequest(amount, staff)
+end
+
+--! Announce to the player that a staff member is leaving the hospital
+function Hospital:announceStaffLeave(staff)
+end
+
+--! Makes the fax requesting player action for the patient who needs a diagnosis room
+function Hospital:makeNoTreatmentRoomFax(patient)
+end
+
+--! Makes the fax requesting player action for the patient who needs a diagnosis room
+function Hospital:makeNoDiagnosisRoomFax(patient)
+end
+
+--! Makes the fax at the start of an emergency
+function Hospital:makeEmergencyStartFax()
+end
+
+--! Makes the fax at the end of an emergency
+function Hospital:makeEmergencyEndFax(rescued_patients, total, max_bonus, earned)
+end
+
+--! Makes the fax which may spawn a VIP
+function Hospital:createVip()
 end

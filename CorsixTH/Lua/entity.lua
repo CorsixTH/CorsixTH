@@ -52,7 +52,7 @@ function Entity:playSound(name, played_callback, played_callback_delay)
   end
 end
 
-function Entity:setWaitingForSoundEffectsToBeTurnedOn(state)
+function Entity:setWaitingForSoundEffectsToBeTurnedOn()
   self.waiting_for_sound_effects_to_be_turned_on = true
 end
 
@@ -299,15 +299,15 @@ end
 --!param id Name of the new object.
 -- TODO Currently only used for benches placed nearby.
 -- TODO Maybe also pass the object tile coordinates?
-function Entity:notifyNewObject(id)
+function Entity:notifyNewObject(id) -- luacheck: ignore 212 keep args for child class
 end
 
 --! Notify the entity that a new room was built.
 --!param room (Room) The new room.
-function Entity:notifyNewRoom(room)
+function Entity:notifyNewRoom(room) -- luacheck: ignore 212 keep args for child class
 end
 
-function Entity:setMood(mood_name, activate)
+function Entity:setMood(mood_name, activate) -- luacheck: ignore 212 keep args for child class
 end
 
 -- Returns a table of hover info about an object.
@@ -334,7 +334,7 @@ function Entity:clearDynamicInfo()
 end
 
 --! Stub to be extended in subclasses, if needed.
-function Entity:afterLoad(old, new)
+function Entity:afterLoad(old, new) -- luacheck: ignore 212 keep args for child class
 end
 
 function Entity:playAfterLoadSound()

@@ -53,7 +53,7 @@ end
 
 function PsychRoom:roomFinished()
   if self.hospital:countStaffOfCategory("Psychiatrist", 1) == 0 then
-    self.world.ui.adviser:say(_A.room_requirements.psychiatry_need_psychiatrist)
+    self.hospital:giveAdvice({_A.room_requirements.psychiatry_need_psychiatrist})
   end
   return Room.roomFinished(self)
 end
@@ -67,7 +67,7 @@ function PsychRoom:commandEnteringStaff(staff)
     staff:walkTo(ox, oy)
     staff:queueAction(UseObjectAction(obj))
     local num_meanders = math.random(2, 8)
-    local loop_callback_meanders = --[[persistable:psych_meander_loop_callback]] function(action)
+    local loop_callback_meanders = --[[persistable:psych_meander_loop_callback]] function()
       num_meanders = num_meanders - 1
       if num_meanders == 0 then
         self:commandEnteringStaff(staff)

@@ -261,6 +261,9 @@ adviser = {
     roujin_on_cheat = "Roujin's challenge activated! Good luck in the coming months...",
     roujin_off_cheat = "Roujin's challenge deactivated. Everything will be back to normal soon.",
   },
+  staff_place_advice = {
+    not_enough_lecture_chairs = "Each student doctor needs a lecture chair to sit in!"
+  },
 }
 
 dynamic_info.patient.actions.no_gp_available = "Waiting for you to build a GP's office"

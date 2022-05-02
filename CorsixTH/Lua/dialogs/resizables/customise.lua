@@ -132,12 +132,12 @@ function UICustomise:UICustomise(ui, mode)
     :makeButton(0, 0, 310, 40, nil, self.buttonBack):setTooltip(_S.tooltip.customise_window.back)
 end
 
-function UICustomise:buttonAudioGlobal(checked)
+function UICustomise:buttonAudioGlobal()
   local window = UIAudio(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
-function UICustomise:buttonMoviesGlobal(checked)
+function UICustomise:buttonMoviesGlobal()
   local app = self.ui.app
   app.config.movies = not app.config.movies
   self.movies_button:toggle()
@@ -146,7 +146,7 @@ function UICustomise:buttonMoviesGlobal(checked)
   app:saveConfig()
 end
 
-function UICustomise:buttonIntro(checked)
+function UICustomise:buttonIntro()
   local app = self.ui.app
   app.config.play_intro = not app.config.play_intro
   self.intro_button:toggle()
@@ -155,7 +155,7 @@ function UICustomise:buttonIntro(checked)
   app:saveConfig()
 end
 
-function UICustomise:buttonPaused(checked)
+function UICustomise:buttonPaused()
   local app = self.ui.app
   app.config.allow_user_actions_while_paused = not app.config.allow_user_actions_while_paused
   self.paused_button:toggle()
@@ -164,7 +164,7 @@ function UICustomise:buttonPaused(checked)
   app:saveConfig()
 end
 
-function UICustomise:buttonVolume(checked)
+function UICustomise:buttonVolume()
   local app = self.ui.app
   app.config.volume_opens_casebook = not app.config.volume_opens_casebook
   self.volume_button:toggle()
@@ -173,7 +173,7 @@ function UICustomise:buttonVolume(checked)
   app:saveConfig()
 end
 
-function UICustomise:buttonAliens(checked)
+function UICustomise:buttonAliens()
   local app = self.ui.app
   app.config.alien_dna_only_by_emergency = not app.config.alien_dna_only_by_emergency
   app.config.alien_dna_must_stand = not app.config.alien_dna_must_stand
@@ -186,7 +186,7 @@ function UICustomise:buttonAliens(checked)
   self.ui:addWindow(UIInformation(self.ui, err))
 end
 
-function UICustomise:buttonFractured_bones(checked)
+function UICustomise:buttonFractured_bones()
   local app = self.ui.app
   app.config.disable_fractured_bones_females = not app.config.disable_fractured_bones_females
   self.fractured_bones_button:toggle()
@@ -197,7 +197,7 @@ function UICustomise:buttonFractured_bones(checked)
   self.ui:addWindow(UIInformation(self.ui, err))
 end
 
-function UICustomise:buttonAverage_contents(checked)
+function UICustomise:buttonAverage_contents()
   local app = self.ui.app
   app.config.enable_avg_contents = not app.config.enable_avg_contents
   self.average_contents_button:toggle()
@@ -206,7 +206,7 @@ function UICustomise:buttonAverage_contents(checked)
   self:reload()
 end
 
-function UICustomise:buttonDestroyed_rooms(checked)
+function UICustomise:buttonDestroyed_rooms()
   local app = self.ui.app
   app.config.remove_destroyed_rooms = not app.config.remove_destroyed_rooms
   self.destroyed_rooms_button:toggle()

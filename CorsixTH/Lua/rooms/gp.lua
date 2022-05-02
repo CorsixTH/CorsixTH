@@ -203,7 +203,7 @@ end
 function GPRoom:roomFinished()
   if self.hospital:countStaffOfCategory("Doctor") == 0 and
       not self.world.ui.start_tutorial then
-    self.world.ui.adviser:say(_A.room_requirements.gps_office_need_doctor)
+    self.hospital:giveAdvice({_A.room_requirements.gps_office_need_doctor})
   end
   return Room.roomFinished(self)
 end

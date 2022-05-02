@@ -100,8 +100,8 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   lock_room = manual or lock_room
 
   local call = {
-    verification = --[[persistable:call_dispatcher_repair_verification]] function(staff) return false end,
-    priority = --[[persistable:call_dispatcher_repair_priority]] function(staff) return 1 end,
+    verification = --[[persistable:call_dispatcher_repair_verification]] function() return false end,
+    priority = --[[persistable:call_dispatcher_repair_priority]] function() return 1 end,
     execute = --[[persistable:call_dispatcher_repair_execute]] function(staff) return CallsDispatcher.sendStaffToRepair(object, staff) end,
     object = object,
     key = "repair",
@@ -136,9 +136,9 @@ end
 
 function CallsDispatcher:callForWatering(plant)
   local call = {
-    verification = --[[persistable:call_dispatcher_watering_verification]]function(staff)
+    verification = --[[persistable:call_dispatcher_watering_verification]]function()
       return false end,
-    priority = --[[persistable:call_dispatcher_watering_priority]] function(staff)
+    priority = --[[persistable:call_dispatcher_watering_priority]] function()
       return 1 end,
     execute = --[[persistable:call_dispatcher_watering_execute]] function(staff) return CallsDispatcher.sendStaffToWatering(plant, staff) end,
     object = plant,
@@ -542,7 +542,7 @@ function CallsDispatcher.sendStaffToRoom(room, staff)
   staff:updateDynamicInfo(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
 end
 
-function CallsDispatcher.staffActionInterruptHandler(action, humanoid, high_priority)
+function CallsDispatcher.staffActionInterruptHandler(action, humanoid)
   if action.call.assigned == humanoid then
     action.call.assigned = nil
     humanoid.on_call = nil

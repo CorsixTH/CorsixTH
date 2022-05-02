@@ -70,13 +70,13 @@ function OperatingTheatreRoom:roomFinished()
   end
   -- Tell the player what is missing, if anything.
   if self.hospital:countRoomOfType("ward", 1) == 0 then
-    self.world.ui.adviser:say(_A.room_requirements.op_need_ward)
+    self.hospital:giveAdvice({_A.room_requirements.op_need_ward})
   end
   local numSurgeons = self.hospital:countStaffOfCategory("Surgeon", 2)
   if numSurgeons == 0 then
-    self.world.ui.adviser:say(_A.room_requirements.op_need_two_surgeons)
+    self.hospital:giveAdvice({_A.room_requirements.op_need_two_surgeons})
   elseif numSurgeons == 1 then
-    self.world.ui.adviser:say(_A.room_requirements.op_need_another_surgeon)
+    self.hospital:giveAdvice({_A.room_requirements.op_need_another_surgeon})
   end
   return Room.roomFinished(self)
 end
@@ -181,7 +181,7 @@ end
 --!param operation_table (OperatingTable): master object representing
 --! the operation table.
 function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_table)
-  local loop_callback_multi_use = --[[persistable:operatring_theatre_multi_use_callback]] function(_)
+  local loop_callback_multi_use = --[[persistable:operatring_theatre_multi_use_callback]] function()
     -- dirty hack to make the truncated animation work
     surgeon1.animation_idx = nil
   end

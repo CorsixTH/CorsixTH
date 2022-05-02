@@ -852,7 +852,7 @@ function UI:onKeyUp(rawchar)
   end
 end
 
-function UI:onEditingText(text, start, length)
+function UI:onEditingText(text, start, length) -- luacheck: ignore 212 keep args for child class
   -- Does nothing at the moment. We are handling text input ourselves.
 end
 

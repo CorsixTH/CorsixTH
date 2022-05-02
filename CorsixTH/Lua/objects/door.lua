@@ -193,5 +193,6 @@ function Door:afterLoad(old, new)
     end
   end
   self:updateDynamicInfo()
+  Object.afterLoad(self, old, new)
 end
 return object

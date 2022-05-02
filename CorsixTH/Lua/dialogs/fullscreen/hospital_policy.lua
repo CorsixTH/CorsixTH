@@ -24,7 +24,7 @@ class "UIPolicy" (UIFullscreen)
 ---@type UIPolicy
 local UIPolicy = _G["UIPolicy"]
 
-function UIPolicy:UIPolicy(ui, disease_selection)
+function UIPolicy:UIPolicy(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   if not pcall(function()
@@ -43,7 +43,7 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   local hosp = ui.hospital
   self.hospital = hosp
 
-  local --[[persistable:hospital_policy_allow_staff]] function allowStaff(name, state, btn)
+  local --[[persistable:hospital_policy_allow_staff]] function allowStaff(name)
     if name == "Allow" then
       if self.prohibit_button.toggled then -- Changing setting from prohibit to allow
         hosp.policies["staff_allowed_to_move"] = true

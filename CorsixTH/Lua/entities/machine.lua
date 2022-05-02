@@ -487,5 +487,5 @@ function Machine:setHandymanRepairPosition(direction)
 end
 
 -- Dummy callbacks for savegame compatibility
-local callbackNewRoom = --[[persistable:machine_build_callback]] function(room) end
+local callbackNewRoom = --[[persistable:machine_build_callback]] function() end
 local repair_loop_callback = --[[persistable:handyman_repair_loop_callback]] function() end

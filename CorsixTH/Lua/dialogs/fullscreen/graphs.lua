@@ -87,6 +87,7 @@ function UIGraphs:UIGraphs(ui)
     self:addPanel(0, 590, 400):makeToggleButton(0, 0, 42, 42, 1, buttons("reputation")):setTooltip(_S.tooltip.graphs.reputation)
   }
 
+  self.display_month = self.hospital.world.game_date:monthOfGame()
   self:updateLines()
 end
 
@@ -347,7 +348,7 @@ function UIGraphs:updateLines()
   for _ = 1, #self.values do
     local line = TH.line()
     line:setWidth(1)
-    line:moveTo(xpos, BOTTOM_Y + 2)
+    line:moveTo(xpos, BOTTOM_Y + 4)
     line:lineTo(xpos, BOTTOM_Y + 8)
     aux_lines[#aux_lines + 1] = line
     xpos = xpos - VERT_DX
@@ -355,6 +356,11 @@ function UIGraphs:updateLines()
 end
 
 function UIGraphs:draw(canvas, x, y)
+  -- update graph automatically every month
+  if self.display_month ~= self.hospital.world.game_date:monthOfGame() then
+    self:updateLines()
+  end
+
   self.background:draw(canvas, self.x + x, self.y + y)
   UIFullscreen.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
@@ -386,17 +392,19 @@ function UIGraphs:draw(canvas, x, y)
   end
 
   local stats_stepsize = getStatisticsStepsize(self.graph_scale)
-  local xpos = x + RIGHT_X
+  local xpos = x + RIGHT_X - math.floor(VERT_DX / 2)
 
   -- Draw numbers (or month names) below the graph
   assert(#self.hospital.statistics > 0) -- Avoid negative months and years.
   if stats_stepsize >= 12 then
     -- Display years
-    local year_number = math.floor((#self.hospital.statistics - 1) / 12)
+    local year_number = math.floor((#self.hospital.statistics - 1) / stats_stepsize)
+	local year_steps = math.floor(stats_stepsize / 12)
+    year_number = year_number * year_steps
     for i = 1, #self.values do
       self.black_font:drawWrapped(canvas, year_number, xpos, y + BOTTOM_Y + 10, 25, "center")
       xpos = xpos - VERT_DX
-      year_number = year_number - math.floor(stats_stepsize / 12)
+      year_number = year_number - year_steps
 
       -- And the small black line
       self.aux_lines[i]:draw(canvas, x, y)
@@ -417,8 +425,8 @@ function UIGraphs:draw(canvas, x, y)
 end
 
 function UIGraphs:toggleGraphScale()
-  self.graph_scale = self.graph_scale + 1
-  if self.graph_scale == 4 then self.graph_scale = 1 end
+  self.graph_scale = self.graph_scale - 1
+  if self.graph_scale == 0 then self.graph_scale = 3 end
   self:updateLines()
   self.ui:playSound("selectx.wav")
 end

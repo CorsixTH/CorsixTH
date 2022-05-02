@@ -78,7 +78,7 @@ function WardRoom:roomFinished()
   }
   self.maximum_patients = beds
   if self.hospital:countStaffOfCategory("Nurse", 1) == 0 then
-    self.world.ui.adviser:say(_A.room_requirements.ward_need_nurse)
+    self.hospital:giveAdvice({_A.room_requirements.ward_need_nurse})
   end
   Room.roomFinished(self)
 end
@@ -115,7 +115,7 @@ function WardRoom:doStaffUseCycle(humanoid)
   end
 
   local num_meanders = math.random(2, 4)
-  local meanders_loop = --[[persistable:ward_meander_loop_callback]] function(action)
+  local meanders_loop = --[[persistable:ward_meander_loop_callback]] function()
     num_meanders = num_meanders - 1
     if num_meanders == 0 then
       self:doStaffUseCycle(humanoid)
