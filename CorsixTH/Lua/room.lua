@@ -416,7 +416,7 @@ function Room:createDealtWithPatientCallback(humanoid)
       staff_member:setNextAction(self:createLeaveAction())
       staff_member:queueAction(MeanderAction())
       staff_member:setMood("staff_wait", "deactivate")
-      staff_member:updateDynamicInfo("")
+      staff_member:setDynamicInfoText("")
     end
     staff_humanoid:setCallCompleted()
     staff_humanoid.waiting_on_other_staff = nil
@@ -485,7 +485,7 @@ function Room:commandEnteringStaff(humanoid, already_initialized)
     humanoid:setNextAction(MeanderAction())
   end
   self:tryToFindNearbyPatients()
-  humanoid:updateDynamicInfo("")
+  humanoid:setDynamicInfoText("")
   -- This variable is used to avoid multiple calls for staff (sound played only)
   self.sound_played = nil
   if self:testStaffCriteria(self:getRequiredStaffCriteria()) then
@@ -502,7 +502,7 @@ function Room:commandEnteringPatient(humanoid)
     if class.is(room_humanoid, Staff) then
       if room_humanoid.humanoid_class ~= "Handyman" then
         room_humanoid:setMood("staff_wait", "deactivate")
-        room_humanoid:updateDynamicInfo("")
+        room_humanoid:setDynamicInfoText("")
       end
     end
   end
@@ -522,7 +522,7 @@ function Room:tryAdvanceQueue()
           if class.is(room_humanoid, Staff) then
             if room_humanoid.humanoid_class ~= "Handyman" then
               room_humanoid:setMood("staff_wait", "activate")
-              room_humanoid:updateDynamicInfo(_S.dynamic_info.staff.actions.waiting_for_patient)
+              room_humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.waiting_for_patient)
             end
           end
         end

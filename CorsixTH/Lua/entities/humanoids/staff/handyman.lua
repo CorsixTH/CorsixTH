@@ -94,7 +94,7 @@ function Handyman:afterLoad(old, new)
 end
 
 function Handyman:interruptHandymanTask()
-  self:updateDynamicInfo("")
+  self:setDynamicInfoText("")
   if self.on_call then
     self.on_call.assigned = nil
     self.on_call = nil

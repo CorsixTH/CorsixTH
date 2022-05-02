@@ -265,7 +265,7 @@ function Object:getRenderAttachTile()
 end
 
 --! Updates the object's dynamic info
---!param only_update (bool) If false or nil, do not increase times_used.
+--!param only_update (bool) If true, do not increase times_used.
 function Object:updateDynamicInfo(only_update)
   if not only_update then
     self.times_used = self.times_used + 1

@@ -338,7 +338,7 @@ function Patient:die()
     self:setNextAction(MeanderAction():setCount(1))
   end
   self:queueAction(DieAction())
-  self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
+  self:setDynamicInfoText(_S.dynamic_info.patient.actions.dying)
 end
 
 -- Actions we can interrupt for in the canPeeOrPuke function
@@ -477,7 +477,7 @@ function Patient:goHome(reason, disease_id)
     self:setMood("cured", "activate")
     self:changeAttribute("happiness", 0.8)
     hosp:updateCuredCounts(self)
-    self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
+    self:setDynamicInfoText(_S.dynamic_info.patient.actions.cured)
 
   elseif reason == "kicked" then
     self:setMood("exit", "activate")
@@ -547,10 +547,10 @@ function Patient:tickDay()
       self:goHome("kicked")
       if self.diagnosed then
         -- No treatment rooms
-        self:updateDynamicInfo(_S.dynamic_info.patient.actions.no_treatment_available)
+        self:setDynamicInfoText(_S.dynamic_info.patient.actions.no_treatment_available)
       else
         -- No diagnosis rooms
-        self:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
+        self:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
       end
     elseif self.waiting == 10 then
       self:tapFoot()
@@ -589,7 +589,7 @@ function Patient:tickDay()
     -- There is a 1/3 chance that the patient will get fed up and leave
     -- note, this is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
     if math.random(1,30) == 1 then
-      self:updateDynamicInfo(_S.dynamic_info.patient.actions.fed_up)
+      self:setDynamicInfoText(_S.dynamic_info.patient.actions.fed_up)
       self:setMood("sad2", "deactivate")
       self:goHome("kicked")
     end
@@ -934,19 +934,17 @@ function Patient:addToTreatmentHistory(room)
   end
 end
 
+--! Sets the dynamic text currently in use by the patient
+--!param action_string (string) What text to say in dynamic text
+function Patient:setDynamicInfoText(action_string)
+  self.action_string = action_string
+  self:updateDynamicInfo()
+end
+
 --! Updates a patient's dynamic info
---!param action_string (string) The text to be appended
-function Patient:updateDynamicInfo(action_string)
-  -- Retain the old text if only an update is wanted, i.e. no new string is supplied.
-  if action_string == nil then
-    if self.action_string then
-      action_string = self.action_string
-    else
-      action_string = ""
-    end
-  else
-    self.action_string = action_string
-  end
+--! Can be called direct to refresh only
+function Patient:updateDynamicInfo()
+  local action_string = self.action_string or ""
   local info = ""
   if self.going_home then
     self:setDynamicInfo('progress', nil)

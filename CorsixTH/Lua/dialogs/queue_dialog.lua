@@ -204,7 +204,7 @@ function UIQueue:onMouseUp(button, x, y)
       local patient = self.dragged.patient
       patient:setNextAction(room:createEnterAction(patient))
       patient.next_room_to_visit = room
-      patient:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to:format(room.room_info.name))
+      patient:setDynamicInfoText(_S.dynamic_info.patient.actions.on_my_way_to:format(room.room_info.name))
       room.door:updateDynamicInfo()
       -- call staff to room if required
       if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then

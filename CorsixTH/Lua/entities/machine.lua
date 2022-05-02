@@ -219,7 +219,7 @@ function Machine:createHandymanActions(handyman)
 
   local --[[persistable:handyman_repair_after_use]] function repair_after_use()
     handyman:setCallCompleted()
-    handyman:updateDynamicInfo("")
+    handyman:setDynamicInfoText("")
     self:machineRepaired(self:getRoom())
   end
 
@@ -256,7 +256,7 @@ function Machine:createHandymanActions(handyman)
   handyman:queueAction(repair_action)
   CallsDispatcher.queueCallCheckpointAction(handyman)
   handyman:queueAction(AnswerCallAction())
-  handyman:updateDynamicInfo(_S.dynamic_info.staff.actions.going_to_repair
+  handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
     :format(self.object_type.name))
 end
 
