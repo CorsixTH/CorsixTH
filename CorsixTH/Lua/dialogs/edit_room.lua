@@ -159,7 +159,6 @@ function UIEditRoom:abortRoom()
   self:close()
   -- Finally remove the room from the world (close() needs the reference)
   if self.room then
-    self.room:deactivate() -- TODO: may be superfluous since already called in Room:tryToEdit
     self.world.rooms[self.room.id] = nil
   end
 end

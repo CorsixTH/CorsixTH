@@ -364,7 +364,7 @@ end
 --!param ... Additional arguments to `callback`.
 function UI:addKeyHandler(keys, window, callback, ...)
   -- It is necessary to clone the key table into another temporary table, as if we don't the original table that we take it from will lose
-  -- the last key of that table permenently in the next line of code after this one, until the program is restarted.
+  -- the last key of that table permanently in the next line of code after this one, until the program is restarted.
   -- I.E. if the "ingame_quitLevel" hotkey from the "hotkeys_values" table in "config_finder.lua" is a table that looks like this:
   --   {"shift", "q"}
   -- We would lose the "q" element until we restarted the game and the "hotkey.txt" was read from again, causing the "ingame_quitLevel"
