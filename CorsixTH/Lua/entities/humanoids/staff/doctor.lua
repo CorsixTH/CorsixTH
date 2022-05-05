@@ -230,7 +230,7 @@ function Doctor:setCrazy(crazy)
     -- make doctor crazy
     if not self.is_crazy then
       self:setLayer(5, self.profile.layer5 + 4)
-      self.world.ui.adviser:say(_A.warnings.doctor_crazy_overwork)
+      self.hospital:giveAdvice({_A.warnings.doctor_crazy_overwork})
       self.is_crazy = true
     end
   else
