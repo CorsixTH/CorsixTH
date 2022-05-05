@@ -223,45 +223,17 @@ end
 --[[--VIP has left--]]
 -- Called when the vip is out of the hospital grounds
 function Vip:onDestroy()
-  local message
-  -- First of all there's a special message if we're in free build mode.
   if self.world.free_build_mode then
     self.last_hospital:unconditionalChangeReputation(20)
-    message = {
-      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.remarks.free_build[math.random(1, 3)]},
-      choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-    }
   elseif self.vip_rating <= 7 then
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
     self.last_hospital:unconditionalChangeReputation(self.rep_reward)
     self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty + 1
-    message = {
-      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.remarks[self.vip_message]},
-      {text = _S.fax.vip_visit_result.rep_boost},
-      {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
-      choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-    }
-  elseif self.vip_rating >=8 and self.vip_rating < 11 then
-    -- Dont tell player about any rep change in this range
-    self.last_hospital:unconditionalChangeReputation(self.rep_reward)
-    message = {
-      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.remarks[self.vip_message]},
-      choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-    }
   else
     self.last_hospital:unconditionalChangeReputation(self.rep_reward)
-    message = {
-      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.remarks[self.vip_message]},
-      {text = _S.fax.vip_visit_result.rep_loss},
-      choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-    }
   end
-  self.world.ui.bottom_panel:queueMessage("report", message, nil, 24 * 20, 1)
 
+  self.last_hospital:makeVipEndFax(self.vip_rating, self.name, self.cash_reward, self.vip_message)
   self.world:nextVip()
 
   return Humanoid.onDestroy(self)

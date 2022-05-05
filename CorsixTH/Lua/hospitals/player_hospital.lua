@@ -695,6 +695,41 @@ function PlayerHospital:removeMessage(humanoid)
   end
 end
 
+--! Called when the vip is out of the hospital grounds and ready to make their report
+--!param vip_rating (int)
+--!param name (string)
+--!param cash_reward (int)
+--!param vip_message (int)
+function PlayerHospital:makeVipEndFax(vip_rating, name, cash_reward, vip_message)
+  local message
+  -- First of all there's a special message if we're in free build mode.
+  if self.world.free_build_mode then
+    message = {
+      {text = _S.fax.vip_visit_result.remarks.free_build[math.random(1, 3)]},
+    }
+  elseif vip_rating <= 7 then
+    message = {
+      {text = _S.fax.vip_visit_result.remarks[vip_message]},
+      {text = _S.fax.vip_visit_result.rep_boost},
+      {text = _S.fax.vip_visit_result.cash_grant:format(cash_reward)},
+    }
+  elseif vip_rating >= 8 and vip_rating < 11 then
+    -- Dont tell player about any rep change in this range
+    message = {
+      {text = _S.fax.vip_visit_result.remarks[vip_message]},
+    }
+  else
+    message = {
+      {text = _S.fax.vip_visit_result.remarks[vip_message]},
+      {text = _S.fax.vip_visit_result.rep_loss},
+    }
+  end
+  table.insert(message, 1, {text = _S.fax.vip_visit_result.vip_remarked_name:format(name)})
+  message["choices"] = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
+
+  self.world.ui.bottom_panel:queueMessage("report", message, nil, Date.hoursPerDay() * 20, 1)
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)
