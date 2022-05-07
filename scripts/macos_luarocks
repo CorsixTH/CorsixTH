@@ -59,7 +59,7 @@ elif [ -e "$dir/lib/lua/$lua/lfs.so" ] && [ -e "$dir/lib/lua/$lua/lpeg.so" ] &&
 else
   luarocks install --lua-version "$lua" --tree . luafilesystem
   luarocks install --lua-version "$lua" --tree . lpeg
-  luarocks install --lua-version "$lua" --tree . luasocket --from=http://luarocks.org/dev
+  luarocks install --lua-version "$lua" --tree . luasocket
   luarocks install --lua-version "$lua" --tree . luasec OPENSSL_DIR=/usr/local/opt/openssl || true
   echo "Installed local luarocks $lua."
 fi
