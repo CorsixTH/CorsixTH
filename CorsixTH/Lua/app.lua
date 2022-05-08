@@ -1476,33 +1476,33 @@ function App:getVersion(version)
   if ver > 156 then
     return "Trunk"
   elseif ver > 138 then
-    return "v0.65"
+    return "v0.65.0" -- Some users had v0.65.1 but no version number was specified
   elseif ver > 134 then
-    return "v0.64"
+    return "v0.64.0"
   elseif ver > 127 then
-    return "v0.63"
+    return "v0.63.0"
   elseif ver > 122 then
-    return "v0.62"
+    return "v0.62.0"
   elseif ver > 111 then
-    return "v0.61"
+    return "v0.61.0"
   elseif ver > 105 then
-    return "v0.60"
+    return "v0.60.0"
   elseif ver > 91 then
-    return "0.50"
+    return "v0.50.0"
   elseif ver > 78 then
-    return "0.40"
+    return "v0.40.0"
   elseif ver > 72 then
-    return "0.30"
+    return "v0.30.0"
   elseif ver > 66 then
-    return "0.21"
+    return "v0.21.0"
   elseif ver > 54 then
-    return "0.20"
+    return "v0.20.0"
   elseif ver > 53 then
-    return "0.11"
+    return "v0.11.0"
   elseif ver > 51 then
-    return "0.10"
+    return "v0.10.0"
   elseif ver > 45 then
-    return "0.01"
+    return "v0.01.0"
   else
     return "Beta 8 or earlier"
   end
@@ -1671,6 +1671,11 @@ function App:afterLoad()
 end
 
 function App:checkForUpdates()
+  local function extractVersionNumericals(version)
+    local _, _, major, minor, rev = string.find(version, "(%d+).(%d+).(%d+)") -- luacheck: ignore 211
+    return tonumber(major), tonumber(minor), tonumber(rev)
+  end
+
   -- Only check for updates once per application launch
   if not self.check_for_updates or not self.config.check_for_updates then return end
   self.check_for_updates = false
@@ -1678,16 +1683,18 @@ function App:checkForUpdates()
   -- Default language to use for the changelog if no localised version is available
   local default_language = "en"
   local update_url = 'https://corsixth.com/CorsixTH/check-for-updates'
-  local current_version = self:getVersion()
+  local current_version = string.gsub(self:getVersion(), "v", "")
 
   -- Only URLs that match this list of trusted domains will be accepted.
   local trusted_domains = { 'corsixth.com', 'github.com', 'corsixth.github.io' }
 
   -- Only check for updates against released versions
-  if current_version == "Trunk" then
-    print("Will not check for updates since this is the Trunk version.")
+  -- Also check for Beta 8 to prevent errors, even though this should never happen
+  if current_version == "Trunk" or current_version == "Beta 8 or earlier" then
+    print("Will not check for updates since this is the " .. current_version .. " version.")
     return
   end
+  local current_version_major, current_version_minor, current_version_revision = extractVersionNumericals(current_version)
 
   local luasocket, _ = pcall(require, "socket")
   local luasec, _ = pcall(require, "ssl.https")
@@ -1709,9 +1716,10 @@ function App:checkForUpdates()
 
   local update_table = loadstring_envcall(update_body, "@updatechecker"){}
   local changelog = update_table["changelog_" .. default_language]
-  local new_version = update_table["major"] .. '.' .. update_table["minor"] .. update_table["revision"]
+  local new_version = update_table["major"] .. '.' .. update_table["minor"] .. "." .. update_table["revision"]
+  local new_version_major, new_version_minor, new_version_revision = extractVersionNumericals(new_version)
 
-  if (new_version <= current_version) then
+  if (new_version_major <= current_version_major) and (new_version_minor <= current_version_minor) and (new_version_revision <= current_version_revision) then
     print("You are running the latest version of CorsixTH.")
     return
   end
