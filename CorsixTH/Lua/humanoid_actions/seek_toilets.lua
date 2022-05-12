@@ -49,7 +49,7 @@ local function seek_toilets_action_start(action, humanoid)
       if queue then
         queue:unexpect(humanoid)
       end
-      humanoid:updateDynamicInfo("")
+      humanoid:setDynamicInfoText("")
     end
     -- toilet door should reflect the expected count
     room.door:updateDynamicInfo()

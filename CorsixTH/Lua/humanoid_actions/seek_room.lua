@@ -105,7 +105,7 @@ local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( functi
   humanoid.message_callback = nil
   humanoid:setNextAction(room:createEnterAction(humanoid))
   humanoid.next_room_to_visit = room
-  humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
+  humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.on_my_way_to
     :format(room.room_info.name))
   room.door:updateDynamicInfo()
   if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
@@ -129,7 +129,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
   if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
     -- Send home automatically
     humanoid:goHome("kicked")
-    humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
+    humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
 
   elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] or
       not humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
@@ -139,7 +139,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     humanoid:setMood("patient_wait", "activate")
     humanoid.waiting = 60
     humanoid.hospital:makeNoDiagnosisRoomFax(humanoid)
-    humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
+    humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.awaiting_decision)
     -- This seek_room action will be reused, return that it's valid.
     return true
   else
@@ -320,14 +320,14 @@ local function action_seek_room_start(action, humanoid)
           -- Wait two months before going home anyway.
           humanoid.waiting = 60
           humanoid:setMood("patient_wait", "activate")
-          humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
+          humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.awaiting_decision)
         end
       else
         -- No more diagnosis rooms can be found
         -- The GP's office is a special case. TODO: Make a custom message anyway?
         if action.room_type == "gp" then
           humanoid:setMood("patient_wait", "activate")
-          humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_gp_available)
+          humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.no_gp_available)
         else
           action_still_valid = action_seek_room_no_diagnosis_room_found(action, humanoid)
         end

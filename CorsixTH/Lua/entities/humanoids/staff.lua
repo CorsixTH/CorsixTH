@@ -585,19 +585,23 @@ function Staff:increaseWage(amount)
   end
 end
 
+--! Sets dynamic info text before the dynamic info update
+--!param text (string) the string to append
 function Staff:setDynamicInfoText(text)
   self.dynamic_text = text
   self:updateDynamicInfo()
 end
 
+--! Updates a staff member's dynamic info
 function Staff:updateDynamicInfo()
+  local dynamic_text = self.dynamic_text or ""
   local fatigue_text = _S.dynamic_info.staff.tiredness
   if not self.attributes["fatigue"] then
     fatigue_text = nil
   end
   self:setDynamicInfo('text', {
     self.profile.profession,
-    self.dynamic_text and self.dynamic_text or "",
+    dynamic_text,
     fatigue_text,
   })
   self:setDynamicInfo('progress', self.attributes["fatigue"])
@@ -671,6 +675,7 @@ function Staff:afterLoad(old, new)
     return
   end
 
+  self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
 end
 

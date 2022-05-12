@@ -264,8 +264,12 @@ function Object:getRenderAttachTile()
   return x, y
 end
 
-function Object:updateDynamicInfo()
-  self.times_used = self.times_used + 1
+--! Updates the object's dynamic info
+--!param only_update (bool) If true, do not increase times_used.
+function Object:updateDynamicInfo(only_update)
+  if not only_update then
+    self.times_used = self.times_used + 1
+  end
   local object = self.object_type
   if object.dynamic_info then
     self:setDynamicInfo("text", {object.name, "", _S.dynamic_info.object.times_used:format(self.times_used)})
@@ -736,6 +740,7 @@ function Object:afterLoad(old, new)
       self:setTile(self.tile_x, self.tile_y)
     end
   end
+  self:updateDynamicInfo(true)
   return Entity.afterLoad(self, old, new)
 end
 

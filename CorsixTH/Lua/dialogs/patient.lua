@@ -319,7 +319,7 @@ function UIPatient:goHome()
   self:close()
   self.patient:playSound("sack.wav")
   self.patient:goHome("kicked")
-  self.patient:updateDynamicInfo(_S.dynamic_info.patient.actions.sent_home)
+  self.patient:setDynamicInfoText(_S.dynamic_info.patient.actions.sent_home)
 end
 
 function UIPatient:viewDiseases()

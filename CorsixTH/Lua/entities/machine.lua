@@ -415,6 +415,7 @@ function Machine:afterLoad(old, new)
       room.hospital:removeHandymanTask(taskIndex, "repairing")
     end
   end
+  self:updateDynamicInfo(true)
   return Object.afterLoad(self, old, new)
 end
 
