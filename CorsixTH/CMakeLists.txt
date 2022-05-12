@@ -128,27 +128,33 @@ else()
 endif()
 
 # Find Lua
-find_package(Lua REQUIRED)
-if(Lua_FOUND)
-  target_link_libraries(CorsixTH ${LUA_LIBRARY})
-  include_directories(${LUA_INCLUDE_DIR})
-  # Special link flags needed on macOS 64bit, according to: http://luajit.org/install.html
-  # If these are not specified, luaL_newstate() returns NULL and we get this:
-  #   Fatal error starting CorsixTH: Cannot open Lua state.
-  if(APPLE AND LUA_LIBRARIES MATCHES "libluajit" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
-    target_link_libraries(CorsixTH "-pagezero_size 10000" "-image_base 100000000")
-  endif()
-  if(LUA_LIBRARIES MATCHES "libluajit")
-    message("  LuaJIT${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR} found")
-  else()
-    message("  Lua${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR} found")
-    if(WITH_LUAJIT)
-      message("    Did you want to use LuaJIT? Please specify the path")
-    endif()
-    unset(WITH_LUAJIT CACHE)
-  endif()
+if(MSVC AND USE_VCPKG_DEPS)
+  find_package(Lua CONFIG REQUIRED)
+  target_link_libraries(CorsixTH_lib lua)
+  target_link_libraries(CorsixTH lua)
 else()
-  message(FATAL_ERROR "Error: Lua library not found, it is required to build")
+  find_package(Lua REQUIRED)
+  if(Lua_FOUND OR LUA_FOUND)
+    target_link_libraries(CorsixTH ${LUA_LIBRARY})
+    include_directories(${LUA_INCLUDE_DIR})
+    # Special link flags needed on macOS 64bit, according to: http://luajit.org/install.html
+    # If these are not specified, luaL_newstate() returns NULL and we get this:
+    #   Fatal error starting CorsixTH: Cannot open Lua state.
+    if(APPLE AND LUA_LIBRARIES MATCHES "libluajit" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+      target_link_libraries(CorsixTH "-pagezero_size 10000" "-image_base 100000000")
+    endif()
+    if(LUA_LIBRARIES MATCHES "libluajit")
+      message("  LuaJIT${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR} found")
+    else()
+      message("  Lua${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR} found")
+      if(WITH_LUAJIT)
+        message("    Did you want to use LuaJIT? Please specify the path")
+      endif()
+      unset(WITH_LUAJIT CACHE)
+    endif()
+  else()
+    message(FATAL_ERROR "Error: Lua library not found, it is required to build")
+  endif()
 endif()
 
 # Add threading library
