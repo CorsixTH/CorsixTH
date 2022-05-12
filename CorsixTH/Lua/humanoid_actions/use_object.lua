@@ -273,10 +273,9 @@ local function action_use_phase(action, humanoid, phase)
     length = action.min_length + action.min_length % length
   end
 
-  if phase == 0 and (not is_list) and length == 1 and action.prolonged_usage and
-      action.on_interrupt and not action.loop_callback then -- luacheck: ignore 542
-    -- a timer would be redundant, so do not set one
-  else
+  -- A timer would be redundant in certain situations, so check it is needed
+  if phase ~= 0 or is_list or length ~= 1 or not action.prolonged_usage or
+      not action.on_interrupt or action.loop_callback then
     humanoid:setTimer(length, action_use_object_tick)
   end
 end

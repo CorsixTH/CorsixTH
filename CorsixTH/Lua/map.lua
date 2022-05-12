@@ -657,49 +657,50 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
         break
       elseif screenY > -32 then
         repeat
-          if screenX < -32 then -- luacheck: ignore 542
-          elseif screenX < sw + 32 then
-            local xy = y * self.width + x
-            local xpos = dx + screenX - 32
-            local ypos = dy + screenY
-            if self.debug_flags then
-              local flags = self.debug_flags[xy]
-              if flags.passable then
-                self.cell_outline:draw(canvas, 3, xpos, ypos)
-              end
-              if flags.hospital then
-                self.cell_outline:draw(canvas, 8, xpos, ypos)
-              end
-              if flags.buildable then
-                self.cell_outline:draw(canvas, 9, xpos, ypos)
-              end
-              if flags.travelNorth and self.debug_flags[xy - self.width].passable then
-                self.cell_outline:draw(canvas, 4, xpos, ypos)
-              end
-              if flags.travelEast and self.debug_flags[xy + 1].passable then
-                self.cell_outline:draw(canvas, 5, xpos, ypos)
-              end
-              if flags.travelSouth and self.debug_flags[xy + self.width].passable then
-                self.cell_outline:draw(canvas, 6, xpos, ypos)
-              end
-              if flags.travelWest and self.debug_flags[xy - 1].passable then
-                self.cell_outline:draw(canvas, 7, xpos, ypos)
-              end
-              if flags.thob ~= 0 then
-                self.debug_font:draw(canvas, "T"..flags.thob, xpos, ypos, 64, 16)
-              end
-              if flags.roomId ~= 0 then
-                self.debug_font:draw(canvas, "R"..flags.roomId, xpos, ypos + 16, 64, 16)
+          if screenX >= -32 then
+            if screenX < sw + 32 then
+              local xy = y * self.width + x
+              local xpos = dx + screenX - 32
+              local ypos = dy + screenY
+              if self.debug_flags then
+                local flags = self.debug_flags[xy]
+                if flags.passable then
+                  self.cell_outline:draw(canvas, 3, xpos, ypos)
+                end
+                if flags.hospital then
+                  self.cell_outline:draw(canvas, 8, xpos, ypos)
+                end
+                if flags.buildable then
+                  self.cell_outline:draw(canvas, 9, xpos, ypos)
+                end
+                if flags.travelNorth and self.debug_flags[xy - self.width].passable then
+                  self.cell_outline:draw(canvas, 4, xpos, ypos)
+                end
+                if flags.travelEast and self.debug_flags[xy + 1].passable then
+                  self.cell_outline:draw(canvas, 5, xpos, ypos)
+                end
+                if flags.travelSouth and self.debug_flags[xy + self.width].passable then
+                  self.cell_outline:draw(canvas, 6, xpos, ypos)
+                end
+                if flags.travelWest and self.debug_flags[xy - 1].passable then
+                  self.cell_outline:draw(canvas, 7, xpos, ypos)
+                end
+                if flags.thob ~= 0 then
+                  self.debug_font:draw(canvas, "T"..flags.thob, xpos, ypos, 64, 16)
+                end
+                if flags.roomId ~= 0 then
+                  self.debug_font:draw(canvas, "R"..flags.roomId, xpos, ypos + 16, 64, 16)
+                end
+              else
+                local msg = self.debug_text[xy]
+                if msg and msg ~= "" then
+                  self.cell_outline:draw(canvas, 2, xpos, ypos)
+                  self.debug_font:draw(canvas, msg, xpos, ypos, 64, 32)
+                end
               end
             else
-              local msg = self.debug_text[xy]
-              if msg and msg ~= "" then
-                self.cell_outline:draw(canvas, 2, xpos, ypos)
-                self.debug_font:draw(canvas, msg, xpos, ypos, 64, 32)
-              end
+              break
             end
-          else
-            break
           end
           x = x + 1
           y = y - 1
