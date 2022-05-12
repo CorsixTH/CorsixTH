@@ -244,6 +244,9 @@
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1set_dynamic_info_text">setDynamicInfoText</a>(<span class="p">action_string</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_patient.html#_0_1_patient_1set_hospital">setHospital</a>(<span class="p">hospital</span>)
  (overrides <a href="_0_1_humanoid.html#_0_1_humanoid_1set_hospital">Humanoid:setHospital</a>)
  </li>
@@ -341,7 +344,7 @@
  (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
  </li>
  <li class="self">
- <a href="_0_1_patient.html#_0_1_patient_1update_dynamic_info">updateDynamicInfo</a>(<span class="p">action_string</span>)
+ <a href="_0_1_patient.html#_0_1_patient_1update_dynamic_info">updateDynamicInfo</a>()
  </li>
  <li class="self">
  <a href="_0_1_patient.html#_0_1_patient_1update_message">updateMessage</a>(<span class="p">choice</span>)
@@ -812,13 +815,13 @@ param disease_id (string): When the reason is "over_priced" this is the<br/><br/
  <td class="d"> Indicator to insert an additional action before resuming.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L1122">line 1122 of Lua/entities/humanoids/patient.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L1123">line 1123 of Lua/entities/humanoids/patient.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_patient_1is_male_patient">function Patient:isMalePatient()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L1113">line 1113 of Lua/entities/humanoids/patient.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L1114">line 1114 of Lua/entities/humanoids/patient.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -936,6 +939,22 @@ in the vicinity through this function.<br/><br/>
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_patient_1set_dynamic_info_text">function Patient:setDynamicInfoText(<span class="p">action_string</span>)</a></h5>
+ <p>
+ Sets the dynamic text currently in use by the patient<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">action_string</td>
+ <td class="t">string</td>
+ <td class="d"> What text to say in dynamic text</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L937">line 937 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_patient_1set_hospital">function Patient:setHospital(<span class="p">hospital</span>)</a></h5>
  <p>
  Sets the hospital for the patient - additionally removing them from a
@@ -1008,18 +1027,11 @@ tries to find a drinks machine nearby.<br/><br/>
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_patient_1update_dynamic_info">function Patient:updateDynamicInfo(<span class="p">action_string</span>)</a></h5>
+ <h5><a name="_0_1_patient_1update_dynamic_info">function Patient:updateDynamicInfo()</a></h5>
  <p>
- <strong>Parameters:</strong>
- <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
- <tr>
- <td class="n">action_string</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
- </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L937">line 937 of Lua/entities/humanoids/patient.lua</a>.
+ Updates a patient's dynamic info<br/><br/>
+ Can be called direct to refresh only<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L944">line 944 of Lua/entities/humanoids/patient.lua</a>.
  </p>
  </div>
  <div class="method">
