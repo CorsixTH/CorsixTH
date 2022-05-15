@@ -244,7 +244,7 @@ function GameUI:draw(canvas)
   local dy = self.screen_offset_y +
       math.floor((0.5 - math.random()) * self.shake_screen_intensity * shake_screen_max_movement * 2)
   if canvas:scale(zoom) then
-    app.map:draw(canvas, dx, dy, math.floor(config.width / zoom), math.floor(config.height / zoom), 0, 0)
+    app.map:draw(canvas, dx, dy, math.ceil(config.width / zoom), math.ceil(config.height / zoom), 0, 0)
     canvas:scale(1)
   else
     self:setZoom(1)
