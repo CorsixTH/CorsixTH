@@ -388,7 +388,7 @@ class render_target {
   int cursor_x;
   int cursor_y;
 
-  std::stack<SDL_Rect> clip_rects; ///< Stack of requested clip rects.
+  std::stack<SDL_Rect> clip_rects;  ///< Stack of requested clip rects.
 
   bool scale_bitmaps;  ///< Whether bitmaps should be scaled.
   bool supports_target_textures;

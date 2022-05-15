@@ -121,7 +121,6 @@ uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component) {
       (colour_component & mask_6bit) * static_cast<double>(0xFF) / mask_6bit));
 }
 
-
 //! Get the intersection of two SDL_Rects. The output rect can be a
 //  pointer to either of the two input rects.
 /*!
@@ -641,13 +640,13 @@ bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
   return true;
 }
 
-render_target::scoped_clip::scoped_clip(render_target* pTarget, const clip_rect* pRect): target(pTarget) {
+render_target::scoped_clip::scoped_clip(render_target* pTarget,
+                                        const clip_rect* pRect)
+    : target(pTarget) {
   target->push_clip_rect(pRect);
 }
 
-render_target::scoped_clip::~scoped_clip() {
-  target->pop_clip_rect();
-}
+render_target::scoped_clip::~scoped_clip() { target->pop_clip_rect(); }
 
 void render_target::push_clip_rect(const clip_rect* pRect) {
   const SDL_Rect* previous_clip = nullptr;

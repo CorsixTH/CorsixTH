@@ -1205,7 +1205,8 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
   oMorphRect.x = 0;
   oMorphRect.w = pCanvas->get_width();
   oMorphRect.y = iDestY + morph_target->x_relative_to_tile;
-  oMorphRect.h = morph_target->y_relative_to_tile - morph_target->x_relative_to_tile;
+  oMorphRect.h =
+      morph_target->y_relative_to_tile - morph_target->x_relative_to_tile;
   {
     render_target::scoped_clip clip(pCanvas, &oMorphRect);
     manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
@@ -1214,8 +1215,9 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
   oMorphRect.h = morph_target->speed.dx - morph_target->y_relative_to_tile;
   {
     render_target::scoped_clip clip(pCanvas, &oMorphRect);
-    manager->draw_frame(pCanvas, morph_target->frame_index, morph_target->layers,
-                        iDestX, iDestY, morph_target->flags);
+    manager->draw_frame(pCanvas, morph_target->frame_index,
+                        morph_target->layers, iDestX, iDestY,
+                        morph_target->flags);
   }
 }
 
