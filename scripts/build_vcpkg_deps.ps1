@@ -119,7 +119,7 @@ function run_script {
     }
 
     # Compile them locally
-    $install_command = ".\vcpkg install " + $triplet + $libs_list
+    $install_command = ".\vcpkg install --recurse " + $triplet + $libs_list
     run_command -command $install_command
 
     # Copy various files from bin to tools
