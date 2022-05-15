@@ -1157,10 +1157,9 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       rcNew.h = rcOld.h;
       rcNew.x = iDestX + (crop_column - 1) * 32;
       rcNew.w = 64;
-      pCanvas->push_clip_rect(&rcNew);
+      render_target::scoped_clip clip(pCanvas, &rcNew);
       manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
                           patient_effect, patient_effect_offset);
-      pCanvas->pop_clip_rect();
     } else
       manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
                           patient_effect, patient_effect_offset);
@@ -1207,15 +1206,17 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
   oMorphRect.w = pCanvas->get_width();
   oMorphRect.y = iDestY + morph_target->x_relative_to_tile;
   oMorphRect.h = morph_target->y_relative_to_tile - morph_target->x_relative_to_tile;
-  pCanvas->push_clip_rect(&oMorphRect);
-  manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
-  pCanvas->pop_clip_rect();
+  {
+    render_target::scoped_clip clip(pCanvas, &oMorphRect);
+    manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
+  }
   oMorphRect.y = iDestY + morph_target->y_relative_to_tile;
   oMorphRect.h = morph_target->speed.dx - morph_target->y_relative_to_tile;
-  pCanvas->push_clip_rect(&oMorphRect);
-  manager->draw_frame(pCanvas, morph_target->frame_index, morph_target->layers,
-                      iDestX, iDestY, morph_target->flags);
-  pCanvas->pop_clip_rect();
+  {
+    render_target::scoped_clip clip(pCanvas, &oMorphRect);
+    manager->draw_frame(pCanvas, morph_target->frame_index, morph_target->layers,
+                        iDestX, iDestY, morph_target->flags);
+  }
 }
 
 bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY) {

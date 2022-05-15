@@ -966,7 +966,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   rcClip.y = static_cast<clip_rect::x_y_type>(iCanvasY);
   rcClip.w = static_cast<clip_rect::w_h_type>(iWidth);
   rcClip.h = static_cast<clip_rect::w_h_type>(iHeight);
-  pCanvas->push_clip_rect(&rcClip);
+  render_target::scoped_clip clip(pCanvas, &rcClip);
 
   for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode1; ++itrNode1) {
@@ -1021,10 +1021,9 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
               static_cast<clip_rect::x_y_type>(itrNode.y() - iH + 32 + 4);
           rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
           rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
-          pCanvas->push_clip_rect(&rcNewClip);
+          render_target::scoped_clip clip(pCanvas, &rcNewClip);
           blocks->draw_sprite(pCanvas, 156, itrNode.x() - 32, itrNode.y() - 56,
                               thdf_alpha_75 | thdf_nearest);
-          pCanvas->pop_clip_rect();
         }
       }
       drawable* pItem = static_cast<drawable*>(itrNode->oEarlyEntities.next);
@@ -1140,11 +1139,10 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                   static_cast<clip_rect::x_y_type>(itrNode.y() - iH + 32 + 4);
               rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
               rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
-              pCanvas->push_clip_rect(&rcNewClip);
+              render_target::scoped_clip clip(pCanvas, &rcNewClip);
               blocks->draw_sprite(pCanvas, 156, itrNode.x() - 96,
                                   itrNode.y() - 56,
                                   thdf_alpha_75 | thdf_nearest);
-              pCanvas->pop_clip_rect();
             }
           }
 
@@ -1180,8 +1178,6 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                          itrNode.tile_x(), itrNode.tile_y());
     }
   }
-
-  pCanvas->pop_clip_rect();
 }
 
 drawable* level_map::hit_test(int iTestX, int iTestY) const {

@@ -272,6 +272,15 @@ class render_target {
   //! Fill a rectangle of the render target with a solid colour
   bool fill_rect(uint32_t iColour, int iX, int iY, int iW, int iH);
 
+  class scoped_clip {
+   public:
+    scoped_clip(render_target*, const clip_rect* pRect);
+    ~scoped_clip();
+
+   private:
+    render_target* target = nullptr;
+  };
+
   //! Push a new clip rectangle.
   void push_clip_rect(const clip_rect* pRect);
 
