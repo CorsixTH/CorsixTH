@@ -935,26 +935,6 @@ void level_map::set_all_wall_draw_flags(uint8_t iFlags) {
   }
 }
 
-// Definition is in th_gfx.h so this should move
-void clip_rect_intersection(clip_rect& rcClip, const clip_rect& rcIntersect) {
-  // The intersection of the rectangles is the higher of the lower bounds and
-  // the lower of the higher bounds, clamped to a zero size.
-  clip_rect::x_y_type maxX = static_cast<uint16_t>(
-      std::min(rcClip.x + rcClip.w, rcIntersect.x + rcIntersect.w));
-  clip_rect::x_y_type maxY = static_cast<uint16_t>(
-      std::min(rcClip.y + rcClip.h, rcIntersect.y + rcIntersect.h));
-  rcClip.x = std::max(rcClip.x, rcIntersect.x);
-  rcClip.y = std::max(rcClip.y, rcIntersect.y);
-  rcClip.w = maxX - rcClip.x;
-  rcClip.h = maxY - rcClip.y;
-
-  // Make sure that we clamp the values to 0.
-  if (rcClip.w <= 0 || rcClip.h <= 0) {
-    rcClip.w = 0;
-    rcClip.h = 0;
-  }
-}
-
 void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                      int iWidth, int iHeight, int iCanvasX,
                      int iCanvasY) const {
@@ -986,7 +966,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   rcClip.y = static_cast<clip_rect::x_y_type>(iCanvasY);
   rcClip.w = static_cast<clip_rect::w_h_type>(iWidth);
   rcClip.h = static_cast<clip_rect::w_h_type>(iHeight);
-  pCanvas->set_clip_rect(&rcClip);
+  pCanvas->push_clip_rect(&rcClip);
 
   for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode1; ++itrNode1) {
@@ -1035,18 +1015,16 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                             itrNode.y() - iH + 32,
                             (iBlock >> 8) | thdf_nearest);
         if (itrNode->flags.shadow_wall) {
-          clip_rect rcOldClip, rcNewClip;
-          pCanvas->get_clip_rect(&rcOldClip);
+          clip_rect rcNewClip;
           rcNewClip.x = static_cast<clip_rect::x_y_type>(itrNode.x() - 32);
           rcNewClip.y =
               static_cast<clip_rect::x_y_type>(itrNode.y() - iH + 32 + 4);
           rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
           rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
-          clip_rect_intersection(rcNewClip, rcOldClip);
-          pCanvas->set_clip_rect(&rcNewClip);
+          pCanvas->push_clip_rect(&rcNewClip);
           blocks->draw_sprite(pCanvas, 156, itrNode.x() - 32, itrNode.y() - 56,
                               thdf_alpha_75 | thdf_nearest);
-          pCanvas->set_clip_rect(&rcOldClip);
+          pCanvas->pop_clip_rect();
         }
       }
       drawable* pItem = static_cast<drawable*>(itrNode->oEarlyEntities.next);
@@ -1156,19 +1134,17 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                                 itrNode.y() - iH + 32,
                                 (iBlock >> 8) | thdf_nearest);
             if (itrNode.get_previous_tile()->flags.shadow_wall) {
-              clip_rect rcOldClip, rcNewClip;
-              pCanvas->get_clip_rect(&rcOldClip);
+              clip_rect rcNewClip;
               rcNewClip.x = static_cast<clip_rect::x_y_type>(itrNode.x() - 96);
               rcNewClip.y =
                   static_cast<clip_rect::x_y_type>(itrNode.y() - iH + 32 + 4);
               rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
               rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
-              clip_rect_intersection(rcNewClip, rcOldClip);
-              pCanvas->set_clip_rect(&rcNewClip);
+              pCanvas->push_clip_rect(&rcNewClip);
               blocks->draw_sprite(pCanvas, 156, itrNode.x() - 96,
                                   itrNode.y() - 56,
                                   thdf_alpha_75 | thdf_nearest);
-              pCanvas->set_clip_rect(&rcOldClip);
+              pCanvas->pop_clip_rect();
             }
           }
 
@@ -1205,7 +1181,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
     }
   }
 
-  pCanvas->set_clip_rect(nullptr);
+  pCanvas->pop_clip_rect();
 }
 
 drawable* level_map::hit_test(int iTestX, int iTestY) const {

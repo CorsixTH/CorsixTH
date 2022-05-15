@@ -1153,16 +1153,14 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
   if (manager) {
     if (flags & thdf_crop) {
       clip_rect rcOld, rcNew;
-      pCanvas->get_clip_rect(&rcOld);
       rcNew.y = rcOld.y;
       rcNew.h = rcOld.h;
       rcNew.x = iDestX + (crop_column - 1) * 32;
       rcNew.w = 64;
-      clip_rect_intersection(rcNew, rcOld);
-      pCanvas->set_clip_rect(&rcNew);
+      pCanvas->push_clip_rect(&rcNew);
       manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
                           patient_effect, patient_effect_offset);
-      pCanvas->set_clip_rect(&rcOld);
+      pCanvas->pop_clip_rect();
     } else
       manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
                           patient_effect, patient_effect_offset);
@@ -1189,22 +1187,6 @@ bool animation::hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY) {
   return false;
 }
 
-namespace {
-
-void CalculateMorphRect(const clip_rect& rcOriginal, clip_rect& rcMorph,
-                        int iYLow, int iYHigh) {
-  rcMorph = rcOriginal;
-  if (rcMorph.y < iYLow) {
-    rcMorph.h += rcMorph.y - iYLow;
-    rcMorph.y = iYLow;
-  }
-  if (rcMorph.y + rcMorph.h >= iYHigh) {
-    rcMorph.h = iYHigh - rcMorph.y - 1;
-  }
-}
-
-}  // namespace
-
 void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
 
@@ -1218,21 +1200,22 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
     sound_to_play = 0;
   }
 
-  clip_rect oClipRect;
-  pCanvas->get_clip_rect(&oClipRect);
   clip_rect oMorphRect;
-  CalculateMorphRect(oClipRect, oMorphRect,
-                     iDestY + morph_target->x_relative_to_tile,
-                     iDestY + morph_target->y_relative_to_tile + 1);
-  pCanvas->set_clip_rect(&oMorphRect);
+  // We set the morph rect x and w clip to the entire canvas, so that only
+  // vertical clipping is applied.
+  oMorphRect.x = 0;
+  oMorphRect.w = pCanvas->get_width();
+  oMorphRect.y = iDestY + morph_target->x_relative_to_tile;
+  oMorphRect.h = morph_target->y_relative_to_tile - morph_target->x_relative_to_tile;
+  pCanvas->push_clip_rect(&oMorphRect);
   manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
-  CalculateMorphRect(oClipRect, oMorphRect,
-                     iDestY + morph_target->y_relative_to_tile,
-                     iDestY + morph_target->speed.dx);
-  pCanvas->set_clip_rect(&oMorphRect);
+  pCanvas->pop_clip_rect();
+  oMorphRect.y = iDestY + morph_target->y_relative_to_tile;
+  oMorphRect.h = morph_target->speed.dx - morph_target->y_relative_to_tile;
+  pCanvas->push_clip_rect(&oMorphRect);
   manager->draw_frame(pCanvas, morph_target->frame_index, morph_target->layers,
                       iDestX, iDestY, morph_target->flags);
-  pCanvas->set_clip_rect(&oClipRect);
+  pCanvas->pop_clip_rect();
 }
 
 bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY) {
