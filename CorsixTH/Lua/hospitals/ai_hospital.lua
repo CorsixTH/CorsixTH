@@ -33,9 +33,6 @@ function AIHospital:AIHospital(competitor, world, avail_rooms, name)
     self.name = "NONAME"
   end
   self.is_in_world = false
-
-  -- AI Hospitals can't cheat, so don't let them
-  self.hosp_cheats = nil
 end
 
 function AIHospital:spawnPatient()
