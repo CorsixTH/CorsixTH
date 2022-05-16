@@ -399,6 +399,10 @@
  <a href="_0_1_hospital.html#_0_1_hospital_1remove_handyman_task">removeHandymanTask</a>(<span class="p">taskIndex</span>, <span class="p">taskType</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_player_hospital.html#_0_1_player_hospital_1remove_message">removeMessage</a>(<span class="p">humanoid</span>)
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1remove_message">Hospital:removeMessage</a>)
+ </li>
  <li class="inherited">
  <a href="_0_1_hospital.html#_0_1_hospital_1remove_patient">removePatient</a>(<span class="p">patient</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
@@ -896,7 +900,7 @@ from Hospital:computePriceLevelImpact</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1after_load">Hospital:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L692">line 692 of Lua/hospitals/player_hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L700">line 700 of Lua/hospitals/player_hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1169,6 +1173,23 @@ call actually says something.</td>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1on_spawn_v_i_p">Hospital:onSpawnVIP</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L451">line 451 of Lua/hospitals/player_hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_player_hospital_1remove_message">function PlayerHospital:removeMessage(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ Remove any message (fax) relating to this humanoid<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">table</td>
+ <td class="d"> The humanoid</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1remove_message">Hospital:removeMessage</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L692">line 692 of Lua/hospitals/player_hospital.lua</a>.
  </p>
  </div>
  <div class="method">
