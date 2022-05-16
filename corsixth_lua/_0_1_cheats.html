@@ -30,7 +30,7 @@
  <h4>Method Index</h4>
  <ul>
  <li class="self">
- <a href="_0_1_cheats.html#_0_1_cheats_1announce_cheat">announceCheat</a>()
+ <a href="_0_1_cheats.html#_0_1_cheats_1announce_cheat">announceCheat</a>(<span class="p">speech</span>)
  </li>
  <li class="self">
  <a href="_0_1_cheats.html#_0_1_cheats_1cheat_decrease_prices">cheatDecreasePrices</a>()
@@ -75,13 +75,36 @@
  <a href="_0_1_cheats.html#_0_1_cheats_1cheat_year">cheatYear</a>()
  </li>
  <li class="self">
+ <a href="_0_1_cheats.html#_0_1_cheats_1is_cheat_active">isCheatActive</a>(<span class="p">name</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_cheats.html#_0_1_cheats_1no_rest_off">noRestOff</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_cheats.html#_0_1_cheats_1no_rest_on">noRestOn</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_cheats.html#_0_1_cheats_1perform_cheat">performCheat</a>(<span class="p">num</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_cheats.html#_0_1_cheats_1process_cheat_code">processCheatCode</a>(<span class="p">num</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_cheats.html#_0_1_cheats_1roujin_off">roujinOff</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_cheats.html#_0_1_cheats_1roujin_on">roujinOn</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_cheats.html#_0_1_cheats_1toggle_cheat">toggleCheat</a>(<span class="p">name</span>)
  </li>
  </ul>
 </div>
 <div class="member_list">
  <h4>Member Index</h4>
  <ul>
+ <li><span class="p">active_cheats</span>
+ </li>
  <li><span class="p">cheat_list</span>
  </li>
  <li><span class="p">hospital</span>
@@ -106,71 +129,80 @@
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_cheats_1announce_cheat">function Cheats:announceCheat()</a></h5>
+ <h5><a name="_0_1_cheats_1announce_cheat">function Cheats:announceCheat(<span class="p">speech</span>)</a></h5>
  <p>
  Updates the cheated status of the player, with a matching announcement<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L63">line 63 of Lua/cheats.lua</a>.
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">speech</td>
+ <td class="t">string</td>
+ <td class="d"> Optional text for the adviser to say</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L66">line 66 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_decrease_prices">function Cheats:cheatDecreasePrices()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L161">line 161 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L169">line 169 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_earthquake">function Cheats:cheatEarthquake()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L125">line 125 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L133">line 133 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_emergency">function Cheats:cheatEmergency()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L85">line 85 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L93">line 93 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_epidemic">function Cheats:cheatEpidemic()</a></h5>
  <p>
  Creates a new contagious patient in the hospital - potentially an epidemic<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L96">line 96 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L104">line 104 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_increase_prices">function Cheats:cheatIncreasePrices()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L149">line 149 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L157">line 157 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_lose">function Cheats:cheatLose()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L141">line 141 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L149">line 149 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_money">function Cheats:cheatMoney()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L72">line 72 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L80">line 80 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_month">function Cheats:cheatMonth()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L133">line 133 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L141">line 141 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_patient">function Cheats:cheatPatient()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L129">line 129 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L137">line 137 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_research">function Cheats:cheatResearch()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L76">line 76 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L84">line 84 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -180,31 +212,61 @@
 to easily distinguish the infected patients -- will toggle icons
 for ALL future epidemics you cannot distinguish between epidemics
 by disease<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L101">line 101 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L109">line 109 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_vip">function Cheats:cheatVip()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L121">line 121 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L129">line 129 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_win">function Cheats:cheatWin()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L145">line 145 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L153">line 153 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1cheat_year">function Cheats:cheatYear()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L137">line 137 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L145">line 145 of Lua/cheats.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_cheats_1is_cheat_active">function Cheats:isCheatActive(<span class="p">name</span>)</a></h5>
+ <p>
+ Checks if a toggle cheat is activated<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">string</td>
+ <td class="d"> Name of cheat to check</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L235">line 235 of Lua/cheats.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_cheats_1no_rest_off">function Cheats:noRestOff()</a></h5>
+ <p>
+ Disable no rest cheat (re-enable staff fatigue, and normal movement)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L205">line 205 of Lua/cheats.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_cheats_1no_rest_on">function Cheats:noRestOn()</a></h5>
+ <p>
+ Enables no rest cheat (staff do not tire, fast movement)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L195">line 195 of Lua/cheats.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_cheats_1perform_cheat">function Cheats:performCheat(<span class="p">num</span>)</a></h5>
  <p>
- Performs a cheat from the cheat_list<br/><br/>
+ Performs a cheat from the cheat_list (menu cheats)<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -214,7 +276,54 @@ by disease<br/><br/>
  <td class="d"> The cheat from the cheat_list called</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L55">line 55 of Lua/cheats.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L58">line 58 of Lua/cheats.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_cheats_1process_cheat_code">function Cheats:processCheatCode(<span class="p">num</span>)</a></h5>
+ <p>
+ Checks the obfuscated cheat code for a match and executes it<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">num</td>
+ <td class="t">number</td>
+ <td class="d"> The obfuscated cheat value</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L242">line 242 of Lua/cheats.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_cheats_1roujin_off">function Cheats:roujinOff()</a></h5>
+ <p>
+ Disable Roujin's challenge (spawn rate cheat)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L188">line 188 of Lua/cheats.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_cheats_1roujin_on">function Cheats:roujinOn()</a></h5>
+ <p>
+ Begin toggle-based cheat functions<br/><br/>
+ Enable Roujin's challenge (spawn rate cheat)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L181">line 181 of Lua/cheats.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_cheats_1toggle_cheat">function Cheats:toggleCheat(<span class="p">name</span>)</a></h5>
+ <p>
+ Performs a cheat from fax_cheats<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">string</td>
+ <td class="d"> The cheat called from the list</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/cheats.lua#L257">line 257 of Lua/cheats.lua</a>.
  </p>
  </div>
 </div>
