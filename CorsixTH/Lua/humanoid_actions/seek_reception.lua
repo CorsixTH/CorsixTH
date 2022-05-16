@@ -76,11 +76,11 @@ local function action_seek_reception_start(action, humanoid)
     -- TODO: Make 'else' method work for all humanoids
     if class.is(humanoid, Vip) or class.is(humanoid, Inspector) then
       humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
-      :format(best_desk.object_type.name))
+        :format(best_desk.object_type.name))
 
     else
       humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.on_my_way_to
-      :format(best_desk.object_type.name))
+        :format(best_desk.object_type.name))
     end
     humanoid.waiting = nil
 
