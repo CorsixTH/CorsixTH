@@ -689,6 +689,14 @@ function PlayerHospital:createVip()
   self.world.ui.bottom_panel:queueMessage("personality", message, nil, Date.hoursPerDay() * 20, 2)
 end
 
+--! Remove any message (fax) relating to this humanoid
+--!param humanoid (table) The humanoid
+function PlayerHospital:removeMessage(humanoid)
+  if humanoid.message then
+    self.world.ui.bottom_panel:removeMessage(humanoid)
+  end
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)
