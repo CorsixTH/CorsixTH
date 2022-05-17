@@ -273,10 +273,9 @@ function ResearchDepartment:nextResearch(category)
     cat.frac = 0
     self:redistributeResearchPoints()
 
-    if self.hospital:isPlayerHospital() then
-      self.world.ui.adviser:say(_A.research.drug_fully_researched
-      :format(_S.research.categories[category]))
-    end
+    self.hospital:giveAdvice({_A.research.drug_fully_researched
+      :format(_S.research.categories[category])})
+
     -- Notify any research window
     local window = self.world.ui:getWindow(UIResearch)
     if window then
@@ -425,14 +424,10 @@ function ResearchDepartment:improveDrug(drug)
     disease.cure_effectiveness = math.min(100, disease.cure_effectiveness + improve_rate)
     research_info.effect_imp = research_info.effect_imp + 1
   end
-  if self.hospital:isPlayerHospital() then
-    if drug.disease.id == "the_squits" then
-      self.world.ui.adviser:say(_A.research.drug_improved_1
-      :format(drug.disease.name))
-    else
-      self.world.ui.adviser:say(_A.research.drug_improved
-      :format(drug.disease.name))
-    end
+  if drug.disease.id == "the_squits" then
+    self.hospital:giveAdvice({_A.research.drug_improved_1:format(drug.disease.name)})
+  else
+    self.hospital:giveAdvice({_A.research.drug_improved:format(drug.disease.name)})
   end
 end
 
@@ -483,10 +478,7 @@ function ResearchDepartment:improveMachine(machine)
     end
   end
   -- Tell the player that something has been improved
-  if self.hospital:isPlayerHospital() then
-    self.world.ui.adviser:say(_A.research.machine_improved
-    :format(machine.name))
-  end
+  self.hospital:giveAdvice({_A.research.machine_improved:format(machine.name)})
 end
 
 --[[ Updates the dynamic info for each matching machine found in the player's
@@ -529,12 +521,10 @@ function ResearchDepartment:discoverObject(object, automatic)
       end
       if unveil_room then
         room_disc.is_discovered = true
-        if self.hospital:isPlayerHospital() then
-          if automatic then
-            self.world.ui.adviser:say(_A.research.new_available:format(object.name))
-          else
-            self.world.ui.adviser:say(_A.research.new_machine_researched:format(object.name))
-          end
+        if automatic then
+          self.hospital:giveAdvice({_A.research.new_available:format(object.name)})
+        else
+          self.hospital:giveAdvice({_A.research.new_machine_researched:format(object.name)})
         end
         -- It may now be possible to continue researching machine improvements
         local current_improvement_research = self.research_policy.improvements.current

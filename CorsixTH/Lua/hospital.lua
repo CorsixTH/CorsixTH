@@ -2455,3 +2455,7 @@ end
 --! Remove any message (fax) relating to this humanoid
 function Hospital:removeMessage(humanoid)
 end
+
+--! Called when the vip is out of the hospital grounds
+function Hospital:makeVipEndFax(vip_rating, name, cash_reward, vip_message)
+end
