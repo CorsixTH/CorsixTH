@@ -1152,9 +1152,9 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
   }
   if (manager) {
     if (flags & thdf_crop) {
-      clip_rect rcOld, rcNew;
-      rcNew.y = rcOld.y;
-      rcNew.h = rcOld.h;
+      clip_rect rcNew;
+      rcNew.y = 0;
+      rcNew.h = pCanvas->get_height();
       rcNew.x = iDestX + (crop_column - 1) * 32;
       rcNew.w = 64;
       render_target::scoped_clip clip(pCanvas, &rcNew);
