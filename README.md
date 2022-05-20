@@ -53,9 +53,8 @@ There are some areas of the game still missing, and while we work to get them in
 - Win level video/letter
 - Newspaper headlines on lose level
 - Demo gameplay video
-- The graphical effects of Serious Radiation and Jellyitis are missing
 - The original graphics do not have a complete set for Pregnancy, Alien DNA, and female Fractured Bones patients -- these may cause anomalies if you enable regular spawning in settings
-- Patients have an astounding ability to always remain upright (can't fall over)
+- Patients have an astounding ability to always remain upright (can't fall over in earthquakes)
 - Some objects in the game may glitch with walls
 
 ## Developers
