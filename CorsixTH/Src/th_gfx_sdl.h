@@ -28,6 +28,7 @@ SOFTWARE.
 #include <SDL.h>
 
 #include <memory>
+#include <stack>
 #include <stdexcept>
 
 #include "persist_lua.h"
@@ -271,17 +272,26 @@ class render_target {
   //! Fill a rectangle of the render target with a solid colour
   bool fill_rect(uint32_t iColour, int iX, int iY, int iW, int iH);
 
-  //! Get the current clip rectangle
-  void get_clip_rect(clip_rect* pRect) const;
+  class scoped_clip {
+   public:
+    scoped_clip(render_target*, const clip_rect* pRect);
+    ~scoped_clip();
+
+   private:
+    render_target* target = nullptr;
+  };
+
+  //! Push a new clip rectangle.
+  void push_clip_rect(const clip_rect* pRect);
+
+  //! Restore the previous clip rectangle.
+  void pop_clip_rect();
 
   //! Get the width of the render target (in pixels)
   int get_width() const;
 
   //! Get the height of the render target (in pixels)
   int get_height() const;
-
-  //! Set the new clip rectangle
-  void set_clip_rect(const clip_rect* pRect);
 
   //! Enable optimisations for non-overlapping draws
   void start_nonoverlapping_draws();
@@ -377,6 +387,9 @@ class render_target {
   int height;
   int cursor_x;
   int cursor_y;
+
+  std::stack<SDL_Rect> clip_rects;  ///< Stack of requested clip rects.
+
   bool scale_bitmaps;  ///< Whether bitmaps should be scaled.
   bool supports_target_textures;
 

@@ -689,31 +689,34 @@ int l_surface_screenshot(lua_State* L) {
   return 2;
 }
 
-int l_surface_get_clip(lua_State* L) {
-  render_target* pCanvas = luaT_testuserdata<render_target>(L);
-  clip_rect rcClip;
-  pCanvas->get_clip_rect(&rcClip);
-  lua_pushinteger(L, rcClip.x);
-  lua_pushinteger(L, rcClip.y);
-  lua_pushinteger(L, rcClip.w);
-  lua_pushinteger(L, rcClip.h);
-  return 4;
-}
-
-int l_surface_set_clip(lua_State* L) {
+int l_surface_push_clip(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   clip_rect rcClip;
   rcClip.x = static_cast<clip_rect::x_y_type>(luaL_checkinteger(L, 2));
   rcClip.y = static_cast<clip_rect::x_y_type>(luaL_checkinteger(L, 3));
   rcClip.w = static_cast<clip_rect::w_h_type>(luaL_checkinteger(L, 4));
   rcClip.h = static_cast<clip_rect::w_h_type>(luaL_checkinteger(L, 5));
-  if (lua_toboolean(L, 6) != 0) {
-    clip_rect rcExistingClip;
-    pCanvas->get_clip_rect(&rcExistingClip);
-    clip_rect_intersection(rcClip, rcExistingClip);
-  }
-  pCanvas->set_clip_rect(&rcClip);
+  pCanvas->push_clip_rect(&rcClip);
   lua_settop(L, 1);
+  return 1;
+}
+
+int l_surface_pop_clip(lua_State* L) {
+  render_target* pCanvas = luaT_testuserdata<render_target>(L);
+  pCanvas->pop_clip_rect();
+  lua_settop(L, 1);
+  return 1;
+}
+
+int l_surface_get_width(lua_State* L) {
+  render_target* pCanvas = luaT_testuserdata<render_target>(L);
+  lua_pushinteger(L, pCanvas->get_width());
+  return 1;
+}
+
+int l_surface_get_height(lua_State* L) {
+  render_target* pCanvas = luaT_testuserdata<render_target>(L);
+  lua_pushinteger(L, pCanvas->get_height());
   return 1;
 }
 
@@ -932,8 +935,10 @@ void lua_register_gfx(const lua_register_state* pState) {
     lcb.add_function(l_surface_map, "mapRGB");
     lcb.add_function(l_surface_set_blue_filter_active, "setBlueFilterActive");
     lcb.add_function(l_surface_rect, "drawRect");
-    lcb.add_function(l_surface_get_clip, "getClip");
-    lcb.add_function(l_surface_set_clip, "setClip");
+    lcb.add_function(l_surface_push_clip, "pushClip");
+    lcb.add_function(l_surface_pop_clip, "popClip");
+    lcb.add_function(l_surface_get_width, "getWidth");
+    lcb.add_function(l_surface_get_height, "getHeight");
     lcb.add_function(l_surface_screenshot, "takeScreenshot");
     lcb.add_function(l_surface_scale, "scale");
     lcb.add_function(l_surface_set_caption, "setCaption");

@@ -121,6 +121,30 @@ uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component) {
       (colour_component & mask_6bit) * static_cast<double>(0xFF) / mask_6bit));
 }
 
+//! Get the intersection of two SDL_Rects. The output rect can be a
+//  pointer to either of the two input rects.
+/*!
+    @param a Pointer to first SDL_Rect to be intersected
+    @param b Pointer to second SDL_Rect to be intersected
+    @param[out] out The intersection of SDL_Rect |a| and |b|.
+ */
+void intersectRect(const SDL_Rect& a, const SDL_Rect& b, SDL_Rect* out) {
+  // The intersection of the rectangles is the higher of the lower bounds and
+  // the lower of the higher bounds, clamped to a zero size.
+  clip_rect::x_y_type maxX = std::min(a.x + a.w, b.x + b.w);
+  clip_rect::x_y_type maxY = std::min(a.y + a.h, b.y + b.h);
+  out->x = std::max(a.x, b.x);
+  out->y = std::max(a.y, b.y);
+  out->w = maxX - out->x;
+  out->h = maxY - out->y;
+
+  // Make sure that we clamp the values to 0.
+  if (out->w <= 0 || out->h <= 0) {
+    out->w = 0;
+    out->h = 0;
+  }
+}
+
 //! Get the enclosing rect of an SDL_Rect scaled by the given scale factor.
 //  Scaling the rect is location dependent, as non-integer scale factors
 //  require that same size rects be +/-1 pixel different in size depending
@@ -616,49 +640,50 @@ bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
   return true;
 }
 
-void render_target::get_clip_rect(clip_rect* pRect) const {
-  SDL_RenderGetClipRect(renderer, reinterpret_cast<SDL_Rect*>(pRect));
-  // SDL returns empty rect when clipping is disabled -> return full rect for
-  // CTH
-  if (SDL_RectEmpty(pRect)) {
-    pRect->x = pRect->y = 0;
-    pRect->w = width;
-    pRect->h = height;
-  }
-
-  if (apply_opengl_clip_fix) {
-    int renderWidth, renderHeight;
-    SDL_RenderGetLogicalSize(renderer, &renderWidth, &renderHeight);
-    pRect->y = renderHeight - pRect->y - pRect->h;
-  }
-
-  getEnclosingScaleRect(pRect, 1.0 / draw_scale(), pRect);
+render_target::scoped_clip::scoped_clip(render_target* pTarget,
+                                        const clip_rect* pRect)
+    : target(pTarget) {
+  target->push_clip_rect(pRect);
 }
 
-void render_target::set_clip_rect(const clip_rect* pRect) {
-  // Full clip rect for CTH means clipping disabled
-  if (pRect == nullptr || (pRect->w == width && pRect->h == height)) {
-    SDL_RenderSetClipRect(renderer, nullptr);
-    return;
-  }
+render_target::scoped_clip::~scoped_clip() { target->pop_clip_rect(); }
 
-  SDL_Rect SDLRect;
-  getEnclosingScaleRect(pRect, draw_scale(), &SDLRect);
+void render_target::push_clip_rect(const clip_rect* pRect) {
+  const SDL_Rect* previous_clip = nullptr;
+  if (!clip_rects.empty()) {
+    previous_clip = &clip_rects.top();
+  }
+  clip_rects.push(SDL_Rect());
+  SDL_Rect& clip = clip_rects.top();
+  getEnclosingScaleRect(pRect, draw_scale(), &clip);
+  if (previous_clip) {
+    // Ensure that this new clip does not escape any previous clips applied.
+    intersectRect(clip, *previous_clip, &clip);
+  }
 
   // For some reason, SDL treats an empty rect (h or w <= 0) as if you turned
   // off clipping, so we replace it with a rect that's outside our viewport.
   const SDL_Rect rcBogus = {-2, -2, 1, 1};
-  if (SDL_RectEmpty(&SDLRect)) {
-    SDLRect = rcBogus;
+  if (SDL_RectEmpty(&clip)) {
+    clip = rcBogus;
   }
 
   if (apply_opengl_clip_fix) {
     int renderWidth, renderHeight;
     SDL_RenderGetLogicalSize(renderer, &renderWidth, &renderHeight);
-    SDLRect.y = renderHeight - SDLRect.y - SDLRect.h;
+    clip.y = renderHeight - clip.y - clip.h;
   }
 
-  SDL_RenderSetClipRect(renderer, &SDLRect);
+  SDL_RenderSetClipRect(renderer, &clip);
+}
+
+void render_target::pop_clip_rect() {
+  clip_rects.pop();
+  if (clip_rects.empty()) {
+    SDL_RenderSetClipRect(renderer, nullptr);
+  } else {
+    SDL_RenderSetClipRect(renderer, &clip_rects.top());
+  }
 }
 
 int render_target::get_width() const {
