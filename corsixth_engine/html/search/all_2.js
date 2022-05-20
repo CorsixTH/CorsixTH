@@ -22,7 +22,7 @@ var searchData=
   ['chunk_5frenderer_74',['chunk_renderer',['../classchunk__renderer.html',1,'chunk_renderer'],['../classchunk__renderer.html#aeb74ad2ee356241806c9b6821ec2203e',1,'chunk_renderer::chunk_renderer()']]],
   ['clear_5flast_5ferror_75',['clear_last_error',['../classmovie__player.html#aaf1308e330a1b23c89aeeea729cdf7f6',1,'movie_player']]],
   ['clip_5frect_76',['clip_rect',['../structclip__rect.html',1,'']]],
-  ['clip_5frect_5fintersection_77',['clip_rect_intersection',['../th__gfx_8h.html#aa691930295f3914a8ba85c7a13998128',1,'clip_rect_intersection(clip_rect &amp;rcClip, const clip_rect &amp;rcIntersect):&#160;th_map.cpp'],['../th__map_8cpp.html#aa691930295f3914a8ba85c7a13998128',1,'clip_rect_intersection(clip_rect &amp;rcClip, const clip_rect &amp;rcIntersect):&#160;th_map.cpp']]],
+  ['clip_5frect_5fintersection_77',['clip_rect_intersection',['../th__gfx_8h.html#aa691930295f3914a8ba85c7a13998128',1,'th_gfx.h']]],
   ['cmakelists_2etxt_78',['CMakeLists.txt',['../CMakeLists_8txt.html',1,'']]],
   ['comfy_5fchair_79',['comfy_chair',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abacaa3abdd121125fb707c67a01dd94456',1,'th_map.h']]],
   ['computer_80',['computer',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abadf53ca268240ca76670c8566ee54568a',1,'th_map.h']]],

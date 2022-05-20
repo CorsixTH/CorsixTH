@@ -79,6 +79,8 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target_1_1scoped__buffer.html">scoped_buffer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target_1_1scoped__clip.html">scoped_clip</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target_1_1scoped__target__texture.html">scoped_target_texture</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -115,18 +117,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4c11aa4552054b6c13bd56722858a40b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a4c11aa4552054b6c13bd56722858a40b">fill_rect</a> (uint32_t iColour, int iX, int iY, int iW, int iH)</td></tr>
 <tr class="memdesc:a4c11aa4552054b6c13bd56722858a40b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a rectangle of the render target with a solid colour.  <a href="classrender__target.html#a4c11aa4552054b6c13bd56722858a40b">More...</a><br /></td></tr>
 <tr class="separator:a4c11aa4552054b6c13bd56722858a40b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6b5d533c0105f41e3c3e61eb3161b4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#ae6b5d533c0105f41e3c3e61eb3161b4e">get_clip_rect</a> (<a class="el" href="structclip__rect.html">clip_rect</a> *pRect) const</td></tr>
-<tr class="memdesc:ae6b5d533c0105f41e3c3e61eb3161b4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current clip rectangle.  <a href="classrender__target.html#ae6b5d533c0105f41e3c3e61eb3161b4e">More...</a><br /></td></tr>
-<tr class="separator:ae6b5d533c0105f41e3c3e61eb3161b4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f1f72e862826960014e72db8c38250b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a8f1f72e862826960014e72db8c38250b">push_clip_rect</a> (const <a class="el" href="structclip__rect.html">clip_rect</a> *pRect)</td></tr>
+<tr class="memdesc:a8f1f72e862826960014e72db8c38250b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push a new clip rectangle.  <a href="classrender__target.html#a8f1f72e862826960014e72db8c38250b">More...</a><br /></td></tr>
+<tr class="separator:a8f1f72e862826960014e72db8c38250b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dfc514388265cf538da30d105581075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a8dfc514388265cf538da30d105581075">pop_clip_rect</a> ()</td></tr>
+<tr class="memdesc:a8dfc514388265cf538da30d105581075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore the previous clip rectangle.  <a href="classrender__target.html#a8dfc514388265cf538da30d105581075">More...</a><br /></td></tr>
+<tr class="separator:a8dfc514388265cf538da30d105581075"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a963353eecb8c5f8648ddc5ec3a0359"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a7a963353eecb8c5f8648ddc5ec3a0359">get_width</a> () const</td></tr>
 <tr class="memdesc:a7a963353eecb8c5f8648ddc5ec3a0359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the width of the render target (in pixels)  <a href="classrender__target.html#a7a963353eecb8c5f8648ddc5ec3a0359">More...</a><br /></td></tr>
 <tr class="separator:a7a963353eecb8c5f8648ddc5ec3a0359"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5819663984f6e46c1777bfd251b46d76"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a5819663984f6e46c1777bfd251b46d76">get_height</a> () const</td></tr>
 <tr class="memdesc:a5819663984f6e46c1777bfd251b46d76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the height of the render target (in pixels)  <a href="classrender__target.html#a5819663984f6e46c1777bfd251b46d76">More...</a><br /></td></tr>
 <tr class="separator:a5819663984f6e46c1777bfd251b46d76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40df5b4dae4bbafbf9f3ad8eb66c4ed0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a40df5b4dae4bbafbf9f3ad8eb66c4ed0">set_clip_rect</a> (const <a class="el" href="structclip__rect.html">clip_rect</a> *pRect)</td></tr>
-<tr class="memdesc:a40df5b4dae4bbafbf9f3ad8eb66c4ed0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the new clip rectangle.  <a href="classrender__target.html#a40df5b4dae4bbafbf9f3ad8eb66c4ed0">More...</a><br /></td></tr>
-<tr class="separator:a40df5b4dae4bbafbf9f3ad8eb66c4ed0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaec844843dbd4ca7fc31730ff0e6c466"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#aaec844843dbd4ca7fc31730ff0e6c466">start_nonoverlapping_draws</a> ()</td></tr>
 <tr class="memdesc:aaec844843dbd4ca7fc31730ff0e6c466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable optimisations for non-overlapping draws.  <a href="classrender__target.html#aaec844843dbd4ca7fc31730ff0e6c466">More...</a><br /></td></tr>
 <tr class="separator:aaec844843dbd4ca7fc31730ff0e6c466"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -565,26 +567,6 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="ae6b5d533c0105f41e3c3e61eb3161b4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae6b5d533c0105f41e3c3e61eb3161b4e">&#9670;&nbsp;</a></span>get_clip_rect()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void render_target::get_clip_rect </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structclip__rect.html">clip_rect</a> *&#160;</td>
-          <td class="paramname"><em>pRect</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the current clip rectangle. </p>
-
-</div>
-</div>
 <a id="a5819663984f6e46c1777bfd251b46d76"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5819663984f6e46c1777bfd251b46d76">&#9670;&nbsp;</a></span>get_height()</h2>
 
@@ -730,6 +712,45 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a8dfc514388265cf538da30d105581075"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8dfc514388265cf538da30d105581075">&#9670;&nbsp;</a></span>pop_clip_rect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void render_target::pop_clip_rect </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Restore the previous clip rectangle. </p>
+
+</div>
+</div>
+<a id="a8f1f72e862826960014e72db8c38250b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f1f72e862826960014e72db8c38250b">&#9670;&nbsp;</a></span>push_clip_rect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void render_target::push_clip_rect </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structclip__rect.html">clip_rect</a> *&#160;</td>
+          <td class="paramname"><em>pRect</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Push a new clip rectangle. </p>
+
+</div>
+</div>
 <a id="ab348bb8f923ca7520584dc5fd983e457"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab348bb8f923ca7520584dc5fd983e457">&#9670;&nbsp;</a></span>set_blue_filter_active()</h2>
 
@@ -767,26 +788,6 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the window caption. </p>
-
-</div>
-</div>
-<a id="a40df5b4dae4bbafbf9f3ad8eb66c4ed0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40df5b4dae4bbafbf9f3ad8eb66c4ed0">&#9670;&nbsp;</a></span>set_clip_rect()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void render_target::set_clip_rect </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structclip__rect.html">clip_rect</a> *&#160;</td>
-          <td class="paramname"><em>pRect</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set the new clip rectangle. </p>
 
 </div>
 </div>
