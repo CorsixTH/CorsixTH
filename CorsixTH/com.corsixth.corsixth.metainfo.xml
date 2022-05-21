@@ -26,6 +26,56 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.66~beta1" date="2022-05-21" type="development">
+      <description>
+        <p>New Features:</p>
+        <ul>
+          <li>Direct Zoom has been improved and is now enabled by default</li>
+          <li>Nurses can now leave the ward without disturbing her patients</li>
+          <li>Patients with Serious Radiation now glow a beautiful shade of green</li>
+          <li>Patients with Jellyitis now wobble wobble wobble</li>
+          <li>The Hotkeys menu has been overhauled to make it easier to use</li>
+          <li>You can now reset your zoom level by pressing 0</li>
+          <li>A new fax code cheat has been added!</li>
+          <li>The replace machine prompt can now tell you the new strength before purchase</li>
+          <li>A machine's dynamic info will tell you the strength a machine can be upgraded
+            to if you replaced it (can be disabled in configuration settings)</li>
+        </ul>
+        <p>Changes:</p>
+        <ul>
+          <li>Improved pee and vomit conditions</li>
+          <li>Patients will no longer queue for reception until nearby</li>
+          <li>The Adviser will no longer queue repetitive messages</li>
+          <li>Dropdown menus will now close when clicked outside of</li>
+          <li>Non-visual diseases can now be delayed in the level config of a custom game</li>
+          <li>Gamelog.txt will now contain system information instead of within the window
+            title</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>Translations should no longer show random '/' on new lines</li>
+          <li>Russian language updated (Thanks @Matvey1705 !)</li>
+          <li>Czech language updated (Thanks @jansakos !)</li>
+          <li>German language updated (Thanks @Manuel-K !)</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Checking for updates should now work moving forward (promise)</li>
+          <li>All cured trophy bugfix now properly applied from 0.65.1</li>
+          <li>Firing staff from a multi-use object now ensures they leave the hospital</li>
+          <li>Missing config and hotkey values will now use default values</li>
+          <li>Fixed an instance where an emergency fax could show the wrong cure</li>
+          <li>Sound effect boundary is now properly applied on window resize</li>
+          <li>The cheats menu is now immediately usable after typing the cheat code on a
+            fax</li>
+          <li>User action while paused setting no longer uses configuration default</li>
+          <li>Quick Save and Quick Load behaviour has been improved</li>
+          <li>The cheats menu dialog will no longer slide off the screen</li>
+          <li>You can now purchase plots while wall transparency is on</li>
+          <li>Fixed playback of movie audio on surround sound systems is the most accurate</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.65.1" date="2021-07-17" type="stable">
       <description>
         <p>This is a hotfix release of 0.65 and replaces the June 2021 release</p>

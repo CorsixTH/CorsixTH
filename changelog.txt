@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version 0.66 - released June 2022
+Version 0.66-beta1 - released May 2022
 -------------------------------------------------------------------------------
 # New Features/Enhancements
 * Direct Zoom has been improved and is now enabled by default

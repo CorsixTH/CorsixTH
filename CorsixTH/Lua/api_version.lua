@@ -30,6 +30,6 @@ way incompatible with old Lua code, then the version number needs to change.
 
 Note: This file compiles as both Lua and C++. */
 
-#endif /*]]--*/
+#endif /*]] --*/
 
-return 2681;
+return 2682;
