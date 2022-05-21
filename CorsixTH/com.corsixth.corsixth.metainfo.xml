@@ -13,12 +13,6 @@
        use CorsixTH. After most of the original engine has been reimplemented in
        open source code, the project will serve as a base from which extensions
        and improvements to the original game can be made.</p>
-    <ul>
-      <li>To play CorsixTH, you will need either the Demo:
-          https://th.corsix.org/Demo.zip</li>
-      <li>or the full game of Theme Hospital, available for example at:
-          https://www.gog.com/game/theme_hospital</li>
-    </ul>
   </description>
   <provides>
     <binary>corsix-th</binary>
