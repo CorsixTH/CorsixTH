@@ -35,7 +35,7 @@ Copyright (C) 2011-2012 Sérgio "Get_It" Ribeiro
 Copyright (C) 2011 Sergei Larionov
 Copyright (C) 2011 Alexey Pinyagin
 Copyright (C) 2011-2019 Giordano "Viandante" Celeghin
-Copyright (C) 2012-2021 Stephen "TheCycoONE" Baker
+Copyright (C) 2012-2022 Stephen "TheCycoONE" Baker
 Copyright (C) 2012 Alex Ghiran
 Copyright (C) 2012-2013,2021 Luis "driverpt" Duarte
 Copyright (C) 2012-2013 Ryan Hugh Dean
@@ -48,13 +48,13 @@ Copyright (C) 2013 YoungSeok Yoon
 Copyright (C) 2013-2015 Maarten Peters
 Copyright (C) 2013 nullstein
 Copyright (C) 2013 BuTcHeR (extragry.pl)
-Copyright (C) 2013-2021 Albert "Alberth" Hofkamp
+Copyright (C) 2013-2022 Albert "Alberth" Hofkamp
 Copyright (C) 2014-2015 Joseph "J-Shep" Sheppard
 Copyright (C) 2014 Phillipp Röll
 Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman
 Copyright (C) 2015 Víctor "mccunyao" González
 Copyright (C) 2015 Josh Keegan
-Copyright (C) 2016-2021 Toby Lane
+Copyright (C) 2016-2022 Toby Lane
 Copyright (C) 2016-2020 Phil Morrell
 Copyright (C) 2017 Arne Zelasko
 Copyright (C) 2017 Víctor "IlDucci"
@@ -64,7 +64,7 @@ Copyright (C) 2017 Steven Price
 Copyright (C) 2017 Radomir Wojtera
 Copyright (C) 2017-2019 David Fairbrother
 Copyright (C) 2017-2020 Altieres Lima
-Copyright (C) 2017-2021 Justin "mugmuggy" Mugford
+Copyright (C) 2017-2022 Justin "mugmuggy" Mugford
 Copyright (C) 2018 Pavel Schoffer
 Copyright (C) 2018 Rick "Feanathiel" Megens
 Copyright (C) 2018 Anton Shestakov
@@ -72,15 +72,22 @@ Copyright (C) 2018 Thilo Ettelt
 Copyright (C) 2018 "red031000"
 Copyright (C) 2018-2019 James "leiget" Russell
 Copyright (C) 2019 Artem Polishchuk
-Copyright (C) 2020-2021 "lewri"
-Copyright (C) 2020 "yangfl"
+Copyright (C) 2020-2022 "lewri"
+Copyright (C) 2020-2021 "yangfl"
 Copyright (C) 2020 Jeremy Tellaa
 Copyright (C) 2020 Maxim Krivchikov
 Copyright (C) 2020 Dimitrios Iliadis
 Copyright (C) 2021 Zany XDev
 Copyright (C) 2021 Romain "rmnvgr" Vigier
-Copyright (C) 2021 Robert "flackr" Flack
+Copyright (C) 2021-2022 Robert "flackr" Flack
 Copyright (C) 2021 Alexandre Lavoie
+Copyright (C) 2021 Jan Sako
+Copyright (C) 2022 Colin Matthews
+Copyright (C) 2022 Frazer Smith
+Copyright (C) 2022 "RetroGamerFan"
+Copyright (C) 2022 "tomracer"
+Copyright (C) 2022 "TotalCaesar659"
+Copyright (C) 2022 Manuel K
 
 et al.
 
@@ -104,11 +111,11 @@ SOFTWARE.
 
 -------------------------------------------------------------------------------
 
-Uses the Lua 5.3 library, which is available from http://www.lua.org/ as well as
+Uses the Lua 5.4 library, which is available from http://www.lua.org/ as well as
 the lpeg, library available from http://www.inf.puc-rio.br/~roberto/lpeg, both
 under the following terms:
 
-Copyright © 1994-2015 Lua.org, PUC-Rio.
+Copyright © 1994-2021 Lua.org, PUC-Rio.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -132,7 +139,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Uses the luafilesystem library available at https://keplerproject.github.io
 under the following terms:
 
-Copyright © 2003 Kepler Project.
+Copyright © 2003-2014 Kepler Project.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -154,7 +161,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -------------------------------------------------------------------------------
 
 Uses the luasocket library available from
-https://github.com/lunarmodules/luasocket under the following terms:
+https://lunarmodules.github.io/luasocket/ under the following terms:
 
 Copyright (C) 2004-2022 Diego Nehab
 
@@ -178,6 +185,29 @@ DEALINGS IN THE SOFTWARE.
 
 -------------------------------------------------------------------------------
 
+Uses the whereami library, which is available from
+https://github.com/gpakosz/whereami under the following terms:
+
+Copyright Gregory Pakosz
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-------------------------------------------------------------------------------
 Uses the Mersenne twister random number generator, which is available from
 http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html under the following
 terms:
