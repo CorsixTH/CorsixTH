@@ -864,7 +864,7 @@ function Hospital:_fixBoiler()
     heat_vars.heating_broke = false
     if num_radiators > 0 then
       -- Only tell the player about fix if there is at least one radiator.
-      self.hospital:giveAdvice({ _A.boiler_issue.resolved })
+      self:giveAdvice({_A.boiler_issue.resolved})
     end
   end
 end
