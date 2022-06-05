@@ -825,6 +825,7 @@ int l_line_depersist(lua_State* L) {
   lua_insert(L, 1);
   lua_persist_reader* pReader =
       static_cast<lua_persist_reader*>(lua_touserdata(L, 1));
+  new (pLine) line_sequence();
   pLine->depersist(pReader);
   return 0;
 }
