@@ -232,14 +232,18 @@ function UIBankManager:draw(canvas, x, y)
     font:draw(canvas, _S.bank_manager.statistics_page.money_in, x + 449, y + 41, 70, 0)
     font:draw(canvas, _S.bank_manager.statistics_page.balance, x + 525, y + 40, 70, 0)
 
-    -- Lua < 5.3 stored integer money amount in floating point values.
-    -- Lua 5.3 introduced an integer representation, and started printing
-    -- integer floating point numbers with a trailing .0 .
-    --
-    -- As a result, CorsixTH games converted from earlier Lua versions print a
-    -- trailing .0 in the bank manager window. The "math.floor" around all
-    -- numbers printed below avoids that problem by converting to integer
-    -- representation for Lua 5.3, and doing nothing in Lua < 5.3.
+    --[[
+      Lua < 5.3 stored integer money amount in floating point values.
+      Lua 5.3 introduced an integer representation, and started printing
+      integer floating point numbers with a trailing .0 .
+
+      As a result, CorsixTH games converted from earlier Lua versions print a
+      trailing .0 in the bank manager window. The "math.floor" around all
+      numbers printed below avoids that problem by converting to integer
+      representation for Lua 5.3, and doing nothing in Lua < 5.3.
+      Note: hospital.balance is a special case and needs string conversion to
+      persist as an integer
+    --]]
 
     -- Each transaction
     -- A for loop going backwards
@@ -258,7 +262,7 @@ function UIBankManager:draw(canvas, x, y)
 
     -- Summary
     font:draw(canvas, _S.bank_manager.statistics_page.current_balance, x + 373, y + 420, 140, 0)
-    font:draw(canvas, "$ " .. hospital.balance, x + 526, y + 421, 70, 0)
+    font:draw(canvas, string.format("$%.0f", hospital.balance), x + 526, y + 421, 70, 0)
   else
     local font = self.font
     self.background:draw(canvas, self.x + x, self.y + y)
