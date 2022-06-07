@@ -356,8 +356,9 @@ function Patient:canPeeOrPuke(current)
   return parcel ~= 0 and th:getPlotOwner(parcel) == self.hospital:getPlayerIndex()
 end
 
---! Animations for when there is an earth quake
-function Patient:falling()
+--! Falling animations for when there is an earth quake or the player is being very mean
+--!param player_init (bool) if true, player triggered the fall
+function Patient:falling(player_init)
   local current = self:getCurrentAction()
   current.keep_reserved = true
   if self.falling_anim and self:canPeeOrPuke(current) and self.has_fallen == 1 then
@@ -376,13 +377,14 @@ function Patient:falling()
     if math.random(1, 5) == 3 then
       self:shakeFist()
     end
-    self:fallingAnnounce()
+    if player_init then self:fallingAnnounce() end
     self:changeAttribute("happiness", -0.05) -- falling makes you very unhappy
   else
     return
   end
 end
 
+--! Announcements specific to a patient being pushed over by the player
 function Patient:fallingAnnounce()
   local msg = {
   (_A.warnings.falling_1),
