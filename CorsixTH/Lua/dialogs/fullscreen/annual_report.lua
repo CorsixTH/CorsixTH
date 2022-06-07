@@ -521,6 +521,7 @@ function UIAnnualReport:draw(canvas, x, y)
   elseif self.state == 2 then -- Statistics screen
     self:drawStatisticsScreen(canvas, x, y)
   else -- Award and trophy screen
+    -- Note: Each 'amount' is wrapped by string.format("%.0f", x) to persist integer notation
     -- Write out motivation if appropriate
     if self.trophy_motivation then
       -- If it is a plaque showing we write in stone text.
@@ -533,7 +534,7 @@ function UIAnnualReport:draw(canvas, x, y)
       end
       self.stone_font:draw(canvas, award_type, x + 220, y + 330, 200, 0)
       -- Amount won/lost
-      self.stone_font:draw(canvas, "+" .. info.amount, x + 220, y + 355, 200, 0)
+      self.stone_font:draw(canvas, string.format("+%.0f", info.amount), x + 220, y + 355, 200, 0)
     elseif self.award_motivation then
       local info = self.awards[self.award_motivation].info
       self.write_font:drawWrapped(canvas, info.text, x + 235, y + 125, 165, "center")
@@ -544,11 +545,7 @@ function UIAnnualReport:draw(canvas, x, y)
       end
       self.write_font:draw(canvas, award_type, x + 220, y + 290, 200, 0)
       -- The amount won/lost
-      local text = ""
-      if info.amount > 0 then
-        text = "+"
-      end
-      self.write_font:draw(canvas, text .. info.amount, x + 220, y + 315, 200, 0)
+      self.write_font:draw(canvas, string.format("%+.0f", info.amount), x + 220, y + 315, 200, 0)
     end
   end
 end
@@ -588,6 +585,7 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
   for i, hospital in ipairs(world.hospitals) do
     local name = hospital.name
 
+    -- Note: Each 'value' is wrapped by string.format("%.0f", x) to persist integer notation
     -- Most Money
     local index_m = getindex(self.money_sort, i)
     -- index_* is the returned value of the sorted place for this player.
@@ -595,42 +593,42 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
     -- duplicate has been found, one additional row lower is the right place to be.
     font:draw(canvas, name:upper(), x + 140,
         y + row_y + row_dy * (index_m - 1))
-    font:draw(canvas, self.money_sort[index_m].value, x + 240,
+    font:draw(canvas, string.format("%.0f", self.money_sort[index_m].value), x + 240,
         y + row_y + row_dy * (index_m - 1), 70, 0, "right")
 
     -- Highest Salary
     local index_s = getindex(self.salary_sort, i)
     font:draw(canvas, name:upper(), x + 140 + col_x,
         y + row_y + row_dy * (index_s - 1))
-    font:draw(canvas, self.salary_sort[index_s].value, x + 240 + col_x,
+    font:draw(canvas, string.format("%.0f", self.salary_sort[index_s].value), x + 240 + col_x,
         y + row_y + row_dy * (index_s - 1), 70, 0, "right")
 
     -- Most Cures
     local index_c = getindex(self.cures_sort, i)
     font:draw(canvas, name:upper(), x + 140,
         y + row_y + row_no_y + row_dy * (index_c - 1))
-    font:draw(canvas, self.cures_sort[index_c].value, x + 240,
+    font:draw(canvas, string.format("%.0f", self.cures_sort[index_c].value), x + 240,
         y + row_y + row_no_y + row_dy * (index_c - 1), 70, 0, "right")
 
     -- Most Deaths
     local index_d = getindex(self.deaths_sort, i)
     font:draw(canvas, name:upper(), x + 140 + col_x,
         y + row_y + row_no_y + row_dy * (index_d - 1))
-    font:draw(canvas, self.deaths_sort[index_d].value, x + 240 + col_x,
+    font:draw(canvas, string.format("%.0f", self.deaths_sort[index_d].value), x + 240 + col_x,
         y + row_y + row_no_y + row_dy * (index_d - 1), 70, 0, "right")
 
     -- Most Visitors
     local index_v = getindex(self.visitors_sort, i)
     font:draw(canvas, name:upper(), x + 140,
         y + row_y + row_no_y * 2 + row_dy * (index_v - 1))
-    font:draw(canvas, self.visitors_sort[index_v].value, x + 240,
+    font:draw(canvas, string.format("%.0f", self.visitors_sort[index_v].value), x + 240,
         y + row_y + row_no_y * 2 + row_dy * (index_v - 1), 70, 0, "right")
 
     -- Highest Value
     local index_v2 = getindex(self.value_sort, i)
     font:draw(canvas, name:upper(), x + 140 + col_x,
         y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1))
-    font:draw(canvas, self.value_sort[index_v2].value, x + 240 + col_x,
+    font:draw(canvas, string.format("%.0f", self.value_sort[index_v2].value), x + 240 + col_x,
         y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1), 70, 0, "right")
   end
 end

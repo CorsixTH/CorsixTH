@@ -84,6 +84,8 @@ function UIProgressReport:UIProgressReport(ui)
       world_goals[crit_name].visible = false
     end
     if res_value then
+      -- FIXME: res_value and cure_value are depersisted as floating points, using
+      -- string.format("%.0f", x) is not suitable due to %d (num) param in _S string
       local tooltip
       if world.level_criteria[tab.criterion].formats == 2 then
         tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value), math.floor(cur_value))

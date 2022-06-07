@@ -387,7 +387,7 @@ function UIGraphs:draw(canvas, x, y)
     if label.pos_y then
       local ypos = label.pos_y + label.shift_y
       self.black_font:draw(canvas, label.text, x + RIGHT_X + 3, y + ypos)
-      self.black_font:draw(canvas, label.value, x + RIGHT_X + 60, y + ypos)
+      self.black_font:draw(canvas, string.format("%.0f", label.value), x + RIGHT_X + 60, y + ypos)
     end
   end
 
