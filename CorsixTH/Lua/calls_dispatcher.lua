@@ -115,7 +115,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   object:setRepairingMode(lock_room and true or false)
 
   if not manual and urgent then
-    object.hospital:giveAdvice(_A.warnings.machines_falling_apart)
+    object.hospital:giveAdvice({_A.warnings.machines_falling_apart})
   elseif object.hospital:countStaffOfCategory("Handyman", 1) == 0 then
     -- Advise about hiring Handyman
     object.hospital:giveAdvice({_A.warnings.machinery_damaged2})
