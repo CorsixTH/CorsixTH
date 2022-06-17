@@ -536,6 +536,14 @@ function Patient:despawn()
   Humanoid.despawn(self)
 end
 
+-- Checks if the room the patient is in is the final treatment room for their disease
+-- NB: Check diagnosed status as some illnesses use Psych for diagnosis and treatment
+function Patient:_checkIfCureRoom(room)
+  local num_rooms = #self.disease.treatment_rooms
+  return (room and self.disease.treatment_rooms[num_rooms] == room.room_info.id
+      and self.diagnosed)
+end
+
 -- This function handles changing of the different attributes of the patient.
 -- For example if thirst gets over a certain level (now: 0.7), the patient
 -- tries to find a drinks machine nearby.
@@ -576,19 +584,21 @@ function Patient:tickDay()
   if not Humanoid.tickDay(self) then
     return
   end
+
   -- Die before we poo or drink
-  -- patient has been in the hospital for over 6 months and is still not well, so will become sad and will either get fed up and leave
-  -- or stay in the hope that you will cure them before they die
-  -- strange, but in TH happiness does not go down, even when close to death IMO that is wrong as you would be unhappy if you waited too long.
-  -- TODO death animation for slack female is missing its head. For now the only option is for her to get fed up and leave
-  -- this can be changed when the animation thing is resolved
+  -- Patient has been in the hospital for over 6 months and is still not well, so
+  -- will become sad and will either get fed up and leave or stay in the hope that you
+  -- will cure them before they die.
+  -- Note: This behaviour intentionally differs from Theme Hospital where being close to
+  -- death does not impact happiness.
   -- TODO clean up this block, nonmagical numbers
   if self.attributes["health"] >= 0.18 and self.attributes["health"] < 0.22 then
     self:setMood("sad2", "activate")
     self:changeAttribute("happiness", -0.0002) -- waiting too long will make you sad
-    -- There is a 1/3 chance that the patient will get fed up and leave
-    -- note, this is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
-    if math.random(1,30) == 1 then
+    -- There is a 1/3 chance that the patient will get fed up and leave.
+    -- This is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
+    -- If patient is already in the cure rodwom, let the treatment happen.
+    if not self:_checkIfCureRoom(self:getRoom()) and math.random(1,30) == 1 then
       self:setDynamicInfoText(_S.dynamic_info.patient.actions.fed_up)
       self:setMood("sad2", "deactivate")
       self:goHome("kicked")
@@ -608,20 +618,17 @@ function Patient:tickDay()
   elseif self.attributes["health"] >= 0.01 and self.attributes["health"] < 0.06 then
     self:setMood("sad5", "deactivate")
     self:setMood("sad6", "activate")
-  -- its not looking good
+  -- it's not looking good
   elseif self.attributes["health"] > 0.00 and self.attributes["health"] < 0.01 then
     self.attributes["health"] = 0.0
   -- is there time to say a prayer
   elseif self.attributes["health"] == 0.0 then
-    -- people who are in a room should not die:
-    -- 1. they are being cured in this moment. dying in the last few seconds
-    --    before the cure makes only a subtle difference for gameplay
-    -- 2. they will leave the room soon (toilets, diagnostics) and will die then
     if not self:getRoom() and not self:getCurrentAction().is_leaving then
       self:setMood("sad6", "deactivate")
       self:die()
     end
-    --dead people aren't thirsty
+    -- Patient died, will die when the leave the room, will be cured, or is leaving
+    -- the hospital. Regardless we do not need to adjust any other attribute
     return
   end
 
