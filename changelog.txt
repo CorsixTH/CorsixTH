@@ -1,4 +1,14 @@
 -------------------------------------------------------------------------------
+Version 0.66-rc1 - released June 2022
+-------------------------------------------------------------------------------
+# Fixes
+* Patients no longer leave or become unhappy waiting too long when they are in
+  their treatment room
+* Loading a save game containing a graph would crash
+* More crashing advisor statements have been corrected
+* Resolved formatting issues with numbers after loading a save
+
+-------------------------------------------------------------------------------
 Version 0.66-beta2 - released June 2022
 -------------------------------------------------------------------------------
 # Fixes
