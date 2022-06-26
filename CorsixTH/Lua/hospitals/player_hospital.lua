@@ -50,7 +50,6 @@ end
 function PlayerHospital:dailyAdviceChecks()
   local current_date = self.world:date()
   local day = current_date:dayOfMonth()
-  local current_month = current_date:monthOfYear()
 
   -- Hold any advice back until the game has somewhat started.
   if current_date < Date(1, 5) then
@@ -69,13 +68,10 @@ function PlayerHospital:dailyAdviceChecks()
         }
         self:giveAdvice(cashlow_advice)
 
-      elseif self.balance < -2000 and current_month > 8 then
-        -- TODO: Ideally this should be linked to the lose criteria for balance.
-        self:giveAdvice({_A.warnings.bankruptcy_imminent})
-
       elseif self.balance > 6000 and self.loan > 0 then
         self:giveAdvice({_A.warnings.pay_back_loan})
       end
+      self:adviseGoalProgress()
     end
   end
 
@@ -214,6 +210,143 @@ function PlayerHospital:dailyAdviceChecks()
   if day == 28 then
     self.adviser_data.temperature_advice = false
   end
+end
+
+--! Give specific advice about progress to the win and lose goals given (of any group)
+--!param goals (table) Goals of the current level, including start values
+function PlayerHospital:adviseGoalSpecifics(goals)
+  local msgs = {}
+  -- Win criteria
+  --  1 Reputation
+  local win1 = goals["reputation"]["win_value"]
+  if win1 and goals["reputation"]["max_min_win"] == 1 then
+    if self.reputation >= win1 and self.reputation > goals["reputation"]["start"] then
+      table.insert(msgs, _A.level_progress.reputation_good_enough:format(win1))
+    elseif win1 > goals["reputation"]["start"] then
+      table.insert(msgs, _A.level_progress.improve_reputation:format(win1 - self.reputation))
+    end
+  end
+  --  2 Balance
+  local win2 = goals["balance"]["win_value"]
+  if win2 and goals["balance"]["max_min_win"] == 1 and self.balance >= win2 and
+      self.balance > goals["balance"]["start"] then
+    table.insert(msgs, _A.level_progress.financial_criteria_met:format(math.floor(win2)))
+  end
+  --  4 Patients cured count
+  local win4 = goals["num_cured"]["win_value"]
+  if win4 and goals["num_cured"]["max_min_win"] == 1 and self.num_cured >= win4 then
+    table.insert(msgs, _A.level_progress.cured_enough_patients)
+  end
+  --  6 Hospital value
+  local win6 = goals["value"]["win_value"]
+  if win6 and goals["value"]["max_min_win"] == 1 then
+    if self.value >= win6 then
+      table.insert(msgs, _A.level_progress.hospital_value_enough :format(math.floor(win6)))
+    elseif self.value > 0.9 * win6 then
+      table.insert(msgs, _A.level_progress.close_to_win_increase_value
+          :format(math.floor(win6 - self.value)))
+    end
+  end
+  local rep_lose_ratio, balance_lose_ratio = 0, 0
+  -- Lose criteria. Ratios 0-1 from start to lose values
+  --  1 Reputation
+  local lose1 = goals["reputation"]["lose_value"]
+  if lose1 and goals["reputation"]["max_min_lose"] == 0 then
+    rep_lose_ratio = (goals["reputation"]["start"] - self.reputation) /
+        (goals["reputation"]["start"] - lose1) or 0
+  end
+  --  2 Balance
+  local lose2 = goals["balance"]["lose_value"]
+  if lose2 and goals["balance"]["max_min_lose"] == 0 then
+    balance_lose_ratio = (goals["balance"]["start"] - self.balance) /
+        (goals["balance"]["start"] - lose2) or 0
+    if balance_lose_ratio > 0.8 then table.insert(msgs, _A.warnings.bankruptcy_imminent) end
+  end
+  --  5 Patients killed percentage
+  local lose5 = goals["percentage_killed"]["lose_value"]
+  if lose5 and goals["percentage_killed"]["max_min_lose"] == 1 and self.percentage_killed > 0.8 * lose5 then
+    table.insert(msgs, _A.level_progress.dont_kill_more_patients)
+    table.insert(msgs, _A.level_progress.nearly_lost)
+  end
+
+  -- Generic negative
+  if rep_lose_ratio > 0.8 or balance_lose_ratio > 0.8 then
+    table.insert(msgs, _A.level_progress.nearly_lost)
+  elseif rep_lose_ratio > 0.6 or balance_lose_ratio > 0.6 then
+    table.insert(msgs, _A.level_progress.three_quarters_lost)
+  elseif rep_lose_ratio > 0.4 or balance_lose_ratio > 0.4 then
+    table.insert(msgs, _A.level_progress.halfway_lost)
+  end
+  return msgs
+end
+
+--! Give advice about general progress to fulfilling all of the goals to win the level
+function PlayerHospital:adviseGoalProgress()
+-- Move to World:World?
+  self.world:determineWinningConditions()
+  local start, goals = self.world.map:getLevelStartState(), self.world.goals
+  if not goals then return end
+
+  local highest_group = 0
+  -- Find highest count group
+  for criteria, v in pairs(goals) do
+    if type(criteria) == "string" then
+      if v["group"] > highest_group then highest_group = v["group"] end
+    end
+  end
+-- End move to World:World?
+-- Combine with World:checkWinningConditions?
+  local criteria_count, win_criteria_met, lose_criteria_met, best_group, best_value = {}, {}, {}
+  -- Collect winning criteria count for each group
+  for g = 1, highest_group do
+    win_criteria_met[g], criteria_count[g] = 0, 0
+    for criteria, t in pairs(goals) do
+      if type(criteria) == "string" and t["group"] == g then
+        -- Win criteria
+        if t["win_value"] then
+          criteria_count[g] = criteria_count[g] + 1
+          if (t["max_min_win"] == 1 and self[criteria] > t["win_value"]) or
+              (t["max_min_win"] == 0 and self[criteria] < t["win_value"]) then
+            win_criteria_met[g] = win_criteria_met[g] + 1
+          end
+        end
+        -- Lose criteria
+        if t["lose_value"] then
+          t["start"] = start[criteria] or 0
+          if (t["max_min_lose"] == 1 and self[criteria] > t["lose_value"]) or
+              (t["max_min_lose"] == 0 and self[criteria] < t["lose_value"]) then
+            lose_criteria_met[criteria] = true -- lose criteria are typically in their own group
+          end
+        end
+      end
+    end
+
+    -- Is this the best performing group in the winning goals?
+    if not best_value or win_criteria_met[g] > best_value then
+      best_value = win_criteria_met[g]
+      best_group = g
+      --[[ If all win criteria in a group are met the level will be won, no advice to give
+      if win_criteria_met[g] > 0 and criteria_count[g] == win_criteria_met[g] then
+        return
+      end]]
+    end
+  end
+
+  local c = 0
+  for _, _ in pairs(lose_criteria_met) do c = c + 1 end
+-- End combine with World:checkWinningConditions
+  local msgs = self:adviseGoalSpecifics(goals)
+
+  -- Generic positive
+  if win_criteria_met[best_group] >= criteria_count[best_group] * 0.75 then
+    table.insert(msgs, _A.level_progress.three_quarters_won)
+  elseif win_criteria_met[best_group] >= criteria_count[best_group] * 0.5 then
+    table.insert(msgs, _A.level_progress.halfway_won)
+  end
+
+  if #msgs == 0 then return end
+for _, m in pairs(msgs) do print(m["text"]) end -- Remove
+  self:giveAdvice(msgs, 1)
 end
 
 --! Give advice to the player at the end of a month.

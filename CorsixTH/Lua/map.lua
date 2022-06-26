@@ -738,6 +738,22 @@ function Map:getParcelTileCount(parcel)
   return self.parcelTileCounts[parcel] or 0
 end
 
+--! Get the starting values of balance and reputation for this level
+--!return start (table)
+function Map:getLevelStartState()
+  local level_config, level, start = self.level_config, self.level_number, {}
+  if level_config.towns and level_config.towns[level] then
+    start["balance"] = level_config.towns[level].StartCash
+    start["reputation"] = level_config.towns[level].StartRep
+  elseif level_config.town then
+    start["balance"] = level_config.town.StartCash
+    start["reputation"] = level_config.town.StartRep
+  end
+  if not start["balance"] then start["balance"] = 0 end
+  if not start["reputation"] then start["reputation"] = 500 end
+  return start
+end
+
 function Map:afterLoad(old, new)
   if old < 6 then
     self.parcelTileCounts = {}
