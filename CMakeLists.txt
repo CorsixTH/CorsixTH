@@ -17,6 +17,7 @@
 
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
 #   - BUILD_ANIMVIEW : Generate AnimViewer build files (no)
+#   - BUILD_TOOLS : Generate cli tools
 
 cmake_minimum_required(VERSION 3.10)
 
@@ -139,6 +140,12 @@ if(BUILD_ANIMVIEW)
   message("Building AnimView")
   add_subdirectory(AnimView)
 endif()
+
+if(BUILD_TOOLS)
+	message("Building Tools")
+	add_subdirectory("tools")
+endif()
+
 message("")
 
 # Documentation generation, construct 'doc' target
