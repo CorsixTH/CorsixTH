@@ -1379,11 +1379,11 @@ end
 
 -- PRIVATE method to generate the next VIP date
 function World:_generateNextVipDate()
-  -- Support standard values for mean and variance
-  local mean = 180
-  local variance = 30
+  -- Support standard values for mean and bound
+  local mean, bound = self.map.level_config.gbv.MayorLaunch, 30
   -- How many days until next vip?
-  local days = math.round(math.n_random(mean, variance))
+  local lower, upper = mean - bound, mean + bound
+  local days = math.round(math.t_random(lower, mean, upper))
   return self.game_date:plusDays(days)
 end
 
