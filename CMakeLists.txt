@@ -142,8 +142,8 @@ if(BUILD_ANIMVIEW)
 endif()
 
 if(BUILD_TOOLS)
-	message("Building Tools")
-	add_subdirectory("tools")
+  message("Building Tools")
+  add_subdirectory("tools")
 endif()
 
 message("")
