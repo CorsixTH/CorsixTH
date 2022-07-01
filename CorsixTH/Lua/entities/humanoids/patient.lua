@@ -597,7 +597,7 @@ function Patient:tickDay()
     self:changeAttribute("happiness", -0.0002) -- waiting too long will make you sad
     -- There is a 1/3 chance that the patient will get fed up and leave.
     -- This is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
-    -- If patient is already in the cure rodwom, let the treatment happen.
+    -- If patient is already in the cure room, let the treatment happen.
     if not self:_checkIfCureRoom(self:getRoom()) and math.random(1,30) == 1 then
       self:setDynamicInfoText(_S.dynamic_info.patient.actions.fed_up)
       self:setMood("sad2", "deactivate")
@@ -627,7 +627,7 @@ function Patient:tickDay()
       self:setMood("sad6", "deactivate")
       self:die()
     end
-    -- Patient died, will die when the leave the room, will be cured, or is leaving
+    -- Patient died, will die when they leave the room, will be cured, or is leaving
     -- the hospital. Regardless we do not need to adjust any other attribute
     return
   end
