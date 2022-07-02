@@ -41,7 +41,7 @@ local function createCampaignList(path)
   local campaigns = {}
 
   for file in lfs.dir(path) do
-    if file:match"%.campaign$" then
+    if file:match("%.campaign$") then
       local campaign_info, err = TheApp:readCampaignFile(file)
       if not campaign_info then
         print(err)

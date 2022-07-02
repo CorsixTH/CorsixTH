@@ -647,7 +647,7 @@ function UIMenuBar:makeGameMenu(app)
       app.runtime_config[option] = item.checked
     end
   end
-  options:appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config"lock_windows")
+  options:appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config("lock_windows"))
 
   -- Edge Scrolling
   options:appendCheckItem(_S.menu_options.edge_scrolling,

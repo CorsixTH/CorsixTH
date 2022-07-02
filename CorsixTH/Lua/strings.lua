@@ -43,7 +43,7 @@ function Strings:init()
   local pathsep = package.config:sub(1,1)
   local path = ourpath .. "languages" .. pathsep
   for file in lfs.dir(path) do
-    if file:match"%.lua$" then
+    if file:match("%.lua$") then
       local result, err = loadfile_envcall(path .. file)
       if not result then
         print("Error loading languages" .. pathsep ..  file .. ":\n" .. tostring(err))

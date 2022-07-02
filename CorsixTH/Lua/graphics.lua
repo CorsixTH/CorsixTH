@@ -145,7 +145,7 @@ function Graphics:loadFontFile()
   end
   local font = font_file and io.open(font_file, "rb")
   if font then
-    self.ttf_font_data = font:read"*a"
+    self.ttf_font_data = font:read("*a")
     font:close()
     if self.ttf_font_data and self.app.config.unicode_font ~= font_file then
       self.app.config.unicode_font = font_file
@@ -465,7 +465,7 @@ function Graphics:loadAnimations(dir, prefix)
     if not file then
       return nil, err
     end
-    local data = file:read"*a"
+    local data = file:read("*a")
     file:close()
     return data
   end

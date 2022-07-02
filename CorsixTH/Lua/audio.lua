@@ -111,7 +111,7 @@ function Audio:init()
   end
   for file in _f, _s, _v do
     local info
-    local filename, ext = file:match"^(.+)%.([^.]+)$"
+    local filename, ext = file:match("^(.+)%.([^.]+)$")
     ext = ext and ext:upper()
     if waveform[ext] or instructional[ext] then
       info = musicFileTable(filename)
@@ -147,8 +147,8 @@ function Audio:init()
     else
       data = assert(self.app.fs:readContents("Sound", "Midi", midi_txt))
     end
-    for file, title in data:gmatch"([^\r\n\26]+).-([^\r\n\26]+)" do
-      local info = musicFileTable(file:match"^(.*)%." or file)
+    for file, title in data:gmatch("([^\r\n\26]+).-([^\r\n\26]+)") do
+      local info = musicFileTable(file:match("^(.*)%.") or file)
       if next(info) ~= nil then
         info.title = title
       else

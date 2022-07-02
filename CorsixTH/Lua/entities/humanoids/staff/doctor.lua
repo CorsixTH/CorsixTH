@@ -155,7 +155,7 @@ function Doctor:updateSkill(consultant, trait, amount) -- luacheck: ignore 212
   self.profile[trait] = self.profile[trait] + amount
   if self.profile[trait] >= 1.0 then
     self.profile[trait] = 1.0
-    local is = trait:match"^is_(.*)"
+    local is = trait:match("^is_(.*)")
     if is == "surgeon" or is == "psychiatrist" or is == "researcher" then
       self.hospital:giveAdvice({ _A.information.promotion_to_specialist:format(_S.staff_title[is]) })
       -- patients might we waiting for a doctor with this skill, notify them

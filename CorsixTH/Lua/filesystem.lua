@@ -174,7 +174,7 @@ function FileSystem:readContents(virtual_path, ...)
   if not f then
     return nil, e
   end
-  local data = f:read"*a"
+  local data = f:read("*a")
   f:close()
   return data
 end

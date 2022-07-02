@@ -70,9 +70,9 @@ function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, call
 
   self:addPanel(bottom_frame, 0, last_y)  -- Dialog footer
   self:addPanel(360, 0, last_y + 10):makeButton(8, 10, 82, 34, 361, self.cancel)
-    :setTooltip(_S.tooltip.window_general.cancel):setSound"No4.wav"
+    :setTooltip(_S.tooltip.window_general.cancel):setSound("No4.wav")
   self:addPanel(362, 90, last_y + 10):makeButton(0, 10, 82, 34, 363, self.ok)
-    :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
+    :setTooltip(_S.tooltip.window_general.confirm):setSound("YesX.wav")
 
   self:registerKeyHandlers()
   if self.must_pause then self:systemPause() end
