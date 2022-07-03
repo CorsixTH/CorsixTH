@@ -73,7 +73,7 @@ endif()
 
 option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
 option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
-option(BUILD_TOOLS "Build additional CLI tools (rnc_decode)" OFF) 
+option(BUILD_TOOLS "Build additional CLI tools (rnc_decode)" OFF)
 
 if(WITH_AUDIO)
   set(CORSIX_TH_USE_SDL_MIXER ON)
