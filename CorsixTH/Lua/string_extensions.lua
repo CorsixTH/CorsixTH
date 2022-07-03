@@ -58,9 +58,9 @@ local format_pattern = lpeg.Cs(
   (
     (
       -- %% to %
-      lpeg.P"%%" / "%%" +
+      lpeg.P("%%") / "%%" +
       -- Old-style (%s) and (%d)
-      lpeg.C("%" * lpeg.S"sd" * lpeg.Carg(1)) / function(key, args)
+      lpeg.C("%" * lpeg.S("sd") * lpeg.Carg(1)) / function(key, args)
         local idx = args.idx + 1
         args.idx = idx
         local arg, proxy_found = _unwrap(args[idx])
