@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "../../libs/rnc/rnc.h"
+#include "rnc.h"
 #include "th_lua.h"
 
 //! Provides lua function to decompress RNC data

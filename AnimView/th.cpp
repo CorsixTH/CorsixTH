@@ -34,7 +34,7 @@ SOFTWARE.
 #include <stdexcept>
 #include <vector>
 
-#include "../libs/rnc/rnc.h"
+#include "rnc.h"
 
 namespace {
 
