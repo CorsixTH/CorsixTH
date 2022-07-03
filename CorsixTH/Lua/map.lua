@@ -375,7 +375,7 @@ function Map:loadMapConfig(filename, config, custom)
       if line:sub(1, 1) == "#" then
         local parts = {}
         local nkeys = 0
-        for part in line:gmatch"%.?[-?a-zA-Z0-9%[_%]]+" do
+        for part in line:gmatch("%.?[-?a-zA-Z0-9%[_%]]+") do
           if part:sub(1, 1) == "." and #parts == nkeys + 1 then
             nkeys = nkeys + 1
           end
@@ -389,7 +389,7 @@ function Map:loadMapConfig(filename, config, custom)
         for i = 2, nkeys + 1 do
           local key = parts[1] .. parts[i]
           local t, n
-          for name in key:gmatch"[^.%[%]]+" do
+          for name in key:gmatch("[^.%[%]]+") do
             name = tonumber(name) or name
             if t then
               if not t[n] then

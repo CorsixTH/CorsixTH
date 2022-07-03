@@ -58,9 +58,9 @@ local format_pattern = lpeg.Cs(
   (
     (
       -- %% to %
-      lpeg.P"%%" / "%%" +
+      lpeg.P("%%") / "%%" +
       -- Old-style (%s) and (%d)
-      lpeg.C("%" * lpeg.S"sd" * lpeg.Carg(1)) / function(key, args)
+      lpeg.C("%" * lpeg.S("sd") * lpeg.Carg(1)) / function(key, args)
         local idx = args.idx + 1
         args.idx = idx
         local arg, proxy_found = _unwrap(args[idx])
@@ -78,14 +78,14 @@ local format_pattern = lpeg.Cs(
         return key
       end +
       -- New-style %([1-9])% and %([1-9]):([a-zA-Z0-9_.]-)%
-      lpeg.C("%" * lpeg.C(lpeg.R"19") *
+      lpeg.C("%" * lpeg.C(lpeg.R("19")) *
         (":" * lpeg.C(lpeg.R("az","AZ","09","__","..")^1) + lpeg.Cc(nil))
       * "%" * lpeg.Carg(1)) / function(str, key, tab, args)
         local val, proxy_found = _unwrap(args[tonumber(key)])
         if val == nil then return str end -- abort
         if tab then
           local string_table = _S
-          for part in tab:gmatch"[^.]+" do
+          for part in tab:gmatch("[^.]+") do
             string_table = string_table[part]
             if not string_table then return str end -- abort
           end

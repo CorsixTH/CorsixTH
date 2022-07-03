@@ -37,7 +37,7 @@ local details_width = 280
 --!param items (table) Table to insert the level metadata into.
 local findLevelsInDir = function(path, items)
   for file in lfs.dir(path) do
-    if file:match"%.level$" then
+    if file:match("%.level$") then
       local level_info = TheApp:readLevelFile(file)
       if level_info.name and level_info.map_file then
         items[#items + 1] = {

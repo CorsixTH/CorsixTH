@@ -1119,10 +1119,14 @@ function Patient:afterLoad(old, new)
 end
 
 function Patient:isMalePatient()
-  if string.find(self.humanoid_class,"Female") then return false
-  elseif string.find(self.humanoid_class,"Male") then return true
+  if string.find(self.humanoid_class, "Female") then return false
+  elseif string.find(self.humanoid_class, "Male") then return true
   else
-    local male_patient_classes = {["Chewbacca Patient"] = true,["Elvis Patient"] = true,["Invisible Patient"] = true}
+    local male_patient_classes = {
+      ["Chewbacca Patient"] = true,
+      ["Elvis Patient"] = true,
+      ["Invisible Patient"] = true
+    }
     return male_patient_classes[self.humanoid_class] ~= nil
   end
 end
