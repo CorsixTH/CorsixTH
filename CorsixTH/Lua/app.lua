@@ -204,8 +204,8 @@ function App:init()
   -- mostly around c between a and b.
   strict_declare_global "math.t_random"
   math.t_random = function(a, c, b)
-    assert(a < c)
-    assert(c < b)
+    assert(a < c, "Left boundary a should be less than center c.")
+    assert(c < b, "Right boundary b should more than center c.")
     -- normalize c (a -> 0, b -> 1)
     local range = b - a
     c = (c - a) / range
