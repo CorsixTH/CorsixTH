@@ -132,8 +132,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.population = 0.25 -- TODO: Percentage showing how much of
   -- the total population that goes to the player's hospital,
   -- used for one of the goals. Change when competitors are there.
-  -- Since there are none right now the player's hospital always get
-  -- 50 % of all patients as soon as gbv.AllocDelay has expired.
 
   -- Statistics used in the graph dialog. Each entry is the month, inside it
   -- is "money in", "money out", wages, balance, visitors, cures, deaths, reputation

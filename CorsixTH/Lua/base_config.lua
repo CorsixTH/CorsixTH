@@ -154,6 +154,7 @@ local configuration = {
   popn = {
     [0] = {Month = 0, Change = 4}, -- Standard: 4 patients the first month.
     [1] = {Month = 1, Change = 1}, -- Then increase by one per month.
+    [2] = {Month = 27, Change = 0}, -- Cap at 30, or population will go crazy.
   },
   expertise = {
     {StartPrice = 100, Known = 1, RschReqd = 0}, -- GENERAL_PRACTICE
