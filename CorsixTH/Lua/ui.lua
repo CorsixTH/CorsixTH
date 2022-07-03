@@ -241,6 +241,7 @@ function UI:UI(app, minimal)
 end
 
 function UI:runDebugScript()
+  -- luacheck: ignore 111 _ is set in debug code
   print("Executing Debug Script...")
   local path_sep = package.config:sub(1, 1)
   local lua_dir = debug.getinfo(1, "S").source:sub(2, -8)

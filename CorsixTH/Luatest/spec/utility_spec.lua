@@ -1,6 +1,6 @@
 require("utility")
 if _VERSION ~= "Lua 5.1" then
-  loadstring = load
+  loadstring = load -- luacheck: ignore 121
 end
 
 describe("serialize", function()

@@ -152,10 +152,9 @@ function UIStaffRise:drawDoctorAttributes(canvas)
 
   -- Junior / Doctor / Consultant marker
   local marker_x = x + 98
-  if profile.is_junior then
-  elseif profile.is_consultant then
+  if profile.is_consultant then
     marker_x = marker_x + 52
-  else
+  elseif not profile.is_junior then
     marker_x = marker_x + 22
   end
 

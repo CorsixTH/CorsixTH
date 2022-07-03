@@ -46,11 +46,8 @@ local function action_seek_reception_start(action, humanoid)
 
   -- Go through all receptions desks.
   for _, desk in ipairs(humanoid.hospital:findReceptionDesks()) do
-    if (not desk.receptionist and not desk.reserved_for) then
-      -- Not an allowed reception desk to go to.
-    else
-
-      -- Ok, so we found one.
+    if desk.receptionist or desk.reserved_for then
+      -- Ok, so we found one with staff at it or on the way.
       -- Is this one better than the last one?
       -- A lower score is better.
       -- First find out where the usage tile is.

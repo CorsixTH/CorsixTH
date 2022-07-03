@@ -1538,9 +1538,6 @@ top-left corner of the window.
 top-left corner of the window.
 ]]
 function Window:hitTest(x, y)
-  if x < 0 or y < 0 or (self.width and x >= self.width) or (self.height and y >= self.height) then
---    return false
-  end
   if self.panels[1] then
     for _, panel in ipairs(self.panels) do
       if self:hitTestPanel(x, y, panel) then

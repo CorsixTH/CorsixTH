@@ -649,6 +649,7 @@ function World:tickEarthquake()
       self.next_earthquake.damage_timer = self.next_earthquake.damage_timer + earthquake_damage_time
     end
 
+    --[[
     local hospital = self:getLocalPlayerHospital()
     -- loop through the patients and allow the possibility for them to fall over
     for _, patient in ipairs(hospital.patients) do
@@ -664,9 +665,10 @@ function World:tickEarthquake()
         -- they visit reception. Some debugging needed here to get
         -- this working.
 
-        -- patient:falling()
+        patient:falling()
       end
     end
+    --]]
   end
 end
 
@@ -1838,7 +1840,7 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
     object = obj
     ox = x
     oy = y
-    if which == "far" then
+    if which == "far" then -- luacheck: ignore 542
       -- just take the last found object, so don't ever abort
     elseif which == "near" then
       -- abort at each item with 50% probability

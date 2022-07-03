@@ -25,7 +25,7 @@ strict_declare_global "permanent"
 strict_declare_global "unpermanent"
 
 local th_getfenv
-local th_getupvalue
+local th_getupvalue -- luacheck: ignore 231
 if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" or _G._VERSION == "Lua 5.4" then
   th_getfenv = function(f)
     local _, val = nil, nil

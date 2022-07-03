@@ -159,10 +159,10 @@ function WardRoom:commandEnteringPatient(patient)
   bed.reserved_for = patient
   -- Old callback kept for persistence in savegame version 155, April 2021
   local --[[persistable:ward_loop_callback]] function _(action)
-    if length <= 0 then
+    if length <= 0 then -- luacheck: ignore 113
       action.prolonged_usage = false
     end
-    length = length - 1
+    length = length - 1 -- luacheck: ignore 111 113
   end
   -- New callback
   local --[[persistable:ward_loop_callback2]] function loop_callback(action)
