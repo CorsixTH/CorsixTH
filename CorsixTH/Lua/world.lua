@@ -1378,11 +1378,12 @@ function World:nextVip()
 end
 
 -- PRIVATE method to generate the next VIP date
+-- Note: it is important we ensure this date always is in the future
 function World:_generateNextVipDate()
   -- Support standard values for mean and bound
-  local mean, bound = self.map.level_config.gbv.MayorLaunch, 30
+  local mean, bound = math.max(self.map.level_config.gbv.MayorLaunch, 1), 30
   -- How many days until next vip?
-  local lower, upper = mean - bound, mean + bound
+  local lower, upper = math.max(mean - bound, 1), mean + bound
   local days = math.round(math.t_random(lower, mean, upper))
   return self.game_date:plusDays(days)
 end

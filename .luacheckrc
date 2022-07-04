@@ -73,7 +73,7 @@ globals = { -- Globals
             "VipGoToNextRoomAction", "VomitAction", "WalkAction", "YawnAction",
 
             -- Math extensions
-            "math.n_random", "math.round", "math.randomdump",
+            "math.n_random", "math.round", "math.randomdump", "math.t_random",
 
             -- Unit Tests
             "assertion_matches"

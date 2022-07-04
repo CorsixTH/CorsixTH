@@ -201,6 +201,25 @@ function App:init()
   -- The following psuedo-random number generators are based on different
   -- disritubtion algorithms. For explanations and how to use them see the Wiki
 
+  -- Add math.t_random globally.
+  -- It generates pseudo random triangular distributed numbers in interval (a, b)
+  -- mostly around c between a and b.
+  strict_declare_global "math.t_random"
+  math.t_random = function(a, c, b)
+    assert(a < c, "Left boundary a should be less than center c.")
+    assert(c < b, "Right boundary b should more than center c.")
+    -- normalize c (a -> 0, b -> 1)
+    local range = b - a
+    c = (c - a) / range
+
+    local u = math.random()
+    if u <= c then
+      return a + math.sqrt(c * u) * range
+    else
+      return a + (1 - math.sqrt((1 - c) * (1 - u))) * range
+    end
+  end
+
   -- Add math.n_random globally. It generates pseudo random normally distributed
   -- numbers using the Box-Muller transform.
   strict_declare_global "math.n_random"
