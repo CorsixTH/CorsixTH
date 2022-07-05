@@ -1415,7 +1415,6 @@ function UIEditRoom:setWindowBlueprint(orig_x, orig_y, orig_wall)
   end
 
   local map = self.ui.app.map.th
-  local world = self.ui.app.world
 
   if self.blueprint_window.anim then
     self.blueprint_window.anim:setAnimation(self.anims, self.blueprint_window.old_anim,
