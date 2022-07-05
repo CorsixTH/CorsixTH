@@ -650,7 +650,7 @@ function UIEditRoom:returnToWallPhase(early)
 end
 
 -- Remove walls
-local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y, world)
+function UIEditRoom:_remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y, world)
   local map = world.map.th
   for _ = 1, n_steps do
     local existing = map:getCell(x, y, layer)
@@ -728,10 +728,10 @@ function UIEditRoom:removeRoom(save_objects, room, world)
     UIPlaceObjects.removeAllObjects(self, true)
   end
 
-  remove_wall_line(room.x, room.y, 0, 1, room.height, 3, -1,  0, world)
-  remove_wall_line(room.x, room.y, 1, 0, room.width , 2,  0, -1, world)
-  remove_wall_line(room.x + room.width, room.y , 0, 1, room.height, 3, 0, 0, world)
-  remove_wall_line(room.x, room.y + room.height, 1, 0, room.width , 2, 0, 0, world)
+  self:_remove_wall_line(room.x, room.y, 0, 1, room.height, 3, -1,  0, world)
+  self:_remove_wall_line(room.x, room.y, 1, 0, room.width , 2,  0, -1, world)
+  self:_remove_wall_line(room.x + room.width, room.y , 0, 1, room.height, 3, 0, 0, world)
+  self:_remove_wall_line(room.x, room.y + room.height, 1, 0, room.width , 2, 0, 0, world)
 
   -- Reset floor tiles and flags
   world.map.th:unmarkRoom(room.x, room.y, room.width, room.height)

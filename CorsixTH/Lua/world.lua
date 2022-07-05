@@ -2704,6 +2704,12 @@ function World:afterLoad(old, new)
   if old < 167 then
     self.object_counts = nil -- Moved to Hospital.tile_object_counts
   end
+  if old < 171 then
+    self.wall_types = nil
+    self.wall_id_by_block_id = nil
+    self.wall_set_by_block_id = nil
+    self.wall_dir_by_block_id = nil
+  end
 
   -- Fix the initial of staff names
   self:updateInitialsCache()
