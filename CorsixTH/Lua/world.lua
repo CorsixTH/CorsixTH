@@ -863,25 +863,6 @@ function World:getWallDirFromBlockId(block_id)
   return self.wall_dir_by_block_id[block_id]
 end
 
-local month_length = {
-  31, -- Jan
-  28, -- Feb (29 in leap years, but TH doesn't have leap years)
-  31, -- Mar
-  30, -- Apr
-  31, -- May
-  30, -- Jun
-  31, -- Jul
-  31, -- Aug
-  30, -- Sep
-  31, -- Oct
-  30, -- Nov
-  31, -- Dec
-}
-
-function World:getDate()
-  return self.game_date:monthOfYear(), self.game_date:dayOfMonth()
-end
-
 -- Game speeds. The second value is the number of world clicks that pass for each
 -- in-game tick and the first is the number of hours to progress when this
 -- happens.
@@ -905,13 +886,13 @@ function World:previousSpeed()
   end
 end
 
--- Return if the selected speed the same as the current speed.
+--! Return true if the given speed the same as the current speed.
 function World:isCurrentSpeed(speed)
   local numerator, denominator = unpack(tick_rates[speed])
   return self.hours_per_tick == numerator and self.tick_rate == denominator
 end
 
--- Return the name of the current speed, relating to a key in tick_rates.
+--! Return the name of the current speed, relating to a key in tick_rates.
 function World:getCurrentSpeed()
   for name, rate in pairs(tick_rates) do
     if rate[1] == self.hours_per_tick and rate[2] == self.tick_rate then
@@ -1401,7 +1382,7 @@ function World:nextEarthquake()
     -- Month length of the start of the earthquake. From start to finish
     -- earthquakes do not persist for >= a month so we can wrap all days
     -- after the start around the month length unambiguously.
-    local eqml = month_length[(self.next_earthquake.start_month % 12) + 1]
+    local eqml = Date.daysPerMonth((self.next_earthquake.start_month % 12) + 1)
     self.next_earthquake.start_day = math.random(1, eqml)
 
     self.next_earthquake.size = control.Severity
