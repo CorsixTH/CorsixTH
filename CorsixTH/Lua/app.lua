@@ -198,6 +198,8 @@ function App:init()
   -- App initialisation 2nd goal: Load remaining systems and data in an appropriate order
 
   math.randomseed(os.time() + SDL.getTicks())
+  -- The following psuedo-random number generators are based on different
+  -- disritubtion algorithms. For explanations and how to use them see the Wiki
 
   -- Add math.t_random globally.
   -- It generates pseudo random triangular distributed numbers in interval (a, b)
