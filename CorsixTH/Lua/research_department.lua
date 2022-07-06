@@ -375,7 +375,7 @@ function ResearchDepartment:addResearchPoints(points)
         local research_info = self.research_progress[info.current]
         local stored = research_info.points
         -- Add just a little randomness
-        research_info.points = stored + math.n_random(1, 0.2) * points * info.frac / 100
+        research_info.points = stored + math.t_random(0.75, 1, 1.25) * points * info.frac / 100
         local required = self:getResearchRequired(info.current)
         if required and required < research_info.points then
           research_info.points = 0
