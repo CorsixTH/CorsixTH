@@ -502,7 +502,7 @@ function UIAnnualReport:draw(canvas, x, y)
   local font = self.stat_font
   local world = self.ui.app.world
 
-  if self.state == 1 then -- Fame screen
+  if self.state == 1 then -- Fame screen (TODO: Make accessible)
     -- Title and column names
     font:draw(canvas, _S.high_score.best_scores, x + 220, y + 104, 200, 0)
     font:draw(canvas, _S.high_score.pos, x + 218, y + 132)
@@ -514,7 +514,7 @@ function UIAnnualReport:draw(canvas, x, y)
     local dy = 0
     --for i = 1, 10 do
       font:draw(canvas, i .. ".", x + 220, y + 160 + dy)
-      font:draw(canvas, world.hospitals[1].name:upper(), x + 260, y + 160 + dy)
+      font:draw(canvas, world:getLocalPlayerHospital().name:upper(), x + 260, y + 160 + dy)
       font:draw(canvas, "NA", x + 360, y + 160 + dy)
       -- dy = dy + 25
     --end
