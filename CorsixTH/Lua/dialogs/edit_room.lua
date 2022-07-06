@@ -1609,6 +1609,11 @@ function UIEditRoom:placeObject()
 end
 
 function UIEditRoom:afterLoad(old, new)
+  if old < 171 then
+    self.wall_types = TheApp.walls
+    self:initWallTypes()
+  end
+
   UIPlaceObjects.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end
