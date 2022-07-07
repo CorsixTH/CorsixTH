@@ -665,7 +665,7 @@ function World:tickEarthquake()
         -- they visit reception. Some debugging needed here to get
         -- this working.
 
-        -- patient:falling(false)
+        patient:falling(false)
       end
     end
     --]]
