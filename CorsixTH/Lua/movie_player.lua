@@ -155,9 +155,8 @@ function MoviePlayer:playAdvanceMovie(level)
 
   if self.audio.background_music then
     self.holding_bg_music = self.audio:pauseBackgroundTrack()
-  else
-
   end
+
   if level == 12 then
     self.audio:playSound("DICE122M.WAV")
   else

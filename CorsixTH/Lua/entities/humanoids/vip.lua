@@ -66,7 +66,7 @@ function Vip:Vip(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("default")
   self.action_string = ""
-  self.name=""
+  self.name = ""
   self.announced = false
   --First we should generate an initial VIP rating
   self.vip_rating = 12 - math.random(0,5)

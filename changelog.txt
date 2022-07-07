@@ -1,12 +1,5 @@
 -------------------------------------------------------------------------------
-Version 0.66-beta2 - released June 2022
--------------------------------------------------------------------------------
-# Fixes
-* Crashing advisor statements introduced in 0.66-beta1
-* Issue loading 0.65.1 and earlier saves with VIP faxes
-
--------------------------------------------------------------------------------
-Version 0.66-beta1 - released May 2022
+Version 0.66 - released June 2022
 -------------------------------------------------------------------------------
 # New Features/Enhancements
 * Direct Zoom has been improved and is now enabled by default
@@ -32,6 +25,8 @@ Version 0.66-beta1 - released May 2022
 * Non-visual diseases can now be delayed in the level config of a custom game
 * Gamelog.txt will now contain system information instead of within the window
   title
+* Patients no longer become fed up and leave the hospital if already in their
+  treatment room
 
 
 # Translations
@@ -55,6 +50,7 @@ Version 0.66-beta1 - released May 2022
 * The cheats menu dialog will no longer slide off the screen
 * You can now purchase plots while wall transparency is on
 * Fixed playback of movie audio on surround sound systems is the most accurate
+* Resolved formatting issues with numbers after loading a save
 
 
 # Packager Notes

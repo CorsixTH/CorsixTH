@@ -43,7 +43,7 @@ function Strings:init()
   local pathsep = package.config:sub(1,1)
   local path = ourpath .. "languages" .. pathsep
   for file in lfs.dir(path) do
-    if file:match"%.lua$" then
+    if file:match("%.lua$") then
       local result, err = loadfile_envcall(path .. file)
       if not result then
         print("Error loading languages" .. pathsep ..  file .. ":\n" .. tostring(err))
@@ -642,11 +642,11 @@ case(0xA4, 0xA5) -- n-tilde
 local case_pattern = "\195[\128-\191]" -- Unicode range [0xC0, 0xFF] as UTF-8
 
 local orig_upper = string.upper
-function string.upper(s)
+function string.upper(s) -- luacheck: ignore 122
   return orig_upper(s:gsub(case_pattern, lower_to_upper))
 end
 
 local orig_lower = string.lower
-function string.lower(s)
+function string.lower(s) -- luacheck: ignore 122
   return orig_lower(s:gsub(case_pattern, upper_to_lower))
 end

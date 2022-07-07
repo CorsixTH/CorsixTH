@@ -145,7 +145,7 @@ function Graphics:loadFontFile()
   end
   local font = font_file and io.open(font_file, "rb")
   if font then
-    self.ttf_font_data = font:read"*a"
+    self.ttf_font_data = font:read("*a")
     font:close()
     if self.ttf_font_data and self.app.config.unicode_font ~= font_file then
       self.app.config.unicode_font = font_file
@@ -430,7 +430,7 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
 
   local use_bitmap_font = true
   -- Force bitmap font for the moneybar (Font05V)
-  if not sprite_table:isVisible(46) or load_font == "Font05V" then -- uppercase M
+  if not sprite_table:isVisible(46) or load_font == "Font05V" then -- luacheck: ignore 542
     -- The font doesn't contain an uppercase M, so (in all likelihood) is used
     -- for drawing special symbols rather than text, so the original bitmap
     -- font should be used.
@@ -465,7 +465,7 @@ function Graphics:loadAnimations(dir, prefix)
     if not file then
       return nil, err
     end
-    local data = file:read"*a"
+    local data = file:read("*a")
     file:close()
     return data
   end

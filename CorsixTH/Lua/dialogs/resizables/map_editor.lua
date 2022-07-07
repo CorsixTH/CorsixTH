@@ -811,7 +811,7 @@ end
 --!return (array of {xpos, ypos} tables) Coordinates to draw the selected sprite.
 function UIMapEditor:getDrawPoints()
   if self.cursor.state == "disabled" then
-    -- Nothing to compute, drop to bottom {} return.
+    return {} -- Nothing to compute
 
   elseif self.cursor.state == "grid" then
     local bx, by = self:areaOnWorld(self.cursor.xpos, self.cursor.ypos,
@@ -1109,9 +1109,6 @@ function UIMapEditor:onMouseDown(button, xpos, ypos)
       repaint = true
     end
 
-  elseif self.cursor.state == "right" then
-    -- Ignore all down buttons, until RMB is released.
-
   elseif self.cursor.state == "paste" then
     if button == "left" then
       self.cursor.state = "paste-left"
@@ -1124,6 +1121,7 @@ function UIMapEditor:onMouseDown(button, xpos, ypos)
     end
 
   -- "both", "delete-left", "parcel-left", "paste-left" do not handle buttons.
+  -- Ignore all down buttons, until RMB is released.
 
   end
 
@@ -1471,7 +1469,7 @@ function UIMapEditor:onMouseUp(button, x, y)
 
   local repaint = false
   if self.cursor.state == "disabled" then
-    -- Don't care about buttons.
+    return repaint -- Don't care about buttons
 
   elseif self.cursor.state == "left" then
     if button == "left" then

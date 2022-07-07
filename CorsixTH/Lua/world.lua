@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require"TH"
+local TH = require("TH")
 local ipairs, _G, table_remove
     = ipairs, _G, table.remove
 
@@ -649,6 +649,7 @@ function World:tickEarthquake()
       self.next_earthquake.damage_timer = self.next_earthquake.damage_timer + earthquake_damage_time
     end
 
+    --[[
     local hospital = self:getLocalPlayerHospital()
     -- loop through the patients and allow the possibility for them to fall over
     for _, patient in ipairs(hospital.patients) do
@@ -667,6 +668,7 @@ function World:tickEarthquake()
         -- patient:falling(false)
       end
     end
+    --]]
   end
 end
 
@@ -1376,12 +1378,13 @@ function World:nextVip()
 end
 
 -- PRIVATE method to generate the next VIP date
+-- Note: it is important we ensure this date always is in the future
 function World:_generateNextVipDate()
-  -- Support standard values for mean and variance
-  local mean = 180
-  local variance = 30
+  -- Support standard values for mean and bound
+  local mean, bound = math.max(self.map.level_config.gbv.MayorLaunch, 1), 30
   -- How many days until next vip?
-  local days = math.round(math.n_random(mean, variance))
+  local lower, upper = math.max(mean - bound, 1), mean + bound
+  local days = math.round(math.t_random(lower, mean, upper))
   return self.game_date:plusDays(days)
 end
 
@@ -1838,7 +1841,7 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
     object = obj
     ox = x
     oy = y
-    if which == "far" then
+    if which == "far" then -- luacheck: ignore 542
       -- just take the last found object, so don't ever abort
     elseif which == "near" then
       -- abort at each item with 50% probability

@@ -714,7 +714,8 @@ function UIEditRoom:screenToWall(x, y)
   local rect = self.blueprint_rect
 
   if cellx == rect.x or cellx == rect.x - 1 or cellx == rect.x + rect.w or cellx == rect.x + rect.w - 1 or
-     celly == rect.y or celly == rect.y - 1 or celly == rect.y + rect.h or celly == rect.y + rect.h - 1 then
+     celly == rect.y or celly == rect.y - 1 or celly == rect.y + rect.h or
+     celly == rect.y + rect.h - 1 then -- luacheck: ignore 542
   else
     return
   end
@@ -1007,7 +1008,7 @@ function UIEditRoom:onMouseDown(button, x, y)
   if self.world.user_actions_allowed and not self.confirm_dialog_open then
     if button == "left" then
       if self.phase == "walls" then
-        if 0 <= x and x < self.width and 0 <= y and y < self.height then
+        if 0 <= x and x < self.width and 0 <= y and y < self.height then -- luacheck: ignore 542
         else
           local mouse_x, mouse_y = self.ui:ScreenToWorld(self.x + x, self.y + y)
           self.mouse_down_x = math.floor(mouse_x)
@@ -1015,9 +1016,7 @@ function UIEditRoom:onMouseDown(button, x, y)
           if self.move_rect then
             self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
             self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
-          elseif self.resize_rect then
-            -- nothing to do
-          else
+          elseif not self.resize_rect then
             self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
           end
         end

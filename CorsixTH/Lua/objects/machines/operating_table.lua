@@ -122,9 +122,8 @@ local OperatingTable = _G["OperatingTable"]
 OperatingTable:slaveMixinClass()
 
 function OperatingTable:machineUsed(...)
-  if self.master then
-    -- Is slave. Do nothing.
-  else
+  -- Only if the table is the primary/master of the pair
+  if not self.master then
     return Machine.machineUsed(self, ...)
   end
 end

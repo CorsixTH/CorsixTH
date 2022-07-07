@@ -20,6 +20,18 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.66~rc1" date="2022-06-18" type="development">
+      <description>
+        <p>Fixes:</p>
+        <ul>
+          <li>Patients no longer leave or become unhappy waiting too long when
+              they are in their treatment room</li>
+          <li>Loading a save game containing a graph would crash</li>
+          <li>More crashing advisor statements have been corrected</li>
+          <li>Resolved formatting issues with numbers after loading a save</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.66~beta2" date="2022-06-04" type="development">
       <description>
         <p>Fixes:</p>

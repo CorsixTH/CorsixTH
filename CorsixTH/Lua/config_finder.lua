@@ -47,7 +47,7 @@ config_name = "config.txt"
 -- Check for config.path.txt
 local fi = io.open(pathconcat(ourpath, "config.path.txt"), "r")
 if fi then
-  local contents = fi:read"*a"
+  local contents = fi:read("*a")
   contents = contents:match("^%s*(.-)%s*$")
   fi:close()
   if #contents ~= 0 then
