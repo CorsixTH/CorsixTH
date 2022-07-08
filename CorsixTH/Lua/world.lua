@@ -817,7 +817,7 @@ end
 --!param room (Room) The new room.
 function World:markRoomAsBuilt(room)
   room:roomFinished()
-  local hosp = self:getLocalPlayerHospital()
+  local hosp = room.hospital
   local diag_disease = hosp.disease_casebook["diag_" .. room.room_info.id]
   if diag_disease and not diag_disease.discovered then
     hosp.disease_casebook["diag_" .. room.room_info.id].discovered = true
