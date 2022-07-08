@@ -68,7 +68,6 @@ local earthquake_warning_length = 25 -- length of early warning quake
 function World:World(app)
   self.app = app
   self.map = app.map
-  self.wall_types = app.walls
   self.object_types = app.objects
   self.anims = app.anims
   self.animation_manager = app.animation_manager
@@ -164,31 +163,6 @@ function World:World(app)
   -- TODO: Add (working) AI and/or multiplayer hospitals
   -- TODO: Needs to be changed for multiplayer support
   self.hospitals[1]:initStaff()
-
-  self.wall_id_by_block_id = {}
-  for _, wall_type in ipairs(self.wall_types) do
-    for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
-      for _, id in pairs(wall_type[set]) do
-        self.wall_id_by_block_id[id] = wall_type.id
-      end
-    end
-  end
-  self.wall_set_by_block_id = {}
-  for _, wall_type in ipairs(self.wall_types) do
-    for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
-      for _, id in pairs(wall_type[set]) do
-        self.wall_set_by_block_id[id] = set
-      end
-    end
-  end
-  self.wall_dir_by_block_id = {}
-  for _, wall_type in ipairs(self.wall_types) do
-    for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
-      for name, id in pairs(wall_type[set]) do
-        self.wall_dir_by_block_id[id] = name
-      end
-    end
-  end
 
   self.object_id_by_thob = {}
   for _, object_type in ipairs(self.object_types) do
@@ -841,49 +815,6 @@ function World:clearCaches()
   self.idle_cache = {}
 end
 
-function World:getWallIdFromBlockId(block_id)
-  -- Remove the transparency flag if present.
-  if self.ui.transparent_walls then
-    block_id = block_id - 1024
-  end
-  return self.wall_id_by_block_id[block_id]
-end
-
-function World:getWallSetFromBlockId(block_id)
-  -- Remove the transparency flag if present.
-  if self.ui.transparent_walls then
-    block_id = block_id - 1024
-  end
-  return self.wall_set_by_block_id[block_id]
-end
-
-function World:getWallDirFromBlockId(block_id)
-  -- Remove the transparency flag if present.
-  if self.ui.transparent_walls then
-    block_id = block_id - 1024
-  end
-  return self.wall_dir_by_block_id[block_id]
-end
-
-local month_length = {
-  31, -- Jan
-  28, -- Feb (29 in leap years, but TH doesn't have leap years)
-  31, -- Mar
-  30, -- Apr
-  31, -- May
-  30, -- Jun
-  31, -- Jul
-  31, -- Aug
-  30, -- Sep
-  31, -- Oct
-  30, -- Nov
-  31, -- Dec
-}
-
-function World:getDate()
-  return self.game_date:monthOfYear(), self.game_date:dayOfMonth()
-end
-
 -- Game speeds. The second value is the number of world clicks that pass for each
 -- in-game tick and the first is the number of hours to progress when this
 -- happens.
@@ -907,13 +838,13 @@ function World:previousSpeed()
   end
 end
 
--- Return if the selected speed the same as the current speed.
+--! Return true if the given speed the same as the current speed.
 function World:isCurrentSpeed(speed)
   local numerator, denominator = unpack(tick_rates[speed])
   return self.hours_per_tick == numerator and self.tick_rate == denominator
 end
 
--- Return the name of the current speed, relating to a key in tick_rates.
+--! Return the name of the current speed, relating to a key in tick_rates.
 function World:getCurrentSpeed()
   for name, rate in pairs(tick_rates) do
     if rate[1] == self.hours_per_tick and rate[2] == self.tick_rate then
@@ -1109,6 +1040,7 @@ function World:onTick()
   self.tick_timer = self.tick_timer - 1
 end
 
+--! Change the date of the game to the last hour of this month.
 function World:setEndMonth()
   local previous_date = self.game_date
   local first_day_of_next_month = Date(self.game_date:year(), self.game_date:monthOfYear() + 1)
@@ -1119,6 +1051,7 @@ function World:setEndMonth()
   end
 end
 
+--! Change the date of the game to the last hour of this year.
 function World:setEndYear()
   local previous_date = self.game_date
   local first_day_of_next_year = Date(self.game_date:year() + 1)
@@ -1404,7 +1337,7 @@ function World:nextEarthquake()
     -- Month length of the start of the earthquake. From start to finish
     -- earthquakes do not persist for >= a month so we can wrap all days
     -- after the start around the month length unambiguously.
-    local eqml = month_length[(self.next_earthquake.start_month % 12) + 1]
+    local eqml = Date.daysPerMonth((self.next_earthquake.start_month % 12) + 1)
     self.next_earthquake.start_day = math.random(1, eqml)
 
     self.next_earthquake.size = control.Severity
@@ -2773,6 +2706,12 @@ function World:afterLoad(old, new)
 
   if old < 167 then
     self.object_counts = nil -- Moved to Hospital.tile_object_counts
+  end
+  if old < 171 then
+    self.wall_types = nil
+    self.wall_id_by_block_id = nil
+    self.wall_set_by_block_id = nil
+    self.wall_dir_by_block_id = nil
   end
 
   -- Fix the initial of staff names

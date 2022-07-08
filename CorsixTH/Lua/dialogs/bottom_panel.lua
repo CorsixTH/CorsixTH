@@ -176,7 +176,8 @@ function UIBottomPanel:draw(canvas, x, y)
 
   x, y = x + self.x, y + self.y
   self.money_font:draw(canvas, ("%7i"):format(self.ui.hospital.balance), x + 44, y + 9)
-  local month, day = self.world:getDate()
+  local game_date = self.world:date()
+  local month, day = game_date:monthOfYear(), game_date:dayOfMonth()
   self.date_font:draw(canvas, _S.date_format.daymonth:format(day, month), x + 140, y + 20, 60, 0)
 
   -- Draw possible information in the dynamic info bar

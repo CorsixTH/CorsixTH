@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 170 -- Version bump for 0.66-beta1
+local SAVEGAME_VERSION = 171 -- Moved wall-info and merged month-length table
 
 class "App"
 
