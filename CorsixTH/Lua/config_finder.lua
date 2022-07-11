@@ -146,6 +146,7 @@ local config_defaults = {
   allow_blocking_off_areas = false,
   direct_zoom = nil,
   new_machine_extra_info = true,
+  debug_falling = false,
   player_name = [[]],
 }
 
@@ -489,9 +490,16 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 --]=] .. '\n' ..
 'debug = ' .. tostring(config_values.debug) .. '\n' .. [=[
 
---Optional settings for CorsixTH's Lua DBGp client. Default settings are
--- nil values, platform & workingdir will be autodected if nil.
---https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
+-- Experimental setting for falling patients. (debug only!)
+-- CorsixTH does not yet have reliable handling for falling actions and enabling it
+-- could cause dropped action queues or undesired bugs. You should leave this setting
+-- off unless you're developing with it
+--]=] .. '\n' ..
+'debug_falling = ' .. tostring(config_values.debug_falling) .. '\n' .. [=[
+
+-- Optional settings for CorsixTH's Lua DBGp client. Default settings are
+-- nil values, platform & working dir will be autodetected if nil.
+-- https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
 --]=] .. '\n' ..
 'idehost = ' .. tostring(config_values.DBGp_client_idehost) .. '\n' ..
 'ideport = ' .. tostring(config_values.DBGp_client_ideport) .. '\n' ..

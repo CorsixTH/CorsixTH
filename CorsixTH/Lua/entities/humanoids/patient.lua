@@ -72,6 +72,14 @@ function Patient:onClick(ui, button)
         ui:addWindow(UIPatient(ui, self))
       end
     end
+  elseif TheApp.config.debug_falling and button == "right" then
+    -- Attempt to push patient over
+    -- Currently debug-only, enable in config file for testing.
+    -- Once confirmed working, the debugging flag can be removed.
+    if not self.world:isPaused() and not (self.cured or self.dead or self.going_home)
+         and math.random(1, 2) == 2 then
+      self:falling(true)
+    end
   elseif self.user_of then
     -- The object we're using is made invisible, as the animation contains both
     -- the humanoid and the object. Hence send the click onto the object.
@@ -341,10 +349,10 @@ function Patient:die()
   self:setDynamicInfoText(_S.dynamic_info.patient.actions.dying)
 end
 
--- Actions we can interrupt for in the canPeeOrPuke function
+-- Actions we can interrupt for in the canPeePukeOrFall function
 local good_actions = {walk=true, idle=true, seek_room=true, queue=true}
 
-function Patient:canPeeOrPuke(current)
+function Patient:canPeePukeOrFall(current)
   if not good_actions[current.name] then return false end
   if self.going_home then return false end
 
@@ -356,24 +364,25 @@ function Patient:canPeeOrPuke(current)
   return parcel ~= 0 and th:getPlotOwner(parcel) == self.hospital:getPlayerIndex()
 end
 
---! Animations for when there is an earth quake
-function Patient:falling()
+--! Falling animations for when there is an earth quake or the player is being very mean
+--!param player_init (bool) if true, player triggered the fall
+function Patient:falling(player_init)
   local current = self:getCurrentAction()
   current.keep_reserved = true
-  if self.falling_anim and self:canPeeOrPuke(current) and self.has_fallen == 1 then
+  if self.falling_anim and self:canPeePukeOrFall(current) and self.has_fallen == 1 then
     self.has_fallen = 2
     self:queueAction(FallingAction(), 1)
     self:queueAction(OnGroundAction(), 2)
     self:queueAction(GetUpAction(), 3)
-    if math.random(1, 5) == 3 and self:shakeFist() then
+    -- show the patient is annoyed, if possbile
+    if math.random(1, 5) == 3 and self.shake_fist_anim then
+      self:queueAction(ShakeFistAction(), 4)
       self:interruptAndRequeueAction(current, 5)
     else
       self:interruptAndRequeueAction(current, 4)
     end
-    self:fallingAnnounce()
+    if player_init then self:fallingAnnounce() end
     self:changeAttribute("happiness", -0.05) -- falling makes you very unhappy
-  else
-    return
   end
 end
 
@@ -389,18 +398,10 @@ function Patient:fallingAnnounce()
   self.hospital:giveAdvice(msg)
 end
 
---! Perform 'shake fist' action.
-function Patient:shakeFist()
-  if self.shake_fist_anim then
-    self:queueAction(ShakeFistAction(), 4)
-    return true
-  end
-end
-
 function Patient:vomit()
   local current = self:getCurrentAction()
   --Only vomit under these conditions. Maybe I should add a vomit for patients in queues too?
-  if self:canPeeOrPuke(current) and self.has_vomitted == 0 then
+  if self:canPeePukeOrFall(current) and self.has_vomitted == 0 then
     self:queueAction(VomitAction(), 1)
     self:interruptAndRequeueAction(current, 2)
     self.has_vomitted = self.has_vomitted + 1
@@ -413,7 +414,7 @@ end
 function Patient:pee()
   local current = self:getCurrentAction()
   --Only pee under these conditions. As with vomit, should they also pee if in a queue?
-  if self:canPeeOrPuke(current) then
+  if self:canPeePukeOrFall(current) then
     self:queueAction(PeeAction(), 1)
     self:interruptAndRequeueAction(current, 2)
     self:setMood("poo", "deactivate")

@@ -806,6 +806,9 @@ function UIMenuBar:makeGameMenu(app)
   local function allowBlockingAreas(item)
     app.config.allow_blocking_off_areas = item.checked
   end
+  local function allowFalling(item)
+    app.config.debug_falling = item.checked
+  end
   local levels_menu = UIMenu()
   for L = 1, 12 do
     levels_menu:appendItem(("  L%i  "):format(L), function()
@@ -821,6 +824,7 @@ function UIMenuBar:makeGameMenu(app)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
       :appendCheckItem(_S.menu_debug.allow_blocking_off_areas, false, allowBlockingAreas, nil, function() return self.ui.app.config.allow_blocking_off_areas end)
+      :appendCheckItem(_S.menu_debug.allow_falling, false, allowFalling, nil, function() return self.ui.app.config.debug_falling end)
       :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui:addWindow(UIMakeDebugPatient(self.ui)) end)
       :appendItem(_S.menu_debug.cheats:format(hotkey_value_label("ingame_showCheatWindow", hotkeys)),             function() self.ui:addWindow(UICheats(self.ui)) end)
