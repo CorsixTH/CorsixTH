@@ -25,7 +25,7 @@ local FallingAction = _G["FallingAction"]
 
 function FallingAction:FallingAction()
   self:HumanoidAction("falling")
-  self.setMustHappen(true)
+  self:setMustHappen(true)
 end
 
 local action_falling_end = permanent"action_falling_end"( function(humanoid)
