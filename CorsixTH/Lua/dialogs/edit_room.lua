@@ -79,9 +79,6 @@ function UIEditRoom:UIEditRoom(ui, room_type)
     self:checkEnableConfirm()
   end
 
-  self.wall_types = app.walls
-  self:initWallTypes()
-
   self.blueprint_wall_anims = {}
   self.blueprint_window = {}
 
@@ -92,58 +89,6 @@ function UIEditRoom:UIEditRoom(ui, room_type)
 
   self:registerKeyHandlers()
 end
-
-function UIEditRoom:initWallTypes()
-  self.wall_id_by_block_id = {}
-  for _, wall_type in ipairs(self.wall_types) do
-    for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
-      for _, id in pairs(wall_type[set]) do
-        self.wall_id_by_block_id[id] = wall_type.id
-      end
-    end
-  end
-  self.wall_set_by_block_id = {}
-  for _, wall_type in ipairs(self.wall_types) do
-    for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
-      for _, id in pairs(wall_type[set]) do
-        self.wall_set_by_block_id[id] = set
-      end
-    end
-  end
-  self.wall_dir_by_block_id = {}
-  for _, wall_type in ipairs(self.wall_types) do
-    for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
-      for name, id in pairs(wall_type[set]) do
-        self.wall_dir_by_block_id[id] = name
-      end
-    end
-  end
-end
-
-function UIEditRoom:getWallIdFromBlockId(block_id)
-  -- Remove the transparency flag if present.
-  if self.ui.transparent_walls then
-    block_id = block_id - 1024
-  end
-  return self.wall_id_by_block_id[block_id]
-end
-
-function UIEditRoom:getWallSetFromBlockId(block_id)
-  -- Remove the transparency flag if present.
-  if self.ui.transparent_walls then
-    block_id = block_id - 1024
-  end
-  return self.wall_set_by_block_id[block_id]
-end
-
-function UIEditRoom:getWallDirFromBlockId(block_id)
-  -- Remove the transparency flag if present.
-  if self.ui.transparent_walls then
-    block_id = block_id - 1024
-  end
-  return self.wall_dir_by_block_id[block_id]
-end
-
 
 function UIEditRoom:registerKeyHandlers()
   self:addKeyHandler("global_confirm", self.confirm) -- UIPlaceObjects does not need this
@@ -451,8 +396,8 @@ function UIEditRoom:finishRoom()
     -- If a wall is built which is normal to an external window, then said
     -- window needs to be removed, otherwise it looks odd (see issue #59).
     local block = map:getCell(x, y, layer)
-    local dir = self:getWallDirFromBlockId(block)
-    local tiles = self.ui.app.walls.external[self:getWallSetFromBlockId(block)]
+    local dir = world:getWallDirFromBlockId(block)
+    local tiles = self.ui.app.walls.external[world:getWallSetFromBlockId(block)]
     if dir == "north_window_1" then
       if x ~= rect.x then
         map:setCell(x, y, layer, flag + tiles.north)
@@ -487,16 +432,16 @@ function UIEditRoom:finishRoom()
     for y, anim in pairs(obj) do
       if x == rect.x and y == rect.y then
         local _, east, north = map:getCell(x, y)
-        if self:getWallIdFromBlockId(east) == "external" then
+        if world:getWallIdFromBlockId(east) == "external" then
           check_external_window(x, y, 2)
-        elseif self:getWallSetFromBlockId(east) == "window_tiles" then
+        elseif world:getWallSetFromBlockId(east) == "window_tiles" then
           map:setCell(x, y, 2, flag + wall_type.window_tiles.north)
         else
           map:setCell(x, y, 2, flag + wall_type.inside_tiles.north)
         end
-        if self:getWallIdFromBlockId(north) == "external" then
+        if world:getWallIdFromBlockId(north) == "external" then
           check_external_window(x, y, 3)
-        elseif self:getWallSetFromBlockId(north) == "window_tiles" then
+        elseif world:getWallSetFromBlockId(north) == "window_tiles" then
           map:setCell(x, y, 3, flag + wall_type.window_tiles.west)
         else
           map:setCell(x, y, 3, flag + wall_type.inside_tiles.west)
@@ -510,7 +455,7 @@ function UIEditRoom:finishRoom()
           end
           local dir = (anim:getFlag() % 2 == 1) and "west" or "north"
           local layer = dir == "north" and 2 or 3
-          if self:getWallIdFromBlockId(map:getCell(x, y, layer)) == "external" then
+          if world:getWallIdFromBlockId(map:getCell(x, y, layer)) == "external" then
             if layer == 2 then
               if (x == rect.x or x == rect.x + rect.w - 1) and (y == rect.y or y == rect.y + rect.h) then
                 check_external_window(x, y, 2)
@@ -522,7 +467,7 @@ function UIEditRoom:finishRoom()
             end
             break
           end
-          local existing = self:getWallSetFromBlockId(map:getCell(x, y, layer))
+          local existing = world:getWallSetFromBlockId(map:getCell(x, y, layer))
           if rect.x <= x and x < rect.x + rect.w and rect.y <= y and y < rect.y + rect.h then
             if tag == "nothing" or tag == "swing_slave" then
               tiles = "swing_inside_tiles"
@@ -659,12 +604,12 @@ function UIEditRoom:_remove_wall_line(x, y, step_x, step_y, n_steps, layer, neig
     if world.ui.transparent_walls then
       flag = 1024
     end
-    if self:getWallIdFromBlockId(existing) ~= "external" then
+    if world:getWallIdFromBlockId(existing) ~= "external" then
       local neighbour = world:getRoom(x + neigh_x, y + neigh_y)
       if neighbour then
         if neigh_x ~= 0 or neigh_y ~= 0 then
-          local set = self:getWallSetFromBlockId(existing)
-          local dir = self:getWallDirFromBlockId(existing)
+          local set = world:getWallSetFromBlockId(existing)
+          local dir = world:getWallDirFromBlockId(existing)
           if set == "inside_tiles" then
             set = "outside_tiles"
           end
@@ -1414,6 +1359,7 @@ function UIEditRoom:setWindowBlueprint(orig_x, orig_y, orig_wall)
   end
 
   local map = self.ui.app.map.th
+  local world = self.ui.app.world
 
   if self.blueprint_window.anim then
     self.blueprint_window.anim:setAnimation(self.anims, self.blueprint_window.old_anim,
@@ -1449,13 +1395,13 @@ function UIEditRoom:setWindowBlueprint(orig_x, orig_y, orig_wall)
   local flags
   if wall == "west" then
     flags = 1
-    if self:getWallIdFromBlockId(map:getCell(x, y, 3)) then
+    if world:getWallIdFromBlockId(map:getCell(x, y, 3)) then
       self.blueprint_window.valid = false
       flags = flags + 16
     end
   else--if wall == "north" then
     flags = 0
-    if self:getWallIdFromBlockId(map:getCell(x, y, 2)) then
+    if world:getWallIdFromBlockId(map:getCell(x, y, 2)) then
       self.blueprint_window.valid = false
       flags = flags + 16
     end
@@ -1611,6 +1557,12 @@ function UIEditRoom:afterLoad(old, new)
   if old < 171 then
     self.wall_types = TheApp.walls
     self:initWallTypes()
+  end
+  if old < 172 then
+    self.wall_types = nil
+    self.wall_id_by_block_id = nil
+    self.wall_set_by_block_id = nil
+    self.wall_dir_by_block_id = nil
   end
 
   UIPlaceObjects.afterLoad(self, old, new)
