@@ -68,6 +68,7 @@ local earthquake_warning_length = 25 -- length of early warning quake
 function World:World(app)
   self.app = app
   self.map = app.map
+  self.wall_types = app.walls
   self.object_types = app.objects
   self.anims = app.anims
   self.animation_manager = app.animation_manager
@@ -163,6 +164,8 @@ function World:World(app)
   -- TODO: Add (working) AI and/or multiplayer hospitals
   -- TODO: Needs to be changed for multiplayer support
   self.hospitals[1]:initStaff()
+
+  self:initWallTypes()
 
   self.object_id_by_thob = {}
   for _, object_type in ipairs(self.object_types) do
@@ -814,6 +817,58 @@ end
 function World:clearCaches()
   self.idle_cache = {}
 end
+
+function World:initWallTypes()
+  self.wall_id_by_block_id = {}
+  for _, wall_type in ipairs(self.wall_types) do
+    for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
+      for _, id in pairs(wall_type[set]) do
+        self.wall_id_by_block_id[id] = wall_type.id
+      end
+    end
+  end
+  self.wall_set_by_block_id = {}
+  for _, wall_type in ipairs(self.wall_types) do
+    for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
+      for _, id in pairs(wall_type[set]) do
+        self.wall_set_by_block_id[id] = set
+      end
+    end
+  end
+  self.wall_dir_by_block_id = {}
+  for _, wall_type in ipairs(self.wall_types) do
+    for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
+      for name, id in pairs(wall_type[set]) do
+        self.wall_dir_by_block_id[id] = name
+      end
+    end
+  end
+end
+
+function World:getWallIdFromBlockId(block_id)
+  -- Remove the transparency flag if present.
+  if self.ui.transparent_walls then
+    block_id = block_id - 1024
+  end
+  return self.wall_id_by_block_id[block_id]
+end
+
+function World:getWallSetFromBlockId(block_id)
+  -- Remove the transparency flag if present.
+  if self.ui.transparent_walls then
+    block_id = block_id - 1024
+  end
+  return self.wall_set_by_block_id[block_id]
+end
+
+function World:getWallDirFromBlockId(block_id)
+  -- Remove the transparency flag if present.
+  if self.ui.transparent_walls then
+    block_id = block_id - 1024
+  end
+  return self.wall_dir_by_block_id[block_id]
+end
+
 
 -- Game speeds. The second value is the number of world clicks that pass for each
 -- in-game tick and the first is the number of hours to progress when this
@@ -2712,6 +2767,10 @@ function World:afterLoad(old, new)
     self.wall_id_by_block_id = nil
     self.wall_set_by_block_id = nil
     self.wall_dir_by_block_id = nil
+  end
+  if old < 172 then
+    self.wall_types = self.app.wall_types
+    self:initWallTypes()
   end
 
   -- Fix the initial of staff names
