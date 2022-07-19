@@ -34,45 +34,14 @@ local col_scrollbar = {
 
 local details_width = 280
 
---! Collect the campaign levels at the provided path
---!param path (str) File system path to search.
---!return (array) The found levels, with some basic information about each level.
-local function createCampaignList(path)
-  local campaigns = {}
-
-  for file in lfs.dir(path) do
-    if file:match("%.campaign$") then
-      local campaign_info, err = TheApp:readCampaignFile(file)
-      if not campaign_info then
-        print(err)
-      else
-        if campaign_info.levels and #campaign_info.levels > 0 then
-          campaigns[#campaigns + 1] = {
-            name = campaign_info.name,
-            tooltip = _S.tooltip.custom_campaign_window.choose_campaign,
-            no_levels = #campaign_info.levels,
-            path = file,
-            description = campaign_info.description,
-          }
-        else
-          print("Warning: Loaded campaign that had no levels specified")
-        end
-      end
-    end
-  end
-  return campaigns
-end
-
 function UICustomCampaign:UICustomCampaign(ui)
   self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
 
-  local local_path = debug.getinfo(1, "S").source:sub(2, -61)
-  local dir = "Campaigns" .. pathsep
-  local path = local_path .. dir
+  self.campaigns = {}
+  self:_findCampaigns(TheApp.campaign_dir)
+  self:_findCampaigns(TheApp.user_campaign_dir)
 
-  local campaigns = createCampaignList(path)
-
-  self:UIMenuList(ui, "menu", _S.custom_campaign_window.caption, campaigns, 10, details_width + 40)
+  self:UIMenuList(ui, "menu", _S.custom_campaign_window.caption, self.campaigns, 10, details_width + 40)
 
   -- Create a toolbar ready to be used if the description for a level is
   -- too long to fit
@@ -90,6 +59,42 @@ function UICustomCampaign:UICustomCampaign(ui)
     :makeButton(0, 0, 160, 40, 11, self.buttonStartCampaign)
     :setTooltip(_S.tooltip.custom_campaign_window.start_selected_campaign)
 end
+
+--! Add a campaign to the Custom Campaign list
+--!param campaign (string) the name of the campaign file
+function UICustomCampaign:_addCampaign(campaign)
+  local campaign_info, err = TheApp:readCampaignFile(campaign)
+  if not campaign_info then
+    print(err)
+  else
+    if campaign_info.levels and #campaign_info.levels > 0 then
+      self.campaigns[#self.campaigns + 1] = {
+        name = campaign_info.name,
+        tooltip = _S.tooltip.custom_campaign_window.choose_campaign,
+        no_levels = #campaign_info.levels,
+        path = campaign,
+        description = campaign_info.description,
+      }
+    else
+      print("Warning: Loaded campaign that had no levels specified")
+    end
+  end
+end
+
+--! Compile metainfo for all of the campaigns in the given path. For better Campaign
+--! folder organisation, allow subdirectories one level deep
+--!param dir (string) The top-level directory that should contain campaign files.
+function UICustomCampaign:_findCampaigns(dir)
+  for file in lfs.dir(dir) do
+    if file:match("%.campaign$") then self:_addCampaign(file)
+    elseif lfs.attributes(dir .. file .. pathsep, "mode") == "directory" and not file:match("%.$") then
+      for subfile in lfs.dir(dir .. file) do
+        if subfile:match("%.campaign$") then self:_addCampaign(subfile) end
+      end
+    end
+  end
+end
+
 
 -- Overrides the function in the UIMenuList, choosing what should happen when the player
 -- clicks a choice in the list.

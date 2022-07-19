@@ -117,7 +117,9 @@ function App:init()
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   self.level_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
+  self.campaign_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Campaigns" .. pathsep
   self:initUserLevelDir()
+  self:initUserCampaignDir()
   self:initSavegameDir()
   self:initScreenshotsDir()
 
@@ -395,6 +397,28 @@ function App:initUserLevelDir()
   return true
 end
 
+--! Tries to initialize the user and built in campaign directories, returns true on
+--! success and false on failure.
+function App:initUserCampaignDir()
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  self.user_campaign_dir = self.config.campaigns or
+      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Campaigns"
+
+  if self.user_campaign_dir:sub(-1, -1) == pathsep then
+    self.user_campaign_dir = self.user_campaign_dir:sub(1, -2)
+  end
+  if lfs.attributes(self.user_campaign_dir, "mode") ~= "directory" then
+    if not lfs.mkdir(self.user_campaign_dir) then
+      print("Notice: Campaign directory does not exist and could not be created.")
+      return false
+    end
+  end
+  if self.user_campaign_dir:sub(-1, -1) ~= pathsep then
+    self.user_campaign_dir = self.user_campaign_dir .. pathsep
+  end
+  return true
+end
+
 --! Tries to initialize the savegame directory, returns true on success and
 --! false on failure.
 function App:initSavegameDir()
@@ -610,15 +634,34 @@ end
 --!return (string, error) Returns the found absolute path, or nil if not found. Then
 --!       a second variable is returned with an error message.
 function App:getAbsolutePathToLevelFile(level)
-  local path = debug.getinfo(1, "S").source:sub(2, -12)
-  -- First look in Campaigns. If not found there, fall back to Levels.
-  local list_of_possible_paths = { self.user_level_dir, path .. "Campaigns", self.level_dir }
+  local function findSubdirsInDir(dir)
+    local subdirs = {}
+    for path in lfs.dir(dir) do
+      if lfs.attributes(dir .. path .. pathsep, "mode") == "directory" and not path:match("%.$") then
+        subdirs[#subdirs + 1] = path .. pathsep
+      end
+    end
+    return subdirs
+  end
+
+   -- First look in Campaigns. If not found there, fall back to Levels.
+  local list_of_possible_paths = { self.user_campaign_dir, self.campaign_dir, self.user_level_dir, self.level_dir }
   for _, parent_path in ipairs(list_of_possible_paths) do
+    local list_of_subdirs = findSubdirsInDir(parent_path)
     local check_path = parent_path .. pathsep .. level
     local file, _ = io.open(check_path, "rb")
     if file then
       file:close()
       return check_path
+    elseif #list_of_subdirs > 0 then
+      for _, subdir in ipairs(list_of_subdirs) do
+        check_path = parent_path .. pathsep .. subdir .. pathsep .. level
+        file, _ = io.open(check_path, "rb")
+        if file then
+          file:close()
+          return check_path
+        end
+      end
     end
   end
   return nil, "Level not found: " .. level

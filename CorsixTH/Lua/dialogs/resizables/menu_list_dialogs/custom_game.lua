@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local pathsep = package.config:sub(1, 1)
+
 --! Custom Game Window
 class "UICustomGame" (UIMenuList)
 
@@ -32,36 +34,15 @@ local col_scrollbar = {
 
 local details_width = 280
 
---! Compile metainfo for all of the levels in the given path.
---!param path (string) The path that should contain level files.
---!param items (table) Table to insert the level metadata into.
-local findLevelsInDir = function(path, items)
-  for file in lfs.dir(path) do
-    if file:match("%.level$") then
-      local level_info = TheApp:readLevelFile(file)
-      if level_info.name and level_info.map_file then
-        items[#items + 1] = {
-          name = level_info.name,
-          tooltip = _S.tooltip.custom_game_window.choose_game,
-          map_file = level_info.map_file,
-          level_file = file,
-          intro = level_info.briefing,
-          deprecated_variable_used = level_info.deprecated_variable_used,
-        }
-      end
-    end
-  end
-end
-
 function UICustomGame:UICustomGame(ui)
   self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
 
   -- Supply the required list of items to UIMenuList
   -- Create the actual list
-  local items = {}
-  findLevelsInDir(TheApp.level_dir, items)
-  findLevelsInDir(TheApp.user_level_dir, items)
-  self:UIMenuList(ui, "menu", _S.custom_game_window.caption, items, 10, details_width + 40)
+  self.items = {}
+  self:_findLevels(TheApp.level_dir)
+  self:_findLevels(TheApp.user_level_dir)
+  self:UIMenuList(ui, "menu", _S.custom_game_window.caption, self.items, 10, details_width + 40)
 
   -- Create a toolbar ready to be used if the description for a level is
   -- too long to fit
@@ -95,6 +76,36 @@ function UICustomGame:UICustomGame(ui)
     :setLabel(_S.custom_game_window.load_selected_level)
     :makeButton(0, 0, 100, 40, 11, self.buttonLoadLevel)
     :setTooltip(_S.tooltip.custom_game_window.load_selected_level)
+end
+
+--! Add a level to the Single Scenario list
+--!param level (string) the name of the level file
+function UICustomGame:_addLevel(level)
+  local level_info = TheApp:readLevelFile(level)
+  if level_info.name and level_info.map_file then
+    self.items[#self.items + 1] = {
+      name = level_info.name,
+      tooltip = _S.tooltip.custom_game_window.choose_game,
+      map_file = level_info.map_file,
+      level_file = level,
+      intro = level_info.briefing,
+      deprecated_variable_used = level_info.deprecated_variable_used,
+    }
+  end
+end
+
+--! Compile metainfo for all of the levels in the given path. For better Levels
+--! folder organisation, allow subdirectories one level deep
+--!param dir (string) The top-level directory that should contain level files.
+function UICustomGame:_findLevels(dir)
+  for file in lfs.dir(dir) do
+    if file:match("%.level$") then self:_addLevel(file, "")
+    elseif lfs.attributes(dir .. file .. pathsep, "mode") == "directory" and not file:match("%.$") then
+      for subfile in lfs.dir(dir .. file) do
+        if subfile:match("%.level$") then self:_addLevel(subfile, file .. pathsep) end
+      end
+    end
+  end
 end
 
 function UICustomGame:updateDescriptionOffset()

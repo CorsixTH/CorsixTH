@@ -213,9 +213,10 @@ function UIFax:choice(choice_number)
       self.ui.app:loadLevel(next_level, self.ui.app.map.difficulty)
       self.ui.app.moviePlayer:playAdvanceMovie(next_level)
     else
-      for i, level in ipairs(self.ui.app.world.campaign_info.levels) do
+      local campaign_info = self.ui.app.world.campaign_info
+      for i, level in ipairs(campaign_info.levels) do
         if self.ui.app.world.map.level_number == level then
-          local next_level = self.ui.app.world.campaign_info.levels[i + 1]
+          local next_level = campaign_info.levels[i + 1]
           local level_info, _ = self.ui.app:readLevelFile(next_level)
           if level_info then
             self.ui.app:loadLevel(next_level, nil, level_info.name,
