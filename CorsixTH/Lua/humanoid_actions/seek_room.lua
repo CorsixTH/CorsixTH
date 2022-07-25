@@ -48,21 +48,29 @@ function SeekRoomAction:setDiagnosisRoom(room)
   return self
 end
 
+--! Finds a relevant diagnosis/treatment room(s) for a patient
+--! If diagnosis room, attempt to use GP's choice first, else select any other available
+--! room at random.
 local action_seek_room_find_room = permanent"action_seek_room_find_room"( function(action, humanoid)
   local room_type = action.room_type
   if action.diagnosis_room then
+    -- Attempt to use the GP's chosen diagnosis room first
+    if room_type then
+      local room = humanoid.world:findRoomNear(humanoid, room_type, nil, "advanced")
+      if room then return room end
+    end
+
     local tried_rooms = 0
     -- Make numbers for each available diagnosis room. A random index from this list will be chosen,
-    -- and then the corresponding room index is taken as next room. (The list decrease for each room
+    -- and then the corresponding room index is taken as next room. (The list decreases for each room
     -- missing)
     local available_rooms = {}
-    local room_at_index
     for i=1, #humanoid.available_diagnosis_rooms do
       available_rooms[i] = i
     end
     while tried_rooms < #humanoid.available_diagnosis_rooms do
       -- Choose a diagnosis room from the list at random. Note: This ignores the initial diagnosis room!
-      room_at_index = math.random(1,#available_rooms)
+      local room_at_index = math.random(1,#available_rooms)
       room_type = humanoid.available_diagnosis_rooms[available_rooms[room_at_index]]
       -- Try to find the room
       local room = humanoid.world:findRoomNear(humanoid, room_type, nil, "advanced")
@@ -188,7 +196,7 @@ local function action_seek_room_start(action, humanoid)
     humanoid:finishAction()
     return
   end
-  -- Tries to find the room, if it is a diagnosis room, try to find any room in the diagnosis list.
+  -- Try to find the appropriate room for the patient
   if not humanoid.diagnosed or action.room_type == "research" then
     local room = action_seek_room_find_room(action, humanoid)
     -- if we have the room but not the staff we shouldn't seek out the room either
