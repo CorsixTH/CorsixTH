@@ -794,9 +794,10 @@ end
 --!param room (Room) The new room.
 function World:markRoomAsBuilt(room)
   room:roomFinished()
-  local diag_disease = self.hospitals[1].disease_casebook["diag_" .. room.room_info.id]
+  local hosp = room.hospital
+  local diag_disease = hosp.disease_casebook["diag_" .. room.room_info.id]
   if diag_disease and not diag_disease.discovered then
-    self.hospitals[1].disease_casebook["diag_" .. room.room_info.id].discovered = true
+    hosp.disease_casebook["diag_" .. room.room_info.id].discovered = true
   end
   for _, entity in ipairs(self.entities) do
     if entity.notifyNewRoom then

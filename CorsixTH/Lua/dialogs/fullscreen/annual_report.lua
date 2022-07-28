@@ -502,7 +502,12 @@ function UIAnnualReport:draw(canvas, x, y)
   local font = self.stat_font
   local world = self.ui.app.world
 
-  if self.state == 1 then -- Fame screen
+  if self.state == 1 then -- Fame/Shame screen (High Scores)
+    -- TODO: This screen should be displayed at the start of the annual report, but currently
+    -- it is not shown, likely as the code for this being unfinished. When implemented
+    -- we only show this screen at the very start, and once they go to the next screen
+    -- it no longer becomes accessible.
+
     -- Title and column names
     font:draw(canvas, _S.high_score.best_scores, x + 220, y + 104, 200, 0)
     font:draw(canvas, _S.high_score.pos, x + 218, y + 132)
@@ -514,7 +519,7 @@ function UIAnnualReport:draw(canvas, x, y)
     local dy = 0
     --for i = 1, 10 do
       font:draw(canvas, i .. ".", x + 220, y + 160 + dy)
-      font:draw(canvas, world.hospitals[1].name:upper(), x + 260, y + 160 + dy)
+      font:draw(canvas, world:getLocalPlayerHospital().name:upper(), x + 260, y + 160 + dy)
       font:draw(canvas, "NA", x + 360, y + 160 + dy)
       -- dy = dy + 25
     --end
