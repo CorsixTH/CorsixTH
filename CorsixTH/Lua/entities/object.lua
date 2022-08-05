@@ -740,6 +740,13 @@ function Object:afterLoad(old, new)
       self:setTile(self.tile_x, self.tile_y)
     end
   end
+  if old < 173 then
+    -- Fix bug with couch not being fully passable
+    if self.object_type.id == "couch" then
+      self:initOrientation(self.direction)
+      self:setTile(self.tile_x, self.tile_y)
+    end
+  end
   self:updateDynamicInfo(true)
   return Entity.afterLoad(self, old, new)
 end
