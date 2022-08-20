@@ -476,6 +476,10 @@ function GameUI:onCursorWorldPositionChange()
   if not overwindow and wx > 0 and wy > 0 and wx < self.app.map.width and wy < self.app.map.height then
     room = self.app.world:getRoom(wx, wy)
   end
+   -- Enable queue icons for patients when hovering the door as well
+  if entity and not room and entity.room then
+    room = entity.room
+  end
   if room ~= self.cursor_room then
     -- Unset queue mood for patients queueing the old room
     if self.cursor_room then
