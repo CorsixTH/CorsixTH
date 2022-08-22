@@ -39,6 +39,11 @@ local configuration = {
   --  {Doctor = 0, Shrink = 0, Skill = 0},
   --},
 
+  -- Maximum salary value, staff will no longer become unhappy at this stage
+  payroll = {
+    MaxSalary = 2000,
+  },
+
   -----------------------------------------------------------
   --           Original configuration values               --
   -----------------------------------------------------------

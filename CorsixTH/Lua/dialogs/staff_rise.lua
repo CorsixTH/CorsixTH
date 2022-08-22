@@ -182,6 +182,7 @@ function UIStaffRise:increaseSalary()
   self.staff.message_callback = nil
   self.staff:increaseWage(self.rise_amount)
   self.staff.quitting_in = nil
+  self.ui:playSound("bonusal2.wav")
   self:close()
 end
 

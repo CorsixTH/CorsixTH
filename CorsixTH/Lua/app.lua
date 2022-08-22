@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 173 -- Make couches fully passable objects
+local SAVEGAME_VERSION = 174 -- Max salary improvements
 
 class "App"
 
