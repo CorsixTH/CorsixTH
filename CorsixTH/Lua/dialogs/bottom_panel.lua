@@ -218,10 +218,21 @@ function UIBottomPanel:drawReputationMeter(canvas, x_left, y)
   self.panel_sprites:draw(canvas, 36, x_left + math.floor(step * (self.ui.hospital.reputation - self.ui.hospital.reputation_min)), y)
 end
 
+--! Adds dynamic text to the bottom panel based on cursor position
+--!param canvas
+--!param x (num) coordinate
+--!param y (num) coordinate
 function UIBottomPanel:drawDynamicInfo(canvas, x, y)
-  if self.world:isCurrentSpeed("Pause") and not self.world.user_actions_allowed then
-    self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10, y + 14, 255, "center")
-    return
+  if self.world:isCurrentSpeed("Pause") then
+    if not self.world.user_actions_allowed then
+      -- Original pause behaviour, show pause text
+      self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10, y + 14, 255, "center")
+      return
+    elseif not (self.dynamic_info and self.dynamic_info["text"]) then
+      -- User allows editing while paused, only show pause text where dynamic text not present
+      self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10, y + 14, 255, "center")
+      return
+    end
   end
 
   if not (self.dynamic_info and self.dynamic_info["text"]) then
