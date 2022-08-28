@@ -409,10 +409,8 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
   }
 
   player_count = pData[0];
-  if (player_count < 1)
-    player_count = 1;
-  if (player_count > max_player_count)
-    player_count = max_player_count;
+  if (player_count < 1) player_count = 1;
+  if (player_count > max_player_count) player_count = max_player_count;
 
   for (int i = 0; i < player_count; ++i) {
     read_tile_index(pData + camera_offset + (i * 2), initial_camera_x[i],
