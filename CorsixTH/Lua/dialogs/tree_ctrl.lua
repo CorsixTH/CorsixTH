@@ -604,6 +604,11 @@ function TreeControl:setSelectCallback(callback)
   return self
 end
 
+function TreeControl:setTextboxCallback(callback)
+  self.textbox_callback = callback
+  return self
+end
+
 function TreeControl:onMouseUp(button, x, y)
   local redraw = Window.onMouseUp(self, button, x, y)
   local node, expand = self:hitTestTree(x, y)
@@ -622,6 +627,9 @@ function TreeControl:onMouseUp(button, x, y)
       redraw = true
     else
       self.selected_node = node
+      if self.textbox_callback then
+        self.textbox_callback(node, node:getLabel())
+      end
       node:select()
       redraw = true
     end
