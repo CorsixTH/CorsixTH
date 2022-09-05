@@ -197,23 +197,47 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
   -- Initialize the tree control
   self.control = FilteredTreeControl(root, 5, 35, h_size - 10, vertical_size, self.col_bg, self.col_scrollbar, true, show_dates)
     :setSelectCallback(--[[persistable:file_browser_select_callback]] function(node)
-      if node.is_valid_file and (lfs.attributes(node.path, "mode") ~= "directory") then
-        self:choiceMade(node.path)
-      end
+      if self:checkChoice(node) then self:choiceMade(node.path) end
+    end)
+    :setValueChangeCallback(--[[persistable:file_browser_textbox_callback]] function(node, label)
+      -- Update the save UI textbox, if it exists
+      if self:checkChoice(node) then self:updateTextbox(label) end
     end)
   self:addWindow(self.control)
 
-  -- Create the back button.
-  self:addBevelPanel((h_size - 160) / 2, 340, 160, 30, self.col_bg):setLabel(_S.menu_list_window.back)
-    :makeButton(0, 0, 160, 40, nil, self.buttonBack):setTooltip(_S.tooltip.menu_list_window.back)
+  -- Create the back and ok buttons.
+  local button_size = 135
+  local indent = math.floor((h_size - (2*button_size))/3)
+  self:addBevelPanel(indent, 340, button_size, 30, self.col_bg):setLabel(_S.menu_list_window.back)
+    :makeButton(0, 0, button_size, 40, nil, self.buttonBack):setTooltip(_S.tooltip.menu_list_window.back)
+
+  self:addBevelPanel(h_size - button_size - indent, 340, button_size, 30,
+  self.col_bg):setLabel(_S.menu_list_window.ok)
+    :makeButton(0, 0, button_size, 40, nil, (--[[persistable:filebrowser_ok_callback]] function()
+      if self.confirmName then
+        self:confirmName()
+      elseif self.control.selected_node then
+        local sel_node = self.control.selected_node
+        if self:checkChoice(sel_node) then self:choiceMade(sel_node.path) end
+      end
+    end)):setTooltip(_S.tooltip.menu_list_window.ok)
 end
 
--- Function stub for dialogs to override. This function is called each time a file is chosen.
+--! Function stub for dialogs to override. This function is called each time a file is chosen.
 --!param name (string) Name of the file chosen.
 function UIFileBrowser:choiceMade(name) -- luacheck: ignore 212 keep args from parent class
+end
+
+--! Function stub for dialogs with a textbox present. This will be called for 
+--! updating the textbox, override it for a proper implementation in the derived class.
+--!param label (string) Name of the file chosen
+function UIFileBrowser:updateTextbox(label) -- luacheck: ignore 212 keep args from parent class
+end
+
+function UIFileBrowser:checkChoice(node)
+  return node.is_valid_file and (lfs.attributes(node.path, "mode") ~= "directory")
 end
 
 function UIFileBrowser:buttonBack()
   self:close()
 end
-

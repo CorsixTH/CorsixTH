@@ -599,8 +599,21 @@ function TreeControl:onMouseDown(button, x, y)
   return redraw
 end
 
+--! Function to handle (final) selection by user that needs to feed back data to
+--! another dialog.
+--!param callback (function) Code to execute on trigger
+--!return self
 function TreeControl:setSelectCallback(callback)
   self.select_callback = callback
+  return self
+end
+
+--! Function for where an action in the file tree needs to feed back data to another
+--! dialog. Its specific usage should be noted in the parent element
+--!param callback (function) Code to execute on trigger
+--!return self
+function TreeControl:setValueChangeCallback(callback)
+  self.val_change_callback = callback
   return self
 end
 
@@ -622,6 +635,9 @@ function TreeControl:onMouseUp(button, x, y)
       redraw = true
     else
       self.selected_node = node
+      if self.val_change_callback then
+        self.val_change_callback(node, node:getLabel())
+      end
       node:select()
       redraw = true
     end
