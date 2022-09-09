@@ -238,7 +238,8 @@ function Machine:createHandymanActions(handyman)
 
   local meander_loop_callback = --[[persistable:handyman_meander_repair_loop_callback]] function()
     -- Wait until the machine is not in use and not about to be used
-    if not self.user and (not self:getRoom():getPatient() or self:getRoom():getPatient().isLeaving) then
+    local patient = self:getRoom():getPatient()
+    if not self.user and (not patient or patient.isLeaving) then
       -- The machine is ready to be repaired.
       -- The following statement will finish the meander action in the handyman's
       -- action queue.
