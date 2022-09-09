@@ -65,10 +65,9 @@ end
 
 --! Updates the textbox to selected file
 --!param label (string) Selected file name
-function UISaveGame:updateTextbox(label)
+function UISaveGame:setInputValue(label)
   local name = string.gsub(label, "%.sav$", "")
-  self.new_savegame_textbox.text = name
-  self.new_savegame_textbox.panel:setLabel(name)
+  self.new_savegame_textbox:setText(name)
 end
 
 --! Function called when textbox is confirmed (e.g. by pressing enter)

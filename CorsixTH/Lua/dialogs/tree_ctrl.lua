@@ -621,6 +621,7 @@ function TreeControl:onMouseUp(button, x, y)
   local redraw = Window.onMouseUp(self, button, x, y)
   local node, expand = self:hitTestTree(x, y)
   if self.mouse_down_in_self and node then
+    -- Expand/collapse directory
     if expand then
       if node:hasChildren() then
         if node:isExpanded() then
@@ -630,9 +631,11 @@ function TreeControl:onMouseUp(button, x, y)
         end
         redraw = true
       end
+    -- Clicking on already highlighted file
     elseif self.selected_node == node and self.select_callback then
       self.select_callback(node)
       redraw = true
+    -- A new file has been selected (not highlighted)
     else
       self.selected_node = node
       if self.val_change_callback then

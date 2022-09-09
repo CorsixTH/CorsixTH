@@ -200,8 +200,8 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
       if self:checkChoice(node) then self:choiceMade(node.path) end
     end)
     :setValueChangeCallback(--[[persistable:file_browser_textbox_callback]] function(node, label)
-      -- Update the save UI textbox, if it exists
-      if self:checkChoice(node) then self:updateTextbox(label) end
+      -- Update any user input
+      if self:checkChoice(node) then self:setInputValue(label) end
     end)
   self:addWindow(self.control)
 
@@ -228,12 +228,14 @@ end
 function UIFileBrowser:choiceMade(name) -- luacheck: ignore 212 keep args from parent class
 end
 
---! Function stub for dialogs with a textbox present. This will be called for 
---! updating the textbox, override it for a proper implementation in the derived class.
+--! Function stub for dialogs with user input option. This will be called for
+--! updating inputs, override it for a proper implementation in the derived class.
 --!param label (string) Name of the file chosen
-function UIFileBrowser:updateTextbox(label) -- luacheck: ignore 212 keep args from parent class
+function UIFileBrowser:setInputValue(label) -- luacheck: ignore 212 keep args from parent class
 end
 
+--! Check selection is a valid file, and not a directory
+--!param node (table) user selected element
 function UIFileBrowser:checkChoice(node)
   return node.is_valid_file and (lfs.attributes(node.path, "mode") ~= "directory")
 end
