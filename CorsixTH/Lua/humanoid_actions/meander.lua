@@ -68,6 +68,20 @@ local function meander_action_start(action, humanoid)
   local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,
       humanoid.tile_y, math.random(1, 24))
 
+  -- If the staff member is confined to one parcel, make sure they don't try to leave
+  if humanoid.parcelNr then
+    local th = TheApp.map.th
+    local current_plot = th:getCellFlags(humanoid.tile_x, humanoid.tile_y).parcelId
+    local target_plot = th:getCellFlags(x, y).parcelId
+    -- As long as they're in the right parcel, prevent them wandering outside of it
+    if (current_plot == humanoid.parcelNr and target_plot ~= humanoid.parcelNr) then
+      humanoid:queueAction(IdleAction():setCount(math.random(5, 40)))
+      humanoid:queueAction(MeanderAction())
+      humanoid:finishAction()
+      return
+    end
+  end
+
   if x == humanoid.tile_x and y == humanoid.tile_y then
     -- Nowhere to walk to - go idle instead, or go onto the next action
     if #humanoid.action_queue == 1 then
