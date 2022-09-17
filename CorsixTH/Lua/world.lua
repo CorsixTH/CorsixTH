@@ -116,7 +116,7 @@ function World:World(app)
 
   -- If set, do not create salary raise requests.
   self.debug_disable_salary_raise = self.free_build_mode
-  self.idle_cache = {}
+  self.idle_cache = {} -- Cached queue standing positions for all queues.
   -- List of which goal criterion means what, and what number the corresponding icon has.
   self.level_criteria = local_criteria_variable
   self.delayed_map_objects = {} -- Initial objects in the map for parcels without owner.
