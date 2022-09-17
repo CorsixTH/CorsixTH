@@ -1636,6 +1636,11 @@ function World:getPath(x, y, dest_x, dest_y)
   return self.pathfinder:findPath(x, y, dest_x, dest_y)
 end
 
+-- Find an tile for idling.
+-- !param x X coordinate of the queue position.
+-- !param y Y coordinate of the queue position.
+-- !param idx Number of standing persons in the queue before the person asking for an idle tile.
+-- !return Position of an idle tile if it exists.
 function World:getIdleTile(x, y, idx)
   local cache_idx = (y - 1) * self.map.width + x
   local cache = self.idle_cache[cache_idx]

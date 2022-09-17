@@ -166,12 +166,22 @@ class idle_tile_finder : public abstract_pathfinder {
   bool try_node(path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
                 travel_direction direction) override;
 
-  bool find_idle_tile(const level_map* pMap, int iStartX, int iStartY, int iN);
+  //| Find a tile for idling.
+  /*!
+      @param pMap Map to search.
+      @param iStartX X coordinate of the queue start position.
+      @param iStartY Y coordinate of the queue start position.
+      @param iN Number of persons standing in the queue before the humanoid.
+      @param parcelId Id of the parcel with valid destinations, use \c -1 for
+     any parcel.
+   */
+  bool find_idle_tile(const level_map* pMap, int iStartX, int iStartY, int iN,
+                      int parcelId);
 
   path_node* best_next_node;
   double best_distance;
-  int start_x;  ///< X coordinate of the start position.
-  int start_y;  ///< Y coordinate of the start position.
+  int start_x;  ///< X coordinate of the queue position.
+  int start_y;  ///< Y coordinate of the queue position.
 };
 
 class object_visitor : public abstract_pathfinder {
@@ -221,8 +231,9 @@ class pathfinder {
   }
 
   inline bool find_idle_tile(const level_map* pMap, int iStartX, int iStartY,
-                             int iN) {
-    return idle_tile_finder.find_idle_tile(pMap, iStartX, iStartY, iN);
+                             int iN, int parcelId) {
+    return idle_tile_finder.find_idle_tile(pMap, iStartX, iStartY, iN,
+                                           parcelId);
   }
 
   inline bool find_path_to_hospital(const level_map* pMap, int iStartX,
