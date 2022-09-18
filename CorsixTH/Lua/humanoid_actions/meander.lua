@@ -65,8 +65,17 @@ local function meander_action_start(action, humanoid)
       humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.wandering)
     end
   end
+
+  -- Handymen may have an assigned parcel, but they are free to visit any staff
+  -- room to rest
+  local meander_parcel
+  if humanoid.humanoid_class == "Handyman" and humanoid.parcelNr > 0 and
+      not humanoid:isResting() then
+    meander_parcel = humanoid.parcelNr
+  end
+
   local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,
-      humanoid.tile_y, math.random(1, 24))
+      humanoid.tile_y, math.random(1, 24), meander_parcel)
 
   if x == humanoid.tile_x and y == humanoid.tile_y then
     -- Nowhere to walk to - go idle instead, or go onto the next action
