@@ -2769,8 +2769,9 @@ function World:afterLoad(old, new)
     self.wall_set_by_block_id = nil
     self.wall_dir_by_block_id = nil
   end
-  if old < 172 then
-    self.wall_types = self.app.wall_types
+  if old < 174 then
+    -- Originally 172, bumping afterLoad to correct a typo
+    self.wall_types = self.app.walls
     self:initWallTypes()
   end
 

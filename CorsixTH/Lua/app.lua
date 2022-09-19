@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 173 -- Make couches fully passable objects
+local SAVEGAME_VERSION = 174 -- Fix typo from afterLoad 172 (wall re-init)
 
 class "App"
 
