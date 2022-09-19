@@ -169,9 +169,10 @@ class idle_tile_finder : public abstract_pathfinder {
   //| Find a tile for idling.
   /*!
       @param pMap Map to search.
-      @param iStartX X coordinate of the queue start position.
-      @param iStartY Y coordinate of the queue start position.
-      @param iN Number of persons standing in the queue before the humanoid.
+      @param iStartX X coordinate of the start position.
+      @param iStartY Y coordinate of the start position.
+      @param iN Return the Nth idle tile. Used for queueing and randomzing idle
+     tiles.
       @param parcelId Id of the parcel with valid destinations, use \c -1 for
      any parcel.
    */
@@ -180,8 +181,8 @@ class idle_tile_finder : public abstract_pathfinder {
 
   path_node* best_next_node;
   double best_distance;
-  int start_x;  ///< X coordinate of the queue position.
-  int start_y;  ///< Y coordinate of the queue position.
+  int start_x;  ///< X coordinate of the start position.
+  int start_y;  ///< Y coordinate of the start position.
 };
 
 class object_visitor : public abstract_pathfinder {
