@@ -1639,9 +1639,10 @@ end
 -- Find an tile for idling.
 -- !param x X coordinate of the queue position.
 -- !param y Y coordinate of the queue position.
--- !param idx Number of standing persons in the queue before the person asking for an idle tile.
+-- !param idx Randomization factor for the idle tile, returns Nth candidate tile.
+-- !param parcel_id Optional parcel of the indoor returned idling tile.
 -- !return Position of an idle tile if it exists.
-function World:getIdleTile(x, y, idx)
+function World:getIdleTile(x, y, idx, parcel_id)
   local cache_idx = (y - 1) * self.map.width + x
   local cache = self.idle_cache[cache_idx]
   if not cache then
@@ -1652,7 +1653,7 @@ function World:getIdleTile(x, y, idx)
     self.idle_cache[cache_idx] = cache
   end
   if not cache.x[idx] then
-    local ix, iy = self.pathfinder:findIdleTile(x, y, idx)
+    local ix, iy = self.pathfinder:findIdleTile(x, y, idx, parcel_id)
     if not ix then
       return ix, iy
     end
