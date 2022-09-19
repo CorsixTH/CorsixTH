@@ -294,7 +294,8 @@ bool idle_tile_finder::find_idle_tile(const level_map* pMap, int iStartX,
     // Check whether pNode is a feasible destination.
     const map_tile* node_tile = pMap->get_tile_unchecked(pNode->x, pNode->y);
     map_tile_flags flags = node_tile->flags;
-    bool correct_parcel = parcelId < 0 || parcelId == node_tile->iParcelId;
+
+    bool correct_parcel = parcelId <= 0 || parcelId == node_tile->iParcelId;
     if (!flags.do_not_idle && flags.passable && flags.hospital &&
         correct_parcel) {
       // Try to avoid re-using a queue-ing position of a humanoid earlier in the
