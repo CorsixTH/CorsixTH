@@ -171,6 +171,7 @@ function UIEditRoom:cancel()
   if self.phase == "walls" then
     if self.paid then
       -- While the confirmation window is open, don't allow the player to click the confirm button.
+      local confirm_button_state = self.confirm_button.enabled
       self.confirm_button:enable(false)
       self.confirm_dialog_open = true
       -- Ask if the user really wish to sell this room
@@ -180,7 +181,7 @@ function UIEditRoom:cancel()
           self:abortRoom()
         end,
         --[[persistable:delete_room_confirm_dialog_cancel]]function()
-          self.confirm_button:enable(true)
+          self.confirm_button:enable(confirm_button_state)
           self.confirm_dialog_open = nil
         end
       ))
