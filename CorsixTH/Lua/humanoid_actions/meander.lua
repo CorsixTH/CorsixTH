@@ -67,10 +67,10 @@ local function meander_action_start(action, humanoid)
   end
 
   -- Handymen may have an assigned parcel, but they are free to visit any staff
-  -- room to rest
+  -- room to rest, or wait inside a room to repair
   local meander_parcel
   if humanoid.humanoid_class == "Handyman" and humanoid.parcelNr > 0 and
-      not humanoid:isResting() then
+      not humanoid:getRoom() then
     meander_parcel = humanoid.parcelNr
   end
 
