@@ -270,35 +270,33 @@ function UIPatient:onTick()
   return Window.onTick(self)
 end
 
+--! Go through the buttons in the patient dialog to check whether they should be visible
 function UIPatient:updateInformation()
   local patient = self.patient
-  if patient.diagnosed then
-    self.disease_button.enabled = true
-    self.disease_button.visible = true
-    self.disease_blanker.visible = false
-  else
-    self.disease_button.enabled = false
-    self.disease_button.visible = false
-    self.disease_blanker.visible = true
-  end
-  if patient.going_home then
-    self.home_button.enabled = false
-    self.home_button.visible = false
-    self.home_blanker.visible = true
-  else
-    self.home_button.enabled = true
-    self.home_button.visible = true
-    self.home_blanker.visible = false
-  end
-  if patient.is_debug or patient.diagnosis_progress == 0 or patient.diagnosed or patient.going_home then
-    self.guess_button.enabled = false
-    self.guess_button.visible = false
-    self.guess_blanker.visible = true
-  else
-    self.guess_button.enabled = true
-    self.guess_button.visible = true
-    self.guess_blanker.visible = false
-  end
+  -- Show casebook?
+  -- Debug patients can exist before a disease is discovered (i.e. no casebook entry)
+  -- so make sure we guard against this.
+  local diag = patient.diagnosed
+  local disc = patient.hospital.disease_casebook[patient.disease.id].discovered
+  local show_dis_btn = diag and disc
+  self.disease_button.enabled = show_dis_btn
+  self.disease_button.visible = show_dis_btn
+  self.disease_blanker.visible = not show_dis_btn
+
+  -- Show go home?
+  local show_home_btn = not patient.going_home
+  self.home_button.enabled = show_home_btn
+  self.home_button.visible = show_home_btn
+  self.home_blanker.visible = not show_home_btn
+
+  -- Show guess cure?
+  local show_guess_btn = not (patient.is_debug or
+      patient.diagnosis_progress == 0 or
+      patient.diagnosed or
+      patient.going_home)
+  self.guess_button.enabled = show_guess_btn
+  self.guess_button.visible = show_guess_btn
+  self.guess_blanker.visible = not show_guess_btn
 end
 
 function UIPatient:viewQueue()

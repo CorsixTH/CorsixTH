@@ -784,6 +784,10 @@ debug_patient_window = {
   caption = "Debug Patient",
 }
 
+tooltip.debug_patient_window = {
+  item = "Create a debug patient with %s",
+}
+
 cheats_window = {
   caption = "Cheats",
   warning = "Warning: You will not get any bonus points at the end of the level if you cheat!",
