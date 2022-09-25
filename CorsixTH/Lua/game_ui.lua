@@ -480,7 +480,7 @@ function GameUI:onCursorWorldPositionChange()
   if entity and not room then
     if entity.room then
       room = entity.room
-    elseif entity.object_type and entity.object_type.class == "SwingDoor" then
+    elseif entity.object_type and entity.object_type.id == "swing_door_left" then
       -- Special case to catch the non-dominant side of a double-door
       room = entity.master.room
     end
