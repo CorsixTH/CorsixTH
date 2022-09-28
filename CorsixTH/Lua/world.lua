@@ -1653,7 +1653,7 @@ function World:getIdleTile(x, y, idx, parcel_id)
     self.idle_cache[cache_idx] = cache
   end
   if not cache.x[idx] then
-    local ix, iy = self.pathfinder:findIdleTile(x, y, idx, parcel_id)
+    local ix, iy = self.pathfinder:findIdleTile(x, y, idx, parcel_id or 0)
     if not ix then
       return ix, iy
     end

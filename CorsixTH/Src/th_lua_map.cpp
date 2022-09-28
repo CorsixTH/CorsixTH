@@ -946,8 +946,7 @@ int l_path_idle(lua_State* L) {
       static_cast<int>(
           luaL_optinteger(L, 4, 0)),  // Take Nth candidate tile, used for
                                       // queueing and randomizing idling tiles.
-      static_cast<int>(
-          luaL_optinteger(L, 5, -1)));  // Optional indoor parcel number.
+      static_cast<int>(luaL_optinteger(L, 5, 0)));  // Optional indoor parcel.
   if (!found) {
     return 0;
   }

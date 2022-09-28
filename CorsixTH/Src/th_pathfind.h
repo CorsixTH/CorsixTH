@@ -171,9 +171,9 @@ class idle_tile_finder : public abstract_pathfinder {
       @param pMap Map to search.
       @param iStartX X coordinate of the start position.
       @param iStartY Y coordinate of the start position.
-      @param iN Return the Nth idle tile. Used for queueing and randomzing idle
+      @param iN Return the Nth idle tile. Used for queueing and randomizing idle
      tiles.
-      @param parcelId Id of the parcel with valid destinations, use \c -1 for
+      @param parcelId Id of the parcel with valid destinations, use \c 0 for
      any parcel.
    */
   bool find_idle_tile(const level_map* pMap, int iStartX, int iStartY, int iN,
