@@ -279,7 +279,7 @@ function Epidemic:checkPatientsForRemoval()
   for i = #self.infected_patients, 1, -1 do
     local infected_patient = self.infected_patients[i]
     if (not self.coverup_in_progress and infected_patient.going_home) or
-        infected_patient.dead then
+        infected_patient.dead or infected_patient.tile_x == nil then
       table.remove(self.infected_patients,i)
     end
   end
