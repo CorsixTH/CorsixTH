@@ -73,6 +73,9 @@
  <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1button_back">buttonBack</a>()
  </li>
  <li class="self">
+ <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1check_choice">checkChoice</a>(<span class="p">node</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1choice_made">choiceMade</a>(<span class="p">name</span>)
  </li>
  <li class="inherited">
@@ -207,6 +210,9 @@
  <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1set_input_value">setInputValue</a>(<span class="p">label</span>)
+ </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
@@ -267,6 +273,8 @@
  </li>
  <li><span class="p">colour</span>
  (*)
+ </li>
+ <li><span class="p">confirmName</span>
  </li>
  <li><span class="p">control</span>
  </li>
@@ -399,7 +407,23 @@
  <div class="method">
  <h5><a name="_0_1_u_i_file_browser_1button_back">function UIFileBrowser:buttonBack()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browser.lua#L216">line 216 of Lua/dialogs/resizables/file_browser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browser.lua#L243">line 243 of Lua/dialogs/resizables/file_browser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_file_browser_1check_choice">function UIFileBrowser:checkChoice(<span class="p">node</span>)</a></h5>
+ <p>
+ Check selection is a valid file, and not a directory<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">node</td>
+ <td class="t">table</td>
+ <td class="d"> user selected element</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browser.lua#L237">line 237 of Lua/dialogs/resizables/file_browser.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -415,7 +439,24 @@
  <td class="d"> Name of the file chosen.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browser.lua#L211">line 211 of Lua/dialogs/resizables/file_browser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browser.lua#L226">line 226 of Lua/dialogs/resizables/file_browser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_file_browser_1set_input_value">function UIFileBrowser:setInputValue(<span class="p">label</span>)</a></h5>
+ <p>
+ Function stub for dialogs with user input option. This will be called for<br/><br/>
+ updating inputs, override it for a proper implementation in the derived class.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">label</td>
+ <td class="t">string</td>
+ <td class="d"> Name of the file chosen</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browser.lua#L231">line 231 of Lua/dialogs/resizables/file_browser.lua</a>.
  </p>
  </div>
 </div>

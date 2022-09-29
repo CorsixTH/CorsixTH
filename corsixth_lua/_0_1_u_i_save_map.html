@@ -76,6 +76,10 @@
  <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1button_back">buttonBack</a>()
  (inherited from <a href="_0_1_u_i_file_browser.html">UIFileBrowser</a>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1check_choice">checkChoice</a>(<span class="p">node</span>)
+ (inherited from <a href="_0_1_u_i_file_browser.html">UIFileBrowser</a>)
+ </li>
  <li class="self">
  <a href="_0_1_u_i_save_map.html#_0_1_u_i_save_map_1choice_made">choiceMade</a>(<span class="p">name</span>)
  (overrides <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1choice_made">UIFileBrowser:choiceMade</a>)
@@ -86,6 +90,7 @@
  </li>
  <li class="self">
  <a href="_0_1_u_i_save_map.html#_0_1_u_i_save_map_1confirm_name">confirmName</a>()
+ (overrides <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1confirm_name">UIFileBrowser:confirmName</a>)
  </li>
  <li class="self">
  <a href="_0_1_u_i_save_map.html#_0_1_u_i_save_map_1do_save">doSave</a>(<span class="p">filename</span>)
@@ -217,6 +222,10 @@
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_save_map.html#_0_1_u_i_save_map_1set_input_value">setInputValue</a>(<span class="p">label</span>)
+ (overrides <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1set_input_value">UIFileBrowser:setInputValue</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
@@ -413,14 +422,15 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1choice_made">UIFileBrowser:choiceMade</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browsers/save_map.lua#L77">line 77 of Lua/dialogs/resizables/file_browsers/save_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browsers/save_map.lua#L84">line 84 of Lua/dialogs/resizables/file_browsers/save_map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_save_map_1confirm_name">function UISaveMap:confirmName()</a></h5>
  <p>
  Function called when textbox is confirmed (e.g. by pressing enter)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browsers/save_map.lua#L66">line 66 of Lua/dialogs/resizables/file_browsers/save_map.lua</a>.
+ <strong>Overrides:</strong> <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1confirm_name">UIFileBrowser:confirmName</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browsers/save_map.lua#L73">line 73 of Lua/dialogs/resizables/file_browsers/save_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -436,7 +446,24 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browsers/save_map.lua#L91">line 91 of Lua/dialogs/resizables/file_browsers/save_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browsers/save_map.lua#L98">line 98 of Lua/dialogs/resizables/file_browsers/save_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_save_map_1set_input_value">function UISaveMap:setInputValue(<span class="p">label</span>)</a></h5>
+ <p>
+ Updates the textbox to selected file<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">label</td>
+ <td class="t">string</td>
+ <td class="d"> Selected file name</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i_file_browser.html#_0_1_u_i_file_browser_1set_input_value">UIFileBrowser:setInputValue</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browsers/save_map.lua#L66">line 66 of Lua/dialogs/resizables/file_browsers/save_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -452,7 +479,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browsers/save_map.lua#L82">line 82 of Lua/dialogs/resizables/file_browsers/save_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/file_browsers/save_map.lua#L89">line 89 of Lua/dialogs/resizables/file_browsers/save_map.lua</a>.
  </p>
  </div>
 </div>
