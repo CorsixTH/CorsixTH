@@ -288,7 +288,7 @@ class level_map {
   //! Change the owner of a particular parcel
   /*!
       \param iParcelId The parcel of land to change ownership of. Should be
-          an integer between 1 and getParcelCount() inclusive (parcel 0 is
+          an integer between 1 and get_parcel_count() inclusive (parcel 0 is
           the outside, and should never have its ownership changed).
       \param iOwner The number of the player who should own the parcel, or
           zero if no player should own the parcel.
@@ -299,7 +299,7 @@ class level_map {
 
   //! Get the owner of a particular parcel of land
   /*!
-      \param iParcelId An integer between 0 and getParcelCount() inclusive.
+      \param iParcelId An integer between 0 and get_parcel_count() inclusive.
       \return 0 if the parcel is unowned, otherwise the number of the owning
           player.
   */
@@ -307,8 +307,8 @@ class level_map {
 
   //! Query if two parcels are directly connected
   /*!
-      \param iParcel1 An integer between 0 and getParcelCount() inclusive.
-      \param iParcel2 An integer between 0 and getParcelCount() inclusive.
+      \param iParcel1 An integer between 0 and get_parcel_count() inclusive.
+      \param iParcel2 An integer between 0 and get_parcel_count() inclusive.
       \return true if there is a path between the two parcels which does not
           go into any other parcels. false otherwise.
   */
@@ -317,7 +317,7 @@ class level_map {
   //! Query if a given player is in a position to purchase a given parcel
   /*!
       \param iParcelId The parcel of land to query. Should be an integer
-          between 1 and getParcelCount() inclusive.
+          between 1 and get_parcel_count() inclusive.
       \param iPlayer The number of the player to perform the query on behalf
           of. Should be a strictly positive integer.
       \return true if the parcel has a door to the outside, or is directly
