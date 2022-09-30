@@ -244,8 +244,8 @@ Static Public Member Functions</h2></td></tr>
 <p>Query if two parcels are directly connected. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">iParcel1</td><td>An integer between 0 and getParcelCount() inclusive. </td></tr>
-    <tr><td class="paramname">iParcel2</td><td>An integer between 0 and getParcelCount() inclusive. </td></tr>
+    <tr><td class="paramname">iParcel1</td><td>An integer between 0 and <a class="el" href="classlevel__map.html#a5345ccd1a90af330104a586b7653276a" title="Get the number of plots of land in this map.">get_parcel_count()</a> inclusive. </td></tr>
+    <tr><td class="paramname">iParcel2</td><td>An integer between 0 and <a class="el" href="classlevel__map.html#a5345ccd1a90af330104a586b7653276a" title="Get the number of plots of land in this map.">get_parcel_count()</a> inclusive. </td></tr>
   </table>
   </dd>
 </dl>
@@ -461,7 +461,7 @@ Static Public Member Functions</h2></td></tr>
 <p>Get the owner of a particular parcel of land. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">iParcelId</td><td>An integer between 0 and getParcelCount() inclusive. </td></tr>
+    <tr><td class="paramname">iParcelId</td><td>An integer between 0 and <a class="el" href="classlevel__map.html#a5345ccd1a90af330104a586b7653276a" title="Get the number of plots of land in this map.">get_parcel_count()</a> inclusive. </td></tr>
   </table>
   </dd>
 </dl>
@@ -842,7 +842,7 @@ Static Public Member Functions</h2></td></tr>
 <p>Query if a given player is in a position to purchase a given parcel. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">iParcelId</td><td>The parcel of land to query. Should be an integer between 1 and getParcelCount() inclusive. </td></tr>
+    <tr><td class="paramname">iParcelId</td><td>The parcel of land to query. Should be an integer between 1 and <a class="el" href="classlevel__map.html#a5345ccd1a90af330104a586b7653276a" title="Get the number of plots of land in this map.">get_parcel_count()</a> inclusive. </td></tr>
     <tr><td class="paramname">iPlayer</td><td>The number of the player to perform the query on behalf of. Should be a strictly positive integer. </td></tr>
   </table>
   </dd>
@@ -1083,7 +1083,7 @@ template&lt;typename T &gt; </div>
 <p>Change the owner of a particular parcel. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">iParcelId</td><td>The parcel of land to change ownership of. Should be an integer between 1 and getParcelCount() inclusive (parcel 0 is the outside, and should never have its ownership changed). </td></tr>
+    <tr><td class="paramname">iParcelId</td><td>The parcel of land to change ownership of. Should be an integer between 1 and <a class="el" href="classlevel__map.html#a5345ccd1a90af330104a586b7653276a" title="Get the number of plots of land in this map.">get_parcel_count()</a> inclusive (parcel 0 is the outside, and should never have its ownership changed). </td></tr>
     <tr><td class="paramname">iOwner</td><td>The number of the player who should own the parcel, or zero if no player should own the parcel. </td></tr>
   </table>
   </dd>

@@ -92,8 +92,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1863d6f4aab26bb50be4a19b3b42caad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classidle__tile__finder.html#a1863d6f4aab26bb50be4a19b3b42caad">try_node</a> (<a class="el" href="structpath__node.html">path_node</a> *pNode, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> flags, <a class="el" href="structpath__node.html">path_node</a> *pNeighbour, <a class="el" href="th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82">travel_direction</a> direction) override</td></tr>
 <tr class="memdesc:a1863d6f4aab26bb50be4a19b3b42caad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try the <em>pNeighbour</em> node.  <a href="classidle__tile__finder.html#a1863d6f4aab26bb50be4a19b3b42caad">More...</a><br /></td></tr>
 <tr class="separator:a1863d6f4aab26bb50be4a19b3b42caad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96496aa5083eb4a4e67c5e3b7fdb18e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classidle__tile__finder.html#a96496aa5083eb4a4e67c5e3b7fdb18e7">find_idle_tile</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStartY, int iN)</td></tr>
-<tr class="separator:a96496aa5083eb4a4e67c5e3b7fdb18e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acca2aea5aec3d55e9f59d08bc0ca4c28"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classidle__tile__finder.html#acca2aea5aec3d55e9f59d08bc0ca4c28">find_idle_tile</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStartY, int iN, int parcelId)</td></tr>
+<tr class="separator:acca2aea5aec3d55e9f59d08bc0ca4c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classabstract__pathfinder"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classabstract__pathfinder')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classabstract__pathfinder.html">abstract_pathfinder</a></td></tr>
 <tr class="memitem:a1fc8e0082b14b07039a2435d29b9cf91 inherit pub_methods_classabstract__pathfinder"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a1fc8e0082b14b07039a2435d29b9cf91">abstract_pathfinder</a> (<a class="el" href="classpathfinder.html">pathfinder</a> *pf)</td></tr>
 <tr class="separator:a1fc8e0082b14b07039a2435d29b9cf91 inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,8 +159,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a96496aa5083eb4a4e67c5e3b7fdb18e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96496aa5083eb4a4e67c5e3b7fdb18e7">&#9670;&nbsp;</a></span>find_idle_tile()</h2>
+<a id="acca2aea5aec3d55e9f59d08bc0ca4c28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acca2aea5aec3d55e9f59d08bc0ca4c28">&#9670;&nbsp;</a></span>find_idle_tile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -187,7 +187,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>iN</em>&#160;</td>
+          <td class="paramname"><em>iN</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>parcelId</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -196,6 +202,16 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pMap</td><td>Map to search. </td></tr>
+    <tr><td class="paramname">iStartX</td><td>X coordinate of the start position. </td></tr>
+    <tr><td class="paramname">iStartY</td><td>Y coordinate of the start position. </td></tr>
+    <tr><td class="paramname">iN</td><td>Return the Nth idle tile. Used for queueing and randomizing idle tiles. </td></tr>
+    <tr><td class="paramname">parcelId</td><td>Id of the parcel with valid destinations, use <code>0</code> for any parcel. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

@@ -86,8 +86,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab785af8286b19cb0185be21978dec868"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac2c62ad69a164e48df78f61f7337af3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpathfinder.html#aac2c62ad69a164e48df78f61f7337af3">find_path</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStartY, int iEndX, int iEndY)</td></tr>
 <tr class="separator:aac2c62ad69a164e48df78f61f7337af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56157789fa68eb25a2ecccc7e6c74be1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpathfinder.html#a56157789fa68eb25a2ecccc7e6c74be1">find_idle_tile</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStartY, int iN)</td></tr>
-<tr class="separator:a56157789fa68eb25a2ecccc7e6c74be1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6de1a3673da70489fa09478769300512"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpathfinder.html#a6de1a3673da70489fa09478769300512">find_idle_tile</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStartY, int iN, int parcelId)</td></tr>
+<tr class="separator:a6de1a3673da70489fa09478769300512"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa225342cd8e628caa3be28e7bf37bb6d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpathfinder.html#aa225342cd8e628caa3be28e7bf37bb6d">find_path_to_hospital</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStartY)</td></tr>
 <tr class="separator:aa225342cd8e628caa3be28e7bf37bb6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b61004f251463f5dbcc5f77091554f6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpathfinder.html#a9b61004f251463f5dbcc5f77091554f6">visit_objects</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStartY, <a class="el" href="th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82ab">object_type</a> eTHOB, int iMaxDistance, lua_State *L, int iVisitFunction, bool anyObjectType)</td></tr>
@@ -229,8 +229,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a56157789fa68eb25a2ecccc7e6c74be1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56157789fa68eb25a2ecccc7e6c74be1">&#9670;&nbsp;</a></span>find_idle_tile()</h2>
+<a id="a6de1a3673da70489fa09478769300512"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6de1a3673da70489fa09478769300512">&#9670;&nbsp;</a></span>find_idle_tile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -260,7 +260,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>iN</em>&#160;</td>
+          <td class="paramname"><em>iN</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>parcelId</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
