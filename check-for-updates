@@ -1,7 +1,7 @@
 return {
   major = 0,
   minor = 6,
-  revision = 5,
-  changelog_en = 'Fire extinguishers reduce explosions, bigger rooms make staff happier, and plenty more.',
+  revision = 6,
+  changelog_en = 'Visual effects for Serious Radiation and Jellitis, improved hotkey assignment menu and more.',
   download_url = 'http://github.com/CorsixTH/CorsixTH/releases',
 }
