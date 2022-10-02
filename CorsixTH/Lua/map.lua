@@ -835,4 +835,10 @@ function Map:afterLoad(old, new)
     {Value = 0}, -- I_UNEXPECTED_SWELLING
     }
   end
+  if old < 175 then
+    -- Set max salary value for existing saves
+    self.level_config.payroll = {
+      MaxSalary = 2000,
+    }
+  end
 end

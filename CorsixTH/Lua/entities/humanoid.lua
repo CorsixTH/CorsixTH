@@ -737,10 +737,18 @@ end
 --!param amount (number) This amount is added to the existing value for the attribute,
 --  and is then capped to be between 0 and 1.
 function Humanoid:changeAttribute(attribute, amount)
-  -- Receptionist is always 100% happy
-  if self.humanoid_class and self.humanoid_class == "Receptionist" and attribute == "happiness" then
-    self.attributes[attribute] = 1
-    return true
+  -- Handle some happiness special cases
+  if attribute == "happiness" and self.humanoid_class then
+    local max_salary = self.world.map.level_config.payroll.MaxSalary
+    if self.humanoid_class == "Receptionist" then
+      -- A receptionist is never unhappy
+      self.attributes[attribute] = 1
+      return true
+    elseif self.profile and self.profile.wage >= max_salary then
+      -- A maximum salaried staff member is never unhappy
+      self.attributes[attribute] = 1
+      return true
+    end
   end
 
   if self.attributes[attribute] then
