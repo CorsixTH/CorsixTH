@@ -67,9 +67,10 @@ function UIStaffManagement:UIStaffManagement(ui)
   -- Other buttons
   self:addPanel(0, 12, 86):makeButton(0, 0, 31, 74, 2, self.scrollUp):setTooltip(_S.tooltip.staff_list.prev_person)
   self:addPanel(0, 12, 274):makeButton(0, 0, 31, 74, 3, self.scrollDown):setTooltip(_S.tooltip.staff_list.next_person)
-  self:addPanel(0, 319, 372):makeButton(0, 0, 112, 39, 7, self.payBonus):setTooltip(_S.tooltip.staff_list.bonus):setSound() -- custom sound
-  self:addPanel(0, 319, 418):makeButton(0, 0, 112, 39, 8, self.increaseSalary):setTooltip(_S.tooltip.staff_list.pay_rise):setSound() -- custom sound
-  self:addPanel(0, 438, 372):makeButton(0, 0, 45, 85, 9, self.fire):setTooltip(_S.tooltip.staff_list.sack):setSound() -- prevent two sound trigger
+  -- Disable the default sounds on the the following three buttons as their sounds are implemented in the callback.
+  self:addPanel(0, 319, 372):makeButton(0, 0, 112, 39, 7, self.payBonus):setTooltip(_S.tooltip.staff_list.bonus):setSound()
+  self:addPanel(0, 319, 418):makeButton(0, 0, 112, 39, 8, self.increaseSalary):setTooltip(_S.tooltip.staff_list.pay_rise):setSound()
+  self:addPanel(0, 438, 372):makeButton(0, 0, 45, 85, 9, self.fire):setTooltip(_S.tooltip.staff_list.sack):setSound()
 
   -- "Arrow" to show title of doctors
   self.arrow = self:addPanel(12, 259, 397)
