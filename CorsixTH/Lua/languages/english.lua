@@ -761,7 +761,7 @@ totd_window = {
     "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
     "You can adjust some settings such as the resolution and language in the options window found both in the main menu and ingame.",
     "You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
-    "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Forum, Mailing List or IRC Channel (corsix-th at freenode).",
+    "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Discord Server, Sub-Reddit or Matrix Server. Links are on our website (CorsixTH.com).",
     "If you find a bug, please report it at our bugtracker: th-issues.corsix.org",
     "Each level has certain requirements to fulfill before you can move on to the next one. Check the status window to see your progression towards the level goals.",
     "If you want to edit or remove an existing room, you can do so with the edit room button found in the bottom toolbar.",
