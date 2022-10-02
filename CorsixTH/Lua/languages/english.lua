@@ -399,12 +399,14 @@ tooltip.save_map_window = {
 menu_list_window = {
   name = "Name",
   save_date = "Modified",
+  ok = "OK",
   back = "Back",
 }
 
 tooltip.menu_list_window = {
   name = "Click here to sort the list by name",
   save_date = "Click here to sort the list by last modification date",
+  ok = "Confirm choice",
   back = "Close this window",
 }
 
@@ -782,6 +784,10 @@ tooltip.totd_window = {
 
 debug_patient_window = {
   caption = "Debug Patient",
+}
+
+tooltip.debug_patient_window = {
+  item = "Create a debug patient with %s",
 }
 
 cheats_window = {

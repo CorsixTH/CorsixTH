@@ -63,6 +63,13 @@ function UISaveMap:abortName()
   self.new_map_textbox.panel:setLabel(_S.save_map_window.new_map)
 end
 
+--! Updates the textbox to selected file
+--!param label (string) Selected file name
+function UISaveMap:setInputValue(label)
+  local name = string.gsub(label, "%.map$", "")
+  self.new_map_textbox:setText(name)
+end
+
 --! Function called when textbox is confirmed (e.g. by pressing enter)
 function UISaveMap:confirmName()
   local filename = self.new_map_textbox.text

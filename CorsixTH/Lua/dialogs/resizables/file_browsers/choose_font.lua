@@ -57,6 +57,6 @@ end
 function UIChooseFont:close()
   UIResizable.close(self)
   if self.mode == "menu" then
-    self.ui:addWindow(UIOptions(self.ui, self.mode))
+    self.ui:addWindow(UIFolder(self.ui, self.mode))
   end
 end
