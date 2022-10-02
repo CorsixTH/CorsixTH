@@ -583,7 +583,7 @@ end
 function UIStaffManagement:afterLoad(old, new)
   self:registerKeyHandlers()
 
-  if old < 174 then
+  if old < 175 then
     self:close()
   end
 
