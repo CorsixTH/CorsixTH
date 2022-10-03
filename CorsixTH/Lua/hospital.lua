@@ -1680,7 +1680,7 @@ function Hospital:objectPlaced(entity, id)
   end
 
   if id == "plant" then
-    self:msgPlant()
+    self:advisePlants(true)
     return
   end
 
@@ -2381,7 +2381,7 @@ function Hospital:msgMultiReceptionDesks()
 end
 
 --! Give advice to the user about maintenance of plants.
-function Hospital:msgPlant()
+function Hospital:advisePlants()
 end
 
 --! Show the 'Gates to hell' animation.
