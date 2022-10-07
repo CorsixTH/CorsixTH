@@ -66,6 +66,7 @@ function App:App()
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
   self.check_for_updates = true
+  self.idle_tick = 0
 end
 
 --! Starts a Lua DBGp client & connects it to a DBGp server.
@@ -491,6 +492,8 @@ function App:worldExited()
   self.audio:clearCallbacks()
 end
 
+--! Initialise CorsixTH's main menu screen including relevant windows
+--!param message (string) Something to display to the user
 function App:loadMainMenu(message)
   if self.world then
     self:worldExited()
@@ -516,6 +519,9 @@ function App:loadMainMenu(message)
   if message then
     self.ui:addWindow(UIInformation(self.ui, message))
   end
+
+  -- Reset the idle tick counter
+  self:resetIdle()
 end
 
 --! Sets the mouse capture to the state set within
@@ -1154,6 +1160,31 @@ function App:onTick(...)
     self.ui:onTick(...)
   end
   return true -- tick events always result in a repaint
+end
+
+--! Function for handling idle time in the main menu, which leads to playing the
+--! demo gameplay trailer if left long enough
+function App:idle()
+  if not self.config.play_intro then return end
+  -- Check if we are in a proper 'idle' state and solely on the main menu
+  if not self.ui:getWindow(UIMainMenu) or self.ui:getWindow(UIUpdate)
+      or self.ui:getWindow(UIConfirmDialog) then
+    self:resetIdle()
+    return
+  end
+  -- Have we been idle enough (~30s)
+  if self.idle_tick > 1000 then
+    -- User is idle, play the demo gameplay movie
+    self.moviePlayer:playDemoMovie()
+    self:resetIdle()
+  else
+    self.idle_tick = self.idle_tick + 1
+  end
+end
+
+-- Reset the idle count
+function App:resetIdle()
+  self.idle_tick = 0
 end
 
 local fps_history = {} -- Used to average FPS over the last thirty frames

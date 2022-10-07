@@ -96,6 +96,12 @@ function UIMainMenu:draw(canvas, x, y)
     ly = ly - 15
   end
   self.label_font:draw(canvas, _S.main_menu.version .. self.version_number, x + 5, ly, 190, 0, "right")
+  TheApp:idle()
+end
+
+function UIMainMenu:onMouseMove(x, y, dx, dy)
+  TheApp:resetIdle()
+  UIResizable.onMouseMove(self, x, y, dx, dy)
 end
 
 function UIMainMenu:buttonNewGame()
