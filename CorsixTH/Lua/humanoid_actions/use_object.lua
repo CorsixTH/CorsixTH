@@ -112,7 +112,9 @@ local function action_use_next_phase(action, phase)
   return phase
 end
 
--- Compute position of the animated humanoid from the footprint.
+--! Compute the position of the animated humanoid from the footprint.
+--!param action (UseObbjectAction) Action being performed.
+--!param humanoid (Humanoid) Person using the object.
 local function setHumanoidTileSpeed(action, humanoid)
   local object = action.object
   local obj_orient = object.object_type.orientations[object.direction]
@@ -125,7 +127,7 @@ local function setHumanoidTileSpeed(action, humanoid)
     tx, ty = object:getRenderAttachTile()
   end
   if humanoid.humanoid_class == "Handyman" and
-    obj_orient.added_handyman_animate_offset_while_in_use then
+      obj_orient.added_handyman_animate_offset_while_in_use then
     tx = tx + obj_orient.added_handyman_animate_offset_while_in_use[1]
     ty = ty + obj_orient.added_handyman_animate_offset_while_in_use[2]
   end
