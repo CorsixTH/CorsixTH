@@ -130,14 +130,10 @@ local function setHumanoidTileSpeed(action, humanoid)
     ty = ty + obj_orient.added_handyman_animate_offset_while_in_use[2]
   end
 
-  local added_offset = obj_orient.added_animation_offset_while_in_use
   local anim_offset = obj_orient.animation_offset
-  if added_offset then
-    humanoid:setTilePositionSpeed(tx, ty, anim_offset[1] + added_offset[1],
-      anim_offset[2] + added_offset[2])
-  else
-    humanoid:setTilePositionSpeed(tx, ty, anim_offset[1], anim_offset[2])
-  end
+  local added_offset = obj_orient.added_animation_offset_while_in_use or {0, 0}
+  humanoid:setTilePositionSpeed(tx, ty, anim_offset[1] + added_offset[1],
+    anim_offset[2] + added_offset[2])
 end
 
 local action_use_object_tick
