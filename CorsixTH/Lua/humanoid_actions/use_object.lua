@@ -112,6 +112,40 @@ local function action_use_next_phase(action, phase)
   return phase
 end
 
+-- Compute position of the animated humanoid from the footprint.
+local function setHumanoidTileSpeed(action, humanoid)
+  local object = action.object
+
+  local offset = object.object_type.orientations
+  if offset then
+    local tx, ty
+    offset = offset[object.direction]
+    if offset.use_animate_from_use_position then
+      tx, ty = action.old_tile_x, action.old_tile_y
+    else
+      tx, ty = object:getRenderAttachTile()
+    end
+    if humanoid.humanoid_class == "Handyman" and
+      offset.added_handyman_animate_offset_while_in_use then
+      tx = tx + offset.added_handyman_animate_offset_while_in_use[1]
+      ty = ty + offset.added_handyman_animate_offset_while_in_use[2]
+    end
+    local added_offset = nil
+    if offset.added_animation_offset_while_in_use then
+      added_offset = offset.added_animation_offset_while_in_use
+    end
+    offset = offset.animation_offset
+    if added_offset then
+      humanoid:setTilePositionSpeed(tx, ty, offset[1] + added_offset[1],
+        offset[2] + added_offset[2])
+    else
+      humanoid:setTilePositionSpeed(tx, ty, offset[1], offset[2])
+    end
+  else
+    humanoid:setTilePositionSpeed(object.tile_x, object.tile_y, 0, 0)
+  end
+end
+
 local action_use_object_tick
 
 local function action_use_phase(action, humanoid, phase)
@@ -234,34 +268,8 @@ local function action_use_phase(action, humanoid, phase)
     humanoid:setAnimation(anim, flags)
   end
 
-  local offset = object.object_type.orientations
-  if offset then
-    local tx, ty
-    offset = offset[object.direction]
-    if offset.use_animate_from_use_position then
-      tx, ty = action.old_tile_x, action.old_tile_y
-    else
-      tx, ty = object:getRenderAttachTile()
-    end
-    if humanoid.humanoid_class == "Handyman" and
-      offset.added_handyman_animate_offset_while_in_use then
-      tx = tx + offset.added_handyman_animate_offset_while_in_use[1]
-      ty = ty + offset.added_handyman_animate_offset_while_in_use[2]
-    end
-    local added_offset = nil
-    if offset.added_animation_offset_while_in_use then
-      added_offset = offset.added_animation_offset_while_in_use
-    end
-    offset = offset.animation_offset
-    if added_offset then
-      humanoid:setTilePositionSpeed(tx, ty, offset[1] + added_offset[1],
-        offset[2] + added_offset[2])
-    else
-      humanoid:setTilePositionSpeed(tx, ty, offset[1], offset[2])
-    end
-  else
-    humanoid:setTilePositionSpeed(object.tile_x, object.tile_y, 0, 0)
-  end
+  setHumanoidTileSpeed(action, humanoid)
+
   humanoid.user_of = object
   local length = anim_length * humanoid.world:getAnimLength(anim)
   if action.min_length and phase == 0 and action.min_length > length then
