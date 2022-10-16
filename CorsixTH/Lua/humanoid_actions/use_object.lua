@@ -117,27 +117,27 @@ local function setHumanoidTileSpeed(action, humanoid)
   local object = action.object
 
   local tx, ty
-  local offset = object.object_type.orientations[object.direction]
-  if offset.use_animate_from_use_position then
+  local obj_orient = object.object_type.orientations[object.direction]
+  if obj_orient.use_animate_from_use_position then
     tx, ty = action.old_tile_x, action.old_tile_y
   else
     tx, ty = object:getRenderAttachTile()
   end
   if humanoid.humanoid_class == "Handyman" and
-    offset.added_handyman_animate_offset_while_in_use then
-    tx = tx + offset.added_handyman_animate_offset_while_in_use[1]
-    ty = ty + offset.added_handyman_animate_offset_while_in_use[2]
+    obj_orient.added_handyman_animate_offset_while_in_use then
+    tx = tx + obj_orient.added_handyman_animate_offset_while_in_use[1]
+    ty = ty + obj_orient.added_handyman_animate_offset_while_in_use[2]
   end
   local added_offset = nil
-  if offset.added_animation_offset_while_in_use then
-    added_offset = offset.added_animation_offset_while_in_use
+  if obj_orient.added_animation_offset_while_in_use then
+    added_offset = obj_orient.added_animation_offset_while_in_use
   end
-  offset = offset.animation_offset
+  local anim_offset = obj_orient.animation_offset
   if added_offset then
-    humanoid:setTilePositionSpeed(tx, ty, offset[1] + added_offset[1],
-      offset[2] + added_offset[2])
+    humanoid:setTilePositionSpeed(tx, ty, anim_offset[1] + added_offset[1],
+      anim_offset[2] + added_offset[2])
   else
-    humanoid:setTilePositionSpeed(tx, ty, offset[1], offset[2])
+    humanoid:setTilePositionSpeed(tx, ty, anim_offset[1], anim_offset[2])
   end
 end
 
