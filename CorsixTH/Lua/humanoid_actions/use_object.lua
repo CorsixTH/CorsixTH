@@ -115,9 +115,10 @@ end
 -- Compute position of the animated humanoid from the footprint.
 local function setHumanoidTileSpeed(action, humanoid)
   local object = action.object
-
-  local tx, ty
   local obj_orient = object.object_type.orientations[object.direction]
+
+  -- Decide the animation tile.
+  local tx, ty
   if obj_orient.use_animate_from_use_position then
     tx, ty = action.old_tile_x, action.old_tile_y
   else
@@ -128,6 +129,7 @@ local function setHumanoidTileSpeed(action, humanoid)
     tx = tx + obj_orient.added_handyman_animate_offset_while_in_use[1]
     ty = ty + obj_orient.added_handyman_animate_offset_while_in_use[2]
   end
+
   local added_offset = nil
   if obj_orient.added_animation_offset_while_in_use then
     added_offset = obj_orient.added_animation_offset_while_in_use
