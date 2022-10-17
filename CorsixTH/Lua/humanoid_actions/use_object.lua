@@ -79,10 +79,10 @@ local function action_use_next_phase(action, phase)
   if phase == -3 and not action.anims.begin_use_3 then
     phase = phase + 1
   end
-    if phase == -2 and not action.anims.begin_use_4 then
+  if phase == -2 and not action.anims.begin_use_4 then
     phase = phase + 1
   end
-    if phase == -1 and not action.anims.begin_use_5 then
+  if phase == -1 and not action.anims.begin_use_5 then
     phase = phase + 1
   end
   if phase == 0 and not action.anims.in_use then
@@ -97,10 +97,10 @@ local function action_use_next_phase(action, phase)
   if phase == 3 and not action.anims.finish_use_3 then
     phase = phase + 1
   end
-    if phase == 4 and not action.anims.finish_use_4 then
+  if phase == 4 and not action.anims.finish_use_4 then
     phase = phase + 1
   end
-    if phase == 5 and not action.anims.finish_use_5 then
+  if phase == 5 and not action.anims.finish_use_5 then
     phase = phase + 1
   end
   if phase == 6 and not action.do_walk or phase == 6 and action.destroy_user_after_use then
