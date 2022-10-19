@@ -59,9 +59,9 @@ jobs:
 
           # Build catch2
           git clone --quiet https://github.com/catchorg/Catch2 \
-           --branch v2.13.2 --depth=1
+           --branch v3.1.1 --depth=1
           cd Catch2
-          cmake . -Bbuild -DBUILD_TESTING=OFF
+          cmake . -Bbuild
           cd build
           sudo make install
           cd ../../
