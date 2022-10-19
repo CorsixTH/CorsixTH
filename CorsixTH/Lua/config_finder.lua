@@ -414,12 +414,13 @@ unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
 savegames = nil -- [[X:\ThemeHospital\Saves]]
 
 -------------------------------------------------------------------------------
--- Levels. By default, the "Levels" directory alongside this config file will
--- be used for storing new maps / levels in. Should this not be suitable, then
--- uncomment the following line, and point it to a directory which exists and
--- is more suitable.
+-- Levels and Campaigns. By default, the "Levels" and "Campaigns" directory alongside
+-- this config file will be used for storing new maps / levels / campaigns in. Should
+-- this not be suitable, then uncomment the following lines, and point it to a directory
+-- which exists and is more suitable.
 --
 levels = nil -- [[X:\ThemeHospital\Levels]]
+campaigns = nil -- [[X:\ThemeHospital\Campaigns]]
 
 -------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital
