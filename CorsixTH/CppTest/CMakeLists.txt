@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-find_package(Catch2 CONFIG REQUIRED)
+find_package(Catch2 3 CONFIG REQUIRED)
 
 add_custom_target(AllTests)
 
@@ -29,7 +29,7 @@ include_directories(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
 
 add_executable(UnitTests "")
 target_link_libraries(UnitTests
-  Catch2::Catch2
+  Catch2::Catch2WithMain
   CorsixTH_lib
   ${LUA_LIBRARY}
   ${CMAKE_DL_LIBS})
@@ -48,7 +48,6 @@ add_dependencies(AllTests UnitTests)
 # List of all test files
 target_sources(UnitTests
     PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_strings.cpp
 )
