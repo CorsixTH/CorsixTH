@@ -118,7 +118,9 @@ function App:init()
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   self.level_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
+  self.campaign_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Campaigns" .. pathsep
   self:initUserLevelDir()
+  self:initUserCampaignDir()
   self:initSavegameDir()
   self:initScreenshotsDir()
 
@@ -392,6 +394,28 @@ function App:initUserLevelDir()
   end
   if self.user_level_dir:sub(-1, -1) ~= pathsep then
     self.user_level_dir = self.user_level_dir .. pathsep
+  end
+  return true
+end
+
+--! Tries to initialize the user and built in campaign directories, returns true on
+--! success and false on failure.
+function App:initUserCampaignDir()
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  self.user_campaign_dir = self.config.campaigns or
+      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Campaigns"
+
+  if self.user_campaign_dir:sub(-1, -1) == pathsep then
+    self.user_campaign_dir = self.user_campaign_dir:sub(1, -2)
+  end
+  if lfs.attributes(self.user_campaign_dir, "mode") ~= "directory" then
+    if not lfs.mkdir(self.user_campaign_dir) then
+      print("Notice: Campaign directory does not exist and could not be created.")
+      return false
+    end
+  end
+  if self.user_campaign_dir:sub(-1, -1) ~= pathsep then
+    self.user_campaign_dir = self.user_campaign_dir .. pathsep
   end
   return true
 end
