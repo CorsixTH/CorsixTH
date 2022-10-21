@@ -476,6 +476,15 @@ function GameUI:onCursorWorldPositionChange()
   if not overwindow and wx > 0 and wy > 0 and wx < self.app.map.width and wy < self.app.map.height then
     room = self.app.world:getRoom(wx, wy)
   end
+  -- Find the room associated with the current entity (Usually only applies to doors)
+  if entity and not room then
+    if entity.room then
+      room = entity.room
+    elseif entity.object_type and entity.object_type.id == "swing_door_left" then
+      -- Special case to catch the non-dominant side of a double-door
+      room = entity.master.room
+    end
+  end
   if room ~= self.cursor_room then
     -- Unset queue mood for patients queueing the old room
     if self.cursor_room then
