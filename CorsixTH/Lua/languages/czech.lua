@@ -1143,6 +1143,7 @@ tooltip = {
 	shift_scrollspeed = "Nastavte rychlost rolování s shiftem v rozmezí 1 (nejpomalejší) až 10 (nejrychlejší). Výchozí hodnota je 4.",
 	zoom_speed = "Nastavte rychlost přibližování v rozmezí 10 (nejpomalejší) až 1000 (nejrychlejší). Výchozí hodnota je 80.",
 	cancel_zoomspeed = "Neměnit rychlost přibližování.",
+    check_for_updates = "Nastavuje, zda má hra při spuštění kontrolovat aktualizace.",
     },
   update_window = {
     download = "Přejít na stránku stahování pro získání nejnovější verze CorsixTH",
@@ -2757,6 +2758,7 @@ main_menu = {
   continue = "Pokračovat ve hře",
   custom_campaign = "Vlastní kampaň",
   map_edit = "Editor map",
+  updates_off = "Kontrola aktualizací vypnuta",
 }
 letter = {
   [1] = {
@@ -3243,6 +3245,9 @@ options_window = {
   capture_mouse = "Zachytávat myš v okně hry",
   hotkey = "Klávesové zkratky",
   shift_scrollspeed = "Rychlost rolování se shiftem",
+  option_enabled = "Povoleno",
+  option_disabled = "Zakázáno",
+  check_for_updates = "Kontrola aktualizací",
 }
 folders_window = {
   new_th_location = "Zde můžete zadat novou instalační složku Theme Hospital. Jakmile ji zvolíte, hra bude restartována.",
