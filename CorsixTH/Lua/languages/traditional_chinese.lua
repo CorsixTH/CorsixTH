@@ -3006,6 +3006,7 @@ main_menu = {
   options = "選項",
   map_edit = "地圖編輯器",
   savegame_version = "存檔版本：",
+  updates_off = "已停用更新檢查",
   version = "版本：",
   exit = "退出",
 }
@@ -3091,6 +3092,8 @@ options_window = {
   caption = "設定",
   option_on = "開",
   option_off = "關",
+  option_enabled = "已啟用",
+  option_disabled = "已停用",
   fullscreen = "全螢幕",
   resolution = "解析度",
   capture_mouse = "捕獲滑鼠",
@@ -3108,6 +3111,7 @@ options_window = {
   shift_scrollspeed = "加速捲動速度",
   zoom_speed = "縮放速度",
   hotkey = "熱鍵",
+  check_for_updates = "自動檢查更新",
 }
 
 tooltip.options_window = {
@@ -3138,6 +3142,7 @@ tooltip.options_window = {
   apply_zoomspeed = "應用輸入的縮放速度",
   cancel_zoomspeed = "返回而不更改縮放速度",
   hotkey = "更改鍵盤熱鍵",
+  check_for_updates = "遊戲啟動時自動檢查更新",
 }
 
 customise_window = {
