@@ -48,9 +48,9 @@ function UIMainMenu:UIMainMenu(ui)
   }
   self.no_menu_entries = #menu_items
 
-  -- Work out the size of non-false items in array
-  -- param items (list) what is to be checked
-  -- return calculated size
+  --! Work out the size of non-false items in array
+  --!param items (list) what is to be checked
+  --!return calculated size
   local function computeSize(items)
     local size = 0
     for _, item in pairs(items) do
@@ -61,10 +61,10 @@ function UIMainMenu:UIMainMenu(ui)
 
   -- Work out the menu's height, giving extra space for the version information
   local line_height = 15
-  local end_of_menu_items_spacer = 20
+  local top_padding = 20
   local num_lines = computeSize({not ui.app.config.check_for_updates, ui.app.config.debug, TheApp:getVersion()}) -- see UIMainMenu:draw for how these are used
-  local bottom_text_height = (line_height * num_lines) + end_of_menu_items_spacer
-  self.height = ((menu_item_height + 10) * #menu_items) + bottom_text_height
+  local bottom_text_height = (line_height * num_lines)
+  self.height = top_padding + ((menu_item_height + 10) * #menu_items) + bottom_text_height
 
   self:UIResizable(ui, 200, self.height, col_bg)
 
@@ -108,7 +108,7 @@ function UIMainMenu:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
 
-  -- The following strings are declared in reverse order
+  -- The following strings are drawn in reverse order
   local ly = y + self.height - 15
   -- Move the version string up a bit if showing check for updates disabled warning.
   if not TheApp.config.check_for_updates then

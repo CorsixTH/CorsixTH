@@ -1143,7 +1143,7 @@ tooltip = {
 	shift_scrollspeed = "Nastavte rychlost rolování s shiftem v rozmezí 1 (nejpomalejší) až 10 (nejrychlejší). Výchozí hodnota je 4.",
 	zoom_speed = "Nastavte rychlost přibližování v rozmezí 10 (nejpomalejší) až 1000 (nejrychlejší). Výchozí hodnota je 80.",
 	cancel_zoomspeed = "Neměnit rychlost přibližování.",
-    check_for_updates = "Nastavuje, zda má hra při spuštění kontrolovat aktualizace.",
+        check_for_updates = "Nastavuje, zda má hra při spuštění kontrolovat aktualizace.",
     },
   update_window = {
     download = "Přejít na stránku stahování pro získání nejnovější verze CorsixTH",
