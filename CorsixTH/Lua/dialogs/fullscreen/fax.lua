@@ -30,9 +30,8 @@ local UIFax = _G["UIFax"]
 function UIFax:UIFax(ui, icon)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
-  self.background = gfx:loadRaw("Fax01V", 640, 480)
-  local palette = gfx:loadPalette("QData", "Fax01V.pal")
-  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+  self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
+  local palette = gfx:loadPalette("QData", "Fax01V.pal", true)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
   self.fax_font = gfx:loadFont("QData", "Font51V", false, palette)
   self.icon = icon
@@ -287,6 +286,13 @@ function UIFax:close()
 end
 
 function UIFax:afterLoad(old, new)
+  if old < 176 then
+    local gfx = TheApp.gfx
+    self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
+    local palette = gfx:loadPalette("QData", "Fax01V.pal", true)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
+    self.fax_font = gfx:loadFont("QData", "Font51V", false, palette)
+  end
   UIFullscreen.afterLoad(self, old, new)
   if old < 59 then
     -- self.choice_buttons added, changes to disabled buttons.

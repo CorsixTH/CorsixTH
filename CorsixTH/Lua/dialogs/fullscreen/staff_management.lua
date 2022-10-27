@@ -30,9 +30,8 @@ function UIStaffManagement:UIStaffManagement(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   if not pcall(function()
-    self.background = gfx:loadRaw("Staff01V", 640, 480)
-    local palette = gfx:loadPalette("QData", "Staff01V.pal")
-    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    self.background = gfx:loadRaw("Staff01V", 640, 480, "QData", "QData", "Staff01V.pal", true)
+    local palette = gfx:loadPalette("QData", "Staff01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette)
     self.title_font = gfx:loadFont("QData", "Font01V", false, palette)
     self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
@@ -586,6 +585,13 @@ function UIStaffManagement:afterLoad(old, new)
 
   if old < 175 then
     self:close()
+  end
+  if old < 176 then
+    local gfx = TheApp.gfx
+    self.background = gfx:loadRaw("Staff01V", 640, 480, "QData", "QData", "Staff01V.pal", true)
+    local palette = gfx:loadPalette("QData", "Staff01V.pal", true)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette)
+    self.title_font = gfx:loadFont("QData", "Font01V", false, palette)
   end
 
   UIFullscreen.afterLoad(self, old, new)
