@@ -23,11 +23,17 @@ class "SeekReceptionAction" (HumanoidAction)
 ---@type SeekReceptionAction
 local SeekReceptionAction = _G["SeekReceptionAction"]
 
--- distance from queue that patient can join a reception desk queue
+-- Distance from queue that patient can join a reception desk queue.
 local can_join_queue_distance = 6
 
-function SeekReceptionAction:SeekReceptionAction()
+-- Number of tile traversals to keep before reaching a hospital.
+local min_street_length = 32
+
+--! Seek the reception of the hospital for registration.
+--!param trim_head If true, trim the first part of the path to the hospital.
+function SeekReceptionAction:SeekReceptionAction(trim_head)
   self:HumanoidAction("seek_reception")
+  self.trim_head = not not trim_head
 end
 
 --! Can the humanoid join the reception queue at the given position?
@@ -58,6 +64,82 @@ local function trimQueuingTail(humanoid, path_x, path_y)
     end
   end
   return
+end
+
+--! Get size of a tile in screen pixels.
+--!return ({xsize, ysize}) Size of a tile in pixels.
+local function getTileSize()
+  local ui = TheApp.ui
+
+  local _, top_y = ui:WorldToScreen(1, 1)
+  local _, bottom_y = ui:WorldToScreen(2, 2)
+  local left_x, _ = ui:WorldToScreen(1, 2)
+  local right_x, _ = ui:WorldToScreen(2, 1)
+  return {right_x - left_x, bottom_y - top_y}
+end
+
+--! Decide whether the tile with its top at (tile_top_x, tile_top_y) is
+--  at least partially visible.
+--!param tile_top_x (int) screen X coordinate of the top of the tile.
+--!param tile_top_y (int) screen Y coordinate of the top of the tile.
+--!param tile_size (array of ints) Size of a tile in screen pixels.
+--!param scr_size (array of ints) Size of the screen in pixels.
+--!return Whether the tile is at least partly visible at the screen.
+local function isTileOnScreen(tile_top_x, tile_top_y, tile_size, scr_size)
+  if tile_top_y + tile_size[2] < 0 then return false end
+  if tile_top_y >= scr_size[2] then return false end
+  if tile_top_x + tile_size[1] / 2 < 0 then return false end
+  return not (tile_top_x - tile_size[1] / 2 >= scr_size[1])
+end
+
+--! Remove some tiles from the start of the path with tiles that are not
+--  visible at the screen.
+--!param humanoid (Humanoid) Humanoid walking the path
+--!param path_x (array int) X coordinates of the path, modified in-place.
+--!param path_y (array int) Y coordinates of the path, modified in-place.
+local function trimInvisibleHead(humanoid, path_x, path_y)
+  local scr_size = {TheApp.config.width, TheApp.config.height}
+  local tile_size = getTileSize()
+
+  -- Find the first tile in a hospital on the path.
+  local hospital_tile_index = 1 -- Default safe value.
+  local map_th = humanoid.world.map.th
+  for i = 1, #path_x do
+    if map_th:getCellFlags(path_x[i], path_y[i]).hospital then
+      hospital_tile_index = i
+      break
+    end
+  end
+  -- Biggest index to keep for the minimum required path length into the hospital.
+  local index_to_keep = hospital_tile_index - min_street_length
+
+  -- Find the first visible tile of the path.
+  local ui = TheApp.ui
+  for i = 1, index_to_keep - 1 do
+    local tile_top_x, tile_top_y = ui:WorldToScreen(path_x[i], path_y[i])
+    if isTileOnScreen(tile_top_x, tile_top_y, tile_size, scr_size) then
+      index_to_keep = math.max(1, i - 1) -- On-screen tile is also a tile to keep.
+      break
+    end
+  end
+
+  -- Trim head of the path if necessary.
+  if index_to_keep > 1 then
+    local d = 1
+    for j = index_to_keep, #path_x do
+      path_x[d] = path_x[j]
+      path_y[d] = path_y[j]
+      d = d + 1
+      path_x[j] = nil
+      path_y[j] = nil
+    end
+
+    while d < index_to_keep do -- Also delete any remaining skipped part.
+      path_x[d] = nil
+      path_y[d] = nil
+      d = d + 1
+    end
+  end
 end
 
 -- Start of the seek-reception action.
@@ -116,6 +198,9 @@ local function action_seek_reception_start(action, humanoid)
       humanoid:queueAction(walk, 0)
 
       trimQueuingTail(humanoid, walk.path_x, walk.path_y)
+      if action.trim_head then
+        trimInvisibleHead(humanoid, walk.path_x, walk.path_y)
+      end
       walk.x = walk.path_x[#walk.path_x]
       walk.y = walk.path_y[#walk.path_x]
     end
