@@ -30,6 +30,12 @@ function SeekReceptionAction:SeekReceptionAction()
   self:HumanoidAction("seek_reception")
 end
 
+--! Can the humanoid join the reception queue at the given position?
+--!param humanoid (Humanoid) Humanoid going to the reception.
+--!param x (int) X coordinate of the tile to consider.
+--!param y (int) Y coordinate of the tile to consider.
+--!param dist (int) Distance of the tile to the reception.
+--!return (bool) Whether the humanoid can start queueing.
 local function can_join_queue_at(humanoid, x, y, dist)
   local flag_cache = humanoid.world.map.th:getCellFlags(x, y)
   return flag_cache.hospital and not flag_cache.room and
@@ -37,6 +43,24 @@ local function can_join_queue_at(humanoid, x, y, dist)
       flag_cache.owner == humanoid.hospital:getPlayerIndex()
 end
 
+--! Trim the last part of the path when it is possible to join the reception queue.
+--!param humanoid Humanoid that will walk the path.
+--!param path_x (array of int) X coordinates of the path, modified in-place.
+--!param path_y (array of int) Y coordinates of the path, modified in-place.
+local function trimQueuingTail(humanoid, path_x, path_y)
+  local pathindex = #path_x
+  for i = pathindex - 1, 2, -1 do
+    if can_join_queue_at(humanoid, path_x[i], path_y[i], pathindex - i) then
+      path_x[i + 1] = nil
+      path_y[i + 1] = nil
+    else
+      break
+    end
+  end
+  return
+end
+
+-- Start of the seek-reception action.
 local function action_seek_reception_start(action, humanoid)
   local world = humanoid.world
   local best_desk
@@ -91,18 +115,9 @@ local function action_seek_reception_start(action, humanoid)
       local walk = WalkAction(x, y):setMustHappen(action.must_happen)
       humanoid:queueAction(walk, 0)
 
-      -- Trim the walk to finish once it is possible to join the queue
-      local pathindex = #walk.path_x
-      for i = pathindex - 1, 2, -1 do
-        if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i], pathindex - i) then
-          walk.path_x[i + 1] = nil
-          walk.path_y[i + 1] = nil
-          walk.x = walk.path_x[i]
-          walk.y = walk.path_y[i]
-        else
-          break
-        end
-      end
+      trimQueuingTail(humanoid, walk.path_x, walk.path_y)
+      walk.x = walk.path_x[#walk.path_x]
+      walk.y = walk.path_y[#walk.path_x]
     end
     humanoid.hospital:msgMultiReceptionDesks()
 
