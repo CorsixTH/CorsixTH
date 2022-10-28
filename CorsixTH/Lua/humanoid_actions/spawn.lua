@@ -74,6 +74,9 @@ end)
 local function action_spawn_start(action, humanoid)
   assert(action.mode == "spawn" or action.mode == "despawn", "spawn action given invalid mode: " .. action.mode)
   local x, y = action.point.x, action.point.y
+
+  -- For despawning, insert a walk to the despawning position if the humanoid is
+  -- not there.
   if action.mode == "despawn" and (humanoid.tile_x ~= x or humanoid.tile_y ~= y) then
     humanoid:queueAction(WalkAction(action.point.x, action.point.y):setMustHappen(action.must_happen), 0)
     return
@@ -94,13 +97,13 @@ local function action_spawn_start(action, humanoid)
   assert(offset_x > 0 and offset_y > 0, "Spawning needs to be done from an adjacent tile.")
   local anim, flag, speed_x, speed_y, duration
   if walk_dir == "east" then
-    anim, flag, speed_x, speed_y, duration = anims.walk_east , 0,  4,  2, 10*offset_x
+    anim, flag, speed_x, speed_y, duration = anims.walk_east , 0,  4,  2, 10 * offset_x
   elseif walk_dir == "west" then
-    anim, flag, speed_x, speed_y, duration = anims.walk_north, 1, -4, -2, 10*offset_x
+    anim, flag, speed_x, speed_y, duration = anims.walk_north, 1, -4, -2, 10 * offset_x
   elseif walk_dir == "south" then
-    anim, flag, speed_x, speed_y, duration = anims.walk_east , 1, -4,  2, 10*offset_y
+    anim, flag, speed_x, speed_y, duration = anims.walk_east , 1, -4,  2, 10 * offset_y
   else--if walk_dir == "north" then
-    anim, flag, speed_x, speed_y, duration = anims.walk_north, 0,  4, -2, 10*offset_y
+    anim, flag, speed_x, speed_y, duration = anims.walk_north, 0,  4, -2, 10 * offset_y
   end
   humanoid.last_move_direction = walk_dir
   humanoid:setAnimation(anim, flag)
