@@ -513,7 +513,7 @@ function World:spawnPatient(hospital)
   local patient = self:newEntity("Patient", 2)
   patient:setDisease(disease)
   patient:setNextAction(SpawnAction("spawn", spawn_point))
-  patient:setHospital(hospital)
+  patient:setHospital(hospital, true)
   return patient
 end
 
@@ -541,7 +541,7 @@ function World:spawnVIP(name)
   vip:setHospital(hospital)
   vip:updateDynamicInfo()
   hospital:onSpawnVIP()
-  vip:queueAction(SeekReceptionAction())
+  vip:queueAction(SeekReceptionAction(true))
 end
 
 --! Perform actions to simulate an active earthquake.

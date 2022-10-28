@@ -200,13 +200,14 @@ end
 -- hospital if they already belong to one. For player hospitals, patients who
 -- are not debug or emergency patients are made to seek a reception desk.
 --!param hospital (Hospital): hospital to assign to patient
-function Patient:setHospital(hospital)
+--!param trim_path_head If set, trim an invisible part of the path to the hospital.
+function Patient:setHospital(hospital, trim_path_head)
   if self.hospital then
     self.hospital:removePatient(self)
   end
   Humanoid.setHospital(self, hospital)
   if hospital.is_in_world and not self.is_debug and not self.is_emergency then
-    self:setNextAction(SeekReceptionAction())
+    self:setNextAction(SeekReceptionAction(trim_path_head))
   end
   hospital:addPatient(self)
 end
