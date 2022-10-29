@@ -89,7 +89,7 @@ local function isTileOnScreen(tile_top_x, tile_top_y, tile_size, scr_size)
   if tile_top_y + tile_size[2] < 0 then return false end
   if tile_top_y >= scr_size[2] then return false end
   if tile_top_x + tile_size[1] / 2 < 0 then return false end
-  return not (tile_top_x - tile_size[1] / 2 >= scr_size[1])
+  return tile_top_x - tile_size[1] / 2 < scr_size[1]
 end
 
 --! Remove some tiles from the start of the path with tiles that are not
