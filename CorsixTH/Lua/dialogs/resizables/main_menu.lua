@@ -47,7 +47,26 @@ function UIMainMenu:UIMainMenu(ui)
     {_S.main_menu.exit,            self.buttonExit,           _S.tooltip.main_menu.exit}
   }
   self.no_menu_entries = #menu_items
-  self:UIResizable(ui, 200, (menu_item_height + 10) * (#menu_items + 1), col_bg)
+
+  --! Work out the size of non-false items in array
+  --!param items (list) what is to be checked
+  --!return calculated size
+  local function computeSize(items)
+    local size = 0
+    for _, item in pairs(items) do
+      size = item and (size + 1) or size
+    end
+    return size
+  end
+
+  -- Work out the menu's height, giving extra space for the version information
+  local line_height = 15
+  local top_padding = 20
+  local num_lines = computeSize({not ui.app.config.check_for_updates, ui.app.config.debug, TheApp:getVersion()}) -- see UIMainMenu:draw for how these are used
+  local bottom_text_height = (line_height * num_lines)
+  self.height = top_padding + ((menu_item_height + 10) * #menu_items) + bottom_text_height
+
+  self:UIResizable(ui, 200, self.height, col_bg)
 
   self.esc_closes = false
   self.modal_class = "main menu"
@@ -89,8 +108,14 @@ function UIMainMenu:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
 
-  -- Move the version string up a bit if also showing the savegame version.
-  local ly = y + (menu_item_height + 10) * (self.no_menu_entries + 1) - 15
+  -- The following strings are drawn in reverse order
+  local ly = y + self.height - 15
+  -- Move the version string up a bit if showing check for updates disabled warning.
+  if not TheApp.config.check_for_updates then
+    self.label_font:draw(canvas, _S.main_menu.updates_off, x + 5, ly, 190, 0, "right")
+    ly = ly - 15
+  end
+  -- Move if also showing the savegame version.
   if TheApp.config.debug then
     self.label_font:draw(canvas, _S.main_menu.savegame_version .. TheApp.savegame_version, x + 5, ly, 190, 0, "right")
     ly = ly - 15

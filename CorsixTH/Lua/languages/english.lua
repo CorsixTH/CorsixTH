@@ -328,6 +328,7 @@ main_menu = {
   options = "Settings",
   map_edit = "Map Editor",
   savegame_version = "Savegame version: ",
+  updates_off = "Not checking for updates",
   version = "Version: ",
   exit = "Exit",
 }
@@ -414,6 +415,8 @@ options_window = {
   caption = "Settings",
   option_on = "On",
   option_off = "Off",
+  option_enabled = "Enabled",
+  option_disabled = "Disabled",
   fullscreen = "Fullscreen",
   resolution = "Resolution",
   capture_mouse = "Capture Mouse",
@@ -431,6 +434,7 @@ options_window = {
   shift_scrollspeed = "Shift Scroll Speed",
   zoom_speed = "Zoom Speed",
   hotkey = "Hotkeys",
+  check_for_updates = "Check for Updates",
 }
 
 tooltip.options_window = {
@@ -461,6 +465,7 @@ tooltip.options_window = {
   apply_zoomspeed = "Apply the entered zoom speed.",
   cancel_zoomspeed = "Return without changing the zoom speed.",
   hotkey = "Change keyboard hotkeys.",
+  check_for_updates = "Sets whether the game should look for updates on launch.",
 }
 
 customise_window = {
