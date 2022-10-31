@@ -57,8 +57,8 @@ local cursors_name = {
   banksummary = 44,
 }
 local cursors_palette = {
-  [36] = "bank01v.pal",
-  [44] = "stat01v.pal",
+  [36] = "Bank01V.pal",
+  [44] = "Stat01V.pal",
 }
 
 function Graphics:Graphics(app)
@@ -159,8 +159,7 @@ function Graphics:loadMainCursor(id)
     id = cursors_name[id]
   end
   if id > 20 then -- SPointer cursors
-    local cursor_palette = self:loadPalette("QData", cursors_palette[id])
-    cursor_palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    local cursor_palette = self:loadPalette("QData", cursors_palette[id], true)
     return self:loadCursor(self:loadSpriteTable("QData", "SPointer", false, cursor_palette), id - 20)
   else
     return self:loadCursor(self:loadSpriteTable("Data", "MPointer"), id)
@@ -228,9 +227,19 @@ local function makeGreyscaleGhost(pal)
   return table.concat(remap, "", 0, 255)
 end
 
-function Graphics:loadPalette(dir, name)
+--! Load a palette file
+--!param dir (string) The directory of the palette relative to the HOSPITAL directory
+--!param name (string) The name of the palette file
+--!param transparent_255 (boolean) Whether the 255th entry in the palette should be transparent
+--!return (palette, string) The palette and a string representing the palette converted to greyscale
+function Graphics:loadPalette(dir, name, transparent_255)
   name = name or "MPalette.dat"
   if self.cache.palette[name] then
+    local li = self.load_info[self.cache.palette[name]]
+    if li and li[5] ~= transparent_255 then
+      print("Warning: palette " .. name .. " requested with different flags than stored")
+    end
+
     return self.cache.palette[name],
       self.cache.palette_greyscale_ghost[name]
   end
@@ -238,9 +247,12 @@ function Graphics:loadPalette(dir, name)
   local data = self.app:readDataFile(dir or "Data", name)
   local palette = TH.palette()
   palette:load(data)
+  if transparent_255 then
+    palette:setEntry(255, 0xFF, 0x00, 0xFF)
+  end
   self.cache.palette_greyscale_ghost[name] = makeGreyscaleGhost(data)
   self.cache.palette[name] = palette
-  self.load_info[palette] = {self.loadPalette, self, dir, name}
+  self.load_info[palette] = {self.loadPalette, self, dir, name, transparent_255}
   return palette, self.cache.palette_greyscale_ghost[name]
 end
 
@@ -254,7 +266,16 @@ function Graphics:loadGhost(dir, name, index)
   return cached:sub(index * 256 + 1, index * 256 + 256)
 end
 
-function Graphics:loadRaw(name, width, height, dir, paldir, pal)
+--! Load a bitmap from a dat file and palette
+--!
+--!param name (string) The file name of the bitmap without the .dat extension
+--!param width (int) The width of the bitmap. Defaults to 640
+--!param height (int) The height of the bitmap. Defaults to 480
+--!param dir (string) The directory of the bitmap. Defaults to QData
+--!param paldir (string) The directory of the palette.
+--!param pal (string) The name of the palette
+--!param transparent_255 (boolean) Whether the 255th entry of the palette should be transparent
+function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255)
   if self.cache.raw[name] then
     return self.cache.raw[name]
   end
@@ -262,16 +283,13 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal)
   width = width or 640
   height = height or 480
   dir = dir or "QData"
+  paldir = paldir or dir
+  pal = pal or (name .. ".pal")
   local data = self.app:readDataFile(dir, name .. ".dat")
   data = data:sub(1, width * height)
 
   local bitmap = TH.bitmap()
-  local palette
-  if pal and paldir then
-    palette = self:loadPalette(paldir, pal)
-  else
-    palette = self:loadPalette(dir, name .. ".pal")
-  end
+  local palette = self:loadPalette(paldir, pal, transparent_255)
   bitmap:setPalette(palette)
   assert(bitmap:load(data, width, self.target))
 

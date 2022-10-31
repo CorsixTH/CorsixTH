@@ -51,13 +51,12 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   self.rep_amount = 0
 
   if not pcall(function()
-    local palette   = gfx:loadPalette("QData", "Award02V.pal")
-    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    local palette = gfx:loadPalette("QData", "Award02V.pal", true)
 
     -- Right now the statistics are first
     --self.background = gfx:loadRaw("Fame01V", 640, 480)
     self.award_background = gfx:loadRaw("Award01V", 640, 480)
-    self.stat_background = gfx:loadRaw("Award02V", 640, 480)
+    self.stat_background = gfx:loadRaw("Award02V", 640, 480, "QData", "QData", "Award02V.pal", true)
     self.background = self.stat_background
 
     self.stat_font = gfx:loadFont("QData", "Font45V", false, palette)
@@ -636,4 +635,21 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
     font:draw(canvas, string.format("%.0f", self.value_sort[index_v2].value), x + 240 + col_x,
         y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1), 70, 0, "right")
   end
+end
+
+function UIAnnualReport:afterLoad(old, new)
+  if old < 176 then
+    local gfx = TheApp.gfx
+
+    local palette = gfx:loadPalette("QData", "Award02V.pal", true)
+    self.award_background = gfx:loadRaw("Award01V", 640, 480)
+    self.stat_background = gfx:loadRaw("Award02V", 640, 480, "QData", "QData", "Award02V.pal", true)
+    self.background = self.stat_background
+    self.stat_font = gfx:loadFont("QData", "Font45V", false, palette)
+    self.write_font = gfx:loadFont("QData", "Font47V", false, palette)
+    self.stone_font = gfx:loadFont("QData", "Font46V", false, palette)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Award03V", true, palette)
+  end
+
+  UIFullscreen.afterLoad(self, old, new)
 end

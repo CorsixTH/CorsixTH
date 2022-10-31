@@ -34,10 +34,9 @@ function UITownMap:UITownMap(ui)
   self.app = app
 
   if not pcall(function()
-    local palette   = gfx:loadPalette("QData", "Town01V.pal")
-    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    local palette = gfx:loadPalette("QData", "Town01V.pal", true)
 
-    self.background = gfx:loadRaw("Town01V", 640, 480)
+    self.background = gfx:loadRaw("Town01V", 640, 480, "QData", "QData", "Town01V.pal", true)
     self.info_font  = gfx:loadFont("QData", "Font34V", false, palette)
     self.city_font = gfx:loadFont("QData", "Font31V", false, palette)
     self.money_font = gfx:loadFont("QData", "Font05V")
@@ -344,4 +343,17 @@ function UITownMap:bankStats()
   dlg:showStatistics()
   self.ui:addWindow(dlg)
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
+end
+
+function UITownMap:afterLoad(old, new)
+  if old < 176 then
+    local gfx = TheApp.gfx
+    local palette = gfx:loadPalette("QData", "Town01V.pal", true)
+    self.background = gfx:loadRaw("Town01V", 640, 480, "QData", "QData", "Town01V.pal", true)
+    self.info_font = gfx:loadFont("QData", "Font34V", false, palette)
+    self.city_font = gfx:loadFont("QData", "Font31V", false, palette)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Town02V", true, palette)
+  end
+
+  UIFullscreen.afterLoad(self, old, new)
 end

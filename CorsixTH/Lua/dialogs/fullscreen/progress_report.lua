@@ -32,11 +32,10 @@ function UIProgressReport:UIProgressReport(ui)
   local gfx   = ui.app.gfx
 
   if not pcall(function()
-    local palette   = gfx:loadPalette("QData", "Rep01V.pal")
-    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
 
-    self.background = gfx:loadRaw("Rep01V", 640, 480)
-    self.red_font  = gfx:loadFont("QData", "Font101V", false, palette)
+    self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
+    self.red_font = gfx:loadFont("QData", "Font101V", false, palette)
     self.normal_font = gfx:loadFont("QData", "Font100V", false, palette)
     self.small_font = gfx:loadFont("QData", "Font106V")
     self.panel_sprites = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
@@ -231,4 +230,19 @@ function UIProgressReport:draw(canvas, x, y)
   self.small_font:draw(canvas, _S.progress_report.win_criteria:upper(), x + 263, y + 172)
   self.small_font:draw(canvas, _S.progress_report.percentage_pop:upper() .. " " ..
       (hospital.population * 100) .. "%", x + 450, y + 65)
+end
+
+function UIProgressReport:afterLoad(old, new)
+  if old < 176 then
+    local gfx = TheApp.gfx
+
+    local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
+    self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
+    self.red_font = gfx:loadFont("QData", "Font101V", false, palette)
+    self.normal_font = gfx:loadFont("QData", "Font100V", false, palette)
+    self.small_font = gfx:loadFont("QData", "Font106V")
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+  end
+
+  UIFullscreen.afterLoad(self, old, new)
 end
