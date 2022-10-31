@@ -63,10 +63,10 @@ the other Lua code.
  <a href="_0_1_graphics.html#_0_1_graphics_1load_menu_font">loadMenuFont</a>()
  </li>
  <li class="self">
- <a href="_0_1_graphics.html#_0_1_graphics_1load_palette">loadPalette</a>(<span class="p">dir</span>, <span class="p">name</span>)
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_palette">loadPalette</a>(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">transparent_255</span>)
  </li>
  <li class="self">
- <a href="_0_1_graphics.html#_0_1_graphics_1load_raw">loadRaw</a>(<span class="p">name</span>, <span class="p">width</span>, <span class="p">height</span>, <span class="p">dir</span>, <span class="p">paldir</span>, <span class="p">pal</span>)
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_raw">loadRaw</a>(<span class="p">name</span>, <span class="p">width</span>, <span class="p">height</span>, <span class="p">dir</span>, <span class="p">paldir</span>, <span class="p">pal</span>, <span class="p">transparent_255</span>)
  </li>
  <li class="self">
  <a href="_0_1_graphics.html#_0_1_graphics_1load_sprite_table">loadSpriteTable</a>(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">complex</span>, <span class="p">palette</span>)
@@ -134,7 +134,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L316">line 316 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L334">line 334 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -154,13 +154,13 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L456">line 456 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L474">line 474 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_builtin_font">function Graphics:loadBuiltinFont()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L291">line 291 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L309">line 309 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -190,7 +190,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L170">line 170 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L169">line 169 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -220,7 +220,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L409">line 409 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L427">line 427 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -253,7 +253,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L247">line 247 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L259">line 259 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -278,7 +278,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L384">line 384 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L402">line 402 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -300,67 +300,79 @@ the other Lua code.
  <h5><a name="_0_1_graphics_1load_menu_font">function Graphics:loadMenuFont()</a></h5>
  <p>
  Utility function to return preferred font for main menu ui<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L373">line 373 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L391">line 391 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_graphics_1load_palette">function Graphics:loadPalette(<span class="p">dir</span>, <span class="p">name</span>)</a></h5>
+ <h5><a name="_0_1_graphics_1load_palette">function Graphics:loadPalette(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">transparent_255</span>)</a></h5>
  <p>
+ Load a palette file<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">dir</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The directory of the palette relative to the HOSPITAL directory</td>
  </tr>
  <tr>
  <td class="n">name</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The name of the palette file</td>
+ </tr>
+ <tr>
+ <td class="n">transparent_255</td>
+ <td class="t">boolean</td>
+ <td class="d"> Whether the 255th entry in the palette should be transparent</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L231">line 231 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L230">line 230 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_graphics_1load_raw">function Graphics:loadRaw(<span class="p">name</span>, <span class="p">width</span>, <span class="p">height</span>, <span class="p">dir</span>, <span class="p">paldir</span>, <span class="p">pal</span>)</a></h5>
+ <h5><a name="_0_1_graphics_1load_raw">function Graphics:loadRaw(<span class="p">name</span>, <span class="p">width</span>, <span class="p">height</span>, <span class="p">dir</span>, <span class="p">paldir</span>, <span class="p">pal</span>, <span class="p">transparent_255</span>)</a></h5>
  <p>
+ Load a bitmap from a dat file and palette<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">name</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The file name of the bitmap without the .dat extension</td>
  </tr>
  <tr>
  <td class="n">width</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">int</td>
+ <td class="d"> The width of the bitmap. Defaults to 640</td>
  </tr>
  <tr>
  <td class="n">height</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">int</td>
+ <td class="d"> The height of the bitmap. Defaults to 480</td>
  </tr>
  <tr>
  <td class="n">dir</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The directory of the bitmap. Defaults to QData</td>
  </tr>
  <tr>
  <td class="n">paldir</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The directory of the palette.</td>
  </tr>
  <tr>
  <td class="n">pal</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The name of the palette</td>
+ </tr>
+ <tr>
+ <td class="n">transparent_255</td>
+ <td class="t">boolean</td>
+ <td class="d"> Whether the 255th entry of the palette should be transparent</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L257">line 257 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L269">line 269 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -390,13 +402,13 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L502">line 502 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L520">line 520 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1on_change_language">function Graphics:onChangeLanguage()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L351">line 351 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L369">line 369 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -411,7 +423,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L528">line 528 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L546">line 546 of Lua/graphics.lua</a>.
  </p>
  </div>
 </div>
