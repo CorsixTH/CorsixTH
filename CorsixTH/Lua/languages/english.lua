@@ -219,10 +219,10 @@ menu_debug_overlay = {
   parcel                      = "  PARCEL  ",
 }
 menu_player_count = {
-	players_1 = "  1 PLAYER  ",
-	players_2 = "  2 PLAYERS  ",
-	players_3 = "  3 PLAYERS  ",
-	players_4 = "  4 PLAYERS  ",
+  players_1 = "  1 PLAYER  ",
+  players_2 = "  2 PLAYERS  ",
+  players_3 = "  3 PLAYERS  ",
+  players_4 = "  4 PLAYERS  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",

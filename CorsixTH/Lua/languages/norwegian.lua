@@ -434,7 +434,7 @@ tooltip = {
     quit               = "Du er på vei til å avslutte spillet. Er du sikker på at du vil dette?",
     options     = "Endre spillets innstillinger",
     exit       = "Nei, nei, vær så snill, ikke avslutt!",
-	load_menu = {
+    load_menu = {
       load_slot        = "  SPILL [slotnumber]  ", -- NB: no %d! Append " [slotnumber]".
       empty_slot       = "  TOM  ",
     },

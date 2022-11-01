@@ -398,7 +398,7 @@ function UIGraphs:draw(canvas, x, y)
   if stats_stepsize >= 12 then
     -- Display years
     local year_number = math.floor((#self.hospital.statistics - 1) / stats_stepsize)
-	local year_steps = math.floor(stats_stepsize / 12)
+    local year_steps = math.floor(stats_stepsize / 12)
     year_number = year_number * year_steps
     for i = 1, #self.values do
       self.black_font:drawWrapped(canvas, year_number, xpos, y + BOTTOM_Y + 10, 25, "center")
