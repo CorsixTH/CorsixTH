@@ -3262,10 +3262,10 @@ map_editor_window = {
 }
 menu["player_count"] = "LICZBA GRACZY"
 menu_player_count = {
-	players_1 = "  1 GRACZ  ",
-	players_2 = "  2 GRACZY  ",
-	players_3 = "  3 GRACZY  ",
-	players_4 = "  4 GRACZY  ",
+  players_1 = "  1 GRACZ  ",
+  players_2 = "  2 GRACZY  ",
+  players_3 = "  3 GRACZY  ",
+  players_4 = "  4 GRACZY  ",
 }
 
 

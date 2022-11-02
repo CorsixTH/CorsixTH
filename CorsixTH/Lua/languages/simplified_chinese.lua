@@ -3173,10 +3173,10 @@ menu_debug_overlay = {
   parcel                      = "  地区  ",
 }
 menu_player_count = {
-	players_1 = "  1 玩家  ",
-	players_2 = "  2 玩家  ",
-	players_3 = "  3 玩家  ",
-	players_4 = "  4 玩家  ",
+  players_1 = "  1 玩家  ",
+  players_2 = "  2 玩家  ",
+  players_3 = "  3 玩家  ",
+  players_4 = "  4 玩家  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "在这个地方放置房间会导致医院的部分空间无法到达。",
