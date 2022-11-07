@@ -398,40 +398,32 @@ function App:initGamelogFile()
   fi:close()
 end
 
---! Tries to initialize the user and built in level directories, returns true on
---! success and false on failure.
+--! Tries to initialize the user level and campaign directories
 -- TODO: Integrate other directory initialisations into this function
 function App:initUserDirectories()
   local conf_path = self.command_line["config-file"] or "config.txt"
 
-  --! Attempt to set the user's directory choice
-  --!param dir (path) The defined path of the folder by the user
-  --!param label (string) What folder is being set, for the error dialogue
-  --!return The fully qualified path
+  -- Attempt to set the user's directory choice
+  -- param dir (path) The defined path of the folder by the user
+  -- param label (string) What folder was being set if there was an error
+  -- return The fully qualified path
   local function setUserDir(dir, label)
-    if dir:sub(-1, -1) == pathsep then
-      dir = dir:sub(1, -2)
+    dir = dir:sub(-1, -1) == pathsep and dir:sub(1, -2) or dir
+    if lfs.attributes(dir, "mode") ~= "directory" and not lfs.mkdir(dir) then
+      -- A failed directory creation does not result in a crash. But the user may lose
+      -- the ability to load/save properly.
+      print("Warning: " .. label .. " directory does not exist and could not be created.")
     end
-    if lfs.attributes(dir, "mode") ~= "directory" then
-      if not lfs.mkdir(dir) then
-        print("Notice:" .. label .. "directory does not exist and could not be created.")
-        return false -- Force game exit
-      end
-    end
-    if dir:sub(-1, -1) ~= pathsep then
-     dir = dir .. pathsep
-    end
+    dir = dir:sub(-1, -1) ~= pathsep and dir .. pathsep or dir
     return dir
   end
 
   self.user_level_dir = self.config.levels or
       conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Levels"
-  self.user_level_dir = setUserDir(self.user_level_dir, "Levels")
+  self.user_level_dir = setUserDir(self.user_level_dir, "User Levels")
   self.user_campaign_dir = self.config.campaigns or
       conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Campaigns"
-  self.user_campaign_dir = setUserDir(self.user_campaign_dir, "Campaigns")
-
-  return true
+  self.user_campaign_dir = setUserDir(self.user_campaign_dir, "User Campaigns")
 end
 
 --! Tries to initialize the savegame directory, returns true on success and
@@ -654,8 +646,12 @@ end
 --!return (string, error) Returns the found absolute path, or nil if not found. Then
 --!       a second variable is returned with an error message.
 function App:getAbsolutePathToLevelFile(level)
-  -- First look in Campaigns. If not found there, fall back to Levels.
-  local paths_to_search = { self.user_campaign_dir, self.campaign_dir, self.user_level_dir, self.level_dir }
+  local paths_to_search = {
+    self.user_campaign_dir,
+    self.user_level_dir,
+    self.campaign_dir,
+    self.level_dir,
+  }
   for _, parent_path in ipairs(paths_to_search) do
     local check_path = parent_path .. pathsep .. level
     local file, _ = io.open(check_path, "rb")
