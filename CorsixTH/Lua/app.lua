@@ -384,7 +384,8 @@ function App:initUserDirectories()
   --! Attempt to set the user's directory choice
   --!param dir (path) The defined path of the folder by the user
   --!param label (string) What folder is being set, for the error dialogue
-  --!return The fully qualified path
+  --!return The fully qualified path or 'false' if directory creation failed (leading
+  --! to game exit)
   local function setUserDir(dir, label)
     if dir:sub(-1, -1) == pathsep then
       dir = dir:sub(1, -2)
@@ -631,8 +632,12 @@ end
 --!return (string, error) Returns the found absolute path, or nil if not found. Then
 --!       a second variable is returned with an error message.
 function App:getAbsolutePathToLevelFile(level)
-  -- First look in Campaigns. If not found there, fall back to Levels.
-  local paths_to_search = { self.user_campaign_dir, self.campaign_dir, self.user_level_dir, self.level_dir }
+  local paths_to_search = {
+    self.user_campaign_dir,
+    self.user_level_dir,
+    self.campaign_dir,
+    self.level_dir,
+  }
   for _, parent_path in ipairs(paths_to_search) do
     local check_path = parent_path .. pathsep .. level
     local file, _ = io.open(check_path, "rb")
