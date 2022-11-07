@@ -142,7 +142,7 @@ local config_defaults = {
   check_for_updates = true,
   room_information_dialogs = true,
   allow_blocking_off_areas = false,
-  direct_zoom = nil,
+  direct_zoom = true,
   new_machine_extra_info = true,
   player_name = [[]],
 }
