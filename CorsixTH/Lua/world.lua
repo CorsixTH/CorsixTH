@@ -2336,10 +2336,7 @@ end
 --! Dump the contents of the game log into a file.
 -- This is automatically done on each error.
 function World:dumpGameLog()
-  local config_path = TheApp.command_line["config-file"] or ""
-  local pathsep = package.config:sub(1, 1)
-  config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
-  local gamelog_path = config_path .. "gamelog.txt"
+  local gamelog_path = TheApp:getGamelogPath()
   local fi = self.app:writeToFileOrTmp(gamelog_path)
   -- Start the gamelog file with the system information
   fi:write(self.app:getSystemInfo())
