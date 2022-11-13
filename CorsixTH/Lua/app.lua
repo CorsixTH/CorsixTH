@@ -1852,15 +1852,16 @@ end
 function App:getSystemInfo()
   local compile_opts = TH.GetCompileOptions()
   local comp_details = {}
+  local date = os.date("%Y-%m-%d %H:%M:%S") -- Use ISO 8601 standard
   for key, value in pairs(compile_opts) do
     table.insert(comp_details, key .. ": " .. tostring(value))
   end
   table.sort(comp_details)
-  local compiled = string.format("Compiled with %s\nSDL renderer: %s\n",
-    table.concat(comp_details, ", "), self.video:getRendererDetails())
+  local compiled = string.format("Gamelog generated on %s\nCompiled with %s\nSDL renderer: %s\n",
+      date, table.concat(comp_details, ", "), self.video:getRendererDetails())
   local running = string.format("%s run with api version: %s, game version: %s, savegame version: %s\n",
-    compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
-    self:getVersion(), tostring(SAVEGAME_VERSION))
+      compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
+      self:getVersion(), tostring(SAVEGAME_VERSION))
   return (compiled .. running)
 end
 
