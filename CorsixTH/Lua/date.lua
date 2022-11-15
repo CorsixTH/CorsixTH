@@ -268,10 +268,16 @@ end
 local Date_mt = Date._metatable
 
 function Date_mt.__eq(one, other)
+  -- Checking for class instance crashes with infinite recusrion in Lua 5.3
+  if one.__eq ~= other.__eq then return false end
+
   return one:isSameDay(other) and one._hour == other._hour
 end
 
 function Date_mt.__lt(one, other)
+  -- Checking for class instance crashes with infinite recusrion in Lua 5.3
+  if one.__eq ~= other.__eq then return false end
+
   if one._year ~= other._year then return one._year < other._year end
   if one._month ~= other._month then return one._month < other._month end
   if one._day ~= other._day then return one._day < other._day end
@@ -279,6 +285,9 @@ function Date_mt.__lt(one, other)
 end
 
 function Date_mt.__le(one, other)
+  -- Checking for class instance crashes with infinite recusrion in Lua 5.3
+  if one.__eq ~= other.__eq then return false end
+
   if one._year ~= other._year then return one._year < other._year end
   if one._month ~= other._month then return one._month < other._month end
   if one._day ~= other._day then return one._day < other._day end
