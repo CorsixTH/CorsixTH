@@ -2339,8 +2339,7 @@ function World:dumpGameLog()
   local gamelog_path = TheApp:getGamelogPath()
   local fi = self.app:writeToFileOrTmp(gamelog_path)
   -- Start the gamelog file with the system information
-  local sysinfo_date, sysinfo = TheApp:getSystemInfo()
-  fi:write(string.format("Gamelog generated on %s\n", sysinfo_date))
+  local sysinfo = TheApp:gamelogHeader()
   fi:write(sysinfo)
   for _, str in ipairs(self.game_log) do
     fi:write(str .. "\n")
