@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 175 -- Max salary improvements
+local SAVEGAME_VERSION = 176 -- Palette fix
 
 class "App"
 
@@ -167,6 +167,9 @@ function App:init()
 
   self:setCaptureMouse()
   self.caption = "CorsixTH"
+
+  -- Create gamelog file if missing
+  self:initGamelogFile()
 
   -- Prereq 2: Load and initialise the graphics subsystem
   corsixth.require("persistance")
@@ -375,7 +378,26 @@ function App:init()
   return true
 end
 
---! Tries to initialize the user level and campaign directories, returns true on
+--! Works out the intended location of the gamelog file.
+--!return full path gamelog should exist at
+function App:getGamelogPath()
+  local config_path = self.command_line["config-file"] or ""
+  config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
+  return config_path .. "gamelog.txt"
+end
+
+--! Checks and creates the gamelog file if it does not exist.
+function App:initGamelogFile()
+  local gamelog_path = self:getGamelogPath()
+  local gamelog = io.open(gamelog_path, "r")
+  if gamelog then gamelog:close() return end
+
+  local fi = self:writeToFileOrTmp(gamelog_path)
+  fi:write(self:getSystemInfo())
+  fi:close()
+end
+
+--! Tries to initialize the user and built in level directories, returns true on
 --! success and false on failure.
 -- TODO: Integrate other directory initialisations into this function
 function App:initUserDirectories()
@@ -968,8 +990,11 @@ function App:writeToFileOrTmp(file, mode)
   if err then
     local tmp_file = os.tmpname()
     f = io.open(tmp_file, mode or "w")
-    self.ui:addWindow(UIInformation(self.ui,
-      { _S.errors.save_to_tmp:format(file, tmp_file, err) }))
+    if self.ui then self.ui:addWindow(UIInformation(self.ui,
+        { _S.errors.save_to_tmp:format(file, tmp_file, err) }))
+    else
+      print("Attempt to write to " .. file .. " failed. File was written instead to temporary location " .. tmp_file .. " because of the error: " .. err)
+    end
   end
   assert(f, "Error: cannot write to filesystem")
   return f
@@ -1555,7 +1580,7 @@ function App:getVersion(version)
   if ver > 170 then
     return "Trunk"
   elseif ver > 156 then
-    return "v0.66-rc1"
+    return "v0.66"
   elseif ver > 138 then
     return "v0.65"
   elseif ver > 134 then

@@ -271,10 +271,10 @@ menu_debug_overlay = {
   parcel                      = "  GRUNDSTÜCK  ",
 }
 menu_player_count = {
-	players_1 = "  1 Spieler  ",
-	players_2 = "  2 Spieler  ",
-	players_3 = "  3 Spieler  ",
-	players_4 = "  4 Spieler  ",
+  players_1 = "  1 Spieler  ",
+  players_2 = "  2 Spieler  ",
+  players_3 = "  3 Spieler  ",
+  players_4 = "  4 Spieler  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Sie können den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar wären.",

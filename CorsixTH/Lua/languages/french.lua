@@ -619,10 +619,10 @@ menu_debug_overlay = {
 }
 
 menu_player_count = {
-	players_1 = "  1 JOUEUR  ",
-	players_2 = "  2 JOUEURS  ",
-	players_3 = "  3 JOUEURS  ",
-	players_4 = "  4 JOUEURS  ",
+  players_1 = "  1 JOUEUR  ",
+  players_2 = "  2 JOUEURS  ",
+  players_3 = "  3 JOUEURS  ",
+  players_4 = "  4 JOUEURS  ",
 }
 
 -- Adviser

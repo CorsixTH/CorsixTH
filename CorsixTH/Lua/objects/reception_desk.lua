@@ -92,48 +92,77 @@ function ReceptionDesk:onClick(ui, button)
 end
 
 function ReceptionDesk:tick()
-  local queue_front = self.queue:front()
-  local reset_timer = true
-  if self.receptionist and queue_front then
-    if queue_front:getCurrentAction().name == "idle" then
-      self.queue_advance_timer = self.queue_advance_timer + 1
-      reset_timer = false
-      if self.queue_advance_timer >= 4 + Date.hoursPerDay() * (1.0 - self.receptionist.profile.skill) then
-        reset_timer = true
-        if queue_front.next_room_to_visit then
-          queue_front:queueAction(SeekRoomAction(queue_front.next_room_to_visit.room_info.id))
-        else
-          if class.is(queue_front, Inspector) then
-            local inspector = queue_front
-            if not inspector.going_home  then
-              local epidemic = self.hospital.epidemic
-              if epidemic then
-                -- The result of the epidemic may already by determined
-                -- i.e if an infected patient has left the hospital
-                if not epidemic.result_determined then
-                  epidemic:finishCoverUp()
-                end
-                epidemic:applyOutcome()
-                inspector:goHome()
-              end
-            end
-            -- VIP has his own list, don't add the gp office twice
-          elseif queue_front.humanoid_class ~= "VIP" then
-            if queue_front:agreesToPay("diag_gp") then
-              queue_front:queueAction(SeekRoomAction("gp"))
-            else
-              queue_front:goHome("over_priced", "diag_gp")
-            end
-          else
-            -- the VIP will realise that he is idle, and start going round rooms
-            queue_front:queueAction(IdleAction())
-            queue_front.waiting = 1
-          end
-        end
-        self.queue:pop()
-        self.queue.visitor_count = self.queue.visitor_count + 1
-        queue_front.has_passed_reception = true
+  --! Handle a patient at the reception desk.
+  --!param patient The patient at the front of queue.
+  --!param is_new (boolean) Have they just entered the hospital?
+  --!return action taken by patient
+  local function handlePatient(patient, is_new)
+    if not is_new then
+      -- Patient redirected to reception, send them on their way
+      local id = patient.next_room_to_visit.room_info.id
+      return patient:queueAction(SeekRoomAction(id))
+    end
+
+    --else: a new patient has arrived in the hospital
+    if patient:agreesToPay("diag_gp") then
+      return patient:queueAction(SeekRoomAction("gp"))
+    end
+    --Patient goes home, too costly
+    return patient:goHome("over_priced", "diag_gp")
+  end
+
+  -- Sends the VIP on their way.
+  local function handleVIP(vip)
+    vip:queueAction(IdleAction())
+    vip.waiting = 1
+  end
+
+  -- Let the Inspector conclude the epidemic, then send them on their way.
+  local function handleInspector(inspector)
+    if inspector.going_home then return end
+    local epidemic = self.hospital.epidemic
+    if epidemic then
+      -- The result of the epidemic may already be decided
+      -- i.e if an infected patient has left the hospital
+      if not epidemic.result_determined then
+        epidemic:finishCoverUp()
       end
+      epidemic:applyOutcome()
+      inspector:goHome()
+    end
+  end
+
+  --! Advance the front humanoid of the queue.
+  --!param humanoid (entity) NPC to be checked/advanced
+  --!return (boolean) true if ready to be dealt with, else false.
+  local function advanceQueue(humanoid)
+    if humanoid:getCurrentAction().name == "idle" then
+      self.queue_advance_timer = self.queue_advance_timer + 1
+    end
+    return self.queue_advance_timer >= 4 + Date.hoursPerDay() * (1.0 - self.receptionist.profile.skill)
+  end
+
+  -- Start of the ReceptionDesk:tick function.
+  local front_humanoid = self.queue:front()
+  local reset_timer = true
+  if self.receptionist and front_humanoid then
+    if not advanceQueue(front_humanoid) then
+      -- Not ready to deal with humanoid, continue waiting
+      reset_timer = false
+    elseif class.is(front_humanoid, Patient) then
+      handlePatient(front_humanoid, not front_humanoid.next_room_to_visit)
+    elseif class.is(front_humanoid, Inspector) then
+      handleInspector(front_humanoid)
+    elseif class.is(front_humanoid, Vip) then
+      handleVIP(front_humanoid)
+    else
+      error("Unexpected humanoid " .. class.type(front_humanoid) .. " at reception desk.")
+    end
+    if reset_timer then
+      -- Humanoid dealt with, call the next one
+      self.queue:pop()
+      self.queue.visitor_count = self.queue.visitor_count + 1
+      front_humanoid.has_passed_reception = true
     end
   end
   if reset_timer then

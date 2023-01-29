@@ -171,20 +171,17 @@ local function action_multi_use_phase(action, humanoid, phase)
   end
   humanoid:setAnimation(anim, action.mirror_flags)
 
-  local offset = object.object_type.orientations
-  if offset then
-    local tx, ty
-    offset = offset[object.direction]
-    if offset.use_animate_from_use_position then
-      tx, ty = object.tile_x + offset.use_position[1], object.tile_y + offset.use_position[2]
-    else
-      tx, ty = object:getRenderAttachTile()
-    end
-    offset = offset.animation_offset
-    humanoid:setTilePositionSpeed(tx, ty, offset[1], offset[2])
+  -- Compute the position of the animated humanoid.
+  local tx, ty
+  local obj_orient = object.object_type.orientations[object.direction]
+  if obj_orient.use_animate_from_use_position then
+    tx = object.tile_x + obj_orient.use_position[1]
+    ty = object.tile_y + obj_orient.use_position[2]
   else
-    humanoid:setTilePositionSpeed(object.tile_x, object.tile_y, 0, 0)
+    tx, ty = object:getRenderAttachTile()
   end
+  local offset = obj_orient.animation_offset
+  humanoid:setTilePositionSpeed(tx, ty, offset[1], offset[2])
 
   humanoid.user_of = object
   local length = humanoid.world:getAnimLength(anim)

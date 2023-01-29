@@ -3173,10 +3173,10 @@ menu_debug_overlay = {
   parcel                      = "  地区  ",
 }
 menu_player_count = {
-	players_1 = "  1 玩家  ",
-	players_2 = "  2 玩家  ",
-	players_3 = "  3 玩家  ",
-	players_4 = "  4 玩家  ",
+  players_1 = "  1 玩家  ",
+  players_2 = "  2 玩家  ",
+  players_3 = "  3 玩家  ",
+  players_4 = "  4 玩家  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "在这个地方放置房间会导致医院的部分空间无法到达。",
@@ -3275,6 +3275,7 @@ main_menu = {
   options = "选项",
   map_edit = "地图编辑器",
   savegame_version = "存档版本：",
+  updates_off = "已禁用更新检查",
   version = "版本：",
   exit = "退出",
 }
@@ -3361,6 +3362,8 @@ options_window = {
   caption = "设置",
   option_on = "开",
   option_off = "关",
+  option_enabled = "已启用",
+  option_disabled = "已禁用",
   fullscreen = "全屏幕",
   resolution = "分辨率",
   capture_mouse = "捕获鼠标",
@@ -3378,6 +3381,7 @@ options_window = {
   shift_scrollspeed = "加速滚动速度",
   zoom_speed = "缩放速度",
   hotkey = "快捷键",
+  check_for_updates = "自动检查更新",
 }
 
 tooltip.options_window = {
@@ -3408,6 +3412,7 @@ tooltip.options_window = {
   apply_zoomspeed = "应用输入的缩放速度。",
   cancel_zoomspeed = "返回而不更改缩放速度。",
   hotkey = "更改键盘热键。",
+  check_for_updates = "游戏启动时自动检查更新",
 }
 
 customise_window = {

@@ -78,7 +78,7 @@ end
 
 
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 320, 430, col_bg)
+  self:UIResizable(ui, 320, 460, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -119,6 +119,17 @@ function UIOptions:UIOptions(ui, mode)
   local title_y_pos = self:_getOptionYPos()
   self:addBevelPanel(80, title_y_pos, 165, 20, col_caption):setLabel(_S.options_window.caption)
     .lowered = true
+
+  -- Check for updates
+  local updates_y_pos = self:_getOptionYPos()
+  local updates_string = app.config.check_for_updates and
+      _S.options_window.option_enabled or _S.options_window.option_disabled
+  self:addBevelPanel(20, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+      :setLabel(_S.options_window.check_for_updates):setTooltip(_S.tooltip.options_window.check_for_updates).lowered = true
+  self.updates_panel =
+      self:addBevelPanel(165, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(updates_string)
+  self.updates_button = self.updates_panel:makeToggleButton(0, 0, 140, BTN_HEIGHT, nil, self.buttonUpdates)
+      :setToggleState(app.config.check_for_updates)
 
   -- Fullscreen
   local fullscreen_y_pos = self:_getOptionYPos()
@@ -290,6 +301,20 @@ function UIOptions:selectResolution(number)
   else
     callback(res.width, res.height)
   end
+end
+
+--! Changes check for update setting to on/of
+function UIOptions:toggleUpdateCheck()
+  self.ui.app.config.check_for_updates = not self.ui.app.config.check_for_updates
+  self.ui.app:saveConfig()
+end
+
+--! Function handles button toggle of checking for updates
+function UIOptions:buttonUpdates()
+  self:toggleUpdateCheck()
+  local new_updates_string = self.ui.app.config.check_for_updates and
+      _S.options_window.option_enabled or _S.options_window.option_disabled
+  self.updates_panel:setLabel(new_updates_string)
 end
 
 function UIOptions:buttonFullscreen()
