@@ -392,7 +392,8 @@ function App:initGamelogFile()
   if gamelog then gamelog:close() return end
 
   local fi = self:writeToFileOrTmp(gamelog_path)
-  fi:write(self:getSystemInfo())
+  local sysinfo = self:gamelogHeader()
+  fi:write(sysinfo)
   fi:close()
 end
 
@@ -1849,7 +1850,11 @@ function App:isAudioEnabled()
   return TH.GetCompileOptions().audio
 end
 
-function App:getSystemInfo()
+--! Generate information about user's system and the program
+--!return System and program info as a string
+function App:gamelogHeader()
+  local gen_date = os.date("%Y-%m-%d %H:%M:%S")
+  gen_date = string.format("Gamelog generated on %s\n", gen_date)
   local compile_opts = TH.GetCompileOptions()
   local comp_details = {}
   for key, value in pairs(compile_opts) do
@@ -1857,11 +1862,11 @@ function App:getSystemInfo()
   end
   table.sort(comp_details)
   local compiled = string.format("Compiled with %s\nSDL renderer: %s\n",
-    table.concat(comp_details, ", "), self.video:getRendererDetails())
+      table.concat(comp_details, ", "), self.video:getRendererDetails())
   local running = string.format("%s run with api version: %s, game version: %s, savegame version: %s\n",
-    compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
-    self:getVersion(), tostring(SAVEGAME_VERSION))
-  return (compiled .. running)
+      compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
+      self:getVersion(), tostring(SAVEGAME_VERSION))
+  return (gen_date .. compiled .. running)
 end
 
 -- Do not remove, for savegame compatibility < r1891
