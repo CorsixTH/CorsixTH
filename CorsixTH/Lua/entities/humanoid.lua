@@ -629,7 +629,7 @@ function Humanoid:_handleEmptyActionQueue()
   self.world:gameLog("Last action: " .. self.previous_action.name)
   self.world:gameLog(debug.traceback())
 
-  ui:addWindow(UIConfirmDialog(ui, true, {_S.errors.dialog_empty_queue},
+  ui:addWindow(UIConfirmDialog(ui, true, _S.errors.dialog_empty_queue,
     --[[persistable:humanoid_leave_hospital]] function()
       self.world:gameLog("The humanoid was told to leave the hospital...")
       if class.is(self, Staff) then
