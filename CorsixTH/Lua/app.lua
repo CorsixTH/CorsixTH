@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 176 -- Palette fix
+local SAVEGAME_VERSION = 177 -- Regression #2086
 
 class "App"
 

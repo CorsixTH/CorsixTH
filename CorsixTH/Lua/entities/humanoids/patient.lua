@@ -1113,6 +1113,19 @@ function Patient:afterLoad(old, new)
       self.th:setPatientEffect(AnimationEffect.None)
     end
   end
+  -- fix walks into room - regression in #2086
+  if old < 177 then
+    for i, action in ipairs(self.action_queue) do
+      if action.name == "walk" and action.is_entering then
+        action.saved_must_happen = false
+        -- if its not the currently executing action
+        -- we should set must_happen to false
+        if i > 1 then
+          action.must_happen = false
+        end
+      end
+    end
+  end
   self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
 end
@@ -1149,7 +1162,9 @@ function Patient:interruptAndRequeueAction(current_action, queue_pos, meander_be
   elseif current_action.name == "walk" then
     requeue_action = WalkAction(current_action.x, current_action.y)
     requeue_action:setMustHappen(current_action.must_happen)
-
+    if current_action.saved_must_happen ~= nil then
+      requeue_action.must_happen = current_action.saved_must_happen
+    end
     -- need to copy the reserve_on_resume, otherwise the new queued action will not
     -- unreserve on interrupt
     requeue_action.reserve_on_resume = current_action.reserve_on_resume
