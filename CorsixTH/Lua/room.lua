@@ -493,19 +493,37 @@ function Room:commandEnteringStaff(humanoid, already_initialized)
   end
 end
 
+
+
+--! Activates and deactivates the staff waiting for patient mood icon
+-- and dynamic info text
+--!param activate (bool) - true to activate, false or nil to deactivate
+function Room:_staffWaitToggle(activate)
+  local state = "deactivate"
+  local dynamic_text = ""
+
+  if activate then
+    dynamic_text = _S.dynamic_info.staff.actions.waiting_for_patient
+    state = "activate"
+  end
+
+  if not self.staff_member_set and self.staff_member then
+    self.staff_member:setMood("staff_wait", state)
+    self.staff_member:setDynamicInfoText(dynamic_text)
+  else
+    for staff_member in pairs(self.staff_member_set) do
+      staff_member:setMood("staff_wait", state)
+      staff_member:setDynamicInfoText(dynamic_text)
+    end
+  end
+end
+
 function Room:commandEnteringPatient(humanoid)
   -- To be extended in derived classes
   self.door.queue.visitor_count = self.door.queue.visitor_count + 1
   humanoid:updateDynamicInfo("")
 
-  for room_humanoid in pairs(self.humanoids) do -- Staff is no longer waiting
-    if class.is(room_humanoid, Staff) then
-      if room_humanoid.humanoid_class ~= "Handyman" then
-        room_humanoid:setMood("staff_wait", "deactivate")
-        room_humanoid:setDynamicInfoText("")
-      end
-    end
-  end
+  self:_staffWaitToggle(false) -- Staff no longer waiting
 end
 
 function Room:tryAdvanceQueue()
@@ -516,16 +534,9 @@ function Room:tryAdvanceQueue()
     if self:canHumanoidEnter(front) then
       self.door.queue:pop()
       self.door:updateDynamicInfo()
-      -- Do nothing if it is the staff room or training room.
-      if self:hasQueueDialog() then
-        for room_humanoid in pairs(self.humanoids) do -- Staff is now waiting
-          if class.is(room_humanoid, Staff) then
-            if room_humanoid.humanoid_class ~= "Handyman" then
-              room_humanoid:setMood("staff_wait", "activate")
-              room_humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.waiting_for_patient)
-            end
-          end
-        end
+      -- Do nothing if it is the staff room or training room or toilets and not a patient
+      if self:hasQueueDialog() and self.room_info.id ~= "toilets" and class.is(front, Patient) then
+        self:_staffWaitToggle(true) -- Staff are now waiting
       end
     elseif self.humanoids[front] then
       self.door.queue:pop()

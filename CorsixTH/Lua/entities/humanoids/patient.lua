@@ -981,16 +981,14 @@ function Patient:updateDynamicInfo()
   end
   -- Set the centre line of dynamic info based on contagiousness, if appropriate
   local epidemic = self.hospital and self.hospital.epidemic
-  if epidemic and epidemic.coverup_in_progress then
-    if self.infected and not self.vaccinated then
-      self:setDynamicInfo('text',
-        {action_string, _S.dynamic_info.patient.actions.epidemic_contagious, info})
-    elseif self.vaccinated then
+  if epidemic and self.infected and epidemic.coverup_in_progress then
+    if self.vaccinated then
       self:setDynamicInfo('text',
         {action_string, _S.dynamic_info.patient.actions.epidemic_vaccinated, info})
     else
-      self:setDynamicInfo('text', {action_string, "", info})
-    end
+      self:setDynamicInfo('text',
+        {action_string, _S.dynamic_info.patient.actions.epidemic_contagious, info})
+	end
   else
     self:setDynamicInfo('text', {action_string, "", info})
   end
