@@ -594,9 +594,9 @@ end
 
 --! Handle an empty action queue in some way instead of crashing.
 function Humanoid:_handleEmptyActionQueue()
-  -- if this is a patient that is going home, an empty
-  -- action queue is not a problem
+  -- if this is a patient that is going home, add a despawn action so that they leave
   if class.is(self, Patient) and self.going_home then
+    self:despawn()
     return
   end
 
