@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 233 -- Remove delayed replace existing staff members in rooms functionality.
+local SAVEGAME_VERSION = 234 -- Overhaul training
 
 class "App"
 
