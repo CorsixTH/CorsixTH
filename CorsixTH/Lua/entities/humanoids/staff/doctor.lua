@@ -1,4 +1,5 @@
 --[[ Copyright (c) 2009 Peter "Corsix" Cawley
+Copyright (c) 2023 lewri
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -55,39 +56,14 @@ function Doctor:tickDay()
 
   -- is self researcher in research room?
   if self:isResearching() then
-    self.hospital.research:addResearchPoints(1550 + 1000*self.profile.skill)
-  -- is self using lecture chair in a training room w/ a consultant?
+    self.hospital.research:addResearchPoints(1550 + 1000 * self.profile.skill)
+  -- Are we learning new skills today?
   elseif self:isLearning() then
-    -- Find values for how fast doctors learn the different professions from the level
-    local level_config = self.world.map.level_config
-    local surg_thres = 1
-    local psych_thres = 1
-    local res_thres = 1
-    if level_config and level_config.gbv.AbilityThreshold then
-      surg_thres = level_config.gbv.AbilityThreshold[0]
-      psych_thres = level_config.gbv.AbilityThreshold[1]
-      res_thres = level_config.gbv.AbilityThreshold[2]
-    end
-    local general_thres = 200 -- general skill factor
-
     local room = self:getRoom()
-    -- room_factor starts at 5 for a basic room w/ TrainingRate == 4
-    -- books add +1.5, skeles add +2.0, see TrainingRoom:calculateTrainingFactor
+    local consultant = room.staff_member
     local room_factor = room:getTrainingFactor()
-    -- number of staff includes consultant
-    local staff_count = room:getStaffCount() - 1
-    -- update general skill
-    self:trainSkill(room.staff_member, "skill", general_thres, room_factor, staff_count)
-    -- update special skill based on consultant skills
-    if room.staff_member.profile.is_surgeon >= 1.0 then
-      self:trainSkill(room.staff_member, "is_surgeon", surg_thres, room_factor, staff_count)
-    end
-    if room.staff_member.profile.is_psychiatrist >= 1.0 then
-      self:trainSkill(room.staff_member, "is_psychiatrist", psych_thres, room_factor, staff_count)
-    end
-    if room.staff_member.profile.is_researcher >= 1.0 then
-      self:trainSkill(room.staff_member, "is_researcher", res_thres, room_factor, staff_count)
-    end
+    local student_count = room:getStaffCount() - 1 -- less 1 for consultant in room
+    self:trainSkills(consultant, room_factor, student_count)
   end
 end
 
@@ -101,7 +77,7 @@ function Doctor:tick()
     -- if doctor is in a room and they're using an object
     -- then their skill level will increase _slowly_ over time
   if self:isLearningOnTheJob() then
-    self:updateSkill(self.humanoid_class, "skill", 0.000003)
+    self:updateSkill("skill", 0.000003)
   end
 end
 
@@ -117,8 +93,9 @@ end
 -- Determine if the staff member should increase their skills
 function Doctor:isLearning()
   local room = self:getRoom()
-
-  -- Doctor is in training room, the training room has a consultant, and  is using lecture chair.
+  -- Check the doctor is not a consultant, in a training room with a teacher and
+  -- currently in a chair
+  if self.profile.is_consultant then return false end
   return room and room.room_info.id == "training" and room.staff_member and
       self:getCurrentAction().name == "use_object" and
       self:getCurrentAction().object.object_type.id == "lecture_chair"
@@ -138,8 +115,10 @@ function Doctor:setProfile(profile)
   self:updateStaffTitle()
 end
 
-function Doctor:updateSkill(consultant, trait, amount)
--- consultant is kept for todo detailed in Doctor:trainSkill
+--! Assign skill points
+--!param trait (string) The trait of focus
+--!param amount (number) The amount granted
+function Doctor:updateSkill(trait, amount)
   local old_profile = {
     is_junior = self.profile.is_junior,
     is_consultant = self.profile.is_consultant
@@ -180,14 +159,125 @@ function Doctor:updateSkill(consultant, trait, amount)
   end
 end
 
-function Doctor:trainSkill(consultant, trait, skill_thres, room_factor, staff_count)
-  -- TODO: tweak/rework this algorithm
-  -- TODO: possibly adjust based upon consultant's skill level?
-  --       possibly based on attention to detail?
-  local constant = 12.0
-  local staff_factor = constant + (staff_count-1)*(constant/6.0)
-  local delta = room_factor / (skill_thres * staff_factor)
-  self:updateSkill(consultant, trait, delta)
+--! Confirm doctor has specialism
+--!param trait (string) what to check (in is_xxx format)
+--!return true if specialised
+function Doctor:hasSpecialism(trait)
+  local specialisms = {
+    ["is_surgeon"] = self.profile.is_surgeon >= 1,
+    ["is_psychiatrist"] = self.profile.is_psychiatrist >= 1,
+    ["is_researcher"] = self.profile.is_researcher >= 1,
+  }
+  return specialisms[trait]
+end
+
+--! Generate the performance factor of the training room
+--!param doc_atd (number) Attention to detail of student
+--!param con_skill (number) Skill level of consultant
+--!param class_size (number) Total students in the training room
+--!return calculated performance
+function Doctor._calculateTrainingPerformance(doc_atd, con_skill, class_size)
+  -- Clamp a performance modifier's impact between 90% and 110%
+  local function clamp(value)
+    local base, extra = 0.9, 0.2 -- specify the +-10% variability
+    local factor = value * extra
+    return base + factor
+  end
+
+  local performers = {
+    doctor_focus = clamp(doc_atd),
+    teacher_ability = clamp(con_skill^2), -- ~1.0 modifier at 0.75 skill
+    random = math.t_random(0.9, 1, 1.1), -- Allow some randomness
+  }
+  -- Average the three performance modifiers to generate a single performance factor
+  local count, p_impact = 0, 0
+  for _, perf in pairs(performers) do
+    p_impact = p_impact + perf
+    count = count + 1
+  end
+  p_impact = p_impact / count
+
+  -- Class size impacts performance when there are more than 3 students at rate 2/n-1
+  local c_impact = class_size >= 3 and class_size - 1 or 2
+  c_impact = 2 / c_impact
+
+  return p_impact * c_impact
+end
+
+--! Calculates the amount of skill to learn towards becoming a doctor/consultant and
+--! any amount towards a specialist skill being taught
+--! There are detailed explanations on the logic to these calculations in the Wiki (see
+--! Training) - PR NOTE: If merge, make wiki page
+--!param consultant (entity) The person teaching the student
+--!param room_factor (number) What score training objects in the room give
+--!param student_count (number) Total number of students present
+function Doctor:trainSkills(consultant, room_factor, student_count)
+  --[[Information about these calculations based on TH:
+    General skill is based on gbv.trainingrate only; specialisms are based on the
+    impact of objects in the room (total training value of relevant objects).
+    Both calculations follow the general formula: x * skills_factor * class_performance
+    where x relates to the gbv.trainingrate (skill) or training value of room (specialism),
+    skills_factor is the impact from number of skills being taught,
+    and class_performance is performance of teacher/student and the class size.
+    For proper control in CorsixTH, specialsms are affected by the AbilityThreshold
+    for the specialism (varies by specialty)
+    The goal is to gain skill to become a consultant (ConsultantTreshold (usually
+    0.750)); or to be qualified in a specialism (always a value of 1.000)
+    PR NOTE: If merge, move to Wiki
+  ]]--
+  local level_config = self.world.map.level_config
+  local general_factor = level_config.gbv.TrainingRate
+  --[[ Scalers and floors:
+    For balance at the very worst it should take ~1000 days to go from skill 0 to skill
+    1. This will be known as the mimum learning value.
+    Generalist skill (g) scales differ from specialism (s) scale to give CorsixTH
+    values. g_scale is a simple conversion of value; but s_scale is more complex as it
+    provides a balance on setting the max skill a doctor can have and still become a
+    surgeon: this is ~0.5 skill (on normal difficulty in base game)
+    training.
+    PR NOTE: If merge, move to Wiki
+  ]]--
+  local MIN_LEARN_VALUE, g_scale, s_scale = 0.001, 10000, 12
+
+  local function countSkillsTaught()
+    local num_skills = 1 -- General skill is always counted
+    local skills = {"is_surgeon", "is_psychiatrist", "is_researcher"}
+    for _, skill in pairs(skills) do
+      if consultant:hasSpecialism(skill) and not self:hasSpecialism(skill) then
+        num_skills = num_skills + 1
+      end
+    end
+    return num_skills
+  end
+
+  local skills_factor = 1 / countSkillsTaught()
+  local class_performance = self._calculateTrainingPerformance(
+      self.profile.attention_to_detail,
+      consultant.profile.skill,
+      student_count)
+
+  -- Calculate the simpler, generalist skill, which is always awarded while training.
+  local g_train = (general_factor * skills_factor * class_performance) /
+      g_scale
+  g_train = g_train > MIN_LEARN_VALUE and g_train or MIN_LEARN_VALUE
+  self:updateSkill("skill", g_train)
+
+  -- Now begin calculations for specialist skills
+  local thresholds = {
+    ["is_surgeon"] = level_config.gbv.AbilityThreshold[0],
+    ["is_psychiatrist"] = level_config.gbv.AbilityThreshold[1],
+    ["is_researcher"] = level_config.gbv.AbilityThreshold[2],
+  }
+
+  for name, threshold in pairs(thresholds) do
+    if consultant:hasSpecialism(name) and not self:hasSpecialism(name) then
+      local base = room_factor / threshold
+      local s_train = (base * skills_factor * class_performance) /
+          s_scale
+      s_train = s_train > MIN_LEARN_VALUE and s_train or MIN_LEARN_VALUE
+      self:updateSkill(name, s_train)
+    end
+  end
 end
 
 function Doctor:updateStaffTitle()
