@@ -500,10 +500,9 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
             next_utf8_codepoint(sLineBreakPosition, sMessageEnd);
             iHandledRows++;
           }
-          sMessage = sLineBreakPosition;
+          sMessage = sLineStart = sLineBreakPosition;
           // Skip leading white space on a line
           skip_utf8_whitespace(sMessage, sMessageEnd);
-          sLineStart = sMessage;
         } else {
           if (iHandledRows >= iSkipRows) {
             vLines.push_back(std::make_pair(sLineStart, sOldMessage));
