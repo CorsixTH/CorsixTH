@@ -68,34 +68,27 @@ function TrainingRoom:roomFinished()
   Room.roomFinished(self)
 end
 
---! Determing the training factor of this room for teaching specialisms
+--! Determine the training factor of this room for teaching specialisms
 --!param objects (table) the list of objects in this room
 --!return total (number) The final training factor
 function TrainingRoom:calculateTrainingFactor(objects)
   -- Tally relevant objects that affect training
   local function countTrainingObjects()
-    local projectors = 0 -- There should only ever be one
-    local skeletons = 0
-    local bookcases = 0
+    local counts = { projector = 0, skeleton = 0, bookcase = 0 }
     for object, _ in pairs(objects) do
-      if object.object_type.id == "skeleton" then
-        skeletons = skeletons + 1
-      elseif object.object_type.id == "bookcase" then
-        bookcases = bookcases + 1
-      elseif object.object_type.id == "projector" then
-        projectors = projectors + 1
-      end
+      local obj_id = object.object_type.id
+      counts[obj_id] = counts[obj_id] and counts[obj_id] + 1 or nil
     end
-    return {[0] = projectors, bookcases, skeletons} -- [0] to align with level_config
+    return counts
   end
   -- Work out total training factor (averaged of all relevant items)
   -- param factors(table) An array containing a count of each object and its raw training value
   -- returns the total effect
   local function calculateTotalEffect(factors)
     local count, total = 0, 0
-    for _, factor in pairs(factors) do
-      count = count + factor.c
-      total = total + (factor.c * factor.v)
+    for i = 1, #factors do
+      count = count + factors[i].count
+      total = total + (factors[i].count * factors[i].value)
     end
     return total / count
   end
@@ -103,12 +96,12 @@ function TrainingRoom:calculateTrainingFactor(objects)
   -- Object values and training rate set in level config
   local level_config = self.world.map.level_config
   local training_objects = countTrainingObjects()
-  -- Consolidate elements of training factor to an array, where c is the number of
-  -- objects and v is the raw training value
+  -- Consolidate elements of training factor to an array
+  local training_value = level_config.gbv.TrainingValue
   local training_factors = {
-    projectors = {c = training_objects[0], v = level_config.gbv.TrainingValue[0]},
-    bookcases  = {c = training_objects[1], v = level_config.gbv.TrainingValue[1]},
-    skeletons  = {c = training_objects[2], v = level_config.gbv.TrainingValue[2]},
+    {count = training_objects.projector, value = training_value[0]},
+    {count = training_objects.skeleton, value = training_value[1]},
+    {count = training_objects.bookcase, value = training_value[2]},
   }
   return calculateTotalEffect(training_factors)
 end
