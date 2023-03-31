@@ -62,7 +62,10 @@ function Doctor:tickDay()
     local room = self:getRoom()
     local consultant = room.staff_member
     local room_factor = room:getTrainingFactor()
-    local student_count = room:getStaffCount() - 1 -- less 1 for consultant in room
+    -- When counting room occupancy, we must subtract 1 for the consultant in the room.
+    -- Currently, handymen/newly trained consultants also get counted here as they
+    -- could be considered distractiing to current trainees.
+    local student_count = room:getStaffCount() - 1
     self:trainSkills(consultant, room_factor, student_count)
   end
 end
@@ -93,8 +96,8 @@ end
 -- Determine if the staff member should increase their skills
 function Doctor:isLearning()
   local room = self:getRoom()
-  -- Check the doctor is not a consultant, in a training room with a teacher and
-  -- currently in a chair
+  -- Check that the doctor is a trainee (currently in a chair and not a consultant) in
+  -- a training room.
   if self.profile.is_consultant then return false end
   return room and room.room_info.id == "training" and room.staff_member and
       self:getCurrentAction().name == "use_object" and
@@ -179,27 +182,25 @@ end
 function Doctor._calculateTrainingPerformance(doc_atd, con_skill, class_size)
   -- Clamp a performance modifier's impact between 90% and 110%
   local function clamp(value)
-    local base, extra = 0.9, 0.2 -- specify the +-10% variability
-    local factor = value * extra
+    local base, range = 0.9, 0.2 -- specify the +-10% variability
+    local factor = value * range
     return base + factor
   end
 
   local performers = {
-    doctor_focus = clamp(doc_atd),
-    teacher_ability = clamp(con_skill^2), -- ~1.0 modifier at 0.75 skill
-    random = math.t_random(0.9, 1, 1.1), -- Allow some randomness
+    clamp(doc_atd), -- doctor focus.
+    clamp(con_skill * con_skill), -- teacher ability. ~1.0 modifier at 0.75 skill
+    math.t_random(0.9, 1, 1.1), -- Allow some randomness
   }
   -- Average the three performance modifiers to generate a single performance factor
-  local count, p_impact = 0, 0
-  for _, perf in pairs(performers) do
-    p_impact = p_impact + perf
-    count = count + 1
+  local p_impact = 0
+  for i = 1, #performers do
+    p_impact = p_impact + performers[i]
   end
-  p_impact = p_impact / count
+  p_impact = p_impact / #performers
 
   -- Class size impacts performance when there are more than 3 students at rate 2/n-1
-  local c_impact = class_size >= 3 and class_size - 1 or 2
-  c_impact = 2 / c_impact
+  local c_impact = class_size >= 3 and 2 / (class_size - 1) or 1
 
   return p_impact * c_impact
 end
@@ -237,7 +238,9 @@ function Doctor:trainSkills(consultant, room_factor, student_count)
     training.
     PR NOTE: If merge, move to Wiki
   ]]--
-  local MIN_LEARN_VALUE, g_scale, s_scale = 0.001, 10000, 12
+  local MIN_LEARN_VALUE = 0.001
+  local g_scale = 10000
+  local s_scale = 12
 
   local function countSkillsTaught()
     local num_skills = 1 -- General skill is always counted
@@ -257,10 +260,8 @@ function Doctor:trainSkills(consultant, room_factor, student_count)
       student_count)
 
   -- Calculate the simpler, generalist skill, which is always awarded while training.
-  local g_train = (general_factor * skills_factor * class_performance) /
-      g_scale
-  g_train = g_train > MIN_LEARN_VALUE and g_train or MIN_LEARN_VALUE
-  self:updateSkill("skill", g_train)
+  local g_train = (general_factor * skills_factor * class_performance) / g_scale
+  self:updateSkill("skill", math.max(g_train, MIN_LEARN_VALUE))
 
   -- Now begin calculations for specialist skills
   local thresholds = {
@@ -272,10 +273,8 @@ function Doctor:trainSkills(consultant, room_factor, student_count)
   for name, threshold in pairs(thresholds) do
     if consultant:hasSpecialism(name) and not self:hasSpecialism(name) then
       local base = room_factor / threshold
-      local s_train = (base * skills_factor * class_performance) /
-          s_scale
-      s_train = s_train > MIN_LEARN_VALUE and s_train or MIN_LEARN_VALUE
-      self:updateSkill(name, s_train)
+      local s_train = (base * skills_factor * class_performance) / s_scale
+      self:updateSkill(name, math.max(s_train, MIN_LEARN_VALUE))
     end
   end
 end
