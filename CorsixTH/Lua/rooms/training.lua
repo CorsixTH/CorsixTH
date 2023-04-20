@@ -81,16 +81,29 @@ function TrainingRoom:calculateTrainingFactor(objects)
     end
     return counts
   end
-  -- Work out total training factor (averaged of all relevant items)
-  -- param factors(table) An array containing a count of each object and its raw training value
+  -- Work out total training factor using two averaging methods, choosing the best one
+  -- param factors(table) An array containing a count of each object and its raw
+  -- training value
   -- returns the total effect
   local function calculateTotalEffect(factors)
-    local count, total = 0, 0
-    for i = 1, #factors do
-      count = count + factors[i].count
-      total = total + (factors[i].count * factors[i].value)
+    assert(factors,
+        "Unable to determine the training factor of a training room! " ..
+        "Reason: No inputs given")
+    local total_objects = 0
+    local total_value = 0
+    local num_factors = #factors
+    for _, factor in ipairs (factors) do
+      total_objects = total_objects + factor.count
+      -- Check we have at least one of this object and action accordingly
+      local multiplier = factor.count > 0 and (math.log(factor.count) + 1) or 0
+      total_value = total_value + (multiplier * factor.value)
     end
-    return total / count
+    assert(total_value > 0 and total_objects > 0,
+        "Unable to determine the training factor of a training room! " ..
+        "Reason: total_value and total_objects are both 0")
+    local average_1 = total_value / num_factors
+    local average_2 = total_value / total_objects
+    return math.max(average_1, average_2)
   end
 
   -- Object values and training rate set in level config
