@@ -34,7 +34,7 @@ Param(
 ################
 
 $anim_view_libs = "wxwidgets"
-$corsixth_libs = "ffmpeg[core,avcodec,avformat,swresample,swscale]", "freetype", "lua[tools]", "luafilesystem", "lpeg", "sdl2", "sdl2-mixer[libmodplug,fluidsynth,libflac,mpg123]", "luasocket", "luasec", "catch2"
+$corsixth_libs = "ffmpeg[core,avcodec,avformat,swresample,swscale]", "freetype", "lua[tools]", "luafilesystem", "lpeg", "sdl2", "fluidsynth[sndfile]", "sdl2-mixer[libmodplug,fluidsynth,libflac,mpg123,opusfile]", "luasocket", "luasec", "catch2"
 
 $vcpkg_git_url = "https://github.com/CorsixTH/vcpkg"
 
