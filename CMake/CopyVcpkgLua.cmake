@@ -29,7 +29,7 @@ add_custom_command(TARGET CorsixTH POST_BUILD
   $<TARGET_FILE_DIR:CorsixTH>/ssl.dll
 )
 
-if(${_VCPKG_TARGET_TRIPLET} STREQUAL "x64-windows")
+if(${_VCPKG_TARGET_TRIPLET} MATCHES "x64-windows.*")
   set(_OPENSSL_SUFFIX "-x64")
 else()
   set(_OPENSSL_SUFFIX "")

@@ -101,7 +101,7 @@ function run_script {
 
     # mpg123 on x64-windows requires x86-windows yasm-tool.
     # https://github.com/microsoft/vcpkg/issues/15890
-    if ($VcpkgTriplet -eq "x64-windows") {
+    if ($VcpkgTriplet -like "x64-windows*") {
         $yasm_tool_install = ".\vcpkg install yasm-tool:x86-windows"
         run_command -command $yasm_tool_install
     }
