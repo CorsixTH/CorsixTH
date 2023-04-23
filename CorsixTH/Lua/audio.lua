@@ -504,14 +504,8 @@ end
 --! If nil is returned music might either be playing or completely stopped.
 function Audio:pauseBackgroundTrack()
   assert(self.background_music, "Trying to pause music while music is stopped")
-  -- TODO: There is a bug in SDL for Windows that makes all sound, not just music stop
-  -- when pausing. For the time being, stop the music instead to prevent this.
-  self:stopBackgroundTrack()
-  return false
-  -------------------------------------------------
-  -- Real pause logic
-  -------------------------------------------------
-  --[[local status
+
+  local status
   if self.background_paused then
     self.background_paused = nil
     status = SDL.audio.resumeMusic()
@@ -541,7 +535,7 @@ function Audio:pauseBackgroundTrack()
     end
   end
   self:notifyJukebox()
-  return self.background_paused--]]
+  return self.background_paused
 end
 
 --! Stops playing background music for the time being.
