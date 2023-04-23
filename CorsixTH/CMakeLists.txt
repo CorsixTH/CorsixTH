@@ -101,7 +101,6 @@ set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 # Add an extra step to copy built DLLs on MSVC
 if(USE_VCPKG_DEPS)
   include(CopyVcpkgLua)
-  include(CopyVcpkgSdlMixerBackends)
 endif()
 
 ## Finding libraries
