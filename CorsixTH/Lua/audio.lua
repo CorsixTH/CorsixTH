@@ -164,8 +164,11 @@ function Audio:init()
     self.has_bg_music = true
   end
 
-  local status, err = SDL.audio.init(self.app.config.audio_frequency,
-    self.app.config.audio_channels, self.app.config.audio_buffer_size)
+  local status, err = SDL.audio.init(
+    self.app.config.audio_frequency,
+    self.app.config.audio_channels,
+    self.app.config.audio_buffer_size,
+    self.app:findSoundFont())
   if status then
     -- NB: Playback will not start if play_music is set to false
     self:playRandomBackgroundTrack()

@@ -1443,6 +1443,26 @@ function App:checkInstallFolder()
   return true, #corrupt ~= 0 and corrupt or nil
 end
 
+function App:findSoundFont()
+  local data_dir = debug.getinfo(1, "S").source:sub(2, -12)
+
+  local possible_locations = {
+    self.config.soundfont or false,
+    data_dir .. "FluidR3_GM.sf2", -- shipped
+    "/usr/share/soundfonts/default.sf2", -- default linux
+    "/usr/share/sounds/sf2/FluidR3_GM.sf2", -- debian based
+    "/usr/share/soundfonts/FluidR3_GM.sf2" -- archlinux and others
+  }
+
+  for _, sf_path in ipairs(possible_locations) do
+    if sf_path and lfs.attributes(sf_path) then
+      return sf_path
+    end
+  end
+
+  return nil
+end
+
 --! Get the directory containing the bitmap files.
 --!return Name of the directory containing the bitmap files, ending with a
 --        directory path separator.
