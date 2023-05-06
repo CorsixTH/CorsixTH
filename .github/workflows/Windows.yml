@@ -32,6 +32,10 @@ jobs:
           ctest --extra-verbose --build-config RelWithDebInfo --output-on-failure
           popd
 
+      - name: Download soundfont
+        run:
+          aria2c -d build/CorsixTH/RelWithDebInfo https://github.com/Jacalz/fluid-soundfont/raw/master/SF3/FluidR3.sf3
+
       - name: Copy data files for archive
         run: |
           cp -R CorsixTH/Lua build/CorsixTH/RelWithDebInfo/Lua
