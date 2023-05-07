@@ -60,6 +60,14 @@ void audio_music_over_callback() {
 
 int l_init(lua_State* L) {
   constexpr int chunk_size = 2048;
+  size_t soundfont_path_len;
+  const char* sound_font = luaL_optlstring(L, 4, nullptr, &soundfont_path_len);
+
+  // soundfont must be set before Mix_OpenAudio the first time or else
+  // fluidsynth is not loaded
+  if (sound_font != nullptr) {
+    Mix_SetSoundFonts(sound_font);
+  }
 
   int err = Mix_OpenAudio(
       static_cast<int>(luaL_optinteger(L, 1, MIX_DEFAULT_FREQUENCY)),
