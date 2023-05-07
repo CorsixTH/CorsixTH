@@ -201,10 +201,9 @@ end
 function UI:runDebugScript()
   -- luacheck: ignore 111 _ is set in debug code
   print("Executing Debug Script...")
-  local path_sep = package.config:sub(1, 1)
-  local lua_dir = debug.getinfo(1, "S").source:sub(2, -8)
+  local debug_script = self.app:getFullPath({"Lua", "debug_script.lua"})
   _ = TheApp.ui and TheApp.ui.debug_cursor_entity
-  local script = assert(loadfile(lua_dir .. path_sep .. "debug_script.lua"))
+  local script = assert(loadfile(debug_script))
   script()
   -- Clear _ after the script to prevent save corruption
   _ = nil

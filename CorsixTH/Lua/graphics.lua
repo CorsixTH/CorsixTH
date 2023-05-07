@@ -21,7 +21,6 @@ SOFTWARE. --]]
 local TH = require("TH")
 
 local pathsep = package.config:sub(1, 1)
-local ourpath = debug.getinfo(1, "S").source:sub(2, -17)
 
 --! Layer for loading (and subsequently caching) graphical resources.
 --! The Graphics class handles loading and caching of graphics resources.
@@ -97,7 +96,7 @@ function Graphics:Graphics(app)
   if self.app.config.use_new_graphics then
     -- Check if the config specifies a place to look for graphics in.
     -- Otherwise check in the default "Graphics" folder.
-    graphics_folder = self.app.config.new_graphics_folder or ourpath .. "Graphics"
+    graphics_folder = self.app.config.new_graphics_folder or self.app:getFullPath("Graphics", true)
     if graphics_folder:sub(-1) ~= pathsep then
       graphics_folder = graphics_folder .. pathsep
     end

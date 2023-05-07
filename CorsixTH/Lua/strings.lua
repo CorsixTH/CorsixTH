@@ -39,9 +39,8 @@ function Strings:init()
   -- Load (but do not execute) everything from the language directory
   -- Note that files are loaded with loadfile_envcall
   self.language_chunks = {}
-  local ourpath = debug.getinfo(1, "S").source:sub(2, -12)
   local pathsep = package.config:sub(1,1)
-  local path = ourpath .. "languages" .. pathsep
+  local path = self.app:getFullPath({"Lua", "languages"}, true)
   for file in lfs.dir(path) do
     if file:match("%.lua$") then
       local result, err = loadfile_envcall(path .. file)
