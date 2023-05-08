@@ -135,7 +135,7 @@ jobs:
         run: |
           cmake --build build/ --target doc
       - name: Upload documentation
-        if: github.ref == 'refs/heads/master' && github.repository == 'CorsixTH/CorsixTH' && matrix.docs
+        if: github.ref == 'refs/heads/master' && github.repository == 'lewri/CorsixTH' && matrix.docs
         run: |
           git config user.email "documentationbot@corsixth.com"
           git config user.name "Docs Bot"
