@@ -1,6 +1,6 @@
 ![](https://i.imgur.com/fYp148T.jpg)
 
-### Latest Release [![Release](https://img.shields.io/github/release/CorsixTH/CorsixTH.svg?colorB=green)](https://github.com/CorsixTH/CorsixTH/releases) [![Linux and Tests](https://github.com/CorsixTH/CorsixTH/workflows/Linux%20and%20Tests/badge.svg)](https://github.com/CorsixTH/CorsixTH/actions?query=workflow%3A%22Linux+%26+Tests%22) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/CorsixTH/CorsixTH?branch=master&svg=true)](https://ci.appveyor.com/project/TheCycoONE/corsixth)
+### Latest Release [![Release](https://img.shields.io/github/release/CorsixTH/CorsixTH.svg?colorB=green)](https://github.com/CorsixTH/CorsixTH/releases) [![Linux and Tests](https://github.com/CorsixTH/CorsixTH/workflows/Linux%20and%20Tests/badge.svg)](https://github.com/CorsixTH/CorsixTH/actions?query=workflow%3A%22Linux+%26+Tests%22) [![Windows](https://github.com/CorsixTH/CorsixTH/actions/workflows/Windows.yml/badge.svg)](https://github.com/CorsixTH/CorsixTH/actions/workflows/Windows.yml) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/CorsixTH/CorsixTH?branch=master&svg=true)](https://ci.appveyor.com/project/TheCycoONE/corsixth)
 
 ##### [Matrix Chat](https://matrix.to/#/#corsixth-general:matrix.org) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new) | [Reddit](https://www.reddit.com/r/corsixth) | [Discord](https://discord.gg/Mxeztvh)
 
