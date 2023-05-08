@@ -426,6 +426,7 @@ void movie_player::play(int iChannel) {
 
   if (audio_stream_index >= 0) {
     Mix_QuerySpec(&mixer_frequency, nullptr, &mixer_channels);
+
     std::int64_t target_channel_layout;
     switch (mixer_channels) {
       case 1:
@@ -446,7 +447,27 @@ void movie_player::play(int iChannel) {
       default:
         std::cerr << "WARN: unsupported channel layout " << mixer_channels
                   << ". Please report issue.";
-        target_channel_layout = av_get_default_channel_layout(mixer_channels);
+        target_channel_layout = 0;
+    }
+
+#if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(57, 24, 100) && \
+    LIBSWRESAMPLE_VERSION_INT >= AV_VERSION_INT(4, 5, 100)
+    av_channel_layout_unique_ptr ch_layout(new AVChannelLayout{});
+
+    if (target_channel_layout == 0) {
+      av_channel_layout_default(ch_layout.get(), mixer_channels);
+    } else {
+      av_channel_layout_from_mask(ch_layout.get(), target_channel_layout);
+    }
+
+    swr_alloc_set_opts2(&audio_resample_context, ch_layout.get(),
+                        AV_SAMPLE_FMT_S16, mixer_frequency,
+                        &(audio_codec_context->ch_layout),
+                        audio_codec_context->sample_fmt,
+                        audio_codec_context->sample_rate, 0, nullptr);
+#else
+    if (target_channel_layout == 0) {
+      target_channel_layout = av_get_default_channel_layout(mixer_channels);
     }
 
     audio_resample_context = swr_alloc_set_opts(
@@ -456,6 +477,7 @@ void movie_player::play(int iChannel) {
         static_cast<std::int64_t>(audio_codec_context->channel_layout),
         audio_codec_context->sample_fmt, audio_codec_context->sample_rate, 0,
         nullptr);
+#endif
     swr_init(audio_resample_context);
     empty_audio_chunk.reset(
         Mix_QuickLoad_RAW(audio_chunk_buffer.data(),

@@ -96,6 +96,21 @@ class mix_chunk_deleter {
 
 using mix_chunk_unique_ptr = std::unique_ptr<Mix_Chunk, mix_chunk_deleter>;
 
+#if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(57, 24, 100)
+//! \brief Functor for deleting AVChannelLayout
+class av_channel_layout_deleter {
+ public:
+  void operator()(AVChannelLayout* c) {
+    av_channel_layout_uninit(c);
+    delete c;
+  }
+};
+
+//! \brief unique_ptr for AVChannelLayout
+using av_channel_layout_unique_ptr =
+    std::unique_ptr<AVChannelLayout, av_channel_layout_deleter>;
+#endif
+
 //! \brief A picture in movie_picture_buffer
 //!
 //! Stores the picture from a frame in the movie from the time that it is
