@@ -85,6 +85,16 @@ function App:setCommandLine(...)
   end
 end
 
+--! Returns the full path of the local path given
+--!param folders (string or table) A string of one segment or an set of many segments of the path
+--!param trailing_slash (boolean) Whether the path needs to end with a local path separator
+--!return fullpath (string) The OS dependent full path
+function App:getFullPath(folders, trailing_slash)
+  if type(folders) ~= "table" then folders = {folders} end
+  local ending = trailing_slash and pathsep or ""
+  return debug.getinfo(1, "S").source:sub(2, -12) .. table.concat(folders, pathsep) .. ending
+end
+
 function App:init()
   -- App initialisation 1st goal: Get the loading screen up
 
@@ -117,8 +127,8 @@ function App:init()
   corsixth.require("filesystem")
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
-  self.level_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
-  self.campaign_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Campaigns" .. pathsep
+  self.level_dir = self:getFullPath("Levels", true)
+  self.campaign_dir = self:getFullPath("Campaigns", true)
   self:initUserDirectories()
   self:initSavegameDir()
   self:initScreenshotsDir()
@@ -595,12 +605,10 @@ end
 --!param campaign_file (string) Name of the file to read.
 --!return (table) Definitions found in the campaign file.
 function App:readCampaignFile(campaign_file)
-  local local_path = debug.getinfo(1, "S").source:sub(2, -12)
-  local dir = "Campaigns" .. pathsep
-  local path = local_path .. dir
-  local chunk, err = loadfile_envcall(path .. campaign_file)
+  local path = self:getFullPath({"Campaigns", campaign_file})
+  local chunk, err = loadfile_envcall(path)
   if not chunk then
-    return nil, "Error loading " .. path .. campaign_file .. ":\n" .. tostring(err)
+    return nil, "Error loading " .. path .. ":\n" .. tostring(err)
   else
     local result = {}
     chunk(result)
@@ -1454,7 +1462,7 @@ function App:checkInstallFolder()
 end
 
 function App:findSoundFont()
-  local data_dir = debug.getinfo(1, "S").source:sub(2, -12)
+  local data_dir = self:getFullPath()
 
   local possible_locations = {
     self.config.soundfont or false,
@@ -1547,10 +1555,10 @@ function App:readMapDataFile(filename)
 end
 
 function App:loadLuaFolder(dir, no_results, append_to)
-  local ourpath = debug.getinfo(1, "S").source:sub(2, -8)
-  dir = dir .. pathsep
-  local path = ourpath .. dir
+  if dir:sub(-1) ~= pathsep then dir = dir .. pathsep end
+  local path = self:getFullPath({"Lua", dir}, true)
   local results = no_results and "" or (append_to or {})
+
   for file in lfs.dir(path) do
     if file:match("%.lua$") then
       local status, result = pcall(corsixth.require, dir .. file:sub(1, -5))

@@ -18,8 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local pathsep = package.config:sub(1, 1)
-
 --! Custom Campaign Window
 class "UICustomCampaign" (UIMenuList)
 
@@ -66,10 +64,7 @@ end
 function UICustomCampaign:UICustomCampaign(ui)
   self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
 
-  local local_path = debug.getinfo(1, "S").source:sub(2, -61)
-  local dir = "Campaigns" .. pathsep
-  local path = local_path .. dir
-
+  local path = TheApp:getFullPath("Campaigns", true)
   local campaigns = createCampaignList(path)
 
   self:UIMenuList(ui, "menu", _S.custom_campaign_window.caption, campaigns, 10, details_width + 40)
