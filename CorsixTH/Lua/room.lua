@@ -493,8 +493,6 @@ function Room:commandEnteringStaff(humanoid, already_initialized)
   end
 end
 
-
-
 --! Activates and deactivates the staff waiting for patient mood icon
 -- and dynamic info text
 --!param activate (bool) - true to activate, false or nil to deactivate
@@ -518,12 +516,21 @@ function Room:_staffWaitToggle(activate)
   end
 end
 
+--! Check the target room for a staff wait toggle is not staff room/training/toilets,
+--! and the front humanoid is a patient.
+function Room:_checkWaitToggleValidTarget()
+  return self:hasQueueDialog() and self.room_info.id ~= "toilets" and
+      class.is(self.door.queue:front(), Patient)
+end
+
 function Room:commandEnteringPatient(humanoid)
   -- To be extended in derived classes
   self.door.queue.visitor_count = self.door.queue.visitor_count + 1
   humanoid:updateDynamicInfo("")
 
-  self:_staffWaitToggle(false) -- Staff no longer waiting
+  if self:_checkWaitToggleValidTarget() then
+    self:_staffWaitToggle(false) -- Staff no longer waiting
+  end
 end
 
 function Room:tryAdvanceQueue()
@@ -534,8 +541,7 @@ function Room:tryAdvanceQueue()
     if self:canHumanoidEnter(front) then
       self.door.queue:pop()
       self.door:updateDynamicInfo()
-      -- Do nothing if it is the staff room or training room or toilets and not a patient
-      if self:hasQueueDialog() and self.room_info.id ~= "toilets" and class.is(front, Patient) then
+      if self:_checkWaitToggleValidTarget() then
         self:_staffWaitToggle(true) -- Staff are now waiting
       end
     elseif self.humanoids[front] then
