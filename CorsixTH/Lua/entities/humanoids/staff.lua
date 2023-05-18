@@ -332,9 +332,9 @@ end
 -- so amounts here should be appropriately small comma values.
 function Staff:tire(amount)
   -- The no rest cheat overrides tiring effects
-  if self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then return end
-
-  self:changeAttribute("fatigue", amount)
+  if not self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then
+    self:changeAttribute("fatigue", amount)
+  end
   self:updateDynamicInfo()
 end
 
