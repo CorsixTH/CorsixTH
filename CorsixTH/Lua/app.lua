@@ -1209,7 +1209,7 @@ end
 --! Function for handling idle time in the main menu, which leads to playing the
 --! demo gameplay trailer if left long enough
 function App:idle()
-  if not self.config.play_intro then return end
+  if not self.config.play_demo then return end
   -- Check if we are in a proper 'idle' state and solely on the main menu
   if not self.ui:getWindow(UIMainMenu) or self.ui:getWindow(UIUpdate)
       or self.ui:getWindow(UIConfirmDialog) then

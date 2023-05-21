@@ -114,6 +114,7 @@ local config_defaults = {
   grant_wage_increase = false,
   movies = true,
   play_intro = true,
+  play_demo = true,
   allow_user_actions_while_paused = false,
   volume_opens_casebook = false,
   alien_dna_only_by_emergency = true,
@@ -337,6 +338,10 @@ local string_01 = [=[
 -- Intro movie: Enabled by default
 --]=] .. '\n' ..
 'play_intro = ' .. tostring(config_values.play_intro) .. '\n' .. [=[
+
+-- Demo movie (played on idle at main menu): Enabled by default
+--]=] .. '\n' ..
+'play_demo = ' .. tostring(config_values.play_demo) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Allow user actions while game is paused

@@ -146,6 +146,10 @@ movies = true
 --
 play_intro = true
 
+-- Demo movie (played on idle at main menu): Enabled by default
+--
+play_demo = true
+
 -------------------------------------------------------------------------------
 -- Allow user actions while game is paused
 -- In Theme Hospital the player would only be allowed to use the top menu if
