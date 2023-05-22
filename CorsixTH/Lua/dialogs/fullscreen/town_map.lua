@@ -107,7 +107,7 @@ function UITownMap:close()
 end
 
 local flag_cache = {}
-function UITownMap:onMouseMove(x, y)
+function UITownMap:onMouseMove(x, y, dx, dy)
   local tx = math.floor((x - 227) / 3)
   local ty = math.floor((y - 25) / 3)
   self.hover_plot = nil

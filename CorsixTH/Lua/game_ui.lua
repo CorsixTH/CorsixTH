@@ -709,7 +709,7 @@ end
 --!param x (float) normalised x value of the gesture
 --!param y (float) normalised y value of the gesture
 --!return (boolean) event processed indicator
-function GameUI:onMultiGesture(numfingers, dTheta, dDist, x, y) -- luacheck: ignore 212 dTheta
+function GameUI:onMultiGesture(numfingers, dTheta, dDist, x, y)
   -- only deal with 2 finger events for now
   if numfingers == 2 then
     -- calculate magnitude of pinch

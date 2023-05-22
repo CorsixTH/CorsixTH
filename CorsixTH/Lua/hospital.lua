@@ -2366,7 +2366,6 @@ function Hospital:getRandomBusyRoom()
 end
 
 ---- Stubs section - these functions have nothing to do here, are overridden in a derived class.
--- luacheck: ignore 212 keep args for child class
 
 --! Give advice to the user about the need to buy the first reception desk.
 function Hospital:msgNeedFirstReceptionDesk()

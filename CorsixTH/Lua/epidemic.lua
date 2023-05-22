@@ -704,7 +704,7 @@ function Epidemic:tryAnnounceInspector()
   end
 end
 
-function Epidemic:afterLoad(old, new) -- luacheck: ignore 212 keep args for child class
+function Epidemic:afterLoad(old, new)
   if old < 106 then
     self.level_config = nil
   end

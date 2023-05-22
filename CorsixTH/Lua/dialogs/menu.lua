@@ -239,7 +239,7 @@ function UIMenuBar:hitTestBar(x, y)
   return false
 end
 
-function UIMenuBar:onMouseMove(x, y)
+function UIMenuBar:onMouseMove(x, y, dx, dy)
   local padding = 6
   local visible = y < self.height + padding
   local newactive = false

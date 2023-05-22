@@ -28,7 +28,7 @@ globals = { -- Globals
             "lfs", "list_to_set", "loadfile_envcall", "loadstring_envcall",
             "permanent", "print_table", "rangeMapLookup", "rnc",
             "strict_declare_global", "table_length", "unpermanent", "values",
-            "serialize","array_join","shallow_clone", "staff_initials_cache",
+            "serialize", "array_join", "shallow_clone", "staff_initials_cache",
             "hasBit", "bitOr",
 
             -- Game classes
@@ -81,7 +81,6 @@ globals = { -- Globals
           }
 
 -- Set standard globals
-std = "lua51+lua52+lua53+luajit"
 files["CorsixTH/Luatest"] = {std = "+busted"}
 
 codes = true            -- Show warning codes
