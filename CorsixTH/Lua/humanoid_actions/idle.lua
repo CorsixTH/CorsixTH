@@ -53,7 +53,7 @@ function IdleAction:setOnInterrupt(on_interrupt)
   return self
 end
 
-local action_idle_interrupt = permanent"action_idle_interrupt"( function(action, humanoid)
+local action_idle_interrupt = permanent"action_idle_interrupt"( function(_, humanoid)
   humanoid:setTimer(1, humanoid.finishAction)
 end)
 
