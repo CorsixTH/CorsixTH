@@ -188,7 +188,7 @@ function Doctor._calculateTrainingPerformance(doc_atd, con_skill, class_size)
   end
 
   local performers = {
-    clamp(doc_atd), -- doctor focus.
+    clamp(doc_atd), -- doctor focus
     clamp(con_skill * con_skill), -- teacher ability. ~1.0 modifier at 0.75 skill
     math.t_random(0.9, 1, 1.1), -- Allow some randomness
   }
@@ -207,40 +207,17 @@ end
 
 --! Calculates the amount of skill to learn towards becoming a doctor/consultant and
 --! any amount towards a specialist skill being taught
---! There are detailed explanations on the logic to these calculations in the Wiki (see
---! Training) - PR NOTE: If merge, make wiki page
+--! There are detailed explanations on the logic to these calculations in the Wiki
 --!param consultant (entity) The person teaching the student
 --!param room_factor (number) What score training objects in the room give
 --!param student_count (number) Total number of students present
 function Doctor:trainSkills(consultant, room_factor, student_count)
-  --[[Information about these calculations based on TH:
-    General skill is based on gbv.trainingrate only; specialisms are based on the
-    impact of objects in the room (total training value of relevant objects).
-    Both calculations follow the general formula: x * skills_factor * class_performance
-    where x relates to the gbv.trainingrate (skill) or training value of room (specialism),
-    skills_factor is the impact from number of skills being taught,
-    and class_performance is performance of teacher/student and the class size.
-    For proper control in CorsixTH, specialsms are affected by the AbilityThreshold
-    for the specialism (varies by specialty)
-    The goal is to gain skill to become a consultant (ConsultantTreshold (usually
-    0.750)); or to be qualified in a specialism (always a value of 1.000)
-    PR NOTE: If merge, move to Wiki
-  ]]--
   local level_config = self.world.map.level_config
   local general_factor = level_config.gbv.TrainingRate
-  --[[ Scalers and floors:
-    For balance at the very worst it should take ~1000 days to go from skill 0 to skill
-    1. This will be known as the mimum learning value.
-    Generalist skill (g) scales differ from specialism (s) scale to give CorsixTH
-    values. g_scale is a simple conversion of value; but s_scale is more complex as it
-    provides a balance on setting the max skill a doctor can have and still become a
-    surgeon: this is ~0.5 skill (on normal difficulty in base game)
-    training.
-    PR NOTE: If merge, move to Wiki
-  ]]--
-  local MIN_LEARN_VALUE = 0.001
-  local g_scale = 10000
-  local s_scale = 12
+
+  local MIN_LEARN_VALUE = 0.001 -- Doctor always advances at least this amount
+  local g_scale = 10000 -- scales generalist calculation
+  local s_scale = 12 -- scales specialism calculation
 
   local function countSkillsTaught()
     local num_skills = 1 -- General skill is always counted
