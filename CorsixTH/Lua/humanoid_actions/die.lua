@@ -178,7 +178,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
     grim_reaper:setNextAction(IdleSpawnAction(1660, point_dir):setCount(40))
 
     --Initialise the grim reaper:
-    grim_reaper:setHospital(humanoid.world:getLocalPlayerHospital())
+    grim_reaper:setHospital(humanoid.hospital or humanoid.world:getHospital(hole_x, hole_y))
     grim_reaper.lava_hole = lava_hole
     grim_reaper.lava_hole.orientation = holes_orientation
     grim_reaper.use_tile_x = grim_use_tile_x

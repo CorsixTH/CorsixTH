@@ -637,7 +637,7 @@ function Humanoid:_handleEmptyActionQueue()
       else
         -- Set these variables to increase the likelihood of the humanoid managing to get out of the hospital.
         self.going_home = false
-        self.hospital = self.world:getLocalPlayerHospital()
+        self.hospital = self.world:getHospital(self.tile_x, self.tile_y)
         self:goHome("kicked")
       end
     end,
