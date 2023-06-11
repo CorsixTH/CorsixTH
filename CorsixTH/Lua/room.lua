@@ -497,6 +497,10 @@ end
 -- and dynamic info text
 --!param activate (bool) - true to activate, false or nil to deactivate
 function Room:_staffWaitToggle(activate)
+  if not self.staff_member and not self.staff_member_set then
+    return -- No staff in room
+  end
+
   local state = "deactivate"
   local dynamic_text = ""
 
@@ -551,6 +555,8 @@ function Room:tryAdvanceQueue()
   end
 end
 
+--! Handles the departure of a humanoid from the room
+--!param humanoid The subject entity
 function Room:onHumanoidLeave(humanoid)
   if self.staff_member == humanoid then
     self.staff_member = nil
@@ -561,7 +567,7 @@ function Room:onHumanoidLeave(humanoid)
     return
   end
   self.humanoids[humanoid] = nil
-  local staff_leaving = false
+  local staff_leaving = false -- used only for staff leaving immediately after a patient
 
   if class.is(humanoid, Patient) then
     -- Some staff member in the room might be waiting to get to the staffroom.
