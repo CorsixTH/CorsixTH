@@ -287,7 +287,7 @@ function World:initLevel(app, avail_rooms)
       end
     end
   end
-  if #self.available_diseases == 0 and not self.map.level_number == "MAP EDITOR" then
+  if #self.available_diseases == 0 and not self.map.level_number == "MAP EDITOR" then -- luacheck: ignore 582
     -- No diseases are needed if we're actually in the map editor!
     print("Warning: This level does not contain any diseases")
   end
