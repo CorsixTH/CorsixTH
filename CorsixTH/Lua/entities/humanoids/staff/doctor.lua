@@ -140,7 +140,7 @@ function Doctor:setProfile(profile)
   self:updateStaffTitle()
 end
 
-function Doctor:updateSkill(consultant, trait, amount) -- luacheck: ignore 212
+function Doctor:updateSkill(consultant, trait, amount)
 -- consultant is kept for todo detailed in Doctor:trainSkill
   local old_profile = {
     is_junior = self.profile.is_junior,

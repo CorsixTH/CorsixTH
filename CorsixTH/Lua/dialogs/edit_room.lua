@@ -1050,7 +1050,7 @@ function UIEditRoom:onMouseUp(button, x, y)
   return UIPlaceObjects.onMouseUp(self, button, x, y)
 end
 
-function UIEditRoom:onMouseMove(x, y, ...)
+function UIEditRoom:onMouseMove(x, y, dx, dy)
   if self.in_pickup_mode then
     self.ui:setCursor(self.ui.app.gfx:loadMainCursor("grab"))
   end

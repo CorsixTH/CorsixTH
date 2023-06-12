@@ -308,7 +308,7 @@ function UIBankManager:draw(canvas, x, y)
   end
 end
 
-function UIBankManager:onMouseMove(x, y, ...)
+function UIBankManager:onMouseMove(x, y, dx, dy)
     local ui = self.ui
     if x > 0 and x < 640 and y > 0 and y < 480 then
       if self.showingStatistics then

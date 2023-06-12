@@ -28,7 +28,8 @@ globals = { -- Globals
             "lfs", "list_to_set", "loadfile_envcall", "loadstring_envcall",
             "permanent", "print_table", "rangeMapLookup", "rnc",
             "strict_declare_global", "table_length", "unpermanent", "values",
-            "serialize","array_join","shallow_clone","staff_initials_cache",
+            "serialize", "array_join", "shallow_clone", "staff_initials_cache",
+            "hasBit", "bitOr",
 
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
@@ -80,11 +81,11 @@ globals = { -- Globals
           }
 
 -- Set standard globals
-std = "lua51+lua52+lua53+luajit"
 files["CorsixTH/Luatest"] = {std = "+busted"}
 
 codes = true            -- Show warning codes
 max_line_length = false -- No maximum line length
+unused_args = false     -- Permit unused arguments
 
 -- Exclude files and directories
 exclude_files = {"CorsixTH/Bitmap", "CorsixTH/Lua/api_version.lua", "LDocGen"}
@@ -135,32 +136,3 @@ add_ignore("CorsixTH/Lua/entities/humanoids/staff.lua", "callbackNewRoom")
 add_ignore("CorsixTH/Lua/humanoid_actions/vip_go_to_next_room.lua", "action_vip_go_to_next_room_end")
 add_ignore("CorsixTH/Lua/rooms/operating_theatre.lua", "after_use")
 add_ignore("CorsixTH/Lua/rooms/operating_theatre.lua", "wait_for_ready")
-
--- W111: setting non-standard global variable XYZ
--- W113: accessing undefined variable XYZ
--- W122: mutating read-only global variable XYZ
--- W212: unused argument XYZ
-
-add_ignore("CorsixTH/Lua/dialogs/edit_room.lua", "113") -- accessing hasBit and bitOr utility.lua functions
-add_ignore("CorsixTH/Lua/dialogs/edit_room.lua", "212")
-add_ignore("CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua", "212")
-add_ignore("CorsixTH/Lua/dialogs/menu.lua", "212")
-add_ignore("CorsixTH/Lua/dialogs/resizables/dropdown.lua", "212")
-add_ignore("CorsixTH/Lua/dialogs/resizables/lua_console.lua", "111")
-add_ignore("CorsixTH/Lua/filesystem.lua", "212")
-add_ignore("CorsixTH/Lua/graphics.lua", "542")
-add_ignore("CorsixTH/Lua/humanoid_actions/idle.lua", "212")
-add_ignore("CorsixTH/Lua/humanoid_actions/multi_use_object.lua", "212")
-add_ignore("CorsixTH/Lua/humanoid_actions/pickup.lua", "212")
-add_ignore("CorsixTH/Lua/humanoid_actions/seek_room.lua", "212")
-add_ignore("CorsixTH/Lua/humanoid_actions/vaccinate.lua", "212")
-add_ignore("CorsixTH/Lua/humanoid_actions/vip_go_to_next_room.lua", "212")
-add_ignore("CorsixTH/Lua/map.lua", "212")
-add_ignore("CorsixTH/Lua/research_department.lua", "212")
-add_ignore("CorsixTH/Lua/room.lua", "212")
-add_ignore("CorsixTH/Lua/sprite_viewer.lua", "212")
-add_ignore("CorsixTH/Lua/strict.lua", "212")
-add_ignore("CorsixTH/Lua/ui.lua", "212")
-add_ignore("CorsixTH/Lua/utility.lua", "111") -- defining hasBit and bitOr
-add_ignore("CorsixTH/Lua/window.lua", "212")
-add_ignore("CorsixTH/Luatest/non_strict.lua", "212")

@@ -30,7 +30,7 @@ local function newindex(t, k, v)
   rawset(t, k, v)
 end
 
-local function index(t, k)
+local function index()
   return nil
 end
 

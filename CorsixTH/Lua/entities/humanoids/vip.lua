@@ -160,7 +160,7 @@ function Vip:getNextRoom()
 end
 
 -- display the VIP name in the info box
-function Vip:updateDynamicInfo(action_string) -- luacheck: ignore 212 keep args from parent class
+function Vip:updateDynamicInfo(action_string)
   self:setDynamicInfo('text', {self.name})
 end
 

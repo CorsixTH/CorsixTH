@@ -75,7 +75,7 @@ end)
 
 
 local interrupt_vaccination = permanent"action_interrupt_vaccination"(
-function(action, humanoid)
+function(_, humanoid)
   local epidemic = humanoid.hospital.epidemic
   epidemic:interruptVaccinationActions(humanoid)
   humanoid:setTimer(1, humanoid.finishAction)
@@ -87,7 +87,7 @@ local function vaccinate(action, nurse)
 
   local patient = action.patient
 
-  local perform_vaccination = --[[persistable:action_perform_vaccination]] function(humanoid)
+  local perform_vaccination = --[[persistable:action_perform_vaccination]] function()
     -- Check if they STILL are in an adjacent square
     if is_in_adjacent_square(nurse, patient) then
       CallsDispatcher.queueCallCheckpointAction(nurse)

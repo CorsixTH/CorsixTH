@@ -56,7 +56,7 @@ local action_pickup_interrupt = permanent"action_pickup_interrupt"( function(act
   action.ui:setDefaultCursor(nil)
 end)
 
-local action_pickup_dont_interrupt = permanent"action_pickup_dont_interrupt"( function(action, humanoid)
+local action_pickup_dont_interrupt = permanent"action_pickup_dont_interrupt"( function(action)
   action.on_interrupt = action_pickup_interrupt
 end)
 

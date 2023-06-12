@@ -224,7 +224,7 @@ local function action_seek_room_start(action, humanoid)
     action.done_init = true
     action.must_happen = true
 
-    local remove_callback = --[[persistable:action_seek_room_remove_callback]] function(rm)
+    local remove_callback = --[[persistable:action_seek_room_remove_callback]] function()
       humanoid:updateMessage("research")
     end -- End of remove_callback function
     action.remove_callback = remove_callback

@@ -27,9 +27,9 @@ function VipGoToNextRoomAction:VipGoToNextRoomAction()
   self:HumanoidAction("vip_go_to_next_room")
 end
 
-local action_vip_go_to_next_room_end = permanent"action_next_room_end"( function(humanoid) end)
+local action_vip_go_to_next_room_end = permanent"action_next_room_end"( function() end)
 
-local function action_vip_go_to_next_room_start(action, humanoid)
+local function action_vip_go_to_next_room_start(_, humanoid)
   if humanoid.next_room_no == nil then
     -- This vip is done here.
     humanoid:goHome()
