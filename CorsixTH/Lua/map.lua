@@ -620,6 +620,46 @@ function Map:setDebugText(x, y, msg, ...)
   self.debug_text[(y - 1) * self.width + x - 1] = text
 end
 
+function Map:_drawDebugTiles(canvas, x, y, xpos, ypos)
+  local xy = y * self.width + x
+  if self.debug_flags then
+    local flags = self.debug_flags[xy]
+    if flags.passable then
+      self.cell_outline:draw(canvas, 3, xpos, ypos)
+    end
+    if flags.hospital then
+      self.cell_outline:draw(canvas, 8, xpos, ypos)
+    end
+    if flags.buildable then
+      self.cell_outline:draw(canvas, 9, xpos, ypos)
+    end
+    if flags.travelNorth and self.debug_flags[xy - self.width].passable then
+      self.cell_outline:draw(canvas, 4, xpos, ypos)
+    end
+    if flags.travelEast and self.debug_flags[xy + 1].passable then
+      self.cell_outline:draw(canvas, 5, xpos, ypos)
+    end
+    if flags.travelSouth and self.debug_flags[xy + self.width].passable then
+      self.cell_outline:draw(canvas, 6, xpos, ypos)
+    end
+    if flags.travelWest and self.debug_flags[xy - 1].passable then
+      self.cell_outline:draw(canvas, 7, xpos, ypos)
+    end
+    if flags.thob ~= 0 then
+      self.debug_font:draw(canvas, "T"..flags.thob, xpos, ypos, 64, 16)
+    end
+    if flags.roomId ~= 0 then
+      self.debug_font:draw(canvas, "R"..flags.roomId, xpos, ypos + 16, 64, 16)
+    end
+  else
+    local msg = self.debug_text[xy]
+    if msg and msg ~= "" then
+      self.cell_outline:draw(canvas, 2, xpos, ypos)
+      self.debug_font:draw(canvas, msg, xpos, ypos, 64, 32)
+    end
+  end
+end
+
 --! Draws the rectangle of the map given by (sx, sy, sw, sh) at position (dx, dy) on the canvas
 --!param canvas
 --!param sx Horizontal start position at the screen.
@@ -633,88 +673,50 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
   -- All the heavy work is done by C code:
   self.th:draw(canvas, sx, sy, sw, sh, dx, dy)
 
+  if not self.debug_font or not (self.debug_text or self.debug_flags) then return end
   -- Draw any debug overlays
-  if self.debug_font and (self.debug_text or self.debug_flags) then
-    local startX = 0
-    local startY = math_floor((sy - 32) / 16)
-    if startY < 0 then
-      startY = 0
-    elseif startY >= self.height then
-      startX = startY - self.height + 1
-      startY = self.height - 1
-      if startX >= self.width then
-        startX = self.width - 1
-      end
+  local startX = 0
+  local startY = math_floor((sy - 32) / 16)
+  if startY < 0 then
+    startY = 0
+  elseif startY >= self.height then
+    startX = startY - self.height + 1
+    startY = self.height - 1
+    if startX >= self.width then
+      startX = self.width - 1
     end
-    local baseX = startX
-    local baseY = startY
-    while true do
-      local x = baseX
-      local y = baseY
-      local screenX = 32 * (x - y) - sx
-      local screenY = 16 * (x + y) - sy
-      if screenY >= sh + 70 then
-        break
-      elseif screenY > -32 then
-        repeat
-          if screenX >= -32 then
-            if screenX < sw + 32 then
-              local xy = y * self.width + x
-              local xpos = dx + screenX - 32
-              local ypos = dy + screenY
-              if self.debug_flags then
-                local flags = self.debug_flags[xy]
-                if flags.passable then
-                  self.cell_outline:draw(canvas, 3, xpos, ypos)
-                end
-                if flags.hospital then
-                  self.cell_outline:draw(canvas, 8, xpos, ypos)
-                end
-                if flags.buildable then
-                  self.cell_outline:draw(canvas, 9, xpos, ypos)
-                end
-                if flags.travelNorth and self.debug_flags[xy - self.width].passable then
-                  self.cell_outline:draw(canvas, 4, xpos, ypos)
-                end
-                if flags.travelEast and self.debug_flags[xy + 1].passable then
-                  self.cell_outline:draw(canvas, 5, xpos, ypos)
-                end
-                if flags.travelSouth and self.debug_flags[xy + self.width].passable then
-                  self.cell_outline:draw(canvas, 6, xpos, ypos)
-                end
-                if flags.travelWest and self.debug_flags[xy - 1].passable then
-                  self.cell_outline:draw(canvas, 7, xpos, ypos)
-                end
-                if flags.thob ~= 0 then
-                  self.debug_font:draw(canvas, "T"..flags.thob, xpos, ypos, 64, 16)
-                end
-                if flags.roomId ~= 0 then
-                  self.debug_font:draw(canvas, "R"..flags.roomId, xpos, ypos + 16, 64, 16)
-                end
-              else
-                local msg = self.debug_text[xy]
-                if msg and msg ~= "" then
-                  self.cell_outline:draw(canvas, 2, xpos, ypos)
-                  self.debug_font:draw(canvas, msg, xpos, ypos, 64, 32)
-                end
-              end
-            else
-              break
-            end
+  end
+  local baseX = startX
+  local baseY = startY
+  while true do -- TODO: replace this with a scanline
+    local x = baseX
+    local y = baseY
+    local screenX = 32 * (x - y) - sx
+    local screenY = 16 * (x + y) - sy
+    local ypos = dy + screenY
+    if screenY >= sh + 70 then
+      break
+    elseif screenY > -32 then
+      repeat
+        if screenX >= -32 then
+          if screenX < sw + 32 then
+            self:_drawDebugTiles(canvas, x, y, dx + screenX - 32, ypos)
+          else
+            break
           end
-          x = x + 1
-          y = y - 1
-          screenX = screenX + 64
-        until y < 0 or x >= self.width
-      end
-      if baseY == self.height - 1 then
-        baseX = baseX + 1
-        if baseX == self.width then
-          break
         end
-      else
-        baseY = baseY + 1
+        x = x + 1
+        y = y - 1
+        screenX = screenX + 64
+      until y < 0 or x >= self.width
+    end
+    if baseY == self.height - 1 then
+      baseX = baseX + 1
+      if baseX == self.width then
+        break
       end
+    else
+      baseY = baseY + 1
     end
   end
 end
