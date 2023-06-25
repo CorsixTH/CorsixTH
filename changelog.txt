@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version 0.67 - released xxx 2023
+Version 0.67 Beta 1 - released July 2023
 -------------------------------------------------------------------------------
 # New Features/Enhancements
 * The backend code for MIDI playback has been changed on Windows and real pause logic

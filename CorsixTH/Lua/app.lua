@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 177 -- Regression #2086
+local SAVEGAME_VERSION = 178 -- 0.67 beta1
 
 class "App"
 
@@ -1598,8 +1598,10 @@ end
 -- a specific savegame version is from.
 function App:getVersion(version)
   local ver = version or self.savegame_version
-  if ver > 170 then
+  if ver > 178 then
     return "Trunk"
+  elseif ver > 170 then
+    return "v0.67-beta1"
   elseif ver > 156 then
     return "v0.66"
   elseif ver > 138 then
