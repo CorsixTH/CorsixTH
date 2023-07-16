@@ -14,18 +14,18 @@ original game can be made.
 ------------------------------------------------------------------------------
 See https://github.com/CorsixTH/CorsixTH/wiki/Getting-Started for full details.
 Briefly:
-1)  Ensure that you are using a supported platform (Windows, Linux, OS X)
-2)  Ensure that you have either the demo of Theme Hospital or the original 
-    game CD/files. 
+1)  Ensure that you are using a supported platform (Windows, macOS, Linux or BSD)
+2)  Ensure that you have either the demo of Theme Hospital or the original
+    game CD/files.
     The demo can be found at: http://th.corsix.org/Demo.zip and the full game
-    can be found at http://www.gog.com/gamecard/theme_hospital. 
-    The full game can also often be found on ebay.
-3)  Copy the resources folder (which contains the folder "ANIMS" and "LEVELS" 
-    among others, this is in some cases called "HOSP") from either the demo 
+    can be found at https://www.gog.com/game/theme_hospital.
+    The full game can also often be found on eBay.
+3)  Copy the resources folder (which contains the folders "ANIMS" and "LEVELS"
+    among others, this is in some cases called "HOSP") from either the demo
     or full game to a directory of your choice.
-4a) If you have downloaded a pre-compiled version: 
-    At this point Windows users should run the installer, during install you 
-    will be asked for the location of the original game files set in step 3. 
+4a) If you have downloaded a pre-compiled version:
+    At this point Windows users should run the installer. During install you
+    will be asked for the location of the original game files set in step 3.
     Linux and OS X users simply run the game and set the location of the 
     original game files when requested.
 4b) If you have a source code distribution, compile it.
@@ -34,9 +34,7 @@ Briefly:
     the Theme Hospital data files. Select the directory you chose in step 3.
 5)  Go play! If this doesn't go smoothly, then consult:
     https://github.com/CorsixTH/CorsixTH/wiki/Frequently-Asked-Questions
-    http://forums.corsixth.com/
-    http://groups.google.com/group/corsix-th-dev
-    #corsix-th on FreeNode (IRC)
+    Or feel free to contact us using one of the contact details below.
 
 ------------------------------------------------------------------------------
 -- CorsixTH.exe Optional Startup Arguments
@@ -51,7 +49,7 @@ Briefly:
 ------------------------------------------------------------------------------
 -- Contact Details
 ------------------------------------------------------------------------------
-Homepage: http://th.corsix.org/
-Forum: http://forums.corsixth.com/
-Mailing list: http://groups.google.com/group/corsix-th-dev
-IRC: #corsix-th on FreeNode
+Homepage: https://corsixth.com
+Discord: https://discord.gg/Mxeztvh
+Mailing list: https://groups.google.com/g/corsix-th-dev
+Matrix Room (Discord Bridge): https://matrix.to/#/#corsixth-general:matrix.org
