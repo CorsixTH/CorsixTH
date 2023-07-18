@@ -53,3 +53,4 @@ Homepage: https://corsixth.com
 Discord: https://discord.gg/Mxeztvh
 Mailing list: https://groups.google.com/g/corsix-th-dev
 Matrix Room (Discord Bridge): https://matrix.to/#/#corsixth-general:matrix.org
+Matrix Space (collection of Discord Bridges): https://matrix.to/#/#CorsixTH:matrix.org
