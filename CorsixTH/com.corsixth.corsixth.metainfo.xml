@@ -20,6 +20,15 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.67~rc1" date="2023-07-29" type="development">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Theme Hospital installs in the default location for the EA Store
+              are now automatically detected, like GOG and Origin.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.67~beta1" date="2023-07-08" type="development">
       <description>
         <p>New Features:</p>
