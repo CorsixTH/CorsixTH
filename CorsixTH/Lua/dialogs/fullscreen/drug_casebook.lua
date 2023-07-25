@@ -394,7 +394,7 @@ function UICasebook:onTick()
 end
 
 function UICasebook:afterLoad(old, new)
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("DrugN01V", 640, 480, "QData", "QData", "DrugN01V.pal", true)
     local palette = gfx:loadPalette("QData", "DrugN01V.pal", true)

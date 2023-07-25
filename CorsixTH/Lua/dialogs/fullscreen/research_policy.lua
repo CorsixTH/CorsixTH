@@ -240,7 +240,7 @@ function UIResearch:afterLoad(old, new)
       }
     end
   end
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Res01V", 640, 480, "QData", "QData", "Res01V.pal", true)
     local palette = gfx:loadPalette("QData", "Res01V.pal", true)

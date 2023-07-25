@@ -233,6 +233,7 @@ end
 --!return (palette, string) The palette and a string representing the palette converted to greyscale
 function Graphics:loadPalette(dir, name, transparent_255)
   name = name or "MPalette.dat"
+
   if self.cache.palette[name] then
     local li = self.load_info[self.cache.palette[name]]
     if li and li[5] ~= transparent_255 then
@@ -301,7 +302,7 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255
   self.reload_functions[bitmap] = bitmap_reloader
 
   self.cache.raw[name] = bitmap
-  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, paldir, pal}
+  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, paldir, pal, transparent_255}
   return bitmap
 end
 
