@@ -586,7 +586,7 @@ function UIStaffManagement:afterLoad(old, new)
   if old < 175 then
     self:close()
   end
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Staff01V", 640, 480, "QData", "QData", "Staff01V.pal", true)
     local palette = gfx:loadPalette("QData", "Staff01V.pal", true)

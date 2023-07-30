@@ -346,7 +346,7 @@ function UITownMap:bankStats()
 end
 
 function UITownMap:afterLoad(old, new)
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
     local palette = gfx:loadPalette("QData", "Town01V.pal", true)
     self.background = gfx:loadRaw("Town01V", 640, 480, "QData", "QData", "Town01V.pal", true)

@@ -228,7 +228,7 @@ function UIPolicy:afterLoad(old, new)
     self.sliders_z = {self.sliders["send_home"], self.sliders["guess_cure"],
         self.sliders["stop_procedure"], self.sliders["goto_staffroom"]}
   end
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
 
     self.background = gfx:loadRaw("Pol01V", 640, 480, "QData", "QData", "Pol01V.pal", true)

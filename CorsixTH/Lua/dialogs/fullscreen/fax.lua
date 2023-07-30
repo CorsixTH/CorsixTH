@@ -286,7 +286,7 @@ function UIFax:close()
 end
 
 function UIFax:afterLoad(old, new)
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
     local palette = gfx:loadPalette("QData", "Fax01V.pal", true)

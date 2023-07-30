@@ -233,7 +233,7 @@ function UIProgressReport:draw(canvas, x, y)
 end
 
 function UIProgressReport:afterLoad(old, new)
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
 
     local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
