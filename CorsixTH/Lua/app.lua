@@ -1827,6 +1827,7 @@ function App:checkForUpdates()
   end
   local http = require("socket.http")
   local url = require("socket.url")
+  http.TIMEOUT = 2
 
   print("Checking for CorsixTH updates...")
   local update_body, status, _ = http.request(update_url)
