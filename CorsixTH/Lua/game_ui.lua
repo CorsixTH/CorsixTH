@@ -541,6 +541,13 @@ function GameUI:onMouseMove(x, y, dx, dy)
     return false
   end
 
+  local mouse_drag_button = nil
+  if self.app.config.right_mouse_panning then
+    mouse_drag_button = self.buttons_down.mouse_right
+  else
+    mouse_drag_button = self.buttons_down.mouse_middle
+  end
+
   local repaint = UpdateCursorPosition(self.app.video, x, y)
   if self.app.moviePlayer.playing then
     return false
@@ -551,7 +558,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
   if self:onCursorWorldPositionChange() or self.simulated_cursor then
     repaint = true
   end
-  if self.buttons_down.mouse_middle then
+  -- //...
+  if mouse_drag_button then
     local zoom = self.zoom_factor
     self.current_momentum.x = -dx/zoom
     self.current_momentum.y = -dy/zoom
@@ -786,7 +794,16 @@ end
 
 function GameUI:onTick()
   local repaint = UI.onTick(self)
-  if not self.buttons_down.mouse_middle then
+
+  -- get the mouse button for dragging the map
+  local mouse_drag_button = nil
+  if self.app.config.right_mouse_panning then
+    mouse_drag_button = self.buttons_down.mouse_right
+  else
+    mouse_drag_button = self.buttons_down.mouse_middle
+  end
+
+  if not mouse_drag_button then
     if math.abs(self.current_momentum.x) < 0.2 and math.abs(self.current_momentum.y) < 0.2 then
       -- Stop scrolling
       self.current_momentum.x = 0.0
@@ -822,7 +839,8 @@ function GameUI:onTick()
       -- If the middle mouse button is down, then the world is being dragged,
       -- and so the scroll direction due to the cursor being at the map edge
       -- should be opposite to normal to make it feel more natural.
-      if self.buttons_down.mouse_middle then
+      -- //...
+      if mouse_drag_button then
         dx, dy = -dx, -dy
       end
     end

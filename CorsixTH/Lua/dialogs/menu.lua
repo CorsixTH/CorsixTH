@@ -663,6 +663,13 @@ function UIMenuBar:makeGameMenu(app)
       app:setCaptureMouse()
     end)
 
+  -- Mouse panning //...
+  options:appendCheckItem(_S.menu_options.right_mouse_panning,
+    app.config.right_mouse_panning,
+    function(item) app.config.right_mouse_panning = item.checked
+      app.config.right_mouse_panning = item.checked
+    end)
+
   options:appendCheckItem(_S.menu_options.adviser_disabled:format(hotkey_value_label("ingame_toggleAdvisor", hotkeys)),
     not app.config.adviser_disabled,
     function(item)

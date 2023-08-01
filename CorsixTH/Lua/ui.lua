@@ -1073,7 +1073,7 @@ function UI:afterLoad(old, new)
   if old < 5 then
     self.editing_allowed = true
   end
-  if old < 179 then
+  if old < 176 then
     if self.app.good_install_folder and not self.app.using_demo_files then
       local gfx = self.app.gfx
       gfx.cache.raw = {}

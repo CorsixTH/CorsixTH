@@ -78,7 +78,7 @@ end
 
 
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 320, 460, col_bg)
+  self:UIResizable(ui, 320, 500, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -158,6 +158,17 @@ function UIOptions:UIOptions(ui, mode)
 
   self.mouse_capture_button = self.mouse_capture_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonMouseCapture)
     :setToggleState(app.config.capture_mouse):setTooltip(_S.tooltip.options_window.capture_mouse)
+
+  -- Mouse pan key
+  local right_mouse_panning_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, right_mouse_panning_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+    :setLabel(_S.options_window.right_mouse_panning):setTooltip(_S.tooltip.options_window.right_mouse_panning).lowered = true
+
+  self.right_mouse_panning_panel =
+    self:addBevelPanel(165, right_mouse_panning_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.right_mouse_panning and _S.options_window.option_on or _S.options_window.option_off)
+
+  self.right_mouse_panning_button = self.right_mouse_panning_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonRightMousePanning)
+    :setToggleState(app.config.right_mouse_panning):setTooltip(_S.tooltip.options_window.right_mouse_panning)
 
 
   -- Language
@@ -332,6 +343,13 @@ function UIOptions:buttonMouseCapture()
   app:saveConfig()
   app:setCaptureMouse()
   self.mouse_capture_button:setLabel(app.config.capture_mouse and _S.options_window.option_on or _S.options_window.option_off)
+end
+
+function UIOptions:buttonRightMousePanning()
+  local app = self.ui.app
+  app.config.right_mouse_panning = not app.config.right_mouse_panning
+  app:saveConfig()
+  self.right_mouse_panning_button:setLabel(app.config.right_mouse_panning and _S.options_window.option_on or _S.options_window.option_off)
 end
 
 function UIOptions:buttonCustomise()
