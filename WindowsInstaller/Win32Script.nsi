@@ -254,7 +254,7 @@ Section "MainSection" SEC01
   !insertmacro ReplaceInFile config_template.txt LANGUAGE_CHOSEN $(install_language)
   !insertmacro ReplaceInFile config_template.txt SCREEN_SIZE_WIDTH "$0"
   !insertmacro ReplaceInFile config_template.txt SCREEN_SIZE_HEIGHT "$1"
-  !insertmacro ReplaceInFile config_template.txt SCREEN_FULLSCREEN "false"
+  !insertmacro ReplaceInFile config_template.txt SCREEN_FULLSCREEN "true"
 
   ; TODO: Let the user choose if new music files exist and where they are in that case.
   Rename config_template.txt config.txt
