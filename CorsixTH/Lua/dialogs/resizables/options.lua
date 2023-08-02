@@ -167,7 +167,7 @@ function UIOptions:UIOptions(ui, mode)
   self.right_mouse_scrolling_panel =
     self:addBevelPanel(165, right_mouse_scrolling_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.right_mouse_scrolling and _S.options_window.right_mouse_scrolling_option_right or _S.options_window.right_mouse_scrolling_option_middle)
 
-  self.right_mouse_scrolling_button = self.right_mouse_scrolling_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonRightMousePanning)
+  self.right_mouse_scrolling_button = self.right_mouse_scrolling_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonRightMouseScrolling)
     :setToggleState(app.config.right_mouse_scrolling):setTooltip(_S.tooltip.options_window.right_mouse_scrolling)
 
 
@@ -345,7 +345,7 @@ function UIOptions:buttonMouseCapture()
   self.mouse_capture_button:setLabel(app.config.capture_mouse and _S.options_window.option_on or _S.options_window.option_off)
 end
 
-function UIOptions:buttonRightMousePanning()
+function UIOptions:buttonRightMouseScrolling()
   local app = self.ui.app
   app.config.right_mouse_scrolling = not app.config.right_mouse_scrolling
   app:saveConfig()
