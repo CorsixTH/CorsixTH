@@ -541,13 +541,6 @@ function GameUI:onMouseMove(x, y, dx, dy)
     return false
   end
 
-  local mouse_drag_button = nil
-  if self.app.config.right_mouse_panning then
-    mouse_drag_button = self.buttons_down.mouse_right
-  else
-    mouse_drag_button = self.buttons_down.mouse_middle
-  end
-
   local repaint = UpdateCursorPosition(self.app.video, x, y)
   if self.app.moviePlayer.playing then
     return false
@@ -558,8 +551,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
   if self:onCursorWorldPositionChange() or self.simulated_cursor then
     repaint = true
   end
-  -- //...
-  if mouse_drag_button then
+
+  if self:_isMouseDragButtonDown() then
     local zoom = self.zoom_factor
     self.current_momentum.x = -dx/zoom
     self.current_momentum.y = -dy/zoom
@@ -792,18 +785,23 @@ function GameUI:playAnnouncement(name, priority, played_callback, played_callbac
   self.announcer:playAnnouncement(name, priority, played_callback, played_callback_delay)
 end
 
-function GameUI:onTick()
-  local repaint = UI.onTick(self)
-
-  -- get the mouse button for dragging the map
-  local mouse_drag_button = nil
+-- Get the configured mouse drag button
+function GameUI:_isMouseDragButtonDown()
+  local mouse_drag_button
   if self.app.config.right_mouse_panning then
     mouse_drag_button = self.buttons_down.mouse_right
   else
     mouse_drag_button = self.buttons_down.mouse_middle
   end
+  return mouse_drag_button
+end
 
-  if not mouse_drag_button then
+function GameUI:onTick()
+  local repaint = UI.onTick(self)
+
+  
+
+  if not self:_isMouseDragButtonDown() then
     if math.abs(self.current_momentum.x) < 0.2 and math.abs(self.current_momentum.y) < 0.2 then
       -- Stop scrolling
       self.current_momentum.x = 0.0
@@ -840,7 +838,7 @@ function GameUI:onTick()
       -- and so the scroll direction due to the cursor being at the map edge
       -- should be opposite to normal to make it feel more natural.
       -- //...
-      if mouse_drag_button then
+      if self:_isMouseDragButtonDown() then
         dx, dy = -dx, -dy
       end
     end
