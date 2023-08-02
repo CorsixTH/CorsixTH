@@ -92,10 +92,10 @@ prevent_edge_scrolling = false
 capture_mouse = true
 
 -------------------------------------------------------------------------------
--- Right Mouse Panning: By default, it is disabled (right_mouse_panning = false).
+-- Right Mouse Panning: By default, it is disabled (right_mouse_scrolling = false).
 -- This means that the default panning method is pressing the middle mouse button.
 --
-right_mouse_panning = false
+right_mouse_scrolling = false
 
 -------------------------------------------------------------------------------
 -- Adviser on/off: If you set this to true the adviser will no longer

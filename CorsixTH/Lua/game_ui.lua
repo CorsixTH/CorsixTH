@@ -552,7 +552,7 @@ function GameUI:onMouseMove(x, y, dx, dy)
     repaint = true
   end
 
-  if self:_isMouseDragButtonDown() then
+  if self:_isMouseScrollButtonDown() then
     local zoom = self.zoom_factor
     self.current_momentum.x = -dx/zoom
     self.current_momentum.y = -dy/zoom
@@ -786,14 +786,14 @@ function GameUI:playAnnouncement(name, priority, played_callback, played_callbac
 end
 
 -- Get the configured mouse drag button
-function GameUI:_isMouseDragButtonDown()
-  local mouse_drag_button
-  if self.app.config.right_mouse_panning then
-    mouse_drag_button = self.buttons_down.mouse_right
+function GameUI:_isMouseScrollButtonDown()
+  local mouse_scroll_button
+  if self.app.config.right_mouse_scrolling then
+    mouse_scroll_button = self.buttons_down.mouse_right
   else
-    mouse_drag_button = self.buttons_down.mouse_middle
+    mouse_scroll_button = self.buttons_down.mouse_middle
   end
-  return mouse_drag_button
+  return mouse_scroll_button
 end
 
 function GameUI:onTick()
@@ -801,7 +801,7 @@ function GameUI:onTick()
 
   
 
-  if not self:_isMouseDragButtonDown() then
+  if not self:_isMouseScrollButtonDown() then
     if math.abs(self.current_momentum.x) < 0.2 and math.abs(self.current_momentum.y) < 0.2 then
       -- Stop scrolling
       self.current_momentum.x = 0.0
@@ -838,7 +838,7 @@ function GameUI:onTick()
       -- and so the scroll direction due to the cursor being at the map edge
       -- should be opposite to normal to make it feel more natural.
       -- //...
-      if self:_isMouseDragButtonDown() then
+      if self:_isMouseScrollButtonDown() then
         dx, dy = -dx, -dy
       end
     end
