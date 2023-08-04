@@ -798,9 +798,6 @@ end
 
 function GameUI:onTick()
   local repaint = UI.onTick(self)
-
-  
-
   if not self:_isMouseScrollButtonDown() then
     if math.abs(self.current_momentum.x) < 0.2 and math.abs(self.current_momentum.y) < 0.2 then
       -- Stop scrolling
@@ -837,7 +834,6 @@ function GameUI:onTick()
       -- If the middle mouse button is down, then the world is being dragged,
       -- and so the scroll direction due to the cursor being at the map edge
       -- should be opposite to normal to make it feel more natural.
-      -- //...
       if self:_isMouseScrollButtonDown() then
         dx, dy = -dx, -dy
       end
