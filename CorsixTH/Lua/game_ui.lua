@@ -785,15 +785,15 @@ function GameUI:playAnnouncement(name, priority, played_callback, played_callbac
   self.announcer:playAnnouncement(name, priority, played_callback, played_callback_delay)
 end
 
--- Get the configured mouse drag button
+-- Check whether the configured mouse drag button is being held down (true) or not (false).
 function GameUI:_isMouseScrollButtonDown()
-  local mouse_scroll_button
+  local mouse_scroll_button_down
   if self.app.config.right_mouse_scrolling then
-    mouse_scroll_button = self.buttons_down.mouse_right
+    mouse_scroll_button_down = self.buttons_down.mouse_right
   else
-    mouse_scroll_button = self.buttons_down.mouse_middle
+    mouse_scroll_button_down = self.buttons_down.mouse_middle
   end
-  return mouse_scroll_button
+  return mouse_scroll_button_down
 end
 
 function GameUI:onTick()
