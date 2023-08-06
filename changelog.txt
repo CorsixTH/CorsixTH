@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version 0.67 Beta 1 - released July 2023
+Version 0.67 - released August 2023
 -------------------------------------------------------------------------------
 # New Features/Enhancements
 * The backend code for MIDI playback has been changed on Windows and real pause logic
@@ -21,8 +21,10 @@ Version 0.67 Beta 1 - released July 2023
   revealed
 * Balance changes to drug improvement research
 * Check for updates can now be disabled in Settings
+* Check for updates timeout duration significantly shortened
 * "Pause" now shows up when the "Build while paused" setting is on and the game is paused.
 * The gamelog file now includes a timestamp
+* Support for detecting original game files from the EA App
 * Many, many, refactors of the code to make it better to understand for future developers
 * Contact methods to reach the CorsixTH Team have been updated
 
@@ -31,6 +33,7 @@ Version 0.67 Beta 1 - released July 2023
 * Russian has been updated. Thanks Matt1
 
 # Bug Fixes
+* Fixed an issue where CorsixTH could default to fullscreen on first launch in Windows
 * Fixed an instance where objects could disappear from the map
 * Fixed a bug where the empty action queue message was prevented from happening
 * Fixed a bug where dying patients became undead and would have a habit of ruining everything 
