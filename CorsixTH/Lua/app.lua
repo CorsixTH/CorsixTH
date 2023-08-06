@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 179 -- Palette bug redux
+local SAVEGAME_VERSION = 180 -- CorsixTH 0.67 release
 
 class "App"
 
@@ -1599,10 +1599,10 @@ end
 -- a specific savegame version is from.
 function App:getVersion(version)
   local ver = version or self.savegame_version
-  if ver > 178 then
+  if ver > 180 then
     return "Trunk"
   elseif ver > 170 then
-    return "v0.67-rc1"
+    return "v0.67"
   elseif ver > 156 then
     return "v0.66"
   elseif ver > 138 then
