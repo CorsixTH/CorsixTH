@@ -1,7 +1,7 @@
 return {
   major = 0,
   minor = 6,
-  revision = 6,
-  changelog_en = 'Visual effects for Serious Radiation and Jellitis, improved hotkey assignment menu and more.',
+  revision = 7,
+  changelog_en = 'Fixes longstanding music issues on Windows, changes to Handymen, VIP and Epidemics. See release notes for more.',
   download_url = 'http://github.com/CorsixTH/CorsixTH/releases',
 }
