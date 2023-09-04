@@ -1463,16 +1463,24 @@ function World:checkWinningConditions(player_no)
     end
     if goal.win_value then
       local max_min = goal.max_min_win == 1 and 1 or -1
-      -- Special case for balance, subtract any loans!
+
       if goal.name == "balance" then
+        -- Special case for balance, subtract any loans!
         current_value = current_value - hospital.loan
       end
+
       -- Is this goal not fulfilled yet?
       if (current_value - goal.win_value) * max_min <= 0 then
         result.state = "nothing"
       end
     end
   end
+
+  -- Special case for loans: you cannot run from them !
+  if hospital.loan > 0 and result.state == "win" then
+    result.state = "nothing"
+  end
+
   return result
 end
 
