@@ -412,3 +412,166 @@ function LevelTableSection:loadSaveConfig(cfg, store)
   end
 end
 
+--! An abstract "page" at the screen for editing level configuration values.
+class "LevelPage"
+local LevelPage = _G["LevelPage"]
+
+-- Abstract base class.
+function LevelPage:LevelPage()
+  self._widgets = {}
+end
+
+--! Load the values from the level config or write the values into a *new*
+--  level config.
+--!param cfg (nested tables with values) Level config file to read or create.
+--!param store (bool) If set, write the value to a new spot in the level config,
+--  else read the value and update the current value.
+function LevelPage:loadSaveConfig(cfg, store)
+  error("Implement me in " .. class.type(self))
+end
+
+--! Set visibility of the widgets to the value of the parameter.
+--!param (bool) Whether the widgets and/or text boxes should be visible.
+function LevelPage:setVisible(is_vsisible)
+  error("Implement me in " .. class.type(self))
+end
+
+--! A "screen" with displayed sections that can be edited.
+class "LevelEditPage" (LevelPage)
+
+--@type LevelEditPage
+local LevelEditPage = _G["LevelEditPage"]
+
+--! A 'screen' with values that can be modified.
+--!param tab_name_path Path in _S with the tab-name of the page.
+--!param sections (array of LevelSection) Sections of settings that can be
+--    edited in this screen.
+function LevelEditPage:LevelEditPage(tab_name_path, sections)
+  LevelPage.LevelPage(self)
+
+  assert(tab_name_path)
+
+  self.tab_name_path = tab_name_path -- Name of the page in a tab of a tab-page.
+  self.sections = sections -- Array of sections displayed at the page.
+
+  self._widgets = {} -- Widgets of the page.
+
+  self.section_sep = 15 -- Space between sections in a column.
+  self.column_sep = 5 -- Space between 'columns'.
+end
+
+--! Set visibility of the widgets to the value of the parameter.
+--!param (bool) Whether the widgets and/or text boxes should be visible.
+function LevelEditPage:setVisible(is_vsisible)
+  for _, widget in ipairs(self._widgets) do
+    widget:setVisible(is_vsisible)
+  end
+  for _, section in ipairs(self.sections) do
+    section:setVisible(is_vsisible)
+  end
+end
+
+local INTER_SECTION_VERT_SPACE = 10 -- Vertical space between two editable sections.
+
+--! Compute layout of the elements at the page.
+--!param window Window to add the new widgets.
+--!param pos (Pos) Position of the to-left corner.
+--!param size (Size) Size if the page.
+function LevelEditPage:layout(window, pos, size)
+  self._widgets = {}
+
+  -- As the displayed sections have a title, the edit page itself does not need
+  -- to display a title.
+
+  -- Naively assume that all sections together fit in the available space.
+  local top_pos = pos.y
+  for _, section in ipairs(self.sections) do
+    local bottom_pos = section:layout(window, Pos(pos.x, top_pos))
+    top_pos = bottom_pos + INTER_SECTION_VERT_SPACE
+  end
+  self:setVisible(false) -- Initially hide the edit page.
+end
+
+--! Load the value from the level config or write the value into a *new* level
+--  config file.
+--!param cfg (nested tables with values) Level config file to read or create.
+--!param store (bool) If, write the value to a new spot in the level config, else
+--  read the value and update the current value.
+function LevelEditPage:loadSaveConfig(cfg, store)
+  for _, sect in ipairs(self.sections) do sect:loadSaveConfig(cfg, store) end
+end
+
+--! Class with tabs to select a child editpage, and room to display the selected page.
+class "LevelTabPage" (LevelPage)
+
+--@type LevelTabPage
+local LevelTabPage = _G["LevelTabPage"]
+
+function LevelTabPage:LevelTabPage(edit_pages)
+  LevelPage.LevelPage(self)
+
+  self._level_pages = edit_pages -- Array of LevelPage.
+  self._selected_page = nil -- Index of selected page in edit_pages.
+
+  self._page_tab_size = Size(90, 20) -- Size of a tab with a edit page name
+
+  -- Amount of vertical space between the page tab rows and the top of a
+  -- displayed edit page.
+  self._edit_sep = 10
+end
+
+--! Compute layout of the elements at the page.
+--!param window Window to add the new widgets.
+--!param pos (Pos) Position of the to-left corner.
+--!param size (Size) Size if the page.
+function LevelTabPage:layout(window, pos, size)
+  local tabs_per_row = math.floor(size.w / self._page_tab_size.w)
+  tabs_per_row = (tabs_per_row < 1) and 1 or tabs_per_row
+  local remaining_hor = math.max(0, size.w - tabs_per_row * self._page_tab_size.w)
+  local indent = math.floor(remaining_hor / 2)
+
+  -- Add edit-page tabs.
+  local ypos = pos.y
+  local xpos =indent + pos.x
+  local placed_tabs = 0
+  for i, level_page in ipairs(self._level_pages) do
+    if placed_tabs >= tabs_per_row then -- Row full.
+      ypos = ypos + self._page_tab_size.h
+      xpos = indent + pos.x
+      placed_tabs = 0
+    end
+    local callback = --[[persistable:LevelTabPage_onClickTab]] function() self:onClickTab(i) end
+    makeButton(window, self._widgets, xpos, y, self.page_tab_size, callback, level_page.tab_name_path)
+    xpos = xpos + self._page_tab_size.w
+    placed_tabs = placed_tabs + 1
+  end
+  ypos = ypos + self._page_tab_size.h + self._edit_sep -- Top of edit pages.
+
+  -- Add the level pages.
+  local edit_page_pos = Pos(pos.x, ypos)
+  local edit_page_size = Size(size.w, size.h - (ypos - pos.y))
+  assert(edit_page_size.h > 0)
+  for _, level_page in ipairs(self._level_pages) do
+    level_page:layout(window, edit_page_pos, edit_page_size)
+  end
+end
+
+-- User selected a page to display.
+--!param page_num Selected page.
+function LevelTabPage:onClickTab(page_num)
+  if page_num ~= self._selected_page then
+    if page_num >= 1 and page_num <= #self._level_pages then
+      if self._selected_page then -- Hide previous selection, first time there is none.
+        self._level_pages[self._selected_page]:setVisible(false)
+      end
+      self._selected_page = page_num -- And select/show new selection.
+      self._level_pages[self._selected_page]:setVisible(true)
+    end
+  end
+end
+
+function LevelTabPage:loadSaveConfig(cfg, store)
+  for _, page in ipairs(self._level_pages) do
+    page:loadSaveConfig(cfg, store)
+  end
+end
