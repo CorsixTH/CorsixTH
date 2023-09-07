@@ -87,6 +87,43 @@ local function _makeValuesSection(settings)
   return section
 end
 
+--! Construct a table with values for each index in a domain.
+--!param settings (table) Settings for the instance.
+--!return (LevelTableSection) The constructed table with index rows and value columns.
+local function _makeTableSection(settings)
+  -- settings fields:
+  --  * "row_names" (array) String names for all rows.
+  --  * "row_tooltips" (array) Optional string names for all rows.
+  --  * "col_names" (array) String names for all columns.
+  --  * "col_tooltips" (array) Optional tooltip string names.
+  --  * "title_height" (int) Optional height of the title.
+  --  * "title_sep" (int) Vertical space below the title
+  --  * "row_label_sep" (int) Optional vertical space between rows.
+  --  * "col_label_sep" (int) Optional horizontal space between column labels.
+  --  * "col_width" (int) Optional with of a column (including the row names column).
+  --  * "row_height" (int) Optional height of a row.
+  --  * "intercol_sep" (int) Optional horizontal space between columns.
+  --  * "interrow_sep" (int) Optional vertical space between rows.
+  assert(settings.title_path)
+  local row_names = settings.row_names
+  local row_tooltips = settings.row_tooltips
+  local col_names = settings.col_names
+  local col_tooltips = settings.col_tooltips
+  local col_values = settings.col_values
+  local section = LevelTableSection(settings.title_path, row_names, row_tooltips,
+      col_names, col_tooltips, col_values)
+  section.title_height = settings.title_height or section.title_height
+  section.title_sep = settings.title_sep or section.title_sep
+  section.row_label_sep = settings.row_label_sep or section.row_label_sep
+  section.col_label_sep = settings.col_label_sep or section.col_label_sep
+  section.col_width = settings.col_width or section.col_width
+  section.row_height = settings.row_height or section.row_height
+  section.intercol_sep = settings.intercol_sep or section.intercol_sep
+  section.interrow_sep = settings.interrow_sep or section.interrow_sep
+  return section
+end
+
+
 --! Construct an editable page with the given edit sections.
 --!param settings (table) Settings and content for the edit page.
 local function _makeEditPageSection(settings)
@@ -138,8 +175,8 @@ function UILevelEditor:UILevelEditor(ui)
   self:setDefaultPosition(0.1, 0.1)
 end
 
-function UILevelEditor:_makeTownSection()
-  return _makeValuesSection({
+function UILevelEditor:_makeTownEditPage()
+  local local_town = _makeValuesSection({
     title_path = "level_editor.titles.local_town",
     title_size = _TITLE_SIZE,
     label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
@@ -151,12 +188,96 @@ function UILevelEditor:_makeTownSection()
     _makeValue({level_cfg_path = "gbv.AllocDelay", name_path = true}),
     _makeValue({level_cfg_path = "gbv.ScoreMaxInc", name_path = true}),
   })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.local_town",
+    local_town,
+  })
 end
 
-function UILevelEditor:_makeTownEditPage()
+function UILevelEditor:_makeTownLevelssEditPage()
+  local towns_col1 = {
+    _makeValue({level_cfg_path = "gbv.towns[0].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[1].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[2].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[3].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[4].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[5].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[6].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[7].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[8].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[9].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[10].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[11].StartCash"}),
+    _makeValue({level_cfg_path = "gbv.towns[12].StartCash"}),
+  }
+  local towns_col2 = {
+    _makeValue({level_cfg_path = "gbv.towns[0].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[1].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[2].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[3].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[4].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[5].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[6].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[7].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[8].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[9].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[10].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[11].InterestRate"}),
+    _makeValue({level_cfg_path = "gbv.towns[12].InterestRate"}),
+  }
+  local towns_col3 = {
+    _makeValue({level_cfg_path = "gbv.towns[0].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[1].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[2].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[3].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[4].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[5].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[6].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[7].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[8].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[9].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[10].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[11].StartRep"}),
+    _makeValue({level_cfg_path = "gbv.towns[12].StartRep"}),
+  }
+  local towns_col4 = {
+    _makeValue({level_cfg_path = "gbv.towns[0].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[1].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[2].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[3].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[4].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[5].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[6].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[7].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[8].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[9].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[10].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[11].OverdraftDiff"}),
+    _makeValue({level_cfg_path = "gbv.towns[12].OverdraftDiff"}),
+  }
+
+  local towns_row_names = {}
+  for i = 0, 12 do
+    towns_row_names[#towns_row_names + 1] = "level_editor.town_levels.row_names[" .. i .. "]"
+  end
+  local towns_col_names = {
+    "level_editor.town_levels.col_names.start_cash",
+    "level_editor.town_levels.col_names.interest_rate",
+    "level_editor.town_levels.col_names.start_rep",
+    "level_editor.town_levels.col_names.overdraft_diff",
+  }
+
+  local town_level_values = _makeTableSection({
+    title_path = "level_editor.titles.town_levels",
+    row_names = towns_row_names,
+    col_values = {towns_col1, towns_col2, towns_col3, towns_col4},
+    col_names = towns_col_names
+  })
+
   return _makeEditPageSection({
-    tab_name_path = "level_editor.tab_names.town",
-    self:_makeTownSection(),
+    tab_name_path = "level_editor.tab_names.town_levels",
+    town_level_values,
   })
 end
 
@@ -325,6 +446,7 @@ end
 function UILevelEditor:_makeMainTabPage()
   return _makeTabPageSection({
     self:_makeTownEditPage(),
+    self:_makeTownLevelssEditPage(),
     self:_makeHospitalEditPage1(), self:_makeHospitalEditPage2(),
     self:_makeStaffEditPage1(),
     self:_makeRoomsCostEditPage(),

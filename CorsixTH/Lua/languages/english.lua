@@ -925,9 +925,10 @@ level_editor = {
     global_awards_trophies = "Global prizes",
     hospital1 = "Hospital 1",
     hospital2 = "Hospital 2",
+    local_town = "Town",
     rooms_cost = "Rooms cost",
     staff1 = "Staff-1",
-    town = "Towns"
+    town_levels = "Town levels"
   },
   titles = {
     epidemics = "Epidemics settings",
@@ -938,7 +939,31 @@ level_editor = {
     min_salaries = "Minimum staff salaries",
     research = "Research settings",
     rooms_cost = "Rooms cost",
+    town_levels = "Town levels",
     training = "Training settings"
+  },
+  town_levels = {
+    col_names = {
+      interest_rate = "Interest",
+      overdraft_diff = "Overdraft",
+      start_cash = "Initial cash",
+      start_rep = "Initial rep"
+    },
+    row_names = {
+      [0] = "Level 1",
+      [1] = "Level 2",
+      [2] = "Level 3",
+      [3] = "Level 4",
+      [4] = "Level 5",
+      [5] = "Level 6",
+      [6] = "Level 7",
+      [7] = "Level 8",
+      [8] = "Level 9",
+      [9] = "Level 10",
+      [10] = "Level 11",
+      [11] = "Level 12",
+      [12] = "Level 13"
+    }
   },
   values = {
     awards_trophies = {
