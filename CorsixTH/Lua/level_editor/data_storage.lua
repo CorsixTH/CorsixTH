@@ -105,7 +105,7 @@ end
 --! A nummeric value to be edited.
 class "LevelValue"
 
---@type LevelValue
+---@type LevelValue
 local LevelValue = _G["LevelValue"]
 
 --! Integer level configuration value in the level config editor.
@@ -182,7 +182,7 @@ end
 --! Common base class for an editable area in the level editor.
 class "LevelSection"
 
---@type LevelSection
+---@type LevelSection
 local LevelSection = _G["LevelSection"]
 
 --! Base class for editing a group of values.
@@ -225,7 +225,7 @@ end
 --! Section with one or more related values.
 class "LevelValuesSection" (LevelSection)
 
---@type LevelValuesSection
+---@type LevelValuesSection
 local LevelValuesSection = _G["LevelValuesSection"]
 
 LevelValuesSection.LABEL_WIDTH = 100
@@ -462,7 +462,7 @@ end
 --! A "screen" with displayed sections that can be edited.
 class "LevelEditPage" (LevelPage)
 
---@type LevelEditPage
+---@type LevelEditPage
 local LevelEditPage = _G["LevelEditPage"]
 
 --! A 'screen' with values that can be modified.
@@ -523,7 +523,7 @@ end
 --! Class with tabs to select a child editpage, and room to display the selected page.
 class "LevelTabPage" (LevelPage)
 
---@type LevelTabPage
+---@type LevelTabPage
 local LevelTabPage = _G["LevelTabPage"]
 
 function LevelTabPage:LevelTabPage(edit_pages)

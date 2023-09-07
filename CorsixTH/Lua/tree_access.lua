@@ -27,7 +27,7 @@ end
 -- Static class for extracting translated text strings by name.
 class "TreeAccess"
 
--- @type TreeAccess
+---@type TreeAccess
 local TreeAccess = _G["TreeAccess"]
 
 --! Collect policy function that stores all name parts in the same given outer
