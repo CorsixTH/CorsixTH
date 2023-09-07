@@ -922,63 +922,46 @@ map_editor_window = {
 
 level_editor = {
   tab_names = {
-    hospital = "Hospital"
-  },
-  titles = {
-    research = "Research settings"
-  },
-  values = {
-    gbv = {
-      AutopsyRepHitPercent = {
-        name = "Reputation loss for detected autopsies"
-      },
-      AutopsyRschPercent = {
-        name = "Amount of improved research for an autopsy"
-      },
-      DrugImproveRate = {
-        name = "Rate of drug improvement"
-      },
-      MaxObjectStrength = {
-        name = "Maximum strength of an object"
-      },
-      MinDrugCost = {
-        name = "Minimum cost of a drug"
-      },
-      ResearchIncrement = {
-        name = "Object strength increase by research"
-      },
-      ResearchPointsDivisor = {
-        name = "Research input divider",
-        tooltip = "Amount of research input for one point"
-      },
-      StartCost = {
-        name = "Initial cost of a drug"
-      },
-      StartRating = {
-        name = "Initial rating of a drug"
-      }
-    }
-  }
-}
-
-level_editor = {
-  tab_names = {
-    hospital = "Hospital"
+    hospital1 = "Hospital-1",
+    hospital2 = "Hospital-2",
+    town = "Towns"
   },
   titles = {
     epidemics = "Epidemics settings",
-    research = "Research settings"
+    local_town = "Local Town section",
+    research = "Research settings",
+    training = "Training settings"
   },
   values = {
     gbv = {
+      AbilityThreshold = {
+        [0] = {
+          name = "Threshold for becoming a surgeon"
+        },
+        [1] = {
+          name = "Threshold for becoming a psychiatrist"
+        },
+        [2] = {
+          name = "Threshold for becoming a researcher"
+        }
+      },
+      AllocDelay = {
+        name = "Delay before allocating population"
+      },
       AutopsyRepHitPercent = {
         name = "Reputation loss for detected autopsies"
       },
       AutopsyRschPercent = {
-        name = "Amount of improved research for an autopsy"
+        name = "Amount of done research with an autopsy"
+      },
+      ConsultantThreshold = {
+        name = "Threshold for becoming a consultant"
       },
       ContagiousSpreadFactor = {
         name = "Chance of spreading"
+      },
+      DoctorThreshold = {
+        name = "Threshold for becoming a doctor"
       },
       DrugImproveRate = {
         name = "Rate of drug improvement"
@@ -1013,6 +996,9 @@ level_editor = {
       MaxObjectStrength = {
         name = "Maximum strength of an object"
       },
+      MayorLaunch = {
+        name = "Frequency of mayor visits"
+      },
       MinDrugCost = {
         name = "Minimum cost of a drug"
       },
@@ -1032,14 +1018,52 @@ level_editor = {
         name = "Research input divider",
         tooltip = "Amount of research input for one point"
       },
+      RschImproveCostPercent = {
+        name = "Cost of an improvement in research"
+      },
+      RschImproveIncrementPercent = {
+        name = "Amount of improvement in research"
+      },
+      ScoreMaxInc = {
+        name = "Factor for maximum score"
+      },
       StartCost = {
         name = "Initial cost of a drug"
       },
       StartRating = {
         name = "Initial rating of a drug"
       },
+      TrainingRate = {
+        name = "Rate of training"
+      },
+      TrainingValue = {
+        [0] = {
+          name = "Training value of a projector"
+        },
+        [1] = {
+          name = "Training value of a skeleton"
+        },
+        [2] = {
+          name = "Training value of a book case"
+        }
+      },
       Vaccost = {
         name = "Cost of a vaccination"
+      }
+    },
+    town = {
+      InterestRate = {
+        name = "Interest rate"
+      },
+      OverdraftDiff = {
+        name = "Overdraft rate",
+        tooltip = "Money to pay while balance is negative"
+      },
+      StartCash = {
+        name = "Initial cash"
+      },
+      StartRep = {
+        name = "Initial reputation"
       }
     }
   }

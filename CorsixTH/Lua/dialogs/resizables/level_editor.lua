@@ -138,6 +138,28 @@ function UILevelEditor:UILevelEditor(ui)
   self:setDefaultPosition(0.1, 0.1)
 end
 
+function UILevelEditor:_makeTownSection()
+  return _makeValuesSection({
+    title_path = "level_editor.titles.local_town",
+    title_size = _TITLE_SIZE,
+    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    _makeValue({level_cfg_path = "town.StartCash", name_path = true}),
+    _makeValue({level_cfg_path = "town.InterestRate", name_path = true}),
+    _makeValue({level_cfg_path = "town.StartRep", name_path = true}),
+    _makeValue({level_cfg_path = "town.OverdraftDiff", name_path = true, tooltip_path = true}),
+    _makeValue({level_cfg_path = "gbv.MayorLaunch", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.AllocDelay", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.ScoreMaxInc", name_path = true}),
+  })
+end
+
+function UILevelEditor:_makeTownEditPage()
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.town",
+    self:_makeTownSection(),
+  })
+end
+
 function UILevelEditor:_makeHospitalResearchSection()
   return _makeValuesSection({
     title_path = "level_editor.titles.research",
@@ -152,7 +174,26 @@ function UILevelEditor:_makeHospitalResearchSection()
     _makeValue({level_cfg_path = "gbv.MaxObjectStrength", name_path = true}),
     _makeValue({level_cfg_path = "gbv.AutopsyRschPercent", name_path = true}),
     _makeValue({level_cfg_path = "gbv.AutopsyRepHitPercent", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.RschImproveCostPercent", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.RschImproveIncrementPercent", name_path = true}),
   })
+end
+
+function UILevelEditor:_makeHospitalTrainingSection()
+  return _makeValuesSection({
+    title_path = "level_editor.titles.training",
+    title_size = _TITLE_SIZE,
+    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    _makeValue({level_cfg_path = "gbv.TrainingRate", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.TrainingValue[0]", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.TrainingValue[1]", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.TrainingValue[2]", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.AbilityThreshold[0]", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.AbilityThreshold[1]", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.AbilityThreshold[2]", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.DoctorThreshold", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.ConsultantThreshold", name_path = true}),
+})
 end
 
 function UILevelEditor:_makeHospitalEpidemicsSection()
@@ -177,16 +218,25 @@ function UILevelEditor:_makeHospitalEpidemicsSection()
 })
 end
 
-function UILevelEditor:_makeHospitalEditPage()
+function UILevelEditor:_makeHospitalEditPage1()
   return _makeEditPageSection({
-    tab_name_path = "level_editor.tab_names.hospital",
+    tab_name_path = "level_editor.tab_names.hospital1",
     self:_makeHospitalResearchSection(),
+    self:_makeHospitalTrainingSection()
+  })
+end
+
+function UILevelEditor:_makeHospitalEditPage2()
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.hospital2",
     self:_makeHospitalEpidemicsSection()
   })
 end
 
 function UILevelEditor:_makeMainTabPage()
   return _makeTabPageSection({
-    self:_makeHospitalEditPage()
+    self:_makeTownEditPage(),
+    self:_makeHospitalEditPage1(),
+    self:_makeHospitalEditPage2()
   })
 end
