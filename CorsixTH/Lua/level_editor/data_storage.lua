@@ -282,18 +282,14 @@ function LevelValuesSection:layout(window, pos)
   self._text_boxes = {}
 
   local x, y = pos.x, pos.y
-  local max_x = x
   -- Title.
   if self.title_path then
     _makeLabel(window, self._widgets, x, y, self.title_size, self.title_path, nil, TITLE_LABEL_SETTINGS)
     y = y + self.title_size.h + self.title_sep
-    max_x = math.max(max_x, x + self.title_size.w)
   end
   -- Editable values below the title.
   local label_x = x
   local val_x = label_x + self.label_size.w + self.value_sep
-  local right_x = val_x + self.value_size.w
-  max_x = math.max(max_x, right_x)
   for idx, val in ipairs(self.values) do
     if idx > 1 then y = y + self.value_sep end
     _makeLabel(window, self._widgets, label_x, y, self.label_size, val.name_path, val.tooltip_path, NAME_LABEL_SETTINGS)
