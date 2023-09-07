@@ -920,6 +920,131 @@ map_editor_window = {
   },
 }
 
+level_editor = {
+  tab_names = {
+    hospital = "Hospital"
+  },
+  titles = {
+    research = "Research settings"
+  },
+  values = {
+    gbv = {
+      AutopsyRepHitPercent = {
+        name = "Reputation loss for detected autopsies"
+      },
+      AutopsyRschPercent = {
+        name = "Amount of improved research for an autopsy"
+      },
+      DrugImproveRate = {
+        name = "Rate of drug improvement"
+      },
+      MaxObjectStrength = {
+        name = "Maximum strength of an object"
+      },
+      MinDrugCost = {
+        name = "Minimum cost of a drug"
+      },
+      ResearchIncrement = {
+        name = "Object strength increase by research"
+      },
+      ResearchPointsDivisor = {
+        name = "Research input divider",
+        tooltip = "Amount of research input for one point"
+      },
+      StartCost = {
+        name = "Initial cost of a drug"
+      },
+      StartRating = {
+        name = "Initial rating of a drug"
+      }
+    }
+  }
+}
+
+level_editor = {
+  tab_names = {
+    hospital = "Hospital"
+  },
+  titles = {
+    epidemics = "Epidemics settings",
+    research = "Research settings"
+  },
+  values = {
+    gbv = {
+      AutopsyRepHitPercent = {
+        name = "Reputation loss for detected autopsies"
+      },
+      AutopsyRschPercent = {
+        name = "Amount of improved research for an autopsy"
+      },
+      ContagiousSpreadFactor = {
+        name = "Chance of spreading"
+      },
+      DrugImproveRate = {
+        name = "Rate of drug improvement"
+      },
+      EpidemicCompHi = {
+        name = "Highest coverup compensation"
+      },
+      EpidemicCompLo = {
+        name = "Lowest coverup compensation"
+      },
+      EpidemicConcurrentLimit = {
+        name = "Maximum simultaneous epidemics"
+      },
+      EpidemicEvacMinimum = {
+        name = "Minimum evacuated"
+      },
+      EpidemicFine = {
+        name = "Fine for failed coverup"
+      },
+      EpidemicRepLossMinimum = {
+        name = "Minimum reputation loss"
+      },
+      HoldVisualMonths = {
+        name = "Time before visual diseases"
+      },
+      HoldVisualPeepCount = {
+        name = "Patient count before visual diseases"
+      },
+      HowContagious = {
+        name = "Contagiousness"
+      },
+      MaxObjectStrength = {
+        name = "Maximum strength of an object"
+      },
+      MinDrugCost = {
+        name = "Minimum cost of a drug"
+      },
+      ReduceContMonths = {
+        name = "Delay reduction by time"
+      },
+      ReduceContPeepCount = {
+        name = "Delay reduction by patient arrivals"
+      },
+      ReduceContRate = {
+        name = "Rate of reducing contagiousness"
+      },
+      ResearchIncrement = {
+        name = "Object strength increase by research"
+      },
+      ResearchPointsDivisor = {
+        name = "Research input divider",
+        tooltip = "Amount of research input for one point"
+      },
+      StartCost = {
+        name = "Initial cost of a drug"
+      },
+      StartRating = {
+        name = "Initial rating of a drug"
+      },
+      Vaccost = {
+        name = "Cost of a vaccination"
+      }
+    }
+  }
+}
+
 hotkeys_file_err = {
   file_err_01 = "Unable to load hotkeys.txt file. Please ensure that CorsixTH " ..
         "has permission to read/write ",

@@ -34,6 +34,14 @@ local NAME_LABEL_SETTINGS = {
   align = "left"
 }
 
+--! Get a translated string by name.
+--!param name (str) Name of the translated string to get.
+--!return (text) The retrieved translated string.
+local function getTranslatedText(name)
+  print("Getting translated text: " .. name)
+  return TreeAccess.readTree(_S, name)
+end
+
 --! Make a bevel for some text.
 --!param window Window to attach the panel to.
 --!param widgets (Array of Panel) Storage for created panels. Appended in-place.
@@ -44,7 +52,7 @@ local NAME_LABEL_SETTINGS = {
 --!param tooltip_path (string) String path for the tooltip to show.
 --!param settings Optional settings to override the defaults (foreground,
 --  background, alignment).
-local function makeLabel(window, widgets, x, y, size, name_path, tooltip_path, settings)
+local function _makeLabel(window, widgets, x, y, size, name_path, tooltip_path, settings)
   local fg = settings and settings.fg or PANEL_FG
   local bg = settings and settings.bg or PANEL_BG
   local align = settings and settings.align or "left"
@@ -67,15 +75,31 @@ end
 --!param y (int) Y position of the top-left corner.
 --!param size (Size) Width and height of the panel.
 --!param value (LevelValue) Value displayed and edited in the box.
-local function makeTextBox(window, text_boxes, x, y, size, value)
+local function _makeTextBox(window, text_boxes, x, y, size, value)
   local text_box = window:addBevelPanel(x, y, size.w, size.h, TEXT_BG, TEXT_FG)
   local function confirm_cb() value:confirm() end
   local function abort_cb() value:abort() end
-  text_box = text_box:makeTextbox(confirm_cb, abort_cb) -- confirm_cb, abort_cb)
+  text_box = text_box:makeTextbox(confirm_cb, abort_cb)
   text_boxes[#text_boxes + 1] = text_box
 
   value.text_box = text_box
   value:setBoxValue()
+end
+
+--! Make a button for the tab page.
+--!param window Window to attach the panel to.
+--!param widgets (Array of Panel) Storage for created buttons. Appended in-place.
+--!param x (int) X position of the top-left corner.
+--!param y (int) Y position of the top-left corner.
+--!param size (Size) Width and height of the panel.
+--!param callback Function to call when clicked.
+--!param text_path Name of the translated string to display at the button.
+local function _makeButton(window, widgets, x, y, size, callback, text_path)
+  local panel = window:addBevelPanel(x, y, size.w, size.h, PANEL_BG, PANEL_FG)
+  local button = panel:makeButton(0, 0, size.w, size.h, nil, callback, nil, nil)
+  button.panel_lowered_active = false
+  if text_path then button:setLabel(getTranslatedText(text_path)) end
+  widgets[#widgets + 1] = button
 end
 
 --! A nummeric value to be edited.
@@ -165,7 +189,6 @@ local LevelSection = _G["LevelSection"]
 --!param title_path (str) Language path to the title name string.
 function LevelSection:LevelSection(title_path)
   assert(title_path, "Missing title path")
-  print("Stupid title_path: " .. title_path)
   self.title_path = title_path -- Displayed name of the section.
   self._widgets = {} -- Widgets of the section.
   self._text_boxes = {} -- Text boxes of the section.
@@ -205,6 +228,10 @@ class "LevelValuesSection" (LevelSection)
 --@type LevelValuesSection
 local LevelValuesSection = _G["LevelValuesSection"]
 
+LevelValuesSection.LABEL_WIDTH = 100
+LevelValuesSection.VALUE_HEIGHT = 15
+LevelValuesSection.VALUE_WIDTH = 30
+
 --! Section with one or more related values.
 --!param title_path (str) Language path to the title name string.
 --!param values (array of LevelValue), values descriptions.
@@ -212,10 +239,10 @@ function LevelValuesSection:LevelValuesSection(title_path, values)
   LevelSection.LevelSection(self, title_path)
   self.values = values -- Array.
 
-  self.label_size = Size(100, 18)
-  self.value_size = Size(30, 18)
-  self.title_sep = 10
-  self.value_sep = 2 -- Vertical separator between values.
+  self.label_size = Size(LevelValuesSection.LABEL_WIDTH, LevelValuesSection.VALUE_HEIGHT)
+  self.value_size = Size(LevelValuesSection.VALUE_WIDTH, LevelValuesSection.VALUE_HEIGHT)
+  self.title_sep = 5
+  self.value_sep = 1 -- Vertical separator between values.
   self.label_sep = 2 -- Horizontal space after label.
 end
 
@@ -258,7 +285,7 @@ function LevelValuesSection:layout(window, pos)
   local max_x = x
   -- Title.
   if self.title_path then
-    makeLabel(window, self._widgets, x, y, self.title_size, self.title_path, nil, TITLE_LABEL_SETTINGS)
+    _makeLabel(window, self._widgets, x, y, self.title_size, self.title_path, nil, TITLE_LABEL_SETTINGS)
     y = y + self.title_size.h + self.title_sep
     max_x = math.max(max_x, x + self.title_size.w)
   end
@@ -269,8 +296,8 @@ function LevelValuesSection:layout(window, pos)
   max_x = math.max(max_x, right_x)
   for idx, val in ipairs(self.values) do
     if idx > 1 then y = y + self.value_sep end
-    makeLabel(window, self._widgets, label_x, y, self.label_size, val.name_path, val.tooltip_path, NAME_LABEL_SETTINGS)
-    makeTextBox(window, self._text_boxes, val_x, y, self.value_size, val)
+    _makeLabel(window, self._widgets, label_x, y, self.label_size, val.name_path, val.tooltip_path, NAME_LABEL_SETTINGS)
+    _makeTextBox(window, self._text_boxes, val_x, y, self.value_size, val)
     y = y + self.label_size.h
   end
   self:setVisible(false) -- Initially hide all.
@@ -362,7 +389,7 @@ function LevelTableSection:layout(window, pos)
   local max_x = x
   -- Title.
   if self.title_path then
-    makeLabel(window, self._widgets, x, y, self.title_size, self.title_path, nil, TITLE_LABEL_SETTINGS)
+    _makeLabel(window, self._widgets, x, y, self.title_size, self.title_path, nil, TITLE_LABEL_SETTINGS)
     y = y + self.title_size.h + self.title_sep
     max_x = math.max(max_x, x + self.title_size.w)
   end
@@ -373,7 +400,7 @@ function LevelTableSection:layout(window, pos)
   local label_size = Size(self.col_width, self.row_height)
   x = pos.x + self.col_width + self.col_label_sep -- Skip space for the row labels
   for col = 1, table_rows_cols.w do
-    makeLabel(window, self._widgets, x, y, label_size, self.col_name_paths[col],
+    _makeLabel(window, self._widgets, x, y, label_size, self.col_name_paths[col],
         self.col_tooltip_paths[col], NAME_LABEL_SETTINGS)
     x = x + label_size.w
     if col < table_rows_cols.w then x = x + self.intercol_sep end
@@ -384,11 +411,11 @@ function LevelTableSection:layout(window, pos)
   -- Rows
   for row = 1, table_rows_cols.h do
     x = pos.x
-    makeLabel(window, self._widgets, x, y, label_size, self.row_name_paths[row],
+    _makeLabel(window, self._widgets, x, y, label_size, self.row_name_paths[row],
         self.row_tooltip_paths[row], NAME_LABEL_SETTINGS)
     x = x + label_size.w + self.col_label_sep
     for col = 1, table_rows_cols.w do
-      makeTextBox(window, self._text_boxes, x, y, label_size, self.values[col][row])
+      _makeTextBox(window, self._text_boxes, x, y, label_size, self.values[col][row])
       x = x + label_size.w
       if col < table_rows_cols.w then x = x + self.intercol_sep end
     end
@@ -449,15 +476,11 @@ local LevelEditPage = _G["LevelEditPage"]
 function LevelEditPage:LevelEditPage(tab_name_path, sections)
   LevelPage.LevelPage(self)
 
-  assert(tab_name_path)
-
+  assert(tab_name_path, "Missing string name of the tab-name text.")
   self.tab_name_path = tab_name_path -- Name of the page in a tab of a tab-page.
   self.sections = sections -- Array of sections displayed at the page.
 
   self._widgets = {} -- Widgets of the page.
-
-  self.section_sep = 15 -- Space between sections in a column.
-  self.column_sep = 5 -- Space between 'columns'.
 end
 
 --! Set visibility of the widgets to the value of the parameter.
@@ -541,7 +564,7 @@ function LevelTabPage:layout(window, pos, size)
       placed_tabs = 0
     end
     local callback = --[[persistable:LevelTabPage_onClickTab]] function() self:onClickTab(i) end
-    makeButton(window, self._widgets, xpos, y, self.page_tab_size, callback, level_page.tab_name_path)
+    _makeButton(window, self._widgets, xpos, ypos, self._page_tab_size, callback, level_page.tab_name_path)
     xpos = xpos + self._page_tab_size.w
     placed_tabs = placed_tabs + 1
   end
