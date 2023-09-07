@@ -921,6 +921,50 @@ map_editor_window = {
 }
 
 level_editor = {
+  popn = {
+    col_names = {
+      gbv = {
+        popn = {
+          change = "Rate of change",
+          month = "Start month"
+        }
+      }
+    },
+    row_names = {
+      gbv = {
+        popn = {
+          [0] = "Change 1",
+          [1] = "Change 2",
+          [2] = "Change 3"
+        }
+      }
+    }
+  },
+  staff_levels = {
+    col_names = {
+      ConsRate = "Rate of consultants",
+      Doctors = "Nr doctors",
+      Handymen = "Nr handymen",
+      JrRate = "Rate of juniors",
+      Month = "Month",
+      Nurses = "Nr nurses",
+      Receptionists = "Nr receptionists",
+      RschRate = "Rate of researchers",
+      ShrkRate = "Rate of psychiatrists",
+      SurgRate = "Rate of surgeons"
+    },
+    row_names = {
+      [0] = "Period 1",
+      [1] = "Period 2",
+      [2] = "Period 3",
+      [3] = "Period 4",
+      [4] = "Period 5",
+      [5] = "Period 6",
+      [6] = "Period 7",
+      [7] = "Period 8",
+      [8] = "Period 9"
+    }
+  },
   tab_names = {
     global_awards_trophies = "Global prizes",
     hospital1 = "Hospital 1",
@@ -928,6 +972,8 @@ level_editor = {
     local_town = "Town",
     rooms_cost = "Rooms cost",
     staff1 = "Staff-1",
+    staff_level1 = "Staff levels",
+    staff_level2 = "Rates of specialists",
     town_levels = "Town levels"
   },
   titles = {
@@ -937,8 +983,11 @@ level_editor = {
     local_town = "Local Town section",
     medical_bonuses = "Additional salaries for medical staff",
     min_salaries = "Minimum staff salaries",
+    popn = "Population changes",
     research = "Research settings",
     rooms_cost = "Rooms cost",
+    staff_level1 = "Staff levels",
+    staff_level2 = "Specialist rates",
     town_levels = "Town levels",
     training = "Training settings"
   },

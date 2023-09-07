@@ -281,6 +281,35 @@ function UILevelEditor:_makeTownLevelssEditPage()
   })
 end
 
+function UILevelEditor:_makePopulationEditPage()
+  local popn_col1 = {
+    _makeValue({level_cfg_path = "gbv.popn[0].Month"}),
+    _makeValue({level_cfg_path = "gbc.popn[1].Month"}),
+    _makeValue({level_cfg_path = "gbc.popn[2].Month"}),
+  }
+  local popn_col2 = {
+    _makeValue({level_cfg_path = "gbv.popn[0].Change"}),
+    _makeValue({level_cfg_path = "gbc.popn[1].Change"}),
+    _makeValue({level_cfg_path = "gbc.popn[2].Change"}),
+  }
+  local popn_row_names = {
+    "level_editor.popn.row_names.gbv.popn[0]",
+    "level_editor.popn.row_names.gbv.popn[1]",
+    "level_editor.popn.row_names.gbv.popn[2]",
+  }
+  local popn_col_names = {
+    "level_editor.popn.col_names.gbv.popn.month",
+    "level_editor.popn.col_names.gbv.popn.change",
+  }
+
+  return _makeTableSection({
+    title_path = "level_editor.titles.popn",
+    row_names = popn_row_names,
+    col_values = {popn_col1, popn_col2},
+    col_names = popn_col_names
+  })
+end
+
 function UILevelEditor:_makeHospitalEditPage1()
   local research_section = _makeValuesSection({
     title_path = "level_editor.titles.research",
@@ -347,7 +376,7 @@ function UILevelEditor:_makeHospitalEditPage2()
   })
 end
 
-function UILevelEditor:_makeStaffEditPage1()
+function UILevelEditor:_makeStaffEditPage()
   local min_salaries_section = _makeValuesSection({
     title_path = "level_editor.titles.min_salaries",
     title_size = _TITLE_SIZE,
@@ -376,6 +405,85 @@ function UILevelEditor:_makeStaffEditPage1()
     min_salaries_section,
     medical_bonuses_section
   })
+end
+
+function UILevelEditor:_makeStaffLevelsEditPage12()
+  local staff_levels_row_names = {}
+  local staff_levels_col_month = {}
+  local staff_levels_col_nurses = {}
+  local staff_levels_col_doctors = {}
+  local staff_levels_col_handymen = {}
+  local staff_levels_col_receptionist = {}
+  local staff_levels_col_psychs_rate = {}
+  local staff_levels_col_surgs_rate = {}
+  local staff_levels_col_researchs_rate = {}
+  local staff_levels_col_consults_rate = {}
+  local staff_levels_col_juniors_rate = {}
+
+  for i = 0, 8 do
+    staff_levels_row_names[i + 1] = "level_editor.staff_levels.row_names[" .. i .. "]"
+
+    staff_levels_col_month[i + 1] =
+        _makeValue({level_cfg_path = "staff_levels[" .. i .. "].Month"})
+    staff_levels_col_nurses[i + 1] =
+        _makeValue({level_cfg_path = "staff_levels[" .. i .. "].Nurses"})
+    staff_levels_col_doctors[i + 1] =
+        _makeValue({level_cfg_path = "staff_levels[" .. i .. "].Doctors"})
+    staff_levels_col_handymen[i + 1] =
+        _makeValue({level_cfg_path = "staff_levels[" .. i .. "].Handymen"})
+    staff_levels_col_receptionist[i + 1] =
+        _makeValue({level_cfg_path = "staff_levels[" .. i .. "].Receptionists"})
+    staff_levels_col_psychs_rate[i + 1] =
+        _makeValue({level_cfg_path = "staff_levels[" .. i .. "].ShrkRate"})
+    staff_levels_col_surgs_rate[i + 1] =
+        _makeValue({level_cfg_path = "staff_levels[" .. i .. "].SurgRate"})
+    staff_levels_col_researchs_rate[i +
+        1] = _makeValue({level_cfg_path = "staff_levels[" .. i .. "].RschRate"})
+    staff_levels_col_consults_rate[i +
+        1] = _makeValue({level_cfg_path = "staff_levels[" .. i .. "].ConsRate"})
+    staff_levels_col_juniors_rate[i +
+        1] = _makeValue({level_cfg_path = "staff_levels[" .. i .. "].JrRate"})
+  end
+
+  local staff_levels1 = _makeTableSection({
+    title_path = "level_editor.titles.staff_level1",
+    col_names = {
+      "level_editor.staff_levels.col_names.Month",
+      "level_editor.staff_levels.col_names.Nurses",
+      "level_editor.staff_levels.col_names.Doctors",
+      "level_editor.staff_levels.col_names.Handymen",
+      "level_editor.staff_levels.col_names.Receptionists"
+    },
+    row_names = staff_levels_row_names,
+    col_values = {staff_levels_col_month, staff_levels_col_nurses,
+        staff_levels_col_doctors, staff_levels_col_handymen,
+        staff_levels_col_receptionist}
+  })
+  staff_levels1 = _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.staff_level1",
+    staff_levels1
+  })
+
+  local staff_levels2 = _makeTableSection({
+    title_path = "level_editor.titles.staff_level2",
+    col_names = {
+      "level_editor.staff_levels.col_names.ShrkRate",
+      "level_editor.staff_levels.col_names.SurgRate",
+      "level_editor.staff_levels.col_names.RschRate",
+      "level_editor.staff_levels.col_names.ConsRate",
+      "level_editor.staff_levels.col_names.JrRate"
+    },
+    row_names = staff_levels_row_names,
+    col_values = {staff_levels_col_psychs_rate, staff_levels_col_surgs_rate,
+        staff_levels_col_researchs_rate, staff_levels_col_consults_rate,
+        staff_levels_col_juniors_rate}
+  })
+  staff_levels2 = _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.staff_level2",
+    staff_levels2
+  })
+
+  return staff_levels1, staff_levels2
 end
 
 function UILevelEditor:_makeRoomsCostEditPage()
@@ -444,11 +552,14 @@ function UILevelEditor:_makeGlobalAwardsTrophiesEditPage()
 end
 
 function UILevelEditor:_makeMainTabPage()
+  local staff_levels1, staff_levels2 = self:_makeStaffLevelsEditPage12()
+
   return _makeTabPageSection({
     self:_makeTownEditPage(),
     self:_makeTownLevelssEditPage(),
+    self:_makePopulationEditPage(),
     self:_makeHospitalEditPage1(), self:_makeHospitalEditPage2(),
-    self:_makeStaffEditPage1(),
+    self:_makeStaffEditPage(), staff_levels1, staff_levels2,
     self:_makeRoomsCostEditPage(),
     self:_makeGlobalAwardsTrophiesEditPage(),
   })
