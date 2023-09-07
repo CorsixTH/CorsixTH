@@ -922,20 +922,54 @@ map_editor_window = {
 
 level_editor = {
   tab_names = {
-    hospital1 = "Hospital-1",
-    hospital2 = "Hospital-2",
+    global_awards_trophies = "Global prizes",
+    hospital1 = "Hospital 1",
+    hospital2 = "Hospital 2",
+    rooms_cost = "Rooms cost",
     staff1 = "Staff-1",
     town = "Towns"
   },
   titles = {
     epidemics = "Epidemics settings",
+    global_awards = "Global awards",
+    global_trophies = "Global trophies",
     local_town = "Local Town section",
     medical_bonuses = "Additional salaries for medical staff",
     min_salaries = "Minimum staff salaries",
     research = "Research settings",
+    rooms_cost = "Rooms cost",
     training = "Training settings"
   },
   values = {
+    awards_trophies = {
+      AllCuresBonus = {
+        name = "Everybody cured"
+      },
+      NewTechAward = {
+        name = "Limit for good tech use"
+      },
+      NewTechPoor = {
+        name = "Limit for bad tech use"
+      },
+      ResearchBonus = {
+        name = "Limit for good research"
+      },
+      ResearchPenalty = {
+        name = "Limit for bad research"
+      },
+      TrophyAllCuredBonus = {
+        name = "All cured"
+      },
+      TrophyCuresBonus = {
+        name = "Almost nobody died"
+      },
+      TrophyDeathBonus = {
+        name = "Nobody died"
+      },
+      TrophyMayorBonus = {
+        name = "Good VIP visits"
+      }
+    },
     gbv = {
       AbilityThreshold = {
         [0] = {
@@ -1082,6 +1116,128 @@ level_editor = {
     payroll = {
       MaxSalary = {
         name = "Max salary"
+      }
+    },
+    rooms = {
+      [7] = {
+        Cost = {
+          name = "Cost of GP"
+        }
+      },
+      [8] = {
+        Cost = {
+          name = "Cost of psychiatry"
+        }
+      },
+      [9] = {
+        Cost = {
+          name = "Cost of ward"
+        }
+      },
+      [10] = {
+        Cost = {
+          name = "Cost of operating theatre"
+        }
+      },
+      [11] = {
+        Cost = {
+          name = "Cost of pharmacy"
+        }
+      },
+      [12] = {
+        Cost = {
+          name = "Cost of cardio"
+        }
+      },
+      [13] = {
+        Cost = {
+          name = "Cost of scanner"
+        }
+      },
+      [14] = {
+        Cost = {
+          name = "Cost of ultra-scan"
+        }
+      },
+      [15] = {
+        Cost = {
+          name = "Cost of blood room"
+        }
+      },
+      [16] = {
+        Cost = {
+          name = "Cost of X-ray room"
+        }
+      },
+      [17] = {
+        Cost = {
+          name = "Cost of inflator room"
+        }
+      },
+      [18] = {
+        Cost = {
+          name = "Cost of dna restorer room"
+        }
+      },
+      [19] = {
+        Cost = {
+          name = "Cost of hair restorer room"
+        }
+      },
+      [20] = {
+        Cost = {
+          name = "Cost of slack tonque room"
+        }
+      },
+      [21] = {
+        Cost = {
+          name = "Cost of fracture room"
+        }
+      },
+      [22] = {
+        Cost = {
+          name = "Cost of Training room"
+        }
+      },
+      [23] = {
+        Cost = {
+          name = "Cost of Electrolysis room"
+        }
+      },
+      [24] = {
+        Cost = {
+          name = "Cost of Jelly-vat room"
+        }
+      },
+      [25] = {
+        Cost = {
+          name = "Cost of staff room"
+        }
+      },
+      [26] = {
+        Cost = {
+          name = "Cost of tv room"
+        }
+      },
+      [27] = {
+        Cost = {
+          name = "Cost of General diag. room"
+        }
+      },
+      [28] = {
+        Cost = {
+          name = "Cost of research room"
+        }
+      },
+      [29] = {
+        Cost = {
+          name = "Cost of toilets"
+        }
+      },
+      [30] = {
+        Cost = {
+          name = "Cost of decontamination room"
+        }
       }
     },
     staff = {

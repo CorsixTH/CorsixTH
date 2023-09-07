@@ -160,8 +160,8 @@ function UILevelEditor:_makeTownEditPage()
   })
 end
 
-function UILevelEditor:_makeHospitalResearchSection()
-  return _makeValuesSection({
+function UILevelEditor:_makeHospitalEditPage1()
+  local research_section = _makeValuesSection({
     title_path = "level_editor.titles.research",
     title_size = _TITLE_SIZE,
     label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
@@ -177,10 +177,7 @@ function UILevelEditor:_makeHospitalResearchSection()
     _makeValue({level_cfg_path = "gbv.RschImproveCostPercent", name_path = true}),
     _makeValue({level_cfg_path = "gbv.RschImproveIncrementPercent", name_path = true}),
   })
-end
-
-function UILevelEditor:_makeHospitalTrainingSection()
-  return _makeValuesSection({
+  local training_section = _makeValuesSection({
     title_path = "level_editor.titles.training",
     title_size = _TITLE_SIZE,
     label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
@@ -193,11 +190,17 @@ function UILevelEditor:_makeHospitalTrainingSection()
     _makeValue({level_cfg_path = "gbv.AbilityThreshold[2]", name_path = true}),
     _makeValue({level_cfg_path = "gbv.DoctorThreshold", name_path = true}),
     _makeValue({level_cfg_path = "gbv.ConsultantThreshold", name_path = true}),
-})
+  })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.hospital1",
+    research_section,
+    training_section,
+  })
 end
 
-function UILevelEditor:_makeHospitalEpidemicsSection()
-  return _makeValuesSection({
+function UILevelEditor:_makeHospitalEditPage2()
+  local epidemics_section = _makeValuesSection({
     title_path = "level_editor.titles.epidemics",
     title_size = _TITLE_SIZE,
     label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
@@ -215,66 +218,117 @@ function UILevelEditor:_makeHospitalEpidemicsSection()
     _makeValue({level_cfg_path = "gbv.EpidemicRepLossMinimum", name_path = true}),
     _makeValue({level_cfg_path = "gbv.EpidemicEvacMinimum", name_path = true}),
     _makeValue({level_cfg_path = "gbv.EpidemicConcurrentLimit", name_path = true}),
-})
-end
-
-function UILevelEditor:_makeHospitalEditPage1()
-  return _makeEditPageSection({
-    tab_name_path = "level_editor.tab_names.hospital1",
-    self:_makeHospitalResearchSection(),
-    self:_makeHospitalTrainingSection()
   })
-end
 
-function UILevelEditor:_makeHospitalEditPage2()
   return _makeEditPageSection({
     tab_name_path = "level_editor.tab_names.hospital2",
-    self:_makeHospitalEpidemicsSection()
+    epidemics_section
   })
-end
-
-function UILevelEditor:_makeStaffMinSalariesSection()
-  return _makeValuesSection({
-    title_path = "level_editor.titles.min_salaries",
-    title_size = _TITLE_SIZE,
-    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
-  _makeValue({level_cfg_path = "staff[0].MinSalary", name_path = true}),
-  _makeValue({level_cfg_path = "staff[1].MinSalary", name_path = true}),
-  _makeValue({level_cfg_path = "staff[2].MinSalary", name_path = true}),
-  _makeValue({level_cfg_path = "staff[3].MinSalary", name_path = true}),
-  _makeValue({level_cfg_path = "gbv.SalaryAbilityDivisor", name_path = true, tooltip_path = true}),
-  _makeValue({level_cfg_path = "payroll.MaxSalary", name_path = true}),
-})
-end
-
-function UILevelEditor:_makeStaffAdditionalSalariesSection()
-  return _makeValuesSection({
-    title_path = "level_editor.titles.medical_bonuses",
-    title_size = _TITLE_SIZE,
-    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
-  name_path = "level_editor.doctor_add_salaries.name",
-  _makeValue({level_cfg_path = "gbv.SalaryAdd[3]", name_path = true, tooltip_path = true}),
-  _makeValue({level_cfg_path = "gbv.SalaryAdd[4]", name_path = true}),
-  _makeValue({level_cfg_path = "gbv.SalaryAdd[5]", name_path = true}),
-  _makeValue({level_cfg_path = "gbv.SalaryAdd[6]", name_path = true}),
-  _makeValue({level_cfg_path = "gbv.SalaryAdd[7]", name_path = true}),
-  _makeValue({level_cfg_path = "gbv.SalaryAdd[8]", name_path = true}),
-})
 end
 
 function UILevelEditor:_makeStaffEditPage1()
+  local min_salaries_section = _makeValuesSection({
+    title_path = "level_editor.titles.min_salaries",
+    title_size = _TITLE_SIZE,
+    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    _makeValue({level_cfg_path = "staff[0].MinSalary", name_path = true}),
+    _makeValue({level_cfg_path = "staff[1].MinSalary", name_path = true}),
+    _makeValue({level_cfg_path = "staff[2].MinSalary", name_path = true}),
+    _makeValue({level_cfg_path = "staff[3].MinSalary", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.SalaryAbilityDivisor", name_path = true, tooltip_path = true}),
+    _makeValue({level_cfg_path = "payroll.MaxSalary", name_path = true}),
+  })
+  local medical_bonuses_section = _makeValuesSection({
+    title_path = "level_editor.titles.medical_bonuses",
+    title_size = _TITLE_SIZE,
+    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    _makeValue({level_cfg_path = "gbv.SalaryAdd[3]", name_path = true, tooltip_path = true}),
+    _makeValue({level_cfg_path = "gbv.SalaryAdd[4]", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.SalaryAdd[5]", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.SalaryAdd[6]", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.SalaryAdd[7]", name_path = true}),
+    _makeValue({level_cfg_path = "gbv.SalaryAdd[8]", name_path = true}),
+  })
+
   return _makeEditPageSection({
     tab_name_path = "level_editor.tab_names.staff1",
-    self:_makeStaffMinSalariesSection(),
-    self:_makeStaffAdditionalSalariesSection(),
+    min_salaries_section,
+    medical_bonuses_section
+  })
+end
+
+function UILevelEditor:_makeRoomsCostEditPage()
+  local rooms_cost_edit_section = _makeValuesSection({
+    title_path = "level_editor.titles.rooms_cost",
+    title_size = _TITLE_SIZE,
+    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    _makeValue({level_cfg_path = "rooms[7].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[8].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[9].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[10].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[11].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[12].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[13].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[14].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[15].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[16].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[17].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[18].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[19].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[20].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[21].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[22].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[23].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[24].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[25].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[26].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[27].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[28].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[29].Cost", name_path = true}),
+    _makeValue({level_cfg_path = "rooms[30].Cost", name_path = true}),
+  })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.rooms_cost",
+    rooms_cost_edit_section,
+  })
+end
+
+function UILevelEditor:_makeGlobalAwardsTrophiesEditPage()
+  local global_trophies_bonuses = _makeValuesSection({
+    title_path = "level_editor.titles.global_trophies",
+    title_size = _TITLE_SIZE,
+    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    _makeValue({level_cfg_path = "awards_trophies.TrophyAllCuredBonus", name_path = true}),
+    _makeValue({level_cfg_path = "awards_trophies.TrophyDeathBonus", name_path = true}),
+    _makeValue({level_cfg_path = "awards_trophies.TrophyCuresBonus", name_path = true}),
+    _makeValue({level_cfg_path = "awards_trophies.TrophyMayorBonus", name_path = true}),
+  })
+  local global_award_bonuses = _makeValuesSection({
+    title_path = "level_editor.titles.global_awards",
+    title_size = _TITLE_SIZE,
+    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    _makeValue({level_cfg_path = "awards_trophies.AllCuresBonus", name_path = true}),
+    _makeValue({level_cfg_path = "awards_trophies.NewTechAward", name_path = true}),
+    _makeValue({level_cfg_path = "awards_trophies.NewTechPoor", name_path = true}),
+    _makeValue({level_cfg_path = "awards_trophies.ResearchBonus", name_path = true}),
+    _makeValue({level_cfg_path = "awards_trophies.ResearchPenalty", name_path = true}),
+  })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.global_awards_trophies",
+    global_trophies_bonuses,
+    global_award_bonuses,
   })
 end
 
 function UILevelEditor:_makeMainTabPage()
   return _makeTabPageSection({
     self:_makeTownEditPage(),
-    self:_makeHospitalEditPage1(),
-    self:_makeHospitalEditPage2(),
+    self:_makeHospitalEditPage1(), self:_makeHospitalEditPage2(),
     self:_makeStaffEditPage1(),
+    self:_makeRoomsCostEditPage(),
+    self:_makeGlobalAwardsTrophiesEditPage(),
   })
 end
+
