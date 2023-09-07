@@ -217,7 +217,7 @@ end
 --! Construct the elements displayed at the window.
 --!param window (Window) Window to add the new widgets.
 --!param pos (Pos) Position of the to-left corner available to use.
---!returns pos (Pos) Bottom of the used area.
+--!return (Pos) Bottom of the used area.
 function LevelSection:layout(window, pos)
   assert(false, "Implement me in " .. class.type(self))
 end
