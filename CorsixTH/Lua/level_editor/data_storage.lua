@@ -480,7 +480,7 @@ function LevelEditPage:LevelEditPage(tab_name_path, sections)
 end
 
 --! Set visibility of the widgets to the value of the parameter.
---!param (bool) Whether the widgets and/or text boxes should be visible.
+--!param is_visible (bool) Whether the widgets and/or text boxes should be visible.
 function LevelEditPage:setVisible(is_visible)
   for _, widget in ipairs(self._widgets) do
     widget:setVisible(is_visible)
