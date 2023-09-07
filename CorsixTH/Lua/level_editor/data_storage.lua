@@ -197,13 +197,13 @@ function LevelSection:LevelSection(title_path)
 end
 
 --! Set visibility of the widgets to the value of the parameter.
---!param (bool) Whether the widgets and/or text boxes should be visible.
-function LevelSection:setVisible(is_vsisible)
+--!param is_visible (bool) Whether the widgets and/or text boxes should be visible.
+function LevelSection:setVisible(is_visible)
   for _, widget in ipairs(self._widgets) do
-    widget:setVisible(is_vsisible)
+    widget:setVisible(is_visible)
   end
   for _, box in ipairs(self._text_boxes) do
-    box:setVisible(is_vsisible)
+    box:setVisible(is_visible)
   end
 end
 
@@ -454,8 +454,8 @@ function LevelPage:loadSaveConfig(cfg, store)
 end
 
 --! Set visibility of the widgets to the value of the parameter.
---!param (bool) Whether the widgets and/or text boxes should be visible.
-function LevelPage:setVisible(is_vsisible)
+--!param is_visible (bool) Whether the widgets and/or text boxes should be visible.
+function LevelPage:setVisible(is_visible)
   error("Implement me in " .. class.type(self))
 end
 
@@ -481,12 +481,12 @@ end
 
 --! Set visibility of the widgets to the value of the parameter.
 --!param (bool) Whether the widgets and/or text boxes should be visible.
-function LevelEditPage:setVisible(is_vsisible)
+function LevelEditPage:setVisible(is_visible)
   for _, widget in ipairs(self._widgets) do
-    widget:setVisible(is_vsisible)
+    widget:setVisible(is_visible)
   end
   for _, section in ipairs(self.sections) do
-    section:setVisible(is_vsisible)
+    section:setVisible(is_visible)
   end
 end
 
