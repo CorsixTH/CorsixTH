@@ -328,6 +328,7 @@ main_menu = {
   load_game = "Load Game",
   options = "Settings",
   map_edit = "Map Editor",
+  level_edit = "Level Editor",
   savegame_version = "Savegame version: ",
   updates_off = "Not checking for updates",
   version = "Version: ",
@@ -342,6 +343,7 @@ tooltip.main_menu = {
   load_game = "Load a saved game",
   options = "Tweak various settings",
   map_edit = "Create a custom map",
+  level_edit = "Create a custom level",
   exit = "No, no, please don't leave!",
   quit = "You are about to quit from CorsixTH. Are you sure this is what you want to do?",
 }
