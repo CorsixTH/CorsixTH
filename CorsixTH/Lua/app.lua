@@ -289,6 +289,10 @@ function App:init()
     self.anims = self.gfx:loadAnimations("Data", "V")
     self.animation_manager = AnimationManager(self.anims)
     self.walls = self:loadLuaFolder("walls")
+
+    corsixth.require("pos_size")
+    corsixth.require("tree_access")
+
     corsixth.require("entity")
     corsixth.require("entities.humanoid")
     corsixth.require("entities.object")
@@ -325,6 +329,8 @@ function App:init()
   if good_install_folder then
     corsixth.require("game_ui")
     self.ui = UI(self, true)
+
+    corsixth.require("level_editor.data_storage")
   else
     self.ui = UI(self, true)
     self.ui:setMenuBackground()
@@ -338,7 +344,6 @@ function App:init()
     self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
     return true
   end
-
 
   -- Load main menu (which creates UI)
   local function callback_after_movie()
