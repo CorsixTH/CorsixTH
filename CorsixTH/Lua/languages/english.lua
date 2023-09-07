@@ -924,11 +924,14 @@ level_editor = {
   tab_names = {
     hospital1 = "Hospital-1",
     hospital2 = "Hospital-2",
+    staff1 = "Staff-1",
     town = "Towns"
   },
   titles = {
     epidemics = "Epidemics settings",
     local_town = "Local Town section",
+    medical_bonuses = "Additional salaries for medical staff",
+    min_salaries = "Minimum staff salaries",
     research = "Research settings",
     training = "Training settings"
   },
@@ -1024,6 +1027,31 @@ level_editor = {
       RschImproveIncrementPercent = {
         name = "Amount of improvement in research"
       },
+      SalaryAbilityDivisor = {
+        name = "Speed of raise",
+        tooltip = "Ability increase to get a raise"
+      },
+      SalaryAdd = {
+        [3] = {
+          name = "Junior",
+          tooltip = "Make negative"
+        },
+        [4] = {
+          name = "Doctor"
+        },
+        [5] = {
+          name = "Surgeon"
+        },
+        [6] = {
+          name = "Shrink"
+        },
+        [7] = {
+          name = "Consultant"
+        },
+        [8] = {
+          name = "Researcher"
+        }
+      },
       ScoreMaxInc = {
         name = "Factor for maximum score"
       },
@@ -1049,6 +1077,33 @@ level_editor = {
       },
       Vaccost = {
         name = "Cost of a vaccination"
+      }
+    },
+    payroll = {
+      MaxSalary = {
+        name = "Max salary"
+      }
+    },
+    staff = {
+      [0] = {
+        MinSalary = {
+          name = "Nurse"
+        }
+      },
+      [1] = {
+        MinSalary = {
+          name = "Doctor"
+        }
+      },
+      [2] = {
+        MinSalary = {
+          name = "Handyman"
+        }
+      },
+      [3] = {
+        MinSalary = {
+          name = "Receptionist"
+        }
       }
     },
     town = {

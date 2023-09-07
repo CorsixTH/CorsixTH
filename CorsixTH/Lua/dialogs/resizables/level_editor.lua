@@ -233,10 +233,48 @@ function UILevelEditor:_makeHospitalEditPage2()
   })
 end
 
+function UILevelEditor:_makeStaffMinSalariesSection()
+  return _makeValuesSection({
+    title_path = "level_editor.titles.min_salaries",
+    title_size = _TITLE_SIZE,
+    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+  _makeValue({level_cfg_path = "staff[0].MinSalary", name_path = true}),
+  _makeValue({level_cfg_path = "staff[1].MinSalary", name_path = true}),
+  _makeValue({level_cfg_path = "staff[2].MinSalary", name_path = true}),
+  _makeValue({level_cfg_path = "staff[3].MinSalary", name_path = true}),
+  _makeValue({level_cfg_path = "gbv.SalaryAbilityDivisor", name_path = true, tooltip_path = true}),
+  _makeValue({level_cfg_path = "payroll.MaxSalary", name_path = true}),
+})
+end
+
+function UILevelEditor:_makeStaffAdditionalSalariesSection()
+  return _makeValuesSection({
+    title_path = "level_editor.titles.medical_bonuses",
+    title_size = _TITLE_SIZE,
+    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+  name_path = "level_editor.doctor_add_salaries.name",
+  _makeValue({level_cfg_path = "gbv.SalaryAdd[3]", name_path = true, tooltip_path = true}),
+  _makeValue({level_cfg_path = "gbv.SalaryAdd[4]", name_path = true}),
+  _makeValue({level_cfg_path = "gbv.SalaryAdd[5]", name_path = true}),
+  _makeValue({level_cfg_path = "gbv.SalaryAdd[6]", name_path = true}),
+  _makeValue({level_cfg_path = "gbv.SalaryAdd[7]", name_path = true}),
+  _makeValue({level_cfg_path = "gbv.SalaryAdd[8]", name_path = true}),
+})
+end
+
+function UILevelEditor:_makeStaffEditPage1()
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.staff1",
+    self:_makeStaffMinSalariesSection(),
+    self:_makeStaffAdditionalSalariesSection(),
+  })
+end
+
 function UILevelEditor:_makeMainTabPage()
   return _makeTabPageSection({
     self:_makeTownEditPage(),
     self:_makeHospitalEditPage1(),
-    self:_makeHospitalEditPage2()
+    self:_makeHospitalEditPage2(),
+    self:_makeStaffEditPage1(),
   })
 end
