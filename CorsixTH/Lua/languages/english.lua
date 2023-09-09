@@ -921,6 +921,29 @@ map_editor_window = {
 }
 
 level_editor = {
+  ai_players = {
+    col_names = {
+      name = "Name of the AI opponent",
+      playing = "Is AI opponent playing"
+    },
+    row_names = {
+      [0] = "Opponent 1",
+      [1] = "Opponent 2",
+      [2] = "Opponent 3",
+      [3] = "Opponent 4",
+      [4] = "Opponent 5",
+      [5] = "Opponent 6",
+      [6] = "Opponent 7",
+      [7] = "Opponent 8",
+      [8] = "Opponent 9",
+      [9] = "Opponent 10",
+      [10] = "Opponent 11",
+      [11] = "Opponent 12",
+      [12] = "Opponent 13",
+      [13] = "Opponent 14",
+      [14] = "Opponent 15"
+    }
+  },
   expertise_diseases = {
     col_names = {
       Known = "Initially known",
@@ -1059,6 +1082,7 @@ level_editor = {
     }
   },
   tab_names = {
+    ai_players = "Opponents",
     expertise_diseases1 = "Dis expertise-1",
     expertise_diseases2 = "Dis expertise-2",
     expertise_diseases3 = "Dis expertise-3",
@@ -1078,6 +1102,7 @@ level_editor = {
     visuals1 = "Visual exist"
   },
   titles = {
+    ai_players = "Opponents",
     epidemics = "Epidemics settings",
     expertise_diseases1 = "Diseases expertise - 1",
     expertise_diseases2 = "Diseases expertise - 2",

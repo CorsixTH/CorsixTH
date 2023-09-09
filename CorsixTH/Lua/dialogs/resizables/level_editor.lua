@@ -641,6 +641,37 @@ function UILevelEditor:_makeGlobalAwardsTrophiesEditPage()
   })
 end
 
+function UILevelEditor:_makeAiPlayersEditPage()
+  local col1 = {}
+  local col2 = {}
+  local ai_row_names = {}
+  for i = 0, 14 do
+    ai_row_names[#ai_row_names + 1] = "level_editor.ai_players.row_names[" .. i .. "]"
+
+    col1[#col1 + 1] = _makeValue({
+      level_cfg_path = "computer[" .. i .. "].Playing",
+      min_value = 0,
+      max_value = 1
+    })
+    col2[#col2 + 1] = _makeValue({level_cfg_path = "computer[" .. i .. "].Name"})
+  end
+
+  local ai_platers_section = _makeTableSection({
+    title_path = "level_editor.titles.ai_players",
+    row_names = ai_row_names,
+    col_values = {col1, col2},
+    col_names = {
+      "level_editor.ai_players.col_names.playing",
+      "level_editor.ai_players.col_names.name"
+    }
+  })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.ai_players",
+    ai_platers_section
+  })
+end
+
 function UILevelEditor:_makeMainTabPage()
   local staff_levels1, staff_levels2 = self:_makeStaffLevelsEditPage12()
 
@@ -659,6 +690,7 @@ function UILevelEditor:_makeMainTabPage()
     self:_makeDiseasesExistenceEditPage("non_visuals", 0, 9, 1),
     self:_makeDiseasesExistenceEditPage("non_visuals", 10, 19, 2),
     self:_makeGlobalAwardsTrophiesEditPage(),
+    self:_makeAiPlayersEditPage()
   })
 end
 
