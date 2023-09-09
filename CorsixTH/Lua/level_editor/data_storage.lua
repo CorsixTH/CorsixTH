@@ -346,7 +346,7 @@ function LevelTableSection:LevelTableSection(title_path, row_name_paths,
         "Column " .. i .. ": count=" .. #c .. ", height=" .. table_rows_cols.h)
   end
 
-  self.title_height = 20 -- Amount of vertical space for the title.
+  self.title_size = Size(200, 25) -- Size of the title.
   self.title_sep = 10 -- Amount of vertical space between the title and the column names,
   self.row_label_sep = 5 -- Amount of vertical space between the column names and the first row.
   self.col_label_sep = 10 -- Amount of horizontal space between the row names and the first column.
