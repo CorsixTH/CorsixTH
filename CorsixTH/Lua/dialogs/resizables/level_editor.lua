@@ -92,7 +92,8 @@ local function _makeTableSection(settings)
   --  * "row_tooltips" (array) Optional string names for all rows.
   --  * "col_names" (array) String names for all columns.
   --  * "col_tooltips" (array) Optional tooltip string names.
-  --  * "title_height" (int) Optional height of the title.
+  --  * "col_values" (array) Array of column arrays of values.
+  --  * "title_size" (Size) Optional size of the title.
   --  * "title_sep" (int) Vertical space below the title
   --  * "row_label_sep" (int) Optional vertical space between rows.
   --  * "col_label_sep" (int) Optional horizontal space between column labels.
@@ -108,7 +109,7 @@ local function _makeTableSection(settings)
   local col_values = settings.col_values
   local section = LevelTableSection(settings.title_path, row_names, row_tooltips,
       col_names, col_tooltips, col_values)
-  section.title_height = settings.title_height or section.title_height
+  section.title_size = settings.title_size or section.title_size
   section.title_sep = settings.title_sep or section.title_sep
   section.row_label_sep = settings.row_label_sep or section.row_label_sep
   section.col_label_sep = settings.col_label_sep or section.col_label_sep
@@ -119,7 +120,6 @@ local function _makeTableSection(settings)
   return section
 end
 
-
 --! Construct an editable page with the given edit sections.
 --!param settings (table) Settings and content for the edit page.
 local function _makeEditPageSection(settings)
@@ -129,7 +129,6 @@ local function _makeEditPageSection(settings)
   local section = LevelEditPage(settings.tab_name_path, settings)
   return section
 end
-
 
 --! Make a LevelTabPage instance.
 --!param settings (table) Settings and content for the tab page.
@@ -192,71 +191,22 @@ function UILevelEditor:_makeTownEditPage()
 end
 
 function UILevelEditor:_makeTownLevelssEditPage()
-  local towns_col1 = {
-    _makeValue({level_cfg_path = "gbv.towns[0].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[1].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[2].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[3].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[4].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[5].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[6].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[7].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[8].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[9].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[10].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[11].StartCash"}),
-    _makeValue({level_cfg_path = "gbv.towns[12].StartCash"}),
-  }
-  local towns_col2 = {
-    _makeValue({level_cfg_path = "gbv.towns[0].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[1].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[2].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[3].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[4].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[5].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[6].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[7].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[8].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[9].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[10].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[11].InterestRate"}),
-    _makeValue({level_cfg_path = "gbv.towns[12].InterestRate"}),
-  }
-  local towns_col3 = {
-    _makeValue({level_cfg_path = "gbv.towns[0].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[1].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[2].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[3].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[4].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[5].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[6].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[7].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[8].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[9].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[10].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[11].StartRep"}),
-    _makeValue({level_cfg_path = "gbv.towns[12].StartRep"}),
-  }
-  local towns_col4 = {
-    _makeValue({level_cfg_path = "gbv.towns[0].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[1].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[2].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[3].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[4].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[5].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[6].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[7].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[8].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[9].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[10].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[11].OverdraftDiff"}),
-    _makeValue({level_cfg_path = "gbv.towns[12].OverdraftDiff"}),
-  }
+  local towns_col1 = {}
+  local towns_col2 = {}
+  local towns_col3 = {}
+  local towns_col4 = {}
+  local town_row_names = {}
 
-  local towns_row_names = {}
-  for i = 0, 12 do
-    towns_row_names[#towns_row_names + 1] = "level_editor.town_levels.row_names[" .. i .. "]"
+  for i = 0,12 do
+    local prefix = "gbv.towns[" .. i .. "]."
+    towns_col1[#towns_col1 + 1] = _makeValue({level_cfg_path = prefix .. "StartCash"})
+    towns_col2[#towns_col2 + 1] = _makeValue({level_cfg_path = prefix .. "InterestRate"})
+    towns_col3[#towns_col3 + 1] = _makeValue({level_cfg_path = prefix .. "StartRep"})
+    towns_col4[#towns_col4 + 1] = _makeValue({level_cfg_path = prefix .. "OverdraftDiff"})
+
+    town_row_names[#town_row_names + 1] = "level_editor.town_levels.row_names[" .. i .. "]"
   end
+
   local towns_col_names = {
     "level_editor.town_levels.col_names.start_cash",
     "level_editor.town_levels.col_names.interest_rate",
@@ -264,16 +214,17 @@ function UILevelEditor:_makeTownLevelssEditPage()
     "level_editor.town_levels.col_names.overdraft_diff",
   }
 
-  local town_level_values = _makeTableSection({
+  local town_level_section = _makeTableSection({
     title_path = "level_editor.titles.town_levels",
-    row_names = towns_row_names,
+    title_size = _TITLE_SIZE,
+    row_names = town_row_names,
     col_values = {towns_col1, towns_col2, towns_col3, towns_col4},
     col_names = towns_col_names
   })
 
   return _makeEditPageSection({
     tab_name_path = "level_editor.tab_names.town_levels",
-    town_level_values,
+    town_level_section,
   })
 end
 
@@ -298,11 +249,17 @@ function UILevelEditor:_makePopulationEditPage()
     "level_editor.popn.col_names.gbv.popn.change",
   }
 
-  return _makeTableSection({
+  local popn_section = _makeTableSection({
     title_path = "level_editor.titles.popn",
+    title_size = _TITLE_SIZE,
     row_names = popn_row_names,
     col_values = {popn_col1, popn_col2},
     col_names = popn_col_names
+  })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.popn",
+    popn_section,
   })
 end
 
@@ -443,6 +400,7 @@ function UILevelEditor:_makeStaffLevelsEditPage12()
 
   local staff_levels1 = _makeTableSection({
     title_path = "level_editor.titles.staff_level1",
+    title_size = _TITLE_SIZE,
     col_names = {
       "level_editor.staff_levels.col_names.Month",
       "level_editor.staff_levels.col_names.Nurses",
@@ -462,6 +420,7 @@ function UILevelEditor:_makeStaffLevelsEditPage12()
 
   local staff_levels2 = _makeTableSection({
     title_path = "level_editor.titles.staff_level2",
+    title_size = _TITLE_SIZE,
     col_names = {
       "level_editor.staff_levels.col_names.ShrkRate",
       "level_editor.staff_levels.col_names.SurgRate",
@@ -480,6 +439,141 @@ function UILevelEditor:_makeStaffLevelsEditPage12()
   })
 
   return staff_levels1, staff_levels2
+end
+
+--! Expand an array of {first, last} pairs to all numbers in the ranges.
+--!param ranges (array) Array of {first, last} pairs.
+--!return (array) Array of all numbers expressed in the pairs.
+local function _xpandRanges(ranges)
+  local result = {}
+  for _, pair in ipairs(ranges) do
+    for i = pair[1], pair[2] do result[#result + 1] = i end
+  end
+  return result
+end
+
+function UILevelEditor:_makeDiseaseExpertiseEditPage(ranges, sect_num)
+  local col1 = {}
+  local col2 = {}
+  local col3 = {}
+  local col4 = {}
+  local section_row_names = {}
+
+  for _, i in ipairs(_xpandRanges(ranges)) do
+    section_row_names[#section_row_names + 1] =
+        "level_editor.expertise_diseases.row_names[" .. i .. "]"
+
+    col1[#col1 + 1] = _makeValue({
+      level_cfg_path = "expertise[" .. i .. "].StartPrice"
+    })
+    col2[#col2 + 1] = _makeValue({
+      level_cfg_path = "expertise[" .. i .. "].Known",
+      min_value = 0,
+      max_value = 1
+    })
+    col3[#col3 + 1] = _makeValue({
+      level_cfg_path = "expertise[" .. i .. "].RschReqd"
+    })
+    col4[#col4 + 1] = _makeValue({
+      level_cfg_path = "expertise[" .. i .. "].MaxDiagDiff"
+    })
+  end
+  local section = _makeTableSection({
+    title_path = "level_editor.titles.expertise_diseases" .. sect_num,
+    title_size = _TITLE_SIZE,
+    row_names = section_row_names,
+    col_values = {col1, col2, col3, col4},
+    col_names = {
+      "level_editor.expertise_diseases.col_names.StartPrice",
+      "level_editor.expertise_diseases.col_names.Known",
+      "level_editor.expertise_diseases.col_names.RschReqd",
+      "level_editor.expertise_diseases.col_names.MaxDiagDiff",
+    }
+  })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.expertise_diseases" .. sect_num,
+    section
+  })
+end
+
+--! Make an edit page for disease availability.
+--!param kind (str) Kind of disease, either "visuals" or "nonvisuals"
+--!param first Index of the first disease to include.
+--!param last Index of the last disease to include.
+--!param sect_num Number of the section.
+function UILevelEditor:_makeDiseasesExistenceEditPage(kind, first, last, sect_num)
+  local col1 = {}
+  local col2 = {}
+  local section_row_names = {}
+  for i = first, last do
+    section_row_names[#section_row_names + 1] =
+        "level_editor." .. kind .. ".row_names[" .. i .. "]"
+
+    col1[#col1 + 1] = _makeValue({
+      level_cfg_path = kind .. "[" .. i .. "]",
+      min_value = 0,
+      max_value = 1
+    })
+    col2[#col2 + 1] = _makeValue({
+      level_cfg_path = kind .. "_available[" .. i .. "]"
+    })
+  end
+  local section = _makeTableSection({
+    title_path = "level_editor.titles." .. kind .. sect_num,
+    title_size = _TITLE_SIZE,
+    row_names = section_row_names,
+    col_values = {col1, col2},
+    col_names = {
+      "level_editor." .. kind .. ".col_names.month",
+      "level_editor." .. kind .. ".col_names.exists",
+    }
+  })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names." .. kind .. sect_num,
+    section
+  })
+end
+
+function UILevelEditor:_makeRoomExpertiseEditPage()
+  local col1 = {}
+  local col2 = {}
+  local col3 = {}
+  local section_row_names = {}
+  for _, i in ipairs(_xpandRanges({{1, 1}, {36, 46}})) do
+    section_row_names[#section_row_names + 1] =
+        "level_editor.expertise_rooms.row_names[" .. i .. "]"
+
+    col1[#col1 + 1] = _makeValue({
+      level_cfg_path = "expertise[" .. i .. "].StartPrice"
+    })
+    col2[#col2 + 1] = _makeValue({
+      level_cfg_path = "expertise[" .. i .. "].Known",
+      min_value = 0,
+      max_value = 1
+    })
+    col3[#col3 + 1] = _makeValue({
+      level_cfg_path = "expertise[" .. i .. "].RschReqd"
+    })
+  end
+
+  local expertise_rooms = _makeTableSection({
+    title_path = "level_editor.titles.expertise_rooms",
+    title_size = _TITLE_SIZE,
+    row_names = section_row_names,
+    col_values = {col1, col2, col3},
+    col_names = {
+      "level_editor.expertise_rooms.col_names.StartPrice",
+      "level_editor.expertise_rooms.col_names.Known",
+      "level_editor.expertise_rooms.col_names.RschReqd",
+    }
+  })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.expertise_rooms",
+    expertise_rooms
+  })
 end
 
 function UILevelEditor:_makeRoomsCostEditPage()
@@ -557,6 +651,13 @@ function UILevelEditor:_makeMainTabPage()
     self:_makeHospitalEditPage1(), self:_makeHospitalEditPage2(),
     self:_makeStaffEditPage(), staff_levels1, staff_levels2,
     self:_makeRoomsCostEditPage(),
+    self:_makeRoomExpertiseEditPage(),
+    self:_makeDiseaseExpertiseEditPage({{2, 13}}, 1),
+    self:_makeDiseaseExpertiseEditPage({{14, 25}}, 2),
+    self:_makeDiseaseExpertiseEditPage({{26, 35}}, 3),
+    self:_makeDiseasesExistenceEditPage("visuals", 0, 13, 1),
+    self:_makeDiseasesExistenceEditPage("non_visuals", 0, 9, 1),
+    self:_makeDiseasesExistenceEditPage("non_visuals", 10, 19, 2),
     self:_makeGlobalAwardsTrophiesEditPage(),
   })
 end

@@ -921,11 +921,104 @@ map_editor_window = {
 }
 
 level_editor = {
+  expertise_diseases = {
+    col_names = {
+      Known = "Initially known",
+      MaxDiagDiff = "Diagnosis difficulty",
+      RschReqd = "Required research",
+      StartPrice = "Initial cure cost"
+    },
+    row_names = {
+      [2] = "Bloaty head",
+      [3] = "Hairyritus",
+      [4] = "Elvis",
+      [5] = "Invisibility",
+      [6] = "Radiation",
+      [7] = "Slack tongue",
+      [8] = "Abduction",
+      [9] = "Broken bones",
+      [10] = "Baldness",
+      [11] = "Discrete itching",
+      [12] = "Jellyitus",
+      [13] = "Sleeping illness",
+      [14] = "Pregnant",
+      [15] = "Transparent",
+      [16] = "Uncommon cold",
+      [17] = "Broken wind",
+      [18] = "Spare ribs",
+      [19] = "Kidney beans",
+      [20] = "Broken heart",
+      [21] = "Ruptured noodles",
+      [22] = "Tv personalities",
+      [23] = "Infectuous laughter",
+      [24] = "Corrugated ankles",
+      [25] = "Chronic nose hair",
+      [26] = "Third degree side burns",
+      [27] = "Fake blood",
+      [28] = "Gastric ejections",
+      [29] = "The squits",
+      [30] = "Iron lungs",
+      [31] = "Sweaty palms",
+      [32] = "Heaped piles",
+      [33] = "Gutt rot",
+      [34] = "Golf stones",
+      [35] = "Unexpected swellings"
+    }
+  },
+  expertise_rooms = {
+    col_names = {
+      Known = "Initrially known",
+      RschReqd = "Required research",
+      StartPrice = "Initial price"
+    },
+    row_names = {
+      [1] = "GP room",
+      [36] = "Scanner",
+      [37] = "Blood machine",
+      [38] = "Cardio",
+      [39] = "X-ray",
+      [40] = "Ultra scanner",
+      [41] = "Diagnosis room",
+      [42] = "Ward",
+      [43] = "Psychiatry",
+      [44] = "Autopsy",
+      [45] = "Atom analyser",
+      [46] = "Research"
+    }
+  },
+  non_visuals = {
+    col_names = {
+      exists = "Exists at all",
+      month = "Month"
+    },
+    row_names = {
+      [0] = "Uncommon cold",
+      [1] = "Broken wind",
+      [2] = "Spare ribs",
+      [3] = "Kidney beans",
+      [4] = "Broken heart",
+      [5] = "Ruptured noodles",
+      [6] = "Tv personalities",
+      [7] = "Infectuous laughter",
+      [8] = "Corrugated ankles",
+      [9] = "Chronic nose hair",
+      [10] = "Third degree side burns",
+      [11] = "Fake blood",
+      [12] = "Gastric ejections",
+      [13] = "The squits",
+      [14] = "Iron lungs",
+      [15] = "Sweaty palms",
+      [16] = "Heaped piles",
+      [17] = "Gutt rot",
+      [18] = "Golf stones",
+      [19] = "Unexpected swellings"
+    }
+  },
   popn = {
     col_names = {
       gbv = {
         popn = {
-          change = "Rate of change",
+          change = "Monthly change",
           month = "Start month"
         }
       }
@@ -966,30 +1059,45 @@ level_editor = {
     }
   },
   tab_names = {
+    expertise_diseases1 = "Dis expertise-1",
+    expertise_diseases2 = "Dis expertise-2",
+    expertise_diseases3 = "Dis expertise-3",
+    expertise_rooms = "Rooms",
     global_awards_trophies = "Global prizes",
-    hospital1 = "Hospital 1",
-    hospital2 = "Hospital 2",
+    hospital1 = "Hospital-1",
+    hospital2 = "Hospital-2",
     local_town = "Town",
+    non_visuals1 = "Nonvisual exist - 1",
+    non_visuals2 = "Nonvisual exist - 2",
+    popn = "Population",
     rooms_cost = "Rooms cost",
     staff1 = "Staff-1",
     staff_level1 = "Staff levels",
     staff_level2 = "Rates of specialists",
-    town_levels = "Town levels"
+    town_levels = "Town levels",
+    visuals1 = "Visual exist"
   },
   titles = {
     epidemics = "Epidemics settings",
+    expertise_diseases1 = "Diseases expertise - 1",
+    expertise_diseases2 = "Diseases expertise - 2",
+    expertise_diseases3 = "Diseases expertise - 3",
+    expertise_rooms = "Rooms expertise",
     global_awards = "Global awards",
     global_trophies = "Global trophies",
     local_town = "Local Town section",
     medical_bonuses = "Additional salaries for medical staff",
     min_salaries = "Minimum staff salaries",
+    non_visuals1 = "Nonvisual illnesses - 1",
+    non_visuals2 = "Nonvisual illnesses - 2",
     popn = "Population changes",
     research = "Research settings",
     rooms_cost = "Rooms cost",
     staff_level1 = "Staff levels",
     staff_level2 = "Specialist rates",
     town_levels = "Town levels",
-    training = "Training settings"
+    training = "Training settings",
+    visuals1 = "Visual illnesses"
   },
   town_levels = {
     col_names = {
@@ -1350,6 +1458,28 @@ level_editor = {
       StartRep = {
         name = "Initial reputation"
       }
+    }
+  },
+  visuals = {
+    col_names = {
+      exists = "Exists at all",
+      month = "Month"
+    },
+    row_names = {
+      [0] = "Bloaty head",
+      [1] = "Hairyritus",
+      [2] = "Elvis",
+      [3] = "Invisibility",
+      [4] = "Radiation",
+      [5] = "Slack tongue",
+      [6] = "Abduction",
+      [7] = "Broken bones",
+      [8] = "Baldness",
+      [9] = "Discrete itching",
+      [10] = "Jellyitus",
+      [11] = "Sleeping illness",
+      [12] = "Pregnant",
+      [13] = "Transparent"
     }
   }
 }
