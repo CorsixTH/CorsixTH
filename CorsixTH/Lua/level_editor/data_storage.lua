@@ -128,7 +128,7 @@ function LevelValue:LevelValue(level_cfg_path, name_path, tooltip_path,
   self.max_value = max_value
   assert(not self.min_value or not self.max_value or self.min_value <= self.max_value)
 
-  self._text_box = nil -- Text box for the value in the editor.
+  self.text_box = nil -- Text box for the value in the editor, set in _makeTextBox.
   self.current_value = nil -- Current value.
 end
 
@@ -163,14 +163,12 @@ function LevelValue:setBoxValue(value)
   if self.max_value and value > self.max_value then value = self.max_value end
   self.current_value = math.floor(value) -- Ensure it's an integer even if the bounds are not.
 
-  if self._text_box then -- Avoid a crash when updated without having a text box.
-    self._text_box:setText(tostring(self.current_value))
-  end
+  self.text_box:setText(tostring(self.current_value))
 end
 
 --! Callback that the user confirmed entering a new value. Apply it.
 function LevelValue:confirm()
-  self.current_value = tonumber(self._text_box.text) or self.current_value
+  self.current_value = tonumber(self.text_box.text) or self.current_value
   self:setBoxValue()
 end
 
