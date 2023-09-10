@@ -64,7 +64,7 @@ function Doctor:tickDay()
     local room_factor = room:getTrainingFactor()
     -- When counting room occupancy, we must subtract 1 for the consultant in the room.
     -- Currently, handymen/newly trained consultants also get counted here as they
-    -- could be considered distractiing to current trainees.
+    -- could be considered distracting to current trainees.
     local student_count = room:getStaffCount() - 1
     self:trainSkills(consultant, room_factor, student_count)
   end

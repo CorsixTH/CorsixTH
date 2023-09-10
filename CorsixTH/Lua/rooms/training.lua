@@ -278,9 +278,12 @@ end
 
 function TrainingRoom:afterLoad(old, new)
   if old < 233 then
-    local fx, fy = self:getEntranceXY(true)
-    local objects = self.world:findAllObjectsNear(fx, fy)
-    self.training_factor = self:calculateTrainingFactor(objects)
+    -- Calculate the new training factor, unless we're currently editing the room
+    if self.built then
+      local fx, fy = self:getEntranceXY(true)
+      local objects = self.world:findAllObjectsNear(fx, fy)
+      self.training_factor = self:calculateTrainingFactor(objects)
+    end
   end
   Room.afterLoad(self, old, new)
 end
