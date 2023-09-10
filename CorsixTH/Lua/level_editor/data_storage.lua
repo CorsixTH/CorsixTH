@@ -409,6 +409,7 @@ function LevelTableSection:layout(window, pos)
         self.row_tooltip_paths[row], NAME_LABEL_SETTINGS)
     x = x + label_size.w + self.col_label_sep
     for col = 1, table_rows_cols.w do
+      assert(self.values[col][row], "No value found at row " .. row .. ", column " .. col)
       _makeTextBox(window, self._text_boxes, x, y, label_size, self.values[col][row])
       x = x + label_size.w
       if col < table_rows_cols.w then x = x + self.intercol_sep end

@@ -923,8 +923,8 @@ map_editor_window = {
 level_editor = {
   ai_players = {
     col_names = {
-      name = "Name of the AI opponent",
-      playing = "Is AI opponent playing"
+      name = "Name",
+      playing = "Is playing"
     },
     row_names = {
       [0] = "Opponent 1",
@@ -1009,6 +1009,23 @@ level_editor = {
       [46] = "Research"
     }
   },
+  lose_criteria = {
+    col_names = {
+      Bound = "Warn value",
+      Criteria = "Criteria",
+      Group = "Group",
+      MaxMin = "Max or Min",
+      Value = "Bound value"
+    },
+    row_names = {
+      [0] = "Entry 1",
+      [1] = "Entry 2",
+      [2] = "Entry 3",
+      [3] = "Entry 4",
+      [4] = "Entry 5",
+      [5] = "Entry 6"
+    }
+  },
   non_visuals = {
     col_names = {
       exists = "Exists at all",
@@ -1035,6 +1052,78 @@ level_editor = {
       [17] = "Gutt rot",
       [18] = "Golf stones",
       [19] = "Unexpected swellings"
+    }
+  },
+  objects = {
+    col_names = {
+      AvailableForLevel = "Exists at all",
+      StartAvail = "Available at start",
+      StartCost = "Initial cost",
+      StartStrength = "Initial strength",
+      WhenAvail = "Month"
+    },
+    row_names = {
+      [1] = "Desk",
+      [2] = "Cabinet",
+      [3] = "Door",
+      [4] = "Bench",
+      [5] = "Table",
+      [6] = "Chair",
+      [7] = "Drinks",
+      [8] = "Bed",
+      [9] = "Inflator machine",
+      [10] = "Snooker table",
+      [11] = "Receptionist desk",
+      [12] = "Tressle table",
+      [13] = "Cardiogram",
+      [14] = "Scanner",
+      [15] = "Scanner console",
+      [16] = "Screen",
+      [17] = "Jukebox",
+      [18] = "Couch",
+      [19] = "Sofa",
+      [20] = "Crash trolley",
+      [21] = "TV set",
+      [22] = "Ultrascan",
+      [23] = "DNA restorer",
+      [24] = "Cast remover",
+      [25] = "Hair restorer",
+      [26] = "Slack Tongue slicer",
+      [27] = "X-ray",
+      [28] = "Radiation shield",
+      [29] = "X-ray viewer",
+      [30] = "Operating table",
+      [31] = "Lamp",
+      [32] = "Bathroom sink",
+      [33] = "OP sink 1",
+      [34] = "OP sink 2",
+      [35] = "Surgeon screen",
+      [36] = "Lecture chair",
+      [37] = "Projector",
+      [38] = "Open bed screen",
+      [39] = "Pharmacy cabinet",
+      [40] = "Research computer",
+      [41] = "Chemical mixer",
+      [42] = "Blood machine",
+      [43] = "Fire extinguisher",
+      [44] = "Radiator",
+      [45] = "Plant",
+      [46] = "Electrolysis machine",
+      [47] = "Jellyitus machine",
+      [48] = "Gates to hell",
+      [49] = "Closed bed screen",
+      [50] = "Bin",
+      [51] = "Toilet",
+      [52] = "Double door part 1",
+      [53] = "Double door part 2",
+      [54] = "Decontamination shower",
+      [55] = "Autopsy machine",
+      [56] = "Book case",
+      [57] = "Video game",
+      [58] = "Entrance door left",
+      [59] = "Entrance door right",
+      [60] = "Skeleton",
+      [61] = "Comfy chair"
     }
   },
   popn = {
@@ -1091,15 +1180,22 @@ level_editor = {
     hospital1 = "Hospital-1",
     hospital2 = "Hospital-2",
     local_town = "Town",
-    non_visuals1 = "Nonvisual exist - 1",
-    non_visuals2 = "Nonvisual exist - 2",
+    lose_criteria = "Lose conditions",
+    non_visuals1 = "Nonvisual exist-1",
+    non_visuals2 = "Nonvisual exist-2",
+    objects1 = "Objects-1",
+    objects2 = "Objects-2",
+    objects3 = "Objects-3",
+    objects4 = "Objects-4",
+    objects5 = "Objects-5",
     popn = "Population",
     rooms_cost = "Rooms cost",
     staff1 = "Staff-1",
     staff_level1 = "Staff levels",
     staff_level2 = "Rates of specialists",
     town_levels = "Town levels",
-    visuals1 = "Visual exist"
+    visuals1 = "Visual exist",
+    win_criteria = "Win conditions"
   },
   titles = {
     ai_players = "Opponents",
@@ -1111,10 +1207,16 @@ level_editor = {
     global_awards = "Global awards",
     global_trophies = "Global trophies",
     local_town = "Local Town section",
+    lose_criteria = "Conditions to lose a level",
     medical_bonuses = "Additional salaries for medical staff",
     min_salaries = "Minimum staff salaries",
     non_visuals1 = "Nonvisual illnesses - 1",
     non_visuals2 = "Nonvisual illnesses - 2",
+    objects1 = "Objects - 1",
+    objects2 = "Objects - 2",
+    objects3 = "Objects - 3",
+    objects4 = "Objects - 4",
+    objects5 = "Objects - 5",
     popn = "Population changes",
     research = "Research settings",
     rooms_cost = "Rooms cost",
@@ -1122,7 +1224,8 @@ level_editor = {
     staff_level2 = "Specialist rates",
     town_levels = "Town levels",
     training = "Training settings",
-    visuals1 = "Visual illnesses"
+    visuals1 = "Visual illnesses",
+    win_criteria = "Conditions to win a level"
   },
   town_levels = {
     col_names = {
@@ -1505,6 +1608,23 @@ level_editor = {
       [11] = "Sleeping illness",
       [12] = "Pregnant",
       [13] = "Transparent"
+    }
+  },
+  win_criteria = {
+    col_names = {
+      Bound = "Warn value",
+      Criteria = "Criteria",
+      Group = "Group",
+      MaxMin = "Max or Min",
+      Value = "Bound value"
+    },
+    row_names = {
+      [0] = "Entry 1",
+      [1] = "Entry 2",
+      [2] = "Entry 3",
+      [3] = "Entry 4",
+      [4] = "Entry 5",
+      [5] = "Entry 6"
     }
   }
 }

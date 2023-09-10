@@ -576,6 +576,58 @@ function UILevelEditor:_makeRoomExpertiseEditPage()
   })
 end
 
+function UILevelEditor:_makeObjectsEditPage(ranges, sect_num)
+  -- ENHANCEMENT: Shuffle objects between table sections so similar objects are at a single page.
+  -- ENHANCEMENT: Eliminate the unused objects.
+  -- ENHANCEMENT: Having a left and a right door as separate objects is just silly for a user.
+  local col1 = {}
+  local col2 = {}
+  local col3 = {}
+  local col4 = {}
+  local col5 = {}
+  local sect_row_names = {}
+
+  for _, i in ipairs(_xpandRanges(ranges)) do
+    sect_row_names[#sect_row_names + 1] =
+        "level_editor.objects.row_names[" .. i .. "]"
+
+    col1[#col1 + 1] = _makeValue({
+      level_cfg_path = "objects[" .. i .. "].AvailableForLevel"
+    })
+    col2[#col2 + 1] = _makeValue({
+      level_cfg_path = "objects[" .. i .. "].StartStrength"
+    })
+    col3[#col3 + 1] = _makeValue({
+      level_cfg_path = "objects[" .. i .. "].WhenAvail"
+    })
+    col4[#col4 + 1] = _makeValue({
+      level_cfg_path = "objects[" .. i .. "].StartAvail"
+    })
+    col5[#col5 + 1] = _makeValue({
+      level_cfg_path = "objects[" .. i .. "].StartCost"
+    })
+  end
+
+  local objects_section = _makeTableSection({
+    title_path = "level_editor.titles.objects" .. sect_num,
+    title_size = _TITLE_SIZE,
+    row_names = sect_row_names,
+    col_values = {col1, col2, col3, col4, col5},
+    col_names = {
+      "level_editor.objects.col_names.AvailableForLevel",
+      "level_editor.objects.col_names.StartStrength",
+      "level_editor.objects.col_names.WhenAvail",
+      "level_editor.objects.col_names.StartAvail",
+      "level_editor.objects.col_names.StartCost",
+    }
+  })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.objects" .. sect_num,
+    objects_section
+  })
+end
+
 function UILevelEditor:_makeRoomsCostEditPage()
   local rooms_cost_edit_section = _makeValuesSection({
     title_path = "level_editor.titles.rooms_cost",
@@ -641,6 +693,61 @@ function UILevelEditor:_makeGlobalAwardsTrophiesEditPage()
   })
 end
 
+function UILevelEditor:_makeWinLoseCriteriaEditPage(kind)
+  -- ENHANCEMENT: Make a drop-down for values with fixed range.
+  -- ENHANCEMENT: Use a check-mark for on/off values.
+  -- ENHANCEMENT: For a really nice UX, have groups to edit.
+  local col1 = {}
+  local col2 = {}
+  local col3 = {}
+  local col4 = {}
+  local col5 = {}
+  local sect_row_names = {}
+  for i = 0, 5 do
+    sect_row_names[#sect_row_names + 1] =
+        "level_editor." .. kind .. "_criteria.row_names[" .. i .. "]"
+
+    local crit_text = kind .. "_criteria[" .. i .."]"
+    col1[#col1 + 1] = _makeValue({
+      level_cfg_path = "level_editor." .. crit_text .. ".Criteria",
+      min_value = 1,
+      max_value = 6
+    })
+    col2[#col2 + 1] = _makeValue({
+      level_cfg_path = "level_editor." .. crit_text .. ".MaxMin",
+      min_value = 0,
+      max_value = 1
+    })
+    col3[#col3 + 1] = _makeValue({
+      level_cfg_path = "level_editor." .. crit_text .. ".Value"
+    })
+    col4[#col4 + 1] = _makeValue({
+      level_cfg_path = "level_editor." .. crit_text .. ".Group"
+    })
+    col5[#col5 + 1] = _makeValue({
+      level_cfg_path = "level_editor." .. crit_text .. ".Bound"
+    })
+  end
+
+  local section = _makeTableSection({
+    title_path = "level_editor.titles." .. kind .. "_criteria",
+    row_names = sect_row_names,
+    col_values = {col1, col2, col3, col4, col5},
+    col_names = {
+      "level_editor." .. kind .. "_criteria.col_names.Criteria",
+      "level_editor." .. kind .. "_criteria.col_names.MaxMin",
+      "level_editor." .. kind .. "_criteria.col_names.Value",
+      "level_editor." .. kind .. "_criteria.col_names.Group",
+      "level_editor." .. kind .. "_criteria.col_names.Bound"
+    }
+  })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names." .. kind .. "_criteria",
+    section
+  })
+end
+
 function UILevelEditor:_makeAiPlayersEditPage()
   local col1 = {}
   local col2 = {}
@@ -681,6 +788,11 @@ function UILevelEditor:_makeMainTabPage()
     self:_makePopulationEditPage(),
     self:_makeHospitalEditPage1(), self:_makeHospitalEditPage2(),
     self:_makeStaffEditPage(), staff_levels1, staff_levels2,
+    self:_makeObjectsEditPage({{1, 12}}, 1),
+    self:_makeObjectsEditPage({{13, 24}}, 2),
+    self:_makeObjectsEditPage({{25, 36}}, 3),
+    self:_makeObjectsEditPage({{36, 47}}, 4),
+    self:_makeObjectsEditPage({{48, 61}}, 5),
     self:_makeRoomsCostEditPage(),
     self:_makeRoomExpertiseEditPage(),
     self:_makeDiseaseExpertiseEditPage({{2, 13}}, 1),
@@ -690,7 +802,8 @@ function UILevelEditor:_makeMainTabPage()
     self:_makeDiseasesExistenceEditPage("non_visuals", 0, 9, 1),
     self:_makeDiseasesExistenceEditPage("non_visuals", 10, 19, 2),
     self:_makeGlobalAwardsTrophiesEditPage(),
+    self:_makeWinLoseCriteriaEditPage("win"),
+    self:_makeWinLoseCriteriaEditPage("lose"),
     self:_makeAiPlayersEditPage()
   })
 end
-
