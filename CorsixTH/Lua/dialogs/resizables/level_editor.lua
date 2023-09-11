@@ -118,7 +118,7 @@ local function _makeTableSection(settings)
   section.title_sep = settings.title_sep or section.title_sep
   section.row_label_sep = settings.row_label_sep or section.row_label_sep
   section.col_label_sep = settings.col_label_sep or section.col_label_sep
-  section.col_width = settings.col_width or section.col_width
+  section.data_col_width = settings.data_col_width or section.data_col_width
   section.label_col_width = settings.label_col_width or section.label_col_width
   section.row_height = settings.row_height or section.row_height
   section.intercol_sep = settings.intercol_sep or section.intercol_sep
@@ -290,6 +290,14 @@ function UILevelEditor:_makeHospitalEditPage1()
     _makeValue({level_cfg_path = "gbv.RschImproveCostPercent", name_path = true}),
     _makeValue({level_cfg_path = "gbv.RschImproveIncrementPercent", name_path = true}),
   })
+
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.hospital1",
+    research_section,
+  })
+end
+
+function UILevelEditor:_makeHospitalEditPage2()
   local training_section = _makeValuesSection({
     title_path = "level_editor.titles.training",
     title_size = _TITLE_SIZE,
@@ -307,13 +315,12 @@ function UILevelEditor:_makeHospitalEditPage1()
   })
 
   return _makeEditPageSection({
-    tab_name_path = "level_editor.tab_names.hospital1",
-    research_section,
+    tab_name_path = "level_editor.tab_names.hospital2",
     training_section,
   })
 end
 
-function UILevelEditor:_makeHospitalEditPage2()
+function UILevelEditor:_makeHospitalEditPage3()
   local epidemics_section = _makeValuesSection({
     title_path = "level_editor.titles.epidemics",
     title_size = _TITLE_SIZE,
@@ -335,7 +342,7 @@ function UILevelEditor:_makeHospitalEditPage2()
   })
 
   return _makeEditPageSection({
-    tab_name_path = "level_editor.tab_names.hospital2",
+    tab_name_path = "level_editor.tab_names.hospital3",
     epidemics_section
   })
 end
@@ -412,7 +419,7 @@ function UILevelEditor:_makeStaffLevelsEditPage12()
   local staff_levels1 = _makeTableSection({
     title_path = "level_editor.titles.staff_level1",
     title_size = _TITLE_SIZE,
-    label_col_width = 100, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = 80, data_col_width = _DATA_COL_WIDTH,
     col_names = {
       "level_editor.staff_levels.col_names.Month",
       "level_editor.staff_levels.col_names.Nurses",
@@ -433,7 +440,7 @@ function UILevelEditor:_makeStaffLevelsEditPage12()
   local staff_levels2 = _makeTableSection({
     title_path = "level_editor.titles.staff_level2",
     title_size = _TITLE_SIZE,
-    label_col_width = 100, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = 80, data_col_width = _DATA_COL_WIDTH,
     col_names = {
       "level_editor.staff_levels.col_names.ShrkRate",
       "level_editor.staff_levels.col_names.SurgRate",
@@ -498,7 +505,7 @@ function UILevelEditor:_makeDiseaseExpertiseEditPage(ranges, sect_num)
   local section = _makeTableSection({
     title_path = "level_editor.titles.expertise_diseases" .. sect_num,
     title_size = _TITLE_SIZE,
-    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = 135, data_col_width = 115,
     row_names = section_row_names,
     col_values = {col1, col2, col3, col4},
     col_names = {
@@ -540,7 +547,7 @@ function UILevelEditor:_makeDiseasesExistenceEditPage(kind, first, last, sect_nu
   local section = _makeTableSection({
     title_path = "level_editor.titles." .. kind .. sect_num,
     title_size = _TITLE_SIZE,
-    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = 200, data_col_width = 120,
     row_names = section_row_names,
     col_values = {col1, col2},
     col_names = {
@@ -580,7 +587,7 @@ function UILevelEditor:_makeRoomExpertiseEditPage()
   local expertise_rooms = _makeTableSection({
     title_path = "level_editor.titles.expertise_rooms",
     title_size = _TITLE_SIZE,
-    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = 200, data_col_width = 130,
     row_names = section_row_names,
     col_values = {col1, col2, col3},
     col_names = {
@@ -631,7 +638,7 @@ function UILevelEditor:_makeObjectsEditPage(ranges, sect_num)
   local objects_section = _makeTableSection({
     title_path = "level_editor.titles.objects" .. sect_num,
     title_size = _TITLE_SIZE,
-    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = 130, data_col_width = 92,
     row_names = sect_row_names,
     col_values = {col1, col2, col3, col4, col5},
     col_names = {
@@ -653,7 +660,7 @@ function UILevelEditor:_makeRoomsCostEditPage(ranges, page_num)
   local section_data = {
     title_path = "level_editor.titles.rooms_cost" .. page_num,
     title_size = _TITLE_SIZE,
-    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    label_size = Size(200, LevelValuesSection.VALUE_HEIGHT),
   }
 
   for _, i in ipairs(_xpandRanges(ranges)) do
@@ -714,7 +721,7 @@ function UILevelEditor:_makeEmergencyControlEditPage()
   local section = _makeTableSection({
     title_path = "level_editor.titles.emergency_control",
     title_size = _TITLE_SIZE,
-    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = 90, data_col_width = 90,
     row_names = emergency_control_row_names,
     col_names = {
       "level_editor.emergency_control.col_names.StartMonth",
@@ -896,7 +903,7 @@ local function _makeFixedCnditionBonusesSection()
 
   values.title_path = "level_editor.titles.fixed_cond_trophies"
   values.title_size = _TITLE_SIZE
-  values.label_size = Size(300, LevelValuesSection.VALUE_HEIGHT)
+  values.label_size = Size(200, LevelValuesSection.VALUE_HEIGHT)
   return _makeValuesSection(values)
 end
 
@@ -915,7 +922,7 @@ local function _makeRegularTrohpiesSection()
   return _makeTableSection({
     title_path = "level_editor.titles.trophies",
     title_size = _TITLE_SIZE,
-    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = _LABEL_COL_WIDTH, data_col_width = 100,
     col_names = {
       "level_editor.trophies.col_names.condition",
       "level_editor.trophies.col_names.bonus",
@@ -942,7 +949,7 @@ local function _makeAwardsSection()
   return _makeTableSection({
     title_path = "level_editor.titles.awards",
     title_size = _TITLE_SIZE,
-    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = 250, data_col_width = _DATA_COL_WIDTH,
     col_names = {
       "level_editor.awards.col_names.award_condition",
       "level_editor.awards.col_names.bonus",
@@ -1008,7 +1015,7 @@ function UILevelEditor:_makeWinLoseCriteriaEditPage(kind)
   local section = _makeTableSection({
     title_path = "level_editor.titles." .. kind .. "_criteria",
     row_names = sect_row_names,
-    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = 100, data_col_width = 90,
     col_values = {col1, col2, col3, col4, col5},
     col_names = {
       "level_editor." .. kind .. "_criteria.col_names.Criteria",
@@ -1043,7 +1050,7 @@ function UILevelEditor:_makeAiPlayersEditPage()
   local ai_platers_section = _makeTableSection({
     title_path = "level_editor.titles.ai_players",
     title_size = _TITLE_SIZE,
-    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    label_col_width = 150, data_col_width = 130,
     row_names = ai_row_names,
     col_values = {col1, col2},
     col_names = {
@@ -1065,7 +1072,9 @@ function UILevelEditor:_makeMainTabPage()
     self:_makeTownEditPage(),
     self:_makeTownLevelssEditPage(),
     self:_makePopulationEditPage(),
-    self:_makeHospitalEditPage1(), self:_makeHospitalEditPage2(),
+    self:_makeHospitalEditPage1(),
+    self:_makeHospitalEditPage2(),
+    self:_makeHospitalEditPage3(),
     self:_makeStaffEditPage(), staff_levels1, staff_levels2,
     self:_makeObjectsEditPage({{1, 12}}, 1),
     self:_makeObjectsEditPage({{13, 24}}, 2),
