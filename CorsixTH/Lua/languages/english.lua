@@ -944,6 +944,51 @@ level_editor = {
       [14] = "Opponent 15"
     }
   },
+  awards = {
+    col_names = {
+      award_condition = "Superior performance",
+      bonus = "Reward",
+      penalty = "Penalty",
+      poor_condition = "Bad performance"
+    },
+    row_names = {
+      AwardReputation = "Reputation",
+      AwardStaffHappiness = "Staff happiness",
+      Cleanliness = "Cleanliness",
+      Cures = "Cures",
+      CuresVDeaths = "Cures vs deaths",
+      Deaths = "Deaths",
+      Emergency = "Emergencies",
+      HospValue = "Hospital value",
+      NewTech = "Newest technology",
+      PeepHappiness = "Patients happiness",
+      PopulationPercentage = "Popn percentage",
+      WaitingTimes = "Queueing time",
+      WellKeptTech = "Machine Maintenance"
+    }
+  },
+  emergency_control = {
+    col_names = {
+      Bonus = "Bonus",
+      EndMonth = "Last month",
+      Illness = "Illness",
+      Max = "Max patients",
+      Min = "Min patients",
+      PercWin = "Percent cure",
+      StartMonth = "First month"
+    },
+    row_names = {
+      [0] = "Period 1",
+      [1] = "Period 2",
+      [2] = "Period 3",
+      [3] = "Period 4",
+      [4] = "Period 5",
+      [5] = "Period 6",
+      [6] = "Period 7",
+      [7] = "Period 8",
+      [8] = "Period 9"
+    }
+  },
   expertise_diseases = {
     col_names = {
       Known = "Initially known",
@@ -1057,9 +1102,9 @@ level_editor = {
   objects = {
     col_names = {
       AvailableForLevel = "Exists at all",
-      StartAvail = "Available at start",
-      StartCost = "Initial cost",
-      StartStrength = "Initial strength",
+      StartAvail = "Av. at start",
+      StartCost = "Price",
+      StartStrength = "Strength",
       WhenAvail = "Month"
     },
     row_names = {
@@ -1172,11 +1217,12 @@ level_editor = {
   },
   tab_names = {
     ai_players = "Opponents",
+    awards = "Awards",
+    emergency_control = "Emergencies",
     expertise_diseases1 = "Dis expertise-1",
     expertise_diseases2 = "Dis expertise-2",
     expertise_diseases3 = "Dis expertise-3",
     expertise_rooms = "Rooms",
-    global_awards_trophies = "Global prizes",
     hospital1 = "Hospital-1",
     hospital2 = "Hospital-2",
     local_town = "Town",
@@ -1189,23 +1235,27 @@ level_editor = {
     objects4 = "Objects-4",
     objects5 = "Objects-5",
     popn = "Population",
-    rooms_cost = "Rooms cost",
+    rooms_cost1 = "Rooms cost-1",
+    rooms_cost2 = "Rooms cost-2",
+    rooms_cost3 = "Rooms cost-3",
     staff1 = "Staff-1",
     staff_level1 = "Staff levels",
     staff_level2 = "Rates of specialists",
     town_levels = "Town levels",
+    trophies = "Trophies",
     visuals1 = "Visual exist",
     win_criteria = "Win conditions"
   },
   titles = {
     ai_players = "Opponents",
+    awards = "Awards",
+    emergency_control = "Emergencies",
     epidemics = "Epidemics settings",
     expertise_diseases1 = "Diseases expertise - 1",
     expertise_diseases2 = "Diseases expertise - 2",
     expertise_diseases3 = "Diseases expertise - 3",
     expertise_rooms = "Rooms expertise",
-    global_awards = "Global awards",
-    global_trophies = "Global trophies",
+    fixed_cond_trophies = "Bonuses for trophies with fixed conditions",
     local_town = "Local Town section",
     lose_criteria = "Conditions to lose a level",
     medical_bonuses = "Additional salaries for medical staff",
@@ -1219,11 +1269,14 @@ level_editor = {
     objects5 = "Objects - 5",
     popn = "Population changes",
     research = "Research settings",
-    rooms_cost = "Rooms cost",
+    rooms_cost1 = "Rooms cost - 1",
+    rooms_cost2 = "Rooms cost - 2",
+    rooms_cost3 = "Rooms cost - 3",
     staff_level1 = "Staff levels",
     staff_level2 = "Specialist rates",
     town_levels = "Town levels",
     training = "Training settings",
+    trophies = "Regular trophies",
     visuals1 = "Visual illnesses",
     win_criteria = "Conditions to win a level"
   },
@@ -1250,34 +1303,31 @@ level_editor = {
       [12] = "Level 13"
     }
   },
+  trophies = {
+    col_names = {
+      bonus = "Bonus",
+      condition = "Value"
+    },
+    row_names = {
+      CansofCoke = "Cans sold",
+      Mayor = "VIP visits",
+      Plant = "Plants",
+      RatKillsAbsolute = "Numvber of rats killed",
+      RatKillsPercentage = "Percentage of rats killed",
+      TrophyReputation = "Reputation",
+      TrophyStaffHappiness = "Staff happiness"
+    }
+  },
   values = {
     awards_trophies = {
-      AllCuresBonus = {
-        name = "Everybody cured"
-      },
-      NewTechAward = {
-        name = "Limit for good tech use"
-      },
-      NewTechPoor = {
-        name = "Limit for bad tech use"
-      },
-      ResearchBonus = {
-        name = "Limit for good research"
-      },
-      ResearchPenalty = {
-        name = "Limit for bad research"
-      },
-      TrophyAllCuredBonus = {
-        name = "All cured"
+      TrophyAllCuresBonus = {
+        name = "Bonus for all cured"
       },
       TrophyCuresBonus = {
-        name = "Almost nobody died"
+        name = "Bonus for most cured"
       },
       TrophyDeathBonus = {
-        name = "Nobody died"
-      },
-      TrophyMayorBonus = {
-        name = "Good VIP visits"
+        name = "Bonus for no deaths"
       }
     },
     gbv = {

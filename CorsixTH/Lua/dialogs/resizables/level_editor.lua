@@ -22,6 +22,9 @@ local _TITLE_WIDTH = 500
 local _TITLE_HEIGHT = 25
 local _TITLE_SIZE = Size(_TITLE_WIDTH, _TITLE_HEIGHT)
 
+local _LABEL_COL_WIDTH = 200
+local _DATA_COL_WIDTH = 150
+
 --! Construct a language string name if path_value is set.
 --!param path_value (nil true string) If true a name is constructed from the given
 --  config path, else if set the string name to use.
@@ -97,7 +100,9 @@ local function _makeTableSection(settings)
   --  * "title_sep" (int) Vertical space below the title
   --  * "row_label_sep" (int) Optional vertical space between rows.
   --  * "col_label_sep" (int) Optional horizontal space between column labels.
-  --  * "col_width" (int) Optional with of a column (including the row names column).
+  --  * "label_col_width" (int) Optional with of the left-most column.
+  --  * "data_col_width" (int) Optional with of a column (excluding the row
+  --    names column at the left).
   --  * "row_height" (int) Optional height of a row.
   --  * "intercol_sep" (int) Optional horizontal space between columns.
   --  * "interrow_sep" (int) Optional vertical space between rows.
@@ -114,6 +119,7 @@ local function _makeTableSection(settings)
   section.row_label_sep = settings.row_label_sep or section.row_label_sep
   section.col_label_sep = settings.col_label_sep or section.col_label_sep
   section.col_width = settings.col_width or section.col_width
+  section.label_col_width = settings.label_col_width or section.label_col_width
   section.row_height = settings.row_height or section.row_height
   section.intercol_sep = settings.intercol_sep or section.intercol_sep
   section.interrow_sep = settings.interrow_sep or section.interrow_sep
@@ -174,7 +180,8 @@ function UILevelEditor:_makeTownEditPage()
   local local_town = _makeValuesSection({
     title_path = "level_editor.titles.local_town",
     title_size = _TITLE_SIZE,
-    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    value_size = Size(70, LevelValuesSection.VALUE_HEIGHT),
+    label_size = Size(250, LevelValuesSection.VALUE_HEIGHT),
     _makeValue({level_cfg_path = "town.StartCash", name_path = true}),
     _makeValue({level_cfg_path = "town.InterestRate", name_path = true}),
     _makeValue({level_cfg_path = "town.StartRep", name_path = true}),
@@ -217,6 +224,7 @@ function UILevelEditor:_makeTownLevelssEditPage()
   local town_level_section = _makeTableSection({
     title_path = "level_editor.titles.town_levels",
     title_size = _TITLE_SIZE,
+    label_col_width = 100, data_col_width = _DATA_COL_WIDTH,
     row_names = town_row_names,
     col_values = {towns_col1, towns_col2, towns_col3, towns_col4},
     col_names = towns_col_names
@@ -252,6 +260,7 @@ function UILevelEditor:_makePopulationEditPage()
   local popn_section = _makeTableSection({
     title_path = "level_editor.titles.popn",
     title_size = _TITLE_SIZE,
+    label_col_width = 100, data_col_width = _DATA_COL_WIDTH,
     row_names = popn_row_names,
     col_values = {popn_col1, popn_col2},
     col_names = popn_col_names
@@ -268,6 +277,7 @@ function UILevelEditor:_makeHospitalEditPage1()
     title_path = "level_editor.titles.research",
     title_size = _TITLE_SIZE,
     label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    title_sep = 4,
     _makeValue({level_cfg_path = "gbv.ResearchPointsDivisor", name_path = true, tooltip_path = true}),
     _makeValue({level_cfg_path = "gbv.ResearchIncrement", name_path = true}),
     _makeValue({level_cfg_path = "gbv.StartRating", name_path = true}),
@@ -284,6 +294,7 @@ function UILevelEditor:_makeHospitalEditPage1()
     title_path = "level_editor.titles.training",
     title_size = _TITLE_SIZE,
     label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    title_sep = 4,
     _makeValue({level_cfg_path = "gbv.TrainingRate", name_path = true}),
     _makeValue({level_cfg_path = "gbv.TrainingValue[0]", name_path = true}),
     _makeValue({level_cfg_path = "gbv.TrainingValue[1]", name_path = true}),
@@ -333,7 +344,7 @@ function UILevelEditor:_makeStaffEditPage()
   local min_salaries_section = _makeValuesSection({
     title_path = "level_editor.titles.min_salaries",
     title_size = _TITLE_SIZE,
-    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    label_size = Size(100, LevelValuesSection.VALUE_HEIGHT),
     _makeValue({level_cfg_path = "staff[0].MinSalary", name_path = true}),
     _makeValue({level_cfg_path = "staff[1].MinSalary", name_path = true}),
     _makeValue({level_cfg_path = "staff[2].MinSalary", name_path = true}),
@@ -344,7 +355,7 @@ function UILevelEditor:_makeStaffEditPage()
   local medical_bonuses_section = _makeValuesSection({
     title_path = "level_editor.titles.medical_bonuses",
     title_size = _TITLE_SIZE,
-    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
+    label_size = Size(100, LevelValuesSection.VALUE_HEIGHT),
     _makeValue({level_cfg_path = "gbv.SalaryAdd[3]", name_path = true, tooltip_path = true}),
     _makeValue({level_cfg_path = "gbv.SalaryAdd[4]", name_path = true}),
     _makeValue({level_cfg_path = "gbv.SalaryAdd[5]", name_path = true}),
@@ -401,6 +412,7 @@ function UILevelEditor:_makeStaffLevelsEditPage12()
   local staff_levels1 = _makeTableSection({
     title_path = "level_editor.titles.staff_level1",
     title_size = _TITLE_SIZE,
+    label_col_width = 100, data_col_width = _DATA_COL_WIDTH,
     col_names = {
       "level_editor.staff_levels.col_names.Month",
       "level_editor.staff_levels.col_names.Nurses",
@@ -421,6 +433,7 @@ function UILevelEditor:_makeStaffLevelsEditPage12()
   local staff_levels2 = _makeTableSection({
     title_path = "level_editor.titles.staff_level2",
     title_size = _TITLE_SIZE,
+    label_col_width = 100, data_col_width = _DATA_COL_WIDTH,
     col_names = {
       "level_editor.staff_levels.col_names.ShrkRate",
       "level_editor.staff_levels.col_names.SurgRate",
@@ -446,8 +459,12 @@ end
 --!return (array) Array of all numbers expressed in the pairs.
 local function _xpandRanges(ranges)
   local result = {}
-  for _, pair in ipairs(ranges) do
-    for i = pair[1], pair[2] do result[#result + 1] = i end
+  for _, val in ipairs(ranges) do
+    if type(val) == "number" then
+      result[#result + 1] = val
+    else
+      for i = val[1], val[2] do result[#result + 1] = i end
+    end
   end
   return result
 end
@@ -481,6 +498,7 @@ function UILevelEditor:_makeDiseaseExpertiseEditPage(ranges, sect_num)
   local section = _makeTableSection({
     title_path = "level_editor.titles.expertise_diseases" .. sect_num,
     title_size = _TITLE_SIZE,
+    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
     row_names = section_row_names,
     col_values = {col1, col2, col3, col4},
     col_names = {
@@ -522,6 +540,7 @@ function UILevelEditor:_makeDiseasesExistenceEditPage(kind, first, last, sect_nu
   local section = _makeTableSection({
     title_path = "level_editor.titles." .. kind .. sect_num,
     title_size = _TITLE_SIZE,
+    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
     row_names = section_row_names,
     col_values = {col1, col2},
     col_names = {
@@ -561,6 +580,7 @@ function UILevelEditor:_makeRoomExpertiseEditPage()
   local expertise_rooms = _makeTableSection({
     title_path = "level_editor.titles.expertise_rooms",
     title_size = _TITLE_SIZE,
+    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
     row_names = section_row_names,
     col_values = {col1, col2, col3},
     col_names = {
@@ -611,6 +631,7 @@ function UILevelEditor:_makeObjectsEditPage(ranges, sect_num)
   local objects_section = _makeTableSection({
     title_path = "level_editor.titles.objects" .. sect_num,
     title_size = _TITLE_SIZE,
+    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
     row_names = sect_row_names,
     col_values = {col1, col2, col3, col4, col5},
     col_names = {
@@ -628,68 +649,323 @@ function UILevelEditor:_makeObjectsEditPage(ranges, sect_num)
   })
 end
 
-function UILevelEditor:_makeRoomsCostEditPage()
-  local rooms_cost_edit_section = _makeValuesSection({
-    title_path = "level_editor.titles.rooms_cost",
+function UILevelEditor:_makeRoomsCostEditPage(ranges, page_num)
+  local section_data = {
+    title_path = "level_editor.titles.rooms_cost" .. page_num,
     title_size = _TITLE_SIZE,
     label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
-    _makeValue({level_cfg_path = "rooms[7].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[8].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[9].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[10].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[11].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[12].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[13].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[14].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[15].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[16].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[17].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[18].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[19].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[20].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[21].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[22].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[23].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[24].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[25].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[26].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[27].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[28].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[29].Cost", name_path = true}),
-    _makeValue({level_cfg_path = "rooms[30].Cost", name_path = true}),
-  })
+  }
+
+  for _, i in ipairs(_xpandRanges(ranges)) do
+    section_data[#section_data + 1] = _makeValue({
+      level_cfg_path = "rooms[" .. i .. "].Cost",
+      name_path = true
+    })
+  end
 
   return _makeEditPageSection({
-    tab_name_path = "level_editor.tab_names.rooms_cost",
-    rooms_cost_edit_section,
+    tab_name_path = "level_editor.tab_names.rooms_cost" .. page_num,
+    _makeValuesSection(section_data)
   })
 end
 
-function UILevelEditor:_makeGlobalAwardsTrophiesEditPage()
-  local global_trophies_bonuses = _makeValuesSection({
-    title_path = "level_editor.titles.global_trophies",
+function UILevelEditor:_makeEmergencyControlEditPage()
+  local col1 = {}
+  local col2 = {}
+  local col3 = {}
+  local col4 = {}
+  local col5 = {}
+  local col6 = {}
+  local col7 = {}
+  local emergency_control_row_names = {}
+
+  for i = 0, 8 do
+    emergency_control_row_names[#emergency_control_row_names + 1] =
+        "level_editor.emergency_control.row_names[" .. i .. "]"
+
+    col1[#col1 + 1] =  _makeValue({
+      level_cfg_path = "level_editor.emergency_control.row_names[" .. i .. "].StartMonth",
+      min_value = 0
+    })
+    col2[#col2 + 1] =  _makeValue({
+      level_cfg_path = "level_editor.emergency_control.row_names[" .. i .. "].EndMonth",
+      min_value = 0
+    })
+    col3[#col3 + 1] =  _makeValue({
+      level_cfg_path = "level_editor.emergency_control.row_names[" .. i .. "].Min",
+      min_value = 0
+    })
+    col4[#col4 + 1] =  _makeValue({
+      level_cfg_path = "level_editor.emergency_control.row_names[" .. i .. "].Max",
+      min_value = 0
+    })
+    col5[#col5 + 1] =  _makeValue({
+      level_cfg_path = "level_editor.emergency_control.row_names[" .. i .. "].Illness"
+    })
+    col6[#col6 + 1] =  _makeValue({
+      level_cfg_path = "level_editor.emergency_control.row_names[" .. i .. "].PercWin",
+      min_value = 0
+    })
+    col7[#col7 + 1] =  _makeValue({
+      level_cfg_path = "level_editor.emergency_control.row_names[" .. i .. "].Bonus"
+    })
+  end
+
+  local section = _makeTableSection({
+    title_path = "level_editor.titles.emergency_control",
     title_size = _TITLE_SIZE,
-    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
-    _makeValue({level_cfg_path = "awards_trophies.TrophyAllCuredBonus", name_path = true}),
-    _makeValue({level_cfg_path = "awards_trophies.TrophyDeathBonus", name_path = true}),
-    _makeValue({level_cfg_path = "awards_trophies.TrophyCuresBonus", name_path = true}),
-    _makeValue({level_cfg_path = "awards_trophies.TrophyMayorBonus", name_path = true}),
-  })
-  local global_award_bonuses = _makeValuesSection({
-    title_path = "level_editor.titles.global_awards",
-    title_size = _TITLE_SIZE,
-    label_size = Size(300, LevelValuesSection.VALUE_HEIGHT),
-    _makeValue({level_cfg_path = "awards_trophies.AllCuresBonus", name_path = true}),
-    _makeValue({level_cfg_path = "awards_trophies.NewTechAward", name_path = true}),
-    _makeValue({level_cfg_path = "awards_trophies.NewTechPoor", name_path = true}),
-    _makeValue({level_cfg_path = "awards_trophies.ResearchBonus", name_path = true}),
-    _makeValue({level_cfg_path = "awards_trophies.ResearchPenalty", name_path = true}),
+    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    row_names = emergency_control_row_names,
+    col_names = {
+      "level_editor.emergency_control.col_names.StartMonth",
+      "level_editor.emergency_control.col_names.EndMonth",
+      "level_editor.emergency_control.col_names.Min",
+      "level_editor.emergency_control.col_names.Max",
+      "level_editor.emergency_control.col_names.Illness",
+      "level_editor.emergency_control.col_names.PercWin",
+      "level_editor.emergency_control.col_names.Bonus"
+    },
+    col_values = {col1, col2, col3, col4, col5, col6, col7},
   })
 
   return _makeEditPageSection({
-    tab_name_path = "level_editor.tab_names.global_awards_trophies",
-    global_trophies_bonuses,
-    global_award_bonuses,
+    tab_name_path = "level_editor.tab_names.emergency_control",
+    section
+  })
+end
+
+-- {{{ Awards (good_cond, bad_cond, good_bonus, bad_bonus, bonus_kind
+local _awards = {
+  {
+    name = "Cures",
+    good_cond = "awards_trophies.CuresAward",
+    bad_cond = "awards_trophies.CuresPoor",
+    good_bonus = "awards_trophies.CuresBonus",
+    bad_bonus = "awards_trophies.CuresPenalty",
+    bonus_kind = "money",
+  }, {
+    name = "Deaths",
+    good_cond = "awards_trophies.DeathsAward",
+    bad_cond = "awards_trophies.DeathsPoor",
+    good_bonus = "awards_trophies.DeathsBonus",
+    bad_bonus = "awards_trophies.DeathsPenalty",
+    bonus_kind = "money",
+  }, {
+    name = "PopulationPercentage",
+    good_cond = "awards_trophies.PopulationPercentageAward",
+    bad_cond = "awards_trophies.PopulationPercentagePoor",
+    good_bonus = "awards_trophies.PopulationPercentageBonus",
+    bad_bonus = "awards_trophies.PopulationPercentagePenalty",
+    bonus_kind = "reputation",
+  }, {
+    name = "CuresVDeaths",
+    good_cond = "awards_trophies.CuresVDeathsAward",
+    bad_cond = "awards_trophies.CuresVDeathsPoor",
+    good_bonus = "awards_trophies.CuresVDeathsBonus",
+    bad_bonus = "awards_trophies.CuresVDeathsPenalty",
+    bonus_kind = "money",
+  }, {
+    name = "AwardReputation",
+    good_cond = "awards_trophies.ReputationAward",
+    bad_cond = "awards_trophies.ReputationPoor",
+    good_bonus = "awards_trophies.AwardReputationBonus",
+    bad_bonus = "awards_trophies.AwardReputationPenalty",
+    bonus_kind = "money",
+  }, {
+    name = "HospValue",
+    good_cond = "awards_trophies.HospValueAward",
+    bad_cond = "awards_trophies.HospValuePoor",
+    good_bonus = "awards_trophies.HospValueBonus",
+    bad_bonus = "awards_trophies.HospValuePenalty",
+    bonus_kind = "reputation",
+  }, {
+    name = "Cleanliness",
+    good_cond = "awards_trophies.CleanlinessAward",
+    bad_cond = "awards_trophies.CleanlinessPoor",
+    good_bonus = "awards_trophies.CleanlinessBonus",
+    bad_bonus = "awards_trophies.CleanlinessPenalty",
+    bonus_kind = "reputation",
+  }, {
+    name = "Emergency",
+    good_cond = "awards_trophies.EmergencyAward",
+    bad_cond = "awards_trophies.EmergencyPoor",
+    good_bonus = "awards_trophies.EmergencyBonus",
+    bad_bonus = "awards_trophies.EmergencyPenalty",
+    bonus_kind = "reputation",
+  }, {
+    name = "AwardStaffHappiness",
+    good_cond = "awards_trophies.StaffHappinessAward",
+    bad_cond = "awards_trophies.StaffHappinessPoor",
+    good_bonus = "awards_trophies.AwardStaffHappinessBonus",
+    bad_bonus = "awards_trophies.AwardStaffHappinessPenalty",
+    bonus_kind = "reputation",
+  }, {
+    name = "PeepHappiness",
+    good_cond = "awards_trophies.PeepHappinessAward",
+    bad_cond = "awards_trophies.PeepHappinessPoor",
+    good_bonus = "awards_trophies.PeepHappinessBonus",
+    bad_bonus = "awards_trophies.PeepHappinessPenalty",
+    bonus_kind = "reputation",
+  }, {
+    name = "WaitingTimes",
+    good_cond = "awards_trophies.WaitingTimesAward",
+    bad_cond = "awards_trophies.WaitingTimesPoor",
+    good_bonus = "awards_trophies.WaitingTimesBonus",
+    bad_bonus = "awards_trophies.WaitingTimesPenalty",
+    bonus_kind = "reputation",
+  }, {
+    name = "WellKeptTech",
+    good_cond = "awards_trophies.WellKeptTechAward",
+    bad_cond = "awards_trophies.WellKeptTechPoor",
+    good_bonus = "awards_trophies.WellKeptTechBonus",
+    bad_bonus = "awards_trophies.WellKeptTechPenalty",
+    bonus_kind = "reputation",
+  }, {
+    name = "NewTech",
+    good_cond = "awards_trophies.NewTechAward",
+    bad_cond = "awards_trophies.NewTechPoor",
+    good_bonus = "awards_trophies.ResearchBonus",
+    bad_bonus = "awards_trophies.ResearchPenalty",
+    bonus_kind = "reputation",
+  }
+}
+-- }}}
+-- {{{ Trophies (optional good_cond, good_bonus, bonus_kind
+local _trophies = {
+  {
+    name = "RatKillsAbsolute",
+    good_cond = "awards_trophies.RatKillsAbsolute",
+    good_bonus = "awards_trophies.RatKillsAbsoluteBonus",
+    bonus_kind = "reputation",
+  }, {
+    name = "CansofCoke",
+    good_cond = "awards_trophies.CansofCoke",
+    good_bonus = "awards_trophies.CansofCokeBonus",
+    bonus_kind = "money",
+  }, {
+    name = "TrophyReputation",
+    good_cond = "awards_trophies.Reputation",
+    good_bonus = "awards_trophies.TrophyReputationBonus",
+    bonus_kind = "money",
+  }, {
+    name = "Plant",
+    good_cond = "awards_trophies.Plant",
+    good_bonus = "awards_trophies.PlantBonus",
+    bonus_kind = "reputation",
+  }, {
+    name = "TrophyStaffHappiness",
+    good_cond = "awards_trophies.TrophyStaffHappiness",
+    good_bonus = "awards_trophies.TrophyStaffHappinessBonus",
+    bonus_kind = "reputation",
+  }, {
+    name = "RatKillsPercentage",
+    good_cond = "awards_trophies.RatKillsPercentage",
+    good_bonus = "awards_trophies.RatKillsPercentageBonus",
+    bonus_kind = "money",
+  }, {
+    name = "Mayor",
+    good_cond = "awards_trophies.TrophyMayor",
+    good_bonus = "awards_trophies.TrophyMayorBonus",
+    bonus_kind = "reputation",
+  }, {
+    name = "Death",
+    good_cond = nil, -- No deaths in a year.
+    good_bonus = "awards_trophies.TrophyDeathBonus",
+    bonus_kind = "money",
+  }, {
+    name = "Cures",
+    good_cond = nil, -- Over 90% cure rate.
+    good_bonus = "awards_trophies.TrophyCuresBonus",
+    bonus_kind = "money",
+  }, {
+    name = "AllCures",
+    good_cond = nil, -- No sent home and no deaths
+    good_bonus = "awards_trophies.TrophyAllCuresBonus",
+    bonus_kind = "money",
+  }
+}
+-- }}}
+
+local function _makeFixedCnditionBonusesSection()
+  local values = {}
+  for _, trophy in ipairs(_trophies) do
+    if not trophy.good_cond then
+      values[#values + 1] = _makeValue({level_cfg_path = trophy.good_bonus, name_path = true})
+    end
+  end
+
+  values.title_path = "level_editor.titles.fixed_cond_trophies"
+  values.title_size = _TITLE_SIZE
+  values.label_size = Size(300, LevelValuesSection.VALUE_HEIGHT)
+  return _makeValuesSection(values)
+end
+
+local function _makeRegularTrohpiesSection()
+  local col1 = {}
+  local col2 = {}
+  local rows = {}
+  for _, trophy in ipairs(_trophies) do
+    if trophy.good_cond then
+      rows[#rows + 1] = "level_editor.trophies.row_names." .. trophy.name
+      col1[#col1 + 1] = _makeValue({level_cfg_path = trophy.good_condition})
+      col2[#col2 + 1] = _makeValue({level_cfg_path = trophy.good_bonus})
+    end
+  end
+
+  return _makeTableSection({
+    title_path = "level_editor.titles.trophies",
+    title_size = _TITLE_SIZE,
+    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    col_names = {
+      "level_editor.trophies.col_names.condition",
+      "level_editor.trophies.col_names.bonus",
+    },
+    col_values = {col1, col2},
+    row_names = rows
+  })
+end
+
+local function _makeAwardsSection()
+  local col1 = {}
+  local col2 = {}
+  local col3 = {}
+  local col4 = {}
+  local rows = {}
+  for _, award in ipairs(_awards) do
+    rows[#rows + 1] = "level_editor.awards.row_names." .. award.name
+    col1[#col1 + 1] = _makeValue({level_cfg_path = award.good_condition})
+    col2[#col2 + 1] = _makeValue({level_cfg_path = award.good_bonus})
+    col3[#col3 + 1] = _makeValue({level_cfg_path = award.bad_condition})
+    col4[#col4 + 1] = _makeValue({level_cfg_path = award.bad_bonus})
+  end
+
+  return _makeTableSection({
+    title_path = "level_editor.titles.awards",
+    title_size = _TITLE_SIZE,
+    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
+    col_names = {
+      "level_editor.awards.col_names.award_condition",
+      "level_editor.awards.col_names.bonus",
+      "level_editor.awards.col_names.poor_condition",
+      "level_editor.awards.col_names.penalty",
+    },
+    col_values = {col1, col2, col3, col4},
+    row_names = rows
+  })
+end
+
+function UILevelEditor:_makeTrophiesEditPage()
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.trophies",
+    _makeFixedCnditionBonusesSection(),
+    _makeRegularTrohpiesSection(),
+  })
+end
+
+function UILevelEditor:_makeAwardsEditPage()
+  return _makeEditPageSection({
+    tab_name_path = "level_editor.tab_names.awards",
+    _makeAwardsSection()
   })
 end
 
@@ -732,6 +1008,7 @@ function UILevelEditor:_makeWinLoseCriteriaEditPage(kind)
   local section = _makeTableSection({
     title_path = "level_editor.titles." .. kind .. "_criteria",
     row_names = sect_row_names,
+    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
     col_values = {col1, col2, col3, col4, col5},
     col_names = {
       "level_editor." .. kind .. "_criteria.col_names.Criteria",
@@ -765,6 +1042,8 @@ function UILevelEditor:_makeAiPlayersEditPage()
 
   local ai_platers_section = _makeTableSection({
     title_path = "level_editor.titles.ai_players",
+    title_size = _TITLE_SIZE,
+    label_col_width = _LABEL_COL_WIDTH, data_col_width = _DATA_COL_WIDTH,
     row_names = ai_row_names,
     col_values = {col1, col2},
     col_names = {
@@ -793,7 +1072,9 @@ function UILevelEditor:_makeMainTabPage()
     self:_makeObjectsEditPage({{25, 36}}, 3),
     self:_makeObjectsEditPage({{36, 47}}, 4),
     self:_makeObjectsEditPage({{48, 61}}, 5),
-    self:_makeRoomsCostEditPage(),
+    self:_makeRoomsCostEditPage({{7, 10}, 16, 22, {25, 29}}, 1),
+    self:_makeRoomsCostEditPage({{12, 14}}, 2),
+    self:_makeRoomsCostEditPage({11, 15, 15, {17, 24}, 30}, 3),
     self:_makeRoomExpertiseEditPage(),
     self:_makeDiseaseExpertiseEditPage({{2, 13}}, 1),
     self:_makeDiseaseExpertiseEditPage({{14, 25}}, 2),
@@ -801,7 +1082,9 @@ function UILevelEditor:_makeMainTabPage()
     self:_makeDiseasesExistenceEditPage("visuals", 0, 13, 1),
     self:_makeDiseasesExistenceEditPage("non_visuals", 0, 9, 1),
     self:_makeDiseasesExistenceEditPage("non_visuals", 10, 19, 2),
-    self:_makeGlobalAwardsTrophiesEditPage(),
+    self:_makeEmergencyControlEditPage(),
+    self:_makeTrophiesEditPage(),
+    self:_makeAwardsEditPage(),
     self:_makeWinLoseCriteriaEditPage("win"),
     self:_makeWinLoseCriteriaEditPage("lose"),
     self:_makeAiPlayersEditPage()

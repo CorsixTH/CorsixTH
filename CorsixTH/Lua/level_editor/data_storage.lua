@@ -228,7 +228,7 @@ local LevelValuesSection = _G["LevelValuesSection"]
 
 LevelValuesSection.LABEL_WIDTH = 100
 LevelValuesSection.VALUE_HEIGHT = 15
-LevelValuesSection.VALUE_WIDTH = 30
+LevelValuesSection.VALUE_WIDTH = 50
 
 --! Section with one or more related values.
 --!param title_path (str) Language path to the title name string.
@@ -350,7 +350,8 @@ function LevelTableSection:LevelTableSection(title_path, row_name_paths,
   self.title_sep = 10 -- Amount of vertical space between the title and the column names,
   self.row_label_sep = 5 -- Amount of vertical space between the column names and the first row.
   self.col_label_sep = 10 -- Amount of horizontal space between the row names and the first column.
-  self.col_width = 100 -- Width of a column values (also sets the column label).
+  self.label_col_width = 100 -- Width of the label column.
+  self.data_col_width = self.label_col_width -- Width of columns.
   self.row_height = 18 -- Height of a row values (also sets the row label).
   self.intercol_sep = 5 -- Horizontal space between two columns in the table.
   self.interrow_sep = 2 -- Vertical space between two rows in the table.
@@ -390,19 +391,20 @@ function LevelTableSection:layout(window, pos)
 
   local table_rows_cols = self:_getTableColsRows()
 
-  -- Column headers
-  local label_size = Size(self.col_width, self.row_height)
-  x = pos.x + self.col_width + self.col_label_sep -- Skip space for the row labels
+  local label_size = Size(self.label_col_width, self.row_height) -- Size of the first column.
+  local datacol_size = Size(self.data_col_width, self.row_height) -- Size of the other columns.
+  -- Column headers above the data values (2nd row and further).
+  x = pos.x + label_size.w + self.col_label_sep -- Skip space for the row labels
   for col = 1, table_rows_cols.w do
-    _makeLabel(window, self._widgets, x, y, label_size, self.col_name_paths[col],
+    _makeLabel(window, self._widgets, x, y, datacol_size, self.col_name_paths[col],
         self.col_tooltip_paths[col], NAME_LABEL_SETTINGS)
-    x = x + label_size.w
+    x = x + datacol_size.w
     if col < table_rows_cols.w then x = x + self.intercol_sep end
   end
   max_x = math.max(max_x, x)
   y = y + self.row_height + self.row_label_sep
 
-  -- Rows
+  -- Rows (label at the left as well as all data columns).
   for row = 1, table_rows_cols.h do
     x = pos.x
     _makeLabel(window, self._widgets, x, y, label_size, self.row_name_paths[row],
@@ -410,8 +412,8 @@ function LevelTableSection:layout(window, pos)
     x = x + label_size.w + self.col_label_sep
     for col = 1, table_rows_cols.w do
       assert(self.values[col][row], "No value found at row " .. row .. ", column " .. col)
-      _makeTextBox(window, self._text_boxes, x, y, label_size, self.values[col][row])
-      x = x + label_size.w
+      _makeTextBox(window, self._text_boxes, x, y, datacol_size, self.values[col][row])
+      x = x + datacol_size.w
       if col < table_rows_cols.w then x = x + self.intercol_sep end
     end
     max_x = math.max(max_x, x)
