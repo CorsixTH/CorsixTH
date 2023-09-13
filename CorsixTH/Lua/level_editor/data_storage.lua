@@ -38,7 +38,6 @@ local NAME_LABEL_SETTINGS = {
 --!param name (str) Name of the translated string to get.
 --!return (text) The retrieved translated string.
 local function getTranslatedText(name)
-  print("Getting translated text: " .. name)
   return TreeAccess.readTree(_S, name)
 end
 
@@ -332,18 +331,18 @@ function LevelTableSection:LevelTableSection(title_path, row_name_paths,
 
   assert(values)
 
-  local table_rows_cols = self:_getTableColsRows()
+  local num_rows_cols = self:_getTableColsRows()
   -- Verify dimensions (hor, vert).
-  assert(#self.row_name_paths == table_rows_cols.h,
+  assert(#self.row_name_paths == num_rows_cols.h,
       "Unequal number of rows: names = " .. #self.row_name_paths
-      .. ", values height = " .. table_rows_cols.h)
-  assert(#self.col_name_paths == table_rows_cols.w,
+      .. ", values height = " .. num_rows_cols.h)
+  assert(#self.col_name_paths == num_rows_cols.w,
       "Unequal number of columns: names = " .. #self.col_name_paths
-      .. ", values width = " .. table_rows_cols.w)
+      .. ", values width = " .. num_rows_cols.w)
 
   for i, c in ipairs(values) do
-    assert(#c == table_rows_cols.h,
-        "Column " .. i .. ": count=" .. #c .. ", height=" .. table_rows_cols.h)
+    assert(#c == num_rows_cols.h,
+        "Column " .. i .. ": count=" .. #c .. ", height=" .. num_rows_cols.h)
   end
 
   self.title_size = Size(200, 25) -- Size of the title.
@@ -352,6 +351,7 @@ function LevelTableSection:LevelTableSection(title_path, row_name_paths,
   self.col_label_sep = 10 -- Amount of horizontal space between the row names and the first column.
   self.label_col_width = 100 -- Width of the label column.
   self.data_col_width = self.label_col_width -- Width of columns.
+  self.value_width = nil -- If set, width of the value itself. If it's smaller than "data_col_width", row names get stacked in 2 rows.
   self.row_height = 18 -- Height of a row values (also sets the row label).
   self.intercol_sep = 5 -- Horizontal space between two columns in the table.
   self.interrow_sep = 2 -- Vertical space between two rows in the table.
@@ -380,49 +380,80 @@ function LevelTableSection:layout(window, pos)
   self._widgets = {}
   self._text_boxes = {}
 
-  local x, y = pos.x, pos.y
-  local max_x = x
+  local y = pos.y
+
   -- Title.
   if self.title_path then
-    _makeLabel(window, self._widgets, x, y, self.title_size, self.title_path, nil, TITLE_LABEL_SETTINGS)
+    _makeLabel(window, self._widgets, pos.x, y, self.title_size, self.title_path, nil, TITLE_LABEL_SETTINGS)
     y = y + self.title_size.h + self.title_sep
-    max_x = math.max(max_x, x + self.title_size.w)
   end
 
-  local table_rows_cols = self:_getTableColsRows()
+  -- The table, starting off with a bunch of computations for positioning the widgets.
+  local num_rows_cols = self:_getTableColsRows()
 
+
+  -- Collect the relevant sizes and widths for laying out the table.
   local label_size = Size(self.label_col_width, self.row_height) -- Size of the first column.
   local datacol_size = Size(self.data_col_width, self.row_height) -- Size of the other columns.
-  -- Column headers above the data values (2nd row and further).
-  x = pos.x + label_size.w + self.col_label_sep -- Skip space for the row labels
-  for col = 1, table_rows_cols.w do
-    _makeLabel(window, self._widgets, x, y, datacol_size, self.col_name_paths[col],
-        self.col_tooltip_paths[col], NAME_LABEL_SETTINGS)
-    x = x + datacol_size.w
-    if col < table_rows_cols.w then x = x + self.intercol_sep end
-  end
-  max_x = math.max(max_x, x)
-  y = y + self.row_height + self.row_label_sep
+  local stacking = self.value_width and num_rows_cols.w > 1 -- Whether title headers are stacked.
+  local value_width = self.value_width and self.value_width or self.data_col_width
+  value_width = math.max(20, math.min(value_width, self.data_col_width)) -- With of a value.
+  local value_size = Size(value_width, self.row_height)
 
-  -- Rows (label at the left as well as all data columns).
-  for row = 1, table_rows_cols.h do
+  --! Split value width and label with into left and right parts wrt center of the row.
+  local function _split_width(length)
+    local left = math.floor(length / 2)
+    return left, length - left
+  end
+  local left_val_width, right_val_width = _split_width(value_width)
+  local left_datacl_width, right_label_width = _split_width(self.data_col_width)
+
+  -- Compute horizontal distance between two rows.
+  -- Between adjacent columns, there is a right-part of a value, some separation,
+  -- and a left-part of a value.Between adjacent columns, there is one half of a
+  -- label and some separation. Take the maximum of both to make it always fit.
+  local interrow_distance = right_val_width + self.intercol_sep + left_val_width
+  interrow_distance = math.max(interrow_distance,
+      self.intercol_sep + math.max(left_datacl_width, right_label_width))
+
+  -- Value columns x positions are relative to the center of the first data column.
+  -- Note that left_val_width < left_datacl_width, so the latter will always fit.
+  local x_first_data_col = pos.x + label_size.w + self.col_label_sep + left_datacl_width
+
+  -- Column headers above the data values (1st data row and further).
+  --
+  -- We always alternate between top_y and bottom_y while positing table headers,
+  -- where sometimes both rows are on top of each other.
+  local top_y = y
+  local bottom_y = top_y
+  if stacking then bottom_y = bottom_y + self.row_height + self.row_label_sep end
+
+  local x = x_first_data_col -- Skip space for the row labels
+  for col = 1, num_rows_cols.w do
+    _makeLabel(window, self._widgets, x - left_datacl_width,
+        (col % 2 == 1) and bottom_y or top_y, datacol_size, self.col_name_paths[col],
+        self.col_tooltip_paths[col], NAME_LABEL_SETTINGS)
+    x = x + interrow_distance
+  end
+  y = bottom_y + self.row_height + self.row_label_sep
+
+  -- All data rows with labels at the left and the data values.
+  for row = 1, num_rows_cols.h do
     x = pos.x
     _makeLabel(window, self._widgets, x, y, label_size, self.row_name_paths[row],
         self.row_tooltip_paths[row], NAME_LABEL_SETTINGS)
-    x = x + label_size.w + self.col_label_sep
-    for col = 1, table_rows_cols.w do
+
+    x = x_first_data_col
+    for col = 1, num_rows_cols.w do
       assert(self.values[col][row], "No value found at row " .. row .. ", column " .. col)
-      _makeTextBox(window, self._text_boxes, x, y, datacol_size, self.values[col][row])
-      x = x + datacol_size.w
-      if col < table_rows_cols.w then x = x + self.intercol_sep end
+      _makeTextBox(window, self._text_boxes, x - left_val_width, y, value_size, self.values[col][row])
+      x = x + interrow_distance
     end
-    max_x = math.max(max_x, x)
-    y = y + self.row_height
-    if row < table_rows_cols.h then y = y + self.interrow_sep end
+    y = y + self.row_height + self.interrow_sep
   end
   self:setVisible(false) -- Initially hide all.
 
-  return y
+  return y - self.interrow_sep
 end
 
 --! Load the values from the level config or write the values into a *new*
