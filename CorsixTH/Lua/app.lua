@@ -361,7 +361,7 @@ function App:init()
         self.command_line.load = file
       else
         self.command_line.load = "Autosaves" .. pathsep ..
-            FileTreeNode(self.savegame_dir .. "Autosaves"):getMostRecentlyModifiedChildFile(".sav").label
+            FileTreeNode(self.savegame_dir .. "Autosaves"):getMostRecentlyModifiedChildFile(".%.sav$").label
       end
     end
     -- If a savegame was specified, load it
