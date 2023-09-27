@@ -108,7 +108,8 @@ function UIMachine:replaceMachine()
   local cost = hosp.research.research_progress[machine.object_type].cost
   if hosp.balance < cost then
     -- give visual warning that player doesn't have enough $ to buy
-    self.ui.adviser:say(_A.warnings.cannot_afford_2, false, true)
+    local advice = _A.warnings.cannot_afford_machine:format(cost, machine.object_type.name)
+    self.ui.adviser:say(advice, false, true)
     self.ui:playSound("wrong2.wav")
     return
   end
