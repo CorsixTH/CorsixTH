@@ -109,24 +109,22 @@ struct drawable : public link_list {
   /*!
       Can also "draw" the object to the speakers, i.e. play sounds.
   */
-  void (*draw_fn)(drawable* pSelf, render_target* pCanvas, int iDestX,
-                  int iDestY);
+  virtual void draw_fn(render_target* pCanvas, int iDestX, int iDestY) = 0;
 
   //! Perform a hit test against the object
   /*!
       Should return true if when the object is drawn at (iDestX, iDestY) on a
      canvas, the point (iTestX, iTestY) is within / on the object.
   */
-  bool (*hit_test_fn)(drawable* pSelf, int iDestX, int iDestY, int iTestX,
-                      int iTestY);
-
-  //! Drawing flags (zero or more list flags from #draw_flags).
-  uint32_t flags;
+  virtual bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) = 0;
 
   /** Returns true if instance is a multiple frame animation.
       Should be overloaded in derived class.
   */
-  bool (*is_multiple_frame_animation_fn)(drawable* pSelf);
+  virtual bool is_multiple_frame_animation_fn() = 0;
+
+  //! Drawing flags (zero or more list flags from #draw_flags).
+  uint32_t flags;
 
   int get_drawing_layer() { return drawing_layer; }
   void set_drawing_layer(int layer) { drawing_layer = layer; }
@@ -583,6 +581,11 @@ class animation : public animation_base {
   void set_morph_target(animation* pMorphTarget, int iDurationFactor = 1);
   void set_frame(size_t iFrame);
 
+  virtual void draw_fn(render_target* pCanvas, int iDestX, int iDestY);
+  virtual bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY);
+  virtual bool is_multiple_frame_animation_fn();
+  void set_function_set(int value);
+
   void set_speed(int iX, int iY) { speed.dx = iX, speed.dy = iY; }
   void set_crop_column(int iColumn) { crop_column = iColumn; }
 
@@ -611,6 +614,7 @@ class animation : public animation_base {
   //! Number of game_ticks to offset animation by so they aren't all
   //! running in sync.
   size_t patient_effect_offset;
+  int function_set;
 };
 
 class sprite_render_list : public animation_base {
@@ -631,6 +635,10 @@ class sprite_render_list : public animation_base {
 
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
+
+  virtual void draw_fn(render_target* pCanvas, int iDestX, int iDestY);
+  virtual bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY);
+  virtual bool is_multiple_frame_animation_fn();
 
  private:
   struct sprite {

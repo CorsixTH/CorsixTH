@@ -1316,11 +1316,9 @@ animation::animation()
       speed({0, 0}),
       sound_to_play(0),
       crop_column(0) {
-  draw_fn = THAnimation_draw;
-  hit_test_fn = THAnimation_hit_test;
-  is_multiple_frame_animation_fn = THAnimation_is_multiple_frame_animation;
   patient_effect = animation_effect::none;
   patient_effect_offset = rand();
+  function_set = 1;
 }
 
 void animation::persist(lua_persist_writer* pWriter) const {
@@ -1336,23 +1334,21 @@ void animation::persist(lua_persist_writer* pWriter) const {
   // Write the drawable fields
   pWriter->write_uint(flags);
 
-  if (draw_fn == THAnimation_draw && hit_test_fn == THAnimation_hit_test) {
-    pWriter->write_uint(1);
-  } else if (draw_fn == THAnimation_draw_child &&
-             hit_test_fn == THAnimation_hit_test_child) {
-    pWriter->write_uint(2);
-  } else if (draw_fn == THAnimation_draw_morph &&
-             hit_test_fn == THAnimation_hit_test_morph) {
-    // NB: Prior version of code used the number 3 here, and forgot
-    // to persist the morph target.
-    pWriter->write_uint(4);
-    lua_rawgeti(L, luaT_environindex, 2);
-    lua_pushlightuserdata(L, morph_target);
-    lua_rawget(L, -2);
-    pWriter->write_stack_object(-1);
-    lua_pop(L, 2);
-  } else {
+  int func_set = function_set;
+  if (func_set == 3) {
+    func_set = 4;
+  }
+  if (func_set < 1 || func_set > 4) {
     pWriter->write_uint(0);
+  } else {
+    pWriter->write_uint(func_set);
+    if (func_set == 4) {
+      lua_rawgeti(L, luaT_environindex, 2);
+      lua_pushlightuserdata(L, morph_target);
+      lua_rawget(L, -2);
+      pWriter->write_stack_object(-1);
+      lua_pop(L, 2);
+    }
   }
 
   // Write the simple fields
@@ -1371,7 +1367,7 @@ void animation::persist(lua_persist_writer* pWriter) const {
   }
 
   // Write the unioned fields
-  if (draw_fn != THAnimation_draw_child) {
+  if (func_set != 2) {
     pWriter->write_int(speed.dx);
     pWriter->write_int(speed.dy);
   } else {
@@ -1391,6 +1387,50 @@ void animation::persist(lua_persist_writer* pWriter) const {
   pWriter->write_byte_stream(layers.layer_contents, iNumLayers);
 }
 
+void animation::set_function_set(int val) {
+  assert(val >= 1 && val <= 4);
+  function_set = val;
+}
+
+void animation::draw_fn(render_target* pCanvas, int iDestX, int iDestY) {
+  switch (function_set) {
+    case 3:
+      // 3 should be the morph set, but the actual morph target is
+      // missing, so settle for a graphical bug rather than a segfault
+      // by reverting to the normal function set.
+    case 1:
+      THAnimation_draw(this, pCanvas, iDestX, iDestY);
+      return;
+    case 2:
+      THAnimation_draw_child(this, pCanvas, iDestX, iDestY);
+      return;
+    case 4:
+      THAnimation_draw_morph(this, pCanvas, iDestX, iDestY);
+      return;
+  }
+}
+
+bool animation::hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) {
+  switch (function_set) {
+    case 3:
+      // 3 should be the morph set, but the actual morph target is
+      // missing, so settle for a graphical bug rather than a segfault
+      // by reverting to the normal function set.
+    case 1:
+      return THAnimation_hit_test(this, iDestX, iDestY, iTestX, iTestY);
+    case 2:
+      return THAnimation_hit_test_child(this, iDestX, iDestY, iTestX, iTestY);
+    case 4:
+      return THAnimation_hit_test_morph(this, iDestX, iDestY, iTestX, iTestY);
+    default:
+      return false;
+  }
+}
+
+bool animation::is_multiple_frame_animation_fn() {
+  return THAnimation_is_multiple_frame_animation(this);
+}
+
 void animation::depersist(lua_persist_reader* pReader) {
   lua_State* L = pReader->get_stack();
 
@@ -1405,22 +1445,17 @@ void animation::depersist(lua_persist_reader* pReader) {
     if (!pReader->read_uint(flags)) break;
     int iFunctionSet;
     if (!pReader->read_uint(iFunctionSet)) break;
+    set_function_set(iFunctionSet);
     switch (iFunctionSet) {
       case 3:
         // 3 should be the morph set, but the actual morph target is
         // missing, so settle for a graphical bug rather than a segfault
         // by reverting to the normal function set.
       case 1:
-        draw_fn = THAnimation_draw;
-        hit_test_fn = THAnimation_hit_test;
         break;
       case 2:
-        draw_fn = THAnimation_draw_child;
-        hit_test_fn = THAnimation_hit_test_child;
         break;
       case 4:
-        draw_fn = THAnimation_draw_morph;
-        hit_test_fn = THAnimation_hit_test_morph;
         pReader->read_stack_object();
         morph_target = reinterpret_cast<animation*>(lua_touserdata(L, -1));
         lua_pop(L, 1);
@@ -1450,7 +1485,7 @@ void animation::depersist(lua_persist_reader* pReader) {
     }
 
     // Read the unioned fields
-    if (draw_fn != THAnimation_draw_child) {
+    if (iFunctionSet != 2) {
       if (!pReader->read_int(speed.dx)) break;
       if (!pReader->read_int(speed.dy)) break;
     } else {
@@ -1496,7 +1531,7 @@ void animation::set_patient_effect(animation_effect patient_effect) {
 
 void animation::tick() {
   frame_index = manager->get_next_frame(frame_index);
-  if (draw_fn != THAnimation_draw_child) {
+  if (function_set != 2) {
     x_relative_to_tile += speed.dx;
     y_relative_to_tile += speed.dy;
   }
@@ -1547,12 +1582,10 @@ void animation_base::attach_to_tile(map_tile* pMapNode, int layer) {
 void animation::set_parent(animation* pParent) {
   remove_from_tile();
   if (pParent == nullptr) {
-    draw_fn = THAnimation_draw;
-    hit_test_fn = THAnimation_hit_test;
+    set_function_set(1);
     speed = {0, 0};
   } else {
-    draw_fn = THAnimation_draw_child;
-    hit_test_fn = THAnimation_hit_test_child;
+    set_function_set(2);
     parent = pParent;
     next = parent->next;
     if (next) next->prev = this;
@@ -1567,8 +1600,7 @@ void animation::set_animation(animation_manager* pManager, size_t iAnimation) {
   frame_index = pManager->get_first_frame(iAnimation);
   if (morph_target) {
     morph_target = nullptr;
-    draw_fn = THAnimation_draw;
-    hit_test_fn = THAnimation_hit_test;
+    set_function_set(1);
   }
 }
 
@@ -1632,8 +1664,7 @@ int GetAnimationDurationAndExtent(animation_manager* pManager, size_t iFrame,
 
 void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
   morph_target = pMorphTarget;
-  draw_fn = THAnimation_draw_morph;
-  hit_test_fn = THAnimation_hit_test_morph;
+  set_function_set(4);
 
   /* Morphing is the process by which two animations are combined to give a
   single animation of one animation turning into another. At the moment,
@@ -1709,11 +1740,19 @@ bool THSpriteRenderList_is_multiple_frame_animation(drawable* pSelf) {
 
 }  // namespace
 
+void sprite_render_list::draw_fn(render_target* pCanvas, int iDestX, int iDestY) {
+  THSpriteRenderList_draw(this, pCanvas, iDestX, iDestY);
+}
+
+bool sprite_render_list::hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) {
+  return THSpriteRenderList_hit_test(this, iDestX, iDestY, iTestX, iTestY);
+}
+
+bool sprite_render_list::is_multiple_frame_animation_fn() {
+  return THSpriteRenderList_is_multiple_frame_animation(this);
+}
+
 sprite_render_list::sprite_render_list() : animation_base() {
-  draw_fn = THSpriteRenderList_draw;
-  hit_test_fn = THSpriteRenderList_hit_test;
-  is_multiple_frame_animation_fn =
-      THSpriteRenderList_is_multiple_frame_animation;
 }
 
 sprite_render_list::~sprite_render_list() { delete[] sprites; }
