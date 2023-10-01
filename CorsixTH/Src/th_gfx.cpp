@@ -1446,25 +1446,21 @@ void animation::depersist(lua_persist_reader* pReader) {
     int iFunctionSet;
     if (!pReader->read_uint(iFunctionSet)) break;
     set_function_set(iFunctionSet);
-    switch (iFunctionSet) {
-      case 3:
-        // 3 should be the morph set, but the actual morph target is
-        // missing, so settle for a graphical bug rather than a segfault
-        // by reverting to the normal function set.
-        [[fallthrough]];
-      case 1:
-        [[fallthrough]];  // Should be "break;" but not allowed.
-      case 2:
-        break;
-      case 4:
-        pReader->read_stack_object();
-        morph_target = reinterpret_cast<animation*>(lua_touserdata(L, -1));
-        lua_pop(L, 1);
-        break;
-      default:
-        pReader->set_error(lua_pushfstring(
-            L, "Unknown animation function set #%i", iFunctionSet));
-        return;
+
+    if (iFunctionSet >= 1 && iFunctionSet <= 3) {
+      // Do nothing.
+
+      // 3 should be the morph set, but the actual morph target is
+      // missing, so settle for a graphical bug rather than a segfault
+      // by reverting to the normal function set.
+    } else if (iFunctionSet == 4) {
+      pReader->read_stack_object();
+      morph_target = reinterpret_cast<animation*>(lua_touserdata(L, -1));
+      lua_pop(L, 1);
+    } else {
+      pReader->set_error(lua_pushfstring(
+          L, "Unknown animation function set #%i", iFunctionSet));
+      return;
     }
 
     // Read the simple fields
