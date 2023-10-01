@@ -1740,11 +1740,13 @@ bool THSpriteRenderList_is_multiple_frame_animation(drawable* pSelf) {
 
 }  // namespace
 
-void sprite_render_list::draw_fn(render_target* pCanvas, int iDestX, int iDestY) {
+void sprite_render_list::draw_fn(render_target* pCanvas, int iDestX,
+                                 int iDestY) {
   THSpriteRenderList_draw(this, pCanvas, iDestX, iDestY);
 }
 
-bool sprite_render_list::hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) {
+bool sprite_render_list::hit_test_fn(int iDestX, int iDestY, int iTestX,
+                                     int iTestY) {
   return THSpriteRenderList_hit_test(this, iDestX, iDestY, iTestX, iTestY);
 }
 
@@ -1752,8 +1754,7 @@ bool sprite_render_list::is_multiple_frame_animation_fn() {
   return THSpriteRenderList_is_multiple_frame_animation(this);
 }
 
-sprite_render_list::sprite_render_list() : animation_base() {
-}
+sprite_render_list::sprite_render_list() : animation_base() {}
 
 sprite_render_list::~sprite_render_list() { delete[] sprites; }
 

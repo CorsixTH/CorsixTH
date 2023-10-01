@@ -1118,8 +1118,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                     : nullptr;
         while (pItem) {
           if (pItem->get_drawing_layer() == 8) {
-            pItem->draw_fn(pCanvas, formerIterator.x(),
-                           formerIterator.y());
+            pItem->draw_fn(pCanvas, formerIterator.x(), formerIterator.y());
           }
           pItem = static_cast<drawable*>(pItem->next);
         }
