@@ -1451,8 +1451,9 @@ void animation::depersist(lua_persist_reader* pReader) {
         // 3 should be the morph set, but the actual morph target is
         // missing, so settle for a graphical bug rather than a segfault
         // by reverting to the normal function set.
+        [[fallthrough]];
       case 1:
-        break;
+        [[fallthrough]];  // Should be "break;" but not allowed.
       case 2:
         break;
       case 4:

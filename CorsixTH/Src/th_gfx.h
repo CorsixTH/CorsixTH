@@ -581,9 +581,9 @@ class animation : public animation_base {
   void set_morph_target(animation* pMorphTarget, int iDurationFactor = 1);
   void set_frame(size_t iFrame);
 
-  virtual void draw_fn(render_target* pCanvas, int iDestX, int iDestY);
-  virtual bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY);
-  virtual bool is_multiple_frame_animation_fn();
+  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override;
+  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override;
+  bool is_multiple_frame_animation_fn() override;
   void set_function_set(int value);
 
   void set_speed(int iX, int iY) { speed.dx = iX, speed.dy = iY; }
@@ -636,9 +636,9 @@ class sprite_render_list : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
-  virtual void draw_fn(render_target* pCanvas, int iDestX, int iDestY);
-  virtual bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY);
-  virtual bool is_multiple_frame_animation_fn();
+  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override;
+  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override;
+  bool is_multiple_frame_animation_fn() override;
 
  private:
   struct sprite {
