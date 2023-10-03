@@ -1,0 +1,102 @@
+//AI reference
+
+int getRoomCost(int pRoomID) //Get the room cost
+bool getRoomAvailability(int pRoomID) //Check to see if a room is Available
+
+//Creates a new room from pRoomID with the length(pLength) and width(pWidth) at location (pRoomLocation)
+//Setting door location at pDoorLoc
+//Setting windows at positions from pWindowArray
+//Setting items (pItemArray) at the position at pItemLocationArray with their rotation from pItemRotationArray
+int buildRoom(int pRoomID, int pLength, int pWidth, int pRoomLocation, int pDoorLoc, int pWindowArray, int pItemArray, int pItemLocationArray, int pItemRotationArray)
+
+bool deleteRoom(int pRoomID) //Delete a room
+int getRoomQue(int pRoomID) //Get the size of queue  for the room
+bool setRoomQue(int pRoomID) //set the room queue  size
+int getRoomCurrentQue(int pRoomID) //Get the number of Patients in the queue 
+array getRoomQuePatients(int pRoomID) //Get an array of all Patients that are in the queue  {patient1ID,patient2ID,patient3ID etc}
+bool setRoomQuePatients(int pRoomID, int pPatientArray)//Change the Patient order in the queue
+bool addItemToRoom(int pRoomID, int pAddItem, int pItemLocaiton, int pItemRotation) //edit a room to add a new item
+bool addCorridorItem(int pItemID, int pPosition) //add a Corridor Item at pPosition
+bool getBuildTimeActive() //returns the status of the build time
+bool endBuildTimer() //ends the build timer
+int getHospitalValue() //gets the Hospital Value
+int getBalance() //gets the current balance
+int getCurrentLoan() //gets the current loan
+int getInterestPayment() //gets the current Interest Payment
+int getReputation() //gets the current reputation
+int getDate() //returns the current date as a int value (DMY)
+array getHireAvailableDoctors() //returns an array with all Available doctor objects which have (int id, string name, int seniority, int ability, int qualifications, int Salary)
+array getHireAvailableNurses() //returns an array with all Available nurse objects which have (int id, string name, int ability, int Salary)
+array getHireAvailableHandymen() //returns an array with all Available handymen objects which have (int id, string name, int ability, int Salary)
+array getHireAvailableReceptionists() //returns an array with all Available receptionists objects which have (int id, string name, int ability, int Salary)  
+bool hireStaff(int pStaffID, int pLocation) //Hire a staff with pStaffID and at location pLocation
+array getAllStaffType(int pStaffType) //Returns an array of all owned staff from type
+object getStaff(int pStaffID, int pValue) //returns an object with the following staff info id ,name , detail, Salary, Morale, Tiredness, Skill, seniority, ability, qualifications
+int getStaffBonusCost(int pStaffID) //returns the bonus cost for the staff 
+bool payStaffBonus(int pStaffID) //Pay staff a bonus
+int getStaffPay(int pStaffID) //returns the current staff pay
+bool raiseStaffPay(int pStaffID) //raise staff pay Staff Bonus
+bool sackStaff(int pStaffID) //Sack the given staff member
+array getPlots() //Returns an array of plots that the ai can buy
+bool buyPlot(int pPlotID) //buy plot for ai
+int getHeatValue() //returns the current heat value
+int getHeatCost() //returns the current heat cost
+bool setHeatValue(int pValue) //set the heat value
+int getTotalPeople() //returns the total amount of people in the hospital
+int getTotalPlants() //returns the total amount of plants in the hospital
+int getTotalFire() //returns the total amount of Fire extinguisher in the hospital
+int getTotalObjects() //returns the total amount of Objects in the hospital
+int getTotalRadiators() //returns the total amount of Radiators in the hospital 
+array getTreatments() //return an array for the current list of Treatments in the Drug casebook
+int getTreatmentReputation(int pTreatmentID) //return the treatment Reputation
+int getTreatmentCharge(int pTreatmentID) //return the charge for the Treatment
+bool setTreatmentCharge(int pTreatmentID,int pValue) //set the charge for the given Treatment
+int getTreatmentMoneyEarned(int pTreatmentID) //returns the money earned from this treatment
+int getTreatmentRecoveries(int pTreatmentID) //return total Recoveries from this treatment
+int getTreatmentFatalities(int pTreatmentID) //return total Fatalities from this treatment
+int getTreatmentTurnedAway(int pTreatmentID) //return total Turned Away from this treatment
+int getTreatmentCureStatus(int pTreatmentID) //return total Cures from this treatment
+int getTreatmentEffectiveness(int pTreatmentID) //return Effectiveness for this treatment
+int getTreatmentHandle(int pTreatmentID) //return Handle for this treatment
+int getTreatmentRequirement(int pTreatmentID) //return Requirement for this treatment
+int getResearchFocus(int pTreatmentID) //return Research Focus for this treatment
+int setResearchFocus(int pTreatmentID) //set Research Focus for this treatment
+int getResearchValue(int pResearchType) //return the current Research value for a research type
+int setResearchValue(int pResearchType) //set the research value for the type, note total cannot be more than 100
+int getResearchAllocaiton() //return the current spent research points
+int getHappiness() //return the happiness level
+int getThirst() //return the thirst level
+int getWarmth() //return the warmth level
+int getBalanceGoal() //return the balance goal
+int getTreatedGoal() //return the treated goal
+int getCureGoal() //return the cure goal
+int getWorthGoal() //return the worth goal
+int getChartMoneyIn() //return money in value
+int getChartMoneyOut() //return money out value
+int getChartWages() //return wages
+int getChartBalance() //return balance
+int getChartVisitors() //return visitors
+int getChartCures() //return cures
+int getChartDeaths() //return deaths 
+int getProcedure(int pValue) //returns the Send Home or cure values
+bool setProcedure(int pSendHome, int pCure) //set the send home and cure values
+int getTermination() //get the Termination value
+bool setTermination(int pValue) //set the Termination value
+int getRest() //get the rest value
+bool setRest(int pValue) //set the rest value
+int getLeaveRoom() //get leave room value
+bool setLeaveRoom() //set leave room value
+array getStaffPayRise() //return an array of all staff that need a pay rise
+bool getEpidemicStaus() //return epidemic status
+array getAllUnvaccinatedPatients() //returns an array of Patient objects that are unvaccinated during an epidemic 
+bool setVaccination(int pPatientID) //vaccinate Patient
+int getPatientVaccination(int pPatientID) //check if current patient needs Vaccination
+bool getVIPrequest(int pPatientID) //check if there is a VIP request
+bool setVIP(int pValue) //set VIP request value
+array getPatientMessage() //return an array of all Patients that need advice
+sendPatientToCure(int pPatientID) //send a Patient To Cure
+sendPatientHome(int pPatientID) //send Patient Home
+sendPatientToResearch(int pPatientID) //send Patient To Research
+
+//other
+setLitterBomb(int pValue)
