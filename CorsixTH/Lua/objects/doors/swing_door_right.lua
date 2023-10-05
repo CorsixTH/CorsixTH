@@ -39,18 +39,14 @@ function SwingDoor:SwingDoor(hospital, object_type, x, y, direction, etc)
   self.is_master = object_type == object
   self:Door(hospital, object_type, x, y, direction, etc)
   if self.is_master then
-    -- Wait one tick before finding the slave so that we're sure it has been created.
-    local --[[persistable:swing_door_creation]] function callback()
-      local slave_type = "swing_door_left"
-      self.slave = self.world:getObject(x - 1, y, slave_type) or self.world:getObject(x, y - 1, slave_type) or nil
-      self.slave:setAsSlave(self)
-      self.ticks = false
-    end
-    self:setTimer(1, callback)
-    self.ticks = true
+    local slave_type = "swing_door_left"
+    self.slave = self.world:getObject(x - 1, y, slave_type) or self.world:getObject(x, y - 1, slave_type) or nil
+    self.slave:setAsSlave(self)
+    assert(self.slave.master, "Swing doors are not paired at " .. x .. "," .. y)
   end
   self.old_anim = self.th:getAnimation()
   self.old_flags = self.th:getFlag()
+  local --[[persistable:swing_door_creation]] function _() end -- Stub from Oct 2023, savegame version 181
 end
 
 --[[ Makes the door mimic its master when it comes to hover cursor and what happens
@@ -158,6 +154,16 @@ function SwingDoor:getWalkableTiles()
       {x-1, y  }, {x, y  }, {x+1, y  },
     }
   end
+end
+
+function SwingDoor:afterLoad(old, new)
+  if old < 181 and self.is_master and not self.slave then
+    local slave_type, x, y = "swing_door_left", self.tile_x, self.tile_y
+    self.slave = self.world:getObject(x - 1, y, slave_type) or self.world:getObject(x, y - 1, slave_type)
+    self.slave:setAsSlave(self)
+    assert(self.slave.master, "Swing doors are not paired at " .. x .. "," .. y)
+  end
+  Door.afterLoad(self, old, new)
 end
 
 return object
