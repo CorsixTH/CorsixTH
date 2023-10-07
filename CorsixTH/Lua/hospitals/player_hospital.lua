@@ -761,6 +761,13 @@ function PlayerHospital:makeVipEndFax(vip_rating, name, cash_reward, vip_message
   self.world.ui.bottom_panel:queueMessage("report", message, nil, Date.hoursPerDay() * 20, 1)
 end
 
+--! Play a sound file
+function PlayerHospital:playSound(sound)
+  if self.world.app.config.play_sounds then
+    self.world.app.audio:playSound(sound)
+  end
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)

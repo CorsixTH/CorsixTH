@@ -304,10 +304,9 @@ function Epidemic:markForVaccination(patient)
     patient.marked_for_vaccination = true
     patient:setMood("epidemy4","deactivate")
     patient:setMood("epidemy2","activate")
+    patient.hospital:playSound("vaccin.wav")
   end
 end
-
-
 
 --[[ Counts the number of patients that have been infected that are still
 -- infected
