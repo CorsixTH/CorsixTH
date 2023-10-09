@@ -552,10 +552,13 @@ function UIMenuBar:makeMapeditorMenu(app)
   self:addMenu(_S.menu.file, menu)
 
   menu = UIMenu()
-  menu:appendItem(_S.menu_player_count.players_1, function() self.ui.map_editor:setPlayerCount(1) end)
-    :appendItem(_S.menu_player_count.players_2, function() self.ui.map_editor:setPlayerCount(2) end)
-    :appendItem(_S.menu_player_count.players_3, function() self.ui.map_editor:setPlayerCount(3) end)
-    :appendItem(_S.menu_player_count.players_4, function() self.ui.map_editor:setPlayerCount(4) end)
+  for i = 1, 4 do
+    menu:appendCheckItem(_S.menu_player_count["players_" .. i],
+        self.ui.app.map:getPlayerCount() == i,
+        function() self.ui.map_editor:setPlayerCount(i) end,
+        "playercount",
+        function () return self.ui.app.map:getPlayerCount() == i end)
+  end
   self:addMenu(_S.menu.player_count, menu)
 end
 
@@ -624,7 +627,7 @@ function UIMenuBar:makeGameMenu(app)
       return app.config.play_announcements
     end)
 
- options:appendCheckItem(_S.menu_options.music:format(hotkey_value_label("ingame_toggleMusic", hotkeys)),
+  options:appendCheckItem(_S.menu_options.music:format(hotkey_value_label("ingame_toggleMusic", hotkeys)),
     app.config.play_music,
     function(item)
       app.config.play_music = item.checked
