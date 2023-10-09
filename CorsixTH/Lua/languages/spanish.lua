@@ -744,7 +744,7 @@ adviser = {
     no_desk_6 = "Tienes una recepcionista, ¿qué tal si construyes una mesa de recepción para que pueda trabajar?",
     no_desk_7 = "Has construido una mesa de recepción, ¿y si contratas a una recepcionista? No verás a ningún paciente hasta que lo arregles, ¿lo sabes, no?",
     another_desk = "Necesitaras construir otro escritorio para la nueva recepcionista.",
-	cannot_afford = "¡No tienes dinero para contratar a esa persona!", -- I can't see anything like this in the original strings
+    cannot_afford = "¡No tienes dinero para contratar a esa persona!", -- I can't see anything like this in the original strings
     cannot_afford_2 = "¡No tienes dinero para comprar eso!",
     falling_1 = "¡Eh! No tiene gracia. Mira dónde haces clic con ese ratón, ¡vas a hacer daño a alguien!",
     falling_2 = "¿Te importaría dejar de perder el tiempo?",
@@ -1265,7 +1265,7 @@ totd_window = {
     "Los pacientes tendrán sed mientras esperan en tu hospital, ¡y más si subes la calefacción! Coloca máquinas de bebidas en lugares estratégicos para ganar un dinerillo extra.",
     "Puedes cancelar el progreso del diagnóstico de un paciente y adivinar la cura si ya has descubierto la enfermedad. Ten en cuenta que esto aumentará el riesgo de darle el tratamiento equivocado, lo que matará al paciente.",
     "Las emergencias pueden ser una buena forma de ganar un dinerillo extra, siempre y cuando tengas la capacidad suficiente para ocuparte de los pacientes de la emergencia a tiempo.",
-    "¿Sabías que pueses asignar bedeles a terrenos específicos? Solo clickea el texto 'Todas las parcelas' en su ficha de personal para cambiarlo!",
+    "¿Sabías que puedes asignar bedeles a terrenos específicos? Solo clickea el texto 'Todas las parcelas' en su ficha de personal para cambiarlo!",
   },
   previous = "Siguiente consejo",
   next = "Consejo anterior",
@@ -1403,7 +1403,7 @@ map_editor_window = {
 }
 
 hotkeys_file_err = {
-  file_err_01 = "No se pudo cargar el archivo 'hotkeys.txt'. Por favor asegurate de que CorsixTH " ..
+  file_err_01 = "No se pudo cargar el archivo 'hotkeys.txt'. Por favor asegúrate de que CorsixTH " ..
         "tiene permisos para leer/escribir ",
   file_err_02 = ", o usa la opcion de línea de comandos --hotkeys-file=filename para especificar un archivo que pueda ser escrito. " ..
         "Para referencia, el error al cargar el archivo de teclas de acceso rápido fue: ",
