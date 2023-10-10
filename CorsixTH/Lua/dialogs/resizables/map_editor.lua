@@ -508,16 +508,6 @@ function UIMapEditor:UIMapEditor(ui)
   local text_pages = {
     {name = "paste",    text = _S.map_editor_window.pages.paste},
     {name = "delete_wall", text = _S.map_editor_window.pages.delete_wall},
-    {name = "parcel_0", text = _S.map_editor_window.pages.parcel_0, parcel = 0},
-    {name = "parcel_1", text = _S.map_editor_window.pages.parcel_1, parcel = 1},
-    {name = "parcel_2", text = _S.map_editor_window.pages.parcel_2, parcel = 2},
-    {name = "parcel_3", text = _S.map_editor_window.pages.parcel_3, parcel = 3},
-    {name = "parcel_4", text = _S.map_editor_window.pages.parcel_4, parcel = 4},
-    {name = "parcel_5", text = _S.map_editor_window.pages.parcel_5, parcel = 5},
-    {name = "parcel_6", text = _S.map_editor_window.pages.parcel_6, parcel = 6},
-    {name = "parcel_7", text = _S.map_editor_window.pages.parcel_7, parcel = 7},
-    {name = "parcel_8", text = _S.map_editor_window.pages.parcel_8, parcel = 8},
-    {name = "parcel_9", text = _S.map_editor_window.pages.parcel_9, parcel = 9},
     {name = "camera_1", text = _S.map_editor_window.pages.camera_1, camera = 1},
     {name = "camera_2", text = _S.map_editor_window.pages.camera_2, camera = 2},
     {name = "camera_3", text = _S.map_editor_window.pages.camera_3, camera = 3},
@@ -526,6 +516,9 @@ function UIMapEditor:UIMapEditor(ui)
     {name = "heliport_2", text = _S.map_editor_window.pages.heliport_2, heliport = 2},
     {name = "heliport_3", text = _S.map_editor_window.pages.heliport_3, heliport = 3},
     {name = "heliport_4", text = _S.map_editor_window.pages.heliport_4, heliport = 4}}
+  for i = 0, 9 do
+    table.insert(text_pages, { name = "parcel_" .. i, text = _S.map_editor_window.pages.parcel:format(i), parcel = i})
+  end
 
   for _, page in ipairs(text_pages) do
     if xpos + XSIZE >= EDITOR_WINDOW_XSIZE then -- Update ypos (and xpos) if necessary.
@@ -541,8 +534,33 @@ function UIMapEditor:UIMapEditor(ui)
     self.page_selectbuttons[#self.page_selectbuttons + 1] = page_data
     xpos = xpos + XSIZE + 10
   end
-  self:pageClicked("") -- Initialize all above 'page_selectbuttons'.
 
+  -- Custom parcel number input
+  local col_textbox = {
+    red = 0,
+    green = 0,
+    blue = 0,
+  }
+  local function parcel_num()
+    self.cursor.state = "parcel"
+    self.cursor.sprite = nil
+    self.cursor.is_drag = false
+    self.cursor.parcel = self.parcel_input.text
+    TheApp.map:loadDebugText("parcel")
+    -- Raise all numbered parcel buttons
+    for _, table in pairs(self.page_selectbuttons) do
+      if table.name:find("parcel") and table.button.toggled then
+        table.button:toggle()
+      end
+    end
+  end
+  self.parcel_input = self:addBevelPanel(xpos, ypos, XSIZE, YSIZE, col_textbox)
+          :setLabel(_S.map_editor_window.pages.set_parcel)
+          :setTooltip(_S.map_editor_window.pages.set_parcel_tooltip)
+          :makeTextbox(--[[persistable:mapeditor_set_parcel_number_callback]] function() parcel_num() end)
+          :allowedInput("numbers"):characterLimit(2):setText("10")
+
+  self:pageClicked("") -- Initialize all above 'page_selectbuttons'.
   -- }}}
 
   self:setPosition(0.1, 0.1)
