@@ -883,6 +883,7 @@ function Patient:setTile(x, y)
     if self.litter_countdown == 0 then
       if x and not self:getRoom() and not self.world:getObjects(x, y) and
           self.world.map.th:getCellFlags(x, y).buildable and
+          self.hospital:isInHospital(x, y) and
           (not self.world:findObjectNear(self, "bin", 8) or math.random() < 0.05) then
         -- Drop some litter!
         local trash = math.random(1, 4)
