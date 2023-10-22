@@ -18,6 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 local object = {}
 object.id = "helicopter"
 object.thob = 63
@@ -55,12 +58,15 @@ end
 
 function Helicopter:tick()
   local phase = self.phase
+  local ui = TheApp.ui
   if phase == 0 then
     self.th:makeVisible()
     self:setSpeed(0, 10)
+    ui:playAnnouncement(ui.hospital.emergency.disease.emergency_sound, AnnouncementPriority.Critical)
   elseif phase == 60 then
     self:setSpeed(0, 0)
     self.spawned_patients = 0
+    ui.adviser:say(_A.information.emergency)
   elseif phase == 85 then
     if self.spawned_patients < self.hospital.emergency.victims then
       self:spawnPatient()
