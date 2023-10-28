@@ -16,7 +16,7 @@
 #   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
 
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
-#   - BUILD_ANIMVIEW : Generate AnimViewer build files (no)
+#   - BUILD_ANIMVIEW : Generate AnimView build files (no)
 #   - BUILD_TOOLS : Generate cli tools
 
 cmake_minimum_required(VERSION 3.10)
