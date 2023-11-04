@@ -427,8 +427,6 @@ end
 function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
   -- Allow (multiple) arguments for loading a sprite table in place of the
   -- sprite_table argument.
-  -- TODO: Native number support for e.g. Korean languages. Current use of load_font is a stopgap solution for #1193 and should be eventually removed
-  local load_font = x_sep
   if type(sprite_table) == "string" then
     local arg = {sprite_table, x_sep, y_sep, ...}
     local n_pass_on_args = #arg
@@ -447,8 +445,7 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
   end
 
   local use_bitmap_font = true
-  -- Force bitmap font for the moneybar (Font05V)
-  if not sprite_table:isVisible(46) or load_font == "Font05V" then -- luacheck: ignore 542
+  if not sprite_table:isVisible(46) then -- luacheck: ignore 542
     -- The font doesn't contain an uppercase M, so (in all likelihood) is used
     -- for drawing special symbols rather than text, so the original bitmap
     -- font should be used.
