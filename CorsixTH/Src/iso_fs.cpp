@@ -423,28 +423,27 @@ bool iso_filesystem::file_metadata_less(const file_metadata& lhs,
 }
 
 int iso_filesystem::find_hosp_directory(const uint8_t* pDirEnt,
-                                        int iDirEntsSize, int iLevel) {
+                                        const uint32_t dirEntsSize, int level) {
   // Sanity check
   // Apart from at the root level, directory record arrays must take up whole
   // sectors, whose sizes are powers of two and at least 2048.
   // The formal limit on directory depth is 8, so hitting 16 is insane.
-  if ((iLevel != 0 && (iDirEntsSize & (min_sector_size - 1)) != 0) ||
-      iLevel > max_directory_depth)
+  if ((level != 0 && (dirEntsSize & (min_sector_size - 1)) != 0) ||
+      level > max_directory_depth)
     return 0;
 
   std::unique_ptr<uint8_t[]> pBuffer(nullptr);
   uint32_t iBufferSize = 0;
-  iso_directory_iterator dir_iter(pDirEnt, pDirEnt + iDirEntsSize);
-  iso_directory_iterator end_iter(pDirEnt + iDirEntsSize,
-                                  pDirEnt + iDirEntsSize);
+  iso_directory_iterator dir_iter(pDirEnt, pDirEnt + dirEntsSize);
+  iso_directory_iterator end_iter(pDirEnt + dirEntsSize, pDirEnt + dirEntsSize);
   for (; dir_iter != end_iter; ++dir_iter) {
     const iso_file_entry& ent = *dir_iter;
     if (ent.flags & def_directory) {
-      // The names "\x00" and "\x01" are used for the current directory
+      // The names "\x00" and "\x01" are used for the current directory and
       // the parent directory respectively. We only want to visit these
       // when at the root level.
-      if (iLevel == 0 || !(ent.filename == std::string(1, '\x00') ||
-                           ent.filename == std::string(1, '\x01'))) {
+      if (level == 0 || !(ent.filename == std::string(1, '\x00') ||
+                          ent.filename == std::string(1, '\x01'))) {
         if (ent.data_length > iBufferSize) {
           iBufferSize = ent.data_length;
           pBuffer = std::make_unique<uint8_t[]>(iBufferSize);
@@ -452,7 +451,7 @@ int iso_filesystem::find_hosp_directory(const uint8_t* pDirEnt,
         if (seek_to_sector(ent.data_sector) &&
             read_data(ent.data_length, pBuffer.get())) {
           int iFoundLevel =
-              find_hosp_directory(pBuffer.get(), ent.data_length, iLevel + 1);
+              find_hosp_directory(pBuffer.get(), ent.data_length, level + 1);
           if (iFoundLevel != 0) {
             if (iFoundLevel == 2) {
               build_file_lookup_table(ent.data_sector, ent.data_length,
@@ -474,26 +473,26 @@ int iso_filesystem::find_hosp_directory(const uint8_t* pDirEnt,
   return 0;
 }
 
-void iso_filesystem::build_file_lookup_table(uint32_t iSector, int iDirEntsSize,
+void iso_filesystem::build_file_lookup_table(uint32_t iSector,
+                                             uint32_t dirEntsSize,
                                              const std::string& prefix) {
   // Sanity check
   // Apart from at the root level, directory record arrays must take up whole
   // sectors, whose sizes are powers of two and at least 2048.
   // Path lengths shouldn't exceed 256 either (or at least not for the files
   // which we're interested in).
-  if ((prefix.size() != 0 && (iDirEntsSize & 0x7FF)) || (prefix.size() > 256))
+  if ((prefix.size() != 0 && (dirEntsSize & 0x7FF)) || (prefix.size() > 256))
     return;
 
-  uint8_t* pBuffer = new uint8_t[iDirEntsSize];
-  if (!seek_to_sector(iSector) || !read_data(iDirEntsSize, pBuffer)) {
+  uint8_t* pBuffer = new uint8_t[dirEntsSize];
+  if (!seek_to_sector(iSector) || !read_data(dirEntsSize, pBuffer)) {
     delete[] pBuffer;
     return;
   }
 
   uint8_t* pDirEnt = pBuffer;
-  iso_directory_iterator dir_iter(pDirEnt, pDirEnt + iDirEntsSize);
-  iso_directory_iterator end_iter(pDirEnt + iDirEntsSize,
-                                  pDirEnt + iDirEntsSize);
+  iso_directory_iterator dir_iter(pDirEnt, pDirEnt + dirEntsSize);
+  iso_directory_iterator end_iter(pDirEnt + dirEntsSize, pDirEnt + dirEntsSize);
   for (; dir_iter != end_iter; ++dir_iter) {
     const iso_file_entry& ent = *dir_iter;
     std::string path;
@@ -568,6 +567,13 @@ iso_filesystem::file_handle iso_filesystem::find_file(const char* sPath) const {
     }
   }
   return 0;
+}
+
+uint32_t iso_filesystem::get_file_start(file_handle iFile) const {
+  if (iFile <= 0 || static_cast<size_t>(iFile) > files.size())
+    return 0;
+  else
+    return files[iFile - 1].sector * sector_size;
 }
 
 uint32_t iso_filesystem::get_file_size(file_handle iFile) const {

@@ -58,7 +58,7 @@ int l_isofs_file_exists(lua_State* L) {
   iso_filesystem* pSelf = luaT_testuserdata<iso_filesystem>(L);
   const char* sFilename = luaL_checkstring(L, 2);
   iso_filesystem::file_handle iFile = pSelf->find_file(sFilename);
-  if (!iso_filesystem::isHandleGood(iFile)) {
+  if (!iso_filesystem::is_handle_good(iFile)) {
     lua_pushnil(L);
     lua_pushfstring(L, "Could not find \'%s\' in .iso image", sFilename);
     return 2;
@@ -71,7 +71,7 @@ int l_isofs_file_size(lua_State* L) {
   iso_filesystem* pSelf = luaT_testuserdata<iso_filesystem>(L);
   const char* sFilename = luaL_checkstring(L, 2);
   iso_filesystem::file_handle iFile = pSelf->find_file(sFilename);
-  if (!iso_filesystem::isHandleGood(iFile)) {
+  if (!iso_filesystem::is_handle_good(iFile)) {
     lua_pushnil(L);
     lua_pushfstring(L, "Could not find \'%s\' in .iso image", sFilename);
     return 2;
@@ -80,11 +80,37 @@ int l_isofs_file_size(lua_State* L) {
   return 1;
 }
 
+//! Get the start and end bytes of a given file.
+/*!
+    Called on an iso_filesystem, passing in a filename. If the file exists in
+    the iso then the byte position of the start of the file inclusive and the
+    end of the file exclusive is returned to the caller.
+
+    If the file is not found then an error is passed as the third return value.
+
+    \param L The Lua State
+*/
+int l_isofs_file_offsets(lua_State* L) {
+  iso_filesystem* pSelf = luaT_testuserdata<iso_filesystem>(L);
+  const char* sFilename = luaL_checkstring(L, 2);
+  iso_filesystem::file_handle iFile = pSelf->find_file(sFilename);
+  if (!iso_filesystem::is_handle_good(iFile)) {
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushfstring(L, "Could not find \'%s\' in .iso image", sFilename);
+    return 3;
+  }
+  uint32_t start = pSelf->get_file_start(iFile);
+  lua_pushinteger(L, start);
+  lua_pushinteger(L, start + pSelf->get_file_size(iFile));
+  return 2;
+}
+
 int l_isofs_read_contents(lua_State* L) {
   iso_filesystem* pSelf = luaT_testuserdata<iso_filesystem>(L);
   const char* sFilename = luaL_checkstring(L, 2);
   iso_filesystem::file_handle iFile = pSelf->find_file(sFilename);
-  if (!iso_filesystem::isHandleGood(iFile)) {
+  if (!iso_filesystem::is_handle_good(iFile)) {
     lua_pushnil(L);
     lua_pushfstring(L, "Could not find \'%s\' in .iso image", sFilename);
     return 2;
@@ -125,6 +151,7 @@ void lua_register_iso_fs(const lua_register_state* pState) {
   lcb.add_function(l_isofs_set_root, "setRoot");
   lcb.add_function(l_isofs_file_exists, "fileExists");
   lcb.add_function(l_isofs_file_size, "fileSize");
+  lcb.add_function(l_isofs_file_offsets, "fileOffsets");
   lcb.add_function(l_isofs_read_contents, "readContents");
   lcb.add_function(l_isofs_list_files, "listFiles");
 }

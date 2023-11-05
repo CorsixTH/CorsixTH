@@ -58,7 +58,7 @@ class iso_filesystem {
 
   //! Get the reason for the most recent failure
   /*!
-      Can be called after initialise() or getFileData() return false.
+      Can be called after initialise() or get_file_data() return false.
   */
   const char* get_error() const;
 
@@ -84,18 +84,24 @@ class iso_filesystem {
                                                 const char*),
                              void* pCallbackData) const;
 
-  //! Test if a file handle from findFile() is good or is invalid
-  static inline bool isHandleGood(file_handle x) { return x != 0; }
+  //! Test if a file handle from find_file() is good or is invalid
+  static inline bool is_handle_good(file_handle x) { return x != 0; }
+
+  //! Get the byte offset of the start of the file in the loaded .iso
+  /*!
+      \param iFile A file handle returned by find_file()
+  */
+  uint32_t get_file_start(file_handle iFile) const;
 
   //! Get the size (in bytes) of a file in the loaded .iso disk image
   /*!
-      \param iFile A file handle returned by findFile()
+      \param iFile A file handle returned by find_file()
   */
   uint32_t get_file_size(file_handle iFile) const;
 
   //! Get the contents of a file in the loaded .iso disk image
   /*!
-      \param iFile A file handle returned by findFile()
+      \param iFile A file handle returned by find_file()
       \param pBuffer The buffer to place the resulting data in
       \return true on success, false on failure - call getError() for reason
   */
@@ -129,23 +135,24 @@ class iso_filesystem {
   //! Scan the given array of directory entries for a Theme Hospital file
   /*!
       \param pDirEnt Pointer to a padded array of ISO 9660 directory entries.
-      \param iDirEntsSize The number of bytes in the directory entry array.
-      \param iLevel The recursion level (used to prevent infinite loops upon
+      \param dirEntsSize The number of bytes in the directory entry array.
+      \param level The recursion level (used to prevent infinite loops upon
         maliciously-formed .iso disk images).
       \return 0 if no Theme Hospital files were found. 1 if the given array
         contains a Theme Hospital data file. 2 if the given array is the
         top-level Theme Hospital data directory. Other values otherwise.
   */
-  int find_hosp_directory(const uint8_t* pDirEnt, int iDirEntsSize, int iLevel);
+  int find_hosp_directory(const uint8_t* pDirEnt, const uint32_t dirEntsSize,
+                          int level);
 
   //! Build the list of Theme Hospital data files
   /*!
       \param iSector The ordinal of a logical sector containing a padded
         array of ISO 9660 directory entries.
-      \param iDirEntsSize The number of bytes in the directory entry array.
+      \param dirEntsSize The number of bytes in the directory entry array.
       \param prefix The path name to prepend to filenames in the directory.
   */
-  void build_file_lookup_table(uint32_t iSector, int iDirEntsSize,
+  void build_file_lookup_table(uint32_t iSector, const uint32_t dirEntsSize,
                                const std::string& prefix);
 
   //! std:less like implementation for file_metadata. Based on the path.
