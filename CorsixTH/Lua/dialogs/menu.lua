@@ -546,8 +546,15 @@ function UIMenuBar:makeMapeditorMenu(app)
   local menu = UIMenu()
   local hotkeys = app.hotkeys
 
+  local function mapeditorSave(ui)
+    local message = app.world:validateMap()
+    if message then
+      ui:addWindow(UIInformation(ui, {message}))
+    end
+    ui:addWindow(UISaveMap(ui))
+  end
   menu:appendItem(_S.menu_file.load:format(hotkey_value_label("ingame_loadMenu", hotkeys)), function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
-    :appendItem(_S.menu_file.save:format(hotkey_value_label("ingame_saveMenu", hotkeys)), function() self.ui:addWindow(UISaveMap(self.ui)) end)
+    :appendItem(_S.menu_file.save:format(hotkey_value_label("ingame_saveMenu", hotkeys)), function() mapeditorSave(self.ui) end)
     :appendItem(_S.menu_file.quit:format(hotkey_value_label("ingame_quitLevel", hotkeys)), function() self.ui:quit() end)
   self:addMenu(_S.menu.file, menu)
 
