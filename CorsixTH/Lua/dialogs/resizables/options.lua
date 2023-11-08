@@ -237,12 +237,17 @@ function UIOptions:checkForAvailableLanguages()
   local langs, c = {}, 1
   for _, lang in pairs(app.strings.languages) do
     local font = app.strings:getFont(lang)
-    if app.gfx:hasLanguageFont(font) and app.strings.languages_english[lang] then
-      local eng_name = app.strings.languages_english[lang]
-      c = c + 1
+    local eng_name = app.strings.languages_english[lang]
+    c = c + 1
+    -- If freetype support and a unicode font setting are not present then
+    -- languages not supported by the builtin font are named in English and cannot be selected
+    if app.gfx:hasLanguageFont(font) then
       font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"))
-      langs[#langs + 1] = { text = lang, font = font,
+      langs[#langs + 1] = { text = lang, name = lang, font = font, disabled = false,
       tooltip = { _S.tooltip.options_window.language_dropdown_item:format(eng_name), nil, BTN_HEIGHT * c } }
+    else
+      langs[#langs + 1] = { text = eng_name, name = lang, font = self.builtin_font, disabled = true,
+      tooltip = { _S.tooltip.options_window.language_dropdown_no_font, nil, BTN_HEIGHT * c } }
     end
   end
   self.available_languages = langs
@@ -263,7 +268,7 @@ function UIOptions:dropdownLanguage(activate)
 end
 
 function UIOptions:selectLanguage(number)
-  local lang = self.app.strings.languages_english[self.available_languages[number]["text"]]
+  local lang = self.app.strings.languages_english[self.available_languages[number].name]
   local app = self.ui.app
   app.config.language = (lang)
   app:initLanguage()

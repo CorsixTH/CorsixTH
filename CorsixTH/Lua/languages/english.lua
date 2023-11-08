@@ -454,6 +454,7 @@ tooltip.options_window = {
   language = "The language texts in the game will appear in",
   select_language = "Select the game language",
   language_dropdown_item = "Choose %s as language",
+  language_dropdown_no_font = "Select a font in the folders settings to enable this language",
   back = "Close the Settings window",
   scrollspeed = "Set the scroll speed between 1 (slowest) to 10 (fastest). The default is 2.",
   shift_scrollspeed = "Set the speed of scrolling while the shift key is pressed. 1 (slowest) to 10 (fastest). The default is 4.",
