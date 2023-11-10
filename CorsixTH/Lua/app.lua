@@ -1928,6 +1928,25 @@ function App:gamelogHeader()
   return (gen_date .. compiled .. running)
 end
 
+--! Open the given string (URL or folder path) in the operating system. Requires io.popen.
+--!param path (string)
+function App:osOpen(path)
+  if not path or not io.popen then return end
+  local cmd
+  if self.os == "windows" then
+    cmd = 'start "" "'
+  elseif self.os == "macos" then
+    cmd = 'open "'
+  else
+    cmd = 'xdg-open "'
+  end
+  local handle = io.popen(cmd .. path .. '" 2>&1')
+  local output = handle:read('*a'):gsub('[\n\r]', ' ')
+  if output:len() > 0 then
+    self.ui:addWindow(UIInformation(self.ui, {output}))
+  end
+end
+
 -- Do not remove, for savegame compatibility < r1891
 local app_confirm_quit_stub = --[[persistable:app_confirm_quit]] function()
 end

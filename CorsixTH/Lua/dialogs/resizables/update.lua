@@ -100,21 +100,9 @@ function UIUpdate:draw(canvas, x, y)
 end
 
 function UIUpdate:buttonDownload()
-
-  if self.app.os == "windows" then
-    os.execute("start " .. self.download_url)
-  elseif self.app.os == "macos" then
-    os.execute("open " .. self.download_url)
-  else
-    os.execute("xdg-open " .. self.download_url)
-  end
-
+  self.ui.app:osOpen(self.download_url)
 end
 
 function UIUpdate:buttonIgnore()
   self:close()
 end
-
-
-
-

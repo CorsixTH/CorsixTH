@@ -149,20 +149,24 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
 
   self.modal_class = mode == "menu" and "main menu" or "dir browser"
   self.resizable = false
-  self.exit_button = self:addBevelPanel(260, 400, 100, 18, self.col_bg)
+  local button_width, button_height, button_pos = 135, 30, self.height - 35
+  local indent = math.floor((self.width - (3 * button_width)) / 4)
+  self.exit_button = self:addBevelPanel(indent, button_pos, button_width, button_height, self.col_bg)
 
   if mode ~= nil then
     self.font = TheApp.gfx:loadFont("QData", "Font01V")
     self:setDefaultPosition(0.5, 0.25)
     self.on_top = true
     self.esc_closes = true
-    self.exit_button:setLabel(_S.install.cancel, self.font):makeButton(0, 0, 100, 18, nil, self.close)
+    self.exit_button:setLabel(_S.install.cancel, self.font)
+      :makeButton(0, 0, button_width, button_height, nil, self.close)
   else
     self.font = ui.app.gfx:loadBuiltinFont()
     self:setDefaultPosition(0.05, 0.5)
     self:addKeyHandler("global_cancel", self.exit)
     self:addKeyHandler("global_cancel_alt", self.exit)
-    self.exit_button:setLabel(_S.install.exit, self.font):makeButton(0, 0, 100, 18, nil, self.exit)
+    self.exit_button:setLabel(_S.install.exit, self.font)
+      :makeButton(0, 0, button_width, button_height, nil, self.exit)
   end
 
   -- Create the root item (or items, on Windows), and set it as the
@@ -185,7 +189,7 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
     end
   end
 
-  local control = TreeControl(root, 5, 55, 490, 340, self.col_bg, self.col_scrollbar)
+  local control = TreeControl(root, 5, 55, 490, 330, self.col_bg, self.col_scrollbar)
     :setSelectCallback(select_function)
 
   local ok_function = function()
@@ -193,10 +197,12 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
       select_function(control.selected_node)
     end
   end
-  self.ok_button = self:addBevelPanel(130, 400, 100, 18, self.col_bg)
-    :setLabel(_S.install.ok, self.font):makeButton(0, 0, 100, 18, nil, ok_function)
+  self.ok_button = self
+    :addBevelPanel(self.width - button_width - indent, button_pos, button_width, button_height, self.col_bg)
+    :setLabel(_S.install.ok, self.font):makeButton(0, 0, button_width, button_height, nil, ok_function)
 
   self:addWindow(control)
+  self.control = control
 end
 
 function UIDirectoryBrowser:exit()

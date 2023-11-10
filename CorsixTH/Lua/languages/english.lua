@@ -534,6 +534,7 @@ tooltip.folders_window = {
   not_specified = "No folder location specified yet!",
   default = "Default location",
   reset_to_default = "Reset the directory to its default location",
+  explore = "Open this folder in your file manager",
   back  = "Close this menu and go back to the Settings Menu",
 }
 
