@@ -101,7 +101,7 @@ jobs:
           # Check if there are lua classes with invalid/improper declarations.
           python3 scripts/check_lua_classes.py
           # Check for tabs (should be spaces)
-          grep -RP '\t' CorsixTH/Lua --exclude-dir=languages
+          ! grep --binary-files=without-match --perl-regexp --recursive --line-number '\t' CorsixTH/Lua --exclude-dir=languages
           # Run CPP Tests
           cd build/CorsixTH
           ctest --extra-verbose --build-config Release --output-on-failure
