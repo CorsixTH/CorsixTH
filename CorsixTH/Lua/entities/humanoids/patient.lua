@@ -988,7 +988,7 @@ function Patient:updateDynamicInfo()
     else
       self:setDynamicInfo('text',
         {action_string, _S.dynamic_info.patient.actions.epidemic_contagious, info})
-	end
+    end
   else
     self:setDynamicInfo('text', {action_string, "", info})
   end
