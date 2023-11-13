@@ -1863,7 +1863,7 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
   return object, ox, oy
 end
 
---! Finds the most desirable room of a given room type
+--! Finds the most desirable room of a given room type for the provided humanoid.
 --!param humanoid The queried NPC (start point)
 --!param room_type_id (string) The room we are looking for
 --!param max_distance (number) The maximum distance away a room will be considered from the humanoid
