@@ -768,7 +768,7 @@ adviser = {
     th_cheat = "¡Felicidades, has desbloqueado los trucos!",
     roujin_on_cheat = "¡Desafío de Roujin activado! Buena suerte...",
     roujin_off_cheat = "Desafío de Roujin desactivado.",
-	norest_on_cheat = "Vaya! Parece que el personal consumió demasiada cafeína y ya no necesitan descansar.",
+    norest_on_cheat = "Vaya! Parece que el personal consumió demasiada cafeína y ya no necesitan descansar.",
     norest_off_cheat = "Uf! Parece que el subidón se acabó. Tu personal ahora podrá descansar apropiadamente.",
   },
 }
