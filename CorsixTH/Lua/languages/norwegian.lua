@@ -62,7 +62,7 @@ because the letters ø and Ø is not included in the original ingame-font.
 --   SECTION A - NEW STRINGS
 -------------------------------------------------------------------------------
 
--- 1. Global setings (do not edit!)
+-- 1. Global settings (do not edit!)
 --Font("unicode") --todo: Add unicode/freefont
 Language("Norsk", "Norwegian", "nb", "nob")
 Inherit("english")

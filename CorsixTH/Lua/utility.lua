@@ -393,7 +393,7 @@ end
 --  specified depth. By default initialized with "{detect_cycles = True}"
 --!param depth Recursion depth, should be omitted.
 --!param pt_reflist Seen nodes, should be omitted.
---!return The seralized output.
+--!return The serialized output.
 function serialize(val, options, depth, pt_reflist)
   if type(val) == "string" then
     return serialize_string(val)

@@ -25,7 +25,7 @@ Language("繁體中文", "Chinese (traditional)", "zh(t)", "chi(t)", "zho(t)")
 Inherit("english")
 Encoding(utf8)
 
--- Serach OVERRIDE and NEW STRINGS for workspace
+-- Search OVERRIDE and NEW STRINGS for workspace
 
 -------------------------------  OLD STRINGS  -------------------------------
 -- Not generated from official Traditional Chinese datapack, as I don't know

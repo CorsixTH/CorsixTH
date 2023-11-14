@@ -151,7 +151,7 @@ struct map_tile_flags {
   bool buildable_s;  //!< Can build on the south side of the tile
   bool buildable_w;  //!< Can build on the west side of the tile
 
-  //! Convert the given uint32_t reprentation of the map_tile flags
+  //! Convert the given uint32_t representation of the map_tile flags
   //! to a map_tile_flags instance.
   map_tile_flags& operator=(uint32_t raw);
 

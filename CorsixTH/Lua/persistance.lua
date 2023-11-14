@@ -152,7 +152,7 @@ local function MakePermanentObjectsTable(inverted)
   end
   permanent[menu_bar] = "TheApp.ui.menu_bar"
 
-  -- Graphics bits are persisted as instructions to reload them or re-use if already loaded
+  -- Graphics bits are persisted as instructions to reload them or reuse if already loaded
   if inverted then
     -- as the object was persisted as a table, we need to add some magic to
     -- the __index metamethod to interpret this table as a function call

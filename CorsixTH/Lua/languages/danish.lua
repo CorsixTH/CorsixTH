@@ -26,16 +26,16 @@ SOFTWARE.
 -------------------------------------------------------------------------------
 
 This danish translation is based apon the Norwegian file by Erlend Mongstad. I have changed it
-so that is match the formating of the norwegian file. Danish translations is done by the danish team.
+so that is match the formatting of the norwegian file. Danish translations is done by the danish team.
 Mostly Robin Madsen (RobseRob) or by Ole Frandsen (Froksen). Please read Mongstads description
-of how the formating is done.
+of how the formatting is done.
 
 Since the norwegian/DANISH language isn't in the original Theme Hospital game, this
 file is split in two sections (A and B). The first section contains all the new
 language strings, made by the Corsix-TH team, and the second section contains
 the override translation of all the original english strings.
 
-FORMATING AND NORWEGIAN/DANISH LETTERS
+FORMATTING AND NORWEGIAN/DANISH LETTERS
 This file contains UTF-8 text. Make sure your editor is set to UTF-8. For the
 norwegian/danish letters ø and Ø, you must use the old-style ö and Ö instead. That is
 because the letters ø and Ø is not included in the original ingame-font.
@@ -70,7 +70,7 @@ because the letters ø and Ø is not included in the original ingame-font.
 --   SECTION A - NEW STRINGS
 -------------------------------------------------------------------------------
 
--- 1. Global setings (do not edit!)
+-- 1. Global settings (do not edit!)
 Language("Dansk", "Danish", "da", "dk")
 Inherit("english")
 
