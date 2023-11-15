@@ -2456,3 +2456,7 @@ end
 --! Called when the vip is out of the hospital grounds
 function Hospital:makeVipEndFax(vip_rating, name, cash_reward, vip_message)
 end
+
+--! Play a sound file
+function Hospital:playSound(sound)
+end
