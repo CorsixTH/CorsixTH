@@ -127,61 +127,66 @@ $(function() {
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                                                <span class="keyword">const</span> <span class="keywordtype">char</span>*),</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                             <span class="keywordtype">void</span>* pCallbackData) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classiso__filesystem.html#aa442d6ed34d86707a882fc940ad999e1">   88</a></span>&#160;  <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classiso__filesystem.html#aa442d6ed34d86707a882fc940ad999e1">isHandleGood</a>(<a class="code" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> x) { <span class="keywordflow">return</span> x != 0; }</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classiso__filesystem.html#a67370d7548462d0cc380727f71d7bbef">   88</a></span>&#160;  <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classiso__filesystem.html#a67370d7548462d0cc380727f71d7bbef">is_handle_good</a>(<a class="code" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> x) { <span class="keywordflow">return</span> x != 0; }</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  uint32_t <a class="code" href="classiso__filesystem.html#a86912a1e5b699cc9f2c6ee2bd39d1076">get_file_size</a>(<a class="code" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> iFile) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  uint32_t <a class="code" href="classiso__filesystem.html#aea7a8c495ab68b4922e447f7e7e70c5b">get_file_start</a>(<a class="code" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> iFile) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classiso__filesystem.html#a5ea2b6616cb6f3e90224a51ba470f7be">get_file_data</a>(<a class="code" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> iFile, uint8_t* pBuffer);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  uint32_t <a class="code" href="classiso__filesystem.html#a86912a1e5b699cc9f2c6ee2bd39d1076">get_file_size</a>(<a class="code" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> iFile) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="keyword">struct </span>file_metadata {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    std::string path;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    uint32_t sector;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    uint32_t size;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  };</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  std::FILE* raw_file;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keywordtype">char</span>* error;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  std::vector&lt;file_metadata&gt; files;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="keywordtype">long</span> sector_size;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  <span class="keywordtype">char</span> path_seperator;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classiso__filesystem.html#a5ea2b6616cb6f3e90224a51ba470f7be">get_file_data</a>(<a class="code" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> iFile, uint8_t* pBuffer);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keyword">struct </span>file_metadata {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    std::string path;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    uint32_t sector;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    uint32_t size;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  };</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="keywordtype">void</span> clear();</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="keywordtype">void</span> set_error(<span class="keyword">const</span> <span class="keywordtype">char</span>* sFormat, ...);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  std::FILE* raw_file;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="keywordtype">char</span>* error;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  std::vector&lt;file_metadata&gt; files;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <span class="keywordtype">long</span> sector_size;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="keywordtype">char</span> path_seperator;</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keywordtype">bool</span> seek_to_sector(uint32_t iSector);</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keywordtype">void</span> clear();</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  <span class="keywordtype">bool</span> read_data(uint32_t iByteCount, uint8_t* pBuffer);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  <span class="keywordtype">void</span> set_error(<span class="keyword">const</span> <span class="keywordtype">char</span>* sFormat, ...);</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;  <span class="keywordtype">int</span> find_hosp_directory(<span class="keyword">const</span> uint8_t* pDirEnt, <span class="keywordtype">int</span> iDirEntsSize, <span class="keywordtype">int</span> iLevel);</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160; </div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  <span class="keywordtype">void</span> build_file_lookup_table(uint32_t iSector, <span class="keywordtype">int</span> iDirEntsSize,</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                               <span class="keyword">const</span> std::string&amp; prefix);</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> file_metadata_less(<span class="keyword">const</span> file_metadata&amp; lhs,</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                                 <span class="keyword">const</span> file_metadata&amp; rhs);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;};</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  <span class="keywordtype">bool</span> seek_to_sector(uint32_t iSector);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  <span class="keywordtype">bool</span> read_data(uint32_t iByteCount, uint8_t* pBuffer);</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;  <span class="keywordtype">int</span> find_hosp_directory(<span class="keyword">const</span> uint8_t* pDirEnt, <span class="keyword">const</span> uint32_t dirEntsSize,</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                          <span class="keywordtype">int</span> level);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;  <span class="keywordtype">void</span> build_file_lookup_table(uint32_t iSector, <span class="keyword">const</span> uint32_t dirEntsSize,</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;                               <span class="keyword">const</span> std::string&amp; prefix);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> file_metadata_less(<span class="keyword">const</span> file_metadata&amp; lhs,</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                                 <span class="keyword">const</span> file_metadata&amp; rhs);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;};</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclassiso__filesystem_html_a67370d7548462d0cc380727f71d7bbef"><div class="ttname"><a href="classiso__filesystem.html#a67370d7548462d0cc380727f71d7bbef">iso_filesystem::is_handle_good</a></div><div class="ttdeci">static bool is_handle_good(file_handle x)</div><div class="ttdoc">Test if a file handle from find_file() is good or is invalid.</div><div class="ttdef"><b>Definition:</b> iso_fs.h:88</div></div>
+<div class="ttc" id="aclassiso__filesystem_html_aea7a8c495ab68b4922e447f7e7e70c5b"><div class="ttname"><a href="classiso__filesystem.html#aea7a8c495ab68b4922e447f7e7e70c5b">iso_filesystem::get_file_start</a></div><div class="ttdeci">uint32_t get_file_start(file_handle iFile) const</div><div class="ttdoc">Get the byte offset of the start of the file in the loaded .iso.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:572</div></div>
 <div class="ttc" id="aclassiso__filesystem_html_a700d30ed27e80d173597c122667258c1"><div class="ttname"><a href="classiso__filesystem.html#a700d30ed27e80d173597c122667258c1">iso_filesystem::iso_filesystem</a></div><div class="ttdeci">iso_filesystem()</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:353</div></div>
 <div class="ttc" id="aclassiso__filesystem_html"><div class="ttname"><a href="classiso__filesystem.html">iso_filesystem</a></div><div class="ttdoc">Layer for reading Theme Hospital files out of an .iso disk image.</div><div class="ttdef"><b>Definition:</b> iso_fs.h:42</div></div>
-<div class="ttc" id="aclassiso__filesystem_html_a3dc6933941b1003aff0a9dc08c5fd865"><div class="ttname"><a href="classiso__filesystem.html#a3dc6933941b1003aff0a9dc08c5fd865">iso_filesystem::get_error</a></div><div class="ttdeci">const char * get_error() const</div><div class="ttdoc">Get the reason for the most recent failure.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:590</div></div>
-<div class="ttc" id="aclassiso__filesystem_html_a5ea2b6616cb6f3e90224a51ba470f7be"><div class="ttname"><a href="classiso__filesystem.html#a5ea2b6616cb6f3e90224a51ba470f7be">iso_filesystem::get_file_data</a></div><div class="ttdeci">bool get_file_data(file_handle iFile, uint8_t *pBuffer)</div><div class="ttdoc">Get the contents of a file in the loaded .iso disk image.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:580</div></div>
+<div class="ttc" id="aclassiso__filesystem_html_a3dc6933941b1003aff0a9dc08c5fd865"><div class="ttname"><a href="classiso__filesystem.html#a3dc6933941b1003aff0a9dc08c5fd865">iso_filesystem::get_error</a></div><div class="ttdeci">const char * get_error() const</div><div class="ttdoc">Get the reason for the most recent failure.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:596</div></div>
+<div class="ttc" id="aclassiso__filesystem_html_a5ea2b6616cb6f3e90224a51ba470f7be"><div class="ttname"><a href="classiso__filesystem.html#a5ea2b6616cb6f3e90224a51ba470f7be">iso_filesystem::get_file_data</a></div><div class="ttdeci">bool get_file_data(file_handle iFile, uint8_t *pBuffer)</div><div class="ttdoc">Get the contents of a file in the loaded .iso disk image.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:586</div></div>
 <div class="ttc" id="aclassiso__filesystem_html_a369b4c0afa558cc732d06649b788f901"><div class="ttname"><a href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">iso_filesystem::file_handle</a></div><div class="ttdeci">int file_handle</div><div class="ttdef"><b>Definition:</b> iso_fs.h:65</div></div>
 <div class="ttc" id="ath__lua_8h_html"><div class="ttname"><a href="th__lua_8h.html">th_lua.h</a></div></div>
 <div class="ttc" id="aclassiso__filesystem_html_a4c4f81e78e26f60dd09a1227356d6ddb"><div class="ttname"><a href="classiso__filesystem.html#a4c4f81e78e26f60dd09a1227356d6ddb">iso_filesystem::initialise</a></div><div class="ttdeci">bool initialise(const char *path)</div><div class="ttdoc">Load an .iso disk image and search for Theme Hospital data files.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:372</div></div>
-<div class="ttc" id="aclassiso__filesystem_html_aa442d6ed34d86707a882fc940ad999e1"><div class="ttname"><a href="classiso__filesystem.html#aa442d6ed34d86707a882fc940ad999e1">iso_filesystem::isHandleGood</a></div><div class="ttdeci">static bool isHandleGood(file_handle x)</div><div class="ttdoc">Test if a file handle from findFile() is good or is invalid.</div><div class="ttdef"><b>Definition:</b> iso_fs.h:88</div></div>
 <div class="ttc" id="aclassiso__filesystem_html_a08c7134a94ec638222c45ef0e84ac227"><div class="ttname"><a href="classiso__filesystem.html#a08c7134a94ec638222c45ef0e84ac227">iso_filesystem::set_path_separator</a></div><div class="ttdeci">void set_path_separator(char cSeparator)</div><div class="ttdoc">Set the character to be used between components in file paths.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:368</div></div>
-<div class="ttc" id="aclassiso__filesystem_html_a8799dba96d02d5550ee54657712be995"><div class="ttname"><a href="classiso__filesystem.html#a8799dba96d02d5550ee54657712be995">iso_filesystem::visit_directory_files</a></div><div class="ttdeci">void visit_directory_files(const char *sPath, void(*fnCallback)(void *, const char *, const char *), void *pCallbackData) const</div><div class="ttdoc">Iterate all files of the .iso disk image within a given directory.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:529</div></div>
+<div class="ttc" id="aclassiso__filesystem_html_a8799dba96d02d5550ee54657712be995"><div class="ttname"><a href="classiso__filesystem.html#a8799dba96d02d5550ee54657712be995">iso_filesystem::visit_directory_files</a></div><div class="ttdeci">void visit_directory_files(const char *sPath, void(*fnCallback)(void *, const char *, const char *), void *pCallbackData) const</div><div class="ttdoc">Iterate all files of the .iso disk image within a given directory.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:528</div></div>
 <div class="ttc" id="aconfig_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div></div>
-<div class="ttc" id="aclassiso__filesystem_html_a86912a1e5b699cc9f2c6ee2bd39d1076"><div class="ttname"><a href="classiso__filesystem.html#a86912a1e5b699cc9f2c6ee2bd39d1076">iso_filesystem::get_file_size</a></div><div class="ttdeci">uint32_t get_file_size(file_handle iFile) const</div><div class="ttdoc">Get the size (in bytes) of a file in the loaded .iso disk image.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:573</div></div>
-<div class="ttc" id="aclassiso__filesystem_html_a8ac7a7c0dba30dd5967f139b449238b8"><div class="ttname"><a href="classiso__filesystem.html#a8ac7a7c0dba30dd5967f139b449238b8">iso_filesystem::find_file</a></div><div class="ttdeci">file_handle find_file(const char *sPath) const</div><div class="ttdoc">Find a file in the loaded .iso disk image.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:553</div></div>
+<div class="ttc" id="aclassiso__filesystem_html_a86912a1e5b699cc9f2c6ee2bd39d1076"><div class="ttname"><a href="classiso__filesystem.html#a86912a1e5b699cc9f2c6ee2bd39d1076">iso_filesystem::get_file_size</a></div><div class="ttdeci">uint32_t get_file_size(file_handle iFile) const</div><div class="ttdoc">Get the size (in bytes) of a file in the loaded .iso disk image.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:579</div></div>
+<div class="ttc" id="aclassiso__filesystem_html_a8ac7a7c0dba30dd5967f139b449238b8"><div class="ttname"><a href="classiso__filesystem.html#a8ac7a7c0dba30dd5967f139b449238b8">iso_filesystem::find_file</a></div><div class="ttdeci">file_handle find_file(const char *sPath) const</div><div class="ttdoc">Find a file in the loaded .iso disk image.</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:552</div></div>
 <div class="ttc" id="aclassiso__filesystem_html_aeaea40b605632d8b9fd61e13cbe289c4"><div class="ttname"><a href="classiso__filesystem.html#aeaea40b605632d8b9fd61e13cbe289c4">iso_filesystem::~iso_filesystem</a></div><div class="ttdeci">~iso_filesystem()</div><div class="ttdef"><b>Definition:</b> iso_fs.cpp:356</div></div>
 <!-- HTML footer for doxygen 1.8.17-->
 <!-- start footer part -->

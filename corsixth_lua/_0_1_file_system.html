@@ -47,6 +47,9 @@ file system.</h3>
  <a href="_0_1_file_system.html#_0_1_file_system_1file_size">fileSize</a>(<span class="p">virtual_path</span>, <span class="p">...</span>)
  </li>
  <li class="self">
+ <a href="_0_1_file_system.html#_0_1_file_system_1file_uri">fileUri</a>(<span class="p">virtual_path</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_file_system.html#_0_1_file_system_1is_iso">isIso</a>(<span class="p">name</span>)
  </li>
  <li class="self">
@@ -107,7 +110,7 @@ Otherwise return nil and an error message.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L222">line 222 of Lua/filesystem.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L240">line 240 of Lua/filesystem.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -129,7 +132,7 @@ Otherwise return nil and an error message.<br/><br/>
 for each level in the filesystem.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L182">line 182 of Lua/filesystem.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L183">line 183 of Lua/filesystem.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -151,7 +154,30 @@ for each level in the filesystem.</td>
 for each level in the filesystem.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L202">line 202 of Lua/filesystem.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L203">line 203 of Lua/filesystem.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_system_1file_uri">function FileSystem:fileUri(<span class="p">virtual_path</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ Get a URI for the file.
+The returned URI formats match those described by <https://ffmpeg.org/ffmpeg-protocols.html>.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">virtual_path</td>
+ <td class="t">string</td>
+ <td class="d"> a path relative to the FileSystem root.</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">string</td>
+ <td class="d"> the virtual_path may be split into separate arguments
+for each level in the filesystem.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L223">line 223 of Lua/filesystem.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -189,7 +215,7 @@ for each level in the filesystem.</td>
 for each level in the filesystem.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L116">line 116 of Lua/filesystem.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L117">line 117 of Lua/filesystem.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -211,7 +237,7 @@ for each level in the filesystem.</td>
 for each level in the filesystem.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L158">line 158 of Lua/filesystem.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L159">line 159 of Lua/filesystem.lua</a>.
  </p>
  </div>
  <div class="method">

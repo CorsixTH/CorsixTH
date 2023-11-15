@@ -104,6 +104,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8799dba96d02d5550ee54657712be995"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a8799dba96d02d5550ee54657712be995">visit_directory_files</a> (const char *sPath, void(*fnCallback)(void *, const char *, const char *), void *pCallbackData) const</td></tr>
 <tr class="memdesc:a8799dba96d02d5550ee54657712be995"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterate all files of the .iso disk image within a given directory.  <a href="classiso__filesystem.html#a8799dba96d02d5550ee54657712be995">More...</a><br /></td></tr>
 <tr class="separator:a8799dba96d02d5550ee54657712be995"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea7a8c495ab68b4922e447f7e7e70c5b"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#aea7a8c495ab68b4922e447f7e7e70c5b">get_file_start</a> (<a class="el" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> iFile) const</td></tr>
+<tr class="memdesc:aea7a8c495ab68b4922e447f7e7e70c5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the byte offset of the start of the file in the loaded .iso.  <a href="classiso__filesystem.html#aea7a8c495ab68b4922e447f7e7e70c5b">More...</a><br /></td></tr>
+<tr class="separator:aea7a8c495ab68b4922e447f7e7e70c5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86912a1e5b699cc9f2c6ee2bd39d1076"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a86912a1e5b699cc9f2c6ee2bd39d1076">get_file_size</a> (<a class="el" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> iFile) const</td></tr>
 <tr class="memdesc:a86912a1e5b699cc9f2c6ee2bd39d1076"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size (in bytes) of a file in the loaded .iso disk image.  <a href="classiso__filesystem.html#a86912a1e5b699cc9f2c6ee2bd39d1076">More...</a><br /></td></tr>
 <tr class="separator:a86912a1e5b699cc9f2c6ee2bd39d1076"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,9 +116,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:aa442d6ed34d86707a882fc940ad999e1"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#aa442d6ed34d86707a882fc940ad999e1">isHandleGood</a> (<a class="el" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> x)</td></tr>
-<tr class="memdesc:aa442d6ed34d86707a882fc940ad999e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if a file handle from findFile() is good or is invalid.  <a href="classiso__filesystem.html#aa442d6ed34d86707a882fc940ad999e1">More...</a><br /></td></tr>
-<tr class="separator:aa442d6ed34d86707a882fc940ad999e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67370d7548462d0cc380727f71d7bbef"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a67370d7548462d0cc380727f71d7bbef">is_handle_good</a> (<a class="el" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> x)</td></tr>
+<tr class="memdesc:a67370d7548462d0cc380727f71d7bbef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if a file handle from <a class="el" href="classiso__filesystem.html#a8ac7a7c0dba30dd5967f139b449238b8" title="Find a file in the loaded .iso disk image.">find_file()</a> is good or is invalid.  <a href="classiso__filesystem.html#a67370d7548462d0cc380727f71d7bbef">More...</a><br /></td></tr>
+<tr class="separator:a67370d7548462d0cc380727f71d7bbef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Layer for reading Theme Hospital files out of an .iso disk image. </p>
@@ -188,7 +191,7 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Find a file in the loaded .iso disk image. </p>
-<p>If (and only if) the given file could not be found, then <a class="el" href="classiso__filesystem.html#aa442d6ed34d86707a882fc940ad999e1" title="Test if a file handle from findFile() is good or is invalid.">isHandleGood()</a> will return false on the returned handle. </p>
+<p>If (and only if) the given file could not be found, then isHandleGood() will return false on the returned handle. </p>
 
 </div>
 </div>
@@ -208,7 +211,7 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the reason for the most recent failure. </p>
-<p>Can be called after <a class="el" href="classiso__filesystem.html#a4c4f81e78e26f60dd09a1227356d6ddb" title="Load an .iso disk image and search for Theme Hospital data files.">initialise()</a> or getFileData() return false. </p>
+<p>Can be called after <a class="el" href="classiso__filesystem.html#a4c4f81e78e26f60dd09a1227356d6ddb" title="Load an .iso disk image and search for Theme Hospital data files.">initialise()</a> or <a class="el" href="classiso__filesystem.html#a5ea2b6616cb6f3e90224a51ba470f7be" title="Get the contents of a file in the loaded .iso disk image.">get_file_data()</a> return false. </p>
 
 </div>
 </div>
@@ -241,7 +244,7 @@ Static Public Member Functions</h2></td></tr>
 <p>Get the contents of a file in the loaded .iso disk image. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">iFile</td><td>A file handle returned by findFile() </td></tr>
+    <tr><td class="paramname">iFile</td><td>A file handle returned by <a class="el" href="classiso__filesystem.html#a8ac7a7c0dba30dd5967f139b449238b8" title="Find a file in the loaded .iso disk image.">find_file()</a> </td></tr>
     <tr><td class="paramname">pBuffer</td><td>The buffer to place the resulting data in </td></tr>
   </table>
   </dd>
@@ -269,7 +272,33 @@ Static Public Member Functions</h2></td></tr>
 <p>Get the size (in bytes) of a file in the loaded .iso disk image. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">iFile</td><td>A file handle returned by findFile() </td></tr>
+    <tr><td class="paramname">iFile</td><td>A file handle returned by <a class="el" href="classiso__filesystem.html#a8ac7a7c0dba30dd5967f139b449238b8" title="Find a file in the loaded .iso disk image.">find_file()</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aea7a8c495ab68b4922e447f7e7e70c5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea7a8c495ab68b4922e447f7e7e70c5b">&#9670;&nbsp;</a></span>get_file_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t iso_filesystem::get_file_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a>&#160;</td>
+          <td class="paramname"><em>iFile</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the byte offset of the start of the file in the loaded .iso. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iFile</td><td>A file handle returned by <a class="el" href="classiso__filesystem.html#a8ac7a7c0dba30dd5967f139b449238b8" title="Find a file in the loaded .iso disk image.">find_file()</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -303,8 +332,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa442d6ed34d86707a882fc940ad999e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa442d6ed34d86707a882fc940ad999e1">&#9670;&nbsp;</a></span>isHandleGood()</h2>
+<a id="a67370d7548462d0cc380727f71d7bbef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67370d7548462d0cc380727f71d7bbef">&#9670;&nbsp;</a></span>is_handle_good()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -313,7 +342,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static bool iso_filesystem::isHandleGood </td>
+          <td class="memname">static bool iso_filesystem::is_handle_good </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a>&#160;</td>
           <td class="paramname"><em>x</em></td><td>)</td>
@@ -327,7 +356,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Test if a file handle from findFile() is good or is invalid. </p>
+<p>Test if a file handle from <a class="el" href="classiso__filesystem.html#a8ac7a7c0dba30dd5967f139b449238b8" title="Find a file in the loaded .iso disk image.">find_file()</a> is good or is invalid. </p>
 
 </div>
 </div>
