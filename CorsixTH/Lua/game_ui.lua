@@ -1094,13 +1094,14 @@ tutorial_phases = {
         -- the real game uses three.
         local texts = TheApp.using_demo_files and {
           {_S.introduction_texts["level15"]},
-          {_S.introduction_texts["demo"]},
         } or {
           {_S.introduction_texts["level15"]},
           {_S.introduction_texts["level16"]},
           {_S.introduction_texts["level17"]},
-          {_S.introduction_texts["level1"]},
         }
+        if TheApp.world.map.level_number ~= 1 then
+          table.insert(texts, _S.introduction_texts["level1"])
+        end
         TheApp.ui:addWindow(UIInformation(TheApp.ui, texts))
         TheApp.ui:addWindow(UIWatch(TheApp.ui, "initial_opening"))
       end,
