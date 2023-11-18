@@ -940,9 +940,13 @@ int l_path_idle(lua_State* L) {
   pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
 
   bool found = pPathfinder->find_idle_tile(
-      nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
-      static_cast<int>(luaL_checkinteger(L, 3)) - 1,
-      static_cast<int>(luaL_optinteger(L, 4, 0)));
+      nullptr,                                        // Default map.
+      static_cast<int>(luaL_checkinteger(L, 2)) - 1,  // X coordinate queue.
+      static_cast<int>(luaL_checkinteger(L, 3)) - 1,  // Y coordinate queue.
+      static_cast<int>(
+          luaL_optinteger(L, 4, 0)),  // Take Nth candidate tile, used for
+                                      // queueing and randomizing idling tiles.
+      static_cast<int>(luaL_optinteger(L, 5, 0)));  // Optional indoor parcel.
   if (!found) {
     return 0;
   }

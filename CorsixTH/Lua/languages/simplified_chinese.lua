@@ -87,7 +87,7 @@ object = {
   op_sink1              = "洗手池",
   op_sink2              = "洗手池",
   surgeon_screen        = "外科屏风",
-  lecture_chair         = "演讲座位",
+  lecture_chair         = "教室座位",
   projector             = "放映机",
   bed2                  = "床", -- unused duplicate
   pharmacy_cabinet      = "医药柜",
@@ -162,6 +162,7 @@ misc = {
 
   mouse        = "老鼠",
   force        = "力量",
+  cant_treat_emergency = "你的医院尚未了解这种新的疾病。请下次再试。",
 }
 
 diseases = {
@@ -501,7 +502,8 @@ transactions = {
   epidemy_fine         = "传染病罚款",
   eoy_bonus_penalty    = "年度奖金/ 罚款",
   eoy_trophy_bonus     = "年度物品奖励",
-  machine_replacement  = "更换机器花费",
+  machine_replacement  = "汰换机器花费",
+  remove_room = "移除已毁坏的房间",
 }
 
 humanoid_name_starts = {
@@ -645,6 +647,7 @@ adviser = {
     nurses_cannot_work_in_room    = "护士无法在%s 中工作", -- %s (room name)
     only_doctors_in_room          = "只有医生可以在%s 中工作", -- %s (room name)
     receptionists_only_at_desk    = "接待员只能在接待台工作。",
+    not_enough_lecture_chairs = "每名医生学员需要一个教室座位",
   },
 
   build_advice = {
@@ -776,6 +779,7 @@ adviser = {
     change_priorities_to_plants   = "您必须改变清洁工的工作优先级，使他们更多地为植物浇水。",
     plants_dying                  = "您的植物快干死了。它们需要水。多为植物派些清洁工。病人可不愿意看到枯死的植物。",
 
+    another_desk = "新雇用的接待员需要添加一个接待台",
   },
 
   praise = {
@@ -888,6 +892,7 @@ adviser = {
     new_machine_researched        = "一个新的%s 刚刚被成功研究出来。", -- %s (machine(?) name)
     new_drug_researched           = "治疗%s 的一种新药被研究成功。", -- %s (disease name)
     drug_improved                 = "治疗%s 的药品被您的研究部门改良了。", -- %s (disease name)
+    drug_improved_1                 = "治疗%s 的药品被您的研究部门改良了。", -- %s (disease name)
     machine_improved              = "%s 的疗效被您的研究部门增强了。", -- %s (machine name)
     new_available                 = "一种新的%s 可以使用了", -- %s TODO What is this? Where to use this and where [11][24]?
     -- ANSWER: It is used if research is not conducted in an area for very long. Some diagnosis equipment
@@ -964,7 +969,7 @@ town_map = {
   -- "Null" -- unused
   chat         = "城镇细节",
   for_sale     = "出售",
-  not_for_sale = "非拥有的",
+  not_for_sale = "不可购买",
   number       = "地区编号",
   owner        = "地区所有",
   area         = "地区面积",
@@ -1036,6 +1041,10 @@ rooms_long = {
   research_room     = "研究部门",
   toilets           = "洗手间",
   decontamination   = "净化",
+}
+
+disease_discovered_patient_choice = {
+  need_to_employ = "雇用一名%s就可以处理该情况。",
 }
 
 drug_companies = {
@@ -1505,7 +1514,7 @@ casebook = {
   earned_money         = "收入",
   cured                = "恢复",
   deaths               = "事故",
-  sent_home            = "转走",
+  sent_home            = "遣送回家",
   research             = "集中研究",
   cure                 = "治疗",
   cure_desc = {
@@ -1694,7 +1703,7 @@ tooltip = {
     times_used         = "机器被使用次数",
     status             = "机器状况",
     repair             = "呼叫清洁工维修机器",
-    replace            = "改良机器",
+    replace            = "汰换机器",
   },
 
   -- Apparently handymen have their own set of strings (partly) containing "handyman".
@@ -1731,7 +1740,7 @@ tooltip = {
     earned_money       = "总收入",
     cured              = "治愈人数",
     deaths             = "事故人数",
-    sent_home          = "转走人数",
+    sent_home          = "遣送回家人数",
     decrease           = "减少",
     increase           = "增加",
     research           = "点击这里可以为治疗使用专门研究预算",
@@ -1937,7 +1946,7 @@ tooltip = {
     op_sink1             = "33 OB_OP_SINK_1", -- no description
     op_sink2             = "34 OB_OP_SINK_2", -- no description
     surgeon_screen       = "35 OB_SURGEON_SCREEN", -- no description
-    lecture_chair        = "演讲座位：接受培训的医生坐在上面，收听无聊的演讲。座位摆放得越多，则教室越大。",
+    lecture_chair        = "教室座位：接受培训的医生坐在上面，收听无聊的演讲。座位摆放得越多，则教室越大。",
     projector            = "37 OB_PROJECTOR", -- no description
     bed2                 = "未使用", -- unused duplicate
     pharmacy_cabinet     = "药房：用来保存药品",
@@ -1971,11 +1980,13 @@ tooltip = {
 confirmation = {
   quit                 = "您已经选择了退出。您是否确定真的要退出游戏？",
   return_to_blueprint  = "您是否确定返回蓝图模式？",
-  replace_machine      = "您是否确定将%s 更新，需花费$%d ？", -- %s (machine name) %d (price)
+  replace_machine      = "您是否确定将%s 汰换，需花费$%d ？", -- %s (machine name) %d (price)
   overwrite_save       = "该位置已储存游戏进度。您是否确定要将其覆盖？",
   delete_room          = "您是否希望拆除这个房间？",
   sack_staff           = "您是否确定要解雇该员工？",
   restart_level        = "您是否希望重新开始这个任务？", -- missing in some TH versions
+  remove_destroyed_room = "你希望支付 $%d 拆除这个房间吗？",
+  replace_machine_extra_info = "新机器的强度为 %d (现在 %d).",
 }
 
 bank_manager = {
@@ -3019,16 +3030,18 @@ dynamic_info = {
       waiting_for_patient         = "等待病人",
       wandering                   = "正在到处走动",
       going_to_repair             = "前往维修%s", -- %s (name of machine)
+      vaccine = "正在注射疫苗",
     },
     tiredness                   = "疲劳",
     ability                     = "能力", -- unused?
   },
 
   object = {
-    strength                    = "力量%d", -- %d (max. uses)
+    strength                    = "强度%d", -- %d (max. uses)
     times_used                  = "使用次数%d", -- %d (times used)
     queue_size                  = "排队人数%d", -- %d (num of patients)
     queue_expected              = "即将加入队伍人数%d", -- %d (num of patients)
+    strength_extra_info = "强度 %d (升级到 %d)",
   },
 }
 
@@ -3042,14 +3055,14 @@ progress_report = {
   too_hot               = "调节供热系统。太热了。",
   too_cold              = "太冷了。多摆放一些暖气。",
   percentage_pop        = "% 人口",
-  win_criteria          = "视窗标准",
+  win_criteria          = "获胜条件",
 }
 
 
 -------------------------------  OVERRIDE  ----------------------------------
 vip_names[4] = "缅甸民主党领袖：昂山素季"  -- 昂山苏蒂
 menu.debug = " 调试  "
-progress_report.win_criteria = "获胜标准"  -- 视窗标准
+progress_report.win_criteria = "获胜条件"
 
 
 -------------------------------  NEW STRINGS  -------------------------------
@@ -3132,12 +3145,13 @@ menu_debug = {
   connect_debugger            = "  (%1%) 连接 LUA DBGp 服务器  ",
   transparent_walls           = "  (%1%) 透明墙壁  ",
   limit_camera                = "  限制镜头  ",
-  disable_salary_raise        = "  关闭涨工资  ",
+  disable_salary_raise        = "  关闭涨工资要求  ",
+  allow_blocking_off_areas    = "  允许导致空间无法到达的建造  ",
   make_debug_fax              = "  创建调试传真  ",
   make_debug_patient          = "  创建调试病人   ",
   cheats                      = "  (%1%) 作弊  ",
   lua_console                 = "  (%1%) LUA 控制台  ",
-  debug_script                = "  (%1%) 运行调试脚本  ",
+  debug_script                = "  (%1%) 运行调试脚本  debug_script.lua",
   calls_dispatcher            = "  签派窗口  ",
   dump_strings                = "  (%1%) 转存字符串  ",
   dump_gamelog                = "  (%1%) 转存游戏日志  ",
@@ -3159,10 +3173,10 @@ menu_debug_overlay = {
   parcel                      = "  地区  ",
 }
 menu_player_count = {
-	players_1 = "  1 玩家  ",
-	players_2 = "  2 玩家  ",
-	players_3 = "  3 玩家  ",
-	players_4 = "  4 玩家  ",
+  players_1 = "  1 玩家  ",
+  players_2 = "  2 玩家  ",
+  players_3 = "  3 玩家  ",
+  players_4 = "  4 玩家  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "在这个地方放置房间会导致医院的部分空间无法到达。",
@@ -3199,6 +3213,8 @@ adviser = {
     th_cheat = "恭喜，你解锁了作弊选项！",
     roujin_on_cheat = "Roujin's challenge 已经开启！祝你好运...",
     roujin_off_cheat = "Roujin's challenge 关闭。",
+    norest_on_cheat = "哇喔！似乎咖啡因使你的员工十分兴奋，永远不用休息。",
+    norest_off_cheat = "呼～精神亢奋剂的效力过去了，员工现在恢复正常作息",
   },
 }
 
@@ -3259,6 +3275,7 @@ main_menu = {
   options = "选项",
   map_edit = "地图编辑器",
   savegame_version = "存档版本：",
+  updates_off = "已禁用更新检查",
   version = "版本：",
   exit = "退出",
 }
@@ -3331,18 +3348,22 @@ menu_list_window = {
   name = "名称",
   save_date = "已修改",
   back = "返回",
+  ok = "确定",
 }
 
 tooltip.menu_list_window = {
   name = "点击此按名称排序",
   save_date = "点击此按最后修改日期排序",
   back = "关闭此窗口",
+  ok = "确定选取",
 }
 
 options_window = {
   caption = "设置",
   option_on = "开",
   option_off = "关",
+  option_enabled = "已启用",
+  option_disabled = "已禁用",
   fullscreen = "全屏幕",
   resolution = "分辨率",
   capture_mouse = "捕获鼠标",
@@ -3360,6 +3381,7 @@ options_window = {
   shift_scrollspeed = "加速滚动速度",
   zoom_speed = "缩放速度",
   hotkey = "快捷键",
+  check_for_updates = "自动检查更新",
 }
 
 tooltip.options_window = {
@@ -3390,6 +3412,7 @@ tooltip.options_window = {
   apply_zoomspeed = "应用输入的缩放速度。",
   cancel_zoomspeed = "返回而不更改缩放速度。",
   hotkey = "更改键盘热键。",
+  check_for_updates = "游戏启动时自动检查更新",
 }
 
 customise_window = {
@@ -3399,11 +3422,12 @@ customise_window = {
   back = "返回",
   movies = "全局 CG 控制",
   intro = "播放启动 CG",
-  paused = "暂停时建造",
+  paused = "建造时暂停",
   volume = "减小音量热键",
-  aliens = "外星人病人",
-  fractured_bones = "骨折",
-  average_contents = "常见内容",
+  aliens = "外星人只限紧急情况",
+  fractured_bones = "骨折只限男性",
+  average_contents = "房间常用物件",
+  remove_destroyed_rooms = "移除已毁坏的房间",
 }
 
 tooltip.customise_window = {
@@ -3414,6 +3438,7 @@ tooltip.customise_window = {
   aliens = "因为缺少合适的动画，默认外星人 DNA 病人只会来自紧急事件。要允许紧急事件外出现外星人 DNA 病人，请关闭此选项",
   fractured_bones = "由于动画效果不佳，默认不会有女性骨折患者。要允许女性骨折患者就诊，请关闭此功能",
   average_contents = "如果您想让游戏记住在建造房间时通常会添加哪些其他对象，请启用此选项。",
+  remove_destroyed_rooms = "打开这个选项，使已毁坏的房间可以付费移除。",
   back = "关闭此菜单，并返回设置菜单",
 }
 
@@ -3460,7 +3485,8 @@ hotkey_window = {
   button_cancel = "取消",
   button_back = "返回",
   button_toggleKeys = "切换键",
-  button_recallPosKeys = "位置返回键",
+  button_gameSpeedKeys = "游戏速度键",
+  button_recallPosKeys = "载入视点键",
   panel_globalKeys = "全局键",
   panel_generalInGameKeys = "一般游戏内键",
   panel_scrollKeys = "滚动键",
@@ -3468,8 +3494,8 @@ hotkey_window = {
   panel_gameSpeedKeys = "游戏速度键",
   panel_toggleKeys = "切换键",
   panel_debugKeys = "调试键",
-  panel_storePosKey = "商店位置钥匙",
-  panel_recallPosKeys = "位置返回键",
+  panel_storePosKeys = "保存视点键",
+  panel_recallPosKeys = "载入视点键",
   panel_altPanelKeys = "替代面板键",
   global_confirm = "确认",
   global_confirm_alt = "确认（替代）",
@@ -3494,6 +3520,7 @@ hotkey_window = {
   ingame_zoom_in_more = "放大更多",
   ingame_zoom_out = "缩小",
   ingame_zoom_out_more = "缩小更多",
+  ingame_reset_zoom = "重置缩放",
   ingame_showmenubar = "显示菜单栏",
   ingame_showCheatWindow = "作弊菜单",
   ingame_loadMenu = "载入游戏",
@@ -3527,9 +3554,9 @@ hotkey_window = {
   ingame_rotateobject = "旋转对象",
   ingame_quickSave = "快速保存",
   ingame_quickLoad = "快速加载",
-  ingame_restartLevel = "重启级别",
-  ingame_quitLevel = "退出级别",
-  ingame_setTransparent = "透明",
+  ingame_restartLevel = "重启关卡",
+  ingame_quitLevel = "退出关卡",
+  ingame_setTransparent = "透明墙壁",
   ingame_toggleAnnouncements = "公告",
   ingame_toggleSounds = "声音",
   ingame_toggleMusic = "音乐",
@@ -3565,6 +3592,7 @@ tooltip.hotkey_window = {
   button_defaults = "将所有热键重置为程序的默认值",
   button_cancel = "取消分配，并返回选项菜单",
   caption_panels = "打开分配面板键的窗口",
+  button_gameSpeedKeys = "开启游戏速度热键的窗口",
   button_recallPosKeys = "打开窗口以设置用于存储和调用摄像机位置的键",
   button_back_02 = "返回主热键窗口。在此窗口中更改的热键可在此处接受",
 }
@@ -3579,7 +3607,7 @@ handyman_window = {
 }
 
 tooltip.handyman_window = {
-  parcel_select = "清洁工接受任务的地区，单击以更改设置"
+  parcel_select = "清洁工工作的地区，单击以更改设置"
 }
 
 new_game_window = {
@@ -3631,11 +3659,19 @@ errors = {
   fractured_bones = "注意：女性骨折患者的动画效果不理想",
   could_not_load_campaign = "无法加载任务：%s",
   could_not_find_first_campaign_level = "找不到该任务的第一关：%s",
+  save_to_tmp = "文件无法保存到 %s 。文件改为保存到 %s 。问题: %s",
+  dialog_empty_queue = "抱歉，程序遇到bug了。弹出窗口显示的这个人员没有被安排指令（empty action queue），请你决定把他叫离医院或进行其他动作。",
+  compatibility_error = {
+    demo_in_full = "抱歉，这是演示版的游戏存档，无法在完整版中打开。请更新原版主题医院目录内容。",
+    full_in_demo = "抱歉，这是完整版的游戏存档，无法在演示版中打开。请更新原版主题医院目录内容。",
+    new_in_old = "抱歉，此游戏存档需要较新版本的 CorsixTH 才能打开。",
+  },
 }
 
 warnings = {
   levelfile_variable_is_deprecated = "注意：关卡'%s'在关卡文件中包含弃用的变量定义。" ..
                                      "'%LevelFile'已重命名为'%MapFile'。请建议地图创建者更新关卡。",
+  newersave = "警告：此游戏存档是由较新版本 CorsixTH 创建的。不建议继续进行游戏，否则可能会出现错误。一般来说，仅作测试用途。",
 }
 
 confirmation = {
@@ -3675,7 +3711,7 @@ totd_window = {
     "有没有试过在传真机上拨112？这是欧洲的急救电话。记得将音量调到最大！",
     "在主菜单和游戏菜单里面，找到选项窗口，在那里可以调整分辨率和语言。",
     "你选择了中文，但是你还是可能会在游戏中不停地看到英文。把他们翻译了吧，我们需要你的帮助！",
-    "CorsixTH 小组正在壮大！如果你对编程、翻译、创作主题医院需要的图片等等任何方面感兴趣，请通过我们的论坛、邮件列表或者 IRC 频道（corsix-th at freenode）联系我们。",
+    "CorsixTH 小组正在壮大！如果你对编程、翻译、创作主题医院需要的图片等等任何方面感兴趣，可以到 CorsixTH 网站找到开发、社群等信息。",
     "如果你碰到了 bug，请提交给我们: th-issues.corsix.org",
     "每一关都需要满足特定的条件才能过关。你可以通过状态窗口看到你的进度。",
     "如果你需要编辑或者删除一间房间，屏幕下方找到工具栏，然后点编辑房间按钮。",
@@ -3685,6 +3721,7 @@ totd_window = {
     "病人等的时间长了，会口渴，如果开了暖气，口渴得会更快！放些自动贩卖机吧，还能多些零花钱。",
     "如果你见过某种病，你可以中断诊疗过程直接去治，治死了不要找我。",
     "从紧急事件总能赚一大笔，但是你要按时处理好才行。",
+    "你知道可以指定清洁工人工作的地区吗？打开他的数据窗口，点击“所有地区”文字便可设置地区。",
   },
   previous = "前一项提示",
   next = "下一项提示",
@@ -3822,4 +3859,71 @@ hotkeys_file_err = {
         "具有读/写权限",
   file_err_02 = "，或使用 --hotkeys-file=filename 命令行选项指定一个可写文件。" ..
         "作为参考，加载快捷键文件的错误是：",
+}
+
+-- Override for level progress typo
+level_progress.hospital_value_enough = "保持医院价值在%d以上，并解决好其他问题，就能完成任务了。"
+level_progress.cured_enough_patients = "您已经治愈了足够多的病人，但是您只有达到更高的标准才能完成任务。"
+
+-- Override for multiplayer typos
+multiplayer.players_failed =  "以下玩家没有完成最终目标："
+multiplayer.everyone_failed = "所有玩家都没有完成最终目标。因此每个人都要继续努力！"
+
+--------------------------------  UNUSED  -----------------------------------
+------------------- (kept for backwards compatibility) ----------------------
+
+options_window.change_resolution = "更改分辨率"
+tooltip.options_window.change_resolution = "更改窗口分辨率为左方的值"
+
+--[[ Compatibility mapping for VIP result faxes in old saves (< 0.66). Using non-
+standard string formatting here, which should not be repeated in normal
+circumstances. This mapping will cause the legacy string to print in English but only
+for the relevant fax. These should be deleted on 2024 release. ]]--
+fax = {
+  vip_visit_result = {
+    ordered_remarks = {
+      [1] = fax.vip_visit_result.remarks[1],
+      [2] = fax.vip_visit_result.remarks[2],
+      [3] = fax.vip_visit_result.remarks[3],
+      [4] = fax.vip_visit_result.remarks[4],
+      [5] = fax.vip_visit_result.remarks[5],
+      [6] = fax.vip_visit_result.remarks[6],
+      [7] = fax.vip_visit_result.remarks[7],
+      [8] = fax.vip_visit_result.remarks[8],
+      [9] = fax.vip_visit_result.remarks[9],
+      [10] = fax.vip_visit_result.remarks[10],
+      [11] = fax.vip_visit_result.remarks[11],
+      [12] = fax.vip_visit_result.remarks[12],
+      [13] = fax.vip_visit_result.remarks[13],
+      [14] = fax.vip_visit_result.remarks[14],
+      [15] = fax.vip_visit_result.remarks[15],
+    },
+    remarks = {
+      super = {
+        fax.vip_visit_result.remarks[1],
+        fax.vip_visit_result.remarks[2],
+        fax.vip_visit_result.remarks[3],
+      },
+      good = {
+        fax.vip_visit_result.remarks[4],
+        fax.vip_visit_result.remarks[5],
+        fax.vip_visit_result.remarks[6],
+      },
+      mediocre = {
+        fax.vip_visit_result.remarks[7],
+        fax.vip_visit_result.remarks[8],
+        fax.vip_visit_result.remarks[9],
+      },
+      bad = {
+        fax.vip_visit_result.remarks[10],
+        fax.vip_visit_result.remarks[11],
+        fax.vip_visit_result.remarks[12],
+      },
+      very_bad = {
+        fax.vip_visit_result.remarks[13],
+        fax.vip_visit_result.remarks[14],
+        fax.vip_visit_result.remarks[15],
+      }
+    }
+  }
 }

@@ -40,9 +40,8 @@ local col_bg = {
 function UIResearch:UIResearch(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
-  self.background = gfx:loadRaw("Res01V", 640, 480)
-  local palette = gfx:loadPalette("QData", "Res01V.pal")
-  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+  self.background = gfx:loadRaw("Res01V", 640, 480, "QData", "QData", "Res01V.pal", true)
+  local palette = gfx:loadPalette("QData", "Res01V.pal", true)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
   self.label_font = gfx:loadFont("QData", "Font43V", false, palette)
   self.number_font  = gfx:loadFont("QData", "Font43V", false, palette)
@@ -240,5 +239,13 @@ function UIResearch:afterLoad(old, new)
         more = self.buttons[2 * i + 1],
       }
     end
+  end
+  if old < 179 then
+    local gfx = TheApp.gfx
+    self.background = gfx:loadRaw("Res01V", 640, 480, "QData", "QData", "Res01V.pal", true)
+    local palette = gfx:loadPalette("QData", "Res01V.pal", true)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
+    self.label_font = gfx:loadFont("QData", "Font43V", false, palette)
+    self.number_font  = gfx:loadFont("QData", "Font43V", false, palette)
   end
 end

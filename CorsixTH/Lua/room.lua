@@ -493,18 +493,47 @@ function Room:commandEnteringStaff(humanoid, already_initialized)
   end
 end
 
+--! Activates and deactivates the staff waiting for patient mood icon
+-- and dynamic info text
+--!param activate (bool) - true to activate, false or nil to deactivate
+function Room:_staffWaitToggle(activate)
+  if not self.staff_member and not self.staff_member_set then
+    return -- No staff in room
+  end
+
+  local state = "deactivate"
+  local dynamic_text = ""
+
+  if activate then
+    dynamic_text = _S.dynamic_info.staff.actions.waiting_for_patient
+    state = "activate"
+  end
+
+  if not self.staff_member_set and self.staff_member then
+    self.staff_member:setMood("staff_wait", state)
+    self.staff_member:setDynamicInfoText(dynamic_text)
+  else
+    for staff_member in pairs(self.staff_member_set) do
+      staff_member:setMood("staff_wait", state)
+      staff_member:setDynamicInfoText(dynamic_text)
+    end
+  end
+end
+
+--! Check the target room for a staff wait toggle is not staff room/training/toilets,
+--! and the front humanoid is a patient.
+function Room:_checkWaitToggleValidTarget()
+  return self:hasQueueDialog() and self.room_info.id ~= "toilets" and
+      class.is(self.door.queue:front(), Patient)
+end
+
 function Room:commandEnteringPatient(humanoid)
   -- To be extended in derived classes
   self.door.queue.visitor_count = self.door.queue.visitor_count + 1
   humanoid:updateDynamicInfo("")
 
-  for room_humanoid in pairs(self.humanoids) do -- Staff is no longer waiting
-    if class.is(room_humanoid, Staff) then
-      if room_humanoid.humanoid_class ~= "Handyman" then
-        room_humanoid:setMood("staff_wait", "deactivate")
-        room_humanoid:setDynamicInfoText("")
-      end
-    end
+  if self:_checkWaitToggleValidTarget() then
+    self:_staffWaitToggle(false) -- Staff no longer waiting
   end
 end
 
@@ -516,16 +545,8 @@ function Room:tryAdvanceQueue()
     if self:canHumanoidEnter(front) then
       self.door.queue:pop()
       self.door:updateDynamicInfo()
-      -- Do nothing if it is the staff room or training room.
-      if self:hasQueueDialog() then
-        for room_humanoid in pairs(self.humanoids) do -- Staff is now waiting
-          if class.is(room_humanoid, Staff) then
-            if room_humanoid.humanoid_class ~= "Handyman" then
-              room_humanoid:setMood("staff_wait", "activate")
-              room_humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.waiting_for_patient)
-            end
-          end
-        end
+      if self:_checkWaitToggleValidTarget() then
+        self:_staffWaitToggle(true) -- Staff are now waiting
       end
     elseif self.humanoids[front] then
       self.door.queue:pop()
@@ -534,6 +555,8 @@ function Room:tryAdvanceQueue()
   end
 end
 
+--! Handles the departure of a humanoid from the room
+--!param humanoid The subject entity
 function Room:onHumanoidLeave(humanoid)
   if self.staff_member == humanoid then
     self.staff_member = nil
@@ -544,7 +567,7 @@ function Room:onHumanoidLeave(humanoid)
     return
   end
   self.humanoids[humanoid] = nil
-  local staff_leaving = false
+  local staff_leaving = false -- used only for staff leaving immediately after a patient
 
   if class.is(humanoid, Patient) then
     -- Some staff member in the room might be waiting to get to the staffroom.

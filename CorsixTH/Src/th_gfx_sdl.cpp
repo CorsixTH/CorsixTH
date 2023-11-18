@@ -689,13 +689,13 @@ void render_target::pop_clip_rect() {
 int render_target::get_width() const {
   int w;
   SDL_RenderGetLogicalSize(renderer, &w, nullptr);
-  return w;
+  return static_cast<int>(std::ceil(w / draw_scale()));
 }
 
 int render_target::get_height() const {
   int h;
   SDL_RenderGetLogicalSize(renderer, nullptr, &h);
-  return h;
+  return static_cast<int>(std::ceil(h / draw_scale()));
 }
 
 void render_target::start_nonoverlapping_draws() {

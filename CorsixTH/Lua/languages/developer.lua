@@ -22,7 +22,7 @@ SOFTWARE. --]]
 -- following line. This language causes every translatable string to be
 -- displayed as the name of the string.
 
---Language("Developer")
+--Language("Developer", "Developer", "dev")
 
 Inherit("english")
 

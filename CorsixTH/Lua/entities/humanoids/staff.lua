@@ -188,7 +188,6 @@ function Staff:checkIfWaitedTooLong()
       if self.hospital.policies.grant_wage_increase then
         local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage(self.world) + self.profile.wage) / 2) - self.profile.wage)
         self.quitting_in = nil
-        self:setMood("pay_rise", "deactivate")
         self.hospital:removeMessage(self)
         self:increaseWage(amount)
         return
@@ -333,9 +332,9 @@ end
 -- so amounts here should be appropriately small comma values.
 function Staff:tire(amount)
   -- The no rest cheat overrides tiring effects
-  if self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then return end
-
-  self:changeAttribute("fatigue", amount)
+  if not self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then
+    self:changeAttribute("fatigue", amount)
+  end
   self:updateDynamicInfo()
 end
 
@@ -470,7 +469,7 @@ end
 
 -- Helper function to decide if Staff fulfills a criterion
 -- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman", "Receptionist", "Junior", "Consultant")
-function Staff:fulfillsCriterion(criterion) -- luacheck: ignore 212 keep args from parent class
+function Staff:fulfillsCriterion(criterion)
   return false
 end
 
@@ -559,9 +558,19 @@ end
 -- Makes the staff member request a raise of 10%, or a wage exactly in the middle of their current and a fair one, whichever is more.
 function Staff:requestRaise()
   assert(self.hospital, "A staff member asked for a pay rise who doesn't belong to a hospital!")
+  local max_salary = self.world.map.level_config.payroll.MaxSalary
+  -- Never request a raise if already at max salary
+  if self.profile.wage >= max_salary then
+    self.timer_until_raise = nil
+    return
+  end
   -- Check whether there is already a request for raise.
   if not self:isMoodActive("pay_rise") then
     local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage() + self.profile.wage) / 2) - self.profile.wage)
+    -- Don't ask over the salary cap
+    if self.profile.wage + amount > max_salary then
+      amount = max_salary - self.profile.wage
+    end
     -- At least for now, staff are timid, and only ask for raises 1/5th of the time
     if math.random(1, 5) ~= 1 or amount <= 0 then
       self.timer_until_raise = nil
@@ -578,16 +587,24 @@ end
 -- any request raise dialogs.
 --!param amount (integer) The amount, in game dollars per month, to increase
 -- the salary by.
+--!return (bool) Whether the wage actually increased
 function Staff:increaseWage(amount)
-  self.profile.wage = self.profile.wage + amount
-  self.world.ui:playSound("cashreg.wav")
-  if self.profile.wage > 2000 then -- What cap here?
-    self.profile.wage = 2000
-  else -- If the cap has been reached this member of staff won't get unhappy
-       -- ever again...
-    self:changeAttribute("happiness", 0.99)
-    self:setMood("pay_rise", "deactivate")
+  -- Are we already paid the maximum?
+  local max_salary = self.world.map.level_config.payroll.MaxSalary
+  local wage_raised = true
+  if self.profile.wage >= max_salary then
+    wage_raised = false -- Already at max salary
+  elseif self.profile.wage + amount > max_salary then
+    -- Maximum salary hit. The staff member will never be unhappy again
+    self.profile.wage = max_salary
+  else
+    -- Apply new salary
+    self.profile.wage = self.profile.wage + amount
   end
+  -- Reset
+  self:setMood("pay_rise", "deactivate")
+  self:changeAttribute("happiness", 0.99)
+  return wage_raised
 end
 
 --! Sets dynamic info text before the dynamic info update

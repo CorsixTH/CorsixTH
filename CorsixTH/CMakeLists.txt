@@ -101,7 +101,6 @@ set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 # Add an extra step to copy built DLLs on MSVC
 if(USE_VCPKG_DEPS)
   include(CopyVcpkgLua)
-  include(CopyVcpkgSdlMixerBackends)
 endif()
 
 ## Finding libraries
@@ -164,8 +163,8 @@ target_link_libraries(CorsixTH ${CMAKE_THREAD_LIBS_INIT})
 # Find SDL_mixer
 if(CORSIX_TH_USE_SDL_MIXER)
   if(MSVC AND USE_VCPKG_DEPS)
-    find_package(sdl2-mixer CONFIG REQUIRED)
-    target_link_libraries(CorsixTH SDL2::SDL2_mixer)
+    find_package(SDL2_mixer CONFIG REQUIRED)
+    target_link_libraries(CorsixTH SDL2_mixer::SDL2_mixer)
   else()
     find_package(SDL2_mixer REQUIRED)
     if(SDLMIXER_FOUND)

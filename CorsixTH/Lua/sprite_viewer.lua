@@ -60,7 +60,7 @@ local function LoadTable(n, complex)
 end
 LoadTable(1, false)
 
-local function DoKey(self, rawchar, modifiers, is_repeat)
+local function DoKey(_, rawchar)
   local key = rawchar:lower()
   if key == "c" then
     gfx.cache.tabled = {}
@@ -86,7 +86,7 @@ local function DoKey(self, rawchar, modifiers, is_repeat)
   return need_draw
 end
 
-local function DoKeyUp(self, rawchar)
+local function DoKeyUp(_, rawchar)
     local key = rawchar:lower()
     if key == "w" then
         wdown = false
@@ -140,7 +140,7 @@ local function DoFrame(app)
   canvas:endFrame()
 end
 
-local function DoTimer(app)
+local function DoTimer()
   if wdown then
     y_off = y_off + 32
     need_draw = true

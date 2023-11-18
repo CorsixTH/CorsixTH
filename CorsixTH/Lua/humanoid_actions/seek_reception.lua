@@ -23,13 +23,19 @@ class "SeekReceptionAction" (HumanoidAction)
 ---@type SeekReceptionAction
 local SeekReceptionAction = _G["SeekReceptionAction"]
 
--- distance from queue that patient can join a reception desk queue
+-- Distance from queue that patient can join a reception desk queue.
 local can_join_queue_distance = 6
 
 function SeekReceptionAction:SeekReceptionAction()
   self:HumanoidAction("seek_reception")
 end
 
+--! Can the humanoid join the reception queue at the given position?
+--!param humanoid (Humanoid) Humanoid going to the reception.
+--!param x (int) X coordinate of the tile to consider.
+--!param y (int) Y coordinate of the tile to consider.
+--!param dist (int) Distance of the tile to the reception.
+--!return (bool) Whether the humanoid can start queueing.
 local function can_join_queue_at(humanoid, x, y, dist)
   local flag_cache = humanoid.world.map.th:getCellFlags(x, y)
   return flag_cache.hospital and not flag_cache.room and
@@ -37,10 +43,29 @@ local function can_join_queue_at(humanoid, x, y, dist)
       flag_cache.owner == humanoid.hospital:getPlayerIndex()
 end
 
+--! Trim the last part of the path when it is possible to join the reception queue.
+--!param humanoid Humanoid that will walk the path.
+--!param path_x (array of int) X coordinates of the path, modified in-place.
+--!param path_y (array of int) Y coordinates of the path, modified in-place.
+local function trimQueuingTail(humanoid, path_x, path_y)
+  local pathindex = #path_x
+  for i = pathindex - 1, 2, -1 do
+    if can_join_queue_at(humanoid, path_x[i], path_y[i], pathindex - i) then
+      path_x[i + 1] = nil
+      path_y[i + 1] = nil
+    else
+      break
+    end
+  end
+  return
+end
+
+-- Start of the seek-reception action.
 local function action_seek_reception_start(action, humanoid)
   local world = humanoid.world
   local best_desk
   local score
+  local best_distance_from_desk
 
   assert(humanoid.hospital, "humanoid must be associated with a hospital to seek reception")
 
@@ -54,13 +79,16 @@ local function action_seek_reception_start(action, humanoid)
       local orientation = desk.object_type.orientations[desk.direction]
       local x = desk.tile_x + orientation.use_position[1]
       local y = desk.tile_y + orientation.use_position[2]
-      local this_score = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
 
-      this_score = this_score + desk:getUsageScore()
-      if not score or this_score < score then
-        -- It is better, or the first one!
-        score = this_score
-        best_desk = desk
+      local distance_from_desk = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
+      if distance_from_desk then
+        local this_score = distance_from_desk + desk:getUsageScore()
+        if not score or this_score < score then
+          -- It is better, or the first one!
+          score = this_score
+          best_desk = desk
+          best_distance_from_desk = distance_from_desk
+        end
       end
     end
   end
@@ -69,7 +97,7 @@ local function action_seek_reception_start(action, humanoid)
     local orientation = best_desk.object_type.orientations[best_desk.direction]
     local x = best_desk.tile_x + orientation.use_position[1]
     local y = best_desk.tile_y + orientation.use_position[2]
-    local dist = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
+
     -- TODO: Make 'else' method work for all humanoids
     if class.is(humanoid, Vip) or class.is(humanoid, Inspector) then
       humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
@@ -83,7 +111,7 @@ local function action_seek_reception_start(action, humanoid)
 
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue
-    if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, dist) then
+    if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, best_distance_from_desk) then
       local face_x, face_y = best_desk:getSecondaryUsageTile()
       humanoid:setNextAction(QueueAction(x, y, best_desk.queue):setMustHappen(action.must_happen)
           :setFaceDirection(face_x, face_y))
@@ -91,18 +119,9 @@ local function action_seek_reception_start(action, humanoid)
       local walk = WalkAction(x, y):setMustHappen(action.must_happen)
       humanoid:queueAction(walk, 0)
 
-      -- Trim the walk to finish once it is possible to join the queue
-      local pathindex = #walk.path_x
-      for i = pathindex - 1, 2, -1 do
-        if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i], pathindex - i) then
-          walk.path_x[i + 1] = nil
-          walk.path_y[i + 1] = nil
-          walk.x = walk.path_x[i]
-          walk.y = walk.path_y[i]
-        else
-          break
-        end
-      end
+      trimQueuingTail(humanoid, walk.path_x, walk.path_y)
+      walk.x = walk.path_x[#walk.path_x]
+      walk.y = walk.path_y[#walk.path_x]
     end
     humanoid.hospital:msgMultiReceptionDesks()
 

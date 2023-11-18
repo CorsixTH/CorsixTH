@@ -94,6 +94,7 @@ function FileSystem:setRoot(physical_path)
   if self:isIso(physical_path) then
     self.provider = ISO_FS()
     self.provider:setPathSeparator(pathsep)
+    self.physical_path = physical_path
     return self.provider:setRoot(physical_path)
   end
 
@@ -217,6 +218,23 @@ function FileSystem:fileSize(virtual_path, ...)
     return nil, e
   end
   return lfs.attributes(s, "size")
+end
+
+--! Get a URI for the file.
+--
+-- The returned URI formats match those described by <https://ffmpeg.org/ffmpeg-protocols.html>.
+--
+--!param virtual_path (string) a path relative to the FileSystem root.
+--!param ... (string) the virtual_path may be split into separate arguments
+-- for each level in the filesystem.
+--!return (string) A uri representing the files location
+function FileSystem:fileUri(virtual_path, ...)
+  virtual_path = getFullPath(virtual_path, ...)
+  if self.provider then
+    local fileStart, fileEnd = self.provider:fileOffsets(virtual_path)
+    return 'subfile,,start,' .. fileStart .. ',end,' .. fileEnd .. ',,:' .. self.physical_path
+  end
+  return 'file:' .. virtual_path
 end
 
 -- If the file exists and we are not using a provider then return a FileSystem

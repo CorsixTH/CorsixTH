@@ -400,30 +400,71 @@ end
 !param drug The drug to improve, table taken from world.available_diseases
 --]]
 function ResearchDepartment:improveDrug(drug)
-  local research_info = self.research_progress[drug]
   local disease = self.hospital.disease_casebook[drug.disease.id]
+  local level_config = self.world.map.level_config
+  local min_drug_cost = level_config.gbv.MinDrugCost
 
-  -- Improving effectiveness and cost should alternate
-  if research_info.effect_imp > research_info.cost_imp then
-    -- Time to improve cost
-    disease.drug_cost = disease.drug_cost - 10
-    research_info.cost_imp = research_info.cost_imp + 1
-    if disease.cure_effectiveness == 100 then
+  -- Work out the improvement to make
+  local function decideImprovement()
+    local at_max_effectiveness = disease.cure_effectiveness >= 100
+    local at_min_cost = disease.drug_cost <= min_drug_cost
+    local improvement
+    if at_max_effectiveness and at_min_cost then -- Nothing left to improve
+      return false
+    end
+    if at_max_effectiveness then -- Only cost improvement remains
+      improvement = "cost"
+    elseif at_min_cost then -- Only effectiveness improvement remains
+      improvement =  "effectiveness"
+    else -- Either can be improved
+      improvement = math.random(1, 2) == 1 and "cost" or "effectiveness"
+      -- A 1/7 chance both are improved
+      improvement = math.random(1, 7) == 1 and "both" or improvement
+    end
+    return improvement
+  end
+
+  -- Decrease the cost of the drug
+  -- Set to 10%, provides good balance vs number of steps on the effectiveness ladder
+  local function decreaseDrugCost()
+    local new_cost = math.max(min_drug_cost, math.floor(disease.drug_cost * 0.9))
+    disease.drug_cost = new_cost
+  end
+
+  -- Improve a drug's effectiveness
+  local function improveEffectiveness()
+    local improve_rate = level_config.gbv.DrugImproveRate
+    disease.cure_effectiveness = math.min(100, disease.cure_effectiveness + improve_rate)
+  end
+
+  -- Work out how to proceed with the next drug research
+  local function decideNextResearch()
+    -- Check if the player's research specialisation is still valid.
+    -- Note, once a drug is 100% effective, it can no longer be specialised.
+    -- TODO: This should only really happen if both cost+effectiveness can't be improved?
+    if disease.cure_effectiveness >= 100 then
       -- Did the researchers concentrate on this drug?
       if self.research_policy.specialisation.current == drug then
         self.research_policy.specialisation.current = self.drain
         self:setResearchConcentration()
       end
     end
+    -- Get a new drug to research
     if self.research_policy.drugs.current == drug then
       self:nextResearch("drugs")
     end
-  else
-    -- Time to improve effectiveness
-    local improve_rate = self.world.map.level_config.gbv.DrugImproveRate
-    disease.cure_effectiveness = math.min(100, disease.cure_effectiveness + improve_rate)
-    research_info.effect_imp = research_info.effect_imp + 1
   end
+
+  local imp = decideImprovement()
+  if not imp then
+    -- Nothing to improve, reset anyway
+    decideNextResearch()
+    return
+  end
+  if imp == "cost" or imp == "both" then decreaseDrugCost() end
+  if imp == "effectiveness" or imp == "both" then improveEffectiveness() end
+  decideNextResearch()
+
   if drug.disease.id == "the_squits" then
     self.hospital:giveAdvice({_A.research.drug_improved_1:format(drug.disease.name)})
   else

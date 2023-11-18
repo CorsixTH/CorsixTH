@@ -47,114 +47,14 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
 end
 
 --! Give advice to the player at the end of a day.
+--! Note: For patient/staff warmth checks, advice is only on one or the other per month
 function PlayerHospital:dailyAdviceChecks()
   local current_date = self.world:date()
   local day = current_date:dayOfMonth()
-  local current_month = current_date:monthOfYear()
 
   -- Hold any advice back until the game has somewhat started.
   if current_date < Date(1, 5) then
     return
-  end
-
-  -- Check for advice on money.
-  -- This must occur after monthly maintenance and salary costs
-  -- or it may give invalid advice
-  if day == 1 then
-    if not self.world.free_build_mode then
-      if self.balance < 2000 and self.balance >= -500 then
-        local cashlow_advice = {
-          _A.warnings.money_low, _A.warnings.money_very_low_take_loan,
-          _A.warnings.cash_low_consider_loan,
-        }
-        self:giveAdvice(cashlow_advice)
-
-      elseif self.balance < -2000 and current_month > 8 then
-        -- TODO: Ideally this should be linked to the lose criteria for balance.
-        self:giveAdvice({_A.warnings.bankruptcy_imminent})
-
-      elseif self.balance > 6000 and self.loan > 0 then
-        self:giveAdvice({_A.warnings.pay_back_loan})
-      end
-    end
-  end
-
-  -- Warn about lack of a staff room.
-  if day == 3 and self:countRoomOfType("staff_room", 1) == 0 then
-    local staffroom_advice = {
-      _A.warnings.build_staffroom, _A.warnings.need_staffroom,
-      _A.warnings.staff_overworked, _A.warnings.staff_tired,
-    }
-    self:giveAdvice(staffroom_advice)
-  end
-
-  -- Warn about lack of toilets.
-  if day == 8 and self:countRoomOfType("toilets", 1) == 0 then
-    local toilet_advice = {
-      _A.warnings.need_toilets, _A.warnings.build_toilets,
-      _A.warnings.build_toilet_now,
-    }
-    self:giveAdvice(toilet_advice)
-  end
-
-  -- Make players more aware of the need for radiators
-  if self:countRadiators() == 0 then
-    self:giveAdvice({_A.information.initial_general_advice.place_radiators})
-  end
-
-  -- Verify patients well-being with respect to room temperature.
-  if day == 15 and not self.adviser_data.temperature_advice
-      and not self.heating.heating_broke then
-    -- Check patients warmth, default value does not result in a message.
-    local warmth = self:getAveragePatientAttribute("warmth", 0.3)
-    if warmth < 0.22 then
-      local cold_advice = {
-        _A.information.initial_general_advice.increase_heating,
-        _A.warnings.patients_very_cold, _A.warnings.people_freezing,
-      }
-      self:giveAdvice(cold_advice)
-      self.adviser_data.temperature_advice = true
-
-    elseif warmth >= 0.36 then
-      local hot_advice = {
-        _A.information.initial_general_advice.decrease_heating,
-        _A.warnings.patients_too_hot, _A.warnings.patients_getting_hot,
-      }
-      self:giveAdvice(hot_advice)
-      self.adviser_data.temperature_advice = true
-    end
-  end
-
-  -- Verify staff well-being with respect to room temperature.
-  if day == 20 and not self.adviser_data.temperature_advice
-      and not self.heating.heating_broke then
-    -- Check staff warmth, default value does not result in a message.
-    local warmth = self:getAverageStaffAttribute("warmth", 0.25)
-    if warmth < 0.22 then
-      self:giveAdvice({_A.warnings.staff_very_cold})
-      self.adviser_data.temperature_advice = true
-
-    elseif warmth >= 0.36 then
-      self:giveAdvice({_A.warnings.staff_too_hot})
-      self.adviser_data.temperature_advice = true
-    end
-  end
-
-  -- Are there sufficient drinks available?
-  if day == 24 then
-    -- Check patients thirst, default value does not result in a message.
-    local thirst = self:getAveragePatientAttribute("thirst", 0)
-
-    -- Increase need after the first year.
-    local threshold = current_date:year() == 1 and 0.9 or 0.8
-    if thirst > threshold then
-      self:giveAdvice({_A.warnings.patients_very_thirsty})
-    elseif thirst > 0.6 then
-      local thirst_advice = {
-        _A.warnings.patients_thirsty, _A.warnings.patients_thirsty2,
-      }
-      self:giveAdvice(thirst_advice)
-    end
   end
 
   -- Track sitting / standing ratio of patients.
@@ -165,55 +65,214 @@ function PlayerHospital:dailyAdviceChecks()
         and num_sitting / (num_sitting + num_standing) or nil
 
     -- Store the measured ratio.
+    -- Once we hit num_sitting_ratios of index points, we wrap around
     self.adviser_data.sitting_ratios[self.adviser_data.sitting_index] = ratio
     self.adviser_data.sitting_index = (self.adviser_data.sitting_index >= num_sitting_ratios)
         and 1 or self.adviser_data.sitting_index + 1
   end
 
-  -- Check for enough (well-placed) benches.
-  if day == 12 then
-    -- Compute average sitting ratio.
-    local sum_ratios = 0
-    local index = 1
-    while index <= num_sitting_ratios do
-      local ratio = self.adviser_data.sitting_ratios[index]
-      if ratio == nil then
-        sum_ratios = nil
-        break
-      else
-        sum_ratios = sum_ratios + ratio
-      end
-
-      index = index + 1
-    end
-
-    if sum_ratios ~= nil then -- Sufficient data available.
-      local ratio = sum_ratios / num_sitting_ratios
-      if ratio < 0.7 then -- At least 30% standing.
-        local bench_advice = {
-          _A.warnings.more_benches, _A.warnings.people_have_to_stand,
-        }
-        self:giveAdvice(bench_advice)
-
-      elseif ratio > 0.9 then
-        -- Praise having enough well placed seats about once a year.
-        local bench_advice = {
-          _A.praise.many_benches, _A.praise.plenty_of_benches,
-          _A.praise.few_have_to_stand,
-        }
-        self:giveAdvice(bench_advice, 1/12)
-      end
-    end
+  if day == 1 then
+    self:_adviseMoney()
   end
-
+  if day == 3 then
+    self:_adviseStaffRoom()
+  end
+  -- Make players more aware of the need for radiators
+  if day == 5 and self:countRadiators() == 0 then
+    self:giveAdvice({_A.information.initial_general_advice.place_radiators})
+  end
+  if day == 8 then
+    self:_adviseToilets()
+  end
   if day == 10 then
-    self:warnForLongQueues()
+    self:_warnForLongQueues()
+  end
+  if day == 12 then
+    self:_adviseBenches()
+  end
+  if day == 15 then
+    self:_adviseHeatingForPatients()
+  end
+  if day == 18 then
+    self:advisePlants(false)
+  end
+  if day == 20 then
+    self:_adviseHeatingForStaff()
+  end
+  if day == 24 then
+    self:_adviseDrinksMachines()
   end
 
   -- Reset advise flags at the end of the month.
   if day == 28 then
     self.adviser_data.temperature_advice = false
   end
+end
+
+--! Private function to check if our financial situation needs advice.
+--! This must occur after monthly maintenance and salary costs
+--! or it may give invalid advice
+function PlayerHospital:_adviseMoney()
+  local current_date = self.world:date()
+  local current_month = current_date:monthOfYear()
+  if not self.world.free_build_mode then
+    if self.balance < 2000 and self.balance >= -500 then
+      local cashlow_advice = {
+        _A.warnings.money_low, _A.warnings.money_very_low_take_loan,
+        _A.warnings.cash_low_consider_loan,
+      }
+      self:giveAdvice(cashlow_advice)
+
+    elseif self.balance < -2000 and current_month > 8 then
+      -- TODO: Ideally this should be linked to the lose criteria for balance.
+      self:giveAdvice({_A.warnings.bankruptcy_imminent})
+
+    elseif self.balance > 6000 and self.loan > 0 then
+      self:giveAdvice({_A.warnings.pay_back_loan})
+    end
+  end
+end
+
+--! Private function to warn about lack of a staff room.
+function PlayerHospital:_adviseStaffRoom()
+  if self:countRoomOfType("staff_room", 1) > 0 then return end
+  local staffroom_advice = {
+    _A.warnings.build_staffroom, _A.warnings.need_staffroom,
+    _A.warnings.staff_overworked, _A.warnings.staff_tired,
+  }
+  self:giveAdvice(staffroom_advice)
+end
+
+--! Private function to warn about a lack of toilets.
+function PlayerHospital:_adviseToilets()
+  if self:countRoomOfType("toilets", 1) > 0 then return end
+  local toilet_advice = {
+    _A.warnings.need_toilets, _A.warnings.build_toilets,
+    _A.warnings.build_toilet_now,
+  }
+  self:giveAdvice(toilet_advice)
+end
+
+--! Private function to check if patients have adequate seating
+function PlayerHospital:_adviseBenches()
+  -- Compute average sitting ratio.
+  local sum_ratios = 0
+  local index = 1
+  while index <= num_sitting_ratios do
+    local ratio = self.adviser_data.sitting_ratios[index]
+    if ratio == nil then
+      sum_ratios = nil
+      break
+    else
+      sum_ratios = sum_ratios + ratio
+    end
+
+    index = index + 1
+  end
+
+  if sum_ratios ~= nil then -- Sufficient data available.
+    local ratio = sum_ratios / num_sitting_ratios
+    if ratio < 0.7 then -- At least 30% standing.
+      local bench_advice = {
+        _A.warnings.more_benches, _A.warnings.people_have_to_stand,
+      }
+      self:giveAdvice(bench_advice)
+
+    elseif ratio > 0.9 then
+      -- Praise having enough well placed seats about once a year.
+      local bench_advice = {
+        _A.praise.many_benches, _A.praise.plenty_of_benches,
+        _A.praise.few_have_to_stand,
+      }
+      self:giveAdvice(bench_advice, 1 / 12)
+    end
+  end
+end
+
+--! Private function to check warmth of the patients.
+--! Only too hot or cold triggers advice
+function PlayerHospital:_adviseHeatingForPatients()
+  if self.adviser_data.temperature_advice
+      or self.heating.heating_broke then return end
+  local warmth = self:getAveragePatientAttribute("warmth", 0.3)
+  if warmth < 0.22 then
+    local cold_advice = {
+      _A.information.initial_general_advice.increase_heating,
+      _A.warnings.patients_very_cold, _A.warnings.people_freezing,
+    }
+    self:giveAdvice(cold_advice)
+    self.adviser_data.temperature_advice = true
+
+  elseif warmth >= 0.36 then
+    local hot_advice = {
+      _A.information.initial_general_advice.decrease_heating,
+      _A.warnings.patients_too_hot, _A.warnings.patients_getting_hot,
+    }
+    self:giveAdvice(hot_advice)
+    self.adviser_data.temperature_advice = true
+  end
+end
+
+--! Private function to check warmth of the staff.
+--! Only too hot or cold triggers advise
+function PlayerHospital:_adviseHeatingForStaff()
+  if self.adviser_data.temperature_advice
+      or self.heating.heating_broke then return end
+  local warmth = self:getAverageStaffAttribute("warmth", 0.3)
+  if warmth < 0.22 then
+    self:giveAdvice({_A.warnings.staff_very_cold})
+    self.adviser_data.temperature_advice = true
+
+  elseif warmth >= 0.36 then
+    self:giveAdvice({_A.warnings.staff_too_hot})
+    self.adviser_data.temperature_advice = true
+  end
+end
+
+--! Private function to check if patients are getting thirsty
+function PlayerHospital:_adviseDrinksMachines()
+  local current_date = self.world:date()
+  local thirst = self:getAveragePatientAttribute("thirst", 0)
+
+  -- Increase need after the first year.
+  local threshold = current_date:year() == 1 and 0.9 or 0.8
+  if thirst > threshold then
+    self:giveAdvice({_A.warnings.patients_very_thirsty})
+  elseif thirst > 0.6 then
+    local thirst_advice = {
+      _A.warnings.patients_thirsty, _A.warnings.patients_thirsty2,
+    }
+    self:giveAdvice(thirst_advice)
+  end
+end
+
+--! Private function to advise about long queues
+--! Rooms requiring a doctor occasionally trigger the generic message
+function PlayerHospital:_warnForLongQueues()
+  local chosen_room = self:getRandomBusyRoom()
+  if not chosen_room then return end
+  chosen_room = chosen_room.room_info
+  -- Required staff that is not nurse is doctor, researcher, surgeon or psych
+  if chosen_room.required_staff and not chosen_room.required_staff["Nurse"]
+      and math.random(1, 3) > 1 then
+    local warn_msgs = {
+      _A.warnings.queue_too_long_send_doctor:format(chosen_room.name),
+      _A.staff_advice.need_doctors
+    }
+    self:giveAdvice(warn_msgs)
+  else
+    self.world.ui.adviser:say(_A.warnings.queues_too_long)
+  end
+end
+
+--! Give advice to the user about maintenance of plants.
+--!param placed (bool) If a plant was placed
+function PlayerHospital:advisePlants(placed)
+  if self:countStaffOfCategory("Handyman", 1) > 0 then return end
+
+  local num_plants = self:countPlants()
+  if num_plants == 0 or (placed and num_plants > 1) then return end
+  self:giveAdvice({_A.staff_advice.need_handyman_plants})
 end
 
 --! Give advice to the player at the end of a month.
@@ -306,15 +365,6 @@ function PlayerHospital:msgMultiReceptionDesks()
   end
 end
 
---! Give advice to the user about maintenance of plants.
-function PlayerHospital:msgPlant()
-  local num_handyman = self:countStaffOfCategory("Handyman", 1)
-
-  if num_handyman == 0 then
-    self:giveAdvice({_A.staff_advice.need_handyman_plants})
-  end
-end
-
 --! Show the 'Gates to hell' animation.
 --!param entity (Entity) Gates to hell.
 function PlayerHospital:showGatesToHell(entity)
@@ -379,25 +429,6 @@ function PlayerHospital:msgKilled()
       _A.level_progress.another_patient_killed:format(self.num_deaths)
     }
     self.adviser_data.cured_died_message = self:giveAdvice(died_msgs, 6/10)
-  end
-end
-
---! Once a month the advisor may warn about long queues.
---! Rooms requiring a doctor occasionally trigger the generic message
-function PlayerHospital:warnForLongQueues()
-  local chosen_room = self:getRandomBusyRoom()
-  if not chosen_room then return end
-  chosen_room = chosen_room.room_info
-  -- Required staff that is not nurse is doctor, researcher, surgeon or psych
-  if chosen_room.required_staff and not chosen_room.required_staff["Nurse"]
-      and math.random(1, 3) > 1 then
-    local warn_msgs = {
-      _A.warnings.queue_too_long_send_doctor:format(chosen_room.name),
-      _A.staff_advice.need_doctors
-    }
-    self:giveAdvice(warn_msgs)
-  else
-    self.world.ui.adviser:say(_A.warnings.queues_too_long)
   end
 end
 
@@ -728,6 +759,13 @@ function PlayerHospital:makeVipEndFax(vip_rating, name, cash_reward, vip_message
   message["choices"] = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
 
   self.world.ui.bottom_panel:queueMessage("report", message, nil, Date.hoursPerDay() * 20, 1)
+end
+
+--! Play a sound file
+function PlayerHospital:playSound(sound)
+  if self.world.app.config.play_sounds then
+    self.world.app.audio:playSound(sound)
+  end
 end
 
 function PlayerHospital:afterLoad(old, new)

@@ -116,7 +116,7 @@ function World:World(app)
 
   -- If set, do not create salary raise requests.
   self.debug_disable_salary_raise = self.free_build_mode
-  self.idle_cache = {}
+  self.idle_cache = {} -- Cached queue standing positions for all queues.
   -- List of which goal criterion means what, and what number the corresponding icon has.
   self.level_criteria = local_criteria_variable
   self.delayed_map_objects = {} -- Initial objects in the map for parcels without owner.
@@ -287,7 +287,7 @@ function World:initLevel(app, avail_rooms)
       end
     end
   end
-  if #self.available_diseases == 0 and not self.map.level_number == "MAP EDITOR" then
+  if #self.available_diseases == 0 and self.map.level_number ~= "MAP EDITOR" then
     -- No diseases are needed if we're actually in the map editor!
     print("Warning: This level does not contain any diseases")
   end
@@ -794,9 +794,10 @@ end
 --!param room (Room) The new room.
 function World:markRoomAsBuilt(room)
   room:roomFinished()
-  local diag_disease = self.hospitals[1].disease_casebook["diag_" .. room.room_info.id]
+  local hosp = room.hospital
+  local diag_disease = hosp.disease_casebook["diag_" .. room.room_info.id]
   if diag_disease and not diag_disease.discovered then
-    self.hospitals[1].disease_casebook["diag_" .. room.room_info.id].discovered = true
+    hosp.disease_casebook["diag_" .. room.room_info.id].discovered = true
   end
   for _, entity in ipairs(self.entities) do
     if entity.notifyNewRoom then
@@ -1253,16 +1254,19 @@ end
 
 -- Called when a month ends. Decides on which dates patients arrive
 -- during the coming month.
+-- TODO: Requires adjustment for AIHospital spawns; see PR 1986 for progress.
 function World:updateSpawnDates()
   local local_hospital = self:getLocalPlayerHospital()
   -- Set dates when people arrive
   local no_of_spawns = math.n_random(self.spawn_rate, 2)
-  -- If Roujin's Challenge is on, override spawn rate
-  if local_hospital.hosp_cheats:isCheatActive("spawn_rate_cheat") then
-    no_of_spawns = 40
-  end
   -- Use ceil so that at least one patient arrives (unless population = 0)
   no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
+  -- If Roujin's Challenge is on, add a fixed bonus to the spawn pool for this player.
+  if local_hospital.hosp_cheats:isCheatActive("spawn_rate_cheat") then
+    local roujin_bonus = 40
+    no_of_spawns = no_of_spawns + roujin_bonus
+  end
+
   self.spawn_dates = {}
   for _ = 1, no_of_spawns do
     -- We are interested in the next month, pick days from it at random.
@@ -1459,16 +1463,24 @@ function World:checkWinningConditions(player_no)
     end
     if goal.win_value then
       local max_min = goal.max_min_win == 1 and 1 or -1
-      -- Special case for balance, subtract any loans!
+
       if goal.name == "balance" then
+        -- Special case for balance, subtract any loans!
         current_value = current_value - hospital.loan
       end
+
       -- Is this goal not fulfilled yet?
       if (current_value - goal.win_value) * max_min <= 0 then
         result.state = "nothing"
       end
     end
   end
+
+  -- Special case for loans: you cannot run from them !
+  if hospital.loan > 0 and result.state == "win" then
+    result.state = "nothing"
+  end
+
   return result
 end
 
@@ -1635,7 +1647,13 @@ function World:getPath(x, y, dest_x, dest_y)
   return self.pathfinder:findPath(x, y, dest_x, dest_y)
 end
 
-function World:getIdleTile(x, y, idx)
+-- Find an tile for idling.
+-- !param x X coordinate of the queue position.
+-- !param y Y coordinate of the queue position.
+-- !param idx Randomization factor for the idle tile, returns Nth candidate tile.
+-- !param parcel_id Optional parcel of the indoor returned idling tile.
+-- !return Position of an idle tile if it exists.
+function World:getIdleTile(x, y, idx, parcel_id)
   local cache_idx = (y - 1) * self.map.width + x
   local cache = self.idle_cache[cache_idx]
   if not cache then
@@ -1646,7 +1664,7 @@ function World:getIdleTile(x, y, idx)
     self.idle_cache[cache_idx] = cache
   end
   if not cache.x[idx] then
-    local ix, iy = self.pathfinder:findIdleTile(x, y, idx)
+    local ix, iy = self.pathfinder:findIdleTile(x, y, idx, parcel_id or 0)
     if not ix then
       return ix, iy
     end
@@ -1845,34 +1863,43 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
   return object, ox, oy
 end
 
-function World:findRoomNear(humanoid, room_type_id, distance, mode)
-  -- If mode == "nearest" (or nil), the nearest room is taken
-  -- If mode == "advanced", prefer a near room, but also few patients and fulfilled staff criteria
+--! Finds the most desirable room of a given room type for the provided humanoid.
+--!param humanoid The queried NPC (start point)
+--!param room_type_id (string) The room we are looking for
+--!param max_distance (number) The maximum distance away a room will be considered from the humanoid
+--!param mode (string) "nearest"/nil returns the nearest room, while
+--! "advanced" prefers a near room but also takes into account queue size/staffing
+--!return The best room for the huamnoid or nil if no room exists within the maximum distance
+function World:findRoomNear(humanoid, room_type_id, max_distance, mode)
+  assert(type(room_type_id) == "string", "Room type id given is not a string!")
   local room
   local score
   if not mode then
     mode = "nearest" -- default mode
   end
-  if not distance then
-    distance = 2^30
+  if not max_distance then
+    max_distance = 2^30
   end
-  for _, r in pairs(self.rooms) do repeat
-    if r.built and (not room_type_id or r.room_info.id == room_type_id) and r.is_active then
+
+  for _, r in pairs(self.rooms) do
+    if r.built and r.room_info.id == room_type_id and r.is_active then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
-      if not d or d > distance then
-        break -- continue
-      end
-      local this_score = d
-      if mode == "advanced" then
-        this_score = this_score + r:getUsageScore()
-      end
-      if not score or this_score < score then
-        score = this_score
-        room = r
+
+      if d and d <= max_distance then
+        local this_score = d
+
+        if mode == "advanced" then
+          this_score = this_score + r:getUsageScore()
+        end
+
+        if not score or this_score < score then
+          score = this_score
+          room = r
+        end
       end
     end
-  until true end
+  end
   return room
 end
 
@@ -2326,13 +2353,11 @@ end
 --! Dump the contents of the game log into a file.
 -- This is automatically done on each error.
 function World:dumpGameLog()
-  local config_path = TheApp.command_line["config-file"] or ""
-  local pathsep = package.config:sub(1, 1)
-  config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
-  local gamelog_path = config_path .. "gamelog.txt"
+  local gamelog_path = TheApp:getGamelogPath()
   local fi = self.app:writeToFileOrTmp(gamelog_path)
   -- Start the gamelog file with the system information
-  fi:write(self.app:getSystemInfo())
+  local sysinfo = TheApp:gamelogHeader()
+  fi:write(sysinfo)
   for _, str in ipairs(self.game_log) do
     fi:write(str .. "\n")
   end
@@ -2768,8 +2793,9 @@ function World:afterLoad(old, new)
     self.wall_set_by_block_id = nil
     self.wall_dir_by_block_id = nil
   end
-  if old < 172 then
-    self.wall_types = self.app.wall_types
+  if old < 174 then
+    -- Originally 172, bumping afterLoad to correct a typo
+    self.wall_types = self.app.walls
     self:initWallTypes()
   end
 

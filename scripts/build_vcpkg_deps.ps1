@@ -34,7 +34,7 @@ Param(
 ################
 
 $anim_view_libs = "wxwidgets"
-$corsixth_libs = "ffmpeg[core,avcodec,avformat,swresample,swscale]", "freetype", "lua[tools]", "luafilesystem", "lpeg", "sdl2", "sdl2-mixer[dynamic-load,libflac,mpg123,libmodplug,libvorbis]", "luasocket", "luasec", "catch2"
+$corsixth_libs = "ffmpeg[core,avcodec,avformat,swresample,swscale]", "freetype", "lua[tools]", "luafilesystem", "lpeg", "sdl2", "fluidsynth[sndfile]", "sdl2-mixer[libmodplug,fluidsynth,libflac,mpg123,opusfile]", "luasocket", "luasec", "catch2"
 
 $vcpkg_git_url = "https://github.com/CorsixTH/vcpkg"
 
@@ -101,7 +101,7 @@ function run_script {
 
     # mpg123 on x64-windows requires x86-windows yasm-tool.
     # https://github.com/microsoft/vcpkg/issues/15890
-    if ($VcpkgTriplet -eq "x64-windows") {
+    if ($VcpkgTriplet -like "x64-windows*") {
         $yasm_tool_install = ".\vcpkg install yasm-tool:x86-windows"
         run_command -command $yasm_tool_install
     }

@@ -51,13 +51,12 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   self.rep_amount = 0
 
   if not pcall(function()
-    local palette   = gfx:loadPalette("QData", "Award02V.pal")
-    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    local palette = gfx:loadPalette("QData", "Award02V.pal", true)
 
     -- Right now the statistics are first
     --self.background = gfx:loadRaw("Fame01V", 640, 480)
     self.award_background = gfx:loadRaw("Award01V", 640, 480)
-    self.stat_background = gfx:loadRaw("Award02V", 640, 480)
+    self.stat_background = gfx:loadRaw("Award02V", 640, 480, "QData", "QData", "Award02V.pal", true)
     self.background = self.stat_background
 
     self.stat_font = gfx:loadFont("QData", "Font45V", false, palette)
@@ -502,7 +501,12 @@ function UIAnnualReport:draw(canvas, x, y)
   local font = self.stat_font
   local world = self.ui.app.world
 
-  if self.state == 1 then -- Fame screen
+  if self.state == 1 then -- Fame/Shame screen (High Scores)
+    -- TODO: This screen should be displayed at the start of the annual report, but currently
+    -- it is not shown, likely as the code for this being unfinished. When implemented
+    -- we only show this screen at the very start, and once they go to the next screen
+    -- it no longer becomes accessible.
+
     -- Title and column names
     font:draw(canvas, _S.high_score.best_scores, x + 220, y + 104, 200, 0)
     font:draw(canvas, _S.high_score.pos, x + 218, y + 132)
@@ -514,7 +518,7 @@ function UIAnnualReport:draw(canvas, x, y)
     local dy = 0
     --for i = 1, 10 do
       font:draw(canvas, i .. ".", x + 220, y + 160 + dy)
-      font:draw(canvas, world.hospitals[1].name:upper(), x + 260, y + 160 + dy)
+      font:draw(canvas, world:getLocalPlayerHospital().name:upper(), x + 260, y + 160 + dy)
       font:draw(canvas, "NA", x + 360, y + 160 + dy)
       -- dy = dy + 25
     --end
@@ -631,4 +635,21 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
     font:draw(canvas, string.format("%.0f", self.value_sort[index_v2].value), x + 240 + col_x,
         y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1), 70, 0, "right")
   end
+end
+
+function UIAnnualReport:afterLoad(old, new)
+  if old < 179 then
+    local gfx = TheApp.gfx
+
+    local palette = gfx:loadPalette("QData", "Award02V.pal", true)
+    self.award_background = gfx:loadRaw("Award01V", 640, 480)
+    self.stat_background = gfx:loadRaw("Award02V", 640, 480, "QData", "QData", "Award02V.pal", true)
+    self.background = self.stat_background
+    self.stat_font = gfx:loadFont("QData", "Font45V", false, palette)
+    self.write_font = gfx:loadFont("QData", "Font47V", false, palette)
+    self.stone_font = gfx:loadFont("QData", "Font46V", false, palette)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Award03V", true, palette)
+  end
+
+  UIFullscreen.afterLoad(self, old, new)
 end

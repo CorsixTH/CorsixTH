@@ -96,55 +96,71 @@ function MoviePlayer:MoviePlayer(app, audio, video)
   self.lose_movies = {}
   self.advance_movies = {}
   self.intro_movie = nil
+  self.demo_movie = nil
   self.win_movie = nil
   self.can_skip = true
   self.wait_for_stop = false
   self.wait_for_over = false
 end
 
+--! Initialises the different movies used in the game
 function MoviePlayer:init()
   self.moviePlayer = TH.moviePlayer()
   self.moviePlayer:setRenderer(self.video)
 
   --find movies in Anims folder
-  local movies = self.app.fs:listFiles("Anims")
+  local fs = self.app.fs
+  local movies = fs:listFiles("Anims")
   if movies then
     for _, movie in pairs(movies) do
       --lose level movies
       if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .. "]+$") then
-        table.insert(self.lose_movies, movie)
+        table.insert(self.lose_movies, fs:fileUri(movie))
       end
       --advance level movies
       local num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
       if num ~= nil and tonumber(num, 10) ~= nil then
-        self.advance_movies[tonumber(num, 10)] = movie
+        self.advance_movies[tonumber(num, 10)] = fs:fileUri(movie)
       end
       --win game movie
       if movie:upper():match(pathsep .. "WINGAME%.[^" .. pathsep .. "]+$") then
-        self.win_movie = movie
+        self.win_movie = fs:fileUri(movie)
       end
     end
   end
 
-  --find intro
+  --find intro and demo movies
   movies = self.app.fs:listFiles("Intro")
   if movies then
     for _, movie in pairs(movies) do
       if movie:upper():match(pathsep .. "INTRO%.SM4$") then
-        self.intro_movie = movie
+        self.intro_movie = fs:fileUri(movie)
+      elseif movie:upper():match(pathsep .. "ATTRACT.SMK$") then
+        self.demo_movie = fs:fileUri(movie)
       end
     end
   end
 end
 
+--! Plays the opening movie from TH
+--!param callback_after_movie (function) What to do once movie ends
 function MoviePlayer:playIntro(callback_after_movie)
   self:playMovie(self.intro_movie, false, true, callback_after_movie)
 end
 
+--! Plays the demo gameplay footage movie from TH
+function MoviePlayer:playDemoMovie()
+  self:playMovie(self.demo_movie, false, true)
+end
+
+--! Plays the movie for winning the game
 function MoviePlayer:playWinMovie()
   self:playMovie(self.win_movie, true, true)
 end
 
+--! Plays the level advance movie, which is going to the next level on the game board
+--! This is for the original campaign only.
+--!param level (number) What level we're going to.
 function MoviePlayer:playAdvanceMovie(level)
   local filename = self.advance_movies[level]
 
@@ -165,6 +181,7 @@ function MoviePlayer:playAdvanceMovie(level)
   self:playMovie(filename, true, false)
 end
 
+--! Plays one of the lose scenario movies at random
 function MoviePlayer:playLoseMovie()
   if #self.lose_movies > 0 then
     local filename = self.lose_movies[math.random(#self.lose_movies)]
@@ -172,6 +189,12 @@ function MoviePlayer:playLoseMovie()
   end
 end
 
+--! Function used to tell the Movie Player to play something.
+--!param filename (string) Location of the movie file
+--!param wait_for_stop (boolean) If true, movie will not dismiss automatically
+--! (requires a mouse/key press)
+--!param can_skip (boolean) If true, the player can end movie prematurely
+--!param callback (function) What to do after the movie ends
 function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
   local success, warning
 
@@ -255,6 +278,7 @@ function MoviePlayer:deallocatePictureBuffer()
   self.moviePlayer:deallocatePictureBuffer()
 end
 
+--! Handles when the movie ends
 function MoviePlayer:onMovieOver()
   if self.moviePlayer == nil then return end
 
@@ -264,6 +288,7 @@ function MoviePlayer:onMovieOver()
   end
 end
 
+--! Handles ending the movie prematurely (user input)
 function MoviePlayer:stop()
   if self.moviePlayer == nil then return end
 

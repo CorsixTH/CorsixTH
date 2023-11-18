@@ -25,12 +25,15 @@ local UIMakeDebugPatient = _G["UIMakeDebugPatient"]
 
 function UIMakeDebugPatient:UIMakeDebugPatient(ui)
   local items = {}
-  for _, disease in ipairs(ui.app.diseases) do
-    if disease.visuals_id or disease.non_visuals_id == 1 then
+  local hosp = TheApp.world:getLocalPlayerHospital()
+  -- Debug patient can be made from any disease available to the level
+  for _, dis in pairs(hosp.disease_casebook) do
+    local disease = dis.disease
+    if not disease.pseudo then
       items[#items + 1] = {
         name = disease.name,
         disease = disease,
-        tooltop = disease.name,
+        tooltip = _S.tooltip.debug_patient_window.item:format(disease.name),
       }
     end
   end

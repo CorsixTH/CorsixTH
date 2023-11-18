@@ -166,7 +166,18 @@ class idle_tile_finder : public abstract_pathfinder {
   bool try_node(path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
                 travel_direction direction) override;
 
-  bool find_idle_tile(const level_map* pMap, int iStartX, int iStartY, int iN);
+  //| Find a tile for idling.
+  /*!
+      @param pMap Map to search.
+      @param iStartX X coordinate of the start position.
+      @param iStartY Y coordinate of the start position.
+      @param iN Return the Nth idle tile. Used for queueing and randomizing idle
+     tiles.
+      @param parcelId Id of the parcel with valid destinations, use \c 0 for
+     any parcel.
+   */
+  bool find_idle_tile(const level_map* pMap, int iStartX, int iStartY, int iN,
+                      int parcelId);
 
   path_node* best_next_node;
   double best_distance;
@@ -221,8 +232,9 @@ class pathfinder {
   }
 
   inline bool find_idle_tile(const level_map* pMap, int iStartX, int iStartY,
-                             int iN) {
-    return idle_tile_finder.find_idle_tile(pMap, iStartX, iStartY, iN);
+                             int iN, int parcelId) {
+    return idle_tile_finder.find_idle_tile(pMap, iStartX, iStartY, iN,
+                                           parcelId);
   }
 
   inline bool find_path_to_hospital(const level_map* pMap, int iStartX,

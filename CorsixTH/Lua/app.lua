@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 172 -- Re-moved wall-info
+local SAVEGAME_VERSION = 180 -- CorsixTH 0.67 release
 
 class "App"
 
@@ -66,6 +66,7 @@ function App:App()
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
   self.check_for_updates = true
+  self.idle_tick = 0
 end
 
 --! Starts a Lua DBGp client & connects it to a DBGp server.
@@ -82,6 +83,16 @@ function App:setCommandLine(...)
       self.command_line[setting] = value
     end
   end
+end
+
+--! Returns the full path of the local path given
+--!param folders (string or table) A string of one segment or an set of many segments of the path
+--!param trailing_slash (boolean) Whether the path needs to end with a local path separator
+--!return fullpath (string) The OS dependent full path
+function App:getFullPath(folders, trailing_slash)
+  if type(folders) ~= "table" then folders = {folders} end
+  local ending = trailing_slash and pathsep or ""
+  return debug.getinfo(1, "S").source:sub(2, -12) .. table.concat(folders, pathsep) .. ending
 end
 
 function App:init()
@@ -116,8 +127,9 @@ function App:init()
   corsixth.require("filesystem")
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
-  self.level_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
-  self:initUserLevelDir()
+  self.level_dir = self:getFullPath("Levels", true)
+  self.campaign_dir = self:getFullPath("Campaigns", true)
+  self:initUserDirectories()
   self:initSavegameDir()
   self:initScreenshotsDir()
 
@@ -165,6 +177,9 @@ function App:init()
 
   self:setCaptureMouse()
   self.caption = "CorsixTH"
+
+  -- Create gamelog file if missing
+  self:initGamelogFile()
 
   -- Prereq 2: Load and initialise the graphics subsystem
   corsixth.require("persistance")
@@ -346,7 +361,7 @@ function App:init()
         self.command_line.load = file
       else
         self.command_line.load = "Autosaves" .. pathsep ..
-            FileTreeNode(self.savegame_dir .. "Autosaves"):getMostRecentlyModifiedChildFile(".sav").label
+            FileTreeNode(self.savegame_dir .. "Autosaves"):getMostRecentlyModifiedChildFile(".%.sav$").label
       end
     end
     -- If a savegame was specified, load it
@@ -373,26 +388,52 @@ function App:init()
   return true
 end
 
---! Tries to initialize the user and built in level directories, returns true on
---! success and false on failure.
-function App:initUserLevelDir()
+--! Works out the intended location of the gamelog file.
+--!return full path gamelog should exist at
+function App:getGamelogPath()
+  local config_path = self.command_line["config-file"] or ""
+  config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
+  return config_path .. "gamelog.txt"
+end
+
+--! Checks and creates the gamelog file if it does not exist.
+function App:initGamelogFile()
+  local gamelog_path = self:getGamelogPath()
+  local gamelog = io.open(gamelog_path, "r")
+  if gamelog then gamelog:close() return end
+
+  local fi = self:writeToFileOrTmp(gamelog_path)
+  local sysinfo = self:gamelogHeader()
+  fi:write(sysinfo)
+  fi:close()
+end
+
+--! Tries to initialize the user level and campaign directories
+-- TODO: Integrate other directory initialisations into this function
+function App:initUserDirectories()
   local conf_path = self.command_line["config-file"] or "config.txt"
+
+  -- Attempt to set the user's directory choice
+  -- param dir (path) The defined path of the folder by the user
+  -- param label (string) What folder was being set if there was an error
+  -- return The fully qualified path
+  local function setUserDir(dir, label)
+    dir = dir:sub(-1, -1) == pathsep and dir:sub(1, -2) or dir
+    if lfs.attributes(dir, "mode") ~= "directory" and not lfs.mkdir(dir) then
+      -- A failed directory creation does not result in a crash. But the user may lose
+      -- the ability to load/save properly.
+      print("Warning: " .. label .. " directory does not exist and could not be created.")
+    end
+    dir = dir:sub(-1, -1) ~= pathsep and dir .. pathsep or dir
+    return dir
+  end
+
   self.user_level_dir = self.config.levels or
       conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Levels"
-
-  if self.user_level_dir:sub(-1, -1) == pathsep then
-    self.user_level_dir = self.user_level_dir:sub(1, -2)
-  end
-  if lfs.attributes(self.user_level_dir, "mode") ~= "directory" then
-    if not lfs.mkdir(self.user_level_dir) then
-      print("Notice: Level directory does not exist and could not be created.")
-      return false
-    end
-  end
-  if self.user_level_dir:sub(-1, -1) ~= pathsep then
-    self.user_level_dir = self.user_level_dir .. pathsep
-  end
-  return true
+  self.user_level_dir = setUserDir(self.user_level_dir, "User Levels")
+  self.user_campaign_dir = self.config.campaigns or
+      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Campaigns"
+  self.user_campaign_dir = setUserDir(self.user_campaign_dir, "User Campaigns")
 end
 
 --! Tries to initialize the savegame directory, returns true on success and
@@ -491,6 +532,8 @@ function App:worldExited()
   self.audio:clearCallbacks()
 end
 
+--! Initialise CorsixTH's main menu screen including relevant windows
+--!param message (string) Something to display to the user
 function App:loadMainMenu(message)
   if self.world then
     self:worldExited()
@@ -516,6 +559,9 @@ function App:loadMainMenu(message)
   if message then
     self.ui:addWindow(UIInformation(self.ui, message))
   end
+
+  -- Reset the idle tick counter
+  self:resetIdle()
 end
 
 --! Sets the mouse capture to the state set within
@@ -559,12 +605,10 @@ end
 --!param campaign_file (string) Name of the file to read.
 --!return (table) Definitions found in the campaign file.
 function App:readCampaignFile(campaign_file)
-  local local_path = debug.getinfo(1, "S").source:sub(2, -12)
-  local dir = "Campaigns" .. pathsep
-  local path = local_path .. dir
-  local chunk, err = loadfile_envcall(path .. campaign_file)
+  local path = self:getFullPath({"Campaigns", campaign_file})
+  local chunk, err = loadfile_envcall(path)
   if not chunk then
-    return nil, "Error loading " .. path .. campaign_file .. ":\n" .. tostring(err)
+    return nil, "Error loading " .. path .. ":\n" .. tostring(err)
   else
     local result = {}
     chunk(result)
@@ -610,10 +654,13 @@ end
 --!return (string, error) Returns the found absolute path, or nil if not found. Then
 --!       a second variable is returned with an error message.
 function App:getAbsolutePathToLevelFile(level)
-  local path = debug.getinfo(1, "S").source:sub(2, -12)
-  -- First look in Campaigns. If not found there, fall back to Levels.
-  local list_of_possible_paths = { self.user_level_dir, path .. "Campaigns", self.level_dir }
-  for _, parent_path in ipairs(list_of_possible_paths) do
+  local paths_to_search = {
+    self.user_campaign_dir,
+    self.user_level_dir,
+    self.campaign_dir,
+    self.level_dir,
+  }
+  for _, parent_path in ipairs(paths_to_search) do
     local check_path = parent_path .. pathsep .. level
     local file, _ = io.open(check_path, "rb")
     if file then
@@ -943,8 +990,11 @@ function App:writeToFileOrTmp(file, mode)
   if err then
     local tmp_file = os.tmpname()
     f = io.open(tmp_file, mode or "w")
-    self.ui:addWindow(UIInformation(self.ui,
-      { _S.errors.save_to_tmp:format(file, tmp_file, err) }))
+    if self.ui then self.ui:addWindow(UIInformation(self.ui,
+        { _S.errors.save_to_tmp:format(file, tmp_file, err) }))
+    else
+      print("Attempt to write to " .. file .. " failed. File was written instead to temporary location " .. tmp_file .. " because of the error: " .. err)
+    end
   end
   assert(f, "Error: cannot write to filesystem")
   return f
@@ -1156,6 +1206,31 @@ function App:onTick(...)
   return true -- tick events always result in a repaint
 end
 
+--! Function for handling idle time in the main menu, which leads to playing the
+--! demo gameplay trailer if left long enough
+function App:idle()
+  if not self.config.play_demo then return end
+  -- Check if we are in a proper 'idle' state and solely on the main menu
+  if not self.ui:getWindow(UIMainMenu) or self.ui:getWindow(UIUpdate)
+      or self.ui:getWindow(UIConfirmDialog) then
+    self:resetIdle()
+    return
+  end
+  -- Have we been idle enough (~30s)
+  if self.idle_tick > 1000 then
+    -- User is idle, play the demo gameplay movie
+    self.moviePlayer:playDemoMovie()
+    self:resetIdle()
+  else
+    self.idle_tick = self.idle_tick + 1
+  end
+end
+
+-- Reset the idle count
+function App:resetIdle()
+  self.idle_tick = 0
+end
+
 local fps_history = {} -- Used to average FPS over the last thirty frames
 for i = 1, 30 do fps_history[i] = 0 end
 local fps_sum = 0 -- Sum of fps_history array
@@ -1296,7 +1371,8 @@ function App:checkInstallFolder()
       [[C:]], [[D:]], [[E:]], [[F:]], [[G:]], [[H:]] }
     local possible_folders = { "ThemeHospital", "Theme Hospital", "HOSP", "TH97",
       [[GOG.com\Theme Hospital]], [[GOG Games\Theme Hospital]],
-      [[Origin Games\Theme Hospital\data\Game]] }
+      [[Origin Games\Theme Hospital\data\Game]], [[EA Games\Theme Hospital\data\Game]]
+    }
     for _, dir in pairs(possible_locations) do
       if status then break end
       for _, folder in pairs(possible_folders) do
@@ -1386,6 +1462,27 @@ function App:checkInstallFolder()
   return true, #corrupt ~= 0 and corrupt or nil
 end
 
+function App:findSoundFont()
+  local data_dir = self:getFullPath()
+
+  local possible_locations = {
+    self.config.soundfont or false,
+    data_dir .. "FluidR3_GM.sf2",
+    data_dir .. "FluidR3.sf3",
+    "/usr/share/soundfonts/default.sf2", -- default linux
+    "/usr/share/sounds/sf2/FluidR3_GM.sf2", -- debian based
+    "/usr/share/soundfonts/FluidR3_GM.sf2" -- archlinux and others
+  }
+
+  for _, sf_path in ipairs(possible_locations) do
+    if sf_path and lfs.attributes(sf_path) then
+      return sf_path
+    end
+  end
+
+  return nil
+end
+
 --! Get the directory containing the bitmap files.
 --!return Name of the directory containing the bitmap files, ending with a
 --        directory path separator.
@@ -1459,10 +1556,10 @@ function App:readMapDataFile(filename)
 end
 
 function App:loadLuaFolder(dir, no_results, append_to)
-  local ourpath = debug.getinfo(1, "S").source:sub(2, -8)
-  dir = dir .. pathsep
-  local path = ourpath .. dir
+  if dir:sub(-1) ~= pathsep then dir = dir .. pathsep end
+  local path = self:getFullPath({"Lua", dir}, true)
   local results = no_results and "" or (append_to or {})
+
   for file in lfs.dir(path) do
     if file:match("%.lua$") then
       local status, result = pcall(corsixth.require, dir .. file:sub(1, -5))
@@ -1502,10 +1599,12 @@ end
 -- a specific savegame version is from.
 function App:getVersion(version)
   local ver = version or self.savegame_version
-  if ver > 170 then
+  if ver > 180 then
     return "Trunk"
+  elseif ver > 170 then
+    return "v0.67"
   elseif ver > 156 then
-    return "v0.66-rc1"
+    return "v0.66"
   elseif ver > 138 then
     return "v0.65"
   elseif ver > 134 then
@@ -1728,6 +1827,7 @@ function App:checkForUpdates()
   end
   local http = require("socket.http")
   local url = require("socket.url")
+  http.TIMEOUT = 2
 
   print("Checking for CorsixTH updates...")
   local update_body, status, _ = http.request(update_url)
@@ -1793,7 +1893,11 @@ function App:isAudioEnabled()
   return TH.GetCompileOptions().audio
 end
 
-function App:getSystemInfo()
+--! Generate information about user's system and the program
+--!return System and program info as a string
+function App:gamelogHeader()
+  local gen_date = os.date("%Y-%m-%d %H:%M:%S")
+  gen_date = string.format("Gamelog generated on %s\n", gen_date)
   local compile_opts = TH.GetCompileOptions()
   local comp_details = {}
   for key, value in pairs(compile_opts) do
@@ -1801,11 +1905,11 @@ function App:getSystemInfo()
   end
   table.sort(comp_details)
   local compiled = string.format("Compiled with %s\nSDL renderer: %s\n",
-    table.concat(comp_details, ", "), self.video:getRendererDetails())
+      table.concat(comp_details, ", "), self.video:getRendererDetails())
   local running = string.format("%s run with api version: %s, game version: %s, savegame version: %s\n",
-    compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
-    self:getVersion(), tostring(SAVEGAME_VERSION))
-  return (compiled .. running)
+      compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
+      self:getVersion(), tostring(SAVEGAME_VERSION))
+  return (gen_date .. compiled .. running)
 end
 
 -- Do not remove, for savegame compatibility < r1891

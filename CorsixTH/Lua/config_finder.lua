@@ -114,6 +114,7 @@ local config_defaults = {
   grant_wage_increase = false,
   movies = true,
   play_intro = true,
+  play_demo = true,
   allow_user_actions_while_paused = false,
   volume_opens_casebook = false,
   alien_dna_only_by_emergency = true,
@@ -338,6 +339,10 @@ local string_01 = [=[
 --]=] .. '\n' ..
 'play_intro = ' .. tostring(config_values.play_intro) .. '\n' .. [=[
 
+-- Demo movie (played on idle at main menu): Enabled by default
+--]=] .. '\n' ..
+'play_demo = ' .. tostring(config_values.play_demo) .. '\n' .. [=[
+
 -------------------------------------------------------------------------------
 -- Allow user actions while game is paused
 -- In Theme Hospital the player would only be allowed to use the top menu if
@@ -414,12 +419,14 @@ unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
 savegames = nil -- [[X:\ThemeHospital\Saves]]
 
 -------------------------------------------------------------------------------
--- Levels. By default, the "Levels" directory alongside this config file will
--- be used for storing new maps / levels in. Should this not be suitable, then
--- uncomment the following line, and point it to a directory which exists and
--- is more suitable.
+-- Levels and Campaigns. By default, the "Levels" and "Campaigns" directory next to
+-- this config file will be used for storing new maps / levels / campaigns in. If
+-- this is not suitable, then uncomment the following lines, and point it to a directory
+-- which exists and is more suitable.
+-- Note: Newly created maps in the Map Editor go into the "Levels" folder currently.
 --
 levels = nil -- [[X:\ThemeHospital\Levels]]
+campaigns = nil -- [[X:\ThemeHospital\Campaigns]]
 
 -------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital

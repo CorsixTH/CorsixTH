@@ -20,6 +20,193 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.67" date="2023-08-12" type="stable">
+      <description>
+        <p>New Features:</p>
+        <ul>
+          <li>The original demo gameplay video now plays when the CorsixTH main
+              menu is idle (this can be disabled in the configuration file)</li>
+          <li>File browser menus now have an OK button</li>
+          <li>Selecting an existing file in the Save Game/Map browsers will now
+              update the text input box to that file name</li>
+        </ul>
+        <p>Changes:</p>
+        <ul>
+          <li>Handymen now always stay in their assigned plots, except when
+              going to rest</li>
+          <li>Staff members now have a maximum salary, which can be configured
+              in custom levels</li>
+          <li>The game will now always use the GP&apos;s choice of next
+              diagnosis room for the patient, if available.</li>
+          <li>Queueing patients are now shown when hovering a door</li>
+          <li>Epidemics can no longer fail because an infected patient left
+              before the epidemic was revealed</li>
+          <li>Balance changes to drug improvement research</li>
+          <li>Check for updates can now be disabled in Settings</li>
+          <li>Check for updates timeout duration significantly shortened</li>
+          <li>&quot;Pause&quot; now shows up when the &quot;Build while
+              paused&quot; setting is on and the game is paused</li>
+          <li>The gamelog now includes a timestamp</li>
+          <li>Theme Hospital installs in the default location for the EA Store
+              are now automatically detected, like GOG and Origin.</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>Chinese Traditional and Simplified translations have been
+              updated</li>
+          <li>Russian has been updated</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Fixed an instance where objects could disappear from the map</li>
+          <li>Fixed a bug where the empty action queue message was prevented
+              from happening</li>
+          <li>Fixed a bug where dying patients became undead and would have a
+              habit of ruining everything</li>
+          <li>Fixed broken dynamic info during epidemics</li>
+          <li>Handymen will no longer try to repair machinery while a patient
+              is using it</li>
+          <li>Psychiatrist couch has less chance of causing blocked paths</li>
+          <li>Roujin&apos;s challenge is now properly applied (read:
+              harder)</li>
+          <li>Serious Radiation is no longer contagious</li>
+          <li>Room blueprints can no longer go beyond external walls</li>
+          <li>Fixed incorrect button sounds in the Staff Management Window</li>
+          <li>Fixed back button behaviour in Font Picker</li>
+          <li>Fixed a bug where word-wrapping text on dialogs could crash the
+              game</li>
+          <li>Fixed a rare case where the next VIP date may be scheduled in the
+              past</li>
+          <li>Fixed a rare case where awarded research points could be
+              negative</li>
+          <li>Fixed a rare case of the balance sheet being victim of a green
+              highlighter</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.67~rc1" date="2023-07-29" type="development">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Theme Hospital installs in the default location for the EA Store
+              are now automatically detected, like GOG and Origin.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.67~beta1" date="2023-07-08" type="development">
+      <description>
+        <p>New Features:</p>
+        <ul>
+          <li>The original demo gameplay video now plays when the CorsixTH main
+              menu is idle (this can be disabled in the configuration file)</li>
+          <li>File browser menus now have an OK button</li>
+          <li>Selecting an existing file in the Save Game/Map browsers will now
+              update the text input box to that file name</li>
+        </ul>
+        <p>Changes:</p>
+        <ul>
+          <li>Handymen now always stay in their assigned plots, except when
+              going to rest</li>
+          <li>Staff members now have a maximum salary, which can be configured
+              in custom levels</li>
+          <li>The game will now always use the GP&apos;s choice of next
+              diagnosis room for the patient, if available.</li>
+          <li>Queueing patients are now shown when hovering a door</li>
+          <li>Epidemics can no longer fail because an infected patient left
+              before the epidemic was revealed</li>
+          <li>Balance changes to drug improvement research</li>
+          <li>Check for updates can now be disabled in Settings</li>
+          <li>&quot;Pause&quot; now shows up when the &quot;Build while
+              paused&quot; setting is on and the game is paused</li>
+          <li>The gamelog now includes a timestamp</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>Chinese Traditional and Simplified translations have been
+              updated</li>
+          <li>Russian has been updated</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Fixed an instance where objects could disappear from the map</li>
+          <li>Fixed a bug where the empty action queue message was prevented
+              from happening</li>
+          <li>Fixed a bug where dying patients became undead and would have a
+              habit of ruining everything</li>
+          <li>Fixed broken dynamic info during epidemics</li>
+          <li>Handymen will no longer try to repair machinery while a patient
+              is using it</li>
+          <li>Psychiatrist couch has less chance of causing blocked paths</li>
+          <li>Roujin&apos;s challenge is now properly applied (read:
+              harder)</li>
+          <li>Serious Radiation is no longer contagious</li>
+          <li>Room blueprints can no longer go beyond external walls</li>
+          <li>Fixed incorrect button sounds in the Staff Management Window</li>
+          <li>Fixed back button behaviour in Font Picker</li>
+          <li>Fixed a bug where word-wrapping text on dialogs could crash the
+              game</li>
+          <li>Fixed a rare case where the next VIP date may be scheduled in the
+              past</li>
+          <li>Fixed a rare case where awarded research points could be
+              negative</li>
+          <li>Fixed a rare case of the balance sheet being victim of a green
+              highlighter</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.66" date="2022-06-25" type="stable">
+      <description>
+        <p>New Features:</p>
+        <ul>
+          <li>Direct Zoom has been improved and is now enabled by default</li>
+          <li>Nurses can now leave the ward without disturbing her patients</li>
+          <li>Patients with Serious Radiation now glow a beautiful shade of green</li>
+          <li>Patients with Jellyitis now wobble wobble wobble</li>
+          <li>The Hotkeys menu has been overhauled to make it easier to use</li>
+          <li>You can now reset your zoom level by pressing 0</li>
+          <li>A new fax code cheat has been added!</li>
+          <li>The replace machine prompt can now tell you the new strength before purchase</li>
+          <li>A machine's dynamic info will tell you the strength a machine can be upgraded
+            to if you replaced it (can be disabled in configuration settings)</li>
+        </ul>
+        <p>Changes:</p>
+        <ul>
+          <li>Improved pee and vomit conditions</li>
+          <li>Patients will no longer queue for reception until nearby</li>
+          <li>The Adviser will no longer queue repetitive messages</li>
+          <li>Dropdown menus will now close when clicked outside of</li>
+          <li>Non-visual diseases can now be delayed in the level config of a custom game</li>
+          <li>Gamelog.txt will now contain system information instead of within the window
+            title</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>Translations should no longer show random '/' on new lines</li>
+          <li>Russian language updated (Thanks @Matvey1705 !)</li>
+          <li>Czech language updated (Thanks @jansakos !)</li>
+          <li>German language updated (Thanks @Manuel-K !)</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Checking for updates should now work moving forward (promise)</li>
+          <li>All cured trophy bugfix now properly applied from 0.65.1</li>
+          <li>Firing staff from a multi-use object now ensures they leave the hospital</li>
+          <li>Missing config and hotkey values will now use default values</li>
+          <li>Fixed an instance where an emergency fax could show the wrong cure</li>
+          <li>Sound effect boundary is now properly applied on window resize</li>
+          <li>The cheats menu is now immediately usable after typing the cheat code on a
+            fax</li>
+          <li>User action while paused setting no longer uses configuration default</li>
+          <li>Quick Save and Quick Load behaviour has been improved</li>
+          <li>The cheats menu dialog will no longer slide off the screen</li>
+          <li>You can now purchase plots while wall transparency is on</li>
+          <li>Fixed playback of movie audio on surround sound systems is the most accurate</li>
+          <li>Patients no longer leave or become unhappy waiting too long when
+              they are in their treatment room</li>
+          <li>Resolved formatting issues with numbers after loading a save</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.66~rc1" date="2022-06-18" type="development">
       <description>
         <p>Fixes:</p>

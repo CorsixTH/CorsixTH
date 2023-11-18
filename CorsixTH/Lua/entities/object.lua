@@ -626,7 +626,7 @@ end
 !param button (string) Which button was clicked.
 !param data (table) If some data should be retained after moving an object it is in this table.
 ]]
-function Object:onClick(ui, button, data) -- luacheck: ignore 212 keep args from parent class
+function Object:onClick(ui, button, data)
   local window = ui:getWindow(UIEditRoom)
   if button == "right" or (button == "left" and window and window.in_pickup_mode) then
     -- This flag can be used if for example some things should only happen as long as the
@@ -737,6 +737,13 @@ function Object:afterLoad(old, new)
         local flags = {buildable = true}
         self.world.map.th:setCellFlags(self.tile_x, self.tile_y, flags)
       end
+      self:setTile(self.tile_x, self.tile_y)
+    end
+  end
+  if old < 173 then
+    -- Fix bug with couch not being fully passable
+    if self.object_type.id == "couch" then
+      self:initOrientation(self.direction)
       self:setTile(self.tile_x, self.tile_y)
     end
   end

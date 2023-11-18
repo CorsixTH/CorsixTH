@@ -1,0 +1,51 @@
+---
+name: Windows
+
+on:  # yamllint disable-line rule:trurhy
+  push:
+    branches-ignore:
+      - 'gh-pages'
+  pull_request:
+
+jobs:
+  Windows:
+    runs-on: windows-2022
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Restore vcpkg cache
+        uses: actions/cache@v3
+        with:
+          path: vcpkg
+          key: vcpkg-${{runner.os}}-${{hashFiles('CMake/VcpkgDeps.cmake','scripts/build_vcpkg_deps.ps1')}}
+
+      - name: Create Project 
+        run: cmake -G "Visual Studio 17 2022" -DUSE_VCPKG_DEPS=ON -DVCPKG_TARGET_TRIPLET=x64-windows-release -DENABLE_UNIT_TESTS=ON -Bbuild .
+
+      - name: Build
+        run: cmake --build build/ --config RelWithDebInfo
+
+      - name: Test
+        run: |
+          pushd build/CorsixTH
+          ctest --extra-verbose --build-config RelWithDebInfo --output-on-failure
+          popd
+
+      - name: Download soundfont
+        run:
+          aria2c -d build/CorsixTH/RelWithDebInfo https://github.com/Jacalz/fluid-soundfont/raw/master/SF3/FluidR3.sf3
+
+      - name: Copy data files for archive
+        run: |
+          cp -R CorsixTH/Lua build/CorsixTH/RelWithDebInfo/Lua
+          cp -R CorsixTH/Bitmap build/CorsixTH/RelWithDebInfo/Bitmap
+          cp -R CorsixTH/Levels build/CorsixTH/RelWithDebInfo/Levels
+          cp -R CorsixTH/Campaigns build/CorsixTH/RelWithDebInfo/Campaigns
+          cp CorsixTH/CorsixTH.lua build/CorsixTH/RelWithDebInfo/
+
+      - name: Archive Release
+        uses: actions/upload-artifact@v3
+        with:
+          path: build/CorsixTH/RelWithDebInfo
+          name: CorsixTH

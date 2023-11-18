@@ -1,5 +1,5 @@
 #include "../Src/th_lua.h"
-#include "catch2/catch.hpp"
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("luaT_rotate works", "[luaT_rotate]") {
   lua_State* L = luaL_newstate();

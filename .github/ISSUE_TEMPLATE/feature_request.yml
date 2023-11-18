@@ -38,7 +38,7 @@ body:
     id: corsix-version
     attributes:
       label: What version of CorsixTH are you using?
-      description: "You can check and download the latest stable release at https://github.com/CorsixTH/releases"
+      description: "You can check and download the latest stable release at https://github.com/CorsixTH/CorsixTH/releases"
       placeholder: e.g. 0.65 (release version) or 7d886f35ca (if built from master)
     validations:
       required: true

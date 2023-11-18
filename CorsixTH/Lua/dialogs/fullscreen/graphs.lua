@@ -43,9 +43,8 @@ function UIGraphs:UIGraphs(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   if not pcall(function()
-    self.background = gfx:loadRaw("Graph01V", 640, 480)
-    local palette = gfx:loadPalette("QData", "Graph01V.pal")
-    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    self.background = gfx:loadRaw("Graph01V", 640, 480, "QData", "QData", "Graph01V.pal", true)
+    local palette = gfx:loadPalette("QData", "Graph01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Graph02V", true, palette)
     self.white_font = gfx:loadFont("QData", "Font01V", false, palette)
     self.black_font = gfx:loadFont("QData", "Font00V", false, palette)
@@ -399,7 +398,7 @@ function UIGraphs:draw(canvas, x, y)
   if stats_stepsize >= 12 then
     -- Display years
     local year_number = math.floor((#self.hospital.statistics - 1) / stats_stepsize)
-	local year_steps = math.floor(stats_stepsize / 12)
+    local year_steps = math.floor(stats_stepsize / 12)
     year_number = year_number * year_steps
     for i = 1, #self.values do
       self.black_font:drawWrapped(canvas, year_number, xpos, y + BOTTOM_Y + 10, 25, "center")
@@ -443,6 +442,15 @@ function UIGraphs:close()
 end
 
 function UIGraphs:afterLoad(old, new)
+  if old < 179 then
+    local gfx = TheApp.gfx
+
+    self.background = gfx:loadRaw("Graph01V", 640, 480, "QData", "QData", "Graph01V.pal", true)
+    local palette = gfx:loadPalette("QData", "Graph01V.pal", true)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Graph02V", true, palette)
+    self.white_font = gfx:loadFont("QData", "Font01V", false, palette)
+    self.black_font = gfx:loadFont("QData", "Font00V", false, palette)
+  end
   UIFullscreen.afterLoad(self, old, new)
   if old < 117 then
     self:close()

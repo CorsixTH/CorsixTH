@@ -28,9 +28,8 @@ function UICasebook:UICasebook(ui, disease_selection)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   if not pcall(function()
-    self.background = gfx:loadRaw("DrugN01V", 640, 480)
-    local palette = gfx:loadPalette("QData", "DrugN01V.pal")
-    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    self.background = gfx:loadRaw("DrugN01V", 640, 480, "QData", "QData", "DrugN01V.pal", true)
+    local palette = gfx:loadPalette("QData", "DrugN01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "DrugN02V", true, palette)
     self.title_font = gfx:loadFont("QData", "Font25V", false, palette)
     self.selected_title_font = gfx:loadFont("QData", "Font26V", false, palette)
@@ -395,6 +394,16 @@ function UICasebook:onTick()
 end
 
 function UICasebook:afterLoad(old, new)
+  if old < 179 then
+    local gfx = TheApp.gfx
+    self.background = gfx:loadRaw("DrugN01V", 640, 480, "QData", "QData", "DrugN01V.pal", true)
+    local palette = gfx:loadPalette("QData", "DrugN01V.pal", true)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "DrugN02V", true, palette)
+    self.title_font = gfx:loadFont("QData", "Font25V", false, palette)
+    self.selected_title_font = gfx:loadFont("QData", "Font26V", false, palette)
+    self.drug_font = gfx:loadFont("QData", "Font24V", false, palette)
+  end
+
   UIFullscreen.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end

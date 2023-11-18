@@ -36,7 +36,7 @@ local function newindex(t, k, v)
   end
 end
 
-local function index(t, k)
+local function index(_, k)
   if allowed_globals[k] then
     return nil
   else

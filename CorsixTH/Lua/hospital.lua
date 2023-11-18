@@ -1680,7 +1680,7 @@ function Hospital:objectPlaced(entity, id)
   end
 
   if id == "plant" then
-    self:msgPlant()
+    self:advisePlants(true)
     return
   end
 
@@ -2366,7 +2366,6 @@ function Hospital:getRandomBusyRoom()
 end
 
 ---- Stubs section - these functions have nothing to do here, are overridden in a derived class.
--- luacheck: ignore 212 keep args for child class
 
 --! Give advice to the user about the need to buy the first reception desk.
 function Hospital:msgNeedFirstReceptionDesk()
@@ -2381,7 +2380,7 @@ function Hospital:msgMultiReceptionDesks()
 end
 
 --! Give advice to the user about maintenance of plants.
-function Hospital:msgPlant()
+function Hospital:advisePlants()
 end
 
 --! Show the 'Gates to hell' animation.
@@ -2456,4 +2455,8 @@ end
 
 --! Called when the vip is out of the hospital grounds
 function Hospital:makeVipEndFax(vip_rating, name, cash_reward, vip_message)
+end
+
+--! Play a sound file
+function Hospital:playSound(sound)
 end

@@ -79,7 +79,7 @@ pay_rise.regular[1] = "I'm totally frazzled. I need a good rest, plus a rise of 
 
 -- Level description overrides where there are typos. Note: This is the only portion of the game that SHOULD use double space after fullstops etc.
 introduction_texts.level17 = " Last word of warning - keep a keen eye on your Reputation - this is what will attract the patients from far and wide to your establishment.  If you don't kill too many people and keep them reasonably happy you shouldn't have too much trouble on this level!// You're on you own now.  Good luck and all that."
-introduction_texts.level11 = " You've been given the chance to build the ultimate in hospitals.  This is an exceedingly prestigious area, and the Ministry would like to see the best possible hospital.  We'll be expecting you to make big money, have a superbly high reputation and cover every possible eventuality.  It's an important job, this.  You'll have to be something special to pull it off.  Note, too, that there have sightings of UFOs in the area.  Make sure your staff are prepared for some unexpected visitors.  Your hospital will need to be worth $240,000, you'll need $500,000 in the bank, and your reputation will need to be 700."
+introduction_texts.level11 = " You've been given the chance to build the ultimate in hospitals.  This is an exceedingly prestigious area, and the Ministry would like to see the best possible hospital.  We'll be expecting you to make big money, have a superbly high reputation and cover every possible eventuality.  It's an important job, this.  You'll have to be something special to pull it off.  Note, too, that there have been sightings of UFOs in the area.  Make sure your staff are prepared for some unexpected visitors.  Your hospital will need to be worth $240,000, you'll need $500,000 in the bank, and your reputation will need to be 700."
 introduction_texts.level9 = " Having filled the Ministry's bank account and paid for a new limousine for the Minister himself, you can now get back to creating a caring, well-run hospital for the benefit of the unwell and needy.  You can expect a lot of different problems to crop up here.  If you have enough well-trained staff and rooms, you should have all the angles covered.  Your hospital will need to be worth $200,000, and you'll need $400,000 in the bank.  Any less and you won't be able to finish the level."
 introduction_texts.level16 = " Once you have diagnosed some of the patients you will need to build treatment facilities and clinics to cure them - a good one to start off with is the Pharmacy.  You'll also need a Nurse to dispense the various drugs in the Pharmacy."
 introduction_texts.level10 = " As well as covering all the illnesses which crop up in this neck of the woods, the Ministry request that you spend some time concentrating on the efficiency of your drugs.  There have been some complaints from Ofsick, the Health Watchdog, so in order to look good you must make sure all your drugs are extremely efficient.  Also, make sure your hospital is above reproach as well. Keep those deaths down.  As a hint, you might like to keep space free for a Jelly Vat.  Develop all your drugs to at least 80 per cent efficiency, get a reputation of 650 and stash $500,000 in the bank to win."
@@ -219,10 +219,10 @@ menu_debug_overlay = {
   parcel                      = "  PARCEL  ",
 }
 menu_player_count = {
-	players_1 = "  1 PLAYER  ",
-	players_2 = "  2 PLAYERS  ",
-	players_3 = "  3 PLAYERS  ",
-	players_4 = "  4 PLAYERS  ",
+  players_1 = "  1 PLAYER  ",
+  players_2 = "  2 PLAYERS  ",
+  players_3 = "  3 PLAYERS  ",
+  players_4 = "  4 PLAYERS  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
@@ -328,6 +328,7 @@ main_menu = {
   options = "Settings",
   map_edit = "Map Editor",
   savegame_version = "Savegame version: ",
+  updates_off = "Not checking for updates",
   version = "Version: ",
   exit = "Exit",
 }
@@ -399,12 +400,14 @@ tooltip.save_map_window = {
 menu_list_window = {
   name = "Name",
   save_date = "Modified",
+  ok = "OK",
   back = "Back",
 }
 
 tooltip.menu_list_window = {
   name = "Click here to sort the list by name",
   save_date = "Click here to sort the list by last modification date",
+  ok = "Confirm choice",
   back = "Close this window",
 }
 
@@ -412,6 +415,8 @@ options_window = {
   caption = "Settings",
   option_on = "On",
   option_off = "Off",
+  option_enabled = "Enabled",
+  option_disabled = "Disabled",
   fullscreen = "Fullscreen",
   resolution = "Resolution",
   capture_mouse = "Capture Mouse",
@@ -429,6 +434,7 @@ options_window = {
   shift_scrollspeed = "Shift Scroll Speed",
   zoom_speed = "Zoom Speed",
   hotkey = "Hotkeys",
+  check_for_updates = "Check for Updates",
 }
 
 tooltip.options_window = {
@@ -459,6 +465,7 @@ tooltip.options_window = {
   apply_zoomspeed = "Apply the entered zoom speed.",
   cancel_zoomspeed = "Return without changing the zoom speed.",
   hotkey = "Change keyboard hotkeys.",
+  check_for_updates = "Sets whether the game should look for updates on launch.",
 }
 
 customise_window = {
@@ -759,7 +766,7 @@ totd_window = {
     "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
     "You can adjust some settings such as the resolution and language in the options window found both in the main menu and ingame.",
     "You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
-    "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Forum, Mailing List or IRC Channel (corsix-th at freenode).",
+    "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Discord Server, Sub-Reddit or Matrix Server. Links are on our website (CorsixTH.com).",
     "If you find a bug, please report it at our bugtracker: th-issues.corsix.org",
     "Each level has certain requirements to fulfill before you can move on to the next one. Check the status window to see your progression towards the level goals.",
     "If you want to edit or remove an existing room, you can do so with the edit room button found in the bottom toolbar.",
@@ -782,6 +789,10 @@ tooltip.totd_window = {
 
 debug_patient_window = {
   caption = "Debug Patient",
+}
+
+tooltip.debug_patient_window = {
+  item = "Create a debug patient with %s",
 }
 
 cheats_window = {
