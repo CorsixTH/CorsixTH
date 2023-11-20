@@ -1023,6 +1023,16 @@ function World:onTick()
     end
     self.tick_timer = self.tick_rate
 
+    -- Remove entities marked for deletion
+    if self.entity_gc then
+      for i = #self.entities, 1, -1 do
+        if self.entities[i].delete then
+          table.remove(self.entities, i)
+        end
+      end
+      self.entity_gc = nil
+    end
+
     -- if an earthquake is supposed to be going on, call the earthquake function
     if self.next_earthquake.active then
       self:tickEarthquake()
@@ -1940,13 +1950,11 @@ function World:newEntity(class, animation)
   return entity
 end
 
+--! Mark an entity for deletion in the next tick
+--!param entity
 function World:destroyEntity(entity)
-  for i, e in ipairs(self.entities) do
-    if e == entity then
-      table.remove(self.entities, i)
-      break
-    end
-  end
+  entity.delete = true
+  self.entity_gc = true -- Garbage collection in onTick
   entity:onDestroy()
 end
 
