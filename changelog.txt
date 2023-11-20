@@ -202,7 +202,7 @@ Version 0.64 - released June 2020
 * Earthquake cheat now breaks your hospital instead of the game.
 
 # Translations
-* Updated translations for Chinese, French, Brazilian Portugese.
+* Updated translations for Chinese, French, Brazilian Portuguese.
 
 -------------------------------------------------------------------------------
 Version 0.63 - released May 2019
@@ -1327,7 +1327,7 @@ Version Beta 2 - released 2010-03-24
   and will need a bathroom sooner or later, and staff will ask for a salary
   raise when unhappy.
 * Feature: Machines will need repair now and then. A dialog that shows
-  necessarry information is displayed when the machine is clicked.
+  necessary information is displayed when the machine is clicked.
 * Feature: Dynamic Information Bar in the bottom right corner of the UI added.
   It shows information about entities beneath the mouse cursor.
 * Feature: The training room can now be built, where doctors can increase

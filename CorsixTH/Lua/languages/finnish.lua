@@ -65,7 +65,7 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 --   SECTION A - NEW STRINGS
 -------------------------------------------------------------------------------
 
--- 1. Global setings (do not edit!)
+-- 1. Global settings (do not edit!)
 Language("Suomi", "Finnish", "fi", "fin")
 Inherit("english")
 

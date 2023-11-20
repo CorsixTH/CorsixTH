@@ -31,7 +31,7 @@ Most features of the game are available -- and we're at a state where you can co
 - All diseases, objects, rooms are available (see below section for outstanding anomalies)
 - All events (emergencies, earthquakes, epidemics, VIP visits)
 - Management windows (managing staff, patients, policies etc.)
-- Music/Jukebox and gameplay videos (see below section for oustanding anomalies)
+- Music/Jukebox and gameplay videos (see below section for outstanding anomalies)
 - Cheats (naughty!)
 ##### New Features #####
 - Custom levels and campaigns
