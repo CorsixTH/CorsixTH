@@ -143,13 +143,15 @@ RECURSIVE              = YES
 
 HTML_FOOTER            = "@CMAKE_SOURCE_DIR@/DoxyGen/new_footer.html"
 
-# If the HTML_TIMESTAMP tag is set to YES then the footer of each generated HTML
-# page will contain the date and time when the page was generated. Setting this
-# to NO can help when comparing the output of multiple runs.
-# The default value is: YES.
-# This tag requires that the tag GENERATE_HTML is set to YES.
+# Note: HTML_TIMESTAMP obsolete in v1.9.8, replaced with TIMESTAMP
+# If the TIMESTAMP tag is set different from NO then 
+# each generated page will contain the date or date and time when the page
+# was generated. Setting this to NO can help when comparing the output of
+# multiple runs.
+# Possible values are: YES, NO, DATETIME and DATE.
+# The default value is: NO.
 
-HTML_TIMESTAMP         = NO
+TIMESTAMP              = NO
 
 #---------------------------------------------------------------------------
 # Configuration options related to the LaTeX output
