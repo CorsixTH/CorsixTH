@@ -404,6 +404,15 @@ function serialize(val, options, depth, pt_reflist)
   end
 end
 
+--! Simplified interface for serializing a value with option for depth
+-- See serialize for further explanation
+-- Output is dumped to the console
+--!param value A table or string to inspect
+--!param depth (num) Optional, defaults at 1
+function inspect(value, depth)
+  print(serialize(value, {detect_cycles = true, max_depth = depth or 1, pretty = true}))
+end
+
 -- Clones a table, but only the first level.
 function shallow_clone(tbl)
   if type(tbl) ~= "table" then return tbl end
