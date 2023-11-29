@@ -238,6 +238,7 @@ adviser = {
     another_desk = "You'll need to build another desk for that new receptionist.",
     cannot_afford = "You don't have enough money in the bank to hire that person!", -- I can't see anything like this in the original strings
     cannot_afford_2 = "You don't have enough money in the bank to make that purchase!",
+    cannot_afford_machine = "You need at least $%1% in the bank to afford a new %2%!",
     falling_1 = "Hey! That is not funny, watch where you click that mouse; someone could get hurt!",
     falling_2 = "Stop messing about, how would you like it?",
     falling_3 = "Ouch, that had to hurt, someone call a Doctor!",

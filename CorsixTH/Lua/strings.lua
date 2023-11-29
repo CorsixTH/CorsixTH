@@ -331,10 +331,11 @@ function Strings:setupAdviserMessage(messages)
     --build_advice
     --cheats
   }
+  -- Passes adviser message through string.format process
   local formatFunc
-  formatFunc = function(format_self, arg)
+  formatFunc = function(format_self, ...)
     -- After 'format', it is not useful to have indexing magic anymore.
-    return { text = format_self.text:format(arg), priority = format_self.priority }
+    return { text = format_self.text:format(...), priority = format_self.priority }
   end
   local indexFunc
   indexFunc = function(index_self, field)
