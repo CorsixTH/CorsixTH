@@ -107,6 +107,7 @@ local config_defaults = {
   music_volume = 0.5,
   prevent_edge_scrolling = false,
   capture_mouse = true,
+  right_mouse_scrolling = false,
   adviser_disabled = false,
   scrolling_momentum = 0.8,
   twentyfour_hour_clock = true,
@@ -283,6 +284,12 @@ local string_01 = [=[
 -- Capture mouse: By default enabled (capture mouse = true).
 --]=] .. '\n' ..
 'capture_mouse = ' .. tostring(config_values.capture_mouse) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- Right Mouse Scrolling: By default, it is disabled (right_mouse_scrolling = false).
+-- This means that the default scrolling method is pressing the middle mouse button.
+--]=] .. '\n' ..
+'right_mouse_scrolling = ' .. tostring(config_values.right_mouse_scrolling) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Adviser on/off: If you set this to true the adviser will no longer
