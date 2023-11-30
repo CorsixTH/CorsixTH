@@ -119,7 +119,7 @@ function UIBankManager:afterLoad(old, new)
     self.eyesblink = self:addPanel(7, 298, 173)
     self.browslift = self:addPanel(9, 296, 165)
   end
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Bank01V", 640, 480, "QData", "QData", "Bank01V.pal", true)
     self.stat_background = gfx:loadRaw("Stat01V", 640, 480, "QData", "QData", "Stat01V.pal", true)
@@ -308,7 +308,7 @@ function UIBankManager:draw(canvas, x, y)
   end
 end
 
-function UIBankManager:onMouseMove(x, y, ...)
+function UIBankManager:onMouseMove(x, y, dx, dy)
     local ui = self.ui
     if x > 0 and x < 640 and y > 0 and y < 480 then
       if self.showingStatistics then

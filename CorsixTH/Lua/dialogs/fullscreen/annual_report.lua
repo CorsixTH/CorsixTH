@@ -638,7 +638,7 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
 end
 
 function UIAnnualReport:afterLoad(old, new)
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
 
     local palette = gfx:loadPalette("QData", "Award02V.pal", true)

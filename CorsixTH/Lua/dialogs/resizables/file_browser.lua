@@ -225,13 +225,13 @@ end
 
 --! Function stub for dialogs to override. This function is called each time a file is chosen.
 --!param name (string) Name of the file chosen.
-function UIFileBrowser:choiceMade(name) -- luacheck: ignore 212 keep args from parent class
+function UIFileBrowser:choiceMade(name)
 end
 
 --! Function stub for dialogs with user input option. This will be called for
 --! updating inputs, override it for a proper implementation in the derived class.
 --!param label (string) Name of the file chosen
-function UIFileBrowser:setInputValue(label) -- luacheck: ignore 212 keep args from parent class
+function UIFileBrowser:setInputValue(label)
 end
 
 --! Check selection is a valid file, and not a directory

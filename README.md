@@ -1,13 +1,13 @@
-![](https://i.imgur.com/fYp148T.jpg)
+![image](https://github.com/CorsixTH/CorsixTH/assets/20030128/923883d1-cd2b-48a9-8506-6ee03e2745dc)
 
 ### Latest Release [![Release](https://img.shields.io/github/release/CorsixTH/CorsixTH.svg?colorB=green)](https://github.com/CorsixTH/CorsixTH/releases) [![Linux and Tests](https://github.com/CorsixTH/CorsixTH/workflows/Linux%20and%20Tests/badge.svg)](https://github.com/CorsixTH/CorsixTH/actions?query=workflow%3A%22Linux+%26+Tests%22) [![Windows](https://github.com/CorsixTH/CorsixTH/actions/workflows/Windows.yml/badge.svg)](https://github.com/CorsixTH/CorsixTH/actions/workflows/Windows.yml) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/CorsixTH/CorsixTH?branch=master&svg=true)](https://ci.appveyor.com/project/TheCycoONE/corsixth)
 
-##### [Matrix Chat](https://matrix.to/#/#corsixth-general:matrix.org) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new) | [Reddit](https://www.reddit.com/r/corsixth) | [Discord](https://discord.gg/Mxeztvh)
+##### [Matrix Space](https://matrix.to/#/#CorsixTH:matrix.org) | [Matrix Chat](https://matrix.to/#/#corsixth-general:matrix.org) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new) | [Reddit](https://www.reddit.com/r/corsixth) | [Discord](https://discord.gg/Mxeztvh)
 
 
 A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original, CorsixTH adds support for modern operating systems (Windows, macOS, Linux and BSD), high resolutions and much more.
 
-![](https://i.imgur.com/qHV60Ui.png)
+![image](https://github.com/CorsixTH/CorsixTH/assets/20030128/71a42d5f-d486-4309-ba85-77e114880bcb)
 
 
 ## Getting Started ##
@@ -20,7 +20,7 @@ You will need the following:
    - A Flatpak for Linux users is available on [Flathub](https://flathub.org/apps/details/com.corsixth.corsixth).
 - We use graphics, sound and other data from the original game so one of the following is required:
    - Original game CD from eBay etc. or your dusty bookshelf:smile:
-   - A download from [GOG.com](https://www.gog.com/game/theme_hospital) or [Origin](https://www.origin.com/en-gb/store/buy/theme-hospital-origin/pc-download/base-game/standard-edition)
+   - A download from [GOG.com](https://www.gog.com/game/theme_hospital) or [EA](https://www.ea.com/games/theme/theme-hospital)
 
  Head over to our [getting started](https://github.com/CorsixTH/CorsixTH/wiki/Getting-Started) page for more detail.
 
@@ -31,7 +31,7 @@ Most features of the game are available -- and we're at a state where you can co
 - All diseases, objects, rooms are available (see below section for outstanding anomalies)
 - All events (emergencies, earthquakes, epidemics, VIP visits)
 - Management windows (managing staff, patients, policies etc.)
-- Music/Jukebox and gameplay videos (see below section for oustanding anomalies)
+- Music/Jukebox and gameplay videos (see below section for outstanding anomalies)
 - Cheats (naughty!)
 ##### New Features #####
 - Custom levels and campaigns
@@ -75,6 +75,17 @@ Our [wiki](https://github.com/CorsixTH/CorsixTH/wiki) is a good place to start, 
 ## Contact
 
 - Follow us on [Reddit](https://www.reddit.com/r/corsixth), Twitter ([**@CorsixTH**](https://twitter.com/CorsixTH)), and on [Facebook](https://facebook.com/CorsixTH)
-- Hit up our Matrix Room (Discord Bridge) [#corsixth-general:matrix.org](https://matrix.to/#/#corsixth-general:matrix.org)
+- <details>
+  <summary>Hit us up on Matrix! (Discord bridged) [click to expand]</summary>
+  
+  - **CorsixTH Space** (includes all rooms below, if your client supports it) [#CorsixTH:matrix.org](https://matrix.to/#/#CorsixTH:matrix.org)
+  - **General Chat** [#corsixth-general:matrix.org](https://matrix.to/#/#corsixth-general:matrix.org)
+  - **Announcements** [#corsixth-announcements:matrix.org](https://matrix.to/#/#corsixth-announcements:matrix.org)
+  - **Technical Discussion** (DevOps) [#corsixth-technical:matrix.org](https://matrix.to/#/#corsixth-technical:matrix.org)
+  - **Help!** [#corsixth-help:matrix.org](https://matrix.to/#/#corsixth-help:matrix.org)
+  - **Community Content** [#corsixth-usercontent:matrix.org](https://matrix.to/#/#corsixth-usercontent:matrix.org)
+  
+</details>
+
 - Join the server on [Discord](https://discord.gg/Mxeztvh)
 - Subscribe to our [Google Developer group](https://groups.google.com/g/corsix-th-dev)

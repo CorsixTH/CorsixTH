@@ -24,7 +24,6 @@ class "Map"
 ---@type Map
 local Map = _G["Map"]
 
-local pathsep = package.config:sub(1, 1)
 local math_floor, tostring, table_concat
     = math.floor, tostring, table.concat
 local thMap = require("TH").map
@@ -69,7 +68,7 @@ function Map:setPlayerCount(count)
 end
 
 function Map:getPlayerCount(count)
-  self.th:getPlayerCount(count)
+  return self.th:getPlayerCount(count)
 end
 
 --! Set the camera tile for the given player on the map
@@ -170,7 +169,7 @@ the original game levels are considered.
 has been loaded.
 ]]
 function Map:load(level, difficulty, level_name, map_file, level_intro, map_editor)
-  local objects
+  local objects, _
   if not difficulty then
     difficulty = "full"
   end
@@ -180,11 +179,9 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
       local f = assert(loadfile(filename))
       return f()
     end
-  local path = debug.getinfo(1, "S").source:sub(2, -12)
-  local result = file(path .. "Lua" .. pathsep .. "base_config.lua")
 
+  local result = file(self.app:getFullPath({"Lua", "base_config.lua"}))
   local base_config = result
-  local _
   if type(level) == "number" then
     local errors, data
     -- Playing the original campaign.
@@ -207,8 +204,8 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     -- Check if we're using the demo files. If we are, that special config should be loaded.
     if self.app.using_demo_files then
       -- Try to load our own configuration file for the demo.
-      local p = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "demo.level"
-      errors, result = self:loadMapConfig(p, base_config, true)
+      local demo_path = self.app:getFullPath({"Levels", "demo.level"})
+      errors, result = self:loadMapConfig(demo_path, base_config, true)
       if errors then
         print("Warning: Could not find the demo configuration, try reinstalling the game")
       end
@@ -221,8 +218,8 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
       -- Override with the specific configuration for this level
       _, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
       -- Finally load additional CorsixTH config per level
-      local p = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "original" .. level_no .. ".level"
-      _, result = self:loadMapConfig(p, result, true)
+      local level_path = self.app:getFullPath({"Levels", "original" .. level_no .. ".level"})
+      _, result = self:loadMapConfig(level_path, result, true)
       self.level_config = result
     end
   elseif map_editor then

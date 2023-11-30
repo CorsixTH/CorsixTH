@@ -319,7 +319,7 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
   end
 end)
 
-local action_multi_use_object_interrupt = permanent"action_multi_use_object_interrupt"( function(action, humanoid)
+local action_multi_use_object_interrupt = permanent"action_multi_use_object_interrupt"( function(action)
   if not action.loop_callback then
     action.prolonged_usage = false
   end

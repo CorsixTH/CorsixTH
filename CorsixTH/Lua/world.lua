@@ -287,7 +287,7 @@ function World:initLevel(app, avail_rooms)
       end
     end
   end
-  if #self.available_diseases == 0 and not self.map.level_number == "MAP EDITOR" then
+  if #self.available_diseases == 0 and self.map.level_number ~= "MAP EDITOR" then
     -- No diseases are needed if we're actually in the map editor!
     print("Warning: This level does not contain any diseases")
   end
@@ -1463,16 +1463,24 @@ function World:checkWinningConditions(player_no)
     end
     if goal.win_value then
       local max_min = goal.max_min_win == 1 and 1 or -1
-      -- Special case for balance, subtract any loans!
+
       if goal.name == "balance" then
+        -- Special case for balance, subtract any loans!
         current_value = current_value - hospital.loan
       end
+
       -- Is this goal not fulfilled yet?
       if (current_value - goal.win_value) * max_min <= 0 then
         result.state = "nothing"
       end
     end
   end
+
+  -- Special case for loans: you cannot run from them !
+  if hospital.loan > 0 and result.state == "win" then
+    result.state = "nothing"
+  end
+
   return result
 end
 
@@ -1855,34 +1863,43 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
   return object, ox, oy
 end
 
-function World:findRoomNear(humanoid, room_type_id, distance, mode)
-  -- If mode == "nearest" (or nil), the nearest room is taken
-  -- If mode == "advanced", prefer a near room, but also few patients and fulfilled staff criteria
+--! Finds the most desirable room of a given room type for the provided humanoid.
+--!param humanoid The queried NPC (start point)
+--!param room_type_id (string) The room we are looking for
+--!param max_distance (number) The maximum distance away a room will be considered from the humanoid
+--!param mode (string) "nearest"/nil returns the nearest room, while
+--! "advanced" prefers a near room but also takes into account queue size/staffing
+--!return The best room for the huamnoid or nil if no room exists within the maximum distance
+function World:findRoomNear(humanoid, room_type_id, max_distance, mode)
+  assert(type(room_type_id) == "string", "Room type id given is not a string!")
   local room
   local score
   if not mode then
     mode = "nearest" -- default mode
   end
-  if not distance then
-    distance = 2^30
+  if not max_distance then
+    max_distance = 2^30
   end
-  for _, r in pairs(self.rooms) do repeat
-    if r.built and (not room_type_id or r.room_info.id == room_type_id) and r.is_active then
+
+  for _, r in pairs(self.rooms) do
+    if r.built and r.room_info.id == room_type_id and r.is_active then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
-      if not d or d > distance then
-        break -- continue
-      end
-      local this_score = d
-      if mode == "advanced" then
-        this_score = this_score + r:getUsageScore()
-      end
-      if not score or this_score < score then
-        score = this_score
-        room = r
+
+      if d and d <= max_distance then
+        local this_score = d
+
+        if mode == "advanced" then
+          this_score = this_score + r:getUsageScore()
+        end
+
+        if not score or this_score < score then
+          score = this_score
+          room = r
+        end
       end
     end
-  until true end
+  end
   return room
 end
 

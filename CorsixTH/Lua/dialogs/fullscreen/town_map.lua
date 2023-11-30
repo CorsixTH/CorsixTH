@@ -107,7 +107,7 @@ function UITownMap:close()
 end
 
 local flag_cache = {}
-function UITownMap:onMouseMove(x, y)
+function UITownMap:onMouseMove(x, y, dx, dy)
   local tx = math.floor((x - 227) / 3)
   local ty = math.floor((y - 25) / 3)
   self.hover_plot = nil
@@ -346,7 +346,7 @@ function UITownMap:bankStats()
 end
 
 function UITownMap:afterLoad(old, new)
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
     local palette = gfx:loadPalette("QData", "Town01V.pal", true)
     self.background = gfx:loadRaw("Town01V", 640, 480, "QData", "QData", "Town01V.pal", true)

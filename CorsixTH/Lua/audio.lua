@@ -147,15 +147,22 @@ function Audio:init()
     else
       data = assert(self.app.fs:readContents("Sound", "Midi", midi_txt))
     end
+    local i = 1
     for file, title in data:gmatch("([^\r\n\26]+).-([^\r\n\26]+)") do
       local info = musicFileTable(file:match("^(.*)%.") or file)
       if next(info) ~= nil then
         info.title = title
+        info.index = i
+        i = i + 1
       else
         print('Notice: Background track "'.. file ..'" named in list file, '..
               'but it does not exist.')
       end
     end
+    -- Sort by midi.txt order if there is one, or by filename.
+    table.sort(self.background_playlist, function(a,b) return a.index < b.index end)
+  else
+    table.sort(self.background_playlist, function(a,b) return a.title < b.title end)
   end
   if #self.background_playlist == 0 and self.app.good_install_folder then
     print("Notice: Audio system loaded, but found no background tracks")

@@ -109,21 +109,22 @@ function MoviePlayer:init()
   self.moviePlayer:setRenderer(self.video)
 
   --find movies in Anims folder
-  local movies = self.app.fs:listFiles("Anims")
+  local fs = self.app.fs
+  local movies = fs:listFiles("Anims")
   if movies then
     for _, movie in pairs(movies) do
       --lose level movies
       if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .. "]+$") then
-        table.insert(self.lose_movies, movie)
+        table.insert(self.lose_movies, fs:fileUri(movie))
       end
       --advance level movies
       local num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
       if num ~= nil and tonumber(num, 10) ~= nil then
-        self.advance_movies[tonumber(num, 10)] = movie
+        self.advance_movies[tonumber(num, 10)] = fs:fileUri(movie)
       end
       --win game movie
       if movie:upper():match(pathsep .. "WINGAME%.[^" .. pathsep .. "]+$") then
-        self.win_movie = movie
+        self.win_movie = fs:fileUri(movie)
       end
     end
   end
@@ -133,9 +134,9 @@ function MoviePlayer:init()
   if movies then
     for _, movie in pairs(movies) do
       if movie:upper():match(pathsep .. "INTRO%.SM4$") then
-        self.intro_movie = movie
+        self.intro_movie = fs:fileUri(movie)
       elseif movie:upper():match(pathsep .. "ATTRACT.SMK$") then
-        self.demo_movie = movie
+        self.demo_movie = fs:fileUri(movie)
       end
     end
   end

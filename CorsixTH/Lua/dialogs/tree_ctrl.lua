@@ -43,13 +43,13 @@ end
 
 --! Get a child of the item.
 --!param idx (integer) An integer between 1 and getChildCount() (inclusive).
-function TreeNode:getChildByIndex(idx) -- luacheck: ignore 212 keep args for child class
+function TreeNode:getChildByIndex(idx)
   error("To be implemented in subclasses")
 end
 
 --! Given a child of the item, determine which index it is
 --!param child (TreeNode) A value returned from getChildByIndex()
-function TreeNode:getIndexOfChild(child) -- luacheck: ignore 212 keep args for child class
+function TreeNode:getIndexOfChild(child)
   error("To be implemented in subclasses")
 end
 
@@ -74,7 +74,7 @@ function TreeNode:isExpanded()
 end
 
 --! Get the background colour for when the item is highlighted
-function TreeNode:getHighlightColour(canvas) -- luacheck: ignore 212 keep args for child class
+function TreeNode:getHighlightColour(canvas)
   return nil
 end
 
@@ -573,7 +573,7 @@ function TreeControl:hitTestTree(x, y)
   end
 end
 
-function TreeControl:onMouseMove(x, y)
+function TreeControl:onMouseMove(x, y, dx, dy)
   local redraw = Window.onMouseMove(self, x, y)
   local node, expand = self:hitTestTree(x, y)
   if expand and self.highlighted_node ~= nil then
@@ -649,7 +649,7 @@ function TreeControl:onMouseUp(button, x, y)
   return redraw
 end
 
-function TreeControl:onMouseWheel(x, y) -- luacheck: ignore 212 keep args from parent class
+function TreeControl:onMouseWheel(x, y)
   self.scrollbar:setXorY(self.scrollbar:getXorY() - y * 8)
 end
 
@@ -673,7 +673,7 @@ end
 
 --! Override this function if a certain row should have certain text
 -- or additional flavour to it.
-function TreeControl:drawExtraOnRow(canvas, node, x, y) -- luacheck: ignore 212 keep args for child class
+function TreeControl:drawExtraOnRow(canvas, node, x, y)
 end
 
 function TreeControl:draw(canvas, x, y)

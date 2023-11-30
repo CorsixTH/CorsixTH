@@ -21,7 +21,7 @@ SOFTWARE.
 
     Original code was from http://www.yoda.arachsys.com/dk/utils.html. While
     that site and the original code do not state copyright or license, email
-    communication releaved the original author, and they agreed to releasing it
+    communication revealed the original author, and they agreed to releasing it
     under the MIT license (above).
 
     Modifications made to the original code include:

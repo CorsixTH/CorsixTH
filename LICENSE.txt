@@ -48,13 +48,13 @@ Copyright (C) 2013 YoungSeok Yoon
 Copyright (C) 2013-2015 Maarten Peters
 Copyright (C) 2013 nullstein
 Copyright (C) 2013 BuTcHeR (extragry.pl)
-Copyright (C) 2013-2022 Albert "Alberth" Hofkamp
+Copyright (C) 2013-2023 Albert "Alberth" Hofkamp
 Copyright (C) 2014-2015 Joseph "J-Shep" Sheppard
 Copyright (C) 2014 Phillipp Röll
 Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman
 Copyright (C) 2015 Víctor "mccunyao" González
 Copyright (C) 2015 Josh Keegan
-Copyright (C) 2016-2022 Toby Lane
+Copyright (C) 2016-2023 Toby Lane
 Copyright (C) 2016-2020 Phil Morrell
 Copyright (C) 2017 Arne Zelasko
 Copyright (C) 2017 Víctor "IlDucci"
@@ -64,7 +64,7 @@ Copyright (C) 2017 Steven Price
 Copyright (C) 2017 Radomir Wojtera
 Copyright (C) 2017-2019 David Fairbrother
 Copyright (C) 2017-2020 Altieres Lima
-Copyright (C) 2017-2022 Justin "mugmuggy" Mugford
+Copyright (C) 2017-2023 Justin "mugmuggy" Mugford
 Copyright (C) 2018 Pavel Schoffer
 Copyright (C) 2018 Rick "Feanathiel" Megens
 Copyright (C) 2018 Anton Shestakov
@@ -72,14 +72,14 @@ Copyright (C) 2018 Thilo Ettelt
 Copyright (C) 2018 "red031000"
 Copyright (C) 2018-2019 James "leiget" Russell
 Copyright (C) 2019 Artem Polishchuk
-Copyright (C) 2020-2022 "lewri"
+Copyright (C) 2020-2023 "lewri"
 Copyright (C) 2020-2021 "yangfl"
 Copyright (C) 2020 Jeremy Tellaa
 Copyright (C) 2020 Maxim Krivchikov
 Copyright (C) 2020 Dimitrios Iliadis
 Copyright (C) 2021 Zany XDev
 Copyright (C) 2021 Romain "rmnvgr" Vigier
-Copyright (C) 2021-2022 Robert "flackr" Flack
+Copyright (C) 2021-2023 Robert "flackr" Flack
 Copyright (C) 2021 Alexandre Lavoie
 Copyright (C) 2021 Jan Sako
 Copyright (C) 2022 Colin Matthews
@@ -88,9 +88,11 @@ Copyright (C) 2022 "RetroGamerFan"
 Copyright (C) 2022 "tomracer"
 Copyright (C) 2022 "TotalCaesar659"
 Copyright (C) 2022 Manuel K
-Copyright (C) 2022 lokpro
-Copyirght (C) 2022 Ryan "ryan-edgewurth" Penfold
+Copyright (C) 2022-2023 lokpro
+Copyright (C) 2022 Ryan "ryan-edgewurth" Penfold
 Copyright (C) 2022 "SilPho"
+Copyright (C) 2023 "dfghjkjhgr"
+Copyright (C) 2023 Bob "bobidle" Idle
 
 et al.
 

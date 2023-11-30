@@ -61,7 +61,7 @@ function StaffRoom:onHumanoidEnter(humanoid)
   end
 end
 
-function StaffRoom:testStaffCriteria(criteria, extra_humanoid) -- luacheck: ignore 212 keep args from parent class
+function StaffRoom:testStaffCriteria(criteria, extra_humanoid)
   -- The staff room always accept more tired staff members.
   if extra_humanoid then
     return true

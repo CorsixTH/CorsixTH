@@ -25,7 +25,7 @@ Language("简体中文", "Chinese (simplified)", "zh(s)", "chi(s)", "zho(s)")
 Inherit("english")
 Encoding(utf8)
 
--- Serach OVERRIDE and NEW STRINGS for workspace
+-- Search OVERRIDE and NEW STRINGS for workspace
 
 -------------------------------  OLD STRINGS  -------------------------------
 -- Generated from official Simplified Chinese datapack, do not modify!

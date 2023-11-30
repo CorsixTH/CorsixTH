@@ -153,7 +153,7 @@ function UIMainMenu:buttonCustomGame()
 end
 
 function UIMainMenu:buttonContinueGame()
-  local most_recent_saved_game = FileTreeNode(self.ui.app.savegame_dir):getMostRecentlyModifiedChildFile(".sav")
+  local most_recent_saved_game = FileTreeNode(self.ui.app.savegame_dir):getMostRecentlyModifiedChildFile(".%.sav$")
   if most_recent_saved_game then
     local path = most_recent_saved_game.path
     local app = self.ui.app

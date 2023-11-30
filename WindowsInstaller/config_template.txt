@@ -92,6 +92,12 @@ prevent_edge_scrolling = false
 capture_mouse = true
 
 -------------------------------------------------------------------------------
+-- Right Mouse Panning: By default, it is disabled (right_mouse_scrolling = false).
+-- This means that the default panning method is pressing the middle mouse button.
+--
+right_mouse_scrolling = false
+
+-------------------------------------------------------------------------------
 -- Adviser on/off: If you set this to true the adviser will no longer
 -- pop up.
 --
@@ -145,6 +151,10 @@ movies = true
 -- Intro movie: Enabled by default
 --
 play_intro = true
+
+-- Demo movie (played on idle at main menu): Enabled by default
+--
+play_demo = true
 
 -------------------------------------------------------------------------------
 -- Allow user actions while game is paused
@@ -220,12 +230,14 @@ unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
 savegames = nil -- [[X:\ThemeHospital\Saves]]
 
 -------------------------------------------------------------------------------
--- Levels. By default, the "Levels" directory alongside this config file will
--- be used for storing new maps / levels in. Should this not be suitable, then
--- uncomment the following line, and point it to a directory which exists and
--- is more suitable.
+-- Levels and Campaigns. By default, the "Levels" and "Campaigns" directory next to
+-- this config file will be used for storing new maps / levels / campaigns in. If
+-- this is not suitable, then uncomment the following lines, and point it to a directory
+-- which exists and is more suitable.
+-- Note: Newly created maps in the Map Editor go into the "Levels" folder currently.
 --
 levels = nil -- [[X:\ThemeHospital\Levels]]
+campaigns = nil -- [[X:\ThemeHospital\Campaigns]]
 
 -------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital

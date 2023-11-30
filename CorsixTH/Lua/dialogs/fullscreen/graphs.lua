@@ -442,7 +442,7 @@ function UIGraphs:close()
 end
 
 function UIGraphs:afterLoad(old, new)
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
 
     self.background = gfx:loadRaw("Graph01V", 640, 480, "QData", "QData", "Graph01V.pal", true)

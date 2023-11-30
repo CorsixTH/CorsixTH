@@ -179,8 +179,6 @@ function UIFax:choice(choice_number)
   if choice == "accept_emergency" then
     self.ui.app.world:newObject("helicopter", "north")
     self.ui:addWindow(UIWatch(self.ui, "emergency"))
-    self.ui:playAnnouncement(self.ui.hospital.emergency.disease.emergency_sound, AnnouncementPriority.Critical)
-    self.ui.adviser:say(_A.information.emergency)
   elseif choice == "refuse_emergency" then
     self.ui.app.world:nextEmergency()
   -- VIP may choose to visit anyway if he is refused too often
@@ -286,7 +284,7 @@ function UIFax:close()
 end
 
 function UIFax:afterLoad(old, new)
-  if old < 176 then
+  if old < 179 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
     local palette = gfx:loadPalette("QData", "Fax01V.pal", true)

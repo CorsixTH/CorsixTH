@@ -18,8 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local L = require "lpeg"
-need_lpeg_version(0, 9)
+local L = require("lpeg")
 
 local C, P, R, S, V = L.C, L.P, L.R, L.S, L.V
 local Carg, Cc, Cp, Ct, Cg, Cb, Cmt = L.Carg, L.Cc, L.Cp, L.Ct, L.Cg, L.Cb, L.Cmt

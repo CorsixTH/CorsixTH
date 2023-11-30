@@ -332,9 +332,9 @@ end
 -- so amounts here should be appropriately small comma values.
 function Staff:tire(amount)
   -- The no rest cheat overrides tiring effects
-  if self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then return end
-
-  self:changeAttribute("fatigue", amount)
+  if not self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then
+    self:changeAttribute("fatigue", amount)
+  end
   self:updateDynamicInfo()
 end
 
@@ -469,7 +469,7 @@ end
 
 -- Helper function to decide if Staff fulfills a criterion
 -- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman", "Receptionist", "Junior", "Consultant")
-function Staff:fulfillsCriterion(criterion) -- luacheck: ignore 212 keep args from parent class
+function Staff:fulfillsCriterion(criterion)
   return false
 end
 
