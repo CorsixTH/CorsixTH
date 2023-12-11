@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 180 -- CorsixTH 0.67 release
+local SAVEGAME_VERSION = 181 -- Pair swing doors instantly
 
 class "App"
 
