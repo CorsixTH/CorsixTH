@@ -92,8 +92,8 @@ prevent_edge_scrolling = false
 capture_mouse = true
 
 -------------------------------------------------------------------------------
--- Right Mouse Panning: By default, it is disabled (right_mouse_scrolling = false).
--- This means that the default panning method is pressing the middle mouse button.
+-- Right Mouse Scrolling: By default, it is disabled (right_mouse_scrolling = false).
+-- This means that the default scrolling method is pressing the middle mouse button.
 --
 right_mouse_scrolling = false
 
