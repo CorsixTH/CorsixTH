@@ -15,7 +15,7 @@ var searchData=
   ['_5fonghostindexchange_12',['_onGhostIndexChange',['../classfrmMain.html#aa20615dee160b196dc23c5cce3f46086',1,'frmMain']]],
   ['_5fongotosearchresult_13',['_onGotoSearchResult',['../classfrmMain.html#ae4640f9cb13cf7a3912977a58ac8b3ac',1,'frmMain']]],
   ['_5fonlastanim_14',['_onLastAnim',['../classfrmMain.html#ac8f841d52f2a9d87b44b714803d2fda1',1,'frmMain']]],
-  ['_5fonload_15',['_onLoad',['../classfrmMain.html#a41e2617e8afd80eb1ffd89a580b54393',1,'frmMain::_onLoad()'],['../classfrmSprites.html#a5d631aad8c4ecd029adafb74ff729a4b',1,'frmSprites::_onLoad()']]],
+  ['_5fonload_15',['_onLoad',['../classfrmSprites.html#a5d631aad8c4ecd029adafb74ff729a4b',1,'frmSprites::_onLoad()'],['../classfrmMain.html#a41e2617e8afd80eb1ffd89a580b54393',1,'frmMain::_onLoad()']]],
   ['_5fonloadcomplex_16',['_onLoadComplex',['../classfrmSprites.html#acc59f2f8cbdf4fed230f0f2378009d83',1,'frmSprites']]],
   ['_5fonnext_17',['_onNext',['../classfrmSprites.html#ae36dfa7c4cb93e0efe5f0de92d118a7b',1,'frmSprites']]],
   ['_5fonnextanim_18',['_onNextAnim',['../classfrmMain.html#a2d7a84de99bc9d2b81d4ed12596c8ef7',1,'frmMain']]],
