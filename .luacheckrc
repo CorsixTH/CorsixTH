@@ -29,7 +29,7 @@ globals = { -- Globals
             "permanent", "print_table", "rangeMapLookup", "rnc",
             "strict_declare_global", "table_length", "unpermanent", "values",
             "serialize", "array_join", "shallow_clone", "staff_initials_cache",
-            "hasBit", "bitOr",
+            "hasBit", "bitOr", "inspect",
 
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
