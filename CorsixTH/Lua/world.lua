@@ -172,7 +172,7 @@ function World:World(app)
     self.object_id_by_thob[object_type.thob] = object_type.id
   end
   self:makeAvailableStaff(0)
-  self:calculateSpawnTiles()
+  self.spawn_points = self:calculateSpawnTiles()
 
   -- Next Events dates
   -- emergencies
@@ -409,8 +409,9 @@ function World:getLocalPlayerHospital()
 end
 
 --! Identify the tiles on the map suitable for spawning `Humanoid`s from.
+--!return (table) 0-8 spawn points of the map.
 function World:calculateSpawnTiles()
-  self.spawn_points = {}
+  local spawn_points = {}
   local w, h = self.map.width, self.map.height
   local directions = {
     {direction = "north", origin = {1, 1}, step = { 1,  0}},
@@ -436,9 +437,10 @@ function World:calculateSpawnTiles()
     local num = math.min(8, #xs)
     for i = 1, num do
       local index = math.floor((i - 0.5) / num * #xs + 1)
-      self.spawn_points[#self.spawn_points + 1] = {x = xs[index], y = ys[index], direction = edge.direction}
+      spawn_points[#spawn_points + 1] = {x = xs[index], y = ys[index], direction = edge.direction}
     end
   end
+  return spawn_points
 end
 
 --! Function to determine whether a given disease is available for new patients.
@@ -2888,4 +2890,15 @@ function World:setCampaignData(campaign_data)
     self[key] = value
   end
   self:getLocalPlayerHospital():setCampaignData(campaign_data.hospital)
+end
+
+--! Perform validity tests on the map in world
+--!return (string) The message relating to the first failed check
+function World:validateMap()
+  local spawn_points = self:calculateSpawnTiles()
+  -- Do any passable tiles on the edge of the map have a path of
+  -- passable tiles to the hospital
+  if not spawn_points[1] then
+    return _S.map_editor_window.checks.spawn_points_and_path
+  end
 end

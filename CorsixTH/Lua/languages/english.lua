@@ -909,7 +909,10 @@ map_editor_window = {
     heliport_3 = "Heliport 3",
     heliport_4 = "Heliport 4",
     paste = "Paste area",
-  }
+  },
+  checks = {
+    spawn_points_and_path = "Warning: Patients cannot reach the hospital. They need 'road' tiles or 'outside' grey tiles at the edge of the map and a path of these tiles to the hospital entrance.",
+  },
 }
 
 hotkeys_file_err = {
