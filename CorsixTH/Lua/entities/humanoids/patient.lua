@@ -548,6 +548,7 @@ end
 -- For example if thirst gets over a certain level (now: 0.7), the patient
 -- tries to find a drinks machine nearby.
 function Patient:tickDay()
+  if self.delete then return end -- Entity is marked for deletion
   -- First of all it may happen that this patient is tired of waiting and goes home.
   if self.waiting then
     self.waiting = self.waiting - 1
