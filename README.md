@@ -1,3 +1,4 @@
+foo
 ![image](https://github.com/CorsixTH/CorsixTH/assets/20030128/923883d1-cd2b-48a9-8506-6ee03e2745dc)
 
 ### Latest Release [![Release](https://img.shields.io/github/release/CorsixTH/CorsixTH.svg?colorB=green)](https://github.com/CorsixTH/CorsixTH/releases) [![Linux and Tests](https://github.com/CorsixTH/CorsixTH/actions/workflows/Linux.yml/badge.svg?branch=master)](https://github.com/CorsixTH/CorsixTH/actions/workflows/Linux.yml) [![Windows](https://github.com/CorsixTH/CorsixTH/actions/workflows/Windows.yml/badge.svg)](https://github.com/CorsixTH/CorsixTH/actions/workflows/Windows.yml) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/CorsixTH/CorsixTH?branch=master&svg=true)](https://ci.appveyor.com/project/TheCycoONE/corsixth)
