@@ -58,7 +58,8 @@ function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback
   for i, item in ipairs(items) do
   if item.tooltip and item.tooltip[1] then
     self:addBevelPanel(1, y + 1, width - 2, height - 2, parent_window.colour):setLabel(item.text, item.font)
-      :makeButton(-1, -1, width, height, nil, --[[persistable:dropdown_tooltip_callback]] function() self:selectItem(i) end)
+      :makeToggleButton(-1, -1, width, height, nil, --[[persistable:dropdown_tooltip_callback]] function() self:selectItem(i) end)
+      :enable(not item.disabled)
       :setTooltip(item.tooltip[1], item.tooltip[2] or math.floor(self.ui.app.config.width / 2 - 25),
         math.floor(self.ui.app.config.height / 4 - 130 + item.tooltip[3]) or 0)
         -- Magic numbers used to find a static position across different screen resolutions.

@@ -89,6 +89,7 @@ function Strings:init()
         if names[1] ~= "original_strings" then
           self.languages[#self.languages + 1] = names[1]
           -- Also save the second name for tooltips and internal purposes.
+          assert(names[2], filename .. " does not have an English name.")
           self.languages_english[names[1]] = names[2]
         end
         -- Associate every passed name with this file, case-independently
