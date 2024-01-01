@@ -42,19 +42,13 @@ corsixth.require("entity_map")
 corsixth.require("date")
 corsixth.require("announcer")
 corsixth.require("endconditions")
-
-local AnnouncementPriority = _G["AnnouncementPriority"]
+corsixth.require("earthquake")
 
 --! Manages entities, rooms, and the date.
 class "World"
 
 ---@type World
 local World = _G["World"]
-
--- time between each damage caused by an earthquake
-local earthquake_damage_time = 16 -- hours
-local earthquake_warning_period = 600 -- hours between warning and real thing
-local earthquake_warning_length = 25 -- length of early warning quake
 
 function World:World(app)
   self.app = app
@@ -71,18 +65,6 @@ function World:World(app)
   self.objects_notify_occupants = {}
   self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
   self.entity_map = EntityMap(self.map)
-
-  -- All information relating to the next or current earthquake, nil if
-  -- there is no scheduled earthquake.
-  -- Contains the following fields:
-  -- active (boolean) Whether we are currently running the warning or damage timers (after start_day of start_month is passed).
-  -- start_month (integer) The month the earthquake warning is triggered.
-  -- start_day (integer) The day of the month the earthquake warning is triggered.
-  -- size (integer) The amount of damage the earthquake causes (1-9).
-  -- remaining_damage (integer) The amount of damage this earthquake has yet to inflict.
-  -- damage_timer (integer) The number of hours until the earthquake next inflicts damage if active.
-  -- warning_timer (integer) The number of hours left until the real damaging earthquake begins.
-  self.next_earthquake = { active = false }
 
   -- Time
   self.hours_per_tick = 2
@@ -169,14 +151,11 @@ function World:World(app)
   self.next_emergency_no = 0
   self:nextEmergency()
 
+  -- Earthquakes
+  self.earthquake = Earthquake(self)
+
   -- vip
   self.next_vip_date = self:_generateNextVipDate()
-
-  -- earthquakes
-  -- current_map_earthquakes is a counter that tracks which number of earthquake
-  -- we are currently on in maps which have information for earthquakes in them
-  self.current_map_earthquake = 0
-  self:nextEarthquake()
 
   -- Set initial spawn rate in people per month.
   -- Assumes that the first entry is always the first month.
@@ -512,111 +491,6 @@ function World:spawnVIP(name)
   vip:queueAction(SeekReceptionAction())
 end
 
---! Perform actions to simulate an active earthquake.
-function World:tickEarthquake()
-  if self:isCurrentSpeed("Pause") then return end
-
-  -- check if this is the day that the earthquake is supposed to stop
-  if self.next_earthquake.remaining_damage == 0 then
-    self.next_earthquake.active = false
-    self.ui:endShakeScreen()
-    -- if the earthquake measured more than 7 on the richter scale, tell the user about it
-    if self.next_earthquake.size > 7 then
-      self.ui.adviser:say(_A.earthquake.ended:format(math.floor(self.next_earthquake.size)))
-    end
-
-    -- set up the next earthquake date
-    self:nextEarthquake()
-  else
-    local announcements = {
-      "quake001.wav", "quake002.wav", "quake003.wav", "quake004.wav",
-    }
-
-    -- start of warning quake
-    if self.next_earthquake.warning_timer == earthquake_warning_period then
-      self.ui:beginShakeScreen(0.2)
-      self.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
-    end
-
-    -- end of warning quake
-    if self.next_earthquake.warning_timer >= earthquake_warning_period - earthquake_warning_length and
-        self.next_earthquake.warning_timer - self.hours_per_tick < earthquake_warning_period - earthquake_warning_length then
-      self.ui:endShakeScreen()
-    end
-
-    if self.next_earthquake.warning_timer > 0 then
-      self.next_earthquake.warning_timer = self.next_earthquake.warning_timer - self.hours_per_tick
-      -- nothing more to do during inactive warning period
-      if self.next_earthquake.warning_timer < earthquake_warning_period - earthquake_warning_length then
-        return
-      end
-
-      -- start of real earthquake
-      if self.next_earthquake.warning_timer <= 0 then
-        self.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
-      end
-    end
-
-    -- All earthquakes start and end small (small earthquakes never become
-    -- larger), so when there has been less than 2 damage applied or only
-    -- 2 damage remaining to be applied, move the screen with less
-    -- intensity than otherwise.
-    if self.next_earthquake.remaining_damage <= 2 or
-        self.next_earthquake.size - self.next_earthquake.remaining_damage <= 2 then
-      self.ui:beginShakeScreen(0.5)
-    else
-      self.ui:beginShakeScreen(1)
-    end
-
-    -- Play the earthquake sound. It has different names depending on language used though.
-    if TheApp.audio:soundExists("quake2.wav") then
-      self.ui:playSound("quake2.wav")
-    else
-      self.ui:playSound("quake.wav")
-    end
-
-    -- do not continue to damage phase while in a warning quake
-    if self.next_earthquake.warning_timer > 0 then
-      return
-    end
-
-    self.next_earthquake.damage_timer = self.next_earthquake.damage_timer - self.hours_per_tick
-    if self.next_earthquake.damage_timer <= 0 then
-      for _, room in pairs(self.rooms) do
-        for object, _ in pairs(room.objects) do
-          if object.strength then
-            object:machineUsed(room)
-          end
-        end
-      end
-
-      self.next_earthquake.remaining_damage = self.next_earthquake.remaining_damage - 1
-      self.next_earthquake.damage_timer = self.next_earthquake.damage_timer + earthquake_damage_time
-    end
-
-    --[[
-    local hospital = self:getLocalPlayerHospital()
-    -- loop through the patients and allow the possibility for them to fall over
-    for _, patient in ipairs(hospital.patients) do
-      if not patient.in_room and patient.falling_anim then
-
-        -- make the patients fall
-
-        -- jpirie: this is currently disabled. Calling this function
-        -- really screws up the action queue, sometimes the patients
-        -- end up with nil action queues, and sometimes the resumed
-        -- actions throw exceptions. Also, patients in the hospital
-        -- who have not yet found reception throw exceptions after
-        -- they visit reception. Some debugging needed here to get
-        -- this working.
-
-        patient:falling()
-      end
-    end
-    --]]
-  end
-end
-
 --! Enable or disable salary raise events.
 --!param mode (boolean) If true, do not create salary raise events.
 function World:debugDisableSalaryRaise(mode)
@@ -885,10 +759,7 @@ function World:setSpeed(speed)
     return
   end
   if speed == "Pause" or self.system_pause then
-    -- stop screen shaking if there was an earthquake in progress
-    if self.next_earthquake.active then
-      self.ui:endShakeScreen()
-    end
+    self.ui.hospital:tickEarthquake("pause")
     -- By default actions are not allowed when the game is paused.
     self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
   elseif self:getCurrentSpeed() == "Pause" then
@@ -995,9 +866,9 @@ function World:onTick()
     end
     self.tick_timer = self.tick_rate
 
-    -- if an earthquake is supposed to be going on, call the earthquake function
-    if self.next_earthquake.active then
-      self:tickEarthquake()
+    -- If the game is not paused then an earthquake may be taking place
+    if not self:isCurrentSpeed("Pause") then
+      self.earthquake:tick()
     end
 
     local new_game_date = self.game_date:plusHours(self.hours_per_tick)
@@ -1122,12 +993,8 @@ function World:onEndDay()
     end
   end
 
-  -- check if it's time for an earthquake, and the user is at least on level 5
-  if self.game_date:monthOfGame() == self.next_earthquake.start_month and
-      self.game_date:dayOfMonth() == self.next_earthquake.start_day then
-    -- warn the user that an earthquake is on the way
-    self.next_earthquake.active = true
-  end
+  -- See if its time for an earthquake
+  self.earthquake:onEndDay()
 
   -- Maybe it's time for an emergency?
   if self.game_date:monthOfGame() == self.next_emergency_month and
@@ -1349,49 +1216,6 @@ function World:_generateNextVipDate()
   local lower, upper = math.max(mean - bound, 1), mean + bound
   local days = math.round(math.t_random(lower, mean, upper))
   return self.game_date:plusDays(days)
-end
-
--- Called when it is time to have another earthquake
-function World:nextEarthquake()
-  self.next_earthquake = {}
-  self.next_earthquake.active = false
-
-  local level_config = self.map.level_config
-  -- check carefully that no value that we are going to use is going to be nil
-  if level_config.quake_control and level_config.quake_control[self.current_map_earthquake] and
-      level_config.quake_control[self.current_map_earthquake].Severity ~= 0 then
-    -- this map has rules to follow when making earthquakes, let's follow them
-    local control = level_config.quake_control[self.current_map_earthquake]
-    self.next_earthquake.start_month = math.random(control.StartMonth, control.EndMonth)
-
-    -- Month length of the start of the earthquake. From start to finish
-    -- earthquakes do not persist for >= a month so we can wrap all days
-    -- after the start around the month length unambiguously.
-    local eqml = Date.daysPerMonth((self.next_earthquake.start_month % 12) + 1)
-    self.next_earthquake.start_day = math.random(1, eqml)
-
-    self.next_earthquake.size = control.Severity
-    self.next_earthquake.remaining_damage = self.next_earthquake.size
-    self.next_earthquake.damage_timer = earthquake_damage_time
-    self.next_earthquake.warning_timer = earthquake_warning_period
-    self.current_map_earthquake = self.current_map_earthquake + 1
-  end
-end
-
--- Earthquake override from cheat menu
-function World:createEarthquake()
-  --make sure an earthquake isn't already happening
-  if not self.next_earthquake.active then
-    self.next_earthquake.start_day = self.game_date:dayOfMonth()
-    self.next_earthquake.start_month = self.game_date:monthOfGame()
-    if self.next_earthquake.size == nil then
-      --forcefully make an earthquake if none left in level file
-      self.next_earthquake.size = math.random(1,6) -- above 6 seems disastrous
-      self.next_earthquake.remaining_damage = self.next_earthquake.size
-      self.next_earthquake.damage_timer = earthquake_damage_time
-      self.next_earthquake.warning_timer = earthquake_warning_period
-    end
-  end
 end
 
 --! Process that the given player number won the game.
@@ -2329,8 +2153,8 @@ end
 --! Let the world react to and old save game. First it gets the chance to
 -- do things for itself, and then it calls corresponding functions for
 -- the hospitals, entities and rooms in that order.
---!param old The old version of the save game.
---!param new The current version of the save game format.
+--!param old (integer) The old version of the save game.
+--!param new (integer) The current version of the save game format.
 function World:afterLoad(old, new)
 
   if not self.original_savegame_version then
@@ -2489,31 +2313,6 @@ function World:afterLoad(old, new)
       end
     end
   end
-  if old < 53 then
-    self.current_map_earthquake = 0
-    -- It may happen that the current game has gone on for a while
-    if self.map.level_config.quake_control then
-      while true do
-        if self.map.level_config.quake_control[self.current_map_earthquake] and
-            self.map.level_config.quake_control[self.current_map_earthquake] ~= 0 then
-          -- Check to see if the start month has passed
-          local control = self.map.level_config.quake_control[self.current_map_earthquake]
-          if control.StartMonth <= self.month + 12 * (self.year - 1) then
-            -- Then check the next one
-            self.current_map_earthquake = self.current_map_earthquake + 1
-          else
-            -- We found an earthquake coming in the future!
-            break
-          end
-        else
-          -- No more earthquakes in the config file.
-          break
-        end
-      end
-    end
-    -- Now set up the next earthquake.
-    self:nextEarthquake()
-  end
   if old < 57 then
     self.user_actions_allowed = true
   end
@@ -2604,42 +2403,6 @@ function World:afterLoad(old, new)
         local litter = self:getObject(x, y, "litter")
         if litter and litter:isCleanable() then self.map:setCellFlags(x, y, {buildable=true}) end
       end
-    end
-  end
-  if old < 115 then
-    self.next_earthquake = {
-      start_month = self.next_earthquake_month,
-      start_day = self.next_earthquake_day,
-      size = self.earthquake_size,
-      active = self.earthquake_active or false
-    }
-    self.next_earthquake_month = nil
-    self.next_earthquake_day = nil
-    self.earthquake_stop_day = nil
-    self.earthquake_size = nil
-    self.earthquake_active = nil
-    self.randomX = nil
-    self.randomY = nil
-    self.currentX = nil
-    self.currentY = nil
-
-    if self.next_earthquake.active then
-      local rd = 0
-      for _, room in pairs(self.rooms) do
-        for object, _ in pairs(room.objects) do
-          if object.quake_points then
-            rd = math.max(rd, object.quake_points)
-            object.quake_points = nil
-          end
-        end
-      end
-      self.next_earthquake.remaining_damage = rd
-      self.next_earthquake.damage_timer = earthquake_damage_time
-      self.next_earthquake.warning_timer = 0
-    else
-      self.next_earthquake.remaining_damage = self.next_earthquake.size
-      self.next_earthquake.damage_timer = earthquake_damage_time
-      self.next_earthquake.warning_timer = earthquake_warning_period
     end
   end
   if old < 120 then
@@ -2734,6 +2497,10 @@ function World:afterLoad(old, new)
     self.goals = nil
     self:determineWinningConditions()
   end
+  if old < 189 then
+    -- Move existing and future earthquakes to the Earthquake class
+    self.earthquake = Earthquake(self, true)
+  end
 
   -- Fix the initial of staff names
   self:updateInitialsCache()
@@ -2746,6 +2513,7 @@ function World:afterLoad(old, new)
     self:localiseInitial(staff.profile)
   end
 
+  self.earthquake:afterLoad(old, new)
   self.savegame_version = new
   self.release_version = TheApp:getVersion(new)
   self.system_pause = false -- Reset flag on load

@@ -147,20 +147,18 @@ function Cheats:cheatToggleEpidemic()
 end
 
 function Cheats:cheatEarthquake()
-  if not self.hospital.earthquakes_disabled then
-    self.hospital.world:createEarthquake()
-  end
+  return self.hospital.world.earthquake:createEarthquake()
 end
 
 --! Toggles the possibility of earthquakes
 function Cheats:cheatToggleEarthquake()
   local world, msg = self.hospital.world
-  if world.earthquakes_disabled then
+  if world.earthquake.disabled then
     msg = _S.misc.earthquakes_on
   else
     msg = _S.misc.earthquakes_off
   end
-  world.earthquakes_disabled = not world.earthquakes_disabled
+  world.earthquake.disabled = not world.earthquake.disabled
   return true, msg
 end
 
