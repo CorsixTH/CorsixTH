@@ -34,9 +34,9 @@ globals = { -- Globals
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
             "CallsDispatcher", "Cheats", "ChildClass", "Command", "Door", "DrawFlags",
-            "DummyRootNode", "EndConditions", "Entity", "EntityMap", "Epidemic",
-            "FileSystem", "FileTreeNode", "FilteredFileTreeNode", "GameUI", "Graphics",
-            "GrimReaper", "Hospital", "Humanoid", "HumanoidRawWalk",
+            "DummyRootNode", "Earthquake", "EndConditions", "Entity", "EntityMap",
+            "Epidemic", "FileSystem", "FileTreeNode", "FilteredFileTreeNode", "GameUI",
+            "Graphics", "GrimReaper", "Hospital", "Humanoid", "HumanoidRawWalk",
             "Inspector", "LoadGame", "LoadGameFile", "Litter", "Machine",
             "Map", "MoviePlayer", "NoRealClass", "Object", "ParentClass",
             "Patient", "Plant", "PlayerHospital", "Queue", "ResearchDepartment", "Room",
