@@ -474,6 +474,7 @@ bool render_target::create(const render_target_creation_params* pParams) {
   apply_opengl_clip_fix = std::strncmp(info.name, "opengl", 6) == 0 &&
                           sdlVersion.major == 2 && sdlVersion.minor == 0 &&
                           sdlVersion.patch < 4;
+  SDL_SetWindowMinimumSize(window, 640, 480);
 
   return update(pParams);
 }
