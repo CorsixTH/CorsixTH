@@ -15,14 +15,6 @@ if debug.setcstacklimit then
   debug.setcstacklimit(30000)
 end
 
--- Parse script parameters:
-local run_debugger = false
-for _, arg in ipairs({...}) do
-  if arg:match("^%-%-connect%-lua%-dbgp") then
-    run_debugger = true
-  end
-end
-
 -- Redefine dofile such that it adds the direction name and file extension, and
 -- won't redo a file which it has previously done.
 local pathsep = package.config:sub(1, 1)
@@ -81,42 +73,23 @@ end
 -- Load standard library extensions
 corsixth.require("utility")
 
--- If requested run a Lua DBGp Debugger Client:
-if run_debugger then
-  dofile("run_debugger")()
+-- A DBGp debugger can debug this file if you start a CorsixTH DBGp client & connect
+--  it to a running server, using this CorsixTH startup arg: -debugger
+for _, arg in ipairs({...}) do
+  if arg:match("^%-%-connect%-lua%-dbgp") then
+    dofile("run_debugger")()
+  end
 end
 
 -- Check Lua version
-if _VERSION ~= "Lua 5.1" then
-  if _VERSION == "Lua 5.2" or _VERSION == "Lua 5.3" or _VERSION == "Lua 5.4" then
-    -- Compatibility: Keep the global unpack function
-    unpack = table.unpack -- luacheck: ignore 121
-    -- Compatibility: Provide a replacement for deprecated ipairs()
-    -- NB: It might be wiser to migrate away from ipairs entirely, but the
-    -- following works as an immediate band-aid
-    local rawget, error, type = rawget, error, type
-    if not pcall(ipairs, {}) then
-      local function next_int(t, i)
-        i = i + 1
-        local v = rawget(t, i)
-        if v ~= nil then
-          return i, v
-        end
-      end
-      function ipairs(t) -- luacheck: ignore 121
-        if type(t) ~= "table" then
-          error("table expected, got " .. type(t))
-        end
-        return next_int, t, 0
-      end
-    end
-  else
-    error "Please recompile CorsixTH and link against Lua version 5.1, 5.2 or 5.3"
-  end
+local support = list_to_set({"Lua 5.1", "Lua 5.2", "Lua 5.3", "Lua 5.4"})
+if not support[_VERSION] then
+  error "Please recompile CorsixTH and link against Lua version 5.1, 5.2, 5.3 or 5.4"
 end
---
--- A DBGp debugger can debug this file if you start a CorsixTH DBGp client & connect
--- it to a running server, using this CorsixTH startup arg: -debugger
+if _VERSION ~= "Lua 5.1" then
+  -- Compatibility: Keep the global unpack function
+  unpack = table.unpack -- luacheck: ignore 121
+end
 
 -- Enable strict mode
 corsixth.require("strict")
