@@ -439,6 +439,7 @@ options_window = {
   zoom_speed = "Zoom Speed",
   hotkey = "Hotkeys",
   check_for_updates = "Check for Updates",
+  jukebox = "Jukebox",
 }
 
 tooltip.options_window = {
@@ -472,6 +473,7 @@ tooltip.options_window = {
   cancel_zoomspeed = "Return without changing the zoom speed.",
   hotkey = "Change keyboard hotkeys.",
   check_for_updates = "Sets whether the game should look for updates on launch.",
+  jukebox = "Open the Jukebox to control the music"
 }
 
 customise_window = {
