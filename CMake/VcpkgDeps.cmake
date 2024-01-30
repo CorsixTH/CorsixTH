@@ -43,7 +43,7 @@ endif()
 
 set(_VCPKG_ARGS "-VcpkgTriplet " ${_VCPKG_TARGET_TRIPLET})
 
-if(BUILD_ANIMVIEWER)
+if(BUILD_ANIMVIEW)
   string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} " -BuildAnimView $True")
 else()
   string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} " -BuildAnimView $False")
