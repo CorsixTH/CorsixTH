@@ -588,7 +588,7 @@ function Audio:playBackgroundTrack(index)
 
         if music_data == nil then
           error("Could not load music file \'" .. (info.filename_music or info.filename) .. "\'" ..
-              (e and (" (" .. e .. ")" or "")))
+              (e and " (" .. e .. ")" or ""))
         else
           info.music = music_data
           -- Do we still want it to play?
