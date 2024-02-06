@@ -23,7 +23,7 @@ SOFTWARE. --]]
 -- bitmap_name: the target BMP image
 -- cell_width: width per character glyph
 -- cell_height: height per character glyph
--- space_width: spacing betweeen glyphs
+-- space_width: spacing between glyphs
 -- Output goes to the same location of the BMP image
 
 function makeFont(bitmap_name, cell_width, cell_height, space_width)
