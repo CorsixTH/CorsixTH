@@ -18,27 +18,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+-- This is a custom written spritesheet library for CorsixTH. It currently only supports
+-- complex encoding
+
 local io_open, assert, setmetatable, string_char, table_concat
     = io.open, assert, setmetatable, string.char, table.concat
 
-module "spritesheet"
+local Spr = {}
 local mt = {__index = _M}
 
-function open(filename_tab, filename_dat, is_complex)
+function Spr.open(filename_tab, filename_dat, is_complex)
   return setmetatable({
     tab = assert(io_open(filename_tab, "wb")),
     dat = assert(io_open(filename_dat, "wb")),
-    encode = is_complex and encodeComplex or encodeSimple,
+    encode = is_complex and Spr.encodeComplex or Spr.encodeSimple,
   }, mt)
 end
 
-function close(ss)
+function Spr.close(ss)
   ss.tab:close()
   ss.dat:close()
   return ss
 end
 
-function writeDummy(ss)
+function Spr.writeDummy(ss)
   ss.tab:write"\0\0\0\0\0\0"
   return ss
 end
@@ -55,18 +58,18 @@ local function uint4(value)
   return string_char(b0, b1, b2, value)
 end
 
-function write(ss, width, height, pixels)
+function Spr.write(ss, width, height, pixels)
   ss.tab:write(uint4(ss.dat:seek()))
   ss.tab:write(string_char(width, height))
   ss.dat:write(ss.encode(width, height, pixels))
   return ss
 end
 
-function encodeSimple(width, height, data)
+function Spr.encodeSimple(width, height, data)
   error "TODO"
 end
 
-function encodeComplex(width, height, data)
+function Spr.encodeComplex(width, height, data)
   local result = {}
   local run_start = 1
   local run_byte = false
@@ -131,3 +134,5 @@ function encodeComplex(width, height, data)
   flush_run(#data + 1)
   return table_concat(result)
 end
+
+return Spr
