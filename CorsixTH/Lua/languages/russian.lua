@@ -114,7 +114,6 @@ options_window = {
   width = "Ширина",
   change_resolution = "Изменить разрешение",
   back = "Назад",
-  original_path = "Папка с установленной оригинальной игрой Theme Hospital",
   browse = "Выбрать папку",
   folder = "ПАПКИ",
   option_off = "Выкл",

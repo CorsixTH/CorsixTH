@@ -1036,7 +1036,6 @@ tooltip.folders_window = {
   not_specified = "¡No se ha especificado una carpeta!",
   default = "Ubicación predeterminada",
   reset_to_default = "Vuelve a asignar la carpeta a su ubicación predeterminada.",
- -- original_path = "Carpeta actual con la instalación del Theme Hospital original", -- where is this used, I have left if for the time being?
   back  = "Cerrar este menú y volver al menú de Opciones.",
 }
 
