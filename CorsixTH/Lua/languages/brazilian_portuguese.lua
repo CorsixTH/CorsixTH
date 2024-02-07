@@ -506,7 +506,6 @@ tooltip.folders_window = {
   not_specified = "Pasta näo especificada!",
   default = "Localizaçäo padräo",
   reset_to_default = "Volta a atribuir a pasta a sua localizaçäo padräo",
- -- original_path = "The currently chosen directory of the original Theme Hospital installation", -- where is this used, I have left if for the time being?
   back  = "Fechar este menu e voltar para o menu de Configuraçöes",
 }
 

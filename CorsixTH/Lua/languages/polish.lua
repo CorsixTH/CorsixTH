@@ -609,7 +609,6 @@ tooltip = {
     language = "Język, w którym wyświetlone zostaną teksty gry",
     select_language = "Wybierz język gry",
     language_dropdown_item = "Wybierz %s jako język gry",
-    original_path = "Aktualnie wybrany katalog z zainstalowaną grą Theme Hospital",
     browse = "Zmień ścieżkę zainstalowanej gry Theme Hospital (obecna lokalizacja: %1%)",
     browse_font = "Zmień ścieżkę dla innego pliku z czcionką (obecna lokalizacja: %1%)",
     no_font_specified = "Lokalizacja czcionki nie została jeszcze wybrana!",

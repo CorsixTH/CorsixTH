@@ -421,7 +421,6 @@ tooltip.folders_window = {
   not_specified = "Non è stata ancora specificata nessuna posizione per la cartella!",
   default = "Posizione di default",
   reset_to_default = "Ripristina la cartella alla sua posizione di default",
- -- original_path = "The currently chosen directory of the original Theme Hospital installation", -- where is this used, I have left if for the time being?
   back  = "Chiudi questo menù e torna al menù delle impostazioni",
 }
 

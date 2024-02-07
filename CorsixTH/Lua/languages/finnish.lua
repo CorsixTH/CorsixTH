@@ -301,7 +301,6 @@ tooltip = {
     height              = "Syötä peli-ikkunan haluttu korkeus",
     change_resolution   = "Muuta ikkunan resoluutio vasemmalla annettujen arvojen mukaiseksi",
     language            = "Valitse kieleksi %s",
-    original_path       = "Käytössä oleva Theme Hospital -pelin asennushakemisto",
     browse              = "Selaa hakemistoja valitaksesi uuden Theme Hospital -pelin asennushakemiston",
     back                = "Sulje tämä ikkuna",
   },

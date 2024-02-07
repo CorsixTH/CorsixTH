@@ -3473,7 +3473,6 @@ tooltip.folders_window = {
   not_specified = "没有指定文件夹位置！",
   default = "默认位置",
   reset_to_default = "重置到默认文件夹",
- -- original_path = "The currently chosen directory of the original Theme Hospital installation", -- where is this used, I have left if for the time being?
   back = "关闭此菜单，并返回设置菜单",
 }
 
