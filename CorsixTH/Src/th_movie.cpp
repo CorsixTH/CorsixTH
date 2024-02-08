@@ -409,7 +409,7 @@ void movie_player::unload() {
   }
 }
 
-void movie_player::play(int iChannel) {
+void movie_player::play(int requested_audio_channel) {
   if (!renderer) {
     last_error = std::string("Cannot play before setting the renderer");
     return;
@@ -424,77 +424,87 @@ void movie_player::play(int iChannel) {
   current_sync_pts = 0;
   current_sync_pts_system_time = SDL_GetTicks();
 
-  if (audio_stream_index >= 0) {
-    Mix_QuerySpec(&mixer_frequency, nullptr, &mixer_channels);
-
-    std::int64_t target_channel_layout;
-    switch (mixer_channels) {
-      case 1:
-        target_channel_layout = AV_CH_LAYOUT_MONO;
-        break;
-      case 2:
-        target_channel_layout = AV_CH_LAYOUT_STEREO;
-        break;
-      case 4:
-        target_channel_layout = AV_CH_LAYOUT_QUAD;
-        break;
-      case 6:
-        target_channel_layout = AV_CH_LAYOUT_5POINT1;
-        break;
-      case 8:
-        target_channel_layout = AV_CH_LAYOUT_7POINT1;
-        break;
-      default:
-        std::cerr << "WARN: unsupported channel layout " << mixer_channels
-                  << ". Please report issue.";
-        target_channel_layout = 0;
-    }
-
-#if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(57, 24, 100) && \
-    LIBSWRESAMPLE_VERSION_INT >= AV_VERSION_INT(4, 5, 100)
-    av_channel_layout_unique_ptr ch_layout(new AVChannelLayout{});
-
-    if (target_channel_layout == 0) {
-      av_channel_layout_default(ch_layout.get(), mixer_channels);
-    } else {
-      av_channel_layout_from_mask(ch_layout.get(), target_channel_layout);
-    }
-
-    swr_alloc_set_opts2(&audio_resample_context, ch_layout.get(),
-                        AV_SAMPLE_FMT_S16, mixer_frequency,
-                        &(audio_codec_context->ch_layout),
-                        audio_codec_context->sample_fmt,
-                        audio_codec_context->sample_rate, 0, nullptr);
-#else
-    if (target_channel_layout == 0) {
-      target_channel_layout = av_get_default_channel_layout(mixer_channels);
-    }
-
-    audio_resample_context = swr_alloc_set_opts(
-        audio_resample_context,
-        static_cast<std::int64_t>(target_channel_layout), AV_SAMPLE_FMT_S16,
-        mixer_frequency,
-        static_cast<std::int64_t>(audio_codec_context->channel_layout),
-        audio_codec_context->sample_fmt, audio_codec_context->sample_rate, 0,
-        nullptr);
-#endif
-    swr_init(audio_resample_context);
-    empty_audio_chunk.reset(
-        Mix_QuickLoad_RAW(audio_chunk_buffer.data(),
-                          static_cast<uint32_t>(audio_chunk_buffer.size())));
-
-    audio_channel = Mix_PlayChannel(iChannel, empty_audio_chunk.get(), -1);
-    if (audio_channel < 0) {
-      audio_channel = -1;
-      last_error = std::string(Mix_GetError());
-      empty_audio_chunk.reset();
-    } else {
-      Mix_RegisterEffect(audio_channel, th_movie_audio_callback, nullptr, this);
-    }
-  }
+  play_audio(requested_audio_channel);
 
   stream_thread = std::thread(&movie_player::read_streams, this);
   video_thread = std::thread(&movie_player::run_video, this);
+}
+
+void movie_player::play_audio(int requested_audio_channel) {
+  if (audio_stream_index < 0) {
+    return;
+  }
+
+  int opened = Mix_QuerySpec(&mixer_frequency, nullptr, &mixer_channels);
+
+  if (opened == 0 || mixer_channels == 0) {
+    return;
+  }
+
+  std::int64_t target_channel_layout;
+  switch (mixer_channels) {
+    case 1:
+      target_channel_layout = AV_CH_LAYOUT_MONO;
+      break;
+    case 2:
+      target_channel_layout = AV_CH_LAYOUT_STEREO;
+      break;
+    case 4:
+      target_channel_layout = AV_CH_LAYOUT_QUAD;
+      break;
+    case 6:
+      target_channel_layout = AV_CH_LAYOUT_5POINT1;
+      break;
+    case 8:
+      target_channel_layout = AV_CH_LAYOUT_7POINT1;
+      break;
+    default:
+      std::cerr << "WARN: unsupported channel layout " << mixer_channels
+                << ". Please report issue.";
+      target_channel_layout = 0;
+  }
+
+#if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(57, 24, 100) && \
+    LIBSWRESAMPLE_VERSION_INT >= AV_VERSION_INT(4, 5, 100)
+  av_channel_layout_unique_ptr ch_layout(new AVChannelLayout{});
+
+  if (target_channel_layout == 0) {
+    av_channel_layout_default(ch_layout.get(), mixer_channels);
+  } else {
+    av_channel_layout_from_mask(ch_layout.get(), target_channel_layout);
+  }
+
+  swr_alloc_set_opts2(&audio_resample_context, ch_layout.get(),
+                      AV_SAMPLE_FMT_S16, mixer_frequency,
+                      &(audio_codec_context->ch_layout),
+                      audio_codec_context->sample_fmt,
+                      audio_codec_context->sample_rate, 0, nullptr);
+#else
+  if (target_channel_layout == 0) {
+    target_channel_layout = av_get_default_channel_layout(mixer_channels);
+  }
+
+  audio_resample_context = swr_alloc_set_opts(
+      audio_resample_context, static_cast<std::int64_t>(target_channel_layout),
+      AV_SAMPLE_FMT_S16, mixer_frequency,
+      static_cast<std::int64_t>(audio_codec_context->channel_layout),
+      audio_codec_context->sample_fmt, audio_codec_context->sample_rate, 0,
+      nullptr);
+#endif
+  swr_init(audio_resample_context);
+  empty_audio_chunk.reset(
+      Mix_QuickLoad_RAW(audio_chunk_buffer.data(),
+                        static_cast<uint32_t>(audio_chunk_buffer.size())));
+
+  audio_channel =
+      Mix_PlayChannel(requested_audio_channel, empty_audio_chunk.get(), -1);
+  if (audio_channel < 0) {
+    audio_channel = -1;
+    last_error = std::string(Mix_GetError());
+    empty_audio_chunk.reset();
+  } else {
+    Mix_RegisterEffect(audio_channel, th_movie_audio_callback, nullptr, this);
+  }
 }
 
 void movie_player::stop() { aborting = true; }
@@ -567,7 +577,8 @@ void movie_player::read_streams() {
     } else {
       if (packet->stream_index == video_stream_index) {
         video_queue.push(std::move(packet));
-      } else if (packet->stream_index == audio_stream_index) {
+      } else if (packet->stream_index == audio_stream_index &&
+                 audio_channel >= 0) {
         audio_queue.push(std::move(packet));
       }
     }
@@ -730,7 +741,7 @@ void movie_player::set_renderer(SDL_Renderer* renderer) {}
 bool movie_player::movies_enabled() const { return false; }
 bool movie_player::load(const char* file_path) { return true; }
 void movie_player::unload() {}
-void movie_player::play(int iChannel) {
+void movie_player::play(int requested_audio_channel) {
   SDL_Event endEvent;
   endEvent.type = SDL_USEREVENT_MOVIE_OVER;
   SDL_PushEvent(&endEvent);
