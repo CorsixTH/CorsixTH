@@ -998,6 +998,8 @@ local outside_temperatures = {
    4.75 / 50, -- December
 }
 
+local start_date = Date()
+
 --! World ticks are translated to game ticks (or hours) depending on the
 -- current speed of the game. There are 50 hours in a TH day.
 function World:onTick()
@@ -1019,8 +1021,10 @@ function World:onTick()
         print("Error while autosaving game: " .. err)
       end
     end
-    if self.game_date == Date() and not self.ui.start_tutorial then
-      self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
+    if self.game_date == start_date then
+      if not self.ui.start_tutorial then
+        self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
+      end
       self.ui:showBriefing()
     end
     self.tick_timer = self.tick_rate
