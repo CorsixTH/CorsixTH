@@ -1808,7 +1808,7 @@ function App:checkForUpdates()
   -- Default language to use for the changelog if no localised version is available
   local default_language = "en"
   local update_url = 'https://corsixth.com/CorsixTH/check-for-updates'
-  local current_version = string.gsub(self:getVersion(), "v", "") -- drop the 'v'
+  local current_version = self:getVersion()
 
   -- Only URLs that match this list of trusted domains will be accepted.
   local trusted_domains = { 'corsixth.com', 'github.com', 'corsixth.github.io' }
@@ -1839,16 +1839,32 @@ function App:checkForUpdates()
   end
 
   local update_table = loadstring_envcall(update_body, "@updatechecker") {}
+  update_table.revision = update_table.revision or 0
   local changelog = update_table["changelog_" .. default_language]
-  local new_version = update_table["major"] .. '.' .. update_table["minor"] .. update_table["revision"]
+  local new_version = update_table.major .. '.' .. update_table.minor .. '.' .. update_table.revision
 
-  if (new_version <= current_version) then
+  -- Semantic version comparison of the current and update version numbers
+  local function compare_versions()
+    local current_major, current_minor, current_revision = string.match(current_version, "(%d+)%.(%d+)%.?(%d*)")
+    current_major, current_minor = tonumber(current_major), tonumber(current_minor)
+    if current_major > update_table.major then return true
+    elseif current_major < update_table.major then return false
+    end
+    if current_minor > update_table.minor then return true
+    elseif current_minor < update_table.minor then return false
+    end
+    current_revision = tonumber(current_revision) or 0
+    if current_revision >= update_table.revision then return true
+    else return false
+    end
+  end
+  if compare_versions() then
     print("You are running the latest version of CorsixTH.")
     return
   end
 
   -- Check to make sure download URL is trusted
-  local download_url = url.parse(update_table["download_url"])
+  local download_url = url.parse(update_table.download_url)
   local valid_url = false
   for _, v in ipairs(trusted_domains) do
     if download_url.host == v then
@@ -1857,7 +1873,7 @@ function App:checkForUpdates()
     end
   end
   if not valid_url then
-    print("Update download url is not on the trusted domains list (" .. update_table["download_url"] .. ")")
+    print("Update download url is not on the trusted domains list (" .. update_table.download_url .. ")")
     return
   end
 
@@ -1872,7 +1888,7 @@ function App:checkForUpdates()
 
   print("New version found: " .. new_version)
   -- Display the update window
-  self.ui:addWindow(UIUpdate(self.ui, current_version, new_version, changelog, update_table["download_url"]))
+  self.ui:addWindow(UIUpdate(self.ui, current_version, new_version, changelog, update_table.download_url))
 end
 
 -- Free up / stop any resources relying on the current video object
