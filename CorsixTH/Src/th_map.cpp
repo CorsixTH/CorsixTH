@@ -722,14 +722,16 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId,
 namespace {
 
 void test_adj(bool* parcel_adjacency_matrix, int parcel_count,
-              const map_tile* original_node, int xy, ptrdiff_t delta) {
-  if (xy > 0 && original_node->iParcelId != original_node[-delta].iParcelId &&
-      original_node->flags.passable && original_node[-delta].flags.passable) {
+              const map_tile* original_node, const map_tile* tested_node) {
+  if (original_node->iParcelId != tested_node->iParcelId &&
+      original_node->flags.passable && tested_node->flags.passable) {
+    // These cells are part of two different parcels, and they are passable, so
+    // we consider them adjacent. Update the adjacency matrix accordingly.
+    // NB: the matrix is always symmetrical such that xy = yx.
     parcel_adjacency_matrix[original_node->iParcelId * parcel_count +
-                            original_node[-delta].iParcelId] = true;
+                            tested_node->iParcelId] = true;
     parcel_adjacency_matrix[original_node->iParcelId +
-                            original_node[-delta].iParcelId * parcel_count] =
-        true;
+                            tested_node->iParcelId * parcel_count] = true;
   }
 }
 
@@ -740,6 +742,9 @@ void level_map::make_adjacency_matrix() {
     return;
   }
 
+  // The adjacency matrix tracks which parcels are adjacent to each other.
+  // Initialize the adjacency matrix to the identity matrix - i.e. every
+  // parcel is adjacent to itself.
   parcel_adjacency_matrix = new bool[parcel_count * parcel_count];
   for (int i = 0; i < parcel_count; ++i) {
     for (int j = 0; j < parcel_count; ++j) {
@@ -747,13 +752,19 @@ void level_map::make_adjacency_matrix() {
     }
   }
 
-  const map_tile* pOriginalNode = original_cells;
+  // Update the adjacency matrix using the parcel IDs of each cell.
   for (int iY = 0; iY < this->height; ++iY) {
     for (int iX = 0; iX < this->width; ++iX) {
-      ++pOriginalNode;
-      test_adj(parcel_adjacency_matrix, parcel_count, pOriginalNode, iX, 1);
-      test_adj(parcel_adjacency_matrix, parcel_count, pOriginalNode, iY,
-               this->width);
+      const map_tile* thisCell = get_original_tile(iX, iY);
+      // Test the cell immediately to the left, and above it.
+      if (iX > 0) {
+        const map_tile* testedCell = get_original_tile(iX - 1, iY);
+        test_adj(parcel_adjacency_matrix, parcel_count, thisCell, testedCell);
+      }
+      if (iY > 0) {
+        const map_tile* testedCell = get_original_tile(iX, iY - 1);
+        test_adj(parcel_adjacency_matrix, parcel_count, thisCell, testedCell);
+      }
     }
   }
 }
