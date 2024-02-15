@@ -314,8 +314,8 @@ class movie_player {
 
   //! Play the currently loaded movie
   //!
-  //! \param iChannel The audio channel to use
-  void play(int iChannel);
+  //! \param requested_audio_channel The audio channel to use
+  void play(int requested_audio_channel);
 
   //! Stop the currently playing movie
   void stop();
@@ -381,6 +381,8 @@ class movie_player {
   //! Get the AVCodecContext associated with a given stream
   av_codec_context_unique_ptr get_codec_context_for_stream(
       av_codec_ptr codec, AVStream* stream) const;
+
+  void play_audio(int requested_audio_channel);
 
   //! Get the time the given frame should be played (from the start of the
   //! stream)
