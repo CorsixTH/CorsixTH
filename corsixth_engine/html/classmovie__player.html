@@ -90,8 +90,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9c700ceb8f60ebd8facbbfc8f429bfe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c4cadbccf413c6918a9573493b64b8b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovie__player.html#a4c4cadbccf413c6918a9573493b64b8b">unload</a> ()</td></tr>
 <tr class="separator:a4c4cadbccf413c6918a9573493b64b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93be11ba66aba6b054234bc7efef45e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovie__player.html#a93be11ba66aba6b054234bc7efef45e0">play</a> (int iChannel)</td></tr>
-<tr class="separator:a93be11ba66aba6b054234bc7efef45e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a323b4f55beebdb8f4342cd474e68a646"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovie__player.html#a323b4f55beebdb8f4342cd474e68a646">play</a> (int requested_audio_channel)</td></tr>
+<tr class="separator:a323b4f55beebdb8f4342cd474e68a646"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7db3b2490cb81125a4458f5b9fbd7a25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovie__player.html#a7db3b2490cb81125a4458f5b9fbd7a25">stop</a> ()</td></tr>
 <tr class="memdesc:a7db3b2490cb81125a4458f5b9fbd7a25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the currently playing movie.  <a href="classmovie__player.html#a7db3b2490cb81125a4458f5b9fbd7a25">More...</a><br /></td></tr>
 <tr class="separator:a7db3b2490cb81125a4458f5b9fbd7a25"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,7 +125,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Movie player for CorsixTH</p>
-<p>The movie player is designed to be preinitialized and used for multiple movies. After initializing the movie player, call <a class="el" href="classmovie__player.html#acaeae14a649f7f3300f7ce30189c4d6d">movie_player::set_renderer</a> to assign the current SDL renderer to the movie player. Then <a class="el" href="classmovie__player.html#a9c700ceb8f60ebd8facbbfc8f429bfe9" title="Load the movie with the given file name.">movie_player::load</a> the desired movie and finally <a class="el" href="classmovie__player.html#a93be11ba66aba6b054234bc7efef45e0">movie_player::play</a> it. </p>
+<p>The movie player is designed to be preinitialized and used for multiple movies. After initializing the movie player, call <a class="el" href="classmovie__player.html#acaeae14a649f7f3300f7ce30189c4d6d">movie_player::set_renderer</a> to assign the current SDL renderer to the movie player. Then <a class="el" href="classmovie__player.html#a9c700ceb8f60ebd8facbbfc8f429bfe9" title="Load the movie with the given file name.">movie_player::load</a> the desired movie and finally <a class="el" href="classmovie__player.html#a323b4f55beebdb8f4342cd474e68a646">movie_player::play</a> it. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af71e2f81a4bf7a851b06fb9aed330b0d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af71e2f81a4bf7a851b06fb9aed330b0d">&#9670;&nbsp;</a></span>movie_player()</h2>
@@ -368,8 +368,8 @@ Up to the size of the picture buffer frames may be lost during this process. </d
 
 </div>
 </div>
-<a id="a93be11ba66aba6b054234bc7efef45e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93be11ba66aba6b054234bc7efef45e0">&#9670;&nbsp;</a></span>play()</h2>
+<a id="a323b4f55beebdb8f4342cd474e68a646"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a323b4f55beebdb8f4342cd474e68a646">&#9670;&nbsp;</a></span>play()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -378,7 +378,7 @@ Up to the size of the picture buffer frames may be lost during this process. </d
           <td class="memname">void movie_player::play </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>iChannel</em></td><td>)</td>
+          <td class="paramname"><em>requested_audio_channel</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -386,7 +386,7 @@ Up to the size of the picture buffer frames may be lost during this process. </d
 <p>Play the currently loaded movie</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">iChannel</td><td>The audio channel to use </td></tr>
+    <tr><td class="paramname">requested_audio_channel</td><td>The audio channel to use </td></tr>
   </table>
   </dd>
 </dl>
