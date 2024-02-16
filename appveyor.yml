@@ -1,13 +1,25 @@
 version: '{build}'
-image: Visual Studio 2019
+image: Visual Studio 2022
 pull_requests:
   do_not_increment_build_number: true
+environment:
+  VCPKG_ROOT: C:\Tools\vcpkg
+  VCPKG_DEFAULT_BINARY_CACHE: C:\vcpkg-bin-cache
+  LUA_PATH: "%APPVEYOR_BUILD_FOLDER%/vcpkg_installed/x64-windows-release/share/lua?.lua;;"
+  LUA_CPATH: "%APPVEYOR_BUILD_FOLDER%/vcpkg_installed/x64-windows-release/bin/?/core.dll;%APPVEYOR_BUILD_FOLDER%/vcpkg_installed/x64-windows-release/bin/?.dll;;"
 init:
+  - mkdir %VCPKG_DEFAULT_BINARY_CACHE%
 cache:
-  - vcpkg -> CMake/VcpkgDeps.cmake, scripts/build_vcpkg_deps.ps1
+  - C:\vcpkg-bin-cache -> vcpkg_configuration.json
 configuration: Release
+install:
+  - cd %VCPKG_ROOT%
+  - git pull --quiet
+  - .\bootstrap-vcpkg.bat
+  - cd %APPVEYOR_BUILD_FOLDER%
+
 before_build:
-  - cmd: cmake -G "Visual Studio 16 2019" -DUSE_VCPKG_DEPS=ON -DVCPKG_TARGET_TRIPLET=x64-windows-release -DENABLE_UNIT_TESTS=ON .
+  - cmd: cmake --preset win-x64-rel -B .
 build:
   project: CorsixTH_Top_Level.sln
   verbosity: minimal

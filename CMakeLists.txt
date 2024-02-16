@@ -12,7 +12,6 @@
 
 #   - WITH_VLD        : Build with Visual Leak Detector (requires Visual Studio) (no)
 #   - USE_PRECOMPILED_DEPS : Use precompiled dependencies on *nix (no)
-#   - USE_VCPKG_DEPS : Build vcpkg dependencies locally (requires Visual Studio) (no)
 #   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
 
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
@@ -22,14 +21,6 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
-
-option(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
-
-if(USE_VCPKG_DEPS)
-  # This must be before the project for the tool-chain to work correctly
-  message("Note: Using locally built vcpkg dependencies.")
-  include(VcpkgDeps)
-endif()
 
 project(CorsixTH_Top_Level)
 

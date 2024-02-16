@@ -1,0 +1,46 @@
+{
+  "dependencies": [
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "avcodec",
+        "avformat",
+        "swresample",
+        "swscale"
+      ]
+    },
+    "freetype",
+    {
+      "name": "lua",
+      "features": [
+        "tools"
+      ]
+    },
+    "luafilesystem",
+    "lpeg",
+    "sdl2",
+    {
+      "name": "fluidsynth",
+      "features": [
+        "sndfile"
+      ]
+    },
+    {
+      "name": "sdl2-mixer",
+      "features": [
+        "libmodplug",
+        "fluidsynth",
+        "libflac",
+        "mpg123",
+        "opusfile"
+      ]
+    },
+    "luasocket",
+    "luasec",
+    "catch2"
+  ],
+  "overrides": [
+    { "name": "sdl2", "version": "2.28.2" }
+  ]
+}
