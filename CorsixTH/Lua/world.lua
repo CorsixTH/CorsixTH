@@ -2804,6 +2804,22 @@ function World:afterLoad(old, new)
     self.wall_types = self.app.walls
     self:initWallTypes()
   end
+  if old < 183 then -- Adjust game speed and tick rates
+    local old_tick_rates = {
+      ["Pause"]              = {0, 1},
+      ["Slowest"]            = {1, 9},
+      ["Slower"]             = {1, 5},
+      ["Normal"]             = {1, 3},
+      ["Max speed"]          = {1, 1},
+      ["And then some more"] = {3, 1},
+    }
+    for name, rate in pairs(old_tick_rates) do
+      if rate[1] == self.hours_per_tick and rate[2] == self.tick_rate then
+        self:setSpeed(name)
+        break
+      end
+    end
+  end
 
   -- Fix the initial of staff names
   self:updateInitialsCache()
