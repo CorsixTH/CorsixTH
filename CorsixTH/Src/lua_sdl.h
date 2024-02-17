@@ -40,7 +40,7 @@ SOFTWARE.
 // SDL_USEREVENT_SOUND_OVER - informs script of a played sound finishing.
 #define SDL_USEREVENT_SOUND_OVER (SDL_USEREVENT + 4)
 
-constexpr int usertick_period_ms = 30;
+constexpr int usertick_period_ms = 36;
 
 int luaopen_sdl(lua_State* L);
 
