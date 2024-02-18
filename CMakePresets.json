@@ -8,7 +8,8 @@
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "USE_SOURCE_DATADIRS": "ON",
-        "ENABLE_UNIT_TESTS": "ON"
+        "ENABLE_UNIT_TESTS": "ON",
+        "BUILD_ANIMVIEW": "ON"
       }
     },
     {

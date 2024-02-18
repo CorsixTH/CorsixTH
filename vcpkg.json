@@ -1,15 +1,5 @@
 {
   "dependencies": [
-    {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "avcodec",
-        "avformat",
-        "swresample",
-        "swscale"
-      ]
-    },
     "freetype",
     {
       "name": "lua",
@@ -40,6 +30,29 @@
     "luasec",
     "catch2"
   ],
+  "features": {
+    "animview": {
+      "description": "Support building AnimView",
+      "dependencies": [
+        "wxwidgets"
+      ]
+    },
+    "movies": {
+      "description": "In game video support",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
+      ]
+    }
+  },
   "overrides": [
     { "name": "sdl2", "version": "2.28.2" }
   ]

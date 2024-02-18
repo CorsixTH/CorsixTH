@@ -20,7 +20,25 @@
 
 cmake_minimum_required(VERSION 3.10)
 
+# Define our options
+option(BUILD_CORSIXTH "Builds the main game" ON)
+option(WITH_AUDIO "Activate sound" ON)
+option(WITH_FREETYPE2 "Enhanced font support" ON)
+option(WITH_MOVIES "Activate in game movies" ON)
+option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
+option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
+option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
+option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
+option(BUILD_TOOLS "Build additional CLI tools (rnc_decode)" OFF)
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
+
+if(WITH_MOVIES)
+  list(APPEND VCPKG_MANIFEST_FEATURES "movies")
+endif()
+if(BUILD_ANIMVIEW)
+  list(APPEND VCPKG_MANIFEST_FEATURES "animview")
+endif()
 
 project(CorsixTH_Top_Level)
 
@@ -31,14 +49,6 @@ endif()
 include(CheckIncludeFiles)
 
 set(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
-
-# Define our options
-option(BUILD_CORSIXTH "Builds the main game" ON)
-option(WITH_AUDIO "Activate sound" ON)
-option(WITH_FREETYPE2 "Enhanced font support" ON)
-option(WITH_MOVIES "Activate in game movies" ON)
-option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
-option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
 
 if(APPLE)
   set(SEARCH_LOCAL_DATADIRS_DEFAULT ON)
@@ -62,9 +72,6 @@ if(APPLE)
   option(WITH_LUAROCKS "Install required luarocks in the app" OFF)
 endif()
 
-option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
-option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
-option(BUILD_TOOLS "Build additional CLI tools (rnc_decode)" OFF)
 
 if(WITH_AUDIO)
   set(CORSIX_TH_USE_SDL_MIXER ON)
