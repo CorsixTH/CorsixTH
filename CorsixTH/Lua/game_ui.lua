@@ -557,8 +557,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
     self.current_momentum.x = self.current_momentum.x - dx/zoom
     self.current_momentum.y = self.current_momentum.y - dy/zoom
 
-    local momentum_x_int = math.floor(self.current_momentum.x + 0.5)
-    local momentum_y_int = math.floor(self.current_momentum.y + 0.5)
+    local momentum_x_int = math.round(self.current_momentum.x)
+    local momentum_y_int = math.round(self.current_momentum.y)
 
     -- Stop zooming when the middle mouse button is pressed
     self.current_momentum.z = 0
