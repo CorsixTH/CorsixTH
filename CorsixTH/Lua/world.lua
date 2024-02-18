@@ -474,6 +474,37 @@ local function isDiseaseUsableForNewPatient(self, disease, hospital)
   error("disease has neither visuals_id or non_visuals_id")
 end
 
+--! Private function to assess the shortest path between all spawn points and desks
+--!param staffed_desks (table) All staffed reception desks
+--!param spawns (table) All available spawn points
+--!return Optimal spawn point to the nearest reception desk or false on failure
+function World:_findClosestSpawnToDesk(staffed_desks, spawns)
+  local best_spawn_point, distance
+  local function testNewSpawnPath(desk, spawn)
+    local new_dist = self:getPathDistance(desk.tile_x, desk.tile_y, spawn.x, spawn.y)
+    if not new_dist then return end
+    if not distance or new_dist < distance then
+      distance = new_dist
+      best_spawn_point = spawn
+    end
+  end
+
+  for _, spawn in ipairs(spawns) do
+    for _, desk in ipairs(staffed_desks) do
+      testNewSpawnPath(desk, spawn)
+    end
+  end
+
+  if not best_spawn_point then
+    local msg =
+        "Warning: Path not found between any spawn point and staffed desk. " ..
+        "Humanoid will still likely find its own way."
+    self:gameLog(msg)
+    return false
+  end
+  return best_spawn_point
+end
+
 --! Spawn a patient from a spawn point for the given hospital.
 --!param hospital (Hospital) Hospital that the new patient should visit.
 --!return (Patient entity) The spawned patient, or 'nil' if no patient spawned.
@@ -511,7 +542,12 @@ function World:spawnPatient(hospital)
   end
 
   -- Construct patient.
-  local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
+  local spawns = self.spawn_points
+  -- Let the first patient to the player use the shortest path to a reception desk
+  local spawn_point = hospital:isPlayerHospital() and not hospital:hadPatients() and
+      self:_findClosestSpawnToDesk(hospital:getStaffedDesks(), spawns) or
+      spawns[math.random(1, #spawns)]
+
   local patient = self:newEntity("Patient", 2)
   patient:setDisease(disease)
   patient:setNextAction(SpawnAction("spawn", spawn_point))
