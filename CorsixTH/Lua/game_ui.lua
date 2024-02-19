@@ -554,11 +554,19 @@ function GameUI:onMouseMove(x, y, dx, dy)
 
   if self:_isMouseScrollButtonDown() then
     local zoom = self.zoom_factor
-    self.current_momentum.x = -dx/zoom
-    self.current_momentum.y = -dy/zoom
+    self.current_momentum.x = self.current_momentum.x - dx/zoom
+    self.current_momentum.y = self.current_momentum.y - dy/zoom
+
+    local momentum_x_int = math.round(self.current_momentum.x)
+    local momentum_y_int = math.round(self.current_momentum.y)
+
     -- Stop zooming when the middle mouse button is pressed
     self.current_momentum.z = 0
-    self:scrollMap(self.current_momentum.x, self.current_momentum.y)
+    self:scrollMap(momentum_x_int, momentum_y_int)
+
+    self.current_momentum.x = self.current_momentum.x - momentum_x_int
+    self.current_momentum.y = self.current_momentum.y - momentum_y_int
+
     repaint = true
   end
 
