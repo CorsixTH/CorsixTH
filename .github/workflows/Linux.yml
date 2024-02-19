@@ -117,7 +117,7 @@ jobs:
           cmakelint --filter=-linelength AnimView/CMakeLists.txt CMakeLists.txt CorsixTH/CMakeLists.txt \
             CorsixTH/CppTest/CMakeLists.txt CorsixTH/Src/CMakeLists.txt CorsixTH/SrcUnshared/CMakeLists.txt \
             libs/CMakeLists.txt libs/rnc/CMakeLists.txt \
-            CMake/GenerateDoc.cmake CMake/PrecompiledDeps.cmake CMake/VcpkgDeps.cmake
+            CMake/CopyVcpkgLua.cmake CMake/GenerateDoc.cmake CMake/PrecompiledDeps.cmake
           # Validate these build files
           yamllint --config-data "rules: {line-length: disable}" .github/workflows/*.yml
           shellcheck --shell sh scripts/macos_luarocks

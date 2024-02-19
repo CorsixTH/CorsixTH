@@ -1,0 +1,70 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "win-dev",
+      "binaryDir": "${sourceDir}/build/dev",
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "USE_SOURCE_DATADIRS": "ON",
+        "ENABLE_UNIT_TESTS": "ON",
+        "BUILD_ANIMVIEW": "ON"
+      }
+    },
+    {
+      "name": "win-x64-rel",
+      "binaryDir": "${sourceDir}/build/win-x64-rel",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-release",
+        "ENABLE_UNIT_TESTS": "ON"
+      }
+    },
+    {
+      "name": "win-x86-rel",
+      "binaryDir": "${sourceDir}/build/win-x86-rel",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "Win32",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x86-windows",
+        "ENABLE_UNIT_TESTS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "win-x64-rel",
+      "configurePreset": "win-x64-rel",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "win-x86-rel",
+      "configurePreset": "win-x86-rel",
+      "configuration": "RelWithDebInfo"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "win-x64-rel",
+      "configurePreset": "win-x64-rel",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "win-x86-rel",
+      "configurePreset": "win-x86-rel",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    }
+  ]
+}
