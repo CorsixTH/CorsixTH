@@ -483,9 +483,15 @@ end
 
 --! Called at the end of each day.
 function PlayerHospital:onEndDay()
-  -- Advise the player.
-  if self:hasStaffedDesk() then
+  if self:canAcceptPatients() then
+    -- Are we providing advice today?
     self:dailyAdviceChecks()
+
+    -- If we haven't spawned our first patient yet for the player make it happen so
+    -- they don't wait too long
+    if self.num_visitors == 0 then
+      self.world:spawnPatient(self)
+    end
   end
 
   -- check if we still have to announce VIP visit

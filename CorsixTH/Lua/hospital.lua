@@ -2365,6 +2365,16 @@ function Hospital:getRandomBusyRoom()
   if #chosen_room.door.queue >= busy_threshold then return chosen_room end
 end
 
+--! Open the hospital
+function Hospital:open()
+  self.opened = true
+end
+
+--! Check if the hospital is ready to accept patients
+function Hospital:canAcceptPatients()
+  return self.opened and self:hasStaffedDesk()
+end
+
 ---- Stubs section - these functions have nothing to do here, are overridden in a derived class.
 
 --! Give advice to the user about the need to buy the first reception desk.

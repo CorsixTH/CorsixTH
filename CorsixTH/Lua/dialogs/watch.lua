@@ -101,7 +101,7 @@ function UIWatch:onCountdownEnd()
       end
     end
   elseif self.count_type == "initial_opening" then
-    self.ui.hospital.opened = true
+    self.hospital:open()
     self.ui:playSound("fanfare.wav")
   end
 end
