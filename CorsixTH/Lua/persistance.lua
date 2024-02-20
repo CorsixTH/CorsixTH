@@ -63,7 +63,7 @@ function unpermanent(name)
   saved_permanents[name] = nil
 end
 
-local --[[persistable:persistance_global_fetch]] function global_fetch(...)
+local --[[persistable:persistence_global_fetch]] function global_fetch(...)
   local val = _G
   for _, k in ipairs({...}) do
     val = val[k]
@@ -313,7 +313,7 @@ function LoadGame(data)
   TheApp.ui:onChangeResolution()
   -- Check if the blueish tone should be applied.
   -- Note: Blue filter control should be handled from world or ui, however when
-  -- loading a game we should let persistance do it.
+  -- loading a game we should let persistence do it.
   if not TheApp.ui:checkForMustPauseWindows() and TheApp.world:isUserActionProhibited() then
     TheApp.video:setBlueFilterActive(true)
   end
