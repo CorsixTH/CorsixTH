@@ -63,7 +63,7 @@ function unpermanent(name)
   saved_permanents[name] = nil
 end
 
-local --[[persistable:persistence_global_fetch]] function global_fetch(...)
+local --[[persistable:persistance_global_fetch]] function global_fetch(...)
   local val = _G
   for _, k in ipairs({...}) do
     val = val[k]
