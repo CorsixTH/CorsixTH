@@ -15,19 +15,35 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.'
+## Settings
+# Lua version, if not the lua CorsixTH was built with. Use 5.1 for luajit
+#lua_version="5.4"
+# The luarocks executable if not in PATH
+luarocks="luarocks"
+# The luarocks folder, assuming all rocks are together
+dir="$($luarocks show --rock-tree luafilesystem)"
+# Always overwrite existing rocks if uncommented
+#always_copy=true
+# Always build new rocks if uncommented
+#always_build=true
+# Do not install luasocket and luasec if uncommented
+#skip_luasocket=true
+if [ "$skip_luasocket" != "true" ]; then
+  # Path to the folder containing openssl, for luasec
+  openssl_path=$( (which openssl | brew --prefix) | sed 's/\bin\/openssl//')
+fi
 
 set -ae
 if [ "$CTH_VERBOSE" ] || [ "$CI" ]; then
   set -x
 fi
 
+# Find target app
 if [ -d "$1" ]; then
   cd "$1"
-  shift
 elif [ -d /Applications/CorsixTH.app ]; then
   cd /Applications/
 fi
-
 if [ -d CorsixTH.app ]; then
   cd CorsixTH.app/Contents/Resources/
 else
@@ -35,41 +51,48 @@ else
   exit 1
 fi
 
-if otool -L ../MacOS/CorsixTH | grep -q 'lua'; then
-  lua="$(otool -L ../MacOS/CorsixTH | grep 'lua' | cut -d. -f4-5)"
+# Find lua version
+if [ -n "$lua_version" ]; then
+  lua=$lua_version
+elif otool -L ../MacOS/CorsixTH | grep -q 'lua'; then
+  lua="$(otool -L ../MacOS/CorsixTH | grep 'lua' | sed -rn "s/.*current.* ([0-9]\.[0-9]).*/\1/p")"
 elif lua -v >/dev/null; then
   lua="$(lua -v | cut -d" " -f2 | cut -d. -f1-2)"
-else
-  lua=5.3
-  echo "No Lua library or executable found, using version 5.3"
+fi
+if [ -z "$lua" ]; then
+  lua=5.4
+  echo "No Lua library or executable found, using version 5.4."
 fi
 
-# Assumes that all luarocks are installed in the same place, ie all globally or all locally
-dir="$(luarocks show --rock-tree luafilesystem)"
-
-if [ -e lfs.so ] && [ -e lpeg.so ] && [ -z "$1" ]
+# Collect rocks
+if [ -e lfs.so ] && [ -e lpeg.so ] && [ -z "$always_copy" ] && [ -z "$always_build" ]
   then echo "Luarocks for $lua in place."
-  exit
+  exit 0
 elif [ -e "$dir/lib/lua/$lua/lfs.so" ] && [ -e "$dir/lib/lua/$lua/lpeg.so" ] &&
- [ "$1" != "fresh" ] && [ -d "$dir/share/lua/" ]
+ [ -d "$dir/share/lua/" ] && [ -z "$always_build" ]
   then mkdir -p lib/lua/"$lua/" share/lua/"$lua/"
   cp -RL "$dir/lib/lua" lib/
   cp -RL "$dir/share/lua" share/
   echo "Copied luarocks from global installation for $lua."
 else
-  luarocks install --lua-version "$lua" --tree . luafilesystem
-  luarocks install --lua-version "$lua" --tree . lpeg
-  luarocks install --lua-version "$lua" --tree . luasocket
-  luarocks install --lua-version "$lua" --tree . luasec OPENSSL_DIR=/usr/local/opt/openssl || true
-  echo "Installed local luarocks $lua."
+  luarocks="$luarocks install --lua-version $lua --tree ."
+  $luarocks luafilesystem
+  $luarocks lpeg
+  if [ -z "$skip_luasocket" ]; then
+    $luarocks luasocket
+    $luarocks luasec OPENSSL_DIR="$openssl_path"
+  fi
+  echo "Installed local luarocks for $lua."
 fi
 
+# Move into place for CorsixTH
 rsync -r "lib/lua/$lua/"lpeg.so "lib/lua/$lua/"lfs.so .
 rsync -r "share/lua/$lua/"re.lua ./Lua/
-set +e # Luasocket and Luasec are optional
-rsync -r "lib/lua/$lua/"ssl.so "lib/lua/$lua/"mime . 2>/dev/null
-rsync -r "lib/lua/$lua/socket/core.so" socket/ 2>/dev/null
-rsync -r "share/lua/$lua/"ltn12.lua "share/lua/$lua/"mime.lua "share/lua/$lua/"socket.lua  "share/lua/$lua/"ssl \
-  "share/lua/$lua/"ssl.lua ./Lua/ 2>/dev/null
-rsync -r "share/lua/$lua/"socket/*.lua ./Lua/socket 2>/dev/null
+if [ -z "$skip_luasocket" ]; then
+  rsync -r "lib/lua/$lua/"ssl.so "lib/lua/$lua/"mime . 2>/dev/null
+  rsync -r "lib/lua/$lua/socket/core.so" socket/ 2>/dev/null
+  rsync -r "share/lua/$lua/"ltn12.lua "share/lua/$lua/"mime.lua "share/lua/$lua/"socket.lua  "share/lua/$lua/"ssl \
+    "share/lua/$lua/"ssl.lua ./Lua/ 2>/dev/null
+  rsync -r "share/lua/$lua/"socket/*.lua ./Lua/socket 2>/dev/null
+fi
 rm -rf lib/ share/
