@@ -140,7 +140,8 @@ int l_mainloop(lua_State* L) {
       SDL_AddTimer(usertick_period_ms, timer_frame_callback, nullptr);
   SDL_Event e;
 
-  while (SDL_WaitEvent(&e) != 0) {
+  int wait_error = 0;
+  while ((wait_error = SDL_WaitEvent(&e)) != 0) {
     bool do_frame = false;
     bool do_timer = false;
     do {
@@ -294,6 +295,10 @@ int l_mainloop(lua_State* L) {
 
     // No events pending - a good time to do a bit of garbage collection
     lua_gc(L, LUA_GCSTEP, 2);
+  }
+
+  if (wait_error != 0) {
+    std::fprintf(stderr, "%s\n", SDL_GetError());
   }
 
 leave_loop:

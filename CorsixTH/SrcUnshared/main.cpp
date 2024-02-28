@@ -49,12 +49,12 @@ struct types_equal<T1, T1> {
 };
 
 static void cleanup(lua_State* L) {
+  lua_close(L);
 #ifdef CORSIX_TH_USE_SDL_MIXER
   while (Mix_QuerySpec(nullptr, nullptr, nullptr)) {
     Mix_CloseAudio();
   }
 #endif
-  lua_close(L);
   SDL_Quit();
 }
 
