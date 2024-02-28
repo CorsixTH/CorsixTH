@@ -628,26 +628,19 @@ function World:tickEarthquake()
       self.next_earthquake.damage_timer = self.next_earthquake.damage_timer + earthquake_damage_time
     end
 
-    --[[
+
+    -- The below code triggers random patient falls during an earthquake.
+    -- It is currently disabled except for debugging purposes in the config file.
+    -- Current behaviour can cause empty action queues or other undesired behaviours.
+    -- Once working, the debugging flag can be removed.
+    if not TheApp.config.debug_falling then return end
     local hospital = self:getLocalPlayerHospital()
     -- loop through the patients and allow the possibility for them to fall over
     for _, patient in ipairs(hospital.patients) do
       if not patient.in_room and patient.falling_anim then
-
-        -- make the patients fall
-
-        -- jpirie: this is currently disabled. Calling this function
-        -- really screws up the action queue, sometimes the patients
-        -- end up with nil action queues, and sometimes the resumed
-        -- actions throw exceptions. Also, patients in the hospital
-        -- who have not yet found reception throw exceptions after
-        -- they visit reception. Some debugging needed here to get
-        -- this working.
-
-        patient:falling()
+        patient:falling(false)
       end
     end
-    --]]
   end
 end
 

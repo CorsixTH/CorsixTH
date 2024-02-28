@@ -72,6 +72,14 @@ function Patient:onClick(ui, button)
         ui:addWindow(UIPatient(ui, self))
       end
     end
+  elseif TheApp.config.debug_falling and button == "right" then
+    -- Attempt to push patient over
+    -- Currently debug-only, enable in config file for testing.
+    -- Once working, the debugging flag can be removed.
+    if not self.world:isPaused() and not (self.cured or self.dead or self.going_home)
+         and math.random(1, 3) == 2 then
+      self:falling(true)
+    end
   elseif self.user_of then
     -- The object we're using is made invisible, as the animation contains both
     -- the humanoid and the object. Hence send the click onto the object.
@@ -356,27 +364,22 @@ function Patient:canPeeOrPuke(current)
   return parcel ~= 0 and th:getPlotOwner(parcel) == self.hospital:getPlayerIndex()
 end
 
---! Animations for when there is an earth quake
-function Patient:falling()
+--! Falling animations for when there is an earth quake or the player is being very mean
+--!param player_init (bool) if true, player triggered the fall
+function Patient:falling(player_init)
   local current = self:getCurrentAction()
   current.keep_reserved = true
   if self.falling_anim and self:canPeeOrPuke(current) and self.has_fallen == 1 then
-    self:setNextAction(FallingAction(), 0)
     self.has_fallen = 2
-    if self.has_fallen == 2 then
-      self:setNextAction(OnGroundAction())
-      self.on_ground = true
+    self:queueAction(FallingAction(), 1)
+    self:queueAction(OnGroundAction(), 2)
+    self:queueAction(GetUpAction(), 3)
+    if math.random(1, 5) == 3 and self:shakeFist() then
+      self:interruptAndRequeueAction(current, 5)
+    else
+      self:interruptAndRequeueAction(current, 4)
     end
-    if self.on_ground then
-      self:setNextAction(GetUpAction())
-    end
-    -- TODO: falls are broken, the will change once implemented
-    self:interruptAndRequeueAction(current, 2)
-    self.on_ground = false
-    if math.random(1, 5) == 3 then
-      self:shakeFist()
-    end
-    self:fallingAnnounce()
+    if player_init then self:fallingAnnounce() end
     self:changeAttribute("happiness", -0.05) -- falling makes you very unhappy
   else
     return
@@ -398,7 +401,8 @@ end
 --! Perform 'shake fist' action.
 function Patient:shakeFist()
   if self.shake_fist_anim then
-    self:queueAction(ShakeFistAction(), 1)
+    self:queueAction(ShakeFistAction(), 4)
+    return true
   end
 end
 
@@ -1123,6 +1127,11 @@ function Patient:afterLoad(old, new)
           action.must_happen = false
         end
       end
+    end
+  end
+  if old < 183 then
+    if self.humanoid_class == "Standard Female Patient" then
+      self.on_ground_anim = 1764
     end
   end
   self:updateDynamicInfo()
