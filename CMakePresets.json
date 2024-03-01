@@ -9,7 +9,8 @@
         "USE_SOURCE_DATADIRS": "ON",
         "ENABLE_UNIT_TESTS": "ON",
         "BUILD_ANIMVIEW": "ON",
-        "BUILD_TOOLS": "ON"
+        "BUILD_TOOLS": "ON",
+	"CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
