@@ -119,7 +119,7 @@ function Hospital:Hospital(world, avail_rooms, name)
     general = 0,
   }
 
-  self.num_visitors = 0
+  self.num_visitors = 0 -- Counts patients only
   self.num_deaths = 0
   self.num_deaths_this_year = 0
   self.num_cured = 0
@@ -1045,6 +1045,17 @@ function Hospital:hasStaffedDesk()
     if desk.receptionist or desk.reserved_for then return true end
   end
   return false
+end
+
+--! Returns a list of all reception desks that are staffed
+function Hospital:getStaffedDesks()
+  local staffed_desks = {}
+  for _, desk in ipairs(self:findReceptionDesks()) do
+    if desk.receptionist or desk.reserved_for then
+      staffed_desks[#staffed_desks + 1] = desk
+    end
+  end
+  return staffed_desks
 end
 
 --! Collect the reception desks in the hospital.
@@ -2373,6 +2384,11 @@ end
 --! Check if the hospital is ready to accept patients
 function Hospital:canAcceptPatients()
   return self.opened and self:hasStaffedDesk()
+end
+
+--! Has this hospital received any patients yet?
+function Hospital:hadPatients()
+  return self.num_visitors > 0
 end
 
 ---- Stubs section - these functions have nothing to do here, are overridden in a derived class.
