@@ -30,6 +30,7 @@ SOFTWARE.
 #include <memory>
 #include <stack>
 #include <stdexcept>
+#include <vector>
 
 #include "persist_lua.h"
 #include "th.h"
@@ -374,6 +375,8 @@ class render_target {
 
   double draw_scale() const;
 
+  void destroy_intermediate_textures();
+
   SDL_Window* window;
   SDL_Renderer* renderer;
   scoped_target_texture* current_target = nullptr;
@@ -389,6 +392,10 @@ class render_target {
   int cursor_y;
 
   std::stack<SDL_Rect> clip_rects;  ///< Stack of requested clip rects.
+
+  // Intermediate textures used in the production of the current frame.
+  // These are destroyed after the frame is presented.
+  std::vector<SDL_Texture*> intermediate_textures;
 
   bool scale_bitmaps;  ///< Whether bitmaps should be scaled.
   bool supports_target_textures;
