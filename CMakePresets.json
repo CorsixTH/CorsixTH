@@ -2,6 +2,17 @@
   "version": 3,
   "configurePresets": [
     {
+      "name": "linux-dev",
+      "binaryDir": "${sourceDir}/build/dev",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "USE_SOURCE_DATADIRS": "ON",
+        "ENABLE_UNIT_TESTS": "ON",
+        "BUILD_ANIMVIEW": "ON",
+        "BUILD_TOOLS": "ON"
+      }
+    },
+    {
       "name": "win-dev",
       "binaryDir": "${sourceDir}/build/dev",
       "generator": "Visual Studio 17 2022",
@@ -9,7 +20,8 @@
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "USE_SOURCE_DATADIRS": "ON",
         "ENABLE_UNIT_TESTS": "ON",
-        "BUILD_ANIMVIEW": "ON"
+        "BUILD_ANIMVIEW": "ON",
+        "BUILD_TOOLS": "ON"
       }
     },
     {
