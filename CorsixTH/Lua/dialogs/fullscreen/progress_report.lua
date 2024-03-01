@@ -113,7 +113,7 @@ function UIProgressReport:UIProgressReport(ui)
     self:addPanel(0, 265, 71 + (num - 1) * 25)
       :makeButton(0, 0, 147, 20, 9, btn_handler(num))
       :setTooltip(tooltip(num))
-      :enable(num == 1)
+      :enable(true)
   end
 
   for i = 1, math.min(#world.hospitals, 4) do
@@ -182,9 +182,11 @@ function UIProgressReport:draw(canvas, x, y)
   UIFullscreen.draw(self, canvas, x, y)
 
   x, y = self.x + x, self.y + y
-  local hospital = self.ui.hospital
-  local world    = hospital.world
+  local world = self.ui.app.world
+  local hospital = world.hospitals[self.selected]
   local world_goals = world.goals
+
+  local total_spawns = 0
 
   -- Names of the players playing
   local ly = 73
@@ -192,6 +194,7 @@ function UIProgressReport:draw(canvas, x, y)
     local font = (pnum == self.selected) and self.red_font or self.normal_font
     font:draw(canvas, player.name:upper(), x + 272, y + ly)
     ly = ly + 25
+    total_spawns = total_spawns + math.max(1, player.population)
   end
 
   -- Draw the vertical bars for the winning conditions
@@ -229,7 +232,7 @@ function UIProgressReport:draw(canvas, x, y)
       (world:date():year() + 1999), x + 227, y + 40, 400, 0)
   self.small_font:draw(canvas, _S.progress_report.win_criteria:upper(), x + 263, y + 172)
   self.small_font:draw(canvas, _S.progress_report.percentage_pop:upper() .. " " ..
-      (hospital.population * 100) .. "%", x + 450, y + 65)
+      math.floor(math.max(1, hospital.population) / total_spawns * 100) .. "%", x + 450, y + 65)
 end
 
 function UIProgressReport:afterLoad(old, new)
