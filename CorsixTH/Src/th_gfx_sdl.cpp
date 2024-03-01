@@ -420,7 +420,7 @@ class render_target::scoped_target_texture
     } else {
       target->draw(texture, nullptr, &rect, 0);
     }
-    SDL_DestroyTexture(texture);
+    target->intermediate_textures.push_back(texture);
   }
 
  private:
@@ -509,6 +509,7 @@ bool render_target::update(const render_target_creation_params* pParams) {
 
 void render_target::destroy() {
   zoom_buffer.reset();
+  destroy_intermediate_textures();
 
   if (pixel_format) {
     SDL_FreeFormat(pixel_format);
@@ -588,6 +589,9 @@ const char* render_target::get_renderer_details() const {
 const char* render_target::get_last_error() { return SDL_GetError(); }
 
 bool render_target::start_frame() {
+  // Destroy any intermediate texures used last frame.
+  destroy_intermediate_textures();
+
   fill_black();
   return true;
 }
@@ -894,6 +898,13 @@ render_target::begin_intermediate_drawing(int iX, int iY, int iWidth,
 double render_target::draw_scale() const {
   if (current_target) return current_target->scale_factor();
   return global_scale_factor;
+}
+
+void render_target::destroy_intermediate_textures() {
+  for (SDL_Texture* texture : intermediate_textures) {
+    SDL_DestroyTexture(texture);
+  }
+  intermediate_textures.clear();
 }
 
 raw_bitmap::raw_bitmap() {
