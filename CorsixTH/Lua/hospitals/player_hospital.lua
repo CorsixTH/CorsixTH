@@ -775,9 +775,6 @@ function PlayerHospital:playSound(sound)
 end
 
 function PlayerHospital:afterLoad(old, new)
-  if old < 145 then
-    self.hosp_cheats = Cheats(self)
-  end
   if old < 146 then
     self.adviser_data = {
       temperature_advise = nil,
@@ -800,5 +797,6 @@ function PlayerHospital:afterLoad(old, new)
     self.adviser_data.reception_advice = self.adviser_data.reception_advice or self.receptionist_msg
   end
 
+  self.hosp_cheats = Cheats(self)
   Hospital.afterLoad(self, old, new)
 end

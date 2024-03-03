@@ -265,7 +265,7 @@ adviser = {
     norest_off_cheat = "Phew! Looks like that buzz finally wore off. Your staff will now rest properly.",
   },
   staff_place_advice = {
-    not_enough_lecture_chairs = "Each student doctor needs a lecture chair to sit in!"
+    not_enough_lecture_chairs = "Each student doctor needs a lecture chair to sit in!",
   },
 }
 
@@ -316,9 +316,18 @@ install = {
   cancel = "Cancel",
 }
 
-misc.not_yet_implemented = "(not yet implemented)"
-misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map. It might be that you need to build a reception desk and hire a receptionist"
-misc.cant_treat_emergency = "Your hospital cannot treat this emergency because its disease has not been discovered. Feel free to try again."
+misc = {
+  not_yet_implemented = "(not yet implemented)",
+  no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map. It might be that you need to build a reception desk and hire a receptionist",
+  cant_treat_emergency = "Your hospital cannot treat this emergency because its disease has not been discovered. Feel free to try again.",
+  epidemics_off = "Epidemics are disabled",
+  epidemics_on = "Epidemics are re-enabled",
+  earthquakes_off = "Earthquakes are disabled",
+  earthquakes_on = "Earthquakes are re-enabled",
+  epidemic_no_icon_to_toggle = "Unable to show/hide infected icons - no epidemics in progress that are not revealed",
+  epidemic_no_diseases = "Cannot create epidemic - no contagious diseases available",
+  epidemic_no_receptionist = "Cannot create epidemic - no staffed reception desk",
+}
 
 main_menu = {
   new_game = "Campaign",
@@ -814,9 +823,11 @@ cheats_window = {
     all_research = "All Research Cheat",
     emergency = "Create Emergency",
     vip = "Create VIP",
+    toggle_earthquake = "Toggle earthquakes",
     earthquake = "Create Earthquake",
+    toggle_epidemic = "Toggle epidemics",
     epidemic = "Spawn contagious patient",
-    toggle_infected = "Toggle infected icons",
+    show_infected = "Show or hide infected icons",
     create_patient = "Create Patient",
     end_month = "End of Month",
     end_year = "End of Year",
@@ -824,6 +835,8 @@ cheats_window = {
     win_level = "Win Level",
     increase_prices = "Increase prices",
     decrease_prices = "Decrease prices",
+    reset_death_count = "Reset death count",
+    max_reputation = "Max reputation",
   },
   close = "Close",
 }
@@ -835,9 +848,11 @@ tooltip.cheats_window = {
     all_research = "Completes all research",
     emergency = "Creates an emergency",
     vip = "Creates a VIP",
+    toggle_earthquake = "Toggle earthquakes",
     earthquake = "Creates an earthquake",
+    toggle_epidemic = "Toggle whether epidemics can happen",
     epidemic = "Creates a contagious patient who may cause an epidemic to happen",
-    toggle_infected = "Toggle the infected icons for the active, discovered epidemic",
+    show_infected = "Show/hide the infected icons for the active, discovered epidemic",
     create_patient = "Creates a Patient at the map border",
     end_month = "Jumps to the end of the month",
     end_year = "Jumps to the end of the year",
@@ -845,6 +860,8 @@ tooltip.cheats_window = {
     win_level = "Win the current level",
     increase_prices = "Increase all prices by 50% (max. 200%)",
     decrease_prices = "Decrease all prices by 50% (min. 50%)",
+    reset_death_count = "Reset the hospital death count to zero",
+    max_reputation = "Set the hospital reputation to the maximum",
   }
 }
 

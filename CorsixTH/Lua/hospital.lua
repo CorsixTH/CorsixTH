@@ -1168,7 +1168,9 @@ end
  see @Hospital:determineIfContagious() to see how epidemics are typically started]]
 function Hospital:spawnContagiousPatient()
   --[[ Gets the available non-visual disease in the current world
-    @return non_visuals (table) table of available non-visual diseases]]
+    @return non_visuals (table) table of available non-visual diseases or
+      false if the patient cannot be spawned.
+    @return message (optional string) The error message that may be caused by using cheats.]]
   local function get_available_contagious_diseases()
     local contagious = {}
     for _, disease in ipairs(self.world.available_diseases) do
@@ -1191,10 +1193,10 @@ function Hospital:spawnContagiousPatient()
       patient:setHospital(self)
       self:addToEpidemic(patient)
     else
-      print("Cannot create epidemic - no contagious diseases available")
+      return false, _S.misc.epidemic_no_diseases
     end
   else
-    print("Cannot create epidemic - no staffed reception desk")
+    return false, _S.misc.epidemic_no_receptionist
   end
 end
 
@@ -1243,7 +1245,7 @@ end
  appropriate epidemic if so.
  @param patient (Patient) patient to determine if contagious]]
 function Hospital:determineIfContagious(patient)
-  if patient.is_emergency or not patient.disease.contagious then
+  if self.epidemics_off or patient.is_emergency or not patient.disease.contagious then
     return false
   end
   -- ContRate treated like a percentage with ContRate% of patients with
@@ -2389,6 +2391,13 @@ end
 --! Has this hospital received any patients yet?
 function Hospital:hadPatients()
   return self.num_visitors > 0
+end
+
+--! Reset the death counts. This is used by a cheat to reset key lose conditions.
+function Hospital:resetDeathCount()
+  self.num_deaths = 0
+  self.num_deaths_this_year = 0
+  self.statistics.deaths = 0
 end
 
 ---- Stubs section - these functions have nothing to do here, are overridden in a derived class.
