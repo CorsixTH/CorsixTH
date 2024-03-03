@@ -671,10 +671,25 @@ function App:getAbsolutePathToLevelFile(level)
   return nil, "Level not found: " .. level
 end
 
--- Loads the specified level. If a string is passed it looks for the file with the same name
+--! Invokes a protected call of App:_loadLevel(...). See that function for more information.
+--! This function should always be called to catch errors and properly pass the
+--! error to the player
+function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
+  local status, err = pcall(self._loadLevel, self, level, difficulty, level_name,
+      level_file, level_intro, map_editor)
+  if not status then
+    err = "Error while loading level: " .. err
+    print(err)
+    self:loadMainMenu() -- We need to unload all level elements that succeeded
+    self.ui:addWindow(UIInformation(self.ui, { err }))
+  end
+end
+
+--! Private Function to load the level. Call via App:loadLevel(...)
+--! Loads the specified level. If a string is passed it looks for the file with the same name
 -- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
 -- the original game.
-function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
+function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
   if self.world then
     self:worldExited()
   end

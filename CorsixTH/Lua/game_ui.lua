@@ -72,7 +72,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
     -- For a standard 128x128 map, screen size would have to be in the
     -- region of 3276x2457 in order to be too large.
     if not self.map_editor then
-      error("Screen size too large for the map")
+      error("Screen size too large for the map. Adjust your resolution in Settings.")
     end
   end
   self.screen_offset_x, self.screen_offset_y = app.map:WorldToScreen(
