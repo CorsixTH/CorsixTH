@@ -1718,12 +1718,7 @@ function App:restart()
       self.ui:addWindow(UIInformation(self.ui, { _S.information.cannot_restart }))
       return
     end
-    local status, err = pcall(self.loadLevel, self, level, difficulty, name, file, intro)
-    if not status then
-      err = "Error while loading level: " .. err
-      print(err)
-      self.ui:addWindow(UIInformation(self.ui, { err }))
-    end
+    self:loadLevel(level, difficulty, name, file, intro)
   end))
 end
 
