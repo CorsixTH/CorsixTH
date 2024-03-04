@@ -207,8 +207,10 @@ function UIFax:choice(choice_number)
     self.ui.hospital.player_salary = self.ui.hospital.salary_offer
     if tonumber(self.ui.app.world.map.level_number) then
       local next_level = self.ui.app.world.map.level_number + 1
-      self.ui.app:loadLevel(next_level, self.ui.app.map.difficulty)
-      self.ui.app.moviePlayer:playAdvanceMovie(next_level)
+      if self.ui.app:loadLevel(next_level, self.ui.app.map.difficulty, nil, nil,
+          nil, nil, _S.errors.load_level_prefix) then
+        self.ui.app.moviePlayer:playAdvanceMovie(next_level)
+      end
     else
       for i, level in ipairs(self.ui.app.world.campaign_info.levels) do
         if self.ui.app.world.map.level_number == level then
@@ -216,7 +218,7 @@ function UIFax:choice(choice_number)
           local level_info, _ = self.ui.app:readLevelFile(next_level)
           if level_info then
             self.ui.app:loadLevel(next_level, nil, level_info.name,
-                     level_info.map_file, level_info.briefing)
+                level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix)
             break
           end
         end

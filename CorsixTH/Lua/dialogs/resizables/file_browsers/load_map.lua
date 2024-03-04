@@ -39,13 +39,7 @@ function UILoadMap:choiceMade(name)
   -- Make sure there is no blue filter active.
   app.video:setBlueFilterActive(false)
   name = name:sub(app.user_level_dir:len() + 1)
-  local status, err = pcall(app.loadLevel, app, name, nil, nil, nil, nil, true)
-  if not status then
-    err = _S.errors.load_prefix .. err
-    print(err)
-    app:loadMainMenu()
-    app.ui:addWindow(UIInformation(self.ui, {err}))
-  end
+  app:loadLevel(name, nil, nil, nil, nil, true, _S.errors.load_map_prefix)
 end
 
 function UILoadMap:close()
