@@ -1082,8 +1082,12 @@ function UI:afterLoad(old, new)
       gfx.cache.palette_greyscale_ghost = {}
       gfx.cache.language_fonts = {}
       gfx.builtin_font = nil
+
+      local palette = gfx:loadPalette("QData", "PREF01V.PAL", true)
+      self.tooltip_font = gfx:loadFont("QData", "Font00V", false, palette)
     end
   end
+
   self:setupGlobalKeyHandlers()
 
   -- Cancel any saved screen movement from edge scrolling
