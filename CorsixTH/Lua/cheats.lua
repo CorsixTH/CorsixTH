@@ -105,6 +105,8 @@ function Cheats:cheatEmergency()
   end
 end
 
+function Cheats:cheatToggleInfected() end -- Stub of the old name of the function below
+
 --[[ Before an epidemic has been revealed, show/hide the infected mood icons
 to easily distinguish the infected patients. This will show/hide icons
 for ALL future epidemics you cannot distinguish between epidemics

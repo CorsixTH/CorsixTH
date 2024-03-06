@@ -1000,3 +1000,10 @@ fax = {
     }
   }
 }
+
+cheats_window.cheats = {
+ toggle_infected = show_infected,
+}
+tooltip.cheats_window.cheats = {
+ toggle_infected = show_infected,
+}
