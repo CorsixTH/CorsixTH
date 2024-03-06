@@ -797,6 +797,10 @@ function PlayerHospital:afterLoad(old, new)
     self.adviser_data.reception_advice = self.adviser_data.reception_advice or self.receptionist_msg
   end
 
+  -- Refresh the cheat system every load
+  local old_active_cheats = self.hosp_cheats.active_cheats
   self.hosp_cheats = Cheats(self)
+  self.hosp_cheats.active_cheats = old_active_cheats
+
   Hospital.afterLoad(self, old, new)
 end
