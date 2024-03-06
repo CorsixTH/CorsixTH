@@ -2175,16 +2175,6 @@ end
 --!param old (integer) The old version of the save game.
 --!param new (integer) The current version of the save game format.
 function World:afterLoad(old, new)
-
-  if not self.original_savegame_version then
-    self.original_savegame_version = old
-  end
-  -- If the original save game version is considerably lower than the current, warn the player.
-  -- For 2024 release, bump cutoff from 20 to 25 pending new methods in PR2518
-  if new - 25 > self.original_savegame_version then
-    self.ui:addWindow(UIInformation(self.ui, {_S.information.very_old_save}))
-  end
-
   self:setUI(self.ui)
 
   -- insert global compatibility code here
@@ -2571,9 +2561,19 @@ function World:afterLoad(old, new)
   self:previousSpeed()
 
   self.earthquake:afterLoad(old, new)
+
+  -- Savegame version housekeeping
+  if not self.original_savegame_version then
+    self.original_savegame_version = old
+  end
+  -- If the original save game version is considerably lower than the current, ask
+  -- the player if they want to restart the level.
+  if new - 20 > self.original_savegame_version then
+    TheApp:restart(_S.confirmation.very_old_save)
+  end
   self.savegame_version = new
   self.release_version = TheApp:getVersion(new)
-  self.system_pause = false -- Reset flag on load
+  self:setSystemPause(false) -- Reset flag on load
 end
 
 function World:playLoadedEntitySounds()
