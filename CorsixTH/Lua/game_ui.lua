@@ -1298,8 +1298,10 @@ end
 
 --! Offers a confirmation window to quit the game and return to main menu
 -- NB: overrides UI.quit, do NOT call it from here
-function GameUI:quit()
-  self:addWindow(UIConfirmDialog(self, false, _S.confirmation.quit, --[[persistable:gameui_confirm_quit]] function()
+--!param mapeditor (boolean) If the user is quitting the map editor
+function GameUI:quit(mapeditor)
+  local msg = mapeditor and _S.confirmation.quit_mapeditor or _S.confirmation.quit
+  self:addWindow(UIConfirmDialog(self, false, msg, --[[persistable:gameui_confirm_quit]] function()
     self.app:loadMainMenu()
   end))
 end
@@ -1310,4 +1312,9 @@ end
 
 function GameUI:showMenuBar()
   self.menu_bar:appear()
+end
+
+function GameUI:restartMapEditor()
+  self:addWindow(UIConfirmDialog(self, false, _S.confirmation.restart_mapeditor,
+    --[[persistable:app_hotkey_confirm_mapeditor_restart]] function() self.app:mapEdit() end))
 end
