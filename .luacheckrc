@@ -31,6 +31,9 @@ globals = { -- Globals
             "serialize", "array_join", "shallow_clone", "staff_initials_cache",
             "hasBit", "bitOr", "inspect",
 
+            -- Generic classes
+            "Pos", "Size", "TreeAccess",
+
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
             "CallsDispatcher", "Cheats", "ChildClass", "Command", "Door", "DrawFlags",
@@ -51,8 +54,8 @@ globals = { -- Globals
             "UICustomGame", "UICustomise", "UIDirectoryBrowser", "UIDropdown",
             "UIEditRoom", "UIFax", "UIFileBrowser", "UIFolder", "UIFullscreen",
             "UIFurnishCorridor", "UIGraphs", "UIHireStaff", "UIHotkeyAssign",
-            "UIHotkeyAssignKeyPane", "UIInformation", "UIJukebox", "UILoadGame",
-            "UILoadMap", "UILuaConsole", "UIMachine", "UIMakeDebugPatient",
+            "UIHotkeyAssignKeyPane", "UIInformation", "UIJukebox", "UILevelEditor",
+            "UILoadGame", "UILoadMap", "UILuaConsole", "UIMachine", "UIMakeDebugPatient",
             "UIMainMenu", "UIMapEditor", "UIMenuBar", "UIMenuList",
             "UIMessage", "UINewGame", "UIOptions", "UIPatient",
             "UIPlaceObjects", "UIPlaceStaff", "UIPolicy", "UIProgressReport",
@@ -60,6 +63,10 @@ globals = { -- Globals
             "UIResolution", "UISaveGame", "UISaveMap", "UIScrollSpeed",
             "UIShiftScrollSpeed", "UIStaff", "UIStaffManagement", "UIStaffRise",
             "UITipOfTheDay", "UITownMap", "UIUpdate", "UIWatch", "UIZoomSpeed",
+
+            -- Level editor data classes
+            "LevelEditPage", "LevelTableSection", "LevelTabPage", "LevelValue",
+            "LevelValuesSection",
 
             -- Actions
             "AnswerCallAction", "CallCheckPointAction", "CheckWatchAction",

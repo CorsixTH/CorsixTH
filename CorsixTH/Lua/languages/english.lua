@@ -337,6 +337,7 @@ main_menu = {
   load_game = "Load Game",
   options = "Settings",
   map_edit = "Map Editor",
+  level_edit = "Level Editor",
   savegame_version = "Savegame version: ",
   updates_off = "Not checking for updates",
   version = "Version: ",
@@ -351,6 +352,7 @@ tooltip.main_menu = {
   load_game = "Load a saved game",
   options = "Tweak various settings",
   map_edit = "Create a custom map",
+  level_edit = "Create a custom level",
   exit = "No, no, please don't leave!",
   quit = "You are about to quit from CorsixTH. Are you sure this is what you want to do?",
 }
@@ -932,6 +934,766 @@ map_editor_window = {
   checks = {
     spawn_points_and_path = "Warning: Patients cannot reach the hospital. They need 'road' tiles or 'outside' grey tiles at the edge of the map and a path of these tiles to the hospital entrance.",
   },
+}
+
+level_editor = {
+  ai_players = {
+    col_names = {
+      name = "Name",
+      playing = "Is playing"
+    },
+    row_names = {
+      [0] = "Opponent 1",
+      [1] = "Opponent 2",
+      [2] = "Opponent 3",
+      [3] = "Opponent 4",
+      [4] = "Opponent 5",
+      [5] = "Opponent 6",
+      [6] = "Opponent 7",
+      [7] = "Opponent 8",
+      [8] = "Opponent 9",
+      [9] = "Opponent 10",
+      [10] = "Opponent 11",
+      [11] = "Opponent 12",
+      [12] = "Opponent 13",
+      [13] = "Opponent 14",
+      [14] = "Opponent 15"
+    }
+  },
+  awards = {
+    col_names = {
+      award_condition = "Superior performance",
+      bonus = "Reward",
+      penalty = "Penalty",
+      poor_condition = "Bad performance"
+    },
+    row_names = {
+      AwardReputation = "Reputation",
+      AwardStaffHappiness = "Staff happiness",
+      Cleanliness = "Cleanliness",
+      Cures = "Cures",
+      CuresVDeaths = "Cures vs deaths",
+      Deaths = "Deaths",
+      Emergency = "Emergencies",
+      HospValue = "Hospital value",
+      NewTech = "Newest technology",
+      PeepHappiness = "Patients happiness",
+      PopulationPercentage = "Popn percentage",
+      WaitingTimes = "Queueing time",
+      WellKeptTech = "Machine Maintenance"
+    }
+  },
+  emergency_control = {
+    col_names = {
+      Bonus = "Bonus",
+      EndMonth = "Last month",
+      Illness = "Illness",
+      Max = "Max patients",
+      Min = "Min patients",
+      PercWin = "Percent cure",
+      StartMonth = "First month"
+    },
+    row_names = {
+      [0] = "Period 1",
+      [1] = "Period 2",
+      [2] = "Period 3",
+      [3] = "Period 4",
+      [4] = "Period 5",
+      [5] = "Period 6",
+      [6] = "Period 7",
+      [7] = "Period 8",
+      [8] = "Period 9"
+    }
+  },
+  expertise_diseases = {
+    col_names = {
+      Known = "Initially known",
+      MaxDiagDiff = "Diagnosis difficulty",
+      RschReqd = "Required research",
+      StartPrice = "Initial cure cost"
+    },
+    row_names = {
+      [2] = "Bloaty head",
+      [3] = "Hairyritus",
+      [4] = "Elvis",
+      [5] = "Invisibility",
+      [6] = "Radiation",
+      [7] = "Slack tongue",
+      [8] = "Abduction",
+      [9] = "Broken bones",
+      [10] = "Baldness",
+      [11] = "Discrete itching",
+      [12] = "Jellyitus",
+      [13] = "Sleeping illness",
+      [14] = "Pregnant",
+      [15] = "Transparent",
+      [16] = "Uncommon cold",
+      [17] = "Broken wind",
+      [18] = "Spare ribs",
+      [19] = "Kidney beans",
+      [20] = "Broken heart",
+      [21] = "Ruptured noodles",
+      [22] = "Tv personalities",
+      [23] = "Infectious laughter",
+      [24] = "Corrugated ankles",
+      [25] = "Chronic nose hair",
+      [26] = "Third degree side burns",
+      [27] = "Fake blood",
+      [28] = "Gastric ejections",
+      [29] = "The squits",
+      [30] = "Iron lungs",
+      [31] = "Sweaty palms",
+      [32] = "Heaped piles",
+      [33] = "Gutt rot",
+      [34] = "Golf stones",
+      [35] = "Unexpected swellings"
+    }
+  },
+  expertise_rooms = {
+    col_names = {
+      Known = "Initrially known",
+      RschReqd = "Required research",
+      StartPrice = "Initial price"
+    },
+    row_names = {
+      [1] = "GP room",
+      [36] = "Scanner",
+      [37] = "Blood machine",
+      [38] = "Cardio",
+      [39] = "X-ray",
+      [40] = "Ultra scanner",
+      [41] = "Diagnosis room",
+      [42] = "Ward",
+      [43] = "Psychiatry",
+      [44] = "Autopsy",
+      [45] = "Atom analyser",
+      [46] = "Research"
+    }
+  },
+  lose_criteria = {
+    col_names = {
+      Bound = "Warn value",
+      Criteria = "Criteria",
+      Group = "Group",
+      MaxMin = "Max or Min",
+      Value = "Bound value"
+    },
+    row_names = {
+      [0] = "Entry 1",
+      [1] = "Entry 2",
+      [2] = "Entry 3",
+      [3] = "Entry 4",
+      [4] = "Entry 5",
+      [5] = "Entry 6"
+    }
+  },
+  non_visuals = {
+    col_names = {
+      exists = "Exists at all",
+      month = "Month"
+    },
+    row_names = {
+      [0] = "Uncommon cold",
+      [1] = "Broken wind",
+      [2] = "Spare ribs",
+      [3] = "Kidney beans",
+      [4] = "Broken heart",
+      [5] = "Ruptured noodles",
+      [6] = "Tv personalities",
+      [7] = "Infectious laughter",
+      [8] = "Corrugated ankles",
+      [9] = "Chronic nose hair",
+      [10] = "Third degree side burns",
+      [11] = "Fake blood",
+      [12] = "Gastric ejections",
+      [13] = "The squits",
+      [14] = "Iron lungs",
+      [15] = "Sweaty palms",
+      [16] = "Heaped piles",
+      [17] = "Gutt rot",
+      [18] = "Golf stones",
+      [19] = "Unexpected swellings"
+    }
+  },
+  objects = {
+    col_names = {
+      AvailableForLevel = "Exists at all",
+      StartAvail = "Av. at start",
+      StartCost = "Price",
+      StartStrength = "Strength",
+      WhenAvail = "Month"
+    },
+    row_names = {
+      [1] = "Desk",
+      [2] = "Cabinet",
+      [3] = "Door",
+      [4] = "Bench",
+      [5] = "Table",
+      [6] = "Chair",
+      [7] = "Drinks",
+      [8] = "Bed",
+      [9] = "Inflator machine",
+      [10] = "Snooker table",
+      [11] = "Receptionist desk",
+      [12] = "Trestle table",
+      [13] = "Cardiogram",
+      [14] = "Scanner",
+      [15] = "Scanner console",
+      [16] = "Screen",
+      [17] = "Jukebox",
+      [18] = "Couch",
+      [19] = "Sofa",
+      [20] = "Crash trolley",
+      [21] = "TV set",
+      [22] = "Ultrascan",
+      [23] = "DNA restorer",
+      [24] = "Cast remover",
+      [25] = "Hair restorer",
+      [26] = "Slack Tongue slicer",
+      [27] = "X-ray",
+      [28] = "Radiation shield",
+      [29] = "X-ray viewer",
+      [30] = "Operating table",
+      [31] = "Lamp",
+      [32] = "Bathroom sink",
+      [33] = "OP sink 1",
+      [34] = "OP sink 2",
+      [35] = "Surgeon screen",
+      [36] = "Lecture chair",
+      [37] = "Projector",
+      [38] = "Open bed screen",
+      [39] = "Pharmacy cabinet",
+      [40] = "Research computer",
+      [41] = "Chemical mixer",
+      [42] = "Blood machine",
+      [43] = "Fire extinguisher",
+      [44] = "Radiator",
+      [45] = "Plant",
+      [46] = "Electrolysis machine",
+      [47] = "Jellyitus machine",
+      [48] = "Gates to hell",
+      [49] = "Closed bed screen",
+      [50] = "Bin",
+      [51] = "Toilet",
+      [52] = "Double door part 1",
+      [53] = "Double door part 2",
+      [54] = "Decon. shower",
+      [55] = "Autopsy machine",
+      [56] = "Book case",
+      [57] = "Video game",
+      [58] = "Entrance door left",
+      [59] = "Entrance door right",
+      [60] = "Skeleton",
+      [61] = "Comfy chair"
+    }
+  },
+  popn = {
+    col_names = {
+      gbv = {
+        popn = {
+          change = "Monthly change",
+          month = "Start month"
+        }
+      }
+    },
+    row_names = {
+      gbv = {
+        popn = {
+          [0] = "Change 1",
+          [1] = "Change 2",
+          [2] = "Change 3"
+        }
+      }
+    }
+  },
+  staff_levels = {
+    col_names = {
+      ConsRate = "Rate of consultants",
+      Doctors = "Nr doctors",
+      Handymen = "Nr handymen",
+      JrRate = "Rate of juniors",
+      Month = "Month",
+      Nurses = "Nr nurses",
+      Receptionists = "Nr receptionists",
+      RschRate = "Rate of researchers",
+      ShrkRate = "Rate of psychiatrists",
+      SurgRate = "Rate of surgeons"
+    },
+    row_names = {
+      [0] = "Period 1",
+      [1] = "Period 2",
+      [2] = "Period 3",
+      [3] = "Period 4",
+      [4] = "Period 5",
+      [5] = "Period 6",
+      [6] = "Period 7",
+      [7] = "Period 8",
+      [8] = "Period 9"
+    }
+  },
+  tab_names = {
+    ai_players = "Opponents",
+    awards = "Awards",
+    emergency_control = "Emergencies",
+    expertise_diseases1 = "Dis expertise-1",
+    expertise_diseases2 = "Dis expertise-2",
+    expertise_diseases3 = "Dis expertise-3",
+    expertise_rooms = "Rooms",
+    hospital1 = "Hospital-1",
+    hospital2 = "Hospital-2",
+    hospital3 = "Hospital-3",
+    local_town = "Town",
+    lose_criteria = "Lose conditions",
+    non_visuals1 = "Nonvisual exist-1",
+    non_visuals2 = "Nonvisual exist-2",
+    objects1 = "Objects-1",
+    objects2 = "Objects-2",
+    objects3 = "Objects-3",
+    objects4 = "Objects-4",
+    objects5 = "Objects-5",
+    popn = "Population",
+    rooms_cost1 = "Rooms cost-1",
+    rooms_cost2 = "Rooms cost-2",
+    rooms_cost3 = "Rooms cost-3",
+    staff1 = "Staff-1",
+    staff_level1 = "Staff levels",
+    staff_level2 = "Rates of specialists",
+    town_levels = "Town levels",
+    trophies = "Trophies",
+    visuals1 = "Visual exist",
+    win_criteria = "Win conditions"
+  },
+  titles = {
+    ai_players = "Opponents",
+    awards = "Awards",
+    emergency_control = "Emergencies",
+    epidemics = "Epidemics settings",
+    expertise_diseases1 = "Diseases expertise - 1",
+    expertise_diseases2 = "Diseases expertise - 2",
+    expertise_diseases3 = "Diseases expertise - 3",
+    expertise_rooms = "Rooms expertise",
+    fixed_cond_trophies = "Bonuses for trophies with fixed conditions",
+    local_town = "Local Town section",
+    lose_criteria = "Conditions to lose a level",
+    medical_bonuses = "Additional salaries for medical staff",
+    min_salaries = "Minimum staff salaries",
+    non_visuals1 = "Nonvisual illnesses - 1",
+    non_visuals2 = "Nonvisual illnesses - 2",
+    objects1 = "Objects - 1",
+    objects2 = "Objects - 2",
+    objects3 = "Objects - 3",
+    objects4 = "Objects - 4",
+    objects5 = "Objects - 5",
+    popn = "Population changes",
+    research = "Research settings",
+    rooms_cost1 = "Rooms cost - 1",
+    rooms_cost2 = "Rooms cost - 2",
+    rooms_cost3 = "Rooms cost - 3",
+    staff_level1 = "Staff levels",
+    staff_level2 = "Specialist rates",
+    town_levels = "Town levels",
+    training = "Training settings",
+    trophies = "Regular trophies",
+    visuals1 = "Visual illnesses",
+    win_criteria = "Conditions to win a level"
+  },
+  town_levels = {
+    col_names = {
+      interest_rate = "Interest",
+      overdraft_diff = "Overdraft",
+      start_cash = "Initial cash",
+      start_rep = "Initial rep"
+    },
+    row_names = {
+      [0] = "Level 1",
+      [1] = "Level 2",
+      [2] = "Level 3",
+      [3] = "Level 4",
+      [4] = "Level 5",
+      [5] = "Level 6",
+      [6] = "Level 7",
+      [7] = "Level 8",
+      [8] = "Level 9",
+      [9] = "Level 10",
+      [10] = "Level 11",
+      [11] = "Level 12",
+      [12] = "Level 13"
+    }
+  },
+  trophies = {
+    col_names = {
+      bonus = "Bonus",
+      condition = "Value"
+    },
+    row_names = {
+      CansofCoke = "Cans sold",
+      Mayor = "VIP visits",
+      Plant = "Plants",
+      RatKillsAbsolute = "Numvber of rats killed",
+      RatKillsPercentage = "Percentage of rats killed",
+      TrophyReputation = "Reputation",
+      TrophyStaffHappiness = "Staff happiness"
+    }
+  },
+  values = {
+    awards_trophies = {
+      TrophyAllCuresBonus = {
+        name = "Bonus for all cured"
+      },
+      TrophyCuresBonus = {
+        name = "Bonus for most cured"
+      },
+      TrophyDeathBonus = {
+        name = "Bonus for no deaths"
+      }
+    },
+    gbv = {
+      AbilityThreshold = {
+        [0] = {
+          name = "Threshold for becoming a surgeon"
+        },
+        [1] = {
+          name = "Threshold for becoming a psychiatrist"
+        },
+        [2] = {
+          name = "Threshold for becoming a researcher"
+        }
+      },
+      AllocDelay = {
+        name = "Delay before allocating population"
+      },
+      AutopsyRepHitPercent = {
+        name = "Reputation loss for detected autopsies"
+      },
+      AutopsyRschPercent = {
+        name = "Amount of done research with an autopsy"
+      },
+      ConsultantThreshold = {
+        name = "Threshold for becoming a consultant"
+      },
+      ContagiousSpreadFactor = {
+        name = "Chance of spreading"
+      },
+      DoctorThreshold = {
+        name = "Threshold for becoming a doctor"
+      },
+      DrugImproveRate = {
+        name = "Rate of drug improvement"
+      },
+      EpidemicCompHi = {
+        name = "Highest coverup compensation"
+      },
+      EpidemicCompLo = {
+        name = "Lowest coverup compensation"
+      },
+      EpidemicConcurrentLimit = {
+        name = "Maximum simultaneous epidemics"
+      },
+      EpidemicEvacMinimum = {
+        name = "Minimum evacuated"
+      },
+      EpidemicFine = {
+        name = "Fine for failed coverup"
+      },
+      EpidemicRepLossMinimum = {
+        name = "Minimum reputation loss"
+      },
+      HoldVisualMonths = {
+        name = "Time before visual diseases"
+      },
+      HoldVisualPeepCount = {
+        name = "Patient count before visual diseases"
+      },
+      HowContagious = {
+        name = "Contagiousness"
+      },
+      MaxObjectStrength = {
+        name = "Maximum strength of an object"
+      },
+      MayorLaunch = {
+        name = "Frequency of mayor visits"
+      },
+      MinDrugCost = {
+        name = "Minimum cost of a drug"
+      },
+      ReduceContMonths = {
+        name = "Delay reduction by time"
+      },
+      ReduceContPeepCount = {
+        name = "Delay reduction by patient arrivals"
+      },
+      ReduceContRate = {
+        name = "Rate of reducing contagiousness"
+      },
+      ResearchIncrement = {
+        name = "Object strength increase by research"
+      },
+      ResearchPointsDivisor = {
+        name = "Research input divider",
+        tooltip = "Amount of research input for one point"
+      },
+      RschImproveCostPercent = {
+        name = "Cost of an improvement in research"
+      },
+      RschImproveIncrementPercent = {
+        name = "Amount of improvement in research"
+      },
+      SalaryAbilityDivisor = {
+        name = "Speed of raise",
+        tooltip = "Ability increase to get a raise"
+      },
+      SalaryAdd = {
+        [3] = {
+          name = "Junior",
+          tooltip = "Make negative"
+        },
+        [4] = {
+          name = "Doctor"
+        },
+        [5] = {
+          name = "Surgeon"
+        },
+        [6] = {
+          name = "Shrink"
+        },
+        [7] = {
+          name = "Consultant"
+        },
+        [8] = {
+          name = "Researcher"
+        }
+      },
+      ScoreMaxInc = {
+        name = "Factor for maximum score"
+      },
+      StartCost = {
+        name = "Initial cost of a drug"
+      },
+      StartRating = {
+        name = "Initial rating of a drug"
+      },
+      TrainingRate = {
+        name = "Rate of training"
+      },
+      TrainingValue = {
+        [0] = {
+          name = "Training value of a projector"
+        },
+        [1] = {
+          name = "Training value of a skeleton"
+        },
+        [2] = {
+          name = "Training value of a book case"
+        }
+      },
+      Vaccost = {
+        name = "Cost of a vaccination"
+      }
+    },
+    payroll = {
+      MaxSalary = {
+        name = "Max salary"
+      }
+    },
+    rooms = {
+      [7] = {
+        Cost = {
+          name = "Cost of GP"
+        }
+      },
+      [8] = {
+        Cost = {
+          name = "Cost of psychiatry"
+        }
+      },
+      [9] = {
+        Cost = {
+          name = "Cost of ward"
+        }
+      },
+      [10] = {
+        Cost = {
+          name = "Cost of operating theatre"
+        }
+      },
+      [11] = {
+        Cost = {
+          name = "Cost of pharmacy"
+        }
+      },
+      [12] = {
+        Cost = {
+          name = "Cost of cardio"
+        }
+      },
+      [13] = {
+        Cost = {
+          name = "Cost of scanner"
+        }
+      },
+      [14] = {
+        Cost = {
+          name = "Cost of ultra-scan"
+        }
+      },
+      [15] = {
+        Cost = {
+          name = "Cost of blood room"
+        }
+      },
+      [16] = {
+        Cost = {
+          name = "Cost of X-ray room"
+        }
+      },
+      [17] = {
+        Cost = {
+          name = "Cost of inflator room"
+        }
+      },
+      [18] = {
+        Cost = {
+          name = "Cost of dna restorer room"
+        }
+      },
+      [19] = {
+        Cost = {
+          name = "Cost of hair restorer room"
+        }
+      },
+      [20] = {
+        Cost = {
+          name = "Cost of slack tonque room"
+        }
+      },
+      [21] = {
+        Cost = {
+          name = "Cost of fracture room"
+        }
+      },
+      [22] = {
+        Cost = {
+          name = "Cost of Training room"
+        }
+      },
+      [23] = {
+        Cost = {
+          name = "Cost of Electrolysis room"
+        }
+      },
+      [24] = {
+        Cost = {
+          name = "Cost of Jelly-vat room"
+        }
+      },
+      [25] = {
+        Cost = {
+          name = "Cost of staff room"
+        }
+      },
+      [26] = {
+        Cost = {
+          name = "Cost of tv room"
+        }
+      },
+      [27] = {
+        Cost = {
+          name = "Cost of General diag. room"
+        }
+      },
+      [28] = {
+        Cost = {
+          name = "Cost of research room"
+        }
+      },
+      [29] = {
+        Cost = {
+          name = "Cost of toilets"
+        }
+      },
+      [30] = {
+        Cost = {
+          name = "Cost of decontamination room"
+        }
+      }
+    },
+    staff = {
+      [0] = {
+        MinSalary = {
+          name = "Nurse"
+        }
+      },
+      [1] = {
+        MinSalary = {
+          name = "Doctor"
+        }
+      },
+      [2] = {
+        MinSalary = {
+          name = "Handyman"
+        }
+      },
+      [3] = {
+        MinSalary = {
+          name = "Receptionist"
+        }
+      }
+    },
+    town = {
+      InterestRate = {
+        name = "Interest rate"
+      },
+      OverdraftDiff = {
+        name = "Overdraft rate",
+        tooltip = "Money to pay while balance is negative"
+      },
+      StartCash = {
+        name = "Initial cash"
+      },
+      StartRep = {
+        name = "Initial reputation"
+      }
+    }
+  },
+  visuals = {
+    col_names = {
+      exists = "Exists at all",
+      month = "Month"
+    },
+    row_names = {
+      [0] = "Bloaty head",
+      [1] = "Hairyritus",
+      [2] = "Elvis",
+      [3] = "Invisibility",
+      [4] = "Radiation",
+      [5] = "Slack tongue",
+      [6] = "Abduction",
+      [7] = "Broken bones",
+      [8] = "Baldness",
+      [9] = "Discrete itching",
+      [10] = "Jellyitus",
+      [11] = "Sleeping illness",
+      [12] = "Pregnant",
+      [13] = "Transparent"
+    }
+  },
+  win_criteria = {
+    col_names = {
+      Bound = "Warn value",
+      Criteria = "Criteria",
+      Group = "Group",
+      MaxMin = "Max or Min",
+      Value = "Bound value"
+    },
+    row_names = {
+      [0] = "Entry 1",
+      [1] = "Entry 2",
+      [2] = "Entry 3",
+      [3] = "Entry 4",
+      [4] = "Entry 5",
+      [5] = "Entry 6"
+    }
+  }
 }
 
 hotkeys_file_err = {

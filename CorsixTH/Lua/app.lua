@@ -289,6 +289,10 @@ function App:init()
     self.anims = self.gfx:loadAnimations("Data", "V")
     self.animation_manager = AnimationManager(self.anims)
     self.walls = self:loadLuaFolder("walls")
+
+    corsixth.require("pos_size")
+    corsixth.require("tree_access")
+
     corsixth.require("entity")
     corsixth.require("entities.humanoid")
     corsixth.require("entities.object")
@@ -325,6 +329,8 @@ function App:init()
   if good_install_folder then
     corsixth.require("game_ui")
     self.ui = UI(self, true)
+
+    corsixth.require("level_editor.data_storage")
   else
     self.ui = UI(self, true)
     self.ui:setMenuBackground()
@@ -338,7 +344,6 @@ function App:init()
     self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
     return true
   end
-
 
   -- Load main menu (which creates UI)
   local function callback_after_movie()
@@ -671,9 +676,17 @@ function App:getAbsolutePathToLevelFile(level)
   return nil, "Level not found: " .. level
 end
 
--- Loads the specified level. If a string is passed it looks for the file with the same name
+--! Loads the specified level. If a string is passed it looks for the file with the same name
 -- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
 -- the original game.
+--!param level  (string or int) The name (or number) of the level to load. If this
+--    is a number the game assumes the original game levels are considered.
+--!param difficulty (string) Difficulty of the level, "easy",  "full", or "hard".
+--!param level_name (string) The name of the actual map/area/hospital as written in the config file.
+--!param level_file (string) The path to the map file as supplied by the config file.
+--!param level_intro (string) If loading a custom level this message will be shown
+--    as soon as the level has been loaded.
+--!param map_editor (boolean) Whether the file is loaded for the map editor.
 function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
   if self.world then
     self:worldExited()

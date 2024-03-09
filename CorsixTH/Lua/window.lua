@@ -171,6 +171,12 @@ function Panel:Panel()
   self.visible = nil
 end
 
+--! Enable or diasble visibility of the panel.
+--!param visibility (bool) Whether to show the panel.
+function Panel:setVisible(visibility)
+  self.visibility = visibility
+end
+
 local panel_mt = permanent("Window.<panel_mt>", getmetatable(Panel()))
 
 function Panel:makeButton(...)
@@ -923,6 +929,14 @@ function Textbox:Textbox()
   self.cursor_counter = nil
   self.cursor_state = nil
   self.cursor_pos = nil
+end
+
+--! Set the visibility of the text box.
+--!param visible Whether the text box is visible.
+function Textbox:setVisible(visible)
+  self.visible = visible
+  self.panel.visible = visible
+  if not visible then self:setActive(false) end -- Disable box when hiding.
 end
 
 local textbox_mt = permanent("Window.<textbox_mt>", getmetatable(Textbox()))
