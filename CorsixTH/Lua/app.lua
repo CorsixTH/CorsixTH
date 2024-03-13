@@ -594,10 +594,11 @@ function App:loadCampaign(campaign_file)
     return
   end
 
-  self:loadLevel(campaign_info.levels[1], nil, level_info.name,
-    level_info.map_file, level_info.briefing)
-  -- The new world needs to know which campaign to continue on.
-  self.world.campaign_info = campaign_info
+  if self:loadLevel(campaign_info.levels[1], nil, level_info.name,
+      level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix) then
+    -- The new world needs to know which campaign to continue on.
+    self.world.campaign_info = campaign_info
+  end
 end
 
 --! Reads the given file name as a Lua chunk from the Campaigns folder in the CorsixTH install directory.
@@ -671,10 +672,28 @@ function App:getAbsolutePathToLevelFile(level)
   return nil, "Level not found: " .. level
 end
 
--- Loads the specified level. If a string is passed it looks for the file with the same name
+--! Invokes a protected call of App:_loadLevel(...). See that function for more information.
+--! This function should always be called to catch errors and properly pass the
+--! error to the player
+--!param error_prefix (string) (Optional) Prefixes the error relevant to what was loaded
+--! return (boolean) The outcome of the pcall
+function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, error_prefix)
+  local status, err = pcall(self._loadLevel, self, level, difficulty, level_name,
+      level_file, level_intro, map_editor)
+  if not status then
+    err = error_prefix and error_prefix .. err or "Error while loading level: " .. err
+    print(err)
+    self:loadMainMenu() -- We need to unload all level elements that succeeded
+    self.ui:addWindow(UIInformation(self.ui, { err }))
+  end
+  return status
+end
+
+--! Private Function to load the level. Call via App:loadLevel(...)
+--! Loads the specified level. If a string is passed it looks for the file with the same name
 -- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
 -- the original game.
-function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
+function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
   if self.world then
     self:worldExited()
   end
@@ -1703,18 +1722,13 @@ function App:restart()
       self.ui:addWindow(UIInformation(self.ui, { _S.information.cannot_restart }))
       return
     end
-    local status, err = pcall(self.loadLevel, self, level, difficulty, name, file, intro)
-    if not status then
-      err = "Error while loading level: " .. err
-      print(err)
-      self.ui:addWindow(UIInformation(self.ui, { err }))
-    end
+    self:loadLevel(_S.errors.load_level_prefix, level, difficulty, name, file, intro)
   end))
 end
 
 --! Begin the map editor
 function App:mapEdit()
-  self:loadLevel("", nil, nil, nil, nil, true)
+  self:loadLevel("", nil, nil, nil, nil, true, _S.errors.load_map_prefix)
 end
 
 --! Exits the game completely (no confirmation window)
