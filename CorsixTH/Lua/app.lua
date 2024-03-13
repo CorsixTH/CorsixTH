@@ -1722,7 +1722,7 @@ function App:restart()
       self.ui:addWindow(UIInformation(self.ui, { _S.information.cannot_restart }))
       return
     end
-    self:loadLevel(_S.errors.load_level_prefix, level, difficulty, name, file, intro)
+    self:loadLevel(level, difficulty, name, file, intro, nil, _S.errors.load_level_prefix)
   end))
 end
 
