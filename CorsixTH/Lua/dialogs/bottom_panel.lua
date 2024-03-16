@@ -174,8 +174,19 @@ end
 function UIBottomPanel:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
+  -- Draw balance with temporary offset in unicode languages
   x, y = x + self.x, y + self.y
-  self.money_font:draw(canvas, ("%7i"):format(self.ui.hospital.balance), x + 44, y + 9)
+  local offset_x, offset_y = 0, 0
+  if self.ui.app.gfx.language_font then
+    offset_x = 4
+    offset_y = 2
+  end
+  local balance = math.floor(self.ui.hospital.balance)
+  local i = 7 - tostring(balance):len() -- Indent balances under 100k
+  for digit in ("%7i"):format(balance):gmatch("[-0-9]") do
+    self.money_font:draw(canvas, digit, x + offset_x + 44 + i * 13, y + offset_y + 9)
+    i = i + 1
+  end
   local game_date = self.world:date()
   local month, day = game_date:monthOfYear(), game_date:dayOfMonth()
   self.date_font:draw(canvas, _S.date_format.daymonth:format(day, month), x + 140, y + 20, 60, 0)

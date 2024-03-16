@@ -191,8 +191,18 @@ function UITownMap:draw(canvas, x, y)
   local heating_costs = math.floor(((hospital.heating.radiator_heat *10)* radiators)* 7.5)
   self.info_font:draw(canvas, ("%8i"):format(heating_costs),  x + 100, y + 355)
 
-  -- draw money balance
-  self.money_font:draw(canvas, ("%7i"):format(hospital.balance), x + 49, y + 431)
+  -- Draw balance with temporary offset in unicode languages
+  local offset_x, offset_y = 0, 0
+  if self.ui.app.gfx.language_font then
+    offset_x = 4
+    offset_y = 2
+  end
+  local balance = math.floor(hospital.balance)
+  local i = 7 - tostring(balance):len() -- Indent balances under 100k
+  for digit in ("%7i"):format(balance):gmatch("[-0-9]") do
+    self.money_font:draw(canvas, digit, x + offset_x + 49 + i * 13, y + offset_y + 431)
+    i = i + 1
+  end
 
   -- radiator heat
   local rad_max_width = 60 -- Radiator indicator width
