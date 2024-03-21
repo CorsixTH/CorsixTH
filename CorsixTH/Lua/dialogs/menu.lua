@@ -540,6 +540,137 @@ local function hotkey_value_label(hotkey_name, hotkeys)
   return string.upper(array_join(hotkey_value, "+"))
 end
 
+-- Add audio options to the menu. These are on/off and volume control for
+-- announcements, game sounds and music, and open the jukebox.
+--!param menu (object) The menu that the options are added to.
+--!param game (boolean) True if this menu is for the game, where announcements and
+-- game sounds controls are added.
+local function audio_options(menu, game)
+  local app = TheApp
+  if not app.audio.has_bg_music then return end
+
+  local function vol(level, setting)
+    if setting == "music" then
+      return level == app.config.music_volume,
+        function()
+          app.audio:setBackgroundVolume(level)
+        end,
+        ""
+    elseif setting == "sound" then
+      return level == app.config.sound_volume,
+        function()
+          app.audio:setSoundVolume(level)
+        end,
+        ""
+    else
+      return level == app.config.announcement_volume,
+        function()
+          app.audio:setAnnouncementVolume(level)
+        end,
+        ""
+    end
+  end
+
+  local hotkeys = app.hotkeys
+  if game then
+    -- Hospital sounds
+    menu:appendCheckItem(_S.menu_options.sound:format(hotkey_value_label("ingame_toggleSounds", hotkeys)),
+      app.config.play_sounds,
+      function(item)
+        app.audio:playSoundEffects(item.checked)
+      end,
+      nil,
+      function()
+        return app.config.play_sounds
+      end)
+
+    -- Hospital announcements
+    menu:appendCheckItem(_S.menu_options.announcements:format(hotkey_value_label("ingame_toggleAnnouncements", hotkeys)),
+      app.config.play_announcements,
+      function(item)
+        app.config.play_announcements = item.checked
+      end,
+      nil,
+      function()
+        return app.config.play_announcements
+      end)
+  end
+
+  -- Jukebox music
+  menu:appendCheckItem(_S.menu_options.music:format(hotkey_value_label("ingame_toggleMusic", hotkeys)),
+    app.config.play_music,
+    function(item)
+      app.config.play_music = item.checked
+      app.ui:togglePlayMusic(item)
+    end,
+    nil,
+    function()
+      return app.config.play_music
+    end)
+
+  -- The three volume menus, and jukebox
+  local function appendVolume(setting)
+    local volume_menu = UIMenu()
+    for level = 10, 100, 10 do
+      volume_menu:appendCheckItem(_S.menu_options_volume[level], vol(level / 100, setting))
+    end
+    return volume_menu
+  end
+  if game then
+    menu:appendMenu(_S.menu_options.sound_vol, appendVolume("sound"))
+      :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
+  end
+  menu:appendMenu(_S.menu_options.music_vol, appendVolume("music"))
+    :appendItem(_S.menu_options.jukebox:format(hotkey_value_label("ingame_jukebox", hotkeys)),
+        function() app.ui:addWindow(UIJukebox(app)) end)
+end
+
+-- Add display options to the menu.
+--!param menu (object) The menu that the options are added to.
+local function display_options(menu)
+  local app = TheApp
+
+  -- Lock windows
+  local function boolean_runtime_config(option)
+    return not not app.runtime_config[option], function(item)
+      app.runtime_config[option] = item.checked
+    end
+  end
+  menu:appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config("lock_windows"))
+
+  -- Edge scrolling
+  menu:appendCheckItem(_S.menu_options.edge_scrolling,
+    not app.config.prevent_edge_scrolling,
+    function(item) app.config.prevent_edge_scrolling = not item.checked end,
+    nil,
+    function() return not app.config.prevent_edge_scrolling end)
+
+  -- Mouse capture
+  menu:appendCheckItem(_S.menu_options.capture_mouse,
+    app.config.capture_mouse,
+    function(item) app.config.capture_mouse = item.checked
+      app:setCaptureMouse()
+    end)
+
+  -- 24 hour clock
+  menu:appendCheckItem(_S.menu_options.twentyfour_hour_clock,
+    app.config.twentyfour_hour_clock,
+    function(item)
+      app.config.twentyfour_hour_clock = item.checked
+    end)
+end
+
+local function overlay(...)
+  local args = {n = select('#', ...), ...}
+  return function(item, m)
+    if args.n > 0 then
+      TheApp.map:loadDebugText(unpack(args, 1, args.n))
+    else
+      TheApp.map:clearDebugText()
+    end
+  end
+end
+
 --! Make a menu for the map editor.
 --!param app Application.
 function UIMenuBar:makeMapeditorMenu(app)
@@ -555,8 +686,20 @@ function UIMenuBar:makeMapeditorMenu(app)
   end
   menu:appendItem(_S.menu_file.load:format(hotkey_value_label("ingame_loadMenu", hotkeys)), function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
     :appendItem(_S.menu_file.save:format(hotkey_value_label("ingame_saveMenu", hotkeys)), function() mapeditorSave(self.ui) end)
+    :appendItem(_S.menu_file.restart:format(hotkey_value_label("ingame_restartLevel", hotkeys)), function() app:mapEdit() end)
     :appendItem(_S.menu_file.quit:format(hotkey_value_label("ingame_quitLevel", hotkeys)), function() self.ui:quit() end)
   self:addMenu(_S.menu.file, menu)
+
+  menu = UIMenu()
+  audio_options(menu)
+  display_options(menu)
+
+  menu:appendMenu(_S.menu_debug.map_overlay, UIMenu()
+    :appendCheckItem(_S.menu_debug_overlay.none, true, overlay(), "overlay")
+    :appendCheckItem(_S.menu_debug_overlay.flags, false, overlay("flags"), "overlay")
+    :appendCheckItem(_S.menu_debug_overlay.positions, false, overlay("positions"), "overlay")
+    :appendCheckItem(_S.menu_debug_overlay.parcel, false, overlay("parcel"), "overlay"))
+  self:addMenu(_S.menu.options, menu)
 
   menu = UIMenu()
   for i = 1, 4 do
@@ -582,96 +725,8 @@ function UIMenuBar:makeGameMenu(app)
   self:addMenu(_S.menu.file, menu)
 
   local options = UIMenu()
-  if app.audio.has_bg_music then
-    local function vol(level, setting)
-      if setting == "music" then
-        return level == app.config.music_volume,
-          function()
-            app.audio:setBackgroundVolume(level)
-          end,
-          ""
-      elseif setting == "sound" then
-        return level == app.config.sound_volume,
-          function()
-            app.audio:setSoundVolume(level)
-          end,
-          ""
-      else
-        return level == app.config.announcement_volume,
-          function()
-            app.audio:setAnnouncementVolume(level)
-          end,
-          ""
-      end
-    end
-
-    local function appendVolume(setting)
-      local volume_menu = UIMenu() -- The three Volume menus
-      for level = 10, 100, 10 do
-        volume_menu:appendCheckItem(_S.menu_options_volume[level], vol(level / 100, setting))
-      end
-      return volume_menu
-    end
-
-  options:appendCheckItem(_S.menu_options.sound:format(hotkey_value_label("ingame_toggleSounds", hotkeys)),
-    app.config.play_sounds,
-    function(item)
-      app.audio:playSoundEffects(item.checked)
-    end,
-    nil,
-    function()
-      return app.config.play_sounds
-    end)
-
-
-  options:appendCheckItem(_S.menu_options.announcements:format(hotkey_value_label("ingame_toggleAnnouncements", hotkeys)),
-    app.config.play_announcements,
-    function(item)
-      app.config.play_announcements = item.checked
-    end,
-    nil,
-    function()
-      return app.config.play_announcements
-    end)
-
-  options:appendCheckItem(_S.menu_options.music:format(hotkey_value_label("ingame_toggleMusic", hotkeys)),
-    app.config.play_music,
-    function(item)
-      app.config.play_music = item.checked
-      self.ui:togglePlayMusic(item)
-    end,
-    nil,
-    function()
-      return app.config.play_music
-    end)
-
-  options
-    :appendMenu(_S.menu_options.sound_vol,         appendVolume("sound"))
-    :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
-    :appendMenu(_S.menu_options.music_vol,         appendVolume("music"))
-    :appendItem(_S.menu_options.jukebox:format(hotkey_value_label("ingame_jukebox", hotkeys)), function() self.ui:addWindow(UIJukebox(app)) end)
-  end
-
-  local function boolean_runtime_config(option)
-    return not not app.runtime_config[option], function(item)
-      app.runtime_config[option] = item.checked
-    end
-  end
-  options:appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config("lock_windows"))
-
-  -- Edge Scrolling
-  options:appendCheckItem(_S.menu_options.edge_scrolling,
-    not app.config.prevent_edge_scrolling,
-    function(item) app.config.prevent_edge_scrolling = not item.checked end,
-    nil,
-    function() return not app.config.prevent_edge_scrolling end)
-
-  -- Mouse Capture
-  options:appendCheckItem(_S.menu_options.capture_mouse,
-    app.config.capture_mouse,
-    function(item) app.config.capture_mouse = item.checked
-      app:setCaptureMouse()
-    end)
+  audio_options(options, true)
+  display_options(options)
 
   options:appendCheckItem(_S.menu_options.adviser_disabled:format(hotkey_value_label("ingame_toggleAdvisor", hotkeys)),
     not app.config.adviser_disabled,
@@ -681,12 +736,6 @@ function UIMenuBar:makeGameMenu(app)
     nil,
     function()
       return not app.config.adviser_disabled
-    end)
-
-  options:appendCheckItem(_S.menu_options.twentyfour_hour_clock,
-    app.config.twentyfour_hour_clock,
-    function(item)
-      app.config.twentyfour_hour_clock = item.checked
     end)
 
   local function temperatureDisplay(method)
@@ -751,7 +800,6 @@ function UIMenuBar:makeGameMenu(app)
     :appendItem(_S.menu_charts.briefing, function() self.ui:showBriefing() end)
   )
 
-  local function _(s) return "  " .. s:upper() .. "  " end
   local function limit_camera(item)
     app.ui:limitCamera(item.checked)
   end
@@ -760,16 +808,6 @@ function UIMenuBar:makeGameMenu(app)
   end
   local function allowBlockingAreas(item)
     app.config.allow_blocking_off_areas = item.checked
-  end
-  local function overlay(...)
-    local args = {n = select('#', ...), ...}
-    return function(item, m)
-      if args.n > 0 then
-        app.map:loadDebugText(unpack(args, 1, args.n))
-      else
-        app.map:clearDebugText()
-      end
-    end
   end
   local levels_menu = UIMenu()
   for L = 1, 12 do
