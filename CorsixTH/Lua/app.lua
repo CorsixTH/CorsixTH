@@ -644,8 +644,18 @@ function App:readLevelFile(level)
     end
     level_info.deprecated_variable_used = true
   end
-  level_info.briefing = contents:match("%LevelBriefing ?= ?\"(.-)\"")
-  level_info.end_praise = contents:match("%LevelDebriefing ?= ?\"(.-)\"")
+
+  -- Pick a localised set of briefings, if available
+  local lang_code = self.strings:getLangCode()
+  local local_briefing = contents:match("%LevelBriefingTable%." .. lang_code .. " ?= ?\"(.-)\"")
+  local en_briefing = contents:match("%LevelBriefingTable%.en ?= ?\"(.-)\"")
+  local standard_briefing = contents:match("%LevelBriefing ?= ?\"(.-)\"")
+  level_info.briefing = local_briefing or en_briefing or standard_briefing
+
+  local local_end_praise = contents:match("%LevelDebriefingTable%." .. lang_code .. " ?= ?\"(.-)\"")
+  local en_end_praise = contents:match("%LevelDebriefingTable%.en ?= ?\"(.-)\"")
+  local standard_end_praise = contents:match("%LevelDebriefing ?= ?\"(.-)\"")
+  level_info.end_praise = local_end_praise or en_end_praise or standard_end_praise
   return level_info
 end
 
