@@ -191,6 +191,7 @@ end
 -- of time in the game engine. Typically used to advance animations and similar
 -- recurring or long-duration tasks.
 function Entity:tick()
+  if self.delete then return end -- Entity is marked for deletion
   if self.num_animation_ticks then
     for _ = 1, self.num_animation_ticks do
       self:_tick()

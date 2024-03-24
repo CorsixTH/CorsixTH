@@ -92,6 +92,7 @@ end
 
 --[[--VIP while on premises--]]
 function Vip:tickDay()
+  if self.delete then return end -- Entity is marked for deletion
   -- for the vip
   if self.waiting then
     self.waiting = self.waiting - 1
