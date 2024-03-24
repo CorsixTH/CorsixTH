@@ -229,8 +229,8 @@ end
 --! Enables no rest cheat (staff do not tire, fast movement)
 function Cheats:noRestOn()
   for _, staff in ipairs(self.hospital.staff) do
-    if staff.attributes["fatigue"] then
-      staff:wake(staff.attributes["fatigue"])
+    if staff:getAttribute("fatigue") then
+      staff:wake(staff:getAttribute("fatigue"))
     end
   end
   self.active_cheats["no_rest_cheat"] = true

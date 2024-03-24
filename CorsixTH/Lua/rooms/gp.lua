@@ -69,7 +69,7 @@ function GPRoom:doStaffUseCycle(humanoid)
       -- to remain alert, so might just remain at the desk and deal with the
       -- next patient quicker.
       if humanoid.profile.is_consultant and
-          math.random() >= humanoid.attributes.fatigue then
+          math.random() >= humanoid:getAttribute("fatigue") then
         desk_use_time = math.random(7, 14)
       else
         self:doStaffUseCycle(humanoid)

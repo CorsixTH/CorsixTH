@@ -265,7 +265,7 @@ function Vip:setVIPRating()
   if count_staff > 1 then
     -- Loop through staff tiredness, if any above verytired, break loop
     for _, staff in ipairs(self.hospital.staff) do
-      if staff.attributes["fatigue"] ~= nil and staff.attributes["fatigue"] >= 0.7 then
+      if staff:getAttribute("fatigue") >= 0.7 then
         self.vip_rating = self.vip_rating + 2
         break
       end

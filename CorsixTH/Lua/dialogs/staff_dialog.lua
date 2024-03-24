@@ -176,32 +176,30 @@ function UIStaff:draw(canvas, x_, y_)
     font:draw(canvas, "$" .. profile.wage, x + 135, y + 226) -- Wage
     font:draw(canvas, self:getParcelText(), x + 35, y + 215, 50, 0)
     -- The concentration areas
-    if self.staff.attributes["cleaning"] then -- Backwards compatibility
-      local cleaning_width = math.floor(self.staff.attributes["cleaning"] * 40 + 0.5)
-      local watering_width = math.floor(self.staff.attributes["watering"] * 40 + 0.5)
-      local repairing_width = math.floor(self.staff.attributes["repairing"] * 40 + 0.5)
-      if cleaning_width ~= 0 then
-        for dx = 0, cleaning_width - 1 do
-          self.panel_sprites:draw(canvas, 351, x + 43 + dx, y + 200)
-        end
+    local cleaning_width = math.floor(self.staff:getAttribute("cleaning") * 40 + 0.5)
+    local watering_width = math.floor(self.staff:getAttribute("watering") * 40 + 0.5)
+    local repairing_width = math.floor(self.staff:getAttribute("repairing") * 40 + 0.5)
+    if cleaning_width ~= 0 then
+      for dx = 0, cleaning_width - 1 do
+        self.panel_sprites:draw(canvas, 351, x + 43 + dx, y + 200)
       end
-      if watering_width ~= 0 then
-        for dx = 0, watering_width - 1 do
-          self.panel_sprites:draw(canvas, 351, x + 99 + dx, y + 200)
-        end
+    end
+    if watering_width ~= 0 then
+      for dx = 0, watering_width - 1 do
+        self.panel_sprites:draw(canvas, 351, x + 99 + dx, y + 200)
       end
-      if repairing_width ~= 0 then
-        for dx = 0, repairing_width - 1 do
-          self.panel_sprites:draw(canvas, 351, x + 155 + dx, y + 200)
-        end
+    end
+    if repairing_width ~= 0 then
+      for dx = 0, repairing_width - 1 do
+        self.panel_sprites:draw(canvas, 351, x + 155 + dx, y + 200)
       end
     end
   else
     font:draw(canvas, "$" .. profile.wage, x + 135, y + 199) -- Wage
   end
 
-  if self.staff.attributes["happiness"] then
-    local happiness_bar_width = math.floor(self.staff.attributes["happiness"] * 40 + 0.5)
+  if self.staff:getAttribute("happiness") then
+    local happiness_bar_width = math.floor(self.staff:getAttribute("happiness") * 40 + 0.5)
     if happiness_bar_width ~= 0 then
       for dx = 0, happiness_bar_width - 1 do
         self.panel_sprites:draw(canvas, 348, x + 139 + dx, y + 56)
@@ -210,8 +208,8 @@ function UIStaff:draw(canvas, x_, y_)
   end
 
   local fatigue_bar_width = 40.5
-  if self.staff.attributes["fatigue"] then
-    fatigue_bar_width = math.floor((1 - self.staff.attributes["fatigue"]) * 40 + 0.5)
+  if self.staff:getAttribute("fatigue") then
+    fatigue_bar_width = math.floor((1 - self.staff:getAttribute("fatigue")) * 40 + 0.5)
   end
   if fatigue_bar_width ~= 0 then
     for dx = 0, fatigue_bar_width - 1 do
@@ -318,7 +316,7 @@ end
 --! one of them is increased, and the other two are decreased.
 --!param increased Attribute to increase.
 function UIStaff:changeHandymanAttributes(increased)
-  if not self.staff.attributes[increased] then
+  if not self.staff:getAttribute(increased) then
     return
   end
 
@@ -337,12 +335,12 @@ function UIStaff:changeHandymanAttributes(increased)
     if attr == increased then
       -- Adding too much is not a problem, it gets clipped to 1.
       self.staff:changeAttribute(attr, incr_value)
-      if self.staff.attributes[attr] == 1 then
+      if self.staff:getAttribute(attr) == 1 then
         incr_value = 2.0 -- Doing 'increased' 100%, set other attributes to 0.
       end
     else
       decr_attrs[#decr_attrs + 1] = attr
-      smallest_decr = math.min(smallest_decr, self.staff.attributes[attr])
+      smallest_decr = math.min(smallest_decr, self.staff:getAttribute(attr))
     end
   end
   assert(#decr_attrs == 2)
