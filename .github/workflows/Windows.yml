@@ -1,47 +1,101 @@
 ---
 name: Windows
 
-on:  # yamllint disable-line rule:trurhy
+on:
   push:
     branches-ignore:
       - 'gh-pages'
   pull_request:
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: 'Select CMake preset'
+        default: 'win-x64-rel'
+        type: choice
+        options:
+          - win-dev
+          - win-x64-rel
+          - win-x86-rel
+      animview:
+        description: 'Build AnimView?'
+        default: 'false'
+        type: boolean
+      pr:
+        description: 'Build this PR (optional)'
+        type: number
 
 jobs:
   Windows:
     runs-on: windows-2022
+    env:
+      PRESET: ${{inputs.preset || 'win-x64-rel'}}
+      VCPKG_DEFAULT_TRIPLET: ${{inputs.preset == 'win-x86-rel' && 'x86-windows' || 'x64-windows-release'}}
+      ANIMVIEW: ${{inputs.animview && 'ON' || 'OFF'}}
+      NAME: CorsixTH${{inputs.animview && '_and_AnimView' || ''}}${{inputs.preset == 'win-x86-rel' && '_x86' || ''}}
+    defaults:
+      run:
+        shell: bash
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: lukka/get-cmake@v3.28.3
+      - name: Checkout selected PR
+        env:
+          GH_TOKEN: ${{github.token}}
+        if: inputs.PR
+        run: gh pr checkout --repo CorsixTH/CorsixTH ${{inputs.pr}}
+
+      - name: Get CMake
+        uses: lukka/get-cmake@v3.28.3
 
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
           vcpkgGitCommitId: 'c823fd3e57035b10d970a96da2796a2db55e5df5'
 
-      - name: Run CMake
+      - name: Run CMake dev configure
+        if: inputs.PRESET == 'win-dev'
         uses: lukka/run-cmake@v10
         with:
-          configurePreset: 'win-x64-rel'
-          buildPreset: 'win-x64-rel'
-          testPreset: 'win-x64-rel'
+          configurePreset: 'win-dev'
+
+      - name: Run CMake release build
+        if: inputs.PRESET != 'win-dev'
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: ${{env.PRESET}}
+          configurePresetAdditionalArgs: "['-DBUILD_ANIMVIEW=${{env.ANIMVIEW}}']"
+          buildPreset: ${{env.PRESET}}
+          buildPresetAdditionalArgs: "['--verbose', '--target install',
+            '-DCMAKE_INSTALL_PREFIX=build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/']"
+          testPreset: ${{env.PRESET}}
 
       - name: Download soundfont
-        run:
-          aria2c -d build/win-x64-rel/CorsixTH/RelWithDebInfo https://github.com/Jacalz/fluid-soundfont/raw/master/SF3/FluidR3.sf3
+        if: inputs.PRESET != 'win-dev'
+        run: |
+          aria2c -d "build/${{env.PRESET}}/CorsixTH/RelWithDebInfo" \
+            https://raw.githubusercontent.com/Jacalz/fluid-soundfont/master/SF3/FluidR3.sf3
 
       - name: Copy data files for archive
+        if: inputs.PRESET != 'win-dev'
         run: |
-          cp -R CorsixTH/Lua build/win-x64-rel/CorsixTH/RelWithDebInfo/Lua
-          cp -R CorsixTH/Bitmap build/win-x64-rel/CorsixTH/RelWithDebInfo/Bitmap
-          cp -R CorsixTH/Levels build/win-x64-rel/CorsixTH/RelWithDebInfo/Levels
-          cp -R CorsixTH/Campaigns build/win-x64-rel/CorsixTH/RelWithDebInfo/Campaigns
-          cp CorsixTH/CorsixTH.lua build/win-x64-rel/CorsixTH/RelWithDebInfo/
+          cp -R CorsixTH/Lua build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/Lua
+          cp -R CorsixTH/Bitmap build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/Bitmap
+          cp -R CorsixTH/Levels build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/Levels
+          cp -R CorsixTH/Campaigns build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/Campaigns
+          cp CorsixTH/CorsixTH.lua build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/
+          if [ "${{inputs.animview}}" == "true" ]; then
+            mkdir -p artifact
+            mv build/${{env.PRESET}}/AnimView/RelWithDebInfo artifact/AnimView
+            mv build/${{env.PRESET}}/CorsixTH/RelWithDebInfo artifact/CorsixTH
+          else
+            mv build/${{env.PRESET}}/CorsixTH/RelWithDebInfo artifact
+          fi
+          ls -R artifact
 
-      - name: Archive Release
-        uses: actions/upload-artifact@v3
+      - name: Upload build
+        if: inputs.PRESET != 'win-dev'
+        uses: actions/upload-artifact@v4
         with:
-          path: build/win-x64-rel/CorsixTH/RelWithDebInfo
-          name: CorsixTH
+          path: artifact
+          name: ${{env.NAME}}
