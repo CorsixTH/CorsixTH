@@ -1494,6 +1494,26 @@ void animation::set_patient_effect(animation_effect patient_effect) {
   this->patient_effect = patient_effect;
 }
 
+namespace {
+// Map of frame numbers to sounds to play.
+const std::map<size_t, int> frame_sound_replacements{
+    // Female flying to heaven (anim 3220)
+    {6987, 123},
+    // Using Computer (anim 2098)
+    {4213, 35},
+    {4215, 35},
+    {4224, 35},
+    {4230, 35},
+    // Using Atom Analyser. Actually a generic animation of Researcher pushing
+    // buttons (anim 4878)
+    {11136, 35},
+    {11138, 35},
+    {11147, 35},
+    {11152, 35},
+    {11153, 35},
+    {11154, 35}};
+}  // Namespace
+
 void animation::tick() {
   frame_index = manager->get_next_frame(frame_index);
   if (draw_fn != THAnimation_draw_child) {
@@ -1508,11 +1528,13 @@ void animation::tick() {
     }
   }
 
-  // Female flying to heaven sound fix:
-  if (frame_index == 6987) {
-    sound_to_play = 123;
-  } else {
+  // Decide sound to play.
+  std::map<size_t, int>::const_iterator pos =
+      frame_sound_replacements.find(frame_index);
+  if (pos == frame_sound_replacements.end()) {
     sound_to_play = manager->get_frame_sound(frame_index);
+  } else {
+    sound_to_play = pos->second;
   }
 }
 
