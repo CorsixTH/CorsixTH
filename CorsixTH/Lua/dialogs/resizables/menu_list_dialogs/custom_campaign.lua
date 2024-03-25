@@ -50,7 +50,8 @@ local function createCampaignList(path)
             tooltip = _S.tooltip.custom_campaign_window.choose_campaign,
             no_levels = #campaign_info.levels,
             path = file,
-            description = campaign_info.description,
+            description = TheApp.strings:getLocalisedText(campaign_info.description,
+               campaign_info.description_table)
           }
         else
           print("Warning: Loaded campaign that had no levels specified")

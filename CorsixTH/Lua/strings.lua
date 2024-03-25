@@ -293,9 +293,21 @@ function Strings:getLanguageNames(language)
   return chunk and self.chunk_to_names[chunk]
 end
 
-function Strings:getLangCode(langage)
+function Strings:getLangCode(language)
   local lang = language or self.app.config.language
   return self.language_to_lang_code[lang:lower()]
+end
+
+--! Use local language text where possible.
+--!param string (string) The default, likely English, text
+--!param table (table) A table of translated text in language code fields
+--!return (string) The text in the current language if available, or in English, or the default string.
+function Strings:getLocalisedText(string, table)
+  if string and not table then return string
+  elseif table[self:getLangCode()] then return table[self:getLangCode()]
+  elseif table.en then return table.en
+  else return string
+  end
 end
 
 function Strings:_loadPrivate(language, env, ...)

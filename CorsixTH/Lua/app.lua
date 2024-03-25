@@ -594,6 +594,12 @@ function App:loadCampaign(campaign_file)
     return
   end
 
+  -- Use localised description and winning text, if available
+  campaign_info.description = self.strings:getLocalisedText(campaign_info.description,
+      campaign_info.description_table)
+  campaign_info.winning_text = self.strings:getLocalisedText(campaign_info.winning_text,
+      campaign_info.winning_text_table)
+
   if self:loadLevel(campaign_info.levels[1], nil, level_info.name,
       level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix) then
     -- The new world needs to know which campaign to continue on.
