@@ -48,6 +48,9 @@
  <a href="_0_1_door.html#_0_1_door_1check_for_deadlock">checkForDeadlock</a>()
  (inherited from <a href="_0_1_door.html">Door</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_swing_door.html#_0_1_swing_door_1check_paired">checkPaired</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
@@ -112,6 +115,9 @@
  <a href="_0_1_object.html#_0_1_object_1on_destroy">onDestroy</a>()
  (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_swing_door.html#_0_1_swing_door_1pair_doors">pairDoors</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
@@ -143,9 +149,6 @@
  <li class="inherited">
  <a href="_0_1_door.html#_0_1_door_1set_animation">setAnimation</a>(<span class="p">animation</span>, <span class="p">flags</span>)
  (inherited from <a href="_0_1_door.html">Door</a>)
- </li>
- <li class="self">
- <a href="_0_1_swing_door.html#_0_1_swing_door_1set_as_slave">setAsSlave</a>(<span class="p">swing_door</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_dynamic_info">setDynamicInfo</a>(<span class="p">type</span>, <span class="p">value</span>)
@@ -269,6 +272,8 @@
  </li>
  <li><span class="p">orientation_before</span>
  (*)
+ </li>
+ <li><span class="p">paired</span>
  </li>
  <li><span class="p">permanent_flags</span>
  (*)
@@ -404,7 +409,28 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_door.html#_0_1_door_1after_load">Door:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L159">line 159 of Lua/objects/doors/swing_door_right.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L190">line 190 of Lua/objects/doors/swing_door_right.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_swing_door_1check_paired">function SwingDoor:checkPaired(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Checks to see if the swing doors have paired correctly<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L77">line 77 of Lua/objects/doors/swing_door_right.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -412,14 +438,14 @@
  <p>
  Depending on if this is a master or slave show the correct information.<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1get_dynamic_info">Entity:getDynamicInfo</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L79">line 79 of Lua/objects/doors/swing_door_right.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L110">line 110 of Lua/objects/doors/swing_door_right.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_swing_door_1get_walkable_tiles">function SwingDoor:getWalkableTiles()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_door.html#_0_1_door_1get_walkable_tiles">Door:getWalkableTiles</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L140">line 140 of Lua/objects/doors/swing_door_right.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L171">line 171 of Lua/objects/doors/swing_door_right.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -441,24 +467,29 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_door.html#_0_1_door_1on_click">Door:onClick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L61">line 61 of Lua/objects/doors/swing_door_right.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L92">line 92 of Lua/objects/doors/swing_door_right.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_swing_door_1set_as_slave">function SwingDoor:setAsSlave(<span class="p">swing_door</span>)</a></h5>
+ <h5><a name="_0_1_swing_door_1pair_doors">function SwingDoor:pairDoors(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
  <p>
- Makes the door mimic its master when it comes to hover cursor and what happens
-when the player clicks on it.<br/><br/>
+ Links the master to the slave swing door. This allows the slave to mimic the<br/><br/>
+ master in interactions<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">swing_door</td>
- <td class="t">Door</td>
- <td class="d"> The master door to mimic.</td>
+ <td class="n">x</td>
+ <td class="t">num</td>
+ <td class="d"> Co-ordinate</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">num</td>
+ <td class="d"> Co-ordinate</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L52">line 52 of Lua/objects/doors/swing_door_right.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L48">line 48 of Lua/objects/doors/swing_door_right.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -479,7 +510,7 @@ when the player clicks on it.<br/><br/>
  <td class="d"> Flags, if any, associated with the animation.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L120">line 120 of Lua/objects/doors/swing_door_right.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L151">line 151 of Lua/objects/doors/swing_door_right.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -501,7 +532,7 @@ when the player clicks on it.<br/><br/>
  <td class="d"> How long the swing animation is for the entering/leaving entity.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L98">line 98 of Lua/objects/doors/swing_door_right.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L129">line 129 of Lua/objects/doors/swing_door_right.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -518,7 +549,7 @@ when the player clicks on it.<br/><br/>
 "in" and "out".</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L84">line 84 of Lua/objects/doors/swing_door_right.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L115">line 115 of Lua/objects/doors/swing_door_right.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -526,7 +557,7 @@ when the player clicks on it.<br/><br/>
  <p>
  Depending on if this is a master or slave update the correct information.<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_door.html#_0_1_door_1update_dynamic_info">Door:updateDynamicInfo</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L70">line 70 of Lua/objects/doors/swing_door_right.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/doors/swing_door_right.lua#L101">line 101 of Lua/objects/doors/swing_door_right.lua</a>.
  </p>
  </div>
 </div>
