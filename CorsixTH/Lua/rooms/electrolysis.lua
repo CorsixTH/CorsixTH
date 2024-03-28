@@ -80,7 +80,7 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
           -- Fatigue 0.45 - normal number of electrocutions
           -- Fatigue 0.80 - expect 1 extra electrocution
           -- Fatigue 1.00 - expect 9 extra electrocutions
-          if math.random() <= 0.1 + 2 * (1 - staff.attributes["fatigue"]) then
+          if math.random() <= 0.1 + 2 * (1 - staff:getAttribute("fatigue")) then
             action.prolonged_usage = false
           end
         end

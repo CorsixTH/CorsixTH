@@ -512,7 +512,7 @@ function CallsDispatcher.getPriorityForRoom(room, attribute, staff)
   end
 
   -- Prefer the tirer staff (such that less chance to have "resting synchronization issue")
-  score = score - staff.attributes["fatigue"] * 40 -- 40 is just a weighting scale
+  score = score - staff:getAttribute("fatigue") * 40 -- 40 is just a weighting scale
 
   -- TODO: Assign doctor with higher ability
 

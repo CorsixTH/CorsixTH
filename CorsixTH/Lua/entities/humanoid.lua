@@ -770,7 +770,7 @@ function Humanoid:tickDay()
   end
 
   local temperature = self.world.map.th:getCellTemperature(self.tile_x, self.tile_y)
-  self.attributes.warmth = self.attributes.warmth * 0.75 + temperature * 0.25
+  self.attributes.warmth = self:getAttribute("warmth") * 0.75 + temperature * 0.25
 
   -- If it is too hot or too cold, start to decrease happiness and
   -- show the corresponding icon. Otherwise we could get happier instead.
@@ -778,15 +778,16 @@ function Humanoid:tickDay()
   local max_comfort_temp = 0.36 -- 18 degrees Celsius.
   local decrease_factor = 0.10
   local increase_happiness = 0.005
+  local warmth = self:getAttribute("warmth")
 
-  if self.attributes["warmth"] and self.hospital then
+  if warmth and self.hospital then
     -- Cold: less than comfortable.
-    if self.attributes["warmth"] < min_comfort_temp then
-      self:changeAttribute("happiness", -decrease_factor * (min_comfort_temp - self.attributes["warmth"]))
+    if warmth < min_comfort_temp then
+      self:changeAttribute("happiness", -decrease_factor * (min_comfort_temp - warmth))
       self:setMood("cold", "activate")
     -- Hot: More than comfortable.
-    elseif self.attributes["warmth"] > max_comfort_temp then
-      self:changeAttribute("happiness", -decrease_factor * (self.attributes["warmth"] - max_comfort_temp))
+    elseif warmth > max_comfort_temp then
+      self:changeAttribute("happiness", -decrease_factor * (warmth - max_comfort_temp))
       self:setMood("hot", "activate")
     -- Ideal: Not too cold or too warm.
     else
@@ -934,13 +935,13 @@ function Humanoid:tostring()
   local result = string.format("%s - class: %s", full_name, class)
 
   result = result .. string.format("\nWarmth: %.3f   Happiness: %.3f   Fatigue: %.3f  Thirst: %.3f  Toilet_Need: %.3f   Health: %.3f   Service Quality: %.3f",
-    self.attributes["warmth"] or 0,
-    self.attributes["happiness"] or 0,
-    self.attributes["fatigue"] or 0,
-    self.attributes["thirst"] or 0,
-    self.attributes["toilet_need"] or 0,
-    self.attributes["health"] or 0,
-    self.attributes["fatigue"] and self:getServiceQuality() or 0)
+    self:getAttribute("warmth"),
+    self:getAttribute("happiness"),
+    self:getAttribute("fatigue"),
+    self:getAttribute("thirst"),
+    self:getAttribute("toilet_need"),
+    self:getAttribute("health"),
+    self.getServiceQuality and self:getServiceQuality() or 0)
 
   result = result .. "\nActions: ["
   for i = 1, #self.action_queue do
@@ -992,3 +993,11 @@ function Humanoid:unexpectFromRoom(dest_room)
     end
   end
  end
+
+-- Get attribute value
+--!param attribute (string)
+--!param default_value (float) Number to return if none found. If neither are present, 0 is returned
+--!return (float)
+function Humanoid:getAttribute(attribute, default_value)
+  return self.attributes[attribute] or default_value or 0
+end

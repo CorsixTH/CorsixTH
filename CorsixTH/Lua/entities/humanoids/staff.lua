@@ -43,29 +43,28 @@ function Staff:tickDay()
   if not Humanoid.tickDay(self) then
     return false
   end
+  if self.humanoid_class == "Receptionist" then return true end
   -- Pay too low  --> unhappy
   -- Pay too high -->   happy
   local fair_wage = self.profile:getFairWage()
   local wage = self.profile.wage
   self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / (fair_wage ~= 0 and fair_wage or 1))
+
   -- if you overwork your Dr's then there is a chance that they can go crazy
   -- when this happens, find him and get him to rest straight away
-  if self.attributes["fatigue"] then
-    if self.attributes["fatigue"] < 0.7 then
-      if self:isResting() then
-        self:setMood("tired", "deactivate")
-        self:changeAttribute("happiness", 0.006)
-      end
-    end
-  -- Working when you should be taking a break will make you unhappy
-    if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] then
-      self:changeAttribute("happiness", -0.02)
-    end
-  -- You will also start to become unhappy as you become tired
-    if self.attributes["fatigue"] >= 0.5 then
-      self:changeAttribute("happiness", -0.01)
-    end
+  if self:getAttribute("fatigue") < 0.7 and self:isResting() then
+    self:setMood("tired", "deactivate")
+    self:changeAttribute("happiness", 0.006)
   end
+  -- Working when you should be taking a break will make you unhappy
+  if self:getAttribute("fatigue") >= self.hospital.policies["goto_staffroom"] then
+    self:changeAttribute("happiness", -0.02)
+  end
+  -- You will also start to become unhappy as you become tired
+  if self:getAttribute("fatigue") >= 0.5 then
+    self:changeAttribute("happiness", -0.01)
+  end
+
   -- It is nice to see plants, but dead plants make you unhappy
   self.world:findObjectNear(self, "plant", 2, function(x, y)
     local plant = self.world:getObject(x, y, "plant")
@@ -141,7 +140,7 @@ function Staff:tick()
   end
 
   -- Make staff members request a raise if they are very unhappy
-  if not self.world.debug_disable_salary_raise and self.attributes["happiness"] < 0.1 then
+  if not self.world.debug_disable_salary_raise and self:getAttribute("happiness") < 0.1 then
     if not self.timer_until_raise then
       self.timer_until_raise = 200
     end
@@ -358,10 +357,10 @@ function Staff:updateSpeed()
     level = 1
   elseif self.hospital and self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then
     level = 3 -- Cheat makes everyone speedy
-  elseif self.attributes["fatigue"] then
-    if self.attributes["fatigue"] >= 0.8 then
+  elseif self.humanoid_class ~= "Receptionist" then
+    if self:getAttribute("fatigue") >= 0.8 then
       level = level - 2
-    elseif self.attributes["fatigue"] >= 0.7 then
+    elseif self:getAttribute("fatigue") >= 0.7 then
       level = level - 1
     end
   end
@@ -381,12 +380,12 @@ end
 -- and go to the StaffRoom if it is.
 function Staff:checkIfNeedRest()
   -- Only when the staff member is very tired should the icon emerge. Unhappiness will also escalate
-  if self.attributes["fatigue"] >= 0.7 then
+  if self:getAttribute("fatigue") >= 0.7 then
     self:setMood("tired", "activate")
     self:changeAttribute("happiness", -0.0002)
   end
   -- If above the policy threshold, go to the staff room.
-  if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] and
+  if self:getAttribute("fatigue") >= self.hospital.policies["goto_staffroom"] and
       not class.is(self:getRoom(), StaffRoom) then
     -- The staff will get unhappy if there is no staffroom to rest in.
     if self.waiting_for_staffroom then
@@ -618,15 +617,16 @@ end
 function Staff:updateDynamicInfo()
   local dynamic_text = self.dynamic_text or ""
   local fatigue_text = _S.dynamic_info.staff.tiredness
-  if not self.attributes["fatigue"] then
+  if self.humanoid_class == "Receptionist" then
     fatigue_text = nil
+  else
+    self:setDynamicInfo('progress', self:getAttribute("fatigue"))
   end
   self:setDynamicInfo('text', {
     self.profile.profession,
     dynamic_text,
     fatigue_text,
   })
-  self:setDynamicInfo('progress', self.attributes["fatigue"])
   if self.hospital then
     self:setDynamicInfo('dividers', {self.hospital.policies["goto_staffroom"]})
   end
@@ -660,11 +660,10 @@ function Staff:afterLoad(old, new)
     self.profile.world = self.world
   end
   if old < 68 and new >= 68 then
-    if self.attributes["fatigue"] then
-      if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] then
-        self:goToStaffRoom()
-        self.going_to_staffroom = true
-      end
+    if self.humanoid_class ~= "Receptionist" and
+        self:getAttribute("fatigue") >= self.hospital.policies["goto_staffroom"] then
+      self:goToStaffRoom()
+      self.going_to_staffroom = true
     end
   end
 
@@ -715,8 +714,8 @@ function Staff:getServiceQuality()
 
   local weighted_skill = skill_weight * self.profile.skill
   -- Less fatigue is better
-  local weighted_restfulness = restfulness_weight * (1 - self.attributes["fatigue"])
-  local weighted_happiness = happiness_weight * self.attributes["happiness"]
+  local weighted_restfulness = restfulness_weight * (1 - self:getAttribute("fatigue"))
+  local weighted_happiness = happiness_weight * self:getAttribute("happiness")
 
   return weighted_skill + weighted_restfulness + weighted_happiness
 end

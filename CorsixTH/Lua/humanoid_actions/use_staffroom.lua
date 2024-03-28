@@ -114,7 +114,7 @@ local function use_staffroom_action_start(action, humanoid)
   local loop_callback_use = --[[persistable:use_staffroom_action_loop_callback]] function(obj_action)
     humanoid:wake(relaxation[action.target_type])
     -- if staff is no longer fatigued, make them leave the staff room
-    if humanoid.attributes["fatigue"] == 0 then
+    if humanoid:getAttribute("fatigue") == 0 then
       humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
 
       local room = humanoid.last_room

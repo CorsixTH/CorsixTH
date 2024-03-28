@@ -42,16 +42,14 @@ function Doctor:tickDay()
 
   -- if you overwork your Dr's then there is a chance that they can go crazy
   -- when this happens, find him and get him to rest straight away
-  if self.attributes["fatigue"] then
-    if self.attributes["fatigue"] < 0.7 then
-      if self:isResting() then
-        self:setCrazy(false)
-      end
-    else
-      -- doctor can go crazy if they're too tired
-      if math.random(1, 300) == 1 then
-        self:setCrazy(true)
-      end
+  if self:getAttribute("fatigue") < 0.7 then
+    if self:isResting() then
+      self:setCrazy(false)
+    end
+  else
+    -- doctor can go crazy if they're too tired
+    if math.random(1, 300) == 1 then
+      self:setCrazy(true)
     end
   end
 

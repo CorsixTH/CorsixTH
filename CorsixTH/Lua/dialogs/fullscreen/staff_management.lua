@@ -261,14 +261,14 @@ function UIStaffManagement:draw(canvas, x, y)
     end
     -- Morale, tiredness and skill, used to draw the average at the end too.
     local happiness_bar_width = 0
-    if staff.attributes["happiness"] then
-      happiness_bar_width = math_floor(staff.attributes["happiness"] * 40 + 0.5)
-      total_happiness = total_happiness + staff.attributes["happiness"]
+    if staff:getAttribute("happiness") then
+      happiness_bar_width = math_floor(staff:getAttribute("happiness") * 40 + 0.5)
+      total_happiness = total_happiness + staff:getAttribute("happiness")
     end
     local fatigue_bar_width = 40.5
-    if staff.attributes["fatigue"] then
-      total_fatigue = total_fatigue + staff.attributes["fatigue"]
-      fatigue_bar_width = math_floor((1 - staff.attributes["fatigue"]) * 40 + 0.5)
+    if staff:getAttribute("fatigue") then
+      total_fatigue = total_fatigue + staff:getAttribute("fatigue")
+      fatigue_bar_width = math_floor((1 - staff:getAttribute("fatigue")) * 40 + 0.5)
     end
     local skill_bar_width = math_floor(staff.profile.skill * 40 + 0.5)
     total_skill = total_skill + staff.profile.skill

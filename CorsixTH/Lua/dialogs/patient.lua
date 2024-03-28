@@ -158,10 +158,10 @@ function UIPatient:draw(canvas, x_, y_)
   Window.draw(self, canvas, x_, y_)
 
   -- The patient bars (happiness, thirst, and warmth).
-  local warmth = self.normaliseWarmth(patient.attributes["warmth"])
+  local warmth = self.normaliseWarmth(patient:getAttribute("warmth"))
 
-  self:drawBar(canvas, 348, 126, x, y, patient.attributes["happiness"] or 0.5)
-  self:drawBar(canvas, 351, 154, x, y, 1 - (patient.attributes["thirst"] or 0.5))
+  self:drawBar(canvas, 348, 126, x, y, patient:getAttribute("happiness", 0.5))
+  self:drawBar(canvas, 351, 154, x, y, 1 - (patient:getAttribute("thirst", 0.5)))
   self:drawBar(canvas, 349, 183, x, y, warmth)
 
   if self.history_panel.visible then
