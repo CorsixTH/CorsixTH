@@ -73,6 +73,9 @@ function UIProgressReport:UIProgressReport(ui)
     local tooltip
     if crit_table.formats == 2 then
       tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value), math.floor(cur_value))
+    elseif crit_table.formats == 3 then
+      tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value) / 1000,
+          math.floor(cur_value) / 1000)
     else
       tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value))
     end
