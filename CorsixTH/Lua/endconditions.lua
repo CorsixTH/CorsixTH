@@ -125,7 +125,7 @@ end
 -- lose criteria with the smallest gap between current value and boundary,
 -- then fill up to five with win criteria in the best group.
 function EndConditions:generateReportTable(hospital)
-  local count, lose_table, report_table, tmp_table = 0, {}, {}, {}
+  local count, lose_table, key_lose_goals_table, report_table, unique_criteria_set = 0, {}, {}, {}, {}
   local win_group = self.win_goals[self:_findBestWinGroup(hospital)] or {}
 
   -- Collect lose criteria over the boundary
@@ -135,25 +135,30 @@ function EndConditions:generateReportTable(hospital)
   -- Get the most relevant of each criterion in all groups
   for _, group_table in pairs(lose_table) do
     for crit_name, crit_table in pairs(group_table) do
-      if not tmp_table[crit_name] or tmp_table[crit_name].gap > crit_table.gap then
-        tmp_table[crit_name] = crit_table
+      if not key_lose_goals_table[crit_name] or key_lose_goals_table[crit_name].gap > crit_table.gap then
+        key_lose_goals_table[crit_name] = crit_table
       end
     end
   end
   -- Move into a numbered table
-  for _, crit_table in pairs(tmp_table) do
+  for _, crit_table in pairs(key_lose_goals_table) do
     table.insert(report_table, crit_table)
     count = count + 1
-    if count == 5 then break end
+  end
+  -- If there are more than five, keep the five criteria closest to meeting lose conditions
+  if count > 5 then
+    table.sort(report_table, function(a,b) return a.gap > b.gap end)
+    for n = 6, #report_table do report_table[n] = nil end
   end
 
   -- Fill up the report table with win criteria not already present as lose criteria
+  for _, crit in pairs(report_table) do unique_criteria_set[crit.name] = true end
   for i = 1, #local_criteria_variable do
+    if count == 5 then break end
     local name = local_criteria_variable[i].name
-    if win_group[name] and not tmp_table[name] then
+    if win_group[name] and not unique_criteria_set[name] then
       count = count + 1
       report_table[count] = win_group[name]
-      if count == 5 then break end
     end
   end
 
