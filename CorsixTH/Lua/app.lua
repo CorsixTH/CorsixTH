@@ -605,6 +605,12 @@ function App:loadCampaign(campaign_file)
     -- The new world needs to know which campaign to continue on.
     self.world.campaign_info = campaign_info
   end
+
+  -- Play the level advance movie from a position where this campaign will end at 12
+  if campaign_info.movie then
+    local n = math.max(1, 12 - #campaign_info.levels)
+    self.moviePlayer:playAdvanceMovie(n)
+  end
 end
 
 --! Reads the given file name as a Lua chunk from the Campaigns folder in the CorsixTH install directory.
