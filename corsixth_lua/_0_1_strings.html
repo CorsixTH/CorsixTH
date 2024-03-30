@@ -36,7 +36,13 @@
  <a href="_0_1_strings.html#_0_1_strings_1get_font">getFont</a>(<span class="p">language</span>)
  </li>
  <li class="self">
+ <a href="_0_1_strings.html#_0_1_strings_1get_lang_code">getLangCode</a>(<span class="p">language</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_strings.html#_0_1_strings_1get_language_names">getLanguageNames</a>(<span class="p">language</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_strings.html#_0_1_strings_1get_localised_text">getLocalisedText</a>(<span class="p">string</span>, <span class="p">table</span>)
  </li>
  <li class="self">
  <a href="_0_1_strings.html#_0_1_strings_1init">init</a>()
@@ -61,6 +67,8 @@
  <li><span class="p">language_chunks</span>
  </li>
  <li><span class="p">language_to_chunk</span>
+ </li>
+ <li><span class="p">language_to_lang_code</span>
  </li>
  <li><span class="p">languages</span>
  </li>
@@ -106,7 +114,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L294">line 294 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L313">line 313 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -122,7 +130,22 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L283">line 283 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L285">line 285 of Lua/strings.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_strings_1get_lang_code">function Strings:getLangCode(<span class="p">language</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">language</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L296">line 296 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -137,7 +160,28 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L289">line 289 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L291">line 291 of Lua/strings.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_strings_1get_localised_text">function Strings:getLocalisedText(<span class="p">string</span>, <span class="p">table</span>)</a></h5>
+ <p>
+ Use local language text where possible.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">string</td>
+ <td class="t">string</td>
+ <td class="d"> The default, likely English, text</td>
+ </tr>
+ <tr>
+ <td class="n">table</td>
+ <td class="t">table</td>
+ <td class="d"> A table of translated text in language code fields</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L301">line 301 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -170,7 +214,7 @@ no_inheritance disables inheritance except original_strings (for debug purposes)
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L162">line 162 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L164">line 164 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -185,7 +229,7 @@ no_inheritance disables inheritance except original_strings (for debug purposes)
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L310">line 310 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L329">line 329 of Lua/strings.lua</a>.
  </p>
  </div>
 </div>
