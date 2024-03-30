@@ -934,8 +934,22 @@ end
 
 local UpdateCursorPosition = TH.cursor.setPosition
 
---! Called when the mouse enters or leaves the game window.
+--! Called when focus changes on game window.
+--!param gain (number) 1 for in-focus, 0 for out-of-focus
 function UI:onWindowActive(gain)
+  self:setWindowActiveStatus(gain == 1)
+end
+
+--! Stores the game window active status
+--!param state (boolean) true for in-focus, false for out-of-focus
+function UI:setWindowActiveStatus(state)
+  self.app.window_active_status = state
+end
+
+--! Gets the game window active status
+--!return true for in-focus, false for out-of-focus
+function UI:getWindowActiveStatus()
+  return self.app.window_active_status
 end
 
 --! Window has been resized by the user

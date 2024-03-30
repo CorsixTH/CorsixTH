@@ -528,11 +528,13 @@ local UpdateCursorPosition = TH.cursor.setPosition
 
 local highlight_x, highlight_y
 
---! Called when the mouse enters or leaves the game window.
+--! Called when focus changes on game window.
+--!param gain (number) 1 for in-focus, 0 for out-of-focus
 function GameUI:onWindowActive(gain)
   if gain == 0 then
     self.tick_scroll_amount_mouse = false
   end
+  UI.onWindowActive(self, gain)
 end
 
 -- TODO: try to remove duplication with UI:onMouseMove
