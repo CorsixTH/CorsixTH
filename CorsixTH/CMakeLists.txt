@@ -99,14 +99,14 @@ set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # Add an extra step to copy built DLLs on MSVC
-if(VCPKG_TARGET_TRIPLET)
+if(MSVC AND VCPKG_TARGET_TRIPLET)
   include(CopyVcpkgLua)
 endif()
 
 ## Finding libraries
 
 # Find SDL
-if(MSVC AND VCPKG_TARGET_TRIPLET)
+if(VCPKG_TARGET_TRIPLET)
   find_package(SDL2 CONFIG REQUIRED)
   target_link_libraries(CorsixTH_lib SDL2::SDL2)
   target_link_libraries(CorsixTH SDL2::SDL2main)
@@ -127,7 +127,7 @@ else()
 endif()
 
 # Find Lua
-if(MSVC AND VCPKG_TARGET_TRIPLET)
+if(VCPKG_TARGET_TRIPLET)
   find_package(Lua CONFIG REQUIRED)
   target_link_libraries(CorsixTH_lib lua)
   target_link_libraries(CorsixTH lua)
@@ -162,9 +162,15 @@ target_link_libraries(CorsixTH ${CMAKE_THREAD_LIBS_INIT})
 
 # Find SDL_mixer
 if(CORSIX_TH_USE_SDL_MIXER)
-  if(MSVC AND VCPKG_TARGET_TRIPLET)
+  if(VCPKG_TARGET_TRIPLET)
     find_package(SDL2_mixer CONFIG REQUIRED)
-    target_link_libraries(CorsixTH SDL2_mixer::SDL2_mixer)
+    target_link_libraries(CorsixTH SDL2_mixer::SDL2_mixer-static)
+    
+    #    if(VCPKG_LIBRARY_LINKAGE EQUAL "static") 
+    #      target_link_libraries(CorsixTH SDL2_mixer::SDL2_mixer-static)
+    #    else()
+    #      target_link_libraries(CorsixTH SDL2_mixer::SDL2_mixer)
+    #    endif()
   else()
     find_package(SDL2_mixer REQUIRED)
     if(SDLMIXER_FOUND)
@@ -196,7 +202,7 @@ endif()
 
 # Find Freetype2
 if(CORSIX_TH_USE_FREETYPE2)
-  if(MSVC AND VCPKG_TARGET_TRIPLET)
+  if(VCPKG_TARGET_TRIPLET)
     find_package(Freetype REQUIRED)
     target_link_libraries(CorsixTH Freetype::Freetype)
   else()

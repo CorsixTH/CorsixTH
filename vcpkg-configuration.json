@@ -14,7 +14,14 @@
       "kind": "git",
       "repository": "https://github.com/CorsixTH/vcpkg-registry",
       "baseline": "7e2920647c0c00b21d684c887d2c9b375a1b5b32",
-      "packages": [ "ffmpeg", "sdl2-mixer" ]
+      "packages": [ "sdl2-mixer" ]
+    },
+    {
+      "kind": "git",
+      "repository": "https://github.com/TheCycoONE/vcpkg-registry",
+      "baseline": "ace617a25403d45fb0adea5adb2bc52c02c06d3b",
+      "reference": "linux_support",
+      "packages": [ "luasocket", "luasec" ]
     }
   ]
 }

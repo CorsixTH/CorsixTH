@@ -15,6 +15,19 @@
       }
     },
     {
+      "name": "linux-dev-vcpkg",
+      "binaryDir": "${sourceDir}/build/dev-vcpkg",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "USE_SOURCE_DATADIRS": "ON",
+        "ENABLE_UNIT_TESTS": "ON",
+        "BUILD_ANIMVIEW": "ON",
+        "BUILD_TOOLS": "ON",
+	"CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
       "name": "win-dev",
       "binaryDir": "${sourceDir}/build/dev",
       "generator": "Visual Studio 17 2022",
@@ -51,6 +64,11 @@
   ],
   "buildPresets": [
     {
+      "name": "linux-dev",
+      "configurePreset": "linux-dev",
+      "configuration": "Debug"
+    },
+    {
       "name": "win-x64-rel",
       "configurePreset": "win-x64-rel",
       "configuration": "RelWithDebInfo"
@@ -62,6 +80,15 @@
     }
   ],
   "testPresets": [
+    {
+      "name": "linux-dev",
+      "configurePreset": "linux-dev",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "Debug"
+    },
     {
       "name": "win-x64-rel",
       "configurePreset": "win-x64-rel",
