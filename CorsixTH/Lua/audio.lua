@@ -100,8 +100,11 @@ function Audio:init()
     - Uses titles from MIDI.TXT if found, else the filename.
   --]]
   local midi_txt -- File name of midi.txt file, if any.
-  local waveform = { MP3=true, OGG=true, WAV=true, AIFF=true, VOC=true, FLAC=true }
-  local instructional = { MID=true, MOD=true, XM=true, XMI=true }
+  local waveform = list_to_set({"OGG", "OPUS", "FLAC", "WV", "WAV", "WAVE",
+      "MPG", "MPEG", "MP3", "MAD", "AIFF", "AIFC", "AIF"})
+  local instructional = list_to_set({"MID", "MIDI", "KAR", "669", "AMF", "AMS", "DBM",
+      "DSM", "FAR", "GDM", "IT", "MED", "MDL", "MOD", "MOL", "MTM", "NST", "OKT", "PTM",
+      "S3M", "STM", "ULT", "UMX", "WOW", "XM"})
 
   local _f, _s, _v
   if music_dir then
