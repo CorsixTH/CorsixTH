@@ -104,7 +104,7 @@ function Audio:init()
       "MPG", "MPEG", "MP3", "MAD", "AIFF", "AIFC", "AIF"})
   local instructional = list_to_set({"MID", "MIDI", "KAR", "669", "AMF", "AMS", "DBM",
       "DSM", "FAR", "GDM", "IT", "MED", "MDL", "MOD", "MOL", "MTM", "NST", "OKT", "PTM",
-      "S3M", "STM", "ULT", "UMX", "WOW", "XM"})
+      "S3M", "STM", "ULT", "UMX", "WOW", "XM", "XMI"})
 
   local _f, _s, _v
   if music_dir then
@@ -120,6 +120,8 @@ function Audio:init()
       info = musicFileTable(filename)
       -- This title might be replaced later by the midi_txt.
       info.title = filename
+      -- XMI files are supported with our own conversion
+      info.is_xmi = ext == "XMI"
     end
     if instructional[ext] and not music_dir then
        info.filename = table.concat({"Sound", "Midi", file}, pathsep)
@@ -579,7 +581,7 @@ function Audio:playBackgroundTrack(index)
       if data:sub(1, 3) == "RNC" then
         data = assert(rnc.decompress(data))
       end
-      if not info.filename_music then
+      if not info.filename_music or info.is_xmi then
         data = SDL.audio.transcodeXmiToMid(data)
       end
       -- Loading of music files can incur a slight pause, which is why it is
