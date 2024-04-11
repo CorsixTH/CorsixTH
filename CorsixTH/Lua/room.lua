@@ -1001,10 +1001,10 @@ end
 
 --! Stub to be extended in subclasses, if needed.
 function Room:afterLoad(old, new)
-  if old and old < 46 then
+  if old < 46 then
     self.humanoids_enroute = {--[[a set rather than a list]]}
   end
-  if old and old < 137 then
+  if old < 137 then
     if self.door.queue then
       -- reset expected count so we can recalculate it
       self.door.queue.expected = {}
@@ -1029,7 +1029,7 @@ function Room:afterLoad(old, new)
     -- no longer using this so empty it
     self.humanoids_enroute = {}
   end
-  if old and old < 186 then
+  if old < 186 then
     self:calculateHappinessFactor()
   end
 end
