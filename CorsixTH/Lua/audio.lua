@@ -587,11 +587,24 @@ function Audio:playBackgroundTrack(index)
       -- Someone might want to stop the player from
       -- starting to play once it's loaded though.
       self.load_music = true
-      SDL.audio.loadMusicAsync(data, function(music_data, e)
+      SDL.audio.loadMusicAsync(data, function(music_data, err)
 
         if music_data == nil then
-          error("Could not load music file \'" .. (info.filename_music or info.filename) .. "\'" ..
-              (e and " (" .. e .. ")" or ""))
+          info.enabled = false
+          local name, msg = (info.filename_music or info.filename)
+          if not self.warned then -- Warn once per session
+            self.app.ui:addWindow(UIInformation(self.app.ui, {_S.errors.music}))
+          end
+          self.warned = true
+          if err == "No SoundFonts have been requested" then
+            msg = "Required soundfont is not found, please download one. A suitable soundfont is linked from the CorsixTH wiki."
+          elseif err == "XMP: Unrecognized file format" or err == "ModPlug_Load failed" then
+            msg = "Music format not supported for file " .. name
+          else
+            msg = "Could not load music file " .. name .. ". Error: " .. err
+          end
+          if self.app.world then self.app.world:gameLog(msg) end
+          if not self.app.world or not self.app.config.debug then print(msg) end
         else
           info.music = music_data
           -- Do we still want it to play?

@@ -737,6 +737,7 @@ errors = {
     demo_in_full = "Sorry, you can't open a demo savegame with the full game files loaded. Please update your TH Data folder setting.",
     full_in_demo = "Sorry, you can't open a full game save with the demo files loaded. Please update your TH Data folder setting.",
   },
+  music = "There are playback issues with one or more files in your music directory. Problematic files will be disabled in the jukebox. See the console window for more information.",
 }
 
 warnings = {
