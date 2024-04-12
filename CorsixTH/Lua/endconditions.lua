@@ -29,11 +29,16 @@ local local_criteria_variable = {
   {name = "num_cured" ,       icon = 13, formats = 2},
   {name = "percentage_killed",icon = 14, formats = 2},
   {name = "value",            icon = 15, formats = 2}, -- Hospital value
+    -- New criteria
+  {name = "staff_happiness",  icon = 16, icon_file = "MPointer", formats = 2, two_tooltips = true},
+  {name = "patient_happiness",icon = 18, icon_file = "MPointer", formats = 2, two_tooltips = true},
 }
 
 -- A table of functions for fetching criteria values that cannot be measured
 --   directly from a hospital attribute of the same name.
 local get_custom_criteria = {
+  staff_happiness = function(hospital) return 100 * hospital:getAverageStaffAttribute("happiness", 0.5) end,
+  patient_happiness = function(hospital) return 100 * hospital:getAveragePatientAttribute("happiness", 0.5) end,
 }
 
 class "EndConditions"
