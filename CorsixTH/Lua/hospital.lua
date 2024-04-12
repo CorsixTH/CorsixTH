@@ -171,7 +171,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.patients = {}
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
-  self.policies = {}
   self.discovered_diseases = {} -- a list
 
   -- Create a cheats instance for each hospital. AIHospitals don't know how to cheat (we hope!)
@@ -187,12 +186,15 @@ function Hospital:Hospital(world, avail_rooms, name)
     }
   end
 
-  self.policies["staff_allowed_to_move"] = true
-  self.policies["send_home"] = 0.1
-  self.policies["guess_cure"] = 0.9
-  self.policies["stop_procedure"] = 1 -- Note that this is between 1 and 2 ( = 100% - 200%)
-  self.policies["goto_staffroom"] = 0.6
-  self.policies["grant_wage_increase"] = TheApp.config.grant_wage_increase
+  local gbv = level_config.gbv
+  self.policies = {
+    staff_allowed_to_move = true,
+    send_home = 0.1,
+    guess_cure = 0.9,
+    stop_procedure = 1, -- Note that this is between 1 and 2 ( = 100% - 200%)
+    goto_staffroom = gbv.Tired / 1000, -- Defaults to 0.6 on normal difficulty
+    grant_wage_increase = TheApp.config.grant_wage_increase,
+  }
 
   -- Semi-randomly select three insurance companies to use, only different by name right now.
   -- The companies in the first quarter of the list are more likely to be selected
@@ -219,7 +221,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- Initialize diseases
   local diseases = TheApp.diseases
   local expertise = level_config.expertise
-  local gbv = level_config.gbv
   for _, disease in ipairs(diseases) do
     local disease_available = true
     local drug_effectiveness = 95

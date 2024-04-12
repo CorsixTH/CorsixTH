@@ -841,4 +841,10 @@ function Map:afterLoad(old, new)
       MaxSalary = 2000,
     }
   end
+  if old < 187 then
+    local gbv = self.level_config.gbv
+    gbv.Tired = gbv.Tired or 600
+    gbv.VeryTired = gbv.VeryTired or 700
+    gbv.CrackUpTired = gbv.CrackUpTired or 800
+  end
 end
