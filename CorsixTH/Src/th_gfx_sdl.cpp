@@ -43,7 +43,7 @@ SOFTWARE.
 #if SDL_VERSION_ATLEAST(2, 0, 10)
 
 //! How much to overdraw scaled sprites to ensure no gaps are visible.
-const float frect_overdraw = 0.002f;
+const float frect_overdraw = 0.01f;
 
 #define SDL_FRECT_UNIT float
 #else
@@ -183,8 +183,8 @@ void getScaleRect(const SDL_Rect* rect, double scale_factor,
   // on scaled rendering.
   dst_rect->x = static_cast<float>(rect->x * scale_factor) - frect_overdraw;
   dst_rect->y = static_cast<float>(rect->y * scale_factor) - frect_overdraw;
-  dst_rect->w = static_cast<float>(rect->w * scale_factor) + frect_overdraw;
-  dst_rect->h = static_cast<float>(rect->h * scale_factor) + frect_overdraw;
+  dst_rect->w = static_cast<float>(rect->w * scale_factor) + 2 * frect_overdraw;
+  dst_rect->h = static_cast<float>(rect->h * scale_factor) + 2 * frect_overdraw;
 #else
   // Prior to SDL 2.0.10, fallback to using the enclosing integer SDL_Rect for
   // scaled rendering.
