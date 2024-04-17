@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 184 -- Dynamically pair swing doors
+local SAVEGAME_VERSION = 185 -- Fix missing staff initial
 
 class "App"
 

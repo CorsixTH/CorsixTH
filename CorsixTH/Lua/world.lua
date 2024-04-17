@@ -2439,6 +2439,7 @@ function World:updateInitialsCache()
   for uchar in parts:gmatch("([%z\1-\127\194-\244][\128-\191]*)") do
     initials[#initials + 1] = uchar
   end
+  initials[0] = initials[#initials]
   staff_initials_cache.initials = initials
 end
 
@@ -2447,11 +2448,9 @@ end
 --!param profile (table) The profile of the staff member
 function World:localiseInitial(profile)
   if not profile.name_seed then
-    -- 1009 is a prime number which avoids a modulo of 0 when we need
-    -- a positive number to randomly pick the initial letter
     profile.name_seed = math.random(1, 1009)
   end
-  if profile.name_lang == TheApp.config.language then return end
+  if profile.initial and profile.name_lang == TheApp.config.language then return end
   -- Staff member doesn't have an initial in the current language
   local num = profile.name_seed % #staff_initials_cache.initials
   profile.initial = staff_initials_cache.initials[num]
@@ -2853,6 +2852,22 @@ function World:afterLoad(old, new)
       if rate[1] == self.hours_per_tick and rate[2] == self.tick_rate then
         self:setSpeed(name)
         break
+      end
+    end
+  end
+  if old < 185 then
+    -- Fix any missing initial in staff names
+    self:updateInitialsCache()
+    for _, staff_category in pairs(self.available_staff) do
+      for _, staff in pairs(staff_category) do
+        if not staff.initial then
+          self:localiseInitial(staff)
+        end
+      end
+    end
+    for _, staff in ipairs(self:getLocalPlayerHospital().staff) do
+      if not staff.profile.initial then
+        self:localiseInitial(staff.profile)
       end
     end
   end
