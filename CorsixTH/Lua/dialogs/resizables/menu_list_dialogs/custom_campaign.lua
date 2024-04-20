@@ -87,6 +87,10 @@ function UICustomCampaign:UICustomCampaign(ui)
     :setTooltip(_S.tooltip.custom_campaign_window.start_selected_campaign)
 end
 
+function UICustomCampaign:updateDescriptionOffset()
+  self.description_offset = self.details_scrollbar.value - 1
+end
+
 -- Overrides the function in the UIMenuList, choosing what should happen when the player
 -- clicks a choice in the list.
 function UICustomCampaign:buttonClicked(num)
