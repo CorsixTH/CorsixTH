@@ -26,8 +26,6 @@
         "opusfile"
       ]
     },
-    "luasocket",
-    "luasec",
     "catch2"
   ],
   "features": {
@@ -35,6 +33,18 @@
       "description": "Support building AnimView",
       "dependencies": [
         "wxwidgets"
+      ]
+    },
+    "updatecheck": {
+      "description": "Support checking for game updates",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        }
       ]
     },
     "movies": {

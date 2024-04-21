@@ -1629,6 +1629,7 @@ end
 -- a specific savegame version is from.
 function App:getVersion(version)
   local ver = version or self.savegame_version
+
   if ver > 180 then
     return "Trunk"
   elseif ver > 170 then
@@ -1832,11 +1833,7 @@ function App:checkForUpdates()
 
   -- Default language to use for the changelog if no localised version is available
   local default_language = "en"
-  local update_url = 'https://corsixth.com/CorsixTH/check-for-updates'
   local current_version = self:getVersion()
-
-  -- Only URLs that match this list of trusted domains will be accepted.
-  local trusted_domains = { 'corsixth.com', 'github.com', 'corsixth.github.io' }
 
   -- Only check for updates against released versions
   if current_version == "Trunk" then
@@ -1844,22 +1841,11 @@ function App:checkForUpdates()
     return
   end
 
-  local luasocket, _ = pcall(require, "socket")
-  local luasec, _ = pcall(require, "ssl.https")
-  if not (luasocket and luasec) then
-    print("Cannot check for updates since LuaSocket and/or LuaSec are not available.")
-    return
-  end
-  local http = require("socket.http")
-  local url = require("socket.url")
-  http.TIMEOUT = 2
-
   print("Checking for CorsixTH updates...")
-  local update_body, status, _ = http.request(update_url)
+  local update_body, err = TH.FetchLatestVersionInfo()
 
-  if not update_body or (status ~= 200) then
-    print("Couldn't check for updates. Server returned code: " .. status)
-    print("Check that you have an active internet connection and that CorsixTH is allowed in your firewall.")
+  if not update_body then
+    print("Couldn't check for updates: " .. err)
     return
   end
 
@@ -1872,6 +1858,7 @@ function App:checkForUpdates()
   local function compare_versions()
     local current_major, current_minor, current_revision = string.match(current_version, "(%d+)%.(%d+)%.?(%d*)")
     current_major, current_minor = tonumber(current_major), tonumber(current_minor)
+
     if current_major > update_table.major then return true
     elseif current_major < update_table.major then return false
     end
@@ -1889,16 +1876,18 @@ function App:checkForUpdates()
   end
 
   -- Check to make sure download URL is trusted
-  local download_url = url.parse(update_table.download_url)
-  local valid_url = false
-  for _, v in ipairs(trusted_domains) do
-    if download_url.host == v then
-      valid_url = true
+  local download_url = update_table.download_url
+  local trusted_url = false
+  local trusted_prefixes = { 'https://corsixth.com/', 'https://github.com/', 'https://corsixth.github.io/' }
+
+  for _, v in ipairs(trusted_prefixes) do
+    if download_url:sub(1, #v) == v then
+      trusted_url = true
       break
     end
   end
-  if not valid_url then
-    print("Update download url is not on the trusted domains list (" .. update_table.download_url .. ")")
+  if not trusted_url then
+    print("Update download url is not on the trusted domains list (" .. download_url .. ")")
     return
   end
 
@@ -1913,7 +1902,7 @@ function App:checkForUpdates()
 
   print("New version found: " .. new_version)
   -- Display the update window
-  self.ui:addWindow(UIUpdate(self.ui, current_version, new_version, changelog, update_table.download_url))
+  self.ui:addWindow(UIUpdate(self.ui, current_version, new_version, changelog, download_url))
 end
 
 -- Free up / stop any resources relying on the current video object

@@ -33,6 +33,10 @@ SOFTWARE.
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>
 #endif
+#ifdef WITH_UPDATE_CHECK
+#include <curl/curl.h>
+#endif
+
 // Template magic for checking type equality
 template <typename T1, typename T2>
 struct types_equal {
@@ -74,6 +78,10 @@ int main(int argc, char** argv) {
     // 32 bits (floats only have 24 bits)
     int number_is_double[types_equal<lua_Number, double>::result];
   };
+
+#ifdef WITH_UPDATE_CHECK
+  curl_global_init(CURL_GLOBAL_DEFAULT);
+#endif
 
   bool bRun = true;
 
@@ -124,5 +132,8 @@ int main(int argc, char** argv) {
       std::printf("\n\nRestarting...\n\n\n");
     }
   }
+#ifdef WITH_UPDATE_CHECK
+  curl_global_cleanup();
+#endif
   return 0;
 }
