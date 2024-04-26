@@ -231,6 +231,17 @@ if(WITH_UPDATE_CHECK)
   endif()
 endif()
 
+if(CORSIX_TH_LINK_LUA_MODULES)
+  message("Linking lua modules")
+  find_package(luafilesystem REQUIRED)
+  target_link_libraries(CorsixTH luafilesystem::lfs)
+
+  find_package(lpeg REQUIRED)
+  target_link_libraries(CorsixTH lpeg::lpeg)
+else()
+  message("Lua modules are not linked and will be loaded at runtime")
+endif()
+
 if(MSVC AND CORSIX_TH_USE_VLD)
   find_package(VLD REQUIRED)
   if(VLD_FOUND)

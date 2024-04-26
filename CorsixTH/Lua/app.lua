@@ -1865,7 +1865,6 @@ function App:checkForUpdates()
   local function compare_versions()
     local current_major, current_minor, current_revision = string.match(current_version, "(%d+)%.(%d+)%.?(%d*)")
     current_major, current_minor = tonumber(current_major), tonumber(current_minor)
-
     if current_major > update_table.major then return true
     elseif current_major < update_table.major then return false
     end

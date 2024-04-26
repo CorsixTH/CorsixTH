@@ -111,6 +111,8 @@ else()
   message("Note: Update check is disabled")
 endif()
 
+set(CORSIX_TH_LINK_LUA_MODULES ON)
+
 if(MSVC)
   if(WITH_VLD)
     set(CORSIX_TH_USE_VLD ON)

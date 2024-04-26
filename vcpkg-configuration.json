@@ -1,7 +1,7 @@
 {
   "default-registry": {
     "kind": "git",
-    "baseline": "a56d892ac792797d779eae79d3423e0131422628",
+    "baseline": "9224b3bbd8df24999d85720b1d005dd6f969ade0",
     "repository": "https://github.com/microsoft/vcpkg"
   },
   "registries": [
@@ -12,16 +12,10 @@
     },
     {
       "kind": "git",
-      "repository": "https://github.com/CorsixTH/vcpkg-registry",
-      "baseline": "7e2920647c0c00b21d684c887d2c9b375a1b5b32",
-      "packages": [ "sdl2-mixer" ]
-    },
-    {
-      "kind": "git",
       "repository": "https://github.com/TheCycoONE/vcpkg-registry",
-      "baseline": "ace617a25403d45fb0adea5adb2bc52c02c06d3b",
-      "reference": "linux_support",
-      "packages": [ "luasocket", "luasec" ]
+      "baseline": "835bea5afb563adb2e60e05a950293cffaba3851",
+      "reference": "lua_cmake",
+      "packages": [ "sdl2-mixer", "luafilesystem", "lpeg" ]
     }
   ]
 }
