@@ -10,6 +10,8 @@ description_table = {
     "à certains des niveaux fournis avec CorsixTH. Bon jeu !",
 }
 
+movie = true
+
 levels = {
   "finisham.level",
   "avatar.level",
