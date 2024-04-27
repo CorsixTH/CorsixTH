@@ -547,7 +547,7 @@ end
 -- game sounds controls are added.
 local function audio_options(menu, game)
   local app = TheApp
-  if not app.audio.has_bg_music then return end
+  if not app:isAudioEnabled() then return end
 
   local function vol(level, setting)
     if setting == "music" then
@@ -597,16 +597,18 @@ local function audio_options(menu, game)
   end
 
   -- Jukebox music
-  menu:appendCheckItem(_S.menu_options.music:format(hotkey_value_label("ingame_toggleMusic", hotkeys)),
-    app.config.play_music,
-    function(item)
-      app.config.play_music = item.checked
-      app.ui:togglePlayMusic(item)
-    end,
-    nil,
-    function()
-      return app.config.play_music
-    end)
+  if app.audio.has_bg_music then
+    menu:appendCheckItem(_S.menu_options.music:format(hotkey_value_label("ingame_toggleMusic", hotkeys)),
+      app.config.play_music,
+      function(item)
+        app.config.play_music = item.checked
+        app.ui:togglePlayMusic(item)
+      end,
+      nil,
+      function()
+        return app.config.play_music
+      end)
+  end
 
   -- The three volume menus, and jukebox
   local function appendVolume(setting)
@@ -620,9 +622,11 @@ local function audio_options(menu, game)
     menu:appendMenu(_S.menu_options.sound_vol, appendVolume("sound"))
       :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
   end
-  menu:appendMenu(_S.menu_options.music_vol, appendVolume("music"))
-    :appendItem(_S.menu_options.jukebox:format(hotkey_value_label("ingame_jukebox", hotkeys)),
-        function() app.ui:addWindow(UIJukebox(app)) end)
+  if app.audio.has_bg_music then
+    menu:appendMenu(_S.menu_options.music_vol, appendVolume("music"))
+      :appendItem(_S.menu_options.jukebox:format(hotkey_value_label("ingame_jukebox", hotkeys)),
+          function() app.ui:addWindow(UIJukebox(app)) end)
+  end
 end
 
 -- Add display options to the menu.
