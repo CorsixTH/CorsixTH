@@ -708,6 +708,7 @@ function Room:roomFinished()
     self.world.dispatcher:callForStaff(self)
   end
   self:tryAdvanceQueue()
+  self:calculateHappinessFactor()
 end
 
 --! Try to move a patient from the old room to the new room.
@@ -1000,10 +1001,10 @@ end
 
 --! Stub to be extended in subclasses, if needed.
 function Room:afterLoad(old, new)
-  if old and old < 46 then
+  if old < 46 then
     self.humanoids_enroute = {--[[a set rather than a list]]}
   end
-  if old and old < 137 then
+  if old < 137 then
     if self.door.queue then
       -- reset expected count so we can recalculate it
       self.door.queue.expected = {}
@@ -1027,6 +1028,9 @@ function Room:afterLoad(old, new)
     end
     -- no longer using this so empty it
     self.humanoids_enroute = {}
+  end
+  if old < 186 then
+    self:calculateHappinessFactor()
   end
 end
 
@@ -1071,11 +1075,10 @@ function Room:getStaffServiceQuality()
   return quality
 end
 
+local window_tile = list_to_set({116, 117, 118, 119, 124, 125, 126, 127})
 --! Count the number of windows in the room
 --!return (int) Number of windows
 function Room:countWindows()
-  local window_tile = {[116]=true, [117]=true, [118]=true, [119]=true,
-   [124]=true, [125]=true, [126]=true, [127]=true}
   local map, count = self.world.ui.app.map.th, 0
   for x = self.x, self.x + self.width do
     for y = self.y, self.y + self.height do
@@ -1102,4 +1105,27 @@ function Room:calculateRemovalCost()
     cost = cost - math.floor(obj_cost * COST_RECOVERY)
   end
   return cost
+end
+
+--! Calculate the effect the room has on humanoid happiness
+function Room:calculateHappinessFactor()
+  -- The number of windows affects happiness
+  local window_factor, space_factor, window_count = 0, 0, self:countWindows()
+  if window_count > 0 then
+    if self.room_info.id == "staff_room" then
+      -- Staff are pleased to rest in a staff room with windows
+      window_count = window_count * 2
+    end
+    -- More windows help but in smaller increments
+   window_factor = math.round(math.log(window_count)) / 1000
+  end
+
+  -- Extra space in the room affects happiness
+  local extraspace = (self.width * self.height) / (self.room_info.minimum_size * self.room_info.minimum_size)
+  if extraspace > 1 then
+    -- Greater space helps but in smaller increments
+    space_factor = math.round(math.log(extraspace)) / 1000
+  end
+
+  self.happiness_factor = window_factor + space_factor
 end
