@@ -178,7 +178,7 @@ function Patient:completeDiagnosticStep(room)
   -- Did the staff member manage to leave the room before the patient had
   -- a chance to get diagnosed? Then use a default middle value.
   if room.staff_member then
-    local fatigue = room.staff_member.attributes["fatigue"] or 0
+    local fatigue = room.staff_member:getAttribute("fatigue")
 
     -- Bonus: based on skill and attn to detail (with some randomness).
     -- additional bonus if the staff member is highly skilled / consultant
@@ -246,7 +246,7 @@ function Patient:getPriceDistortion(casebook)
   local reputation = casebook.reputation or self.hospital.reputation
   local effectiveness = casebook.cure_effectiveness
 
-  local weighted_happiness = happiness_weight * self.attributes.happiness
+  local weighted_happiness = happiness_weight * self:getAttribute("happiness")
   local weighted_reputation = reputation_weight * (reputation / 1000)
   local weighted_effectiveness = effectiveness_weight * (effectiveness / 100)
 
@@ -574,7 +574,7 @@ function Patient:tickDay()
   end
 
   -- if patients are getting unhappy, then maybe we should see this!
-  if self.attributes["happiness"] < 0.3 then
+  if self:getAttribute("happiness") < 0.3 then
     self:setMood("sad7", "activate")
   else
     self:setMood("sad7", "deactivate")
@@ -592,7 +592,8 @@ function Patient:tickDay()
   -- Note: This behaviour intentionally differs from Theme Hospital where being close to
   -- death does not impact happiness.
   -- TODO clean up this block, nonmagical numbers
-  if self.attributes["health"] >= 0.18 and self.attributes["health"] < 0.22 then
+  local health = self:getAttribute("health")
+  if health >= 0.18 and health < 0.22 then
     self:setMood("sad2", "activate")
     self:changeAttribute("happiness", -0.0002) -- waiting too long will make you sad
     -- There is a 1/3 chance that the patient will get fed up and leave.
@@ -603,26 +604,26 @@ function Patient:tickDay()
       self:setMood("sad2", "deactivate")
       self:goHome("kicked")
     end
-  elseif self.attributes["health"] >= 0.14 and self.attributes["health"] < 0.18 then
+  elseif health >= 0.14 and health < 0.18 then
     self:setMood("sad2", "deactivate")
     self:setMood("sad3", "activate")
   -- now wishes they had gone to that other hospital
-  elseif self.attributes["health"] >= 0.10 and self.attributes["health"] < 0.14 then
+  elseif health >= 0.10 and health < 0.14 then
     self:setMood("sad3", "deactivate")
     self:setMood("sad4", "activate")
   -- starts to take a turn for the worse and is slipping away
-  elseif self.attributes["health"] >= 0.06 and self.attributes["health"] < 0.10 then
+  elseif health >= 0.06 and health < 0.10 then
     self:setMood("sad4", "deactivate")
     self:setMood("sad5", "activate")
   -- fading fast
-  elseif self.attributes["health"] >= 0.01 and self.attributes["health"] < 0.06 then
+  elseif health >= 0.01 and health < 0.06 then
     self:setMood("sad5", "deactivate")
     self:setMood("sad6", "activate")
   -- it's not looking good
-  elseif self.attributes["health"] > 0.00 and self.attributes["health"] < 0.01 then
+  elseif health > 0.00 and health < 0.01 then
     self.attributes["health"] = 0.0
   -- is there time to say a prayer
-  elseif self.attributes["health"] == 0.0 then
+  elseif health == 0.0 then
     if not self:getRoom() and not self:getCurrentAction().is_leaving then
       self:setMood("sad6", "deactivate")
       self:die()
@@ -644,14 +645,14 @@ function Patient:tickDay()
   if not self.health_history then
     -- First day, initialize health history.
     self.health_history = {}
-    self.health_history[1] = self.attributes["health"]
+    self.health_history[1] = self:getAttribute("health")
     self.health_history["last"] = 1
     self.health_history["size"] = 20
   else
     -- Update the health history, wrapping around the array.
     local last = self.health_history["last"] + 1
     if last > self.health_history["size"] then last = 1 end
-    self.health_history[last] = self.attributes["health"]
+    self.health_history[last] = self:getAttribute("health")
     self.health_history["last"] = last
   end
 
@@ -661,7 +662,7 @@ function Patient:tickDay()
     --Only a patient with a health value of less than 0.8 can be the initial vomiter, however :)
     local initialVomitMult = 0.002 --The initial chance of vomiting.
     local proximityVomitMult = 1.5 --The multiplier used when in proximity to vomit.
-    local nausea = (1.0 - self.attributes["health"]) * initialVomitMult
+    local nausea = (1.0 - self:getAttribute("health")) * initialVomitMult
     local foundVomit = {}
     local numVomit = 0
 
@@ -694,7 +695,7 @@ function Patient:tickDay()
     -- As we don't yet have rats, ratholes and dead rats the chances of vomitting are slim
     -- as a temp fix for this I have added 0.5 to the < nausea equation,
     -- this may want adjusting or removing when the other factors are in the game MarkL
-    if self.attributes["health"] <= 0.8 or numVomit > 0 or self.attributes["happiness"] < 0.6 then
+    if self:getAttribute("health") <= 0.8 or numVomit > 0 or self:getAttribute("happiness") < 0.6 then
       nausea = nausea * ((numVomit+1) * proximityVomitMult)
       if math.random() < nausea + 0.5 then
         self:vomit()
@@ -721,15 +722,15 @@ function Patient:tickDay()
   end
 
   -- Each tick both thirst, warmth and toilet_need changes and health decreases.
-  self:changeAttribute("thirst", self.attributes["warmth"]*0.02+0.004*math.random() + 0.004)
+  self:changeAttribute("thirst", self:getAttribute("warmth") * 0.02 + 0.004 * math.random() + 0.004)
   self:changeAttribute("health", - 0.004)
   if self.disease.more_loo_use then
-    self:changeAttribute("toilet_need", 0.018*math.random() + 0.008)
+    self:changeAttribute("toilet_need", 0.018 * math.random() + 0.008)
   else
-    self:changeAttribute("toilet_need", 0.006*math.random() + 0.002)
+    self:changeAttribute("toilet_need", 0.006 * math.random() + 0.002)
   end
   -- Maybe it's time to visit the loo?
-  if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.75 then
+  if self:getAttribute("toilet_need") > 0.75 then
     if self.pee_anim and not self:getCurrentAction().is_leaving and
         not self:getCurrentAction().is_entering and not self.in_room then
       if math.random(1, 10) < 5 then
@@ -758,7 +759,7 @@ function Patient:tickDay()
   end
 
   -- If thirsty enough a soda would be nice
-  if self.attributes["thirst"] and self.attributes["thirst"] > 0.7 then
+  if self:getAttribute("thirst") > 0.7 then
     self:changeAttribute("happiness", -0.002)
     self:setMood("thirsty", "activate")
     -- If there's already an action to buy a drink in the action queue, or
