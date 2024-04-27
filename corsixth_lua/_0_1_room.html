@@ -39,6 +39,9 @@
  <a href="_0_1_room.html#_0_1_room_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
  </li>
  <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1calculate_happiness_factor">calculateHappinessFactor</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_room.html#_0_1_room_1calculate_removal_cost">calculateRemovalCost</a>()
  </li>
  <li class="self">
@@ -168,6 +171,8 @@
  <li><span class="p">door</span>
  </li>
  <li><span class="p">door2</span>
+ </li>
+ <li><span class="p">happiness_factor</span>
  </li>
  <li><span class="p">height</span>
  </li>
@@ -312,14 +317,21 @@ and dynamic info text<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1001">line 1001 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1002">line 1002 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1calculate_happiness_factor">function Room:calculateHappinessFactor()</a></h5>
+ <p>
+ Calculate the effect the room has on humanoid happiness<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1110">line 1110 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_room_1calculate_removal_cost">function Room:calculateRemovalCost()</a></h5>
  <p>
  Get the removal cost<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1090">line 1090 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1093">line 1093 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -379,14 +391,14 @@ what to do.</td>
  <h5><a name="_0_1_room_1count_windows">function Room:countWindows()</a></h5>
  <p>
  Count the number of windows in the room<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1074">line 1074 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1079">line 1079 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_room_1crash_room">function Room:crashRoom()</a></h5>
  <p>
  Explode the room.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L802">line 802 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L803">line 803 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -435,7 +447,7 @@ what to do.</td>
  <h5><a name="_0_1_room_1deactivate">function Room:deactivate()</a></h5>
  <p>
  Deactivate the room from the world.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L956">line 956 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L957">line 957 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -534,7 +546,7 @@ In multi-occupancy rooms this returns the staff member with the minimum service 
  <h5><a name="_0_1_room_1get_staff_service_quality">function Room:getStaffServiceQuality()</a></h5>
  <p>
  Get the average service quality of the staff members in the room.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1051">line 1051 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1055">line 1055 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -548,7 +560,7 @@ In multi-occupancy rooms this returns the staff member with the minimum service 
  <div class="method">
  <h5><a name="_0_1_room_1has_queue_dialog">function Room:hasQueueDialog()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L997">line 997 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L998">line 998 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -608,7 +620,7 @@ In multi-occupancy rooms this returns the staff member with the minimum service 
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1033">line 1033 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1037">line 1037 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -623,7 +635,7 @@ In multi-occupancy rooms this returns the staff member with the minimum service 
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L919">line 919 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L920">line 920 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -640,7 +652,7 @@ handling, e.g. if the humanoid needs to change before leaving the room.<br/><br/
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L912">line 912 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L913">line 913 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -798,14 +810,14 @@ Otherwise returns true.<br/><br/>
  <div class="method">
  <h5><a name="_0_1_room_1try_to_edit">function Room:tryToEdit()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L969">line 969 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L970">line 970 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_room_1try_to_find_nearby_patients">function Room:tryToFindNearbyPatients()</a></h5>
  <p>
  Try to find new patients for this room by 'stealing' them from other rooms nearby.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L779">line 779 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L780">line 780 of Lua/room.lua</a>.
  </p>
  </div>
 </div>
