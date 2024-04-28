@@ -60,6 +60,30 @@
         "VCPKG_TARGET_TRIPLET": "x86-windows",
         "ENABLE_UNIT_TESTS": "ON"
       }
+    },
+    {
+      "name": "macos-arm64-rel",
+      "binaryDir": "${sourceDir}/build/macos-arm64-rel",
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-osx-release",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_MAKE_PROGRAM": "/usr/bin/make"
+      }
+    },
+    {
+      "name": "macos-x64-rel",
+      "binaryDir": "${sourceDir}/build/macos-arm64-rel",
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-osx-release",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_MAKE_PROGRAM": "/usr/bin/make"
+      }
     }
   ],
   "buildPresets": [
@@ -76,6 +100,16 @@
     {
       "name": "win-x86-rel",
       "configurePreset": "win-x86-rel",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos-arm64-rel",
+      "configurePreset": "macos-arm64-rel",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos-x64-rel",
+      "configurePreset": "macos-x64-rel",
       "configuration": "RelWithDebInfo"
     }
   ],
@@ -101,6 +135,24 @@
     {
       "name": "win-x86-rel",
       "configurePreset": "win-x86-rel",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos-arm64-rel",
+      "configurePreset": "macos-arm64-rel",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos-x64-rel",
+      "configurePreset": "macos-x64-rel",
       "output": {
         "verbosity": "extra",
         "outputOnFailure": true
