@@ -1923,6 +1923,10 @@ function App:isAudioEnabled()
   return TH.GetCompileOptions().audio
 end
 
+function App:isUpdateCheckDisabledByConfig()
+  return TH.GetCompileOptions().update_check and not self.config.check_for_updates
+end
+
 --! Generate information about user's system and the program
 --!return System and program info as a string
 function App:gamelogHeader()
