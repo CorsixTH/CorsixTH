@@ -65,7 +65,7 @@ function App:App()
   }
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
-  self.check_for_updates = true
+  self.check_for_updates = TH.GetCompileOptions().update_check
   self.idle_tick = 0
 end
 

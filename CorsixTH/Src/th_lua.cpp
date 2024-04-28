@@ -255,6 +255,13 @@ int l_get_compile_options(lua_State* L) {
 #endif
   lua_setfield(L, -2, "audio");
 
+#ifdef WITH_UPDATE_CHECK
+  lua_pushboolean(L, 1);
+#else
+  lua_pushboolean(L, 0);
+#endif
+  lua_setfield(L, -2, "update_check");
+
   lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
   lua_getfield(L, -1, "jit");
   if (lua_type(L, -1) == LUA_TNIL) {
