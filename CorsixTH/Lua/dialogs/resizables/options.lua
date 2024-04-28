@@ -121,16 +121,18 @@ function UIOptions:UIOptions(ui, mode)
   self:addBevelPanel(175, title_y_pos, BTN_WIDTH * 2, 20, col_caption):setLabel(_S.options_window.caption)
     .lowered = true
 
-  -- Check for updates
-  local updates_y_pos = self:_getOptionYPos()
-  local updates_string = app.config.check_for_updates and
-      _S.options_window.option_enabled or _S.options_window.option_disabled
-  self:addBevelPanel(20, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
-      :setLabel(_S.options_window.check_for_updates):setTooltip(_S.tooltip.options_window.check_for_updates).lowered = true
-  self.updates_panel =
-      self:addBevelPanel(165, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(updates_string)
-  self.updates_button = self.updates_panel:makeToggleButton(0, 0, 140, BTN_HEIGHT, nil, self.buttonUpdates)
-      :setToggleState(app.config.check_for_updates)
+  if app:isUpdateCheckAvailable() then
+    -- Check for updates
+    local updates_y_pos = self:_getOptionYPos()
+    local updates_string = app.config.check_for_updates and
+        _S.options_window.option_enabled or _S.options_window.option_disabled
+    self:addBevelPanel(20, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+        :setLabel(_S.options_window.check_for_updates):setTooltip(_S.tooltip.options_window.check_for_updates).lowered = true
+    self.updates_panel =
+        self:addBevelPanel(165, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(updates_string)
+    self.updates_button = self.updates_panel:makeToggleButton(0, 0, 140, BTN_HEIGHT, nil, self.buttonUpdates)
+        :setToggleState(app.config.check_for_updates)
+  end
 
   -- Fullscreen
   local fullscreen_y_pos = self:_getOptionYPos()
