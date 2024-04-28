@@ -169,8 +169,8 @@ function Staff:checkIfWaitedTooLong()
           break
         end
       end
-      --If the hospital policy is set to automatically grant wage increases, grant the requested raise
-      --instead of firing the staff member
+      -- If the hospital policy is set to automatically grant wage increases, grant
+      -- the requested raise instead of firing the staff member
       if self.hospital.policies.grant_wage_increase then
         local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage(self.world) + self.profile.wage) / 2) - self.profile.wage)
         self.quitting_in = nil
@@ -179,12 +179,12 @@ function Staff:checkIfWaitedTooLong()
         return
       end
 
-      -- Plays the sack sound, but maybe it's good that you hear a staff member leaving?
+      -- else: The staff member is sacked
       if staff_rise_window then
         staff_rise_window:fireStaff()
-      else
-        self:fire()
+        return
       end
+      self:fire()
     end
   end
 end
@@ -220,6 +220,11 @@ function Staff:isResting()
   end
 end
 
+--! Destroys any raise request window that may be queued
+function Staff:removeQueuedStaffMessage()
+  self.hospital:removeMessage(self)
+end
+
 -- Immediately terminate the staff member's employment.
 function Staff:fire()
   if self.fired then
@@ -231,6 +236,7 @@ function Staff:fire()
   if staff_window and staff_window.staff == self then
       staff_window:close()
   end
+  self:removeQueuedStaffMessage()
   self.hospital:spendMoney(self.profile.wage, _S.transactions.severance .. ": "
       .. self.profile:getFullName())
   self.world.ui:playSound("sack.wav")
@@ -252,6 +258,7 @@ function Staff:fire()
 end
 
 function Staff:die()
+  self:removeQueuedStaffMessage()
   -- Update the staff management screen (if present) accordingly
   local window = self.world.ui:getWindow(UIStaffManagement)
   if window then
