@@ -98,11 +98,6 @@ set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 14)
 set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
-# Add an extra step to copy built DLLs on MSVC
-if(MSVC AND VCPKG_TARGET_TRIPLET)
-  include(CopyVcpkgLua)
-endif()
-
 ## Finding libraries
 
 # Find SDL
@@ -238,6 +233,13 @@ if(CORSIX_TH_LINK_LUA_MODULES)
 
   find_package(unofficial-lpeg CONFIG REQUIRED)
   target_link_libraries(CorsixTH unofficial::lpeg::lpeg)
+
+  add_custom_command(TARGET CorsixTH POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${UNOFFICIAL_LPEG_LUA_FILES}
+    $<TARGET_FILE_DIR:CorsixTH>
+)
+
 else()
   message("Lua modules are not linked and will be loaded at runtime")
 endif()

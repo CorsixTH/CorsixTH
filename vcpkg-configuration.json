@@ -13,7 +13,7 @@
     {
       "kind": "git",
       "repository": "https://github.com/TheCycoONE/vcpkg-registry",
-      "baseline": "278ccf53e6f8781d29f63cc158028ad8b15d7cf6",
+      "baseline": "15529ddf98c6ae963861c7fdc145c969d666aadf",
       "reference": "lua_cmake",
       "packages": [ "sdl2-mixer", "luafilesystem", "lpeg" ]
     }
