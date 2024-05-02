@@ -67,14 +67,17 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">th_lua.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;cstdio&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="config_8h_source.html">config.h</a>&quot;</code><br />
+<code>#include &lt;cstdio&gt;</code><br />
 <code>#include &lt;cstring&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &quot;<a class="el" href="bootstrap_8h_source.html">bootstrap.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="th_8h_source.html">th.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="th__lua__internal_8h_source.html">th_lua_internal.h</a>&quot;</code><br />
@@ -134,6 +137,11 @@ Functions</h2></td></tr>
 <tr class="separator:ae0e380465968f8ae478548947f5f2bb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8aca5e29d784bbb490dee4fd2f1715a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8cpp.html#a8aca5e29d784bbb490dee4fd2f1715a8">luaT_printrawtable</a> (lua_State *L, int idx)</td></tr>
 <tr class="separator:a8aca5e29d784bbb490dee4fd2f1715a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a494bd01a393b6e2bf7a28915e060a5cf"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8cpp.html#a494bd01a393b6e2bf7a28915e060a5cf">update_check_url</a></td></tr>
+<tr class="separator:a494bd01a393b6e2bf7a28915e060a5cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ad0abb6adff6f120c5f8ced16f0b29403"></a>
@@ -743,6 +751,23 @@ Functions</h2></td></tr>
 <p>Set a field on the environment table of an object. </p>
 <p>Set a field on the environment table of a value. </p>
 
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a494bd01a393b6e2bf7a28915e060a5cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a494bd01a393b6e2bf7a28915e060a5cf">&#9670;&nbsp;</a></span>update_check_url</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* update_check_url</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">    <span class="stringliteral">&quot;https://corsixth.com/CorsixTH/check-for-updates&quot;</span></div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->
