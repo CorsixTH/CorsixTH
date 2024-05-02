@@ -60,6 +60,11 @@ SOFTWARE.
 // Chinese are desired.
 #cmakedefine CORSIX_TH_USE_FREETYPE2
 
+/** Update check options **/
+// If defined then an http request will be made using libcurl to check to see
+// if the current version is the latest.
+#cmakedefine WITH_UPDATE_CHECK
+
 #ifdef _MSC_VER
 #define CORSIX_TH_USE_PACK_PRAGMAS 1
 #define CORSIX_TH_PACKED_FLAGS

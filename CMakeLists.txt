@@ -18,7 +18,7 @@
 #   - BUILD_ANIMVIEW : Generate AnimView build files (no)
 #   - BUILD_TOOLS : Generate cli tools
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 
 # Define our options
 option(BUILD_CORSIXTH "Builds the main game" ON)
@@ -26,6 +26,7 @@ option(WITH_AUDIO "Activate sound" ON)
 option(WITH_FREETYPE2 "Enhanced font support" ON)
 option(WITH_MOVIES "Activate in game movies" ON)
 option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
+option(WITH_UPDATE_CHECK "Check for new versions" ON)
 option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
 option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
 option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
@@ -38,6 +39,9 @@ if(WITH_MOVIES)
 endif()
 if(BUILD_ANIMVIEW)
   list(APPEND VCPKG_MANIFEST_FEATURES "animview")
+endif()
+if(WITH_UPDATE_CHECK)
+  list(APPEND VCPKG_MANIFEST_FEATURES "updatecheck")
 endif()
 
 project(CorsixTH_Top_Level)
@@ -72,7 +76,6 @@ if(APPLE)
   option(WITH_LUAROCKS "Install required luarocks in the app" OFF)
 endif()
 
-
 if(WITH_AUDIO)
   set(CORSIX_TH_USE_SDL_MIXER ON)
   message("Note: SDL audio is enabled (default)")
@@ -100,6 +103,12 @@ if(WITH_FREETYPE2)
 else()
   set(CORSIX_TH_USE_FREETYPE2 OFF)
   message("Note: FreeType2 is disabled")
+endif()
+
+if(WITH_UPDATE_CHECK)
+  message("Note: Update check is enabled (default)")
+else()
+  message("Note: Update check is disabled")
 endif()
 
 if(MSVC)

@@ -26,12 +26,6 @@ dir="$($luarocks show --rock-tree luafilesystem)"
 #always_copy=true
 # Always build new rocks if uncommented
 #always_build=true
-# Do not install luasocket and luasec if uncommented
-#skip_luasocket=true
-if [ "$skip_luasocket" != "true" ]; then
-  # Path to the folder containing openssl, for luasec
-  openssl_path=$( (which openssl | brew --prefix) | sed 's/\bin\/openssl//')
-fi
 
 set -ae
 if [ "$CTH_VERBOSE" ] || [ "$CI" ]; then
@@ -78,21 +72,10 @@ else
   luarocks="$luarocks install --lua-version $lua --tree ."
   $luarocks luafilesystem
   $luarocks lpeg
-  if [ -z "$skip_luasocket" ]; then
-    $luarocks luasocket
-    $luarocks luasec OPENSSL_DIR="$openssl_path"
-  fi
   echo "Installed local luarocks for $lua."
 fi
 
 # Move into place for CorsixTH
 rsync -r "lib/lua/$lua/"lpeg.so "lib/lua/$lua/"lfs.so .
 rsync -r "share/lua/$lua/"re.lua ./Lua/
-if [ -z "$skip_luasocket" ]; then
-  rsync -r "lib/lua/$lua/"ssl.so "lib/lua/$lua/"mime . 2>/dev/null
-  rsync -r "lib/lua/$lua/socket/core.so" socket/ 2>/dev/null
-  rsync -r "share/lua/$lua/"ltn12.lua "share/lua/$lua/"mime.lua "share/lua/$lua/"socket.lua  "share/lua/$lua/"ssl \
-    "share/lua/$lua/"ssl.lua ./Lua/ 2>/dev/null
-  rsync -r "share/lua/$lua/"socket/*.lua ./Lua/socket 2>/dev/null
-fi
 rm -rf lib/ share/

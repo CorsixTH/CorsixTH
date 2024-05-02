@@ -62,7 +62,7 @@ function UIMainMenu:UIMainMenu(ui)
   -- Work out the menu's height, giving extra space for the version information
   local line_height = 15
   local top_padding = 20
-  local num_lines = computeSize({not ui.app.config.check_for_updates, ui.app.config.debug, TheApp:getVersion()}) -- see UIMainMenu:draw for how these are used
+  local num_lines = computeSize({TheApp:isUpdateCheckDisabledByConfig(), TheApp.config.debug, TheApp:getVersion()}) -- see UIMainMenu:draw for how these are used
   local bottom_text_height = (line_height * num_lines)
   self.height = top_padding + ((menu_item_height + 10) * #menu_items) + bottom_text_height
 
@@ -111,7 +111,7 @@ function UIMainMenu:draw(canvas, x, y)
   -- The following strings are drawn in reverse order
   local ly = y + self.height - 15
   -- Move the version string up a bit if showing check for updates disabled warning.
-  if not TheApp.config.check_for_updates then
+  if TheApp:isUpdateCheckDisabledByConfig() then
     self.label_font:draw(canvas, _S.main_menu.updates_off, x + 5, ly, 190, 0, "right")
     ly = ly - 15
   end

@@ -50,7 +50,8 @@ jobs:
       - name: Install CorsixTH requirements
         run: |
           sudo apt-get install libsdl2-dev libsdl2-mixer-dev \
-           libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev
+           libavcodec-dev libavformat-dev libavutil-dev libswresample-dev \
+           libswscale-dev libcurl4-openssl-dev
       - name: Install static analysis requirements
         if: matrix.static_analysis
         run: |
@@ -68,11 +69,11 @@ jobs:
 
           sudo luarocks --lua-version 5.4 install luafilesystem
 
-      - name: Install CMake 3.10
+      - name: Install CMake 3.14
         if: matrix.cmake
         run: |
-          # Install CMake version 3.10, the oldest CorsixTH-supported version, which does not support Lua 5.4
-          curl -L https://github.com/Kitware/CMake/releases/download/v3.10.3/cmake-3.10.3-Linux-x86_64.sh -o cmake.sh
+          # Install CMake version 3.14, the oldest CorsixTH-supported version, which does not support Lua 5.4
+          curl -L https://github.com/Kitware/CMake/releases/download/v3.14.6/cmake-3.14.6-Linux-x86_64.sh -o cmake.sh
           sudo bash cmake.sh --prefix=/usr/local/ --exclude-subdir --skip-license
           cmake --version
       - name: Create CorsixTH${{ matrix.animview }} makefiles with ${{ matrix.lua }}
