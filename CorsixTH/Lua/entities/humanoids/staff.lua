@@ -52,7 +52,7 @@ function Staff:tickDay()
 
   -- if you overwork your Dr's then there is a chance that they can go crazy
   -- when this happens, find him and get him to rest straight away
-  if self:getAttribute("fatigue") < 0.7 and self:isResting() then
+  if not self:isVeryTired() and self:isResting() then
     self:setMood("tired", "deactivate")
     self:changeAttribute("happiness", 0.006)
   end
@@ -352,9 +352,9 @@ function Staff:updateSpeed()
   elseif self.hospital and self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then
     level = 3 -- Cheat makes everyone speedy
   elseif self.humanoid_class ~= "Receptionist" then
-    if self:getAttribute("fatigue") >= 0.8 then
+    if self:isCrackUpTired() then
       level = level - 2
-    elseif self:getAttribute("fatigue") >= 0.7 then
+    elseif self:isVeryTired() then
       level = level - 1
     end
   end
@@ -374,7 +374,7 @@ end
 -- and go to the StaffRoom if it is.
 function Staff:checkIfNeedRest()
   -- Only when the staff member is very tired should the icon emerge. Unhappiness will also escalate
-  if self:getAttribute("fatigue") >= 0.7 then
+  if self:isVeryTired() then
     self:setMood("tired", "activate")
     self:changeAttribute("happiness", -0.0002)
   end
@@ -719,6 +719,18 @@ end
 ]]
 function Staff:tostring()
   return Humanoid.tostring(self)
+end
+
+--! Judge tiredness based on the level config (which has a default of 700)
+--!return (boolean) Is staff member very tired?
+function Staff:isVeryTired()
+  return self:getAttribute("fatigue") * 1000 >= self.world.map.level_config.gbv.VeryTired
+end
+
+--! Judge crack up tiredness based on the level config (which has a default of 800)
+--!return (boolean) Is staff member very tired?
+function Staff:isCrackUpTired()
+  return self:getAttribute("fatigue") * 1000 >= self.world.map.level_config.gbv.CrackUpTired
 end
 
 -- Dummy callback for savegame compatibility
