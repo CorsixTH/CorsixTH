@@ -1,4 +1,5 @@
---[[ Copyright (c) 2010 Manuel "Roujin" Wolf, 2024 Peppe "Inkub0" Malara
+--[[ Copyright (c) 2010 Manuel "Roujin" Wolf, 2024 Peppe "Inkub0" Malara,
+   2024 Sebastiano Pistore
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -118,24 +119,24 @@ menu_file.restart = "  RIAVVIA  "
 menu_debug = {
   jump_to_level               = "  SALTA AL LIVELLO  ",
   connect_debugger            = "  (%1%) CONNETTI SERVER LUA DBGp  ",
-  transparent_walls           = "  (%1%) MURA TRASPARENTI  ",
+  transparent_walls           = "  (%1%) MURI TRASPARENTI  ",
   limit_camera                = "  LIMITA TELECAMERA  ",
   disable_salary_raise        = "  DISABILITA AUMENTI DI SALARIO  ",
   make_debug_fax              = "  CREA FAX DI DEBUG  ",
-  make_debug_patient          = "  CREA UN PAZIENTE DI DEBUG  ",
+  make_debug_patient          = "  CREA PAZIENTE DI DEBUG  ",
   cheats                      = "  (%1%) CHEAT  ",
   lua_console                 = "  (%1%) CONSOLE LUA  ",
   debug_script                = "  (%1%) ESEGUI SCRIPT DI DEBUG  ",
   calls_dispatcher            = "  GESTORE CHIAMATE  ",
-  dump_strings                = "  (%1%) FAI IL DUMP DELLE STRINGHE  ",
-  dump_gamelog                = "  (%1%) FAI IL DUMP DEL GAMELOG  ",
+  dump_strings                = "  (%1%) DUMP DELLE STRINGHE  ",
+  dump_gamelog                = "  (%1%) DUMP DEL GAMELOG  ",
   map_overlay                 = "  MAPPA IN SOVRAPPOSIZIONE  ",
   sprite_viewer               = "  VISUALIZZATORE SPRITE  ",
   allow_blocking_off_areas    = " CONSENTI IL BLOCCO DI ALCUNE AREE ",
 }
 menu_debug_overlay = {
   none                        = "  NESSUN OVERLAY  ",
-  flags                       = "  FLAGS  ",
+  flags                       = "  FLAG  ",
   positions                   = "  POSIZIONI  ",
   heat                        = "  TEMPERATURA  ",
   byte_0_1                    = "  BYTE 0 & 1  ",
@@ -176,7 +177,7 @@ adviser = {
     falling_5 = "Non è il luogo adatto per far cadere le persone, sono malate sai!",
     falling_6 = "Non è una sala da bowling, i malati non dovrebbero essere trattati così!",
     research_screen_open_1 = "Devi costruire un Reparto Ricerca prima di poter accedere alla schermata Ricerca.",
-    research_screen_open_2 = "La Ricerca è disabilitata in questo livello.",
+    research_screen_open_2 = "La ricerca è disabilitata in questo livello.",
     researcher_needs_desk_1 = "Un ricercatore ha bisogno di una scrivania su cui lavorare.",
     researcher_needs_desk_2 = "Al tuo ricercatore ha fatto piacere tu gli abbia concesso una pausa. Se invece volevi assegnare più personale alla ricerca devi procurare a ognuno di loro una scrivania sulla quale lavorare.",
     researcher_needs_desk_3 = "Ogni ricercatore ha bisogno della propria scrivania su cui poter lavorare.",
@@ -239,7 +240,7 @@ letter = {
 
 install = {
   title = "----------------------------- Installazione CorsixTH -----------------------------",
-  th_directory = "CorsixTH ha bisogno di una copia dei file dati di Theme Hospital (o della demo) per essere eseguito. Per favore indica la posizione della cartella di installazione di Theme Hospital.",
+  th_directory = "CorsixTH ha bisogno di una copia dei file dati di Theme Hospital (o della demo) per essere eseguito. Per favore indica la posizione della cartella HOSP nell'installazione di Theme Hospital.",
   ok = "Ok",
   exit = "Esci",
   cancel = "Annulla",
@@ -247,7 +248,7 @@ install = {
 
 misc = {
   not_yet_implemented = "(non ancora implementato)",
-  no_heliport = "O non sono state ancora scoperte malattie oppure non c'è alcun eliporto su questa mappa. Potrebbe anche essere necessario costruire una reception e assumere una receptionist",
+  no_heliport = "Non è stata ancora scoperta nessuna malattia, non c'è un eliporto sulla mappa oppure potrebbe essere necessario costruire un banco accettazione e assumere una receptionist",
   epidemic_no_icon_to_toggle = "Impossibile mostrare/nascondere icone infezione - non ci sono epidemie in corso che non siano gia' state rivelate",
   epidemic_no_diseases = "Impossibile creare epidemia - non ci sono malattie contagiose disponibili.",
   cant_treat_emergency = "Il tuo ospedale non può affrontare questa emergenza perché la sua malattia non è stata scoperta. Sentiti libero di riprovare.",
@@ -286,7 +287,7 @@ tooltip.main_menu = {
 }
 
 load_game_window = {
-  caption = "Carica Partita (%1%)",
+  caption = "Carica partita (%1%)",
 }
 
 tooltip.load_game_window = {
@@ -297,7 +298,7 @@ tooltip.load_game_window = {
 
 custom_game_window = {
   caption = "Partita personalizzata",
-  free_build = "Costruzione Libera",
+  free_build = "Costruzione libera",
   load_selected_level = "Inizia",
 }
 
@@ -318,8 +319,8 @@ tooltip.custom_campaign_window = {
 }
 
 save_game_window = {
-  caption = "Salva Partita (%1%)",
-  new_save_game = "Nuovo Salvataggio",
+  caption = "Salva partita (%1%)",
+  new_save_game = "Nuovo salvataggio",
 }
 
 tooltip.save_game_window = {
@@ -361,12 +362,18 @@ options_window = {
   capture_mouse = "Cattura Mouse",
   custom_resolution = "Personalizzata...",
   width = "Largh",
+  option_enabled = "Attiv.",
   height = "Alt",
   audio = "Audio globale",
+  scrollspeed = "Vel. scorrimento",
+  shift_scrollspeed = "Vel. scorrimento veloce",
+  zoom_speed = "Velocità zoom",
+  check_for_updates = "Cerca aggiornamenti",
   customise = "Personalizza",
   folder = "Cartelle",
   language = "Lingua del gioco",
   apply = "Applica",
+  hotkey = "Scorciatoie",
   cancel = "Cancella",
   back = "Indietro",
   scrollspeed = "velocità di scorrimento",
@@ -399,6 +406,8 @@ tooltip.options_window = {
   language = "La lingua in cui verrà mostrato il testo",
   select_language = "Seleziona la lingua del gioco",
   language_dropdown_item = "Seleziona %s come lingua",
+  scrollspeed = "Imposta la velocità di scorrimento con il mouse tra 1 (più bassa) e 10 (più veloce). Il default è 2.",
+  shift_scrollspeed = "Imposta la velocità di scorrimento con il tasto MAIUSC premuto tra 1 (più bassa) e 10 (più veloce). Il default è 4.",
   back = "Chiudi la finestra delle opzioni",
   scrollspeed = "Imposta la velocità di scorrimento tra 1 (minimo) e 10 (massimo). Il valore predefinito è 2.",
   shift_scrollspeed = "Imposta la velocità di scorrimento mentre si tiene premuto il tasto Maiusc. Da 1 (minimo) a 10 (massimo). Il valore predefinito è 4.",
@@ -426,7 +435,7 @@ customise_window = {
   paused = "Costruzione durante la pausa",
   volume = "Scorciatoia volume basso",
   aliens = "Pazienti alieni",
-  fractured_bones = "Ossa Rotte",
+  fractured_bones = "Ossa rotte",
   average_contents = "Oggetti frequenti",
   remove_destroyed_rooms = "Rimuovi stanze distrutte",
 }
@@ -718,8 +727,8 @@ totd_window = {
     "Le emergenze possono essere una buona fonte di guadagno extra, sempre che tu abbia i mezzi sufficienti a gestire l'emergenza in tempo.",
     "Sapevi che puoi assegnare i Tuttofare ad aree specifiche? Basta fare clic sul testo Tutte le aree nel profilo dello staff per scorrerle!",
   },
-  previous = "Suggerimento Precedente",
-  next = "Suggerimento Successivo",
+  previous = "Suggerimento precedente",
+  next = "Suggerimento successivo",
 }
 
 tooltip.totd_window = {
@@ -728,7 +737,7 @@ tooltip.totd_window = {
 }
 
 debug_patient_window = {
-  caption = "Debug Paziente",
+  caption = "Debug paziente",
 }
 
 tooltip.debug_patient_window = {
@@ -744,17 +753,17 @@ cheats_window = {
   },
   cheats = {
     money = "Cheat soldi",
-    all_research = "Completa Ricerche",
-    emergency = "Crea Emergenza",
+    all_research = "Completa ricerche",
+    emergency = "Crea emergenza",
     vip = "Crea VIP",
-    earthquake = "Crea Terremoto",
+    earthquake = "Crea terremoto",
     epidemic = "Genera paziente contagioso",
     toggle_infected = "Attiva o disattiva icone infetti",
-    create_patient = "Crea Paziente",
-    end_month = "Fine Mese",
-    end_year = "Fine Anno",
-    lose_level = "Perdi Livello",
-    win_level = "Vinci Livello",
+    create_patient = "Crea paziente",
+    end_month = "Fine mese",
+    end_year = "Fine anno",
+    lose_level = "Perdi livello",
+    win_level = "Vinci livello",
     increase_prices = "Aumenta prezzi",
     decrease_prices = "Diminuisci prezzi",
     toggle_earthquake = "Attiva/Disattiva terremoti",
@@ -776,7 +785,7 @@ tooltip.cheats_window = {
     earthquake = "Crea un terremoto.",
     epidemic = "Crea un paziente contagioso che potrebbe causare un'epidemia",
     toggle_infected = "Attiva o disattiva le icone infetti per le epidemie attive scoperte",
-    create_patient = "Crea un Paziente sul bordo della mappa.",
+    create_patient = "Crea un paziente sul bordo della mappa.",
     end_month = "Salta alla fine del mese.",
     end_year = "Salta alla fine dell'anno.",
     lose_level = "Perdi il livello corrente.",
