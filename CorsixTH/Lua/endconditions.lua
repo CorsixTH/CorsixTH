@@ -19,7 +19,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 -- The "Winning and Losing Conditions" section of level files uses Criteria
---   numbers from the order of this table.
+--   numbers from the order of this table. Any Criteria numbers higher than
+--   the size of this table will be silently ignored.
 --   Icon, icon_file and formats are used in the progress report dialog.
 local local_criteria_variable = {
   {name = "reputation",       icon = 10, formats = 2},
@@ -31,7 +32,7 @@ local local_criteria_variable = {
 }
 
 -- A table of functions for fetching criteria values that cannot be measured
---  directly from a hospital attribute of the same name.
+--   directly from a hospital attribute of the same name.
 local get_custom_criteria = {
   balance = function(hospital) return hospital.balance - hospital.loan end,
 }
@@ -72,7 +73,7 @@ end
 --!param win (boolean) If the win goals are being filled this time
 function EndConditions:_loadGoals(criteria_tbl, goals, start, win)
   for _, values in pairs(criteria_tbl) do
-    if values.Criteria ~= 0 then
+    if local_criteria_variable[values.Criteria] then
       local crit_name = local_criteria_variable[values.Criteria].name
       if not goals[values.Group] then goals[values.Group] = {} end
       goals[values.Group][crit_name] = {
