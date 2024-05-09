@@ -67,6 +67,7 @@ function App:App()
   self.savegame_version = SAVEGAME_VERSION
   self.check_for_updates = TH.GetCompileOptions().update_check
   self.idle_tick = 0
+  self.window_active_status = false -- whether window is in focus, set after App:init
 end
 
 --! Starts a Lua DBGp client & connects it to a DBGp server.
@@ -1247,8 +1248,8 @@ end
 function App:idle()
   if not self.config.play_demo then return end
   -- Check if we are in a proper 'idle' state and solely on the main menu
-  if not self.ui:getWindow(UIMainMenu) or self.ui:getWindow(UIUpdate)
-      or self.ui:getWindow(UIConfirmDialog) then
+  if not self.ui:getWindowActiveStatus() or not self.ui:getWindow(UIMainMenu) or
+      self.ui:getWindow(UIUpdate) or self.ui:getWindow(UIConfirmDialog) then
     self:resetIdle()
     return
   end
