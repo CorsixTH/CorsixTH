@@ -111,7 +111,11 @@ else()
   message("Note: Update check is disabled")
 endif()
 
-set(CORSIX_TH_LINK_LUA_MODULES ON)
+if(VCPKG_TARGET_TRIPLET AND NOT WITH_LUAROCKS)
+  set(CORSIX_TH_LINK_LUA_MODULES ON)
+else()
+  set(CORSIX_TH_LINK_LUA_MODULES OFF)
+endif()
 
 if(MSVC)
   if(WITH_VLD)
