@@ -167,10 +167,10 @@ int lua_main_no_eval(lua_State* L) {
   preload_lua_package(L, "persist", luaopen_persist);
   preload_lua_package(L, "sdl", luaopen_sdl);
 
-  #ifdef CORSIX_TH_LINK_LUA_MODULES
+#ifdef CORSIX_TH_LINK_LUA_MODULES
   preload_lua_package(L, "lfs", luaopen_lfs);
   preload_lua_package(L, "lpeg", luaopen_lpeg);
-  #endif
+#endif
 
   // require "debug" (Harmless in Lua 5.1, useful in 5.2 for compatibility)
   luaT_execute(L, "require \"debug\"");
