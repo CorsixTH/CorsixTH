@@ -55,7 +55,7 @@ function XRayRoom:XRayRoom(...)
 end
 
 function XRayRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local x_ray, pat_x, pat_y = self.world:findObjectNear(patient, "x_ray")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "radiation_shield")
 

@@ -55,7 +55,7 @@ function SlackTongueRoom:SlackTongueRoom(...)
 end
 
 function SlackTongueRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local slicer, pat_x, pat_y = self.world:findObjectNear(patient, "slicer")
   local stf_x, stf_y = slicer:getSecondaryUsageTile()
 

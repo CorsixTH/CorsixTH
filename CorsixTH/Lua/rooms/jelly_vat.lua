@@ -55,7 +55,7 @@ function JellyVatRoom:JellyVatRoom(...)
 end
 
 function JellyVatRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local moulder, stf_x, stf_y = self.world:findObjectNear(patient, "jelly_moulder")
   local pat_x, pat_y = moulder:getSecondaryUsageTile()
 

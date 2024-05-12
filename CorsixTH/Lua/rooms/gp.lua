@@ -95,7 +95,7 @@ function GPRoom:doStaffUseCycle(humanoid)
 end
 
 function GPRoom:commandEnteringStaff(humanoid)
-  self.staff_member = humanoid
+  self:setStaffMember(humanoid)
   self:doStaffUseCycle(humanoid)
   return Room.commandEnteringStaff(self, humanoid, true)
 end
@@ -114,6 +114,7 @@ end
 
 function GPRoom:dealtWithPatient(patient)
   patient = patient or self:getPatient()
+  local staff = self:getStaffMember()
 
   -- If patients are slow to leave the chair, and staff are quick in their
   -- usage cycle, then dealtWithPatient() might get called twice for the
@@ -149,7 +150,7 @@ function GPRoom:dealtWithPatient(patient)
         patient:goHome("over_priced", patient.disease.id)
       end
 
-      self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
+      staff:setMood("idea3", "activate") -- Show the light bulb over the doctor
       -- Check if this disease has just been discovered
       if not self.hospital.disease_casebook[patient.disease.id].discovered then
         self.hospital.research:discoverDisease(patient.disease)
@@ -162,7 +163,7 @@ function GPRoom:dealtWithPatient(patient)
     patient:queueAction(IdleAction())
   end
 
-  if self.staff_member then
+  if self:getStaffMember() then
     self:setStaffMembersAttribute("dealing_with_patient", false)
   end
 end
@@ -174,7 +175,7 @@ function GPRoom:sendPatientToNextDiagnosisRoom(patient)
     patient:goHome("kicked")
     patient:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
   else
-    self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
+    self:getStaffMember():setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
     local next_room_id = math.random(1, #patient.available_diagnosis_rooms)
     local next_room = patient.available_diagnosis_rooms[next_room_id]
     if patient:agreesToPay("diag_" .. next_room) then
@@ -192,9 +193,6 @@ function GPRoom:onHumanoidLeave(humanoid)
       staff:setMood("idea3", "deactivate")
       staff:setMood("reflexion", "deactivate")
     end
-  end
-  if self.staff_member == humanoid then
-    self.staff_member = nil
   end
   if self.just_dealt_with == humanoid then
     self.just_dealt_with = nil
