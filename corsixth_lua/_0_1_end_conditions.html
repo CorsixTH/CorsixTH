@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>EndConditions Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">EndConditions Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L39">line 39 of Lua/endconditions.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_end_conditions.html#_0_1_end_conditions_1__check_lose_group">_checkLoseGroup</a>(<span class="p">hospital</span>, <span class="p">lose_table</span>, <span class="p">report</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_end_conditions.html#_0_1_end_conditions_1__check_win_group">_checkWinGroup</a>(<span class="p">hospital</span>, <span class="p">win_table</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_end_conditions.html#_0_1_end_conditions_1__find_best_win_group">_findBestWinGroup</a>(<span class="p">hospital</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_end_conditions.html#_0_1_end_conditions_1__load_goals">_loadGoals</a>(<span class="p">criteria_tbl</span>, <span class="p">goals</span>, <span class="p">start</span>, <span class="p">win</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_end_conditions.html#_0_1_end_conditions_1check_end_game">checkEndGame</a>(<span class="p">hospital</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_end_conditions.html#_0_1_end_conditions_1generate_report_table">generateReportTable</a>(<span class="p">hospital</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_end_conditions.html#_0_1_end_conditions_1get_attribute">getAttribute</a>(<span class="p">hospital</span>, <span class="p">attribute</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">highest_group</span>
+ </li>
+ <li><span class="p">lose_goals</span>
+ </li>
+ <li><span class="p">win_goals</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_end_conditions_1_end_conditions">function EndConditions:EndConditions(<span class="p">level_config</span>, <span class="p">level_number</span>, <span class="p">freebuild</span>)</a></h5>
+ <p>
+ Collect the end conditions for this level, if they exist<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">level_config</td>
+ <td class="t">table</td>
+ <td class="d"> The map's level_config, containing criteria.</td>
+ </tr>
+ <tr>
+ <td class="n">level_number</td>
+ <td class="t">integer</td>
+ <td class="d"> The number of the map, if playing a campaign.</td>
+ </tr>
+ <tr>
+ <td class="n">freebuild</td>
+ <td class="t">boolean</td>
+ <td class="d"> The free build status of the world</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L43">line 43 of Lua/endconditions.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_end_conditions_1__check_lose_group">function EndConditions:_checkLoseGroup(<span class="p">hospital</span>, <span class="p">lose_table</span>, <span class="p">report</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">Hospital</td>
+ <td class="d"> The hospital of the tests.</td>
+ </tr>
+ <tr>
+ <td class="n">lose_table</td>
+ <td class="t">table</td>
+ <td class="d"> A group of lose conditions from level_config.</td>
+ </tr>
+ <tr>
+ <td class="n">report</td>
+ <td class="t">boolean</td>
+ <td class="d"> Whether a report table will be returned.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L164">line 164 of Lua/endconditions.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_end_conditions_1__check_win_group">function EndConditions:_checkWinGroup(<span class="p">hospital</span>, <span class="p">win_table</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">Hospital</td>
+ <td class="d"> The hospital of the tests.</td>
+ </tr>
+ <tr>
+ <td class="n">win_table</td>
+ <td class="t">table</td>
+ <td class="d"> A group of win conditions from level_config</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L194">line 194 of Lua/endconditions.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_end_conditions_1__find_best_win_group">function EndConditions:_findBestWinGroup(<span class="p">hospital</span>)</a></h5>
+ <p>
+ Find the group of win conditions best met by the hospital.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">Hospital</td>
+ <td class="d"> The hospital of the tests.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L212">line 212 of Lua/endconditions.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_end_conditions_1__load_goals">function EndConditions:_loadGoals(<span class="p">criteria_tbl</span>, <span class="p">goals</span>, <span class="p">start</span>, <span class="p">win</span>)</a></h5>
+ <p>
+ Load conditions (goals) to win and lose from the level config,
+and store them in self.win_goals and self.lose_goals in their groups.
+Put the highest number of group of conditions in self.highest_group.
+These groups are often incomplete, possibly empty
+ie more groups of conditions that lead to loss than win.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">criteria_tbl</td>
+ <td class="t">table</td>
+ <td class="d"> The map's win or lose criteria.</td>
+ </tr>
+ <tr>
+ <td class="n">goals</td>
+ <td class="t">table</td>
+ <td class="d"> The class table to fill</td>
+ </tr>
+ <tr>
+ <td class="n">start</td>
+ <td class="t">table</td>
+ <td class="d"> The starting values of the hospital attributes</td>
+ </tr>
+ <tr>
+ <td class="n">win</td>
+ <td class="t">boolean</td>
+ <td class="d"> If the win goals are being filled this time</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L64">line 64 of Lua/endconditions.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_end_conditions_1check_end_game">function EndConditions:checkEndGame(<span class="p">hospital</span>)</a></h5>
+ <p>
+ Checks if the player has won or lost by meeting all of any one group.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">Hospital</td>
+ <td class="d"> The hospital of the tests.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L97">line 97 of Lua/endconditions.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_end_conditions_1generate_report_table">function EndConditions:generateReportTable(<span class="p">hospital</span>)</a></h5>
+ <p>
+ Generate table for the Progress Report dialog and progress advice.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">Hospital</td>
+ <td class="d"> The hospital of the tests.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L121">line 121 of Lua/endconditions.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_end_conditions_1get_attribute">function EndConditions:getAttribute(<span class="p">hospital</span>, <span class="p">attribute</span>)</a></h5>
+ <p>
+ Fetch the attribute value, through the get_custom_criteria table of
+functions if there is one for this attribute.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">attribute</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L227">line 227 of Lua/endconditions.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>
