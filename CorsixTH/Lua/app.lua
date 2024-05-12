@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 187 -- Add tired values to level config
+local SAVEGAME_VERSION = 188 -- Add groups to win and lose criteria.
 
 class "App"
 

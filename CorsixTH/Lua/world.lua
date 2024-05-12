@@ -41,6 +41,7 @@ corsixth.require("research_department")
 corsixth.require("entity_map")
 corsixth.require("date")
 corsixth.require("announcer")
+corsixth.require("endconditions")
 
 local AnnouncementPriority = _G["AnnouncementPriority"]
 
@@ -49,16 +50,6 @@ class "World"
 
 ---@type World
 local World = _G["World"]
-
-local local_criteria_variable = {
-  {name = "reputation",       icon = 10, formats = 2},
-  {name = "balance",          icon = 11, formats = 2},
-  {name = "percentage_cured", icon = 12, formats = 2},
-  {name = "num_cured" ,       icon = 13, formats = 2},
-  {name = "percentage_killed",icon = 14, formats = 2},
-  {name = "value",            icon = 15, formats = 2},
-  {name = "population",       icon = 11, formats = 1},
-}
 
 -- time between each damage caused by an earthquake
 local earthquake_damage_time = 16 -- hours
@@ -117,8 +108,6 @@ function World:World(app)
   -- If set, do not create salary raise requests.
   self.debug_disable_salary_raise = self.free_build_mode
   self.idle_cache = {} -- Cached queue standing positions for all queues.
-  -- List of which goal criterion means what, and what number the corresponding icon has.
-  self.level_criteria = local_criteria_variable
   self.delayed_map_objects = {} -- Initial objects in the map for parcels without owner.
   self.room_remove_callbacks = {--[[a set rather than a list]]}
   self.room_built = {} -- List of room types that have been built
@@ -299,69 +288,10 @@ function World:toggleInformation()
   self.room_information_dialogs = not self.room_information_dialogs
 end
 
---! Load goals to win and lose from the map, and store them in 'self.goals'.
---! Also set 'self.winning_goal_count'.
+--! In EndConditions, collect and test the win and lose conditions of the level.
 function World:determineWinningConditions()
-  local winning_goal_count = 0
-  -- No conditions if in free build mode!
-  if self.free_build_mode then
-    self.goals = {}
-    self.winning_goal_count = winning_goal_count
-    return
-  end
-  -- Determine winning and losing conditions
-  local world_goals = {}
-
-  -- There might be no winning criteria (i.e. the demo), then
-  -- we don't have to worry about the progress report dialog
-  -- since it doesn't exist anyway.
-  local win = self.map.level_config.win_criteria
-  if win then
-    for _, values in pairs(win) do
-      if values.Criteria ~= 0 then
-        winning_goal_count = winning_goal_count + 1
-        local crit_name = self.level_criteria[values.Criteria].name
-        world_goals[crit_name] = {
-          name = crit_name,
-          win_value = values.Value,
-          boundary = values.Bound,
-          criterion = values.Criteria,
-          max_min_win = values.MaxMin,
-          group = values.Group,
-          number = winning_goal_count,
-        }
-        world_goals[#world_goals + 1] = world_goals[crit_name]
-      end
-    end
-  end
-  -- Likewise there might be no losing criteria (i.e. the demo)
-  local lose = self.map.level_config.lose_criteria
-  if lose then
-    for _, values in pairs(lose) do
-      if values.Criteria ~= 0 then
-        local crit_name = self.level_criteria[values.Criteria].name
-        if not world_goals[crit_name] then
-          world_goals[crit_name] = {number = #world_goals + 1, name = crit_name}
-          world_goals[#world_goals + 1] = world_goals[crit_name]
-        end
-        world_goals[crit_name].lose_value = values.Value
-        world_goals[crit_name].boundary = values.Bound
-        world_goals[crit_name].criterion = values.Criteria
-        world_goals[crit_name].max_min_lose = values.MaxMin
-        world_goals[crit_name].group = values.Group
-        world_goals[world_goals[crit_name].number].lose_value = values.Value
-        world_goals[world_goals[crit_name].number].boundary = values.Bound
-        world_goals[world_goals[crit_name].number].criterion = values.Criteria
-        world_goals[world_goals[crit_name].number].max_min_lose = values.MaxMin
-        world_goals[world_goals[crit_name].number].group = values.Group
-      end
-    end
-  end
-
-  -- Order the criteria (some icons in the progress report shouldn't be next to each other)
-  table.sort(world_goals, function(a,b) return a.criterion < b.criterion end)
-  self.goals = world_goals
-  self.winning_goal_count = winning_goal_count
+  self.endconditions = EndConditions(self.map.level_config,
+      self.map.level_number, self.free_build_mode)
 end
 
 --! Find the rooms available at the level.
@@ -1252,9 +1182,8 @@ function World:onEndDay()
 end
 
 function World:checkIfGameWon()
-  for i, _ in ipairs(self.hospitals) do
-    local res = self:checkWinningConditions(i)
-    if res.state == "win" then
+  for i, hosp in ipairs(self.hospitals) do
+    if self.endconditions:checkEndGame(hosp) == "win" then
       self:winGame(i)
     end
   end
@@ -1465,67 +1394,6 @@ function World:createEarthquake()
   end
 end
 
---! Checks if all goals have been achieved or if the player has lost.
---! Returns a table that always contains a state string ("win", "lose" or "nothing").
---! If the state is "lose", the table also contains a reason string,
---! which corresponds to the criterion name the player lost to
---! (reputation, balance, percentage_killed) and a number limit which
---! corresponds to the limit the player passed.
---!param player_no The index of the player to check in the world's list of hospitals
-function World:checkWinningConditions(player_no)
-  -- If there are no goals at all, do nothing.
-  if #self.goals == 0 then
-    return {state = "nothing"}
-  end
-
-  -- Default is to win.
-  -- As soon as a goal that doesn't support this is found it is changed.
-  local result = {state = "win"}
-  local hospital = self.hospitals[player_no]
-
-  -- Go through the goals
-  for _, goal in ipairs(self.goals) do
-    local current_value = hospital[goal.name]
-    -- If max_min is 1 the value must be > than the goal condition.
-    -- If 0 it must be < than the goal condition.
-    if goal.lose_value then
-      local max_min = goal.max_min_lose == 1 and 1 or -1
-      -- Is this a minimum/maximum that has been passed?
-      -- This is actually not entirely correct. A lose condition
-      -- for balance at -1000 will make you lose if you have exactly
-      -- -1000 too, but how often does that happen? Probably not more often
-      -- than having exactly e.g. 200 in reputation,
-      -- which is handled correctly.
-      if (current_value - goal.lose_value) * max_min > 0 then
-        result.state = "lose"
-        result.reason = goal.name
-        result.limit = goal.lose_value
-        break
-      end
-    end
-    if goal.win_value then
-      local max_min = goal.max_min_win == 1 and 1 or -1
-
-      if goal.name == "balance" then
-        -- Special case for balance, subtract any loans!
-        current_value = current_value - hospital.loan
-      end
-
-      -- Is this goal not fulfilled yet?
-      if (current_value - goal.win_value) * max_min <= 0 then
-        result.state = "nothing"
-      end
-    end
-  end
-
-  -- Special case for loans: you cannot run from them !
-  if hospital.loan > 0 and result.state == "win" then
-    result.state = "nothing"
-  end
-
-  return result
-end
-
 --! Process that the given player number won the game.
 --!param player_no (integer) Number of the player who just won.
 function World:winGame(player_no)
@@ -1659,12 +1527,13 @@ function World:onEndYear()
   for _, hospital in ipairs(self.hospitals) do
     hospital:onEndYear()
   end
+
   -- This is done here instead of in onEndMonth so that the player gets
   -- the chance to receive money or reputation from trophies and awards first.
-  for i, _ in ipairs(self.hospitals) do
-    local res = self:checkWinningConditions(i)
-    if res.state == "lose" then
-      self:loseGame(i, res.reason, res.limit)
+  for i, hosp in ipairs(self.hospitals) do
+    local reason, limit = self.endconditions:checkEndGame(hosp)
+    if limit then
+      self:loseGame(i, reason, limit)
       if i == 1 then
         return true
       end
@@ -2505,10 +2374,6 @@ function World:afterLoad(old, new)
     self.hospitals[1].value = value
   end
 
-  if old < 7 then
-    self.level_criteria = local_criteria_variable
-    self:determineWinningConditions()
-  end
   if old < 10 then
     self.object_counts = {
       extinguisher = 0,
@@ -2580,9 +2445,6 @@ function World:afterLoad(old, new)
   if old < 31 then
     self.hours_per_day = 50
     self:setSpeed("Normal")
-  end
-  if old < 36 then
-    self:determineWinningConditions()
   end
   if old < 37 then
     -- Spawn rate is taken from level files now.
@@ -2717,10 +2579,6 @@ function World:afterLoad(old, new)
     for _, obj in pairs(cat) do
       obj:afterLoad(old, new)
     end
-  end
-
-  if old < 80 then
-    self:determineWinningConditions()
   end
 
   if old >= 87 then
@@ -2870,6 +2728,11 @@ function World:afterLoad(old, new)
         self:localiseInitial(staff.profile)
       end
     end
+  end
+  if old < 188 then
+    self.level_criteria = nil
+    self.goals = nil
+    self:determineWinningConditions()
   end
 
   -- Fix the initial of staff names
