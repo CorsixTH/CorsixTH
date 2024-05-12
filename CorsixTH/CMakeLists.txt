@@ -103,7 +103,9 @@ set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 # Find SDL
 if(VCPKG_TARGET_TRIPLET)
   find_package(SDL2 CONFIG REQUIRED)
-  target_link_libraries(CorsixTH_lib SDL2::SDL2)
+  target_link_libraries(CorsixTH_lib
+    PRIVATE
+      $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>)
   target_link_libraries(CorsixTH SDL2::SDL2main)
 else()
   find_package(SDL2 REQUIRED)
@@ -159,13 +161,10 @@ target_link_libraries(CorsixTH ${CMAKE_THREAD_LIBS_INIT})
 if(CORSIX_TH_USE_SDL_MIXER)
   if(VCPKG_TARGET_TRIPLET)
     find_package(SDL2_mixer CONFIG REQUIRED)
-    target_link_libraries(CorsixTH SDL2_mixer::SDL2_mixer-static)
-    
-    #    if(VCPKG_LIBRARY_LINKAGE EQUAL "static") 
-    #      target_link_libraries(CorsixTH SDL2_mixer::SDL2_mixer-static)
-    #    else()
-    #      target_link_libraries(CorsixTH SDL2_mixer::SDL2_mixer)
-    #    endif()
+    target_link_libraries(
+      CorsixTH
+      PRIVATE
+        $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)
   else()
     find_package(SDL2_mixer REQUIRED)
     if(SDLMIXER_FOUND)
@@ -199,7 +198,7 @@ endif()
 if(CORSIX_TH_USE_FREETYPE2)
   if(VCPKG_TARGET_TRIPLET)
     find_package(Freetype REQUIRED)
-    target_link_libraries(CorsixTH Freetype::Freetype)
+    target_link_libraries(CorsixTH PRIVATE Freetype::Freetype)
   else()
     find_package(Freetype REQUIRED)
     if(FREETYPE_FOUND)
@@ -237,9 +236,7 @@ if(CORSIX_TH_LINK_LUA_MODULES)
   add_custom_command(TARGET CorsixTH POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
     ${UNOFFICIAL_LPEG_LUA_FILES}
-    $<TARGET_FILE_DIR:CorsixTH>
-)
-
+    $<TARGET_FILE_DIR:CorsixTH>)
 else()
   message("Lua modules are not linked and will be loaded at runtime")
 endif()
