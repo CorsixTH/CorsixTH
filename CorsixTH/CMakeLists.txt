@@ -131,7 +131,7 @@ if(VCPKG_TARGET_TRIPLET)
 else()
   find_package(Lua REQUIRED)
   if(Lua_FOUND OR LUA_FOUND)
-    target_link_libraries(CorsixTH ${LUA_LIBRARY})
+    target_link_libraries(CorsixTH PUBLIC ${LUA_LIBRARY})
     include_directories(${LUA_INCLUDE_DIR})
     # Special link flags needed on macOS 64bit, according to: http://luajit.org/install.html
     # If these are not specified, luaL_newstate() returns NULL and we get this:
