@@ -12,10 +12,9 @@
     },
     {
       "kind": "git",
-      "repository": "https://github.com/TheCycoONE/vcpkg-registry",
-      "baseline": "15529ddf98c6ae963861c7fdc145c969d666aadf",
-      "reference": "lua_cmake",
-      "packages": [ "sdl2-mixer", "luafilesystem", "lpeg" ]
+      "repository": "https://github.com/CorsixTH/vcpkg-registry",
+      "baseline": "151e73e017fa301504dee342b85e6c464e64469c",
+      "packages": [ "ffmpeg", "sdl2-mixer", "luafilesystem", "lpeg" ]
     }
   ]
 }
