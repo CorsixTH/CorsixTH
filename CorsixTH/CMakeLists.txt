@@ -237,6 +237,10 @@ if(CORSIX_TH_LINK_LUA_MODULES)
     COMMAND ${CMAKE_COMMAND} -E copy
     ${UNOFFICIAL_LPEG_LUA_FILES}
     $<TARGET_FILE_DIR:CorsixTH>)
+
+  if(NOT USE_SOURCE_DATADIRS)
+    install(FILES ${UNOFFICIAL_LPEG_LUA_FILES} DESTINATION ${CORSIX_TH_DATADIR})
+  endif()
 else()
   message("Lua modules are not linked and will be loaded at runtime")
 endif()

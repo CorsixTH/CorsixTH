@@ -13,7 +13,7 @@
     {
       "kind": "git",
       "repository": "https://github.com/CorsixTH/vcpkg-registry",
-      "baseline": "151e73e017fa301504dee342b85e6c464e64469c",
+      "baseline": "30e94d20cb95de2cc64941c0ba6bd901890ccec6",
       "packages": [ "ffmpeg", "sdl2-mixer", "luafilesystem", "lpeg" ]
     }
   ]
