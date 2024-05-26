@@ -2,6 +2,7 @@
 name: Windows installer
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       x86:
@@ -24,13 +25,13 @@ jobs:
       - name: Download x86 artifact
         uses: actions/download-artifact@v4
         with:
-          run-id: ${{inputs.x86}}
+          run-id: ${{inputs.x86 || '8400619622'}}
           path: WindowsInstaller
           github-token: ${{github.token}}
       - name: Download x64 artifact
         uses: actions/download-artifact@v4
         with:
-          run-id: ${{inputs.x64}}
+          run-id: ${{inputs.x64 || '8409844591'}}
           path: WindowsInstaller
           github-token: ${{github.token}}
       - name: Create installer
