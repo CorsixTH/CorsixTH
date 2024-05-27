@@ -53,6 +53,9 @@ InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
 ; This is needed to be able to install into the program files directory
 RequestExecutionLevel admin
 
+; Include the Microsoft Visual C++ 2022 Redistributable
+!include "cpp-redist.nsh"
+
 ; -------------------- Definitions and macros that create the graphical interface -----------------
 
 ; MUI Settings
@@ -105,8 +108,8 @@ var ICONS_GROUP
 !insertmacro MUI_UNPAGE_INSTFILES
 
 ; Icons used by the installer and uninstaller
-UninstallIcon "..\CorsixTH\corsixTH.ico"
-Icon "..\CorsixTH\corsixTH.ico"
+UninstallIcon "..\CorsixTH\CorsixTH.ico"
+Icon "..\CorsixTH\CorsixTH.ico"
 
 
 ; ------------------------------- Languages supported by the installer ---------------------------
