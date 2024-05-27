@@ -1,0 +1,47 @@
+---
+name: Windows installer
+
+on:
+  workflow_dispatch:
+    inputs:
+      x86:
+        description: 'x86 run ID (url part)'
+        required: true
+        type: number
+      x64:
+        description: 'x64 run ID (url part)'
+        required: true
+        type: number
+
+jobs:
+  WindowsInstaller:
+    runs-on: ubuntu-24.04
+    name: Make and test Windows installer
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install NSIS
+        run: sudo apt-get install nsis
+      - name: Download x86 artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{inputs.x86}}
+          path: WindowsInstaller
+          github-token: ${{github.token}}
+      - name: Download x64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{inputs.x64}}
+          path: WindowsInstaller
+          github-token: ${{github.token}}
+      - name: Create installer
+        run: |
+          cd WindowsInstaller
+          mv CorsixTH_x86 x86
+          mv CorsixTH x64
+          makensis -V4 -WX -- Win32Script.nsi
+          sha256sum CorsixTHInstaller.exe >> $GITHUB_STEP_SUMMARY
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          path: 'WindowsInstaller/CorsixTHInstaller.exe'
+          name: 'Windows installer'
