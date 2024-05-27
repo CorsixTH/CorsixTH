@@ -34,7 +34,7 @@ Section "customInit"
     ;download installer
     NSISdl::download "$VCRedistDownload" $TEMP\app-name-setup\vcppredist.exe
     ;exec installer
-    ExecWait "$TEMP\app-name-setup\vcppredist.exe"
+    ExecWait "$TEMP\app-name-setup\vcppredist.exe /install /passive /norestart"
   ${EndIf}
 
 
