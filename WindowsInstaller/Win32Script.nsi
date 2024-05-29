@@ -53,9 +53,6 @@ InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
 ; This is needed to be able to install into the program files directory
 RequestExecutionLevel admin
 
-; Include the Microsoft Visual C++ 2022 Redistributable
-!include "cpp-redist.nsh"
-
 ; -------------------- Definitions and macros that create the graphical interface -----------------
 
 ; MUI Settings
