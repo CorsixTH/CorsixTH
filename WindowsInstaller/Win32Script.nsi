@@ -105,8 +105,8 @@ var ICONS_GROUP
 !insertmacro MUI_UNPAGE_INSTFILES
 
 ; Icons used by the installer and uninstaller
-UninstallIcon "..\CorsixTH\corsixTH.ico"
-Icon "..\CorsixTH\corsixTH.ico"
+UninstallIcon "..\CorsixTH\CorsixTH.ico"
+Icon "..\CorsixTH\CorsixTH.ico"
 
 
 ; ------------------------------- Languages supported by the installer ---------------------------
