@@ -47,6 +47,30 @@
         "VCPKG_TARGET_TRIPLET": "x86-windows",
         "ENABLE_UNIT_TESTS": "ON"
       }
+    },
+    {
+      "name": "win-x64-static",
+      "binaryDir": "${sourceDir}/build/win-x64-static",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+        "ENABLE_UNIT_TESTS": "ON",
+        "DCMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded"
+      }
+    },
+    {
+      "name": "win-x86-static",
+      "binaryDir": "${sourceDir}/build/win-x86-static",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "Win32",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x86-windows-static",
+        "ENABLE_UNIT_TESTS": "ON",
+        "DCMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded"
+      }
     }
   ],
   "buildPresets": [
@@ -58,6 +82,16 @@
     {
       "name": "win-x86-rel",
       "configurePreset": "win-x86-rel",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "win-x64-static",
+      "configurePreset": "win-x86-static",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "win-x86-static",
+      "configurePreset": "win-x86-static",
       "configuration": "RelWithDebInfo"
     }
   ],
@@ -74,6 +108,24 @@
     {
       "name": "win-x86-rel",
       "configurePreset": "win-x86-rel",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "win-x64-static",
+      "configurePreset": "win-x64-static",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "win-x86-static",
+      "configurePreset": "win-x86-static",
       "output": {
         "verbosity": "extra",
         "outputOnFailure": true

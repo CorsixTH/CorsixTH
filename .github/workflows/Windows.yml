@@ -10,12 +10,12 @@ on:
     inputs:
       preset:
         description: 'Select CMake preset'
-        default: 'win-x64-rel'
+        default: 'win-x64-static'
         type: choice
         options:
           - win-dev
-          - win-x64-rel
-          - win-x86-rel
+          - win-x64-static
+          - win-x86-static
       animview:
         description: 'Build AnimView?'
         default: 'false'
@@ -28,10 +28,10 @@ jobs:
   Windows:
     runs-on: windows-2022
     env:
-      PRESET: ${{inputs.preset || 'win-x64-rel'}}
-      VCPKG_DEFAULT_TRIPLET: ${{inputs.preset == 'win-x86-rel' && 'x86-windows' || 'x64-windows-release'}}
+      PRESET: ${{inputs.preset || 'win-x64-static'}}
+      VCPKG_DEFAULT_TRIPLET: ${{inputs.preset == 'win-x86-static' && 'x86-windows' || 'x64-windows-staticease'}}
       ANIMVIEW: ${{inputs.animview && 'ON' || 'OFF'}}
-      NAME: CorsixTH${{inputs.animview && '_and_AnimView' || ''}}${{inputs.preset == 'win-x86-rel' && '_x86' || ''}}
+      NAME: CorsixTH${{inputs.animview && '_and_AnimView' || ''}}${{inputs.preset == 'win-x86-static' && '_x86' || ''}}
     defaults:
       run:
         shell: bash
@@ -67,7 +67,6 @@ jobs:
           configurePresetAdditionalArgs: "['-DBUILD_ANIMVIEW=${{env.ANIMVIEW}}']"
           buildPreset: ${{env.PRESET}}
           buildPresetAdditionalArgs: "['--verbose', '--target install',
-            '-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded',
             '-DCMAKE_INSTALL_PREFIX=build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/']"
           testPreset: ${{env.PRESET}}
 
