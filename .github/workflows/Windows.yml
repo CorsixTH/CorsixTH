@@ -67,7 +67,7 @@ jobs:
           configurePresetAdditionalArgs: "['-DBUILD_ANIMVIEW=${{env.ANIMVIEW}}']"
           buildPreset: ${{env.PRESET}}
           buildPresetAdditionalArgs: "['--verbose', '--target install',
-            '-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded'
+            '-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded',
             '-DCMAKE_INSTALL_PREFIX=build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/']"
           testPreset: ${{env.PRESET}}
 
