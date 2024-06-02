@@ -71,13 +71,19 @@ function UIProgressReport:UIProgressReport(ui)
     -- FIXME: res_value and cure_value are depersisted as floating points, using
     -- string.format("%.0f", x) is not suitable due to %d (num) param in _S string
     local tooltip
+    if crit_table.two_tooltips then
+      local direction = crit_table.win_value and "over" or "under"
+      tooltip = _S.tooltip.status[direction][crit_name]
+    else
+      tooltip = _S.tooltip.status[crit_name]
+    end
     if crit_table.formats == 2 then
-      tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value), math.floor(cur_value))
+      tooltip = tooltip:format(math.floor(res_value), math.floor(cur_value))
     elseif crit_table.formats == 3 then
-      tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value) / 1000,
+      tooltip = tooltip:format(math.floor(res_value) / 1000,
           math.floor(cur_value) / 1000)
     else
-      tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value))
+      tooltip = tooltip:format(math.floor(res_value))
     end
     if not crit_table.icon_file then -- Icons from QData/Rep02V
       self:addPanel(crit_table.icon, x, 240)

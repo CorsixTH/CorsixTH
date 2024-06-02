@@ -21,7 +21,7 @@ SOFTWARE. --]]
 -- The "Winning and Losing Conditions" section of level files uses Criteria
 --   numbers from the order of this table. Any Criteria numbers higher than
 --   the size of this table will be silently ignored.
---   Icon, icon_file and formats are used in the progress report dialog.
+--   Icon, icon_file, formats and two_tooltips are used in the progress report dialog.
 local local_criteria_variable = {
   {name = "reputation",       icon = 10, formats = 2},
   {name = "balance",          icon = 11, formats = 2},
@@ -84,6 +84,7 @@ function EndConditions:_loadGoals(criteria_tbl, goals, start, win)
         icon = local_criteria_variable[values.Criteria].icon,
         icon_file = local_criteria_variable[values.Criteria].icon_file,
         formats = local_criteria_variable[values.Criteria].formats,
+        two_tooltips = local_criteria_variable[values.Criteria].two_tooltips,
         start = start[crit_name] or 0,
       }
       if win then
