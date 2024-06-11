@@ -74,11 +74,11 @@ add_library(CorsixTH_lib STATIC ${CorsixTH_generated_src_dir})
 
 target_include_directories(CorsixTH_lib PUBLIC ${CorsixTH_generated_src_dir})
 
-target_link_libraries(CorsixTH_lib RncLib)
+target_link_libraries(CorsixTH_lib PRIVATE RncLib)
 if(SEARCH_LOCAL_DATADIRS)
-  target_link_libraries(CorsixTH_lib WhereamiLib)
+  target_link_libraries(CorsixTH_lib PRIVATE WhereamiLib)
 endif()
-target_link_libraries(CorsixTH CorsixTH_lib)
+target_link_libraries(CorsixTH PRIVATE CorsixTH_lib)
 
 if(UNIX AND NOT APPLE)
   set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME corsix-th)
@@ -98,18 +98,15 @@ set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 14)
 set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
-# Add an extra step to copy built DLLs on MSVC
-if(VCPKG_TARGET_TRIPLET)
-  include(CopyVcpkgLua)
-endif()
-
 ## Finding libraries
 
 # Find SDL
-if(MSVC AND VCPKG_TARGET_TRIPLET)
+if(VCPKG_TARGET_TRIPLET)
   find_package(SDL2 CONFIG REQUIRED)
-  target_link_libraries(CorsixTH_lib SDL2::SDL2)
-  target_link_libraries(CorsixTH SDL2::SDL2main)
+  target_link_libraries(CorsixTH_lib
+    PUBLIC
+      $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>)
+  target_link_libraries(CorsixTH PRIVATE SDL2::SDL2main)
 else()
   find_package(SDL2 REQUIRED)
   if(SDL_FOUND)
@@ -119,7 +116,7 @@ else()
       message("Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
     endif()
     # No need to specify sdl2main separately, the FindSDL.cmake file will take care of that. If not we get an error about it
-    target_link_libraries(CorsixTH ${SDL_LIBRARY})
+    target_link_libraries(CorsixTH PRIVATE ${SDL_LIBRARY})
     message("  SDL2 found")
   else()
     message(FATAL_ERROR "Error: SDL2 library not found, it is required to build. Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
@@ -127,14 +124,14 @@ else()
 endif()
 
 # Find Lua
-if(MSVC AND VCPKG_TARGET_TRIPLET)
+if(VCPKG_TARGET_TRIPLET)
   find_package(Lua CONFIG REQUIRED)
-  target_link_libraries(CorsixTH_lib lua)
-  target_link_libraries(CorsixTH lua)
+  target_link_libraries(CorsixTH_lib PUBLIC lua)
+  target_link_libraries(CorsixTH PRIVATE lua)
 else()
   find_package(Lua REQUIRED)
   if(Lua_FOUND OR LUA_FOUND)
-    target_link_libraries(CorsixTH ${LUA_LIBRARY})
+    target_link_libraries(CorsixTH PUBLIC ${LUA_LIBRARY})
     include_directories(${LUA_INCLUDE_DIR})
     # Special link flags needed on macOS 64bit, according to: http://luajit.org/install.html
     # If these are not specified, luaL_newstate() returns NULL and we get this:
@@ -158,17 +155,20 @@ endif()
 
 # Add threading library
 find_package(Threads)
-target_link_libraries(CorsixTH ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(CorsixTH PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 
 # Find SDL_mixer
 if(CORSIX_TH_USE_SDL_MIXER)
-  if(MSVC AND VCPKG_TARGET_TRIPLET)
+  if(VCPKG_TARGET_TRIPLET)
     find_package(SDL2_mixer CONFIG REQUIRED)
-    target_link_libraries(CorsixTH SDL2_mixer::SDL2_mixer)
+    target_link_libraries(
+      CorsixTH
+      PRIVATE
+        $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)
   else()
     find_package(SDL2_mixer REQUIRED)
     if(SDLMIXER_FOUND)
-      target_link_libraries(CorsixTH ${SDLMIXER_LIBRARY})
+      target_link_libraries(CorsixTH PRIVATE ${SDLMIXER_LIBRARY})
       include_directories(${SDLMIXER_INCLUDE_DIR})
       message("  SDL_mixer found")
     else()
@@ -181,10 +181,10 @@ endif()
 if(CORSIX_TH_USE_FFMPEG)
   find_package(FFmpeg COMPONENTS AVFORMAT AVCODEC AVUTIL SWSCALE SWRESAMPLE REQUIRED)
   if(FFMPEG_FOUND)
-    target_link_libraries(CorsixTH ${FFMPEG_LIBRARIES})
+    target_link_libraries(CorsixTH PRIVATE ${FFMPEG_LIBRARIES})
     include_directories(${FFMPEG_INCLUDE_DIRS})
     if(APPLE)
-      target_link_libraries(CorsixTH libz.dylib)
+      target_link_libraries(CorsixTH PRIVATE libz.dylib)
       # These LDFLAGS are necessary for static ffmpeg, harmless for dynamic ffmpeg
       set(CMAKE_EXE_LINKER_FLAGS "-liconv -framework CoreVideo")
     endif()
@@ -196,17 +196,17 @@ endif()
 
 # Find Freetype2
 if(CORSIX_TH_USE_FREETYPE2)
-  if(MSVC AND VCPKG_TARGET_TRIPLET)
+  if(VCPKG_TARGET_TRIPLET)
     find_package(Freetype REQUIRED)
-    target_link_libraries(CorsixTH Freetype::Freetype)
+    target_link_libraries(CorsixTH PRIVATE Freetype::Freetype)
   else()
     find_package(Freetype REQUIRED)
     if(FREETYPE_FOUND)
-      target_link_libraries(CorsixTH ${FREETYPE_LIBRARIES})
+      target_link_libraries(CorsixTH PRIVATE ${FREETYPE_LIBRARIES})
       include_directories(${FREETYPE_INCLUDE_DIRS})
       if(APPLE)
-        target_link_libraries(CorsixTH libz.dylib)
-        target_link_libraries(CorsixTH libbz2.dylib)
+        target_link_libraries(CorsixTH PRIVATE libz.dylib)
+        target_link_libraries(CorsixTH PRIVATE libbz2.dylib)
       endif()
       message("  FreeType2 found")
     else()
@@ -218,18 +218,38 @@ endif()
 if(WITH_UPDATE_CHECK)
   find_package(CURL REQUIRED COMPONENTS HTTPS SSL)
   if(CURL_FOUND)
-    target_link_libraries(CorsixTH CURL::libcurl)
+    target_link_libraries(CorsixTH PRIVATE CURL::libcurl)
     message("  Curl found")
   else()
     message(FATAL_ERROR "Error: curl not found")
   endif()
 endif()
 
+if(CORSIX_TH_LINK_LUA_MODULES)
+  message("Linking lua modules")
+  find_package(unofficial-luafilesystem CONFIG REQUIRED)
+  target_link_libraries(CorsixTH PRIVATE unofficial::luafilesystem::lfs)
+
+  find_package(unofficial-lpeg CONFIG REQUIRED)
+  target_link_libraries(CorsixTH PRIVATE unofficial::lpeg::lpeg)
+
+  add_custom_command(TARGET CorsixTH POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${UNOFFICIAL_LPEG_LUA_FILES}
+    $<TARGET_FILE_DIR:CorsixTH>)
+
+  if(NOT USE_SOURCE_DATADIRS)
+    install(FILES ${UNOFFICIAL_LPEG_LUA_FILES} DESTINATION ${CORSIX_TH_DATADIR})
+  endif()
+else()
+  message("Lua modules are not linked and will be loaded at runtime")
+endif()
+
 if(MSVC AND CORSIX_TH_USE_VLD)
   find_package(VLD REQUIRED)
   if(VLD_FOUND)
-    target_link_libraries(CorsixTH ${VLD_LIBRARY})
-    include_directories(CorsixTH ${VLD_INCLUDE_DIR})
+    target_link_libraries(CorsixTH PRIVATE ${VLD_LIBRARY})
+    include_directories(CorsixTH PRIVATE ${VLD_INCLUDE_DIR})
     message("  VLD found")
   else()
     message(FATAL_ERROR "Error: VLD Library not found, it is required to build when USE_VLD is set")

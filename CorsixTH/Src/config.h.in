@@ -65,6 +65,11 @@ SOFTWARE.
 // if the current version is the latest.
 #cmakedefine WITH_UPDATE_CHECK
 
+/** Lua modules options */
+// If defined then lua modules are considered to have been linked into the
+// binary instead of loaded at runtime.
+#cmakedefine CORSIX_TH_LINK_LUA_MODULES
+
 #ifdef _MSC_VER
 #define CORSIX_TH_USE_PACK_PRAGMAS 1
 #define CORSIX_TH_PACKED_FLAGS
