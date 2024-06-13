@@ -765,7 +765,7 @@ end
 -- feeling of warmth accordingly. Returns whether the calling function should proceed.
 function Humanoid:tickDay()
   -- No use doing anything if we're going home/fired (or dead)
-  if self.going_home or self.dead then
+  if self.going_home or self.dead or self.delete then
     return false
   end
 
