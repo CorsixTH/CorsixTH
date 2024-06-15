@@ -74,6 +74,7 @@ add_library(CorsixTH_lib STATIC ${CorsixTH_generated_src_dir})
 
 target_include_directories(CorsixTH_lib PUBLIC ${CorsixTH_generated_src_dir})
 
+
 target_link_libraries(CorsixTH_lib PRIVATE RncLib)
 if(SEARCH_LOCAL_DATADIRS)
   target_link_libraries(CorsixTH_lib PRIVATE WhereamiLib)
@@ -99,6 +100,13 @@ set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
 ## Finding libraries
+
+# Workaround for vcpkg/fluidsynth bug: glib2 libraries are added without an
+# absolute path.
+if(MSVC AND VCPKG_TARGET_TRIPLET)
+  target_link_directories(CorsixTH PRIVATE "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/")
+endif()
+
 
 # Find SDL
 if(VCPKG_TARGET_TRIPLET)

@@ -46,8 +46,9 @@
       "architecture": "x64",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x64-windows-release",
-        "ENABLE_UNIT_TESTS": "ON"
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static-release",
+        "ENABLE_UNIT_TESTS": "ON",
+        "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded"
       }
     },
     {
@@ -57,8 +58,9 @@
       "architecture": "Win32",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x86-windows",
-        "ENABLE_UNIT_TESTS": "ON"
+        "VCPKG_TARGET_TRIPLET": "x86-windows-static",
+        "ENABLE_UNIT_TESTS": "ON",
+        "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded"
       }
     }
   ],
