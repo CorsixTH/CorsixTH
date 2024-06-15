@@ -2496,3 +2496,7 @@ end
 --! Play a sound file
 function Hospital:playSound(sound)
 end
+
+--! The UI parts of earthquake ticks
+function Hospital:tickEarthquake(stage)
+end

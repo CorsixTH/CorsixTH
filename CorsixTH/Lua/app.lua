@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 188 -- Add groups to win and lose criteria.
+local SAVEGAME_VERSION = 189 -- Refactor earthquakes
 
 class "App"
 
