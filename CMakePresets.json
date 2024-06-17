@@ -62,6 +62,18 @@
         "ENABLE_UNIT_TESTS": "ON",
         "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreaded"
       }
+    },
+    {
+      "name": "win-x64-rel-md",
+      "binaryDir": "${sourceDir}/build/win-x64-rel-md",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-release",
+        "ENABLE_UNIT_TESTS": "ON",
+        "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreadedDLL"
+      }
     }
   ],
   "buildPresets": [
