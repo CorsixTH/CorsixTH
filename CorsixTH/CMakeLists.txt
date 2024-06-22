@@ -186,7 +186,7 @@ if(CORSIX_TH_USE_FFMPEG)
     if(APPLE)
       target_link_libraries(CorsixTH PRIVATE libz.dylib)
       # These LDFLAGS are necessary for static ffmpeg, harmless for dynamic ffmpeg
-      set(CMAKE_EXE_LINKER_FLAGS "-liconv -framework CoreVideo")
+      set(CMAKE_EXE_LINKER_FLAGS "-liconv -framework CoreMedia -framework CoreVideo -framework VideoToolbox")
     endif()
     message("  FFmpeg found")
   else()

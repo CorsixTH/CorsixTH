@@ -1,34 +1,41 @@
 {
   "dependencies": [
-    "freetype",
     {
       "name": "lua",
       "features": [
         "tools"
       ]
     },
-    "luafilesystem",
-    "lpeg",
     "sdl2",
-    {
-      "name": "fluidsynth",
-      "features": [
-        "sndfile"
-      ]
-    },
-    {
-      "name": "sdl2-mixer",
-      "features": [
-        "libmodplug",
-        "fluidsynth",
-        "libflac",
-        "mpg123",
-        "opusfile"
-      ]
-    },
-    "catch2"
+    "luafilesystem",
+    "lpeg"
   ],
   "features": {
+    "audio": {
+      "description": "In game audio support",
+      "dependencies": [
+         {
+           "name": "fluidsynth",
+           "platform": "!osx",
+           "features": [
+             "sndfile"
+           ]
+        },
+        {
+          "name": "sdl2-mixer",
+          "features": [
+            "libmodplug",
+            {
+              "name": "fluidsynth",
+              "platform": "!osx"
+            },
+            "libflac",
+            "mpg123",
+            "opusfile"
+          ]
+        }
+      ]
+    },
     "animview": {
       "description": "Support building AnimView",
       "dependencies": [
@@ -60,6 +67,18 @@
             "swscale"
           ]
         }
+      ]
+    },
+    "freetype": {
+      "description": "In game freetype font support",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "catch2": {
+      "description": "Support Catch2 tests",
+      "dependencies": [
+        "catch2"
       ]
     }
   },
