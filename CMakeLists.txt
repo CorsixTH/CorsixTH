@@ -18,7 +18,7 @@
 #   - BUILD_ANIMVIEW : Generate AnimView build files (no)
 #   - BUILD_TOOLS : Generate cli tools
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.15)
 
 # Define our options
 option(BUILD_CORSIXTH "Builds the main game" ON)

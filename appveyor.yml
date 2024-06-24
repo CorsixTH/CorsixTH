@@ -19,7 +19,7 @@ install:
   - cd %APPVEYOR_BUILD_FOLDER%
 
 before_build:
-  - cmd: cmake --preset win-x64-rel -B .
+  - cmd: cmake --preset win-x64-rel-md -B .
 build:
   project: CorsixTH_Top_Level.sln
   verbosity: minimal

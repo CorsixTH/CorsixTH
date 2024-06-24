@@ -74,6 +74,7 @@ add_library(CorsixTH_lib STATIC ${CorsixTH_generated_src_dir})
 
 target_include_directories(CorsixTH_lib PUBLIC ${CorsixTH_generated_src_dir})
 
+
 target_link_libraries(CorsixTH_lib PRIVATE RncLib)
 if(SEARCH_LOCAL_DATADIRS)
   target_link_libraries(CorsixTH_lib PRIVATE WhereamiLib)
@@ -160,6 +161,12 @@ target_link_libraries(CorsixTH PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 # Find SDL_mixer
 if(CORSIX_TH_USE_SDL_MIXER)
   if(VCPKG_TARGET_TRIPLET)
+    # Workaround for static linking bug
+    if(MSVC)
+      find_package(FluidSynth CONFIG REQUIRED)
+      target_link_libraries(CorsixTH PRIVATE FluidSynth::libfluidsynth)
+    endif()
+
     find_package(SDL2_mixer CONFIG REQUIRED)
     target_link_libraries(
       CorsixTH

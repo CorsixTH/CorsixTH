@@ -51,7 +51,7 @@ jobs:
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: 'a1212c93cabaa9c5c36c1ffdb4bddd59fdf31e43'
+          vcpkgGitCommitId: '94a50e8c1357d423840e22451e122f56d62b5c20'
 
       - name: Run CMake dev configure
         if: inputs.PRESET == 'win-dev'
@@ -91,6 +91,7 @@ jobs:
           else
             mv build/${{env.PRESET}}/CorsixTH/RelWithDebInfo artifact
           fi
+          rm artifact/*.lib
           ls -R artifact
 
       - name: Upload build
