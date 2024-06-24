@@ -101,13 +101,6 @@ set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
 ## Finding libraries
 
-# Workaround for vcpkg/fluidsynth bug: glib2 libraries are added without an
-# absolute path.
-if(MSVC AND VCPKG_TARGET_TRIPLET)
-  target_link_directories(CorsixTH PRIVATE "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/")
-endif()
-
-
 # Find SDL
 if(VCPKG_TARGET_TRIPLET)
   find_package(SDL2 CONFIG REQUIRED)
@@ -168,6 +161,12 @@ target_link_libraries(CorsixTH PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 # Find SDL_mixer
 if(CORSIX_TH_USE_SDL_MIXER)
   if(VCPKG_TARGET_TRIPLET)
+    # Workaround for static linking bug
+    if(MSVC)
+      find_package(FluidSynth CONFIG REQUIRED)
+      target_link_libraries(CorsixTH PRIVATE FluidSynth::libfluidsynth)
+    endif()
+
     find_package(SDL2_mixer CONFIG REQUIRED)
     target_link_libraries(
       CorsixTH
