@@ -55,6 +55,11 @@ function UISaveMap:UISaveMap(ui)
     :setLabel(_S.save_map_window.new_map, nil, "left"):setTooltip(_S.tooltip.save_map_window.new_map)
     :makeTextbox(--[[persistable:save_map_new_map_textbox_confirm_callback]] function() self:confirmName() end,
     --[[persistable:save_map_new_map_textbox_abort_callback]] function() self:abortName() end)
+
+  local message = ui.app.world:validateMap()
+  if message then
+    ui:addWindow(UIInformation(ui, {message}))
+  end
 end
 
 --! Function called when textbox is aborted (e.g. by pressing escape)
