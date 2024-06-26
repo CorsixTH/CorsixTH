@@ -240,50 +240,9 @@ fax = {
   vip_visit_result = {
     telegram = "Télégramme !",
     vip_remarked_name = "Après avoir visité votre hôpital, %s a dit : ",
-    ordered_remarks = {
-      [1] = "Quel hôpital remarquable. Quand je serai sérieusement malade, emmenez-moi ici.",
-      [2] = "Maintenant, voilà ce que j'appelle un hôpital.",
-      [3] = "C'est un super hôpital. Et je devrais le savoir ; j'en ai vu quelques-uns.",
-      [4] = "Quel hôpital bien géré. Merci de m'y avoir invité.",
-      [5] = "Hmm. Pas un mauvais établissement médical, certainement.",
-      [6] = "J'ai vraiment apprécié votre charmant hôpital. Maintenant, qui veut un curry au Taj ?",
-      [7] = "Eh bien, j'ai vu pire. Mais vous devriez apporter des améliorations.",
-      [8] = "Oh là là. Pas un bel endroit si vous vous sentez patraque.",
-      [9] = "C'est un hôpital standard, pour être honnête. Franchement, j'attendais mieux.",
-      [10] = "Pourquoi ai-je pris la peine ? C'était pire que d'aller voir un opéra long de quatre heures !",
-      [11] = "Je suis dégoûté par ce que j'ai vu. Vous appelez ça un hôpital ? Plutôt une porcherie !",
-      [12] = "J'en ai assez d'être sous les feux de la rampe et de visiter des endroits nauséabonds comme celui-ci ! Je démissionne.",
-      [13] = "Quel taudis. Je vais essayer de le faire fermer.",
-      [14] = "Je n'ai jamais vu un hôpital aussi affreux. Quelle honte !",
-      [15] = "Je suis choqué. On ne peut pas appeler ça un hôpital ! Je vais boire une pinte."
-    },
     remarks = {
-      very_bad = {
-        [1] = "Quelle déception ! On devrait fermer cet endroit.",
-        [2] = "Je n'ai jamais vu ça. Quelle honte !",
-        [3] = "Je suis sous le choc. Et on appelle ça un hôpital ! Il me faut un verre pour m'en remettre."
-      },
-      bad = {
-        [1] = "Pourquoi ai-je pris la peine ? C'était pire que d'aller voir un opéra long de quatre heures !",
-        [2] = "Ce que j'ai vu est révoltant. Ce n'est pas un hôpital, c'est une porcherie !",
-        [3] = "J'en ai assez de devoir faire des visites officielles dans des trous puants comme celui-ci. Je démissionne !"
-      },
-      good = {
-        [1] = "Quel hôpital bien géré. Merci de m'y avoir invité.",
-        [2] = "Hmm. Pas un mauvais établissement médical, certainement.",
-        [3] = "J'ai vraiment apprécié votre charmant hôpital. Maintenant, qui veut un curry au Taj ?"
-      },
-      mediocre = {
-        [1] = "Eh bien, j'ai vu pire. Mais vous devriez apporter des améliorations.",
-        [2] = "Oh là là. Pas un bel endroit si vous vous sentez patraque.",
-        [3] = "C'est un hôpital standard, pour être honnête. Franchement, j'attendais mieux."
-      },
-      super = {
-        [1] = "Quel hôpital remarquable. Quand je serai sérieusement malade, emmenez-moi ici.",
-        [2] = "Maintenant, voilà ce que j'appelle un hôpital.",
-        [3] = "C'est un super hôpital. Et je devrais le savoir ; j'en ai vu quelques-uns."
-      }
-    }
+      free_build = {"C'est vraiment un bel hôpital que vous avez là ! Pas trop difficile d'y arriver sans limite d'argent, hein ?", "Je ne suis pas économiste, mais je pense que je pourrais faire tourner cet hôpital aussi si vous voyez ce que je veux dire...", "Un hôpital très bien tenu. Cependant, attention à la récession ! Ah oui... vous n'avez pas à vous soucier de cela."},
+    },
   },
   diagnosis_failed = {
     what_to_do_question = "Que faire du patient ?",
@@ -738,11 +697,6 @@ fax = {
     num_disease_singular = "Il y a 1 personne atteinte de %s qui a besoin de soins immédiats.",
     free_build = "Si vous réussissez votre réputation augmentera mais si vous échouez votre réputation sera sérieusement entachée."
   },
-  vip_visit_result = {
-    remarks = {
-      free_build = {"C'est vraiment un bel hôpital que vous avez là ! Pas trop difficile d'y arriver sans limite d'argent, hein ?", "Je ne suis pas économiste, mais je pense que je pourrais faire tourner cet hôpital aussi si vous voyez ce que je veux dire...", "Un hôpital très bien tenu. Cependant, attention à la récession ! Ah oui... vous n'avez pas à vous soucier de cela."}
-    }
-  }
 }
 
 -- Winning texts
