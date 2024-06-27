@@ -1729,9 +1729,10 @@ function App:checkCompatibility(save_version, gfx_set)
 end
 
 --! Restarts the current level (offers confirmation window first)
-function App:restart()
+--!param message (string) Optional message to the player
+function App:restart(message)
   assert(self.map, "Trying to restart while no map is loaded.")
-  self.ui:addWindow(UIConfirmDialog(self.ui, false, _S.confirmation.restart_level,
+  self.ui:addWindow(UIConfirmDialog(self.ui, true, message or _S.confirmation.restart_level,
     --[[persistable:app_confirm_restart]] function()
     self:worldExited()
     local level = self.map.level_number

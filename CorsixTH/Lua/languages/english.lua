@@ -752,13 +752,14 @@ confirmation = {
   maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000. Larger resolutions are possible but will require better hardware in order to maintain a playable frame rate. Are you sure you want to continue?",
   remove_destroyed_room = "Would you like to remove the room for $%d?",
   replace_machine_extra_info = "The new machine will have %d strength (currently %d).",
+  very_old_save = "There have been a lot of updates to the game since you started. To be sure that all features work as intended would you like to restart this level now?//" ..
+  "Your old save won't be deleted unless you overwrite it.",
 }
 
 information = {
   custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
   no_custom_game_in_demo = "Sorry, but in the demo version you can't play any custom maps.",
   cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
-  very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it.",
   level_lost = {
     "Bummer! You failed the level. Better luck next time!",
     "The reason you lost:",
@@ -950,6 +951,7 @@ transactions.remove_room = "Build: Remove destroyed room"
 
 options_window.change_resolution = "Change resolution"
 tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
+information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
 
 --[[ Compatibility mapping for VIP result faxes in old saves (< 0.66). Using non-
 standard string formatting here, which should not be repeated in normal
