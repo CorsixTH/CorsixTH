@@ -303,6 +303,8 @@ confirmation = {
   return_to_blueprint = "Jste si jisti, že se chcete vrátit do režimu Návrhu?",
   maximum_screen_size = "Velikost obrazovky, kterou jste zadali, je vyšší než 3000 x 2000. Na tato rozlišení lze přejít za předpokladu, že máte hardware schopný tuto hru udržet v hratelné rychlosti. Opravdu chcete pokračovat?",
   remove_destroyed_room = "Opravdu chcete odebrat místnost? Bude to stát $%d.",
+  very_old_save = "Od doby, kdy jste začali s touto hrou, jsme již mnohokrát program aktualizovali. Chcete teď restartovat úroveň, pro jistotu, že vše správně funguje?//" ..
+  "Vaše uložené rozehrané hry nebudou smazány, dokud je sami nepřepíšete novým uložením.",
 }
 adviser = {
   goals = {
