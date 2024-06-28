@@ -228,7 +228,7 @@ function UIProgressReport:draw(canvas, x, y)
 end
 
 function UIProgressReport:afterLoad(old, new)
-  if old < 188 then
+  if old < 206 then
     self:close()
   end
 
