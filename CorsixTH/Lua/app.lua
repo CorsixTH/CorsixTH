@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 190 -- Improve falling actions for debug purposes
+local SAVEGAME_VERSION = 191 -- Add support for new win and lose criteria
 
 class "App"
 
