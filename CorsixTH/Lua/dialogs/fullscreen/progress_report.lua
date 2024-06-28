@@ -238,7 +238,7 @@ function UIProgressReport:afterLoad(old, new)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
   end
 
-  if old < 188 then
+  if old < 189 then
     self:close()
   end
 
