@@ -1407,8 +1407,9 @@ function App:checkInstallFolder()
       os.getenv("ProgramFiles(x86)"),
       [[C:]], [[D:]], [[E:]], [[F:]], [[G:]], [[H:]] }
     local possible_folders = { "ThemeHospital", "Theme Hospital", "HOSP", "TH97",
-      [[GOG.com\Theme Hospital]], [[GOG Games\Theme Hospital]],
-      [[Origin Games\Theme Hospital\data\Game]], [[EA Games\Theme Hospital\data\Game]]
+      [[GOG Galaxy\Games\Theme Hospital]], [[GOG.com\Theme Hospital]],
+      [[GOG Games\Theme Hospital]], [[Origin Games\Theme Hospital\data\Game]],
+      [[EA Games\Theme Hospital\data\Game]]
     }
     for _, dir in pairs(possible_locations) do
       if status then break end
