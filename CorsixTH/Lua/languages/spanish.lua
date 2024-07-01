@@ -113,7 +113,6 @@ rooms_long.decontamination = "Consulta de Descontaminación"
 dynamic_info.staff.ability = "Habilidad"
 dynamic_info.staff.actions.going_to_repair = "Yendo a reparar %s"
 dynamic_info.object.queue_expected = "Fila esperada: %d"
-fax.vip_visit_result.remarks.super[1] = "¡Qué hospital tan eficaz! La próxima vez que esté gravemente enfermo, llevadme allí."
 research.categories.drugs = "Investigación farmacéutica"
 transactions = {
   machine_replacement = "Coste de máquina de reemplazo",
@@ -798,16 +797,6 @@ fax = {
         "¡Su hospital es muy bueno! No es difícil mantenerlo sin limitaciones económicas, ¿eh?",
         "No soy economista, pero hasta yo podría dirigir este hospital, si usted me entiende...",
         "Un hospital muy bien cuidado. ¡Pero ojo con la crisis financiera! Ah... que a usted no le afecta.",
-      },
-      mediocre = {
-        [1] = "Bueno, los he visto peores. Pero debería hacer algunas mejoras.",
-        [2] = "¡Oh, cielos! No es un lugar agradable para ir si estás pachucho.",
-        [3] = "Si le soy sincero, es un hospital normalucho. Francamente, yo esperaba más.",
-      },
-      very_bad = {
-        [1] = "¡Vaya tugurio! Voy a intentar clausurarlo.",
-        [2] = "Nunca he visto un hospital tan espantoso. ¡Qué vergüenza!",
-        [3] = "Estoy horrorizado. ¡Y a esto lo llama un hospital! Me voy de cañas...",
       },
     }
   }
