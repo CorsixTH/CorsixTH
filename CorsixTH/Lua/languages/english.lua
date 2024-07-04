@@ -951,59 +951,6 @@ transactions.remove_room = "Build: Remove destroyed room"
 options_window.change_resolution = "Change resolution"
 tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
 
---[[ Compatibility mapping for VIP result faxes in old saves (< 0.66). Using non-
-standard string formatting here, which should not be repeated in normal
-circumstances. This mapping will cause the legacy string to print in English but only
-for the relevant fax. These should be deleted on 2024 release. ]]--
-fax = {
-  vip_visit_result = {
-    ordered_remarks = {
-      [1] = fax.vip_visit_result.remarks[1],
-      [2] = fax.vip_visit_result.remarks[2],
-      [3] = fax.vip_visit_result.remarks[3],
-      [4] = fax.vip_visit_result.remarks[4],
-      [5] = fax.vip_visit_result.remarks[5],
-      [6] = fax.vip_visit_result.remarks[6],
-      [7] = fax.vip_visit_result.remarks[7],
-      [8] = fax.vip_visit_result.remarks[8],
-      [9] = fax.vip_visit_result.remarks[9],
-      [10] = fax.vip_visit_result.remarks[10],
-      [11] = fax.vip_visit_result.remarks[11],
-      [12] = fax.vip_visit_result.remarks[12],
-      [13] = fax.vip_visit_result.remarks[13],
-      [14] = fax.vip_visit_result.remarks[14],
-      [15] = fax.vip_visit_result.remarks[15],
-    },
-    remarks = {
-      super = {
-        fax.vip_visit_result.remarks[1],
-        fax.vip_visit_result.remarks[2],
-        fax.vip_visit_result.remarks[3],
-      },
-      good = {
-        fax.vip_visit_result.remarks[4],
-        fax.vip_visit_result.remarks[5],
-        fax.vip_visit_result.remarks[6],
-      },
-      mediocre = {
-        fax.vip_visit_result.remarks[7],
-        fax.vip_visit_result.remarks[8],
-        fax.vip_visit_result.remarks[9],
-      },
-      bad = {
-        fax.vip_visit_result.remarks[10],
-        fax.vip_visit_result.remarks[11],
-        fax.vip_visit_result.remarks[12],
-      },
-      very_bad = {
-        fax.vip_visit_result.remarks[13],
-        fax.vip_visit_result.remarks[14],
-        fax.vip_visit_result.remarks[15],
-      }
-    }
-  }
-}
-
 cheats_window.cheats = {
  toggle_infected = show_infected,
 }
