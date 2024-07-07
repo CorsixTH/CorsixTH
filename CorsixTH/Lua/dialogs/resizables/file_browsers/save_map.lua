@@ -81,6 +81,7 @@ function UISaveMap:confirmName()
   local filename = self.new_map_textbox.text
   local app = self.ui.app
   if filename == "" then
+    self.ui:addWindow(UIInformation(self.ui, { _S.save_map_window.missing_filename }))
     self:abortName()
     return
   end

@@ -76,6 +76,7 @@ function UISaveGame:confirmName()
   local filename = self.new_savegame_textbox.text
   local app = self.ui.app
   if filename == "" then
+    self.ui:addWindow(UIInformation(self.ui, { _S.save_game_window.missing_filename }))
     self:abortName()
     return
   end
