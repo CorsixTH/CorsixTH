@@ -299,7 +299,7 @@
  (inherited from <a href="_0_1_u_i.html">UI</a>)
  </li>
  <li class="self">
- <a href="_0_1_game_u_i.html#_0_1_game_u_i_1quit">quit</a>()
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1quit">quit</a>(<span class="p">mapeditor</span>)
  (overrides <a href="_0_1_u_i.html#_0_1_u_i_1quit">UI:quit</a>)
  </li>
  <li class="self">
@@ -332,6 +332,9 @@
  <li class="inherited">
  <a href="_0_1_u_i.html#_0_1_u_i_1reset_app">resetApp</a>()
  (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1restart_map_editor">restartMapEditor</a>()
  </li>
  <li class="self">
  <a href="_0_1_game_u_i.html#_0_1_game_u_i_1resync">resync</a>(<span class="p">ui</span>)
@@ -1206,10 +1209,19 @@ call actually says something.</td>
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_game_u_i_1quit">function GameUI:quit()</a></h5>
+ <h5><a name="_0_1_game_u_i_1quit">function GameUI:quit(<span class="p">mapeditor</span>)</a></h5>
  <p>
  Offers a confirmation window to quit the game and return to main menu
 NB: overrides UI.quit, do NOT call it from here<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">mapeditor</td>
+ <td class="t">boolean</td>
+ <td class="d"> If the user is quitting the map editor</td>
+ </tr>
+ </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1quit">UI:quit</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1301">line 1301 of Lua/game_ui.lua</a>.
  </p>
@@ -1229,6 +1241,12 @@ param index (integer) Position in recallpositions table<br/><br/>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1212">line 1212 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1restart_map_editor">function GameUI:restartMapEditor()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1319">line 1319 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1387,13 +1405,13 @@ param index (integer) Position in recallpositions table<br/><br/>
  <div class="method">
  <h5><a name="_0_1_game_u_i_1show_cheats_window">function GameUI:showCheatsWindow()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1309">line 1309 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1311">line 1311 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_game_u_i_1show_menu_bar">function GameUI:showMenuBar()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1313">line 1313 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1315">line 1315 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
