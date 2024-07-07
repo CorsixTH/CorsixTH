@@ -45,7 +45,8 @@ local col_shadow = {
 function UISaveGame:UISaveGame(ui)
   local treenode = FilteredFileTreeNode(ui.app.savegame_dir, ".sav")
   treenode.label = "Saves"
-  self:UIFileBrowser(ui, "game", _S.save_game_window.caption:format(".sav"), 265, treenode, true)
+  self:UIFileBrowser(ui, "game", _S.save_game_window.caption:format(".sav"), 265,
+      treenode, true, _S.save_game_window.save_button)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.
   self.control:sortByDate()

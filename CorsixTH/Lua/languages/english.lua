@@ -357,6 +357,7 @@ tooltip.main_menu = {
 
 load_game_window = {
   caption = "Load Game (%1%)",
+  load_button = "Load",
 }
 
 tooltip.load_game_window = {
@@ -390,6 +391,7 @@ tooltip.custom_campaign_window = {
 save_game_window = {
   caption = "Save Game (%1%)",
   new_save_game = "New Savegame",
+  save_button = "Save",
 }
 
 tooltip.save_game_window = {
@@ -400,6 +402,7 @@ tooltip.save_game_window = {
 save_map_window = {
   caption = "Save Map (%1%)",
   new_map = "New Map",
+  save_button = "Save",
 }
 
 tooltip.save_map_window = {

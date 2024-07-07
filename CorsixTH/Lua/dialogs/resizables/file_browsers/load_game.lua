@@ -27,7 +27,7 @@ local UILoadGame = _G["UILoadGame"]
 function UILoadGame:UILoadGame(ui, mode)
   local treenode = FilteredFileTreeNode(ui.app.savegame_dir, ".sav")
   treenode.label = "Saves"
-  self:UIFileBrowser(ui, mode, _S.load_game_window.caption:format(".sav"), 295, treenode, true)
+  self:UIFileBrowser(ui, mode, _S.load_game_window.caption:format(".sav"), 295, treenode, true, _S.load_game_window.load_button)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.
   self.control:sortByDate()

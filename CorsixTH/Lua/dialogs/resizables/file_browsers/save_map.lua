@@ -45,7 +45,8 @@ local col_shadow = {
 function UISaveMap:UISaveMap(ui)
   local treenode = FilteredFileTreeNode(ui.app.user_level_dir, ".map")
   treenode.label = "Maps"
-  self:UIFileBrowser(ui, "map", _S.save_map_window.caption:format(".map"), 265, treenode, true)
+  self:UIFileBrowser(ui, "map", _S.save_map_window.caption:format(".map"), 265,
+      treenode, true, _S.save_map_window.save_button)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.
   self.control:sortByDate()
