@@ -1,6 +1,7 @@
 --[[ Copyright (c) 2010 RAS
                    2011 FlyingBastard, L_konings, Nossah, KasperVld
                    2012-2013 Omni, Maarten
+                   2024 Jetenergy
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
