@@ -564,6 +564,34 @@ function UIMapEditor:UIMapEditor(ui)
   -- }}}
 
   self:setPosition(0.1, 0.1)
+
+  ui:addKeyHandler("ingame_loadMenu", self, self.openLoad) -- load saved maps menu
+  ui:addKeyHandler("ingame_saveMenu", self, self.openSave) -- load save map menu
+  ui:addKeyHandler("ingame_restartLevel", self, self.restart) -- restart the map editor
+  ui:addKeyHandler("ingame_quitLevel", self, self.quit) -- quit the map editor and return to main menu
+  ui:addKeyHandler("ingame_jukebox", self, self.openJukebox) -- open jukebox
+end
+
+function UIMapEditor:openLoad()
+  self.ui:addWindow(UILoadMap(self.ui, "map"))
+end
+
+function UIMapEditor:openSave()
+  self.ui:addWindow(UISaveMap(self.ui))
+end
+
+function UIMapEditor:restart()
+  self.ui:restartMapEditor()
+end
+
+function UIMapEditor:quit()
+  self.ui:quit(true)
+end
+
+function UIMapEditor:openJukebox()
+  if self.ui.app.config.audio and self.ui.app:isAudioEnabled() then
+    self.ui:addWindow(UIJukebox(self.ui.app))
+  end
 end
 
 function UIMapEditor:setPlayerCount(count)
