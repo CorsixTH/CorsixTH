@@ -29,7 +29,6 @@ jobs:
     runs-on: windows-2022
     env:
       PRESET: ${{inputs.preset || 'win-x64-rel'}}
-      VCPKG_DEFAULT_TRIPLET: ${{inputs.preset == 'win-x86-rel' && 'x86-windows' || 'x64-windows-release'}}
       ANIMVIEW: ${{inputs.animview && 'ON' || 'OFF'}}
       NAME: CorsixTH${{inputs.animview && '_and_AnimView' || ''}}${{inputs.preset == 'win-x86-rel' && '_x86' || ''}}
     defaults:
@@ -64,10 +63,10 @@ jobs:
         uses: lukka/run-cmake@v10
         with:
           configurePreset: ${{env.PRESET}}
-          configurePresetAdditionalArgs: "['-DBUILD_ANIMVIEW=${{env.ANIMVIEW}}']"
-          buildPreset: ${{env.PRESET}}
-          buildPresetAdditionalArgs: "['--verbose', '--target install',
+          configurePresetAdditionalArgs: "['-DBUILD_ANIMVIEW=${{env.ANIMVIEW}}',
             '-DCMAKE_INSTALL_PREFIX=build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/']"
+          buildPreset: ${{env.PRESET}}
+          buildPresetAdditionalArgs: "['--verbose', '--target install']"
           testPreset: ${{env.PRESET}}
 
       - name: Download soundfont
@@ -79,17 +78,15 @@ jobs:
       - name: Copy data files for archive
         if: inputs.PRESET != 'win-dev'
         run: |
-          cp -R CorsixTH/Lua build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/Lua
-          cp -R CorsixTH/Bitmap build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/Bitmap
-          cp -R CorsixTH/Levels build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/Levels
-          cp -R CorsixTH/Campaigns build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/Campaigns
-          cp CorsixTH/CorsixTH.lua build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/
+          cp -r build/${{env.PRESET}}/. .
+          cp -Ru CorsixTH/RelWithDebInfo/CorsixTH/. CorsixTH/RelWithDebInfo/
+          rm -rf CorsixTH/RelWithDebInfo/CorsixTH/
           if [ "${{inputs.animview}}" == "true" ]; then
             mkdir -p artifact
-            mv build/${{env.PRESET}}/AnimView/RelWithDebInfo artifact/AnimView
-            mv build/${{env.PRESET}}/CorsixTH/RelWithDebInfo artifact/CorsixTH
+            mv AnimView/RelWithDebInfo artifact/AnimView
+            mv CorsixTH/RelWithDebInfo artifact/CorsixTH
           else
-            mv build/${{env.PRESET}}/CorsixTH/RelWithDebInfo artifact
+            mv CorsixTH/RelWithDebInfo artifact
           fi
           ls -R artifact
 
