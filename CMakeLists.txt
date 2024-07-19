@@ -5,6 +5,7 @@
 #   - WITH_FREETYPE2  : Active support for non-Latin script alphabets (yes)
 #   - WITH_MOVIES     : Activate movies (requires with_audio, FFmpeg) (yes)
 #   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
+#   - WITH_UPDATE_CHECK : Activates support to check for new version on launch (requires libcurl) (yes)
 #   - USE_SOURCE_DATADIRS : Use the source directory for loading resources. Incompatible with the install target (no)
 #   - SEARCH_LOCAL_DATADIRS : Search resources in the working directory and the
 #       program directory where the executable stores. Makes the executable
