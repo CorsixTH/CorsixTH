@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Earthquake Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Earthquake Class</h2>
+<h3 class="class">Manages all earthquakes in the world</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/earthquake.lua#L21">line 21 of Lua/earthquake.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_earthquake.html#_0_1_earthquake_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_earthquake.html#_0_1_earthquake_1create_earthquake">createEarthquake</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_earthquake.html#_0_1_earthquake_1is_active">isActive</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_earthquake.html#_0_1_earthquake_1next_earthquake">nextEarthquake</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_earthquake.html#_0_1_earthquake_1on_end_day">onEndDay</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_earthquake.html#_0_1_earthquake_1tick">tick</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active</span>
+ </li>
+ <li><span class="p">current_map_earthquake</span>
+ </li>
+ <li><span class="p">damage_timer</span>
+ </li>
+ <li><span class="p">disabled</span>
+ </li>
+ <li><span class="p">next_planned</span>
+ </li>
+ <li><span class="p">remaining_damage</span>
+ </li>
+ <li><span class="p">size</span>
+ </li>
+ <li><span class="p">start_day</span>
+ </li>
+ <li><span class="p">start_month</span>
+ </li>
+ <li><span class="p">warning_timer</span>
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_earthquake_1_earthquake">function Earthquake:Earthquake(<span class="p">world</span>, <span class="p">convert</span>)</a></h5>
+ <p>
+ Track earthquakes in the world<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">world</td>
+ <td class="t">table</td>
+ <td class="d"> Owned by this world</td>
+ </tr>
+ <tr>
+ <td class="n">convert</td>
+ <td class="t">boolean</td>
+ <td class="d"> If true, world is upgraded from before this Earthquake class</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/earthquake.lua#L61">line 61 of Lua/earthquake.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_earthquake_1after_load">function Earthquake:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ Afterload sections before 189 were taken from World<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">integer</td>
+ <td class="d"> The old version of the save game.</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">integer</td>
+ <td class="d"> The current version of the save game format.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/earthquake.lua#L210">line 210 of Lua/earthquake.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_earthquake_1create_earthquake">function Earthquake:createEarthquake()</a></h5>
+ <p>
+ Create a small or medium quake now for the "Create Earthquake" cheat<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/earthquake.lua#L188">line 188 of Lua/earthquake.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_earthquake_1is_active">function Earthquake:isActive()</a></h5>
+ <p>
+ Check if there is a current earthquake<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/earthquake.lua#L204">line 204 of Lua/earthquake.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_earthquake_1next_earthquake">function Earthquake:nextEarthquake()</a></h5>
+ <p>
+ Called when it is time to have another earthquake<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/earthquake.lua#L161">line 161 of Lua/earthquake.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_earthquake_1on_end_day">function Earthquake:onEndDay()</a></h5>
+ <p>
+ Check if it's time for an earthquake<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/earthquake.lua#L151">line 151 of Lua/earthquake.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_earthquake_1tick">function Earthquake:tick()</a></h5>
+ <p>
+ Perform actions to simulate an active earthquake.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/earthquake.lua#L72">line 72 of Lua/earthquake.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>
