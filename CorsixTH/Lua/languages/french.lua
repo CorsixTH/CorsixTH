@@ -184,21 +184,6 @@ adviser.multiplayer.poaching = {
 adviser.vomit_wave.ended = "Ouf ! On dirait que le virus qui provoquait des nausées est enfin enrayé. Gardez l'hôpital propre, à l'avenir."
 adviser.research.new_available = "Nouveau : un(e) %s est disponible."
 adviser.research.drug_improved_1 = "Le traitement contre la %s a été amélioré par votre département de recherche."
-adviser.warnings = {
-  money_low = "Les fonds sont en baisse !",
-  no_patients_last_month = "Pas de nouveaux patients le mois dernier. Honteux !",
-  machines_falling_apart = "Les machines tombent en panne. Faites-les réparer !",
-  bankruptcy_imminent = "Hé ! Vous courez à la faillite. Attention !",
-  too_many_plants = "Il y a bien trop de plantes. C'est la jungle, ici !",
-  many_killed = "Vous avez laissé mourir %d personnes. Idiot ! Vous êtes censé les soigner.",
-  falling_1 = "Hé ! Ce n'est pas drôle, regardez ou vous cliquez, quelqu'un pourrait être blessé !",
-  falling_2 = "Arrêtez de faire n'importe quoi, qu'en penseriez-vous à leur place ?",
-  falling_3 = "Aïe, ça doit faire mal,  qu'on appelle un médecin !",
-  falling_4 = "C'est un hôpital, pas un parc d'attraction !",
-  falling_5 = "Ce n'est pas un endroit pour bousculer les gens, ils sont malades vous savez ?",
-  falling_6 = "Ce n'est pas un bowling, les gens malades ne devraient pas être traités comme ça !",
-  handymen_tired = "Les agents de maintenance sont très fatigués. Laissez-les se reposer." -- Add a missing letter
-}
 adviser.placement_info.object_cannot_place = "Hé ! Vous ne pouvez pas placer cet objet ici."
 adviser.information = {
   epidemic = "Une maladie contagieuse sévit dans votre hôpital. Vous devez l'enrayer immédiatement !",
@@ -664,7 +649,21 @@ adviser = {
     high_prices = "Votre tarif pour %s est trop élevé. Ça va générer plus de profit sur le court-terme, mais à la longue les gens vont fuir.",
     fair_prices = "Le prix pour %s semble juste et équilibré.",
     patient_not_paying = "Un patient est parti sans payer pour %s parce que c'est trop cher !",
-    another_desk = "Vous devrez construire un autre bureau pour cette nouvelle réceptionniste."
+    another_desk = "Vous devrez construire un autre bureau pour cette nouvelle réceptionniste.",
+    money_low = "Les fonds sont en baisse !",
+    no_patients_last_month = "Pas de nouveaux patients le mois dernier. Honteux !",
+    machines_falling_apart = "Les machines tombent en panne. Faites-les réparer !",
+    bankruptcy_imminent = "Hé ! Vous courez à la faillite. Attention !",
+    too_many_plants = "Il y a bien trop de plantes. C'est la jungle, ici !",
+    many_killed = "Vous avez laissé mourir %d personnes. Idiot ! Vous êtes censé les soigner.",
+    falling_1 = "Hé ! Ce n'est pas drôle, regardez ou vous cliquez, quelqu'un pourrait être blessé !",
+    falling_2 = "Arrêtez de faire n'importe quoi, qu'en penseriez-vous à leur place ?",
+    falling_3 = "Aïe, ça doit faire mal,  qu'on appelle un médecin !",
+    falling_4 = "C'est un hôpital, pas un parc d'attraction !",
+    falling_5 = "Ce n'est pas un endroit pour bousculer les gens, ils sont malades vous savez ?",
+    falling_6 = "Ce n'est pas un bowling, les gens malades ne devraient pas être traités comme ça !",
+    handymen_tired = "Les agents de maintenance sont très fatigués. Laissez-les se reposer.", -- Add a missing letter
+    cannot_afford_machine = "Vous avez besoin de au moins $%1% dans la banque pour pouvoir acheter: %2%!",
   },
   cheats = {
     th_cheat = "Félicitations, vous avez débloqué les triches !",
@@ -718,9 +717,18 @@ install = {
   cancel = "Annuler"
 }
 
--- Misc
-misc.not_yet_implemented = "(pas encore implémenté)"
-misc.no_heliport = "Aucune maladie n'a été découverte pour l'instant, ou il n'y a pas d'héliport sur cette carte."
+-- Misc (some other misc strings also exist outside this section)
+misc = {
+  not_yet_implemented = "(pas encore implémenté)",
+  no_heliport = "Aucune maladie n'a été découverte pour l'instant, ou il n'y a pas d'héliport sur cette carte.",
+  epidemics_off = "Les épidémies sont désactivées",
+  epidemics_on = "Les épidémies sont activées",
+  epidemic_no_receptionist = "Impossible de créer une épidémie - il n'y a pas de réceptionniste",
+  epidemic_no_diseases = "Impossible de créer une épidémie - il n'y a pas de maladie contagieuse disponible",
+  epidemic_no_icon_to_toggle = "Impossible de montrer/cacher les icônes des infectés - il n'y a pas d'épidémies non-révélées",
+  earthquakes_off = "Les tremblements de terre sont désactivés",
+  earthquakes_on = "Les tremblements de terre sont activés"
+}
 
 -- Main menu
 main_menu = {
@@ -844,7 +852,11 @@ options_window = {
   scrollspeed = "Vitesse de défilement",
   shift_scrollspeed = "Vitesse de défilement avec Maj",
   width = "Largeur",
-  zoom_speed = "Vitesse de zoom"
+  zoom_speed = "Vitesse de zoom",
+  right_mouse_scrolling = "Défilement Souris",
+  right_mouse_scrolling_option_middle = "Bouton Milieu",
+  right_mouse_scrolling_option_right = "Bouton Droit",
+  jukebox = "Jukebox"
 }
 
 tooltip.options_window = {
@@ -877,8 +889,10 @@ tooltip.options_window = {
   cancel_shift_scrollspeed = "Revenir sans changer la vitesse de défilement de la touche Maj.",
   scrollspeed = "Réglez la vitesse de défilement de 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 2.",
   apply_scrollspeed = "Appliquer la vitesse de défilement entrée.",
-  capture_mouse = "Cliquez pour activer la capture du curseur dans la fenêtre du jeu."
-
+  capture_mouse = "Cliquez pour activer la capture du curseur dans la fenêtre du jeu.",
+  language_dropdown_no_font = "Sélectionnez une police d'écriture dans les paramètres pour activer ce langage",
+  right_mouse_scrolling = "Activer le bouton qui est utilisé pour faire défiler la carte",
+  jukebox = "Ouvrir le Jukebox pour changer la musique"
 }
 
 customise_window = {
@@ -999,6 +1013,8 @@ errors = {
   dialog_missing_graphics = "Désolé, les données de démo ne contiennent pas cette boîte de dialogue.",
   save_prefix = "Erreur lors de la sauvegarde de la partie : ",
   load_prefix = "Erreur lors du chargement de la partie : ",
+  load_map_prefix = "Erreur pendant le chargement de la carte: ",
+  load_level_prefix = "Erreur pendant le chargement du niveau: ",
   no_games_to_contine = "Pas de parties sauvegardées.",
   map_file_missing = "Impossible de trouver le fichier de carte %s pour ce niveau !",
   minimum_screen_size = "Veuillez entrer une résolution supérieure à 640x480.",
@@ -1050,17 +1066,28 @@ tooltip.information = {
 
 -- "Tip of the day" window
 totd_window = {
-  tips = {"Chaque hôpital a besoin d'un bureau de réception et d'un cabinet de médecine générale. Après, tout dépend du type de patients qui visitent votre hôpital. Une pharmacie est toujours un bon choix malgré tout.", "Les machines telles que le Gonflage ont besoin de maintenance. Embauchez un ou deux agents de maintenance pour réparer vos machines, ou vous risquerez d'avoir des blessés parmi le personnel ou les patients.",
-          "Après un certain temps, vos employés seront fatigués. Pensez à construire une salle de repos où ils pourront se détendre.", "Placez suffisamment de radiateurs pour garder vos employés et patients au chaud, ou ils deviendront mécontents. Utilisez la carte de la ville pour localiser les endroits de votre hôpital qui nécessitent plus de chauffage.",
-          "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostiques. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostiques.",
-          "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications particulières (chirurgien, psychiatre ou chercheur), il transférera ses connaissances à ses élèves.", "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
-          "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.", "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
-          "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé à coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre serveur Discord, Sub-Reddit or serveur Matrix. Les liens sont sur notre site internet (CorsixTH.com).",
-          "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de statuts pour voir votre progression dans les objectifs du niveau.", "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils en bas.",
-          "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.", "Cliquez sur la porte d'une pièce pour visualiser sa file d'attente. Vous pouvez faire des réglages très utiles ici, comme réorganiser la file d'attente ou envoyer un patient vers une autre pièce.",
-          "Le personnel mécontent vous demandera des augmentations de salaires fréquemment. Assurez-vous de leur offrir un environnement de travail confortable pour éviter cela.", "Les patients auront soif en attendant dans votre hôpital, encore plus si vous augmentez le chauffage ! Placez des distributeurs automatiques dans les points stratégiques pour un revenu d'appoint.",
-          "Vous pouvez interrompre le processus de diagnostic d'un patient et proposer un traitement, si vous avez déjà rencontré la maladie. Notez que cela peut accroître le risque d'erreur de traitement, et provoquer la mort du patient.", "Les urgences peuvent être une bonne source de revenus additionnels, à condition que vous ayez les capacités suffisantes pour traiter les patients à temps.",
-          "Saviez-vous que vous pouvez affecter des Agents d'entretien à des parcelles spécifiques ? Cliquez simplement sur le texte 'Toutes les parcelles' dans leur profil du personnel pour les parcourir !"},
+  tips = {
+    "Chaque hôpital a besoin d'un bureau de réception et d'un cabinet de médecine générale. Après, tout dépend du type de patients qui visitent votre hôpital. Une pharmacie est toujours un bon choix malgré tout.",
+    "Les machines telles que le Gonflage ont besoin de maintenance. Embauchez un ou deux agents de maintenance pour réparer vos machines, ou vous risquerez d'avoir des blessés parmi le personnel ou les patients.",
+    "Après un certain temps, vos employés seront fatigués. Pensez à construire une salle de repos où ils pourront se détendre.",
+    "Placez suffisamment de radiateurs pour garder vos employés et patients au chaud, ou ils deviendront mécontents. Utilisez la carte de la ville pour localiser les endroits de votre hôpital qui nécessitent plus de chauffage.",
+    "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostiques. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostiques.",
+    "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications particulières (chirurgien, psychiatre ou chercheur), il transférera ses connaissances à ses élèves.",
+    "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
+    "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
+    "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
+    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé à coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre serveur Discord, Sub-Reddit or serveur Matrix. Les liens sont sur notre site internet (CorsixTH.com).",
+    "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de statuts pour voir votre progression dans les objectifs du niveau.",
+    "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils en bas.",
+    "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.",
+    "Cliquez sur la porte d'une pièce pour visualiser sa file d'attente. Vous pouvez faire des réglages très utiles ici, comme réorganiser la file d'attente ou envoyer un patient vers une autre pièce.",
+    "Le personnel mécontent vous demandera des augmentations de salaires fréquemment. Assurez-vous de leur offrir un environnement de travail confortable pour éviter cela.",
+    "Les patients auront soif en attendant dans votre hôpital, encore plus si vous augmentez le chauffage ! Placez des distributeurs automatiques dans les points stratégiques pour un revenu d'appoint.",
+    "Vous pouvez interrompre le processus de diagnostic d'un patient et proposer un traitement, si vous avez déjà rencontré la maladie. Notez que cela peut accroître le risque d'erreur de traitement, et provoquer la mort du patient.",
+    "Les urgences peuvent être une bonne source de revenus additionnels, à condition que vous ayez les capacités suffisantes pour traiter les patients à temps.",
+    "Saviez-vous que vous pouvez affecter des Agents d'entretien à des parcelles spécifiques ? Cliquez simplement sur le texte 'Toutes les parcelles' dans leur profil du personnel pour les parcourir !",
+    "Saviez-vous que vous pouvez attribuer des Agents de Maintenance a bouts de terrain spécifiques ? Il suffit de cliquer sur la mention Tous bouts de terrain sur son profil d'employé pour faire le tour!"
+  },
   previous = "Astuce précédente",
   next = "Astuce suivante"
 }
@@ -1098,7 +1125,12 @@ cheats_window = {
     epidemic = "Reproduire des patients contagieux",
     toggle_infected = "Faire apparaître des patients contagieux.",
     increase_prices = "Augmenter les prix",
-    decrease_prices = "Diminuer les prix"
+    decrease_prices = "Diminuer les prix",
+    reset_death_count = "Remettre à zéro le nombre de décès à l’hôpital",
+    toggle_epidemic = "Active la possibilité d'épidémies",
+    show_infected = "Montrer/cacher les icônes des infectés pour les épidémies découvertes et actives",
+    toggle_earthquake = "Activer les tremblements de terre",
+    max_reputation = "Mettre la réputation de l'hôpital au maximum"
   },
   close = "Fermer"
 }
@@ -1119,7 +1151,12 @@ tooltip.cheats_window = {
     epidemic = "Crée un patient contagieux qui peut causer une épidémie.",
     toggle_infected = "Bascule les icônes infectés pour l'épidémie, découverte active.",
     increase_prices = "Augmenter tous les prix de 50% (max. 200%)",
-    decrease_prices = "Diminuer tous les prix de 50% (min. 50%)"
+    decrease_prices = "Diminuer tous les prix de 50% (min. 50%)",
+    reset_death_count = "Remettre à zéro le nombre de décès à l’hôpital",
+    toggle_epidemic = "Active la possibilité d'épidémies",
+    show_infected = "Montrer/cacher les icônes des infectés pour les épidémies découvertes et actives",
+    toggle_earthquake = "Activer les tremblements de terre",
+    max_reputation = "Mettre la réputation de l'hôpital au maximum"
   }
 }
 
@@ -1189,6 +1226,7 @@ map_editor_window = {
     west_wall = "Mur ouest",
     helipad = "Héliport",
     delete_wall = "Supprimer des murs",
+    parcel = "Parcelle %d",
     parcel_0 = "Parcelle 0",
     parcel_1 = "Parcelle 1",
     parcel_2 = "Parcelle 2",
@@ -1207,7 +1245,12 @@ map_editor_window = {
     heliport_2 = "Héliport 2",
     heliport_3 = "Héliport 3",
     heliport_4 = "Héliport 4",
-    paste = "Coller la zone"
+    paste = "Coller la zone",
+    set_parcel_tooltip = "Choissisez un chiffre et appuyez sur Entrée.",
+    set_parcel = "Choisir le chiffre de la parcelle",
+  },
+  checks = {
+    spawn_points_and_path = "Attention: les patients ne peuvent pas arriver à l'hôpital. Ils ont besoin de carreaux 'route' ou carreaux gris 'dehors' au bord de la carte et un chemin avec ces carreaux jusqu'à l'entrée de l'hôpital."
   }
 }
 
