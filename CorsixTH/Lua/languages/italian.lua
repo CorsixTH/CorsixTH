@@ -31,11 +31,11 @@ adviser.warnings.money_low = "Stai finendo i soldi!"
 -- TODO: tooltip.status.close -- it's called status window, not overview window.
 
 -- The originals of these two contain one space too much
-fax.emergency.cure_not_possible_build = "E' necessario costruire un %s"
-fax.emergency.cure_not_possible_build_and_employ = "E' necessario costruire un %s e assumere un %s"
+fax.emergency.cure_not_possible_build = "È necessario costruire un %s"
+fax.emergency.cure_not_possible_build_and_employ = "È necessario costruire un %s e assumere un %s"
 
 -- An override for the squits becoming the the squits see issue 1646
-adviser.research.drug_improved_1 = "Il medicinale per %s è stato migliorato dal Reparto Ricerca."
+adviser.research.drug_improved_1 = "Il medicinale per %s è stato migliorato dal Reparto ricerca."
 
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
@@ -52,7 +52,7 @@ tooltip.fax.close = "Chiudi questa finestra senza cancellare il messaggio"
 tooltip.message.button = "Click sinistro per aprire il messaggio"
 tooltip.message.button_dismiss = "Click sinistro per aprire il messaggio, click destro per eliminarlo"
 tooltip.casebook.cure_requirement.hire_staff = "Hai bisogno di assumere personale per somministrare questa cura"
-tooltip.casebook.cure_type.unknown = "Ancora non sei a conoscenza di un modo per curare questa malattia"
+tooltip.casebook.cure_type.unknown = "Ancora non sei a conoscenza di una cura per questa malattia"
 tooltip.research_policy.no_research = "Non c'è nessuna ricerca in corso in questa categoria al momento"
 tooltip.research_policy.research_progress = "Progresso verso una nuova scoperta in questa categoria: %1%/%2%"
 
@@ -155,7 +155,7 @@ menu_player_count = {
     players_4 = "  4 GIOCATORI  ",
 }
 adviser = {
-  room_forbidden_non_reachable_parts = "Mettere la stanza in questa posizione risulterebbe nel blocco dell'accesso ad alcune parti dell'ospedale.",
+  room_forbidden_non_reachable_parts = "Mettere la stanza in questa posizione bloccherebbe l'accesso ad alcune parti dell'ospedale.",
   staff_place_advice = {
     not_enough_lecture_chairs = "Ogni studente medico ha bisogno di uno sgabello su cui sedersi!",
   },
@@ -199,12 +199,12 @@ adviser = {
   },
 }
 
-dynamic_info.patient.actions.no_gp_available = "Aspettando che venga costruito un ambulatorio"
-dynamic_info.staff.actions.heading_for = "Andando verso %s"
+dynamic_info.patient.actions.no_gp_available = "Aspetta che venga costruito un ambulatorio"
+dynamic_info.staff.actions.heading_for = "Sta andando verso %s"
 dynamic_info.staff.actions.fired = "Licenziato"
 dynamic_info.patient.actions.epidemic_vaccinated = "Non sono più infetto"
 dynamic_info.object.strength_extra_info = "Forza %d (Migliorabile a %d)"
-dynamic_info.staff.actions.vaccine = "Vaccinando un paziente"
+dynamic_info.staff.actions.vaccine = "Sta vaccinando un paziente"
 
 progress_report.free_build = "COSTRUZIONE LIBERA"
 
@@ -376,16 +376,16 @@ options_window = {
   hotkey = "Scorciatoie",
   cancel = "Cancella",
   back = "Indietro",
-  scrollspeed = "velocità di scorrimento",
+  scrollspeed = "Velocità scorrimento",
   option_disabled = "Disabilitato",
   hotkey = "Scorciatoie",
   option_enabled = "Abilitato",
-  zoom_speed = "Velocità di Zoom",
+  zoom_speed = "Velocità zoom",
   shift_scrollspeed = "Velocità di scorrimento con Maiusc",
   jukebox = "Jukebox",
   right_mouse_scrolling_option_right = "Bottone Destro",
   right_mouse_scrolling_option_middle = "Bottone Centrale",
-  check_for_updates = "Cerca gli aggiornamenti",
+  check_for_updates = "Cerca  aggiornamenti",
   right_mouse_scrolling = "Scorrimento con Mouse",
 }
 
@@ -416,7 +416,7 @@ tooltip.options_window = {
   right_mouse_scrolling = "Attiva/disattiva il pulsante del mouse utilizzato per scorrere la mappa",
   cancel_scrollspeed = "Torna senza cambiare la velocità di scorrimento.",
   jukebox = "Apri il Jukebox per controllare la musica",
-  zoom_speed = "Imposta la velocità di zoom della camera da 10 (minimo) a 1000 (massimo). Il valore predefinito è 80.",
+  zoom_speed = "Imposta la velocità di zoom della telecamera da 10 (minimo) a 1000 (massimo). Il valore predefinito è 80.",
   language_dropdown_no_font = "Seleziona un font nelle impostazioni delle cartelle per abilitare questa lingua",
   cancel_zoomspeed = "Torna senza cambiare la velocità di zoom",
   cancel_shift_scrollspeed = "Torna senza cambiare la velocità di scorrimento con Maiusc.",
@@ -679,7 +679,7 @@ confirmation = {
   needs_restart = "Cambiare questa impostazione richiede che CorsixTH sia riavviato. Ogni progresso non salvato sarà perduto. Sei sicuro di volerlo fare?",
   abort_edit_room = "Stai attualmente costruendo o modificando una stanza. Se tutti gli oggetti richiesti sono stati posizionati sarà completata, altrimenti sarà cancellata. Continuare?",
   maximum_screen_size = "La risoluzione che hai inserito è superiore a 3000x2000. Risoluzioni maggiori sono supportate, ma richiederanno un hardware migliore per mantenere un livello di frame rate giocabile. Sei sicuro di voler continuare?",
-  music_warning = "Nota: E' necessario avere la libreria smpeg.dll o equivalente nel tuo sistema operativo, altrimenti non sentirai alcuna musica nel gioco. Vuoi continuare?",
+  music_warning = "Nota: è necessario avere la libreria smpeg.dll o equivalente nel tuo sistema operativo, altrimenti non sentirai alcuna musica nel gioco. Vuoi continuare?",
  --This next line isn't in the english.lua, but when strings are dump it is reported missing
   restart_level = "Sei sicuro di voler riavviare il livello?",
 }
@@ -714,10 +714,10 @@ totd_window = {
     "Assistenti e dottori possono aumentare il loro livello di competenza imparando da un consulente nella sala tirocinio. Se il consulente è anche uno specialista (chirurgo, psichiatra e/o ricercatore), passerà le sue conoscente ai suoi studenti.",
     "Hai provato a digitare il numero di emergenza europea (112) nel fax? Assicurati di avere l'audio attivato!",
     "Il menu d'opzioni non è ancora implementato, ma puoi regolare le impostazioni modificando il file config.txt nella directory di gioco.",
-    "Hai selezionato il tuo linguaggio, ma tutto è in inglese? Aiutaci a convertire il gioco in più linguaggi!",
-    "Il team di CorsixTH sta cercando rinforzi! Sei interessato in programmare, tradurre o creare nuovi elementi grafici per CorsixTH? Contattaci nei forum, tramite mail o sul canale IRC (corsix-th su freenode).",
-    "Trovato un bug? Vuoi segnalare un errore di qualsiasi genere? Inviaci un rapporto su ciò che hai trovato al nostro bug tracker: th-issues.corsix.org",
-    "Ogni livello ha degli obiettivi da raggiungere prima di poter passare al successivo. Controlla la finestra del riepilogo per vedere a che punto sei.",
+    "Hai selezionato la tua lingua, ma è tutto in Inglese? Aiutaci a tradurre il gioco!",
+    "Il team di CorsixTH sta cercando rinforzi!  Ti piacerebbe programmare, tradurre o creare nuovi elementi grafici per CorsixTH? Contattaci nei forum, tramite mail o sul canale IRC (corsix-th su freenode).",
+    "Hai trovato un bug? Vuoi segnalare un errore di qualsiasi genere? Invia una segnalazione al nostro bug tracker: th-issues.corsix.org",
+    "Ogni livello ha degli obiettivi da raggiungere prima di poter passare al successivo. Controlla la finestra di riepilogo per vedere a che punto sei.",
     "Se vuoi modificare o rimuovere una stanza esistente, puoi farlo con il tasto modifica stanza nella barra degli strumenti in basso.",
     "In un'orda di pazienti in attesa, puoi vedere velocemente chi sta aspettando il proprio turno per una stanza particolare spostando il mouse sulla stanza.",
     "Clicca sulla porta di una stanza per vederne la coda. Puoi fare diverse cose utili, come riordinare la coda o mandare il paziente in un'altra stanza.",
@@ -746,7 +746,7 @@ tooltip.debug_patient_window = {
 
 cheats_window = {
   caption = "Cheat",
-  warning = "Attenzione: Non riceverai alcun punto bonus alla fine del livello se usi i cheat!",
+  warning = "Attenzione: non riceverai alcun punto bonus alla fine del livello se usi i trucchi!",
   cheated = {
     no = "Cheat usati: No",
     yes = "Cheat usati: Sì",
@@ -776,7 +776,7 @@ cheats_window = {
 }
 
 tooltip.cheats_window = {
-  close = "Chiudi il menu dei cheat",
+  close = "Chiudi il menu dei trucchi",
   cheats = {
     money = "Aggiunge 10.000 al tuo conto in banca.",
     all_research = "Completa tutte le ricerche.",
@@ -829,13 +829,13 @@ tooltip.calls_dispatcher = {
 update_window = {
   caption = "Aggiornamento disponibile!",
   new_version = "Nuova versione:",
-  current_version = "Versione corrente:",
+  current_version = "Versione attuale:",
   download = "Vai alla pagina del download",
   ignore = "Salta e vai al menù principale",
 }
 
 tooltip.update_window = {
-  download = "Vai alla pagina del download per trovare l'ultima versione di CorsixTH",
+  download = "Vai alla pagina di download per trovare l'ultima versione di CorsixTH",
   ignore = "Ignora l'aggiornamento per ora. Questa notifica apparirà di nuovo al prossimo avvio di CorsixTH",
 }
 
@@ -854,10 +854,10 @@ map_editor_window = {
     parcel = "Pacco %d",
     set_parcel = "Imposta num pacco",
     set_parcel_tooltip = "Scegli un numero e premi Invio.",
-    camera_1 = "Camera 1",
-    camera_2 = "Camera 2",
-    camera_3 = "Camera 3",
-    camera_4 = "Camera 4",
+    camera_1 = "Telecamera 1",
+    camera_2 = "Telecamera 2",
+    camera_3 = "Telecamera 3",
+    camera_4 = "Telecamera 4",
     heliport_1 = "Eliporto 1",
     heliport_2 = "Eliporto 2",
     heliport_3 = "Eliporto 3",
@@ -873,7 +873,7 @@ tooltip = {
   hotkey_window = {
     button_accept = "Accetta e salva i tasti scorciatoia",
     button_cancel = "Cancella l'assegnazione e torna al menu opzioni",
-    button_recallPosKeys = "Apri una finestra per impostare scorciatoie per salvare e richiamare posizioni della camera",
+    button_recallPosKeys = "Apri una finestra per impostare scorciatoie per salvare e richiamare posizioni della telecamera",
     caption_panels = "Open window to assign panel keys",
     button_back_02 = "Torna alla finestra principale delle scorciatoie. Cio' che hai cambiato in questa finestra può essere salvato li'",
     button_defaults = "Ripristina tutte le scorciatoie alle impostazioni predefinite del programma",
@@ -888,9 +888,9 @@ level_progress = {
 
 disease_discovered_patient_choice.need_to_employ = "Assumi un %s per poter gestire questa sitazione."
 
-transactions.remove_room = "Costruzione: Rimuovi stanza distrutta"
+transactions.remove_room = "Costruzione: rimuovi stanza distrutta"
 
-multiplayer.everyone_failed = "Nessuno e' riuscito ad arrivare a duell'ultimo obiettivo. Quindi tutti possono continuare a giocare!"
+multiplayer.everyone_failed = "Nessuno è riuscito ad arrivare a duell'ultimo obiettivo. Quindi tutti possono continuare a giocare!"
 multiplayer.players_failed = "I seguenti giocatori non sono riusciti a raggiungere l'ultimo obiettivo:"
 
 
