@@ -84,10 +84,13 @@ custom_game_window = {
 }
 load_game_window = {
   caption = "Загрузить игру",
+  load_button = "Загрузить",
 }
 save_game_window = {
   caption = "Сохранить игру",
   new_save_game = "Новое сохранение",
+  save_button = "Сохранить",
+  missing_filename = "Пожалуйста, введите название нового сохранения или выберите старое для перезаписи.",
 }
 folders_window = {
   data_label = "Данные TH",
@@ -162,9 +165,12 @@ update_window = {
   caption = "Доступно новое обновление!",
 }
 save_map_window = {
-  caption = "Сохранение карты (%1%)",
+  caption = "Сохранить карту (%1%)",
   new_map = "Новая карта",
+  save_button = "Сохранить",
+  missing_filename = "Пожалуйста, введите название новой карты или выберите старое для перезаписи.",
 }
+
 hotkey_window = {
   right_mouse_scrolling = "Переключить клавишу мыши, которая отвечает за прокрутку карты",
   ingame_rotateobject = "Повернуть объект",
@@ -401,18 +407,18 @@ menu_file_load = {
   [8] = "  ИГРА 8  ",
 }
 menu_debug_overlay = {
-  heat = "  ТЕМПЕРАТУРА  ",
-  byte_0_1 = "  БАЙТ 0 & 1  ", -- Not sure how "BYTE" should be translated here
-  byte_6 = "  БАЙТ 6  ",
-  flags = "  АТРИБУТЫ  ",
-  byte_7 = "  БАЙТ 7  ",
-  byte_5 = "  БАЙТ 5  ",
-  byte_floor = "  БАЙТ ПОЛА  ",
-  positions = "  КООРДИНАТЫ  ",
-  byte_w_wall = "  БАЙТ ЗАП. СТЕН  ",
-  parcel = "  УЧАСТКИ  ",
-  byte_n_wall = "  БАЙТ СЕВ. СТЕН  ",
-  none = "  УБРАТЬ ОВЕРЛЕЙ  ",
+  heat = "  Теипература  ",
+  byte_0_1 = "  Байт 0 & 1  ", -- Not sure how "BYTE" should be translated here
+  byte_6 = "  Байт 6  ",
+  flags = "  Атрибуты  ",
+  byte_7 = "  Байт 7  ",
+  byte_5 = "  Байт 5  ",
+  byte_floor = "  Байт пола  ",
+  positions = "  Координаты  ",
+  byte_w_wall = "  Байт зап. стен  ",
+  parcel = "  Участки  ",
+  byte_n_wall = "  Байт сев. стен  ",
+  none = "  Убрать оверлей  ",
 }
 menu_file_save = {
   [1] = "  ИГРА 1  ",
@@ -440,7 +446,7 @@ information = {
   custom_game = "Добро пожаловать в CorsixTH. Удачи на этой пользовательской карте!",
   no_custom_game_in_demo = "Извините, но в демо-версии нельзя играть в пользовательские уровни.",
   cannot_restart = "К сожалению, эта игра была сохранена до того, когда функция перезапуска игры была введена.",
-  very_old_save = "Произошло много обновлений с тех пор, когда этот уровень был начат. Чтобы убедиться, что все функции работают как положено, перезапустите уровень.",
+  very_old_save = "Прошло много обновлений с тех пор, когда этот уровень был начат. Чтобы убедиться, что все функции работают как положено, перезапустите уровень.",
   level_lost = {
     "Облом Обломович! Вы провалили уровень. Удачи в следующий раз!",
     "Причина, по которой уровень был провален:",
@@ -771,8 +777,9 @@ errors = {
   load_quick_save = "Ошибка, не удалось загрузить быстрое сохранение, так как оно не существовало, но мы создали для Вас новое!",
   could_not_find_first_campaign_level = "Не удалось найти первый уровень в этой кампании: %s",
   save_to_tmp = "Файл в %s не может быть использован. Игра была сохранена в %s. Ошибка: %s",
-  -- TODO dialog_empty_queue = "Sorry, a humanoid just had an empty action queue, which means that they didn't know what to do next. Please consult the command window for more detailed information. A dialog with the offending humanoid has been opened. Would you like them to leave the hospital?",
+  dialog_empty_queue = "Извините, у гуманоида только что была пустая очередь действий, то есть он не знал, что делать дальше. Пожалуйста, прочитайте окно командной строки для получения подробной информации. Диалог с проблемным гуманоидом был открыт. Хотите ли вы, чтобы он покинул больницу?",
   could_not_load_campaign = "Сбой при загрузке кампании: %s",
+  music = "Возникли проблемы с воспроизведением одного или нескольких файлов в вашей папке с музыкой. Проблемные файлы будут отключены. Дополнительную информацию читайте в окне консоли.",
   compatibility_error = {
     new_in_old = "Извините, это сохранение было создано в более новой версией CorsixTH и несовместимо. Пожалуйста, обновите до более поздней версии.",
   },
@@ -1576,6 +1583,10 @@ confirmation = {
   music_warning = "Перед тем, как выбрать mp3 в качестве игровой музыки, вам потребуется smpeg.dll или аналог для вашей операционной системы, иначе музыка не сможет быть проиграна. Вы уверены, что хотите продолжить?",
   remove_destroyed_room = "Вы хотите удалить комнату за $%d?",
   replace_machine_extra_info = "Новая машина будет иметь прочность %d (в настоящее время %d).",
+  restart_mapeditor = "Вы уверены, что хотите перезапустить редактор карт?",
+  quit_mapeditor = "Вы уверены, что хотите выйти из редактора карт?",
+  very_old_save = "Прошло много обновлений с тех пор, когда этот уровень был начат. Чтобы убедиться что все функции работают как положено, желаете ли вы начать уровень заново?//" ..
+  "Ваше старое сохранение не удалится, если вы не будете перезаписывать его.",
 }
 pay_rise = {
   definite_quit = "Я увольняюсь, и точка. Я сыт по горло этим местом.",
@@ -3578,26 +3589,26 @@ debug_patient_window = {
   caption = "Тестовый пациент",
 }
 menu_debug = {
-  allow_blocking_off_areas = "  РАЗРЕШИТЬ БЛОКИРОВАНИЕ ОБЛАСТЕЙ  ",
-  connect_debugger = "  (%1%) СОЕДИНЕНИЕ С LUA DBGp СЕРВЕРОМ  ",
-  debug_script = "  (%1%) ЗАПУСК ОТЛАДКИ СКРИПТА  ",
-  transparent_walls = "  (%1%) ПРОЗРАЧНЫЕ СТЕНЫ  ",
-  make_debug_fax = "  СОЗДАТЬ ТЕСТОВЫЙ ФАКС  ",
-  display_pager = "  DISPLAY PAGER        ",
-  cheats = "  (%1%) ЧИТЫ  ",
-  remove_objects = "  УДАЛИТЬ ОБЪЕКТЫ       ",
-  remove_walls = "  УДАЛИТЬ СТЕНЫ         ",
-  sprite_viewer = "  ПРОСМОТР СПРАЙТОВ  ",
-  map_overlay = "  ОВЕРЛЕЙ  ",
-  disable_salary_raise = "  ОТКЛЮЧИТЬ ПОДНЯТИЕ ЗАРПЛАТЫ  ",
-  limit_camera = "  ОГРАНИЧЕНИЕ КАМЕРЫ  ",
-  calls_dispatcher = "  СПИСОК ДЕЛ РАБОЧИХ ",
-  jump_to_level = "  ПЕРЕЙТИ НА УРОВЕНЬ  ",
-  dump_gamelog = "  (%1%) СОЗДАТЬ ДАМП   ",
-  dump_strings = "  (%1%) СОЗДАТЬ ДАМП СТРОК  ",
-  win_game_anim = "  АНИМАЦИЯ ПОБЕДЫ        ",
-  make_debug_patient = "  СОЗДАТЬ ТЕСТОВОГО ПАЦИЕНТА  ",
-  lua_console = "  (%1%) КОНСОЛЬ LUA  "
+  allow_blocking_off_areas = "  Разрешить блокирование областей  ",
+  connect_debugger = "  (%1%) Соединение с LUA DBGp сервером  ",
+  debug_script = "  (%1%) Запуск скрипта отладки  ",
+  transparent_walls = "  (%1%) Прозрачные стены  ",
+  make_debug_fax = "  Создать текстовый факс  ",
+  display_pager = "  Отобразить пейджер        ",
+  cheats = "  (%1%) Читы  ",
+  remove_objects = "  Удалить объекты       ",
+  remove_walls = "  Удалить стены         ",
+  sprite_viewer = "  Просмотр спрайтов  ",
+  map_overlay = "  Оверлей  ",
+  disable_salary_raise = "  Отключить поднятие зарплаты  ",
+  limit_camera = "  Ограничение камеры  ",
+  calls_dispatcher = "  Список дел персонала ",
+  jump_to_level = "  Перейти на уровень  ",
+  dump_gamelog = "  (%1%) Создать дамп   ",
+  dump_strings = "  (%1%) Создать дамп строк   ",
+  win_game_anim = "  Анимация победы        ",
+  make_debug_patient = "  Создать тестового пациента  ",
+  lua_console = "  (%1%) Консоль Lua  "
 }
 lua_console = {
   execute_code = "Выполнить",
