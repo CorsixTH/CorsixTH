@@ -89,7 +89,7 @@ Copyright (C) 2022 "tomracer"
 Copyright (C) 2022 "TotalCaesar659"
 Copyright (C) 2022 Manuel K
 Copyright (C) 2022-2023 lokpro
-Copyright (C) 2022 Ryan "ryan-edgewurth" Penfold
+Copyright (C) 2022 Raven "Edgewurth" Penfold
 Copyright (C) 2022 "SilPho"
 Copyright (C) 2023 "dfghjkjhgr"
 Copyright (C) 2023 Bob "bobidle" Idle
