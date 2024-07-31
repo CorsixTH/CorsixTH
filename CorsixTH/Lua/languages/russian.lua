@@ -170,6 +170,10 @@ save_map_window = {
   save_button = "Сохранить",
   missing_filename = "Пожалуйста, введите название новой карты или выберите старое для перезаписи.",
 }
+load_map_window = {
+  caption = "Загрузить карту (%1%)",
+  load_button = "Загрузить",
+}
 
 hotkey_window = {
   right_mouse_scrolling = "Переключить клавишу мыши, которая отвечает за прокрутку карты",
