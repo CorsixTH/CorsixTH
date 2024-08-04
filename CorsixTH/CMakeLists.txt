@@ -298,6 +298,10 @@ if(NOT USE_SOURCE_DATADIRS)
     if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/mime")
       install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/mime" "${CMAKE_CURRENT_BINARY_DIR}/socket" DESTINATION ${CORSIX_TH_DATADIR})
     endif()
+    # Include this module to search for compiler-provided system runtime
+    # libraries and add install rules for them.
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ".")
+    include(InstallRequiredSystemLibraries)
   else()
     install(TARGETS CorsixTH
       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
