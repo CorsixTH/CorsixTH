@@ -69,11 +69,11 @@ jobs:
 
           sudo luarocks --lua-version 5.4 install luafilesystem
 
-      - name: Install CMake 3.14
+      - name: Install CMake 3.15
         if: matrix.cmake
         run: |
-          # Install CMake version 3.14, the oldest CorsixTH-supported version, which does not support Lua 5.4
-          curl -L https://github.com/Kitware/CMake/releases/download/v3.14.6/cmake-3.14.6-Linux-x86_64.sh -o cmake.sh
+          # Install CMake version 3.15, the oldest CorsixTH-supported version, which does not support Lua 5.4
+          curl -L https://github.com/Kitware/CMake/releases/download/v3.15.6/cmake-3.15.6-Linux-x86_64.sh -o cmake.sh
           sudo bash cmake.sh --prefix=/usr/local/ --exclude-subdir --skip-license
           cmake --version
       - name: Create CorsixTH${{ matrix.animview }} makefiles with ${{ matrix.lua }}

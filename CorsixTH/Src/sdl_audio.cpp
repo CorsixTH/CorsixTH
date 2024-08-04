@@ -32,9 +32,6 @@ SOFTWARE.
 #include <cstring>
 
 #include "xmi2mid.h"
-#ifdef _MSC_VER
-#pragma comment(lib, "SDL2_mixer")
-#endif
 
 class music {
  public:
