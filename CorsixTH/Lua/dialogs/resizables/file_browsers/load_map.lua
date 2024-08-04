@@ -28,7 +28,7 @@ function UILoadMap:UILoadMap(ui, mode)
   local path = ui.app.user_level_dir
   local treenode = FilteredFileTreeNode(path, ".map")
   treenode.label = "Maps"
-  self:UIFileBrowser(ui, mode, _S.load_game_window.caption:format(".map"), 295,
+  self:UIFileBrowser(ui, mode, _S.load_map_window.caption:format(".map"), 295,
       treenode, true, _S.load_game_window.load_button)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.

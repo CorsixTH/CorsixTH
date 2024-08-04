@@ -413,6 +413,11 @@ tooltip.save_map_window = {
   new_map = "Enter name for a map savegame",
 }
 
+load_map_window = {
+  caption = "Load Map (%1%)",
+  load_button = "Load",
+}
+
 menu_list_window = {
   name = "Name",
   save_date = "Modified",
