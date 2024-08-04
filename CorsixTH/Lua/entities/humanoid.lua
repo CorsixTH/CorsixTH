@@ -171,7 +171,7 @@ falling_anim("Standard Female Patient",   3116)
 --  | Name                                 |Anim| Notes
 ----+--------------------------------+-----+-----+-----+-----+------+------+
 on_ground_anim("Standard Male Patient",     1258)
-on_ground_anim("Standard Female Patient",   3116)
+on_ground_anim("Standard Female Patient",   1764)
 
 --  | Get_up Animations                   |
 --  | Name                                 |Anim| Notes

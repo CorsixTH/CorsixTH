@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 189 -- Refactor earthquakes
+local SAVEGAME_VERSION = 190 -- Improve falling actions for debug purposes
 
 class "App"
 
