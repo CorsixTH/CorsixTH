@@ -289,6 +289,8 @@ local string_01 = [=[
 -------------------------------------------------------------------------------
 -- Right Mouse Scrolling: By default, it is disabled (right_mouse_scrolling = false).
 -- This means that the default scrolling method is pressing the middle mouse button.
+-- Please note this an Experimental Feature and may interfere with other right mouse
+-- operations. Report bugs for this on Github Issue 2469.
 --]=] .. '\n' ..
 'right_mouse_scrolling = ' .. tostring(config_values.right_mouse_scrolling) .. '\n' .. [=[
 

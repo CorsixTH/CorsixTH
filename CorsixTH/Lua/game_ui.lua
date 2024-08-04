@@ -796,6 +796,7 @@ function GameUI:playAnnouncement(name, priority, played_callback, played_callbac
 end
 
 --! Check whether the configured mouse drag button is being held down (true) or not (false).
+-- fixme: right mouse scrolling currently breaks other mouse operations (see issue 2469).
 function GameUI:_isMouseScrollButtonDown()
   local mouse_scroll_button_down
   if self.app.config.right_mouse_scrolling then

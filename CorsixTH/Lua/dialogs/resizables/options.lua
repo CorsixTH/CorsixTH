@@ -134,6 +134,17 @@ function UIOptions:UIOptions(ui, mode)
         :setToggleState(app.config.check_for_updates)
   end
 
+  -- add the Audio global switch.
+  local audio_status = app:isAudioEnabled()
+  local audio_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+    :setLabel(_S.options_window.audio):setTooltip(_S.tooltip.options_window.audio_button).lowered = true
+  self.volume_panel =
+    self:addBevelPanel(165, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.audio and audio_status and _S.customise_window.option_on or _S.customise_window.option_off)
+  self.volume_button = self.volume_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonAudioGlobal)
+    :setToggleState(app.config.audio and audio_status):setTooltip(_S.tooltip.options_window.audio_toggle)
+  self.volume_button.enabled = audio_status
+
   -- Fullscreen
   local fullscreen_y_pos = self:_getOptionYPos()
   self:addBevelPanel(20, fullscreen_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
@@ -162,18 +173,6 @@ function UIOptions:UIOptions(ui, mode)
   self.mouse_capture_button = self.mouse_capture_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonMouseCapture)
     :setToggleState(app.config.capture_mouse):setTooltip(_S.tooltip.options_window.capture_mouse)
 
-  -- Mouse scroll key
-  local right_mouse_scrolling_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(20, right_mouse_scrolling_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
-    :setLabel(_S.options_window.right_mouse_scrolling):setTooltip(_S.tooltip.options_window.right_mouse_scrolling).lowered = true
-
-  self.right_mouse_scrolling_panel =
-    self:addBevelPanel(165, right_mouse_scrolling_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.right_mouse_scrolling and _S.options_window.right_mouse_scrolling_option_right or _S.options_window.right_mouse_scrolling_option_middle)
-
-  self.right_mouse_scrolling_button = self.right_mouse_scrolling_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonRightMouseScrolling)
-    :setToggleState(app.config.right_mouse_scrolling):setTooltip(_S.tooltip.options_window.right_mouse_scrolling)
-
-
   -- Language
   -- Get language name in the language to normalize display.
   -- If it doesn't exist, display the current config option.
@@ -185,22 +184,13 @@ function UIOptions:UIOptions(ui, mode)
   end
 
   -- Start a new column of buttons
+  -- Language setting.
   local lang_y_pos = self:_getOptionYPos(true)
   self:addBevelPanel(320, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.language):setTooltip(_S.tooltip.options_window.language).lowered = true
   self.language_panel = self:addBevelPanel(465, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(lang)
   self.language_button = self.language_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
 
-  -- add the Audio global switch.
-  local audio_status = app:isAudioEnabled()
-  local audio_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(320, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
-    :setLabel(_S.options_window.audio):setTooltip(_S.tooltip.options_window.audio_button).lowered = true
-  self.volume_panel =
-    self:addBevelPanel(465, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.audio and audio_status and _S.customise_window.option_on or _S.customise_window.option_off)
-  self.volume_button = self.volume_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonAudioGlobal)
-    :setToggleState(app.config.audio and audio_status):setTooltip(_S.tooltip.options_window.audio_toggle)
-  self.volume_button.enabled = audio_status
 
   -- Set scroll speed.
   local scroll_y_pos = self:_getOptionYPos()
@@ -219,6 +209,10 @@ function UIOptions:UIOptions(ui, mode)
   self:addBevelPanel(320, zoom_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.zoom_speed):setTooltip(_S.tooltip.options_window.zoom_speed).lowered = true
   self.zoomspeed_panel = self:addBevelPanel(465, zoom_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel( tostring(self.ui.app.config.zoom_speed) )
   self.zoomspeed_button = self.zoomspeed_panel : makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonZoomSpeed) : setTooltip(_S.tooltip.options_window.zoom_speed)
+
+  -- The right row is currently uneven with the left row, add an additional spacer
+  -- to avoid an overlap.
+  self:_getOptionYPos()
 
   local lower_row_y_pos = self:_getOptionYPos()
   -- "Customise" button
@@ -355,13 +349,6 @@ function UIOptions:buttonMouseCapture()
   app:saveConfig()
   app:setCaptureMouse()
   self.mouse_capture_button:setLabel(app.config.capture_mouse and _S.options_window.option_on or _S.options_window.option_off)
-end
-
-function UIOptions:buttonRightMouseScrolling()
-  local app = self.ui.app
-  app.config.right_mouse_scrolling = not app.config.right_mouse_scrolling
-  app:saveConfig()
-  self.right_mouse_scrolling_button:setLabel(app.config.right_mouse_scrolling and _S.options_window.right_mouse_scrolling_option_right or _S.options_window.right_mouse_scrolling_option_middle)
 end
 
 function UIOptions:buttonCustomise()
