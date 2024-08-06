@@ -2161,7 +2161,8 @@ function World:afterLoad(old, new)
     self.original_savegame_version = old
   end
   -- If the original save game version is considerably lower than the current, warn the player.
-  if new - 20 > self.original_savegame_version then
+  -- For 2024 release, bump cutoff from 20 to 25 pending new methods in PR2518
+  if new - 25 > self.original_savegame_version then
     self.ui:addWindow(UIInformation(self.ui, {_S.information.very_old_save}))
   end
 
