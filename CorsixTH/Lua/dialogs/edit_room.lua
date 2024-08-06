@@ -413,9 +413,9 @@ function UIEditRoom:finishRoom()
         end
         map:setCell(x, y, layer, flag + tiles.north)
       end
-	elseif dir == "north_window_long" then
+    elseif dir == "north_window_long" then
       if x ~= rect.x then
-  	    map:setCell(x, y, layer, flag + tiles.north)
+        map:setCell(x, y, layer, flag + tiles.north)
         if map:getCell(x + 1, y, layer) ~= 0 then
           map:setCell(x + 1, y, layer, flag + tiles.north)
         end
@@ -434,13 +434,13 @@ function UIEditRoom:finishRoom()
         end
         map:setCell(x, y, layer, flag + tiles.west)
       end
-	elseif dir == "west_window_long" then
-    if x ~= rect.x then
-		  map:setCell(x, y, layer, flag + tiles.west)
-      if map:getCell(x, y + 1, layer) ~= 0 then
-        map:setCell(x, y + 1, layer, flag + tiles.west)
+    elseif dir == "west_window_long" then
+      if x ~= rect.x then
+        map:setCell(x, y, layer, flag + tiles.west)
+        if map:getCell(x, y + 1, layer) ~= 0 then
+          map:setCell(x, y + 1, layer, flag + tiles.west)
+        end
       end
-    end
     end
   end
   for x, obj in pairs(self.blueprint_wall_anims) do
