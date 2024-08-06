@@ -435,7 +435,7 @@ function UIEditRoom:finishRoom()
         map:setCell(x, y, layer, flag + tiles.west)
       end
     elseif dir == "west_window_long" then
-      if x ~= rect.x then
+      if y ~= rect.y then
         map:setCell(x, y, layer, flag + tiles.west)
         if map:getCell(x, y + 1, layer) ~= 0 then
           map:setCell(x, y + 1, layer, flag + tiles.west)
