@@ -1,0 +1,27 @@
+---
+on: 
+  push:
+    tags:
+    - '*'
+
+jobs:
+  release:
+    name: Prepare release
+    if: github.repository == 'CorsixTH/CorsixTH'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Fetch changelog
+      id: changelog
+      run: >
+        git diff -U0 v0.67..master changelog.txt |
+        tail -n+9 | sed -e 's/#/##/g' | sed -e 's/^+//g' >> body.md
+    - name: Create release
+      uses: ncipollo/release-action@v1
+      with:
+        bodyFile: 'body.md'
+        draft: true
+        name: 'CorsixTH 0.68'
