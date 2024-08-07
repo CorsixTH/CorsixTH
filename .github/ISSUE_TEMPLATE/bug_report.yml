@@ -36,6 +36,15 @@ body:
       description: What did you expect to happen in the game?
     validations:
       required: true
+# Experiments
+  - type: checkboxes
+    id: experiments
+    attributes:
+      label: Have you enabled any current CorsixTH Experimental Features?
+      description: Select all that apply
+      options:
+        - label: Right mouse panning
+        - label: Falling actions
 # Save Game Upload
   - type: textarea
     id: savegame
