@@ -441,7 +441,7 @@ function UIEditRoom:finishRoom()
         if map:getCell(x - 1, y, layer) ~= 0 and map:getCell(x - 1, y, layer) ~= 118 then
           map:setCell(x - 1, y, layer, flag + tiles.north)
         end
-      elseif x ~= rect.x then
+      else
         map:setCell(x, y, layer, flag + tiles.north)
         if map:getCell(x + 1, y, layer) ~= 0 and map:getCell(x + 1, y, layer) ~= 116 then
           map:setCell(x + 1, y, layer, flag + tiles.north)
@@ -453,7 +453,7 @@ function UIEditRoom:finishRoom()
         if map:getCell(x, y - 1, layer) ~= 0 and map:getCell(x, y - 1, layer) ~= 119 then
           map:setCell(x, y - 1, layer, flag + tiles.west)
         end
-      elseif y ~= rect.y then
+      else
         map:setCell(x, y, layer, flag + tiles.west)
         if map:getCell(x, y + 1, layer) ~= 0 and map:getCell(x, y + 1, layer) ~= 117 then
           map:setCell(x, y + 1, layer, flag + tiles.west)
