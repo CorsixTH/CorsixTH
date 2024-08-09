@@ -31,8 +31,8 @@ adviser.warnings.money_low = "Stai finendo i soldi!"
 -- TODO: tooltip.status.close -- it's called status window, not overview window.
 
 -- The originals of these two contain one space too much
-fax.emergency.cure_not_possible_build = "È necessario costruire un %s"
-fax.emergency.cure_not_possible_build_and_employ = "È necessario costruire un %s e assumere un %s"
+fax.emergency.cure_not_possible_build = "E' necessario costruire un %s" -- È unsupported by TH font
+fax.emergency.cure_not_possible_build_and_employ = "E' necessario costruire un %s e assumere un %s" -- È unsupported in TH font
 
 -- An override for the squits becoming the the squits see issue 1646
 adviser.research.drug_improved_1 = "Il medicinale per %s è stato migliorato dal Reparto ricerca."
