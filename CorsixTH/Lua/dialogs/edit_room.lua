@@ -427,48 +427,48 @@ function UIEditRoom:finishRoom()
         end
         map:setCell(x, y, layer, flag + tiles.west)
       end
-	elseif dir == "north_window_long" then
-	  if x == rect.x then
-		map:setCell(x, y, layer, flag + tiles.north_window_1)
-		-- Check if the window_long continues.
-		-- If yes, replace the window_long with window_n. 
-		-- if no, replace it with the wall.
-		if map:getCell(x - 1, y, layer) ~= 0 and map:getCell(x - 1, y, layer) ~= 118 then
-		  if map:getCell(x - 2, y, layer) == 120 or map:getCell(x - 2, y, layer) == 116 then
-		    map:setCell(x - 1, y, layer, flag + tiles.north_window_2)
-		  else
+    elseif dir == "north_window_long" then
+      if x == rect.x then
+        map:setCell(x, y, layer, flag + tiles.north_window_1)
+        -- Check if the window_long continues.
+        -- If yes, replace the window_long with window_n.
+        -- if no, replace it with the wall.
+        if map:getCell(x - 1, y, layer) ~= 0 and map:getCell(x - 1, y, layer) ~= 118 then
+          if map:getCell(x - 2, y, layer) == 120 or map:getCell(x - 2, y, layer) == 116 then
+            map:setCell(x - 1, y, layer, flag + tiles.north_window_2)
+          else
             map:setCell(x - 1, y, layer, flag + tiles.north)
-		  end
+          end
         end
-	  else
-		map:setCell(x, y, layer, flag + tiles.north_window_2)
-		if map:getCell(x + 1, y, layer) ~= 0 and map:getCell(x + 1, y, layer) ~= 116 then
-		  if map:getCell(x + 2, y, layer) == 120 or map:getCell(x + 2, y, layer) == 118 then
-		    map:setCell(x + 1, y, layer, flag + tiles.north_window_1)
-		  else
+      else
+        map:setCell(x, y, layer, flag + tiles.north_window_2)
+        if map:getCell(x + 1, y, layer) ~= 0 and map:getCell(x + 1, y, layer) ~= 116 then
+          if map:getCell(x + 2, y, layer) == 120 or map:getCell(x + 2, y, layer) == 118 then
+            map:setCell(x + 1, y, layer, flag + tiles.north_window_1)
+          else
             map:setCell(x + 1, y, layer, flag + tiles.north)
-		  end
+          end
         end
-	  end
-	elseif dir == "west_window_long" then
+      end
+    elseif dir == "west_window_long" then
       if y == rect.y then
-		map:setCell(x, y, layer, flag + tiles.west_window_2)
-		if map:getCell(x, y - 1, layer) ~= 0 and map:getCell(x, y - 1, layer) ~= 119 then
-		  if map:getCell(x, y - 2, layer) == 121 or map:getCell(x, y - 2, layer) == 117 then
-			map:setCell(x, y - 1, layer, flag + tiles.west_window_1)
-		  else
-			map:setCell(x, y - 1, layer, flag + tiles.west)
-		  end
-		end
-	  else
-		map:setCell(x, y, layer, flag + tiles.west_window_1)
-		if map:getCell(x, y + 1, layer) ~= 0 and map:getCell(x, y + 1, layer) ~= 117 then
-	      if map:getCell(x, y + 2, layer) == 121 or map:getCell(x, y + 2, layer) == 119 then
-			map:setCell(x, y + 1, layer, flag + tiles.west_window_2)
-		  else
-			map:setCell(x, y + 1, layer, flag + tiles.west)
-		  end
-	    end
+        map:setCell(x, y, layer, flag + tiles.west_window_2)
+        if map:getCell(x, y - 1, layer) ~= 0 and map:getCell(x, y - 1, layer) ~= 119 then
+          if map:getCell(x, y - 2, layer) == 121 or map:getCell(x, y - 2, layer) == 117 then
+            map:setCell(x, y - 1, layer, flag + tiles.west_window_1)
+          else
+            map:setCell(x, y - 1, layer, flag + tiles.west)
+          end
+        end
+      else
+        map:setCell(x, y, layer, flag + tiles.west_window_1)
+        if map:getCell(x, y + 1, layer) ~= 0 and map:getCell(x, y + 1, layer) ~= 117 then
+          if map:getCell(x, y + 2, layer) == 121 or map:getCell(x, y + 2, layer) == 119 then
+            map:setCell(x, y + 1, layer, flag + tiles.west_window_2)
+          else
+            map:setCell(x, y + 1, layer, flag + tiles.west)
+          end
+        end
       end
     end
   end
