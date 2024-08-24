@@ -1417,10 +1417,11 @@ function Hospital:receiveMoneyForTreatment(patient)
   end
 end
 
---! Sell a soda to a patient.
+--! Sell a soda to a patient for the price in the level config (default $20).
 --!param patient (patient) The patient buying the soda.
 function Hospital:sellSodaToPatient(patient)
-  self:receiveMoneyForProduct(patient, 20, _S.transactions.drinks)
+  local soda_price = self.world.map.level_config.gbv.SodaPrice
+  self:receiveMoneyForProduct(patient, soda_price, _S.transactions.drinks)
   self.sodas_sold = self.sodas_sold + 1
 end
 

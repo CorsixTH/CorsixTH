@@ -145,6 +145,8 @@ local configuration = {
     VeryTired = 700,
     -- Per mille point of attribute fatigue to be crack up (extremely) tired
     CrackUpTired = 800,
+    -- How much soda costs at a drinks machine
+    SodaPrice              = 20,
   },
 
   towns = {
