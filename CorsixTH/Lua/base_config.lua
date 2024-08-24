@@ -120,6 +120,8 @@ local configuration = {
     DrugImproveRate        = 5,
     -- How many months until population allocation is done for real
     AllocDelay             = 3,
+    -- how much soda costs
+    SodaPrice     			   = 20,
 
     AbilityThreshold = {
       [0] = {Value = 75}, -- SURGEON

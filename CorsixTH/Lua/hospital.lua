@@ -1418,7 +1418,8 @@ end
 --! Sell a soda to a patient.
 --!param patient (patient) The patient buying the soda.
 function Hospital:sellSodaToPatient(patient)
-  self:receiveMoneyForProduct(patient, 20, _S.transactions.drinks)
+  local soda_price = self.world.map.level_config.gbv.SodaPrice or 20
+  self:receiveMoneyForProduct(patient, soda_price, _S.transactions.drinks)
   self.sodas_sold = self.sodas_sold + 1
 end
 
