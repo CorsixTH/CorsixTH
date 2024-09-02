@@ -221,7 +221,7 @@ menu_debug_overlay = {
   byte_5                      = "  BYTE 5  ",
   byte_6                      = "  BYTE 6  ",
   byte_7                      = "  BYTE 7  ",
-  parcel                      = "  PARCELA  ",
+  parcel                      = "  TERRENO  ",
 }
 
 menu_player_count = {
