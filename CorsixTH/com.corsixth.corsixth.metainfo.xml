@@ -458,13 +458,12 @@
   </releases>
   <screenshots>
     <screenshot type="default">
+      <caption>Welcome dialog for first hospital</caption>
       <image>https://corsixth.com/media/screenshots/1-medium.jpg</image>
     </screenshot>
     <screenshot>
+      <caption>First level in progress</caption>
       <image>https://corsixth.com/media/screenshots/2-medium.jpg</image>
-    </screenshot>
-    <screenshot>
-      <image>https://camo.githubusercontent.com/1b82352e0f0eac03a6927af7e9d7bbad8c380f93/687474703a2f2f692e696d6775722e636f6d2f714856363055692e706e67</image>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1">
@@ -496,10 +495,12 @@
     <content_attribute id="money-purchasing">none</content_attribute>
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
-  <developer_name>CorsixTH developers</developer_name>
+  <developer id="com.corsixth">
+    <name>CorsixTH developers</name>
+  </developer>
   <url type="homepage">https://corsixth.com</url>
+  <url type="vcs-browser">https://github.com/CorsixTH/CorsixTH</url>
   <url type="bugtracker">https://github.com/CorsixTH/CorsixTH/issues</url>
-  <url type="contact">https://webchat.freenode.net/?channels=corsix-th</url>
   <url type="contact">https://discord.gg/Mxeztvh</url>
   <url type="help">https://github.com/CorsixTH/CorsixTH/wiki</url>
 </component>
