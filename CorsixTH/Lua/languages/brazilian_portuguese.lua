@@ -1,7 +1,7 @@
 --[[ Copyright (c) 2010 Manuel "Roujin" Wolf
 Copyright (c) 2012 Henrique Poyatos
 Copyright (c) 2014 Leonardo Malaman (LeonardoGamer)
-Copyright (c) 2018 Altieres Lima da Silva
+Copyright (c) 2024 Altieres Lima da Silva
 Copyright (c) 2020 Henrique Poyatos
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -25,9 +25,11 @@ SOFTWARE. --]]
 Language("Português Brasileiro", "Brazilian Portuguese", "pt_br", "br")
 Inherit("English")
 Encoding(utf8)
+
+--Note: All strings should use a single space after full-stops. Only exception is level descriptions.
 -------------------------------  OVERRIDE  ----------------------------------
 adviser.warnings.money_low = "Você está ficando sem dinheiro!" -- Funny. Exists in German translation, but not existent in english?
-tooltip.graphs.reputation = "Alternar reputaçäo" -- IncorreIncorrectly said "toggle hospital value"
+tooltip.graphs.reputation = "Alternar reputaçäo" -- Incorrectly said "toggle hospital value"
 tooltip.status.close = "Fechar janela de status" -- Incorrectly said "close overview window"
 
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
@@ -120,7 +122,7 @@ date_format = {
 }
 
 object.litter = "Lixo"
-tooltip.objects.litter = "Lixo: Um paciente jogou porque näo encontrou um cesto de lixo."
+tooltip.objects.litter = "Lixo: Deixado no chäo por um paciente porque ele näo encontrou uma lixeira para jogá-lo."
 
 object.rathole = "Buraco de rato"
 tooltip.objects.rathole = "Casa de uma família de ratos que encontrou seu hospital sujo o suficiente para morar nele."
@@ -128,9 +130,9 @@ tooltip.objects.rathole = "Casa de uma família de ratos que encontrou seu hospi
 tooltip.fax.close = "Fecha esta janela sem apagar a mensagem."
 tooltip.message.button = "Clique com o botäo esquerdo para abrir a mensagem"
 tooltip.message.button_dismiss = "Clique com o botäo esquerdo para abrir a mensagem e botäo direto para recusá-la"
-tooltip.casebook.cure_requirement.hire_staff = "Você precisa contratar empregados para realizar este tratamento."
+tooltip.casebook.cure_requirement.hire_staff = "Você precisa contratar funcionários para realizar este tratamento."
 tooltip.casebook.cure_type.unknown = "Você ainda näo sabe como tratar esta doença"
-tooltip.research_policy.no_research = "Nenhuma pesquisa está sendo feita nesta categoria no momento."
+tooltip.research_policy.no_research = "Nenhuma pesquisa está sendo realizada nesta categoria no momento."
 tooltip.research_policy.research_progress = "Progresso para a próxima descoberta nesta categoria: %1%/%2%"
 
 menu["player_count"] = "QUANTIDADE DE JOGADORES"
