@@ -962,6 +962,28 @@ hotkeys_file_err = {
         "Para referência, o erro ao carregar o arquivo de teclas de atalho foi: ",
 }
 
+fax = {
+  vip_visit_result = {
+    remarks = {
+      [1] = "Que hospital eficiente! Da próxima vez que eu estiver gravemente doente, vou querer ser tratado aqui.",
+      [2] = "Isso sim é o que eu chamo de um hospital.",
+      [3] = "Este hospital é excelente. E eu sei do que estou falando; visito muitos hospitais.",
+      [4] = "Que hospital bem administrado! Obrigado pelo convite.",
+      [5] = "Mmmm. Definitivamente näo é uma má instituiçäo médica.",
+      [6] = "Gostei muito do seu excelente hospital. Agora, alguém aí quer um curry da Casa do Curry?",
+      [7] = "Bem, já vi piores. Mas você deveria fazer algumas melhorias.",
+      [8] = "Oh céus! Isso näo é um lugar agradável para se estar quando se está doente.",
+      [9] = "Para ser honesto, é um hospital mediano. Francamente, eu esperava mais.",
+      [10] = "Por que me zanguei? Isso foi pior que assistir a uma ópera de quatro horas!",
+      [11] = "Estou decepcionado com o que vi. Você chama isso de hospital? Parece mais uma pocilga!",
+      [12] = "Estou farto de atrair atençäo pública e visitar buracos fedorentos como este! Eu me demito.",
+      [13] = "Que lixo. Vou tentar fechá-lo.",
+      [14] = "Eu nunca vi um hospital täo ruim. Que vergonha!",
+      [15] = "Estou chocado. Isso näo pode ser chamado de hospital! Näo conte comigo para voltar aqui.",
+    }
+  }
+}
+
 transactions.remove_room = "Construir: Remover sala destruída"
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
