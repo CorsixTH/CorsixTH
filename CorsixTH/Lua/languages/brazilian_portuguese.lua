@@ -957,8 +957,8 @@ map_editor_window = {
 
 hotkeys_file_err = {
   file_err_01 = "Näo foi possível carregar o arquivo hotkeys.txt. Certifique-se de que o " ..
-        "Theme Hospital tem permissäo de leitura/escrita ",
-  file_err_02 = ", ou use a opçäo linha de comando --hotkeys-file=NomeDoArquivo para especificar um arquivo gravável. " ..
+        "CorsixTH tenha permissäo de leitura/escrita ",
+  file_err_02 = ", ou use a opçäo linha de comando --hotkeys-file=nome_do_arquivo para especificar um arquivo gravável. " ..
         "Para referência, o erro ao carregar o arquivo de teclas de atalho foi: ",
 }
 
@@ -1163,7 +1163,7 @@ original_credits[62] = "Stuart Black"
 original_credits[63] = " "
 original_credits[64] = " "
 original_credits[65] = " "
-original_credits[66] = ":Música e Efeitos de Som"
+original_credits[66] = ":Música e Efeitos Sonoros"
 original_credits[67] = ","
 original_credits[68] = "Russell Shaw"
 original_credits[69] = "Adrian Moore"
@@ -2462,8 +2462,8 @@ tooltip.bank_manager.current_loan = "Empréstimos pendentes"
 tooltip.jukebox.play = "Ligar jukebox"
 tooltip.jukebox.stop = "Parar jukebox"
 tooltip.jukebox.close = "Fechar jukebox"
-tooltip.jukebox.fast_forward = "Avançar rapidamente jukebox"
-tooltip.jukebox.rewind = "Retroceder jukebox"
+tooltip.jukebox.fast_forward = "Avançar rapidamente no jukebox"
+tooltip.jukebox.rewind = "Retroceder no jukebox"
 tooltip.jukebox.current_title = "Máquina de discos"
 tooltip.jukebox.loop = "Funcionamento contínuo da máquina de discos"
 tooltip.build_room_window.cost = "Preço da consulta selecionada"
