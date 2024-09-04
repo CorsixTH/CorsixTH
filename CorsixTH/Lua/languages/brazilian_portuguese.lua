@@ -1,8 +1,8 @@
 --[[ Copyright (c) 2010 Manuel "Roujin" Wolf
 Copyright (c) 2012 Henrique Poyatos
 Copyright (c) 2014 Leonardo Malaman (LeonardoGamer)
-Copyright (c) 2024 Altieres Lima da Silva
 Copyright (c) 2020 Henrique Poyatos
+Copyright (c) 2024 Altieres Lima da Silva
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -35,8 +35,8 @@ tooltip.status.close = "Fechar janela de status" -- Incorrectly said "close over
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
 tooltip.staff_list.next_person = "Mostrar a página seguinte"
 tooltip.staff_list.prev_person = "Mostrar a página anterior"
-tooltip.status.reputation = "Sua reputaçäo näo deve estar abaixo de %d. Atualmente tem %d"
-tooltip.status.balance = "Näo deve ter menos que $%d no banco. Atualmente tem $%d"
+tooltip.status.reputation = "Sua Reputaçäo näo deve ser menor que %d. Atualmente está em %d"
+tooltip.status.balance = "Seu saldo bancário näo deve ser menor que %d. Atualmente está em %d"
 
 -- The originals of these two contain one space too much
 fax.emergency.cure_not_possible_build = "Você precisará construir um(a) %s"
