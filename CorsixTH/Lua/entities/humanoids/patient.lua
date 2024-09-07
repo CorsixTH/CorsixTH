@@ -354,10 +354,10 @@ local good_actions = {walk=true, idle=true, seek_room=true, queue=true}
 
 --! Test whether the current tile of the patient is useful for inserting an
 -- action that needs a fully empty tile in the hospital.
---!param current Current action.
+--!param cur_action Current action of the patient.
 --!return Whether the tile can be used for inserting an action.
-function Patient:canPeePukeOrFall(current)
-  if not good_actions[current.name] then return false end
+function Patient:canPeePukeOrFall(cur_action)
+  if not good_actions[cur_action.name] then return false end
   if self.going_home then return false end
 
   local th = self.world.map.th
