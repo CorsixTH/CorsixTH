@@ -235,6 +235,7 @@ local string_01 = [=[
 --  Russian               / ru / rus
 --  Spanish               / es / spa
 --  Swedish               / sv / swe
+--  Ukrainian             / uk / ukr
 --]=] .. '\n' ..
 'language = [['.. config_values.language ..']]' .. '\n' .. [=[
 
