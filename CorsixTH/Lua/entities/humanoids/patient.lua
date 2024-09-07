@@ -349,14 +349,14 @@ function Patient:die()
   self:setDynamicInfoText(_S.dynamic_info.patient.actions.dying)
 end
 
--- Actions we can interrupt for in the canPeePukeOrFall function
+-- Actions we can interrupt when at a fully empty tile.
 local good_actions = {walk=true, idle=true, seek_room=true, queue=true}
 
 --! Test whether the current tile of the patient is useful for inserting an
 -- action that needs a fully empty tile in the hospital.
 --!param cur_action Current action of the patient.
 --!return Whether the tile can be used for inserting an action.
-function Patient:canPeePukeOrFall(cur_action)
+function Patient:atFullyEmptyTile(cur_action)
   if not good_actions[cur_action.name] then return false end
   if self.going_home then return false end
 
@@ -373,7 +373,7 @@ end
 function Patient:falling(player_init)
   local current = self:getCurrentAction()
   current.keep_reserved = true
-  if self.falling_anim and self:canPeePukeOrFall(current) and self.has_fallen == 1 then
+  if self.falling_anim and self:atFullyEmptyTile(current) and self.has_fallen == 1 then
     self.has_fallen = 2
     self:queueAction(FallingAction(), 1)
     self:queueAction(OnGroundAction(), 2)
@@ -405,7 +405,7 @@ end
 function Patient:vomit()
   local current = self:getCurrentAction()
   --Only vomit under these conditions. Maybe I should add a vomit for patients in queues too?
-  if self:canPeePukeOrFall(current) and self.has_vomitted == 0 then
+  if self:atFullyEmptyTile(current) and self.has_vomitted == 0 then
     self:queueAction(VomitAction(), 1)
     self:interruptAndRequeueAction(current, 2)
     self.has_vomitted = self.has_vomitted + 1
@@ -418,7 +418,7 @@ end
 function Patient:pee()
   local current = self:getCurrentAction()
   --Only pee under these conditions. As with vomit, should they also pee if in a queue?
-  if self:canPeePukeOrFall(current) then
+  if self:atFullyEmptyTile(current) then
     self:queueAction(PeeAction(), 1)
     self:interruptAndRequeueAction(current, 2)
     self:setMood("poo", "deactivate")
