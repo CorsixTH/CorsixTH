@@ -158,7 +158,7 @@ function Patient:setDiagnosed()
   self:updateDynamicInfo()
 end
 
--- Modifies the diagnosis progress of a patient.
+--! Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
   self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
@@ -171,7 +171,7 @@ function Patient:modifyDiagnosisProgress(incrementValue)
   self:updateDynamicInfo()
 end
 
--- Updates the patients diagnostic progress based on the doctors skill
+--! Updates the patients diagnostic progress based on the doctors skill
 -- called when they are done using a diagnosis room
 function Patient:completeDiagnosticStep(room)
   -- Base: depending on difficulty of disease as set in sam file
@@ -204,7 +204,7 @@ function Patient:completeDiagnosticStep(room)
   self:modifyDiagnosisProgress(diagnosis_base + (diagnosis_bonus * multiplier))
 end
 
--- Sets the hospital for the patient - additionally removing them from a
+--! Sets the hospital for the patient - additionally removing them from a
 -- hospital if they already belong to one. For player hospitals, patients who
 -- are not debug or emergency patients are made to seek a reception desk.
 --!param hospital (Hospital): hospital to assign to patient
@@ -352,6 +352,10 @@ end
 -- Actions we can interrupt for in the canPeePukeOrFall function
 local good_actions = {walk=true, idle=true, seek_room=true, queue=true}
 
+--! Test whether the current tile of the patient is useful for inserting an
+-- action that needs a fully empty tile in the hospital.
+--!param current Current action.
+--!return Whether the tile can be used for inserting an action.
 function Patient:canPeePukeOrFall(current)
   if not good_actions[current.name] then return false end
   if self.going_home then return false end
