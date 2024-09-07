@@ -40,6 +40,7 @@ height = SCREEN_SIZE_HEIGHT
 --  Russian               / ru / rus
 --  Spanish               / es / spa
 --  Swedish               / sv / swe
+--  Ukrainian             / uk / ukr
 --
 language = [[LANGUAGE_CHOSEN]]
 
