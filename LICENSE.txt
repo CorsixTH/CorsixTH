@@ -63,7 +63,7 @@ Copyright (C) 2017 Fang Xianfu
 Copyright (C) 2017 Steven Price
 Copyright (C) 2017 Radomir Wojtera
 Copyright (C) 2017-2019 David Fairbrother
-Copyright (C) 2017-2020 Altieres Lima
+Copyright (C) 2017-2024 Altieres Lima da Silva
 Copyright (C) 2017-2024 Justin "mugmuggy" Mugford
 Copyright (C) 2018 Pavel Schoffer
 Copyright (C) 2018 Rick "Feanathiel" Megens
