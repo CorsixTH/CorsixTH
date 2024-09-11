@@ -261,7 +261,7 @@ function UIStaff:onMouseUp(button, x, y)
   local repaint = Window.onMouseUp(self, button, x, y)
   -- Test for hit within the view circle
   if button == "right" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
-     or x > 18 and x < 170 and y > 19 and y < 42 then
+     or x > 18 and x < 170 and y > 19 and y < 42 then -- Coordinates of name label
     -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
     local staff_index = nil
     for i, staff in ipairs(ui.hospital.staff) do
