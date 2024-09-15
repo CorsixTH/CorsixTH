@@ -20,7 +20,26 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
-      <release version="0.68.0~beta1" date="2024-09-01" type="development">
+    <release version="0.68.0~rc1" date="2024-09-14" type="development">
+      <description>
+        <p>New Features:</p>
+        <ul>
+          <li>Long windows now behave properly in the game if they get intersected
+              by an adjacent wall</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>Ukranian translation added.</li>
+          <li>Brazilian-Portuguese translation has been updated</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Tooltips for language menu now align with list items. Please note we are
+              aware of an issue where some languages don&apos;t show a tooltip.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.68.0~beta1" date="2024-09-01" type="development">
       <description>
         <p>New Features:</p>
       <ul>
