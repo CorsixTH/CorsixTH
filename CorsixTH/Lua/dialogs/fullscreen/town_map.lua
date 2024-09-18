@@ -188,10 +188,8 @@ function UITownMap:draw(canvas, x, y)
   self.info_font:draw(canvas, radiators,    x +  95, y + 265)
 
   -- Heating costs
-  local heating_costs = math.floor(((hospital.heating.radiator_heat *10)* radiators)* 7.5)
-  if app.config.free_build_mode then  -- Everything is 0$ in free build mode
-    heating_costs = 0
-  end
+  local heating_costs = app.config.free_build_mode and 0  -- Everything is 0$ in free build mode
+			or math.floor(((hospital.heating.radiator_heat *10)* radiators)* 7.5)
   self.info_font:draw(canvas, ("%8i"):format(heating_costs),  x + 100, y + 355)
 
   -- Draw balance with temporary offset in unicode languages
@@ -306,10 +304,8 @@ function UITownMap:draw(canvas, x, y)
       local owner_num = map.th:getPlotOwner(self.hover_plot)
       if owner_num == 0 then
         owner = _S.town_map.for_sale
-	price = "$" .. map:getParcelPrice(self.hover_plot)
-	if app.config.free_build_mode then  -- Everything is 0$ in free build mode
-	  price = "$0"
-	end
+	price = app.config.free_build_mode and "$0"  -- Everything is 0$ in free build mode
+  		or ("$" .. map:getParcelPrice(self.hover_plot
       else
         owner = world.hospitals[owner_num].name
       end
