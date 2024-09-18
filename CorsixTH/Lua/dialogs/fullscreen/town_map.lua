@@ -305,7 +305,7 @@ function UITownMap:draw(canvas, x, y)
       if owner_num == 0 then
         owner = _S.town_map.for_sale
 	price = app.config.free_build_mode and "$0"  -- Everything is 0$ in free build mode
-  		or ("$" .. map:getParcelPrice(self.hover_plot))
+		or ("$" .. map:getParcelPrice(self.hover_plot))
       else
         owner = world.hospitals[owner_num].name
       end
