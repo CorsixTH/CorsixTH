@@ -96,8 +96,8 @@ jobs:
       - name: Run simple code tests
         if: matrix.static_analysis
         run: |
-          # Check if there are trailing whitespaces.
-          python3 scripts/check_trailing_whitespaces.py
+          # Check if there bad whitespace.
+          python3 scripts/check_whitespace.py
           # Check for incorrectly encoded files.
           python3 scripts/check_language_files_not_BOM.py
           # Check if there are lua classes with invalid/improper declarations.
