@@ -37,29 +37,33 @@ def has_bad_whitespace(path):
 
     return False
 
-# Main program.
-if len(sys.argv) > 2:
-    sys.exit(f'Usage: {sys.argv[0]} [root-dir]')
 
-top = os.getcwd()
-if len(sys.argv) == 2:
-    top = os.path.join(top, sys.argv[1])
+def main():
+    if len(sys.argv) > 2:
+        sys.exit(f'Usage: {sys.argv[0]} [root-dir]')
 
-count = 0
-offending_files = []
-for root, dirs, files in os.walk(top):
-    for f in files:
-        if f.lower().endswith(('.py', '.lua', '.h', '.cpp', '.cc', '.c')):
-            count += 1
-            path = os.path.join(root, f)
-            if has_bad_whitespace(path):
-                offending_files.append(path)
+    top = os.getcwd()
+    if len(sys.argv) == 2:
+        top = os.path.join(top, sys.argv[1])
 
-print('Checked {} files'.format(count))
-if offending_files:
-    print('Found files with bad whitespace:')
-    for path in offending_files:
-        print(path)
-    sys.exit(1)
+    count = 0
+    offending_files = []
+    for root, dirs, files in os.walk(top):
+        for f in files:
+            if f.lower().endswith(('.py', '.lua', '.h', '.cpp', '.cc', '.c')):
+                count += 1
+                path = os.path.join(root, f)
+                if has_bad_whitespace(path):
+                    offending_files.append(path)
 
-sys.exit(0)
+    print('Checked {} files'.format(count))
+    if offending_files:
+        print('Found files with bad whitespace:')
+        for path in offending_files:
+            print(path)
+        sys.exit(1)
+
+    sys.exit(0)
+
+if __name__ == '__main__':
+    main()
