@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 
 """
-  Usage: check_whitespace.py [root-dir]
+  Usage: check_whitespace.py [-e EXCL] [root-dir ...]
 
   This script will check for incorrect whitespace (usage of TAB and trailing
-  whitespace) in Lua, Python, and C/C++ files below |root-dir|.
+  whitespace) in Lua, Python, and C/C++ files below one of the listed
+  |root-dir| directories. With the -e option you can specify one or more EXCL
+  fragments that skips file paths that have one of the fragments.
     It will return 0 (ie success) if only correct whitespace is found.
   Otherwise, it will print the path of the violating file(s) and return an
   error code.
 
-  If root-dir is not specified, it will use the current directory.
+  If no root-dir is specified, it will use the current directory.
 """
 
 import getopt
@@ -24,19 +26,36 @@ import sys
 # - a SPACE as last character.
 BAD_WHITESPACE = re.compile(r'\t| \r| \n| $')
 
+MESSAGES = {
+    (True, False): "has at least one tab character",
+    (False, True): "has trailing whitespace",
+    (True, True): "has both at least one tab character and trailing whitespace"
+}
 
-def has_bad_whitespace(path):
+def check_for_bad_whitespace(path):
     """
-    Returns whether the file at |path| has bad whitespace.
+    Checks the file at |path| for tab and trailing white space and returns an
+    error-message if something bad was found, or None.
     """
+    has_bad_tab = False
+    has_bad_space = False
     if os.path.isfile(path):
         with open(path, 'r') as handle:
             for line in handle:
-                m = BAD_WHITESPACE.search(line)
-                if m:
-                    return True
+                bad_whites = BAD_WHITESPACE.findall(line)
+                if bad_whites:
+                    bad_tab_count = sum(1 for bw in bad_whites if bw == '\t')
+                    bad_space_count = len(bad_whites) - bad_tab_count
 
-    return False
+                    has_bad_tab = has_bad_tab or (bad_tab_count > 0)
+                    has_bad_space = has_bad_space or (bad_space_count > 0)
+
+                    if has_bad_tab and has_bad_space:
+                        break # Found everything we can possibly find, done.
+
+    if has_bad_tab or has_bad_space:
+        return f"File \"{path}\" {MESSAGES[(has_bad_tab, has_bad_space)]}"
+    return None
 
 
 def main():
@@ -82,7 +101,7 @@ def main():
 
     # Process files.
     count = 0
-    offending_files = []
+    messages = []
     found_errors = False
     for top in tops:
         for root, dirs, files in os.walk(top):
@@ -99,9 +118,10 @@ def main():
                 # Check the file.
                 count += 1
                 try:
-                    if has_bad_whitespace(path):
+                    message = check_for_bad_whitespace(path)
+                    if message is not None:
                         found_errors = True
-                        offending_files.append(path)
+                        messages.append(message)
 
                 except UnicodeDecodeError:
                     print(f"ERROR: File {path} has Unicode errors.")
@@ -109,10 +129,11 @@ def main():
 
     # Report files with bad whitespace.
     print('Checked {} files'.format(count))
-    if offending_files:
+    if messages:
+        print()
         print('Found files with bad whitespace:')
-        for path in offending_files:
-            print(path)
+        for message in messages:
+            print(message)
 
     # And construct the return code.
     if found_errors:
