@@ -48,22 +48,33 @@ def main():
 
     count = 0
     offending_files = []
+    found_errors = False
     for root, dirs, files in os.walk(top):
         for f in files:
             if f.lower().endswith(('.py', '.lua', '.h', '.cpp', '.cc', '.c')):
                 count += 1
                 path = os.path.join(root, f)
-                if has_bad_whitespace(path):
-                    offending_files.append(path)
+                try:
+                    if has_bad_whitespace(path):
+                        found_errors = True
+                        offending_files.append(path)
 
+                except UnicodeDecodeError:
+                    print(f"ERROR: File {path} has Unicode errors.")
+                    found_errors = True
+
+
+    # Report files with bad whitespace.
     print('Checked {} files'.format(count))
     if offending_files:
         print('Found files with bad whitespace:')
         for path in offending_files:
             print(path)
-        sys.exit(1)
 
-    sys.exit(0)
+    if found_errors:
+        sys.exit(1)
+    else:
+        sys.exit(0)
 
 if __name__ == '__main__':
     main()
