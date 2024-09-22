@@ -12,6 +12,7 @@
   If root-dir is not specified, it will use the current directory.
 """
 
+import getopt
 import os
 import re
 import sys
@@ -39,21 +40,64 @@ def has_bad_whitespace(path):
 
 
 def main():
-    if len(sys.argv) > 2:
-        sys.exit(f'Usage: {sys.argv[0]} [root-dir]')
+    # Process the command line.
+    short_opts = "he:"
+    long_opts = []
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], short_opts, long_opts)
+    except getopt.GetoptError as ex:
+        print(f"ERROR: {ex}")
+        sys.exit(1)
 
-    top = os.getcwd()
-    if len(sys.argv) == 2:
-        top = os.path.join(top, sys.argv[1])
+    # Process the found options.
+    excludes = []
+    for opt, optval in opts:
+        if opt == '-h':
+            print("Usage: check_whitespace [options] [ROOT-DIR ...]")
+            print()
+            print("Checks source files for bad whitespace. Recursively examines all")
+            print("supplied ROOT-DIR, or the current directory if no root is provided.")
+            print()
+            print("Options:")
+            print("  -h       Print this help text")
+            print("  -e TEXT  Exclude source files with TEXT in their path")
+            print("           This option may be used multiple times")
+            print()
+            print("Have a nice day!")
+            sys.exit(0)
 
+        if opt == '-e':
+            excludes.append(optval)
+            continue
+
+        # Shouldn't happen due to getopt checking.
+        assert False, f"Unexpected option ({(opt, optval)} found."
+
+    # Setup root directories.
+    cur_dir = os.getcwd()
+    if args:
+        tops = [os.path.join(cur_dir, arg) for arg in args]
+    else:
+        tops = [cur_dir]
+
+    # Process files.
     count = 0
     offending_files = []
     found_errors = False
-    for root, dirs, files in os.walk(top):
-        for f in files:
-            if f.lower().endswith(('.py', '.lua', '.h', '.cpp', '.cc', '.c')):
-                count += 1
+    for top in tops:
+        for root, dirs, files in os.walk(top):
+            for f in files:
+                # Skip non-source files.
+                if not f.lower().endswith(('.py', '.lua', '.h', '.cpp', '.cc', '.c')):
+                    continue
+
+                # Skip files with excluded patterns.
                 path = os.path.join(root, f)
+                if any(excl in path for excl in excludes):
+                    continue
+
+                # Check the file.
+                count += 1
                 try:
                     if has_bad_whitespace(path):
                         found_errors = True
@@ -63,7 +107,6 @@ def main():
                     print(f"ERROR: File {path} has Unicode errors.")
                     found_errors = True
 
-
     # Report files with bad whitespace.
     print('Checked {} files'.format(count))
     if offending_files:
@@ -71,6 +114,7 @@ def main():
         for path in offending_files:
             print(path)
 
+    # And construct the return code.
     if found_errors:
         sys.exit(1)
     else:
