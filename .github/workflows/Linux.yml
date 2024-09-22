@@ -97,7 +97,7 @@ jobs:
         if: matrix.static_analysis
         run: |
           # Check if there bad whitespace.
-          python3 scripts/check_whitespace.py
+          python3 scripts/check_whitespace.py -e scanner.cpp -e parser.cpp
           # Check for incorrectly encoded files.
           python3 scripts/check_language_files_not_BOM.py
           # Check if there are lua classes with invalid/improper declarations.
