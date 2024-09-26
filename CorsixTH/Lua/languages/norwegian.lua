@@ -2698,7 +2698,7 @@ vip_names = {
   "Kong Bernard av Nederland",
   "Aung Sang Su Kyi, den Burmesisk Demokratiske Opposisjonslederen",
   "Sir Reginald Crumbly",
-  "Billy Savile OBE",
+  "Sir Lancelot Spratt",
   "Rådgiver Crawford Purves",
   "Rocket Ronnie Jepson",
   "En Fotballspiller i Eliteserien",
