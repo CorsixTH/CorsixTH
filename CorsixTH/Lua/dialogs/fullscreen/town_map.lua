@@ -189,7 +189,7 @@ function UITownMap:draw(canvas, x, y)
 
   -- Heating costs
   local heating_costs = app.config.free_build_mode and 0
-			or math.floor(((hospital.heating.radiator_heat *10)* radiators)* 7.5)
+      or math.floor(((hospital.heating.radiator_heat *10)* radiators)* 7.5)
   self.info_font:draw(canvas, ("%8i"):format(heating_costs),  x + 100, y + 355)
 
   -- Draw balance with temporary offset in unicode languages
