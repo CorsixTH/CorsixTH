@@ -44,7 +44,7 @@ CorsixTH 0.68.0 - released September 2024
 
 # Translations
 * Ukranian translation added. Thanks @JurecStrongman
-* Dutch translation has been updated. Thanks @jetenergy
+* Dutch translation has been updated. Thanks @jetenergy and @Alberth289346
 * Italian translation has been updated. Thanks @SebastianoPistore & @Inkub0
 * Russian translation has been updated. Thanks @Matroftt
 * Spanish translation has been updated. Thanks @ShiroAka
@@ -65,6 +65,8 @@ CorsixTH 0.68.0 - released September 2024
 * Staff who have left the hospital can no longer ask for a raise
 * Fixed a bug where some staff may have no initial before surname
 * Patients can no longer litter outdoors
+* Patients waiting for a player decision no longer lose their mood icon on
+  vomit/pee
 * Fixed a bug where an unreachable reception desk could cause a crash
 * The Computer and Atom Analyser now make button sounds as originally intended
 * The mark for vaccination action now makes a sound as originally intended
@@ -79,7 +81,7 @@ CorsixTH 0.68.0 - released September 2024
 * Custom campaigns menu now will use a scrollbar for long campaign descriptions
 * Continue Game now properly targets files explicitly ending in the .sav format
 * Tooltips for language menu now align with list items. Please note we are aware
-  of an issue where some languages don't show a tooltip.
+  of an issue where some languages don't show a tooltip
 * Fixed an instance where information boxes could load pink from older
   savegames
 * Implemented a more permanent fix for the money bar being drawn incorrectly in
