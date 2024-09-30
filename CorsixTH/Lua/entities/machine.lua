@@ -293,7 +293,7 @@ function Machine:machineRepaired(room)
   local current_strength = self.strength
   local used_out_rate = self.times_used / current_strength
 
-  // calculate chance of strength reducing
+  -- calculate chance of strength reducing
   local should_reduce_strength = math.random() < used_out_rate
   if should_reduce_strength then
     self.strength = current_strength - 1
