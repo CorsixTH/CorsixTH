@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-CorsixTH 0.68.0 - released September 2024
+CorsixTH 0.68.0 - released October 2024
 -------------------------------------------------------------------------------
 # New Features/Enhancements
 * In-game movies now play for users using TH Data directly from a .ISO file

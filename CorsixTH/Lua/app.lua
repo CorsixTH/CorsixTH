@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 193 -- CorsixTH 0.68.0~rc2
+local SAVEGAME_VERSION = 194 -- CorsixTH 0.68.0 release
 
 class "App"
 
@@ -1641,14 +1641,10 @@ function App:getVersion(version)
   -- Versioning format is major.minor.revision (required) Patch (optional)
   -- Old versions (<= 0.67) retain existing format
   -- All patch versions should be retained in this table (due to be replaced, see PR2518)
-  if ver > 193 then
+  if ver > 194 then
     return "Trunk"
-  elseif ver > 192 then
-    return "v0.68.0 RC 2"
-  elseif ver > 191 then
-    return "v0.68.0 RC 1"
   elseif ver > 180 then
-    return "v0.68.0 Beta 1"
+    return "v0.68.0"
   elseif ver > 170 then
     return "v0.67"
   elseif ver > 156 then
