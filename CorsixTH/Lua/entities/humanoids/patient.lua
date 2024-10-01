@@ -296,7 +296,7 @@ function Patient:treatDisease()
   end
 end
 
---! Sets a pernament price of treatment for this patient instance,
+--! Sets a permanent price of treatment for this patient instance,
 --! so changing price in casebook wont affect any longer
 function Patient:setTreatmentPrice(disease_id)
   local hosp = self.hospital
