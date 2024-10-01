@@ -1388,7 +1388,7 @@ end
 
 !param patient (Patient) The patient that just got treated.
 ]]
-function Hospital:receiveMoneyForTreatment(patient)
+function Hospital:receiveMoneyForTreatment(patient, pay_amount)
   if not self.world.free_build_mode then
     local disease_id = patient:getTreatmentDiseaseId()
     if disease_id == nil then return end
@@ -1399,7 +1399,7 @@ function Hospital:receiveMoneyForTreatment(patient)
     else
       reason = _S.transactions.cure_colon .. " " .. casebook.disease.name
     end
-    local amount = self:getTreatmentPrice(disease_id)
+    local amount = pay_amount or 0
 
     -- 25% of the payments now go through insurance
     if patient.insurance_company then
