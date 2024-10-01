@@ -300,7 +300,6 @@ end
 --! so changing price in casebook wont affect any longer
 function Patient:setTreatmentPrice(disease_id)
   local hosp = self.hospital
-  local casebook = self.hospital.disease_casebook[disease_id]
   self.pay_amount = hosp:getTreatmentPrice(disease_id)
 end
 
