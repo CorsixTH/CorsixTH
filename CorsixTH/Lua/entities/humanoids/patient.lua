@@ -36,6 +36,7 @@ function Patient:Patient(...)
   self.action_string = ""
   self.cured = false
   self.infected = false
+  self.pay_amount = 0
   -- To distinguish between actually being dead and having a nil hospital
   self.dead = false
   -- Is the patient reserved for a particular nurse when being vaccinated
