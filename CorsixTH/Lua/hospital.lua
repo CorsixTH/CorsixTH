@@ -1388,7 +1388,7 @@ end
 
 !param patient (Patient) The patient that just got treated.
 ]]
-function Hospital:receiveMoneyForTreatment(patientt)
+function Hospital:receiveMoneyForTreatment(patient)
   if not self.world.free_build_mode then
     local disease_id = patient:getTreatmentDiseaseId()
     if disease_id == nil then return end
