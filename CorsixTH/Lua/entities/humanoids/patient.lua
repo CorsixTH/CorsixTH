@@ -276,6 +276,7 @@ function Patient:treatDisease()
   local hospital = self.hospital
 
   hospital:receiveMoneyForTreatment(self, self.pay_amount)
+  self.pay_amount = 0
 
   -- Remove visual effects of disease.
   self.th:setPatientEffect(AnimationEffect.None)
@@ -296,22 +297,18 @@ function Patient:treatDisease()
   end
 end
 
---! Sets a permanent price of treatment for this patient instance,
---! so changing price in casebook wont affect any longer
-function Patient:setTreatmentPrice(disease_id)
-  local hosp = self.hospital
-  self.pay_amount = hosp:getTreatmentPrice(disease_id)
-end
-
 --! Returns true if patient agrees to pay for the given treatment.
 --!param disease_id (string): The id of the disease to test
 function Patient:agreesToPay(disease_id)
+  local hosp = self.hospital
   local casebook = self.hospital.disease_casebook[disease_id]
   local price_distortion = self:getPriceDistortion(casebook)
   local is_over_priced = price_distortion > self.hospital.over_priced_threshold
-  self:setTreatmentPrice(disease_id)
 
-  return not (is_over_priced and math.random(1, 5) == 1)
+  local agreesToPay = not (is_over_priced and math.random(1, 5) == 1)
+  if agreesToPay then self.pay_amount = hosp:getTreatmentPrice(disease_id) end
+
+  return agreesToPay
 end
 
 --! Either the patient is cured, or he/she dies.
