@@ -275,7 +275,7 @@ end
 function Patient:treatDisease()
   local hospital = self.hospital
 
-  hospital:receiveMoneyForTreatment(self, self.pay_amount)
+  hospital:receiveMoneyForTreatment(self)
   self.pay_amount = 0
 
   -- Remove visual effects of disease.
