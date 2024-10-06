@@ -110,7 +110,7 @@ body:
         Information about the configuration file can be found [here](https://github.com/CorsixTH/CorsixTH/wiki/Configuration-File).
         You can find gamelog.txt at the same location as the config file."
       placeholder: Paste gamelog.txt output here
-      render: bash
+      render: yaml
 # Extra Info
   - type: textarea
     id: extra
