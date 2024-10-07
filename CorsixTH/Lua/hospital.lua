@@ -1412,6 +1412,7 @@ function Hospital:receiveMoneyForTreatment(patient)
     end
     casebook.money_earned = casebook.money_earned + amount
     patient.world:newFloatingDollarSign(patient, amount)
+    patient.pay_amount = 0
   end
 end
 
