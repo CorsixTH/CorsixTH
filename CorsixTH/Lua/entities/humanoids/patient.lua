@@ -72,6 +72,10 @@ function Patient:onClick(ui, button)
         ui:addWindow(UIPatient(ui, self))
       end
     end
+  elseif self.user_of then
+    -- The object we're using is made invisible, as the animation contains both
+    -- the humanoid and the object. Hence send the click onto the object.
+    self.user_of:onClick(ui, button)
   elseif TheApp.config.debug_falling and button == "right" then
     -- Attempt to push patient over
     -- Currently debug-only, enable in config file for testing.
@@ -80,10 +84,6 @@ function Patient:onClick(ui, button)
          and math.random(1, 2) == 2 then
       self:falling(true)
     end
-  elseif self.user_of then
-    -- The object we're using is made invisible, as the animation contains both
-    -- the humanoid and the object. Hence send the click onto the object.
-    self.user_of:onClick(ui, button)
   end
   Humanoid.onClick(self, ui, button)
 end
