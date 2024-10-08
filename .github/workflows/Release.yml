@@ -1,0 +1,29 @@
+---
+on: 
+  push:
+    tags:
+    - '*'
+
+jobs:
+  release:
+    name: Prepare release
+    if: github.repository == 'CorsixTH/CorsixTH'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Fetch changelog
+      id: changelog
+      run: >
+        current_version=$(git tag -l --sort=-creatordate | grep -vE 'rc|pre|beta' | head -2 | tail -1)
+        git diff -U0 $current_version..master changelog.txt |
+          tail -n+9 | sed -e 's/#/##/g' | sed -e 's/^+//g' >> body.md
+        echo "NEW_VERSION=$(git tag -l --sort=-creatordate | head -1 | sed -e 's/v//')" >> $GITHUB_ENV
+    - name: Create release
+      uses: ncipollo/release-action@v1
+      with:
+        bodyFile: 'body.md'
+        draft: true
+        name: 'CorsixTH $${{env.NEW_VERSION}}'
