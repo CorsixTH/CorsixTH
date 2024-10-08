@@ -18,8 +18,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require("TH")
+-- The location of a bundled font relative to this file
+local bundled_path = TheApp:getFullPath({"GoNotoKurrent-Bold.ttf"})
+-- The location of a globally installed font
+local installed_path = "/usr/share/fonts/truetype/arphic/uming.ttc"
 
+local TH = require("TH")
 local pathsep = package.config:sub(1, 1)
 
 --! Layer for loading (and subsequently caching) graphical resources.
@@ -116,8 +120,8 @@ function Graphics:Graphics(app)
   self.custom_graphics_folder = graphics_folder
 end
 
---! Tries to load the font file given in the config file as unicode_font.
---! If it is not found it tries to find one in the operating system.
+--! Tries to load a font, preferring the user's choice over the bundled font,
+--! over Arial from the operating system.
 function Graphics:loadFontFile()
   local lfs = require("lfs")
   local function check(path) return path and lfs.attributes(path, "mode") == "file" end
@@ -131,22 +135,23 @@ function Graphics:loadFontFile()
   elseif self.app.os == "macos" then
     os_path = "/Library/Fonts/Arial Unicode.ttf"
   else
-    os_path = "/usr/share/fonts/truetype/arphic/uming.ttc"
+    os_path = installed_path
   end
+
   if check(config_path) then font_file = config_path
-  elseif check(os_path) then
-    font_file = os_path
-    print("Configured unicode font not found, using " .. font_file .. " instead.")
-    print("This will be written to the config file.")
-  elseif config_path ~= nil then
-    print("Configured unicode font not found, no fallback available.")
+  elseif check(bundled_path) then font_file = bundled_path
+  elseif check(os_path) then font_file = os_path
+  else
+    print("No unicode font found, no fallback available.")
     return
   end
-  local font = font_file and io.open(font_file, "rb")
+  local font = io.open(font_file, "rb")
   if font then
     self.ttf_font_data = font:read("*a")
     font:close()
     if self.ttf_font_data and self.app.config.unicode_font ~= font_file then
+      print("Configured unicode font not found, using " .. font_file .. " instead.")
+      print("This will be written to the config file.")
       self.app.config.unicode_font = font_file
       self.app:saveConfig()
     end
