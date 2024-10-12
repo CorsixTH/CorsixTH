@@ -301,7 +301,7 @@ function UIStaff:onTick()
 end
 
 function UIStaff:pickupStaff()
-  self.staff:pickup(PickupAction(self.ui):setTodoClose(self))
+  self.staff:setPickup(PickupAction(self.ui):setTodoClose(self))
 end
 
 function UIStaff:fireStaff()

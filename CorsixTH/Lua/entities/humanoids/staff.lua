@@ -290,7 +290,7 @@ function Staff:onClick(ui, button)
       ui:addWindow(UIStaff(ui, self))
     end
   elseif button == "right" then
-    self:pickup(PickupAction(ui))
+    self:setPickup(PickupAction(ui))
   end
   Humanoid.onClick(self, ui, button)
 end
@@ -439,7 +439,7 @@ function Staff:goToStaffRoom()
   end
 end
 
-function Staff:pickup(pickupAction)
+function Staff:setPickup(pickupAction)
   if not self.pickup then
     self.pickup = true
     self:setNextAction(pickupAction, true)
