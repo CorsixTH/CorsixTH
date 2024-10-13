@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 194 -- CorsixTH 0.68.0 release
+local SAVEGAME_VERSION = 204 -- Hotfix buffer post 0.68.0
 
 class "App"
 
