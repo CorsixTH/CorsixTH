@@ -1,7 +1,7 @@
 return {
   major = 0,
-  minor = 6,
-  revision = 7,
-  changelog_en = 'Fixes longstanding music issues on Windows, changes to Handymen, VIP and Epidemics. See release notes for more.',
+  minor = 68,
+  revision = 0,
+  changelog_en = 'Improvements to Jukebox and Map Editor, various fixes across the board; and many translation updates. See release notes for more.',
   download_url = 'https://github.com/CorsixTH/CorsixTH/releases',
 }
