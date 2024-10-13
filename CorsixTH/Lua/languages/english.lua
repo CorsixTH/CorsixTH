@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010-2020 Manuel "Roujin" Wolf, Edvin "Lego3" Linge, lewri et al.
+--[[ Copyright (c) 2010-2024 Manuel "Roujin" Wolf, Edvin "Lego3" Linge, MandrakeHorse, lewri et al.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -741,7 +741,7 @@ errors = {
   fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
   could_not_load_campaign = "Failed to load the campaign: %s",
   could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
-  save_to_tmp = "The file at %s could not be used. The game has been saved to %s. Error: %s",
+  save_to_tmp = "Attempt to write to %s failed. File was written instead to temporary location %s because of the error: %s",
   dialog_empty_queue = "Sorry, a humanoid just had an empty action queue, which means that they didn't know what to do next. Please consult the command window for more detailed information. A dialog with the offending humanoid has been opened. Would you like them to leave the hospital?",
   compatibility_error = {
     new_in_old = "Sorry, this save was created with a newer version of CorsixTH and is not compatible. Please update to a more recent version.",
