@@ -30,13 +30,6 @@ class "UIStaff" (Window)
 ---@type UIStaff
 local UIStaff = _G["UIStaff"]
 
-function UIStaff:afterLoad(old, new)
-  if old < 196 then
-    self:close()
-  end
-  Window.afterLoad(self, old, new)
-end
-
 --! Callback function for handyman to change his parcel.
 function UIStaff:changeParcel()
   local index = 0
@@ -389,5 +382,12 @@ end
 
 function UIStaff:hitTest(x, y)
   return Window.hitTest(self, x, y) or is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
+end
+
+function UIStaff:afterLoad(old, new)
+  if old < 196 then
+    self:close()
+  end
+  Window.afterLoad(self, old, new)
 end
 
