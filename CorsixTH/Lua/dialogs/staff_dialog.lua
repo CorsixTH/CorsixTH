@@ -30,6 +30,13 @@ class "UIStaff" (Window)
 ---@type UIStaff
 local UIStaff = _G["UIStaff"]
 
+function UIStaff:afterLoad(old, new)
+  if old < 196 then
+    self:close()
+  end
+  Window.afterLoad(self, old, new)
+end
+
 --! Callback function for handyman to change his parcel.
 function UIStaff:changeParcel()
   local index = 0
