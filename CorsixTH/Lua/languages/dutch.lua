@@ -2278,7 +2278,7 @@ errors = {
   load_level_prefix = "Fout bij het laden van level: ",
   load_map_prefix = "Fout bij het laden van map: ",
   music = "Er zijn afspeelproblemen met een of meer bestanden in uw muziekfolder. Problematische bestanden worden uitgeschakeld in de jukebox. Zie het consolevenster voor meer informatie.",
-  save_to_tmp = "Het bestand op %s kon niet worden gebruikt. Het spel is opgeslagen op %s. Fout: %s",
+  save_to_tmp = "Poging om naar %s te schrijven is mislukt. Het bestand is in plaats daarvan geschreven naar de tijdelijke locatie %s vanwege de fout: %s",
 }
 diseases = {
   diag_ward = {
