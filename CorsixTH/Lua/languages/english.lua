@@ -43,6 +43,17 @@ adviser.goals.lose.kill = "Kill another %d patients to lose the level!"
 tooltip.staff_window.face = "This person's face - click to open management screen"
 tooltip.staff_window.center_view = "Left click to zoom to staff, right click to cycle through staff members"
 
+-- Improve tooltips in Research Screen
+tooltip.research.cure_dec = "Decrease Cure research percentage"
+tooltip.research.cure_inc = "Increase Cure research percentage"
+tooltip.research.diagnosis_dec = "Decrease Diagnosis research percentage"
+tooltip.research.diagnosis_inc = "Increase Diagnosis research percentage"
+tooltip.research.drugs_dec = "Decrease Drugs research percentage"
+tooltip.research.improvements_dec = "Decrease Improvements research percentage"
+tooltip.research.improvements_inc = "Increase Improvements research percentage"
+tooltip.research.specialisation_dec = "Decrease Specialisation research percentage"
+tooltip.research.specialisation_inc = "Increase Specialisation research percentage"
+
 -- These strings are missing in some versions of TH (unpatched?)
 confirmation.restart_level = "Are you sure you want to restart the level?"
 -- TODO adviser.multiplayer.objective_completed
