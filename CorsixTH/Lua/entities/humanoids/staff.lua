@@ -118,7 +118,7 @@ function Staff:tick()
   -- check if we need to use the staff room and go there if so
   self:checkIfNeedRest()
   -- check if staff has been waiting too long for a raise and fire if so
-  self:checkIfWaitedTooLong()
+  self:checkIfWaitedTooLongForRaise()
 
   -- Decide whether the staff member should be tiring and tire them
   if self:isTiring() then
@@ -154,37 +154,43 @@ function Staff:tick()
   self:updateSpeed()
 end
 
-function Staff:checkIfWaitedTooLong()
+function Staff:checkIfWaitedTooLongForRaise()
   if self.quitting_in then
     self.quitting_in = self.quitting_in - 1
-    if self.quitting_in < 0 then
+
+    local is_waiting_time_is_up = self.quitting_in < 0
+    if is_waiting_time_is_up then
       local rise_windows = self.world.ui:getWindows(UIStaffRise)
       local staff_rise_window = nil
+      local rise_amount = self.profile:getRiseAmount()
+      self.quitting_in = nil
+      self.hospital:removeMessage(self)
 
-      -- We go through all "requesting rise" windows open, to see if we need
-      -- to close them when the person is fired.
+      -- We go through all "requesting rise" windows open
+      -- to close one of them if open when request resolved.
       for i = 1, #rise_windows do
         if rise_windows[i].staff == self then
           staff_rise_window = rise_windows[i]
           break
         end
       end
+
       -- If the hospital policy is set to automatically grant wage increases, grant
       -- the requested raise instead of firing the staff member
       if self.hospital.policies.grant_wage_increase then
-        local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage(self.world) + self.profile.wage) / 2) - self.profile.wage)
-        self.quitting_in = nil
-        self.hospital:removeMessage(self)
-        self:increaseWage(amount)
-        return
-      end
-
+        if staff_rise_window then -- if rise window open
+          staff_rise_window:increaseSalary() -- close window and raise
+        else
+          self:increaseWage(rise_amount)
+        end  
       -- else: The staff member is sacked
-      if staff_rise_window then
-        staff_rise_window:fireStaff()
-        return
-      end
-      self:fire()
+      else
+        if staff_rise_window then
+          staff_rise_window:fireStaff() -- close window and fire
+        else
+          self:fire()
+        end
+      end 
     end
   end
 end
@@ -571,7 +577,7 @@ function Staff:requestRaise()
     end
     -- The staff member can now successfully ask for a raise
     self.hospital:makeRaiseRequest(amount, self)
-    self.quitting_in = 25*30 -- Time until the staff members quits anyway
+    self.quitting_in = 25*30 + math.random(50) -- Time until the staff members quits anyway
     self:setMood("pay_rise", "activate")
   end
 end
@@ -587,12 +593,17 @@ function Staff:increaseWage(amount)
   local wage_raised = true
   if self.profile.wage >= max_salary then
     wage_raised = false -- Already at max salary
-  elseif self.profile.wage + amount > max_salary then
-    -- Maximum salary hit. The staff member will never be unhappy again
-    self.profile.wage = max_salary
-  else
+  else 
+    local new_wage = self.profile.wage
+    if self.profile.wage + amount > max_salary then
+      -- Maximum salary hit. The staff member will never be unhappy again
+      new_wage = max_salary
+    else
+      new_wage = self.profile.wage + amount
+    end
     -- Apply new salary
-    self.profile.wage = self.profile.wage + amount
+    self.profile.wage = new_wage
+    self.world.ui:playSound("bonusal2.wav")
   end
   -- Reset
   self:setMood("pay_rise", "deactivate")
