@@ -629,16 +629,27 @@ function Room:onHumanoidLeave(humanoid)
 
   -- The player might be waiting to edit this room
   if not self.is_active then
-    local i = 0
+    local people_in_room = 0
     for _ in pairs(self.humanoids) do
-      i = i + 1
+      people_in_room = people_in_room + 1
     end
-    if i == 0 then
-      local ui = self.world.ui
-      ui:addWindow(UIEditRoom(ui, self))
-      ui:setCursor(ui.default_cursor)
+    if people_in_room == 0 then
+      self:enterEditMode()
     end
   end
+end
+
+function Room:enterEditMode()
+  local ui = self.world.ui
+
+  -- If we have the window for this room machine open, close it
+  local window = ui:getWindow(UIMachine)
+  if window and window.machine and window.machine:getRoom() == self then
+    window:close()
+  end
+
+  ui:addWindow(UIEditRoom(ui, self))
+  ui:setCursor(ui.default_cursor)
 end
 
 function Room:shouldHavePatientReenter(patient)
@@ -969,11 +980,11 @@ end
 
 function Room:tryToEdit()
   self:deactivate()
-  local i = 0
+  local people_in_room = 0
   -- Tell all humanoids that they should leave
   -- If someone is entering the room right now they are also counted.
   if self.door.user and self.door.user:getCurrentAction().is_entering then
-    i = 1
+    people_in_room = 1
   end
   for humanoid, _ in pairs(self.humanoids) do
     if not humanoid:isLeaving() then
@@ -985,13 +996,11 @@ function Room:tryToEdit()
         humanoid:queueAction(MeanderAction())
       end
     end
-    i = i + 1
+    people_in_room = people_in_room + 1
   end
   -- If there were no people inside we're ready to edit the room
-  if i == 0 then
-    local ui = self.world.ui
-    ui:addWindow(UIEditRoom(ui, self))
-    ui:setCursor(ui.default_cursor)
+  if people_in_room == 0 then
+    self:enterEditMode()
   end
 end
 
