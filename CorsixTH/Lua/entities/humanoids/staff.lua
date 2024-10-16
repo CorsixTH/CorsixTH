@@ -182,7 +182,7 @@ function Staff:checkIfWaitedTooLongForRaise()
           staff_rise_window:increaseSalary() -- close window and raise
         else
           self:increaseWage(rise_amount)
-        end  
+        end
       -- else: The staff member is sacked
       else
         if staff_rise_window then
@@ -190,7 +190,7 @@ function Staff:checkIfWaitedTooLongForRaise()
         else
           self:fire()
         end
-      end 
+      end
     end
   end
 end
@@ -593,13 +593,11 @@ function Staff:increaseWage(amount)
   local wage_raised = true
   if self.profile.wage >= max_salary then
     wage_raised = false -- Already at max salary
-  else 
-    local new_wage = self.profile.wage
+  else
+    local new_wage = self.profile.wage + amount
     if self.profile.wage + amount > max_salary then
       -- Maximum salary hit. The staff member will never be unhappy again
       new_wage = max_salary
-    else
-      new_wage = self.profile.wage + amount
     end
     -- Apply new salary
     self.profile.wage = new_wage
