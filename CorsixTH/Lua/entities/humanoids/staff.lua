@@ -155,41 +155,40 @@ function Staff:tick()
 end
 
 function Staff:checkIfWaitedTooLongForRaise()
-  if self.quitting_in then
-    self.quitting_in = self.quitting_in - 1
+  if self.quitting_in >= 0 then return end
+  self.quitting_in = self.quitting_in - 1
 
-    local is_waiting_time_is_up = self.quitting_in < 0
-    if is_waiting_time_is_up then
-      local rise_windows = self.world.ui:getWindows(UIStaffRise)
-      local staff_rise_window = nil
-      self.quitting_in = nil
-      self.hospital:removeMessage(self)
+  local is_waiting_time_is_up = self.quitting_in < 0
+  if is_waiting_time_is_up then
+    local rise_windows = self.world.ui:getWindows(UIStaffRise)
+    local staff_rise_window = nil
+    self.quitting_in = nil
+    self.hospital:removeMessage(self)
 
-      -- We go through all "requesting rise" windows open
-      -- to close one of them if open when request resolved.
-      for i = 1, #rise_windows do
-        if rise_windows[i].staff == self then
-          staff_rise_window = rise_windows[i]
-          break
-        end
+    -- We go through all "requesting rise" windows open
+    -- to close one of them if open when request resolved.
+    for i = 1, #rise_windows do
+      if rise_windows[i].staff == self then
+        staff_rise_window = rise_windows[i]
+        break
       end
+    end
 
-      -- If the hospital policy is set to automatically grant wage increases, grant
-      -- the requested raise instead of firing the staff member
-      if self.hospital.policies.grant_wage_increase then
-        if staff_rise_window then -- if rise window open
-          staff_rise_window:increaseSalary() -- close window and raise
-        else
-          local rise_amount = self.profile:getRiseAmount()
-          self:increaseWage(rise_amount)
-        end
-      -- else: The staff member is sacked
+    -- If the hospital policy is set to automatically grant wage increases, grant
+    -- the requested raise instead of firing the staff member
+    if self.hospital.policies.grant_wage_increase then
+      if staff_rise_window then -- if rise window open
+        staff_rise_window:increaseSalary() -- close window and raise
       else
-        if staff_rise_window then
-          staff_rise_window:fireStaff() -- close window and fire
-        else
-          self:fire()
-        end
+        local rise_amount = self.profile:getRiseAmount()
+        self:increaseWage(rise_amount)
+      end
+    -- else: The staff member is sacked
+    else
+      if staff_rise_window then
+        staff_rise_window:fireStaff() -- close window and fire
+      else
+        self:fire()
       end
     end
   end
