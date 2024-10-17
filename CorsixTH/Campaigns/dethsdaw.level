@@ -23,7 +23,7 @@ SOFTWARE.
 %Name = "Dethsdaw"
 %MapFile = "Dethsdaw.map"
 
-%LevelBriefing = "The end is almost in sight, but first, some of the residents of Dethsdaw are coming down with a wobbly kind of illness. As always, the pinnacle of medical technologies are available to you as top scientists have created a new invention called the Atom Analyser. To move on to the final level, we want 900 cures, 90% treated, $450,000 in the bank, $750,000 worth of hospital and a reputation of 900. The Ministry expects total perfection!"
+%LevelBriefing = "The end is almost in sight, but first, some of the residents of Dethsdaw are coming down with a wobbly kind of illness. As always, the pinnacle of medical technologies are available to you as top scientists have created a new invention called the Atom Analyser. To move on to the final level, we want 900 cures, 90% treated, $450,000 in the bank, $600,000 worth of hospital and a reputation of 900. The Ministry expects total perfection!"
 
 %LevelDebriefing = "Exemplary! On the eve of your final mission, you've received a note from the Ministry of Health saying that they're putting you in charge of the largest and most complex hospital of them all!
 
@@ -292,7 +292,7 @@ Each entry states how many staff members of each category are available a given 
 #win_criteria[1].Criteria.MaxMin.Value.Group.Bound 2 1 450000 1 0
 #win_criteria[2].Criteria.MaxMin.Value.Group.Bound 3 1 90 1 0
 #win_criteria[3].Criteria.MaxMin.Value.Group.Bound 4 1 900 1 0
-#win_criteria[4].Criteria.MaxMin.Value.Group.Bound 6 1 750000 1 0
+#win_criteria[4].Criteria.MaxMin.Value.Group.Bound 6 1 600000 1 0
 
 #lose_criteria[0].Criteria.MaxMin.Value.Group.Bound 1 0 450 1 500
 #lose_criteria[1].Criteria.MaxMin.Value.Group.Bound 2 0 -40000 2 -20000
