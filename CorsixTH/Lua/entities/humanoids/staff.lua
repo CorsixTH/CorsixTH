@@ -117,7 +117,7 @@ function Staff:tick()
 
   -- check if we need to use the staff room and go there if so
   self:checkIfNeedRest()
-  -- check if staff has been waiting too long for a raise and fire if so
+  -- check if staff has been waiting too long for a raise
   self:checkIfWaitedTooLongForRaise()
 
   -- Decide whether the staff member should be tiring and tire them
@@ -162,7 +162,6 @@ function Staff:checkIfWaitedTooLongForRaise()
     if is_waiting_time_is_up then
       local rise_windows = self.world.ui:getWindows(UIStaffRise)
       local staff_rise_window = nil
-      local rise_amount = self.profile:getRiseAmount()
       self.quitting_in = nil
       self.hospital:removeMessage(self)
 
@@ -181,6 +180,7 @@ function Staff:checkIfWaitedTooLongForRaise()
         if staff_rise_window then -- if rise window open
           staff_rise_window:increaseSalary() -- close window and raise
         else
+          local rise_amount = self.profile:getRiseAmount()
           self:increaseWage(rise_amount)
         end
       -- else: The staff member is sacked
