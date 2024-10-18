@@ -549,7 +549,6 @@ function UIStaffManagement:increaseSalary()
   if self.selected_staff then
     local staff = self.staff_members[self.category][self.selected_staff]
     if staff:increaseWage(math_floor(staff.profile.wage * 0.1)) then
-      self.ui:playSound("bonusal2.wav")
       return
     end
   end
