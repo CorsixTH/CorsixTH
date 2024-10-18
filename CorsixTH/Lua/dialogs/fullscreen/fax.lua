@@ -219,7 +219,7 @@ function UIFax:choice(choice_number)
           local level_info, _ = self.ui.app:readLevelFile(next_level)
           if level_info then
             self.ui.app:loadLevel(next_level, nil, level_info.name,
-                level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix)
+                level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix, self.ui.app.world.campaign_info)
             if campaign_info.movie then
               local n = math.max(1, 12 - #campaign_info.levels + i)
               self.ui.app.moviePlayer:playAdvanceMovie(n)

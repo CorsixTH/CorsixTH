@@ -602,7 +602,7 @@ function App:loadCampaign(campaign_file)
       campaign_info.winning_text_table)
 
   if self:loadLevel(campaign_info.levels[1], nil, level_info.name,
-      level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix) then
+      level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix, campaign_info) then
     -- The new world needs to know which campaign to continue on.
     self.world.campaign_info = campaign_info
   end
@@ -700,9 +700,9 @@ end
 --! error to the player
 --!param error_prefix (string) (Optional) Prefixes the error relevant to what was loaded
 --! return (boolean) The outcome of the pcall
-function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, error_prefix)
+function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, error_prefix, campaign_info)
   local status, err = pcall(self._loadLevel, self, level, difficulty, level_name,
-      level_file, level_intro, map_editor)
+      level_file, level_intro, map_editor, campaign_info)
   if not status then
     err = error_prefix and error_prefix .. err or "Error while loading level: " .. err
     print(err)
@@ -716,7 +716,7 @@ end
 --! Loads the specified level. If a string is passed it looks for the file with the same name
 -- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
 -- the original game.
-function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
+function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, campaign_info)
   if self.world then
     self:worldExited()
   end
@@ -744,8 +744,18 @@ function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, 
   self.map:setBlocks(self.gfx:loadSpriteTable("Data", "VBlk-0"))
   self.map:setDebugFont(self.gfx:loadFont("QData", "Font01V"))
 
+  -- In Free Build mode?
+  local free_build_mode
+  local isMainCampaign = tonumber(new_map.level_number)
+  local isCustomCampaign = campaign_info ~= nil
+  if isMainCampaign or isCustomCampaign then
+    free_build_mode = false -- disable free_build_mode for any Campaign
+  else
+    free_build_mode = self.config.free_build_mode
+  end
+
   -- Load world
-  self.world = World(self)
+  self.world = World(self, free_build_mode)
   self.world:createMapObjects(map_objects)
 
   -- Enable / disable SoundEffects
@@ -1740,6 +1750,7 @@ function App:restart()
   self.ui:addWindow(UIConfirmDialog(self.ui, false, _S.confirmation.restart_level,
     --[[persistable:app_confirm_restart]] function()
     self:worldExited()
+    local campaign_info = self.world.campaign_info
     local level = self.map.level_number
     local difficulty = self.map.difficulty
     local name, file, intro
@@ -1752,13 +1763,13 @@ function App:restart()
       self.ui:addWindow(UIInformation(self.ui, { _S.information.cannot_restart }))
       return
     end
-    self:loadLevel(level, difficulty, name, file, intro, nil, _S.errors.load_level_prefix)
+    self:loadLevel(level, difficulty, name, file, intro, nil, _S.errors.load_level_prefix, campaign_info)
   end))
 end
 
 --! Begin the map editor
 function App:mapEdit()
-  self:loadLevel("", nil, nil, nil, nil, true, _S.errors.load_map_prefix)
+  self:loadLevel("", nil, nil, nil, nil, true, _S.errors.load_map_prefix, nil)
 end
 
 --! Exits the game completely (no confirmation window)

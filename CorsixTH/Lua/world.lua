@@ -50,8 +50,9 @@ class "World"
 ---@type World
 local World = _G["World"]
 
-function World:World(app)
+function World:World(app, free_build_mode)
   self.app = app
+  self.free_build_mode = free_build_mode
   self.map = app.map
   self.wall_types = app.walls
   self.object_types = app.objects
@@ -79,13 +80,6 @@ function World:World(app)
   -- The system pause method is used as an additional layer to pause the game, where the user
   -- needs to deal with a recoverable error
   self.system_pause = false
-
-  -- In Free Build mode?
-  if tonumber(self.map.level_number) then
-    self.free_build_mode = false
-  else
-    self.free_build_mode = app.config.free_build_mode
-  end
 
   -- If set, do not create salary raise requests.
   self.debug_disable_salary_raise = self.free_build_mode
@@ -1227,7 +1221,8 @@ function World:winGame(player_no)
     local bonus_rate = math.random(4,9)
     local with_bonus = self.ui.hospital.cheated and 0 or (self.ui.hospital.player_salary * bonus_rate) / 100
     self.ui.hospital.salary_offer = math.floor(self.ui.hospital.player_salary + with_bonus)
-    if type(self.map.level_number) == "number" or self.campaign_info then
+    local isCampaign = type(self.map.level_number) == "number" or self.campaign_info
+    if isCampaign then
       text, choice_text, choice = self:getCampaignWinningText(player_no)
     else
       local level_info = TheApp:readLevelFile(self.map.level_number)
