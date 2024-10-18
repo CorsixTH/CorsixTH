@@ -642,7 +642,7 @@ vip_names = {
   [3] = "Bernard, król Niderlandów",
   [4] = "Aung Sang Su Kyi, lider birmańskiej opozycji demokratycznej",
   [5] = "Sir Reginald Crumbly",
-  [6] = "Billy Savile, Oficer Orderu",
+  -- [6] requires replacement (English uses 'Sir Lancelot Spratt')
   [7] = "Radny Crawford Purves",
   [8] = "Rakieta Ronnie Jepson",
   [9] = "Piłkarz ligi Premiership",
