@@ -1221,8 +1221,7 @@ function World:winGame(player_no)
     local bonus_rate = math.random(4,9)
     local with_bonus = self.ui.hospital.cheated and 0 or (self.ui.hospital.player_salary * bonus_rate) / 100
     self.ui.hospital.salary_offer = math.floor(self.ui.hospital.player_salary + with_bonus)
-    local isCampaign = type(self.map.level_number) == "number" or self.campaign_info
-    if isCampaign then
+    if self:isCampaign() then
       text, choice_text, choice = self:getCampaignWinningText(player_no)
     else
       local level_info = TheApp:readLevelFile(self.map.level_number)
@@ -2599,4 +2598,9 @@ function World:validateMap()
   if not spawn_points[1] then
     return _S.map_editor_window.checks.spawn_points_and_path
   end
+end
+
+--! Returns whether the level being played is part of a campaign or not
+function World:isCampaign()
+  return type(self.map.level_number) == "number" or self.campaign_info
 end

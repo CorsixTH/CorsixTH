@@ -744,15 +744,12 @@ function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, 
   self.map:setBlocks(self.gfx:loadSpriteTable("Data", "VBlk-0"))
   self.map:setDebugFont(self.gfx:loadFont("QData", "Font01V"))
 
-  -- In Free Build mode?
-  local free_build_mode
-  local isMainCampaign = tonumber(new_map.level_number)
-  local isCustomCampaign = campaign_info ~= nil
-  if isMainCampaign or isCustomCampaign then
-    free_build_mode = false -- disable free_build_mode for any Campaign
-  else
-    free_build_mode = self.config.free_build_mode
+  local function determineFreeBuildMode()
+    local is_main_campaign = tonumber(new_map.level_number)
+    local is_custom_campaign = campaign_info ~= nil
+    return self.config.free_build_mode and not (is_main_campaign or is_custom_campaign)
   end
+  local free_build_mode = determineFreeBuildMode()
 
   -- Load world
   self.world = World(self, free_build_mode)
