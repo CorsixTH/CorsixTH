@@ -136,8 +136,8 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
   quantity = quantity + o.qty
   if quantity < o.min_qty then
     quantity = o.min_qty
-  elseif quantity > 100 then
-    quantity = 100
+  elseif quantity > 99 then
+    quantity = 99
   end
   quantity = quantity - o.qty
   local hospital = self.ui.hospital
