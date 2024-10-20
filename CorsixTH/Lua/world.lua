@@ -67,8 +67,8 @@ function World:World(app)
   self.entity_map = EntityMap(self.map)
 
   -- Time
-  self.hours_per_tick = 2
-  self.tick_rate = 3
+  self.hours_per_tick = 1
+  self.tick_rate = 6
   self.tick_timer = 0
   self.game_date = Date() -- Current date in the game.
 
@@ -718,12 +718,12 @@ end
 -- happens.
 local tick_rates = {
   ["Pause"]              = {0, 1},
-  ["Slowest"]            = {1, 28}, -- 1 tick per s
-  ["Slower"]             = {1, 6}, -- 1 tick per 216ms
-  ["Normal"]             = {2, 3}, -- 2 ticks per 108ms = 1 tick per 54 ms
-  ["Max speed"]          = {1, 1}, -- 1 tick per 36 ms
-  ["And then some more"] = {2, 1}, -- 2 ticks per 36 ms = 1 tick 18ms
-  ["Speed Up"]           = {4, 1},
+  ["Slowest"]            = {1, 56}, -- 1 tick per s
+  ["Slower"]             = {1, 12}, -- 1 tick per 216ms
+  ["Normal"]             = {1, 3}, -- 1 ticks per 54 ms
+  ["Max speed"]          = {1, 2}, -- 1 tick per 36 ms
+  ["And then some more"] = {1, 1}, -- 1 tick 18ms
+  ["Speed Up"]           = {8, 1},
 }
 
 function World:speedUp()
