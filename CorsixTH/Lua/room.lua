@@ -34,14 +34,20 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self:initRoom(x, y, w, h, door, door2)
 end
 
+-- If there is already a room, e.g. it is being moved, we can just reinit it by calling this, not make a new one.
 function Room:initRoom(x, y, w, h, door, door2)
   self.x = x
   self.y = y
   self.width = w
   self.height = h
   self.maximum_patients = 1 -- A good default for most rooms
-  door.room = self
-  self.door = door
+
+  -- setup new door and new queue
+  local newDoor = door
+  local oldDoor = self.door
+  newDoor:setupDoor(self, oldDoor)
+  self.door = newDoor
+
   -- If it's a swing door we have two doors
   self.door2 = door2
   if not self:hasQueueDialog() then

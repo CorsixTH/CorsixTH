@@ -49,6 +49,14 @@ function Door:Door(...)
   -- self.user = "locked" -- prevents doors from being used (debug aid)
 end
 
+function Door:setupDoor(room, oldDoor)
+  if oldDoor and oldDoor.queue then
+    -- for room edit case update new queue with values from old queue
+    self.queue.visitor_count = oldDoor.queue.visitor_count
+    self.queue.max_size = oldDoor.queue.max_size
+  end
+  self.room = room
+end
 
 function Door:getRoom()
   return self.room
