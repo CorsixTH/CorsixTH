@@ -34,7 +34,7 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self:initRoom(x, y, w, h, door, door2)
 end
 
---! If there is already a room, e.g. it is being moved, 
+--! If there is already a room, e.g. it is being moved,
 -- we can just reinit it by calling this, not make a new one.
 function Room:initRoom(x, y, w, h, door, door2)
   self.x = x
