@@ -34,8 +34,15 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self:initRoom(x, y, w, h, door, door2)
 end
 
---! If there is already a room, e.g. it is being moved,
+--! Initialises primary components of the room.
+-- Additionally, if there is already a room, e.g. it is being moved,
 -- we can just reinit it by calling this, not make a new one.
+--!param x (co-ordinate) starting tile
+--!param y (co-ordinate) starting tile
+--!param w (num) width of room
+--!param h (num) height of room
+--!param door (object) primary door for room
+--!param door2 (object) optional secondary door (e.g. swing doors)
 function Room:initRoom(x, y, w, h, door, door2)
   self.x = x
   self.y = y
