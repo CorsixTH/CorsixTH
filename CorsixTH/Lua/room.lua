@@ -34,14 +34,28 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self:initRoom(x, y, w, h, door, door2)
 end
 
+--! Initialises primary components of the room.
+-- Additionally, if there is already a room, e.g. it is being moved,
+-- we can just reinit it by calling this, not make a new one.
+--!param x (co-ordinate) starting tile
+--!param y (co-ordinate) starting tile
+--!param w (num) width of room
+--!param h (num) height of room
+--!param door (object) primary door for room
+--!param door2 (object) optional secondary door (e.g. swing doors)
 function Room:initRoom(x, y, w, h, door, door2)
   self.x = x
   self.y = y
   self.width = w
   self.height = h
   self.maximum_patients = 1 -- A good default for most rooms
-  door.room = self
-  self.door = door
+
+  -- setup new door and new queue
+  local new_door = door
+  local old_door = self.door
+  new_door:setupDoor(self, old_door)
+  self.door = new_door
+
   -- If it's a swing door we have two doors
   self.door2 = door2
   if not self:hasQueueDialog() then
