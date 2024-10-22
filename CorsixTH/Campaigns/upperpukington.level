@@ -22,7 +22,7 @@ SOFTWARE.
 %Name = "Upper Pukington"
 %MapFile = "Upper Pukington.map"
 
-%LevelBriefing = "The Ministry of Health has recently acquired this old hospital in Upper Pukington, but has found it to be unsatisfactory in standards. There is a new tongue swelling disorder going around too, so watch out! Whilst you will not be dealing with emergencies, the layout is somewhat archaic, but we are sure you can reach the targets of 400 cures, 70% patient treatment, $150,000 in the kitty, $200,000 hospital value and a reputation of 650. Good luck!"
+%LevelBriefing = "The Ministry of Health has recently acquired this old hospital in Upper Pukington, but has found it to be unsatisfactory in standards. There is a new tongue swelling disorder going around too, so watch out! Whilst you will not be dealing with emergencies, the layout is somewhat archaic, but we are sure you can reach the targets of 400 cures, 70% patient treatment, $200,000 in the kitty, $150,000 hospital value and a reputation of 650. Good luck!"
 
 %LevelDebriefing = "Excellent! The Ministry sees that your climbing the ranks in this career, but watch you don't fall and break a leg! You wouldn't want to ruin your new Italian shoes now...
 
@@ -204,14 +204,14 @@ Divides research input to get the amount of research points. must be > 0
 6 Hospital value
 
 #win_criteria[0].Criteria.MaxMin.Value.Group.Bound	1	1	650	1	0
-#win_criteria[1].Criteria.MaxMin.Value.Group.Bound	2	1	150000	1	0
+#win_criteria[1].Criteria.MaxMin.Value.Group.Bound	2	1	200000	1	0
 #win_criteria[2].Criteria.MaxMin.Value.Group.Bound	3	1	70	1	0
 #win_criteria[3].Criteria.MaxMin.Value.Group.Bound	4	1	400	1	0
-#win_criteria[4].Criteria.MaxMin.Value.Group.Bound	6	1	200000	1	0
+#win_criteria[4].Criteria.MaxMin.Value.Group.Bound	6	1	150000	1	0
 #win_criteria[5].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
 
 #lose_criteria[0].Criteria.MaxMin.Value.Group.Bound	1	0	400	1	450
-#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound	5	1	30	2	0
+#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound	5	1	30	2	10
 #lose_criteria[2].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
 #lose_criteria[3].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
 #lose_criteria[4].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0

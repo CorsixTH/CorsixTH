@@ -23,7 +23,7 @@ SOFTWARE.
 %Name = "Hoppalong"
 %MapFile = "Hoppalong.map"
 
-%LevelBriefing = "A strange disease which makes people hairy is running rampant around the city of Wishinwell. According to our top scientists, it can only be removed by electroconvulsive therapy. Aside from that, you may find yourself out of room and out of cash, so plan ahead carefully. To win the level, cure 700 patients, treat 80% of visitors, amass $250,000 in the kitty, have a hospital worth $400,000 and gain a reputation of 800."
+%LevelBriefing = "A strange disease which makes people hairy is running rampant around the city of Wishinwell. According to our top scientists, it can only be removed by electroconvulsive therapy. Aside from that, you may find yourself out of room and out of cash, so plan ahead carefully. To win the level, cure 700 patients, treat 80% of visitors, amass $250,000 in the kitty, have a hospital worth $350,000 and gain a reputation of 800."
 
 %LevelDebriefing = "Perfect! Though you've done well here, a recent emergency has led to the creation of a makeshift hospital and your new boss, Mr B. Hind, is desperate for someone to run it. Don't let the public down!
 
@@ -292,7 +292,7 @@ Each entry states how many staff members of each category are available a given 
 #win_criteria[1].Criteria.MaxMin.Value.Group.Bound 2 1 250000 1 0
 #win_criteria[2].Criteria.MaxMin.Value.Group.Bound 3 1 80 1 0
 #win_criteria[3].Criteria.MaxMin.Value.Group.Bound 4 1 700 1 0
-#win_criteria[4].Criteria.MaxMin.Value.Group.Bound 6 1 400000 1 0
+#win_criteria[4].Criteria.MaxMin.Value.Group.Bound 6 1 350000 1 0
 
 #lose_criteria[0].Criteria.MaxMin.Value.Group.Bound 1 0 400 1 450
 #lose_criteria[1].Criteria.MaxMin.Value.Group.Bound 2 0 -50000 2 -30000
