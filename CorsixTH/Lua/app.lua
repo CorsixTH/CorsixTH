@@ -749,10 +749,9 @@ function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, 
     local is_custom_campaign = campaign_info ~= nil
     return self.config.free_build_mode and not (is_main_campaign or is_custom_campaign)
   end
-  local free_build_mode = determineFreeBuildMode()
 
   -- Load world
-  self.world = World(self, free_build_mode)
+  self.world = World(self, determineFreeBuildMode())
   self.world:createMapObjects(map_objects)
 
   -- Enable / disable SoundEffects
