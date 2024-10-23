@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 196 -- Prevent staff grab spamming fix
+local SAVEGAME_VERSION = 205 -- Prevent staff grab spamming fix
 
 class "App"
 

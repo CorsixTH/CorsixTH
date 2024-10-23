@@ -385,7 +385,7 @@ function UIStaff:hitTest(x, y)
 end
 
 function UIStaff:afterLoad(old, new)
-  if old < 196 then
+  if old < 205 then
     self:close()
   end
   Window.afterLoad(self, old, new)
