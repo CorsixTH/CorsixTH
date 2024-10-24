@@ -441,7 +441,7 @@ end
 
 -- Function to set pickup action on staff. Pickup action can be deferred.
 function Staff:setPickup(ui, windowToClose)
-  if not self.pickup then -- check is we already added pickup Action in actions queue
+  if not self.pickup then -- check if we already added pickup Action in actions queue
     self.pickup = true
     local pickupAction = PickupAction(ui)
     if windowToClose then -- if we want to close some window after pickup happened
