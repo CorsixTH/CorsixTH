@@ -1399,7 +1399,8 @@ function Hospital:receiveMoneyForTreatment(patient)
     else
       reason = _S.transactions.cure_colon .. " " .. casebook.disease.name
     end
-    local amount = patient.pay_amount or self:getTreatmentPrice(disease_id)
+    local amount = patient.pay_amount or 0
+    amount = amount > 0 and amount or self:getTreatmentPrice(disease_id)
 
     -- 25% of the payments now go through insurance
     if patient.insurance_company then
