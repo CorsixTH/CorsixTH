@@ -445,7 +445,7 @@ function Staff:setPickup(ui, window_to_close)
     self.pickup = true
     local pickup_action = PickupAction(ui)
     if window_to_close then -- if we want to close some window after pickup happened
-      pickup_action = pickupAction:setTodoClose(window_to_close)
+      pickup_action = pickup_action:setTodoClose(window_to_close)
     end
     self:setNextAction(pickup_action, true)
   end
