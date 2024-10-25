@@ -155,7 +155,7 @@ function Staff:tick()
 end
 
 function Staff:checkIfWaitedTooLongForRaise()
-  if self.quitting_in >= 0 then return end
+  if not self.quitting_in then return end
   self.quitting_in = self.quitting_in - 1
 
   local is_waiting_time_is_up = self.quitting_in < 0
@@ -576,7 +576,7 @@ function Staff:requestRaise()
     end
     -- The staff member can now successfully ask for a raise
     self.hospital:makeRaiseRequest(amount, self)
-    self.quitting_in = 25*30 + math.random(50) -- Time until the staff members quits anyway
+    self.quitting_in = 25*30 + math.random(0, 50) -- Time until the staff members quits anyway
     self:setMood("pay_rise", "activate")
   end
 end
