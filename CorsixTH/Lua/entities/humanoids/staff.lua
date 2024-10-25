@@ -290,8 +290,7 @@ function Staff:onClick(ui, button)
       ui:addWindow(UIStaff(ui, self))
     end
   elseif button == "right" then
-    self.pickup = true
-    self:setNextAction(PickupAction(ui), true)
+    self:setPickup(ui, nil)
   end
   Humanoid.onClick(self, ui, button)
 end
@@ -437,6 +436,18 @@ function Staff:goToStaffRoom()
     self:queueAction(SeekStaffRoomAction())
   else
     self:setNextAction(SeekStaffRoomAction())
+  end
+end
+
+-- Function to set pickup action on staff. Pickup action can be deferred.
+function Staff:setPickup(ui, window_to_close)
+  if not self.pickup then -- check if we already added pickup Action in actions queue
+    self.pickup = true
+    local pickup_action = PickupAction(ui)
+    if window_to_close then -- if we want to close some window after pickup happened
+      pickup_action = pickup_action:setTodoClose(window_to_close)
+    end
+    self:setNextAction(pickup_action, true)
   end
 end
 
