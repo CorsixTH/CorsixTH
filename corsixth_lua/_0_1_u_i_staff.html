@@ -51,9 +51,9 @@
  <a href="_0_1_window.html#_0_1_window_1add_window">addWindow</a>(<span class="p">window</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
- (inherited from <a href="_0_1_window.html">Window</a>)
+ <li class="self">
+ <a href="_0_1_u_i_staff.html#_0_1_u_i_staff_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
@@ -191,7 +191,7 @@
  <a href="_0_1_u_i_staff.html#_0_1_u_i_staff_1open_staff_management">openStaffManagement</a>()
  </li>
  <li class="self">
- <a href="_0_1_u_i_staff.html#_0_1_u_i_staff_1place_staff">placeStaff</a>()
+ <a href="_0_1_u_i_staff.html#_0_1_u_i_staff_1pickup_staff">pickupStaff</a>()
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
@@ -355,6 +355,27 @@
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_u_i_staff_1after_load">function UIStaff:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L387">line 387 of Lua/dialogs/staff_dialog.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_u_i_staff_1change_handyman_attributes">function UIStaff:changeHandymanAttributes(<span class="p">increased</span>)</a></h5>
  <p>
  Function to balance 'cleaning','watering', and 'repairing', where<br/><br/>
@@ -368,7 +389,7 @@
  <td class="d">Attribute to increase.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L315">line 315 of Lua/dialogs/staff_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L314">line 314 of Lua/dialogs/staff_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -382,21 +403,21 @@
  <h5><a name="_0_1_u_i_staff_1do_more_cleaning">function UIStaff:doMoreCleaning()</a></h5>
  <p>
  UI callback function to increase 'cleaning' (wiping litter).<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L358">line 358 of Lua/dialogs/staff_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L357">line 357 of Lua/dialogs/staff_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_1do_more_repairing">function UIStaff:doMoreRepairing()</a></h5>
  <p>
  UI callback function to increase 'repairing' (machines).<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L368">line 368 of Lua/dialogs/staff_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L367">line 367 of Lua/dialogs/staff_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_1do_more_watering">function UIStaff:doMoreWatering()</a></h5>
  <p>
  UI callback function to increase 'watering' (plants).<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L363">line 363 of Lua/dialogs/staff_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L362">line 362 of Lua/dialogs/staff_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -428,7 +449,7 @@
  <div class="method">
  <h5><a name="_0_1_u_i_staff_1fire_staff">function UIStaff:fireStaff()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L308">line 308 of Lua/dialogs/staff_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L307">line 307 of Lua/dialogs/staff_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -475,7 +496,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1hit_test">Window:hitTest</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L384">line 384 of Lua/dialogs/staff_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L383">line 383 of Lua/dialogs/staff_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -571,11 +592,11 @@
  <div class="method">
  <h5><a name="_0_1_u_i_staff_1open_staff_management">function UIStaff:openStaffManagement()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L373">line 373 of Lua/dialogs/staff_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L372">line 372 of Lua/dialogs/staff_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_staff_1place_staff">function UIStaff:placeStaff()</a></h5>
+ <h5><a name="_0_1_u_i_staff_1pickup_staff">function UIStaff:pickupStaff()</a></h5>
  <p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/staff_dialog.lua#L303">line 303 of Lua/dialogs/staff_dialog.lua</a>.
  </p>
