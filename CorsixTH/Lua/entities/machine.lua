@@ -443,7 +443,7 @@ end
 function Machine:getState()
   local state = Object.getState(self)
   state.total_usage = self.total_usage
-
+  state.strength = self.strength
   return state
 end
 
@@ -457,6 +457,7 @@ function Machine:setState(state)
   Object.setState(self, state)
   if state then
     self.total_usage = state.total_usage
+    self.strength = state.strength
   end
 end
 
