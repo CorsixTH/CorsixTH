@@ -1253,8 +1253,8 @@ function App:idle()
     self:resetIdle()
     return
   end
-  -- Have we been idle enough (~30s)
-  if self.idle_tick > 1000 then
+  -- Have we been idle enough (~30s, based on SDL tick rate of 18ms)
+  if self.idle_tick > 1680 then
     -- User is idle, play the demo gameplay movie
     self.moviePlayer:playDemoMovie()
     self:resetIdle()
