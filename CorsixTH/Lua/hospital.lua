@@ -1308,15 +1308,6 @@ function Hospital:spawnPatient()
   self.world:spawnPatient(self)
 end
 
-function Hospital:removeDebugPatient(patient)
-  for i, p in ipairs(self.debug_patients) do
-    if p == patient then
-      table.remove(self.debug_patients, i)
-      return
-    end
-  end
-end
-
 local debug_n
 function Hospital:getDebugPatient()
   if not debug_n or debug_n >= #self.debug_patients then
@@ -1730,9 +1721,17 @@ function Hospital:removeStaff(staff)
 end
 
 --! Remove a patient from the hospital.
+--  Also if a debug patient, they are also removed from the debug list.
 --!param patient (Patient) Patient to remove.
 function Hospital:removePatient(patient)
+  if patient.is_debug then self:removeDebugPatient(patient) end
   RemoveByValue(self.patients, patient)
+end
+
+--! Remove a debug patient from the debug list.
+--!param patient (Patient) Patient to remove
+function Hospital:removeDebugPatient(patient)
+  RemoveByValue(self.debug_patients, patient)
 end
 
 -- TODO: This should depend on difficulty and level

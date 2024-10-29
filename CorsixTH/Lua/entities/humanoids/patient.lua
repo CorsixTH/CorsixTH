@@ -509,9 +509,11 @@ function Patient:goHome(reason, disease_id)
 
   hosp:updatePercentages()
 
+  -- Debug patients must be removed from the debug list so they can despawn properly
   if self.is_debug then
     hosp:removeDebugPatient(self)
   end
+
   -- Remove any messages and/or callbacks related to the patient.
   self:unregisterCallbacks()
 
