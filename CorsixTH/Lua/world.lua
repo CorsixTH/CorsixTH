@@ -2088,7 +2088,7 @@ end
 --! Dump the contents of the game log into a file.
 -- This is automatically done on each error.
 function World:dumpGameLog()
-  local gamelog_path = TheApp:getGamelogPath()
+  local gamelog_path = TheApp.gamelog_path
   local fi = self.app:writeToFileOrTmp(gamelog_path)
   -- Start the gamelog file with the system information
   local sysinfo = TheApp:gamelogHeader()
