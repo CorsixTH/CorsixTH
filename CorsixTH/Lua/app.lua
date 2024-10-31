@@ -392,10 +392,25 @@ end
 --! Create the gamelog, using the launch time in the filename, and write the system information.
 function App:initGamelogFile()
   self.gamelog_path = self.user_log_dir .. os.date("%y-%m-%d--%H-%M-%S--gamelog.txt", os.time(os.date("!*t")))
-  local fi = self:writeToFileOrTmp(self.gamelog_path)
+  local fi, success = self:writeToFileOrTmp(self.gamelog_path)
   local sysinfo = self:gamelogHeader()
   fi:write(sysinfo)
   fi:close()
+  if success then self:trimLogs() end -- Only trim logs if logs folder is writable
+end
+
+--! Trims the logs folder of old game logs down to ten files.
+function App:trimLogs()
+  local log_retention, log_table = 11, {}
+  for node in lfs.dir(self.user_log_dir) do
+    local file = self.user_log_dir .. pathsep .. node
+    if node:sub(-12) == "-gamelog.txt" then
+      table.insert(log_table, file)
+    end
+  end
+  table.sort(log_table,
+      function(a, b) return lfs.attributes(a, "modification") > lfs.attributes(b, "modification") end)
+  for i=log_retention, #log_table do os.remove(log_table[i]) end
 end
 
 --! Tries to initialize the user level and campaign directories
@@ -1011,7 +1026,7 @@ function App:saveConfig()
 end
 
 --! Tries to open the given file or a file in OS's temp dir.
--- Returns the file handler
+-- Returns the file handler, and true if it was written to the intended file.
 --!param file The full path of the intended file
 --!param mode The mode in which the file is opened, defaults to write
 function App:writeToFileOrTmp(file, mode)
@@ -1026,7 +1041,7 @@ function App:writeToFileOrTmp(file, mode)
     end
   end
   assert(f, "Error: cannot write to filesystem")
-  return f
+  return f, not err
 end
 
 function App:fixHotkeys()
