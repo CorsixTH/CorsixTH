@@ -435,6 +435,9 @@ function App:initUserDirectories()
   self.user_campaign_dir = self.config.campaigns or
       conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Campaigns"
   self.user_campaign_dir = setUserDir(self.user_campaign_dir, "User Campaigns")
+  self.user_log_dir = self.config.logs or
+      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Logs"
+  self.user_log_dir = setUserDir(self.user_log_dir, "Gamelogs")
 end
 
 --! Tries to initialize the savegame directory, returns true on success and
