@@ -34,7 +34,6 @@ local local_criteria_variable = {
 -- A table of functions for fetching criteria values that cannot be measured
 --   directly from a hospital attribute of the same name.
 local get_custom_criteria = {
-  balance = function(hospital) return hospital.balance - hospital.loan end,
 }
 
 class "EndConditions"
