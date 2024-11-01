@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 206 -- Add support for new win and lose criteria
+local SAVEGAME_VERSION = 207 -- Make VIP move slower
 
 class "App"
 
