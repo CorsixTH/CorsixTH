@@ -587,7 +587,6 @@ local hotkeys_defaults = {
   global_exitApp = {"alt", "f4"},
   global_resetApp = {"shift", "f10"},
   global_releaseMouse = {"ctrl", "f10"},
-  global_connectDebugger = {"ctrl", "c"},
   global_showLuaConsole = "f12",
   global_runDebugScript = {"shift", "d"},
   global_screenshot = {"ctrl", "s"},
@@ -729,7 +728,6 @@ if hotkeys_needs_rewrite and TheApp then
 'global_exitApp = ' .. hotkeys_values.global_exitApp .. '\n' ..
 'global_resetApp = ' .. hotkeys_values.global_resetApp .. '\n' ..
 'global_releaseMouse = ' .. hotkeys_values.global_releaseMouse .. '\n' ..
-'global_connectDebugger = ' .. hotkeys_values.global_connectDebugger .. '\n' ..
 'global_showLuaConsole = ' .. hotkeys_values.global_showLuaConsole .. '\n' ..
 'global_runDebugScript = ' .. hotkeys_values.global_runDebugScript .. '\n' ..
 'global_screenshot = ' .. hotkeys_values.global_screenshot .. '\n' ..
