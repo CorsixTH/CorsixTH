@@ -303,17 +303,6 @@ debug = false
 --
 debug_falling = false
 
--- Optional settings for CorsixTH's Lua DBGp client. Default settings are
--- nil values, platform & working dir will be autodetected if nil.
--- https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
---
-idehost = nil
-ideport = nil
-idekey = nil
-transport = nil
-platform = nil
-workingdir = nil
-
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
 -- off the FPS limiter, causing much higher CPU utilisation, but resulting in

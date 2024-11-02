@@ -40,7 +40,6 @@ Briefly:
 -- CorsixTH.exe Optional Startup Arguments
 ------------------------------------------------------------------------------
 
---connect-lua-dbgp : Before App.lua is executed connect a Lua DBGp client & to a Lua DBGp server.
 --interpreter=... : loadfile(...) instead of CorsixTH.lua.
 --config-file=... : Makes CorsixTH use the specified config file.
 --bitmap-dir=... : Makes CorsixTH use the specified bitmap directory.
