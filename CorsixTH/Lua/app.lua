@@ -23,7 +23,6 @@ local rnc = require("rnc")
 local lfs = require("lfs")
 local TH = require("TH")
 local SDL = require("sdl")
-local runDebugger = corsixth.require("run_debugger")
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
@@ -68,12 +67,6 @@ function App:App()
   self.check_for_updates = TH.GetCompileOptions().update_check
   self.idle_tick = 0
   self.window_active_status = false -- whether window is in focus, set after App:init
-end
-
---! Starts a Lua DBGp client & connects it to a DBGp server.
---!return error_message (String) Returns an error message or nil.
-function App:connectDebugger()
-  return runDebugger()
 end
 
 function App:setCommandLine(...)
