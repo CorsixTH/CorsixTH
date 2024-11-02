@@ -73,14 +73,6 @@ end
 -- Load standard library extensions
 corsixth.require("utility")
 
--- A DBGp debugger can debug this file if you start a CorsixTH DBGp client & connect
---  it to a running server, using this CorsixTH startup arg: -debugger
-for _, arg in ipairs({...}) do
-  if arg:match("^%-%-connect%-lua%-dbgp") then
-    dofile("run_debugger")()
-  end
-end
-
 -- Check Lua version
 local support = list_to_set({"Lua 5.1", "Lua 5.2", "Lua 5.3", "Lua 5.4"})
 if not support[_VERSION] then
