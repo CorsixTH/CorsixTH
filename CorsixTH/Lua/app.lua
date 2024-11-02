@@ -29,7 +29,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 207 -- Make VIP move slower
+local SAVEGAME_VERSION = 208 -- Game tick speed adjustment
 
 class "App"
 
