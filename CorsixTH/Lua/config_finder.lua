@@ -222,6 +222,7 @@ local string_01 = [=[
 --  German                / de / ger / deu
 --  Hungarian             / hu / hun
 --  Italian               / it / ita
+--  Japanese              / ja / jp
 --  Korean                / kor / ko
 --  Norwegian             / nb / nob
 --  Polish                / pl / pol
