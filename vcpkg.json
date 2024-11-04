@@ -81,8 +81,5 @@
         "catch2"
       ]
     }
-  },
-  "overrides": [
-    { "name": "sdl2", "version": "2.28.2" }
-  ]
+  }
 }
