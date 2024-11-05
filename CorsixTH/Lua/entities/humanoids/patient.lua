@@ -36,6 +36,7 @@ function Patient:Patient(...)
   self.action_string = ""
   self.cured = false
   self.infected = false
+  self.pay_amount = 0
   -- To distinguish between actually being dead and having a nil hospital
   self.dead = false
   -- Is the patient reserved for a particular nurse when being vaccinated
@@ -72,6 +73,10 @@ function Patient:onClick(ui, button)
         ui:addWindow(UIPatient(ui, self))
       end
     end
+  elseif self.user_of then
+    -- The object we're using is made invisible, as the animation contains both
+    -- the humanoid and the object. Hence send the click onto the object.
+    self.user_of:onClick(ui, button)
   elseif TheApp.config.debug_falling and button == "right" then
     -- Attempt to push patient over
     -- Currently debug-only, enable in config file for testing.
@@ -80,10 +85,6 @@ function Patient:onClick(ui, button)
          and math.random(1, 2) == 2 then
       self:falling(true)
     end
-  elseif self.user_of then
-    -- The object we're using is made invisible, as the animation contains both
-    -- the humanoid and the object. Hence send the click onto the object.
-    self.user_of:onClick(ui, button)
   end
   Humanoid.onClick(self, ui, button)
 end
@@ -158,7 +159,7 @@ function Patient:setDiagnosed()
   self:updateDynamicInfo()
 end
 
--- Modifies the diagnosis progress of a patient.
+--! Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
   self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
@@ -171,7 +172,7 @@ function Patient:modifyDiagnosisProgress(incrementValue)
   self:updateDynamicInfo()
 end
 
--- Updates the patients diagnostic progress based on the doctors skill
+--! Updates the patients diagnostic progress based on the doctors skill
 -- called when they are done using a diagnosis room
 function Patient:completeDiagnosticStep(room)
   -- Base: depending on difficulty of disease as set in sam file
@@ -204,7 +205,7 @@ function Patient:completeDiagnosticStep(room)
   self:modifyDiagnosisProgress(diagnosis_base + (diagnosis_bonus * multiplier))
 end
 
--- Sets the hospital for the patient - additionally removing them from a
+--! Sets the hospital for the patient - additionally removing them from a
 -- hospital if they already belong to one. For player hospitals, patients who
 -- are not debug or emergency patients are made to seek a reception desk.
 --!param hospital (Hospital): hospital to assign to patient
@@ -298,11 +299,15 @@ end
 --! Returns true if patient agrees to pay for the given treatment.
 --!param disease_id (string): The id of the disease to test
 function Patient:agreesToPay(disease_id)
-  local casebook = self.hospital.disease_casebook[disease_id]
+  local hosp = self.hospital
+  local casebook = hosp.disease_casebook[disease_id]
   local price_distortion = self:getPriceDistortion(casebook)
-  local is_over_priced = price_distortion > self.hospital.over_priced_threshold
+  local is_over_priced = price_distortion > hosp.over_priced_threshold
 
-  return not (is_over_priced and math.random(1, 5) == 1)
+  if is_over_priced and math.random(1, 5) == 1 then return false end
+  self.pay_amount = hosp:getTreatmentPrice(disease_id)
+
+  return true
 end
 
 --! Either the patient is cured, or he/she dies.
@@ -349,11 +354,15 @@ function Patient:die()
   self:setDynamicInfoText(_S.dynamic_info.patient.actions.dying)
 end
 
--- Actions we can interrupt for in the canPeePukeOrFall function
+-- Actions we can interrupt when at a fully empty tile.
 local good_actions = {walk=true, idle=true, seek_room=true, queue=true}
 
-function Patient:canPeePukeOrFall(current)
-  if not good_actions[current.name] then return false end
+--! Test whether the current tile of the patient is useful for inserting an
+-- action that needs a fully empty tile in the hospital.
+--!param cur_action Current action of the patient.
+--!return Whether the tile can be used for inserting an action.
+function Patient:atFullyEmptyTile(cur_action)
+  if not good_actions[cur_action.name] then return false end
   if self.going_home then return false end
 
   local th = self.world.map.th
@@ -369,7 +378,7 @@ end
 function Patient:falling(player_init)
   local current = self:getCurrentAction()
   current.keep_reserved = true
-  if self.falling_anim and self:canPeePukeOrFall(current) and self.has_fallen == 1 then
+  if self.falling_anim and self:atFullyEmptyTile(current) and self.has_fallen == 1 then
     self.has_fallen = 2
     self:queueAction(FallingAction(), 1)
     self:queueAction(OnGroundAction(), 2)
@@ -401,7 +410,7 @@ end
 function Patient:vomit()
   local current = self:getCurrentAction()
   --Only vomit under these conditions. Maybe I should add a vomit for patients in queues too?
-  if self:canPeePukeOrFall(current) and self.has_vomitted == 0 then
+  if self:atFullyEmptyTile(current) and self.has_vomitted == 0 then
     self:queueAction(VomitAction(), 1)
     self:interruptAndRequeueAction(current, 2)
     self.has_vomitted = self.has_vomitted + 1
@@ -414,7 +423,7 @@ end
 function Patient:pee()
   local current = self:getCurrentAction()
   --Only pee under these conditions. As with vomit, should they also pee if in a queue?
-  if self:canPeePukeOrFall(current) then
+  if self:atFullyEmptyTile(current) then
     self:queueAction(PeeAction(), 1)
     self:interruptAndRequeueAction(current, 2)
     self:setMood("poo", "deactivate")

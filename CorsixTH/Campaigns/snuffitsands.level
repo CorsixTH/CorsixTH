@@ -208,7 +208,7 @@ Divides research input to get the amount of research points. must be > 0
 #win_criteria[5].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
 
 #lose_criteria[0].Criteria.MaxMin.Value.Group.Bound	1	0	400	1	450
-#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound	5	1	30	2	0
+#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound	5	1	30	2	10
 #lose_criteria[2].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
 #lose_criteria[3].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
 #lose_criteria[4].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0

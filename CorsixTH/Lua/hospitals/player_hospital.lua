@@ -839,7 +839,7 @@ function PlayerHospital:afterLoad(old, new)
   end
 
   -- Refresh the cheat system every load
-  local old_active_cheats = self.hosp_cheats.active_cheats
+  local old_active_cheats = self.hosp_cheats and self.hosp_cheats.active_cheats or {}
   self.hosp_cheats = Cheats(self)
   self.hosp_cheats.active_cheats = old_active_cheats
 

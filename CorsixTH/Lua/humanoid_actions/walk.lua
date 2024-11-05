@@ -111,6 +111,10 @@ local flag_flip_h = 1
 local navigateDoor
 
 local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
+  -- The variables below must always make up factor*quantity = 8 or the
+  -- animation glitches
+  -- Factor must also be able to multiply by 2 to become an integer
+  -- Quantity must always be an integer
   local factor = 1
   local quantity = 8
   if humanoid.speed and humanoid.speed == "fast" then

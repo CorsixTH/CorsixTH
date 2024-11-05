@@ -34,14 +34,28 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self:initRoom(x, y, w, h, door, door2)
 end
 
+--! Initialises primary components of the room.
+-- Additionally, if there is already a room, e.g. it is being moved,
+-- we can just reinit it by calling this, not make a new one.
+--!param x (co-ordinate) starting tile
+--!param y (co-ordinate) starting tile
+--!param w (num) width of room
+--!param h (num) height of room
+--!param door (object) primary door for room
+--!param door2 (object) optional secondary door (e.g. swing doors)
 function Room:initRoom(x, y, w, h, door, door2)
   self.x = x
   self.y = y
   self.width = w
   self.height = h
   self.maximum_patients = 1 -- A good default for most rooms
-  door.room = self
-  self.door = door
+
+  -- setup new door and new queue
+  local new_door = door
+  local old_door = self.door
+  new_door:setupDoor(self, old_door)
+  self.door = new_door
+
   -- If it's a swing door we have two doors
   self.door2 = door2
   if not self:hasQueueDialog() then
@@ -629,16 +643,27 @@ function Room:onHumanoidLeave(humanoid)
 
   -- The player might be waiting to edit this room
   if not self.is_active then
-    local i = 0
+    local people_in_room = 0
     for _ in pairs(self.humanoids) do
-      i = i + 1
+      people_in_room = people_in_room + 1
     end
-    if i == 0 then
-      local ui = self.world.ui
-      ui:addWindow(UIEditRoom(ui, self))
-      ui:setCursor(ui.default_cursor)
+    if people_in_room == 0 then
+      self:enterEditMode()
     end
   end
+end
+
+function Room:enterEditMode()
+  local ui = self.world.ui
+
+  -- If we have the window for this room machine open, close it
+  local window = ui:getWindow(UIMachine)
+  if window and window.machine and window.machine:getRoom() == self then
+    window:close()
+  end
+
+  ui:addWindow(UIEditRoom(ui, self))
+  ui:setCursor(ui.default_cursor)
 end
 
 function Room:shouldHavePatientReenter(patient)
@@ -969,11 +994,11 @@ end
 
 function Room:tryToEdit()
   self:deactivate()
-  local i = 0
+  local people_in_room = 0
   -- Tell all humanoids that they should leave
   -- If someone is entering the room right now they are also counted.
   if self.door.user and self.door.user:getCurrentAction().is_entering then
-    i = 1
+    people_in_room = 1
   end
   for humanoid, _ in pairs(self.humanoids) do
     if not humanoid:isLeaving() then
@@ -985,13 +1010,11 @@ function Room:tryToEdit()
         humanoid:queueAction(MeanderAction())
       end
     end
-    i = i + 1
+    people_in_room = people_in_room + 1
   end
   -- If there were no people inside we're ready to edit the room
-  if i == 0 then
-    local ui = self.world.ui
-    ui:addWindow(UIEditRoom(ui, self))
-    ui:setCursor(ui.default_cursor)
+  if people_in_room == 0 then
+    self:enterEditMode()
   end
 end
 

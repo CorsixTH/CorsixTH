@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010-2020 Manuel "Roujin" Wolf, Edvin "Lego3" Linge, lewri et al.
+--[[ Copyright (c) 2010-2024 Manuel "Roujin" Wolf, Edvin "Lego3" Linge, MandrakeHorse, lewri et al.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -42,6 +42,17 @@ adviser.goals.lose.kill = "Kill another %d patients to lose the level!"
 -- Improve tooltips in staff window to mention hidden features
 tooltip.staff_window.face = "This person's face - click to open management screen"
 tooltip.staff_window.center_view = "Left click to zoom to staff, right click to cycle through staff members"
+
+-- Improve tooltips in Research Screen
+tooltip.research.cure_dec = "Decrease Cure research percentage"
+tooltip.research.cure_inc = "Increase Cure research percentage"
+tooltip.research.diagnosis_dec = "Decrease Diagnosis research percentage"
+tooltip.research.diagnosis_inc = "Increase Diagnosis research percentage"
+tooltip.research.drugs_dec = "Decrease Drugs research percentage"
+tooltip.research.improvements_dec = "Decrease Improvements research percentage"
+tooltip.research.improvements_inc = "Increase Improvements research percentage"
+tooltip.research.specialisation_dec = "Decrease Specialisation research percentage"
+tooltip.research.specialisation_inc = "Increase Specialisation research percentage"
 
 -- These strings are missing in some versions of TH (unpatched?)
 confirmation.restart_level = "Are you sure you want to restart the level?"
@@ -741,7 +752,7 @@ errors = {
   fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
   could_not_load_campaign = "Failed to load the campaign: %s",
   could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
-  save_to_tmp = "The file at %s could not be used. The game has been saved to %s. Error: %s",
+  save_to_tmp = "Attempt to write to %s failed. File was written instead to temporary location %s because of the error: %s",
   dialog_empty_queue = "Sorry, a humanoid just had an empty action queue, which means that they didn't know what to do next. Please consult the command window for more detailed information. A dialog with the offending humanoid has been opened. Would you like them to leave the hospital?",
   compatibility_error = {
     new_in_old = "Sorry, this save was created with a newer version of CorsixTH and is not compatible. Please update to a more recent version.",

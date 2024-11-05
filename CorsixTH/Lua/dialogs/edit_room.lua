@@ -394,11 +394,25 @@ function UIEditRoom:finishRoom()
     flag = 1024
   end
   local function check_external_window(x, y, layer)
+    -- Test it is a wall, but not spr_num.
+    local function is_wall_and_not(wall_x, wall_y, spr_num)
+      return map:getCell(wall_x, wall_y, layer) ~= 0
+          and map:getCell(wall_x, wall_y, layer) ~= spr_num
+    end
+    -- Test that the wall is either spr_num1 or spr_num2.
+    local function is_one_of_wall(wall_x, wall_y, spr_num1, spr_num2)
+      return  map:getCell(wall_x, wall_y, layer) == spr_num1
+          or map:getCell(wall_x, wall_y, layer) == spr_num2
+    end
+
+
     -- If a wall is built which is normal to an external window, then said
-    -- window needs to be removed, otherwise it looks odd (see issue #59).
+    -- window needs to be removed, otherwise it looks odd.
     local block = map:getCell(x, y, layer)
     local dir = world:getWallDirFromBlockId(block)
     local tiles = self.ui.app.walls.external[world:getWallSetFromBlockId(block)]
+
+    -- Dispatch on the wall tiles at (x, y)
     if dir == "north_window_1" then
       if x ~= rect.x then
         map:setCell(x, y, layer, flag + tiles.north)
@@ -406,6 +420,7 @@ function UIEditRoom:finishRoom()
           map:setCell(x + 1, y, layer, flag + tiles.north)
         end
       end
+
     elseif dir == "north_window_2" then
       if x == rect.x then
         if map:getCell(x - 1, y, layer) ~= 0 then
@@ -413,6 +428,7 @@ function UIEditRoom:finishRoom()
         end
         map:setCell(x, y, layer, flag + tiles.north)
       end
+
     elseif dir == "west_window_1" then
       if y == rect.y then
         map:setCell(x, y, layer, flag + tiles.west)
@@ -420,6 +436,7 @@ function UIEditRoom:finishRoom()
           map:setCell(x, y - 1, layer, flag + tiles.west)
         end
       end
+
     elseif dir == "west_window_2" then
       if y ~= rect.y then
         if map:getCell(x, y + 1, layer) ~= 0 then
@@ -427,8 +444,58 @@ function UIEditRoom:finishRoom()
         end
         map:setCell(x, y, layer, flag + tiles.west)
       end
+
+    elseif dir == "north_window_long" then
+      if x == rect.x then
+        map:setCell(x, y, layer, flag + tiles.north_window_1)
+        -- Check if the window_long continues.
+        -- If yes, replace the window_long with window_n.
+        -- if no, replace it with the wall.
+        if is_wall_and_not(x - 1, y, tiles.north_window_2) then
+          if is_one_of_wall(x - 2, y,
+              tiles.north_window_long, tiles.north_window_1) then
+            map:setCell(x - 1, y, layer, flag + tiles.north_window_2)
+          else
+            map:setCell(x - 1, y, layer, flag + tiles.north)
+          end
+        end
+      else
+        map:setCell(x, y, layer, flag + tiles.north_window_2)
+        if is_wall_and_not(x + 1, y, tiles.north_window_1) then
+          if is_one_of_wall(x + 2, y,
+              tiles.north_window_long, tiles.north_window_2) then
+            map:setCell(x + 1, y, layer, flag + tiles.north_window_1)
+          else
+            map:setCell(x + 1, y, layer, flag + tiles.north)
+          end
+        end
+      end
+
+    elseif dir == "west_window_long" then
+      if y == rect.y then
+        map:setCell(x, y, layer, flag + tiles.west_window_2)
+        if is_wall_and_not(x, y - 1, tiles.west_window_1) then
+          if is_one_of_wall(x, y - 2,
+              tiles.west_window_long, tiles.west_window_2) then
+            map:setCell(x, y - 1, layer, flag + tiles.west_window_1)
+          else
+            map:setCell(x, y - 1, layer, flag + tiles.west)
+          end
+        end
+      else
+        map:setCell(x, y, layer, flag + tiles.west_window_1)
+        if is_wall_and_not(x, y + 1, tiles.west_window_2) then
+          if is_one_of_wall(x, y + 2,
+              tiles.west_window_long, tiles.west_window_1) then
+            map:setCell(x, y + 1, layer, flag + tiles.west_window_2)
+          else
+            map:setCell(x, y + 1, layer, flag + tiles.west)
+          end
+        end
+      end
     end
   end
+
   for x, obj in pairs(self.blueprint_wall_anims) do
     for y, anim in pairs(obj) do
       if x == rect.x and y == rect.y then

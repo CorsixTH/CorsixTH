@@ -129,12 +129,6 @@ local config_defaults = {
   audio_buffer_size = 2048,
   theme_hospital_install = [[X:\ThemeHospital\hospital]],
   debug = false,
-  DBGp_client_idehost = nil,
-  DBGp_client_ideport = nil,
-  DBGp_client_idekey = nil,
-  DBGp_client_transport = nil,
-  DBGp_client_platform = nil,
-  DBGp_client_workingdir = nil,
   track_fps = false,
   zoom_speed = 80,
   scroll_speed = 2,
@@ -235,6 +229,7 @@ local string_01 = [=[
 --  Russian               / ru / rus
 --  Spanish               / es / spa
 --  Swedish               / sv / swe
+--  Ukrainian             / uk / ukr
 --]=] .. '\n' ..
 'language = [['.. config_values.language ..']]' .. '\n' .. [=[
 
@@ -499,17 +494,6 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 --]=] .. '\n' ..
 'debug_falling = ' .. tostring(config_values.debug_falling) .. '\n' .. [=[
 
--- Optional settings for CorsixTH's Lua DBGp client. Default settings are
--- nil values, platform & working dir will be autodetected if nil.
--- https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
---]=] .. '\n' ..
-'idehost = ' .. tostring(config_values.DBGp_client_idehost) .. '\n' ..
-'ideport = ' .. tostring(config_values.DBGp_client_ideport) .. '\n' ..
-'idekey = ' .. tostring(config_values.DBGp_client_idekey) .. '\n' ..
-'transport = ' .. tostring(config_values.DBGp_client_transport) .. '\n' ..
-'platform = ' .. tostring(config_values.DBGp_platform) .. '\n' ..
-'workingdir = ' .. tostring(config_values.DBGp_workingdir) .. '\n' .. [=[
-
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
 -- off the FPS limiter, causing much higher CPU utilisation, but resulting in
@@ -586,7 +570,6 @@ local hotkeys_defaults = {
   global_exitApp = {"alt", "f4"},
   global_resetApp = {"shift", "f10"},
   global_releaseMouse = {"ctrl", "f10"},
-  global_connectDebugger = {"ctrl", "c"},
   global_showLuaConsole = "f12",
   global_runDebugScript = {"shift", "d"},
   global_screenshot = {"ctrl", "s"},
@@ -728,7 +711,6 @@ if hotkeys_needs_rewrite and TheApp then
 'global_exitApp = ' .. hotkeys_values.global_exitApp .. '\n' ..
 'global_resetApp = ' .. hotkeys_values.global_resetApp .. '\n' ..
 'global_releaseMouse = ' .. hotkeys_values.global_releaseMouse .. '\n' ..
-'global_connectDebugger = ' .. hotkeys_values.global_connectDebugger .. '\n' ..
 'global_showLuaConsole = ' .. hotkeys_values.global_showLuaConsole .. '\n' ..
 'global_runDebugScript = ' .. hotkeys_values.global_runDebugScript .. '\n' ..
 'global_screenshot = ' .. hotkeys_values.global_screenshot .. '\n' ..

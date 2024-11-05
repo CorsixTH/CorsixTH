@@ -454,7 +454,6 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
         sections = {{
             title = _S.hotkey_window.panel_debugKeys,
             keys = {
-              "global_connectDebugger",
               "global_showLuaConsole",
               "global_runDebugScript",
               "ingame_showCheatWindow",

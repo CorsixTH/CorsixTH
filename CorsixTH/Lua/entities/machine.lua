@@ -289,14 +289,19 @@ end
 
 function Machine:machineRepaired(room)
   room.needs_repair = nil
-  local str = self.strength
-  if self.times_used/str > 0.55 then
-    self.strength = str - 1
+
+  local current_strength = self.strength
+  local used_out_rate = self.times_used / current_strength
+
+  -- calculate chance of strength reducing
+  local should_reduce_strength = math.random() < used_out_rate
+  if should_reduce_strength then
+    self.strength = current_strength - 1
   end
+
   self.times_used = 0
   self:setRepairing(nil)
   setSmoke(self, false)
-
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
   self.hospital:removeHandymanTask(taskIndex, "repairing")
 end
@@ -438,7 +443,7 @@ end
 function Machine:getState()
   local state = Object.getState(self)
   state.total_usage = self.total_usage
-
+  state.strength = self.strength
   return state
 end
 
@@ -452,6 +457,7 @@ function Machine:setState(state)
   Object.setState(self, state)
   if state then
     self.total_usage = state.total_usage
+    self.strength = state.strength
   end
 end
 

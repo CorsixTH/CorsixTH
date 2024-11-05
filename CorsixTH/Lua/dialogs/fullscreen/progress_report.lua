@@ -37,7 +37,12 @@ function UIProgressReport:UIProgressReport(ui)
     self.red_font = gfx:loadFont("QData", "Font101V", false, palette)
     self.normal_font = gfx:loadFont("QData", "Font100V", false, palette)
     self.small_font = gfx:loadFont("QData", "Font106V")
-    self.panel_sprites = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+    -- Load all sprite tables needed for all goal icons
+    self.panel_sprites_table = {
+      MPointer = gfx:loadSpriteTable("Data", "MPointer"),
+      Rep02V = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+    }
+    self.panel_sprites = self.panel_sprites_table.Rep02V -- The default goals icons
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
     self:close()
@@ -66,12 +71,23 @@ function UIProgressReport:UIProgressReport(ui)
     -- FIXME: res_value and cure_value are depersisted as floating points, using
     -- string.format("%.0f", x) is not suitable due to %d (num) param in _S string
     local tooltip
-    if crit_table.formats == 2 then
-      tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value), math.floor(cur_value))
+    if crit_table.two_tooltips then
+      local direction = crit_table.win_value and "over" or "under"
+      tooltip = _S.tooltip.status[direction][crit_name]
     else
-      tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value))
+      tooltip = _S.tooltip.status[crit_name]
     end
-    self:addPanel(crit_table.icon, x, 240)
+    if crit_table.formats == 2 then
+      tooltip = tooltip:format(math.floor(res_value), math.floor(cur_value))
+    elseif crit_table.formats == 3 then
+      tooltip = tooltip:format(math.floor(res_value) / 1000,
+          math.floor(cur_value) / 1000)
+    else
+      tooltip = tooltip:format(math.floor(res_value))
+    end
+    if not crit_table.icon_file then -- Icons from QData/Rep02V
+      self:addPanel(crit_table.icon, x, 240)
+    end
     self:makeTooltip(tooltip, x, 180, x + 30, 180 + 90)
     x = x + 30
   end
@@ -194,6 +210,10 @@ function UIProgressReport:draw(canvas, x, y)
         result_y = result_y + 1
       end
       self.panel_sprites:draw(canvas, 2 + sprite_offset, x + lx, y + 237 - result_y)
+      if crit_table.icon_file then -- Icons not from QData/Rep02V
+        local icon_sprites = self.panel_sprites_table[crit_table.icon_file]
+        icon_sprites:draw(canvas, crit_table.icon, x + lx, y + 240)
+      end
       lx = lx + 30
     end
   end
@@ -208,18 +228,7 @@ function UIProgressReport:draw(canvas, x, y)
 end
 
 function UIProgressReport:afterLoad(old, new)
-  if old < 179 then
-    local gfx = TheApp.gfx
-
-    local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
-    self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
-    self.red_font = gfx:loadFont("QData", "Font101V", false, palette)
-    self.normal_font = gfx:loadFont("QData", "Font100V", false, palette)
-    self.small_font = gfx:loadFont("QData", "Font106V")
-    self.panel_sprites = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
-  end
-
-  if old < 188 then
+  if old < 206 then
     self:close()
   end
 

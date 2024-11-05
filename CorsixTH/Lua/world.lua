@@ -67,7 +67,7 @@ function World:World(app)
   self.entity_map = EntityMap(self.map)
 
   -- Time
-  self.hours_per_tick = 2
+  self.hours_per_tick = 1
   self.tick_rate = 3
   self.tick_timer = 0
   self.game_date = Date() -- Current date in the game.
@@ -718,12 +718,12 @@ end
 -- happens.
 local tick_rates = {
   ["Pause"]              = {0, 1},
-  ["Slowest"]            = {1, 28}, -- 1 tick per s
-  ["Slower"]             = {1, 6}, -- 1 tick per 216ms
-  ["Normal"]             = {2, 3}, -- 2 ticks per 108ms = 1 tick per 54 ms
-  ["Max speed"]          = {1, 1}, -- 1 tick per 36 ms
-  ["And then some more"] = {2, 1}, -- 2 ticks per 36 ms = 1 tick 18ms
-  ["Speed Up"]           = {4, 1},
+  ["Slowest"]            = {1, 56}, -- 1 hour per s
+  ["Slower"]             = {1, 12}, -- 1 hour per 216ms
+  ["Normal"]             = {1, 3}, -- 1 hour per 54 ms
+  ["Max speed"]          = {1, 2}, -- 1 hour per 36 ms
+  ["And then some more"] = {1, 1}, -- 1 hour per 18ms
+  ["Speed Up"]           = {8, 1},
 }
 
 function World:speedUp()
@@ -837,8 +837,8 @@ local outside_temperatures = {
 
 local start_date = Date()
 
---! World ticks are translated to game ticks (or hours) depending on the
--- current speed of the game. There are 50 hours in a TH day.
+--! World ticks (every 18ms) are translated to game ticks (or hours) depending
+-- on the current speed of the game. There are 50 hours in a TH day.
 function World:onTick()
   if self.map.level_number == "MAP EDITOR" then return end
 
@@ -2461,22 +2461,6 @@ function World:afterLoad(old, new)
     self.wall_types = self.app.walls
     self:initWallTypes()
   end
-  if old < 183 then -- Adjust game speed and tick rates
-    local old_tick_rates = {
-      ["Pause"]              = {0, 1},
-      ["Slowest"]            = {1, 9},
-      ["Slower"]             = {1, 5},
-      ["Normal"]             = {1, 3},
-      ["Max speed"]          = {1, 1},
-      ["And then some more"] = {3, 1},
-    }
-    for name, rate in pairs(old_tick_rates) do
-      if rate[1] == self.hours_per_tick and rate[2] == self.tick_rate then
-        self:setSpeed(name)
-        break
-      end
-    end
-  end
   if old < 185 then
     -- Fix any missing initial in staff names
     self:updateInitialsCache()
@@ -2501,6 +2485,40 @@ function World:afterLoad(old, new)
   if old < 189 then
     -- Move existing and future earthquakes to the Earthquake class
     self.earthquake = Earthquake(self, true)
+  end
+  if old < 208 then -- Adjust game speed and tick rates
+    local old_tick_rates
+    if old < 183 then
+      old_tick_rates = {
+        ["Pause"]              = {0, 1},
+        ["Slowest"]            = {1, 9},
+        ["Slower"]             = {1, 5},
+        ["Normal"]             = {1, 3},
+        ["Max speed"]          = {1, 1},
+        ["And then some more"] = {3, 1},
+      }
+    else
+      old_tick_rates = {
+        ["Pause"]              = {0, 1},
+        ["Slowest"]            = {1, 28},
+        ["Slower"]             = {1, 6},
+        ["Normal"]             = {2, 3},
+        ["Max speed"]          = {1, 1},
+        ["And then some more"] = {2, 1},
+        ["Speed Up"]           = {4, 1},
+      }
+    end
+    local found_speed = false
+    for name, rate in pairs(old_tick_rates) do
+      if rate[1] == self.hours_per_tick and rate[2] == self.tick_rate then
+        found_speed = true
+        self:setSpeed(name)
+        break
+      end
+    end
+    if not found_speed then
+      self:setSpeed("Normal")
+    end
   end
 
   -- Fix the initial of staff names

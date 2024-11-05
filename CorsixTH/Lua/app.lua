@@ -23,13 +23,12 @@ local rnc = require("rnc")
 local lfs = require("lfs")
 local TH = require("TH")
 local SDL = require("sdl")
-local runDebugger = corsixth.require("run_debugger")
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 190 -- Improve falling actions for debug purposes
+local SAVEGAME_VERSION = 208 -- Game tick speed adjustment
 
 class "App"
 
@@ -68,12 +67,6 @@ function App:App()
   self.check_for_updates = TH.GetCompileOptions().update_check
   self.idle_tick = 0
   self.window_active_status = false -- whether window is in focus, set after App:init
-end
-
---! Starts a Lua DBGp client & connects it to a DBGp server.
---!return error_message (String) Returns an error message or nil.
-function App:connectDebugger()
-  return runDebugger()
 end
 
 function App:setCommandLine(...)
@@ -1253,8 +1246,8 @@ function App:idle()
     self:resetIdle()
     return
   end
-  -- Have we been idle enough (~30s)
-  if self.idle_tick > 1000 then
+  -- Have we been idle enough (~30s, based on SDL tick rate of 18ms)
+  if self.idle_tick > 1680 then
     -- User is idle, play the demo gameplay movie
     self.moviePlayer:playDemoMovie()
     self:resetIdle()
@@ -1638,8 +1631,13 @@ end
 function App:getVersion(version)
   local ver = version or self.savegame_version
 
-  if ver > 180 then
+  -- Versioning format is major.minor.revision (required) Patch (optional)
+  -- Old versions (<= 0.67) retain existing format
+  -- All patch versions should be retained in this table (due to be replaced, see PR2518)
+  if ver > 194 then
     return "Trunk"
+  elseif ver > 180 then
+    return "v0.68.0"
   elseif ver > 170 then
     return "v0.67"
   elseif ver > 156 then
@@ -1834,6 +1832,12 @@ function App:afterLoad()
   self.world:afterLoad(old, new)
 end
 
+--! Runs a comparison between the current (installed) version and the reported
+--! update table hosted by Github. If the update table is newer, it will generate
+--! an update window.
+--! As pre-releases are not announced on the update table, the checker also assumes
+--! that any current version with a patch in its name (Beta, RC, etc) will be older
+--! than the update table's version if their major, minor, and revision components match.
 function App:checkForUpdates()
   -- Only check for updates once per application launch
   if not self.check_for_updates or not self.config.check_for_updates then return end
@@ -1863,8 +1867,10 @@ function App:checkForUpdates()
   local new_version = update_table.major .. '.' .. update_table.minor .. '.' .. update_table.revision
 
   -- Semantic version comparison of the current and update version numbers
+  -- A return value of true means the current version is newer
   local function compare_versions()
-    local current_major, current_minor, current_revision = string.match(current_version, "(%d+)%.(%d+)%.?(%d*)")
+    local current_major, current_minor, current_revision, current_patch =
+        string.match(current_version, "(%d+)%.(%d+)%.?(%d*) ?(.*)")
     current_major, current_minor = tonumber(current_major), tonumber(current_minor)
     if current_major > update_table.major then return true
     elseif current_major < update_table.major then return false
@@ -1872,10 +1878,11 @@ function App:checkForUpdates()
     if current_minor > update_table.minor then return true
     elseif current_minor < update_table.minor then return false
     end
+
     current_revision = tonumber(current_revision) or 0
-    if current_revision >= update_table.revision then return true
-    else return false
-    end
+    current_patch = string.len(current_patch) > 0 and current_patch
+    if current_patch then return current_revision > update_table.revision end
+    return current_revision >= update_table.revision
   end
   if compare_versions() then
     print("You are running the latest version of CorsixTH.")

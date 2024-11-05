@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-CorsixTH 0.68.0 - released xxxx 2024
+CorsixTH 0.68.0 - released October 2024
 -------------------------------------------------------------------------------
 # New Features/Enhancements
 * In-game movies now play for users using TH Data directly from a .ISO file
@@ -7,6 +7,8 @@ CorsixTH 0.68.0 - released xxxx 2024
   movie when progressing through the campaign
 * The Map Editor has received some love including new features, fixes, and
   jukebox controls
+* Long windows now behave properly in the game if they get intersected by an
+  adjacent wall
 * You can now control the Jukebox from the Main Menu by going to
   Options > Jukebox
 * External (non-TH) XMI files are now supported by the Jukebox
@@ -41,11 +43,13 @@ CorsixTH 0.68.0 - released xxxx 2024
 * Support is added to auto-detect a Theme Hospital install via GOG Galaxy
 
 # Translations
-* Dutch translation has been updated. Thanks @jetenergy
+* Ukranian translation added. Thanks @JurecStrongman
+* Dutch translation has been updated. Thanks @jetenergy and @Alberth289346
 * Italian translation has been updated. Thanks @SebastianoPistore & @Inkub0
 * Russian translation has been updated. Thanks @Matroftt
 * Spanish translation has been updated. Thanks @ShiroAka
 * French translation has been updated. Thanks @nMustaki & @Sanndow
+* Brazilian-Portuguese translation has been updated. Thanks @altiereslima
 * Some unused language strings have been cleaned up
 * Custom campaign and level creators can now optionally add translated strings
   for campaign description, level briefing, and winning text
@@ -61,6 +65,8 @@ CorsixTH 0.68.0 - released xxxx 2024
 * Staff who have left the hospital can no longer ask for a raise
 * Fixed a bug where some staff may have no initial before surname
 * Patients can no longer litter outdoors
+* Patients waiting for a player decision no longer lose their mood icon on
+  vomit/pee
 * Fixed a bug where an unreachable reception desk could cause a crash
 * The Computer and Atom Analyser now make button sounds as originally intended
 * The mark for vaccination action now makes a sound as originally intended
@@ -74,6 +80,8 @@ CorsixTH 0.68.0 - released xxxx 2024
   properly
 * Custom campaigns menu now will use a scrollbar for long campaign descriptions
 * Continue Game now properly targets files explicitly ending in the .sav format
+* Tooltips for language menu now align with list items. Please note we are aware
+  of an issue where some languages don't show a tooltip
 * Fixed an instance where information boxes could load pink from older
   savegames
 * Implemented a more permanent fix for the money bar being drawn incorrectly in
