@@ -57,7 +57,7 @@ confirmation.restart_level = "Você tem certeza de que deseja reiniciar o nível
 -- this is only relevant to the English game so does not need adding
 -- in other language files
 vip_names = {
- [6] = "Sir Lancelot Spratt",
+ [6] = "O Presidente da Cruz Vermelha",
 }
 
 -- An override for the squits becoming the the squits see issue 1646
