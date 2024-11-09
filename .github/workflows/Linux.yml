@@ -51,7 +51,7 @@ jobs:
         run: |
           sudo apt-get install libsdl2-dev libsdl2-mixer-dev \
            libavcodec-dev libavformat-dev libavutil-dev libswresample-dev \
-           libswscale-dev libcurl4-openssl-dev
+           libswscale-dev libcurl4-openssl-dev libspdlog-dev
       - name: Install static analysis requirements
         if: matrix.static_analysis
         run: |

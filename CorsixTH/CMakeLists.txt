@@ -225,6 +225,9 @@ if(WITH_UPDATE_CHECK)
   endif()
 endif()
 
+find_package(spdlog CONFIG REQUIRED)
+target_link_libraries(CorsixTH PRIVATE spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>)
+
 if(CORSIX_TH_LINK_LUA_MODULES)
   message("Linking lua modules")
   find_package(unofficial-luafilesystem CONFIG REQUIRED)

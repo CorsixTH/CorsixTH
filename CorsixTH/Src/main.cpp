@@ -22,6 +22,8 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <spdlog/spdlog.h>
+
 #include <array>
 #include <cstdio>
 #include <cstring>
@@ -177,10 +179,10 @@ int lua_main_no_eval(lua_State* L) {
 
   auto scriptFilePath = search_script_file(L);
   if (scriptFilePath.empty()) {
-    std::fprintf(stderr,
-                 "CorsixTH cannot find CorsixTH.lua. If you want use a custom "
-                 "location, specify it by --interpreter=FILE\n");
-    std::fflush(stderr);
+    spdlog::error(
+        "CorsixTH cannot find CorsixTH.lua. If you want use a custom "
+        "location, specify it by --interpreter=FILE");
+    spdlog::shutdown();
     exit(1);
   }
 
@@ -222,16 +224,14 @@ int lua_stacktrace(lua_State* L) {
 }
 
 int lua_panic(lua_State* L) {
-  std::fprintf(stderr,
-               "A Lua error has occurred in CorsixTH outside of protected "
-               "mode!\n");
-  std::fflush(stderr);
+  spdlog::error(
+      "A Lua error has occurred in CorsixTH outside of protected "
+      "mode!");
 
   if (lua_type(L, -1) == LUA_TSTRING)
-    std::fprintf(stderr, "%s\n", lua_tostring(L, -1));
+    spdlog::error("{}", lua_tostring(L, -1));
   else
-    std::fprintf(stderr, "%p\n", lua_topointer(L, -1));
-  std::fflush(stderr);
+    spdlog::error("{}", lua_topointer(L, -1));
 
   // A stack trace would be nice, but they cannot be done in a panic.
 

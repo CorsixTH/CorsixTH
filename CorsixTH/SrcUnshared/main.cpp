@@ -25,9 +25,13 @@ SOFTWARE.
 #include "config.h"
 
 #include <SDL.h>
+#include <spdlog/common.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 
 #include <cstdio>
-#include <stack>
+#include <cstdlib>
 
 #include "../Src/bootstrap.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
@@ -62,6 +66,26 @@ static void cleanup(lua_State* L) {
   SDL_Quit();
 }
 
+static std::string get_log_dir() {
+#ifdef _WIN32
+  const char* appDir = std::getenv("AppData");
+  if (appDir == nullptr) {
+    return std::string(".");
+  }
+  return std::string(appDir).append("/CorsixTH");
+#else
+  const char* xdgConfigDir = std::getenv("XDG_STATE_HOME");
+  if (xdgConfigDir != nullptr) {
+    return std::string(xdgConfigDir).append("/CorsixTH");
+  }
+  const char* homeDir = std::getenv("HOME");
+  if (homeDir == nullptr) {
+    homeDir = "~";
+  }
+  return std::string(homeDir).append("/.local/state/CorsixTH");
+#endif
+}
+
 //! Program entry point
 /*!
     Prepares a Lua state for, and catches errors from, lua_main(). By
@@ -79,6 +103,28 @@ int main(int argc, char** argv) {
     int number_is_double[types_equal<lua_Number, double>::result];
   };
 
+  try {
+    auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    consoleSink->set_level(spdlog::level::warn);
+
+    constexpr size_t maxLogSize = 1024 * 1024 * 5;  // 5MB
+    constexpr size_t maxFiles = 10;
+    std::string logFile = get_log_dir().append("/gamelog.txt");
+
+    auto fileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
+        logFile.c_str(), maxLogSize, maxFiles, true);
+    fileSink->set_level(spdlog::level::trace);
+
+    spdlog::sinks_init_list sinkList{consoleSink, fileSink};
+    auto gameLog = std::make_shared<spdlog::logger>("gamelog", sinkList.begin(),
+                                                    sinkList.end());
+    gameLog->set_level(spdlog::level::info);
+
+    spdlog::set_default_logger(gameLog);
+  } catch (const spdlog::spdlog_ex& ex) {
+    spdlog::error("Failed to register gamelog: {}", ex.what());
+  }
+
 #ifdef WITH_UPDATE_CHECK
   curl_global_init(CURL_GLOBAL_DEFAULT);
 #endif
@@ -90,9 +136,7 @@ int main(int argc, char** argv) {
 
     L = luaL_newstate();
     if (L == nullptr) {
-      std::fprintf(stderr,
-                   "Fatal error starting CorsixTH: "
-                   "Cannot open Lua state.\n");
+      spdlog::error("Fatal error starting CorsixTH: Cannot open Lua state.");
       return 0;
     }
     lua_atpanic(L, lua_panic);
@@ -110,11 +154,11 @@ int main(int argc, char** argv) {
     if (lua_pcall(L, argc, 0, 1) != 0) {
       const char* err = lua_tostring(L, -1);
       if (err != nullptr) {
-        std::fprintf(stderr, "%s\n", err);
+        spdlog::error("{}", err);
       } else {
-        std::fprintf(stderr,
-                     "An error has occurred in CorsixTH:\n"
-                     "Uncaught non-string Lua error\n");
+        spdlog::error(
+            "An error has occurred in CorsixTH:\n"
+            "Uncaught non-string Lua error\n");
       }
       lua_pushcfunction(L, bootstrap_lua_error_report);
       lua_insert(L, -2);
@@ -129,11 +173,13 @@ int main(int argc, char** argv) {
     cleanup(L);
 
     if (bRun) {
-      std::printf("\n\nRestarting...\n\n\n");
+      spdlog::info("Restarting...");
     }
   }
 #ifdef WITH_UPDATE_CHECK
   curl_global_cleanup();
 #endif
+  spdlog::shutdown();
+
   return 0;
 }
