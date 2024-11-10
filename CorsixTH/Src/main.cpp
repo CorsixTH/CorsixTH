@@ -32,6 +32,7 @@ SOFTWARE.
 
 #include "iso_fs.h"
 #include "lua.hpp"
+#include "lua_logger.h"
 #include "lua_rnc.h"
 #include "lua_sdl.h"
 #include "persist_lua.h"
@@ -168,6 +169,7 @@ int lua_main_no_eval(lua_State* L) {
   preload_lua_package(L, "TH", luaopen_th);
   preload_lua_package(L, "persist", luaopen_persist);
   preload_lua_package(L, "sdl", luaopen_sdl);
+  preload_lua_package(L, "logger", luaopen_logger);
 
 #ifdef CORSIX_TH_LINK_LUA_MODULES
   preload_lua_package(L, "lfs", luaopen_lfs);

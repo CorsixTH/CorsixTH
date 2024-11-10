@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local log = require("logger")
+
 --! Save Map Window
 class "UISaveMap" (UIFileBrowser)
 
@@ -111,8 +113,8 @@ function UISaveMap:doSave(filename)
 
   local status, err = pcall(map.save, map, filename)
   if not status then
+    log.error("Error saving game: " .. err)
     err = _S.errors.save_prefix .. err
-    print(err)
     ui:addWindow(UIInformation(ui, {err}))
   end
 end

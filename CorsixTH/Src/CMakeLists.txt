@@ -6,6 +6,7 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/random.c
     ${CMAKE_CURRENT_SOURCE_DIR}/bootstrap.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/iso_fs.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lua_logger.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lua_rnc.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/persist_lua.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/run_length_encoder.cpp

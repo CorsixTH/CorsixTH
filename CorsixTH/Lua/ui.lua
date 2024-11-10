@@ -30,6 +30,7 @@ local TH = require("TH")
 local SDL = require("sdl")
 local WM = SDL.wm
 local lfs = require("lfs")
+local log = require("logger")
 
 local function invert(t)
   local r = {}
@@ -200,7 +201,7 @@ end
 
 function UI:runDebugScript()
   -- luacheck: ignore 111 _ is set in debug code
-  print("Executing Debug Script...")
+  log.debug("Executing Debug Script...")
   local debug_script = self.app:getFullPath({"Lua", "debug_script.lua"})
   _ = TheApp.ui and TheApp.ui.debug_cursor_entity
   local script = assert(loadfile(debug_script))
@@ -328,9 +329,9 @@ function UI:addKeyHandler(keys, window, callback, ...)
     end
   else
     if type(keys) == "string" then
-      print(string.format("\"%s\" does not exist in the hotkeys configuration file.", keys))
+      log.warn(string.format("\"%s\" does not exist in the hotkeys configuration file.", keys))
     else
-      print("Usage of addKeyHandler() requires the first argument to be a string of a key that can be found in the hotkeys configuration file.")
+      log.warn("Usage of addKeyHandler() requires the first argument to be a string of a key that can be found in the hotkeys configuration file.")
     end
   end
 
@@ -403,7 +404,7 @@ function UI:addKeyHandler(keys, window, callback, ...)
       })
     end
   else
-    print("addKeyHandler() failed.")
+    log.warn("addKeyHandler() failed.")
   end
 end
 
@@ -424,9 +425,9 @@ function UI:removeKeyHandler(keys, window)
     end
   else
     if type(keys) == "string" then
-      print(string.format("\"%s\" does not exist in the \"ui.key_handlers\" table.", keys))
+      log.warn(string.format("\"%s\" does not exist in the \"ui.key_handlers\" table.", keys))
     else
-      print("Usage of removeKeyHandler() requires the first argument to be a string of a key that can be found in the \"ui.key_handlers\" table.")
+      log.warn("Usage of removeKeyHandler() requires the first argument to be a string of a key that can be found in the \"ui.key_handlers\" table.")
     end
   end
 
@@ -576,9 +577,7 @@ function UI:changeResolution(width, height)
   self.app:finishVideoUpdate()
 
   if error_message then
-    print("Warning: Could not change resolution to " .. width .. "x" .. height .. ".")
-    print("The error was: ")
-    print(error_message)
+    log.warn("Could not change resolution to " .. width .. "x" .. height .. ": " .. error_message)
     return false
   end
 
@@ -672,7 +671,7 @@ function UI:toggleFullscreen()
   if error_message then
     success = false
     local mode_string = modes[index] or "windowed"
-    print("Warning: Could not toggle to " .. mode_string .. " mode with resolution of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
+    log.warn("Could not toggle to " .. mode_string .. " mode with resolution of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
     -- Revert fullscreen mode modifications
     toggleMode(index)
   end
@@ -1114,10 +1113,10 @@ function UI:makeScreenshot()
     filename = TheApp.screenshot_dir .. ("screenshot%i.bmp"):format(i)
     i = i + 1
   until lfs.attributes(filename, "size") == nil
-  print("Taking screenshot: " .. filename)
+  log.info("Taking screenshot: " .. filename)
   local res, err = self.app.video:takeScreenshot(filename) -- Take screenshot
   if not res then
-    print("Screenshot failed: " .. err)
+    log.error("Screenshot failed: " .. err)
   else
     self.app.audio:playSound("SNAPSHOT.WAV")
   end

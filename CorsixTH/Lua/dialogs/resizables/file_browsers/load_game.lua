@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local log = require("logger")
+
 --! Load Game Window
 class "UILoadGame" (UIFileBrowser)
 
@@ -41,6 +43,7 @@ function UILoadGame:choiceMade(name)
 
   local status, err = pcall(app.load, app, name)
   if not status then
+    log.error("Error loading game: " .. err)
     err = _S.errors.load_prefix .. err
     self:loadError(err)
   end
@@ -49,7 +52,6 @@ end
 --! Output the error when trying to load a game
 --!param err The error given
 function UILoadGame:loadError(err)
-  print(err)
   TheApp:loadMainMenu()
   TheApp.ui:addWindow(UIInformation(TheApp.ui, {err}))
 end

@@ -23,6 +23,7 @@ local rnc = require("rnc")
 local lfs = require("lfs")
 local TH = require("TH")
 local SDL = require("sdl")
+local log = require("logger")
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
@@ -140,9 +141,9 @@ function App:init()
     api_version = api_version or 0
     compile_opts.api_version = compile_opts.api_version or 0
     if api_version < compile_opts.api_version then
-      print("Notice: Compiled binary is more recent than Lua scripts.")
+      log.warn("Notice: Compiled binary is more recent than Lua scripts.")
     elseif api_version > compile_opts.api_version then
-      print("Warning: Compiled binary is out of date. CorsixTH will likely" ..
+      log.warn("Warning: Compiled binary is out of date. CorsixTH will likely" ..
         " fail to run until you recompile the binary.")
     end
   end
@@ -362,8 +363,8 @@ function App:init()
     if self.command_line.load then
       local status, err = pcall(self.load, self, self.savegame_dir .. self.command_line.load)
       if not status then
+        log.error("Failed to load save: " .. err)
         err = _S.errors.load_prefix .. err
-        print(err)
         self.ui:addWindow(UIInformation(self.ui, { err }))
       end
     end
@@ -416,7 +417,7 @@ function App:initUserDirectories()
     if lfs.attributes(dir, "mode") ~= "directory" and not lfs.mkdir(dir) then
       -- A failed directory creation does not result in a crash. But the user may lose
       -- the ability to load/save properly.
-      print("Warning: " .. label .. " directory does not exist and could not be created.")
+      log.warn(label .. " directory does not exist and could not be created.")
     end
     dir = dir:sub(-1, -1) ~= pathsep and dir .. pathsep or dir
     return dir
@@ -442,7 +443,7 @@ function App:initSavegameDir()
   end
   if lfs.attributes(self.savegame_dir, "mode") ~= "directory" then
     if not lfs.mkdir(self.savegame_dir) then
-      print("Notice: Savegame directory does not exist and could not be created.")
+      log.warn("Savegame directory does not exist and could not be created.")
       return false
     end
   end
@@ -462,7 +463,7 @@ function App:initScreenshotsDir()
   end
   if lfs.attributes(self.screenshot_dir, "mode") ~= "directory" then
     if not lfs.mkdir(self.screenshot_dir) then
-      print("Notice: Screenshot directory does not exist and could not be created.")
+      log.warn("Screenshot directory does not exist and could not be created.")
       return false
     end
   end
@@ -645,8 +646,8 @@ function App:readLevelFile(level)
     -- The old way of defining the Map File has been deprecated, but a warning is enough.
     level_info.map_file = contents:match("%LevelFile ?= ?\"(.-)\"")
     if level_info.map_file then
-      print("\nWarning: The level '" .. level_info.name .. "' contains a deprecated variable definition in the level file." ..
-        "'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level.\n")
+      log.warn("The level '" .. level_info.name .. "' contains a deprecated variable definition in the level file." ..
+        "'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level.")
     end
     level_info.deprecated_variable_used = true
   end
@@ -698,7 +699,7 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
       level_file, level_intro, map_editor)
   if not status then
     err = error_prefix and error_prefix .. err or "Error while loading level: " .. err
-    print(err)
+    log.error(err)
     self:loadMainMenu() -- We need to unload all level elements that succeeded
     self.ui:addWindow(UIInformation(self.ui, { err }))
   end
@@ -837,11 +838,7 @@ function App:dumpStrings()
   -- for _, lang in pairs(self.strings.languages_english) do
   --   self:checkMissingStringsInLanguage(dir, lang)
   -- end
-  print("")
-  print("------------------------------------------------------")
-  print("Dumped strings to default configuration file directory")
-  print("------------------------------------------------------")
-  print("")
+  log.info("Dumped strings to default configuration file directory")
 end
 
 --! Compares strings provided by language file of given language WITHOUT inheritance
@@ -1023,7 +1020,7 @@ function App:writeToFileOrTmp(file, mode)
     if self.ui then self.ui:addWindow(UIInformation(self.ui,
         { _S.errors.save_to_tmp:format(file, tmp_file, err) }))
     else
-      print("Attempt to write to " .. file .. " failed. File was written instead to temporary location " .. tmp_file .. " because of the error: " .. err)
+      log.warn("Attempt to write to " .. file .. " failed. File was written instead to temporary location " .. tmp_file .. " because of the error: " .. err)
     end
   end
   assert(f, "Error: cannot write to filesystem")
@@ -1219,7 +1216,7 @@ function App:dispatch(evt_type, ...)
     return handler(self, ...)
   else
     if not done_no_handler_warning[evt_type] then
-      print("Warning: No event handler for " .. evt_type)
+      log.warn("No event handler for " .. evt_type)
       done_no_handler_warning[evt_type] = true
     end
     return false
@@ -1409,8 +1406,7 @@ function App:checkInstallFolder()
       for _, folder in pairs(possible_folders) do
         local path = dir .. pathsep .. folder
         if lfs.attributes(path, "mode") == "directory" and self:isThemeHospitalPath(path) then
-          print("Game data found at: " .. path)
-          print("This will be written to the config file")
+          log.info("Game data found at: " .. path .. ". This will be written to the config file")
           self.config.theme_hospital_install = path
           status, _ = self.fs:setRoot(path)
           break
@@ -1442,16 +1438,16 @@ function App:checkInstallFolder()
     message = "Invalid Theme Hospital folder specified in config file, " ..
         "as at least the following files are missing: " .. missing .. ".\n" ..
         message
-    print(message)
-    print("Trying to let the user select a new one.")
+    log.error(message)
+    log.info("Trying to let the user select a new Theme Hospital folder.")
     return false, { message }
   end
 
   -- Check for demo version
   if self.fs:readContents("DataM", "Demo.dat") then
     self.using_demo_files = true
-    print("Notice: Using data files from demo version of Theme Hospital.")
-    print("Consider purchasing a full copy of the game to support EA.")
+    log.info("Using data files from demo version of Theme Hospital.")
+    log.info("Consider purchasing a full copy of the game to support EA.")
   end
 
   -- Do a few more checks to make sure that commonly corrupted files are OK.
@@ -1595,15 +1591,15 @@ function App:loadLuaFolder(dir, no_results, append_to)
     if file:match("%.lua$") then
       local status, result = pcall(corsixth.require, dir .. file:sub(1, -5))
       if not status then
-        print("Error loading " .. dir .. file .. ":\n" .. tostring(result))
+        log.error("Error loading " .. dir .. file .. ": " .. tostring(result))
       else
         if result == nil then
           if not no_results then
-            print("Warning: " .. dir .. file .. " returned no value")
+            log.warn(dir .. file .. " returned no value")
           end
         else
           if no_results then
-            print("Warning: " .. dir .. file .. " returned a value:", result)
+            log.warn(dir .. file .. " returned a value:", result)
           else
             if type(result) == "table" and result.id then
               results[result.id] = result
@@ -1712,14 +1708,17 @@ function App:checkCompatibility(save_version, gfx_set)
 
   -- First check the graphics set matches with the game files
   if (gfx_set == "demo" and not self.using_demo_files) then
+    log.error("Attempt to load save game from demo with full game assets")
     err = _S.errors.compatibility_error.demo_in_full
   elseif (gfx_set == "full" and self.using_demo_files) then
+    log.error("Attempt to load save game from full game with demo assets")
     err = _S.errors.compatibility_error.full_in_demo
 
     -- if that's all good, check the save and app version
   elseif app_version >= save_version or self.config.debug then
     return true
   else -- savegame newer than application
+    log.error("Attempt to load save game from newer CorsixTH than currently running")
     err = _S.errors.compatibility_error.new_in_old
   end
 
@@ -1849,15 +1848,15 @@ function App:checkForUpdates()
 
   -- Only check for updates against released versions
   if current_version == "Trunk" then
-    print("Will not check for updates since this is the Trunk version.")
+    log.debug("Will not check for updates since this is the Trunk version.")
     return
   end
 
-  print("Checking for CorsixTH updates...")
+  log.info("Checking for CorsixTH updates...")
   local update_body, err = TH.FetchLatestVersionInfo()
 
   if not update_body then
-    print("Couldn't check for updates: " .. err)
+    log.warn("Couldn't check for updates: " .. err)
     return
   end
 
@@ -1885,7 +1884,7 @@ function App:checkForUpdates()
     return current_revision >= update_table.revision
   end
   if compare_versions() then
-    print("You are running the latest version of CorsixTH.")
+    log.debug("You are running the latest version of CorsixTH.")
     return
   end
 
@@ -1901,7 +1900,7 @@ function App:checkForUpdates()
     end
   end
   if not trusted_url then
-    print("Update download url is not on the trusted domains list (" .. download_url .. ")")
+    log.warn("Update download url is not on the trusted domains list (" .. download_url .. ")")
     return
   end
 
@@ -1914,7 +1913,7 @@ function App:checkForUpdates()
     end
   end
 
-  print("New version found: " .. new_version)
+  log.debug("New version found: " .. new_version)
   -- Display the update window
   self.ui:addWindow(UIUpdate(self.ui, current_version, new_version, changelog, download_url))
 end
