@@ -1,4 +1,4 @@
-function l(m)
+local l = function(m)
   print(m)
 end
 
@@ -9,3 +9,5 @@ local logger = {
   warn = l,
   error = l
 }
+
+return logger;
