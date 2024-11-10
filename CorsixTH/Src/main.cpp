@@ -104,9 +104,13 @@ std::string search_script_file(lua_State* L) {
       if (iProgramPathLengthReal != iProgramPathLength ||
           iProgramPathLength <= iProgramDirLength) {
         if (iProgramPathLengthReal != iProgramPathLength)
-          spdlog::error("Path length of CorsixTH binary changed?!?! Old: {}, new: {}", iProgramPathLength, iProgramPathLengthReal);
+          spdlog::error(
+              "Path length of CorsixTH binary changed?!?! Old: {}, new: {}",
+              iProgramPathLength, iProgramPathLengthReal);
         else
-          spdlog::error("Path to CorsixTH looks like a directory?!?! Path is: '{}'.", sProgramDir);
+          spdlog::error(
+              "Path to CorsixTH looks like a directory?!?! Path is: '{}'.",
+              sProgramDir);
         spdlog::shutdown();
         exit(255);
       }

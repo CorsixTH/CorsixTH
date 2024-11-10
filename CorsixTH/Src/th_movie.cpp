@@ -105,8 +105,9 @@ void movie_picture_buffer::allocate(SDL_Renderer* pRenderer, int iWidth,
                                     int iHeight) {
   if (texture) {
     SDL_DestroyTexture(texture);
-    spdlog::error("movie_player overlay should be deallocated before being "
-                 "allocated!");
+    spdlog::error(
+        "movie_player overlay should be deallocated before being "
+        "allocated!");
   }
   texture = SDL_CreateTexture(pRenderer, SDL_PIXELFORMAT_RGB24,
                               SDL_TEXTUREACCESS_STREAMING, iWidth, iHeight);
@@ -460,7 +461,8 @@ void movie_player::play_audio(int requested_audio_channel) {
       target_channel_layout = AV_CH_LAYOUT_7POINT1;
       break;
     default:
-      spdlog::warn("Unsupported channel layout {}. Please report issue.", mixer_channels);
+      spdlog::warn("Unsupported channel layout {}. Please report issue.",
+                   mixer_channels);
       target_channel_layout = 0;
   }
 

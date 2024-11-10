@@ -28,6 +28,8 @@ SOFTWARE.
 #include "th_gfx_font.h"
 #endif
 
+#include <spdlog/spdlog.h>
+
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
@@ -38,8 +40,6 @@ SOFTWARE.
 #include <memory>
 #include <new>
 #include <stdexcept>
-
-#include <spdlog/spdlog.h>
 
 #include "th_map.h"
 

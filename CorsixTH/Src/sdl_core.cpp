@@ -22,11 +22,11 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <spdlog/spdlog.h>
+
 #include <array>
 #include <cstdio>
 #include <cstring>
-
-#include <spdlog/spdlog.h>
 
 #include "SDL_error.h"
 #include "lua_sdl.h"
