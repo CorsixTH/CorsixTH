@@ -104,17 +104,10 @@ std::string search_script_file(lua_State* L) {
       if (iProgramPathLengthReal != iProgramPathLength ||
           iProgramPathLength <= iProgramDirLength) {
         if (iProgramPathLengthReal != iProgramPathLength)
-          std::fprintf(stderr,
-                       "Path length of CorsixTH binary changed?!?! "
-                       "Old: %d, new: %d.\n",
-                       iProgramPathLength, iProgramPathLengthReal);
+          spdlog::error("Path length of CorsixTH binary changed?!?! Old: {}, new: {}", iProgramPathLength, iProgramPathLengthReal);
         else
-          std::fprintf(stderr,
-                       "Path to CorsixTH looks like a directory?!?! "
-                       "Path is: '%s'.\n",
-                       sProgramDir);
-        std::fprintf(stderr, "Please report this incident!\n");
-        std::fflush(stderr);
+          spdlog::error("Path to CorsixTH looks like a directory?!?! Path is: '{}'.", sProgramDir);
+        spdlog::shutdown();
         exit(255);
       }
       // replace me with C++17 std::filesystem::path::preferred_separator

@@ -26,6 +26,9 @@ SOFTWARE.
 #include <cstdio>
 #include <cstring>
 
+#include <spdlog/spdlog.h>
+
+#include "SDL_error.h"
 #include "lua_sdl.h"
 #include "th_lua.h"
 
@@ -49,7 +52,7 @@ int l_init(lua_State* L) {
       luaL_argerror(L, i, "Expected SDL part name");
   }
   if (SDL_Init(flags) != 0) {
-    std::fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
+    spdlog::error("SDL_Init failed: {}", SDL_GetError());
     lua_pushboolean(L, 0);
     return 1;
   }

@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 
+#include "SDL_error.h"
 #include "th_gfx.h"
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include "th_gfx_font.h"
@@ -37,6 +38,8 @@ SOFTWARE.
 #include <memory>
 #include <new>
 #include <stdexcept>
+
+#include <spdlog/spdlog.h>
 
 #include "th_map.h"
 
@@ -555,8 +558,7 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
         this, 0, 0, virtWidth, virtHeight, /* bScale = */ false);
     if (!zoom_buffer->is_target()) {
       global_scale_factor = 1.0;
-      std::cout << "Warning: Could not render to zoom texture - "
-                << SDL_GetError() << std::endl;
+      spdlog::warn("Could not render to zoom texture - {}", SDL_GetError());
 
       return false;
     }
@@ -1141,7 +1143,7 @@ bool sprite_sheet::set_sprite_data(size_t iSprite, const uint8_t* pData,
   if (iSprite >= sprite_count) return false;
 
   if (!testSprite(pData, iDataLength, iWidth, iHeight)) {
-    std::printf("Sprite number %zu has a bad encoding, skipping", iSprite);
+    spdlog::warn("Sprite number {} has a bad encoding, skipping", iSprite);
     return false;
   }
 

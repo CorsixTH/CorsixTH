@@ -38,6 +38,7 @@ extern "C" {
 #include <libswscale/swscale.h>
 }
 #include <SDL_mixer.h>
+#include <spdlog/spdlog.h>
 
 #include <chrono>
 #include <cstring>
@@ -104,13 +105,13 @@ void movie_picture_buffer::allocate(SDL_Renderer* pRenderer, int iWidth,
                                     int iHeight) {
   if (texture) {
     SDL_DestroyTexture(texture);
-    std::cerr << "movie_player overlay should be deallocated before being "
-                 "allocated!\n";
+    spdlog::error("movie_player overlay should be deallocated before being "
+                 "allocated!");
   }
   texture = SDL_CreateTexture(pRenderer, SDL_PIXELFORMAT_RGB24,
                               SDL_TEXTUREACCESS_STREAMING, iWidth, iHeight);
   if (texture == nullptr) {
-    std::cerr << "Problem creating overlay: " << SDL_GetError() << "\n";
+    spdlog::error("Problem creating overlay: {}", SDL_GetError());
     return;
   }
   for (movie_picture& picture : picture_queue) {
@@ -170,7 +171,7 @@ void movie_picture_buffer::draw(SDL_Renderer* pRenderer,
       SDL_UpdateTexture(texture, nullptr, cur_pic.buffer, cur_pic.width * 3);
       int iError = SDL_RenderCopy(pRenderer, texture, nullptr, &dstrect);
       if (iError < 0) {
-        std::cerr << "Error displaying movie frame: " << SDL_GetError() << "\n";
+        spdlog::error("Error displaying movie frame: {}", SDL_GetError());
       }
     }
   }
@@ -222,7 +223,7 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
         picture.height, picture.pixel_format, SWS_BICUBIC, nullptr, nullptr,
         nullptr);
     if (sws_context == nullptr) {
-      std::cerr << "Failed to initialize SwsContext\n";
+      spdlog::error("Failed to initialize SwsContext");
       return 1;
     }
 
@@ -459,8 +460,7 @@ void movie_player::play_audio(int requested_audio_channel) {
       target_channel_layout = AV_CH_LAYOUT_7POINT1;
       break;
     default:
-      std::cerr << "WARN: unsupported channel layout " << mixer_channels
-                << ". Please report issue.";
+      spdlog::warn("Unsupported channel layout {}. Please report issue.", mixer_channels);
       target_channel_layout = 0;
   }
 
@@ -611,8 +611,7 @@ void movie_player::run_video() {
     if (iError == AVERROR_EOF) {
       break;
     } else if (iError < 0) {
-      std::cerr << "Unexpected error " << iError
-                << " while decoding video packet" << std::endl;
+      spdlog::error("Unexpected error {} while decoding video packet", iError);
       break;
     }
 
@@ -698,8 +697,7 @@ int movie_player::decode_audio_frame(uint8_t* stream, int stream_size) {
   int actual_samples =
       swr_convert(audio_resample_context, &stream, iOutSamples, nullptr, 0);
   if (actual_samples < 0) {
-    std::cerr << "WARN: Unexpected error " << actual_samples
-              << " while converting audio" << std::endl;
+    spdlog::warn("Unexpected error {} while converting audio", actual_samples);
     return 0;
   } else if (actual_samples > 0) {
     return actual_samples * av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) *
@@ -712,8 +710,7 @@ int movie_player::decode_audio_frame(uint8_t* stream, int stream_size) {
   if (iError == AVERROR_EOF) {
     return 0;
   } else if (iError < 0) {
-    std::cerr << "WARN: Unexpected error " << iError
-              << " while decoding audio packet" << std::endl;
+    spdlog::warn("Unexpected error {} while decoding audio packet", iError);
     return 0;
   }
 
@@ -727,8 +724,7 @@ int movie_player::decode_audio_frame(uint8_t* stream, int stream_size) {
                   const_cast<const uint8_t**>(&audio_frame->data[0]),
                   audio_frame->nb_samples);
   if (actual_samples < 0) {
-    std::cerr << "WARN: Unexpected error " << actual_samples
-              << " while converting audio" << std::endl;
+    spdlog::warn("Unexpected error {} while converting audio", actual_samples);
     return 0;
   }
   return actual_samples * av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) *

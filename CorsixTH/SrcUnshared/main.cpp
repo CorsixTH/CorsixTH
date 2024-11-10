@@ -163,7 +163,7 @@ int main(int argc, char** argv) {
       lua_pushcfunction(L, bootstrap_lua_error_report);
       lua_insert(L, -2);
       if (lua_pcall(L, 1, 0, 0) != 0) {
-        std::fprintf(stderr, "%s\n", lua_tostring(L, -1));
+        spdlog::error(lua_tostring(L, -1));
       }
     }
 
