@@ -3,6 +3,6 @@
 
 #include "lua.hpp"
 
-int luaopen_logger(lua_State *L);
+int luaopen_logger(lua_State* L);
 
 #endif
