@@ -228,8 +228,8 @@ if(WITH_UPDATE_CHECK)
   endif()
 endif()
 
-find_package(spdlog CONFIG REQUIRED)
-target_link_libraries(CorsixTH PRIVATE spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>)
+find_package(spdlog REQUIRED)
+target_link_libraries(CorsixTH_lib PRIVATE spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>)
 
 if(CORSIX_TH_LINK_LUA_MODULES)
   message("Linking lua modules")

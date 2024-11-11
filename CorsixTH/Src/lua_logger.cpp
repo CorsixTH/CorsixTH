@@ -3,6 +3,8 @@
 #include <spdlog/common.h>
 #include <spdlog/spdlog.h>
 
+#include <array>
+
 #include "th_lua.h"
 
 namespace {
