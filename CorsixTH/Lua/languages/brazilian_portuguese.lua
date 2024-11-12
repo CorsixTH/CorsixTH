@@ -979,7 +979,7 @@ fax = {
       [12] = "Estou farto de atrair a atenção pública e de visitar buracos fedorentos como este! Eu me demito.",
       [13] = "Vá tugúrio! Vou tentar enclausurá-lo.",
       [14] = "Nunca vi um hospital tão espantoso. Que vergonha!",
-      [15] = "Estou horrorizado. Chama isso de hospital! Vou sair com um cano.",
+      [15] = "Estou horrorizado. Chama isso de hospital! Preciso de uma bebida urgentemente.",
     }
   }
 }
