@@ -171,7 +171,7 @@ function App:init()
 
   self.caption = "CorsixTH"
 
-  -- Create gamelog file if missing
+  -- Create gamelog file.
   self:initGamelogFile()
 
   -- Prereq 2: Load and initialise the graphics subsystem
@@ -382,24 +382,28 @@ function App:init()
   return true
 end
 
---! Works out the intended location of the gamelog file.
---!return full path gamelog should exist at
-function App:getGamelogPath()
-  local config_path = self.command_line["config-file"] or ""
-  config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
-  return config_path .. "gamelog.txt"
-end
-
---! Checks and creates the gamelog file if it does not exist.
+--! Create the gamelog, using the launch time in the filename, and write the system information.
 function App:initGamelogFile()
-  local gamelog_path = self:getGamelogPath()
-  local gamelog = io.open(gamelog_path, "r")
-  if gamelog then gamelog:close() return end
-
-  local fi = self:writeToFileOrTmp(gamelog_path)
+  self.gamelog_path = self.user_log_dir .. os.date("%y-%m-%d--%H-%M-%S--gamelog.txt", os.time(os.date("!*t")))
+  local fi, success = self:writeToFileOrTmp(self.gamelog_path)
   local sysinfo = self:gamelogHeader()
   fi:write(sysinfo)
   fi:close()
+  if success then self:trimLogs() end -- Only trim logs if logs folder is writable
+end
+
+--! Trims the logs folder of old game logs down to ten files.
+function App:trimLogs()
+  local log_retention, log_table = 11, {}
+  for node in lfs.dir(self.user_log_dir) do
+    local file = self.user_log_dir .. pathsep .. node
+    if node:sub(-12) == "-gamelog.txt" then
+      table.insert(log_table, file)
+    end
+  end
+  table.sort(log_table,
+      function(a, b) return lfs.attributes(a, "modification") > lfs.attributes(b, "modification") end)
+  for i=log_retention, #log_table do os.remove(log_table[i]) end
 end
 
 --! Tries to initialize the user level and campaign directories
@@ -428,6 +432,9 @@ function App:initUserDirectories()
   self.user_campaign_dir = self.config.campaigns or
       conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Campaigns"
   self.user_campaign_dir = setUserDir(self.user_campaign_dir, "User Campaigns")
+  self.user_log_dir = self.config.logs or
+      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Logs"
+  self.user_log_dir = setUserDir(self.user_log_dir, "Gamelogs")
 end
 
 --! Tries to initialize the savegame directory, returns true on success and
@@ -1012,7 +1019,7 @@ function App:saveConfig()
 end
 
 --! Tries to open the given file or a file in OS's temp dir.
--- Returns the file handler
+-- Returns the file handler, and true if it was written to the intended file.
 --!param file The full path of the intended file
 --!param mode The mode in which the file is opened, defaults to write
 function App:writeToFileOrTmp(file, mode)
@@ -1027,7 +1034,7 @@ function App:writeToFileOrTmp(file, mode)
     end
   end
   assert(f, "Error: cannot write to filesystem")
-  return f
+  return f, not err
 end
 
 function App:fixHotkeys()
@@ -1948,8 +1955,6 @@ end
 --! Generate information about user's system and the program
 --!return System and program info as a string
 function App:gamelogHeader()
-  local gen_date = os.date("%Y-%m-%d %H:%M:%S")
-  gen_date = string.format("Gamelog generated on %s\n", gen_date)
   local compile_opts = TH.GetCompileOptions()
   local comp_details = {}
   for key, value in pairs(compile_opts) do
@@ -1961,7 +1966,7 @@ function App:gamelogHeader()
   local running = string.format("%s run with api version: %s, game version: %s, savegame version: %s\n",
       compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
       self:getVersion(), tostring(SAVEGAME_VERSION))
-  return (gen_date .. compiled .. running)
+  return (compiled .. running)
 end
 
 -- Do not remove, for savegame compatibility < r1891
