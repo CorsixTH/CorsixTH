@@ -682,9 +682,15 @@ tooltip.hotkey_window = {
   button_accept = "Accept and save hotkey assignments",
   button_defaults = "Reset all hotkeys to the program's defaults",
   button_cancel = "Cancel the assignment and go back to the options menu",
-  caption_panels = "Open window to assign panel keys",
-  button_gameSpeedKeys = "Open window to set keys to control game speed",
-  button_recallPosKeys = "Open window to set keys to store and recall camera positions",
+  panel_globalKeys = "Assign global hotkeys",
+  panel_generalInGameKeys = "Assign general in-game hotkeys",
+  button_gameSpeedKeys = "Assign hotkeys to control the game speed",
+  panel_scrollKeys = "Assign hotkeys to scroll the screen",
+  panel_zoomKeys = "Assign hotkeys to zoom in and out",
+  panel_toggleKeys = "Assign hotkeys to toggle options",
+  caption_panels = "Assign hotkeys to open panels",
+  button_recallPosKeys = "Assign hotkeys to save and recall camera positions",
+  panel_debugKeys = "Assign hotkeys for debugging",
   button_back_02 = "Go back to the main hotkey window. Hotkeys changed in this window can be accepted there",
 }
 

@@ -311,7 +311,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   self.key_options = {{
       id = "global",
       title = _S.hotkey_window.panel_globalKeys,
-      tooltip = _S.hotkey_window.panel_globalKeys,
+      tooltip = _S.tooltip.hotkey_window.panel_globalKeys,
       sections = {{
           title = _S.hotkey_window.panel_globalKeys,
           keys = {
@@ -324,7 +324,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     {
       id = "ingame",
       title = _S.hotkey_window.panel_generalInGameKeys,
-      tooltip = _S.hotkey_window.panel_generalInGameKeys,
+      tooltip = _S.tooltip.hotkey_window.panel_generalInGameKeys,
       sections = {{
           title = _S.hotkey_window.panel_generalInGameKeys,
           keys = {
@@ -357,7 +357,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     {
       id = "scroll",
       title = _S.hotkey_window.panel_scrollKeys,
-      tooltip = _S.hotkey_window.panel_scrollKeys,
+      tooltip = _S.tooltip.hotkey_window.panel_scrollKeys,
       sections = {{
           title = _S.hotkey_window.panel_scrollKeys,
           keys = {
@@ -370,7 +370,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     {
       id = "zoom",
       title = _S.hotkey_window.panel_zoomKeys,
-      tooltip = _S.hotkey_window.panel_zoomKeys,
+      tooltip = _S.tooltip.hotkey_window.panel_zoomKeys,
       sections = {{
           title = _S.hotkey_window.panel_zoomKeys,
           keys = {
@@ -382,7 +382,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     {
       id = "toggle",
       title = _S.hotkey_window.panel_toggleKeys,
-      tooltip = _S.hotkey_window.panel_toggleKeys,
+      tooltip = _S.tooltip.hotkey_window.panel_toggleKeys,
       sections = {{
           title = _S.hotkey_window.panel_toggleKeys,
           keys = {
@@ -450,7 +450,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     table.insert(self.key_options, {
         id = "debug",
         title = _S.hotkey_window.panel_debugKeys,
-        tooltip = _S.hotkey_window.panel_debugKeys,
+        tooltip = _S.tooltip.hotkey_window.panel_debugKeys,
         sections = {{
             title = _S.hotkey_window.panel_debugKeys,
             keys = {
