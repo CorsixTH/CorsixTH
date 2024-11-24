@@ -40,7 +40,8 @@ function UIProgressReport:UIProgressReport(ui)
     -- Load all sprite tables needed for all goal icons
     self.panel_sprites_table = {
       MPointer = gfx:loadSpriteTable("Data", "MPointer"),
-      Rep02V = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+      Rep02V = gfx:loadSpriteTable("QData", "Rep02V", true, palette),
+      Font04V = gfx:loadSpriteTable("QData", "Font04V"),
     }
     self.panel_sprites = self.panel_sprites_table.Rep02V -- The default goals icons
   end) then
@@ -82,6 +83,9 @@ function UIProgressReport:UIProgressReport(ui)
     elseif crit_table.formats == 3 then
       tooltip = tooltip:format(math.floor(res_value) / 1000,
           math.floor(cur_value) / 1000)
+    elseif crit_table.formats == 4 then
+      -- The year criterion uses 0 to represent the start year, which is displayed to the player as 2000
+      tooltip = tooltip:format(res_value + 2000, math.floor(cur_value) + 2000)
     else
       tooltip = tooltip:format(math.floor(res_value))
     end
