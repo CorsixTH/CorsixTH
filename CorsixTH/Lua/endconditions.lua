@@ -32,13 +32,15 @@ local local_criteria_variable = {
     -- New criteria
   {name = "staff_happiness",  icon = 16, icon_file = "MPointer", formats = 2, two_tooltips = true},
   {name = "patient_happiness",icon = 18, icon_file = "MPointer", formats = 2, two_tooltips = true},
+  {name = "months_played",    icon = 46, icon_file = "Font04V",  formats = 4, two_tooltips = true},
 }
 
 -- A table of functions for fetching criteria values that cannot be measured
---   directly from a hospital attribute of the same name.
+-- directly from a hospital attribute of the same name.
 local get_custom_criteria = {
   staff_happiness = function(hospital) return 100 * hospital:getAverageStaffAttribute("happiness", 0.5) end,
   patient_happiness = function(hospital) return 100 * hospital:getAveragePatientAttribute("happiness", 0.5) end,
+  months_played = function(hospital) return hospital.world.game_date:getProgressInMonths() end,
 }
 
 class "EndConditions"
