@@ -41,6 +41,9 @@ InterestRate is defined as centiprocent to allow for two decimals precision, i.e
 300 means 3 %
 #town.StartCash.InterestRate 100000 300
 
+Soda price at drinks machines
+#gbv.SodaPrice 20
+
 -------------------- Disease Configuration -------------------------
 
 When a drug is researched, what effectiveness does it have
