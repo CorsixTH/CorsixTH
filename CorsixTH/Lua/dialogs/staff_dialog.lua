@@ -285,11 +285,11 @@ function UIStaff:onMouseUp(button, x, y)
       local staff = ui.hospital.staff[i]
       if staff.profile.humanoid_class == self.staff.profile.humanoid_class then
         ui:addWindow(UIStaff(ui, staff))
-	if hit_namebox then
+        if hit_namebox then
           local sx, sy = ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
           local dx, dy = staff.th:getPosition()
           ui:scrollMapTo(sx + dx, sy + dy)
-	end
+        end
         return false
       end
     end
