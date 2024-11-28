@@ -796,6 +796,8 @@ information = {
     balance = "Your bank balance fell below %d.",
     percentage_killed = "You killed more than %d percent of the patients.",
     cheat = "This was your choice or did you select the wrong button? So you can't even cheat correctly, not that funny huh?",
+    staff_happiness = "Your average staff happiness fell below %d%.",
+    patient_happiness = "Your average patient happiness fell below %d%.",
   },
   cheat_not_possible = "Cannot use that cheat on this level. You even fail to cheat, not that funny huh?",
 }
@@ -975,6 +977,17 @@ hotkeys_file_err = {
 }
 
 transactions.remove_room = "Build: Remove destroyed room"
+
+tooltip.status = {
+  over = {
+    staff_happiness = "Your average staff happiness should be over %d%. Currently it's %d%",
+    patient_happiness = "Your average patient happiness should be over %d%. Currently it's %d%",
+  },
+  under = {
+    staff_happiness = "Your average staff happiness should not be less than %d%. Currently it's %d%",
+    patient_happiness = "Your average patient happiness should not be less than %d%. Currently it's %d%",
+  }
+}
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 
