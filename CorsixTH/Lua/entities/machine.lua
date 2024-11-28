@@ -290,6 +290,7 @@ end
 function Machine:machineRepaired(room)
   room.needs_repair = nil
   self:reduceStrengthOnRepair(room)
+  self.times_used = 0
   self:setRepairing(nil)
   setSmoke(self, false)
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
@@ -297,7 +298,6 @@ function Machine:machineRepaired(room)
 end
 
 --! Calculates if machine strength should be reduced as a result of repair
--- Also resets 'times_used' value
 --!param room (object) machine room
 function Machine:reduceStrengthOnRepair(room)
   local minimum_possible_strength = 2
@@ -311,8 +311,6 @@ function Machine:reduceStrengthOnRepair(room)
   if should_reduce_strength then
     self.strength = current_strength - 1
   end
-
-  self.times_used = 0
 end
 
 --! Tells the machine to start showing the icon that it needs repair.
