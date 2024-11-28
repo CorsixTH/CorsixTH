@@ -100,7 +100,7 @@ function UIStaff:UIStaff(ui, staff)
   self:addPanel(303,   0, 253) -- View circle midpiece
     self:addPanel(304,   6, 302) -- View circle bottom
     self:addPanel(307, 106, 253):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack)
-    self:addPanel(309, 164, 253):makeButton(0, 0, 37, 50, 310, self.placeStaff):setTooltip(_S.tooltip.staff_window.pick_up)
+    self:addPanel(309, 164, 253):makeButton(0, 0, 37, 50, 310, self.pickupStaff):setTooltip(_S.tooltip.staff_window.pick_up)
   else
     self:addPanel(302,   5, 178) -- View circle top/Wage
     self:addPanel(303,   0, 226) -- View circle midpiece
@@ -109,7 +109,7 @@ function UIStaff:UIStaff(ui, staff)
       self:addColourPanel(32, 141, 171, 39, 85, 202, 219)  -- Hides Skills
     end
     self:addPanel(307, 106, 226):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack)
-    self:addPanel(309, 164, 226):makeButton(0, 0, 37, 50, 310, self.placeStaff):setTooltip(_S.tooltip.staff_window.pick_up)
+    self:addPanel(309, 164, 226):makeButton(0, 0, 37, 50, 310, self.pickupStaff):setTooltip(_S.tooltip.staff_window.pick_up)
   end
 
   self:addPanel(305, 178,  18):makeButton(0, 0, 24, 24, 306, self.close):setTooltip(_S.tooltip.staff_window.close)
@@ -301,9 +301,8 @@ function UIStaff:onTick()
   return Window.onTick(self)
 end
 
-function UIStaff:placeStaff()
-  self.staff.pickup = true
-  self.staff:setNextAction(PickupAction(self.ui):setTodoClose(self), true)
+function UIStaff:pickupStaff()
+  self.staff:setPickup(self.ui, self)
 end
 
 function UIStaff:fireStaff()
@@ -384,5 +383,12 @@ end
 
 function UIStaff:hitTest(x, y)
   return Window.hitTest(self, x, y) or is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
+end
+
+function UIStaff:afterLoad(old, new)
+  if old < 205 then
+    self:close()
+  end
+  Window.afterLoad(self, old, new)
 end
 

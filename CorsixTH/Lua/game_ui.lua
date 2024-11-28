@@ -41,6 +41,10 @@ local multigesture_pinch_sensitivity_factor = 0.002
 -- will result in a call to adjustZoom in the onTick method
 local multigesture_pinch_amplification_factor = 100
 
+-- Speed of scrolling when using keys. Pixels / tick (18ms)
+-- This scroll speed is further adjusted by the configured scroll_speed
+local key_scroll_speed = 10
+
 --! Game UI constructor.
 --!param app (Application) Application object.
 --!param local_hospital Hospital to display
@@ -104,10 +108,10 @@ function GameUI:setupGlobalKeyHandlers()
 
   -- Set the scrolling keys.
   self.scroll_keys = {
-     [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
-     [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
-     [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
-     [tostring(self.app.hotkeys["ingame_scroll_right"])] = {x = 10, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -key_scroll_speed},
+     [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = key_scroll_speed},
+     [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -key_scroll_speed, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_right"])] = {x = key_scroll_speed, y = 0},
   }
 
   -- This is the long version of the shift speed key.
@@ -315,9 +319,9 @@ function GameUI:updateKeyScroll()
   if dx ~= 0 or dy ~= 0 then
     --Get the length of the scrolling vector.
     local mag = (dx^2 + dy^2) ^ 0.5
-    --Then normalize the scrolling vector, after which multiply it by the scroll speed variable used in self.scroll_keys, which is 10 as of 14/10/18.
-    dx = (dx / mag) * 10
-    dy = (dy / mag) * 10
+    --Then normalize the scrolling vector, after which multiply it by the scroll speed variable.
+    dx = (dx / mag) * key_scroll_speed
+    dy = (dy / mag) * key_scroll_speed
     -- Set the scroll amount to be used.
     self.tick_scroll_amount = {x = dx, y = dy}
     return true
@@ -861,11 +865,12 @@ function GameUI:onTick()
     -- and defaulted to 2, where 1 was regular scroll speed. By
     -- By multiplying by 0.5, we allow for setting slower than normal
     -- scroll speeds, and ensure there is no behaviour change for players
-    -- who do not modify their config file.
+    -- who do not modify their config file. Later the tick speed was
+    -- doubled so now we multiply by 0.25.
     if self.shift_scroll_speed_pressed then
-      mult = mult * self.app.config.shift_scroll_speed * 0.5
+      mult = mult * self.app.config.shift_scroll_speed * 0.25
     else
-      mult = mult * self.app.config.scroll_speed * 0.5
+      mult = mult * self.app.config.scroll_speed * 0.25
     end
 
     self:scrollMap(dx * mult, dy * mult)

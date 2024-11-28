@@ -847,4 +847,7 @@ function Map:afterLoad(old, new)
     gbv.VeryTired = gbv.VeryTired or 700
     gbv.CrackUpTired = gbv.CrackUpTired or 800
   end
+  if old < 209 then
+    self.level_config.gbv.SodaPrice = 20
+  end
 end

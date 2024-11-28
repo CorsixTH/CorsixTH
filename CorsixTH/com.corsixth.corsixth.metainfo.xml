@@ -20,7 +20,160 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
-      <release version="0.68.0~beta1" date="2024-09-01" type="development">
+    <release version="0.68.0" date="2024-10-01" type="stable">
+      <description>
+        <p>New Features:</p>
+        <ul>
+          <li>In-game movies now play for users using TH Data directly from a
+              .ISO file</li>
+          <li>Custom campaign creators can now optionally use the original
+              level advance movie when progressing through the campaign</li>
+          <li>The Map Editor has received some love including new features,
+              fixes, and jukebox controls</li>
+          <li>Long windows now behave properly in the game if they get
+              intersected by an adjacent wall</li>
+          <li>You can now control the Jukebox from the Main Menu by going to
+              Options &gt; Jukebox</li>
+          <li>External (non-TH) XMI files are now supported by the Jukebox</li>
+          <li>The adviser now tells you the cost of replacing your machine if
+              you cannot currently afford it</li>
+          <li>More cheats!</li>
+          <li>[Experimental] Right mouse panning can now be used instead of
+              using the middle mouse button. Enable it in the configuration
+              file</li>
+          <li>[Experimental] We&apos;re closer to fully implementing falling
+              actions! Get a sneak peek and get the chance to push people over
+              by enabling it in the configuration file/debug menu</li>
+        </ul>
+        <p>Changes:</p>
+        <ul>
+          <li>The demo movie will no longer play and cause jumpscares at the
+              main menu if the CorsixTH window is not in focus</li>
+          <li>Game speeds are now more closely aligned with the original
+              game</li>
+          <li>Improvements to handling of win/lose conditions, and the
+              progress report</li>
+          <li>Staff tiredness levels are now taken from the level config file
+              based on difficulty level of the main campaign</li>
+          <li>You can no longer win a level if you still have outstanding
+              loans</li>
+          <li>Emergencies will now be announced once patients actually begin
+              arriving instead of at the start</li>
+          <li>Errors with music playback will now attempt to provide more
+              helpful information in the console</li>
+          <li>Level briefings now show before the in-game tutorial</li>
+          <li>The first patient of a level will now arrive faster after
+              opening the hospital</li>
+          <li>The information dialog box is now more closely aligned with the
+              original game</li>
+          <li>The tip of the day window should no longer be obscured in the
+              main menu</li>
+          <li>The load/save windows now have better labelling</li>
+          <li>Unavailable languages are shown as disabled until you select a
+              Unicode font</li>
+          <li>Support is added to auto-detect a Theme Hospital install via GOG
+              Galaxy</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>Ukrainian translation added</li>
+          <li>Dutch translation has been updated</li>
+          <li>Italian translation has been updated</li>
+          <li>Russian translation has been updated</li>
+          <li>Spanish translation has been updated</li>
+          <li>French translation has been updated</li>
+          <li>Brazilian-Portuguese translation has been updated</li>
+          <li>Some unused language strings have been cleaned up</li>
+          <li>Custom campaign and level creators can now optionally add
+              translated strings for campaign description, level briefing, and
+              winning text</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Swing (double) doors will no longer crash your game if you built
+              rooms that used them while paused</li>
+          <li>Fixed a bug for NVIDIA users who didn&apos;t like graphical
+              corruption when playing fullscreen at non-native resolutions</li>
+          <li>Games should no longer crash irrecoverably because you have a
+              4k monitor :)</li>
+          <li>The game will now exit to the main menu cleanly if a problem
+              occurred trying to load a new level or map</li>
+          <li>Staff who have left the hospital can no longer ask for a
+              raise</li>
+          <li>Fixed a bug where some staff may have no initial before
+              surname</li>
+          <li>Patients can no longer litter outdoors</li>
+          <li>Patients waiting for a player decision no longer lose their mood icon
+              on vomit/pee</li>
+          <li>Fixed a bug where an unreachable reception desk could cause a
+              crash</li>
+          <li>The Computer and Atom Analyser now make button sounds as
+              originally intended</li>
+          <li>The mark for vaccination action now makes a sound as originally
+              intended</li>
+          <li>Fixed a rare bug where edges of map tiles for parcels could
+              cause unintended behaviour when purchasing plots</li>
+          <li>Active cheats will now persist across saves</li>
+          <li>Audio settings have better safeguards against no audio enabled/
+              no background music</li>
+          <li>Movies will no longer attempt to play audio when global audio is
+              off</li>
+          <li>Config values using brackets (such as a custom music directory)
+              will now work properly</li>
+          <li>Custom campaigns menu now will use a scrollbar for long campaign
+              descriptions</li>
+          <li>Continue Game now properly targets files explicitly ending in
+              the .sav format</li>
+          <li>Tooltips for language menu now align with list items. Please note we
+              are aware of an issue where some languages don&apos;t show a
+              tooltip</li>
+          <li>Fixed an instance where information boxes could load pink from
+              older savegames</li>
+          <li>Implemented a more permanent fix for the money bar being drawn
+              incorrectly in some CJK and Cyrllic languages</li>
+          <li>Fixed a crash on exit that could occur in some systems</li>
+          <li>Mouse panning behaviour has been made more responsive and
+              accurate</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.68.0~rc2" date="2024-09-25" type="development">
+      <description>
+        <p>Translations:</p>
+        <ul>
+          <li>Dutch translation has been updated</li>
+          <li>Ukranian translation has been updated</li>
+          <li>Russian translation has been updated</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Added a safeguard to prevent a crash of games previously using the
+              old cheat system</li>
+          <li>Patients waiting for a player decision no longer lose their mood icon
+              on vomit/pee</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.68.0~rc1" date="2024-09-14" type="development">
+      <description>
+        <p>New Features:</p>
+        <ul>
+          <li>Long windows now behave properly in the game if they get intersected
+              by an adjacent wall</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>Ukranian translation added</li>
+          <li>Brazilian-Portuguese translation has been updated</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Tooltips for language menu now align with list items. Please note we
+             are aware of an issue where some languages don&apos;t show a tooltip</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.68.0~beta1" date="2024-09-01" type="development">
       <description>
         <p>New Features:</p>
       <ul>

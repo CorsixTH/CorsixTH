@@ -87,7 +87,7 @@ function Vip:Vip(...)
   -- sets the chance VIP visits each room, default is 50% or 1/2. For every 40 rooms in a hospital over 79 we increase n by 1 and chance is 1/n+1
   self.room_visit_chance = 1
   self.waiting = 0
-
+  self.slow_animation = true
 end
 
 --[[--VIP while on premises--]]
@@ -503,6 +503,9 @@ function Vip:afterLoad(old, new)
         end
       end
     end
+  end
+  if old < 207 then
+    self.slow_animation = true
   end
   Humanoid.afterLoad(self, old, new)
 end

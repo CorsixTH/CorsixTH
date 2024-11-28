@@ -224,13 +224,6 @@ function UI:setupGlobalKeyHandlers()
   self:addOrRemoveDebugModeKeyHandlers()
 end
 
-function UI:connectDebugger()
-  local error_message = TheApp:connectDebugger()
-  if error_message then
-    self:addWindow(UIInformation(self, {error_message}))
-  end
-end
-
 -- Used for everything except music and announcements
 function UI:playSound(name, played_callback, played_callback_delay)
   if self.app.config.play_sounds then
@@ -1071,11 +1064,9 @@ function UI:getCursorPosition(window)
 end
 
 function UI:addOrRemoveDebugModeKeyHandlers()
-  self:removeKeyHandler("global_connectDebugger", self)
   self:removeKeyHandler("global_showLuaConsole", self)
   self:removeKeyHandler("global_runDebugScript", self)
   if self.app.config.debug then
-    self:addKeyHandler("global_connectDebugger", self, self.connectDebugger)
     self:addKeyHandler("global_showLuaConsole", self, self.showLuaConsole)
     self:addKeyHandler("global_runDebugScript", self, self.runDebugScript)
   end

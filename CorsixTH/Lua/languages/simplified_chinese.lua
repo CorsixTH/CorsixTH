@@ -2093,16 +2093,16 @@ letter = {
 
 vip_names = {
   health_minister = "卫生部部长",
-  "伟大的查普顿市长", -- the rest is better organized in an array.
-  "南丁格尔",
-  "来自荷兰的伯那德国王",
-  "缅甸民主党领袖：昂山苏蒂",
-  "克朗伯先生",
-  "比利先生",
-  "克劳福议员",
-  "罗尼",
-  "一个超级联赛球星",
-  "拉里普罗斯特",
+  [1] = "伟大的查普顿市长", -- the rest is better organized in an array.
+  [2] = "南丁格尔",
+  [3] = "来自荷兰的伯那德国王",
+  [4] = "缅甸民主党领袖：昂山苏蒂",
+  [5] = "克朗伯先生",
+  -- [6] requires replacement (English uses 'Sir Lancelot Spratt')
+  [7] = "克劳福议员",
+  [8] = "罗尼",
+  [9] = "一个超级联赛球星",
+  [10] = "拉里普罗斯特",
 }
 
 -- 43: credits

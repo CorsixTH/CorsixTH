@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010-2020 Manuel "Roujin" Wolf, Edvin "Lego3" Linge, lewri et al.
+--[[ Copyright (c) 2010-2024 Manuel "Roujin" Wolf, Edvin "Lego3" Linge, MandrakeHorse, lewri et al.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -42,6 +42,17 @@ adviser.goals.lose.kill = "Kill another %d patients to lose the level!"
 -- Improve tooltips in staff window to mention hidden features
 tooltip.staff_window.face = "This person's face - click to open management screen"
 tooltip.staff_window.center_view = "Left click to zoom to staff, right click to cycle through staff members"
+
+-- Improve tooltips in Research Screen
+tooltip.research.cure_dec = "Decrease Cure research percentage"
+tooltip.research.cure_inc = "Increase Cure research percentage"
+tooltip.research.diagnosis_dec = "Decrease Diagnosis research percentage"
+tooltip.research.diagnosis_inc = "Increase Diagnosis research percentage"
+tooltip.research.drugs_dec = "Decrease Drugs research percentage"
+tooltip.research.improvements_dec = "Decrease Improvements research percentage"
+tooltip.research.improvements_inc = "Increase Improvements research percentage"
+tooltip.research.specialisation_dec = "Decrease Specialisation research percentage"
+tooltip.research.specialisation_inc = "Increase Specialisation research percentage"
 
 -- These strings are missing in some versions of TH (unpatched?)
 confirmation.restart_level = "Are you sure you want to restart the level?"
@@ -671,9 +682,15 @@ tooltip.hotkey_window = {
   button_accept = "Accept and save hotkey assignments",
   button_defaults = "Reset all hotkeys to the program's defaults",
   button_cancel = "Cancel the assignment and go back to the options menu",
-  caption_panels = "Open window to assign panel keys",
-  button_gameSpeedKeys = "Open window to set keys to control game speed",
-  button_recallPosKeys = "Open window to set keys to store and recall camera positions",
+  panel_globalKeys = "Assign global hotkeys",
+  panel_generalInGameKeys = "Assign general in-game hotkeys",
+  button_gameSpeedKeys = "Assign hotkeys to control the game speed",
+  panel_scrollKeys = "Assign hotkeys to scroll the screen",
+  panel_zoomKeys = "Assign hotkeys to zoom in and out",
+  panel_toggleKeys = "Assign hotkeys to toggle options",
+  caption_panels = "Assign hotkeys to open panels",
+  button_recallPosKeys = "Assign hotkeys to save and recall camera positions",
+  panel_debugKeys = "Assign hotkeys for debugging",
   button_back_02 = "Go back to the main hotkey window. Hotkeys changed in this window can be accepted there",
 }
 
@@ -741,7 +758,7 @@ errors = {
   fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
   could_not_load_campaign = "Failed to load the campaign: %s",
   could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
-  save_to_tmp = "The file at %s could not be used. The game has been saved to %s. Error: %s",
+  save_to_tmp = "Attempt to write to %s failed. File was written instead to temporary location %s because of the error: %s",
   dialog_empty_queue = "Sorry, a humanoid just had an empty action queue, which means that they didn't know what to do next. Please consult the command window for more detailed information. A dialog with the offending humanoid has been opened. Would you like them to leave the hospital?",
   compatibility_error = {
     new_in_old = "Sorry, this save was created with a newer version of CorsixTH and is not compatible. Please update to a more recent version.",
@@ -779,6 +796,8 @@ information = {
     balance = "Your bank balance fell below %d.",
     percentage_killed = "You killed more than %d percent of the patients.",
     cheat = "This was your choice or did you select the wrong button? So you can't even cheat correctly, not that funny huh?",
+    staff_happiness = "Your average staff happiness fell below %d%.",
+    patient_happiness = "Your average patient happiness fell below %d%.",
   },
   cheat_not_possible = "Cannot use that cheat on this level. You even fail to cheat, not that funny huh?",
 }
@@ -958,6 +977,17 @@ hotkeys_file_err = {
 }
 
 transactions.remove_room = "Build: Remove destroyed room"
+
+tooltip.status = {
+  over = {
+    staff_happiness = "Your average staff happiness should be over %d%. Currently it's %d%",
+    patient_happiness = "Your average patient happiness should be over %d%. Currently it's %d%",
+  },
+  under = {
+    staff_happiness = "Your average staff happiness should not be less than %d%. Currently it's %d%",
+    patient_happiness = "Your average patient happiness should not be less than %d%. Currently it's %d%",
+  }
+}
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 

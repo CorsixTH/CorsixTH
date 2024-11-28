@@ -1126,11 +1126,11 @@ cheats_window = {
     toggle_infected = "Faire apparaître des patients contagieux.",
     increase_prices = "Augmenter les prix",
     decrease_prices = "Diminuer les prix",
-    reset_death_count = "Remettre à zéro le nombre de décès à l’hôpital",
+    reset_death_count = "Remettre à zéro le nombre de décès",
     toggle_epidemic = "Active la possibilité d'épidémies",
-    show_infected = "Montrer/cacher les icônes des infectés pour les épidémies découvertes et actives",
+    show_infected = "Montrer les icônes des infectés",
     toggle_earthquake = "Activer les tremblements de terre",
-    max_reputation = "Mettre la réputation de l'hôpital au maximum"
+    max_reputation = "Réputation de l'hôpital au maximum"
   },
   close = "Fermer"
 }
@@ -1152,7 +1152,7 @@ tooltip.cheats_window = {
     toggle_infected = "Bascule les icônes infectés pour l'épidémie, découverte active.",
     increase_prices = "Augmenter tous les prix de 50% (max. 200%)",
     decrease_prices = "Diminuer tous les prix de 50% (min. 50%)",
-    reset_death_count = "Remettre à zéro le nombre de décès à l’hôpital",
+    reset_death_count = "Remettre à zéro le nombre de décès à l'hôpital",
     toggle_epidemic = "Active la possibilité d'épidémies",
     show_infected = "Montrer/cacher les icônes des infectés pour les épidémies découvertes et actives",
     toggle_earthquake = "Activer les tremblements de terre",

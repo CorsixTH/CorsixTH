@@ -921,13 +921,13 @@ tooltip = {
     cure_inc = "Budget voor onderzoek verhogen",
     close = "Onderzoeksscherm sluiten",
     specialisation_dec = "Budget voor specialisatie verlagen",
-    diagnosis_dec = "Budget voor diagnostische apparatuur verhogen",
+    diagnosis_dec = "Budget voor diagnostische apparatuur verlagen",
     allocated_amount = "Totaal budget",
     improvements_inc = "Budget voor verbeteringen verhogen",
     drugs_dec = "Budget voor medicijnen verlagen",
     drugs_inc = "Budget voor medicijnen verhogen",
     cure_dec = "Budget voor behandelmethodes verlagen",
-    specialisation_inc = "Budget voor specialisatie verlagen",
+    specialisation_inc = "Budget voor specialisatie verhogen",
     improvements_dec = "Budget voor verbeteringen verlagen",
     diagnosis_inc = "Budget voor diagnostische apparatuur verhogen",
   },
@@ -2278,7 +2278,7 @@ errors = {
   load_level_prefix = "Fout bij het laden van level: ",
   load_map_prefix = "Fout bij het laden van map: ",
   music = "Er zijn afspeelproblemen met een of meer bestanden in uw muziekfolder. Problematische bestanden worden uitgeschakeld in de jukebox. Zie het consolevenster voor meer informatie.",
-  save_to_tmp = "Het bestand op %s kon niet worden gebruikt. Het spel is opgeslagen op %s. Fout: %s",
+  save_to_tmp = "Poging om naar %s te schrijven is mislukt. Het bestand is in plaats daarvan geschreven naar de tijdelijke locatie %s vanwege de fout: %s",
 }
 diseases = {
   diag_ward = {

@@ -170,7 +170,6 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
 end
 
 local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( function(action, humanoid)
-  humanoid:setMood("patient_wait", "deactivate")
   -- Just in case we are somehow started again:
   -- FIXME: This seems to be used for intermediate actions like peeing while the patient is waiting
   --        Unfortunately this means that if you finish the required room while the patient is peeing

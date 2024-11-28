@@ -1308,15 +1308,6 @@ function Hospital:spawnPatient()
   self.world:spawnPatient(self)
 end
 
-function Hospital:removeDebugPatient(patient)
-  for i, p in ipairs(self.debug_patients) do
-    if p == patient then
-      table.remove(self.debug_patients, i)
-      return
-    end
-  end
-end
-
 local debug_n
 function Hospital:getDebugPatient()
   if not debug_n or debug_n >= #self.debug_patients then
@@ -1399,7 +1390,8 @@ function Hospital:receiveMoneyForTreatment(patient)
     else
       reason = _S.transactions.cure_colon .. " " .. casebook.disease.name
     end
-    local amount = self:getTreatmentPrice(disease_id)
+    local amount = patient.pay_amount or 0
+    amount = amount > 0 and amount or self:getTreatmentPrice(disease_id)
 
     -- 25% of the payments now go through insurance
     if patient.insurance_company then
@@ -1412,13 +1404,15 @@ function Hospital:receiveMoneyForTreatment(patient)
     end
     casebook.money_earned = casebook.money_earned + amount
     patient.world:newFloatingDollarSign(patient, amount)
+    patient.pay_amount = 0
   end
 end
 
---! Sell a soda to a patient.
+--! Sell a soda to a patient for the price in the level config (default $20).
 --!param patient (patient) The patient buying the soda.
 function Hospital:sellSodaToPatient(patient)
-  self:receiveMoneyForProduct(patient, 20, _S.transactions.drinks)
+  local soda_price = self.world.map.level_config.gbv.SodaPrice
+  self:receiveMoneyForProduct(patient, soda_price, _S.transactions.drinks)
   self.sodas_sold = self.sodas_sold + 1
 end
 
@@ -1728,9 +1722,17 @@ function Hospital:removeStaff(staff)
 end
 
 --! Remove a patient from the hospital.
+--  Also if a debug patient, they are also removed from the debug list.
 --!param patient (Patient) Patient to remove.
 function Hospital:removePatient(patient)
+  if patient.is_debug then self:removeDebugPatient(patient) end
   RemoveByValue(self.patients, patient)
+end
+
+--! Remove a debug patient from the debug list.
+--!param patient (Patient) Patient to remove
+function Hospital:removeDebugPatient(patient)
+  RemoveByValue(self.debug_patients, patient)
 end
 
 -- TODO: This should depend on difficulty and level
