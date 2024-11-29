@@ -699,6 +699,8 @@ end
 --! This function should always be called to catch errors and properly pass the
 --! error to the player
 --!param error_prefix (string) (Optional) Prefixes the error relevant to what was loaded
+--!param campaign_info (object) (Optional) is information about campaign in case loading level
+-- is a part of a campaign. if not part of a campaign then campaign_info is nil.
 --! return (boolean) The outcome of the pcall
 function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, error_prefix, campaign_info)
   local status, err = pcall(self._loadLevel, self, level, difficulty, level_name,
@@ -716,7 +718,7 @@ end
 --! Loads the specified level. If a string is passed it looks for the file with the same name
 -- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
 -- the original game.
---!param campaign_info (object) is information about campaign in case loading level
+--!param campaign_info (object) (Optional) is information about campaign in case loading level
 -- is a part of a campaign. if not part of a campaign then campaign_info is nil.
 function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, campaign_info)
   if self.world then
