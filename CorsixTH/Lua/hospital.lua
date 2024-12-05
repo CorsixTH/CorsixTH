@@ -1190,6 +1190,10 @@ function Hospital:spawnContagiousPatient()
       patient:setDisease(disease)
       --Move the first patient closer (FOR TESTING ONLY)
       local x,y = self:getHeliportSpawnPosition()
+      if not x then
+        local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
+        x, y = spawn_point.x, spawn_point.y
+      end
       patient:setTile(x,y)
       patient:setHospital(self)
       self:addToEpidemic(patient)
