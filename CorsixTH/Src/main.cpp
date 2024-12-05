@@ -22,6 +22,8 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <spdlog/spdlog.h>
+
 #include <array>
 #include <cstdio>
 #include <cstring>
@@ -30,6 +32,7 @@ SOFTWARE.
 
 #include "iso_fs.h"
 #include "lua.hpp"
+#include "lua_logger.h"
 #include "lua_rnc.h"
 #include "lua_sdl.h"
 #include "persist_lua.h"
@@ -101,17 +104,14 @@ std::string search_script_file(lua_State* L) {
       if (iProgramPathLengthReal != iProgramPathLength ||
           iProgramPathLength <= iProgramDirLength) {
         if (iProgramPathLengthReal != iProgramPathLength)
-          std::fprintf(stderr,
-                       "Path length of CorsixTH binary changed?!?! "
-                       "Old: %d, new: %d.\n",
-                       iProgramPathLength, iProgramPathLengthReal);
+          spdlog::error(
+              "Path length of CorsixTH binary changed?!?! Old: {}, new: {}",
+              iProgramPathLength, iProgramPathLengthReal);
         else
-          std::fprintf(stderr,
-                       "Path to CorsixTH looks like a directory?!?! "
-                       "Path is: '%s'.\n",
-                       sProgramDir);
-        std::fprintf(stderr, "Please report this incident!\n");
-        std::fflush(stderr);
+          spdlog::error(
+              "Path to CorsixTH looks like a directory?!?! Path is: '{}'.",
+              sProgramDir);
+        spdlog::shutdown();
         exit(255);
       }
       // replace me with C++17 std::filesystem::path::preferred_separator
@@ -166,6 +166,7 @@ int lua_main_no_eval(lua_State* L) {
   preload_lua_package(L, "TH", luaopen_th);
   preload_lua_package(L, "persist", luaopen_persist);
   preload_lua_package(L, "sdl", luaopen_sdl);
+  preload_lua_package(L, "logger", luaopen_logger);
 
 #ifdef CORSIX_TH_LINK_LUA_MODULES
   preload_lua_package(L, "lfs", luaopen_lfs);
@@ -177,10 +178,10 @@ int lua_main_no_eval(lua_State* L) {
 
   auto scriptFilePath = search_script_file(L);
   if (scriptFilePath.empty()) {
-    std::fprintf(stderr,
-                 "CorsixTH cannot find CorsixTH.lua. If you want use a custom "
-                 "location, specify it by --interpreter=FILE\n");
-    std::fflush(stderr);
+    spdlog::error(
+        "CorsixTH cannot find CorsixTH.lua. If you want use a custom "
+        "location, specify it by --interpreter=FILE");
+    spdlog::shutdown();
     exit(1);
   }
 
@@ -222,16 +223,14 @@ int lua_stacktrace(lua_State* L) {
 }
 
 int lua_panic(lua_State* L) {
-  std::fprintf(stderr,
-               "A Lua error has occurred in CorsixTH outside of protected "
-               "mode!\n");
-  std::fflush(stderr);
+  spdlog::error(
+      "A Lua error has occurred in CorsixTH outside of protected "
+      "mode!");
 
   if (lua_type(L, -1) == LUA_TSTRING)
-    std::fprintf(stderr, "%s\n", lua_tostring(L, -1));
+    spdlog::error("{}", lua_tostring(L, -1));
   else
-    std::fprintf(stderr, "%p\n", lua_topointer(L, -1));
-  std::fflush(stderr);
+    spdlog::error("{}", lua_topointer(L, -1));
 
   // A stack trace would be nice, but they cannot be done in a panic.
 

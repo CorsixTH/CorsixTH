@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local log = require("logger")
+
 --! Interface for items within a UI tree control
 class "TreeNode"
 
@@ -281,7 +283,7 @@ function FileTreeNode:hasChildren()
     end
     local status, err, dir_obj = pcall(lfs.dir, self.path)
     if not status then
-      print("Error while fetching children for " .. self.path .. ": " .. err)
+      log.error("Error while fetching children for " .. self.path .. ": " .. err)
     else
       for item in dir_obj.next, dir_obj do
         if self:isValidFile(item) then

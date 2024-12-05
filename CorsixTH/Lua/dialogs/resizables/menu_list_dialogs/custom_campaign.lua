@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local log = require("logger")
+
 --! Custom Campaign Window
 class "UICustomCampaign" (UIMenuList)
 
@@ -42,7 +44,7 @@ local function createCampaignList(path)
     if file:match("%.campaign$") then
       local campaign_info, err = TheApp:readCampaignFile(file)
       if not campaign_info then
-        print(err)
+        log.error("Could not read campaign file: " .. err)
       else
         if campaign_info.levels and #campaign_info.levels > 0 then
           campaigns[#campaigns + 1] = {
@@ -54,7 +56,7 @@ local function createCampaignList(path)
                campaign_info.description_table)
           }
         else
-          print("Warning: Loaded campaign that had no levels specified")
+          log.warn("Loaded campaign that had no levels specified.")
         end
       end
     end
