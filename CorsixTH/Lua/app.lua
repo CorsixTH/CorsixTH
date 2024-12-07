@@ -769,7 +769,7 @@ function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, 
   local new_map = Map(self)
   local map_objects, errors = new_map:load(level, difficulty, level_name, level_file, level_intro, map_editor)
   if not map_objects then
-    self.world.ui:addWindow(UIInformation(self.ui, { errors }))
+    self.ui:addWindow(UIInformation(self.ui, { errors }))
     return
   end
   -- If going from another level, save progress.
