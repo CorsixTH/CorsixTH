@@ -181,7 +181,6 @@ function App:init()
 
   -- Put up the loading screen
   if good_install_folder then
-    self:setCaptureMouse()
     self.video:startFrame()
     self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
       math.floor((self.config.width - 640) / 2), math.floor((self.config.height - 480) / 2))
