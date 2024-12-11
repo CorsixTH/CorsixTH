@@ -181,7 +181,6 @@ function App:init()
 
   -- Put up the loading screen
   if good_install_folder then
-    self:setCaptureMouse()
     self.video:startFrame()
     self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
       math.floor((self.config.width - 640) / 2), math.floor((self.config.height - 480) / 2))
@@ -538,6 +537,8 @@ end
 function App:loadMainMenu(message)
   if self.world then
     self:worldExited()
+    -- Release the mouse regardless of setting
+    self.video:setCaptureMouse(false)
   end
 
   -- Make sure there is no blue filter active.
@@ -1837,6 +1838,7 @@ function App:afterLoad()
   self.map:afterLoad(old, new)
   self.ui:afterLoad(old, new)
   self.world:afterLoad(old, new)
+  self:setCaptureMouse()
 end
 
 --! Runs a comparison between the current (installed) version and the reported

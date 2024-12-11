@@ -171,6 +171,8 @@ function World:World(app)
   }
 
   self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
+
+  self.app:setCaptureMouse()
 end
 
 --! Register key shortcuts for controlling the world (game speed, etc.)
