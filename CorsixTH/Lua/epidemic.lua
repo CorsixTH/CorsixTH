@@ -262,12 +262,15 @@ function Epidemic:checkNoInfectedPlayerHasLeft()
         px and py and not self.hospital:isInHospital(px,py) then
       -- Patient escaped from the hospital, discovery is inevitable.
       self.result_determined = true
-      if not self.inspector then
-        self:spawnInspector()
-      end
       self:finishCoverUp()
       return
     end
+  end
+
+  local all_infected_cured = self:countInfectedPatients() == 0 
+  if all_infected_cured then
+    self:finishCoverUp()
+    return
   end
 end
 
@@ -410,6 +413,10 @@ end
 later (@see applyOutcome) ]]
 function Epidemic:finishCoverUp()
   self.result_determined = true
+
+  if not self.inspector then
+    self:spawnInspector()
+  end
 
   self.timer:close()
 
