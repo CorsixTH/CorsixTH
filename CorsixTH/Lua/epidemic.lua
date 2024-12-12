@@ -267,7 +267,7 @@ function Epidemic:checkNoInfectedPlayerHasLeft()
     end
   end
 
-  local all_infected_cured = self:countInfectedPatients() == 0 
+  local all_infected_cured = self:countInfectedPatients() == 0
   if all_infected_cured then
     self:finishCoverUp()
     return
