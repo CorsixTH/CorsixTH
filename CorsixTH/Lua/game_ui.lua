@@ -152,6 +152,7 @@ function GameUI:setupGlobalKeyHandlers()
   self:addKeyHandler("ingame_showmenubar", self, self.showMenuBar)
   self:addKeyHandler("ingame_gamespeed_speedup", self, self.keySpeedUp)
   self:addKeyHandler("ingame_setTransparent", self, self.keyTransparent)
+  self:addKeyHandler("ingame_toggleTransparent", self, self.toggleTransparent)
   self:addKeyHandler("ingame_toggleAdvisor", self, self.toggleAdviser)
   self:addKeyHandler("ingame_poopLog", self.app.world, self.app.world.dumpGameLog)
   self:addKeyHandler("ingame_poopStrings", self.app, self.app.dumpStrings)
@@ -340,6 +341,11 @@ function GameUI:keyTransparent()
   self:setWallsTransparent(true)
 end
 
+function GameUI:toggleTransparent()
+  self.toggled_transparency = not self.toggled_transparency
+  self:setWallsTransparent(self.toggled_transparency)
+end
+
 function GameUI:onKeyDown(rawchar, modifiers, is_repeat)
   if UI.onKeyDown(self, rawchar, modifiers, is_repeat) then
     -- Key has been handled already
@@ -381,7 +387,7 @@ function GameUI:onKeyUp(rawchar)
     self.app.world:previousSpeed()
   end
 
-  self:setWallsTransparent(false)
+  if not self.toggled_transparency then self:setWallsTransparent(false) end
 end
 
 function GameUI:makeDebugFax()

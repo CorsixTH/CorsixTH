@@ -648,6 +648,7 @@ hotkey_window = {
   ingame_restartLevel = "Restart Level",
   ingame_quitLevel = "Quit Level",
   ingame_setTransparent = "Transparent",
+  ingame_toggleTransparent = "Toggle transparent",
   ingame_toggleAnnouncements = "Announcements",
   ingame_toggleSounds = "Sounds",
   ingame_toggleMusic = "Music",
