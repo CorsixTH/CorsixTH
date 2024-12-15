@@ -268,6 +268,9 @@ function Epidemic:checkNoInfectedPlayerHasLeft()
   end
 end
 
+--[[ Check for conditions that no any uncured infected patients
+left in hospital. If so then epidemic must end earlier than the
+length of the timer.]]
 function Epidemic:checkThereAreNoAnyInfectedPatientsLeft()
   if self.result_determined then return end
 
