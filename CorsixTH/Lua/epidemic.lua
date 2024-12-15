@@ -277,7 +277,6 @@ function Epidemic:checkThereAreNoAnyInfectedPatientsLeft()
   local no_any_infected_patients_left = self:countInfectedPatients() == 0
   if no_any_infected_patients_left then
     self:finishCoverUp()
-    return
   end
 end
 
