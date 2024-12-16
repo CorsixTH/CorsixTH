@@ -598,6 +598,7 @@ local hotkeys_defaults = {
   ingame_zoom_out_more = {"shift", "-"},
   ingame_reset_zoom = "0",
   ingame_setTransparent = "x",
+  ingame_toggleTransparent = {"shift", "x"},
   ingame_toggleAdvisor = {"shift", "a"},
   ingame_poopLog = {"ctrl", "d"},
   ingame_poopStrings = {"ctrl", "t"},
@@ -796,9 +797,10 @@ if hotkeys_needs_rewrite and TheApp then
 'ingame_quitLevel = ' .. hotkeys_values.ingame_quitLevel .. '\n' .. [=[
 
 ---------------------------------Set Transparent-------------------------------
--- While held down any walls will be transparent, allowing you to see behind them.
+-- Use these keys to make walls transparent, allowing you to see behind them.
 --]=] .. '\n' ..
-'ingame_setTransparent = ' .. hotkeys_values.ingame_setTransparent .. '\n' .. [=[
+'ingame_setTransparent = ' .. hotkeys_values.ingame_setTransparent .. '\n' ..
+'ingame_toggleTransparent = ' .. hotkeys_values.ingame_toggleTransparent .. '\n' .. [=[
 ]=]
 
 local string_05 = [=[
