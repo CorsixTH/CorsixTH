@@ -260,7 +260,7 @@ function UIStaff:onMouseUp(button, x, y)
   end
   local repaint = Window.onMouseUp(self, button, x, y)
   -- Test for hit within the view circle and name box
-  local hit_namebox = x > self.tooltip_regions[1].x and x < self.tooltip_regions[1].r 
+  local hit_namebox = x > self.tooltip_regions[1].x and x < self.tooltip_regions[1].r
                       and y > self.tooltip_regions[1].y and y < self.tooltip_regions[1].b
   if button == "right" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
      or button == "right" and hit_namebox then
