@@ -167,7 +167,7 @@ function GameUI:setupGlobalKeyHandlers()
     self:addKeyHandler(string.format("ingame_recallPosition_%d", i), self, self.recallMapPosition, i)
   end
 
-  if self.app.config.debug then
+  if self.app.config.debug and self.app.world.map.level_number ~= "MAP EDITOR" then
     self:addKeyHandler("ingame_showCheatWindow", self, self.showCheatsWindow)
   end
 end
