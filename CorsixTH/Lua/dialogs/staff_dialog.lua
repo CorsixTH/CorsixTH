@@ -72,7 +72,6 @@ function UIStaff:UIStaff(ui, staff)
   else
     self.height = 304
   end
-  self.name_box = {x_left = 19, x_right = 169, y_top = 20, y_btm = 41}
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req01V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
@@ -261,7 +260,8 @@ function UIStaff:onMouseUp(button, x, y)
   end
   local repaint = Window.onMouseUp(self, button, x, y)
   -- Test for hit within the view circle and name box
-  local hit_namebox = x > self.name_box.x_left and x < self.name_box.x_right and y > self.name_box.y_top and y < self.name_box.y_btm
+  local hit_namebox = x > self.tooltip_regions[1].x and x < self.tooltip_regions[1].r 
+                      and y > self.tooltip_regions[1].y and y < self.tooltip_regions[1].b
   if button == "right" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
      or button == "right" and hit_namebox then
     -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
