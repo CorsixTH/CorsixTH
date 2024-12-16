@@ -402,6 +402,33 @@ function Map:loadMapConfig(filename, config, custom)
         end
       end
     end
+
+    -- If the level file overlay field gives a custom level name or a difficulty and number (from campaign),
+    --   try to load that on top of the config loaded so far.
+    if config.overlay then
+      local name, difficulty, level_number = config.overlay.Value, config.overlay.difficulty, config.overlay.level_number
+      local errors, errors2, _
+      config.overlay = nil -- Prevent recursive loop
+
+      if difficulty and level_number then -- Overlay a campaign level config
+        -- First overlay the difficulty
+        errors, config = self:loadMapConfig(difficulty .. "00.SAM", config)
+        if errors then print(errors, "Overlay difficulty:", difficulty) end
+        if level_number < 10 then
+          level_number = "0" .. level_number
+        end
+        -- Overlay with the specific configuration for this level
+        errors2, config = self:loadMapConfig(difficulty .. level_number .. ".SAM", config)
+        if errors2 then print(errors2, "Overlay level number:", level_number) end
+        -- Finally overlay additional CorsixTH config per level
+        local level_path = self.app:getFullPath({"Levels", "original" .. level_number .. ".level"})
+        _, config = self:loadMapConfig(level_path, config, true)
+      elseif name then -- Overlay a custom level's config
+        errors, config = self:loadMapConfig(self.app:getAbsolutePathToLevelFile(name .. ".level"), config, true)
+        if errors then print(errors, "Overlay custom level name:", name) end
+      else print("No difficulty and level number, or custom level name given in overlay of custom level:", filename)
+      end
+    end
     return nil, config
   else
     return "Error: Could not find the configuration file, only 'Base Config' will be loaded for this level.", config
