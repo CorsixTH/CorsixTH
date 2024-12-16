@@ -1204,12 +1204,24 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
     uint8_t cPalIndex = pSprite->data[i];
     uint32_t iColour = palette->get_argb_data()[cPalIndex];
     if ((iColour >> 24) == 0) continue;
+
+    // - Convert from nonlinear RGB to linear RGB.
+    //   gamma = around 2.2 but depends on the screen.
+    //   R, G and B are fractions.
+    const double gamma = 2.2;
+    double linR = std::pow(palette::get_red(iColour) / 255.0, gamma);
+    double linG = std::pow(palette::get_green(iColour) / 255.0, gamma);
+    double linB = std::pow(palette::get_blue(iColour) / 255.0, gamma);
+    // - Compute luminance Y in XYZ space.
+    //   Y = .2126 * R^gamma + .7152 * G^gamma + .0722 * B^gamma
+    double Y = 0.2126 * linR + 0.7152 * linG + 0.0722 * linB;
+    // - Compute lightness L*.
+    //   L* = 116 * Y ^ 1/3 - 16, range is from 0 to 100.
+    double L = std::min(100.0, std::max(0.0, 166 * std::cbrt(Y) - 16));
+    uint8_t cIntensity = static_cast<uint8_t>(L / 100 * 255.0);
+
     // Grant higher score to pixels with high or low intensity (helps avoid
     // grey fonts)
-    int iR = palette::get_red(iColour);
-    int iG = palette::get_green(iColour);
-    int iB = palette::get_blue(iColour);
-    uint8_t cIntensity = static_cast<uint8_t>((iR + iG + iB) / 3);
     int iScore = 1 + std::max(0, 3 - ((255 - cIntensity) / 32)) +
                  std::max(0, 3 - (cIntensity / 32));
     iUsageCounts[cPalIndex] += iScore;
