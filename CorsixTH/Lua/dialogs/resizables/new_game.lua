@@ -197,7 +197,7 @@ end
 
 function UINewGame:startGame(difficulty)
   if self.ui.app:loadLevel(1, difficulty, nil, nil, nil, nil,
-      _S.errors.load_level_prefix) then
+      _S.errors.load_level_prefix, nil) then
     self.ui.app.moviePlayer:playAdvanceMovie(1)
 
     -- Initiate campaign progression. The UI above may now have changed.

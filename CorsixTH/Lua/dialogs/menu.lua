@@ -812,7 +812,7 @@ function UIMenuBar:makeGameMenu(app)
   local levels_menu = UIMenu()
   for L = 1, 12 do
     levels_menu:appendItem(("  L%i  "):format(L), function()
-      if app:loadLevel(L, nil, nil, nil, nil, nil, _S.errors.load_level_prefix) then
+      if app:loadLevel(L, nil, nil, nil, nil, nil, _S.errors.load_level_prefix, nil) then
         self.ui.app.moviePlayer:playAdvanceMovie(L)
       end
     end)
