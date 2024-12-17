@@ -110,9 +110,9 @@ function Epidemic:tick()
   if self.coverup_in_progress then
     if not self.result_determined then
       self:checkNoInfectedPlayerHasLeft()
+      self:checkNoInfectedPatients()
       self:markedPatientsCallForVaccination()
       self:showAppropriateAdviceMessages()
-      self:checkThereAreNoAnyInfectedPatientsLeft()
     end
     self:tryAnnounceInspector()
   end
@@ -274,7 +274,7 @@ length of the timer.]]
 function Epidemic:checkNoInfectedPatients()
   if self.result_determined then return end
 
-  if (self:countInfectedPatients() == 0) then
+  if self:countInfectedPatients() == 0 then
     self:finishCoverUp()
   end
 end
