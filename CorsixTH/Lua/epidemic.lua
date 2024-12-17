@@ -274,8 +274,7 @@ length of the timer.]]
 function Epidemic:checkThereAreNoAnyInfectedPatientsLeft()
   if self.result_determined then return end
 
-  local no_any_infected_patients_left = self:countInfectedPatients() == 0
-  if no_any_infected_patients_left then
+  if (self:countInfectedPatients() == 0) then
     self:finishCoverUp()
   end
 end
