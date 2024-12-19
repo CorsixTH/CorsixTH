@@ -101,6 +101,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.shake_screen_intensity = 0
 
   self.announcer = Announcer(app)
+  self.app:setCaptureMouse()
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -1296,6 +1297,7 @@ function GameUI:afterLoad(old, new)
 
   self.announcer.playing = false
 
+  self.app:setCaptureMouse()
   return UI.afterLoad(self, old, new)
 end
 
@@ -1317,6 +1319,8 @@ function GameUI:quit(mapeditor)
   local msg = mapeditor and _S.confirmation.quit_mapeditor or _S.confirmation.quit
   self:addWindow(UIConfirmDialog(self, false, msg, --[[persistable:gameui_confirm_quit]] function()
     self.app:loadMainMenu()
+    -- Release the mouse regardless of setting
+    self.app.video:setCaptureMouse(false)
   end))
 end
 

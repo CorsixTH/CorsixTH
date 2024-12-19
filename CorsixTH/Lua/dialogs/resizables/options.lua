@@ -347,7 +347,6 @@ function UIOptions:buttonMouseCapture()
   local app = self.ui.app
   app.config.capture_mouse = not app.config.capture_mouse
   app:saveConfig()
-  app:setCaptureMouse()
   self.mouse_capture_button:setLabel(app.config.capture_mouse and _S.options_window.option_on or _S.options_window.option_off)
 end
 
