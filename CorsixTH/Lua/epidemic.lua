@@ -416,7 +416,7 @@ function Epidemic:finishCoverUp()
   end
 end
 
---[[ Inspector had arrived at reception desk. Check if 
+--[[ Inspector had arrived at reception desk. Check if
 any infected still in hospital and determine final verdict.]]
 function Epidemic:handleInspectorArrival()
   local still_infected = self:countInfectedPatients()
