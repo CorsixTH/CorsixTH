@@ -252,15 +252,12 @@ end)
 
 navigateDoor = function(humanoid, x1, y1, dir)
   local action = humanoid:getCurrentAction()
-  local duration = 12
   local dx = x1
   local dy = y1
   if dir == "east" then
     dx = dx + 1
-    duration = 10
   elseif dir == "south" then
     dy = dy + 1
-    duration = 10
   end
   local swinging = false
   local door = humanoid.world:getObject(dx, dy, "door")
@@ -338,33 +335,35 @@ navigateDoor = function(humanoid, x1, y1, dir)
   humanoid:setTilePositionSpeed(dx, dy)
   humanoid.user_of = door
   door:setUser(humanoid)
-  local entering, leaving
-  if swinging then
-    entering = anims.entering_swing
-    leaving = anims.leaving_swing
-    duration = humanoid.world:getAnimLength(entering)
-  else
-    entering = anims.entering
-    leaving = anims.leaving
-  end
-  local direction = "in"
+  local entering = swinging and anims.entering_swing or anims.entering
+  local leaving = swinging and anims.leaving_swing or anims.leaving
+
+  local duration, direction
   if dir == "north" then
     humanoid:setAnimation(leaving, flag_list_bottom)
-    to_x, to_y = dx, dy - 1
     duration = humanoid.world:getAnimLength(leaving)
+    to_x, to_y = dx, dy - 1
+    direction = "in"
+
   elseif dir == "west" then
     humanoid:setAnimation(leaving, flag_list_bottom + flag_flip_h)
-    to_x, to_y = dx - 1, dy
     duration = humanoid.world:getAnimLength(leaving)
+    to_x, to_y = dx - 1, dy
+    direction = "in"
+
   elseif dir == "east" then
     humanoid:setAnimation(entering, flag_list_bottom)
+    duration = humanoid.world:getAnimLength(entering)
     to_x, to_y = dx, dy
     direction = "out"
+
   elseif dir == "south" then
     humanoid:setAnimation(entering, flag_list_bottom + flag_flip_h)
+    duration = humanoid.world:getAnimLength(entering)
     to_x, to_y = dx, dy
     direction = "out"
   end
+
   humanoid.last_move_direction = dir
   if swinging then
     door:swingDoors(direction, duration)
