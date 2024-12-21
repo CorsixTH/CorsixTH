@@ -63,10 +63,6 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   self.timer = nil
   self.countdown_intervals = 0
 
-  -- Set when we know if the player has passed/failed the epidemic
-  -- generally used to test if infected patients can still infect others
-  self.result_determined = false
-
   -- Vaccination mode is activated when the icon on the timer
   -- is clicked - used to determine what the cursor should look like
   self.vaccination_mode_active = false
@@ -101,24 +97,15 @@ end
 --[[ The epidemic tick - currently the same rate as the hospital's tick but
 not necessary dependent on it - could potentially be reduced for performance.]]
 function Epidemic:tick()
-  if not self.ready_to_reveal then
-    self:checkIfReadyToReveal()
-  end
-  if not self.result_determined then
-    self:infectOtherPatients()
-  end
-  if self.coverup_in_progress then
-    if not self.result_determined then
-      self:checkNoInfectedPlayerHasLeft()
-      self:checkNoInfectedPatients()
-      self:markedPatientsCallForVaccination()
-      self:showAppropriateAdviceMessages()
-    end
-    self:tryAnnounceInspector()
-  end
+  self:infectOtherPatients()
+  self:checkIfReadyToReveal()
+  self:showAppropriateAdviceMessages()
+  self:tryAnnounceInspector()
+  self:markedPatientsCallForVaccination()
+  self:checkInfectedLeftHospital()
+  self:checkNoInfectedPatients()
   self:checkPatientsForRemoval()
 end
-
 
 --[[ Adds a new patient to the epidemic who is actively contagious: infected but
   not vaccinated or cured]]
@@ -214,6 +201,8 @@ end
  WILL be revealed to the player and may even terminate before they are even
  aware it existed. ]]
 function Epidemic:checkIfReadyToReveal()
+  if self.ready_to_reveal then return end
+
   for _, infected_patient in ipairs(self.infected_patients) do
     if infected_patient.diagnosed then
       self.ready_to_reveal = true
@@ -252,8 +241,8 @@ end
 --[[ Check for conditions that one of the infected and not cured
 patient leaved the hospital. This discover epidemic to public instantly.
 So epidemic must end earlier than the length of the timer.]]
-function Epidemic:checkNoInfectedPlayerHasLeft()
-  if self.result_determined then return end
+function Epidemic:checkInfectedLeftHospital()
+  if not self.coverup_in_progress or self:inspectorSpawned() then return end
 
   -- Check whether a patient has left.
   for _, infected_patient in ipairs(self.infected_patients) do
@@ -272,7 +261,7 @@ end
 left in hospital. If so then epidemic must end earlier than the
 length of the timer.]]
 function Epidemic:checkNoInfectedPatients()
-  if self.result_determined then return end
+  if not self.coverup_in_progress or self:inspectorSpawned() then return end
 
   if self:countInfectedPatients() == 0 then
     self:finishCoverUp()
@@ -372,7 +361,6 @@ end
  to cover up it from the initial faxes - ends the epidemic immediately
  after applying fine.]]
 function Epidemic:resolveDeclaration()
-  self.result_determined = true
   self:clearAllInfectedPatients()
 
   --No fax for declaration just apply fines and rep hit
@@ -414,25 +402,27 @@ function Epidemic:startCoverUp()
   end
 end
 
---[[ Ends the cover up of the epidemic with the result to be applied
-later (@see applyOutcome) ]]
+--[[ Ends the cover up epidemic stage ]]
 function Epidemic:finishCoverUp()
-  self.result_determined = true
-
   if not self.inspector then
     self:spawnInspector()
   end
 
   self.timer:close()
 
-  -- Turn vaccination mode off
+  -- Turn vaccination mode off if enabled
   if self.vaccination_mode_active then
     self:toggleVaccinationMode()
   end
+end
 
+--[[ Inspector had arrived at reception desk. Check if 
+any infected still in hospital and determine final verdict.]]
+function Epidemic:handleInspectorArrival()
   local still_infected = self:countInfectedPatients()
   self:determineFaxAndFines(still_infected)
   self:clearAllInfectedPatients()
+  self:applyOutcome()
 end
 
 --[[ Calculates the contents of the fax and the appropriate fines based on the
@@ -499,7 +489,7 @@ function Epidemic:applyOutcome()
     end
     -- Apply fine and reputation hit
     self.hospital:spendMoney(self.coverup_fine,_S.transactions.epidemy_coverup_fine)
-    self.hospital.reputation =  self.hospital.reputation - self.reputation_hit
+    self.hospital.reputation = self.hospital.reputation - self.reputation_hit
   else
     self.hospital:receiveMoney(self.compensation, _S.transactions.compensation)
   end
@@ -558,6 +548,12 @@ function Epidemic:spawnInspector()
   inspector:setNextAction(SpawnAction("spawn", spawn_point))
   inspector:setHospital(self.hospital)
   inspector:queueAction(SeekReceptionAction())
+end
+
+--[[ Is inspector already spawned.
+@return (boolean) true if spawned alredy, false if not]]
+function Epidemic:inspectorSpawned()
+  return self.inspector ~= nil
 end
 
 --[[ Is the patient "still" either idle queuing or sitting on a bench
@@ -683,6 +679,8 @@ end
 --[[ Make the advisor show appropriate messages under certain
   conditions of the epidemic.]]
 function Epidemic:showAppropriateAdviceMessages()
+  if not self.coverup_in_progress or self:inspectorSpawned() then return end
+
   if self.countdown_intervals then
     if not self.has_said_hurry_up and self:countInfectedPatients() > 0 and
         -- If only 1/4 of the countdown_intervals remaining on the timer
@@ -707,8 +705,10 @@ function Epidemic:hasNoInfectedPatients()
 end
 
 function Epidemic:tryAnnounceInspector()
+  if not self.coverup_in_progress or not self:inspectorSpawned() then return end
+
   local inspector = self.inspector
-  if inspector and not inspector.has_been_announced and
+  if inspector.has_been_announced and
       self.hospital:isInHospital(inspector.tile_x, inspector.tile_y) then
     inspector:announce()
     inspector.has_been_announced = true
