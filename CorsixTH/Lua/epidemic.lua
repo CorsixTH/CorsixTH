@@ -110,6 +110,7 @@ function Epidemic:tick()
   if self.coverup_in_progress then
     if not self.result_determined then
       self:checkNoInfectedPlayerHasLeft()
+      self:checkNoInfectedPatients()
       self:markedPatientsCallForVaccination()
       self:showAppropriateAdviceMessages()
     end
@@ -248,9 +249,9 @@ function Epidemic:announceEndOfEpidemic()
   end
 end
 
---[[ Checks for conditions that could end the epidemic earlier than
- the length of the timer. If an infected patient leaves the
- hospital it's discovered instantly and will result in a fail.]]
+--[[ Check for conditions that one of the infected and not cured
+patient leaved the hospital. This discover epidemic to public instantly.
+So epidemic must end earlier than the length of the timer.]]
 function Epidemic:checkNoInfectedPlayerHasLeft()
   if self.result_determined then return end
 
@@ -261,13 +262,20 @@ function Epidemic:checkNoInfectedPlayerHasLeft()
     if infected_patient.going_home and not infected_patient.cured and
         px and py and not self.hospital:isInHospital(px,py) then
       -- Patient escaped from the hospital, discovery is inevitable.
-      self.result_determined = true
-      if not self.inspector then
-        self:spawnInspector()
-      end
       self:finishCoverUp()
       return
     end
+  end
+end
+
+--[[ Check for conditions that no any uncured infected patients
+left in hospital. If so then epidemic must end earlier than the
+length of the timer.]]
+function Epidemic:checkNoInfectedPatients()
+  if self.result_determined then return end
+
+  if self:countInfectedPatients() == 0 then
+    self:finishCoverUp()
   end
 end
 
@@ -410,6 +418,10 @@ end
 later (@see applyOutcome) ]]
 function Epidemic:finishCoverUp()
   self.result_determined = true
+
+  if not self.inspector then
+    self:spawnInspector()
+  end
 
   self.timer:close()
 
