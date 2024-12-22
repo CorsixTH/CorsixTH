@@ -708,7 +708,7 @@ function Epidemic:tryAnnounceInspector()
   if not self.coverup_in_progress or not self:inspectorSpawned() then return end
 
   local inspector = self.inspector
-  if inspector.has_been_announced and
+  if not inspector.has_been_announced and
       self.hospital:isInHospital(inspector.tile_x, inspector.tile_y) then
     inspector:announce()
     inspector.has_been_announced = true
