@@ -1098,7 +1098,7 @@ function Room:getStaffServiceQuality()
   return quality
 end
 
-local window_tile = list_to_set({116, 117, 118, 119, 124, 125, 126, 127})
+local window_tile = list_to_set({116, 117, 118, 119, 120, 121, 124, 125, 126, 127})
 --! Count the number of windows in the room
 --!return (int) Number of windows
 function Room:countWindows()

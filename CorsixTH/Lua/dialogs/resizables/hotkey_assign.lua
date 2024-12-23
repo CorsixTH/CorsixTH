@@ -339,7 +339,8 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
             "ingame_quitLevel",
             "ingame_rotateobject",
             "ingame_patient_gohome",
-            "ingame_setTransparent" }}}},
+            "ingame_setTransparent",
+            "ingame_toggleTransparent" }}}},
     {
       id = "speed",
       title = _S.hotkey_window.button_gameSpeedKeys,

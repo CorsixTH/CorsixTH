@@ -101,6 +101,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.shake_screen_intensity = 0
 
   self.announcer = Announcer(app)
+  self.app:setCaptureMouse()
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -152,6 +153,7 @@ function GameUI:setupGlobalKeyHandlers()
   self:addKeyHandler("ingame_showmenubar", self, self.showMenuBar)
   self:addKeyHandler("ingame_gamespeed_speedup", self, self.keySpeedUp)
   self:addKeyHandler("ingame_setTransparent", self, self.keyTransparent)
+  self:addKeyHandler("ingame_toggleTransparent", self, self.toggleTransparent)
   self:addKeyHandler("ingame_toggleAdvisor", self, self.toggleAdviser)
   self:addKeyHandler("ingame_poopLog", self.app.world, self.app.world.dumpGameLog)
   self:addKeyHandler("ingame_poopStrings", self.app, self.app.dumpStrings)
@@ -167,7 +169,7 @@ function GameUI:setupGlobalKeyHandlers()
     self:addKeyHandler(string.format("ingame_recallPosition_%d", i), self, self.recallMapPosition, i)
   end
 
-  if self.app.config.debug then
+  if self.app.config.debug and self.app.world.map.level_number ~= "MAP EDITOR" then
     self:addKeyHandler("ingame_showCheatWindow", self, self.showCheatsWindow)
   end
 end
@@ -340,6 +342,11 @@ function GameUI:keyTransparent()
   self:setWallsTransparent(true)
 end
 
+function GameUI:toggleTransparent()
+  self.toggled_transparency = not self.toggled_transparency
+  self:setWallsTransparent(self.toggled_transparency)
+end
+
 function GameUI:onKeyDown(rawchar, modifiers, is_repeat)
   if UI.onKeyDown(self, rawchar, modifiers, is_repeat) then
     -- Key has been handled already
@@ -381,7 +388,7 @@ function GameUI:onKeyUp(rawchar)
     self.app.world:previousSpeed()
   end
 
-  self:setWallsTransparent(false)
+  if not self.toggled_transparency then self:setWallsTransparent(false) end
 end
 
 function GameUI:makeDebugFax()
@@ -1290,6 +1297,7 @@ function GameUI:afterLoad(old, new)
 
   self.announcer.playing = false
 
+  self.app:setCaptureMouse()
   return UI.afterLoad(self, old, new)
 end
 
@@ -1311,6 +1319,8 @@ function GameUI:quit(mapeditor)
   local msg = mapeditor and _S.confirmation.quit_mapeditor or _S.confirmation.quit
   self:addWindow(UIConfirmDialog(self, false, msg, --[[persistable:gameui_confirm_quit]] function()
     self.app:loadMainMenu()
+    -- Release the mouse regardless of setting
+    self.app.video:setCaptureMouse(false)
   end))
 end
 

@@ -181,7 +181,6 @@ function App:init()
 
   -- Put up the loading screen
   if good_install_folder then
-    self:setCaptureMouse()
     self.video:startFrame()
     self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
       math.floor((self.config.width - 640) / 2), math.floor((self.config.height - 480) / 2))
@@ -384,7 +383,7 @@ end
 
 --! Create the gamelog, using the launch time in the filename, and write the system information.
 function App:initGamelogFile()
-  self.gamelog_path = self.user_log_dir .. os.date("%y-%m-%d--%H-%M-%S--gamelog.txt", os.time(os.date("!*t")))
+  self.gamelog_path = self.user_log_dir .. os.date("%y-%m-%d--%H-%M-%S--gamelog.txt", os.time(os.date("*t")))
   local fi, success = self:writeToFileOrTmp(self.gamelog_path)
   local sysinfo = self:gamelogHeader()
   fi:write(sysinfo)

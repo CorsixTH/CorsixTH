@@ -240,7 +240,7 @@ end
 
 --[[ Check for conditions that one of the infected and not cured
 patient leaved the hospital. This discover epidemic to public instantly.
-So cover up must end earlier than the length of the timer.]]
+So epidemic must end earlier than the length of the timer.]]
 function Epidemic:checkInfectedLeftHospital()
   if not self.coverup_in_progress or self:inspectorSpawned() then return end
 
@@ -258,7 +258,7 @@ function Epidemic:checkInfectedLeftHospital()
 end
 
 --[[ Check for conditions that no any uncured infected patients
-left in hospital. If so then cover up must end earlier than the
+left in hospital. If so then epidemic must end earlier than the
 length of the timer.]]
 function Epidemic:checkNoInfectedPatients()
   if not self.coverup_in_progress or self:inspectorSpawned() then return end
@@ -404,6 +404,10 @@ end
 
 --[[ Ends the cover up epidemic stage ]]
 function Epidemic:finishCoverUp()
+  if not self.inspector then
+    self:spawnInspector()
+  end
+
   if not self.inspector then
     self:spawnInspector()
   end
