@@ -284,12 +284,15 @@ local function action_use_phase(action, humanoid, phase)
   setHumanoidTileSpeed(action, humanoid)
   humanoid.user_of = object
 
-  local length = anim_length * humanoid.world:getAnimLength(anim)
-  if action.min_length and phase == 0 and action.min_length > length then
-    -- A certain length is desired.
-    -- Even it out so that an integer number of animation sequences are done.
-    length = action.min_length + action.min_length % length
+  local frame_count = humanoid.world:getAnimLength(anim)
+  local action_anim_count = 1 -- Number of times to show 'in_use' animation for the action.
+  if action.min_length and phase == 0 then
+    -- 'action.min_length' is a frame count, convert to number of complete animations.
+    action_anim_count = math.floor((action.min_length + frame_count - 1) / frame_count)
   end
+  -- Take the smallest number of of animations that satisfies both the object and
+  -- the action minimum count.
+  local length = math.max(action_anim_count, anim_length) * frame_count
 
   -- A timer would be redundant in certain situations, so check it is needed
   if phase ~= 0 or is_list or length ~= 1 or not action.prolonged_usage or
