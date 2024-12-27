@@ -191,7 +191,7 @@ local function action_use_phase(action, humanoid, phase)
   elseif phase == 5 then
     anim_table = action.anims.finish_use_5
   end
-  local is_list = false
+
   local anim = anim_table[humanoid.humanoid_class]
   if not anim then
     -- Handymen have their own number of animations.
@@ -212,6 +212,7 @@ local function action_use_phase(action, humanoid, phase)
     anim_length = anim.length
   end
 
+  local is_list = false
   if type(anim) == "table" and anim[1] ~= "morph" and #anim > 1 then
     -- If an animation list is provided rather than a single animation, then
     -- choose an animation from the list at random.
