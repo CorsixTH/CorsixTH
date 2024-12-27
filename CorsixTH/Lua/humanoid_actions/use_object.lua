@@ -442,12 +442,12 @@ local function action_use_object_start(action, humanoid)
   local flags = 0
   if not object.object_type.usage_animations[orient] then
     orient = orient_mirror[orient]
-    flags = flags + 1
+    flags = flags + DrawFlags.FlipHorizontal
   end
   local spec = object.object_type.orientations[object.direction]
   -- early_list_while_in_use (if defined) will take precedence over early_list
   if spec.early_list_while_in_use or (spec.early_list_while_in_use == nil and spec.early_list) then
-    flags = flags + 1024
+    flags = flags + DrawFlags.EarlyList
   end
 
   -- The handyman has his own place to be in
