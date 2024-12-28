@@ -129,18 +129,17 @@ end
 
 --[[ Creates a new contagious patient in the hospital - potentially an epidemic]]
 function Cheats:cheatEpidemic()
-  if not self.hospital.epidemics_disabled then
-    return self.hospital:spawnContagiousPatient()
-  end
+  return self.hospital:spawnContagiousPatient()
 end
 
---! Toggles the possibility of epidemics
+--! Toggles the possibility of epidemics. Cancel any ongoing or preparing epidemics.
 function Cheats:cheatToggleEpidemic()
   local hosp, msg = self.hospital
   if hosp.epidemics_disabled then
     msg = _S.misc.epidemics_on
   else
     msg = _S.misc.epidemics_off
+    hosp:cancelEpidemics()
   end
   hosp.epidemics_disabled = not hosp.epidemics_disabled
   return true, msg
