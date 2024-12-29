@@ -134,7 +134,7 @@ function UICustomGame:buttonLoadLevel()
       return
     end
     app:loadLevel(item.level_file, nil, self.chosen_level_name, item.map_file,
-        self.chosen_level_description, nil, _S.errors.load_level_prefix)
+        self.chosen_level_description, nil, _S.errors.load_level_prefix, nil)
   end
 end
 
