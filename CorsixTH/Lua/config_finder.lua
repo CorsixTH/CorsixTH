@@ -468,6 +468,15 @@ screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 --
 audio_music = nil -- [[X:\ThemeHospital\Music]]
 
+-------------------------------------------------------------------------------
+-- SoundFont: CorsixTH uses the FluidR3 SoundFont by default for playing MIDI music.
+-- Windows users, and other OS versions compiled with the FluidSynth software
+-- synthesiser can specify their own SoundFont file below (.sf2 or .sf3).
+-- Mac(OS) Source Ports build users, and OS versions compiled with TiMidity
+-- won't see any effect from this option. See our Wiki for alternative options.
+--
+soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
+
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
 -------------------------------------------------------------------------------
