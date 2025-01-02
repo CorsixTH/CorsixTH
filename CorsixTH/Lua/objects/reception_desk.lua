@@ -122,12 +122,7 @@ function ReceptionDesk:tick()
     if inspector.going_home then return end
     local epidemic = self.hospital.epidemic
     if epidemic then
-      -- The result of the epidemic may already be decided
-      -- i.e if an infected patient has left the hospital
-      if not epidemic.result_determined then
-        epidemic:finishCoverUp()
-      end
-      epidemic:applyOutcome()
+      epidemic:handleInspectorArrival()
       inspector:goHome()
     end
   end
