@@ -452,7 +452,6 @@ end
 function UIAnnualReport:close()
   if TheApp.world:getLocalPlayerHospital().game_won then
     TheApp.video:setBlueFilterActive(false)
-    TheApp.world.ui.bottom_panel:openLastMessage()
   end
   self:updateAwards()
   Window.close(self)
