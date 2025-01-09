@@ -153,6 +153,7 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
   local total_price = self.total_price + bought * hospital:getObjectBuildCost(o.object.id)
 
   if hospital.balance >= total_price or is_negative_quantity then
+    o.qty = math.tointeger(o.qty + bought)
     self.total_price = total_price
     if o.object.id == "reception_desk" then
       if o.qty > 0 then
