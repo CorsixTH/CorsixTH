@@ -33,40 +33,41 @@ local col_scrollbar = {
 local details_width = 280
 
 --! Collect the campaign levels at the provided path
---!param path (str) File system path to search.
---!return (array) The found levels, with some basic information about each level.
-local function createCampaignList(path)
+--!param paths_table (array) File system paths to search.
+--!return (array) The found levels, with some basic information about each level, in alphabetical order.
+local function createCampaignList(paths_table)
   local campaigns = {}
-
-  for file in lfs.dir(path) do
-    if file:match("%.campaign$") then
-      local campaign_info, err = TheApp:readCampaignFile(file)
-      if not campaign_info then
-        print(err)
-      else
-        if campaign_info.levels and #campaign_info.levels > 0 then
-          campaigns[#campaigns + 1] = {
-            name = campaign_info.name,
-            tooltip = _S.tooltip.custom_campaign_window.choose_campaign,
-            no_levels = #campaign_info.levels,
-            path = file,
-            description = TheApp.strings:getLocalisedText(campaign_info.description,
-               campaign_info.description_table)
-          }
+  for _, folder in pairs(paths_table) do
+    for file in lfs.dir(folder) do
+      if file:match("%.campaign$") then
+        local campaign_info, err = TheApp:readCampaignFile(file)
+        if not campaign_info then
+          print(err)
         else
-          print("Warning: Loaded campaign that had no levels specified")
+          if campaign_info.levels and #campaign_info.levels > 0 then
+            campaigns[#campaigns + 1] = {
+              name = campaign_info.name,
+              tooltip = _S.tooltip.custom_campaign_window.choose_campaign,
+              no_levels = #campaign_info.levels,
+              path = file,
+              description = TheApp.strings:getLocalisedText(campaign_info.description,
+                 campaign_info.description_table)
+            }
+          else
+            print("Warning: Loaded campaign that had no levels specified")
+          end
         end
       end
     end
   end
+  table.sort(campaigns, function(a,b) return a.name < b.name end)
   return campaigns
 end
 
 function UICustomCampaign:UICustomCampaign(ui)
   self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
 
-  local path = TheApp:getFullPath("Campaigns", true)
-  local campaigns = createCampaignList(path)
+  local campaigns = createCampaignList({ui.app.campaign_dir, ui.app.user_campaign_dir})
 
   self:UIMenuList(ui, "menu", _S.custom_campaign_window.caption, campaigns, 10, details_width + 40)
 
