@@ -93,6 +93,9 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   local function item_callback(index, qty)
     local is_negative_quantity = qty < 0
     return --[[persistable:furnish_corridor_item_callback]] function(window)
+      -- lewri: a persistence bug from the 'decrease' button converts integer to a
+      -- float, for now, sanitise it back to an integer
+      qty = math.floor(qty)
       local quantity, error = window:purchaseItem(index, qty)
 
       if quantity == nil and not is_negative_quantity then
@@ -249,6 +252,12 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
 end
 
 function UIFurnishCorridor:afterLoad(old, new)
+  -- If we saved with the window open, quantities might get converted to floats
+  -- This may be overkill
+  for _, obj in pairs(self.objects) do
+    obj.qty = math.floor(obj.qty)
+  end
+
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end
