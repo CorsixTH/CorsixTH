@@ -36,7 +36,7 @@ local details_width = 280
 --!param paths_table (array) File system paths to search.
 --!return (array) The found levels, with some basic information about each level, in alphabetical order.
 local function createCampaignList(paths_table)
-  local campaigns = {}
+  local campaigns, unique_names = {}, {}
   for _, folder in pairs(paths_table) do
     for file in lfs.dir(folder) do
       if file:match("%.campaign$") then
@@ -44,15 +44,22 @@ local function createCampaignList(paths_table)
         if not campaign_info then
           print(err)
         else
-          if campaign_info.levels and #campaign_info.levels > 0 then
+          local name = campaign_info.name
+          if unique_names[name] then
+            print("Custom campaign error: duplicate campaign name in file " .. file ..
+                ". Check the folders " .. table.concat(paths_table, ", "))
+            TheApp.ui:addWindow(UIInformation(TheApp.ui,
+                {"A campaign with a duplicate name was not loaded, see console for details"}))
+          elseif campaign_info.levels and #campaign_info.levels > 0 then
             campaigns[#campaigns + 1] = {
-              name = campaign_info.name,
+              name = name,
               tooltip = _S.tooltip.custom_campaign_window.choose_campaign,
               no_levels = #campaign_info.levels,
               path = file,
               description = TheApp.strings:getLocalisedText(campaign_info.description,
                  campaign_info.description_table)
             }
+            unique_names[name] = true
           else
             print("Warning: Loaded campaign that had no levels specified")
           end
