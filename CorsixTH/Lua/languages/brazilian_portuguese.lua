@@ -16,6 +16,7 @@ The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
@@ -242,7 +243,7 @@ adviser = {
     no_desk_6 = "Você tem uma recepcionista, que tal se construir uma mesa de recepçäo para que possa trabalhar?",
     no_desk_7 = "Você construiu a mesa da recepçäo, entäo que tal contratar um recepcionista?  Você näo receberá nenhum paciente até que contrate uma.",
     another_desk = "Você precisará construir outra mesa para essa nova recepcionista.",
-    cannot_buy = "Você näo pode comprar mais %1%!",
+    cannot_buy = "Você näo pode comprar mais desse item!",
     cannot_afford = "Você näo tem dinheiro suficiente no banco para contratar essa pessoa!", -- I can't see anything like this in the original strings
     cannot_afford_2 = "Você näo tem dinheiro suficiente no banco para fazer essa compra!",
     cannot_afford_machine = "Você precisa de pelo menos $%1% no banco para comprar um novo %2%!",
