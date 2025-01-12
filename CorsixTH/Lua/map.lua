@@ -167,6 +167,8 @@ the original game levels are considered.
 !param map_file (string) The path to the map file as supplied by the config file.
 !param level_intro (string) If loading a custom level this message will be shown as soon as the level
 has been loaded.
+!return objects (table) The loaded map objects if successfully loaded
+!return errors (string) A localised error message if objects were not successfully loaded
 ]]
 function Map:load(level, difficulty, level_name, map_file, level_intro, map_editor)
   local objects, _
@@ -216,8 +218,12 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
         level_no = "0" .. level
       end
       -- Override with the specific configuration for this level
-      _, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
-      -- Finally load additional CorsixTH config per level
+      errors, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
+      if errors then
+        return nil, "Warning: Could not find campaign level " .. difficulty .. level_no ..
+            ", the Theme Hospital data is incomplete."
+      end
+      -- Finally load additional CorsixTH config per level. As these files may not exist, failure is permitted.
       local level_path = self.app:getFullPath({"Levels", "original" .. level_no .. ".level"})
       _, result = self:loadMapConfig(level_path, result, true)
       self.level_config = result
@@ -423,7 +429,7 @@ function Map:loadMapConfig(filename, config, custom)
         -- Overlay with the specific configuration for this level
         errors, config = self:loadMapConfig(difficulty .. level_number .. ".SAM", config)
         if errors then return "Overlay level number must be 1-12. Current value is " .. level_number end
-        -- Finally overlay additional CorsixTH config per level
+        -- Finally overlay additional CorsixTH config per level. As these files may not exist, failure is permitted.
         local level_path = self.app:getFullPath({"Levels", "original" .. level_number .. ".level"})
         _, config = self:loadMapConfig(level_path, config, true)
       else return "No difficulty and level number given in overlay field of custom level"
