@@ -3,6 +3,7 @@ Copyright (c) 2012 Henrique Poyatos
 Copyright (c) 2014 Leonardo Malaman (LeonardoGamer)
 Copyright (c) 2017-2024 Altieres Lima da Silva
 Copyright (c) 2020 Henrique Poyatos
+Copyright (c) 2024 Felipe "FMMazur" Mazur
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -242,6 +243,7 @@ adviser = {
     no_desk_6 = "Você tem uma recepcionista, que tal se construir uma mesa de recepçäo para que possa trabalhar?",
     no_desk_7 = "Você construiu a mesa da recepçäo, entäo que tal contratar um recepcionista?  Você näo receberá nenhum paciente até que contrate uma.",
     another_desk = "Você precisará construir outra mesa para essa nova recepcionista.",
+    cannot_buy = "Você näo pode comprar mais desse item!",
     cannot_afford = "Você näo tem dinheiro suficiente no banco para contratar essa pessoa!", -- I can't see anything like this in the original strings
     cannot_afford_2 = "Você näo tem dinheiro suficiente no banco para fazer essa compra!",
     cannot_afford_machine = "Você precisa de pelo menos $%1% no banco para comprar um novo %2%!",

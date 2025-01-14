@@ -1,4 +1,5 @@
 --[[ Copyright (c) 2009 Peter "Corsix" Cawley
+Copyright (c) 2024 Felipe "FMMazur" Mazur
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -92,9 +93,14 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   local function item_callback(index, qty)
     local is_negative_quantity = qty < 0
     return --[[persistable:furnish_corridor_item_callback]] function(window)
-      if window:purchaseItem(index, qty) == 0 and not is_negative_quantity then
-        -- give visual warning that player doesn't have enough $ to buy
-        window.ui.adviser:say(_A.warnings.cannot_afford_2, false, true)
+      -- lewri: a persistence bug from the 'decrease' button converts integer to a
+      -- float, for now, sanitise it back to an integer
+      qty = math.floor(qty)
+      local quantity, error = window:purchaseItem(index, qty)
+
+      if quantity == nil and not is_negative_quantity then
+        -- give visual warning that player doesn't have enough $ to buy or can't buy more
+        window.ui.adviser:say(error, false, true)
         window.ui:playSound("wrong2.wav")
       elseif qty > 0 then
         window.ui:playSound("AddItemJ.wav")
@@ -128,6 +134,11 @@ end
 function UIFurnishCorridor:purchaseItem(index, quantity)
   local o = self.objects[index]
   local is_negative_quantity = quantity < 0
+
+  if (quantity > 0 and o.qty >= 99) then
+    return nil, _A.warnings.cannot_buy:format(o.object.name)
+  end
+
   if self.ui.app.key_modifiers.ctrl then
     quantity = quantity * 10
   elseif self.ui.app.key_modifiers.shift then
@@ -139,11 +150,14 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
   elseif quantity > 99 then
     quantity = 99
   end
-  quantity = quantity - o.qty
+
+  local bought = quantity - o.qty
   local hospital = self.ui.hospital
-  if hospital.balance >= self.total_price + quantity * hospital:getObjectBuildCost(o.object.id) or is_negative_quantity then
-    o.qty = o.qty + quantity
-    self.total_price = self.total_price + quantity * hospital:getObjectBuildCost(o.object.id)
+  local total_price = self.total_price + bought * hospital:getObjectBuildCost(o.object.id)
+
+  if hospital.balance >= total_price or is_negative_quantity then
+    o.qty = o.qty + bought
+    self.total_price = total_price
     if o.object.id == "reception_desk" then
       if o.qty > 0 then
         self.ui:tutorialStep(1, 2, 3)
@@ -152,7 +166,7 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
       end
     end
   else
-    quantity = 0
+    return nil, _A.warnings.cannot_afford_2
   end
   return quantity
 end
@@ -238,6 +252,12 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
 end
 
 function UIFurnishCorridor:afterLoad(old, new)
+  -- If we saved with the window open, quantities might get converted to floats
+  -- This may be overkill
+  for _, obj in pairs(self.objects) do
+    obj.qty = math.floor(obj.qty)
+  end
+
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end
