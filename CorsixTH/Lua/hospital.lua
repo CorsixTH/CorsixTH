@@ -2502,3 +2502,7 @@ end
 --! The UI parts of earthquake ticks
 function Hospital:tickEarthquake(stage)
 end
+
+--! Give advice that a patient is waiting for the player to build a GP's office
+function Hospital:adviseNoGPOffice()
+end
