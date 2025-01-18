@@ -242,7 +242,7 @@ end
 patient leaved the hospital. This discover epidemic to public instantly.
 So cover up must end earlier than the length of the timer.]]
 function Epidemic:checkInfectedLeftHospital()
-  if not self.coverup_in_progress or self:inspectorSpawned() then return end
+  if not self:_isCoverUpActive() then return end
 
   -- Check whether a patient has left.
   for _, infected_patient in ipairs(self.infected_patients) do
@@ -261,7 +261,7 @@ end
 left in hospital. If so then cover up must end earlier than the
 length of the timer.]]
 function Epidemic:checkNoInfectedPatients()
-  if not self.coverup_in_progress or self:inspectorSpawned() then return end
+  if not self:_isCoverUpActive() then return end
 
   if self:countInfectedPatients() == 0 then
     self:finishCoverUp()
@@ -550,10 +550,16 @@ function Epidemic:spawnInspector()
   inspector:queueAction(SeekReceptionAction())
 end
 
---[[ Is inspector already spawned.
+--[[ Private function to check if a inspector already spawned.
 @return (boolean) true if spawned alredy, false if not]]
-function Epidemic:inspectorSpawned()
+function Epidemic:_inspectorSpawned()
   return self.inspector ~= nil
+end
+
+--[[ Private function to check if a cover up is in progress
+@return (boolean) true if cover up in progress, false if not]]
+function Epidemic:_isCoverUpActive()
+  return self.coverup_in_progress and not self:_inspectorSpawned()
 end
 
 --[[ Is the patient "still" either idle queuing or sitting on a bench
@@ -679,7 +685,7 @@ end
 --[[ Make the advisor show appropriate messages under certain
   conditions of the epidemic.]]
 function Epidemic:showAppropriateAdviceMessages()
-  if not self.coverup_in_progress or self:inspectorSpawned() then return end
+  if not self:_isCoverUpActive() then return end
 
   if self.countdown_intervals then
     if not self.has_said_hurry_up and self:countInfectedPatients() > 0 and
@@ -705,11 +711,12 @@ function Epidemic:hasNoInfectedPatients()
 end
 
 function Epidemic:tryAnnounceInspector()
-  if not self.coverup_in_progress or not self:inspectorSpawned() then return end
+  if not self.coverup_in_progress then return end
+  if not self:_inspectorSpawned() then return end
 
   local inspector = self.inspector
   if not inspector.has_been_announced and
-      self.hospital:isInHospital(inspector.tile_x, inspector.tile_y) then
+    self.hospital:isInHospital(inspector.tile_x, inspector.tile_y) then
     inspector:announce()
     inspector.has_been_announced = true
   end
