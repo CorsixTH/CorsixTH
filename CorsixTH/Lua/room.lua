@@ -216,20 +216,6 @@ function Room:dealtWithPatient(patient)
   if self.dealt_patient_callback then
     self.dealt_patient_callback(self.waiting_staff_member)
   end
-  -- The staff member(s) might be needed somewhere else.
-  self:findWorkForStaff()
-end
-
---! Checks if the room still needs the staff in it and otherwise
--- sends them away if they're needed somewhere else.
-function Room:findWorkForStaff()
-  -- If the staff member is idle we can send him/her somewhere else
-  for humanoid in pairs(self.humanoids) do
-    -- Don't check handymen
-    if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Handyman" and humanoid:isIdle() then
-      self.world.dispatcher:answerCall(humanoid)
-    end
-  end
 end
 
 local profile_attributes = {
