@@ -147,14 +147,14 @@ Function .onInit
   ReadRegStr $R0 ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString"
 
   ; Check to see if game is already installed.
-  ; Temporary $R0 NSIS register is used for storage while we pull the registry data, if CorsixTH data exists we parse the path and set it as the installer location, if not the installer defaults to stock location.
+  ; Temporary $R0 NSIS register is used for storage while we pull the registry data,
+  ;   if CorsixTH data exists we parse the path and set it as the installer location,
+  ;   if not the installer defaults to stock location.
   ${If} $R0 != ''
-   ${GetParent} $R0, $R0
-   StrCpy $INSTDIR $R0
-  ${Else}
-   ${If} ${RunningX64}
+    ${GetParent} $R0, $R0
+    StrCpy $INSTDIR $R0
+  ${ElseIf} ${RunningX64}
     StrCpy $INSTDIR $PROGRAMFILES64\${PRODUCT_NAME}
-   ${EndIf}
   ${EndIf}
   !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
@@ -206,27 +206,17 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
 
-  ; We no longer have three exes. Make sure to remove them in case this is a
-  ; previous CorsixTH installation directory.
-  Delete "$INSTDIR\CorsixTH_SDL.exe"
-  Delete "$INSTDIR\CorsixTH_DirectX.exe"
-  Delete "$INSTDIR\CorsixTH_OpenGL.exe"
-  Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_SDL.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_OpenGL.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_DirectX.lnk"
-
   ${If} ${FileExists} "$INSTDIR\Lua"
     RMDir /r "$INSTDIR\Lua"
     CreateDirectory "$INSTDIR\Lua"
   ${EndIf}
 
   ${If} ${RunningX64}
-    File /r /x .svn x64\*.*
-    Goto continued
+    File /nonfatal /r x64\*.*
+  ${Else}
+    File /nonfatal /r x86\*.*
   ${EndIf}
-  File /r /x .svn x86\*.*
 
-  continued:
   ; Time to make the configuration file and Saves folder at the correct location
   ${If} $CONFIGAPPDATA == ${BST_CHECKED}
     SetOutPath "$APPDATA\CorsixTH"
@@ -265,20 +255,20 @@ Section "MainSection" SEC01
   ; The three other needed folders
   ; The old Lua folder is deleted first, if any exists, so that the game can start properly.
   SetOutPath "$INSTDIR\Lua"
-  File /r /x .svn ..\CorsixTH\Lua\*.*
+  File /r ..\CorsixTH\Lua\*.*
 
   SetOutPath "$INSTDIR\Bitmap"
-  File /r /x .svn ..\CorsixTH\Bitmap\*.pal
-  File /r /x .svn ..\CorsixTH\Bitmap\*.dat
-  File /r /x .svn ..\CorsixTH\Bitmap\*.tab
+  File /r ..\CorsixTH\Bitmap\*.pal
+  File /r ..\CorsixTH\Bitmap\*.dat
+  File /r ..\CorsixTH\Bitmap\*.tab
 
   SetOutPath "$INSTDIR\Levels"
-  File /r /x .svn ..\CorsixTH\Levels\*.*
+  File /r ..\CorsixTH\Levels\*.*
 
   SetOutPath "$INSTDIR\Campaigns"
-  File /r /x .svn ..\CorsixTH\Campaigns\*.*
+  File /r ..\CorsixTH\Campaigns\*.*
 
-; Shortcuts and final files
+  ; Shortcuts and final files
   SetOutPath "$INSTDIR"
   File ..\CorsixTH\*.lua
   File ..\changelog.txt
@@ -298,7 +288,7 @@ Section -AdditionalIcons
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\CorsixTH.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
-  CreateShortcut "$SMPROGRAMS\${PRODUCT_NAME}\CorsixTH AppData Folder.lnk" "$APPDATA\CorsixTH"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\CorsixTH AppData Folder.lnk" "$APPDATA\CorsixTH"
   !insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
 
@@ -335,6 +325,7 @@ Section Uninstall
 
   RMDir /r "$INSTDIR\Lua"
   RMDir /r "$INSTDIR\Bitmap"
+  RMDir /r "$INSTDIR\Campaigns"
   RMDir /r "$INSTDIR\Levels"
   RMDir /r "$INSTDIR\mime"
   RMDir /r "$INSTDIR\socket"
