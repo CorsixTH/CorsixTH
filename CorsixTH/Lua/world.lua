@@ -732,8 +732,8 @@ end
 
 --! Return true if the given speed the same as the current speed.
 function World:isCurrentSpeed(speed)
-  local numerator, denominator = unpack(tick_rates[speed])
-  return self.hours_per_tick == numerator and self.tick_rate == denominator
+  local hours_per_tick, tick_rate = unpack(tick_rates[speed])
+  return self.hours_per_tick == hours_per_tick and self.tick_rate == tick_rate
 end
 
 --! Return the name of the current speed, relating to a key in tick_rates.
@@ -760,19 +760,24 @@ function World:setSpeed(speed)
     self.user_actions_allowed = true
   end
 
-  local currentSpeed = self:getCurrentSpeed()
-  if currentSpeed ~= "Pause" and currentSpeed ~= "Speed Up" then
-    self.prev_speed = self:getCurrentSpeed()
+  local old_speed = self:getCurrentSpeed()
+  if old_speed ~= "Pause" and old_speed ~= "Speed Up" then
+    self.prev_speed = old_speed
   end
 
-  local was_paused = currentSpeed == "Pause"
-  local numerator, denominator = unpack(tick_rates[speed])
-  self.hours_per_tick = numerator
-  self.tick_rate = denominator
+  local was_paused = old_speed == "Pause"
+  local old_tick_rate = self.tick_rate or 1
+  local new_hours_per_tick, new_tick_rate = unpack(tick_rates[speed])
 
   if was_paused then
     TheApp.audio:onEndPause()
+    self.tick_timer = new_tick_rate
+  else
+    self.tick_timer = math.ceil((self.tick_timer or 0) / old_tick_rate * new_tick_rate)
   end
+
+  self.hours_per_tick = new_hours_per_tick
+  self.tick_rate = new_tick_rate
 
   -- Set the blue filter according to whether the user can build or not.
   TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self.ui:checkForMustPauseWindows())
@@ -1250,9 +1255,7 @@ function World:winGame(player_no)
       end
     end
     self.hospitals[player_no].game_won = true
-    if self:isCurrentSpeed("Speed Up") then
-      self:previousSpeed()
-    end
+    self:previousSpeed()
     self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
     self.ui.bottom_panel:openLastMessage()
   end
@@ -2525,6 +2528,9 @@ function World:afterLoad(old, new)
   for _, staff in ipairs(self:getLocalPlayerHospital().staff) do
     self:localiseInitial(staff.profile)
   end
+
+  -- Fix if game was saved with Speed Up
+  self:previousSpeed()
 
   self.earthquake:afterLoad(old, new)
   self.savegame_version = new
