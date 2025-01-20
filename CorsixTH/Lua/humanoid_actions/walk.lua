@@ -26,13 +26,15 @@ local WalkAction = _G["WalkAction"]
 --! Action to walk to a given position.
 --!param x (int) X coordinate of the destination tile.
 --!param y (int) Y coordinate of the destination tile.
-function WalkAction:WalkAction(x, y)
+--!param trimmed (boolean) Optional parameter to finish action on re-route
+function WalkAction:WalkAction(x, y, trimmed)
   assert(type(x) == "number", "Invalid value for parameter 'x'")
   assert(type(y) == "number", "Invalid value for parameter 'y'")
 
   self:HumanoidAction("walk")
   self.x = x
   self.y = y
+  self.trimmed = trimmed
   self.truncate_only_on_high_priority = false
   self.walking_to_vaccinate = false -- Nurse walking with the intention to vaccinate
   self.is_entering = false -- Whether the walk enters a room.
@@ -209,9 +211,13 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
     local doorcheck = {[door] = true, [door2] = true}
     -- but we should see if this is the same room id we want to go to and cancel the reroute
     -- ensure we still have a door on this route
-    if recalc_route and (humanoid.world:getObject(x1, y1, doorcheck) or humanoid.world:getObject(x2, y2, doorcheck)) and -- is there any door
-        map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId == flags_there.roomId then
-      recalc_route = false
+    if recalc_route and (humanoid.world:getObject(x1, y1, doorcheck) or
+        humanoid.world:getObject(x2, y2, doorcheck)) and -- is there any door
+        map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ==
+        flags_there.roomId then
+      -- A walk including a trimmed path could have the last tile inside a room, and
+      -- might need a new route completely (e.g. seek reception)
+      recalc_route = action.trimmed
     end
   end
   if recalc_route then
@@ -219,6 +225,10 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
       humanoid:setTilePositionSpeed(x1, y1)
       if action.on_next_tile_set then
         action.on_next_tile_set()
+      end
+      if action.trimmed then -- request new route
+        humanoid:finishAction(action)
+        return
       end
       return action:on_restart(humanoid)
     end
