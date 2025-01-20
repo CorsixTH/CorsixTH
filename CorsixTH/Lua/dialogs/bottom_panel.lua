@@ -338,7 +338,7 @@ end
 -- appear on screen once there is space.
 --!param type (string) The type of message, can be: "emergency", "epidemy", "personality", "information", "disease", "report" or "strike"
 --!param message (table or number) If type == "strike", the amount of pay rise. Else a list of texts to display, including a "choices" table with choices. See below for structure.
---!param owner (humanoid or nil) Some messages are related to one staff or patient. Otherwise this is nil.
+--!param owner (object or nil) Some messages are related to one staff or patient or epidemic. Otherwise this is nil.
 --!param timeout (number or nil) If given, the message will expire after that many world ticks and be removed.
 --!param default_choice (number or nil) If given, the choice with this number will be executed on expiration of the message.
 --!param callback (function or nil) If given, it will be called when the message is closed.

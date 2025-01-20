@@ -345,7 +345,7 @@ function Epidemic:sendInitialFax()
       {text = _S.fax.epidemic.choices.cover_up, choice = "cover_up_epidemic"},
     },
   }
-  self.world.ui.bottom_panel:queueMessage("epidemy", message, nil, 24*20,2)
+  self.world.ui.bottom_panel:queueMessage("epidemy", message, self, 24*20,2)
 end
 
 --[[ Calculate the fine for having a given number of infected patients
@@ -713,6 +713,27 @@ function Epidemic:tryAnnounceInspector()
     inspector:announce()
     inspector.has_been_announced = true
   end
+end
+
+--[[ For Cheat - Cancel the epidemic. ]]
+function Epidemic:cancelEpidemic()
+  -- Remove init epidemic fax
+  self.world.ui.bottom_panel:removeMessage(self)
+  -- Turn vaccination mode off if enabled
+  if self.vaccination_mode_active then
+    self:toggleVaccinationMode()
+  end
+  -- Remove epidemic timer
+  if self.timer ~= nil then
+    self.timer:close()
+  end
+  -- Send inspector home if spawned
+  if self.inspector ~= nil then
+    self.inspector:goHome()
+  end
+  -- Clear epidemic patients
+  self:clearAllInfectedPatients()
+  self.infected_patients = {}
 end
 
 function Epidemic:afterLoad(old, new)
