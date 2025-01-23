@@ -1174,6 +1174,8 @@ function Hospital:spawnContagiousPatient()
     @return non_visuals (table) table of available non-visual diseases or
       false if the patient cannot be spawned.
     @return message (optional string) The error message that may be caused by using cheats.]]
+  if self.epidemics_disabled then return false, _S.misc.epidemics_off end
+
   local function get_available_contagious_diseases()
     local contagious = {}
     for _, disease in ipairs(self.world.available_diseases) do
