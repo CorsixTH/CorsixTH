@@ -1120,7 +1120,7 @@ function Hospital:createEmergency(emergency)
     self:makeEmergencyStartFax()
     return -- successfully created
   end
-  return "no heliport"
+  return "no_heliport"
 end
 
 -- Called when the timer runs out during an emergency or when all emergency patients are cured or dead.
