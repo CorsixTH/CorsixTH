@@ -90,6 +90,9 @@
  <a href="_0_1_hospital.html#_0_1_hospital_1can_concentrate_research">canConcentrateResearch</a>(<span class="p">disease</span>)
  </li>
  <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1cancel_epidemics">cancelEpidemics</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_hospital.html#_0_1_hospital_1change_reputation">changeReputation</a>(<span class="p">reason</span>, <span class="p">disease</span>, <span class="p">valueChange</span>)
  </li>
  <li class="self">
@@ -435,7 +438,7 @@
  </li>
  <li><span class="p">epidemic</span>
  </li>
- <li><span class="p">epidemics_off</span>
+ <li><span class="p">epidemics_disabled</span>
  </li>
  <li><span class="p">free_build_mode</span>
  </li>
@@ -625,7 +628,7 @@
  <h5><a name="_0_1_hospital_1__fix_boiler">function Hospital:_fixBoiler()</a></h5>
  <p>
  Boiler broke down and work is done to get it fixed.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L843">line 843 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L845">line 845 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -666,7 +669,7 @@
  <td class="d">The call added to the dispatcher</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2081">line 2081 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2101">line 2101 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -686,7 +689,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1436">line 1436 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1456">line 1456 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -701,7 +704,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1554">line 1554 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1574">line 1574 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -732,7 +735,7 @@
  <td class="d"> Parcel number of the xy position.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2035">line 2035 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2055">line 2055 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -747,7 +750,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1546">line 1546 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1566">line 1566 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -764,7 +767,7 @@
  <td class="d">Category of the tile object.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1617">line 1617 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1637">line 1637 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -784,21 +787,21 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1276">line 1276 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1296">line 1296 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1advise_boiler_breakdown">function Hospital:adviseBoilerBreakdown()</a></h5>
  <p>
  Select a relevant message to be displayed to the user<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2447">line 2447 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2467">line 2467 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1advise_cannot_afford_plot">function Hospital:adviseCannotAffordPlot()</a></h5>
  <p>
  Give visual warning that player doesn't have enough $ to build<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2458">line 2458 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2478">line 2478 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -813,14 +816,14 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2444">line 2444 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2464">line 2464 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1advise_plants">function Hospital:advisePlants()</a></h5>
  <p>
  Give advice to the user about maintenance of plants.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2424">line 2424 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2444">line 2444 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -841,7 +844,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2462">line 2462 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2482">line 2482 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -862,7 +865,7 @@
  <td class="d">Version of the code being executed.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L281">line 281 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L283">line 283 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -878,7 +881,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2451">line 2451 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2471">line 2471 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -894,7 +897,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2470">line 2470 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2490">line 2490 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -919,7 +922,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2137">line 2137 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2157">line 2157 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -935,14 +938,14 @@
  <td class="d"> Amount of heat to output due to being broken.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L820">line 820 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L822">line 822 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1can_accept_patients">function Hospital:canAcceptPatients()</a></h5>
  <p>
  Check if the hospital is ready to accept patients<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2393">line 2393 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2413">line 2413 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -959,7 +962,14 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2273">line 2273 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2293">line 2293 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1cancel_epidemics">function Hospital:cancelEpidemics()</a></h5>
+ <p>
+ For Cheat - Cancel ongoing and future epidemics.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1253">line 1253 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -987,7 +997,7 @@
 Then it is specified here.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1754">line 1754 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1774">line 1774 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1003,7 +1013,7 @@ Then it is specified here.</td>
  <td class="d"> The amount the hospital value should change by</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2340">line 2340 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2360">line 2360 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1020,7 +1030,7 @@ Then it is specified here.</td>
  <td class="d"> The disease to check the requirements for</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1930">line 1930 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1950">line 1950 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1028,7 +1038,7 @@ Then it is specified here.</td>
  <p>
  Determine if all of the patients in the emergency have been cured or killed.<br/><br/>
  If they have end the emergency timer.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1154">line 1154 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1156">line 1156 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1050,27 +1060,27 @@ Then it is specified here.</td>
  <td class="d"> Disease casebook entry. It's used to display the</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2305">line 2305 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2325">line 2325 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1count_epidemics">function Hospital:countEpidemics()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1208">line 1208 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1212">line 1212 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1count_fire_extinguishers">function Hospital:countFireExtinguishers()</a></h5>
  <p>
  Get the number of fire extinguishers in the hospital.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1655">line 1655 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1675">line 1675 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1count_general_objects">function Hospital:countGeneralObjects()</a></h5>
  <p>
  Get the number of general objects in the hospital.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1661">line 1661 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1681">line 1681 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1086,28 +1096,28 @@ Then it is specified here.</td>
  <td class="d"> If provided, non-negative maximum count to return.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L694">line 694 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L696">line 696 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1count_plants">function Hospital:countPlants()</a></h5>
  <p>
  Get the number of plants in the hospital.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1649">line 1649 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1669">line 1669 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1count_radiators">function Hospital:countRadiators()</a></h5>
  <p>
  Get the number of radiators in the hospital.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1643">line 1643 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1663">line 1663 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1count_reception_desks">function Hospital:countReceptionDesks()</a></h5>
  <p>
  Get the number of reception desks in the hospital.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1637">line 1637 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1657">line 1657 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1129,14 +1139,14 @@ Then it is specified here.</td>
  <td class="d"> If provided, non-negative maximum count to return.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1601">line 1601 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1621">line 1621 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1count_sitting_standing">function Hospital:countSittingStanding()</a></h5>
  <p>
  Count number of sitting and standing patients in the hospital.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L710">line 710 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L712">line 712 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1158,7 +1168,7 @@ Then it is specified here.</td>
  <td class="d"> If provided, non-negative maximum count to return.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1584">line 1584 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1604">line 1604 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1175,21 +1185,21 @@ to cure them and the fax.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1094">line 1094 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1096">line 1096 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1create_vip">function Hospital:createVip()</a></h5>
  <p>
  Makes the fax which may spawn a VIP<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2490">line 2490 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2510">line 2510 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1days_until_next_disaster">function Hospital:daysUntilNextDisaster()</a></h5>
  <p>
  Decide how many days the hospital functions within specification.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L812">line 812 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L814">line 814 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1207,7 +1217,7 @@ to cure them and the fax.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1249">line 1249 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1269">line 1269 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1222,14 +1232,14 @@ to cure them and the fax.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2123">line 2123 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2143">line 2143 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1find_reception_desks">function Hospital:findReceptionDesks()</a></h5>
  <p>
  Collect the reception desks in the hospital.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1062">line 1062 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1064">line 1064 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1250,7 +1260,7 @@ to cure them and the fax.<br/><br/>
  <td class="d">Value to return if there are no patients.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1890">line 1890 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1910">line 1910 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1271,20 +1281,20 @@ to cure them and the fax.<br/><br/>
  <td class="d">Value to return if there is no staff.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1913">line 1913 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1933">line 1933 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1get_campaign_data">function Hospital:getCampaignData()</a></h5>
  <p>
  Collect the hospital level settings relevant for the next hospital<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2346">line 2346 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2366">line 2366 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1get_debug_patient">function Hospital:getDebugPatient()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1316">line 1316 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1336">line 1336 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1305,21 +1315,21 @@ to cure them and the fax.<br/><br/>
  <td class="d">The handyman task type: repairing, watering, cleaning</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2094">line 2094 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2114">line 2114 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1get_heliport_position">function Hospital:getHeliportPosition()</a></h5>
  <p>
  Returns the heliport x and y coordinates or nil if none exist.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L782">line 782 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L784">line 784 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1get_heliport_spawn_position">function Hospital:getHeliportSpawnPosition()</a></h5>
  <p>
  Returns the tile on which patients should spawn when getting out of the helicopter.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L794">line 794 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L796">line 796 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1351,7 +1361,7 @@ to cure them and the fax.<br/><br/>
  <td class="d"> If specified, the object used for doing the task.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2224">line 2224 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2244">line 2244 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1368,20 +1378,20 @@ may be affected by research progress.<br/><br/>
  <td class="d"> The name (id) of the object to investigate.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1325">line 1325 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1345">line 1345 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1get_player_index">function Hospital:getPlayerIndex()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L777">line 777 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L779">line 779 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1get_random_busy_room">function Hospital:getRandomBusyRoom()</a></h5>
  <p>
  Finds a random room with significantly long queues<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2368">line 2368 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2388">line 2388 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1389,14 +1399,14 @@ may be affected by research progress.<br/><br/>
  <p>
  Compute the likelihood for a reputation change to be effective.<br/><br/>
  Likelihood gets smaller as hospital reputation gets closer to extreme values.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1816">line 1816 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1836">line 1836 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1get_staffed_desks">function Hospital:getStaffedDesks()</a></h5>
  <p>
  Returns a list of all reception desks that are staffed<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1051">line 1051 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1053">line 1053 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1416,7 +1426,7 @@ may be affected by research progress.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2133">line 2133 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2153">line 2153 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1433,7 +1443,7 @@ Treatment charge should never be less than the starting price if reputation fall
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1423">line 1423 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1443">line 1443 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1454,7 +1464,7 @@ Treatment charge should never be less than the starting price if reputation fall
  <td class="d"> Y position of the queried tile.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1963">line 1963 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1983">line 1983 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1480,21 +1490,21 @@ Treatment charge should never be less than the starting price if reputation fall
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2432">line 2432 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2452">line 2452 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1had_patients">function Hospital:hadPatients()</a></h5>
  <p>
  Has this hospital received any patients yet?<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2398">line 2398 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2418">line 2418 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1has_staffed_desk">function Hospital:hasStaffedDesk()</a></h5>
  <p>
  Does the hospital have a working reception?<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1042">line 1042 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1044">line 1044 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1510,21 +1520,21 @@ Treatment charge should never be less than the starting price if reputation fall
  <td class="d">The deceased.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1564">line 1564 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1584">line 1584 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1init_owned_plots">function Hospital:initOwnedPlots()</a></h5>
  <p>
  Afterload function to initialize the owned plots.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2240">line 2240 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2260">line 2260 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1init_staff">function Hospital:initStaff()</a></h5>
  <p>
  Initialize hospital staff from the level config.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1470">line 1470 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1490">line 1490 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1545,14 +1555,14 @@ Treatment charge should never be less than the starting price if reputation fall
  <td class="d"> The 1-based Y coordinate of the tile to test.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L803">line 803 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L805">line 805 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1is_player_hospital">function Hospital:isPlayerHospital()</a></h5>
  <p>
  Returns whether this hospital is controlled by a real person or not.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1037">line 1037 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1039">line 1039 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1569,7 +1579,7 @@ Treatment charge should never be less than the starting price if reputation fall
  <td class="d">: The amount of reputation change.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1804">line 1804 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1824">line 1824 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1585,7 +1595,7 @@ Treatment charge should never be less than the starting price if reputation fall
  <td class="d"> The name of the room</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L274">line 274 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L276">line 276 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1602,7 +1612,7 @@ Treatment charge should never be less than the starting price if reputation fall
 at least one of the following integer fields: `spend`, `receive`.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1456">line 1456 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1476">line 1476 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1633,14 +1643,14 @@ at least one of the following integer fields: `spend`, `receive`.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2486">line 2486 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2506">line 2506 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1make_emergency_start_fax">function Hospital:makeEmergencyStartFax()</a></h5>
  <p>
  Makes the fax at the start of an emergency<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2482">line 2482 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2502">line 2502 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1656,7 +1666,7 @@ at least one of the following integer fields: `spend`, `receive`.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2478">line 2478 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2498">line 2498 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1672,7 +1682,7 @@ at least one of the following integer fields: `spend`, `receive`.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2474">line 2474 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2494">line 2494 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1693,7 +1703,7 @@ at least one of the following integer fields: `spend`, `receive`.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2466">line 2466 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2486">line 2486 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1724,7 +1734,7 @@ at least one of the following integer fields: `spend`, `receive`.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2498">line 2498 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2518">line 2518 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1735,7 +1745,7 @@ is no current epidemic determines if any epidemic in the pool of future
 epidemics can become the active one. Also removes any epidemics from the
 future pool which have no infected patients and thus, will have no effect on
 the hospital.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1215">line 1215 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1219">line 1219 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1760,28 +1770,28 @@ the hospital.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2103">line 2103 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2123">line 2123 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1msg_cured">function Hospital:msgCured()</a></h5>
  <p>
  Give the user possibly a message about a cured patient.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2436">line 2436 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2456">line 2456 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1msg_killed">function Hospital:msgKilled()</a></h5>
  <p>
  Give the user possibly a message about a dead patient.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2440">line 2440 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2460">line 2460 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1msg_multi_reception_desks">function Hospital:msgMultiReceptionDesks()</a></h5>
  <p>
  Give advice about having more desks.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2420">line 2420 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2440">line 2440 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1789,14 +1799,14 @@ the hospital.<br/><br/>
  <p>
  -- Stubs section - these functions have nothing to do here, are overridden in a derived class.<br/><br/>
  Give advice to the user about the need to buy the first reception desk.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2410">line 2410 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2430">line 2430 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1msg_reception_desk">function Hospital:msgReceptionDesk()</a></h5>
  <p>
  Give advice to the user about having bought a reception desk.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2416">line 2416 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2436">line 2436 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1812,7 +1822,7 @@ the hospital.<br/><br/>
  <td class="d"> Changed staff member subject of notification</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2332">line 2332 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2352">line 2352 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1833,41 +1843,41 @@ the hospital.<br/><br/>
  <td class="d"> That entity's id.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1667">line 1667 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1687">line 1687 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1on_end_day">function Hospital:onEndDay()</a></h5>
  <p>
  Called at the end of each day.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L914">line 914 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L916">line 916 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1on_end_month">function Hospital:onEndMonth()</a></h5>
  <p>
  Called at the end of each month.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L961">line 961 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L963">line 963 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1on_end_year">function Hospital:onEndYear()</a></h5>
  <p>
  Called at the end of each year<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1076">line 1076 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1078">line 1078 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1on_spawn_v_i_p">function Hospital:onSpawnVIP()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2455">line 2455 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2475">line 2475 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1open">function Hospital:open()</a></h5>
  <p>
  Open the hospital<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2388">line 2388 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2408">line 2408 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1883,7 +1893,7 @@ the hospital.<br/><br/>
  <td class="d">Disease that was treated.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1446">line 1446 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1466">line 1466 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1899,7 +1909,7 @@ the hospital.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2502">line 2502 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2522">line 2522 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1914,7 +1924,7 @@ the hospital.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L758">line 758 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L760">line 760 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1941,7 +1951,7 @@ in _S.transactions.</td>
  <td class="d"> The (positive) amount the hospital value should be decreased</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1364">line 1364 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1384">line 1384 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1966,7 +1976,7 @@ in _S.transactions.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1441">line 1441 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1461">line 1461 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1982,7 +1992,7 @@ in _S.transactions.</td>
  <td class="d"> The patient that just got treated.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1382">line 1382 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1402">line 1402 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1998,7 +2008,7 @@ in _S.transactions.</td>
  <td class="d"> Patient to remove</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1736">line 1736 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1756">line 1756 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2018,7 +2028,7 @@ in _S.transactions.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2110">line 2110 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2130">line 2130 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2034,7 +2044,7 @@ in _S.transactions.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2494">line 2494 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2514">line 2514 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2051,7 +2061,7 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d"> Patient to remove.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1728">line 1728 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1748">line 1748 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2067,7 +2077,7 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d"> Hole to remove.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2053">line 2053 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2073">line 2073 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2088,7 +2098,7 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d">Y position of the tile that should not have ratholes.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2068">line 2068 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2088">line 2088 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2104,7 +2114,7 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d"> Room being de-activated.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2021">line 2021 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2041">line 2041 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2120,7 +2130,7 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d"> Staff member to remove.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1720">line 1720 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1740">line 1740 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2137,21 +2147,21 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d">Category of the tile object.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1627">line 1627 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1647">line 1647 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1reset_death_count">function Hospital:resetDeathCount()</a></h5>
  <p>
  Reset the death counts. This is used by a cheat to reset key lose conditions.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2403">line 2403 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2423">line 2423 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1resolve_emergency">function Hospital:resolveEmergency()</a></h5>
  <p>
  Called when the timer runs out during an emergency or when all emergency patients are cured or dead.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1126">line 1126 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1128">line 1128 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2168,7 +2178,7 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d">: the disease to be checked.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2260">line 2260 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2280">line 2280 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2188,7 +2198,7 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2150">line 2150 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2170">line 2170 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2204,7 +2214,7 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d"> The patient buying the soda.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1415">line 1415 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1435">line 1435 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2220,7 +2230,7 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d"> Hospital campaign data</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2360">line 2360 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2380">line 2380 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2236,7 +2246,7 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2428">line 2428 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2448">line 2448 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2245,13 +2255,13 @@ Also if a debug patient, they are also removed from the debug list.<br/><br/>
  Creates a new epidemic by creating a new contagious patient with
  a random disease - this is NOT typically how epidemics are started (mainly for cheat use)
  see @Hospital:determineIfContagious() to see how epidemics are typically started<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1167">line 1167 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1169">line 1169 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1spawn_patient">function Hospital:spawnPatient()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1311">line 1311 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1331">line 1331 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2278,7 +2288,7 @@ in _S.transactions.</td>
  <td class="d"> The (positive) amount the hospital value should be increased</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1346">line 1346 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1366">line 1366 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2286,7 +2296,7 @@ in _S.transactions.</td>
  <p>
  Called each tick, also called 'hours'. Check hours_per_day in<br/><br/>
  date.lua to see how many times per day this is.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L726">line 726 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L728">line 728 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2302,7 +2312,7 @@ in _S.transactions.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2506">line 2506 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2526">line 2526 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2319,7 +2329,7 @@ in _S.transactions.</td>
  <td class="d"> Amount of change.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1779">line 1779 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1799">line 1799 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2335,7 +2345,7 @@ in _S.transactions.</td>
  <td class="d">Patient that was cured.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1840">line 1840 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1860">line 1860 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -2357,13 +2367,13 @@ in _S.transactions.</td>
  <td class="d"> the reason why the patient is not cured.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1860">line 1860 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1880">line 1880 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_hospital_1update_percentages">function Hospital:updatePercentages()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1883">line 1883 of Lua/hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1903">line 1903 of Lua/hospital.lua</a>.
  </p>
  </div>
 </div>
