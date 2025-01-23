@@ -139,40 +139,41 @@ function UIFax:choice(choice_number)
   end
 
   local owner = self.owner
-  if owner then
+  if owner and owner.humanoid_class then
+    local humanoid = owner
     -- A choice was made, the patient is no longer waiting for a decision
-    owner:setMood("patient_wait", "deactivate")
-    owner.message_callback = nil
+    humanoid:setMood("patient_wait", "deactivate")
+    humanoid.message_callback = nil
     if choice == "send_home" then
-      owner:goHome("kicked")
-      if owner.diagnosed then
+      humanoid:goHome("kicked")
+      if humanoid.diagnosed then
         -- No treatment rooms
-        owner:setDynamicInfoText(_S.dynamic_info.patient.actions.no_treatment_available)
+        humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.no_treatment_available)
       else
         -- No diagnosis rooms
-        owner:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
+        humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
       end
     elseif choice == "wait" then
       -- Wait two months before going home
-      owner.waiting = 60
-      if owner.diagnosed then
+      humanoid.waiting = 60
+      if humanoid.diagnosed then
         -- Waiting for treatment room
-        owner:setDynamicInfoText(_S.dynamic_info.patient.actions.waiting_for_treatment_rooms)
+        humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.waiting_for_treatment_rooms)
       else
         -- Waiting for diagnosis room
-        owner:setDynamicInfoText(_S.dynamic_info.patient.actions.waiting_for_diagnosis_rooms)
+        humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.waiting_for_diagnosis_rooms)
       end
     elseif choice == "guess_cure" then
-      owner:setDiagnosed()
-      if owner:agreesToPay(owner.disease.id) then
-        owner:setNextAction(SeekRoomAction(owner.disease.treatment_rooms[1]):enableTreatmentRoom())
+      humanoid:setDiagnosed()
+      if humanoid:agreesToPay(humanoid.disease.id) then
+        humanoid:setNextAction(SeekRoomAction(humanoid.disease.treatment_rooms[1]):enableTreatmentRoom())
       else
-        owner:goHome("over_priced", owner.disease.id)
+        humanoid:goHome("over_priced", humanoid.disease.id)
       end
     elseif choice == "research" then
-      owner:unregisterCallbacks()
-      owner:setMood("idea", "activate")
-      owner:setNextAction(SeekRoomAction("research"))
+      humanoid:unregisterCallbacks()
+      humanoid:setMood("idea", "activate")
+      humanoid:setNextAction(SeekRoomAction("research"))
     end
   end
   local vip_ignores_refusal = math.random(1, 2)

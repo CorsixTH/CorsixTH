@@ -75,6 +75,8 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- epidemics. If epidemic_limit = 1 then only one epidemic can exist at a
   -- time either in the futures pool or as a current epidemic.
   self.concurrent_epidemic_limit = level_config.gbv.EpidemicConcurrentLimit or 1
+  -- For Cheat - flag determines possibility of epidemics
+  self.epidemics_disabled = false
 
   -- Initial values
   self.interest_rate = interest_rate_numerator / 10000
@@ -1172,6 +1174,8 @@ function Hospital:spawnContagiousPatient()
     @return non_visuals (table) table of available non-visual diseases or
       false if the patient cannot be spawned.
     @return message (optional string) The error message that may be caused by using cheats.]]
+  if self.epidemics_disabled then return false, _S.misc.epidemics_off end
+
   local function get_available_contagious_diseases()
     local contagious = {}
     for _, disease in ipairs(self.world.available_diseases) do
@@ -1246,11 +1250,27 @@ function Hospital:manageEpidemics()
   end
 end
 
+--[[ For Cheat - Cancel ongoing and future epidemics. ]]
+function Hospital:cancelEpidemics()
+  -- Cancel ongoing epidemic
+  if self.epidemic ~= nil then
+    self.epidemic:cancelEpidemic()
+    self.epidemic = nil
+  end
+  -- Cancel not revealed epidemics
+  if self.future_epidemics_pool then
+    for i, future_epidemic in ipairs(self.future_epidemics_pool) do
+      future_epidemic:cancelEpidemic()
+    end
+    self.future_epidemics_pool = {}
+  end
+end
+
 --[[ Determines if a patient is contagious and then attempts to add them the
  appropriate epidemic if so.
  @param patient (Patient) patient to determine if contagious]]
 function Hospital:determineIfContagious(patient)
-  if self.epidemics_off or patient.is_emergency or not patient.disease.contagious then
+  if self.epidemics_disabled or patient.is_emergency or not patient.disease.contagious then
     return false
   end
   -- ContRate treated like a percentage with ContRate% of patients with
