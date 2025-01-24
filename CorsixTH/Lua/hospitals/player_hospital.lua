@@ -856,6 +856,16 @@ function PlayerHospital:afterLoad(old, new)
   if old < 159 then
     self.adviser_data.reception_advice = self.adviser_data.reception_advice or self.receptionist_msg
   end
+  if old < 211 then
+    -- Serious Radiation epidemics could exist in old saves and cause a crash
+    local serious_radiation = TheApp.diseases["serious_radiation"]
+    if self.epidemic and self.epidemic.disease == serious_radiation then
+      -- Tell the player somehow we ended the epidemic, EPI0008 is most fitting
+      self.world.ui:playAnnouncement("EPID008.wav", AnnouncementPriority.Critical)
+      self.world:gameLog("Notice: Removing active epidemic for Serious Radiation. See issue 2760.")
+    end
+    self:cancelEpidemics(serious_radiation)
+  end
 
   -- Refresh the cheat system every load
   local old_active_cheats = self.hosp_cheats and self.hosp_cheats.active_cheats or {}

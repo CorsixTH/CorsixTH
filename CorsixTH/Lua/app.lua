@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 210 -- Renamed humanoid moods
+local SAVEGAME_VERSION = 211 -- Remove serious radiation epidemics
 
 class "App"
 
