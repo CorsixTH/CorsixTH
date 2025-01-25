@@ -1261,8 +1261,7 @@ function Hospital:cancelEpidemics(disease)
   end
   -- Cancel ongoing epidemic
   if self.epidemic ~= nil then
-    cancelEpidemic(self.epidemic)
-    self.epidemic = nil
+    if cancelEpidemic(self.epidemic) then self.epidemic = nil end
   end
   -- Cancel not revealed epidemics
   if self.future_epidemics_pool then
