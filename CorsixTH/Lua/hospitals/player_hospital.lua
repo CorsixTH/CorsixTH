@@ -862,7 +862,7 @@ function PlayerHospital:afterLoad(old, new)
     if self.epidemic and self.epidemic.disease == serious_radiation then
       -- Tell the player somehow we ended the epidemic, EPI0008 is most fitting
       self.world.ui:playAnnouncement("EPID008.wav", AnnouncementPriority.Critical)
-      self.world:gameLog("Notice: Removing active epidemic for Serious Radiation. See issue 2760.")
+      self.world:gameLog("Notice: Removing active epidemic for Serious Radiation as it may crash the game due to a bug.")
     end
     self:cancelEpidemics(serious_radiation)
   end
