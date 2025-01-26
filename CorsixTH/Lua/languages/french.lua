@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010-2015 Nicolas "MeV" Elie
+--[[ Copyright (c) 2010-2015 Nicolas "MeV" Elie, 2013-2025 Antoine Lemaire, 2024 Sanndow
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -21,6 +21,12 @@ SOFTWARE. --]]
 Language(utf8 "Français", "French", "fr", "fre", "fra")
 Inherit("english")
 Inherit("original_strings", 1)
+
+--[[
+  Notice: Theme Hospital's font lacks support for certain character types used in
+  French, including '«' and '»'. See the "Localisation" page on the Wiki for more
+  information.
+--]]
 
 ----------------------------------------------------------- Override -----------------------------------------------------------
 misc.save_failed = "ERREUR : partie non sauvegardée." -- Much more french
@@ -1049,14 +1055,14 @@ information = {
   no_custom_game_in_demo = "Désolé, mais dans la version démo vous ne pouvez jouer avec aucune des cartes personnalisées.",
   cannot_restart = "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
   very_old_save = "Il y a eu beaucoup de mises à jour du jeu depuis que vous avez commencé ce niveau. Pour être sûr que tout fonctionne comme prévu, pensez à recommencer le niveau.",
-  cheat_not_possible = "Vous ne pouvez pas utiliser ce code de triche dans ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?",
+  cheat_not_possible = "Vous ne pouvez pas utiliser ce code de triche dans ce niveau.",
   level_lost = {
     "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
     "Voilà pourquoi vous avez perdu : ",
     reputation = "Votre réputation est tombée en dessous de %d.",
     balance = "Votre solde bancaire est tombé en dessous %d.",
     percentage_killed = "Vous avez tué plus de %d pourcents de vos patients.",
-    cheat = "Étais-ce votre choix, ou bien avez-vous appuyé sur le mauvais bouton ? Vous n'arrivez même pas à tricher correctement, n'est-ce pas désolant ?"
+    cheat = "J'espère que vous n'avez pas cliqué sur le bouton \" Perdre le niveau \" par accident !"
   }
 }
 
