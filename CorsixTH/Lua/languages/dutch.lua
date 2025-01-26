@@ -199,9 +199,9 @@ information = {
     reputation = "Je reputatie kwam onder %d",
     balance = "Je banksaldo was lager dan %d",
     percentage_killed = "Je hebt meer dan %d procent van je patiënten vermoord",
-    cheat = "Dit was jouw keuze of heb je op de verkeerde knop gedrukt? Dus je faalt zelfs om vals te spelen, niet zo grappig hè?",
+    cheat = "Je hebt (hopelijk niet per ongeluk) de \"Verlies het huidige level\" optie gebruikt", -- Zie ook cheats_window.cheats.lose_level
   },
-  cheat_not_possible = "Cheat kan niet toegepast worden op dit level. Je faalt zelfs om vals te spelen, niet zo grappig hè?",
+  cheat_not_possible = "Cheat kan niet toegepast worden op dit level.",
 }
 
 staff_list = {
@@ -825,7 +825,7 @@ tooltip = {
       win_level = "Win het huidige level",
       create_patient = "Creëer een patiënt op de rand van de kaart.",
       money = "Voegt 10.000 toe aan je saldo",
-      lose_level = "Verlies het huidige level",
+      lose_level = "Verlies het huidige level", -- Zie ook information.level_lost.cheat
       all_research = "Voltooi al het onderzoek",
       end_year = "Spring naar het einde van het jaar.",
       earthquake = "Creëer een aardbeving",
