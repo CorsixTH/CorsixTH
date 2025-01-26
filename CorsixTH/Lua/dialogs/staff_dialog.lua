@@ -259,13 +259,21 @@ function UIStaff:onMouseUp(button, x, y)
     self.do_scroll = false
   end
   local repaint = Window.onMouseUp(self, button, x, y)
-  -- Test for hit within the view circle
-  if button == "right" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman") then
+  -- Test for hit within the view circle and name box
+  local hit_namebox = x > self.tooltip_regions[1].x and x < self.tooltip_regions[1].r
+                      and y > self.tooltip_regions[1].y and y < self.tooltip_regions[1].b
+  if button == "right" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
+     or button == "right" and hit_namebox then
     -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
     local staff_index = nil
     for i, staff in ipairs(ui.hospital.staff) do
       if staff_index and staff.profile.humanoid_class == self.staff.profile.humanoid_class then
         ui:addWindow(UIStaff(ui, staff))
+        if hit_namebox then
+          local sx, sy = ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
+          local dx, dy = staff.th:getPosition()
+          ui:scrollMapTo(sx + dx, sy + dy)
+        end
         return false
       end
       if staff == self.staff then
@@ -277,6 +285,11 @@ function UIStaff:onMouseUp(button, x, y)
       local staff = ui.hospital.staff[i]
       if staff.profile.humanoid_class == self.staff.profile.humanoid_class then
         ui:addWindow(UIStaff(ui, staff))
+        if hit_namebox then
+          local sx, sy = ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
+          local dx, dy = staff.th:getPosition()
+          ui:scrollMapTo(sx + dx, sy + dy)
+        end
         return false
       end
     end
@@ -390,4 +403,3 @@ function UIStaff:afterLoad(old, new)
   end
   Window.afterLoad(self, old, new)
 end
-
