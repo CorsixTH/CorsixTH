@@ -1225,9 +1225,9 @@ information = {
     reputation = "Tu reputación ha caído por debajo de %d.",
     balance = "Tu cuenta bancaria ha llegado a tener menos de %d.",
     percentage_killed = "Has matado a más de un %d por ciento de los pacientes.",
-    cheat = "¿Lo has elegido tú o te has equivocado de botón? No sabes ni hacer trampas como es debido... ¿a que no tiene gracia?",
+    cheat = "¡Espero que no hayas hecho clic en el botón 'Perder Nivel' por accidente!",
   },
-  cheat_not_possible = "No puedes usar ese truco en este nivel. No sabes ni hacer trampas, ¿a que no tiene gracia?",
+  cheat_not_possible = "No puedes usar ese truco en este nivel.",
 }
 
 tooltip.information = {
