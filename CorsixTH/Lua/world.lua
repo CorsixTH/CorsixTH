@@ -327,14 +327,14 @@ function World:calculateSpawnTiles()
     local xs = {}
     local ys = {}
     local x, y = edge.origin[1], edge.origin[2]
-    repeat
+    while not (x < 1 or x > w or y < 1 or y > h) do
       if self.pathfinder:isReachableFromHospital(x, y) then
         xs[#xs + 1] = x
         ys[#ys + 1] = y
       end
       x = x + edge.step[1]
       y = y + edge.step[2]
-    until x < 1 or x > w or y < 1 or y > h
+    end
 
     -- Choose at most 8 points for the edge
     local num = math.min(8, #xs)
