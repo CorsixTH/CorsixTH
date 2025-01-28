@@ -49,6 +49,7 @@ Copyright (C) 2013-2015 Maarten Peters
 Copyright (C) 2013 nullstein
 Copyright (C) 2013 BuTcHeR (extragry.pl)
 Copyright (C) 2013-2024 Albert "Alberth" Hofkamp
+Copyright (C) 2013, 2016-2017, 2025 Antoine Lemaire
 Copyright (C) 2014-2015 Joseph "J-Shep" Sheppard
 Copyright (C) 2014 Phillipp Röll
 Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman

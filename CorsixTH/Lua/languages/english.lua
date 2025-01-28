@@ -797,11 +797,11 @@ information = {
     reputation = "Your reputation fell below %d.",
     balance = "Your bank balance fell below %d.",
     percentage_killed = "You killed more than %d percent of the patients.",
-    cheat = "This was your choice or did you select the wrong button? So you can't even cheat correctly, not that funny huh?",
+    cheat = "Hope you didn't click the Lose Level button by accident!",
     staff_happiness = "Your average staff happiness fell below %d%.",
     patient_happiness = "Your average patient happiness fell below %d%.",
   },
-  cheat_not_possible = "Cannot use that cheat on this level. You even fail to cheat, not that funny huh?",
+  cheat_not_possible = "You cannot use that cheat on this level.",
 }
 
 tooltip.information = {

@@ -127,6 +127,8 @@ function UICheats:updateCheatedStatus()
   self.cheated_panel:setColour(cheated and col_cheated_yes or col_cheated_no)
 end
 
+--! Handles the choice of a cheat from the dialog
+--!param num (number) the index in the cheat list
 function UICheats:buttonClicked(num)
   -- If the menu was opened by fax code, allow player to use it
   if self.ui.hospital.world:isUserActionProhibited() and not self.ui:getWindow(UIFax) then
@@ -137,9 +139,11 @@ function UICheats:buttonClicked(num)
   if success then
     self.cheats.announceCheat(self.ui)
     self:updateCheatedStatus()
+  else -- cheat failed, make sure we provide feedback
+    message = message or _S.information.cheat_not_possible
   end
   if message then
-    self.ui:addWindow(UIInformation(self.ui, {message or _S.information.cheat_not_possible}))
+    self.ui:addWindow(UIInformation(self.ui, {message}))
   end
 end
 
