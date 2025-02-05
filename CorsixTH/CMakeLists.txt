@@ -12,6 +12,9 @@ if(MSVC)
   add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
   # Suppress warnings about insecure functions
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
+  # fmt requires utf-8 mode for unicode support
+  add_compile_options("/utf-8")
 endif()
 
 set(CORSIX_TH_SEARCH_LOCAL_DATADIRS ${SEARCH_LOCAL_DATADIRS})
@@ -224,6 +227,9 @@ if(WITH_UPDATE_CHECK)
     message(FATAL_ERROR "Error: curl not found")
   endif()
 endif()
+
+find_package(spdlog REQUIRED)
+target_link_libraries(CorsixTH_lib PUBLIC spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>)
 
 if(CORSIX_TH_LINK_LUA_MODULES)
   message("Linking lua modules")

@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local log = require("logger")
+
 --! An `Entity` which occupies a single tile and is capable of moving around the map.
 class "Humanoid" (Entity)
 
@@ -508,7 +510,7 @@ function Humanoid:setNextAction(action, high_priority)
     if not removed then
       -- A bug (rare) that removed could be nil.
       --   but as it's being removed anyway...it could be ignored
-      print("Warning: Action to be removed was nil")
+      log.warn("Action to be removed was nil")
     else
       if removed.on_remove then
         removed.on_remove(removed, self)
