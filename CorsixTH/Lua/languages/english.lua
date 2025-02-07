@@ -394,11 +394,13 @@ tooltip.custom_game_window = {
 custom_campaign_window = {
   caption = "Custom Campaign",
   start_selected_campaign = "Start campaign",
+  duplicates_warning = "Campaigns with duplicate names have been hidden",
 }
 
 tooltip.custom_campaign_window = {
   choose_campaign = "Choose a campaign to read more about it",
   start_selected_campaign = "Load the first level of this campaign",
+  duplicates_warning = "See console for specific errors",
 }
 
 save_game_window = {
