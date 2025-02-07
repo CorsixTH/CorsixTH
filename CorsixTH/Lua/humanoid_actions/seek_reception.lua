@@ -116,7 +116,7 @@ local function action_seek_reception_start(action, humanoid)
       humanoid:setNextAction(QueueAction(x, y, best_desk.queue):setMustHappen(action.must_happen)
           :setFaceDirection(face_x, face_y))
     else
-      local walk = WalkAction(x, y):setMustHappen(action.must_happen)
+      local walk = WalkAction(x, y, true):setMustHappen(action.must_happen)
       humanoid:queueAction(walk, 0)
 
       trimQueuingTail(humanoid, walk.path_x, walk.path_y)
