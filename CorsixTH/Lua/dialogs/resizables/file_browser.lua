@@ -57,20 +57,9 @@ function FilteredFileTreeNode:createNewNode(path)
 end
 
 function FilteredFileTreeNode:getLabel()
-  -- The label was previously only the file name without extension or
-  -- folder hierarchy. TODO: Is there some reason to not show the extension?
   local label = self.label
   if not label then
     label = FileTreeNode.getLabel(self)
-    --[[if type(self.filter_by) == "table" then
-      for _, ext in ipairs(self.filter_by) do
-        if string.sub(label:lower(), -string.len(ext)) == ext then
-          label = string.sub(label:lower(), 0, -string.len(ext) - 1)
-        end
-      end
-    elseif string.sub(label:lower(), -string.len(self.filter_by)) == self.filter_by then
-      label = string.sub(label:lower(), 0, -string.len(self.filter_by) - 1)
-    end--]]
     self.label = label
   end
   return label

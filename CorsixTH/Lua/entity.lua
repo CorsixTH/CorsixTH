@@ -277,13 +277,6 @@ function Entity:onDestroy()
   self:setMoodInfo()
   self:setTile(nil)
   self.world.dispatcher:dropFromQueue(self)
-  -- Debug aid to check that there are no hanging references after the entity
-  -- has been destroyed:
-  --[[
-  self.gc_dummy = newproxy(true) -- undocumented Lua library function
-  getmetatable(self.gc_dummy).__gc = function()
-    print("Entity " .. tostring(self) .. " has been garbage collected.")
-  end --]]
   if self.waiting_for_sound_effects_to_be_turned_on then
     TheApp.audio:entityNoLongerWaitingForSoundsToBeTurnedOn(self)
   end
