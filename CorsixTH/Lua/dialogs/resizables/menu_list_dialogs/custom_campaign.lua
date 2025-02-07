@@ -36,7 +36,7 @@ local details_width = 280
 --!param paths_table (array) File system paths to search.
 --!return (array) The found levels, with some basic information about each level, in alphabetical order.
 local function createCampaignList(paths_table)
-  local campaigns = {}
+  local campaigns, unique_names, duplicates = {}, {}
   for _, folder in pairs(paths_table) do
     for file in lfs.dir(folder) do
       if file:match("%.campaign$") then
@@ -44,15 +44,21 @@ local function createCampaignList(paths_table)
         if not campaign_info then
           print(err)
         else
-          if campaign_info.levels and #campaign_info.levels > 0 then
+          local name = campaign_info.name
+          if unique_names[name] then
+            print("Custom campaign error: duplicate campaign name in file " .. file ..
+                ". Check the folders " .. table.concat(paths_table, ", "))
+            duplicates = true
+          elseif campaign_info.levels and #campaign_info.levels > 0 then
             campaigns[#campaigns + 1] = {
-              name = campaign_info.name,
+              name = name,
               tooltip = _S.tooltip.custom_campaign_window.choose_campaign,
               no_levels = #campaign_info.levels,
               path = file,
               description = TheApp.strings:getLocalisedText(campaign_info.description,
                  campaign_info.description_table)
             }
+            unique_names[name] = true
           else
             print("Warning: Loaded campaign that had no levels specified")
           end
@@ -61,15 +67,16 @@ local function createCampaignList(paths_table)
     end
   end
   table.sort(campaigns, function(a,b) return a.name < b.name end)
-  return campaigns
+  return campaigns, duplicates
 end
 
 function UICustomCampaign:UICustomCampaign(ui)
   self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
 
-  local campaigns = createCampaignList({ui.app.campaign_dir, ui.app.user_campaign_dir})
+  local campaigns, duplicates = createCampaignList({ui.app.campaign_dir, ui.app.user_campaign_dir})
+  local campaign_count = duplicates and 9 or 10
 
-  self:UIMenuList(ui, "menu", _S.custom_campaign_window.caption, campaigns, 10, details_width + 40)
+  self:UIMenuList(ui, "menu", _S.custom_campaign_window.caption, campaigns, campaign_count, details_width + 40)
 
   -- Create a toolbar ready to be used if the description for a level is
   -- too long to fit
@@ -80,6 +87,13 @@ function UICustomCampaign:UICustomCampaign(ui)
   end, 1, 1, self.num_rows)
 
   self.description_offset = 0
+
+  -- Warn about hidden duplicate campaigns
+  if duplicates then
+    self:addBevelPanel(100, 195, 400, 20, self.col_bg)
+      :setLabel(_S.custom_campaign_window.duplicates_warning)
+      :setTooltip(_S.tooltip.custom_campaign_window.duplicates_warning).lowered = true
+  end
 
   -- Finally the load button
   self:addBevelPanel(420, 220, 160, 40, self.col_bg)
