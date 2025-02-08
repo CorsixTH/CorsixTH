@@ -204,7 +204,7 @@ function UINewGame:startGame(difficulty)
     if not TheApp.using_demo_files then
       TheApp.world.campaign_info = "TH.campaign"
     end
-    if self.start_tutorial then
+    if self.start_tutorial and TheApp.world then
       TheApp.ui.start_tutorial = true
       TheApp.ui:startTutorial()
     end
