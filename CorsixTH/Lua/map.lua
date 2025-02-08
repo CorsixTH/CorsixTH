@@ -171,30 +171,22 @@ has been loaded.
 !return errors (string) A localised error message if objects were not successfully loaded
 ]]
 function Map:load(level, difficulty, level_name, map_file, level_intro, map_editor)
-  local objects, _
+  local objects
   if not difficulty then
     difficulty = "full"
   end
-  -- Load CorsixTH base configuration for all levels.
-  -- We want to load the file again each time.
-  local function file (filename)
-      local f = assert(loadfile(filename))
-      return f()
-    end
 
-  local result = file(self.app:getFullPath({"Lua", "base_config.lua"}))
-  local base_config = result
+  -- Load CorsixTH base configuration for all levels.
+  local base_config = loadfile(self.app:getFullPath({"Lua", "base_config.lua"}))
+  if not base_config then
+    return nil, _S.errors.missing_corsixth_file:format("base_config.lua")
+  end
+  base_config = base_config()
+  assert(base_config, "No base config has been loaded!")
+
   if type(level) == "number" then
-    local errors, data
     -- Playing the original campaign.
-    -- Add TH's base config if possible, otherwise our own config
-    -- roughly corresponds to "full".
-    errors, base_config = self:loadMapConfig(difficulty .. "00.SAM", base_config)
-    -- If it couldn't be loaded the new difficulty level is full no matter what.
-    if errors then
-      difficulty = "full"
-    end
-    self.difficulty = difficulty
+    local errors, data, _, result
     self.level_number = level
     data, errors = self:getRawData(map_file)
     if data then
@@ -209,26 +201,19 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
       local demo_path = self.app:getFullPath({"Levels", "demo.level"})
       errors, result = self:loadMapConfig(demo_path, base_config, true)
       if errors then
-        print("Warning: Could not find the demo configuration, try reinstalling the game")
+        return nil, _S.errors.missing_corsixth_file:format("demo.level")
       end
+      self.difficulty = "full"
       self.level_config = result
     else
-      local level_no = level
-      if level_no < 10 then
-        level_no = "0" .. level
-      end
-      -- Override with the specific configuration for this level
-      errors, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
+      errors, result = self:_loadOriginalCampaignLevel(difficulty, level, base_config)
       if errors then
-        return nil, "Warning: Could not find campaign level " .. difficulty .. level_no ..
-            ", the Theme Hospital data is incomplete."
+        return nil, errors
       end
-      -- Finally load additional CorsixTH config per level. As these files may not exist, failure is permitted.
-      local level_path = self.app:getFullPath({"Levels", "original" .. level_no .. ".level"})
-      _, result = self:loadMapConfig(level_path, result, true)
       self.level_config = result
     end
   elseif map_editor then
+    local _
     -- We're being fed data by the map editor.
     self.level_name = "MAP EDITOR"
     self.level_number = "MAP EDITOR"
@@ -242,10 +227,9 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
         return nil, errors
       end
     end
-    assert(base_config, "No base config has been loaded!")
-
     self.level_config = base_config
   else
+    local _, result
     -- We're loading a custom level.
     self.level_name = level_name
     self.level_intro = level_intro
@@ -258,7 +242,6 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     else
       return nil, errors
     end
-    assert(base_config, "No base config has been loaded!")
     errors, result = self:loadMapConfig(level, base_config, true)
     if errors then
       return nil, errors
@@ -283,6 +266,46 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
   end
 
   return objects
+end
+
+-- A set of the TH campaign levels with additional CorsixTH config files, found in CorsixTH/Levels.
+local additional_config = list_to_set({"05", "07", "08", 11, 12})
+
+--! Load further level configurations for the main campaign.
+--!param difficulty (string)
+--!param level_number (integer)
+--!param config (table) The level config created so far
+--!return error (string) Localised error message if error happens
+--!return config (table) Level config, if loaded successfully
+function Map:_loadOriginalCampaignLevel(difficulty, level_number, config)
+  local errors
+   if level_number < 10 then
+     level_number = "0" .. level_number
+   end
+   -- Add TH's base config if possible, otherwise our own config,
+   --  which roughly corresponds to "full".
+   local filename_diff = difficulty .. "00.SAM"
+   errors, config = self:loadMapConfig(filename_diff, config)
+   if errors then
+     return _S.errors.missing_th_data_file:format(filename_diff)
+   end
+   self.difficulty = difficulty
+   -- Load the Theme Hospital configuration for this difficulty and level
+   local filename_th_data = difficulty .. level_number .. ".SAM"
+   errors, config = self:loadMapConfig(filename_th_data, config)
+   if errors then
+     return _S.errors.missing_th_data_file:format(filename_th_data)
+   end
+   if additional_config[level_number] then
+     -- Load additional CorsixTH config per level.
+     local filename_cth = "original" .. level_number .. ".level"
+     local level_path = self.app:getFullPath({"Levels", filename_cth})
+     errors, config = self:loadMapConfig(level_path, config, true)
+     if errors then
+       return _S.errors.missing_corsixth_file:format(filename_cth)
+     end
+   end
+  return nil, config
 end
 
 --! Get the difficulty of the level. Custom levels and campaign always have medium difficulty.
@@ -358,15 +381,17 @@ function Map:save(filename)
   self.th:save(filename)
 end
 
---[[! Loads map configurations from files. Returns only an error if there is one, or
-  nil and the config if the complete config was loaded successfully.
-  An error and the config are both returned if the file does not exist, as CorsixTH
-  modifications to campaign levels are loaded without checking if they exist first.
+-- A set of the level difficulties. Full is default
+local correct_difficulties = list_to_set({"easy", "full", "hard"})
+
+--[[! Loads map configurations from files.
 !param filename (string) The absolute path to the config file to load
 !param config (string) If a base config already exists and only some values should be overridden
 this is the base config
 !param custom If true The configuration file is searched for where filename points, otherwise
 it is assumed that we're looking in the theme_hospital_install path.
+!return error The specific localised error message, if error occurred
+!return config The successfully loaded config
 ]]
 function Map:loadMapConfig(filename, config, custom)
   local function iterator()
@@ -376,7 +401,7 @@ function Map:loadMapConfig(filename, config, custom)
       return self.app.fs:readContents("Levels", filename):gmatch"[^\r\n]+"
     end
   end
-  if self.app.fs:readContents("Levels", filename) or io.open(filename) then
+  if filename and (self.app.fs:readContents("Levels", filename) or io.open(filename)) then
     for line in iterator() do
       if line:sub(1, 1) == "#" then
         local parts = {}
@@ -412,32 +437,33 @@ function Map:loadMapConfig(filename, config, custom)
       end
     end
 
-    -- If the level file overlay field gives a difficulty and number (from the campaign),
+    -- If the level file overlay field gives a difficulty and number (from the TH campaign),
     --   try to load that on top of the config loaded so far.
     if config.overlay then
       local difficulty, level_number = config.overlay.difficulty, config.overlay.level_number
-      local errors, _
+      local errors
       config.overlay = nil -- Prevent recursive loop
 
       if difficulty and level_number then
-        -- First overlay the difficulty
-        errors, config = self:loadMapConfig(difficulty .. "00.SAM", config)
-        if errors then return "Overlay difficulty must be easy, full or hard. Current value is " .. difficulty end
-        if type(level_number) == "number" and level_number < 10 then
-          level_number = "0" .. level_number
+        -- Validate the difficulty and level number
+        if not correct_difficulties[difficulty] then
+          return _S.errors.overlay.incorrect_difficulty .. difficulty
         end
-        -- Overlay with the specific configuration for this level
-        errors, config = self:loadMapConfig(difficulty .. level_number .. ".SAM", config)
-        if errors then return "Overlay level number must be 1-12. Current value is " .. level_number end
-        -- Finally overlay additional CorsixTH config per level. As these files may not exist, failure is permitted.
-        local level_path = self.app:getFullPath({"Levels", "original" .. level_number .. ".level"})
-        _, config = self:loadMapConfig(level_path, config, true)
-      else return "No difficulty and level number given in overlay field of custom level"
+        if type(level_number) ~= "number" or level_number < 1 or level_number > 12 then
+          return _S.errors.overlay.incorrect_level_number .. level_number
+        end
+        -- Load difficulty and level from Theme Hospital and CorsixTH configs
+        errors, config = self:_loadOriginalCampaignLevel(difficulty, level_number, config)
+        if errors then
+          return errors
+        end
+      else
+        return _S.errors.overlay.missing_setting
       end
     end
     return nil, config
   else
-    return "Error: Could not find the configuration file.", config
+    return _S.errors.missing_level_file
   end
 end
 
