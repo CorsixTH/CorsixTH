@@ -252,14 +252,7 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
       return nil, errors
     end
     assert(base_config, "No base config has been loaded!")
-    local search_paths = {
-      self.app.user_campaign_dir,
-      self.app.user_level_dir,
-      self.app.campaign_dir,
-      self.app.level_dir,
-    }
-    local filename = self.app:findFileInDirs(search_paths, level)
-    errors, result = self:loadMapConfig(filename, base_config, true)
+    errors, result = self:loadMapConfig(level, base_config, true)
     if errors then
       print(errors)
     end

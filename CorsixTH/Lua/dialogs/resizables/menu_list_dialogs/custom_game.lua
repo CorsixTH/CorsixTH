@@ -38,13 +38,14 @@ local details_width = 280
 local findLevelsInDir = function(path, items)
   for file in lfs.dir(path) do
     if file:match("%.level$") then
-      local level_info = TheApp:readLevelFile(file)
-      if level_info.name and level_info.map_file then
+      local level_info, err = TheApp:readLevelFile(path .. file)
+      if err then print(file, err)
+      elseif level_info.name and level_info.map_file then
         items[#items + 1] = {
           name = level_info.name,
           tooltip = _S.tooltip.custom_game_window.choose_game,
           map_file = level_info.map_file,
-          level_file = file,
+          level_file = path .. file,
           intro = level_info.briefing,
           deprecated_variable_used = level_info.deprecated_variable_used,
         }

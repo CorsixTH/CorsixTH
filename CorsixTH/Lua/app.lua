@@ -630,16 +630,24 @@ end
 
 --! Opens the given file name and returns all Level definitions in a table.
 --! Values in the returned table: "path", "level_file", "name", "map_file", "briefing", and "end_praise".
---!param level (string) Name of the file to read.
+--!param level (string) Full path or name of the file to read.
+--!param campaign_dir (string) Folder of the parent campaign file
 --!return (table) Level info found in the file.
-function App:readLevelFile(level)
-  local search_paths = {
-    self.user_campaign_dir,
-    self.user_level_dir,
-    self.campaign_dir,
-    self.level_dir,
-  }
-  local filename = self:findFileInDirs(search_paths, level)
+function App:readLevelFile(level, campaign_dir)
+  local filename, level_dir
+  if level:match(pathsep) then -- Full path given
+    filename = level
+    level_dir = level:match("(.*)" .. pathsep)
+  else
+    local search_paths = {
+      campaign_dir or "",
+      self.user_campaign_dir,
+      self.user_level_dir,
+      self.campaign_dir,
+      self.level_dir,
+    }
+    filename = self:findFileInDirs(search_paths, level)
+  end
   local file, err = io.open(filename and filename or "")
   if not file then
     return nil, "Could not open the specified level file (" .. level .. "): " .. err
@@ -651,15 +659,35 @@ function App:readLevelFile(level)
   level_info.path = filename
   level_info.level_file = level
   level_info.name = contents:match("%Name ?= ?\"(.-)\"") or "Unknown name"
-  level_info.map_file = contents:match("%MapFile ?= ?\"(.-)\"")
-  if not level_info.map_file then
+  local map_file = contents:match("%MapFile ?= ?\"(.-)\"")
+  if not map_file then
     -- The old way of defining the Map File has been deprecated, but a warning is enough.
-    level_info.map_file = contents:match("%LevelFile ?= ?\"(.-)\"")
-    if level_info.map_file then
+    map_file = contents:match("%LevelFile ?= ?\"(.-)\"")
+    if map_file then
       print("\nWarning: The level '" .. level_info.name .. "' contains a deprecated variable definition in the level file." ..
         "'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level.\n")
     end
     level_info.deprecated_variable_used = true
+  end
+  -- Find the full path of the map file, unless it is a CorsixTH additional config or a Theme Hospital map
+  if filename:match(self.level_dir .. "original%d%d%.level") then
+    level_info.map_file = map_file
+  elseif map_file then
+    if map_file:lower():match("^level") then
+      level_info.map_file = map_file
+    else
+      local search_paths = {
+        campaign_dir or "",
+        level_dir or "",
+        self.user_campaign_dir,
+        self.user_level_dir,
+        self.campaign_dir,
+        self.level_dir,
+      }
+      level_info.map_file = self:findFileInDirs(search_paths, map_file)
+    end
+  else
+    return nil, _S.errors.map_file_missing:format(map_file)
   end
 
   -- Pick a localised set of briefings, if available
@@ -682,7 +710,7 @@ end
 --!return path (string) The full path of the found file
 function App:findFileInDirs(search_paths, filename)
   for _, parent_path in ipairs(search_paths) do
-    local check_path = parent_path .. pathsep .. filename
+    local check_path = parent_path .. filename
     local file, _ = io.open(check_path, "rb")
     if file then
       file:close()
@@ -1571,27 +1599,21 @@ function App:readDataFile(dir, filename)
 end
 
 --! Get a level file.
---!param filename (string) Name of the level file.
+--!param path (string) Full path of the level file, or a Theme Hospital level filename
 --!return If the file could be found, the data of the file, else a
 --        tuple 'nil', and an error description
-function App:readMapDataFile(filename)
-  -- First look in the original install directory, if not found there
-  -- look in the CorsixTH directories "Levels" and "Campaigns".
-  local data = self.fs:readContents("Levels" .. pathsep .. filename)
-  if not data then
-    local search_paths = {
-      self.user_campaign_dir,
-      self.user_level_dir,
-      self.campaign_dir,
-      self.level_dir,
-    }
-    local absolute_path = self:findFileInDirs(search_paths, filename)
-    if absolute_path then
-      local file = io.open(absolute_path, "rb")
-      if file then
-        data = file:read("*a")
-        file:close()
-      end
+function App:readMapDataFile(path)
+  local data
+  if path:match(pathsep) then
+    local file = io.open(path, "rb")
+    if file then
+      data = file:read("*a")
+      file:close()
+    end
+  else
+    data = self.fs:readContents("Levels" .. pathsep .. path)
+    if not data then
+      return nil, _S.errors.missing_th_data_file:format(path)
     end
   end
   if data then
@@ -1600,7 +1622,7 @@ function App:readMapDataFile(filename)
     end
   else
     -- Could not find the file
-    return nil, _S.errors.map_file_missing:format(filename)
+    return nil, _S.errors.map_file_missing:format(path)
   end
   return data
 end
