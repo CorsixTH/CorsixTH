@@ -1287,13 +1287,13 @@ function World:getCampaignWinningText(player_no)
     text[3] = text[3]:format(_S.level_names[self.map.level_number + 1])
   else
     local campaign_info = self.campaign_info
-    local next_level_name
+    local next_level_name, next_level_info
     if campaign_info then
       for i, level in ipairs(campaign_info.levels) do
-        if self.map.level_number == level then
+        if self.map.level_filename == level then
           has_next = i < #campaign_info.levels
           if has_next then
-            local next_level_info = TheApp:readLevelFile(campaign_info.levels[i + 1])
+            next_level_info = TheApp:readLevelFile(campaign_info.levels[i + 1], campaign_info.folder)
             if not next_level_info then
               return {_S.letter.campaign_level_missing:format(campaign_info.levels[i + 1]), "", ""},
                      _S.fax.choices.return_to_main_menu,
@@ -1305,15 +1305,17 @@ function World:getCampaignWinningText(player_no)
         end
       end
     end
-    local level_info = TheApp:readLevelFile(self.map.level_number)
     text[1] = _S.letter.dear_player:format(self.hospitals[player_no].name)
     if has_next then
-      text[2] = level_info.end_praise and level_info.end_praise:format(next_level_name) or _S.letter.campaign_level_completed:format(next_level_name)
-      text[3] = ""
+      if next_level_info.end_praise then
+        text[2] = next_level_info.end_praise:format(next_level_name)
+      else
+        text[2] = _S.letter.campaign_level_completed:format(next_level_name)
+      end
     else
       text[2] = campaign_info.winning_text and campaign_info.winning_text or _S.letter.campaign_completed
-      text[3] = ""
     end
+    text[3] = ""
   end
   if has_next then
     choice_text = _S.fax.choices.accept_new_level

@@ -582,7 +582,7 @@ function App:loadCampaign(campaign_file)
     return
   end
 
-  level_info, errors = self:readLevelFile(campaign_info.levels[1])
+  level_info, errors = self:readLevelFile(campaign_info.levels[1], campaign_info.folder)
   if not level_info then
     self.ui:addWindow(UIInformation(self.ui, { _S.errors.could_not_find_first_campaign_level:format(errors) }))
     return
@@ -600,7 +600,7 @@ function App:loadCampaign(campaign_file)
   campaign_info.winning_text = self.strings:getLocalisedText(campaign_info.winning_text,
       campaign_info.winning_text_table)
 
-  if self:loadLevel(campaign_info.levels[1], nil, level_info.name,
+  if self:loadLevel(level_info.path, nil, level_info.name,
       level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix, campaign_info) then
     -- The new world needs to know which campaign to continue on.
     self.world.campaign_info = campaign_info
