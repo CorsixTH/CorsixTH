@@ -40,7 +40,8 @@ local function createCampaignList(paths_table)
   for _, folder in pairs(paths_table) do
     for file in lfs.dir(folder) do
       if file:match("%.campaign$") then
-        local campaign_info, err = TheApp:readCampaignFile(file)
+        local full_path = folder .. file
+        local campaign_info, err = TheApp:readCampaignFile(full_path)
         if not campaign_info then
           print(err)
         else
@@ -54,7 +55,8 @@ local function createCampaignList(paths_table)
               name = name,
               tooltip = _S.tooltip.custom_campaign_window.choose_campaign,
               no_levels = #campaign_info.levels,
-              path = file,
+              path = full_path,
+              folder = folder,
               description = TheApp.strings:getLocalisedText(campaign_info.description,
                  campaign_info.description_table)
             }

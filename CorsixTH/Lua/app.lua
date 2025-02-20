@@ -572,7 +572,7 @@ end
 
 --! Loads the first level of the specified campaign and prepares the world
 --! to be able to progress through that campaign.
---!param campaign_file (string) Name of a CorsixTH Campaign definition Lua file.
+--!param campaign_file (string) Full path of a CorsixTH Campaign definition Lua file.
 function App:loadCampaign(campaign_file)
   local campaign_info, level_info, errors, _
 
@@ -615,18 +615,12 @@ end
 
 --! Reads the given file name as a Lua chunk from the Campaign folders
 --! A correct campaign definition contains "name", "description", "levels", and "winning_text".
---!param campaign_file (string) Name of the file to read.
+--!param campaign_file (string) Full path of the file to read.
 --!return (table) Definitions found in the campaign file.
 function App:readCampaignFile(campaign_file)
-  local search_paths = {
-    self.user_campaign_dir,
-    self.campaign_dir,
-  }
-  local path = self:findFileInDirs(search_paths, campaign_file)
-  if not path then return nil, "Campaign not found: " .. campaign_file end
-  local chunk, err = loadfile_envcall(path)
+  local chunk, err = loadfile_envcall(campaign_file)
   if not chunk then
-    return nil, "Error loading " .. path .. ":\n" .. tostring(err)
+    return nil, "Error loading " .. campaign_file .. ":\n" .. tostring(err)
   else
     local result = {}
     chunk(result)
@@ -683,9 +677,9 @@ function App:readLevelFile(level)
 end
 
 --! Searches in the given folders for the given filename
---!param search_paths (table) Set of folders to look through
+--!param search_paths (table) List of folders (strings) to look through
 --!param filename (string) Filename to search for.
---!return (string, error) Returns the found absolute path, or nil if not found
+--!return path (string) The full path of the found file
 function App:findFileInDirs(search_paths, filename)
   for _, parent_path in ipairs(search_paths) do
     local check_path = parent_path .. pathsep .. filename
