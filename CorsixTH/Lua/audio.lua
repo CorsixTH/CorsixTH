@@ -617,8 +617,8 @@ function Audio:playBackgroundTrack(index)
       end)
       return
     end
-    SDL.audio.setMusicVolume(self.app.config.music_volume)
     assert(SDL.audio.playMusic(music))
+    SDL.audio.setMusicVolume(self.app.config.music_volume)
     self.background_music = music
 
     self:notifyJukebox()
