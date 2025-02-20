@@ -44,7 +44,8 @@ function Patient:Patient(...)
   self.vaccinated = false
   -- Has the patient been sent to the wrong room and needs redirecting
   self.needs_redirecting = false
-  self.attempted_to_infect= false
+  -- Is under attempt to be infected
+  self.attempted_to_infect = false
   -- Is the patient about to be vaccinated?
   self.vaccination_candidate = false
   -- Has the patient passed reception?
@@ -990,7 +991,7 @@ function Patient:updateDynamicInfo()
   end
   -- Set the centre line of dynamic info based on contagiousness, if appropriate
   local epidemic = self.hospital and self.hospital.epidemic
-  if epidemic and self.infected and epidemic.coverup_in_progress then
+  if epidemic and self.infected and epidemic.coverup_selected then
     if self.vaccinated then
       self:setDynamicInfo('text',
         {action_string, _S.dynamic_info.patient.actions.epidemic_vaccinated, info})
@@ -1059,6 +1060,18 @@ function Patient:updateMessage(choice)
   end
 end
 
+--[[ Show patient infected status ]]
+function Patient:setInfectedStatus()
+  self:setMood("epidemy4","activate")
+end
+
+--[[ Show patient as ready for vaccination status ]]
+function Patient:setToReadyForVaccinationStatus()
+  self:setMood("epidemy4","deactivate")
+  self:setMood("epidemy2","activate")
+  self.marked_for_vaccination = true
+end
+
 --[[ If the patient is not a vaccination candidate then
   give them the arrow icon and candidate status ]]
 function Patient:giveVaccinationCandidateStatus()
@@ -1067,13 +1080,31 @@ function Patient:giveVaccinationCandidateStatus()
   self.vaccination_candidate = true
 end
 
---[[Remove the vaccination candidate icon and status from the patient]]
+--[[ Remove the vaccination candidate icon and status from the patient ]]
 function Patient:removeVaccinationCandidateStatus()
   if not self.vaccinated then
     self:setMood("epidemy3","deactivate")
     self:setMood("epidemy2","activate")
     self.vaccination_candidate = false
   end
+end
+
+--[[ Show vaccinated status for vaccinated patient ]]
+function Patient:setVaccinatedStatus()
+  -- Disable either vaccination icon that may be present (edge case)
+  self:setMood("epidemy3", "deactivate")
+  self:setMood("epidemy2", "deactivate")
+  self:setMood("epidemy1", "activate")
+  self.marked_for_vaccination = false
+  self.vaccinated = true
+end
+
+--[[ Clear all epidemic status ]]
+function Patient:removeAnyEpidemicStatus()
+  self:setMood("epidemy1","deactivate")
+  self:setMood("epidemy2","deactivate")
+  self:setMood("epidemy3","deactivate")
+  self:setMood("epidemy4","deactivate")
 end
 
 function Patient:afterLoad(old, new)

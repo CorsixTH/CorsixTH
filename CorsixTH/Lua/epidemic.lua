@@ -33,6 +33,7 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   self.hospital = hospital
   self.world = self.hospital.world
 
+  -- Epidemic participants
   self.infected_patients = {}
 
   -- The contagious disease the epidemic is based around
@@ -57,7 +58,7 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   self.cover_up_result_fax = {}
 
   -- Set if the user choses the cover up option instead of declaring
-  self.coverup_in_progress = false
+  self.coverup_selected = false
 
   --Cover up timer and amount of intervals the timer has
   self.timer = nil
@@ -70,7 +71,7 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   -- For Cheat - Show the contagious icon even before the epidemic is revealed?
   self.cheat_always_show_mood = false
 
-  -- Number of times an infect patient has successfully infected another
+  -- Number of times an infected patients has successfully infected another
   self.total_infections = 0
   -- Number of times any infected patient has tried to infected another - successful or not
   self.attempted_infections = 0
@@ -113,8 +114,8 @@ function Epidemic:addContagiousPatient(patient)
   patient.infected = true
   patient:updateDynamicInfo()
   self.infected_patients[#self.infected_patients + 1] = patient
-  if self.coverup_in_progress or self.cheat_always_show_mood then
-    patient:setMood("epidemy4","activate")
+  if self.coverup_selected or self.cheat_always_show_mood then
+    patient:setInfectedStatus()
   end
 end
 
@@ -125,44 +126,42 @@ function Epidemic:infectOtherPatients()
   --[[ Can an infected patient infect another patient - taking into account
   spread factor as defined in the configuration. Patients must be both in the
   corridors or in the same room - don't infect through walls.
-  @param patient (Patient) already infected patient
-  @param other (Patient) target to possibly infect
+  @param infector (Patient) already infected patient who want to infect
+  @param victim (Patient) target to possibly infect
   @return true if patient can infect other, false otherwise (boolean) ]]
-  local function canInfectOther(patient, other)
-    -- Patient is not infectious.
-    if patient.cured or patient.vaccinated then return false end
+  local function canInfectOther(infector, victim)
+    -- Check is patient-Infector is not infectious.
+    if infector.cured or infector.vaccinated then return false end
 
     -- Don't allow infection outside the hospital grounds
     -- Also check both patients to prevent infecting through outer walls
-    local ppx, ppy = patient.tile_x, patient.tile_y
+    local ppx, ppy = infector.tile_x, infector.tile_y
     if ppx and ppy and not self.hospital:isInHospital(ppx, ppy) then return false end
-    local opx, opy = other.tile_x, other.tile_y
+    local opx, opy = victim.tile_x, victim.tile_y
     if opx and opy and not self.hospital:isInHospital(opx, opy) then return false end
 
-    -- 'other' is already infected or is going home.
-    if other.infected or other.cured or other.vaccinated then return false end
-    if other.is_emergency then return false end -- Don't interact with emergencies.
+    -- 'victim' is already infected or is going home.
+    if victim.infected or victim.cured or victim.vaccinated then return false end
+    -- Don't infect victim if it alredy under another attempt to be infected
+    if victim.attempted_to_infect then return false end
+    -- Don't infect emergencies.
+    if victim.is_emergency then return false end
 
-    -- If the other patient has a different disease OR the other patient's
+    -- If the victim patient has a different disease OR the victim patient's
     -- disease cannot be changed.
-    if patient.disease ~= other.disease and
-        (not other.disease.contagious or other.diagnosed) then return false end
-
-    if other.attempted_to_infect then return false end
+    if infector.disease ~= victim.disease and
+        (not victim.disease.contagious or victim.diagnosed) then return false end
 
     -- Only infect if both are in the same room.
-    return patient:getRoom() == other:getRoom()
+    return infector:getRoom() == victim:getRoom()
   end
 
-  local function infect_other(infected_patient, patient)
-    if infected_patient.disease == patient.disease then
-      self:addContagiousPatient(patient)
-      self.total_infections = self.total_infections + 1
-    else
-      patient:changeDisease(infected_patient.disease)
-      self:addContagiousPatient(patient)
-      self.total_infections = self.total_infections + 1
+  local function infect_other(infector, victim)
+    if infector.disease ~= victim.disease then
+      victim:changeDisease(infector.disease)
     end
+    self:addContagiousPatient(victim)
+    self.total_infections = self.total_infections + 1
   end
 
   -- Scale the chance of spreading the disease infecting spread_factor%
@@ -177,16 +176,16 @@ function Epidemic:infectOtherPatients()
   -- and making any patient they can infect contagious too.
   local entity_map = self.world.entity_map
   if entity_map then
-    for _, infected_patient in ipairs(self.infected_patients) do
+    for _, infector in ipairs(self.infected_patients) do
       local adjacent_patients =
-      entity_map:getPatientsInAdjacentSquares(infected_patient.tile_x, infected_patient.tile_y)
-      for _, patient in ipairs(adjacent_patients) do
-        if canInfectOther(infected_patient, patient) then
-          patient.attempted_to_infect = true
+      entity_map:getPatientsInAdjacentSquares(infector.tile_x, infector.tile_y)
+      for _, potential_victim in ipairs(adjacent_patients) do
+        if canInfectOther(infector, potential_victim) then
+          potential_victim.attempted_to_infect = true
           self.attempted_infections = self.attempted_infections + 1
           if (self.total_infections / self.attempted_infections) <
               (self.spread_factor / spread_scale_factor) then
-            infect_other(infected_patient, patient)
+            infect_other(infector, potential_victim)
           end
         end
       end
@@ -275,7 +274,7 @@ otherwise a player may never win the epidemic in such a case.]]
 function Epidemic:checkPatientsForRemoval()
   for i = #self.infected_patients, 1, -1 do
     local infected_patient = self.infected_patients[i]
-    if (not self.coverup_in_progress and infected_patient.going_home) or
+    if (not self.coverup_selected and infected_patient.going_home) or
         infected_patient.dead or infected_patient.tile_x == nil then
       table.remove(self.infected_patients,i)
     end
@@ -287,6 +286,17 @@ end
 (@see UIWatch:UIWatch) ]]
 function Epidemic:toggleVaccinationMode()
   self.vaccination_mode_active = not self.vaccination_mode_active
+  self:_updateVaccinationCursor()
+end
+
+--[[ Turn off vaccination cursor mode ]]
+function Epidemic:turnOffVaccinationMode()
+  self.vaccination_mode_active = false
+  self:_updateVaccinationCursor()
+end
+
+--[[ Update how the cursor interacts with the hospital. ]]
+function Epidemic:_updateVaccinationCursor()
   local cursor = self.vaccination_mode_active and "epidemic_hover" or "default"
   self.world.ui:setCursor(self.world.ui.app.gfx:loadMainCursor(cursor))
 end
@@ -298,9 +308,7 @@ end
 function Epidemic:markForVaccination(patient)
   if patient.infected and not patient.vaccinated and
       not patient.marked_for_vaccination then
-    patient.marked_for_vaccination = true
-    patient:setMood("epidemy4","deactivate")
-    patient:setMood("epidemy2","activate")
+    patient:setToReadyForVaccinationStatus()
     patient.hospital:playSound("vaccin.wav")
   end
 end
@@ -378,10 +386,7 @@ function Epidemic:clearAllInfectedPatients()
     infected_patient:removeVaccinationCandidateStatus()
     self.world.dispatcher:dropFromQueue(infected_patient)
     infected_patient.vaccinated = true
-    infected_patient:setMood("epidemy1","deactivate")
-    infected_patient:setMood("epidemy2","deactivate")
-    infected_patient:setMood("epidemy3","deactivate")
-    infected_patient:setMood("epidemy4","deactivate")
+    infected_patient:removeAnyEpidemicStatus()
   end
 end
 
@@ -394,11 +399,11 @@ function Epidemic:startCoverUp()
   self.world.ui:addWindow(self.timer)
   -- last chance clean up as entities might have ticked and changed state
   self:checkPatientsForRemoval()
-  self.coverup_in_progress = true
+  self.coverup_selected = true
   --Set the mood icon for all infected patients
   for _, infected_patient in ipairs(self.infected_patients) do
     infected_patient:updateDynamicInfo()
-    infected_patient:setMood("epidemy4","activate")
+    infected_patient:setInfectedStatus()
   end
 end
 
@@ -411,9 +416,7 @@ function Epidemic:finishCoverUp()
   self.timer:close()
 
   -- Turn vaccination mode off if enabled
-  if self.vaccination_mode_active then
-    self:toggleVaccinationMode()
-  end
+  self:turnOffVaccinationMode()
 end
 
 --[[ Inspector had arrived at reception desk. Check if
@@ -423,6 +426,11 @@ function Epidemic:handleInspectorArrival()
   self:determineFaxAndFines(still_infected)
   self:clearAllInfectedPatients()
   self:applyOutcome()
+end
+
+--[[ Epidemic timer time is up ]]
+function Epidemic:coverUpTimeIsUp()
+  self:finishCoverUp()
 end
 
 --[[ Calculates the contents of the fax and the appropriate fines based on the
@@ -559,7 +567,7 @@ end
 --[[ Private function to check if a cover up is in progress
 @return (boolean) true if cover up in progress, false if not]]
 function Epidemic:_isCoverUpActive()
-  return self.coverup_in_progress and not self:_inspectorSpawned()
+  return self.coverup_selected and not self:_inspectorSpawned()
 end
 
 --[[ Is the patient "still" either idle queuing or sitting on a bench
@@ -711,7 +719,7 @@ function Epidemic:hasNoInfectedPatients()
 end
 
 function Epidemic:tryAnnounceInspector()
-  if not self.coverup_in_progress then return end
+  if not self.coverup_selected then return end
   if not self:_inspectorSpawned() then return end
 
   local inspector = self.inspector
@@ -727,9 +735,7 @@ function Epidemic:cancelEpidemic()
   -- Remove init epidemic fax
   self.world.ui.bottom_panel:removeMessage(self)
   -- Turn vaccination mode off if enabled
-  if self.vaccination_mode_active then
-    self:toggleVaccinationMode()
-  end
+  self:turnOffVaccinationMode()
   -- Remove epidemic timer
   if self.timer ~= nil then
     self.timer:close()
@@ -746,5 +752,8 @@ end
 function Epidemic:afterLoad(old, new)
   if old < 106 then
     self.level_config = nil
+  end
+  if old < 210 then
+    self.coverup_selected = self.coverup_in_progress
   end
 end
