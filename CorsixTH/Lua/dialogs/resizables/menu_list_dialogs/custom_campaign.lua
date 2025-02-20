@@ -37,34 +37,45 @@ local details_width = 280
 --!return (array) The found levels, with some basic information about each level, in alphabetical order.
 local function createCampaignList(paths_table)
   local campaigns, unique_names, duplicates = {}, {}
-  for _, folder in pairs(paths_table) do
-    for file in lfs.dir(folder) do
-      if file:match("%.campaign$") then
-        local full_path = folder .. file
-        local campaign_info, err = TheApp:readCampaignFile(full_path)
-        if not campaign_info then
-          print(err)
-        else
-          local name = campaign_info.name
-          if unique_names[name] then
-            print("Custom campaign error: duplicate campaign name in file " .. file ..
-                ". Check the folders " .. table.concat(paths_table, ", "))
-            duplicates = true
-          elseif campaign_info.levels and #campaign_info.levels > 0 then
-            campaigns[#campaigns + 1] = {
-              name = name,
-              tooltip = _S.tooltip.custom_campaign_window.choose_campaign,
-              no_levels = #campaign_info.levels,
-              path = full_path,
-              folder = folder,
-              description = TheApp.strings:getLocalisedText(campaign_info.description,
-                 campaign_info.description_table)
-            }
-            unique_names[name] = true
-          else
-            print("Warning: Loaded campaign that had no levels specified")
+  -- Read all campaign files for uniquely named campaigns
+  local function readCampaignFile(folder, file)
+    local full_path = folder .. file
+    local campaign_info, err = TheApp:readCampaignFile(full_path)
+    if not campaign_info then
+      print(err)
+    else
+      local name = campaign_info.name
+      if unique_names[name] then
+        print("Custom campaign error: duplicate campaign name in file " .. file ..
+            ". Check the folders " .. table.concat(paths_table, ", "))
+        duplicates = true
+      elseif campaign_info.levels and #campaign_info.levels > 0 then
+        campaigns[#campaigns + 1] = {
+          name = name,
+          tooltip = _S.tooltip.custom_campaign_window.choose_campaign,
+          no_levels = #campaign_info.levels,
+          path = full_path,
+          description = TheApp.strings:getLocalisedText(campaign_info.description,
+             campaign_info.description_table)
+        }
+        unique_names[name] = true
+      else
+        print("Warning: Loaded campaign that had no levels specified")
+      end
+    end
+  end
+  -- Find all campaign files in given folders and their subfolders (one level deep)
+  for _, folder in ipairs(paths_table) do
+    for item in lfs.dir(folder) do
+      local path = folder .. item
+      if lfs.attributes(path, "mode") == "directory" and not item:match("^%.") then
+        for file in lfs.dir(path) do -- Check subfolders
+          if file:match("%.campaign$") then
+            readCampaignFile(path .. package.config:sub(1, 1), file)
           end
         end
+      elseif path:match("%.campaign$") then
+        readCampaignFile(folder, item)
       end
     end
   end
