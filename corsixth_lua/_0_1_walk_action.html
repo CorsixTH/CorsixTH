@@ -104,6 +104,8 @@
  <li><span class="p">state</span>
  (*)
  </li>
+ <li><span class="p">trimmed</span>
+ </li>
  <li><span class="p">truncate_only_on_high_priority</span>
  </li>
  <li><span class="p">walking_to_vaccinate</span>
@@ -117,7 +119,7 @@
 </div>
 <div class="methods">
  <div class="method">
- <h5><a name="_0_1_walk_action_1_walk_action">function WalkAction:WalkAction(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <h5><a name="_0_1_walk_action_1_walk_action">function WalkAction:WalkAction(<span class="p">x</span>, <span class="p">y</span>, <span class="p">trimmed</span>)</a></h5>
  <p>
  Action to walk to a given position.<br/><br/>
  <strong>Parameters:</strong>
@@ -133,6 +135,11 @@
  <td class="t">int</td>
  <td class="d"> Y coordinate of the destination tile.</td>
  </tr>
+ <tr>
+ <td class="n">trimmed</td>
+ <td class="t">boolean</td>
+ <td class="d"> Optional parameter to finish action on re-route</td>
+ </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L26">line 26 of Lua/humanoid_actions/walk.lua</a>.
  </p>
@@ -141,7 +148,7 @@
  <h5><a name="_0_1_walk_action_1enable_walking_to_vaccinate">function WalkAction:enableWalkingToVaccinate()</a></h5>
  <p>
  Nurse is walking with the intention to vaccinate.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L46">line 46 of Lua/humanoid_actions/walk.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L48">line 48 of Lua/humanoid_actions/walk.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -157,13 +164,13 @@
  <td class="d"> If set or nil, set the flag of entering the room.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L53">line 53 of Lua/humanoid_actions/walk.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L55">line 55 of Lua/humanoid_actions/walk.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_walk_action_1truncate_on_high_priority">function WalkAction:truncateOnHighPriority()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L41">line 41 of Lua/humanoid_actions/walk.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L43">line 43 of Lua/humanoid_actions/walk.lua</a>.
  </p>
  </div>
 </div>
