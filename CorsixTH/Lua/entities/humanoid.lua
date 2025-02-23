@@ -104,8 +104,8 @@ end
 local function pee_anim(name, peeAnim)
   pee_animations[name] = peeAnim
 end
-local function moods(name, iconNo, prio, alwaysOn)
-  mood_icons[name] = {icon = iconNo, priority = prio, on_hover = alwaysOn}
+local function moods(name, iconNo, prio, onHover)
+  mood_icons[name] = {icon = iconNo, priority = prio, on_hover = onHover}
 end
 
 --   | Walk animations           |
@@ -235,35 +235,38 @@ pee_anim("Invisible Patient",          4208)
 pee_anim("Transparent Female Patient", 4852)
 pee_anim("Transparent Male Patient",   4848)
 
+-- Some icons should only appear when the player hovers over the humanoid
+-- Higher priority is more important.
 --   | Available Moods |
---   | Name            |Icon|Priority|Show Always| Notes
+--   | Name            |Icon|Priority|On Hover| Notes
 -----+-----------------+----+--------+-----------+
-moods("reflexion",      4020,       5)            -- Some icons should only appear when the player
-moods("cantfind",       4050,       3)            -- hover over the humanoid
-moods("idea1",          2464,      10)            -- Higher priority is more important.
+moods("reflexion",      4020,       5)
+moods("cantfind",       4050,       3)
+moods("idea1",          2464,      10)
 moods("idea2",          2466,      11)
 moods("idea3",          4044,      12)
 moods("staff_wait",     4054,      20)
 moods("tired",          3990,      30)
 moods("pay_rise",       4576,      40)
 moods("thirsty",        3986,       4)
-moods("cold",           3994,       0,       true) -- These have no priority since
-moods("hot",            3988,       0,       true) -- they will be shown when hovering
-moods("queue",          4568,      70)             -- no matter what other priorities.
+moods("cold",           3994,       0,   true) -- These have no priority since
+moods("hot",            3988,       0,   true) -- they will be shown when hovering
+                                               -- no matter what other priorities.
+moods("queue",          4568,      70)
 moods("poo",            3996,       5)
 moods("sad_money",      4018,      55)
-moods("patient_wait",   5006,      40)
+moods("patient_wait",   5006,      39)
 moods("epidemy1",       4566,      55)
 moods("epidemy2",       4570,      55)
 moods("epidemy3",       4572,      55)
 moods("epidemy4",       4574,      55)
-moods("sad1",           3992,      40)
-moods("sad2",           4000,      41)
-moods("sad3",           4002,      42)
-moods("sad4",           4004,      43)
-moods("sad5",           4006,      44)
-moods("sad6",           4008,      45)
-moods("sad7",           4578,      46)
+moods("sad1",           3992,      39)          -- unused?
+moods("sad2",           4578,      40)
+moods("dying1",         4000,      41)
+moods("dying2",         4002,      42)
+moods("dying3",         4004,      43)
+moods("dying4",         4006,      44)
+moods("dying5",         4008,      45)
 moods("dead",           4046,      60)
 moods("cured",          4048,      60)
 moods("emergency",      3914,      50)
@@ -340,6 +343,19 @@ function Humanoid:afterLoad(old, new)
   end
   if old < 134 and new >= 134 then
     self.staff_change_callbacks = {}
+  end
+  if old < 210 then
+    -- We renamed the old sad7 to sad2; and sad2 - sad6 to dying1 - dying5.
+    -- Make sure we adjust sad2 and sad7 to the new mood names
+    -- Other dying ones aren't an issue
+    if self:isMoodActive("sad2") then
+      self:setMood("sad2", "deactivate")
+      self:setMood("dying1", "activate")
+    end
+    if self:isMoodActive("sad7") then
+      self:setMood("sad7", "deactivate")
+      self:setMood("sad2", "activate")
+    end
   end
 
   for _, action in pairs(self.action_queue) do
