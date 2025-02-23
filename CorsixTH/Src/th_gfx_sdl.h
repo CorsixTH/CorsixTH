@@ -562,6 +562,13 @@ class sprite_sheet {
   */
   bool get_sprite_average_colour(size_t iSprite, argb_colour* pColour) const;
 
+  //! Return whether the given sprite show any pixel when displayed.
+  /*!
+      @param iSprite Sprite number to analyze.
+      @return Whether any pixel of the sprite is visible.
+  */
+  bool is_sprite_visible(size_t iSprite) const;
+
   //! Draw a sprite onto the canvas.
   /*!
       @param pCanvas Canvas to draw on.
