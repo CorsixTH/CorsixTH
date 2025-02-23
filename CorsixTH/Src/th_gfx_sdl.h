@@ -647,7 +647,7 @@ class sprite_sheet {
 
     //! Height of the sprite.
     int height;
-  }* sprites;
+  } * sprites;
 
   //! Original palette.
   const ::palette* palette;
