@@ -226,8 +226,11 @@ function Announcer:_setRandomAnnouncementTarget()
   -- Note that random announcement are measured in ticks.
   -- This ensures that on fast game speeds random announcements aren't
   -- spammed, or on lower game speeds random announcements are never played.
-  -- Every tick is 30ms, so 2000 ticks is 1 minute.
-  self.random_announcement_ticks_target = math.random(8000, 12000)
+
+  -- Every tick is 18ms, so ~3333 ticks is 1 minute at normal speed
+  local tick_chunk = 3333
+  -- Set a target of 4 - 6 minutes (chunks)
+  self.random_announcement_ticks_target = math.random(tick_chunk * 4, tick_chunk * 6)
 end
 
 --! Private function. Plays the actual sound of an announcement.
