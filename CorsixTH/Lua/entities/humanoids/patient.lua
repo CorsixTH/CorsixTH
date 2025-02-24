@@ -1062,20 +1062,21 @@ end
 
 --[[ Show patient infected status ]]
 function Patient:setInfectedStatus()
+  self:removeAnyEpidemicStatus()
   self:setMood("epidemy4","activate")
+  self.vaccination_candidate = false
 end
 
 --[[ Show patient as ready for vaccination status ]]
 function Patient:setToReadyForVaccinationStatus()
-  self:setMood("epidemy4","deactivate")
+  self:removeAnyEpidemicStatus()
   self:setMood("epidemy2","activate")
   self.marked_for_vaccination = true
 end
 
---[[ If the patient is not a vaccination candidate then
-  give them the arrow icon and candidate status ]]
+--[[ Show patient selected vaccination candidate status ]]
 function Patient:giveVaccinationCandidateStatus()
-  self:setMood("epidemy2","deactivate")
+  self:removeAnyEpidemicStatus()
   self:setMood("epidemy3","activate")
   self.vaccination_candidate = true
 end
@@ -1083,7 +1084,7 @@ end
 --[[ Remove the vaccination candidate icon and status from the patient ]]
 function Patient:removeVaccinationCandidateStatus()
   if not self.vaccinated then
-    self:setMood("epidemy3","deactivate")
+    self:removeAnyEpidemicStatus()
     self:setMood("epidemy2","activate")
     self.vaccination_candidate = false
   end
@@ -1091,20 +1092,18 @@ end
 
 --[[ Show vaccinated status for vaccinated patient ]]
 function Patient:setVaccinatedStatus()
-  -- Disable either vaccination icon that may be present (edge case)
-  self:setMood("epidemy3", "deactivate")
-  self:setMood("epidemy2", "deactivate")
-  self:setMood("epidemy1", "activate")
+  self:removeAnyEpidemicStatus()
+  self:setMood("epidemy1","activate")
   self.marked_for_vaccination = false
   self.vaccinated = true
 end
 
 --[[ Clear all epidemic status ]]
 function Patient:removeAnyEpidemicStatus()
-  self:setMood("epidemy1","deactivate")
-  self:setMood("epidemy2","deactivate")
-  self:setMood("epidemy3","deactivate")
-  self:setMood("epidemy4","deactivate")
+  self:setMood("epidemy1","deactivate") -- vaccinated (step 4)
+  self:setMood("epidemy2","deactivate") -- marked (step 2)
+  self:setMood("epidemy3","deactivate") -- choosed by nurse (step 3)
+  self:setMood("epidemy4","deactivate") -- infected (step 1)
 end
 
 function Patient:afterLoad(old, new)
