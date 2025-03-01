@@ -1,0 +1,38 @@
+---
+name: Create draft Github release
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+  release:
+    name: Prepare release
+    if: github.repository == 'CorsixTH/CorsixTH'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        repository: CorsixTH/CorsixTH
+    - name: Fetch changelog
+      id: changelog
+      run: |
+        git fetch --tags
+        latest_tag=$(git tag -l --sort=-creatordate | head -1)
+        if [[ $latest_tag =~ [0-9]$ ]]; then # Current version is a full release
+          previous_version=$(git tag -l --sort=-creatordate | grep -ve 'rc' -ve 'pre' -ve 'beta' | head -2 | tail -1)
+        else # Current version is a beta or prerelease
+          previous_version=$(git tag -l --sort=-creatordate | grep -ve 'rc' -ve 'pre' -ve 'beta' | head -1)
+        fi
+        git diff -U0 $previous_version..master changelog.txt |
+          tail -n+9 | sed -e 's/^+//g' | sed -e 's/^#/##/g' >> body.md
+        echo "CURRENT_VERSION=${latest_tag:1}" >> $GITHUB_ENV
+    - name: Create release
+      uses: ncipollo/release-action@v1
+      with:
+        bodyFile: 'body.md'
+        draft: true
+        name: 'CorsixTH ${{env.CURRENT_VERSION}}'
