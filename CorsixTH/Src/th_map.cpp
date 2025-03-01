@@ -25,6 +25,7 @@ SOFTWARE.
 #include "config.h"
 
 #include <SDL.h>
+#include <spdlog/spdlog.h>
 
 #include <algorithm>
 #include <cstdio>
@@ -1607,7 +1608,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     pNode->entities.next = static_cast<link_list*>(lua_touserdata(L, -1));
     if (pNode->entities.next) {
       if (pNode->entities.next->prev != nullptr) {
-        std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
+        spdlog::warn("THMap linked-lists are corrupted.");
       }
       pNode->entities.next->prev = &pNode->entities;
     }
@@ -1617,7 +1618,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     pNode->oEarlyEntities.next = static_cast<link_list*>(lua_touserdata(L, -1));
     if (pNode->oEarlyEntities.next) {
       if (pNode->oEarlyEntities.next->prev != nullptr) {
-        std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
+        spdlog::warn("THMap linked-lists are corrupted.");
       }
       pNode->oEarlyEntities.next->prev = &pNode->oEarlyEntities;
     }

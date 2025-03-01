@@ -30,6 +30,7 @@ SOFTWARE.
 #ifdef WITH_UPDATE_CHECK
 #include <curl/curl.h>
 #endif
+#include <spdlog/spdlog.h>
 
 #include "bootstrap.h"
 #include "th.h"
