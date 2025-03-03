@@ -143,7 +143,7 @@ function Epidemic:infectOtherPatients()
     -- 'victim' is already infected or is going home.
     if victim.infected or victim.cured or victim.vaccinated then return false end
     -- Don't infect victim if it alredy under another attempt to be infected
-    if victim.attempted_to_infect then return false end
+    if victim.under_infection_attempt then return false end
     -- Don't infect emergencies.
     if victim.is_emergency then return false end
 
@@ -181,7 +181,7 @@ function Epidemic:infectOtherPatients()
       entity_map:getPatientsInAdjacentSquares(infector.tile_x, infector.tile_y)
       for _, potential_victim in ipairs(adjacent_patients) do
         if canInfectOther(infector, potential_victim) then
-          potential_victim.attempted_to_infect = true
+          potential_victim.under_infection_attempt = true
           self.attempted_infections = self.attempted_infections + 1
           if (self.total_infections / self.attempted_infections) <
               (self.spread_factor / spread_scale_factor) then

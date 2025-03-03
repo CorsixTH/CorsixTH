@@ -44,8 +44,10 @@ function Patient:Patient(...)
   self.vaccinated = false
   -- Has the patient been sent to the wrong room and needs redirecting
   self.needs_redirecting = false
-  -- Is under attempt to be infected
-  self.attempted_to_infect = false
+  -- Is under infection attempt
+  -- Indicates is currently some infected patient trying to infect this patient
+  -- Helps to prevent the situation when several infectors trying to infect the same victim
+  self.under_infection_attempt = false
   -- Is the patient about to be vaccinated?
   self.vaccination_candidate = false
   -- Has the patient passed reception?
@@ -1167,6 +1169,9 @@ function Patient:afterLoad(old, new)
     if self.humanoid_class == "Standard Female Patient" then
       self.on_ground_anim = 1764
     end
+  end
+  if old < 210 then
+    self.under_infection_attempt = self.attempted_to_infect
   end
   self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
