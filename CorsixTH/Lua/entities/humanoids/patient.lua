@@ -383,7 +383,7 @@ function Patient:falling(player_init)
     self:queueAction(FallingAction(), 1)
     self:queueAction(OnGroundAction(), 2)
     self:queueAction(GetUpAction(), 3)
-    -- show the patient is annoyed, if possbile
+    -- show the patient is annoyed, if possible
     if math.random(1, 5) == 3 and self.shake_fist_anim then
       self:queueAction(ShakeFistAction(), 4)
       self:interruptAndRequeueAction(current, 5)

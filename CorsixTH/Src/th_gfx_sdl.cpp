@@ -589,7 +589,7 @@ const char* render_target::get_renderer_details() const {
 const char* render_target::get_last_error() { return SDL_GetError(); }
 
 bool render_target::start_frame() {
-  // Destroy any intermediate texures used last frame.
+  // Destroy any intermediate textures used last frame.
   destroy_intermediate_textures();
 
   fill_black();

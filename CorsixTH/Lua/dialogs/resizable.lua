@@ -158,8 +158,8 @@ function UIResizable:hitTestCorners(x, y)
 end
 
 --[[ Initiate resizing of the resizable window.
-!param x The X position of the cursor in window co-ordinatees.
-!param y The Y position of the cursor in window co-ordinatees.
+!param x The X position of the cursor in window coordinates.
+!param y The Y position of the cursor in window coordinates.
 !param mode Either one of "ul", "ur", "ll" or "lr" to denote in which direction to resize. (upper/lower + left/right)
 ]]
 function UIResizable:beginResize(x, y, mode)

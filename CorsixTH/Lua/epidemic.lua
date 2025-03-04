@@ -551,7 +551,7 @@ function Epidemic:spawnInspector()
 end
 
 --[[ Private function to check if a inspector already spawned.
-@return (boolean) true if spawned alredy, false if not]]
+@return (boolean) true if spawned already, false if not]]
 function Epidemic:_inspectorSpawned()
   return self.inspector ~= nil
 end

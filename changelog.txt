@@ -43,7 +43,7 @@ CorsixTH 0.68.0 - released October 2024
 * Support is added to auto-detect a Theme Hospital install via GOG Galaxy
 
 # Translations
-* Ukranian translation added. Thanks @JurecStrongman
+* Ukrainian translation added. Thanks @JurecStrongman
 * Dutch translation has been updated. Thanks @jetenergy and @Alberth289346
 * Italian translation has been updated. Thanks @SebastianoPistore & @Inkub0
 * Russian translation has been updated. Thanks @Matroftt
@@ -85,7 +85,7 @@ CorsixTH 0.68.0 - released October 2024
 * Fixed an instance where information boxes could load pink from older
   savegames
 * Implemented a more permanent fix for the money bar being drawn incorrectly in
-  some CJK and Cyrllic languages
+  some CJK and Cyrillic languages
 * Fixed a crash on exit that could occur in some systems
 * Mouse panning behaviour has been made more responsive and accurate
 
