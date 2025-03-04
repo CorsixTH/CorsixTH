@@ -47,10 +47,10 @@ end
 
 --! Links the master to the slave swing door. This allows the slave to mimic the
 --! master in interactions
---!param x (num) Co-ordinate
---!param y (num) Co-ordinate
+--!param x (num) Coordinate
+--!param y (num) Coordinate
 function SwingDoor:pairDoors(x, y)
-  -- Because we don't know the build order of each door we must accomodate for this
+  -- Because we don't know the build order of each door we must accommodate for this
   if self.is_master then -- The master will check for an adjacent slave
     local slave_type = "swing_door_left"
     self.slave = self.world:getObject(x - 1, y, slave_type) or
