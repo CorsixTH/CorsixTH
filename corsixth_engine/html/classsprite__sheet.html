@@ -109,6 +109,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5187a26c9e86bfeff430b4f6e788c2db"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsprite__sheet.html#a5187a26c9e86bfeff430b4f6e788c2db">get_sprite_average_colour</a> (size_t iSprite, <a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a> *pColour) const</td></tr>
 <tr class="memdesc:a5187a26c9e86bfeff430b4f6e788c2db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the best colour to represent the sprite.  <a href="classsprite__sheet.html#a5187a26c9e86bfeff430b4f6e788c2db">More...</a><br /></td></tr>
 <tr class="separator:a5187a26c9e86bfeff430b4f6e788c2db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85ed582a9ddea549a73ee7a01eaa71f1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsprite__sheet.html#a85ed582a9ddea549a73ee7a01eaa71f1">is_sprite_visible</a> (size_t iSprite) const</td></tr>
+<tr class="memdesc:a85ed582a9ddea549a73ee7a01eaa71f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return whether the given sprite show any pixel when displayed.  <a href="classsprite__sheet.html#a85ed582a9ddea549a73ee7a01eaa71f1">More...</a><br /></td></tr>
+<tr class="separator:a85ed582a9ddea549a73ee7a01eaa71f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace796ee3dfb544c34c36cb79edc5be49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsprite__sheet.html#ace796ee3dfb544c34c36cb79edc5be49">draw_sprite</a> (<a class="el" href="classrender__target.html">render_target</a> *pCanvas, size_t iSprite, int iX, int iY, uint32_t iFlags, size_t effect_ticks=0u, <a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870">animation_effect</a> effect=<a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870a334c4a4c42fdb79d7ebc3e73b517e6f8">animation_effect::none</a>)</td></tr>
 <tr class="memdesc:ace796ee3dfb544c34c36cb79edc5be49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a sprite onto the canvas.  <a href="classsprite__sheet.html#ace796ee3dfb544c34c36cb79edc5be49">More...</a><br /></td></tr>
 <tr class="separator:ace796ee3dfb544c34c36cb79edc5be49"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -430,6 +433,33 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Whether the sprite covers the give point. </dd></dl>
+
+</div>
+</div>
+<a id="a85ed582a9ddea549a73ee7a01eaa71f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85ed582a9ddea549a73ee7a01eaa71f1">&#9670;&nbsp;</a></span>is_sprite_visible()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool sprite_sheet::is_sprite_visible </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>iSprite</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return whether the given sprite show any pixel when displayed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iSprite</td><td>Sprite number to analyze. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Whether any pixel of the sprite is visible. </dd></dl>
 
 </div>
 </div>

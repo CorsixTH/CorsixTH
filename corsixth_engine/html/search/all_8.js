@@ -9,7 +9,7 @@ var searchData=
   ['initialise_273',['initialise',['../classiso__filesystem.html#a4c4f81e78e26f60dd09a1227356d6ddb',1,'iso_filesystem::initialise()'],['../classinteger__run__length__encoder.html#a034e6a4762bca9264b28f76e2dd57185',1,'integer_run_length_encoder::initialise()'],['../classinteger__run__length__decoder.html#a8ccacc7725846abe456ca16459cb68c5',1,'integer_run_length_decoder::initialise(size_t iRecordSize, lua_persist_reader *pReader)'],['../classinteger__run__length__decoder.html#a9b510ed10366a53c86d2e3b04fce98f6',1,'integer_run_length_decoder::initialise(size_t iRecordSize, const uint32_t *pInput, size_t iCount)']]],
   ['input_5fend_274',['input_end',['../classinteger__run__length__decoder.html#ab0f1fef62de60d99893b6a7072292970',1,'integer_run_length_decoder']]],
   ['integer_5frun_5flength_5fdecoder_275',['integer_run_length_decoder',['../classinteger__run__length__decoder.html',1,'integer_run_length_decoder'],['../classinteger__run__length__decoder.html#afb12edbc619ee19c2bfefb3822d189c2',1,'integer_run_length_decoder::integer_run_length_decoder()']]],
-  ['integer_5frun_5flength_5fencoder_276',['integer_run_length_encoder',['../classinteger__run__length__encoder.html#aba45bbe2c0cb8687431831fbb4d5b1a4',1,'integer_run_length_encoder::integer_run_length_encoder()'],['../classinteger__run__length__encoder.html',1,'integer_run_length_encoder']]],
+  ['integer_5frun_5flength_5fencoder_276',['integer_run_length_encoder',['../classinteger__run__length__encoder.html',1,'integer_run_length_encoder'],['../classinteger__run__length__encoder.html#aba45bbe2c0cb8687431831fbb4d5b1a4',1,'integer_run_length_encoder::integer_run_length_encoder()']]],
   ['invalid_5fchar_5fcodepoint_277',['invalid_char_codepoint',['../th__strings_8h.html#a019d6f1113e97fc735e770bf69cd8981',1,'th_strings.h']]],
   ['iparcelid_278',['iParcelId',['../structmap__tile.html#aa52953010db3ab5f37cb6f3c4a1487e8',1,'map_tile']]],
   ['iroomid_279',['iRoomId',['../structmap__tile.html#af2cc8e8907e970fea4a24d53bd9b8427',1,'map_tile']]],
@@ -20,9 +20,10 @@ var searchData=
   ['is_5flast_5fon_5fscanline_284',['is_last_on_scanline',['../classmap__tile__iterator.html#a2aba826ca80b6696ca514f1c9d1bf77b',1,'map_tile_iterator']]],
   ['is_5fmultiple_5fframe_5fanimation_5ffn_285',['is_multiple_frame_animation_fn',['../structdrawable.html#adb6e0d3db2d3f931dff2d8c21dff5753',1,'drawable']]],
   ['is_5fparcel_5fpurchasable_286',['is_parcel_purchasable',['../classlevel__map.html#a65418c5f1e872e10672543dcd915bdb2',1,'level_map']]],
-  ['is_5ftarget_287',['is_target',['../classrender__target_1_1scoped__target__texture.html#a8897c1063ab94f00ea98f64baaa762ed',1,'render_target::scoped_target_texture']]],
-  ['iso_5ffilesystem_288',['iso_filesystem',['../classiso__filesystem.html#a700d30ed27e80d173597c122667258c1',1,'iso_filesystem::iso_filesystem()'],['../classiso__filesystem.html',1,'iso_filesystem']]],
-  ['iso_5ffs_289',['iso_fs',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a69ee82389230df0b417022523e293bf7',1,'th_lua_internal.h']]],
-  ['iso_5ffs_2ecpp_290',['iso_fs.cpp',['../iso__fs_8cpp.html',1,'']]],
-  ['iso_5ffs_2eh_291',['iso_fs.h',['../iso__fs_8h.html',1,'']]]
+  ['is_5fsprite_5fvisible_287',['is_sprite_visible',['../classsprite__sheet.html#a85ed582a9ddea549a73ee7a01eaa71f1',1,'sprite_sheet']]],
+  ['is_5ftarget_288',['is_target',['../classrender__target_1_1scoped__target__texture.html#a8897c1063ab94f00ea98f64baaa762ed',1,'render_target::scoped_target_texture']]],
+  ['iso_5ffilesystem_289',['iso_filesystem',['../classiso__filesystem.html#a700d30ed27e80d173597c122667258c1',1,'iso_filesystem::iso_filesystem()'],['../classiso__filesystem.html',1,'iso_filesystem']]],
+  ['iso_5ffs_290',['iso_fs',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a69ee82389230df0b417022523e293bf7',1,'th_lua_internal.h']]],
+  ['iso_5ffs_2ecpp_291',['iso_fs.cpp',['../iso__fs_8cpp.html',1,'']]],
+  ['iso_5ffs_2eh_292',['iso_fs.h',['../iso__fs_8h.html',1,'']]]
 ];
