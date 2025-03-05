@@ -589,7 +589,7 @@ const char* render_target::get_renderer_details() const {
 const char* render_target::get_last_error() { return SDL_GetError(); }
 
 bool render_target::start_frame() {
-  // Destroy any intermediate texures used last frame.
+  // Destroy any intermediate textures used last frame.
   destroy_intermediate_textures();
 
   fill_black();
@@ -1217,7 +1217,7 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
     double Y = 0.2126 * linR + 0.7152 * linG + 0.0722 * linB;
     // - Compute lightness L*.
     //   L* = 116 * Y ^ 1/3 - 16, range is from 0 to 100.
-    double L = std::min(100.0, std::max(0.0, 166 * std::cbrt(Y) - 16));
+    double L = std::min(100.0, std::max(0.0, 116 * std::cbrt(Y) - 16));
     uint8_t cIntensity = static_cast<uint8_t>(L / 100 * 255.0);
 
     // Grant higher score to pixels with high or low intensity (helps avoid
@@ -1235,6 +1235,18 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
   }
   *pColour = palette->get_argb_data()[iHighestCountIndex];
   return true;
+}
+
+bool sprite_sheet::is_sprite_visible(size_t iSprite) const {
+  if (iSprite >= sprite_count) return false;
+
+  const sprite* pSprite = sprites + iSprite;
+  for (long i = 0; i < pSprite->width * pSprite->height; ++i) {
+    uint8_t cPalIndex = pSprite->data[i];
+    uint32_t iColour = palette->get_argb_data()[cPalIndex];
+    if ((iColour >> 24) != 0) return true;
+  }
+  return false;
 }
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,

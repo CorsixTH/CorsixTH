@@ -130,7 +130,7 @@
           <li>Fixed an instance where information boxes could load pink from
               older savegames</li>
           <li>Implemented a more permanent fix for the money bar being drawn
-              incorrectly in some CJK and Cyrllic languages</li>
+              incorrectly in some CJK and Cyrillic languages</li>
           <li>Fixed a crash on exit that could occur in some systems</li>
           <li>Mouse panning behaviour has been made more responsive and
               accurate</li>
@@ -142,7 +142,7 @@
         <p>Translations:</p>
         <ul>
           <li>Dutch translation has been updated</li>
-          <li>Ukranian translation has been updated</li>
+          <li>Ukrainian translation has been updated</li>
           <li>Russian translation has been updated</li>
         </ul>
         <p>Bug Fixes:</p>
@@ -163,7 +163,7 @@
         </ul>
         <p>Translations:</p>
         <ul>
-          <li>Ukranian translation added</li>
+          <li>Ukrainian translation added</li>
           <li>Brazilian-Portuguese translation has been updated</li>
         </ul>
         <p>Bug Fixes:</p>
@@ -266,7 +266,7 @@
         <li>Fixed an instance where information boxes could load pink from older
             savegames</li>
         <li>Implemented a more permanent fix for the money bar being drawn
-            incorrectly in some CJK and Cyrllic languages</li>
+            incorrectly in some CJK and Cyrillic languages</li>
         <li>Fixed a crash on exit that could occur in some systems</li>
         <li>Mouse panning behaviour has been made more responsive and accurate</li>
       </ul>

@@ -1709,8 +1709,8 @@ local --[[persistable:window_drag_position_representation]] function getNicestPo
 end
 
 --[[ Initiate dragging of the window.
-!param x The X position of the cursor in window co-ordinatees.
-!param y The Y position of the cursor in window co-ordinatees.
+!param x The X position of the cursor in window coordinates.
+!param y The Y position of the cursor in window coordinates.
 ]]
 function Window:beginDrag(x, y)
   if not self.width or not self.height or not self.ui or

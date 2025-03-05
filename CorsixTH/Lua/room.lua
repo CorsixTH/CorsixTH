@@ -37,8 +37,8 @@ end
 --! Initialises primary components of the room.
 -- Additionally, if there is already a room, e.g. it is being moved,
 -- we can just reinit it by calling this, not make a new one.
---!param x (co-ordinate) starting tile
---!param y (co-ordinate) starting tile
+--!param x (coordinate) starting tile
+--!param y (coordinate) starting tile
 --!param w (num) width of room
 --!param h (num) height of room
 --!param door (object) primary door for room
