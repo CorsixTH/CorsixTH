@@ -198,9 +198,7 @@ int l_spritesheet_hittest(lua_State* L) {
 int l_spritesheet_isvisible(lua_State* L) {
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
   size_t iSprite = luaL_checkinteger(L, 2);
-  argb_colour oDummy;
-  lua_pushboolean(L,
-                  pSheet->get_sprite_average_colour(iSprite, &oDummy) ? 1 : 0);
+  lua_pushboolean(L, pSheet->is_sprite_visible(iSprite) ? 1 : 0);
   return 1;
 }
 

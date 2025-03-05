@@ -1237,6 +1237,18 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
   return true;
 }
 
+bool sprite_sheet::is_sprite_visible(size_t iSprite) const {
+  if (iSprite >= sprite_count) return false;
+
+  const sprite* pSprite = sprites + iSprite;
+  for (long i = 0; i < pSprite->width * pSprite->height; ++i) {
+    uint8_t cPalIndex = pSprite->data[i];
+    uint32_t iColour = palette->get_argb_data()[cPalIndex];
+    if ((iColour >> 24) != 0) return true;
+  }
+  return false;
+}
+
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
                                int iY, uint32_t iFlags, size_t effect_ticks,
                                animation_effect effect) {
