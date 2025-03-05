@@ -1170,7 +1170,7 @@ function Patient:afterLoad(old, new)
       self.on_ground_anim = 1764
     end
   end
-  if old < 210 then
+  if old < 211 then
     self.under_infection_attempt = self.attempted_to_infect
   end
   self:updateDynamicInfo()

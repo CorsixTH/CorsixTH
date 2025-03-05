@@ -753,7 +753,7 @@ function Epidemic:afterLoad(old, new)
   if old < 106 then
     self.level_config = nil
   end
-  if old < 210 then
+  if old < 211 then
     self.coverup_selected = self.coverup_in_progress
   end
 end
