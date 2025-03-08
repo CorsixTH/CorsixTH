@@ -795,7 +795,7 @@ function UIMenuBar:makeGameMenu(app)
     :appendItem(_S.menu_charts.graphs:format(hotkey_value_label("ingame_panel_charts", hotkeys)), function() self.ui.bottom_panel:dialogCharts(true) end)
     :appendItem(_S.menu_charts.policy:format(hotkey_value_label("ingame_panel_policy", hotkeys)), function() self.ui.bottom_panel:dialogPolicy(true) end)
     :appendItem(_S.menu_charts.briefing, function() self.ui:showBriefing() end)
-	:appendItem(_S.menu_debug.machine_menu,        function() self.ui:addWindow(UIMachineMenu(self.ui)) end)
+    :appendItem(_S.menu_debug.machine_menu,        function() self.ui:addWindow(UIMachineMenu(self.ui)) end)
   )
 
   local function limit_camera(item)
