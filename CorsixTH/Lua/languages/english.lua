@@ -198,6 +198,7 @@ menu_charts = {
 }
 
 menu_debug = {
+  machine_menu                = "  MACHINES MENU",
   jump_to_level               = "  JUMP TO LEVEL  ",
   connect_debugger            = "  (%1%) CONNECT LUA DBGp SERVER  ",
   transparent_walls           = "  (%1%) TRANSPARENT WALLS  ",
@@ -929,6 +930,22 @@ tooltip.calls_dispatcher = {
   assigned = "This box is marked if someone is assigned to the corresponding task.",
   close = "Close the calls dispatcher dialog",
 }
+
+machine_menu = {
+  summary = "%d machines in total; %d assigned",
+  description = "%s @ %d,%d",
+  close = "Close",
+}
+
+tooltip.machine_menu = {
+  machine = "List of machines - click machine to open machine's window and scroll to its location",
+  smoking = "This box is marked if the machine is at risk of exploding",
+  assigned = "This box is marked if a handyman is assigned to fix corresponding machine",
+  remaining_strength = "This label shows remaining strength of the machine",
+  strength = "This label shows total strength of the machine",
+  close = "Close the machine list dialog",
+}
+
 
 update_window = {
   caption = "Update Available!",
