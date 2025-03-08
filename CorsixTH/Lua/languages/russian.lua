@@ -1,4 +1,4 @@
- --[[ Copyright (c) 2011 Sergei Larionov, Alexey Pinyagin, 2021-2024 "Matroftt", 2024 Artem Argus (ARGAMX)
+ --[[ Copyright (c) 2011 Sergei Larionov, Alexey Pinyagin, 2021-2025 "Matroftt", 2024 Artem Argus (ARGAMX)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -398,8 +398,8 @@ menu_charts = {
   staff_listing = "  (%1%) Список сотрудников",
   bank_manager =  "  (%1%) Управляющий банка",
   status =        "  (%1%) Состояние",
-  briefing =      "  Инструктаж",
   town_map =      "  (%1%) Карта города ",
+  briefing =      "  Инструктаж",
 }
 menu_file_load = {
   [1] = "  ИГРА 1  ",
@@ -3117,9 +3117,17 @@ tooltip = {
     epidemic = "Эпидемия: время на остановку эпидемии. Когда время закончится или зараженный пациент покинет больницу, приедет инспектор. Кнопка включает/отключает режим вакцинации. Щелкните на пациенте, и медсестра введет ему вакцину.",
   },
   calls_dispatcher = {
-    assigned = "Это поле отмечено, если кому-то присвоено соответствующее задание.",
+    assigned = "Это окошко отмечено, если кому-то присвоено соответствующее задание.",
     task = "Список заданий - нажмите на задание, чтобы открыть окно назначенного персонала и прокрутить до расположения задачи",
     close = "Закрыть окно диспетчера",
+  },
+  machine_menu = {
+    machine = "Список машин - нажмите на машину, чтобы открыть соответствующее окно и показать ее на карте",
+    smoking = "Это окошко отмечено, если машина скоро сломается.",
+    assigned = "Это окошко отмечено, если разнорабочий назначен на починку машины.",
+    remaining_strength = "Это поле отображает оставшуюся прочность машины",
+    strength = "Это поле отображает полную прочность машины",
+    close = "Закрыть окно машин",
   },
   information = {
     close = "Закрыть окно информации",
@@ -3590,6 +3598,7 @@ debug_patient_window = {
   caption = "Тестовый пациент",
 }
 menu_debug = {
+  machine_menu =             "  Меню машин",
   allow_blocking_off_areas = "  Разрешить блокирование областей  ",
   connect_debugger =         "  (%1%) Соединение с LUA DBGp сервером  ",
   debug_script =             "  (%1%) Запуск скрипта отладки  ",
@@ -3622,6 +3631,11 @@ calls_dispatcher = {
   close = "Закрыть",
   watering = "Полить @ %d,%d",
   staff = "%s - %s",
+}
+
+machine_menu = {
+  summary = "%d машин всего; %d назначено",
+  close = "Закрыть",
 }
 
 level_progress = {
