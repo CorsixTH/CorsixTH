@@ -44,9 +44,8 @@ function Patient:Patient(...)
   self.vaccinated = false
   -- Has the patient been sent to the wrong room and needs redirecting
   self.needs_redirecting = false
-  -- Is under infection attempt
   -- Indicates is currently some infected patient trying to infect this patient
-  -- Helps to prevent the situation when several infectors trying to infect the same victim
+  -- Prevents the situation when several infectors trying to infect the same victim
   self.under_infection_attempt = false
   -- Is the patient about to be vaccinated?
   self.vaccination_candidate = false
