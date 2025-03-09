@@ -109,25 +109,25 @@ function UIMachineMenu:createControls()
     self.rows_shown = rows
     self.list_table = {}
     local y = window_margin
-    local smoke_top = self:addBevelPanel(window_margin, y, 20, row_height, col_highlight)
+    local smoke_header = self:addBevelPanel(window_margin, y, 20, row_height, col_highlight)
       :setLabel("!"):setTooltip(_S.tooltip.machine_menu.header.smoking)
-    local assigned_top = self:addBevelPanel(window_margin+20, y, 20, row_height, col_highlight)
+    local assigned_header = self:addBevelPanel(window_margin+20, y, 20, row_height, col_highlight)
       :setLabel("@"):setTooltip(_S.tooltip.machine_menu.header.assigned)
-    local name_top = self:addBevelPanel(window_margin+40, y, self.width - 181 - 40 - window_margin, row_height, col_highlight)
+    local name_header = self:addBevelPanel(window_margin+40, y, self.width - 181 - 40 - window_margin, row_height, col_highlight)
       :setLabel(_S.machine_menu.machine):setTooltip(_S.tooltip.machine_menu.header.machine)
-    local remaining_strength_panel_top = self:addBevelPanel(280, y, 40, row_height, col_highlight)
+    local remaining_strength_panel_header = self:addBevelPanel(280, y, 40, row_height, col_highlight)
       :setLabel(_S.machine_menu.remaining_strength)
       :makeButton(0, 0, 40, 20, nil, self.setSortRS)
       :setTooltip(_S.tooltip.machine_menu.header.remaining_strength .. " " .. _S.tooltip.machine_menu.sort)
-    local strength_panel_top = self:addBevelPanel(320, y, 40, row_height, col_highlight)
+    local strength_panel_header = self:addBevelPanel(320, y, 40, row_height, col_highlight)
       :setLabel(_S.machine_menu.total_strength)
       :makeButton(0, 0, 40, 20, nil, self.setSortTS):setTooltip(_S.tooltip.machine_menu.close)
       :setTooltip(_S.tooltip.machine_menu.header.total_strength .. " " .. _S.tooltip.machine_menu.sort)
-    local ratio_panel_top = self:addBevelPanel(360, y, 40, row_height, col_highlight)
+    local ratio_panel_header = self:addBevelPanel(360, y, 40, row_height, col_highlight)
       :setLabel(_S.machine_menu.ratio)
       :makeButton(0, 0, 40, 20, nil, self.setSortRatio):setTooltip(_S.tooltip.machine_menu.close)
       :setTooltip(_S.tooltip.machine_menu.header.ratio .. " " .. _S.tooltip.machine_menu.sort)
-    local timesUsed_panel_top = self:addBevelPanel(400, y, 40, row_height, col_highlight)
+    local timesUsed_panel_header = self:addBevelPanel(400, y, 40, row_height, col_highlight)
       :setLabel(_S.machine_menu.times_used)
       :makeButton(0, 0, 40, 20, nil, self.setSortTU)
       :setTooltip(_S.tooltip.machine_menu.header.times_used .. " " .. _S.tooltip.machine_menu.sort)
@@ -151,6 +151,13 @@ function UIMachineMenu:createControls()
       local usage_panel = self:addBevelPanel(400, y+row_height, 40, row_height, col_shadow)
         :setTooltip(_S.tooltip.machine_menu.times_used)
       table.insert(self.list_table, {
+        smoke_header = smoke_header,
+        assigned_header = assigned_header,
+        name_header = name_header,
+        remaining_strength_panel_header = remaining_strength_panel_header,
+        strength_panel_header = strength_panel_header,
+        ratio_panel_header = ratio_panel_header,
+        timesUsed_panel_header = timesUsed_panel_header,
         assigned_panel = assigned_panel,
         assigned_button = assigned_button,
         smoke_panel = smoke_panel,
@@ -183,7 +190,7 @@ function UIMachineMenu:update()
 
   for _, entity in ipairs(self.ui.app.world.entities) do
     if class.is(entity, Machine) and not entity.master then
-      if entity:getRemainingUses() > -1 then
+      if (entity:getRemainingUses() > 0 or entity:getRoom().needs_repair) then
         if dispatcher.call_queue[entity] then
           if dispatcher.call_queue[entity]["repair"].assigned then
             assign = true
