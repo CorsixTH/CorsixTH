@@ -69,7 +69,7 @@ function UIMachineMenu:UIMachineMenu(ui)
 
   self.machine_list = {}
   self.list_table = {}
-  
+
   self.default_button_sound = "selectx.wav"
 
   self.sort_method = "sortByRatio"
