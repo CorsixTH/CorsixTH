@@ -44,7 +44,9 @@ function Patient:Patient(...)
   self.vaccinated = false
   -- Has the patient been sent to the wrong room and needs redirecting
   self.needs_redirecting = false
-  self.attempted_to_infect= false
+  -- Indicates is currently some infected patient trying to infect this patient
+  -- Prevents the situation when several infectors trying to infect the same victim
+  self.under_infection_attempt = false
   -- Is the patient about to be vaccinated?
   self.vaccination_candidate = false
   -- Has the patient passed reception?
@@ -990,7 +992,7 @@ function Patient:updateDynamicInfo()
   end
   -- Set the centre line of dynamic info based on contagiousness, if appropriate
   local epidemic = self.hospital and self.hospital.epidemic
-  if epidemic and self.infected and epidemic.coverup_in_progress then
+  if epidemic and self.infected and epidemic.coverup_selected then
     if self.vaccinated then
       self:setDynamicInfo('text',
         {action_string, _S.dynamic_info.patient.actions.epidemic_vaccinated, info})
@@ -1059,21 +1061,50 @@ function Patient:updateMessage(choice)
   end
 end
 
---[[ If the patient is not a vaccination candidate then
-  give them the arrow icon and candidate status ]]
+--[[ Show patient infected status ]]
+function Patient:setInfectedStatus()
+  self:removeAnyEpidemicStatus()
+  self:setMood("epidemy4","activate")
+  self.vaccination_candidate = false
+end
+
+--[[ Show patient as ready for vaccination status ]]
+function Patient:setToReadyForVaccinationStatus()
+  self:removeAnyEpidemicStatus()
+  self:setMood("epidemy2","activate")
+  self.marked_for_vaccination = true
+end
+
+--[[ Show patient selected vaccination candidate status ]]
 function Patient:giveVaccinationCandidateStatus()
-  self:setMood("epidemy2","deactivate")
+  self:removeAnyEpidemicStatus()
   self:setMood("epidemy3","activate")
   self.vaccination_candidate = true
 end
 
---[[Remove the vaccination candidate icon and status from the patient]]
+--[[ Remove the vaccination candidate icon and status from the patient ]]
 function Patient:removeVaccinationCandidateStatus()
   if not self.vaccinated then
-    self:setMood("epidemy3","deactivate")
+    self:removeAnyEpidemicStatus()
     self:setMood("epidemy2","activate")
     self.vaccination_candidate = false
   end
+end
+
+--[[ Show vaccinated status for vaccinated patient ]]
+function Patient:setVaccinatedStatus()
+  self:removeAnyEpidemicStatus()
+  self:setMood("epidemy1","activate")
+  self.marked_for_vaccination = false
+  self.vaccinated = true
+end
+
+--[[ Clear all epidemic status ]]
+function Patient:removeAnyEpidemicStatus()
+  self:setMood("epidemy1","deactivate") -- vaccinated (step 4)
+  self:setMood("epidemy2","deactivate") -- marked (step 2)
+  self:setMood("epidemy3","deactivate") -- choosed by nurse (step 3)
+  self:setMood("epidemy4","deactivate") -- infected (step 1)
 end
 
 function Patient:afterLoad(old, new)
@@ -1137,6 +1168,10 @@ function Patient:afterLoad(old, new)
     if self.humanoid_class == "Standard Female Patient" then
       self.on_ground_anim = 1764
     end
+  end
+  if old < 211 then
+    self.under_infection_attempt = self.attempted_to_infect
+    self.attempted_to_infect = nil
   end
   self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
