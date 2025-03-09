@@ -195,10 +195,10 @@ menu_charts = {
   status        = "  (%1%) STATUS  ",
   graphs        = "  (%1%) GRAPHS  ",
   policy        = "  (%1%) POLICY  ",
+  machine_menu  = "  (%1%) MACHINES MENU",
 }
 
 menu_debug = {
-  machine_menu                = "  MACHINES MENU",
   jump_to_level               = "  JUMP TO LEVEL  ",
   connect_debugger            = "  (%1%) CONNECT LUA DBGp SERVER  ",
   transparent_walls           = "  (%1%) TRANSPARENT WALLS  ",
@@ -638,6 +638,7 @@ hotkey_window = {
   ingame_panel_status = "Status",
   ingame_panel_charts = "Charts",
   ingame_panel_policy = "Policy",
+  ingame_panel_machineMenu = "Machines Menu",
   ingame_panel_map_alt = "Town Map 2",
   ingame_panel_research_alt = "Research 2",
   ingame_panel_casebook_alt = "Casebook 2",
@@ -934,15 +935,35 @@ tooltip.calls_dispatcher = {
 machine_menu = {
   summary = "%d machines in total; %d assigned",
   description = "%s @ %d,%d",
+  percentage = "%d%",
+  smoking = "Dn",
+  assigned = "As",
+  machine = "Machine",
+  remaining_strength = "RS",
+  total_strength = "TS",
+  ratio = "%",
+  times_used = "Used",
   close = "Close",
 }
 
 tooltip.machine_menu = {
+  sort = "Click to sort by this variable.",
   machine = "List of machines - click machine to open machine's window and scroll to its location",
   smoking = "This box is marked if the machine is at risk of exploding",
   assigned = "This box is marked if a handyman is assigned to fix corresponding machine",
   remaining_strength = "This label shows remaining strength of the machine",
-  strength = "This label shows total strength of the machine",
+  total_strength = "This label shows total strength of the machine",
+  ratio = "This label shows ratio of remaining strength and total strength",
+  times_used = "This label shows how much times machine was used",
+  header = {
+    smoking = "Danger Indicator",
+    assigned = "Assigns Indicator",
+    machine = "Name and position of the machine",
+    remaining_strength = "Remaining Strength of the machines.",
+    total_strength = "Total Strength of the machines.",
+    ratio = "RS & TS percentage ratio of the machines.",
+    times_used = "How much times machines was used.",
+  },
   close = "Close the machine list dialog",
 }
 
