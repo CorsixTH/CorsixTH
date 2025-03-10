@@ -172,10 +172,10 @@ function UIMachineMenu:createControls()
       y = y + row_height
     end
     self.summary_panel = self:addColourPanel(50, y + 30, self.width - 50 - 40 - window_margin, 20,
-                                             col_bg.red, col_bg.green, col_bg.blue)
+                             col_bg.red, col_bg.green, col_bg.blue)
     self.scrollbar = self:addColourPanel(self.width - window_margin - 20, window_margin+20, 20, row_height * rows,
-                                         col_shadow.red, col_shadow.green, col_shadow.blue)
-                         :makeScrollbar(col_bg, callback, 1, 1, 10, 1)
+                         col_shadow.red, col_shadow.green, col_shadow.blue)
+                       :makeScrollbar(col_bg, callback, 1, 1, 10, 1)
     self.close_button = self:addBevelPanel(window_margin, y + 40 + window_margin, self.width - 2 * window_margin, 40, col_bg):setLabel(_S.machine_menu.close)
       :makeButton(0, 0, self.width - 2 * window_margin, 40, nil, self.close):setTooltip(_S.tooltip.machine_menu.close)
   end
