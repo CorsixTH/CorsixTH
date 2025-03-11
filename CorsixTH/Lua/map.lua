@@ -244,6 +244,7 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     self.level_name = level_name
     self.level_intro = level_intro
     self.level_number = level
+    self.level_filename = level:match(".+" .. package.config:sub(1, 1) .. "(.+)$")
     self.map_file = map_file
     local data, errors = self:getRawData(map_file)
     if data then
@@ -252,7 +253,7 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
       return nil, errors
     end
     assert(base_config, "No base config has been loaded!")
-    errors, result = self:loadMapConfig(self.app:getAbsolutePathToLevelFile(level), base_config, true)
+    errors, result = self:loadMapConfig(level, base_config, true)
     if errors then
       print(errors)
     end
