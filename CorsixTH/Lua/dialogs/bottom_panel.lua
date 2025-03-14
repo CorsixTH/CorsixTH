@@ -139,12 +139,17 @@ function UIBottomPanel:registerKeyHandlers()
   ui:addKeyHandler("ingame_openFirstMessage", self, self.openFirstMessage)    -- message
   ui:addKeyHandler("ingame_toggleInfo", self, self.toggleInformation)   -- information when you first build
   ui:addKeyHandler("ingame_jukebox", self, self.openJukebox)   -- jukebox
+  ui:addKeyHandler("ingame_panel_machineMenu", self, self.openMachineMenu)    -- machine menu
 end
 
 function UIBottomPanel:openJukebox()
   if self.ui.app.config.audio and self.ui.app:isAudioEnabled() then
     self.ui:addWindow(UIJukebox(self.ui.app))
   end
+end
+
+function UIBottomPanel:openMachineMenu()
+  self.ui:addWindow(UIMachineMenu(self.ui))
 end
 
 function UIBottomPanel:openSave()
