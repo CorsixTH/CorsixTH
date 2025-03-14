@@ -235,6 +235,39 @@ function App:init()
     return mean + math.sqrt(-2 * math.log(math.random()))
         * math.cos(2 * math.pi * math.random()) * variance
   end
+
+  -- Add math.p_random globally.
+  -- It generates pseudo random Poisson distributed numbers.
+  -- Algorithm by Junhao for large mean value support, based on Knuths algorithm.
+  -- See also: https://en.wikipedia.org/wiki/Poisson_distribution
+  strict_declare_global "math.p_random"
+  math.p_random = function(mean)
+    local STEP = 500
+    local mean_left = mean
+    local k = 0
+    local p = 1
+    while true do
+      k = k + 1
+      -- Draw a non-zero random value.
+      local u = 0
+      while u == 0 do u = math.random() end
+      p = p * u
+
+      while p < 1 and mean_left > 0 do
+        if mean_left > STEP then
+          p = p * math.exp(STEP)
+          mean_left = mean_left - STEP
+        else
+          p = p * math.exp(mean_left)
+          mean_left = 0
+        end
+      end
+
+      if p <= 1 then break end
+    end
+    return k - 1
+  end
+
   -- Also add the nice-to-have function math.round
   strict_declare_global "math.round"
   math.round = function(input)

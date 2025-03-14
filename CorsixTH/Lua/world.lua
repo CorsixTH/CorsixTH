@@ -1094,21 +1094,36 @@ end
 -- TODO: Requires adjustment for AIHospital spawns; see PR 1986 for progress.
 function World:updateSpawnDates()
   local local_hospital = self:getLocalPlayerHospital()
-  -- Set dates when people arrive
-  local no_of_spawns = math.n_random(self.spawn_rate, 2)
-  -- Use ceil so that at least one patient arrives (unless population = 0)
-  no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
+
+  -- Decide on number of visitors
+  local no_of_spawns = self.spawn_rate * local_hospital.population
   -- If Roujin's Challenge is on, add a fixed bonus to the spawn pool for this player.
   if local_hospital.hosp_cheats:isCheatActive("spawn_rate_cheat") then
     local roujin_bonus = 40
     no_of_spawns = no_of_spawns + roujin_bonus
   end
-
+  -- Compute expected number of patients that arrive while forcing an arrival
+  -- if feasible.
   self.spawn_dates = {}
-  for _ = 1, no_of_spawns do
-    -- We are interested in the next month, pick days from it at random.
-    local day = math.random(1, self.game_date:lastDayOfMonth())
-    self.spawn_dates[day] = self.spawn_dates[day] and self.spawn_dates[day] + 1 or 1
+
+  if local_hospital.population > 0 then
+    local day, last_day = 1, self.game_date:lastDayOfMonth()
+    local force_arrival = true -- Ensure a patient arrives.
+    local interval = last_day / no_of_spawns -- Lower interval = more visits.
+    while day <= last_day do
+      local x = math.p_random(interval)
+      day = day + x
+      if day <= last_day then
+        local count = self.spawn_dates[day]
+        self.spawn_dates[day] = count and count + 1 or 1
+        force_arrival = false
+      end
+    end
+
+    -- Give the poor user a patient this month anyway.
+    if force_arrival then
+      self.spawn_dates[math.floor(1 + math.random() * last_day)] = 1
+    end
   end
 end
 
