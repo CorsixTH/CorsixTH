@@ -151,9 +151,9 @@ function EndConditions:generateReportTable(hospital)
     table.insert(report_table, crit_table)
     count = count + 1
   end
-  -- If there are more than five, keep the five criteria closest to meeting lose conditions
+  -- Limit the table to five goals, ordered by progress towards meeting the lose goal
   if count > 5 then
-    table.sort(report_table, function(a,b) return a.gap > b.gap end)
+    table.sort(report_table, function(a,b) return a.progress > b.progress end)
     for n = 6, #report_table do report_table[n] = nil end
   end
 
@@ -168,7 +168,7 @@ function EndConditions:generateReportTable(hospital)
     end
   end
 
-  -- Some criteria icons shouldn't be next to each other
+  -- Order by criteria number, as some criteria icons shouldn't be next to each other
   table.sort(report_table, function(a,b) return a.criterion < b.criterion end)
   return report_table
 end
@@ -181,15 +181,17 @@ end
 function EndConditions:_checkLoseGroup(hospital, lose_table, report)
   local report_table, met_count, total_count, reason, limit = {}, 0, 0
   for crit_name, crit_table in pairs(lose_table) do
-    local target = report and crit_table.boundary or crit_table.lose_value
+    local boundary, lose_value = crit_table.boundary, crit_table.lose_value
     local max_min = crit_table.max_min == 1 and 1 or -1
     local measure = self:getAttribute(hospital, crit_name)
-    if (measure - target) * max_min > 0 then
-      if report then -- Collect the criteria that should be reported on
+    if report then -- Collect the criteria that should be reported on
+      if (measure - boundary) * max_min > 0 then
         report_table[crit_name] = crit_table
-        report_table[crit_name].gap = math.abs(measure - target)
-      else
-        reason, limit = crit_name, crit_table.lose_value
+        report_table[crit_name].progress = (1 - ((measure - lose_value)/(boundary - lose_value)))
+      end
+    else
+      if (measure - lose_value) * max_min > 0 then
+        reason, limit = crit_name, lose_value
         met_count = met_count + 1
       end
     end
