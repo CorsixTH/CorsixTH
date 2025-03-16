@@ -686,11 +686,11 @@ function Hospital:afterLoad(old, new)
   end
 
   -- Update other objects in the hospital (added in version 106).
-  if self.epidemic then self.epidemic.afterLoad(old, new) end
+  if self.epidemic then self.epidemic:afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
-    future_epidemic.afterLoad(old, new)
+    future_epidemic:afterLoad(old, new)
   end
-  self.research.afterLoad(old, new)
+  self.research:afterLoad(old, new)
 end
 
 --! Count the number of patients in the hospital.
@@ -1310,11 +1310,11 @@ function Hospital:addToEpidemic(patient)
   local epidemic = self.epidemic
   -- Don't add a new contagious patient if the player is trying to cover up
   -- an existing epidemic - not really fair
-  if epidemic and not epidemic.coverup_in_progress and
+  if epidemic and not epidemic.coverup_selected and
       (patient.disease == epidemic.disease) then
     epidemic:addContagiousPatient(patient)
   elseif self.future_epidemics_pool and
-      not (epidemic and epidemic.coverup_in_progress) then
+      not (epidemic and epidemic.coverup_selected) then
     local added = false
     for _, future_epidemic in ipairs(self.future_epidemics_pool) do
       if future_epidemic.disease == patient.disease then
