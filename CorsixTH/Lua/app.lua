@@ -605,7 +605,7 @@ end
 
 --! Loads the first level of the specified campaign and prepares the world
 --! to be able to progress through that campaign.
---!param campaign_file (string) Name of a CorsixTH Campaign definition Lua file.
+--!param campaign_file (string) Full path of a CorsixTH Campaign definition Lua file.
 function App:loadCampaign(campaign_file)
   local campaign_info, level_info, errors, _
 
@@ -615,7 +615,7 @@ function App:loadCampaign(campaign_file)
     return
   end
 
-  level_info, errors = self:readLevelFile(campaign_info.levels[1])
+  level_info, errors = self:readLevelFile(campaign_info.levels[1], campaign_info.folder)
   if not level_info then
     self.ui:addWindow(UIInformation(self.ui, { _S.errors.could_not_find_first_campaign_level:format(errors) }))
     return
@@ -633,7 +633,7 @@ function App:loadCampaign(campaign_file)
   campaign_info.winning_text = self.strings:getLocalisedText(campaign_info.winning_text,
       campaign_info.winning_text_table)
 
-  if self:loadLevel(campaign_info.levels[1], nil, level_info.name,
+  if self:loadLevel(level_info.path, nil, level_info.name,
       level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix, campaign_info) then
     -- The new world needs to know which campaign to continue on.
     self.world.campaign_info = campaign_info
@@ -646,15 +646,14 @@ function App:loadCampaign(campaign_file)
   end
 end
 
---! Reads the given file name as a Lua chunk from the Campaigns folder in the CorsixTH install directory.
+--! Reads the given file name as a Lua chunk from the Campaign folders
 --! A correct campaign definition contains "name", "description", "levels", and "winning_text".
---!param campaign_file (string) Name of the file to read.
+--!param campaign_file (string) Full path of the file to read.
 --!return (table) Definitions found in the campaign file.
 function App:readCampaignFile(campaign_file)
-  local path = self:getFullPath({"Campaigns", campaign_file})
-  local chunk, err = loadfile_envcall(path)
+  local chunk, err = loadfile_envcall(campaign_file)
   if not chunk then
-    return nil, "Error loading " .. path .. ":\n" .. tostring(err)
+    return nil, "Error loading " .. campaign_file .. ":\n" .. tostring(err)
   else
     local result = {}
     chunk(result)
@@ -664,10 +663,24 @@ end
 
 --! Opens the given file name and returns all Level definitions in a table.
 --! Values in the returned table: "path", "level_file", "name", "map_file", "briefing", and "end_praise".
---!param level (string) Name of the file to read.
+--!param level (string) Full path or name of the file to read.
+--!param campaign_dir (string) Folder of the parent campaign file
 --!return (table) Level info found in the file.
-function App:readLevelFile(level)
-  local filename = self:getAbsolutePathToLevelFile(level)
+function App:readLevelFile(level, campaign_dir)
+  local filename, level_dir
+  if level:match(pathsep) then -- Full path given
+    filename = level
+    level_dir = level:match("(.*)" .. pathsep)
+  else
+    local search_paths = {
+      campaign_dir or "",
+      self.user_campaign_dir,
+      self.user_level_dir,
+      self.campaign_dir,
+      self.level_dir,
+    }
+    filename = self:findFileInDirs(search_paths, level)
+  end
   local file, err = io.open(filename and filename or "")
   if not file then
     return nil, "Could not open the specified level file (" .. level .. "): " .. err
@@ -679,15 +692,35 @@ function App:readLevelFile(level)
   level_info.path = filename
   level_info.level_file = level
   level_info.name = contents:match("%Name ?= ?\"(.-)\"") or "Unknown name"
-  level_info.map_file = contents:match("%MapFile ?= ?\"(.-)\"")
-  if not level_info.map_file then
+  local map_file = contents:match("%MapFile ?= ?\"(.-)\"")
+  if not map_file then
     -- The old way of defining the Map File has been deprecated, but a warning is enough.
-    level_info.map_file = contents:match("%LevelFile ?= ?\"(.-)\"")
-    if level_info.map_file then
+    map_file = contents:match("%LevelFile ?= ?\"(.-)\"")
+    if map_file then
       print("\nWarning: The level '" .. level_info.name .. "' contains a deprecated variable definition in the level file." ..
         "'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level.\n")
     end
     level_info.deprecated_variable_used = true
+  end
+  -- Find the full path of the map file, unless it is a CorsixTH additional config or a Theme Hospital map
+  if filename:match(self.level_dir .. "original%d%d%.level") then
+    level_info.map_file = map_file
+  elseif map_file then
+    if map_file:lower():match("^level") then
+      level_info.map_file = map_file
+    else
+      local search_paths = {
+        campaign_dir or "",
+        level_dir or "",
+        self.user_campaign_dir,
+        self.user_level_dir,
+        self.campaign_dir,
+        self.level_dir,
+      }
+      level_info.map_file = self:findFileInDirs(search_paths, map_file)
+    end
+  else
+    return nil, _S.errors.map_file_missing:format(map_file)
   end
 
   -- Pick a localised set of briefings, if available
@@ -704,27 +737,19 @@ function App:readLevelFile(level)
   return level_info
 end
 
---! Searches for the given level file in the "Campaigns" and "Levels" folder of the
---! CorsixTH install directory.
---!param level (string) Filename to search for.
---!return (string, error) Returns the found absolute path, or nil if not found. Then
---!       a second variable is returned with an error message.
-function App:getAbsolutePathToLevelFile(level)
-  local paths_to_search = {
-    self.user_campaign_dir,
-    self.user_level_dir,
-    self.campaign_dir,
-    self.level_dir,
-  }
-  for _, parent_path in ipairs(paths_to_search) do
-    local check_path = parent_path .. pathsep .. level
+--! Searches in the given folders for the given filename
+--!param search_paths (table) List of folders (strings) to look through
+--!param filename (string) Filename to search for.
+--!return path (string) The full path of the found file
+function App:findFileInDirs(search_paths, filename)
+  for _, parent_path in ipairs(search_paths) do
+    local check_path = parent_path .. filename
     local file, _ = io.open(check_path, "rb")
     if file then
       file:close()
       return check_path
     end
   end
-  return nil, "Level not found: " .. level
 end
 
 --! Invokes a protected call of App:_loadLevel(...). See that function for more information.
@@ -1607,21 +1632,21 @@ function App:readDataFile(dir, filename)
 end
 
 --! Get a level file.
---!param filename (string) Name of the level file.
+--!param path (string) Full path of the level file, or a Theme Hospital level filename
 --!return If the file could be found, the data of the file, else a
 --        tuple 'nil', and an error description
-function App:readMapDataFile(filename)
-  -- First look in the original install directory, if not found there
-  -- look in the CorsixTH directories "Levels" and "Campaigns".
-  local data = self.fs:readContents("Levels" .. pathsep .. filename)
-  if not data then
-    local absolute_path = self:getAbsolutePathToLevelFile(filename)
-    if absolute_path then
-      local file = io.open(absolute_path, "rb")
-      if file then
-        data = file:read("*a")
-        file:close()
-      end
+function App:readMapDataFile(path)
+  local data
+  if path:match(pathsep) then
+    local file = io.open(path, "rb")
+    if file then
+      data = file:read("*a")
+      file:close()
+    end
+  else
+    data = self.fs:readContents("Levels" .. pathsep .. path)
+    if not data then
+      return nil, _S.errors.missing_th_data_file:format(path)
     end
   end
   if data then
@@ -1630,7 +1655,7 @@ function App:readMapDataFile(filename)
     end
   else
     -- Could not find the file
-    return nil, _S.errors.map_file_missing:format(filename)
+    return nil, _S.errors.map_file_missing:format(path)
   end
   return data
 end
