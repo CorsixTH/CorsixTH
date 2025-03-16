@@ -1094,21 +1094,36 @@ end
 -- TODO: Requires adjustment for AIHospital spawns; see PR 1986 for progress.
 function World:updateSpawnDates()
   local local_hospital = self:getLocalPlayerHospital()
-  -- Set dates when people arrive
-  local no_of_spawns = math.n_random(self.spawn_rate, 2)
-  -- Use ceil so that at least one patient arrives (unless population = 0)
-  no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
+
+  -- Decide on number of visitors
+  local no_of_spawns = self.spawn_rate * local_hospital.population
   -- If Roujin's Challenge is on, add a fixed bonus to the spawn pool for this player.
   if local_hospital.hosp_cheats:isCheatActive("spawn_rate_cheat") then
     local roujin_bonus = 40
     no_of_spawns = no_of_spawns + roujin_bonus
   end
-
+  -- Compute expected number of patients that arrive while forcing an arrival
+  -- if feasible.
   self.spawn_dates = {}
-  for _ = 1, no_of_spawns do
-    -- We are interested in the next month, pick days from it at random.
-    local day = math.random(1, self.game_date:lastDayOfMonth())
-    self.spawn_dates[day] = self.spawn_dates[day] and self.spawn_dates[day] + 1 or 1
+
+  if local_hospital.population > 0 then
+    local day, last_day = 1, self.game_date:lastDayOfMonth()
+    local force_arrival = true -- Ensure a patient arrives.
+    local interval = last_day / no_of_spawns -- Lower interval = more visits.
+    while day <= last_day do
+      local x = math.p_random(interval)
+      day = day + x
+      if day <= last_day then
+        local count = self.spawn_dates[day]
+        self.spawn_dates[day] = count and count + 1 or 1
+        force_arrival = false
+      end
+    end
+
+    -- Give the poor user a patient this month anyway.
+    if force_arrival then
+      self.spawn_dates[math.floor(1 + math.random() * last_day)] = 1
+    end
   end
 end
 
@@ -1287,13 +1302,13 @@ function World:getCampaignWinningText(player_no)
     text[3] = text[3]:format(_S.level_names[self.map.level_number + 1])
   else
     local campaign_info = self.campaign_info
-    local next_level_name
+    local next_level_name, next_level_info
     if campaign_info then
       for i, level in ipairs(campaign_info.levels) do
-        if self.map.level_number == level then
+        if self.map.level_filename == level then
           has_next = i < #campaign_info.levels
           if has_next then
-            local next_level_info = TheApp:readLevelFile(campaign_info.levels[i + 1])
+            next_level_info = TheApp:readLevelFile(campaign_info.levels[i + 1], campaign_info.folder)
             if not next_level_info then
               return {_S.letter.campaign_level_missing:format(campaign_info.levels[i + 1]), "", ""},
                      _S.fax.choices.return_to_main_menu,
@@ -1305,15 +1320,17 @@ function World:getCampaignWinningText(player_no)
         end
       end
     end
-    local level_info = TheApp:readLevelFile(self.map.level_number)
     text[1] = _S.letter.dear_player:format(self.hospitals[player_no].name)
     if has_next then
-      text[2] = level_info.end_praise and level_info.end_praise:format(next_level_name) or _S.letter.campaign_level_completed:format(next_level_name)
-      text[3] = ""
+      if next_level_info.end_praise then
+        text[2] = next_level_info.end_praise:format(next_level_name)
+      else
+        text[2] = _S.letter.campaign_level_completed:format(next_level_name)
+      end
     else
       text[2] = campaign_info.winning_text and campaign_info.winning_text or _S.letter.campaign_completed
-      text[3] = ""
     end
+    text[3] = ""
   end
   if has_next then
     choice_text = _S.fax.choices.accept_new_level
@@ -2486,6 +2503,7 @@ function World:afterLoad(old, new)
   if old < 208 then -- Adjust game speed and tick rates
     local old_tick_rates
     if old < 183 then
+      -- Save is using tick rates before 0.68.0 (PR2494)
       old_tick_rates = {
         ["Pause"]              = {0, 1},
         ["Slowest"]            = {1, 9},
@@ -2493,8 +2511,10 @@ function World:afterLoad(old, new)
         ["Normal"]             = {1, 3},
         ["Max speed"]          = {1, 1},
         ["And then some more"] = {3, 1},
+        ["Speed Up"]           = {8, 1},
       }
     else
+      -- Save is using tick rates introduced during development post 0.68.0 (PR2688)
       old_tick_rates = {
         ["Pause"]              = {0, 1},
         ["Slowest"]            = {1, 28},
@@ -2509,11 +2529,18 @@ function World:afterLoad(old, new)
     for name, rate in pairs(old_tick_rates) do
       if rate[1] == self.hours_per_tick and rate[2] == self.tick_rate then
         found_speed = true
-        self:setSpeed(name)
+        -- Do not call setSpeed as the values below are mapped to old tick rates.
+        -- Instead, update manually.
+        self.hours_per_tick = tick_rates[name][1]
+        self.tick_rate = tick_rates[name][2]
+        -- There is also no need to run it afterward either
         break
       end
     end
+    -- No conversion available; reset instead
     if not found_speed then
+      self.hours_per_tick = tick_rates["Pause"][1]
+      self.tick_rate = tick_rates["Pause"][2]
       self:setSpeed("Normal")
     end
   end

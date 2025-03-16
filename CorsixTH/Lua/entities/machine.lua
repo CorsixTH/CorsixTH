@@ -227,7 +227,7 @@ function Machine:createHandymanActions(handyman)
 
   local repair_action = UseObjectAction(self):setProlongedUsage(false)
       :setAfterUse(repair_after_use)
-  repair_action.min_length = 20
+  repair_action.min_length = 20 -- Minimum number of frames needed for the action.
 
   if handyman_room and handyman_room ~= this_room then
     handyman:setNextAction(handyman_room:createLeaveAction())
