@@ -2501,6 +2501,7 @@ function World:afterLoad(old, new)
   if old < 208 then -- Adjust game speed and tick rates
     local old_tick_rates
     if old < 183 then
+      -- Save is using tick rates before 0.68.0 (PR2494)
       old_tick_rates = {
         ["Pause"]              = {0, 1},
         ["Slowest"]            = {1, 9},
@@ -2508,8 +2509,10 @@ function World:afterLoad(old, new)
         ["Normal"]             = {1, 3},
         ["Max speed"]          = {1, 1},
         ["And then some more"] = {3, 1},
+        ["Speed Up"]           = {8, 1},
       }
     else
+      -- Save is using tick rates introduced during development post 0.68.0 (PR2688)
       old_tick_rates = {
         ["Pause"]              = {0, 1},
         ["Slowest"]            = {1, 28},
@@ -2524,11 +2527,18 @@ function World:afterLoad(old, new)
     for name, rate in pairs(old_tick_rates) do
       if rate[1] == self.hours_per_tick and rate[2] == self.tick_rate then
         found_speed = true
-        self:setSpeed(name)
+        -- Do not call setSpeed as the values below are mapped to old tick rates.
+        -- Instead, update manually.
+        self.hours_per_tick = tick_rates[name][1]
+        self.tick_rate = tick_rates[name][2]
+        -- There is also no need to run it afterward either
         break
       end
     end
+    -- No conversion available; reset instead
     if not found_speed then
+      self.hours_per_tick = tick_rates["Pause"][1]
+      self.tick_rate = tick_rates["Pause"][2]
       self:setSpeed("Normal")
     end
   end
