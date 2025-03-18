@@ -105,4 +105,7 @@ using std::uint64_t;
 /** Report system architecture **/
 #cmakedefine CORSIX_TH_ARCH "@CORSIX_TH_ARCH@"
 
+/** Set default value of font file **/
+#cmakedefine CORSIX_TH_FONT "@CORSIX_TH_FONT@"
+
 #endif  // CORSIX_TH_CONFIG_H_
