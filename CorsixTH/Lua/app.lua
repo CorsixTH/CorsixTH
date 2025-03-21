@@ -756,8 +756,6 @@ end
 --! This function should always be called to catch errors and properly pass the
 --! error to the player
 --!param error_prefix (string) (Optional) Prefixes the error relevant to what was loaded
---!param campaign_info (object) (Optional) is information about campaign in case loading level
--- is a part of a campaign. if not part of a campaign then campaign_info is nil.
 --! return (boolean) The outcome of the pcall
 function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, error_prefix, campaign_info)
   local status, err = pcall(self._loadLevel, self, level, difficulty, level_name,
@@ -772,10 +770,15 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
 end
 
 --! Private Function to load the level. Call via App:loadLevel(...)
---! Loads the specified level. If a string is passed it looks for the file with the same name
--- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
--- the original game.
---!param campaign_info (object) (Optional) is information about campaign in case loading level
+--! Loads the specified level.
+--!param level (string) Full path of a custom level, name of a TH level, or nil for mapeditor
+--!param difficulty (string) One of "easy, full, hard", or nil for custom levels
+--!param level_name (string) Display name of the level
+--!param level_file (string) Full path of a custom map, name of a TH level,
+--  or nil for TH campaign or mapeditor
+--!param level_intro (string) Introduction text displayed to the player
+--!param map_editor (boolean) True for opening the map editor
+--!param campaign_info (table of strings) Information about campaign in case loading level
 -- is a part of a campaign. if not part of a campaign then campaign_info is nil.
 function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, campaign_info)
   if self.world then
@@ -1815,6 +1818,16 @@ function App:restart()
       name = self.map.level_name
       file = self.map.map_file
       intro = self.map.level_intro
+      local search_paths = {
+        self.user_campaign_dir,
+        self.user_level_dir,
+        self.campaign_dir,
+        self.level_dir,
+      }
+      if not level:match(pathsep) then -- level and file only contain filenames, not full paths
+        level = self:findFileInDirs(search_paths, level)
+        file = self:findFileInDirs(search_paths, file)
+      end
     end
     if level and name and not file then
       self.ui:addWindow(UIInformation(self.ui, { _S.information.cannot_restart }))
