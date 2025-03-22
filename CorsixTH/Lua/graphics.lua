@@ -117,38 +117,51 @@ function Graphics:Graphics(app)
 end
 
 --! Tries to load the font file given in the config file as unicode_font.
---! If it is not found it tries to find one in the operating system.
+--! If it is not found it tries to use the font file from the compile setting,
+--!  or look for one in the CorsixTH folder, grandparent of this file.
 function Graphics:loadFontFile()
   local lfs = require("lfs")
-  local function check(path) return path and lfs.attributes(path, "mode") == "file" end
-  -- Load the Unicode font, if there is one specified.
-  local config_path = self.app.config.unicode_font
-  -- Try a font that commonly comes with the operating system.
-  local os_path, font_file
-  local windir = os.getenv("WINDIR")
-  if windir and windir ~= "" then
-    os_path = windir .. pathsep .. "Fonts" .. pathsep .. "ARIALUNI.TTF"
-  elseif self.app.os == "macos" then
-    os_path = "/Library/Fonts/Arial Unicode.ttf"
-  else
-    os_path = "/usr/share/fonts/truetype/arphic/uming.ttc"
+  local function check(path) return lfs.attributes(path, "mode") == "file" end
+
+  local font_file
+  local config_err, compile_err = "", ""
+  local config_path, compile_path = self.app.config.unicode_font, TH.GetCompileOptions().font
+  if config_path then
+    if check(config_path) then font_file = config_path
+    else config_err = "Configured font set but not found. Check path " .. config_path
+    end
   end
-  if check(config_path) then font_file = config_path
-  elseif check(os_path) then
-    font_file = os_path
-    print("Configured unicode font not found, using " .. font_file .. " instead.")
-    print("This will be written to the config file.")
-  elseif config_path ~= nil then
-    print("Configured unicode font not found, no fallback available.")
+  if compile_path and not font_file then
+    if check(compile_path) then font_file = compile_path
+    else compile_err = "Compiled font path set but not found. Check path " .. compile_path
+    end
+  end
+  if not font_file then
+    local path = self.app:getFullPath({})
+    for file in lfs.dir(path) do
+      for _, ext in pairs({"ttc", "ttf", "otc", "otf"}) do
+        if file:match(".%." .. ext .. "$") then
+          font_file = path .. file
+          break
+        end
+      end
+      if font_file then break end
+    end
+  end
+  if not font_file then
+    print("Unicode font not found, no fallback available.", config_err, compile_err)
     return
   end
-  local font = font_file and io.open(font_file, "rb")
+
+  local font = io.open(font_file, "rb")
   if font then
     self.ttf_font_data = font:read("*a")
     font:close()
-    if self.ttf_font_data and self.app.config.unicode_font ~= font_file then
+    if self.ttf_font_data and config_path ~= font_file then
       self.app.config.unicode_font = font_file
       self.app:saveConfig()
+      print("Configured unicode font not found, using " .. font_file .. " instead.")
+      print("This will be written to the config file.")
     end
   end
 end

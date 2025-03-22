@@ -11,6 +11,7 @@
 #       program directory where the executable stores. Makes the executable
 #       portable (yes for Apple)
 
+#   - WITH_FONT       : Path of a font that will be used if the user does not set one (empty, Arial on macOS)
 #   - WITH_VLD        : Build with Visual Leak Detector (requires Visual Studio) (no)
 #   - USE_PRECOMPILED_DEPS : Use precompiled dependencies on *nix (no)
 #   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
@@ -73,6 +74,10 @@ endif()
 option(SEARCH_LOCAL_DATADIRS
   "Search resources in the working directory and the program directory where the executable stores."
   ${SEARCH_LOCAL_DATADIRS_DEFAULT})
+
+if(WITH_FREETYPE2)
+  option(WITH_FONT "Use this font if one is not set in the game settings")
+endif()
 
 if(MSVC)
   option(WITH_VLD "Build with Visual Leak Detector for Visual Studio" OFF)
