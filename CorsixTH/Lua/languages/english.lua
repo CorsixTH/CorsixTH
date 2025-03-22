@@ -772,6 +772,7 @@ errors = {
     full_in_demo = "Sorry, you can't open a full game save with the demo files loaded. Please update your TH Data folder setting.",
   },
   music = "There are playback issues with one or more files in your music directory. Problematic files will be disabled in the jukebox. See the console window for more information.",
+  missing_th_data_file = "Warning: Could not find file %s, the Theme Hospital data is incomplete.",
 }
 
 warnings = {
