@@ -623,6 +623,7 @@ local hotkeys_defaults = {
   ingame_panel_status = "f7",
   ingame_panel_charts = "f8",
   ingame_panel_policy = "f9",
+  ingame_panel_machineMenu = "f10",
   ingame_panel_map_alt = "t",
   ingame_panel_research_alt = "r",
   ingame_panel_casebook_alt = "c",
@@ -782,6 +783,7 @@ if hotkeys_needs_rewrite and TheApp then
 'ingame_panel_status = ' .. hotkeys_values.ingame_panel_status .. '\n' ..
 'ingame_panel_charts = ' .. hotkeys_values.ingame_panel_charts .. '\n' ..
 'ingame_panel_policy = ' .. hotkeys_values.ingame_panel_policy .. '\n' ..
+'ingame_panel_machineMenu = ' .. hotkeys_values.ingame_panel_machineMenu .. '\n' ..
 'ingame_panel_map_alt = ' .. hotkeys_values.ingame_panel_map_alt .. '\n' ..
 'ingame_panel_research_alt = ' .. hotkeys_values.ingame_panel_research_alt .. '\n' ..
 'ingame_panel_casebook_alt = ' .. hotkeys_values.ingame_panel_casebook_alt .. '\n' ..
