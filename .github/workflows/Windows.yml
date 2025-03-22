@@ -50,7 +50,8 @@ jobs:
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: '5f4628b89f3f98cd9a0b43c27ded2aa53da1f790'
+          vcpkgJsonGlob: 'vcpkg.json'
+          vcpkgConfigurationJsonGlob: 'vcpkg-configuration.json'
 
       - name: Run CMake dev configure
         if: inputs.PRESET == 'win-dev'
