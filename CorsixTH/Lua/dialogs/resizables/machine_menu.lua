@@ -172,7 +172,7 @@ function UIMachineMenu:createControls()
       })
       y = y + row_height
     end
-    
+
     -- Add scrollbar
     self.scrollbar = self:addColourPanel(461, window_margin + 20, 26, row_height * rows,
           col_shadow.red, col_shadow.green, col_shadow.blue)
@@ -263,7 +263,7 @@ function UIMachineMenu:update()
     local remaining_uses_count = machine:getRemainingUses()
     local percentage_strength = math.floor((remaining_uses_count / machine.strength) * 100)
     local is_assigned = assigned_handyman ~= nil
-    local machine = {
+    local result = {
       object = machine,
       smoking = machine:isBreaking(),
       assigned = is_assigned,
@@ -274,7 +274,7 @@ function UIMachineMenu:update()
       percentage_strength = percentage_strength,
       total_usage = machine.total_usage
     }
-    return machine
+    return result
   end
 
   self.machine_list = {}
