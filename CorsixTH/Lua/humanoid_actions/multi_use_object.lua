@@ -304,7 +304,8 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
     humanoid:setTilePositionSpeed(object.tile_x + pos[1], object.tile_y + pos[2])
     -- Check if the room is about to be destroyed
     local room_destroyed = false
-    if object.strength then
+    local object_is_machine = object.strength
+    if object_is_machine then
       room_destroyed = object:machineUsed(humanoid:getRoom())
     end
     if not room_destroyed then
