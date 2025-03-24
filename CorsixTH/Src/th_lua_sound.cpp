@@ -20,6 +20,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <SDL3/SDL_iostream.h>
+#include <SDL3/SDL_timer.h>
+
 #include <array>
 #include <cctype>
 #include <cstring>
@@ -140,17 +143,17 @@ int l_soundarc_data(lua_State* L) {
   sound_archive* pArchive = luaT_testuserdata<sound_archive>(L);
   size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
   if (iIndex == pArchive->get_number_of_sounds()) return 2;
-  SDL_RWops* pRWops = pArchive->load_sound(iIndex);
+  SDL_IOStream* pRWops = pArchive->load_sound(iIndex);
   if (!pRWops) return 0;
-  size_t iLength = SDL_RWseek(pRWops, 0, SEEK_END);
-  SDL_RWseek(pRWops, 0, SEEK_SET);
+  size_t iLength = SDL_SeekIO(pRWops, 0, SDL_IO_SEEK_END);
+  SDL_SeekIO(pRWops, 0, SDL_IO_SEEK_SET);
   // There is a potential leak of pRWops if either of these Lua calls cause
   // a memory error, but it isn't very likely, and this a debugging function
   // anyway, so it isn't very important.
   void* pBuffer = lua_newuserdata(L, iLength);
   lua_pushlstring(L, (const char*)pBuffer,
-                  SDL_RWread(pRWops, pBuffer, 1, iLength));
-  SDL_RWclose(pRWops);
+                  SDL_ReadIO(pRWops, pBuffer, iLength));
+  SDL_CloseIO(pRWops);
   return 1;
 }
 
@@ -190,7 +193,8 @@ int l_soundfx_set_sound_effects_on(lua_State* L) {
   return 1;
 }
 
-Uint32 played_sound_callback(Uint32 interval, void* param) {
+Uint32 played_sound_callback(void* param, SDL_TimerID timerId,
+                             Uint32 interval) {
   SDL_Event e;
   e.type = SDL_USEREVENT_SOUND_OVER;
   e.user.data1 = param;

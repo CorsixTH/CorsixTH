@@ -128,7 +128,7 @@ function App:init()
   self:initScreenshotsDir()
 
   -- Create the window
-  if not SDL.init("video", "timer") then
+  if not SDL.init("video") then
     return false, "Cannot initialise SDL"
   end
   local compile_opts = TH.GetCompileOptions()

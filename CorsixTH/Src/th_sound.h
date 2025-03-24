@@ -24,7 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_TH_SOUND_H_
 #include "config.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>
 #endif
@@ -50,7 +50,7 @@ class sound_archive {
   /*!
       The caller is responsible for closing/freeing the result.
   */
-  SDL_RWops* load_sound(size_t iIndex);
+  SDL_IOStream* load_sound(size_t iIndex);
 
  private:
 #if CORSIX_TH_USE_PACK_PRAGMAS
