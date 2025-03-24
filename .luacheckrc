@@ -54,7 +54,7 @@ globals = { -- Globals
             "UIHotkeyAssignKeyPane", "UIInformation", "UIJukebox", "UILoadGame",
             "UILoadMap", "UILuaConsole", "UIMachine", "UIMakeDebugPatient",
             "UIMainMenu", "UIMapEditor", "UIMenuBar", "UIMenuList",
-            "UIMessage", "UINewGame", "UIOptions", "UIPatient",
+            "UIMessage", "UINewGame", "UIOptions", "UIPatient", "UIMachineMenu",
             "UIPlaceObjects", "UIPlaceStaff", "UIPolicy", "UIProgressReport",
             "UIQueue", "UIQueuePopup", "UIResizable", "UIResearch",
             "UIResolution", "UISaveGame", "UISaveMap", "UIScrollSpeed",
