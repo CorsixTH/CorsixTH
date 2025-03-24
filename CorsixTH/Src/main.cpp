@@ -84,11 +84,12 @@ std::string search_script_file(lua_State* L) {
 
 #ifdef CORSIX_TH_SEARCH_LOCAL_DATADIRS
   // 2. Find CorsixTH.lua in working dir and program dir
-  static constexpr std::array<const char*, 4> asSearchDirs{
+  static constexpr std::array<const char*, 5> asSearchDirs{
       "./",
       "CorsixTH/",
       "Contents/Resources/",
       "../Resources/",
+      "../share/corsix-th/",
   };
   std::string strProgramDir = "";
   {
