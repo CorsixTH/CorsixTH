@@ -22,10 +22,11 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <SDL3/SDL_mouse.h>
+
 #include "lua_sdl.h"
 #include "th_lua.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
-#include <SDL_syswm.h>
 #include <windows.h>
 
 #include "../resource.h"
@@ -58,7 +59,11 @@ int l_set_icon_win32(lua_State* L) {
 }
 
 int l_show_cursor(lua_State* L) {
-  SDL_ShowCursor(lua_toboolean(L, 1));
+  if (lua_toboolean(L, 1)) {
+    SDL_ShowCursor();
+  } else {
+    SDL_HideCursor();
+  }
   return 0;
 }
 

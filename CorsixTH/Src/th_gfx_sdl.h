@@ -25,7 +25,8 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_pixels.h>
 
 #include <memory>
 #include <stack>
@@ -352,8 +353,8 @@ class render_target {
                                          uint32_t iSpriteFlags) const;
   SDL_Texture* create_texture(int iWidth, int iHeight,
                               const uint32_t* pPixels) const;
-  void draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
-            const SDL_Rect* prcDstRect, int iFlags);
+  void draw(SDL_Texture* pTexture, const SDL_FRect* prcSrcRect,
+            const SDL_FRect* prcDstRect, int iFlags);
   void draw_line(line_sequence* pLine, int iX, int iY);
 
   //! Begin drawing to an intermediate unscaled texture targeting the given
@@ -381,7 +382,7 @@ class render_target {
   SDL_Renderer* renderer;
   scoped_target_texture* current_target = nullptr;
   std::unique_ptr<scoped_target_texture> zoom_buffer;
-  SDL_PixelFormat* pixel_format;
+  const SDL_PixelFormat pixel_format;
   bool blue_filter_active;
   cursor* game_cursor;
   double bitmap_scale_factor;  ///< Bitmap scale factor.
@@ -647,7 +648,7 @@ class sprite_sheet {
 
     //! Height of the sprite.
     int height;
-  } * sprites;
+  }* sprites;
 
   //! Original palette.
   const ::palette* palette;

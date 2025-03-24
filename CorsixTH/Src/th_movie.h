@@ -25,7 +25,7 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 #include <array>
 #include <atomic>
