@@ -270,7 +270,7 @@ function Object:incrementUsedCount()
 end
 
 --! Updates the object's dynamic info
-function Object:updateDynamicInfo()  
+function Object:updateDynamicInfo()
   local object = self.object_type
   if object.dynamic_info then
     self:setDynamicInfo("text", {object.name, "", _S.dynamic_info.object.times_used:format(self.times_used)})

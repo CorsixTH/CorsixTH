@@ -333,7 +333,7 @@ function Machine:replaceMachine(cost)
   setSmoke(self, false)
 end
 
---! Call on machine repaired. 
+--! Call on machine repaired.
 --!param room (object) machine room
 function Machine:machineRepaired(room)
   room.needs_repair = nil
@@ -422,7 +422,7 @@ function Machine:finalize(room)
   end
 end
 
-function Machine:updateDynamicInfo()  
+function Machine:updateDynamicInfo()
   if self.strength then
     local show_machine_max_available_strength_value = self.world.ui.app.config.new_machine_extra_info
     if show_machine_max_available_strength_value then
