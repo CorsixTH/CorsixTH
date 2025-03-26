@@ -41,13 +41,13 @@ local function create_room(name, args)
 
   if args.alive_plants then
     for _=1,args.alive_plants do
-      room.objects[{object_type = {id = "plant"}, isDying = function() return false end}] = true
+      room.objects[{object_type = {id = "plant"}, isMachine = function() return false end, isDying = function() return false end}] = true
     end
   end
 
   if args.dying_plants then
     for _=1,args.dying_plants do
-      room.objects[{object_type = {id = "plant"}, isDying = function() return true end}] = true
+      room.objects[{object_type = {id = "plant"}, isMachine = function() return false end, isDying = function() return true end}] = true
     end
   end
 
@@ -64,11 +64,11 @@ local function create_room(name, args)
   end
 
   if args.extinguisher then
-    room.objects[{object_type = {id = "extinguisher"}}] = true
+    room.objects[{object_type = {id = "extinguisher"}, isMachine = function() return false end}] = true
   end
 
   if args.bin then
-    room.objects[{object_type = {id = "bin"}}] = true
+    room.objects[{object_type = {id = "bin"}, isMachine = function() return false end}] = true
   end
 
   return room
