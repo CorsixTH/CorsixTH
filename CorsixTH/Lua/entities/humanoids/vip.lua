@@ -205,9 +205,7 @@ function Vip:evaluateRoom()
       self.room_eval = self.room_eval + 1
       -- Only count this object type once
       room_bin = 1
-    end
-
-    if object:isMachine() then
+    elseif object:isMachine() then
       self.room_eval = object:isBreaking() and self.room_eval - 1 or self.room_eval + 1
     end
   end
