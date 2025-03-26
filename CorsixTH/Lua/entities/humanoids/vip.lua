@@ -207,7 +207,7 @@ function Vip:evaluateRoom()
       room_bin = 1
     end
 
-    if object.isMachine(object) then
+    if object ~= nil and object:isMachine() then
       self.room_eval = object:isBreaking() and self.room_eval - 1 or self.room_eval + 1
     end
   end
