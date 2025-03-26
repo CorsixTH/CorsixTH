@@ -136,8 +136,7 @@ function Earthquake:tick()
 
   for _, room in pairs(self.world.rooms) do
     for object, _ in pairs(room.objects) do
-      local object_is_machine = object.strength
-      if object_is_machine then
+      if object:isMachine() then
         object:earthquakeImpact(room)
       end
     end

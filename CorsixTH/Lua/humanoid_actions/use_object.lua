@@ -386,8 +386,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
 
     -- Check if the room is about to be destroyed
     local room_destroyed = false
-    local object_is_machine = object.strength
-    if object_is_machine then
+    if object:isMachine() then
       if humanoid.humanoid_class ~= "Handyman"  then
         room_destroyed = object:machineUsed(humanoid:getRoom())
       end

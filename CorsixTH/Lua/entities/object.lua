@@ -622,6 +622,11 @@ function Object:isReservedFor(user)
   return false
 end
 
+--! Checks the object is a machine.
+function Object:isMachine()
+  return self.strength ~= nil
+end
+
 --[[ Called when the object is clicked
 !param ui (UI) The active ui.
 !param button (string) Which button was clicked.

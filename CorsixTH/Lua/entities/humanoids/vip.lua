@@ -207,8 +207,7 @@ function Vip:evaluateRoom()
       room_bin = 1
     end
 
-    local object_is_machine = object.strength
-    if object_is_machine then
+    if object:isMachine() then
       self.room_eval = object:isBreaking() and self.room_eval - 1 or self.room_eval + 1
     end
   end
