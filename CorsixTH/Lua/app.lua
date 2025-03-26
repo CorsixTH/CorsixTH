@@ -614,6 +614,7 @@ function App:loadCampaign(campaign_file)
     self.ui:addWindow(UIInformation(self.ui, { _S.errors.could_not_load_campaign:format(errors) }))
     return
   end
+  campaign_info.folder = campaign_file:match("(.*" .. pathsep .. ")")
 
   level_info, errors = self:readLevelFile(campaign_info.levels[1], campaign_info.folder)
   if not level_info then
