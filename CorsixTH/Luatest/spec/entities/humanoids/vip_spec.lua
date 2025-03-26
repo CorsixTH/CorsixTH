@@ -53,13 +53,13 @@ local function create_room(name, args)
 
   if args.working_machines then
     for _=1,args.working_machines do
-      room.objects[{object_type = {id = "machine"}, strength=_, isBreaking = function() return false end, isMachine = function() return true end}] = true
+      room.objects[{object_type = {id = "machine"}, strength=_, isMachine = function() return true end, isBreaking = function() return false end}] = true
     end
   end
 
   if args.breaking_machines then
     for _=1,args.breaking_machines do
-      room.objects[{object_type = {id = "machine"}, strength=_, isBreaking = function() return true end, isMachine = function() return true end}] = true
+      room.objects[{object_type = {id = "machine"}, strength=_, isMachine = function() return true end, isBreaking = function() return true end}] = true
     end
   end
 
