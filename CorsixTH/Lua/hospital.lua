@@ -158,8 +158,8 @@ function Hospital:Hospital(world, avail_rooms, name)
   self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
 
   self.sodas_sold = 0
-  self.num_vips_ty  = 0 -- used to count how many VIP visits in the year for an award
-  self.pleased_vips_ty  = 0
+  self.num_vips_ty = 0 -- used to count how many VIP visits in the year for an award
+  self.pleased_vips_ty = 0
   self.num_cured_ty = 0
   self.not_cured_ty = 0
   self.num_visitors_ty = 0
@@ -1022,7 +1022,8 @@ function Hospital:onEndMonth()
   self.research:checkAutomaticDiscovery(self.world:date():monthOfGame())
 
   -- Add some interesting statistics.
-  self.statistics[self.world:date():monthOfGame() + 1] = {
+  local newMonth = self.world:date():monthOfGame() + 1
+  self.statistics[newMonth] = {
     money_in = self.money_in,
     money_out = self.money_out,
     wages = wages,
@@ -1078,7 +1079,11 @@ end
 --! Called at the end of each year
 function Hospital:onEndYear()
   self.sodas_sold = 0
-  self.num_vips_ty  = 0
+  self.num_vips_ty = 0
+  self.pleased_vips_ty = 0
+  self.num_cured_ty = 0
+  self.not_cured_ty = 0
+  self.num_visitors_ty = 0
   self.num_deaths_this_year = 0
 
   self.has_impressive_reputation = true
