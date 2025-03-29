@@ -1285,7 +1285,7 @@ void animation::persist(lua_persist_writer* pWriter) const {
   // Write the drawable fields
   pWriter->write_uint(flags);
 
-  if (anim_kind  == animation_kind::normal) {
+  if (anim_kind == animation_kind::normal) {
     pWriter->write_uint(1);
   } else if (anim_kind == animation_kind::child) {
     pWriter->write_uint(2);
@@ -1656,8 +1656,7 @@ void animation_base::set_layer(int iLayer, int iId) {
   }
 }
 
-sprite_render_list::sprite_render_list() : animation_base() {
-}
+sprite_render_list::sprite_render_list() : animation_base() {}
 
 sprite_render_list::~sprite_render_list() { delete[] sprites; }
 

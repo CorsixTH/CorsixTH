@@ -574,13 +574,13 @@ class animation : public animation_base {
 
   void draw_fn(render_target* pCanvas, int iDestX, int iDestY) {
     switch (anim_kind) {
-    case animation_kind::normal:
+      case animation_kind::normal:
         draw(pCanvas, iDestX, iDestY);
         return;
-    case animation_kind::child:
+      case animation_kind::child:
         draw_child(pCanvas, iDestX, iDestY);
         return;
-    case animation_kind::morph:
+      case animation_kind::morph:
         draw_morph(pCanvas, iDestX, iDestY);
         return;
     }
@@ -588,21 +588,20 @@ class animation : public animation_base {
 
   bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) {
     switch (anim_kind) {
-    case animation_kind::normal:
+      case animation_kind::normal:
         return hit_test(iDestX, iDestY, iTestX, iTestY);
-    case animation_kind::child:
+      case animation_kind::child:
         return hit_test_child(iDestX, iDestY, iTestX, iTestY);
-    case animation_kind::morph:
+      case animation_kind::morph:
         return hit_test_morph(iDestX, iDestY, iTestX, iTestY);
     }
     return false;
   }
 
   bool is_multiple_frame_animation_fn() {
-    size_t firstFrame = get_animation_manager()->get_first_frame(
-        get_animation());
-    size_t nextFrame =
-        get_animation_manager()->get_next_frame(firstFrame);
+    size_t firstFrame =
+        get_animation_manager()->get_first_frame(get_animation());
+    size_t nextFrame = get_animation_manager()->get_next_frame(firstFrame);
     return nextFrame != firstFrame;
   }
 
@@ -677,9 +676,7 @@ class sprite_render_list : public animation_base {
     return hit_test(iDestX, iDestY, iTestX, iTestY);
   }
 
-  bool is_multiple_frame_animation_fn() {
-    return false;
-  }
+  bool is_multiple_frame_animation_fn() { return false; }
 
  private:
   struct sprite {
