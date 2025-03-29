@@ -572,7 +572,7 @@ class animation : public animation_base {
   void draw_child(render_target* pCanvas, int iDestX, int iDestY);
   bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
 
-  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) {
+  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override {
     switch (anim_kind) {
       case animation_kind::normal:
         draw(pCanvas, iDestX, iDestY);
@@ -586,7 +586,7 @@ class animation : public animation_base {
     }
   }
 
-  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) {
+  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override {
     switch (anim_kind) {
       case animation_kind::normal:
         return hit_test(iDestX, iDestY, iTestX, iTestY);
@@ -598,7 +598,7 @@ class animation : public animation_base {
     return false;
   }
 
-  bool is_multiple_frame_animation_fn() {
+  bool is_multiple_frame_animation_fn() override {
     size_t firstFrame =
         get_animation_manager()->get_first_frame(get_animation());
     size_t nextFrame = get_animation_manager()->get_next_frame(firstFrame);
@@ -668,15 +668,15 @@ class sprite_render_list : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
-  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) {
+  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override {
     draw(pCanvas, iDestX, iDestY);
   }
 
-  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) {
+  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override {
     return hit_test(iDestX, iDestY, iTestX, iTestY);
   }
 
-  bool is_multiple_frame_animation_fn() { return false; }
+  bool is_multiple_frame_animation_fn() override { return false; }
 
  private:
   struct sprite {
