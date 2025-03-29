@@ -100,7 +100,7 @@ local function setSmoke(self, isSmoking)
   end
 end
 
---! The function is called when an earthquake strike the machine. 
+--! The function is called when an earthquake strike the machine.
 --! Function defines the machine's reaction to an earthquake.
 --! During an earthquake, this function is called one or several times.
 --!param room (object) machine room
@@ -149,8 +149,8 @@ function Machine:callHandymanForRepairIfNecessary(room)
       local call = self.world.dispatcher:callForRepair(self, true, false, true)
       self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
       self.hospital:announceRepair(room)
-    else 
-      -- Otherwise the task is already queued. 
+    else
+      -- Otherwise the task is already queued.
       -- Increase the priority to above that of machines with at least 4 uses left
       -- Upgrades task from low (1) priority to high (2) priority
       -- This does not lock the room, as happens when the task call starts at high priority
@@ -191,7 +191,7 @@ function Machine:calculateIsMachineMustExplode(room)
     else
       -- Explosion chance increases 20% with every use over strength, and reduced by 5% for every additional extinguisher (up to 3 extra) in the room bar the first one
       explosion_chance = (2 / self.strength) + (remaining_use_count * -0.2) - (num_extinguishers * 0.05) + 0.05
-      explosion_chance = min(0.95, max(0.05, explosion_chance))
+      explosion_chance = math.min(0.95, math.max(0.05, explosion_chance))
       must_explode = math.random() < explosion_chance
     end
   end
