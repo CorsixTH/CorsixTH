@@ -506,7 +506,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     -- Some objects (e.g. the plant) uses this flag to avoid doing stupid things when picked up.
     real_obj.picked_up = false
     if real_obj:isMachine() then
-    -- Machines may have some state like smoke and etc. Update it.
+      -- Machines may have some state like smoke and etc. Update it.
       real_obj:placed(room)
     end
     if class.is(real_obj, Machine) then

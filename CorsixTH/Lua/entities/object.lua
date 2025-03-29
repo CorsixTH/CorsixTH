@@ -622,9 +622,9 @@ function Object:isReservedFor(user)
   return false
 end
 
---! Checks the object is a machine.
+--! This function is for overriding it in the inheriting Machine class.
 function Object:isMachine()
-  return self.strength ~= nil
+  return false
 end
 
 --[[ Called when the object is clicked
