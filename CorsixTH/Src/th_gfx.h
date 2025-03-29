@@ -109,27 +109,25 @@ struct drawable : public link_list {
   /*!
       Can also "draw" the object to the speakers, i.e. play sounds.
   */
-  void (*draw_fn)(drawable* pSelf, render_target* pCanvas, int iDestX,
-                  int iDestY);
+  virtual void draw_fn(render_target* pCanvas, int iDestX, int iDestY) = 0;
 
   //! Perform a hit test against the object
   /*!
       Should return true if when the object is drawn at (iDestX, iDestY) on a
      canvas, the point (iTestX, iTestY) is within / on the object.
   */
-  bool (*hit_test_fn)(drawable* pSelf, int iDestX, int iDestY, int iTestX,
-                      int iTestY);
-
-  //! Drawing flags (zero or more list flags from #draw_flags).
-  uint32_t flags;
+  virtual bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) = 0;
 
   /** Returns true if instance is a multiple frame animation.
       Should be overloaded in derived class.
   */
-  bool (*is_multiple_frame_animation_fn)(drawable* pSelf);
+  virtual bool is_multiple_frame_animation_fn() = 0;
 
   int get_drawing_layer() { return drawing_layer; }
   void set_drawing_layer(int layer) { drawing_layer = layer; }
+
+  //! Drawing flags (zero or more list flags from #draw_flags).
+  uint32_t flags;
 
  private:
   int drawing_layer;
@@ -541,7 +539,6 @@ class animation_base : public drawable {
   void set_layer(int iLayer, int iId);
   void set_layers_from(const animation_base* pSrc) { layers = pSrc->layers; }
 
-  // bool isMultipleFrameAnimation() { return false;}
  protected:
   //! X position on tile (not tile x-index)
   int x_relative_to_tile;
@@ -558,6 +555,9 @@ struct xy_diff {
   int dy;
 };
 
+//! The kind of animation.
+enum class animation_kind { normal, child, morph };
+
 class animation : public animation_base {
  public:
   animation();
@@ -571,6 +571,40 @@ class animation : public animation_base {
   bool hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY);
   void draw_child(render_target* pCanvas, int iDestX, int iDestY);
   bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
+
+  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) {
+    switch (anim_kind) {
+    case animation_kind::normal:
+        draw(pCanvas, iDestX, iDestY);
+        return;
+    case animation_kind::child:
+        draw_child(pCanvas, iDestX, iDestY);
+        return;
+    case animation_kind::morph:
+        draw_morph(pCanvas, iDestX, iDestY);
+        return;
+    }
+  }
+
+  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) {
+    switch (anim_kind) {
+    case animation_kind::normal:
+        return hit_test(iDestX, iDestY, iTestX, iTestY);
+    case animation_kind::child:
+        return hit_test_child(iDestX, iDestY, iTestX, iTestY);
+    case animation_kind::morph:
+        return hit_test_morph(iDestX, iDestY, iTestX, iTestY);
+    }
+    return false;
+  }
+
+  bool is_multiple_frame_animation_fn() {
+    size_t firstFrame = get_animation_manager()->get_first_frame(
+        get_animation());
+    size_t nextFrame =
+        get_animation_manager()->get_next_frame(firstFrame);
+    return nextFrame != firstFrame;
+  }
 
   link_list* get_previous() { return prev; }
   size_t get_animation() const { return animation_index; }
@@ -590,6 +624,8 @@ class animation : public animation_base {
   void depersist(lua_persist_reader* pReader);
 
   void set_patient_effect(animation_effect patient_effect);
+  void set_animation_kind(animation_kind anim_kind);
+  animation_kind get_animation_kind() { return anim_kind; }
 
   animation_manager* get_animation_manager() { return manager; }
 
@@ -607,6 +643,7 @@ class animation : public animation_base {
 
   size_t sound_to_play;
   int crop_column;
+  animation_kind anim_kind;
   animation_effect patient_effect;
   //! Number of game_ticks to offset animation by so they aren't all
   //! running in sync.
@@ -631,6 +668,18 @@ class sprite_render_list : public animation_base {
 
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
+
+  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) {
+    draw(pCanvas, iDestX, iDestY);
+  }
+
+  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) {
+    return hit_test(iDestX, iDestY, iTestX, iTestY);
+  }
+
+  bool is_multiple_frame_animation_fn() {
+    return false;
+  }
 
  private:
   struct sprite {

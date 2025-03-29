@@ -1042,7 +1042,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
       }
       drawable* pItem = static_cast<drawable*>(itrNode->oEarlyEntities.next);
       while (pItem) {
-        pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
+        pItem->draw_fn(pCanvas, itrNode.x(), itrNode.y());
         pItem = static_cast<drawable*>(pItem->next);
       }
     }
@@ -1091,8 +1091,8 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
       drawable* pItem = static_cast<drawable*>(itrNode->entities.next);
       while (pItem) {
-        pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
-        if (pItem->is_multiple_frame_animation_fn(pItem)) {
+        pItem->draw_fn(pCanvas, itrNode.x(), itrNode.y());
+        if (pItem->is_multiple_frame_animation_fn()) {
           bRedrawAnimations = true;
         }
         if (pItem->get_drawing_layer() == 1) {
@@ -1115,7 +1115,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
             formerIterator.get_previous_tile()->entities.next);
         while (pItem) {
           if (pItem->get_drawing_layer() == 9) {
-            pItem->draw_fn(pItem, pCanvas, formerIterator.x() - 64,
+            pItem->draw_fn(pCanvas, formerIterator.x() - 64,
                            formerIterator.y());
             bTileNeedsRedraw = true;
           }
@@ -1129,7 +1129,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                     : nullptr;
         while (pItem) {
           if (pItem->get_drawing_layer() == 8) {
-            pItem->draw_fn(pItem, pCanvas, formerIterator.x(),
+            pItem->draw_fn(pCanvas, formerIterator.x(),
                            formerIterator.y());
           }
           pItem = static_cast<drawable*>(pItem->next);
@@ -1163,13 +1163,13 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
           pItem = static_cast<drawable*>(
               itrNode.get_previous_tile()->oEarlyEntities.next);
           for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
-            pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
+            pItem->draw_fn(pCanvas, itrNode.x() - 64, itrNode.y());
           }
 
           pItem = static_cast<drawable*>(
               itrNode.get_previous_tile()->entities.next);
           for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
-            pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
+            pItem->draw_fn(pCanvas, itrNode.x() - 64, itrNode.y());
           }
         }
       }
@@ -1245,7 +1245,7 @@ drawable* level_map::hit_test_drawables(link_list* pListStart, int iXs, int iYs,
   drawable* pList = static_cast<drawable*>(pListEnd);
 
   while (true) {
-    if (pList->hit_test_fn(pList, iXs, iYs, iTestX, iTestY)) return pList;
+    if (pList->hit_test_fn(iXs, iYs, iTestX, iTestY)) return pList;
 
     if (pList == pListStart) {
       return nullptr;
