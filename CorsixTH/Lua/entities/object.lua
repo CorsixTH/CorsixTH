@@ -56,7 +56,7 @@ function Object:Object(hospital, object_type, x, y, direction, etc)
   self.hospital = hospital
   self.world = hospital.world
   self.user = false
-  self.times_used = -1 -- Incremented in the call on the next line
+  self.times_used = 0
   self:updateDynamicInfo()
   self:initOrientation(direction)
   self:setTile(x, y)
@@ -264,12 +264,13 @@ function Object:getRenderAttachTile()
   return x, y
 end
 
+--! Call on object used. After object used increment use values accordingly.
+function Object:incrementUsedCount()
+  self.times_used = self.times_used + 1
+end
+
 --! Updates the object's dynamic info
---!param only_update (bool) If true, do not increase times_used.
-function Object:updateDynamicInfo(only_update)
-  if not only_update then
-    self.times_used = self.times_used + 1
-  end
+function Object:updateDynamicInfo()
   local object = self.object_type
   if object.dynamic_info then
     self:setDynamicInfo("text", {object.name, "", _S.dynamic_info.object.times_used:format(self.times_used)})
@@ -621,6 +622,11 @@ function Object:isReservedFor(user)
   return false
 end
 
+--! This function is for overriding it in the inheriting Machine class.
+function Object:isMachine()
+  return false
+end
+
 --[[ Called when the object is clicked
 !param ui (UI) The active ui.
 !param button (string) Which button was clicked.
@@ -651,9 +657,10 @@ function Object:onClick(ui, button, data)
       if self.object_type.class == "Machine" then
         taskType = "repairing"
       end
-      local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, taskType)
-      if index ~= -1 then
-        self.hospital:removeHandymanTask(index, taskType)
+      local task_index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, taskType)
+      local task_exist = task_index ~= -1
+      if task_exist then
+        self.hospital:removeHandymanTask(task_index, taskType)
       end
     end
 
@@ -747,7 +754,7 @@ function Object:afterLoad(old, new)
       self:setTile(self.tile_x, self.tile_y)
     end
   end
-  self:updateDynamicInfo(true)
+  self:updateDynamicInfo()
   return Entity.afterLoad(self, old, new)
 end
 

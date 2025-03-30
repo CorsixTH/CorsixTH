@@ -386,12 +386,13 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
 
     -- Check if the room is about to be destroyed
     local room_destroyed = false
-    if object.strength then
+    if object:isMachine() then
       if humanoid.humanoid_class ~= "Handyman"  then
         room_destroyed = object:machineUsed(humanoid:getRoom())
       end
     elseif object:getDynamicInfo() and not object.master then
       -- Don't update if it is a slave object.
+      object:incrementUsedCount()
       object:updateDynamicInfo()
     end
     if not room_destroyed then

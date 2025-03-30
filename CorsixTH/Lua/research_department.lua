@@ -531,7 +531,7 @@ function ResearchDepartment:updateMachinesDynamicInfo(machine_id)
     if room.hospital == self.hospital then
       for obj, _ in pairs(room.objects) do
         if obj.object_type.id == machine_id then
-          obj:updateDynamicInfo(true)
+          obj:updateDynamicInfo()
           break
         end
       end
