@@ -32,4 +32,4 @@ Note: This file compiles as both Lua and C++. */
 
 #endif /*]] --*/
 
-return 2689;
+return 2688;
