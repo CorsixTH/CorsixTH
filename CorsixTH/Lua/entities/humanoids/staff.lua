@@ -456,6 +456,15 @@ function Staff:setPickup(ui, window_to_close)
   end
 end
 
+-- Function resets "Surgeon" state for Doctor.
+-- Useful for case when on picking up Doctor from Operating Theatre
+-- we need to switching him back to regular clothes and type.
+function Staff:resetSurgeonState()
+  if self.humanoid_class == "Surgeon" then
+    self:setType("Doctor")
+  end
+end
+
 function Staff:onPlaceInCorridor()
   local world = self.world
   local notify_object = world:getObjectToNotifyOfOccupants(self.tile_x, self.tile_y)
