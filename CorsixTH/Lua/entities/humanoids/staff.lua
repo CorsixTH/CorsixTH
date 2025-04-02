@@ -456,13 +456,12 @@ function Staff:setPickup(ui, window_to_close)
   end
 end
 
--- Function resets "Surgeon" state for Doctor.
--- Useful for case when on picking up Doctor from Operating Theatre
--- we need to switching him back to regular clothes and type.
-function Staff:resetSurgeonState()
-  if self.humanoid_class == "Surgeon" then
-    self:setType("Doctor")
-  end
+function Staff:onPickup()
+  self:setDynamicInfoText("")
+  -- picking up staff was not canceling moods in all cases see issue 1642
+  -- as you would expect room:onHumanoidLeave(humanoid) to clear them!
+  self:setMood("idea3", "deactivate")
+  self:setMood("reflexion", "deactivate")
 end
 
 function Staff:onPlaceInCorridor()

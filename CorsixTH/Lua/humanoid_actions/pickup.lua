@@ -66,15 +66,7 @@ local function action_pickup_start(action, humanoid)
     action.todo_close:close()
   end
   if class.is(humanoid, Staff) then
-    local staff = humanoid
-    staff:setDynamicInfoText("")
-    -- picking up staff was not canceling moods in all cases see issue 1642
-    -- as you would expect room:onHumanoidLeave(humanoid) to clear them!
-    staff:setMood("idea3", "deactivate")
-    staff:setMood("reflexion", "deactivate")
-    -- if picking up Doctor from Operating Theatre in operating gown
-    -- let's switch him back to regular clothes and type.
-    staff:resetSurgeonState()
+    humanoid:onPickup()
   end
   humanoid:setSpeed(0, 0)
   humanoid.th:makeInvisible()
