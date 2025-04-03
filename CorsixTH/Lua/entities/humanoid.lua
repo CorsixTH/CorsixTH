@@ -554,14 +554,17 @@ function Humanoid:setNextAction(action, high_priority)
   -- Interrupt the current action and queue other actions to be interrupted
   -- when they start.
   if interrupted then
-    interrupted = queue[1]
+    local current_action = queue[1]
     for j = 1, i - 1 do
       queue[j].todo_interrupt = high_priority and "high" or true
     end
-    local on_interrupt = interrupted.on_interrupt
-    if on_interrupt then
-      interrupted.on_interrupt = nil
-      on_interrupt(interrupted, self, high_priority or false)
+    -- Try to interrupt current action
+    if not current_action.uninterruptible then
+      local interrupt_handler = current_action.on_interrupt
+      if interrupt_handler then
+        current_action.on_interrupt = nil
+        interrupt_handler(current_action, self, high_priority or false)
+      end
     end
   else
     -- Start the action if it has become the current action
