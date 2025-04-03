@@ -43,7 +43,7 @@ uint8_t range_scale(uint16_t low, uint16_t high, uint16_t val, uint16_t start,
 }
 
 inline bool is_wall(uint16_t blk) {
-  return ((82 <= ((blk)&0xFF)) && (((blk)&0xFF) <= 164));
+  return ((82 <= ((blk) & 0xFF)) && (((blk) & 0xFF) <= 164));
 }
 
 inline bool is_wall_drawn(const level_map& map, const map_tile& node,
