@@ -66,11 +66,7 @@ local function action_pickup_start(action, humanoid)
     action.todo_close:close()
   end
   if class.is(humanoid, Staff) then
-    humanoid:setDynamicInfoText("")
-    -- picking up staff was not canceling moods in all cases see issue 1642
-    -- as you would expect room:onHumanoidLeave(humanoid to clear them!
-    humanoid:setMood("idea3", "deactivate")
-    humanoid:setMood("reflexion", "deactivate")
+    humanoid:onPickup()
   end
   humanoid:setSpeed(0, 0)
   humanoid.th:makeInvisible()

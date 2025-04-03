@@ -242,6 +242,20 @@ function Doctor:setCrazy(crazy)
   end
 end
 
+function Doctor:onPickup()
+  Staff.onPickup(self)
+  self:resetSurgeonState()
+end
+
+-- Function resets "Surgeon" state for Doctor.
+-- Useful for case when on picking up Doctor from Operating Theatre
+-- we need to switching him back to regular clothes and type.
+function Doctor:resetSurgeonState()
+  if self.humanoid_class == "Surgeon" then
+    self:setType("Doctor")
+  end
+end
+
 local profile_attributes = {
   Psychiatrist = "is_psychiatrist",
   Surgeon = "is_surgeon",

@@ -456,6 +456,14 @@ function Staff:setPickup(ui, window_to_close)
   end
 end
 
+function Staff:onPickup()
+  self:setDynamicInfoText("")
+  -- picking up staff was not canceling moods in all cases see issue 1642
+  -- as you would expect room:onHumanoidLeave(humanoid) to clear them!
+  self:setMood("idea3", "deactivate")
+  self:setMood("reflexion", "deactivate")
+end
+
 function Staff:onPlaceInCorridor()
   local world = self.world
   local notify_object = world:getObjectToNotifyOfOccupants(self.tile_x, self.tile_y)
