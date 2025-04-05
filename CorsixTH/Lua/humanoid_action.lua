@@ -31,11 +31,12 @@ function HumanoidAction:HumanoidAction(name)
 
   self.name = name
   self.count = nil -- 'nil' means 'forever' (until finished), else the number to perform.
-  self.must_happen = false -- If true, action cannot be skipped.
+  self.must_happen = false -- If true, action cannot be skipped. still can be interrupted/cancelled by pick up.
   self.loop_callback = nil -- Periodic callback to check for termination conditions.
   self.after_use = nil -- Callback for performing updates afterwards.
   self.is_leaving = false -- Whether the humanoid is leaving.
   self.no_truncate = false -- If set, disable shortening the action.
+  self.uninterruptible = false -- If true, can not be interrupted/cancelled by pickup.
 end
 
 --! Set the number of times the action should happen.
@@ -55,6 +56,16 @@ function HumanoidAction:setMustHappen(must_happen)
   assert(type(must_happen) == "boolean", "Invalid value for parameters 'must_happen'")
 
   self.must_happen = must_happen
+  return self
+end
+
+--! Set the 'uninterruptable' flag (that is, action cannot be canceled or truncated by pickup).
+--!param uninterruptable (bool) Whether or not the action uninterruptable.
+--!return (action) Returning self, for daisy-chaining.
+function HumanoidAction:setUninterruptable(uninterruptable)
+  assert(type(uninterruptable) == "boolean", "Invalid value for parameters 'uninterruptable'")
+
+  self.uninterruptible = uninterruptable
   return self
 end
 
