@@ -245,17 +245,6 @@ else()
   message("Lua modules are not linked and will be loaded at runtime")
 endif()
 
-if(MSVC AND CORSIX_TH_USE_VLD)
-  find_package(VLD REQUIRED)
-  if(VLD_FOUND)
-    target_link_libraries(CorsixTH PRIVATE ${VLD_LIBRARY})
-    include_directories(CorsixTH PRIVATE ${VLD_INCLUDE_DIR})
-    message("  VLD found")
-  else()
-    message(FATAL_ERROR "Error: VLD Library not found, it is required to build when USE_VLD is set")
-  endif()
-endif()
-
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
   # Do not generate launch script. The default is fine for this case.
