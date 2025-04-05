@@ -327,8 +327,8 @@ end
 function CallsDispatcher:answerCall(staff)
   local min_score = 2^30
   local min_call = nil
-  assert(not staff.on_call, "Staff should be idea before he can answer another call")
-  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call")
+  assert(not staff.on_call, "Staff member looking for work while already answering a call.")
+  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call.")
 
   if staff.humanoid_class == "Handyman" then
    staff:searchForHandymanTask()
