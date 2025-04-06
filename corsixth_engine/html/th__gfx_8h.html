@@ -82,6 +82,7 @@ $(function() {
 <code>#include &quot;<a class="el" href="th_8h_source.html">th.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="th__gfx__common_8h_source.html">th_gfx_common.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="th__gfx__sdl_8h_source.html">th_gfx_sdl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="th__lua_8h_source.html">th_lua.h</a>&quot;</code><br />
 </div>
 <p><a href="th__gfx_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -150,6 +151,12 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a43e9cb66d61948afed4b803a77a88bac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bitflags for drawing operations.  <a href="th__gfx_8h.html#a43e9cb66d61948afed4b803a77a88bac">More...</a><br /></td></tr>
 <tr class="separator:a43e9cb66d61948afed4b803a77a88bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a762973ebb25ec988b09557fc414c01ab"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__gfx_8h.html#a762973ebb25ec988b09557fc414c01ab">animation_kind</a> { <a class="el" href="th__gfx_8h.html#a762973ebb25ec988b09557fc414c01abafea087517c26fadd409bd4b9dc642555">normal</a>
+, <a class="el" href="th__gfx_8h.html#a762973ebb25ec988b09557fc414c01aba1b7d5726533ab525a8760351e9b5e415">child</a>
+, <a class="el" href="th__gfx_8h.html#a762973ebb25ec988b09557fc414c01aba5696e4b381bd5151da8337f3c5ce643b">morph</a>
+ }</td></tr>
+<tr class="memdesc:a762973ebb25ec988b09557fc414c01ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The kind of animation.  <a href="th__gfx_8h.html#a762973ebb25ec988b09557fc414c01ab">More...</a><br /></td></tr>
+<tr class="separator:a762973ebb25ec988b09557fc414c01ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -158,6 +165,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1472e83492af694471a73f956424cef6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__gfx_8h.html#a1472e83492af694471a73f956424cef6">operator&lt;</a> (const <a class="el" href="structanimation__key.html">animation_key</a> &amp;oK, const <a class="el" href="structanimation__key.html">animation_key</a> &amp;oL)</td></tr>
 <tr class="memdesc:a1472e83492af694471a73f956424cef6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Less-than operator for map-sorting.  <a href="th__gfx_8h.html#a1472e83492af694471a73f956424cef6">More...</a><br /></td></tr>
 <tr class="separator:a1472e83492af694471a73f956424cef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f474fc9fec36aefbade0f4156b79955"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a7f474fc9fec36aefbade0f4156b79955"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classanimation__base.html">animation_base</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="th__gfx_8h.html#a7f474fc9fec36aefbade0f4156b79955">luaT_testuserdata&lt; animation_base &gt;</a> (lua_State *L, int idx, bool required)</td></tr>
+<tr class="separator:a7f474fc9fec36aefbade0f4156b79955"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -197,6 +207,35 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a762973ebb25ec988b09557fc414c01ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a762973ebb25ec988b09557fc414c01ab">&#9670;&nbsp;</a></span>animation_kind</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="th__gfx_8h.html#a762973ebb25ec988b09557fc414c01ab">animation_kind</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The kind of animation. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a762973ebb25ec988b09557fc414c01abafea087517c26fadd409bd4b9dc642555"></a>normal&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a762973ebb25ec988b09557fc414c01aba1b7d5726533ab525a8760351e9b5e415"></a>child&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a762973ebb25ec988b09557fc414c01aba5696e4b381bd5151da8337f3c5ce643b"></a>morph&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <a id="a43e9cb66d61948afed4b803a77a88bac"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a43e9cb66d61948afed4b803a77a88bac">&#9670;&nbsp;</a></span>draw_flags</h2>
 
@@ -301,6 +340,50 @@ Variables</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7f474fc9fec36aefbade0f4156b79955"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f474fc9fec36aefbade0f4156b79955">&#9670;&nbsp;</a></span>luaT_testuserdata&lt; animation_base &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classanimation__base.html">animation_base</a>* <a class="el" href="th__lua_8h.html#a892859403c206d690ba292402c81d3ba">luaT_testuserdata</a>&lt; <a class="el" href="classanimation__base.html">animation_base</a> &gt; </td>
+          <td>(</td>
+          <td class="paramtype">lua_State *&#160;</td>
+          <td class="paramname"><em>L</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>required</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
