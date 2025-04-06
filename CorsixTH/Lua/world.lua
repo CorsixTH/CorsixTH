@@ -2425,6 +2425,9 @@ function World:afterLoad(old, new)
     self:resetSideObjects()
   end
 
+  if old < 132 then
+    self.app = self.ui.app
+  end
   if old < 153 then
     -- Set the new variable next_emergency_date
     -- Also set the new variable next_emergency
