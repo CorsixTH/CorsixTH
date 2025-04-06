@@ -19,7 +19,7 @@
 
 # Tests and debug options
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
-#   - ENABLE_ASAN : Build with AddressSanitizer enabled (no)
+#   - ENABLE_SANITIZERS : Build with AddressSanitizer (ASan) and UndefinedBehaviorSanitizer (UBSan) enabled (no)
 
 # Additional build targets
 #   - BUILD_ANIMVIEW : Generate AnimView build files (no)
@@ -38,7 +38,7 @@ option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Inco
 option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
 option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
 option(BUILD_TOOLS "Build additional CLI tools (rnc_decode)" OFF)
-option(ENABLE_ASAN "Build with AddressSanitizer enabled" OFF)
+option(ENABLE_SANITIZERS "Build with ASan and UBSan enabled" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
@@ -67,9 +67,9 @@ if(MINGW)
   set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 endif()
 
-if(ENABLE_ASAN)
-  add_compile_options(-fsanitize=address)
-  add_link_options(-fsanitize=address)
+if(ENABLE_SANITIZERS)
+  add_compile_options(-fsanitize=address,undefined)
+  add_link_options(-fsanitize=address,undefined)
 endif()
 
 include(CheckIncludeFiles)

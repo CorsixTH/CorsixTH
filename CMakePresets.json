@@ -8,7 +8,7 @@
       "cacheVariables": {
         "USE_SOURCE_DATADIRS": "ON",
         "ENABLE_UNIT_TESTS": "ON",
-        "ENABLE_ASAN": "ON",
+        "ENABLE_SANITIZERS": "ON",
         "BUILD_ANIMVIEW": "ON",
         "BUILD_TOOLS": "ON",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
@@ -23,7 +23,7 @@
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "USE_SOURCE_DATADIRS": "ON",
         "ENABLE_UNIT_TESTS": "ON",
-        "ENABLE_ASAN": "ON",
+        "ENABLE_SANITIZERS": "ON",
         "BUILD_ANIMVIEW": "ON",
         "BUILD_TOOLS": "ON",
 	"CMAKE_BUILD_TYPE": "Debug"
