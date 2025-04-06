@@ -30,6 +30,7 @@ SOFTWARE.
 #include "th.h"
 #include "th_gfx_common.h"
 #include "th_gfx_sdl.h"
+#include "th_lua.h"
 
 class lua_persist_reader;
 class lua_persist_writer;
@@ -700,5 +701,13 @@ class sprite_render_list : public animation_base {
   //! rendering quality when scaling.
   bool use_intermediate_buffer = false;
 };
+
+inline animation_base* get_animation_base_from_userdata(lua_State* L, int idx) {
+  animation_base* p = luaT_testuserdata<animation>(L, idx, false);
+  if (p == nullptr) {
+    p = luaT_testuserdata<sprite_render_list>(L, idx, false);
+  }
+  return p;
+}
 
 #endif  // CORSIX_TH_TH_GFX_H_

@@ -1603,7 +1603,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     }
 
     if (!pReader->read_stack_object()) return;
-    pNode->entities.next = static_cast<link_list*>(lua_touserdata(L, -1));
+    pNode->entities.next = get_animation_base_from_userdata(L, -1);
     if (pNode->entities.next) {
       if (pNode->entities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
@@ -1613,7 +1613,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     lua_pop(L, 1);
 
     if (!pReader->read_stack_object()) return;
-    pNode->oEarlyEntities.next = static_cast<link_list*>(lua_touserdata(L, -1));
+    pNode->oEarlyEntities.next = get_animation_base_from_userdata(L, -1);
     if (pNode->oEarlyEntities.next) {
       if (pNode->oEarlyEntities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
