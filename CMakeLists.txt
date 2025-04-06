@@ -68,8 +68,13 @@ if(MINGW)
 endif()
 
 if(ENABLE_SANITIZERS)
-  add_compile_options(-fsanitize=address,undefined)
-  add_link_options(-fsanitize=address,undefined)
+  if(MSVC)
+    # https://learn.microsoft.com/en-us/cpp/build/reference/fsanitize?view=msvc-170
+    add_compile_options(/fsanitize=address)
+  else()
+    add_compile_options(-fsanitize=address,undefined)
+    add_link_options(-fsanitize=address,undefined)
+  endif()
 endif()
 
 include(CheckIncludeFiles)
