@@ -1613,7 +1613,8 @@ void level_map::depersist(lua_persist_reader* pReader) {
     lua_pop(L, 1);
 
     if (!pReader->read_stack_object()) return;
-    pNode->oEarlyEntities.next = luaT_testuserdata<animation_base>(L, -1, false);
+    pNode->oEarlyEntities.next =
+        luaT_testuserdata<animation_base>(L, -1, false);
     if (pNode->oEarlyEntities.next) {
       if (pNode->oEarlyEntities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
