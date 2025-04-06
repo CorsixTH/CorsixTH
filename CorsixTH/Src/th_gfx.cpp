@@ -1345,7 +1345,7 @@ void animation::depersist(lua_persist_reader* pReader) {
     // Read the chain
     if (!pReader->read_stack_object()) break;
 
-    next = get_animation_base_from_userdata(L, -1);
+    next = luaT_testuserdata<animation_base>(L, -1, false);
     if (next) next->prev = this;
     lua_pop(L, 1);
 
@@ -1828,7 +1828,7 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
     return;
   }
 
-  next = get_animation_base_from_userdata(L, -1);
+  next = luaT_testuserdata<animation_base>(L, -1, false);
   if (next) {
     next->prev = this;
   }

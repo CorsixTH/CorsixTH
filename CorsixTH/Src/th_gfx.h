@@ -702,10 +702,14 @@ class sprite_render_list : public animation_base {
   bool use_intermediate_buffer = false;
 };
 
-inline animation_base* get_animation_base_from_userdata(lua_State* L, int idx) {
+// Specialization of the 'luaT_testuserdata' template for the 'animation_base'
+// class.
+template <>
+inline animation_base* luaT_testuserdata<animation_base>(lua_State* L, int idx,
+                                                  bool required) {
   animation_base* p = luaT_testuserdata<animation>(L, idx, false);
   if (p == nullptr) {
-    p = luaT_testuserdata<sprite_render_list>(L, idx, false);
+    p = luaT_testuserdata<sprite_render_list>(L, idx, required);
   }
   return p;
 }
