@@ -35,12 +35,16 @@ local Queue = _G["Queue"]
 
 --! Constructor of a queue.
 function Queue:Queue()
-  self.reported_size = 0   -- Number of real patients
-  self.expected = {}       -- Expected humanoids
+  -- Number of real patients that can be observed in the door queue interface.
+  self.reported_size = 0
+  -- Expected humanoids
+  self.expected = {}
   self.callbacks = {}
-  self.expected_count = 0  -- Number of expected patients
+  -- Number of expected patients
+  self.expected_count = 0
   self.visitor_count = 0
-  self.max_size = 6        -- Maximum queue length (default value)
+  -- Maximum queue length (default value)
+  self.max_size = 6
   self.bench_threshold = 0
 end
 
@@ -96,7 +100,7 @@ end
 --!return (int) Number of various people in the queue.
 function Queue:size()
   -- Remember, the size includes people waiting to leave and staff waiting to enter
-  -- For just the patients waiting to enter, use Queue:reportedSize()
+  -- For just the patients waiting to be served, use Queue:reportedSize()
   -- Most of the time, size() == reportedSize(), so it won't be immediately obvious
   -- if you're using the wrong method, but from time to time, staff or exiting
   -- patients will be in the queue, at which point the sizes will differ.
@@ -106,7 +110,7 @@ end
 --! Retrieve whether the queue is full.
 --!return (boolean) Whether the queue is full.
 function Queue:isFull()
-  return #self >= self.max_size
+  return self:size() >= self.max_size
 end
 
 --! Get the number of real patients in the queue.
@@ -142,7 +146,7 @@ end
 --!param index (int) Index of the patient to retrieve (runs up to Queue:reportedSize).
 --!return Patient at the queried point in the queue.
 function Queue:reportedHumanoid(index)
-  return self[#self - self.reported_size + index]
+  return self[self:size() - self.reported_size + index]
 end
 
 function Queue:setPriorityForSameRoom(entity)
@@ -153,39 +157,64 @@ local function _isLeaving(queue, humanoid)
   return queue.same_room_priority and queue.same_room_priority:getRoom() == humanoid:getRoom()
 end
 
-
+--! Get queue priority for given humanoid
+--! Lower value means more significant priority.
+--! Humanoids with priority lower that 'reported_priority_threshold'
+-- is not displayed in the door queue interface.
+--!param queue (object) target Queue.
+--!param humanoid (object) Humanoid for which we asking the priority.
 local function _humanoidQueuePriority(queue, humanoid)
   if _isLeaving(queue, humanoid) then
+    -- If humanoid Leaving he have most significant priority
+    -- If not prioritize Leaving then are possible cases like #873
     return 1
   elseif class.is(humanoid, Staff) then
+    -- Next is a staff members
     return 2
-  elseif humanoid.is_emergency or class.is(humanoid, Vip) or class.is(humanoid, Inspector) then
+  elseif class.is(humanoid, Vip) or class.is(humanoid, Inspector) then
+    -- Next is a Vip and other hospital guests.
+    -- Who are served instantly and do not delay others.
     return 3
-  else
+  elseif humanoid.is_emergency then
+    -- Next is a Emergency patients
     return 4
+  else
+    -- All other regular patients receives this priority
+    return 5
   end
 end
 
-local reported_priority_threshold = 2
+--! Determines whether Humanoid with this priority
+-- is sufficient to display in door queue interface.
+--!param priority (int) priority need to be checked.
+--return (bool) is should displayed.
+local function _shouldDisplayInDoorQueueInterface(priority)
+  local reported_priority_threshold = 3
+  return priority > reported_priority_threshold
+end
 
 function Queue:push(humanoid, callbacks_on)
-  local index = #self + 1
+  local index = self:size() + 1
   local priority = _humanoidQueuePriority(self, humanoid)
 
+  -- let's calculate under what 'index' we should insert new humanoid into the queue
   while index > 1 do
+    -- if new humanoid have higher or same priority than another one humanoid in queue
     if _humanoidQueuePriority(self, self[index - 1]) <= priority then
       break
     end
     index = index - 1
   end
 
-  if priority > reported_priority_threshold then
+  -- Increment the 'reported_size' if the priority is sufficient
+  -- to display humanoid in the door queue interface
+  if _shouldDisplayInDoorQueueInterface(priority) then
     self.reported_size = self.reported_size + 1
   end
 
   self.callbacks[humanoid] = callbacks_on
   table.insert(self, index, humanoid)
-  for i = index + 1, #self do
+  for i = index + 1, self:size() do
     local queued_humanoid = self[i]
     local callbacks = self.callbacks[queued_humanoid]
     if callbacks then
@@ -204,14 +233,14 @@ end
 --! Get the last person in the queue (queue is not changed).
 --!return Last person in the queue.
 function Queue:back()
-  return self[#self]
+  return self[self:size()]
 end
 
 --! Pop first person from the queue.
 --! Note that first person may not be a patient, use Queue:reportedHumanoid to get patients
 --!return First person in the queue.
 function Queue:pop()
-  if self.reported_size == #self then
+  if self.reported_size == self:size() then
     self.reported_size = self.reported_size - 1
   end
   local oldfront = self[1]
@@ -240,13 +269,13 @@ function Queue:remove(index)
     return
   end
   local value = self[index]
-  if index > #self - self.reported_size then
+  if index > self:size() - self.reported_size then
     self.reported_size = self.reported_size - 1
   end
   value:setMood("queue", "deactivate")
   table.remove(self, index)
   self.callbacks[value] = nil
-  for i = #self, index, -1 do
+  for i = self:size(), index, -1 do
     local humanoid = self[i]
     if humanoid.onAdvanceQueue then
       humanoid:onAdvanceQueue(self, i - 1)
@@ -259,7 +288,7 @@ end
 --!param value Person to remove.
 --!return Whether the person could be found (and was removed).
 function Queue:removeValue(value)
-  for i = 1, #self do
+  for i = 1, self:size() do
     if self[i] == value then
       self:remove(i)
       return true
