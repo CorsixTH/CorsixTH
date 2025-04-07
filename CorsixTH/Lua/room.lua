@@ -722,6 +722,20 @@ function Room:roomFinished()
   self:calculateHappinessFactor()
 end
 
+--! Check if a room is actively required by patients
+--! A room is deemed in demand should any patient be in a state of using, or
+--! wanting to use the room.
+--!return (boolean) true if the room is currently needed
+function Room:isRoomInDemand()
+  local door = self.door
+  if self:getPatientCount() > 0 and not self:getPatient():isLeaving() then
+    return true
+  end
+  return (door.queue and door.queue:patientSize() > 0) or
+      (door.reserved_for and class.is(door.reserved_for, Patient)) or
+      (door.user and class.is(door.user, Patient) and door.user:getCurrentAction().is_entering)
+end
+
 --! Try to move a patient from the old room to the new room.
 --!param old_room (Room) Room that currently has the patient in the queue.
 --!param new_room (Room) Room that wants the patient in the queue.
