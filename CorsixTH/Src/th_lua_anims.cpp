@@ -174,9 +174,9 @@ int l_anims_set_alt_pal(lua_State* L) {
 int l_anims_set_primary_marker(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   lua_pushboolean(
-      L, pAnims->set_frame_primary_marker(luaL_checkinteger(L, 2),
-                                  static_cast<int>(luaL_checkinteger(L, 3)),
-                                  static_cast<int>(luaL_checkinteger(L, 4)))
+      L, pAnims->set_frame_primary_marker(
+             luaL_checkinteger(L, 2), static_cast<int>(luaL_checkinteger(L, 3)),
+             static_cast<int>(luaL_checkinteger(L, 4)))
              ? 1
              : 0);
   return 1;
@@ -436,11 +436,12 @@ int l_anim_set_parent(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   animation* pParent =
       luaT_testuserdata<animation>(L, 2, luaT_environindex, false);
-  bool use_primary = lua_isnone(L, 3); // No number means '1'.
+  bool use_primary = lua_isnone(L, 3);  // No number means '1'.
   if (!use_primary) {
     uint32_t value = luaL_checkinteger(L, 3);
     if (value < 1 || value > 2)
-      luaL_argerror(L, 3, "Marker index out of bounds (only values 1 and 2 are allowed)");
+      luaL_argerror(
+          L, 3, "Marker index out of bounds (only values 1 and 2 are allowed)");
     use_primary = (value == 1);
   }
   pAnimation->set_parent(pParent, use_primary);

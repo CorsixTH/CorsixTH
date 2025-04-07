@@ -1536,8 +1536,8 @@ void animation::set_parent(animation* pParent, bool use_primary) {
     set_animation_kind(animation_kind::normal);
     speed = {0, 0};
   } else {
-    set_animation_kind(use_primary ? animation_kind::primary_child :
-        animation_kind::secondary_child);
+    set_animation_kind(use_primary ? animation_kind::primary_child
+                                   : animation_kind::secondary_child);
     parent = pParent;
     next = parent->next;
     if (next) next->prev = this;

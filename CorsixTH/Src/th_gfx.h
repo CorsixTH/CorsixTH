@@ -435,10 +435,10 @@ class animation_manager {
     // Markers are used to know where humanoids are on an frame. The
     // positions are pixels offsets from the centre of the frame's base
     // tile to the centre of the humanoid's feet.
-    int primary_marker_x;  ///< X position of the first center of a humanoids
-                           ///< feet.
-    int primary_marker_y;  ///< Y position of the first center of a humanoids
-                           ///< feet.
+    int primary_marker_x;    ///< X position of the first center of a humanoids
+                             ///< feet.
+    int primary_marker_y;    ///< Y position of the first center of a humanoids
+                             ///< feet.
     int secondary_marker_x;  ///< X position of the second center of a
                              ///< humanoids feet.
     int secondary_marker_y;  ///< Y position of the second center of a
@@ -572,7 +572,8 @@ class animation : public animation_base {
   bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
   void draw_morph(render_target* pCanvas, int iDestX, int iDestY);
   bool hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY);
-  void draw_child(render_target* pCanvas, int iDestX, int iDestY, bool use_primary);
+  void draw_child(render_target* pCanvas, int iDestX, int iDestY,
+                  bool use_primary);
   bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
 
   void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override {
