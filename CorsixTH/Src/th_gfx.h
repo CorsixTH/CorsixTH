@@ -559,7 +559,7 @@ struct xy_diff {
 };
 
 //! The kind of animation.
-enum class animation_kind { normal, child, morph };
+enum class animation_kind { normal, primary_child, morph };
 
 class animation : public animation_base {
  public:
@@ -580,7 +580,7 @@ class animation : public animation_base {
       case animation_kind::normal:
         draw(pCanvas, iDestX, iDestY);
         return;
-      case animation_kind::child:
+      case animation_kind::primary_child:
         draw_child(pCanvas, iDestX, iDestY);
         return;
       case animation_kind::morph:
@@ -593,7 +593,7 @@ class animation : public animation_base {
     switch (anim_kind) {
       case animation_kind::normal:
         return hit_test(iDestX, iDestY, iTestX, iTestY);
-      case animation_kind::child:
+      case animation_kind::primary_child:
         return hit_test_child(iDestX, iDestY, iTestX, iTestY);
       case animation_kind::morph:
         return hit_test_morph(iDestX, iDestY, iTestX, iTestY);

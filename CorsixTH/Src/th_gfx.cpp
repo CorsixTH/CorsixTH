@@ -1289,7 +1289,7 @@ void animation::persist(lua_persist_writer* pWriter) const {
 
   if (anim_kind == animation_kind::normal) {
     pWriter->write_uint(1);
-  } else if (anim_kind == animation_kind::child) {
+  } else if (anim_kind == animation_kind::primary_child) {
     pWriter->write_uint(2);
   } else if (anim_kind == animation_kind::morph) {
     // NB: Prior version of code used the number 3 here, and forgot
@@ -1320,7 +1320,7 @@ void animation::persist(lua_persist_writer* pWriter) const {
   }
 
   // Write the unioned fields
-  if (anim_kind != animation_kind::child) {
+  if (anim_kind != animation_kind::primary_child) {
     pWriter->write_int(speed.dx);
     pWriter->write_int(speed.dy);
   } else {
@@ -1364,7 +1364,7 @@ void animation::depersist(lua_persist_reader* pReader) {
         set_animation_kind(animation_kind::normal);
         break;
       case 2:
-        set_animation_kind(animation_kind::child);
+        set_animation_kind(animation_kind::primary_child);
         break;
       case 4:
         set_animation_kind(animation_kind::morph);
@@ -1397,7 +1397,7 @@ void animation::depersist(lua_persist_reader* pReader) {
     }
 
     // Read the unioned fields
-    if (anim_kind != animation_kind::child) {
+    if (anim_kind != animation_kind::primary_child) {
       if (!pReader->read_int(speed.dx)) break;
       if (!pReader->read_int(speed.dy)) break;
     } else {
@@ -1467,7 +1467,7 @@ const std::map<size_t, int> frame_sound_replacements{
 
 void animation::tick() {
   frame_index = manager->get_next_frame(frame_index);
-  if (anim_kind != animation_kind::child) {
+  if (anim_kind != animation_kind::primary_child) {
     x_relative_to_tile += speed.dx;
     y_relative_to_tile += speed.dy;
   }
@@ -1523,7 +1523,7 @@ void animation::set_parent(animation* pParent) {
     set_animation_kind(animation_kind::normal);
     speed = {0, 0};
   } else {
-    set_animation_kind(animation_kind::child);
+    set_animation_kind(animation_kind::primary_child);
     parent = pParent;
     next = parent->next;
     if (next) next->prev = this;
