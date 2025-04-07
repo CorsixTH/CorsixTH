@@ -227,8 +227,8 @@ bool animation_manager::load_from_th_file(
     oFrame.sound = pFrame->sound;
     oFrame.flags = pFrame->flags;
     // Bounding box fields initialised later
-    oFrame.marker_x = 0;
-    oFrame.marker_y = 0;
+    oFrame.primary_marker_x = 0;
+    oFrame.primary_marker_y = 0;
     oFrame.secondary_marker_x = 0;
     oFrame.secondary_marker_y = 0;
 
@@ -638,8 +638,8 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
 
       // Set later
       oFrame.flags = 0;
-      oFrame.marker_x = 0;
-      oFrame.marker_y = 0;
+      oFrame.primary_marker_x = 0;
+      oFrame.primary_marker_y = 0;
       oFrame.secondary_marker_x = 0;
       oFrame.secondary_marker_y = 0;
 
@@ -784,13 +784,14 @@ void animation_manager::set_animation_alt_palette_map(size_t iAnimation,
   } while (iFrame != iFirstFrame);
 }
 
-bool animation_manager::set_frame_marker(size_t iFrame, int iX, int iY) {
+bool animation_manager::set_frame_primary_marker(size_t iFrame, int iX,
+                                                 int iY) {
   if (iFrame >= frame_count) {
     return false;
   }
 
-  frames[iFrame].marker_x = iX;
-  frames[iFrame].marker_y = iY;
+  frames[iFrame].primary_marker_x = iX;
+  frames[iFrame].primary_marker_y = iY;
   return true;
 }
 
@@ -805,13 +806,14 @@ bool animation_manager::set_frame_secondary_marker(size_t iFrame, int iX,
   return true;
 }
 
-bool animation_manager::get_frame_marker(size_t iFrame, int* pX, int* pY) {
+bool animation_manager::get_frame_primary_marker(size_t iFrame, int* pX,
+                                                 int* pY) {
   if (iFrame >= frame_count) {
     return false;
   }
 
-  *pX = frames[iFrame].marker_x;
-  *pY = frames[iFrame].marker_y;
+  *pX = frames[iFrame].primary_marker_x;
+  *pY = frames[iFrame].primary_marker_y;
   return true;
 }
 
@@ -1170,7 +1172,7 @@ void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
   if (are_flags_set(parent->flags, thdf_alpha_50 | thdf_alpha_75)) return;
   int iX = 0, iY = 0;
-  parent->get_marker(&iX, &iY);
+  parent->get_primary_marker(&iX, &iY);
   iX += x_relative_to_tile + iDestX;
   iY += y_relative_to_tile + iDestY;
   if (sound_to_play) {
@@ -1540,8 +1542,8 @@ void animation::set_animation(animation_manager* pManager, size_t iAnimation) {
   }
 }
 
-bool animation::get_marker(int* pX, int* pY) {
-  if (!manager || !manager->get_frame_marker(frame_index, pX, pY)) {
+bool animation::get_primary_marker(int* pX, int* pY) {
+  if (!manager || !manager->get_frame_primary_marker(frame_index, pX, pY)) {
     return false;
   }
 

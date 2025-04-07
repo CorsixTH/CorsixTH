@@ -354,9 +354,9 @@ class animation_manager {
   bool hit_test(size_t iFrame, const ::layers& oLayers, int iX, int iY,
                 uint32_t iFlags, int iTestX, int iTestY) const;
 
-  bool set_frame_marker(size_t iFrame, int iX, int iY);
+  bool set_frame_primary_marker(size_t iFrame, int iX, int iY);
   bool set_frame_secondary_marker(size_t iFrame, int iX, int iY);
-  bool get_frame_marker(size_t iFrame, int* pX, int* pY);
+  bool get_frame_primary_marker(size_t iFrame, int* pX, int* pY);
   bool get_frame_secondary_marker(size_t iFrame, int* pX, int* pY);
 
   //! Retrieve a custom animation by name and tile size.
@@ -435,8 +435,10 @@ class animation_manager {
     // Markers are used to know where humanoids are on an frame. The
     // positions are pixels offsets from the centre of the frame's base
     // tile to the centre of the humanoid's feet.
-    int marker_x;  ///< X position of the first center of a humanoids feet.
-    int marker_y;  ///< Y position of the first center of a humanoids feet.
+    int primary_marker_x;  ///< X position of the first center of a humanoids
+                           ///< feet.
+    int primary_marker_y;  ///< Y position of the first center of a humanoids
+                           ///< feet.
     int secondary_marker_x;  ///< X position of the second center of a
                              ///< humanoids feet.
     int secondary_marker_y;  ///< Y position of the second center of a
@@ -608,7 +610,7 @@ class animation : public animation_base {
 
   link_list* get_previous() { return prev; }
   size_t get_animation() const { return animation_index; }
-  bool get_marker(int* pX, int* pY);
+  bool get_primary_marker(int* pX, int* pY);
   bool get_secondary_marker(int* pX, int* pY);
   size_t get_frame() const { return frame_index; }
   int get_crop_column() const { return crop_column; }
@@ -636,8 +638,8 @@ class animation : public animation_base {
   size_t frame_index;      ///< Frame number.
   union {
     xy_diff speed;
-    //! Some animations are tied to the marker of another animation and
-    //! hence have a parent rather than a speed.
+    //! Some animations are tied to the primary or secondary marker of another
+    //! animation and hence have a parent rather than a speed.
     animation* parent;
   };
 

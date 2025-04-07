@@ -171,10 +171,10 @@ int l_anims_set_alt_pal(lua_State* L) {
   return 1;
 }
 
-int l_anims_set_marker(lua_State* L) {
+int l_anims_set_primary_marker(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   lua_pushboolean(
-      L, pAnims->set_frame_marker(luaL_checkinteger(L, 2),
+      L, pAnims->set_frame_primary_marker(luaL_checkinteger(L, 2),
                                   static_cast<int>(luaL_checkinteger(L, 3)),
                                   static_cast<int>(luaL_checkinteger(L, 4)))
              ? 1
@@ -559,11 +559,11 @@ int l_anim_get_tag(lua_State* L) {
   return 1;
 }
 
-int l_anim_get_marker(lua_State* L) {
+int l_anim_get_primary_marker(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   int iX = 0;
   int iY = 0;
-  pAnimation->get_marker(&iX, &iY);
+  pAnimation->get_primary_marker(&iX, &iY);
   lua_pushinteger(L, iX);
   lua_pushinteger(L, iY);
   return 2;
@@ -659,7 +659,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anims_getfirst, "getFirstFrame");
     lcb.add_function(l_anims_getnext, "getNextFrame");
     lcb.add_function(l_anims_set_alt_pal, "setAnimationGhostPalette");
-    lcb.add_function(l_anims_set_marker, "setFrameMarker");
+    lcb.add_function(l_anims_set_primary_marker, "setFrameMarker");
+    lcb.add_function(l_anims_set_primary_marker, "setFramePrimaryMarker");
     lcb.add_function(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
     lcb.add_function(l_anims_draw, "draw", lua_metatable::surface,
                      lua_metatable::layers);
@@ -718,7 +719,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_set_layer<animation>, "setLayer");
     lcb.add_function(l_anim_set_layers_from, "setLayersFrom");
     lcb.add_function(l_anim_set_hitresult, "setHitTestResult");
-    lcb.add_function(l_anim_get_marker, "getMarker");
+    lcb.add_function(l_anim_get_primary_marker, "getMarker");
+    lcb.add_function(l_anim_get_primary_marker, "getPrimaryMarker");
     lcb.add_function(l_anim_get_secondary_marker, "getSecondaryMarker");
     lcb.add_function(l_anim_tick<animation>, "tick");
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
