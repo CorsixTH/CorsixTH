@@ -559,20 +559,20 @@ struct xy_diff {
 };
 
 //! The kind of animation.
-enum class animation_kind { normal, primary_child, morph };
+enum class animation_kind { primary_child, secondary_child, normal, morph };
 
 class animation : public animation_base {
  public:
   animation();
 
-  void set_parent(animation* pParent);
+  void set_parent(animation* pParent, bool use_primary);
 
   void tick();
   void draw(render_target* pCanvas, int iDestX, int iDestY);
   bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
   void draw_morph(render_target* pCanvas, int iDestX, int iDestY);
   bool hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY);
-  void draw_child(render_target* pCanvas, int iDestX, int iDestY);
+  void draw_child(render_target* pCanvas, int iDestX, int iDestY, bool use_primary);
   bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
 
   void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override {
@@ -581,7 +581,10 @@ class animation : public animation_base {
         draw(pCanvas, iDestX, iDestY);
         return;
       case animation_kind::primary_child:
-        draw_child(pCanvas, iDestX, iDestY);
+        draw_child(pCanvas, iDestX, iDestY, true);
+        return;
+      case animation_kind::secondary_child:
+        draw_child(pCanvas, iDestX, iDestY, false);
         return;
       case animation_kind::morph:
         draw_morph(pCanvas, iDestX, iDestY);
@@ -594,6 +597,7 @@ class animation : public animation_base {
       case animation_kind::normal:
         return hit_test(iDestX, iDestY, iTestX, iTestY);
       case animation_kind::primary_child:
+      case animation_kind::secondary_child:
         return hit_test_child(iDestX, iDestY, iTestX, iTestY);
       case animation_kind::morph:
         return hit_test_morph(iDestX, iDestY, iTestX, iTestY);

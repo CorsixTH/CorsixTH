@@ -1168,11 +1168,16 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
   }
 }
 
-void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY) {
+void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY,
+                           bool use_primary) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
   if (are_flags_set(parent->flags, thdf_alpha_50 | thdf_alpha_75)) return;
   int iX = 0, iY = 0;
-  parent->get_primary_marker(&iX, &iY);
+  if (use_primary)
+    parent->get_primary_marker(&iX, &iY);
+  else
+    parent->get_secondary_marker(&iX, &iY);
+
   iX += x_relative_to_tile + iDestX;
   iY += y_relative_to_tile + iDestY;
   if (sound_to_play) {
@@ -1300,6 +1305,8 @@ void animation::persist(lua_persist_writer* pWriter) const {
     lua_rawget(L, -2);
     pWriter->write_stack_object(-1);
     lua_pop(L, 2);
+  } else if (anim_kind == animation_kind::secondary_child) {
+    pWriter->write_uint(5);
   } else {
     pWriter->write_uint(0);
   }
@@ -1320,7 +1327,8 @@ void animation::persist(lua_persist_writer* pWriter) const {
   }
 
   // Write the unioned fields
-  if (anim_kind != animation_kind::primary_child) {
+  if (anim_kind != animation_kind::primary_child &&
+      anim_kind != animation_kind::secondary_child) {
     pWriter->write_int(speed.dx);
     pWriter->write_int(speed.dy);
   } else {
@@ -1372,6 +1380,9 @@ void animation::depersist(lua_persist_reader* pReader) {
         morph_target = reinterpret_cast<animation*>(lua_touserdata(L, -1));
         lua_pop(L, 1);
         break;
+      case 5:
+        set_animation_kind(animation_kind::secondary_child);
+        break;
       default:
         pReader->set_error(lua_pushfstring(
             L, "Unknown animation function set #%i", iFunctionSet));
@@ -1397,7 +1408,8 @@ void animation::depersist(lua_persist_reader* pReader) {
     }
 
     // Read the unioned fields
-    if (anim_kind != animation_kind::primary_child) {
+    if (anim_kind != animation_kind::primary_child &&
+        anim_kind != animation_kind::secondary_child) {
       if (!pReader->read_int(speed.dx)) break;
       if (!pReader->read_int(speed.dy)) break;
     } else {
@@ -1467,7 +1479,8 @@ const std::map<size_t, int> frame_sound_replacements{
 
 void animation::tick() {
   frame_index = manager->get_next_frame(frame_index);
-  if (anim_kind != animation_kind::primary_child) {
+  if (anim_kind != animation_kind::primary_child &&
+      anim_kind != animation_kind::secondary_child) {
     x_relative_to_tile += speed.dx;
     y_relative_to_tile += speed.dy;
   }
@@ -1517,13 +1530,14 @@ void animation_base::attach_to_tile(map_tile* pMapNode, int layer) {
   pList->next = this;
 }
 
-void animation::set_parent(animation* pParent) {
+void animation::set_parent(animation* pParent, bool use_primary) {
   remove_from_tile();
   if (pParent == nullptr) {
     set_animation_kind(animation_kind::normal);
     speed = {0, 0};
   } else {
-    set_animation_kind(animation_kind::primary_child);
+    set_animation_kind(use_primary ? animation_kind::primary_child :
+        animation_kind::secondary_child);
     parent = pParent;
     next = parent->next;
     if (next) next->prev = this;

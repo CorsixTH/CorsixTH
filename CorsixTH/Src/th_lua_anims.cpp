@@ -436,7 +436,14 @@ int l_anim_set_parent(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   animation* pParent =
       luaT_testuserdata<animation>(L, 2, luaT_environindex, false);
-  pAnimation->set_parent(pParent);
+  bool use_primary = lua_isnone(L, 3); // No number means '1'.
+  if (!use_primary) {
+    uint32_t value = luaL_checkinteger(L, 3);
+    if (value < 1 || value > 2)
+      luaL_argerror(L, 3, "Marker index out of bounds (only values 1 and 2 are allowed)");
+    use_primary = (value == 1);
+  }
+  pAnimation->set_parent(pParent, use_primary);
   lua_settop(L, 1);
   return 1;
 }
