@@ -158,36 +158,36 @@ local function _isLeaving(queue, humanoid)
 end
 
 --! Get queue priority for given humanoid
---! Lower value means more significant priority.
 --! Humanoids with priority lower that 'reported_priority_threshold'
--- is not displayed in the door queue interface.
+-- are not displayed in the door queue interface.
 --!param queue (object) target Queue.
---!param humanoid (object) Humanoid for which we asking the priority.
-local function _humanoidQueuePriority(queue, humanoid)
+--!param humanoid (object) Humanoid for which we're asking the priority.
+--return (int) priority. Lower value means more significant priority.
+local function _getHumanoidQueuePriority(queue, humanoid)
   if _isLeaving(queue, humanoid) then
-    -- If humanoid Leaving he have most significant priority
-    -- If not prioritize Leaving then are possible cases like #873
+    -- If humanoid is leaving they have the highest priority
+    -- To prevent cases like #873
     return 1
   elseif class.is(humanoid, Staff) then
-    -- Next is a staff members
+    -- Next are staff members
     return 2
   elseif class.is(humanoid, Vip) or class.is(humanoid, Inspector) then
     -- Next is a Vip and other hospital guests.
     -- Who are served instantly and do not delay others.
     return 3
   elseif humanoid.is_emergency then
-    -- Next is a Emergency patients
+    -- Next are Emergency patients
     return 4
   else
-    -- All other regular patients receives this priority
+    -- All other regular patients receive this priority
     return 5
   end
 end
 
---! Determines whether Humanoid with this priority
--- is sufficient to display in door queue interface.
---!param priority (int) priority need to be checked.
---return (bool) is should displayed.
+--! Determines whether Humanoid priority is sufficient
+-- to display this Humanoid in door queue interface.
+--!param priority (int) humanoid priority.
+--return (bool) true if patient should be displayed.
 local function _shouldDisplayInDoorQueueInterface(priority)
   local reported_priority_threshold = 3
   return priority > reported_priority_threshold
@@ -195,19 +195,17 @@ end
 
 function Queue:push(humanoid, callbacks_on)
   local index = self:size() + 1
-  local priority = _humanoidQueuePriority(self, humanoid)
+  local priority = _getHumanoidQueuePriority(self, humanoid)
 
-  -- let's calculate under what 'index' we should insert new humanoid into the queue
+  -- calculate under what 'index' we should insert new humanoid into the queue
   while index > 1 do
     -- if new humanoid have higher or same priority than another one humanoid in queue
-    if _humanoidQueuePriority(self, self[index - 1]) <= priority then
+    if _getHumanoidQueuePriority(self, self[index - 1]) <= priority then
       break
     end
     index = index - 1
   end
 
-  -- Increment the 'reported_size' if the priority is sufficient
-  -- to display humanoid in the door queue interface
   if _shouldDisplayInDoorQueueInterface(priority) then
     self.reported_size = self.reported_size + 1
   end
