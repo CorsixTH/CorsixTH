@@ -146,7 +146,7 @@ function UIPatient:draw(canvas, x_, y_)
     return
   end
   local px, py = map:WorldToScreen(patient.tile_x, patient.tile_y)
-  local dx, dy = patient.th:getMarker()
+  local dx, dy = patient.th:getPrimaryMarker()
   px = px + dx - 37
   py = py + dy - 61
   -- If the patient is spawning or despawning, or just on the map edge, then

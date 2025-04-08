@@ -603,7 +603,7 @@ end
 --]]
 
 function AnimationManager:setMarker(anim, ...)
-  return self:setMarkerRaw(anim, "setFrameMarker", ...)
+  return self:setMarkerRaw(anim, "setFramePrimaryMarker", ...)
 end
 
 local function TableToPixels(t)

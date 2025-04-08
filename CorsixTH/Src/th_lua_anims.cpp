@@ -667,7 +667,6 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anims_getfirst, "getFirstFrame");
     lcb.add_function(l_anims_getnext, "getNextFrame");
     lcb.add_function(l_anims_set_alt_pal, "setAnimationGhostPalette");
-    lcb.add_function(l_anims_set_primary_marker, "setFrameMarker");
     lcb.add_function(l_anims_set_primary_marker, "setFramePrimaryMarker");
     lcb.add_function(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
     lcb.add_function(l_anims_draw, "draw", lua_metatable::surface,
@@ -727,7 +726,6 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_set_layer<animation>, "setLayer");
     lcb.add_function(l_anim_set_layers_from, "setLayersFrom");
     lcb.add_function(l_anim_set_hitresult, "setHitTestResult");
-    lcb.add_function(l_anim_get_primary_marker, "getMarker");
     lcb.add_function(l_anim_get_primary_marker, "getPrimaryMarker");
     lcb.add_function(l_anim_get_secondary_marker, "getSecondaryMarker");
     lcb.add_function(l_anim_tick<animation>, "tick");
