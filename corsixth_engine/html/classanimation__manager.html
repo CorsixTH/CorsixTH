@@ -117,12 +117,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a16f8e572a2b0e6ec8472f09707b83262"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a682cff6fdfe2629bd33e1de48ff051ce"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a682cff6fdfe2629bd33e1de48ff051ce">hit_test</a> (size_t iFrame, const ::<a class="el" href="structlayers.html">layers</a> &amp;oLayers, int iX, int iY, uint32_t iFlags, int iTestX, int iTestY) const</td></tr>
 <tr class="separator:a682cff6fdfe2629bd33e1de48ff051ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a126fd5c5dc522e78e558f45d3cb5933e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a126fd5c5dc522e78e558f45d3cb5933e">set_frame_marker</a> (size_t iFrame, int iX, int iY)</td></tr>
-<tr class="separator:a126fd5c5dc522e78e558f45d3cb5933e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa160f6c662df39c28a6aceffc3568bd7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#aa160f6c662df39c28a6aceffc3568bd7">set_frame_primary_marker</a> (size_t iFrame, int iX, int iY)</td></tr>
+<tr class="separator:aa160f6c662df39c28a6aceffc3568bd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4298481203ff99f6d3439dca4d9eec07"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a4298481203ff99f6d3439dca4d9eec07">set_frame_secondary_marker</a> (size_t iFrame, int iX, int iY)</td></tr>
 <tr class="separator:a4298481203ff99f6d3439dca4d9eec07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a573266dc3b1137a514c18d7e90de1463"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a573266dc3b1137a514c18d7e90de1463">get_frame_marker</a> (size_t iFrame, int *pX, int *pY)</td></tr>
-<tr class="separator:a573266dc3b1137a514c18d7e90de1463"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77387be4a20a96a0aec6c027c9f0e611"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a77387be4a20a96a0aec6c027c9f0e611">get_frame_primary_marker</a> (size_t iFrame, int *pX, int *pY)</td></tr>
+<tr class="separator:a77387be4a20a96a0aec6c027c9f0e611"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa00ed9e4dc72617a86f9071a757f3f11"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#aa00ed9e4dc72617a86f9071a757f3f11">get_frame_secondary_marker</a> (size_t iFrame, int *pX, int *pY)</td></tr>
 <tr class="separator:aa00ed9e4dc72617a86f9071a757f3f11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4725611ff3343d350f8cc8ec60307d97"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structanimation__start__frames.html">animation_start_frames</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a4725611ff3343d350f8cc8ec60307d97">get_named_animations</a> (const std::string &amp;sName, int iTilesize) const</td></tr>
@@ -366,14 +366,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a573266dc3b1137a514c18d7e90de1463"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a573266dc3b1137a514c18d7e90de1463">&#9670;&nbsp;</a></span>get_frame_marker()</h2>
+<a id="a77387be4a20a96a0aec6c027c9f0e611"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77387be4a20a96a0aec6c027c9f0e611">&#9670;&nbsp;</a></span>get_frame_primary_marker()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool animation_manager::get_frame_marker </td>
+          <td class="memname">bool animation_manager::get_frame_primary_marker </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>iFrame</em>, </td>
@@ -750,14 +750,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a126fd5c5dc522e78e558f45d3cb5933e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a126fd5c5dc522e78e558f45d3cb5933e">&#9670;&nbsp;</a></span>set_frame_marker()</h2>
+<a id="aa160f6c662df39c28a6aceffc3568bd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa160f6c662df39c28a6aceffc3568bd7">&#9670;&nbsp;</a></span>set_frame_primary_marker()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool animation_manager::set_frame_marker </td>
+          <td class="memname">bool animation_manager::set_frame_primary_marker </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>iFrame</em>, </td>
