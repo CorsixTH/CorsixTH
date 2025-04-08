@@ -541,14 +541,14 @@ function Room:_checkWaitToggleValidTarget()
       class.is(self.door.queue:front(), Patient)
 end
 
+--! Handle the patient coming into the room
+--! To be extended in derived classes.
+--!param humanoid The patient entering
 function Room:commandEnteringPatient(humanoid)
-  -- To be extended in derived classes
   self.door.queue.visitor_count = self.door.queue.visitor_count + 1
   humanoid:updateDynamicInfo("")
 
-  if self:_checkWaitToggleValidTarget() then
-    self:_staffWaitToggle(false) -- Staff no longer waiting
-  end
+  self:_staffWaitToggle(false) -- Staff no longer waiting
 end
 
 function Room:tryAdvanceQueue()
