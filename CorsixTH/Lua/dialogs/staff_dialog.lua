@@ -157,7 +157,7 @@ end
 function UIStaff:getStaffPosition(dx, dy)
   local staff = self.staff
   local x, y = self.ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
-  local px, py = staff.th:getMarker()
+  local px, py = staff.th:getPrimaryMarker()
   return x + px - (dx or 0), y + py - (dy or 0)
 end
 
