@@ -137,7 +137,23 @@ function Room:createEnterAction(humanoid_entering, callback)
   return WalkAction(x, y):setIsEntering(true)
 end
 
---! Get a patient in the room.
+--! Get a table of all patients using the room
+--! A room usually only has one patient, however in the ward can have multiple
+--! patients at once.
+--!return patients (table) All patients actively using the room
+function Room:getPatients()
+  local patients = {}
+  -- Are there patients using the room?
+  if self:getPatientCount() == 0 then return patients end
+  for humanoid in pairs(self.humanoids) do
+    if class.is(humanoid, Patient) then
+      patients[#patients + 1] = humanoid
+    end
+  end
+  return patients
+end
+
+--! Get any patient in the room.
 --!return A patient (humanoid) if there is a patient, nil otherwise.
 function Room:getPatient()
   for humanoid in pairs(self.humanoids) do
@@ -728,8 +744,12 @@ end
 --!return (boolean) true if the room is currently needed
 function Room:isRoomInDemand()
   local door = self.door
-  if self:getPatientCount() > 0 and not self:getPatient():isLeaving() then
-    return true
+
+  if self:getPatientCount() > 0 then
+    -- All patients must be leaving who are inside the room
+    for _, patient in ipairs(self:getPatients()) do
+      if not patient:isLeaving() then return true end
+    end
   end
   return (door.queue and door.queue:patientSize() > 0) or
       (door.reserved_for and class.is(door.reserved_for, Patient)) or
