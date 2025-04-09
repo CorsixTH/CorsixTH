@@ -28,11 +28,11 @@ local col_bg = { red = 219, green = 81, blue = 12, }
 local col_shadow = { red = 202, green = 69, blue = 8, }
 local col_highlight = { red = 232, green = 95, blue = 16 }
 local col_assigned_button = { red = 84, green = 200, blue = 84 }
-local col_smoke_button = { red = 219, green = 36, blue = 36 }
+local col_warning_button = { red = 219, green = 36, blue = 36 }
 
--- Timer, used to update machine menu only per x ticks to get rid of lag.
-local skip_ticks = 10
-local tick_timer = skip_ticks
+-- Timer, used to update machine menu only once per X ticks to reduce the burden.
+local ticks_to_skip = 10
+local tick_timer = ticks_to_skip
 
 local row_height = 20
 local window_margin = 15
@@ -77,21 +77,21 @@ function UIMachineMenu:createControls()
   if rows ~= self.rows_shown then
     local function assigned_factory(num)
       return --[[persistable:machine_menu_assigned_button]] function(window)
-        window:assignButtonClicked(num)
+        window:assignedHandymanButtonClicked(num)
       end
     end
-    local function smoke_factory(num)
-      return --[[persistable:machine_menu_smoke_button]] function(window)
-        window:smokeButtonClicked(num)
+    local function warning_factory(num)
+      return --[[persistable:machine_menu_warning_button]] function(window)
+        window:warningButtonClicked(num)
       end
     end
-    local function task_factory(num)
-      return --[[persistable:machine_menu_task_button]] function(window)
-        window:itemButtonClicked(num)
+    local function name_factory(num)
+      return --[[persistable:machine_menu_name_button]] function(window)
+        window:machineButtonClicked(num)
       end
     end
-    local callback = --[[persistable:machine_menu_scrollbar]] function()
-      self:scrollbarChange()
+    local scrollbarMovedCallback = --[[persistable:machine_menu_scrollbar]] function()
+      self:scrollbarMoved()
     end
 
     self.rows_shown = rows
@@ -104,7 +104,7 @@ function UIMachineMenu:createControls()
 
 
     -- Draw headers
-    local smoke_header = self:addBevelPanel(x, window_margin, indicator_width, row_height, col_highlight)
+    local warning_header = self:addBevelPanel(x, window_margin, indicator_width, row_height, col_highlight)
         :setLabel("!"):setTooltip(_S.tooltip.machine_menu.header.smoking)
     x = x + indicator_width
     local assigned_header = self:addBevelPanel(x, window_margin, indicator_width, row_height, col_highlight)
@@ -116,32 +116,32 @@ function UIMachineMenu:createControls()
     local remaining_strength_panel_header = self:addBevelPanel(x, window_margin, values_width, row_height,
           col_highlight)
         :setLabel(_S.machine_menu.remaining_strength)
-        :makeButton(0, 0, 70, 20, nil, self.setSortRemain)
+        :makeButton(0, 0, 70, 20, nil, self.setSortByRemain)
         :setTooltip(_S.tooltip.machine_menu.header.remaining_strength .. " " .. _S.tooltip.machine_menu.sort)
     x = x + values_width
     local strength_panel_header = self:addBevelPanel(x, window_margin, values_width, row_height, col_highlight)
         :setLabel(_S.machine_menu.total_strength)
-        :makeButton(0, 0, 70, 20, nil, self.setSortStrength)
+        :makeButton(0, 0, 70, 20, nil, self.setSortByStrength)
         :setTooltip(_S.tooltip.machine_menu.header.total_strength .. " " .. _S.tooltip.machine_menu.sort)
     x = x + values_width
     local ratio_panel_header = self:addBevelPanel(x, window_margin, values_width, row_height, col_highlight)
         :setLabel(_S.machine_menu.ratio)
-        :makeButton(0, 0, 70, 20, nil, self.setSortRatio)
+        :makeButton(0, 0, 70, 20, nil, self.setSortByRatio)
         :setTooltip(_S.tooltip.machine_menu.header.ratio .. " " .. _S.tooltip.machine_menu.sort)
 
     -- Draw rows
     for i = 1, rows, 1 do
       x = window_margin
-      local smoke_panel = self:addBevelPanel(x, y + row_height, indicator_width, row_height, col_smoke_button)
-      local smoke_button = smoke_panel:makeButton(0, 0, indicator_width, row_height, nil, smoke_factory(i))
+      local warning_panel = self:addBevelPanel(x, y + row_height, indicator_width, row_height, col_warning_button)
+      local warning_button = warning_panel:makeButton(0, 0, indicator_width, row_height, nil, warning_factory(i))
           :setTooltip(_S.tooltip.machine_menu.smoking)
       x = x + indicator_width
       local assigned_panel = self:addBevelPanel(x, y + row_height, indicator_width, row_height, col_assigned_button)
       local assigned_button = assigned_panel:makeButton(0, 0, indicator_width, row_height, nil, assigned_factory(i))
           :setTooltip(_S.tooltip.machine_menu.assigned)
       x = x + indicator_width
-      local task_panel = self:addBevelPanel(x, y + row_height, 180, row_height, col_bg)
-      local task_button = task_panel:makeButton(0, 0, 200, row_height, nil, task_factory(i))
+      local name_panel = self:addBevelPanel(x, y + row_height, 180, row_height, col_bg)
+      local name_button = name_panel:makeButton(0, 0, 200, row_height, nil, name_factory(i))
           :setTooltip(_S.tooltip.machine_menu.machine)
       x = x + name_width
       local remaining_strength_panel = self:addBevelPanel(x, y + row_height, 70, row_height, col_shadow)
@@ -154,7 +154,7 @@ function UIMachineMenu:createControls()
           :setTooltip(_S.tooltip.machine_menu.ratio)
 
       table.insert(self.list_table, {
-        smoke_header = smoke_header,
+        warning_header = warning_header,
         assigned_header = assigned_header,
         name_header = name_header,
         remaining_strength_panel_header = remaining_strength_panel_header,
@@ -162,10 +162,10 @@ function UIMachineMenu:createControls()
         ratio_panel_header = ratio_panel_header,
         assigned_panel = assigned_panel,
         assigned_button = assigned_button,
-        smoke_panel = smoke_panel,
-        smoke_button = smoke_button,
-        task_panel = task_panel,
-        task_button = task_button,
+        warning_panel = warning_panel,
+        warning_button = warning_button,
+        name_panel = name_panel,
+        name_button = name_button,
         remaining_strength_panel = remaining_strength_panel,
         strength_panel = strength_panel,
         percentage_panel = percentage_panel,
@@ -174,12 +174,12 @@ function UIMachineMenu:createControls()
     end
 
     -- Add scrollbar
-    self.scrollbar = self:addColourPanel(461, window_margin + 20, 26, row_height * rows,
+    self.scrollbar = self:addColourPanel(461, window_margin + 20, 24, row_height * rows,
           col_shadow.red, col_shadow.green, col_shadow.blue)
-        :makeScrollbar(col_bg, callback, 1, 1, 10, 1)
+        :makeScrollbar(col_bg, scrollbarMovedCallback, 1, 1, 10, 1)
     -- Add close button
     self:addPanel(337, 461,  8):makeButton(0, 0, 24, 24, 338, self.close)
-        :setTooltip(_S.tooltip.machine_window.close)
+        :setTooltip(_S.tooltip.machine_menu.close)
   end
 end
 
@@ -190,7 +190,7 @@ function UIMachineMenu:scrollToEntity(entity)
   self.ui:addWindow(UIMachine(self.ui, entity, entity:getRoom()))
 end
 
-function UIMachineMenu:itemButtonClicked(index)
+function UIMachineMenu:machineButtonClicked(index)
   local machine_index = index + self.scrollbar.value - 1
   local machine = self.machine_list[machine_index]
   if machine and machine.object then
@@ -202,7 +202,7 @@ function UIMachineMenu:itemButtonClicked(index)
   end
 end
 
-function UIMachineMenu:smokeButtonClicked(index)
+function UIMachineMenu:warningButtonClicked(index)
   local ui = self.ui
   local machine_index = index + self.scrollbar.value - 1
   local machine = self.machine_list[machine_index]
@@ -215,7 +215,7 @@ function UIMachineMenu:smokeButtonClicked(index)
   end
 end
 
-function UIMachineMenu:assignButtonClicked(index)
+function UIMachineMenu:assignedHandymanButtonClicked(index)
   local ui = self.ui
   local machine_index = index + self.scrollbar.value - 1
   local machine = self.machine_list[machine_index]
@@ -224,15 +224,15 @@ function UIMachineMenu:assignButtonClicked(index)
   end
 end
 
-function UIMachineMenu:setSortRemain()
+function UIMachineMenu:setSortByRemain()
   self.sort_method = "sortByRemain"
 end
 
-function UIMachineMenu:setSortStrength()
+function UIMachineMenu:setSortByStrength()
   self.sort_method = "sortByStrength"
 end
 
-function UIMachineMenu:setSortRatio()
+function UIMachineMenu:setSortByRatio()
   self.sort_method = "sortByRatio"
 end
 
@@ -299,10 +299,10 @@ function UIMachineMenu:update()
   self:sortMachines(self.sort_method)
 
   self.scrollbar:setRange(1, math.max(1, #self.machine_list), self.rows_shown, self.scrollbar.value)
-  self:scrollbarChange()
+  self:scrollbarMoved()
 end
 
-function UIMachineMenu:scrollbarChange()
+function UIMachineMenu:scrollbarMoved()
   local scroll_pos = self.scrollbar.value
   for i = 1, self.rows_shown, 1 do
     local machine = self.machine_list[i + scroll_pos - 1]
@@ -310,27 +310,28 @@ function UIMachineMenu:scrollbarChange()
     if machine then
       row.assigned_panel:setLabel(machine.assigned and "X" or "")
       row.assigned_button:enable(machine.assigned and true or false)
-      row.smoke_panel:setLabel(machine.smoking and "!" or "")
-      row.smoke_button:enable(machine.smoking and true or false)
-      row.task_panel:setLabel(" " .. machine.name, nil, "left")
-      row.task_button:enable(true)
+      row.warning_panel:setLabel(machine.smoking and "!" or "")
+      row.warning_button:enable(true)
+      row.name_panel:setLabel(" " .. machine.name, nil, "left")
+      row.name_button:enable(true)
       row.remaining_strength_panel:setLabel(tostring(machine.remaining_strength))
       row.strength_panel:setLabel(tostring(machine.strength))
       row.percentage_panel:setLabel(_S.machine_menu.percentage:format(machine.percentage_strength))
     else
       row.assigned_panel:setLabel("")
-      row.task_panel:setLabel("")
+      row.name_panel:setLabel("")
       row.assigned_button:enable(false)
-      row.smoke_button:enable(false)
-      row.task_button:enable(false)
+      row.warning_button:enable(false)
+      row.name_button:enable(false)
     end
   end
 end
 
 function UIMachineMenu:onTick()
+  -- menu updates not every tick
   tick_timer = tick_timer - 1
   if tick_timer <= 0 then
-    tick_timer = skip_ticks
+    tick_timer = ticks_to_skip
     self:update()
   end
 end
