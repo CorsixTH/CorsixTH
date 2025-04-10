@@ -936,7 +936,6 @@ tooltip.calls_dispatcher = {
 }
 
 machine_menu = {
-  summary = "%d machines in total; %d assigned",
   percentage = "%d%",
   machine = "Machine",
   remaining_strength = "Remain",
@@ -946,20 +945,20 @@ machine_menu = {
 }
 
 tooltip.machine_menu = {
-  sort = "Click to sort by this variable.",
+  sort = "Click to sort by this value.",
   machine = "List of machines - click machine to open machine's window and scroll to its location",
-  smoking = "This box is marked if the machine is at risk of exploding",
-  assigned = "This box is marked if a handyman is assigned to fix corresponding machine",
-  remaining_strength = "This label shows remaining strength of the machine",
-  total_strength = "This label shows total strength of the machine",
-  ratio = "This label shows ratio of remaining strength and total strength",
+  smoking = "This box is marked if the machine is at risk of exploding. Click to buy a new machine.",
+  assigned = "This box is marked if a handyman is assigned to fix corresponding machine. Click to show assigned handyman.",
+  remaining_strength = "This value shows remaining strength of the machine",
+  total_strength = "This value shows total strength of the machine",
+  ratio = "This value shows ratio of remaining strength and total strength",
   header = {
     smoking = "Danger Indicator",
-    assigned = "Assigns Indicator",
-    machine = "Name and position of the machine",
+    assigned = "Repair assignment Indicator",
+    machine = "Machine name",
     remaining_strength = "Remaining Strength of the machines.",
     total_strength = "Total Strength of the machines.",
-    ratio = "RS & TS percentage ratio of the machines.",
+    ratio = "Remaining Strength to Total Strength percentage ratio of the machines.",
   },
   close = "Close the machine list dialog",
 }
