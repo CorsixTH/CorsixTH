@@ -1427,7 +1427,8 @@ menu_charts = {
 
 hotkey_window = {
   ingame_panel_machineMenu = "Menú de Máquinas",
-}`
+}
+
 hotkeys_file_err = {
   file_err_01 = "No se pudo cargar el archivo 'hotkeys.txt'. Por favor asegúrate de que CorsixTH " ..
         "tiene permisos para leer/escribir ",
