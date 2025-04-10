@@ -460,7 +460,7 @@ function GameUI:onCursorWorldPositionChange()
       local cursor = self.default_cursor
       if self.app.world.user_actions_allowed then
         --- If the patient is infected show the infected cursor
-        if epidemic and epidemic.coverup_in_progress and
+        if epidemic and epidemic.coverup_selected and
           entity and entity.infected and not epidemic.timer.closed then
           cursor = infected_cursor
           -- In vaccination mode display epidemic hover cursor for all entities

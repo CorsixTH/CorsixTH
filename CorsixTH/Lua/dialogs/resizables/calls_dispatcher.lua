@@ -137,7 +137,7 @@ end
 
 function UICallsDispatcher:scrollToEntity(entity)
   local x, y = self.ui.app.map:WorldToScreen(entity.tile_x, entity.tile_y)
-  local px, py = entity.th:getMarker()
+  local px, py = entity.th:getPrimaryMarker()
   self.ui:scrollMapTo(x + px, y + py)
 end
 

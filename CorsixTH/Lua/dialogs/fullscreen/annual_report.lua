@@ -174,6 +174,8 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
   local level_config = world.map.level_config
   local prices = level_config and level_config.awards_trophies or nil
 
+  local anybody_cured = hosp.num_cured_ty > 1
+
   -- Check CuresAward so that we know the new config settings are available
   if prices and prices.TrophyMayorBonus then
     self.won_amount = 0
@@ -189,29 +191,34 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
 
     -- Coke sales
     if hosp.sodas_sold > prices.CansofCoke then
+      -- Bonus
       self:addTrophy(_S.trophy_room.sold_drinks.trophies[math.random(1, 3)], "money", prices.CansofCokeBonus)
       self.won_amount = self.won_amount + prices.CansofCokeBonus
     end
     -- Impressive VIP visits
-    if  hosp.num_vips_ty > 0 and hosp.pleased_vips_ty == hosp.num_vips_ty then
-      -- added some here so you get odd amounts as in TH!
+    if anybody_cured and hosp.num_vips_ty > 0 and hosp.pleased_vips_ty == hosp.num_vips_ty then
+      -- Bonus
       local win_value = (prices.TrophyMayorBonus * hosp.pleased_vips_ty) + math.random(1, 5)
       self:addTrophy(_S.trophy_room.happy_vips.trophies[math.random(1, 3)], "reputation", win_value)
       self.rep_amount = self.rep_amount + win_value
     end
     -- Impressive Reputation in the year (above a threshold throughout the year)
-    if hosp.has_impressive_reputation then
+    if anybody_cured and hosp.has_impressive_reputation then
+      -- Bonus
       self:addTrophy(_S.trophy_room.consistant_rep.trophies[math.random(1, 2)], "money", prices.TrophyReputationBonus)
       self.won_amount = self.won_amount + prices.TrophyReputationBonus
     end
     -- Everyone treated successfully, no deaths, or around a 100% Cure rate in the year
-    if hosp.num_cured_ty > 1 and hosp.num_deaths_this_year == 0 and hosp.not_cured_ty == 0 then
+    if anybody_cured and hosp.num_deaths_this_year == 0 and hosp.not_cured_ty == 0 then
+      -- Bonus
       self:addTrophy(_S.trophy_room.all_cured.trophies[math.random(1, 2)], "money", prices.TrophyAllCuredBonus)
       self.won_amount = self.won_amount + prices.TrophyAllCuredBonus
-    elseif hosp.num_deaths_this_year == 0 then
+    elseif anybody_cured and hosp.num_deaths_this_year == 0 then
+      -- Bonus
       self:addTrophy(_S.trophy_room.no_deaths.trophies[math.random(1, 3)], "money", prices.TrophyDeathBonus)
       self.won_amount = self.won_amount + prices.TrophyDeathBonus
-    elseif hosp.num_cured_ty > (hosp.not_cured_ty * 0.9)  then
+    elseif anybody_cured and hosp.num_cured_ty > (hosp.not_cured_ty * 0.9) then
+      -- Bonus
       self:addTrophy(_S.trophy_room.many_cured.trophies[math.random(1, 3)], "money", prices.TrophyCuresBonus)
       self.won_amount = self.won_amount + prices.TrophyCuresBonus
     end
@@ -221,22 +228,24 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
 
 
     -- Reputation
-    if hosp.reputation > prices.ReputationAward then
+    if anybody_cured and hosp.reputation > prices.ReputationAward then
+      -- Bonus
       self:addAward(_S.trophy_room.high_rep.awards[math.random(1, 2)], "money", prices.AwardReputationBonus)
       self.award_won_amount = self.award_won_amount + prices.AwardReputationBonus
     elseif hosp.reputation < prices.ReputationPoor then
+      -- Penalty
       self:addAward(_S.trophy_room.high_rep.penalty[math.random(1, 2)], "money", prices.AwardReputationPenalty)
       self.award_won_amount = self.award_won_amount + prices.AwardReputationPenalty
     end
 
     -- Hospital Value
-    if hosp.value > prices.HospValueAward then
-      -- added some here so you get odd amounts as in TH!
+    if anybody_cured and hosp.value > prices.HospValueAward then
+      -- Bonus
       local win_value = prices.HospValueBonus * math.random(1, 15)
       self:addAward(_S.trophy_room.hosp_value.awards[1], "reputation", win_value)
       self.rep_amount = self.rep_amount + win_value
     elseif hosp.value < prices.HospValuePoor then
-      -- added some here so you get odd amounts as in TH!
+      -- Penalty
       local lose_value = prices.HospValuePenalty * math.random(1, 15)
       self:addAward(_S.trophy_room.hosp_value.penalty[1], "reputation", lose_value)
       self.rep_amount = self.rep_amount + lose_value
@@ -245,22 +254,27 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
     -- Should these next few be linked so that you can only get one or should you get more than one if you met the targets?
 
     -- Cures
-    if hosp.num_cured_ty > prices.CuresAward then
+    if anybody_cured and hosp.num_cured_ty > prices.CuresAward then
+      -- Bonus
       self:addAward(_S.trophy_room.many_cured.awards[math.random(1, 2)], "money", prices.CuresBonus)
       self.award_won_amount = self.award_won_amount + prices.CuresBonus
     elseif hosp.num_cured_ty < prices.CuresPoor then
+      -- Penalty
       self:addAward(_S.trophy_room.many_cured.penalty[math.random(1, 2)], "money", prices.CuresPenalty)
       self.award_won_amount = self.award_won_amount + prices.CuresPenalty
     end
 
     -- Deaths
-    if hosp.num_cured_ty > 1 and hosp.num_deaths_this_year == 0 and hosp.not_cured_ty == 0 then
+    if anybody_cured and hosp.num_deaths_this_year == 0 and hosp.not_cured_ty == 0 then
+      -- Bonus
       self:addAward(_S.trophy_room.no_deaths.awards[1], "money", prices.AllCuresBonus)
       self.award_won_amount = self.award_won_amount + prices.AllCuresBonus
-    elseif hosp.num_deaths_this_year < prices.DeathsAward then
+    elseif anybody_cured and hosp.num_deaths_this_year < prices.DeathsAward then
+      -- Bonus
       self:addAward(_S.trophy_room.no_deaths.awards[math.random(1, 2)], "money", prices.DeathsBonus)
       self.award_won_amount = self.award_won_amount + prices.DeathsBonus
     elseif hosp.num_deaths_this_year > prices.DeathsPoor then
+      -- Penalty
       self:addAward(_S.trophy_room.no_deaths.penalty[math.random(1, 2)], "money", prices.DeathsPenalty)
       self.award_won_amount = self.award_won_amount + prices.DeathsPenalty
     end
@@ -271,10 +285,12 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
     if hosp.num_deaths_this_year > 0 then
       cure_ratio = hosp.num_cured_ty / hosp.num_deaths_this_year
     end
-    if cure_ratio > prices.CuresVDeathsAward then
+    if anybody_cured and cure_ratio > prices.CuresVDeathsAward then
+      -- Bonus
       self:addAward(_S.trophy_room.curesvdeaths.awards[1], "money", prices.CuresVDeathsBonus)
       self.award_won_amount = self.award_won_amount + prices.CuresVDeathsBonus
     elseif cure_ratio <= prices.CuresVDeathsPoor then
+      -- Penalty
       self:addAward(_S.trophy_room.curesvdeaths.penalty[1], "money", prices.CuresVDeathsPenalty)
       self.award_won_amount = self.award_won_amount + prices.CuresVDeathsPenalty
     end

@@ -86,7 +86,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   buttons[7] = panels[7]:makeToggleButton(1, 6, 35, 36, 28, self.dialogPolicy):setTooltip(_S.tooltip.toolbar.policy)
   for _, panel in ipairs(panels) do
     panel.visible = false
-    end
+  end
   self.additional_panels = panels
   self.additional_buttons = buttons
 
@@ -302,6 +302,7 @@ function UIBottomPanel:setDynamicInfo(info)
   end
 
   if not info then
+    -- dynamic info hide countdown value. 25 = ~1 second
     self.countdown = 25
   else
     self.countdown = nil

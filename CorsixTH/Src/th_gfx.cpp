@@ -227,8 +227,8 @@ bool animation_manager::load_from_th_file(
     oFrame.sound = pFrame->sound;
     oFrame.flags = pFrame->flags;
     // Bounding box fields initialised later
-    oFrame.marker_x = 0;
-    oFrame.marker_y = 0;
+    oFrame.primary_marker_x = 0;
+    oFrame.primary_marker_y = 0;
     oFrame.secondary_marker_x = 0;
     oFrame.secondary_marker_y = 0;
 
@@ -638,8 +638,8 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
 
       // Set later
       oFrame.flags = 0;
-      oFrame.marker_x = 0;
-      oFrame.marker_y = 0;
+      oFrame.primary_marker_x = 0;
+      oFrame.primary_marker_y = 0;
       oFrame.secondary_marker_x = 0;
       oFrame.secondary_marker_y = 0;
 
@@ -784,13 +784,14 @@ void animation_manager::set_animation_alt_palette_map(size_t iAnimation,
   } while (iFrame != iFirstFrame);
 }
 
-bool animation_manager::set_frame_marker(size_t iFrame, int iX, int iY) {
+bool animation_manager::set_frame_primary_marker(size_t iFrame, int iX,
+                                                 int iY) {
   if (iFrame >= frame_count) {
     return false;
   }
 
-  frames[iFrame].marker_x = iX;
-  frames[iFrame].marker_y = iY;
+  frames[iFrame].primary_marker_x = iX;
+  frames[iFrame].primary_marker_y = iY;
   return true;
 }
 
@@ -805,13 +806,14 @@ bool animation_manager::set_frame_secondary_marker(size_t iFrame, int iX,
   return true;
 }
 
-bool animation_manager::get_frame_marker(size_t iFrame, int* pX, int* pY) {
+bool animation_manager::get_frame_primary_marker(size_t iFrame, int* pX,
+                                                 int* pY) {
   if (iFrame >= frame_count) {
     return false;
   }
 
-  *pX = frames[iFrame].marker_x;
-  *pY = frames[iFrame].marker_y;
+  *pX = frames[iFrame].primary_marker_x;
+  *pY = frames[iFrame].primary_marker_y;
   return true;
 }
 
@@ -1166,11 +1168,16 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
   }
 }
 
-void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY) {
+void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY,
+                           bool use_primary) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
   if (are_flags_set(parent->flags, thdf_alpha_50 | thdf_alpha_75)) return;
   int iX = 0, iY = 0;
-  parent->get_marker(&iX, &iY);
+  if (use_primary)
+    parent->get_primary_marker(&iX, &iY);
+  else
+    parent->get_secondary_marker(&iX, &iY);
+
   iX += x_relative_to_tile + iDestX;
   iY += y_relative_to_tile + iDestY;
   if (sound_to_play) {
@@ -1249,55 +1256,6 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
          morph_target->hit_test(iDestX, iDestY, iTestX, iTestY);
 }
 
-namespace {
-bool THAnimation_hit_test_child(drawable* pSelf, int iDestX, int iDestY,
-                                int iTestX, int iTestY) {
-  return reinterpret_cast<animation*>(pSelf)->hit_test_child(iDestX, iDestY,
-                                                             iTestX, iTestY);
-}
-
-void THAnimation_draw_child(drawable* pSelf, render_target* pCanvas, int iDestX,
-                            int iDestY) {
-  reinterpret_cast<animation*>(pSelf)->draw_child(pCanvas, iDestX, iDestY);
-}
-
-bool THAnimation_hit_test_morph(drawable* pSelf, int iDestX, int iDestY,
-                                int iTestX, int iTestY) {
-  return reinterpret_cast<animation*>(pSelf)->hit_test_morph(iDestX, iDestY,
-                                                             iTestX, iTestY);
-}
-
-void THAnimation_draw_morph(drawable* pSelf, render_target* pCanvas, int iDestX,
-                            int iDestY) {
-  reinterpret_cast<animation*>(pSelf)->draw_morph(pCanvas, iDestX, iDestY);
-}
-
-bool THAnimation_hit_test(drawable* pSelf, int iDestX, int iDestY, int iTestX,
-                          int iTestY) {
-  return reinterpret_cast<animation*>(pSelf)->hit_test(iDestX, iDestY, iTestX,
-                                                       iTestY);
-}
-
-void THAnimation_draw(drawable* pSelf, render_target* pCanvas, int iDestX,
-                      int iDestY) {
-  reinterpret_cast<animation*>(pSelf)->draw(pCanvas, iDestX, iDestY);
-}
-
-bool THAnimation_is_multiple_frame_animation(drawable* pSelf) {
-  animation* pAnimation = reinterpret_cast<animation*>(pSelf);
-  if (pAnimation) {
-    size_t firstFrame = pAnimation->get_animation_manager()->get_first_frame(
-        pAnimation->get_animation());
-    size_t nextFrame =
-        pAnimation->get_animation_manager()->get_next_frame(firstFrame);
-    return nextFrame != firstFrame;
-  } else {
-    return false;
-  }
-}
-
-}  // namespace
-
 animation_base::animation_base() : drawable() {
   x_relative_to_tile = 0;
   y_relative_to_tile = 0;
@@ -1315,10 +1273,8 @@ animation::animation()
       frame_index(0),
       speed({0, 0}),
       sound_to_play(0),
-      crop_column(0) {
-  draw_fn = THAnimation_draw;
-  hit_test_fn = THAnimation_hit_test;
-  is_multiple_frame_animation_fn = THAnimation_is_multiple_frame_animation;
+      crop_column(0),
+      anim_kind(animation_kind::normal) {
   patient_effect = animation_effect::none;
   patient_effect_offset = rand();
 }
@@ -1336,13 +1292,11 @@ void animation::persist(lua_persist_writer* pWriter) const {
   // Write the drawable fields
   pWriter->write_uint(flags);
 
-  if (draw_fn == THAnimation_draw && hit_test_fn == THAnimation_hit_test) {
+  if (anim_kind == animation_kind::normal) {
     pWriter->write_uint(1);
-  } else if (draw_fn == THAnimation_draw_child &&
-             hit_test_fn == THAnimation_hit_test_child) {
+  } else if (anim_kind == animation_kind::primary_child) {
     pWriter->write_uint(2);
-  } else if (draw_fn == THAnimation_draw_morph &&
-             hit_test_fn == THAnimation_hit_test_morph) {
+  } else if (anim_kind == animation_kind::morph) {
     // NB: Prior version of code used the number 3 here, and forgot
     // to persist the morph target.
     pWriter->write_uint(4);
@@ -1351,6 +1305,8 @@ void animation::persist(lua_persist_writer* pWriter) const {
     lua_rawget(L, -2);
     pWriter->write_stack_object(-1);
     lua_pop(L, 2);
+  } else if (anim_kind == animation_kind::secondary_child) {
+    pWriter->write_uint(5);
   } else {
     pWriter->write_uint(0);
   }
@@ -1371,7 +1327,8 @@ void animation::persist(lua_persist_writer* pWriter) const {
   }
 
   // Write the unioned fields
-  if (draw_fn != THAnimation_draw_child) {
+  if (anim_kind != animation_kind::primary_child &&
+      anim_kind != animation_kind::secondary_child) {
     pWriter->write_int(speed.dx);
     pWriter->write_int(speed.dy);
   } else {
@@ -1397,7 +1354,8 @@ void animation::depersist(lua_persist_reader* pReader) {
   do {
     // Read the chain
     if (!pReader->read_stack_object()) break;
-    next = reinterpret_cast<link_list*>(lua_touserdata(L, -1));
+
+    next = luaT_testuserdata<animation_base>(L, -1, false);
     if (next) next->prev = this;
     lua_pop(L, 1);
 
@@ -1411,19 +1369,19 @@ void animation::depersist(lua_persist_reader* pReader) {
         // missing, so settle for a graphical bug rather than a segfault
         // by reverting to the normal function set.
       case 1:
-        draw_fn = THAnimation_draw;
-        hit_test_fn = THAnimation_hit_test;
+        set_animation_kind(animation_kind::normal);
         break;
       case 2:
-        draw_fn = THAnimation_draw_child;
-        hit_test_fn = THAnimation_hit_test_child;
+        set_animation_kind(animation_kind::primary_child);
         break;
       case 4:
-        draw_fn = THAnimation_draw_morph;
-        hit_test_fn = THAnimation_hit_test_morph;
+        set_animation_kind(animation_kind::morph);
         pReader->read_stack_object();
         morph_target = reinterpret_cast<animation*>(lua_touserdata(L, -1));
         lua_pop(L, 1);
+        break;
+      case 5:
+        set_animation_kind(animation_kind::secondary_child);
         break;
       default:
         pReader->set_error(lua_pushfstring(
@@ -1450,7 +1408,8 @@ void animation::depersist(lua_persist_reader* pReader) {
     }
 
     // Read the unioned fields
-    if (draw_fn != THAnimation_draw_child) {
+    if (anim_kind != animation_kind::primary_child &&
+        anim_kind != animation_kind::secondary_child) {
       if (!pReader->read_int(speed.dx)) break;
       if (!pReader->read_int(speed.dy)) break;
     } else {
@@ -1494,6 +1453,10 @@ void animation::set_patient_effect(animation_effect patient_effect) {
   this->patient_effect = patient_effect;
 }
 
+void animation::set_animation_kind(animation_kind anim_kind) {
+  this->anim_kind = anim_kind;
+}
+
 namespace {
 // Map of frame numbers to sounds to play.
 const std::map<size_t, int> frame_sound_replacements{
@@ -1516,7 +1479,8 @@ const std::map<size_t, int> frame_sound_replacements{
 
 void animation::tick() {
   frame_index = manager->get_next_frame(frame_index);
-  if (draw_fn != THAnimation_draw_child) {
+  if (anim_kind != animation_kind::primary_child &&
+      anim_kind != animation_kind::secondary_child) {
     x_relative_to_tile += speed.dx;
     y_relative_to_tile += speed.dy;
   }
@@ -1566,15 +1530,14 @@ void animation_base::attach_to_tile(map_tile* pMapNode, int layer) {
   pList->next = this;
 }
 
-void animation::set_parent(animation* pParent) {
+void animation::set_parent(animation* pParent, bool use_primary) {
   remove_from_tile();
   if (pParent == nullptr) {
-    draw_fn = THAnimation_draw;
-    hit_test_fn = THAnimation_hit_test;
+    set_animation_kind(animation_kind::normal);
     speed = {0, 0};
   } else {
-    draw_fn = THAnimation_draw_child;
-    hit_test_fn = THAnimation_hit_test_child;
+    set_animation_kind(use_primary ? animation_kind::primary_child
+                                   : animation_kind::secondary_child);
     parent = pParent;
     next = parent->next;
     if (next) next->prev = this;
@@ -1589,13 +1552,12 @@ void animation::set_animation(animation_manager* pManager, size_t iAnimation) {
   frame_index = pManager->get_first_frame(iAnimation);
   if (morph_target) {
     morph_target = nullptr;
-    draw_fn = THAnimation_draw;
-    hit_test_fn = THAnimation_hit_test;
+    set_animation_kind(animation_kind::normal);
   }
 }
 
-bool animation::get_marker(int* pX, int* pY) {
-  if (!manager || !manager->get_frame_marker(frame_index, pX, pY)) {
+bool animation::get_primary_marker(int* pX, int* pY) {
+  if (!manager || !manager->get_frame_primary_marker(frame_index, pX, pY)) {
     return false;
   }
 
@@ -1654,8 +1616,7 @@ int GetAnimationDurationAndExtent(animation_manager* pManager, size_t iFrame,
 
 void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
   morph_target = pMorphTarget;
-  draw_fn = THAnimation_draw_morph;
-  hit_test_fn = THAnimation_hit_test_morph;
+  set_animation_kind(animation_kind::morph);
 
   /* Morphing is the process by which two animations are combined to give a
   single animation of one animation turning into another. At the moment,
@@ -1712,31 +1673,7 @@ void animation_base::set_layer(int iLayer, int iId) {
   }
 }
 
-namespace {
-
-bool THSpriteRenderList_hit_test(drawable* pSelf, int iDestX, int iDestY,
-                                 int iTestX, int iTestY) {
-  return reinterpret_cast<sprite_render_list*>(pSelf)->hit_test(iDestX, iDestY,
-                                                                iTestX, iTestY);
-}
-
-void THSpriteRenderList_draw(drawable* pSelf, render_target* pCanvas,
-                             int iDestX, int iDestY) {
-  reinterpret_cast<sprite_render_list*>(pSelf)->draw(pCanvas, iDestX, iDestY);
-}
-
-bool THSpriteRenderList_is_multiple_frame_animation(drawable* pSelf) {
-  return false;
-}
-
-}  // namespace
-
-sprite_render_list::sprite_render_list() : animation_base() {
-  draw_fn = THSpriteRenderList_draw;
-  hit_test_fn = THSpriteRenderList_hit_test;
-  is_multiple_frame_animation_fn =
-      THSpriteRenderList_is_multiple_frame_animation;
-}
+sprite_render_list::sprite_render_list() : animation_base() {}
 
 sprite_render_list::~sprite_render_list() { delete[] sprites; }
 
@@ -1907,7 +1844,7 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
     return;
   }
 
-  next = reinterpret_cast<link_list*>(lua_touserdata(L, -1));
+  next = luaT_testuserdata<animation_base>(L, -1, false);
   if (next) {
     next->prev = this;
   }

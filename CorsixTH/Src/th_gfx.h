@@ -30,6 +30,7 @@ SOFTWARE.
 #include "th.h"
 #include "th_gfx_common.h"
 #include "th_gfx_sdl.h"
+#include "th_lua.h"
 
 class lua_persist_reader;
 class lua_persist_writer;
@@ -109,27 +110,25 @@ struct drawable : public link_list {
   /*!
       Can also "draw" the object to the speakers, i.e. play sounds.
   */
-  void (*draw_fn)(drawable* pSelf, render_target* pCanvas, int iDestX,
-                  int iDestY);
+  virtual void draw_fn(render_target* pCanvas, int iDestX, int iDestY) = 0;
 
   //! Perform a hit test against the object
   /*!
       Should return true if when the object is drawn at (iDestX, iDestY) on a
      canvas, the point (iTestX, iTestY) is within / on the object.
   */
-  bool (*hit_test_fn)(drawable* pSelf, int iDestX, int iDestY, int iTestX,
-                      int iTestY);
-
-  //! Drawing flags (zero or more list flags from #draw_flags).
-  uint32_t flags;
+  virtual bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) = 0;
 
   /** Returns true if instance is a multiple frame animation.
       Should be overloaded in derived class.
   */
-  bool (*is_multiple_frame_animation_fn)(drawable* pSelf);
+  virtual bool is_multiple_frame_animation_fn() = 0;
 
   int get_drawing_layer() { return drawing_layer; }
   void set_drawing_layer(int layer) { drawing_layer = layer; }
+
+  //! Drawing flags (zero or more list flags from #draw_flags).
+  uint32_t flags;
 
  private:
   int drawing_layer;
@@ -355,9 +354,9 @@ class animation_manager {
   bool hit_test(size_t iFrame, const ::layers& oLayers, int iX, int iY,
                 uint32_t iFlags, int iTestX, int iTestY) const;
 
-  bool set_frame_marker(size_t iFrame, int iX, int iY);
+  bool set_frame_primary_marker(size_t iFrame, int iX, int iY);
   bool set_frame_secondary_marker(size_t iFrame, int iX, int iY);
-  bool get_frame_marker(size_t iFrame, int* pX, int* pY);
+  bool get_frame_primary_marker(size_t iFrame, int* pX, int* pY);
   bool get_frame_secondary_marker(size_t iFrame, int* pX, int* pY);
 
   //! Retrieve a custom animation by name and tile size.
@@ -436,8 +435,10 @@ class animation_manager {
     // Markers are used to know where humanoids are on an frame. The
     // positions are pixels offsets from the centre of the frame's base
     // tile to the centre of the humanoid's feet.
-    int marker_x;  ///< X position of the first center of a humanoids feet.
-    int marker_y;  ///< Y position of the first center of a humanoids feet.
+    int primary_marker_x;    ///< X position of the first center of a humanoids
+                             ///< feet.
+    int primary_marker_y;    ///< Y position of the first center of a humanoids
+                             ///< feet.
     int secondary_marker_x;  ///< X position of the second center of a
                              ///< humanoids feet.
     int secondary_marker_y;  ///< Y position of the second center of a
@@ -541,7 +542,6 @@ class animation_base : public drawable {
   void set_layer(int iLayer, int iId);
   void set_layers_from(const animation_base* pSrc) { layers = pSrc->layers; }
 
-  // bool isMultipleFrameAnimation() { return false;}
  protected:
   //! X position on tile (not tile x-index)
   int x_relative_to_tile;
@@ -558,23 +558,64 @@ struct xy_diff {
   int dy;
 };
 
+//! The kind of animation.
+enum class animation_kind { primary_child, secondary_child, normal, morph };
+
 class animation : public animation_base {
  public:
   animation();
 
-  void set_parent(animation* pParent);
+  void set_parent(animation* pParent, bool use_primary);
 
   void tick();
   void draw(render_target* pCanvas, int iDestX, int iDestY);
   bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
   void draw_morph(render_target* pCanvas, int iDestX, int iDestY);
   bool hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY);
-  void draw_child(render_target* pCanvas, int iDestX, int iDestY);
+  void draw_child(render_target* pCanvas, int iDestX, int iDestY,
+                  bool use_primary);
   bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
+
+  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override {
+    switch (anim_kind) {
+      case animation_kind::normal:
+        draw(pCanvas, iDestX, iDestY);
+        return;
+      case animation_kind::primary_child:
+        draw_child(pCanvas, iDestX, iDestY, true);
+        return;
+      case animation_kind::secondary_child:
+        draw_child(pCanvas, iDestX, iDestY, false);
+        return;
+      case animation_kind::morph:
+        draw_morph(pCanvas, iDestX, iDestY);
+        return;
+    }
+  }
+
+  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override {
+    switch (anim_kind) {
+      case animation_kind::normal:
+        return hit_test(iDestX, iDestY, iTestX, iTestY);
+      case animation_kind::primary_child:
+      case animation_kind::secondary_child:
+        return hit_test_child(iDestX, iDestY, iTestX, iTestY);
+      case animation_kind::morph:
+        return hit_test_morph(iDestX, iDestY, iTestX, iTestY);
+    }
+    return false;
+  }
+
+  bool is_multiple_frame_animation_fn() override {
+    size_t firstFrame =
+        get_animation_manager()->get_first_frame(get_animation());
+    size_t nextFrame = get_animation_manager()->get_next_frame(firstFrame);
+    return nextFrame != firstFrame;
+  }
 
   link_list* get_previous() { return prev; }
   size_t get_animation() const { return animation_index; }
-  bool get_marker(int* pX, int* pY);
+  bool get_primary_marker(int* pX, int* pY);
   bool get_secondary_marker(int* pX, int* pY);
   size_t get_frame() const { return frame_index; }
   int get_crop_column() const { return crop_column; }
@@ -590,6 +631,8 @@ class animation : public animation_base {
   void depersist(lua_persist_reader* pReader);
 
   void set_patient_effect(animation_effect patient_effect);
+  void set_animation_kind(animation_kind anim_kind);
+  animation_kind get_animation_kind() { return anim_kind; }
 
   animation_manager* get_animation_manager() { return manager; }
 
@@ -600,13 +643,14 @@ class animation : public animation_base {
   size_t frame_index;      ///< Frame number.
   union {
     xy_diff speed;
-    //! Some animations are tied to the marker of another animation and
-    //! hence have a parent rather than a speed.
+    //! Some animations are tied to the primary or secondary marker of another
+    //! animation and hence have a parent rather than a speed.
     animation* parent;
   };
 
   size_t sound_to_play;
   int crop_column;
+  animation_kind anim_kind;
   animation_effect patient_effect;
   //! Number of game_ticks to offset animation by so they aren't all
   //! running in sync.
@@ -632,6 +676,16 @@ class sprite_render_list : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
+  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override {
+    draw(pCanvas, iDestX, iDestY);
+  }
+
+  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override {
+    return hit_test(iDestX, iDestY, iTestX, iTestY);
+  }
+
+  bool is_multiple_frame_animation_fn() override { return false; }
+
  private:
   struct sprite {
     size_t index;
@@ -654,5 +708,17 @@ class sprite_render_list : public animation_base {
   //! rendering quality when scaling.
   bool use_intermediate_buffer = false;
 };
+
+// Specialization of the 'luaT_testuserdata' template for the 'animation_base'
+// class.
+template <>
+inline animation_base* luaT_testuserdata<animation_base>(lua_State* L, int idx,
+                                                         bool required) {
+  animation_base* p = luaT_testuserdata<animation>(L, idx, false);
+  if (p == nullptr) {
+    p = luaT_testuserdata<sprite_render_list>(L, idx, required);
+  }
+  return p;
+}
 
 #endif  // CORSIX_TH_TH_GFX_H_

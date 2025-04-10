@@ -237,10 +237,15 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   local surgeon2 = next(self.staff_member_set, surgeon1)
   assert(surgeon1 and surgeon2, "Not enough staff in operating theatre")
 
-  -- Patient changes into surgical gown
   local screen, sx, sy = self.world:findObjectNear(patient, "surgeon_screen")
-  patient:walkTo(sx, sy)
-  patient:queueAction(UseScreenAction(screen))
+  -- Patient walk to surgeon screen
+  patient:queueAction(WalkAction(sx, sy)
+    :setMustHappen(true)
+    :disableTruncate())
+  -- Patient changes into surgical gown
+  patient:queueAction(UseScreenAction(screen)
+    :setMustHappen(true)
+    :disableTruncate())
 
   -- Meanwhile, surgeons wash their hands
   -- TODO: They sometimes overlap each other when doing that. Can we avoid that?

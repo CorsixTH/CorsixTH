@@ -397,11 +397,13 @@ tooltip.custom_game_window = {
 custom_campaign_window = {
   caption = "Custom Campaign",
   start_selected_campaign = "Start campaign",
+  duplicates_warning = "%d campaign(s) with duplicate names have been hidden",
 }
 
 tooltip.custom_campaign_window = {
   choose_campaign = "Choose a campaign to read more about it",
   start_selected_campaign = "Load the first level of this campaign",
+  duplicates_warning = "See the console window for specific errors",
 }
 
 save_game_window = {
@@ -772,6 +774,7 @@ errors = {
     full_in_demo = "Sorry, you can't open a full game save with the demo files loaded. Please update your TH Data folder setting.",
   },
   music = "There are playback issues with one or more files in your music directory. Problematic files will be disabled in the jukebox. See the console window for more information.",
+  missing_th_data_file = "Warning: Could not find file %s, the Theme Hospital data is incomplete.",
 }
 
 warnings = {

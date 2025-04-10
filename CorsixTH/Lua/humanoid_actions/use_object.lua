@@ -62,6 +62,11 @@ local orient_mirror = {
   south = "east",
 }
 
+--! Find the next phase with an animation to show.
+--!param action (UseObjectAction) The use_object action.
+--!param phase The previous displayed phase or -100.
+--!return The phase to show after the previous phase. Is 100 if there are no
+--  phases with animations anymore.
 local function action_use_next_phase(action, phase)
   phase = phase + 1
   if phase < -6 then
@@ -112,8 +117,9 @@ local function action_use_next_phase(action, phase)
   return phase
 end
 
---! Compute the position of the animated humanoid from the footprint.
---!param action (UseObbjectAction) Action being performed.
+--! Compute and set the position of the animated humanoid from the footprint.
+--  The humanoid does not move.
+--!param action (UseObjectAction) Action being performed.
 --!param humanoid (Humanoid) Person using the object.
 local function setHumanoidTileSpeed(action, humanoid)
   local object = action.object
@@ -161,7 +167,9 @@ local function action_use_phase(action, humanoid, phase)
       nil, action_use_object_tick)
     return
   end
-  local anim_table = action.anims.in_use
+
+  -- Get the animation table for the current phase.
+  local anim_table = action.anims.in_use -- phase 0
   if phase == -5 then
     anim_table = action.anims.begin_use
   elseif phase == -4 then
@@ -183,7 +191,7 @@ local function action_use_phase(action, humanoid, phase)
   elseif phase == 5 then
     anim_table = action.anims.finish_use_5
   end
-  local is_list = false
+
   local anim = anim_table[humanoid.humanoid_class]
   if not anim then
     -- Handymen have their own number of animations.
@@ -198,11 +206,13 @@ local function action_use_phase(action, humanoid, phase)
     end
   end
 
+  -- Animation can be shown 'length' times rather than just once.
   local anim_length = 1
   if type(anim) == "table" and anim.length then
     anim_length = anim.length
   end
 
+  local is_list = false
   if type(anim) == "table" and anim[1] ~= "morph" and #anim > 1 then
     -- If an animation list is provided rather than a single animation, then
     -- choose an animation from the list at random.
@@ -210,6 +220,10 @@ local function action_use_phase(action, humanoid, phase)
     anim = anim[math.random(1, #anim)]
   end
 
+  -- Handle various flags:
+  -- "mirror" to mirror a single animation (possibly for the second time).
+  -- "object_visible" whether the used object should be visible as well.
+  --     Default is to not show it.
   local flags = action.mirror_flags
   if type(anim) == "table" then
     if anim.mirror then
@@ -222,6 +236,8 @@ local function action_use_phase(action, humanoid, phase)
     else
       object.th:makeInvisible()
     end
+
+    -- If not morphing, grab the animation to show.
     if anim[1] ~= "morph" then
       anim = anim[1]
     end
@@ -229,6 +245,7 @@ local function action_use_phase(action, humanoid, phase)
     object.th:makeInvisible()
   end
 
+  -- For split animations, add a Crop flag to the selected animations.
   if object.split_anims then
     flags = flags + DrawFlags.Crop
     local anims = humanoid.world.anims
@@ -238,16 +255,17 @@ local function action_use_phase(action, humanoid, phase)
     end
   end
 
+  -- Morph from one animation to another.
   if type(anim) == "table" and anim[1] == "morph" then
     -- If a table with entries {"morph", A, B} is given rather than a single
     -- animation, then display A first, then morph to B.
-    humanoid:setAnimation(anim[2], flags)
+    humanoid:setAnimation(anim[2], flags) -- A animation.
     local morph_target = TH.animation()
     local morph_flags = flags
     if anim.mirror_morph then
       morph_flags = flag_toggle(morph_flags, DrawFlags.FlipHorizontal)
     end
-    morph_target:setAnimation(humanoid.world.anims, anim[3], morph_flags)
+    morph_target:setAnimation(humanoid.world.anims, anim[3], morph_flags) -- B animation.
     for layer, id in pairs(humanoid.layers) do
       morph_target:setLayer(layer, id)
     end
@@ -255,7 +273,7 @@ local function action_use_phase(action, humanoid, phase)
       for layer, id in pairs(humanoid[anim.layers]) do
         morph_target:setLayer(layer, id)
       end
-      action.change_layers = humanoid[anim.layers]
+      action.change_layers = humanoid[anim.layers] -- Rescue the layers for use afterwards.
     end
     humanoid.th:setMorph(morph_target, anim_length)
     anim = anim[3]
@@ -263,15 +281,19 @@ local function action_use_phase(action, humanoid, phase)
     humanoid:setAnimation(anim, flags)
   end
 
+  -- Set position (and speed) of the humanoid, and make it the user of the object.
   setHumanoidTileSpeed(action, humanoid)
-
   humanoid.user_of = object
-  local length = anim_length * humanoid.world:getAnimLength(anim)
-  if action.min_length and phase == 0 and action.min_length > length then
-    -- A certain length is desired.
-    -- Even it out so that an integer number of animation sequences are done.
-    length = action.min_length + action.min_length % length
+
+  local frame_count = humanoid.world:getAnimLength(anim)
+  local action_anim_count = 1 -- Number of times to show 'in_use' animation for the action.
+  if action.min_length and phase == 0 then
+    -- 'action.min_length' is a frame count, convert to number of complete animations.
+    action_anim_count = math.floor((action.min_length + frame_count - 1) / frame_count)
   end
+  -- Take the smallest number of of animations that satisfies both the object and
+  -- the action minimum count.
+  local length = math.max(action_anim_count, anim_length) * frame_count
 
   -- A timer would be redundant in certain situations, so check it is needed
   if phase ~= 0 or is_list or length ~= 1 or not action.prolonged_usage or
@@ -280,6 +302,8 @@ local function action_use_phase(action, humanoid, phase)
   end
 end
 
+--! Setup split animations by copying the humanoid layers and hit-test
+--  to the other animations.
 local function init_split_anims(object, humanoid)
   if object.split_anims then
     for i = 2, #object.split_anims do
@@ -291,12 +315,19 @@ local function init_split_anims(object, humanoid)
   end
 end
 
+--! Cleanup function after usage.
 local function finish_using(object, humanoid)
-  object:removeUser(humanoid)
+  object:removeUser(humanoid) -- Disconnect the humanoid from the object.
   humanoid.user_of = nil
+
+  -- Restore the layers and hit-test of the object, and set all animations
+  -- to the same frame.
   if object.split_anims then
-    local anims, anim, frame, flags = humanoid.world.anims,
-      object.th:getAnimation(), object.th:getFrame(), object.th:getFlag()
+    local anims = humanoid.world.anims
+    local anim = object.th:getAnimation()
+    local frame = object.th:getFrame()
+    local flags = object.th:getFlag()
+
     for i = 2, #object.split_anims do
       local th = object.split_anims[i]
       th:setLayersFrom(object.th)
@@ -304,15 +335,20 @@ local function finish_using(object, humanoid)
       th:setAnimation(anims, anim, flags)
       th:setFrame(frame)
     end
+
+    -- Restore ticks to default of the object.
     object.ticks = object.object_type.ticks
   end
 end
 
+--! Callback after an animation.
 action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   local action = humanoid:getCurrentAction()
   local object = action.object
   local phase = action.phase
   local oldphase = phase
+
+  -- walk_in phase done.
   if oldphase == -6 then
     object:setUser(humanoid)
     humanoid.user_of = object
@@ -321,31 +357,42 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
       action:after_walk_in()
     end
   end
+
   if phase ~= 0 or not action.prolonged_usage or not action.on_interrupt then
+    -- For the 'begin_use*', the 'finish_use*', and simple 'in_use' animations,
+    -- find to the next phase to animate.
     phase = action_use_next_phase(action, phase)
   elseif action.loop_callback then
     action:loop_callback()
   end
+
+  -- Apply the layers from before the morphed animation if available.
   if action.change_layers then
     for layer, id in pairs(action.change_layers) do
       humanoid:setLayer(layer, id)
     end
     action.change_layers = nil
   end
+
+  -- Except for possibly walking away from the object, all usage animations are done.
+  -- Perform cleanup.
   if oldphase <= 5 and phase > 5 then
     finish_using(object, humanoid)
   end
+
   if phase == 100 then
+    -- Any walking away from the object is done too.
     humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
 
     -- Check if the room is about to be destroyed
     local room_destroyed = false
-    if object.strength then
+    if object:isMachine() then
       if humanoid.humanoid_class ~= "Handyman"  then
         room_destroyed = object:machineUsed(humanoid:getRoom())
       end
     elseif object:getDynamicInfo() and not object.master then
       -- Don't update if it is a slave object.
+      object:incrementUsedCount()
       object:updateDynamicInfo()
     end
     if not room_destroyed then
@@ -364,6 +411,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
       end
     end
   else
+    -- Perform the next phase.
     action_use_phase(action, humanoid, phase)
   end
 end)
@@ -372,7 +420,7 @@ local action_use_object_interrupt = permanent"action_use_object_interrupt"( func
   if high_priority then
     local object = action.object
     if humanoid.user_of then
-      finish_using(object, humanoid)
+      finish_using(object, humanoid) -- Cleanup after usage.
     elseif object:isReservedFor(humanoid) then
       object:removeReservedUser(humanoid)
     end
@@ -393,23 +441,26 @@ local function action_use_object_start(action, humanoid)
   action.old_tile_y = humanoid.tile_y
   action.on_interrupt = action_use_object_interrupt
   action.must_happen = true
+
   local object = action.object
   local orient = object.direction
   local flags = 0
   if not object.object_type.usage_animations[orient] then
     orient = orient_mirror[orient]
-    flags = flags + 1
+    flags = flags + DrawFlags.FlipHorizontal
   end
   local spec = object.object_type.orientations[object.direction]
   -- early_list_while_in_use (if defined) will take precedence over early_list
   if spec.early_list_while_in_use or (spec.early_list_while_in_use == nil and spec.early_list) then
-    flags = flags + 1024
+    flags = flags + DrawFlags.EarlyList
   end
+
   -- The handyman has his own place to be in
   if spec.finish_use_position and humanoid.humanoid_class ~= "Handyman" then
     action.old_tile_x = object.tile_x + spec.finish_use_position[1]
     action.old_tile_y = object.tile_y + spec.finish_use_position[2]
   end
+
   if spec.walk_in_tile then
     action.new_tile_x = spec.walk_in_tile[1] + object.tile_x
     action.new_tile_y = spec.walk_in_tile[2] + object.tile_y
@@ -417,6 +468,7 @@ local function action_use_object_start(action, humanoid)
     action.new_tile_x = object.tile_x
     action.new_tile_y = object.tile_y
   end
+
   local anims = object.object_type.usage_animations[orient]
   action.anims = anims
   action.mirror_flags = flags
@@ -424,6 +476,8 @@ local function action_use_object_start(action, humanoid)
     anims.in_use and anims.finish_use then
     action.prolonged_usage = true
   end
+
+  -- If walking in and walking out must be done, delay assigning the object to the humanoid.
   if object.object_type.walk_in_to_use then
     action.do_walk = true
   else
@@ -431,10 +485,12 @@ local function action_use_object_start(action, humanoid)
     humanoid.user_of = object
     init_split_anims(object, humanoid)
   end
+
   if action.watering_plant then
     -- Tell the plant to start restoring itself
     object:restoreToFullHealth()
   end
+
   action_use_phase(action, humanoid, action_use_next_phase(action, -100))
 end
 

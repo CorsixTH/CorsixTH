@@ -367,10 +367,10 @@ T* luaT_testuserdata(lua_State* L, int idx, int mt_idx, bool required = true) {
 }
 
 template <class T>
-T* luaT_testuserdata(lua_State* L, int idx = 1) {
+T* luaT_testuserdata(lua_State* L, int idx = 1, bool required = true) {
   int iMetaIndex = luaT_environindex;
   if (idx > 1) iMetaIndex = luaT_upvalueindex(idx - 1);
-  return luaT_testuserdata<T>(L, idx, iMetaIndex);
+  return luaT_testuserdata<T>(L, idx, iMetaIndex, required);
 }
 
 template <class T, int mt>
