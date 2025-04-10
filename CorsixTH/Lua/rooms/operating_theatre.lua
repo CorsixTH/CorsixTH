@@ -139,18 +139,6 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   staff:queueAction(wait_for_object(staff, screen, false))
   staff:queueAction(UseScreenAction(screen))
 
-  -- Resume operation if already ongoing
-  if self:isOperating() then
-    local surgeon1 = next(self.staff_member_set)
-    local ongoing_action = surgeon1:getCurrentAction()
-    assert(ongoing_action.name == "multi_use_object")
-
-    local table, table_x, table_y = self.world:findObjectNear(staff, "operating_table_b")
-    self:queueWashHands(staff)
-    staff:queueAction(WalkAction(table_x, table_y))
-    staff:queueAction(self._buildTableAction2(ongoing_action, table))
-  end
-
   self.staff_member_set[staff] = true
 
   -- Wait around for patients
