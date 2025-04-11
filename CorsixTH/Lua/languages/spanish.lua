@@ -1393,7 +1393,6 @@ map_editor_window = {
 }
 
 machine_menu = {
-  summary = "%d máquinas en total; %d asignadas",
   machine = "Máquina",
   remaining_strength = "Restante",
   total_strength = "Fuerza",

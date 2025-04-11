@@ -3645,7 +3645,6 @@ calls_dispatcher = {
 }
 
 machine_menu = {
-  summary = "%d машин всего; %d назначено",
   machine = "Mашина",
   remaining_strength = "Остаток",
   total_strength = "Прочность",
