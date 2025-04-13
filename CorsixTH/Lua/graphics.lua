@@ -612,7 +612,7 @@ end
 
   The 'position' should be a table; An {x, y} pair for a tile position or
   {x, y, "px"} for a pixel position. In both cases the position should be the
-  humanoid center at floor level, with the center of the (0, 0) tile being the
+  humanoid centre at floor level, with the centre of the (0, 0) tile being the
   origin in both cases.
 
   The first variant of set{Patient,Staff}Marker sets the same marker for each frame.
@@ -630,12 +630,12 @@ end
   conjection with a for loop to set markers for multiple things.
 --]]
 
---! Define the center of a patient at floor level in an animation.
+--! Define the centre of a patient at floor level in an animation.
 function AnimationManager:setPatientMarker(anim, ...)
   self:_unfoldAnims(anim, "setFramePrimaryMarker", ...)
 end
 
---! Define the center of a staff member at floor level in an animation.
+--! Define the centre of a staff member at floor level in an animation.
 function AnimationManager:setStaffMarker(anim, ...)
   self:_unfoldAnims(anim, "setFrameSecondaryMarker", ...)
 end
