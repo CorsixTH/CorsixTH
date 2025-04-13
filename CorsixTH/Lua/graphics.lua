@@ -630,11 +630,16 @@ function AnimationManager:setMarker(anim, ...)
   return self:setMarkerRaw(anim, "setFramePrimaryMarker", ...)
 end
 
-local function TableToPixels(t)
-  if t[3] == "px" then
-    return t[1], t[2]
+--! Convert a {x, y} tile position or a {x, y, "px"} pixel position to an X/Y
+--  pair that represents the center of the humanoid at floor level, relative to
+--  the center of tile (0,0) in an animation.
+--!param pos (table) The tile or pixel position to convert.
+--!return The X/Y pair.
+local function positionToXy(pos)
+  if pos[3] == "px" then
+    return pos[1], pos[2]
   else
-    local x, y = Map:WorldToScreen(t[1] + 1, t[2] + 1)
+    local x, y = Map:WorldToScreen(pos[1] + 1, pos[2] + 1)
     return math.floor(x), math.floor(y)
   end
 end
@@ -653,8 +658,8 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
   if tp_arg1 == "table" then
     if arg2 then
       -- Linear-interpolation positions
-      local x1, y1 = TableToPixels(arg1)
-      local x2, y2 = TableToPixels(arg2)
+      local x1, y1 = positionToXy(arg1)
+      local x2, y2 = positionToXy(arg2)
       for i = 0, anim_length - 1 do
         local n = math.floor(i / (anim_length - 1))
         anims[fn](anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
@@ -662,7 +667,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       end
     else
       -- Static position
-      local x, y = TableToPixels(arg1)
+      local x, y = positionToXy(arg1)
       for _ = 1, anim_length do
         anims[fn](anims, frame, x, y)
         frame = anims:getNextFrame(frame)
@@ -673,7 +678,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     local f1, x1, y1 = 0, 0, 0
     local args
     if arg1 == 0 then
-      x1, y1 = TableToPixels(arg2)
+      x1, y1 = positionToXy(arg2)
       args = {...}
     else
       args = {arg1, arg2, ...}
@@ -688,7 +693,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       if not f2 then
         f2 = args[args_i]
         if f2 then
-          x2, y2 = TableToPixels(args[args_i + 1])
+          x2, y2 = positionToXy(args[args_i + 1])
           args_i = args_i + 2
         end
       end
