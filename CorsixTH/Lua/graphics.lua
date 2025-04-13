@@ -627,7 +627,7 @@ end
 --]]
 
 function AnimationManager:setMarker(anim, ...)
-  return self:setMarkerRaw(anim, "setFramePrimaryMarker", ...)
+  self:_unfoldAnims(anim, "setFramePrimaryMarker", ...)
 end
 
 --! Convert a {x, y} tile position or a {x, y, "px"} pixel position to an X/Y
@@ -644,13 +644,20 @@ local function positionToXy(pos)
   end
 end
 
-function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
+--! Unfold tables containing animation numbers.
+function AnimationManager:_unfoldAnims(anim, fn, ...)
+  if not anim then return end
+
   if type(anim) == "table" then
     for _, val in pairs(anim) do
-      self:setMarkerRaw(val, fn, arg1, arg2, ...)
+      self:_unfoldAnims(val, fn, ...)
     end
-    return
+  else
+    self:setMarkerRaw(anim, fn, ...)
   end
+end
+
+function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
   local tp_arg1 = type(arg1)
   local anim_length = self:getAnimLength(anim)
   local anims = self.anims
