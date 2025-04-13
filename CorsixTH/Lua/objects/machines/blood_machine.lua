@@ -113,6 +113,6 @@ object.orientations = {
   },
 }
 local anim_mgr = TheApp.animation_manager
-anim_mgr:setMarker(object.idle_animations.north, {-1.5, -0.8})
+anim_mgr:setPatientMarker(object.idle_animations.north, {-1.5, -0.8})
 
 return object
