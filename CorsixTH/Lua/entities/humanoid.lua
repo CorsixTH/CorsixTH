@@ -165,13 +165,24 @@ anims("VIP",                        266,  268,  274,  276)
 anims("Inspector",                  266,  268,  274,  276)
 anims("Grim Reaper",                994,  996, 1002, 1004)
 
-assignPatientMarkers(door_animations, "entering", 0, {-1, 0}, 3, {-1, 0}, 9, {0, 0})
-assignPatientMarkers(door_animations, "leaving", 1, {0, 0.4}, 4, {0, 0.4}, 7, {0, 0}, 11, {0, -1})
+local doorE_markers = { -- Anim 3288 in particular
+  {-19, -15, "px"}, {-26, -17, "px"}, {-26, -17, "px"}, {-26, -17, "px"},
+  {-26, -15, "px"}, {-22, -13, "px"}, {-19, -9, "px"}, {-13, -5, "px"},
+  {-8, -4, "px"}, {-5, 0, "px"},
+}
+local doorL_markers = { -- Anim 3286 in particular.
+  {-7, 0, "px"}, {-14, 6, "px"}, {-14, 6, "px"}, {-12, 5, "px"}, {-11, 5, "px"},
+  {-7, 3, "px"}, {-4, 0, "px"}, {2, -1, "px"}, {2, -1, "px"}, {10, -3, "px"},
+  {14, -7, "px"}, {20, -11, "px"},
+}
+
+assignPatientMarkers(door_animations, "entering", doorE_markers)
+assignPatientMarkers(door_animations, "leaving", doorL_markers)
 assignPatientMarkers(door_animations, "entering_swing", 0, {-1.0, 0.0}, 8, {0.0, 0.0})
 assignPatientMarkers(door_animations, "leaving_swing", 0, {0.1, 0.0}, 9, {0.0, -1.0})
 
-assignStaffMarkers(door_animations, "entering", 0, {-1.0, 0.0}, 8, {0.0, 0.0})
-assignStaffMarkers(door_animations, "leaving", 0, {0.1, 0.0}, 9, {0.0, -1.0})
+assignStaffMarkers(door_animations, "entering", doorE_markers)
+assignStaffMarkers(door_animations, "leaving", doorL_markers)
 assignStaffMarkers(door_animations, "entering_swing", 0, {-1.0, 0.0}, 8, {0.0, 0.0})
 assignStaffMarkers(door_animations, "leaving_swing", 0, {0.1, 0.0}, 9, {0.0, -1.0})
 
@@ -220,6 +231,7 @@ get_up_anim("Standard Female Patient",   580)
 ----+--------------------------------+-----+-----+-----+-----+------+------+
 shake_fist_anim("Standard Male Patient",   392) -- bloaty head patients lose head!
 
+assignPatientMarkers(shake_fist_animations, nil, {0.0, 0.0})
 
 --  | Vomit Animations                  |
 --  | Name                              |Anim | Notes
@@ -234,6 +246,8 @@ vomit_anim("Slack Male Patient",         4324)
 vomit_anim("Transparent Female Patient", 4452)
 vomit_anim("Transparent Male Patient",   4384)
 
+assignPatientMarkers(vomit_animations, nil, {0.0, 0.0})
+
 --  | Yawn Animations                  |
 --  | Name                              |Anim | Notes
 ----+-----------------------------------+-----+
@@ -242,12 +256,16 @@ yawn_anim("Standard Male Patient",      368)
 --yawn_anim("Alternate Male Patient",     2968)  is this one the same as standard male?
 -- whichever one is used for male, if he wears a hat it will lift when he yawns
 
+assignPatientMarkers(yawn_animations, nil, {0.0, 0.0})
+
 --  | Foot tapping Animations                  |
 --  | Name                              |Anim | Notes
 ----+-----------------------------------+-----+
 tap_foot_anim("Standard Female Patient",    4464)
 tap_foot_anim("Standard Male Patient",      2960)
 tap_foot_anim("Alternate Male Patient",     360)
+
+assignPatientMarkers(tap_foot_animations, nil, {0.0, 0.0})
 
 --  | Check watch Animations                  |
 --  | Name                              |Anim | Notes
@@ -256,6 +274,8 @@ check_watch_anim("Standard Female Patient",    4468)
 check_watch_anim("Standard Male Patient",      2964)
 check_watch_anim("Alternate Male Patient",     364)
 check_watch_anim("Slack Male Patient",         4060)
+
+assignPatientMarkers(check_watch_animations, nil, {0.0, 0.0})
 
 --  | pee Animations                  |
 --  | Name                              |Anim | Notes
@@ -270,6 +290,8 @@ pee_anim("Chewbacca Patient",          4178)
 pee_anim("Invisible Patient",          4208)
 pee_anim("Transparent Female Patient", 4852)
 pee_anim("Transparent Male Patient",   4848)
+
+assignPatientMarkers(pee_animations, nil, {0.0, 0.0})
 
 -- Some icons should only appear when the player hovers over the humanoid
 -- Higher priority is more important.

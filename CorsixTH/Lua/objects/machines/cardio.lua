@@ -47,6 +47,16 @@ object.usage_animations = copy_north_to_south {
     },
   },
 }
+
+TheApp.animation_manager:setStaffMarker(object.usage_animations.north.in_use.Handyman,
+  0, {-10, -7, "px"}, 1, {-13, -11, "px"}, 2, {-17, -11, "px"}, 3, {-21, -13, "px"},
+  4, {-27, -14, "px"}, 5, {-31, -16, "px"}, 6, {-37, -17, "px"}
+)
+TheApp.animation_manager:setStaffMarker(object.usage_animations.north.finish_use.Handyman,
+  0, {-37, -17, "px"}, 5, {-37, -17, "px"}, 6, {-29, -15, "px"}, 7, {-25, -15, "px"},
+  8, {-20, -13, "px"}, 9, {-19, -13, "px"}, 10, {-18, -13, "px"}, 11, {-12, -10, "px"}
+)
+
 object.multi_usage_animations = {
   ["Stripped Male Patient - Doctor"] = copy_north_to_south {
     north = {
