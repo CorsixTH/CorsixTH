@@ -606,18 +606,23 @@ end
 
 --[[ Markers can be set using a variety of different arguments:
   setMarker(anim_number, position)
+  setMarker(anim_number, {position1, position2, ..., positionN})
   setMarker(anim_number, start_position, end_position)
   setMarker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
 
-  position should be a table; {x, y} for a tile position, {x, y, "px"} for a
-  pixel position, with (0, 0) being the origin in both cases.
+  The 'position' should be a table; An {x, y} pair for a tile position or
+  {x, y, "px"} for a pixel position. In both cases the position should be the
+  humanoid center at floor level, with the center of the (0, 0) tile being the
+  origin in both cases.
 
   The first variant of setMarker sets the same marker for each frame.
-  The second variant does linear interpolation of the two positions between
-  the first frame and the last frame.
-  The third variant does linear interpolation between keyframes, and then the
-  final position for frames after the last keyframe. The keyframe arguments
-  should be 0-based integers, as in the animation viewer.
+  The second variant of has a unique position for each frame. 'nil' can be used to
+  repeat the previous position.
+  The third variant does linear interpolation of the two positions between the first
+  frame and the last frame.
+  The fourth variant does linear interpolation between keyframes, and then the final
+  position for frames after the last keyframe. The keyframe arguments should be
+  0-based integers, as in the animation viewer.
 
   To set the markers for multiple animations at once, the anim_number argument
   can be a table, in which case the marker is set for all values in the table.
@@ -669,6 +674,16 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       for i = 0, anim_length - 1 do
         local n = math.floor(i / (anim_length - 1))
         self.anims[fn](self.anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
+        frame = self.anims:getNextFrame(frame)
+      end
+    elseif type(arg1[1]) == "table" then
+      -- A position for each frame.
+      local x, y
+      for rel_frame = 1, anim_length do
+        if arg1[rel_frame] then
+          x, y = positionToXy(arg1[rel_frame])
+        end
+        self.anims[fn](self.anims, frame, x, y)
         frame = self.anims:getNextFrame(frame)
       end
     else
