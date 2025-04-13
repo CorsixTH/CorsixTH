@@ -590,15 +590,14 @@ function AnimationManager:setAnimLength(anim, length)
 end
 
 function AnimationManager:getAnimLength(anim)
-  local anims = self.anims
   if not self.anim_length_cache[anim] then
     local length = 0
     local seen = {}
-    local frame = anims:getFirstFrame(anim)
+    local frame = self.anims:getFirstFrame(anim)
     while not seen[frame] do
       seen[frame] = true
       length = length + 1
-      frame = anims:getNextFrame(frame)
+      frame = self.anims:getNextFrame(frame)
     end
     self.anim_length_cache[anim] = length
   end
@@ -658,10 +657,10 @@ function AnimationManager:_unfoldAnims(anim, fn, ...)
 end
 
 function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
-  local tp_arg1 = type(arg1)
   local anim_length = self:getAnimLength(anim)
-  local anims = self.anims
-  local frame = anims:getFirstFrame(anim)
+  local frame = self.anims:getFirstFrame(anim)
+
+  local tp_arg1 = type(arg1)
   if tp_arg1 == "table" then
     if arg2 then
       -- Linear-interpolation positions
@@ -669,15 +668,15 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       local x2, y2 = positionToXy(arg2)
       for i = 0, anim_length - 1 do
         local n = math.floor(i / (anim_length - 1))
-        anims[fn](anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
-        frame = anims:getNextFrame(frame)
+        self.anims[fn](self.anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
+        frame = self.anims:getNextFrame(frame)
       end
     else
       -- Static position
       local x, y = positionToXy(arg1)
       for _ = 1, anim_length do
-        anims[fn](anims, frame, x, y)
-        frame = anims:getNextFrame(frame)
+        self.anims[fn](self.anims, frame, x, y)
+        frame = self.anims:getNextFrame(frame)
       end
     end
   elseif tp_arg1 == "number" then
@@ -706,14 +705,12 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       end
       if f2 then
         local n = math.floor((f - f1) / (f2 - f1))
-        anims[fn](anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
+        self.anims[fn](self.anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
       else
-        anims[fn](anims, frame, x1, y1)
+        self.anims[fn](self.anims, frame, x1, y1)
       end
-      frame = anims:getNextFrame(frame)
+      frame = self.anims:getNextFrame(frame)
     end
-  elseif tp_arg1 == "string" then
-    error("TODO")
   else
     error("Invalid arguments to setMarker", 2)
   end
