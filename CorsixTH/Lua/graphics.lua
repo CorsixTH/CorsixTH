@@ -605,17 +605,17 @@ function AnimationManager:getAnimLength(anim)
 end
 
 --[[ Markers can be set using a variety of different arguments:
-  setMarker(anim_number, position)
-  setMarker(anim_number, {position1, position2, ..., positionN})
-  setMarker(anim_number, start_position, end_position)
-  setMarker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
+  set{Patient,Staff}Marker(anim_number, position)
+  set{Patient,Staff}Marker(anim_number, {position1, position2, ..., positionN})
+  set{Patient,Staff}Marker(anim_number, start_position, end_position)
+  set{Patient,Staff}Marker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
 
   The 'position' should be a table; An {x, y} pair for a tile position or
   {x, y, "px"} for a pixel position. In both cases the position should be the
   humanoid center at floor level, with the center of the (0, 0) tile being the
   origin in both cases.
 
-  The first variant of setMarker sets the same marker for each frame.
+  The first variant of set{Patient,Staff}Marker sets the same marker for each frame.
   The second variant of has a unique position for each frame. 'nil' can be used to
   repeat the previous position.
   The third variant does linear interpolation of the two positions between the first
@@ -630,15 +630,16 @@ end
   conjection with a for loop to set markers for multiple things.
 --]]
 
-function AnimationManager:setMarker(anim, ...)
+--! Define the center of a patient at floor level in an animation.
+function AnimationManager:setPatientMarker(anim, ...)
   self:_unfoldAnims(anim, "setFramePrimaryMarker", ...)
 end
 
---! Convert a {x, y} tile position or a {x, y, "px"} pixel position to an X/Y
---  pair that represents the center of the humanoid at floor level, relative to
---  the center of tile (0,0) in an animation.
---!param pos (table) The tile or pixel position to convert.
---!return The X/Y pair.
+--! Define the center of a staff member at floor level in an animation.
+function AnimationManager:setStaffMarker(anim, ...)
+  self:_unfoldAnims(anim, "setFrameSecondaryMarker", ...)
+end
+
 local function positionToXy(pos)
   if pos[3] == "px" then
     return pos[1], pos[2]
