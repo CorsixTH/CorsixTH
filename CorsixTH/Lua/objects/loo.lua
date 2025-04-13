@@ -109,13 +109,13 @@ object.usage_animations = copy_north_to_south {
 }
 local anim_mgr = TheApp.animation_manager
 local kf1, kf2 = {0, 0}, {-0.1, -0.9}
-anim_mgr:setMarker(object.usage_animations.north.begin_use, 1, kf1, 6, kf2)
+anim_mgr:setPatientMarker(object.usage_animations.north.begin_use, 1, kf1, 6, kf2)
 kf1 = {-0.1, -0.9}
-anim_mgr:setMarker(object.usage_animations.north.begin_use_2, kf1)
-anim_mgr:setMarker(object.usage_animations.north.in_use, kf1)
-anim_mgr:setMarker(object.usage_animations.north.finish_use, kf1)
+anim_mgr:setPatientMarker(object.usage_animations.north.begin_use_2, kf1)
+anim_mgr:setPatientMarker(object.usage_animations.north.in_use, kf1)
+anim_mgr:setPatientMarker(object.usage_animations.north.finish_use, kf1)
 kf1, kf2 = {-0.1, -0.9}, {0, 0}
-anim_mgr:setMarker(object.usage_animations.north.finish_use_2, 0, kf1, 1, kf1, 6, kf2)
+anim_mgr:setPatientMarker(object.usage_animations.north.finish_use_2, 0, kf1, 1, kf1, 6, kf2)
 
 object.orientations = {
   north = {

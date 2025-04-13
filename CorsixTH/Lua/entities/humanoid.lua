@@ -114,8 +114,8 @@ end
 anims("Standard Male Patient",       16,   18,   24,   26,  182,  184,   286,   288,  2040,  2042) -- 0-16, ABC
 anims("Gowned Male Patient",        406,  408,  414,  416)                           -- 0-10
 anims("Stripped Male Patient",      818,  820,  826,  828)                           -- 0-16
-anims("Stripped Male Patient 2",      818,  820,  826,  828)                           -- 0-16
-anims("Stripped Male Patient 3",      818,  820,  826,  828)
+anims("Stripped Male Patient 2",    818,  820,  826,  828)                           -- 0-16
+anims("Stripped Male Patient 3",    818,  820,  826,  828)
 anims("Alternate Male Patient",    2704, 2706, 2712, 2714, 2748, 2750,  2764,  2766) -- 0-10, ABC
 anims("Slack Male Patient",        1484, 1486, 1492, 1494, 1524, 1526,  2764,  1494) -- 0-14, ABC
 anims("Slack Female Patient",         0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
@@ -123,8 +123,8 @@ anims("Transparent Male Patient",  1064, 1066, 1072, 1074, 1104, 1106,  1120,  1
 anims("Standard Female Patient",      0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
 anims("Gowned Female Patient",     2876, 2878, 2884, 2886)                           -- 0-8
 anims("Stripped Female Patient",    834,  836,  842,  844)                           -- 0-16
-anims("Stripped Female Patient 2",    834,  836,  842,  844)                           -- 0-16
-anims("Stripped Female Patient 3",    834,  836,  842,  844)
+anims("Stripped Female Patient 2",  834,  836,  842,  844)                           -- 0-16
+anims("Stripped Female Patient 3",  834,  836,  842,  844)
 anims("Transparent Female Patient",3012, 3014, 3020, 3022, 3052, 3054,  3068,  3070) -- 0-8, ABC
 anims("Chewbacca Patient",          858,  860,  866,  868, 3526, 3528,  4150,  4152)
 anims("Elvis Patient",              978,  980,  986,  988, 3634, 3636,  4868,  4870)
@@ -157,10 +157,11 @@ die_anims("Invisible Patient",         4200, 2434,       384, 2438,  2446, 2450)
 die_anims("Alien Male Patient",        4882, 2434,       384, 2438,  2446, 2450)
 die_anims("Alien Female Patient",      4886, 3208,       580, 3212,  3216, 3220)
 
--- The next fours sets belong together, but are done like this so we can use them on there own
--- I also had difficulty in keeping them together, as the patient needs to on the floor
+-- The next fours sets belong together, but are done like this so we can use them on their own
+-- I also had difficulty in keeping them together, as the patient needs to be on the floor
 -- for the duration of the earth quake before getting back up
 -- Shaking of fist could perhaps be used when waiting too long
+
 --  | Falling Animations                   |
 --  | Name                                 |Anim| Notes
 ----+--------------------------------+-----+-----+-----+-----+------+------+
@@ -170,8 +171,8 @@ falling_anim("Standard Female Patient",   3116)
 --  | On_ground Animations                   |
 --  | Name                                 |Anim| Notes
 ----+--------------------------------+-----+-----+-----+-----+------+------+
-on_ground_anim("Standard Male Patient",     1258)
-on_ground_anim("Standard Female Patient",   1764)
+on_ground_anim("Standard Male Patient",   1258)
+on_ground_anim("Standard Female Patient", 1764)
 
 --  | Get_up Animations                   |
 --  | Name                                 |Anim| Notes
@@ -182,7 +183,7 @@ get_up_anim("Standard Female Patient",   580)
 --  | Shake_fist Animations                   |
 --  | Name                                 |Anim| Notes
 ----+--------------------------------+-----+-----+-----+-----+------+------+
-shake_fist_anim("Standard Male Patient",     392) -- bloaty head patients lose head!
+shake_fist_anim("Standard Male Patient",   392) -- bloaty head patients lose head!
 
 
 --  | Vomit Animations                  |

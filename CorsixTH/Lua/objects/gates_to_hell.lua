@@ -45,8 +45,8 @@ object.usage_animations = {
 }
 
 local anim_mgr = TheApp.animation_manager
-anim_mgr:setMarker(object.usage_animations.south.in_use, 0, {0,0})
-anim_mgr:setMarker(object.usage_animations.east.in_use,  0, {0,0})
+anim_mgr:setPatientMarker(object.usage_animations.south.in_use, 0, {0,0})
+anim_mgr:setPatientMarker(object.usage_animations.east.in_use,  0, {0,0})
 
 -- Orientation directions are relative to the patient's death location:
 object.orientations = {

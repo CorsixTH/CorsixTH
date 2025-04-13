@@ -64,22 +64,22 @@ object.usage_animations = {
 }
 local anim_mgr = TheApp.animation_manager
 local kf1, kf2, kf3 = {0, 0}, {-1, -0.3}, {-0.9, -0.1}
-anim_mgr:setMarker(  56, 0, kf1, 10, kf2, 13, kf3)
-anim_mgr:setMarker(3240, 0, kf1, 10, kf2, 13, kf3)
-anim_mgr:setMarker(  72, kf3)
-anim_mgr:setMarker( 718, kf3)
-anim_mgr:setMarker(3256, kf3)
-anim_mgr:setMarker(  64, 0, kf3, 3, kf2, 12, kf1)
-anim_mgr:setMarker(3248, 0, kf3, 3, kf2, 12, kf1)
+anim_mgr:setStaffMarker(  56, 0, kf1, 10, kf2, 13, kf3)
+anim_mgr:setStaffMarker(3240, 0, kf1, 10, kf2, 13, kf3)
+anim_mgr:setStaffMarker(  72, kf3)
+anim_mgr:setStaffMarker( 718, kf3)
+anim_mgr:setStaffMarker(3256, kf3)
+anim_mgr:setStaffMarker(  64, 0, kf3, 3, kf2, 12, kf1)
+anim_mgr:setStaffMarker(3248, 0, kf3, 3, kf2, 12, kf1)
 kf1, kf2, kf3 = {-1, 0}, {-1, -1.1}, {-0.8, -0.9}
-anim_mgr:setMarker(  58, 0, kf1, 9, kf2, 11, kf3)
-anim_mgr:setMarker(3242, 0, kf1, 9, kf2, 11, kf3)
+anim_mgr:setStaffMarker(  58, 0, kf1, 9, kf2, 11, kf3)
+anim_mgr:setStaffMarker(3242, 0, kf1, 9, kf2, 11, kf3)
 kf1 = {-0.7, -1}
-anim_mgr:setMarker(  74, kf1)
-anim_mgr:setMarker(3258, kf1)
+anim_mgr:setStaffMarker(  74, kf1)
+anim_mgr:setStaffMarker(3258, kf1)
 kf2, kf1 = {-0.8, -1}, {-1, -2}
-anim_mgr:setMarker(  66, 0, kf3, 3, kf2, 8, kf1)
-anim_mgr:setMarker(3250, 0, kf3, 3, kf2, 8, kf1)
+anim_mgr:setStaffMarker(  66, 0, kf3, 3, kf2, 8, kf1)
+anim_mgr:setStaffMarker(3250, 0, kf3, 3, kf2, 8, kf1)
 
 object.orientations = {
   north = {
