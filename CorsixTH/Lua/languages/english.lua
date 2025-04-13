@@ -773,6 +773,7 @@ errors = {
   },
   music = "There are playback issues with one or more files in your music directory. Problematic files will be disabled in the jukebox. See the console window for more information.",
   missing_th_data_file = "Warning: Could not find file %s, the Theme Hospital data is incomplete.",
+  cannot_restart_missing_files = "Sorry, but this level cannot be restarted because of missing files %s or %s.",
 }
 
 warnings = {

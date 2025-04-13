@@ -1305,7 +1305,8 @@ function World:getCampaignWinningText(player_no)
     local next_level_name, next_level_info
     if campaign_info then
       for i, level in ipairs(campaign_info.levels) do
-        if self.map.level_filename == level then
+        local filename = self.map.level_filename or self.map.level_number
+        if filename == level then
           has_next = i < #campaign_info.levels
           if has_next then
             next_level_info = TheApp:readLevelFile(campaign_info.levels[i + 1], campaign_info.folder)

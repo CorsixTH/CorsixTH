@@ -215,7 +215,8 @@ function UIFax:choice(choice_number)
     else
       local campaign_info = self.ui.app.world.campaign_info
       for i, level in ipairs(campaign_info.levels) do
-        if self.ui.app.world.map.level_filename == level then
+        local filename = self.ui.app.world.map.level_filename or self.ui.app.world.map.level_number
+        if filename == level then
           local level_info, _ = self.ui.app:readLevelFile(campaign_info.levels[i + 1], campaign_info.folder)
           if level_info then
             self.ui.app:loadLevel(level_info.path, nil, level_info.name,
