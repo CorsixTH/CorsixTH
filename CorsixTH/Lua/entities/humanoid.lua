@@ -108,6 +108,31 @@ local function moods(name, iconNo, prio, onHover)
   mood_icons[name] = {icon = iconNo, priority = prio, on_hover = onHover}
 end
 
+--! Filter animations for patients and set the give marker positions.
+local function assignPatientMarkers(anims, name, ...)
+  local anim_mgr = TheApp.animation_manager
+
+  for hum_type, anim in pairs(anims) do
+    if string.find(hum_type, "Patient") then
+      if name then anim = anim[name] end
+      anim_mgr:setPatientMarker(anim, ...)
+    end
+  end
+end
+
+--! Filter animations for staff and set the give marker positions.
+local function assignStaffMarkers(anims, name, ...)
+  local anim_mgr = TheApp.animation_manager
+
+  for hum_type, anim in pairs(anims) do
+    if not string.find(hum_type, "Patient") then
+      if name then anim = anim[name] end
+      anim_mgr:setStaffMarker(anim, ...)
+    end
+  end
+end
+
+
 --   | Walk animations           |
 --   | Name                      |WalkN|WalkE|IdleN|IdleE|DoorL|DoorE|KnockN|KnockE|SwingL|SwingE| Notes
 -----+---------------------------+-----+-----+-----+-----+-----+-----+------+------+-------+---------+
@@ -139,6 +164,16 @@ anims("Receptionist",              3668, 3670, 3676, 3678) -- Could do with door
 anims("VIP",                        266,  268,  274,  276)
 anims("Inspector",                  266,  268,  274,  276)
 anims("Grim Reaper",                994,  996, 1002, 1004)
+
+assignPatientMarkers(door_animations, "entering", 0, {-1, 0}, 3, {-1, 0}, 9, {0, 0})
+assignPatientMarkers(door_animations, "leaving", 1, {0, 0.4}, 4, {0, 0.4}, 7, {0, 0}, 11, {0, -1})
+assignPatientMarkers(door_animations, "entering_swing", 0, {-1.0, 0.0}, 8, {0.0, 0.0})
+assignPatientMarkers(door_animations, "leaving_swing", 0, {0.1, 0.0}, 9, {0.0, -1.0})
+
+assignStaffMarkers(door_animations, "entering", 0, {-1.0, 0.0}, 8, {0.0, 0.0})
+assignStaffMarkers(door_animations, "leaving", 0, {0.1, 0.0}, 9, {0.0, -1.0})
+assignStaffMarkers(door_animations, "entering_swing", 0, {-1.0, 0.0}, 8, {0.0, 0.0})
+assignStaffMarkers(door_animations, "leaving_swing", 0, {0.1, 0.0}, 9, {0.0, -1.0})
 
 --  | Die Animations                 |
 --  | Name                           |FallE|RiseE|RiseE Hell|WingsE|HandsE|FlyE|ExtraE| Notes 2248
@@ -273,19 +308,6 @@ moods("cured",          4048,      60)
 moods("emergency",      3914,      50)
 moods("exit",           4052,      60)
 
-local anim_mgr = TheApp.animation_manager
-for anim in values(door_animations, "*.entering") do
-  anim_mgr:setMarker(anim, 0, {-1, 0}, 3, {-1, 0}, 9, {0, 0})
-end
-for anim in values(door_animations, "*.leaving") do
-  anim_mgr:setMarker(anim, 1, {0, 0.4}, 4, {0, 0.4}, 7, {0, 0}, 11, {0, -1})
-end
-for anim in values(door_animations, "*.entering_swing") do
-  anim_mgr:setMarker(anim, 0, {-1, 0}, 8, {0, 0})
-end
-for anim in values(door_animations, "*.leaving_swing") do
-  anim_mgr:setMarker(anim, 0, {0.1, 0}, 9, {0, -1})
-end
 
 --!param ... Arguments for base class constructor.
 function Humanoid:Humanoid(...)
