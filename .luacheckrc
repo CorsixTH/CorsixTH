@@ -21,7 +21,7 @@ SOFTWARE. --]]
 self = false
 
 globals = { -- Globals
-            "_A", "_S",
+            "_A", "_S", "TheApp",
             "corsixth",
             "action_queue_leave_bench", "class", "compare_tables",
             "destrict", "flag_clear", "flag_isset", "flag_set", "flag_toggle",
