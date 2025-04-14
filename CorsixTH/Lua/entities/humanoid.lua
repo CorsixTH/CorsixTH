@@ -165,15 +165,19 @@ walk_anims("VIP",                        266,  268,  274,  276)
 walk_anims("Inspector",                  266,  268,  274,  276)
 walk_anims("Grim Reaper",                994,  996, 1002, 1004)
 
+
+local kfp1, kfp2, kfp3, kfp4, kfp5, kfp6, kfp7, kfp8
+kfp1, kfp2, kfp3, kfp4 = {-19, -15, "px"}, {-26, -17, "px"}, {-26, -15, "px"}, {-22, -13, "px"}
+kfp5, kfp6, kfp7, kfp8 = {-19, -9, "px"}, {-13, -5, "px"}, {-8, -4, "px"}, {-5, 0, "px"}
 local doorE_markers = { -- Anim 3288 in particular
-  {-19, -15, "px"}, {-26, -17, "px"}, {-26, -17, "px"}, {-26, -17, "px"},
-  {-26, -15, "px"}, {-22, -13, "px"}, {-19, -9, "px"}, {-13, -5, "px"},
-  {-8, -4, "px"}, {-5, 0, "px"},
+  kfp1, kfp2, kfp2, kfp2, kfp3, kfp4, kfp5, kfp6, kfp7, kfp8,
 }
+
+local kfp9, kfp10
+kfp1, kfp2, kfp3, kfp4, kfp5 = {-7, 0, "px"}, {-14, 6, "px"}, {-12, 5, "px"}, {-11, 5, "px"}, {-7, 3, "px"}
+kfp6, kfp7, kfp8, kfp9, kfp10 = {-4, 0, "px"}, {2, -1, "px"}, {10, -3, "px"}, {14, -7, "px"}, {20, -11, "px"}
 local doorL_markers = { -- Anim 3286 in particular.
-  {-7, 0, "px"}, {-14, 6, "px"}, {-14, 6, "px"}, {-12, 5, "px"}, {-11, 5, "px"},
-  {-7, 3, "px"}, {-4, 0, "px"}, {2, -1, "px"}, {2, -1, "px"}, {10, -3, "px"},
-  {14, -7, "px"}, {20, -11, "px"},
+  kfp1, kfp2, kfp2, kfp3, kfp4, kfp5, kfp6, kfp7, kfp7, kfp8, kfp9, kfp10,
 }
 
 assignPatientMarkers(door_animations, "entering", doorE_markers)
