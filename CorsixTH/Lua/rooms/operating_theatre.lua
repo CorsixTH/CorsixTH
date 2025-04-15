@@ -95,17 +95,6 @@ local function wait_for_object(humanoid, obj, must_happen)
   return IdleAction():setMustHappen(must_happen):setLoopCallback(loop_callback_wait)
 end
 
---! Returns true if an operation is ongoing
-function OperatingTheatreRoom:isOperating()
-  for k, _ in pairs(self.staff_member_set) do
-    if k:getCurrentAction().name == "multi_use_object" then
-      return true
-    end
-  end
-
-  return false
-end
-
 --! Builds the second operation action (i.e. with the surgeon whose we
 --! see the back). Called either when the operation starts or when the
 --! operation is resumed after interruption caused by the picking up of
