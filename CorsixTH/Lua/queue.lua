@@ -199,7 +199,7 @@ function Queue:push(humanoid, callbacks_on)
 
   -- calculate under what 'index' we should insert new humanoid into the queue
   while index > 1 do
-    -- if new humanoid have higher or same priority than another one humanoid in queue
+    -- Is the new humanoid's priority higher or equal to the current index's humanoid
     if _getHumanoidQueuePriority(self, self[index - 1]) <= priority then
       break
     end
