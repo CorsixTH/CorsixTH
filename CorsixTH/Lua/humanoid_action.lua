@@ -31,7 +31,7 @@ function HumanoidAction:HumanoidAction(name)
 
   self.name = name
   self.count = nil -- 'nil' means 'forever' (until finished), else the number to perform.
-  self.must_happen = false -- If true, action cannot be skipped. still can be interrupted/cancelled by pick up.
+  self.must_happen = false -- If true, action cannot be skipped. Still can be interrupted/cancelled by pick up.
   self.loop_callback = nil -- Periodic callback to check for termination conditions.
   self.after_use = nil -- Callback for performing updates afterwards.
   self.is_leaving = false -- Whether the humanoid is leaving.
