@@ -219,7 +219,9 @@ function UIMachineMenu:assignedHandymanButtonClicked(index)
   local ui = self.ui
   local machine_index = index + self.scrollbar.value - 1
   local machine = self.machine_list[machine_index]
-  if machine and machine.assigned_to then
+  local room = machine.object:getRoom()
+
+  if machine and machine.assigned_to and room.is_active then
     self.ui:addWindow(UIStaff(ui, machine.assigned_to))
   end
 end
@@ -278,20 +280,25 @@ function UIMachineMenu:update()
   end
 
   self.machine_list = {}
-  local dispatcher = self.ui.app.world.dispatcher
+  local world = self.ui.app.world
+  local dispatcher = world.dispatcher
+  local hosp = world:getLocalPlayerHospital()
 
-  for _, entity in ipairs(self.ui.app.world.entities) do
+  for _, entity in ipairs(world.entities) do
     -- is entity a machine and not a slave (e.g. operating_table_b)
     if class.is(entity, Machine) and not entity.master then
-      local machine = entity
-      if not machine:getRoom().crashed then
-        local assigned_handyman
-        local repair_call = dispatcher.call_queue[machine]
-        if repair_call then
-          assigned_handyman = repair_call["repair"].assigned
+      -- check if machine belongs to player hospital
+      if entity.hospital == hosp then
+        local machine = entity
+        if not machine:getRoom().crashed then
+          local assigned_handyman
+          local repair_call = dispatcher.call_queue[machine]
+          if repair_call then
+            assigned_handyman = repair_call["repair"].assigned
+          end
+          local machine_for_list = machineForList(machine, assigned_handyman)
+          table.insert(self.machine_list, machine_for_list)
         end
-        local machine_for_list = machineForList(machine, assigned_handyman)
-        table.insert(self.machine_list, machine_for_list)
       end
     end
   end
