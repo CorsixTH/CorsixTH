@@ -41,14 +41,12 @@ int l_init(lua_State* L) {
       flags |= SDL_INIT_VIDEO;
     else if (std::strcmp(s, "audio") == 0)
       flags |= SDL_INIT_AUDIO;
-    else if (std::strcmp(s, "timer") == 0)
-      flags |= SDL_INIT_TIMER;
     else if (std::strcmp(s, "*") == 0)
-      flags |= SDL_INIT_EVERYTHING;
+      flags |= SDL_INIT_VIDEO | SDL_INIT_AUDIO;
     else
       luaL_argerror(L, i, "Expected SDL part name");
   }
-  if (SDL_Init(flags) != 0) {
+  if (!SDL_Init(flags)) {
     std::fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
     lua_pushboolean(L, 0);
     return 1;
@@ -58,7 +56,7 @@ int l_init(lua_State* L) {
   return 1;
 }
 
-Uint32 timer_frame_callback(Uint32 interval, void* param) {
+Uint32 timer_frame_callback(void* param, SDL_TimerID timerId, Uint32 interval) {
   SDL_Event e;
   e.type = SDL_USEREVENT_TICK;
   SDL_PushEvent(&e);
@@ -108,19 +106,19 @@ class fps_ctrl {
 
 void l_push_modifiers_table(lua_State* L, Uint16 mod) {
   lua_newtable(L);
-  if ((mod & KMOD_SHIFT) != 0) {
+  if ((mod & SDL_KMOD_SHIFT) != 0) {
     luaT_pushtablebool(L, "shift", true);
   }
-  if ((mod & KMOD_ALT) != 0) {
+  if ((mod & SDL_KMOD_ALT) != 0) {
     luaT_pushtablebool(L, "alt", true);
   }
-  if ((mod & KMOD_CTRL) != 0) {
+  if ((mod & SDL_KMOD_CTRL) != 0) {
     luaT_pushtablebool(L, "ctrl", true);
   }
-  if ((mod & KMOD_GUI) != 0) {
+  if ((mod & SDL_KMOD_GUI) != 0) {
     luaT_pushtablebool(L, "gui", true);
   }
-  if ((mod & KMOD_NUM) != 0) {
+  if ((mod & SDL_KMOD_NUM) != 0) {
     luaT_pushtablebool(L, "numlockactive", true);
   }
 }
@@ -147,53 +145,53 @@ int l_mainloop(lua_State* L) {
     do {
       int nargs;
       switch (e.type) {
-        case SDL_QUIT:
+        case SDL_EVENT_QUIT:
           goto leave_loop;
-        case SDL_KEYDOWN:
+        case SDL_EVENT_KEY_DOWN:
           lua_pushliteral(dispatcher, "keydown");
-          lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
-          l_push_modifiers_table(dispatcher, e.key.keysym.mod);
+          lua_pushstring(dispatcher, SDL_GetKeyName(e.key.key));
+          l_push_modifiers_table(dispatcher, e.key.mod);
           lua_pushboolean(dispatcher, e.key.repeat != 0);
           nargs = 4;
           break;
-        case SDL_KEYUP:
+        case SDL_EVENT_KEY_UP:
           lua_pushliteral(dispatcher, "keyup");
-          lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
+          lua_pushstring(dispatcher, SDL_GetKeyName(e.key.key));
           nargs = 2;
           break;
-        case SDL_TEXTINPUT:
+        case SDL_EVENT_TEXT_INPUT:
           lua_pushliteral(dispatcher, "textinput");
           lua_pushstring(dispatcher, e.text.text);
           nargs = 2;
           break;
-        case SDL_TEXTEDITING:
+        case SDL_EVENT_TEXT_EDITING:
           lua_pushliteral(dispatcher, "textediting");
           lua_pushstring(dispatcher, e.edit.text);
           lua_pushinteger(dispatcher, e.edit.start);
           lua_pushinteger(dispatcher, e.edit.length);
           nargs = 4;
           break;
-        case SDL_MOUSEBUTTONDOWN:
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
           lua_pushliteral(dispatcher, "buttondown");
           lua_pushinteger(dispatcher, e.button.button);
           lua_pushinteger(dispatcher, e.button.x);
           lua_pushinteger(dispatcher, e.button.y);
           nargs = 4;
           break;
-        case SDL_MOUSEBUTTONUP:
+        case SDL_EVENT_MOUSE_BUTTON_UP:
           lua_pushliteral(dispatcher, "buttonup");
           lua_pushinteger(dispatcher, e.button.button);
           lua_pushinteger(dispatcher, e.button.x);
           lua_pushinteger(dispatcher, e.button.y);
           nargs = 4;
           break;
-        case SDL_MOUSEWHEEL:
+        case SDL_EVENT_MOUSE_WHEEL:
           lua_pushliteral(dispatcher, "mousewheel");
           lua_pushinteger(dispatcher, e.wheel.x);
           lua_pushinteger(dispatcher, e.wheel.y);
           nargs = 3;
           break;
-        case SDL_MOUSEMOTION:
+        case SDL_EVENT_MOUSE_MOTION:
           lua_pushliteral(dispatcher, "motion");
           lua_pushinteger(dispatcher, e.motion.x);
           lua_pushinteger(dispatcher, e.motion.y);
@@ -201,6 +199,8 @@ int l_mainloop(lua_State* L) {
           lua_pushinteger(dispatcher, e.motion.yrel);
           nargs = 5;
           break;
+#ifdef CORSIX_TH_USE_GESTURES  // No longer supported SDL3. Compat lib
+                               // available.
         case SDL_MULTIGESTURE:
           lua_pushliteral(dispatcher, "multigesture");
           lua_pushinteger(dispatcher, e.mgesture.numFingers);
@@ -210,28 +210,22 @@ int l_mainloop(lua_State* L) {
           lua_pushnumber(dispatcher, e.mgesture.y);
           nargs = 6;
           break;
-        case SDL_WINDOWEVENT:
-          switch (e.window.event) {
-            case SDL_WINDOWEVENT_FOCUS_GAINED:
-              lua_pushliteral(dispatcher, "active");
-              lua_pushinteger(dispatcher, 1);
-              nargs = 2;
-              break;
-            case SDL_WINDOWEVENT_FOCUS_LOST:
-              lua_pushliteral(dispatcher, "active");
-              lua_pushinteger(dispatcher, 0);
-              nargs = 2;
-              break;
-            case SDL_WINDOWEVENT_SIZE_CHANGED:
-              lua_pushliteral(dispatcher, "window_resize");
-              lua_pushinteger(dispatcher, e.window.data1);
-              lua_pushinteger(dispatcher, e.window.data2);
-              nargs = 3;
-              break;
-            default:
-              nargs = 0;
-              break;
-          }
+#endif
+        case SDL_EVENT_WINDOW_FOCUS_GAINED:
+          lua_pushliteral(dispatcher, "active");
+          lua_pushinteger(dispatcher, 1);
+          nargs = 2;
+          break;
+        case SDL_EVENT_WINDOW_FOCUS_LOST:
+          lua_pushliteral(dispatcher, "active");
+          lua_pushinteger(dispatcher, 0);
+          nargs = 2;
+          break;
+        case SDL_EVENT_WINDOW_RESIZED:
+          lua_pushliteral(dispatcher, "window_resize");
+          lua_pushinteger(dispatcher, e.window.data1);
+          lua_pushinteger(dispatcher, e.window.data2);
+          nargs = 3;
           break;
         case SDL_USEREVENT_MUSIC_OVER:
           lua_pushliteral(dispatcher, "music_over");
