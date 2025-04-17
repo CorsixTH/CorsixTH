@@ -193,13 +193,19 @@ local function _shouldDisplayInDoorQueueInterface(priority)
   return priority > reported_priority_threshold
 end
 
+--! Insert the humanoid at the proper spot in the queue.
+--!param humanoid (object) Humanoid we want to put in the queue.
 function Queue:push(humanoid, callbacks_on)
+  -- The queue is ordered on decreasing priority of the the humanoids for using the door.
+  -- Higher priority is a smaller number.
+  -- Starting from the back of the queue, and moving towards the front of the queue until
+  -- the humanoid in front has an equal or higher priority (an equal of lower number).
   local index = self:size() + 1
   local priority = _getHumanoidQueuePriority(self, humanoid)
 
-  -- calculate under what 'index' we should insert new humanoid into the queue
+  -- Calculate under what 'index' we should insert new humanoid into the queue
   while index > 1 do
-    -- Is the new humanoid's priority higher or equal to the current index's humanoid
+    -- Abort the loop when the humanoid before it has equal or higher priority.
     if _getHumanoidQueuePriority(self, self[index - 1]) <= priority then
       break
     end
