@@ -128,8 +128,12 @@ function OperatingTheatreRoom._buildTableAction2(multi_use, operation_table_b)
     multi_use.prolonged_usage = false
   end
 
-  return UseObjectAction(operation_table_b):setLoopCallback(loop_callback_use_object)
-      :setAfterUse(after_use_use_object):setMustHappen(true):disableTruncate()
+  return UseObjectAction(operation_table_b)
+    :setLoopCallback(loop_callback_use_object)
+    :setAfterUse(after_use_use_object)
+    :setMustHappen(true)
+    :disableTruncate()
+    :setUninterruptable(true)
 end
 
 function OperatingTheatreRoom:commandEnteringStaff(staff)
