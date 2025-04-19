@@ -67,6 +67,11 @@ else()
   set(CORSIX_TH_ARCH ${CMAKE_SYSTEM_PROCESSOR})
 endif()
 
+# Set default value of font file in compile_opts.font
+if(WITH_FONT)
+  set(CORSIX_TH_FONT ${WITH_FONT})
+endif()
+
 # Ensure config.h is picked up by cmake - moving this into subdir cmake files will
 # prevent it applying to the CorsixTH project
 set(CorsixTH_generated_src_dir ${CMAKE_BINARY_DIR}/CorsixTH/Src/)

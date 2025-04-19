@@ -5,6 +5,7 @@
 # CorsixTH Features and behaviour
 #   - WITH_AUDIO      : Activate sound (yes)
 #   - WITH_FREETYPE2  : Active support for non-Latin script alphabets (yes)
+#   - WITH_FONT       : Path of a font that will be used if the user does not set one (empty, Arial on macOS)
 #   - WITH_MOVIES     : Activate movies (requires with_audio, FFmpeg) (yes)
 #   - WITH_UPDATE_CHECK : Activates support to check for new version on launch (requires libcurl) (yes)
 #   - USE_SOURCE_DATADIRS : Use the source directory for loading resources. Incompatible with the install target (no)
@@ -90,6 +91,15 @@ endif()
 option(SEARCH_LOCAL_DATADIRS
   "Search resources in the working directory and the program directory where the executable stores."
   ${SEARCH_LOCAL_DATADIRS_DEFAULT})
+
+if(WITH_FREETYPE2)
+  if(APPLE)
+    set(WITH_FONT_DEFAULT "/Library/Fonts/Arial Unicode.ttf")
+  else()
+    set(WITH_FONT_DEFAULT "")
+  endif()
+  set(WITH_FONT ${WITH_FONT_DEFAULT} CACHE FILEPATH "Use this font if one is not set in the game settings")
+endif()
 
 # Dependency management
 if(UNIX AND CMAKE_COMPILER_IS_GNU)
