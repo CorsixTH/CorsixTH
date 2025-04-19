@@ -75,6 +75,9 @@ object.orientations = {
   },
 }
 local anim_mgr = TheApp.animation_manager
-anim_mgr:setMarker(object.idle_animations.north, {-1.0, -1.1})
+anim_mgr:setPatientMarker(object.idle_animations.north, {-1.0, -1.1})
+
+anim_mgr:setStaffMarker(object.usage_animations.north.in_use["Handyman"], {61, -36, "px"})
+
 
 return object

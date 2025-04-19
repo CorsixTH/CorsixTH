@@ -67,6 +67,13 @@ object.orientations = {
   },
 }
 
+local kf1, kf2 = {-1, 1, "px"}, {4, -1, "px"}
+local anim_mgr = TheApp.animation_manager
+anim_mgr:setStaffMarker(1972, 0, kf1, 12, kf1, 13, kf2)
+local kf3, kf4 = {2, -1, "px"}, {6, 0, "px"}
+anim_mgr:setStaffMarker(1974, 0, kf1, 19, kf1, 20, kf3, 21, kf4)
+
+
 -- For litter: put broom back 356
 -- take broom out: 1874
 -- swoop: 1878

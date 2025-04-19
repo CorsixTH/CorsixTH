@@ -72,7 +72,8 @@ local animation_numbers = {
   4768,
   4770,
 }
-TheApp.animation_manager:setMarker(animation_numbers, {-1.05, -0.05})
+TheApp.animation_manager:setPatientMarker(animation_numbers, {-1.05, -0.05})
+TheApp.animation_manager:setStaffMarker(animation_numbers, {-1.05, -0.05})
 
 local patient_clothes_state = permanent"action_use_screen_patient_clothes_state"( function(humanoid)
   humanoid.user_of:setAnimation(1204)

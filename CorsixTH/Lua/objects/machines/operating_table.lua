@@ -84,7 +84,9 @@ anim_mgr:setAnimLength(2348, 1)
 anim_mgr:setAnimLength(2938, 1)
 
 -- Mood icon positions
-anim_mgr:setMarker(object.idle_animations.north, {-1.59, -2.41})
+anim_mgr:setPatientMarker(object.idle_animations.north, {-1.59, -2.41})
+
+anim_mgr:setStaffMarker(object.usage_animations.north.in_use.Handyman, {29, -52, "px"})
 
 
 object.orientations = {

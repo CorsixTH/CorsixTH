@@ -78,21 +78,21 @@ object.usage_animations = {
 }
 local anim_mgr = TheApp.animation_manager
 local kf1, kf2 = {-1, -1}, {-1, -0.6}
-anim_mgr:setMarker(object.usage_animations.north.begin_use, 0, kf1, 2, kf2)
+anim_mgr:setStaffMarker(object.usage_animations.north.begin_use, 0, kf1, 2, kf2)
 kf1 = {-0.6, 0.3}
-anim_mgr:setMarker(object.usage_animations.north.begin_use_2, 0, kf2, 2, kf1)
-anim_mgr:setMarker(object.usage_animations.north.in_use, kf1)
+anim_mgr:setStaffMarker(object.usage_animations.north.begin_use_2, 0, kf2, 2, kf1)
+anim_mgr:setStaffMarker(object.usage_animations.north.in_use, kf1)
 kf2 = {-1, -0.6}
 local kf3 = {-1, -1}
-anim_mgr:setMarker(object.usage_animations.north.finish_use, 0, kf1, 2, kf2, 5, kf3)
+anim_mgr:setStaffMarker(object.usage_animations.north.finish_use, 0, kf1, 2, kf2, 5, kf3)
 kf1, kf2 = {1, -1}, {0.6, -1}
-anim_mgr:setMarker(object.usage_animations.east.begin_use, 0, kf1, 2, kf2)
+anim_mgr:setStaffMarker(object.usage_animations.east.begin_use, 0, kf1, 2, kf2)
 kf1 = {0.3, -0.6}
-anim_mgr:setMarker(object.usage_animations.east.begin_use_2, 0, kf2, 3, kf1)
-anim_mgr:setMarker(object.usage_animations.east.in_use, kf1)
+anim_mgr:setStaffMarker(object.usage_animations.east.begin_use_2, 0, kf2, 3, kf1)
+anim_mgr:setStaffMarker(object.usage_animations.east.in_use, kf1)
 kf2 = {0.6, -1}
 kf3 = {1, -1}
-anim_mgr:setMarker(object.usage_animations.east.finish_use, 0, kf1, 1, kf1, 3, kf2, 5, kf3)
+anim_mgr:setStaffMarker(object.usage_animations.east.finish_use, 0, kf1, 1, kf1, 3, kf2, 5, kf3)
 
 object.orientations = {
   north = {

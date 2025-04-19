@@ -65,10 +65,10 @@ object.usage_animations = {
 
 local anim_mgr = TheApp.animation_manager
 local kf1, kf2, kf3 = {1, -1}, {0.4, -1}, {-0.3, -1}
-anim_mgr:setMarker(object.usage_animations.north.begin_use, 0, kf1, 4, kf2, 12, kf2, 18, kf3)
-anim_mgr:setMarker(object.usage_animations.north.in_use, kf3)
-anim_mgr:setMarker(object.usage_animations.north.finish_use, 0, kf3, 6, kf3, 12, kf2, 14, kf1)
--- TODO: The other direction
+anim_mgr:setPatientMarker(object.usage_animations.north.begin_use, 0, kf1, 4, kf2, 12, kf2, 18, kf3)
+anim_mgr:setPatientMarker(object.usage_animations.north.in_use, kf3)
+anim_mgr:setPatientMarker(object.usage_animations.north.finish_use, 0, kf3, 6, kf3, 12, kf2, 14, kf1)
+-- TODO: The other direction setPatientMarker
 
 object.orientations = {
   north = {

@@ -39,7 +39,7 @@ local check_watch_animations = permanent"humanoid_check_watch_animations"({})
 
 local mood_icons = permanent"humanoid_mood_icons"({})
 
-local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE, swingL, swingE)
+local function walk_anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE, swingL, swingE)
   walk_animations[name] = {
     walk_east = walkE,
     walk_north = walkN,
@@ -108,37 +108,87 @@ local function moods(name, iconNo, prio, onHover)
   mood_icons[name] = {icon = iconNo, priority = prio, on_hover = onHover}
 end
 
---   | Walk animations           |
---   | Name                      |WalkN|WalkE|IdleN|IdleE|DoorL|DoorE|KnockN|KnockE|SwingL|SwingE| Notes
------+---------------------------+-----+-----+-----+-----+-----+-----+------+------+-------+---------+
-anims("Standard Male Patient",       16,   18,   24,   26,  182,  184,   286,   288,  2040,  2042) -- 0-16, ABC
-anims("Gowned Male Patient",        406,  408,  414,  416)                           -- 0-10
-anims("Stripped Male Patient",      818,  820,  826,  828)                           -- 0-16
-anims("Stripped Male Patient 2",      818,  820,  826,  828)                           -- 0-16
-anims("Stripped Male Patient 3",      818,  820,  826,  828)
-anims("Alternate Male Patient",    2704, 2706, 2712, 2714, 2748, 2750,  2764,  2766) -- 0-10, ABC
-anims("Slack Male Patient",        1484, 1486, 1492, 1494, 1524, 1526,  2764,  1494) -- 0-14, ABC
-anims("Slack Female Patient",         0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
-anims("Transparent Male Patient",  1064, 1066, 1072, 1074, 1104, 1106,  1120,  1074) -- 0-16, ABC
-anims("Standard Female Patient",      0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
-anims("Gowned Female Patient",     2876, 2878, 2884, 2886)                           -- 0-8
-anims("Stripped Female Patient",    834,  836,  842,  844)                           -- 0-16
-anims("Stripped Female Patient 2",    834,  836,  842,  844)                           -- 0-16
-anims("Stripped Female Patient 3",    834,  836,  842,  844)
-anims("Transparent Female Patient",3012, 3014, 3020, 3022, 3052, 3054,  3068,  3070) -- 0-8, ABC
-anims("Chewbacca Patient",          858,  860,  866,  868, 3526, 3528,  4150,  4152)
-anims("Elvis Patient",              978,  980,  986,  988, 3634, 3636,  4868,  4870)
-anims("Invisible Patient",         1642, 1644, 1840, 1842, 1796, 1798,  4192,  4194)
-anims("Alien Male Patient",        3598, 3600, 3606, 3608,  182,  184,   286,   288, 3626,  3628) -- remember, no "normal"-doors animation
-anims("Alien Female Patient",      3598, 3600, 3606, 3608,  258,  260,   294,   296, 3626,  3628) -- identical to male; however death animations differ
-anims("Doctor",                      32,   34,   40,   42,  670,  672,   nil,   nil, 4750,  4752)
-anims("Surgeon",                   2288, 2290, 2296, 2298)
-anims("Nurse",                     1206, 1208, 1650, 1652, 3264, 3266,   nil,   nil, 3272,  3274)
-anims("Handyman",                  1858, 1860, 1866, 1868, 3286, 3288,   nil,   nil, 3518,  3520)
-anims("Receptionist",              3668, 3670, 3676, 3678) -- Could do with door animations
-anims("VIP",                        266,  268,  274,  276)
-anims("Inspector",                  266,  268,  274,  276)
-anims("Grim Reaper",                994,  996, 1002, 1004)
+--! Filter animations for patients and set the give marker positions.
+local function assignPatientMarkers(anims, name, ...)
+  local anim_mgr = TheApp.animation_manager
+
+  for hum_type, anim in pairs(anims) do
+    if string.find(hum_type, "Patient") then
+      if name then anim = anim[name] end
+      anim_mgr:setPatientMarker(anim, ...)
+    end
+  end
+end
+
+--! Filter animations for staff and set the give marker positions.
+local function assignStaffMarkers(anims, name, ...)
+  local anim_mgr = TheApp.animation_manager
+
+  for hum_type, anim in pairs(anims) do
+    if not string.find(hum_type, "Patient") then
+      if name then anim = anim[name] end
+      anim_mgr:setStaffMarker(anim, ...)
+    end
+  end
+end
+
+
+--   | Walk animations                 |
+--   | Name                            |WalkN|WalkE|IdleN|IdleE|DoorL|DoorE|KnockN|KnockE|SwingL|SwingE| Notes
+-----+---------------------------------------+-----+-----+-----+-----+-----+-----+------+------+-------+---------+
+walk_anims("Standard Male Patient",       16,   18,   24,   26,  182,  184,   286,   288,  2040,  2042) -- 0-16, ABC
+walk_anims("Gowned Male Patient",        406,  408,  414,  416)                           -- 0-10
+walk_anims("Stripped Male Patient",      818,  820,  826,  828)                           -- 0-16
+walk_anims("Stripped Male Patient 2",    818,  820,  826,  828)                           -- 0-16
+walk_anims("Stripped Male Patient 3",    818,  820,  826,  828)
+walk_anims("Alternate Male Patient",    2704, 2706, 2712, 2714, 2748, 2750,  2764,  2766) -- 0-10, ABC
+walk_anims("Slack Male Patient",        1484, 1486, 1492, 1494, 1524, 1526,  2764,  1494) -- 0-14, ABC
+walk_anims("Slack Female Patient",         0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
+walk_anims("Transparent Male Patient",  1064, 1066, 1072, 1074, 1104, 1106,  1120,  1074) -- 0-16, ABC
+walk_anims("Standard Female Patient",      0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
+walk_anims("Gowned Female Patient",     2876, 2878, 2884, 2886)                           -- 0-8
+walk_anims("Stripped Female Patient",    834,  836,  842,  844)                           -- 0-16
+walk_anims("Stripped Female Patient 2",  834,  836,  842,  844)                           -- 0-16
+walk_anims("Stripped Female Patient 3",  834,  836,  842,  844)
+walk_anims("Transparent Female Patient",3012, 3014, 3020, 3022, 3052, 3054,  3068,  3070) -- 0-8, ABC
+walk_anims("Chewbacca Patient",          858,  860,  866,  868, 3526, 3528,  4150,  4152)
+walk_anims("Elvis Patient",              978,  980,  986,  988, 3634, 3636,  4868,  4870)
+walk_anims("Invisible Patient",         1642, 1644, 1840, 1842, 1796, 1798,  4192,  4194)
+walk_anims("Alien Male Patient",        3598, 3600, 3606, 3608,  182,  184,   286,   288, 3626,  3628) -- remember, no "normal"-doors animation
+walk_anims("Alien Female Patient",      3598, 3600, 3606, 3608,  258,  260,   294,   296, 3626,  3628) -- identical to male; however death animations differ
+walk_anims("Doctor",                      32,   34,   40,   42,  670,  672,   nil,   nil, 4750,  4752)
+walk_anims("Surgeon",                   2288, 2290, 2296, 2298)
+walk_anims("Nurse",                     1206, 1208, 1650, 1652, 3264, 3266,   nil,   nil, 3272,  3274)
+walk_anims("Handyman",                  1858, 1860, 1866, 1868, 3286, 3288,   nil,   nil, 3518,  3520)
+walk_anims("Receptionist",              3668, 3670, 3676, 3678) -- Could do with door animations
+walk_anims("VIP",                        266,  268,  274,  276)
+walk_anims("Inspector",                  266,  268,  274,  276)
+walk_anims("Grim Reaper",                994,  996, 1002, 1004)
+
+
+local kfp1, kfp2, kfp3, kfp4, kfp5, kfp6, kfp7, kfp8
+kfp1, kfp2, kfp3, kfp4 = {-19, -15, "px"}, {-26, -17, "px"}, {-26, -15, "px"}, {-22, -13, "px"}
+kfp5, kfp6, kfp7, kfp8 = {-19, -9, "px"}, {-13, -5, "px"}, {-8, -4, "px"}, {-5, 0, "px"}
+local doorE_markers = { -- Anim 3288 in particular
+  kfp1, kfp2, kfp2, kfp2, kfp3, kfp4, kfp5, kfp6, kfp7, kfp8,
+}
+
+local kfp9, kfp10
+kfp1, kfp2, kfp3, kfp4, kfp5 = {-7, 0, "px"}, {-14, 6, "px"}, {-12, 5, "px"}, {-11, 5, "px"}, {-7, 3, "px"}
+kfp6, kfp7, kfp8, kfp9, kfp10 = {-4, 0, "px"}, {2, -1, "px"}, {10, -3, "px"}, {14, -7, "px"}, {20, -11, "px"}
+local doorL_markers = { -- Anim 3286 in particular.
+  kfp1, kfp2, kfp2, kfp3, kfp4, kfp5, kfp6, kfp7, kfp7, kfp8, kfp9, kfp10,
+}
+
+assignPatientMarkers(door_animations, "entering", doorE_markers)
+assignPatientMarkers(door_animations, "leaving", doorL_markers)
+assignPatientMarkers(door_animations, "entering_swing", 0, {-1.0, 0.0}, 8, {0.0, 0.0})
+assignPatientMarkers(door_animations, "leaving_swing", 0, {0.1, 0.0}, 9, {0.0, -1.0})
+
+assignStaffMarkers(door_animations, "entering", doorE_markers)
+assignStaffMarkers(door_animations, "leaving", doorL_markers)
+assignStaffMarkers(door_animations, "entering_swing", 0, {-1.0, 0.0}, 8, {0.0, 0.0})
+assignStaffMarkers(door_animations, "leaving_swing", 0, {0.1, 0.0}, 9, {0.0, -1.0})
 
 --  | Die Animations                 |
 --  | Name                           |FallE|RiseE|RiseE Hell|WingsE|HandsE|FlyE|ExtraE| Notes 2248
@@ -157,10 +207,11 @@ die_anims("Invisible Patient",         4200, 2434,       384, 2438,  2446, 2450)
 die_anims("Alien Male Patient",        4882, 2434,       384, 2438,  2446, 2450)
 die_anims("Alien Female Patient",      4886, 3208,       580, 3212,  3216, 3220)
 
--- The next fours sets belong together, but are done like this so we can use them on there own
--- I also had difficulty in keeping them together, as the patient needs to on the floor
+-- The next fours sets belong together, but are done like this so we can use them on their own
+-- I also had difficulty in keeping them together, as the patient needs to be on the floor
 -- for the duration of the earth quake before getting back up
 -- Shaking of fist could perhaps be used when waiting too long
+
 --  | Falling Animations                   |
 --  | Name                                 |Anim| Notes
 ----+--------------------------------+-----+-----+-----+-----+------+------+
@@ -170,8 +221,8 @@ falling_anim("Standard Female Patient",   3116)
 --  | On_ground Animations                   |
 --  | Name                                 |Anim| Notes
 ----+--------------------------------+-----+-----+-----+-----+------+------+
-on_ground_anim("Standard Male Patient",     1258)
-on_ground_anim("Standard Female Patient",   1764)
+on_ground_anim("Standard Male Patient",   1258)
+on_ground_anim("Standard Female Patient", 1764)
 
 --  | Get_up Animations                   |
 --  | Name                                 |Anim| Notes
@@ -182,8 +233,9 @@ get_up_anim("Standard Female Patient",   580)
 --  | Shake_fist Animations                   |
 --  | Name                                 |Anim| Notes
 ----+--------------------------------+-----+-----+-----+-----+------+------+
-shake_fist_anim("Standard Male Patient",     392) -- bloaty head patients lose head!
+shake_fist_anim("Standard Male Patient",   392) -- bloaty head patients lose head!
 
+assignPatientMarkers(shake_fist_animations, nil, {0.0, 0.0})
 
 --  | Vomit Animations                  |
 --  | Name                              |Anim | Notes
@@ -198,6 +250,8 @@ vomit_anim("Slack Male Patient",         4324)
 vomit_anim("Transparent Female Patient", 4452)
 vomit_anim("Transparent Male Patient",   4384)
 
+assignPatientMarkers(vomit_animations, nil, {0.0, 0.0})
+
 --  | Yawn Animations                  |
 --  | Name                              |Anim | Notes
 ----+-----------------------------------+-----+
@@ -206,12 +260,16 @@ yawn_anim("Standard Male Patient",      368)
 --yawn_anim("Alternate Male Patient",     2968)  is this one the same as standard male?
 -- whichever one is used for male, if he wears a hat it will lift when he yawns
 
+assignPatientMarkers(yawn_animations, nil, {0.0, 0.0})
+
 --  | Foot tapping Animations                  |
 --  | Name                              |Anim | Notes
 ----+-----------------------------------+-----+
 tap_foot_anim("Standard Female Patient",    4464)
 tap_foot_anim("Standard Male Patient",      2960)
 tap_foot_anim("Alternate Male Patient",     360)
+
+assignPatientMarkers(tap_foot_animations, nil, {0.0, 0.0})
 
 --  | Check watch Animations                  |
 --  | Name                              |Anim | Notes
@@ -220,6 +278,8 @@ check_watch_anim("Standard Female Patient",    4468)
 check_watch_anim("Standard Male Patient",      2964)
 check_watch_anim("Alternate Male Patient",     364)
 check_watch_anim("Slack Male Patient",         4060)
+
+assignPatientMarkers(check_watch_animations, nil, {0.0, 0.0})
 
 --  | pee Animations                  |
 --  | Name                              |Anim | Notes
@@ -234,6 +294,8 @@ pee_anim("Chewbacca Patient",          4178)
 pee_anim("Invisible Patient",          4208)
 pee_anim("Transparent Female Patient", 4852)
 pee_anim("Transparent Male Patient",   4848)
+
+assignPatientMarkers(pee_animations, nil, {0.0, 0.0})
 
 -- Some icons should only appear when the player hovers over the humanoid
 -- Higher priority is more important.
@@ -272,19 +334,6 @@ moods("cured",          4048,      60)
 moods("emergency",      3914,      50)
 moods("exit",           4052,      60)
 
-local anim_mgr = TheApp.animation_manager
-for anim in values(door_animations, "*.entering") do
-  anim_mgr:setMarker(anim, 0, {-1, 0}, 3, {-1, 0}, 9, {0, 0})
-end
-for anim in values(door_animations, "*.leaving") do
-  anim_mgr:setMarker(anim, 1, {0, 0.4}, 4, {0, 0.4}, 7, {0, 0}, 11, {0, -1})
-end
-for anim in values(door_animations, "*.entering_swing") do
-  anim_mgr:setMarker(anim, 0, {-1, 0}, 8, {0, 0})
-end
-for anim in values(door_animations, "*.leaving_swing") do
-  anim_mgr:setMarker(anim, 0, {0.1, 0}, 9, {0, -1})
-end
 
 --!param ... Arguments for base class constructor.
 function Humanoid:Humanoid(...)
