@@ -668,20 +668,7 @@ end
 --!param campaign_dir (string) Folder of the parent campaign file
 --!return (table) Level info found in the file.
 function App:readLevelFile(level, campaign_dir)
-  local filename, level_dir
-  if level:match(pathsep) then -- Full path given
-    filename = level
-    level_dir = level:match("(.*)" .. pathsep)
-  else
-    local search_paths = {
-      campaign_dir or "",
-      self.user_campaign_dir,
-      self.user_level_dir,
-      self.campaign_dir,
-      self.level_dir,
-    }
-    filename = self:findFileInDirs(search_paths, level)
-  end
+  local filename = self:_checkOrFind(level, campaign_dir)
   local file, err = io.open(filename and filename or "")
   if not file then
     return nil, "Could not open the specified level file (" .. level .. "): " .. err
@@ -710,15 +697,7 @@ function App:readLevelFile(level, campaign_dir)
     if map_file:lower():match("^level") then
       level_info.map_file = map_file
     else
-      local search_paths = {
-        campaign_dir or "",
-        level_dir or "",
-        self.user_campaign_dir,
-        self.user_level_dir,
-        self.campaign_dir,
-        self.level_dir,
-      }
-      level_info.map_file = self:findFileInDirs(search_paths, map_file)
+      level_info.map_file = self:_checkOrFind(map_file, campaign_dir)
     end
   else
     return nil, _S.errors.map_file_missing:format(map_file)
@@ -1805,6 +1784,40 @@ function App:checkCompatibility(save_version, gfx_set)
   return false
 end
 
+--! Check that a file at a full path exists, or find it, or expand filename to full paths
+--!param test_file (string) A full path or a filename of a level or map file
+--!return (string) A full path that exists
+function App:_checkOrFind(test_file, campaign_dir)
+  local folder_name = ""
+  if test_file:match("[\\/]") then
+    -- Full path to the file is known, check file is present
+    local file_handler, _ = io.open(test_file)
+    if file_handler then
+      file_handler:close()
+      return test_file
+    end
+    -- File not found, get the subfolder name and filename for the search
+    folder_name, test_file = test_file:match(".+[\\/](.+)[\\/](.+)")
+    -- Add path separator of current computer
+    folder_name = folder_name .. pathsep
+  end
+  -- Only filename is known, search for file
+  local level = self.map and self.map.level_number:match("(.+[\\/])") or ""
+  local campaign_folder = (self.world and self.world.campaign_info and self.world.campaign_info.folder) or ""
+  local search_paths = {
+    -- The folder of the campaign or level file, if known
+    campaign_dir or campaign_folder,
+    level,
+    self.user_campaign_dir .. folder_name,
+    self.user_campaign_dir,
+    self.user_level_dir,
+    self.campaign_dir .. folder_name,
+    self.campaign_dir,
+    self.level_dir,
+  }
+  return self:findFileInDirs(search_paths, test_file)
+end
+
 --! Restarts the current level (offers confirmation window first)
 function App:restart()
   assert(self.map, "Trying to restart while no map is loaded.")
@@ -1814,27 +1827,22 @@ function App:restart()
     local campaign_info = self.world.campaign_info
     local level = self.map.level_number
     local difficulty = self.map.difficulty
-    local name, file, intro
-    if not tonumber(level) then
-      name = self.map.level_name
-      file = self.map.map_file
-      intro = self.map.level_intro
-      local search_paths = {
-        self.user_campaign_dir,
-        self.user_level_dir,
-        self.campaign_dir,
-        self.level_dir,
-      }
-      if not level:match(pathsep) then -- level and file only contain filenames, not full paths
-        level = self:findFileInDirs(search_paths, level)
-        file = self:findFileInDirs(search_paths, file)
-      end
-    end
-    if level and name and not file then
-      self.ui:addWindow(UIInformation(self.ui, { _S.information.cannot_restart }))
+    local name, file, intro = self.map.level_name, self.map.map_file, self.map.level_intro
+    if tonumber(level) then -- TH campaign
+      self:loadLevel(level, difficulty, name, file, intro, nil, _S.errors.load_level_prefix, campaign_info)
       return
     end
-    self:loadLevel(level, difficulty, name, file, intro, nil, _S.errors.load_level_prefix, campaign_info)
+
+    level = self:_checkOrFind(level)
+    if not file:match("^LEVEL%.L%d") then -- Map file might be a TH map filename
+      file = self:_checkOrFind(file)
+    end
+    if level and file then
+      self:loadLevel(level, difficulty, name, file, intro, nil, _S.errors.load_level_prefix, campaign_info)
+    else
+      self.ui:addWindow(UIInformation(self.ui, { _S.errors.cannot_restart_missing_files
+          :format(self.map.level_number, self.map.map_file) }))
+    end
   end))
 end
 
