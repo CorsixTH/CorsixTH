@@ -1,4 +1,4 @@
- --[[ Copyright (c) 2011 Sergei Larionov, Alexey Pinyagin, 2021-2024 "Matroftt", 2024 Artem Argus (ARGAMX)
+ --[[ Copyright (c) 2011 Sergei Larionov, Alexey Pinyagin, 2021-2025 "Matroftt", 2024 Artem Argus (ARGAMX)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -183,6 +183,7 @@ hotkey_window = {
   panel_recallPosKeys = "Изменить клавиши положения",
   global_runDebugScript = "Скрипт отладки",
   ingame_zoom_in_more = "Быстрее приближать",
+  ingame_panel_machineMenu = "Меню машин",
   global_fullscreen_toggle = "Полный экран",
   panel_storePosKeys = "Клавиши покупки",
   ingame_storePosition_8 = "8",
@@ -398,8 +399,9 @@ menu_charts = {
   staff_listing = "  (%1%) Список сотрудников",
   bank_manager =  "  (%1%) Управляющий банка",
   status =        "  (%1%) Состояние",
-  briefing =      "  Инструктаж",
   town_map =      "  (%1%) Карта города ",
+  machine_menu =  "  (%1%) Меню машин ",
+  briefing =      "  Инструктаж",
 }
 menu_file_load = {
   [1] = "  ИГРА 1  ",
@@ -3117,12 +3119,30 @@ tooltip = {
     epidemic = "Эпидемия: время на остановку эпидемии. Когда время закончится или зараженный пациент покинет больницу, приедет инспектор. Кнопка включает/отключает режим вакцинации. Щелкните на пациенте, и медсестра введет ему вакцину.",
   },
   calls_dispatcher = {
-    assigned = "Это поле отмечено, если кому-то присвоено соответствующее задание.",
+    assigned = "Это окошко отмечено, если кому-то присвоено соответствующее задание.",
     task = "Список заданий - нажмите на задание, чтобы открыть окно назначенного персонала и прокрутить до расположения задачи",
     close = "Закрыть окно диспетчера",
   },
+  machine_menu = {
+    sort = "Нажмите, чтобы отсортировать список по этой переменной.",
+    machine = "Список машин - нажмите на машину, чтобы открыть соответствующее окно и показать ее на карте",
+    smoking = "Это окошко отмечено, если машина скоро сломается.",
+    assigned = "Это окошко отмечено, если разнорабочий назначен на починку машины.",
+    remaining_strength = "Это поле отображает Остаток Прочности машины",
+    total_strength = "Это поле отображает полную прочность машины",
+    ratio = "Это поле отображает соотношение остатка прочности и полной прочности машины в процентах.",
+    close = "Закрыть меню машин",
+    header = {
+      smoking = "Индикатор тревоги",
+      assigned = "Индикатор назначения",
+      machine = "Название и координаты машины",
+      remaining_strength = "Остаток Прочности машин.",
+      total_strength = "Полная Прочность машин.",
+      ratio = "Соотношение Остатка прочности и Полной прочности машин в процентах.",
+    },
+  },
   information = {
-    close = "Закрыть окно информации",
+    close = "Закрыть информационное окно",
   },
   lua_console = {
     textbox = "Введите сюда код, написанный на Lua",
@@ -3622,6 +3642,14 @@ calls_dispatcher = {
   close = "Закрыть",
   watering = "Полить @ %d,%d",
   staff = "%s - %s",
+}
+
+machine_menu = {
+  machine = "Mашина",
+  remaining_strength = "Остаток",
+  total_strength = "Прочность",
+  ratio = "Соотнош.",
+  close = "Закрыть",
 }
 
 level_progress = {

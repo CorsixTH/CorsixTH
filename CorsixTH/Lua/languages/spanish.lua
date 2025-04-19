@@ -1392,6 +1392,42 @@ map_editor_window = {
   }
 }
 
+machine_menu = {
+  machine = "Máquina",
+  remaining_strength = "Restante",
+  total_strength = "Fuerza",
+  ratio = "Ratio",
+  close = "Cerrar",
+}
+
+tooltip.machine_menu = {
+  sort = "Haz clic para ordenar por esta valor.",
+  machine = "Lista de máquinas - haz clic en una máquina para abrir su interfaz y desplazarte a su ubicación",
+  smoking = "Esta casilla está marcada si la máquina corre riesgo de explotar",
+  assigned = "Esta casilla está marcada si un operario de mantenimiento está asignado para reparar la máquina correspondiente",
+  remaining_strength = "Esta etiqueta muestra la fuerza restante de la máquina",
+  total_strength = "Muestra la fuerza total de la máquina",
+  ratio = "Muestra la relación entre la fuerza restante y la fuerza total",
+  header = {
+    smoking = "Indicador de peligro",
+    assigned = "Indicador de asignación",
+    machine = "Nombre y posición de la máquina",
+    remaining_strength = "Fuerza restante de las máquinas.",
+    total_strength = "Fuerza total de las máquinas.",
+    ratio = "Porcentaje de fuerza restante en relación con la fuerza total de las máquinas",
+    times_used = "Cantidad de veces que se ha usado la máquina.",
+  },
+  close = "Cerrar la lista de máquinas",
+}
+
+menu_charts = {
+  machine_menu  = "  (%1%) MENÚ DE MÁQUINAS",
+}
+
+hotkey_window = {
+  ingame_panel_machineMenu = "Menú de Máquinas",
+}
+
 hotkeys_file_err = {
   file_err_01 = "No se pudo cargar el archivo 'hotkeys.txt'. Por favor asegúrate de que CorsixTH " ..
         "tiene permisos para leer/escribir ",
