@@ -509,7 +509,7 @@ function Staff:adviseWrongPersonForThisRoom()
   end
 end
 
--- Function to decide if staff currently has nothing to do and can be called to a room where he's needed
+-- Function to decide if staff currently has nothing to do and can be called to a room where they're needed
 function Staff:isIdle()
   -- Make sure we're not in an undesired state
   if not self.hospital or self.fired then
@@ -538,25 +538,15 @@ function Staff:isIdle()
     end
 
     -- For handyman - just check the on_call flag
-    if self.humanoid_class == "Handyman" and not self.on_call then
-      return true
-    end
+    if self.humanoid_class == "Handyman" then return not self.on_call end
 
     -- For other staff...
+    -- Staff member might be leaving
+    if self:getCurrentAction().is_leaving then return false end
+
     -- in regular rooms (diagnosis / treatment), if no patient is in sight
     -- or if the only one in sight is actually leaving.
-    if self.humanoid_class ~= "Handyman" and room.door.queue:patientSize() == 0 and
-        not self:getCurrentAction().is_leaving and
-        not (room.door.reserved_for and class.is(room.door.reserved_for, Patient)) then
-      if room:getPatientCount() == 0 then
-        return true
-      else
-        -- It might still be the case that the patient is leaving
-        if room:getPatient():isLeaving() then
-          return true
-        end
-      end
-    end
+    return not room:isRoomInDemand()
   else
     -- In the corridor and not on_call (watering or going to room), the staff is free
     -- unless going back to the training room or research department.
@@ -569,7 +559,6 @@ function Staff:isIdle()
     end
     return true
   end
-  return false
 end
 
 -- Makes the staff member request a raise of 10%, or a wage exactly in the middle of their current and a fair one, whichever is more.

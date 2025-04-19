@@ -137,7 +137,23 @@ function Room:createEnterAction(humanoid_entering, callback)
   return WalkAction(x, y):setIsEntering(true)
 end
 
---! Get a patient in the room.
+--! Get a table of all patients using the room
+--! A room usually only has one patient, however in the ward can have multiple
+--! patients at once.
+--!return patients (table) All patients actively using the room
+function Room:getPatients()
+  local patients = {}
+  -- Are there patients using the room?
+  if self:getPatientCount() == 0 then return patients end
+  for humanoid in pairs(self.humanoids) do
+    if class.is(humanoid, Patient) then
+      patients[#patients + 1] = humanoid
+    end
+  end
+  return patients
+end
+
+--! Get any patient in the room.
 --!return A patient (humanoid) if there is a patient, nil otherwise.
 function Room:getPatient()
   for humanoid in pairs(self.humanoids) do
@@ -215,20 +231,6 @@ function Room:dealtWithPatient(patient)
 
   if self.dealt_patient_callback then
     self.dealt_patient_callback(self.waiting_staff_member)
-  end
-  -- The staff member(s) might be needed somewhere else.
-  self:findWorkForStaff()
-end
-
---! Checks if the room still needs the staff in it and otherwise
--- sends them away if they're needed somewhere else.
-function Room:findWorkForStaff()
-  -- If the staff member is idle we can send him/her somewhere else
-  for humanoid in pairs(self.humanoids) do
-    -- Don't check handymen
-    if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Handyman" and humanoid:isIdle() then
-      self.world.dispatcher:answerCall(humanoid)
-    end
   end
 end
 
@@ -734,6 +736,30 @@ function Room:roomFinished()
   end
   self:tryAdvanceQueue()
   self:calculateHappinessFactor()
+end
+
+--! Private function to check for any patients outside the door queueing,
+--! or about to come in
+--!return (boolean) true if any patient wants to come in
+function Room:_arePatientsWantingToEnter()
+  local door = self.door
+  return (door.queue and door.queue:patientSize() > 0) or
+      (door.reserved_for and class.is(door.reserved_for, Patient)) or
+      (door.user and class.is(door.user, Patient) and door.user:getCurrentAction().is_entering)
+end
+
+--! Check if a room is actively required by patients
+--! A room is deemed in demand should any patient be in a state of using, or
+--! wanting to use the room.
+--!return (boolean) true if the room is currently needed
+function Room:isRoomInDemand()
+  if self:getPatientCount() > 0 then
+    -- Maybe a patient is using the room right now?
+    for _, patient in ipairs(self:getPatients()) do
+      if not patient:isLeaving() then return true end
+    end
+  end
+  return self:_arePatientsWantingToEnter()
 end
 
 --! Try to move a patient from the old room to the new room.
