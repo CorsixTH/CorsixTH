@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 Font("unicode")
+IsArabicNumerals(false)
 Language("日本語", "Japanese", "ja", "jp")
 Inherit("english")
 Encoding(utf8)

@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 Font("unicode")
+IsArabicNumerals(true)
 Language("Русский", "Russian", "ru", "rus")
 Inherit("English")
 Encoding(utf8)

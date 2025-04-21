@@ -427,6 +427,7 @@ end
 function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
   -- Allow (multiple) arguments for loading a sprite table in place of the
   -- sprite_table argument.
+  local load_font = x_sep
   if type(sprite_table) == "string" then
     local arg = {sprite_table, x_sep, y_sep, ...}
     local n_pass_on_args = #arg
@@ -445,7 +446,7 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
   end
 
   local use_bitmap_font = true
-  if not sprite_table:isVisible(46) then -- luacheck: ignore 542
+  if (not sprite_table:isVisible(46)) or (load_font == "Font05V" and self:arabicNumerals()) then -- luacheck: ignore 542
     -- The font doesn't contain an uppercase M, so (in all likelihood) is used
     -- for drawing special symbols rather than text, so the original bitmap
     -- font should be used.
@@ -466,6 +467,17 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
   font = setmetatable({_proxy = font}, font_proxy_mt)
   self.load_info[font] = {self.loadFont, self, sprite_table, x_sep, y_sep, ...}
   return font
+end
+
+function Graphics:arabicNumerals()
+  local strings = self.app.strings
+  local language = self.app.config.language
+  local arabic_numerals = strings:isArabicNumerals(language)
+  return arabic_numerals
+end
+
+function Graphics:drawNumbersFromUnicode()
+  return self.language_font and not self:arabicNumerals()
 end
 
 function Graphics:loadAnimations(dir, prefix)

@@ -63,6 +63,7 @@ function Strings:init()
   self.language_to_chunk = {}
   self.chunk_to_font = {}
   self.chunk_to_names = {}
+  self.chunk_to_is_arabic_numerals = {}
   self.language_to_lang_code = {}
   for chunk, filename in pairs(self.language_chunks) do
     -- To allow the file to set global variables without causing an error, it
@@ -108,6 +109,9 @@ function Strings:init()
       Inherit = function() end,
       SetSpeechFile = function() end,
       Encoding = function() end,
+      IsArabicNumerals = function(...)
+        self.chunk_to_is_arabic_numerals[chunk] = ...
+      end,
       -- Set LoadStrings to return an infinite table
       LoadStrings = infinite_table_mt.__index,
     }, infinite_table_mt)
@@ -233,6 +237,8 @@ function Strings:load(language, no_restriction, no_inheritance)
     SetSpeechFile = function(...)
       speech_file = ...
     end,
+    IsArabicNumerals = function()
+    end,
     _G = env,
     type = type,
   }
@@ -296,6 +302,11 @@ end
 function Strings:getLangCode(language)
   local lang = language or self.app.config.language
   return self.language_to_lang_code[lang:lower()]
+end
+
+function Strings:isArabicNumerals(language)
+  local chunk = self.language_to_chunk[language:lower()]
+  return chunk and self.chunk_to_is_arabic_numerals[chunk]
 end
 
 --! Use local language text where possible.

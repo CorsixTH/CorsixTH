@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 Font("unicode")
+IsArabicNumerals(false)
 Language("한국어", "Korean", "ko", "kor")
 Inherit("English")
 Encoding(utf8)
