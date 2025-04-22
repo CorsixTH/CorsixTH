@@ -280,6 +280,12 @@ int l_get_compile_options(lua_State* L) {
   lua_pushinteger(L, get_api_version());
   lua_setfield(L, -2, "api_version");
 
+#ifdef CORSIX_TH_FONT
+  // Set default value of font file
+  lua_pushliteral(L, CORSIX_TH_FONT);
+  lua_setfield(L, -2, "font");
+#endif
+
   return 1;
 }
 
