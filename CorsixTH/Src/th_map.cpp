@@ -485,7 +485,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
 
       if (!(pData[5] & 1)) {
         pNode->flags.passable = true;
-        if (!(pData[7] & 16)) {
+        if (!(pData[7] & 16) && pNode->iParcelId != 0) {
           pNode->flags.hospital = true;
           if (!(pData[5] & 2)) {
             pNode->flags.buildable = true;
