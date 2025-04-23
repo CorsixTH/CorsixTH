@@ -63,7 +63,6 @@ function Strings:init()
   self.language_to_chunk = {}
   self.chunk_to_font = {}
   self.chunk_to_names = {}
-  self.chunk_to_is_arabic_numerals = {}
   self.language_to_lang_code = {}
   self.languages_with_arabic_numerals = {}
   for chunk, filename in pairs(self.language_chunks) do
