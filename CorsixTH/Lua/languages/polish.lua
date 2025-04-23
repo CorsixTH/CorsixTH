@@ -29,10 +29,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 Font("unicode")
-IsArabicNumerals(true)
 Language("Polski", "Polish", "pl", "pol")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 font_location_window.caption = "Wybierz czcionkę (%1%)"
 

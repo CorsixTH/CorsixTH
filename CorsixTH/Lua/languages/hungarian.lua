@@ -68,10 +68,10 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 
 
 Font("unicode")
-IsArabicNumerals(true)
 Language("Magyar", "Hungarian", "hu", "hun")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 
 -- 2. Faxes

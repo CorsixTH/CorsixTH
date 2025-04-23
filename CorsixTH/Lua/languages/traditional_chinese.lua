@@ -21,10 +21,10 @@ SOFTWARE. --]]
 -- Note: This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 
 Font("unicode")
-IsArabicNumerals(false)
 Language("繁體中文", "Chinese (traditional)", "zh(t)", "chi(t)", "zho(t)")
 Inherit("english")
 Encoding(utf8)
+IsArabicNumerals(false)
 
 -- Search OVERRIDE and NEW STRINGS for workspace
 

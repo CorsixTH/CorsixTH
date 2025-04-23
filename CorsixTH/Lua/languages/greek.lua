@@ -19,10 +19,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 Font("unicode")
-IsArabicNumerals(true)
 Language("Ελληνικά", "Greek", "el", "gre", "ell")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 menu_file = {
   quit = "  (%1%) ΕΞΟΔΟΣ   ",
