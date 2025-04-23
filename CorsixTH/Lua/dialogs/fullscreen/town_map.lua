@@ -329,7 +329,7 @@ end
 function UITownMap:decreaseHeat()
   local h = self.ui.hospital
   local heat = math.floor(h.heating.radiator_heat * 10 + 0.5)
-  if not h.heating_broke then
+  if not h.heating.heating_broke then
     heat = math.max(heat - 1, 1)
     h.heating.radiator_heat = heat / 10
   end
@@ -338,7 +338,7 @@ end
 function UITownMap:increaseHeat()
   local h = self.ui.hospital
   local heat = math.floor(h.heating.radiator_heat * 10 + 0.5)
-  if not h.heating_broke then
+  if not h.heating.heating_broke then
     heat = math.min(heat + 1, 10)
     h.heating.radiator_heat = heat / 10
   end
