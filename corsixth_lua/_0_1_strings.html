@@ -48,6 +48,9 @@
  <a href="_0_1_strings.html#_0_1_strings_1init">init</a>()
  </li>
  <li class="self">
+ <a href="_0_1_strings.html#_0_1_strings_1is_arabic_numerals">isArabicNumerals</a>(<span class="p">language</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_strings.html#_0_1_strings_1load">load</a>(<span class="p">language</span>, <span class="p">no_restriction</span>, <span class="p">no_inheritance</span>)
  </li>
  <li class="self">
@@ -73,6 +76,8 @@
  <li><span class="p">languages</span>
  </li>
  <li><span class="p">languages_english</span>
+ </li>
+ <li><span class="p">languages_with_arabic_numerals</span>
  </li>
  </ul>
 </div>
@@ -114,7 +119,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L313">line 313 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L322">line 322 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -130,7 +135,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L285">line 285 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L290">line 290 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -145,7 +150,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L296">line 296 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L301">line 301 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -160,7 +165,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L291">line 291 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L296">line 296 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -181,13 +186,28 @@
  <td class="d"> A table of translated text in language code fields</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L301">line 301 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L310">line 310 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_strings_1init">function Strings:init()</a></h5>
  <p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L38">line 38 of Lua/strings.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_strings_1is_arabic_numerals">function Strings:isArabicNumerals(<span class="p">language</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">language</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L306">line 306 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -214,7 +234,7 @@ no_inheritance disables inheritance except original_strings (for debug purposes)
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L164">line 164 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L166">line 166 of Lua/strings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -229,7 +249,7 @@ no_inheritance disables inheritance except original_strings (for debug purposes)
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L329">line 329 of Lua/strings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L338">line 338 of Lua/strings.lua</a>.
  </p>
  </div>
 </div>
