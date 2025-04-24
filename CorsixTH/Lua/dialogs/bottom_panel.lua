@@ -182,7 +182,7 @@ function UIBottomPanel:draw(canvas, x, y)
   -- Draw balance with temporary offset in unicode languages
   x, y = x + self.x, y + self.y
   local offset_x, offset_y = 0, 0
-  if self.ui.app.gfx.language_font then
+  if self.ui.app.gfx:drawNumbersFromUnicode() then
     offset_x = 4
     offset_y = 2
   end

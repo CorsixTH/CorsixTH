@@ -22,6 +22,7 @@ Font("unicode")
 Language("日本語", "Japanese", "ja", "jp")
 Inherit("english")
 Encoding(utf8)
+IsArabicNumerals(false)
 
 main_menu = {
   new_game = "新しく始める",

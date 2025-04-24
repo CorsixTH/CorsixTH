@@ -22,6 +22,7 @@ Font("unicode")
 Language("Українська", "Ukrainian", "uk", "ukr")
 Inherit("english")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 main_menu = {
   new_game = "Нова гра",

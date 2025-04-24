@@ -71,6 +71,7 @@ Font("unicode")
 Language("Magyar", "Hungarian", "hu", "hun")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 
 -- 2. Faxes

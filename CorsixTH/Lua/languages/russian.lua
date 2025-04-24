@@ -22,6 +22,7 @@ Font("unicode")
 Language("Русский", "Russian", "ru", "rus")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 --[[  Оглавление
   1.  Главное меню

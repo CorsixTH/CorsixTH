@@ -32,6 +32,7 @@ Font("unicode")
 Language("Polski", "Polish", "pl", "pol")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 font_location_window.caption = "Wybierz czcionkę (%1%)"
 

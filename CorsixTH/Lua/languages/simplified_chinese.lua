@@ -24,6 +24,7 @@ Font("unicode")
 Language("简体中文", "Chinese (simplified)", "zh(s)", "chi(s)", "zho(s)")
 Inherit("english")
 Encoding(utf8)
+IsArabicNumerals(false)
 
 -- Search OVERRIDE and NEW STRINGS for workspace
 

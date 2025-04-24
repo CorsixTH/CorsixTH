@@ -21,6 +21,7 @@ SOFTWARE. --]]
 Font("unicode")
 Language("Čeština", "Czech", "cs", "cze", "cz")
 Inherit("English")
+IsArabicNumerals(true)
 
 high_score = {
   player = "HRÁČ",

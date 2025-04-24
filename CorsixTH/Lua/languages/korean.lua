@@ -22,6 +22,7 @@ Font("unicode")
 Language("한국어", "Korean", "ko", "kor")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(false)
 
 misc = {
   hospital_open = "병원이 문을 열었습니다",
