@@ -526,6 +526,7 @@ customise_window = {
   fractured_bones = "Fractured Bones",
   average_contents = "Average Contents",
   remove_destroyed_rooms = "Remove destroyed rooms",
+  check_for_corrupted = "Check for corrupted",
 }
 
 tooltip.customise_window = {
@@ -537,6 +538,7 @@ tooltip.customise_window = {
   fractured_bones = "Because of a poor animation we have by default made it so there are no female patients with Fractured Bones. To allow female patients with Fractured Bones to visit your hospital, turn this off",
   average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",
   remove_destroyed_rooms = "If you would like to be able to remove destroyed rooms, for a fee, turn this option on",
+  check_for_corrupted = "If you would like the game to check Theme Hospital files for corruption on launch, turn this option on",
   back = "Close this menu and go back to the Settings Menu",
 }
 

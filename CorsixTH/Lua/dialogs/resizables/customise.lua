@@ -43,7 +43,7 @@ local col_caption = {
 }
 
 function UICustomise:UICustomise(ui, mode)
-  self:UIResizable(ui, 340, 300, col_bg)
+  self:UIResizable(ui, 340, 325, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -127,8 +127,17 @@ function UICustomise:UICustomise(ui, mode)
   self.destroyed_rooms_button = self.destroyed_rooms_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonDestroyed_rooms)
     :setToggleState(app.config.remove_destroyed_rooms):setTooltip(_S.tooltip.customise_window.remove_destroyed_rooms)
 
+  -- Check for corrupted files.
+  local check_for_corrupted_string = (app.config.check_for_corrupted and _S.customise_window.option_on or _S.customise_window.option_off)
+  self:addBevelPanel(15, 240, 165, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.customise_window.check_for_corrupted):setTooltip(_S.tooltip.customise_window.check_for_corrupted).lowered = true
+  self.check_for_corrupted_panel =
+    self:addBevelPanel(185, 240, 140, 20, col_bg):setLabel(check_for_corrupted_string)
+  self.check_for_corrupted_button = self.check_for_corrupted_panel:makeToggleButton(0, 0, 140, 20, nil, self.toggleCorruptedCheck)
+    :setToggleState(app.config.check_for_corrupted):setTooltip(_S.tooltip.customise_window.check_for_corrupted)
+
   -- "Back" button
-  self:addBevelPanel(15, 245, 310, 40, col_bg):setLabel(_S.customise_window.back)
+  self:addBevelPanel(15, 270, 310, 40, col_bg):setLabel(_S.customise_window.back)
     :makeButton(0, 0, 310, 40, nil, self.buttonBack):setTooltip(_S.tooltip.customise_window.back)
 end
 
@@ -211,6 +220,15 @@ function UICustomise:buttonDestroyed_rooms()
   app.config.remove_destroyed_rooms = not app.config.remove_destroyed_rooms
   self.destroyed_rooms_button:toggle()
   self.destroyed_rooms_panel:setLabel(app.config.remove_destroyed_rooms and _S.customise_window.option_on or _S.customise_window.option_off)
+  app:saveConfig()
+  self:reload()
+end
+
+function UICustomise:toggleCorruptedCheck()
+  local app = self.ui.app
+  app.config.check_for_corrupted = not self.ui.app.config.check_for_corrupted
+  self.check_for_corrupted_button:toggle()
+  self.check_for_corrupted_panel:setLabel(app.config.check_for_corrupted and _S.customise_window.option_on or _S.customise_window.option_off)
   app:saveConfig()
   self:reload()
 end

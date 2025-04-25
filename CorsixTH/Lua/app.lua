@@ -1528,17 +1528,19 @@ function App:checkInstallFolder()
     end
   end
 
-  if self.using_demo_files then
-    check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 243188)
-    check_corrupt("LEVELS" .. pathsep .. "LEVEL.L1", 163948)
-    check_corrupt("DATA" .. pathsep .. "BUTTON01.DAT", 252811)
-  else
-    check_corrupt("ANIMS" .. pathsep .. "AREA01V.SMK", 251572)
-    check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656)
-    check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 335220)
-    check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520)
-    check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
-    check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728)
+  if self.config.check_for_corrupted then
+    if self.using_demo_files then
+      check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 243188)
+      check_corrupt("LEVELS" .. pathsep .. "LEVEL.L1", 163948)
+      check_corrupt("DATA" .. pathsep .. "BUTTON01.DAT", 252811)
+    else
+      check_corrupt("ANIMS" .. pathsep .. "AREA01V.SMK", 251572)
+      check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656)
+      check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 335220)
+      check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520)
+      check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
+      check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728)
+    end
   end
 
   if #corrupt ~= 0 then

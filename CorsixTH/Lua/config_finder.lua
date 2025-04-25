@@ -136,6 +136,7 @@ local config_defaults = {
   new_graphics_folder = nil,
   use_new_graphics = false,
   check_for_updates = true,
+  check_for_corrupted = true,
   room_information_dialogs = true,
   allow_blocking_off_areas = false,
   direct_zoom = nil,
@@ -316,6 +317,13 @@ local string_01 = [=[
 -- versions on startup.
 --]=] .. '\n' ..
 'check_for_updates = ' .. tostring(config_values.check_for_updates) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- Check for corrupted files.
+-- If set to true, CorsixTH will check Theme Hospital files and if there are
+-- corrupted files, will warn user.
+--]=] .. '\n' ..
+'check_for_corrupted = ' .. tostring(config_values.check_for_corrupted) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Warmth Colors display settings.
