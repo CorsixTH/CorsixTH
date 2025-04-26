@@ -95,17 +95,6 @@ local function wait_for_object(humanoid, obj, must_happen)
   return IdleAction():setMustHappen(must_happen):setLoopCallback(loop_callback_wait)
 end
 
---! Returns true if an operation is ongoing
-function OperatingTheatreRoom:isOperating()
-  for k, _ in pairs(self.staff_member_set) do
-    if k:getCurrentAction().name == "multi_use_object" then
-      return true
-    end
-  end
-
-  return false
-end
-
 --! Builds the second operation action (i.e. with the surgeon whose we
 --! see the back). Called either when the operation starts or when the
 --! operation is resumed after interruption caused by the picking up of
@@ -138,18 +127,6 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   staff:walkTo(screen_x, screen_y)
   staff:queueAction(wait_for_object(staff, screen, false))
   staff:queueAction(UseScreenAction(screen))
-
-  -- Resume operation if already ongoing
-  if self:isOperating() then
-    local surgeon1 = next(self.staff_member_set)
-    local ongoing_action = surgeon1:getCurrentAction()
-    assert(ongoing_action.name == "multi_use_object")
-
-    local table, table_x, table_y = self.world:findObjectNear(staff, "operating_table_b")
-    self:queueWashHands(staff)
-    staff:queueAction(WalkAction(table_x, table_y))
-    staff:queueAction(self._buildTableAction2(ongoing_action, table))
-  end
 
   self.staff_member_set[staff] = true
 
