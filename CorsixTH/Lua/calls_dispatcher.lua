@@ -327,8 +327,8 @@ end
 function CallsDispatcher:answerCall(staff)
   local min_score = 2^30
   local min_call = nil
-  assert(not staff.on_call, "Staff should be idea before he can answer another call")
-  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call")
+  assert(not staff.on_call, "Staff member looking for work while already answering a call.")
+  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call.")
 
   if staff.humanoid_class == "Handyman" then
    staff:searchForHandymanTask()
@@ -513,6 +513,11 @@ function CallsDispatcher.getPriorityForRoom(room, attribute, staff)
 
   -- Prefer the tirer staff (such that less chance to have "resting synchronization issue")
   score = score - staff:getAttribute("fatigue") * 40 -- 40 is just a weighting scale
+
+  -- Prefer a wandering staff member over a staff member in a room
+  if not staff:getRoom() then
+    score = score - 50
+  end
 
   -- TODO: Assign doctor with higher ability
 
