@@ -684,6 +684,7 @@ hotkey_window = {
   ingame_recallPosition_8 = "8",
   ingame_recallPosition_9 = "9",
   ingame_recallPosition_0 = "10",
+  back = "Back",
 }
 
 tooltip.hotkey_window = {
@@ -700,6 +701,7 @@ tooltip.hotkey_window = {
   button_recallPosKeys = "Assign hotkeys to save and recall camera positions",
   panel_debugKeys = "Assign hotkeys for debugging",
   button_back_02 = "Go back to the main hotkey window. Hotkeys changed in this window can be accepted there",
+  button_back = "Return to the options screen without saving changes",
 }
 
 font_location_window = {
