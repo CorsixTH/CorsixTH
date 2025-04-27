@@ -82,7 +82,7 @@ int l_town_map_draw(lua_State* L) {
           else
             goto dont_paint_tile;
         } else if (pNode->iParcelId == 0) {
-            goto dont_paint_tile;
+          goto dont_paint_tile;
         } else if (bShowHeat) {
           uint16_t iTemp = pMap->get_tile_temperature(pNode);
           if (iTemp < 5200)  // Less than 4 degrees
