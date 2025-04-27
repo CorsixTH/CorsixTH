@@ -17,6 +17,7 @@
 #   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
 #   - USE_PRECOMPILED_DEPS : Use precompiled dependencies on *nix (no)
 #   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
+#   - FETCH_CATCH2: Use FetchContent to obtain Catch2 if ENABLE_UNIT_TESTS=yes
 
 # Tests and debug options
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
