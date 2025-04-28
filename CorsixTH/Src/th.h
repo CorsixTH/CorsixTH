@@ -30,7 +30,7 @@ SOFTWARE.
 class link_list {
  public:
   link_list();
-  ~link_list();
+  virtual ~link_list();
 
   link_list* prev;
   link_list* next;

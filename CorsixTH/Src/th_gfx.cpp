@@ -1284,7 +1284,11 @@ void animation::persist(lua_persist_writer* pWriter) const {
 
   // Write the next chained thing
   lua_rawgeti(L, luaT_environindex, 2);
-  lua_pushlightuserdata(L, next);
+  void* np = dynamic_cast<animation*>(next);
+  if (np == nullptr) {
+    np = dynamic_cast<sprite_render_list*>(next);
+  }
+  lua_pushlightuserdata(L, np);
   lua_rawget(L, -2);
   pWriter->fast_write_stack_object(-1);
   lua_pop(L, 2);
@@ -1355,7 +1359,7 @@ void animation::depersist(lua_persist_reader* pReader) {
     // Read the chain
     if (!pReader->read_stack_object()) break;
 
-    next = luaT_testuserdata<animation_base>(L, -1, false);
+    next = luaT_toanimationbase(L, -1);
     if (next) next->prev = this;
     lua_pop(L, 1);
 
@@ -1789,7 +1793,11 @@ void sprite_render_list::persist(lua_persist_writer* pWriter) const {
 
   // Write the next chained thing
   lua_rawgeti(L, luaT_environindex, 2);
-  lua_pushlightuserdata(L, next);
+  void* np = dynamic_cast<animation*>(next);
+  if (np == nullptr) {
+    np = dynamic_cast<sprite_render_list*>(next);
+  }
+  lua_pushlightuserdata(L, np);
   lua_rawget(L, -2);
   pWriter->fast_write_stack_object(-1);
   lua_pop(L, 2);
@@ -1844,7 +1852,7 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
     return;
   }
 
-  next = luaT_testuserdata<animation_base>(L, -1, false);
+  next = luaT_toanimationbase(L, -1);
   if (next) {
     next->prev = this;
   }

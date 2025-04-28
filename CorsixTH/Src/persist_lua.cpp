@@ -30,7 +30,6 @@ SOFTWARE.
 #include <cstdlib>
 #include <cstring>
 #include <string>
-#include <vector>
 
 #include "th_lua.h"
 #ifdef _MSC_VER
