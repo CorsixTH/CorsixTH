@@ -23,6 +23,8 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_GFX_H_
 #define CORSIX_TH_TH_GFX_H_
 
+#include <cstdio>
+#include <cstring>
 #include <map>
 #include <string>
 #include <vector>
@@ -660,7 +662,7 @@ class animation : public animation_base {
 class sprite_render_list : public animation_base {
  public:
   sprite_render_list();
-  ~sprite_render_list();
+  ~sprite_render_list() override;
 
   void tick();
   void draw(render_target* pCanvas, int iDestX, int iDestY);
@@ -709,16 +711,51 @@ class sprite_render_list : public animation_base {
   bool use_intermediate_buffer = false;
 };
 
-// Specialization of the 'luaT_testuserdata' template for the 'animation_base'
-// class.
-template <>
-inline animation_base* luaT_testuserdata<animation_base>(lua_State* L, int idx,
-                                                         bool required) {
-  animation_base* p = luaT_testuserdata<animation>(L, idx, false);
-  if (p == nullptr) {
-    p = luaT_testuserdata<sprite_render_list>(L, idx, required);
+// Find the appropriate subclass of animation_base for a given
+// userdata object.
+//
+// th_lua_internal.h defines our c++ binding class metatables:
+// metatable: { __index = method_table, ... }
+// method_table: { ... }
+// method_table metatable: { __class_name = class_name }
+inline animation_base* luaT_toanimationbase(lua_State* L, int idx) {
+  void* p = lua_touserdata(L, idx);
+  if (!p) {
+    return nullptr;
   }
-  return p;
+  if (lua_getmetatable(L, idx) == 0) {
+    std::printf("Warn: No metatable for animation_base userdata\n");
+    return nullptr;
+  }
+  lua_getfield(L, -1, "__index");
+  if (lua_type(L, -1) != LUA_TTABLE) {
+    lua_pop(L, 2);
+    std::printf("Warn: No __index field method table animation_base\n");
+    return nullptr;
+  }
+  if (lua_getmetatable(L, -1) == 0) {
+    lua_pop(L, 2);
+    std::printf("Warn: No metatable for method table of animation_base\n");
+    return nullptr;
+  }
+  lua_getfield(L, -1, "__class_name");
+  if (lua_type(L, -1) != LUA_TSTRING) {
+    lua_pop(L, 4);
+    std::printf("Warn: No __class_name field for animation_base\n");
+    return nullptr;
+  }
+  const char* class_name = lua_tostring(L, -1);
+  if (std::strcmp(class_name, "animation") == 0) {
+    lua_pop(L, 4);
+    return static_cast<animation*>(p);
+  } else if (std::strcmp(class_name, "spriteList") == 0) {
+    lua_pop(L, 4);
+    return static_cast<sprite_render_list*>(p);
+  } else {
+    std::printf("Warn: Unknown animation_base class name %s\n", class_name);
+    lua_pop(L, 4);
+    return nullptr;
+  }
 }
 
 #endif  // CORSIX_TH_TH_GFX_H_
