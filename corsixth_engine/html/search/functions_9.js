@@ -60,6 +60,6 @@ var searchData=
   ['luat_5fstdgc_1173',['luaT_stdgc',['../th__lua_8h.html#a4488b4bca0ba2d6564a1119934c664d8',1,'th_lua.h']]],
   ['luat_5fstdnew_1174',['luaT_stdnew',['../th__lua_8h.html#a4863b8c72e8bdf482883351830378bd9',1,'th_lua.h']]],
   ['luat_5ftestuserdata_1175',['luaT_testuserdata',['../th__lua_8h.html#afa4c0de823b67bccbe25122e991a5d24',1,'luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required=true):&#160;th_lua.h'],['../th__lua_8h.html#a892859403c206d690ba292402c81d3ba',1,'luaT_testuserdata(lua_State *L, int idx=1, bool required=true):&#160;th_lua.h']]],
-  ['luat_5ftestuserdata_3c_20animation_5fbase_20_3e_1176',['luaT_testuserdata&lt; animation_base &gt;',['../th__gfx_8h.html#a7f474fc9fec36aefbade0f4156b79955',1,'th_gfx.h']]],
+  ['luat_5ftoanimationbase_1176',['luaT_toanimationbase',['../th__gfx_8h.html#a49d9e6c4c81d50f4ba120e03eaed6d1f',1,'th_gfx.h']]],
   ['luat_5fupvalueindex_1177',['luaT_upvalueindex',['../th__lua_8h.html#a2426c8f84e6715df6ec6d45b8d1543c1',1,'th_lua.h']]]
 ];

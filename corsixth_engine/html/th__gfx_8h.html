@@ -76,7 +76,9 @@ $(function() {
 <div class="title">th_gfx.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;map&gt;</code><br />
+<div class="textblock"><code>#include &lt;cstdio&gt;</code><br />
+<code>#include &lt;cstring&gt;</code><br />
+<code>#include &lt;map&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="th_8h_source.html">th.h</a>&quot;</code><br />
@@ -166,9 +168,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a1472e83492af694471a73f956424cef6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__gfx_8h.html#a1472e83492af694471a73f956424cef6">operator&lt;</a> (const <a class="el" href="structanimation__key.html">animation_key</a> &amp;oK, const <a class="el" href="structanimation__key.html">animation_key</a> &amp;oL)</td></tr>
 <tr class="memdesc:a1472e83492af694471a73f956424cef6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Less-than operator for map-sorting.  <a href="th__gfx_8h.html#a1472e83492af694471a73f956424cef6">More...</a><br /></td></tr>
 <tr class="separator:a1472e83492af694471a73f956424cef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f474fc9fec36aefbade0f4156b79955"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:a7f474fc9fec36aefbade0f4156b79955"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classanimation__base.html">animation_base</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="th__gfx_8h.html#a7f474fc9fec36aefbade0f4156b79955">luaT_testuserdata&lt; animation_base &gt;</a> (lua_State *L, int idx, bool required)</td></tr>
-<tr class="separator:a7f474fc9fec36aefbade0f4156b79955"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49d9e6c4c81d50f4ba120e03eaed6d1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classanimation__base.html">animation_base</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__gfx_8h.html#a49d9e6c4c81d50f4ba120e03eaed6d1f">luaT_toanimationbase</a> (lua_State *L, int idx)</td></tr>
+<tr class="separator:a49d9e6c4c81d50f4ba120e03eaed6d1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -346,19 +347,17 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a7f474fc9fec36aefbade0f4156b79955"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f474fc9fec36aefbade0f4156b79955">&#9670;&nbsp;</a></span>luaT_testuserdata&lt; animation_base &gt;()</h2>
+<a id="a49d9e6c4c81d50f4ba120e03eaed6d1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49d9e6c4c81d50f4ba120e03eaed6d1f">&#9670;&nbsp;</a></span>luaT_toanimationbase()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classanimation__base.html">animation_base</a>* <a class="el" href="th__lua_8h.html#a892859403c206d690ba292402c81d3ba">luaT_testuserdata</a>&lt; <a class="el" href="classanimation__base.html">animation_base</a> &gt; </td>
+          <td class="memname"><a class="el" href="classanimation__base.html">animation_base</a>* luaT_toanimationbase </td>
           <td>(</td>
           <td class="paramtype">lua_State *&#160;</td>
           <td class="paramname"><em>L</em>, </td>
@@ -367,13 +366,7 @@ template&lt;&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>idx</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>required</em>&#160;</td>
+          <td class="paramname"><em>idx</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
