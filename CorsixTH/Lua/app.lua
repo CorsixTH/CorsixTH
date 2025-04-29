@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 216 -- CorsixTH 0.69.0-beta1
+local SAVEGAME_VERSION = 217 -- Fix original campaign maps
 
 class "App"
 
