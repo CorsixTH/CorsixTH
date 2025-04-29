@@ -417,7 +417,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
 end)
 
 local action_use_object_interrupt = permanent"action_use_object_interrupt"( function(action, humanoid, high_priority)
-  if high_priority then
+  if not action.uninterruptible and high_priority then
     local object = action.object
     if humanoid.user_of then
       finish_using(object, humanoid) -- Cleanup after usage.
@@ -427,7 +427,7 @@ local action_use_object_interrupt = permanent"action_use_object_interrupt"( func
     humanoid:setTimer(nil)
     humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
     humanoid:finishAction()
-  elseif not humanoid.timer_function then
+  elseif not action.uninterruptible and not humanoid.timer_function then
     humanoid:setTimer(1, action_use_object_tick)
   end
   -- Only patients can be vaccination candidates so no need to check
