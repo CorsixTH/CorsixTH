@@ -51,6 +51,9 @@
  <li class="self">
  <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_must_happen">setMustHappen</a>(<span class="p">must_happen</span>)
  </li>
+ <li class="self">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_uninterruptable">setUninterruptable</a>(<span class="p">uninterruptable</span>)
+ </li>
  </ul>
 </div>
 <div class="member_list">
@@ -77,6 +80,8 @@
  <li><span class="p">saved_must_happen</span>
  </li>
  <li><span class="p">state</span>
+ </li>
+ <li><span class="p">uninterruptible</span>
  </li>
  </ul>
 </div>
@@ -114,14 +119,14 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L101">line 101 of Lua/humanoid_action.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L112">line 112 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_action_1disable_truncate">function HumanoidAction:disableTruncate()</a></h5>
  <p>
  Do not allow truncating the action.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L94">line 94 of Lua/humanoid_action.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L105">line 105 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -137,7 +142,7 @@
  <td class="d"> Callback function that is called after the action ends.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L73">line 73 of Lua/humanoid_action.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L84">line 84 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -153,7 +158,7 @@
  <td class="d"> Set to 'nil' if 'forever', else integer count.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L41">line 41 of Lua/humanoid_action.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L42">line 42 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -169,7 +174,7 @@
  <td class="d"> Whether or not the humanoid is leaving. If not specified, value is true.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L84">line 84 of Lua/humanoid_action.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L95">line 95 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -186,7 +191,7 @@
  <td class="d"> Callback function that is called each iteration to check for</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L61">line 61 of Lua/humanoid_action.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L72">line 72 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -202,7 +207,23 @@
  <td class="d"> Whether or not the action must happen.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L51">line 51 of Lua/humanoid_action.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L52">line 52 of Lua/humanoid_action.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_humanoid_action_1set_uninterruptable">function HumanoidAction:setUninterruptable(<span class="p">uninterruptable</span>)</a></h5>
+ <p>
+ Set the 'uninterruptable' flag (that is, action cannot be canceled or truncated by pickup).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">uninterruptable</td>
+ <td class="t">bool</td>
+ <td class="d"> Whether or not the action uninterruptable.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L62">line 62 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
 </div>
