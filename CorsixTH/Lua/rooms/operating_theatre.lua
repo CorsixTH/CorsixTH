@@ -183,17 +183,25 @@ end
 
 --! Sends the surgeon to the nearest operation sink ("op_sink1")
 --! and makes him wash his hands
---!param at_front (boolean): If true, add the actions at the front the action queue.
+--!param before_other_actions (boolean): If true, add the actions at the front the action queue.
 --! Add the actions at the end of the queue otherwise.
 --! Default value is true.
-function OperatingTheatreRoom:queueWashHands(surgeon, at_front)
+function OperatingTheatreRoom:queueWashHands(surgeon, before_other_actions)
   local sink, sink_x, sink_y = self.world:findObjectNear(surgeon, "op_sink1")
-  local walk = WalkAction(sink_x, sink_y):setMustHappen(true):disableTruncate()
+  local walk = WalkAction(sink_x, sink_y)
+    :setMustHappen(true)
+    :disableTruncate()
   local wait = wait_for_object(surgeon, sink, true)
-  local wash = UseObjectAction(sink):setMustHappen(true)
+    :setMustHappen(true)
+    :disableTruncate()
+    :setUninterruptable(true)
+  local wash = UseObjectAction(sink)
+    :setMustHappen(true)
+    :disableTruncate()
+    :setUninterruptable(true)
 
   for pos, action in pairs({walk, wait, wash}) do
-    if (at_front) then
+    if (before_other_actions) then
       surgeon:queueAction(action, pos)
     else
       surgeon:queueAction(action)
