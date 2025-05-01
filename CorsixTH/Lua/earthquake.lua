@@ -224,7 +224,7 @@ end
 function Earthquake:afterLoad(old, new) -- luacheck: ignore 212 keep params from parent function
   local old_quake = self.world.next_earthquake
   if old < 115 then
-    if old_quake.active then
+    if old_quake and old_quake.active then
       local rd = 0
       for _, room in pairs(self.world.rooms) do
         for object, _ in pairs(room.objects) do
