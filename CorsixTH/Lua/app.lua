@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 212 -- 'coverup_in_progress' renamed to 'coverup_selected'
+local SAVEGAME_VERSION = 213 -- mood markers for staff & patients
 
 class "App"
 
