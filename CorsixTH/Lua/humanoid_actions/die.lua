@@ -172,7 +172,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
 
     --Spawn the grim reaper and the lava hole:
     local lava_hole = humanoid.world:newObject("gates_to_hell", hole_x, hole_y, holes_orientation)
-    local grim_reaper = humanoid.world:newEntity("GrimReaper", 1660)
+    local grim_reaper = humanoid.world:newEntity("GrimReaper", 1660, 2)
 
     local point_dir = {x = grim_x, y = grim_y, direction = grim_spawn_idle_direction}
     grim_reaper:setNextAction(IdleSpawnAction(1660, point_dir):setCount(40))

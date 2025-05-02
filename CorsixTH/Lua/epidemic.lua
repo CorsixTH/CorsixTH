@@ -548,7 +548,7 @@ end
 --[[ Spawns the inspector who will walk to the reception desk. ]]
 function Epidemic:spawnInspector()
   self.world.ui.adviser:say(_A.information.epidemic_health_inspector)
-  local inspector = self.world:newEntity("Inspector", 2)
+  local inspector = self.world:newEntity("Inspector", 2, 2)
   self.inspector = inspector
   inspector:setType("Inspector")
 

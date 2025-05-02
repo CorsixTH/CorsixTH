@@ -130,7 +130,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
         if self.staff then
           self.staff:setTile(self.tile_x, self.tile_y)
         else
-          local entity = self.world:newEntity(self.profile.humanoid_class, 2)
+          local entity = self.world:newEntity(self.profile.humanoid_class, 2, 2)
           entity:setProfile(self.profile)
           self.profile = nil
           entity:setTile(self.tile_x, self.tile_y)
