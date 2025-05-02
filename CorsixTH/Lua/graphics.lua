@@ -640,6 +640,12 @@ function AnimationManager:setStaffMarker(anim, ...)
   self:_unfoldAnims(anim, "setFrameSecondaryMarker", ...)
 end
 
+--! Convert a humanoid position to a pixel offset.
+--!param pos (table) Humanoid center position to convert. Is either a tile
+--  position of the form {x, y} with floating point numbers, or a pixel
+--  position of the form {x, y, "px"} with integer numbers. In both cases,
+--  the origin is at the center of tile (0, 0), at floor level.
+--!return (int, int) The computed offset wrt to the origin in pixels.
 local function positionToXy(pos)
   if pos[3] == "px" then
     return pos[1], pos[2]
