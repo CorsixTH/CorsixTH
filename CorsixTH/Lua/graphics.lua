@@ -604,11 +604,32 @@ function AnimationManager:getAnimLength(anim)
   return self.anim_length_cache[anim]
 end
 
---[[ Markers can be set using a variety of different arguments:
-  set{Patient,Staff}Marker(anim_number, position)
-  set{Patient,Staff}Marker(anim_number, {position1, position2, ..., positionN})
-  set{Patient,Staff}Marker(anim_number, start_position, end_position)
-  set{Patient,Staff}Marker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
+--[[ A marker position can be used to indicate the position of en entity in the
+  frame of an animation relative to the position of drawing the animation.
+
+  The marker position is used to display a humanoid in the circular area of its
+  window. It is also used to position mood icons or smoke of a machine above
+  the entity.
+
+  There are two marker positions associated with each frame of an animation.
+  The primary marker is reserved for patients and machines. The secondary
+  marker is used for staff and other officials such as VIPs and inspectors.
+
+  Markers are set as part of the animation definitions of entities with code like
+
+  -- Sets the primary markers of all frames of an animation:
+  local anim_mgr = TheApp.animation_manager
+  anim_mgr:setPatientMarker(...)
+
+  -- Sets the secondary markers of all frames of an animation:
+  local anim_mgr = TheApp.animation_manager
+  anim_mgr:setStaffMarker(...)
+
+  Markers can be set using a variety of different arguments:
+  * set{Patient/Staff}Marker(anim_number, position)
+  * set{Patient/Staff}Marker(anim_number, {position1, position2, ..., positionN})
+  * set{Patient/Staff}Marker(anim_number, start_position, end_position)
+  * set{Patient/Staff}Marker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
 
   The 'position' should be a table; An {x, y} pair for a tile position or
   {x, y, "px"} for a pixel position. In both cases the position should be the
@@ -628,6 +649,8 @@ end
   can be a table, in which case the marker is set for all values in the table.
   Alternatively, the values function (defined in utility.lua) can be used in
   conjection with a for loop to set markers for multiple things.
+
+  The AnimView program can be used to easily obtain position information in frames.
 --]]
 
 --! Define the centre of a patient at floor level in an animation.
