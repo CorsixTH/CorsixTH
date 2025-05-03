@@ -27,8 +27,8 @@ class "Machine" (Object)
 local Machine = _G["Machine"]
 
 function Machine:Machine(hospital, object_type, x, y, direction, etc)
-  self.total_usage = 0
   self:Object(hospital, object_type, x, y, direction, etc)
+  self.mood_marker = 1 -- Machine reuses the patient marker.
 
   if object_type.default_strength then
     -- Only for the main object. The slave doesn't need any strength
@@ -41,6 +41,7 @@ function Machine:Machine(hospital, object_type, x, y, direction, etc)
   -- Change hover cursor once the room has been finished.
   self.waiting_for_finalize = true -- Waiting until the room is completed (reset by new-room callback).
 
+  self.total_usage = 0
   self:setHandymanRepairPosition(direction)
 end
 
