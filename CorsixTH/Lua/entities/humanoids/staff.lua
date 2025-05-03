@@ -509,6 +509,16 @@ function Staff:adviseWrongPersonForThisRoom()
   end
 end
 
+-- Function to decide if staff currently Meander
+function Staff:isMeandering()
+  for _, action in ipairs(self.action_queue) do
+    if action.name == "meander" then
+      return true
+    end
+  end
+  return false
+end
+
 -- Function to decide if staff currently has nothing to do and can be called to a room where they're needed
 function Staff:isIdle()
   -- Make sure we're not in an undesired state
