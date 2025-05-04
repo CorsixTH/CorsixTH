@@ -1175,7 +1175,7 @@ function Patient:afterLoad(old, new)
   end
 
   if old < 213 and new >= 213 then
-    self.mood_marker = 2
+    self.mood_marker = 1
   end
 
   self:updateDynamicInfo()
