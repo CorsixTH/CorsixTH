@@ -590,82 +590,138 @@ function AnimationManager:setAnimLength(anim, length)
 end
 
 function AnimationManager:getAnimLength(anim)
-  local anims = self.anims
   if not self.anim_length_cache[anim] then
     local length = 0
     local seen = {}
-    local frame = anims:getFirstFrame(anim)
+    local frame = self.anims:getFirstFrame(anim)
     while not seen[frame] do
       seen[frame] = true
       length = length + 1
-      frame = anims:getNextFrame(frame)
+      frame = self.anims:getNextFrame(frame)
     end
     self.anim_length_cache[anim] = length
   end
   return self.anim_length_cache[anim]
 end
 
---[[ Markers can be set using a variety of different arguments:
-  setMarker(anim_number, position)
-  setMarker(anim_number, start_position, end_position)
-  setMarker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
+--[[ A marker position can be used to indicate the position of en entity in the
+  frame of an animation relative to the position of drawing the animation.
 
-  position should be a table; {x, y} for a tile position, {x, y, "px"} for a
-  pixel position, with (0, 0) being the origin in both cases.
+  The marker position is used to display a humanoid in the circular area of its
+  window. It is also used to position mood icons or smoke of a machine above
+  the entity.
 
-  The first variant of setMarker sets the same marker for each frame.
-  The second variant does linear interpolation of the two positions between
-  the first frame and the last frame.
-  The third variant does linear interpolation between keyframes, and then the
-  final position for frames after the last keyframe. The keyframe arguments
-  should be 0-based integers, as in the animation viewer.
+  There are two marker positions associated with each frame of an animation.
+  The primary marker is reserved for patients and machines. The secondary
+  marker is used for staff and other officials such as VIPs and inspectors.
+
+  Markers are set as part of the animation definitions of entities with code like
+
+  -- Sets the primary markers of all frames of an animation:
+  local anim_mgr = TheApp.animation_manager
+  anim_mgr:setPatientMarker(...)
+
+  -- Sets the secondary markers of all frames of an animation:
+  local anim_mgr = TheApp.animation_manager
+  anim_mgr:setStaffMarker(...)
+
+  Markers can be set using a variety of different arguments:
+  * set{Patient/Staff}Marker(anim_number, position)
+  * set{Patient/Staff}Marker(anim_number, {position1, position2, ..., positionN})
+  * set{Patient/Staff}Marker(anim_number, start_position, end_position)
+  * set{Patient/Staff}Marker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
+
+  The 'position' should be a table; An {x, y} pair for a tile position or
+  {x, y, "px"} for a pixel position. In both cases the position should be the
+  humanoid centre at floor level, with the centre of the (0, 0) tile being the
+  origin in both cases.
+
+  The first variant of set{Patient,Staff}Marker sets the same marker for each frame.
+  The second variant of has a unique position for each frame. 'nil' can be used to
+  repeat the previous position.
+  The third variant does linear interpolation of the two positions between the first
+  frame and the last frame.
+  The fourth variant does linear interpolation between keyframes, and then the final
+  position for frames after the last keyframe. The keyframe arguments should be
+  0-based integers, as in the animation viewer.
 
   To set the markers for multiple animations at once, the anim_number argument
   can be a table, in which case the marker is set for all values in the table.
   Alternatively, the values function (defined in utility.lua) can be used in
   conjection with a for loop to set markers for multiple things.
+
+  The AnimView program can be used to easily obtain position information in frames.
 --]]
 
-function AnimationManager:setMarker(anim, ...)
-  return self:setMarkerRaw(anim, "setFramePrimaryMarker", ...)
+--! Define the centre of a patient at floor level in an animation.
+function AnimationManager:setPatientMarker(anim, ...)
+  self:_unfoldAnims(anim, "setFramePrimaryMarker", ...)
 end
 
-local function TableToPixels(t)
-  if t[3] == "px" then
-    return t[1], t[2]
+--! Define the centre of a staff member at floor level in an animation.
+function AnimationManager:setStaffMarker(anim, ...)
+  self:_unfoldAnims(anim, "setFrameSecondaryMarker", ...)
+end
+
+--! Convert a humanoid position to a pixel offset.
+--!param pos (table) Humanoid center position to convert. Is either a tile
+--  position of the form {x, y} with floating point numbers, or a pixel
+--  position of the form {x, y, "px"} with integer numbers. In both cases,
+--  the origin is at the center of tile (0, 0), at floor level.
+--!return (int, int) The computed offset wrt to the origin in pixels.
+local function positionToXy(pos)
+  if pos[3] == "px" then
+    return pos[1], pos[2]
   else
-    local x, y = Map:WorldToScreen(t[1] + 1, t[2] + 1)
+    local x, y = Map:WorldToScreen(pos[1] + 1, pos[2] + 1)
     return math.floor(x), math.floor(y)
   end
 end
 
-function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
+--! Unfold tables containing animation numbers.
+function AnimationManager:_unfoldAnims(anim, fn, ...)
+  if not anim then return end
+
   if type(anim) == "table" then
     for _, val in pairs(anim) do
-      self:setMarkerRaw(val, fn, arg1, arg2, ...)
+      self:_unfoldAnims(val, fn, ...)
     end
-    return
+  else
+    self:setMarkerRaw(anim, fn, ...)
   end
-  local tp_arg1 = type(arg1)
+end
+
+function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
   local anim_length = self:getAnimLength(anim)
-  local anims = self.anims
-  local frame = anims:getFirstFrame(anim)
+  local frame = self.anims:getFirstFrame(anim)
+
+  local tp_arg1 = type(arg1)
   if tp_arg1 == "table" then
     if arg2 then
       -- Linear-interpolation positions
-      local x1, y1 = TableToPixels(arg1)
-      local x2, y2 = TableToPixels(arg2)
+      local x1, y1 = positionToXy(arg1)
+      local x2, y2 = positionToXy(arg2)
       for i = 0, anim_length - 1 do
         local n = math.floor(i / (anim_length - 1))
-        anims[fn](anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
-        frame = anims:getNextFrame(frame)
+        self.anims[fn](self.anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
+        frame = self.anims:getNextFrame(frame)
+      end
+    elseif type(arg1[1]) == "table" then
+      -- A position for each frame.
+      local x, y
+      for rel_frame = 1, anim_length do
+        if arg1[rel_frame] then
+          x, y = positionToXy(arg1[rel_frame])
+        end
+        self.anims[fn](self.anims, frame, x, y)
+        frame = self.anims:getNextFrame(frame)
       end
     else
       -- Static position
-      local x, y = TableToPixels(arg1)
+      local x, y = positionToXy(arg1)
       for _ = 1, anim_length do
-        anims[fn](anims, frame, x, y)
-        frame = anims:getNextFrame(frame)
+        self.anims[fn](self.anims, frame, x, y)
+        frame = self.anims:getNextFrame(frame)
       end
     end
   elseif tp_arg1 == "number" then
@@ -673,7 +729,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     local f1, x1, y1 = 0, 0, 0
     local args
     if arg1 == 0 then
-      x1, y1 = TableToPixels(arg2)
+      x1, y1 = positionToXy(arg2)
       args = {...}
     else
       args = {arg1, arg2, ...}
@@ -688,20 +744,18 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       if not f2 then
         f2 = args[args_i]
         if f2 then
-          x2, y2 = TableToPixels(args[args_i + 1])
+          x2, y2 = positionToXy(args[args_i + 1])
           args_i = args_i + 2
         end
       end
       if f2 then
         local n = math.floor((f - f1) / (f2 - f1))
-        anims[fn](anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
+        self.anims[fn](self.anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
       else
-        anims[fn](anims, frame, x1, y1)
+        self.anims[fn](self.anims, frame, x1, y1)
       end
-      frame = anims:getNextFrame(frame)
+      frame = self.anims:getNextFrame(frame)
     end
-  elseif tp_arg1 == "string" then
-    error("TODO")
   else
     error("Invalid arguments to setMarker", 2)
   end

@@ -35,7 +35,7 @@ local animation_numbers = {
   1874,
   1878,
 }
-TheApp.animation_manager:setMarker(animation_numbers, {-1.05, -0.05})
+TheApp.animation_manager:setStaffMarker(animation_numbers, {-1, 0, "px"})
 
 local finish = permanent"action_sweep_floor_finish"( function(humanoid)
   humanoid:finishAction()

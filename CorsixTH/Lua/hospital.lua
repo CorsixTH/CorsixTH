@@ -1192,7 +1192,7 @@ function Hospital:spawnContagiousPatient()
   end
 
   if self:hasStaffedDesk() then
-    local patient = self.world:newEntity("Patient", 2)
+    local patient = self.world:newEntity("Patient", 2, 1)
     local contagious_diseases = get_available_contagious_diseases()
     if #contagious_diseases > 0 then
       local disease = contagious_diseases[math.random(1,#contagious_diseases)]
@@ -1541,7 +1541,7 @@ function Hospital:initStaff()
         added_staff = false
       end
       if added_staff then
-        local staff = self.world:newEntity(profile.humanoid_class, 2)
+        local staff = self.world:newEntity(profile.humanoid_class, 2, 2)
         staff:setProfile(profile)
 
         -- Identify a safe starting place and

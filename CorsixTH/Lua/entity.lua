@@ -27,6 +27,13 @@ local Entity = _G["Entity"]
 local TH = require("TH")
 
 function Entity:Entity(animation)
+  -- World of the entity, set by World:newEntity()
+  self.world = nil
+
+  -- Index of the marker to use for displaying moods of the entity,
+  -- set by World:newEntity()
+  self.mood_marker = nil
+
   self.th = animation
   self.layers = {}
   animation:setHitTestResult(self)
@@ -122,7 +129,7 @@ function Entity:setTile(x, y)
   -- NB: (x, y) can be nil, in which case th:setTile expects all nil arguments
   self.th:setTile(x and self.world.map.th, x, y)
   if self.mood_info then
-    self.mood_info:setParent(self.th)
+    self.mood_info:setParent(self.th, self.mood_marker)
   end
 
   -- Update the entity map for the new position

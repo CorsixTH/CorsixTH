@@ -40,6 +40,10 @@ TheApp = {
     isCurrentSpeed = function(self, s) return s == self.speed end,
     gameLog = function() end,
   },
+  animation_manager = {
+    setPatientMarker = function(...) end,
+    setStaffMarker = function(...) end,
+  },
 }
 
 local sub_S = setmetatable({key = ''}, {

@@ -1173,6 +1173,11 @@ function Patient:afterLoad(old, new)
     self.under_infection_attempt = self.attempted_to_infect
     self.attempted_to_infect = nil
   end
+
+  if old < 213 then
+    self.mood_marker = 1
+  end
+
   self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
 end

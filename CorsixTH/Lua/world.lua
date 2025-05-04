@@ -451,7 +451,7 @@ function World:spawnPatient(hospital)
       self:_findClosestSpawnToDesk(hospital:getStaffedDesks(), spawns) or
       spawns[math.random(1, #spawns)]
 
-  local patient = self:newEntity("Patient", 2)
+  local patient = self:newEntity("Patient", 2, 1)
   patient:setDisease(disease)
   patient:setNextAction(SpawnAction("spawn", spawn_point))
   patient:setHospital(hospital)
@@ -463,7 +463,7 @@ end
 function World:spawnVIP(name)
   local hospital = self:getLocalPlayerHospital()
 
-  local vip = self:newEntity("Vip", 2)
+  local vip = self:newEntity("Vip", 2, 2)
   vip:setType("VIP")
   vip.name = name
   vip.enter_deaths = hospital.num_deaths
@@ -1681,12 +1681,20 @@ function World:newFloatingDollarSign(patient, amount)
   self.floating_dollars[spritelist] = true
 end
 
-function World:newEntity(class, animation)
+--! Create a new entity.
+--!param class Class to use for the new entity.
+--!param animation (int)Initial animation to use.
+--!param mood_marker (int) Whether to use the first (default), or the second marker.
+function World:newEntity(class, animation, mood_marker)
+  mood_marker = mood_marker and mood_marker or 1
+  assert(mood_marker == 1 or mood_marker == 2, "mood_marker is neither 1 nor 2.")
+
   local th = TH.animation()
   th:setAnimation(self.anims, animation)
   local entity = _G[class](th)
   self.entities[#self.entities + 1] = entity
   entity.world = self
+  entity.mood_marker = mood_marker
   return entity
 end
 
