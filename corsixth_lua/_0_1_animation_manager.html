@@ -30,16 +30,22 @@
  <h4>Method Index</h4>
  <ul>
  <li class="self">
+ <a href="_0_1_animation_manager.html#_0_1_animation_manager_1__unfold_anims">_unfoldAnims</a>(<span class="p">anim</span>, <span class="p">fn</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_animation_manager.html#_0_1_animation_manager_1get_anim_length">getAnimLength</a>(<span class="p">anim</span>)
  </li>
  <li class="self">
  <a href="_0_1_animation_manager.html#_0_1_animation_manager_1set_anim_length">setAnimLength</a>(<span class="p">anim</span>, <span class="p">length</span>)
  </li>
  <li class="self">
- <a href="_0_1_animation_manager.html#_0_1_animation_manager_1set_marker">setMarker</a>(<span class="p">anim</span>, <span class="p">...</span>)
+ <a href="_0_1_animation_manager.html#_0_1_animation_manager_1set_marker_raw">setMarkerRaw</a>(<span class="p">anim</span>, <span class="p">fn</span>, <span class="p">arg1</span>, <span class="p">arg2</span>, <span class="p">...</span>)
  </li>
  <li class="self">
- <a href="_0_1_animation_manager.html#_0_1_animation_manager_1set_marker_raw">setMarkerRaw</a>(<span class="p">anim</span>, <span class="p">fn</span>, <span class="p">arg1</span>, <span class="p">arg2</span>, <span class="p">...</span>)
+ <a href="_0_1_animation_manager.html#_0_1_animation_manager_1set_patient_marker">setPatientMarker</a>(<span class="p">anim</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_animation_manager.html#_0_1_animation_manager_1set_staff_marker">setStaffMarker</a>(<span class="p">anim</span>, <span class="p">...</span>)
  </li>
  </ul>
 </div>
@@ -66,6 +72,32 @@
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L582">line 582 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_animation_manager_1__unfold_anims">function AnimationManager:_unfoldAnims(<span class="p">anim</span>, <span class="p">fn</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ Unfold tables containing animation numbers.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">anim</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">fn</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L681">line 681 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -105,43 +137,6 @@
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_animation_manager_1set_marker">function AnimationManager:setMarker(<span class="p">anim</span>, <span class="p">...</span>)</a></h5>
- <p>
- Markers can be set using a variety of different arguments:
- setMarker(anim_number, position)
- setMarker(anim_number, start_position, end_position)
- setMarker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
- position should be a table; {x, y} for a tile position, {x, y, "px"} for a
- pixel position, with (0, 0) being the origin in both cases.
- The first variant of setMarker sets the same marker for each frame.
- The second variant does linear interpolation of the two positions between
- the first frame and the last frame.
- The third variant does linear interpolation between keyframes, and then the
- final position for frames after the last keyframe. The keyframe arguments
- should be 0-based integers, as in the animation viewer.
- To set the markers for multiple animations at once, the anim_number argument
- can be a table, in which case the marker is set for all values in the table.
- Alternatively, the values function (defined in utility.lua) can be used in
- conjection with a for loop to set markers for multiple things.
---<br/><br/>
- <strong>Parameters:</strong>
- <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
- <tr>
- <td class="n">anim</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
- <tr>
- <td class="n">...</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
- </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L608">line 608 of Lua/graphics.lua</a>.
- </p>
- </div>
- <div class="method">
  <h5><a name="_0_1_animation_manager_1set_marker_raw">function AnimationManager:setMarkerRaw(<span class="p">anim</span>, <span class="p">fn</span>, <span class="p">arg1</span>, <span class="p">arg2</span>, <span class="p">...</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
@@ -173,7 +168,87 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L642">line 642 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L694">line 694 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_animation_manager_1set_patient_marker">function AnimationManager:setPatientMarker(<span class="p">anim</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ A marker position can be used to indicate the position of en entity in the
+ frame of an animation relative to the position of drawing the animation.
+ The marker position is used to display a humanoid in the circular area of its
+ window. It is also used to position mood icons or smoke of a machine above
+ the entity.
+ There are two marker positions associated with each frame of an animation.
+ The primary marker is reserved for patients and machines. The secondary
+ marker is used for staff and other officials such as VIPs and inspectors.
+ Markers are set as part of the animation definitions of entities with code like
+ -- Sets the primary markers of all frames of an animation:
+ local anim_mgr = TheApp.animation_manager
+ anim_mgr:setPatientMarker(...)
+ -- Sets the secondary markers of all frames of an animation:
+ local anim_mgr = TheApp.animation_manager
+ anim_mgr:setStaffMarker(...)
+ Markers can be set using a variety of different arguments:
+ * set{Patient/Staff}Marker(anim_number, position)
+ * set{Patient/Staff}Marker(anim_number, {position1, position2, ..., positionN})
+ * set{Patient/Staff}Marker(anim_number, start_position, end_position)
+ * set{Patient/Staff}Marker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
+ The 'position' should be a table; An {x, y} pair for a tile position or
+ {x, y, "px"} for a pixel position. In both cases the position should be the
+ humanoid centre at floor level, with the centre of the (0, 0) tile being the
+ origin in both cases.
+ The first variant of set{Patient,Staff}Marker sets the same marker for each frame.
+ The second variant of has a unique position for each frame. 'nil' can be used to
+ repeat the previous position.
+ The third variant does linear interpolation of the two positions between the first
+ frame and the last frame.
+ The fourth variant does linear interpolation between keyframes, and then the final
+ position for frames after the last keyframe. The keyframe arguments should be
+ 0-based integers, as in the animation viewer.
+ To set the markers for multiple animations at once, the anim_number argument
+ can be a table, in which case the marker is set for all values in the table.
+ Alternatively, the values function (defined in utility.lua) can be used in
+ conjection with a for loop to set markers for multiple things.
+ The AnimView program can be used to easily obtain position information in frames.
+--<br/><br/>
+ Define the centre of a patient at floor level in an animation.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">anim</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L607">line 607 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_animation_manager_1set_staff_marker">function AnimationManager:setStaffMarker(<span class="p">anim</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ Define the centre of a staff member at floor level in an animation.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">anim</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L661">line 661 of Lua/graphics.lua</a>.
  </p>
  </div>
 </div>
