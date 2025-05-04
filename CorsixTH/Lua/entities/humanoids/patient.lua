@@ -1174,7 +1174,7 @@ function Patient:afterLoad(old, new)
     self.attempted_to_infect = nil
   end
 
-  if old < 213 and new >= 213 then
+  if old < 213 then
     self.mood_marker = 1
   end
 

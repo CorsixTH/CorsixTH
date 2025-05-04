@@ -706,7 +706,7 @@ function Staff:afterLoad(old, new)
     return
   end
 
-  if old < 213 and new >= 213 then
+  if old < 213 then
     self.mood_marker = 2
   end
 
