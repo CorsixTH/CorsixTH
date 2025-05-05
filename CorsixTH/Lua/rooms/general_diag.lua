@@ -61,7 +61,7 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
     if staff then
       local trolley, cx, cy = self.world:findObjectNear(patient, "crash_trolley")
 
-      -- Doctor walk to trolley
+      -- Doctor walks to trolley
       local ox, oy = trolley:getSecondaryUsageTile()
       local staff_prepare = WalkAction(ox, oy)
           :setMustHappen(true)
@@ -69,21 +69,21 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
           :setUninterruptable(true)
       staff:setNextAction(staff_prepare)
 
-      -- Doctor wait patient near trolley
+      -- Doctor waits patient near trolley
       local staff_idle = IdleAction()
           :setMustHappen(true)
           :disableTruncate()
           :setUninterruptable(true)
       staff:queueAction(staff_idle)
 
-      -- Patient walk to trolley
+      -- Patient walks to trolley
       local go_to_trolley = WalkAction(cx, cy)
           :setMustHappen(true)
           :disableTruncate()
       patient:queueAction(go_to_trolley)
 
       local after_use_trolley = --[[persistable:general_diag_trolley_after_use]] function()
-        -- Doctor finish wait near trolley
+        -- Release doctor after procedure and finish his IdleAction() near trolley
         staff:setNextAction(MeanderAction())
         staff:finishAction(staff_idle)
       end

@@ -497,7 +497,7 @@ end
 
 --! When a valid member of staff enters the room this function is called.
 -- Can be extended in derived classes.
---!param staff (Staff) The staff in question
+--!param staff (object) The staff in question
 --!param already_initialized (bool) If true, this means that the staff has already got order
 -- what to do.
 function Room:commandEnteringStaff(staff, already_initialized)

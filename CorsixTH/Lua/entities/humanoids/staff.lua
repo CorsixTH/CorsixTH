@@ -512,7 +512,7 @@ end
 --! Check whether staff are meandering
 --!return true if staff currently has a meander action
 function Staff:isMeandering()
-  if (self.action_queue[1].name == "meander") or 
+  if (self.action_queue[1].name == "meander") or
     (self.action_queue[2].name == "meander") then
     return true
   end
