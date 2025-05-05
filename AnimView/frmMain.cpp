@@ -39,6 +39,7 @@ SOFTWARE.
 #include <wx/stattext.h>
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h>
+#include <regex>
 
 #include "backdrop.h"
 
@@ -65,6 +66,11 @@ BEGIN_EVENT_TABLE(frmMain, wxFrame)
   EVT_TIMER(ID_TIMER_ANIMATE, frmMain::_onTimer)
   EVT_CHECKBOX(ID_DRAW_MOOD, frmMain::_onToggleDrawMood)
   EVT_CHECKBOX(ID_DRAW_COORDINATES, frmMain::_onToggleDrawCoordinates)
+  EVT_BUTTON(ID_MOOD_FRAME, frmMain::_onMoodFrameApply)
+  EVT_BUTTON(ID_MOOD_LEFT, frmMain::_onMoodLeft)
+  EVT_BUTTON(ID_MOOD_RIGHT, frmMain::_onMoodRight)
+  EVT_BUTTON(ID_MOOD_UP, frmMain::_onMoodUp)
+  EVT_BUTTON(ID_MOOD_DOWN, frmMain::_onMoodDown)
 END_EVENT_TABLE()
 
 namespace {
@@ -291,6 +297,28 @@ frmMain::frmMain()
       m_txtMoodPosition[1] = new wxTextCtrl(this, wxID_ANY, L"{0, 0, \"px\"}"),
       wxSizerFlags(1).Expand());
   pMoodOverlay->Add(pMoodRow, wxSizerFlags(1).Expand().Border(wxALL, 2));
+
+  wxSizerFlags moodAdjustFlags(0);
+  moodAdjustFlags.Align(wxALIGN_CENTER).Border(wxALL, 1);
+
+  layerSizerFlags.Align(wxALIGN_CENTER).Border(wxALL, 1);
+  wxBoxSizer* pMoodAdjustRow = new wxBoxSizer(wxHORIZONTAL);
+  m_txtMoodFramePos = new wxTextCtrl(this, ID_MOOD_POS, L"{0.0, 0.0}",
+                                     wxDefaultPosition, wxDefaultSize,
+                                     wxTE_CENTRE);
+  pMoodAdjustRow->Add(m_txtMoodFramePos, wxSizerFlags(1).Expand());
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_FRAME, L"This frame"),
+                      moodAdjustFlags);
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_LEFT, L"<", wxDefaultPosition,
+                      wxDefaultSize, wxBU_EXACTFIT), moodAdjustFlags);
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_RIGHT, L">", wxDefaultPosition,
+                      wxDefaultSize, wxBU_EXACTFIT), moodAdjustFlags);
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_UP, L"^", wxDefaultPosition,
+                      wxDefaultSize, wxBU_EXACTFIT), moodAdjustFlags);
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_DOWN, L"v", wxDefaultPosition,
+                      wxDefaultSize, wxBU_EXACTFIT), moodAdjustFlags);
+  pMoodOverlay->Add(pMoodAdjustRow, wxSizerFlags(1).Expand().Border(wxALL, 2));
+
   pMoodOverlay->Add(
       new wxCheckBox(this, ID_DRAW_COORDINATES, L"Draw tile coordinates"),
       fillSizerFlags);
@@ -680,8 +708,12 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt) {
 }
 
 void frmMain::_onPanelClick(wxMouseEvent& evt) {
-  m_iMoodDrawX = evt.GetX() - 143;
-  m_iMoodDrawY = evt.GetY() - 203;
+  updateMoodPosition(evt.GetX() - 143, evt.GetY() - 203);
+}
+
+void frmMain::updateMoodPosition(int centerX, int centerY) {
+  m_iMoodDrawX = centerX;
+  m_iMoodDrawY = centerY;
   {
     double fX = (double)m_iMoodDrawX;
     double fY = (double)m_iMoodDrawY;
@@ -695,6 +727,63 @@ void frmMain::_onPanelClick(wxMouseEvent& evt) {
   m_txtMoodPosition[1]->SetValue(
       wxString::Format(L"{%i, %i, \"px\"}", m_iMoodDrawX, m_iMoodDrawY));
   if (m_bDrawMood) m_panFrame->Refresh(false);
+}
+
+void frmMain::_onMoodFrameApply(wxCommandEvent &evt) {
+  wxString wxText = m_txtMoodFramePos->GetLineText(0);
+  std::string text = wxText.ToStdString();
+
+  std::regex tilePosRegex("\\{ *([-0-9]+[.][0-9]*) *, *([-0-9]+[.][0-9]*) *\\}");
+  std::regex pixelPosRegex("\\{ *([-0-9]+) *, *([-0-9]+) *, *[\"]px[\"] *\\}");
+
+  std::smatch m;
+  if (std::regex_match(text, m, tilePosRegex)) {
+    double x, y;
+    try {
+        x = std::stod(m[1].str());
+        y = std::stod(m[2].str());
+    }
+    catch (...) {
+      return;
+    }
+
+    // Convert the fractions to a pixel position.
+    x -= y;
+    x /= 2.0;
+    y += x;
+    x *= 64.0;
+    y *= 32.0;
+    updateMoodPosition(round(x), round(y));
+  }
+
+  if (std::regex_match(text, m, pixelPosRegex)) {
+    int x, y;
+    try {
+        x = std::stoi(m[1].str());
+        y = std::stoi(m[2].str());
+    }
+    catch (...) {
+      return;
+    }
+
+    updateMoodPosition(x, y);
+  }
+}
+
+void frmMain::_onMoodLeft(wxCommandEvent &evt) {
+  updateMoodPosition(m_iMoodDrawX - 1, m_iMoodDrawY);
+}
+
+void frmMain::_onMoodRight(wxCommandEvent &evt) {
+  updateMoodPosition(m_iMoodDrawX + 1, m_iMoodDrawY);
+}
+
+void frmMain::_onMoodUp(wxCommandEvent &evt) {
+  updateMoodPosition(m_iMoodDrawX, m_iMoodDrawY - 1);
+}
+
+void frmMain::_onMoodDown(wxCommandEvent &evt) {
+  updateMoodPosition(m_iMoodDrawX, m_iMoodDrawY + 1);
 }
 
 void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
