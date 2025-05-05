@@ -184,7 +184,7 @@ local function action_multi_use_phase(action, humanoid, phase)
   humanoid:setTilePositionSpeed(tx, ty, offset[1], offset[2])
 
   humanoid.user_of = object
-  local length = humanoid.world:getAnimLength(anim)
+  local length = TheApp.animation_manager:getAnimLength(anim)
   local secondary_anim = action.anims.secondary and action.anims.secondary[anim_name]
   if action.secondary_anim then
     secondary_anim = action.secondary_anim
@@ -211,7 +211,7 @@ local function action_multi_use_phase(action, humanoid, phase)
       use_with:setAnimation(secondary_anim, action.mirror_flags)
     end
     use_with.th:makeVisible()
-    local secondary_length = use_with.world:getAnimLength(secondary_anim)
+    local secondary_length = TheApp.animation_manager:getAnimLength(secondary_anim)
     if secondary_length > length then
       length = secondary_length
     end

@@ -43,7 +43,7 @@ local function action_falling_start(action, humanoid)
   assert(humanoid.falling_anim, "Error: no falling animation for humanoid " .. humanoid.humanoid_class)
 
   humanoid:setAnimation(humanoid.falling_anim, humanoid.last_move_direction == "east" and 0 or 1)
-  humanoid:setTimer(humanoid.world:getAnimLength(humanoid.falling_anim), action_falling_end)
+  humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.falling_anim), action_falling_end)
 end
 
 return action_falling_start

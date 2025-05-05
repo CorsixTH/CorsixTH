@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 213 -- mood markers for staff & patients
+local SAVEGAME_VERSION = 214 -- Eliminate animation_manager from world.
 
 class "App"
 

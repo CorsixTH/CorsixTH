@@ -209,7 +209,7 @@ local function action_use_screen_start(action, humanoid)
   humanoid:setPosition(offset[1], offset[2])
   humanoid.mood_info = mood_info
   humanoid:setSpeed(0, 0)
-  humanoid:setTimer(humanoid.world:getAnimLength(anim), when_done)
+  humanoid:setTimer(TheApp.animation_manager:getAnimLength(anim), when_done)
 
   screen:setUser(humanoid)
   humanoid.user_of = screen

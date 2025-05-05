@@ -285,7 +285,7 @@ local function action_use_phase(action, humanoid, phase)
   setHumanoidTileSpeed(action, humanoid)
   humanoid.user_of = object
 
-  local frame_count = humanoid.world:getAnimLength(anim)
+  local frame_count = TheApp.animation_manager:getAnimLength(anim)
   local action_anim_count = 1 -- Number of times to show 'in_use' animation for the action.
   if action.min_length and phase == 0 then
     -- 'action.min_length' is a frame count, convert to number of complete animations.

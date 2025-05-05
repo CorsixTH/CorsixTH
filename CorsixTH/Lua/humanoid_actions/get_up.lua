@@ -37,7 +37,7 @@ local function action_get_up_start(action, humanoid)
   assert(humanoid.get_up_anim, "Error: no getting up animation for humanoid " .. humanoid.humanoid_class)
 
   humanoid:setAnimation(humanoid.get_up_anim, humanoid.last_move_direction == "east" and 0 or 1)
-  humanoid:setTimer(humanoid.world:getAnimLength(humanoid.get_up_anim), action_get_up_end)
+  humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.get_up_anim), action_get_up_end)
 end
 
 return action_get_up_start

@@ -45,7 +45,7 @@ local function action_vomit_start(action, humanoid)
   assert(humanoid.vomit_anim, "Error: no vomit animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.vomit_anim, humanoid.last_move_direction == "east" and 0 or 1)
-  humanoid:setTimer(humanoid.world:getAnimLength(humanoid.vomit_anim), action_vomit_end)
+  humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.vomit_anim), action_vomit_end)
 end
 
 return action_vomit_start

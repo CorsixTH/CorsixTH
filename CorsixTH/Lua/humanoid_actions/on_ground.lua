@@ -37,7 +37,7 @@ local function action_on_ground_start(action, humanoid)
   assert(humanoid.on_ground_anim, "Error: no on the ground animation for humanoid " .. humanoid.humanoid_class)
 
   humanoid:setAnimation(humanoid.on_ground_anim, humanoid.last_move_direction == "east" and 0 or 1)
-  humanoid:setTimer(humanoid.world:getAnimLength(humanoid.on_ground_anim), action_on_ground_end)
+  humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.on_ground_anim), action_on_ground_end)
 end
 
 return action_on_ground_start
