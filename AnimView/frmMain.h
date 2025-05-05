@@ -148,7 +148,7 @@ class frmMain : public wxFrame {
   wxPanel* m_panFrame;
   DECLARE_EVENT_TABLE()
 
-private:
+ private:
   /**
       Update the mood position of the current frame to the given coordinate.
       @param centerX X coordinate of the center.

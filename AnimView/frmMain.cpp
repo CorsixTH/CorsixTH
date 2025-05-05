@@ -39,6 +39,7 @@ SOFTWARE.
 #include <wx/stattext.h>
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h>
+
 #include <regex>
 
 #include "backdrop.h"
@@ -303,20 +304,24 @@ frmMain::frmMain()
 
   layerSizerFlags.Align(wxALIGN_CENTER).Border(wxALL, 1);
   wxBoxSizer* pMoodAdjustRow = new wxBoxSizer(wxHORIZONTAL);
-  m_txtMoodFramePos = new wxTextCtrl(this, ID_MOOD_POS, L"{0.0, 0.0}",
-                                     wxDefaultPosition, wxDefaultSize,
-                                     wxTE_CENTRE);
+  m_txtMoodFramePos =
+      new wxTextCtrl(this, ID_MOOD_POS, L"{0.0, 0.0}", wxDefaultPosition,
+                     wxDefaultSize, wxTE_CENTRE);
   pMoodAdjustRow->Add(m_txtMoodFramePos, wxSizerFlags(1).Expand());
   pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_FRAME, L"This frame"),
                       moodAdjustFlags);
   pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_LEFT, L"<", wxDefaultPosition,
-                      wxDefaultSize, wxBU_EXACTFIT), moodAdjustFlags);
+                                   wxDefaultSize, wxBU_EXACTFIT),
+                      moodAdjustFlags);
   pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_RIGHT, L">", wxDefaultPosition,
-                      wxDefaultSize, wxBU_EXACTFIT), moodAdjustFlags);
+                                   wxDefaultSize, wxBU_EXACTFIT),
+                      moodAdjustFlags);
   pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_UP, L"^", wxDefaultPosition,
-                      wxDefaultSize, wxBU_EXACTFIT), moodAdjustFlags);
+                                   wxDefaultSize, wxBU_EXACTFIT),
+                      moodAdjustFlags);
   pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_DOWN, L"v", wxDefaultPosition,
-                      wxDefaultSize, wxBU_EXACTFIT), moodAdjustFlags);
+                                   wxDefaultSize, wxBU_EXACTFIT),
+                      moodAdjustFlags);
   pMoodOverlay->Add(pMoodAdjustRow, wxSizerFlags(1).Expand().Border(wxALL, 2));
 
   pMoodOverlay->Add(
@@ -726,27 +731,27 @@ void frmMain::updateMoodPosition(int centerX, int centerY) {
   }
   m_txtMoodPosition[1]->SetValue(
       wxString::Format(L"{%i, %i, \"px\"}", m_iMoodDrawX, m_iMoodDrawY));
-  printf("%ld, {%i, %i, \"px\"}, -- Anim %ld\n", m_iCurrentFrame,
-      m_iMoodDrawX, m_iMoodDrawY, m_iCurrentAnim);
+  printf("%ld, {%i, %i, \"px\"}, -- Anim %ld\n", m_iCurrentFrame, m_iMoodDrawX,
+         m_iMoodDrawY, m_iCurrentAnim);
 
   if (m_bDrawMood) m_panFrame->Refresh(false);
 }
 
-void frmMain::_onMoodFrameApply(wxCommandEvent &evt) {
+void frmMain::_onMoodFrameApply(wxCommandEvent& evt) {
   wxString wxText = m_txtMoodFramePos->GetLineText(0);
   std::string text = wxText.ToStdString();
 
-  std::regex tilePosRegex("\\{ *([-0-9]+[.][0-9]*) *, *([-0-9]+[.][0-9]*) *\\}");
+  std::regex tilePosRegex(
+      "\\{ *([-0-9]+[.][0-9]*) *, *([-0-9]+[.][0-9]*) *\\}");
   std::regex pixelPosRegex("\\{ *([-0-9]+) *, *([-0-9]+) *, *[\"]px[\"] *\\}");
 
   std::smatch m;
   if (std::regex_match(text, m, tilePosRegex)) {
     double x, y;
     try {
-        x = std::stod(m[1].str());
-        y = std::stod(m[2].str());
-    }
-    catch (...) {
+      x = std::stod(m[1].str());
+      y = std::stod(m[2].str());
+    } catch (...) {
       return;
     }
 
@@ -762,10 +767,9 @@ void frmMain::_onMoodFrameApply(wxCommandEvent &evt) {
   if (std::regex_match(text, m, pixelPosRegex)) {
     int x, y;
     try {
-        x = std::stoi(m[1].str());
-        y = std::stoi(m[2].str());
-    }
-    catch (...) {
+      x = std::stoi(m[1].str());
+      y = std::stoi(m[2].str());
+    } catch (...) {
       return;
     }
 
@@ -773,19 +777,19 @@ void frmMain::_onMoodFrameApply(wxCommandEvent &evt) {
   }
 }
 
-void frmMain::_onMoodLeft(wxCommandEvent &evt) {
+void frmMain::_onMoodLeft(wxCommandEvent& evt) {
   updateMoodPosition(m_iMoodDrawX - 1, m_iMoodDrawY);
 }
 
-void frmMain::_onMoodRight(wxCommandEvent &evt) {
+void frmMain::_onMoodRight(wxCommandEvent& evt) {
   updateMoodPosition(m_iMoodDrawX + 1, m_iMoodDrawY);
 }
 
-void frmMain::_onMoodUp(wxCommandEvent &evt) {
+void frmMain::_onMoodUp(wxCommandEvent& evt) {
   updateMoodPosition(m_iMoodDrawX, m_iMoodDrawY - 1);
 }
 
-void frmMain::_onMoodDown(wxCommandEvent &evt) {
+void frmMain::_onMoodDown(wxCommandEvent& evt) {
   updateMoodPosition(m_iMoodDrawX, m_iMoodDrawY + 1);
 }
 
