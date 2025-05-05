@@ -695,6 +695,19 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
   local anim_length = self:getAnimLength(anim)
   local frame = self.anims:getFirstFrame(anim)
 
+  --! Set marker position for frame
+  --!param x1y1 (boolen) use values given by x1 and y1 only if true, otherwise use
+  -- linear interpolation between x1/y1 and x2/y2
+  --!param x1, y1, x2 (optional), y2 (optional) pixel positions
+  --!param n fraction between start and end frame of linear interpolation
+  local function setMarkerFramePosition(x1y1, x1, y1, x2, y2, n)
+    assert(type(x1) == "number" and type(y1) == "number",
+        "Anim " .. anim .. ", frame " .. frame .. " has missing marker position")
+    local pos_x = x1y1 and x1 or math.floor((x2 - x1) * n + x1)
+    local pos_y = x1y1 and y1 or math.floor((y2 - y1) * n + y1)
+    self.anims[fn](self.anims, frame, pos_x, pos_y)
+  end
+
   local tp_arg1 = type(arg1)
   if tp_arg1 == "table" then
     if arg2 then
@@ -702,8 +715,8 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       local x1, y1 = positionToXy(arg1)
       local x2, y2 = positionToXy(arg2)
       for i = 0, anim_length - 1 do
-        local n = math.floor(i / (anim_length - 1))
-        self.anims[fn](self.anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
+        local n = i / (anim_length - 1)
+        setMarkerFramePosition(false, x1, y1, x2, y2, n)
         frame = self.anims:getNextFrame(frame)
       end
     elseif type(arg1[1]) == "table" then
@@ -713,19 +726,19 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
         if arg1[rel_frame] then
           x, y = positionToXy(arg1[rel_frame])
         end
-        self.anims[fn](self.anims, frame, x, y)
+        setMarkerFramePosition(true, x, y)
         frame = self.anims:getNextFrame(frame)
       end
     else
       -- Static position
       local x, y = positionToXy(arg1)
       for _ = 1, anim_length do
-        self.anims[fn](self.anims, frame, x, y)
+        setMarkerFramePosition(true, x, y)
         frame = self.anims:getNextFrame(frame)
       end
     end
   elseif tp_arg1 == "number" then
-    -- Keyframe positions
+    -- Keyframe positions, using liner-interpolation
     local f1, x1, y1 = 0, 0, 0
     local args
     if arg1 == 0 then
@@ -749,10 +762,10 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
         end
       end
       if f2 then
-        local n = math.floor((f - f1) / (f2 - f1))
-        self.anims[fn](self.anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
+        local n = (f - f1) / (f2 - f1)
+        setMarkerFramePosition(false, x1, y1, x2, y2, n)
       else
-        self.anims[fn](self.anims, frame, x1, y1)
+        setMarkerFramePosition(true, x1, y1)
       end
       frame = self.anims:getNextFrame(frame)
     end
