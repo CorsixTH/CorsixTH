@@ -15,7 +15,6 @@
 
 # Dependency resolution
 #   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
-#   - USE_PRECOMPILED_DEPS : Use precompiled dependencies on *nix (no)
 #   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
 #   - FETCH_CATCH2: Use FetchContent to obtain Catch2 if ENABLE_UNIT_TESTS=yes
 
@@ -103,10 +102,6 @@ if(WITH_FREETYPE2)
 endif()
 
 # Dependency management
-if(UNIX AND CMAKE_COMPILER_IS_GNU)
-  option(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
-endif()
-
 if(APPLE)
   option(WITH_LUAROCKS "Install required luarocks in the app" OFF)
 endif()
@@ -150,12 +145,6 @@ if(VCPKG_TARGET_TRIPLET AND NOT WITH_LUAROCKS)
   set(CORSIX_TH_LINK_LUA_MODULES ON)
 else()
   set(CORSIX_TH_LINK_LUA_MODULES OFF)
-endif()
-
-# Get precompiled dependencies before running the various find modules
-if(USE_PRECOMPILED_DEPS)
-  message("Note: Using precompiled dependencies.")
-  include(PrecompiledDeps)
 endif()
 
 include(GNUInstallDirs)
