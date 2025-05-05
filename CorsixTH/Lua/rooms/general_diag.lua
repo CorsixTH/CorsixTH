@@ -52,7 +52,7 @@ end
 
 function GeneralDiagRoom:commandEnteringPatient(patient)
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
-  -- Patient walk to screen
+  -- Patient walks to screen
   patient:walkTo(sx, sy)
 
   local after_use_screen1 = --[[persistable:general_diag_screen_after_use1]] function()
@@ -64,22 +64,22 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
       -- Doctor walk to trolley
       local ox, oy = trolley:getSecondaryUsageTile()
       local staff_prepare = WalkAction(ox, oy)
-        :setMustHappen(true)
-        :disableTruncate()
-        :setUninterruptable(true)
+          :setMustHappen(true)
+          :disableTruncate()
+          :setUninterruptable(true)
       staff:setNextAction(staff_prepare)
 
       -- Doctor wait patient near trolley
       local staff_idle = IdleAction()
-        :setMustHappen(true)
-        :disableTruncate()
-        :setUninterruptable(true)
+          :setMustHappen(true)
+          :disableTruncate()
+          :setUninterruptable(true)
       staff:queueAction(staff_idle)
 
       -- Patient walk to trolley
       local go_to_trolley = WalkAction(cx, cy)
-        :setMustHappen(true)
-        :disableTruncate()
+          :setMustHappen(true)
+          :disableTruncate()
       patient:queueAction(go_to_trolley)
 
       local after_use_trolley = --[[persistable:general_diag_trolley_after_use]] function()
@@ -90,17 +90,17 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
 
       -- Patient use trolley
       local use_trolley = MultiUseObjectAction(trolley, staff)
-        :disableTruncate()
-        :setMustHappen(true)
-        :setProlongedUsage(false)
-        :setAfterUse(after_use_trolley)
+          :disableTruncate()
+          :setMustHappen(true)
+          :setProlongedUsage(false)
+          :setAfterUse(after_use_trolley)
       patient:queueAction(use_trolley)
 
-      -- Patient walk back to screen
+      -- Patient walks back to screen
       local go_to_screen2 = WalkAction(sx, sy)
-        :setIsLeaving(true)
-        :setMustHappen(true)
-        :disableTruncate()
+          :setIsLeaving(true)
+          :setMustHappen(true)
+          :disableTruncate()
       patient:queueAction(go_to_screen2)
 
       after_use_screen2 = --[[persistable:general_diag_screen_after_use2]] function()
@@ -114,15 +114,15 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
       patient:queueAction(SeekRoomAction(self.room_info.id))
     end
 
-    -- Patient dress back to his clothes
+    -- Patient dresses back to their clothes
     local dress_back = UseScreenAction(screen)
-      :setIsLeaving(true)
-      :setMustHappen(true)
-      :setAfterUse(after_use_screen2)
+        :setIsLeaving(true)
+        :setMustHappen(true)
+        :setAfterUse(after_use_screen2)
     patient:queueAction(dress_back)
   end
 
-  -- Patient undress for procedure
+  -- Patient undresses for procedure
   local undress = UseScreenAction(screen):setAfterUse(after_use_screen1)
   patient:queueAction(undress)
 

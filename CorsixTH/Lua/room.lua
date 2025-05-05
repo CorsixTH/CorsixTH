@@ -367,7 +367,7 @@ function Room:onHumanoidEnter(humanoid)
         if staff_in_room.humanoid_class == "Nurse" and self.room_info.id == "ward" then
           self.hospital:giveAdvice(nurse_desks)
         end
-        if (not staff_in_room.dealing_with_patient) or staff_in_room:isMeandering() then
+        if not staff_in_room.dealing_with_patient or staff_in_room:isMeandering() then
           -- Previous staff in the room not currently occupied by serving patient in room.
           -- Send out the previous staff and appoint new one.
           staff_in_room:setNextAction(self:createLeaveAction())
@@ -407,7 +407,7 @@ function Room:onHumanoidEnter(humanoid)
     -- been sent to an incorrect diagnosis room, they should leave and go
     -- back to the gp for redirection
     local patient_entered = humanoid
-    if (patient_entered.infected) and not patient_entered.diagnosed and
+    if patient_entered.infected and not patient_entered.diagnosed and
         not self:isDiagnosisRoomForPatient(patient_entered) then
       patient_entered:queueAction(self:createLeaveAction())
       patient_entered.needs_redirecting = true
