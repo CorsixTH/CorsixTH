@@ -95,23 +95,20 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#ifndef CORSIX_TH_MAIN_H_</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define CORSIX_TH_MAIN_H_</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="lua_8hpp.html">lua.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#ifdef CORSIX_TH_USE_VLD</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;vld.h&gt;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">int</span> <a class="code" href="main_8h.html#ac6d1e00e58e25adf390b6d6de3c31d3f">lua_main</a>(lua_State* L);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keywordtype">int</span> <a class="code" href="main_8h.html#ab79648fde3f7c6c6af7befa3be166c92">lua_main_no_eval</a>(lua_State* L);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keywordtype">int</span> <a class="code" href="main_8h.html#a3ffd92a5539cb4d0e7ff9fa4e4a6fff8">lua_stacktrace</a>(lua_State* L);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">int</span> <a class="code" href="main_8h.html#a82e10b54229f60c3518dbcfccd7443ca">lua_panic</a>(lua_State* L);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// CORSIX_TH_MAIN_H_</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">int</span> <a class="code" href="main_8h.html#ac6d1e00e58e25adf390b6d6de3c31d3f">lua_main</a>(lua_State* L);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">int</span> <a class="code" href="main_8h.html#ab79648fde3f7c6c6af7befa3be166c92">lua_main_no_eval</a>(lua_State* L);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">int</span> <a class="code" href="main_8h.html#a3ffd92a5539cb4d0e7ff9fa4e4a6fff8">lua_stacktrace</a>(lua_State* L);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">int</span> <a class="code" href="main_8h.html#a82e10b54229f60c3518dbcfccd7443ca">lua_panic</a>(lua_State* L);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// CORSIX_TH_MAIN_H_</span></div>
 <div class="ttc" id="alua_8hpp_html"><div class="ttname"><a href="lua_8hpp.html">lua.hpp</a></div></div>
 <div class="ttc" id="amain_8h_html_a3ffd92a5539cb4d0e7ff9fa4e4a6fff8"><div class="ttname"><a href="main_8h.html#a3ffd92a5539cb4d0e7ff9fa4e4a6fff8">lua_stacktrace</a></div><div class="ttdeci">int lua_stacktrace(lua_State *L)</div><div class="ttdoc">Process a caught error before returning it to the caller.</div><div class="ttdef"><b>Definition:</b> main.cpp:203</div></div>
 <div class="ttc" id="amain_8h_html_a82e10b54229f60c3518dbcfccd7443ca"><div class="ttname"><a href="main_8h.html#a82e10b54229f60c3518dbcfccd7443ca">lua_panic</a></div><div class="ttdeci">int lua_panic(lua_State *L)</div><div class="ttdoc">Process an uncaught Lua error before aborting.</div><div class="ttdef"><b>Definition:</b> main.cpp:225</div></div>
