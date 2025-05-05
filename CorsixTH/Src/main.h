@@ -23,9 +23,6 @@ SOFTWARE.
 #ifndef CORSIX_TH_MAIN_H_
 #define CORSIX_TH_MAIN_H_
 #include "lua.hpp"
-#ifdef CORSIX_TH_USE_VLD
-#include <vld.h>
-#endif
 
 //! Lua mode entry point
 /*!
