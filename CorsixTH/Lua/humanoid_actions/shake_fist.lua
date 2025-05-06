@@ -43,7 +43,7 @@ local function action_shake_fist_start(action, humanoid)
   assert(humanoid.shake_fist_anim, "Error: no shaking fist animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.shake_fist_anim, humanoid.last_move_direction == "east" and 0 or 1)
-  humanoid:setTimer(humanoid.world:getAnimLength(humanoid.shake_fist_anim), action_shake_fist_end)
+  humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.shake_fist_anim), action_shake_fist_end)
 end
 
 return action_shake_fist_start

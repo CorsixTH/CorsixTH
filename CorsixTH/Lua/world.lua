@@ -57,7 +57,6 @@ function World:World(app, free_build_mode)
   self.wall_types = app.walls
   self.object_types = app.objects
   self.anims = app.anims
-  self.animation_manager = app.animation_manager
   self.pathfinder = TH.pathfinder()
   self.pathfinder:setMap(app.map.th)
   self.entities = {} -- List of entities in the world.
@@ -594,10 +593,6 @@ function World:setPlotOwner(parcel, owner)
     end
   end
   self.map.th:updateShadows()
-end
-
-function World:getAnimLength(anim)
-  return self.animation_manager:getAnimLength(anim)
 end
 
 -- Register a function to be called whenever a room has been deactivated (crashed or edited).
@@ -2555,6 +2550,9 @@ function World:afterLoad(old, new)
       self.tick_rate = tick_rates["Pause"][2]
       self:setSpeed("Normal")
     end
+  end
+  if old < 214 then
+    self.animation_manager = nil -- Use TheApp.animation_manager instead.
   end
 
   -- Fix the initial of staff names

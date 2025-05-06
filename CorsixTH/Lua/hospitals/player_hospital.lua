@@ -377,7 +377,7 @@ function PlayerHospital:showGatesToHell(entity)
 
   entity:playEntitySounds("LAVA00*.WAV", {0,1350,1150,950,750,350},
       {0,1450,1250,1050,850,450}, 40)
-  entity:setTimer(entity.world:getAnimLength(2550), anim_func)
+  entity:setTimer(TheApp.animation_manager:getAnimLength(2550), anim_func)
   entity:setAnimation(2550)
 end
 

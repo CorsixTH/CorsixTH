@@ -351,25 +351,25 @@ navigateDoor = function(humanoid, x1, y1, dir)
   local duration, direction
   if dir == "north" then
     humanoid:setAnimation(leaving, flag_list_bottom)
-    duration = humanoid.world:getAnimLength(leaving)
+    duration = TheApp.animation_manager:getAnimLength(leaving)
     to_x, to_y = dx, dy - 1
     direction = "in"
 
   elseif dir == "west" then
     humanoid:setAnimation(leaving, flag_list_bottom + flag_flip_h)
-    duration = humanoid.world:getAnimLength(leaving)
+    duration = TheApp.animation_manager:getAnimLength(leaving)
     to_x, to_y = dx - 1, dy
     direction = "in"
 
   elseif dir == "east" then
     humanoid:setAnimation(entering, flag_list_bottom)
-    duration = humanoid.world:getAnimLength(entering)
+    duration = TheApp.animation_manager:getAnimLength(entering)
     to_x, to_y = dx, dy
     direction = "out"
 
   elseif dir == "south" then
     humanoid:setAnimation(entering, flag_list_bottom + flag_flip_h)
-    duration = humanoid.world:getAnimLength(entering)
+    duration = TheApp.animation_manager:getAnimLength(entering)
     to_x, to_y = dx, dy
     direction = "out"
   end

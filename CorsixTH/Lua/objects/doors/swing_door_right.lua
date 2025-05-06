@@ -165,7 +165,7 @@ function SwingDoor:swing(anim, flags)
       self:getRoom():tryAdvanceQueue()
     end
   end
-  self:setTimer(self.world:getAnimLength(anim), callback)
+  self:setTimer(TheApp.animation_manager:getAnimLength(anim), callback)
 end
 
 function SwingDoor:getWalkableTiles()

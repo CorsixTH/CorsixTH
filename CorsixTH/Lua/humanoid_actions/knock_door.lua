@@ -70,7 +70,7 @@ function KnockDoorAction:update()
     end
     self.humanoid:setAnimation(anim, flag_mirror)
     self.humanoid:setTilePositionSpeed(self.humanoid.tile_x, self.humanoid.tile_y)
-    self.humanoid:setTimer(self.humanoid.world:getAnimLength(anim), action_knock_door_tick)
+    self.humanoid:setTimer(TheApp.animation_manager:getAnimLength(anim), action_knock_door_tick)
     self.humanoid.user_of = door
     door:setUser(self.humanoid)
     door.th:makeVisible()
