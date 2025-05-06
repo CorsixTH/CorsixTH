@@ -61,7 +61,7 @@ object.usage_animations = copy_north_to_south {
       ["Chewbacca Patient"         ] = 4162,
       ["Elvis Patient"             ] =  954,
       ["Alien Male Patient"        ] = 1716,
-      ["Alien Female Patient"      ] = 3132,
+      ["Alien Female Patient"      ] = 3136,
     },
     in_use = {
       ["Standard Male Patient"     ] = {1728, 1732},
