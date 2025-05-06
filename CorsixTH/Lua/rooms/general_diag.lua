@@ -69,7 +69,7 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
           :setUninterruptable(true)
       staff:setNextAction(staff_prepare)
 
-      -- Doctor waits patient near trolley
+      -- Doctor waits for patient near trolley
       local staff_idle = IdleAction()
           :setMustHappen(true)
           :disableTruncate()
@@ -88,7 +88,7 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
         staff:finishAction(staff_idle)
       end
 
-      -- Patient use trolley
+      -- Patient uses trolley (trolly animation with patient and doctor)
       local use_trolley = MultiUseObjectAction(trolley, staff)
           :disableTruncate()
           :setMustHappen(true)

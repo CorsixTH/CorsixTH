@@ -491,8 +491,9 @@ function Humanoid:startAction()
   -- Call the action start handler
   TheApp.humanoid_actions[action.name](action, self)
 
+  -- If action has been marked as to be interrupted
   if action == self.action_queue[1] and action.todo_interrupt and not action.uninterruptible then
-    -- Interrupt an action because it has been marked as to be interrupted
+    -- Interrupt this action
     local high_priority = action.todo_interrupt == "high"
     action.todo_interrupt = nil
     local on_interrupt = action.on_interrupt
