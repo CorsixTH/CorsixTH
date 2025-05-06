@@ -736,44 +736,42 @@ void frmMain::updateMoodPosition(int centerX, int centerY) {
 }
 
 /**
-   Match the 'text' against the pattern in 'p'. The pattern should have 2 numbers.
-   @param p: Pattern to match. ' ' means optional white space, 'I' means a possibly
-       negative integer, 'R' means a possibly negative real or integer, all other
-       character match with themselves.
+   Match the 'text' against the pattern in 'p'. The pattern should have 2
+   numbers.
+   @param p: Pattern to match. ' ' means optional white space, 'I' means a
+   possibly negative integer, 'R' means a possibly negative real or integer, all
+   other character match with themselves.
    @param text: Text to completely match.
    @param num1: The text of the first number if successful.
    @param num2: The text of the second number if successful.
    @return: Whether the match was successful.
 */
-static bool matchText(const char *p, const std::string& text, std::string& num1,
-               std::string& num2) {
+static bool matchText(const char* p, const std::string& text, std::string& num1,
+                      std::string& num2) {
   bool filled_num1 = false;
   bool filled_num2 = false;
 
-  const char * const c_start = text.c_str(); // Pointer to the first input.
-  const char *c = c_start; // Pointer to the current input character.
+  const char* const c_start = text.c_str();  // Pointer to the first input.
+  const char* c = c_start;  // Pointer to the current input character.
   while (*p) {
     // Dispatch on the current pattern character.
     switch (*p) {
-      case ' ': // Optional spaces.
-        while (*c == ' ')
-          c++;
+      case ' ':  // Optional spaces.
+        while (*c == ' ') c++;
         break;
 
-      case 'R': // Possibly negative real number without exponent.
-      case 'I': { // Possibly negative integer number.
+      case 'R':    // Possibly negative real number without exponent.
+      case 'I': {  // Possibly negative integer number.
         bool seen_digit = false;
         int num_start = c - c_start;
 
-        if (*c == '-')
-          c++;
+        if (*c == '-') c++;
         while (*c >= '0' && *c <= '9') {
           c++;
           seen_digit = true;
         }
         if (*c == '.') {
-          if (*p != 'R')
-            return false;
+          if (*p != 'R') return false;
           c++;
         }
         while (*c >= '0' && *c <= '9') {
@@ -794,9 +792,8 @@ static bool matchText(const char *p, const std::string& text, std::string& num1,
         break;
       }
 
-      default: // Input should match the pattern character exactly.
-        if (*p != *c)
-          return false;
+      default:  // Input should match the pattern character exactly.
+        if (*p != *c) return false;
         c++;
         break;
     }
