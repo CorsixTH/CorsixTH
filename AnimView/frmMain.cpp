@@ -40,8 +40,6 @@ SOFTWARE.
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h>
 
-#include <regex>
-
 #include "backdrop.h"
 
 BEGIN_EVENT_TABLE(frmMain, wxFrame)
@@ -737,43 +735,139 @@ void frmMain::updateMoodPosition(int centerX, int centerY) {
   if (m_bDrawMood) m_panFrame->Refresh(false);
 }
 
+/**
+   Match the 'text' against the pattern in 'p'. The pattern should have 2 numbers.
+   @param p: Pattern to match. ' ' means optional white space, 'I' means a possibly
+       negative integer, 'R' means a possibly negative real or integer, all other
+       character match with themselves.
+   @param text: Text to completely match.
+   @param num1: The text of the first number if successful.
+   @param num2: The text of the second number if successful.
+   @return: Whether the match was successful.
+*/
+static bool matchText(const char *p, const std::string& text, std::string& num1,
+               std::string& num2) {
+  bool filled_num1 = false;
+  bool filled_num2 = false;
+
+  const char * const c_start = text.c_str(); // Pointer to the first input.
+  const char *c = c_start; // Pointer to the current input character.
+  while (*p) {
+    // Dispatch on the current pattern character.
+    switch (*p) {
+      case ' ': // Optional spaces.
+        while (*c == ' ')
+          c++;
+        break;
+
+      case 'R': // Possibly negative real number without exponent.
+      case 'I': { // Possibly negative integer number.
+        bool seen_digit = false;
+        int num_start = c - c_start;
+
+        if (*c == '-')
+          c++;
+        while (*c >= '0' && *c <= '9') {
+          c++;
+          seen_digit = true;
+        }
+        if (*c == '.') {
+          if (*p != 'R')
+            return false;
+          c++;
+        }
+        while (*c >= '0' && *c <= '9') {
+          c++;
+          seen_digit = true;
+        }
+        if (!seen_digit) return false;
+
+        // Store the number text for value conversion by the caller.
+        int num_length = (c - c_start) - num_start;
+        if (!filled_num1) {
+          num1 = text.substr(num_start, num_length);
+          filled_num1 = true;
+        } else if (!filled_num2) {
+          num2 = text.substr(num_start, num_length);
+          filled_num2 = true;
+        }
+        break;
+      }
+
+      default: // Input should match the pattern character exactly.
+        if (*p != *c)
+          return false;
+        c++;
+        break;
+    }
+    p++;
+  }
+
+  return *p == '\0' && *c == '\0' && filled_num2;
+}
+
+/**
+  Match text of the form '{real, real}' with 'real' a possibly negative
+  real number without exponent.
+  @param text Input text to match.
+  @param x Value of the first real in the text.
+  @param y Value of the second real in the text.
+  @return Whether the input text was successfully matched.
+ */
+static bool matchTilePos(const std::string& text, double& x, double& y) {
+  std::string num1, num2;
+  if (matchText(" { R , R } ", text, num1, num2)) {
+    try {
+      x = std::stod(num1.c_str());
+      y = std::stod(num2.c_str());
+      return true;
+    } catch (...) {
+      // Drop into fail return value.
+    }
+  }
+  return false;
+}
+
+/**
+  Match text of the form '{int, int, "px"}' with 'int' a possibly negative
+  integer number.
+  @param text Input text to match.
+  @param x Value of the first integer in the text.
+  @param y Value of the second integer in the text.
+  @return Whether the input text was successfully matched.
+ */
+static bool matchPixelPos(const std::string& text, int& x, int& y) {
+  std::string num1, num2;
+  if (matchText(" { I , I , \"px\" } ", text, num1, num2)) {
+    try {
+      x = std::stoi(num1.c_str());
+      y = std::stoi(num2.c_str());
+      return true;
+    } catch (...) {
+      // Drop into fail return value.
+    }
+  }
+  return false;
+}
+
 void frmMain::_onMoodFrameApply(wxCommandEvent& evt) {
   wxString wxText = m_txtMoodFramePos->GetLineText(0);
   std::string text = wxText.ToStdString();
 
-  std::regex tilePosRegex(
-      "\\{ *([-0-9]+[.][0-9]*) *, *([-0-9]+[.][0-9]*) *\\}");
-  std::regex pixelPosRegex("\\{ *([-0-9]+) *, *([-0-9]+) *, *[\"]px[\"] *\\}");
-
-  std::smatch m;
-  if (std::regex_match(text, m, tilePosRegex)) {
-    double x, y;
-    try {
-      x = std::stod(m[1].str());
-      y = std::stod(m[2].str());
-    } catch (...) {
-      return;
-    }
-
+  // Try to recognize a tile position.
+  double x_tile, y_tile;
+  if (matchTilePos(text, x_tile, y_tile)) {
     // Convert the fractions to a pixel position.
-    x -= y;
-    x /= 2.0;
-    y += x;
-    x *= 64.0;
-    y *= 32.0;
-    updateMoodPosition(round(x), round(y));
+    x_tile -= y_tile;
+    x_tile /= 2.0;
+    y_tile += x_tile;
+    updateMoodPosition(round(x_tile * 64.0), round(y_tile * 32.0));
   }
 
-  if (std::regex_match(text, m, pixelPosRegex)) {
-    int x, y;
-    try {
-      x = std::stoi(m[1].str());
-      y = std::stoi(m[2].str());
-    } catch (...) {
-      return;
-    }
-
-    updateMoodPosition(x, y);
+  // Try to recognize a pixel position.
+  int x_pixel, y_pixel;
+  if (matchPixelPos(text, x_pixel, y_pixel)) {
+    updateMoodPosition(x_pixel, y_pixel);
   }
 }
 
