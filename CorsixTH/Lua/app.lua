@@ -635,15 +635,15 @@ function App:loadCampaign(campaign_file)
       campaign_info.winning_text_table)
 
   if self:loadLevel(level_info.path, nil, level_info.name,
-      level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix, campaign_info) then
+      level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix, campaign_info) and self.world then
     -- The new world needs to know which campaign to continue on.
     self.world.campaign_info = campaign_info
-  end
 
-  -- Play the level advance movie from a position where this campaign will end at 12
-  if campaign_info.movie then
-    local n = math.max(1, 12 - #campaign_info.levels)
-    self.moviePlayer:playAdvanceMovie(n)
+    -- Play the level advance movie from a position where this campaign will end at 12
+    if campaign_info.movie then
+      local n = math.max(1, 12 - #campaign_info.levels)
+      self.moviePlayer:playAdvanceMovie(n)
+    end
   end
 end
 
@@ -769,7 +769,7 @@ function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, 
   local new_map = Map(self)
   local map_objects, errors = new_map:load(level, difficulty, level_name, level_file, level_intro, map_editor)
   if not map_objects then
-    self.world.ui:addWindow(UIInformation(self.ui, { errors }))
+    self.ui:addWindow(UIInformation(self.ui, { errors }))
     return
   end
   -- If going from another level, save progress.
