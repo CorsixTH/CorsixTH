@@ -306,7 +306,7 @@ frmMain::frmMain()
       new wxTextCtrl(this, ID_MOOD_POS, L"{0.0, 0.0}", wxDefaultPosition,
                      wxDefaultSize, wxTE_CENTRE);
   pMoodAdjustRow->Add(m_txtMoodFramePos, wxSizerFlags(1).Expand());
-  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_FRAME, L"This frame"),
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_FRAME, L"Set marker"),
                       moodAdjustFlags);
   pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_LEFT, L"<", wxDefaultPosition,
                                    wxDefaultSize, wxBU_EXACTFIT),
