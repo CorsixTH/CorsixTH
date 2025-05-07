@@ -25,9 +25,7 @@ SOFTWARE.
 #include "config.h"
 
 #include <cassert>
-#include <cstdio>
 #include <new>
-#include <vector>
 
 #include "lua.hpp"
 

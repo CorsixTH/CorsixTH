@@ -23,14 +23,14 @@ SOFTWARE.
 #include "iso_fs.h"
 
 #include <algorithm>
-#include <array>
 #include <cstdarg>
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
+#include <exception>
 #include <iterator>
 #include <memory>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #include "th.h"

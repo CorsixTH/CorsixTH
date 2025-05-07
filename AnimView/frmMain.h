@@ -25,19 +25,22 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <wx/button.h>
-#include <wx/checkbox.h>
-#include <wx/dcclient.h>
+#include <wx/defs.h>
+#include <wx/event.h>
 #include <wx/frame.h>
-#include <wx/listbox.h>
-#include <wx/panel.h>
-#include <wx/spinctrl.h>
-#include <wx/textctrl.h>
+#include <wx/image.h>
+#include <wx/string.h>
 #include <wx/timer.h>
-#include <wx/txtstrm.h>
 
 #include "th.h"
-//#include <vector>
+
+class wxButton;
+class wxCheckBox;
+class wxListBox;
+class wxPaintDC;
+class wxPanel;
+class wxSpinEvent;
+class wxTextCtrl;
 
 class frmMain : public wxFrame {
  public:

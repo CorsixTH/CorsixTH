@@ -24,11 +24,16 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <SDL_rwops.h>
+
 #include <cmath>
 #include <cstring>
 #include <new>
 
 #include "th.h"
+#ifdef CORSIX_TH_USE_SDL_MIXER
+#include <SDL_mixer.h>
+#endif
 
 sound_archive::sound_archive() {
   sound_files = nullptr;

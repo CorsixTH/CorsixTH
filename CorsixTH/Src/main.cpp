@@ -22,13 +22,12 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <array>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <string>
 
-#include "iso_fs.h"
 #include "lua.hpp"
 #include "lua_rnc.h"
 #include "lua_sdl.h"

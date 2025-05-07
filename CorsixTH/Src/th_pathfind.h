@@ -22,11 +22,20 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_PATHFIND_H_
 #define CORSIX_TH_TH_PATHFIND_H_
-#include "th_map.h"
 
+#include "config.h"
+
+#include <cstdint>
+#include <vector>
+
+#include "lua.hpp"
+
+class level_map;
 class lua_persist_reader;
 class lua_persist_writer;
 class pathfinder;
+enum class object_type : uint8_t;
+struct map_tile_flags;
 
 /** Directions of movement. */
 enum class travel_direction {

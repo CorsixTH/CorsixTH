@@ -27,9 +27,9 @@ SOFTWARE.
 #include <SDL.h>
 
 #include <cstdio>
-#include <stack>
 
 #include "../Src/bootstrap.h"
+#include "../Src/lua.hpp"
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>
 #endif

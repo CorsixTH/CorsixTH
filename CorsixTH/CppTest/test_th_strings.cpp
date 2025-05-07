@@ -1,7 +1,8 @@
-#include <cstring>
+#include <string>
 
 #include "../Src/th_strings.h"
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 TEST_CASE("skip whitespace", "[skip_utf8_whitespace]") {

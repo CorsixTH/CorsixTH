@@ -25,11 +25,13 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL.h>
+#include <SDL_rect.h>
+#include <SDL_render.h>
 
 #include <array>
 #include <atomic>
 #include <condition_variable>
+#include <memory>
 #include <mutex>
 #include <queue>
 #include <string>
@@ -45,10 +47,11 @@ extern "C" {
 #endif
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
-#include <libavutil/avutil.h>
+#include <libavutil/avutil.h>  // IWYU pragma: keep
 #include <libswresample/swresample.h>
-#include <libswscale/swscale.h>
 }
+
+struct SwsContext;
 
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59, 0, 100)
 using av_codec_ptr = AVCodec*;

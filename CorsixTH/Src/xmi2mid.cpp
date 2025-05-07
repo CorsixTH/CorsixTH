@@ -24,7 +24,6 @@ SOFTWARE.
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <algorithm>
 #include <cstring>
-#include <iterator>
 #include <new>
 #include <vector>
 

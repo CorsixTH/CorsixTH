@@ -20,9 +20,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "config.h"
+
+#include <new>
+#include <string>
+
+#include "lua.hpp"
+#include "persist_lua.h"
+#include "th.h"
 #include "th_gfx.h"
+#include "th_lua.h"
 #include "th_lua_internal.h"
 #include "th_map.h"
+
+class render_target;
+class sprite_sheet;
+enum class animation_effect;
 
 namespace {
 

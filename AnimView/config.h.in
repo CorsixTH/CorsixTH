@@ -24,8 +24,8 @@ SOFTWARE.
 #define CORSIX_AV_CONFIG_H_
 
 /** Standard includes **/
-#include <cstddef>
-#include <cstdint>
+#include <cstddef> // IWYU pragma: export
+#include <cstdint> // IWYU pragma: export
 
 // We bring in the most common stddef and stdint types to avoid typing
 using std::size_t;

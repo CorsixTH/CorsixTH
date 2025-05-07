@@ -23,19 +23,26 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_GFX_H_
 #define CORSIX_TH_TH_GFX_H_
 
+#include "config.h"
+
 #include <cstdio>
 #include <cstring>
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
+#include "lua.hpp"
 #include "th.h"
 #include "th_gfx_common.h"
-#include "th_gfx_sdl.h"
-#include "th_lua.h"
 
 class lua_persist_reader;
 class lua_persist_writer;
+class memory_reader;
+class render_target;
+class sprite_sheet;
+struct clip_rect;
+struct map_tile;
 
 enum class scaled_items { none, sprite_sheets, bitmaps, all };
 
@@ -209,8 +216,6 @@ const int max_number_of_layers = 13;
 struct layers {
   uint8_t layer_contents[max_number_of_layers];
 };
-
-class memory_reader;
 
 /** Key value for finding an animation. */
 struct animation_key {
@@ -525,7 +530,6 @@ class animation_manager {
   void fix_next_frame(uint32_t iFirst, size_t iLength);
 };
 
-struct map_tile;
 class animation_base : public drawable {
  public:
   animation_base();

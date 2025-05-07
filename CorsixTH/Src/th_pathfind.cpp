@@ -26,12 +26,15 @@ SOFTWARE.
 
 #include <cmath>
 #include <cstdlib>
-#include <queue>
+#include <initializer_list>
+#include <list>
+#include <new>
 #include <stdexcept>
 #include <vector>
 
 #include "lua.hpp"
 #include "persist_lua.h"
+#include "th_map.h"
 
 abstract_pathfinder::abstract_pathfinder(pathfinder* pf) : parent(pf) {}
 

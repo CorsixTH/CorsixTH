@@ -1,5 +1,7 @@
 #include "lua_rnc.h"
 
+#include "config.h"
+
 #include <array>
 
 #include "rnc.h"

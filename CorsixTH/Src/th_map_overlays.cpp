@@ -23,10 +23,11 @@ SOFTWARE.
 #include "th_map_overlays.h"
 
 #include <array>
+#include <list>
 #include <sstream>
 
-#include "th_gfx.h"
 #include "th_gfx_font.h"
+#include "th_gfx_sdl.h"
 #include "th_map.h"
 
 map_overlay_pair::map_overlay_pair() {

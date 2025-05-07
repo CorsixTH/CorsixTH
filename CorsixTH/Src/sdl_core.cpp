@@ -20,12 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "config.h"
+#include <SDL.h>
 
 #include <array>
 #include <cstdio>
 #include <cstring>
 
+#include "lua.hpp"
 #include "lua_sdl.h"
 #include "th_lua.h"
 

@@ -24,8 +24,11 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <cstring>
+#include <array>
 #include <stdexcept>
+
+#include "cp437_table.h"
+#include "cp936_table.h"
 
 link_list::link_list() {
   prev = nullptr;
@@ -44,9 +47,6 @@ void link_list::remove_from_list() {
   }
   prev = nullptr;
 }
-
-#include "cp437_table.h"
-#include "cp936_table.h"
 
 namespace {
 

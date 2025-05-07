@@ -24,9 +24,8 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <wx/app.h>
-#include <wx/filename.h>
-#include <wx/toplevel.h>
+#include <wx/gdicmn.h>
+#include <wx/image.h>
 
 #include <algorithm>
 #include <array>

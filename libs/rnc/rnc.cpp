@@ -38,7 +38,6 @@ SOFTWARE.
 
 #include <cstddef>
 #include <cstdint>
-#include <vector>
 
 static const std::uint32_t rnc_signature = 0x524E4301; /*!< "RNC\001" */
 

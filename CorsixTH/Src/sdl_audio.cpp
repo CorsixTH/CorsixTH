@@ -22,13 +22,18 @@ SOFTWARE.
 
 #include "config.h"
 
+#include "lua.hpp"
 #include "lua_sdl.h"
 #include "th_lua.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
+#include <SDL_events.h>
 #include <SDL_mixer.h>
+#include <SDL_rwops.h>
+#include <SDL_thread.h>
 
 #include <array>
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 
 #include "xmi2mid.h"
