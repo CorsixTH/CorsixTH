@@ -67,6 +67,12 @@ class frmMain : public wxFrame {
     ID_EXPORT,
     ID_DRAW_MOOD,
     ID_DRAW_COORDINATES,
+    ID_MOOD_POS,
+    ID_MOOD_FRAME,
+    ID_MOOD_LEFT,
+    ID_MOOD_RIGHT,
+    ID_MOOD_UP,
+    ID_MOOD_DOWN,
     ID_LAYER_CHECKS,  // Must be last ID
   };
 
@@ -101,6 +107,11 @@ class frmMain : public wxFrame {
   void _onPanelPaint(wxPaintEvent& evt);
   void _onPanelClick(wxMouseEvent& evt);
   void _onTimer(wxTimerEvent& evt);
+  void _onMoodFrameApply(wxCommandEvent& evt);
+  void _onMoodLeft(wxCommandEvent& evt);
+  void _onMoodRight(wxCommandEvent& evt);
+  void _onMoodUp(wxCommandEvent& evt);
+  void _onMoodDown(wxCommandEvent& evt);
 
   void _onAnimChange(size_t iIndex);
 
@@ -131,10 +142,19 @@ class frmMain : public wxFrame {
   wxTextCtrl* m_txtFrameCount;
   wxTextCtrl* m_txtFrameFlags[2];
   wxTextCtrl* m_txtMoodPosition[2];
+  wxTextCtrl* m_txtMoodFramePos;
   wxCheckBox* m_chkFrameFlags[16];
   wxListBox* m_lstSearchResults;
   wxPanel* m_panFrame;
   DECLARE_EVENT_TABLE()
+
+ private:
+  /**
+      Update the mood position of the current frame to the given coordinate.
+      @param centerX X coordinate of the center.
+      @param centerY Y coordinate of the center.
+   */
+  void updateMoodPosition(int centerX, int centerY);
 };
 
 #endif

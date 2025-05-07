@@ -65,6 +65,11 @@ BEGIN_EVENT_TABLE(frmMain, wxFrame)
   EVT_TIMER(ID_TIMER_ANIMATE, frmMain::_onTimer)
   EVT_CHECKBOX(ID_DRAW_MOOD, frmMain::_onToggleDrawMood)
   EVT_CHECKBOX(ID_DRAW_COORDINATES, frmMain::_onToggleDrawCoordinates)
+  EVT_BUTTON(ID_MOOD_FRAME, frmMain::_onMoodFrameApply)
+  EVT_BUTTON(ID_MOOD_LEFT, frmMain::_onMoodLeft)
+  EVT_BUTTON(ID_MOOD_RIGHT, frmMain::_onMoodRight)
+  EVT_BUTTON(ID_MOOD_UP, frmMain::_onMoodUp)
+  EVT_BUTTON(ID_MOOD_DOWN, frmMain::_onMoodDown)
 END_EVENT_TABLE()
 
 namespace {
@@ -291,6 +296,32 @@ frmMain::frmMain()
       m_txtMoodPosition[1] = new wxTextCtrl(this, wxID_ANY, L"{0, 0, \"px\"}"),
       wxSizerFlags(1).Expand());
   pMoodOverlay->Add(pMoodRow, wxSizerFlags(1).Expand().Border(wxALL, 2));
+
+  wxSizerFlags moodAdjustFlags(0);
+  moodAdjustFlags.Align(wxALIGN_CENTER).Border(wxALL, 1);
+
+  layerSizerFlags.Align(wxALIGN_CENTER).Border(wxALL, 1);
+  wxBoxSizer* pMoodAdjustRow = new wxBoxSizer(wxHORIZONTAL);
+  m_txtMoodFramePos =
+      new wxTextCtrl(this, ID_MOOD_POS, L"{0.0, 0.0}", wxDefaultPosition,
+                     wxDefaultSize, wxTE_CENTRE);
+  pMoodAdjustRow->Add(m_txtMoodFramePos, wxSizerFlags(1).Expand());
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_FRAME, L"Set marker"),
+                      moodAdjustFlags);
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_LEFT, L"<", wxDefaultPosition,
+                                   wxDefaultSize, wxBU_EXACTFIT),
+                      moodAdjustFlags);
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_RIGHT, L">", wxDefaultPosition,
+                                   wxDefaultSize, wxBU_EXACTFIT),
+                      moodAdjustFlags);
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_UP, L"^", wxDefaultPosition,
+                                   wxDefaultSize, wxBU_EXACTFIT),
+                      moodAdjustFlags);
+  pMoodAdjustRow->Add(new wxButton(this, ID_MOOD_DOWN, L"v", wxDefaultPosition,
+                                   wxDefaultSize, wxBU_EXACTFIT),
+                      moodAdjustFlags);
+  pMoodOverlay->Add(pMoodAdjustRow, wxSizerFlags(1).Expand().Border(wxALL, 2));
+
   pMoodOverlay->Add(
       new wxCheckBox(this, ID_DRAW_COORDINATES, L"Draw tile coordinates"),
       fillSizerFlags);
@@ -680,8 +711,12 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt) {
 }
 
 void frmMain::_onPanelClick(wxMouseEvent& evt) {
-  m_iMoodDrawX = evt.GetX() - 143;
-  m_iMoodDrawY = evt.GetY() - 203;
+  updateMoodPosition(evt.GetX() - 143, evt.GetY() - 203);
+}
+
+void frmMain::updateMoodPosition(int centerX, int centerY) {
+  m_iMoodDrawX = centerX;
+  m_iMoodDrawY = centerY;
   {
     double fX = (double)m_iMoodDrawX;
     double fY = (double)m_iMoodDrawY;
@@ -694,7 +729,159 @@ void frmMain::_onPanelClick(wxMouseEvent& evt) {
   }
   m_txtMoodPosition[1]->SetValue(
       wxString::Format(L"{%i, %i, \"px\"}", m_iMoodDrawX, m_iMoodDrawY));
+  printf("%ld, {%i, %i, \"px\"}, -- Anim %ld\n", m_iCurrentFrame, m_iMoodDrawX,
+         m_iMoodDrawY, m_iCurrentAnim);
+
   if (m_bDrawMood) m_panFrame->Refresh(false);
+}
+
+/**
+   Match the 'text' against the pattern in 'p'. The pattern should have 2
+   numbers.
+   @param p: Pattern to match. ' ' means optional white space, 'I' means a
+   possibly negative integer, 'R' means a possibly negative real or integer, all
+   other character match with themselves.
+   @param text: Text to completely match.
+   @param num1: The text of the first number if successful.
+   @param num2: The text of the second number if successful.
+   @return: Whether the match was successful.
+*/
+static bool matchText(const char* p, const std::string& text, std::string& num1,
+                      std::string& num2) {
+  bool filled_num1 = false;
+  bool filled_num2 = false;
+
+  const char* const c_start = text.c_str();  // Pointer to the first input.
+  const char* c = c_start;  // Pointer to the current input character.
+  while (*p) {
+    // Dispatch on the current pattern character.
+    switch (*p) {
+      case ' ':  // Optional spaces.
+        while (*c == ' ') c++;
+        break;
+
+      case 'R':    // Possibly negative real number without exponent.
+      case 'I': {  // Possibly negative integer number.
+        bool seen_digit = false;
+        int num_start = c - c_start;
+
+        if (*c == '-') c++;
+        while (*c >= '0' && *c <= '9') {
+          c++;
+          seen_digit = true;
+        }
+        if (*c == '.') {
+          if (*p != 'R') return false;
+          c++;
+        }
+        while (*c >= '0' && *c <= '9') {
+          c++;
+          seen_digit = true;
+        }
+        if (!seen_digit) return false;
+
+        // Store the number text for value conversion by the caller.
+        int num_length = (c - c_start) - num_start;
+        if (!filled_num1) {
+          num1 = text.substr(num_start, num_length);
+          filled_num1 = true;
+        } else if (!filled_num2) {
+          num2 = text.substr(num_start, num_length);
+          filled_num2 = true;
+        }
+        break;
+      }
+
+      default:  // Input should match the pattern character exactly.
+        if (*p != *c) return false;
+        c++;
+        break;
+    }
+    p++;
+  }
+
+  return *p == '\0' && *c == '\0' && filled_num2;
+}
+
+/**
+  Match text of the form '{real, real}' with 'real' a possibly negative
+  real number without exponent.
+  @param text Input text to match.
+  @param x Value of the first real in the text.
+  @param y Value of the second real in the text.
+  @return Whether the input text was successfully matched.
+ */
+static bool matchTilePos(const std::string& text, double& x, double& y) {
+  std::string num1, num2;
+  if (matchText(" { R , R } ", text, num1, num2)) {
+    try {
+      x = std::stod(num1.c_str());
+      y = std::stod(num2.c_str());
+      return true;
+    } catch (...) {
+      // Drop into fail return value.
+    }
+  }
+  return false;
+}
+
+/**
+  Match text of the form '{int, int, "px"}' with 'int' a possibly negative
+  integer number.
+  @param text Input text to match.
+  @param x Value of the first integer in the text.
+  @param y Value of the second integer in the text.
+  @return Whether the input text was successfully matched.
+ */
+static bool matchPixelPos(const std::string& text, int& x, int& y) {
+  std::string num1, num2;
+  if (matchText(" { I , I , \"px\" } ", text, num1, num2)) {
+    try {
+      x = std::stoi(num1.c_str());
+      y = std::stoi(num2.c_str());
+      return true;
+    } catch (...) {
+      // Drop into fail return value.
+    }
+  }
+  return false;
+}
+
+void frmMain::_onMoodFrameApply(wxCommandEvent& evt) {
+  wxString wxText = m_txtMoodFramePos->GetLineText(0);
+  std::string text = wxText.ToStdString();
+
+  // Try to recognize a tile position.
+  double x_tile, y_tile;
+  if (matchTilePos(text, x_tile, y_tile)) {
+    // Convert the fractions to a pixel position.
+    x_tile -= y_tile;
+    x_tile /= 2.0;
+    y_tile += x_tile;
+    updateMoodPosition(round(x_tile * 64.0), round(y_tile * 32.0));
+  }
+
+  // Try to recognize a pixel position.
+  int x_pixel, y_pixel;
+  if (matchPixelPos(text, x_pixel, y_pixel)) {
+    updateMoodPosition(x_pixel, y_pixel);
+  }
+}
+
+void frmMain::_onMoodLeft(wxCommandEvent& evt) {
+  updateMoodPosition(m_iMoodDrawX - 1, m_iMoodDrawY);
+}
+
+void frmMain::_onMoodRight(wxCommandEvent& evt) {
+  updateMoodPosition(m_iMoodDrawX + 1, m_iMoodDrawY);
+}
+
+void frmMain::_onMoodUp(wxCommandEvent& evt) {
+  updateMoodPosition(m_iMoodDrawX, m_iMoodDrawY - 1);
+}
+
+void frmMain::_onMoodDown(wxCommandEvent& evt) {
+  updateMoodPosition(m_iMoodDrawX, m_iMoodDrawY + 1);
 }
 
 void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
