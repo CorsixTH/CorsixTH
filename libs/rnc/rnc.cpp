@@ -36,6 +36,7 @@ SOFTWARE.
 
 #include "rnc.h"
 
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 
@@ -187,8 +188,14 @@ static void bitread_init(bit_stream* bs, const std::uint8_t* p,
     @param bs Bit stream to correct
 */
 static void bitread_fix(bit_stream* bs) {
-  // Remove the top 16 bits
+  // Remove the top 16 bits if present
   bs->bitcount -= 16;
+  if (bs->bitcount <= 0) {
+    bs->bitcount = 0;
+  }
+
+  // bs->bitcount is never greater than 32 and we just subtracted 16
+  assert(bs->bitcount <= 16);
   bs->bitbuf &= (1 << bs->bitcount) - 1;
 
   // Replace with what is in the new current location
@@ -219,6 +226,8 @@ static std::uint32_t bit_peek(bit_stream* bs, const std::uint32_t mask) {
         between 0 and 16
 */
 static void bit_advance(bit_stream* bs, int n) {
+  assert(n >= 0 && n <= 16);
+
   bs->bitbuf >>= n;
   bs->bitcount -= n;
 
