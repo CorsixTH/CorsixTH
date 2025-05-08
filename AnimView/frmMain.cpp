@@ -834,7 +834,7 @@ static bool matchTilePos(const std::string& text, double& x, double& y) {
       y = std::stod(num2.c_str());
       return true;
     } catch (...) {
-      // Drop into fail return value.
+      return false;
     }
   }
   return false;
@@ -856,7 +856,7 @@ static bool matchPixelPos(const std::string& text, int& x, int& y) {
       y = std::stoi(num2.c_str());
       return true;
     } catch (...) {
-      // Drop into fail return value.
+      return false;
     }
   }
   return false;

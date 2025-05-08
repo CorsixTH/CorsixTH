@@ -1161,7 +1161,7 @@ int l_persist_dofile(lua_State* L) {
   }
   size_t iBufferSize = lua_objlen(L, luaT_upvalueindex(1));
   size_t iBufferUsed = 0;
-  while (!std::feof(fFile)) {
+  while (!std::ferror(fFile) && !std::feof(fFile)) {
     iBufferUsed += std::fread(
         reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1))) +
             iBufferUsed,
