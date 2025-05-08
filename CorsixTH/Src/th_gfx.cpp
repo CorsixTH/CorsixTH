@@ -27,10 +27,14 @@ SOFTWARE.
 #include <algorithm>
 #include <cassert>
 #include <climits>
+#include <cstdlib>
 #include <cstring>
+#include <memory>
 #include <new>
 
 #include "persist_lua.h"
+#include "th_gfx_sdl.h"
+#include "th_lua.h"
 #include "th_map.h"
 #include "th_sound.h"
 

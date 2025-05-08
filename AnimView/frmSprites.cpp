@@ -24,13 +24,19 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <wx/button.h>
+#include <wx/chartype.h>
 #include <wx/dcclient.h>
-#include <wx/dirdlg.h>
 #include <wx/filedlg.h>
+#include <wx/filefn.h>
+#include <wx/gdicmn.h>
+#include <wx/image.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
-#include <wx/vscroll.h>
+#include <wx/textctrl.h>
+#include <wx/unichar.h>
+#include <wx/utils.h>
 
 BEGIN_EVENT_TABLE(frmSprites, wxFrame)
   EVT_BUTTON(ID_LOAD, frmSprites::_onLoad)

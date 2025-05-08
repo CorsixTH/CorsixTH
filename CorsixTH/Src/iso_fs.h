@@ -27,8 +27,7 @@ SOFTWARE.
 
 #include <cstdio>
 #include <string>
-
-#include "th_lua.h"
+#include <vector>
 
 //! Layer for reading Theme Hospital files out of an .iso disk image
 /*!

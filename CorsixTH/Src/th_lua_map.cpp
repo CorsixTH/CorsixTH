@@ -20,13 +20,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <cstring>
-#include <exception>
-#include <string>
+#include "config.h"
 
+#include <cstring>
+#include <list>
+#include <map>
+#include <stdexcept>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "lua.hpp"
+#include "th_gfx.h"
+#include "th_lua.h"
 #include "th_lua_internal.h"
 #include "th_map.h"
 #include "th_pathfind.h"
+
+class lua_persist_reader;
+class lua_persist_writer;
+class render_target;
+class sprite_sheet;
 
 namespace {
 

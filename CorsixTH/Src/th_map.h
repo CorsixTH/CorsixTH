@@ -22,10 +22,21 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_MAP_H_
 #define CORSIX_TH_TH_MAP_H_
+#include "config.h"
+
 #include <list>
 #include <string>
+#include <utility>
+#include <vector>
 
-#include "th_gfx.h"
+#include "th.h"
+
+class lua_persist_reader;
+class lua_persist_writer;
+class map_overlay;
+class render_target;
+class sprite_sheet;
+struct drawable;
 
 /*
     Object type enumeration uses same values as original TH does.
@@ -212,8 +223,6 @@ struct map_tile {
   std::list<object_type> objects;
 };
 
-class sprite_sheet;
-
 //! Prototype for object callbacks from THMap::loadFromTHFile
 /*!
     The callback function will receive 5 arguments:
@@ -225,8 +234,6 @@ class sprite_sheet;
 */
 typedef void (*map_load_object_callback_fn)(void*, int, int, object_type,
                                             uint8_t);
-
-class map_overlay;
 
 class level_map {
  public:

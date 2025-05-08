@@ -24,10 +24,10 @@ SOFTWARE.
 #define CORSIX_TH_PERSIST_LUA_H_
 #include "config.h"
 
-#include <cstdlib>
+#include <type_traits>
 #include <vector>
 
-#include "th_lua.h"
+#include "lua.hpp"
 
 template <class T>
 struct lua_persist_int {};

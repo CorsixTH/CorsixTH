@@ -20,14 +20,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <SDL.h>
+#include "config.h"
 
+#include <SDL_stdinc.h>
+
+#include <climits>
 #include <cstring>
-#include <exception>
+#include <new>
 
+#include "lua.hpp"
+#include "persist_lua.h"
 #include "th_gfx.h"
 #include "th_gfx_font.h"
+#include "th_gfx_sdl.h"
+#include "th_lua.h"
 #include "th_lua_internal.h"
+
+#ifdef CORSIX_TH_USE_FREETYPE2
+#include <ft2build.h>  // IWYU pragma: keep
+#include FT_ERRORS_H
+#include FT_TYPES_H
+#endif
 
 namespace {
 

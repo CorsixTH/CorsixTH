@@ -20,9 +20,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <algorithm>
+#include "config.h"
 
-#include "th_gfx.h"
+#include <algorithm>
+#include <list>
+
+#include "lua.hpp"
+#include "th_gfx_sdl.h"
+#include "th_lua.h"
 #include "th_lua_internal.h"
 #include "th_map.h"
 

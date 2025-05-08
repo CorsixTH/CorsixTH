@@ -26,19 +26,23 @@ SOFTWARE.
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include "th_gfx_font.h"
 #endif
+#include <SDL.h>
 
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <limits>
 #include <memory>
 #include <new>
+#include <stack>
 #include <stdexcept>
+#include <vector>
 
-#include "th_map.h"
+#include "persist_lua.h"
+#include "th_gfx_common.h"
+#include "th_gfx_sdl.h"
 
 #if SDL_VERSION_ATLEAST(2, 0, 10)
 

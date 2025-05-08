@@ -32,11 +32,12 @@ SOFTWARE.
 #include <stdexcept>
 #include <vector>
 
-#include "persist_lua.h"
-#include "th.h"
 #include "th_gfx_common.h"
 
 class cursor;
+class line_sequence;
+class lua_persist_reader;
+class lua_persist_writer;
 
 struct clip_rect : public SDL_Rect {
   typedef Sint16 x_y_type;

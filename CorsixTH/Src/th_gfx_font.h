@@ -22,15 +22,19 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_GFX_FONT_H_
 #define CORSIX_TH_TH_GFX_FONT_H_
-#include "th_gfx.h"
+#include "config.h"
+
+#include <SDL_render.h>
+
+#include <climits>
+
+#include "th_gfx_sdl.h"
 #ifdef CORSIX_TH_USE_FREETYPE2
-#include <ft2build.h>
+#include <ft2build.h>  // IWYU pragma: keep
 #include FT_FREETYPE_H
+#include FT_IMAGE_H
+#include FT_TYPES_H
 #endif
-
-class render_target;
-
-class sprite_sheet;
 
 enum class text_alignment {
   left = 0,

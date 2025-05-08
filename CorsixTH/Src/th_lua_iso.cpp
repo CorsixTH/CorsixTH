@@ -20,9 +20,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <cstdio>
+#include "config.h"
 
 #include "iso_fs.h"
+#include "lua.hpp"
+#include "th_lua.h"
 #include "th_lua_internal.h"
 
 namespace {

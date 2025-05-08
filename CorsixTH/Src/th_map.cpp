@@ -24,19 +24,20 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL.h>
-
-#include <algorithm>
 #include <cstdio>
 #include <cstring>
-#include <exception>
 #include <fstream>
 #include <new>
+#include <stdexcept>
 #include <string>
 
+#include "lua.hpp"
+#include "persist_lua.h"
 #include "run_length_encoder.h"
 #include "th.h"
 #include "th_gfx.h"
+#include "th_gfx_sdl.h"
+#include "th_lua.h"
 #include "th_map_overlays.h"
 
 constexpr int max_player_count = 4;

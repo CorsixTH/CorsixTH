@@ -27,21 +27,31 @@ SOFTWARE.
 #include "lua_sdl.h"
 #if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
 
-#include "th_gfx.h"
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavutil/avutil.h>
 #include <libavutil/channel_layout.h>
+#include <libavutil/error.h>
 #include <libavutil/imgutils.h>
-#include <libavutil/mathematics.h>
-#include <libavutil/opt.h>
+#include <libavutil/rational.h>
+#include <libavutil/samplefmt.h>
+#include <libswresample/version.h>
 #include <libswscale/swscale.h>
 }
+#include <SDL_error.h>
+#include <SDL_events.h>
 #include <SDL_mixer.h>
+#include <SDL_pixels.h>
+#include <SDL_rect.h>
+#include <SDL_render.h>
+#include <SDL_timer.h>
 
+#include <cerrno>
 #include <chrono>
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
+#include <utility>
 
 namespace {
 

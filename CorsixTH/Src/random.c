@@ -43,6 +43,7 @@
 
 #include <lauxlib.h>
 #include <lua.h>
+#include <stddef.h>
 #ifdef _MSC_VER
 typedef unsigned __int16 uint16_t;
 typedef unsigned __int32 uint32_t;

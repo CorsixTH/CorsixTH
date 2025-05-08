@@ -39,14 +39,15 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <stdint.h>
 #include <wx/file.h>
-#include <wx/image.h>
 #include <wx/string.h>
-#include <wx/txtstrm.h>
 
 #include <array>
+#include <cstring>
 #include <vector>
+
+class wxImage;
+class wxSize;
 
 #pragma pack(push)
 #pragma pack(1)

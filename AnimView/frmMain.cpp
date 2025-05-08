@@ -24,21 +24,36 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <wx/anybutton.h>
 #include <wx/bitmap.h>
+#include <wx/button.h>
+#include <wx/chartype.h>
+#include <wx/checkbox.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/defs.h>
 #include <wx/dir.h>
 #include <wx/dirdlg.h>
 #include <wx/filename.h>
+#include <wx/gdicmn.h>
 #include <wx/image.h>
+#include <wx/listbox.h>
 #include <wx/msgdlg.h>
 #include <wx/numdlg.h>
+#include <wx/object.h>
+#include <wx/panel.h>
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
+#include <wx/spinbutt.h>
+#include <wx/spinctrl.h>
 #include <wx/stattext.h>
+#include <wx/stringimpl.h>
+#include <wx/textctrl.h>
 #include <wx/tokenzr.h>
-#include <wx/wfstream.h>
+#include <wx/unichar.h>
+#include <wx/utils.h>
+
+#include <cstring>
 
 #include "backdrop.h"
 

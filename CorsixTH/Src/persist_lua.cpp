@@ -22,15 +22,19 @@ SOFTWARE.
 
 #include "persist_lua.h"
 
+#include "config.h"
+
 #include <errno.h>
 
 #include <array>
+#include <climits>
 #include <cmath>
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
+#include <new>
 #include <string>
 
+#include "lua.hpp"
 #include "th_lua.h"
 #ifdef _MSC_VER
 #pragma warning( \

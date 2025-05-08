@@ -20,7 +20,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "th_gfx.h"
+#include <SDL_rect.h>
+
+#include "lua.hpp"
+#include "th_gfx_sdl.h"
+#include "th_lua.h"
 #include "th_lua_internal.h"
 #include "th_movie.h"
 

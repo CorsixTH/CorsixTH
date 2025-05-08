@@ -32,7 +32,9 @@ SOFTWARE.
 #endif
 
 #include "bootstrap.h"
+#include "lua.hpp"
 #include "th.h"
+#include "th_lua.h"
 #include "th_lua_internal.h"
 
 const char* update_check_url =
@@ -237,7 +239,7 @@ int l_load_strings(lua_State* L) {
 }
 
 int get_api_version() {
-#include "../Lua/api_version.lua"
+#include "../Lua/api_version.lua"  // IWYU pragma: keep
 }
 
 int l_get_compile_options(lua_State* L) {
