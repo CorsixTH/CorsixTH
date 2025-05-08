@@ -35,10 +35,8 @@ SOFTWARE.
 #include <SDL_mixer.h>
 #endif
 
-sound_archive::sound_archive() {
-  sound_files = nullptr;
-  data = nullptr;
-}
+sound_archive::sound_archive()
+    : header(), sound_files(nullptr), data(nullptr), sound_file_count(0) {}
 
 sound_archive::~sound_archive() { delete[] data; }
 
@@ -90,13 +88,13 @@ constexpr uint32_t fourcc(const char c1, const char c2, const char c3,
 namespace {
 
 template <typename A, typename B>
-inline uint64_t mul64(A a, B b) {
+uint64_t mul64(A a, B b) {
   return static_cast<uint64_t>(a) * static_cast<uint64_t>(b);
 }
 
 }  // namespace
 
-size_t sound_archive::get_sound_duration(size_t iIndex) {
+size_t sound_archive::get_sound_duration(size_t iIndex) const {
   SDL_RWops* pFile = load_sound(iIndex);
   if (!pFile) {
     return 0;
@@ -125,9 +123,8 @@ size_t sound_archive::get_sound_duration(size_t iIndex) {
       if (iChunkLength >= 4) {
         if (SDL_RWread(pFile, &iFourCC, 4, 1) != 1) {
           break;
-        } else {
-          continue;
         }
+        continue;
       }
     }
     if (iFourCC == fourcc('f', 'm', 't', ' ') && iChunkLength >= 16) {
@@ -167,12 +164,11 @@ size_t sound_archive::get_sound_duration(size_t iIndex) {
     return 0;
   }
 
-  return static_cast<size_t>(
-      mul64(iWaveDataLength, 8000) /
-      mul64(mul64(iWaveBitsPerSample, iWaveChannelCount), iWaveSampleRate));
+  return mul64(iWaveDataLength, 8000) /
+         mul64(mul64(iWaveBitsPerSample, iWaveChannelCount), iWaveSampleRate);
 }
 
-SDL_RWops* sound_archive::load_sound(size_t iIndex) {
+SDL_RWops* sound_archive::load_sound(size_t iIndex) const {
   if (iIndex >= sound_file_count) {
     return nullptr;
   }
@@ -265,14 +261,14 @@ void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {
     return;
   }
 
-  double fDX = (double)(iX - camera_x);
-  double fDY = (double)(iY - camera_y);
+  const double fDX = iX - camera_x;
+  const double fDY = iY - camera_y;
   double fDistance = sqrt(fDX * fDX + fDY * fDY);
   if (fDistance > camera_radius) return;
   fDistance = fDistance / camera_radius;
 
-  double fVolume = master_volume * (1.0 - fDistance * 0.8) *
-                   (double)MIX_MAX_VOLUME * dVolume;
+  double fVolume =
+      master_volume * (1.0 - fDistance * 0.8) * (MIX_MAX_VOLUME * dVolume);
 
   play_raw(iIndex, static_cast<int>(std::lround(fVolume)));
 }
@@ -309,7 +305,7 @@ void sound_player::play_raw(size_t iIndex, int iVolume) {
 void sound_player::set_camera(int iX, int iY, int iRadius) {
   camera_x = iX;
   camera_y = iY;
-  camera_radius = (double)iRadius;
+  camera_radius = static_cast<double>(iRadius);
   if (camera_radius < 0.001) camera_radius = 0.001;
 }
 

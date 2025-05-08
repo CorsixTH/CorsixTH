@@ -133,7 +133,7 @@ class bitmap_font final : public font {
   */
   void set_sprite_sheet(sprite_sheet* pSpriteSheet);
 
-  sprite_sheet* get_sprite_sheet() { return sheet; }
+  sprite_sheet* get_sprite_sheet() const { return sheet; }
 
   //! Set the separation between characters and between lines
   /*!
@@ -272,8 +272,8 @@ class freetype_font final : public font {
   };
 
   //! Render a FreeType2 monochrome bitmap to a cache canvas.
-  void render_mono(cached_text* pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x,
-                   FT_Pos y) const;
+  static void render_mono(cached_text* pCacheEntry, FT_Bitmap* pBitmap,
+                          FT_Pos x, FT_Pos y);
 
   //! Render a FreeType2 grayscale bitmap to a cache canvas.
   void render_gray(cached_text* pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x,
@@ -306,7 +306,7 @@ class freetype_font final : public font {
           an object which can be used by the rendering engine, and store the
           result in the pTexture or iTexture field.
   */
-  void make_texture(render_target* pEventualCanvas,
+  void make_texture(const render_target* pEventualCanvas,
                     cached_text* pCacheEntry) const;
 
   //! Free a previously-made texture of a cache entry.
@@ -327,8 +327,8 @@ class freetype_font final : public font {
       @param iX The X position at which to draw the texture on the canvas.
       @param iY The Y position at which to draw the texture on the canvas.
   */
-  void draw_texture(render_target* pCanvas, cached_text* pCacheEntry, int iX,
-                    int iY) const;
+  static void draw_texture(const render_target* pCanvas,
+                           const cached_text* pCacheEntry, int iX, int iY);
 };
 #endif  // CORSIX_TH_USE_FREETYPE2
 

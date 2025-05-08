@@ -45,7 +45,7 @@ enum class travel_direction {
   west = 3    ///< Move to the west.
 };
 
-/** Node in the path finder routines. */
+/** Node in the pathfinder routines. */
 struct path_node {
   //! Pointer to the previous node in the path to this cell.
   /*!
@@ -91,13 +91,13 @@ struct path_node {
   inline int value() const { return distance + guess; }
 };
 
-/** Base class of the path finders. */
+/** Base class of the pathfinders. */
 class abstract_pathfinder {
  public:
-  abstract_pathfinder(pathfinder* pf);
+  explicit abstract_pathfinder(pathfinder* pf);
   virtual ~abstract_pathfinder() = default;
 
-  //! Initialize the path finder.
+  //! Initialize the pathfinder.
   /*!
       @param pMap Map to search on.
       @param iStartX X coordinate of the start position.
@@ -143,7 +143,7 @@ class abstract_pathfinder {
 
 class basic_pathfinder : public abstract_pathfinder {
  public:
-  basic_pathfinder(pathfinder* pf) : abstract_pathfinder(pf) {}
+  explicit basic_pathfinder(pathfinder* pf) : abstract_pathfinder(pf) {}
 
   int guess_distance(path_node* pNode) override;
   bool try_node(path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
@@ -152,13 +152,13 @@ class basic_pathfinder : public abstract_pathfinder {
   bool find_path(const level_map* pMap, int iStartX, int iStartY, int iEndX,
                  int iEndY);
 
-  int destination_x;  ///< X coordinate of the destination of the path.
-  int destination_y;  ///< Y coordinate of the destination of the path.
+  int destination_x{};  ///< X coordinate of the destination of the path.
+  int destination_y{};  ///< Y coordinate of the destination of the path.
 };
 
 class hospital_finder : public abstract_pathfinder {
  public:
-  hospital_finder(pathfinder* pf) : abstract_pathfinder(pf) {}
+  explicit hospital_finder(pathfinder* pf) : abstract_pathfinder(pf) {}
 
   int guess_distance(path_node* pNode) override;
   bool try_node(path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
@@ -169,7 +169,7 @@ class hospital_finder : public abstract_pathfinder {
 
 class idle_tile_finder : public abstract_pathfinder {
  public:
-  idle_tile_finder(pathfinder* pf) : abstract_pathfinder(pf) {}
+  explicit idle_tile_finder(pathfinder* pf) : abstract_pathfinder(pf) {}
 
   int guess_distance(path_node* pNode) override;
   bool try_node(path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
@@ -188,15 +188,15 @@ class idle_tile_finder : public abstract_pathfinder {
   bool find_idle_tile(const level_map* pMap, int iStartX, int iStartY, int iN,
                       int parcelId);
 
-  path_node* best_next_node;
-  double best_distance;
-  int start_x;  ///< X coordinate of the start position.
-  int start_y;  ///< Y coordinate of the start position.
+  path_node* best_next_node{};
+  double best_distance{};
+  int start_x{};
+  int start_y{};
 };
 
 class object_visitor : public abstract_pathfinder {
  public:
-  object_visitor(pathfinder* pf) : abstract_pathfinder(pf) {}
+  explicit object_visitor(pathfinder* pf) : abstract_pathfinder(pf) {}
 
   int guess_distance(path_node* pNode) override;
   bool try_node(path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
@@ -206,11 +206,11 @@ class object_visitor : public abstract_pathfinder {
                      object_type eTHOB, int iMaxDistance, lua_State* L,
                      int iVisitFunction, bool anyObjectType);
 
-  lua_State* L;
-  int visit_function_index;
-  int max_distance;
-  bool target_any_object_type;
-  object_type target;
+  lua_State* L{};
+  int visit_function_index{};
+  int max_distance{};
+  bool target_any_object_type{};
+  object_type target{};
 };
 
 //! Finds paths through maps
@@ -222,7 +222,7 @@ class object_visitor : public abstract_pathfinder {
     path.
 
     Internally, the A* search algorithm is used. The open set is implemented as
-    a heap in open_heap, and there is no explicit closed set. For each cell
+    a heap in open_heap, and there is no explicitly closed set. For each cell
     of the map, a path_node structure is created (and cached between searches if
     the map size is constant), which holds information about said map cell in
     the current search. The algorithm is implemented in such a way that most
@@ -235,25 +235,24 @@ class pathfinder {
 
   void set_default_map(const level_map* pMap);
 
-  inline bool find_path(const level_map* pMap, int iStartX, int iStartY,
-                        int iEndX, int iEndY) {
+  bool find_path(const level_map* pMap, int iStartX, int iStartY, int iEndX,
+                 int iEndY) {
     return basic_pathfinder.find_path(pMap, iStartX, iStartY, iEndX, iEndY);
   }
 
-  inline bool find_idle_tile(const level_map* pMap, int iStartX, int iStartY,
-                             int iN, int parcelId) {
+  bool find_idle_tile(const level_map* pMap, int iStartX, int iStartY, int iN,
+                      int parcelId) {
     return idle_tile_finder.find_idle_tile(pMap, iStartX, iStartY, iN,
                                            parcelId);
   }
 
-  inline bool find_path_to_hospital(const level_map* pMap, int iStartX,
-                                    int iStartY) {
+  bool find_path_to_hospital(const level_map* pMap, int iStartX, int iStartY) {
     return hospital_finder.find_path_to_hospital(pMap, iStartX, iStartY);
   }
 
-  inline bool visit_objects(const level_map* pMap, int iStartX, int iStartY,
-                            object_type eTHOB, int iMaxDistance, lua_State* L,
-                            int iVisitFunction, bool anyObjectType) {
+  bool visit_objects(const level_map* pMap, int iStartX, int iStartY,
+                     object_type eTHOB, int iMaxDistance, lua_State* L,
+                     int iVisitFunction, bool anyObjectType) {
     return object_visitor.visit_objects(pMap, iStartX, iStartY, eTHOB,
                                         iMaxDistance, L, iVisitFunction,
                                         anyObjectType);

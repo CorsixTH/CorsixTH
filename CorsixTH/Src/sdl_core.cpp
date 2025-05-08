@@ -136,7 +136,8 @@ int l_mainloop(lua_State* L) {
   lua_State* dispatcher = lua_tothread(L, 1);
   int resume_stack_size = 0;
 
-  fps_ctrl* fps_control = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
+  fps_ctrl* fps_control =
+      static_cast<fps_ctrl*>(lua_touserdata(L, luaT_upvalueindex(1)));
   SDL_TimerID timer =
       SDL_AddTimer(usertick_period_ms, timer_frame_callback, nullptr);
   SDL_Event e;
@@ -239,8 +240,7 @@ int l_mainloop(lua_State* L) {
           nargs = 1;
           break;
         case SDL_USEREVENT_MUSIC_LOADED:
-          if (luaT_cpcall(L, (lua_CFunction)l_load_music_async_callback,
-                          e.user.data1)) {
+          if (luaT_cpcall(L, l_load_music_async_callback, e.user.data1)) {
             SDL_RemoveTimer(timer);
             lua_pushliteral(L, "callback");
             return 2;

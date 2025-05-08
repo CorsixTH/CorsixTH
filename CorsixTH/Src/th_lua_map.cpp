@@ -72,7 +72,8 @@ int l_map_depersist(lua_State* L) {
   level_map* pMap = luaT_testuserdata<level_map>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
-  lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
+  lua_persist_reader* pReader =
+      static_cast<lua_persist_reader*>(lua_touserdata(L, 1));
 
   pMap->depersist(pReader);
   luaT_getenvfield(L, 2, "sprites");
@@ -83,7 +84,7 @@ int l_map_depersist(lua_State* L) {
 
 void l_map_load_obj_cb(void* pL, int iX, int iY, object_type eTHOB,
                        uint8_t iFlags) {
-  lua_State* L = reinterpret_cast<lua_State*>(pL);
+  lua_State* L = static_cast<lua_State*>(pL);
   lua_createtable(L, 4, 0);
 
   lua_pushinteger(L, 1 + (lua_Integer)iX);
@@ -509,8 +510,8 @@ const std::map<std::string, map_tile_flags::key> lua_tile_flag_map{
  * @param flag Flag of the tile to check (and report).
  * @param name Name of the flag in Lua code.
  */
-inline void add_cellflag(lua_State* L, const map_tile* tile,
-                         map_tile_flags::key flag, const std::string& name) {
+void add_cellflag(lua_State* L, const map_tile* tile, map_tile_flags::key flag,
+                  const std::string& name) {
   lua_pushlstring(L, name.c_str(), name.size());
   lua_pushboolean(L, tile->flags[flag] ? 1 : 0);
   lua_settable(L, 4);
@@ -522,7 +523,7 @@ inline void add_cellflag(lua_State* L, const map_tile* tile,
  * @param value Value of the tile field to add.
  * @param name Name of the field in Lua code.
  */
-inline void add_cellint(lua_State* L, int value, const std::string& name) {
+void add_cellint(lua_State* L, int value, const std::string& name) {
   lua_pushlstring(L, name.c_str(), name.size());
   lua_pushinteger(L, value);
   lua_settable(L, 4);
@@ -591,7 +592,7 @@ int l_map_remove_cell_thob(lua_State* L) {
   }
   auto thob = static_cast<object_type>(luaL_checkinteger(L, 4));
   for (auto iter = pNode->objects.begin(); iter != pNode->objects.end();
-       iter++) {
+       ++iter) {
     if (*iter == thob) {
       pNode->objects.erase(iter);
       break;
@@ -857,7 +858,7 @@ int l_map_get_litter_fraction(lua_State* L) {
 
       tile_count++;
       for (auto iter = pNode->objects.begin(); iter != pNode->objects.end();
-           iter++) {
+           ++iter) {
         if (*iter == object_type::litter) {
           litter_count++;
           break;

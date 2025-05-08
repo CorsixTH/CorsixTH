@@ -49,13 +49,11 @@ int l_movie_enabled(lua_State* L) {
 }
 
 int l_movie_load(lua_State* L) {
-  bool loaded;
-  const char* warning;
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
   const char* filepath = lua_tolstring(L, 2, nullptr);
   pMovie->clear_last_error();
-  loaded = pMovie->load(filepath);
-  warning = pMovie->get_last_error();
+  bool loaded = pMovie->load(filepath);
+  const char* warning = pMovie->get_last_error();
   lua_pushboolean(L, loaded);
   lua_pushstring(L, warning);
   return 2;
@@ -68,11 +66,10 @@ int l_movie_unload(lua_State* L) {
 }
 
 int l_movie_play(lua_State* L) {
-  const char* warning;
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
   pMovie->clear_last_error();
   pMovie->play(static_cast<int>(luaL_checkinteger(L, 2)));
-  warning = pMovie->get_last_error();
+  const char* warning = pMovie->get_last_error();
   lua_pushstring(L, warning);
   return 1;
 }

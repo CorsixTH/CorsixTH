@@ -55,13 +55,15 @@ class memory_reader {
       @param iSize Number of bytes that are queried.
       @return Whether the requested number of bytes is still available.
    */
-  bool are_bytes_available(size_t iSize) { return iSize <= remaining_bytes; }
+  bool are_bytes_available(size_t iSize) const {
+    return iSize <= remaining_bytes;
+  }
 
   //! Is EOF reached?
   /*!
       @return Whether EOF has been reached.
    */
-  bool is_at_end_of_file() { return remaining_bytes == 0; }
+  bool is_at_end_of_file() const { return remaining_bytes == 0; }
 
   //! Get an 8 bit value from the file.
   /*!
@@ -140,25 +142,24 @@ class memory_reader {
   }
 };
 
-animation_manager::animation_manager() {
+animation_manager::animation_manager()
+    : sheet(nullptr),
+      canvas(nullptr),
+      animation_count(0),
+      frame_count(0),
+      element_list_count(0),
+      element_count(0),
+      game_ticks(0) {
   first_frames.clear();
   frames.clear();
   element_list.clear();
   elements.clear();
   custom_sheets.clear();
-
-  sheet = nullptr;
-
-  animation_count = 0;
-  frame_count = 0;
-  element_list_count = 0;
-  element_count = 0;
-  game_ticks = 0;
 }
 
 animation_manager::~animation_manager() {
-  for (size_t i = 0; i < custom_sheets.size(); i++) {
-    delete custom_sheets[i];
+  for (auto& custom_sheet : custom_sheets) {
+    delete custom_sheet;
   }
 }
 
@@ -223,7 +224,7 @@ bool animation_manager::load_from_th_file(
     const th_frame_properties* pFrame =
         reinterpret_cast<const th_frame_properties*>(pFrameData) + i;
 
-    frame oFrame;
+    frame oFrame{};
     oFrame.list_index =
         iListStart + (pFrame->list_index < iListCount ? pFrame->list_index : 0);
     oFrame.next_frame =
@@ -258,7 +259,7 @@ bool animation_manager::load_from_th_file(
     const th_element_properties* pTHElement =
         reinterpret_cast<const th_element_properties*>(pElementData) + i;
 
-    element oElement;
+    element oElement{};
     oElement.sprite = pTHElement->table_position / 6;
     oElement.flags = pTHElement->flags & 0xF;
     oElement.x = static_cast<int>(pTHElement->offx) - 141;
@@ -359,14 +360,14 @@ namespace {
     @return Number of consumed bytes, a negative number indicates an error.
  */
 int load_header(memory_reader& input) {
-  static const uint8_t aHdr[] = {'C', 'T', 'H', 'G', 1, 2};
+  static constexpr uint8_t aHdr[] = {'C', 'T', 'H', 'G', 1, 2};
 
   if (!input.are_bytes_available(6)) {
     return false;
   }
 
-  for (int i = 0; i < 6; i++) {
-    if (input.read_uint8() != aHdr[i]) {
+  for (const unsigned char i : aHdr) {
+    if (input.read_uint8() != i) {
       return false;
     }
   }
@@ -398,7 +399,7 @@ size_t animation_manager::load_elements(
       iLayerClass = 6;
     }
 
-    element oElement;
+    element oElement{};
     oElement.sprite = iSprite;
     oElement.flags = iFlags;
     oElement.x = iX;
@@ -605,98 +606,101 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
       named_animation_pair p(oKey, oFrames);
       named_animations.insert(p);
       continue;
-    } else if (first == 'F' && second == 'R') {
-      // Recognized a frame block, load it.
-
-      if (iLoadedFrames >= iFrameCount) {
-        return false;
-      }
-
-      if (!input.are_bytes_available(2 + 2)) {
-        return false;
-      }
-
-      int iSound = input.read_uint16();
-      size_t iNumElements = input.read_uint16();
-
-      size_t iElm = load_elements(input, pSheet, iNumElements, iLoadedElements,
-                                  iElementStart, iElementCount);
-      if (iElm == SIZE_MAX) {
-        return false;
-      }
-
-      size_t iListElm = make_list_elements(
-          iElm, iNumElements, iLoadedListElements, iListStart, iListCount);
-      if (iListElm == SIZE_MAX) {
-        return false;
-      }
-
-      frame oFrame;
-      oFrame.list_index = iListElm;
-
-      // Point to next frame.
-      // Last frame of each animation corrected later.
-      oFrame.next_frame = iFrameStart + iLoadedFrames + 1;
-
-      oFrame.sound = iSound;
-
-      // Set later
-      oFrame.flags = 0;
-      oFrame.primary_marker_x = 0;
-      oFrame.primary_marker_y = 0;
-      oFrame.secondary_marker_x = 0;
-      oFrame.secondary_marker_y = 0;
-
-      set_bounding_box(oFrame);
-
-      frames.push_back(oFrame);
-      iLoadedFrames++;
-      continue;
-    } else if (first == 'S' && second == 'P') {
-      // Recognized a Sprite block, load it.
-
-      if (iLoadedSprites >= iSpriteCount) {
-        return false;
-      }
-
-      if (!input.are_bytes_available(2 + 2 + 4)) {
-        return false;
-      }
-
-      int iWidth = input.read_uint16();
-      int iHeight = input.read_uint16();
-      uint32_t iSize = input.read_uint32();
-
-      // Check it is safe to use as 'int'
-      if (iSize > INT_MAX) {
-        return false;
-      }
-
-      // Load data.
-      uint8_t* pData = new (std::nothrow) uint8_t[iSize];
-      if (pData == nullptr) {
-        return false;
-      }
-
-      if (!input.are_bytes_available(iSize)) {
-        delete[] pData;
-        return false;
-      }
-
-      for (uint32_t i = 0; i < iSize; i++) {
-        pData[i] = input.read_uint8();
-      }
-
-      if (!pSheet->set_sprite_data(iLoadedSprites, pData, true, iSize, iWidth,
-                                   iHeight)) {
-        return false;
-      }
-
-      iLoadedSprites++;
-      continue;
     } else {
-      // Unrecognized block, fail.
-      return false;
+      if (first == 'F' && second == 'R') {
+        // Recognized a frame block, load it.
+
+        if (iLoadedFrames >= iFrameCount) {
+          return false;
+        }
+
+        if (!input.are_bytes_available(2 + 2)) {
+          return false;
+        }
+
+        int iSound = input.read_uint16();
+        size_t iNumElements = input.read_uint16();
+
+        size_t iElm =
+            load_elements(input, pSheet, iNumElements, iLoadedElements,
+                          iElementStart, iElementCount);
+        if (iElm == SIZE_MAX) {
+          return false;
+        }
+
+        size_t iListElm = make_list_elements(
+            iElm, iNumElements, iLoadedListElements, iListStart, iListCount);
+        if (iListElm == SIZE_MAX) {
+          return false;
+        }
+
+        frame oFrame{};
+        oFrame.list_index = iListElm;
+
+        // Point to next frame.
+        // Last frame of each animation corrected later.
+        oFrame.next_frame = iFrameStart + iLoadedFrames + 1;
+
+        oFrame.sound = iSound;
+
+        // Set later
+        oFrame.flags = 0;
+        oFrame.primary_marker_x = 0;
+        oFrame.primary_marker_y = 0;
+        oFrame.secondary_marker_x = 0;
+        oFrame.secondary_marker_y = 0;
+
+        set_bounding_box(oFrame);
+
+        frames.push_back(oFrame);
+        iLoadedFrames++;
+        continue;
+      }
+      if (first == 'S' && second == 'P') {
+        // Recognized a Sprite block, load it.
+
+        if (iLoadedSprites >= iSpriteCount) {
+          return false;
+        }
+
+        if (!input.are_bytes_available(2 + 2 + 4)) {
+          return false;
+        }
+
+        int iWidth = input.read_uint16();
+        int iHeight = input.read_uint16();
+        uint32_t iSize = input.read_uint32();
+
+        // Check it is safe to use as 'int'
+        if (iSize > INT_MAX) {
+          return false;
+        }
+
+        // Load data.
+        uint8_t* pData = new (std::nothrow) uint8_t[iSize];
+        if (pData == nullptr) {
+          return false;
+        }
+
+        if (!input.are_bytes_available(iSize)) {
+          delete[] pData;
+          return false;
+        }
+
+        for (uint32_t i = 0; i < iSize; i++) {
+          pData[i] = input.read_uint8();
+        }
+
+        if (!pSheet->set_sprite_data(iLoadedSprites, pData, true, iSize, iWidth,
+                                     iHeight)) {
+          return false;
+        }
+
+        iLoadedSprites++;
+      } else {
+        // Unrecognized block, fail.
+        return false;
+      }
     }
   }
 
@@ -732,7 +736,7 @@ const animation_start_frames& animation_manager::get_named_animations(
   oKey.name = sName;
   oKey.tile_size = iTilesize;
 
-  named_animations_map::const_iterator iter = named_animations.find(oKey);
+  auto iter = named_animations.find(oKey);
   if (iter == named_animations.end()) {
     return oNoneAnimations;
   }
@@ -811,7 +815,7 @@ bool animation_manager::set_frame_secondary_marker(size_t iFrame, int iX,
 }
 
 bool animation_manager::get_frame_primary_marker(size_t iFrame, int* pX,
-                                                 int* pY) {
+                                                 int* pY) const {
   if (iFrame >= frame_count) {
     return false;
   }
@@ -822,7 +826,7 @@ bool animation_manager::get_frame_primary_marker(size_t iFrame, int* pX,
 }
 
 bool animation_manager::get_frame_secondary_marker(size_t iFrame, int* pX,
-                                                   int* pY) {
+                                                   int* pY) const {
   if (iFrame >= frame_count) {
     return false;
   }

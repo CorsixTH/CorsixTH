@@ -84,7 +84,7 @@ class iso_filesystem {
                              void* pCallbackData) const;
 
   //! Test if a file handle from find_file() is good or is invalid
-  static inline bool is_handle_good(file_handle x) { return x != 0; }
+  static bool is_handle_good(file_handle x) { return x != 0; }
 
   //! Get the byte offset of the start of the file in the loaded .iso
   /*!
@@ -116,7 +116,7 @@ class iso_filesystem {
   std::FILE* raw_file;
   char* error;
   std::vector<file_metadata> files;
-  long sector_size;
+  long sector_size{};
   char path_seperator;
 
   //! Free any memory in use
@@ -141,7 +141,7 @@ class iso_filesystem {
         contains a Theme Hospital data file. 2 if the given array is the
         top-level Theme Hospital data directory. Other values otherwise.
   */
-  int find_hosp_directory(const uint8_t* pDirEnt, const uint32_t dirEntsSize,
+  int find_hosp_directory(const uint8_t* pDirEnt, uint32_t dirEntsSize,
                           int level);
 
   //! Build the list of Theme Hospital data files
@@ -151,7 +151,7 @@ class iso_filesystem {
       \param dirEntsSize The number of bytes in the directory entry array.
       \param prefix The path name to prepend to filenames in the directory.
   */
-  void build_file_lookup_table(uint32_t iSector, const uint32_t dirEntsSize,
+  void build_file_lookup_table(uint32_t iSector, uint32_t dirEntsSize,
                                const std::string& prefix);
 
   //! std:less like implementation for file_metadata. Based on the path.

@@ -87,7 +87,7 @@ int ignorecase_cmp(const char* s1, const char* s2) {
 
 size_t l_soundarc_checkidx(lua_State* L, int iArg, sound_archive* pArchive) {
   if (lua_isnumber(L, iArg)) {
-    size_t iIndex = (size_t)lua_tonumber(L, iArg);
+    size_t iIndex = static_cast<size_t>(lua_tonumber(L, iArg));
     if (iIndex >= pArchive->get_number_of_sounds()) {
       lua_pushnil(L);
       lua_pushfstring(L,

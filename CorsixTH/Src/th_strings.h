@@ -9,7 +9,7 @@
 constexpr unsigned int invalid_char_codepoint = 0xFFFD;
 constexpr unsigned int ideographic_space_codepoint = 0x3000;
 
-size_t discard_leading_set_bits(uint8_t& byte) {
+inline size_t discard_leading_set_bits(uint8_t& byte) {
   size_t count = 0;
   while ((byte & 0x80) != 0) {
     count++;
@@ -19,7 +19,7 @@ size_t discard_leading_set_bits(uint8_t& byte) {
   return count;
 }
 
-unsigned int next_utf8_codepoint(const char*& sString, const char* end) {
+inline unsigned int next_utf8_codepoint(const char*& sString, const char* end) {
   if (sString >= end) {
     throw std::out_of_range("pointer is outside of string");
   }
@@ -51,18 +51,18 @@ unsigned int next_utf8_codepoint(const char*& sString, const char* end) {
   return codepoint;
 }
 
-unsigned int decode_utf8(const char* sString, const char* end) {
+inline unsigned int decode_utf8(const char* sString, const char* end) {
   return next_utf8_codepoint(sString, end);
 }
 
-const char* previous_utf8_codepoint(const char* sString) {
+inline const char* previous_utf8_codepoint(const char* sString) {
   do {
     --sString;
   } while (((*sString) & 0xC0) == 0x80);
   return sString;
 }
 
-void skip_utf8_whitespace(const char*& sString, const char* end) {
+inline void skip_utf8_whitespace(const char*& sString, const char* end) {
   if (sString >= end) {
     return;
   }
@@ -86,7 +86,7 @@ constexpr uint16_t unicode_to_cp437_table[0x60] = {
     0x8A, 0x82, 0x88, 0x89, 0x8D, 0xA1, 0x8C, 0x8B, 0x3F, 0xA4, 0x95, 0xA2,
     0x93, 0x3F, 0x94, 0xF6, 0x3F, 0x97, 0xA3, 0x96, 0x81, 0x3F, 0x3F, 0x98};
 
-unsigned int unicode_to_codepage_437(unsigned int iCodePoint) {
+inline unsigned int unicode_to_codepage_437(unsigned int iCodePoint) {
   if (iCodePoint < 0x80) return iCodePoint;
   if (iCodePoint < 0xA0) return '?';
   if (iCodePoint < 0x100) return unicode_to_cp437_table[iCodePoint - 0xA0];

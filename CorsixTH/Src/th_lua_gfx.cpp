@@ -562,13 +562,12 @@ int l_cursor_position(lua_State* L) {
 /** Construct the helper structure for making a #THRenderTarget. */
 render_target_creation_params l_surface_creation_params(lua_State* L,
                                                         int iArgStart) {
-  render_target_creation_params oParams;
-  oParams.width = static_cast<int>(luaL_checkinteger(L, iArgStart));
-  oParams.height = static_cast<int>(luaL_checkinteger(L, iArgStart + 1));
-
-  oParams.fullscreen = false;
-  oParams.present_immediate = false;
-  oParams.direct_zoom = false;
+  render_target_creation_params oParams{
+      .width = static_cast<int>(luaL_checkinteger(L, iArgStart)),
+      .height = static_cast<int>(luaL_checkinteger(L, iArgStart + 1)),
+      .fullscreen = false,
+      .present_immediate = false,
+      .direct_zoom = false};
 
   // Parse string arguments, looking for matching parameter names.
   for (int iArg = iArgStart + 2, iArgCount = lua_gettop(L); iArg <= iArgCount;

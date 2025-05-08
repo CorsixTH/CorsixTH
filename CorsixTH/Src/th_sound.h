@@ -44,13 +44,13 @@ class sound_archive {
   const char* get_sound_name(size_t iIndex) const;
 
   //! Gets the duration (in milliseconds) of the sound at a given index
-  size_t get_sound_duration(size_t iIndex);
+  size_t get_sound_duration(size_t iIndex) const;
 
   //! Opens the sound at a given index into an SDL_RWops structure
   /*!
       The caller is responsible for closing/freeing the result.
   */
-  SDL_RWops* load_sound(size_t iIndex);
+  SDL_RWops* load_sound(size_t iIndex) const;
 
  private:
 #if CORSIX_TH_USE_PACK_PRAGMAS

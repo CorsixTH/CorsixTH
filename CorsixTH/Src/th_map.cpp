@@ -247,7 +247,7 @@ map_tile_flags::operator uint32_t() const {
   return raw;
 }
 
-map_tile::map_tile() : iParcelId(0), iRoomId(0), flags({}), objects() {
+map_tile::map_tile() : iParcelId(0), iRoomId(0), flags({}) {
   iBlock[0] = 0;
   iBlock[1] = 0;
   iBlock[2] = 0;
@@ -265,6 +265,10 @@ level_map::level_map()
       width(0),
       height(0),
       player_count(0),
+      initial_camera_x{},
+      initial_camera_y{},
+      heliport_x{},
+      heliport_y{},
       parcel_count(0),
       current_temperature_index(0),
       current_temperature_theme(temperature_theme::red),
@@ -394,7 +398,7 @@ bool level_map::load_blank() {
 
 namespace {
 
-inline bool is_divider_wall(const uint8_t byte) { return (byte >> 1) == 70; }
+bool is_divider_wall(const uint8_t byte) { return (byte >> 1) == 70; }
 
 }  // namespace
 
@@ -543,7 +547,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
   return true;
 }
 
-void level_map::save(const std::string& filename) {
+void level_map::save(const std::string& filename) const {
   uint8_t aBuffer[256] = {0};
   int iBufferNext = 0;
   std::ofstream os(filename, std::ios_base::trunc | std::ios_base::binary);
@@ -1041,10 +1045,10 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                               thdf_alpha_75 | thdf_nearest);
         }
       }
-      drawable* pItem = static_cast<drawable*>(itrNode->oEarlyEntities.next);
+      drawable* pItem = dynamic_cast<drawable*>(itrNode->oEarlyEntities.next);
       while (pItem) {
         pItem->draw_fn(pCanvas, itrNode.x(), itrNode.y());
-        pItem = static_cast<drawable*>(pItem->next);
+        pItem = dynamic_cast<drawable*>(pItem->next);
       }
     }
 
@@ -1090,7 +1094,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
       bool bRedrawAnimations = false;
 
-      drawable* pItem = static_cast<drawable*>(itrNode->entities.next);
+      drawable* pItem = dynamic_cast<drawable*>(itrNode->entities.next);
       while (pItem) {
         pItem->draw_fn(pCanvas, itrNode.x(), itrNode.y());
         if (pItem->is_multiple_frame_animation_fn()) {
@@ -1099,7 +1103,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         if (pItem->get_drawing_layer() == 1) {
           bNeedsRedraw = true;
         }
-        pItem = static_cast<drawable*>(pItem->next);
+        pItem = dynamic_cast<drawable*>(pItem->next);
       }
 
       // if the current tile contained a multiple frame animation (e.g. a
@@ -1112,7 +1116,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
         // check if an object in the adjacent tile to the left of the
         // current tile needs to be redrawn and if necessary draw it
-        pItem = static_cast<drawable*>(
+        pItem = dynamic_cast<drawable*>(
             formerIterator.get_previous_tile()->entities.next);
         while (pItem) {
           if (pItem->get_drawing_layer() == 9) {
@@ -1120,19 +1124,19 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                            formerIterator.y());
             bTileNeedsRedraw = true;
           }
-          pItem = static_cast<drawable*>(pItem->next);
+          pItem = dynamic_cast<drawable*>(pItem->next);
         }
 
         // check if an object in the adjacent tile above the current
         // tile needs to be redrawn and if necessary draw it
         pItem = formerIterator
-                    ? static_cast<drawable*>(formerIterator->entities.next)
+                    ? dynamic_cast<drawable*>(formerIterator->entities.next)
                     : nullptr;
         while (pItem) {
           if (pItem->get_drawing_layer() == 8) {
             pItem->draw_fn(pCanvas, formerIterator.x(), formerIterator.y());
           }
-          pItem = static_cast<drawable*>(pItem->next);
+          pItem = dynamic_cast<drawable*>(pItem->next);
         }
 
         // if an object was redrawn in the tile to the left of the
@@ -1160,15 +1164,15 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
             }
           }
 
-          pItem = static_cast<drawable*>(
+          pItem = dynamic_cast<drawable*>(
               itrNode.get_previous_tile()->oEarlyEntities.next);
           for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
             pItem->draw_fn(pCanvas, itrNode.x() - 64, itrNode.y());
           }
 
-          pItem = static_cast<drawable*>(
+          pItem = dynamic_cast<drawable*>(
               itrNode.get_previous_tile()->entities.next);
-          for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
+          for (; pItem; pItem = dynamic_cast<drawable*>(pItem->next)) {
             pItem->draw_fn(pCanvas, itrNode.x() - 64, itrNode.y());
           }
         }
@@ -1237,21 +1241,20 @@ drawable* level_map::hit_test(int iTestX, int iTestY) const {
 }
 
 drawable* level_map::hit_test_drawables(link_list* pListStart, int iXs, int iYs,
-                                        int iTestX, int iTestY) const {
+                                        int iTestX, int iTestY) {
   link_list* pListEnd = pListStart;
   while (pListEnd->next) {
     pListEnd = pListEnd->next;
   }
-  drawable* pList = static_cast<drawable*>(pListEnd);
+  drawable* pList = dynamic_cast<drawable*>(pListEnd);
 
   while (true) {
     if (pList->hit_test_fn(iXs, iYs, iTestX, iTestY)) return pList;
 
     if (pList == pListStart) {
       return nullptr;
-    } else {
-      pList = static_cast<drawable*>(pList->prev);
     }
+    pList = dynamic_cast<drawable*>(pList->prev);
   }
 }
 
@@ -1355,8 +1358,8 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
     iNeighbourCount += thermal_neighbour(
         iNeighbourSum, pNode->flags.can_travel_w, -1, pNode, iPrevTemp);
 
-    uint32_t iMergeTemp = 0;
-    double mergeRatio = 100;
+    uint32_t iMergeTemp;
+    double mergeRatio;
     if (pNode->flags.hospital) {
       bool hasRadiator = false;
       for (auto thob : pNode->objects) {
@@ -1387,7 +1390,7 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
   }
 }
 
-void level_map::update_pathfinding() {
+void level_map::update_pathfinding() const {
   map_tile* pNode = cells;
   for (int iY = 0; iY < this->height; ++iY) {
     for (int iX = 0; iX < this->width; ++iX, ++pNode) {
@@ -1436,7 +1439,7 @@ bool is_wall(map_tile* tile, size_t block, bool flag) {
 
 }  // namespace
 
-void level_map::update_shadows() {
+void level_map::update_shadows() const {
   map_tile* pNode = cells;
   for (int iY = 0; iY < this->height; ++iY) {
     for (int iX = 0; iX < this->width; ++iX, ++pNode) {
@@ -1652,12 +1655,12 @@ void level_map::depersist(lua_persist_reader* pReader) {
 }
 
 map_tile_iterator::map_tile_iterator()
-    : tile(nullptr),
-      container(nullptr),
+    : container(nullptr),
       screen_offset_x(0),
       screen_offset_y(0),
       screen_width(0),
-      screen_height(0) {}
+      screen_height(0),
+      direction{map_scanline_iterator_direction::forward} {}
 
 map_tile_iterator::map_tile_iterator(
     const level_map* pMap, int iScreenX, int iScreenY, int iWidth, int iHeight,
@@ -1667,7 +1670,6 @@ map_tile_iterator::map_tile_iterator(
       screen_offset_y(iScreenY),
       screen_width(iWidth),
       screen_height(iHeight),
-      scanline_count(0),
       direction(eScanlineDirection) {
   if (direction == map_scanline_iterator_direction::forward) {
     base_x = 0;
@@ -1799,8 +1801,12 @@ map_scanline_iterator& map_scanline_iterator::operator++() {
 
 // copies the members of the given THMapScanlineIterator and resets the tile
 // member to the first element.
-map_scanline_iterator map_scanline_iterator::operator=(
+map_scanline_iterator& map_scanline_iterator::operator=(
     const map_scanline_iterator& iterator) {
+  if (this == &iterator) {
+    return *this;
+  }
+
   tile = iterator.first_tile;
   end_tile = iterator.end_tile;
   x_relative_to_screen =

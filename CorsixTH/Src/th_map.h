@@ -246,7 +246,7 @@ class level_map {
                          map_load_object_callback_fn fnObjectCallback,
                          void* pCallbackToken);
 
-  void save(const std::string& filename);
+  void save(const std::string& filename) const;
 
   //! Set the sprite sheet to be used for drawing the map
   /*!
@@ -262,8 +262,8 @@ class level_map {
   */
   void set_all_wall_draw_flags(uint8_t iFlags);
 
-  void update_pathfinding();
-  void update_shadows();
+  void update_pathfinding() const;
+  void update_shadows() const;
   void set_temperature_display(temperature_theme eTempDisplay);
   inline temperature_theme get_temperature_display() const {
     return current_temperature_theme;
@@ -368,7 +368,7 @@ class level_map {
 
   //! Convert world (tile) coordinates to absolute screen coordinates
   template <typename T>
-  static inline void world_to_screen(T& x, T& y) {
+  static void world_to_screen(T& x, T& y) {
     T x_(x);
     x = (T)32 * (x_ - y);
     y = (T)16 * (x_ + y);
@@ -376,7 +376,7 @@ class level_map {
 
   //! Convert absolute screen coordinates to world (tile) coordinates
   template <typename T>
-  static inline void screen_to_world(T& x, T& y) {
+  static void screen_to_world(T& x, T& y) {
     T x_(x);
     x = y / (T)32 + x_ / (T)64;
     y = y / (T)32 - x_ / (T)64;
@@ -388,8 +388,8 @@ class level_map {
   void set_overlay(map_overlay* pOverlay, bool bTakeOwnership);
 
  private:
-  drawable* hit_test_drawables(link_list* pListStart, int iXs, int iYs,
-                               int iTestX, int iTestY) const;
+  static drawable* hit_test_drawables(link_list* pListStart, int iXs, int iYs,
+                                      int iTestX, int iTestY);
   void read_tile_index(const uint8_t* pData, int& iX, int& iY) const;
   void write_tile_index(uint8_t* pData, int iX, int iY) const;
 
@@ -481,29 +481,29 @@ class map_tile_iterator {
                         map_scanline_iterator_direction::forward);
 
   //! Returns false if the iterator has exhausted its tiles
-  inline operator bool() const { return tile != nullptr; }
+  explicit operator bool() const { return tile != nullptr; }
 
   //! Advances the iterator to the next tile
   inline map_tile_iterator& operator++();
 
   //! Accessor for the current tile
-  inline const map_tile* operator->() const { return tile; }
+  const map_tile* operator->() const { return tile; }
 
   //! Get the X position of the tile relative to the top-left corner of the
   //! screen-space rectangle
-  inline int tile_x_position_on_screen() const { return x_relative_to_screen; }
+  int tile_x_position_on_screen() const { return x_relative_to_screen; }
 
   //! Get the Y position of the tile relative to the top-left corner of the
   //! screen-space rectangle
-  inline int tile_y_position_on_screen() const { return y_relative_to_screen; }
+  int tile_y_position_on_screen() const { return y_relative_to_screen; }
 
-  inline int tile_x() const { return world_x; }
-  inline int tile_y() const { return world_y; }
+  int tile_x() const { return world_x; }
+  int tile_y() const { return world_y; }
 
-  inline const level_map* get_map() { return container; }
-  inline const map_tile* get_map_tile() { return tile; }
-  inline int get_scanline_count() { return scanline_count; }
-  inline int get_tile_step() {
+  const level_map* get_map() const { return container; }
+  const map_tile* get_map_tile() const { return tile; }
+  int get_scanline_count() const { return scanline_count; }
+  int get_tile_step() {
     return (static_cast<int>(direction) - 1) * (1 - container->get_width());
   }
 
@@ -519,29 +519,29 @@ class map_tile_iterator {
   // to the top-most corner of an isometric cell)
   // If set too low, things will disappear when near the screen edge
   // If set too high, rendering will slow down
-  static const int margin_top = 150;
-  static const int margin_left = 110;
-  static const int margin_right = 110;
-  static const int margin_bottom = 150;
+  static constexpr int margin_top = 150;
+  static constexpr int margin_left = 110;
+  static constexpr int margin_right = 110;
+  static constexpr int margin_bottom = 150;
 
   friend class map_scanline_iterator;
 
-  const map_tile* tile;
+  const map_tile* tile{};
   const level_map* container;
 
   // TODO: Consider removing these, they are trivial to calculate
-  int x_relative_to_screen;
-  int y_relative_to_screen;
+  int x_relative_to_screen{};
+  int y_relative_to_screen{};
 
   const int screen_offset_x;
   const int screen_offset_y;
   const int screen_width;
   const int screen_height;
-  int base_x;
-  int base_y;
-  int world_x;
-  int world_y;
-  int scanline_count;
+  int base_x{};
+  int base_y{};
+  int world_x{};
+  int world_y{};
+  int scanline_count{};
   map_scanline_iterator_direction direction;
 
   void advance_until_visible();
@@ -563,16 +563,16 @@ class map_scanline_iterator {
                         map_scanline_iterator_direction eDirection,
                         int iXOffset = 0, int iYOffset = 0);
 
-  inline operator bool() const { return tile != end_tile; }
+  explicit operator bool() const { return tile != end_tile; }
   inline map_scanline_iterator& operator++();
 
-  inline const map_tile* operator->() const { return tile; }
-  inline int x() const { return x_relative_to_screen; }
-  inline int y() const { return y_relative_to_screen; }
-  inline const map_tile* get_next_tile() { return tile + tile_step; }
-  inline const map_tile* get_previous_tile() { return tile - tile_step; }
-  map_scanline_iterator operator=(const map_scanline_iterator& iterator);
-  inline const map_tile* get_tile() { return tile; }
+  const map_tile* operator->() const { return tile; }
+  int x() const { return x_relative_to_screen; }
+  int y() const { return y_relative_to_screen; }
+  const map_tile* get_next_tile() const { return tile + tile_step; }
+  const map_tile* get_previous_tile() const { return tile - tile_step; }
+  map_scanline_iterator& operator=(const map_scanline_iterator& iterator);
+  const map_tile* get_tile() const { return tile; }
 
  private:
   const map_tile* tile;

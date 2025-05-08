@@ -67,7 +67,7 @@ template <class T>
 int l_crude_gc(lua_State* L) {
   // This __gc metamethod does not verify that the given value is the correct
   // type of userdata, or that the value is userdata at all.
-  reinterpret_cast<T*>(lua_touserdata(L, 1))->~T();
+  static_cast<T*>(lua_touserdata(L, 1))->~T();
   return 0;
 }
 
@@ -90,8 +90,8 @@ int l_crude_gc(lua_State* L) {
 */
 class load_multi_buffer {
  public:
-  const char* s[3];
-  size_t i[3];
+  const char* s[3]{};
+  size_t i[3]{};
   int n;
 
   load_multi_buffer() {
@@ -101,7 +101,7 @@ class load_multi_buffer {
   }
 
   static const char* load_fn(lua_State* L, void* ud, size_t* size) {
-    load_multi_buffer* pThis = reinterpret_cast<load_multi_buffer*>(ud);
+    load_multi_buffer* pThis = static_cast<load_multi_buffer*>(ud);
 
     for (; pThis->n < 3; ++pThis->n) {
       if (pThis->i[pThis->n] != 0) {
@@ -131,7 +131,7 @@ class load_multi_buffer {
 */
 class lua_persist_basic_writer : public lua_persist_writer {
  public:
-  lua_persist_basic_writer(lua_State* L) : L(L), data() {}
+  explicit lua_persist_basic_writer(lua_State* L) : L(L) {}
 
   ~lua_persist_basic_writer() override = default;
 
@@ -164,10 +164,9 @@ class lua_persist_basic_writer : public lua_persist_writer {
       lua_getfield(L, -1, "err");
       lua_replace(L, -2);
       return 3;
-    } else {
-      lua_pushlstring(L, data.c_str(), data.length());
-      return 1;
     }
+    lua_pushlstring(L, data.c_str(), data.length());
+    return 1;
   }
 
   void fast_write_stack_object(int iIndex) override {
@@ -197,7 +196,7 @@ class lua_persist_basic_writer : public lua_persist_writer {
 
     // Save the index to the cache
     lua_pushvalue(L, iIndex);
-    lua_pushnumber(L, (lua_Number)(next_index++));
+    lua_pushnumber(L, static_cast<lua_Number>(next_index++));
     lua_settable(L, -3);
 
     if (!check_that_userdata_can_be_depersisted(iIndex)) return;
@@ -256,7 +255,7 @@ class lua_persist_basic_writer : public lua_persist_writer {
         // can fit into two bytes of VUInt.
         uint8_t iByte = PERSIST_TINTEGER;
         write_byte_stream(&iByte, 1);
-        uint16_t iValue = (uint16_t)fValue;
+        uint16_t iValue = static_cast<uint16_t>(fValue);
         write_uint(iValue);
       } else {
         // Other numbers are written as an 8 byte double
@@ -301,10 +300,9 @@ class lua_persist_basic_writer : public lua_persist_writer {
   }
 
   void write_object_raw() {
-    int top = lua_gettop(L);
-    int item_index = top;      // same position in write_stack_object
-    int self_index = 1;        // index 1 in write_stack_object
-    int permanents_index = 2;  // also in fenv self [1]
+    const int top = lua_gettop(L);
+    int item_index = top;                // same position in write_stack_object
+    constexpr int permanents_index = 2;  // also in fenv self [1]
     uint8_t item_type = lua_type(L, item_index);
 
     lua_checkstack(L, top + 5);
@@ -321,6 +319,7 @@ class lua_persist_basic_writer : public lua_persist_writer {
       write_stack_object(-1);
       lua_pop(L, 1);
     } else {
+      constexpr int self_index = 1;
       // Object is not in the permanents table.
       lua_pop(L, 1);
 
@@ -594,7 +593,7 @@ class lua_persist_basic_writer : public lua_persist_writer {
     data.assign(sError);
   }
 
-  void set_error_object(int iStackObject, int self_index) {
+  void set_error_object(int iStackObject, int self_index) const {
     if (had_error) return;
 
     lua_pushvalue(L, iStackObject);
@@ -604,19 +603,17 @@ class lua_persist_basic_writer : public lua_persist_writer {
     lua_pop(L, 1);
   }
 
-  const char* get_error() {
-    if (had_error)
-      return data.c_str();
-    else
-      return nullptr;
+  const char* get_error() const {
+    if (had_error) return data.c_str();
+    return nullptr;
   }
 
  private:
   lua_State* L;
-  uint64_t next_index;
+  uint64_t next_index{};
   std::string data;
-  size_t data_size;
-  bool had_error;
+  size_t data_size{};
+  bool had_error{};
 };
 
 //! Basic implementation of depersistence interface
@@ -636,7 +633,7 @@ class lua_persist_basic_writer : public lua_persist_writer {
 */
 class lua_persist_basic_reader : public lua_persist_reader {
  public:
-  lua_persist_basic_reader(lua_State* L) : L(L), string_buffer() {}
+  explicit lua_persist_basic_reader(lua_State* L) : L(L) {}
 
   ~lua_persist_basic_reader() override = default;
 
@@ -694,7 +691,7 @@ class lua_persist_basic_reader : public lua_persist_reader {
         return false;
       }
     } else {
-      uint8_t iType = (uint8_t)iIndex;
+      uint8_t iType = static_cast<uint8_t>(iIndex);
       switch (iType) {
         case LUA_TNIL:
           lua_pushnil(L);
@@ -964,9 +961,9 @@ class lua_persist_basic_reader : public lua_persist_reader {
   void save_stack_object() {
     if (next_index < (uint64_t)INT_MAX) {
       lua_pushvalue(L, -1);
-      lua_rawseti(L, 1, (int)next_index);
+      lua_rawseti(L, 1, static_cast<int>(next_index));
     } else {
-      lua_pushnumber(L, (lua_Number)next_index);
+      lua_pushnumber(L, static_cast<lua_Number>(next_index));
       lua_pushvalue(L, -2);
       lua_rawset(L, 1);
     }
@@ -1022,7 +1019,7 @@ class lua_persist_basic_reader : public lua_persist_reader {
     if (iCount > data_buffer_size) {
       set_error(lua_pushfstring(
           L, "End of input reached while attempting to read %d byte%s",
-          (int)iCount, iCount == 1 ? "" : "s"));
+          static_cast<int>(iCount), iCount == 1 ? "" : "s"));
       lua_pop(L, 1);
       return false;
     }
@@ -1038,7 +1035,7 @@ class lua_persist_basic_reader : public lua_persist_reader {
     if (iCount > data_buffer_size) {
       set_error(lua_pushfstring(
           L, "End of input reached while attempting to read %d byte%s",
-          (int)iCount, iCount == 1 ? "" : "s"));
+          static_cast<int>(iCount), iCount == 1 ? "" : "s"));
       lua_pop(L, 1);
       return false;
     }
@@ -1050,8 +1047,8 @@ class lua_persist_basic_reader : public lua_persist_reader {
     return true;
   }
 
-  const uint8_t* get_pointer() { return data; }
-  uint64_t get_object_count() { return next_index; }
+  const uint8_t* get_pointer() const { return data; }
+  uint64_t get_object_count() const { return next_index; }
 
   const char* get_error() {
     if (had_error)
@@ -1062,11 +1059,11 @@ class lua_persist_basic_reader : public lua_persist_reader {
 
  private:
   lua_State* L;
-  uint64_t next_index;
-  const uint8_t* data;
-  size_t data_buffer_size;
+  uint64_t next_index{};
+  const uint8_t* data{};
+  size_t data_buffer_size{};
   std::string string_buffer;
-  bool had_error;
+  bool had_error{};
 };
 
 namespace {
@@ -1104,9 +1101,8 @@ int l_load_toplevel(lua_State* L) {
                                          : "Error while depersisting",
                     iNumObjects, iNumBytes);
     return 2;
-  } else {
-    return 1;
   }
+  return 1;
 }
 
 int calculate_line_number(const char* sStart, const char* sPosition) {
@@ -1162,10 +1158,10 @@ int l_persist_dofile(lua_State* L) {
   size_t iBufferSize = lua_objlen(L, luaT_upvalueindex(1));
   size_t iBufferUsed = 0;
   while (!std::feof(fFile)) {
-    iBufferUsed += std::fread(
-        reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1))) +
-            iBufferUsed,
-        1, iBufferSize - iBufferUsed, fFile);
+    iBufferUsed +=
+        std::fread(static_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1))) +
+                       iBufferUsed,
+                   1, iBufferSize - iBufferUsed, fFile);
     if (iBufferUsed == iBufferSize) {
       iBufferSize *= 2;
       std::memcpy(lua_newuserdata(L, iBufferSize),
@@ -1182,8 +1178,7 @@ int l_persist_dofile(lua_State* L) {
   }
 
   // Check file
-  char* sFile =
-      reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
+  char* sFile = static_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
   sFile[iBufferUsed] = 0;
   if (sFile[0] == '#') {
     do {
@@ -1207,7 +1202,7 @@ int l_persist_dofile(lua_State* L) {
   std::memcpy(lua_newuserdata(L, iBufferUsed + 1), sFile, iBufferUsed + 1);
   lua_insert(L, -2);
   lua_call(L, 0, LUA_MULTRET);
-  sFile = reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
+  sFile = static_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
   std::memcpy(sFile, lua_touserdata(L, iBufferCopyIndex), iBufferUsed + 1);
   lua_remove(L, iBufferCopyIndex);
 

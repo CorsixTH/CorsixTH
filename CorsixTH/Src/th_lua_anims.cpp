@@ -248,7 +248,8 @@ int l_anim_persist(lua_State* L) {
     // Fast __persist call
     pAnimation = (T*)lua_touserdata(L, -1);
   }
-  lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 1);
+  lua_persist_writer* pWriter =
+      static_cast<lua_persist_writer*>(lua_touserdata(L, 1));
 
   pAnimation->persist(pWriter);
   lua_rawgeti(L, luaT_environindex, 1);
@@ -423,7 +424,7 @@ int l_anim_get_tile(lua_State* L) {
   if (lua_isnil(L, 2)) {
     return 0;
   }
-  level_map* pMap = (level_map*)lua_touserdata(L, 2);
+  level_map* pMap = static_cast<level_map*>(lua_touserdata(L, 2));
   const link_list* pListNode = pAnimation->get_previous();
   while (pListNode->prev) {
     pListNode = pListNode->prev;
@@ -498,7 +499,7 @@ template <typename T>
 int l_anim_make_invisible(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
   pAnimation->set_flags(pAnimation->get_flags() |
-                        static_cast<uint32_t>(thdf_alpha_50 | thdf_alpha_75));
+                        (thdf_alpha_50 | thdf_alpha_75));
 
   lua_settop(L, 1);
   return 1;

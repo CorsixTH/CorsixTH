@@ -143,7 +143,7 @@ static int l_random(lua_State* L) {
       lua_pushinteger(L, 1 + (lua_Integer)(genrand_int32() % max));
       break;
     case 0:
-      lua_pushnumber(L, (lua_Number)genrand_res53());
+      lua_pushnumber(L, genrand_res53());
       break;
   }
   return 1;

@@ -152,18 +152,18 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
           draw_text(pCanvas, sMessage, sBreakPosition - sMessage, iX + iXOffset,
                     iY);
         }
-        iY += static_cast<int>(iTallest) + line_spacing;
+        iY += iTallest + line_spacing;
         oDrawArea.end_x = iMsgWidth;
         oDrawArea.row_count++;
         if (foundNewLine) {
-          iY += static_cast<int>(iTallest) + line_spacing;
+          iY += iTallest + line_spacing;
           oDrawArea.row_count++;
         }
       } else {
         iSkippedRows++;
         if (foundNewLine) {
           if (iSkippedRows == iSkipRows) {
-            iY += static_cast<int>(iTallest) + line_spacing;
+            iY += iTallest + line_spacing;
             oDrawArea.row_count++;
           }
           iSkippedRows++;
@@ -187,9 +187,8 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
 FT_Library freetype_font::freetype_library = nullptr;
 int freetype_font::freetype_init_count = 0;
 
-freetype_font::freetype_font() {
-  font_face = nullptr;
-  is_done_freetype_init = false;
+freetype_font::freetype_font()
+    : font_face(nullptr), colour(0), is_done_freetype_init(false) {
   for (cached_text* pEntry = cache; pEntry != cache + (1 << cache_size_log2);
        ++pEntry) {
     pEntry->message = nullptr;
@@ -551,8 +550,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
       iPreviousGlyphIndex = oGlyph.index;
       ftvPen.x += oGlyph.metrics.horiAdvance;
     }
-    if (sLineStart != sMessageEnd)
-      vLines.push_back(std::make_pair(sLineStart, sMessageEnd));
+    if (sLineStart != sMessageEnd) vLines.emplace_back(sLineStart, sMessageEnd);
     sMessage = sMessageStart;
 
     // Finalise the position of each character (alignment might change X,
@@ -630,9 +628,8 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
     bool bIsMonochrome = is_monochrome();
     FT_Render_Mode eRenderMode =
         bIsMonochrome ? FT_RENDER_MODE_MONO : FT_RENDER_MODE_NORMAL;
-    for (auto itr = mapGlyphs.begin(), itrEnd = mapGlyphs.end(); itr != itrEnd;
-         ++itr) {
-      FT_Glyph_To_Bitmap(&itr->second.glyph, eRenderMode, nullptr, 1);
+    for (auto& mapGlyph : mapGlyphs) {
+      FT_Glyph_To_Bitmap(&mapGlyph.second.glyph, eRenderMode, nullptr, 1);
     }
 
     // Prepare a canvas for rendering.
@@ -694,7 +691,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
 // #define TRUST_RENDER_COORDS
 
 void freetype_font::render_mono(cached_text* pCacheEntry, FT_Bitmap* pBitmap,
-                                FT_Pos x, FT_Pos y) const {
+                                FT_Pos x, FT_Pos y) {
   uint8_t* pOutRow = pCacheEntry->data + y * pCacheEntry->width + x;
   uint8_t* pInRow = pBitmap->buffer;
   int rows = static_cast<int>(pBitmap->rows);

@@ -63,9 +63,9 @@ namespace {
 
 // We need 2 lightuserdata keys for naming the weak tables in the registry,
 // which we get by having 2 bytes of dummy global variables.
-uint8_t weak_table_keys[2] = {0};
+uint8_t weak_table_keys[2] = {};
 
-inline void aux_push_weak_table(lua_State* L, int iIndex) {
+void aux_push_weak_table(lua_State* L, int iIndex) {
   lua_pushlightuserdata(L, &weak_table_keys[iIndex]);
   lua_rawget(L, LUA_REGISTRYINDEX);
 }

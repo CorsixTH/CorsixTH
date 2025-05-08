@@ -64,7 +64,7 @@ using av_codec_ptr = const AVCodec*;
 //! Deletes AVPacket pointers that are allocated with av_malloc
 class av_packet_deleter {
  public:
-  void operator()(AVPacket* p) {
+  void operator()(AVPacket* p) const {
     av_packet_unref(p);
     av_free(p);
   }
@@ -75,14 +75,14 @@ using av_packet_unique_ptr = std::unique_ptr<AVPacket, av_packet_deleter>;
 
 class av_frame_deleter {
  public:
-  void operator()(AVFrame* f) { av_frame_free(&f); }
+  void operator()(AVFrame* f) const { av_frame_free(&f); }
 };
 
 using av_frame_unique_ptr = std::unique_ptr<AVFrame, av_frame_deleter>;
 
 class av_codec_context_deleter {
  public:
-  void operator()(AVCodecContext* c) { avcodec_free_context(&c); }
+  void operator()(AVCodecContext* c) const { avcodec_free_context(&c); }
 };
 
 using av_codec_context_unique_ptr =
@@ -205,7 +205,7 @@ class movie_picture_buffer {
   //! Return whether there is space to add any more frame data to the queue
   //!
   //! \remark Requires external locking
-  bool unsafe_full();
+  bool unsafe_full() const;
 
   //! The number of elements to allocate in the picture queue
   static constexpr std::size_t picture_buffer_size = 4;
@@ -304,7 +304,7 @@ class movie_player {
   void set_renderer(SDL_Renderer* pRenderer);
 
   //! Return whether movies were compiled into CorsixTH
-  bool movies_enabled() const;
+  static bool movies_enabled();
 
   //! Load the movie with the given file name
   bool load(const char* szFilepath);
@@ -382,8 +382,8 @@ class movie_player {
       128;  ///< Buffer to hold last error description
 
   //! Get the AVCodecContext associated with a given stream
-  av_codec_context_unique_ptr get_codec_context_for_stream(
-      av_codec_ptr codec, AVStream* stream) const;
+  static av_codec_context_unique_ptr get_codec_context_for_stream(
+      av_codec_ptr codec, AVStream* stream);
 
   void play_audio(int requested_audio_channel);
 
@@ -414,7 +414,8 @@ class movie_player {
   //! \param frame An empty frame which gets populated by the data in the
   //! packet queue.
   //! \returns FFMPEG result of avcodec_receive_frame
-  int populate_frame(AVCodecContext& ctx, av_packet_queue& pq, AVFrame& frame);
+  static int populate_frame(AVCodecContext& ctx, av_packet_queue& pq,
+                            AVFrame& frame);
 
   SDL_Renderer* renderer;  ///< The renderer to draw to
 

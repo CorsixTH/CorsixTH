@@ -98,8 +98,7 @@ class memory_buffer {
     uint8_t iByte0, iByte1, iByte2;
     if (read(iByte0) && read(iByte1) && read(iByte2))
       return (((iByte0 << 8) | iByte1) << 8) | iByte2;
-    else
-      return 0;
+    return 0;
   }
 
   uint32_t read_variable_length_uint() {
@@ -227,10 +226,8 @@ uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data, size_t xmi_length,
     while (true) {
       if (!bufInput.read(iTokenType)) return nullptr;
 
-      if (iTokenType & 0x80)
-        break;
-      else
-        iTokenTime += static_cast<int>(iTokenType) * 3;
+      if (iTokenType & 0x80) break;
+      iTokenTime += static_cast<int>(iTokenType) * 3;
     }
     pToken = lstTokens.append(iTokenTime, iTokenType);
     pToken->buffer = bufInput.get_pointer() + 1;
@@ -303,8 +300,7 @@ uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data, size_t xmi_length,
   iTokenType = 0;
   bEnd = false;
 
-  for (midi_token_list::iterator itr = lstTokens.begin(),
-                                 itrEnd = lstTokens.end();
+  for (auto itr = lstTokens.begin(), itrEnd = lstTokens.end();
        itr != itrEnd && !bEnd; ++itr) {
     if (!bufOutput.write_variable_length_uint(itr->time - iTokenTime))
       return nullptr;

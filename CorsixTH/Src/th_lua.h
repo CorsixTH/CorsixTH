@@ -64,7 +64,7 @@ inline int luaT_upvalueindex(int i) {
 }
 
 template <class Collection>
-inline void luaT_register(lua_State* L, const char* n, Collection& l) {
+void luaT_register(lua_State* L, const char* n, Collection& l) {
 #if LUA_VERSION_NUM >= 502
   lua_createtable(L, 0, static_cast<int>(l.size()));
   lua_pushvalue(L, luaT_environindex);
@@ -177,8 +177,7 @@ void luaT_setenvfield(lua_State* L, int index, const char* k);
 void luaT_getenvfield(lua_State* L, int index, const char* k);
 
 template <class T>
-inline T* luaT_stdnew(lua_State* L, int mt_idx = luaT_environindex,
-                      bool env = false) {
+T* luaT_stdnew(lua_State* L, int mt_idx = luaT_environindex, bool env = false) {
   T* p = luaT_new<T>(L);
   lua_pushvalue(L, mt_idx);
   lua_setmetatable(L, -2);
@@ -195,141 +194,141 @@ struct luaT_classinfo {};
 class render_target;
 template <>
 struct luaT_classinfo<render_target> {
-  static inline const char* name() { return "Surface"; }
+  static const char* name() { return "Surface"; }
 };
 
 class level_map;
 template <>
 struct luaT_classinfo<level_map> {
-  static inline const char* name() { return "Map"; }
+  static const char* name() { return "Map"; }
 };
 
 class sprite_sheet;
 template <>
 struct luaT_classinfo<sprite_sheet> {
-  static inline const char* name() { return "SpriteSheet"; }
+  static const char* name() { return "SpriteSheet"; }
 };
 
 class animation;
 template <>
 struct luaT_classinfo<animation> {
-  static inline const char* name() { return "Animation"; }
+  static const char* name() { return "Animation"; }
 };
 
 class animation_manager;
 template <>
 struct luaT_classinfo<animation_manager> {
-  static inline const char* name() { return "Animator"; }
+  static const char* name() { return "Animator"; }
 };
 
 class palette;
 template <>
 struct luaT_classinfo<palette> {
-  static inline const char* name() { return "Palette"; }
+  static const char* name() { return "Palette"; }
 };
 
 class raw_bitmap;
 template <>
 struct luaT_classinfo<raw_bitmap> {
-  static inline const char* name() { return "RawBitmap"; }
+  static const char* name() { return "RawBitmap"; }
 };
 
 class font;
 template <>
 struct luaT_classinfo<font> {
-  static inline const char* name() { return "Font"; }
+  static const char* name() { return "Font"; }
 };
 
 class bitmap_font;
 template <>
 struct luaT_classinfo<bitmap_font> {
-  static inline const char* name() { return "BitmapFont"; }
+  static const char* name() { return "BitmapFont"; }
 };
 
 #ifdef CORSIX_TH_USE_FREETYPE2
 class freetype_font;
 template <>
 struct luaT_classinfo<freetype_font> {
-  static inline const char* name() { return "FreeTypeFont"; }
+  static const char* name() { return "FreeTypeFont"; }
 };
 #endif
 
 struct layers;
 template <>
 struct luaT_classinfo<layers> {
-  static inline const char* name() { return "Layers"; }
+  static const char* name() { return "Layers"; }
 };
 
 class pathfinder;
 template <>
 struct luaT_classinfo<pathfinder> {
-  static inline const char* name() { return "Pathfinder"; }
+  static const char* name() { return "Pathfinder"; }
 };
 
 class cursor;
 template <>
 struct luaT_classinfo<cursor> {
-  static inline const char* name() { return "Cursor"; }
+  static const char* name() { return "Cursor"; }
 };
 
 class line_sequence;
 template <>
 struct luaT_classinfo<line_sequence> {
-  static inline const char* name() { return "Line"; }
+  static const char* name() { return "Line"; }
 };
 
 class music;
 template <>
 struct luaT_classinfo<music> {
-  static inline const char* name() { return "Music"; }
+  static const char* name() { return "Music"; }
 };
 
 class sound_archive;
 template <>
 struct luaT_classinfo<sound_archive> {
-  static inline const char* name() { return "SoundArchive"; }
+  static const char* name() { return "SoundArchive"; }
 };
 
 class sound_player;
 template <>
 struct luaT_classinfo<sound_player> {
-  static inline const char* name() { return "SoundEffects"; }
+  static const char* name() { return "SoundEffects"; }
 };
 
 class movie_player;
 template <>
 struct luaT_classinfo<movie_player> {
-  static inline const char* name() { return "Movie"; }
+  static const char* name() { return "Movie"; }
 };
 
 class abstract_window;
 template <>
 struct luaT_classinfo<abstract_window> {
-  static inline const char* name() { return "WindowBase"; }
+  static const char* name() { return "WindowBase"; }
 };
 
 class sprite_render_list;
 template <>
 struct luaT_classinfo<sprite_render_list> {
-  static inline const char* name() { return "SpriteRenderList"; }
+  static const char* name() { return "SpriteRenderList"; }
 };
 
 class string_proxy;
 template <>
 struct luaT_classinfo<string_proxy> {
-  static inline const char* name() { return "StringProxy"; }
+  static const char* name() { return "StringProxy"; }
 };
 
 class lfs_ext;
 template <>
 struct luaT_classinfo<lfs_ext> {
-  static inline const char* name() { return "LfsExt"; }
+  static const char* name() { return "LfsExt"; }
 };
 
 class iso_filesystem;
 template <>
 struct luaT_classinfo<iso_filesystem> {
-  static inline const char* name() { return "ISO Filesystem"; }
+  static const char* name() { return "ISO Filesystem"; }
 };
 
 template <class T>

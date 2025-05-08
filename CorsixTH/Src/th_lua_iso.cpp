@@ -118,18 +118,17 @@ int l_isofs_read_contents(lua_State* L) {
     return 2;
   }
   void* pBuffer = lua_newuserdata(L, pSelf->get_file_size(iFile));
-  if (!pSelf->get_file_data(iFile, reinterpret_cast<uint8_t*>(pBuffer))) {
+  if (!pSelf->get_file_data(iFile, static_cast<uint8_t*>(pBuffer))) {
     lua_pushnil(L);
     lua_pushstring(L, pSelf->get_error());
     return 2;
   }
-  lua_pushlstring(L, reinterpret_cast<char*>(pBuffer),
-                  pSelf->get_file_size(iFile));
+  lua_pushlstring(L, static_cast<char*>(pBuffer), pSelf->get_file_size(iFile));
   return 1;
 }
 
 void l_isofs_list_files_callback(void* p, const char* name, const char* path) {
-  lua_State* L = reinterpret_cast<lua_State*>(p);
+  lua_State* L = static_cast<lua_State*>(p);
   lua_pushstring(L, name);
   lua_pushstring(L, path);
   lua_settable(L, 3);

@@ -27,11 +27,7 @@ SOFTWARE.
 
 #include "persist_lua.h"
 
-integer_run_length_encoder::integer_run_length_encoder() {
-  buffer = nullptr;
-  output = nullptr;
-  clean();
-}
+integer_run_length_encoder::integer_run_length_encoder() = default;
 
 integer_run_length_encoder::~integer_run_length_encoder() { clean(); }
 

@@ -63,10 +63,10 @@ class th_string_list {
   ~th_string_list() = default;
 
   //! Get the number of sections in the string list
-  size_t get_section_count();
+  size_t get_section_count() const;
 
   //! Get the number of strings in a section of the string list
-  size_t get_section_size(size_t section);
+  size_t get_section_size(size_t section) const;
 
   //! Get a string from the string list
   /*!
@@ -75,7 +75,7 @@ class th_string_list {
       @return nullptr if the index is invalid, otherwise a UTF-8 encoded
      string.
   */
-  const char* get_string(size_t section, size_t index);
+  const char* get_string(size_t section, size_t index) const;
 
  private:
   //! Section information

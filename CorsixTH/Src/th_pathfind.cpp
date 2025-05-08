@@ -36,7 +36,8 @@ SOFTWARE.
 #include "persist_lua.h"
 #include "th_map.h"
 
-abstract_pathfinder::abstract_pathfinder(pathfinder* pf) : parent(pf) {}
+abstract_pathfinder::abstract_pathfinder(pathfinder* pf)
+    : parent(pf), map(nullptr) {}
 
 path_node* abstract_pathfinder::init(const level_map* pMap, int iStartX,
                                      int iStartY) {

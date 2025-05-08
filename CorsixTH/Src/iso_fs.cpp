@@ -115,11 +115,11 @@ void trim_file_id(const uint8_t* sIdent, uint8_t& iLength) {
 char normalise(char c) {
   if (c == '_') {
     return '-';
-  } else if ('a' <= c && c <= 'z') {
-    return static_cast<char>(c - 'a' + 'A');
-  } else {
-    return c;
   }
+  if ('a' <= c && c <= 'z') {
+    return static_cast<char>(c - 'a' + 'A');
+  }
+  return c;
 }
 
 /// Convert length bytes from the start pointer to a normalized filename
@@ -157,7 +157,7 @@ class iso_file_entry {
   /// from their offsets from that location.
   ///
   /// \param Pointer to first byte of file entry in directory table.
-  iso_file_entry(const uint8_t* b) {
+  explicit iso_file_entry(const uint8_t* b) {
     uint8_t size = *b;
     if (size < minimum_file_entry_size) {
       throw std::runtime_error("size specified for file entry is too small.");
@@ -176,16 +176,16 @@ class iso_file_entry {
   }
 
   /// Logical location of the data for this file in the ISO image.
-  uint32_t data_sector;
+  uint32_t data_sector{};
 
   /// The length of the data for this file.
-  uint32_t data_length;
+  uint32_t data_length{};
 
   /// Flags that indicate whether this entry is a file or directory, along
   /// with other properties.
   ///
   /// \see iso_dir_ent_flag
-  uint8_t flags;
+  uint8_t flags{};
 
   /// The filename of this entry.
   std::string filename;
@@ -196,10 +196,8 @@ class iso_file_entry {
  * stored in a byte buffer.
  */
 class iso_directory_iterator final {
-  using iterator_category = std::input_iterator_tag;
   using value_type = const iso_file_entry;
   using difference_type = ptrdiff_t;
-  using pointer = const iso_file_entry*;
   using reference = const iso_file_entry&;
 
  public:
@@ -261,7 +259,7 @@ class iso_directory_iterator final {
    * table entry.
    */
   bool operator!=(const iso_directory_iterator& rhs) const {
-    return !((*this) == rhs);
+    return !(*this == rhs);
   }
 
   /**
@@ -277,7 +275,8 @@ class iso_directory_iterator final {
   /**
    * Assign this iterator the value of another iterator by copy
    */
-  iso_directory_iterator& operator=(iso_directory_iterator& rhs) = default;
+  iso_directory_iterator& operator=(iso_directory_iterator const& rhs) =
+      default;
 
   /**
    * Assign this iterator the value of another iterator by move
@@ -351,7 +350,7 @@ class iso_directory_iterator final {
 }  // namespace
 
 iso_filesystem::iso_filesystem()
-    : raw_file(nullptr), error(nullptr), files(), path_seperator('\\') {}
+    : raw_file(nullptr), error(nullptr), sector_size(0), path_seperator('\\') {}
 
 iso_filesystem::~iso_filesystem() { clear(); }
 
@@ -401,14 +400,14 @@ bool iso_filesystem::initialise(const char* path) {
                 "Could not find Theme Hospital data "
                 "directory.");
             return false;
-          } else {
-            return true;
           }
+          return true;
         } catch (const std::exception& ex) {
           set_error(ex.what());
           return false;
         }
-      } else if (aBuffer[0] == vdt_terminator) {
+      }
+      if (aBuffer[0] == vdt_terminator) {
         break;
       }
     }
@@ -518,7 +517,7 @@ void iso_filesystem::build_file_lookup_table(uint32_t iSector,
   }
   delete[] pBuffer;
 
-  if (prefix.size() == 0) {
+  if (prefix.empty()) {
     // The lookup table will be ordered by the underlying ordering of the
     // disk. we want it sorted by the path for ease of lookup.
     std::sort(files.begin(), files.end(), file_metadata_less);
@@ -542,7 +541,7 @@ void iso_filesystem::visit_directory_files(
       }
       std::string filename(file.path.substr(filename_pos));
 
-      if (filename.find(path_seperator) == filename.npos) {
+      if (filename.find(path_seperator) == std::string::npos) {
         fnCallback(pCallbackData, filename.c_str(), file.path.c_str());
       }
     }
@@ -577,20 +576,17 @@ uint32_t iso_filesystem::get_file_start(file_handle iFile) const {
 }
 
 uint32_t iso_filesystem::get_file_size(file_handle iFile) const {
-  if (iFile <= 0 || static_cast<size_t>(iFile) > files.size())
-    return 0;
-  else
-    return files[iFile - 1].size;
+  if (iFile <= 0 || static_cast<size_t>(iFile) > files.size()) return 0;
+  return files[iFile - 1].size;
 }
 
 bool iso_filesystem::get_file_data(file_handle iFile, uint8_t* pBuffer) {
   if (iFile <= 0 || static_cast<size_t>(iFile) > files.size()) {
     set_error("Invalid file handle.");
     return false;
-  } else {
-    return seek_to_sector(files[iFile - 1].sector) &&
-           read_data(files[iFile - 1].size, pBuffer);
   }
+  return seek_to_sector(files[iFile - 1].sector) &&
+         read_data(files[iFile - 1].size, pBuffer);
 }
 
 const char* iso_filesystem::get_error() const { return error; }
@@ -604,10 +600,9 @@ bool iso_filesystem::seek_to_sector(uint32_t iSector) {
       std::fseek(raw_file, sector_size * static_cast<long>(iSector), SEEK_SET);
   if (res == 0) {
     return true;
-  } else {
-    set_error("Unable to seek to sector %i.", static_cast<int>(iSector));
-    return false;
   }
+  set_error("Unable to seek to sector %i.", static_cast<int>(iSector));
+  return false;
 }
 
 bool iso_filesystem::read_data(uint32_t iByteCount, uint8_t* pBuffer) {
@@ -615,12 +610,9 @@ bool iso_filesystem::read_data(uint32_t iByteCount, uint8_t* pBuffer) {
     set_error("No raw file.");
     return false;
   }
-  if (std::fread(pBuffer, 1, iByteCount, raw_file) == iByteCount)
-    return true;
-  else {
-    set_error("Unable to read %i bytes.", static_cast<int>(iByteCount));
-    return false;
-  }
+  if (std::fread(pBuffer, 1, iByteCount, raw_file) == iByteCount) return true;
+  set_error("Unable to read %i bytes.", static_cast<int>(iByteCount));
+  return false;
 }
 
 void iso_filesystem::set_error(const char* sFormat, ...) {

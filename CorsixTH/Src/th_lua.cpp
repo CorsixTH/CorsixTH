@@ -102,7 +102,7 @@ int luaT_setfenv52(lua_State* L, int iIndex) {
     case LUA_TUSERDATA:
       lua_setuservalue(L, iIndex);
       return 1;
-    case LUA_TFUNCTION:
+    case LUA_TFUNCTION: {
       if (lua_iscfunction(L, iIndex)) {
         // Our convention: upvalue at #1 is environment
         if (lua_setupvalue(L, iIndex, 1) == nullptr) {
@@ -110,27 +110,27 @@ int luaT_setfenv52(lua_State* L, int iIndex) {
           return 0;
         }
         return 1;
-      } else {
-        // Language convention: upvalue called _ENV is environment,
-        // which might be shared with other functions.
-        const char* sUpName = nullptr;
-        for (int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)); ++i) {
-          lua_pop(L, 1);  // lua_getupvalue puts the value on the
-                          // stack, but we just want to replace it
-          if (std::strcmp(sUpName, "_ENV") == 0) {
-            luaL_loadstring(L,
-                            "local upv = ... return function() return upv "
-                            "end");
-            lua_insert(L, -2);
-            lua_call(L, 1, 1);
-            lua_upvaluejoin(L, iIndex, i, -1, 1);
-            lua_pop(L, 1);
-            return 1;
-          }
-        }
-        lua_pop(L, 1);
-        return 0;
       }
+      // Language convention: upvalue called _ENV is environment,
+      // which might be shared with other functions.
+      const char* sUpName = nullptr;
+      for (int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)); ++i) {
+        lua_pop(L, 1);  // lua_getupvalue puts the value on the
+                        // stack, but we just want to replace it
+        if (std::strcmp(sUpName, "_ENV") == 0) {
+          luaL_loadstring(L,
+                          "local upv = ... return function() return upv "
+                          "end");
+          lua_insert(L, -2);
+          lua_call(L, 1, 1);
+          lua_upvaluejoin(L, iIndex, i, -1, 1);
+          lua_pop(L, 1);
+          return 1;
+        }
+      }
+      lua_pop(L, 1);
+      return 0;
+    }
     default:
       return 0;
   }
@@ -154,7 +154,7 @@ const uint8_t* luaT_checkfile(lua_State* L, int idx, size_t* pDataLen) {
   const uint8_t* pData;
   size_t iLength;
   if (lua_type(L, idx) == LUA_TUSERDATA) {
-    pData = reinterpret_cast<const uint8_t*>(lua_touserdata(L, idx));
+    pData = static_cast<const uint8_t*>(lua_touserdata(L, idx));
     iLength = lua_objlen(L, idx);
   } else {
     pData =
@@ -302,7 +302,7 @@ int luaopen_th(lua_State* L) {
   lua_settop(L, 0);
   lua_checkstack(L, 16 + static_cast<int>(lua_metatable::count));
 
-  lua_register_state oState;
+  lua_register_state oState{};
   const lua_register_state* pState = &oState;
   oState.L = L;
   for (int i = 0; i < static_cast<int>(lua_metatable::count); ++i) {
@@ -337,7 +337,7 @@ int luaopen_th(lua_State* L) {
 }
 
 void luaT_execute_loadstring(lua_State* L, const char* sLuaString) {
-  static const int iRegistryCacheIndex = 7;
+  static constexpr int iRegistryCacheIndex = 7;
   lua_rawgeti(L, LUA_REGISTRYINDEX, iRegistryCacheIndex);
   if (lua_isnil(L, -1)) {
     // Cache not yet created - create it.

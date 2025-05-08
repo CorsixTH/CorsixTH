@@ -79,8 +79,8 @@ SOFTWARE.
 #endif
 
 /** Standard includes **/
-#include <cstddef> // IWYU pragma: export
-#include <cstdint> // IWYU pragma: export
+#include <cstddef>  // IWYU pragma: export
+#include <cstdint>  // IWYU pragma: export
 
 // We bring in the most common stddef and stdint types to avoid typing
 // clang-format off

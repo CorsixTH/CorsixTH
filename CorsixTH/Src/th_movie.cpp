@@ -64,7 +64,11 @@ void th_movie_audio_callback(int iChannel, void* pStream, int iStreamSize,
 }  // namespace
 
 movie_picture::movie_picture()
-    : buffer(nullptr), pixel_format(AV_PIX_FMT_RGB24), mutex{} {}
+    : buffer(nullptr),
+      pixel_format(AV_PIX_FMT_RGB24),
+      width(0),
+      height(0),
+      pts(0) {}
 
 movie_picture::~movie_picture() { av_freep(&buffer); }
 
@@ -207,7 +211,7 @@ bool movie_picture_buffer::full() {
   return unsafe_full();
 }
 
-bool movie_picture_buffer::unsafe_full() {
+bool movie_picture_buffer::unsafe_full() const {
   return (!allocated || picture_count == picture_buffer_size);
 }
 
@@ -301,20 +305,21 @@ void av_packet_queue::clear() {
 
 movie_player::movie_player()
     : renderer(nullptr),
-      last_error(),
-      decoding_audio_mutex{},
+      error_buffer{},
+      aborting(),
       format_context(nullptr),
+      video_stream_index(0),
+      audio_stream_index(0),
       video_codec_context(nullptr),
       audio_codec_context(nullptr),
-      video_queue(),
-      audio_queue(),
-      movie_picture_buffer(),
+      current_sync_pts_system_time(0),
+      current_sync_pts(0),
       audio_resample_context(nullptr),
       empty_audio_chunk(nullptr),
       audio_chunk_buffer{},
       audio_channel(-1),
-      stream_thread{},
-      video_thread{} {
+      mixer_channels(0),
+      mixer_frequency(0) {
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100)
   av_register_all();
 #endif
@@ -326,7 +331,7 @@ void movie_player::set_renderer(SDL_Renderer* pRenderer) {
   renderer = pRenderer;
 }
 
-bool movie_player::movies_enabled() const { return true; }
+bool movie_player::movies_enabled() { return true; }
 
 bool movie_player::load(const char* szFilepath) {
   int iError = 0;
@@ -373,7 +378,7 @@ bool movie_player::load(const char* szFilepath) {
 }
 
 av_codec_context_unique_ptr movie_player::get_codec_context_for_stream(
-    av_codec_ptr codec, AVStream* stream) const {
+    av_codec_ptr codec, AVStream* stream) {
   av_codec_context_unique_ptr ctx(avcodec_alloc_context3(codec));
   avcodec_parameters_to_context(ctx.get(), stream->codecpar);
   return ctx;
@@ -544,10 +549,8 @@ const char* movie_player::get_last_error() const { return last_error.c_str(); }
 void movie_player::clear_last_error() { last_error.clear(); }
 
 void movie_player::refresh(const SDL_Rect& destination_rect) {
-  SDL_Rect dest_rect;
-
-  dest_rect = SDL_Rect{destination_rect.x, destination_rect.y,
-                       destination_rect.w, destination_rect.h};
+  SDL_Rect dest_rect = SDL_Rect{destination_rect.x, destination_rect.y,
+                                destination_rect.w, destination_rect.h};
 
   if (!movie_picture_buffer.empty()) {
     double dCurTime = SDL_GetTicks() - current_sync_pts_system_time +
@@ -609,24 +612,24 @@ void movie_player::read_streams() {
 }
 
 void movie_player::run_video() {
-  av_frame_unique_ptr pFrame(av_frame_alloc());
-  double dClockPts;
-  int iError;
+  const av_frame_unique_ptr pFrame(av_frame_alloc());
 
   while (!aborting) {
     av_frame_unref(pFrame.get());
 
-    iError = populate_frame(video_stream_index, *pFrame);
+    int iError = populate_frame(video_stream_index, *pFrame);
 
     if (iError == AVERROR_EOF) {
       break;
-    } else if (iError < 0) {
+    }
+    if (iError < 0) {
       std::cerr << "Unexpected error " << iError
                 << " while decoding video packet" << std::endl;
       break;
     }
 
-    dClockPts = get_presentation_time_for_frame(*pFrame, video_stream_index);
+    double dClockPts =
+        get_presentation_time_for_frame(*pFrame, video_stream_index);
     iError = movie_picture_buffer.write(pFrame.get(), dClockPts);
 
     if (iError < 0) {
@@ -657,11 +660,11 @@ double movie_player::get_presentation_time_for_frame(const AVFrame& frame,
 int movie_player::populate_frame(int stream, AVFrame& frame) {
   if (stream == video_stream_index) {
     return populate_frame(*video_codec_context, video_queue, frame);
-  } else if (stream == audio_stream_index) {
-    return populate_frame(*audio_codec_context, audio_queue, frame);
-  } else {
-    throw std::invalid_argument("Invalid value provided for stream");
   }
+  if (stream == audio_stream_index) {
+    return populate_frame(*audio_codec_context, audio_queue, frame);
+  }
+  throw std::invalid_argument("Invalid value provided for stream");
 }
 
 int movie_player::populate_frame(AVCodecContext& ctx, av_packet_queue& pq,
@@ -694,10 +697,9 @@ void movie_player::copy_audio_to_stream(uint8_t* pbStream, int iStreamSize) {
     if (iAudioSize <= 0) {
       std::memset(pbStream, 0, static_cast<std::size_t>(iStreamSize));
       return;
-    } else {
-      iStreamSize -= iAudioSize;
-      pbStream += iAudioSize;
     }
+    iStreamSize -= iAudioSize;
+    pbStream += iAudioSize;
   }
 }
 
@@ -711,7 +713,8 @@ int movie_player::decode_audio_frame(uint8_t* stream, int stream_size) {
     std::cerr << "WARN: Unexpected error " << actual_samples
               << " while converting audio" << std::endl;
     return 0;
-  } else if (actual_samples > 0) {
+  }
+  if (actual_samples > 0) {
     return actual_samples * av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) *
            mixer_channels;
   }
@@ -721,7 +724,8 @@ int movie_player::decode_audio_frame(uint8_t* stream, int stream_size) {
 
   if (iError == AVERROR_EOF) {
     return 0;
-  } else if (iError < 0) {
+  }
+  if (iError < 0) {
     std::cerr << "WARN: Unexpected error " << iError
               << " while decoding audio packet" << std::endl;
     return 0;

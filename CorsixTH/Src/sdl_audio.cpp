@@ -99,7 +99,7 @@ struct load_music_async_data {
 };
 
 int load_music_async_thread(void* arg) {
-  load_music_async_data* async = (load_music_async_data*)arg;
+  load_music_async_data* async = static_cast<load_music_async_data*>(arg);
 
   async->music = Mix_LoadMUS_RW(async->rwop, 1);
   async->rwop = nullptr;
@@ -227,18 +227,18 @@ int l_transcode_xmi(lua_State* L) {
     lua_pushliteral(L, "Unable to transcode XMI to MIDI");
     return 2;
   }
-  lua_pushlstring(L, (const char*)pMidData, iMidLength);
+  lua_pushlstring(L, reinterpret_cast<const char*>(pMidData), iMidLength);
   delete[] pMidData;
 
   return 1;
 }
 
-constexpr std::array<struct luaL_Reg, 3> sdl_audiolib{
+constexpr std::array<luaL_Reg, 3> sdl_audiolib{
     {{"init", l_init},
      {"transcodeXmiToMid", l_transcode_xmi},
      {nullptr, nullptr}}};
 
-constexpr std::array<struct luaL_Reg, 8> sdl_musiclib{
+constexpr std::array<luaL_Reg, 8> sdl_musiclib{
     {{"loadMusic", l_load_music},
      {"loadMusicAsync", l_load_music_async},
      {"playMusic", l_play_music},
@@ -251,7 +251,8 @@ constexpr std::array<struct luaL_Reg, 8> sdl_musiclib{
 }  // namespace
 
 int l_load_music_async_callback(lua_State* L) {
-  load_music_async_data* async = (load_music_async_data*)lua_touserdata(L, 1);
+  load_music_async_data* async =
+      static_cast<load_music_async_data*>(lua_touserdata(L, 1));
 
   // Frees resources allocated to the thread
   SDL_WaitThread(async->thread, nullptr);
@@ -281,7 +282,7 @@ int l_load_music_async_callback(lua_State* L) {
     }
   } else {
     lua_rawgeti(L, 2, 2);
-    music* pLMusic = (music*)lua_touserdata(L, -1);
+    music* pLMusic = static_cast<music*>(lua_touserdata(L, -1));
     pLMusic->pMusic = async->music;
     async->music = nullptr;
   }

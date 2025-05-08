@@ -363,8 +363,8 @@ class animation_manager {
 
   bool set_frame_primary_marker(size_t iFrame, int iX, int iY);
   bool set_frame_secondary_marker(size_t iFrame, int iX, int iY);
-  bool get_frame_primary_marker(size_t iFrame, int* pX, int* pY);
-  bool get_frame_secondary_marker(size_t iFrame, int* pX, int* pY);
+  bool get_frame_primary_marker(size_t iFrame, int* pX, int* pY) const;
+  bool get_frame_secondary_marker(size_t iFrame, int* pX, int* pY) const;
 
   //! Retrieve a custom animation by name and tile size.
   /*!

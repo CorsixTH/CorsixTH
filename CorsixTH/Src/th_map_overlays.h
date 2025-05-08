@@ -65,7 +65,7 @@ class map_typical_overlay : public map_overlay {
 
  protected:
   void draw_text(render_target* pCanvas, int iX, int iY,
-                 const std::string& str);
+                 const std::string& str) const;
 
   sprite_sheet* sprites;
   ::font* font;

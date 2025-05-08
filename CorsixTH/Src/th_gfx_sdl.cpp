@@ -83,8 +83,7 @@ constexpr int jelly_effect_duration = 90;
     @param iB Blue colour intensity.
     @return 32bpp colour pixel in grey scale.
  */
-inline uint32_t makeGreyScale(uint8_t iOpacity, uint8_t iR, uint8_t iG,
-                              uint8_t iB) {
+uint32_t makeGreyScale(uint8_t iOpacity, uint8_t iR, uint8_t iG, uint8_t iB) {
   // http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
   // 0.2126*R + 0.7152*G + 0.0722*B
   // 0.2126 * 65536 = 13932.9536 -> 1393
@@ -104,8 +103,7 @@ inline uint32_t makeGreyScale(uint8_t iOpacity, uint8_t iR, uint8_t iG,
     @param iB Blue colour intensity.
     @return 32bpp colour pixel with red and blue swapped.
  */
-inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG,
-                                uint8_t iB) {
+uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG, uint8_t iB) {
   // http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
   // The Y factor for red is 0.2126, and for blue 0.0722. This means red is
   // about 3 times stronger than blue. Simple swapping channels will thus
@@ -135,8 +133,10 @@ uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component) {
 void intersectRect(const SDL_Rect& a, const SDL_Rect& b, SDL_Rect* out) {
   // The intersection of the rectangles is the higher of the lower bounds and
   // the lower of the higher bounds, clamped to a zero size.
-  clip_rect::x_y_type maxX = std::min(a.x + a.w, b.x + b.w);
-  clip_rect::x_y_type maxY = std::min(a.y + a.h, b.y + b.h);
+  clip_rect::x_y_type maxX =
+      static_cast<clip_rect::x_y_type>(std::min(a.x + a.w, b.x + b.w));
+  clip_rect::x_y_type maxY =
+      static_cast<clip_rect::x_y_type>(std::min(a.y + a.h, b.y + b.h));
   out->x = std::max(a.x, b.x);
   out->y = std::max(a.y, b.y);
   out->w = maxX - out->x;
@@ -213,8 +213,6 @@ class scoped_color_mod {
 };
 
 }  // namespace
-
-palette::palette() { colour_count = 0; }
 
 bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength) {
   if (iDataLength != 256 * 3) return false;
@@ -370,8 +368,7 @@ void wx_storing::store_argb(uint32_t pixel) {
   *alpha_data++ = palette::get_alpha(pixel);
 }
 
-class render_target::scoped_target_texture
-    : public render_target::scoped_buffer {
+class render_target::scoped_target_texture : public scoped_buffer {
  public:
   scoped_target_texture(render_target* pTarget, int iX, int iY, int iWidth,
                         int iHeight, bool bScale)
@@ -401,9 +398,11 @@ class render_target::scoped_target_texture
     targetRect.y -= static_cast<SDL_FRECT_UNIT>(rect.y);
   }
 
-  double scale_factor() { return scale ? target->global_scale_factor : 1.0; }
+  double scale_factor() const {
+    return scale ? target->global_scale_factor : 1.0;
+  }
 
-  bool is_target() { return texture; }
+  bool is_target() const { return texture; }
 
   ~scoped_target_texture() override {
     if (!texture) return;
@@ -441,10 +440,14 @@ render_target::render_target()
       pixel_format(nullptr),
       blue_filter_active(false),
       game_cursor(nullptr),
+      bitmap_scale_factor(0),
       global_scale_factor(1.0),
       width(-1),
       height(-1),
+      cursor_x(0),
+      cursor_y(0),
       scale_bitmaps(false),
+      supports_target_textures(false),
       apply_opengl_clip_fix(false),
       direct_zoom(false) {}
 
@@ -537,50 +540,55 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
 
   if (fScale <= 0.000) {
     return false;
-  } else if (eWhatToScale == scaled_items::all && direct_zoom) {
-    global_scale_factor = fScale;
-    if ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
-        SDL_WINDOW_FULLSCREEN_DESKTOP) {
-      // Drawing to an intermediate screen sized buffer when fullscreen results
-      // in noticeably better text rendering quality.
-      zoom_buffer =
-          std::make_unique<scoped_target_texture>(this, 0, 0, width, height,
-                                                  /* bScale = */ true);
+  } else {
+    if (eWhatToScale == scaled_items::all && direct_zoom) {
+      global_scale_factor = fScale;
+      if ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
+          SDL_WINDOW_FULLSCREEN_DESKTOP) {
+        // Drawing to an intermediate screen sized buffer when fullscreen
+        // results in noticeably better text rendering quality.
+        zoom_buffer =
+            std::make_unique<scoped_target_texture>(this, 0, 0, width, height,
+                                                    /* bScale = */ true);
+      }
+      return true;
     }
-    return true;
-  } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
-    // Draw everything from now until the next scale to zoom_texture
-    // with the appropriate virtual size, which will be copied scaled to
-    // fit the window.
-    int virtWidth = static_cast<int>(width / fScale);
-    int virtHeight = static_cast<int>(height / fScale);
+    if (eWhatToScale == scaled_items::all && supports_target_textures) {
+      // Draw everything from now until the next scale to zoom_texture
+      // with the appropriate virtual size, which will be copied scaled to
+      // fit the window.
+      int virtWidth = static_cast<int>(width / fScale);
+      int virtHeight = static_cast<int>(height / fScale);
 
-    zoom_buffer = std::make_unique<scoped_target_texture>(
-        this, 0, 0, virtWidth, virtHeight, /* bScale = */ false);
-    if (!zoom_buffer->is_target()) {
-      global_scale_factor = 1.0;
-      std::cout << "Warning: Could not render to zoom texture - "
-                << SDL_GetError() << std::endl;
+      zoom_buffer = std::make_unique<scoped_target_texture>(
+          this, 0, 0, virtWidth, virtHeight, /* bScale = */ false);
+      if (!zoom_buffer->is_target()) {
+        global_scale_factor = 1.0;
+        std::cout << "Warning: Could not render to zoom texture - "
+                  << SDL_GetError() << std::endl;
 
-      return false;
+        return false;
+      }
+
+      // When zoom_buffer is allocated with bScale = false, this is only used
+      // for the scale to commit the zoom buffer back to the screen at.
+      global_scale_factor = fScale;
+      return true;
     }
+    if (0.999 <= fScale && fScale <= 1.001) {
+      return true;
+    }
+    if (eWhatToScale == scaled_items::bitmaps) {
+      scale_bitmaps = true;
+      bitmap_scale_factor = fScale;
 
-    // When zoom_buffer is allocated with bScale = false, this is only used for
-    // the scale to commit the zoom buffer back to the screen at.
-    global_scale_factor = fScale;
-    return true;
-  } else if (0.999 <= fScale && fScale <= 1.001) {
-    return true;
-  } else if (eWhatToScale == scaled_items::bitmaps) {
-    scale_bitmaps = true;
-    bitmap_scale_factor = fScale;
-
-    return true;
+      return true;
+    }
   }
   return false;
 }
 
-void render_target::set_caption(const char* sCaption) {
+void render_target::set_caption(const char* sCaption) const {
   SDL_SetWindowTitle(window, sCaption);
 }
 
@@ -618,7 +626,7 @@ bool render_target::end_frame() {
   return true;
 }
 
-bool render_target::fill_black() {
+bool render_target::fill_black() const {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(renderer);
 
@@ -629,13 +637,13 @@ void render_target::set_blue_filter_active(bool bActivate) {
   blue_filter_active = bActivate;
 }
 
-// Actiate and Deactivate SDL function to capture mouse to window
-void render_target::set_window_grab(bool bActivate) {
+// Activate and Deactivate SDL function to capture mouse to window
+void render_target::set_window_grab(bool bActivate) const {
   SDL_SetWindowGrab(window, bActivate ? SDL_TRUE : SDL_FALSE);
 }
 
 bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
-                              int iH) {
+                              int iH) const {
   SDL_Rect rcDest = {iX, iY, iW, iH};
   getEnclosingScaleRect(&rcDest, draw_scale(), &rcDest);
 
@@ -662,7 +670,7 @@ void render_target::push_clip_rect(const clip_rect* pRect) {
   if (!clip_rects.empty()) {
     previous_clip = &clip_rects.top();
   }
-  clip_rects.push(SDL_Rect());
+  clip_rects.emplace();
   SDL_Rect& clip = clip_rects.top();
   getEnclosingScaleRect(pRect, draw_scale(), &clip);
   if (previous_clip) {
@@ -672,8 +680,8 @@ void render_target::push_clip_rect(const clip_rect* pRect) {
 
   // For some reason, SDL treats an empty rect (h or w <= 0) as if you turned
   // off clipping, so we replace it with a rect that's outside our viewport.
-  const SDL_Rect rcBogus = {-2, -2, 1, 1};
   if (SDL_RectEmpty(&clip)) {
+    constexpr SDL_Rect rcBogus = {-2, -2, 1, 1};
     clip = rcBogus;
   }
 
@@ -722,7 +730,7 @@ void render_target::set_cursor_position(int iX, int iY) {
   cursor_y = iY;
 }
 
-bool render_target::take_screenshot(const char* sFile) {
+bool render_target::take_screenshot(const char* sFile) const {
   int width = 0, height = 0;
   if (SDL_GetRendererOutputSize(renderer, &width, &height) == -1) return false;
 
@@ -748,7 +756,7 @@ bool render_target::take_screenshot(const char* sFile) {
   return (readStatus != -1);
 }
 
-bool render_target::should_scale_bitmaps(double* pFactor) {
+bool render_target::should_scale_bitmaps(double* pFactor) const {
   if (!scale_bitmaps) return false;
   if (pFactor) *pFactor = bitmap_scale_factor;
   return true;
@@ -846,7 +854,7 @@ SDL_Texture* render_target::create_texture(int iWidth, int iHeight,
 }
 
 void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
-                         const SDL_Rect* prcDstRect, int iFlags) {
+                         const SDL_Rect* prcDstRect, int iFlags) const {
   SDL_SetTextureAlphaMod(pTexture, 0xFF);
   if (iFlags & thdf_alpha_50) {
     SDL_SetTextureAlphaMod(pTexture, 0x80);
@@ -869,7 +877,7 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   }
 }
 
-void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
+void render_target::draw_line(line_sequence* pLine, int iX, int iY) const {
   SDL_SetRenderDrawColor(renderer, pLine->red, pLine->green, pLine->blue,
                          pLine->alpha);
 
@@ -1011,12 +1019,12 @@ bool testSprite(const uint8_t* pData, size_t iDataLength, int iWidth,
 
 }  // namespace
 
-void raw_bitmap::draw(render_target* pCanvas, int iX, int iY) {
+void raw_bitmap::draw(render_target* pCanvas, int iX, int iY) const {
   draw(pCanvas, iX, iY, 0, 0, width, height);
 }
 
 void raw_bitmap::draw(render_target* pCanvas, int iX, int iY, int iSrcX,
-                      int iSrcY, int iWidth, int iHeight) {
+                      int iSrcY, int iWidth, int iHeight) const {
   double fScaleFactor;
   if (texture == nullptr) return;
 
@@ -1031,17 +1039,11 @@ void raw_bitmap::draw(render_target* pCanvas, int iX, int iY, int iSrcX,
   pCanvas->draw(texture, &rcSrc, &rcDest, 0);
 }
 
-sprite_sheet::sprite_sheet() {
-  sprites = nullptr;
-  palette = nullptr;
-  target = nullptr;
-  sprite_count = 0;
-}
-
 sprite_sheet::~sprite_sheet() { _freeSprites(); }
 
-void sprite_sheet::_freeSingleSprite(size_t iNumber) {
+void sprite_sheet::_freeSingleSprite(size_t iNumber) const {
   if (iNumber >= sprite_count) return;
+  if (!sprites) return;
 
   if (sprites[iNumber].texture != nullptr) {
     SDL_DestroyTexture(sprites[iNumber].texture);
@@ -1168,7 +1170,7 @@ bool sprite_sheet::set_sprite_data(size_t iSprite, const uint8_t* pData,
 
 void sprite_sheet::set_sprite_alt_palette_map(size_t iSprite,
                                               const uint8_t* pMap,
-                                              uint32_t iAlt32) {
+                                              uint32_t iAlt32) const {
   if (iSprite >= sprite_count) return;
 
   sprite* pSprite = sprites + iSprite;
@@ -1334,7 +1336,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
 }
 
 void sprite_sheet::wx_draw_sprite(size_t iSprite, uint8_t* pRGBData,
-                                  uint8_t* pAData) {
+                                  uint8_t* pAData) const {
   if (iSprite >= sprite_count || pRGBData == nullptr || pAData == nullptr)
     return;
   sprite* pSprite = sprites + iSprite;
@@ -1343,7 +1345,7 @@ void sprite_sheet::wx_draw_sprite(size_t iSprite, uint8_t* pRGBData,
   oRenderer.decode_image(pSprite->data, palette, pSprite->sprite_flags);
 }
 
-SDL_Texture* sprite_sheet::_makeAltBitmap(sprite* pSprite) {
+SDL_Texture* sprite_sheet::_makeAltBitmap(sprite* pSprite) const {
   const uint32_t* pPalette = palette->get_argb_data();
 
   if (!pSprite->alt_palette_map)  // Use normal palette.
@@ -1458,14 +1460,13 @@ uint32_t get32BppPixel(const uint8_t* pImg, int iWidth, int iHeight,
           // layer. Note that the iOpacity is ignored here.
           const uint32_t* pColours = pPalette->get_argb_data();
           return pColours[pImg[iPixelNumber]];
-        } else {
-          // TODO: Add proper recolour layers, where RGB comes from
-          // table 'iTable' at index *pImg (iLength times), and
-          // opacity comes from the byte after the iTable byte.
-          //
-          // For now just draw black pixels, so it won't go unnoticed.
-          return palette::pack_argb(0xFF, 0, 0, 0);
         }
+        // TODO: Add proper recolour layers, where RGB comes from
+        // table 'iTable' at index *pImg (iLength times), and
+        // opacity comes from the byte after the iTable byte.
+        //
+        // For now just draw black pixels, so it won't go unnoticed.
+        return palette::pack_argb(0xFF, 0, 0, 0);
       }
     }
   }
@@ -1487,13 +1488,6 @@ bool sprite_sheet::hit_test_sprite(size_t iSprite, int iX, int iY,
   uint32_t iCol =
       get32BppPixel(sprite.data, iWidth, iHeight, palette, iY * iWidth + iX);
   return palette::get_alpha(iCol) != 0;
-}
-
-cursor::cursor() {
-  bitmap = nullptr;
-  hotspot_x = 0;
-  hotspot_y = 0;
-  hidden_cursor = nullptr;
 }
 
 cursor::~cursor() {
@@ -1644,7 +1638,7 @@ void freetype_font::free_texture(cached_text* pCacheEntry) const {
   }
 }
 
-void freetype_font::make_texture(render_target* pEventualCanvas,
+void freetype_font::make_texture(const render_target* pEventualCanvas,
                                  cached_text* pCacheEntry) const {
   uint32_t* pPixels = new uint32_t[pCacheEntry->width * pCacheEntry->height];
   std::memset(pPixels, 0,
@@ -1664,12 +1658,12 @@ void freetype_font::make_texture(render_target* pEventualCanvas,
   delete[] pPixels;
 }
 
-void freetype_font::draw_texture(render_target* pCanvas,
-                                 cached_text* pCacheEntry, int iX,
-                                 int iY) const {
+void freetype_font::draw_texture(const render_target* pCanvas,
+                                 const cached_text* pCacheEntry, int iX,
+                                 int iY) {
   if (pCacheEntry->texture == nullptr) return;
 
-  SDL_Rect rcDest = {iX, iY, pCacheEntry->width, pCacheEntry->height};
+  const SDL_Rect rcDest = {iX, iY, pCacheEntry->width, pCacheEntry->height};
   pCanvas->draw(pCacheEntry->texture, nullptr, &rcDest, 0);
 }
 

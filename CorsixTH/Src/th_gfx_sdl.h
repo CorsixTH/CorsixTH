@@ -54,7 +54,7 @@ typedef uint32_t argb_colour;
 //! 8bpp palette class.
 class palette {
  public:  // External API
-  palette();
+  palette() = default;
 
   //! Load palette from the supplied data.
   /*!
@@ -76,7 +76,7 @@ class palette {
   */
   bool set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB);
 
- public:  // Internal (this rendering engine only) API
+  // public internal (this rendering engine only) API
   //! Convert A, R, G, B values to a 32bpp colour.
   /*!
       @param iA Amount of opacity (0-255).
@@ -146,16 +146,16 @@ class palette {
       @param iEntry Entry to modify.
       @param iVal Palette value to set.
   */
-  inline void set_argb(int iEntry, uint32_t iVal) {
+  void set_argb(int iEntry, uint32_t iVal) {
     colour_index_to_argb_map[iEntry] = iVal;
   }
 
  private:
   //! 32bpp palette colours associated with the 8bpp colour index.
-  uint32_t colour_index_to_argb_map[256];
+  uint32_t colour_index_to_argb_map[256]{};
 
   //! Number of colours in the palette.
-  int colour_count;
+  int colour_count{};
 };
 
 /*!
@@ -256,7 +256,7 @@ class render_target {
   void destroy();
 
   //! Get the reason for the last operation failing
-  const char* get_last_error();
+  static const char* get_last_error();
 
   //! Begin rendering a new frame
   bool start_frame();
@@ -265,14 +265,14 @@ class render_target {
   bool end_frame();
 
   //! Paint the entire render target black
-  bool fill_black();
+  bool fill_black() const;
 
   //! Sets a blue filter on the current surface.
   // Used to add the blue effect when the game is paused.
   void set_blue_filter_active(bool bActivate);
 
   //! Fill a rectangle of the render target with a solid colour
-  bool fill_rect(uint32_t iColour, int iX, int iY, int iW, int iH);
+  bool fill_rect(uint32_t iColour, int iX, int iY, int iW, int iH) const;
 
   class scoped_clip {
    public:
@@ -296,10 +296,10 @@ class render_target {
   int get_height() const;
 
   //! Enable optimisations for non-overlapping draws
-  void start_nonoverlapping_draws();
+  static void start_nonoverlapping_draws();
 
   //! Disable optimisations for non-overlapping draws
-  void finish_nonoverlapping_draws();
+  static void finish_nonoverlapping_draws();
 
   //! Set the cursor to be used
   void set_cursor(cursor* pCursor);
@@ -308,7 +308,7 @@ class render_target {
   void set_cursor_position(int iX, int iY);
 
   //! Take a screenshot and save it as a bitmap
-  bool take_screenshot(const char* sFile);
+  bool take_screenshot(const char* sFile) const;
 
   //! Set the amount by which future draw operations are scaled.
   /*!
@@ -319,10 +319,10 @@ class render_target {
   bool set_scale_factor(double fScale, scaled_items eWhatToScale);
 
   //! Set the window caption
-  void set_caption(const char* sCaption);
+  void set_caption(const char* sCaption) const;
 
   //! Toggle mouse capture on the window.
-  void set_window_grab(bool bActivate);
+  void set_window_grab(bool bActivate) const;
 
   //! Get any user-displayable information to describe the renderer path used
   const char* get_renderer_details() const;
@@ -345,7 +345,7 @@ class render_target {
           for scaling (can be \c nullptr if not interested in the value).
       @return Whether bitmaps should be scaled.
    */
-  bool should_scale_bitmaps(double* pFactor);
+  bool should_scale_bitmaps(double* pFactor) const;
 
   SDL_Texture* create_palettized_texture(int iWidth, int iHeight,
                                          const uint8_t* pPixels,
@@ -354,8 +354,8 @@ class render_target {
   SDL_Texture* create_texture(int iWidth, int iHeight,
                               const uint32_t* pPixels) const;
   void draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
-            const SDL_Rect* prcDstRect, int iFlags);
-  void draw_line(line_sequence* pLine, int iX, int iY);
+            const SDL_Rect* prcDstRect, int iFlags) const;
+  void draw_line(line_sequence* pLine, int iX, int iY) const;
 
   //! Begin drawing to an intermediate unscaled texture targeting the given
   //! location and size. The intermediate drawing will be committed once
@@ -438,7 +438,7 @@ class raw_bitmap {
       @param iX Destination x position.
       @param iY Destination y position.
   */
-  void draw(render_target* pCanvas, int iX, int iY);
+  void draw(render_target* pCanvas, int iX, int iY) const;
 
   //! Draw part of the image at a given position at the given canvas.
   /*!
@@ -451,7 +451,7 @@ class raw_bitmap {
       @param iHeight Height of the part to display.
   */
   void draw(render_target* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
-            int iWidth, int iHeight);
+            int iWidth, int iHeight) const;
 
  private:
   //! Image stored in SDL format for quick rendering.
@@ -473,7 +473,7 @@ class raw_bitmap {
 //! Sheet of sprites.
 class sprite_sheet {
  public:  // External API
-  sprite_sheet();
+  sprite_sheet() = default;
   ~sprite_sheet();
 
   //! Set the palette to use for the sprites in the sheet.
@@ -519,7 +519,7 @@ class sprite_sheet {
       @param iAlt32 What to do for a 32bpp sprite (#thdf_alt32_mask bits).
   */
   void set_sprite_alt_palette_map(size_t iSprite, const uint8_t* pMap,
-                                  uint32_t iAlt32);
+                                  uint32_t iAlt32) const;
 
   //! Get the number of sprites at the sheet.
   /*!
@@ -603,7 +603,7 @@ class sprite_sheet {
       @param pRGBData Output RGB data array.
       @param pAData Output Alpha channel array.
   */
-  void wx_draw_sprite(size_t iSprite, uint8_t* pRGBData, uint8_t* pAData);
+  void wx_draw_sprite(size_t iSprite, uint8_t* pRGBData, uint8_t* pAData) const;
 
  private:
   friend class cursor;
@@ -648,22 +648,22 @@ class sprite_sheet {
 
     //! Height of the sprite.
     int height;
-  } * sprites;
+  } * sprites{};
 
   //! Original palette.
-  const ::palette* palette;
+  const ::palette* palette{};
 
   //! Target to render to.
-  render_target* target;
+  render_target* target{};
 
   //! Number of sprites in the sprite sheet.
-  size_t sprite_count;
+  size_t sprite_count{};
 
   //! Free memory of a single sprite.
   /*!
       @param iNumber Number of the sprite to clear.
   */
-  void _freeSingleSprite(size_t iNumber);
+  void _freeSingleSprite(size_t iNumber) const;
 
   //! Free the memory used by the sprites. Also releases the SDL bitmaps.
   void _freeSprites();
@@ -674,12 +674,12 @@ class sprite_sheet {
       @param pSprite Sprite to change.
       @return SDL texture containing the sprite.
   */
-  SDL_Texture* _makeAltBitmap(sprite* pSprite);
+  SDL_Texture* _makeAltBitmap(sprite* pSprite) const;
 };
 
 class cursor {
  public:
-  cursor();
+  cursor() = default;
   ~cursor();
 
   bool create_from_sprite(sprite_sheet* pSheet, size_t iSprite,
@@ -692,10 +692,10 @@ class cursor {
   void draw(render_target* pCanvas, int iX, int iY);
 
  private:
-  SDL_Surface* bitmap;
-  SDL_Cursor* hidden_cursor;
-  int hotspot_x;
-  int hotspot_y;
+  SDL_Surface* bitmap{};
+  SDL_Cursor* hidden_cursor{};
+  int hotspot_x{};
+  int hotspot_y{};
 };
 
 class line_sequence {
@@ -730,8 +730,8 @@ class line_sequence {
   };
 
   std::vector<line_element> line_elements;
-  double width;
-  uint8_t red, green, blue, alpha;
+  double width{1};
+  uint8_t red{0}, green{0}, blue{0}, alpha{255};
 };
 
 #endif  // CORSIX_TH_TH_GFX_SDL_H_

@@ -66,7 +66,7 @@ class lua_persist_writer {
     int iNumBytes;
     for (iNumBytes = 1; tTemp >= (T)0x80; tTemp /= (T)0x80) ++iNumBytes;
     if (iNumBytes == 1) {
-      uint8_t iByte = (uint8_t)tValue;
+      uint8_t iByte = static_cast<uint8_t>(tValue);
       write_byte_stream(&iByte, 1);
     } else {
       std::vector<uint8_t> bytes(iNumBytes);
@@ -83,10 +83,11 @@ class lua_persist_writer {
   void write_int(T tValue) {
     typename lua_persist_int<T>::T tValueToWrite;
     if (tValue >= 0) {
-      tValueToWrite = (typename lua_persist_int<T>::T)tValue;
+      tValueToWrite = static_cast<typename lua_persist_int<T>::T>(tValue);
       tValueToWrite <<= 1;
     } else {
-      tValueToWrite = (typename lua_persist_int<T>::T)(-(tValue + 1));
+      tValueToWrite =
+          static_cast<typename lua_persist_int<T>::T>(-(tValue + 1));
       tValueToWrite <<= 1;
       tValueToWrite |= 1;
     }
