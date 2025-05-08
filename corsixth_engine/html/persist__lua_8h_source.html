@@ -96,10 +96,10 @@ $(function() {
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define CORSIX_TH_PERSIST_LUA_H_</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config_8h.html">config.h</a>&quot;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;cstdlib&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;type_traits&gt;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="th__lua_8h.html">th_lua.h</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="lua_8hpp.html">lua.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="structlua__persist__int.html">   33</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structlua__persist__int.html">lua_persist_int</a> {};</div>
@@ -240,10 +240,10 @@ $(function() {
 <div class="ttc" id="aclasslua__persist__writer_html_aba99d9352646ec090bd6c83c2088a376"><div class="ttname"><a href="classlua__persist__writer.html#aba99d9352646ec090bd6c83c2088a376">lua_persist_writer::write_stack_object</a></div><div class="ttdeci">virtual void write_stack_object(int iIndex)=0</div></div>
 <div class="ttc" id="aclasslua__persist__writer_html_aef97adeb8f673df7caec9112aa9fe417"><div class="ttname"><a href="classlua__persist__writer.html#aef97adeb8f673df7caec9112aa9fe417">lua_persist_writer::set_error</a></div><div class="ttdeci">virtual void set_error(const char *sError)=0</div></div>
 <div class="ttc" id="aconfig_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div></div>
-<div class="ttc" id="apersist__lua_8h_html_aab2dcf78b2e98f36d7acdf7e61c03db1"><div class="ttname"><a href="persist__lua_8h.html#aab2dcf78b2e98f36d7acdf7e61c03db1">luaopen_persist</a></div><div class="ttdeci">int luaopen_persist(lua_State *L)</div><div class="ttdef"><b>Definition:</b> persist_lua.cpp:1294</div></div>
+<div class="ttc" id="alua_8hpp_html"><div class="ttname"><a href="lua_8hpp.html">lua.hpp</a></div></div>
+<div class="ttc" id="apersist__lua_8h_html_aab2dcf78b2e98f36d7acdf7e61c03db1"><div class="ttname"><a href="persist__lua_8h.html#aab2dcf78b2e98f36d7acdf7e61c03db1">luaopen_persist</a></div><div class="ttdeci">int luaopen_persist(lua_State *L)</div><div class="ttdef"><b>Definition:</b> persist_lua.cpp:1298</div></div>
 <div class="ttc" id="astructlua__persist__int_3_01int_01_4_html_a2b3a630a1a72cc6d7e131712e64941a4"><div class="ttname"><a href="structlua__persist__int_3_01int_01_4.html#a2b3a630a1a72cc6d7e131712e64941a4">lua_persist_int&lt; int &gt;::T</a></div><div class="ttdeci">unsigned int T</div><div class="ttdef"><b>Definition:</b> persist_lua.h:36</div></div>
 <div class="ttc" id="astructlua__persist__int_html"><div class="ttname"><a href="structlua__persist__int.html">lua_persist_int</a></div><div class="ttdef"><b>Definition:</b> persist_lua.h:33</div></div>
-<div class="ttc" id="ath__lua_8h_html"><div class="ttname"><a href="th__lua_8h.html">th_lua.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.17-->
 <!-- start footer part -->
