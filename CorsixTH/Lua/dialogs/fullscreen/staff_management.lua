@@ -419,22 +419,35 @@ end
 
 function UIStaffManagement:onMouseDown(code, x, y)
   if code == "left" then
-    if x > 50 and x < 490 then
-      if y > 82 and y < 351 then
-        if #self.staff_members[self.category] - (self.page - 1)*10 > math_floor((y - 81)/27) then
-          self.selected_staff = math_floor((y - 81)/27) + 1 + (self.page - 1)*10
-        end
+    local inside_stuff_list_area = (x > 50 and x < 624) and (y > 82 and y < 351)
+    if inside_stuff_list_area then
+      -- Hit staff row
+      if #self.staff_members[self.category] - (self.page - 1)*10 > math_floor((y - 81)/27) then
+        self.selected_staff = math_floor((y - 81)/27) + 1 + (self.page - 1)*10
       end
-    elseif x > 497 and x < 580 and y > 373 and y < 455 and self.selected_staff then
-      -- Hit in the view of the staff
+    else
+      local inside_view_of_the_staff_area = (x > 497 and x < 580) and (y > 373 and y < 455)
+      if inside_view_of_the_staff_area and self.selected_staff then
+        return false -- on false window dragging won't work
+      end
+    end
+  end
+  return UIFullscreen.onMouseDown(self, code, x, y)
+end
+
+function UIStaffManagement:onMouseUp(code, x, y)
+  if code == "left" then
+    local inside_view_of_the_staff_area = (x > 497 and x < 580) and (y > 373 and y < 455)
+    if inside_view_of_the_staff_area and self.selected_staff then
+      -- Hit in the view of the staff. This handler better be here in onMouseUp,
+      -- not in onMouseDown, because in onMouseDown it interferes with world objects.
       local ui = self.ui
       ui:scrollMapTo(self:getStaffPosition())
       ui:addWindow(UIStaff(ui, self.staff_members[self.category][self.selected_staff]))
       self:close()
-      return false
     end
   end
-  return UIFullscreen.onMouseDown(self, code, x, y)
+  return UIFullscreen.onMouseUp(self, code, x, y)
 end
 
 function UIStaffManagement:onMouseWheel(x, y)
