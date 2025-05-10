@@ -26,6 +26,7 @@ object.tooltip = _S.tooltip.objects.screen
 object.ticks = false
 object.build_preview_animation = 926
 object.show_in_town_map = true
+-- More than one idle animation exists, but we can only set one to the object
 object.idle_animations = {
   north = 1022,
 }
@@ -36,5 +37,42 @@ object.orientations = {
     use_position = "passable",
   },
 }
+
+-- Animation numbers below correspond to non-operating theatre uses only
+-- See surgeon_screen.lua for that room
+object.usage_animations = {
+  north = {
+    in_use = {
+      ["Elvis Patient"] = 946, -- specifically, transformation
+      ["Standard Male Patient"] = {
+        undress = 1048,
+        dress   = 1052,
+      },
+      ["Standard Female Patient"] = {
+        undress = 2848,
+        dress   = 2844,
+      },
+    },
+  },
+}
+
+
+local anim_mgr = TheApp.animation_manager
+local kf1, kf2, kf3 = {-1, -1}, {-0.9, -0.8}, {-0.6, -0.6}
+local anims = { object.idle_animations.north, 1204 } -- idle anims
+anim_mgr:setPatientMarker(anims, kf1)
+anim_mgr:setStaffMarker(anims, kf1)
+
+anims = object.usage_animations.north.in_use
+anim_mgr:setPatientMarker(anims["Elvis Patient"],
+    0, kf1, 6, kf1, 7, kf2, 11, kf2, 12, kf1, 24, kf1, 28, kf3, 32, kf3, 36, kf1, 43, kf1)
+anim_mgr:setPatientMarker(anims["Standard Male Patient"].undress,
+    0, kf1, 7, kf1, 8, kf2, 12, kf2, 13, kf1)
+anim_mgr:setPatientMarker(anims["Standard Male Patient"].dress,
+    0, kf1, 10, kf1, 11, kf2, 21, kf2, 22, kf1)
+anim_mgr:setPatientMarker(anims["Standard Female Patient"].undress,
+    0, kf1, 2, kf2, 3, kf2, 9, kf2, 11, kf1, 17, kf1, 18, kf2, 25, kf2, 26, kf1)
+anim_mgr:setPatientMarker(anims["Standard Female Patient"].dress,
+    0, kf1, 2, kf1, 3, kf2, 12, kf2, 13, kf1)
 
 return object
