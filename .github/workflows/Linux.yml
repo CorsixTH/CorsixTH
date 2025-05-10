@@ -138,8 +138,7 @@ jobs:
             AnimView/*.h libs/rnc/*.cpp libs/rnc/*.h CorsixTH/SrcUnshared/main.cpp
           git diff
           # Clang-tidy linter
-          clang-tidy-20 -p build --warnings-as-errors=\* \
-            CorsixTH/Src/*.c CorsixTH/Src/*.cpp libs/rnc/*.cpp CorsixTH/SrcUnshared/main.cpp
+          run-clang-tidy-20 -p build
           git diff --quiet # exit if clang-format made any changes
       - name: Generate documentation
         if: matrix.docs
