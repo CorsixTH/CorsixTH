@@ -356,42 +356,46 @@ function Room:onHumanoidEnter(humanoid)
   if class.is(humanoid, Staff) then
     -- If the room is already full of staff, or the staff member isn't relevant
     -- to the room, then make them leave. Otherwise, take control of them.
-    if not self:staffFitsInRoom(humanoid) then
-      if self:getStaffMember() and self:staffMeetsRoomRequirements(humanoid) then
-        local staff_member = self:getStaffMember()
-        self.humanoids[humanoid] = true
-          if staff_member.profile.is_researcher and self.room_info.id == "research" then
-            self.hospital:giveAdvice(researcher_desks)
-          end
-          if staff_member.humanoid_class == "Nurse" and self.room_info.id == "ward" then
-            self.hospital:giveAdvice(nurse_desks)
-          end
-        if not staff_member.dealing_with_patient then
-          staff_member:setNextAction(self:createLeaveAction())
-          staff_member:queueAction(MeanderAction())
-          self.staff_member = humanoid
-          humanoid:setCallCompleted()
-          self:commandEnteringStaff(humanoid)
+    local staff_entered = humanoid
+    if not self:staffFitsInRoom(staff_entered) then
+      if self:getStaffMember() and self:staffMeetsRoomRequirements(staff_entered) then
+        local staff_in_room = self:getStaffMember()
+        self.humanoids[staff_entered] = true
+        if staff_in_room.profile.is_researcher and self.room_info.id == "research" then
+          self.hospital:giveAdvice(researcher_desks)
+        end
+        if staff_in_room.humanoid_class == "Nurse" and self.room_info.id == "ward" then
+          self.hospital:giveAdvice(nurse_desks)
+        end
+        if not staff_in_room.dealing_with_patient or staff_in_room:isMeandering() then
+          -- Previous staff in the room not currently occupied by serving patient in room.
+          -- Send out the previous staff and appoint new one.
+          staff_in_room:setNextAction(self:createLeaveAction())
+          staff_in_room:queueAction(MeanderAction())
+          self.staff_member = staff_entered
+          staff_entered:setCallCompleted()
+          self:commandEnteringStaff(staff_entered)
         else
           if self.waiting_staff_member then
             self.waiting_staff_member.waiting_on_other_staff = nil
             self.waiting_staff_member:setNextAction(self:createLeaveAction())
             self.waiting_staff_member:queueAction(MeanderAction())
           end
-          self:createDealtWithPatientCallback(humanoid)
-          humanoid.waiting_on_other_staff = true
-          humanoid:setNextAction(MeanderAction())
+          self:createDealtWithPatientCallback(staff_entered)
+          staff_entered.waiting_on_other_staff = true
+          staff_entered:setNextAction(MeanderAction())
         end
       else
-        self.humanoids[humanoid] = true
-        humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction(MeanderAction())
-        humanoid:adviseWrongPersonForThisRoom()
+        -- Inappropriate staff for this room
+        self.humanoids[staff_entered] = true
+        staff_entered:setNextAction(self:createLeaveAction())
+        staff_entered:queueAction(MeanderAction())
+        staff_entered:adviseWrongPersonForThisRoom()
       end
     else
-      self.humanoids[humanoid] = true
-      humanoid:setCallCompleted()
-      self:commandEnteringStaff(humanoid)
+      self.humanoids[staff_entered] = true
+      staff_entered:setCallCompleted()
+      self:commandEnteringStaff(staff_entered)
     end
     self:tryAdvanceQueue()
     return
@@ -402,22 +406,23 @@ function Room:onHumanoidEnter(humanoid)
     -- An infect patient's disease may have changed so they might have
     -- been sent to an incorrect diagnosis room, they should leave and go
     -- back to the gp for redirection
-    if (humanoid.infected) and not humanoid.diagnosed and
-        not self:isDiagnosisRoomForPatient(humanoid) then
-      humanoid:queueAction(self:createLeaveAction())
-      humanoid.needs_redirecting = true
-      humanoid:queueAction(SeekRoomAction("gp"))
+    local patient_entered = humanoid
+    if patient_entered.infected and not patient_entered.diagnosed and
+        not self:isDiagnosisRoomForPatient(patient_entered) then
+      patient_entered:queueAction(self:createLeaveAction())
+      patient_entered.needs_redirecting = true
+      patient_entered:queueAction(SeekRoomAction("gp"))
       return
     end
     -- Check if the staff requirements are still fulfilled (the staff might have left / been picked up meanwhile)
     if self:testStaffCriteria(self:getRequiredStaffCriteria()) then
-      if self.staff_member  then
+      if self.staff_member then
         self:setStaffMembersAttribute("dealing_with_patient", true)
       end
-      self:commandEnteringPatient(humanoid)
+      self:commandEnteringPatient(patient_entered)
     else
-      humanoid:setNextAction(self:createLeaveAction())
-      humanoid:queueAction(self:createEnterAction(humanoid))
+      patient_entered:setNextAction(self:createLeaveAction())
+      patient_entered:queueAction(self:createEnterAction(patient_entered))
     end
   end
 end
@@ -492,16 +497,16 @@ end
 
 --! When a valid member of staff enters the room this function is called.
 -- Can be extended in derived classes.
---!param humanoid The staff in question
---!param already_initialized If true, this means that the staff has already got order
+--!param staff (object) The staff in question
+--!param already_initialized (bool) If true, this means that the staff has already got order
 -- what to do.
-function Room:commandEnteringStaff(humanoid, already_initialized)
+function Room:commandEnteringStaff(staff, already_initialized)
   if not already_initialized then
-    self.staff_member = humanoid
-    humanoid:setNextAction(MeanderAction())
+    self.staff_member = staff
+    staff:setNextAction(MeanderAction())
   end
   self:tryToFindNearbyPatients()
-  humanoid:setDynamicInfoText("")
+  staff:setDynamicInfoText("")
   -- This variable is used to avoid multiple calls for staff (sound played only)
   self.sound_played = nil
   if self:testStaffCriteria(self:getRequiredStaffCriteria()) then
