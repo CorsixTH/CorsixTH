@@ -622,7 +622,7 @@ void movie_player::run_video() {
       break;
     } else if (iError < 0) {
       std::cerr << "Unexpected error " << iError
-                << " while decoding video packet" << std::endl;
+                << " while decoding video packet\n";
       break;
     }
 
@@ -709,7 +709,7 @@ int movie_player::decode_audio_frame(uint8_t* stream, int stream_size) {
       swr_convert(audio_resample_context, &stream, iOutSamples, nullptr, 0);
   if (actual_samples < 0) {
     std::cerr << "WARN: Unexpected error " << actual_samples
-              << " while converting audio" << std::endl;
+              << " while converting audio\n";
     return 0;
   } else if (actual_samples > 0) {
     return actual_samples * av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) *
@@ -723,7 +723,7 @@ int movie_player::decode_audio_frame(uint8_t* stream, int stream_size) {
     return 0;
   } else if (iError < 0) {
     std::cerr << "WARN: Unexpected error " << iError
-              << " while decoding audio packet" << std::endl;
+              << " while decoding audio packet\n";
     return 0;
   }
 
@@ -738,7 +738,7 @@ int movie_player::decode_audio_frame(uint8_t* stream, int stream_size) {
                   audio_frame->nb_samples);
   if (actual_samples < 0) {
     std::cerr << "WARN: Unexpected error " << actual_samples
-              << " while converting audio" << std::endl;
+              << " while converting audio\n";
     return 0;
   }
   return actual_samples * av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) *

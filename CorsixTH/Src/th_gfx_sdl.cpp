@@ -560,7 +560,7 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     if (!zoom_buffer->is_target()) {
       global_scale_factor = 1.0;
       std::cout << "Warning: Could not render to zoom texture - "
-                << SDL_GetError() << std::endl;
+                << SDL_GetError() << "\n";
 
       return false;
     }
