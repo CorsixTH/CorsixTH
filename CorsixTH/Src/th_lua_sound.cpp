@@ -103,8 +103,8 @@ size_t l_soundarc_checkidx(lua_State* L, int iArg, sound_archive* pArchive) {
   lua_getfenv(L, 1);
   lua_pushvalue(L, iArg);
   lua_rawget(L, -2);
-  if (lua_type(L, -1) == LUA_TLIGHTUSERDATA) {
-    size_t iIndex = (size_t)lua_topointer(L, -1);
+  if (lua_type(L, -1) == LUA_TNUMBER) {
+    size_t iIndex = static_cast<size_t>(lua_tointeger(L, -1));
     lua_pop(L, 2);
     return iIndex;
   }
@@ -114,7 +114,7 @@ size_t l_soundarc_checkidx(lua_State* L, int iArg, sound_archive* pArchive) {
     if (ignorecase_cmp(sName, pArchive->get_sound_name(i)) == 0) {
       lua_getfenv(L, 1);
       lua_pushvalue(L, iArg);
-      lua_pushlightuserdata(L, (void*)i);
+      lua_pushinteger(L, static_cast<lua_Integer>(i));
       lua_settable(L, -3);
       lua_pop(L, 1);
       return i;
