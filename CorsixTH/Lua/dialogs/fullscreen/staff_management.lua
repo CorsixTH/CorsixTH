@@ -439,8 +439,7 @@ function UIStaffManagement:onMouseUp(code, x, y)
   if code == "left" then
     local inside_view_of_the_staff_area = (x > 497 and x < 580) and (y > 373 and y < 455)
     if inside_view_of_the_staff_area and self.selected_staff then
-      -- Hit in the view of the staff. This handler better be here in onMouseUp,
-      -- not in onMouseDown, because in onMouseDown it interferes with world objects.
+      -- Hit in the view of the staff.
       local ui = self.ui
       ui:scrollMapTo(self:getStaffPosition())
       ui:addWindow(UIStaff(ui, self.staff_members[self.category][self.selected_staff]))
