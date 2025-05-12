@@ -55,7 +55,11 @@ jobs:
       - name: Install static analysis requirements
         if: matrix.static_analysis
         run: |
-          sudo apt-get install doxygen yamllint clang-format-11 clang-tidy-11
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 20
+
+          sudo apt-get install doxygen yamllint clang-format-20 clang-tidy-20
 
           sudo pip3 install -I codespell==2.2 cmakelint==1.4
 
@@ -130,12 +134,11 @@ jobs:
         if: matrix.static_analysis
         run: |
           # Check cpp format
-          clang-format-11 -i CorsixTH/Src/*.cpp CorsixTH/Src/*.h AnimView/*.cpp \
+          clang-format-20 -i CorsixTH/Src/*.cpp CorsixTH/Src/*.h AnimView/*.cpp \
             AnimView/*.h libs/rnc/*.cpp libs/rnc/*.h CorsixTH/SrcUnshared/main.cpp
           git diff
           # Clang-tidy linter
-          clang-tidy-11 -p build --warnings-as-errors=\* \
-            CorsixTH/Src/*.c CorsixTH/Src/*.cpp libs/rnc/*.cpp CorsixTH/SrcUnshared/main.cpp
+          run-clang-tidy-20 -p build
           git diff --quiet # exit if clang-format made any changes
       - name: Generate documentation
         if: matrix.docs
