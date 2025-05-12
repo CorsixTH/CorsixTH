@@ -419,8 +419,8 @@ end
 
 function UIStaffManagement:onMouseDown(code, x, y)
   if code == "left" then
-    local inside_stuff_list_area = (x > 50 and x < 624) and (y > 82 and y < 351)
-    if inside_stuff_list_area then
+    local inside_staff_list_area = (x > 50 and x < 624) and (y > 82 and y < 351)
+    if inside_staff_list_area then
       -- Hit staff row
       if #self.staff_members[self.category] - (self.page - 1)*10 > math_floor((y - 81)/27) then
         self.selected_staff = math_floor((y - 81)/27) + 1 + (self.page - 1)*10
