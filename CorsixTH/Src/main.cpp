@@ -54,13 +54,6 @@ int luaopen_lpeg(lua_State* L);
 
 namespace {
 
-inline void preload_lua_package(lua_State* L, const char* name,
-                                lua_CFunction fn) {
-  luaT_execute(
-      L, std::string("package.preload.").append(name).append(" = ...").c_str(),
-      fn);
-}
-
 // relace me with C++17 std::filesystem::exists
 inline bool file_exists(const char* f) {
   std::ifstream file(f);

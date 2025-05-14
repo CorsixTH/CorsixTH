@@ -36,9 +36,6 @@ endif()
 
 add_custom_target(AllTests)
 
-# Expose the header files from CorsixTH
-include_directories(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
-
 add_executable(UnitTests "")
 target_link_libraries(UnitTests
   Catch2::Catch2WithMain
@@ -61,6 +58,7 @@ add_dependencies(AllTests UnitTests)
 target_sources(UnitTests
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua_map.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_strings.cpp
 )
 
