@@ -744,7 +744,7 @@ void frmMain::updateMoodPosition(int centerX, int centerY) {
   }
   m_txtMoodPosition[1]->SetValue(
       wxString::Format(L"{%i, %i, \"px\"}", m_iMoodDrawX, m_iMoodDrawY));
-  printf("%ld, {%i, %i, \"px\"}, -- Anim %ld\n", m_iCurrentFrame, m_iMoodDrawX,
+  printf("%zd, {%i, %i, \"px\"}, -- Anim %zd\n", m_iCurrentFrame, m_iMoodDrawX,
          m_iMoodDrawY, m_iCurrentAnim);
 
   if (m_bDrawMood) m_panFrame->Refresh(false);
