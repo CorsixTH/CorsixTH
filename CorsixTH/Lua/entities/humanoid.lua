@@ -182,13 +182,13 @@ local doorL_markers = { -- Anim 3286 in particular.
 
 assignPatientMarkers(door_animations, "entering", doorE_markers)
 assignPatientMarkers(door_animations, "leaving", doorL_markers)
-assignPatientMarkers(door_animations, "entering_swing", 0, {-1.0, 0.0}, 8, {0.0, 0.0})
-assignPatientMarkers(door_animations, "leaving_swing", 0, {0.1, 0.0}, 9, {0.0, -1.0})
+assignPatientMarkers(door_animations, "leaving_swing", {3, 4, "px"}, {32, -14, "px"})
+assignPatientMarkers(door_animations, "entering_swing", {-32, -10, "px"}, {0, -2, "px"})
 
 assignStaffMarkers(door_animations, "entering", doorE_markers)
 assignStaffMarkers(door_animations, "leaving", doorL_markers)
-assignStaffMarkers(door_animations, "entering_swing", 0, {-1.0, 0.0}, 8, {0.0, 0.0})
-assignStaffMarkers(door_animations, "leaving_swing", 0, {0.1, 0.0}, 9, {0.0, -1.0})
+assignStaffMarkers(door_animations, "leaving_swing", {3, 4, "px"}, {32, -14, "px"})
+assignStaffMarkers(door_animations, "entering_swing", {-32, -10, "px"}, {0, -2, "px"})
 
 --  | Die Animations                 |
 --  | Name                           |FallE|RiseE|RiseE Hell|WingsE|HandsE|FlyE|ExtraE| Notes 2248
