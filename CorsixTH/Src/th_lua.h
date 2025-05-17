@@ -25,12 +25,33 @@ SOFTWARE.
 #include "config.h"
 
 #include <cassert>
+#include <memory>
 #include <new>
 
 #include "lua.hpp"
 
+class lua_state_deleter {
+ public:
+  void operator()(lua_State* L) const { lua_close(L); }
+};
+
+//! \brief Unique pointer for lua_State
+using lua_state_unique_ptr = std::unique_ptr<lua_State, lua_state_deleter>;
+
 int luaopen_th(lua_State* L);
 
+// Print debugging helper functions
+
+void luaT_printvalue(lua_State* L, int idx);
+
+void luaT_printstack(lua_State* L);
+
+void luaT_printrawtable(lua_State* L, int idx);
+
+//! Lua 5.3 lua_rotate backported to 5.1+
+/*!
+ /sa https://www.lua.org/manual/5.4/manual.html#lua_rotate
+ */
 inline void luaT_rotate(lua_State* L, int idx, int n) {
 #if LUA_VERSION_NUM >= 503
   lua_rotate(L, idx, n);
@@ -63,6 +84,15 @@ inline int luaT_upvalueindex(int i) {
 #endif
 }
 
+//! Compatibility function for Lua 5.1 luaL_register
+/*!
+ luaL_register was removed in Lua 5.2.
+
+ \param L The lua state
+ \param n The name of the library to register
+ \param l An array of functions to register in the library
+ \sa https://www.lua.org/manual/5.1/manual.html#luaL_register
+ */
 template <class Collection>
 inline void luaT_register(lua_State* L, const char* n, Collection& l) {
 #if LUA_VERSION_NUM >= 502
@@ -76,6 +106,12 @@ inline void luaT_register(lua_State* L, const char* n, Collection& l) {
 #endif
 }
 
+//! Register functions into the table on top of the stack
+/*!
+ \param L The lua state
+ \param R An array of functions to register
+ \sa https://www.lua.org/manual/5.1/manual.html#luaL_register
+ */
 inline void luaT_setfuncs(lua_State* L, const luaL_Reg* R) {
 #if LUA_VERSION_NUM >= 502
   lua_pushvalue(L, luaT_environindex);
@@ -425,12 +461,6 @@ void luaT_execute(lua_State* L, const char* sLuaString, T1 arg1, T2 arg2,
 
 void luaT_pushtablebool(lua_State* L, const char* k, bool v);
 
-// Print debugging helper functions
-
-void luaT_printvalue(lua_State* L, int idx);
-
-void luaT_printstack(lua_State* L);
-
-void luaT_printrawtable(lua_State* L, int idx);
+void preload_lua_package(lua_State* L, const char* name, lua_CFunction fn);
 
 #endif  // CORSIX_TH_TH_LUA_H_

@@ -25,9 +25,7 @@ build:
   verbosity: minimal
 
 test_script:
-  - cd CorsixTH
-  - cmd: ctest -VV -C Release
-  - cd ..
+  - cmd: ctest --extra-verbose --build-config Release --output-on-failure
 
 after_build:
 - curl -L -o %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/FluidR3.sf3 https://github.com/Jacalz/fluid-soundfont/raw/master/SF3/FluidR3.sf3

@@ -382,6 +382,12 @@ void luaT_execute(lua_State* L, const char* sLuaString) {
   lua_call(L, 0, LUA_MULTRET);
 }
 
+void preload_lua_package(lua_State* L, const char* name, lua_CFunction fn) {
+  luaT_execute(
+      L, std::string("package.preload.").append(name).append(" = ...").c_str(),
+      fn);
+}
+
 void luaT_push(lua_State* L, lua_CFunction f) { luaT_pushcfunction(L, f); }
 
 void luaT_push(lua_State* L, int i) { lua_pushinteger(L, (lua_Integer)i); }

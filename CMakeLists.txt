@@ -64,6 +64,10 @@ endif()
 
 project(CorsixTH_Top_Level)
 
+if(ENABLE_UNIT_TESTS)
+  enable_testing()
+endif()
+
 if(MINGW)
   set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 endif()

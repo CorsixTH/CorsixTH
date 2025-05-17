@@ -36,22 +36,16 @@ endif()
 
 add_custom_target(AllTests)
 
-# Expose the header files from CorsixTH
-include_directories(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
-
 add_executable(UnitTests "")
 target_link_libraries(UnitTests
   Catch2::Catch2WithMain
-  CorsixTH_lib
-  ${LUA_LIBRARY}
-  ${CMAKE_DL_LIBS})
+  CorsixTH_lib)
 
 set_property(TARGET UnitTests PROPERTY CXX_STANDARD 14)
 set_property(TARGET UnitTests PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET UnitTests PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # Add the target to CTest
-add_test(NAME UnitTests COMMAND UnitTests)
 set_target_properties(UnitTests PROPERTIES FOLDER UnitTests)
 
 # Make sure we add it as a dependency to all tests (some day we can add LuaTest here)
@@ -61,6 +55,7 @@ add_dependencies(AllTests UnitTests)
 target_sources(UnitTests
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua_map.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_strings.cpp
 )
 
