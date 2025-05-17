@@ -864,9 +864,9 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   if (iSDLFlip != 0) {
     // iSDLFlip may be 3 (HORIZONTAL | VERTICAL) but there is no enum value for
     // that
-    [[clang::suppress]] SDL_RenderCopyExF(renderer, pTexture, prcSrcRect,
-                                          &scaledDstRect, 0, nullptr,
-                                          (SDL_RendererFlip)iSDLFlip);
+    SDL_RenderCopyExF(renderer, pTexture, prcSrcRect, &scaledDstRect, 0,
+                      nullptr,
+                      (SDL_RendererFlip)iSDLFlip);  // NOLINT
   } else {
     SDL_RenderCopyF(renderer, pTexture, prcSrcRect, &scaledDstRect);
   }
