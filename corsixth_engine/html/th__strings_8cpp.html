@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CorsixTH engine (the C++ part): /home/runner/work/CorsixTH/CorsixTH/CorsixTH/Src/th_strings.h File Reference</title>
+<title>CorsixTH engine (the C++ part): /home/runner/work/CorsixTH/CorsixTH/CorsixTH/Src/th_strings.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,34 +70,33 @@ $(function() {
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">th_strings.h File Reference</div>  </div>
+<div class="title">th_strings.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="config_8h_source.html">config.h</a>&quot;</code><br />
-</div>
-<p><a href="th__strings_8h_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="th__strings_8h_source.html">th_strings.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="config_8h_source.html">config.h</a>&quot;</code><br />
+<code>#include &lt;cwctype&gt;</code><br />
+<code>#include &lt;stdexcept&gt;</code><br />
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5d730665a4b3192da968fb6bbbe0fdc5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8h.html#a5d730665a4b3192da968fb6bbbe0fdc5">discard_leading_set_bits</a> (uint8_t &amp;byte)</td></tr>
+<tr class="memitem:a5d730665a4b3192da968fb6bbbe0fdc5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8cpp.html#a5d730665a4b3192da968fb6bbbe0fdc5">discard_leading_set_bits</a> (uint8_t &amp;byte)</td></tr>
 <tr class="separator:a5d730665a4b3192da968fb6bbbe0fdc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07fd15c1e581cdbfc5f88204e4efe578"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8h.html#a07fd15c1e581cdbfc5f88204e4efe578">next_utf8_codepoint</a> (const char *&amp;sString, const char *end)</td></tr>
+<tr class="memitem:a07fd15c1e581cdbfc5f88204e4efe578"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8cpp.html#a07fd15c1e581cdbfc5f88204e4efe578">next_utf8_codepoint</a> (const char *&amp;sString, const char *end)</td></tr>
 <tr class="separator:a07fd15c1e581cdbfc5f88204e4efe578"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a443cccf0cc0524fda61cf93b00b3479c"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8h.html#a443cccf0cc0524fda61cf93b00b3479c">decode_utf8</a> (const char *sString, const char *end)</td></tr>
+<tr class="memitem:a443cccf0cc0524fda61cf93b00b3479c"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8cpp.html#a443cccf0cc0524fda61cf93b00b3479c">decode_utf8</a> (const char *sString, const char *end)</td></tr>
 <tr class="separator:a443cccf0cc0524fda61cf93b00b3479c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97d6c404cf54b7bdaaefff0a6e1386a4"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8h.html#a97d6c404cf54b7bdaaefff0a6e1386a4">previous_utf8_codepoint</a> (const char *sString)</td></tr>
+<tr class="memitem:a97d6c404cf54b7bdaaefff0a6e1386a4"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8cpp.html#a97d6c404cf54b7bdaaefff0a6e1386a4">previous_utf8_codepoint</a> (const char *sString)</td></tr>
 <tr class="separator:a97d6c404cf54b7bdaaefff0a6e1386a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4af1659821787a84d0ebe1b25e852137"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8h.html#a4af1659821787a84d0ebe1b25e852137">skip_utf8_whitespace</a> (const char *&amp;sString, const char *end)</td></tr>
+<tr class="memitem:a4af1659821787a84d0ebe1b25e852137"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8cpp.html#a4af1659821787a84d0ebe1b25e852137">skip_utf8_whitespace</a> (const char *&amp;sString, const char *end)</td></tr>
 <tr class="separator:a4af1659821787a84d0ebe1b25e852137"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6445f694f5f64de06742f1294697c861"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8h.html#a6445f694f5f64de06742f1294697c861">unicode_to_codepage_437</a> (unsigned int iCodePoint)</td></tr>
+<tr class="memitem:a6445f694f5f64de06742f1294697c861"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8cpp.html#a6445f694f5f64de06742f1294697c861">unicode_to_codepage_437</a> (unsigned int iCodePoint)</td></tr>
 <tr class="separator:a6445f694f5f64de06742f1294697c861"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a019d6f1113e97fc735e770bf69cd8981"><td class="memItemLeft" align="right" valign="top">constexpr unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8h.html#a019d6f1113e97fc735e770bf69cd8981">invalid_char_codepoint</a> = 0xFFFD</td></tr>
-<tr class="separator:a019d6f1113e97fc735e770bf69cd8981"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a124f0a44fda3a25f47c10431898cc426"><td class="memItemLeft" align="right" valign="top">constexpr unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8h.html#a124f0a44fda3a25f47c10431898cc426">ideographic_space_codepoint</a> = 0x3000</td></tr>
-<tr class="separator:a124f0a44fda3a25f47c10431898cc426"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c6eee93a964f99c7471724100f6d398"><td class="memItemLeft" align="right" valign="top">constexpr uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__strings_8cpp.html#a9c6eee93a964f99c7471724100f6d398">unicode_to_cp437_table</a> [0x60]</td></tr>
+<tr class="separator:a9c6eee93a964f99c7471724100f6d398"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a443cccf0cc0524fda61cf93b00b3479c"></a>
@@ -239,8 +238,8 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="a124f0a44fda3a25f47c10431898cc426"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a124f0a44fda3a25f47c10431898cc426">&#9670;&nbsp;</a></span>ideographic_space_codepoint</h2>
+<a id="a9c6eee93a964f99c7471724100f6d398"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c6eee93a964f99c7471724100f6d398">&#9670;&nbsp;</a></span>unicode_to_cp437_table</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -249,7 +248,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr unsigned int ideographic_space_codepoint = 0x3000</td>
+          <td class="memname">constexpr uint16_t unicode_to_cp437_table[0x60]</td>
         </tr>
       </table>
   </td>
@@ -258,29 +257,16 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a019d6f1113e97fc735e770bf69cd8981"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a019d6f1113e97fc735e770bf69cd8981">&#9670;&nbsp;</a></span>invalid_char_codepoint</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr unsigned int invalid_char_codepoint = 0xFFFD</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    0xFF, 0xAD, 0x9B, 0x9C, 0x3F, 0x9D, 0x3F, 0x3F, 0x3F, 0x3F, 0xA6, 0xAE,</div>
+<div class="line">    0xAA, 0x3F, 0x3F, 0x3F, 0xF8, 0xF1, 0xFD, 0x3F, 0x3F, 0x3F, 0x3F, 0xFA,</div>
+<div class="line">    0x3F, 0x3F, 0xA7, 0xAF, 0xAC, 0xAB, 0x3F, 0xA8, 0x3F, 0x3F, 0x3F, 0x3F,</div>
+<div class="line">    0x8E, 0x8F, 0x3F, 0x80, 0x3F, 0x90, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F,</div>
+<div class="line">    0x3F, 0xA5, 0x3F, 0x3F, 0x3F, 0x3F, 0x99, 0x3F, 0x3F, 0x3F, 0x3F, 0x3F,</div>
+<div class="line">    0x9A, 0x3F, 0x3F, 0xE1, 0x85, 0xA0, 0x83, 0x3F, 0x84, 0x86, 0x91, 0x87,</div>
+<div class="line">    0x8A, 0x82, 0x88, 0x89, 0x8D, 0xA1, 0x8C, 0x8B, 0x3F, 0xA4, 0x95, 0xA2,</div>
+<div class="line">    0x93, 0x3F, 0x94, 0xF6, 0x3F, 0x97, 0xA3, 0x96, 0x81, 0x3F, 0x3F, 0x98}</div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

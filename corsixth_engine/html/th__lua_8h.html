@@ -68,6 +68,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -76,6 +77,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="config_8h_source.html">config.h</a>&quot;</code><br />
 <code>#include &lt;cassert&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;new&gt;</code><br />
 <code>#include &quot;<a class="el" href="lua_8hpp_source.html">lua.hpp</a>&quot;</code><br />
 </div>
@@ -83,6 +85,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlua__state__deleter.html">lua_state_deleter</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluaT__classinfo.html">luaT_classinfo&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluaT__classinfo_3_01render__target_01_4.html">luaT_classinfo&lt; render_target &gt;</a></td></tr>
@@ -130,18 +134,33 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluaT__classinfo_3_01iso__filesystem_01_4.html">luaT_classinfo&lt; iso_filesystem &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:aa61367328ac04c8aac9a0041374b9ba1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#aa61367328ac04c8aac9a0041374b9ba1">lua_state_unique_ptr</a> = std::unique_ptr&lt; lua_State, <a class="el" href="classlua__state__deleter.html">lua_state_deleter</a> &gt;</td></tr>
+<tr class="memdesc:aa61367328ac04c8aac9a0041374b9ba1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique pointer for lua_State.  <a href="th__lua_8h.html#aa61367328ac04c8aac9a0041374b9ba1">More...</a><br /></td></tr>
+<tr class="separator:aa61367328ac04c8aac9a0041374b9ba1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a72816e6d529b23e260088949550f64cd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#a72816e6d529b23e260088949550f64cd">luaopen_th</a> (lua_State *L)</td></tr>
 <tr class="separator:a72816e6d529b23e260088949550f64cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca36904d8940bcb3b432d34ae30bb2a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#aca36904d8940bcb3b432d34ae30bb2a9">luaT_printvalue</a> (lua_State *L, int idx)</td></tr>
+<tr class="separator:aca36904d8940bcb3b432d34ae30bb2a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0e380465968f8ae478548947f5f2bb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#ae0e380465968f8ae478548947f5f2bb0">luaT_printstack</a> (lua_State *L)</td></tr>
+<tr class="separator:ae0e380465968f8ae478548947f5f2bb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8aca5e29d784bbb490dee4fd2f1715a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#a8aca5e29d784bbb490dee4fd2f1715a8">luaT_printrawtable</a> (lua_State *L, int idx)</td></tr>
+<tr class="separator:a8aca5e29d784bbb490dee4fd2f1715a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0752f82cd5032fd990b02e73257f67af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#a0752f82cd5032fd990b02e73257f67af">luaT_rotate</a> (lua_State *L, int idx, int n)</td></tr>
+<tr class="memdesc:a0752f82cd5032fd990b02e73257f67af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lua 5.3 lua_rotate backported to 5.1+.  <a href="th__lua_8h.html#a0752f82cd5032fd990b02e73257f67af">More...</a><br /></td></tr>
 <tr class="separator:a0752f82cd5032fd990b02e73257f67af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2426c8f84e6715df6ec6d45b8d1543c1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#a2426c8f84e6715df6ec6d45b8d1543c1">luaT_upvalueindex</a> (int i)</td></tr>
 <tr class="separator:a2426c8f84e6715df6ec6d45b8d1543c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3dd4d4437f274343d1f3ce91ee94aa2"><td class="memTemplParams" colspan="2">template&lt;class Collection &gt; </td></tr>
 <tr class="memitem:ac3dd4d4437f274343d1f3ce91ee94aa2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#ac3dd4d4437f274343d1f3ce91ee94aa2">luaT_register</a> (lua_State *L, const char *n, Collection &amp;l)</td></tr>
+<tr class="memdesc:ac3dd4d4437f274343d1f3ce91ee94aa2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compatibility function for Lua 5.1 luaL_register.  <a href="th__lua_8h.html#ac3dd4d4437f274343d1f3ce91ee94aa2">More...</a><br /></td></tr>
 <tr class="separator:ac3dd4d4437f274343d1f3ce91ee94aa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb238d5bf1eee7c287614431b4761eff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#adb238d5bf1eee7c287614431b4761eff">luaT_setfuncs</a> (lua_State *L, const luaL_Reg *R)</td></tr>
+<tr class="memdesc:adb238d5bf1eee7c287614431b4761eff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register functions into the table on top of the stack.  <a href="th__lua_8h.html#adb238d5bf1eee7c287614431b4761eff">More...</a><br /></td></tr>
 <tr class="separator:adb238d5bf1eee7c287614431b4761eff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48e24c3f2bdd96360b669e1cb5eb0147"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#a48e24c3f2bdd96360b669e1cb5eb0147">luaT_pushcclosure</a> (lua_State *L, lua_CFunction f, int nups)</td></tr>
 <tr class="separator:a48e24c3f2bdd96360b669e1cb5eb0147"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,18 +227,31 @@ Functions</h2></td></tr>
 <tr class="separator:a0225ee719bc90f8f43e89eb719906f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5a0a90e07979f7b205ab61a33f316e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#ae5a0a90e07979f7b205ab61a33f316e5">luaT_pushtablebool</a> (lua_State *L, const char *k, bool v)</td></tr>
 <tr class="separator:ae5a0a90e07979f7b205ab61a33f316e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca36904d8940bcb3b432d34ae30bb2a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#aca36904d8940bcb3b432d34ae30bb2a9">luaT_printvalue</a> (lua_State *L, int idx)</td></tr>
-<tr class="separator:aca36904d8940bcb3b432d34ae30bb2a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0e380465968f8ae478548947f5f2bb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#ae0e380465968f8ae478548947f5f2bb0">luaT_printstack</a> (lua_State *L)</td></tr>
-<tr class="separator:ae0e380465968f8ae478548947f5f2bb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8aca5e29d784bbb490dee4fd2f1715a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#a8aca5e29d784bbb490dee4fd2f1715a8">luaT_printrawtable</a> (lua_State *L, int idx)</td></tr>
-<tr class="separator:a8aca5e29d784bbb490dee4fd2f1715a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2565c16adca319babdc00fe5353e7bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#ab2565c16adca319babdc00fe5353e7bf">preload_lua_package</a> (lua_State *L, const char *name, lua_CFunction fn)</td></tr>
+<tr class="separator:ab2565c16adca319babdc00fe5353e7bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a707a9bf7f73cbea17d8a83d838f309fe"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#a707a9bf7f73cbea17d8a83d838f309fe">luaT_environindex</a> = LUA_ENVIRONINDEX</td></tr>
 <tr class="separator:a707a9bf7f73cbea17d8a83d838f309fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="aa61367328ac04c8aac9a0041374b9ba1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa61367328ac04c8aac9a0041374b9ba1">&#9670;&nbsp;</a></span>lua_state_unique_ptr</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="th__lua_8h.html#aa61367328ac04c8aac9a0041374b9ba1">lua_state_unique_ptr</a> =  std::unique_ptr&lt;lua_State, <a class="el" href="classlua__state__deleter.html">lua_state_deleter</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Unique pointer for lua_State. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a72816e6d529b23e260088949550f64cd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a72816e6d529b23e260088949550f64cd">&#9670;&nbsp;</a></span>luaopen_th()</h2>
@@ -1064,6 +1096,18 @@ template&lt;class Collection &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Compatibility function for Lua 5.1 luaL_register. </p>
+<p>luaL_register was removed in Lua 5.2.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">L</td><td>The lua state </td></tr>
+    <tr><td class="paramname">n</td><td>The name of the library to register </td></tr>
+    <tr><td class="paramname">l</td><td>An array of functions to register in the library </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a href="https://www.lua.org/manual/5.1/manual.html#luaL_register">https://www.lua.org/manual/5.1/manual.html#luaL_register</a> </dd></dl>
+
 </div>
 </div>
 <a id="a25fa55c73b2a161bb44c33fe1e6b8dbb"></a>
@@ -1154,6 +1198,9 @@ template&lt;class Collection &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Lua 5.3 lua_rotate backported to 5.1+. </p>
+<p>/sa <a href="https://www.lua.org/manual/5.4/manual.html#lua_rotate">https://www.lua.org/manual/5.4/manual.html#lua_rotate</a> </p>
+
 </div>
 </div>
 <a id="aa4e5d7218b21d3a3fee0b32128196937"></a>
@@ -1227,6 +1274,16 @@ template&lt;class Collection &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Register functions into the table on top of the stack. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">L</td><td>The lua state </td></tr>
+    <tr><td class="paramname">R</td><td>An array of functions to register </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a href="https://www.lua.org/manual/5.1/manual.html#luaL_register">https://www.lua.org/manual/5.1/manual.html#luaL_register</a> </dd></dl>
 
 </div>
 </div>
@@ -1394,6 +1451,40 @@ template&lt;class T &gt; </div>
 <span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab2565c16adca319babdc00fe5353e7bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2565c16adca319babdc00fe5353e7bf">&#9670;&nbsp;</a></span>preload_lua_package()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void preload_lua_package </td>
+          <td>(</td>
+          <td class="paramtype">lua_State *&#160;</td>
+          <td class="paramname"><em>L</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">lua_CFunction&#160;</td>
+          <td class="paramname"><em>fn</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
