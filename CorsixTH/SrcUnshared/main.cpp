@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include "../Src/bootstrap.h"
 #include "../Src/lua.hpp"
+#include "../Src/th_lua.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>
 #endif
@@ -51,16 +52,6 @@ struct types_equal<T1, T1> {
     result = 1,
   };
 };
-
-static void cleanup(lua_State* L) {
-  lua_close(L);
-#ifdef CORSIX_TH_USE_SDL_MIXER
-  while (Mix_QuerySpec(nullptr, nullptr, nullptr)) {
-    Mix_CloseAudio();
-  }
-#endif
-  SDL_Quit();
-}
 
 //! Program entry point
 /*!
@@ -86,29 +77,27 @@ int main(int argc, char** argv) {
   bool bRun = true;
 
   while (bRun) {
-    lua_State* L = nullptr;
-
-    L = luaL_newstate();
+    lua_state_unique_ptr L(luaL_newstate());
     if (L == nullptr) {
       std::fprintf(stderr,
                    "Fatal error starting CorsixTH: "
                    "Cannot open Lua state.\n");
       return 0;
     }
-    lua_atpanic(L, lua_panic);
-    luaL_openlibs(L);
-    lua_settop(L, 0);
-    lua_pushcfunction(L, lua_stacktrace);
-    lua_pushcfunction(L, lua_main);
+    lua_atpanic(L.get(), lua_panic);
+    luaL_openlibs(L.get());
+    lua_settop(L.get(), 0);
+    lua_pushcfunction(L.get(), lua_stacktrace);
+    lua_pushcfunction(L.get(), lua_main);
 
     // Move command line parameters onto the Lua stack
-    lua_checkstack(L, argc);
+    lua_checkstack(L.get(), argc);
     for (int i = 0; i < argc; ++i) {
-      lua_pushstring(L, argv[i]);
+      lua_pushstring(L.get(), argv[i]);
     }
 
-    if (lua_pcall(L, argc, 0, 1) != 0) {
-      const char* err = lua_tostring(L, -1);
+    if (lua_pcall(L.get(), argc, 0, 1) != 0) {
+      const char* err = lua_tostring(L.get(), -1);
       if (err != nullptr) {
         std::fprintf(stderr, "%s\n", err);
       } else {
@@ -116,17 +105,25 @@ int main(int argc, char** argv) {
                      "An error has occurred in CorsixTH:\n"
                      "Uncaught non-string Lua error\n");
       }
-      lua_pushcfunction(L, bootstrap_lua_error_report);
-      lua_insert(L, -2);
-      if (lua_pcall(L, 1, 0, 0) != 0) {
-        std::fprintf(stderr, "%s\n", lua_tostring(L, -1));
+      lua_pushcfunction(L.get(), bootstrap_lua_error_report);
+      lua_insert(L.get(), -2);
+      if (lua_pcall(L.get(), 1, 0, 0) != 0) {
+        std::fprintf(stderr, "%s\n", lua_tostring(L.get(), -1));
       }
     }
 
-    lua_getfield(L, LUA_REGISTRYINDEX, "_RESTART");
-    bRun = lua_toboolean(L, -1) != 0;
+    lua_getfield(L.get(), LUA_REGISTRYINDEX, "_RESTART");
+    bRun = lua_toboolean(L.get(), -1) != 0;
 
-    cleanup(L);
+    // Destroy the lua_State before SDL so that any SDL resource owned by
+    // Lua can be freed first.
+    L.reset(nullptr);
+#ifdef CORSIX_TH_USE_SDL_MIXER
+    while (Mix_QuerySpec(nullptr, nullptr, nullptr)) {
+      Mix_CloseAudio();
+    }
+#endif
+    SDL_Quit();
 
     if (bRun) {
       std::printf("\n\nRestarting...\n\n\n");
