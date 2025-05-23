@@ -104,6 +104,9 @@ CorsixTH/CorsixTH.sln
 .cproject
 .vs/
 
+# CLion / IntelliJ
+.idea/
+
 # Default build path
 CorsixTH/CorsixTH
 CorsixTH/corsix-th
