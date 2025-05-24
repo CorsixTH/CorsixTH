@@ -1,7 +1,7 @@
 {
   "default-registry": {
     "kind": "git",
-    "baseline": "57f42c11b101c1a999bbeaf941fe12752c6de399",
+    "baseline": "8f54ef5453e7e76ff01e15988bf243e7247c5eb5",
     "repository": "https://github.com/microsoft/vcpkg"
   },
   "registries": [
@@ -13,8 +13,8 @@
     {
       "kind": "git",
       "repository": "https://github.com/CorsixTH/vcpkg-registry",
-      "baseline": "b998b8771178330078a06e310c79579a690159ed",
-      "packages": [ "ffmpeg", "luafilesystem", "lpeg" ]
+      "baseline": "1ec0ed6b666d6ef4843e8b8fc0f32cbf5b6fe359",
+      "packages": [ "ffmpeg" ]
     }
   ]
 }
