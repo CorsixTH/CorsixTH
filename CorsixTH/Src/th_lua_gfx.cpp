@@ -227,6 +227,9 @@ int l_bitmap_font_new(lua_State* L) {
 int l_bitmap_font_set_spritesheet(lua_State* L) {
   bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
+  // Note: l_freetype_font_set_spritesheet has an additional parameter
+  // for the colour.
+
   lua_settop(L, 2);
 
   pFont->set_sprite_sheet(pSheet);
@@ -277,11 +280,18 @@ int l_freetype_font_new(lua_State* L) {
 }
 
 int l_freetype_font_set_spritesheet(lua_State* L) {
+  // Any fully transparent colour falls back to getting the font colour from
+  // the sprite sheet.
+  argb_colour colour = 0;
+
   freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
+  if (!lua_isnoneornil(L, 3)) {
+    colour = static_cast<uint32_t>(luaL_checkinteger(L, 3));
+  }
   lua_settop(L, 2);
 
-  l_freetype_throw_error_code(L, pFont->match_bitmap_font(pSheet));
+  l_freetype_throw_error_code(L, pFont->match_bitmap_font(pSheet, colour));
   lua_settop(L, 1);
   return 1;
 }
