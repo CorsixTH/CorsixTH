@@ -227,8 +227,8 @@ int l_bitmap_font_new(lua_State* L) {
 int l_bitmap_font_set_spritesheet(lua_State* L) {
   bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
-  // Note: l_freetype_font_set_spritesheet has an additional parameter
-  // for the colour.
+  // Note: l_freetype_font_set_spritesheet has additional RGB parameters for
+  // the colour.
 
   lua_settop(L, 2);
 
