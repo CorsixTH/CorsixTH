@@ -210,8 +210,8 @@ class freetype_font final : public font {
       not be perfect. This must be called after setFace().
 
       @param font_spritesheet The sprite sheet of the bitmap font.
-      @param colour Colour to use for the font. Providing any fully transparent
-             colour falls back to deriving the colour from the sprite sheet.
+      @param colour Colour to use for the font. Colour 0 falls back to
+          deriving the colour from the sprite sheet.
   */
   FT_Error match_bitmap_font(sprite_sheet* font_spritesheet,
                              argb_colour colour);

@@ -280,14 +280,14 @@ int l_freetype_font_new(lua_State* L) {
 }
 
 int l_freetype_font_set_spritesheet(lua_State* L) {
-  // Any fully transparent colour falls back to getting the font colour from
-  // the sprite sheet.
+  // Colour 0 falls back to using the average colour o the sprite sheet.
   argb_colour colour = 0;
 
   freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
   if (!lua_isnoneornil(L, 3)) {
-    colour = static_cast<uint32_t>(luaL_checkinteger(L, 3));
+    palette *palette = luaT_testuserdata<palette>(L, 3);
+    colour = palette->get_argb_data();
   }
   lua_settop(L, 2);
 

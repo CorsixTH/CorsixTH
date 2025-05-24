@@ -277,7 +277,7 @@ FT_Error freetype_font::match_bitmap_font(sprite_sheet* font_spritesheet,
     if (font_spritesheet->get_sprite_size(iSprite, &iWidth, &iHeight) &&
         font_spritesheet->get_sprite_average_colour(iSprite, &sheet_colour) &&
         iWidth > 1 && iHeight > 1) {
-      font_colour = ((colour & 0xFF000000) == 0) ? sheet_colour : colour;
+      font_colour = (colour == 0) ? sheet_colour : colour;
       return set_ideal_character_size(iWidth, iHeight);
     }
   }
@@ -300,7 +300,7 @@ FT_Error freetype_font::match_bitmap_font(sprite_sheet* font_spritesheet,
   }
   if (iAverageNum == 0) return FT_Err_Divide_By_Zero;
 
-  font_colour = ((colour & 0xFF000000) == 0) ? sheet_colour : colour;
+  font_colour = (colour == 0) ? sheet_colour : colour;
   return set_ideal_character_size((iWidthSum + iAverageNum / 2) / iAverageNum,
                                   (iHeightSum + iAverageNum / 2) / iAverageNum);
 }
