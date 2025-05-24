@@ -1516,29 +1516,29 @@ function App:checkInstallFolder()
 
   -- Check for file corruption for local files.
   -- No check is done if the game is loaded from an ISO
-  local function check_corrupt(path, correct_size)
+  local function check_corrupt(path, correct_size, allow_missing)
     -- If the file exists but is smaller than usual it is probably corrupt
     if self.fs:fileExists(path) then
       local real_size = self.fs:fileSize(path)
       if real_size + 1024 < correct_size or real_size - 1024 > correct_size then
         corrupt[#corrupt + 1] = path .. " (Size: " .. math.floor(real_size / 1024) .. " kB / Correct: about " .. math.floor(correct_size / 1024) .. " kB)"
       end
-    else
+    elseif not allow_missing then
       corrupt[#corrupt + 1] = path .. " (This file is missing)"
     end
   end
 
   if self.using_demo_files then
-    check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 243188)
+    check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 243188, true)
     check_corrupt("LEVELS" .. pathsep .. "LEVEL.L1", 163948)
     check_corrupt("DATA" .. pathsep .. "BUTTON01.DAT", 252811)
   else
-    check_corrupt("ANIMS" .. pathsep .. "AREA01V.SMK", 251572)
-    check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656)
-    check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 335220)
-    check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520)
+    check_corrupt("ANIMS" .. pathsep .. "AREA01V.SMK", 251572, true)
+    check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656, true)
+    check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 335220, true)
+    check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520, true)
     check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
-    check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728)
+    check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728, true)
   end
 
   if #corrupt ~= 0 then
