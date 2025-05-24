@@ -227,6 +227,9 @@ int l_bitmap_font_new(lua_State* L) {
 int l_bitmap_font_set_spritesheet(lua_State* L) {
   bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
+  // Note: l_freetype_font_set_spritesheet has additional RGB parameters for
+  // the colour.
+
   lua_settop(L, 2);
 
   pFont->set_sprite_sheet(pSheet);
@@ -277,11 +280,23 @@ int l_freetype_font_new(lua_State* L) {
 }
 
 int l_freetype_font_set_spritesheet(lua_State* L) {
+  // Colour 0 falls back to using the average colour of the sprite sheet.
+  argb_colour colour = 0;
+
   freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
+  if (!lua_isnoneornil(L, 3)) {
+    int red = static_cast<int>(luaL_checkinteger(L, 3));
+    int green = static_cast<int>(luaL_checkinteger(L, 4));
+    int blue = static_cast<int>(luaL_checkinteger(L, 5));
+    red = std::max(0, std::min(255, red));
+    green = std::max(0, std::min(255, green));
+    blue = std::max(0, std::min(255, blue));
+    colour = palette::pack_argb(255, red, green, blue);
+  }
   lua_settop(L, 2);
 
-  l_freetype_throw_error_code(L, pFont->match_bitmap_font(pSheet));
+  l_freetype_throw_error_code(L, pFont->match_bitmap_font(pSheet, colour));
   lua_settop(L, 1);
   return 1;
 }

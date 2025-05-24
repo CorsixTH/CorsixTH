@@ -209,9 +209,12 @@ class freetype_font final : public font {
       Note that the matching is done on a best-effort basis, and will likely
       not be perfect. This must be called after setFace().
 
-      @param pBitmapFontSpriteSheet The sprite sheet of the bitmap font.
+      @param font_spritesheet The sprite sheet of the bitmap font.
+      @param colour Colour to use for the font. Colour 0 falls back to
+          deriving the colour from the sprite sheet.
   */
-  FT_Error match_bitmap_font(sprite_sheet* pBitmapFontSpriteSheet);
+  FT_Error match_bitmap_font(sprite_sheet* font_spritesheet,
+                             argb_colour colour);
 
   //! Set the ideal character size using pixel values.
   /*!
@@ -283,7 +286,7 @@ class freetype_font final : public font {
   static int freetype_init_count;
   static const int cache_size_log2 = 7;
   FT_Face font_face;
-  argb_colour colour;
+  argb_colour font_colour;
   bool is_done_freetype_init;
   mutable cached_text cache[1 << cache_size_log2];
 

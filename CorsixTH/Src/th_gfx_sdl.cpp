@@ -1654,7 +1654,7 @@ void freetype_font::make_texture(render_target* pEventualCanvas,
               pCacheEntry->width * pCacheEntry->height * sizeof(uint32_t));
   uint8_t* pInRow = pCacheEntry->data;
   uint32_t* pOutRow = pPixels;
-  uint32_t iColBase = colour & 0xFFFFFF;
+  uint32_t iColBase = font_colour & 0xFFFFFF;
   for (int iY = 0; iY < pCacheEntry->height;
        ++iY, pOutRow += pCacheEntry->width, pInRow += pCacheEntry->width) {
     for (int iX = 0; iX < pCacheEntry->width; ++iX) {
