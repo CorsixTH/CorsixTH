@@ -46,8 +46,8 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self.height = 274
   self:setDefaultPosition(0.5, 0.4)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req10V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.blue_font = app.gfx:loadFont("QData", "Font02V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V")
   self.title_text = _S.buy_objects_window.choose_items
   self.price_text = (_S.buy_objects_window.price .. " "):gsub("  $", " ")
   self.total_text = (_S.buy_objects_window.total .. " "):gsub("  $", " ")

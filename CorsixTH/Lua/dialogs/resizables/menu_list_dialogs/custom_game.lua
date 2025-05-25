@@ -55,7 +55,7 @@ local findLevelsInDir = function(path, items)
 end
 
 function UICustomGame:UICustomGame(ui)
-  self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
+  self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V")
 
   -- Supply the required list of items to UIMenuList
   -- Create the actual list

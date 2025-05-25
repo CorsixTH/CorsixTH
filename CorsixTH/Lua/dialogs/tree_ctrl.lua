@@ -512,7 +512,7 @@ function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_of
   if not has_font then
     self.font = gfx:loadBuiltinFont()
   else
-    self.font = TheApp.gfx:loadFont("QData", "Font01V")
+    self.font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V")
   end
   self.tree_sprites = gfx:loadSpriteTable("Bitmap", "tree_ctrl", true,
     gfx:loadPalette("Bitmap", "tree_ctrl.pal"))

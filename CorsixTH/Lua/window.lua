@@ -256,7 +256,7 @@ end
 --!  can be either of "left", "center", "right"
 function Panel:setLabel(label, font, align)
   self.label = label or ""
-  self.label_font = font or self.label_font or TheApp.gfx:loadFont("QData", "Font01V")
+  self.label_font = font or self.label_font or TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V")
   self.align = align or self.align
   return self
 end

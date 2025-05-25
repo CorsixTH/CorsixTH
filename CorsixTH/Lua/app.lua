@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 214 -- Eliminate animation_manager from world.
+local SAVEGAME_VERSION = 215 -- Coloured ttf fonts
 
 class "App"
 
@@ -786,7 +786,7 @@ function App:_loadLevel(level, difficulty, level_name, level_file, level_intro, 
   -- Load map
   self.map = new_map
   self.map:setBlocks(self.gfx:loadSpriteTable("Data", "VBlk-0"))
-  self.map:setDebugFont(self.gfx:loadFont("QData", "Font01V"))
+  self.map:setDebugFont(self.gfx:loadFontAndSpriteTable("QData", "Font01V"))
 
   local function determineFreeBuildMode()
     local is_main_campaign = tonumber(new_map.level_number)

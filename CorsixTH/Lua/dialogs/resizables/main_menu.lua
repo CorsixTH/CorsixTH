@@ -30,6 +30,12 @@ local col_bg = {
   blue = 198,
 }
 
+local label_ttf_col = { -- off white
+  red = 250,
+  green = 249,
+  blue = 245,
+}
+
 local menu_item_height = 40
 
 function UIMainMenu:UIMainMenu(ui)
@@ -74,7 +80,7 @@ function UIMainMenu:UIMainMenu(ui)
   self:setDefaultPosition(0.5, 0.25)
 
   -- The main menu also shows the version number of the player's copy of the game.
-  self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
+  self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, 0, 0, label_ttf_col)
   self.version_number = TheApp:getVersion()
 
   -- individual buttons

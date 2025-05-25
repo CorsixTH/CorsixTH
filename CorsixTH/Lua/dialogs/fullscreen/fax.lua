@@ -33,7 +33,7 @@ function UIFax:UIFax(ui, icon)
   self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
   local palette = gfx:loadPalette("QData", "Fax01V.pal", true)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
-  self.fax_font = gfx:loadFont("QData", "Font51V", false, palette)
+  self.fax_font = gfx:loadFontAndSpriteTable("QData", "Font51V", false, palette)
   self.icon = icon
   self.message = icon.message or {}
   self.owner = icon.owner
@@ -297,7 +297,7 @@ function UIFax:afterLoad(old, new)
     self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
     local palette = gfx:loadPalette("QData", "Fax01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
-    self.fax_font = gfx:loadFont("QData", "Font51V", false, palette)
+    self.fax_font = gfx:loadFontAndSpriteTable("QData", "Font51V", false, palette)
   end
   UIFullscreen.afterLoad(self, old, new)
   if old < 59 then

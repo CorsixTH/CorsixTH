@@ -43,8 +43,8 @@ function UIResearch:UIResearch(ui)
   self.background = gfx:loadRaw("Res01V", 640, 480, "QData", "QData", "Res01V.pal", true)
   local palette = gfx:loadPalette("QData", "Res01V.pal", true)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
-  self.label_font = gfx:loadFont("QData", "Font43V", false, palette)
-  self.number_font  = gfx:loadFont("QData", "Font43V", false, palette)
+  self.label_font = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
+  self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
   self.hospital = ui.hospital
   self.research = ui.hospital.research
 
@@ -245,7 +245,7 @@ function UIResearch:afterLoad(old, new)
     self.background = gfx:loadRaw("Res01V", 640, 480, "QData", "QData", "Res01V.pal", true)
     local palette = gfx:loadPalette("QData", "Res01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
-    self.label_font = gfx:loadFont("QData", "Font43V", false, palette)
-    self.number_font  = gfx:loadFont("QData", "Font43V", false, palette)
+    self.label_font = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
+    self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
   end
 end

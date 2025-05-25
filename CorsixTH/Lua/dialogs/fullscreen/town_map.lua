@@ -37,9 +37,9 @@ function UITownMap:UITownMap(ui)
     local palette = gfx:loadPalette("QData", "Town01V.pal", true)
 
     self.background = gfx:loadRaw("Town01V", 640, 480, "QData", "QData", "Town01V.pal", true)
-    self.info_font  = gfx:loadFont("QData", "Font34V", false, palette)
-    self.city_font = gfx:loadFont("QData", "Font31V", false, palette)
-    self.money_font = gfx:loadFont("QData", "Font05V")
+    self.info_font  = gfx:loadFontAndSpriteTable("QData", "Font34V", false, palette)
+    self.city_font = gfx:loadFontAndSpriteTable("QData", "Font31V", false, palette)
+    self.money_font = gfx:loadFontAndSpriteTable("QData", "Font05V")
     self.panel_sprites = gfx:loadSpriteTable("QData", "Town02V", true, palette)
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
@@ -362,8 +362,8 @@ function UITownMap:afterLoad(old, new)
     local gfx = TheApp.gfx
     local palette = gfx:loadPalette("QData", "Town01V.pal", true)
     self.background = gfx:loadRaw("Town01V", 640, 480, "QData", "QData", "Town01V.pal", true)
-    self.info_font = gfx:loadFont("QData", "Font34V", false, palette)
-    self.city_font = gfx:loadFont("QData", "Font31V", false, palette)
+    self.info_font = gfx:loadFontAndSpriteTable("QData", "Font34V", false, palette)
+    self.city_font = gfx:loadFontAndSpriteTable("QData", "Font31V", false, palette)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Town02V", true, palette)
   end
 

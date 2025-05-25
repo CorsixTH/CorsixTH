@@ -404,25 +404,51 @@ end
 function Graphics:loadMenuFont()
   local font
   if self.language_font then
-    font = self:loadFont("QData", "Font01V")
+    font = self:loadFontAndSpriteSheet("QData", "Font01V")
   else
     font = self:loadBuiltinFont()
   end
   return font
 end
 
-function Graphics:loadLanguageFont(name, sprite_table, ...)
+local ttf_col_to_cache_key = function(ttf_col)
+  if ttf_col then
+    return string.format("r%d,g%d,b%d", ttf_col.red, ttf_col.green, ttf_col.blue)
+  else
+    return "nil"
+  end
+end
+
+local language_font_cache_key = function(name, x_sep, y_sep, ttf_col, force_bitmap)
+  return string.format("%s,%d,%d,%s,%s", name or "nil", x_sep or 0, y_sep or 0,
+    ttf_col_to_cache_key(ttf_col), force_bitmap and "T" or "F")
+end
+
+--! Load a true type font
+--!
+--!param name (string) The name of the font from the language file. Always 'unicode'.
+--!param sprite_table (userdata) The sprite table of the font this font is replacing. Used for default colour and metrics.
+--!param x_sep (int) Unused on ttf for now, controls the horizontal separation of the font for bitmap fonts.
+--!param y_sep (int) Unused on ttf for now, controls the vertical separation of the font for bitmap fonts.
+--!param ttf_col (colour in form .red, .green and .blue) The colour of the font.
+--  If nil, the colour will be detected from the sprite table.
+--!param force_bitmap (boolean) Whether to force the font to be a bitmap font.
+function Graphics:loadLanguageFont(name, sprite_table, x_sep, y_sep, ttf_col, force_bitmap)
   local font
   if name == nil then
-    font = self:loadFont(sprite_table, ...)
+    font = self:loadFont(sprite_table, x_sep, y_sep, ttf_col, force_bitmap)
   else
-    local cache = self.cache.language_fonts[name]
+    local cache = self.cache.language_fonts[language_font_cache_key(name, x_sep, y_sep, ttf_col, force_bitmap)]
     font = cache and cache[sprite_table]
     if not font then
       font = TH.freetype_font()
       -- TODO: Choose face based on "name" rather than always using same face.
       font:setFace(self.ttf_font_data)
-      font:setSheet(sprite_table)
+      if ttf_col then
+        font:setSheet(sprite_table, ttf_col.red, ttf_col.green, ttf_col.blue)
+      else
+        font:setSheet(sprite_table)
+      end
       self.reload_functions_last[font] = font_reloader
 
       if not cache then
@@ -432,52 +458,61 @@ function Graphics:loadLanguageFont(name, sprite_table, ...)
       cache[sprite_table] = font
     end
   end
-  self.load_info[font] = {self.loadLanguageFont, self, name, sprite_table, ...}
+  self.load_info[font] = {self.loadLanguageFont, self, name, sprite_table, x_sep, y_sep, ttf_col, force_bitmap}
   return font
 end
 
-function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
-  -- Allow (multiple) arguments for loading a sprite table in place of the
-  -- sprite_table argument.
-  local load_font = x_sep
-  if type(sprite_table) == "string" then
-    local arg = {sprite_table, x_sep, y_sep, ...}
-    local n_pass_on_args = #arg
-    for i = 2, #arg do
-      if type(arg[i]) == "number" then -- x_sep
-        n_pass_on_args = i - 1
-        break
-      end
-    end
-    sprite_table = self:loadSpriteTable(unpack(arg, 1, n_pass_on_args))
-    if n_pass_on_args < #arg then
-      x_sep, y_sep = unpack(arg, n_pass_on_args + 1, #arg)
-    else
-      x_sep, y_sep = nil, nil
-    end
+--! Load a font and the corresponding sprite sheet in one operation.
+--!
+--! This is the same as calling loadFont(Graphics:loadSpriteTable(dir, name, complex, palette), x_sep, y_sep, ttf_col)
+--! except that force_bitmap is set to true automatically for some sprite tables.
+--!
+--!param dir (string) The directory of the sprite table relative to the HOSPITAL directory.
+--!param name (string) The name of the sprite table file without the .dat extension.
+--!param complex (boolean) Whether the sprite table is complex or not.
+--!param palette (string) The name of the palette file. If nil, the default palette will be used.
+--!param x_sep (integer) Controls the horizontal separation of the font for bitmap fonts.
+--!param y_sep (integer) Controls the vertical separation of the font for bitmap fonts.
+--!param ttf_col (colour in form .red, .green and .blue) The colour of the font if a true type font is loaded.
+--  If nil, the colour will be detected from the sprite table.
+function Graphics:loadFontAndSpriteTable(dir, name, complex, palette, x_sep, y_sep, ttf_col)
+  local sprite_table = self:loadSpriteTable(dir, name, complex, palette)
+  local force_bitmap = (name == "Font05V" and self:arabicNumerals())
+
+  return self:loadFont(sprite_table, x_sep, y_sep, ttf_col, force_bitmap)
+end
+
+--! Load a font for the given sprite table.
+--!
+--!param sprite_table (userdata) The sprite table of the font this font is replacing. Used for default colour and metrics.
+--!param x_sep (integer) Controls the horizontal separation of the font for bitmap fonts.
+--!param y_sep (integer) Controls the vertical separation of the font for bitmap fonts.
+--!param ttf_col (colour in form .red, .green and .blue) The colour of the font if a true type font is loaded.
+--  If nil, the colour will be detected from the sprite table.
+--!param force_bitmap (boolean) Whether to force the font to be a bitmap font.
+function Graphics:loadFont(sprite_table, x_sep, y_sep, ttf_col, force_bitmap)
+
+  -- afterLoad fix. Saves before 215 would double the y_sep argument, but did not have ttf_col
+  if type(ttf_col) == "number" then
+    ttf_col = nil
   end
 
-  local use_bitmap_font = true
-  if (not sprite_table:isVisible(46)) or (load_font == "Font05V" and self:arabicNumerals()) then -- luacheck: ignore 542
-    -- The font doesn't contain an uppercase M, so (in all likelihood) is used
-    -- for drawing special symbols rather than text, so the original bitmap
-    -- font should be used.
-  elseif self.language_font then
-    use_bitmap_font = false
-  end
+  -- Use a bitmap font if forced, or the language uses bitmap, or the
+  -- sprite_table has no M in it, indicating it's probably a symbol file.
+  local use_bitmap_font = force_bitmap or not self.language_font or not sprite_table:isVisible(46)
   local font
   if use_bitmap_font then
     font = TH.bitmap_font()
     font:setSeparation(x_sep or 0, y_sep or 0)
     font:setSheet(sprite_table)
   else
-    font = self:loadLanguageFont(self.language_font, sprite_table)
+    font = self:loadLanguageFont(self.language_font, sprite_table, x_sep, y_sep, ttf_col, force_bitmap)
   end
   -- A change of language might cause the font to change between bitmap and
   -- freetype, so wrap it in a proxy object which allows the actual object to
   -- be changed easily.
-  font = setmetatable({_proxy = font}, font_proxy_mt)
-  self.load_info[font] = {self.loadFont, self, sprite_table, x_sep, y_sep, ...}
+  font = setmetatable({ _proxy = font }, font_proxy_mt)
+  self.load_info[font] = { self.loadFont, self, sprite_table, x_sep, y_sep, ttf_col, force_bitmap }
   return font
 end
 

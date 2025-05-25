@@ -36,7 +36,7 @@ function UIMachine:UIMachine(ui, machine, room)
   self.height = 206
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req03V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
 
   self:addPanel(333,    0,   0) -- Dialog header
   self:addPanel(334,    0,  74) -- The next part

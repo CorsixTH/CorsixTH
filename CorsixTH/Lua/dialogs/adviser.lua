@@ -52,7 +52,7 @@ function UIAdviser:UIAdviser(ui)
   self.y = -16
   self.balloon_width = 0
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
-  self.black_font = app.gfx:loadFont("QData", "Font50V")
+  self.black_font = app.gfx:loadFontAndSpriteTable("QData", "Font50V")
 
   local th = TH.animation()
   self.th = th

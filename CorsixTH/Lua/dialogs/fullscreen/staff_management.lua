@@ -33,7 +33,7 @@ function UIStaffManagement:UIStaffManagement(ui)
     self.background = gfx:loadRaw("Staff01V", 640, 480, "QData", "QData", "Staff01V.pal", true)
     local palette = gfx:loadPalette("QData", "Staff01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette)
-    self.title_font = gfx:loadFont("QData", "Font01V", false, palette)
+    self.title_font = gfx:loadFontAndSpriteTable("QData", "Font01V", false, palette)
     self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
@@ -602,7 +602,7 @@ function UIStaffManagement:afterLoad(old, new)
     self.background = gfx:loadRaw("Staff01V", 640, 480, "QData", "QData", "Staff01V.pal", true)
     local palette = gfx:loadPalette("QData", "Staff01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette)
-    self.title_font = gfx:loadFont("QData", "Font01V", false, palette)
+    self.title_font = gfx:loadFontAndSpriteTable("QData", "Font01V", false, palette)
   end
 
   UIFullscreen.afterLoad(self, old, new)
