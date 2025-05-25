@@ -51,7 +51,10 @@ the other Lua code.
  <a href="_0_1_graphics.html#_0_1_graphics_1load_cursor">loadCursor</a>(<span class="p">sheet</span>, <span class="p">index</span>, <span class="p">hot_x</span>, <span class="p">hot_y</span>)
  </li>
  <li class="self">
- <a href="_0_1_graphics.html#_0_1_graphics_1load_font">loadFont</a>(<span class="p">sprite_table</span>, <span class="p">x_sep</span>, <span class="p">y_sep</span>, <span class="p">...</span>)
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_font">loadFont</a>(<span class="p">sprite_table</span>, <span class="p">x_sep</span>, <span class="p">y_sep</span>, <span class="p">ttf_col</span>, <span class="p">force_bitmap</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_font_and_sprite_table">loadFontAndSpriteTable</a>(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">complex</span>, <span class="p">palette</span>, <span class="p">x_sep</span>, <span class="p">y_sep</span>, <span class="p">ttf_col</span>)
  </li>
  <li class="self">
  <a href="_0_1_graphics.html#_0_1_graphics_1load_font_file">loadFontFile</a>()
@@ -60,7 +63,7 @@ the other Lua code.
  <a href="_0_1_graphics.html#_0_1_graphics_1load_ghost">loadGhost</a>(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">index</span>)
  </li>
  <li class="self">
- <a href="_0_1_graphics.html#_0_1_graphics_1load_language_font">loadLanguageFont</a>(<span class="p">name</span>, <span class="p">sprite_table</span>, <span class="p">...</span>)
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_language_font">loadLanguageFont</a>(<span class="p">name</span>, <span class="p">sprite_table</span>, <span class="p">x_sep</span>, <span class="p">y_sep</span>, <span class="p">ttf_col</span>, <span class="p">force_bitmap</span>)
  </li>
  <li class="self">
  <a href="_0_1_graphics.html#_0_1_graphics_1load_main_cursor">loadMainCursor</a>(<span class="p">id</span>)
@@ -100,6 +103,8 @@ the other Lua code.
  </li>
  <li><span class="p">language_font</span>
  </li>
+ <li><span class="p">loadFontAndSpriteSheet</span>
+ </li>
  <li><span class="p">load_info</span>
  </li>
  <li><span class="p">reload_functions</span>
@@ -131,13 +136,13 @@ the other Lua code.
  <div class="method">
  <h5><a name="_0_1_graphics_1arabic_numerals">function Graphics:arabicNumerals()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L484">line 484 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L519">line 519 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1draw_numbers_from_unicode">function Graphics:drawNumbersFromUnicode()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L491">line 491 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L526">line 526 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -172,7 +177,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L495">line 495 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L530">line 530 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -212,33 +217,88 @@ the other Lua code.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_graphics_1load_font">function Graphics:loadFont(<span class="p">sprite_table</span>, <span class="p">x_sep</span>, <span class="p">y_sep</span>, <span class="p">...</span>)</a></h5>
+ <h5><a name="_0_1_graphics_1load_font">function Graphics:loadFont(<span class="p">sprite_table</span>, <span class="p">x_sep</span>, <span class="p">y_sep</span>, <span class="p">ttf_col</span>, <span class="p">force_bitmap</span>)</a></h5>
  <p>
+ Load a font for the given sprite table.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">sprite_table</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">userdata</td>
+ <td class="d"> The sprite table of the font this font is replacing. Used for default colour and metrics.</td>
  </tr>
  <tr>
  <td class="n">x_sep</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> Controls the horizontal separation of the font for bitmap fonts.</td>
  </tr>
  <tr>
  <td class="n">y_sep</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> Controls the vertical separation of the font for bitmap fonts.</td>
  </tr>
  <tr>
- <td class="n">...</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="n">ttf_col</td>
+ <td class="t">colour&nbsp;or&nbsp;in&nbsp;or&nbsp;form&nbsp;or&nbsp;red&nbsp;or&nbsp;green&nbsp;or&nbsp;and&nbsp;or&nbsp;blue</td>
+ <td class="d"> The colour of the font if a true type font is loaded.
+If nil, the colour will be detected from the sprite table.</td>
+ </tr>
+ <tr>
+ <td class="n">force_bitmap</td>
+ <td class="t">boolean</td>
+ <td class="d"> Whether to force the font to be a bitmap font.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L439">line 439 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L485">line 485 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_font_and_sprite_table">function Graphics:loadFontAndSpriteTable(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">complex</span>, <span class="p">palette</span>, <span class="p">x_sep</span>, <span class="p">y_sep</span>, <span class="p">ttf_col</span>)</a></h5>
+ <p>
+ This is the same as calling loadFont(Graphics:loadSpriteTable(dir, name, complex, palette), x_sep, y_sep, ttf_col)<br/><br/>
+ except that force_bitmap is set to true automatically for some sprite tables.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">dir</td>
+ <td class="t">string</td>
+ <td class="d"> The directory of the sprite table relative to the HOSPITAL directory.</td>
+ </tr>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">string</td>
+ <td class="d"> The name of the sprite table file without the .dat extension.</td>
+ </tr>
+ <tr>
+ <td class="n">complex</td>
+ <td class="t">boolean</td>
+ <td class="d"> Whether the sprite table is complex or not.</td>
+ </tr>
+ <tr>
+ <td class="n">palette</td>
+ <td class="t">string</td>
+ <td class="d"> The name of the palette file. If nil, the default palette will be used.</td>
+ </tr>
+ <tr>
+ <td class="n">x_sep</td>
+ <td class="t">integer</td>
+ <td class="d"> Controls the horizontal separation of the font for bitmap fonts.</td>
+ </tr>
+ <tr>
+ <td class="n">y_sep</td>
+ <td class="t">integer</td>
+ <td class="d"> Controls the vertical separation of the font for bitmap fonts.</td>
+ </tr>
+ <tr>
+ <td class="n">ttf_col</td>
+ <td class="t">colour&nbsp;or&nbsp;in&nbsp;or&nbsp;form&nbsp;or&nbsp;red&nbsp;or&nbsp;green&nbsp;or&nbsp;and&nbsp;or&nbsp;blue</td>
+ <td class="d"> The colour of the font if a true type font is loaded.
+If nil, the colour will be detected from the sprite table.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L465">line 465 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -275,28 +335,45 @@ the other Lua code.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_graphics_1load_language_font">function Graphics:loadLanguageFont(<span class="p">name</span>, <span class="p">sprite_table</span>, <span class="p">...</span>)</a></h5>
+ <h5><a name="_0_1_graphics_1load_language_font">function Graphics:loadLanguageFont(<span class="p">name</span>, <span class="p">sprite_table</span>, <span class="p">x_sep</span>, <span class="p">y_sep</span>, <span class="p">ttf_col</span>, <span class="p">force_bitmap</span>)</a></h5>
  <p>
+ Load a true type font<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">name</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The name of the font from the language file. Always 'unicode'.</td>
  </tr>
  <tr>
  <td class="n">sprite_table</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">userdata</td>
+ <td class="d"> The sprite table of the font this font is replacing. Used for default colour and metrics.</td>
  </tr>
  <tr>
- <td class="n">...</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="n">x_sep</td>
+ <td class="t">int</td>
+ <td class="d"> Unused on ttf for now, controls the horizontal separation of the font for bitmap fonts.</td>
+ </tr>
+ <tr>
+ <td class="n">y_sep</td>
+ <td class="t">int</td>
+ <td class="d"> Unused on ttf for now, controls the vertical separation of the font for bitmap fonts.</td>
+ </tr>
+ <tr>
+ <td class="n">ttf_col</td>
+ <td class="t">colour&nbsp;or&nbsp;in&nbsp;or&nbsp;form&nbsp;or&nbsp;red&nbsp;or&nbsp;green&nbsp;or&nbsp;and&nbsp;or&nbsp;blue</td>
+ <td class="d"> The colour of the font.
+If nil, the colour will be detected from the sprite table.</td>
+ </tr>
+ <tr>
+ <td class="n">force_bitmap</td>
+ <td class="t">boolean</td>
+ <td class="d"> Whether to force the font to be a bitmap font.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L414">line 414 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L427">line 427 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -420,7 +497,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L541">line 541 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L576">line 576 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -441,7 +518,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L567">line 567 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L602">line 602 of Lua/graphics.lua</a>.
  </p>
  </div>
 </div>
