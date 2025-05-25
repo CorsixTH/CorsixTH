@@ -583,7 +583,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
           mapGlyphs[decode_utf8(sLastChar, sMessageEnd)];
       iLineWidth = vCharPositions[sLastChar - sMessage].x +
                    oLastGlyph.metrics.horiBearingX + oLastGlyph.metrics.width;
-      if ((iLineWidth >> 6) < iWidth) {
+      if ((iLineWidth >> 6) < iWidth && eAlign != text_alignment::left) {
         iAlignDelta =
             ((iWidth * 64 - iLineWidth) * static_cast<int>(eAlign)) / 2;
       }
