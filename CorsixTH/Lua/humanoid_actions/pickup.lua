@@ -47,7 +47,10 @@ local action_pickup_interrupt = permanent"action_pickup_interrupt"( function(act
   end
   humanoid.th:makeVisible()
   local room = humanoid:getRoom()
-  if room then
+  if room and room.crashed then
+    action.ui:setDefaultCursor(nil)
+    return
+  elseif room then
     room:onHumanoidEnter(humanoid)
   else
     humanoid:onPlaceInCorridor()
