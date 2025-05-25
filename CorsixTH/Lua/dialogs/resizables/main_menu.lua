@@ -25,9 +25,9 @@ class "UIMainMenu" (UIResizable)
 local UIMainMenu = _G["UIMainMenu"]
 
 local col_bg = {
-  red = 154,
-  green = 146,
-  blue = 198,
+  red = 90,
+  green = 160,
+  blue = 90
 }
 
 local label_ttf_col = { -- off white
