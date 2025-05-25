@@ -463,7 +463,7 @@ function Graphics:loadLanguageFont(name, sprite_table, x_sep, y_sep, ttf_col, fo
 end
 
 --! Load a font and the corresponding sprite sheet in one operation.
---! 
+--!
 --! This is the same as calling loadFont(Graphics:loadSpriteTable(dir, name, complex, palette), x_sep, y_sep, ttf_col)
 --! except that force_bitmap is set to true automatically for some sprite tables.
 --!
