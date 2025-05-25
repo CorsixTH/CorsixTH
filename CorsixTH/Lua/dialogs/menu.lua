@@ -39,9 +39,10 @@ function UIMenuBar:UIMenuBar(ui, map_editor)
   self.width = app.config.width
   self.height = 16
   self.visible = false
+  local selected_label_color = { red = 40, green = 40, blue = 250 }
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PullDV", true)
   self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
-  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V")
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, 0, 0, selected_label_color)
   -- The list of top-level menus, from left to right
   self.menus = {}
   -- The menu which the cursor was most recently over

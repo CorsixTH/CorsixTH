@@ -35,11 +35,8 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.width = 640
   self.height = 48
   self:setDefaultPosition(0.5, -0.1)
-  self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
-  self.money_font = app.gfx:loadFontAndSpriteTable("QData", "Font05V")
-  self.date_font = app.gfx:loadFontAndSpriteTable("QData", "Font16V")
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, 0, -2)
-  self.pause_font = app.gfx:loadFontAndSpriteTable("QData", "Font124V")
+
+  self:_initFonts(app.gfx)
 
   -- State relating to fax notification messages
   self.show_animation = true
@@ -97,6 +94,16 @@ function UIBottomPanel:UIBottomPanel(ui)
   end, 41, 30, 137, 42)
 
   self:registerKeyHandlers()
+end
+
+function UIBottomPanel:_initFonts(gfx)
+  local date_label_color = { red = 175, green = 50, blue = 15 }
+  local pause_label_color = { red = 35, green = 138, blue = 173 }
+  self.panel_sprites = gfx:loadSpriteTable("Data", "Panel02V", true)
+  self.money_font = gfx:loadFontAndSpriteTable("QData", "Font05V")
+  self.date_font = gfx:loadFontAndSpriteTable("QData", "Font16V", nil, nil, 0, 0, date_label_color)
+  self.white_font = gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, 0, -2)
+  self.pause_font = gfx:loadFontAndSpriteTable("QData", "Font124V", nil, nil, 0, 0, pause_label_color)
 end
 
 function UIBottomPanel:registerKeyHandlers()
@@ -899,6 +906,9 @@ function UIBottomPanel:afterLoad(old, new)
       self.additional_buttons[i] = self.buttons[5 + i]:makeToggle() -- made them toggle buttons
     end
     self.bank_button = self.buttons[1]:makeToggle()
+  end
+  if old < 215 then
+   self:_initFonts(self.ui.app.gfx)
   end
   -- Hotfix to force re-calculation of the money font (see issue #1193)
   self.money_font = self.ui.app.gfx:loadFontAndSpriteTable("QData", "Font05V")
