@@ -491,6 +491,12 @@ end
 --  If nil, the colour will be detected from the sprite table.
 --!param force_bitmap (boolean) Whether to force the font to be a bitmap font.
 function Graphics:loadFont(sprite_table, x_sep, y_sep, ttf_col, force_bitmap)
+
+  -- afterLoad fix. Saves before 215 would double the y_sep argument, but did not have ttf_col
+  if type(ttf_col) == "number" then
+    ttf_col = nil
+  end
+
   -- Use a bitmap font if forced, or the language uses bitmap, or the
   -- sprite_table has no M in it, indicating it's probably a symbol file.
   local use_bitmap_font = force_bitmap or not self.language_font or not sprite_table:isVisible(46)
