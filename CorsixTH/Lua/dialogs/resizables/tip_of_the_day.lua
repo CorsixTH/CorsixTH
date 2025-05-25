@@ -41,7 +41,7 @@ function UITipOfTheDay:UITipOfTheDay(ui)
   self.ui = ui
   self.resizable = false
   self:setDefaultPosition(-20, -20)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
 
   self.num_tips = #_S.totd_window.tips
   if self.num_tips == 0 then

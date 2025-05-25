@@ -34,9 +34,9 @@ function UIProgressReport:UIProgressReport(ui)
     local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
 
     self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
-    self.red_font = gfx:loadFont("QData", "Font101V", false, palette)
-    self.normal_font = gfx:loadFont("QData", "Font100V", false, palette)
-    self.small_font = gfx:loadFont("QData", "Font106V")
+    self.red_font = gfx:loadFontAndSpriteTable("QData", "Font101V", false, palette)
+    self.normal_font = gfx:loadFontAndSpriteTable("QData", "Font100V", false, palette)
+    self.small_font = gfx:loadFontAndSpriteTable("QData", "Font106V")
     -- Load all sprite tables needed for all goal icons
     self.panel_sprites_table = {
       MPointer = gfx:loadSpriteTable("Data", "MPointer"),

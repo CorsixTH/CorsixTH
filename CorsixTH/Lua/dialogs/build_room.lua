@@ -36,8 +36,8 @@ function UIBuildRoom:UIBuildRoom(ui)
   self.height = 294
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req09V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.blue_font = app.gfx:loadFont("QData", "Font02V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V")
   self.category_index = 0
   self.list_hover_index = 0
   self.preview_anim = false

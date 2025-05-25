@@ -59,9 +59,9 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     self.stat_background = gfx:loadRaw("Award02V", 640, 480, "QData", "QData", "Award02V.pal", true)
     self.background = self.stat_background
 
-    self.stat_font = gfx:loadFont("QData", "Font45V", false, palette)
-    self.write_font = gfx:loadFont("QData", "Font47V", false, palette)
-    self.stone_font = gfx:loadFont("QData", "Font46V", false, palette)
+    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font45V", false, palette)
+    self.write_font = gfx:loadFontAndSpriteTable("QData", "Font47V", false, palette)
+    self.stone_font = gfx:loadFontAndSpriteTable("QData", "Font46V", false, palette)
 
     self.panel_sprites = gfx:loadSpriteTable("QData", "Award03V", true, palette)
   end) then
@@ -660,9 +660,9 @@ function UIAnnualReport:afterLoad(old, new)
     self.award_background = gfx:loadRaw("Award01V", 640, 480)
     self.stat_background = gfx:loadRaw("Award02V", 640, 480, "QData", "QData", "Award02V.pal", true)
     self.background = self.stat_background
-    self.stat_font = gfx:loadFont("QData", "Font45V", false, palette)
-    self.write_font = gfx:loadFont("QData", "Font47V", false, palette)
-    self.stone_font = gfx:loadFont("QData", "Font46V", false, palette)
+    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font45V", false, palette)
+    self.write_font = gfx:loadFontAndSpriteTable("QData", "Font47V", false, palette)
+    self.stone_font = gfx:loadFontAndSpriteTable("QData", "Font46V", false, palette)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Award03V", true, palette)
   end
 

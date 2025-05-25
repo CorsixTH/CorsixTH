@@ -152,7 +152,7 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
   self.exit_button = self:addBevelPanel(260, 400, 100, 18, self.col_bg)
 
   if mode ~= nil then
-    self.font = TheApp.gfx:loadFont("QData", "Font01V")
+    self.font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V")
     self:setDefaultPosition(0.5, 0.25)
     self.on_top = true
     self.esc_closes = true

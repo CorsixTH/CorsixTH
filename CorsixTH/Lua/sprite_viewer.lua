@@ -24,7 +24,7 @@ SOFTWARE. --]]
 
 local gfx = TheApp.gfx
 gfx.cache.tabled = {}
-local font = gfx:loadFont("QData", "Font00V")
+local font = gfx:loadFontAndSpriteTable("QData", "Font00V")
 local need_draw = true
 local sprite_table_paths = {}
 local sprite_table_index

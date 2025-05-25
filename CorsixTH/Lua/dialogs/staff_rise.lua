@@ -46,8 +46,8 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:setDefaultPosition(0.5, 0.5)
 
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req12V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.black_font = app.gfx:loadFont("QData", "Font00V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.black_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V")
   self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
 
   -- Left hand side
@@ -188,6 +188,6 @@ end
 function UIStaffRise:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   if not self.black_font then
-    self.black_font = self.ui.app.gfx:loadFont("QData", "Font00V")
+    self.black_font = self.ui.app.gfx:loadFontAndSpriteTable("QData", "Font00V")
   end
 end

@@ -33,7 +33,7 @@ local col_scrollbar = {
 local details_width = 280
 
 function UICustomCampaign:UICustomCampaign(ui)
-  self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
+  self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V")
 
   self.unique_names, self.campaigns, self.duplicates = {}, {}, 0
   self.paths_table = {ui.app.campaign_dir, ui.app.user_campaign_dir}

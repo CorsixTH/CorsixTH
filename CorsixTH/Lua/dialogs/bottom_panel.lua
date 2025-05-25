@@ -36,10 +36,10 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.height = 48
   self:setDefaultPosition(0.5, -0.1)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
-  self.money_font = app.gfx:loadFont("QData", "Font05V")
-  self.date_font = app.gfx:loadFont("QData", "Font16V")
-  self.white_font = app.gfx:loadFont("QData", "Font01V", 0, -2)
-  self.pause_font = app.gfx:loadFont("QData", "Font124V")
+  self.money_font = app.gfx:loadFontAndSpriteTable("QData", "Font05V")
+  self.date_font = app.gfx:loadFontAndSpriteTable("QData", "Font16V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, 0, -2)
+  self.pause_font = app.gfx:loadFontAndSpriteTable("QData", "Font124V")
 
   -- State relating to fax notification messages
   self.show_animation = true
@@ -888,7 +888,7 @@ function UIBottomPanel:afterLoad(old, new)
     end
   end
   if old < 58 then
-    self.pause_font = TheApp.gfx:loadFont("QData", "Font124V")
+    self.pause_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font124V")
   end
   if old < 62 then
     -- renamed additional_buttons to additional_panels
@@ -901,7 +901,7 @@ function UIBottomPanel:afterLoad(old, new)
     self.bank_button = self.buttons[1]:makeToggle()
   end
   -- Hotfix to force re-calculation of the money font (see issue #1193)
-  self.money_font = self.ui.app.gfx:loadFont("QData", "Font05V")
+  self.money_font = self.ui.app.gfx:loadFontAndSpriteTable("QData", "Font05V")
 
   self:registerKeyHandlers()
 

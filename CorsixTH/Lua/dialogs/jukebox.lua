@@ -37,8 +37,8 @@ function UIJukebox:UIJukebox(app)
   self.height = 74 + 30 * #self.audio.background_playlist + 18
   self:setDefaultPosition(26, 26)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req13V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.blue_font = app.gfx:loadFont("QData", "Font02V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V")
 
   -- Dialog head (current track title & exit button)
   self:addPanel(389, 0, 0)

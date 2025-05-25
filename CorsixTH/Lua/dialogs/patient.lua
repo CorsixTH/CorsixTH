@@ -42,7 +42,7 @@ function UIPatient:UIPatient(ui, patient)
   self.height = 310
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req02V", true)
-  self.font = app.gfx:loadFont("QData", "Font74V") -- Font used in the treatment history
+  self.font = app.gfx:loadFontAndSpriteTable("QData", "Font74V") -- Font used in the treatment history
   self.patient = patient
   self.visible_diamond = ui:makeVisibleDiamond(75, 76)
 

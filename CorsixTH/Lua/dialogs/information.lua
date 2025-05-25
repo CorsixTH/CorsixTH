@@ -40,7 +40,7 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
   self.ui = ui
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PulldV", true)
   if not use_built_in_font then
-    self.black_font = app.gfx:loadFont("QData", "Font00V")
+    self.black_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V")
   else
     self.black_font = app.gfx:loadBuiltinFont()
     self.black_background = true

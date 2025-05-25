@@ -33,11 +33,11 @@ function UIBankManager:UIBankManager(ui)
     self.stat_background = gfx:loadRaw("Stat01V", 640, 480, "QData", "QData", "Stat01V.pal", true)
     local palette = gfx:loadPalette("QData", "Bank01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Bank02V", true, palette)
-    self.font = gfx:loadFont("QData", "Font36V", false, palette)
+    self.font = gfx:loadFontAndSpriteTable("QData", "Font36V", false, palette)
 
     -- The statistics font
     palette = gfx:loadPalette("QData", "Stat01V.pal", true)
-    self.stat_font = gfx:loadFont("QData", "Font37V", false, palette)
+    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font37V", false, palette)
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
     self:close()
@@ -125,10 +125,10 @@ function UIBankManager:afterLoad(old, new)
     self.stat_background = gfx:loadRaw("Stat01V", 640, 480, "QData", "QData", "Stat01V.pal", true)
     local palette = gfx:loadPalette("QData", "Bank01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Bank02V", true, palette)
-    self.font = gfx:loadFont("QData", "Font36V", false, palette)
+    self.font = gfx:loadFontAndSpriteTable("QData", "Font36V", false, palette)
 
     palette = gfx:loadPalette("QData", "Stat01V.pal", true)
-    self.stat_font = gfx:loadFont("QData", "Font37V", false, palette)
+    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font37V", false, palette)
   end
   UIFullscreen.afterLoad(self, old, new)
 end
