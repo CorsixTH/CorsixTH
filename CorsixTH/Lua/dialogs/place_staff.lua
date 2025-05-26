@@ -53,26 +53,24 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
 end
 
 function UIPlaceStaff:close()
-  if self.staff then
+  local old_staff_member = self.staff
+  local newcomer_hired = not self.profile and not old_staff_member
+  if newcomer_hired then
+    self.ui:playSound("plac_st2.wav")
+  elseif old_staff_member then
     self.staff.pickup = false
     self.staff.going_to_staffroom = nil
     self.staff:getCurrentAction().window = nil
-    local room = self.world:getRoom(self.staff.tile_x, self.staff.tile_y)
-    if room and room == self.staff.last_room and room.crashed then
-      self.staff:die()
-      self.staff:despawn()
-      self.world:destroyEntity(self.staff)
-    else
-      self.staff:setNextAction(MeanderAction())
-    end
-  elseif self.profile then
+    self.staff:setNextAction(MeanderAction())
+    self.ui:playSound("plac_st2.wav")
+  else
+    -- cancel hiring newcomer
     self.ui:tutorialStep(2, {6, 7}, 1)
     self.ui:tutorialStep(4, {4, 5}, 1)
     -- Return the profile to the available staff list
     local staff_pool = self.world.available_staff[self.profile.humanoid_class]
     staff_pool[#staff_pool + 1] = self.profile
   end
-  self.ui:playSound("plac_st2.wav")
   Window.close(self)
 end
 
