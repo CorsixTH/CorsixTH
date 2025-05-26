@@ -31,6 +31,8 @@ SOFTWARE.
 #include <curl/curl.h>
 #endif
 
+#include <emscripten.h>
+
 #include "bootstrap.h"
 #include "lua.hpp"
 #include "th.h"
@@ -215,6 +217,20 @@ int l_fetch_latest_version_info(lua_State* L) {
 #endif
 }
 
+EM_ASYNC_JS(void, do_save_idbfs, (), {
+    await new Promise((resolve, reject) => FS.syncfs(err => err ? reject(err) : resolve()))
+});
+
+int l_sync_emscripten_fs(lua_State* L) {
+  do_save_idbfs();
+  return 0;
+}
+
+int l_module_game_ready(lua_State* L) {
+  EM_ASM(Module?.gameReady?.());
+  return 0;
+}
+
 int l_load_strings(lua_State* L) {
   size_t iDataLength;
   const uint8_t* pData = luaT_checkfile(L, 1, &iDataLength);
@@ -320,6 +336,8 @@ int luaopen_th(lua_State* L) {
   add_lua_function(pState, bootstrap_lua_resources, "GetBuiltinFont");
   add_lua_function(pState, l_fetch_latest_version_info,
                    "FetchLatestVersionInfo");
+  add_lua_function(pState, l_sync_emscripten_fs, "SyncEmscriptenFS");
+  add_lua_function(pState, l_module_game_ready, "moduleGameReady");
 
   // Classes
   lua_register_map(pState);

@@ -92,7 +92,7 @@ letter = {
 
 install = {
   title       = "--------------------------------- CorsixTH Beállítások ---------------------------------",
-  th_directory      = "CorsixTH-nak a futáshoz szüksége van az eredeti (teljes vagy demó) játék adatfájljaira. Kérlek az alábbi választómenü segítségével keresd ki a Theme Hospital telepítőfájljait tartalmazó könyvtárat.",
+  th_directory      = "CorsixTH-nak a futáshoz szüksége van az eredeti (teljes vagy demó) játék adatfájljaira. Kérlek az alábbi választómenü segítségével keresd ki a CorsixTH telepítőfájljait tartalmazó könyvtárat.",
   exit        = "Kilépés",
 }
 
@@ -231,7 +231,7 @@ options_window = {
   height = "Magasság",
   change_resolution = "Felbontás megváltoztatása",
   browse = "Tallózás...",
-  new_th_directory = "Itt egy új Theme Hospital telepítési útvonalat adhatsz meg. Amint kiválasztottad az új könyvtárat, a játék újraindul.",
+  new_th_directory = "Itt egy új CorsixTH telepítési útvonalat adhatsz meg. Amint kiválasztottad az új könyvtárat, a játék újraindul.",
   cancel = "Mégse",
   back = "Vissza",
 }
@@ -242,7 +242,7 @@ tooltip.options_window = {
   height = "Add meg a kívánt magasságot",
   change_resolution = "Az ablak felbontásának alkalmazása a bal oldalon lévő adatok szerint",
   language = "%s nyelv kiválasztása",
-  browse = "Másik elérési útvonal kiválasztása a Theme Hospital fájljaihoz",
+  browse = "Másik elérési útvonal kiválasztása a CorsixTH fájljaihoz",
   back = "Beállítások ablak bezárása",
 }
 
@@ -1836,7 +1836,7 @@ tooltip.folders_window.back = "Menü bezárása, és vissza a Beállításokhoz"
 tooltip.folders_window.music_location = "Válaszd ki az mp3 file-jaid elérési útját. A könyvtárt először létre kell hoznod, utána pedig  ki kell választanod."
 tooltip.folders_window.font_location = "Szükség van egy olyan betűtípusfile elérési útjára, amely alkalmas a magyar nyelv betűit Unicode karakterek segítségével megjeleníteni. Amennyiben ezt elmulasztod nem leszel képes olyan nyelveket beállítani, amelyeknek szükségük van a játék eredeti nyelvében nem fellelhető karakterekre. Például: orosz és kínai"
 tooltip.folders_window.savegames_location = "Alaphelyzetben a játék mentéseit tartalmazó file-ok a konfigurációs file-ok könyvtárába kerülnek. Amennyiben máshova szeretnéd menteni őket csak tallózd ki a számodra megfelelő célkönyvtárat."
-tooltip.folders_window.browse_data = "Tallózd ki a Theme Hospital telepítési helyét (jelenlegi hely: %1%)"
+tooltip.folders_window.browse_data = "Tallózd ki a CorsixTH telepítési helyét (jelenlegi hely: %1%)"
 tooltip.folders_window.browse = "Tallózz elérési utat"
 tooltip.folders_window.browse_screenshots = "Válassz másik könyvtárat a kilopott képeidnek ( jelenlegi hely: %1% )"
 tooltip.folders_window.browse_music = "Válassz másik könyvtárat a zenéidnek ( jelenlegi hely: %1% )"
@@ -1844,7 +1844,7 @@ tooltip.folders_window.no_font_specified = "Még nem adtál meg betűtípusfile 
 tooltip.folders_window.not_specified = "Még nem adtál meg könyvtár elérési utat!"
 tooltip.folders_window.browse_saves = "Válassz másik könyvtárat az elmentett játékállásaidnak ( jelenlegi hely: %1% )"
 tooltip.folders_window.default = "Alapértelmezett elérési út"
-tooltip.folders_window.data_location = "Az eredeti Theme Hospital telepítési helye (szükséges a CorsixTH futtatásához)"
+tooltip.folders_window.data_location = "Az eredeti CorsixTH telepítési helye (szükséges a CorsixTH futtatásához)"
 tooltip.customise_window.aliens = "Mivel nincsenek megfelelő animációink az idegen DNA-val rendelkező páciensek megjelenítésére, ezért ők csak vészhelyzetek esetén jelennek meg a kórházadban. Ha szeretnéd, hogy ne csak ilyen esetekben jöjjenek, akkor ezt kapcsold ki"
 tooltip.customise_window.average_contents = "Ha szeretnéd, hogy a játék megjegyezze milyen extra tárgyakkal szoktad a szobákat általában berendezni, akkor kapcsold be ezt"
 tooltip.customise_window.back = "Menü bezárása, és vissza a Beállításokhoz"
@@ -1852,7 +1852,7 @@ tooltip.customise_window.movies = "Ezzel le tudod tiltani az összes átvezető 
 tooltip.customise_window.fractured_bones = "Mivel csak félkész animációink van a törött csontú női páciensek megjelenítésére, ezért ők nem jelennek meg a kórházadban. Ha mégis szeretnéd, hogy érkezzenek ilyen betegek is, akkor ezt kapcsold ki"
 tooltip.customise_window.volume = "Ha hangerő halkítása gomb használata megnyitja az esetleírásokat is, akkor ezt bekapcsolva átállíthatod az esetleírások gyorsbillentyű kombinációját Shift + C -re"
 tooltip.customise_window.intro = "A bevezető videó (intro) ki/be kapcsolása - az átvezető videóknak engedélyezve kell lenniük, ha szeretnéd ezt bekapcsolni"
-tooltip.customise_window.paused = "Az eredeti Theme Hospitalban a játékos csak a felső menüt használhatta ha a játék szüneteltetve volt. Ez az alapbeállítás a CorsixTH-ban is, de ha ezt bekapcsolod, akkor szüneteltetés alatt is elérsz minden menüt"
+tooltip.customise_window.paused = "Az eredeti CorsixTHban a játékos csak a felső menüt használhatta ha a játék szüneteltetve volt. Ez az alapbeállítás a CorsixTH-ban is, de ha ezt bekapcsolod, akkor szüneteltetés alatt is elérsz minden menüt"
 update_window.caption = "Frissítés elérhető!"
 update_window.new_version = "Új verzió:"
 update_window.current_version = "Jelenlegi verzió:"
@@ -1864,7 +1864,7 @@ errors.load_quick_save = "Hiba történt: a gyorsmentés betöltése sikertelen 
 folders_window.data_label = "TH adat"
 folders_window.music_location = "Válaszd ki a könyvtárat ahol a zenéidet tárolod"
 folders_window.music_label = "MP3-ak"
-folders_window.new_th_location = "Itt tudsz beállítani új Theme Hospital telepítési könyvtárat. Mihelyst kiválasztod a játék újra fog indulni."
+folders_window.new_th_location = "Itt tudsz beállítani új CorsixTH telepítési könyvtárat. Mihelyst kiválasztod a játék újra fog indulni."
 folders_window.caption = "Könyvtár elérési utak"
 folders_window.screenshots_label = "Kilopott képek"
 folders_window.font_label = "Betűtípus"

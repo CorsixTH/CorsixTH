@@ -96,7 +96,7 @@ letter = {
 
 install = {
   title = "--------------------------------- CorsixTH Installation ---------------------------------",
-  th_directory = "CorsixTH kræver en original installation af Theme Hospital for at fungere. Angiv placeringen af spillet her.",
+  th_directory = "CorsixTH kræver en original installation af CorsixTH for at fungere. Angiv placeringen af spillet her.",
   exit = "Afslut",
 }
 
@@ -246,7 +246,7 @@ options_window = {
   height = "Höjde",
   change_resolution = "Skift oplösning",
   browse = "Gennemse",
-  new_th_directory = "Her kan du specificere en ny installationsmappe for Theme Hospital. Så snart du har gjort det vil spillet genstarte.",
+  new_th_directory = "Her kan du specificere en ny installationsmappe for CorsixTH. Så snart du har gjort det vil spillet genstarte.",
   cancel = "Annullér",
   back = "Tilbage",
 }
@@ -257,7 +257,7 @@ tooltip.options_window = {
   height = "Indtast den önskede skærmhöjde",
   change_resolution = "Skift skærmstörrelsen til dimmensionerne indtastet til höjre",
   language = "Vælg %s som sprog",
-  browse = "Gennemse et andet sted for installation af Theme Hospital. %1%",
+  browse = "Gennemse et andet sted for installation af CorsixTH. %1%",
   back = "Luk indstillingsvinduet",
 }
 
@@ -2649,7 +2649,7 @@ tooltip.folders_window.no_font_specified = "Du har ikke valgt en skrifttype-plac
 tooltip.folders_window.not_specified = "Du har ikke valgt en mappeplacering endnu!"
 tooltip.folders_window.browse_saves = "Find en anden mappe til din gemte spil ( nuværende placering %1% ) "
 tooltip.folders_window.default = "Standard lokation"
-tooltip.folders_window.data_location = "Placeringen af den originale Theme Hospital installation som kræves for at køre CorsixTH"
+tooltip.folders_window.data_location = "Placeringen af den originale CorsixTH installation som kræves for at køre CorsixTH"
 tooltip.customise_window.back = "Luk denne menu og gå tilbage til indstillinger"
 tooltip.customise_window.movies = "Global film kontrol, dette vil tillade dig at deaktivere alle film"
 update_window.caption = "Ny opdatering klar!"

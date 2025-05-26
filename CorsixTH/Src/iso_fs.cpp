@@ -398,7 +398,7 @@ bool iso_filesystem::initialise(const char* path) {
                               root_directory_entry_size, 0);
           if (files.empty()) {
             set_error(
-                "Could not find Theme Hospital data "
+                "Could not find CorsixTH data "
                 "directory.");
             return false;
           } else {

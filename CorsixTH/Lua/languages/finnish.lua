@@ -231,7 +231,7 @@ options_window = {
   height                = "Korkeus",
   change_resolution     = "Vaihda resoluutio",
   browse                = "Selaa...",
-  new_th_directory      = "Tässä voit määrittää uuden Theme Hospital -pelin asennushakemiston. Kun olet valinnut uuden hakemiston, peli käynnistyy uudestaan.",
+  new_th_directory      = "Tässä voit määrittää uuden CorsixTH -pelin asennushakemiston. Kun olet valinnut uuden hakemiston, peli käynnistyy uudestaan.",
   cancel                = "Peruuta",
   back                  = "Takaisin",
 }
@@ -301,7 +301,7 @@ tooltip = {
     height              = "Syötä peli-ikkunan haluttu korkeus",
     change_resolution   = "Muuta ikkunan resoluutio vasemmalla annettujen arvojen mukaiseksi",
     language            = "Valitse kieleksi %s",
-    browse              = "Selaa hakemistoja valitaksesi uuden Theme Hospital -pelin asennushakemiston",
+    browse              = "Selaa hakemistoja valitaksesi uuden CorsixTH -pelin asennushakemiston",
     back                = "Sulje tämä ikkuna",
   },
 
@@ -375,7 +375,7 @@ letter = {
 -- 8. Installation
 install = {
   title         = "-------------------------------- CorsixTH asennus --------------------------------",
-  th_directory  = "CorsixTH tarvitsee kopion alkuperäisen Theme Hospital -pelin (tai demon) tiedostoista toimiakseen. Ole hyvä ja käytä alla olevaa valitsinta Theme Hospital-pelin asennushakemiston etsimiseen.",
+  th_directory  = "CorsixTH tarvitsee kopion alkuperäisen CorsixTH -pelin (tai demon) tiedostoista toimiakseen. Ole hyvä ja käytä alla olevaa valitsinta CorsixTH-pelin asennushakemiston etsimiseen.",
   exit          = "Sulje",
 }
 

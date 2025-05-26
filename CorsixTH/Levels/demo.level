@@ -23,7 +23,7 @@ SOFTWARE.
 %MapFile = "LEVEL.L1"
 
 %LevelBriefing = "This is the only map available as long as you use
- the Theme Hospital Demo files."
+ the CorsixTH Demo files."
 
 %LevelDebriefing = "That was not too hard right? Time to get the real deal?"
 

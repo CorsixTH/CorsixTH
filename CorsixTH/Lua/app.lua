@@ -180,6 +180,7 @@ function App:init()
   self.gfx = Graphics(self)
 
   -- Put up the loading screen
+  --[[
   if good_install_folder then
     self.video:startFrame()
     self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
@@ -202,6 +203,7 @@ function App:init()
       self.video:endFrame()
     end
   end
+  ]]--
 
   -- App initialisation 2nd goal: Load remaining systems and data in an appropriate order
 
@@ -411,6 +413,7 @@ function App:init()
   else
     callback_after_movie()
   end
+  TH.moduleGameReady()
   return true
 end
 
@@ -421,6 +424,7 @@ function App:initGamelogFile()
   local sysinfo = self:gamelogHeader()
   fi:write(sysinfo)
   fi:close()
+  TH.SyncEmscriptenFS()
   if success then self:trimLogs() end -- Only trim logs if logs folder is writable
 end
 
@@ -1066,6 +1070,7 @@ function App:saveConfig()
     fi:write(line .. "\n")
   end
   fi:close()
+  TH.SyncEmscriptenFS()
 end
 
 --! Tries to open the given file or a file in OS's temp dir.
@@ -1171,6 +1176,7 @@ function App:saveHotkeys()
   end
 
   fi:close()
+  TH.SyncEmscriptenFS()
 end
 
 function App:run()
@@ -1456,7 +1462,7 @@ function App:checkInstallFolder()
       os.getenv("ProgramFiles"),
       os.getenv("ProgramFiles(x86)"),
       [[C:]], [[D:]], [[E:]], [[F:]], [[G:]], [[H:]] }
-    local possible_folders = { "ThemeHospital", "Theme Hospital", "HOSP", "TH97",
+    local possible_folders = { "CorsixTH", "ThemeHospital", "Theme Hospital", "HOSP", "TH97",
       [[GOG Galaxy\Games\Theme Hospital]], [[GOG.com\Theme Hospital]],
       [[GOG Games\Theme Hospital]], [[Origin Games\Theme Hospital\data\Game]],
       [[EA Games\Theme Hospital\data\Game]]
@@ -1496,7 +1502,7 @@ function App:checkInstallFolder()
   check("QData" .. pathsep .. "SPointer.dat")
   if #missing ~= 0 then
     missing = table.concat(missing, ", ")
-    message = "Invalid Theme Hospital folder specified in config file, " ..
+    message = "Invalid CorsixTH folder specified in config file, " ..
         "as at least the following files are missing: " .. missing .. ".\n" ..
         message
     print(message)
@@ -1507,8 +1513,8 @@ function App:checkInstallFolder()
   -- Check for demo version
   if self.fs:readContents("DataM", "Demo.dat") then
     self.using_demo_files = true
-    print("Notice: Using data files from demo version of Theme Hospital.")
-    print("Consider purchasing a full copy of the game to support EA.")
+    print("Notice: Using data files from demo version of CorsixTH.")
+    -- print("Consider purchasing a full copy of the game to support EA.")
   end
 
   -- Do a few more checks to make sure that commonly corrupted files are OK.
@@ -1536,13 +1542,13 @@ function App:checkInstallFolder()
     check_corrupt("ANIMS" .. pathsep .. "AREA01V.SMK", 251572, true)
     check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656, true)
     check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 335220, true)
-    check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520, true)
+    --check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520, true)
     check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
-    check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728, true)
+    --check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728, true)
   end
 
   if #corrupt ~= 0 then
-    table.insert(corrupt, 1, "There appears to be corrupt files in your Theme Hospital folder, " ..
+    table.insert(corrupt, 1, "There appears to be corrupt files in your CorsixTH folder, " ..
       "so don't be surprised if CorsixTH crashes. At least the following files are wrong:")
     table.insert(corrupt, message)
   end
@@ -1692,7 +1698,7 @@ function App:getVersion(version)
   -- Old versions (<= 0.67) retain existing format
   -- All patch versions should be retained in this table (due to be replaced, see PR2518)
   if ver > 194 then
-    return "Trunk"
+    return "WASM " .. "v0.68.0"
   elseif ver > 180 then
     return "v0.68.0"
   elseif ver > 170 then

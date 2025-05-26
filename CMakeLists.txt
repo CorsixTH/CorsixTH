@@ -41,6 +41,12 @@ option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" 
 option(BUILD_TOOLS "Build additional CLI tools (rnc_decode)" OFF)
 option(ENABLE_SANITIZERS "Build with ASan and UBSan enabled" OFF)
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+  set(WITH_MOVIES OFF)
+  set(WITH_UPDATE_CHECK OFF)
+  set(USE_SOURCE_DATADIRS ON)
+endif ()
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
 if(WITH_FREETYPE2)

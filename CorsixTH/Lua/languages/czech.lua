@@ -1087,9 +1087,9 @@ room_classes = {
 }
 tooltip = {
   folders_window = {
-    data_location = "Adresář instalace původní hry Theme Hospital, jenž je vyžadován pro spuštění CorsixTH",
+    data_location = "Adresář instalace původní hry CorsixTH, jenž je vyžadován pro spuštění CorsixTH",
     no_font_specified = "Umístění písma zatím nezadáno!",
-    browse_data = "Procházet pro jiné umístění instalace Theme Hospital. (současné umístění: %1%)",
+    browse_data = "Procházet pro jiné umístění instalace CorsixTH. (současné umístění: %1%)",
     browse_font = "Procházet pro výběr jiného souboru s písmem (současné umístění: %1%)",
     font_location = "Umístění souboru s písmem, které je schopno zobrazit znaky Unicode vyžadované vaším jazykem. Pokud toto není zadáno, nebudete moci zvolit jazyky, které potřebují více znaků, než původní hra obsahuje. Příklad: ruština a čínština",
     screenshots_location = "Standardně je složka se snímky obrazovky ve stejném umístění jako soubor s nastavením. Pokud toto není žádané, pak si můžete zvolit vlastní. Stačí zvolit adresář, který chete použít.",
@@ -1112,7 +1112,7 @@ tooltip = {
     fractured_bones = "Kvůli špatné animaci jsou standardně zakázány pacientky se Zlomenými Kostmi. Pro povolení pacientek s touto diagnózou ve vaší nemocnici musíte toto vypnout.",
     volume = "Pokud tlačítko pro snížení hlasitosti zároveň také otevírá Knihu léčby pacientů, můžete toto zapnout pro změnu klávesové zkratky knihy na Shift + C",
     intro = "Zapne nebo vypne úvodní video. Pokud chcete, aby video bylo přehráváno při každém spuštění CorsixTH, je třeba zapnout globální kontrolu videí.",
-    paused = "V Theme Hospital může hráč použít horní nabídku pouze při pozastavení hry. To samé platí v CorsixTH, ale pomocí této volby můžete při pozastavení povolit vše.",
+    paused = "V CorsixTH může hráč použít horní nabídku pouze při pozastavení hry. To samé platí v CorsixTH, ale pomocí této volby můžete při pozastavení povolit vše.",
     remove_destroyed_rooms = "Pokud chcete povolit možnost odstranit zničené místnosti (za poplatek), zapněte tuto možnost.",
   },
   options_window = {
@@ -2651,7 +2651,7 @@ errors = {
   load_prefix = "Chyba při načtení hry: ",
   unavailable_screen_size = "Rozlišení obrazovky, které požadujete, není dostupné v režimu celé obrazovky.",
   save_prefix = "Chyba při uložení hry: ",
-  alien_dna = "POZNÁMKA: Pro animaci s Mimozemskou DNA neexistují animace pro sednutí, otevírání nebo klepání na dveře atd. Proto se při těchto činnostech, stejně jako v Theme Hospital, dočasně změní na normálně vypadající pacienty a pak se změní zpět. Tyto pacienti se v nemocnici objeví pouze při nastavení v souboru úrovně",
+  alien_dna = "POZNÁMKA: Pro animaci s Mimozemskou DNA neexistují animace pro sednutí, otevírání nebo klepání na dveře atd. Proto se při těchto činnostech, stejně jako v CorsixTH, dočasně změní na normálně vypadající pacienty a pak se změní zpět. Tyto pacienti se v nemocnici objeví pouze při nastavení v souboru úrovně",
   fractured_bones = "POZNÁMKA: Animace ženských pacientů se Zlomenými kostmi není dokonalá",
   load_quick_save = "Chyba! Rychle uloženou pozici nelze načíst, protože neexistuje. Není třeba se obávat, hned jsme jednu pro Vás vytvořili!",
   no_games_to_contine = "Žádné uložené hry.",
@@ -3176,7 +3176,7 @@ introduction_texts = {
     "Musíte vyléčit alespoň 10 lidí a zajistit, že vaše reputace nespadne pod 200.",
 }
 install = {
-  th_directory = "CorsixTH potřebuje kopii datových souborů z původní hry Theme Hospital (nebo demoverze), aby mohla běžet. Prosím, použijte okno níže k nalezení instalační složky Theme Hospital.",
+  th_directory = "CorsixTH potřebuje kopii datových souborů z původní hry CorsixTH (nebo demoverze), aby mohla běžet. Prosím, použijte okno níže k nalezení instalační složky CorsixTH.",
   title = "-------------------------------- Nastavení CorsixTH --------------------------------",
   exit = "Odejít",
   ok = "OK",
@@ -3251,7 +3251,7 @@ options_window = {
   check_for_updates = "Kontrola aktualizací",
 }
 folders_window = {
-  new_th_location = "Zde můžete zadat novou instalační složku Theme Hospital. Jakmile ji zvolíte, hra bude restartována.",
+  new_th_location = "Zde můžete zadat novou instalační složku CorsixTH. Jakmile ji zvolíte, hra bude restartována.",
   data_label = "Data TH",
   music_label = "MP3",
   savegames_label = "Uložené hry",

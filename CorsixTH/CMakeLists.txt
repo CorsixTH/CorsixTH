@@ -104,7 +104,30 @@ set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
 ## Finding libraries
-
+if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+  set(USE_FLAGS " \
+  --use-port=sdl2 \
+  --use-port=sdl2_image:formats=png,jpg --use-port=libpng --use-port=libjpeg \
+  --use-port=sdl2_mixer -sSDL2_MIXER_FORMATS=ogg \
+  --use-port=sdl2_ttf \
+  --use-port=contrib.lua \
+  --use-port=zlib \
+  -sNO_DISABLE_EXCEPTION_CATCHING -Os")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${USE_FLAGS}")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS} \
+  -sASYNCIFY -sASYNCIFY_STACK_SIZE=32768 \
+  -sALLOW_MEMORY_GROWTH -sINITIAL_MEMORY=128mb -sMEMORY_GROWTH_LINEAR_STEP=32mb \
+  -sENVIRONMENT=web \
+  -sMODULARIZE \
+  -lidbfs.js \
+  -lwebsocket.js \
+  -sEXPORTED_RUNTIME_METHODS=callMain,addRunDependency,removeRunDependency \
+  -sEXPORT_ALL \
+  -sEXIT_RUNTIME \
+  -Wno-pthreads-mem-growth")
+  set(WITH_UPDATE_CHECK OFF)
+else ()
 # Find SDL
 if(VCPKG_TARGET_TRIPLET)
   find_package(SDL2 CONFIG REQUIRED)
@@ -248,7 +271,7 @@ if(CORSIX_TH_LINK_LUA_MODULES)
 else()
   message("Lua modules are not linked and will be loaded at runtime")
 endif()
-
+endif ()
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
   # Do not generate launch script. The default is fine for this case.

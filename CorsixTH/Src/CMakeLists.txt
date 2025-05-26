@@ -1,6 +1,14 @@
 # Modify the config.h based upon our selection of options
 configure_file(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
 
+file(GLOB LPEG_SRC_FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/lpeg-1.1.0/*.c
+)
+file(GLOB LPEG_HRC_FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/lpeg-1.1.0/*.h
+)
+
+
 target_sources(CorsixTH_lib
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/random.c
@@ -33,6 +41,9 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/th_sound.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/th_strings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/lua_lfs.c
+    ${LPEG_SRC_FILES}
 )
 
 # These are for IDEs such as XCode and MSVC to track headers within their
@@ -60,6 +71,9 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/th_sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/th_strings.h
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.h
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/lua_lfs.h
+    ${LPEG_HRC_FILES}
 
     ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
 )
