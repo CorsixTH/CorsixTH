@@ -61,7 +61,14 @@ function UIPlaceStaff:close()
     self.staff.pickup = false
     self.staff.going_to_staffroom = nil
     self.staff:getCurrentAction().window = nil
-    self.staff:setNextAction(MeanderAction())
+    local room = self.world:getRoom(self.staff.tile_x, self.staff.tile_y)
+    if room and room == self.staff.last_room and room.crashed then
+      self.staff:die()
+      self.staff:despawn()
+      self.world:destroyEntity(self.staff)
+    else
+      self.staff:setNextAction(MeanderAction())
+    end
     self.ui:playSound("plac_st2.wav")
   else
     -- cancel hiring newcomer
