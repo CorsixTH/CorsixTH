@@ -76,7 +76,7 @@ function UIPlaceStaff:close()
     play_placement_sound = false
   end
   if play_placement_sound then
-    self.ui:playSound("plac_st2.wav") -- play 'staff placement' sound
+    self.ui:playSound("plac_st2.wav")
   end
   Window.close(self)
 end
