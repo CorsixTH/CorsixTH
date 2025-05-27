@@ -53,30 +53,30 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
 end
 
 function UIPlaceStaff:close()
-  local old_staff_member = self.staff
-  if old_staff_member then
-    old_staff_member.pickup = false
-    old_staff_member.going_to_staffroom = nil
-    old_staff_member:getCurrentAction().window = nil
-    local room = self.world:getRoom(old_staff_member.tile_x, old_staff_member.tile_y)
-    if room and room == old_staff_member.last_room and room.crashed then
-      old_staff_member:die()
-      old_staff_member:despawn()
-      old_staff_member:destroyEntity(old_staff_member)
+  local employed_staff = self.staff
+  local play_placement_sound = true
+  if employed_staff then
+    employed_staff.pickup = false
+    employed_staff.going_to_staffroom = nil
+    employed_staff:getCurrentAction().window = nil
+    local room = self.world:getRoom(employed_staff.tile_x, employed_staff.tile_y)
+    if room and room == employed_staff.last_room and room.crashed then
+      employed_staff:die()
+      employed_staff:despawn()
+      employed_staff:destroyEntity(employed_staff)
     else
-      old_staff_member:setNextAction(MeanderAction())
+      employed_staff:setNextAction(MeanderAction())
     end
-  else
-    -- cancel hiring newcomer
+  else -- Cancel hiring newcomer
     self.ui:tutorialStep(2, {6, 7}, 1)
     self.ui:tutorialStep(4, {4, 5}, 1)
     -- Return the profile to the available staff list
     local staff_pool = self.world.available_staff[self.profile.humanoid_class]
     staff_pool[#staff_pool + 1] = self.profile
+    play_placement_sound = false
   end
-  if old_staff_member or not self.profile then
-    -- Drop sound
-    self.ui:playSound("plac_st2.wav")
+  if play_placement_sound then
+    self.ui:playSound("plac_st2.wav") -- play 'staff placement' sound
   end
   Window.close(self)
 end
