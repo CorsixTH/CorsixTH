@@ -54,10 +54,7 @@ end
 
 function UIPlaceStaff:close()
   local old_staff_member = self.staff
-  local newcomer_hired = not self.profile and not old_staff_member
-  if newcomer_hired then
-    self.ui:playSound("plac_st2.wav")
-  elseif old_staff_member then
+  if old_staff_member then
     old_staff_member.pickup = false
     old_staff_member.going_to_staffroom = nil
     old_staff_member:getCurrentAction().window = nil
@@ -69,7 +66,6 @@ function UIPlaceStaff:close()
     else
       old_staff_member:setNextAction(MeanderAction())
     end
-    self.ui:playSound("plac_st2.wav")
   else
     -- cancel hiring newcomer
     self.ui:tutorialStep(2, {6, 7}, 1)
@@ -77,6 +73,10 @@ function UIPlaceStaff:close()
     -- Return the profile to the available staff list
     local staff_pool = self.world.available_staff[self.profile.humanoid_class]
     staff_pool[#staff_pool + 1] = self.profile
+  end
+  if old_staff_member or not self.profile then
+    -- Drop sound
+    self.ui:playSound("plac_st2.wav")
   end
   Window.close(self)
 end
