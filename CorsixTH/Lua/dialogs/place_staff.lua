@@ -58,16 +58,16 @@ function UIPlaceStaff:close()
   if newcomer_hired then
     self.ui:playSound("plac_st2.wav")
   elseif old_staff_member then
-    self.staff.pickup = false
-    self.staff.going_to_staffroom = nil
-    self.staff:getCurrentAction().window = nil
-    local room = self.world:getRoom(self.staff.tile_x, self.staff.tile_y)
-    if room and room == self.staff.last_room and room.crashed then
-      self.staff:die()
-      self.staff:despawn()
-      self.world:destroyEntity(self.staff)
+    old_staff_member.pickup = false
+    old_staff_member.going_to_staffroom = nil
+    old_staff_member:getCurrentAction().window = nil
+    local room = self.world:getRoom(old_staff_member.tile_x, old_staff_member.tile_y)
+    if room and room == old_staff_member.last_room and room.crashed then
+      old_staff_member:die()
+      old_staff_member:despawn()
+      old_staff_member:destroyEntity(old_staff_member)
     else
-      self.staff:setNextAction(MeanderAction())
+      old_staff_member:setNextAction(MeanderAction())
     end
     self.ui:playSound("plac_st2.wav")
   else
