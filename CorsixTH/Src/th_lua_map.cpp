@@ -663,11 +663,11 @@ int l_map_setcell(lua_State* L) {
     pNode->tile_parts[tile_part::west_wall] = (uint16_t)luaL_checkinteger(L, 6);
     pNode->tile_parts[tile_part::ui] = (uint16_t)luaL_checkinteger(L, 7);
   } else {
-    lua_Integer iLayer = luaL_checkinteger(L, 4) - 1;
-    if (iLayer < tile_part::ground || iLayer >= tile_part::_num_tile_parts)
+    lua_Integer part = luaL_checkinteger(L, 4) - 1;
+    if (part < tile_part::ground || part >= tile_part::_num_tile_parts)
       return luaL_argerror(L, 4, "Tile part index is out of bounds (1-4)");
-    uint16_t iBlock = static_cast<uint16_t>(luaL_checkinteger(L, 5));
-    pNode->tile_parts[iLayer] = iBlock;
+    uint16_t blk = static_cast<uint16_t>(luaL_checkinteger(L, 5));
+    pNode->tile_parts[part] = blk;
   }
 
   lua_settop(L, 1);

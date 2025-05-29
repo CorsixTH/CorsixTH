@@ -650,17 +650,17 @@ namespace {
 */
 bool addRemoveDividerWalls(level_map* pMap, map_tile* pNode,
                            const map_tile* pOriginalNode, int iXY, int delta,
-                           int block, int iParcelId) {
+                           tile_part part, int iParcelId) {
   if (iXY > 0 && pOriginalNode->flags.hospital &&
       pOriginalNode[-delta].flags.hospital &&
       pNode->iParcelId != pNode[-delta].iParcelId) {
     int iOwner = pMap->get_parcel_owner(pNode->iParcelId);
     int iOtherOwner = pMap->get_parcel_owner(pNode[-delta].iParcelId);
     if (iOwner != iOtherOwner) {
-      pNode->tile_parts[block] = block + (iOwner ? 143 : 141);
+      pNode->tile_parts[part] = part + (iOwner ? 143 : 141);
     } else if (pNode->iParcelId == iParcelId ||
                pNode[-delta].iParcelId == iParcelId) {
-      pNode->tile_parts[block] = 0;
+      pNode->tile_parts[part] = 0;
       return true;
     }
   }
@@ -940,13 +940,13 @@ const map_tile* level_map::get_original_tile_unchecked(int iX, int iY) const {
 void level_map::set_block_sheet(sprite_sheet* pSheet) { wall_blocks = pSheet; }
 
 void level_map::set_all_wall_draw_flags(uint8_t iFlags) {
-  uint16_t iBlockOr = static_cast<uint16_t>(iFlags << 8);
+  uint16_t draw_flags = static_cast<uint16_t>(iFlags << 8);
   map_tile* pNode = cells;
   for (int i = 0; i < width * height; ++i, ++pNode) {
     pNode->tile_parts[tile_part::north_wall] =
-        static_cast<uint16_t>((pNode->tile_parts[tile_part::north_wall] & 0xFF) | iBlockOr);
+        static_cast<uint16_t>((pNode->tile_parts[tile_part::north_wall] & 0xFF) | draw_flags);
     pNode->tile_parts[tile_part::west_wall] =
-        static_cast<uint16_t>((pNode->tile_parts[tile_part::west_wall] & 0xFF) | iBlockOr);
+        static_cast<uint16_t>((pNode->tile_parts[tile_part::west_wall] & 0xFF) | draw_flags);
   }
 }
 
@@ -987,13 +987,13 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
        itrNode1; ++itrNode1) {
     // First, draw the floor tile as it should be below everything else.
     int iH = 32;
-    unsigned int iBlock = itrNode1->tile_parts[tile_part::ground];
-    wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH);
+    uint16_t part = itrNode1->tile_parts[tile_part::ground];
+    wall_blocks->get_sprite_size(part & 0xFF, nullptr, &iH);
     wall_blocks->draw_sprite(
-        pCanvas, iBlock & 0xFF,
+        pCanvas, part & 0xFF,
         itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
         itrNode1.tile_y_position_on_screen() + iCanvasY - iH + 32,
-        (iBlock >> 8) | thdf_nearest);
+        (part >> 8) | thdf_nearest);
 
     // Draw floor shadows immediately after floor tiles ensuring that all
     // shadow pixels are drawn onto freshly drawn opaque floor tile pixels.
@@ -1023,12 +1023,12 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
              iCanvasY);
          itrNode; ++itrNode) {
       int iH;
-      unsigned int iBlock = itrNode->tile_parts[tile_part::north_wall];
-      if (iBlock != 0 && wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
+      uint16_t part = itrNode->tile_parts[tile_part::north_wall];
+      if (part != 0 && wall_blocks->get_sprite_size(part & 0xFF, nullptr, &iH) &&
           iH > 0) {
-        wall_blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+        wall_blocks->draw_sprite(pCanvas, part & 0xFF, itrNode.x() - 32,
                             itrNode.y() - iH + 32,
-                            (iBlock >> 8) | thdf_nearest);
+                            (part >> 8) | thdf_nearest);
         if (itrNode->flags.shadow_wall) {
           clip_rect rcNewClip;
           rcNewClip.x = static_cast<clip_rect::x_y_type>(itrNode.x() - 32);
@@ -1065,22 +1065,22 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
     for (; itrNode; ++itrNode) {
       bool bNeedsRedraw = false;
       int iH;
-      unsigned int iBlock = itrNode->tile_parts[tile_part::west_wall];
-      if (iBlock != 0 && wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
+      uint16_t part = itrNode->tile_parts[tile_part::west_wall];
+      if (part != 0 && wall_blocks->get_sprite_size(part & 0xFF, nullptr, &iH) &&
           iH > 0) {
-        wall_blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+        wall_blocks->draw_sprite(pCanvas, part & 0xFF, itrNode.x() - 32,
                             itrNode.y() - iH + 32,
-                            (iBlock >> 8) | thdf_nearest);
+                            (part >> 8) | thdf_nearest);
       }
-      iBlock = itrNode->tile_parts[tile_part::ui];
-      if (iBlock != 0 && wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
+      part = itrNode->tile_parts[tile_part::ui];
+      if (part != 0 && wall_blocks->get_sprite_size(part & 0xFF, nullptr, &iH) &&
           iH > 0) {
-        wall_blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+        wall_blocks->draw_sprite(pCanvas, part & 0xFF, itrNode.x() - 32,
                             itrNode.y() - iH + 32,
-                            (iBlock >> 8) | thdf_nearest);
+                            (part >> 8) | thdf_nearest);
       }
-      iBlock = itrNode->tile_parts[tile_part::north_wall];
-      if (iBlock != 0 && wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
+      part = itrNode->tile_parts[tile_part::north_wall];
+      if (part != 0 && wall_blocks->get_sprite_size(part & 0xFF, nullptr, &iH) &&
           iH > 0) {
         bNeedsRedraw = true;
       }
@@ -1140,12 +1140,12 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         // north side or a wall to the north redraw that tile
         if (bTileNeedsRedraw) {
           // redraw the north wall
-          unsigned int iBlock = itrNode.get_previous_tile()->tile_parts[1];
-          if (iBlock != 0 &&
-              wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) && iH > 0) {
-            wall_blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 96,
+          uint16_t part = itrNode.get_previous_tile()->tile_parts[tile_part::north_wall];
+          if (part != 0 &&
+              wall_blocks->get_sprite_size(part & 0xFF, nullptr, &iH) && iH > 0) {
+            wall_blocks->draw_sprite(pCanvas, part & 0xFF, itrNode.x() - 96,
                                 itrNode.y() - iH + 32,
-                                (iBlock >> 8) | thdf_nearest);
+                                (part >> 8) | thdf_nearest);
             if (itrNode.get_previous_tile()->flags.shadow_wall) {
               clip_rect rcNewClip;
               rcNewClip.x = static_cast<clip_rect::x_y_type>(itrNode.x() - 96);
@@ -1429,9 +1429,9 @@ namespace {
 //! For shadow casting, a tile is considered to have a wall on a direction
 //! if it has a door in that direction, or the block is from the hardcoded
 //! range of wall-like blocks.
-bool is_wall(map_tile* tile, size_t block, bool flag) {
-  return flag || (82 <= (tile->tile_parts[block] & 0xFF) &&
-                  (tile->tile_parts[block] & 0xFF) <= 164);
+bool is_wall(map_tile* tile, tile_part part, bool flag) {
+  return flag || (82 <= (tile->tile_parts[part] & 0xFF) &&
+                  (tile->tile_parts[part] & 0xFF) <= 164);
 }
 
 }  // namespace
@@ -1443,14 +1443,14 @@ void level_map::update_shadows() {
       pNode->flags.shadow_full = false;
       pNode->flags.shadow_half = false;
       pNode->flags.shadow_wall = false;
-      if (is_wall(pNode, 2, pNode->flags.tall_west)) {
+      if (is_wall(pNode, tile_part::west_wall, pNode->flags.tall_west)) {
         pNode->flags.shadow_half = true;
-        if (is_wall(pNode, 1, pNode->flags.tall_north)) {
+        if (is_wall(pNode, tile_part::north_wall, pNode->flags.tall_north)) {
           pNode->flags.shadow_wall = true;
         } else if (iY != 0) {
           map_tile* pNeighbour = pNode - this->width;
           pNeighbour->flags.shadow_full = true;
-          if (iX != 0 && !is_wall(pNeighbour, 2, pNode->flags.tall_west)) {
+          if (iX != 0 && !is_wall(pNeighbour, tile_part::west_wall, pNode->flags.tall_west)) {
             // Wrap the shadow around a corner (no need to continue
             // all the way along the wall, as the shadow would be
             // occluded by the wall. If Debug->Transparent Walls is

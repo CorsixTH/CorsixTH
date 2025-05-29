@@ -52,7 +52,7 @@ inline bool is_wall(uint16_t blk) {
 }
 
 inline bool is_wall_drawn(const level_map& map, const map_tile& node,
-                          const map_tile& original_node, size_t n) {
+                          const map_tile& original_node, tile_part n) {
   return map.get_tile_owner(&node) != 0 ? is_wall(node.tile_parts[n])
                                         : is_wall(original_node.tile_parts[n]);
 }
@@ -133,7 +133,7 @@ int l_town_map_draw(lua_State* L) {
         pCanvas->fill_rect(iColour, iCanvasX, iCanvasY, 3, 3);
       }
     dont_paint_tile:
-      if (is_wall_drawn(*pMap, *pNode, *pOriginalNode, 1)) {
+      if (is_wall_drawn(*pMap, *pNode, *pOriginalNode, tile_part::north_wall)) {
         pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 3, 1);
 
         // Draw entrance door
@@ -146,7 +146,7 @@ int l_town_map_draw(lua_State* L) {
           }
         }
       }
-      if (is_wall_drawn(*pMap, *pNode, *pOriginalNode, 2)) {
+      if (is_wall_drawn(*pMap, *pNode, *pOriginalNode, tile_part::west_wall)) {
         pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 1, 3);
 
         // Draw entrance door
