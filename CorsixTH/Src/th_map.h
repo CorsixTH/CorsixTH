@@ -420,7 +420,7 @@ class level_map {
 
   map_tile* cells;
   map_tile* original_cells;  // Cells at map load time, before any changes
-  sprite_sheet* blocks;
+  sprite_sheet* wall_blocks;
   map_overlay* overlay;
   bool owns_overlay;
   int* plot_owner;  // 0 for unowned, 1 for player 1, etc.
