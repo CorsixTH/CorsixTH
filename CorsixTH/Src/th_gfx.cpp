@@ -1466,23 +1466,63 @@ void animation::set_animation_kind(animation_kind anim_kind) {
 }
 
 namespace {
+//! Storage of one or two sounds. If two sounds are stored, both are selected in 50% of the cases.
+struct sound_pair {
+  sound_pair(int16_t sound): soundA(sound), soundB(-1) { }
+  sound_pair(int16_t soundA, int16_t soundB): soundA(soundA), soundB(soundB) { }
+
+  int16_t get_sound() const {
+    if (soundB < 0) {
+      return soundA;
+    } else {
+      int value = rand();
+      int counter = 0;
+      for (int i = 0; i < 7; i++) {
+        counter = counter + (value & 1);
+        value >>= 1;
+      }
+      return (counter < 4) ? soundA : soundB;
+    }
+  }
+
+private:
+  const int16_t soundA; //!< First available sound.
+  const int16_t soundB; //!< If non-negative, the second available sound.
+};
+
+typedef std::map<size_t, sound_pair> sound_replacement_map;
+
 // Map of frame numbers to sounds to play.
-const std::map<size_t, int> frame_sound_replacements{
+const sound_replacement_map frame_sound_replacements {
     // Female flying to heaven (anim 3220)
-    {6987, 123},
+    {6987, sound_pair(123)},
+
     // Using Computer (anim 2098)
-    {4213, 35},
-    {4215, 35},
-    {4224, 35},
-    {4230, 35},
+    {4213, sound_pair(35)},
+    {4215, sound_pair(35)},
+    {4224, sound_pair(35)},
+    {4230, sound_pair(35)},
+
+    {1034, sound_pair(58, 114)},
+    {2056, sound_pair(58, 114)},
+    {3184, sound_pair(58, 114)},
+    {4138, sound_pair(58, 114)},
+    {4204, sound_pair(58, 114)},
+    {4324, sound_pair(58, 114)},
+    {4384, sound_pair(58, 114)},
+    {4452, sound_pair(58, 114)},
+    {4476, sound_pair(58, 114)},
+    {4792, sound_pair(58, 114)},
+
     // Using Atom Analyser. Actually a generic animation of Researcher pushing
     // buttons (anim 4878)
-    {11136, 35},
-    {11138, 35},
-    {11147, 35},
-    {11152, 35},
-    {11153, 35},
-    {11154, 35}};
+    {11136, sound_pair(35)},
+    {11138, sound_pair(35)},
+    {11147, sound_pair(35)},
+    {11152, sound_pair(35)},
+    {11153, sound_pair(35)},
+    {11154, sound_pair(35)}
+  };
 }  // Namespace
 
 void animation::tick() {
@@ -1501,12 +1541,12 @@ void animation::tick() {
   }
 
   // Decide sound to play.
-  std::map<size_t, int>::const_iterator pos =
+  sound_replacement_map::const_iterator pos =
       frame_sound_replacements.find(frame_index);
   if (pos == frame_sound_replacements.end()) {
     sound_to_play = manager->get_frame_sound(frame_index);
   } else {
-    sound_to_play = pos->second;
+    sound_to_play = pos->second.get_sound();
   }
 }
 
