@@ -182,6 +182,15 @@ enum class temperature_theme {
   yellow_red     //!< Gradients of yellow, orange, and red
 };
 
+enum tile_part: uint8_t {
+    ground = 0,
+    north_wall = 1,
+    west_wall = 2,
+    ui = 3,
+
+    _num_tile_parts = 4 //!< Number of parts in a tile.
+};
+
 struct map_tile {
   map_tile();
   ~map_tile() = default;
@@ -200,7 +209,7 @@ struct map_tile {
   //! Part 2 is for the west wall
   //! Part 3 is for the UI
   //! NB: In Lua, parts are numbered 1 - 4 rather than 0 - 3
-  uint16_t tile_parts[4];
+  uint16_t tile_parts[tile_part::_num_tile_parts];
 
   //! Parcels (plots) of land have an ID, with each tile in the plot having
   //! that ID. Parcel 0 is the outside.
