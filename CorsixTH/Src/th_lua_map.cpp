@@ -658,10 +658,14 @@ int l_map_setcell(lua_State* L) {
     return luaL_argerror(L, 2, "Map coordinates out of bounds");
   }
   if (lua_gettop(L) >= 7) {
-    pNode->tile_parts[tile_part::ground] = static_cast<uint16_t>(luaL_checkinteger(L, 4));
-    pNode->tile_parts[tile_part::north_wall] = static_cast<uint16_t>(luaL_checkinteger(L, 5));
-    pNode->tile_parts[tile_part::west_wall] = static_cast<uint16_t>(luaL_checkinteger(L, 6));
-    pNode->tile_parts[tile_part::ui] = static_cast<uint16_t>(luaL_checkinteger(L, 7));
+    pNode->tile_parts[tile_part::ground] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 4));
+    pNode->tile_parts[tile_part::north_wall] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 5));
+    pNode->tile_parts[tile_part::west_wall] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 6));
+    pNode->tile_parts[tile_part::ui] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 7));
   } else {
     lua_Integer part = luaL_checkinteger(L, 4) - 1;
     if (part < tile_part::ground || part >= tile_part::_num_tile_parts)
@@ -735,7 +739,9 @@ int l_map_unmark_room(lua_State* L) {
   for (int iY = iY_; iY < iY_ + iH; ++iY) {
     for (int iX = iX_; iX < iX_ + iW; ++iX) {
       map_tile* pNode = pMap->get_tile_unchecked(iX, iY);
-      pNode->tile_parts[tile_part::ground] = pMap->get_original_tile_unchecked(iX, iY)->tile_parts[tile_part::ground];
+      pNode->tile_parts[tile_part::ground] =
+          pMap->get_original_tile_unchecked(iX, iY)
+              ->tile_parts[tile_part::ground];
       pNode->flags.room = false;
       pNode->iRoomId = 0;
     }

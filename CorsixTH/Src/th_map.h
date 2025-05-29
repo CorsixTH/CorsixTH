@@ -182,13 +182,13 @@ enum class temperature_theme {
   yellow_red     //!< Gradients of yellow, orange, and red
 };
 
-enum tile_part: uint8_t {
-    ground = 0,
-    north_wall = 1,
-    west_wall = 2,
-    ui = 3,
+enum tile_part : uint8_t {
+  ground = 0,
+  north_wall = 1,
+  west_wall = 2,
+  ui = 3,
 
-    _num_tile_parts = 4 //!< Number of parts in a tile.
+  _num_tile_parts = 4  //!< Number of parts in a tile.
 };
 
 struct map_tile {
