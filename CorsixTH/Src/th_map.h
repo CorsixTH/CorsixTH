@@ -192,15 +192,15 @@ struct map_tile {
   //! Linked list for entities rendered in an early (right-to-left) pass
   link_list oEarlyEntities;
 
-  //! Block tiles for rendering
-  //! For each tile, the lower byte is the index in the sprite sheet, and the
+  //! Tile parts for rendering.
+  //! For each part, the lower byte is the index in the sprite sheet, and the
   //! upper byte is for the drawing flags.
-  //! Layer 0 is for the floor
-  //! Layer 1 is for the north wall
-  //! Layer 2 is for the west wall
-  //! Layer 3 is for the UI
-  //! NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3
-  uint16_t iBlock[4];
+  //! Part 0 is for the floor
+  //! Part 1 is for the north wall
+  //! Part 2 is for the west wall
+  //! Part 3 is for the UI
+  //! NB: In Lua, parts are numbered 1 - 4 rather than 0 - 3
+  uint16_t tile_parts[4];
 
   //! Parcels (plots) of land have an ID, with each tile in the plot having
   //! that ID. Parcel 0 is the outside.

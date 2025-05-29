@@ -248,10 +248,10 @@ map_tile_flags::operator uint32_t() const {
 }
 
 map_tile::map_tile() : iParcelId(0), iRoomId(0), flags({}), objects() {
-  iBlock[0] = 0;
-  iBlock[1] = 0;
-  iBlock[2] = 0;
-  iBlock[3] = 0;
+  tile_parts[0] = 0;
+  tile_parts[1] = 0;
+  tile_parts[2] = 0;
+  tile_parts[3] = 0;
   aiTemperature[0] = aiTemperature[1] = 8192;
 }
 
@@ -381,7 +381,7 @@ bool level_map::load_blank() {
   map_tile* pOriginalNode = original_cells;
   for (int iY = 0; iY < height; ++iY) {
     for (int iX = 0; iX < width; ++iX, ++pNode, ++pOriginalNode) {
-      pNode->iBlock[0] = static_cast<uint16_t>(2 + (iX % 2));
+      pNode->tile_parts[0] = static_cast<uint16_t>(2 + (iX % 2));
     }
   }
   plot_owner = new int[1];
@@ -450,28 +450,28 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
         pNode->flags.can_travel_s = false;
       }
 
-      pNode->iBlock[0] = iBaseTile;
+      pNode->tile_parts[0] = iBaseTile;
       if (pData[3] == 0 || is_divider_wall(pData[3])) {
         // Tiles 71, 72 and 73 (pond foliage) are used as floor tiles,
         // but are too tall to be floor tiles, so move them to a wall,
         // and replace the floor with something similar (pond base).
         if (71 <= iBaseTile && iBaseTile <= 73) {
-          pNode->iBlock[1] = iBaseTile;
-          pNode->iBlock[0] = 69;
+          pNode->tile_parts[1] = iBaseTile;
+          pNode->tile_parts[0] = 69;
         } else {
-          pNode->iBlock[1] = 0;
+          pNode->tile_parts[1] = 0;
         }
       } else {
-        pNode->iBlock[1] = gs_iTHMapBlockLUT[pData[3]];
+        pNode->tile_parts[1] = gs_iTHMapBlockLUT[pData[3]];
         pNode->flags.can_travel_n = false;
         if (iY != 0) {
           pNode[-this->width].flags.can_travel_s = false;
         }
       }
       if (pData[4] == 0 || is_divider_wall(pData[4])) {
-        pNode->iBlock[2] = 0;
+        pNode->tile_parts[2] = 0;
       } else {
-        pNode->iBlock[2] = gs_iTHMapBlockLUT[pData[4]];
+        pNode->tile_parts[2] = gs_iTHMapBlockLUT[pData[4]];
         pNode->flags.can_travel_w = false;
         if (iX != 0) {
           pNode[-1].flags.can_travel_e = false;
@@ -508,10 +508,10 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
 
       *pOriginalNode = *pNode;
       if (is_divider_wall(pData[3])) {
-        pOriginalNode->iBlock[1] = gs_iTHMapBlockLUT[pData[3]];
+        pOriginalNode->tile_parts[1] = gs_iTHMapBlockLUT[pData[3]];
       }
       if (is_divider_wall(pData[4])) {
-        pOriginalNode->iBlock[2] = gs_iTHMapBlockLUT[pData[4]];
+        pOriginalNode->tile_parts[2] = gs_iTHMapBlockLUT[pData[4]];
       }
 
       if (pData[1] != 0 && fnObjectCallback != nullptr) {
@@ -568,9 +568,9 @@ void level_map::save(const std::string& filename) {
                                                     : pNode->objects.front());
 
     // Blocks
-    aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[0] & 0xFF];
-    aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[1] & 0xFF];
-    aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[2] & 0xFF];
+    aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->tile_parts[0] & 0xFF];
+    aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->tile_parts[1] & 0xFF];
+    aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->tile_parts[2] & 0xFF];
 
     // Flags (TODO: Set a few more flag bits?)
     uint8_t iFlags = 63;
@@ -657,10 +657,10 @@ bool addRemoveDividerWalls(level_map* pMap, map_tile* pNode,
     int iOwner = pMap->get_parcel_owner(pNode->iParcelId);
     int iOtherOwner = pMap->get_parcel_owner(pNode[-delta].iParcelId);
     if (iOwner != iOtherOwner) {
-      pNode->iBlock[block] = block + (iOwner ? 143 : 141);
+      pNode->tile_parts[block] = block + (iOwner ? 143 : 141);
     } else if (pNode->iParcelId == iParcelId ||
                pNode[-delta].iParcelId == iParcelId) {
-      pNode->iBlock[block] = 0;
+      pNode->tile_parts[block] = 0;
       return true;
     }
   }
@@ -684,22 +684,22 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId,
     for (int iX = 0; iX < this->width; ++iX, ++pNode, ++pOriginalNode) {
       if (pNode->iParcelId == iParcelId) {
         if (iOwner != 0) {
-          pNode->iBlock[0] = pOriginalNode->iBlock[0];
-          pNode->iBlock[1] = pOriginalNode->iBlock[1];
-          pNode->iBlock[2] = pOriginalNode->iBlock[2];
+          pNode->tile_parts[0] = pOriginalNode->tile_parts[0];
+          pNode->tile_parts[1] = pOriginalNode->tile_parts[1];
+          pNode->tile_parts[2] = pOriginalNode->tile_parts[2];
           pNode->flags = pOriginalNode->flags;
         } else {
           // Nicely mown grass pattern
-          pNode->iBlock[0] = static_cast<uint16_t>(((iX & 1) << 1) + 1);
+          pNode->tile_parts[0] = static_cast<uint16_t>(((iX & 1) << 1) + 1);
 
-          pNode->iBlock[1] = 0;
-          pNode->iBlock[2] = 0;
+          pNode->tile_parts[1] = 0;
+          pNode->tile_parts[2] = 0;
           pNode->flags = {};
 
           // Random decoration
           if (((iX | iY) & 0x7) == 0) {
             int iWhich = (iX ^ iY) % 9;
-            pNode->iBlock[1] = static_cast<uint16_t>(192 + iWhich);
+            pNode->tile_parts[1] = static_cast<uint16_t>(192 + iWhich);
           }
         }
       }
@@ -943,10 +943,10 @@ void level_map::set_all_wall_draw_flags(uint8_t iFlags) {
   uint16_t iBlockOr = static_cast<uint16_t>(iFlags << 8);
   map_tile* pNode = cells;
   for (int i = 0; i < width * height; ++i, ++pNode) {
-    pNode->iBlock[1] =
-        static_cast<uint16_t>((pNode->iBlock[1] & 0xFF) | iBlockOr);
-    pNode->iBlock[2] =
-        static_cast<uint16_t>((pNode->iBlock[2] & 0xFF) | iBlockOr);
+    pNode->tile_parts[1] =
+        static_cast<uint16_t>((pNode->tile_parts[1] & 0xFF) | iBlockOr);
+    pNode->tile_parts[2] =
+        static_cast<uint16_t>((pNode->tile_parts[2] & 0xFF) | iBlockOr);
   }
 }
 
@@ -987,7 +987,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
        itrNode1; ++itrNode1) {
     // First, draw the floor tile as it should be below everything else.
     int iH = 32;
-    unsigned int iBlock = itrNode1->iBlock[0];
+    unsigned int iBlock = itrNode1->tile_parts[0];
     wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH);
     wall_blocks->draw_sprite(
         pCanvas, iBlock & 0xFF,
@@ -1023,7 +1023,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
              iCanvasY);
          itrNode; ++itrNode) {
       int iH;
-      unsigned int iBlock = itrNode->iBlock[1];
+      unsigned int iBlock = itrNode->tile_parts[1];
       if (iBlock != 0 && wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         wall_blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
@@ -1065,21 +1065,21 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
     for (; itrNode; ++itrNode) {
       bool bNeedsRedraw = false;
       int iH;
-      unsigned int iBlock = itrNode->iBlock[2];
+      unsigned int iBlock = itrNode->tile_parts[2];
       if (iBlock != 0 && wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         wall_blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                             itrNode.y() - iH + 32,
                             (iBlock >> 8) | thdf_nearest);
       }
-      iBlock = itrNode->iBlock[3];
+      iBlock = itrNode->tile_parts[3];
       if (iBlock != 0 && wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         wall_blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                             itrNode.y() - iH + 32,
                             (iBlock >> 8) | thdf_nearest);
       }
-      iBlock = itrNode->iBlock[1];
+      iBlock = itrNode->tile_parts[1];
       if (iBlock != 0 && wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         bNeedsRedraw = true;
@@ -1140,7 +1140,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         // north side or a wall to the north redraw that tile
         if (bTileNeedsRedraw) {
           // redraw the north wall
-          unsigned int iBlock = itrNode.get_previous_tile()->iBlock[1];
+          unsigned int iBlock = itrNode.get_previous_tile()->tile_parts[1];
           if (iBlock != 0 &&
               wall_blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) && iH > 0) {
             wall_blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 96,
@@ -1408,13 +1408,13 @@ void level_map::update_pathfinding() {
         pNode->flags.can_travel_s = false;
       }
 
-      if (pNode->iBlock[1] & 0xFF) {
+      if (pNode->tile_parts[1] & 0xFF) {
         pNode->flags.can_travel_n = false;
         if (iY != 0) {
           pNode[-this->width].flags.can_travel_s = false;
         }
       }
-      if (pNode->iBlock[2] & 0xFF) {
+      if (pNode->tile_parts[2] & 0xFF) {
         pNode->flags.can_travel_w = false;
         if (iX != 0) {
           pNode[-1].flags.can_travel_e = false;
@@ -1430,8 +1430,8 @@ namespace {
 //! if it has a door in that direction, or the block is from the hardcoded
 //! range of wall-like blocks.
 bool is_wall(map_tile* tile, size_t block, bool flag) {
-  return flag || (82 <= (tile->iBlock[block] & 0xFF) &&
-                  (tile->iBlock[block] & 0xFF) <= 164);
+  return flag || (82 <= (tile->tile_parts[block] & 0xFF) &&
+                  (tile->tile_parts[block] & 0xFF) <= 164);
 }
 
 }  // namespace
@@ -1491,10 +1491,10 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   oEncoder.initialise(6);
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
-    oEncoder.write(pNode->iBlock[0]);
-    oEncoder.write(pNode->iBlock[1]);
-    oEncoder.write(pNode->iBlock[2]);
-    oEncoder.write(pNode->iBlock[3]);
+    oEncoder.write(pNode->tile_parts[0]);
+    oEncoder.write(pNode->tile_parts[1]);
+    oEncoder.write(pNode->tile_parts[2]);
+    oEncoder.write(pNode->tile_parts[3]);
     oEncoder.write(pNode->iParcelId);
     oEncoder.write(pNode->iRoomId);
     // Flags include THOB values, and other things which do not work
@@ -1520,9 +1520,9 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   for (map_tile *pNode = original_cells,
                 *pLimitNode = original_cells + width * height;
        pNode != pLimitNode; ++pNode) {
-    oEncoder.write(pNode->iBlock[0]);
-    oEncoder.write(pNode->iBlock[1]);
-    oEncoder.write(pNode->iBlock[2]);
+    oEncoder.write(pNode->tile_parts[0]);
+    oEncoder.write(pNode->tile_parts[1]);
+    oEncoder.write(pNode->tile_parts[2]);
     oEncoder.write(pNode->iParcelId);
     oEncoder.write(static_cast<uint32_t>(pNode->flags));
   }
@@ -1626,10 +1626,10 @@ void level_map::depersist(lua_persist_reader* pReader) {
   oDecoder.initialise(6, pReader);
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
-    pNode->iBlock[0] = static_cast<uint16_t>(oDecoder.read());
-    pNode->iBlock[1] = static_cast<uint16_t>(oDecoder.read());
-    pNode->iBlock[2] = static_cast<uint16_t>(oDecoder.read());
-    pNode->iBlock[3] = static_cast<uint16_t>(oDecoder.read());
+    pNode->tile_parts[0] = static_cast<uint16_t>(oDecoder.read());
+    pNode->tile_parts[1] = static_cast<uint16_t>(oDecoder.read());
+    pNode->tile_parts[2] = static_cast<uint16_t>(oDecoder.read());
+    pNode->tile_parts[3] = static_cast<uint16_t>(oDecoder.read());
     pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
     pNode->iRoomId = static_cast<uint16_t>(oDecoder.read());
   }
@@ -1637,9 +1637,9 @@ void level_map::depersist(lua_persist_reader* pReader) {
   for (map_tile *pNode = original_cells,
                 *pLimitNode = original_cells + width * height;
        pNode != pLimitNode; ++pNode) {
-    pNode->iBlock[0] = static_cast<uint16_t>(oDecoder.read());
-    pNode->iBlock[1] = static_cast<uint16_t>(oDecoder.read());
-    pNode->iBlock[2] = static_cast<uint16_t>(oDecoder.read());
+    pNode->tile_parts[0] = static_cast<uint16_t>(oDecoder.read());
+    pNode->tile_parts[1] = static_cast<uint16_t>(oDecoder.read());
+    pNode->tile_parts[2] = static_cast<uint16_t>(oDecoder.read());
     pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
     pNode->flags = oDecoder.read();
   }

@@ -48,13 +48,13 @@ uint8_t range_scale(uint16_t low, uint16_t high, uint16_t val, uint16_t start,
 }
 
 inline bool is_wall(uint16_t blk) {
-  return ((82 <= ((blk) & 0xFF)) && (((blk) & 0xFF) <= 164));
+  return 82 <= (blk & 0xFF) && (blk & 0xFF) <= 164;
 }
 
 inline bool is_wall_drawn(const level_map& map, const map_tile& node,
                           const map_tile& original_node, size_t n) {
-  return map.get_tile_owner(&node) != 0 ? is_wall(node.iBlock[n])
-                                        : is_wall(original_node.iBlock[n]);
+  return map.get_tile_owner(&node) != 0 ? is_wall(node.tile_parts[n])
+                                        : is_wall(original_node.tile_parts[n]);
 }
 
 int l_town_map_draw(lua_State* L) {
