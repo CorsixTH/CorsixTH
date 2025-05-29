@@ -36,6 +36,9 @@ local action_vomit_end = permanent"action_vomit_end"( function(humanoid)
 end)
 
 local function action_vomit_start(action, humanoid)
+  local puke_sound = (math.random(0, 1) == 1) and "puke.wav" or "puke2.wav"
+  humanoid.hospital:playSound(puke_sound)
+
   if math.random(0, 1) == 1 then
     humanoid.last_move_direction = "east"
   else
