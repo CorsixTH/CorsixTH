@@ -463,7 +463,8 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
           pNode->tile_layers[tile_layer::north_wall] = 0;
         }
       } else {
-        pNode->tile_layers[tile_layer::north_wall] = gs_iTHMapBlockLUT[pData[3]];
+        pNode->tile_layers[tile_layer::north_wall] =
+            gs_iTHMapBlockLUT[pData[3]];
         pNode->flags.can_travel_n = false;
         if (iY != 0) {
           pNode[-this->width].flags.can_travel_s = false;
