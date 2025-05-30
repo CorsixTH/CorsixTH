@@ -188,7 +188,7 @@ enum tile_layer : uint8_t {
   west_wall = 2,
   ui = 3,
 
-  _num_tile_layers = 4  //!< Number of layers in a tile.
+  num_tile_layers = 4  //!< Number of layers in a tile.
 };
 
 struct map_tile {
@@ -209,7 +209,7 @@ struct map_tile {
   //! Layer 2 is for the west wall
   //! Layer 3 is for the UI
   //! NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3
-  uint16_t tile_layers[tile_layer::_num_tile_layers];
+  uint16_t tile_layers[tile_layer::num_tile_layers];
 
   //! Parcels (plots) of land have an ID, with each tile in the plot having
   //! that ID. Parcel 0 is the outside.
