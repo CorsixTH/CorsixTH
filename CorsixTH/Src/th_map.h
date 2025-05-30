@@ -188,7 +188,7 @@ enum tile_layer : uint8_t {
   west_wall = 2,
   ui = 3,
 
-  _num_tile_layers = 4  //!< Number of parts in a tile.
+  _num_tile_layers = 4  //!< Number of layers in a tile.
 };
 
 struct map_tile {
@@ -201,14 +201,14 @@ struct map_tile {
   //! Linked list for entities rendered in an early (right-to-left) pass
   link_list oEarlyEntities;
 
-  //! Tile parts for rendering.
-  //! For each part, the lower byte is the index in the sprite sheet, and the
+  //! Tile layers for rendering.
+  //! For each layer, the lower byte is the index in the sprite sheet, and the
   //! upper byte is for the drawing flags.
-  //! Part 0 is for the floor
-  //! Part 1 is for the north wall
-  //! Part 2 is for the west wall
-  //! Part 3 is for the UI
-  //! NB: In Lua, parts are numbered 1 - 4 rather than 0 - 3
+  //! Layer 0 is for the floor
+  //! Layer 1 is for the north wall
+  //! Layer 2 is for the west wall
+  //! Layer 3 is for the UI
+  //! NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3
   uint16_t tile_layers[tile_layer::_num_tile_layers];
 
   //! Parcels (plots) of land have an ID, with each tile in the plot having

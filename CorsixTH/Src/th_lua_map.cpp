@@ -475,7 +475,7 @@ int l_map_getcell(lua_State* L) {
   } else {
     lua_Integer iLayer = luaL_checkinteger(L, 4) - 1;
     if (iLayer < tile_layer::ground || iLayer >= tile_layer::_num_tile_layers)
-      return luaL_argerror(L, 4, "Tile part index is out of bounds (1-4)");
+      return luaL_argerror(L, 4, "Tile layer index is out of bounds (1-4)");
     lua_pushinteger(L, pNode->tile_layers[iLayer]);
     return 1;
   }
@@ -667,11 +667,11 @@ int l_map_setcell(lua_State* L) {
     pNode->tile_layers[tile_layer::ui] =
         static_cast<uint16_t>(luaL_checkinteger(L, 7));
   } else {
-    lua_Integer part = luaL_checkinteger(L, 4) - 1;
-    if (part < tile_layer::ground || part >= tile_layer::_num_tile_layers)
-      return luaL_argerror(L, 4, "Tile part index is out of bounds (1-4)");
+    lua_Integer layer = luaL_checkinteger(L, 4) - 1;
+    if (layer < tile_layer::ground || layer >= tile_layer::_num_tile_layers)
+      return luaL_argerror(L, 4, "Tile layer index is out of bounds (1-4)");
     uint16_t blk = static_cast<uint16_t>(luaL_checkinteger(L, 5));
-    pNode->tile_layers[part] = blk;
+    pNode->tile_layers[layer] = blk;
   }
 
   lua_settop(L, 1);
