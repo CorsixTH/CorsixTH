@@ -67,7 +67,7 @@ function UIPlaceStaff:close()
     else
       employed_staff:setNextAction(MeanderAction())
     end
-  else -- Cancel hiring newcomer
+  elseif self.profile then -- Cancel hiring newcomer
     self.ui:tutorialStep(2, {6, 7}, 1)
     self.ui:tutorialStep(4, {4, 5}, 1)
     -- Return the profile to the available staff list
