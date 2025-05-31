@@ -182,6 +182,15 @@ enum class temperature_theme {
   yellow_red     //!< Gradients of yellow, orange, and red
 };
 
+enum tile_layer : uint8_t {
+  ground = 0,
+  north_wall = 1,
+  west_wall = 2,
+  ui = 3,
+
+  num_tile_layers = 4  //!< Number of layers in a tile.
+};
+
 struct map_tile {
   map_tile();
   ~map_tile() = default;
@@ -192,15 +201,15 @@ struct map_tile {
   //! Linked list for entities rendered in an early (right-to-left) pass
   link_list oEarlyEntities;
 
-  //! Block tiles for rendering
-  //! For each tile, the lower byte is the index in the sprite sheet, and the
+  //! Tile layers for rendering.
+  //! For each layer, the lower byte is the index in the sprite sheet, and the
   //! upper byte is for the drawing flags.
   //! Layer 0 is for the floor
   //! Layer 1 is for the north wall
   //! Layer 2 is for the west wall
   //! Layer 3 is for the UI
   //! NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3
-  uint16_t iBlock[4];
+  uint16_t tile_layers[tile_layer::num_tile_layers];
 
   //! Parcels (plots) of land have an ID, with each tile in the plot having
   //! that ID. Parcel 0 is the outside.
@@ -420,7 +429,7 @@ class level_map {
 
   map_tile* cells;
   map_tile* original_cells;  // Cells at map load time, before any changes
-  sprite_sheet* blocks;
+  sprite_sheet* wall_blocks;
   map_overlay* overlay;
   bool owns_overlay;
   int* plot_owner;  // 0 for unowned, 1 for player 1, etc.

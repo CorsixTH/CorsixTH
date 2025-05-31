@@ -259,7 +259,7 @@ int l_map_updateblueprint(lua_State* L) {
   for (int iY = iOldY; iY < iOldY + iOldH; ++iY) {
     for (int iX = iOldX; iX < iOldX + iOldW; ++iX) {
       map_tile* pNode = pMap->get_tile_unchecked(iX, iY);
-      pNode->iBlock[3] = 0;
+      pNode->tile_layers[tile_layer::ui] = 0;
       pNode->flags.passable |= pNode->flags.passable_if_not_for_blueprint;
       pNode->flags.passable_if_not_for_blueprint = false;
     }
@@ -270,9 +270,9 @@ int l_map_updateblueprint(lua_State* L) {
     for (int iX = iNewX; iX < iNewX + iNewW; ++iX) {
       map_tile* pNode = pMap->get_tile_unchecked(iX, iY);
       if (is_valid(entire_invalid, pNode, pMap, player_id)) {
-        pNode->iBlock[3] = iFloorTileGood;
+        pNode->tile_layers[tile_layer::ui] = iFloorTileGood;
       } else {
-        pNode->iBlock[3] = iFloorTileBad;
+        pNode->tile_layers[tile_layer::ui] = iFloorTileBad;
         valid = false;
       }
       pNode->flags.passable_if_not_for_blueprint = pNode->flags.passable;
@@ -285,20 +285,20 @@ int l_map_updateblueprint(lua_State* L) {
     int iCenterY = iNewY + (iNewH - 2) / 2;
 
     map_tile* pNode = pMap->get_tile_unchecked(iCenterX, iCenterY);
-    if (pNode->iBlock[3] == iFloorTileGood)
-      pNode->iBlock[3] = iFloorTileGoodCenter + 2;
+    if (pNode->tile_layers[tile_layer::ui] == iFloorTileGood)
+      pNode->tile_layers[tile_layer::ui] = iFloorTileGoodCenter + 2;
 
     pNode = pMap->get_tile_unchecked(iCenterX + 1, iCenterY);
-    if (pNode->iBlock[3] == iFloorTileGood)
-      pNode->iBlock[3] = iFloorTileGoodCenter + 1;
+    if (pNode->tile_layers[tile_layer::ui] == iFloorTileGood)
+      pNode->tile_layers[tile_layer::ui] = iFloorTileGoodCenter + 1;
 
     pNode = pMap->get_tile_unchecked(iCenterX, iCenterY + 1);
-    if (pNode->iBlock[3] == iFloorTileGood)
-      pNode->iBlock[3] = iFloorTileGoodCenter + 0;
+    if (pNode->tile_layers[tile_layer::ui] == iFloorTileGood)
+      pNode->tile_layers[tile_layer::ui] = iFloorTileGoodCenter + 0;
 
     pNode = pMap->get_tile_unchecked(iCenterX + 1, iCenterY + 1);
-    if (pNode->iBlock[3] == iFloorTileGood)
-      pNode->iBlock[3] = iFloorTileGoodCenter + 3;
+    if (pNode->tile_layers[tile_layer::ui] == iFloorTileGood)
+      pNode->tile_layers[tile_layer::ui] = iFloorTileGoodCenter + 3;
   }
 
   // Set wall animations
@@ -467,16 +467,16 @@ int l_map_getcell(lua_State* L) {
                                          iX + 1, iY + 1));
   }
   if (lua_isnoneornil(L, 4)) {
-    lua_pushinteger(L, pNode->iBlock[0]);
-    lua_pushinteger(L, pNode->iBlock[1]);
-    lua_pushinteger(L, pNode->iBlock[2]);
-    lua_pushinteger(L, pNode->iBlock[3]);
+    lua_pushinteger(L, pNode->tile_layers[tile_layer::ground]);
+    lua_pushinteger(L, pNode->tile_layers[tile_layer::north_wall]);
+    lua_pushinteger(L, pNode->tile_layers[tile_layer::west_wall]);
+    lua_pushinteger(L, pNode->tile_layers[tile_layer::ui]);
     return 4;
   } else {
     lua_Integer iLayer = luaL_checkinteger(L, 4) - 1;
-    if (iLayer < 0 || iLayer >= 4)
-      return luaL_argerror(L, 4, "Layer index is out of bounds (1-4)");
-    lua_pushinteger(L, pNode->iBlock[iLayer]);
+    if (iLayer < tile_layer::ground || iLayer >= tile_layer::num_tile_layers)
+      return luaL_argerror(L, 4, "Tile layer index is out of bounds (1-4)");
+    lua_pushinteger(L, pNode->tile_layers[iLayer]);
     return 1;
   }
 }
@@ -658,16 +658,20 @@ int l_map_setcell(lua_State* L) {
     return luaL_argerror(L, 2, "Map coordinates out of bounds");
   }
   if (lua_gettop(L) >= 7) {
-    pNode->iBlock[0] = (uint16_t)luaL_checkinteger(L, 4);
-    pNode->iBlock[1] = (uint16_t)luaL_checkinteger(L, 5);
-    pNode->iBlock[2] = (uint16_t)luaL_checkinteger(L, 6);
-    pNode->iBlock[3] = (uint16_t)luaL_checkinteger(L, 7);
+    pNode->tile_layers[tile_layer::ground] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 4));
+    pNode->tile_layers[tile_layer::north_wall] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 5));
+    pNode->tile_layers[tile_layer::west_wall] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 6));
+    pNode->tile_layers[tile_layer::ui] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 7));
   } else {
-    lua_Integer iLayer = luaL_checkinteger(L, 4) - 1;
-    if (iLayer < 0 || iLayer >= 4)
-      return luaL_argerror(L, 4, "Layer index is out of bounds (1-4)");
-    uint16_t iBlock = static_cast<uint16_t>(luaL_checkinteger(L, 5));
-    pNode->iBlock[iLayer] = iBlock;
+    lua_Integer layer = luaL_checkinteger(L, 4) - 1;
+    if (layer < tile_layer::ground || layer >= tile_layer::num_tile_layers)
+      return luaL_argerror(L, 4, "Tile layer index is out of bounds (1-4)");
+    uint16_t blk = static_cast<uint16_t>(luaL_checkinteger(L, 5));
+    pNode->tile_layers[layer] = blk;
   }
 
   lua_settop(L, 1);
@@ -705,8 +709,8 @@ int l_map_mark_room(lua_State* L) {
   for (int iY = iY_; iY < iY_ + iH; ++iY) {
     for (int iX = iX_; iX < iX_ + iW; ++iX) {
       map_tile* pNode = pMap->get_tile_unchecked(iX, iY);
-      pNode->iBlock[0] = iTile;
-      pNode->iBlock[3] = 0;
+      pNode->tile_layers[tile_layer::ground] = iTile;
+      pNode->tile_layers[tile_layer::ui] = 0;
       pNode->flags.room = true;
       pNode->flags.passable |= pNode->flags.passable_if_not_for_blueprint;
       pNode->flags.passable_if_not_for_blueprint = false;
@@ -735,7 +739,9 @@ int l_map_unmark_room(lua_State* L) {
   for (int iY = iY_; iY < iY_ + iH; ++iY) {
     for (int iX = iX_; iX < iX_ + iW; ++iX) {
       map_tile* pNode = pMap->get_tile_unchecked(iX, iY);
-      pNode->iBlock[0] = pMap->get_original_tile_unchecked(iX, iY)->iBlock[0];
+      pNode->tile_layers[tile_layer::ground] =
+          pMap->get_original_tile_unchecked(iX, iY)
+              ->tile_layers[tile_layer::ground];
       pNode->flags.room = false;
       pNode->iRoomId = 0;
     }
