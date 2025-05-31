@@ -74,11 +74,12 @@ var searchData=
   ['get_5ftile_5fowner_246',['get_tile_owner',['../classlevel__map.html#a85a506c1c1505b4001c8f2293411a819',1,'level_map']]],
   ['get_5ftile_5fstep_247',['get_tile_step',['../classmap__tile__iterator.html#ad70f1f69ab745dd149a78baf73cbe8ee',1,'map_tile_iterator']]],
   ['get_5ftile_5ftemperature_248',['get_tile_temperature',['../classlevel__map.html#aa047c531bebedce8f092bd1c93203492',1,'level_map']]],
-  ['get_5ftile_5funchecked_249',['get_tile_unchecked',['../classlevel__map.html#abefb6a880482045a9b40c09db9f47b5b',1,'level_map::get_tile_unchecked(int iX, int iY) const'],['../classlevel__map.html#a8bdae301b998715bb8ceaa67f7860203',1,'level_map::get_tile_unchecked(int iX, int iY)']]],
+  ['get_5ftile_5funchecked_249',['get_tile_unchecked',['../classlevel__map.html#a8bdae301b998715bb8ceaa67f7860203',1,'level_map::get_tile_unchecked(int iX, int iY)'],['../classlevel__map.html#abefb6a880482045a9b40c09db9f47b5b',1,'level_map::get_tile_unchecked(int iX, int iY) const']]],
   ['get_5fwidth_250',['get_width',['../classrender__target.html#a7a963353eecb8c5f8648ddc5ec3a0359',1,'render_target::get_width()'],['../classlevel__map.html#aaa697ff239156482b23ebb6f8ee1a172',1,'level_map::get_width()']]],
   ['get_5fx_251',['get_x',['../classanimation__base.html#a596ff20ed14a2249a42c217a0f5a8a8d',1,'animation_base']]],
   ['get_5fy_252',['get_y',['../classanimation__base.html#aba0d591ffbce76cabca717bd209621f8',1,'animation_base']]],
   ['glowing_253',['glowing',['../th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870a4999ac0e4d451d5d77f37fd20cbf7633',1,'th_gfx_common.h']]],
-  ['guess_254',['guess',['../structpath__node.html#ade043ea977bbdcccee525d83bdf3f471',1,'path_node']]],
-  ['guess_5fdistance_255',['guess_distance',['../classabstract__pathfinder.html#a1f7db79fdb685cbfd955f49d3874bec5',1,'abstract_pathfinder::guess_distance()'],['../classbasic__pathfinder.html#aa2bd427ccbd1cc76d6d2dec8140a5f92',1,'basic_pathfinder::guess_distance()'],['../classhospital__finder.html#ac4204a005d0e31e7f51644d5f8cc314b',1,'hospital_finder::guess_distance()'],['../classidle__tile__finder.html#a85c7d8bc668dad1a74b886c61b40bca1',1,'idle_tile_finder::guess_distance()'],['../classobject__visitor.html#a2f82d1054ea30c033853409cc71a0b5c',1,'object_visitor::guess_distance()']]]
+  ['ground_254',['ground',['../th__map_8h.html#a073fc89e2a5359593c2b5f94a0229d79a831e08074fc31bab018bf359a0184978',1,'th_map.h']]],
+  ['guess_255',['guess',['../structpath__node.html#ade043ea977bbdcccee525d83bdf3f471',1,'path_node']]],
+  ['guess_5fdistance_256',['guess_distance',['../classabstract__pathfinder.html#a1f7db79fdb685cbfd955f49d3874bec5',1,'abstract_pathfinder::guess_distance()'],['../classbasic__pathfinder.html#aa2bd427ccbd1cc76d6d2dec8140a5f92',1,'basic_pathfinder::guess_distance()'],['../classhospital__finder.html#ac4204a005d0e31e7f51644d5f8cc314b',1,'hospital_finder::guess_distance()'],['../classidle__tile__finder.html#a85c7d8bc668dad1a74b886c61b40bca1',1,'idle_tile_finder::guess_distance()'],['../classobject__visitor.html#a2f82d1054ea30c033853409cc71a0b5c',1,'object_visitor::guess_distance()']]]
 ];

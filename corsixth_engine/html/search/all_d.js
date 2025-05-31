@@ -6,12 +6,14 @@ var searchData=
   ['named_5fanimation_5fpair_444',['named_animation_pair',['../th__gfx_8h.html#a52e84b5f9b2e517c8ec1867680d7c104',1,'th_gfx.h']]],
   ['named_5fanimations_5fmap_445',['named_animations_map',['../th__gfx_8h.html#a3e12d44096b98713cc338e55f4ab5e53',1,'th_gfx.h']]],
   ['next_446',['next',['../classlink__list.html#ae37b806d12255934c8fa9e3f98914ad0',1,'link_list']]],
-  ['next_5futf8_5fcodepoint_447',['next_utf8_codepoint',['../th__strings_8h.html#a07fd15c1e581cdbfc5f88204e4efe578',1,'next_utf8_codepoint(const char *&amp;sString, const char *end):&#160;th_strings.cpp'],['../th__strings_8cpp.html#a07fd15c1e581cdbfc5f88204e4efe578',1,'next_utf8_codepoint(const char *&amp;sString, const char *end):&#160;th_strings.cpp']]],
+  ['next_5futf8_5fcodepoint_447',['next_utf8_codepoint',['../th__strings_8cpp.html#a07fd15c1e581cdbfc5f88204e4efe578',1,'next_utf8_codepoint(const char *&amp;sString, const char *end):&#160;th_strings.cpp'],['../th__strings_8h.html#a07fd15c1e581cdbfc5f88204e4efe578',1,'next_utf8_codepoint(const char *&amp;sString, const char *end):&#160;th_strings.cpp']]],
   ['no_5fobject_448',['no_object',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba591624d12cf75d857603f97c9282334a',1,'th_map.h']]],
   ['node_5fcache_5fheight_449',['node_cache_height',['../classpathfinder.html#a21c268646f9e04b4d8973f5b08a47e08',1,'pathfinder']]],
   ['node_5fcache_5fwidth_450',['node_cache_width',['../classpathfinder.html#a4901f6202bb6c0df789e966cd02ba7bc',1,'pathfinder']]],
   ['nodes_451',['nodes',['../classpathfinder.html#a2aaa22b5c1de58d9f111779f3ead87eb',1,'pathfinder']]],
   ['none_452',['none',['../th__gfx_8h.html#a77be529fc9278664926902e9d9da26a2a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'none():&#160;th_gfx.h'],['../th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'none():&#160;th_gfx_common.h']]],
   ['normal_453',['normal',['../th__gfx_8h.html#a762973ebb25ec988b09557fc414c01abafea087517c26fadd409bd4b9dc642555',1,'th_gfx.h']]],
-  ['north_454',['north',['../structanimation__start__frames.html#a05d3ded037549c56aaf91218cb61cfc1',1,'animation_start_frames::north()'],['../th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82a8d8d1437907bca79900ac5f0ea1f5c73',1,'north():&#160;th_pathfind.h']]]
+  ['north_454',['north',['../structanimation__start__frames.html#a05d3ded037549c56aaf91218cb61cfc1',1,'animation_start_frames::north()'],['../th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82a8d8d1437907bca79900ac5f0ea1f5c73',1,'north():&#160;th_pathfind.h']]],
+  ['north_5fwall_455',['north_wall',['../th__map_8h.html#a073fc89e2a5359593c2b5f94a0229d79a4dae92b60dc7135e89a3b6dd4e131e48',1,'th_map.h']]],
+  ['num_5ftile_5flayers_456',['num_tile_layers',['../th__map_8h.html#a073fc89e2a5359593c2b5f94a0229d79ab12d35f8f0e3ea39e0f21801d6309bff',1,'th_map.h']]]
 ];

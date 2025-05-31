@@ -87,8 +87,8 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a931312074617e9a8bc6915327ba17253"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classlink__list.html">link_list</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmap__tile.html#a931312074617e9a8bc6915327ba17253">oEarlyEntities</a></td></tr>
 <tr class="memdesc:a931312074617e9a8bc6915327ba17253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linked list for entities rendered in an early (right-to-left) pass.  <a href="structmap__tile.html#a931312074617e9a8bc6915327ba17253">More...</a><br /></td></tr>
 <tr class="separator:a931312074617e9a8bc6915327ba17253"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac39a9123d07c6a9105db37f4344b73b2"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmap__tile.html#ac39a9123d07c6a9105db37f4344b73b2">iBlock</a> [4]</td></tr>
-<tr class="separator:ac39a9123d07c6a9105db37f4344b73b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaee346a3759afaa9051353511fbd8788"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmap__tile.html#aaee346a3759afaa9051353511fbd8788">tile_layers</a> [<a class="el" href="th__map_8h.html#a073fc89e2a5359593c2b5f94a0229d79ab12d35f8f0e3ea39e0f21801d6309bff">tile_layer::num_tile_layers</a>]</td></tr>
+<tr class="separator:aaee346a3759afaa9051353511fbd8788"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa52953010db3ab5f37cb6f3c4a1487e8"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmap__tile.html#aa52953010db3ab5f37cb6f3c4a1487e8">iParcelId</a></td></tr>
 <tr class="separator:aa52953010db3ab5f37cb6f3c4a1487e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2cc8e8907e970fea4a24d53bd9b8427"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmap__tile.html#af2cc8e8907e970fea4a24d53bd9b8427">iRoomId</a></td></tr>
@@ -192,21 +192,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac39a9123d07c6a9105db37f4344b73b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac39a9123d07c6a9105db37f4344b73b2">&#9670;&nbsp;</a></span>iBlock</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t map_tile::iBlock[4]</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Block tiles for rendering For each tile, the lower byte is the index in the sprite sheet, and the upper byte is for the drawing flags. Layer 0 is for the floor Layer 1 is for the north wall Layer 2 is for the west wall Layer 3 is for the UI NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3 </p>
-
-</div>
-</div>
 <a id="aa52953010db3ab5f37cb6f3c4a1487e8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa52953010db3ab5f37cb6f3c4a1487e8">&#9670;&nbsp;</a></span>iParcelId</h2>
 
@@ -267,6 +252,21 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Linked list for entities rendered in an early (right-to-left) pass. </p>
+
+</div>
+</div>
+<a id="aaee346a3759afaa9051353511fbd8788"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaee346a3759afaa9051353511fbd8788">&#9670;&nbsp;</a></span>tile_layers</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t map_tile::tile_layers[<a class="el" href="th__map_8h.html#a073fc89e2a5359593c2b5f94a0229d79ab12d35f8f0e3ea39e0f21801d6309bff">tile_layer::num_tile_layers</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Tile layers for rendering. For each layer, the lower byte is the index in the sprite sheet, and the upper byte is for the drawing flags. Layer 0 is for the floor Layer 1 is for the north wall Layer 2 is for the west wall Layer 3 is for the UI NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3 </p>
 
 </div>
 </div>
