@@ -82,7 +82,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ${{ github.workspace }}/vcpkg_cache
-          key: vcpkg-${{env.PRESET}}-${{hashFiles('vcpkg.json','vcpkg-configuration.json') }
+          key: vcpkg-${{env.PRESET}}-${{hashFiles('vcpkg.json','vcpkg-configuration.json')}}
 
       - name: Download soundfont
         if: inputs.PRESET != 'win-dev'
