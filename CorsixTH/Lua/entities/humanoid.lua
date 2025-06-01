@@ -892,11 +892,7 @@ end
 -- Unregisters a build callback for this humanoid.
 --!param callback (function) The callback to remove.
 function Humanoid:unregisterRoomBuildCallback(callback)
-  if self.build_callbacks[callback] then
-    self.build_callbacks[callback] = nil
-  else
-    self.world:gameLog("Warning: Trying to remove nonexistent room build callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
-  end
+  self.build_callbacks[callback] = nil
 end
 
 function Humanoid:notifyNewRoom(room)
@@ -928,8 +924,6 @@ function Humanoid:unregisterRoomRemoveCallback(callback)
   if self.remove_callbacks[callback] then
     self.world:unregisterRoomRemoveCallback(callback)
     self.remove_callbacks[callback] = nil
-  else
-    self.world:gameLog("Warning: Trying to remove nonexistent room remove callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
   end
 end
 
