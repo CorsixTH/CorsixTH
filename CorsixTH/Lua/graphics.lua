@@ -438,7 +438,8 @@ function Graphics:loadLanguageFont(name, sprite_table, x_sep, y_sep, ttf_col, fo
   if name == nil then
     font = self:loadFont(sprite_table, x_sep, y_sep, ttf_col, force_bitmap)
   else
-    local cache = self.cache.language_fonts[language_font_cache_key(name, x_sep, y_sep, ttf_col, force_bitmap)]
+    local cache_key = language_font_cache_key(name, x_sep, y_sep, ttf_col, force_bitmap)
+    local cache = self.cache.language_fonts[cache_key]
     font = cache and cache[sprite_table]
     if not font then
       font = TH.freetype_font()
@@ -453,7 +454,7 @@ function Graphics:loadLanguageFont(name, sprite_table, x_sep, y_sep, ttf_col, fo
 
       if not cache then
         cache = {}
-        self.cache.language_fonts[name] = cache
+        self.cache.language_fonts[cache_key] = cache
       end
       cache[sprite_table] = font
     end
