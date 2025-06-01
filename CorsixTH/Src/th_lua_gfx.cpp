@@ -44,6 +44,18 @@ SOFTWARE.
 
 namespace {
 
+font* luaT_getfont(lua_State* L) {
+  font* p = luaT_touserdata_base<font, bitmap_font, freetype_font>(
+      L, 1, {"bitmap_font", "freetype_font"});
+#ifdef DEBUG
+  if (p != nullptr && dynamic_cast<bitmap_font*>(p) == nullptr &&
+      dynamic_cast<freetype_font*>(p) == nullptr) {
+    std::fprintf(stderr, "font found which is not freetype or bitmap: %p\n", p);
+  }
+#endif
+  return p;
+}
+
 int l_palette_new(lua_State* L) {
   luaT_stdnew<palette>(L);
   return 1;
@@ -326,7 +338,7 @@ int l_freetype_font_clear_cache(lua_State* L) {
 #endif
 
 int l_font_get_size(lua_State* L) {
-  font* pFont = luaT_testuserdata<font>(L);
+  font* pFont = luaT_getfont(L);
   size_t iMsgLen;
   const char* sMsg = luaT_checkstring(L, 2, &iMsgLen);
 
@@ -344,7 +356,7 @@ int l_font_get_size(lua_State* L) {
 }
 
 int l_font_draw(lua_State* L) {
-  font* pFont = luaT_testuserdata<font>(L);
+  font* pFont = luaT_getfont(L);
   render_target* pCanvas = nullptr;
   if (!lua_isnoneornil(L, 2)) {
     pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -392,7 +404,7 @@ int l_font_draw(lua_State* L) {
 }
 
 int l_font_draw_wrapped(lua_State* L) {
-  font* pFont = luaT_testuserdata<font>(L);
+  font* pFont = luaT_getfont(L);
   render_target* pCanvas = nullptr;
   if (!lua_isnoneornil(L, 2)) {
     pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -439,7 +451,7 @@ int l_font_draw_wrapped(lua_State* L) {
 }
 
 int l_font_draw_tooltip(lua_State* L) {
-  font* pFont = luaT_testuserdata<font>(L);
+  font* pFont = luaT_getfont(L);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
   size_t iMsgLen;
   const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);

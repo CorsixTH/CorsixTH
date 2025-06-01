@@ -35,6 +35,7 @@ SOFTWARE.
 #include "lua.hpp"
 #include "th.h"
 #include "th_gfx_common.h"
+#include "th_lua.h"
 
 class lua_persist_reader;
 class lua_persist_writer;
@@ -723,43 +724,8 @@ class sprite_render_list : public animation_base {
 // method_table: { ... }
 // method_table metatable: { __class_name = class_name }
 inline animation_base* luaT_toanimationbase(lua_State* L, int idx) {
-  void* p = lua_touserdata(L, idx);
-  if (!p) {
-    return nullptr;
-  }
-  if (lua_getmetatable(L, idx) == 0) {
-    std::printf("Warn: No metatable for animation_base userdata\n");
-    return nullptr;
-  }
-  lua_getfield(L, -1, "__index");
-  if (lua_type(L, -1) != LUA_TTABLE) {
-    lua_pop(L, 2);
-    std::printf("Warn: No __index field method table animation_base\n");
-    return nullptr;
-  }
-  if (lua_getmetatable(L, -1) == 0) {
-    lua_pop(L, 2);
-    std::printf("Warn: No metatable for method table of animation_base\n");
-    return nullptr;
-  }
-  lua_getfield(L, -1, "__class_name");
-  if (lua_type(L, -1) != LUA_TSTRING) {
-    lua_pop(L, 4);
-    std::printf("Warn: No __class_name field for animation_base\n");
-    return nullptr;
-  }
-  const char* class_name = lua_tostring(L, -1);
-  if (std::strcmp(class_name, "animation") == 0) {
-    lua_pop(L, 4);
-    return static_cast<animation*>(p);
-  } else if (std::strcmp(class_name, "spriteList") == 0) {
-    lua_pop(L, 4);
-    return static_cast<sprite_render_list*>(p);
-  } else {
-    std::printf("Warn: Unknown animation_base class name %s\n", class_name);
-    lua_pop(L, 4);
-    return nullptr;
-  }
+  return luaT_touserdata_base<animation_base, animation, sprite_render_list>(
+      L, idx, {"animation", "spriteList"});
 }
 
 #endif  // CORSIX_TH_TH_GFX_H_
