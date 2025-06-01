@@ -77,8 +77,12 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="config_8h_source.html">config.h</a>&quot;</code><br />
 <code>#include &lt;cassert&gt;</code><br />
+<code>#include &lt;cstdio&gt;</code><br />
+<code>#include &lt;cstring&gt;</code><br />
+<code>#include &lt;initializer_list&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;new&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
 <code>#include &quot;<a class="el" href="lua_8hpp_source.html">lua.hpp</a>&quot;</code><br />
 </div>
 <p><a href="th__lua_8h_source.html">Go to the source code of this file.</a></p>
@@ -229,6 +233,9 @@ Functions</h2></td></tr>
 <tr class="separator:ae5a0a90e07979f7b205ab61a33f316e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2565c16adca319babdc00fe5353e7bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#ab2565c16adca319babdc00fe5353e7bf">preload_lua_package</a> (lua_State *L, const char *name, lua_CFunction fn)</td></tr>
 <tr class="separator:ab2565c16adca319babdc00fe5353e7bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6f0d43db6a69f3a928c4ba31f12492f"><td class="memTemplParams" colspan="2">template&lt;typename B , typename T1 , typename T2 &gt; </td></tr>
+<tr class="memitem:ad6f0d43db6a69f3a928c4ba31f12492f"><td class="memTemplItemLeft" align="right" valign="top">B *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="th__lua_8h.html#ad6f0d43db6a69f3a928c4ba31f12492f">luaT_touserdata_base</a> (lua_State *L, int idx, const std::initializer_list&lt; const char * &gt; &amp;class_names)</td></tr>
+<tr class="separator:ad6f0d43db6a69f3a928c4ba31f12492f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -1418,6 +1425,42 @@ template&lt;class T &gt; </div>
           <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>required</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad6f0d43db6a69f3a928c4ba31f12492f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6f0d43db6a69f3a928c4ba31f12492f">&#9670;&nbsp;</a></span>luaT_touserdata_base()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename B , typename T1 , typename T2 &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">B* luaT_touserdata_base </td>
+          <td>(</td>
+          <td class="paramtype">lua_State *&#160;</td>
+          <td class="paramname"><em>L</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::initializer_list&lt; const char * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>class_names</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
