@@ -35,7 +35,7 @@ Copyright (C) 2011-2012 Sérgio "Get_It" Ribeiro
 Copyright (C) 2011 Sergei Larionov
 Copyright (C) 2011 Alexey Pinyagin
 Copyright (C) 2011-2019 Giordano "Viandante" Celeghin
-Copyright (C) 2012-2024 Stephen "TheCycoONE" Baker
+Copyright (C) 2012-2025 Stephen "TheCycoONE" Baker
 Copyright (C) 2012 Alex Ghiran
 Copyright (C) 2012-2013, 2021 Luis "driverpt" Duarte
 Copyright (C) 2012-2013 Ryan Hugh Dean
@@ -48,14 +48,14 @@ Copyright (C) 2013 YoungSeok Yoon
 Copyright (C) 2013-2015 Maarten Peters
 Copyright (C) 2013 nullstein
 Copyright (C) 2013 BuTcHeR (extragry.pl)
-Copyright (C) 2013-2024 Albert "Alberth" Hofkamp
+Copyright (C) 2013-2025 Albert "Alberth" Hofkamp
 Copyright (C) 2013, 2016-2017, 2025 Antoine Lemaire
 Copyright (C) 2014-2015 Joseph "J-Shep" Sheppard
 Copyright (C) 2014 Phillipp Röll
 Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman
 Copyright (C) 2015 Víctor "mccunyao" González
 Copyright (C) 2015 Josh Keegan
-Copyright (C) 2016-2024 Toby Lane
+Copyright (C) 2016-2025 Toby Lane
 Copyright (C) 2016-2020 Phil Morrell
 Copyright (C) 2017 Arne Zelasko
 Copyright (C) 2017 Víctor "IlDucci"
@@ -65,7 +65,7 @@ Copyright (C) 2017 Steven Price
 Copyright (C) 2017 Radomir Wojtera
 Copyright (C) 2017-2019 David Fairbrother
 Copyright (C) 2017-2024 Altieres Lima da Silva
-Copyright (C) 2017-2024 Justin "mugmuggy" Mugford
+Copyright (C) 2017-2025 Justin "mugmuggy" Mugford
 Copyright (C) 2018 Pavel Schoffer
 Copyright (C) 2018 Rick "Feanathiel" Megens
 Copyright (C) 2018 Anton Shestakov
@@ -73,7 +73,7 @@ Copyright (C) 2018 Thilo Ettelt
 Copyright (C) 2018 "red031000"
 Copyright (C) 2018-2019 James "leiget" Russell
 Copyright (C) 2019 Artem Polishchuk
-Copyright (C) 2020-2024 "lewri"
+Copyright (C) 2020-2025 "lewri"
 Copyright (C) 2020-2021 "yangfl"
 Copyright (C) 2020 Jeremy Tellaa
 Copyright (C) 2020 Maxim Krivchikov
@@ -107,6 +107,9 @@ Copyright (C) 2024 SebastianoPistore
 Copryight (C) 2024 jetenergy
 Copyright (C) 2024 Yurii "JurecStrongman"
 Copyright (C) 2024 ShimaKen
+Copyright (C) 2024 "MandrakeHorse"
+Copyright (C) 2024-2025 Artem Argus "ARGAMX" Gusakov
+Copyright (C) 2025 Felipe Muñoz Mazur
 
 et al.
 
