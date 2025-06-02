@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 215 -- Coloured ttf fonts
+local SAVEGAME_VERSION = 216 -- Fix original campaign maps
 
 class "App"
 
