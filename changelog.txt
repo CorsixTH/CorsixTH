@@ -91,10 +91,11 @@ CorsixTH 0.69.0 Beta 1 - released June 2025
 
 # Packager Notes
 * Packagers can now set a default unicode font at build time using the
-  WITH_FONT cmake flag. For the highest level of compatibility with our
+  WITH_FONT cmake option. For the highest level of compatibility with our
   supported languages, we recommend using GoNotoKurrent-Regular
 * An additional interpreter path has been added for portable Linux installs:
   ../share/corsix-th/
+
 -------------------------------------------------------------------------------
 CorsixTH 0.68.0 - released October 2024
 -------------------------------------------------------------------------------
