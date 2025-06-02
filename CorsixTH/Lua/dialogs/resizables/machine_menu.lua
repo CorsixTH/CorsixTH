@@ -185,8 +185,7 @@ end
 
 function UIMachineMenu:scrollToEntity(entity)
   local x, y = self.ui.app.map:WorldToScreen(entity.tile_x, entity.tile_y)
-  local px, py = entity.th:getSecondaryMarker()
-  self.ui:scrollMapTo(x + px, y + py)
+  self.ui:scrollMapTo(x, y)
   self.ui:addWindow(UIMachine(self.ui, entity, entity:getRoom()))
 end
 
