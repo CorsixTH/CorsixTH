@@ -1513,7 +1513,7 @@ const sound_replacement_map frame_sound_replacements {
     {9654, sound_pair(58, 114)}, // Animation 4384
     {9944, sound_pair(58, 114)}, // Animation 4452
     {10007, sound_pair(58, 114)}, // Animation 4476
-//    {??, sound_pair(58, 114)}, // Animation 4792
+    {10989, sound_pair(58, 114)}, // Animation 4792
 
     // Using Atom Analyser. Actually a generic animation of Researcher pushing
     // buttons (anim 4878)
