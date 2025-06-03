@@ -39,7 +39,6 @@ function UILoadMap:choiceMade(name)
   local app = self.ui.app
   -- Make sure there is no blue filter active.
   app.video:setBlueFilterActive(false)
-  name = name:sub(app.user_level_dir:len() + 1)
   app:loadLevel(name, nil, nil, nil, nil, true, _S.errors.load_map_prefix, nil)
 end
 
