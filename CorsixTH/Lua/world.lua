@@ -2653,6 +2653,7 @@ end
 --! Perform validity tests on the map in world
 --!return (string) The message relating to the first failed check
 function World:validateMap()
+  self.map.th:updatePathfinding()
   local spawn_points = self:calculateSpawnTiles()
   -- Do any passable tiles on the edge of the map have a path of
   -- passable tiles to the hospital
