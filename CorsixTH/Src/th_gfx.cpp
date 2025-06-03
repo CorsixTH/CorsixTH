@@ -1466,10 +1466,11 @@ void animation::set_animation_kind(animation_kind anim_kind) {
 }
 
 namespace {
-//! Storage of one or two sounds. If two sounds are stored, both are selected in 50% of the cases.
+//! Storage of one or two sounds. If two sounds are stored, both are selected in
+//! 50% of the cases.
 struct sound_pair {
-  sound_pair(int16_t sound): soundA(sound), soundB(-1) { }
-  sound_pair(int16_t soundA, int16_t soundB): soundA(soundA), soundB(soundB) { }
+  sound_pair(int16_t sound) : soundA(sound), soundB(-1) {}
+  sound_pair(int16_t soundA, int16_t soundB) : soundA(soundA), soundB(soundB) {}
 
   int16_t get_sound() const {
     if (soundB < 0) {
@@ -1485,15 +1486,15 @@ struct sound_pair {
     }
   }
 
-private:
-  const int16_t soundA; //!< First available sound.
-  const int16_t soundB; //!< If non-negative, the second available sound.
+ private:
+  const int16_t soundA;  //!< First available sound.
+  const int16_t soundB;  //!< If non-negative, the second available sound.
 };
 
 typedef std::map<size_t, sound_pair> sound_replacement_map;
 
 // Map of frame numbers to sounds to play.
-const sound_replacement_map frame_sound_replacements {
+const sound_replacement_map frame_sound_replacements{
     // Female flying to heaven (anim 3220)
     {6987, sound_pair(123)},
 
@@ -1504,16 +1505,16 @@ const sound_replacement_map frame_sound_replacements {
     {4230, sound_pair(35)},
 
     // Vomit sounds.
-    {1902, sound_pair(58, 114)}, // Animation 1034
-    {4149, sound_pair(58, 114)}, // Animation 2056
-    {6901, sound_pair(58, 114)}, // Animation 3184
-    {8819, sound_pair(58, 114)}, // Animation 4138
-    {9105, sound_pair(58, 114)}, // Animation 4204
-    {9565, sound_pair(58, 114)}, // Animation 4324
-    {9654, sound_pair(58, 114)}, // Animation 4384
-    {9944, sound_pair(58, 114)}, // Animation 4452
-    {10007, sound_pair(58, 114)}, // Animation 4476
-    {10989, sound_pair(58, 114)}, // Animation 4792
+    {1902, sound_pair(58, 114)},   // Animation 1034
+    {4149, sound_pair(58, 114)},   // Animation 2056
+    {6901, sound_pair(58, 114)},   // Animation 3184
+    {8819, sound_pair(58, 114)},   // Animation 4138
+    {9105, sound_pair(58, 114)},   // Animation 4204
+    {9565, sound_pair(58, 114)},   // Animation 4324
+    {9654, sound_pair(58, 114)},   // Animation 4384
+    {9944, sound_pair(58, 114)},   // Animation 4452
+    {10007, sound_pair(58, 114)},  // Animation 4476
+    {10989, sound_pair(58, 114)},  // Animation 4792
 
     // Using Atom Analyser. Actually a generic animation of Researcher pushing
     // buttons (anim 4878)
@@ -1522,8 +1523,7 @@ const sound_replacement_map frame_sound_replacements {
     {11147, sound_pair(35)},
     {11152, sound_pair(35)},
     {11153, sound_pair(35)},
-    {11154, sound_pair(35)}
-  };
+    {11154, sound_pair(35)}};
 }  // Namespace
 
 void animation::tick() {
