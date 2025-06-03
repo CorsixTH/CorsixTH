@@ -1503,16 +1503,17 @@ const sound_replacement_map frame_sound_replacements {
     {4224, sound_pair(35)},
     {4230, sound_pair(35)},
 
-    {1034, sound_pair(58, 114)},
-    {2056, sound_pair(58, 114)},
-    {3184, sound_pair(58, 114)},
-    {4138, sound_pair(58, 114)},
-    {4204, sound_pair(58, 114)},
-    {4324, sound_pair(58, 114)},
-    {4384, sound_pair(58, 114)},
-    {4452, sound_pair(58, 114)},
-    {4476, sound_pair(58, 114)},
-    {4792, sound_pair(58, 114)},
+    // Vomit sounds.
+    {1902, sound_pair(58, 114)}, // Animation 1034
+    {4149, sound_pair(58, 114)}, // Animation 2056
+    {6901, sound_pair(58, 114)}, // Animation 3184
+    {8819, sound_pair(58, 114)}, // Animation 4138
+    {9105, sound_pair(58, 114)}, // Animation 4204
+    {9565, sound_pair(58, 114)}, // Animation 4324
+    {9654, sound_pair(58, 114)}, // Animation 4384
+    {9944, sound_pair(58, 114)}, // Animation 4452
+    {10007, sound_pair(58, 114)}, // Animation 4476
+//    {??, sound_pair(58, 114)}, // Animation 4792
 
     // Using Atom Analyser. Actually a generic animation of Researcher pushing
     // buttons (anim 4878)
