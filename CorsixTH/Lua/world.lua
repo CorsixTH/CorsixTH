@@ -1316,10 +1316,11 @@ function World:getCampaignWinningText(player_no)
         end
       end
     end
+    local level_info = TheApp:readLevelFile(self.map.level_number)
     text[1] = _S.letter.dear_player:format(self.hospitals[player_no].name)
     if has_next then
-      if next_level_info.end_praise then
-        text[2] = next_level_info.end_praise:format(next_level_name)
+      if level_info.end_praise then
+        text[2] = level_info.end_praise:format(next_level_name)
       else
         text[2] = _S.letter.campaign_level_completed:format(next_level_name)
       end
