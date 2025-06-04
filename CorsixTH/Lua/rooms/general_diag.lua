@@ -84,7 +84,7 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
 
       local after_use_trolley = --[[persistable:general_diag_trolley_after_use]] function()
         -- Release doctor after procedure and finish his IdleAction() near trolley
-        staff:setNextAction(MeanderAction())
+        staff:queueAction(MeanderAction())
         staff:finishAction(staff_idle)
       end
 
