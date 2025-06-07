@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 215 -- Coloured ttf fonts
+local SAVEGAME_VERSION = 216 -- CorsixTH 0.69.0-beta1
 
 class "App"
 
@@ -1691,8 +1691,10 @@ function App:getVersion(version)
   -- Versioning format is major.minor.revision (required) Patch (optional)
   -- Old versions (<= 0.67) retain existing format
   -- All patch versions should be retained in this table (due to be replaced, see PR2518)
-  if ver > 194 then
+  if ver > 216 then
     return "Trunk"
+  elseif ver > 194 then
+    return "v0.69.0-beta1"
   elseif ver > 180 then
     return "v0.68.0"
   elseif ver > 170 then
