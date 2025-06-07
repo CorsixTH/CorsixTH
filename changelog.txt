@@ -14,11 +14,11 @@ CorsixTH 0.69.0 Beta 1 - released June 2025
 * Improved how staff look for work if idle
 * Machine strength reduction after repair now more closely aligned with the
   original game
-* Machine strength now has a minimum value of 2
+* Machine strength now has a minimum value of 2 after repair
 * Mouse is now only captured when in game, or using the map editor
 * Improved measurement on the progress report chart columns
 * Annual rewards and trophies now have more robust evaluation criteria
-* A patient's treatment cost is now fixed to the point they agree to pay
+* A patient's treatment cost is now decided at the point they agree to pay
 * VIPs now walk slower, as in the original game
 * Gamelogs now include the date and time of the crash in their file name, and
   the last 10 logs are now held in the Logs folder
@@ -81,7 +81,7 @@ CorsixTH 0.69.0 Beta 1 - released June 2025
 * Editing a room now closes the machine dialog of the room if it was open
 * Room statistics no longer reset when editing a room
 * Long windows now correctly count as a window
-* Dynamic info for machines now shows during cycling
+* Dynamic info for machines now displays correctly when cycling between them
 * Fixed a bug in picking up objects when falling actions were enabled
 * Fixed a bug that caused staff members to be picked up multiple times
 * Fixed a bug where changing doctor in General Diagnosis could break the room
