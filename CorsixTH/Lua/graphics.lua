@@ -404,7 +404,7 @@ end
 function Graphics:loadMenuFont()
   local font
   if self.language_font then
-    font = self:loadFontAndSpriteSheet("QData", "Font01V")
+    font = self:loadFontAndSpriteTable("QData", "Font01V")
   else
     font = self:loadBuiltinFont()
   end
