@@ -129,7 +129,7 @@ function Entity:setTile(x, y)
   -- NB: (x, y) can be nil, in which case th:setTile expects all nil arguments
   self.th:setTile(x and self.world.map.th, x, y)
   if self.mood_info then
-    self.mood_info:setParent(self.th, self.mood_marker)
+    self.mood_info:setParent(self.th, self.mood_marker or 1)
   end
 
   -- Update the entity map for the new position
@@ -266,7 +266,7 @@ function Entity:setMoodInfo(new_mood)
     if not self.mood_info then
       self.mood_info = TH.animation()
       self.mood_info:setPosition(-1, -96)
-      self.mood_info:setParent(self.th)
+      self.mood_info:setParent(self.th, self.mood_marker or 1)
     end
     self.mood_info:setAnimation(self.world.anims, new_mood.icon)
   else
