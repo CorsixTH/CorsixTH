@@ -774,7 +774,14 @@ errors = {
     full_in_demo = "Sorry, you can't open a full game save with the demo files loaded. Please update your TH Data folder setting.",
   },
   music = "There are playback issues with one or more files in your music directory. Problematic files will be disabled in the jukebox. See the console window for more information.",
+  missing_corsixth_file = "Warning: Could not find file %s, try reinstalling CorsixTH.",
   missing_th_data_file = "Warning: Could not find file %s, the Theme Hospital data is incomplete.",
+  missing_level_file = "Error: Could not find the chosen level file.",
+  overlay = {
+    incorrect_difficulty = "Overlay difficulty must be easy, full or hard. Current value is ",
+    incorrect_level_number = "Overlay level number must be 1-12. Current value is ",
+    missing_setting = "No difficulty and level number given in overlay field of custom level.",
+  },
   cannot_restart_missing_files = "Sorry, but this level cannot be restarted because of missing files %s or %s.",
 }
 
