@@ -259,12 +259,7 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     end
   end
 
-  -- fix original level 6 map
-  if level == 6 and not map_file and not map_editor then
-    self:setCellFlags(56, 71, {hospital = true, buildable = true, buildableNorth = true, buildableSouth = true, buildableEast = true, buildableWest = true})
-    self:setCellFlags(58, 72, {passable = false})
-  end
-
+  self:_fixTiles()
   return objects
 end
 
@@ -371,7 +366,9 @@ function Map:setPlotOwner(plot_number, new_owner)
       end
     end
   end
+  -- Refresh the map's paths and flags
   self.th:updatePathfinding()
+  self:_fixTiles()
 end
 
 --[[! Saves the map to a .map file
@@ -797,6 +794,66 @@ function Map:getParcelTileCount(parcel)
   return self.parcelTileCounts[parcel] or 0
 end
 
+--! Expandable private function to fix tile issues on loading a map.
+--! Each fix should be rendered in a local function.
+function Map:_fixTiles()
+  local function isOriginalCampaign()
+    return type(self.level_number) == "number" and not self.map_file
+  end
+
+ -- Fix the original campaign's outdoor tiles from being marked with bad flags
+  local function fixOutdoorTiles()
+    local function unsetFlags(cell, x, y, allowed_set, flags_to_set)
+      if not allowed_set[cell] then
+        self:setCellFlags(x, y, flags_to_set)
+      end
+    end
+
+    -- Only buildings should be part of the hospital.
+    local hosp_tiles = list_to_set( {
+      17, 70, 18, 19, 23, 16, 21, 22, 66, 76, 20 -- indoor tiles
+    } )
+    local non_hosp_flags = { hospital = false }
+
+    -- Only indoor and certain outdoor tiles should be transverable.
+    local pathable_tiles = list_to_set( {
+      17, 70, 18, 19, 23, 16, 21, 22, 66, 76, 20, -- indoor tiles
+      4, 15, 5, -- concrete paths and helipad
+      41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58 -- road tiles
+    } )
+    -- Also make ineligible outdoor tiles non-buildable, which sometimes got set in
+    -- the original campaign.
+    local non_path_flags = {
+      passable = false, buildable = false, buildableNorth = false,
+      buildableEast = false, buildableSouth = false, buildableWest = false
+    }
+
+    for x=1, self.width do
+      for y=1, self.height do
+        local cell = self.th:getCell(x, y, 1)
+        unsetFlags(cell, x, y, hosp_tiles, non_hosp_flags)
+        unsetFlags(cell, x, y, pathable_tiles, non_path_flags)
+      end
+    end
+  end
+
+  -- Fix the original level 6 map
+  local function fixLevel6Flags()
+    if self.level_number ~= 6 then return end
+    self:setCellFlags(56, 71, {
+      hospital = true, buildable = true,
+      buildableNorth = true, buildableSouth = true,
+      buildableEast = true, buildableWest = true
+    })
+    self:setCellFlags(58, 72, {passable = false})
+  end
+
+  if isOriginalCampaign() then
+    fixOutdoorTiles()
+    fixLevel6Flags()
+  end
+end
+
 function Map:afterLoad(old, new)
   if old < 6 then
     self.parcelTileCounts = {}
@@ -855,12 +912,6 @@ function Map:afterLoad(old, new)
     -- Issue #1105 update pathfinding (rebuild walls) potentially broken by side object placement
     self.th:updatePathfinding()
   end
-  if old < 136 then
-    if self.level_number == 6 then
-      self:setCellFlags(56, 71, {hospital = true, buildable = true, buildableNorth = true, buildableSouth = true, buildableEast = true, buildableWest = true})
-      self:setCellFlags(58, 72, {passable = false})
-    end
-  end
   if old < 161 then
     -- Permanently fix the 0.65 trophy bug (#2004)
     -- make sure we erase the hofix variable too
@@ -908,5 +959,8 @@ function Map:afterLoad(old, new)
   end
   if old < 209 then
     self.level_config.gbv.SodaPrice = 20
+  end
+  if old < 217 then
+    self:_fixTiles()
   end
 end
