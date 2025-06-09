@@ -39,6 +39,9 @@
  <a href="_0_1_map.html#_0_1_map_1__draw_debug_tiles">_drawDebugTiles</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">xpos</span>, <span class="p">ypos</span>)
  </li>
  <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1__load_original_campaign_level">_loadOriginalCampaignLevel</a>(<span class="p">difficulty</span>, <span class="p">level_number</span>, <span class="p">config</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_map.html#_0_1_map_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
  </li>
  <li class="self">
@@ -279,7 +282,33 @@ for this).<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L624">line 624 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L682">line 682 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1__load_original_campaign_level">function Map:_loadOriginalCampaignLevel(<span class="p">difficulty</span>, <span class="p">level_number</span>, <span class="p">config</span>)</a></h5>
+ <p>
+ Load further level configurations for the main campaign.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">difficulty</td>
+ <td class="t">string</td>
+ <td class="d"></td>
+ </tr>
+ <tr>
+ <td class="n">level_number</td>
+ <td class="t">integer</td>
+ <td class="d"></td>
+ </tr>
+ <tr>
+ <td class="n">config</td>
+ <td class="t">table</td>
+ <td class="d"> The level config created so far</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L274">line 274 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -299,20 +328,20 @@ for this).<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L742">line 742 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L800">line 800 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_map_1after_save">function Map:afterSave()</a></h5>
  <p>
  Restore the temporarily stored debug information after saving<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L429">line 429 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L487">line 487 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_map_1clear_debug_text">function Map:clearDebugText()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L441">line 441 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L499">line 499 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -359,7 +388,7 @@ for this).<br/><br/>
 ]]</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L664">line 664 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L722">line 722 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -392,7 +421,7 @@ for this).<br/><br/>
  <h5><a name="_0_1_map_1get_difficulty">function Map:getDifficulty()</a></h5>
  <p>
  Get the difficulty of the level. Custom levels and campaign always have medium difficulty.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L282">line 282 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L311">line 311 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -408,7 +437,7 @@ for this).<br/><br/>
  <td class="d"> Parcel number being queried.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L725">line 725 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L783">line 783 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -424,7 +453,7 @@ for this).<br/><br/>
  <td class="d"> Parcel number being queried.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L735">line 735 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L793">line 793 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -454,7 +483,7 @@ for this).<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L447">line 447 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L505">line 505 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -555,14 +584,13 @@ has been loaded.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L526">line 526 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L584">line 584 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_map_1load_map_config">function Map:loadMapConfig(<span class="p">filename</span>, <span class="p">config</span>, <span class="p">custom</span>)</a></h5>
  <p>
- Loads map configurations from files. Returns nil as first result
-if no configuration could be loaded and config as second result no matter what.<br/><br/>
+ Loads map configurations from files.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -584,20 +612,20 @@ this is the base config</td>
 it is assumed that we're looking in the theme_hospital_install path.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L355">line 355 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L387">line 387 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_map_1on_tick">function Map:onTick()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L580">line 580 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L638">line 638 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_map_1prepare_for_save">function Map:prepareForSave()</a></h5>
  <p>
  Keep debug information in temporary local vars, do not save them<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L417">line 417 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L475">line 475 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -620,7 +648,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <td class="d"> Name of the file to save the map in</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L348">line 348 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L377">line 377 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -636,7 +664,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <td class="d"> Sprite sheet for the map.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L591">line 591 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L649">line 649 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -677,7 +705,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L598">line 598 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L656">line 656 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -692,7 +720,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L602">line 602 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L660">line 660 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -722,7 +750,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L607">line 607 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L665">line 665 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -786,7 +814,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <td class="d"> The player number that should own plot_number. 0 means no owner.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L290">line 290 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L319">line 319 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -809,31 +837,31 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <div class="method">
  <h5><a name="_0_1_map_1update_debug_overlay_camera">function Map:updateDebugOverlayCamera()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L494">line 494 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L552">line 552 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_map_1update_debug_overlay_flags">function Map:updateDebugOverlayFlags()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L464">line 464 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L522">line 522 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_map_1update_debug_overlay_heat">function Map:updateDebugOverlayHeat()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L473">line 473 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L531">line 531 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_map_1update_debug_overlay_heliport">function Map:updateDebugOverlayHeliport()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L510">line 510 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L568">line 568 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_map_1update_debug_overlay_parcels">function Map:updateDebugOverlayParcels()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L482">line 482 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L540">line 540 of Lua/map.lua</a>.
  </p>
  </div>
 </div>
