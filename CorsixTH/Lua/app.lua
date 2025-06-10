@@ -96,7 +96,7 @@ function App:init()
   print("")
   print("---------------------------------------------------------------")
   print("")
-  print("Welcome to CorsixTH " .. self:getVersion() .. "!")
+  print("Welcome to CorsixTH " .. self:getVersion(self.savegame_version, true) .. "!")
   print("")
   print("---------------------------------------------------------------")
   print("")
@@ -1680,57 +1680,131 @@ function App:loadLuaFolder(dir, no_results, append_to)
   end
 end
 
---! Returns the version number (name) of the local copy of the game based on
---! which save game version it is. This was added after the Beta 8
---! release, which is why the checks prior to that version aren't made.
---!param version An optional value if you want to find what game version
--- a specific savegame version is from.
-function App:getVersion(version)
-  local ver = version or self.savegame_version
+--[[
+  CorsixTH versioning follows a convention similar to semantic versioning but it
+  does not accurately follow its standard. As we are currently <1.0.0 the major
+  integer is not at play. Instead:
+  Minor - denotes an new milestone of the program that often encompassses multiple
+  patches that could break savegames without in-situ afterLoads
+  Revision - denotes a revised hotfix release of the program that patches a major
+  bug before the next milestone. The bug is then patched for the next milestone.
+  Moving forward, revisions should have a savegame_version bump of 1, as 10
+  savegame versions are reserved each release for patching.
+  All beta versions must have a savegame increment each time
+  Each patch note must begin with a '-'
+--]]
+local version_table = {
+  -- Format: major, minor, revision, patch (string), release date {YYYY, MM, DD}, savegame_version
+  {major = 0, minor = 0, revision = 8, patch = "", date = {2012, 01, 01}, version = 0}, -- Beta 8 or below
+  {major = 0, minor = 1, revision = 0, patch = "", date = {2012, 03, 24}, version = 51},
+  {major = 0, minor = 10, revision = 0, patch = "", date = {2012, 09, 24}, version = 53},
+  {major = 0, minor = 11, revision = 0, patch = "", date = {2012, 11, 17}, version = 54},
+  {major = 0, minor = 20, revision = 0, patch = "", date = {2013, 03, 24}, version = 66},
+  {major = 0, minor = 21, revision = 0, patch = "", date = {2013, 05, 24}, version = 72},
+  {major = 0, minor = 30, revision = 0, patch = "", date = {2013, 12, 24}, version = 78},
+  {major = 0, minor = 40, revision = 0, patch = "", date = {2014, 12, 22}, version = 91},
+  {major = 0, minor = 50, revision = 0, patch = "", date = {2015, 08, 31}, version = 105},
+  {major = 0, minor = 60, revision = 0, patch = "", date = {2016, 05, 30}, version = 111},
+  {major = 0, minor = 61, revision = 0, patch = "", date = {2017, 12, 21}, version = 122},
+  {major = 0, minor = 62, revision = 0, patch = "", date = {2018, 07, 21}, version = 127},
+  {major = 0, minor = 63, revision = 0, patch = "", date = {2019, 05, 24}, version = 134},
+  {major = 0, minor = 64, revision = 0, patch = "", date = {2020, 06, 16}, version = 138},
+  {major = 0, minor = 65, revision = 0, patch = "", date = {2021, 06, 19}, version = 156},
+  -- There was also 0.65.1, not differentiated by version number
+  {major = 0, minor = 66, revision = 0, patch = "", date = {2022, 06, 26}, version = 170},
+  {major = 0, minor = 67, revision = 0, patch = "", date = {2023, 08, 12}, version = 180},
+  {major = 0, minor = 68, revision = 0, patch = "", date = {2024, 10, 13}, version = 194},
+  {major = 0, minor = 69, revision = 0, patch = "-beta-1", date = {2025, 06, 07}, version = 216}
+}
 
-  -- Versioning format is major.minor.revision (required) Patch (optional)
-  -- Old versions (<= 0.67) retain existing format
-  -- All patch versions should be retained in this table (due to be replaced, see PR2518)
-  if ver > 216 then
-    return "Trunk"
-  elseif ver > 194 then
-    return "v0.69.0-beta1"
-  elseif ver > 180 then
-    return "v0.68.0"
-  elseif ver > 170 then
-    return "v0.67"
-  elseif ver > 156 then
-    return "v0.66"
-  elseif ver > 138 then
-    return "v0.65"
-  elseif ver > 134 then
-    return "v0.64"
-  elseif ver > 127 then
-    return "v0.63"
-  elseif ver > 122 then
-    return "v0.62"
-  elseif ver > 111 then
-    return "v0.61"
-  elseif ver > 105 then
-    return "v0.60"
-  elseif ver > 91 then
-    return "0.50"
-  elseif ver > 78 then
-    return "0.40"
-  elseif ver > 72 then
-    return "0.30"
-  elseif ver > 66 then
-    return "0.21"
-  elseif ver > 54 then
-    return "0.20"
-  elseif ver > 53 then
-    return "0.11"
-  elseif ver > 51 then
-    return "0.10"
-  elseif ver > 45 then
-    return "0.01"
-  else
-    return "Beta 8 or earlier"
+function App:getCurrentVersion()
+  return self.savegame_version
+end
+
+--! Requests data regarding a given savegame version
+--!param savegame_version (number) What to lookup, uses application version if blank
+--!param concatenate (boolean) (optional) Whether the version should be converted to a string
+--!return the matching version as a table, or as a string if concatenate is true.
+-- If no versions match it returns the base version with the savegame version
+-- attached e.g. 0.66.0-dev172
+function App:getVersion(savegame_version, concatenate)
+  savegame_version = savegame_version or self:getCurrentVersion()
+  local result
+  for i=#version_table, 1, -1 do
+    local version = version_table[i]
+    if version.version == savegame_version then
+      result = version
+      break
+    elseif version.version - savegame_version < 0 then
+      -- we're not on a release version
+      local devel_version = shallow_clone(version) -- prevent recursion
+      devel_version.patch = version.patch .. "-dev" .. savegame_version
+      result = devel_version
+      break
+    end
+  end
+  if concatenate and result then
+    if string.len(result.patch) > 0 then
+      result = "v" .. result.major .. "." .. result.minor .. "." ..
+          result.revision .. result.patch
+    else
+      result = "v" .. result.major .. "." .. result.minor .. "." .. result.revision
+    end
+  end
+  return result
+end
+
+--! Reports a difference between two versions based on requested methodology.
+--!param version_a (number or table) The first (usually newer) version to test
+--!param version_b (number or table) The second (usually older) version to test
+--!param method (string) What method to compare by
+--- method(release) reports the difference between the matching releases in steps, revisions are not counted.
+--- method(version) reports the difference between two savegame versions
+--- method(age) reports the difference in days between the matching release dates
+--! if a match is detected as a development version it will target the release it was built upon, except for via version method.
+function App:compareVersions(version_a, version_b, method)
+  assert(type(version_a) ~= "string" and type(version_b) ~= "string",
+      "Compare requires savegame version or the version table to function")
+  assert(method == "age" or method == "release" or method == "version",
+      "Not using a valid compare method")
+
+  if type(version_a) == "number" then
+    version_a = self:getVersion(version_a)
+  end
+  if type(version_b) == "number" then
+    version_b = self:getVersion(version_b)
+  end
+
+  if method == "release" then
+    local function countBackward(version_to_check)
+      local step = 0
+      for i=#version_table, 1, -1 do
+        local version = version_table[i]
+        if version.version == version_to_check then
+          break
+        elseif (version.version - version_to_check) < 0 then
+          -- we're not on a release version
+          if step == 0 then break end -- working from current development
+          step = step - 1
+          break
+        end
+        step = (version.revision == 0 and string.len(version.patch) == 0)
+            and step - 1 or step
+      end
+      return step
+    end
+    return countBackward(version_a.version) - countBackward(version_b.version)
+  end
+
+  if method == "version" then
+    return version_a.version - version_b.version
+  end
+
+  if method == "age" then
+    local date_a, date_b = version_a.date, version_b.date
+    local unix_time_a = os.time({year=date_a[1], month=date_a[2], day=date_a[3]})
+    local unix_time_b = os.time({year=date_b[1], month=date_b[2], day=date_b[3]})
+    return math.floor(os.difftime(unix_time_a, unix_time_b) / (60 * 60 * 24))
   end
 end
 
@@ -1883,9 +1957,9 @@ function App:afterLoad()
   local first = self.world.original_savegame_version
 
   -- Generate the human-readable version number (old [loaded save], new [program], first [original])
-  local first_version = first .. " (" .. self:getVersion(first) .. ")"
-  local old_version = old .. " (" .. self:getVersion(old) .. ")"
-  local new_version = new .. " (" .. self:getVersion() .. ")"
+  local first_version = first .. " (" .. self:getVersion(first, true) .. ")"
+  local old_version = old .. " (" .. self:getVersion(old, true) .. ")"
+  local new_version = new .. " (" .. self:getVersion(new, true) .. ")"
 
   if new == old then
     local msg_same = "Savegame version is %s, originally it was %s."
@@ -1901,7 +1975,7 @@ function App:afterLoad()
     self.world:gameLog(msg_newer:format(old_version, new_version))
     self.ui:addWindow(UIInformation(self.ui, { _S.warnings.newersave }))
   end
-  self.world.release_version = self:getVersion()
+  self.world.release_version = self:getVersion(new, true)
   self.world.savegame_version = new
 
   if old < 87 then
@@ -1945,7 +2019,7 @@ function App:checkForUpdates()
 
   -- Default language to use for the changelog if no localised version is available
   local default_language = "en"
-  local current_version = self:getVersion()
+  local current_version = self:getVersion(self.savegame_version, true)
 
   -- Only check for updates against released versions
   if current_version == "Trunk" then
@@ -2058,7 +2132,7 @@ function App:gamelogHeader()
       table.concat(comp_details, ", "), self.video:getRendererDetails())
   local running = string.format("%s run with api version: %s, game version: %s, savegame version: %s\n",
       compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
-      self:getVersion(), tostring(SAVEGAME_VERSION))
+      self:getVersion(self.savegame_version, true), tostring(SAVEGAME_VERSION))
   return (compiled .. running)
 end
 

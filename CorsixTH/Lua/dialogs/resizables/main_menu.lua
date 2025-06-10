@@ -68,7 +68,8 @@ function UIMainMenu:UIMainMenu(ui)
   -- Work out the menu's height, giving extra space for the version information
   local line_height = 15
   local top_padding = 20
-  local num_lines = computeSize({TheApp:isUpdateCheckDisabledByConfig(), TheApp.config.debug, TheApp:getVersion()}) -- see UIMainMenu:draw for how these are used
+  local version = TheApp:getVersion(nil, true)
+  local num_lines = computeSize({TheApp:isUpdateCheckDisabledByConfig(), TheApp.config.debug, version}) -- see UIMainMenu:draw for how these are used
   local bottom_text_height = (line_height * num_lines)
   self.height = top_padding + ((menu_item_height + 10) * #menu_items) + bottom_text_height
 
@@ -81,7 +82,7 @@ function UIMainMenu:UIMainMenu(ui)
 
   -- The main menu also shows the version number of the player's copy of the game.
   self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, 0, 0, label_ttf_col)
-  self.version_number = TheApp:getVersion()
+  self.version_number = version
 
   -- individual buttons
   self.default_button_sound = "selectx.wav"
