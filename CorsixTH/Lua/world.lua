@@ -90,7 +90,7 @@ function World:World(app, free_build_mode)
   self.floating_dollars = {}
   self.game_log = {} -- saves list of useful debugging information
   self.savegame_version = app.savegame_version -- Savegame version number
-  self.release_version = app:getVersion(self.savegame_version, true) -- Savegame release version (e.g. 0.60), or Trunk
+  self.release_version = app:getReleaseString() -- Savegame release version (e.g. 0.60), or Trunk
   -- Also preserve this throughout future updates.
   self.original_savegame_version = app.savegame_version
 
@@ -2572,7 +2572,7 @@ function World:afterLoad(old, new)
     TheApp:restart(_S.confirmation.very_old_save)
   end
   self.savegame_version = new
-  self.release_version = TheApp:getVersion(new)
+  self.release_version = TheApp:getReleaseString(new)
   self:setSystemPause(false) -- Reset flag on load
 end
 

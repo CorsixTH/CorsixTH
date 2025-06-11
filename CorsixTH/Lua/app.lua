@@ -96,7 +96,7 @@ function App:init()
   print("")
   print("---------------------------------------------------------------")
   print("")
-  print("Welcome to CorsixTH " .. self:getVersion(self.savegame_version, true) .. "!")
+  print("Welcome to CorsixTH " .. self:getReleaseString() .. "!")
   print("")
   print("---------------------------------------------------------------")
   print("")
@@ -1693,7 +1693,7 @@ end
   All beta versions must have a savegame increment each time
   Each patch note must begin with a '-'
 --]]
-local version_table = {
+local release_table = {
   -- Format: major, minor, revision, patch (string), savegame_version
   {major = 0, minor = 0, revision = 8, patch = "", version = 0}, -- Beta 8 or below
   {major = 0, minor = 1, revision = 0, patch = "", version = 51},
@@ -1724,44 +1724,54 @@ end
 
 --! Requests data regarding a given savegame version
 --!param savegame_version (number) What to lookup, uses application version if blank
---!param concatenate (boolean) (optional) Whether the version should be converted to a string
---!return the matching version as a table, or as a string if concatenate is true.
--- If no versions match it returns the base version with the savegame version
--- attached e.g. 0.66.0-dev172
-function App:getVersion(savegame_version, concatenate)
+--!return the matching release table entry
+-- If no releases match it returns the base release with the savegame version
+-- inserted
+function App:getReleaseData(savegame_version)
   savegame_version = savegame_version or self:getCurrentVersion()
-  local result
-  for i = #version_table, 1, -1 do
-    local version = version_table[i]
-    if version.version == savegame_version then
-      result = version
+  local release_data
+  for i = #release_table, 1, -1 do
+    local release = release_table[i]
+    if release.version == savegame_version then
+      release_data = release
       break
-    elseif version.version - savegame_version < 0 then
+    elseif (release.version - savegame_version) < 0 then
       -- we're not on a release version
-      local devel_version = shallow_clone(version) -- prevent recursion
-      devel_version.patch = version.patch .. "-dev" .. savegame_version
-      result = devel_version
+      local develop = shallow_clone(release) -- prevent recursion
+      develop.version = savegame_version
+      develop.patch = release.patch .. "-dev" .. savegame_version
+      release_data = develop
       break
     end
   end
-  if concatenate and result then
-    if string.len(result.patch) > 0 then
-      result = "v" .. result.major .. "." .. result.minor .. "." ..
-          result.revision .. result.patch
-    else
-      result = "v" .. result.major .. "." .. result.minor .. "." .. result.revision
-    end
+  return release_data
+end
+
+--! Provides the release (or development) string for a given savegame version
+--!param savegame_version (number) The version to look up
+--!return A string in the format "v<major>.<minor>.<revision>[patch]"
+--! For development builds, the savegame version is appended as a patch e.g. 'dev213'
+function App:getReleaseString(savegame_version)
+  local release = self:getReleaseData(savegame_version)
+  local release_string = "v" .. release.major .. "." .. release.minor .. "." ..
+      release.revision
+  if string.len(release.patch) > 0 then
+    release_string = release_string .. release.patch
   end
-  return result
+  return release_string
 end
 
 --! Reports a difference between two versions based on requested methodology.
 --!param version_a (number or table) The first (usually newer) version to test
 --!param version_b (number or table) The second (usually older) version to test
 --!param method (string) What method to compare by
---- method(release) reports the difference between the matching releases in steps, revisions are not counted.
+--- method(release) reports the difference between the matching releases in steps,
+--- revisions are not counted.
+--- For development builds it will use the base release it started from when using
+--- the release method
 --- method(version) reports the difference between two savegame versions
---! if a match is detected as a development version it will target the release it was built upon, except for via version method.
+--!return The step difference between release a and release b for release method
+--- or The raw savegame version difference for version method
 function App:compareVersions(version_a, version_b, method)
   assert((type(version_a) == "table" or type(version_a) == "number") and
       (type(version_b) == "table" or type(version_b) == "number"),
@@ -1772,24 +1782,23 @@ function App:compareVersions(version_a, version_b, method)
   if method == "release" then
     local function countBackward(version_to_check)
       local step = 0
-      for i = #version_table, 1, -1 do
-        local version = version_table[i]
-        if version.version == version_to_check then
+      for i = #release_table, 1, -1 do
+        local release = release_table[i]
+        if release.version == version_to_check then
           break
-        elseif (version.version - version_to_check) < 0 then
+        elseif (release.version - version_to_check) < 0 then
           -- we're not on a release version
-          if step == 0 then break end -- working from current development
-          step = step - 1
+          if step == 0 then step = 1 break end -- working from current development
           break
         end
-        step = (version.revision == 0 and string.len(version.patch) == 0)
+        step = (release.revision == 0 and string.len(release.patch) == 0)
             and step - 1 or step
       end
       return step
     end
 
-    if type(version_a) == "number" then version_a = self:getVersion(version_a) end
-    if type(version_b) == "number" then version_b = self:getVersion(version_b) end
+    if type(version_a) == "number" then version_a = self:getReleaseData(version_a) end
+    if type(version_b) == "number" then version_b = self:getReleaseData(version_b) end
     return countBackward(version_a.version) - countBackward(version_b.version)
   end
 
@@ -1950,9 +1959,9 @@ function App:afterLoad()
   local first = self.world.original_savegame_version
 
   -- Generate the human-readable version number (old [loaded save], new [program], first [original])
-  local first_version = first .. " (" .. self:getVersion(first, true) .. ")"
-  local old_version = old .. " (" .. self:getVersion(old, true) .. ")"
-  local new_version = new .. " (" .. self:getVersion(new, true) .. ")"
+  local first_version = first .. " (" .. self:getReleaseString(first) .. ")"
+  local old_version = old .. " (" .. self:getReleaseString(old) .. ")"
+  local new_version = new .. " (" .. self:getReleaseString(new) .. ")"
 
   if new == old then
     local msg_same = "Savegame version is %s, originally it was %s."
@@ -1968,7 +1977,7 @@ function App:afterLoad()
     self.world:gameLog(msg_newer:format(old_version, new_version))
     self.ui:addWindow(UIInformation(self.ui, { _S.warnings.newersave }))
   end
-  self.world.release_version = self:getVersion(new, true)
+  self.world.release_version = self:getReleaseString(new)
   self.world.savegame_version = new
 
   if old < 87 then
@@ -2012,11 +2021,11 @@ function App:checkForUpdates()
 
   -- Default language to use for the changelog if no localised version is available
   local default_language = "en"
-  local current_version = self:getVersion(self.savegame_version, true)
+  local current_version = self:getReleaseString()
 
   -- Only check for updates against released versions
-  if current_version == "Trunk" then
-    print("Will not check for updates since this is the Trunk version.")
+  if string.find(current_version, "dev") then
+    print("Will not check for updates since this is a development version.")
     return
   end
 
@@ -2125,7 +2134,7 @@ function App:gamelogHeader()
       table.concat(comp_details, ", "), self.video:getRendererDetails())
   local running = string.format("%s run with api version: %s, game version: %s, savegame version: %s\n",
       compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
-      self:getVersion(self.savegame_version, true), tostring(SAVEGAME_VERSION))
+      self:getReleaseString(), tostring(SAVEGAME_VERSION))
   return (compiled .. running)
 end
 
