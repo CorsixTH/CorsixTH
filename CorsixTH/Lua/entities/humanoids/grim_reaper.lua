@@ -44,6 +44,6 @@ function GrimReaper:afterLoad(old, new)
     self.mood_marker = 2
   end
 
-  self:updateDynamicInfo()
+  -- The grim repear has no dynamic info currently, so don't refresh it
   Humanoid.afterLoad(self, old, new)
 end
