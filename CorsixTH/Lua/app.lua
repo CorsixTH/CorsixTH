@@ -1694,7 +1694,7 @@ end
   Each patch note must begin with a '-'
 --]]
 local version_table = {
-  -- Format: major, minor, revision, patch (string), release date {YYYY, MM, DD}, savegame_version
+  -- Format: major, minor, revision, patch (string), savegame_version
   {major = 0, minor = 0, revision = 8, patch = "", version = 0}, -- Beta 8 or below
   {major = 0, minor = 1, revision = 0, patch = "", version = 51},
   {major = 0, minor = 10, revision = 0, patch = "", version = 53},
@@ -1717,6 +1717,7 @@ local version_table = {
   {major = 0, minor = 69, revision = 0, patch = "-beta-1", version = 216}
 }
 
+--! Retrieve the current savegame version as defined in the application.
 function App:getCurrentVersion()
   return self.savegame_version
 end
@@ -1730,7 +1731,7 @@ end
 function App:getVersion(savegame_version, concatenate)
   savegame_version = savegame_version or self:getCurrentVersion()
   local result
-  for i=#version_table, 1, -1 do
+  for i = #version_table, 1, -1 do
     local version = version_table[i]
     if version.version == savegame_version then
       result = version
@@ -1771,7 +1772,7 @@ function App:compareVersions(version_a, version_b, method)
   if method == "release" then
     local function countBackward(version_to_check)
       local step = 0
-      for i=#version_table, 1, -1 do
+      for i = #version_table, 1, -1 do
         local version = version_table[i]
         if version.version == version_to_check then
           break
