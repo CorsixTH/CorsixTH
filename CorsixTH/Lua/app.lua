@@ -1695,26 +1695,26 @@ end
 --]]
 local version_table = {
   -- Format: major, minor, revision, patch (string), release date {YYYY, MM, DD}, savegame_version
-  {major = 0, minor = 0, revision = 8, patch = "", date = {2012, 01, 01}, version = 0}, -- Beta 8 or below
-  {major = 0, minor = 1, revision = 0, patch = "", date = {2012, 03, 24}, version = 51},
-  {major = 0, minor = 10, revision = 0, patch = "", date = {2012, 09, 24}, version = 53},
-  {major = 0, minor = 11, revision = 0, patch = "", date = {2012, 11, 17}, version = 54},
-  {major = 0, minor = 20, revision = 0, patch = "", date = {2013, 03, 24}, version = 66},
-  {major = 0, minor = 21, revision = 0, patch = "", date = {2013, 05, 24}, version = 72},
-  {major = 0, minor = 30, revision = 0, patch = "", date = {2013, 12, 24}, version = 78},
-  {major = 0, minor = 40, revision = 0, patch = "", date = {2014, 12, 22}, version = 91},
-  {major = 0, minor = 50, revision = 0, patch = "", date = {2015, 08, 31}, version = 105},
-  {major = 0, minor = 60, revision = 0, patch = "", date = {2016, 05, 30}, version = 111},
-  {major = 0, minor = 61, revision = 0, patch = "", date = {2017, 12, 21}, version = 122},
-  {major = 0, minor = 62, revision = 0, patch = "", date = {2018, 07, 21}, version = 127},
-  {major = 0, minor = 63, revision = 0, patch = "", date = {2019, 05, 24}, version = 134},
-  {major = 0, minor = 64, revision = 0, patch = "", date = {2020, 06, 16}, version = 138},
-  {major = 0, minor = 65, revision = 0, patch = "", date = {2021, 06, 19}, version = 156},
+  {major = 0, minor = 0, revision = 8, patch = "", version = 0}, -- Beta 8 or below
+  {major = 0, minor = 1, revision = 0, patch = "", version = 51},
+  {major = 0, minor = 10, revision = 0, patch = "", version = 53},
+  {major = 0, minor = 11, revision = 0, patch = "", version = 54},
+  {major = 0, minor = 20, revision = 0, patch = "", version = 66},
+  {major = 0, minor = 21, revision = 0, patch = "", version = 72},
+  {major = 0, minor = 30, revision = 0, patch = "", version = 78},
+  {major = 0, minor = 40, revision = 0, patch = "", version = 91},
+  {major = 0, minor = 50, revision = 0, patch = "", version = 105},
+  {major = 0, minor = 60, revision = 0, patch = "", version = 111},
+  {major = 0, minor = 61, revision = 0, patch = "", version = 122},
+  {major = 0, minor = 62, revision = 0, patch = "", version = 127},
+  {major = 0, minor = 63, revision = 0, patch = "", version = 134},
+  {major = 0, minor = 64, revision = 0, patch = "", version = 138},
+  {major = 0, minor = 65, revision = 0, patch = "", version = 156},
   -- There was also 0.65.1, not differentiated by version number
-  {major = 0, minor = 66, revision = 0, patch = "", date = {2022, 06, 26}, version = 170},
-  {major = 0, minor = 67, revision = 0, patch = "", date = {2023, 08, 12}, version = 180},
-  {major = 0, minor = 68, revision = 0, patch = "", date = {2024, 10, 13}, version = 194},
-  {major = 0, minor = 69, revision = 0, patch = "-beta-1", date = {2025, 06, 07}, version = 216}
+  {major = 0, minor = 66, revision = 0, patch = "", version = 170},
+  {major = 0, minor = 67, revision = 0, patch = "", version = 180},
+  {major = 0, minor = 68, revision = 0, patch = "", version = 194},
+  {major = 0, minor = 69, revision = 0, patch = "-beta-1", version = 216}
 }
 
 function App:getCurrentVersion()
@@ -1760,12 +1760,11 @@ end
 --!param method (string) What method to compare by
 --- method(release) reports the difference between the matching releases in steps, revisions are not counted.
 --- method(version) reports the difference between two savegame versions
---- method(age) reports the difference in days between the matching release dates
 --! if a match is detected as a development version it will target the release it was built upon, except for via version method.
 function App:compareVersions(version_a, version_b, method)
   assert(type(version_a) ~= "string" and type(version_b) ~= "string",
       "Compare requires savegame version or the version table to function")
-  assert(method == "age" or method == "release" or method == "version",
+  assert(method == "release" or method == "version",
       "Not using a valid compare method")
 
   if type(version_a) == "number" then
@@ -1798,13 +1797,6 @@ function App:compareVersions(version_a, version_b, method)
 
   if method == "version" then
     return version_a.version - version_b.version
-  end
-
-  if method == "age" then
-    local date_a, date_b = version_a.date, version_b.date
-    local unix_time_a = os.time({year=date_a[1], month=date_a[2], day=date_a[3]})
-    local unix_time_b = os.time({year=date_b[1], month=date_b[2], day=date_b[3]})
-    return math.floor(os.difftime(unix_time_a, unix_time_b) / (60 * 60 * 24))
   end
 end
 
