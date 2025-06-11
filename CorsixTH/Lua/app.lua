@@ -1762,17 +1762,11 @@ end
 --- method(version) reports the difference between two savegame versions
 --! if a match is detected as a development version it will target the release it was built upon, except for via version method.
 function App:compareVersions(version_a, version_b, method)
-  assert(type(version_a) ~= "string" and type(version_b) ~= "string",
+  assert((type(version_a) == "table" or type(version_a) == "number") and
+      (type(version_b) == "table" or type(version_b) == "number"),
       "Compare requires savegame version or the version table to function")
   assert(method == "release" or method == "version",
       "Not using a valid compare method")
-
-  if type(version_a) == "number" then
-    version_a = self:getVersion(version_a)
-  end
-  if type(version_b) == "number" then
-    version_b = self:getVersion(version_b)
-  end
 
   if method == "release" then
     local function countBackward(version_to_check)
@@ -1792,13 +1786,19 @@ function App:compareVersions(version_a, version_b, method)
       end
       return step
     end
+
+    if type(version_a) == "number" then version_a = self:getVersion(version_a) end
+    if type(version_b) == "number" then version_b = self:getVersion(version_b) end
     return countBackward(version_a.version) - countBackward(version_b.version)
   end
 
   if method == "version" then
-    return version_a.version - version_b.version
+    local a = version_a.version or version_a
+    local b = version_b.version or version_b
+    return a - b
   end
 end
+
 
 function App:save(filename)
   return SaveGameFile(filename)
