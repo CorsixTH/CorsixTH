@@ -97,7 +97,7 @@ Copyright (C) 2023 Bob "bobidle" Idle
 Copyright (C) 2023 Michael "RednibCoding" Binder
 Copyright (C) 2023 Nathan "nMustaki" Mustaki
 Copyright (C) 2023 Damian "ShiroAka"
-Copyright (C) 2023-2024 Matroftt
+Copyright (C) 2023-2025 Matthew "Matroftt"
 Copyright (C) 2024 Peppe "Inkub0" Malara
 Copyright (C) 2024 Sandow "Sanndow"
 Copyright (C) 2024 Tomás Domínguez "tombolano" Bolaño
