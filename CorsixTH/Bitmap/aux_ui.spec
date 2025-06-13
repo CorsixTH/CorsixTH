@@ -1,6 +1,3 @@
---[[ EXAMPLE SPEC FILE FOR MAKING SPRITESHEETS ]]
--- Specify your sprites (BMP images) and output file locations
--- It is recommended to leave palette and compression options at their default values
 local SPEC = {
   sprites = { -- one bmp per line
     "build_room_dialog_close.bmp",
