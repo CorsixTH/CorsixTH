@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 217 -- Fix original campaign maps
+local SAVEGAME_VERSION = 218 -- Remember active graphs
 
 class "App"
 

@@ -41,6 +41,7 @@ local colours = {
 
 function UIGraphs:UIGraphs(ui)
   self:UIFullscreen(ui)
+  self.app = ui.app
   local gfx = ui.app.gfx
   if not pcall(function()
     self.background = gfx:loadRaw("Graph01V", 640, 480, "QData", "QData", "Graph01V.pal", true)
@@ -70,21 +71,20 @@ function UIGraphs:UIGraphs(ui)
 
   self.hide_graph = {}
 
-  local function buttons(name)
-    return --[[persistable:graphs_button]] function()
-      self:toggleGraph(name)
-    end
+  local config = self:initRuntimeConfig()
+  local function toggleButton(sprite, x, y, option, str)
+    local panel = self:addPanel(sprite, x, y)
+    local btn = panel:makeToggleButton(0, 0, 42, 42, 1, --[[persistable:graphs_button]] function() self:toggleGraph(option) end):setTooltip(str)
+    btn:setToggleState(not config[option])
   end
-  self.graph_buttons = {
-    self:addPanel(0, 590, 34):makeToggleButton(0, 0, 42, 42, 1, buttons("money_in")):setTooltip(_S.tooltip.graphs.money_in),
-    self:addPanel(0, 590, 86):makeToggleButton(0, 0, 42, 42, 1, buttons("money_out")):setTooltip(_S.tooltip.graphs.money_out),
-    self:addPanel(0, 590, 138):makeToggleButton(0, 0, 42, 42, 1, buttons("wages")):setTooltip(_S.tooltip.graphs.wages),
-    self:addPanel(0, 590, 190):makeToggleButton(0, 0, 42, 42, 1, buttons("balance")):setTooltip(_S.tooltip.graphs.balance),
-    self:addPanel(0, 590, 243):makeToggleButton(0, 0, 42, 42, 1, buttons("visitors")):setTooltip(_S.tooltip.graphs.visitors),
-    self:addPanel(0, 590, 295):makeToggleButton(0, 0, 42, 42, 1, buttons("cures")):setTooltip(_S.tooltip.graphs.cures),
-    self:addPanel(0, 590, 347):makeToggleButton(0, 0, 42, 42, 1, buttons("deaths")):setTooltip(_S.tooltip.graphs.deaths),
-    self:addPanel(0, 590, 400):makeToggleButton(0, 0, 42, 42, 1, buttons("reputation")):setTooltip(_S.tooltip.graphs.reputation)
-  }
+  toggleButton(0, 590, 34,  "money_in",   _S.tooltip.graphs.money_in)
+  toggleButton(0, 590, 86,  "money_out",  _S.tooltip.graphs.money_out)
+  toggleButton(0, 590, 138, "wages",      _S.tooltip.graphs.wages)
+  toggleButton(0, 590, 190, "balance",    _S.tooltip.graphs.balance)
+  toggleButton(0, 590, 243, "visitors",   _S.tooltip.graphs.visitors)
+  toggleButton(0, 590, 295, "cures",      _S.tooltip.graphs.cures)
+  toggleButton(0, 590, 347, "deaths",     _S.tooltip.graphs.deaths)
+  toggleButton(0, 590, 400, "reputation", _S.tooltip.graphs.reputation)
 
   self.display_month = self.hospital.world.game_date:monthOfGame()
   self:updateLines()
@@ -108,6 +108,25 @@ local function computeVerticalValuePosition(graph_line, value)
   if range == 0 then return BOTTOM_Y end
 
   return BOTTOM_Y - math.floor(((value - graph_line.minimum) / range) * GRAPH_HEIGHT)
+end
+
+function UIGraphs:initRuntimeConfig()
+  -- config is a *runtime* configuration list; re-instantiations of the dialog
+  -- share the same values, but it's not saved across saves or sessions
+  local config = self.app.runtime_config.graphs_dialog
+  if config == nil then
+    config = {}
+    self.app.runtime_config.graphs_dialog = config
+    config.money_in = true
+    config.money_out = true
+    config.wages = true
+    config.balance = true
+    config.visitors = true
+    config.cures = true
+    config.deaths = true
+    config.reputation = true
+  end
+  return config
 end
 
 --! Convert graph scale to a stepsize in months.
@@ -355,7 +374,12 @@ function UIGraphs:updateLines()
 end
 
 function UIGraphs:draw(canvas, x, y)
-  -- update graph automatically every month
+  local config = self.app.runtime_config.graphs_dialog
+  if not config then
+    config = self:initRuntimeConfig()
+  end
+
+  -- Update graph automatically every month
   if self.display_month ~= self.hospital.world.game_date:monthOfGame() then
     self:updateLines()
   end
@@ -375,7 +399,7 @@ function UIGraphs:draw(canvas, x, y)
 
   -- Draw the different lines
   for stat, graph in pairs(self.graph_datas) do
-    if not self.hide_graph[stat] then
+    if config[stat] then
       graph.line:draw(canvas, x, y)
     end
   end
@@ -431,7 +455,7 @@ function UIGraphs:toggleGraphScale()
 end
 
 function UIGraphs:toggleGraph(name)
-  self.hide_graph[name] = not self.hide_graph[name]
+  self.app.runtime_config.graphs_dialog[name] = not self.app.runtime_config.graphs_dialog[name]
   self.ui:playSound("selectx.wav")
   updateTextPositions(self)
 end
@@ -442,17 +466,7 @@ function UIGraphs:close()
 end
 
 function UIGraphs:afterLoad(old, new)
-  if old < 179 then
-    local gfx = TheApp.gfx
-
-    self.background = gfx:loadRaw("Graph01V", 640, 480, "QData", "QData", "Graph01V.pal", true)
-    local palette = gfx:loadPalette("QData", "Graph01V.pal", true)
-    self.panel_sprites = gfx:loadSpriteTable("QData", "Graph02V", true, palette)
-    self.white_font = gfx:loadFontAndSpriteTable("QData", "Font01V", false, palette)
-    self.black_font = gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette)
-  end
-  UIFullscreen.afterLoad(self, old, new)
-  if old < 117 then
+  if old < 218 then
     self:close()
   end
 end
