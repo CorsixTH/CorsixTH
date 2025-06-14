@@ -1212,6 +1212,8 @@ confirmation = {
   music_warning = "Nota: Necesitas el archivo smpeg.dll o el equivalente para tu sistema operativo, de lo contrario no tendrás música en el juego. ¿Quieres continuar?",
   remove_destroyed_room = "¿Te gustaría eliminar la habitación por $%d?",
   replace_machine_extra_info = "La nueva máquina tendrá una resistencia de %d (actualmente es de %d).",
+  very_old_save = "Ha habido muchas actualizaciones en el juego desde que comenzaste. Para asegurarte de que todas las características funcionen como se espera, ¿te gustaría reiniciar este nivel ahora?//" ..
+  "Tu archivo de guardado anterior no se eliminará a menos que lo sobrescribas."
 }
 
 information = {
