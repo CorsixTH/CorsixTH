@@ -69,8 +69,6 @@ function UIGraphs:UIGraphs(ui)
   self.graph_scale_panel = self:addPanel(0, 371, 384)
   self.graph_scale_button = self.graph_scale_panel:makeButton(0, 0, 65, 26, 2, self.toggleGraphScale):setTooltip(_S.tooltip.graphs.scale)
 
-  self.hide_graph = {}
-
   local config = self:initRuntimeConfig()
   local function toggleButton(sprite, x, y, option, str)
     local panel = self:addPanel(sprite, x, y)
@@ -214,13 +212,15 @@ end
 --! Compute new actual position of the labels.
 --!param graph (UIGraphs) Graph window object
 local function updateTextPositions(graph)
+  local config = graph.app.runtime_config.graphs_dialog
+
   -- Reset vertical position of the text back to its ideal position.
   -- Disable computations on invisible graphs by removing the actual y position of it.
   for _, label in ipairs(graph.label_datas) do
-    if graph.hide_graph[label.stat] then
-      label.pos_y = nil
-    else
+    if config[label.stat] then
       label.pos_y = label.ideal_y
+    else
+      label.pos_y = nil
     end
   end
 
