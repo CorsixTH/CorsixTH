@@ -411,6 +411,14 @@ class level_map {
   void draw_ui(const map_tile *tile, int tile_x, int tile_y,
                render_target* pCanvas) const;
 
+  //! Check that the sprite indicated by the layer can be found and has height.
+  /*
+   *  @param layer Layer to investigate.
+   *  @param [out] height Height of the sprite if the method returns \c true.
+   *  @return Whether the sprite exists and is not empty.
+   */
+  bool layer_exists(uint16_t layer, int& height) const;
+
   drawable* hit_test_drawables(link_list* pListStart, int iXs, int iYs,
                                int iTestX, int iTestY) const;
   void read_tile_index(const uint8_t* pData, int& iX, int& iY) const;
