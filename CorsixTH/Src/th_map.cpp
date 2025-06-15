@@ -1016,6 +1016,30 @@ void level_map::draw_north_wall(const map_tile *tile, int tile_x, int tile_y,
   }
 }
 
+void level_map::draw_west_wall(const map_tile *tile, int tile_x, int tile_y,
+                               render_target* pCanvas) const {
+      int iH;
+      uint16_t layer = tile->tile_layers[tile_layer::west_wall];
+      if (layer != 0 &&
+          wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &iH) && iH > 0) {
+        wall_blocks->draw_sprite(pCanvas, layer & 0xFF, tile_x - 32,
+                                 tile_y - iH + 32,
+                                 (layer >> 8) | thdf_nearest);
+      }
+}
+
+void level_map::draw_ui(const map_tile *tile, int tile_x, int tile_y,
+                        render_target* pCanvas) const {
+      int iH;
+      uint16_t layer = tile->tile_layers[tile_layer::ui];
+      if (layer != 0 &&
+          wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &iH) && iH > 0) {
+        wall_blocks->draw_sprite(pCanvas, layer & 0xFF, tile_x - 32,
+                                 tile_y - iH + 32,
+                                 (layer >> 8) | thdf_nearest);
+      }
+}
+
 void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                      int iWidth, int iHeight, int iCanvasX,
                      int iCanvasY) const {
@@ -1091,22 +1115,12 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
     bool bPreviousTileNeedsRedraw = false;
     for (; itrNode; ++itrNode) {
       bool bNeedsRedraw = false;
+
+      draw_west_wall(itrNode.get_tile(), itrNode.x(), itrNode.y(), pCanvas);
+      draw_ui(itrNode.get_tile(), itrNode.x(), itrNode.y(), pCanvas);
+
       int iH;
-      uint16_t layer = itrNode->tile_layers[tile_layer::west_wall];
-      if (layer != 0 &&
-          wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &iH) && iH > 0) {
-        wall_blocks->draw_sprite(pCanvas, layer & 0xFF, itrNode.x() - 32,
-                                 itrNode.y() - iH + 32,
-                                 (layer >> 8) | thdf_nearest);
-      }
-      layer = itrNode->tile_layers[tile_layer::ui];
-      if (layer != 0 &&
-          wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &iH) && iH > 0) {
-        wall_blocks->draw_sprite(pCanvas, layer & 0xFF, itrNode.x() - 32,
-                                 itrNode.y() - iH + 32,
-                                 (layer >> 8) | thdf_nearest);
-      }
-      layer = itrNode->tile_layers[tile_layer::north_wall];
+      uint16_t layer = itrNode->tile_layers[tile_layer::north_wall];
       if (layer != 0 &&
           wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &iH) && iH > 0) {
         bNeedsRedraw = true;
