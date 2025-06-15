@@ -402,6 +402,9 @@ class level_map {
   void set_overlay(map_overlay* pOverlay, bool bTakeOwnership);
 
  private:
+  void draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
+                  int iWidth, int iHeight, int iCanvasX, int iCanvasY) const;
+
   drawable* hit_test_drawables(link_list* pListStart, int iXs, int iYs,
                                int iTestX, int iTestY) const;
   void read_tile_index(const uint8_t* pData, int& iX, int& iY) const;

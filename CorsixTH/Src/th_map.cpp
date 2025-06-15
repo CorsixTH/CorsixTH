@@ -964,39 +964,9 @@ void level_map::set_all_wall_draw_flags(uint8_t iFlags) {
   }
 }
 
-void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
-                     int iWidth, int iHeight, int iCanvasX,
-                     int iCanvasY) const {
-  /*
-     The map is drawn in two passes, with each pass done one scanline at a
-     time (a scanline is a list of tiles with the same screen Y coordinate).
-     The first pass draws the floor tiles and floor shadows, as the entire
-     floor needs to be painted below anything else (for example, see the
-     walking north through a door animation or death animation, which needs
-     to paint over the floor of the scanline below the animation). On the
-     second pass, walls and entities are drawn, with the order controlled
-     such that entities appear in the right order relative to the walls
-     around them. For each scanline, the following is done:
-
-     1st pass:
-      1) For each tile, left to right, the floor tile (layer 0)
-      2) The floor shadow of that tile.
-     2nd pass:
-      1) For each tile, right to left, the north wall, then the early entities
-      2) For each tile, left to right, the west wall, then the late entities
-  */
-
-  if (wall_blocks == nullptr || cells == nullptr) {
-    return;
-  }
-
-  clip_rect rcClip;
-  rcClip.x = static_cast<clip_rect::x_y_type>(iCanvasX);
-  rcClip.y = static_cast<clip_rect::x_y_type>(iCanvasY);
-  rcClip.w = static_cast<clip_rect::w_h_type>(iWidth);
-  rcClip.h = static_cast<clip_rect::w_h_type>(iHeight);
-  render_target::scoped_clip clip(pCanvas, &rcClip);
-
+void level_map::draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
+                           int iWidth, int iHeight, int iCanvasX,
+                           int iCanvasY) const {
   for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode1; ++itrNode1) {
     // First, draw the floor tile as it should be below everything else.
@@ -1023,6 +993,44 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
           thdf_alpha_75 | thdf_nearest);
     }
   }
+}
+
+
+void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
+                     int iWidth, int iHeight, int iCanvasX,
+                     int iCanvasY) const {
+  /*
+     The map is drawn in two passes, with each pass done one scanline at a
+     time (a scanline is a list of tiles with the same screen Y coordinate).
+     The first pass draws the floor tiles and floor shadows, as the entire
+     floor needs to be painted below anything else (for example, see the
+     walking north through a door animation or death animation, which needs
+     to paint over the floor of the scanline below the animation). On the
+     second pass, walls and entities are drawn, with the order controlled
+     such that entities appear in the right order relative to the walls
+     around them. For each scanline, the following is done:
+
+     1st pass:
+      1) For each tile, left to right, the floor tile (layer 0)
+      2) The floor shadow of that tile.
+     2nd pass:
+      1) For each tile, right to left, the north wall, then the early entities
+      2) For each tile, left to right, the west wall, then the late entities
+  */
+
+  if (wall_blocks == nullptr || cells == nullptr) {
+    return;
+  }
+
+  // Clip to the canvas.
+  clip_rect rcClip;
+  rcClip.x = static_cast<clip_rect::x_y_type>(iCanvasX);
+  rcClip.y = static_cast<clip_rect::x_y_type>(iCanvasY);
+  rcClip.w = static_cast<clip_rect::w_h_type>(iWidth);
+  rcClip.h = static_cast<clip_rect::w_h_type>(iHeight);
+  render_target::scoped_clip clip(pCanvas, &rcClip);
+
+  draw_floor(pCanvas, iScreenX, iScreenY, iWidth, iHeight, iCanvasX, iCanvasY);
 
   bool bFirst = true;
   map_scanline_iterator formerIterator;
