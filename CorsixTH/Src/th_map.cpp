@@ -1187,9 +1187,10 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         // current tile, or if the tile below it had an object in the
         // north side or a wall to the north, then redraw that tile.
         if (bTileNeedsRedraw) {
+          const map_tile *prev_tile = itrNode.get_previous_tile();
+
           // Redraw the north wall of the previous tile.
           int height;
-          const map_tile *prev_tile = itrNode.get_previous_tile();
           uint16_t layer = prev_tile->tile_layers[tile_layer::north_wall];
           if (layer_exists(layer, height)) {
             wall_blocks->draw_sprite(pCanvas, layer & 0xFF,
@@ -1197,7 +1198,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                                      itrNode.y() - height + 32,
                                      (layer >> 8) | thdf_nearest);
             // Redraw shadow
-            if (itrNode.get_previous_tile()->flags.shadow_wall) {
+            if (prev_tile->flags.shadow_wall) {
               clip_rect rcNewClip;
               rcNewClip.x = static_cast<clip_rect::x_y_type>(
                   itrNode.x() - 64 - 32);
@@ -1214,15 +1215,13 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
           }
 
           // Redraw early entities of previous tile.
-          pItem = static_cast<drawable*>(
-              itrNode.get_previous_tile()->oEarlyEntities.next);
+          pItem = static_cast<drawable*>(prev_tile->oEarlyEntities.next);
           for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
             pItem->draw_fn(pCanvas, itrNode.x() - 64, itrNode.y());
           }
 
           // Redraw entities of previous tile.
-          pItem = static_cast<drawable*>(
-              itrNode.get_previous_tile()->entities.next);
+          pItem = static_cast<drawable*>(prev_tile->entities.next);
           for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
             pItem->draw_fn(pCanvas, itrNode.x() - 64, itrNode.y());
           }
