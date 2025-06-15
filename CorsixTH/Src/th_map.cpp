@@ -969,28 +969,25 @@ void level_map::draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
                            int iCanvasY) const {
   for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode1; ++itrNode1) {
+    int tile_x = itrNode1.tile_x_position_on_screen() + iCanvasX - 32;
+    int tile_y = itrNode1.tile_y_position_on_screen() + iCanvasY;
+
     // First, draw the floor tile as it should be below everything else.
-    int iH = 32;
+    int height = 32;
     uint16_t layer = itrNode1->tile_layers[tile_layer::ground];
-    wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &iH);
-    wall_blocks->draw_sprite(
-        pCanvas, layer & 0xFF,
-        itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
-        itrNode1.tile_y_position_on_screen() + iCanvasY - iH + 32,
-        (layer >> 8) | thdf_nearest);
+    wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &height);
+    wall_blocks->draw_sprite(pCanvas, layer & 0xFF, tile_x,
+                             tile_y - height + 32,
+                             (layer >> 8) | thdf_nearest);
 
     // Draw floor shadows immediately after floor tiles ensuring that all
     // shadow pixels are drawn onto freshly drawn opaque floor tile pixels.
     if (itrNode1->flags.shadow_full) {
-      wall_blocks->draw_sprite(
-          pCanvas, 74, itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
-          itrNode1.tile_y_position_on_screen() + iCanvasY,
-          thdf_alpha_75 | thdf_nearest);
+      wall_blocks->draw_sprite(pCanvas, 74, tile_x, tile_y,
+                               thdf_alpha_75 | thdf_nearest);
     } else if (itrNode1->flags.shadow_half) {
-      wall_blocks->draw_sprite(
-          pCanvas, 75, itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
-          itrNode1.tile_y_position_on_screen() + iCanvasY,
-          thdf_alpha_75 | thdf_nearest);
+      wall_blocks->draw_sprite(pCanvas, 75, tile_x, tile_y,
+                               thdf_alpha_75 | thdf_nearest);
     }
   }
 }
