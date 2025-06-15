@@ -1188,42 +1188,22 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         // north side or a wall to the north, then redraw that tile.
         if (bTileNeedsRedraw) {
           const map_tile *prev_tile = itrNode.get_previous_tile();
+          int prev_tile_x = itrNode.x() - 64;
+          int prev_tile_y = itrNode.y();
 
           // Redraw the north wall of the previous tile.
-          int height;
-          uint16_t layer = prev_tile->tile_layers[tile_layer::north_wall];
-          if (layer_exists(layer, height)) {
-            wall_blocks->draw_sprite(pCanvas, layer & 0xFF,
-                                     itrNode.x() - 64 - 32,
-                                     itrNode.y() - height + 32,
-                                     (layer >> 8) | thdf_nearest);
-            // Redraw shadow
-            if (prev_tile->flags.shadow_wall) {
-              clip_rect rcNewClip;
-              rcNewClip.x = static_cast<clip_rect::x_y_type>(
-                  itrNode.x() - 64 - 32);
-              rcNewClip.y =
-                  static_cast<clip_rect::x_y_type>(
-                      itrNode.y() - height + 32 + 4);
-              rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
-              rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
-              render_target::scoped_clip clip(pCanvas, &rcNewClip);
-              wall_blocks->draw_sprite(pCanvas, 156, itrNode.x() - 64 - 32,
-                                       itrNode.y() - 56,
-                                       thdf_alpha_75 | thdf_nearest);
-            }
-          }
+          draw_north_wall(prev_tile, prev_tile_x, prev_tile_y, pCanvas);
 
           // Redraw early entities of previous tile.
           pItem = static_cast<drawable*>(prev_tile->oEarlyEntities.next);
           for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
-            pItem->draw_fn(pCanvas, itrNode.x() - 64, itrNode.y());
+            pItem->draw_fn(pCanvas, prev_tile_x, prev_tile_y);
           }
 
           // Redraw entities of previous tile.
           pItem = static_cast<drawable*>(prev_tile->entities.next);
           for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
-            pItem->draw_fn(pCanvas, itrNode.x() - 64, itrNode.y());
+            pItem->draw_fn(pCanvas, prev_tile_x, prev_tile_y);
           }
         }
       }
