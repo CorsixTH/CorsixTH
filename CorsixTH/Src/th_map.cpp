@@ -992,6 +992,29 @@ void level_map::draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
   }
 }
 
+void level_map::draw_north_wall(const map_tile *tile, int tile_x, int tile_y,
+                                render_target* pCanvas) const {
+  int iH;
+  uint16_t layer = tile->tile_layers[tile_layer::north_wall];
+  if (layer != 0 &&
+      wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &iH) && iH > 0) {
+    wall_blocks->draw_sprite(pCanvas, layer & 0xFF, tile_x - 32,
+                             tile_y - iH + 32, (layer >> 8) | thdf_nearest);
+
+    // Draw shadow if needed.
+    if (tile->flags.shadow_wall) {
+      clip_rect rcNewClip;
+      rcNewClip.x = static_cast<clip_rect::x_y_type>(tile_x - 32);
+      rcNewClip.y =
+          static_cast<clip_rect::x_y_type>(tile_y - iH + 32 + 4);
+      rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
+      rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
+      render_target::scoped_clip clip(pCanvas, &rcNewClip);
+      wall_blocks->draw_sprite(pCanvas, 156, tile_x - 32, tile_y - 56,
+                               thdf_alpha_75 | thdf_nearest);
+    }
+  }
+}
 
 void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                      int iWidth, int iHeight, int iCanvasX,
@@ -1041,26 +1064,10 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
              itrNode1, map_scanline_iterator_direction::backward, iCanvasX,
              iCanvasY);
          itrNode; ++itrNode) {
-      int iH;
-      uint16_t layer = itrNode->tile_layers[tile_layer::north_wall];
-      if (layer != 0 &&
-          wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &iH) && iH > 0) {
-        wall_blocks->draw_sprite(pCanvas, layer & 0xFF, itrNode.x() - 32,
-                                 itrNode.y() - iH + 32,
-                                 (layer >> 8) | thdf_nearest);
-        if (itrNode->flags.shadow_wall) {
-          clip_rect rcNewClip;
-          rcNewClip.x = static_cast<clip_rect::x_y_type>(itrNode.x() - 32);
-          rcNewClip.y =
-              static_cast<clip_rect::x_y_type>(itrNode.y() - iH + 32 + 4);
-          rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
-          rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
-          render_target::scoped_clip clip(pCanvas, &rcNewClip);
-          wall_blocks->draw_sprite(pCanvas, 156, itrNode.x() - 32,
-                                   itrNode.y() - 56,
-                                   thdf_alpha_75 | thdf_nearest);
-        }
-      }
+
+      draw_north_wall(itrNode.get_tile(), itrNode.x(), itrNode.y(), pCanvas);
+
+      // Draw early entities.
       drawable* pItem = static_cast<drawable*>(itrNode->oEarlyEntities.next);
       while (pItem) {
         pItem->draw_fn(pCanvas, itrNode.x(), itrNode.y());
@@ -1841,3 +1848,4 @@ map_scanline_iterator map_scanline_iterator::operator=(
   tile_step = iterator.tile_step;
   return *this;
 }
+

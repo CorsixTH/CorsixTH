@@ -404,6 +404,8 @@ class level_map {
  private:
   void draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
                   int iWidth, int iHeight, int iCanvasX, int iCanvasY) const;
+  void draw_north_wall(const map_tile *tile, int tile_x, int tile_y,
+                      render_target* pCanvas) const;
 
   drawable* hit_test_drawables(link_list* pListStart, int iXs, int iYs,
                                int iTestX, int iTestY) const;
