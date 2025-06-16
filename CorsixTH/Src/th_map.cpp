@@ -1004,48 +1004,41 @@ void level_map::draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
 
 void level_map::draw_north_wall(const map_tile *tile, int tile_x, int tile_y,
                                 render_target* pCanvas) const {
-  int height;
-  uint16_t layer = tile->tile_layers[tile_layer::north_wall];
-  if (layer_exists(layer, height)) {
-    wall_blocks->draw_sprite(pCanvas, layer & 0xFF, tile_x - 32,
-                             tile_y - height + 32,
-                             (layer >> 8) | thdf_nearest);
+  int height = draw_layer(tile, tile_x, tile_y, tile_layer::north_wall,
+                          pCanvas);
 
-    // Draw shadow if needed.
-    if (tile->flags.shadow_wall) {
+  // Draw shadow if needed.
+  if (height > 0 && tile->flags.shadow_wall) {
       clip_rect rcNewClip;
       rcNewClip.x = static_cast<clip_rect::x_y_type>(tile_x - 32);
-      rcNewClip.y =
-          static_cast<clip_rect::x_y_type>(tile_y - height + 32 + 4);
+      rcNewClip.y = static_cast<clip_rect::x_y_type>(tile_y - height + 32 + 4);
       rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
       rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
       render_target::scoped_clip clip(pCanvas, &rcNewClip);
       wall_blocks->draw_sprite(pCanvas, 156, tile_x - 32, tile_y - 56,
                                thdf_alpha_75 | thdf_nearest);
-    }
   }
 }
 
-void level_map::draw_west_wall(const map_tile *tile, int tile_x, int tile_y,
-                               render_target* pCanvas) const {
-      int height;
-      uint16_t layer = tile->tile_layers[tile_layer::west_wall];
-      if (layer_exists(layer, height)) {
-        wall_blocks->draw_sprite(pCanvas, layer & 0xFF, tile_x - 32,
-                                 tile_y - height + 32,
-                                 (layer >> 8) | thdf_nearest);
-      }
-}
-
-void level_map::draw_ui(const map_tile *tile, int tile_x, int tile_y,
-                        render_target* pCanvas) const {
-      int height;
-      uint16_t layer = tile->tile_layers[tile_layer::ui];
-      if (layer_exists(layer, height)) {
-        wall_blocks->draw_sprite(pCanvas, layer & 0xFF, tile_x - 32,
-                                 tile_y - height + 32,
-                                 (layer >> 8) | thdf_nearest);
-      }
+//! Draw a layer.
+/*
+    @param tile Map tile with the layer data to draw.
+    @param tile_x X position of the tile at the screen.
+    @param tile_y Y position of the tile at the screen.
+    @param layer The layer to draw.
+    @param pCanvas The canvas to paint.
+    @return The height of the layer sprite in pixels.
+ */
+int level_map::draw_layer(const map_tile *tile, int tile_x, int tile_y,
+                          tile_layer layer, render_target* pCanvas) const {
+  int height = 0;
+  uint16_t layer_data = tile->tile_layers[layer];
+  if (layer_exists(layer_data, height)) {
+     wall_blocks->draw_sprite(pCanvas, layer_data & 0xFF, tile_x - 32,
+                              tile_y - height + 32,
+                              (layer_data >> 8) | thdf_nearest);
+  }
+  return height;
 }
 
 void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
@@ -1124,8 +1117,10 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
     for (; itrNode; ++itrNode) {
       bool bNeedsRedraw = false;
 
-      draw_west_wall(itrNode.get_tile(), itrNode.x(), itrNode.y(), pCanvas);
-      draw_ui(itrNode.get_tile(), itrNode.x(), itrNode.y(), pCanvas);
+      draw_layer(itrNode.get_tile(), itrNode.x(), itrNode.y(),
+                 tile_layer::west_wall, pCanvas);
+      draw_layer(itrNode.get_tile(), itrNode.x(), itrNode.y(), tile_layer::ui,
+                 pCanvas);
 
       int height;
       uint16_t layer = itrNode->tile_layers[tile_layer::north_wall];

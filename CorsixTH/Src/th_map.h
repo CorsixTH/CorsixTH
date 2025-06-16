@@ -406,10 +406,9 @@ class level_map {
                   int iWidth, int iHeight, int iCanvasX, int iCanvasY) const;
   void draw_north_wall(const map_tile *tile, int tile_x, int tile_y,
                        render_target* pCanvas) const;
-  void draw_west_wall(const map_tile *tile, int tile_x, int tile_y,
-                      render_target* pCanvas) const;
-  void draw_ui(const map_tile *tile, int tile_x, int tile_y,
-               render_target* pCanvas) const;
+
+  int draw_layer(const map_tile *tile, int tile_x, int tile_y,
+                 tile_layer layer, render_target* pCanvas) const;
 
   //! Check that the sprite indicated by the layer can be found and has height.
   /*
