@@ -987,8 +987,7 @@ void level_map::draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
     uint16_t layer = itrNode1->tile_layers[tile_layer::ground];
     wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &height);
     wall_blocks->draw_sprite(pCanvas, layer & 0xFF, tile_x,
-                             tile_y - height + 32,
-                             (layer >> 8) | thdf_nearest);
+                             tile_y - height + 32, (layer >> 8) | thdf_nearest);
 
     // Draw floor shadows immediately after floor tiles ensuring that all
     // shadow pixels are drawn onto freshly drawn opaque floor tile pixels.
@@ -1002,21 +1001,21 @@ void level_map::draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
   }
 }
 
-void level_map::draw_north_wall(const map_tile *tile, int tile_x, int tile_y,
+void level_map::draw_north_wall(const map_tile* tile, int tile_x, int tile_y,
                                 render_target* pCanvas) const {
-  int height = draw_layer(tile, tile_x, tile_y, tile_layer::north_wall,
-                          pCanvas);
+  int height =
+      draw_layer(tile, tile_x, tile_y, tile_layer::north_wall, pCanvas);
 
   // Draw shadow if needed.
   if (height > 0 && tile->flags.shadow_wall) {
-      clip_rect rcNewClip;
-      rcNewClip.x = static_cast<clip_rect::x_y_type>(tile_x - 32);
-      rcNewClip.y = static_cast<clip_rect::x_y_type>(tile_y - height + 32 + 4);
-      rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
-      rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
-      render_target::scoped_clip clip(pCanvas, &rcNewClip);
-      wall_blocks->draw_sprite(pCanvas, 156, tile_x - 32, tile_y - 56,
-                               thdf_alpha_75 | thdf_nearest);
+    clip_rect rcNewClip;
+    rcNewClip.x = static_cast<clip_rect::x_y_type>(tile_x - 32);
+    rcNewClip.y = static_cast<clip_rect::x_y_type>(tile_y - height + 32 + 4);
+    rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
+    rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
+    render_target::scoped_clip clip(pCanvas, &rcNewClip);
+    wall_blocks->draw_sprite(pCanvas, 156, tile_x - 32, tile_y - 56,
+                             thdf_alpha_75 | thdf_nearest);
   }
 }
 
@@ -1029,14 +1028,14 @@ void level_map::draw_north_wall(const map_tile *tile, int tile_x, int tile_y,
     @param pCanvas The canvas to paint.
     @return The height of the layer sprite in pixels.
  */
-int level_map::draw_layer(const map_tile *tile, int tile_x, int tile_y,
+int level_map::draw_layer(const map_tile* tile, int tile_x, int tile_y,
                           tile_layer layer, render_target* pCanvas) const {
   int height = 0;
   uint16_t layer_data = tile->tile_layers[layer];
   if (layer_exists(layer_data, height)) {
-     wall_blocks->draw_sprite(pCanvas, layer_data & 0xFF, tile_x - 32,
-                              tile_y - height + 32,
-                              (layer_data >> 8) | thdf_nearest);
+    wall_blocks->draw_sprite(pCanvas, layer_data & 0xFF, tile_x - 32,
+                             tile_y - height + 32,
+                             (layer_data >> 8) | thdf_nearest);
   }
   return height;
 }
@@ -1089,7 +1088,6 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
              itrNode1, map_scanline_iterator_direction::backward, iCanvasX,
              iCanvasY);
          itrNode; ++itrNode) {
-
       draw_north_wall(itrNode.get_tile(), itrNode.x(), itrNode.y(), pCanvas);
 
       // Draw early entities.
@@ -1117,6 +1115,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
     for (; itrNode; ++itrNode) {
       bool bNeedsRedraw = false;
 
+      // Draw the west wall and ui layers.
       draw_layer(itrNode.get_tile(), itrNode.x(), itrNode.y(),
                  tile_layer::west_wall, pCanvas);
       draw_layer(itrNode.get_tile(), itrNode.x(), itrNode.y(), tile_layer::ui,
@@ -1182,7 +1181,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         // current tile, or if the tile below it had an object in the
         // north side or a wall to the north, then redraw that tile.
         if (bTileNeedsRedraw) {
-          const map_tile *prev_tile = itrNode.get_previous_tile();
+          const map_tile* prev_tile = itrNode.get_previous_tile();
           int prev_tile_x = itrNode.x() - 64;
           int prev_tile_y = itrNode.y();
 
@@ -1849,4 +1848,3 @@ map_scanline_iterator map_scanline_iterator::operator=(
   tile_step = iterator.tile_step;
   return *this;
 }
-
