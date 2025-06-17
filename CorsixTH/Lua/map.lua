@@ -578,6 +578,7 @@ function Map:updateDebugOverlayHeliport()
   end
 end
 
+-- If both 'first' and 'last' are numbers, they are indices starting at 0.
 function Map:loadDebugText(first, last, bits_)
   self.debug_text = false
   self.debug_flags = false
