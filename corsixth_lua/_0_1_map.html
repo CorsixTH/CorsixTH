@@ -81,7 +81,7 @@
  <a href="_0_1_map.html#_0_1_map_1load">load</a>(<span class="p">level</span>, <span class="p">difficulty</span>, <span class="p">level_name</span>, <span class="p">map_file</span>, <span class="p">level_intro</span>, <span class="p">map_editor</span>)
  </li>
  <li class="self">
- <a href="_0_1_map.html#_0_1_map_1load_debug_text">loadDebugText</a>(<span class="p">base_offset</span>, <span class="p">xy_offset</span>, <span class="p">first</span>, <span class="p">last</span>, <span class="p">bits_</span>)
+ <a href="_0_1_map.html#_0_1_map_1load_debug_text">loadDebugText</a>(<span class="p">first</span>, <span class="p">last</span>, <span class="p">bits_</span>)
  </li>
  <li class="self">
  <a href="_0_1_map.html#_0_1_map_1load_map_config">loadMapConfig</a>(<span class="p">filename</span>, <span class="p">config</span>, <span class="p">custom</span>)
@@ -285,7 +285,7 @@ for this).<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L679">line 679 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L678">line 678 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -293,7 +293,7 @@ for this).<br/><br/>
  <p>
  Expandable private function to fix tile issues on loading a map.<br/><br/>
  Each fix should be rendered in a local function.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L797">line 797 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L796">line 796 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -339,7 +339,7 @@ for this).<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L857">line 857 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L856">line 856 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -399,7 +399,7 @@ for this).<br/><br/>
 ]]</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L719">line 719 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L718">line 718 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -448,7 +448,7 @@ for this).<br/><br/>
  <td class="d"> Parcel number being queried.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L780">line 780 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L779">line 779 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -464,7 +464,7 @@ for this).<br/><br/>
  <td class="d"> Parcel number being queried.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L790">line 790 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L789">line 789 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -564,21 +564,12 @@ has been loaded.</td>
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_map_1load_debug_text">function Map:loadDebugText(<span class="p">base_offset</span>, <span class="p">xy_offset</span>, <span class="p">first</span>, <span class="p">last</span>, <span class="p">bits_</span>)</a></h5>
+ <h5><a name="_0_1_map_1load_debug_text">function Map:loadDebugText(<span class="p">first</span>, <span class="p">last</span>, <span class="p">bits_</span>)</a></h5>
  <p>
+ If both 'first' and 'last' are numbers, they are indices starting at 0.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
- <tr>
- <td class="n">base_offset</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
- <tr>
- <td class="n">xy_offset</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
  <tr>
  <td class="n">first</td>
  <td class="t">?</td>
@@ -629,7 +620,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <div class="method">
  <h5><a name="_0_1_map_1on_tick">function Map:onTick()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L635">line 635 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L634">line 634 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -675,7 +666,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <td class="d"> Sprite sheet for the map.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L646">line 646 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L645">line 645 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -716,7 +707,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L653">line 653 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L652">line 652 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -731,7 +722,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L657">line 657 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L656">line 656 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -761,7 +752,7 @@ it is assumed that we're looking in the theme_hospital_install path.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L662">line 662 of Lua/map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L661">line 661 of Lua/map.lua</a>.
  </p>
  </div>
  <div class="method">
