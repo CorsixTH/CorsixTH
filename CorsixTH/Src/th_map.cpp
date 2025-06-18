@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <fstream>
@@ -247,7 +248,7 @@ map_tile_flags::operator uint32_t() const {
   return raw;
 }
 
-map_tile::map_tile() : iParcelId(0), iRoomId(0), flags({}), objects() {
+map_tile::map_tile() : iParcelId(0), iRoomId(0), flags({}), objects{}, raw{} {
   tile_layers[tile_layer::ground] = 0;
   tile_layers[tile_layer::north_wall] = 0;
   tile_layers[tile_layer::west_wall] = 0;
@@ -434,6 +435,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
   pNode->objects.clear();
   for (int iY = 0; iY < height; ++iY) {
     for (int iX = 0; iX < width; ++iX) {
+      std::copy_n(pData, map_tile::raw_length, pNode->raw);
       uint8_t iBaseTile = gs_iTHMapBlockLUT[pData[2]];
       pNode->flags.can_travel_n = true;
       pNode->flags.can_travel_e = true;
@@ -1485,7 +1487,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   lua_State* L = pWriter->get_stack();
   integer_run_length_encoder oEncoder;
 
-  uint32_t iVersion = 4;
+  uint32_t iVersion = 5;
   pWriter->write_uint(iVersion);
   pWriter->write_uint(player_count);
   for (int i = 0; i < player_count; ++i) {
@@ -1518,6 +1520,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
     pWriter->write_uint(static_cast<uint32_t>(pNode->flags));
     pWriter->write_uint(pNode->aiTemperature[0]);
     pWriter->write_uint(pNode->aiTemperature[1]);
+    pWriter->write_byte_stream(pNode->raw, map_tile::raw_length);
 
     lua_rawgeti(L, luaT_upvalueindex(1), 2);
     lua_pushlightuserdata(L, pNode->entities.next);
@@ -1555,14 +1558,12 @@ void level_map::depersist(lua_persist_reader* pReader) {
 
   uint32_t iVersion;
   if (!pReader->read_uint(iVersion)) return;
-  if (iVersion != 4) {
-    if (iVersion < 2 || iVersion == 128) {
-      luaL_error(L,
-                 "TODO: Write code to load map data from earlier "
-                 "savegame versions (if really necessary).");
-    } else if (iVersion > 4) {
-      luaL_error(L, "Cannot load savegame from a newer version.");
-    }
+  if (iVersion < 2 || iVersion == 128) {
+    luaL_error(L,
+               "TODO: Write code to load map data from earlier "
+               "savegame versions (if really necessary).");
+  } else if (iVersion > 5) {
+    luaL_error(L, "Cannot load savegame from a newer version.");
   }
   if (!pReader->read_uint(player_count)) return;
   for (int i = 0; i < player_count; ++i) {
@@ -1617,6 +1618,9 @@ void level_map::depersist(lua_persist_reader* pReader) {
           !pReader->read_uint(pNode->aiTemperature[1])) {
         return;
       }
+    }
+    if (iVersion >= 5) {
+      if (!pReader->read_byte_stream(pNode->raw, map_tile::raw_length)) return;
     }
 
     if (!pReader->read_stack_object()) return;

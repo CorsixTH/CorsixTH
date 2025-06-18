@@ -230,6 +230,11 @@ struct map_tile {
 
   //! objects in this tile
   std::list<object_type> objects;
+
+  static constexpr int raw_length = 8;
+
+  //! raw data from map file for debugging
+  std::uint8_t raw[raw_length];
 };
 
 //! Prototype for object callbacks from THMap::loadFromTHFile

@@ -563,6 +563,20 @@ int l_map_getcellflags(lua_State* L) {
   return 1;
 }
 
+int l_map_getcellraw(lua_State* L) {
+  level_map* pMap = luaT_testuserdata<level_map>(L);
+  int iX = static_cast<int>(luaL_checkinteger(L, 2) -
+                            1);  // Lua arrays start at 1 - pretend
+  int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);  // the map does too.
+  map_tile* pNode = pMap->get_tile(iX, iY);
+  if (pNode == nullptr) {
+    return luaL_argerror(L, 2, "Map coordinates out of bounds");
+  }
+  lua_pushlstring(L, reinterpret_cast<const char*>(pNode->raw),
+                  map_tile::raw_length);
+  return 1;
+}
+
 /* because all the thobs are not retrieved when the map is loaded in c
   lua objects use the afterLoad function to be registered after a load,
   if the object list would not be cleared it would result in duplication
@@ -1015,6 +1029,7 @@ void lua_register_map(const lua_register_state* pState) {
     lcb.add_function(l_map_gettemperature, "getCellTemperature");
     lcb.add_function(l_map_getcellflags, "getCellFlags");
     lcb.add_function(l_map_setcellflags, "setCellFlags");
+    lcb.add_function(l_map_getcellraw, "getCellRaw");
     lcb.add_function(l_map_setcell, "setCell");
     lcb.add_function(l_map_setwallflags, "setWallDrawFlags");
     lcb.add_function(l_map_settemperaturedisplay, "setTemperatureDisplay");
