@@ -1,4 +1,30 @@
 -------------------------------------------------------------------------------
+CorsixTH 0.69.0 Beta 2 - released June 2025
+-------------------------------------------------------------------------------
+# Features
+* Custom level/campaign creators can now use an existing level file as an
+  overlay to copy and extend their level file with the #overlay variable. See
+  the 'Custom Level' Wiki page for more information.
+
+# Changes
+* You can now hear patients vomiting, instead of just the vomit splatters
+* Lakes no longer show in the Town Map as per the original game
+
+# Translations
+* Russian translation has been updated. Thanks @ARGAMX
+
+# Bug Fixes
+* Fixed a crash in General Diagnosis
+* Fixed a compatibility issue with mood markers on old saves
+* Fixed a crash with the grim reaper
+* Fixed a bug with the hotkey assignment menu
+* Fixed some anomalies in the original campaign's map files
+* Fixed an issue with handymen ignoring cleaning duties. Please note existing
+  saves from Beta 1 currently have no fix implemented for those duties already
+  broken.
+
+
+-------------------------------------------------------------------------------
 CorsixTH 0.69.0 Beta 1 - released June 2025
 -------------------------------------------------------------------------------
 # New Features/Enhancements

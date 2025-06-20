@@ -20,6 +20,38 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.69.0~beta2" date="2025-06-21" type="development">
+      <description>
+        <p>Features</p>
+        <ul>
+          <li>Custom level/campaign creators can now use an existing level file
+              as an overlay to copy and extend their level file with the
+              &num;overlay variable. See the &apos;Custom Level&apos; Wiki page
+              for more information.</li>
+        </ul>
+        <p>Changes</p>
+        <ul>
+          <li>You can now hear patients vomiting, instead of just the vomit
+              splatters</li>
+          <li>Lakes no longer show in the Town Map as per the original game</li>
+        </ul>
+        <p>Translations</p>
+        <ul>
+          <li>Russian translation has been updated. Thanks @ARGAMX</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed a crash in General Diagnosis</li>
+          <li>Fixed a compatibility issue with mood markers on old saves</li>
+          <li>Fixed a crash with the grim reaper</li>
+          <li>Fixed a bug with the hotkey assignment menu</li>
+          <li>Fixed some anomalies in the original campaign&apos;s map files</li>
+          <li>Fixed an issue with handymen ignoring cleaning duties. Please note
+              existing saves from Beta 1 currently have no fix implemented for
+              those duties already broken.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.69.0~beta1" date="2025-06-07" type="development">
       <description>
         <p>New Features/Enhancements</p>
