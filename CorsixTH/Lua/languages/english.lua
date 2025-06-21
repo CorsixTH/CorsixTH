@@ -944,7 +944,7 @@ tooltip.calls_dispatcher = {
 }
 
 tooltip.machine_window = {
-  toggle_machine_menu = "Click to toggle machine menu",
+  toggle_machine_menu = "Click to open machine menu",
 }
 
 machine_menu = {

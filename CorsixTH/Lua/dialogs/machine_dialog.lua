@@ -62,6 +62,7 @@ function UIMachine:UIMachine(ui, machine, room)
   local aux_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self:addPanel(22, 146,  52):makeButton(0, 0, 24, 24, 23, self.toggleMachineMenu)
     :setTooltip(_S.tooltip.machine_window.toggle_machine_menu)
+    :setSound("selectx.wav")
     .panel_for_sprite.custom_draw = --[[persistable:machine_menu_buttons]] function(panel, canvas, x, y)
     x = x + panel.x
     y = y + panel.y

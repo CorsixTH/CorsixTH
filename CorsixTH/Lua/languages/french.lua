@@ -1220,6 +1220,10 @@ tooltip.update_window = {
   ignore = "Ignorer cette mise à jour pour l'instant. Vous serez averti à nouveau lorsque vous ouvrez CorsixTH de nouveau"
 }
 
+tooltip.machine_window = {
+  toggle_machine_menu = "Cliquez pour afficher le menu des machines",
+}
+
 map_editor_window = {
   pages = {
     inside = "À l'intérieur",
