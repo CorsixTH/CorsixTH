@@ -1755,9 +1755,7 @@ function App:getReleaseString(savegame_version)
   local release = self:getReleaseData(savegame_version)
   local release_string = "v" .. release.major .. "." .. release.minor .. "." ..
       release.revision
-  if string.len(release.patch) > 0 then
-    release_string = release_string .. release.patch
-  end
+  release_string = release_string .. release.patch
   return release_string
 end
 
@@ -1773,9 +1771,10 @@ end
 --!return The step difference between release a and release b for release method
 --- or The raw savegame version difference for version method
 function App:compareVersions(version_a, version_b, method)
-  assert((type(version_a) == "table" or type(version_a) == "number") and
-      (type(version_b) == "table" or type(version_b) == "number"),
-      "Compare requires savegame version or the version table to function")
+  assert(type(version_a) == "table" or type(version_a) == "number",
+      "version_a requires savegame version or an entry from the version table to compare")
+  assert(type(version_b) == "table" or type(version_b) == "number",
+      "version_b requires savegame version or an entry from the version table to compare")
   assert(method == "release" or method == "version",
       "Not using a valid compare method")
 
@@ -1791,8 +1790,9 @@ function App:compareVersions(version_a, version_b, method)
           if step == 0 then step = 1 break end -- working from current development
           break
         end
-        step = (release.revision == 0 and string.len(release.patch) == 0)
-            and step - 1 or step
+        if release.revision == 0 and release.patch == "" then
+          step = step - 1
+        end
       end
       return step
     end
