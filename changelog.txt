@@ -14,15 +14,17 @@ CorsixTH 0.69.0 Beta 2 - released June 2025
 * Russian translation has been updated. Thanks @ARGAMX
 
 # Bug Fixes
+* Fixed some anomalies in the original campaign's map files
+
+# Regressions from 0.69.0 Beta 1
 * Fixed a crash in General Diagnosis
-* Fixed a compatibility issue with mood markers on old saves
+* Fixed a compatibility issue with mood markers on old
+  saves
 * Fixed a crash with the grim reaper
 * Fixed a bug with the hotkey assignment menu
-* Fixed some anomalies in the original campaign's map files
 * Fixed an issue with handymen ignoring cleaning duties. Please note existing
   saves from Beta 1 currently have no fix implemented for those duties already
   broken.
-
 
 -------------------------------------------------------------------------------
 CorsixTH 0.69.0 Beta 1 - released June 2025

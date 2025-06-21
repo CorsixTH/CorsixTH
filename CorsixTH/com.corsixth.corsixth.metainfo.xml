@@ -22,30 +22,33 @@
   <releases>
     <release version="0.69.0~beta2" date="2025-06-21" type="development">
       <description>
-        <p>Features</p>
+        <p>Features:</p>
         <ul>
-          <li>Custom level/campaign creators can now use an existing level file
+          <li>Custom level&sol;campaign creators can now use an existing level file
               as an overlay to copy and extend their level file with the
               &num;overlay variable. See the &apos;Custom Level&apos; Wiki page
               for more information.</li>
         </ul>
-        <p>Changes</p>
+        <p>Changes:</p>
         <ul>
           <li>You can now hear patients vomiting, instead of just the vomit
               splatters</li>
           <li>Lakes no longer show in the Town Map as per the original game</li>
         </ul>
-        <p>Translations</p>
+        <p>Translations:</p>
         <ul>
           <li>Russian translation has been updated. Thanks @ARGAMX</li>
         </ul>
-        <p>Bug Fixes</p>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Fixed some anomalies in the original campaign&apos;s map files</li>
+        </ul>
+        <p>Regressions from 0.69.0 Beta 1:</p>
         <ul>
           <li>Fixed a crash in General Diagnosis</li>
           <li>Fixed a compatibility issue with mood markers on old saves</li>
           <li>Fixed a crash with the grim reaper</li>
           <li>Fixed a bug with the hotkey assignment menu</li>
-          <li>Fixed some anomalies in the original campaign&apos;s map files</li>
           <li>Fixed an issue with handymen ignoring cleaning duties. Please note
               existing saves from Beta 1 currently have no fix implemented for
               those duties already broken.</li>
@@ -54,7 +57,7 @@
     </release>
     <release version="0.69.0~beta1" date="2025-06-07" type="development">
       <description>
-        <p>New Features/Enhancements</p>
+        <p>New Features/Enhancements:</p>
         <ul>
           <li>A new machine menu has been added. Now you can view the status of
               all your hospital machines in one place!</li>
@@ -64,7 +67,7 @@
           <li>Soda price can now be configured in the level file</li>
           <li>Improvements and fixes for the ChirzmanTV custom campaign</li>
         </ul>
-        <p>Changes</p>
+        <p>Changes:</p>
         <ul>
           <li>Improved how staff look for work if idle</li>
           <li>Machine strength reduction after repair now more closely aligned
@@ -88,7 +91,7 @@
           <li>Video files can now be missing during TH installation corruption
               checks</li>
         </ul>
-        <p>Translations</p>
+        <p>Translations:</p>
         <ul>
           <li>The original game&apos;s numerals for the money bar can now be
               toggled by translators using the isArabicNumerals flag. This setting
@@ -105,7 +108,7 @@
           <li>Dutch translation has been updated. Thanks @Alberth289346 &amp;
               @jetenergy</li>
         </ul>
-        <p>Bug Fixes</p>
+        <p>Bug Fixes:</p>
         <ul>
           <li>Game speed tick rates have been smoothed out again, improving
               animations and sound playback for objects</li>
