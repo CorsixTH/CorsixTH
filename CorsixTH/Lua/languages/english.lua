@@ -799,13 +799,14 @@ confirmation = {
   replace_machine_extra_info = "The new machine will have %d strength (currently %d).",
   restart_mapeditor = "Are you sure you want to restart the map editor?",
   quit_mapeditor = "Are you sure you want to quit the map editor?",
+  very_old_save = "There have been a lot of updates to the game since you started. To be sure that all features work as intended would you like to restart this level now?//" ..
+  "Your old save won't be deleted unless you overwrite it.",
 }
 
 information = {
   custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
   no_custom_game_in_demo = "Sorry, but in the demo version you can't play any custom maps.",
   cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
-  very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it.",
   level_lost = {
     "Bummer! You failed the level. Better luck next time!",
     "The reason you lost:",
@@ -1039,6 +1040,7 @@ tooltip.status = {
 
 options_window.change_resolution = "Change resolution"
 tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
+information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
 
 cheats_window.cheats = {
  toggle_infected = show_infected,

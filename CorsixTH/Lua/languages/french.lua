@@ -1046,7 +1046,9 @@ confirmation = {
   abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
   maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Êtes-vous sûr de vouloir continuer?",
   remove_destroyed_room = "Souhaitez-vous supprimer la salle pour %d $ ?",
-  replace_machine_extra_info = "La nouvelle machine aura une puissance de %d (actuellement %d)."
+  replace_machine_extra_info = "La nouvelle machine aura une puissance de %d (actuellement %d).",
+  very_old_save = "Il y a eu de nombreuses mises à jour du jeu depuis que vous avez commencé. Pour être sûr que toutes les fonctionnalités fonctionnent comme prévu, voudriez-vous recommencer ce niveau maintenant ?//"..
+  "Votre ancienne sauvegarde ne sera pas supprimée à moins que vous ne l'écrasiez."
 }
 
 -- Information dialog

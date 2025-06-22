@@ -2582,6 +2582,7 @@ confirmation = {  --spaces on the end make the text fit properly in text windows
   maximum_screen_size = "De resolutie die je hebt ingevoerd is groter dan 3000x2000. Een hoge resolutie is mogelijk, mits je hardware goed genoeg is om een speelbare framerate te behalen. Weet je zeker dat je wilt doorgaan?",
   replace_machine_extra_info = "De nieuwe machine zal %d vermogen hebben (momenteel %d)",
   remove_destroyed_room = "Wil je de kamer voor $%d verwijderen?",
+  very_old_save = "Er zijn veel updates geweest sinds je met dit level bent begonnen. Om zeker te zijn dat alles werkt zoals het hoort, zou je nu opnieuw willen beginnen dit level?//Je opgeslagen spel blijft beschikbaar tenzij je het overschrijft.",
 }
 menu_display = {
   mcga_lo_res = "  LAGE RES  ",
