@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 217 -- Fix original campaign maps
+local SAVEGAME_VERSION = 218 -- CorsixTH 0.69-beta2
 
 class "App"
 
@@ -1714,7 +1714,8 @@ local release_table = {
   {major = 0, minor = 66, revision = 0, patch = "", version = 170},
   {major = 0, minor = 67, revision = 0, patch = "", version = 180},
   {major = 0, minor = 68, revision = 0, patch = "", version = 194},
-  {major = 0, minor = 69, revision = 0, patch = "-beta-1", version = 216}
+  {major = 0, minor = 69, revision = 0, patch = "-beta1", version = 216},
+  {major = 0, minor = 69, revision = 0, patch = "-beta2", version = 218},
 }
 
 --! Retrieve the current savegame version as defined in the application.
