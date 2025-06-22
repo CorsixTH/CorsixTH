@@ -692,6 +692,7 @@ menu_charts = {
   status        = "  (%1%) ESTADO  ",
   graphs        = "  (%1%) GRAFICAS  ",
   policy        = "  (%1%) NORMAS  ",
+  machine_menu  = "  (%1%) MENÚ DE MÁQUINAS",
 }
 
 menu_debug = {
@@ -1422,8 +1423,8 @@ tooltip.machine_menu = {
   close = "Cerrar la lista de máquinas",
 }
 
-menu_charts = {
-  machine_menu  = "  (%1%) MENÚ DE MÁQUINAS",
+tooltip.machine_window = {
+  toggle_machine_menu = "Haga clic para desplegar el menú de máquinas",
 }
 
 hotkey_window = {
