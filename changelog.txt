@@ -9,6 +9,7 @@ CorsixTH 0.69.0 Beta 2 - released June 2025
 # Changes
 * You can now hear patients vomiting, instead of just the vomit splatters
 * Lakes no longer show in the Town Map as per the original game
+* Warns of incompatibility for saves more than 2 releases old
 
 # Translations
 * Russian translation has been updated. Thanks @ARGAMX
