@@ -34,7 +34,6 @@ local col_bg = {red = 204, green = 41, blue = 0}
 --!param can_reset (boolean) Determine if this crash allows for an app reset.
 function UIFatalError:UIFatalError(ui, month, gamelog_dir, can_reset)
   self:Window()
-  TheApp.config.debug = false
 
   local app = ui.app
   self.modal_class = "information"
@@ -69,7 +68,7 @@ function UIFatalError:UIFatalError(ui, month, gamelog_dir, can_reset)
     l = 15,
     r = 15,
     t = 15,
-    b = ui.app.config.debug and 18 + 15 or 15, -- Size of close button + padding
+    b = self.can_reset and 18 + 15 or 15, -- Size of close button + padding
   }
 
   self:onChangeLanguage()
@@ -124,12 +123,11 @@ end
 
 function UIFatalError:draw(canvas, x, y)
   local dx, dy = x + self.x, y + self.y
-  local background = self.black_background and canvas:mapRGB(0, 0, 0) or
-      canvas:mapRGB(col_bg["red"], col_bg["green"], col_bg["blue"])
+  local background = canvas:mapRGB(col_bg["red"], col_bg["green"], col_bg["blue"])
   canvas:drawRect(background, dx + 4, dy + 4, self.width - 8, self.height - 8)
   local last_y = dy + self.spacing.t
-    last_y = self.blue_font:drawWrapped(canvas, self.text[1], dx + self.spacing.l, last_y, self.text_width)
-    last_y = self.built_in_font:drawWrapped(canvas, self.text[2], dx + self.spacing.l, last_y, self.text_width)
+  last_y = self.blue_font:drawWrapped(canvas, self.text[1], dx + self.spacing.l, last_y, self.text_width)
+  self.built_in_font:drawWrapped(canvas, self.text[2], dx + self.spacing.l, last_y, self.text_width)
 
   Window.draw(self, canvas, x, y)
 end
