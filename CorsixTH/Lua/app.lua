@@ -1227,35 +1227,56 @@ function App:errorHandler(last_dispatch_type, st)
   print("A stack trace is included below, and the handler has been disconnected.")
   print(st)
   print("")
-  self.video:setCaptureMouse(false) -- Free the mouse, so the user can eg close the window.
+
+  -- Free the mouse, so the user can eg close the window.
+  self.video:setCaptureMouse(false)
+
   if self.world then
     self.world:gameLog("Error in " .. last_dispatch_type .. " handler: ")
     self.world:gameLog(st)
     self.world:dumpGameLog()
   end
-  if self.world and last_dispatch_type == "timer" and self.world.current_tick_entity then
+
+  if self.world and last_dispatch_type == "timer" and
+      self.world.current_tick_entity then
     -- Disconnecting the tick handler is quite a drastic measure, so give
     -- the option of just disconnecting the offending entity and attempting
     -- to continue.
     local handler = self.eventHandlers[last_dispatch_type]
     local entity = self.world.current_tick_entity
     self.world.current_tick_entity = nil
+
     if class.is(entity, Patient) then
       self.ui:addWindow(UIPatient(self.ui, entity))
     elseif class.is(entity, Staff) then
       self.ui:addWindow(UIStaff(self.ui, entity))
     end
-    self.ui:addWindow(UIConfirmDialog(self.ui, true,
-            "Sorry, but an error has occurred. There can be many reasons - see the " ..
-                    "log window for details. Would you like to attempt a recovery?",
-    --[[persistable:app_attempt_recovery]] function()
-              self.world:gameLog("Recovering from error in timer handler...")
-              entity.ticks = false
-              self.eventHandlers.timer = handler
-            end
+
+    self.ui:addWindow(UIConfirmDialog(
+      self.ui,
+      true,
+      _S.errors.recoverable,
+      --[[persistable:app_attempt_recovery]] function()
+        self.world:gameLog("Recovering from error in timer handler...")
+        entity.ticks = false
+        self.eventHandlers.timer = handler
+      end
+    ))
+  elseif self.world then
+    local can_reset = last_dispatch_type ~= "buttonup" and
+      last_dispatch_type ~= "buttondown" and
+      last_dispatch_type ~= "motion"
+
+    self.ui:addWindow(UIFatalError(
+      self.ui,
+      self.world.game_date:monthOfYear(),
+      self.gamelog_path,
+      can_reset
     ))
   end
+
   self.eventHandlers[last_dispatch_type] = nil
+
   if last_dispatch_type ~= "frame" then
     -- If it wasn't the drawing code which failed, then it would be useful
     -- to ensure that a draw happens, as with events disconnected, a frame
