@@ -1221,6 +1221,10 @@ errors = {
       missing_setting = "Aucune difficulté ni aucun numéro de niveau n'est indiqué dans le champ overlay du niveau personnalisé.",
     },
     cannot_restart_missing_files = "Désolé, ce niveau ne peut pas être redémarré car les fichiers %s ou %s sont manquants.",
+  recoverable = "Navré, mais une erreur s'est produite. Plusieurs raisons peuvent expliquer ce problème - consultez la console pour plus de détails. Souhaitez-vous tenter une récupération ?",
+  fatal_can_reset = "Une erreur fatale s'est produite avec CorsixTH et n'a pas pu être récupéré. Veuillez appuyer sur 'X' pour redémarrer le programme. Votre dernière sauvegarde automatique était probablement Autosave%d. // Pour signaler ce problème aux développeurs, le journal de jeu de cette session est disponible à l'adresse ://",
+  fatal_can_debug = "Une erreur fatale s'est produite avec CorsixTH et n'a pas pu être récupéré. Veuillez appuyer sur 'X' pour redémarrer le programme. Votre dernière sauvegarde automatique était probablement Autosave%d. // Les développeurs peuvent appuyer sur 'X' pour fermer ce message et débogger. Le journal de jeu de cette session est disponible à l'adresse ://",
+  fatal_cant_reset = "Une erreur fatale s'est produite avec CorsixTH et n'a pas pu être corrigée. Veuillez fermer le programme et le relancer. Votre dernière sauvegarde automatique était probablement Autosave%d. // Pour signaler ce problème aux développeurs, le journal de jeu de cette session est disponible à l'adresse suivante ://"
 }
 
 -- Confirmation dialog
