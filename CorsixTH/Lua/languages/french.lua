@@ -1037,7 +1037,11 @@ errors = {
     new_in_old = "Désolé, cette sauvegarde a été créée avec une version plus récente de CorsixTH et n'est pas compatible. Veuillez mettre à jour vers une version plus récente.",
     full_in_demo = "Désolé, vous ne pouvez pas ouvrir une sauvegarde de jeu complet avec les fichiers de démonstration chargés. Veuillez mettre à jour votre paramètre de dossier TH Data.",
     demo_in_full = "Désolé, vous ne pouvez pas ouvrir une sauvegarde de démonstration avec les fichiers de jeu complet chargés. Veuillez mettre à jour votre paramètre de dossier TH Data."
-  }
+  },
+  recoverable = "Navré, mais une erreur s'est produite. Plusieurs raisons peuvent expliquer ce problème - consultez la console pour plus de détails. Souhaitez-vous tenter une récupération ?",
+  fatal_can_reset = "Une erreur fatale s'est produite avec CorsixTH et n'a pas pu être récupéré. Veuillez appuyer sur 'X' pour redémarrer le programme. Votre dernière sauvegarde automatique était probablement Autosave%d. // Pour signaler ce problème aux développeurs, le journal de jeu de cette session est disponible à l'adresse ://",
+  fatal_can_debug = "Une erreur fatale s'est produite avec CorsixTH et n'a pas pu être récupéré. Veuillez appuyer sur 'X' pour redémarrer le programme. Votre dernière sauvegarde automatique était probablement Autosave%d. // Les développeurs peuvent appuyer sur 'X' pour fermer ce message et débogger. Le journal de jeu de cette session est disponible à l'adresse ://",
+  fatal_cant_reset = "Une erreur fatale s'est produite avec CorsixTH et n'a pas pu être corrigée. Veuillez fermer le programme et le relancer. Votre dernière sauvegarde automatique était probablement Autosave%d. // Pour signaler ce problème aux développeurs, le journal de jeu de cette session est disponible à l'adresse suivante ://"
 }
 
 -- Confirmation dialog
