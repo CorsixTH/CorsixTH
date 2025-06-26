@@ -1233,11 +1233,11 @@ function App:run()
       self.world:gameLog(debug.traceback(co, e, 0))
       self.world:dumpGameLog()
     end
+    local handler = self.eventHandlers[self.last_dispatch_type]
     if self.world and self.last_dispatch_type == "timer" and self.world.current_tick_entity then
       -- Disconnecting the tick handler is quite a drastic measure, so give
       -- the option of just disconnecting the offending entity and attempting
       -- to continue.
-      local handler = self.eventHandlers[self.last_dispatch_type]
       local entity = self.world.current_tick_entity
       self.world.current_tick_entity = nil
       if class.is(entity, Patient) then
@@ -1246,14 +1246,16 @@ function App:run()
         self.ui:addWindow(UIStaff(self.ui, entity))
       end
       self.ui:addWindow(UIConfirmDialog(self.ui, true,
-        "Sorry, but an error has occurred. There can be many reasons - see the " ..
-        "log window for details. Would you like to attempt a recovery?",
+        _S.errors.recoverable,
         --[[persistable:app_attempt_recovery]] function()
         self.world:gameLog("Recovering from error in timer handler...")
         entity.ticks = false
         self.eventHandlers.timer = handler
       end
       ))
+    elseif self.world then
+      local can_reset = handler ~= "buttonup" and handler ~= "buttondown" and handler ~= "motion"
+      self.ui:addWindow(UIFatalError(self.ui, self.world.game_date:monthOfYear(), self.gamelog_path, can_reset))
     end
     self.eventHandlers[self.last_dispatch_type] = nil
     if self.last_dispatch_type ~= "frame" then
