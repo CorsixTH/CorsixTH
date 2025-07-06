@@ -25,6 +25,8 @@ SOFTWARE.
 #include "config.h"
 
 #include <SDL.h>
+#include <png.h>
+#include <zlib.h>
 
 #include <algorithm>
 #include <cmath>
@@ -628,7 +630,7 @@ void render_target::set_blue_filter_active(bool bActivate) {
   blue_filter_active = bActivate;
 }
 
-// Actiate and Deactivate SDL function to capture mouse to window
+// Activate or Deactivate SDL function to capture mouse to window
 void render_target::set_window_grab(bool bActivate) {
   SDL_SetWindowGrab(window, bActivate ? SDL_TRUE : SDL_FALSE);
 }
@@ -721,7 +723,69 @@ void render_target::set_cursor_position(int iX, int iY) {
   cursor_y = iY;
 }
 
-bool render_target::take_screenshot(const char* sFile) {
+namespace {
+
+bool write_rgb_png(int width, int height, png_bytep pixels, int pitch,
+                   const char* file_path) {
+  // Open the file for writing
+  FILE* fp = std::fopen(file_path, "wb");
+  if (fp == nullptr) {
+    return false;
+  }
+
+  // Create PNG writer and info data structures.
+  png_structp png_write_data = png_create_write_struct(PNG_LIBPNG_VER_STRING,
+                                                       nullptr, nullptr,
+                                                       nullptr);
+  if (png_write_data == nullptr) {
+    std::fclose(fp);
+    return false;
+  }
+  png_infop info_write_data = png_create_info_struct(png_write_data);
+  if (info_write_data == nullptr) {
+    png_destroy_write_struct(&png_write_data, nullptr);
+    std::fclose(fp);
+    return false;
+  }
+
+  // Setup error handling.
+  if (setjmp(png_jmpbuf(png_write_data))) {
+    png_destroy_write_struct(&png_write_data, &info_write_data);
+    std::fclose(fp);
+    return false;
+  }
+
+  // Allocate and setup row pointers to the pixels.
+  png_bytepp row_pointers = new (std::nothrow) png_bytep[height];
+  if (row_pointers == nullptr) {
+    return false;
+  }
+  png_bytep rp = pixels;
+  for (int h = 0; h < height; h++) {
+    row_pointers[h] = rp;
+    rp += pitch;
+  }
+
+  // Configure what to write.
+  png_init_io(png_write_data, fp);
+  png_set_IHDR(png_write_data, info_write_data, width, height, 8,
+               PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+               PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+  png_set_rows(png_write_data, info_write_data, row_pointers);
+
+  // Write the image.
+  png_write_png(png_write_data, info_write_data, PNG_TRANSFORM_IDENTITY, nullptr);
+
+  // Cleanup, and done.
+  png_destroy_write_struct(&png_write_data, &info_write_data);
+  std::fclose(fp);
+  delete row_pointers;
+  return true;
+}
+
+}  // namespace
+
+bool render_target::take_screenshot(const char* file_path, bool write_bmp) {
   int width = 0, height = 0;
   if (SDL_GetRendererOutputSize(renderer, &width, &height) == -1) return false;
 
@@ -739,7 +803,15 @@ bool render_target::take_screenshot(const char* sFile) {
                              pRgbSurface->pixels, pRgbSurface->pitch);
     SDL_UnlockSurface(pRgbSurface);
 
-    if (readStatus != -1) SDL_SaveBMP(pRgbSurface, sFile);
+    if (readStatus != -1) {
+      if (write_bmp) {
+        SDL_SaveBMP(pRgbSurface, file_path);
+      } else {
+        write_rgb_png(width, height,
+                      static_cast<png_bytep>(pRgbSurface->pixels),
+                      pRgbSurface->pitch, file_path);
+      }
+    }
   }
 
   SDL_FreeSurface(pRgbSurface);
