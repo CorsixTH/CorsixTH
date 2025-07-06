@@ -8,7 +8,9 @@
     },
     "sdl2",
     "luafilesystem",
-    "lpeg"
+    "lpeg",
+    "libpng",
+    "zlib"
   ],
   "features": {
     "audio": {
