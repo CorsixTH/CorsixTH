@@ -245,6 +245,20 @@ else()
   message("Lua modules are not linked and will be loaded at runtime")
 endif()
 
+# Find libpng
+if(VCPKG_TARGET_TRIPLET)
+  find_package(PNG REQUIRED)
+  target_link_libraries(CorsixTH_lib PUBLIC PNG::PNG)
+else()
+endif()
+
+# Find zlib
+if(VCPKG_TARGET_TRIPLET)
+  find_package(ZLIB REQUIRED)
+  target_link_libraries(CorsixTH_lib PUBLIC ZLIB::ZLIB)
+else()
+endif()
+
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
   # Do not generate launch script. The default is fine for this case.

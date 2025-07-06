@@ -9,6 +9,8 @@
     "sdl2",
     "luafilesystem",
     "lpeg",
+    "libpng",
+    "zlib",
     {
        "name": "fluidsynth",
        "platform": "!osx",
