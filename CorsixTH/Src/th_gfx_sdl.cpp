@@ -773,8 +773,8 @@ bool write_rgb_png(int width, int height, png_bytep pixels, int pitch,
                PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
   png_set_rows(png_write_data, info_write_data, row_pointers);
 
-  // Write the image.
-  png_write_png(png_write_data, info_write_data, PNG_TRANSFORM_IDENTITY, nullptr);
+  // Write the image while swapping R and B channels.
+  png_write_png(png_write_data, info_write_data, PNG_TRANSFORM_BGR, nullptr);
 
   // Cleanup, and done.
   png_destroy_write_struct(&png_write_data, &info_write_data);
