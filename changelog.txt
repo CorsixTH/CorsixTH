@@ -1,4 +1,11 @@
 -------------------------------------------------------------------------------
+CorsixTH 0.69.0 Release Candidate 1 - released July 2025
+-------------------------------------------------------------------------------
+# Translations
+* Russian translation has been updated. Thanks @Matroftt
+* French translation has been updated. Thanks @legluondunet
+
+-------------------------------------------------------------------------------
 CorsixTH 0.69.0 Beta 2 - released June 2025
 -------------------------------------------------------------------------------
 # Features
@@ -17,7 +24,7 @@ CorsixTH 0.69.0 Beta 2 - released June 2025
 # Bug Fixes
 * Fixed some anomalies in the original campaign's map files
 
-# Regressions from 0.69.0 Beta 1
+# Regressions
 * Fixed a crash in General Diagnosis
 * Fixed a compatibility issue with mood markers on old
   saves
