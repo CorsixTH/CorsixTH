@@ -719,7 +719,7 @@ bool str_endswith(const char* text, size_t text_length, const char* end_text) {
   return !strcasecmp(text + (text_length - end_length), end_text);
 }
 
-} // namespace
+}  // namespace
 
 int l_surface_screenshot(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
