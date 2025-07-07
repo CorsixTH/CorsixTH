@@ -710,6 +710,19 @@ int l_surface_rect(lua_State* L) {
 }
 
 namespace {
+// Case insensitive string compare.
+int strcasecmp(const char* left, const char* right) {
+  for (;; left++, right++) {
+    int left_val = tolower(*left);
+    int right_val = tolower(*right);
+    if (left_val != right_val) {
+      return left_val - right_val;
+    } else if (left_val == 0) {  // right_val is 0 too.
+      return 0;
+    }
+  }
+}
+
 //! Check if the text ends with the end_text, in a case-insensitive way.
 bool str_endswith(const char* text, size_t text_length, const char* end_text) {
   size_t end_length = strlen(end_text);
