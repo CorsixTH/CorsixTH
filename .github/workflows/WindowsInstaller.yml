@@ -33,11 +33,16 @@ jobs:
           run-id: ${{inputs.x64}}
           path: WindowsInstaller
           github-token: ${{github.token}}
+      - name: Download Noto font
+        run: |
+          wget https://github.com/satbyy/go-noto-universal/releases/download/v7.0/GoNotoKurrent-Regular.ttf
       - name: Create installer
         run: |
           cd WindowsInstaller
           mv CorsixTH_x86 x86
           mv CorsixTH x64
+          cp ../GoNotoKurrent-Regular.ttf x86/CorsixTHUnicode.ttf
+          cp ../GoNotoKurrent-Regular.ttf x64/CorsixTHUnicode.ttf
           makensis -V4 -WX -- Win32Script.nsi
           sha256sum CorsixTHInstaller.exe >> $GITHUB_STEP_SUMMARY
       - name: Upload installer
