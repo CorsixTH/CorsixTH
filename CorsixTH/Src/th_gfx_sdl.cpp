@@ -727,43 +727,48 @@ namespace {
 
 bool write_rgb_png(int width, int height, png_bytep pixels, int pitch,
                    const char* file_path) {
-  // Open the file for writing
-  FILE* fp = std::fopen(file_path, "wb");
-  if (fp == nullptr) {
-    return false;
-  }
+  // Allocated data if not nullptr. Is released in 'finish' at the bottom
+  // of the function.
+  png_structp png_write_data = nullptr;
+  png_infop info_write_data = nullptr;
+  png_bytepp row_pointers = nullptr;
+  FILE* fp = nullptr;
+
+  bool return_value = false;
 
   // Create PNG writer and info data structures.
-  png_structp png_write_data =
+  png_write_data =
       png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   if (png_write_data == nullptr) {
-    std::fclose(fp);
-    return false;
+    goto finish;
   }
-  png_infop info_write_data = png_create_info_struct(png_write_data);
+  info_write_data = png_create_info_struct(png_write_data);
   if (info_write_data == nullptr) {
-    png_destroy_write_struct(&png_write_data, nullptr);
-    std::fclose(fp);
-    return false;
+    goto finish;
+  }
+
+  // Allocate and setup row pointers to the pixels.
+  row_pointers = new (std::nothrow) png_bytep[height];
+  if (row_pointers == nullptr) {
+    goto finish;
+  }
+  {
+    png_bytep rp = pixels;
+    for (int h = 0; h < height; h++) {
+      row_pointers[h] = rp;
+      rp += pitch;
+    }
   }
 
   // Setup error handling.
   if (setjmp(png_jmpbuf(png_write_data))) {
-    png_destroy_write_struct(&png_write_data, &info_write_data);
-    std::fclose(fp);
-    return false;
+    goto finish;
   }
 
-  // Allocate and setup row pointers to the pixels.
-  png_bytepp row_pointers = new (std::nothrow) png_bytep[height];
-  if (row_pointers == nullptr) {
-    std::fclose(fp);
-    return false;
-  }
-  png_bytep rp = pixels;
-  for (int h = 0; h < height; h++) {
-    row_pointers[h] = rp;
-    rp += pitch;
+  // Open the file for writing.
+  fp = std::fopen(file_path, "wb");
+  if (fp == nullptr) {
+    goto finish;
   }
 
   // Configure what to write.
@@ -775,12 +780,20 @@ bool write_rgb_png(int width, int height, png_bytep pixels, int pitch,
 
   // Write the image while swapping red and blue channels.
   png_write_png(png_write_data, info_write_data, PNG_TRANSFORM_BGR, nullptr);
+  return_value = true;
 
-  // Cleanup, and done.
-  png_destroy_write_struct(&png_write_data, &info_write_data);
-  std::fclose(fp);
-  delete[] row_pointers;
-  return true;
+finish:
+  if (png_write_data != nullptr || info_write_data != nullptr) {
+    png_destroy_write_struct(&png_write_data, &info_write_data);
+  }
+  if (row_pointers != nullptr) {
+    delete[] row_pointers;
+  }
+  if (fp != nullptr) {
+    std::fclose(fp);
+  }
+
+  return return_value;
 }
 
 }  // namespace
