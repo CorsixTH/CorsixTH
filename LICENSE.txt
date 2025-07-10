@@ -111,6 +111,7 @@ Copyright (C) 2024 "MandrakeHorse"
 Copyright (C) 2024-2025 Artem Argus "ARGAMX" Gusakov
 Copyright (C) 2025 Felipe Muñoz Mazur
 Copyright (C) 2025 "pizzadepollo"
+Copyright (C) 2025 "legluodunet"
 
 et al.
 

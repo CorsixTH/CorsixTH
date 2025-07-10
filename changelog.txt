@@ -1,9 +1,16 @@
 -------------------------------------------------------------------------------
 CorsixTH 0.69.0 Release Candidate 1 - released July 2025
 -------------------------------------------------------------------------------
+# Features
+* A CorsixTH Unicode font (based on GoNotoKurrent Regular) is now provided with
+  the Windows installer to provide better language support out of the box
+
 # Translations
 * Russian translation has been updated. Thanks @Matroftt
 * French translation has been updated. Thanks @legluondunet
+
+# Packager Notes
+* Fixed a regression with CORSIXTH_SEARCH_LOCAL_DATADIRS cmake option
 
 -------------------------------------------------------------------------------
 CorsixTH 0.69.0 Beta 2 - released June 2025
@@ -26,8 +33,7 @@ CorsixTH 0.69.0 Beta 2 - released June 2025
 
 # Regressions
 * Fixed a crash in General Diagnosis
-* Fixed a compatibility issue with mood markers on old
-  saves
+* Fixed a compatibility issue with mood markers on old saves
 * Fixed a crash with the grim reaper
 * Fixed a bug with the hotkey assignment menu
 * Fixed an issue with handymen ignoring cleaning duties. Please note existing

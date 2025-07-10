@@ -20,6 +20,26 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.69.0~rc1" date="2025-07-12" type="development">
+      <description>
+        <p>Features:</p>
+        <ul>
+          <li>A CorsixTH Unicode font (based on GoNotoKurrent Regular) is now
+              provided with the Windows installer to provide better language
+              support out of the box</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>Russian translation has been updated. Thanks @Matroftt</li>
+          <li>French translation has been updated. Thanks @legluondunet</li>
+        </ul>
+        <p>Packager Notes:</p>
+        <ul>
+          <li>Fixed a regression with CORSIXTH_SEARCH_LOCAL_DATADIRS cmake
+              option</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.69.0~beta2" date="2025-06-21" type="development">
       <description>
         <p>Features:</p>
