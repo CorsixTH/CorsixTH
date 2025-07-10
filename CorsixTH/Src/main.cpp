@@ -35,6 +35,8 @@ SOFTWARE.
 #include "th_lua.h"
 
 #ifdef CORSIX_TH_SEARCH_LOCAL_DATADIRS
+#include <array>
+
 #include "../../libs/whereami/whereami.h"
 #endif
 
