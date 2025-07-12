@@ -725,7 +725,7 @@ void render_target::set_cursor_position(int iX, int iY) {
 namespace {
 
 //! Error function called when PNG writing fails.
-void png_error(png_structp png_data, const char* message) { throw (message); }
+void png_error(png_structp png_data, const char* message) { throw (0); }
 
 //! Class for managing lifetime of the data structures for saving a PNG file.
 class png_data_manager {
@@ -836,8 +836,8 @@ bool render_target::take_screenshot(const char* file_path, bool write_bmp) {
                         static_cast<png_bytep>(pRgbSurface->pixels),
                         pRgbSurface->pitch, file_path);
           ok = true;
-        } catch (const char* message) {
-          ok = false; // Not needed, but clang-tidy wants it.
+        } catch (int zero) {
+          ok = false;  // Not needed, but clang-tidy wants it.
         }
       }
     }
