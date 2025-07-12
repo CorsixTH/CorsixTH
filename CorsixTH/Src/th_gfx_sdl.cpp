@@ -724,75 +724,84 @@ void render_target::set_cursor_position(int iX, int iY) {
 
 namespace {
 
+//! Error function called when PNG writing fails.
+void png_error(png_structp png_data, const char* message) { throw(message); }
+
+//! Class for managing lifetime of the data structures for saving a PNG file.
+class png_data_manager {
+ public:
+  png_structp png_write_data;
+  png_infop info_write_data;
+  png_bytepp row_pointers;
+  FILE* fp;
+
+  png_data_manager()
+      : png_write_data(nullptr),
+        info_write_data(nullptr),
+        row_pointers(nullptr),
+        fp(nullptr) {}
+
+  ~png_data_manager() {
+    if (png_write_data != nullptr || info_write_data != nullptr) {
+      png_destroy_write_struct(&png_write_data, &info_write_data);
+    }
+    if (row_pointers != nullptr) {
+      delete[] row_pointers;
+    }
+    if (fp != nullptr) {
+      std::fclose(fp);
+    }
+  }
+};
+
+//! Function to write the pixels to the given file as PNG image.
 bool write_rgb_png(int width, int height, png_bytep pixels, int pitch,
                    const char* file_path) {
-  // Allocated data if not nullptr. Is released in 'finish' at the bottom
-  // of the function.
-  png_structp png_write_data = nullptr;
-  png_infop info_write_data = nullptr;
-  png_bytepp row_pointers = nullptr;
-  FILE* fp = nullptr;
-
-  bool return_value = false;
+  png_data_manager png_storage;
 
   // Create PNG writer and info data structures.
-  png_write_data =
-      png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-  if (png_write_data == nullptr) {
-    goto finish;
+  png_storage.png_write_data = png_create_write_struct(
+      PNG_LIBPNG_VER_STRING, (png_voidp)png_error, nullptr, nullptr);
+  if (png_storage.png_write_data == nullptr) {
+    return false;
   }
-  info_write_data = png_create_info_struct(png_write_data);
-  if (info_write_data == nullptr) {
-    goto finish;
+  png_storage.info_write_data =
+      png_create_info_struct(png_storage.png_write_data);
+  if (png_storage.info_write_data == nullptr) {
+    return false;
   }
 
   // Allocate and setup row pointers to the pixels.
-  row_pointers = new (std::nothrow) png_bytep[height];
-  if (row_pointers == nullptr) {
-    goto finish;
+  png_storage.row_pointers = new (std::nothrow) png_bytep[height];
+  if (png_storage.row_pointers == nullptr) {
+    return false;
   }
   {
     png_bytep rp = pixels;
     for (int h = 0; h < height; h++) {
-      row_pointers[h] = rp;
+      png_storage.row_pointers[h] = rp;
       rp += pitch;
     }
   }
 
-  // Setup error handling.
-  if (setjmp(png_jmpbuf(png_write_data))) {
-    goto finish;
-  }
-
   // Open the file for writing.
-  fp = std::fopen(file_path, "wb");
-  if (fp == nullptr) {
-    goto finish;
+  png_storage.fp = std::fopen(file_path, "wb");
+  if (png_storage.fp == nullptr) {
+    return false;
   }
 
   // Configure what to write.
-  png_init_io(png_write_data, fp);
-  png_set_IHDR(png_write_data, info_write_data, width, height, 8,
-               PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+  png_init_io(png_storage.png_write_data, png_storage.fp);
+  png_set_IHDR(png_storage.png_write_data, png_storage.info_write_data, width,
+               height, 8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
                PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-  png_set_rows(png_write_data, info_write_data, row_pointers);
+  png_set_rows(png_storage.png_write_data, png_storage.info_write_data,
+               png_storage.row_pointers);
 
   // Write the image while swapping red and blue channels.
-  png_write_png(png_write_data, info_write_data, PNG_TRANSFORM_BGR, nullptr);
-  return_value = true;
-
-finish:
-  if (png_write_data != nullptr || info_write_data != nullptr) {
-    png_destroy_write_struct(&png_write_data, &info_write_data);
-  }
-  if (row_pointers != nullptr) {
-    delete[] row_pointers;
-  }
-  if (fp != nullptr) {
-    std::fclose(fp);
-  }
-
-  return return_value;
+  png_write_png(png_storage.png_write_data, png_storage.info_write_data,
+                PNG_TRANSFORM_BGR, nullptr);
+  return true;
 }
 
 }  // namespace
@@ -806,6 +815,8 @@ bool render_target::take_screenshot(const char* file_path, bool write_bmp) {
       SDL_CreateRGBSurface(0, width, height, 24, 0, 0, 0, 0);
   if (pRgbSurface == nullptr) return false;
 
+  bool ok = false;
+
   int readStatus = -1;
   if (SDL_LockSurface(pRgbSurface) != -1) {
     // Ask the renderer to (slowly) fill the surface with renderer
@@ -818,17 +829,23 @@ bool render_target::take_screenshot(const char* file_path, bool write_bmp) {
     if (readStatus != -1) {
       if (write_bmp) {
         SDL_SaveBMP(pRgbSurface, file_path);
+        ok = true;
       } else {
-        write_rgb_png(width, height,
-                      static_cast<png_bytep>(pRgbSurface->pixels),
-                      pRgbSurface->pitch, file_path);
+        try {
+          write_rgb_png(width, height,
+                        static_cast<png_bytep>(pRgbSurface->pixels),
+                        pRgbSurface->pitch, file_path);
+          ok = true;
+        } catch (const char* message) {
+          // Nothing to do.
+        }
       }
     }
   }
 
   SDL_FreeSurface(pRgbSurface);
 
-  return (readStatus != -1);
+  return ok;
 }
 
 bool render_target::should_scale_bitmaps(double* pFactor) {
