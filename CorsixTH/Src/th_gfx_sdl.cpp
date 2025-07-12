@@ -26,7 +26,6 @@ SOFTWARE.
 
 #include <SDL.h>
 #include <png.h>
-#include <zlib.h>
 
 #include <algorithm>
 #include <cmath>
