@@ -725,7 +725,7 @@ void render_target::set_cursor_position(int iX, int iY) {
 namespace {
 
 //! Error function called when PNG writing fails.
-void png_error(png_structp png_data, const char* message) { throw (0); }
+void png_error(png_structp png_data, const char* message) { throw(0); }
 
 //! Class for managing lifetime of the data structures for saving a PNG file.
 class png_data_manager {
