@@ -806,7 +806,7 @@ bool write_rgb_png(int width, int height, png_bytep pixels, int pitch,
 
 }  // namespace
 
-bool render_target::take_screenshot(const char* file_path, bool write_bmp) {
+bool render_target::take_screenshot(const char* file_path) {
   int width = 0, height = 0;
   if (SDL_GetRendererOutputSize(renderer, &width, &height) == -1) return false;
 
@@ -827,18 +827,13 @@ bool render_target::take_screenshot(const char* file_path, bool write_bmp) {
     SDL_UnlockSurface(pRgbSurface);
 
     if (readStatus != -1) {
-      if (write_bmp) {
-        SDL_SaveBMP(pRgbSurface, file_path);
+      try {
+        write_rgb_png(width, height,
+                      static_cast<png_bytep>(pRgbSurface->pixels),
+                      pRgbSurface->pitch, file_path);
         ok = true;
-      } else {
-        try {
-          write_rgb_png(width, height,
-                        static_cast<png_bytep>(pRgbSurface->pixels),
-                        pRgbSurface->pitch, file_path);
-          ok = true;
-        } catch (int zero) {
-          ok = false;  // Not needed, but clang-tidy wants it.
-        }
+      } catch (int zero) {
+        ok = false;  // Not needed, but clang-tidy wants it.
       }
     }
   }

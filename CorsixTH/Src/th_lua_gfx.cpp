@@ -709,45 +709,10 @@ int l_surface_rect(lua_State* L) {
   return 2;
 }
 
-namespace {
-// Case insensitive string compare.
-int strcasecmp(const char* left, const char* right) {
-  for (;; left++, right++) {
-    int left_val = tolower(*left);
-    int right_val = tolower(*right);
-    if (left_val != right_val) {
-      return left_val - right_val;
-    } else if (left_val == 0) {  // right_val is 0 too.
-      return 0;
-    }
-  }
-}
-
-//! Check if the text ends with the end_text, in a case-insensitive way.
-bool str_endswith(const char* text, size_t text_length, const char* end_text) {
-  size_t end_length = strlen(end_text);
-  if (end_length > text_length) {
-    return false;
-  }
-  return !strcasecmp(text + (text_length - end_length), end_text);
-}
-
-}  // namespace
-
 int l_surface_screenshot(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   const char* file_path = luaL_checkstring(L, 2);
-
-  // Decide the image format.
-  size_t file_path_length = strlen(file_path);
-  bool write_bmp = str_endswith(file_path, file_path_length, ".bmp");
-  if (!write_bmp && !str_endswith(file_path, file_path_length, ".png")) {
-    lua_pushnil(L);
-    lua_pushstring(L, "Unrecognized file extension");
-    return 2;
-  }
-
-  if (pCanvas->take_screenshot(file_path, write_bmp)) {
+  if (pCanvas->take_screenshot(file_path)) {
     lua_settop(L, 1);
     return 1;
   }
