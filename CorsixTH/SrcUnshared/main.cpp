@@ -25,15 +25,13 @@ SOFTWARE.
 #include "config.h"
 
 #include <SDL.h>
+#include <SDL_mixer.h>
 
 #include <cstdio>
 
 #include "../Src/bootstrap.h"
 #include "../Src/lua.hpp"
 #include "../Src/th_lua.h"
-#ifdef CORSIX_TH_USE_SDL_MIXER
-#include <SDL_mixer.h>
-#endif
 #ifdef WITH_UPDATE_CHECK
 #include <curl/curl.h>
 #endif
@@ -118,11 +116,9 @@ int main(int argc, char** argv) {
     // Destroy the lua_State before SDL so that any SDL resource owned by
     // Lua can be freed first.
     L.reset(nullptr);
-#ifdef CORSIX_TH_USE_SDL_MIXER
     while (Mix_QuerySpec(nullptr, nullptr, nullptr)) {
       Mix_CloseAudio();
     }
-#endif
     SDL_Quit();
 
     if (bRun) {

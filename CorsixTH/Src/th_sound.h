@@ -24,10 +24,8 @@ SOFTWARE.
 #define CORSIX_TH_TH_SOUND_H_
 #include "config.h"
 
-#include <SDL_rwops.h>
-#ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>
-#endif
+#include <SDL_rwops.h>
 
 //! Utility class for accessing Theme Hospital's SOUND-0.DAT
 class sound_archive {
@@ -106,7 +104,6 @@ class sound_player {
   void release_channel(int iChannel);
 
  private:
-#ifdef CORSIX_TH_USE_SDL_MIXER
   static sound_player* singleton;
   static void on_channel_finished(int iChannel);
 
@@ -125,7 +122,6 @@ class sound_player {
   double sound_effect_volume;
   int positionless_volume;
   bool sound_effects_enabled;
-#endif  // CORSIX_TH_USE_SDL_MIXER
 };
 
 #endif  // CORSIX_TH_TH_SOUND_H_
