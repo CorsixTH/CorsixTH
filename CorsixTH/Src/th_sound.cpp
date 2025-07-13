@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <SDL_mixer.h>
 #include <SDL_rwops.h>
 
 #include <cmath>
@@ -31,9 +32,6 @@ SOFTWARE.
 #include <new>
 
 #include "th.h"
-#ifdef CORSIX_TH_USE_SDL_MIXER
-#include <SDL_mixer.h>
-#endif
 
 sound_archive::sound_archive() {
   sound_files = nullptr;
@@ -181,8 +179,6 @@ SDL_RWops* sound_archive::load_sound(size_t iIndex) {
   return SDL_RWFromConstMem(data + pFile->position, pFile->length);
 }
 
-#ifdef CORSIX_TH_USE_SDL_MIXER
-
 constexpr int number_of_channels = 32;
 
 sound_player* sound_player::singleton = nullptr;
@@ -312,20 +308,3 @@ void sound_player::set_camera(int iX, int iY, int iRadius) {
   camera_radius = (double)iRadius;
   if (camera_radius < 0.001) camera_radius = 0.001;
 }
-
-#else  // CORSIX_TH_USE_SDL_MIXER
-
-sound_player::sound_player() {}
-sound_player::~sound_player() {}
-sound_player* sound_player::get_singleton() { return nullptr; }
-void sound_player::populate_from(sound_archive* pArchive) {}
-void sound_player::play(size_t iIndex, double dVolume) {}
-void sound_player::play_at(size_t iIndex, int iX, int iY) {}
-void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {}
-int sound_player::reserve_channel() { return 0; }
-void sound_player::release_channel(int iChannel) {}
-void sound_player::set_camera(int iX, int iY, int iRadius) {}
-void sound_player::set_sound_effect_volume(double dVolume) {}
-void sound_player::set_sound_effects_enabled(bool iOn) {}
-
-#endif  // CORSIX_TH_USE_SDL_MIXER

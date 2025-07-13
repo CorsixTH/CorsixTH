@@ -25,16 +25,14 @@ SOFTWARE.
 #include "config.h"
 
 #include <SDL_render.h>
+#include <ft2build.h>  // IWYU pragma: keep
 
 #include <climits>
 
 #include "th_gfx_sdl.h"
-#ifdef CORSIX_TH_USE_FREETYPE2
-#include <ft2build.h>  // IWYU pragma: keep
 #include FT_FREETYPE_H
 #include FT_IMAGE_H
 #include FT_TYPES_H
-#endif
 
 enum class text_alignment {
   left = 0,
@@ -159,7 +157,6 @@ class bitmap_font final : public font {
   int line_spacing;
 };
 
-#ifdef CORSIX_TH_USE_FREETYPE2
 //! Adaptor around the FreeType2 library to a THFont.
 /*!
     Due to the relatively high cost of rendering a message with FreeType, this
@@ -333,6 +330,5 @@ class freetype_font final : public font {
   void draw_texture(render_target* pCanvas, cached_text* pCacheEntry, int iX,
                     int iY) const;
 };
-#endif  // CORSIX_TH_USE_FREETYPE2
 
 #endif  // CORSIX_TH_TH_GFX_FONT_H_

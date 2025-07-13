@@ -20,12 +20,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "th_gfx_sdl.h"
+
 #include "config.h"
 
-#include "th_gfx.h"
-#ifdef CORSIX_TH_USE_FREETYPE2
-#include "th_gfx_font.h"
-#endif
 #include <SDL.h>
 
 #include <algorithm>
@@ -41,8 +39,9 @@ SOFTWARE.
 #include <vector>
 
 #include "persist_lua.h"
+#include "th_gfx.h"
 #include "th_gfx_common.h"
-#include "th_gfx_sdl.h"
+#include "th_gfx_font.h"
 
 #if SDL_VERSION_ATLEAST(2, 0, 10)
 
@@ -1637,7 +1636,6 @@ void line_sequence::depersist(lua_persist_reader* pReader) {
   }
 }
 
-#ifdef CORSIX_TH_USE_FREETYPE2
 bool freetype_font::is_monochrome() const { return false; }
 
 void freetype_font::free_texture(cached_text* pCacheEntry) const {
@@ -1675,5 +1673,3 @@ void freetype_font::draw_texture(render_target* pCanvas,
   SDL_Rect rcDest = {iX, iY, pCacheEntry->width, pCacheEntry->height};
   pCanvas->draw(pCacheEntry->texture, nullptr, &rcDest, 0);
 }
-
-#endif  // CORSIX_TH_USE_FREETYPE2
