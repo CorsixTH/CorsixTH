@@ -246,13 +246,8 @@ else()
 endif()
 
 # Find libpng
-if(VCPKG_TARGET_TRIPLET)
-  find_package(PNG REQUIRED)
-  target_link_libraries(CorsixTH_lib PUBLIC PNG::PNG)
-else()
-  find_package(PNG REQUIRED)
-  target_link_libraries(CorsixTH_lib PUBLIC PNG::PNG)
-endif()
+find_package(PNG REQUIRED)
+target_link_libraries(CorsixTH_lib PUBLIC PNG::PNG)
 
 # Find zlib
 if(VCPKG_TARGET_TRIPLET)
