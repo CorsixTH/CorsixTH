@@ -832,7 +832,7 @@ bool render_target::take_screenshot(const char* file_path) {
                       static_cast<png_bytep>(pRgbSurface->pixels),
                       pRgbSurface->pitch, file_path);
         ok = true;
-      } catch (int zero) {
+      } catch (int) {
         ok = false;  // Not needed, but clang-tidy wants it.
       }
     }
