@@ -126,9 +126,9 @@
       <description>
         <p>Features:</p>
         <ul>
-          <li>Custom level&sol;campaign creators can now use an existing level file
+          <li>Custom level/campaign creators can now use an existing level file
               as an overlay to copy and extend their level file with the
-              &num;overlay variable. See the &apos;Custom Level&apos; Wiki page
+              #overlay variable. See the &apos;Custom Level&apos; Wiki page
               for more information.</li>
         </ul>
         <p>Changes:</p>
