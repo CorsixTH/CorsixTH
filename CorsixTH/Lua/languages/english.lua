@@ -944,6 +944,10 @@ tooltip.calls_dispatcher = {
   close = "Close the calls dispatcher dialog",
 }
 
+tooltip.machine_window = {
+  toggle_machine_menu = "Click to open machine menu",
+}
+
 machine_menu = {
   percentage = "%d%",
   machine = "Machine",
