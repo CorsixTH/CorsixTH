@@ -548,7 +548,6 @@ end
 -- game sounds controls are added.
 local function audio_options(menu, game)
   local app = TheApp
-  if not app:isAudioEnabled() then return end
 
   local function vol(level, setting)
     if setting == "music" then
