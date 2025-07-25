@@ -145,9 +145,7 @@ function App:init()
   end
 
   -- Report operating system
-  if compile_opts.os then
-    self.os = compile_opts.os
-  end
+  self.os = compile_opts.os
 
   local modes = {}
   self.fullscreen = false
