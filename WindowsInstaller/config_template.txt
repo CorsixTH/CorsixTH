@@ -47,8 +47,6 @@ language = [[LANGUAGE_CHOSEN]]
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
--- Note that audio will also be disabled if CorsixTH was compiled without
--- the SDL_mixer library.
 --
 audio = true
 

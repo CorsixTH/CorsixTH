@@ -236,8 +236,6 @@ local string_01 = [=[
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
--- Note that audio will also be disabled if CorsixTH was compiled without
--- the SDL_mixer library.
 --]=] .. '\n' ..
 'audio = ' .. tostring(config_values.audio) .. '\n' .. [=[
 

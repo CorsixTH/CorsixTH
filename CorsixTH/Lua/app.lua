@@ -128,13 +128,10 @@ function App:init()
   self:initScreenshotsDir()
 
   -- Create the window
-  if not SDL.init("video", "timer") then
+  if not SDL.init("video", "timer", "audio") then
     return false, "Cannot initialise SDL"
   end
   local compile_opts = TH.GetCompileOptions()
-  if compile_opts.audio then
-    SDL.init("audio")
-  end
   local api_version = corsixth.require("api_version")
   if api_version ~= compile_opts.api_version then
     api_version = api_version or 0
@@ -188,7 +185,7 @@ function App:init()
     -- Add some notices to the loading screen
     local notices = {}
     local font = self.gfx:loadBuiltinFont()
-    if TH.freetype_font and self.gfx:hasLanguageFont("unicode") then
+    if self.gfx:hasLanguageFont("unicode") then
       notices[#notices + 1] = TH.freetype_font.getCopyrightNotice()
       font = self.gfx:loadLanguageFont("unicode", font:getSheet())
     end
