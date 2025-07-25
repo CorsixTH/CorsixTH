@@ -2107,10 +2107,6 @@ function App:finishVideoUpdate()
   self.video:startFrame()
 end
 
-function App:isAudioEnabled()
-  return TH.GetCompileOptions().audio
-end
-
 function App:isUpdateCheckDisabledByConfig()
   return TH.GetCompileOptions().update_check and not self.config.check_for_updates
 end
