@@ -25,7 +25,7 @@ SOFTWARE.
 #include "config.h"
 
 #include "lua_sdl.h"
-#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
+#ifdef CORSIX_TH_USE_FFMPEG
 
 extern "C" {
 #include <libavcodec/avcodec.h>

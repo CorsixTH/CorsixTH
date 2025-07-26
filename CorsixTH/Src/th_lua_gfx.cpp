@@ -23,6 +23,7 @@ SOFTWARE.
 #include "config.h"
 
 #include <SDL_stdinc.h>
+#include <ft2build.h>  // IWYU pragma: keep
 
 #include <climits>
 #include <cstring>
@@ -35,12 +36,8 @@ SOFTWARE.
 #include "th_gfx_sdl.h"
 #include "th_lua.h"
 #include "th_lua_internal.h"
-
-#ifdef CORSIX_TH_USE_FREETYPE2
-#include <ft2build.h>  // IWYU pragma: keep
 #include FT_ERRORS_H
 #include FT_TYPES_H
-#endif
 
 namespace {
 
@@ -265,7 +262,6 @@ int l_bitmap_font_set_sep(lua_State* L) {
   return 1;
 }
 
-#ifdef CORSIX_TH_USE_FREETYPE2
 void l_freetype_throw_error_code(lua_State* L, FT_Error e) {
   if (e != FT_Err_Ok) {
     switch (e) {
@@ -334,8 +330,6 @@ int l_freetype_font_clear_cache(lua_State* L) {
   pFont->clear_cache();
   return 0;
 }
-
-#endif
 
 int l_font_get_size(lua_State* L) {
   font* pFont = luaT_getfont(L);
@@ -927,7 +921,6 @@ void lua_register_gfx(const lua_register_state* pState) {
     lcb.add_function(l_bitmap_font_set_sep, "setSeparation");
   }
 
-#ifdef CORSIX_TH_USE_FREETYPE2
   // FreeTypeFont
   {
     lua_class_binding<freetype_font> lcb(pState, "freetype_font",
@@ -940,7 +933,6 @@ void lua_register_gfx(const lua_register_state* pState) {
     lcb.add_function(l_freetype_font_get_copyright, "getCopyrightNotice");
     lcb.add_function(l_freetype_font_clear_cache, "clearCache");
   }
-#endif
 
   // Layers
   {

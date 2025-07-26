@@ -348,14 +348,7 @@ function Graphics:hasLanguageFont(font)
     -- Original game fonts are always present.
     return true
   else
-    if not TH.freetype_font then
-      -- CorsixTH compiled without FreeType2 support, so even if suitable font
-      -- file exists, it cannot be loaded or drawn.
-      return false
-    end
-
     -- TODO: Handle more than one font
-
     return not not self.ttf_font_data
   end
 end

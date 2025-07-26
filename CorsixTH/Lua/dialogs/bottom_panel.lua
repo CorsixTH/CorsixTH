@@ -150,7 +150,7 @@ function UIBottomPanel:registerKeyHandlers()
 end
 
 function UIBottomPanel:openJukebox()
-  if self.ui.app.config.audio and self.ui.app:isAudioEnabled() then
+  if self.ui.app.config.audio then
     self.ui:addWindow(UIJukebox(self.ui.app))
   end
 end
