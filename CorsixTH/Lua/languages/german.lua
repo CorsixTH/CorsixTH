@@ -705,6 +705,10 @@ tooltip.handyman_window = {
   parcel_select = "Der Arbeitsbereich des Handlangers. Klicken zum Ändern.",
 }
 
+tooltip.machine_window = {
+  toggle_machine_menu = "Klicke, um das Maschinenmenü umzuschalten",
+}
+
 new_game_window = {
   caption = "Neues Spiel",
   player_name = "Spielername",
