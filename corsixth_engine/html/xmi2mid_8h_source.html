@@ -95,24 +95,13 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#ifndef CORSIX_TH_XMI2MID_H_</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define CORSIX_TH_XMI2MID_H_</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config_8h.html">config.h</a>&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#ifdef CORSIX_TH_USE_SDL_MIXER</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;uint8_t* <a class="code" href="xmi2mid_8h.html#a08eee4e4c46aa874cfe04da10aaa7d79">transcode_xmi_to_midi</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* xmi_data, <span class="keywordtype">size_t</span> xmi_length,</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                               <span class="keywordtype">size_t</span>* midi_length);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#else  </span><span class="comment">// CORSIX_TH_USE_SDL_MIXER</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="xmi2mid_8h.html#a08eee4e4c46aa874cfe04da10aaa7d79">   33</a></span>&#160;<span class="keyword">inline</span> uint8_t* <a class="code" href="xmi2mid_8h.html#a08eee4e4c46aa874cfe04da10aaa7d79">transcode_xmi_to_midi</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* xmi_data,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                                      <span class="keywordtype">size_t</span> xmi_length, <span class="keywordtype">size_t</span>* midi_length) {</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="comment">// When SDL_mixer isn&#39;t being used, there is no need to transcode XMI to</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="comment">// MIDI, so the function always fails.</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// CORSIX_TH_USE_SDL_MIXER</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// CORSIX_TH_XMI2MID_H_</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;uint8_t* <a class="code" href="xmi2mid_8h.html#a08eee4e4c46aa874cfe04da10aaa7d79">transcode_xmi_to_midi</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* xmi_data, <span class="keywordtype">size_t</span> xmi_length,</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                               <span class="keywordtype">size_t</span>* midi_length);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// CORSIX_TH_XMI2MID_H_</span></div>
 <div class="ttc" id="aconfig_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div></div>
-<div class="ttc" id="axmi2mid_8h_html_a08eee4e4c46aa874cfe04da10aaa7d79"><div class="ttname"><a href="xmi2mid_8h.html#a08eee4e4c46aa874cfe04da10aaa7d79">transcode_xmi_to_midi</a></div><div class="ttdeci">uint8_t * transcode_xmi_to_midi(const unsigned char *xmi_data, size_t xmi_length, size_t *midi_length)</div><div class="ttdef"><b>Definition:</b> xmi2mid.h:33</div></div>
+<div class="ttc" id="axmi2mid_8h_html_a08eee4e4c46aa874cfe04da10aaa7d79"><div class="ttname"><a href="xmi2mid_8h.html#a08eee4e4c46aa874cfe04da10aaa7d79">transcode_xmi_to_midi</a></div><div class="ttdeci">uint8_t * transcode_xmi_to_midi(const unsigned char *xmi_data, size_t xmi_length, size_t *midi_length)</div><div class="ttdef"><b>Definition:</b> xmi2mid.cpp:208</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.17-->
 <!-- start footer part -->

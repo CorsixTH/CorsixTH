@@ -96,121 +96,117 @@ $(function() {
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define CORSIX_TH_TH_SOUND_H_</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config_8h.html">config.h</a>&quot;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;SDL_rwops.h&gt;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifdef CORSIX_TH_USE_SDL_MIXER</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;SDL_mixer.h&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classsound__archive.html">   33</a></span>&#160;<span class="keyword">class </span><a class="code" href="classsound__archive.html">sound_archive</a> {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <a class="code" href="classsound__archive.html#a357fd76a604459fc5c7d83c8488409aa">sound_archive</a>();</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <a class="code" href="classsound__archive.html#a8abbc68ae1ba91aabb57c5162929db3d">~sound_archive</a>();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;SDL_mixer.h&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;SDL_rwops.h&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classsound__archive.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classsound__archive.html">sound_archive</a> {</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <a class="code" href="classsound__archive.html#a357fd76a604459fc5c7d83c8488409aa">sound_archive</a>();</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <a class="code" href="classsound__archive.html#a8abbc68ae1ba91aabb57c5162929db3d">~sound_archive</a>();</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classsound__archive.html#ae7827c7c7edda0290d903f42735cbe18">load_from_th_file</a>(<span class="keyword">const</span> uint8_t* pData, <span class="keywordtype">size_t</span> iDataLength);</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classsound__archive.html#ae7827c7c7edda0290d903f42735cbe18">load_from_th_file</a>(<span class="keyword">const</span> uint8_t* pData, <span class="keywordtype">size_t</span> iDataLength);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <span class="keywordtype">size_t</span> <a class="code" href="classsound__archive.html#a4d6b2ebb34d82fa1aefcc1cd42aa26ff">get_number_of_sounds</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="classsound__archive.html#ac28933d985fe3fd52300aae83d57e33f">get_sound_name</a>(<span class="keywordtype">size_t</span> iIndex) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordtype">size_t</span> <a class="code" href="classsound__archive.html#a5f8f86315602dc3422cdf3b3f50e92e5">get_sound_duration</a>(<span class="keywordtype">size_t</span> iIndex);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="keywordtype">size_t</span> <a class="code" href="classsound__archive.html#a4d6b2ebb34d82fa1aefcc1cd42aa26ff">get_number_of_sounds</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="classsound__archive.html#ac28933d985fe3fd52300aae83d57e33f">get_sound_name</a>(<span class="keywordtype">size_t</span> iIndex) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordtype">size_t</span> <a class="code" href="classsound__archive.html#a5f8f86315602dc3422cdf3b3f50e92e5">get_sound_duration</a>(<span class="keywordtype">size_t</span> iIndex);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  SDL_RWops* <a class="code" href="classsound__archive.html#a66fc62d00bc24993142cd418fc17e813">load_sound</a>(<span class="keywordtype">size_t</span> iIndex);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#if CORSIX_TH_USE_PACK_PRAGMAS</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#pragma pack(push)</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#pragma pack(1)</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keyword">struct </span>sound_dat_file_header {</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    uint8_t unknown1[50];</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    uint32_t table_position;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    uint32_t unknown2;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    uint32_t table_length;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    uint32_t table_position2;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    uint8_t unknown3[112];</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    uint32_t table_position3;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    uint32_t table_length2;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    uint8_t unknown4[48];</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  } CORSIX_TH_PACKED_FLAGS;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keyword">struct </span>sound_dat_sound_info {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">char</span> sound_name[18];</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    uint32_t position;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    uint32_t unknown1;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    uint32_t length;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    uint16_t unknown2;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  } CORSIX_TH_PACKED_FLAGS;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#if CORSIX_TH_USE_PACK_PRAGMAS</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#pragma pack(pop)</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="comment">// TODO: header is only used in one function, should not be class variable.</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  sound_dat_file_header header;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  sound_dat_sound_info* sound_files;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  uint8_t* data;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keywordtype">size_t</span> sound_file_count;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;};</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="classsound__player.html">   90</a></span>&#160;<span class="keyword">class </span><a class="code" href="classsound__player.html">sound_player</a> {</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <a class="code" href="classsound__player.html#aefdca533df6ec423d01ceef5f0fff910">sound_player</a>();</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <a class="code" href="classsound__player.html#a002ec77b9fd73012dee8f68ce480126d">~sound_player</a>();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  SDL_RWops* <a class="code" href="classsound__archive.html#a66fc62d00bc24993142cd418fc17e813">load_sound</a>(<span class="keywordtype">size_t</span> iIndex);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#if CORSIX_TH_USE_PACK_PRAGMAS</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#pragma pack(push)</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#pragma pack(1)</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">struct </span>sound_dat_file_header {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    uint8_t unknown1[50];</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    uint32_t table_position;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    uint32_t unknown2;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    uint32_t table_length;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    uint32_t table_position2;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    uint8_t unknown3[112];</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    uint32_t table_position3;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    uint32_t table_length2;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    uint8_t unknown4[48];</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  } CORSIX_TH_PACKED_FLAGS;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keyword">struct </span>sound_dat_sound_info {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">char</span> sound_name[18];</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    uint32_t position;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    uint32_t unknown1;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    uint32_t length;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    uint16_t unknown2;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  } CORSIX_TH_PACKED_FLAGS;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#if CORSIX_TH_USE_PACK_PRAGMAS</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#pragma pack(pop)</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="comment">// TODO: header is only used in one function, should not be class variable.</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  sound_dat_file_header header;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  sound_dat_sound_info* sound_files;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  uint8_t* data;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keywordtype">size_t</span> sound_file_count;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;};</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classsound__player.html">   88</a></span>&#160;<span class="keyword">class </span><a class="code" href="classsound__player.html">sound_player</a> {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <a class="code" href="classsound__player.html#aefdca533df6ec423d01ceef5f0fff910">sound_player</a>();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <a class="code" href="classsound__player.html#a002ec77b9fd73012dee8f68ce480126d">~sound_player</a>();</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keyword">static</span> <a class="code" href="classsound__player.html">sound_player</a>* <a class="code" href="classsound__player.html#a1f94bcc35debe2279dffe5521c84aca4">get_singleton</a>();</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keyword">static</span> <a class="code" href="classsound__player.html">sound_player</a>* <a class="code" href="classsound__player.html#a1f94bcc35debe2279dffe5521c84aca4">get_singleton</a>();</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ae142d80dc6029651ed3bd1655c89350a">populate_from</a>(<a class="code" href="classsound__archive.html">sound_archive</a>* pArchive);</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ae142d80dc6029651ed3bd1655c89350a">populate_from</a>(<a class="code" href="classsound__archive.html">sound_archive</a>* pArchive);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#a72a4a94f6e3176400e6e7d312de2c743">play</a>(<span class="keywordtype">size_t</span> iIndex, <span class="keywordtype">double</span> dVolume);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ac730fd117c84fed20ca8c7270e059650">play_at</a>(<span class="keywordtype">size_t</span> iIndex, <span class="keywordtype">int</span> iX, <span class="keywordtype">int</span> iY);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ac730fd117c84fed20ca8c7270e059650">play_at</a>(<span class="keywordtype">size_t</span> iIndex, <span class="keywordtype">double</span> dVolume, <span class="keywordtype">int</span> iX, <span class="keywordtype">int</span> iY);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ab5af500bea86470b88ca3d75dc1833f6">set_sound_effect_volume</a>(<span class="keywordtype">double</span> dVolume);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ab3706925c1c24054ff5ac8e7b6d1954a">set_sound_effects_enabled</a>(<span class="keywordtype">bool</span> bOn);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ad10af9d329495d402fcce97071d02b49">set_camera</a>(<span class="keywordtype">int</span> iX, <span class="keywordtype">int</span> iY, <span class="keywordtype">int</span> iRadius);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="keywordtype">int</span> <a class="code" href="classsound__player.html#a161c2136e5ef64a9d40e7703b0958863">reserve_channel</a>();</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#a851a575dc94d0661beae921fa3c973a3">release_channel</a>(<span class="keywordtype">int</span> iChannel);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#ifdef CORSIX_TH_USE_SDL_MIXER</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keyword">static</span> <a class="code" href="classsound__player.html">sound_player</a>* singleton;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> on_channel_finished(<span class="keywordtype">int</span> iChannel);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keyword">inline</span> <span class="keywordtype">void</span> play_raw(<span class="keywordtype">size_t</span> iIndex, <span class="keywordtype">int</span> iVolume);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  Mix_Chunk** sounds;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <span class="keywordtype">size_t</span> sound_count;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  uint32_t available_channels_bitmap;  </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="keywordtype">int</span> camera_x;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  <span class="keywordtype">int</span> camera_y;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="keywordtype">double</span> camera_radius;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keywordtype">double</span> master_volume;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  <span class="keywordtype">double</span> sound_effect_volume;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  <span class="keywordtype">int</span> positionless_volume;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  <span class="keywordtype">bool</span> sound_effects_enabled;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// CORSIX_TH_USE_SDL_MIXER</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;};</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// CORSIX_TH_TH_SOUND_H_</span></div>
-<div class="ttc" id="aclasssound__archive_html"><div class="ttname"><a href="classsound__archive.html">sound_archive</a></div><div class="ttdoc">Utility class for accessing Theme Hospital's SOUND-0.DAT.</div><div class="ttdef"><b>Definition:</b> th_sound.h:33</div></div>
-<div class="ttc" id="aclasssound__archive_html_a357fd76a604459fc5c7d83c8488409aa"><div class="ttname"><a href="classsound__archive.html#a357fd76a604459fc5c7d83c8488409aa">sound_archive::sound_archive</a></div><div class="ttdeci">sound_archive()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:38</div></div>
-<div class="ttc" id="aclasssound__archive_html_a4d6b2ebb34d82fa1aefcc1cd42aa26ff"><div class="ttname"><a href="classsound__archive.html#a4d6b2ebb34d82fa1aefcc1cd42aa26ff">sound_archive::get_number_of_sounds</a></div><div class="ttdeci">size_t get_number_of_sounds() const</div><div class="ttdoc">Returns the number of sounds present in the archive.</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:75</div></div>
-<div class="ttc" id="aclasssound__archive_html_a5f8f86315602dc3422cdf3b3f50e92e5"><div class="ttname"><a href="classsound__archive.html#a5f8f86315602dc3422cdf3b3f50e92e5">sound_archive::get_sound_duration</a></div><div class="ttdeci">size_t get_sound_duration(size_t iIndex)</div><div class="ttdoc">Gets the duration (in milliseconds) of the sound at a given index.</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:99</div></div>
-<div class="ttc" id="aclasssound__archive_html_a66fc62d00bc24993142cd418fc17e813"><div class="ttname"><a href="classsound__archive.html#a66fc62d00bc24993142cd418fc17e813">sound_archive::load_sound</a></div><div class="ttdeci">SDL_RWops * load_sound(size_t iIndex)</div><div class="ttdoc">Opens the sound at a given index into an SDL_RWops structure.</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:175</div></div>
-<div class="ttc" id="aclasssound__archive_html_a8abbc68ae1ba91aabb57c5162929db3d"><div class="ttname"><a href="classsound__archive.html#a8abbc68ae1ba91aabb57c5162929db3d">sound_archive::~sound_archive</a></div><div class="ttdeci">~sound_archive()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:43</div></div>
-<div class="ttc" id="aclasssound__archive_html_ac28933d985fe3fd52300aae83d57e33f"><div class="ttname"><a href="classsound__archive.html#ac28933d985fe3fd52300aae83d57e33f">sound_archive::get_sound_name</a></div><div class="ttdeci">const char * get_sound_name(size_t iIndex) const</div><div class="ttdoc">Gets the name of the sound at a given index.</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:77</div></div>
-<div class="ttc" id="aclasssound__archive_html_ae7827c7c7edda0290d903f42735cbe18"><div class="ttname"><a href="classsound__archive.html#ae7827c7c7edda0290d903f42735cbe18">sound_archive::load_from_th_file</a></div><div class="ttdeci">bool load_from_th_file(const uint8_t *pData, size_t iDataLength)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:45</div></div>
-<div class="ttc" id="aclasssound__player_html"><div class="ttname"><a href="classsound__player.html">sound_player</a></div><div class="ttdef"><b>Definition:</b> th_sound.h:90</div></div>
-<div class="ttc" id="aclasssound__player_html_a002ec77b9fd73012dee8f68ce480126d"><div class="ttname"><a href="classsound__player.html#a002ec77b9fd73012dee8f68ce480126d">sound_player::~sound_player</a></div><div class="ttdeci">~sound_player()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:319</div></div>
-<div class="ttc" id="aclasssound__player_html_a161c2136e5ef64a9d40e7703b0958863"><div class="ttname"><a href="classsound__player.html#a161c2136e5ef64a9d40e7703b0958863">sound_player::reserve_channel</a></div><div class="ttdeci">int reserve_channel()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:325</div></div>
-<div class="ttc" id="aclasssound__player_html_a1f94bcc35debe2279dffe5521c84aca4"><div class="ttname"><a href="classsound__player.html#a1f94bcc35debe2279dffe5521c84aca4">sound_player::get_singleton</a></div><div class="ttdeci">static sound_player * get_singleton()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:320</div></div>
-<div class="ttc" id="aclasssound__player_html_a72a4a94f6e3176400e6e7d312de2c743"><div class="ttname"><a href="classsound__player.html#a72a4a94f6e3176400e6e7d312de2c743">sound_player::play</a></div><div class="ttdeci">void play(size_t iIndex, double dVolume)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:322</div></div>
-<div class="ttc" id="aclasssound__player_html_a851a575dc94d0661beae921fa3c973a3"><div class="ttname"><a href="classsound__player.html#a851a575dc94d0661beae921fa3c973a3">sound_player::release_channel</a></div><div class="ttdeci">void release_channel(int iChannel)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:326</div></div>
-<div class="ttc" id="aclasssound__player_html_ab3706925c1c24054ff5ac8e7b6d1954a"><div class="ttname"><a href="classsound__player.html#ab3706925c1c24054ff5ac8e7b6d1954a">sound_player::set_sound_effects_enabled</a></div><div class="ttdeci">void set_sound_effects_enabled(bool bOn)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:329</div></div>
-<div class="ttc" id="aclasssound__player_html_ab5af500bea86470b88ca3d75dc1833f6"><div class="ttname"><a href="classsound__player.html#ab5af500bea86470b88ca3d75dc1833f6">sound_player::set_sound_effect_volume</a></div><div class="ttdeci">void set_sound_effect_volume(double dVolume)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:328</div></div>
-<div class="ttc" id="aclasssound__player_html_ac730fd117c84fed20ca8c7270e059650"><div class="ttname"><a href="classsound__player.html#ac730fd117c84fed20ca8c7270e059650">sound_player::play_at</a></div><div class="ttdeci">void play_at(size_t iIndex, int iX, int iY)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:323</div></div>
-<div class="ttc" id="aclasssound__player_html_ad10af9d329495d402fcce97071d02b49"><div class="ttname"><a href="classsound__player.html#ad10af9d329495d402fcce97071d02b49">sound_player::set_camera</a></div><div class="ttdeci">void set_camera(int iX, int iY, int iRadius)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:327</div></div>
-<div class="ttc" id="aclasssound__player_html_ae142d80dc6029651ed3bd1655c89350a"><div class="ttname"><a href="classsound__player.html#ae142d80dc6029651ed3bd1655c89350a">sound_player::populate_from</a></div><div class="ttdeci">void populate_from(sound_archive *pArchive)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:321</div></div>
-<div class="ttc" id="aclasssound__player_html_aefdca533df6ec423d01ceef5f0fff910"><div class="ttname"><a href="classsound__player.html#aefdca533df6ec423d01ceef5f0fff910">sound_player::sound_player</a></div><div class="ttdeci">sound_player()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:318</div></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#a72a4a94f6e3176400e6e7d312de2c743">play</a>(<span class="keywordtype">size_t</span> iIndex, <span class="keywordtype">double</span> dVolume);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ac730fd117c84fed20ca8c7270e059650">play_at</a>(<span class="keywordtype">size_t</span> iIndex, <span class="keywordtype">int</span> iX, <span class="keywordtype">int</span> iY);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ac730fd117c84fed20ca8c7270e059650">play_at</a>(<span class="keywordtype">size_t</span> iIndex, <span class="keywordtype">double</span> dVolume, <span class="keywordtype">int</span> iX, <span class="keywordtype">int</span> iY);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ab5af500bea86470b88ca3d75dc1833f6">set_sound_effect_volume</a>(<span class="keywordtype">double</span> dVolume);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ab3706925c1c24054ff5ac8e7b6d1954a">set_sound_effects_enabled</a>(<span class="keywordtype">bool</span> bOn);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#ad10af9d329495d402fcce97071d02b49">set_camera</a>(<span class="keywordtype">int</span> iX, <span class="keywordtype">int</span> iY, <span class="keywordtype">int</span> iRadius);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keywordtype">int</span> <a class="code" href="classsound__player.html#a161c2136e5ef64a9d40e7703b0958863">reserve_channel</a>();</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classsound__player.html#a851a575dc94d0661beae921fa3c973a3">release_channel</a>(<span class="keywordtype">int</span> iChannel);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keyword">static</span> <a class="code" href="classsound__player.html">sound_player</a>* singleton;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">void</span> on_channel_finished(<span class="keywordtype">int</span> iChannel);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keyword">inline</span> <span class="keywordtype">void</span> play_raw(<span class="keywordtype">size_t</span> iIndex, <span class="keywordtype">int</span> iVolume);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  Mix_Chunk** sounds;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keywordtype">size_t</span> sound_count;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  uint32_t available_channels_bitmap;  </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="keywordtype">int</span> camera_x;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  <span class="keywordtype">int</span> camera_y;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <span class="keywordtype">double</span> camera_radius;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="keywordtype">double</span> master_volume;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  <span class="keywordtype">double</span> sound_effect_volume;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="keywordtype">int</span> positionless_volume;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keywordtype">bool</span> sound_effects_enabled;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// CORSIX_TH_TH_SOUND_H_</span></div>
+<div class="ttc" id="aclasssound__archive_html"><div class="ttname"><a href="classsound__archive.html">sound_archive</a></div><div class="ttdoc">Utility class for accessing Theme Hospital's SOUND-0.DAT.</div><div class="ttdef"><b>Definition:</b> th_sound.h:31</div></div>
+<div class="ttc" id="aclasssound__archive_html_a357fd76a604459fc5c7d83c8488409aa"><div class="ttname"><a href="classsound__archive.html#a357fd76a604459fc5c7d83c8488409aa">sound_archive::sound_archive</a></div><div class="ttdeci">sound_archive()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:36</div></div>
+<div class="ttc" id="aclasssound__archive_html_a4d6b2ebb34d82fa1aefcc1cd42aa26ff"><div class="ttname"><a href="classsound__archive.html#a4d6b2ebb34d82fa1aefcc1cd42aa26ff">sound_archive::get_number_of_sounds</a></div><div class="ttdeci">size_t get_number_of_sounds() const</div><div class="ttdoc">Returns the number of sounds present in the archive.</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:73</div></div>
+<div class="ttc" id="aclasssound__archive_html_a5f8f86315602dc3422cdf3b3f50e92e5"><div class="ttname"><a href="classsound__archive.html#a5f8f86315602dc3422cdf3b3f50e92e5">sound_archive::get_sound_duration</a></div><div class="ttdeci">size_t get_sound_duration(size_t iIndex)</div><div class="ttdoc">Gets the duration (in milliseconds) of the sound at a given index.</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:97</div></div>
+<div class="ttc" id="aclasssound__archive_html_a66fc62d00bc24993142cd418fc17e813"><div class="ttname"><a href="classsound__archive.html#a66fc62d00bc24993142cd418fc17e813">sound_archive::load_sound</a></div><div class="ttdeci">SDL_RWops * load_sound(size_t iIndex)</div><div class="ttdoc">Opens the sound at a given index into an SDL_RWops structure.</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:173</div></div>
+<div class="ttc" id="aclasssound__archive_html_a8abbc68ae1ba91aabb57c5162929db3d"><div class="ttname"><a href="classsound__archive.html#a8abbc68ae1ba91aabb57c5162929db3d">sound_archive::~sound_archive</a></div><div class="ttdeci">~sound_archive()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:41</div></div>
+<div class="ttc" id="aclasssound__archive_html_ac28933d985fe3fd52300aae83d57e33f"><div class="ttname"><a href="classsound__archive.html#ac28933d985fe3fd52300aae83d57e33f">sound_archive::get_sound_name</a></div><div class="ttdeci">const char * get_sound_name(size_t iIndex) const</div><div class="ttdoc">Gets the name of the sound at a given index.</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:75</div></div>
+<div class="ttc" id="aclasssound__archive_html_ae7827c7c7edda0290d903f42735cbe18"><div class="ttname"><a href="classsound__archive.html#ae7827c7c7edda0290d903f42735cbe18">sound_archive::load_from_th_file</a></div><div class="ttdeci">bool load_from_th_file(const uint8_t *pData, size_t iDataLength)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:43</div></div>
+<div class="ttc" id="aclasssound__player_html"><div class="ttname"><a href="classsound__player.html">sound_player</a></div><div class="ttdef"><b>Definition:</b> th_sound.h:88</div></div>
+<div class="ttc" id="aclasssound__player_html_a002ec77b9fd73012dee8f68ce480126d"><div class="ttname"><a href="classsound__player.html#a002ec77b9fd73012dee8f68ce480126d">sound_player::~sound_player</a></div><div class="ttdeci">~sound_player()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:204</div></div>
+<div class="ttc" id="aclasssound__player_html_a161c2136e5ef64a9d40e7703b0958863"><div class="ttname"><a href="classsound__player.html#a161c2136e5ef64a9d40e7703b0958863">sound_player::reserve_channel</a></div><div class="ttdeci">int reserve_channel()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:284</div></div>
+<div class="ttc" id="aclasssound__player_html_a1f94bcc35debe2279dffe5521c84aca4"><div class="ttname"><a href="classsound__player.html#a1f94bcc35debe2279dffe5521c84aca4">sound_player::get_singleton</a></div><div class="ttdeci">static sound_player * get_singleton()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:218</div></div>
+<div class="ttc" id="aclasssound__player_html_a72a4a94f6e3176400e6e7d312de2c743"><div class="ttname"><a href="classsound__player.html#a72a4a94f6e3176400e6e7d312de2c743">sound_player::play</a></div><div class="ttdeci">void play(size_t iIndex, double dVolume)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:243</div></div>
+<div class="ttc" id="aclasssound__player_html_a851a575dc94d0661beae921fa3c973a3"><div class="ttname"><a href="classsound__player.html#a851a575dc94d0661beae921fa3c973a3">sound_player::release_channel</a></div><div class="ttdeci">void release_channel(int iChannel)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:294</div></div>
+<div class="ttc" id="aclasssound__player_html_ab3706925c1c24054ff5ac8e7b6d1954a"><div class="ttname"><a href="classsound__player.html#ab3706925c1c24054ff5ac8e7b6d1954a">sound_player::set_sound_effects_enabled</a></div><div class="ttdeci">void set_sound_effects_enabled(bool bOn)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:280</div></div>
+<div class="ttc" id="aclasssound__player_html_ab5af500bea86470b88ca3d75dc1833f6"><div class="ttname"><a href="classsound__player.html#ab5af500bea86470b88ca3d75dc1833f6">sound_player::set_sound_effect_volume</a></div><div class="ttdeci">void set_sound_effect_volume(double dVolume)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:276</div></div>
+<div class="ttc" id="aclasssound__player_html_ac730fd117c84fed20ca8c7270e059650"><div class="ttname"><a href="classsound__player.html#ac730fd117c84fed20ca8c7270e059650">sound_player::play_at</a></div><div class="ttdeci">void play_at(size_t iIndex, int iX, int iY)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:252</div></div>
+<div class="ttc" id="aclasssound__player_html_ad10af9d329495d402fcce97071d02b49"><div class="ttname"><a href="classsound__player.html#ad10af9d329495d402fcce97071d02b49">sound_player::set_camera</a></div><div class="ttdeci">void set_camera(int iX, int iY, int iRadius)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:305</div></div>
+<div class="ttc" id="aclasssound__player_html_ae142d80dc6029651ed3bd1655c89350a"><div class="ttname"><a href="classsound__player.html#ae142d80dc6029651ed3bd1655c89350a">sound_player::populate_from</a></div><div class="ttdeci">void populate_from(sound_archive *pArchive)</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:220</div></div>
+<div class="ttc" id="aclasssound__player_html_aefdca533df6ec423d01ceef5f0fff910"><div class="ttname"><a href="classsound__player.html#aefdca533df6ec423d01ceef5f0fff910">sound_player::sound_player</a></div><div class="ttdeci">sound_player()</div><div class="ttdef"><b>Definition:</b> th_sound.cpp:186</div></div>
 <div class="ttc" id="aconfig_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.17-->
