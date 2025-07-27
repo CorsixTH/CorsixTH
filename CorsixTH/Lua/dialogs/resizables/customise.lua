@@ -61,23 +61,20 @@ function UICustomise:UICustomise(ui, mode)
     .lowered = true
 
   -- Movies, global switch
-  local audio_status = app:isAudioEnabled()
   self:addBevelPanel(15, 40, 165, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.customise_window.movies):setTooltip(_S.tooltip.customise_window.movies).lowered = true
   self.movies_panel =
-    self:addBevelPanel(185, 40, 140, 20, col_bg):setLabel(app.config.movies and audio_status and _S.customise_window.option_on or _S.customise_window.option_off)
+    self:addBevelPanel(185, 40, 140, 20, col_bg):setLabel(app.config.movies and _S.customise_window.option_on or _S.customise_window.option_off)
   self.movies_button = self.movies_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonMoviesGlobal)
-    :setToggleState(app.config.movies and audio_status):setTooltip(_S.tooltip.customise_window.movies)
-  self.movies_button.enabled = audio_status
+    :setToggleState(app.config.movies):setTooltip(_S.tooltip.customise_window.movies)
 
   -- Intro movie
   self:addBevelPanel(15, 65, 165, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.customise_window.intro):setTooltip(_S.tooltip.customise_window.intro).lowered = true
   self.intro_panel =
-    self:addBevelPanel(185, 65, 140, 20, col_bg):setLabel(app.config.play_intro and audio_status and _S.customise_window.option_on or _S.customise_window.option_off)
+    self:addBevelPanel(185, 65, 140, 20, col_bg):setLabel(app.config.play_intro and _S.customise_window.option_on or _S.customise_window.option_off)
   self.intro_button = self.intro_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonIntro)
-    :setToggleState(app.config.play_intro and audio_status):setTooltip(_S.tooltip.customise_window.intro)
-  self.intro_button.enabled = audio_status
+    :setToggleState(app.config.play_intro):setTooltip(_S.tooltip.customise_window.intro)
 
   -- Allow user actions when paused
   self:addBevelPanel(15, 90, 165, 20, col_shadow, col_bg, col_bg)

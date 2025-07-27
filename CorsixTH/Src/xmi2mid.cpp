@@ -21,7 +21,7 @@ SOFTWARE.
 */
 
 #include "config.h"
-#ifdef CORSIX_TH_USE_SDL_MIXER
+
 #include <algorithm>
 #include <cstring>
 #include <new>
@@ -337,5 +337,3 @@ uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data, size_t xmi_length,
 
   return bufOutput.take_data(midi_length);
 }
-
-#endif

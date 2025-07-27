@@ -24,20 +24,19 @@ SOFTWARE.
 
 #include "config.h"
 
-#include "th_strings.h"
-#ifdef CORSIX_TH_USE_FREETYPE2
 #include <ft2build.h>  // IWYU pragma: keep
+
+#include "th_strings.h"
 #include FT_FREETYPE_H
 #include FT_ERRORS_H
 #include FT_GLYPH_H
 #include FT_IMAGE_H
 #include FT_TYPES_H
-#include <map>
-#include <vector>
-#endif
 #include <algorithm>
 #include <cstring>
+#include <map>
 #include <utility>
+#include <vector>
 
 bitmap_font::bitmap_font() {
   sheet = nullptr;
@@ -183,7 +182,6 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
   return oDrawArea;
 }
 
-#ifdef CORSIX_TH_USE_FREETYPE2
 FT_Library freetype_font::freetype_library = nullptr;
 int freetype_font::freetype_init_count = 0;
 
@@ -751,5 +749,3 @@ void freetype_font::render_gray(cached_text* pCacheEntry, FT_Bitmap* pBitmap,
     }
   }
 }
-
-#endif  // CORSIX_TH_USE_FREETYPE2

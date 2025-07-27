@@ -37,7 +37,7 @@ SOFTWARE.
 #include <string>
 #include <thread>
 
-#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
+#ifdef CORSIX_TH_USE_FFMPEG
 #include <SDL_mixer.h>
 
 extern "C" {
@@ -377,7 +377,7 @@ class movie_player {
   void copy_audio_to_stream(uint8_t* pbStream, int iStreamSize);
 
  private:
-#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
+#ifdef CORSIX_TH_USE_FFMPEG
   static constexpr size_t movie_error_buffer_capacity =
       128;  ///< Buffer to hold last error description
 

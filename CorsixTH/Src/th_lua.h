@@ -286,13 +286,11 @@ struct luaT_classinfo<bitmap_font> {
   static inline const char* name() { return "BitmapFont"; }
 };
 
-#ifdef CORSIX_TH_USE_FREETYPE2
 class freetype_font;
 template <>
 struct luaT_classinfo<freetype_font> {
   static inline const char* name() { return "FreeTypeFont"; }
 };
-#endif
 
 struct layers;
 template <>
