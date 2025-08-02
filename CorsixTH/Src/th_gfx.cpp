@@ -1149,8 +1149,6 @@ bool are_flags_set(uint32_t val, uint32_t flags) {
 void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
 
-  iDestX += x_relative_to_tile;
-  iDestY += y_relative_to_tile;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
     if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY);
@@ -1164,11 +1162,15 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       rcNew.x = iDestX + (crop_column - 1) * 32;
       rcNew.w = 64;
       render_target::scoped_clip clip(pCanvas, &rcNew);
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
-                          patient_effect, patient_effect_offset);
+      manager->draw_frame(pCanvas, frame_index, layers,
+                          iDestX + x_relative_to_tile,
+                          iDestY + y_relative_to_tile, flags, patient_effect,
+                          patient_effect_offset);
     } else
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
-                          patient_effect, patient_effect_offset);
+      manager->draw_frame(pCanvas, frame_index, layers,
+                          iDestX + x_relative_to_tile,
+                          iDestY + y_relative_to_tile, flags, patient_effect,
+                          patient_effect_offset);
   }
 }
 
