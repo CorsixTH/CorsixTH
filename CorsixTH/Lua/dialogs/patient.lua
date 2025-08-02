@@ -172,12 +172,13 @@ function UIPatient:draw(canvas, x_, y_)
 end
 
 --! List the treatments that were performed on the patient.
+-- This text is always capitalised.
 --!param canvas Destination to draw on.
 --!param x (int) X position of the top of the list.
 --!param y (int) Y position of the top of the list.
 function UIPatient:drawTreatmentHistory(canvas, x, y)
   for _, room in ipairs(self.patient.treatment_history) do
-    y = self.font:drawWrapped(canvas, room, x, y, 95)
+    y = self.font:drawWrapped(canvas, room:upper(), x, y, 95)
   end
 end
 
