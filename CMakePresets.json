@@ -26,7 +26,8 @@
         "ENABLE_SANITIZERS": "ON",
         "BUILD_ANIMVIEW": "ON",
         "BUILD_TOOLS": "ON",
-	"CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -95,6 +96,11 @@
       "configuration": "Debug"
     },
     {
+      "name": "linux-dev-vcpkg",
+      "configurePreset": "linux-dev-vcpkg",
+      "configuration": "Debug"
+    },
+    {
       "name": "win-x64-rel",
       "configurePreset": "win-x64-rel",
       "configuration": "RelWithDebInfo"
@@ -119,6 +125,15 @@
     {
       "name": "linux-dev",
       "configurePreset": "linux-dev",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux-dev-vcpkg",
+      "configurePreset": "linux-dev-vcpkg",
       "output": {
         "verbosity": "extra",
         "outputOnFailure": true
