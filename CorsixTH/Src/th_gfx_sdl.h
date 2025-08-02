@@ -307,8 +307,8 @@ class render_target {
   //! Update the cursor position (if the cursor is being simulated)
   void set_cursor_position(int iX, int iY);
 
-  //! Take a screenshot and save it as a bitmap
-  bool take_screenshot(const char* sFile);
+  //! Take a screenshot and save it as a PNG file.
+  bool take_screenshot(const char* file_path);
 
   //! Set the amount by which future draw operations are scaled.
   /*!

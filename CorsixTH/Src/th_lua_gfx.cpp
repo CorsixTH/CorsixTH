@@ -711,8 +711,8 @@ int l_surface_rect(lua_State* L) {
 
 int l_surface_screenshot(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
-  const char* sFile = luaL_checkstring(L, 2);
-  if (pCanvas->take_screenshot(sFile)) {
+  const char* file_path = luaL_checkstring(L, 2);
+  if (pCanvas->take_screenshot(file_path)) {
     lua_settop(L, 1);
     return 1;
   }
