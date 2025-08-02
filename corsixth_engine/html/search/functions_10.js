@@ -1,7 +1,7 @@
 var searchData=
 [
   ['take_5fdata_1384',['take_data',['../classmemory__buffer.html#a2ae74fd8d953a54869ac41beec128e61',1,'memory_buffer::take_data()'],['../classchunk__renderer.html#afaa3c48574eee1f9c27c84d76811d40e',1,'chunk_renderer::take_data()']]],
-  ['take_5fscreenshot_1385',['take_screenshot',['../classrender__target.html#a09d5967891dccc00d7cba3b25c75a5da',1,'render_target']]],
+  ['take_5fscreenshot_1385',['take_screenshot',['../classrender__target.html#a02aa6f68d6707adc44212777ab92c945',1,'render_target']]],
   ['tell_1386',['tell',['../classmemory__buffer.html#aaf40b726b2cc796bb859c07e0e5ca4f5',1,'memory_buffer']]],
   ['th_5fstring_5flist_1387',['th_string_list',['../classth__string__list.html#a24cd184c0a7d26a78f755a8bf5c08cb6',1,'th_string_list::th_string_list(const uint8_t *data, size_t length)'],['../classth__string__list.html#a2235cc463c06003f14f0c9c6a563694a',1,'th_string_list::th_string_list()=delete'],['../classth__string__list.html#a838b62bac4fb4e6adb4dfdf762a64c72',1,'th_string_list::th_string_list(const th_string_list &amp;)=delete'],['../classth__string__list.html#ae8c3ffc4c7dd0742aa0a51d7f6d3b6e0',1,'th_string_list::th_string_list(th_string_list &amp;&amp;)=delete']]],
   ['tick_1388',['tick',['../classanimation__manager.html#a8abe0e00f7fa5d61b757d4dd77e57123',1,'animation_manager::tick()'],['../classanimation.html#a19e1060d2fdc871b60e2b0f703752415',1,'animation::tick()'],['../classsprite__render__list.html#ad09736d16bf8d01859c51bf776343e67',1,'sprite_render_list::tick()']]],
