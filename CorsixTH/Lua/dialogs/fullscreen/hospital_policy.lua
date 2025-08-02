@@ -124,22 +124,22 @@ function UIPolicy:draw(canvas, x, y)
   local text = self.text_font
   local label = self.label_font
 
-  -- Labels on the panels
+  -- Labels on the panels. Labels are always capitalised.
   local added_x = self.sliders["send_home"].x
   local added_y = self.sliders["send_home"].y
-  label:draw(canvas, _S.policy.sliders.send_home, x + added_x, y + added_y + 2, 82, 0)
+  label:draw(canvas, _S.policy.sliders.send_home:upper(), x + added_x, y + added_y + 2, 82, 0)
 
   added_x = self.sliders["guess_cure"].x
   added_y = self.sliders["guess_cure"].y
-  label:draw(canvas, _S.policy.sliders.guess, x + added_x, y + added_y + 2, 82, 0)
+  label:draw(canvas, _S.policy.sliders.guess:upper(), x + added_x, y + added_y + 2, 82, 0)
 
   added_x = self.sliders["stop_procedure"].x
   added_y = self.sliders["stop_procedure"].y
-  label:draw(canvas, _S.policy.sliders.stop, x + added_x, y + added_y + 2, 92, 0)
+  label:draw(canvas, _S.policy.sliders.stop:upper(), x + added_x, y + added_y + 2, 92, 0)
 
   added_x = self.sliders["goto_staffroom"].x
   added_y = self.sliders["goto_staffroom"].y
-  label:draw(canvas, _S.policy.sliders.staff_room, x + added_x, y + added_y + 2, 92, 0)
+  label:draw(canvas, _S.policy.sliders.staff_room:upper(), x + added_x, y + added_y + 2, 92, 0)
 
   -- All other text
   text:draw(canvas, _S.policy.header,            x + 160, y + 78, 300, 0)
