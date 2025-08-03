@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['markduplicates_297',['markDuplicates',['../classTHAnimations.html#aba837af1d5290e13d75682aacea60cda',1,'THAnimations']]],
-  ['myvscrolled_298',['MyVScrolled',['../classMyVScrolled.html#a9f571a6a3d39e8194f0aa2079b0a6f50',1,'MyVScrolled']]]
+  ['markduplicates_0',['markDuplicates',['../classTHAnimations.html#aba837af1d5290e13d75682aacea60cda',1,'THAnimations']]],
+  ['myvscrolled_1',['MyVScrolled',['../classMyVScrolled.html#a9f571a6a3d39e8194f0aa2079b0a6f50',1,'MyVScrolled']]]
 ];

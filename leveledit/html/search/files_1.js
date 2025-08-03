@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['emergency_2ejava_112',['Emergency.java',['../Emergency_8java.html',1,'']]]
+  ['emergency_2ejava_0',['Emergency.java',['../Emergency_8java.html',1,'']]]
 ];
