@@ -33,10 +33,6 @@ local orient_mirror = {
   south = "east",
 }
 
-function Object:getDrawingLayer()
-  return 4
-end
-
 function Object:Object(hospital, object_type, x, y, direction, etc)
   assert(class.is(hospital, Hospital), "First argument is not a Hospital instance.")
 
