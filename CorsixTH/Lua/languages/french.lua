@@ -31,6 +31,7 @@ Inherit("original_strings", 1)
 ----------------------------------------------------------- Override -----------------------------------------------------------
 rooms_short.ward = "Salle des malades"
 rooms_long.ward = "Salle des malades"
+confirmation.replace_machine = "Voulez-vous vraiment remplacer cette machine %s pour $%d ?" -- French originally had no parameters
 
 misc.save_failed = "ERREUR : partie non sauvegardée." -- Much more french
 misc.cant_treat_emergency = "Votre hôpital ne peut pas traiter cette urgence car la maladie n'a pas été découverte. N'hésitez pas à réessayer."
@@ -503,7 +504,6 @@ confirmation = {
   overwrite_save = "Il y a déjà une partie sauvegardée ici. Êtes-vous sûr de vouloir l'écraser ?",
   delete_room = "Voulez-vous vraiment détruire cette salle ?",
   sack_staff = "Êtes-vous sûr de vouloir licencier ?",
-  replace_machine = "Voulez-vous vraiment remplacer cette machine ?"
 }
 
 -- The originals of these strings contain one space too much
