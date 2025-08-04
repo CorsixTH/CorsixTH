@@ -515,11 +515,18 @@ end
 --[1 idle, 2 meander] or [1 walk, 2 meander].
 --!return true if staff currently has a meander action
 function Staff:isMeandering()
-  if ((self.action_queue[1].name == "idle") or
-    (self.action_queue[1].name == "walk")) and
-    (self.action_queue[2].name == "meander") then
+  local actions_count = #self.action_queue
+  -- if the action queue is empty, we assume that staff is meandering
+  if actions_count == 0 then return true end
+
+  if actions_count >= 2 and
+    (
+      ((self.action_queue[1].name == "idle") or (self.action_queue[1].name == "walk"))
+      and (self.action_queue[2].name == "meander")
+    ) then
     return true
   end
+
   return false
 end
 
