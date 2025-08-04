@@ -25,7 +25,7 @@ SOFTWARE.
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <fstream>
+#include <filesystem>
 #include <string>
 
 #include "lua.hpp"
@@ -56,13 +56,10 @@ int luaopen_lpeg(lua_State* L);
 
 namespace {
 
-// relace me with C++17 std::filesystem::exists
-inline bool file_exists(const char* f) {
-  std::ifstream file(f);
-  return file.is_open();
+bool file_exists(const std::filesystem::path& f) {
+  const std::filesystem::file_status st = std::filesystem::status(f);
+  return std::filesystem::exists(st) && !std::filesystem::is_directory(st);
 }
-
-inline bool file_exists(const std::string& f) { return file_exists(f.c_str()); }
 
 std::string search_script_file(lua_State* L) {
   // 1. Check for --interpreter
@@ -85,7 +82,7 @@ std::string search_script_file(lua_State* L) {
       "../Resources/",
       "../share/corsix-th/",
   };
-  std::string strProgramDir = "";
+  std::string strProgramDir;
   {
     int iProgramPathLength = wai_getExecutablePath(nullptr, 0, nullptr);
     if (iProgramPathLength != 0) {
@@ -109,7 +106,6 @@ std::string search_script_file(lua_State* L) {
         std::fflush(stderr);
         exit(255);
       }
-      // replace me with C++17 std::filesystem::path::preferred_separator
       sProgramDir[iProgramDirLength] = '/';
       sProgramDir[iProgramDirLength + 1] = '\0';
       strProgramDir = sProgramDir;
