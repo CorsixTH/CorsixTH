@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include <cstddef>
 #include <string>
+#include <string_view>
 
 class font;
 class level_map;
@@ -65,7 +66,7 @@ class map_typical_overlay : public map_overlay {
 
  protected:
   void draw_text(render_target* pCanvas, int iX, int iY,
-                 const std::string& str);
+                 std::string_view str);
 
   sprite_sheet* sprites;
   ::font* font;

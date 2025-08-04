@@ -373,7 +373,7 @@ class animation_manager {
       @param iTilesize Tile size of the animation.
       @return A set starting frames for the queried animation.
    */
-  const animation_start_frames& get_named_animations(const std::string& sName,
+  const animation_start_frames& get_named_animations(std::string_view sName,
                                                      int iTilesize) const;
 
   //! Notified every world tick to allow tracking rate of game time passage.

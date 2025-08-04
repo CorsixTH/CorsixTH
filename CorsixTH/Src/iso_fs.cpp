@@ -473,15 +473,15 @@ int iso_filesystem::find_hosp_directory(const uint8_t* pDirEnt,
   return 0;
 }
 
-void iso_filesystem::build_file_lookup_table(uint32_t iSector,
-                                             uint32_t dirEntsSize,
-                                             const std::string& prefix) {
+void iso_filesystem::build_file_lookup_table(const uint32_t iSector,
+                                             const uint32_t dirEntsSize,
+                                             const std::string_view prefix) {
   // Sanity check
   // Apart from at the root level, directory record arrays must take up whole
   // sectors, whose sizes are powers of two and at least 2048.
   // Path lengths shouldn't exceed 256 either (or at least not for the files
   // which we're interested in).
-  if ((prefix.size() != 0 && (dirEntsSize & 0x7FF)) || (prefix.size() > 256))
+  if ((!prefix.empty() && (dirEntsSize & 0x7FF)) || (prefix.size() > 256))
     return;
 
   uint8_t* pBuffer = new uint8_t[dirEntsSize];
@@ -499,7 +499,9 @@ void iso_filesystem::build_file_lookup_table(uint32_t iSector,
     if (prefix.empty()) {
       path = ent.filename;
     } else {
-      path = prefix + path_seperator + ent.filename;
+      path += prefix;
+      path += path_seperator;
+      path += ent.filename;
     }
 
     if (ent.flags & def_directory) {
@@ -518,7 +520,7 @@ void iso_filesystem::build_file_lookup_table(uint32_t iSector,
   }
   delete[] pBuffer;
 
-  if (prefix.size() == 0) {
+  if (prefix.empty()) {
     // The lookup table will be ordered by the underlying ordering of the
     // disk. we want it sorted by the path for ease of lookup.
     std::sort(files.begin(), files.end(), file_metadata_less);

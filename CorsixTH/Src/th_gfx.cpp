@@ -725,7 +725,7 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
 }
 
 const animation_start_frames& animation_manager::get_named_animations(
-    const std::string& sName, int iTilesize) const {
+    const std::string_view sName, const int iTilesize) const {
   static const animation_start_frames oNoneAnimations = {-1, -1, -1, -1};
 
   animation_key oKey;

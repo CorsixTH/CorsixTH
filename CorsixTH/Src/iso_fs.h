@@ -151,8 +151,8 @@ class iso_filesystem {
       \param dirEntsSize The number of bytes in the directory entry array.
       \param prefix The path name to prepend to filenames in the directory.
   */
-  void build_file_lookup_table(uint32_t iSector, const uint32_t dirEntsSize,
-                               const std::string& prefix);
+  void build_file_lookup_table(uint32_t iSector, uint32_t dirEntsSize,
+                               std::string_view prefix);
 
   //! std:less like implementation for file_metadata. Based on the path.
   static bool file_metadata_less(const file_metadata& lhs,

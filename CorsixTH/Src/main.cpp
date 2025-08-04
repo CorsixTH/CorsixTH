@@ -27,6 +27,7 @@ SOFTWARE.
 #include <cstring>
 #include <filesystem>
 #include <string>
+#include <string_view>
 
 #include "lua.hpp"
 #include "lua_rnc.h"
@@ -63,13 +64,13 @@ bool file_exists(const std::filesystem::path& f) {
 
 std::string search_script_file(lua_State* L) {
   // 1. Check for --interpreter
-  int iNArgs = lua_gettop(L);
+  const int iNArgs = lua_gettop(L);
   for (int i = 1; i <= iNArgs; ++i) {
     if (lua_type(L, i) == LUA_TSTRING) {
-      size_t iLen;
-      const char* sCmd = lua_tolstring(L, i, &iLen);
-      if (iLen > 14 && std::memcmp(sCmd, "--interpreter=", 14) == 0)
-        return sCmd + 14;
+      std::string_view interpreterPrefix("--interpreter=");
+      std::string_view arg = lua_tolstring(L, i, nullptr);
+      if (arg.substr(0, interpreterPrefix.size()) == interpreterPrefix)
+        return std::string( arg.substr(interpreterPrefix.size()));
     }
   }
 
