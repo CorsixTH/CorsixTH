@@ -719,11 +719,11 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId,
       }
       if (addRemoveDividerWalls(this, pNode, pOriginalNode, iX, 1,
                                 tile_layer::west_wall, iParcelId)) {
-        vSplitTiles.push_back(std::make_pair(iX, iY));
+        vSplitTiles.emplace_back(iX, iY);
       }
       if (addRemoveDividerWalls(this, pNode, pOriginalNode, iY, this->width,
                                 tile_layer::north_wall, iParcelId)) {
-        vSplitTiles.push_back(std::make_pair(iX, iY));
+        vSplitTiles.emplace_back(iX, iY);
       }
     }
   }
