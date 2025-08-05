@@ -31,7 +31,7 @@ Inherit("original_strings", 1)
 ----------------------------------------------------------- Override -----------------------------------------------------------
 rooms_short.ward = "Salle des malades"
 rooms_long.ward = "Salle des malades"
-confirmation.replace_machine = "Voulez-vous vraiment remplacer cette machine %s pour $%d ?" -- French originally had no parameters
+confirmation.replace_machine = "Voulez-vous vraiment remplacer cette machine %s pour $%d ?" -- French originally did not show machine name or cost
 
 misc.save_failed = "ERREUR : partie non sauvegardée." -- Much more french
 misc.cant_treat_emergency = "Votre hôpital ne peut pas traiter cette urgence car la maladie n'a pas été découverte. N'hésitez pas à réessayer."
