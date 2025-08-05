@@ -90,15 +90,11 @@ int l_crude_gc(lua_State* L) {
 */
 class load_multi_buffer {
  public:
-  const char* s[3];
-  size_t i[3];
-  int n;
+  const char* s[3]{nullptr};
+  size_t i[3]{};
+  int n{};
 
-  load_multi_buffer() {
-    s[0] = s[1] = s[2] = nullptr;
-    i[0] = i[1] = i[2] = 0;
-    n = 0;
-  }
+  load_multi_buffer() = default;
 
   static const char* load_fn(lua_State* L, void* ud, size_t* size) {
     load_multi_buffer* pThis = reinterpret_cast<load_multi_buffer*>(ud);
@@ -131,7 +127,7 @@ class load_multi_buffer {
 */
 class lua_persist_basic_writer : public lua_persist_writer {
  public:
-  lua_persist_basic_writer(lua_State* L) : L(L), data() {}
+  explicit lua_persist_basic_writer(lua_State* L) : L(L) {}
 
   ~lua_persist_basic_writer() override = default;
 
@@ -613,10 +609,10 @@ class lua_persist_basic_writer : public lua_persist_writer {
 
  private:
   lua_State* L;
-  uint64_t next_index;
+  uint64_t next_index{1};
   std::string data;
-  size_t data_size;
-  bool had_error;
+  size_t data_size{0};
+  bool had_error{false};
 };
 
 //! Basic implementation of depersistence interface
@@ -636,7 +632,7 @@ class lua_persist_basic_writer : public lua_persist_writer {
 */
 class lua_persist_basic_reader : public lua_persist_reader {
  public:
-  lua_persist_basic_reader(lua_State* L) : L(L), string_buffer() {}
+  explicit lua_persist_basic_reader(lua_State* L) : L(L) {}
 
   ~lua_persist_basic_reader() override = default;
 
@@ -1062,11 +1058,11 @@ class lua_persist_basic_reader : public lua_persist_reader {
 
  private:
   lua_State* L;
-  uint64_t next_index;
-  const uint8_t* data;
-  size_t data_buffer_size;
+  uint64_t next_index{1};
+  const uint8_t* data{nullptr};
+  size_t data_buffer_size{0};
   std::string string_buffer;
-  bool had_error;
+  bool had_error{false};
 };
 
 namespace {

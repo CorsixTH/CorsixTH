@@ -32,13 +32,6 @@ SOFTWARE.
 #include "th_gfx_sdl.h"
 #include "th_map.h"
 
-map_overlay_pair::map_overlay_pair() {
-  first = nullptr;
-  second = nullptr;
-  owns_first = false;
-  owns_second = false;
-}
-
 map_overlay_pair::~map_overlay_pair() {
   set_first(nullptr, false);
   set_second(nullptr, false);
@@ -71,8 +64,6 @@ void map_overlay_pair::draw_cell(render_target* pCanvas, int iCanvasX,
   }
 }
 
-map_text_overlay::map_text_overlay() { background_sprite = 0; }
-
 void map_text_overlay::set_background_sprite(size_t iSprite) {
   background_sprite = iSprite;
 }
@@ -93,13 +84,6 @@ const std::string map_positions_overlay::get_text(const level_map* pMap,
   std::ostringstream str;
   str << iNodeX + 1 << ',' << iNodeY + 1;
   return str.str();
-}
-
-map_typical_overlay::map_typical_overlay() {
-  sprites = nullptr;
-  font = nullptr;
-  owns_sprites = false;
-  owns_font = false;
 }
 
 map_typical_overlay::~map_typical_overlay() {

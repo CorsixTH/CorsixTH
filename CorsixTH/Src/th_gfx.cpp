@@ -42,10 +42,7 @@ SOFTWARE.
  * track of available length. */
 class memory_reader {
  public:
-  memory_reader(const uint8_t* pData, size_t iLength) {
-    data = pData;
-    remaining_bytes = iLength;
-  }
+  memory_reader(const uint8_t* pData, const size_t iLength) : data(pData), remaining_bytes(iLength) {}
 
   const uint8_t* data;     ///< Pointer to the remaining data.
   size_t remaining_bytes;  ///< Remaining number of bytes.
@@ -55,13 +52,13 @@ class memory_reader {
       @param iSize Number of bytes that are queried.
       @return Whether the requested number of bytes is still available.
    */
-  bool are_bytes_available(size_t iSize) { return iSize <= remaining_bytes; }
+  bool are_bytes_available(size_t iSize) const { return iSize <= remaining_bytes; }
 
   //! Is EOF reached?
   /*!
       @return Whether EOF has been reached.
    */
-  bool is_at_end_of_file() { return remaining_bytes == 0; }
+  bool is_at_end_of_file() const { return remaining_bytes == 0; }
 
   //! Get an 8 bit value from the file.
   /*!
@@ -140,20 +137,9 @@ class memory_reader {
   }
 };
 
-animation_manager::animation_manager() {
-  first_frames.clear();
-  frames.clear();
-  element_list.clear();
-  elements.clear();
-  custom_sheets.clear();
-
-  sheet = nullptr;
-
-  animation_count = 0;
-  frame_count = 0;
-  element_list_count = 0;
-  element_count = 0;
-  game_ticks = 0;
+animation_manager::animation_manager():
+  sheet(nullptr), animation_count(0), frame_count(0), element_list_count(0),
+  element_count(0), game_ticks(0), canvas(nullptr) {
 }
 
 animation_manager::~animation_manager() {
@@ -576,11 +562,6 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
           shift_first(iWestFirst, iNumFrames, iFrameStart, iLoadedFrames);
 
       animation_start_frames oFrames;
-      oFrames.north = -1;
-      oFrames.east = -1;
-      oFrames.south = -1;
-      oFrames.west = -1;
-
       if (iNorthFirst != 0xFFFFFFFFu) {
         fix_next_frame(iNorthFirst, iNumFrames);
         oFrames.north = static_cast<long>(first_frames.size());
@@ -1018,15 +999,11 @@ void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
   if (pMaxY) *pMaxY = iMaxY;
 }
 
-chunk_renderer::chunk_renderer(int width, int height, uint8_t* buffer) {
+chunk_renderer::chunk_renderer(const int width, const int height, uint8_t* buffer) :
+  width(width), height(height) {
   data = buffer ? buffer : new uint8_t[width * height];
   ptr = data;
   end = data + width * height;
-  x = 0;
-  y = 0;
-  this->width = width;
-  this->height = height;
-  skip_eol = false;
 }
 
 chunk_renderer::~chunk_renderer() { delete[] data; }
@@ -1260,26 +1237,9 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
          morph_target->hit_test(iDestX, iDestY, iTestX, iTestY);
 }
 
-animation_base::animation_base() : drawable() {
-  x_relative_to_tile = 0;
-  y_relative_to_tile = 0;
-  for (int i = 0; i < max_number_of_layers; ++i) {
-    layers.layer_contents[i] = 0;
-  }
-  flags = 0;
-}
+animation_base::animation_base() : drawable() {}
 
-animation::animation()
-    : animation_base(),
-      manager(nullptr),
-      morph_target(nullptr),
-      animation_index(0),
-      frame_index(0),
-      speed({0, 0}),
-      sound_to_play(0),
-      crop_column(0),
-      anim_kind(animation_kind::normal) {
-  patient_effect = animation_effect::none;
+animation::animation() {
   patient_effect_offset = rand();
 }
 

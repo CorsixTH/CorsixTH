@@ -80,27 +80,27 @@ class integer_run_length_encoder {
   bool move_object_to_output(size_t iObjSize, size_t iObjCount);
 
   //! A circular fixed-size buffer holding the most recent input
-  uint32_t* buffer;
+  uint32_t* buffer{nullptr};
   //! A variable-length array holding the output sequence
-  uint32_t* output;
+  uint32_t* output{nullptr};
   //! The number of integers in a record
-  size_t record_size;
+  size_t record_size{};
   //! The maximum number of integers stored in the buffer
-  size_t buffer_capacity;
+  size_t buffer_capacity{};
   //! The current number of integers stored in the buffer
-  size_t buffer_size;
+  size_t buffer_size{};
   //! The index into buffer of the 1st integer
-  size_t buffer_offset;
+  size_t buffer_offset{};
   //! The maximum number of integers storable in the output (before the
   //! output array has to be resized).
-  size_t output_capacity;
+  size_t output_capacity{};
   //! The current number of integers stored in the output
-  size_t output_size;
+  size_t output_size{};
   //! The number of integers in the current object (multiple of record size)
-  size_t object_size;
+  size_t object_size{};
   //! The number of copies of the current object already seen and removed
   //! from the buffer.
-  size_t object_copies;
+  size_t object_copies{};
 };
 
 class integer_run_length_decoder {
@@ -116,17 +116,17 @@ class integer_run_length_decoder {
  private:
   void clean();
 
-  uint32_t* buffer;
-  lua_persist_reader* reader;
-  const uint32_t* input;
+  uint32_t* buffer{nullptr};
+  lua_persist_reader* reader{nullptr};
+  const uint32_t* input{nullptr};
   union {
-    const uint32_t* input_end;
+    const uint32_t* input_end{nullptr};
     size_t reads_remaining;
   };
-  size_t object_copies;
-  size_t record_size;
-  size_t object_index;
-  size_t object_size;
+  size_t object_copies{};
+  size_t record_size{};
+  size_t object_index{};
+  size_t object_size{};
 };
 
 #endif  // CORSIX_TH_RLE_H_

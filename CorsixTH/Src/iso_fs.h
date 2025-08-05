@@ -113,11 +113,11 @@ class iso_filesystem {
     uint32_t size;
   };
 
-  std::FILE* raw_file;
-  char* error;
+  std::FILE* raw_file{nullptr};
+  char* error{nullptr};
   std::vector<file_metadata> files;
-  long sector_size;
-  char path_seperator;
+  long sector_size{2048};
+  char path_seperator{'\\'};
 
   //! Free any memory in use
   void clear();

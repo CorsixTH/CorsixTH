@@ -205,7 +205,7 @@ class movie_picture_buffer {
   //! Return whether there is space to add any more frame data to the queue
   //!
   //! \remark Requires external locking
-  bool unsafe_full();
+  bool unsafe_full() const;
 
   //! The number of elements to allocate in the picture queue
   static constexpr std::size_t picture_buffer_size = 4;

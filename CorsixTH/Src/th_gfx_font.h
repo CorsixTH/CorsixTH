@@ -152,9 +152,9 @@ class bitmap_font final : public font {
       text_alignment eAlign = text_alignment::left) const override;
 
  private:
-  sprite_sheet* sheet;
-  int letter_spacing;
-  int line_spacing;
+  sprite_sheet* sheet{nullptr};
+  int letter_spacing{};
+  int line_spacing{};
 };
 
 //! Adaptor around the FreeType2 library to a THFont.
@@ -281,11 +281,11 @@ class freetype_font final : public font {
 
   static FT_Library freetype_library;
   static int freetype_init_count;
-  static const int cache_size_log2 = 7;
-  FT_Face font_face;
-  argb_colour font_colour;
-  bool is_done_freetype_init;
-  mutable cached_text cache[1 << cache_size_log2];
+  static constexpr int cache_size_log2{7};
+  FT_Face font_face{nullptr};
+  argb_colour font_colour{0};
+  bool is_done_freetype_init{false};
+  mutable cached_text cache[1 << cache_size_log2]{};
 
   // The following five methods are implemented by the rendering engine.
 

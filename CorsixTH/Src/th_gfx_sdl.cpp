@@ -60,10 +60,7 @@ const float frect_overdraw = 0.01f;
 #endif
 
 full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
-    : width(iWidth), height(iHeight) {
-  x = 0;
-  y = 0;
-}
+    : width(iWidth), height(iHeight) {}
 
 namespace {
 
@@ -214,7 +211,7 @@ class scoped_color_mod {
 
 }  // namespace
 
-palette::palette() { colour_count = 0; }
+palette::palette() = default;
 
 bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength) {
   if (iDataLength != 256 * 3) return false;
@@ -396,14 +393,14 @@ class render_target::scoped_target_texture
     target->current_target = this;
   }
 
-  void offset(SDL_FRect& targetRect) {
+  void offset(SDL_FRect& targetRect) const {
     targetRect.x -= static_cast<SDL_FRECT_UNIT>(rect.x);
     targetRect.y -= static_cast<SDL_FRECT_UNIT>(rect.y);
   }
 
-  double scale_factor() { return scale ? target->global_scale_factor : 1.0; }
+  double scale_factor() const { return scale ? target->global_scale_factor : 1.0; }
 
-  bool is_target() { return texture; }
+  bool is_target() const { return texture; }
 
   ~scoped_target_texture() override {
     if (!texture) return;
@@ -435,18 +432,7 @@ class render_target::scoped_target_texture
   SDL_Texture* texture = nullptr;
 };
 
-render_target::render_target()
-    : window(nullptr),
-      renderer(nullptr),
-      pixel_format(nullptr),
-      blue_filter_active(false),
-      game_cursor(nullptr),
-      global_scale_factor(1.0),
-      width(-1),
-      height(-1),
-      scale_bitmaps(false),
-      apply_opengl_clip_fix(false),
-      direct_zoom(false) {}
+render_target::render_target() = default;
 
 render_target::~render_target() { destroy(); }
 
@@ -730,16 +716,12 @@ void png_error(png_structp png_data, const char* message) { throw(0); }
 //! Class for managing lifetime of the data structures for saving a PNG file.
 class png_data_manager {
  public:
-  png_structp png_write_data;
-  png_infop info_write_data;
-  png_bytepp row_pointers;
-  FILE* fp;
+  png_structp png_write_data{nullptr};
+  png_infop info_write_data{nullptr};
+  png_bytepp row_pointers{nullptr};
+  FILE* fp{nullptr};
 
-  png_data_manager()
-      : png_write_data(nullptr),
-        info_write_data(nullptr),
-        row_pointers(nullptr),
-        fp(nullptr) {}
+  png_data_manager() = default;
 
   ~png_data_manager() {
     if (png_write_data != nullptr || info_write_data != nullptr) {
@@ -806,7 +788,7 @@ bool write_rgb_png(int width, int height, png_bytep pixels, int pitch,
 
 }  // namespace
 
-bool render_target::take_screenshot(const char* file_path) {
+bool render_target::take_screenshot(const char* file_path) const {
   int width = 0, height = 0;
   if (SDL_GetRendererOutputSize(renderer, &width, &height) == -1) return false;
 
@@ -1009,13 +991,7 @@ void render_target::destroy_intermediate_textures() {
   intermediate_textures.clear();
 }
 
-raw_bitmap::raw_bitmap() {
-  texture = nullptr;
-  bitmap_palette = nullptr;
-  target = nullptr;
-  width = 0;
-  height = 0;
-}
+raw_bitmap::raw_bitmap() = default;
 
 raw_bitmap::~raw_bitmap() {
   if (texture) {
@@ -1129,12 +1105,7 @@ void raw_bitmap::draw(render_target* pCanvas, int iX, int iY, int iSrcX,
   pCanvas->draw(texture, &rcSrc, &rcDest, 0);
 }
 
-sprite_sheet::sprite_sheet() {
-  sprites = nullptr;
-  palette = nullptr;
-  target = nullptr;
-  sprite_count = 0;
-}
+sprite_sheet::sprite_sheet() = default;
 
 sprite_sheet::~sprite_sheet() { _freeSprites(); }
 
@@ -1587,12 +1558,7 @@ bool sprite_sheet::hit_test_sprite(size_t iSprite, int iX, int iY,
   return palette::get_alpha(iCol) != 0;
 }
 
-cursor::cursor() {
-  bitmap = nullptr;
-  hotspot_x = 0;
-  hotspot_y = 0;
-  hidden_cursor = nullptr;
-}
+cursor::cursor() = default;
 
 cursor::~cursor() {
   SDL_FreeSurface(bitmap);
@@ -1647,7 +1613,9 @@ void cursor::draw(render_target* pCanvas, int iX, int iY) {
 #endif
 }
 
-line_sequence::line_sequence() { initialize(); }
+line_sequence::line_sequence() {
+  move_to(0.0, 0.0);
+}
 
 void line_sequence::initialize() {
   width = 1;

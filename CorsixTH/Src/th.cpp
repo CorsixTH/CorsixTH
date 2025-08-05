@@ -30,10 +30,7 @@ SOFTWARE.
 #include "cp437_table.h"
 #include "cp936_table.h"
 
-link_list::link_list() {
-  prev = nullptr;
-  next = nullptr;
-}
+link_list::link_list() = default;
 
 link_list::~link_list() { remove_from_list(); }
 
@@ -174,13 +171,13 @@ th_string_list::th_string_list(const uint8_t* data, size_t length) {
   *sDataOut = 0;
 }
 
-size_t th_string_list::get_section_count() { return sections.size(); }
+size_t th_string_list::get_section_count() const { return sections.size(); }
 
-size_t th_string_list::get_section_size(size_t section) {
+size_t th_string_list::get_section_size(size_t section) const {
   return section < sections.size() ? sections[section].size() : 0;
 }
 
-const char* th_string_list::get_string(size_t section, size_t index) {
+const char* th_string_list::get_string(size_t section, size_t index) const {
   if (index < get_section_size(section)) {
     return sections[section][index];
   }

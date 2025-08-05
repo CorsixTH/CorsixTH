@@ -114,7 +114,7 @@ struct render_target_creation_params {
 */
 // TODO: Replace this struct with something cleaner
 struct drawable : public link_list {
-  drawable() : link_list() { drawing_layer = 0; }
+  drawable() = default;
 
   //! Draw the object at a specific point on a render target
   /*!
@@ -138,10 +138,10 @@ struct drawable : public link_list {
   void set_drawing_layer(int layer) { drawing_layer = layer; }
 
   //! Drawing flags (zero or more list flags from #draw_flags).
-  uint32_t flags;
+  uint32_t flags{0};
 
  private:
-  int drawing_layer;
+  int drawing_layer{0};
 };
 
 /*!
@@ -200,13 +200,14 @@ class chunk_renderer {
   void chunk_finish(uint8_t value);
 
  private:
-  inline bool is_done() { return ptr == end; }
+  inline bool is_done() const { return ptr == end; }
   inline void fix_n_pixels(int& npixels) const;
   inline void increment_position(int npixels);
 
   uint8_t *data, *ptr, *end;
-  int x, y, width, height;
-  bool skip_eol;
+  int x{0}, y{0};
+  int width, height;
+  bool skip_eol{false};
 };
 
 //! Number of available layers, must be less or equal to 16 as it is stored in
@@ -215,7 +216,7 @@ const int max_number_of_layers = 13;
 
 //! Layer information (see animation_manager::draw_frame)
 struct layers {
-  uint8_t layer_contents[max_number_of_layers];
+  uint8_t layer_contents[max_number_of_layers]{};
 };
 
 /** Key value for finding an animation. */
@@ -240,10 +241,10 @@ inline bool operator<(const animation_key& oK, const animation_key& oL) {
  * A negative number indicates there is no animation in that direction.
  */
 struct animation_start_frames {
-  long north;  ///< Animation start frame for the 'north' view.
-  long east;   ///< Animation start frame for the 'east' view.
-  long south;  ///< Animation start frame for the 'south' view.
-  long west;   ///< Animation start frame for the 'west' view.
+  long north{-1};  ///< Animation start frame for the 'north' view.
+  long east{-1};   ///< Animation start frame for the 'east' view.
+  long south{-1};  ///< Animation start frame for the 'south' view.
+  long west{-1};   ///< Animation start frame for the 'west' view.
 };
 
 /** Map holding the custom animations. */
@@ -551,18 +552,18 @@ class animation_base : public drawable {
 
  protected:
   //! X position on tile (not tile x-index)
-  int x_relative_to_tile;
+  int x_relative_to_tile{};
   //! Y position on tile (not tile y-index)
-  int y_relative_to_tile;
+  int y_relative_to_tile{};
 
-  ::layers layers;
+  ::layers layers{};
 };
 
 struct xy_diff {
   //! Amount to change x per tick
-  int dx;
+  int dx{};
   //! Amount to change y per tick
-  int dy;
+  int dy{};
 };
 
 //! The kind of animation.
@@ -644,21 +645,21 @@ class animation : public animation_base {
   animation_manager* get_animation_manager() { return manager; }
 
  private:
-  animation_manager* manager;
-  animation* morph_target;
-  size_t animation_index;  ///< Animation number.
-  size_t frame_index;      ///< Frame number.
+  animation_manager* manager{nullptr};
+  animation* morph_target{nullptr};
+  size_t animation_index{};  ///< Animation number.
+  size_t frame_index{};      ///< Frame number.
   union {
-    xy_diff speed;
+    xy_diff speed{};
     //! Some animations are tied to the primary or secondary marker of another
     //! animation and hence have a parent rather than a speed.
     animation* parent;
   };
 
-  size_t sound_to_play;
-  int crop_column;
-  animation_kind anim_kind;
-  animation_effect patient_effect;
+  size_t sound_to_play{};
+  int crop_column{};
+  animation_kind anim_kind{animation_kind::normal};
+  animation_effect patient_effect{animation_effect::none};
   //! Number of game_ticks to offset animation by so they aren't all
   //! running in sync.
   size_t patient_effect_offset;
@@ -700,20 +701,20 @@ class sprite_render_list : public animation_base {
     int y;
   };
 
-  sprite_sheet* sheet = nullptr;
-  sprite* sprites = nullptr;
-  int sprite_count = 0;
-  int buffer_size = 0;
+  sprite_sheet* sheet{nullptr};
+  sprite* sprites{nullptr};
+  int sprite_count{0};
+  int buffer_size{0};
 
   //! Amount to change x per tick
-  int dx_per_tick = 0;
+  int dx_per_tick{0};
   //! Amount to change y per tick
-  int dy_per_tick = 0;
+  int dy_per_tick{0};
   //! Number of ticks until reports as dead (-1 = never dies)
-  int lifetime = -1;
+  int lifetime{-1};
   //! Whether to draw to an intermediate buffer. This is used to preserve text
   //! rendering quality when scaling.
-  bool use_intermediate_buffer = false;
+  bool use_intermediate_buffer{false};
 };
 
 // Find the appropriate subclass of animation_base for a given

@@ -156,8 +156,8 @@ class iso_file_entry {
   /// The first byte is the size of the entry. Other useful headers are read
   /// from their offsets from that location.
   ///
-  /// \param Pointer to first byte of file entry in directory table.
-  iso_file_entry(const uint8_t* b) {
+  /// \param b Pointer to first byte of file entry in directory table.
+  explicit iso_file_entry(const uint8_t* b) {
     uint8_t size = *b;
     if (size < minimum_file_entry_size) {
       throw std::runtime_error("size specified for file entry is too small.");
@@ -176,16 +176,16 @@ class iso_file_entry {
   }
 
   /// Logical location of the data for this file in the ISO image.
-  uint32_t data_sector;
+  uint32_t data_sector{};
 
   /// The length of the data for this file.
-  uint32_t data_length;
+  uint32_t data_length{};
 
   /// Flags that indicate whether this entry is a file or directory, along
   /// with other properties.
   ///
   /// \see iso_dir_ent_flag
-  uint8_t flags;
+  uint8_t flags{};
 
   /// The filename of this entry.
   std::string filename;
@@ -350,8 +350,7 @@ class iso_directory_iterator final {
 
 }  // namespace
 
-iso_filesystem::iso_filesystem()
-    : raw_file(nullptr), error(nullptr), files(), path_seperator('\\') {}
+iso_filesystem::iso_filesystem() = default;
 
 iso_filesystem::~iso_filesystem() { clear(); }
 

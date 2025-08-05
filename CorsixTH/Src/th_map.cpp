@@ -248,30 +248,9 @@ map_tile_flags::operator uint32_t() const {
   return raw;
 }
 
-map_tile::map_tile() : iParcelId(0), iRoomId(0), flags({}), objects{}, raw{} {
-  tile_layers[tile_layer::ground] = 0;
-  tile_layers[tile_layer::north_wall] = 0;
-  tile_layers[tile_layer::west_wall] = 0;
-  tile_layers[tile_layer::ui] = 0;
-  aiTemperature[0] = aiTemperature[1] = 8192;
-}
+map_tile::map_tile() : iParcelId(0), iRoomId(0), flags({}), raw{}, tile_layers{}, aiTemperature{8192, 8192} {}
 
-level_map::level_map()
-    : cells(nullptr),
-      original_cells(nullptr),
-      wall_blocks(nullptr),
-      overlay(nullptr),
-      owns_overlay(false),
-      plot_owner(nullptr),
-      width(0),
-      height(0),
-      player_count(0),
-      parcel_count(0),
-      current_temperature_index(0),
-      current_temperature_theme(temperature_theme::red),
-      parcel_tile_counts(nullptr),
-      parcel_adjacency_matrix(nullptr),
-      purchasable_matrix(nullptr) {}
+level_map::level_map() = default;
 
 level_map::~level_map() {
   set_overlay(nullptr, false);
@@ -1689,14 +1668,6 @@ void level_map::depersist(lua_persist_reader* pReader) {
   }
 }
 
-map_tile_iterator::map_tile_iterator()
-    : tile(nullptr),
-      container(nullptr),
-      screen_offset_x(0),
-      screen_offset_y(0),
-      screen_width(0),
-      screen_height(0) {}
-
 map_tile_iterator::map_tile_iterator(
     const level_map* pMap, int iScreenX, int iScreenY, int iWidth, int iHeight,
     map_scanline_iterator_direction eScanlineDirection)
@@ -1705,7 +1676,6 @@ map_tile_iterator::map_tile_iterator(
       screen_offset_y(iScreenY),
       screen_width(iWidth),
       screen_height(iHeight),
-      scanline_count(0),
       direction(eScanlineDirection) {
   if (direction == map_scanline_iterator_direction::forward) {
     base_x = 0;
@@ -1802,16 +1772,14 @@ map_scanline_iterator::map_scanline_iterator()
       tile_step(0),
       x_step(0),
       x_relative_to_screen(0),
-      y_relative_to_screen(0),
-      steps_taken(0) {}
+      y_relative_to_screen(0) {}
 
 map_scanline_iterator::map_scanline_iterator(
     const map_tile_iterator& itrNodes,
     map_scanline_iterator_direction eDirection, int iXOffset, int iYOffset)
     : tile_step((static_cast<int>(eDirection) - 1) *
                 (1 - itrNodes.container->get_width())),
-      x_step((static_cast<int>(eDirection) - 1) * 64),
-      steps_taken(0) {
+      x_step((static_cast<int>(eDirection) - 1) * 64) {
   if (eDirection == map_scanline_iterator_direction::backward) {
     tile = itrNodes.tile;
     x_relative_to_screen = itrNodes.tile_x_position_on_screen();
