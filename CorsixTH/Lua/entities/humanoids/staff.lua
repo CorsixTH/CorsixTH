@@ -520,10 +520,9 @@ function Staff:isMeandering()
   if actions_count == 0 then return true end
 
   if actions_count >= 2 and
-    (
-      ((self.action_queue[1].name == "idle") or (self.action_queue[1].name == "walk"))
-      and (self.action_queue[2].name == "meander")
-    ) then
+    (((self.action_queue[1].name == "idle") or
+    (self.action_queue[1].name == "walk")) and
+    (self.action_queue[2].name == "meander")) then
     return true
   end
 
