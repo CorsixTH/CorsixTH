@@ -510,16 +510,12 @@ function Staff:adviseWrongPersonForThisRoom()
 end
 
 --! Check whether staff are meandering
---"meander" action always insert "move" or "idle" action before itself.
---so when humanoid "meandering" his action queue usually looks like:
---[1 idle, 2 meander] or [1 walk, 2 meander].
 --!return true if staff currently has a meander action
 function Staff:isMeandering()
-  local actions_count = #self.action_queue
-  -- if the action queue is empty, we assume that staff is meandering
-  if actions_count == 0 then return true end
-
-  if actions_count >= 2 and
+  -- "meander" action always insert "move" or "idle" action before itself.
+  -- so when humanoid "meandering" his action queue usually looks like:
+  -- [1 idle, 2 meander] or [1 walk, 2 meander].
+  if #self.action_queue >= 2 and
     (((self.action_queue[1].name == "idle") or
     (self.action_queue[1].name == "walk")) and
     (self.action_queue[2].name == "meander")) then
