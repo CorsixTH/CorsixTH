@@ -64,7 +64,11 @@ void th_movie_audio_callback(int iChannel, void* pStream, int iStreamSize,
 }  // namespace
 
 movie_picture::movie_picture()
-    : buffer(nullptr), pixel_format(AV_PIX_FMT_RGB24), width(0), height(0), pts(0) {}
+    : buffer(nullptr),
+      pixel_format(AV_PIX_FMT_RGB24),
+      width(0),
+      height(0),
+      pts(0) {}
 
 movie_picture::~movie_picture() { av_freep(&buffer); }
 

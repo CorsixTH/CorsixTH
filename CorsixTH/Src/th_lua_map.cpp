@@ -510,8 +510,7 @@ const std::map<std::string, map_tile_flags::key> lua_tile_flag_map{
  * @param name Name of the flag in Lua code.
  */
 void add_cellflag(lua_State* L, const map_tile* tile,
-                         const map_tile_flags::key flag,
-                         const std::string_view name) {
+                  const map_tile_flags::key flag, const std::string_view name) {
   lua_pushlstring(L, name.data(), name.size());
   lua_pushboolean(L, tile->flags[flag] ? 1 : 0);
   lua_settable(L, 4);

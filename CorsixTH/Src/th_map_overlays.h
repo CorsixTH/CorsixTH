@@ -65,8 +65,7 @@ class map_typical_overlay : public map_overlay {
   void set_font(::font* font, bool take_ownership);
 
  protected:
-  void draw_text(render_target* pCanvas, int iX, int iY,
-                 std::string_view str);
+  void draw_text(render_target* pCanvas, int iX, int iY, std::string_view str);
 
   sprite_sheet* sprites{nullptr};
   ::font* font{nullptr};

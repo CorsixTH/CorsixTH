@@ -163,8 +163,7 @@ void map_parcels_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
     return;
   }
   if (font) {
-    draw_text(pCanvas, iCanvasX, iCanvasY,
-              std::to_string(pNode->iParcelId));
+    draw_text(pCanvas, iCanvasX, iCanvasY, std::to_string(pNode->iParcelId));
   }
   if (sprites) {
     for (const parcel_edge_sprite& dir_sprite : parcel_edges) {

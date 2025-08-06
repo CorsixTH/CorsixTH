@@ -70,7 +70,7 @@ std::string search_script_file(lua_State* L) {
       std::string_view interpreterPrefix("--interpreter=");
       std::string_view arg = lua_tolstring(L, i, nullptr);
       if (arg.substr(0, interpreterPrefix.size()) == interpreterPrefix)
-        return std::string( arg.substr(interpreterPrefix.size()));
+        return std::string(arg.substr(interpreterPrefix.size()));
     }
   }
 

@@ -42,7 +42,8 @@ SOFTWARE.
  * track of available length. */
 class memory_reader {
  public:
-  memory_reader(const uint8_t* pData, const size_t iLength) : data(pData), remaining_bytes(iLength) {}
+  memory_reader(const uint8_t* pData, const size_t iLength)
+      : data(pData), remaining_bytes(iLength) {}
 
   const uint8_t* data;     ///< Pointer to the remaining data.
   size_t remaining_bytes;  ///< Remaining number of bytes.
@@ -52,7 +53,9 @@ class memory_reader {
       @param iSize Number of bytes that are queried.
       @return Whether the requested number of bytes is still available.
    */
-  bool are_bytes_available(size_t iSize) const { return iSize <= remaining_bytes; }
+  bool are_bytes_available(size_t iSize) const {
+    return iSize <= remaining_bytes;
+  }
 
   //! Is EOF reached?
   /*!
@@ -137,10 +140,14 @@ class memory_reader {
   }
 };
 
-animation_manager::animation_manager():
-  sheet(nullptr), animation_count(0), frame_count(0), element_list_count(0),
-  element_count(0), game_ticks(0), canvas(nullptr) {
-}
+animation_manager::animation_manager()
+    : sheet(nullptr),
+      animation_count(0),
+      frame_count(0),
+      element_list_count(0),
+      element_count(0),
+      game_ticks(0),
+      canvas(nullptr) {}
 
 animation_manager::~animation_manager() {
   for (size_t i = 0; i < custom_sheets.size(); i++) {
@@ -999,8 +1006,9 @@ void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
   if (pMaxY) *pMaxY = iMaxY;
 }
 
-chunk_renderer::chunk_renderer(const int width, const int height, uint8_t* buffer) :
-  width(width), height(height) {
+chunk_renderer::chunk_renderer(const int width, const int height,
+                               uint8_t* buffer)
+    : width(width), height(height) {
   data = buffer ? buffer : new uint8_t[width * height];
   ptr = data;
   end = data + width * height;
@@ -1239,9 +1247,7 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
 
 animation_base::animation_base() : drawable() {}
 
-animation::animation() {
-  patient_effect_offset = rand();
-}
+animation::animation() { patient_effect_offset = rand(); }
 
 void animation::persist(lua_persist_writer* pWriter) const {
   lua_State* L = pWriter->get_stack();

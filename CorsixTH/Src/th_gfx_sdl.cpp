@@ -398,7 +398,9 @@ class render_target::scoped_target_texture
     targetRect.y -= static_cast<SDL_FRECT_UNIT>(rect.y);
   }
 
-  double scale_factor() const { return scale ? target->global_scale_factor : 1.0; }
+  double scale_factor() const {
+    return scale ? target->global_scale_factor : 1.0;
+  }
 
   bool is_target() const { return texture; }
 
@@ -1613,9 +1615,7 @@ void cursor::draw(render_target* pCanvas, int iX, int iY) {
 #endif
 }
 
-line_sequence::line_sequence() {
-  move_to(0.0, 0.0);
-}
+line_sequence::line_sequence() { move_to(0.0, 0.0); }
 
 void line_sequence::initialize() {
   width = 1;
