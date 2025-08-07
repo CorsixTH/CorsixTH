@@ -211,8 +211,6 @@ class scoped_color_mod {
 
 }  // namespace
 
-palette::palette() = default;
-
 bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength) {
   if (iDataLength != 256 * 3) return false;
 
@@ -367,74 +365,62 @@ void wx_storing::store_argb(uint32_t pixel) {
   *alpha_data++ = palette::get_alpha(pixel);
 }
 
-class render_target::scoped_target_texture
-    : public render_target::scoped_buffer {
- public:
-  scoped_target_texture(render_target* pTarget, int iX, int iY, int iWidth,
-                        int iHeight, bool bScale)
-      : target(pTarget),
-        previous_target(target->current_target),
-        rect({iX, iY, iWidth, iHeight}),
-        scale(bScale) {
-    if (!target->supports_target_textures) return;
+render_target::scoped_target_texture::scoped_target_texture(
+    render_target* pTarget, int iX, int iY, int iWidth, int iHeight,
+    bool bScale)
+    : target(pTarget),
+      previous_target(target->current_target),
+      rect({iX, iY, iWidth, iHeight}),
+      scale(bScale) {
+  if (!target->supports_target_textures) return;
 
-    texture = SDL_CreateTexture(target->renderer, SDL_PIXELFORMAT_ABGR8888,
-                                SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
-    if (SDL_SetRenderTarget(target->renderer, texture) != 0) {
-      SDL_DestroyTexture(texture);
-      texture = nullptr;
-      return;
-    }
-
-    // Clear the new texture to transparent/black.
-    SDL_RenderSetLogicalSize(target->renderer, rect.w, rect.h);
-    SDL_SetRenderDrawColor(target->renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-    SDL_RenderClear(target->renderer);
-    target->current_target = this;
+  texture = SDL_CreateTexture(target->renderer, SDL_PIXELFORMAT_ABGR8888,
+                              SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
+  if (SDL_SetRenderTarget(target->renderer, texture) != 0) {
+    SDL_DestroyTexture(texture);
+    texture = nullptr;
+    return;
   }
 
-  void offset(SDL_FRect& targetRect) const {
-    targetRect.x -= static_cast<SDL_FRECT_UNIT>(rect.x);
-    targetRect.y -= static_cast<SDL_FRECT_UNIT>(rect.y);
+  // Clear the new texture to transparent/black.
+  SDL_RenderSetLogicalSize(target->renderer, rect.w, rect.h);
+  SDL_SetRenderDrawColor(target->renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+  SDL_RenderClear(target->renderer);
+  target->current_target = this;
+}
+
+void render_target::scoped_target_texture::offset(SDL_FRect& targetRect) const {
+  targetRect.x -= static_cast<SDL_FRECT_UNIT>(rect.x);
+  targetRect.y -= static_cast<SDL_FRECT_UNIT>(rect.y);
+}
+
+double render_target::scoped_target_texture::scale_factor() const {
+  return scale ? target->global_scale_factor : 1.0;
+}
+
+bool render_target::scoped_target_texture::is_target() const { return texture; }
+
+render_target::scoped_target_texture::~scoped_target_texture() {
+  if (!texture) return;
+
+  // Restore previous context.
+  SDL_SetRenderTarget(target->renderer,
+                      previous_target ? previous_target->texture : nullptr);
+  SDL_RenderSetLogicalSize(
+      target->renderer,
+      previous_target ? previous_target->rect.w : target->width,
+      previous_target ? previous_target->rect.h : target->height);
+  SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+  target->current_target = previous_target;
+  if (scale) {
+    // If the target texture is already scaled, skip the global scale factor
+    // by drawing directly.
+    SDL_RenderCopy(target->renderer, texture, nullptr, &rect);
+  } else {
+    target->draw(texture, nullptr, &rect, 0);
   }
-
-  double scale_factor() const {
-    return scale ? target->global_scale_factor : 1.0;
-  }
-
-  bool is_target() const { return texture; }
-
-  ~scoped_target_texture() override {
-    if (!texture) return;
-
-    // Restore previous context.
-    SDL_SetRenderTarget(target->renderer,
-                        previous_target ? previous_target->texture : nullptr);
-    SDL_RenderSetLogicalSize(
-        target->renderer,
-        previous_target ? previous_target->rect.w : target->width,
-        previous_target ? previous_target->rect.h : target->height);
-    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-    target->current_target = previous_target;
-    if (scale) {
-      // If the target texture is already scaled, skip the global scale factor
-      // by drawing directly.
-      SDL_RenderCopy(target->renderer, texture, nullptr, &rect);
-    } else {
-      target->draw(texture, nullptr, &rect, 0);
-    }
-    target->intermediate_textures.push_back(texture);
-  }
-
- private:
-  render_target* target;
-  scoped_target_texture* previous_target;
-  SDL_Rect rect;
-  bool scale;
-  SDL_Texture* texture = nullptr;
-};
-
-render_target::render_target() = default;
+  target->intermediate_textures.push_back(texture);
+}
 
 render_target::~render_target() { destroy(); }
 
@@ -723,8 +709,6 @@ class png_data_manager {
   png_bytepp row_pointers{nullptr};
   FILE* fp{nullptr};
 
-  png_data_manager() = default;
-
   ~png_data_manager() {
     if (png_write_data != nullptr || info_write_data != nullptr) {
       png_destroy_write_struct(&png_write_data, &info_write_data);
@@ -993,8 +977,6 @@ void render_target::destroy_intermediate_textures() {
   intermediate_textures.clear();
 }
 
-raw_bitmap::raw_bitmap() = default;
-
 raw_bitmap::~raw_bitmap() {
   if (texture) {
     SDL_DestroyTexture(texture);
@@ -1106,8 +1088,6 @@ void raw_bitmap::draw(render_target* pCanvas, int iX, int iY, int iSrcX,
 
   pCanvas->draw(texture, &rcSrc, &rcDest, 0);
 }
-
-sprite_sheet::sprite_sheet() = default;
 
 sprite_sheet::~sprite_sheet() { _freeSprites(); }
 
@@ -1559,8 +1539,6 @@ bool sprite_sheet::hit_test_sprite(size_t iSprite, int iX, int iY,
       get32BppPixel(sprite.data, iWidth, iHeight, palette, iY * iWidth + iX);
   return palette::get_alpha(iCol) != 0;
 }
-
-cursor::cursor() = default;
 
 cursor::~cursor() {
   SDL_FreeSurface(bitmap);

@@ -54,8 +54,6 @@ typedef uint32_t argb_colour;
 //! 8bpp palette class.
 class palette {
  public:  // External API
-  palette();
-
   //! Load palette from the supplied data.
   /*!
       Note that the data uses palette entries of 6 bit colours.
@@ -238,7 +236,7 @@ class wx_storing : public full_colour_renderer {
 
 class render_target {
  public:  // External API
-  render_target();
+  render_target() = default;
   ~render_target();
 
   //! Encode an RGB triplet for fillRect()
@@ -280,7 +278,7 @@ class render_target {
     ~scoped_clip();
 
    private:
-    render_target* target = nullptr;
+    render_target* target{nullptr};
   };
 
   //! Push a new clip rectangle.
@@ -337,6 +335,23 @@ class render_target {
     virtual ~scoped_buffer() = default;
   };
 
+  class scoped_target_texture final : public scoped_buffer {
+   public:
+    scoped_target_texture(render_target* pTarget, int iX, int iY, int iWidth,
+                          int iHeight, bool bScale);
+    ~scoped_target_texture() override;
+    void offset(SDL_FRect& targetRect) const;
+    double scale_factor() const;
+    bool is_target() const;
+
+   private:
+    render_target* target;
+    scoped_target_texture* previous_target;
+    SDL_Rect rect;
+    bool scale;
+    SDL_Texture* texture{nullptr};
+  };
+
   SDL_Renderer* get_renderer() const { return renderer; }
 
   //! Should bitmaps be scaled?
@@ -371,7 +386,6 @@ class render_target {
                                                             int iHeight);
 
  private:
-  class scoped_target_texture;
   friend class scoped_target_texture;
 
   double draw_scale() const;
@@ -411,7 +425,7 @@ class render_target {
 //! Stored image.
 class raw_bitmap {
  public:
-  raw_bitmap();
+  raw_bitmap() = default;
   ~raw_bitmap();
 
   //! Set the palette of the image.
@@ -473,7 +487,7 @@ class raw_bitmap {
 //! Sheet of sprites.
 class sprite_sheet {
  public:  // External API
-  sprite_sheet();
+  sprite_sheet() = default;
   ~sprite_sheet();
 
   //! Set the palette to use for the sprites in the sheet.
@@ -679,7 +693,7 @@ class sprite_sheet {
 
 class cursor {
  public:
-  cursor();
+  cursor() = default;
   ~cursor();
 
   bool create_from_sprite(sprite_sheet* pSheet, size_t iSprite,
