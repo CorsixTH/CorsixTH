@@ -24,9 +24,12 @@ SOFTWARE.
 
 #include <SDL_stdinc.h>
 #include <ft2build.h>  // IWYU pragma: keep
+// IWYU pragma: no_include "freetype/config/ftheader.h"
 
+#include <algorithm>
 #include <climits>
 #include <cstring>
+#include <exception>
 #include <new>
 
 #include "lua.hpp"

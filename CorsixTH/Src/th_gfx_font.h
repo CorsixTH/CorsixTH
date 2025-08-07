@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include <SDL_render.h>
 #include <ft2build.h>  // IWYU pragma: keep
+// IWYU pragma: no_include "freetype/config/ftheader.h"
 
 #include <climits>
 

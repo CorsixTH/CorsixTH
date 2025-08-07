@@ -25,6 +25,7 @@ SOFTWARE.
 #include "config.h"
 
 #include <ft2build.h>  // IWYU pragma: keep
+// IWYU pragma: no_include "freetype/config/ftheader.h"
 
 #include "th_strings.h"
 #include FT_FREETYPE_H

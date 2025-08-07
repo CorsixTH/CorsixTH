@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include <SDL.h>
 #include <png.h>
+// IWYU pragma: no_include <pngconf.h>
 
 #include <algorithm>
 #include <cmath>

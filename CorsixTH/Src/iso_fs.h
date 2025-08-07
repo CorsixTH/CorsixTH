@@ -27,6 +27,7 @@ SOFTWARE.
 
 #include <cstdio>
 #include <string>
+#include <string_view>
 #include <vector>
 
 //! Layer for reading Theme Hospital files out of an .iso disk image

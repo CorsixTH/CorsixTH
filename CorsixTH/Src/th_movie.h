@@ -46,8 +46,16 @@ extern "C" {
 #define UINT64_C(c) (c##ULL)
 #endif
 #include <libavcodec/avcodec.h>
+// IWYU pragma: no_include <libavcodec/codec.h>
+// IWYU pragma: no_include <libavcodec/packet.h>
+// IWYU pragma: no_include <libavcodec/version.h>
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>  // IWYU pragma: keep
+// IWYU pragma: no_include <libavutil/channel_layout.h>
+// IWYU pragma: no_include <libavutil/frame.h>
+// IWYU pragma: no_include <libavutil/mem.h>
+// IWYU pragma: no_include <libavutil/pixfmt.h>
+// IWYU pragma: no_include <libavutil/version.h>
 #include <libswresample/swresample.h>
 }
 

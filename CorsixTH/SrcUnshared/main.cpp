@@ -28,6 +28,7 @@ SOFTWARE.
 #include <SDL_mixer.h>
 
 #include <cstdio>
+#include <memory>
 
 #include "../Src/bootstrap.h"
 #include "../Src/lua.hpp"
