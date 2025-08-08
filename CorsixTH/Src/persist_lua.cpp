@@ -146,10 +146,6 @@ class lua_persist_basic_writer : public lua_persist_writer {
     lua_pushvalue(L, luaT_upvalueindex(1));  // Prototype persistence names
     lua_rawseti(L, -2, 1);
     lua_setmetatable(L, 1);
-
-    next_index = 1;
-    data_size = 0;
-    had_error = false;
   }
 
   int finish() {
@@ -632,7 +628,8 @@ class lua_persist_basic_writer : public lua_persist_writer {
 */
 class lua_persist_basic_reader : public lua_persist_reader {
  public:
-  explicit lua_persist_basic_reader(lua_State* L) : L(L) {}
+  lua_persist_basic_reader(lua_State* L, const uint8_t* pData, size_t iLength)
+      : L(L), data(pData), data_buffer_size(iLength) {}
 
   ~lua_persist_basic_reader() override = default;
 
@@ -643,11 +640,7 @@ class lua_persist_basic_reader : public lua_persist_reader {
     string_buffer.assign(sError);
   }
 
-  void init(const uint8_t* pData, size_t iLength) {
-    data = pData;
-    data_buffer_size = iLength;
-    next_index = 1;
-    had_error = false;
+  void init() {
     lua_createtable(L, 32, 0);  // Environment
     lua_pushvalue(L, 2);
     lua_rawseti(L, -2, 0);
@@ -1059,8 +1052,8 @@ class lua_persist_basic_reader : public lua_persist_reader {
  private:
   lua_State* L;
   uint64_t next_index{1};
-  const uint8_t* data{nullptr};
-  size_t data_buffer_size{0};
+  const uint8_t* data;
+  size_t data_buffer_size;
   std::string string_buffer;
   bool had_error{false};
 };
@@ -1088,9 +1081,9 @@ int l_load_toplevel(lua_State* L) {
   lua_pushvalue(L, 1);
   lua_persist_basic_reader* pReader =
       new (lua_newuserdata(L, sizeof(lua_persist_basic_reader)))
-          lua_persist_basic_reader(L);
+          lua_persist_basic_reader(L, pData, iDataLength);
   lua_replace(L, 1);
-  pReader->init(pData, iDataLength);
+  pReader->init();
   if (!pReader->read_stack_object() || !pReader->finish()) {
     int iNumObjects = (int)pReader->get_object_count();
     int iNumBytes = (int)(pReader->get_pointer() - pData);
