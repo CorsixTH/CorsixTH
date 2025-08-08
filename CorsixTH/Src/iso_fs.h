@@ -26,6 +26,7 @@ SOFTWARE.
 #include "config.h"
 
 #include <cstdio>
+#include <memory>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -41,26 +42,25 @@ SOFTWARE.
 */
 class iso_filesystem {
  public:
-  iso_filesystem();
-  ~iso_filesystem();
-
-  //! Set the character to be used between components in file paths
-  void set_path_separator(char cSeparator);
+  /// Sector sizes can vary, but they must be powers of two, and the minimum
+  /// size is 2048.
+  static constexpr size_t min_sector_size = 2048;
 
   //! Load an .iso disk image and search for Theme Hospital data files
   /*!
-      \param fRawFile A file handle of an .iso disk image. This handle must
-        remain valid for as long as the IsoFilesystem instance exists, and
-        is not automatically closed by the IsoFilesystem instance.
-      \return true on success, false on failure - call getError() for reason
+      \param path Path to the .iso disk image to load
+        \param pathSeparator The character to be used between components in file
+          paths. Defaults to '/'.
+      \throws std::runtime_error if the file could not be opened
   */
-  bool initialise(const char* path);
+  explicit iso_filesystem(const char* path, char pathSeparator = '/');
+  ~iso_filesystem() = default;
 
   //! Get the reason for the most recent failure
   /*!
-      Can be called after initialise() or get_file_data() return false.
+      Can be called after get_file_data() return false.
   */
-  const char* get_error() const;
+  std::string_view get_error() const;
 
   using file_handle = int;
 
@@ -114,14 +114,11 @@ class iso_filesystem {
     uint32_t size;
   };
 
-  std::FILE* raw_file{nullptr};
-  char* error{nullptr};
+  std::unique_ptr<std::FILE, int (*)(std::FILE*)> raw_file;
+  std::string error{};
   std::vector<file_metadata> files;
-  long sector_size{2048};
-  char path_seperator{'\\'};
-
-  //! Free any memory in use
-  void clear();
+  long sector_size{min_sector_size};
+  char path_seperator;
 
   //! Set the last error, printf-style
   void set_error(const char* sFormat, ...);

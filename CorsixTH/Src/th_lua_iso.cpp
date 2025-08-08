@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <stdexcept>
 #include <string_view>
 
 #include "iso_fs.h"
@@ -48,38 +49,41 @@ namespace {
  * @return Number of return values
  */
 int l_isofs_new(lua_State* L) {
-  iso_filesystem* fs = luaT_stdnew<iso_filesystem>(L, luaT_environindex, true);
   const char* path = luaL_checkstring(L, 2);
-
   std::string_view sep = luaL_optstring(L, 3, "/");
   if (sep.length() != 1) {
     luaL_argerror(L, 3, "Path separator must be a single character");
   }
 
+  try {
+    luaT_stdnew<iso_filesystem>(L, luaT_environindex, true, path, sep.at(0));
+  } catch (std::runtime_error& e) {
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushfstring(L, "%s", e.what());
+    return 3;
+  }
+
+  // L
   // 1 - table (metatable)
   // 2 - path
   // 3 - separator
   // 4 - userdata (iso_filesystem)
 
-  fs->set_path_separator(sep.at(0));
-  if (fs->initialise(path)) {
-    lua_pushvalue(L, 2);
-    luaT_setenvfield(L, 4, "string");
-    lua_pushvalue(L, 2);
-    return 2;
-  }
-
-  lua_pushnil(L);
-  lua_pushnil(L);
-  lua_pushstring(L, fs->get_error());
-  return 3;
+  lua_pushvalue(L, 2);
+  luaT_setenvfield(L, 4, "string");
+  lua_pushvalue(L, 2);
+  return 2;
 }
 
 int l_isofs_is_valid_root(lua_State* L) {
   // Static method so we don't need an instance
-  iso_filesystem fs;
-  const char* path = luaL_checkstring(L, 1);
-  lua_pushboolean(L, fs.initialise(path));
+  try {
+    iso_filesystem fs(luaL_checkstring(L, 1));
+    lua_pushboolean(L, true);
+  } catch (std::runtime_error& e) {
+    lua_pushboolean(L, false);
+  }
   return 1;
 }
 
@@ -147,7 +151,7 @@ int l_isofs_read_contents(lua_State* L) {
   void* pBuffer = lua_newuserdata(L, pSelf->get_file_size(iFile));
   if (!pSelf->get_file_data(iFile, reinterpret_cast<uint8_t*>(pBuffer))) {
     lua_pushnil(L);
-    lua_pushstring(L, pSelf->get_error());
+    lua_pushlstring(L, pSelf->get_error().data(), pSelf->get_error().size());
     return 2;
   }
   lua_pushlstring(L, reinterpret_cast<char*>(pBuffer),

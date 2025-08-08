@@ -82,10 +82,6 @@ constexpr int max_directory_depth = 16;
 /// indicate that we've loaded the right directory.
 constexpr const char* vblk_0_filename = "VBLK-0.TAB";
 
-/// Sector sizes can vary, but they must be powers of two, and the minimum
-/// size is 2048.
-constexpr size_t min_sector_size = 2048;
-
 /// Offset of the sector size from the primary volume descriptor
 constexpr size_t sector_size_offset = 128;
 
@@ -350,35 +346,12 @@ class iso_directory_iterator final {
 
 }  // namespace
 
-iso_filesystem::iso_filesystem() = default;
-
-iso_filesystem::~iso_filesystem() { clear(); }
-
-void iso_filesystem::clear() {
-  delete[] error;
-  error = nullptr;
-  files.clear();
-  if (raw_file) {
-    std::fclose(raw_file);
-    raw_file = nullptr;
+iso_filesystem::iso_filesystem(const char* path, char pathSeparator)
+    : path_seperator(pathSeparator),
+      raw_file(std::fopen(path, "rb"), &std::fclose) {
+  if (!raw_file) {
+    throw std::runtime_error("Failed to open ISO file");
   }
-}
-
-void iso_filesystem::set_path_separator(char cSeparator) {
-  path_seperator = cSeparator;
-}
-
-bool iso_filesystem::initialise(const char* path) {
-  clear();
-  FILE* f = std::fopen(path, "rb");
-  if (!f) {
-    set_error("Failed to open ISO file");
-    return false;
-  }
-  raw_file = f;
-
-  // Until we know better, assume that sectors are 2048 bytes.
-  sector_size = min_sector_size;
 
   // The first 16 sectors are reserved for bootable media.
   // Volume descriptor records follow this, with one record per sector.
@@ -392,28 +365,20 @@ bool iso_filesystem::initialise(const char* path) {
     if (std::memcmp(aBuffer + 1, "CD001\x01", 6) == 0) {
       if (aBuffer[0] == vdt_primary_volume) {
         sector_size = bytes_to_uint16_le(aBuffer + sector_size_offset);
-        try {
-          find_hosp_directory(aBuffer + root_directory_offset,
-                              root_directory_entry_size, 0);
-          if (files.empty()) {
-            set_error(
-                "Could not find Theme Hospital data "
-                "directory.");
-            return false;
-          } else {
-            return true;
-          }
-        } catch (const std::exception& ex) {
-          set_error(ex.what());
-          return false;
+        find_hosp_directory(aBuffer + root_directory_offset,
+                            root_directory_entry_size, 0);
+        if (files.empty()) {
+          throw(
+              std::runtime_error("Could not find Theme Hospital data "
+                                 "directory."));
         }
+        return;
       } else if (aBuffer[0] == vdt_terminator) {
         break;
       }
     }
   }
-  set_error("Could not find primary volume descriptor.");
-  return false;
+  throw(std::runtime_error("Could not find primary volume descriptor."));
 }
 
 bool iso_filesystem::file_metadata_less(const file_metadata& lhs,
@@ -594,15 +559,11 @@ bool iso_filesystem::get_file_data(file_handle iFile, uint8_t* pBuffer) {
   }
 }
 
-const char* iso_filesystem::get_error() const { return error; }
+std::string_view iso_filesystem::get_error() const { return error; }
 
 bool iso_filesystem::seek_to_sector(uint32_t iSector) {
-  if (!raw_file) {
-    set_error("No raw file.");
-    return false;
-  }
-  int res =
-      std::fseek(raw_file, sector_size * static_cast<long>(iSector), SEEK_SET);
+  int res = std::fseek(raw_file.get(), sector_size * static_cast<long>(iSector),
+                       SEEK_SET);
   if (res == 0) {
     return true;
   } else {
@@ -612,11 +573,7 @@ bool iso_filesystem::seek_to_sector(uint32_t iSector) {
 }
 
 bool iso_filesystem::read_data(uint32_t iByteCount, uint8_t* pBuffer) {
-  if (!raw_file) {
-    set_error("No raw file.");
-    return false;
-  }
-  if (std::fread(pBuffer, 1, iByteCount, raw_file) == iByteCount)
+  if (std::fread(pBuffer, 1, iByteCount, raw_file.get()) == iByteCount)
     return true;
   else {
     set_error("Unable to read %i bytes.", static_cast<int>(iByteCount));
@@ -625,15 +582,16 @@ bool iso_filesystem::read_data(uint32_t iByteCount, uint8_t* pBuffer) {
 }
 
 void iso_filesystem::set_error(const char* sFormat, ...) {
-  if (error == nullptr) {
-    // None of the errors which we generate will be longer than 1024.
-    error = new char[1024];
-  }
+  // Replace this implementation with std::format when adopting C++20
+
+  char err[1024];
   va_list a;
   va_start(a, sFormat);
   // The valist test is buggy in this environment
   // (https://bugs.llvm.org/show_bug.cgi?id=41311)
   // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized)
-  std::vsnprintf(error, 1024, sFormat, a);
+  std::vsnprintf(err, 1024, sFormat, a);
   va_end(a);
+
+  error = err;
 }
