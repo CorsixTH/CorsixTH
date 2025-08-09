@@ -1482,7 +1482,6 @@ void level_map::update_shadows() {
 
 void level_map::persist(lua_persist_writer* pWriter) const {
   lua_State* L = pWriter->get_stack();
-  integer_run_length_encoder oEncoder;
 
   uint32_t iVersion = 5;
   pWriter->write_uint(iVersion);
@@ -1503,7 +1502,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   pWriter->write_uint(width);
   pWriter->write_uint(height);
   pWriter->write_uint(current_temperature_index);
-  oEncoder.initialise(6);
+  integer_run_length_encoder oEncoder(6);
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
     oEncoder.write(pNode->tile_layers[tile_layer::ground]);
@@ -1532,7 +1531,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   oEncoder.finish();
   oEncoder.pump_output(pWriter);
 
-  oEncoder.initialise(5);
+  oEncoder = integer_run_length_encoder(5);
   for (map_tile *pNode = original_cells,
                 *pLimitNode = original_cells + width * height;
        pNode != pLimitNode; ++pNode) {

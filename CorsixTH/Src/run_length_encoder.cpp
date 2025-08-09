@@ -28,52 +28,14 @@ SOFTWARE.
 
 #include "persist_lua.h"
 
-integer_run_length_encoder::integer_run_length_encoder() = default;
-
-integer_run_length_encoder::~integer_run_length_encoder() { clean(); }
-
-void integer_run_length_encoder::clean() {
-  delete[] buffer;
-  delete[] output;
-  buffer = nullptr;
-  output = nullptr;
-  record_size = 0;
-  buffer_capacity = 0;
-  buffer_size = 0;
-  buffer_offset = 0;
-  output_capacity = 0;
-  output_size = 0;
-  object_size = 0;
-  object_copies = 0;
-}
-
-bool integer_run_length_encoder::initialise(size_t iRecordSize) {
-  clean();
-  record_size = iRecordSize;
-
-  // Buffer must hold at least 7 + 2 * 8 records, as the maximum object size
-  // is 8 records, 2 of which are needed to detect a repeat, and 7 for the
-  // offset at which the objects are found.
-  buffer_capacity = iRecordSize * 8 * 4;
-  buffer_size = 0;
-  buffer_offset = 0;
-  buffer = new (std::nothrow) uint32_t[buffer_capacity];
-  if (!buffer) return false;
-
-  output_capacity = iRecordSize * 32;
-  output_size = 0;
-  output = new (std::nothrow) uint32_t[output_capacity];
-  if (!output) return false;
-
-  object_size = 0;
-  object_copies = 0;
-
-  return true;
-}
+integer_run_length_encoder::integer_run_length_encoder(size_t iRecordSize)
+    : buffer(iRecordSize * 8 * 4),
+      output(iRecordSize * 8 * 4),
+      record_size(iRecordSize) {}
 
 void integer_run_length_encoder::write(uint32_t iValue) {
-  buffer[(buffer_offset + buffer_size) % buffer_capacity] = iValue;
-  if (++buffer_size == buffer_capacity) flush(false);
+  buffer[(buffer_offset + buffer_size) % buffer.size()] = iValue;
+  if (++buffer_size == buffer.size()) flush(false);
 }
 
 void integer_run_length_encoder::finish() {
@@ -119,7 +81,7 @@ void integer_run_length_encoder::flush(bool bAll) {
         object_size = iBestSize;
         object_copies = iBestRepeats - 1;
         buffer_offset =
-            (buffer_offset + object_size * object_copies) % buffer_capacity;
+            (buffer_offset + object_size * object_copies) % buffer.size();
         buffer_size -= object_size * object_copies;
       }
     } else {
@@ -127,7 +89,7 @@ void integer_run_length_encoder::flush(bool bAll) {
       while (object_size * 2 <= buffer_size &&
              are_ranges_equal(0, 1, 0, object_size)) {
         ++object_copies;
-        buffer_offset = (buffer_offset + object_size) % buffer_capacity;
+        buffer_offset = (buffer_offset + object_size) % buffer.size();
         buffer_size -= object_size;
       }
       // Write data
@@ -147,8 +109,8 @@ bool integer_run_length_encoder::are_ranges_equal(size_t iObjIdx1,
   iObjIdx1 = buffer_offset + iOffset * record_size + iObjIdx1 * iObjSize;
   iObjIdx2 = buffer_offset + iOffset * record_size + iObjIdx2 * iObjSize;
   for (size_t i = 0; i < iObjSize; ++i) {
-    if (buffer[(iObjIdx1 + i) % buffer_capacity] !=
-        buffer[(iObjIdx2 + i) % buffer_capacity]) {
+    if (buffer[(iObjIdx1 + i) % buffer.size()] !=
+        buffer[(iObjIdx2 + i) % buffer.size()]) {
       return false;
     }
   }
@@ -158,35 +120,24 @@ bool integer_run_length_encoder::are_ranges_equal(size_t iObjIdx1,
 bool integer_run_length_encoder::move_object_to_output(size_t iObjSize,
                                                        size_t iObjCount) {
   // Grow the output array if needed
-  if (output_capacity - output_size <= iObjSize) {
-    size_t iNewSize = (output_capacity + iObjSize) * 2;
-    uint32_t* pNewOutput = new (std::nothrow) uint32_t[iNewSize];
-    if (!pNewOutput) return false;
-#ifdef _MSC_VER
-#pragma warning(disable : 4996)
-#endif
-    std::copy(output, output + output_size, pNewOutput);
-#ifdef _MSC_VER
-#pragma warning(default : 4996)
-#endif
-    delete[] output;
-    output = pNewOutput;
-    output_capacity = iNewSize;
+  if (output.size() - output_size <= iObjSize) {
+    size_t iNewSize = (output.size() + iObjSize) * 2;
+    output.resize(iNewSize);
   }
   size_t iHeader = (iObjSize / record_size - 1) + 8 * (iObjCount - 1);
   output[output_size++] = static_cast<uint32_t>(iHeader);
   // Move the object from the buffer to the output
   for (size_t i = 0; i < iObjSize; ++i) {
     output[output_size++] = buffer[buffer_offset];
-    buffer_offset = (buffer_offset + 1) % buffer_capacity;
+    buffer_offset = (buffer_offset + 1) % buffer.size();
   }
   buffer_size -= iObjSize;
   return true;
 }
 
-uint32_t* integer_run_length_encoder::get_output(size_t* pCount) const {
+const uint32_t* integer_run_length_encoder::get_output(size_t* pCount) const {
   if (pCount) *pCount = output_size;
-  return output;
+  return output.data();
 }
 
 void integer_run_length_encoder::pump_output(
