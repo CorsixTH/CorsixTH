@@ -153,16 +153,11 @@ class chunk_renderer {
   /*!
       @param width Pixel width of the resulting image
       @param height Pixel height of the resulting image
-      @param buffer If nullptr, then a new buffer is created to render the
-     image onto. Otherwise, should be an array at least width*height in size.
-        Ownership of this pointer is assumed by the class - call takeData()
-        to take ownership back again.
+      @param buffer The buffer to write the resulting image to. Must have a size
+                    of width * height.
   */
-  chunk_renderer(int width, int height, uint8_t* buffer = nullptr);
+  chunk_renderer(int width, int height, std::vector<uint8_t>& buffer);
 
-  ~chunk_renderer();
-
-  // TODO: Should be function, not method of chunk_renderer
   //! Convert a stream of chunks into a raw bitmap
   /*!
       @param pData Stream data.
@@ -170,21 +165,8 @@ class chunk_renderer {
       @param bComplex true if pData is a stream of "complex" chunks, false if
         pData is a stream of "simple" chunks. Passing the wrong value will
         usually result in a very visible wrong result.
-
-      Use getData() or takeData() to obtain the resulting bitmap.
   */
   void decode_chunks(const uint8_t* pData, int iDataLen, bool bComplex);
-
-  //! Get the result buffer, and take ownership of it
-  /*!
-      This transfers ownership of the buffer to the caller. After calling,
-      the class will not have any buffer, and thus cannot be used for
-      anything.
-  */
-  uint8_t* take_data();
-
-  //! Get the result buffer
-  inline const uint8_t* get_data() const { return data; }
 
   //! Perform a "copy" chunk (normally called by decodeChunks)
   void chunk_copy(int npixels, const uint8_t* in_data);
@@ -203,7 +185,8 @@ class chunk_renderer {
   inline void fix_n_pixels(int& npixels) const;
   inline void increment_position(int npixels);
 
-  uint8_t *data, *ptr, *end;
+  std::vector<uint8_t>& data;
+  std::vector<uint8_t>::iterator ptr, end;
   int x{0}, y{0};
   int width, height;
   bool skip_eol{false};

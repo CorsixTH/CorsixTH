@@ -1175,17 +1175,15 @@ bool sprite_sheet::load_from_th_file(const uint8_t* pTableData,
     if (pSprite->width == 0 || pSprite->height == 0) continue;
 
     {
-      uint8_t* pData = new uint8_t[pSprite->width * pSprite->height];
+      std::vector<uint8_t> pData(pSprite->width * pSprite->height);
       chunk_renderer oRenderer(pSprite->width, pSprite->height, pData);
       int iDataLen = static_cast<int>(iChunkDataLength) -
                      static_cast<int>(pTHSprite->position);
       if (iDataLen < 0) iDataLen = 0;
       oRenderer.decode_chunks(pChunkData + pTHSprite->position, iDataLen,
                               bComplexChunks);
-      pData = oRenderer.take_data();
       pSprite->data =
-          convertLegacySprite(pData, pSprite->width * pSprite->height);
-      delete[] pData;
+          convertLegacySprite(pData.data(), pSprite->width * pSprite->height);
     }
   }
   return true;

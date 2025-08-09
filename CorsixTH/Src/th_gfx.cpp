@@ -1007,19 +1007,13 @@ void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
 }
 
 chunk_renderer::chunk_renderer(const int width, const int height,
-                               uint8_t* buffer)
-    : width(width), height(height) {
-  data = buffer ? buffer : new uint8_t[width * height];
-  ptr = data;
-  end = data + width * height;
-}
-
-chunk_renderer::~chunk_renderer() { delete[] data; }
-
-uint8_t* chunk_renderer::take_data() {
-  uint8_t* buffer = data;
-  data = nullptr;
-  return buffer;
+                               std::vector<uint8_t>& buffer)
+    : width(width),
+      height(height),
+      data(buffer),
+      ptr(buffer.begin()),
+      end(buffer.end()) {
+  assert(buffer.size() == width * height);
 }
 
 void chunk_renderer::chunk_fill_to_end_of_line(uint8_t value) {
@@ -1036,7 +1030,7 @@ void chunk_renderer::chunk_finish(uint8_t value) {
 void chunk_renderer::chunk_fill(int npixels, uint8_t value) {
   fix_n_pixels(npixels);
   if (npixels > 0) {
-    std::memset(ptr, value, npixels);
+    std::fill_n(ptr, npixels, value);
     increment_position(npixels);
   }
 }
@@ -1044,7 +1038,7 @@ void chunk_renderer::chunk_fill(int npixels, uint8_t value) {
 void chunk_renderer::chunk_copy(int npixels, const uint8_t* in_data) {
   fix_n_pixels(npixels);
   if (npixels > 0) {
-    std::memcpy(ptr, in_data, npixels);
+    std::copy_n(in_data, npixels, ptr);
     increment_position(npixels);
   }
 }
