@@ -205,7 +205,6 @@ void integer_run_length_decoder::clean() {
   buffer = nullptr;
   reader = nullptr;
   input = nullptr;
-  input_end = nullptr;
   reads_remaining = 0;
   object_copies = 0;
   record_size = 0;
@@ -224,36 +223,16 @@ bool integer_run_length_decoder::initialise(size_t iRecordSize,
   return pReader->read_uint(reads_remaining);
 }
 
-bool integer_run_length_decoder::initialise(size_t iRecordSize,
-                                            const uint32_t* pInput,
-                                            size_t iCount) {
-  clean();
-
-  buffer = new (std::nothrow) uint32_t[9 * iRecordSize];
-  if (!buffer) return false;
-  input = pInput;
-  input_end = pInput + iCount;
-  record_size = iRecordSize;
-  return true;
-}
-
 uint32_t integer_run_length_decoder::read() {
   if (object_copies == 0) {
     uint32_t iHeader = 0;
-    if (reader) {
-      reader->read_uint(iHeader);
-      --reads_remaining;
-    } else
-      iHeader = *(input++);
+    reader->read_uint(iHeader);
+    --reads_remaining;
     object_size = record_size * (1 + (iHeader & 7));
     object_copies = (iHeader / 8) + 1;
-    if (reader) {
-      for (size_t i = 0; i < object_size; ++i) {
-        reader->read_uint(buffer[i]);
-        --reads_remaining;
-      }
-    } else {
-      for (size_t i = 0; i < object_size; ++i) buffer[i] = *(input++);
+    for (size_t i = 0; i < object_size; ++i) {
+      reader->read_uint(buffer[i]);
+      --reads_remaining;
     }
   }
 
@@ -266,8 +245,5 @@ uint32_t integer_run_length_decoder::read() {
 }
 
 bool integer_run_length_decoder::is_finished() const {
-  if (reader)
-    return reads_remaining == 0 && object_copies == 0;
-  else
-    return input == input_end && object_copies == 0;
+  return reads_remaining == 0 && object_copies == 0;
 }

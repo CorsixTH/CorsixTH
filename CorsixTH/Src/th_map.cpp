@@ -1551,7 +1551,6 @@ void level_map::depersist(lua_persist_reader* pReader) {
 
   lua_State* L = pReader->get_stack();
   int iWidth, iHeight;
-  integer_run_length_decoder oDecoder;
 
   uint32_t iVersion;
   if (!pReader->read_uint(iVersion)) return;
@@ -1640,6 +1639,8 @@ void level_map::depersist(lua_persist_reader* pReader) {
     }
     lua_pop(L, 1);
   }
+
+  integer_run_length_decoder oDecoder;
   oDecoder.initialise(6, pReader);
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {

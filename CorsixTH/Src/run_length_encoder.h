@@ -109,7 +109,6 @@ class integer_run_length_decoder {
   ~integer_run_length_decoder();
 
   bool initialise(size_t iRecordSize, lua_persist_reader* pReader);
-  bool initialise(size_t iRecordSize, const uint32_t* pInput, size_t iCount);
   uint32_t read();
   bool is_finished() const;
 
@@ -119,10 +118,7 @@ class integer_run_length_decoder {
   uint32_t* buffer{nullptr};
   lua_persist_reader* reader{nullptr};
   const uint32_t* input{nullptr};
-  union {
-    const uint32_t* input_end{nullptr};
-    size_t reads_remaining;
-  };
+  size_t reads_remaining;
   size_t object_copies{};
   size_t record_size{};
   size_t object_index{};
