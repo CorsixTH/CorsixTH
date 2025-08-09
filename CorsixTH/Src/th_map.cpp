@@ -1649,8 +1649,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
         static_cast<uint16_t>(oDecoder.read());
     pNode->tile_layers[tile_layer::west_wall] =
         static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::ui] =
-        static_cast<uint16_t>(oDecoder.read());
+    pNode->tile_layers[tile_layer::ui] = static_cast<uint16_t>(oDecoder.read());
     pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
     pNode->iRoomId = static_cast<uint16_t>(oDecoder.read());
   }

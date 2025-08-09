@@ -24,6 +24,8 @@ SOFTWARE.
 #define CORSIX_TH_RLE_H_
 #include "config.h"
 
+#include <vector>
+
 class lua_persist_reader;
 class lua_persist_writer;
 
@@ -108,26 +110,19 @@ class integer_run_length_encoder {
 class integer_run_length_decoder {
  public:
   integer_run_length_decoder(size_t iRecordSize, lua_persist_reader* pReader);
-  integer_run_length_decoder(const integer_run_length_decoder&);
-  integer_run_length_decoder(integer_run_length_decoder&&) noexcept;
-  integer_run_length_decoder& operator=(const integer_run_length_decoder&);
-  integer_run_length_decoder& operator=(integer_run_length_decoder&&) noexcept;
-  ~integer_run_length_decoder();
 
   uint32_t read();
   bool is_finished() const;
 
  private:
-  // Owned by the decoder, buffer for the reader data so that an entire object
-  // can be read at once.
-  uint32_t* buffer{};
+  std::vector<uint32_t> buffer;
 
   // Not owned by the decoder, the reader to read from.
   lua_persist_reader* reader;
 
   size_t reads_remaining{};
+  size_t record_size;
   size_t object_copies{};
-  size_t record_size{};
   size_t object_index{};
   size_t object_size{};
 };
