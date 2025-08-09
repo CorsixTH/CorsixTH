@@ -103,22 +103,29 @@ class integer_run_length_encoder {
   size_t object_copies{};
 };
 
+//! Decoder for reading a sequence of integers encoded by
+//! integer_run_length_encoder
 class integer_run_length_decoder {
  public:
-  integer_run_length_decoder();
+  integer_run_length_decoder(size_t iRecordSize, lua_persist_reader* pReader);
+  integer_run_length_decoder(const integer_run_length_decoder&);
+  integer_run_length_decoder(integer_run_length_decoder&&) noexcept;
+  integer_run_length_decoder& operator=(const integer_run_length_decoder&);
+  integer_run_length_decoder& operator=(integer_run_length_decoder&&) noexcept;
   ~integer_run_length_decoder();
 
-  bool initialise(size_t iRecordSize, lua_persist_reader* pReader);
   uint32_t read();
   bool is_finished() const;
 
  private:
-  void clean();
+  // Owned by the decoder, buffer for the reader data so that an entire object
+  // can be read at once.
+  uint32_t* buffer{};
 
-  uint32_t* buffer{nullptr};
-  lua_persist_reader* reader{nullptr};
-  const uint32_t* input{nullptr};
-  size_t reads_remaining;
+  // Not owned by the decoder, the reader to read from.
+  lua_persist_reader* reader;
+
+  size_t reads_remaining{};
   size_t object_copies{};
   size_t record_size{};
   size_t object_index{};

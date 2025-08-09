@@ -23,6 +23,7 @@ SOFTWARE.
 #include "run_length_encoder.h"
 
 #include <algorithm>
+#include <cstdio>
 #include <new>
 
 #include "persist_lua.h"
@@ -196,32 +197,61 @@ void integer_run_length_encoder::pump_output(
   }
 }
 
-integer_run_length_decoder::integer_run_length_decoder() = default;
-
-integer_run_length_decoder::~integer_run_length_decoder() { clean(); }
-
-void integer_run_length_decoder::clean() {
-  delete[] buffer;
-  buffer = nullptr;
-  reader = nullptr;
-  input = nullptr;
-  reads_remaining = 0;
-  object_copies = 0;
-  record_size = 0;
-  object_index = 0;
-  object_size = 0;
+integer_run_length_decoder::integer_run_length_decoder(
+    size_t iRecordSize, lua_persist_reader* pReader)
+    : reader(pReader), record_size(iRecordSize) {
+  buffer = new uint32_t[9 * iRecordSize];
+  pReader->read_uint(reads_remaining);
 }
 
-bool integer_run_length_decoder::initialise(size_t iRecordSize,
-                                            lua_persist_reader* pReader) {
-  clean();
-
-  buffer = new (std::nothrow) uint32_t[9 * iRecordSize];
-  if (!buffer) return false;
-  reader = pReader;
-  record_size = iRecordSize;
-  return pReader->read_uint(reads_remaining);
+integer_run_length_decoder::integer_run_length_decoder(const integer_run_length_decoder& other)
+    : reader(other.reader), reads_remaining(other.reads_remaining),
+      object_copies(other.object_copies), record_size(other.record_size),
+      object_index(other.object_index), object_size(other.object_size) {
+  buffer = new uint32_t[9 * record_size];
+  std::copy_n(other.buffer, 9 * record_size, buffer);
 }
+
+integer_run_length_decoder::integer_run_length_decoder(integer_run_length_decoder&& other)
+ noexcept     : reader(other.reader), reads_remaining(other.reads_remaining),
+      object_copies(other.object_copies), record_size(other.record_size),
+      object_index(other.object_index), object_size(other.object_size) {
+  buffer = other.buffer;
+  other.buffer = nullptr;
+}
+
+integer_run_length_decoder& integer_run_length_decoder::operator=(const integer_run_length_decoder& other) {
+  if (this != &other) {
+    this->reader = other.reader;
+    this->reads_remaining = other.reads_remaining;
+    this->object_copies = other.object_copies;
+    this->record_size = other.record_size;
+    this->object_index = other.object_index;
+    this->object_size = other.object_size;
+
+    this->buffer = new uint32_t[9 * record_size];
+    std::copy_n(other.buffer, 9 * record_size, this->buffer);
+  }
+  return *this;
+}
+
+integer_run_length_decoder& integer_run_length_decoder::operator=(integer_run_length_decoder&& other) noexcept {
+  if (this != &other) {
+    this->reader = other.reader;
+    this->reads_remaining = other.reads_remaining;
+    this->object_copies = other.object_copies;
+    this->record_size = other.record_size;
+    this->object_index = other.object_index;
+    this->object_size = other.object_size;
+
+    delete[] this->buffer;
+    this->buffer = other.buffer;
+    other.buffer = nullptr;
+  }
+  return *this;
+}
+
+integer_run_length_decoder::~integer_run_length_decoder() { delete[] buffer; }
 
 uint32_t integer_run_length_decoder::read() {
   if (object_copies == 0) {

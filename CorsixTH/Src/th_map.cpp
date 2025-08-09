@@ -1640,8 +1640,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     lua_pop(L, 1);
   }
 
-  integer_run_length_decoder oDecoder;
-  oDecoder.initialise(6, pReader);
+  integer_run_length_decoder oDecoder(6, pReader);
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
     pNode->tile_layers[tile_layer::ground] =
@@ -1650,11 +1649,13 @@ void level_map::depersist(lua_persist_reader* pReader) {
         static_cast<uint16_t>(oDecoder.read());
     pNode->tile_layers[tile_layer::west_wall] =
         static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::ui] = static_cast<uint16_t>(oDecoder.read());
+    pNode->tile_layers[tile_layer::ui] =
+        static_cast<uint16_t>(oDecoder.read());
     pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
     pNode->iRoomId = static_cast<uint16_t>(oDecoder.read());
   }
-  oDecoder.initialise(5, pReader);
+
+  oDecoder = integer_run_length_decoder(5, pReader);
   for (map_tile *pNode = original_cells,
                 *pLimitNode = original_cells + width * height;
        pNode != pLimitNode; ++pNode) {
