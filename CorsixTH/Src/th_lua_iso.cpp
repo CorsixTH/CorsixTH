@@ -81,7 +81,7 @@ int l_isofs_is_valid_root(lua_State* L) {
   try {
     iso_filesystem fs(luaL_checkstring(L, 1));
     lua_pushboolean(L, true);
-  } catch (std::runtime_error& e) {
+  } catch (std::runtime_error&) {
     lua_pushboolean(L, false);
   }
   return 1;
