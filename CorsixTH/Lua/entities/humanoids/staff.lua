@@ -562,15 +562,13 @@ function Staff:isIdle()
     -- or if the only one in sight is actually leaving.
     return not room:isRoomInDemand()
   else
-    -- In the corridor and not on_call (watering or going to room), the staff is free
-    -- unless going back to the training room or research department.
-    local x, y = self:getCurrentAction().x, self:getCurrentAction().y
-    if x then
-      room = self.world:getRoom(x, y)
-      if room and (room.room_info.id == "training" or room.room_info.id == "research") then
-        return false
-      end
+    -- In the corridor and not on_call (e.g. watering or going to room).
+    -- The staff is free, unless going back to the training/research.
+    room = self.last_room
+    if room then
+      return room.room_info.id ~= "training" and room.room_info.id ~= "research"
     end
+
     return true
   end
 end
