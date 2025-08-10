@@ -1594,18 +1594,6 @@ void cursor::draw(render_target* pCanvas, int iX, int iY) {
 
 line_sequence::line_sequence() { move_to(0.0, 0.0); }
 
-void line_sequence::initialize() {
-  width = 1;
-  red = 0;
-  green = 0;
-  blue = 0;
-  alpha = 255;
-  line_elements.clear();
-
-  // We start at 0,0
-  move_to(0.0, 0.0);
-}
-
 void line_sequence::move_to(double fX, double fY) {
   line_elements.emplace_back(line_command::move, fX, fY);
 }
@@ -1645,8 +1633,6 @@ void line_sequence::persist(lua_persist_writer* pWriter) const {
 }
 
 void line_sequence::depersist(lua_persist_reader* pReader) {
-  initialize();
-
   pReader->read_uint(red);
   pReader->read_uint(green);
   pReader->read_uint(blue);

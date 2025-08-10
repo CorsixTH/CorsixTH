@@ -731,7 +731,6 @@ class line_sequence {
 
  private:
   friend class render_target;
-  void initialize();
 
   enum class line_command : uint32_t { move = 0, line = 1 };
 
