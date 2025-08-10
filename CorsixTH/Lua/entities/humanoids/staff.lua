@@ -729,10 +729,6 @@ function Staff:afterLoad(old, new)
   Humanoid.afterLoad(self, old, new)
 end
 
-function Staff:getDrawingLayer()
-  return 4
-end
-
 --! Estimate staff service quality based on skills, restfulness (inverse of fatigue) and happiness.
 --!return (float) between [0-1] indicating quality of the service.
 function Staff:getServiceQuality()

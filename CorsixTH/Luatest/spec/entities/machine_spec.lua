@@ -21,6 +21,7 @@ require("corsixth")
 
 require("class_test_base")
 
+require("utility")
 require("announcer")
 require("entity")
 require("entities/object")
