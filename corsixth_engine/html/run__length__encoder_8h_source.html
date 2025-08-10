@@ -108,95 +108,76 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#define CORSIX_TH_RLE_H_</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="config_8h.html">config.h</a>&quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">class </span><a class="code hl_class" href="classlua__persist__reader.html">lua_persist_reader</a>;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">class </span><a class="code hl_class" href="classlua__persist__writer.html">lua_persist_writer</a>;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">class </span><a class="code hl_class" href="classlua__persist__reader.html">lua_persist_reader</a>;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">class </span><a class="code hl_class" href="classlua__persist__writer.html">lua_persist_writer</a>;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="foldopen" id="foldopen00042" data-start="{" data-end="};">
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classinteger__run__length__encoder.html">   42</a></span><span class="keyword">class </span><a class="code hl_class" href="classinteger__run__length__encoder.html">integer_run_length_encoder</a> {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <a class="code hl_function" href="classinteger__run__length__encoder.html#aba45bbe2c0cb8687431831fbb4d5b1a4">integer_run_length_encoder</a>();</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <a class="code hl_function" href="classinteger__run__length__encoder.html#a61208463533b5bc4aed44cb4ca917326">~integer_run_length_encoder</a>();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classinteger__run__length__encoder.html#a034e6a4762bca9264b28f76e2dd57185">initialise</a>(<span class="keywordtype">size_t</span> iRecordSize);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classinteger__run__length__encoder.html#ada76c6f3fb226d6a4ba8d358a5b45fe3">write</a>(uint32_t iValue);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classinteger__run__length__encoder.html#af655560834ad235646008c6c1e0a834d">finish</a>();</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  uint32_t* <a class="code hl_function" href="classinteger__run__length__encoder.html#a5c4a76d4584878c0f0d878d8ae895c77">get_output</a>(<span class="keywordtype">size_t</span>* pCount) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classinteger__run__length__encoder.html#ae2d03b3d0ae17b437e1a1f09f0f1e135">pump_output</a>(<a class="code hl_class" href="classlua__persist__writer.html">lua_persist_writer</a>* pWriter) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keywordtype">void</span> clean();</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keywordtype">void</span> flush(<span class="keywordtype">bool</span> bAll);</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordtype">bool</span> are_ranges_equal(<span class="keywordtype">size_t</span> iObjIdx1, <span class="keywordtype">size_t</span> iObjIdx2, <span class="keywordtype">size_t</span> iOffset,</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                        <span class="keywordtype">size_t</span> iObjSize) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keywordtype">bool</span> move_object_to_output(<span class="keywordtype">size_t</span> iObjSize, <span class="keywordtype">size_t</span> iObjCount);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  uint32_t* buffer;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  uint32_t* output;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keywordtype">size_t</span> record_size;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordtype">size_t</span> buffer_capacity;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="keywordtype">size_t</span> buffer_size;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keywordtype">size_t</span> buffer_offset;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keywordtype">size_t</span> output_capacity;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keywordtype">size_t</span> output_size;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="keywordtype">size_t</span> object_size;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  <span class="keywordtype">size_t</span> object_copies;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>};</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="};">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classinteger__run__length__encoder.html">   44</a></span><span class="keyword">class </span><a class="code hl_class" href="classinteger__run__length__encoder.html">integer_run_length_encoder</a> {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keyword">explicit</span> <a class="code hl_class" href="classinteger__run__length__encoder.html">integer_run_length_encoder</a>(<span class="keywordtype">size_t</span> iRecordSize);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classinteger__run__length__encoder.html#ada76c6f3fb226d6a4ba8d358a5b45fe3">write</a>(uint32_t iValue);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classinteger__run__length__encoder.html#af655560834ad235646008c6c1e0a834d">finish</a>();</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keyword">const</span> uint32_t* <a class="code hl_function" href="classinteger__run__length__encoder.html#aa318d4e7d0906b70c94e86e952d92e20">get_output</a>(<span class="keywordtype">size_t</span>* pCount) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classinteger__run__length__encoder.html#ae2d03b3d0ae17b437e1a1f09f0f1e135">pump_output</a>(<a class="code hl_class" href="classlua__persist__writer.html">lua_persist_writer</a>* pWriter) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keywordtype">void</span> flush(<span class="keywordtype">bool</span> bAll);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="keywordtype">bool</span> are_ranges_equal(<span class="keywordtype">size_t</span> iObjIdx1, <span class="keywordtype">size_t</span> iObjIdx2, <span class="keywordtype">size_t</span> iOffset,</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                        <span class="keywordtype">size_t</span> iObjSize) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="keywordtype">bool</span> move_object_to_output(<span class="keywordtype">size_t</span> iObjSize, <span class="keywordtype">size_t</span> iObjCount);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  std::vector&lt;uint32_t&gt; buffer;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  std::vector&lt;uint32_t&gt; output;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordtype">size_t</span> record_size;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keywordtype">size_t</span> buffer_size{};</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="keywordtype">size_t</span> buffer_offset{};</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keywordtype">size_t</span> output_size{};</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keywordtype">size_t</span> object_size{};</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keywordtype">size_t</span> object_copies{};</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>};</div>
 </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="foldopen" id="foldopen00106" data-start="{" data-end="};">
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classinteger__run__length__decoder.html">  106</a></span><span class="keyword">class </span><a class="code hl_class" href="classinteger__run__length__decoder.html">integer_run_length_decoder</a> {</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <a class="code hl_function" href="classinteger__run__length__decoder.html#afb12edbc619ee19c2bfefb3822d189c2">integer_run_length_decoder</a>();</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <a class="code hl_function" href="classinteger__run__length__decoder.html#adcb371bbd8b13d9526b38dcf15eca5a6">~integer_run_length_decoder</a>();</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classinteger__run__length__decoder.html#a8ccacc7725846abe456ca16459cb68c5">initialise</a>(<span class="keywordtype">size_t</span> iRecordSize, <a class="code hl_class" href="classlua__persist__reader.html">lua_persist_reader</a>* pReader);</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classinteger__run__length__decoder.html#a8ccacc7725846abe456ca16459cb68c5">initialise</a>(<span class="keywordtype">size_t</span> iRecordSize, <span class="keyword">const</span> uint32_t* pInput, <span class="keywordtype">size_t</span> iCount);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  uint32_t <a class="code hl_function" href="classinteger__run__length__decoder.html#ad49ab4fecc0b0a888069d02845be95e9">read</a>();</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classinteger__run__length__decoder.html#afe700fea92b6d56176a9de9970ef8572">is_finished</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="keywordtype">void</span> clean();</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  uint32_t* buffer;</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <a class="code hl_class" href="classlua__persist__reader.html">lua_persist_reader</a>* reader;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keyword">const</span> uint32_t* input;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <span class="keyword">union </span>{</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="classinteger__run__length__decoder.html#ab0f1fef62de60d99893b6a7072292970">  123</a></span>    <span class="keyword">const</span> uint32_t* <a class="code hl_variable" href="classinteger__run__length__decoder.html#ab0f1fef62de60d99893b6a7072292970">input_end</a>;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="classinteger__run__length__decoder.html#a16f886cdcd3f8402a8feac660733a681">  124</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="classinteger__run__length__decoder.html#a16f886cdcd3f8402a8feac660733a681">reads_remaining</a>;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  };</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  <span class="keywordtype">size_t</span> object_copies;</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  <span class="keywordtype">size_t</span> record_size;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <span class="keywordtype">size_t</span> object_index;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="keywordtype">size_t</span> object_size;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>};</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="foldopen" id="foldopen00100" data-start="{" data-end="};">
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classinteger__run__length__decoder.html">  100</a></span><span class="keyword">class </span><a class="code hl_class" href="classinteger__run__length__decoder.html">integer_run_length_decoder</a> {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <a class="code hl_class" href="classinteger__run__length__decoder.html">integer_run_length_decoder</a>(<span class="keywordtype">size_t</span> iRecordSize, <a class="code hl_class" href="classlua__persist__reader.html">lua_persist_reader</a>* pReader);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  uint32_t <a class="code hl_function" href="classinteger__run__length__decoder.html#ad49ab4fecc0b0a888069d02845be95e9">read</a>();</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classinteger__run__length__decoder.html#afe700fea92b6d56176a9de9970ef8572">is_finished</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  std::vector&lt;uint32_t&gt; buffer;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  <span class="comment">// Not owned by the decoder, the reader to read from.</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <a class="code hl_class" href="classlua__persist__reader.html">lua_persist_reader</a>* reader;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="keywordtype">size_t</span> reads_remaining{};</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  <span class="keywordtype">size_t</span> record_size;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <span class="keywordtype">size_t</span> object_copies{};</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  <span class="keywordtype">size_t</span> object_index{};</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="keywordtype">size_t</span> object_size{};</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>};</div>
 </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#endif  </span><span class="comment">// CORSIX_TH_RLE_H_</span></div>
-<div class="ttc" id="aclassinteger__run__length__decoder_html"><div class="ttname"><a href="classinteger__run__length__decoder.html">integer_run_length_decoder</a></div><div class="ttdef"><b>Definition</b> run_length_encoder.h:106</div></div>
-<div class="ttc" id="aclassinteger__run__length__decoder_html_a16f886cdcd3f8402a8feac660733a681"><div class="ttname"><a href="classinteger__run__length__decoder.html#a16f886cdcd3f8402a8feac660733a681">integer_run_length_decoder::reads_remaining</a></div><div class="ttdeci">size_t reads_remaining</div><div class="ttdef"><b>Definition</b> run_length_encoder.h:124</div></div>
-<div class="ttc" id="aclassinteger__run__length__decoder_html_a8ccacc7725846abe456ca16459cb68c5"><div class="ttname"><a href="classinteger__run__length__decoder.html#a8ccacc7725846abe456ca16459cb68c5">integer_run_length_decoder::initialise</a></div><div class="ttdeci">bool initialise(size_t iRecordSize, lua_persist_reader *pReader)</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:223</div></div>
-<div class="ttc" id="aclassinteger__run__length__decoder_html_ab0f1fef62de60d99893b6a7072292970"><div class="ttname"><a href="classinteger__run__length__decoder.html#ab0f1fef62de60d99893b6a7072292970">integer_run_length_decoder::input_end</a></div><div class="ttdeci">const uint32_t * input_end</div><div class="ttdef"><b>Definition</b> run_length_encoder.h:123</div></div>
-<div class="ttc" id="aclassinteger__run__length__decoder_html_ad49ab4fecc0b0a888069d02845be95e9"><div class="ttname"><a href="classinteger__run__length__decoder.html#ad49ab4fecc0b0a888069d02845be95e9">integer_run_length_decoder::read</a></div><div class="ttdeci">uint32_t read()</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:247</div></div>
-<div class="ttc" id="aclassinteger__run__length__decoder_html_adcb371bbd8b13d9526b38dcf15eca5a6"><div class="ttname"><a href="classinteger__run__length__decoder.html#adcb371bbd8b13d9526b38dcf15eca5a6">integer_run_length_decoder::~integer_run_length_decoder</a></div><div class="ttdeci">~integer_run_length_decoder()</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:208</div></div>
-<div class="ttc" id="aclassinteger__run__length__decoder_html_afb12edbc619ee19c2bfefb3822d189c2"><div class="ttname"><a href="classinteger__run__length__decoder.html#afb12edbc619ee19c2bfefb3822d189c2">integer_run_length_decoder::integer_run_length_decoder</a></div><div class="ttdeci">integer_run_length_decoder()</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:203</div></div>
-<div class="ttc" id="aclassinteger__run__length__decoder_html_afe700fea92b6d56176a9de9970ef8572"><div class="ttname"><a href="classinteger__run__length__decoder.html#afe700fea92b6d56176a9de9970ef8572">integer_run_length_decoder::is_finished</a></div><div class="ttdeci">bool is_finished() const</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:275</div></div>
-<div class="ttc" id="aclassinteger__run__length__encoder_html"><div class="ttname"><a href="classinteger__run__length__encoder.html">integer_run_length_encoder</a></div><div class="ttdoc">Encoder for reducing the amount of space to store a sequence of integers.</div><div class="ttdef"><b>Definition</b> run_length_encoder.h:42</div></div>
-<div class="ttc" id="aclassinteger__run__length__encoder_html_a034e6a4762bca9264b28f76e2dd57185"><div class="ttname"><a href="classinteger__run__length__encoder.html#a034e6a4762bca9264b28f76e2dd57185">integer_run_length_encoder::initialise</a></div><div class="ttdeci">bool initialise(size_t iRecordSize)</div><div class="ttdoc">(Re-)initialise the encoder</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:53</div></div>
-<div class="ttc" id="aclassinteger__run__length__encoder_html_a5c4a76d4584878c0f0d878d8ae895c77"><div class="ttname"><a href="classinteger__run__length__encoder.html#a5c4a76d4584878c0f0d878d8ae895c77">integer_run_length_encoder::get_output</a></div><div class="ttdeci">uint32_t * get_output(size_t *pCount) const</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:190</div></div>
-<div class="ttc" id="aclassinteger__run__length__encoder_html_a61208463533b5bc4aed44cb4ca917326"><div class="ttname"><a href="classinteger__run__length__encoder.html#a61208463533b5bc4aed44cb4ca917326">integer_run_length_encoder::~integer_run_length_encoder</a></div><div class="ttdeci">~integer_run_length_encoder()</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:36</div></div>
-<div class="ttc" id="aclassinteger__run__length__encoder_html_aba45bbe2c0cb8687431831fbb4d5b1a4"><div class="ttname"><a href="classinteger__run__length__encoder.html#aba45bbe2c0cb8687431831fbb4d5b1a4">integer_run_length_encoder::integer_run_length_encoder</a></div><div class="ttdeci">integer_run_length_encoder()</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:30</div></div>
-<div class="ttc" id="aclassinteger__run__length__encoder_html_ada76c6f3fb226d6a4ba8d358a5b45fe3"><div class="ttname"><a href="classinteger__run__length__encoder.html#ada76c6f3fb226d6a4ba8d358a5b45fe3">integer_run_length_encoder::write</a></div><div class="ttdeci">void write(uint32_t iValue)</div><div class="ttdoc">Supply the next integer in the input sequence to the encoder.</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:77</div></div>
-<div class="ttc" id="aclassinteger__run__length__encoder_html_ae2d03b3d0ae17b437e1a1f09f0f1e135"><div class="ttname"><a href="classinteger__run__length__encoder.html#ae2d03b3d0ae17b437e1a1f09f0f1e135">integer_run_length_encoder::pump_output</a></div><div class="ttdeci">void pump_output(lua_persist_writer *pWriter) const</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:195</div></div>
-<div class="ttc" id="aclassinteger__run__length__encoder_html_af655560834ad235646008c6c1e0a834d"><div class="ttname"><a href="classinteger__run__length__encoder.html#af655560834ad235646008c6c1e0a834d">integer_run_length_encoder::finish</a></div><div class="ttdeci">void finish()</div><div class="ttdoc">Inform the encoder that the input sequence has finished.</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:82</div></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="preprocessor">#endif  </span><span class="comment">// CORSIX_TH_RLE_H_</span></div>
+<div class="ttc" id="aclassinteger__run__length__decoder_html"><div class="ttname"><a href="classinteger__run__length__decoder.html">integer_run_length_decoder</a></div><div class="ttdef"><b>Definition</b> run_length_encoder.h:100</div></div>
+<div class="ttc" id="aclassinteger__run__length__decoder_html_ad49ab4fecc0b0a888069d02845be95e9"><div class="ttname"><a href="classinteger__run__length__decoder.html#ad49ab4fecc0b0a888069d02845be95e9">integer_run_length_decoder::read</a></div><div class="ttdeci">uint32_t read()</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:157</div></div>
+<div class="ttc" id="aclassinteger__run__length__decoder_html_afe700fea92b6d56176a9de9970ef8572"><div class="ttname"><a href="classinteger__run__length__decoder.html#afe700fea92b6d56176a9de9970ef8572">integer_run_length_decoder::is_finished</a></div><div class="ttdeci">bool is_finished() const</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:178</div></div>
+<div class="ttc" id="aclassinteger__run__length__encoder_html"><div class="ttname"><a href="classinteger__run__length__encoder.html">integer_run_length_encoder</a></div><div class="ttdoc">Encoder for reducing the amount of space to store a sequence of integers.</div><div class="ttdef"><b>Definition</b> run_length_encoder.h:44</div></div>
+<div class="ttc" id="aclassinteger__run__length__encoder_html_aa318d4e7d0906b70c94e86e952d92e20"><div class="ttname"><a href="classinteger__run__length__encoder.html#aa318d4e7d0906b70c94e86e952d92e20">integer_run_length_encoder::get_output</a></div><div class="ttdeci">const uint32_t * get_output(size_t *pCount) const</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:138</div></div>
+<div class="ttc" id="aclassinteger__run__length__encoder_html_ada76c6f3fb226d6a4ba8d358a5b45fe3"><div class="ttname"><a href="classinteger__run__length__encoder.html#ada76c6f3fb226d6a4ba8d358a5b45fe3">integer_run_length_encoder::write</a></div><div class="ttdeci">void write(uint32_t iValue)</div><div class="ttdoc">Supply the next integer in the input sequence to the encoder.</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:36</div></div>
+<div class="ttc" id="aclassinteger__run__length__encoder_html_ae2d03b3d0ae17b437e1a1f09f0f1e135"><div class="ttname"><a href="classinteger__run__length__encoder.html#ae2d03b3d0ae17b437e1a1f09f0f1e135">integer_run_length_encoder::pump_output</a></div><div class="ttdeci">void pump_output(lua_persist_writer *pWriter) const</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:143</div></div>
+<div class="ttc" id="aclassinteger__run__length__encoder_html_af655560834ad235646008c6c1e0a834d"><div class="ttname"><a href="classinteger__run__length__encoder.html#af655560834ad235646008c6c1e0a834d">integer_run_length_encoder::finish</a></div><div class="ttdeci">void finish()</div><div class="ttdoc">Inform the encoder that the input sequence has finished.</div><div class="ttdef"><b>Definition</b> run_length_encoder.cpp:41</div></div>
 <div class="ttc" id="aclasslua__persist__reader_html"><div class="ttname"><a href="classlua__persist__reader.html">lua_persist_reader</a></div><div class="ttdoc">Interface used for depersisting Lua objects.</div><div class="ttdef"><b>Definition</b> persist_lua.h:107</div></div>
 <div class="ttc" id="aclasslua__persist__writer_html"><div class="ttname"><a href="classlua__persist__writer.html">lua_persist_writer</a></div><div class="ttdoc">Interface used for persisting Lua objects.</div><div class="ttdef"><b>Definition</b> persist_lua.h:44</div></div>
 <div class="ttc" id="aconfig_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div></div>

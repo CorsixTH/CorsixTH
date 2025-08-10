@@ -21,7 +21,7 @@ var searchData=
   ['anims_18',['anims',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a666821b4e0ab412117d5981094b078eb',1,'th_lua_internal.h']]],
   ['append_19',['append',['../structmidi__token__list.html#abfa6c14fe40622c11abfed350b3650b0',1,'midi_token_list']]],
   ['append_5fsprite_20',['append_sprite',['../classsprite__render__list.html#aa131c341a420e37752a695e9881b568f',1,'sprite_render_list']]],
-  ['are_5fbytes_5favailable_21',['are_bytes_available',['../classmemory__reader.html#a6ffa6b60188b9eb43ec52de34011b12c',1,'memory_reader']]],
+  ['are_5fbytes_5favailable_21',['are_bytes_available',['../classmemory__reader.html#a3550e113facd16b87d041dbb72c368a0',1,'memory_reader']]],
   ['are_5fparcels_5fadjacent_22',['are_parcels_adjacent',['../classlevel__map.html#a3200a67d20b2a15786a59b6a15ff389b',1,'level_map']]],
   ['argb_5fcolour_23',['argb_colour',['../th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8',1,'th_gfx_sdl.h']]],
   ['attach_5fto_5ftile_24',['attach_to_tile',['../classanimation__base.html#a2e5f17925c7e534e140da3af6ad9800d',1,'animation_base']]],

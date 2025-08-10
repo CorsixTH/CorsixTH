@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['raw_5fbitmap_0',['raw_bitmap',['../classraw__bitmap.html#a82fd699943a197841c472bf84dca1916',1,'raw_bitmap']]],
+  ['raw_5fbitmap_0',['raw_bitmap',['../classraw__bitmap.html#a59ac11ae02197720f0c8d2c0eadc58ef',1,'raw_bitmap']]],
   ['read_1',['read',['../classinteger__run__length__decoder.html#ad49ab4fecc0b0a888069d02845be95e9',1,'integer_run_length_decoder::read()'],['../classmemory__buffer.html#a4423bff204cc9892dd8d2c153c0aa91c',1,'memory_buffer::read(T &amp;value)'],['../classmemory__buffer.html#ac512a878d758b1c178856d970f276997',1,'memory_buffer::read(T *values, size_t count)']]],
   ['read_5fbig_5fendian_5fuint24_2',['read_big_endian_uint24',['../classmemory__buffer.html#a3d5c1dddbf796d7403693ff3b33dbfe8',1,'memory_buffer']]],
   ['read_5fbyte_5fstream_3',['read_byte_stream',['../classlua__persist__basic__reader.html#ab54f22e4b6bb7b4e31ca217c8a5a780d',1,'lua_persist_basic_reader::read_byte_stream(uint8_t *pBytes, size_t iCount) override'],['../classlua__persist__basic__reader.html#a9652c664bc114a2a55fa68b52f81be80',1,'lua_persist_basic_reader::read_byte_stream(std::string &amp;bytes, size_t iCount)'],['../classlua__persist__reader.html#a7214beabe5d896df97fe2bca81d2c58c',1,'lua_persist_reader::read_byte_stream(uint8_t *pBytes, size_t iCount)=0']]],
@@ -21,7 +21,7 @@ var searchData=
   ['release_5fchannel_18',['release_channel',['../classsound__player.html#a851a575dc94d0661beae921fa3c973a3',1,'sound_player']]],
   ['remove_5ffrom_5flist_19',['remove_from_list',['../classlink__list.html#a0574884960b710a882dd7dee4fc89615',1,'link_list']]],
   ['remove_5ffrom_5ftile_20',['remove_from_tile',['../classanimation__base.html#a060a51bf2cd2f0def97014a1d39ff5ed',1,'animation_base']]],
-  ['render_5ftarget_21',['render_target',['../classrender__target.html#a2d901b3c30f40e9d57f3b983ee8330e5',1,'render_target']]],
+  ['render_5ftarget_21',['render_target',['../classrender__target.html#a4530299964e2734b414813b2fd20b939',1,'render_target']]],
   ['reserve_5fchannel_22',['reserve_channel',['../classsound__player.html#a161c2136e5ef64a9d40e7703b0958863',1,'sound_player']]],
   ['run_5fvideo_23',['run_video',['../classmovie__player.html#a3e76aa43db63f7792efefa3b316fd269',1,'movie_player']]]
 ];

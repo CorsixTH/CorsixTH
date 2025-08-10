@@ -75,6 +75,7 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classiso__filesystem-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">iso_filesystem Class Reference</div></div>
 </div><!--header-->
@@ -92,19 +93,14 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a700d30ed27e80d173597c122667258c1" id="r_a700d30ed27e80d173597c122667258c1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a700d30ed27e80d173597c122667258c1">iso_filesystem</a> ()</td></tr>
-<tr class="separator:a700d30ed27e80d173597c122667258c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeaea40b605632d8b9fd61e13cbe289c4" id="r_aeaea40b605632d8b9fd61e13cbe289c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#aeaea40b605632d8b9fd61e13cbe289c4">~iso_filesystem</a> ()</td></tr>
-<tr class="separator:aeaea40b605632d8b9fd61e13cbe289c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08c7134a94ec638222c45ef0e84ac227" id="r_a08c7134a94ec638222c45ef0e84ac227"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a08c7134a94ec638222c45ef0e84ac227">set_path_separator</a> (char cSeparator)</td></tr>
-<tr class="memdesc:a08c7134a94ec638222c45ef0e84ac227"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the character to be used between components in file paths.  <br /></td></tr>
-<tr class="separator:a08c7134a94ec638222c45ef0e84ac227"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c4f81e78e26f60dd09a1227356d6ddb" id="r_a4c4f81e78e26f60dd09a1227356d6ddb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a4c4f81e78e26f60dd09a1227356d6ddb">initialise</a> (const char *path)</td></tr>
-<tr class="memdesc:a4c4f81e78e26f60dd09a1227356d6ddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load an .iso disk image and search for Theme Hospital data files.  <br /></td></tr>
-<tr class="separator:a4c4f81e78e26f60dd09a1227356d6ddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3dc6933941b1003aff0a9dc08c5fd865" id="r_a3dc6933941b1003aff0a9dc08c5fd865"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a3dc6933941b1003aff0a9dc08c5fd865">get_error</a> () const</td></tr>
-<tr class="memdesc:a3dc6933941b1003aff0a9dc08c5fd865"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the reason for the most recent failure.  <br /></td></tr>
-<tr class="separator:a3dc6933941b1003aff0a9dc08c5fd865"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6eb84acc762ac45e66bdba0cea9e9a8" id="r_ae6eb84acc762ac45e66bdba0cea9e9a8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#ae6eb84acc762ac45e66bdba0cea9e9a8">iso_filesystem</a> (const char *path, char pathSeparator='/')</td></tr>
+<tr class="memdesc:ae6eb84acc762ac45e66bdba0cea9e9a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load an .iso disk image and search for Theme Hospital data files.  <br /></td></tr>
+<tr class="separator:ae6eb84acc762ac45e66bdba0cea9e9a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0878808d086e926f08fc71e054765a60" id="r_a0878808d086e926f08fc71e054765a60"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a0878808d086e926f08fc71e054765a60">~iso_filesystem</a> ()=default</td></tr>
+<tr class="separator:a0878808d086e926f08fc71e054765a60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af03ada3794920fc735a70feb64de028c" id="r_af03ada3794920fc735a70feb64de028c"><td class="memItemLeft" align="right" valign="top">std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#af03ada3794920fc735a70feb64de028c">get_error</a> () const</td></tr>
+<tr class="memdesc:af03ada3794920fc735a70feb64de028c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the reason for the most recent failure.  <br /></td></tr>
+<tr class="separator:af03ada3794920fc735a70feb64de028c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ac7a7c0dba30dd5967f139b449238b8" id="r_a8ac7a7c0dba30dd5967f139b449238b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a8ac7a7c0dba30dd5967f139b449238b8">find_file</a> (const char *sPath) const</td></tr>
 <tr class="memdesc:a8ac7a7c0dba30dd5967f139b449238b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a file in the loaded .iso disk image.  <br /></td></tr>
 <tr class="separator:a8ac7a7c0dba30dd5967f139b449238b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,6 +122,11 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a67370d7548462d0cc380727f71d7bbef" id="r_a67370d7548462d0cc380727f71d7bbef"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a67370d7548462d0cc380727f71d7bbef">is_handle_good</a> (<a class="el" href="classiso__filesystem.html#a369b4c0afa558cc732d06649b788f901">file_handle</a> x)</td></tr>
 <tr class="memdesc:a67370d7548462d0cc380727f71d7bbef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if a file handle from <a class="el" href="classiso__filesystem.html#a8ac7a7c0dba30dd5967f139b449238b8" title="Find a file in the loaded .iso disk image.">find_file()</a> is good or is invalid.  <br /></td></tr>
 <tr class="separator:a67370d7548462d0cc380727f71d7bbef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a2d4176614fd45e7bd56bfd7889ae9391" id="r_a2d4176614fd45e7bd56bfd7889ae9391"><td class="memItemLeft" align="right" valign="top">static constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classiso__filesystem.html#a2d4176614fd45e7bd56bfd7889ae9391">min_sector_size</a> = 2048</td></tr>
+<tr class="separator:a2d4176614fd45e7bd56bfd7889ae9391"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Layer for reading Theme Hospital files out of an .iso disk image. </p>
@@ -146,28 +147,65 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a700d30ed27e80d173597c122667258c1" name="a700d30ed27e80d173597c122667258c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a700d30ed27e80d173597c122667258c1">&#9670;&#160;</a></span>iso_filesystem()</h2>
+<a id="ae6eb84acc762ac45e66bdba0cea9e9a8" name="ae6eb84acc762ac45e66bdba0cea9e9a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6eb84acc762ac45e66bdba0cea9e9a8">&#9670;&#160;</a></span>iso_filesystem()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">iso_filesystem::iso_filesystem </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>pathSeparator</em> = <code>'/'</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Load an .iso disk image and search for Theme Hospital data files. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to the .iso disk image to load </td></tr>
+    <tr><td class="paramname">pathSeparator</td><td>The character to be used between components in file paths. Defaults to '/'. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>if the file could not be opened </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="aeaea40b605632d8b9fd61e13cbe289c4" name="aeaea40b605632d8b9fd61e13cbe289c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeaea40b605632d8b9fd61e13cbe289c4">&#9670;&#160;</a></span>~iso_filesystem()</h2>
+<a id="a0878808d086e926f08fc71e054765a60" name="a0878808d086e926f08fc71e054765a60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0878808d086e926f08fc71e054765a60">&#9670;&#160;</a></span>~iso_filesystem()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">iso_filesystem::~iso_filesystem </td>
@@ -176,6 +214,11 @@ Static Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -202,14 +245,14 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a3dc6933941b1003aff0a9dc08c5fd865" name="a3dc6933941b1003aff0a9dc08c5fd865"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3dc6933941b1003aff0a9dc08c5fd865">&#9670;&#160;</a></span>get_error()</h2>
+<a id="af03ada3794920fc735a70feb64de028c" name="af03ada3794920fc735a70feb64de028c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af03ada3794920fc735a70feb64de028c">&#9670;&#160;</a></span>get_error()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const char * iso_filesystem::get_error </td>
+          <td class="memname">std::string_view iso_filesystem::get_error </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -218,7 +261,7 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the reason for the most recent failure. </p>
-<p>Can be called after <a class="el" href="classiso__filesystem.html#a4c4f81e78e26f60dd09a1227356d6ddb" title="Load an .iso disk image and search for Theme Hospital data files.">initialise()</a> or <a class="el" href="classiso__filesystem.html#a5ea2b6616cb6f3e90224a51ba470f7be" title="Get the contents of a file in the loaded .iso disk image.">get_file_data()</a> return false. </p>
+<p>Can be called after <a class="el" href="classiso__filesystem.html#a5ea2b6616cb6f3e90224a51ba470f7be" title="Get the contents of a file in the loaded .iso disk image.">get_file_data()</a> return false. </p>
 
 </div>
 </div>
@@ -312,33 +355,6 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a4c4f81e78e26f60dd09a1227356d6ddb" name="a4c4f81e78e26f60dd09a1227356d6ddb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c4f81e78e26f60dd09a1227356d6ddb">&#9670;&#160;</a></span>initialise()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool iso_filesystem::initialise </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>path</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Load an .iso disk image and search for Theme Hospital data files. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">fRawFile</td><td>A file handle of an .iso disk image. This handle must remain valid for as long as the IsoFilesystem instance exists, and is not automatically closed by the IsoFilesystem instance. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true on success, false on failure - call getError() for reason </dd></dl>
-
-</div>
-</div>
 <a id="a67370d7548462d0cc380727f71d7bbef" name="a67370d7548462d0cc380727f71d7bbef"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a67370d7548462d0cc380727f71d7bbef">&#9670;&#160;</a></span>is_handle_good()</h2>
 
@@ -364,26 +380,6 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Test if a file handle from <a class="el" href="classiso__filesystem.html#a8ac7a7c0dba30dd5967f139b449238b8" title="Find a file in the loaded .iso disk image.">find_file()</a> is good or is invalid. </p>
-
-</div>
-</div>
-<a id="a08c7134a94ec638222c45ef0e84ac227" name="a08c7134a94ec638222c45ef0e84ac227"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08c7134a94ec638222c45ef0e84ac227">&#9670;&#160;</a></span>set_path_separator()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void iso_filesystem::set_path_separator </td>
-          <td>(</td>
-          <td class="paramtype">char&#160;</td>
-          <td class="paramname"><em>cSeparator</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set the character to be used between components in file paths. </p>
 
 </div>
 </div>
@@ -428,6 +424,30 @@ Static Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a2d4176614fd45e7bd56bfd7889ae9391" name="a2d4176614fd45e7bd56bfd7889ae9391"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d4176614fd45e7bd56bfd7889ae9391">&#9670;&#160;</a></span>min_sector_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr size_t iso_filesystem::min_sector_size = 2048</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Sector sizes can vary, but they must be powers of two, and the minimum size is 2048. </p>
 
 </div>
 </div>

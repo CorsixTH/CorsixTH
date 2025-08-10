@@ -39,9 +39,9 @@ var searchData=
   ['draw_5fline_36',['draw_line',['../classrender__target.html#acb03e7bd95ba6439618d0d06cc271f68',1,'render_target']]],
   ['draw_5fmorph_37',['draw_morph',['../classanimation.html#acfba48506e471cf093d48e0eb04cc4df',1,'animation']]],
   ['draw_5fsprite_38',['draw_sprite',['../classsprite__sheet.html#ace796ee3dfb544c34c36cb79edc5be49',1,'sprite_sheet']]],
-  ['draw_5ftext_39',['draw_text',['../classfont.html#ad726109dbd82ee9a4fc469e56b7b98a8',1,'font::draw_text()'],['../classmap__typical__overlay.html#a706406c15877db10163441c8d1b3fe8f',1,'map_typical_overlay::draw_text()'],['../classfreetype__font.html#a0937e6b471f4487396645b428118284a',1,'freetype_font::draw_text()'],['../classbitmap__font.html#a39e6a556f1cd21ffbfc19a328323cddd',1,'bitmap_font::draw_text()']]],
+  ['draw_5ftext_39',['draw_text',['../classfont.html#ad726109dbd82ee9a4fc469e56b7b98a8',1,'font::draw_text()'],['../classmap__typical__overlay.html#a34fcaf678fbe53066aef6cad8f9d906c',1,'map_typical_overlay::draw_text()'],['../classfreetype__font.html#a0937e6b471f4487396645b428118284a',1,'freetype_font::draw_text()'],['../classbitmap__font.html#a39e6a556f1cd21ffbfc19a328323cddd',1,'bitmap_font::draw_text()']]],
   ['draw_5ftext_5fwrapped_40',['draw_text_wrapped',['../classfreetype__font.html#a4d3935841e091fa74096e281aa14e12a',1,'freetype_font::draw_text_wrapped()'],['../classbitmap__font.html#a3c46defb0a297c908516abc4e772655a',1,'bitmap_font::draw_text_wrapped()'],['../classfont.html#a79a2599688a20f4eca9db6abbf4e8c22',1,'font::draw_text_wrapped()']]],
-  ['drawable_41',['drawable',['../structdrawable.html#ab35defb39f6862b73c6e4fec00cba12c',1,'drawable::drawable()'],['../structdrawable.html',1,'drawable']]],
+  ['drawable_41',['drawable',['../structdrawable.html#a3df5e9381083a44f65b07beeade31820',1,'drawable::drawable()'],['../structdrawable.html',1,'drawable']]],
   ['drinks_5fmachine_42',['drinks_machine',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba02b5b99b10d24e6d3dd8931f861ad762',1,'th_map.h']]],
   ['dx_43',['dx',['../structxy__diff.html#aa83b5c5fde85dc29ebe6f5e56f874666',1,'xy_diff']]],
   ['dy_44',['dy',['../structxy__diff.html#ae5e0de37d3d2176043058fd0b8a0ad44',1,'xy_diff']]]

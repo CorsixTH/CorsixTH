@@ -1,7 +1,7 @@
 var searchData=
 [
   ['object_5fvisitor_0',['object_visitor',['../classobject__visitor.html#adb3696ca73eb04f1bda57533e7b2d916',1,'object_visitor']]],
-  ['offset_1',['offset',['../classrender__target_1_1scoped__target__texture.html#a98b0a4f664339fae4802ece12f21ce2c',1,'render_target::scoped_target_texture']]],
+  ['offset_1',['offset',['../classrender__target_1_1scoped__target__texture.html#ac668461112eeb954a7bb4c4b15b1e366',1,'render_target::scoped_target_texture']]],
   ['open_5fheap_5fpromote_2',['open_heap_promote',['../classpathfinder.html#a279aa2c67a0e272505c549764006d8c7',1,'pathfinder']]],
   ['operator_20bool_3',['operator bool',['../classmap__tile__iterator.html#aca23bc9655d7a867bee40e692e537ce6',1,'map_tile_iterator::operator bool()'],['../classmap__scanline__iterator.html#a2fcce0ea25b2d040ecc95702899d593e',1,'map_scanline_iterator::operator bool()']]],
   ['operator_20uint32_5ft_4',['operator uint32_t',['../structmap__tile__flags.html#a8e6bec2ccd7a91f30bf3f22df14c5395',1,'map_tile_flags']]],

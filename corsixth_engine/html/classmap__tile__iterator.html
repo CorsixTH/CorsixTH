@@ -85,8 +85,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a32e52d32dd278631fb2947a9b6e81368" id="r_a32e52d32dd278631fb2947a9b6e81368"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmap__tile__iterator.html#a32e52d32dd278631fb2947a9b6e81368">map_tile_iterator</a> ()</td></tr>
-<tr class="separator:a32e52d32dd278631fb2947a9b6e81368"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a686454d2594dd8300850c18e465c26b3" id="r_a686454d2594dd8300850c18e465c26b3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmap__tile__iterator.html#a686454d2594dd8300850c18e465c26b3">map_tile_iterator</a> ()=delete</td></tr>
+<tr class="separator:a686454d2594dd8300850c18e465c26b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ed4b160f5df60bc9be1a9042f518619" id="r_a7ed4b160f5df60bc9be1a9042f518619"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmap__tile__iterator.html#a7ed4b160f5df60bc9be1a9042f518619">map_tile_iterator</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iScreenX, int iScreenY, int iWidth, int iHeight, <a class="el" href="th__map_8h.html#a4e429f38fce9a6053f296c4ce76c7733">map_scanline_iterator_direction</a> eScanlineDirection=<a class="el" href="th__map_8h.html#a4e429f38fce9a6053f296c4ce76c7733a965dbaac085fc891bfbbd4f9d145bbc8">map_scanline_iterator_direction::forward</a>)</td></tr>
 <tr class="separator:a7ed4b160f5df60bc9be1a9042f518619"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca23bc9655d7a867bee40e692e537ce6" id="r_aca23bc9655d7a867bee40e692e537ce6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmap__tile__iterator.html#aca23bc9655d7a867bee40e692e537ce6">operator bool</a> () const</td></tr>
@@ -128,11 +128,14 @@ Friends</h2></td></tr>
 <p>To easily iterate over the map tiles which might draw something within a certain rectangle of screen space, an instance of this class can be used.</p>
 <p>By default, it iterates by scanline, top-to-bottom, and then left-to-right within each scanline. Alternatively, by passing ScanlineBackward to the constructor, it will iterate bottom-to-top. Within a scanline, to visit tiles right-to-left, wait until isLastOnScanline() returns true, then use an instance of THMapScanlineIterator. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a32e52d32dd278631fb2947a9b6e81368" name="a32e52d32dd278631fb2947a9b6e81368"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32e52d32dd278631fb2947a9b6e81368">&#9670;&#160;</a></span>map_tile_iterator() <span class="overload">[1/2]</span></h2>
+<a id="a686454d2594dd8300850c18e465c26b3" name="a686454d2594dd8300850c18e465c26b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a686454d2594dd8300850c18e465c26b3">&#9670;&#160;</a></span>map_tile_iterator() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">map_tile_iterator::map_tile_iterator </td>
@@ -141,6 +144,11 @@ Friends</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

@@ -19,7 +19,7 @@ var searchData=
   ['chunk_5ffill_16',['chunk_fill',['../classchunk__renderer.html#a4383d351e0250873967a1e8ac9b2f7c6',1,'chunk_renderer']]],
   ['chunk_5ffill_5fto_5fend_5fof_5fline_17',['chunk_fill_to_end_of_line',['../classchunk__renderer.html#a13fb8f64915d18bce5a8c740b29c7326',1,'chunk_renderer']]],
   ['chunk_5ffinish_18',['chunk_finish',['../classchunk__renderer.html#a7238b25b6f89d4cbe4185d15a6964e4d',1,'chunk_renderer']]],
-  ['chunk_5frenderer_19',['chunk_renderer',['../classchunk__renderer.html#aeb74ad2ee356241806c9b6821ec2203e',1,'chunk_renderer::chunk_renderer()'],['../classchunk__renderer.html',1,'chunk_renderer']]],
+  ['chunk_5frenderer_19',['chunk_renderer',['../classchunk__renderer.html#ac3191c97180f9373a6dee18834f46e48',1,'chunk_renderer::chunk_renderer()'],['../classchunk__renderer.html',1,'chunk_renderer']]],
   ['clear_5fcache_20',['clear_cache',['../classfreetype__font.html#a6ab98285edae8848fe7181df64d2274e',1,'freetype_font']]],
   ['clear_5flast_5ferror_21',['clear_last_error',['../classmovie__player.html#aaf1308e330a1b23c89aeeea729cdf7f6',1,'movie_player']]],
   ['clip_5frect_22',['clip_rect',['../structclip__rect.html',1,'']]],
@@ -46,5 +46,5 @@ var searchData=
   ['create_5ffrom_5fsprite_43',['create_from_sprite',['../classcursor.html#a31ea9390f5dbfcb2806bf42094e2ea74',1,'cursor']]],
   ['create_5fpalettized_5ftexture_44',['create_palettized_texture',['../classrender__target.html#a4ae1ea0d2b4c6dc9d740023828135307',1,'render_target']]],
   ['create_5ftexture_45',['create_texture',['../classrender__target.html#a6dc517fc9ded160593d094c418b82a21',1,'render_target']]],
-  ['cursor_46',['cursor',['../classcursor.html#adc39d7443ad2bf65de46a8107a5d6f89',1,'cursor::cursor()'],['../classsprite__sheet.html#a2b9fbf16302036cf7138a173a7f162cd',1,'sprite_sheet::cursor'],['../classcursor.html',1,'cursor'],['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1791a97a8403730ee0760489a2aeb992',1,'cursor:&#160;th_lua_internal.h']]]
+  ['cursor_46',['cursor',['../classcursor.html#a11e92dc451433dc687e949b2985aa540',1,'cursor::cursor()'],['../classsprite__sheet.html#a2b9fbf16302036cf7138a173a7f162cd',1,'sprite_sheet::cursor'],['../classcursor.html',1,'cursor'],['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1791a97a8403730ee0760489a2aeb992',1,'cursor:&#160;th_lua_internal.h']]]
 ];

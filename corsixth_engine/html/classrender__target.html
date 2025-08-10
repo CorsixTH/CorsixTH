@@ -93,8 +93,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2d901b3c30f40e9d57f3b983ee8330e5" id="r_a2d901b3c30f40e9d57f3b983ee8330e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a2d901b3c30f40e9d57f3b983ee8330e5">render_target</a> ()</td></tr>
-<tr class="separator:a2d901b3c30f40e9d57f3b983ee8330e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4530299964e2734b414813b2fd20b939" id="r_a4530299964e2734b414813b2fd20b939"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a4530299964e2734b414813b2fd20b939">render_target</a> ()=default</td></tr>
+<tr class="separator:a4530299964e2734b414813b2fd20b939"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c451dfd6606d6694af5d555a6b4ae59" id="r_a4c451dfd6606d6694af5d555a6b4ae59"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a4c451dfd6606d6694af5d555a6b4ae59">~render_target</a> ()</td></tr>
 <tr class="separator:a4c451dfd6606d6694af5d555a6b4ae59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad55d460a8b002fd3c0c8ff96c106ba88" id="r_ad55d460a8b002fd3c0c8ff96c106ba88"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#ad55d460a8b002fd3c0c8ff96c106ba88">create</a> (const <a class="el" href="structrender__target__creation__params.html">render_target_creation_params</a> *pParams)</td></tr>
@@ -148,9 +148,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a83fa18c0fa7eb3ec044fb5950a70d333" id="r_a83fa18c0fa7eb3ec044fb5950a70d333"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a83fa18c0fa7eb3ec044fb5950a70d333">set_cursor_position</a> (int iX, int iY)</td></tr>
 <tr class="memdesc:a83fa18c0fa7eb3ec044fb5950a70d333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the cursor position (if the cursor is being simulated)  <br /></td></tr>
 <tr class="separator:a83fa18c0fa7eb3ec044fb5950a70d333"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02aa6f68d6707adc44212777ab92c945" id="r_a02aa6f68d6707adc44212777ab92c945"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a02aa6f68d6707adc44212777ab92c945">take_screenshot</a> (const char *file_path)</td></tr>
-<tr class="memdesc:a02aa6f68d6707adc44212777ab92c945"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take a screenshot and save it as a PNG file.  <br /></td></tr>
-<tr class="separator:a02aa6f68d6707adc44212777ab92c945"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec10a2c8e9a13f49dfae04489c23e1a7" id="r_aec10a2c8e9a13f49dfae04489c23e1a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#aec10a2c8e9a13f49dfae04489c23e1a7">take_screenshot</a> (const char *file_path) const</td></tr>
+<tr class="memdesc:aec10a2c8e9a13f49dfae04489c23e1a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take a screenshot and save it as a PNG file.  <br /></td></tr>
+<tr class="separator:aec10a2c8e9a13f49dfae04489c23e1a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a428b64258b49ce1c30cd786008854ddc" id="r_a428b64258b49ce1c30cd786008854ddc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a428b64258b49ce1c30cd786008854ddc">set_scale_factor</a> (double fScale, <a class="el" href="th__gfx_8h.html#a77be529fc9278664926902e9d9da26a2">scaled_items</a> eWhatToScale)</td></tr>
 <tr class="memdesc:a428b64258b49ce1c30cd786008854ddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the amount by which future draw operations are scaled.  <br /></td></tr>
 <tr class="separator:a428b64258b49ce1c30cd786008854ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -191,11 +191,14 @@ Friends</h2></td></tr>
 <tr class="separator:ae1f92aa50d12526ba339149f919a338d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a2d901b3c30f40e9d57f3b983ee8330e5" name="a2d901b3c30f40e9d57f3b983ee8330e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d901b3c30f40e9d57f3b983ee8330e5">&#9670;&#160;</a></span>render_target()</h2>
+<a id="a4530299964e2734b414813b2fd20b939" name="a4530299964e2734b414813b2fd20b939"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4530299964e2734b414813b2fd20b939">&#9670;&#160;</a></span>render_target()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">render_target::render_target </td>
@@ -204,6 +207,11 @@ Friends</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -971,8 +979,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a02aa6f68d6707adc44212777ab92c945" name="a02aa6f68d6707adc44212777ab92c945"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a02aa6f68d6707adc44212777ab92c945">&#9670;&#160;</a></span>take_screenshot()</h2>
+<a id="aec10a2c8e9a13f49dfae04489c23e1a7" name="aec10a2c8e9a13f49dfae04489c23e1a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec10a2c8e9a13f49dfae04489c23e1a7">&#9670;&#160;</a></span>take_screenshot()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -982,7 +990,7 @@ Friends</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>file_path</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">

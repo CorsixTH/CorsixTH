@@ -80,14 +80,14 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7d1c866dddbd891d7e58dd3631472821" id="r_a7d1c866dddbd891d7e58dd3631472821"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmemory__reader.html#a7d1c866dddbd891d7e58dd3631472821">memory_reader</a> (const uint8_t *pData, size_t iLength)</td></tr>
-<tr class="separator:a7d1c866dddbd891d7e58dd3631472821"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ffa6b60188b9eb43ec52de34011b12c" id="r_a6ffa6b60188b9eb43ec52de34011b12c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmemory__reader.html#a6ffa6b60188b9eb43ec52de34011b12c">are_bytes_available</a> (size_t iSize)</td></tr>
-<tr class="memdesc:a6ffa6b60188b9eb43ec52de34011b12c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can <em>iSize</em> bytes be read from the file?  <br /></td></tr>
-<tr class="separator:a6ffa6b60188b9eb43ec52de34011b12c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a350ea89b99c8c97ee3e0974719e40c30" id="r_a350ea89b99c8c97ee3e0974719e40c30"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmemory__reader.html#a350ea89b99c8c97ee3e0974719e40c30">is_at_end_of_file</a> ()</td></tr>
-<tr class="memdesc:a350ea89b99c8c97ee3e0974719e40c30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is EOF reached?  <br /></td></tr>
-<tr class="separator:a350ea89b99c8c97ee3e0974719e40c30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a517345caa6caa2a7f364cb08b7b8ee85" id="r_a517345caa6caa2a7f364cb08b7b8ee85"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmemory__reader.html#a517345caa6caa2a7f364cb08b7b8ee85">memory_reader</a> (const uint8_t *pData, const size_t iLength)</td></tr>
+<tr class="separator:a517345caa6caa2a7f364cb08b7b8ee85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3550e113facd16b87d041dbb72c368a0" id="r_a3550e113facd16b87d041dbb72c368a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmemory__reader.html#a3550e113facd16b87d041dbb72c368a0">are_bytes_available</a> (size_t iSize) const</td></tr>
+<tr class="memdesc:a3550e113facd16b87d041dbb72c368a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can <em>iSize</em> bytes be read from the file?  <br /></td></tr>
+<tr class="separator:a3550e113facd16b87d041dbb72c368a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7113063f677c808e08a0abe20481f019" id="r_a7113063f677c808e08a0abe20481f019"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmemory__reader.html#a7113063f677c808e08a0abe20481f019">is_at_end_of_file</a> () const</td></tr>
+<tr class="memdesc:a7113063f677c808e08a0abe20481f019"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is EOF reached?  <br /></td></tr>
+<tr class="separator:a7113063f677c808e08a0abe20481f019"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c72d4d9b6cd9f2aebec2286ff88e91f" id="r_a4c72d4d9b6cd9f2aebec2286ff88e91f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmemory__reader.html#a4c72d4d9b6cd9f2aebec2286ff88e91f">read_uint8</a> ()</td></tr>
 <tr class="memdesc:a4c72d4d9b6cd9f2aebec2286ff88e91f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an 8 bit value from the file.  <br /></td></tr>
 <tr class="separator:a4c72d4d9b6cd9f2aebec2286ff88e91f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,8 +116,8 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Data retrieval class, simulating sequential access to the data, keeping track of available length. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a7d1c866dddbd891d7e58dd3631472821" name="a7d1c866dddbd891d7e58dd3631472821"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d1c866dddbd891d7e58dd3631472821">&#9670;&#160;</a></span>memory_reader()</h2>
+<a id="a517345caa6caa2a7f364cb08b7b8ee85" name="a517345caa6caa2a7f364cb08b7b8ee85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a517345caa6caa2a7f364cb08b7b8ee85">&#9670;&#160;</a></span>memory_reader()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -134,7 +134,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype">const size_t&#160;</td>
           <td class="paramname"><em>iLength</em>&#160;</td>
         </tr>
         <tr>
@@ -153,8 +153,8 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6ffa6b60188b9eb43ec52de34011b12c" name="a6ffa6b60188b9eb43ec52de34011b12c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ffa6b60188b9eb43ec52de34011b12c">&#9670;&#160;</a></span>are_bytes_available()</h2>
+<a id="a3550e113facd16b87d041dbb72c368a0" name="a3550e113facd16b87d041dbb72c368a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3550e113facd16b87d041dbb72c368a0">&#9670;&#160;</a></span>are_bytes_available()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -167,7 +167,7 @@ Public Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>iSize</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -188,8 +188,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a350ea89b99c8c97ee3e0974719e40c30" name="a350ea89b99c8c97ee3e0974719e40c30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a350ea89b99c8c97ee3e0974719e40c30">&#9670;&#160;</a></span>is_at_end_of_file()</h2>
+<a id="a7113063f677c808e08a0abe20481f019" name="a7113063f677c808e08a0abe20481f019"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7113063f677c808e08a0abe20481f019">&#9670;&#160;</a></span>is_at_end_of_file()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -201,7 +201,7 @@ Public Attributes</h2></td></tr>
           <td class="memname">bool memory_reader::is_at_end_of_file </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
