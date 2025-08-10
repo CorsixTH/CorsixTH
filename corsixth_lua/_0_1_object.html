@@ -51,9 +51,9 @@
  <a href="_0_1_object.html#_0_1_object_1erase_object">eraseObject</a>()
  (overrides <a href="_0_1_entity.html#_0_1_entity_1erase_object">Entity:eraseObject</a>)
  </li>
- <li class="self">
- <a href="_0_1_object.html#_0_1_object_1get_drawing_layer">getDrawingLayer</a>()
- (overrides <a href="_0_1_entity.html#_0_1_entity_1get_drawing_layer">Entity:getDrawingLayer</a>)
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1get_drawing_layer">getDrawingLayer</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1get_dynamic_info">getDynamicInfo</a>()
@@ -321,7 +321,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L40">line 40 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L36">line 36 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -339,7 +339,7 @@ reserved this object.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L552">line 552 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L548">line 548 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -360,21 +360,14 @@ reserved this object.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1after_load">Entity:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L729">line 729 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L725">line 725 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_object_1erase_object">function Object:eraseObject()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1erase_object">Entity:eraseObject</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L686">line 686 of Lua/entities/object.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_object_1get_drawing_layer">function Object:getDrawingLayer()</a></h5>
- <p>
- <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1get_drawing_layer">Entity:getDrawingLayer</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L36">line 36 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L682">line 682 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -385,13 +378,13 @@ reserved this object.<br/><br/>
 return the X and Y Lua world coordinates of that tile. For objects which split
 their rendering over multiple tiles, one of them is arbitrarily designated as
 the primary tile, and its coordinates are returned.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L247">line 247 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L243">line 243 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_object_1get_secondary_usage_tile">function Object:getSecondaryUsageTile()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L280">line 280 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L276">line 276 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -401,7 +394,7 @@ the primary tile, and its coordinates are returned.<br/><br/>
  The state can be later used to set the state of this object. This is
 useful when we would destroy and create a new object that should represent
 the same object.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L885">line 885 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L881">line 881 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -409,14 +402,14 @@ the same object.<br/><br/>
  <p>
  This function returns a list of all "only_passable" tiles belonging to an object.
 It must be overridden by objects which do not have a footprint, but walkable tiles (e.g. doors of any kind)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L291">line 291 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L287">line 287 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_object_1increment_used_count">function Object:incrementUsedCount()</a></h5>
  <p>
  Call on object used. After object used increment use values accordingly.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L267">line 267 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L263">line 263 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -433,14 +426,14 @@ split animations.<br/><br/>
  <td class="d">The orientation in which the object is facing.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L65">line 65 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L61">line 61 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_object_1is_machine">function Object:isMachine()</a></h5>
  <p>
  This function is for overriding it in the inheriting Machine class.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L625">line 625 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L621">line 621 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -457,7 +450,7 @@ If the argument is nil a check for any reserved user is done.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L599">line 599 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L595">line 595 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -483,14 +476,14 @@ If the argument is nil a check for any reserved user is done.<br/><br/>
  <td class="d"> If some data should be retained after moving an object it is in this table.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L630">line 630 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L626">line 626 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_object_1on_destroy">function Object:onDestroy()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1on_destroy">Entity:onDestroy</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L696">line 696 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L692">line 692 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -505,7 +498,7 @@ If the argument is nil a check for any reserved user is done.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L763">line 763 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L759">line 759 of Lua/entities/object.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -526,7 +519,7 @@ Otherwise: sets reserved_for to nil.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L568">line 568 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L564">line 564 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -543,14 +536,14 @@ object. Otherwise it sets "user" to nil. Please don't directly change the variab
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L522">line 522 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L518">line 518 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_object_1reset_animation">function Object:resetAnimation()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1reset_animation">Entity:resetAnimation</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L690">line 690 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L686">line 686 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -571,7 +564,7 @@ object. Otherwise it sets "user" to nil. Please don't directly change the variab
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1set_animation">Entity:setAnimation</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L227">line 227 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L223">line 223 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -592,7 +585,7 @@ object. Otherwise it sets "user" to nil. Please don't directly change the variab
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1set_position">Entity:setPosition</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L211">line 211 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L207">line 207 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -610,7 +603,7 @@ table to update it's state.<br/><br/>
  <td class="d"> table holding the state</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L897">line 897 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L893">line 893 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -631,7 +624,7 @@ table to update it's state.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1set_tile">Entity:setTile</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L303">line 303 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L299">line 299 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -649,7 +642,7 @@ Please do not modify object.user directly.<br/><br/>
  <td class="d">The user that is about to use this object.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L505">line 505 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L501">line 501 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -665,7 +658,7 @@ Please do not modify object.user directly.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L116">line 116 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L112">line 112 of Lua/entities/object.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -673,14 +666,14 @@ Please do not modify object.user directly.<br/><br/>
  <h5><a name="_0_1_object_1tick">function Object:tick()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1tick">Entity:tick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L193">line 193 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L189">line 189 of Lua/entities/object.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_object_1update_dynamic_info">function Object:updateDynamicInfo()</a></h5>
  <p>
  Updates the object's dynamic info<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L272">line 272 of Lua/entities/object.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/object.lua#L268">line 268 of Lua/entities/object.lua</a>.
  </p>
  </div>
 </div>
