@@ -52,7 +52,7 @@ class lua_persist_writer {
 
   // write_stack_object for userdata without growing the Lua call stack
   // The given index should be a userdata whose __persist metamethod supports
-  // fast persistance (being called with extra arguments and the wrong
+  // fast persistence (being called with extra arguments and the wrong
   // environment / upvalues).
   virtual void fast_write_stack_object(int iIndex) = 0;
 

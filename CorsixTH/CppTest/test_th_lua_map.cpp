@@ -1,6 +1,4 @@
-#include <array>
 #include <catch2/catch_test_macros.hpp>
-#include <cstdio>
 
 #include "../Src/lua.hpp"
 #include "../Src/th_lua.h"

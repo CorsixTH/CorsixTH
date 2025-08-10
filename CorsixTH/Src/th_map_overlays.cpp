@@ -25,17 +25,12 @@ SOFTWARE.
 #include <array>
 #include <list>
 #include <sstream>
+#include <string>
+#include <string_view>
 
 #include "th_gfx_font.h"
 #include "th_gfx_sdl.h"
 #include "th_map.h"
-
-map_overlay_pair::map_overlay_pair() {
-  first = nullptr;
-  second = nullptr;
-  owns_first = false;
-  owns_second = false;
-}
 
 map_overlay_pair::~map_overlay_pair() {
   set_first(nullptr, false);
@@ -69,8 +64,6 @@ void map_overlay_pair::draw_cell(render_target* pCanvas, int iCanvasX,
   }
 }
 
-map_text_overlay::map_text_overlay() { background_sprite = 0; }
-
 void map_text_overlay::set_background_sprite(size_t iSprite) {
   background_sprite = iSprite;
 }
@@ -91,13 +84,6 @@ const std::string map_positions_overlay::get_text(const level_map* pMap,
   std::ostringstream str;
   str << iNodeX + 1 << ',' << iNodeY + 1;
   return str.str();
-}
-
-map_typical_overlay::map_typical_overlay() {
-  sprites = nullptr;
-  font = nullptr;
-  owns_sprites = false;
-  owns_font = false;
 }
 
 map_typical_overlay::~map_typical_overlay() {
@@ -177,8 +163,7 @@ void map_parcels_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
     return;
   }
   if (font) {
-    draw_text(pCanvas, iCanvasX, iCanvasY,
-              std::to_string((int)pNode->iParcelId));
+    draw_text(pCanvas, iCanvasX, iCanvasY, std::to_string(pNode->iParcelId));
   }
   if (sprites) {
     for (const parcel_edge_sprite& dir_sprite : parcel_edges) {
@@ -192,9 +177,9 @@ void map_parcels_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
 }
 
 void map_typical_overlay::draw_text(render_target* pCanvas, int iX, int iY,
-                                    const std::string& str) {
-  text_layout oArea = font->get_text_dimensions(str.c_str(), str.length());
-  font->draw_text(pCanvas, str.c_str(), str.length(),
+                                    const std::string_view str) {
+  text_layout oArea = font->get_text_dimensions(str.data(), str.length());
+  font->draw_text(pCanvas, str.data(), str.length(),
                   iX + (64 - oArea.end_x) / 2, iY + (32 - oArea.end_y) / 2);
 }
 

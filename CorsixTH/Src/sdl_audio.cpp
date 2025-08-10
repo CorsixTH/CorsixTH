@@ -42,9 +42,9 @@ SOFTWARE.
 
 class music {
  public:
-  Mix_Music* pMusic;
+  Mix_Music* pMusic{nullptr};
 
-  music() { pMusic = nullptr; }
+  music() = default;
 
   ~music() {
     if (pMusic) {

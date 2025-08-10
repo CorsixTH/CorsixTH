@@ -23,7 +23,6 @@ SOFTWARE.
 #include "config.h"
 
 #include <new>
-#include <string>
 
 #include "lua.hpp"
 #include "persist_lua.h"

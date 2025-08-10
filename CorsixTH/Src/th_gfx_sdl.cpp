@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include <SDL.h>
 #include <png.h>
+// IWYU pragma: no_include <pngconf.h>
 
 #include <algorithm>
 #include <cmath>
@@ -60,10 +61,7 @@ const float frect_overdraw = 0.01f;
 #endif
 
 full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
-    : width(iWidth), height(iHeight) {
-  x = 0;
-  y = 0;
-}
+    : width(iWidth), height(iHeight) {}
 
 namespace {
 
@@ -213,8 +211,6 @@ class scoped_color_mod {
 };
 
 }  // namespace
-
-palette::palette() { colour_count = 0; }
 
 bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength) {
   if (iDataLength != 256 * 3) return false;
@@ -370,83 +366,62 @@ void wx_storing::store_argb(uint32_t pixel) {
   *alpha_data++ = palette::get_alpha(pixel);
 }
 
-class render_target::scoped_target_texture
-    : public render_target::scoped_buffer {
- public:
-  scoped_target_texture(render_target* pTarget, int iX, int iY, int iWidth,
-                        int iHeight, bool bScale)
-      : target(pTarget),
-        previous_target(target->current_target),
-        rect({iX, iY, iWidth, iHeight}),
-        scale(bScale) {
-    if (!target->supports_target_textures) return;
+render_target::scoped_target_texture::scoped_target_texture(
+    render_target* pTarget, int iX, int iY, int iWidth, int iHeight,
+    bool bScale)
+    : target(pTarget),
+      previous_target(target->current_target),
+      rect({iX, iY, iWidth, iHeight}),
+      scale(bScale) {
+  if (!target->supports_target_textures) return;
 
-    texture = SDL_CreateTexture(target->renderer, SDL_PIXELFORMAT_ABGR8888,
-                                SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
-    if (SDL_SetRenderTarget(target->renderer, texture) != 0) {
-      SDL_DestroyTexture(texture);
-      texture = nullptr;
-      return;
-    }
-
-    // Clear the new texture to transparent/black.
-    SDL_RenderSetLogicalSize(target->renderer, rect.w, rect.h);
-    SDL_SetRenderDrawColor(target->renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-    SDL_RenderClear(target->renderer);
-    target->current_target = this;
+  texture = SDL_CreateTexture(target->renderer, SDL_PIXELFORMAT_ABGR8888,
+                              SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
+  if (SDL_SetRenderTarget(target->renderer, texture) != 0) {
+    SDL_DestroyTexture(texture);
+    texture = nullptr;
+    return;
   }
 
-  void offset(SDL_FRect& targetRect) {
-    targetRect.x -= static_cast<SDL_FRECT_UNIT>(rect.x);
-    targetRect.y -= static_cast<SDL_FRECT_UNIT>(rect.y);
+  // Clear the new texture to transparent/black.
+  SDL_RenderSetLogicalSize(target->renderer, rect.w, rect.h);
+  SDL_SetRenderDrawColor(target->renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+  SDL_RenderClear(target->renderer);
+  target->current_target = this;
+}
+
+void render_target::scoped_target_texture::offset(SDL_FRect& targetRect) const {
+  targetRect.x -= static_cast<SDL_FRECT_UNIT>(rect.x);
+  targetRect.y -= static_cast<SDL_FRECT_UNIT>(rect.y);
+}
+
+double render_target::scoped_target_texture::scale_factor() const {
+  return scale ? target->global_scale_factor : 1.0;
+}
+
+bool render_target::scoped_target_texture::is_target() const { return texture; }
+
+render_target::scoped_target_texture::~scoped_target_texture() {
+  if (!texture) return;
+
+  // Restore previous context.
+  SDL_SetRenderTarget(target->renderer,
+                      previous_target ? previous_target->texture : nullptr);
+  SDL_RenderSetLogicalSize(
+      target->renderer,
+      previous_target ? previous_target->rect.w : target->width,
+      previous_target ? previous_target->rect.h : target->height);
+  SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+  target->current_target = previous_target;
+  if (scale) {
+    // If the target texture is already scaled, skip the global scale factor
+    // by drawing directly.
+    SDL_RenderCopy(target->renderer, texture, nullptr, &rect);
+  } else {
+    target->draw(texture, nullptr, &rect, 0);
   }
-
-  double scale_factor() { return scale ? target->global_scale_factor : 1.0; }
-
-  bool is_target() { return texture; }
-
-  ~scoped_target_texture() override {
-    if (!texture) return;
-
-    // Restore previous context.
-    SDL_SetRenderTarget(target->renderer,
-                        previous_target ? previous_target->texture : nullptr);
-    SDL_RenderSetLogicalSize(
-        target->renderer,
-        previous_target ? previous_target->rect.w : target->width,
-        previous_target ? previous_target->rect.h : target->height);
-    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-    target->current_target = previous_target;
-    if (scale) {
-      // If the target texture is already scaled, skip the global scale factor
-      // by drawing directly.
-      SDL_RenderCopy(target->renderer, texture, nullptr, &rect);
-    } else {
-      target->draw(texture, nullptr, &rect, 0);
-    }
-    target->intermediate_textures.push_back(texture);
-  }
-
- private:
-  render_target* target;
-  scoped_target_texture* previous_target;
-  SDL_Rect rect;
-  bool scale;
-  SDL_Texture* texture = nullptr;
-};
-
-render_target::render_target()
-    : window(nullptr),
-      renderer(nullptr),
-      pixel_format(nullptr),
-      blue_filter_active(false),
-      game_cursor(nullptr),
-      global_scale_factor(1.0),
-      width(-1),
-      height(-1),
-      scale_bitmaps(false),
-      apply_opengl_clip_fix(false),
-      direct_zoom(false) {}
+  target->intermediate_textures.push_back(texture);
+}
 
 render_target::~render_target() { destroy(); }
 
@@ -730,16 +705,10 @@ void png_error(png_structp png_data, const char* message) { throw(0); }
 //! Class for managing lifetime of the data structures for saving a PNG file.
 class png_data_manager {
  public:
-  png_structp png_write_data;
-  png_infop info_write_data;
-  png_bytepp row_pointers;
-  FILE* fp;
-
-  png_data_manager()
-      : png_write_data(nullptr),
-        info_write_data(nullptr),
-        row_pointers(nullptr),
-        fp(nullptr) {}
+  png_structp png_write_data{nullptr};
+  png_infop info_write_data{nullptr};
+  png_bytepp row_pointers{nullptr};
+  FILE* fp{nullptr};
 
   ~png_data_manager() {
     if (png_write_data != nullptr || info_write_data != nullptr) {
@@ -806,7 +775,7 @@ bool write_rgb_png(int width, int height, png_bytep pixels, int pitch,
 
 }  // namespace
 
-bool render_target::take_screenshot(const char* file_path) {
+bool render_target::take_screenshot(const char* file_path) const {
   int width = 0, height = 0;
   if (SDL_GetRendererOutputSize(renderer, &width, &height) == -1) return false;
 
@@ -1009,14 +978,6 @@ void render_target::destroy_intermediate_textures() {
   intermediate_textures.clear();
 }
 
-raw_bitmap::raw_bitmap() {
-  texture = nullptr;
-  bitmap_palette = nullptr;
-  target = nullptr;
-  width = 0;
-  height = 0;
-}
-
 raw_bitmap::~raw_bitmap() {
   if (texture) {
     SDL_DestroyTexture(texture);
@@ -1129,13 +1090,6 @@ void raw_bitmap::draw(render_target* pCanvas, int iX, int iY, int iSrcX,
   pCanvas->draw(texture, &rcSrc, &rcDest, 0);
 }
 
-sprite_sheet::sprite_sheet() {
-  sprites = nullptr;
-  palette = nullptr;
-  target = nullptr;
-  sprite_count = 0;
-}
-
 sprite_sheet::~sprite_sheet() { _freeSprites(); }
 
 void sprite_sheet::_freeSingleSprite(size_t iNumber) {
@@ -1221,17 +1175,15 @@ bool sprite_sheet::load_from_th_file(const uint8_t* pTableData,
     if (pSprite->width == 0 || pSprite->height == 0) continue;
 
     {
-      uint8_t* pData = new uint8_t[pSprite->width * pSprite->height];
-      chunk_renderer oRenderer(pSprite->width, pSprite->height, pData);
+      std::vector<uint8_t> pData(pSprite->width * pSprite->height);
+      chunk_renderer oRenderer(pSprite->width, pSprite->height, pData.begin());
       int iDataLen = static_cast<int>(iChunkDataLength) -
                      static_cast<int>(pTHSprite->position);
       if (iDataLen < 0) iDataLen = 0;
       oRenderer.decode_chunks(pChunkData + pTHSprite->position, iDataLen,
                               bComplexChunks);
-      pData = oRenderer.take_data();
       pSprite->data =
-          convertLegacySprite(pData, pSprite->width * pSprite->height);
-      delete[] pData;
+          convertLegacySprite(pData.data(), pSprite->width * pSprite->height);
     }
   }
   return true;
@@ -1587,13 +1539,6 @@ bool sprite_sheet::hit_test_sprite(size_t iSprite, int iX, int iY,
   return palette::get_alpha(iCol) != 0;
 }
 
-cursor::cursor() {
-  bitmap = nullptr;
-  hotspot_x = 0;
-  hotspot_y = 0;
-  hidden_cursor = nullptr;
-}
-
 cursor::~cursor() {
   SDL_FreeSurface(bitmap);
   SDL_FreeCursor(hidden_cursor);
@@ -1647,19 +1592,7 @@ void cursor::draw(render_target* pCanvas, int iX, int iY) {
 #endif
 }
 
-line_sequence::line_sequence() { initialize(); }
-
-void line_sequence::initialize() {
-  width = 1;
-  red = 0;
-  green = 0;
-  blue = 0;
-  alpha = 255;
-  line_elements.clear();
-
-  // We start at 0,0
-  move_to(0.0, 0.0);
-}
+line_sequence::line_sequence() { move_to(0.0, 0.0); }
 
 void line_sequence::move_to(double fX, double fY) {
   line_elements.emplace_back(line_command::move, fX, fY);
@@ -1700,8 +1633,6 @@ void line_sequence::persist(lua_persist_writer* pWriter) const {
 }
 
 void line_sequence::depersist(lua_persist_reader* pReader) {
-  initialize();
-
   pReader->read_uint(red);
   pReader->read_uint(green);
   pReader->read_uint(blue);

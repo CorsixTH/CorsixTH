@@ -27,6 +27,7 @@ SOFTWARE.
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -509,9 +510,9 @@ const std::map<std::string, map_tile_flags::key> lua_tile_flag_map{
  * @param flag Flag of the tile to check (and report).
  * @param name Name of the flag in Lua code.
  */
-inline void add_cellflag(lua_State* L, const map_tile* tile,
-                         map_tile_flags::key flag, const std::string& name) {
-  lua_pushlstring(L, name.c_str(), name.size());
+void add_cellflag(lua_State* L, const map_tile* tile,
+                  const map_tile_flags::key flag, const std::string_view name) {
+  lua_pushlstring(L, name.data(), name.size());
   lua_pushboolean(L, tile->flags[flag] ? 1 : 0);
   lua_settable(L, 4);
 }
@@ -522,8 +523,8 @@ inline void add_cellflag(lua_State* L, const map_tile* tile,
  * @param value Value of the tile field to add.
  * @param name Name of the field in Lua code.
  */
-inline void add_cellint(lua_State* L, int value, const std::string& name) {
-  lua_pushlstring(L, name.c_str(), name.size());
+void add_cellint(lua_State* L, const int value, const std::string_view name) {
+  lua_pushlstring(L, name.data(), name.size());
   lua_pushinteger(L, value);
   lua_settable(L, 4);
 }

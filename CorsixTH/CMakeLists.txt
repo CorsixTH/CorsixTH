@@ -95,11 +95,11 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/Src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/SrcUnshared)
 
 # Set language standard
-set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 14)
+set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 17)
 set_property(TARGET CorsixTH_lib PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD_REQUIRED ON)
 
-set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 14)
+set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 17)
 set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 

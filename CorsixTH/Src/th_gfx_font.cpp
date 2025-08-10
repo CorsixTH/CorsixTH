@@ -25,6 +25,7 @@ SOFTWARE.
 #include "config.h"
 
 #include <ft2build.h>  // IWYU pragma: keep
+// IWYU pragma: no_include "freetype/config/ftheader.h"
 
 #include "th_strings.h"
 #include FT_FREETYPE_H
@@ -38,11 +39,7 @@ SOFTWARE.
 #include <utility>
 #include <vector>
 
-bitmap_font::bitmap_font() {
-  sheet = nullptr;
-  letter_spacing = 0;
-  line_spacing = 0;
-}
+bitmap_font::bitmap_font() = default;
 
 void bitmap_font::set_sprite_sheet(sprite_sheet* pSpriteSheet) {
   sheet = pSpriteSheet;
@@ -186,8 +183,6 @@ FT_Library freetype_font::freetype_library = nullptr;
 int freetype_font::freetype_init_count = 0;
 
 freetype_font::freetype_font() {
-  font_face = nullptr;
-  is_done_freetype_init = false;
   for (cached_text* pEntry = cache; pEntry != cache + (1 << cache_size_log2);
        ++pEntry) {
     pEntry->message = nullptr;

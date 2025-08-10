@@ -33,10 +33,8 @@ SOFTWARE.
 
 #include "th.h"
 
-sound_archive::sound_archive() {
-  sound_files = nullptr;
-  data = nullptr;
-}
+sound_archive::sound_archive()
+    : sound_files(nullptr), data(nullptr), header{}, sound_file_count(0) {}
 
 sound_archive::~sound_archive() { delete[] data; }
 
@@ -183,19 +181,18 @@ constexpr int number_of_channels = 32;
 
 sound_player* sound_player::singleton = nullptr;
 
-sound_player::sound_player() {
-  sounds = nullptr;
-  sound_count = 0;
+sound_player::sound_player()
+    : sounds(nullptr),
+      sound_count(0),
+      available_channels_bitmap(~0),
+      camera_x(0),
+      camera_y(0),
+      camera_radius(1.0),
+      master_volume(1.0),
+      sound_effect_volume(0.5),
+      positionless_volume(MIX_MAX_VOLUME),
+      sound_effects_enabled(true) {
   singleton = this;
-  camera_x = 0;
-  camera_y = 0;
-  camera_radius = 1.0;
-  master_volume = 1.0;
-  sound_effect_volume = 0.5;
-  positionless_volume = MIX_MAX_VOLUME;
-  sound_effects_enabled = true;
-
-  available_channels_bitmap = ~0;
   Mix_AllocateChannels(number_of_channels);
 
   Mix_ChannelFinished(on_channel_finished);

@@ -17,7 +17,7 @@ set_target_properties(RncDecodeCli PROPERTIES OUTPUT_NAME "rnc_decode")
 target_link_libraries(RncDecodeCli RncLib)
 
 # Set language standard
-set_property(TARGET RncDecodeCli PROPERTY CXX_STANDARD 14)
+set_property(TARGET RncDecodeCli PROPERTY CXX_STANDARD 17)
 set_property(TARGET RncDecodeCli PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET RncDecodeCli PROPERTY CXX_STANDARD_REQUIRED ON)
 

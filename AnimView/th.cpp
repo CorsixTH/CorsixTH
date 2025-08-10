@@ -186,28 +186,16 @@ void merge_colour(th_colour_t& dst, const th_colour_t& src) {
 
 }  // namespace
 
-THLayerMask::THLayerMask() { clear(); }
-
 void THLayerMask::clear() {
   for (int i = 0; i < 13; ++i) m_iMask[i] = 0;
 }
 
 THAnimations::THAnimations() {
-  anims = std::vector<th_anim_t>();
-  frames = std::vector<th_frame_t>();
-  elementList = std::vector<uint16_t>();
-  elements = std::vector<th_element_t>();
-  sprites = std::vector<th_sprite_t>();
-  spriteBitmaps = std::vector<Bitmap>();
-  chunks = std::vector<uint8_t>();
-  colours = std::vector<th_colour_t>();
-  ghostMaps = std::array<unsigned char, 256 * 256 * 4>();
   for (int iMap = 0; iMap < 256 * 4; ++iMap) {
     for (int iCol = 0; iCol < 256; ++iCol) {
       ghostMaps[iMap * 256 + iCol] = iCol;
     }
   }
-  m_iGhostMapOffset = 0;
 }
 
 bool THAnimations::isAnimationDuplicate(size_t iAnimation) {

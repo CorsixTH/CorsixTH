@@ -129,8 +129,6 @@ frmMain::frmMain()
   pPaletteTop->Add(new wxRadioButton(this, ID_GHOST_1, L"Ghost 1"), 1);
   pPaletteTop->Add(new wxRadioButton(this, ID_GHOST_2, L"Ghost 2"), 1);
   pPaletteTop->Add(new wxRadioButton(this, ID_GHOST_3, L"Ghost 66"), 1);
-  m_iGhostFile = 0;
-  m_iGhostIndex = 0;
   pPalette->Add(pPaletteTop, fillBorderSizerFlags);
   pPalette->Add(
       new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
@@ -188,8 +186,6 @@ frmMain::frmMain()
   m_btnPlayPause = new wxButton(this, ID_PLAY_PAUSE, L"Pause");
   pFrame->Add(m_btnPlayPause,
               wxSizerFlags(1).Align(wxALIGN_CENTER_VERTICAL).Border(wxALL, 1));
-  m_bPlayingAnimation = true;
-  // m_bPlayingAnimation = false;
   pSidebarSizer->Add(pFrame, fillSizerFlags);
 
   wxSizerFlags layerSizerFlags(0);
@@ -341,10 +337,6 @@ frmMain::frmMain()
       new wxCheckBox(this, ID_DRAW_COORDINATES, L"Draw tile coordinates"),
       fillSizerFlags);
   pSidebarSizer->Add(pMoodOverlay, fillSizerFlags);
-  m_bDrawMood = false;
-  m_bDrawCoordinates = false;
-  m_iMoodDrawX = 0;
-  m_iMoodDrawY = 0;
 
   for (int iLayer = 0; iLayer < 13; ++iLayer) {
     wxCheckBox* pCheck =
