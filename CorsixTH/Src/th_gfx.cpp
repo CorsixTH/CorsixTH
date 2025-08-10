@@ -149,12 +149,6 @@ animation_manager::animation_manager()
       game_ticks(0),
       canvas(nullptr) {}
 
-animation_manager::~animation_manager() {
-  for (size_t i = 0; i < custom_sheets.size(); i++) {
-    delete custom_sheets[i];
-  }
-}
-
 void animation_manager::set_sprite_sheet(sprite_sheet* pSpriteSheet) {
   sheet = pSpriteSheet;
 }
@@ -513,8 +507,8 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
   elements.reserve(iElementStart + iElementCount);
 
   // Construct a sprite sheet for the sprites to be loaded.
-  sprite_sheet* pSheet = new sprite_sheet;
-  pSheet->set_sprite_count(iSpriteCount, canvas);
+  sprite_sheet pSheet;
+  pSheet.set_sprite_count(iSpriteCount, canvas);
   custom_sheets.push_back(pSheet);
 
   size_t iLoadedFrames = 0;
@@ -607,7 +601,7 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
       int iSound = input.read_uint16();
       size_t iNumElements = input.read_uint16();
 
-      size_t iElm = load_elements(input, pSheet, iNumElements, iLoadedElements,
+      size_t iElm = load_elements(input, &pSheet, iNumElements, iLoadedElements,
                                   iElementStart, iElementCount);
       if (iElm == SIZE_MAX) {
         return false;
@@ -675,7 +669,7 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
         pData[i] = input.read_uint8();
       }
 
-      if (!pSheet->set_sprite_data(iLoadedSprites, pData, true, iSize, iWidth,
+      if (!pSheet.set_sprite_data(iLoadedSprites, pData, true, iSize, iWidth,
                                    iHeight)) {
         return false;
       }
@@ -1682,10 +1676,6 @@ void animation_base::set_layer(int iLayer, int iId) {
   }
 }
 
-sprite_render_list::sprite_render_list() : animation_base() {}
-
-sprite_render_list::~sprite_render_list() { delete[] sprites; }
-
 void sprite_render_list::tick() {
   x_relative_to_tile += dx_per_tick;
   y_relative_to_tile += dy_per_tick;
@@ -1695,22 +1685,21 @@ void sprite_render_list::tick() {
 }
 
 void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
-  if (!sheet || sprite_count == 0) {
+  if (!sheet || sprites.empty()) {
     return;
   }
 
   iDestX += x_relative_to_tile;
   iDestY += y_relative_to_tile;
-  sprite* pLast = sprites + sprite_count;
 
   std::unique_ptr<render_target::scoped_buffer> intermediate_buffer;
   if (use_intermediate_buffer) {
     int minX = INT_MAX, minY = INT_MAX, maxX = INT_MIN, maxY = INT_MIN;
-    for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
-      int spriteX = iDestX + pSprite->x;
-      int spriteY = iDestY + pSprite->y;
+    for (const sprite& pSprite : sprites) {
+      int spriteX = iDestX + pSprite.x;
+      int spriteY = iDestY + pSprite.y;
       int spriteWidth, spriteHeight;
-      sheet->get_sprite_size_unchecked(pSprite->index, &spriteWidth,
+      sheet->get_sprite_size_unchecked(pSprite.index, &spriteWidth,
                                        &spriteHeight);
       minX = std::min(minX, spriteX);
       minY = std::min(minY, spriteY);
@@ -1721,9 +1710,9 @@ void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
         minX, minY, maxX - minX, maxY - minY);
   }
 
-  for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
-    sheet->draw_sprite(pCanvas, pSprite->index, iDestX + pSprite->x,
-                       iDestY + pSprite->y, flags);
+  for (const sprite& pSprite : sprites) {
+    sheet->draw_sprite(pCanvas, pSprite.index, iDestX + pSprite.x,
+                       iDestY + pSprite.y, flags);
   }
 }
 
@@ -1745,33 +1734,14 @@ void sprite_render_list::set_use_intermediate_buffer() {
 }
 
 void sprite_render_list::append_sprite(size_t iSprite, int iX, int iY) {
-  if (buffer_size == sprite_count) {
-    int iNewSize = buffer_size * 2;
-    if (iNewSize == 0) {
-      iNewSize = 4;
-    }
-    sprite* pNewSprites = new sprite[iNewSize];
-#ifdef _MSC_VER
-#pragma warning(disable : 4996)
-#endif
-    std::copy(sprites, sprites + sprite_count, pNewSprites);
-#ifdef _MSC_VER
-#pragma warning(default : 4996)
-#endif
-    delete[] sprites;
-    sprites = pNewSprites;
-    buffer_size = iNewSize;
-  }
-  sprites[sprite_count].index = iSprite;
-  sprites[sprite_count].x = iX;
-  sprites[sprite_count].y = iY;
-  ++sprite_count;
+  sprite s { iSprite, iX, iY };
+  sprites.push_back(s);
 }
 
 void sprite_render_list::persist(lua_persist_writer* pWriter) const {
   lua_State* L = pWriter->get_stack();
 
-  pWriter->write_uint(sprite_count);
+  pWriter->write_uint(sprites.size());
   pWriter->write_uint(flags);
   pWriter->write_int(x_relative_to_tile);
   pWriter->write_int(y_relative_to_tile);
@@ -1779,11 +1749,10 @@ void sprite_render_list::persist(lua_persist_writer* pWriter) const {
   pWriter->write_int(dy_per_tick);
   pWriter->write_int(lifetime);
 
-  sprite* pLast = sprites + sprite_count;
-  for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
-    pWriter->write_uint(pSprite->index);
-    pWriter->write_int(pSprite->x);
-    pWriter->write_int(pSprite->y);
+  for (const sprite& pSprite : sprites) {
+    pWriter->write_uint(pSprite.index);
+    pWriter->write_int(pSprite.x);
+    pWriter->write_int(pSprite.y);
   }
 
   // Write the layers
@@ -1811,10 +1780,9 @@ void sprite_render_list::persist(lua_persist_writer* pWriter) const {
 void sprite_render_list::depersist(lua_persist_reader* pReader) {
   lua_State* L = pReader->get_stack();
 
+  uint32_t sprite_count;
   if (!pReader->read_uint(sprite_count)) return;
-  buffer_size = sprite_count;
-  delete[] sprites;
-  sprites = new sprite[buffer_size];
+  sprites.resize(sprite_count);
 
   if (!pReader->read_uint(flags)) return;
   if (!pReader->read_int(x_relative_to_tile)) return;
@@ -1822,11 +1790,10 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
   if (!pReader->read_int(dx_per_tick)) return;
   if (!pReader->read_int(dy_per_tick)) return;
   if (!pReader->read_int(lifetime)) return;
-  for (sprite *pSprite = sprites, *pLast = sprites + sprite_count;
-       pSprite != pLast; ++pSprite) {
-    if (!pReader->read_uint(pSprite->index)) return;
-    if (!pReader->read_int(pSprite->x)) return;
-    if (!pReader->read_int(pSprite->y)) return;
+  for (sprite& pSprite : sprites) {
+    if (!pReader->read_uint(pSprite.index)) return;
+    if (!pReader->read_int(pSprite.x)) return;
+    if (!pReader->read_int(pSprite.y)) return;
   }
 
   // Read the layers

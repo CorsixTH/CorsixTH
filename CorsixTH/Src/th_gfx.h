@@ -34,14 +34,12 @@ SOFTWARE.
 #include "lua.hpp"
 #include "th.h"
 #include "th_gfx_common.h"
+#include "th_gfx_sdl.h"
 #include "th_lua.h"
 
 class lua_persist_reader;
 class lua_persist_writer;
 class memory_reader;
-class render_target;
-class sprite_sheet;
-struct clip_rect;
 struct map_tile;
 
 enum class scaled_items { none, sprite_sheets, bitmaps, all };
@@ -244,7 +242,6 @@ typedef std::pair<animation_key, animation_start_frames> named_animation_pair;
 class animation_manager {
  public:
   animation_manager();
-  ~animation_manager();
 
   void set_sprite_sheet(sprite_sheet* pSpriteSheet);
 
@@ -447,19 +444,19 @@ class animation_manager {
     uint8_t layer_id;  ///< Value of the layer class to match.
 
     sprite_sheet* element_sprite_sheet;  ///< Sprite sheet to use for this
-                                         ///< element.
+                                         ///< element. Not owned.
   };
 
   std::vector<size_t> first_frames;    ///< First frame number of an animation.
   std::vector<frame> frames;           ///< The loaded frames.
   std::vector<uint16_t> element_list;  ///< List of elements for a frame.
   std::vector<element> elements;       ///< Sprite Elements.
-  std::vector<sprite_sheet*>
+  std::vector<sprite_sheet>
       custom_sheets;  ///< Sprite sheets with custom graphics.
   named_animations_map named_animations;  ///< Collected named animations.
 
-  sprite_sheet* sheet;    ///< Sprite sheet to use.
-  render_target* canvas;  ///< Video surface to use.
+  sprite_sheet* sheet;    ///< Sprite sheet to use. Not owned.
+  render_target* canvas;  ///< Video surface to use. Not owned.
 
   size_t animation_count;     ///< Number of animations.
   size_t frame_count;         ///< Number of frames.
@@ -649,9 +646,6 @@ class animation : public animation_base {
 
 class sprite_render_list : public animation_base {
  public:
-  sprite_render_list();
-  ~sprite_render_list() override;
-
   void tick();
   void draw(render_target* pCanvas, int iDestX, int iDestY);
   bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
@@ -684,9 +678,7 @@ class sprite_render_list : public animation_base {
   };
 
   sprite_sheet* sheet{nullptr};
-  sprite* sprites{nullptr};
-  int sprite_count{0};
-  int buffer_size{0};
+  std::vector<sprite> sprites{};
 
   //! Amount to change x per tick
   int dx_per_tick{0};
