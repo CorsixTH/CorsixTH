@@ -670,7 +670,7 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
       }
 
       if (!pSheet.set_sprite_data(iLoadedSprites, pData, true, iSize, iWidth,
-                                   iHeight)) {
+                                  iHeight)) {
         return false;
       }
 
@@ -1002,10 +1002,7 @@ void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
 
 chunk_renderer::chunk_renderer(const int width, const int height,
                                std::vector<uint8_t>::iterator start)
-    : width(width),
-      height(height),
-      ptr(start),
-      end(start + (width * height)) {}
+    : width(width), height(height), ptr(start), end(start + (width * height)) {}
 
 void chunk_renderer::chunk_fill_to_end_of_line(uint8_t value) {
   if (x != 0 || !skip_eol) {
@@ -1731,7 +1728,7 @@ void sprite_render_list::set_use_intermediate_buffer() {
 }
 
 void sprite_render_list::append_sprite(size_t iSprite, int iX, int iY) {
-  sprite s { iSprite, iX, iY };
+  sprite s{iSprite, iX, iY};
   sprites.push_back(s);
 }
 
