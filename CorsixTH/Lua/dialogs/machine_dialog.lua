@@ -50,31 +50,11 @@ function UIMachine:UIMachine(ui, machine, room)
     :makeButton(0, 0, 63, 60, 340, self.callHandyman)
     :setTooltip(_S.tooltip.machine_window.repair)
     :setSound("selectx.wav")
-
   -- Replace button
   self:addPanel(341, 92, 127)
     :makeButton(0, 0, 45, 60, 342, self.replaceMachine)
     :setTooltip(_S.tooltip.machine_window.replace)
     :setSound("selectx.wav")
-
-  -- Machine Menu
-  -- Machine menu buttons doesnt exist in original game, so it has to be custom drawn
-  local aux_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-  self:addPanel(22, 146,  52):makeButton(0, 0, 24, 24, 23, self.toggleMachineMenu)
-    :setTooltip(_S.tooltip.machine_window.toggle_machine_menu)
-    :setSound("selectx.wav")
-    .panel_for_sprite.custom_draw = --[[persistable:machine_menu_buttons]] function(panel, canvas, x, y)
-    x = x + panel.x
-    y = y + panel.y
-    panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
-    local btn = panel.window.active_button
-    if btn and btn.panel_for_sprite == panel and btn.active then
-      aux_sprites:draw(canvas, 23, x-2, y-2)
-    else
-      aux_sprites:draw(canvas, 22, x-2, y-2)
-    end
-  end
-
   -- Close button
   self:addPanel(337, 146,  18):makeButton(0, 0, 24, 24, 338, self.close)
     :setTooltip(_S.tooltip.machine_window.close)
@@ -104,16 +84,6 @@ function UIMachine:draw(canvas, x, y)
     for dx = 0, status_bar_width - 1 do
       self.panel_sprites:draw(canvas, 352, x + 53 + dx, y + 99) -- Or 5
     end
-  end
-end
-
-function UIMachine:toggleMachineMenu()
-  local ui = self.ui
-  local machine_menu = ui:getWindow(UIMachineMenu)
-  if machine_menu then
-    machine_menu:close()
-  else
-    ui:addWindow(UIMachineMenu(ui))
   end
 end
 
