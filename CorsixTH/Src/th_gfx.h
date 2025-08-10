@@ -151,10 +151,10 @@ class chunk_renderer {
   /*!
       @param width Pixel width of the resulting image
       @param height Pixel height of the resulting image
-      @param buffer The buffer to write the resulting image to. Must have a size
-                    of width * height.
+      @param start An interator to the start writing the resulting image to.
+                   Must point to a container of at least width * height.
   */
-  chunk_renderer(int width, int height, std::vector<uint8_t>& buffer);
+  chunk_renderer(int width, int height, std::vector<uint8_t>::iterator start);
 
   //! Convert a stream of chunks into a raw bitmap
   /*!
@@ -183,7 +183,6 @@ class chunk_renderer {
   inline void fix_n_pixels(int& npixels) const;
   inline void increment_position(int npixels);
 
-  std::vector<uint8_t>& data;
   std::vector<uint8_t>::iterator ptr, end;
   int x{0}, y{0};
   int width, height;

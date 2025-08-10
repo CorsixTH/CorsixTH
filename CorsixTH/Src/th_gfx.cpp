@@ -1001,14 +1001,11 @@ void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
 }
 
 chunk_renderer::chunk_renderer(const int width, const int height,
-                               std::vector<uint8_t>& buffer)
+                               std::vector<uint8_t>::iterator start)
     : width(width),
       height(height),
-      data(buffer),
-      ptr(buffer.begin()),
-      end(buffer.end()) {
-  assert(buffer.size() == width * height);
-}
+      ptr(start),
+      end(start + (width * height)) {}
 
 void chunk_renderer::chunk_fill_to_end_of_line(uint8_t value) {
   if (x != 0 || !skip_eol) {

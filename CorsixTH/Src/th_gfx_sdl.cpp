@@ -1176,7 +1176,7 @@ bool sprite_sheet::load_from_th_file(const uint8_t* pTableData,
 
     {
       std::vector<uint8_t> pData(pSprite->width * pSprite->height);
-      chunk_renderer oRenderer(pSprite->width, pSprite->height, pData);
+      chunk_renderer oRenderer(pSprite->width, pSprite->height, pData.begin());
       int iDataLen = static_cast<int>(iChunkDataLength) -
                      static_cast<int>(pTHSprite->position);
       if (iDataLen < 0) iDataLen = 0;
