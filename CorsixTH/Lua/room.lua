@@ -30,6 +30,11 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self.world = world
   self.hospital = hospital
 
+  -- Serving staff in single occupancy rooms (like GD, Pharmacy and etc)
+  self.staff_member = nil
+  -- Serving staff list in multi-occupancy rooms (like Operating Theatre)
+  self.staff_member_set = {}
+
   self.room_info = room_info
   self:initRoom(x, y, w, h, door, door2)
 end
@@ -229,9 +234,14 @@ function Room:dealtWithPatient(patient)
     patient:queueAction(IdleAction())
   end
 
+  ----- BEGIN Save game compatibility -----
+  -- These function call are merely for save game compatibility.
+  -- And they does not participate in the current game logic.
+  -- Do not move or edit
   if self.dealt_patient_callback then
     self.dealt_patient_callback(self.waiting_staff_member)
   end
+  ----- END Save game compatibility -----
 end
 
 local profile_attributes = {
@@ -377,14 +387,10 @@ function Room:onHumanoidEnter(humanoid)
           staff_entered:setCallCompleted()
           self:commandEnteringStaff(staff_entered)
         else
-          if self.waiting_staff_member then
-            self.waiting_staff_member.waiting_on_other_staff = nil
-            self.waiting_staff_member:setNextAction(self:createLeaveAction())
-            self.waiting_staff_member:queueAction(MeanderAction())
-          end
-          self:createDealtWithPatientCallback(staff_entered)
-          staff_entered.waiting_on_other_staff = true
-          staff_entered:setNextAction(MeanderAction())
+          -- Previous staff in the room currently occupied by serving patient in room.
+          -- Send out the entered staff. It's not needed here.
+          staff_entered:setNextAction(self:createLeaveAction())
+          staff_entered:queueAction(MeanderAction())
         end
       else
         -- Inappropriate staff for this room
@@ -428,27 +434,26 @@ function Room:onHumanoidEnter(humanoid)
   end
 end
 
+----- BEGIN Save game compatibility -----
+-- These function are merely for save game compatibility.
+-- And they does not participate in the current game logic.
+-- Do not move or edit
 function Room:createDealtWithPatientCallback(humanoid)
   self.dealt_patient_callback = --[[persistable:room_dealt_with_patient_callback]] function (staff_humanoid)
     if not staff_humanoid.waiting_on_other_staff then
       return
     end
-    local staff_member = self:getStaffMember()
-    if staff_member then
-      staff_member:setNextAction(self:createLeaveAction())
-      staff_member:queueAction(MeanderAction())
-      staff_member:setMood("staff_wait", "deactivate")
-      staff_member:setDynamicInfoText("")
-    end
     staff_humanoid:setCallCompleted()
     staff_humanoid.waiting_on_other_staff = nil
-    self:commandEnteringStaff(staff_humanoid)
-    self:setStaffMember(staff_humanoid)
+    staff_humanoid:setNextAction(self:createLeaveAction())
+    staff_humanoid:queueAction(MeanderAction())
+    staff_humanoid:setMood("staff_wait", "deactivate")
+    staff_humanoid:setDynamicInfoText("")
     self.waiting_staff_member = nil
     self.dealt_patient_callback = nil
   end
-  self.waiting_staff_member = humanoid
 end
+----- END Save game compatibility -----
 
 --! Get the current staff member.
 -- In multi-occupancy rooms this returns the staff member with the minimum service quality
@@ -532,9 +537,11 @@ function Room:_staffWaitToggle(activate)
   end
 
   if not self.staff_member_set and self.staff_member then
+    -- single occupancy rooms (like GD, Pharmacy and etc)
     self.staff_member:setMood("staff_wait", state)
     self.staff_member:setDynamicInfoText(dynamic_text)
   else
+    -- multi-occupancy rooms (like Operating Theatre)
     for staff_member in pairs(self.staff_member_set) do
       staff_member:setMood("staff_wait", state)
       staff_member:setDynamicInfoText(dynamic_text)
@@ -624,12 +631,8 @@ function Room:onHumanoidLeave(humanoid)
     end
   end
   if class.is(humanoid, Staff) then
-    if humanoid.waiting_on_other_staff then
-      humanoid.waiting_on_other_staff = nil
-      self.dealt_patient_callback = nil
-    end
     -- Make patients leave the room (except wards) if there are no longer enough staff
-    if not self:testStaffCriteria(self:getRequiredStaffCriteria()) then
+    if not self:testStaffCriteria(self:getRequiredStaffCriteria()) or self.staff_member == nil then
       local call_for_new_staff = self.door.queue:patientSize() > 0
       for room_humanoid in pairs(self.humanoids) do
         if class.is(room_humanoid, Patient) and self:shouldHavePatientReenter(room_humanoid) then

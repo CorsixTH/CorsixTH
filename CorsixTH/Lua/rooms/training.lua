@@ -172,36 +172,27 @@ function TrainingRoom:commandEnteringStaff(humanoid)
   local profile = humanoid.profile
 
   if profile.humanoid_class == "Doctor" then
-    -- Consultants try to use the projector and/or skeleton
     if profile.is_consultant then
+      -- Consultant entered. Try to use the projector and/or skeleton
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "projector")
-      if self.staff_member then
-        if self.waiting_staff_member then
-          local staff = self.waiting_staff_member
-          staff.waiting_on_other_staff = nil
-          staff:setNextAction(self:createLeaveAction())
-          staff:queueAction(MeanderAction())
-        end
-        humanoid.waiting_on_other_staff = true
-        humanoid:setNextAction(MeanderAction())
-        self.waiting_staff_member = humanoid
-        self.staff_member:setNextAction(self:createLeaveAction())
-        self.staff_member:queueAction(MeanderAction())
+      local projector = obj
+      if not self.staff_member and projector then
+        -- if there is no lecturer and the projector is available
+        projector.reserved_for = humanoid
+        humanoid:walkTo(ox, oy)
+        self:doStaffUseCycle(humanoid)
+        self:setStaffMember(humanoid)
       else
-        if obj then
-          obj.reserved_for = humanoid
-          humanoid:walkTo(ox, oy)
-          self:doStaffUseCycle(humanoid)
-          self:setStaffMember(humanoid)
-        else
-          humanoid:setNextAction(self:createLeaveAction())
-          humanoid:queueAction(MeanderAction())
-        end
+        humanoid:setNextAction(self:createLeaveAction())
+        humanoid:queueAction(MeanderAction())
       end
     else
+      -- Student entered
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "lecture_chair")
-      if obj then
-        obj.reserved_for = humanoid
+      local lecture_chair = obj
+      if lecture_chair then
+        -- Try to use the lecture chair
+        lecture_chair.reserved_for = humanoid
         humanoid:walkTo(ox, oy)
         humanoid:queueAction(UseObjectAction(obj))
         humanoid:queueAction(MeanderAction())
@@ -234,15 +225,6 @@ function TrainingRoom:onHumanoidLeave(humanoid)
       end
     end
 
-    if humanoid.profile.is_consultant and humanoid == self.staff_member then
-      local staff = self.waiting_staff_member
-      self:setStaffMember(nil)
-      if staff then
-        staff.waiting_on_other_staff = nil
-        self.waiting_staff_member = nil
-        self:commandEnteringStaff(staff)
-      end
-    end
   end
 
   Room.onHumanoidLeave(self, humanoid)
