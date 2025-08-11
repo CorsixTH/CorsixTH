@@ -1157,20 +1157,24 @@ bool sprite_sheet::load_from_th_file(const uint8_t* pTableData,
   _freeSprites();
   if (pCanvas == nullptr) return false;
 
-  size_t iCount = iTableDataLength / sizeof(th_sprite_properties);
+  size_t iCount = iTableDataLength / sprite_properties_size;
   if (!set_sprite_count(iCount, pCanvas)) return false;
 
   for (size_t i = 0; i < sprite_count; ++i) {
     sprite* pSprite = sprites + i;
-    const th_sprite_properties* pTHSprite =
-        reinterpret_cast<const th_sprite_properties*>(pTableData) + i;
+    const th_sprite_properties pTHSprite{
+        bytes_to_uint32_le(pTableData + i * sprite_properties_size +
+                           sprite_properties_position_offset),
+        pTableData[i * sprite_properties_size + sprite_properties_width_offset],
+        pTableData[i * sprite_properties_size +
+                   sprite_properties_height_offset]};
 
     pSprite->texture = nullptr;
     pSprite->alt_texture = nullptr;
     pSprite->data = nullptr;
     pSprite->alt_palette_map = nullptr;
-    pSprite->width = pTHSprite->width;
-    pSprite->height = pTHSprite->height;
+    pSprite->width = pTHSprite.width;
+    pSprite->height = pTHSprite.height;
 
     if (pSprite->width == 0 || pSprite->height == 0) continue;
 
@@ -1178,9 +1182,9 @@ bool sprite_sheet::load_from_th_file(const uint8_t* pTableData,
       std::vector<uint8_t> pData(pSprite->width * pSprite->height);
       chunk_renderer oRenderer(pSprite->width, pSprite->height, pData.begin());
       int iDataLen = static_cast<int>(iChunkDataLength) -
-                     static_cast<int>(pTHSprite->position);
+                     static_cast<int>(pTHSprite.position);
       if (iDataLen < 0) iDataLen = 0;
-      oRenderer.decode_chunks(pChunkData + pTHSprite->position, iDataLen,
+      oRenderer.decode_chunks(pChunkData + pTHSprite.position, iDataLen,
                               bComplexChunks);
       pSprite->data =
           convertLegacySprite(pData.data(), pSprite->width * pSprite->height);

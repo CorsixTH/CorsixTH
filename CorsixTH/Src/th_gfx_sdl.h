@@ -621,11 +621,10 @@ class sprite_sheet {
 
  private:
   friend class cursor;
-#if CORSIX_TH_USE_PACK_PRAGMAS
-#pragma pack(push)
-#pragma pack(1)
-#endif
   //! Sprite structure in the table file.
+  /*!
+      https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#spritetable
+  */
   struct th_sprite_properties {
     //! Position of the sprite in the chunk data file.
     uint32_t position;
@@ -635,10 +634,11 @@ class sprite_sheet {
 
     //! Height of the sprite.
     uint8_t height;
-  } CORSIX_TH_PACKED_FLAGS;
-#if CORSIX_TH_USE_PACK_PRAGMAS
-#pragma pack(pop)
-#endif
+  };
+  static constexpr size_t sprite_properties_size = 6;
+  static constexpr size_t sprite_properties_position_offset = 0;
+  static constexpr size_t sprite_properties_width_offset = 4;
+  static constexpr size_t sprite_properties_height_offset = 5;
 
   //! Sprites of the sheet.
   struct sprite {
