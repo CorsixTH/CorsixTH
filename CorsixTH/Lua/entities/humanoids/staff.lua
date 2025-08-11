@@ -534,9 +534,6 @@ function Staff:isIdle()
     return false
   end
 
-  if self.waiting_on_other_staff then
-    return false
-  end
   -- if they are using a door they are not idle, this stops doctors being considered for staff selection
   -- for rooms they have not completely left yet, fixes issue 810
   if self.user_of and self.user_of.object_type.id == "door" then
