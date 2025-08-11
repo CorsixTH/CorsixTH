@@ -1148,6 +1148,26 @@ bool sprite_sheet::set_sprite_count(size_t iCount, render_target* pCanvas) {
   return true;
 }
 
+//! Sprite structure in the table file.
+/*!
+    https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#spritetable
+*/
+struct th_sprite_properties {
+  //! Position of the sprite in the chunk data file.
+  uint32_t position;
+
+  //! Width of the sprite.
+  uint8_t width;
+
+  //! Height of the sprite.
+  uint8_t height;
+
+  static constexpr size_t size = 6;
+  static constexpr size_t position_offset = 0;
+  static constexpr size_t width_offset = 4;
+  static constexpr size_t height_offset = 5;
+};
+
 bool sprite_sheet::load_from_th_file(const uint8_t* pTableData,
                                      size_t iTableDataLength,
                                      const uint8_t* pChunkData,
@@ -1157,17 +1177,18 @@ bool sprite_sheet::load_from_th_file(const uint8_t* pTableData,
   _freeSprites();
   if (pCanvas == nullptr) return false;
 
-  size_t iCount = iTableDataLength / sprite_properties_size;
+  size_t iCount = iTableDataLength / th_sprite_properties::size;
   if (!set_sprite_count(iCount, pCanvas)) return false;
 
   for (size_t i = 0; i < sprite_count; ++i) {
     sprite* pSprite = sprites + i;
     const th_sprite_properties pTHSprite{
-        bytes_to_uint32_le(pTableData + i * sprite_properties_size +
-                           sprite_properties_position_offset),
-        pTableData[i * sprite_properties_size + sprite_properties_width_offset],
-        pTableData[i * sprite_properties_size +
-                   sprite_properties_height_offset]};
+        bytes_to_uint32_le(pTableData + i * th_sprite_properties::size +
+                           th_sprite_properties::position_offset),
+        pTableData[i * th_sprite_properties::size +
+                   th_sprite_properties::width_offset],
+        pTableData[i * th_sprite_properties::size +
+                   th_sprite_properties::height_offset]};
 
     pSprite->texture = nullptr;
     pSprite->alt_texture = nullptr;
