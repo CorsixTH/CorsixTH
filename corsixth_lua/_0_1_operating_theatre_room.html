@@ -38,6 +38,9 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  (inherited from <a href="_0_1_room.html">Room</a>)
  </li>
  <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1__build_table_action1">_buildTableAction1</a>(<span class="p">surgeon1</span>, <span class="p">patient</span>, <span class="p">operation_table</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1__build_table_action2">_buildTableAction2</a>(<span class="p">multi_use</span>, <span class="p">operation_table_b</span>)
  </li>
  <li class="inherited">
@@ -51,9 +54,6 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  <li class="inherited">
  <a href="_0_1_room.html#_0_1_room_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
  (inherited from <a href="_0_1_room.html">Room</a>)
- </li>
- <li class="self">
- <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1build_table_action1">buildTableAction1</a>(<span class="p">surgeon1</span>, <span class="p">patient</span>, <span class="p">operation_table</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_room.html#_0_1_room_1calculate_happiness_factor">calculateHappinessFactor</a>()
@@ -324,6 +324,33 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1__build_table_action1">function OperatingTheatreRoom:_buildTableAction1(<span class="p">surgeon1</span>, <span class="p">patient</span>, <span class="p">operation_table</span>)</a></h5>
+ <p>
+ be the same as the surgeon who gets the action on his queue.<br/><br/>
+ the operation table.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">surgeon1</td>
+ <td class="t">Staff</td>
+ <td class="d">: the surgeon who does this operation action. He must</td>
+ </tr>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">Patient</td>
+ <td class="d">: the patient to be operated.</td>
+ </tr>
+ <tr>
+ <td class="n">operation_table</td>
+ <td class="t">OperatingTable</td>
+ <td class="d">: master object representing</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L166">line 166 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_operating_theatre_room_1__build_table_action2">function OperatingTheatreRoom._buildTableAction2(<span class="p">multi_use</span>, <span class="p">operation_table_b</span>)</a></h5>
  <p>
  Note: Must be part of OperatingTheatreRoom and not a local function<br/><br/>
@@ -347,33 +374,6 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_operating_theatre_room_1build_table_action1">function OperatingTheatreRoom:buildTableAction1(<span class="p">surgeon1</span>, <span class="p">patient</span>, <span class="p">operation_table</span>)</a></h5>
- <p>
- be the same as the surgeon who gets the action on his queue.<br/><br/>
- the operation table.<br/><br/>
- <strong>Parameters:</strong>
- <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
- <tr>
- <td class="n">surgeon1</td>
- <td class="t">Staff</td>
- <td class="d">: the surgeon who does this operation action. He must</td>
- </tr>
- <tr>
- <td class="n">patient</td>
- <td class="t">Patient</td>
- <td class="d">: the patient to be operated.</td>
- </tr>
- <tr>
- <td class="n">operation_table</td>
- <td class="t">OperatingTable</td>
- <td class="d">: master object representing</td>
- </tr>
- </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L158">line 158 of Lua/rooms/operating_theatre.lua</a>.
- </p>
- </div>
- <div class="method">
  <h5><a name="_0_1_operating_theatre_room_1can_humanoid_enter">function OperatingTheatreRoom:canHumanoidEnter(<span class="p">humanoid</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
@@ -386,7 +386,7 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1can_humanoid_enter">Room:canHumanoidEnter</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L335">line 335 of Lua/rooms/operating_theatre.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L366">line 366 of Lua/rooms/operating_theatre.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -402,7 +402,7 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1command_entering_patient">Room:commandEnteringPatient</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L220">line 220 of Lua/rooms/operating_theatre.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L231">line 231 of Lua/rooms/operating_theatre.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -418,7 +418,7 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1command_entering_staff">Room:commandEnteringStaff</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L128">line 128 of Lua/rooms/operating_theatre.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L129">line 129 of Lua/rooms/operating_theatre.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -434,7 +434,7 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1on_humanoid_leave">Room:onHumanoidLeave</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L315">line 315 of Lua/rooms/operating_theatre.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L346">line 346 of Lua/rooms/operating_theatre.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -456,7 +456,7 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  <td class="d">: If true, add the actions at the front the action queue.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L184">line 184 of Lua/rooms/operating_theatre.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L195">line 195 of Lua/rooms/operating_theatre.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -484,7 +484,7 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1set_staff_members_attribute">Room:setStaffMembersAttribute</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L152">line 152 of Lua/rooms/operating_theatre.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L160">line 160 of Lua/rooms/operating_theatre.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -500,7 +500,7 @@ room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3>
  <td class="d">: true to switch on and false to switch off</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L212">line 212 of Lua/rooms/operating_theatre.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L223">line 223 of Lua/rooms/operating_theatre.lua</a>.
  </p>
  </div>
 </div>
