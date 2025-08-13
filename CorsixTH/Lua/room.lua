@@ -236,6 +236,7 @@ function Room:dealtWithPatient(patient)
 
   ----- BEGIN Save game compatibility -----
   -- These function call are merely for save game compatibility.
+  -- For 0.69 gamesaves and below.
   -- And they does not participate in the current game logic.
   -- Do not move or edit
   if self.dealt_patient_callback then
@@ -436,6 +437,7 @@ end
 
 ----- BEGIN Save game compatibility -----
 -- These function are merely for save game compatibility.
+-- For 0.69 gamesaves and below.
 -- And they does not participate in the current game logic.
 -- Do not move or edit
 function Room:createDealtWithPatientCallback(humanoid)

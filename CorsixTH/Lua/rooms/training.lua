@@ -176,13 +176,15 @@ function TrainingRoom:commandEnteringStaff(humanoid)
       -- Consultant entered. Try to use the projector and/or skeleton
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "projector")
       local projector = obj
+      -- If there is no other lecturer and the projector is available
       if not self.staff_member and projector then
-        -- if there is no lecturer and the projector is available
+        -- Start lecture
         projector.reserved_for = humanoid
         humanoid:walkTo(ox, oy)
         self:doStaffUseCycle(humanoid)
         self:setStaffMember(humanoid)
       else
+        -- Leave room
         humanoid:setNextAction(self:createLeaveAction())
         humanoid:queueAction(MeanderAction())
       end
@@ -190,13 +192,15 @@ function TrainingRoom:commandEnteringStaff(humanoid)
       -- Student entered
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "lecture_chair")
       local lecture_chair = obj
+      -- If any chair available
       if lecture_chair then
-        -- Try to use the lecture chair
+        -- Occupy chair
         lecture_chair.reserved_for = humanoid
         humanoid:walkTo(ox, oy)
         humanoid:queueAction(UseObjectAction(obj))
         humanoid:queueAction(MeanderAction())
       else
+        -- Leave room
         self.hospital:giveAdvice({_A.staff_place_advice.not_enough_lecture_chairs})
         humanoid:setNextAction(self:createLeaveAction())
         humanoid:queueAction(MeanderAction())
