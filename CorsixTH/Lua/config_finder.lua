@@ -124,6 +124,7 @@ local config_defaults = {
   disable_fractured_bones_females = true,
   enable_avg_contents = false,
   remove_destroyed_rooms = false,
+  machine_menu_button = true,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,

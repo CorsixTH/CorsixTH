@@ -1395,6 +1395,10 @@ map_editor_window = {
   }
 }
 
+tooltip.toolbar = {
+  machine_menu = "Menú de máquinas",
+}
+
 machine_menu = {
   machine = "Máquina",
   remaining_strength = "Restante",
@@ -1421,10 +1425,6 @@ tooltip.machine_menu = {
     times_used = "Cantidad de veces que se ha usado la máquina.",
   },
   close = "Cerrar la lista de máquinas",
-}
-
-tooltip.machine_window = {
-  toggle_machine_menu = "Haga clic para desplegar el menú de máquinas",
 }
 
 hotkey_window = {

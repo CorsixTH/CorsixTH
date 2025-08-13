@@ -590,6 +590,10 @@ menu_charts = {
   policy = "  (%1%) POLITIQUE "
 }
 
+tooltip.toolbar = {
+  machine_menu = "Menu des machines",
+}
+
 -- Debug menu
 menu_debug = {
   jump_to_level = "  ALLER AU NIVEAU  ",
@@ -1223,10 +1227,6 @@ update_window = {
 tooltip.update_window = {
   download = "Accédez à la page de téléchargement pour la toute dernière version de CorsixTH",
   ignore = "Ignorer cette mise à jour pour l'instant. Vous serez averti à nouveau lorsque vous ouvrez CorsixTH de nouveau"
-}
-
-tooltip.machine_window = {
-  toggle_machine_menu = "Cliquez pour afficher le menu des machines",
 }
 
 map_editor_window = {

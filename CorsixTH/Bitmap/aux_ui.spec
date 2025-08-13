@@ -21,8 +21,8 @@ local SPEC = {
     "map_cell_outline_east.bmp",
     "map_cell_outline_south.bmp",
     "map_cell_outline_west.bmp",
-    "machinemenu.bmp",
-    "machinemenupressed.bmp",
+    "toolbar_machinemenu_idle.bmp",
+    "toolbar_machinemenu_pressed.bmp",
   },
 
   -- Palette options
