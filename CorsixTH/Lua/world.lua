@@ -1152,14 +1152,18 @@ function World:nextEmergency()
     self:scheduleRandomEmergency(control)
     return
   end
-  repeat
+
+  -- Find the next valid emergency entry
+  local valid_emergency = false
+  while not valid_emergency do
     local emer_num = self.next_emergency_no
-    -- Account for missing Level 3 emergency[5]
+    -- First, handle the missing Level 3 emergency[5]
     if not control[emer_num] and control[emer_num + 1] then
       emer_num = emer_num + 1
       self.next_emergency_no = emer_num
     end
     local emergency = control[emer_num]
+
     -- No more emergencies?
     if not emergency then
       self.next_emergency_month = 0
@@ -1167,9 +1171,12 @@ function World:nextEmergency()
       self.next_emergency = nil
       return
     end
+
+    -- Test the emergency's validity
     self.next_emergency = emergency
     self.next_emergency_no = self.next_emergency_no + 1
-  until self:computeNextEmergencyDates(emergency)
+    valid_emergency = self:computeNextEmergencyDates(emergency)
+  end
 end
 
 --! If a level file specifies random emergencies we make the next one as defined by the mean/variance given
