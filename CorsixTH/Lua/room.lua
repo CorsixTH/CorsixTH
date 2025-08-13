@@ -633,7 +633,7 @@ function Room:onHumanoidLeave(humanoid)
   end
   if class.is(humanoid, Staff) then
     -- Make patients leave the room (except wards) if there are no longer enough staff
-    if not self:testStaffCriteria(self:getRequiredStaffCriteria()) or self.staff_member == nil then
+    if not self:testStaffCriteria(self:getRequiredStaffCriteria()) or self:getStaffMember() == nil then
       local call_for_new_staff = self.door.queue:patientSize() > 0
       for room_humanoid in pairs(self.humanoids) do
         if class.is(room_humanoid, Patient) and self:shouldHavePatientReenter(room_humanoid) then
