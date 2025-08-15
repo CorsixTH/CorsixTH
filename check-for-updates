@@ -1,7 +1,7 @@
 return {
   major = 0,
   minor = 69,
-  revision = 0,
-  changelog_en = 'Improvements for level creators, a new machine menu, quality of life changes, and many fixes! See release notes for more.',
+  revision = 1,
+  changelog_en = 'Fixes a crash when placing staff in rooms while a patient is being treated.',
   download_url = 'https://github.com/CorsixTH/CorsixTH/releases',
 }
