@@ -3090,7 +3090,7 @@ introduction_texts = {
     "Malé varování - opravdu si hlídejte vaši reputaci - zkušenosti okolí jsou to, co ovlivní kolik lidí z kraje vloží svůj osud do vašich rukou. " ..
     "Pokud nezabijete příliš mnoho lidí a udržíte je rozumně šťastné, neměli byste mít v této úrovni problémy!\n\n" ..
     "Teď jste v tom sami. Hodně štěstí a tak dále.",
-  level4 = 
+  level4 =
     "Udržte všechny lidi šťastné, zacházejte s nimi jako v rukavičkách a udržte počet úmrtí na absolutním minimu. " ..
     "V sázce je vaše reputace, takže se ujistěte, že ji budete držet tak vysoko, jak je to jen možné. " ..
     "O peníze se moc nestarejte - ty přijdou společně s růstem vaší reputace. " ..
