@@ -114,6 +114,11 @@ cheats_window = {
     toggle_infected = "Vypnout/zapnout ikony nakažení",
     increase_prices = "Zvýšit ceny",
     decrease_prices = "Snížit ceny",
+	toggle_earthquake = "Vypnout/zapnout zemětřesení",
+    max_reputation = "Max reputace",
+    toggle_epidemic = "Vypnout/zapnout epidemie",
+    show_infected = "Ukázat/Skrýt ikony nakažení",
+    reset_death_count = "Resetovat počet úmrtí",
   },
 }
 menu_file_save = {
@@ -232,6 +237,7 @@ dynamic_info = {
     queue_size = "Velikost fronty %d",
     times_used = "Použito %d krát",
     queue_expected = "Očekávaná fronta %d",
+	strength_extra_info = "Výdrž %d (Vyzkoumatelná až %d)",
   },
   patient = {
     diagnosed = "Diagnóza: %s ",
@@ -305,6 +311,9 @@ confirmation = {
   remove_destroyed_room = "Opravdu chcete odstranit místnost? Bude to stát $%d.",
   very_old_save = "Tuto hru jste hráli ve starší verzi a několik věcí se změnilo. Chcete teď restartovat úroveň, aby vše opravdu správně fungovalo?//" ..
   "Vaše uložené hry nebudou smazány (dokud si je sami nepřepíšete).",
+  restart_mapeditor = "Opravdu chcete restartovat editor map?",
+  replace_machine_extra_info = "Výdrž nového stroje bude %d (nyní je %d).",
+  quit_mapeditor = "Opravdu chcete odejít z editoru map?",
 }
 adviser = {
   goals = {
@@ -413,6 +422,7 @@ adviser = {
     only_surgeons = "Doktoři mohou operovat na Operačním Sále pouze pokud jsou kvalifikovaní Chirurgové.",
     only_psychiatrists = "Doktoři mohou pracovat na Psychiatrii pouze pokud jsou kvalifikovaní Psychiatři.",
     doctors_cannot_work_in_room = "Doktoři nemohou pracovat v %s.",
+	not_enough_lecture_chairs = "Každý žák potřebuje svoji vlastní Učební lavici, aby si měl kam sednout.",
   },
   tutorial = {
     start_tutorial = "Přečtěte si Úvod do Mise, pak klikněte levým tlačítkem myši ke spuštění výuky.",
@@ -477,6 +487,8 @@ adviser = {
     th_cheat = "Blahopřejeme, právě jste odemkli cheaty!",
     roujin_off_cheat = "Roujinova výzva deaktivována.",
     roujin_on_cheat = "Roujinova výzva aktivována! Hodně štěstí...",
+    norest_off_cheat = "Už bylo na čase! Snad teď bude větší klid. Zaměstnanci opět budou odpočívat jako obvykle.",
+    norest_on_cheat = "Ale ne! Vaši zaměstnanci objevili skládku kávy a kratomu a nepotřebují žádný odpočinek.",
   },
   room_forbidden_non_reachable_parts = "Umístění místnosti zde by zapříčinilo, že části nemocnice by byly nedostupné.",
   level_progress = {
@@ -604,6 +616,10 @@ adviser = {
     high_prices = "Za %s si účtujete moc vysokou částku. Sice zkásnete pacienty o více, ale oni budou rádi platit u konkurence méně.",
     patient_not_paying = "Pacient odešel bez zaplacení %s, protože je to prý moc drahé.",
     fair_prices = "Vaše částka za %s vypadá přijatelně a vyváženě.",
+    no_doctor_no_gp_office = "Možná je na čase postavit Kancelář Praktického Lékaře a někoho v ní i zaměstnat.",
+    cannot_buy = "Tohoto si již více koupit nemůžete!",
+    cannot_afford_machine = "Potřebujete alespoň $%1% na vašem účtu, abyste si mohli koupit novou %2%!",
+    no_gp_office = "Trochu vám tu chybí Kancelář Praktického Lékaře, ve které mohou Doktoři diagnostikovat pacienty.",
   },
   earthquake = {
     ended = "Uf. To skoro vypadalo na velký třesk. To byl %d stupeň Richterovy škály.",
@@ -644,8 +660,8 @@ staff_descriptions = {
     [6] = "Pozoruhodná slušnost, vlídné chování. ",
     [7] = "Neuvěřitelný talent a schopnosti. ",
     [8] = "Práci, kterou dělá, přikládá velký význam. ",
-    [9] = "Je puntičkář, který se prostě nevzdává. ",
-    [10] = "Nadšeně pomáhá lidem s úsměvem. ",
+    [9] = "Puntičkář, který se prostě nevzdává. ",
+    [10] = "Nadšeně a s úsměvem pomáhá lidem. ",
     [11] = "Pečující a nápomocný typ. ",
     [12] = "Silná motivace a oddanost práci. ",
     [13] = "Srdce na pravém místě. ",
@@ -711,6 +727,11 @@ staff_descriptions = {
 }
 load_game_window = {
   caption = "Načíst hru (%1%)",
+  load_button = "Načíst",
+}
+load_map_window = {
+  caption = "Načíst mapu (%1%)",
+  load_button = "Načíst",
 }
 menu_options_game_speed = {
   slowest = "    (%1%) NEJPOMALEJŠÍ  ",
@@ -1175,11 +1196,14 @@ tooltip = {
     zoom_speed = "Nastavte rychlost přibližování v rozmezí 10 (nejpomalejší) až 1000 (nejrychlejší). Výchozí hodnota je 80.",
     cancel_zoomspeed = "Neměnit rychlost přibližování",
     check_for_updates = "Nastavuje, zda má hra při spuštění kontrolovat aktualizace.",
-    },
+    right_mouse_scrolling = "Přepnout tlačítko myši, kterým lze posouvat kameru",
+    language_dropdown_no_font = "Pro použití tohoto jazyka musíte vybrat font podporující tento jazyk v Nastavení > Umístění složek > Písmo",
+    jukebox = "Otevře Jukebox pro ovládání hudby ve hře",
+  },
   update_window = {
     download = "Stáhnout nejnovější verzi CorsixTH.",
     ignore = "Zatím neaktualizovat. Při příštím spuštění CorsixTH vám toto upozornění vyskočí znovu.",
-    },
+  },
   information = {
     close = "Zavřít informační dialogové okno",
   },
@@ -1187,6 +1211,7 @@ tooltip = {
     save_date = "Klikněte zde pro seřazení seznamu podle posledního data změny.",
     name = "Klikněte zde pro seřazení seznamu podle názvu.",
     back = "Zavřít toto okno",
+	ok = "Potvrdit volby",
   },
   cheats_window = {
     close = "Zavřít dialogové okno cheatů.",
@@ -1205,6 +1230,11 @@ tooltip = {
       toggle_infected = "Zobrazit/Skrýt ikony nakažení pro aktivní zjištěné epidemie.",
       increase_prices = "Zvýšit všechny ceny o 50% (max. 200%).",
       decrease_prices = "Snížit všechny ceny o 50% (min. 50%).",
+	  toggle_earthquake = "Vypne/zapne zemětřesení",
+      max_reputation = "Nastaví reputaci nemocnice na maximum",
+      toggle_epidemic = "Vypne/zapne možnost epidemií",
+      show_infected = "Ukáže/Skryje ikony u nakažených pacientů aktivní, odhalené epidemie",
+      reset_death_count = "Nastaví počet úmrtí v nemocnici na 0",
     },
   },
   buy_objects_window = {
@@ -1237,6 +1267,25 @@ tooltip = {
     repair = "Zavolat Údržbáře, aby stroj opravil",
     name = "Název",
     times_used = "Počet použití stroje",
+	toggle_machine_menu = "Klikněte pro zobrazení Správy strojů",
+  },
+  machine_menu = {
+    smoking = "Toto políčko je zaškrtnuté pokud tomuto stroji hrozí výbuch. Kliknutím koupíte nový stroj a nahradíte jím starý.",
+    remaining_strength = "Tato hodnota ukazuje, kolik použití tento stroj ještě snese před opravou.",
+    header = {
+	  smoking = "Kontrolka nebezpečí",
+      remaining_strength = "Zbývající výdrž do nutné opravy.",
+      machine = "Typ stroje",
+      ratio = "Poměr zbývající výdrže k celkové výdrži stroje.",
+      total_strength = "Celková výdrž stroje do první opravy.",
+      assigned = "Kontrolka přidělení opravy stroje.",
+	},
+    close = "Zavře okno správy strojů",
+    sort = "Klikněte pro seřazení dle této hodnoty.",
+    machine = "Seznam strojů - klikněte na stroj pro otevření jeho okna s informacemi a umístění kamery na něj.",
+    ratio = "Tato hodnota ukazuje poměr zbývající výdrže k celkové výdrži stroje.",
+    total_strength = "Tato hodnota ukazuje, kolik použití tento stroj jako nový snese před první opravou.",
+    assigned = "Toto políčko je zaškrtnuté pokud je k opravě tohoto stroje přivolán Údržbář. Klikněte pro ukázání přiděleného Údržbáře.",
   },
   calls_dispatcher = {
     close = "Zavřít okno úkolů a přiřazení.",
@@ -1415,6 +1464,12 @@ tooltip = {
     button_cancel = "Vrátit se do nastavení bez ukládání změn",
     caption_panels = "Nastavit klávesové zkratky pro zobrazení panelů (Výzkum, Mapa města, Pravidla atd.)",
     button_gameSpeedKeys = "Nastavit klávesové zkratky pro ovládání rychlosti hry",
+    panel_globalKeys = "Nastavit klávesové zkratky použitelné v celém programu",
+    panel_scrollKeys = "Nastavit klávesové zkratky pro pohyb kamery ve hře",
+    panel_generalInGameKeys = "Nastavit klávesové zkratky použitelné během hry",
+    panel_zoomKeys = "Nastavit klávesové zkratky pro přiblížení a oddálení",
+    panel_toggleKeys = "Nastavit klávesové zkratky pro vypnutí/zapnutí věcí",
+    panel_debugKeys = "Nastavit klávesové zkratky pro ladění (debugging)",
   },
   pay_rise_window = {
     accept = "Splnit požadavky zaměstnance",
@@ -1477,6 +1532,14 @@ tooltip = {
     warmth = "Spokojenost lidí s teplotou ve vaší nemocnici",
     percentage_killed = "Nesmíte zabít více než %d%% vašich návštěvníků. Dosud jste zabili %d%% z nich",
     percentage_cured = "Potřebujete vyléčit alespoň %d%% návštěvníků vaší nemocnice. Nyní léčíte průměrně %d%%",
+	over = {
+	  staff_happiness = "Průměrná spokojenost vašich zaměstnanců by měla být přes %d%. Nyní je %d%",
+	  patient_happiness = "Průměrná spokojenost vašich pacientů by měla být přes %d%. Nyní je %d%",
+	},
+	under = {
+	  staff_happiness = "Průměrná spokojenost vašich zaměstnanců by neměla být nižší než %d%. Nyní je %d%",
+	  patient_happiness = "Průměrná spokojenost vašich pacientů by neměla být nižší než %d%. Nyní je %d%",
+	},
   },
   patient_window = {
     happiness = "Spokojenost",
@@ -1670,13 +1733,13 @@ tooltip = {
   custom_campaign_window = {
     choose_campaign = "Zvolte kampaň pro zobrazení informací o ní",
     start_selected_campaign = "Načíst první úroveň kampaně",
+	duplicates_warning = "Podívejte se do konzole pro specifické chyby",
   },
   save_map_window = {
     map = "Přepsat mapu %s",
     new_map = "Zadejte název nové uložené mapy",
   },
 }
-
 place_objects_window = {
   drag_blueprint = "Táhnutím myší za okraje upravte návrh, dokud nebudete spokojeni s rozměry místnosti",
   place_objects = "Nyní umístěte všechny objekty do místnosti (pravým tlačítkem je můžete otočit)",
@@ -1723,7 +1786,15 @@ transactions = {
   advance_colon = "Pokrok:",
   hire_staff = "Najmutí zaměstnance",
   overdraft = "Úrok z přečerpání účtu",
-  remove_room = "Odklizení rozbité místnosti"
+  remove_room = "Odklizení rozbité místnosti",
+}
+machine_menu = {
+  percentage = "%d%",
+  ratio = "Poměr",
+  machine = "Stroj",
+  remaining_strength = "Zbývá",
+  close = "Zavřít",
+  total_strength = "Celk. výdrž",
 }
 diseases = {
   jellyitis = {
@@ -1977,6 +2048,7 @@ menu_list_window = {
   back = "Zpět",
   save_date = "Uloženo",
   name = "Název",
+  ok = "OK",
 }
 misc = {
   low_res = "Nízké rozli.",
@@ -2000,6 +2072,13 @@ misc = {
   out_of_sync = "Hra není synchronizována",
   save_failed = "CHYBA: Hru se nepovedlo uložit",
   load_failed = "CHYBA: Uloženou hru nelze načíst",
+  epidemics_off = "Epidemie jsou vypnuty. Žádné další epidemie nevzniknou",
+  earthquakes_off = "Zemětřesení jsou vypnuta",
+  earthquakes_on = "Zemětřesení jsou opět zapnuta",
+  epidemics_on = "Epidemie jsou opět zapnuty",
+  epidemic_no_icon_to_toggle = "Nebylo možné ukázat/schovat ikony nakažení - žádná probíhající neodhalená epidemie",
+  epidemic_no_diseases = "Nelze vytvořit epidemii - zatím nebyla odhalena žádná nakažlivá choroba",
+  epidemic_no_receptionist = "Nelze vytvořit epidemii - nemáte Recepci nebo Recepční",
 }
 progress_report = {
   win_criteria = "KRITÉRIA VÍTĚZSTVÍ",
@@ -2606,6 +2685,7 @@ queue_window = {
 }
 debug_patient_window = {
   caption = "Pacient pro ladění",
+  item = "Vytvoří ladicího pacienta s %s",
 }
 totd_window = {
   next = "Další Rada",
@@ -2630,6 +2710,7 @@ totd_window = {
     [17] = "Pacienti budou mít žízeň, zatímco čekají ve vaší nemocnici, a pokud zvýšite teplotu, bude žízeň ještě vyšší! Umístěte Automaty na Nápoje ve strategických pozicích pro správnou hydrataci.",
     [18] = "Můžete předčasně ukončit proces vyšetření a hádat léčbu, pokud jste se již s nemocí setkali. Uvědomte si ale, že toto může zvýšit riziko špatné léčby, což způsobí smrt pacienta.",
     [19] = "Pohotovost může být dobrým zdrojem peněz navíc, za předpokladu, že máte dostatečné kapacity na včasné zvládnutí pacientů pohotovosti.",
+	[20] = "Věděli jste, že můžete Údržbářům nastavit parcely, kde mají pracovat? Stačí v jejich profilu kliknout na text „Všude“ a postupně se proklikat k parcele, kde má Údržbář pracovat.",
   },
 }
 information = {
@@ -2645,6 +2726,8 @@ information = {
     balance = "Stav vašeho účtu klesl pod bod mrazu, přitom nejhůře měl být %d.",
     percentage_killed = "Jsme nemocnice, ne jatka. Nesmíte zabít více než %d %% pacientů.",
     cheat = "Snad to víte sami. A pokud ne, tak si propříště cheaty pořádně pročtěte.",
+    staff_happiness = "Průměrná spokojenost zaměstnanců v nemocnici spadla pod %d%.",
+    patient_happiness = "Průměrná spokojenost pacientů v nemocnici spadla pod %d%.",
   },
 }
 errors = {
@@ -2665,6 +2748,26 @@ errors = {
   compatibility_error = {
     new_in_old = "Pozor! Tato hra byla uložena v novější verzi CorsixTH a není s touto kompatibilní. Pro hraní aktualizujte na novější verzi CorsixTH.",
   },
+  cannot_restart_missing_files = "Tato úroveň nemůže být restartována, protože chybí soubory %s nebo %s.",
+  missing_th_data_file = "Varování: Nepovedlo se najít soubor %s, data ze hry Theme Hospital nejsou kompletní.",
+  missing_level_file = "CHYBA: Nepovedlo se najít soubor vybrané úrovně.",
+  compatibility_error = {
+    demo_in_full = "Nelze otevřít hru z demo verze, když máte nastavené soubory z plné verze hry Theme Hospital. Můžete však vybrat složku obsahující demo verzi v Nastavení > Umístění složek > Data TH.",
+	full_in_demo = "Nelze otevřít hru z plné verze, když máte nastavené soubory z demo verze hry Theme Hospital. Můžete však vybrat složku obsahující plnou verzi v Nastavení > Umístění složek > Data TH.",
+  },
+  music = "Při přehrávání některých souborů hudby došlo k potížím. Tyto soubory se v Jukeboxu zakázány. Pro více informací se podívejte do konzole hry.",
+  load_level_prefix = "CHYBA při načítání úrovně: ",
+  missing_corsixth_file = "Varování: Nepovedlo se najít soubor %s, zkuste přeinstalovat CorsixTH.",
+  load_map_prefix = "CHYBA při načítání mapy: ",
+  overlay = {
+    incorrect_difficulty = "Obtížnost musí být nastavená na lehkou (easy), střední (full) nebo těžkou (hard). Nyní je nastavena na ",
+	missing_setting = "Nebyla nastavena obtížnost ani číslo úrovně v této vlastní úrovni.",
+	incorrect_level_number = "Číslo úrovně musí být 1-12. Nyní je nastaveno na ",
+  },
+  recoverable = "Nastala CHYBA. Jedná se o obecnou chybu - pro detaily zkontrolujte konzoli hry. Chcete zkusit pokračovat ve hře?",
+  fatal_can_reset = "Nastala KRITICKÁ CHYBA. Hra nemůže pokračovat. Zmáčkněte klávesu 'X' pro restartování programu. Poslední automatické uložení bylo nejspíše Autosave%d.// Budeme rádi, když tuto chybu nahlásíte vývojářům CorsixTH. Ke krátkému popisu chyby přiložte i tento log soubor://",
+  fatal_can_debug = "Nastala KRITICKÁ CHYBA. Hra nemůže pokračovat. Poslední automatické uložení bylo nejspíše Autosave%d.// Pokud jste vývojář a chcete ladit program, zmáčkněte 'X' pro zavření tohoto okna. Budeme rádi, když tuto chybu nahlásíte vývojářům CorsixTH. Ke krátkému popisu chyby přiložte i tento log soubor://",
+  fatal_cant_reset = "Nastala KRITICKÁ CHYBA. Hra nemůže pokračovat. Prosím, ukončete program, poté jej můžete spustit znovu. Poslední automatické uložení bylo nejspíše Autosave%d.// Budeme rádi, když tuto chybu nahlásíte vývojářům CorsixTH. Ke krátkému popisu chyby přiložte i tento log soubor://"
 }
 menu = {
   charts = "  PŘEHLEDY  ",
@@ -2746,10 +2849,13 @@ menu_debug = {
   debug_script = "    (%1%) SPUSTIT SKRIPT PRO LADĚNÍ  ",
   connect_debugger = "    (%1%) PŘIPOJIT LUA DBGp SERVER  ",
   allow_blocking_off_areas = "    POVOLIT VYBLOKOVÁNÍ OBLASTÍ  ",
+  allow_falling = "    POVOLIT PADÁNÍ  ",
 }
 save_game_window = {
   caption = "Uložit hru (%1%)",
   new_save_game = "Zadejte název hry",
+  save_button = "Uložit",
+  missing_filename = "Prosím, napište jméno nové uložené hry nebo vyberte hru, kterou chcete přepsat.",
 }
 main_menu = {
   custom_level = "Vytvořená úroveň",
@@ -2820,7 +2926,7 @@ letter = {
   [11] = {
     [1] = "Vážený/á %s\n\n",
     [2] = "Vaše kariéra byla ukázková, a Vy jste inspirací pro nás všechny. Děkujeme, že jste spravovali tolik nemocnic a v každé si tak dobře vedli. Chtěli bychom Vám darovat doživotní plat %d$, a přitom bychom od Vás chtěli pouze, abyste cestovali oficiálním autem s otevřenou střechou od města k městu a přednášeli veřejnosti o tom, jak jste dosáhli takového úspěchu tak rychle.\n\n",
-    [3] = "Jste příklad pro každého správně smýšlejícího člověka, a to bez výjimky. Všichni na světě Vás považují za přínosného člověka.\n\n",
+    [3] = "Jste příkladem pro každého správně smýšlejícího člověka, a to bez výjimky. Všichni na světě Vás považují za přínosného člověka.\n\n",
     [4] = "",
   },
   [12] = {
@@ -2909,6 +3015,11 @@ fax = {
       [13] = "To nebyla skládka? Udělám cokoliv budu moct, aby vám to tu zavřeli!",
       [14] = "Doteď jsem neviděl takto otřesnou nemocnici. Jaká ostuda!",
       [15] = "To je děs! Tomuto jako říkáte nemocnice? S tím se střízlivý nevypořádám.",
+      free_build = {
+        [1] = "Zařídili jste fakt pěkný špitál! Ale asi to není tak těžké, když nemusíte řešit čísla v bance, co?",
+        [2] = "Nejsem žádný ekonom, ale myslím si, že bych tuto nemocnici finančně uřídil taky, jestli si rozumíme...",
+        [3] = "Krásně běžící nemocnice. Jen si dávejte bacha na pád burzy! Vlastně... to vás nějak moc netrápí.",
+      },
     },
     close_text = "Děkuji za návštěvu nemocnice.",
     cash_grant = "Byl Vám darován peněžní dar ve výši %d.",
@@ -3057,7 +3168,7 @@ graphs = {
   deaths = "Úmrtí",
   balance = "Stav účtu",
   money_in = "Příjmy",
-  money_out = "Výdeje",
+  money_out = "Výdaje",
   reputation = "Reputace",
 }
 staff_list = {
@@ -3084,7 +3195,7 @@ introduction_texts = {
     "Nyní máte před sebou opravdu náročnou výzvu. " ..
     "Ohromeni vaším úspěchem, Ministerstvo má pro vás špičkovou práci; chtějí, aby někdo postavil tu nejlepší nemocnici, vydělal obrovské množství penízků a měl neposkvrněnou reputaci. " ..
     "Očekává se, že také koupíte všechny pozemky, které můžete, všechno vyléčíte (a tím myslíme opravdu všechno) a vyhrajete všechna ocenění. " ..
-    "Myslíte, že na to máte?" ..
+    "Myslíte, že na to máte? " ..
     "Vydělejte 650 000$, vylečte 750 lidí a mějte reputaci alespoň 800, abyste obhájili své správcovské dovednosti.",
   level17 =
     "Malé varování - opravdu si hlídejte vaši reputaci - zkušenosti okolí jsou to, co ovlivní kolik lidí z kraje vloží svůj osud do vašich rukou. " ..
@@ -3202,6 +3313,7 @@ menu_charts = {
   status        = "  (%1%) POSTUP V ÚROVNI  ",
   graphs        = "  (%1%) GRAFY  ",
   policy        = "  (%1%) PRAVIDLA  ",
+  machine_menu  = "  (%1%) SPRÁVA STROJŮ  ",
   briefing      = "  ÚVOD DO ÚROVNĚ  ",
 }
 level_progress = {
@@ -3252,6 +3364,10 @@ options_window = {
   option_enabled = "Povoleno",
   option_disabled = "Zakázáno",
   check_for_updates = "Kontrola aktualizací",
+  right_mouse_scrolling = "Scrolling myší",
+  right_mouse_scrolling_option_middle = "Prostřední tlač. myši",
+  jukebox = "Jukebox",
+  right_mouse_scrolling_option_right = "Pravé tlač. myši",
 }
 folders_window = {
   new_th_location = "Zde můžete vybrat novou instalační složku Theme Hospital. Jakmile ji zvolíte, hra bude restartována.",
@@ -3390,6 +3506,8 @@ hotkey_window = {
   button_gameSpeedKeys = "Zkratky rychlosti hry",
   ingame_reset_zoom = "Obnovit výchozí přiblížení",
   panel_storePosKeys = "Uložit pozici kamery",
+  ingame_panel_machineMenu = "Správa strojů",
+  ingame_toggleTransparent = "Vypnout/zapnout průhlednost stěn",
 }
 update_window = {
   caption = "Vyšla nová verze CorsixTH!",
@@ -3415,6 +3533,7 @@ customise_window = {
 custom_campaign_window = {
   caption = "Vlastní kampaň",
   start_selected_campaign = "Spustit kampaň",
+  duplicates_warning = "%d kampaní se stejnými jmény bylo skryto (nesmějí mít stejná jména).",
 }
 warnings = {
   levelfile_variable_is_deprecated = "Upozornění: Úroveň '%s' obsahuje starý formát definice nastavení." ..
@@ -3452,11 +3571,19 @@ map_editor_window = {
     camera_2 = "Kamera 2",
     west_wall = "Západní zdi",
     heliport_1 = "Heliport 1",
+	parcel = "Parcela %d",
+	set_parcel_tooltip = "Vepište číslo a potvrďte Enterem.",
+	set_parcel = "Nastavit č. parcely",
+  },
+  checks = {
+    spawn_points_and_path = "Varování: Pacienti se nemohou dostat do nemocnice. Potřebují políčka 'Silnice' nebo šedá políčka 'Vnějších prostor' na okraji mapy a nepřerušenou cestu z těchto políček až ke dveřím nemocnice."
   },
 }
 save_map_window = {
   new_map = "Nová mapa",
   caption = "Uložit mapu (%1%)",
+  save_button = "Uložit",
+  missing_filename = "Prosím, napište jméno nové uložené mapy nebo vyberte mapy, kterou chcete přepsat.",
 }
 menu_player_count = {
   players_1 = "  1 HRÁČ  ",
@@ -3464,107 +3591,3 @@ menu_player_count = {
   players_3 = "  3 HRÁČI  ",
   players_4 = "  4 HRÁČI  ",
 }
-
-misc.epidemics_off = "Epidemie jsou vypnuty. Žádné další epidemie nevzniknou"
-misc.earthquakes_off = "Zemětřesení jsou vypnuta"
-misc.earthquakes_on = "Zemětřesení jsou opět zapnuta"
-misc.epidemics_on = "Epidemie jsou opět zapnuty"
-misc.epidemic_no_icon_to_toggle = "Nebylo možné ukázat/schovat ikony nakažení - žádná probíhající neodhalená epidemie"
-misc.epidemic_no_diseases = "Nelze vytvořit epidemii - zatím nebyla odhalena žádná nakažlivá choroba"
-misc.epidemic_no_receptionist = "Nelze vytvořit epidemii - nemáte Recepci nebo Recepční"
-totd_window.tips[20] = "Věděli jste, že můžete Údržbářům nastavit parcely, kde mají pracovat? Stačí v jejich profilu kliknout na text „Všude“ a postupně se proklikat k parcele, kde má Údržbář pracovat."
-menu_list_window.ok = "OK"
-menu_charts.machine_menu = "  (%1%) SPRÁVA STROJŮ  "
-load_map_window.caption = "Načíst mapu (%1%)"
-load_map_window.load_button = "Načíst"
-map_editor_window.pages.parcel = "Parcela %d"
-map_editor_window.pages.set_parcel_tooltip = "Vepište číslo a potvrďte Enterem."
-map_editor_window.pages.set_parcel = "Nastavit č. parcely"
-map_editor_window.checks.spawn_points_and_path = "Varování: Pacienti se nemohou dostat do nemocnice. Potřebují políčka 'Silnice' nebo šedá políčka 'Vnějších prostor' na okraji mapy a nepřerušenou cestu z těchto políček až ke dveřím nemocnice."
-cheats_window.cheats.toggle_earthquake = "Vypnout/zapnout zemětřesení"
-cheats_window.cheats.max_reputation = "Max reputace"
-cheats_window.cheats.toggle_epidemic = "Vypnout/zapnout epidemie"
-cheats_window.cheats.show_infected = "Ukázat/Skrýt ikony nakažení"
-cheats_window.cheats.reset_death_count = "Resetovat počet úmrtí"
-save_game_window.save_button = "Uložit"
-save_game_window.missing_filename = "Prosím, napište jméno nové uložené hry nebo vyberte hru, kterou chcete přepsat."
-errors.cannot_restart_missing_files = "Tato úroveň nemůže být restartována, protože chybí soubory %s nebo %s."
-errors.missing_th_data_file = "Varování: Nepovedlo se najít soubor %s, data ze hry Theme Hospital nejsou kompletní."
-errors.missing_level_file = "CHYBA: Nepovedlo se najít soubor vybrané úrovně."
-errors.compatibility_error.demo_in_full = "Nelze otevřít hru z demo verze, když máte nastavené soubory z plné verze hry Theme Hospital. Můžete však vybrat složku obsahující demo verzi v Nastavení > Umístění složek > Data TH."
-errors.compatibility_error.full_in_demo = "Nelze otevřít hru z plné verze, když máte nastavené soubory z demo verze hry Theme Hospital. Můžete však vybrat složku obsahující plnou verzi v Nastavení > Umístění složek > Data TH."
-errors.music = "Při přehrávání některých souborů hudby došlo k potížím. Tyto soubory se v Jukeboxu zakázány. Pro více informací se podívejte do konzole hry."
-errors.load_level_prefix = "CHYBA při načítání úrovně: "
-errors.missing_corsixth_file = "Varování: Nepovedlo se najít soubor %s, zkuste přeinstalovat CorsixTH."
-errors.load_map_prefix = "CHYBA při načítání mapy: "
-errors.overlay.incorrect_difficulty = "Obtížnost musí být nastavená na lehkou (easy), střední (full) nebo těžkou (hard). Nyní je nastavena na "
-errors.overlay.incorrect_level_number = "Číslo úrovně musí být 1-12. Nyní je nastaveno na "
-errors.overlay.missing_setting = "Nebyla nastavena obtížnost ani číslo úrovně v této vlastní úrovni."
-information.level_lost.staff_happiness = "Průměrná spokojenost zaměstnanců v nemocnici spadla pod %d%."
-information.level_lost.patient_happiness = "Průměrná spokojenost pacientů v nemocnici spadla pod  %d%."
-machine_menu.percentage = "%d%"
-machine_menu.ratio = "Poměr"
-machine_menu.machine = "Stroj"
-machine_menu.remaining_strength = "Zbývá"
-machine_menu.close = "Zavřít"
-machine_menu.total_strength = "Celk. výdrž"
-hotkey_window.ingame_panel_machineMenu = "Správa strojů"
-hotkey_window.ingame_toggleTransparent = "Vypnout/zapnout průhlednost stěn"
-options_window.right_mouse_scrolling = "Scrolling myší"
-options_window.right_mouse_scrolling_option_middle = "Prostřední tlač. myši"
-options_window.jukebox = "Jukebox"
-options_window.right_mouse_scrolling_option_right = "Pravé tlač. myši"
-dynamic_info.object.strength_extra_info = "Výdrž %d (Vyzkoumatelná až %d)"
-save_map_window.save_button = "Uložit"
-save_map_window.missing_filename = "Prosím, napište jméno nové uložené mapy nebo vyberte mapy, kterou chcete přepsat."
-custom_campaign_window.duplicates_warning = "%d kampaní se stejnými jmény bylo skryto (nesmějí mít stejná jména)."
-adviser.staff_place_advice.not_enough_lecture_chairs = "Každý žák potřebuje svoji vlastní Učební lavici, aby si měl kam sednout."
-adviser.cheats.norest_off_cheat = "Už bylo na čase! Snad teď bude větší klid. Zaměstnanci opět budou odpočívat jako obvykle."
-adviser.cheats.norest_on_cheat = "Ale ne! Vaši zaměstnanci objevili skládku kávy a kratomu a nepotřebují žádný odpočinek."
-adviser.warnings.no_doctor_no_gp_office = "Možná je na čase postavit Kancelář Praktického Lékaře a někoho v ní i zaměstnat."
-adviser.warnings.cannot_buy = "Tohoto si již více koupit nemůžete!"
-adviser.warnings.cannot_afford_machine = "Potřebujete alespoň $%1% na vašem účtu, abyste si mohli koupit novou %2%!"
-adviser.warnings.no_gp_office = "Trochu vám tu chybí Kancelář Praktického Lékaře, ve které mohou Doktoři diagnostikovat pacienty."
-fax.vip_visit_result.remarks.free_build[1] = "Zařídili jste fakt pěkný špitál! Ale asi to není tak těžké, když nemusíte řešit čísla v bance, co?"
-fax.vip_visit_result.remarks.free_build[2] = "Nejsem žádný ekonom, ale myslím si, že bych tuto nemocnici finančně uřídil taky, jestli si rozumíme..."
-fax.vip_visit_result.remarks.free_build[3] = "Krásně běžící nemocnice. Jen si dávejte bacha na pád burzy! Vlastně... to vás nějak moc netrápí."
-menu_debug.allow_falling = "    POVOLIT PADÁNÍ  "
-load_game_window.load_button = "Načíst"
-confirmation.restart_mapeditor = "Opravdu chcete restartovat editor map?"
-confirmation.replace_machine_extra_info = "Výdrž nového stroje bude %d (nyní je %d)."
-confirmation.quit_mapeditor = "Opravdu chcete odejít z editoru map?"
-tooltip.custom_campaign_window.duplicates_warning = "Podívejte se do konzole pro specifické chyby"
-tooltip.cheats_window.cheats.toggle_earthquake = "Vypne/zapne zemětřesení"
-tooltip.cheats_window.cheats.max_reputation = "Nastaví reputaci nemocnice na maximum"
-tooltip.cheats_window.cheats.toggle_epidemic = "Vypne/zapne možnost epidemií"
-tooltip.cheats_window.cheats.show_infected = "Ukáže/Skryje ikony u nakažených pacientů aktivní, odhalené epidemie"
-tooltip.cheats_window.cheats.reset_death_count = "Nastaví počet úmrtí v nemocnici na 0"
-tooltip.menu_list_window.ok = "Potvrdit volby"
-tooltip.debug_patient_window.item = "Vytvoří ladicího pacienta s %s"
-tooltip.status.over.staff_happiness = "Průměrná spokojenost vašich zaměstnanců by měla být přes %d%. Nyní je %d%"
-tooltip.status.over.patient_happiness = "Průměrná spokojenost vašich pacientů by měla být přes %d%. Nyní je %d%"
-tooltip.status.under.staff_happiness = "Průměrná spokojenost vašich zaměstnanců by neměla být nižší než %d%. Nyní je %d%"
-tooltip.status.under.patient_happiness = "Průměrná spokojenost vašich pacientů by neměla být nižší než %d%. Nyní je %d%"
-tooltip.machine_menu.smoking = "Toto políčko je zaškrtnuté pokud tomuto stroji hrozí výbuch. Kliknutím koupíte nový stroj a nahradíte jím starý."
-tooltip.machine_menu.remaining_strength = "Tato hodnota ukazuje, kolik použití tento stroj ještě snese před opravou."
-tooltip.machine_menu.header.smoking = "Kontrolka nebezpečí"
-tooltip.machine_menu.header.remaining_strength = "Zbývající výdrž do nutné opravy."
-tooltip.machine_menu.header.machine = "Typ stroje"
-tooltip.machine_menu.header.ratio = "Poměr zbývající výdrže k celkové výdrži stroje."
-tooltip.machine_menu.header.total_strength = "Celková výdrž stroje do první opravy."
-tooltip.machine_menu.header.assigned = "Kontrolka přidělení opravy stroje."
-tooltip.machine_menu.close = "Zavře okno správy strojů"
-tooltip.machine_menu.sort = "Klikněte pro seřazení dle této hodnoty."
-tooltip.machine_menu.machine = "Seznam strojů - klikněte na stroj pro otevření jeho okna s informacemi a umístění kamery na něj."
-tooltip.machine_menu.ratio = "Tato hodnota ukazuje poměr zbývající výdrže k celkové výdrži stroje."
-tooltip.machine_menu.total_strength = "Tato hodnota ukazuje, kolik použití tento stroj jako nový snese před první opravou."
-tooltip.machine_menu.assigned = "Toto políčko je zaškrtnuté pokud je k opravě tohoto stroje přivolán Údržbář. Klikněte pro ukázání přiděleného Údržbáře."
-tooltip.hotkey_window.panel_globalKeys = "Nastavit klávesové zkratky použitelné v celém programu"
-tooltip.hotkey_window.panel_scrollKeys = "Nastavit klávesové zkratky pro pohyb kamery ve hře"
-tooltip.hotkey_window.panel_generalInGameKeys = "Nastavit klávesové zkratky použitelné během hry"
-tooltip.hotkey_window.panel_zoomKeys = "Nastavit klávesové zkratky pro přiblížení a oddálení"
-tooltip.hotkey_window.panel_toggleKeys = "Nastavit klávesové zkratky pro vypnutí/zapnutí věcí"
-tooltip.hotkey_window.panel_debugKeys = "Nastavit klávesové zkratky pro ladění (debugging)"
-tooltip.options_window.right_mouse_scrolling = "Přepnout tlačítko myši, kterým lze posouvat kameru"
-tooltip.options_window.language_dropdown_no_font = "Pro použití tohoto jazyka musíte vybrat font podporující tento jazyk v Nastavení > Umístění složek > Písmo"
-tooltip.options_window.jukebox = "Otevře Jukebox pro ovládání hudby ve hře"
