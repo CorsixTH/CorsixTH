@@ -900,6 +900,21 @@ int level_map::count_parcel_tiles(int iParcelId) const {
   return iTiles;
 }
 
+bool level_map::is_on_map(int x, int y) const {
+  return 0 <= x && x < _width && 0 <= y && y < height;
+}
+bool level_map::is_on_map(int index) const {
+  return index >= 0 && index < _width * height;
+}
+
+int level_map::encode_tile_index_unchecked(int x, int y) const {
+  return x + y * _width;
+}
+void level_map::decode_tile_index_unchecked(int index, int& x, int& y) const {
+  x = index % _width;
+  y = index / _width;
+}
+
 map_tile* level_map::get_tile(int iX, int iY) {
   if (0 <= iX && iX < width && 0 <= iY && iY < height) {
     return get_tile_unchecked(iX, iY);
