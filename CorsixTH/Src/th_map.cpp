@@ -746,14 +746,14 @@ void level_map::make_adjacency_matrix() {
   // Update the adjacency matrix using the parcel IDs of each cell.
   for (int iY = 0; iY < this->height; ++iY) {
     for (int iX = 0; iX < this->width; ++iX) {
-      const map_tile* thisCell = get_original_tile(iX, iY);
+      const map_tile* thisCell = get_original_tile_unchecked(iX, iY);
       // Test the cell immediately to the left, and above it.
       if (iX > 0) {
-        const map_tile* testedCell = get_original_tile(iX - 1, iY);
+        const map_tile* testedCell = get_original_tile_unchecked(iX - 1, iY);
         test_adj(parcel_adjacency_matrix, parcel_count, thisCell, testedCell);
       }
       if (iY > 0) {
-        const map_tile* testedCell = get_original_tile(iX, iY - 1);
+        const map_tile* testedCell = get_original_tile_unchecked(iX, iY - 1);
         test_adj(parcel_adjacency_matrix, parcel_count, thisCell, testedCell);
       }
     }
