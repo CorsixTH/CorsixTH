@@ -260,8 +260,6 @@ level_map::level_map() = default;
 
 level_map::~level_map() {
   set_overlay(nullptr, false);
-  delete[] cells;
-  delete[] original_cells;
   delete[] plot_owner;
   delete[] parcel_tile_counts;
   delete[] parcel_adjacency_matrix;
@@ -281,27 +279,20 @@ bool level_map::set_size(int iWidth, int iHeight) {
     return false;
   }
 
-  delete[] cells;
-  delete[] original_cells;
   delete[] parcel_adjacency_matrix;
   delete[] purchasable_matrix;
-  width = iWidth;
-  height = iHeight;
-  cells = nullptr;
-  cells = new (std::nothrow) map_tile[iWidth * iHeight];
-  original_cells = nullptr;
-  original_cells = new (std::nothrow) map_tile[iWidth * iHeight];
   parcel_adjacency_matrix = nullptr;
   purchasable_matrix = nullptr;
 
-  if (cells == nullptr || original_cells == nullptr) {
-    delete[] cells;
-    delete[] original_cells;
-    original_cells = nullptr;
-    cells = nullptr;
-    width = 0;
-    height = 0;
-    return false;
+  width = iWidth;
+  height = iHeight;
+  cells.clear();
+  original_cells.clear();
+  for (int x = 0; x < width; ++x) {
+    for (int y = 0; y < height; ++y) {
+      cells.emplace_back();
+      original_cells.emplace_back();
+    }
   }
 
   return true;
@@ -414,7 +405,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
   const uint8_t* pParcel = pData + parcel_offset;
   pData += 34;
 
-  cells->objects.clear();
+  cells[0].objects.clear();
   for (int iY = 0; iY < height; ++iY) {
     for (int iX = 0; iX < width; ++iX) {
       map_tile* pNode = get_tile_unchecked(iX, iY);
@@ -483,8 +474,10 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
         }
       }
 
-      // Copy the loaded data to the original map.
-      map_tile* pOriginalNode = original_cells + encode_tile_index_unchecked(iX, iY);
+      // Copy the loaded data to the original map. (Note that the original map
+      // is writable here.)
+      int tile_index = encode_tile_index_unchecked(iX, iY);
+      map_tile* pOriginalNode = &original_cells[tile_index];
       *pOriginalNode = *pNode;
 
       // Restore the north and west walls.
@@ -541,61 +534,55 @@ void level_map::save(const std::string& filename) {
   }
   aReverseBlockLUT[0] = 0;
 
-  for (map_tile *pNode = cells, *pLimitNode = pNode + width * height;
-       pNode != pLimitNode; ++pNode) {
+  for (const map_tile& node: cells) {
     // TODO: Nicer system for saving object data
-    aBuffer[iBufferNext++] = pNode->flags.tall_west ? 1 : 0;
+    aBuffer[iBufferNext++] = node.flags.tall_west ? 1 : 0;
     aBuffer[iBufferNext++] =
-        static_cast<uint8_t>(pNode->objects.empty() ? object_type::no_object
-                                                    : pNode->objects.front());
+        static_cast<uint8_t>(node.objects.empty() ? object_type::no_object
+                                                    : node.objects.front());
 
     // Blocks
     aBuffer[iBufferNext++] =
-        aReverseBlockLUT[pNode->tile_layers[tile_layer::ground] & 0xFF];
+        aReverseBlockLUT[node.tile_layers[tile_layer::ground] & 0xFF];
     aBuffer[iBufferNext++] =
-        aReverseBlockLUT[pNode->tile_layers[tile_layer::north_wall] & 0xFF];
+        aReverseBlockLUT[node.tile_layers[tile_layer::north_wall] & 0xFF];
     aBuffer[iBufferNext++] =
-        aReverseBlockLUT[pNode->tile_layers[tile_layer::west_wall] & 0xFF];
+        aReverseBlockLUT[node.tile_layers[tile_layer::west_wall] & 0xFF];
 
     // Flags (TODO: Set a few more flag bits?)
     uint8_t iFlags = 63;
-    if (pNode->flags.passable) {
+    if (node.flags.passable) {
       iFlags ^= 1;
     }
-    if (pNode->flags.buildable) {
+    if (node.flags.buildable) {
       iFlags ^= 2;
     }
-    if (pNode->flags.buildable_n) {
+    if (node.flags.buildable_n) {
       iFlags ^= 4;
     }
-    if (pNode->flags.buildable_e) {
+    if (node.flags.buildable_e) {
       iFlags ^= 8;
     }
-    if (pNode->flags.buildable_s) {
+    if (node.flags.buildable_s) {
       iFlags ^= 16;
     }
-    if (pNode->flags.buildable_w) {
+    if (node.flags.buildable_w) {
       iFlags ^= 32;
     }
 
     aBuffer[iBufferNext++] = iFlags;
-
     aBuffer[iBufferNext++] = 0;
-    iFlags = 16;
-    if (pNode->flags.hospital) {
-      iFlags ^= 16;
-    }
-    aBuffer[iBufferNext++] = iFlags;
+    aBuffer[iBufferNext++] = node.flags.hospital ? 0 : 16;
 
     if (iBufferNext == sizeof(aBuffer)) {
       os.write(reinterpret_cast<char*>(aBuffer), sizeof(aBuffer));
       iBufferNext = 0;
     }
   }
-  for (map_tile *pNode = cells, *pLimitNode = pNode + width * height;
-       pNode != pLimitNode; ++pNode) {
-    aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iParcelId & 0xFF);
-    aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iParcelId >> 8);
+  for (const map_tile& node: cells) {
+    aBuffer[iBufferNext++] = static_cast<uint8_t>(node.iParcelId & 0xFF);
+    aBuffer[iBufferNext++] = static_cast<uint8_t>(node.iParcelId >> 8);
+
     if (iBufferNext == sizeof(aBuffer)) {
       os.write(reinterpret_cast<char*>(aBuffer), sizeof(aBuffer));
       iBufferNext = 0;
@@ -880,12 +867,9 @@ int level_map::get_parcel_tile_count(int iParcelId) const {
 
 int level_map::count_parcel_tiles(int iParcelId) const {
   int iTiles = 0;
-  for (int iY = 0; iY < height; ++iY) {
-    for (int iX = 0; iX < width; ++iX) {
-      const map_tile* pNode = get_tile_unchecked(iX, iY);
-      if (pNode->iParcelId == iParcelId) {
-        iTiles++;
-      }
+  for (const map_tile& tile: cells) {
+    if (tile.iParcelId == iParcelId) {
+      iTiles++;
     }
   }
   return iTiles;
@@ -931,27 +915,26 @@ const map_tile* level_map::get_original_tile(int iX, int iY) const {
 }
 
 map_tile* level_map::get_tile_unchecked(int iX, int iY) {
-  return cells + encode_tile_index_unchecked(iX, iY);
+  return cells.data() + encode_tile_index_unchecked(iX, iY);
 }
 
 const map_tile* level_map::get_tile_unchecked(int iX, int iY) const {
-  return cells + encode_tile_index_unchecked(iX, iY);
+  return cells.data() + encode_tile_index_unchecked(iX, iY);
 }
 
 const map_tile* level_map::get_original_tile_unchecked(int iX, int iY) const {
-  return original_cells + encode_tile_index_unchecked(iX, iY);
+  return original_cells.data() + encode_tile_index_unchecked(iX, iY);
 }
 
 void level_map::set_block_sheet(sprite_sheet* pSheet) { wall_blocks = pSheet; }
 
 void level_map::set_all_wall_draw_flags(uint8_t iFlags) {
   uint16_t draw_flags = static_cast<uint16_t>(iFlags << 8);
-  map_tile* pNode = cells;
-  for (int i = 0; i < width * height; ++i, ++pNode) {
-    pNode->tile_layers[tile_layer::north_wall] = static_cast<uint16_t>(
-        (pNode->tile_layers[tile_layer::north_wall] & 0xFF) | draw_flags);
-    pNode->tile_layers[tile_layer::west_wall] = static_cast<uint16_t>(
-        (pNode->tile_layers[tile_layer::west_wall] & 0xFF) | draw_flags);
+  for (map_tile& tile: cells) {
+    tile.tile_layers[tile_layer::north_wall] = static_cast<uint16_t>(
+        (tile.tile_layers[tile_layer::north_wall] & 0xFF) | draw_flags);
+    tile.tile_layers[tile_layer::west_wall] = static_cast<uint16_t>(
+        (tile.tile_layers[tile_layer::west_wall] & 0xFF) | draw_flags);
   }
 }
 
@@ -1053,7 +1036,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
       2) For each tile, left to right, the west wall, then the late entities
   */
 
-  if (wall_blocks == nullptr || cells == nullptr) {
+  if (wall_blocks == nullptr || cells .empty()) {
     return;
   }
 
@@ -1218,7 +1201,7 @@ drawable* level_map::hit_test(int iTestX, int iTestY) const {
   // This function needs to hitTest each drawable object, in the reverse
   // order to that in which they would be drawn.
 
-  if (wall_blocks == nullptr || cells == nullptr) {
+  if (wall_blocks == nullptr || cells.empty()) {
     return nullptr;
   }
 
@@ -1303,8 +1286,8 @@ uint32_t level_map::thermal_neighbour(uint32_t& iNeighbourSum, bool canTravel,
   map_tile* pNeighbour = pNode + relative_idx;
 
   // Ensure the neighbour is within the map bounds
-  map_tile* pLimitNode = cells + width * height;
-  if (pNeighbour < cells || pNeighbour >= pLimitNode) {
+  const map_tile* pLimitNode = cells.data() + width * height;
+  if (pNeighbour < cells.data() || pNeighbour >= pLimitNode) {
     return 0;
   }
 
@@ -1360,26 +1343,25 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
   current_temperature_index ^= 1;
   const int iNewTemp = current_temperature_index;
 
-  map_tile* pLimitNode = cells + width * height;
-  for (map_tile* pNode = cells; pNode != pLimitNode; ++pNode) {
+  for (map_tile& tile: cells) {
     // Get average temperature of neighbour cells
     uint32_t iNeighbourSum = 0;
     uint32_t iNeighbourCount = 0;
 
     iNeighbourCount += thermal_neighbour(
-        iNeighbourSum, pNode->flags.can_travel_n, -width, pNode, iPrevTemp);
+        iNeighbourSum, tile.flags.can_travel_n, -width, &tile, iPrevTemp);
     iNeighbourCount += thermal_neighbour(
-        iNeighbourSum, pNode->flags.can_travel_s, width, pNode, iPrevTemp);
+        iNeighbourSum, tile.flags.can_travel_s, width, &tile, iPrevTemp);
     iNeighbourCount += thermal_neighbour(
-        iNeighbourSum, pNode->flags.can_travel_e, 1, pNode, iPrevTemp);
+        iNeighbourSum, tile.flags.can_travel_e, 1, &tile, iPrevTemp);
     iNeighbourCount += thermal_neighbour(
-        iNeighbourSum, pNode->flags.can_travel_w, -1, pNode, iPrevTemp);
+        iNeighbourSum, tile.flags.can_travel_w, -1, &tile, iPrevTemp);
 
     uint32_t iMergeTemp = 0;
     double mergeRatio = 100;
-    if (pNode->flags.hospital) {
+    if (tile.flags.hospital) {
       bool hasRadiator = false;
-      for (auto thob : pNode->objects) {
+      for (auto thob : tile.objects) {
         if (thob == object_type::radiator) {
           hasRadiator = true;
           break;
@@ -1398,12 +1380,12 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
     }
 
     // Diffuse 25% with neighbours
-    pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
+    tile.aiTemperature[iNewTemp] = tile.aiTemperature[iPrevTemp];
     if (iNeighbourCount != 0) {
-      merge_temperatures(*pNode, iNewTemp, iNeighbourSum / iNeighbourCount, 4);
+      merge_temperatures(tile, iNewTemp, iNeighbourSum / iNeighbourCount, 4);
     }
 
-    merge_temperatures(*pNode, iNewTemp, iMergeTemp, mergeRatio);
+    merge_temperatures(tile, iNewTemp, iMergeTemp, mergeRatio);
   }
 }
 
@@ -1497,27 +1479,26 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   pWriter->write_uint(height);
   pWriter->write_uint(current_temperature_index);
   integer_run_length_encoder oEncoder(6);
-  for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
-       pNode != pLimitNode; ++pNode) {
-    oEncoder.write(pNode->tile_layers[tile_layer::ground]);
-    oEncoder.write(pNode->tile_layers[tile_layer::north_wall]);
-    oEncoder.write(pNode->tile_layers[tile_layer::west_wall]);
-    oEncoder.write(pNode->tile_layers[tile_layer::ui]);
-    oEncoder.write(pNode->iParcelId);
-    oEncoder.write(pNode->iRoomId);
+  for (const map_tile& tile: cells) {
+    oEncoder.write(tile.tile_layers[tile_layer::ground]);
+    oEncoder.write(tile.tile_layers[tile_layer::north_wall]);
+    oEncoder.write(tile.tile_layers[tile_layer::west_wall]);
+    oEncoder.write(tile.tile_layers[tile_layer::ui]);
+    oEncoder.write(tile.iParcelId);
+    oEncoder.write(tile.iRoomId);
     // Flags include THOB values, and other things which do not work
     // well with run-length encoding.
-    pWriter->write_uint(static_cast<uint32_t>(pNode->flags));
-    pWriter->write_uint(pNode->aiTemperature[0]);
-    pWriter->write_uint(pNode->aiTemperature[1]);
-    pWriter->write_byte_stream(pNode->raw, map_tile::raw_length);
+    pWriter->write_uint(static_cast<uint32_t>(tile.flags));
+    pWriter->write_uint(tile.aiTemperature[0]);
+    pWriter->write_uint(tile.aiTemperature[1]);
+    pWriter->write_byte_stream(tile.raw, map_tile::raw_length);
 
     lua_rawgeti(L, luaT_upvalueindex(1), 2);
-    lua_pushlightuserdata(L, pNode->entities.next);
+    lua_pushlightuserdata(L, tile.entities.next);
     lua_rawget(L, -2);
     pWriter->write_stack_object(-1);
     lua_pop(L, 1);
-    lua_pushlightuserdata(L, pNode->oEarlyEntities.next);
+    lua_pushlightuserdata(L, tile.oEarlyEntities.next);
     lua_rawget(L, -2);
     pWriter->write_stack_object(-1);
     lua_pop(L, 2);
@@ -1526,14 +1507,12 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   oEncoder.pump_output(pWriter);
 
   oEncoder = integer_run_length_encoder(5);
-  for (map_tile *pNode = original_cells,
-                *pLimitNode = original_cells + width * height;
-       pNode != pLimitNode; ++pNode) {
-    oEncoder.write(pNode->tile_layers[tile_layer::ground]);
-    oEncoder.write(pNode->tile_layers[tile_layer::north_wall]);
-    oEncoder.write(pNode->tile_layers[tile_layer::west_wall]);
-    oEncoder.write(pNode->iParcelId);
-    oEncoder.write(static_cast<uint32_t>(pNode->flags));
+  for (const map_tile& tile: original_cells) {
+    oEncoder.write(tile.tile_layers[tile_layer::ground]);
+    oEncoder.write(tile.tile_layers[tile_layer::north_wall]);
+    oEncoder.write(tile.tile_layers[tile_layer::west_wall]);
+    oEncoder.write(tile.iParcelId);
+    oEncoder.write(static_cast<uint32_t>(tile.flags));
   }
   oEncoder.finish();
   oEncoder.pump_output(pWriter);
@@ -1596,69 +1575,65 @@ void level_map::depersist(lua_persist_reader* pReader) {
     }
   }
 
-  for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
-       pNode != pLimitNode; ++pNode) {
+  for (map_tile& tile: cells) {
     uint32_t f;
     if (!pReader->read_uint(f)) return;
 
-    pNode->flags = f;
+    tile.flags = f;
     if (iVersion >= 4) {
-      if (!pReader->read_uint(pNode->aiTemperature[0]) ||
-          !pReader->read_uint(pNode->aiTemperature[1])) {
+      if (!pReader->read_uint(tile.aiTemperature[0]) ||
+          !pReader->read_uint(tile.aiTemperature[1])) {
         return;
       }
     }
     if (iVersion >= 5) {
-      if (!pReader->read_byte_stream(pNode->raw, map_tile::raw_length)) return;
+      if (!pReader->read_byte_stream(tile.raw, map_tile::raw_length)) return;
     }
 
     if (!pReader->read_stack_object()) return;
-    pNode->entities.next = luaT_toanimationbase(L, -1);
-    if (pNode->entities.next) {
-      if (pNode->entities.next->prev != nullptr) {
+    tile.entities.next = luaT_toanimationbase(L, -1);
+    if (tile.entities.next) {
+      if (tile.entities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
       }
-      pNode->entities.next->prev = &pNode->entities;
+      tile.entities.next->prev = &tile.entities;
     }
     lua_pop(L, 1);
 
     if (!pReader->read_stack_object()) return;
-    pNode->oEarlyEntities.next = luaT_toanimationbase(L, -1);
-    if (pNode->oEarlyEntities.next) {
-      if (pNode->oEarlyEntities.next->prev != nullptr) {
+    tile.oEarlyEntities.next = luaT_toanimationbase(L, -1);
+    if (tile.oEarlyEntities.next) {
+      if (tile.oEarlyEntities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
       }
-      pNode->oEarlyEntities.next->prev = &pNode->oEarlyEntities;
+      tile.oEarlyEntities.next->prev = &tile.oEarlyEntities;
     }
     lua_pop(L, 1);
   }
 
   integer_run_length_decoder oDecoder(6, pReader);
-  for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
-       pNode != pLimitNode; ++pNode) {
-    pNode->tile_layers[tile_layer::ground] =
+  for (map_tile& tile: cells) {
+    tile.tile_layers[tile_layer::ground] =
         static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::north_wall] =
+    tile.tile_layers[tile_layer::north_wall] =
         static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::west_wall] =
+    tile.tile_layers[tile_layer::west_wall] =
         static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::ui] = static_cast<uint16_t>(oDecoder.read());
-    pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
-    pNode->iRoomId = static_cast<uint16_t>(oDecoder.read());
+    tile.tile_layers[tile_layer::ui] = static_cast<uint16_t>(oDecoder.read());
+    tile.iParcelId = static_cast<uint16_t>(oDecoder.read());
+    tile.iRoomId = static_cast<uint16_t>(oDecoder.read());
   }
 
   oDecoder = integer_run_length_decoder(5, pReader);
-  for (map_tile *pNode = original_cells,
-                *pLimitNode = original_cells + width * height;
-       pNode != pLimitNode; ++pNode) {
-    pNode->tile_layers[tile_layer::ground] =
+  for (map_tile& tile: original_cells) {
+    tile.tile_layers[tile_layer::ground] =
         static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::north_wall] =
+    tile.tile_layers[tile_layer::north_wall] =
         static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::west_wall] =
+    tile.tile_layers[tile_layer::west_wall] =
         static_cast<uint16_t>(oDecoder.read());
-    pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
-    pNode->flags = oDecoder.read();
+    tile.iParcelId = static_cast<uint16_t>(oDecoder.read());
+    tile.flags = oDecoder.read();
   }
 
   if (iVersion < 3) {
