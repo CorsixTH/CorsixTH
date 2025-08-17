@@ -453,7 +453,7 @@ class level_map {
 
   int count_parcel_tiles(int iParcelId) const;
 
-  std::vector<map_tile> cells{};  // Cells in the game.
+  std::vector<map_tile> cells{};           // Cells in the game.
   std::vector<map_tile> original_cells{};  // Originally loaded cells.
   sprite_sheet* wall_blocks{};
   map_overlay* overlay{};

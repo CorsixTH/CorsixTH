@@ -534,12 +534,11 @@ void level_map::save(const std::string& filename) {
   }
   aReverseBlockLUT[0] = 0;
 
-  for (const map_tile& node: cells) {
+  for (const map_tile& node : cells) {
     // TODO: Nicer system for saving object data
     aBuffer[iBufferNext++] = node.flags.tall_west ? 1 : 0;
-    aBuffer[iBufferNext++] =
-        static_cast<uint8_t>(node.objects.empty() ? object_type::no_object
-                                                    : node.objects.front());
+    aBuffer[iBufferNext++] = static_cast<uint8_t>(
+        node.objects.empty() ? object_type::no_object : node.objects.front());
 
     // Blocks
     aBuffer[iBufferNext++] =
@@ -579,7 +578,7 @@ void level_map::save(const std::string& filename) {
       iBufferNext = 0;
     }
   }
-  for (const map_tile& node: cells) {
+  for (const map_tile& node : cells) {
     aBuffer[iBufferNext++] = static_cast<uint8_t>(node.iParcelId & 0xFF);
     aBuffer[iBufferNext++] = static_cast<uint8_t>(node.iParcelId >> 8);
 
@@ -867,7 +866,7 @@ int level_map::get_parcel_tile_count(int iParcelId) const {
 
 int level_map::count_parcel_tiles(int iParcelId) const {
   int iTiles = 0;
-  for (const map_tile& tile: cells) {
+  for (const map_tile& tile : cells) {
     if (tile.iParcelId == iParcelId) {
       iTiles++;
     }
@@ -915,22 +914,22 @@ const map_tile* level_map::get_original_tile(int iX, int iY) const {
 }
 
 map_tile* level_map::get_tile_unchecked(int iX, int iY) {
-  return cells.data() + encode_tile_index_unchecked(iX, iY);
+  return &cells[encode_tile_index_unchecked(iX, iY)];
 }
 
 const map_tile* level_map::get_tile_unchecked(int iX, int iY) const {
-  return cells.data() + encode_tile_index_unchecked(iX, iY);
+  return &cells[encode_tile_index_unchecked(iX, iY)];
 }
 
 const map_tile* level_map::get_original_tile_unchecked(int iX, int iY) const {
-  return original_cells.data() + encode_tile_index_unchecked(iX, iY);
+  return &original_cells[encode_tile_index_unchecked(iX, iY)];
 }
 
 void level_map::set_block_sheet(sprite_sheet* pSheet) { wall_blocks = pSheet; }
 
 void level_map::set_all_wall_draw_flags(uint8_t iFlags) {
   uint16_t draw_flags = static_cast<uint16_t>(iFlags << 8);
-  for (map_tile& tile: cells) {
+  for (map_tile& tile : cells) {
     tile.tile_layers[tile_layer::north_wall] = static_cast<uint16_t>(
         (tile.tile_layers[tile_layer::north_wall] & 0xFF) | draw_flags);
     tile.tile_layers[tile_layer::west_wall] = static_cast<uint16_t>(
@@ -1036,7 +1035,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
       2) For each tile, left to right, the west wall, then the late entities
   */
 
-  if (wall_blocks == nullptr || cells .empty()) {
+  if (wall_blocks == nullptr || cells.empty()) {
     return;
   }
 
@@ -1343,19 +1342,19 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
   current_temperature_index ^= 1;
   const int iNewTemp = current_temperature_index;
 
-  for (map_tile& tile: cells) {
+  for (map_tile& tile : cells) {
     // Get average temperature of neighbour cells
     uint32_t iNeighbourSum = 0;
     uint32_t iNeighbourCount = 0;
 
-    iNeighbourCount += thermal_neighbour(
-        iNeighbourSum, tile.flags.can_travel_n, -width, &tile, iPrevTemp);
-    iNeighbourCount += thermal_neighbour(
-        iNeighbourSum, tile.flags.can_travel_s, width, &tile, iPrevTemp);
-    iNeighbourCount += thermal_neighbour(
-        iNeighbourSum, tile.flags.can_travel_e, 1, &tile, iPrevTemp);
-    iNeighbourCount += thermal_neighbour(
-        iNeighbourSum, tile.flags.can_travel_w, -1, &tile, iPrevTemp);
+    iNeighbourCount += thermal_neighbour(iNeighbourSum, tile.flags.can_travel_n,
+                                         -width, &tile, iPrevTemp);
+    iNeighbourCount += thermal_neighbour(iNeighbourSum, tile.flags.can_travel_s,
+                                         width, &tile, iPrevTemp);
+    iNeighbourCount += thermal_neighbour(iNeighbourSum, tile.flags.can_travel_e,
+                                         1, &tile, iPrevTemp);
+    iNeighbourCount += thermal_neighbour(iNeighbourSum, tile.flags.can_travel_w,
+                                         -1, &tile, iPrevTemp);
 
     uint32_t iMergeTemp = 0;
     double mergeRatio = 100;
@@ -1479,7 +1478,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   pWriter->write_uint(height);
   pWriter->write_uint(current_temperature_index);
   integer_run_length_encoder oEncoder(6);
-  for (const map_tile& tile: cells) {
+  for (const map_tile& tile : cells) {
     oEncoder.write(tile.tile_layers[tile_layer::ground]);
     oEncoder.write(tile.tile_layers[tile_layer::north_wall]);
     oEncoder.write(tile.tile_layers[tile_layer::west_wall]);
@@ -1507,7 +1506,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   oEncoder.pump_output(pWriter);
 
   oEncoder = integer_run_length_encoder(5);
-  for (const map_tile& tile: original_cells) {
+  for (const map_tile& tile : original_cells) {
     oEncoder.write(tile.tile_layers[tile_layer::ground]);
     oEncoder.write(tile.tile_layers[tile_layer::north_wall]);
     oEncoder.write(tile.tile_layers[tile_layer::west_wall]);
@@ -1575,7 +1574,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     }
   }
 
-  for (map_tile& tile: cells) {
+  for (map_tile& tile : cells) {
     uint32_t f;
     if (!pReader->read_uint(f)) return;
 
@@ -1612,7 +1611,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
   }
 
   integer_run_length_decoder oDecoder(6, pReader);
-  for (map_tile& tile: cells) {
+  for (map_tile& tile : cells) {
     tile.tile_layers[tile_layer::ground] =
         static_cast<uint16_t>(oDecoder.read());
     tile.tile_layers[tile_layer::north_wall] =
@@ -1625,7 +1624,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
   }
 
   oDecoder = integer_run_length_decoder(5, pReader);
-  for (map_tile& tile: original_cells) {
+  for (map_tile& tile : original_cells) {
     tile.tile_layers[tile_layer::ground] =
         static_cast<uint16_t>(oDecoder.read());
     tile.tile_layers[tile_layer::north_wall] =
