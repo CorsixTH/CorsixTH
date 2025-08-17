@@ -286,7 +286,7 @@ class level_map {
                            uint16_t iRadiatorTemperature);
 
   //! Get the map width (in tiles)
-  inline int get_width() const { return _width; }
+  inline int get_width() const { return width; }
 
   //! Get the map height (in tiles)
   inline int get_height() const { return height; }
@@ -459,7 +459,7 @@ class level_map {
   map_overlay* overlay{};
   bool owns_overlay{};
   int* plot_owner{};  // 0 for unowned, 1 for player 1, etc.
-  int _width{};
+  int width{};
   int height{};
   int player_count{};
   int initial_camera_x[4]{};
