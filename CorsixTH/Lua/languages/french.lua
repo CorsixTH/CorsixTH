@@ -920,7 +920,8 @@ customise_window = {
   aliens = "Extraterrestres",
   fractured_bones = "Fractures",
   average_contents = "Achats mémorisés",
-  remove_destroyed_rooms = "Supprimer les salles détruites"
+  remove_destroyed_rooms = "Supprimer les salles détruites",
+  machine_menu_button = "Bouton du menu des machines",
 }
 
 tooltip.customise_window = {
@@ -933,6 +934,7 @@ tooltip.customise_window = {
   average_contents = "Si vous voulez que le jeu se rappelle des articles supplémentaires que vous avez tendance à normalement magasiner pour une nouvelle salle, activer cette option",
   back = "Fermer ce menu et revenir au menu d'options",
   remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option"
+  machine_menu_button = "Si vous voulez avoir un bouton pour le menu des machines dans le panneau inférieur, activez cette option. Gardez à l'esprit que ce bouton ne sera pas disponible sur des petites résolutions d'écran.",
 }
 
 folders_window = {
