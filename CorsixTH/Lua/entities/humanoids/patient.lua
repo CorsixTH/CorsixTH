@@ -335,7 +335,7 @@ function Patient:isTreatmentEffective()
 end
 
 function Patient:isHaveMorePossibleDiagnosticRooms()
-  return not (#self.available_diagnosis_rooms == 0)
+  return #self.available_diagnosis_rooms ~= 0
 end
 
 --! Change patient internal state to "cured".
