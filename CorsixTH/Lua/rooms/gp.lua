@@ -159,9 +159,15 @@ function GPRoom:dealtWithPatient(patient)
     patient:queueAction(IdleAction())
   end
 
+  ----- BEGIN Save game compatibility -----
+  -- These function call are merely for save game compatibility.
+  -- For 0.69 gamesaves and below.
+  -- And they does not participate in the current game logic.
+  -- Do not move or edit
   if self.dealt_patient_callback then
     self.dealt_patient_callback(self.waiting_staff_member)
   end
+  ----- END Save game compatibility -----
   if self.staff_member then
     self:setStaffMembersAttribute("dealing_with_patient", false)
   end

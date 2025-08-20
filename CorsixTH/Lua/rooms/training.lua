@@ -173,7 +173,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
 
   if profile.humanoid_class == "Doctor" then
     if profile.is_consultant then
-      -- Consultant entered. Try to use the projector and/or skeleton
+      -- Consultant entered/placed in room. Try to use the projector
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "projector")
       local projector = obj
       -- If there is no other lecturer and the projector is available
@@ -189,7 +189,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
         humanoid:queueAction(MeanderAction())
       end
     else
-      -- Student entered
+      -- Student entered/placed in room
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "lecture_chair")
       local lecture_chair = obj
       -- If any chair available
