@@ -27,12 +27,12 @@ SOFTWARE.
 #include <SDL_mixer.h>
 #include <SDL_rwops.h>
 
+#include <array>
+#include <vector>
+
 //! Utility class for accessing Theme Hospital's SOUND-0.DAT
 class sound_archive {
  public:
-  sound_archive();
-  ~sound_archive();
-
   bool load_from_th_file(const uint8_t* pData, size_t iDataLength);
 
   //! Returns the number of sounds present in the archive
@@ -51,43 +51,21 @@ class sound_archive {
   SDL_RWops* load_sound(size_t iIndex);
 
  private:
-#if CORSIX_TH_USE_PACK_PRAGMAS
-#pragma pack(push)
-#pragma pack(1)
-#endif
-  struct sound_dat_file_header {
-    uint8_t unknown1[50];
-    uint32_t table_position;
-    uint32_t unknown2;
-    uint32_t table_length;
-    uint32_t table_position2;
-    uint8_t unknown3[112];
-    uint32_t table_position3;
-    uint32_t table_length2;
-    uint8_t unknown4[48];
-  } CORSIX_TH_PACKED_FLAGS;
-
   struct sound_dat_sound_info {
-    char sound_name[18];
+    std::array<char, 18> sound_name;
     uint32_t position;
-    uint32_t unknown1;
     uint32_t length;
-    uint16_t unknown2;
-  } CORSIX_TH_PACKED_FLAGS;
-#if CORSIX_TH_USE_PACK_PRAGMAS
-#pragma pack(pop)
-#endif
+  };
 
-  // TODO: header is only used in one function, should not be class variable.
-  sound_dat_file_header header;
-  sound_dat_sound_info* sound_files;
-  uint8_t* data;
-  size_t sound_file_count;
+  std::vector<uint8_t> data;
+  std::vector<sound_dat_sound_info> sound_files;
 };
 
 class sound_player {
  public:
   sound_player();
+  sound_player(const sound_player&) = delete;
+  sound_player& operator=(const sound_player&) = delete;
   ~sound_player();
 
   static sound_player* get_singleton();
