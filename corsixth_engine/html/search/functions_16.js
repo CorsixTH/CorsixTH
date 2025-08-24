@@ -27,8 +27,7 @@ var searchData=
   ['_7escoped_5fbuffer_24',['~scoped_buffer',['../classrender__target_1_1scoped__buffer.html#ac779ac872c54d8976e4c0bc268b2a52b',1,'render_target::scoped_buffer']]],
   ['_7escoped_5fclip_25',['~scoped_clip',['../classrender__target_1_1scoped__clip.html#a49288d7240233ceba92080d400fd7e04',1,'render_target::scoped_clip']]],
   ['_7escoped_5ftarget_5ftexture_26',['~scoped_target_texture',['../classrender__target_1_1scoped__target__texture.html#ab4ffb06e3306d8ff3d5f4e41652d03cd',1,'render_target::scoped_target_texture']]],
-  ['_7esound_5farchive_27',['~sound_archive',['../classsound__archive.html#a8abbc68ae1ba91aabb57c5162929db3d',1,'sound_archive']]],
-  ['_7esound_5fplayer_28',['~sound_player',['../classsound__player.html#a002ec77b9fd73012dee8f68ce480126d',1,'sound_player']]],
-  ['_7esprite_5fsheet_29',['~sprite_sheet',['../classsprite__sheet.html#a8550a1986215c9f0ed65bb9e2b88f4b2',1,'sprite_sheet']]],
-  ['_7eth_5fstring_5flist_30',['~th_string_list',['../classth__string__list.html#a72c22bb51236a1d8c6438033abbe8fad',1,'th_string_list']]]
+  ['_7esound_5fplayer_27',['~sound_player',['../classsound__player.html#a002ec77b9fd73012dee8f68ce480126d',1,'sound_player']]],
+  ['_7esprite_5fsheet_28',['~sprite_sheet',['../classsprite__sheet.html#a8550a1986215c9f0ed65bb9e2b88f4b2',1,'sprite_sheet']]],
+  ['_7eth_5fstring_5flist_29',['~th_string_list',['../classth__string__list.html#a72c22bb51236a1d8c6438033abbe8fad',1,'th_string_list']]]
 ];

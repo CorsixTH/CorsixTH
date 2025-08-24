@@ -72,10 +72,9 @@ var searchData=
   ['should_5fscale_5fbitmaps_69',['should_scale_bitmaps',['../classrender__target.html#a6f30868ba1e008b95d6ef7b3804995ac',1,'render_target']]],
   ['skip_70',['skip',['../classmemory__buffer.html#a7a48b757badf81c6bcc863517821174c',1,'memory_buffer']]],
   ['skip_5futf8_5fwhitespace_71',['skip_utf8_whitespace',['../th__strings_8cpp.html#a4af1659821787a84d0ebe1b25e852137',1,'skip_utf8_whitespace(const char *&amp;sString, const char *end):&#160;th_strings.cpp'],['../th__strings_8h.html#a4af1659821787a84d0ebe1b25e852137',1,'skip_utf8_whitespace(const char *&amp;sString, const char *end):&#160;th_strings.cpp']]],
-  ['sound_5farchive_72',['sound_archive',['../classsound__archive.html#a357fd76a604459fc5c7d83c8488409aa',1,'sound_archive']]],
-  ['sound_5fplayer_73',['sound_player',['../classsound__player.html#aefdca533df6ec423d01ceef5f0fff910',1,'sound_player']]],
-  ['sprite_5fsheet_74',['sprite_sheet',['../classsprite__sheet.html#abc5bd06af9a0b2f826c7e8012046b045',1,'sprite_sheet']]],
-  ['start_5fframe_75',['start_frame',['../classrender__target.html#a6111def8d036dfcec5066342142a69bc',1,'render_target']]],
-  ['start_5fnonoverlapping_5fdraws_76',['start_nonoverlapping_draws',['../classrender__target.html#aaec844843dbd4ca7fc31730ff0e6c466',1,'render_target']]],
-  ['stop_77',['stop',['../classmovie__player.html#a7db3b2490cb81125a4458f5b9fbd7a25',1,'movie_player']]]
+  ['sound_5fplayer_72',['sound_player',['../classsound__player.html#aefdca533df6ec423d01ceef5f0fff910',1,'sound_player::sound_player()'],['../classsound__player.html#a2d587fe74cdab86bdd8a79f37827a354',1,'sound_player::sound_player(const sound_player &amp;)=delete']]],
+  ['sprite_5fsheet_73',['sprite_sheet',['../classsprite__sheet.html#abc5bd06af9a0b2f826c7e8012046b045',1,'sprite_sheet']]],
+  ['start_5fframe_74',['start_frame',['../classrender__target.html#a6111def8d036dfcec5066342142a69bc',1,'render_target']]],
+  ['start_5fnonoverlapping_5fdraws_75',['start_nonoverlapping_draws',['../classrender__target.html#aaec844843dbd4ca7fc31730ff0e6c466',1,'render_target']]],
+  ['stop_76',['stop',['../classmovie__player.html#a7db3b2490cb81125a4458f5b9fbd7a25',1,'movie_player']]]
 ];
