@@ -522,8 +522,8 @@ function App:initLanguage()
   local exists = self.strings:checkLanguageExists(language)
   if not exists then
     -- Not existent language, revert to English.
-    err = "The game language set in the configuration file: " .. language ..
-          " was not valid. It has been reverted to English. Please select your" ..
+    err = "The game language set in the configuration file '" .. language ..
+          "' was not valid. It has been reverted to English. Please select your" ..
           " desired language from the Settings screen again."
     revertToEnglish()
   end
@@ -534,7 +534,7 @@ function App:initLanguage()
   else
     -- Font unavailable, revert to English.
     err = "The game language has been reverted to English because the desired" ..
-          " language: " .. language .. " could not be loaded. Please make sure" ..
+          " language '" .. language .. "' could not be loaded. Please make sure" ..
           " you have specified a font file in Settings-Folders-Font or the" ..
           " configuration file."
     revertToEnglish()
