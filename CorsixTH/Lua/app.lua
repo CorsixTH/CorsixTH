@@ -285,7 +285,7 @@ function App:init()
   corsixth.require("string_extensions")
   self.strings = Strings(self)
   self.strings:init()
-  local language_load_success = self:initLanguage()
+  local language_load_success, language_error = self:initLanguage()
   if (self.command_line.dump or ""):match("strings") then
     -- Specify --dump=strings on the command line to dump strings
     -- (or insert "true or" after the "if" in the above)
@@ -368,9 +368,7 @@ function App:init()
     if not language_load_success then
       -- At this point we know the language is english, so no use having
       -- localized strings.
-      self.ui:addWindow(UIInformation(self.ui, { "The game language has been reverted" ..
-          " to English because the desired language could not be loaded. " ..
-          "Please make sure you have specified a font file in the config file." }))
+      self.ui:addWindow(UIInformation(self.ui, { language_error }))
     end
 
     -- If the player wants to continue then load the youngest file in the Autosaves folder
@@ -506,21 +504,41 @@ function App:initScreenshotsDir()
   return true
 end
 
+--! Initialises the application's language based on the player's choice.
+--!return success (boolean) Whether the chosen language was initialised
+--!return err (string) What to report back to the player on failure
 function App:initLanguage()
   -- Make sure that we can actually show the desired language.
-  -- If we can't, then the player probably didn't specify a font file
-  -- in the config file properly.
-  local success = true
+  -- If we can't, work out the most common issue and reset to English.
+  local success, err = true, nil
   local language = self.config.language
+  local function revertToEnglish()
+    language = [[English]]
+    self.config.language = language
+    self:saveConfig()
+    success = false
+  end
+
+  local exists = self.strings:checkLanguageExists(language)
+  if not exists then
+    -- Not existent language, revert to English.
+    err = "The game language set in the configuration file '" .. language ..
+          "' was not valid. It has been reverted to English. Please select your" ..
+          " desired language from the Settings screen again."
+    revertToEnglish()
+  end
+
   local font = self.strings:getFont(language)
   if self.gfx:hasLanguageFont(font) then
     self.gfx.language_font = font
   else
-    -- Otherwise revert to english.
-    self.gfx.language_font = self.strings:getFont("english")
-    language = "english"
-    self.config.language = "english"
-    success = false
+    -- Font unavailable, revert to English.
+    err = "The game language has been reverted to English because the desired" ..
+          " language '" .. language .. "' could not be loaded. Please make sure" ..
+          " you have specified a font file in Settings-Folders-Font or the" ..
+          " configuration file."
+    revertToEnglish()
+    self.gfx.language_font = self.strings:getFont([[English]])
   end
 
   local strings, speech_file = self.strings:load(language)
@@ -553,7 +571,7 @@ function App:initLanguage()
     self.ui:onChangeLanguage()
   end
   self.audio:initSpeech(speech_file)
-  return success
+  return success, err
 end
 
 function App:worldExited()

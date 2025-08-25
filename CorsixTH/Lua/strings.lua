@@ -319,6 +319,13 @@ function Strings:getLocalisedText(string, table)
   end
 end
 
+--! Checks the language we specify is known to the application.
+--!param language (string) Language to check
+--!return true if known
+function Strings:checkLanguageExists(language)
+  return not not self.language_to_chunk[language:lower()]
+end
+
 function Strings:_loadPrivate(language, env, ...)
   local chunk = self.language_to_chunk[language:lower()]
   if not chunk then -- If selected language could not be found, try to revert to English
