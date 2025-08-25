@@ -124,10 +124,11 @@ void CopyStringCP936(const uint8_t*& sIn, uint8_t*& sOut) {
 
 }  // namespace
 
+// https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#strings
 th_string_list::th_string_list(const uint8_t* data, size_t length) {
   if (length < 2) throw std::invalid_argument("length must be 2 or larger");
 
-  size_t iSectionCount = *reinterpret_cast<const uint16_t*>(data);
+  size_t iSectionCount = bytes_to_uint16_le(data);
   size_t iHeaderLength = (iSectionCount + 1) * 2;
 
   if (length < iHeaderLength)
@@ -158,7 +159,8 @@ th_string_list::th_string_list(const uint8_t* data, size_t length) {
   uint8_t* sDataOut = string_buffer.data();
   sections.resize(iSectionCount);
   for (size_t i = 0; i < iSectionCount; ++i) {
-    size_t section_size = reinterpret_cast<const uint16_t*>(data)[i + 1];
+    size_t section_size_offset = (i + 1) * 2;
+    size_t section_size = bytes_to_uint16_le(data + section_size_offset);
     sections[i].reserve(section_size);
     for (size_t j = 0; j < section_size; ++j) {
       sections[i].push_back(reinterpret_cast<char*>(sDataOut));
