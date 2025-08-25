@@ -510,7 +510,7 @@ end
 function App:initLanguage()
   -- Make sure that we can actually show the desired language.
   -- If we can't, work out the most common issue and reset to English.
-  local success, err = true, ""
+  local success, err = true, nil
   local language = self.config.language
   local function revertToEnglish()
     language = [[English]]
