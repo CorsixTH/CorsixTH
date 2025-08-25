@@ -1375,7 +1375,7 @@ void animation::depersist(lua_persist_reader* pReader) {
       case 4:
         set_animation_kind(animation_kind::morph);
         pReader->read_stack_object();
-        morph_target = reinterpret_cast<animation*>(lua_touserdata(L, -1));
+        morph_target = static_cast<animation*>(lua_touserdata(L, -1));
         lua_pop(L, 1);
         break;
       case 5:
