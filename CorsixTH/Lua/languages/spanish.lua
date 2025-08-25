@@ -982,6 +982,7 @@ customise_window = {
   fractured_bones = "Fracturas óseas",
   average_contents = "Contenidos habituales",
   remove_destroyed_rooms = "Elimina habitaciones destruidas",
+  machine_menu_button = "Botón del menú de máquinas",
 }
 
 tooltip.customise_window = {
@@ -992,6 +993,7 @@ tooltip.customise_window = {
   aliens = "Debido a la falta de animaciones decentes disponibles, hemos hecho que los pacientes con ADN alienígena solo aparezcan en una emergencia. Para permitir que los pacientes con ADN alienígena puedan visitar tu hospital, desactiva esta opción.",
   fractured_bones = "Debido a una animación deficiente, hemos hecho que no existan pacientes con Fracturas óseas femeninas. Para permitir que las pacientes con Fracturas óseas visiten tu hospital, desactiva esta opción.",
   average_contents = "Activa esta opción si quieres que el juego recuerde los objetos adicionales que sueles añadir cuando construyes habitaciones.",
+  machine_menu_button = "Si quieres tener un botón para abrir el menú de máquinas en el panel inferior, activa esta opción. Tenga en cuenta que este botón no estará visible si la resolución de pantalla es pequeña.",
   back = "Cerrar este menú y volver al menú de opciones.",
 }
 
@@ -1395,6 +1397,10 @@ map_editor_window = {
   }
 }
 
+tooltip.toolbar = {
+  machine_menu = "Menú de máquinas",
+}
+
 machine_menu = {
   machine = "Máquina",
   remaining_strength = "Restante",
@@ -1421,10 +1427,6 @@ tooltip.machine_menu = {
     times_used = "Cantidad de veces que se ha usado la máquina.",
   },
   close = "Cerrar la lista de máquinas",
-}
-
-tooltip.machine_window = {
-  toggle_machine_menu = "Haga clic para desplegar el menú de máquinas",
 }
 
 hotkey_window = {

@@ -237,6 +237,11 @@ menu_player_count = {
   players_3 = "  3 PLAYERS  ",
   players_4 = "  4 PLAYERS  ",
 }
+
+tooltip.toolbar = {
+  machine_menu = "Machine menu",
+}
+
 adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
   warnings = {
@@ -526,6 +531,7 @@ customise_window = {
   fractured_bones = "Fractured Bones",
   average_contents = "Average Contents",
   remove_destroyed_rooms = "Remove destroyed rooms",
+  machine_menu_button = "Machine menu button",
 }
 
 tooltip.customise_window = {
@@ -537,6 +543,7 @@ tooltip.customise_window = {
   fractured_bones = "Because of a poor animation we have by default made it so there are no female patients with Fractured Bones. To allow female patients with Fractured Bones to visit your hospital, turn this off",
   average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",
   remove_destroyed_rooms = "If you would like to be able to remove destroyed rooms, for a fee, turn this option on",
+  machine_menu_button = "If you would like to have a machine menu button in bottom panel, turn this option on. Keep in mind that this button will not be available in small screen resolutions",
   back = "Close this menu and go back to the Settings Menu",
 }
 
@@ -942,10 +949,6 @@ tooltip.calls_dispatcher = {
   task = "List of tasks - click task to open assigned staff's window and scroll to location of task",
   assigned = "This box is marked if someone is assigned to the corresponding task.",
   close = "Close the calls dispatcher dialog",
-}
-
-tooltip.machine_window = {
-  toggle_machine_menu = "Click to open machine menu",
 }
 
 machine_menu = {

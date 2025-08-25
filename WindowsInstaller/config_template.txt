@@ -205,6 +205,12 @@ enable_avg_contents = false
 --
 remove_destroyed_rooms = false
 
+-------------------------------------------------------------------------------
+-- By default machine menu is shown in a bottom panel. If you would like the
+-- game to hide it change this option to false.
+--
+machine_menu_button = true
+
 ------------------------------- FOLDER SETTINGS -------------------------------
 -- These settings can also be changed from the Folders Menu
 -------------------------------------------------------------------------------

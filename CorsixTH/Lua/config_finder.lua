@@ -124,6 +124,7 @@ local config_defaults = {
   disable_fractured_bones_females = true,
   enable_avg_contents = false,
   remove_destroyed_rooms = false,
+  machine_menu_button = true,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
@@ -392,7 +393,13 @@ local string_01 = [=[
 -- By default destroyed rooms can't be removed. If you would like the game to
 -- give you the option of removing a destroyed room change this option to true.
 --]=] .. '\n' ..
-'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[]=]
+'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default machine menu is shown in a bottom panel. If you would like the
+-- game to hide it change this option to false.
+--]=] .. '\n' ..
+'machine_menu_button = ' .. tostring(config_values.machine_menu_button) .. '\n' .. [=[]=]
 
 local string_02 = [=[
 
