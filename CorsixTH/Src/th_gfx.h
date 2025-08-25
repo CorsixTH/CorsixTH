@@ -359,48 +359,6 @@ class animation_manager {
   void tick();
 
  private:
-#if CORSIX_TH_USE_PACK_PRAGMAS
-#pragma pack(push)
-#pragma pack(1)
-#endif
-  // Animation information structure reinterpreted from Theme Hospital data.
-  struct th_animation_properties {
-    uint16_t first_frame;
-    // It could be that frame is a uint32_t rather than a uint16_t, which
-    // would resolve the following unknown (which seems to always be zero).
-    uint16_t unknown;
-  } CORSIX_TH_PACKED_FLAGS;
-
-  // Frame information structure reinterpreted from Theme Hospital data.
-  struct th_frame_properties {
-    uint32_t list_index;
-    // These fields have something to do with width and height, but it's
-    // not clear quite exactly how.
-    uint8_t width;
-    uint8_t height;
-    // If non-zero, index into sound.dat filetable.
-    uint8_t sound;
-    // Combination of zero or more fame_flags values
-    uint8_t flags;
-    uint16_t next;
-  } CORSIX_TH_PACKED_FLAGS;
-
-  // Structure reinterpreted from Theme Hospital data.
-  struct th_element_properties {
-    uint16_t table_position;
-    uint8_t offx;
-    uint8_t offy;
-    // High nibble: The layer which the element belongs to
-    //              [0, max_number_of_layers)
-    // Low  nibble: Zero or more draw_flags
-    uint8_t flags;
-    // The layer option / layer id
-    uint8_t layerid;
-  } CORSIX_TH_PACKED_FLAGS;
-#if CORSIX_TH_USE_PACK_PRAGMAS
-#pragma pack(pop)
-#endif
-
   struct frame {
     size_t list_index;   ///< First entry in #element_list (pointing to an
                          ///< element) for this frame.

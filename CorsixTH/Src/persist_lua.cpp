@@ -67,7 +67,7 @@ template <class T>
 int l_crude_gc(lua_State* L) {
   // This __gc metamethod does not verify that the given value is the correct
   // type of userdata, or that the value is userdata at all.
-  reinterpret_cast<T*>(lua_touserdata(L, 1))->~T();
+  static_cast<T*>(lua_touserdata(L, 1))->~T();
   return 0;
 }
 
@@ -97,7 +97,7 @@ class load_multi_buffer {
   load_multi_buffer() = default;
 
   static const char* load_fn(lua_State* L, void* ud, size_t* size) {
-    load_multi_buffer* pThis = reinterpret_cast<load_multi_buffer*>(ud);
+    load_multi_buffer* pThis = static_cast<load_multi_buffer*>(ud);
 
     for (; pThis->n < 3; ++pThis->n) {
       if (pThis->i[pThis->n] != 0) {
@@ -1151,10 +1151,10 @@ int l_persist_dofile(lua_State* L) {
   size_t iBufferSize = lua_objlen(L, luaT_upvalueindex(1));
   size_t iBufferUsed = 0;
   while (!std::ferror(fFile) && !std::feof(fFile)) {
-    iBufferUsed += std::fread(
-        reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1))) +
-            iBufferUsed,
-        1, iBufferSize - iBufferUsed, fFile);
+    iBufferUsed +=
+        std::fread(static_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1))) +
+                       iBufferUsed,
+                   1, iBufferSize - iBufferUsed, fFile);
     if (iBufferUsed == iBufferSize) {
       iBufferSize *= 2;
       std::memcpy(lua_newuserdata(L, iBufferSize),
@@ -1171,8 +1171,7 @@ int l_persist_dofile(lua_State* L) {
   }
 
   // Check file
-  char* sFile =
-      reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
+  char* sFile = static_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
   sFile[iBufferUsed] = 0;
   if (sFile[0] == '#') {
     do {
@@ -1196,7 +1195,7 @@ int l_persist_dofile(lua_State* L) {
   std::memcpy(lua_newuserdata(L, iBufferUsed + 1), sFile, iBufferUsed + 1);
   lua_insert(L, -2);
   lua_call(L, 0, LUA_MULTRET);
-  sFile = reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
+  sFile = static_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
   std::memcpy(sFile, lua_touserdata(L, iBufferCopyIndex), iBufferUsed + 1);
   lua_remove(L, iBufferCopyIndex);
 

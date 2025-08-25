@@ -153,15 +153,41 @@ void animation_manager::set_sprite_sheet(sprite_sheet* pSpriteSheet) {
   sheet = pSpriteSheet;
 }
 
+constexpr size_t bytes_per_animation_property = 4;
+
+// Frame information structure reinterpreted from Theme Hospital data.
+// https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#frame
+struct th_frame_properties {
+  constexpr static size_t size = 10;
+  constexpr static size_t list_index_offset = 0;
+  constexpr static size_t sound_offset = 6;
+  constexpr static size_t flags_offset = 7;
+  constexpr static size_t next_offset = 8;
+};
+
+// Structure reinterpreted from Theme Hospital data.
+// https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#spriteelement
+struct th_element_properties {
+  constexpr static size_t size = 6;
+  constexpr static size_t table_position_offset = 0;
+  constexpr static size_t offset_x_offset = 2;
+  constexpr static size_t offset_y_offset = 3;
+
+  // High nibble: The layer which the element belongs to: [0,
+  // max_number_of_layers) Low nibble: Zero or more draw_flags
+  constexpr static size_t flags_offset = 4;
+  constexpr static size_t layer_id_offset = 5;
+};
+
 bool animation_manager::load_from_th_file(
     const uint8_t* pStartData, size_t iStartDataLength,
     const uint8_t* pFrameData, size_t iFrameDataLength,
     const uint8_t* pListData, size_t iListDataLength,
     const uint8_t* pElementData, size_t iElementDataLength) {
-  size_t iAnimationCount = iStartDataLength / sizeof(th_animation_properties);
-  size_t iFrameCount = iFrameDataLength / sizeof(th_frame_properties);
+  size_t iAnimationCount = iStartDataLength / bytes_per_animation_property;
+  size_t iFrameCount = iFrameDataLength / th_frame_properties::size;
   size_t iListCount = iListDataLength / 2;
-  size_t iElementCount = iElementDataLength / sizeof(th_element_properties);
+  size_t iElementCount = iElementDataLength / th_element_properties::size;
 
   if (iAnimationCount == 0 || iFrameCount == 0 || iListCount == 0 ||
       iElementCount == 0) {
@@ -195,8 +221,7 @@ bool animation_manager::load_from_th_file(
   // Read animations.
   for (size_t i = 0; i < iAnimationCount; ++i) {
     size_t iFirstFrame =
-        reinterpret_cast<const th_animation_properties*>(pStartData)[i]
-            .first_frame;
+        bytes_to_uint32_le(pStartData + i * bytes_per_animation_property);
     if (iFirstFrame > iFrameCount) {
       iFirstFrame = 0;
     }
@@ -207,16 +232,17 @@ bool animation_manager::load_from_th_file(
 
   // Read frames.
   for (size_t i = 0; i < iFrameCount; ++i) {
-    const th_frame_properties* pFrame =
-        reinterpret_cast<const th_frame_properties*>(pFrameData) + i;
+    const uint8_t* pFrame = pFrameData + i * th_frame_properties::size;
+    uint32_t listIndex =
+        bytes_to_uint32_le(pFrame + th_frame_properties::list_index_offset);
+    uint16_t nextFrame =
+        bytes_to_uint16_le(pFrame + th_frame_properties::next_offset);
 
     frame oFrame;
-    oFrame.list_index =
-        iListStart + (pFrame->list_index < iListCount ? pFrame->list_index : 0);
-    oFrame.next_frame =
-        iFrameStart + (pFrame->next < iFrameCount ? pFrame->next : 0);
-    oFrame.sound = pFrame->sound;
-    oFrame.flags = pFrame->flags;
+    oFrame.list_index = iListStart + (listIndex < iListCount ? listIndex : 0);
+    oFrame.next_frame = iFrameStart + (nextFrame < iFrameCount ? nextFrame : 0);
+    oFrame.sound = *(pFrame + th_frame_properties::sound_offset);
+    oFrame.flags = *(pFrame + th_frame_properties::flags_offset);
     // Bounding box fields initialised later
     oFrame.primary_marker_x = 0;
     oFrame.primary_marker_y = 0;
@@ -226,9 +252,9 @@ bool animation_manager::load_from_th_file(
     frames.push_back(oFrame);
   }
 
-  // Read element list.
+  // Read the element list.
   for (size_t i = 0; i < iListCount; ++i) {
-    uint16_t iElmNumber = *(reinterpret_cast<const uint16_t*>(pListData) + i);
+    uint16_t iElmNumber = bytes_to_uint16_le(pListData + i * 2);
     if (iElmNumber >= iElementCount) {
       iElmNumber = 0xFFFF;
     } else {
@@ -242,22 +268,30 @@ bool animation_manager::load_from_th_file(
   // Read elements.
   size_t iSpriteCount = sheet->get_sprite_count();
   for (size_t i = 0; i < iElementCount; ++i) {
-    const th_element_properties* pTHElement =
-        reinterpret_cast<const th_element_properties*>(pElementData) + i;
+    const uint8_t* pTHElement = pElementData + i * th_element_properties::size;
 
     element oElement;
-    oElement.sprite = pTHElement->table_position / 6;
-    oElement.flags = pTHElement->flags & 0xF;
-    oElement.x = static_cast<int>(pTHElement->offx) - 141;
-    oElement.y = static_cast<int>(pTHElement->offy) - 186;
+    oElement.sprite =
+        bytes_to_uint16_le(pTHElement +
+                           th_element_properties::table_position_offset) /
+        6;
+    oElement.flags = *(pTHElement + th_element_properties::flags_offset) &
+                     0xF;  // Low nibble, flags of the element.
+    oElement.x = static_cast<int>(
+                     *(pTHElement + th_element_properties::offset_x_offset)) -
+                 141;
+    oElement.y = static_cast<int>(
+                     *(pTHElement + th_element_properties::offset_y_offset)) -
+                 186;
     oElement.layer = static_cast<uint8_t>(
-        pTHElement->flags >> 4);  // High nibble, layer of the element.
+        *(pTHElement + th_element_properties::flags_offset) >>
+        4);  // High nibble, layer of the element.
 
     if (oElement.layer >= max_number_of_layers) {
       // Nothing lives on layer 6
       oElement.layer = 6;
     }
-    oElement.layer_id = pTHElement->layerid;
+    oElement.layer_id = *(pTHElement + th_element_properties::layer_id_offset);
     if (oElement.sprite < iSpriteCount) {
       oElement.element_sprite_sheet = sheet;
     } else {
@@ -1335,7 +1369,7 @@ void animation::depersist(lua_persist_reader* pReader) {
       case 4:
         set_animation_kind(animation_kind::morph);
         pReader->read_stack_object();
-        morph_target = reinterpret_cast<animation*>(lua_touserdata(L, -1));
+        morph_target = static_cast<animation*>(lua_touserdata(L, -1));
         lua_pop(L, 1);
         break;
       case 5:

@@ -84,7 +84,7 @@ int l_map_depersist(lua_State* L) {
 
 void l_map_load_obj_cb(void* pL, int iX, int iY, object_type eTHOB,
                        uint8_t iFlags) {
-  lua_State* L = reinterpret_cast<lua_State*>(pL);
+  lua_State* L = static_cast<lua_State*>(pL);
   lua_createtable(L, 4, 0);
 
   lua_pushinteger(L, 1 + (lua_Integer)iX);
@@ -921,8 +921,7 @@ int l_path_depersist(lua_State* L) {
 
   pPathfinder->depersist(pReader);
   luaT_getenvfield(L, 2, "map");
-  pPathfinder->set_default_map(
-      reinterpret_cast<level_map*>(lua_touserdata(L, -1)));
+  pPathfinder->set_default_map(static_cast<level_map*>(lua_touserdata(L, -1)));
   return 0;
 }
 
