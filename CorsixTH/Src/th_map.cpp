@@ -405,7 +405,6 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
   const uint8_t* pParcel = pData + parcel_offset;
   pData += 34;
 
-  cells[0].objects.clear();
   for (int iY = 0; iY < height; ++iY) {
     for (int iX = 0; iX < width; ++iX) {
       map_tile* pNode = get_tile_unchecked(iX, iY);
