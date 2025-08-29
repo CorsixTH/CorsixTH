@@ -701,12 +701,12 @@ handyman_window = {
   parcel = "Grundstück",
 }
 
-tooltip.handyman_window = {
-  parcel_select = "Der Arbeitsbereich des Handlangers. Klicken zum Ändern.",
+tooltip.toolbar = {
+  machine_menu = "Maschinenmenü",
 }
 
-tooltip.machine_window = {
-  toggle_machine_menu = "Klicke, um das Maschinenmenü umzuschalten",
+tooltip.handyman_window = {
+  parcel_select = "Der Arbeitsbereich des Handlangers. Klicken zum Ändern.",
 }
 
 new_game_window = {

@@ -590,6 +590,10 @@ menu_charts = {
   policy = "  (%1%) POLITIQUE "
 }
 
+tooltip.toolbar = {
+  machine_menu = "Menu des machines",
+}
+
 -- Debug menu
 menu_debug = {
   jump_to_level = "  ALLER AU NIVEAU  ",
@@ -916,7 +920,8 @@ customise_window = {
   aliens = "Extraterrestres",
   fractured_bones = "Fractures",
   average_contents = "Achats mémorisés",
-  remove_destroyed_rooms = "Supprimer les salles détruites"
+  remove_destroyed_rooms = "Supprimer les salles détruites",
+  machine_menu_button = "Bouton du menu des machines",
 }
 
 tooltip.customise_window = {
@@ -928,7 +933,8 @@ tooltip.customise_window = {
   fractured_bones = "En raison de la qualité faible de l'animation il n'y a pas de patientes avec des fractures. Désactivez cette option si vous désirez avoir des femmes avec des fractures.",
   average_contents = "Si vous voulez que le jeu se rappelle des articles supplémentaires que vous avez tendance à normalement magasiner pour une nouvelle salle, activer cette option",
   back = "Fermer ce menu et revenir au menu d'options",
-  remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option"
+  remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option",
+  machine_menu_button = "Si vous voulez avoir un bouton pour le menu des machines dans le panneau inférieur, activez cette option. Gardez à l'esprit que ce bouton ne sera pas disponible sur des petites résolutions d'écran.",
 }
 
 folders_window = {
@@ -1223,10 +1229,6 @@ update_window = {
 tooltip.update_window = {
   download = "Accédez à la page de téléchargement pour la toute dernière version de CorsixTH",
   ignore = "Ignorer cette mise à jour pour l'instant. Vous serez averti à nouveau lorsque vous ouvrez CorsixTH de nouveau"
-}
-
-tooltip.machine_window = {
-  toggle_machine_menu = "Cliquez pour afficher le menu des machines",
 }
 
 map_editor_window = {
