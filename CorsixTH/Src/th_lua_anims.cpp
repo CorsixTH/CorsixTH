@@ -393,11 +393,13 @@ int l_anim_set_tile(lua_State* L) {
     lua_settop(L, 1);
   } else {
     level_map* pMap = luaT_testuserdata<level_map>(L, 2);
-    map_tile* pNode =
-        pMap->get_tile(static_cast<int>(luaL_checkinteger(L, 3) - 1),
-                       static_cast<int>(luaL_checkinteger(L, 4) - 1));
+    int x = static_cast<int>(luaL_checkinteger(L, 3)) - 1;
+    int y = static_cast<int>(luaL_checkinteger(L, 4)) - 1;
+
+    map_tile* pNode = pMap->get_tile(x, y);
     if (pNode) {
       pAnimation->attach_to_tile(pNode, last_layer);
+      pAnimation->set_tile_position(x, y);
     } else {
       luaL_argerror(L, 3,
                     lua_pushfstring(L,
@@ -422,25 +424,17 @@ int l_anim_get_tile(lua_State* L) {
   if (lua_isnil(L, 2)) {
     return 0;
   }
-  level_map* pMap = (level_map*)lua_touserdata(L, 2);
-  const link_list* pListNode = pAnimation->get_previous();
-  while (pListNode->prev) {
-    pListNode = pListNode->prev;
+  lua_touserdata(L, 2);  // Not used, but returned from the call.
+
+  int x_tile = pAnimation->get_x_tile();
+  int y_tile = pAnimation->get_y_tile();
+  if (x_tile >= 0 && y_tile >= 0) {
+    lua_pushinteger(L, x_tile + 1);
+    lua_pushinteger(L, y_tile + 1);
+  } else {
+    lua_pushnil(L);
+    lua_pushnil(L);
   }
-  // Casting pListNode to a map_tile* is slightly dubious, but it should
-  // work. If on the normal list, then pListNode will be a map_tile*, and
-  // all is fine. However, if on the early list, pListNode will be pointing
-  // to a member of a map_tile, so we're relying on pointer arithmetic
-  // being a subtract and integer divide by sizeof(map_tile) to yield the
-  // correct map_tile.
-  const map_tile* pRootNode = pMap->get_tile_unchecked(0, 0);
-  uintptr_t iDiff = reinterpret_cast<const char*>(pListNode) -
-                    reinterpret_cast<const char*>(pRootNode);
-  int iIndex = (int)(iDiff / sizeof(map_tile));
-  int iY = iIndex / pMap->get_width();
-  int iX = iIndex - (iY * pMap->get_width());
-  lua_pushinteger(L, iX + 1);
-  lua_pushinteger(L, iY + 1);
   return 3;  // map, x, y
 }
 
@@ -512,21 +506,22 @@ int l_anim_get_flag(lua_State* L) {
 }
 
 template <typename T>
-int l_anim_set_position(lua_State* L) {
+int l_anim_set_pixel_position(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
 
-  pAnimation->set_position(static_cast<int>(luaL_checkinteger(L, 2)),
-                           static_cast<int>(luaL_checkinteger(L, 3)));
+  int x_pixels = static_cast<int>(luaL_checkinteger(L, 2));
+  int y_pixels = static_cast<int>(luaL_checkinteger(L, 3));
+  pAnimation->set_pixel_position(x_pixels, y_pixels);
 
   lua_settop(L, 1);
   return 1;
 }
 
-int l_anim_get_position(lua_State* L) {
+int l_anim_get_pixel_position(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
 
-  lua_pushinteger(L, pAnimation->get_x());
-  lua_pushinteger(L, pAnimation->get_y());
+  lua_pushinteger(L, pAnimation->get_x_pixels());
+  lua_pushinteger(L, pAnimation->get_y_pixels());
 
   return 2;
 }
@@ -732,8 +727,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_make_invisible<animation>, "makeInvisible");
     lcb.add_function(l_anim_set_tag, "setTag");
     lcb.add_function(l_anim_get_tag, "getTag");
-    lcb.add_function(l_anim_set_position<animation>, "setPosition");
-    lcb.add_function(l_anim_get_position, "getPosition");
+    lcb.add_function(l_anim_set_pixel_position<animation>, "setPosition");
+    lcb.add_function(l_anim_get_pixel_position, "getPosition");
     lcb.add_function(l_anim_set_speed<animation>, "setSpeed");
     lcb.add_function(l_anim_set_layer<animation>, "setLayer");
     lcb.add_function(l_anim_set_layers_from, "setLayersFrom");
@@ -782,7 +777,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_make_visible<sprite_render_list>, "makeVisible");
     lcb.add_function(l_anim_make_invisible<sprite_render_list>,
                      "makeInvisible");
-    lcb.add_function(l_anim_set_position<sprite_render_list>, "setPosition");
+    lcb.add_function(l_anim_set_pixel_position<sprite_render_list>,
+                     "setPosition");
     lcb.add_function(l_anim_set_speed<sprite_render_list>, "setSpeed");
     lcb.add_function(l_anim_set_layer<sprite_render_list>, "setLayer");
     lcb.add_function(l_anim_tick<sprite_render_list>, "tick");
