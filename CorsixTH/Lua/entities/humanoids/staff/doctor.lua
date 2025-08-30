@@ -173,7 +173,7 @@ function Doctor:updateSkill(consultant, trait, amount)
       if self:getRoom().room_info.id == "training" then
         self:setNextAction(self:getRoom():createLeaveAction())
         self:queueAction(MeanderAction())
-        self.last_room = nil
+        self.last_room = nil -- Consultant no longer needs to return to this room
       end
       self:updateStaffTitle()
     end
