@@ -124,10 +124,11 @@ void CopyStringCP936(const uint8_t*& sIn, uint8_t*& sOut) {
 
 }  // namespace
 
+// https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#strings
 th_string_list::th_string_list(const uint8_t* data, size_t length) {
   if (length < 2) throw std::invalid_argument("length must be 2 or larger");
 
-  size_t iSectionCount = *reinterpret_cast<const uint16_t*>(data);
+  size_t iSectionCount = bytes_to_uint16_le(data);
   size_t iHeaderLength = (iSectionCount + 1) * 2;
 
   if (length < iHeaderLength)
@@ -158,9 +159,18 @@ th_string_list::th_string_list(const uint8_t* data, size_t length) {
   uint8_t* sDataOut = string_buffer.data();
   sections.resize(iSectionCount);
   for (size_t i = 0; i < iSectionCount; ++i) {
-    size_t section_size = reinterpret_cast<const uint16_t*>(data)[i + 1];
-    sections[i].reserve(section_size);
-    for (size_t j = 0; j < section_size; ++j) {
+    // The section sizes start at offset 2 in the data, after the section count.
+    // Each section size is 2 bytes.
+    size_t sectionSizeOffset = (i + 1) * 2;
+    size_t sectionSize = bytes_to_uint16_le(data + sectionSizeOffset);
+
+    // Read the strings for the section.
+    //
+    // All of the strings get stored in string_buffer which sDataOut points
+    // into. The sections vectors get filled with the pointers to the start of
+    // each string in string_buffer.
+    sections[i].reserve(sectionSize);
+    for (size_t j = 0; j < sectionSize; ++j) {
       sections[i].push_back(reinterpret_cast<char*>(sDataOut));
       if (sStringData != sDataEnd) {
         fnCopyString(sStringData, sDataOut);

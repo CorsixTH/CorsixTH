@@ -1148,6 +1148,28 @@ bool sprite_sheet::set_sprite_count(size_t iCount, render_target* pCanvas) {
   return true;
 }
 
+//! Sprite structure in the table file.
+/*!
+    https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#spritetable
+*/
+struct th_sprite_properties {
+  static constexpr size_t size = 6;
+
+  explicit th_sprite_properties(const uint8_t* pData)
+      : position{bytes_to_uint32_le(pData)},
+        width{pData[4]},
+        height{pData[5]} {}
+
+  //! Position of the sprite in the chunk data file.
+  uint32_t position;
+
+  //! Width of the sprite.
+  uint8_t width;
+
+  //! Height of the sprite.
+  uint8_t height;
+};
+
 bool sprite_sheet::load_from_th_file(const uint8_t* pTableData,
                                      size_t iTableDataLength,
                                      const uint8_t* pChunkData,
@@ -1157,20 +1179,20 @@ bool sprite_sheet::load_from_th_file(const uint8_t* pTableData,
   _freeSprites();
   if (pCanvas == nullptr) return false;
 
-  size_t iCount = iTableDataLength / sizeof(th_sprite_properties);
+  size_t iCount = iTableDataLength / th_sprite_properties::size;
   if (!set_sprite_count(iCount, pCanvas)) return false;
 
   for (size_t i = 0; i < sprite_count; ++i) {
     sprite* pSprite = sprites + i;
-    const th_sprite_properties* pTHSprite =
-        reinterpret_cast<const th_sprite_properties*>(pTableData) + i;
+    const th_sprite_properties thSprite(pTableData +
+                                        i * th_sprite_properties::size);
 
     pSprite->texture = nullptr;
     pSprite->alt_texture = nullptr;
     pSprite->data = nullptr;
     pSprite->alt_palette_map = nullptr;
-    pSprite->width = pTHSprite->width;
-    pSprite->height = pTHSprite->height;
+    pSprite->width = thSprite.width;
+    pSprite->height = thSprite.height;
 
     if (pSprite->width == 0 || pSprite->height == 0) continue;
 
@@ -1178,9 +1200,9 @@ bool sprite_sheet::load_from_th_file(const uint8_t* pTableData,
       std::vector<uint8_t> pData(pSprite->width * pSprite->height);
       chunk_renderer oRenderer(pSprite->width, pSprite->height, pData.begin());
       int iDataLen = static_cast<int>(iChunkDataLength) -
-                     static_cast<int>(pTHSprite->position);
+                     static_cast<int>(thSprite.position);
       if (iDataLen < 0) iDataLen = 0;
-      oRenderer.decode_chunks(pChunkData + pTHSprite->position, iDataLen,
+      oRenderer.decode_chunks(pChunkData + thSprite.position, iDataLen,
                               bComplexChunks);
       pSprite->data =
           convertLegacySprite(pData.data(), pSprite->width * pSprite->height);
