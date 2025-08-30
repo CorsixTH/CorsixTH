@@ -424,7 +424,7 @@ int l_anim_get_tile(lua_State* L) {
   if (lua_isnil(L, 2)) {
     return 0;
   }
-  lua_touserdata(L, 2); // Not used, but returned from the call.
+  lua_touserdata(L, 2);  // Not used, but returned from the call.
 
   int x_tile = pAnimation->get_x_tile();
   int y_tile = pAnimation->get_y_tile();
@@ -777,7 +777,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_make_visible<sprite_render_list>, "makeVisible");
     lcb.add_function(l_anim_make_invisible<sprite_render_list>,
                      "makeInvisible");
-    lcb.add_function(l_anim_set_pixel_position<sprite_render_list>, "setPosition");
+    lcb.add_function(l_anim_set_pixel_position<sprite_render_list>,
+                     "setPosition");
     lcb.add_function(l_anim_set_speed<sprite_render_list>, "setSpeed");
     lcb.add_function(l_anim_set_layer<sprite_render_list>, "setLayer");
     lcb.add_function(l_anim_tick<sprite_render_list>, "tick");
