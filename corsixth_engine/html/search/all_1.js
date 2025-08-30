@@ -31,6 +31,7 @@ var searchData=
   ['buildable_5fs_5fmask_28',['buildable_s_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fac3349c0f42d23a6e8fa19e60f9fcac9a',1,'map_tile_flags']]],
   ['buildable_5fw_29',['buildable_w',['../structmap__tile__flags.html#a016e2be6852124bbe2f079370219df53',1,'map_tile_flags']]],
   ['buildable_5fw_5fmask_30',['buildable_w_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa8dcd4cbd998b123dcd8eee6d85375cdc',1,'map_tile_flags']]],
-  ['bytes_5fto_5fuint16_5fle_31',['bytes_to_uint16_le',['../th_8h.html#a36582649efba94b9e0130b2bb88ede6d',1,'th.h']]],
-  ['bytes_5fto_5fuint32_5fle_32',['bytes_to_uint32_le',['../th_8h.html#ac9041f33a078043b8fb0b1586161238b',1,'th.h']]]
+  ['bytes_5fper_5fanimation_5fproperty_31',['bytes_per_animation_property',['../th__gfx_8cpp.html#a970f32c2b2d6e96cb44556db62b77689',1,'th_gfx.cpp']]],
+  ['bytes_5fto_5fuint16_5fle_32',['bytes_to_uint16_le',['../th_8h.html#a36582649efba94b9e0130b2bb88ede6d',1,'th.h']]],
+  ['bytes_5fto_5fuint32_5fle_33',['bytes_to_uint32_le',['../th_8h.html#ac9041f33a078043b8fb0b1586161238b',1,'th.h']]]
 ];

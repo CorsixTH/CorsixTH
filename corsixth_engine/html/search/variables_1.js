@@ -9,5 +9,6 @@ var searchData=
   ['buildable_5fe_6',['buildable_e',['../structmap__tile__flags.html#a8ae1d2c872092769d0a5e91a5a62de18',1,'map_tile_flags']]],
   ['buildable_5fn_7',['buildable_n',['../structmap__tile__flags.html#a4a30e756dd10d9ba411114dabf99e62a',1,'map_tile_flags']]],
   ['buildable_5fs_8',['buildable_s',['../structmap__tile__flags.html#a1a1cf825fa2b34051e0d1d620e028e7b',1,'map_tile_flags']]],
-  ['buildable_5fw_9',['buildable_w',['../structmap__tile__flags.html#a016e2be6852124bbe2f079370219df53',1,'map_tile_flags']]]
+  ['buildable_5fw_9',['buildable_w',['../structmap__tile__flags.html#a016e2be6852124bbe2f079370219df53',1,'map_tile_flags']]],
+  ['bytes_5fper_5fanimation_5fproperty_10',['bytes_per_animation_property',['../th__gfx_8cpp.html#a970f32c2b2d6e96cb44556db62b77689',1,'th_gfx.cpp']]]
 ];

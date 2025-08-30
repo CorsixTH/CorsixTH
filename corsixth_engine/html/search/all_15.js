@@ -3,7 +3,7 @@ var searchData=
   ['w_5fh_5ftype_0',['w_h_type',['../structclip__rect.html#a210c14872ef181bf591b774981724ad0',1,'clip_rect']]],
   ['west_1',['west',['../structanimation__start__frames.html#a611da6d4aeedd97941dbe6c2325082d0',1,'animation_start_frames::west'],['../th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82ada4f0053a5c13882268852ae2da2e466',1,'west:&#160;th_pathfind.h']]],
   ['west_5fwall_2',['west_wall',['../th__map_8h.html#a073fc89e2a5359593c2b5f94a0229d79a746938333a11e89823d1a69d886b9824',1,'th_map.h']]],
-  ['width_3',['width',['../structrender__target__creation__params.html#a0480e1671b869d510a738d222eac81c4',1,'render_target_creation_params::width'],['../structtext__layout.html#a26c515414e4756ed94ab34707ebf7b5e',1,'text_layout::width']]],
+  ['width_3',['width',['../structrender__target__creation__params.html#a0480e1671b869d510a738d222eac81c4',1,'render_target_creation_params::width'],['../structtext__layout.html#a26c515414e4756ed94ab34707ebf7b5e',1,'text_layout::width'],['../structth__sprite__properties.html#a16df0c4c9012ee9f0d351c3e71ec2e6d',1,'th_sprite_properties::width']]],
   ['window_5fbase_4',['window_base',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a294811d9f93adaf20cdca4da01af1692',1,'th_lua_internal.h']]],
   ['with_5fupdate_5fcheck_5',['WITH_UPDATE_CHECK',['../config_8h.html#aef5845a3d50a5712cd31f2c12936d730',1,'config.h']]],
   ['world_5fto_5fscreen_6',['world_to_screen',['../classlevel__map.html#a6fd4640c93553f42e225337fe01f402d',1,'level_map']]],

@@ -2,7 +2,7 @@ var searchData=
 [
   ['hair_5frestorer_0',['hair_restorer',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abab3c2a6995713d91d58329324b94f9853',1,'th_map.h']]],
   ['has_5faudio_5ftrack_1',['has_audio_track',['../classmovie__player.html#af2dbbedb7190fe4bc07327e358fbc1cd',1,'movie_player']]],
-  ['height_2',['height',['../structrender__target__creation__params.html#acf86e40da26e92472ac4d30a0c863d92',1,'render_target_creation_params']]],
+  ['height_2',['height',['../structrender__target__creation__params.html#acf86e40da26e92472ac4d30a0c863d92',1,'render_target_creation_params::height'],['../structth__sprite__properties.html#acd486b2920cee2acb2f099d08ce4eee6',1,'th_sprite_properties::height']]],
   ['helicopter_3',['helicopter',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abae29e13ac702a77bcd28a4463a211eba4',1,'th_map.h']]],
   ['hell_4',['hell',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba4229d691b07b13341da53f17ab9f2416',1,'th_map.h']]],
   ['hit_5ftest_5',['hit_test',['../classsprite__render__list.html#a7eefb5beccaeef7b59d2217f73dfbc14',1,'sprite_render_list::hit_test()'],['../classlevel__map.html#a73ae182c89e0ffa5d697637f9664c4e4',1,'level_map::hit_test()'],['../classanimation.html#ae614a97b919790a74f32bb45b84594c1',1,'animation::hit_test()'],['../classanimation__manager.html#a682cff6fdfe2629bd33e1de48ff051ce',1,'animation_manager::hit_test()']]],

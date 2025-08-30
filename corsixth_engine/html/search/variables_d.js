@@ -4,6 +4,7 @@ var searchData=
   ['passable_1',['passable',['../structmap__tile__flags.html#ace24555f9578877cd4d3c35b63da3c95',1,'map_tile_flags']]],
   ['passable_5fif_5fnot_5ffor_5fblueprint_2',['passable_if_not_for_blueprint',['../structmap__tile__flags.html#a22a202c75e458c019efe82f7d7e15d35',1,'map_tile_flags']]],
   ['pmusic_3',['pMusic',['../classmusic.html#aafe1b128a8003b2353030bcde8811636',1,'music']]],
-  ['present_5fimmediate_4',['present_immediate',['../structrender__target__creation__params.html#aab53a7369291f16c8501f714ba2c8703',1,'render_target_creation_params']]],
-  ['prev_5',['prev',['../classlink__list.html#aecf4e1b1052f5650e59b12e29602a120',1,'link_list::prev'],['../structpath__node.html#a8965214c4063fe5f73f80db5427743b1',1,'path_node::prev']]]
+  ['position_4',['position',['../structth__sprite__properties.html#aacd4b74fbff612d67a52960e2bbdf78e',1,'th_sprite_properties']]],
+  ['present_5fimmediate_5',['present_immediate',['../structrender__target__creation__params.html#aab53a7369291f16c8501f714ba2c8703',1,'render_target_creation_params']]],
+  ['prev_6',['prev',['../classlink__list.html#aecf4e1b1052f5650e59b12e29602a120',1,'link_list::prev'],['../structpath__node.html#a8965214c4063fe5f73f80db5427743b1',1,'path_node::prev']]]
 ];
