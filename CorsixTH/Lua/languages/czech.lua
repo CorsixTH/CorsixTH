@@ -3536,7 +3536,7 @@ custom_campaign_window = {
   duplicates_warning = "%d kampaní se stejnými jmény bylo skryto (nesmějí mít stejná jména).",
 }
 warnings = {
-  levelfile_variable_is_deprecated = "Upozornění: Úroveň '%s' obsahuje starý formát definice nastavení." ..
+  levelfile_variable_is_deprecated = "Upozornění: Úroveň '%s' obsahuje starý formát definice nastavení. " ..
                                      "Proměnná '%LevelFile' byla změněna na '%MapFile'. Prosím, kontaktujte autora této úrovně.",
   newersave = "Pozor! Snažíte se spustit hru z novější verze CorsixTH. Nedoporučujeme pokračovat z důvodu možné nestability hry. Na vlastní riziko.",
 }
