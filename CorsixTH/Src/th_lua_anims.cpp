@@ -512,21 +512,22 @@ int l_anim_get_flag(lua_State* L) {
 }
 
 template <typename T>
-int l_anim_set_position(lua_State* L) {
+int l_anim_set_pixel_position(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
 
-  pAnimation->set_position(static_cast<int>(luaL_checkinteger(L, 2)),
-                           static_cast<int>(luaL_checkinteger(L, 3)));
+  int x_pixels = static_cast<int>(luaL_checkinteger(L, 2));
+  int y_pixels = static_cast<int>(luaL_checkinteger(L, 3));
+  pAnimation->set_pixel_position(x_pixels, y_pixels);
 
   lua_settop(L, 1);
   return 1;
 }
 
-int l_anim_get_position(lua_State* L) {
+int l_anim_get_pixel_position(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
 
-  lua_pushinteger(L, pAnimation->get_x());
-  lua_pushinteger(L, pAnimation->get_y());
+  lua_pushinteger(L, pAnimation->get_x_pixels());
+  lua_pushinteger(L, pAnimation->get_y_pixels());
 
   return 2;
 }
@@ -732,8 +733,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_make_invisible<animation>, "makeInvisible");
     lcb.add_function(l_anim_set_tag, "setTag");
     lcb.add_function(l_anim_get_tag, "getTag");
-    lcb.add_function(l_anim_set_position<animation>, "setPosition");
-    lcb.add_function(l_anim_get_position, "getPosition");
+    lcb.add_function(l_anim_set_pixel_position<animation>, "setPosition");
+    lcb.add_function(l_anim_get_pixel_position, "getPosition");
     lcb.add_function(l_anim_set_speed<animation>, "setSpeed");
     lcb.add_function(l_anim_set_layer<animation>, "setLayer");
     lcb.add_function(l_anim_set_layers_from, "setLayersFrom");
@@ -782,7 +783,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_make_visible<sprite_render_list>, "makeVisible");
     lcb.add_function(l_anim_make_invisible<sprite_render_list>,
                      "makeInvisible");
-    lcb.add_function(l_anim_set_position<sprite_render_list>, "setPosition");
+    lcb.add_function(l_anim_set_pixel_position<sprite_render_list>, "setPosition");
     lcb.add_function(l_anim_set_speed<sprite_render_list>, "setSpeed");
     lcb.add_function(l_anim_set_layer<sprite_render_list>, "setLayer");
     lcb.add_function(l_anim_tick<sprite_render_list>, "tick");

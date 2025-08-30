@@ -1130,13 +1130,13 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       rcNew.w = 64;
       render_target::scoped_clip clip(pCanvas, &rcNew);
       manager->draw_frame(pCanvas, frame_index, layers,
-                          iDestX + x_relative_to_tile,
-                          iDestY + y_relative_to_tile, flags, patient_effect,
+                          iDestX + x_tile_pixels,
+                          iDestY + y_tile_pixels, flags, patient_effect,
                           patient_effect_offset);
     } else
       manager->draw_frame(pCanvas, frame_index, layers,
-                          iDestX + x_relative_to_tile,
-                          iDestY + y_relative_to_tile, flags, patient_effect,
+                          iDestX + x_tile_pixels,
+                          iDestY + y_tile_pixels, flags, patient_effect,
                           patient_effect_offset);
   }
 }
@@ -1151,8 +1151,8 @@ void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY,
   else
     parent->get_secondary_marker(&iX, &iY);
 
-  iX += x_relative_to_tile + iDestX;
-  iY += y_relative_to_tile + iDestY;
+  iX += x_tile_pixels + iDestX;
+  iY += y_tile_pixels + iDestY;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
     if (pSounds) pSounds->play_at(sound_to_play, iX, iY);
@@ -1171,8 +1171,8 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
 
   if (!manager) return;
 
-  iDestX += x_relative_to_tile;
-  iDestY += y_relative_to_tile;
+  iDestX += x_tile_pixels;
+  iDestY += y_tile_pixels;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
     if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY);
@@ -1184,15 +1184,15 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
   // vertical clipping is applied.
   oMorphRect.x = 0;
   oMorphRect.w = pCanvas->get_width();
-  oMorphRect.y = iDestY + morph_target->x_relative_to_tile;
+  oMorphRect.y = iDestY + morph_target->x_tile_pixels;
   oMorphRect.h =
-      morph_target->y_relative_to_tile - morph_target->x_relative_to_tile;
+      morph_target->y_tile_pixels - morph_target->x_tile_pixels;
   {
     render_target::scoped_clip clip(pCanvas, &oMorphRect);
     manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
   }
-  oMorphRect.y = iDestY + morph_target->y_relative_to_tile;
-  oMorphRect.h = morph_target->speed.dx - morph_target->y_relative_to_tile;
+  oMorphRect.y = iDestY + morph_target->y_tile_pixels;
+  oMorphRect.h = morph_target->speed.dx - morph_target->y_tile_pixels;
   {
     render_target::scoped_clip clip(pCanvas, &oMorphRect);
     manager->draw_frame(pCanvas, morph_target->frame_index,
@@ -1210,8 +1210,8 @@ bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY) {
     return false;
   }
 
-  return manager->hit_test(frame_index, layers, x_relative_to_tile + iDestX,
-                           y_relative_to_tile + iDestY, flags, iTestX, iTestY);
+  return manager->hit_test(frame_index, layers, x_tile_pixels + iDestX,
+                           y_tile_pixels + iDestY, flags, iTestX, iTestY);
 }
 
 bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
@@ -1223,8 +1223,8 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
     return false;
   }
 
-  return manager->hit_test(frame_index, layers, x_relative_to_tile + iDestX,
-                           y_relative_to_tile + iDestY, flags, iTestX,
+  return manager->hit_test(frame_index, layers, x_tile_pixels + iDestX,
+                           y_tile_pixels + iDestY, flags, iTestX,
                            iTestY) ||
          morph_target->hit_test(iDestX, iDestY, iTestX, iTestY);
 }
@@ -1272,8 +1272,8 @@ void animation::persist(lua_persist_writer* pWriter) const {
   // Write the simple fields
   pWriter->write_uint(animation_index);
   pWriter->write_uint(frame_index);
-  pWriter->write_int(x_relative_to_tile);
-  pWriter->write_int(y_relative_to_tile);
+  pWriter->write_int(x_tile_pixels);
+  pWriter->write_int(y_tile_pixels);
 
   // Not a uint, for compatibility
   pWriter->write_int((int)sound_to_play);
@@ -1350,8 +1350,8 @@ void animation::depersist(lua_persist_reader* pReader) {
     // Read the simple fields
     if (!pReader->read_uint(animation_index)) break;
     if (!pReader->read_uint(frame_index)) break;
-    if (!pReader->read_int(x_relative_to_tile)) break;
-    if (!pReader->read_int(y_relative_to_tile)) break;
+    if (!pReader->read_int(x_tile_pixels)) break;
+    if (!pReader->read_int(y_tile_pixels)) break;
     int iDummy;
     if (!pReader->read_int(iDummy)) break;
     if (iDummy >= 0) sound_to_play = (unsigned int)iDummy;
@@ -1480,14 +1480,14 @@ void animation::tick() {
   frame_index = manager->get_next_frame(frame_index);
   if (anim_kind != animation_kind::primary_child &&
       anim_kind != animation_kind::secondary_child) {
-    x_relative_to_tile += speed.dx;
-    y_relative_to_tile += speed.dy;
+    x_tile_pixels += speed.dx;
+    y_tile_pixels += speed.dy;
   }
 
   if (morph_target) {
-    morph_target->y_relative_to_tile += morph_target->speed.dy;
-    if (morph_target->y_relative_to_tile < morph_target->x_relative_to_tile) {
-      morph_target->y_relative_to_tile = morph_target->x_relative_to_tile;
+    morph_target->y_tile_pixels += morph_target->speed.dy;
+    if (morph_target->y_tile_pixels < morph_target->x_tile_pixels) {
+      morph_target->y_tile_pixels = morph_target->x_tile_pixels;
     }
   }
 
@@ -1564,8 +1564,8 @@ bool animation::get_primary_marker(int* pX, int* pY) {
     *pX = -*pX;
   }
 
-  *pX += x_relative_to_tile;
-  *pY += y_relative_to_tile + 16;
+  *pX += x_tile_pixels;
+  *pY += y_tile_pixels + 16;
   return true;
 }
 
@@ -1578,8 +1578,8 @@ bool animation::get_secondary_marker(int* pX, int* pY) {
     *pX = -*pX;
   }
 
-  *pX += x_relative_to_tile;
-  *pY += y_relative_to_tile + 16;
+  *pX += x_tile_pixels;
+  *pY += y_tile_pixels + 16;
   return true;
 }
 
@@ -1648,9 +1648,9 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
 
   iMorphDuration *= iDurationFactor;
   if (iOrigMinY < iMorphMinY) {
-    morph_target->x_relative_to_tile = iOrigMinY;
+    morph_target->x_tile_pixels = iOrigMinY;
   } else {
-    morph_target->x_relative_to_tile = iMorphMinY;
+    morph_target->x_tile_pixels = iMorphMinY;
   }
 
   if (iOrigMaxY > iMorphMaxY) {
@@ -1659,9 +1659,9 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
     morph_target->speed.dx = iMorphMaxY;
   }
 
-  int iDist = morph_target->x_relative_to_tile - morph_target->speed.dx;
+  int iDist = morph_target->x_tile_pixels - morph_target->speed.dx;
   morph_target->speed.dy = (iDist - iMorphDuration + 1) / iMorphDuration;
-  morph_target->y_relative_to_tile = morph_target->speed.dx;
+  morph_target->y_tile_pixels = morph_target->speed.dx;
 }
 
 void animation::set_frame(size_t iFrame) { frame_index = iFrame; }
@@ -1673,8 +1673,8 @@ void animation_base::set_layer(int iLayer, int iId) {
 }
 
 void sprite_render_list::tick() {
-  x_relative_to_tile += dx_per_tick;
-  y_relative_to_tile += dy_per_tick;
+  x_tile_pixels += dx_per_tick;
+  y_tile_pixels += dy_per_tick;
   if (lifetime > 0) {
     --lifetime;
   }
@@ -1685,8 +1685,8 @@ void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
     return;
   }
 
-  iDestX += x_relative_to_tile;
-  iDestY += y_relative_to_tile;
+  iDestX += x_tile_pixels;
+  iDestY += y_tile_pixels;
 
   std::unique_ptr<render_target::scoped_buffer> intermediate_buffer;
   if (use_intermediate_buffer) {
@@ -1739,8 +1739,8 @@ void sprite_render_list::persist(lua_persist_writer* pWriter) const {
 
   pWriter->write_uint(sprites.size());
   pWriter->write_uint(flags);
-  pWriter->write_int(x_relative_to_tile);
-  pWriter->write_int(y_relative_to_tile);
+  pWriter->write_int(x_tile_pixels);
+  pWriter->write_int(y_tile_pixels);
   pWriter->write_int(dx_per_tick);
   pWriter->write_int(dy_per_tick);
   pWriter->write_int(lifetime);
@@ -1781,8 +1781,8 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
   sprites.resize(sprite_count);
 
   if (!pReader->read_uint(flags)) return;
-  if (!pReader->read_int(x_relative_to_tile)) return;
-  if (!pReader->read_int(y_relative_to_tile)) return;
+  if (!pReader->read_int(x_tile_pixels)) return;
+  if (!pReader->read_int(y_tile_pixels)) return;
   if (!pReader->read_int(dx_per_tick)) return;
   if (!pReader->read_int(dy_per_tick)) return;
   if (!pReader->read_int(lifetime)) return;
