@@ -33,12 +33,12 @@ tooltip.status.reputation = "Tu reputación no debe estar por debajo de %d. Actu
 tooltip.status.balance = "No debes tener menos de $%d en el banco. Actualmente tienes $%d"
 
 fax.emergency.cure_not_possible_build = "Necesitas construir un %s"
-fax.emergency.cure_not_possible_build_and_employ = "Necesitas construir un %s y contratar un %s"
+fax.emergency.cure_not_possible_build_and_employ = "Necesitas construir un %s y contratar un/a %s"
 fax.emergency.num_disease = "Hay %d personas con %s y necesitan ser atendidas inmediatamente."
 adviser.goals.lose.kill = "Mata otros %d pacientes para perder el nivel!"
 
 -- Improve tooltips in staff window to mention hidden features
-tooltip.staff_window.face = "Rostro de la persona - pulsa para abrir la pantalla de gestión."
+tooltip.staff_window.face = "Rostro de la persona - pulsa para abrir la pantalla de personal."
 tooltip.staff_window.center_view = "Botón izquierdo para fijarse en la persona, botón derecho para rotar entre los miembros del personal."
 
 -- Improve tooltips in Research Screen
@@ -707,7 +707,7 @@ menu_charts = {
   status        = "  (%1%) ESTADO  ",
   graphs        = "  (%1%) GRAFICAS  ",
   policy        = "  (%1%) NORMAS  ",
-  machine_menu  = "  (%1%) MENÚ DE MÁQUINAS",
+  machine_menu  = "  (%1%) MENU DE MAQUINAS",
 }
 
 menu_debug = {
