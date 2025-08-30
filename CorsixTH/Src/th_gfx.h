@@ -520,15 +520,26 @@ class animation_base : public drawable {
   uint32_t get_flags() const { return flags; }
   int get_x_pixels() const { return x_tile_pixels; }
   int get_y_pixels() const { return y_tile_pixels; }
+  int get_x_tile() const { return x_tile; }
+  int get_y_tile() const { return y_tile; }
 
   void set_flags(uint32_t iFlags) { flags = iFlags; }
-  void set_pixel_position(int iX, int iY) {
-    x_tile_pixels = iX, y_tile_pixels = iY;
+  void set_pixel_position(int x, int y) {
+    x_tile_pixels = x;
+    y_tile_pixels = y;
+  }
+  void set_tile_position(int x, int y) {
+    x_tile = x;
+    y_tile = y;
   }
   void set_layer(int iLayer, int iId);
   void set_layers_from(const animation_base* pSrc) { layers = pSrc->layers; }
 
  protected:
+  //! X tile position. Negative value indicates the animation is not active.
+  int x_tile{-1};
+  //! Y tile position. Negative value indicates the animation is not active.
+  int y_tile{-1};
   //! X pixel position relative to animation tile center.
   int x_tile_pixels{};
   //! Y pixel position relative to animation tile center.

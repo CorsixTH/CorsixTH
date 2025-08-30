@@ -1501,7 +1501,12 @@ void animation::tick() {
   }
 }
 
-void animation_base::remove_from_tile() { link_list::remove_from_list(); }
+void animation_base::remove_from_tile() {
+  link_list::remove_from_list();
+
+  x_tile = -1;
+  y_tile = -1;
+}
 
 void animation_base::attach_to_tile(map_tile* pMapNode, int layer) {
   remove_from_tile();

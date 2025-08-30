@@ -393,11 +393,13 @@ int l_anim_set_tile(lua_State* L) {
     lua_settop(L, 1);
   } else {
     level_map* pMap = luaT_testuserdata<level_map>(L, 2);
-    map_tile* pNode =
-        pMap->get_tile(static_cast<int>(luaL_checkinteger(L, 3) - 1),
-                       static_cast<int>(luaL_checkinteger(L, 4) - 1));
+    int x = static_cast<int>(luaL_checkinteger(L, 3)) - 1;
+    int y = static_cast<int>(luaL_checkinteger(L, 4)) - 1;
+
+    map_tile* pNode = pMap->get_tile(x, y);
     if (pNode) {
       pAnimation->attach_to_tile(pNode, last_layer);
+      pAnimation->set_tile_position(x, y);
     } else {
       luaL_argerror(L, 3,
                     lua_pushfstring(L,
@@ -422,25 +424,17 @@ int l_anim_get_tile(lua_State* L) {
   if (lua_isnil(L, 2)) {
     return 0;
   }
-  level_map* pMap = (level_map*)lua_touserdata(L, 2);
-  const link_list* pListNode = pAnimation->get_previous();
-  while (pListNode->prev) {
-    pListNode = pListNode->prev;
+  lua_touserdata(L, 2); // Not used, but returned from the call.
+
+  int x_tile = pAnimation->get_x_tile();
+  int y_tile = pAnimation->get_y_tile();
+  if (x_tile >= 0 && y_tile >= 0) {
+    lua_pushinteger(L, x_tile + 1);
+    lua_pushinteger(L, y_tile + 1);
+  } else {
+    lua_pushnil(L);
+    lua_pushnil(L);
   }
-  // Casting pListNode to a map_tile* is slightly dubious, but it should
-  // work. If on the normal list, then pListNode will be a map_tile*, and
-  // all is fine. However, if on the early list, pListNode will be pointing
-  // to a member of a map_tile, so we're relying on pointer arithmetic
-  // being a subtract and integer divide by sizeof(map_tile) to yield the
-  // correct map_tile.
-  const map_tile* pRootNode = pMap->get_tile_unchecked(0, 0);
-  uintptr_t iDiff = reinterpret_cast<const char*>(pListNode) -
-                    reinterpret_cast<const char*>(pRootNode);
-  int iIndex = (int)(iDiff / sizeof(map_tile));
-  int iY = iIndex / pMap->get_width();
-  int iX = iIndex - (iY * pMap->get_width());
-  lua_pushinteger(L, iX + 1);
-  lua_pushinteger(L, iY + 1);
   return 3;  // map, x, y
 }
 
