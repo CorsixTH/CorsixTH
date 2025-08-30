@@ -73,42 +73,77 @@ int l_crude_gc(lua_State* L) {
 
 }  // namespace
 
+constexpr size_t load_multi_buffer_capacity = 3;
+
 //! Structure for loading multiple strings as a Lua chunk, avoiding
 //! concatenation
 /*!
-    luaL_loadbuffer() is a good way to load a string as a Lua chunk. If there
+   luaL_loadbuffer() is a good way to load a string as a Lua chunk. If there
    are several strings which need to be concatenated before being loaded, then
-   it can be more efficient to use this structure, which can load them without
-    concatenating them. Sample usage is:
+   it can be more efficient to call lua_load with a callback function for
+   loading the strings one at a time than to concatenate the strings into a
+   single buffer.
+
+   This class provides the data structure and callback function to do this.
 
     ```
     load_multi_buffer ls;
-    ls.s[0] = lua_tolstring(L, -2, &ls.i[0]);
-    ls.s[1] = lua_tolstring(L, -1, &ls.i[1]);
-    lua_load(L, LoadMultiBuffer_t::load_fn, &ls, "chunk name");
+    ls.piece[0] = lua_tolstring(L, -2, &ls.piece_size[0]);
+    ls.piece[1] = lua_tolstring(L, -1, &ls.piece_size[1]);
+    luaT_load(L, load_multi_buffer::load_fn, &ls, "chunk name", "bt");
     ```
+
+    Because of the api of lua_tolstring the API of this class allows direct
+    and independent assignment of the chunk pieces and their sizes.
+
+    It is up to the caller to keep track of how many pieces are used and to
+    ensure that no more than load_multi_buffer_capacity pieces are used.
 */
 class load_multi_buffer {
  public:
-  const char* s[3]{nullptr};
-  size_t i[3]{};
-  int n{};
+  /// lua_Reader callback function for lua_load or luaT_load
+  /*!
+   Called repeatedly by lua to get the next piece of data to load until a
+   null pointer is returned.
 
-  load_multi_buffer() = default;
+   \param L The Lua state
+   \param ud Pointer to the load_multi_buffer instance
+   \param size Pointer to size_t to receive the size of the returned string
 
+   \see https://www.lua.org/manual/5.4/manual.html#lua_Reader
+  */
   static const char* load_fn(lua_State* L, void* ud, size_t* size) {
-    load_multi_buffer* pThis = static_cast<load_multi_buffer*>(ud);
+    auto* me = static_cast<load_multi_buffer*>(ud);
 
-    for (; pThis->n < 3; ++pThis->n) {
-      if (pThis->i[pThis->n] != 0) {
-        *size = pThis->i[pThis->n];
-        return pThis->s[pThis->n++];
-      }
+    // Skip empty chunks if any which would cause lua_load to stop early
+    while (me->n < load_multi_buffer_capacity && me->piece_size[me->n] == 0) {
+      ++me->n;
+    }
+
+    if (me->n < load_multi_buffer_capacity) {
+      *size = me->piece_size[me->n];
+      return me->piece[me->n++];
     }
 
     *size = 0;
     return nullptr;
   }
+
+  /// Insert the given chunk at the given index in the buffer
+  void insert(std::string_view piece, size_t index) {
+    this->piece[index] = piece.data();
+    this->piece_size[index] = piece.size();
+  }
+
+  /// Pieces of the lua code chunk to be loaded.
+  const char* piece[load_multi_buffer_capacity]{nullptr};
+
+  /// Lengths of the pieces.
+  size_t piece_size[load_multi_buffer_capacity]{};
+
+ private:
+  /// The next piece index to be loaded
+  int n{};
 };
 
 //! Basic implementation of persistence interface
@@ -818,8 +853,8 @@ class lua_persist_basic_reader : public lua_persist_reader {
           lua_remove(L, -3);
           // Construct the closure factory
           load_multi_buffer ls;
-          ls.s[0] = lua_tolstring(L, -3, &ls.i[0]);
-          ls.s[1] = lua_tolstring(L, -1, &ls.i[1]);
+          ls.piece[0] = lua_tolstring(L, -3, &ls.piece_size[0]);
+          ls.piece[1] = lua_tolstring(L, -1, &ls.piece_size[1]);
           if (luaT_load(L, load_multi_buffer::load_fn, &ls, lua_tostring(L, -2),
                         "bt") != 0) {
             // Should never happen
@@ -1124,10 +1159,9 @@ const char* find_function_end(lua_State* L, const char* sStart) {
     if (sEnd) {
       sEnd += 3;
       load_multi_buffer ls;
-      ls.s[0] = "return function";
-      ls.i[0] = sizeof("return function") - 1;
-      ls.s[1] = sStart;
-      ls.i[1] = sEnd - sStart;
+      ls.insert("return function", 0);
+      ls.piece[1] = sStart;
+      ls.piece_size[1] = sEnd - sStart;
       if (luaT_load(L, load_multi_buffer::load_fn, &ls, "", "bt") == 0) {
         lua_pop(L, 1);
         return sEnd;
