@@ -524,21 +524,20 @@ class animation_base : public drawable {
   void attach_to_tile(map_tile* pMapNode, int layer);
 
   uint32_t get_flags() const { return flags; }
-  int get_x() const { return x_relative_to_tile; }
-  int get_y() const { return y_relative_to_tile; }
+  int get_x() const { return pixel_offset.x; }
+  int get_y() const { return pixel_offset.y; }
 
   void set_flags(uint32_t iFlags) { flags = iFlags; }
-  void set_position(int iX, int iY) {
-    x_relative_to_tile = iX, y_relative_to_tile = iY;
+  void set_position(int x, int y) {
+    pixel_offset.x = x;
+    pixel_offset.y = y;
   }
   void set_layer(int iLayer, int iId);
   void set_layers_from(const animation_base* pSrc) { layers = pSrc->layers; }
 
  protected:
-  //! X position on tile (not tile x-index)
-  int x_relative_to_tile{};
-  //! Y position on tile (not tile y-index)
-  int y_relative_to_tile{};
+  //! Offset in pixels relative to the center of the animation tile.
+  xy_pair pixel_offset{0, 0};
 
   ::layers layers{};
 };
