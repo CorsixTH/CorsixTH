@@ -532,7 +532,7 @@ class animation_base : public drawable {
     tile.x = x;
     tile.y = y;
   }
-  void set_position(int x, int y) {
+  void set_pixel_offset(int x, int y) {
     pixel_offset.x = x;
     pixel_offset.y = y;
   }

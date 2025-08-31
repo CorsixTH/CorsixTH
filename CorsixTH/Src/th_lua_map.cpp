@@ -323,7 +323,7 @@ int l_map_updateblueprint(lua_State* L) {
                             ? 0
                             : thdf_alt_palette));
       pAnim->attach_to_tile(iX, iNewY, pNode, 0);
-      pAnim->set_position(0, 0);
+      pAnim->set_pixel_offset(0, 0);
     }
     pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
     pNode = pMap->get_tile_unchecked(iX, iNewY + iNewH - 1);
@@ -334,7 +334,7 @@ int l_map_updateblueprint(lua_State* L) {
                           : thdf_alt_palette));
     pNode = pMap->get_tile_unchecked(iX, iNewY + iNewH);
     pAnim->attach_to_tile(iX, iNewY + iNewH, pNode, 0);
-    pAnim->set_position(0, -1);
+    pAnim->set_pixel_offset(0, -1);
   }
   for (int iY = iNewY; iY < iNewY + iNewH; ++iY) {
     if (iY != iNewY) {
@@ -346,7 +346,7 @@ int l_map_updateblueprint(lua_State* L) {
                             ? 0
                             : thdf_alt_palette));
       pAnim->attach_to_tile(iNewX, iY, pNode, 0);
-      pAnim->set_position(2, 0);
+      pAnim->set_pixel_offset(2, 0);
     }
     pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
     pNode = pMap->get_tile_unchecked(iNewX + iNewW - 1, iY);
@@ -357,7 +357,7 @@ int l_map_updateblueprint(lua_State* L) {
                           : thdf_alt_palette));
     pNode = pMap->get_tile_unchecked(iNewX + iNewW, iY);
     pAnim->attach_to_tile(iNewX + iNewW - 1, iY, pNode, 0);
-    pAnim->set_position(2, -1);
+    pAnim->set_pixel_offset(2, -1);
   }
 
   // Clear away extra animations

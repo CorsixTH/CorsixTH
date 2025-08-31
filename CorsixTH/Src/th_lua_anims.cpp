@@ -503,18 +503,18 @@ int l_anim_get_flag(lua_State* L) {
 }
 
 template <typename T>
-int l_anim_set_position(lua_State* L) {
+int l_anim_set_pixel_offset(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
 
   int x = static_cast<int>(luaL_optinteger(L, 2, 0));
   int y = static_cast<int>(luaL_optinteger(L, 3, 0));
-  pAnimation->set_position(x, y);
+  pAnimation->set_pixel_offset(x, y);
 
   lua_settop(L, 1);
   return 1;
 }
 
-int l_anim_get_position(lua_State* L) {
+int l_anim_get_pixel_offset(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
 
   const xy_pair& offset = pAnimation->get_pixel_offset();
@@ -726,8 +726,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_make_invisible<animation>, "makeInvisible");
     lcb.add_function(l_anim_set_tag, "setTag");
     lcb.add_function(l_anim_get_tag, "getTag");
-    lcb.add_function(l_anim_set_position<animation>, "setPosition");
-    lcb.add_function(l_anim_get_position, "getPosition");
+    lcb.add_function(l_anim_set_pixel_offset<animation>, "setPosition");
+    lcb.add_function(l_anim_get_pixel_offset, "getPosition");
     lcb.add_function(l_anim_set_speed<animation>, "setSpeed");
     lcb.add_function(l_anim_set_layer<animation>, "setLayer");
     lcb.add_function(l_anim_set_layers_from, "setLayersFrom");
@@ -776,7 +776,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_make_visible<sprite_render_list>, "makeVisible");
     lcb.add_function(l_anim_make_invisible<sprite_render_list>,
                      "makeInvisible");
-    lcb.add_function(l_anim_set_position<sprite_render_list>, "setPosition");
+    lcb.add_function(l_anim_set_pixel_offset<sprite_render_list>,
+                     "setPosition");
     lcb.add_function(l_anim_set_speed<sprite_render_list>, "setSpeed");
     lcb.add_function(l_anim_set_layer<sprite_render_list>, "setLayer");
     lcb.add_function(l_anim_tick<sprite_render_list>, "tick");
