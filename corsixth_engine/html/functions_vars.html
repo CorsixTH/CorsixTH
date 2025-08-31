@@ -112,8 +112,6 @@ $(function() {
 <li>do_not_idle&#160;:&#160;<a class="el" href="structmap__tile__flags.html#a38ad51aef8c3c68128254a81162db185">map_tile_flags</a></li>
 <li>door_north&#160;:&#160;<a class="el" href="structmap__tile__flags.html#a4d24112d93198434f2d42610a15e301c">map_tile_flags</a></li>
 <li>door_west&#160;:&#160;<a class="el" href="structmap__tile__flags.html#acbfbe7dcfbf09868a635bac866d60346">map_tile_flags</a></li>
-<li>dx&#160;:&#160;<a class="el" href="structxy__diff.html#aa83b5c5fde85dc29ebe6f5e56f874666">xy_diff</a></li>
-<li>dy&#160;:&#160;<a class="el" href="structxy__diff.html#ae5e0de37d3d2176043058fd0b8a0ad44">xy_diff</a></li>
 </ul>
 
 
@@ -194,6 +192,7 @@ $(function() {
 <li>passable_if_not_for_blueprint&#160;:&#160;<a class="el" href="structmap__tile__flags.html#a22a202c75e458c019efe82f7d7e15d35">map_tile_flags</a></li>
 <li>piece&#160;:&#160;<a class="el" href="classload__multi__buffer.html#af223b4bb067fd212d7b2c243a227ca21">load_multi_buffer</a></li>
 <li>piece_size&#160;:&#160;<a class="el" href="classload__multi__buffer.html#a4723640f04203af60dfa62a65584ba53">load_multi_buffer</a></li>
+<li>pixel_offset&#160;:&#160;<a class="el" href="classanimation__base.html#a7c1a8b579cdb1dc5eec2c44bac61315b">animation_base</a></li>
 <li>pMusic&#160;:&#160;<a class="el" href="classmusic.html#aafe1b128a8003b2353030bcde8811636">music</a></li>
 <li>position&#160;:&#160;<a class="el" href="structth__sprite__properties.html#aacd4b74fbff612d67a52960e2bbdf78e">th_sprite_properties</a></li>
 <li>present_immediate&#160;:&#160;<a class="el" href="structrender__target__creation__params.html#aab53a7369291f16c8501f714ba2c8703">render_target_creation_params</a></li>
@@ -217,7 +216,7 @@ $(function() {
 <li>size&#160;:&#160;<a class="el" href="structth__element__properties.html#a1296cc15b7138c9a9316b7d12707cb4a">th_element_properties</a>, <a class="el" href="structth__frame__properties.html#a355e03b8a2a53bd0ac876bb07e51a67c">th_frame_properties</a>, <a class="el" href="structth__sprite__properties.html#ac92217947f0bfe8ed65ac555fefee83c">th_sprite_properties</a></li>
 <li>sound&#160;:&#160;<a class="el" href="structth__frame__properties.html#a62c73e9c770257a617dce4b63c1fdef7">th_frame_properties</a></li>
 <li>south&#160;:&#160;<a class="el" href="structanimation__start__frames.html#a26d97dadc37a99d3322acc2a3f8c1c5c">animation_start_frames</a></li>
-<li>speed&#160;:&#160;<a class="el" href="classanimation.html#aac98c35d1017845936681dad0a253cf9">animation</a></li>
+<li>speed&#160;:&#160;<a class="el" href="classanimation.html#a51fc65009aec266c54ac02a8062cb472">animation</a></li>
 <li>sprites&#160;:&#160;<a class="el" href="classmap__typical__overlay.html#a38e96b576c7404a59746f39436d5ebd9">map_typical_overlay</a></li>
 <li>start_x&#160;:&#160;<a class="el" href="classidle__tile__finder.html#aa675283ea8ca4feca7711e12644be050">idle_tile_finder</a>, <a class="el" href="structtext__layout.html#a6b5f6946412090cc2a0fdda4483cb446">text_layout</a></li>
 <li>start_y&#160;:&#160;<a class="el" href="classidle__tile__finder.html#ad76ad8927c1dd6f35691ed0f26ea4117">idle_tile_finder</a>, <a class="el" href="structtext__layout.html#a064c929e7da42670b65c123fe4f3aeef">text_layout</a></li>
@@ -230,6 +229,7 @@ $(function() {
 <li>tall_west&#160;:&#160;<a class="el" href="structmap__tile__flags.html#a8d684984ccc207e7a2fa0458b18c6317">map_tile_flags</a></li>
 <li>target&#160;:&#160;<a class="el" href="classobject__visitor.html#a572900f1cdac6a51dda48dcb7009c825">object_visitor</a></li>
 <li>target_any_object_type&#160;:&#160;<a class="el" href="classobject__visitor.html#a6a315f2228f1c4fc0cbdec5b65e755b4">object_visitor</a></li>
+<li>tile&#160;:&#160;<a class="el" href="classanimation__base.html#a90665a28eba2176a44c4ecfa05cdbac7">animation_base</a></li>
 <li>tile_layers&#160;:&#160;<a class="el" href="structmap__tile.html#aaee346a3759afaa9051353511fbd8788">map_tile</a></li>
 <li>tile_size&#160;:&#160;<a class="el" href="structanimation__key.html#a95892a39a824e9eede63851031ea2e1f">animation_key</a></li>
 <li>time&#160;:&#160;<a class="el" href="structmidi__token.html#ac4edae626047cfa73fc5290b692abc07">midi_token</a></li>
@@ -251,14 +251,12 @@ $(function() {
 
 
 <h3><a id="index_x" name="index_x"></a>- x -</h3><ul>
-<li>x&#160;:&#160;<a class="el" href="structpath__node.html#ac4134de21b533d5d884f34dd9dfb8a45">path_node</a></li>
-<li>x_relative_to_tile&#160;:&#160;<a class="el" href="classanimation__base.html#a05a917736f5580c9e05a15552562a45f">animation_base</a></li>
+<li>x&#160;:&#160;<a class="el" href="structpath__node.html#ac4134de21b533d5d884f34dd9dfb8a45">path_node</a>, <a class="el" href="structxy__pair.html#a291e40fcf5a1e4e4d7b831a369853a21">xy_pair</a></li>
 </ul>
 
 
 <h3><a id="index_y" name="index_y"></a>- y -</h3><ul>
-<li>y&#160;:&#160;<a class="el" href="structpath__node.html#a463f2b8a385abbc363f0a134ea244edf">path_node</a></li>
-<li>y_relative_to_tile&#160;:&#160;<a class="el" href="classanimation__base.html#ab7e5fe783e51f394495dccde2d9c0479">animation_base</a></li>
+<li>y&#160;:&#160;<a class="el" href="structpath__node.html#a463f2b8a385abbc363f0a134ea244edf">path_node</a>, <a class="el" href="structxy__pair.html#a9aec964599430ab0f009b08f3d67c508">xy_pair</a></li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.17-->

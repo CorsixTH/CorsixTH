@@ -9,7 +9,7 @@ var searchData=
   ['sound_5fentry_5fposition_5foffset_6',['sound_entry_position_offset',['../th__sound_8cpp.html#aae87d605071f1f894fa383760b9c1bd0',1,'th_sound.cpp']]],
   ['sound_5fentry_5fsize_7',['sound_entry_size',['../th__sound_8cpp.html#ab21a110e829c79b4d272c512b2d56a95',1,'th_sound.cpp']]],
   ['south_8',['south',['../structanimation__start__frames.html#a26d97dadc37a99d3322acc2a3f8c1c5c',1,'animation_start_frames']]],
-  ['speed_9',['speed',['../classanimation.html#aac98c35d1017845936681dad0a253cf9',1,'animation']]],
+  ['speed_9',['speed',['../classanimation.html#a51fc65009aec266c54ac02a8062cb472',1,'animation']]],
   ['sprites_10',['sprites',['../classmap__typical__overlay.html#a38e96b576c7404a59746f39436d5ebd9',1,'map_typical_overlay']]],
   ['start_5fx_11',['start_x',['../structtext__layout.html#a6b5f6946412090cc2a0fdda4483cb446',1,'text_layout::start_x'],['../classidle__tile__finder.html#aa675283ea8ca4feca7711e12644be050',1,'idle_tile_finder::start_x']]],
   ['start_5fy_12',['start_y',['../structtext__layout.html#a064c929e7da42670b65c123fe4f3aeef',1,'text_layout::start_y'],['../classidle__tile__finder.html#ad76ad8927c1dd6f35691ed0f26ea4117',1,'idle_tile_finder::start_y']]]

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xy_5fdiff_0',['xy_diff',['../structxy__diff.html',1,'']]]
+  ['xy_5fpair_0',['xy_pair',['../structxy__pair.html',1,'']]]
 ];

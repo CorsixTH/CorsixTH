@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['data_0',['data',['../structmidi__token.html#a1d0c621011775b625307583adab69375',1,'midi_token::data'],['../classmemory__reader.html#a20c64180bb4d8c64b613fb1d12c6f5f1',1,'memory_reader::data']]],
+  ['data_0',['data',['../classmemory__reader.html#a20c64180bb4d8c64b613fb1d12c6f5f1',1,'memory_reader::data'],['../structmidi__token.html#a1d0c621011775b625307583adab69375',1,'midi_token::data']]],
   ['default_5fheight_1',['default_height',['../th__map_8cpp.html#a9a6ed6001e856223e44cd81e35a981b2',1,'th_map.cpp']]],
   ['default_5fmap_2',['default_map',['../classpathfinder.html#a57d0bef4267f63214c317681e81375fc',1,'pathfinder']]],
   ['default_5fwidth_3',['default_width',['../th__map_8cpp.html#a12cffb247e219565d8e1aa01fee403dd',1,'th_map.cpp']]],
@@ -13,7 +13,5 @@ var searchData=
   ['distance_10',['distance',['../structpath__node.html#ac6fedf23f597c1e4b5da90c03379d124',1,'path_node']]],
   ['do_5fnot_5fidle_11',['do_not_idle',['../structmap__tile__flags.html#a38ad51aef8c3c68128254a81162db185',1,'map_tile_flags']]],
   ['door_5fnorth_12',['door_north',['../structmap__tile__flags.html#a4d24112d93198434f2d42610a15e301c',1,'map_tile_flags']]],
-  ['door_5fwest_13',['door_west',['../structmap__tile__flags.html#acbfbe7dcfbf09868a635bac866d60346',1,'map_tile_flags']]],
-  ['dx_14',['dx',['../structxy__diff.html#aa83b5c5fde85dc29ebe6f5e56f874666',1,'xy_diff']]],
-  ['dy_15',['dy',['../structxy__diff.html#ae5e0de37d3d2176043058fd0b8a0ad44',1,'xy_diff']]]
+  ['door_5fwest_13',['door_west',['../structmap__tile__flags.html#acbfbe7dcfbf09868a635bac866d60346',1,'map_tile_flags']]]
 ];
