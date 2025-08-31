@@ -334,7 +334,7 @@ function Patient:isTreatmentEffective()
   return (cure_chance >= math.random(1,100))
 end
 
-function Patient:isHaveMorePossibleDiagnosticRooms()
+function Patient:hasMoreDiagnosisRoomsAvailable()
   return #self.available_diagnosis_rooms ~= 0
 end
 

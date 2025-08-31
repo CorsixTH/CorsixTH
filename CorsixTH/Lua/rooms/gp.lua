@@ -137,7 +137,7 @@ function GPRoom:dealtWithPatient(patient)
     local no_need_diagnose_further =
       patient.diagnosis_progress >= self.hospital.policies["stop_procedure"]
     local cant_diagnose_further_but_can_set_diagnosis =
-      (patient.diagnosis_progress >= 1.0) and (not patient:isHaveMorePossibleDiagnosticRooms())
+      (patient.diagnosis_progress >= 1.0) and (not patient:hasMoreDiagnosisRoomsAvailable())
     if no_need_diagnose_further or cant_diagnose_further_but_can_set_diagnosis then
       patient:setDiagnosed()
       if patient:agreesToPay(patient.disease.id) then
@@ -168,7 +168,7 @@ function GPRoom:dealtWithPatient(patient)
 end
 
 function GPRoom:sendPatientToNextDiagnosisRoom(patient)
-  if not patient:isHaveMorePossibleDiagnosticRooms() then
+  if not patient:hasMoreDiagnosisRoomsAvailable() then
     -- The very rare case where the patient has visited all his/her possible diagnosis rooms
     -- There's not much to do then... Send home
     patient:goHome("kicked")
