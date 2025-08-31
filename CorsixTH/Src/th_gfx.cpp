@@ -1501,18 +1501,22 @@ void animation::tick() {
   }
 }
 
-void animation_base::remove_from_tile() { link_list::remove_from_list(); }
+void animation_base::remove_from_tile() {
+  link_list::remove_from_list();
+  tile = {-1, -1};
+}
 
-void animation_base::attach_to_tile(map_tile* pMapNode, int layer) {
+void animation_base::attach_to_tile(int x, int y, map_tile* node, int layer) {
   remove_from_tile();
   link_list* pList;
   if (flags & thdf_early_list) {
-    pList = &pMapNode->oEarlyEntities;
+    pList = &node->oEarlyEntities;
   } else {
-    pList = &pMapNode->entities;
+    pList = &node->entities;
   }
 
   this->set_drawing_layer(layer);
+  this->set_tile(x, y);
 
   while (pList->next &&
          static_cast<drawable*>(pList->next)->get_drawing_layer() < layer) {

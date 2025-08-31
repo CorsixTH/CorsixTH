@@ -521,13 +521,17 @@ class animation_base : public drawable {
   animation_base();
 
   void remove_from_tile();
-  void attach_to_tile(map_tile* pMapNode, int layer);
+  void attach_to_tile(int x, int y, map_tile* node, int layer);
 
   uint32_t get_flags() const { return flags; }
-  int get_x() const { return pixel_offset.x; }
-  int get_y() const { return pixel_offset.y; }
+  const xy_pair &get_pixel_offset() const { return pixel_offset; }
+  const xy_pair &get_tile() const { return tile; }
 
   void set_flags(uint32_t iFlags) { flags = iFlags; }
+  void set_tile(int x, int y) {
+    tile.x = x;
+    tile.y = y;
+  }
   void set_position(int x, int y) {
     pixel_offset.x = x;
     pixel_offset.y = y;
@@ -536,6 +540,9 @@ class animation_base : public drawable {
   void set_layers_from(const animation_base* pSrc) { layers = pSrc->layers; }
 
  protected:
+  //! Tile containing the animation. A negative x or y means it is not active.
+  xy_pair tile{-1, -1};
+
   //! Offset in pixels relative to the center of the animation tile.
   xy_pair pixel_offset{0, 0};
 
