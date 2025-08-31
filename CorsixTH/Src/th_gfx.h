@@ -524,8 +524,8 @@ class animation_base : public drawable {
   void attach_to_tile(int x, int y, map_tile* node, int layer);
 
   uint32_t get_flags() const { return flags; }
-  const xy_pair &get_pixel_offset() const { return pixel_offset; }
-  const xy_pair &get_tile() const { return tile; }
+  const xy_pair& get_pixel_offset() const { return pixel_offset; }
+  const xy_pair& get_tile() const { return tile; }
 
   void set_flags(uint32_t iFlags) { flags = iFlags; }
   void set_tile(int x, int y) {
