@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['i_0',['i',['../classload__multi__buffer.html#a21088150514982f5ed5ceffc080ac3e4',1,'load_multi_buffer']]],
-  ['ideographic_5fspace_5fcodepoint_1',['ideographic_space_codepoint',['../th__strings_8h.html#a124f0a44fda3a25f47c10431898cc426',1,'th_strings.h']]],
-  ['idle_5ftile_5ffinder_2',['idle_tile_finder',['../classidle__tile__finder.html',1,'idle_tile_finder'],['../classidle__tile__finder.html#ac46556a6236add5a7082464eaad0169c',1,'idle_tile_finder::idle_tile_finder()']]],
-  ['inflator_3',['inflator',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abadfcc9fda6fe6dcec5b475068872fec9c',1,'th_map.h']]],
-  ['init_4',['init',['../classlua__persist__basic__writer.html#ab0b002f1218260370e2d7f87ce421787',1,'lua_persist_basic_writer::init()'],['../classabstract__pathfinder.html#a5486c7697943a6390d06d0db3c8643e8',1,'abstract_pathfinder::init()'],['../classlua__persist__basic__reader.html#acb1d3b1683b34838250ab965ec12c309',1,'lua_persist_basic_reader::init()']]],
-  ['initialise_5',['initialise',['../classfreetype__font.html#a995a57c17a9f95c78f50a39ceee07759',1,'freetype_font']]],
+  ['ideographic_5fspace_5fcodepoint_0',['ideographic_space_codepoint',['../th__strings_8h.html#a124f0a44fda3a25f47c10431898cc426',1,'th_strings.h']]],
+  ['idle_5ftile_5ffinder_1',['idle_tile_finder',['../classidle__tile__finder.html',1,'idle_tile_finder'],['../classidle__tile__finder.html#ac46556a6236add5a7082464eaad0169c',1,'idle_tile_finder::idle_tile_finder()']]],
+  ['inflator_2',['inflator',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abadfcc9fda6fe6dcec5b475068872fec9c',1,'th_map.h']]],
+  ['init_3',['init',['../classlua__persist__basic__reader.html#acb1d3b1683b34838250ab965ec12c309',1,'lua_persist_basic_reader::init()'],['../classabstract__pathfinder.html#a5486c7697943a6390d06d0db3c8643e8',1,'abstract_pathfinder::init()'],['../classlua__persist__basic__writer.html#ab0b002f1218260370e2d7f87ce421787',1,'lua_persist_basic_writer::init()']]],
+  ['initialise_4',['initialise',['../classfreetype__font.html#a995a57c17a9f95c78f50a39ceee07759',1,'freetype_font']]],
+  ['insert_5',['insert',['../classload__multi__buffer.html#ad3c699fd0e17208f0a260e25a94b7186',1,'load_multi_buffer']]],
   ['integer_5frun_5flength_5fdecoder_6',['integer_run_length_decoder',['../classinteger__run__length__decoder.html#a4e10186319d79367cefca3d393594377',1,'integer_run_length_decoder::integer_run_length_decoder()'],['../classinteger__run__length__decoder.html',1,'integer_run_length_decoder']]],
   ['integer_5frun_5flength_5fencoder_7',['integer_run_length_encoder',['../classinteger__run__length__encoder.html',1,'integer_run_length_encoder'],['../classinteger__run__length__encoder.html#a85f99fcedda501fa8a639b36aaee89f6',1,'integer_run_length_encoder::integer_run_length_encoder()']]],
   ['invalid_5fchar_5fcodepoint_8',['invalid_char_codepoint',['../th__strings_8h.html#a019d6f1113e97fc735e770bf69cd8981',1,'th_strings.h']]],
