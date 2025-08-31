@@ -510,6 +510,12 @@ class animation_manager {
   void fix_next_frame(uint32_t iFirst, size_t iLength);
 };
 
+// Integer 2D pair.
+struct xy_pair {
+  int x{};  ///< Value of the X coordinate.
+  int y{};  ///< Value of the Y coordinate.
+};
+
 class animation_base : public drawable {
  public:
   animation_base();
@@ -535,13 +541,6 @@ class animation_base : public drawable {
   int y_relative_to_tile{};
 
   ::layers layers{};
-};
-
-struct xy_diff {
-  //! Amount to change x per tick
-  int dx{};
-  //! Amount to change y per tick
-  int dy{};
 };
 
 //! The kind of animation.
@@ -610,7 +609,10 @@ class animation : public animation_base {
   void set_morph_target(animation* pMorphTarget, int iDurationFactor = 1);
   void set_frame(size_t iFrame);
 
-  void set_speed(int iX, int iY) { speed.dx = iX, speed.dy = iY; }
+  void set_speed(int x, int y) {
+    speed.x = x;
+    speed.y = y;
+  }
   void set_crop_column(int iColumn) { crop_column = iColumn; }
 
   void persist(lua_persist_writer* pWriter) const;
@@ -628,7 +630,8 @@ class animation : public animation_base {
   size_t animation_index{};  ///< Animation number.
   size_t frame_index{};      ///< Frame number.
   union {
-    xy_diff speed{};
+    xy_pair speed{};  ///< Speed in pixels per tick.
+
     //! Some animations are tied to the primary or secondary marker of another
     //! animation and hence have a parent rather than a speed.
     animation* parent;

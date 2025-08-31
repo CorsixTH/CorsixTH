@@ -1192,7 +1192,7 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
     manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
   }
   oMorphRect.y = iDestY + morph_target->y_relative_to_tile;
-  oMorphRect.h = morph_target->speed.dx - morph_target->y_relative_to_tile;
+  oMorphRect.h = morph_target->speed.x - morph_target->y_relative_to_tile;
   {
     render_target::scoped_clip clip(pCanvas, &oMorphRect);
     manager->draw_frame(pCanvas, morph_target->frame_index,
@@ -1287,8 +1287,8 @@ void animation::persist(lua_persist_writer* pWriter) const {
   // Write the unioned fields
   if (anim_kind != animation_kind::primary_child &&
       anim_kind != animation_kind::secondary_child) {
-    pWriter->write_int(speed.dx);
-    pWriter->write_int(speed.dy);
+    pWriter->write_int(speed.x);
+    pWriter->write_int(speed.y);
   } else {
     lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, parent);
@@ -1368,8 +1368,8 @@ void animation::depersist(lua_persist_reader* pReader) {
     // Read the unioned fields
     if (anim_kind != animation_kind::primary_child &&
         anim_kind != animation_kind::secondary_child) {
-      if (!pReader->read_int(speed.dx)) break;
-      if (!pReader->read_int(speed.dy)) break;
+      if (!pReader->read_int(speed.x)) break;
+      if (!pReader->read_int(speed.y)) break;
     } else {
       if (!pReader->read_stack_object()) break;
       parent = static_cast<animation*>(lua_touserdata(L, -1));
@@ -1480,12 +1480,12 @@ void animation::tick() {
   frame_index = manager->get_next_frame(frame_index);
   if (anim_kind != animation_kind::primary_child &&
       anim_kind != animation_kind::secondary_child) {
-    x_relative_to_tile += speed.dx;
-    y_relative_to_tile += speed.dy;
+    x_relative_to_tile += speed.x;
+    y_relative_to_tile += speed.y;
   }
 
   if (morph_target) {
-    morph_target->y_relative_to_tile += morph_target->speed.dy;
+    morph_target->y_relative_to_tile += morph_target->speed.y;
     if (morph_target->y_relative_to_tile < morph_target->x_relative_to_tile) {
       morph_target->y_relative_to_tile = morph_target->x_relative_to_tile;
     }
@@ -1628,8 +1628,8 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
   the morph target animation:
     * The y value top limit - morph_target->x
     * The y value threshold - morph_target->y
-    * The y value bottom limit - morph_target->speed.dx
-    * The y value increment per frame - morph_target->speed.dy
+    * The y value bottom limit - morph_target->speed.x
+    * The y value increment per frame - morph_target->speed.y
   This obviously means that the morph target should not be ticked or rendered
   as it's position and speed contain other values.
   */
@@ -1654,14 +1654,14 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
   }
 
   if (iOrigMaxY > iMorphMaxY) {
-    morph_target->speed.dx = iOrigMaxY;
+    morph_target->speed.x = iOrigMaxY;
   } else {
-    morph_target->speed.dx = iMorphMaxY;
+    morph_target->speed.x = iMorphMaxY;
   }
 
-  int iDist = morph_target->x_relative_to_tile - morph_target->speed.dx;
-  morph_target->speed.dy = (iDist - iMorphDuration + 1) / iMorphDuration;
-  morph_target->y_relative_to_tile = morph_target->speed.dx;
+  int iDist = morph_target->x_relative_to_tile - morph_target->speed.x;
+  morph_target->speed.y = (iDist - iMorphDuration + 1) / iMorphDuration;
+  morph_target->y_relative_to_tile = morph_target->speed.x;
 }
 
 void animation::set_frame(size_t iFrame) { frame_index = iFrame; }
