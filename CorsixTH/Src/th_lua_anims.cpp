@@ -425,8 +425,13 @@ int l_anim_get_tile(lua_State* L) {
   }
 
   const xy_pair& tile = pAnimation->get_tile();
-  lua_pushinteger(L, tile.x + 1);
-  lua_pushinteger(L, tile.y + 1);
+  if (tile.x >= 0 && tile.y >= 0) {
+    lua_pushinteger(L, tile.x + 1);
+    lua_pushinteger(L, tile.y + 1);
+  } else {
+    lua_pushnil(L);
+    lua_pushnil(L);
+  }
   return 3;  // map, x, y
 }
 
