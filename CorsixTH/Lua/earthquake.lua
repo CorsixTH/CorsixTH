@@ -149,7 +149,7 @@ function Earthquake:tick()
   local hospital = self.world:getLocalPlayerHospital()
   -- loop through the patients and allow the possibility for them to fall over
   for _, patient in ipairs(hospital.patients) do
-    if not patient.in_room and patient.falling_anim then
+    if not patient.in_room and patient.falling_anim and math.random(1,2) == 2 then
       patient:falling(false)
     end
   end
