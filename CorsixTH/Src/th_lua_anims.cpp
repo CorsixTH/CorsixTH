@@ -506,8 +506,8 @@ template <typename T>
 int l_anim_set_pixel_offset(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
 
-  int x = static_cast<int>(luaL_optinteger(L, 2, 0));
-  int y = static_cast<int>(luaL_optinteger(L, 3, 0));
+  int x = static_cast<int>(luaL_checkinteger(L, 2));
+  int y = static_cast<int>(luaL_checkinteger(L, 3));
   pAnimation->set_pixel_offset(x, y);
 
   lua_settop(L, 1);
