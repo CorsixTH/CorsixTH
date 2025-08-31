@@ -1129,13 +1129,11 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       rcNew.x = iDestX + (crop_column - 1) * 32;
       rcNew.w = 64;
       render_target::scoped_clip clip(pCanvas, &rcNew);
-      manager->draw_frame(pCanvas, frame_index, layers,
-                          iDestX + pixel_offset.x,
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX + pixel_offset.x,
                           iDestY + pixel_offset.y, flags, patient_effect,
                           patient_effect_offset);
     } else
-      manager->draw_frame(pCanvas, frame_index, layers,
-                          iDestX + pixel_offset.x,
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX + pixel_offset.x,
                           iDestY + pixel_offset.y, flags, patient_effect,
                           patient_effect_offset);
   }
@@ -1185,8 +1183,7 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
   oMorphRect.x = 0;
   oMorphRect.w = pCanvas->get_width();
   oMorphRect.y = iDestY + morph_target->pixel_offset.x;
-  oMorphRect.h =
-      morph_target->pixel_offset.y - morph_target->pixel_offset.x;
+  oMorphRect.h = morph_target->pixel_offset.y - morph_target->pixel_offset.x;
   {
     render_target::scoped_clip clip(pCanvas, &oMorphRect);
     manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
@@ -1224,8 +1221,7 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
   }
 
   return manager->hit_test(frame_index, layers, pixel_offset.x + iDestX,
-                           pixel_offset.y + iDestY, flags, iTestX,
-                           iTestY) ||
+                           pixel_offset.y + iDestY, flags, iTestX, iTestY) ||
          morph_target->hit_test(iDestX, iDestY, iTestX, iTestY);
 }
 
