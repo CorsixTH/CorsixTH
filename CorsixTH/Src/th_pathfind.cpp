@@ -639,8 +639,6 @@ void pathfinder::persist(lua_persist_writer* pWriter) const {
 }
 
 void pathfinder::depersist(lua_persist_reader* pReader) {
-  new (this) pathfinder;  // Call constructor
-
   int iLength;
   if (!pReader->read_uint(iLength)) {
     return;

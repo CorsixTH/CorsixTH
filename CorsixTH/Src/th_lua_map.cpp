@@ -70,14 +70,15 @@ int l_map_persist(lua_State* L) {
 }
 
 int l_map_depersist(lua_State* L) {
-  level_map* pMap = luaT_testuserdata<level_map>(L);
+  void* map_ud = luaT_testuserdata<level_map>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
-  pMap->depersist(pReader);
+  level_map* map = new (map_ud) level_map();
+  map->depersist(pReader);
   luaT_getenvfield(L, 2, "sprites");
-  pMap->set_block_sheet((sprite_sheet*)lua_touserdata(L, -1));
+  map->set_block_sheet((sprite_sheet*)lua_touserdata(L, -1));
   lua_pop(L, 1);
   return 0;
 }
@@ -914,14 +915,15 @@ int l_path_persist(lua_State* L) {
 }
 
 int l_path_depersist(lua_State* L) {
-  pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
+  void* pathfinder_ud = luaT_testuserdata<pathfinder>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
-  pPathfinder->depersist(pReader);
+  pathfinder* pf = new (pathfinder_ud) pathfinder();
+  pf->depersist(pReader);
   luaT_getenvfield(L, 2, "map");
-  pPathfinder->set_default_map(static_cast<level_map*>(lua_touserdata(L, -1)));
+  pf->set_default_map(static_cast<level_map*>(lua_touserdata(L, -1)));
   return 0;
 }
 

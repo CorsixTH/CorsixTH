@@ -1546,8 +1546,6 @@ void level_map::persist(lua_persist_writer* pWriter) const {
 }
 
 void level_map::depersist(lua_persist_reader* pReader) {
-  new (this) level_map;  // Call constructor
-
   lua_State* L = pReader->get_stack();
   int iWidth, iHeight;
 

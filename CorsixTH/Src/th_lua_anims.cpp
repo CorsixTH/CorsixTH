@@ -275,6 +275,8 @@ int l_anim_pre_depersist(lua_State* L) {
 
 template <typename T>
 int l_anim_depersist(lua_State* L) {
+  // Because anim has a pre_depersist function the userdata is already
+  // initialized as a T.
   T* pAnimation = luaT_testuserdata<T>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);

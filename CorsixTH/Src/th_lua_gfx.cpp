@@ -520,18 +520,17 @@ int l_layers_persist(lua_State* L) {
 }
 
 int l_layers_depersist(lua_State* L) {
-  layers* pLayers = luaT_testuserdata<layers>(L);
+  void* layers_ud = luaT_testuserdata<layers>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader =
       static_cast<lua_persist_reader*>(lua_touserdata(L, 1));
 
-  std::memset(pLayers->layer_contents, 0, sizeof(pLayers->layer_contents));
+  layers* ls = new (layers_ud) layers();
   int iNumLayers;
   if (!pReader->read_uint(iNumLayers)) return 0;
   if (iNumLayers > max_number_of_layers) {
-    if (!pReader->read_byte_stream(pLayers->layer_contents,
-                                   max_number_of_layers)) {
+    if (!pReader->read_byte_stream(ls->layer_contents, max_number_of_layers)) {
       return 0;
     }
     if (!pReader->read_byte_stream(nullptr,
@@ -539,8 +538,7 @@ int l_layers_depersist(lua_State* L) {
       return 0;
     }
   } else {
-    if (!pReader->read_byte_stream(pLayers->layer_contents, iNumLayers))
-      return 0;
+    if (!pReader->read_byte_stream(ls->layer_contents, iNumLayers)) return 0;
   }
   return 0;
 }
@@ -855,13 +853,13 @@ int l_line_persist(lua_State* L) {
 }
 
 int l_line_depersist(lua_State* L) {
-  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
+  void* line_ud = luaT_testuserdata<line_sequence>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader =
       static_cast<lua_persist_reader*>(lua_touserdata(L, 1));
-  new (pLine) line_sequence();
-  pLine->depersist(pReader);
+  line_sequence* line = new (line_ud) line_sequence();
+  line->depersist(pReader);
   return 0;
 }
 
