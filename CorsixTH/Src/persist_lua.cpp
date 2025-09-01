@@ -919,7 +919,7 @@ class lua_persist_basic_reader : public lua_persist_reader {
             lua_pop(L, 1);
           else {
             // Call the __depersist function with the userdata.
-            // Note: Unless the __pre_depersist method was called above the
+            // Note: Unless the __pre_depersist method was called above, the
             // new userdata has been created but any initialization such as
             // the constructor normally called by luaT_stdnew has not yet been
             // run. If the object is a C++ class, call the placement new
