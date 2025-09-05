@@ -44,7 +44,7 @@ body:
       description: Select all that apply
       options:
         - label: Right mouse panning
-        - label: Falling actions
+        - label: Falling actions (applies to CorsixTH versions < 0.70.0)
 # Save Game Upload
   - type: textarea
     id: savegame

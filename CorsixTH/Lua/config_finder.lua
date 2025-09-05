@@ -141,7 +141,6 @@ local config_defaults = {
   allow_blocking_off_areas = false,
   direct_zoom = nil,
   new_machine_extra_info = true,
-  debug_falling = false,
   player_name = [[]],
 }
 
@@ -501,13 +500,6 @@ soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
 -- and a debug menu will be visible.
 --]=] .. '\n' ..
 'debug = ' .. tostring(config_values.debug) .. '\n' .. [=[
-
--- Experimental setting for falling patients. (debug only!)
--- CorsixTH does not yet have reliable handling for falling actions and enabling it
--- could cause dropped action queues or undesired bugs. You should leave this setting
--- off unless you're developing with it
---]=] .. '\n' ..
-'debug_falling = ' .. tostring(config_values.debug_falling) .. '\n' .. [=[
 
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
