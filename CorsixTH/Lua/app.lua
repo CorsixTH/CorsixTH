@@ -1003,24 +1003,33 @@ function App:fixConfig()
     -- For language, make language name lower case
     if key == "language" and type(value) == "string" then
       self.config[key] = value:lower()
-    end
 
     -- For resolution, check that resolution is at least 640x480
-    if key == "width" and type(value) == "number" and value < 640 then
+    elseif key == "width" and type(value) == "number" and value < 640 then
       self.config[key] = 640
-    end
 
-    if key == "height" and type(value) == "number" and value < 480 then
+    elseif key == "height" and type(value) == "number" and value < 480 then
       self.config[key] = 480
-    end
 
-    if (key == "scroll_speed" or key == "shift_scroll_speed") and
+    elseif (key == "scroll_speed" or key == "shift_scroll_speed") and
         type(value) == "number" then
       if value > 10 then
         self.config[key] = 10
       elseif value < 1 then
         self.config[key] = 1
       end
+
+    -- For player name, trim spaces or fill in from environment
+    elseif key == "player_name" then
+      value = value:match('^%s*(.*%S)') or "" -- Trim spaces
+      if value:len() == 0 then -- If empty, use computer user's name,
+        value = os.getenv("USER") or os.getenv("USERNAME")
+      end
+      value = value:match('^%s*(.*%S)') or ""
+      if value:len() == 0 then -- unless that is also empty
+        value = "PLAYER"
+      end
+      self.config[key] = value
     end
   end
 end
