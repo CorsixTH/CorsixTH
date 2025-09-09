@@ -60,16 +60,12 @@ function UIGraphs:UIGraphs(ui)
   -- Buttons
   self:addPanel(0, 63, 384):makeButton(0, 0, 26, 26, 3, self.close):setTooltip(_S.tooltip.graphs.close)
 
-  -- The possible scales are:
-  -- 1: Increments of four years per line
-  -- 2: Increments of one year per line
-  -- 3: Increments of one month per line
-  self.graph_scale = 3
-
   self.graph_scale_panel = self:addPanel(0, 371, 384)
   self.graph_scale_button = self.graph_scale_panel:makeButton(0, 0, 65, 26, 2, self.toggleGraphScale):setTooltip(_S.tooltip.graphs.scale)
 
   local config = self:initRuntimeConfig()
+  self.graph_scale = config.graph_scale
+
   local function toggleButton(sprite, x, y, option, str)
     local panel = self:addPanel(sprite, x, y)
     local btn = panel:makeToggleButton(0, 0, 42, 42, 1, --[[persistable:graphs_button]] function() self:toggleGraph(option) end):setTooltip(str)
@@ -123,6 +119,7 @@ function UIGraphs:initRuntimeConfig()
     config.cures = true
     config.deaths = true
     config.reputation = true
+    config.graph_scale = 3
   end
   return config
 end
@@ -448,8 +445,16 @@ function UIGraphs:draw(canvas, x, y)
 end
 
 function UIGraphs:toggleGraphScale()
+  -- The possible scales are:
+  -- 1: Increments of four years per line
+  -- 2: Increments of one year per line
+  -- 3: Increments of one month per line
   self.graph_scale = self.graph_scale - 1
   if self.graph_scale == 0 then self.graph_scale = 3 end
+
+  local config = self.ui.app.runtime_config.graphs_dialog
+  config.graph_scale = self.graph_scale
+
   self:updateLines()
   self.ui:playSound("selectx.wav")
 end
@@ -466,7 +471,17 @@ function UIGraphs:close()
 end
 
 function UIGraphs:afterLoad(old, new)
-  if old < 218 then
+  if old < 179 then
+    local gfx = TheApp.gfx
+
+    self.background = gfx:loadRaw("Graph01V", 640, 480, "QData", "QData", "Graph01V.pal", true)
+    local palette = gfx:loadPalette("QData", "Graph01V.pal", true)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Graph02V", true, palette)
+    self.white_font = gfx:loadFontAndSpriteTable("QData", "Font01V", false, palette)
+    self.black_font = gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette)
+  end
+  UIFullscreen.afterLoad(self, old, new)
+  if old < 231 then
     self:close()
   end
 end
