@@ -108,9 +108,9 @@ function Patient:setDisease(disease)
     self.available_diagnosis_rooms[i] = room
   end
   -- 25% of the patients pay via insurance
-  local insurance_chance = math.random(1,12)
-  if insurance_chance < 4 then
-    self.insurance_company = insurance_chance
+  if math.random(1,4) == 1 then
+    -- randomly select one of three insurance companies
+    self.insurance_company = math.random(1,3)
   end
   -- Randomise thirst and the need to visit the loo soon.
   -- Alien patients do not have the needed animations for these things, so exclude them
