@@ -231,7 +231,7 @@ function Cheats:cheatRepairAllMachines()
 end
 
 function Cheats:cheatToggleInvulnerableMachines()
-  local msg = nil
+  local msg
 
   if self.active_cheats["invulnerable_machines"] then
     msg = _S.misc.invulnerable_machines_off
