@@ -856,6 +856,8 @@ misc = {
   epidemic_no_icon_to_toggle = "No es posible mostrar/ocultar iconos de infección - no hay epidemias en progreso que no hayan sido reveladas",
   epidemic_no_diseases = "No es posible crear una epidemia - no hay enfermedades contagiosas disponibles",
   epidemic_no_receptionist = "No es posible crear una epidemia - no hay una recepcion que cuente con personal",
+  invulnerable_machines_off = "Las máquinas volverán a estropearse y romperse.",
+  invulnerable_machines_on = "Las máquinas ya no se estropearán ni romperán.",
 }
 
 main_menu = {
@@ -1391,6 +1393,7 @@ cheats_window = {
     reset_death_count = "Reiniciar contador de muertes",
     max_reputation = "Reputatión máxima",
     repair_all_machines = "Reparar todas las máquinas",
+    toggle_invulnerable_machines = "Activar máquinas invulnerables",
   },
   close = "Cerrar",
 }
@@ -1417,6 +1420,7 @@ tooltip.cheats_window = {
     reset_death_count = "Reinicia el contador de muertes del hospital a cero",
     max_reputation = "Establece la reputación del hospital al máximo",
     repair_all_machines = "Repara todas las máquinas del hospital",
+    toggle_invulnerable_machines = "Permite elegir si las máquinas pueden estropearse o romperse luego de ser usadas",
   }
 }
 
@@ -1462,8 +1466,8 @@ machine_menu = {
 tooltip.machine_menu = {
   sort = "Haz clic para ordenar por esta valor.",
   machine = "Lista de máquinas - haz clic en una máquina para abrir su interfaz y desplazarte a su ubicación",
-  smoking = "Esta casilla está marcada si la máquina corre riesgo de explotar",
-  assigned = "Esta casilla está marcada si un operario de mantenimiento está asignado para reparar la máquina correspondiente",
+  smoking = "Esta casilla estará marcada si la máquina corre riesgo de explotar",
+  assigned = "Esta casilla estará marcada si un operario de mantenimiento está asignado para reparar la máquina correspondiente",
   remaining_strength = "Esta etiqueta muestra la fuerza restante de la máquina",
   total_strength = "Muestra la fuerza total de la máquina",
   ratio = "Muestra la relación entre la fuerza restante y la fuerza total",

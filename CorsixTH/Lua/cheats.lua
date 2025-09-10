@@ -53,6 +53,7 @@ function Cheats:Cheats(hospital)
     {name = "reset_death_count", func = self.cheatResetDeathCount},
     {name = "max_reputation",  func = self.cheatMaxReputation},
     {name = "repair_all_machines", func = self.cheatRepairAllMachines},
+    {name = "toggle_invulnerable_machines", func = self.cheatToggleInvulnerableMachines},
   }
 
   self.active_cheats = {} -- Toggle cheat status
@@ -227,6 +228,19 @@ function Cheats:cheatRepairAllMachines()
   for _, machine in ipairs(machines) do
     machine:machineRepaired(machine:getRoom(), false)
   end
+end
+
+function Cheats:cheatToggleInvulnerableMachines()
+  local msg = nil
+
+  if self.active_cheats["invulnerable_machines"] then
+    msg = _S.misc.invulnerable_machines_off
+  else
+    msg = _S.misc.invulnerable_machines_on
+  end
+
+  self.active_cheats["invulnerable_machines"] = not self.active_cheats["invulnerable_machines"]
+  return true, msg
 end
 
 --[[Begin toggle-based cheat functions]]
