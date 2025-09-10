@@ -402,6 +402,11 @@ class level_map {
   void set_overlay(map_overlay* pOverlay, bool bTakeOwnership);
 
  private:
+  bool is_on_map(int x, int y) const;
+  bool is_on_map(int index) const;
+  int encode_tile_index_unchecked(int x, int y) const;
+  void decode_tile_index_unchecked(int index, int& x, int& y) const;
+
   void draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
                   int iWidth, int iHeight, int iCanvasX, int iCanvasY) const;
   void draw_north_wall(const map_tile* tile, int tile_x, int tile_y,
@@ -448,8 +453,8 @@ class level_map {
 
   int count_parcel_tiles(int iParcelId) const;
 
-  map_tile* cells{};
-  map_tile* original_cells{};  // Cells at map load time, before any changes
+  std::vector<map_tile> cells{};           // Cells in the game.
+  std::vector<map_tile> original_cells{};  // Originally loaded cells.
   sprite_sheet* wall_blocks{};
   map_overlay* overlay{};
   bool owns_overlay{};
