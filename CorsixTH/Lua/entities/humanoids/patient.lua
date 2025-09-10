@@ -51,6 +51,9 @@ function Patient:Patient(...)
   self.vaccination_candidate = false
   -- Has the patient passed reception?
   self.has_passed_reception = false
+  -- Diagnostics progress to diagnose the patient.
+  -- Usually this value is in the range from 0 to ~2.5
+  self.diagnosis_progress = 0
 
   -- Is the patient trying to get to the toilet? ("yes", "no", or "no-toilets")
   self.going_to_toilet = "no"
@@ -104,9 +107,10 @@ function Patient:setDisease(disease)
   for i, room in ipairs(self.disease.diagnosis_rooms) do
     self.available_diagnosis_rooms[i] = room
   end
-  local company = math.random(1,12)
-  if company < 4 then
-    self.insurance_company = company
+  -- 25% of the patients pay via insurance
+  if math.random(1,4) == 1 then
+    -- randomly select one of three insurance companies
+    self.insurance_company = math.random(1,3)
   end
   -- Randomise thirst and the need to visit the loo soon.
   -- Alien patients do not have the needed animations for these things, so exclude them
@@ -328,6 +332,10 @@ function Patient:isTreatmentEffective()
   cure_chance = cure_chance + (service_base * service_factor)
 
   return (cure_chance >= math.random(1,100))
+end
+
+function Patient:hasMoreDiagnosisRoomsAvailable()
+  return #self.available_diagnosis_rooms ~= 0
 end
 
 --! Change patient internal state to "cured".
