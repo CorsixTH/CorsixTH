@@ -345,13 +345,16 @@ end
 
 --! Call on machine repaired.
 --!param room (object) machine room
-function Machine:machineRepaired(room)
+function Machine:machineRepaired(room, dontReduceStrength)
   room.needs_repair = false
-  self:reduceStrengthOnRepair(room)
   self.times_used = 0
   self:setRepairing(nil)
   setSmoke(self, false)
   self:removeHandymanRepairTask()
+
+  if dontReduceStrength == nil or not dontReduceStrength then
+    self:reduceStrengthOnRepair(room)
+  end
 end
 
 --! Call on machine used. After machine use increment use values accordingly.

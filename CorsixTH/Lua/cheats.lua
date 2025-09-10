@@ -52,6 +52,7 @@ function Cheats:Cheats(hospital)
     {name = "decrease_prices", func = self.cheatDecreasePrices},
     {name = "reset_death_count", func = self.cheatResetDeathCount},
     {name = "max_reputation",  func = self.cheatMaxReputation},
+    {name = "repair_all_machines", func = self.cheatRepairAllMachines},
   }
 
   self.active_cheats = {} -- Toggle cheat status
@@ -209,6 +210,24 @@ function Cheats:cheatDecreasePrices()
   end
 end
 
+function Cheats:cheatResetDeathCount()
+  self.hospital:resetDeathCount()
+end
+
+function Cheats:cheatMaxReputation()
+  local hosp = self.hospital
+  hosp:unconditionalChangeReputation(hosp.reputation_max)
+end
+
+function Cheats:cheatRepairAllMachines()
+  local world = self.hospital.world
+  local playerMachines = world:getPlayerMachines()
+
+  for _, machine in ipairs(playerMachines) do
+    machine:machineRepaired(machine:getRoom(), true)
+  end
+end
+
 --[[Begin toggle-based cheat functions]]
 
 --! Enable Roujin's challenge (spawn rate cheat)
@@ -306,13 +325,4 @@ function Cheats:toggleCheat(name)
   if cheatWindow then
     cheatWindow:updateCheatedStatus()
   end
-end
-
-function Cheats:cheatResetDeathCount()
-  self.hospital:resetDeathCount()
-end
-
-function Cheats:cheatMaxReputation()
-  local hosp = self.hospital
-  hosp:unconditionalChangeReputation(hosp.reputation_max)
 end
