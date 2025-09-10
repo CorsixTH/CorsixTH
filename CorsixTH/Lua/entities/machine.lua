@@ -352,7 +352,7 @@ function Machine:machineRepaired(room, dontReduceStrength)
   setSmoke(self, false)
   self:removeHandymanRepairTask()
 
-  if dontReduceStrength == nil or not dontReduceStrength then
+  if not dontReduceStrength then
     self:reduceStrengthOnRepair(room)
   end
 end
