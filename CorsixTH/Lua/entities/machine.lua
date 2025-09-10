@@ -134,8 +134,13 @@ end
 
 --! Call after use of the machine.
 function Machine:incrementUsedCount()
-  self.times_used = self.times_used + 1
+  local is_machines_never_break_cheat_active = self.hospital.hosp_cheats.active_cheats["invulnerable_machines"] or false
+
   self.total_usage = self.total_usage + 1
+
+  if not is_machines_never_break_cheat_active then
+    self.times_used = self.times_used + 1
+  end
 end
 
 --! Call on machine use.

@@ -348,6 +348,8 @@ misc = {
   epidemic_no_icon_to_toggle = "Unable to show/hide infected icons - no epidemics in progress that are not revealed",
   epidemic_no_diseases = "Cannot create epidemic - no contagious diseases available",
   epidemic_no_receptionist = "Cannot create epidemic - no staffed reception desk",
+  invulnerable_machines_off = "Machines will wear and break down again.",
+  invulnerable_machines_on = "Machines will no longer wear or break down.",
 }
 
 main_menu = {
@@ -897,6 +899,7 @@ cheats_window = {
     decrease_prices = "Decrease prices",
     reset_death_count = "Reset death count",
     max_reputation = "Max reputation",
+    toggle_invulnerable_machines = "Toggle invulnerable machines",
   },
   close = "Close",
 }
@@ -922,6 +925,7 @@ tooltip.cheats_window = {
     decrease_prices = "Decrease all prices by 50% (min. 50%)",
     reset_death_count = "Reset the hospital death count to zero",
     max_reputation = "Set the hospital reputation to the maximum",
+    toggle_invulnerable_machines = "Toggle whether machines wear down when used",
   }
 }
 
