@@ -82,10 +82,8 @@ function Patient:onClick(ui, button)
     -- The object we're using is made invisible, as the animation contains both
     -- the humanoid and the object. Hence send the click onto the object.
     self.user_of:onClick(ui, button)
-  elseif TheApp.config.debug_falling and button == "right" then
+  elseif button == "right" then
     -- Attempt to push patient over
-    -- Currently debug-only, enable in config file for testing.
-    -- Once confirmed working, the debugging flag can be removed.
     if not self.world:isPaused() and not (self.cured or self.dead or self.going_home)
          and math.random(1, 2) == 2 then
       self:falling(true)

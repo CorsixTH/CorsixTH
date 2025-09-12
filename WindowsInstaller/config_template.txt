@@ -310,13 +310,6 @@ audio_buffer_size = 2048
 --
 debug = false
 
--- Experimental setting for falling patients. (debug only!)
--- CorsixTH does not yet have reliable handling for falling actions and enabling it
--- could cause dropped action queues or undesired bugs. You should leave this setting
--- off unless you're developing with it
---
-debug_falling = false
-
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
 -- off the FPS limiter, causing much higher CPU utilisation, but resulting in

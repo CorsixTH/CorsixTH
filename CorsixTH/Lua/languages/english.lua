@@ -205,7 +205,6 @@ menu_debug = {
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
   allow_blocking_off_areas    = "  ALLOW BLOCKING OFF AREAS  ",
-  allow_falling               = "  ALLOW FALLING  ",
   make_debug_fax              = "  MAKE DEBUG FAX  ",
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
   cheats                      = "  (%1%) CHEATS  ",
