@@ -1545,6 +1545,18 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   oEncoder.pump_output(pWriter);
 }
 
+namespace {
+//! Assign the tile position in the map to the just loaded animations.
+void restore_map_position(animation_base* anim, int tile_x_pos,
+                          int tile_y_pos) {
+  while (anim != nullptr) {
+    anim->set_tile(tile_x_pos, tile_y_pos);
+    anim = dynamic_cast<animation_base*>(anim->next);
+  }
+}
+
+}  // namespace
+
 void level_map::depersist(lua_persist_reader* pReader) {
   lua_State* L = pReader->get_stack();
   int iWidth, iHeight;
@@ -1600,8 +1612,17 @@ void level_map::depersist(lua_persist_reader* pReader) {
     }
   }
 
+  int tile_x_pos = -1;
+  int tile_y_pos = 0;
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
+    // Update tile 2D position.
+    tile_x_pos++;
+    if (tile_x_pos == width) {
+      tile_x_pos = 0;
+      tile_y_pos++;
+    }
+
     uint32_t f;
     if (!pReader->read_uint(f)) return;
 
@@ -1617,23 +1638,32 @@ void level_map::depersist(lua_persist_reader* pReader) {
     }
 
     if (!pReader->read_stack_object()) return;
-    pNode->entities.next = luaT_toanimationbase(L, -1);
+
+    animation_base* anim = luaT_toanimationbase(L, -1);
+    restore_map_position(anim, tile_x_pos, tile_y_pos);
+
+    pNode->entities.next = anim;
     if (pNode->entities.next) {
       if (pNode->entities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
       }
       pNode->entities.next->prev = &pNode->entities;
     }
-    lua_pop(L, 1);
 
+    lua_pop(L, 1);
     if (!pReader->read_stack_object()) return;
-    pNode->oEarlyEntities.next = luaT_toanimationbase(L, -1);
+
+    animation_base* early_anim = luaT_toanimationbase(L, -1);
+    restore_map_position(early_anim, tile_x_pos, tile_y_pos);
+
+    pNode->oEarlyEntities.next = early_anim;
     if (pNode->oEarlyEntities.next) {
       if (pNode->oEarlyEntities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
       }
       pNode->oEarlyEntities.next->prev = &pNode->oEarlyEntities;
     }
+
     lua_pop(L, 1);
   }
 
