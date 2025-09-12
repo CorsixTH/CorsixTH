@@ -353,7 +353,7 @@ function Machine:machineRepaired(room, dontReduceStrength)
   self:removeHandymanRepairTask()
 
   if not dontReduceStrength then
-    self:reduceStrengthOnRepair(room)
+    self:reduceStrengthOnRepair()
   end
 end
 
@@ -368,8 +368,7 @@ function Machine:removeHandymanRepairTask()
 end
 
 --! Calculates if machine strength should be reduced as a result of repair
---!param room (object) machine room
-function Machine:reduceStrengthOnRepair(room)
+function Machine:reduceStrengthOnRepair()
   local minimum_possible_strength = 2
   if self.strength <= minimum_possible_strength then return end
 

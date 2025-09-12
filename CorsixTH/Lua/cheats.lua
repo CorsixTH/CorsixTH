@@ -219,11 +219,12 @@ function Cheats:cheatMaxReputation()
   hosp:unconditionalChangeReputation(hosp.reputation_max)
 end
 
+--! Instantly repairs all of the player's machines (regardless of condition, without decreasing strength)
 function Cheats:cheatRepairAllMachines()
   local world = self.hospital.world
-  local playerMachines = world:getPlayerMachines()
+  local machines = world:getPlayerMachines()
 
-  for _, machine in ipairs(playerMachines) do
+  for _, machine in ipairs(machines) do
     machine:machineRepaired(machine:getRoom(), true)
   end
 end

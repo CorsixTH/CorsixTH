@@ -2101,6 +2101,7 @@ function World:getRoomNameAndRequiredStaffName(room_id)
   return room_name, staff_name, StaffProfile.translateStaffClass(staff_name)
 end
 
+--! Gets a list of all the machines in the player's hospital.
 function World:getPlayerMachines()
   local world = self
   local hosp = world:getLocalPlayerHospital()
