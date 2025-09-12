@@ -230,13 +230,14 @@ function Cheats:cheatRepairAllMachines()
   end
 end
 
+--! Toggles machine invulnerability (no wear or explosions)
 function Cheats:cheatToggleInvulnerableMachines()
   local msg
 
-  if self.active_cheats["invulnerable_machines"] then
-    msg = _S.misc.invulnerable_machines_off
-  else
+  if self:isCheatActive("invulnerable_machines") then
     msg = _S.misc.invulnerable_machines_on
+  else
+    msg = _S.misc.invulnerable_machines_off
   end
 
   self.active_cheats["invulnerable_machines"] = not self.active_cheats["invulnerable_machines"]
