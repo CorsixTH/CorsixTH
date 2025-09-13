@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local lfs = require("lfs")
 local TH = require("TH")
-local iso_fs = TH.iso_fs()
+local iso_fs = TH.iso_fs
 local lfsext = TH.lfsExt()
 
 --! A tree node representing a directory in the physical file-system.
@@ -105,7 +105,7 @@ function InstallDirTreeNode:getHighlightColour(canvas)
     elseif self:getChildCount() >= 3 and TheApp:isThemeHospitalPath(self.path) then
       highlight_colour = canvas:mapRGB(0, 255, 0)
       self.is_valid_directory = true
-    elseif FileSystem:isIso(self.path) and iso_fs:setRoot(self.path) then
+    elseif FileSystem:isIso(self.path) and iso_fs.isValidRoot(self.path) then
       highlight_colour = canvas:mapRGB(0, 255, 0)
       self.is_valid_directory = true
     end

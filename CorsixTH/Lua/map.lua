@@ -578,11 +578,12 @@ function Map:updateDebugOverlayHeliport()
   end
 end
 
-function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
+-- If both 'first' and 'last' are numbers, they are indices starting at 0.
+function Map:loadDebugText(first, last, bits_)
   self.debug_text = false
   self.debug_flags = false
   self.updateDebugOverlay = nil
-  if base_offset == "flags" then
+  if first == "flags" then
     self.debug_flags = {}
     for x = 1, self.width do
       for y = 1, self.height do
@@ -592,7 +593,7 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
     end
     self.updateDebugOverlay = self.updateDebugOverlayFlags
     self:updateDebugOverlay()
-  elseif base_offset == "positions" then
+  elseif first == "positions" then
     self.debug_text = {}
     for x = 1, self.width do
       for y = 1, self.height do
@@ -600,32 +601,30 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
         self.debug_text[xy] = x .. "," .. y
       end
     end
-  elseif base_offset == "heat" then
+  elseif first == "heat" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayHeat
     self:updateDebugOverlay()
-  elseif base_offset == "parcel" then
+  elseif first == "parcel" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayParcels
     self:updateDebugOverlay()
-  elseif base_offset == "camera" then
+  elseif first == "camera" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayCamera
     self:updateDebugOverlay()
-  elseif base_offset == "heliport" then
+  elseif first == "heliport" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayHeliport
     self:updateDebugOverlay()
   else
-    local thData = self:getRawData()
     for x = 1, self.width do
       for y = 1, self.height do
-        local xy = (y - 1) * self.width + x - 1
-        local offset = base_offset + xy * xy_offset
+        local raw = self.th:getCellRaw(x, y)
         if bits_ then
-          self:setDebugText(x, y, bits(thData:byte(offset + first, offset + last)))
+          self:setDebugText(x, y, bits(raw:byte(first + 1, last + 1)))
         else
-          self:setDebugText(x, y, thData:byte(offset + first, offset + last))
+          self:setDebugText(x, y, raw:byte(first + 1, last + 1))
         end
       end
     end

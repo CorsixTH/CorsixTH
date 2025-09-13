@@ -135,15 +135,13 @@ function UIOptions:UIOptions(ui, mode)
   end
 
   -- add the Audio global switch.
-  local audio_status = app:isAudioEnabled()
   local audio_y_pos = self:_getOptionYPos()
   self:addBevelPanel(20, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.audio):setTooltip(_S.tooltip.options_window.audio_button).lowered = true
   self.volume_panel =
-    self:addBevelPanel(165, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.audio and audio_status and _S.customise_window.option_on or _S.customise_window.option_off)
+    self:addBevelPanel(165, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
   self.volume_button = self.volume_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonAudioGlobal)
-    :setToggleState(app.config.audio and audio_status):setTooltip(_S.tooltip.options_window.audio_toggle)
-  self.volume_button.enabled = audio_status
+    :setToggleState(app.config.audio):setTooltip(_S.tooltip.options_window.audio_toggle)
 
   -- Fullscreen
   local fullscreen_y_pos = self:_getOptionYPos()
@@ -366,7 +364,7 @@ function UIOptions:buttonHotkey()
 end
 
 function UIOptions:buttonJukebox()
-  if self.app.config.audio and self.app:isAudioEnabled() then
+  if self.app.config.audio then
     self.ui:addWindow(UIJukebox(self.app))
   end
 end

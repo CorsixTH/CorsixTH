@@ -24,6 +24,8 @@ SOFTWARE.
 #define CORSIX_TH_RLE_H_
 #include "config.h"
 
+#include <vector>
+
 class lua_persist_reader;
 class lua_persist_writer;
 
@@ -41,16 +43,13 @@ class lua_persist_writer;
 */
 class integer_run_length_encoder {
  public:
-  integer_run_length_encoder();
-  ~integer_run_length_encoder();
-
-  //! (Re-)initialise the encoder
+  //! Initialise the encoder
   /*!
       Prepares the encoder for accepting a sequence of records.
 
       \param iRecordSize The number of integers in a record.
   */
-  bool initialise(size_t iRecordSize);
+  explicit integer_run_length_encoder(size_t iRecordSize);
 
   //! Supply the next integer in the input sequence to the encoder
   void write(uint32_t iValue);
@@ -62,12 +61,10 @@ class integer_run_length_encoder {
   */
   void finish();
 
-  uint32_t* get_output(size_t* pCount) const;
+  const uint32_t* get_output(size_t* pCount) const;
   void pump_output(lua_persist_writer* pWriter) const;
 
  private:
-  void clean();
-
   //! Reduce the amount of data in the buffer
   /*!
       \param bAll If true, will reduce buffer_size to zero.
@@ -80,53 +77,44 @@ class integer_run_length_encoder {
   bool move_object_to_output(size_t iObjSize, size_t iObjCount);
 
   //! A circular fixed-size buffer holding the most recent input
-  uint32_t* buffer;
+  std::vector<uint32_t> buffer;
   //! A variable-length array holding the output sequence
-  uint32_t* output;
+  std::vector<uint32_t> output;
   //! The number of integers in a record
   size_t record_size;
-  //! The maximum number of integers stored in the buffer
-  size_t buffer_capacity;
   //! The current number of integers stored in the buffer
-  size_t buffer_size;
+  size_t buffer_size{};
   //! The index into buffer of the 1st integer
-  size_t buffer_offset;
-  //! The maximum number of integers storable in the output (before the
-  //! output array has to be resized).
-  size_t output_capacity;
+  size_t buffer_offset{};
   //! The current number of integers stored in the output
-  size_t output_size;
+  size_t output_size{};
   //! The number of integers in the current object (multiple of record size)
-  size_t object_size;
+  size_t object_size{};
   //! The number of copies of the current object already seen and removed
   //! from the buffer.
-  size_t object_copies;
+  size_t object_copies{};
 };
 
+//! Decoder for reading a sequence of integers encoded by
+//! integer_run_length_encoder
 class integer_run_length_decoder {
  public:
-  integer_run_length_decoder();
-  ~integer_run_length_decoder();
+  integer_run_length_decoder(size_t iRecordSize, lua_persist_reader* pReader);
 
-  bool initialise(size_t iRecordSize, lua_persist_reader* pReader);
-  bool initialise(size_t iRecordSize, const uint32_t* pInput, size_t iCount);
   uint32_t read();
   bool is_finished() const;
 
  private:
-  void clean();
+  std::vector<uint32_t> buffer;
 
-  uint32_t* buffer;
+  // Not owned by the decoder, the reader to read from.
   lua_persist_reader* reader;
-  const uint32_t* input;
-  union {
-    const uint32_t* input_end;
-    size_t reads_remaining;
-  };
-  size_t object_copies;
+
+  size_t reads_remaining{};
   size_t record_size;
-  size_t object_index;
-  size_t object_size;
+  size_t object_copies{};
+  size_t object_index{};
+  size_t object_size{};
 };
 
 #endif  // CORSIX_TH_RLE_H_

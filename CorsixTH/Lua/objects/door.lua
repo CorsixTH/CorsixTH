@@ -166,7 +166,7 @@ function Door:closeDoor()
 end
 
 function Door:getDrawingLayer()
-  return 0
+  return DrawingLayers.Door
 end
 
 function Door:checkForDeadlock()

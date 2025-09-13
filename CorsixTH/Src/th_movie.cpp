@@ -25,7 +25,7 @@ SOFTWARE.
 #include "config.h"
 
 #include "lua_sdl.h"
-#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
+#ifdef CORSIX_TH_USE_FFMPEG
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -64,7 +64,11 @@ void th_movie_audio_callback(int iChannel, void* pStream, int iStreamSize,
 }  // namespace
 
 movie_picture::movie_picture()
-    : buffer(nullptr), pixel_format(AV_PIX_FMT_RGB24), mutex{} {}
+    : buffer(nullptr),
+      pixel_format(AV_PIX_FMT_RGB24),
+      width(0),
+      height(0),
+      pts(0) {}
 
 movie_picture::~movie_picture() { av_freep(&buffer); }
 
@@ -90,9 +94,7 @@ movie_picture_buffer::movie_picture_buffer()
       read_index(0),
       write_index(0),
       sws_context(nullptr),
-      texture(nullptr),
-      mutex{},
-      cond{} {}
+      texture(nullptr) {}
 
 movie_picture_buffer::~movie_picture_buffer() {
   sws_freeContext(sws_context);
@@ -207,7 +209,7 @@ bool movie_picture_buffer::full() {
   return unsafe_full();
 }
 
-bool movie_picture_buffer::unsafe_full() {
+bool movie_picture_buffer::unsafe_full() const {
   return (!allocated || picture_count == picture_buffer_size);
 }
 
@@ -261,7 +263,7 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
   return 0;
 }
 
-av_packet_queue::av_packet_queue() : data{}, mutex{}, cond{} {}
+av_packet_queue::av_packet_queue() = default;
 
 std::size_t av_packet_queue::get_count() const { return data.size(); }
 
@@ -301,20 +303,21 @@ void av_packet_queue::clear() {
 
 movie_player::movie_player()
     : renderer(nullptr),
-      last_error(),
-      decoding_audio_mutex{},
       format_context(nullptr),
       video_codec_context(nullptr),
       audio_codec_context(nullptr),
-      video_queue(),
-      audio_queue(),
-      movie_picture_buffer(),
       audio_resample_context(nullptr),
       empty_audio_chunk(nullptr),
       audio_chunk_buffer{},
       audio_channel(-1),
-      stream_thread{},
-      video_thread{} {
+      error_buffer{},
+      aborting(false),
+      video_stream_index(-1),
+      audio_stream_index(-1),
+      current_sync_pts(0.0),
+      current_sync_pts_system_time(0),
+      mixer_channels(0),
+      mixer_frequency(0) {
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100)
   av_register_all();
 #endif

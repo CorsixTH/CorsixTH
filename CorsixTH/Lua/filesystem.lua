@@ -92,10 +92,10 @@ end
 -- or theme hospital ISO file.
 function FileSystem:setRoot(physical_path)
   if self:isIso(physical_path) then
-    self.provider = ISO_FS()
-    self.provider:setPathSeparator(pathsep)
     self.physical_path = physical_path
-    return self.provider:setRoot(physical_path)
+    local provider, status, err = ISO_FS(physical_path, pathsep)
+    self.provider = provider
+    return status, err
   end
 
   if physical_path:sub(-1) == pathsep then

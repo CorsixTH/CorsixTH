@@ -281,7 +281,7 @@ constexpr std::array<uint8_t, 47> bootstrap_font_pal{
 
 // Lua reader function for loading bootstrap_code
 const char* read_bootstrap_line(lua_State* L, void* data, size_t* size) {
-  int& iLine = *reinterpret_cast<int*>(data);
+  int& iLine = *static_cast<int*>(data);
   ++iLine;
   if (iLine < 0 || (iLine & 1)) {
     *size = 1;

@@ -90,7 +90,7 @@ function World:World(app, free_build_mode)
   self.floating_dollars = {}
   self.game_log = {} -- saves list of useful debugging information
   self.savegame_version = app.savegame_version -- Savegame version number
-  self.release_version = app:getVersion(self.savegame_version) -- Savegame release version (e.g. 0.60), or Trunk
+  self.release_version = app:getReleaseString() -- Savegame release version (e.g. 0.60), or Trunk
   -- Also preserve this throughout future updates.
   self.original_savegame_version = app.savegame_version
 
@@ -1152,14 +1152,18 @@ function World:nextEmergency()
     self:scheduleRandomEmergency(control)
     return
   end
-  repeat
+
+  -- Find the next valid emergency entry
+  local valid_emergency = false
+  while not valid_emergency do
     local emer_num = self.next_emergency_no
-    -- Account for missing Level 3 emergency[5]
+    -- First, handle the missing Level 3 emergency[5]
     if not control[emer_num] and control[emer_num + 1] then
       emer_num = emer_num + 1
       self.next_emergency_no = emer_num
     end
     local emergency = control[emer_num]
+
     -- No more emergencies?
     if not emergency then
       self.next_emergency_month = 0
@@ -1167,9 +1171,12 @@ function World:nextEmergency()
       self.next_emergency = nil
       return
     end
+
+    -- Test the emergency's validity
     self.next_emergency = emergency
     self.next_emergency_no = self.next_emergency_no + 1
-  until self:computeNextEmergencyDates(emergency)
+    valid_emergency = self:computeNextEmergencyDates(emergency)
+  end
 end
 
 --! If a level file specifies random emergencies we make the next one as defined by the mean/variance given
@@ -2175,16 +2182,6 @@ end
 --!param old (integer) The old version of the save game.
 --!param new (integer) The current version of the save game format.
 function World:afterLoad(old, new)
-
-  if not self.original_savegame_version then
-    self.original_savegame_version = old
-  end
-  -- If the original save game version is considerably lower than the current, warn the player.
-  -- For 2024 release, bump cutoff from 20 to 25 pending new methods in PR2518
-  if new - 25 > self.original_savegame_version then
-    self.ui:addWindow(UIInformation(self.ui, {_S.information.very_old_save}))
-  end
-
   self:setUI(self.ui)
 
   -- insert global compatibility code here
@@ -2571,9 +2568,19 @@ function World:afterLoad(old, new)
   self:previousSpeed()
 
   self.earthquake:afterLoad(old, new)
+
+  -- Savegame version housekeeping
+  if not self.original_savegame_version then
+    self.original_savegame_version = old
+  end
+  -- If the original save game version is considerably lower than the current, ask
+  -- the player if they want to restart the level.
+  if TheApp:compareVersions(new, old, "release") > 2 then
+    TheApp:restart(_S.confirmation.very_old_save)
+  end
   self.savegame_version = new
-  self.release_version = TheApp:getVersion(new)
-  self.system_pause = false -- Reset flag on load
+  self.release_version = TheApp:getReleaseString(new)
+  self:setSystemPause(false) -- Reset flag on load
 end
 
 function World:playLoadedEntitySounds()

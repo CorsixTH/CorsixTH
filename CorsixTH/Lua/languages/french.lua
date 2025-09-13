@@ -29,6 +29,10 @@ Inherit("original_strings", 1)
 --]]
 
 ----------------------------------------------------------- Override -----------------------------------------------------------
+rooms_short.ward = "Salle des malades"
+rooms_long.ward = "Salle des malades"
+confirmation.replace_machine = "Voulez-vous vraiment remplacer cette machine %s pour $%d ?" -- French originally did not show machine name or cost
+
 misc.save_failed = "ERREUR : partie non sauvegardée." -- Much more french
 misc.cant_treat_emergency = "Votre hôpital ne peut pas traiter cette urgence car la maladie n'a pas été découverte. N'hésitez pas à réessayer."
 tooltip.policy.diag_termination = "L'auscultation d'un patient continuera jusqu'à ce que les médecins soient sûrs à hauteur du pourcentage FIN PROCEDURE ou jusqu'à ce que toutes les machines de diagnostic aient été essayées. " -- Remove a superfluous word
@@ -500,7 +504,6 @@ confirmation = {
   overwrite_save = "Il y a déjà une partie sauvegardée ici. Êtes-vous sûr de vouloir l'écraser ?",
   delete_room = "Voulez-vous vraiment détruire cette salle ?",
   sack_staff = "Êtes-vous sûr de vouloir licencier ?",
-  replace_machine = "Voulez-vous vraiment remplacer cette machine ?"
 }
 
 -- The originals of these strings contain one space too much
@@ -585,6 +588,10 @@ menu_charts = {
   status = "  (%1%) STATUTS  ",
   graphs = "  (%1%) GRAPHIQUES  ",
   policy = "  (%1%) POLITIQUE "
+}
+
+tooltip.toolbar = {
+  machine_menu = "Menu des machines",
 }
 
 -- Debug menu
@@ -913,7 +920,8 @@ customise_window = {
   aliens = "Extraterrestres",
   fractured_bones = "Fractures",
   average_contents = "Achats mémorisés",
-  remove_destroyed_rooms = "Supprimer les salles détruites"
+  remove_destroyed_rooms = "Supprimer les salles détruites",
+  machine_menu_button = "Bouton du menu des machines",
 }
 
 tooltip.customise_window = {
@@ -925,7 +933,8 @@ tooltip.customise_window = {
   fractured_bones = "En raison de la qualité faible de l'animation il n'y a pas de patientes avec des fractures. Désactivez cette option si vous désirez avoir des femmes avec des fractures.",
   average_contents = "Si vous voulez que le jeu se rappelle des articles supplémentaires que vous avez tendance à normalement magasiner pour une nouvelle salle, activer cette option",
   back = "Fermer ce menu et revenir au menu d'options",
-  remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option"
+  remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option",
+  machine_menu_button = "Si vous voulez avoir un bouton pour le menu des machines dans le panneau inférieur, activez cette option. Gardez à l'esprit que ce bouton ne sera pas disponible sur des petites résolutions d'écran.",
 }
 
 folders_window = {
@@ -1046,7 +1055,9 @@ confirmation = {
   abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
   maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Êtes-vous sûr de vouloir continuer?",
   remove_destroyed_room = "Souhaitez-vous supprimer la salle pour %d $ ?",
-  replace_machine_extra_info = "La nouvelle machine aura une puissance de %d (actuellement %d)."
+  replace_machine_extra_info = "La nouvelle machine aura une puissance de %d (actuellement %d).",
+  very_old_save = "Il y a eu de nombreuses mises à jour du jeu depuis que vous avez commencé. Pour être sûr que toutes les fonctionnalités fonctionnent comme prévu, voudriez-vous recommencer ce niveau maintenant ?//"..
+  "Votre ancienne sauvegarde ne sera pas supprimée à moins que vous ne l'écrasiez."
 }
 
 -- Information dialog

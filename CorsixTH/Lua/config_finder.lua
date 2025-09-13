@@ -124,6 +124,7 @@ local config_defaults = {
   disable_fractured_bones_females = true,
   enable_avg_contents = false,
   remove_destroyed_rooms = false,
+  machine_menu_button = true,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
@@ -140,7 +141,6 @@ local config_defaults = {
   allow_blocking_off_areas = false,
   direct_zoom = nil,
   new_machine_extra_info = true,
-  debug_falling = false,
   player_name = [[]],
 }
 
@@ -236,8 +236,6 @@ local string_01 = [=[
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
--- Note that audio will also be disabled if CorsixTH was compiled without
--- the SDL_mixer library.
 --]=] .. '\n' ..
 'audio = ' .. tostring(config_values.audio) .. '\n' .. [=[
 
@@ -394,7 +392,13 @@ local string_01 = [=[
 -- By default destroyed rooms can't be removed. If you would like the game to
 -- give you the option of removing a destroyed room change this option to true.
 --]=] .. '\n' ..
-'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[]=]
+'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default machine menu is shown in a bottom panel. If you would like the
+-- game to hide it change this option to false.
+--]=] .. '\n' ..
+'machine_menu_button = ' .. tostring(config_values.machine_menu_button) .. '\n' .. [=[]=]
 
 local string_02 = [=[
 
@@ -496,13 +500,6 @@ soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
 -- and a debug menu will be visible.
 --]=] .. '\n' ..
 'debug = ' .. tostring(config_values.debug) .. '\n' .. [=[
-
--- Experimental setting for falling patients. (debug only!)
--- CorsixTH does not yet have reliable handling for falling actions and enabling it
--- could cause dropped action queues or undesired bugs. You should leave this setting
--- off unless you're developing with it
---]=] .. '\n' ..
-'debug_falling = ' .. tostring(config_values.debug_falling) .. '\n' .. [=[
 
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns

@@ -20,9 +20,18 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
-    <release version="0.69.0~beta1" date="2025-06-07" type="development">
+    <release version="0.69.1" date="2025-08-16" type="stable">
       <description>
-        <p>New Features/Enhancements</p>
+        <p>Bug fixes:</p>
+        <ul>
+          <li>Fixed a crash when placing staff in a room while a patient is being
+            treated</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.69.0" date="2025-07-26" type="stable">
+      <description>
+        <p>New Features/Enhancements:</p>
         <ul>
           <li>A new machine menu has been added. Now you can view the status of
               all your hospital machines in one place!</li>
@@ -32,7 +41,144 @@
           <li>Soda price can now be configured in the level file</li>
           <li>Improvements and fixes for the ChirzmanTV custom campaign</li>
         </ul>
-        <p>Changes</p>
+        <p>Changes:</p>
+        <ul>
+          <li>Improved how staff look for work if idle</li>
+          <li>Machine strength reduction after repair now more closely aligned
+              with the original game</li>
+          <li>Machine strength now has a minimum value of 2 after repair</li>
+          <li>Mouse is now only captured when in game, or using the map editor</li>
+          <li>Improved measurement on the progress report chart columns</li>
+          <li>Annual rewards and trophies now have more robust evaluation
+              criteria</li>
+          <li>A patient&apos;s treatment cost is now decided at the point they agree
+              to pay</li>
+          <li>VIPs now walk slower, as in the original game</li>
+          <li>Gamelogs now include the date and time of the crash in their file
+              name, and the last 10 logs are now held in the Logs folder</li>
+          <li>Finding files for custom campaigns is now more reliable, and
+              supports storing your campaign inside its own folder</li>
+          <li>Custom Campaigns can no longer be played in Free Build mode, as they
+              could break campaign progression</li>
+          <li>For games compiled using fluidsynth (such as our Windows and Flatpak
+              builds), you can now set the soundfont in the configuration file</li>
+          <li>Video files can now be missing during TH installation corruption
+              checks</li>
+          <li>You can now hear patients vomiting, instead of just the vomit
+              splatters</li>
+          <li>Lakes no longer show in the Town Map as per the original game</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>The original game&apos;s numerals for the money bar can now be
+              toggled by translators using the isArabicNumerals flag. This setting
+              is set to off currently for CJK languages</li>
+          <li>Reworded cheat failure messages, some translations still require
+              updating</li>
+          <li>Improved hotkey window and research tooltips, some translations
+              still require updating</li>
+          <li>A new Japanese translation has been added. Thanks @ShimaKen523</li>
+          <li>Brazilian Portuguese translation has been updated. Thanks
+              @altiereslima</li>
+          <li>Russian translation has been updated. Thanks @ARGAMX @Matroftt</li>
+          <li>French translation has been updated. Thanks @Sanndow @legluondunet</li>
+          <li>Dutch translation has been updated. Thanks @Alberth289346 &amp;
+              @jetenergy</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Game speed tick rates have been smoothed out again, improving
+              animations and sound playback for objects</li>
+          <li>Improved colour accuracy for fonts in unicode languages now means
+              you can actually read when your game is paused</li>
+          <li>Many fixes for the position of staff and patient moods in the game!
+              More are scheduled to come in future</li>
+          <li>Fixed a (very annoying) bug with walks that caused new patients to
+              enter rooms along their path</li>
+          <li>Rework to the operating theatre room to prevent patient/staff
+              lockups</li>
+          <li>Free build now always comes with free heating and free parcel
+              purchases!</li>
+          <li>Epidemic timer now ends once all patients are resolved</li>
+          <li>Old serious radiation epidemics can no longer cause a game crash.
+              In future, this epidemic type will be reinstated again</li>
+          <li>Failed cheats will now always provide feedback messages</li>
+          <li>Spawning a contagious patient via cheating now works in levels
+              without a helipad</li>
+          <li>Long windows now correctly count as a window</li>
+          <li>Dynamic info for machines now displays correctly when cycling between
+              them</li>
+          <li>Fixed a bug where changing doctor in General Diagnosis could break
+              the room and patient</li>
+          <li>Fixed a scenario where clicking on a staff member in an exploding
+              room caused a game crash</li>
+          <li>Fixed some anomalies in the original campaign&apos;s map files</li>
+          <li>And more... Check out the project changelog for the full list</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.69.0~rc1" date="2025-07-12" type="development">
+      <description>
+        <p>Translations:</p>
+        <ul>
+          <li>Russian translation has been updated. Thanks @Matroftt</li>
+          <li>French translation has been updated. Thanks @legluondunet</li>
+        </ul>
+        <p>Packager Notes:</p>
+        <ul>
+          <li>Fixed a regression with CORSIXTH_SEARCH_LOCAL_DATADIRS cmake
+              option</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.69.0~beta2" date="2025-06-21" type="development">
+      <description>
+        <p>Features:</p>
+        <ul>
+          <li>Custom level/campaign creators can now use an existing level file
+              as an overlay to copy and extend their level file with the
+              #overlay variable. See the &apos;Custom Level&apos; Wiki page
+              for more information.</li>
+        </ul>
+        <p>Changes:</p>
+        <ul>
+          <li>You can now hear patients vomiting, instead of just the vomit
+              splatters</li>
+          <li>Lakes no longer show in the Town Map as per the original game</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>Russian translation has been updated. Thanks @ARGAMX</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Fixed some anomalies in the original campaign&apos;s map files</li>
+        </ul>
+        <p>Regressions from 0.69.0 Beta 1:</p>
+        <ul>
+          <li>Fixed a crash in General Diagnosis</li>
+          <li>Fixed a compatibility issue with mood markers on old saves</li>
+          <li>Fixed a crash with the grim reaper</li>
+          <li>Fixed a bug with the hotkey assignment menu</li>
+          <li>Fixed an issue with handymen ignoring cleaning duties. Please note
+              existing saves from Beta 1 currently have no fix implemented for
+              those duties already broken.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.69.0~beta1" date="2025-06-07" type="development">
+      <description>
+        <p>New Features/Enhancements:</p>
+        <ul>
+          <li>A new machine menu has been added. Now you can view the status of
+              all your hospital machines in one place!</li>
+          <li>Changing speed in game now happens immediately</li>
+          <li>Patient happiness can now be a win/lose factor in custom games</li>
+          <li>Transparent walls can now be toggled using Shift + X</li>
+          <li>Soda price can now be configured in the level file</li>
+          <li>Improvements and fixes for the ChirzmanTV custom campaign</li>
+        </ul>
+        <p>Changes:</p>
         <ul>
           <li>Improved how staff look for work if idle</li>
           <li>Machine strength reduction after repair now more closely aligned
@@ -56,7 +202,7 @@
           <li>Video files can now be missing during TH installation corruption
               checks</li>
         </ul>
-        <p>Translations</p>
+        <p>Translations:</p>
         <ul>
           <li>The original game&apos;s numerals for the money bar can now be
               toggled by translators using the isArabicNumerals flag. This setting
@@ -73,7 +219,7 @@
           <li>Dutch translation has been updated. Thanks @Alberth289346 &amp;
               @jetenergy</li>
         </ul>
-        <p>Bug Fixes</p>
+        <p>Bug Fixes:</p>
         <ul>
           <li>Game speed tick rates have been smoothed out again, improving
               animations and sound playback for objects</li>

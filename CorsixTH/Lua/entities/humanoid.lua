@@ -972,10 +972,6 @@ function Humanoid:unregisterCallbacks()
   end
 end
 
-function Humanoid:getDrawingLayer()
-  return 4
-end
-
 function Humanoid:getCurrentAction()
   if next(self.action_queue) == nil then
     error("Action queue was empty. This should never happen.\n" .. self:tostring())

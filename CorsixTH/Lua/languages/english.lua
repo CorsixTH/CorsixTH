@@ -205,7 +205,6 @@ menu_debug = {
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
   allow_blocking_off_areas    = "  ALLOW BLOCKING OFF AREAS  ",
-  allow_falling               = "  ALLOW FALLING  ",
   make_debug_fax              = "  MAKE DEBUG FAX  ",
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
   cheats                      = "  (%1%) CHEATS  ",
@@ -237,6 +236,11 @@ menu_player_count = {
   players_3 = "  3 PLAYERS  ",
   players_4 = "  4 PLAYERS  ",
 }
+
+tooltip.toolbar = {
+  machine_menu = "Machine menu",
+}
+
 adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
   warnings = {
@@ -526,6 +530,7 @@ customise_window = {
   fractured_bones = "Fractured Bones",
   average_contents = "Average Contents",
   remove_destroyed_rooms = "Remove destroyed rooms",
+  machine_menu_button = "Machine menu button",
 }
 
 tooltip.customise_window = {
@@ -537,6 +542,7 @@ tooltip.customise_window = {
   fractured_bones = "Because of a poor animation we have by default made it so there are no female patients with Fractured Bones. To allow female patients with Fractured Bones to visit your hospital, turn this off",
   average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",
   remove_destroyed_rooms = "If you would like to be able to remove destroyed rooms, for a fee, turn this option on",
+  machine_menu_button = "If you would like to have a machine menu button in bottom panel, turn this option on. Keep in mind that this button will not be available in small screen resolutions",
   back = "Close this menu and go back to the Settings Menu",
 }
 
@@ -799,13 +805,14 @@ confirmation = {
   replace_machine_extra_info = "The new machine will have %d strength (currently %d).",
   restart_mapeditor = "Are you sure you want to restart the map editor?",
   quit_mapeditor = "Are you sure you want to quit the map editor?",
+  very_old_save = "There have been a lot of updates to the game since you started. To be sure that all features work as intended would you like to restart this level now?//" ..
+  "Your old save won't be deleted unless you overwrite it.",
 }
 
 information = {
   custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
   no_custom_game_in_demo = "Sorry, but in the demo version you can't play any custom maps.",
   cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
-  very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it.",
   level_lost = {
     "Bummer! You failed the level. Better luck next time!",
     "The reason you lost:",
@@ -1039,6 +1046,7 @@ tooltip.status = {
 
 options_window.change_resolution = "Change resolution"
 tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
+information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
 
 cheats_window.cheats = {
  toggle_infected = show_infected,

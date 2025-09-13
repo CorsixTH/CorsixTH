@@ -43,7 +43,7 @@ local col_caption = {
 }
 
 function UICustomise:UICustomise(ui, mode)
-  self:UIResizable(ui, 340, 300, col_bg)
+  self:UIResizable(ui, 340, 325, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -61,23 +61,20 @@ function UICustomise:UICustomise(ui, mode)
     .lowered = true
 
   -- Movies, global switch
-  local audio_status = app:isAudioEnabled()
   self:addBevelPanel(15, 40, 165, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.customise_window.movies):setTooltip(_S.tooltip.customise_window.movies).lowered = true
   self.movies_panel =
-    self:addBevelPanel(185, 40, 140, 20, col_bg):setLabel(app.config.movies and audio_status and _S.customise_window.option_on or _S.customise_window.option_off)
+    self:addBevelPanel(185, 40, 140, 20, col_bg):setLabel(app.config.movies and _S.customise_window.option_on or _S.customise_window.option_off)
   self.movies_button = self.movies_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonMoviesGlobal)
-    :setToggleState(app.config.movies and audio_status):setTooltip(_S.tooltip.customise_window.movies)
-  self.movies_button.enabled = audio_status
+    :setToggleState(app.config.movies):setTooltip(_S.tooltip.customise_window.movies)
 
   -- Intro movie
   self:addBevelPanel(15, 65, 165, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.customise_window.intro):setTooltip(_S.tooltip.customise_window.intro).lowered = true
   self.intro_panel =
-    self:addBevelPanel(185, 65, 140, 20, col_bg):setLabel(app.config.play_intro and audio_status and _S.customise_window.option_on or _S.customise_window.option_off)
+    self:addBevelPanel(185, 65, 140, 20, col_bg):setLabel(app.config.play_intro and _S.customise_window.option_on or _S.customise_window.option_off)
   self.intro_button = self.intro_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonIntro)
-    :setToggleState(app.config.play_intro and audio_status):setTooltip(_S.tooltip.customise_window.intro)
-  self.intro_button.enabled = audio_status
+    :setToggleState(app.config.play_intro):setTooltip(_S.tooltip.customise_window.intro)
 
   -- Allow user actions when paused
   self:addBevelPanel(15, 90, 165, 20, col_shadow, col_bg, col_bg)
@@ -127,8 +124,16 @@ function UICustomise:UICustomise(ui, mode)
   self.destroyed_rooms_button = self.destroyed_rooms_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonDestroyed_rooms)
     :setToggleState(app.config.remove_destroyed_rooms):setTooltip(_S.tooltip.customise_window.remove_destroyed_rooms)
 
+  -- Allow machine menu button in a toolbar
+  self:addBevelPanel(15, 240, 165, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.customise_window.machine_menu_button):setTooltip(_S.tooltip.customise_window.machine_menu_button).lowered = true
+  self.machine_menu_panel =
+    self:addBevelPanel(185, 240, 140, 20, col_bg):setLabel(app.config.machine_menu_button and _S.customise_window.option_on or _S.customise_window.option_off)
+  self.machine_menu_button = self.machine_menu_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonMachine_menu)
+    :setToggleState(app.config.machine_menu_button):setTooltip(_S.tooltip.customise_window.machine_menu_button)
+
   -- "Back" button
-  self:addBevelPanel(15, 245, 310, 40, col_bg):setLabel(_S.customise_window.back)
+  self:addBevelPanel(15, 270, 310, 40, col_bg):setLabel(_S.customise_window.back)
     :makeButton(0, 0, 310, 40, nil, self.buttonBack):setTooltip(_S.tooltip.customise_window.back)
 end
 
@@ -211,6 +216,15 @@ function UICustomise:buttonDestroyed_rooms()
   app.config.remove_destroyed_rooms = not app.config.remove_destroyed_rooms
   self.destroyed_rooms_button:toggle()
   self.destroyed_rooms_panel:setLabel(app.config.remove_destroyed_rooms and _S.customise_window.option_on or _S.customise_window.option_off)
+  app:saveConfig()
+  self:reload()
+end
+
+function UICustomise:buttonMachine_menu()
+  local app = self.ui.app
+  app.config.machine_menu_button = not app.config.machine_menu_button
+  self.destroyed_rooms_button:toggle()
+  self.destroyed_rooms_panel:setLabel(app.config.machine_menu_button and _S.customise_window.option_on or _S.customise_window.option_off)
   app:saveConfig()
   self:reload()
 end

@@ -23,9 +23,13 @@ SOFTWARE.
 #include "config.h"
 
 #include <SDL_stdinc.h>
+#include <ft2build.h>  // IWYU pragma: keep
+// IWYU pragma: no_include "freetype/config/ftheader.h"
 
+#include <algorithm>
 #include <climits>
 #include <cstring>
+#include <exception>
 #include <new>
 
 #include "lua.hpp"
@@ -35,12 +39,8 @@ SOFTWARE.
 #include "th_gfx_sdl.h"
 #include "th_lua.h"
 #include "th_lua_internal.h"
-
-#ifdef CORSIX_TH_USE_FREETYPE2
-#include <ft2build.h>  // IWYU pragma: keep
 #include FT_ERRORS_H
 #include FT_TYPES_H
-#endif
 
 namespace {
 
@@ -265,7 +265,6 @@ int l_bitmap_font_set_sep(lua_State* L) {
   return 1;
 }
 
-#ifdef CORSIX_TH_USE_FREETYPE2
 void l_freetype_throw_error_code(lua_State* L, FT_Error e) {
   if (e != FT_Err_Ok) {
     switch (e) {
@@ -334,8 +333,6 @@ int l_freetype_font_clear_cache(lua_State* L) {
   pFont->clear_cache();
   return 0;
 }
-
-#endif
 
 int l_font_get_size(lua_State* L) {
   font* pFont = luaT_getfont(L);
@@ -523,18 +520,17 @@ int l_layers_persist(lua_State* L) {
 }
 
 int l_layers_depersist(lua_State* L) {
-  layers* pLayers = luaT_testuserdata<layers>(L);
+  void* layers_ud = luaT_testuserdata<layers>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader =
       static_cast<lua_persist_reader*>(lua_touserdata(L, 1));
 
-  std::memset(pLayers->layer_contents, 0, sizeof(pLayers->layer_contents));
+  layers* ls = new (layers_ud) layers();
   int iNumLayers;
   if (!pReader->read_uint(iNumLayers)) return 0;
   if (iNumLayers > max_number_of_layers) {
-    if (!pReader->read_byte_stream(pLayers->layer_contents,
-                                   max_number_of_layers)) {
+    if (!pReader->read_byte_stream(ls->layer_contents, max_number_of_layers)) {
       return 0;
     }
     if (!pReader->read_byte_stream(nullptr,
@@ -542,8 +538,7 @@ int l_layers_depersist(lua_State* L) {
       return 0;
     }
   } else {
-    if (!pReader->read_byte_stream(pLayers->layer_contents, iNumLayers))
-      return 0;
+    if (!pReader->read_byte_stream(ls->layer_contents, iNumLayers)) return 0;
   }
   return 0;
 }
@@ -717,8 +712,8 @@ int l_surface_rect(lua_State* L) {
 
 int l_surface_screenshot(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
-  const char* sFile = luaL_checkstring(L, 2);
-  if (pCanvas->take_screenshot(sFile)) {
+  const char* file_path = luaL_checkstring(L, 2);
+  if (pCanvas->take_screenshot(file_path)) {
     lua_settop(L, 1);
     return 1;
   }
@@ -858,13 +853,13 @@ int l_line_persist(lua_State* L) {
 }
 
 int l_line_depersist(lua_State* L) {
-  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
+  void* line_ud = luaT_testuserdata<line_sequence>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader =
       static_cast<lua_persist_reader*>(lua_touserdata(L, 1));
-  new (pLine) line_sequence();
-  pLine->depersist(pReader);
+  line_sequence* line = new (line_ud) line_sequence();
+  line->depersist(pReader);
   return 0;
 }
 
@@ -927,7 +922,6 @@ void lua_register_gfx(const lua_register_state* pState) {
     lcb.add_function(l_bitmap_font_set_sep, "setSeparation");
   }
 
-#ifdef CORSIX_TH_USE_FREETYPE2
   // FreeTypeFont
   {
     lua_class_binding<freetype_font> lcb(pState, "freetype_font",
@@ -940,7 +934,6 @@ void lua_register_gfx(const lua_register_state* pState) {
     lcb.add_function(l_freetype_font_get_copyright, "getCopyrightNotice");
     lcb.add_function(l_freetype_font_clear_cache, "clearCache");
   }
-#endif
 
   // Layers
   {

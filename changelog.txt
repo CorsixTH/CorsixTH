@@ -1,7 +1,22 @@
 -------------------------------------------------------------------------------
-CorsixTH 0.69.0 Beta 1 - released June 2025
+CorsixTH 0.70.0 - ???
 -------------------------------------------------------------------------------
-# New Features/Enhancements
+# Packager Notes
+* Now supports big-endian systems (tested on s390x)
+
+-------------------------------------------------------------------------------
+CorsixTH 0.69.1 - released August 2025
+-------------------------------------------------------------------------------
+# Bug Fixes
+* Fixed a crash when placing staff in a room while a patient is being treated.
+
+-------------------------------------------------------------------------------
+CorsixTH 0.69.0 - released July 2025
+-------------------------------------------------------------------------------
+# Features
+* Custom level/campaign creators can now use an existing level file as an
+  overlay to copy and extend their level file with the #overlay variable. See
+  the 'Custom Level' Wiki page for more information.
 * A new machine menu has been added. Now you can view the status of all your
   hospital machines in one place!
 * Changing speed in game now happens immediately
@@ -11,6 +26,9 @@ CorsixTH 0.69.0 Beta 1 - released June 2025
 * Improvements and fixes for the ChirzmanTV custom campaign
 
 # Changes
+* You can now hear patients vomiting, instead of just the vomit splatters
+* Lakes no longer show in the Town Map as per the original game
+* Warns of incompatibility for saves more than 2 releases old
 * Improved how staff look for work if idle
 * Machine strength reduction after repair now more closely aligned with the
   original game
@@ -30,20 +48,8 @@ CorsixTH 0.69.0 Beta 1 - released June 2025
   you can now set the soundfont in the configuration file
 * Video files can now be missing during TH installation corruption checks
 
-# Translations
-* The original game's numerals for the money bar can now be toggled by
-  translators using the isArabicNumerals flag. This setting is set to off
-  currently for CJK languages
-* Reworded cheat failure messages, some translations still require updating
-* Improved hotkey window and research tooltips, some translations still require
-  updating
-* A new Japanese translation has been added. Thanks @ShimaKen523
-* Brazilian Portuguese translation has been updated. Thanks @altiereslima
-* Russian translation has been updated. Thanks @ARGAMX
-* French translation has been updated. Thanks @Sanndow
-* Dutch translation has been updated. Thanks @Alberth289346 & @jetenergy
-
 # Bug Fixes
+* Fixed some anomalies in the original campaign's map files
 * Improved reliability of the Map Editor checking for a path to the hospital on
   save
 * Game speed tick rates have been smoothed out again, improving animations and
@@ -90,6 +96,19 @@ CorsixTH 0.69.0 Beta 1 - released June 2025
   a game crash
 * Fixed an audible error when backing out of hiring a staff member
 * Additional safeguards to music volume playback added
+
+# Translations
+* The original game's numerals for the money bar can now be toggled by
+  translators using the isArabicNumerals flag. This setting is set to off
+  currently for CJK languages
+* Reworded cheat failure messages, some translations still require updating
+* Improved hotkey window and research tooltips, some translations still require
+  updating
+* A new Japanese translation has been added. Thanks @ShimaKen523
+* Russian translation has been updated. Thanks @Matroftt, @ARGAMX
+* French translation has been updated. Thanks @Sanndow @legluondunet
+* Brazilian Portuguese translation has been updated. Thanks @altiereslima
+* Dutch translation has been updated. Thanks @Alberth289346 & @jetenergy
 
 # Packager Notes
 * Packagers can now set a default unicode font at build time using the

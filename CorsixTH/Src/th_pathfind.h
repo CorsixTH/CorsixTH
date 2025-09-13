@@ -143,7 +143,8 @@ class abstract_pathfinder {
 
 class basic_pathfinder : public abstract_pathfinder {
  public:
-  basic_pathfinder(pathfinder* pf) : abstract_pathfinder(pf) {}
+  explicit basic_pathfinder(pathfinder* pf)
+      : abstract_pathfinder(pf), destination_x(0), destination_y(0) {}
 
   int guess_distance(path_node* pNode) override;
   bool try_node(path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
@@ -158,7 +159,7 @@ class basic_pathfinder : public abstract_pathfinder {
 
 class hospital_finder : public abstract_pathfinder {
  public:
-  hospital_finder(pathfinder* pf) : abstract_pathfinder(pf) {}
+  explicit hospital_finder(pathfinder* pf) : abstract_pathfinder(pf) {}
 
   int guess_distance(path_node* pNode) override;
   bool try_node(path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
@@ -169,7 +170,12 @@ class hospital_finder : public abstract_pathfinder {
 
 class idle_tile_finder : public abstract_pathfinder {
  public:
-  idle_tile_finder(pathfinder* pf) : abstract_pathfinder(pf) {}
+  explicit idle_tile_finder(pathfinder* pf)
+      : abstract_pathfinder(pf),
+        best_next_node(nullptr),
+        best_distance(0),
+        start_x(0),
+        start_y(0) {}
 
   int guess_distance(path_node* pNode) override;
   bool try_node(path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
@@ -196,7 +202,13 @@ class idle_tile_finder : public abstract_pathfinder {
 
 class object_visitor : public abstract_pathfinder {
  public:
-  object_visitor(pathfinder* pf) : abstract_pathfinder(pf) {}
+  explicit object_visitor(pathfinder* pf)
+      : abstract_pathfinder(pf),
+        L(nullptr),
+        visit_function_index{},
+        max_distance{},
+        target_any_object_type{},
+        target{} {}
 
   int guess_distance(path_node* pNode) override;
   bool try_node(path_node* pNode, map_tile_flags flags, path_node* pNeighbour,

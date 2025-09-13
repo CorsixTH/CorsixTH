@@ -95,11 +95,11 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/Src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/SrcUnshared)
 
 # Set language standard
-set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 14)
+set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 17)
 set_property(TARGET CorsixTH_lib PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD_REQUIRED ON)
 
-set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 14)
+set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 17)
 set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
@@ -162,22 +162,20 @@ find_package(Threads)
 target_link_libraries(CorsixTH PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 
 # Find SDL_mixer
-if(CORSIX_TH_USE_SDL_MIXER)
-  if(VCPKG_TARGET_TRIPLET)
-    find_package(SDL2_mixer CONFIG REQUIRED)
-    target_link_libraries(
-      CorsixTH_lib
-      PUBLIC
-        $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)
+if(VCPKG_TARGET_TRIPLET)
+  find_package(SDL2_mixer CONFIG REQUIRED)
+  target_link_libraries(
+    CorsixTH_lib
+    PUBLIC
+      $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)
+else()
+  find_package(SDL2_mixer REQUIRED)
+  if(SDLMIXER_FOUND)
+    target_link_libraries(CorsixTH_lib PUBLIC ${SDLMIXER_LIBRARY})
+    include_directories(${SDLMIXER_INCLUDE_DIR})
+    message("  SDL_mixer found")
   else()
-    find_package(SDL2_mixer REQUIRED)
-    if(SDLMIXER_FOUND)
-      target_link_libraries(CorsixTH_lib PUBLIC ${SDLMIXER_LIBRARY})
-      include_directories(${SDLMIXER_INCLUDE_DIR})
-      message("  SDL_mixer found")
-    else()
-      message(FATAL_ERROR "Error: SDL_mixer library not found, even though it was selected to be included")
-    endif()
+    message(FATAL_ERROR "Error: SDL_mixer library not found, it is required to build")
   endif()
 endif()
 
@@ -199,23 +197,21 @@ if(CORSIX_TH_USE_FFMPEG)
 endif()
 
 # Find Freetype2
-if(CORSIX_TH_USE_FREETYPE2)
-  if(VCPKG_TARGET_TRIPLET)
-    find_package(Freetype REQUIRED)
-    target_link_libraries(CorsixTH_lib PUBLIC Freetype::Freetype)
-  else()
-    find_package(Freetype REQUIRED)
-    if(FREETYPE_FOUND)
-      target_link_libraries(CorsixTH_lib PUBLIC ${FREETYPE_LIBRARIES})
-      include_directories(${FREETYPE_INCLUDE_DIRS})
-      if(APPLE)
-        target_link_libraries(CorsixTH_lib PRIVATE libz.dylib)
-        target_link_libraries(CorsixTH_lib PRIVATE libbz2.dylib)
-      endif()
-      message("  FreeType2 found")
-    else()
-      message(FATAL_ERROR "Error: FreeType2 library not found, even though it was selected to be used")
+if(VCPKG_TARGET_TRIPLET)
+  find_package(Freetype REQUIRED)
+  target_link_libraries(CorsixTH_lib PUBLIC Freetype::Freetype)
+else()
+  find_package(Freetype REQUIRED)
+  if(FREETYPE_FOUND)
+    target_link_libraries(CorsixTH_lib PUBLIC ${FREETYPE_LIBRARIES})
+    include_directories(${FREETYPE_INCLUDE_DIRS})
+    if(APPLE)
+      target_link_libraries(CorsixTH_lib PRIVATE libz.dylib)
+      target_link_libraries(CorsixTH_lib PRIVATE libbz2.dylib)
     endif()
+    message("  FreeType2 found")
+  else()
+    message(FATAL_ERROR "Error: FreeType2 library not found, it is required to build")
   endif()
 endif()
 
@@ -248,6 +244,14 @@ if(CORSIX_TH_LINK_LUA_MODULES)
 else()
   message("Lua modules are not linked and will be loaded at runtime")
 endif()
+
+# Find libpng
+find_package(PNG REQUIRED)
+target_link_libraries(CorsixTH_lib PUBLIC PNG::PNG)
+
+# Find zlib
+find_package(ZLIB REQUIRED)
+target_link_libraries(CorsixTH_lib PUBLIC ZLIB::ZLIB)
 
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)

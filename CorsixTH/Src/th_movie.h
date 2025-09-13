@@ -37,7 +37,7 @@ SOFTWARE.
 #include <string>
 #include <thread>
 
-#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
+#ifdef CORSIX_TH_USE_FFMPEG
 #include <SDL_mixer.h>
 
 extern "C" {
@@ -46,8 +46,16 @@ extern "C" {
 #define UINT64_C(c) (c##ULL)
 #endif
 #include <libavcodec/avcodec.h>
+// IWYU pragma: no_include <libavcodec/codec.h>
+// IWYU pragma: no_include <libavcodec/packet.h>
+// IWYU pragma: no_include <libavcodec/version.h>
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>  // IWYU pragma: keep
+// IWYU pragma: no_include <libavutil/channel_layout.h>
+// IWYU pragma: no_include <libavutil/frame.h>
+// IWYU pragma: no_include <libavutil/mem.h>
+// IWYU pragma: no_include <libavutil/pixfmt.h>
+// IWYU pragma: no_include <libavutil/version.h>
 #include <libswresample/swresample.h>
 }
 
@@ -205,7 +213,7 @@ class movie_picture_buffer {
   //! Return whether there is space to add any more frame data to the queue
   //!
   //! \remark Requires external locking
-  bool unsafe_full();
+  bool unsafe_full() const;
 
   //! The number of elements to allocate in the picture queue
   static constexpr std::size_t picture_buffer_size = 4;
@@ -377,7 +385,7 @@ class movie_player {
   void copy_audio_to_stream(uint8_t* pbStream, int iStreamSize);
 
  private:
-#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
+#ifdef CORSIX_TH_USE_FFMPEG
   static constexpr size_t movie_error_buffer_capacity =
       128;  ///< Buffer to hold last error description
 

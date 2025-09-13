@@ -54,8 +54,6 @@ typedef uint32_t argb_colour;
 //! 8bpp palette class.
 class palette {
  public:  // External API
-  palette();
-
   //! Load palette from the supplied data.
   /*!
       Note that the data uses palette entries of 6 bit colours.
@@ -152,10 +150,10 @@ class palette {
 
  private:
   //! 32bpp palette colours associated with the 8bpp colour index.
-  uint32_t colour_index_to_argb_map[256];
+  uint32_t colour_index_to_argb_map[256]{};
 
   //! Number of colours in the palette.
-  int colour_count;
+  int colour_count{};
 };
 
 /*!
@@ -190,8 +188,8 @@ class full_colour_renderer {
 
   const int width;
   const int height;
-  int x;
-  int y;
+  int x{};
+  int y{};
 
   //! Push a pixel to the storage.
   /*!
@@ -238,7 +236,7 @@ class wx_storing : public full_colour_renderer {
 
 class render_target {
  public:  // External API
-  render_target();
+  render_target() = default;
   ~render_target();
 
   //! Encode an RGB triplet for fillRect()
@@ -280,7 +278,7 @@ class render_target {
     ~scoped_clip();
 
    private:
-    render_target* target = nullptr;
+    render_target* target{nullptr};
   };
 
   //! Push a new clip rectangle.
@@ -307,8 +305,8 @@ class render_target {
   //! Update the cursor position (if the cursor is being simulated)
   void set_cursor_position(int iX, int iY);
 
-  //! Take a screenshot and save it as a bitmap
-  bool take_screenshot(const char* sFile);
+  //! Take a screenshot and save it as a PNG file.
+  bool take_screenshot(const char* file_path) const;
 
   //! Set the amount by which future draw operations are scaled.
   /*!
@@ -335,6 +333,23 @@ class render_target {
   class scoped_buffer {
    public:
     virtual ~scoped_buffer() = default;
+  };
+
+  class scoped_target_texture final : public scoped_buffer {
+   public:
+    scoped_target_texture(render_target* pTarget, int iX, int iY, int iWidth,
+                          int iHeight, bool bScale);
+    ~scoped_target_texture() override;
+    void offset(SDL_FRect& targetRect) const;
+    double scale_factor() const;
+    bool is_target() const;
+
+   private:
+    render_target* target;
+    scoped_target_texture* previous_target;
+    SDL_Rect rect;
+    bool scale;
+    SDL_Texture* texture{nullptr};
   };
 
   SDL_Renderer* get_renderer() const { return renderer; }
@@ -371,26 +386,25 @@ class render_target {
                                                             int iHeight);
 
  private:
-  class scoped_target_texture;
   friend class scoped_target_texture;
 
   double draw_scale() const;
 
   void destroy_intermediate_textures();
 
-  SDL_Window* window;
-  SDL_Renderer* renderer;
-  scoped_target_texture* current_target = nullptr;
+  SDL_Window* window{nullptr};
+  SDL_Renderer* renderer{nullptr};
+  scoped_target_texture* current_target{nullptr};
   std::unique_ptr<scoped_target_texture> zoom_buffer;
-  SDL_PixelFormat* pixel_format;
-  bool blue_filter_active;
-  cursor* game_cursor;
-  double bitmap_scale_factor;  ///< Bitmap scale factor.
-  double global_scale_factor;  ///< Global scale factor.
-  int width;
-  int height;
-  int cursor_x;
-  int cursor_y;
+  SDL_PixelFormat* pixel_format{nullptr};
+  bool blue_filter_active{false};
+  cursor* game_cursor{nullptr};
+  double bitmap_scale_factor{1.0};  ///< Bitmap scale factor.
+  double global_scale_factor{1.0};  ///< Global scale factor.
+  int width{-1};
+  int height{-1};
+  int cursor_x{};
+  int cursor_y{};
 
   std::stack<SDL_Rect> clip_rects;  ///< Stack of requested clip rects.
 
@@ -398,20 +412,20 @@ class render_target {
   // These are destroyed after the frame is presented.
   std::vector<SDL_Texture*> intermediate_textures;
 
-  bool scale_bitmaps;  ///< Whether bitmaps should be scaled.
-  bool supports_target_textures;
+  bool scale_bitmaps{false};  ///< Whether bitmaps should be scaled.
+  bool supports_target_textures{};
 
   // In SDL2 < 2.0.4 there is an issue with the y coordinates used for
   // ClipRects in opengl and opengles.
   // see: https://bugzilla.libsdl.org/show_bug.cgi?id=2700
-  bool apply_opengl_clip_fix;
-  bool direct_zoom;
+  bool apply_opengl_clip_fix{};
+  bool direct_zoom{};
 };
 
 //! Stored image.
 class raw_bitmap {
  public:
-  raw_bitmap();
+  raw_bitmap() = default;
   ~raw_bitmap();
 
   //! Set the palette of the image.
@@ -455,25 +469,25 @@ class raw_bitmap {
 
  private:
   //! Image stored in SDL format for quick rendering.
-  SDL_Texture* texture;
+  SDL_Texture* texture{nullptr};
 
   //! Palette of the image.
-  const ::palette* bitmap_palette;
+  const ::palette* bitmap_palette{nullptr};
 
   //! Target canvas.
-  render_target* target;
+  render_target* target{nullptr};
 
   //! Width of the stored image.
-  int width;
+  int width{};
 
   //! Height of the stored image.
-  int height;
+  int height{};
 };
 
 //! Sheet of sprites.
 class sprite_sheet {
  public:  // External API
-  sprite_sheet();
+  sprite_sheet() = default;
   ~sprite_sheet();
 
   //! Set the palette to use for the sprites in the sheet.
@@ -607,24 +621,6 @@ class sprite_sheet {
 
  private:
   friend class cursor;
-#if CORSIX_TH_USE_PACK_PRAGMAS
-#pragma pack(push)
-#pragma pack(1)
-#endif
-  //! Sprite structure in the table file.
-  struct th_sprite_properties {
-    //! Position of the sprite in the chunk data file.
-    uint32_t position;
-
-    //! Width of the sprite.
-    uint8_t width;
-
-    //! Height of the sprite.
-    uint8_t height;
-  } CORSIX_TH_PACKED_FLAGS;
-#if CORSIX_TH_USE_PACK_PRAGMAS
-#pragma pack(pop)
-#endif
 
   //! Sprites of the sheet.
   struct sprite {
@@ -648,16 +644,16 @@ class sprite_sheet {
 
     //! Height of the sprite.
     int height;
-  }* sprites;
+  }* sprites{nullptr};
 
   //! Original palette.
-  const ::palette* palette;
+  const ::palette* palette{nullptr};
 
   //! Target to render to.
-  render_target* target;
+  render_target* target{nullptr};
 
   //! Number of sprites in the sprite sheet.
-  size_t sprite_count;
+  size_t sprite_count{};
 
   //! Free memory of a single sprite.
   /*!
@@ -679,7 +675,7 @@ class sprite_sheet {
 
 class cursor {
  public:
-  cursor();
+  cursor() = default;
   ~cursor();
 
   bool create_from_sprite(sprite_sheet* pSheet, size_t iSprite,
@@ -692,10 +688,10 @@ class cursor {
   void draw(render_target* pCanvas, int iX, int iY);
 
  private:
-  SDL_Surface* bitmap;
-  SDL_Cursor* hidden_cursor;
-  int hotspot_x;
-  int hotspot_y;
+  SDL_Surface* bitmap{nullptr};
+  SDL_Cursor* hidden_cursor{nullptr};
+  int hotspot_x{};
+  int hotspot_y{};
 };
 
 class line_sequence {
@@ -717,7 +713,6 @@ class line_sequence {
 
  private:
   friend class render_target;
-  void initialize();
 
   enum class line_command : uint32_t { move = 0, line = 1 };
 
@@ -730,8 +725,8 @@ class line_sequence {
   };
 
   std::vector<line_element> line_elements;
-  double width;
-  uint8_t red, green, blue, alpha;
+  double width{1};
+  uint8_t red{0}, green{0}, blue{0}, alpha{255};
 };
 
 #endif  // CORSIX_TH_TH_GFX_SDL_H_
