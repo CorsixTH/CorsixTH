@@ -234,6 +234,8 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
       error("Patient in a queue has no calculated distance from themselves to their target door/desk!")
     end
 
+    -- Look for a free bench that is closer to the goal. If we are standing
+    -- expand the search radius to increase the chance of getting a seat.
     local bench_look_distance = not action:isStanding() and
         math.max(2 * distance_from_goal / 3, DISTANCE_THRESHOLD) or MAX_DISTANCE
 
