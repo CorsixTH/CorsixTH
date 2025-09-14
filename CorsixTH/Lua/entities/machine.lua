@@ -346,7 +346,7 @@ end
 --! Call on machine repaired.
 --!param room (object) machine room
 function Machine:machineRepaired(room)
-  room.needs_repair = nil
+  room.needs_repair = false
   self:reduceStrengthOnRepair(room)
   self.times_used = 0
   self:setRepairing(nil)
@@ -383,13 +383,14 @@ end
 --! Tells the machine to start showing the icon that it needs repair.
 --!   also lock the room from patient entering
 --!param handyman The handyman heading to this machine. nil if repairing is finished
-function Machine:setRepairing(handyman)
-  -- If mode is set to true manually through the dialog, boost the urgency despite of the strength
+--!param is_manual_repair (bool) true if the repairing mode was set manually through the dialog; nil otherwise
+function Machine:setRepairing(handyman, is_manual_repair)
   local anim = {icon = 4564} -- The only icon for machinery
   local room = self:getRoom()
-  self:setMoodInfo(handyman and anim or nil)
-  room.needs_repair = handyman
-  if handyman then
+  local should_repair = handyman or is_manual_repair
+  self:setMoodInfo(should_repair and anim or nil)
+  room.needs_repair = should_repair
+  if should_repair then
     self.ticks = true
   else
     self.ticks = self.object_type.ticks
@@ -401,12 +402,12 @@ function Machine:setRepairing(handyman)
   end
 end
 
-function Machine:setRepairingMode(lock_room)
+function Machine:setRepairingMode(lock_room, is_manual_repair)
   if lock_room ~= nil then
     self.repairing_lock_room = lock_room
   end
-  if self.repairing and self.repairing_lock_room then
-    self:setRepairing(self.repairing)
+  if (self.repairing or is_manual_repair) and self.repairing_lock_room then
+    self:setRepairing(self.repairing, is_manual_repair)
   end
 end
 
@@ -465,7 +466,7 @@ end
 function Machine:onDestroy()
   local room = self:getRoom()
   if room then
-    room.needs_repair = nil
+    room.needs_repair = false
   end
   self:removeHandymanRepairTask()
 
