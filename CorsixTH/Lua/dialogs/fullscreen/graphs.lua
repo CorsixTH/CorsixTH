@@ -41,7 +41,6 @@ local colours = {
 
 function UIGraphs:UIGraphs(ui)
   self:UIFullscreen(ui)
-  self.app = ui.app
   local gfx = ui.app.gfx
   if not pcall(function()
     self.background = gfx:loadRaw("Graph01V", 640, 480, "QData", "QData", "Graph01V.pal", true)
@@ -107,10 +106,10 @@ end
 function UIGraphs:initRuntimeConfig()
   -- config is a *runtime* configuration list; re-instantiations of the dialog
   -- share the same values, but it's not saved across saves or sessions
-  local config = self.app.runtime_config.graphs_dialog
+  local config = TheApp.runtime_config.graphs_dialog
   if config == nil then
     config = {}
-    self.app.runtime_config.graphs_dialog = config
+    TheApp.runtime_config.graphs_dialog = config
     config.money_in = true
     config.money_out = true
     config.wages = true
@@ -209,7 +208,7 @@ end
 --! Compute new actual position of the labels.
 --!param graph (UIGraphs) Graph window object
 local function updateTextPositions(graph)
-  local config = graph.app.runtime_config.graphs_dialog
+  local config = TheApp.runtime_config.graphs_dialog
 
   -- Reset vertical position of the text back to its ideal position.
   -- Disable computations on invisible graphs by removing the actual y position of it.
@@ -371,7 +370,7 @@ function UIGraphs:updateLines()
 end
 
 function UIGraphs:draw(canvas, x, y)
-  local config = self.app.runtime_config.graphs_dialog
+  local config = TheApp.runtime_config.graphs_dialog
   if not config then
     config = self:initRuntimeConfig()
   end
@@ -460,7 +459,7 @@ function UIGraphs:toggleGraphScale()
 end
 
 function UIGraphs:toggleGraph(name)
-  self.app.runtime_config.graphs_dialog[name] = not self.app.runtime_config.graphs_dialog[name]
+  TheApp.runtime_config.graphs_dialog[name] = not TheApp.runtime_config.graphs_dialog[name]
   self.ui:playSound("selectx.wav")
   updateTextPositions(self)
 end
