@@ -235,9 +235,9 @@ function Cheats:cheatToggleInvulnerableMachines()
   local msg
 
   if self:isCheatActive("invulnerable_machines") then
-    msg = _S.misc.invulnerable_machines_on
-  else
     msg = _S.misc.invulnerable_machines_off
+  else
+    msg = _S.misc.invulnerable_machines_on
   end
 
   self.active_cheats["invulnerable_machines"] = not self.active_cheats["invulnerable_machines"]
