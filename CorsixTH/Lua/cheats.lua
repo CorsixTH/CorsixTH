@@ -225,7 +225,7 @@ function Cheats:cheatRepairAllMachines()
   local machines = world:getPlayerMachines()
 
   for _, machine in ipairs(machines) do
-    machine:machineRepaired(machine:getRoom(), true)
+    machine:machineRepaired(machine:getRoom(), false)
   end
 end
 

@@ -345,14 +345,15 @@ end
 
 --! Call on machine repaired.
 --!param room (object) machine room
-function Machine:machineRepaired(room, dontReduceStrength)
+function Machine:machineRepaired(room, should_reduce_strength)
+  should_reduce_strength = should_reduce_strength or true
   room.needs_repair = false
   self.times_used = 0
   self:setRepairing(nil)
   setSmoke(self, false)
   self:removeHandymanRepairTask()
 
-  if not dontReduceStrength then
+  if should_reduce_strength then
     self:reduceStrengthOnRepair()
   end
 end
