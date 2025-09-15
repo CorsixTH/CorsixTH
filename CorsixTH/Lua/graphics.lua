@@ -725,7 +725,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
   local frame = self.anims:getFirstFrame(anim)
 
   --! Set marker position for frame
-  --!param x1y1 (boolen) use values given by x1 and y1 only if true, otherwise use
+  --!param x1y1 (boolean) use values given by x1 and y1 only if true, otherwise use
   -- linear interpolation between x1/y1 and x2/y2
   --!param x1, y1, x2 (optional), y2 (optional) pixel positions
   --!param n fraction between start and end frame of linear interpolation

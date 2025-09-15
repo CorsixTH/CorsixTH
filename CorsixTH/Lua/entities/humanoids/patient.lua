@@ -1109,7 +1109,7 @@ end
 function Patient:removeAnyEpidemicStatus()
   self:setMood("epidemy1","deactivate") -- vaccinated (step 4)
   self:setMood("epidemy2","deactivate") -- marked (step 2)
-  self:setMood("epidemy3","deactivate") -- choosed by nurse (step 3)
+  self:setMood("epidemy3","deactivate") -- chosen by nurse (step 3)
   self:setMood("epidemy4","deactivate") -- infected (step 1)
 end
 

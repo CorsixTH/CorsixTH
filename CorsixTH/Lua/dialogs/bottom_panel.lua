@@ -99,7 +99,7 @@ function UIBottomPanel:drawPanels()
   panels[1]  = self:addPanel(15, 364, 0) -- Staff management button
   buttons[1] = panels[1]:makeToggleButton(6, 6, 35, 36, 16, self.dialogStaffManagement):setTooltip(_S.tooltip.toolbar.staff_list)
   if self:machineMenuButtonExists() then
-    -- Sprites for machine menu button doesnt exist in original game. Lets import them from aux_ui.dat and draw
+    -- Sprites for machine menu button doesn't exist in original game. Let's import them from aux_ui.dat and draw
     local aux_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
     self:addPanel(0, 407, 0):makeToggleButton(2, 6, 36, 36, 0, self.dialogMachineMenu)
       :setTooltip(_S.tooltip.toolbar.machine_menu)
