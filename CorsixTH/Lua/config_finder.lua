@@ -401,6 +401,12 @@ local string_01 = [=[
 --]=] .. '\n' ..
 'machine_menu_button = ' .. tostring(config_values.machine_menu_button) .. '\n' .. [=[]=]
 
+-------------------------------------------------------------------------------
+-- By default the entire screen will shake during earthquakes. If you would
+-- like the game to keep the screen stationary, change this option to false.
+--]=] .. '\n' ..
+'enable_screen_shake = ' .. tostring(config_values.enable_screen_shake) .. '\n' .. [=[
+
 local string_02 = [=[
 
 ------------------------------- FOLDER SETTINGS -------------------------------
