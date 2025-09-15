@@ -123,7 +123,7 @@ function OperatingTheatreRoom._buildTableAction2(multi_use, operation_table_b)
     :setAfterUse(after_use_use_object)
     :setMustHappen(true)
     :disableTruncate()
-    :setUninterruptable(true)
+    :setUninterruptible(true)
 end
 
 function OperatingTheatreRoom:commandEnteringStaff(staff)
@@ -205,11 +205,11 @@ function OperatingTheatreRoom:queueWashHands(surgeon, before_other_actions)
   local wait = wait_for_object(surgeon, sink, true)
     :setMustHappen(true)
     :disableTruncate()
-    :setUninterruptable(true)
+    :setUninterruptible(true)
   local wash = UseObjectAction(sink)
     :setMustHappen(true)
     :disableTruncate()
-    :setUninterruptable(true)
+    :setUninterruptible(true)
 
   for pos, action in pairs({walk, wait, wash}) do
     if (before_other_actions) then
@@ -311,7 +311,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
     :setLoopCallback(operation_standby)
     :setMustHappen(true)
     :disableTruncate()
-    :setUninterruptable(true), 5)
+    :setUninterruptible(true), 5)
 
   -- Patient walk to the side of the operating table
   ox, oy = obj:getSecondaryUsageTile()
@@ -338,7 +338,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
     :setLoopCallback(operation_standby)
     :setMustHappen(true)
     :disableTruncate()
-    :setUninterruptable(true), 5)
+    :setUninterruptible(true), 5)
 
   return Room.commandEnteringPatient(self, patient)
 end

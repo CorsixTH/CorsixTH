@@ -151,7 +151,7 @@ class chunk_renderer {
   /*!
       @param width Pixel width of the resulting image
       @param height Pixel height of the resulting image
-      @param start An interator to the start writing the resulting image to.
+      @param start An iterator to the start writing the resulting image to.
                    Must point to a container of at least width * height.
   */
   chunk_renderer(int width, int height, std::vector<uint8_t>::iterator start);

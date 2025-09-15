@@ -66,14 +66,14 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
       local staff_prepare = WalkAction(ox, oy)
           :setMustHappen(true)
           :disableTruncate()
-          :setUninterruptable(true)
+          :setUninterruptible(true)
       staff:setNextAction(staff_prepare)
 
       -- Doctor waits for patient near trolley
       local staff_idle = IdleAction()
           :setMustHappen(true)
           :disableTruncate()
-          :setUninterruptable(true)
+          :setUninterruptible(true)
       staff:queueAction(staff_idle)
 
       -- Patient walks to trolley

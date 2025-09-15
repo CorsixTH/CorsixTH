@@ -142,7 +142,7 @@ function Epidemic:infectOtherPatients()
 
     -- 'victim' is already infected or is going home.
     if victim.infected or victim.cured or victim.vaccinated then return false end
-    -- Don't infect victim if it alredy under another attempt to be infected
+    -- Don't infect victim if it is already under another attempt to be infected
     if victim.under_infection_attempt then return false end
     -- Don't infect emergencies.
     if victim.is_emergency then return false end
