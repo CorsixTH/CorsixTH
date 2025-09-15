@@ -281,9 +281,9 @@ function UIMachineMenu:update()
   self.machine_list = {}
   local world = self.ui.app.world
   local dispatcher = world.dispatcher
-  local playerMachines = world:getPlayerMachines()
+  local machines = world:getPlayerMachines()
 
-  for _, machine in ipairs(playerMachines) do
+  for _, machine in ipairs(machines) do
     if not machine:getRoom().crashed then
       local assigned_handyman
       local repair_call = dispatcher.call_queue[machine]
