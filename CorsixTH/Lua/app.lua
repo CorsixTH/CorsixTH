@@ -707,7 +707,7 @@ function App:readLevelFile(level, campaign_dir)
   if filename:match(self.level_dir .. "original%d%d%.level") then
     level_info.map_file = map_file
   elseif map_file then
-    if map_file:lower():match("^level") then
+    if map_file:lower():match("^level%.l%d+$") then
       level_info.map_file = map_file
     else
       level_info.map_file = self:_checkOrFind(map_file, campaign_dir)
