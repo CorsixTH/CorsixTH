@@ -43,6 +43,16 @@ adviser.goals.lose.kill = "Kill another %d patients to lose the level!"
 tooltip.staff_window.face = "This person's face - click to open management screen"
 tooltip.staff_window.center_view = "Left click to zoom to staff, right click to cycle through staff members"
 
+-- Improve tooltips in Build Rooms menu
+tooltip.rooms.inflation = "A Doctor uses the Inflation Room to cure patients with Bloaty Head"
+tooltip.rooms.tongue_clinic = "A Doctor uses the Slack Tongue Clinic to cure Slack Tongue"
+tooltip.rooms.fracture_clinic = "A Nurse uses the Fracture Clinic to repair Fractured Bones"
+tooltip.rooms.hair_restoration = "A Doctor uses the Hair Restoration Room to cure Baldness"
+tooltip.rooms.decontamination = "A Doctor uses the Decontamination Shower to cure Serious Radiation"
+tooltip.rooms.ward = "Wards are useful for both diagnosis and treatment. Patients are sent here for observation and also prepare for operations in a Ward with a Nurse"
+tooltip.rooms.research_room = "Doctors with Research skills can discover new drugs and machines in the Research Dept"
+tooltip.objects.reception_desk = "Reception Desk: requires a Receptionist who directs patients to the GP's office"
+
 -- Improve tooltips in Research Screen
 tooltip.research.cure_dec = "Decrease Cure research percentage"
 tooltip.research.cure_inc = "Increase Cure research percentage"
