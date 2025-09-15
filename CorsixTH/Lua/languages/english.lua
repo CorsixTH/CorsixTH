@@ -541,7 +541,6 @@ customise_window = {
   average_contents = "Average Contents",
   remove_destroyed_rooms = "Remove destroyed rooms",
   machine_menu_button = "Machine menu button",
-  enable_screen_shake = "Earthquakes will cause the entire screen to shake. If you would prefer the screen to remain still, turn this option off",
   enable_screen_shake = "Enable Screen Shake",
 }
 
@@ -555,6 +554,7 @@ tooltip.customise_window = {
   average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",
   remove_destroyed_rooms = "If you would like to be able to remove destroyed rooms, for a fee, turn this option on",
   machine_menu_button = "If you would like to have a machine menu button in bottom panel, turn this option on. Keep in mind that this button will not be available in small screen resolutions",
+  enable_screen_shake = "Earthquakes will cause the entire screen to shake. If you would prefer the screen to remain still, turn this option off",
   back = "Close this menu and go back to the Settings Menu",
 }
 
