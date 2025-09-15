@@ -541,6 +541,8 @@ customise_window = {
   average_contents = "Average Contents",
   remove_destroyed_rooms = "Remove destroyed rooms",
   machine_menu_button = "Machine menu button",
+  enable_screen_shake = "Earthquakes will cause the entire screen to shake. If you would prefer the screen to remain still, turn this option off",
+  enable_screen_shake = "Enable Screen Shake",
 }
 
 tooltip.customise_window = {

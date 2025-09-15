@@ -43,7 +43,7 @@ local col_caption = {
 }
 
 function UICustomise:UICustomise(ui, mode)
-  self:UIResizable(ui, 340, 325, col_bg)
+  self:UIResizable(ui, 340, 350, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -132,8 +132,16 @@ function UICustomise:UICustomise(ui, mode)
   self.machine_menu_button = self.machine_menu_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonMachine_menu)
     :setToggleState(app.config.machine_menu_button):setTooltip(_S.tooltip.customise_window.machine_menu_button)
 
+  -- Allow user to disable screen shake during earthquakes
+  self:addBevelPanel(15, 265, 165, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.customise_window.enable_screen_shake):setTooltip(_S.tooltip.customise_window.enable_screen_shake).lowered = true
+  self.screen_shake_panel =
+    self:addBevelPanel(185, 265, 140, 20, col_bg):setLabel(app.config.enable_screen_shake and _S.customise_window.option_on or _S.customise_window.option_off)
+  self.screen_shake_button = self.screen_shake_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonScreen_shake)
+    :setToggleState(app.config.enable_screen_shake):setTooltip(_S.tooltip.customise_window.enable_screen_shake)
+
   -- "Back" button
-  self:addBevelPanel(15, 270, 310, 40, col_bg):setLabel(_S.customise_window.back)
+  self:addBevelPanel(15, 295, 310, 40, col_bg):setLabel(_S.customise_window.back)
     :makeButton(0, 0, 310, 40, nil, self.buttonBack):setTooltip(_S.tooltip.customise_window.back)
 end
 
@@ -225,6 +233,15 @@ function UICustomise:buttonMachine_menu()
   app.config.machine_menu_button = not app.config.machine_menu_button
   self.destroyed_rooms_button:toggle()
   self.destroyed_rooms_panel:setLabel(app.config.machine_menu_button and _S.customise_window.option_on or _S.customise_window.option_off)
+  app:saveConfig()
+  self:reload()
+end
+
+function UICustomise:buttonScreen_shake()
+  local app = self.ui.app
+  app.config.enable_screen_shake = not app.config.enable_screen_shake
+  self.screen_shake_button:toggle()
+  self.screen_shake_panel:setLabel(app.config.enable_screen_shake and _S.customise_window.option_on or _S.customise_window.option_off)
   app:saveConfig()
   self:reload()
 end
