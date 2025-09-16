@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 230 -- Post 0.69.0 bump
+local SAVEGAME_VERSION = 231 -- Remember active graphs
 
 class "App"
 
