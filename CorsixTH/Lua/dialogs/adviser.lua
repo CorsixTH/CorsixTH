@@ -41,6 +41,9 @@ function UIAdviser:UIAdviser(ui)
   self.queued_messages = {}        -- There might be many messages in a row
   self.timer = nil                 -- Timer which hides adviser at the end
 
+  self.message_history = {}        -- Store past messages to be able to view them later
+  self.message_history_limit = 20  -- Limit the number of messages stored
+
   -- There are 5 phases the adviser might be in on a given time point.
   -- Not visible, getting up, talking, idling, getting_down.
   self.phase = 0
@@ -56,6 +59,30 @@ function UIAdviser:UIAdviser(ui)
 
   local th = TH.animation()
   self.th = th
+end
+
+function UIAdviser:addMessageToHistory(speech)
+  -- Add the message to the history list (newest messages first)
+  table.insert(self.message_history, 1, speech)
+  -- If the history exceeds the limit, remove the oldest message (the last one in the list)
+  if #self.message_history > self.message_history_limit then
+    table.remove(self.message_history, #self.message_history)
+  end
+end
+
+function UIAdviser:addQueuedMessagesToHistory()
+  for _, message in ipairs(self.queued_messages) do
+
+    self:addMessageToHistory(message.speech)
+  end
+end
+
+function UIAdviser:removeMessageFromHistory(index)
+  table.remove(self.message_history, index)
+end
+
+function UIAdviser:deleteAllMessagesFromHistory()
+  self.message_history = {}
 end
 
 -- Shows the adviser by running the "popup" animation.
@@ -91,6 +118,7 @@ function UIAdviser:talk()
   local speech = self.queued_messages[best].speech
   self.stay_up = self.queued_messages[best].stay_up
   table.remove(self.queued_messages, best)
+  self:addMessageToHistory(speech)
   self.speech = speech
   -- Calculate number of lines needed for the text.
   -- Each "/" at end of string indicates a blank line
@@ -232,6 +260,8 @@ function UIAdviser:onMouseDown(button, x, y)
     end
   elseif button == "right" then
     self:hide()
+    --Dump dismissed messages to history
+    self:addQueuedMessagesToHistory()
     self.queued_messages = {}
   end
 end

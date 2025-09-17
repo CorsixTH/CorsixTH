@@ -1321,6 +1321,8 @@ function GameUI:afterLoad(old, new)
   end
 
   self.announcer.playing = false
+  self.adviser.message_history = {}
+  self.adviser.message_history_limit = 20
 
   self.app:setCaptureMouse()
   return UI.afterLoad(self, old, new)

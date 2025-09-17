@@ -206,6 +206,7 @@ menu_charts = {
   graphs        = "  (%1%) GRAPHS  ",
   policy        = "  (%1%) POLICY  ",
   machine_menu  = "  (%1%) MACHINES MENU",
+  adviser_history = "  (%1%) ADVISER HISTORY ",
 }
 
 menu_debug = {
@@ -699,6 +700,7 @@ hotkey_window = {
   ingame_panel_charts = "Charts",
   ingame_panel_policy = "Policy",
   ingame_panel_machineMenu = "Machines Menu",
+  ingame_panel_adviserHistory = "Adviser History",
   ingame_panel_map_alt = "Town Map 2",
   ingame_panel_research_alt = "Research 2",
   ingame_panel_casebook_alt = "Casebook 2",
@@ -1032,6 +1034,21 @@ tooltip.machine_menu = {
     ratio = "Remaining Strength to Total Strength percentage ratio of the machines.",
   },
   close = "Close the machine list dialog",
+}
+
+adviser_history = {
+  message = "Message",
+  close = "Close",
+}
+
+tooltip.adviser_history = {
+  delete_message = "Click to dismiss this message",
+  message = "List of adviser messages - Newest messages appear first",
+  header = {
+    message = "Adviser messages",
+    delete_message = "Click to delete all messages"
+  },
+  close = "Close the adviser history dialog",
 }
 
 
