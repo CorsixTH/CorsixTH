@@ -1,4 +1,4 @@
---[[ Copyright (c) 2025 Matthew "Matroftt"
+--[[ Copyright (c) 2025 Damian "ShiroAka"
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
---! Interactive Machine List
+--! Adviser message history
 class "UIAdviserHistory" (UIResizable)
 
 ---@type UIAdviserHistory
@@ -29,7 +29,7 @@ local col_highlight = { red = 47, green = 154, blue = 190, }
 local col_shadow = { red = 36, green = 138, blue = 158 }
 local col_delete_button = { red = 219, green = 36, blue = 36 }
 
--- Timer, used to update machine menu only once per X ticks to reduce the burden.
+-- Timer, used to update the dialog only once per X ticks to reduce the burden.
 local ticks_to_skip = 5
 local tick_timer = ticks_to_skip
 
