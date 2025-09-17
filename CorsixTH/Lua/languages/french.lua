@@ -587,7 +587,8 @@ menu_charts = {
   research = "  (%1%) RECHERCHE  ",
   status = "  (%1%) STATUTS  ",
   graphs = "  (%1%) GRAPHIQUES  ",
-  policy = "  (%1%) POLITIQUE "
+  policy = "  (%1%) POLITIQUE ",
+  machine_menu  = "  (%1%) MENU DES MACHINES",
 }
 
 tooltip.toolbar = {
@@ -771,7 +772,8 @@ tooltip.main_menu = {
 
 -- Load game window
 load_game_window = {
-  caption = "Charger une partie"
+  caption = "Charger une partie",
+  load_button = "Charger",
 }
 
 tooltip.load_game_window = {
@@ -1217,6 +1219,34 @@ tooltip.calls_dispatcher = {
   close = "Ferme la boîte de dialogue de répartitions des tâches"
 }
 
+machine_menu = {
+  percentage = "%d%",
+  machine = "Machine",
+  remaining_strength = "Restant",
+  total_strength = "Résistance",
+  ratio = "Ratio",
+  close = "Fermer",
+}
+
+tooltip.machine_menu = {
+  sort = "Cliquer pour trier selon cette valeur.",
+  machine = "Liste des machines – Cliquer pour ouvrir la fenêtre de la machine et se rendre à son emplacement.",
+  smoking = "Cette case est cochée si la machine risque d’exploser. Cliquer pour acheter une nouvelle machine.",
+  assigned = "Cette case est cochée si un agent d’entretien est affecté à la réparation de la machine correspondante. Cliquer pour afficher l’agent assigné.",
+  remaining_strength = "Cette valeur indique la résistance restante de la machine.",
+  total_strength = "Cette valeur indique la résistance totale de la machine.",
+  ratio = "Cette valeur indique le rapport entre la résistance restante et la résistance totale.",
+  header = {
+    smoking = "Indicateur de danger",
+    assigned = "Indicateur d’affectation à la réparation",
+    machine = "Nom de la machine",
+    remaining_strength = "Résistance restante des machines.",
+    total_strength = "Résistance totale des machines.",
+    ratio = "Pourcentage de résistance restante par rapport à la résistance totale des machines.",
+  },
+  close = "Fermer la fenêtre de la liste des machines.",
+}
+  
 -- Updates
 update_window = {
   caption = "Une mise à jour est disponible !",
