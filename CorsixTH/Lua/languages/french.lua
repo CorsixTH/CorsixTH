@@ -1246,7 +1246,7 @@ tooltip.machine_menu = {
   },
   close = "Fermer la fenêtre de la liste des machines.",
 }
-  
+
 -- Updates
 update_window = {
   caption = "Une mise à jour est disponible !",
