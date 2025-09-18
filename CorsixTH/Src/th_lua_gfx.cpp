@@ -584,13 +584,13 @@ int l_cursor_position(lua_State* L) {
 /** Construct the helper structure for making a #THRenderTarget. */
 render_target_creation_params l_surface_creation_params(lua_State* L,
                                                         int iArgStart) {
-  render_target_creation_params oParams;
-  oParams.width = static_cast<int>(luaL_checkinteger(L, iArgStart));
-  oParams.height = static_cast<int>(luaL_checkinteger(L, iArgStart + 1));
+  render_target_creation_params params;
+  params.width = static_cast<int>(luaL_checkinteger(L, iArgStart));
+  params.height = static_cast<int>(luaL_checkinteger(L, iArgStart + 1));
 
-  oParams.fullscreen = false;
-  oParams.present_immediate = false;
-  oParams.direct_zoom = false;
+  params.fullscreen = false;
+  params.present_immediate = false;
+  params.direct_zoom = false;
 
   // Parse string arguments, looking for matching parameter names.
   for (int iArg = iArgStart + 2, iArgCount = lua_gettop(L); iArg <= iArgCount;
@@ -599,47 +599,41 @@ render_target_creation_params l_surface_creation_params(lua_State* L,
     if (sOption[0] == 0) continue;
 
     if (std::strcmp(sOption, "fullscreen") == 0) {
-      oParams.fullscreen = true;
+      params.fullscreen = true;
     }
     if (std::strcmp(sOption, "present immediate") == 0) {
-      oParams.present_immediate = true;
+      params.present_immediate = true;
     }
     if (std::strcmp(sOption, "direct zoom") == 0) {
-      oParams.direct_zoom = true;
+      params.direct_zoom = true;
     }
   }
 
-  return oParams;
+  return params;
 }
 
 int l_surface_new(lua_State* L) {
   lua_remove(L, 1);  // Value inserted by __call
 
-  render_target_creation_params oParams = l_surface_creation_params(L, 1);
-  render_target* pCanvas = luaT_stdnew<render_target>(L);
-  if (pCanvas->create(&oParams)) return 1;
+  render_target_creation_params params = l_surface_creation_params(L, 1);
+  try {
+    luaT_stdnew<render_target>(L, luaT_environindex, false, params);
+  } catch (const std::exception& ex) {
+    return luaL_error(L, "Could not create render target: %s", ex.what());
+  }
 
-  lua_pushnil(L);
-  lua_pushstring(L, pCanvas->get_last_error());
-  return 2;
+  return 1;
 }
 
 int l_surface_update(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
-  render_target_creation_params oParams = l_surface_creation_params(L, 2);
-  if (pCanvas->update(&oParams)) {
+  render_target_creation_params params = l_surface_creation_params(L, 2);
+  if (pCanvas->update(params)) {
     lua_pushnil(L);
     return 1;
   }
 
   lua_pushstring(L, pCanvas->get_last_error());
-  return 1;
-}
-
-int l_surface_destroy(lua_State* L) {
-  render_target* pCanvas = luaT_testuserdata<render_target>(L);
-  pCanvas->end_frame();
-  pCanvas->destroy();
   return 1;
 }
 
@@ -959,7 +953,6 @@ void lua_register_gfx(const lua_register_state* pState) {
     lua_class_binding<render_target> lcb(pState, "surface", l_surface_new,
                                          lua_metatable::surface);
     lcb.add_function(l_surface_update, "update");
-    lcb.add_function(l_surface_destroy, "destroy");
     lcb.add_function(l_surface_fill_black, "fillBlack");
     lcb.add_function(l_surface_start_frame, "startFrame");
     lcb.add_function(l_surface_end_frame, "endFrame");
