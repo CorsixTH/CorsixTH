@@ -125,6 +125,7 @@ local config_defaults = {
   enable_avg_contents = false,
   remove_destroyed_rooms = false,
   machine_menu_button = true,
+  enable_screen_shake = true,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
@@ -398,7 +399,13 @@ local string_01 = [=[
 -- By default machine menu is shown in a bottom panel. If you would like the
 -- game to hide it change this option to false.
 --]=] .. '\n' ..
-'machine_menu_button = ' .. tostring(config_values.machine_menu_button) .. '\n' .. [=[]=]
+'machine_menu_button = ' .. tostring(config_values.machine_menu_button) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default the entire screen will shake during earthquakes. If you would
+-- like the game to keep the screen stationary, change this option to false.
+--]=] .. '\n' ..
+'enable_screen_shake = ' .. tostring(config_values.enable_screen_shake) .. '\n' .. [=[]=]
 
 local string_02 = [=[
 

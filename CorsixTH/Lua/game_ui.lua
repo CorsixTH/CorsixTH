@@ -965,11 +965,15 @@ function GameUI:scrollMap(dx, dy)
   self.screen_offset_y = floor(dy + 0.5)
 end
 
---! Start shaking the screen, e.g. an earthquake effect
+--! Start shaking the screen, e.g. an earthquake effect (unless disabled in config)
 --!param intensity (number) The magnitude of the effect, between 0 for no
 -- movement to 1 for significant shaking.
 function GameUI:beginShakeScreen(intensity)
-  self.shake_screen_intensity = intensity
+  if self.app.config.enable_screen_shake then
+    self.shake_screen_intensity = intensity
+  else
+    self.shake_screen_intensity = 0
+  end
 end
 
 --! Stop the screen from shaking after beginShakeScreen is called.
