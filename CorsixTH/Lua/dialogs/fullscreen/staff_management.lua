@@ -34,6 +34,7 @@ function UIStaffManagement:UIStaffManagement(ui)
     local palette = gfx:loadPalette("QData", "Staff01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette)
     self.title_font = gfx:loadFontAndSpriteTable("QData", "Font01V", false, palette)
+    self.blue_font = gfx:loadFontAndSpriteTable("QData", "Font02V", false, palette)
     self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
@@ -49,6 +50,8 @@ function UIStaffManagement:UIStaffManagement(ui)
   self:updateStaffList()
 
   self.default_button_sound = "selectx.wav"
+  self.hover_id = 0
+  self.visual_hover_id = 0
 
   -- Close button
   self:addPanel(0, 603, 443):makeButton(0, 0, 26, 26, 10, self.close):setTooltip(_S.tooltip.staff_list.close)
@@ -277,9 +280,13 @@ function UIStaffManagement:draw(canvas, x, y)
       local row_no = i - (self.page-1)*10
       self.row_blankers[row_no].visible = false
       titles:draw(canvas, row_no + 10*(self.page-1), x + 58, y + 63 + row_no*27)
-      titles:draw(canvas, staff.profile:getFullName(),
+      local font = self.title_font
+      if i == self.visual_hover_id then
+        font = self.blue_font
+      end
+      font:draw(canvas, staff.profile:getFullName(),
           x + 88, y + 63 + row_no*27)
-      titles:draw(canvas, "$" .. staff.profile.wage, x + 230, y + 63 + row_no*27, 80, 0)
+      font:draw(canvas, "$" .. staff.profile.wage, x + 230, y + 63 + row_no*27, 80, 0)
 
       -- Draw the morale, tiredness and skill for this staff member
       if happiness_bar_width ~= 0 then
@@ -299,6 +306,7 @@ function UIStaffManagement:draw(canvas, x, y)
       end
     end
   end
+
   -- Make sure the other ones are not visible
   for i = #staff_list + 1 - (self.page-1)*10, 10 do
     self.row_blankers[i].visible = true
@@ -424,6 +432,7 @@ function UIStaffManagement:onMouseDown(code, x, y)
       -- Hit staff row
       if #self.staff_members[self.category] - (self.page - 1)*10 > math_floor((y - 81)/27) then
         self.selected_staff = math_floor((y - 81)/27) + 1 + (self.page - 1)*10
+        TheApp.audio:playSound("selectx.wav")
       end
     else
       local inside_view_of_the_staff_area = (x > 497 and x < 580) and (y > 373 and y < 455)
@@ -433,6 +442,33 @@ function UIStaffManagement:onMouseDown(code, x, y)
     end
   end
   return UIFullscreen.onMouseDown(self, code, x, y)
+end
+
+function UIStaffManagement:onMouseMove(x, y, dx, dy)
+  local current_hover_id
+  local inside_staff_list_area
+
+  if self.page*10 >= #self.staff_members[self.category] then
+    inside_staff_list_area = (x > 50 and x < 624) and
+    (y > 82 and y < 82 + 27 * (#self.staff_members[self.category] % 10))
+  else
+    inside_staff_list_area = (x > 50 and x < 624) and (y > 82 and y < 351)
+  end
+
+  if inside_staff_list_area then
+    if #self.staff_members[self.category] - (self.page - 1)*10 > math_floor((y - 81)/27) then
+      current_hover_id = math_floor((y - 81)/27) + 1 + (self.page - 1)*10
+      if self.hover_id ~= current_hover_id then
+        self.ui:playSound("Hlight5.wav")
+        self.hover_id = current_hover_id
+        self.visual_hover_id = current_hover_id
+      end
+    end
+  else
+    self.hover_id = nil
+    self.visual_hover_id = nil
+  end
+  return Window:onMouseMove(x, y, dx, dy)
 end
 
 function UIStaffManagement:onMouseUp(code, x, y)

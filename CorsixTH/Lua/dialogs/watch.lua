@@ -53,12 +53,14 @@ function UIWatch:UIWatch(ui, count_type)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Watch01V", true)
   self.epidemic = false
   self.count_type = count_type
+  self.hover = false
   -- For cycling the list of epidemic/emergency patients which index to use
   self.current_index = nil
   -- The last patient whose dialog was opened by clicking the timer
   self.lastCycledPatient = nil
 
   local end_sprite = (count_type == "epidemic") and 14 or 16
+  self.end_sprite = end_sprite
 
   local tooltips = {
     ["initial_opening"] = _S.tooltip.watch.hospital_opening,
@@ -70,6 +72,17 @@ function UIWatch:UIWatch(ui, count_type)
     self.end_button = self:addPanel(end_sprite, 4, 0)
     :makeButton(4, 0, 27, 28, end_sprite + 1, self.toggleVaccinationMode)
     :setTooltip(tooltips[count_type])
+
+    self:addPanel(end_sprite, 4, 0)
+    .custom_draw = function(panel, canvas, x, y)
+      x = x + panel.x
+      y = y + panel.y
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
+      if self.hover then
+        self.panel_sprites:draw(canvas, 15, x, y)
+      end
+    end
+
   elseif count_type ~= "emergency" then
     self.end_button = self:addPanel(end_sprite, 4, 0)
       :makeButton(4, 0, 27, 28, end_sprite + 1, self.onCountdownEnd)
@@ -84,6 +97,14 @@ function UIWatch:UIWatch(ui, count_type)
         self.scrollToTimerEventPatient, nil, self.cycleTimerEventPatient)
   else
     self:addPanel(timer_sprite, 0, 28):setTooltip(tooltips[count_type])
+    .custom_draw = function(panel, canvas, x, y)
+      x = x + panel.x
+      y = y + panel.y
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
+      if self.hover then
+        self.panel_sprites:draw(canvas, 17, x+4, y-28)
+      end
+    end
   end
   self:addPanel(1, 2, 47)
 end
@@ -101,6 +122,19 @@ function UIWatch:onCountdownEnd()
     self.hospital:open()
     self.ui:playSound("fanfare.wav")
   end
+end
+
+function UIWatch:onMouseMove(x, y, dx, dy)
+  local current_hover = x > 4 and x < 31 and y > 0 and y < 29
+  if current_hover and not self.hover then
+    self.hover = true
+    self.ui:playSound("Hlight5.wav")
+  else
+    if not current_hover then
+      self.hover = false
+    end
+  end
+  return Window:onMouseMove(x, y, dx, dy)
 end
 
 function UIWatch:onWorldTick()
