@@ -796,20 +796,20 @@ fixme: right mouse scrolling currently breaks other mouse operations (see issue 
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1after_load">UI:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1263">line 1263 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1267">line 1267 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_game_u_i_1apply_transparency">function GameUI:applyTransparency()</a></h5>
  <p>
  Applies the current setting for wall transparency to the map<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L985">line 985 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L989">line 989 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_game_u_i_1begin_shake_screen">function GameUI:beginShakeScreen(<span class="p">intensity</span>)</a></h5>
  <p>
- Start shaking the screen, e.g. an earthquake effect<br/><br/>
+ Start shaking the screen, e.g. an earthquake effect (unless disabled in config)<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -851,7 +851,7 @@ movement to 1 for significant shaking.</td>
  <h5><a name="_0_1_game_u_i_1end_shake_screen">function GameUI:endShakeScreen()</a></h5>
  <p>
  Stop the screen from shaking after beginShakeScreen is called.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L975">line 975 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L979">line 979 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -885,7 +885,7 @@ movement to 1 for significant shaking.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L980">line 980 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L984">line 984 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1225,7 +1225,7 @@ NB: overrides UI.quit, do NOT call it from here<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1quit">UI:quit</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1315">line 1315 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1319">line 1319 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1242,13 +1242,13 @@ param index (integer) Position in recallpositions table<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1225">line 1225 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1229">line 1229 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_game_u_i_1restart_map_editor">function GameUI:restartMapEditor()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1335">line 1335 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1339">line 1339 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1323,7 +1323,7 @@ taken.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1236">line 1236 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1240">line 1240 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1340,7 +1340,7 @@ param index (integer) Position in recallpositions table<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1218">line 1218 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1222">line 1222 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1356,7 +1356,7 @@ param index (integer) Position in recallpositions table<br/><br/>
  <td class="d"> whether to enable or disable wall transparency</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L990">line 990 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L994">line 994 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1401,19 +1401,19 @@ param index (integer) Position in recallpositions table<br/><br/>
  <div class="method">
  <h5><a name="_0_1_game_u_i_1show_briefing">function GameUI:showBriefing()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1304">line 1304 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1308">line 1308 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_game_u_i_1show_cheats_window">function GameUI:showCheatsWindow()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1327">line 1327 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1331">line 1331 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_game_u_i_1show_menu_bar">function GameUI:showMenuBar()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1331">line 1331 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1335">line 1335 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1428,7 +1428,7 @@ param index (integer) Position in recallpositions table<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1210">line 1210 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1214">line 1214 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1470,7 +1470,7 @@ returns true if we changed phase, false if we didn't<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1tutorial_step">UI:tutorialStep</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1152">line 1152 of Lua/game_ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1156">line 1156 of Lua/game_ui.lua</a>.
  </p>
  </div>
  <div class="method">
