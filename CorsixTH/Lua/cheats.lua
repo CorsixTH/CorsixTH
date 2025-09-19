@@ -52,6 +52,7 @@ function Cheats:Cheats(hospital)
     {name = "decrease_prices", func = self.cheatDecreasePrices},
     {name = "reset_death_count", func = self.cheatResetDeathCount},
     {name = "max_reputation",  func = self.cheatMaxReputation},
+    {name = "toggle_invulnerable_machines", func = self.cheatToggleInvulnerableMachines},
   }
 
   self.active_cheats = {} -- Toggle cheat status
@@ -207,6 +208,20 @@ function Cheats:cheatDecreasePrices()
       casebook.price = new_price
     end
   end
+end
+
+--! Toggles machine invulnerability (no wear or explosions)
+function Cheats:cheatToggleInvulnerableMachines()
+  local msg
+
+  if self:isCheatActive("invulnerable_machines") then
+    msg = _S.misc.invulnerable_machines_off
+  else
+    msg = _S.misc.invulnerable_machines_on
+  end
+
+  self.active_cheats["invulnerable_machines"] = not self.active_cheats["invulnerable_machines"]
+  return true, msg
 end
 
 --[[Begin toggle-based cheat functions]]
