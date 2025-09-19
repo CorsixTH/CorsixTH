@@ -103,7 +103,7 @@ function UIInformation:onChangeLanguage()
 
   -- Close button
   self:addPanel(19, self.width - 28, self.height - 28):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
-  .panel_for_sprite.custom_draw = function(panel, canvas, x, y)
+  .panel_for_sprite.custom_draw = --[[persistable:information_close_button]] function(panel, canvas, x, y)
       x = x + panel.x
       y = y + panel.y
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)

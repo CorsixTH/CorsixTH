@@ -74,7 +74,7 @@ function UIWatch:UIWatch(ui, count_type)
     :setTooltip(tooltips[count_type])
 
     self:addPanel(end_sprite, 4, 0)
-    .custom_draw = function(panel, canvas, x, y)
+    .custom_draw = --[[persistable:epidemic_timer_button]] function(panel, canvas, x, y)
       x = x + panel.x
       y = y + panel.y
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
@@ -97,7 +97,7 @@ function UIWatch:UIWatch(ui, count_type)
         self.scrollToTimerEventPatient, nil, self.cycleTimerEventPatient)
   else
     self:addPanel(timer_sprite, 0, 28):setTooltip(tooltips[count_type])
-    .custom_draw = function(panel, canvas, x, y)
+    .custom_draw = --[[persistable:open_hospital_timer_button]] function(panel, canvas, x, y)
       x = x + panel.x
       y = y + panel.y
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
