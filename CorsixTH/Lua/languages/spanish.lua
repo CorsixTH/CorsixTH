@@ -1390,6 +1390,7 @@ cheats_window = {
     decrease_prices = "Bajar precios",
     reset_death_count = "Reiniciar contador de muertes",
     max_reputation = "Reputatión máxima",
+    repair_all_machines = "Reparar todas las máquinas",
   },
   close = "Cerrar",
 }
@@ -1415,6 +1416,7 @@ tooltip.cheats_window = {
     decrease_prices = "Reduce los precios en un 50% (50% mínimo).",
     reset_death_count = "Reinicia el contador de muertes del hospital a cero",
     max_reputation = "Establece la reputación del hospital al máximo",
+    repair_all_machines = "Repara todas las máquinas del hospital",
   }
 }
 

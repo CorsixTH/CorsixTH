@@ -345,13 +345,17 @@ end
 
 --! Call on machine repaired.
 --!param room (object) machine room
-function Machine:machineRepaired(room)
+function Machine:machineRepaired(room, should_reduce_strength)
+  should_reduce_strength = should_reduce_strength or true
   room.needs_repair = false
-  self:reduceStrengthOnRepair(room)
   self.times_used = 0
   self:setRepairing(nil)
   setSmoke(self, false)
   self:removeHandymanRepairTask()
+
+  if should_reduce_strength then
+    self:reduceStrengthOnRepair()
+  end
 end
 
 --! Call on machine used. After machine use increment use values accordingly.
@@ -365,8 +369,7 @@ function Machine:removeHandymanRepairTask()
 end
 
 --! Calculates if machine strength should be reduced as a result of repair
---!param room (object) machine room
-function Machine:reduceStrengthOnRepair(room)
+function Machine:reduceStrengthOnRepair()
   local minimum_possible_strength = 2
   if self.strength <= minimum_possible_strength then return end
 

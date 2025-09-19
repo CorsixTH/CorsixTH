@@ -2101,6 +2101,24 @@ function World:getRoomNameAndRequiredStaffName(room_id)
   return room_name, staff_name, StaffProfile.translateStaffClass(staff_name)
 end
 
+--! Gets a list of all the machines in the player's hospital.
+function World:getPlayerMachines()
+  local world = self
+  local hosp = world:getLocalPlayerHospital()
+  local playerMachines = {}
+
+  for _, entity in ipairs(world.entities) do
+    -- is entity a machine and not a slave (e.g. operating_table_b)
+    if class.is(entity, Machine) and not entity.master then
+      -- check if machine belongs to player hospital
+      if entity.hospital == hosp then
+        playerMachines[#playerMachines + 1] = entity
+      end
+    end
+  end
+  return playerMachines
+end
+
 --! Append a message to the game log.
 --!param message (string) The message to add.
 function World:gameLog(message)

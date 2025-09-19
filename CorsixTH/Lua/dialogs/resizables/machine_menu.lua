@@ -281,24 +281,17 @@ function UIMachineMenu:update()
   self.machine_list = {}
   local world = self.ui.app.world
   local dispatcher = world.dispatcher
-  local hosp = world:getLocalPlayerHospital()
+  local machines = world:getPlayerMachines()
 
-  for _, entity in ipairs(world.entities) do
-    -- is entity a machine and not a slave (e.g. operating_table_b)
-    if class.is(entity, Machine) and not entity.master then
-      -- check if machine belongs to player hospital
-      if entity.hospital == hosp then
-        local machine = entity
-        if not machine:getRoom().crashed then
-          local assigned_handyman
-          local repair_call = dispatcher.call_queue[machine]
-          if repair_call then
-            assigned_handyman = repair_call["repair"].assigned
-          end
-          local machine_for_list = machineForList(machine, assigned_handyman)
-          table.insert(self.machine_list, machine_for_list)
-        end
+  for _, machine in ipairs(machines) do
+    if not machine:getRoom().crashed then
+      local assigned_handyman
+      local repair_call = dispatcher.call_queue[machine]
+      if repair_call then
+        assigned_handyman = repair_call["repair"].assigned
       end
+      local machine_for_list = machineForList(machine, assigned_handyman)
+      table.insert(self.machine_list, machine_for_list)
     end
   end
 
