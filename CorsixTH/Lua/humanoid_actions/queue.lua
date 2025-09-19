@@ -215,15 +215,31 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
     end
   end
 
+  -- Maybe we can sit down?
   if not must_stand then
-    -- Try to find a bench
-    local bench_max_distance
-    if action:isStanding() then
-      bench_max_distance = 10
-    else
-      bench_max_distance = action.current_bench_distance / 2
+    -- Where are we in relation to door/reception desk (goal).
+    -- Specify the distance we no longer look for a bench from our goal tile,
+    -- and the maximum distance we will look for one too.
+    local DISTANCE_THRESHOLD, MAX_DISTANCE = 4, 10
+    if action.current_bench_distance and
+        action.current_bench_distance <= DISTANCE_THRESHOLD then
+      return
     end
-    local bench, bx, by, dist = humanoid.world:getFreeBench(action.x, action.y, bench_max_distance)
+    local hum_x, hum_y = humanoid.tile_x, humanoid.tile_y
+    local goal_x, goal_y = action.x, action.y
+
+    local distance_from_goal = humanoid.world:getPathDistance(hum_x, hum_y,
+                                                              goal_x, goal_y)
+    if not distance_from_goal then
+      error("Patient in a queue has no calculated distance from themselves to their target door/desk!")
+    end
+
+    -- Look for a free bench that is closer to the goal. If we are standing
+    -- expand the search radius to increase the chance of getting a seat.
+    local bench_look_distance = not action:isStanding() and
+        math.max(2 * distance_from_goal / 3, DISTANCE_THRESHOLD) or MAX_DISTANCE
+
+    local bench, bx, by, new_dist = humanoid.world:getFreeBench(goal_x, goal_y, bench_look_distance)
     if bench then
       local num_actions_prior
       if action:isStanding() then
@@ -231,7 +247,7 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
       else
         num_actions_prior = action_queue_leave_bench(action, humanoid)
       end
-      action.current_bench_distance = dist
+      action.current_bench_distance = new_dist
       humanoid:queueAction(WalkAction(bx, by):setMustHappen(true), num_actions_prior)
       humanoid:queueAction(UseObjectAction(bench):setMustHappen(true), num_actions_prior + 1)
       bench.reserved_for = humanoid
