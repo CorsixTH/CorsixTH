@@ -550,12 +550,12 @@ customise_window = {
 tooltip.customise_window = {
   movies = "Global movie control. This will allow you to enable or disable all movies",
   intro = "Turn the intro movie on and off. Global movies must be on if you want the intro movie to play each time you launch CorsixTH",
-  paused = "In Theme Hospital, the player could only use the top menu while the game was paused. This is the default behaviour in CorsixTH, but turning this option on will allow you to build rooms and pick up objects while the game is paused",
+  paused = "In the original Theme Hospital, the player could only use the top menu while the game was paused. This is the default behaviour in CorsixTH, but turning this option on will allow you to build rooms and pick up objects while the game is paused",
   volume = "If the volume down button causes the Casebook to open, turn this option on to change the hotkey for the Casebook to Shift + C",
   aliens = "Due to incomplete animations, patients with Alien DNA will only appear via Emergencies by default. To allow patients with Alien DNA to visit your hospital normally, set this option to Regular Patients",
   fractured_bones = "Due to poor animation, female patients with Fractured Bones will not appear by default. To allow female patients with Fractured Bones to visit your hospital, set this option to Male and Female",
   average_contents = "If you would like the game to remember which extra objects you usually add while building rooms, turn this option on",
-  remove_destroyed_rooms = "In Theme Hospital, exploded machines made rooms permanently unusable. If you would like to be able to remove destroyed rooms for a fee, turn this option on",
+  remove_destroyed_rooms = "In the original Theme Hospital, exploded machines made rooms permanently unusable. If you would like to be able to remove destroyed rooms for a fee, turn this option on",
   machine_menu_button = "If you would like to have a machine menu button in bottom panel, turn this option on. Keep in mind that this button will not be available in small screen resolutions",
   back = "Close this menu and go back to the Settings Menu",
 }
