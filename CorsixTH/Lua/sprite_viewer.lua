@@ -27,6 +27,9 @@ gfx.cache.tabled = {}
 local font = gfx:loadFontAndSpriteTable("QData", "Font00V")
 local need_draw = true
 local sprite_table_paths = {}
+local palettes = {{"Data", "MPalette.dat"}}
+local palette_index = 1
+local palette_name
 local sprite_table_index
 local sprite_table
 local is_complex = false
@@ -39,12 +42,15 @@ for _, dir in ipairs({"Data", "QData", "DataM", "QDataM"}) do
   for item in pairs(TheApp.fs:listFiles(dir) or {}) do
     if item:match("%.TAB$") then
       sprite_table_paths[#sprite_table_paths + 1] = {dir, item:sub(1, -5)}
+    elseif item:match("%.PAL$") then
+      palettes[#palettes + 1] = {dir, item}
     end
   end
 end
 table.sort(sprite_table_paths, function(lhs, rhs)
   return lhs[1] < rhs[1] or (lhs[1] == rhs[1] and lhs[2] < rhs[2])
 end)
+
 
 local function LoadTable(n, complex)
   sprite_table_index = n
@@ -53,6 +59,10 @@ local function LoadTable(n, complex)
   local pal
   if TheApp.fs:readContents(path[1], path[2] .. ".PAL") then
     pal = gfx:loadPalette(path[1], path[2] .. ".PAL")
+    palette_name = path[1] .. '/' .. path[2] .. ".PAL"
+  else
+    pal = gfx:loadPalette(palettes[palette_index][1], palettes[palette_index][2])
+    palette_name = palettes[palette_index][1] .. '/' .. palettes[palette_index][2]
   end
   sprite_table = gfx:loadSpriteTable(path[1], path[2], complex, pal)
   need_draw = true
@@ -73,6 +83,10 @@ local function DoKey(_, rawchar)
     if sprite_table_index < #sprite_table_paths then
       LoadTable(sprite_table_index + 1, is_complex)
     end
+  elseif key == "p" then
+    palette_index = (palette_index or 1) % #palettes + 1
+    gfx.cache.tabled = {}
+    LoadTable(sprite_table_index, is_complex)
   elseif key == "w" then
     wdown = true
     need_draw = true
@@ -97,12 +111,12 @@ local function DoKeyUp(_, rawchar)
 end
 
 local function Render(canvas)
-  local encoding = is_complex and " (Complex)" or " (Simple)"
-  local msg = table.concat(sprite_table_paths[sprite_table_index], package.config:sub(1, 1)) .. encoding
+  local encoding = is_complex and " (Complex) " or " (Simple) "
+  local msg = table.concat(sprite_table_paths[sprite_table_index], package.config:sub(1, 1)) .. encoding .. palette_name
   local _, fonth = font:sizeOf(msg)
   local sep = 2
   local y = y_off
-  font:draw(canvas, "CorsixTH Debug Sprite Viewer - W/A/S/D to navigate, C to change mode, Q to quit", 0, y)
+  font:draw(canvas, "CorsixTH Debug Sprite Viewer - W/A/S/D to navigate, C to change mode, P to switch palette, Q to quit", 0, y)
   y = y + fonth + sep
   font:draw(canvas, msg, 0, y)
   y = y + fonth + sep
