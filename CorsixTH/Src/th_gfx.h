@@ -92,18 +92,6 @@ enum draw_flags : uint32_t {
   thdf_nearest = 1 << 14,
 };
 
-/** Helper structure with parameters to create a #render_target. */
-struct render_target_creation_params {
-  int width;               ///< Expected width of the render target.
-  int height;              ///< Expected height of the render target.
-  int bpp;                 ///< Expected colour depth of the render target.
-  bool fullscreen;         ///< Run full-screen.
-  bool present_immediate;  ///< Whether to present immediately to the user
-                           ///< (else wait for Vsync).
-  bool direct_zoom;  ///< Scale each texture when copying if true, otherwise
-                     ///< render to intermediate texture and scale.
-};
-
 /*!
     Base class for a linked list of drawable objects.
     Note that "object" is used as a generic term, not in specific reference to

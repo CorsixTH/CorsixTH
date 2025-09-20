@@ -423,25 +423,21 @@ render_target::scoped_target_texture::~scoped_target_texture() {
   target->intermediate_textures.push_back(texture);
 }
 
-render_target::~render_target() { destroy(); }
-
-bool render_target::create(const render_target_creation_params* pParams) {
-  if (renderer != nullptr) return false;
-
-  direct_zoom = pParams->direct_zoom;
-
+render_target::render_target(const render_target_creation_params& params)
+    : width(params.width),
+      height(params.height),
+      direct_zoom(params.direct_zoom) {
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
   pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
-  window =
-      SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
-                       SDL_WINDOWPOS_UNDEFINED, pParams->width, pParams->height,
-                       SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+  window = SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
+                            SDL_WINDOWPOS_UNDEFINED, width, height,
+                            SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
   if (!window) {
-    return false;
+    throw std::runtime_error(SDL_GetError());
   }
 
   Uint32 iRendererFlags =
-      (pParams->present_immediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
+      (params.present_immediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
   renderer = SDL_CreateRenderer(window, -1, iRendererFlags);
 
   SDL_RendererInfo info;
@@ -455,38 +451,10 @@ bool render_target::create(const render_target_creation_params* pParams) {
                           sdlVersion.patch < 4;
   SDL_SetWindowMinimumSize(window, 640, 480);
 
-  return update(pParams);
+  update(params);
 }
 
-bool render_target::update(const render_target_creation_params* pParams) {
-  if (window == nullptr) {
-    return false;
-  }
-
-  bool bUpdateSize = (width != pParams->width) || (height != pParams->height);
-  width = pParams->width;
-  height = pParams->height;
-
-  bool bIsFullscreen =
-      ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
-       SDL_WINDOW_FULLSCREEN_DESKTOP);
-  if (bIsFullscreen != pParams->fullscreen) {
-    SDL_SetWindowFullscreen(
-        window, (pParams->fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
-  }
-
-  if (bUpdateSize || bIsFullscreen != pParams->fullscreen) {
-    SDL_SetWindowSize(window, width, height);
-  }
-
-  if (bUpdateSize) {
-    SDL_RenderSetLogicalSize(renderer, width, height);
-  }
-
-  return true;
-}
-
-void render_target::destroy() {
+render_target::~render_target() {
   zoom_buffer.reset();
   destroy_intermediate_textures();
 
@@ -504,6 +472,30 @@ void render_target::destroy() {
     SDL_DestroyWindow(window);
     window = nullptr;
   }
+}
+
+bool render_target::update(const render_target_creation_params& params) {
+  bool bUpdateSize = (width != params.width) || (height != params.height);
+  width = params.width;
+  height = params.height;
+
+  bool bIsFullscreen =
+      ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
+       SDL_WINDOW_FULLSCREEN_DESKTOP);
+  if (bIsFullscreen != params.fullscreen) {
+    SDL_SetWindowFullscreen(
+        window, (params.fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+  }
+
+  if (bUpdateSize || bIsFullscreen != params.fullscreen) {
+    SDL_SetWindowSize(window, width, height);
+  }
+
+  if (bUpdateSize) {
+    SDL_RenderSetLogicalSize(renderer, width, height);
+  }
+
+  return true;
 }
 
 bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {

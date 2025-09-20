@@ -44,7 +44,17 @@ struct clip_rect : public SDL_Rect {
   typedef Uint16 w_h_type;
 };
 
-struct render_target_creation_params;
+/** Helper structure with parameters to create a #render_target. */
+struct render_target_creation_params {
+  int width;               ///< Expected width of the render target.
+  int height;              ///< Expected height of the render target.
+  int bpp;                 ///< Expected colour depth of the render target.
+  bool fullscreen;         ///< Run full-screen.
+  bool present_immediate;  ///< Whether to present immediately to the user
+                           ///< (else wait for Vsync).
+  bool direct_zoom;  ///< Scale each texture when copying if true, otherwise
+                     ///< render to intermediate texture and scale.
+};
 
 enum class scaled_items;
 
@@ -236,7 +246,9 @@ class wx_storing : public full_colour_renderer {
 
 class render_target {
  public:  // External API
-  render_target() = default;
+  explicit render_target(const render_target_creation_params& params);
+  render_target(const render_target& other) = delete;
+  render_target& operator=(const render_target& other) = delete;
   ~render_target();
 
   //! Encode an RGB triplet for fillRect()
@@ -244,14 +256,8 @@ class render_target {
     return palette::pack_argb(0xFF, iR, iG, iB);
   }
 
-  //! Initialise the render target
-  bool create(const render_target_creation_params* pParams);
-
   //! Update the parameters for the render target
-  bool update(const render_target_creation_params* pParams);
-
-  //! Shut down the render target
-  void destroy();
+  bool update(const render_target_creation_params& params);
 
   //! Get the reason for the last operation failing
   const char* get_last_error();
@@ -339,6 +345,8 @@ class render_target {
    public:
     scoped_target_texture(render_target* pTarget, int iX, int iY, int iWidth,
                           int iHeight, bool bScale);
+    scoped_target_texture(scoped_target_texture&) = delete;
+    scoped_target_texture& operator=(scoped_target_texture&) = delete;
     ~scoped_target_texture() override;
     void offset(SDL_FRect& targetRect) const;
     double scale_factor() const;
