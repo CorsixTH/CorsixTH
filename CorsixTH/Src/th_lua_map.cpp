@@ -357,7 +357,7 @@ int l_map_updateblueprint(lua_State* L) {
                           ? 0
                           : thdf_alt_palette));
     pNode = pMap->get_tile_unchecked(iNewX + iNewW, iY);
-    pAnim->attach_to_tile(iNewX + iNewW - 1, iY, pNode, 0);
+    pAnim->attach_to_tile(iNewX + iNewW, iY, pNode, 0);
     pAnim->set_pixel_offset(2, -1);
   }
 
