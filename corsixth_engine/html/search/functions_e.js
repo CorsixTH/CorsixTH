@@ -21,7 +21,7 @@ var searchData=
   ['release_5fchannel_18',['release_channel',['../classsound__player.html#a851a575dc94d0661beae921fa3c973a3',1,'sound_player']]],
   ['remove_5ffrom_5flist_19',['remove_from_list',['../classlink__list.html#a0574884960b710a882dd7dee4fc89615',1,'link_list']]],
   ['remove_5ffrom_5ftile_20',['remove_from_tile',['../classanimation__base.html#a060a51bf2cd2f0def97014a1d39ff5ed',1,'animation_base']]],
-  ['render_5ftarget_21',['render_target',['../classrender__target.html#a4530299964e2734b414813b2fd20b939',1,'render_target']]],
+  ['render_5ftarget_21',['render_target',['../classrender__target.html#a19afee709b38a69362ef506d87425419',1,'render_target::render_target(const render_target_creation_params &amp;params)'],['../classrender__target.html#a18d7dcbde3479f2784421de3a9affe92',1,'render_target::render_target(const render_target &amp;other)=delete']]],
   ['reserve_5fchannel_22',['reserve_channel',['../classsound__player.html#a161c2136e5ef64a9d40e7703b0958863',1,'sound_player']]],
   ['run_5fvideo_23',['run_video',['../classmovie__player.html#a3e76aa43db63f7792efefa3b316fd269',1,'movie_player']]]
 ];

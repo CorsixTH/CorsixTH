@@ -5,7 +5,7 @@ var searchData=
   ['scale_5ffactor_2',['scale_factor',['../classrender__target_1_1scoped__target__texture.html#ad7a5230977b608390626abb6e7753de7',1,'render_target::scoped_target_texture']]],
   ['scan_5fto_3',['scan_to',['../classmemory__buffer.html#abb588155e79f872aabc7a96e37edefbf',1,'memory_buffer']]],
   ['scoped_5fclip_4',['scoped_clip',['../classrender__target_1_1scoped__clip.html#aae0217604e34c0eb86ff795a11c36eaf',1,'render_target::scoped_clip']]],
-  ['scoped_5ftarget_5ftexture_5',['scoped_target_texture',['../classrender__target_1_1scoped__target__texture.html#ad90d9f7178533d617b9baf9d0ecafd54',1,'render_target::scoped_target_texture']]],
+  ['scoped_5ftarget_5ftexture_5',['scoped_target_texture',['../classrender__target_1_1scoped__target__texture.html#ad90d9f7178533d617b9baf9d0ecafd54',1,'render_target::scoped_target_texture::scoped_target_texture(render_target *pTarget, int iX, int iY, int iWidth, int iHeight, bool bScale)'],['../classrender__target_1_1scoped__target__texture.html#a0631bdffb5e7ce3feef50c2929d4da65',1,'render_target::scoped_target_texture::scoped_target_texture(scoped_target_texture &amp;)=delete']]],
   ['screen_5fto_5fworld_6',['screen_to_world',['../classlevel__map.html#a540ecd9326572d16ad2c6add1d0068bb',1,'level_map']]],
   ['search_5fneighbours_7',['search_neighbours',['../classabstract__pathfinder.html#a61b7bf41d705d9461d4d772fe341acef',1,'abstract_pathfinder']]],
   ['seek_8',['seek',['../classmemory__buffer.html#a475128ddb40ec2ed7b7aee80b814c2bc',1,'memory_buffer']]],

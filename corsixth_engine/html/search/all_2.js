@@ -42,9 +42,8 @@ var searchData=
   ['cp936_5ftable_2eh_39',['cp936_table.h',['../cp936__table_8h.html',1,'']]],
   ['cp936_5fto_5funicode_5ftable_40',['cp936_to_unicode_table',['../cp936__table_8h.html#af8d8ba45aa6e4d71d402f5c78bcab2f3',1,'cp936_table.h']]],
   ['crash_41',['crash',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abadcaa9fd4f23aaf0c29f540becf35b46f',1,'th_map.h']]],
-  ['create_42',['create',['../classrender__target.html#ad55d460a8b002fd3c0c8ff96c106ba88',1,'render_target']]],
-  ['create_5ffrom_5fsprite_43',['create_from_sprite',['../classcursor.html#a31ea9390f5dbfcb2806bf42094e2ea74',1,'cursor']]],
-  ['create_5fpalettized_5ftexture_44',['create_palettized_texture',['../classrender__target.html#a4ae1ea0d2b4c6dc9d740023828135307',1,'render_target']]],
-  ['create_5ftexture_45',['create_texture',['../classrender__target.html#a6dc517fc9ded160593d094c418b82a21',1,'render_target']]],
-  ['cursor_46',['cursor',['../classcursor.html#a11e92dc451433dc687e949b2985aa540',1,'cursor::cursor()'],['../classsprite__sheet.html#a2b9fbf16302036cf7138a173a7f162cd',1,'sprite_sheet::cursor'],['../classcursor.html',1,'cursor'],['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1791a97a8403730ee0760489a2aeb992',1,'cursor:&#160;th_lua_internal.h']]]
+  ['create_5ffrom_5fsprite_42',['create_from_sprite',['../classcursor.html#a31ea9390f5dbfcb2806bf42094e2ea74',1,'cursor']]],
+  ['create_5fpalettized_5ftexture_43',['create_palettized_texture',['../classrender__target.html#a4ae1ea0d2b4c6dc9d740023828135307',1,'render_target']]],
+  ['create_5ftexture_44',['create_texture',['../classrender__target.html#a6dc517fc9ded160593d094c418b82a21',1,'render_target']]],
+  ['cursor_45',['cursor',['../classcursor.html#a11e92dc451433dc687e949b2985aa540',1,'cursor::cursor()'],['../classsprite__sheet.html#a2b9fbf16302036cf7138a173a7f162cd',1,'sprite_sheet::cursor'],['../classcursor.html',1,'cursor'],['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1791a97a8403730ee0760489a2aeb992',1,'cursor:&#160;th_lua_internal.h']]]
 ];

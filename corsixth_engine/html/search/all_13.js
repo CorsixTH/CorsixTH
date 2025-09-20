@@ -5,7 +5,7 @@ var searchData=
   ['unicode_5fto_5fcodepage_5f437_2',['unicode_to_codepage_437',['../th__strings_8cpp.html#a6445f694f5f64de06742f1294697c861',1,'unicode_to_codepage_437(unsigned int iCodePoint):&#160;th_strings.cpp'],['../th__strings_8h.html#a6445f694f5f64de06742f1294697c861',1,'unicode_to_codepage_437(unsigned int iCodePoint):&#160;th_strings.cpp']]],
   ['unicode_5fto_5fcp437_5ftable_3',['unicode_to_cp437_table',['../th__strings_8cpp.html#a9c6eee93a964f99c7471724100f6d398',1,'th_strings.cpp']]],
   ['unload_4',['unload',['../classmovie__player.html#a4c4cadbccf413c6918a9573493b64b8b',1,'movie_player']]],
-  ['update_5',['update',['../classrender__target.html#ab47053f1af4550b739bbcb3d82576cb2',1,'render_target']]],
+  ['update_5',['update',['../classrender__target.html#a40efb9d8ea74051377fe4c6198cc4912',1,'render_target']]],
   ['update_5fcheck_5furl_6',['update_check_url',['../th__lua_8cpp.html#a494bd01a393b6e2bf7a28915e060a5cf',1,'th_lua.cpp']]],
   ['update_5fpathfinding_7',['update_pathfinding',['../classlevel__map.html#ada13ef9021e3ed8f214f44a4f9e68d92',1,'level_map']]],
   ['update_5fshadows_8',['update_shadows',['../classlevel__map.html#a0de5863bd061828d4a14b38cfa47df68',1,'level_map']]],
