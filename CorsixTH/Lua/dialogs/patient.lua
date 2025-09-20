@@ -52,7 +52,7 @@ function UIPatient:UIPatient(ui, patient)
   self.history_panel = self:addColourPanel(36, 22, 99, 88, 223, 223, 223) -- Treatment history background
   self.history_panel:makeButton(0, 0, 99, 88, nil, --[[persistable:patient_toggle_history]] function()
     self.history_panel.visible = not self.history_panel.visible
-  end):setTooltip(_S.tooltip.patient_window.graph) -- Treatment history toggle
+  end):setTooltip(_S.tooltip.patient_window.graph):setSound("selectx.wav") -- Treatment history toggle
   self.history_panel.visible = false -- Hide the treatment history at start
 
   self:addPanel(322,  15, 126) -- Happiness / thirst / temperature sliders

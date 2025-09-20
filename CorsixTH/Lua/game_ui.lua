@@ -94,6 +94,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.recallpositions = {}
 
   self.speed_up_key_pressed = false
+  self.last_hovered_entity = nil
 
   -- The currently specified intensity value for earthquakes. To abstract
   -- the effect from the implementation this value is a number between 0
@@ -509,6 +510,9 @@ function GameUI:onCursorWorldPositionChange()
     -- Set queue mood for patients queueing the new room
     if room then
       local queue = room.door.queue
+      if #queue > 0 then
+        TheApp.audio:playSound("HLIGHTP2.wav")
+      end
       if queue then
         for _, humanoid in ipairs(queue) do
           humanoid:setMood("queue", "activate")
@@ -518,16 +522,24 @@ function GameUI:onCursorWorldPositionChange()
     self.cursor_room = room
   end
 
-  -- Any hoverable mood should be displayed on the new entity
   if class.is(entity, Humanoid) then
     for _, value in pairs(entity.active_moods) do
       if value.on_hover then
-        entity:setMoodInfo(value)
+        if not self.mood_info then
+          if self.last_hovered_entity ~= entity then
+            TheApp.audio:playSound("HLIGHTP2.wav")
+            self.last_hovered_entity = entity
+          end
+          entity:setMoodInfo(value)
+        end
         break
       end
     end
+  else
+    self.last_hovered_entity = nil
   end
-  -- Dynamic info
+
+  -- Dynamic Info
   if entity and self.bottom_panel then
     self.bottom_panel:setDynamicInfo(entity:getDynamicInfo())
   end

@@ -93,13 +93,13 @@ function UIStaff:UIStaff(ui, staff)
     end
     self:addPanel(302,   5, 205) -- View circle top/Wage
     self:addPanel(313,  15, 189) -- Tasks bottom
-    self:addPanel(314,  37, 145):makeRepeatButton(0, 0, 49, 48, 315, self.doMoreCleaning):setTooltip(_S.tooltip.handyman_window.prio_litter)
-    self:addPanel(316,  92, 145):makeRepeatButton(0, 0, 49, 48, 317, self.doMoreWatering):setTooltip(_S.tooltip.handyman_window.prio_plants)
-    self:addPanel(318, 148, 145):makeRepeatButton(0, 0, 49, 48, 319, self.doMoreRepairing):setTooltip(_S.tooltip.handyman_window.prio_machines)
-    self:addPanel(240,  21, 210):makeButton(0, 0, 73, 30, 240, self.changeParcel):setTooltip(_S.tooltip.handyman_window.parcel_select)
+    self:addPanel(314,  37, 145):makeRepeatButton(0, 0, 49, 48, 315, self.doMoreCleaning):setTooltip(_S.tooltip.handyman_window.prio_litter):setSound("selectx.wav")
+    self:addPanel(316,  92, 145):makeRepeatButton(0, 0, 49, 48, 317, self.doMoreWatering):setTooltip(_S.tooltip.handyman_window.prio_plants):setSound("selectx.wav")
+    self:addPanel(318, 148, 145):makeRepeatButton(0, 0, 49, 48, 319, self.doMoreRepairing):setTooltip(_S.tooltip.handyman_window.prio_machines):setSound("selectx.wav")
+    self:addPanel(240,  21, 210):makeButton(0, 0, 73, 30, 240, self.changeParcel):setTooltip(_S.tooltip.handyman_window.parcel_select):setSound("selectx.wav")
   self:addPanel(303,   0, 253) -- View circle midpiece
     self:addPanel(304,   6, 302) -- View circle bottom
-    self:addPanel(307, 106, 253):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack)
+    self:addPanel(307, 106, 253):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack):setSound("selectx.wav")
     self:addPanel(309, 164, 253):makeButton(0, 0, 37, 50, 310, self.pickupStaff):setTooltip(_S.tooltip.staff_window.pick_up)
   else
     self:addPanel(302,   5, 178) -- View circle top/Wage
@@ -108,7 +108,7 @@ function UIStaff:UIStaff(ui, staff)
     if profile.humanoid_class ~= "Doctor" then
       self:addColourPanel(32, 141, 171, 39, 85, 202, 219)  -- Hides Skills
     end
-    self:addPanel(307, 106, 226):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack)
+    self:addPanel(307, 106, 226):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack):setSound("selectx.wav")
     self:addPanel(309, 164, 226):makeButton(0, 0, 37, 50, 310, self.pickupStaff):setTooltip(_S.tooltip.staff_window.pick_up)
   end
 
