@@ -96,7 +96,7 @@ function UICustomise:UICustomise(ui, mode)
   self:addBevelPanel(15, 140, 165, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.customise_window.aliens):setTooltip(_S.tooltip.customise_window.aliens).lowered = true
   self.aliens_panel =
-    self:addBevelPanel(185, 140, 140, 20, col_bg):setLabel(app.config.alien_dna_only_by_emergency and _S.customise_window.option_on or _S.customise_window.option_off)
+    self:addBevelPanel(185, 140, 140, 20, col_bg):setLabel(app.config.alien_dna_only_by_emergency and _S.customise_window.emergency_only or _S.customise_window.regular_patients)
   self.aliens_button = self.aliens_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonAliens)
     :setToggleState(app.config.alien_dna_only_by_emergency):setTooltip(_S.tooltip.customise_window.aliens)
 
@@ -104,7 +104,7 @@ function UICustomise:UICustomise(ui, mode)
   self:addBevelPanel(15, 165, 165, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.customise_window.fractured_bones):setTooltip(_S.tooltip.customise_window.fractured_bones).lowered = true
   self.fractured_bones_panel =
-    self:addBevelPanel(185, 165, 140, 20, col_bg):setLabel(app.config.disable_fractured_bones_females and _S.customise_window.option_on or _S.customise_window.option_off)
+    self:addBevelPanel(185, 165, 140, 20, col_bg):setLabel(app.config.disable_fractured_bones_females and _S.customise_window.male_only or _S.customise_window.male_and_female)
   self.fractured_bones_button = self.fractured_bones_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonFractured_bones)
     :setToggleState(app.config.disable_fractured_bones_females):setTooltip(_S.tooltip.customise_window.fractured_bones)
 
