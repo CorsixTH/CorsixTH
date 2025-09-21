@@ -74,6 +74,26 @@ function Machine:isMachine()
   return true
 end
 
+--! Return Tile position for smoke animation
+--!return (map, int, int)
+local function getSmokeTile(self)
+  local map, x, y = self.th:getTile()
+  if self.footprint then
+    for _, footprintCell in ipairs(self.footprint) do
+      if footprintCell.smoke_position then
+        x = x + footprintCell[1]
+        y = y + footprintCell[2]
+        break
+      end
+    end
+  end
+
+  -- adjust the offset of the original animation.
+  x = x - 1
+
+  return map, x, y
+end
+
 --! Set whether the smoke animation should be showing
 local function setSmoke(self, isSmoking)
   -- If turning smoke on for this machine
@@ -84,7 +104,7 @@ local function setSmoke(self, isSmoking)
       -- Note: Set the location of the smoke to that of the machine
       -- rather than setting the machine to the parent so that the smoke
       -- doesn't get hidden with the machine during use
-      self.smokeInfo:setTile(self.th:getTile())
+      self.smokeInfo:setTile(getSmokeTile(self))
       -- Always show the first smoke layer
       self.smokeInfo:setLayer(10, 2)
       -- tick to animate over all frames

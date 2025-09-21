@@ -97,7 +97,7 @@ object.orientations = {
     footprint = {
       {-2, -1, only_passable = true},
       {-1, -1, complete_cell = true}, {-1, -2, only_passable = true},
-      {0, -1, complete_cell = true}, {0, -2, complete_cell = true},
+      {0, -1, complete_cell = true, smoke_position = true}, {0, -2, complete_cell = true},
       {1, 0, complete_cell = true}, {1, -2, complete_cell = true},  {1, -1, only_passable = true},
     },
     render_attach_position = {0, -1},
@@ -109,7 +109,7 @@ object.orientations = {
     footprint = {
       {-1, -2, only_passable = true},
       {-1, -1, complete_cell = true}, {-2, -1, only_passable = true},
-      {-1, 0, complete_cell = true}, {-2, 0, complete_cell = true},
+      {-1, 0, complete_cell = true, smoke_position = true}, {-2, 0, complete_cell = true},
       {0, 1, complete_cell = true}, {-2, 1, complete_cell = true},  {-1, 1, only_passable = true},
     },
     slave_position = {-1, 1},
