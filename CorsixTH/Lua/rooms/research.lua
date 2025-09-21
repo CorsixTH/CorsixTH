@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 local room = {}
 room.id = "research"
 room.vip_must_visit = true
@@ -131,12 +133,21 @@ function ResearchRoom:roomFinished()
   -- Is this the first research department built?
   if not self.hospital.research_dep_built and not TheApp.using_demo_files then
     self.hospital.research_dep_built = true
-    self.hospital:giveAdvice({_A.information.initial_general_advice
-      .research_now_available})
+    self.hospital:giveAdvice({
+      {
+        text = _A.information.initial_general_advice.research_now_available,
+        speech_id = AdviserStringIds.information.initial_general_advice.research_now_available
+      }
+    })
   end
   -- Also check if it would be good to hire a researcher.
   if self.hospital:countStaffOfCategory("Researcher", 1) == 0 then
-    self.hospital:giveAdvice({_A.room_requirements.research_room_need_researcher})
+    self.hospital:giveAdvice({
+      {
+        text = _A.room_requirements.research_room_need_researcher,
+        speech_id = AdviserStringIds.room_requirements.research_room_need_researcher
+      }
+    })
   end
   return Room.roomFinished(self)
 end

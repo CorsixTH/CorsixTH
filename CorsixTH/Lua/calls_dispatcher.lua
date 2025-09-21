@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 corsixth.require("announcer")
+require("languages.string_ids")
 
 local AnnouncementPriority = _G["AnnouncementPriority"]
 
@@ -115,10 +116,20 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   object:setRepairingMode(lock_room and true or false, true)
 
   if not manual and urgent then
-    object.hospital:giveAdvice({_A.warnings.machines_falling_apart})
+    object.hospital:giveAdvice({
+      {
+        text = _A.warnings.machines_falling_apart,
+        speech_id = AdviserStringIds.warnings.machines_falling_apart
+      }
+    })
   elseif object.hospital:countStaffOfCategory("Handyman", 1) == 0 then
     -- Advise about hiring Handyman
-    object.hospital:giveAdvice({_A.warnings.machinery_damaged2})
+    object.hospital:giveAdvice({
+      {
+        text = _A.warnings.machinery_damaged2,
+        speech_id = AdviserStringIds.warnings.machinery_damaged2
+      }
+    })
   end
 
   if not self.call_queue[object] then

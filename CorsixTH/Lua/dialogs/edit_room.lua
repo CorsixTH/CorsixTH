@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 corsixth.require("dialogs.place_objects")
+require("languages.string_ids")
 
 class "UIEditRoom" (UIPlaceObjects)
 
@@ -955,7 +956,7 @@ function UIEditRoom:enterDoorPhase()
       self.phase = "walls"
       self:returnToWallPhase(true)
       self.ui:playSound("wrong2.wav")
-      self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
+      self.ui.adviser:say(_A.room_forbidden_non_reachable_parts, AdviserStringIds.room_forbidden_non_reachable_parts)
       return
     end
   end

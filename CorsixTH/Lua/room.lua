@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 class "Room"
 
 ---@type Room
@@ -346,13 +348,28 @@ function Room:onHumanoidEnter(humanoid)
     return
   end
   local researcher_desks = {
-    (_A.warnings.researcher_needs_desk_1),
-    (_A.warnings.researcher_needs_desk_2),
-    (_A.warnings.researcher_needs_desk_3),
+    {
+      text = _A.warnings.researcher_needs_desk_1,
+      speech_id = AdviserStringIds.warnings.researcher_needs_desk_1
+    },
+    {
+      text = _A.warnings.researcher_needs_desk_2,
+      speech_id = AdviserStringIds.warnings.researcher_needs_desk_2
+    },
+    {
+      text = _A.warnings.researcher_needs_desk_3,
+      speech_id = AdviserStringIds.warnings.researcher_needs_desk_3
+    },
   }
   local nurse_desks = {
-    (_A.warnings.nurse_needs_desk_1),
-    (_A.warnings.nurse_needs_desk_2),
+    {
+      text = _A.warnings.nurse_needs_desk_1,
+      speech_id = AdviserStringIds.warnings.nurse_needs_desk_1
+    },
+    {
+      text = _A.warnings.nurse_needs_desk_2,
+      speech_id = AdviserStringIds.warnings.nurse_needs_desk_2
+    },
   }
   if class.is(humanoid, Staff) then
     -- If the room is already full of staff, or the staff member isn't relevant

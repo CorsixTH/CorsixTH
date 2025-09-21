@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 local room = {}
 room.id = "gp"
 room.vip_must_visit = false
@@ -205,7 +207,12 @@ end
 function GPRoom:roomFinished()
   if self.hospital:countStaffOfCategory("Doctor") == 0 and
       not self.world.ui.start_tutorial then
-    self.hospital:giveAdvice({_A.room_requirements.gps_office_need_doctor})
+    self.hospital:giveAdvice({
+      {
+        text = _A.room_requirements.gps_office_need_doctor,
+        speech_id = AdviserStringIds.room_requirements.gps_office_need_doctor
+      }
+    })
   end
   return Room.roomFinished(self)
 end

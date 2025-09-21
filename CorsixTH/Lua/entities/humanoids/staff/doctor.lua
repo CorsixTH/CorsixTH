@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 corsixth.require("entities.humanoids.staff")
+require("languages.string_ids")
 
 local AnnouncementPriority = _G["AnnouncementPriority"]
 
@@ -155,7 +156,12 @@ function Doctor:updateSkill(consultant, trait, amount)
     self.profile[trait] = 1.0
     local is = trait:match("^is_(.*)")
     if is == "surgeon" or is == "psychiatrist" or is == "researcher" then
-      self.hospital:giveAdvice({ _A.information.promotion_to_specialist:format(_S.staff_title[is]) })
+      self.hospital:giveAdvice({
+        {
+          text = _A.information.promotion_to_specialist:format(_S.staff_title[is]),
+          speech_id = AdviserStringIds.information.promotion_to_specialist
+        }
+      })
       -- patients might we waiting for a doctor with this skill, notify them
       self.hospital:notifyOfStaffChange(self)
     end
@@ -166,10 +172,20 @@ function Doctor:updateSkill(consultant, trait, amount)
     self.profile:parseSkillLevel()
 
     if old_profile.is_junior and not self.profile.is_junior then
-      self.hospital:giveAdvice({ _A.information.promotion_to_doctor })
+      self.hospital:giveAdvice({
+        {
+          text = _A.information.promotion_to_doctor,
+          speech_id = AdviserStringIds.information.promotion_to_doctor
+        }
+      })
       self:updateStaffTitle()
     elseif not old_profile.is_consultant and self.profile.is_consultant then
-      self.hospital:giveAdvice({ _A.information.promotion_to_consultant })
+      self.hospital:giveAdvice({
+        {
+          text = _A.information.promotion_to_consultant,
+          speech_id = AdviserStringIds.information.promotion_to_consultant
+        }
+      })
       if self:getRoom().room_info.id == "training" then
         self:setNextAction(self:getRoom():createLeaveAction())
         self:queueAction(MeanderAction())
@@ -228,7 +244,12 @@ function Doctor:setCrazy(crazy)
     -- make doctor crazy
     if not self.is_crazy then
       self:setLayer(5, self.profile.layer5 + 4)
-      self.hospital:giveAdvice({_A.warnings.doctor_crazy_overwork})
+      self.hospital:giveAdvice({
+        {
+          text = _A.warnings.doctor_crazy_overwork,
+          speech_id = AdviserStringIds.warnings.doctor_crazy_overwork
+        }
+      })
       self.is_crazy = true
     end
   else
@@ -280,9 +301,19 @@ function Doctor:adviseWrongPersonForThisRoom()
   local room = self:getRoom()
   local room_name = room.room_info.long_name
   if room.room_info.id == "toilets" then
-    self.hospital:giveAdvice({ _A.staff_place_advice.doctors_cannot_work_in_room:format(room_name) })
+    self.hospital:giveAdvice({
+      {
+        text = _A.staff_place_advice.doctors_cannot_work_in_room:format(room_name),
+        speech_id = AdviserStringIds.staff_place_advice.doctors_cannot_work_in_room
+      }
+    })
   elseif room.room_info.id == "training" then
-    self.hospital:giveAdvice({ _A.staff_place_advice.doctors_cannot_work_in_room:format(room_name) })
+    self.hospital:giveAdvice({
+      {
+        text = _A.staff_place_advice.doctors_cannot_work_in_room:format(room_name),
+        speech_id = AdviserStringIds.staff_place_advice.doctors_cannot_work_in_room
+      }
+    })
   else
     Staff.adviseWrongPersonForThisRoom(self)
   end

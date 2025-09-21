@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 local object = {}
 object.id = "plant"
 object.thob = 45
@@ -186,7 +188,12 @@ function Plant:callForWatering()
 
     -- If very thirsty, make user aware of it.
     if self.current_state > 1 and not self.plant_announced then
-      self.hospital:giveAdvice({ _A.warnings.plants_thirsty })
+      self.hospital:giveAdvice({
+        {
+          text = _A.warnings.plants_thirsty,
+          speech_id = AdviserStringIds.warnings.plants_thirsty,
+        }
+      })
       self.plant_announced = true
     end
   end

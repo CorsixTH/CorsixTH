@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 local room = {}
 room.id = "psych"
 room.vip_must_visit = false
@@ -53,7 +55,12 @@ end
 
 function PsychRoom:roomFinished()
   if self.hospital:countStaffOfCategory("Psychiatrist", 1) == 0 then
-    self.hospital:giveAdvice({_A.room_requirements.psychiatry_need_psychiatrist})
+    self.hospital:giveAdvice({
+      {
+        text = _A.room_requirements.psychiatry_need_psychiatrist,
+        speech_id = AdviserStringIds.room_requirements.psychiatry_need_psychiatrist
+      }
+    })
   end
   return Room.roomFinished(self)
 end

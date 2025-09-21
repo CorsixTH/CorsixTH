@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 --! Manages all earthquakes in the world
 class "Earthquake"
 
@@ -79,7 +81,12 @@ function Earthquake:tick()
     hosp:tickEarthquake("end")
     -- If the earthquake measured more than 7 on the richter scale, tell the user about it
     if self.size > 7 then
-      hosp:giveAdvice({_A.earthquake.ended:format(math.floor(self.size))})
+      hosp:giveAdvice({
+        {
+          text = _A.earthquake.ended:format(math.floor(self.size)),
+          speech_id = AdviserStringIds.earthquake.ended
+        }
+      })
     end
 
     -- Set up the next earthquake date

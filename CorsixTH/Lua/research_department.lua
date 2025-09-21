@@ -28,6 +28,8 @@ get improved. On the other hand it appears that the research is
 stored for future use anyway.
 --]]
 
+require("languages.string_ids")
+
 --! Manages all things related to research for one hospital.
 class "ResearchDepartment"
 
@@ -273,8 +275,12 @@ function ResearchDepartment:nextResearch(category)
     cat.frac = 0
     self:redistributeResearchPoints()
 
-    self.hospital:giveAdvice({_A.research.drug_fully_researched
-      :format(_S.research.categories[category])})
+    self.hospital:giveAdvice({
+      {
+        text = _A.research.drug_fully_researched:format(_S.research.categories[category]),
+        speech_id = AdviserStringIds.research.drug_fully_researched
+      }
+    })
 
     -- Notify any research window
     local window = self.world.ui:getWindow(UIResearch)
@@ -466,9 +472,19 @@ function ResearchDepartment:improveDrug(drug)
   decideNextResearch()
 
   if drug.disease.id == "the_squits" then
-    self.hospital:giveAdvice({_A.research.drug_improved_1:format(drug.disease.name)})
+    self.hospital:giveAdvice({
+      {
+        text = _A.research.drug_improved_1:format(drug.disease.name),
+        speech_id = AdviserStringIds.research.drug_improved_1
+      }
+    })
   else
-    self.hospital:giveAdvice({_A.research.drug_improved:format(drug.disease.name)})
+    self.hospital:giveAdvice({
+      {
+        text = _A.research.drug_improved:format(drug.disease.name),
+        speech_id = AdviserStringIds.research.drug_improved
+      }
+    })
   end
 end
 
@@ -519,7 +535,12 @@ function ResearchDepartment:improveMachine(machine)
     end
   end
   -- Tell the player that something has been improved
-  self.hospital:giveAdvice({_A.research.machine_improved:format(machine.name)})
+  self.hospital:giveAdvice({
+    {
+      text = _A.research.machine_improved:format(machine.name),
+      speech_id = AdviserStringIds.research.machine_improved
+    }
+  })
 end
 
 --[[ Updates the dynamic info for each matching machine found in the player's
@@ -563,9 +584,19 @@ function ResearchDepartment:discoverObject(object, automatic)
       if unveil_room then
         room_disc.is_discovered = true
         if automatic then
-          self.hospital:giveAdvice({_A.research.new_available:format(object.name)})
+          self.hospital:giveAdvice({
+            {
+              text = _A.research.new_available:format(object.name),
+              speech_id = AdviserStringIds.research.new_available
+            }
+          })
         else
-          self.hospital:giveAdvice({_A.research.new_machine_researched:format(object.name)})
+          self.hospital:giveAdvice({
+            {
+              text = _A.research.new_machine_researched:format(object.name),
+              speech_id = AdviserStringIds.research.new_machine_researched
+            }
+          })
         end
         -- It may now be possible to continue researching machine improvements
         local current_improvement_research = self.research_policy.improvements.current

@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 corsixth.require("announcer")
+require("languages.string_ids")
 
 local AnnouncementPriority = _G["AnnouncementPriority"]
 
@@ -262,7 +263,7 @@ function UIFax:validate()
   print("Code typed on fax:", code)
   if code == "24328" then
     -- Original game cheat code
-    self.ui.adviser:say(_A.cheats.th_cheat)
+    self.ui.adviser:say(_A.cheats.th_cheat, AdviserStringIds.cheats.th_cheat)
     self.ui:addWindow(UICheats(self.ui))
   elseif code == "112" then
     -- simple, unobfuscated cheat for everyone :)

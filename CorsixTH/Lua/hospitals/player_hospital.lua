@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 corsixth.require("announcer")
+require("languages.string_ids")
 
 local AnnouncementPriority = _G["AnnouncementPriority"]
 
@@ -79,7 +80,12 @@ function PlayerHospital:dailyAdviceChecks()
   end
   -- Make players more aware of the need for radiators
   if day == 5 and self:countRadiators() == 0 then
-    self:giveAdvice({_A.information.initial_general_advice.place_radiators})
+    self:giveAdvice({
+      {
+        text = _A.information.initial_general_advice.place_radiators,
+        speech_id = AdviserStringIds.information.initial_general_advice.place_radiators
+      }
+    })
   end
   if day == 8 then
     self:_adviseToilets()
@@ -120,17 +126,37 @@ function PlayerHospital:_adviseMoney()
   if not self.world.free_build_mode then
     if self.balance < 2000 and self.balance >= -500 then
       local cashlow_advice = {
-        _A.warnings.money_low, _A.warnings.money_very_low_take_loan,
-        _A.warnings.cash_low_consider_loan,
+        {
+          text = _A.warnings.money_low,
+          speech_id = AdviserStringIds.warnings.money_low
+        },
+        {
+          text = _A.warnings.money_very_low_take_loan,
+          speech_id = AdviserStringIds.warnings.money_very_low_take_loan
+        },
+        {
+          text = _A.warnings.cash_low_consider_loan,
+          speech_id = AdviserStringIds.warnings.cash_low_consider_loan
+        }
       }
       self:giveAdvice(cashlow_advice)
 
     elseif self.balance < -2000 and current_month > 8 then
       -- TODO: Ideally this should be linked to the lose criteria for balance.
-      self:giveAdvice({_A.warnings.bankruptcy_imminent})
+      self:giveAdvice({
+        {
+          text = _A.warnings.bankruptcy_imminent,
+          speech_id = AdviserStringIds.warnings.bankruptcy_imminent
+        }
+      })
 
     elseif self.balance > 6000 and self.loan > 0 then
-      self:giveAdvice({_A.warnings.pay_back_loan})
+      self:giveAdvice({
+        {
+          text = _A.warnings.pay_back_loan,
+          speech_id = AdviserStringIds.warnings.pay_back_loan
+        }
+      })
     end
   end
 end
@@ -139,8 +165,22 @@ end
 function PlayerHospital:_adviseStaffRoom()
   if self:countRoomOfType("staff_room", 1) > 0 then return end
   local staffroom_advice = {
-    _A.warnings.build_staffroom, _A.warnings.need_staffroom,
-    _A.warnings.staff_overworked, _A.warnings.staff_tired,
+    {
+      text = _A.warnings.build_staffroom,
+      speech_id = AdviserStringIds.warnings.build_staffroom
+    },
+    {
+      text = _A.warnings.need_staffroom,
+      speech_id = AdviserStringIds.warnings.need_staffroom
+    },
+    {
+      text = _A.warnings.staff_overworked,
+      speech_id = AdviserStringIds.warnings.staff_overworked
+    },
+    {
+      text = _A.warnings.staff_tired,
+      speech_id = AdviserStringIds.warnings.staff_tired
+    },
   }
   self:giveAdvice(staffroom_advice)
 end
@@ -149,8 +189,18 @@ end
 function PlayerHospital:_adviseToilets()
   if self:countRoomOfType("toilets", 1) > 0 then return end
   local toilet_advice = {
-    _A.warnings.need_toilets, _A.warnings.build_toilets,
-    _A.warnings.build_toilet_now,
+    {
+      text = _A.warnings.need_toilets,
+      speech_id = AdviserStringIds.warnings.need_toilets
+    },
+    {
+      text = _A.warnings.build_toilets,
+      speech_id = AdviserStringIds.warnings.build_toilets
+    },
+    {
+      text = _A.warnings.build_toilet_now,
+      speech_id = AdviserStringIds.warnings.build_toilet_now
+    },
   }
   self:giveAdvice(toilet_advice)
 end
@@ -176,15 +226,32 @@ function PlayerHospital:_adviseBenches()
     local ratio = sum_ratios / num_sitting_ratios
     if ratio < 0.7 then -- At least 30% standing.
       local bench_advice = {
-        _A.warnings.more_benches, _A.warnings.people_have_to_stand,
+        {
+          text = _A.warnings.more_benches,
+          speech_id = AdviserStringIds.warnings.more_benches
+        },
+        {
+          text = _A.warnings.people_have_to_stand,
+          speech_id = AdviserStringIds.warnings.people_have_to_stand
+        }
       }
       self:giveAdvice(bench_advice)
 
     elseif ratio > 0.9 then
       -- Praise having enough well placed seats about once a year.
       local bench_advice = {
-        _A.praise.many_benches, _A.praise.plenty_of_benches,
-        _A.praise.few_have_to_stand,
+        {
+          text = _A.praise.many_benches,
+          speech_id = AdviserStringIds.praise.many_benches
+        },
+        {
+          text = _A.praise.plenty_of_benches,
+          speech_id = AdviserStringIds.praise.plenty_of_benches
+        },
+        {
+          text = _A.praise.few_have_to_stand,
+          speech_id = AdviserStringIds.praise.few_have_to_stand
+        },
       }
       self:giveAdvice(bench_advice, 1 / 12)
     end
@@ -199,16 +266,36 @@ function PlayerHospital:_adviseHeatingForPatients()
   local warmth = self:getAveragePatientAttribute("warmth", 0.3)
   if warmth < 0.22 then
     local cold_advice = {
-      _A.information.initial_general_advice.increase_heating,
-      _A.warnings.patients_very_cold, _A.warnings.people_freezing,
+      {
+        text = _A.information.initial_general_advice.increase_heating,
+        speech_id = AdviserStringIds.information.initial_general_advice.increase_heating
+      },
+      {
+        text = _A.warnings.patients_very_cold,
+        speech_id = AdviserStringIds.warnings.patients_very_cold
+      },
+      {
+        text = _A.warnings.people_freezing,
+        speech_id = AdviserStringIds.warnings.people_freezing
+      },
     }
     self:giveAdvice(cold_advice)
     self.adviser_data.temperature_advice = true
 
   elseif warmth >= 0.36 then
     local hot_advice = {
-      _A.information.initial_general_advice.decrease_heating,
-      _A.warnings.patients_too_hot, _A.warnings.patients_getting_hot,
+      {
+        text = _A.information.initial_general_advice.decrease_heating,
+        speech_id = AdviserStringIds.information.initial_general_advice.decrease_heating
+      },
+      {
+        text = _A.warnings.patients_too_hot,
+        speech_id = AdviserStringIds.warnings.patients_too_hot
+      },
+      {
+        text = _A.warnings.patients_getting_hot,
+        speech_id = AdviserStringIds.warnings.patients_getting_hot
+      }
     }
     self:giveAdvice(hot_advice)
     self.adviser_data.temperature_advice = true
@@ -222,11 +309,21 @@ function PlayerHospital:_adviseHeatingForStaff()
       or self.heating.heating_broke then return end
   local warmth = self:getAverageStaffAttribute("warmth", 0.3)
   if warmth < 0.22 then
-    self:giveAdvice({_A.warnings.staff_very_cold})
+    self:giveAdvice({
+      {
+        text = _A.warnings.staff_very_cold,
+        speech_id = AdviserStringIds.warnings.staff_very_cold
+      }
+    })
     self.adviser_data.temperature_advice = true
 
   elseif warmth >= 0.36 then
-    self:giveAdvice({_A.warnings.staff_too_hot})
+    self:giveAdvice({
+      {
+        text = _A.warnings.staff_too_hot,
+        speech_id = AdviserStringIds.warnings.staff_too_hot
+      }
+    })
     self.adviser_data.temperature_advice = true
   end
 end
@@ -239,10 +336,22 @@ function PlayerHospital:_adviseDrinksMachines()
   -- Increase need after the first year.
   local threshold = current_date:year() == 1 and 0.9 or 0.8
   if thirst > threshold then
-    self:giveAdvice({_A.warnings.patients_very_thirsty})
+    self:giveAdvice({
+      {
+        text = _A.warnings.patients_very_thirsty,
+        speech_id = AdviserStringIds.warnings.patients_very_thirsty
+      }
+    })
   elseif thirst > 0.6 then
     local thirst_advice = {
-      _A.warnings.patients_thirsty, _A.warnings.patients_thirsty2,
+      {
+        text = _A.warnings.patients_thirsty,
+        speech_id = AdviserStringIds.warnings.patients_thirsty
+      },
+      {
+        text = _A.warnings.patients_thirsty2,
+        speech_id = AdviserStringIds.warnings.patients_thirsty2
+      }
     }
     self:giveAdvice(thirst_advice)
   end
@@ -258,12 +367,18 @@ function PlayerHospital:_warnForLongQueues()
   if chosen_room.required_staff and not chosen_room.required_staff["Nurse"]
       and math.random(1, 3) > 1 then
     local warn_msgs = {
-      _A.warnings.queue_too_long_send_doctor:format(chosen_room.name),
-      _A.staff_advice.need_doctors
+      {
+        text = _A.warnings.queue_too_long_send_doctor:format(chosen_room.name),
+        speech_id = AdviserStringIds.warnings.queue_too_long_send_doctor
+      },
+      {
+        text = _A.staff_advice.need_doctors,
+        speech_id = AdviserStringIds.staff_advice.need_doctors
+      }
     }
     self:giveAdvice(warn_msgs)
   else
-    self.world.ui.adviser:say(_A.warnings.queues_too_long)
+    self.world.ui.adviser:say(_A.warnings.queues_too_long, AdviserStringIds.warnings.queues_too_long)
   end
 end
 
@@ -274,7 +389,12 @@ function PlayerHospital:advisePlants(placed)
 
   local num_plants = self:countPlants()
   if num_plants == 0 or (placed and num_plants > 1) then return end
-  self:giveAdvice({_A.staff_advice.need_handyman_plants})
+  self:giveAdvice({
+    {
+      text = _A.staff_advice.need_handyman_plants,
+      speech_id = AdviserStringIds.staff_advice.need_handyman_plants
+    }
+  })
 end
 
 --! Give advice to the player at the end of a month.
@@ -298,23 +418,53 @@ function PlayerHospital:checkReceptionAdvice(current_month, current_year)
 
   local num_receptionists = self:countStaffOfCategory("Receptionist", 1)
   if num_receptionists ~= 0 and current_month > 2 and not self.adviser_data.reception_advice then
-    self:giveAdvice({_A.warnings.no_desk_6})
+    self:giveAdvice({
+      {
+        text = _A.warnings.no_desk_6,
+        speech_id = AdviserStringIds.warnings.no_desk_6
+      }
+    })
     self.adviser_data.reception_advice = true
 
   elseif num_receptionists == 0 and current_month > 2 and self:countReceptionDesks() ~= 0  then
-    self:giveAdvice({_A.warnings.no_desk_7})
+    self:giveAdvice({
+      {
+        text = _A.warnings.no_desk_7,
+        speech_id = AdviserStringIds.warnings.no_desk_7
+      }
+    })
 
   elseif current_month == 3 then
-    self:giveAdvice({_A.warnings.no_desk}, 1, true)
+    self:giveAdvice({
+      {
+        text = _A.warnings.no_desk,
+        speech_id = AdviserStringIds.warnings.no_desk
+      }
+    }, 1, true)
 
   elseif current_month == 8 then
-    self:giveAdvice({_A.warnings.no_desk_1}, 1, true)
+    self:giveAdvice({
+      {
+        text = _A.warnings.no_desk_1,
+        speech_id = AdviserStringIds.warnings.no_desk_1
+      }
+    }, 1, true)
 
   elseif current_month == 11 then
     if self.visitors == 0 then
-      self:giveAdvice({_A.warnings.no_desk_2}, 1, true)
+      self:giveAdvice({
+        {
+          text = _A.warnings.no_desk_2,
+          speech_id = AdviserStringIds.warnings.no_desk_2
+        }
+      }, 1, true)
     else
-      self:giveAdvice({_A.warnings.no_desk_3}, 1, true)
+      self:giveAdvice({
+        {
+          text = _A.warnings.no_desk_3,
+          speech_id = AdviserStringIds.warnings.no_desk_3
+        }
+      }, 1, true)
     end
   end
 end
@@ -324,7 +474,7 @@ function PlayerHospital:msgNeedFirstReceptionDesk()
   if self.adviser_data.reception_advice then return end
 
   if self:countReceptionDesks() == 0 then
-    self.world.ui.adviser:say(_A.warnings.no_desk_4)
+    self.world.ui.adviser:say(_A.warnings.no_desk_4, AdviserStringIds.warnings.no_desk_4)
     self.adviser_data.reception_advice = true
   end
 end
@@ -334,10 +484,20 @@ function PlayerHospital:msgReceptionDesk()
   local num_receptionists = self:countStaffOfCategory("Receptionist", 1)
 
   if not self.world.ui.start_tutorial and num_receptionists == 0 then
-    self:giveAdvice({_A.room_requirements.reception_need_receptionist})
+    self:giveAdvice({
+      {
+        text = _A.room_requirements.reception_need_receptionist,
+        speech_id = AdviserStringIds.room_requirements.reception_need_receptionist
+      }
+    })
   elseif num_receptionists > 0 and self:countReceptionDesks() == 1 and
       not self.adviser_data.reception_advice and self.world:date():monthOfGame() > 3 then
-    self:giveAdvice({_A.warnings.no_desk_5})
+    self:giveAdvice({
+      {
+        text = _A.warnings.no_desk_5,
+        speech_id = AdviserStringIds.warnings.no_desk_5
+      }
+    })
     self.adviser_data.reception_advice = true
   end
 end
@@ -358,11 +518,11 @@ function PlayerHospital:msgMultiReceptionDesks()
   if (receptionists > 1 and num_desks > 0) or (receptionists > 0 and num_desks > 1) then
     local queue_avg = math.floor(queue_total / num_desks)
     if receptionists < num_desks and queue_avg > 5 then
-      self.world.ui.adviser:say(_A.warnings.reception_bottleneck)
+      self.world.ui.adviser:say(_A.warnings.reception_bottleneck, AdviserStringIds.warnings.reception_bottleneck)
     elseif queue_avg > 4 then
-      self.world.ui.adviser:say(_A.warnings.queue_too_long_at_reception)
+      self.world.ui.adviser:say(_A.warnings.queue_too_long_at_reception, AdviserStringIds.warnings.queue_too_long_at_reception)
     elseif receptionists > num_desks then
-      self.world.ui.adviser:say(_A.warnings.another_desk)
+      self.world.ui.adviser:say(_A.warnings.another_desk, AdviserStringIds.warnings.another_desk)
     end
   end
 end
@@ -382,7 +542,7 @@ function PlayerHospital:showGatesToHell(entity)
 end
 
 --! Advises the player.
---!param msgs (array of string) Messages to select from.
+--!param msgs (array of table) Messages to select from.
 --!param rnd_frac (optional float in range (0, 1]) Fraction of times that the
 --    call actually says something.
 --!param stay_up (bool) If true, let the adviser remain visible afterwards.
@@ -396,7 +556,8 @@ function PlayerHospital:giveAdvice(msgs, rnd_frac, stay_up)
 
   local index = (max_rnd == 1) and 1 or math.random(1, max_rnd)
   if index <= #msgs then
-    self.world.ui.adviser:say(msgs[index], stay_up)
+    --msgs = { {text = <adviserMessage>, speech_id = <adviserMessageId>}, ... }
+    self.world.ui.adviser:say(msgs[index].text, msgs[index].speech_id, stay_up)
     return true
   end
   return false
@@ -407,12 +568,23 @@ function PlayerHospital:msgCured()
   self.world.ui:playSound("cheer.wav") -- This sound is always heard
 
   if self.num_cured < 1 then -- First cure is always reported.
-    self:giveAdvice({_A.information.first_cure})
+    self:giveAdvice({
+      {
+        text = _A.information.first_cure,
+        speech_id = AdviserStringIds.information.first_cure
+      }
+    })
 
   elseif self.num_cured > 1 and not self.adviser_data.cured_died_message then
     local cured_msgs = {
-      _A.level_progress.another_patient_cured:format(self.num_cured),
-      _A.praise.patients_cured:format(self.num_cured)
+      {
+        text = _A.level_progress.another_patient_cured:format(self.num_cured),
+        speech_id = AdviserStringIds.level_progress.another_patient_cured
+      },
+      {
+        text = _A.praise.patients_cured:format(self.num_cured),
+        speech_id = AdviserStringIds.praise.patients_cured
+      }
     }
     self.adviser_data.cured_died_message = self:giveAdvice(cured_msgs, 2/15)
   end
@@ -423,12 +595,22 @@ function PlayerHospital:msgKilled()
   self.world.ui:playSound("boo.wav") -- this sound is always heard
 
   if self.num_deaths < 1 then -- First death is always reported.
-    self:giveAdvice({_A.information.first_death})
-
+    self:giveAdvice({
+      {
+        text = _A.information.first_death,
+        speech_id = AdviserStringIds.information.first_death
+      }
+    })
   elseif self.num_deaths > 1 and not self.adviser_data.cured_died_message then
     local died_msgs = {
-      _A.warnings.many_killed:format(self.num_deaths),
-      _A.level_progress.another_patient_killed:format(self.num_deaths)
+      {
+        text = _A.warnings.many_killed:format(self.num_deaths),
+        speech_id = AdviserStringIds.warnings.many_killed
+      },
+      {
+        text = _A.level_progress.another_patient_killed:format(self.num_deaths),
+        speech_id = AdviserStringIds.level_progress.another_patient_killed
+      }
     }
     self.adviser_data.cured_died_message = self:giveAdvice(died_msgs, 6/10)
   end
@@ -459,10 +641,10 @@ end
 function PlayerHospital:adviseBoilerBreakdown(broken_heat)
   local ui = self.world.ui
   if broken_heat == 0 then
-    ui.adviser:say(_A.boiler_issue.minimum_heat)
+    ui.adviser:say(_A.boiler_issue.minimum_heat, AdviserStringIds.boiler_issue.minimum_heat)
     ui:playRandomAnnouncement({ "sorry002.wav", "sorry004.wav" })
   else
-    ui.adviser:say(_A.boiler_issue.maximum_heat)
+    ui.adviser:say(_A.boiler_issue.maximum_heat, AdviserStringIds.boiler_issue.maximum_heat)
     ui:playRandomAnnouncement({ "sorry003.wav", "sorry004.wav" })
   end
 end
@@ -508,9 +690,9 @@ function PlayerHospital:onEndDay()
         ui:playRandomAnnouncement({ "vip001.wav", "vip002.wav", "vip003.wav",
             "vip004.wav", "vip005.wav" }, AnnouncementPriority.High)
         if self.num_vips < 1 then
-          ui.adviser:say(_A.information.initial_general_advice.first_VIP)
+          ui.adviser:say(_A.information.initial_general_advice.first_VIP, AdviserStringIds.information.initial_general_advice.first_VIP)
         else
-          ui.adviser:say(_A.information.vip_arrived:format(e.name))
+          ui.adviser:say(_A.information.vip_arrived:format(e.name), AdviserStringIds.information.vip_arrived)
         end
         e.announced = true
         self.announce_vip = self.announce_vip - 1
@@ -552,7 +734,7 @@ end
 --! Give visual warning that player doesn't have enough $ to build
 -- Let the message remain until cancelled by the player as it is being displayed behind the town map
 function PlayerHospital:adviseCannotAffordPlot()
-  self.world.ui.adviser:say(_A.warnings.cannot_afford_2, true, true)
+  self.world.ui.adviser:say(_A.warnings.cannot_afford_2, AdviserStringIds.warnings.cannot_afford_2, true, true)
 end
 
 --! Tell the player, through the advisor, about the impact of casebook prices
@@ -560,16 +742,19 @@ end
 -- from Hospital:computePriceLevelImpact
 --!param name (string) The name of the casebook entry of the diagnosis or disease
 function PlayerHospital:advisePriceLevelImpact(judgment, name)
-  local message
+  local message, message_id
   if judgment == "under" then
     message = _A.warnings.low_prices:format(name)
+    message_id = AdviserStringIds.warnings.low_prices
   elseif judgment == "over" then
     message = _A.warnings.high_prices:format(name)
+    message_id = AdviserStringIds.warnings.high_prices
   else
     assert(judgment == "fair", "Price level impact judgements must be under, over or fair")
     message = _A.warnings.fair_prices:format(name)
+    message_id = AdviserStringIds.warnings.fair_prices
   end
-  self.world.ui.adviser:say(message)
+  self.world.ui.adviser:say(message, message_id)
 end
 
 --! Makes the raise request for a staff member
@@ -580,7 +765,7 @@ function PlayerHospital:makeRaiseRequest(amount, staff)
   -- a staff member requesting a raise.
   -- Only show the help if the player is playing the campaign.
   if not self.has_seen_pay_rise and tonumber(self.world.map.level_number) then
-    self.world.ui.adviser:say(_A.information.pay_rise)
+    self.world.ui.adviser:say(_A.information.pay_rise, AdviserStringIds.information.pay_rise)
     self.has_seen_pay_rise = true
   end
   self.world.ui.bottom_panel:queueMessage("strike", amount, staff)
@@ -831,12 +1016,12 @@ end
 function PlayerHospital:adviseNoGPOffice()
   if self:countStaffOfCategory("Doctor", 1) > 0 then -- Doctor without a room
     if not self.adviser_data.no_gp_office then
-      self.world.ui.adviser:say(_A.warnings.no_gp_office)
+      self.world.ui.adviser:say(_A.warnings.no_gp_office, AdviserStringIds.warnings.no_gp_office)
       self.adviser_data.no_gp_office = true
     end
   else -- No room or doctor
     if not self.adviser_data.no_doctor_no_gp_office then
-      self.world.ui.adviser:say(_A.warnings.no_doctor_no_gp_office)
+      self.world.ui.adviser:say(_A.warnings.no_doctor_no_gp_office, AdviserStringIds.warnings.no_doctor_no_gp_office)
       self.adviser_data.no_doctor_no_gp_office = true
     end
   end

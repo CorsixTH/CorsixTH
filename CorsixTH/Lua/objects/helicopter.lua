@@ -19,6 +19,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 corsixth.require("announcer")
+require("languages.string_ids")
+
 local AnnouncementPriority = _G["AnnouncementPriority"]
 
 local object = {}
@@ -66,7 +68,7 @@ function Helicopter:tick()
   elseif phase == 60 then
     self:setSpeed(0, 0)
     self.spawned_patients = 0
-    ui.adviser:say(_A.information.emergency)
+    ui.adviser:say(_A.information.emergency, AdviserStringIds.information.emergency)
   elseif phase == 85 then
     if self.spawned_patients < self.hospital.emergency.victims then
       self:spawnPatient()

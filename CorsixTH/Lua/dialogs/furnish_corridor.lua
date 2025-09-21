@@ -19,6 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
 local TH = require("TH")
 local math_floor
     = math.floor
@@ -101,7 +102,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
 
       if quantity == nil and not is_negative_quantity then
         -- give visual warning that player doesn't have enough $ to buy or can't buy more
-        window.ui.adviser:say(error, false, true)
+        window.ui.adviser:say(error.text, error.id, false, true)
         window.ui:playSound("wrong2.wav")
       elseif qty > 0 then
         window.ui:playSound("AddItemJ.wav")
@@ -137,7 +138,7 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
   local is_negative_quantity = quantity < 0
 
   if (quantity > 0 and o.qty >= 99) then
-    return nil, _A.warnings.cannot_buy:format(o.object.name)
+    return nil, { text = _A.warnings.cannot_buy:format(o.object.name), speech_id = AdviserStringIds.warnings.cannot_buy }
   end
 
   if self.ui.app.key_modifiers.ctrl then
@@ -167,7 +168,7 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
       end
     end
   else
-    return nil, _A.warnings.cannot_afford_2
+    return nil, { text = _A.warnings.cannot_afford_2, speech_id = AdviserStringIds.warnings.cannot_afford_2 }
   end
   return quantity
 end

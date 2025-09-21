@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 local room = {}
 room.id = "training"
 room.vip_must_visit = false
@@ -69,7 +71,12 @@ function TrainingRoom:roomFinished()
 
   -- Also tell the player if he/she doesn't have a consultant yet.
   if self.hospital:countStaffOfCategory("Consultant", 1) == 0 then
-    self.hospital:giveAdvice({_A.room_requirements.training_room_need_consultant})
+    self.hospital:giveAdvice({
+      {
+        text = _A.room_requirements.training_room_need_consultant,
+        speech_id = AdviserStringIds.room_requirements.training_room_need_consultant
+      }
+    })
   end
   Room.roomFinished(self)
 end
@@ -206,15 +213,24 @@ function TrainingRoom:commandEnteringStaff(humanoid)
         humanoid:queueAction(UseObjectAction(obj))
         humanoid:queueAction(MeanderAction())
       else
-        self.hospital:giveAdvice({_A.staff_place_advice.not_enough_lecture_chairs})
+        self.hospital:giveAdvice({
+          {
+            text = _A.staff_place_advice.not_enough_lecture_chairs,
+            speech_id = AdviserStringIds.staff_place_advice.not_enough_lecture_chairs
+          }
+        })
         humanoid:setNextAction(self:createLeaveAction())
         humanoid:queueAction(MeanderAction())
         humanoid.last_room = nil -- Prevent Doctor returning to this room automatically
       end
     end
   elseif humanoid.humanoid_class ~= "Handyman" then
-    self.hospital:giveAdvice({_A.staff_place_advice.only_doctors_in_room
-      :format(_S.rooms_long.training_room)})
+    self.hospital:giveAdvice({
+      {
+        text = _A.staff_place_advice.only_doctors_in_room:format(_S.rooms_long.training_room),
+        speech_id = AdviserStringIds.staff_place_advice.only_doctors_in_room
+      }
+    })
     humanoid:setNextAction(self:createLeaveAction())
     humanoid:queueAction(MeanderAction())
     return

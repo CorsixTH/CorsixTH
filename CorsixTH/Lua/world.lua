@@ -43,6 +43,7 @@ corsixth.require("date")
 corsixth.require("announcer")
 corsixth.require("endconditions")
 corsixth.require("earthquake")
+require("languages.string_ids")
 
 --! Manages entities, rooms, and the date.
 class "World"
@@ -1734,7 +1735,12 @@ function World:newObject(id, x, y, flags, name)
     entity = Machine(hospital, object_type, x, y, flags, name)
     -- Tell the player if there is no handyman to take care of the new machinery.
     if hospital:countStaffOfCategory("Handyman", 1) == 0 then
-      hospital:giveAdvice({_A.staff_advice.need_handyman_machines})
+      hospital:giveAdvice({
+        {
+          text = _A.staff_advice.need_handyman_machines,
+          speech_id = AdviserStringIds.staff_advice.need_handyman_machines,
+        }
+      })
     end
   else
     entity = Object(hospital, object_type, x, y, flags, name)

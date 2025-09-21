@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 -- Test for hit within the view circle
 local --[[persistable:staff_dialog_is_in_view_circle]] function is_in_view_circle(x, y, is_handyman)
   local circle_center_y = is_handyman and 276 or 248
@@ -334,7 +336,7 @@ function UIStaff:changeHandymanAttributes(increased)
 
   -- Show a helpful message if this dialog hasn't been opened yet
   if not self.ui.hospital.handyman_popup then
-    self.ui.adviser:say(_A.information.handyman_adjust)
+    self.ui.adviser:say(_A.information.handyman_adjust, AdviserStringIds.information.handyman_adjust)
     self.ui.hospital.handyman_popup = true
   end
 

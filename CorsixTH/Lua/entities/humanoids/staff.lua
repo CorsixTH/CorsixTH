@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 corsixth.require("announcer")
+require("languages.string_ids")
 
 local AnnouncementPriority = _G["AnnouncementPriority"]
 
@@ -496,15 +497,40 @@ function Staff:adviseWrongPersonForThisRoom()
   local required = (room.room_info.maximum_staff or room.room_info.required_staff)
   if required then
     if required.Nurse then
-      self.hospital:giveAdvice({ _A.staff_place_advice.only_nurses_in_room:format(room_name) })
+      self.hospital:giveAdvice({
+        {
+          text = _A.staff_place_advice.only_nurses_in_room:format(room_name),
+          speech_id = AdviserStringIds.staff_place_advice.only_nurses_in_room
+        }
+      })
     elseif required.Surgeon then
-      self.hospital:giveAdvice({ _A.staff_place_advice.only_surgeons })
+      self.hospital:giveAdvice({
+        {
+          text = _A.staff_place_advice.only_surgeons:format(room_name),
+          speech_id = AdviserStringIds.staff_place_advice.only_surgeons
+        }
+      })
     elseif required.Researcher then
-      self.hospital:giveAdvice({ _A.staff_place_advice.only_researchers })
+      self.hospital:giveAdvice({
+        {
+          text = _A.staff_place_advice.only_researchers:format(room_name),
+          speech_id = AdviserStringIds.staff_place_advice.only_researchers
+        }
+      })
     elseif required.Psychiatrist then
-      self.hospital:giveAdvice({ _A.staff_place_advice.only_psychiatrists })
+      self.hospital:giveAdvice({
+        {
+          text = _A.staff_place_advice.only_psychiatrists:format(room_name),
+          speech_id = AdviserStringIds.staff_place_advice.only_psychiatrists
+        }
+      })
     else
-      self.hospital:giveAdvice({ _A.staff_place_advice.only_doctors_in_room:format(room_name) })
+      self.hospital:giveAdvice({
+        {
+          text = _A.staff_place_advice.only_doctors_in_room:format(room_name),
+          speech_id = AdviserStringIds.staff_place_advice.only_doctors_in_room
+        }
+      })
     end
   end
 end

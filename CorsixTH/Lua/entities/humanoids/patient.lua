@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 --! A `Humanoid` who is in the hospital for diagnosis and/or treatment.
 class "Patient" (Humanoid)
 
@@ -405,12 +407,30 @@ end
 
 function Patient:fallingAnnounce()
   local msg = {
-  (_A.warnings.falling_1),
-  (_A.warnings.falling_2),
-  (_A.warnings.falling_3),
-  (_A.warnings.falling_4),
-  (_A.warnings.falling_5),
-  (_A.warnings.falling_6),
+    {
+      text = _A.warnings.falling_1,
+      speech_id = AdviserStringIds.warnings.falling_1,
+    },
+    {
+      text = _A.warnings.falling_2,
+      speech_id = AdviserStringIds.warnings.falling_2,
+    },
+    {
+      text = _A.warnings.falling_3,
+      speech_id = AdviserStringIds.warnings.falling_3,
+    },
+    {
+      text = _A.warnings.falling_4,
+      speech_id = AdviserStringIds.warnings.falling_4,
+    },
+    {
+      text = _A.warnings.falling_5,
+      speech_id = AdviserStringIds.warnings.falling_5,
+    },
+    {
+      text = _A.warnings.falling_6,
+      speech_id = AdviserStringIds.warnings.falling_6,
+    },
   }
   self.hospital:giveAdvice(msg)
 end
@@ -438,7 +458,12 @@ function Patient:pee()
     self:changeAttribute("happiness", -0.02) -- not being able to find a loo and doing it in the corridor will make you sad too
     if not self.hospital.did_it_on_floor then
       self.hospital.did_it_on_floor = true
-      self.hospital:giveAdvice({_A.warnings.people_did_it_on_the_floor})
+      self.hospital:giveAdvice({
+        {
+          text = _A.warnings.people_did_it_on_the_floor,
+          speech_id = AdviserStringIds.warnings.people_did_it_on_the_floor
+        }
+      })
     end
   else
     return
@@ -501,7 +526,12 @@ function Patient:goHome(reason, disease_id)
     self:changeAttribute("happiness", -0.5)
 
     local treatment_name = self.hospital.disease_casebook[disease_id].disease.name
-    self.hospital:giveAdvice({_A.warnings.patient_not_paying:format(treatment_name)})
+    self.hospital:giveAdvice({
+      {
+        text = _A.warnings.patient_not_paying:format(treatment_name),
+        speech_id = AdviserStringIds.warnings.patient_not_paying
+      }
+    })
     hosp:updateNotCuredCounts(self, reason)
     self:clearDynamicInfo()
     self:setDynamicInfo('text', {"", _S.dynamic_info.patient.actions.prices_too_high})
@@ -910,7 +940,12 @@ function Patient:setTile(x, y)
 
           -- A callout is only needed if there are no handymen employed
           if self.hospital:countStaffOfCategory("Handyman", 1) == 0 then
-            self.hospital:giveAdvice({_A.staff_advice.need_handyman_litter})
+            self.hospital:giveAdvice({
+              {
+                text = _A.staff_advice.need_handyman_litter,
+                speech_id = AdviserStringIds.staff_advice.need_handyman_litter
+              }
+            })
           end
         end
       end

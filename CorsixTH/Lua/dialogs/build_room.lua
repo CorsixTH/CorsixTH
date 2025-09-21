@@ -18,7 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
 local TH = require("TH")
+
 
 class "UIBuildRoom" (Window)
 
@@ -186,7 +188,7 @@ function UIBuildRoom:buildRoom(index)
     self.ui:addWindow(edit_dlg)
   else
     -- give visual warning that player doesn't have enough $ to build
-    self.ui.adviser:say(_A.warnings.money_very_low_take_loan, false, true)
+    self.ui.adviser:say(_A.warnings.money_very_low_take_loan, AdviserStringIds.warnings.money_very_low_take_loan, false, true)
     self.ui:playSound("Wrong2.wav")
   end
 end

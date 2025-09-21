@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 --! The multi-purpose panel for launching dialogs / screens and dynamic information.
 class "UIBottomPanel" (Window)
 
@@ -413,7 +415,7 @@ end
 function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choice, callback)
   -- Show a helpful message if there has been no messages before - only in campaign though
   if not self.ui.hospital.message_popup and tonumber(self.world.map.level_number) then
-    self.world.ui.adviser:say(_A.information.fax_received)
+    self.world.ui.adviser:say(_A.information.fax_received, AdviserStringIds.information.fax_received)
     self.ui.hospital.message_popup = true
   end
   local fax = {
@@ -811,8 +813,11 @@ function UIBottomPanel:giveResearchAdvice()
     end
   end
   local msg = can_build_research and _A.warnings.research_screen_open_1 or _A.warnings.research_screen_open_2
+
+  local msg_id = can_build_research and AdviserStringIds.warnings.research_screen_open_1 or AdviserStringIds.warnings.research_screen_open_2
+
   if not TheApp.using_demo_files then
-    self.ui.adviser:say(msg)
+    self.ui.adviser:say(msg, msg_id)
   end
 end
 

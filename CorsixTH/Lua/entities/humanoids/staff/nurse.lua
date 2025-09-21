@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 corsixth.require("entities.humanoids.staff")
+require("languages.string_ids")
 
 local AnnouncementPriority = _G["AnnouncementPriority"]
 
@@ -44,7 +45,12 @@ end
 function Nurse:adviseWrongPersonForThisRoom()
   local room = self:getRoom()
   local room_name = room.room_info.long_name
-  self.hospital:giveAdvice({ _A.staff_place_advice.nurses_cannot_work_in_room:format(room_name) })
+  self.hospital:giveAdvice({
+    {
+      text = _A.staff_place_advice.nurses_cannot_work_in_room:format(room_name),
+      speech_id = AdviserStringIds.staff_place_advice.nurses_cannot_work_in_room,
+    }
+  })
 end
 
 function Nurse:afterLoad(old, new)

@@ -547,7 +547,7 @@ end
 
 --[[ Spawns the inspector who will walk to the reception desk. ]]
 function Epidemic:spawnInspector()
-  self.world.ui.adviser:say(_A.information.epidemic_health_inspector)
+  self.world.ui.adviser:say(_A.information.epidemic_health_inspector, AdviserStringIds.information.epidemic_health_inspector)
   local inspector = self.world:newEntity("Inspector", 2, 2)
   self.inspector = inspector
   inspector:setType("Inspector")
@@ -699,14 +699,14 @@ function Epidemic:showAppropriateAdviceMessages()
     if not self.has_said_hurry_up and self:countInfectedPatients() > 0 and
         -- If only 1/4 of the countdown_intervals remaining on the timer
         self.timer.open_timer == math.floor(self.countdown_intervals * 1 / 4) then
-      self.world.ui.adviser:say(_A.epidemic.hurry_up)
+      self.world.ui.adviser:say(_A.epidemic.hurry_up, AdviserStringIds.epidemic.hurry_up)
       self.has_said_hurry_up = true
 
     -- Wait until at least 1/4 of the countdown_intervals has expired before giving
     -- this warning so it doesn't happen straight away
     elseif self.timer.open_timer <= math.floor(self.countdown_intervals * 3 / 4) and
         not self.has_said_serious and self:countInfectedPatients() > 10 then
-      self.world.ui.adviser:say(_A.epidemic.serious_warning)
+      self.world.ui.adviser:say(_A.epidemic.serious_warning, AdviserStringIds.epidemic.serious_warning)
       self.has_said_serious = true
     end
   end

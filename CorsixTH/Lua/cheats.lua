@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 corsixth.require("announcer")
+require("languages.string_ids")
 
 local AnnouncementPriority = _G["AnnouncementPriority"]
 
@@ -78,7 +79,7 @@ function Cheats:announceCheat(speech)
     ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
   end
   if speech then
-    ui.adviser:say(speech)
+    ui.adviser:say(speech.text, speech.id)
   end
   self.hospital.cheated = true
 end
@@ -268,16 +269,28 @@ local toggle_cheats = {
     ["spawn_rate_cheat"] = {
     enable = Cheats.roujinOn,
     disable = Cheats.roujinOff,
-    enableAnnouncement = _A.cheats.roujin_on_cheat,
-    disableAnnouncement = _A.cheats.roujin_off_cheat,
+    enableAnnouncement = {
+      text = _A.cheats.roujin_on_cheat,
+      speech_id = AdviserStringIds.cheats.roujin_on_cheat,
+    },
+    disableAnnouncement = {
+      text = _A.cheats.roujin_off_cheat,
+      speech_id = AdviserStringIds.cheats.roujin_off_cheat,
+    },
     lower = 27868.3,
     upper = 27868.4,
   },
   ["no_rest_cheat"] = {
     enable = Cheats.noRestOn,
     disable = Cheats.noRestOff,
-    enableAnnouncement = _A.cheats.norest_on_cheat,
-    disableAnnouncement = _A.cheats.norest_off_cheat,
+    enableAnnouncement = {
+      text = _A.cheats.norest_on_cheat,
+      speech_id = AdviserStringIds.cheats.norest_on_cheat,
+    },
+    disableAnnouncement = {
+      text = _A.cheats.norest_off_cheat,
+      speech_id = AdviserStringIds.cheats.norest_off_cheat,
+    },
     lower = 185.5,
     upper = 185.6,
   },

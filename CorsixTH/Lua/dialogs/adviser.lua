@@ -126,13 +126,12 @@ function UIAdviser:hide()
 end
 
 --! Function checks if the adviser has been asked to say something already queued
---!param speech (string) Text to check
+--!param speech (int) Id of the adviser string to check
 --!return (boolean) true if duplicate found
-function UIAdviser:checkForDuplicates(speech)
-  local speech_to_check = speech.text -- Humanise for clarity
+function UIAdviser:checkForDuplicates(speech_id)
   for _, text in ipairs(self.queued_messages) do
-    local speech_to_compare = text.speech -- Humanise for clarity
-    if speech_to_compare == speech_to_check then return true end
+    local queued_speech_id = text.speech_id
+    if queued_speech_id == speech_id then return true end
   end
 end
 
@@ -142,14 +141,15 @@ end
 -- until the next say() call is made. Useful for the tutorial.
 --!param override_current Cancels previous messages (if any) immediately
 -- and shows this new one instead.
-function UIAdviser:say(speech, talk_until_next_announce, override_current)
+function UIAdviser:say(speech, speech_id, talk_until_next_announce, override_current)
   assert(type(speech) == "table")
   if not self.ui.app.config.adviser_disabled then
     -- Drop duplicate messages unless overridden
-    if not override_current and self:checkForDuplicates(speech) then return end
+    if not override_current and self:checkForDuplicates(speech_id) then return end
     -- Queue the new message
     self.queued_messages[#self.queued_messages + 1] = {
       speech = speech.text,
+      speech_id = speech_id,
       stay_up = talk_until_next_announce,
       priority = speech.priority
     }

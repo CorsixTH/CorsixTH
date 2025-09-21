@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 local room = {}
 room.id = "ward"
 room.vip_must_visit = true
@@ -78,7 +80,12 @@ function WardRoom:roomFinished()
   }
   self.maximum_patients = beds
   if self.hospital:countStaffOfCategory("Nurse", 1) == 0 then
-    self.hospital:giveAdvice({_A.room_requirements.ward_need_nurse})
+    self.hospital:giveAdvice({
+      {
+        text = _A.room_requirements.ward_need_nurse,
+        speech_id = AdviserStringIds.room_requirements.ward_need_nurse
+      }
+    })
   end
   Room.roomFinished(self)
 end

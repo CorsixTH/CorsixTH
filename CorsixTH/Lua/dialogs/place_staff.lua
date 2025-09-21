@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 local math_floor
     = math.floor
 local TH = require("TH")
@@ -165,7 +167,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
         self:close()
         return true
       else
-        self.ui.adviser:say(_A.placement_info.staff_cannot_place)
+        self.ui.adviser:say(_A.placement_info.staff_cannot_place, AdviserStringIds.placement_info.staff_cannot_place)
         return true
       end
     end

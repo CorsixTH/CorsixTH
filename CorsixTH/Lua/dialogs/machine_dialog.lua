@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+require("languages.string_ids")
+
 class "UIMachine" (Window)
 
 ---@type UIMachine
@@ -109,7 +111,8 @@ function UIMachine:replaceMachine()
   if hosp.balance < cost then
     -- give visual warning that player doesn't have enough $ to buy
     local advice = _A.warnings.cannot_afford_machine:format(cost, machine.object_type.name)
-    self.ui.adviser:say(advice, false, true)
+    local advice_id = AdviserStringIds.warnings.cannot_afford_machine
+    self.ui.adviser:say(advice, advice_id, false, true)
     self.ui:playSound("wrong2.wav")
     return
   end
