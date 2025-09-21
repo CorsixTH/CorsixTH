@@ -434,6 +434,7 @@ void movie_player::play(int requested_audio_channel) {
   movie_picture_buffer.allocate(renderer, video_codec_context->width,
                                 video_codec_context->height);
 
+  paused = false;
   current_sync_pts = 0;
   current_sync_pts_system_time = SDL_GetTicks();
 
@@ -522,6 +523,22 @@ void movie_player::play_audio(int requested_audio_channel) {
 
 void movie_player::stop() { aborting = true; }
 
+void movie_player::togglePause() {
+  // This is so close to thread safe. Note the potential race between !paused
+  // and paused.exchange. If c++ had an atomic not, or if fetch_xor
+  // worked on bools in c++ 17 I would have done it. As is I'd need a mutex or a
+  // compare_exchange loop, which didn't seem worth it since we only call from
+  // the event thread anyway.
+  bool wasPaused = paused.exchange(!paused);
+
+  if (!wasPaused) {
+    pause_start_time = SDL_GetTicks();
+  } else {
+    uint32_t pauseDuration = SDL_GetTicks() - pause_start_time;
+    current_sync_pts_system_time += pauseDuration;
+  }
+}
+
 int movie_player::get_native_height() const {
   int iHeight = 0;
 
@@ -556,22 +573,21 @@ const char* movie_player::get_last_error() const { return last_error.c_str(); }
 void movie_player::clear_last_error() { last_error.clear(); }
 
 double movie_player::refresh(const SDL_Rect& destination_rect) {
-  SDL_Rect dest_rect;
+  SDL_Rect dest_rect = SDL_Rect{destination_rect.x, destination_rect.y,
+                                destination_rect.w, destination_rect.h};
 
-  dest_rect = SDL_Rect{destination_rect.x, destination_rect.y,
-                       destination_rect.w, destination_rect.h};
+  double dCurTime = (paused.load() ? pause_start_time : SDL_GetTicks()) -
+                    current_sync_pts_system_time + current_sync_pts * 1000.0;
 
-  double dCurTime =
-      SDL_GetTicks() - current_sync_pts_system_time + current_sync_pts * 1000.0;
   if (!movie_picture_buffer.empty()) {
     double dNextPts = movie_picture_buffer.get_next_pts();
 
     if (dNextPts > 0 && dNextPts * 1000.0 <= dCurTime) {
       movie_picture_buffer.advance();
     }
-
     movie_picture_buffer.draw(renderer, dest_rect);
   }
+
   return dCurTime;
 }
 
@@ -715,6 +731,12 @@ void movie_player::copy_audio_to_stream(uint8_t* pbStream, int iStreamSize) {
 }
 
 int movie_player::decode_audio_frame(uint8_t* stream, int stream_size) {
+  // If we are paused, return silence
+  if (paused.load()) {
+    std::memset(stream, 0, static_cast<std::size_t>(stream_size));
+    return stream_size;
+  }
+
   int iOutSamples = stream_size / (av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) *
                                    mixer_channels);
 
@@ -770,6 +792,7 @@ void movie_player::play(int requested_audio_channel) {
   SDL_PushEvent(&endEvent);
 }
 void movie_player::stop() {}
+void movie_player::togglePause() {}
 int movie_player::get_native_height() const { return 0; }
 int movie_player::get_native_width() const { return 0; }
 bool movie_player::has_audio_track() const { return false; }
