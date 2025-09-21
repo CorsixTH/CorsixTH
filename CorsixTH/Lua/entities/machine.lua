@@ -139,6 +139,8 @@ end
 
 --! Call after use of the machine.
 function Machine:incrementUsedCount(should_increment_times_used)
+  --If not specified, the 'times_used' should be incremented
+  should_increment_times_used = should_increment_times_used or true
   self.total_usage = self.total_usage + 1
 
   if should_increment_times_used then
