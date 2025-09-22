@@ -24,6 +24,8 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <algorithm>
+
 #include "lua_sdl.h"
 #ifdef CORSIX_TH_USE_FFMPEG
 
@@ -213,7 +215,8 @@ bool movie_picture_buffer::unsafe_full() const {
   return (!allocated || picture_count == picture_buffer_size);
 }
 
-int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
+int movie_picture_buffer::write(AVFrame* pFrame, double dPts,
+                                AVCodecID codecId) {
   std::unique_lock<std::mutex> picBufLock(mutex);
   while (unsafe_full() && !aborting) {
     cond.wait(picBufLock);
@@ -249,6 +252,16 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
               pFrameRGB->data, pFrameRGB->linesize);
 
     picture.pts = dPts;
+
+    // We're getting into some codec specific implementation details here.
+    if (codecId == AV_CODEC_ID_SMACKVIDEO &&
+        pFrame->format == AV_PIX_FMT_PAL8 && pFrame->data[1]) {
+      constexpr std::size_t palette_size = 256 * 4;  // Writes RGBA
+      std::copy_n(pFrame->data[1], palette_size, picture.palette.begin());
+      FILE* f = std::fopen("/home/stephen/palette.pl8", "wb");
+      fwrite(pFrame->data[1], 1, palette_size, f);
+      std::fclose(f);
+    }
 
     pictureLock.unlock();
     write_index++;
@@ -630,7 +643,8 @@ void movie_player::run_video() {
     }
 
     dClockPts = get_presentation_time_for_frame(*pFrame, video_stream_index);
-    iError = movie_picture_buffer.write(pFrame.get(), dClockPts);
+    iError = movie_picture_buffer.write(pFrame.get(), dClockPts,
+                                        video_codec_context->codec_id);
 
     if (iError < 0) {
       break;

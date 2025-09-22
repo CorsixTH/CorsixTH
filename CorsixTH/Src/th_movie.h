@@ -137,12 +137,16 @@ class movie_picture {
   //! Delete the buffer
   void deallocate();
 
-  uint8_t* buffer;                   ///< Pixel data in #m_pixelFormat
-  const AVPixelFormat pixel_format;  ///< The format of pixels to output
-  int width;                         ///< Picture width
-  int height;                        ///< Picture height
-  double pts;                        ///< Presentation time stamp
-  std::mutex mutex;                  ///< Mutex protecting this picture
+  uint8_t* buffer;                    ///< Pixel data in pixel_format
+  const AVPixelFormat pixel_format;   ///< The format of pixels to output
+  int width;                          ///< Picture width
+  int height;                         ///< Picture height
+  double pts;                         ///< Presentation time stamp
+  std::mutex mutex;                   ///< Mutex protecting this picture
+  std::array<uint8_t, 1024> palette;  ///< Palette data for smacker videos. The
+                                      ///< buffer is already converted to
+                                      ///< pixel_format, this is just for
+                                      ///< reference/debugging.
 };
 
 //! A buffer for holding movie pictures and drawing them to the renderer
@@ -207,7 +211,7 @@ class movie_picture_buffer {
   //! \retval 0 Success
   //! \retval -1 Abort is in progress
   //! \retval 1 An error writing the frame
-  int write(AVFrame* pFrame, double dPts);
+  int write(AVFrame* pFrame, double dPts, AVCodecID codecId);
 
  private:
   //! Return whether there is space to add any more frame data to the queue
