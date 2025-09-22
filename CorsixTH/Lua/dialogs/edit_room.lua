@@ -577,7 +577,6 @@ function UIEditRoom:finishRoom()
 end
 
 function UIEditRoom:purchaseItems()
-  self.ui:playSound("selectx.wav")
   self.visible = false
   self.place_objects = false
   self:stopPickupItems()
@@ -619,7 +618,6 @@ end
 
 -- callback for item pick up button
 function UIEditRoom:pickupItems()
-  self.ui:playSound("selectx.wav")
   if self.in_pickup_mode then
     self:stopPickupItems()
   else
