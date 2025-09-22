@@ -208,11 +208,13 @@ end
 
 local function makeGreyscaleGhost(pal)
   local remap = {}
+  local stride = #pal / 256
+  assert(stride == 3 or stride == 4, "Palette length is not valid")
   -- Convert pal from a string to an array of palette entries
   local entries = {}
-  for i = 1, #pal, 3 do
+  for i = 1, #pal, stride do
     local entry = {pal:byte(i, i + 2)} -- R, G, B at [1], [2], [3]
-    entries[(i - 1) / 3] = entry
+    entries[(i - 1) / stride] = entry
   end
   -- For each palette entry, convert it to grey and then find the nearest
   -- entry in the palette to that grey.
@@ -243,7 +245,7 @@ end
 --!param name (string) The name of the palette file
 --!param transparent_255 (boolean) Whether the 255th entry in the palette should be transparent
 --!return (palette, string) The palette and a string representing the palette converted to greyscale
-function Graphics:loadPalette(dir, name, transparent_255)
+function Graphics:loadPalette(dir, name, transparent_255, pal8bit)
   name = name or "MPalette.dat"
 
   if self.cache.palette[name] then
@@ -258,7 +260,7 @@ function Graphics:loadPalette(dir, name, transparent_255)
 
   local data = self.app:readDataFile(dir or "Data", name)
   local palette = TH.palette()
-  palette:load(data)
+  palette:load(data, pal8bit)
   if transparent_255 then
     palette:setEntry(255, 0xFF, 0x00, 0xFF)
   end

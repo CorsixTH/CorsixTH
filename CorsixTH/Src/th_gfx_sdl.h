@@ -73,6 +73,8 @@ class palette {
   */
   bool load_from_th_file(const uint8_t* pData, size_t iDataLength);
 
+  bool load_from_8pal_file(const uint8_t* pData, size_t iDataLength);
+
   //! Set an entry of the palette.
   /*!
       The RGB colour (255, 0, 255) is used as the transparent colour.

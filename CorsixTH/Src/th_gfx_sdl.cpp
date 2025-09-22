@@ -230,6 +230,34 @@ bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength) {
   return true;
 }
 
+bool palette::load_from_8pal_file(const uint8_t* pData, size_t iDataLength) {
+  int stride;
+  if (iDataLength == 256 * 3) {
+    stride = 3;
+    // RGB
+  } else if (iDataLength == 256 * 4) {
+    stride = 4;
+    // RGBA
+  } else {
+    return false;
+  }
+  colour_count = 256;
+
+  for (int i = 0; i < colour_count; ++i, pData += stride) {
+    uint8_t iR = pData[0];
+    uint8_t iG = pData[1];
+    uint8_t iB = pData[2];
+    uint8_t iA = stride == 4 ? pData[3] : 0xFF;
+    uint32_t iColour = pack_argb(iA, iR, iG, iB);
+
+    // Remap magenta to transparent
+    if (iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
+      iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
+    colour_index_to_argb_map[i] = iColour;
+  }
+  return true;
+}
+
 bool palette::set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB) {
   if (iEntry < 0 || iEntry >= colour_count) return false;
   uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
