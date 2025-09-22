@@ -65,11 +65,15 @@ int l_palette_load(lua_State* L) {
   palette* pPalette = luaT_testuserdata<palette>(L);
   size_t iDataLen;
   const uint8_t* pData = luaT_checkfile(L, 2, &iDataLen);
+  bool pal8 = lua_toboolean(L, 3);
 
-  if (pPalette->load_from_th_file(pData, iDataLen))
-    lua_pushboolean(L, 1);
+  bool res;
+  if (pal8)
+    res = pPalette->load_from_8pal_file(pData, iDataLen);
   else
-    lua_pushboolean(L, 0);
+    res = pPalette->load_from_th_file(pData, iDataLen);
+
+  lua_pushboolean(L, res);
   return 1;
 }
 
