@@ -259,8 +259,7 @@ function Graphics:loadPalette(dir, name, transparent_255, pal8bit)
   end
 
   local data = self.app:readDataFile(dir or "Data", name)
-  local palette = TH.palette()
-  palette:load(data, pal8bit)
+  local palette = TH.palette(data, pal8bit)
   if transparent_255 then
     palette:setEntry(255, 0xFF, 0x00, 0xFF)
   end
@@ -331,8 +330,7 @@ function Graphics:loadBuiltinFont()
         return x
       end
     end
-    local palette = TH.palette()
-    palette:load(dernc(pal))
+    local palette = TH.palette(dernc(pal))
     local sheet = TH.sheet()
     sheet:setPalette(palette)
     sheet:load(dernc(tab), dernc(dat), true, self.target)

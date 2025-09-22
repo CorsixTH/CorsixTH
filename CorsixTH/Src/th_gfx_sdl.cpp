@@ -212,54 +212,35 @@ class scoped_color_mod {
 
 }  // namespace
 
-bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength) {
-  if (iDataLength != 256 * 3) return false;
-
-  colour_count = static_cast<int>(iDataLength / 3);
-  for (int i = 0; i < colour_count; ++i, pData += 3) {
-    uint8_t iR = convert_6bit_to_8bit_colour_component(pData[0]);
-    uint8_t iG = convert_6bit_to_8bit_colour_component(pData[1]);
-    uint8_t iB = convert_6bit_to_8bit_colour_component(pData[2]);
-    uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
-    // Remap magenta to transparent
-    if (iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
-      iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
-    colour_index_to_argb_map[i] = iColour;
-  }
-
-  return true;
-}
-
-bool palette::load_from_8pal_file(const uint8_t* pData, size_t iDataLength) {
+palette::palette(const uint8_t* pData, size_t iDataLength, bool is8bit) {
   int stride;
   if (iDataLength == 256 * 3) {
-    stride = 3;
-    // RGB
+    stride = 3;  // RGB
   } else if (iDataLength == 256 * 4) {
-    stride = 4;
-    // RGBA
+    stride = 4;  // RGBA
   } else {
-    return false;
+    throw std::runtime_error(
+        "Invalid palette data length. Must be 768 or 1024 bytes.");
   }
-  colour_count = 256;
 
-  for (int i = 0; i < colour_count; ++i, pData += stride) {
-    uint8_t iR = pData[0];
-    uint8_t iG = pData[1];
-    uint8_t iB = pData[2];
+  for (int i = 0; i < color_count; ++i, pData += stride) {
+    uint8_t iR =
+        is8bit ? pData[0] : convert_6bit_to_8bit_colour_component(pData[0]);
+    uint8_t iG =
+        is8bit ? pData[1] : convert_6bit_to_8bit_colour_component(pData[1]);
+    uint8_t iB =
+        is8bit ? pData[2] : convert_6bit_to_8bit_colour_component(pData[2]);
     uint8_t iA = stride == 4 ? pData[3] : 0xFF;
     uint32_t iColour = pack_argb(iA, iR, iG, iB);
-
     // Remap magenta to transparent
     if (iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
       iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
     colour_index_to_argb_map[i] = iColour;
   }
-  return true;
 }
 
 bool palette::set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB) {
-  if (iEntry < 0 || iEntry >= colour_count) return false;
+  if (iEntry < 0 || iEntry >= color_count) return false;
   uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
   // Remap magenta to transparent
   if (iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
@@ -268,9 +249,8 @@ bool palette::set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB) {
   return true;
 }
 
-int palette::get_colour_count() const { return colour_count; }
-
-const uint32_t* palette::get_argb_data() const {
+const std::array<argb_colour, palette::color_count>& palette::get_argb_data()
+    const {
   return colour_index_to_argb_map;
 }
 
@@ -286,7 +266,7 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
 
   iSpriteFlags &= thdf_alt32_mask;
 
-  const uint32_t* pColours = pPalette->get_argb_data();
+  const auto& pColours = pPalette->get_argb_data();
   for (;;) {
     uint8_t iType = *pImg++;
     size_t iLength = iType & 63;
@@ -1436,28 +1416,27 @@ void sprite_sheet::wx_draw_sprite(size_t iSprite, uint8_t* pRGBData,
 }
 
 SDL_Texture* sprite_sheet::_makeAltBitmap(sprite* pSprite) {
-  const uint32_t* pPalette = palette->get_argb_data();
+  const auto& argb_data = palette->get_argb_data();
 
-  if (!pSprite->alt_palette_map)  // Use normal palette.
-  {
+  if (!pSprite->alt_palette_map) {
+    // Use normal palette
     uint32_t iSprFlags =
         (pSprite->sprite_flags & ~thdf_alt32_mask) | thdf_alt32_plain;
     pSprite->alt_texture = target->create_palettized_texture(
         pSprite->width, pSprite->height, pSprite->data, palette, iSprFlags);
-  } else if (!pPalette)  // Draw alternative palette, but no palette set (ie
-                         // 32bpp image).
-  {
+  } else if (!palette) {
+    // Draw 32bpp image without palette
     pSprite->alt_texture = target->create_palettized_texture(
         pSprite->width, pSprite->height, pSprite->data, palette,
         pSprite->sprite_flags);
-  } else  // Paletted image, build recolour palette.
-  {
+  } else {
+    // Create a palette remapping
     ::palette oPalette;
     for (int iColour = 0; iColour < 255; iColour++) {
-      oPalette.set_argb(iColour, pPalette[pSprite->alt_palette_map[iColour]]);
+      oPalette.set_argb(iColour, argb_data[pSprite->alt_palette_map[iColour]]);
     }
-    oPalette.set_argb(255,
-                      pPalette[255]);  // Colour 0xFF doesn't get remapped.
+    // Index 255 is typically transparent and not remapped.
+    oPalette.set_argb(255, argb_data[255]);
 
     pSprite->alt_texture = target->create_palettized_texture(
         pSprite->width, pSprite->height, pSprite->data, &oPalette,
@@ -1548,8 +1527,7 @@ uint32_t get32BppPixel(const uint8_t* pImg, int iWidth, int iHeight,
         if (iTable == 0xFF && pPalette != nullptr) {
           // Legacy sprite data. Use the palette to recolour the
           // layer. Note that the iOpacity is ignored here.
-          const uint32_t* pColours = pPalette->get_argb_data();
-          return pColours[pImg[iPixelNumber]];
+          return pPalette->get_argb_data()[pImg[iPixelNumber]];
         } else {
           // TODO: Add proper recolour layers, where RGB comes from
           // table 'iTable' at index *pImg (iLength times), and
