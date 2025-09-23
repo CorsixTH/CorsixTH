@@ -120,7 +120,7 @@ function Machine:machineUsed(room)
   local cheats = self.hospital.hosp_cheats
   local is_invulnerable_machines_cheat_active = cheats:isCheatActive("invulnerable_machines")
 
-  self:incrementUsedCount(not is_invulnerable_machines_cheat_active)
+  self:incrementUsageCounts(is_invulnerable_machines_cheat_active)
   -- Update dynamic info (machine strength & times used)
   self:updateDynamicInfo()
 
@@ -138,12 +138,11 @@ function Machine:machineUsed(room)
 end
 
 --! Call after use of the machine.
-function Machine:incrementUsedCount(should_increment_times_used)
-  --If not specified, the 'times_used' should be incremented
-  should_increment_times_used = should_increment_times_used or true
+function Machine:incrementUsageCounts(total_usage_only)
+  total_usage_only = total_usage_only or false
   self.total_usage = self.total_usage + 1
 
-  if should_increment_times_used then
+  if not total_usage_only then
     self.times_used = self.times_used + 1
   end
 end
