@@ -340,6 +340,9 @@ class movie_player {
   //! Return whether the movie has an audio stream
   bool has_audio_track() const;
 
+  //! Return the length of the movie in milliseconds
+  double get_movie_length() const;
+
   //! Return a text description of the last error encountered
   const char* get_last_error() const;
 
@@ -351,7 +354,8 @@ class movie_player {
   //!
   //! \param destination_rect The location and dimensions in the renderer on
   //! which to draw the movie
-  void refresh(const SDL_Rect& destination_rect);
+  //! \returns The current presentation time stamp of the movie in milliseconds
+  double refresh(const SDL_Rect& destination_rect);
 
   //! Deallocate the picture buffer and free any resources associated with it.
   //!

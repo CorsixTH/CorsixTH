@@ -542,19 +542,28 @@ int movie_player::get_native_width() const {
 
 bool movie_player::has_audio_track() const { return (audio_stream_index >= 0); }
 
+double movie_player::get_movie_length() const {
+  if (format_context && video_stream_index >= 0) {
+    AVStream* stream = format_context->streams[video_stream_index];
+    return static_cast<double>(stream->duration) * av_q2d(stream->time_base) *
+           1000.0;
+  }
+  return 0;
+}
+
 const char* movie_player::get_last_error() const { return last_error.c_str(); }
 
 void movie_player::clear_last_error() { last_error.clear(); }
 
-void movie_player::refresh(const SDL_Rect& destination_rect) {
+double movie_player::refresh(const SDL_Rect& destination_rect) {
   SDL_Rect dest_rect;
 
   dest_rect = SDL_Rect{destination_rect.x, destination_rect.y,
                        destination_rect.w, destination_rect.h};
 
+  double dCurTime =
+      SDL_GetTicks() - current_sync_pts_system_time + current_sync_pts * 1000.0;
   if (!movie_picture_buffer.empty()) {
-    double dCurTime = SDL_GetTicks() - current_sync_pts_system_time +
-                      current_sync_pts * 1000.0;
     double dNextPts = movie_picture_buffer.get_next_pts();
 
     if (dNextPts > 0 && dNextPts * 1000.0 <= dCurTime) {
@@ -563,6 +572,7 @@ void movie_player::refresh(const SDL_Rect& destination_rect) {
 
     movie_picture_buffer.draw(renderer, dest_rect);
   }
+  return dCurTime;
 }
 
 void movie_player::allocate_picture_buffer() {
@@ -763,9 +773,10 @@ void movie_player::stop() {}
 int movie_player::get_native_height() const { return 0; }
 int movie_player::get_native_width() const { return 0; }
 bool movie_player::has_audio_track() const { return false; }
+double movie_player::get_movie_length() const { return 0; }
 const char* movie_player::get_last_error() const { return nullptr; }
 void movie_player::clear_last_error() {}
-void movie_player::refresh(const SDL_Rect& destination_rect) {}
+double movie_player::refresh(const SDL_Rect& destination_rect) { return 0; }
 void movie_player::allocate_picture_buffer() {}
 void movie_player::deallocate_picture_buffer() {}
 void movie_player::read_streams() {}
