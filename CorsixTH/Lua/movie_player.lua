@@ -30,11 +30,18 @@ local MoviePlayer = _G["MoviePlayer"]
 
 --! Calculate the position and size for a movie
 --!
---! Returns x and y position and width and height for the movie to be displayed
---! based on the native size of the movie and the current screen dimensions
+--! Returns x and y position, width and height, and the scale factor of the
+--! movie to be displayed based on the native size of the movie and the current
+--! screen dimensions.
+--!
+--! Theme Hospital movies were 320x240 but played in game at 640x480 so when
+--! scaling other assets to match the movies they should be scaled by half
+--! the returned scaling factor.
+--!
+--!param me The MoviePlayer object
 local calculateSize = function(me)
   -- calculate target dimensions
-  local x, y, w, h
+  local x, y, w, h, scale
   local screen_w, screen_h = me.app.config.width, me.app.config.height
   local native_w = me.moviePlayer:getNativeWidth()
   local native_h = me.moviePlayer:getNativeHeight()
@@ -43,25 +50,29 @@ local calculateSize = function(me)
     if math.abs((screen_w / screen_h) - ar) < 0.001 then
       x, y = 0, 0
       w, h = screen_w, screen_h
+      scale = screen_h / native_h
     else
       if screen_w > screen_h / native_h * native_w then
         w = math.floor(screen_h / native_h * native_w)
         h = screen_h
         x = math.floor((screen_w - w) / 2)
         y = 0
+        scale = screen_h / native_h
       else
         w = screen_w
         h = math.floor(screen_w / native_w * native_h)
         x = 0
         y = math.floor((screen_h - h) / 2)
+        scale = screen_w / native_w
       end
     end
   else
     x, y = 0, 0
     w, h = screen_w, screen_h
+    scale = 1
   end
 
-  return x, y, w, h
+  return x, y, w, h, scale
 end
 
 local destroyMovie = function(me)
@@ -79,10 +90,53 @@ local destroyMovie = function(me)
   else
     me.audio:playRandomBackgroundTrack()
   end
+  me.refresh_overlay = nil
   me.playing = false
+  me.movie_over = false
   if me.callback_on_destroy_movie then
     me.callback_on_destroy_movie()
     me.callback_on_destroy_movie = nil
+  end
+end
+
+local loseMovieOverlay = function(me, lose_movie_index)
+
+  -- These are the times in milliseconds when the headline should appear as
+  -- determined experimentally
+  local start_movie_pts = {
+    me.movie_length - 1760,
+    me.movie_length - 860,
+    me.movie_length - 1600,
+    me.movie_length - 1000,
+    me.movie_length - 860,
+    me.movie_length - 780,
+  }
+
+  local start_pts = start_movie_pts[lose_movie_index]
+  local headlines = _S.newspaper[lose_movie_index]
+  local headline = headlines[math.random(#headlines)]
+
+  -- The LOSE movies are 320x240 but are drawn in the original game at 640x480
+  -- before drawing the font over them. The headline area at double size is 40px
+  -- tall and 590px wide if we exclude the padding which has no other ink. If we
+  -- let the headline fill the entire width of the paper it could be 618px wide.
+  --
+  -- The widest original english headline is headline 4 for LOSE5 which is 708px
+  -- wide in standard font and 520px wide in narrow font.
+  local standard_width = me.lose_font:sizeOf(headline)
+  local hl_font = standard_width <= 590 and me.lose_font or me.lose_font_narrow
+
+  -- The narrow font and standard font have different dimensions but the draw
+  -- function does not support vertical alignment so we compensate
+  local hl_top = hl_font == me.lose_font and 132 or 138
+
+  return function(player, x, y, w, h, scale, pts)
+    if pts >= start_pts then
+      local vs = scale * 0.5
+      player.video:scale(vs)
+      hl_font:draw(player.video, headline, math.floor(x / vs), math.floor(y / vs) + hl_top, 640, 0, "center")
+      player.video:scale(1)
+    end
   end
 end
 
@@ -97,10 +151,17 @@ function MoviePlayer:MoviePlayer(app, audio, video)
   self.advance_movies = {}
   self.intro_movie = nil
   self.demo_movie = nil
-  self.win_movie = nil
+  self.win_game_movie = nil
+  self.win_level_movie = nil
   self.can_skip = true
   self.wait_for_stop = false
   self.wait_for_over = false
+  self.movie_over = false
+  self.movie_length = 0
+
+  local lose_palette = app.gfx:loadPalette("Bitmap", "lose.pl8", true, true)
+  self.lose_font = app.gfx:loadFontAndSpriteTable("QData", "Font39v", false, lose_palette)
+  self.lose_font_narrow = app.gfx:loadFontAndSpriteTable("QData", "Font40v", false, lose_palette)
 end
 
 --! Initialises the different movies used in the game
@@ -113,18 +174,28 @@ function MoviePlayer:init()
   local movies = fs:listFiles("Anims")
   if movies then
     for _, movie in pairs(movies) do
+      local num
+
       --lose level movies
-      if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .. "]+$") then
-        table.insert(self.lose_movies, fs:fileUri(movie))
+      num = movie:upper():match(pathsep .. "LOSE(%d+)%.[^" .. pathsep .. "]+$")
+      if num then
+        self.lose_movies[tonumber(num, 10)] = fs:fileUri(movie)
       end
+
       --advance level movies
-      local num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
-      if num ~= nil and tonumber(num, 10) ~= nil then
+      num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
+      if num then
         self.advance_movies[tonumber(num, 10)] = fs:fileUri(movie)
       end
+
       --win game movie
       if movie:upper():match(pathsep .. "WINGAME%.[^" .. pathsep .. "]+$") then
-        self.win_movie = fs:fileUri(movie)
+        self.win_game_movie = fs:fileUri(movie)
+      end
+
+      --win level movie
+      if movie:upper():match(pathsep .. "WINLEVEL%.[^" .. pathsep .. "]+$") then
+        self.win_level_movie = fs:fileUri(movie)
       end
     end
   end
@@ -155,7 +226,12 @@ end
 
 --! Plays the movie for winning the game
 function MoviePlayer:playWinMovie()
-  self:playMovie(self.win_movie, true, true)
+  self:playMovie(self.win_game_movie, true, true)
+end
+
+--! Play the movie for winning the level
+function MoviePlayer:playWinLevelMovie()
+  self:playMovie(self.win_level_movie, true, true)
 end
 
 --! Plays the level advance movie, which is going to the next level on the game board
@@ -184,8 +260,10 @@ end
 --! Plays one of the lose scenario movies at random
 function MoviePlayer:playLoseMovie()
   if #self.lose_movies > 0 then
-    local filename = self.lose_movies[math.random(#self.lose_movies)]
+    local lose_movie_index = math.random(#self.lose_movies)
+    local filename = self.lose_movies[lose_movie_index]
     self:playMovie(filename, true, true)
+    self.refresh_overlay = loseMovieOverlay(self, lose_movie_index)
   end
 end
 
@@ -231,6 +309,8 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
     end
   end
 
+  self.movie_length = self.moviePlayer:getLength()
+
   self.video:startFrame()
   self.video:fillBlack()
   self.video:endFrame()
@@ -251,7 +331,6 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
     self.app.modes[self.opengl_mode_index] = ""
   end
 
-  --TODO: Add text e.g. for newspaper headlines
   warning = self.moviePlayer:play(self.channel)
   if warning ~= nil and warning ~= "" then
     local message = "MoviePlayer:playMovie - Warning: " .. warning
@@ -282,6 +361,7 @@ end
 function MoviePlayer:onMovieOver()
   if self.moviePlayer == nil then return end
 
+  self.movie_over = true
   self.wait_for_over = false
   if not self.wait_for_stop then
     destroyMovie(self)
@@ -304,12 +384,21 @@ end
 function MoviePlayer:refresh()
   if self.moviePlayer == nil then return end
 
-  local x, y, w, h = calculateSize(self)
-  self.moviePlayer:refresh(x, y, w, h)
+  local x, y, w, h, scale = calculateSize(self)
+  local pts = self.moviePlayer:refresh(x, y, w, h)
+  if self.refresh_overlay then
+    self.refresh_overlay(self, x, y, w, h, scale, pts)
+  end
 end
 
 function MoviePlayer:updateRenderer()
   if self.moviePlayer == nil then return end
 
   self.moviePlayer:setRenderer(self.video)
+end
+
+function MoviePlayer:togglePause()
+  if self.moviePlayer == nil or not self.can_skip then return end
+
+  self.moviePlayer:togglePause()
 end
