@@ -1531,6 +1531,24 @@ function Window:hitTestPanel(x, y, panel)
   return false
 end
 
+--[[ Used to test if cursor is currently hovering over certain area in dialog.
+!param active_hover (bool) Is cursor is already hovering over it?
+!params mouse_x, mouse_y (integers) Mouse X and Y coordinate
+!params min_x, max_x, min_y, max_y (integers) Coordinates of the area.
+]]
+function Window:hoverTest(active_hover, mouse_x, mouse_y, min_x, max_x, min_y, max_y)
+  local is_currently_hovering = mouse_x > min_x and mouse_x < max_x and mouse_y > min_y and mouse_y < max_y
+  if is_currently_hovering and not active_hover then
+    self.ui:playSound("HLight5.wav")
+    return true
+  else
+    if not is_currently_hovering then
+      return false
+    end
+    return true
+  end
+end
+
 --[[ Used to test if the window has a (non-transparent) pixel at the given position.
 !param x (integer) The X coordinate of the pixel to test, relative to the
 top-left corner of the window.

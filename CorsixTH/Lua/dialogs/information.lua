@@ -39,7 +39,7 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
   self.on_top = true
   self.ui = ui
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PulldV", true)
-  self.hover = false
+  self.active_hover = false
   if not use_built_in_font then
     self.black_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V")
   else
@@ -107,7 +107,7 @@ function UIInformation:onChangeLanguage()
       x = x + panel.x
       y = y + panel.y
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
-      if self.hover then
+      if self.active_hover then
         self.panel_sprites:draw(canvas, 20, x, y)
       end
     end
@@ -126,16 +126,17 @@ function UIInformation:draw(canvas, x, y)
 end
 
 function UIInformation:onMouseMove(x, y, dx, dy)
+  self.active_hover = self:hoverTest(self.active_hover, x, y, self.width - 29, self.width - 10, self.height - 29, self.height - 10)
+  --[[
   local current_hover = x > self.width - 29 and x < self.width - 10 and y > self.height - 29 and y < self.height - 10
-
-  if current_hover and not self.hover then
-    self.hover = true
+  if current_hover and not self.active_hover then
+    self.active_hover = true
     self.ui:playSound("Hlight5.wav")
   else
     if not current_hover then
-      self.hover = false
+      self.active_hover = false
     end
-  end
+  end]]
   return Window:onMouseMove(x, y, dx, dy)
 end
 

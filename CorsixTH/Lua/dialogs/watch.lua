@@ -53,7 +53,7 @@ function UIWatch:UIWatch(ui, count_type)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Watch01V", true)
   self.epidemic = false
   self.count_type = count_type
-  self.hover = false
+  self.active_hover = false
   -- For cycling the list of epidemic/emergency patients which index to use
   self.current_index = nil
   -- The last patient whose dialog was opened by clicking the timer
@@ -78,7 +78,7 @@ function UIWatch:UIWatch(ui, count_type)
       x = x + panel.x
       y = y + panel.y
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
-      if self.hover then
+      if self.active_hover then
         self.panel_sprites:draw(canvas, 15, x, y)
       end
     end
@@ -101,7 +101,7 @@ function UIWatch:UIWatch(ui, count_type)
       x = x + panel.x
       y = y + panel.y
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
-      if self.hover then
+      if self.active_hover then
         self.panel_sprites:draw(canvas, 17, x+4, y-28)
       end
     end
@@ -125,15 +125,7 @@ function UIWatch:onCountdownEnd()
 end
 
 function UIWatch:onMouseMove(x, y, dx, dy)
-  local current_hover = x > 4 and x < 31 and y > 0 and y < 29
-  if current_hover and not self.hover then
-    self.hover = true
-    self.ui:playSound("Hlight5.wav")
-  else
-    if not current_hover then
-      self.hover = false
-    end
-  end
+  self.active_hover = self:hoverTest(self.active_hover, x, y, 4, 31, 0, 29)
   return Window:onMouseMove(x, y, dx, dy)
 end
 

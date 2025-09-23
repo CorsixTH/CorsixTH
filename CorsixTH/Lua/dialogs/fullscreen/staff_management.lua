@@ -447,17 +447,20 @@ end
 function UIStaffManagement:onMouseMove(x, y, dx, dy)
   local current_hover_id
   local inside_staff_list_area
-
-  if self.page*10 >= #self.staff_members[self.category] then
+  local header_height = 81
+  local row_height = 27
+  local active_hover_id = math_floor((y - header_height)/row_height)
+  if self.page*10 > #self.staff_members[self.category] then
+    -- Make sure area contains no hollow space
     inside_staff_list_area = (x > 50 and x < 624) and
-    (y > 82 and y < 82 + 27 * (#self.staff_members[self.category] % 10))
+    (y > header_height and y < header_height + row_height * (#self.staff_members[self.category] % 10))
   else
-    inside_staff_list_area = (x > 50 and x < 624) and (y > 82 and y < 351)
+    inside_staff_list_area = (x > 50 and x < 624) and (y > header_height and y < 351)
   end
 
   if inside_staff_list_area then
-    if #self.staff_members[self.category] - (self.page - 1)*10 > math_floor((y - 81)/27) then
-      current_hover_id = math_floor((y - 81)/27) + 1 + (self.page - 1)*10
+    if #self.staff_members[self.category] - (self.page - 1)*10 > active_hover_id then
+      current_hover_id = active_hover_id + 1 + (self.page - 1)*10
       if self.hover_id ~= current_hover_id then
         self.ui:playSound("Hlight5.wav")
         self.hover_id = current_hover_id
