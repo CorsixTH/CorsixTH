@@ -127,16 +127,6 @@ end
 
 function UIInformation:onMouseMove(x, y, dx, dy)
   self.active_hover = self:hoverTest(self.active_hover, x, y, self.width - 29, self.width - 10, self.height - 29, self.height - 10)
-  --[[
-  local current_hover = x > self.width - 29 and x < self.width - 10 and y > self.height - 29 and y < self.height - 10
-  if current_hover and not self.active_hover then
-    self.active_hover = true
-    self.ui:playSound("Hlight5.wav")
-  else
-    if not current_hover then
-      self.active_hover = false
-    end
-  end]]
   return Window:onMouseMove(x, y, dx, dy)
 end
 
