@@ -117,10 +117,15 @@ function Machine:machineUsed(room)
   if room.crashed then
     return
   end
-  self:incrementUsedCount()
+  local cheats = self.hospital.hosp_cheats
+  local is_invulnerable_machines_cheat_active = cheats:isCheatActive("invulnerable_machines")
+
+  self:incrementUsageCounts(is_invulnerable_machines_cheat_active)
   -- Update dynamic info (machine strength & times used)
   self:updateDynamicInfo()
-  local must_explode = self:calculateIsMachineMustExplode(room)
+
+  -- If the cheat is active, the machine should not wear out or explode
+  local must_explode = not is_invulnerable_machines_cheat_active and self:calculateIsMachineMustExplode(room)
   if must_explode then
     -- Room failed to be saved, it must be explode
     self:explodeMachine(room)
@@ -133,9 +138,13 @@ function Machine:machineUsed(room)
 end
 
 --! Call after use of the machine.
-function Machine:incrementUsedCount()
-  self.times_used = self.times_used + 1
+function Machine:incrementUsageCounts(total_usage_only)
+  total_usage_only = total_usage_only or false
   self.total_usage = self.total_usage + 1
+
+  if not total_usage_only then
+    self.times_used = self.times_used + 1
+  end
 end
 
 --! Call on machine use.
