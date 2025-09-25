@@ -424,9 +424,9 @@ render_target::scoped_target_texture::~scoped_target_texture() {
 }
 
 render_target::render_target(const render_target_creation_params& params)
-    : width(params.width),
-      height(params.height),
-      direct_zoom(params.direct_zoom) {
+    : width{params.width},
+      height{params.height},
+      direct_zoom{params.direct_zoom} {
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
   pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
   window = SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
@@ -450,6 +450,7 @@ render_target::render_target(const render_target_creation_params& params)
                           sdlVersion.major == 2 && sdlVersion.minor == 0 &&
                           sdlVersion.patch < 4;
   SDL_SetWindowMinimumSize(window, 640, 480);
+  SDL_RenderSetLogicalSize(renderer, width, height);
 
   update(params);
 }
