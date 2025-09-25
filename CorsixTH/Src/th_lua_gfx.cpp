@@ -57,19 +57,11 @@ font* luaT_getfont(lua_State* L) {
 }
 
 int l_palette_new(lua_State* L) {
-  luaT_stdnew<palette>(L);
-  return 1;
-}
-
-int l_palette_load(lua_State* L) {
-  palette* pPalette = luaT_testuserdata<palette>(L);
   size_t iDataLen;
   const uint8_t* pData = luaT_checkfile(L, 2, &iDataLen);
+  bool pal8 = lua_toboolean(L, 3);
 
-  if (pPalette->load_from_th_file(pData, iDataLen))
-    lua_pushboolean(L, 1);
-  else
-    lua_pushboolean(L, 0);
+  luaT_stdnew<palette>(L, luaT_environindex, false, pData, iDataLen, pal8);
   return 1;
 }
 
@@ -864,7 +856,6 @@ void lua_register_gfx(const lua_register_state* pState) {
   {
     lua_class_binding<palette> lcb(pState, "palette", l_palette_new,
                                    lua_metatable::palette);
-    lcb.add_function(l_palette_load, "load");
     lcb.add_function(l_palette_set_entry, "setEntry");
   }
 
