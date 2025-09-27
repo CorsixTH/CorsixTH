@@ -89,7 +89,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
 
   self:addPanel(235, 146, 0) -- List top
   self:addPanel(236, 146, 223) -- List bottom
-  self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm):setTooltip(_S.tooltip.buy_objects_window.confirm)
+  self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm):setTooltip(_S.tooltip.buy_objects_window.confirm):setSound("selectx.wav")
   local i = 1
   local function item_callback(index, qty)
     local is_negative_quantity = qty < 0
@@ -244,6 +244,7 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
       local obj = self.objects[hover_idx].object
       self.item_price = self.ui.hospital:getObjectBuildCost(obj.id)
       self.preview_anim:setAnimation(self.anims, obj.build_preview_animation)
+      TheApp.audio:playSound("HLIGHT5.wav")
     end
     self.list_hover_index = hover_idx
     repaint = true

@@ -66,11 +66,13 @@ function UIPolicy:UIPolicy(ui)
 
   self.allow_button = self:addPanel(0, 348, 379)
       :makeToggleButton(0, 0, 48, 17, 4, allowStaff, "Allow")
-      :setTooltip(_S.tooltip.policy.staff_leave) -- Allow staff to move
+      :setTooltip(_S.tooltip.policy.staff_leave)
+      :setSound("selectx.wav") -- Allow staff to move
 
   self.prohibit_button = self:addPanel(0, 395, 379)
       :makeToggleButton(0, 0, 48, 17, 5, allowStaff, "Prohibit")
-      :setTooltip(_S.tooltip.policy.staff_stay) -- Prohibit staff to move
+      :setTooltip(_S.tooltip.policy.staff_stay)
+      :setSound("selectx.wav") -- Prohibit staff to move
 
   if self.hospital.policies["staff_allowed_to_move"] then
     self.allow_button:toggle()
