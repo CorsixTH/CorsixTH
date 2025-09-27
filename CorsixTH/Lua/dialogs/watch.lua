@@ -102,7 +102,7 @@ function UIWatch:UIWatch(ui, count_type)
       y = y + panel.y
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
       if self.active_hover then
-        self.panel_sprites:draw(canvas, 17, x+4, y-28)
+        self.panel_sprites:draw(canvas, 17, x + 4, y - 28)
       end
     end
   end

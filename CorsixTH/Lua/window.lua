@@ -1538,15 +1538,13 @@ end
 ]]
 function Window:hoverTest(active_hover, mouse_x, mouse_y, min_x, max_x, min_y, max_y)
   local is_currently_hovering = mouse_x > min_x and mouse_x < max_x and mouse_y > min_y and mouse_y < max_y
-  if is_currently_hovering and not active_hover then
-    self.ui:playSound("HLight5.wav")
-    return true
-  else
-    if not is_currently_hovering then
-      return false
+  if is_currently_hovering then
+    if not active_hover then
+      self.ui:playSound("HLight5.wav")
     end
     return true
   end
+  return false
 end
 
 --[[ Used to test if the window has a (non-transparent) pixel at the given position.
