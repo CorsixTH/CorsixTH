@@ -307,7 +307,7 @@ if(NOT USE_SOURCE_DATADIRS)
   endif()
   install(DIRECTORY Campaigns Lua Levels DESTINATION ${CORSIX_TH_DATADIR})
   install(DIRECTORY Bitmap DESTINATION ${CORSIX_TH_DATADIR}
-    FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
+    FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png|pl8)$"
   )
   install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
 

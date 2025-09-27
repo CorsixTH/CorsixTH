@@ -52,7 +52,8 @@ end
 table.sort(sprite_table_paths, function(lhs, rhs)
   return lhs[1] < rhs[1] or (lhs[1] == rhs[1] and lhs[2] < rhs[2])
 end)
-
+palettes[#palettes + 1] = {"Bitmap", "lose.pl8", true}
+palettes[#palettes + 1] = {"Bitmap", "winlevel.pl8", true}
 
 local function LoadTable(n, complex)
   sprite_table_index = n
