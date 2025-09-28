@@ -47,7 +47,6 @@ SOFTWARE.
 #include <wx/spinbutt.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
-#include <wx/stringimpl.h>
 #include <wx/textctrl.h>
 #include <wx/tokenzr.h>
 #include <wx/unichar.h>
