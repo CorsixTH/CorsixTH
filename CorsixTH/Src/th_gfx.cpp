@@ -1145,6 +1145,46 @@ void chunk_renderer::decode_chunks(const uint8_t* data, int datalen,
   chunk_finish(0xFF);
 }
 
+animation_base::animation_base() : drawable() {}
+
+void animation_base::remove_from_tile() {
+  link_list::remove_from_list();
+  tile = {-1, -1};
+}
+
+void animation_base::attach_to_tile(int x, int y, map_tile* node, int layer) {
+  remove_from_tile();
+  link_list* pList;
+  if (flags & thdf_early_list) {
+    pList = &node->oEarlyEntities;
+  } else {
+    pList = &node->entities;
+  }
+
+  this->set_drawing_layer(layer);
+  this->set_tile(x, y);
+
+  while (pList->next &&
+         static_cast<drawable*>(pList->next)->get_drawing_layer() < layer) {
+    pList = pList->next;
+  }
+
+  prev = pList;
+  if (pList->next != nullptr) {
+    pList->next->prev = this;
+    this->next = pList->next;
+  } else {
+    next = nullptr;
+  }
+  pList->next = this;
+}
+
+void animation_base::set_layer(int iLayer, int iId) {
+  if (0 <= iLayer && iLayer < max_number_of_layers) {
+    layers.layer_contents[iLayer] = static_cast<uint8_t>(iId);
+  }
+}
+
 namespace {
 
 bool are_flags_set(uint32_t val, uint32_t flags) {
@@ -1152,6 +1192,8 @@ bool are_flags_set(uint32_t val, uint32_t flags) {
 }
 
 }  // namespace
+
+animation::animation() { patient_effect_offset = rand(); }
 
 void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
@@ -1264,10 +1306,6 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
                            pixel_offset.y + iDestY, flags, iTestX, iTestY) ||
          morph_target->hit_test(iDestX, iDestY, iTestX, iTestY);
 }
-
-animation_base::animation_base() : drawable() {}
-
-animation::animation() { patient_effect_offset = rand(); }
 
 void animation::persist(lua_persist_writer* pWriter) const {
   lua_State* L = pWriter->get_stack();
@@ -1537,38 +1575,6 @@ void animation::tick() {
   }
 }
 
-void animation_base::remove_from_tile() {
-  link_list::remove_from_list();
-  tile = {-1, -1};
-}
-
-void animation_base::attach_to_tile(int x, int y, map_tile* node, int layer) {
-  remove_from_tile();
-  link_list* pList;
-  if (flags & thdf_early_list) {
-    pList = &node->oEarlyEntities;
-  } else {
-    pList = &node->entities;
-  }
-
-  this->set_drawing_layer(layer);
-  this->set_tile(x, y);
-
-  while (pList->next &&
-         static_cast<drawable*>(pList->next)->get_drawing_layer() < layer) {
-    pList = pList->next;
-  }
-
-  prev = pList;
-  if (pList->next != nullptr) {
-    pList->next->prev = this;
-    this->next = pList->next;
-  } else {
-    next = nullptr;
-  }
-  pList->next = this;
-}
-
 void animation::set_parent(animation* pParent, bool use_primary) {
   remove_from_tile();
   if (pParent == nullptr) {
@@ -1705,12 +1711,6 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
 }
 
 void animation::set_frame(size_t iFrame) { frame_index = iFrame; }
-
-void animation_base::set_layer(int iLayer, int iId) {
-  if (0 <= iLayer && iLayer < max_number_of_layers) {
-    layers.layer_contents[iLayer] = static_cast<uint8_t>(iId);
-  }
-}
 
 void sprite_render_list::tick() {
   pixel_offset.x += dx_per_tick;
