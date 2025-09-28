@@ -30,6 +30,7 @@ object.build_preview_animation = 5070
 object.default_strength = 7
 object.crashed_animation = 3376 -- TODO correct?
 object.show_in_town_map = true
+object.smoke_animation = 3428 -- TODO
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -66,6 +67,7 @@ object.orientations = {
                   {-1,  1, only_passable = true} },
     use_position = "passable",
     early_list = true,
+    smoke_position = {0, 0},
   },
   east = {
     footprint = { {-1,  -2, complete_cell = true}, {0,  -2, complete_cell = true},
@@ -73,6 +75,7 @@ object.orientations = {
                   {-1,  0}, {0,  0},
                   {1,  -1, only_passable = true} },
     use_position = "passable",
+    smoke_position = {0, 0},
   },
 }
 

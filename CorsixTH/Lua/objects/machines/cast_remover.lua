@@ -30,6 +30,7 @@ object.build_preview_animation = 5072
 object.default_strength = 10
 object.crashed_animation = 3388
 object.show_in_town_map = true
+object.smoke_animation = 3468
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -130,6 +131,7 @@ object.orientations = {
                   {-2, -1, only_passable = true, invisible = true, optional = true} },
     list_bottom = true,
     render_attach_position = {-1, 1},
+    smoke_position = {0, 0},
   },
   east = {
     use_position = {0, 0},
@@ -144,6 +146,7 @@ object.orientations = {
                   {-1, -2, only_passable = true, invisible = true, optional = true} },
     early_list = true,
     list_bottom = true,
+    smoke_position = {0, 0},
   },
 }
 anim_mgr:setPatientMarker(object.idle_animations.north, {-1.6, -0.8})

@@ -831,7 +831,8 @@ function Object.processTypeDefinition(object_type)
         end
         for _, key in ipairs({"use_position_secondary",
                               "finish_use_position",
-                              "finish_use_position_secondary"}) do
+                              "finish_use_position_secondary",
+                              "smoke_position"}) do
           if details[key] then
             details[key][1] = details[key][1] - x
             details[key][2] = details[key][2] - y

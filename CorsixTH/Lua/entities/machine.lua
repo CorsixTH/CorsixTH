@@ -43,6 +43,13 @@ function Machine:Machine(hospital, object_type, x, y, direction, etc)
 
   self.total_usage = 0
   self:setHandymanRepairPosition(direction)
+
+  self.smoke_offset = object_type.orientations[direction].smoke_position
+  if object_type.smoke_animation then
+    self.smoke_animation = object_type.smoke_animation
+  else
+    self.smoke_animation = 3428 -- Default to the (0,0) based animation
+  end
 end
 
 --!param room (object) machine room
@@ -77,19 +84,13 @@ end
 --! Return Tile position for smoke animation
 --!return (map, int, int)
 local function getSmokeTile(self)
-  local map, x, y = self.th:getTile()
-  if self.footprint then
-    for _, footprintCell in ipairs(self.footprint) do
-      if footprintCell.smoke_position then
-        x = x + footprintCell[1]
-        y = y + footprintCell[2]
-        break
-      end
-    end
-  end
+  local map, _, _ = self.th:getTile()
+  local x, y = self.tile_x, self.tile_y
 
-  -- adjust the offset of the original animation.
-  x = x - 1
+  if self.smoke_offset or self.object_type.orientations[self.direction].smoke_position then
+    x = x + self.object_type.orientations[self.direction].smoke_position[1] -- todo : replace by self.smoke_offset
+    y = y + self.object_type.orientations[self.direction].smoke_position[2]
+  end
 
   return map, x, y
 end
@@ -111,7 +112,8 @@ local function setSmoke(self, isSmoking)
       self.ticks = true
     end
     -- TODO: select the smoke icon based on the type of machine
-    self.smokeInfo:setAnimation(self.world.anims, 3424)
+    local mirror = self.direction == "east" and 1 or 0
+    self.smokeInfo:setAnimation(self.world.anims, self.smoke_animation or self.object_type.smoke_animation, mirror)
   else -- Otherwise, turning smoke off
     -- If there is currently a smoke animation, remove it
     if self.smokeInfo then
