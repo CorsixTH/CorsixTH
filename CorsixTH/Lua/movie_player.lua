@@ -123,12 +123,21 @@ local loseMovieOverlay = function(me, lose_movie_index)
   --
   -- The widest original english headline is headline 4 for LOSE5 which is 708px
   -- wide in standard font and 520px wide in narrow font.
-  local standard_width = me.lose_font:sizeOf(headline)
-  local hl_font = standard_width <= 590 and me.lose_font or me.lose_font_narrow
+  local hl_font = me.lose_font
+  local hl_top = 132
+  local hl_w, hl_h = me.lose_font:sizeOf(headline)
+  if me.lose_font:isBitmap() then
+    if hl_w > 590 then
+      hl_font = me.lose_font_narrow
 
-  -- The narrow font and standard font have different dimensions but the draw
-  -- function does not support vertical alignment so we compensate
-  local hl_top = hl_font == me.lose_font and 132 or 138
+      -- The narrow font and standard font have a different baseline so we need
+      -- to adjust the top.
+      hl_top = 138
+    end
+  else
+    -- For TTF fonts we try to vertically center them in the headline area
+    hl_top = 132 + math.floor((52 - hl_h) / 2)
+  end
 
   return function(player, x, y, w, h, scale, pts)
     if pts >= start_pts then

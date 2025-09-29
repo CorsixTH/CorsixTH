@@ -477,6 +477,12 @@ int l_font_draw_tooltip(lua_State* L) {
   return 1;
 }
 
+int l_font_is_bitmap(lua_State* L) {
+  font* pFont = luaT_getfont(L);
+  lua_pushboolean(L, dynamic_cast<bitmap_font*>(pFont) != nullptr ? 1 : 0);
+  return 1;
+}
+
 int l_layers_new(lua_State* L) {
   layers* pLayers = luaT_stdnew<layers>(L, luaT_environindex, false);
   for (int i = 0; i < max_number_of_layers; ++i) pLayers->layer_contents[i] = 0;
@@ -898,6 +904,7 @@ void lua_register_gfx(const lua_register_state* pState) {
                      lua_metatable::surface);
     lcb.add_function(l_font_draw_tooltip, "drawTooltip",
                      lua_metatable::surface);
+    lcb.add_function(l_font_is_bitmap, "isBitmap");
   }
 
   // BitmapFont

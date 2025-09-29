@@ -368,6 +368,9 @@ local font_proxy_mt = {
     drawTooltip = function(self, ...)
       return self._proxy:drawTooltip(...)
     end,
+    isBitmap = function(self)
+      return self._proxy:isBitmap()
+    end,
   }
 }
 
