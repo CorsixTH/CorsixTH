@@ -104,6 +104,10 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hover_test">hoverTest</a>(<span class="p">active_hover</span>, <span class="p">mouse_x</span>, <span class="p">mouse_y</span>, <span class="p">min_x</span>, <span class="p">max_x</span>, <span class="p">min_y</span>, <span class="p">max_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1make_button_on_panel">makeButtonOnPanel</a>(<span class="p">panel</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">sprite</span>, <span class="p">on_click</span>, <span class="p">on_click_self</span>, <span class="p">on_rightclick</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
@@ -150,9 +154,9 @@
  <a href="_0_1_window.html#_0_1_window_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
- (inherited from <a href="_0_1_window.html">Window</a>)
+ <li class="self">
+ <a href="_0_1_u_i_watch.html#_0_1_u_i_watch_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
@@ -220,6 +224,8 @@
  <li><span class="p">active_button</span>
  (*)
  </li>
+ <li><span class="p">active_hover</span>
+ </li>
  <li><span class="p">active_scrollbar</span>
  (*)
  </li>
@@ -261,6 +267,8 @@
  (*)
  </li>
  <li><span class="p">end_button</span>
+ </li>
+ <li><span class="p">end_sprite</span>
  </li>
  <li><span class="p">epidemic</span>
  </li>
@@ -353,20 +361,51 @@
  <p>
  During an emergency - Cycles through the patient dialogs of all the emergency patients<br/><br/>
  During an epidemic - Cycles to the first patient who is infected but not vaccinated<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L135">line 135 of Lua/dialogs/watch.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L161">line 161 of Lua/dialogs/watch.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_watch_1on_countdown_end">function UIWatch:onCountdownEnd()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L91">line 91 of Lua/dialogs/watch.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L112">line 112 of Lua/dialogs/watch.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_watch_1on_mouse_move">function UIWatch:onMouseMove(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L127">line 127 of Lua/dialogs/watch.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_watch_1on_world_tick">function UIWatch:onWorldTick()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_world_tick">Window:onWorldTick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L106">line 106 of Lua/dialogs/watch.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L132">line 132 of Lua/dialogs/watch.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -375,7 +414,7 @@
  While cycling through timer event patients (@see
  UIWatch:cycleTimerEventPatient) scrolls the screen to centre on the selected patient
  If a patient dialog is open that does not belong to the timer event, does nothing<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L164">line 164 of Lua/dialogs/watch.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L190">line 190 of Lua/dialogs/watch.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -383,7 +422,7 @@
  <p>
  Toggles vaccination mode by toggling the button then
 toggling the mode in the current epidemic.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L127">line 127 of Lua/dialogs/watch.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/watch.lua#L153">line 153 of Lua/dialogs/watch.lua</a>.
  </p>
  </div>
 </div>

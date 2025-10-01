@@ -107,6 +107,10 @@
  <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hover_test">hoverTest</a>(<span class="p">active_hover</span>, <span class="p">mouse_x</span>, <span class="p">mouse_y</span>, <span class="p">min_x</span>, <span class="p">max_x</span>, <span class="p">min_y</span>, <span class="p">max_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
  <li class="self">
  <a href="_0_1_u_i_staff_management.html#_0_1_u_i_staff_management_1increase_salary">increaseSalary</a>()
  </li>
@@ -160,9 +164,9 @@
  <a href="_0_1_u_i_staff_management.html#_0_1_u_i_staff_management_1on_mouse_down">onMouseDown</a>(<span class="p">code</span>, <span class="p">x</span>, <span class="p">y</span>)
  (overrides <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1on_mouse_down">UIFullscreen:onMouseDown</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
- (inherited from <a href="_0_1_window.html">Window</a>)
+ <li class="self">
+ <a href="_0_1_u_i_staff_management.html#_0_1_u_i_staff_management_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>)
  </li>
  <li class="self">
  <a href="_0_1_u_i_staff_management.html#_0_1_u_i_staff_management_1on_mouse_up">onMouseUp</a>(<span class="p">code</span>, <span class="p">x</span>, <span class="p">y</span>)
@@ -278,6 +282,8 @@
  <li><span class="p">blinking_button</span>
  (*)
  </li>
+ <li><span class="p">blue_font</span>
+ </li>
  <li><span class="p">border_sprites</span>
  (*)
  </li>
@@ -321,6 +327,8 @@
  </li>
  <li><span class="p">hotkeyboxes</span>
  (*)
+ </li>
+ <li><span class="p">hover_id</span>
  </li>
  <li><span class="p">key_handlers</span>
  (*)
@@ -386,6 +394,8 @@
  <li><span class="p">visible</span>
  (*)
  </li>
+ <li><span class="p">visual_hover_id</span>
+ </li>
  <li><span class="p">width</span>
  (*)
  </li>
@@ -439,14 +449,14 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1after_load">UIFullscreen:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L594">line 594 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L633">line 633 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1close">function UIStaffManagement:close()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L589">line 589 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L628">line 628 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -472,31 +482,31 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1draw">UIFullscreen:draw</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L236">line 236 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L239">line 239 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1fire">function UIStaffManagement:fire()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L570">line 570 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L609">line 609 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1increase_salary">function UIStaffManagement:increaseSalary()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L560">line 560 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L599">line 599 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1next_category">function UIStaffManagement:nextCategory()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L486">line 486 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L525">line 525 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1next_staff">function UIStaffManagement:nextStaff()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L505">line 505 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L544">line 544 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -522,7 +532,38 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1on_mouse_down">UIFullscreen:onMouseDown</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L420">line 420 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L428">line 428 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_staff_management_1on_mouse_move">function UIStaffManagement:onMouseMove(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L447">line 447 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -548,7 +589,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L438">line 438 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L477">line 477 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -569,43 +610,43 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">Window:onMouseWheel</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L452">line 452 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L491">line 491 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1pay_bonus">function UIStaffManagement:payBonus()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L549">line 549 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L588">line 588 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1previous_category">function UIStaffManagement:previousCategory()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L476">line 476 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L515">line 515 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1previous_staff">function UIStaffManagement:previousStaff()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L496">line 496 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L535">line 535 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1register_key_handlers">function UIStaffManagement:registerKeyHandlers()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L139">line 139 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L142">line 142 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1scroll_down">function UIStaffManagement:scrollDown()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L523">line 523 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L562">line 562 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1scroll_up">function UIStaffManagement:scrollUp()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L514">line 514 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L553">line 553 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -622,7 +663,7 @@ Includes jumping to correct page.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L214">line 214 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L217">line 217 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -639,7 +680,7 @@ Includes switching to correct category and page.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L224">line 224 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L227">line 227 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -654,21 +695,21 @@ Includes switching to correct category and page.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L196">line 196 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L199">line 199 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1update_scroll_dot">function UIStaffManagement:updateScrollDot()</a></h5>
  <p>
  Updates the position of the paging scroll indicator<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L532">line 532 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L571">line 571 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1update_scroll_dot_visibility">function UIStaffManagement:updateScrollDotVisibility()</a></h5>
  <p>
  Updates whether the paging scroll indicator is visible and its position if visible<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L539">line 539 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L578">line 578 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -683,13 +724,13 @@ Includes switching to correct category and page.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L159">line 159 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L162">line 162 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_staff_management_1update_tooltips">function UIStaffManagement:updateTooltips()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L147">line 147 of Lua/dialogs/fullscreen/staff_management.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/staff_management.lua#L150">line 150 of Lua/dialogs/fullscreen/staff_management.lua</a>.
  </p>
  </div>
 </div>
