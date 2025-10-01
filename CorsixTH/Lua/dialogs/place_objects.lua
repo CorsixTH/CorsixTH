@@ -70,10 +70,10 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound("no4.wav"):setTooltip(_S.tooltip.place_objects_window.cancel)
   self.purchase_button =
   self:addPanel(117,  50, 100):makeButton(1, 8, 41, 42, 118, self.purchaseItems):setTooltip(_S.tooltip.place_objects_window.buy_sell)
-    :setDisabledSprite(127):enable(false) -- Disabled purchase items button
+    :setDisabledSprite(127):setSound("selectx.wav"):enable(false) -- Disabled purchase items button
   self.pickup_button =
   self:addPanel(119,  92, 100):makeButton(1, 8, 41, 42, 120, self.pickupItems):setTooltip(_S.tooltip.place_objects_window.pick_up)
-    :setDisabledSprite(128):enable(false):makeToggle() -- Disabled pick up items button
+    :setDisabledSprite(128):setSound("selectx.wav"):enable(false):makeToggle() -- Disabled pick up items button
   self.confirm_button =
   self:addPanel(121, 134, 100):makeButton(1, 8, 43, 42, 122, self.confirm):setTooltip(_S.tooltip.place_objects_window.confirm)
     :setDisabledSprite(129):enable(false):setSound("YesX.wav") -- Disabled confirm button
@@ -135,12 +135,12 @@ function UIPlaceObjects:resize(num_slots)
     -- add new panels (save last one)
     for i = self.num_slots + 1, num_slots - 1 do
       self:addPanel(124, 0, 121 + i * 29)
-        :makeButton(15, 8, 130, 23, 125, idx(i))
+        :makeButton(15, 8, 130, 23, 125, idx(i)):setSound("selectx.wav")
         :preservePanel()
     end
     -- add last new panel
     self:addPanel(156, 0, 117 + num_slots * 29)
-      :makeButton(15, 12, 130, 23, 125, idx(num_slots))
+      :makeButton(15, 12, 130, 23, 125, idx(num_slots)):setSound("selectx.wav")
       :preservePanel()
   else
     -- remove buttons
@@ -233,6 +233,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
   end)
 
   self.active_index = 0 -- avoid case of index changing from 1 to 1
+  self.active_hover_index = 0
   self:setActiveIndex(1)
   self:onCursorWorldPositionChange(self.ui:getCursorPosition(self))
 end
@@ -271,6 +272,7 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
     table.remove(self.objects, idx)
     self:resize(#self.objects)
     self.active_index = 0 -- avoid case of index changing from 1 to 1
+    self.active_hover_index = 0
     self:setActiveIndex(1)
   else
     -- Make sure the correct frame is shown for the next object
@@ -562,13 +564,48 @@ function UIPlaceObjects:draw(canvas, x, y)
 
   for i, o in ipairs(self.objects) do
     local font = self.white_font
-    local ypos = y + 136 + i * 29
+    local font_ypos = y + 136 + i * 29
+
     if i == self.active_index then
+      local frame_xpos = x + 20
+      local frame_ypos = y + 134 + i * 29
+      local frame_width = 119
+      local frame_height = 12
+
+      local red = canvas:mapRGB(221, 83, 0)
+      canvas:drawRect(red, frame_xpos, frame_ypos, frame_width, 1)
+      canvas:drawRect(red, frame_xpos, frame_ypos + frame_height, frame_width+1, 1)
+      canvas:drawRect(red, frame_xpos, frame_ypos, 1, frame_height)
+      canvas:drawRect(red, frame_xpos + frame_width, frame_ypos, 1, frame_height)
+    end
+    if i == self.active_hover_index then
       font = self.blue_font
     end
-    font:draw(canvas, o.object.name, x + 15, ypos, 130, 0)
-    font:draw(canvas, o.qty, x + 151, ypos, 19, 0)
+    font:draw(canvas, o.object.name, x + 15, font_ypos, 130, 0)
+    font:draw(canvas, o.qty, x + 151, font_ypos, 19, 0)
   end
+end
+
+function UIPlaceObjects:onMouseMove(x, y, dx, dy)
+  local current_hover_id
+  local header_height = 159
+  local bar_height = 29
+  local inside_objects_area = (x > 0 and x < 186) and (y > header_height and y < header_height + bar_height*#self.objects)
+  if inside_objects_area then
+    -- Check if player hovers over a button, not between.
+    if (header_height+y) % bar_height < 21 then
+      current_hover_id = math_floor((y - header_height)/bar_height) + 1
+      if self.active_hover_index ~= current_hover_id then
+        self.ui:playSound("Hlight5.wav")
+        self.active_hover_index = current_hover_id
+      end
+    else
+      self.active_hover_index = 0
+    end
+  else
+    self.active_hover_index = nil
+  end
+  return Window:onMouseMove(x, y, dx, dy)
 end
 
 function UIPlaceObjects:clearBlueprint()
