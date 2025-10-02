@@ -73,6 +73,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classpalette-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">palette Class Reference</div></div>
 </div><!--header-->
@@ -85,18 +86,18 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4a6fa04719ea9f6cc4a46f5fce42c466" id="r_a4a6fa04719ea9f6cc4a46f5fce42c466"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpalette.html#a4a6fa04719ea9f6cc4a46f5fce42c466">load_from_th_file</a> (const uint8_t *pData, size_t iDataLength)</td></tr>
-<tr class="memdesc:a4a6fa04719ea9f6cc4a46f5fce42c466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load palette from the supplied data.  <br /></td></tr>
-<tr class="separator:a4a6fa04719ea9f6cc4a46f5fce42c466"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c2b10f4cc5aa46fc4a51dcdfc0b8db9" id="r_a9c2b10f4cc5aa46fc4a51dcdfc0b8db9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpalette.html#a9c2b10f4cc5aa46fc4a51dcdfc0b8db9">palette</a> ()=default</td></tr>
+<tr class="memdesc:a9c2b10f4cc5aa46fc4a51dcdfc0b8db9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an empty palette. All entries are black and fully opaque.  <br /></td></tr>
+<tr class="separator:a9c2b10f4cc5aa46fc4a51dcdfc0b8db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25a51bf12b55e7286e72556599241965" id="r_a25a51bf12b55e7286e72556599241965"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpalette.html#a25a51bf12b55e7286e72556599241965">palette</a> (const uint8_t *pData, size_t iDataLength, bool is8bit)</td></tr>
+<tr class="memdesc:a25a51bf12b55e7286e72556599241965"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a 256 index color palette from the supplied data.  <br /></td></tr>
+<tr class="separator:a25a51bf12b55e7286e72556599241965"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74b553900add2402057a563f3b492406" id="r_a74b553900add2402057a563f3b492406"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpalette.html#a74b553900add2402057a563f3b492406">set_entry</a> (int iEntry, uint8_t iR, uint8_t iG, uint8_t iB)</td></tr>
 <tr class="memdesc:a74b553900add2402057a563f3b492406"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set an entry of the palette.  <br /></td></tr>
 <tr class="separator:a74b553900add2402057a563f3b492406"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34b4c127fb2e7091a261699a422b0049" id="r_a34b4c127fb2e7091a261699a422b0049"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpalette.html#a34b4c127fb2e7091a261699a422b0049">get_colour_count</a> () const</td></tr>
-<tr class="memdesc:a34b4c127fb2e7091a261699a422b0049"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of colours in the palette.  <br /></td></tr>
-<tr class="separator:a34b4c127fb2e7091a261699a422b0049"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef20b07a8454a4b0ef9c64c2dcf0733a" id="r_aef20b07a8454a4b0ef9c64c2dcf0733a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpalette.html#aef20b07a8454a4b0ef9c64c2dcf0733a">get_argb_data</a> () const</td></tr>
-<tr class="memdesc:aef20b07a8454a4b0ef9c64c2dcf0733a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the internal palette data for fast (read-only) access.  <br /></td></tr>
-<tr class="separator:aef20b07a8454a4b0ef9c64c2dcf0733a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab93e1a75eb06ab8e33a5d26f72be7dac" id="r_ab93e1a75eb06ab8e33a5d26f72be7dac"><td class="memItemLeft" align="right" valign="top">const std::array&lt; <a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a>, <a class="el" href="classpalette.html#add64c77dcd47df72201ea5cc2a3bed67">color_count</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpalette.html#ab93e1a75eb06ab8e33a5d26f72be7dac">get_argb_data</a> () const</td></tr>
+<tr class="memdesc:ab93e1a75eb06ab8e33a5d26f72be7dac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the internal palette data for fast (read-only) access.  <br /></td></tr>
+<tr class="separator:ab93e1a75eb06ab8e33a5d26f72be7dac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36709db9edc065d5a35503abf0167959" id="r_a36709db9edc065d5a35503abf0167959"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpalette.html#a36709db9edc065d5a35503abf0167959">set_argb</a> (int iEntry, uint32_t iVal)</td></tr>
 <tr class="memdesc:a36709db9edc065d5a35503abf0167959"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set an entry of the palette.  <br /></td></tr>
 <tr class="separator:a36709db9edc065d5a35503abf0167959"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,10 +119,89 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aaa3b8dc3837e4f5414de4ba9360eae1a" id="r_aaa3b8dc3837e4f5414de4ba9360eae1a"><td class="memItemLeft" align="right" valign="top">static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpalette.html#aaa3b8dc3837e4f5414de4ba9360eae1a">get_alpha</a> (<a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a> iColour)</td></tr>
 <tr class="memdesc:aaa3b8dc3837e4f5414de4ba9360eae1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the opacity component of a colour.  <br /></td></tr>
 <tr class="separator:aaa3b8dc3837e4f5414de4ba9360eae1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:add64c77dcd47df72201ea5cc2a3bed67" id="r_add64c77dcd47df72201ea5cc2a3bed67"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpalette.html#add64c77dcd47df72201ea5cc2a3bed67">color_count</a> {256}</td></tr>
+<tr class="memdesc:add64c77dcd47df72201ea5cc2a3bed67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of colours in the palette.  <br /></td></tr>
+<tr class="separator:add64c77dcd47df72201ea5cc2a3bed67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>8bpp palette class. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a9c2b10f4cc5aa46fc4a51dcdfc0b8db9" name="a9c2b10f4cc5aa46fc4a51dcdfc0b8db9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c2b10f4cc5aa46fc4a51dcdfc0b8db9">&#9670;&#160;</a></span>palette() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">palette::palette </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create an empty palette. All entries are black and fully opaque. </p>
+
+</div>
+</div>
+<a id="a25a51bf12b55e7286e72556599241965" name="a25a51bf12b55e7286e72556599241965"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25a51bf12b55e7286e72556599241965">&#9670;&#160;</a></span>palette() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">palette::palette </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>pData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>iDataLength</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is8bit</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load a 256 index color palette from the supplied data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pData</td><td>Palette data in RGB or RGBA format. </td></tr>
+    <tr><td class="paramname">iDataLength</td><td>Size of the data. </td></tr>
+    <tr><td class="paramname">is8bit</td><td>Whether the data is in 8bpp (otherwise 6bpp). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Whether loading of the palette succeeded. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="aaa3b8dc3837e4f5414de4ba9360eae1a" name="aaa3b8dc3837e4f5414de4ba9360eae1a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaa3b8dc3837e4f5414de4ba9360eae1a">&#9670;&#160;</a></span>get_alpha()</h2>
 
@@ -157,14 +237,14 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aef20b07a8454a4b0ef9c64c2dcf0733a" name="aef20b07a8454a4b0ef9c64c2dcf0733a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef20b07a8454a4b0ef9c64c2dcf0733a">&#9670;&#160;</a></span>get_argb_data()</h2>
+<a id="ab93e1a75eb06ab8e33a5d26f72be7dac" name="ab93e1a75eb06ab8e33a5d26f72be7dac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab93e1a75eb06ab8e33a5d26f72be7dac">&#9670;&#160;</a></span>get_argb_data()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const uint32_t * palette::get_argb_data </td>
+          <td class="memname">const std::array&lt; <a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a>, <a class="el" href="classpalette.html#add64c77dcd47df72201ea5cc2a3bed67">palette::color_count</a> &gt; &amp; palette::get_argb_data </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -209,26 +289,6 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The blue component intensity of the colour. </dd></dl>
-
-</div>
-</div>
-<a id="a34b4c127fb2e7091a261699a422b0049" name="a34b4c127fb2e7091a261699a422b0049"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34b4c127fb2e7091a261699a422b0049">&#9670;&#160;</a></span>get_colour_count()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int palette::get_colour_count </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the number of colours in the palette. </p>
-<dl class="section return"><dt>Returns</dt><dd>The number of colours in the palette. </dd></dl>
 
 </div>
 </div>
@@ -299,44 +359,6 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The red component intensity of the colour. </dd></dl>
-
-</div>
-</div>
-<a id="a4a6fa04719ea9f6cc4a46f5fce42c466" name="a4a6fa04719ea9f6cc4a46f5fce42c466"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a6fa04719ea9f6cc4a46f5fce42c466">&#9670;&#160;</a></span>load_from_th_file()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool palette::load_from_th_file </td>
-          <td>(</td>
-          <td class="paramtype">const uint8_t *&#160;</td>
-          <td class="paramname"><em>pData</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>iDataLength</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Load palette from the supplied data. </p>
-<p>Note that the data uses palette entries of 6 bit colours. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pData</td><td>Data loaded from the file. </td></tr>
-    <tr><td class="paramname">iDataLength</td><td>Size of the data. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Whether loading of the palette succeeded. </dd></dl>
 
 </div>
 </div>
@@ -494,6 +516,31 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Setting the entry succeeded. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="add64c77dcd47df72201ea5cc2a3bed67" name="add64c77dcd47df72201ea5cc2a3bed67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add64c77dcd47df72201ea5cc2a3bed67">&#9670;&#160;</a></span>color_count</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int palette::color_count {256}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of colours in the palette. </p>
 
 </div>
 </div>

@@ -25,7 +25,7 @@ var searchData=
   ['reception_5fdesk_22',['reception_desk',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba372e4b1cc85e1e8ede197732ab22278b',1,'th_map.h']]],
   ['record_5fneighbour_5fif_5fpassable_23',['record_neighbour_if_passable',['../classabstract__pathfinder.html#a13f96752966a2ed07f146cc9675b0041',1,'abstract_pathfinder']]],
   ['red_24',['red',['../th__map_8h.html#a19d4dd8be9950be8b2bb1d2e62ab269cabda9643ac6601722a28f238714274da4',1,'th_map.h']]],
-  ['refresh_25',['refresh',['../classmovie__player.html#a49b97cd32329eadc6cafb57e789b7bdc',1,'movie_player']]],
+  ['refresh_25',['refresh',['../classmovie__player.html#a267f954dded274d634ff9a52bab8e43d',1,'movie_player']]],
   ['release_5fchannel_26',['release_channel',['../classsound__player.html#a851a575dc94d0661beae921fa3c973a3',1,'sound_player']]],
   ['remaining_5fbytes_27',['remaining_bytes',['../classmemory__reader.html#a1b652caa4aefe1a2bf9a737bb162fc25',1,'memory_reader']]],
   ['remove_5ffrom_5flist_28',['remove_from_list',['../classlink__list.html#a0574884960b710a882dd7dee4fc89615',1,'link_list']]],

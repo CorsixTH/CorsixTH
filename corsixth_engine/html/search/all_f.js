@@ -1,7 +1,7 @@
 var searchData=
 [
   ['pack_5fargb_0',['pack_argb',['../classpalette.html#ad6d4ff7e2b5a9b81f03f94f28b1f28a1',1,'palette']]],
-  ['palette_1',['palette',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a5ca5a8d02077b7f6a0da48bda450f755',1,'palette:&#160;th_lua_internal.h'],['../classpalette.html',1,'palette']]],
+  ['palette_1',['palette',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a5ca5a8d02077b7f6a0da48bda450f755',1,'palette:&#160;th_lua_internal.h'],['../classpalette.html',1,'palette'],['../classpalette.html#a9c2b10f4cc5aa46fc4a51dcdfc0b8db9',1,'palette::palette()=default'],['../classpalette.html#a25a51bf12b55e7286e72556599241965',1,'palette::palette(const uint8_t *pData, size_t iDataLength, bool is8bit)']]],
   ['parent_2',['parent',['../classanimation.html#af4f59ba089a1851402a67c30713cd663',1,'animation::parent'],['../classabstract__pathfinder.html#a755d57562d5d25648da941f46807cba2',1,'abstract_pathfinder::parent']]],
   ['passable_3',['passable',['../structmap__tile__flags.html#ace24555f9578877cd4d3c35b63da3c95',1,'map_tile_flags']]],
   ['passable_5fif_5fnot_5ffor_5fblueprint_4',['passable_if_not_for_blueprint',['../structmap__tile__flags.html#a22a202c75e458c019efe82f7d7e15d35',1,'map_tile_flags']]],
@@ -18,7 +18,7 @@ var searchData=
   ['pixel_5foffset_15',['pixel_offset',['../classanimation__base.html#a7c1a8b579cdb1dc5eec2c44bac61315b',1,'animation_base']]],
   ['plant_16',['plant',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba9ea0a36b3a20901fafe834eb519a595c',1,'th_map.h']]],
   ['play_17',['play',['../classsound__player.html#a72a4a94f6e3176400e6e7d312de2c743',1,'sound_player::play()'],['../classmovie__player.html#a323b4f55beebdb8f4342cd474e68a646',1,'movie_player::play()']]],
-  ['play_5fat_18',['play_at',['../classsound__player.html#ae61e4de089d235f9f2309fa97f5e1d1b',1,'sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY)'],['../classsound__player.html#ac730fd117c84fed20ca8c7270e059650',1,'sound_player::play_at(size_t iIndex, int iX, int iY)']]],
+  ['play_5fat_18',['play_at',['../classsound__player.html#ac730fd117c84fed20ca8c7270e059650',1,'sound_player::play_at(size_t iIndex, int iX, int iY)'],['../classsound__player.html#ae61e4de089d235f9f2309fa97f5e1d1b',1,'sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY)']]],
   ['pmusic_19',['pMusic',['../classmusic.html#aafe1b128a8003b2353030bcde8811636',1,'music']]],
   ['pool_5ftable_20',['pool_table',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba9640c9711128d3a52214d5c9aed3c23b',1,'th_map.h']]],
   ['pop_5fclip_5frect_21',['pop_clip_rect',['../classrender__target.html#a8dfc514388265cf538da30d105581075',1,'render_target']]],
