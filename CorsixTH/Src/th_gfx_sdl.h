@@ -27,6 +27,7 @@ SOFTWARE.
 
 #include <SDL.h>
 
+#include <array>
 #include <memory>
 #include <stack>
 #include <stdexcept>
@@ -64,14 +65,20 @@ typedef uint32_t argb_colour;
 //! 8bpp palette class.
 class palette {
  public:  // External API
-  //! Load palette from the supplied data.
+  //! Number of colours in the palette.
+  static constexpr int color_count{256};
+
+  //! Create an empty palette. All entries are black and fully opaque.
+  palette() = default;
+
+  //! Load a 256 index color palette from the supplied data.
   /*!
-      Note that the data uses palette entries of 6 bit colours.
-      @param pData Data loaded from the file.
+      @param pData Palette data in RGB or RGBA format.
       @param iDataLength Size of the data.
+      @param is8bit Whether the data is in 8bpp (otherwise 6bpp).
       @return Whether loading of the palette succeeded.
   */
-  bool load_from_th_file(const uint8_t* pData, size_t iDataLength);
+  palette(const uint8_t* pData, size_t iDataLength, bool is8bit);
 
   //! Set an entry of the palette.
   /*!
@@ -137,17 +144,11 @@ class palette {
     return static_cast<uint8_t>((iColour >> 24) & 0xFF);
   }
 
-  //! Get the number of colours in the palette.
-  /*!
-      @return The number of colours in the palette.
-  */
-  int get_colour_count() const;
-
   //! Get the internal palette data for fast (read-only) access.
   /*!
       @return Table with all 256 colours of the palette.
   */
-  const argb_colour* get_argb_data() const;
+  const std::array<argb_colour, color_count>& get_argb_data() const;
 
   //! Set an entry of the palette.
   /*!
@@ -160,10 +161,7 @@ class palette {
 
  private:
   //! 32bpp palette colours associated with the 8bpp colour index.
-  uint32_t colour_index_to_argb_map[256]{};
-
-  //! Number of colours in the palette.
-  int colour_count{};
+  std::array<argb_colour, color_count> colour_index_to_argb_map{};
 };
 
 /*!

@@ -57,19 +57,16 @@ font* luaT_getfont(lua_State* L) {
 }
 
 int l_palette_new(lua_State* L) {
-  luaT_stdnew<palette>(L);
-  return 1;
-}
-
-int l_palette_load(lua_State* L) {
-  palette* pPalette = luaT_testuserdata<palette>(L);
   size_t iDataLen;
   const uint8_t* pData = luaT_checkfile(L, 2, &iDataLen);
+  bool pal8 = lua_toboolean(L, 3);
 
-  if (pPalette->load_from_th_file(pData, iDataLen))
-    lua_pushboolean(L, 1);
-  else
-    lua_pushboolean(L, 0);
+  try {
+    luaT_stdnew<palette>(L, luaT_environindex, false, pData, iDataLen, pal8);
+  } catch (const std::exception& ex) {
+    lua_pushstring(L, ex.what());
+    lua_error(L);
+  }
   return 1;
 }
 
@@ -480,6 +477,12 @@ int l_font_draw_tooltip(lua_State* L) {
   return 1;
 }
 
+int l_font_is_bitmap(lua_State* L) {
+  font* pFont = luaT_getfont(L);
+  lua_pushboolean(L, dynamic_cast<bitmap_font*>(pFont) != nullptr ? 1 : 0);
+  return 1;
+}
+
 int l_layers_new(lua_State* L) {
   layers* pLayers = luaT_stdnew<layers>(L, luaT_environindex, false);
   for (int i = 0; i < max_number_of_layers; ++i) pLayers->layer_contents[i] = 0;
@@ -864,7 +867,6 @@ void lua_register_gfx(const lua_register_state* pState) {
   {
     lua_class_binding<palette> lcb(pState, "palette", l_palette_new,
                                    lua_metatable::palette);
-    lcb.add_function(l_palette_load, "load");
     lcb.add_function(l_palette_set_entry, "setEntry");
   }
 
@@ -902,6 +904,7 @@ void lua_register_gfx(const lua_register_state* pState) {
                      lua_metatable::surface);
     lcb.add_function(l_font_draw_tooltip, "drawTooltip",
                      lua_metatable::surface);
+    lcb.add_function(l_font_is_bitmap, "isBitmap");
   }
 
   // BitmapFont

@@ -101,13 +101,22 @@ int l_movie_has_audio_track(lua_State* L) {
   return 1;
 }
 
+int l_movie_get_length(lua_State* L) {
+  movie_player* pMovie = luaT_testuserdata<movie_player>(L);
+  lua_pushnumber(L, pMovie->get_movie_length());
+  return 1;
+}
+
 int l_movie_refresh(lua_State* L) {
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
-  pMovie->refresh(SDL_Rect{static_cast<int>(luaL_checkinteger(L, 2)),
-                           static_cast<int>(luaL_checkinteger(L, 3)),
-                           static_cast<int>(luaL_checkinteger(L, 4)),
-                           static_cast<int>(luaL_checkinteger(L, 5))});
-  return 0;
+  double pts =
+      pMovie->refresh(SDL_Rect{static_cast<int>(luaL_checkinteger(L, 2)),
+                               static_cast<int>(luaL_checkinteger(L, 3)),
+                               static_cast<int>(luaL_checkinteger(L, 4)),
+                               static_cast<int>(luaL_checkinteger(L, 5))});
+
+  lua_pushnumber(L, pts);
+  return 1;
 }
 
 int l_movie_allocate_picture_buffer(lua_State* L) {
@@ -136,6 +145,7 @@ void lua_register_movie(const lua_register_state* pState) {
   lcb.add_function(l_movie_get_native_height, "getNativeHeight");
   lcb.add_function(l_movie_get_native_width, "getNativeWidth");
   lcb.add_function(l_movie_has_audio_track, "hasAudioTrack");
+  lcb.add_function(l_movie_get_length, "getLength");
   lcb.add_function(l_movie_refresh, "refresh");
   lcb.add_function(l_movie_allocate_picture_buffer, "allocatePictureBuffer");
   lcb.add_function(l_movie_deallocate_picture_buffer,
