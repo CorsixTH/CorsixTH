@@ -110,7 +110,7 @@ function UIFax:draw(canvas, x, y)
     local last_y = y + 40
     for _, message in ipairs(self.message) do
       last_y = self.fax_font:drawWrapped(canvas, message.text, x + 190,
-                                         last_y + (message.offset or 0), 330,
+                                         last_y + (message.offset or 0), 360,
                                          "center")
     end
     local choices = self.message.choices
