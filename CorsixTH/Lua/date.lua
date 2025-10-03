@@ -92,6 +92,7 @@ function Date:Date(year, month, day, hour)
   self._day = day or 1
   self._hour = hour or 0
   self:_adjustOverflow()
+  self:_calculateCumulativeDays()
 end
 
 --[[ Returns the last day of the current month
@@ -263,6 +264,13 @@ function Date:isSameDay(other)
   return self._year == other._year and self._month == other._month and self._day == other._day
 end
 
+--[[ Calculates the complete and partial years up to the current date
+!return (number) Floating point number of years since 2000
+]]
+function Date:getProgress()
+  return self._year - 1 + (self._cumulative_months[self._month] + self._day) / self._daysInYear
+end
+
 -- METAMETHODS
 
 local Date_mt = Date._metatable
@@ -348,4 +356,17 @@ function Date:_adjustOverflow()
   self:_adjustMonthOverflow()
   self:_adjustDayOverflow()
   self:_adjustHoursOverflow()
+end
+
+--[[ Calculate the cumulative days before the first of each month
+and days in the year.
+]]
+function Date:_calculateCumulativeDays()
+  local days = 0
+  self._cumulative_months = {}
+  for i, days_of_month in ipairs(month_length) do
+    self._cumulative_months[i] = days
+    days = days + days_of_month
+  end
+  self._daysInYear = days
 end
