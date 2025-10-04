@@ -262,7 +262,7 @@ function Machine:updateSmokeDisplay(room)
   end
 
   -- How many uses this machine has left until it explodes
-  self:getRemainingUses()
+  local threshold = self:getRemainingUses()
 
   -- Machines needing urgent repair show smoke
   if threshold < 4 then
