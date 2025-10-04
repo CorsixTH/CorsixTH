@@ -30,7 +30,7 @@ object.build_preview_animation = 5074
 object.default_strength = 8
 object.crashed_animation = 5116
 object.show_in_town_map = true
-object.smoke_animation = 3460 -- TODO
+object.smoke_animation = 3472
 local function copy_north_to_south(t)
   t.south = t.north
   return t

@@ -45,11 +45,6 @@ function Machine:Machine(hospital, object_type, x, y, direction, etc)
   self:setHandymanRepairPosition(direction)
 
   self.smoke_offset = object_type.orientations[direction].smoke_position
-  if object_type.smoke_animation then
-    self.smoke_animation = object_type.smoke_animation
-  else
-    self.smoke_animation = 3428 -- Default to the (0,0) based animation
-  end
 end
 
 --!param room (object) machine room
@@ -87,7 +82,7 @@ local function getSmokeTile(self)
   local map, _, _ = self.th:getTile()
   local x, y = self.tile_x, self.tile_y
 
-  if self.smoke_offset or self.object_type.orientations[self.direction].smoke_position then
+  if self.object_type.orientations[self.direction].smoke_position then
     x = x + self.object_type.orientations[self.direction].smoke_position[1] -- todo : replace by self.smoke_offset
     y = y + self.object_type.orientations[self.direction].smoke_position[2]
   end
@@ -98,7 +93,7 @@ end
 --! Set whether the smoke animation should be showing
 local function setSmoke(self, isSmoking)
   -- If turning smoke on for this machine
-  if isSmoking then
+  if isSmoking and self.object_type.smoke_animation then
     -- If there is no smoke animation for this machine, make one
     if not self.smokeInfo then
       self.smokeInfo = TH.animation()
@@ -111,9 +106,8 @@ local function setSmoke(self, isSmoking)
       -- tick to animate over all frames
       self.ticks = true
     end
-    -- TODO: select the smoke icon based on the type of machine
     local mirror = self.direction == "east" and 1 or 0
-    self.smokeInfo:setAnimation(self.world.anims, self.smoke_animation or self.object_type.smoke_animation, mirror)
+    self.smokeInfo:setAnimation(self.world.anims, self.object_type.smoke_animation, mirror)
   else -- Otherwise, turning smoke off
     -- If there is currently a smoke animation, remove it
     if self.smokeInfo then
@@ -268,7 +262,7 @@ function Machine:updateSmokeDisplay(room)
   end
 
   -- How many uses this machine has left until it explodes
-  local threshold = self:getRemainingUses()
+  self:getRemainingUses()
 
   -- Machines needing urgent repair show smoke
   if threshold < 4 then
