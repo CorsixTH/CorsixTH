@@ -1136,8 +1136,13 @@ function Hospital:resolveEmergency()
   local rescued_patients = emer.cured_emergency_patients
   for _, patient in ipairs(self.emergency_patients) do
     if patient and not patient.cured and not patient.dead
-        and not patient.going_home and not patient:getRoom() then
-      patient:die()
+        and not patient.going_home then
+      if not patient:getRoom() then
+        patient:die()
+      else
+        -- Patient is considered dead, unless cured by staff, will die after leaving the room.
+        patient.attributes["health"] = 0.0
+      end
     end
   end
   local total = emer.victims
