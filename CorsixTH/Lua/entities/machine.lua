@@ -43,8 +43,6 @@ function Machine:Machine(hospital, object_type, x, y, direction, etc)
 
   self.total_usage = 0
   self:setHandymanRepairPosition(direction)
-
-  self.smoke_offset = object_type.orientations[direction].smoke_position
 end
 
 --!param room (object) machine room
@@ -81,10 +79,10 @@ end
 local function getSmokeTile(self)
   local map, _, _ = self.th:getTile()
   local x, y = self.tile_x, self.tile_y
-
-  if self.object_type.orientations[self.direction].smoke_position then
-    x = x + self.object_type.orientations[self.direction].smoke_position[1] -- todo : replace by self.smoke_offset
-    y = y + self.object_type.orientations[self.direction].smoke_position[2]
+  local smoke_position = self.object_type.orientations[self.direction].smoke_position
+  if smoke_position then
+    x = x + smoke_position[1]
+    y = y + smoke_position[2]
   end
 
   return map, x, y
