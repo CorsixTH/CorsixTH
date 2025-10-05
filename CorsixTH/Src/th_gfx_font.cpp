@@ -256,22 +256,19 @@ FT_Error freetype_font::set_face(const uint8_t* pData, size_t iLength) {
 }
 
 FT_Error freetype_font::match_bitmap_font(sprite_sheet* font_spritesheet,
-                                          argb_colour colour) {
+                                          argb_colour* color, int* width,
+                                          int* height) {
   if (font_spritesheet == nullptr) return FT_Err_Invalid_Argument;
 
   // Try to take the size and colour of a standard character (em is generally
   // the standard font character, but for fonts which only have numbers, zero
   // seems like the next best choice).
   for (const char* sCharToTry = "M0"; *sCharToTry; ++sCharToTry) {
-    int iWidth;
-    int iHeight;
-    argb_colour sheet_colour = 0;
     unsigned int iSprite = *sCharToTry - 31;
-    if (font_spritesheet->get_sprite_size(iSprite, &iWidth, &iHeight) &&
-        font_spritesheet->get_sprite_average_colour(iSprite, &sheet_colour) &&
-        iWidth > 1 && iHeight > 1) {
-      font_colour = (colour == 0) ? sheet_colour : colour;
-      return set_ideal_character_size(iWidth, iHeight);
+    if (font_spritesheet->get_sprite_size(iSprite, width, height) &&
+        font_spritesheet->get_sprite_average_colour(iSprite, color) &&
+        *width > 1 && *height > 1) {
+      return FT_Err_Ok;
     }
   }
 
@@ -279,23 +276,21 @@ FT_Error freetype_font::match_bitmap_font(sprite_sheet* font_spritesheet,
   int iWidthSum = 0;
   int iHeightSum = 0;
   int iAverageNum = 0;
-  argb_colour sheet_colour = 0;
   for (size_t i = 0; i < font_spritesheet->get_sprite_count(); ++i) {
     int iWidth;
     int iHeight;
     font_spritesheet->get_sprite_size_unchecked(i, &iWidth, &iHeight);
     if (iWidth <= 1 || iHeight <= 1) continue;
-    if (!font_spritesheet->get_sprite_average_colour(i, &sheet_colour))
-      continue;
-    iWidthSum += iWidth;
-    iHeightSum += iHeight;
+    if (!font_spritesheet->get_sprite_average_colour(i, color)) continue;
+    iWidthSum += *width;
+    iHeightSum += *height;
     ++iAverageNum;
   }
   if (iAverageNum == 0) return FT_Err_Divide_By_Zero;
 
-  font_colour = (colour == 0) ? sheet_colour : colour;
-  return set_ideal_character_size((iWidthSum + iAverageNum / 2) / iAverageNum,
-                                  (iHeightSum + iAverageNum / 2) / iAverageNum);
+  *width = (iWidthSum + iAverageNum / 2) / iAverageNum;
+  *height = (iHeightSum + iAverageNum / 2) / iAverageNum;
+  return FT_Err_Ok;
 }
 
 FT_Error freetype_font::set_ideal_character_size(int iWidth, int iHeight) {
@@ -334,6 +329,8 @@ FT_Error freetype_font::set_ideal_character_size(int iWidth, int iHeight) {
   }
   return FT_Set_Pixel_Sizes(font_face, iWidth, iHeight);
 }
+
+void freetype_font::set_font_color(argb_colour color) { font_color = color; }
 
 text_layout freetype_font::get_text_dimensions(const char* sMessage,
                                                size_t iMessageLength,

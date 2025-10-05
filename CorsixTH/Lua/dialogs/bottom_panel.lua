@@ -150,9 +150,9 @@ function UIBottomPanel:_initFonts(gfx)
   local pause_label_color = { red = 35, green = 138, blue = 173 }
   self.panel_sprites = gfx:loadSpriteTable("Data", "Panel02V", true)
   self.money_font = gfx:loadFontAndSpriteTable("QData", "Font05V")
-  self.date_font = gfx:loadFontAndSpriteTable("QData", "Font16V", nil, nil, 0, 0, date_label_color)
-  self.white_font = gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, 0, -2)
-  self.pause_font = gfx:loadFontAndSpriteTable("QData", "Font124V", nil, nil, 0, 0, pause_label_color)
+  self.date_font = gfx:loadFontAndSpriteTable("QData", "Font16V", nil, nil, {ttf_color = date_label_color})
+  self.white_font = gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, {y_sep = -2})
+  self.pause_font = gfx:loadFontAndSpriteTable("QData", "Font124V", nil, nil, {ttf_color = pause_label_color})
 end
 
 function UIBottomPanel:registerKeyHandlers()

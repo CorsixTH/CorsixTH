@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 231 -- Remember active graphs
+local SAVEGAME_VERSION = 232 -- Font options
 
 class "App"
 

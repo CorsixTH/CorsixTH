@@ -48,7 +48,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   local selected_label_color = { red = 40, green = 40, blue = 250 }
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req10V", true)
   self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
-  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, 0, 0, selected_label_color)
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color})
   self.title_text = _S.buy_objects_window.choose_items
   self.price_text = (_S.buy_objects_window.price .. " "):gsub("  $", " ")
   self.total_text = (_S.buy_objects_window.total .. " "):gsub("  $", " ")

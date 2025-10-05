@@ -58,7 +58,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   local selected_label_color = { red = 40, green = 40, blue = 250 }
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
   self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
-  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, 0, 0, selected_label_color)
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color})
   self.title_text = _S.rooms_short.corridor_objects
   self.desc_text = _S.place_objects_window.place_objects_in_corridor
 

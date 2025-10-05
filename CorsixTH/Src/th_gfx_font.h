@@ -202,17 +202,19 @@ class freetype_font final : public font {
   */
   FT_Error set_face(const uint8_t* pData, size_t iLength);
 
-  //! Set the font size and colour to match that of a bitmap font.
+  //! Find colour and size to best match a bitmap font.
   /*!
       Note that the matching is done on a best-effort basis, and will likely
       not be perfect. This must be called after setFace().
 
       @param font_spritesheet The sprite sheet of the bitmap font.
-      @param colour Colour to use for the font. Colour 0 falls back to
+      @param color [out] Colour to use for the font. Colour 0 falls back to
           deriving the colour from the sprite sheet.
+      @param width [out] Width of each character in pixels.
+      @param height [out] Height of each character in pixels.
   */
-  FT_Error match_bitmap_font(sprite_sheet* font_spritesheet,
-                             argb_colour colour);
+  FT_Error match_bitmap_font(sprite_sheet* font_spritesheet, argb_colour* color,
+                             int* width, int* height);
 
   //! Set the ideal character size using pixel values.
   /*!
@@ -221,6 +223,8 @@ class freetype_font final : public font {
       setFace().
   */
   FT_Error set_ideal_character_size(int iWidth, int iHeight);
+
+  void set_font_color(argb_colour color);
 
   text_layout get_text_dimensions(const char* sMessage, size_t iMessageLength,
                                   int iMaxWidth = INT_MAX) const override;
@@ -284,7 +288,7 @@ class freetype_font final : public font {
   static int freetype_init_count;
   static constexpr int cache_size_log2{7};
   FT_Face font_face{nullptr};
-  argb_colour font_colour{0};
+  argb_colour font_color{0};
   bool is_done_freetype_init{false};
   mutable cached_text cache[1 << cache_size_log2]{};
 
