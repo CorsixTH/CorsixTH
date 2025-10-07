@@ -7,7 +7,7 @@ var searchData=
   ['map_5ftile_4',['map_tile',['../structmap__tile.html#a9861cdc4191c282bd231070eba7be538',1,'map_tile']]],
   ['map_5ftile_5fiterator_5',['map_tile_iterator',['../classmap__tile__iterator.html#a686454d2594dd8300850c18e465c26b3',1,'map_tile_iterator::map_tile_iterator()=delete'],['../classmap__tile__iterator.html#a7ed4b160f5df60bc9be1a9042f518619',1,'map_tile_iterator::map_tile_iterator(const level_map *pMap, int iScreenX, int iScreenY, int iWidth, int iHeight, map_scanline_iterator_direction eScanlineDirection=map_scanline_iterator_direction::forward)']]],
   ['map_5ftypical_5foverlay_6',['map_typical_overlay',['../classmap__typical__overlay.html#ac79a7d71ff03fe19b3adb56687bdb26b',1,'map_typical_overlay']]],
-  ['match_5fbitmap_5ffont_7',['match_bitmap_font',['../classfreetype__font.html#af24a714044dca5490982eb8eda144351',1,'freetype_font']]],
+  ['match_5fbitmap_5ffont_7',['match_bitmap_font',['../classfreetype__font.html#a86c7e0be3823ee75af2bf6796b9b0073',1,'freetype_font']]],
   ['memory_5fbuffer_8',['memory_buffer',['../classmemory__buffer.html#a1c784e5ce690816642856e079f8e0a0a',1,'memory_buffer::memory_buffer()'],['../classmemory__buffer.html#a7c4b0ba0dbad3cfb600bdebb4d390cf0',1,'memory_buffer::memory_buffer(const uint8_t *pData, size_t iLength)']]],
   ['memory_5freader_9',['memory_reader',['../classmemory__reader.html#a517345caa6caa2a7f364cb08b7b8ee85',1,'memory_reader']]],
   ['move_5fto_10',['move_to',['../classline__sequence.html#ac500e00bc649985451a8e233ea5c244f',1,'line_sequence']]],

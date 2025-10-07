@@ -108,12 +108,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aefc1bfdcff1ad7952016358ab1030b2d" id="r_aefc1bfdcff1ad7952016358ab1030b2d"><td class="memItemLeft" align="right" valign="top">FT_Error&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfreetype__font.html#aefc1bfdcff1ad7952016358ab1030b2d">set_face</a> (const uint8_t *pData, size_t iLength)</td></tr>
 <tr class="memdesc:aefc1bfdcff1ad7952016358ab1030b2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the font face to be used.  <br /></td></tr>
 <tr class="separator:aefc1bfdcff1ad7952016358ab1030b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af24a714044dca5490982eb8eda144351" id="r_af24a714044dca5490982eb8eda144351"><td class="memItemLeft" align="right" valign="top">FT_Error&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfreetype__font.html#af24a714044dca5490982eb8eda144351">match_bitmap_font</a> (<a class="el" href="classsprite__sheet.html">sprite_sheet</a> *font_spritesheet, <a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a> colour)</td></tr>
-<tr class="memdesc:af24a714044dca5490982eb8eda144351"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the font size and colour to match that of a bitmap font.  <br /></td></tr>
-<tr class="separator:af24a714044dca5490982eb8eda144351"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86c7e0be3823ee75af2bf6796b9b0073" id="r_a86c7e0be3823ee75af2bf6796b9b0073"><td class="memItemLeft" align="right" valign="top">FT_Error&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfreetype__font.html#a86c7e0be3823ee75af2bf6796b9b0073">match_bitmap_font</a> (<a class="el" href="classsprite__sheet.html">sprite_sheet</a> *font_spritesheet, <a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a> *color, int *width, int *height)</td></tr>
+<tr class="memdesc:a86c7e0be3823ee75af2bf6796b9b0073"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find colour and size to best match a bitmap font.  <br /></td></tr>
+<tr class="separator:a86c7e0be3823ee75af2bf6796b9b0073"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a269b7febd0144ecc9c295742be23b4c5" id="r_a269b7febd0144ecc9c295742be23b4c5"><td class="memItemLeft" align="right" valign="top">FT_Error&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfreetype__font.html#a269b7febd0144ecc9c295742be23b4c5">set_ideal_character_size</a> (int iWidth, int iHeight)</td></tr>
 <tr class="memdesc:a269b7febd0144ecc9c295742be23b4c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the ideal character size using pixel values.  <br /></td></tr>
 <tr class="separator:a269b7febd0144ecc9c295742be23b4c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f17bd99d90e1da94a819ad0045db69f" id="r_a7f17bd99d90e1da94a819ad0045db69f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfreetype__font.html#a7f17bd99d90e1da94a819ad0045db69f">set_font_color</a> (<a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a> color)</td></tr>
+<tr class="separator:a7f17bd99d90e1da94a819ad0045db69f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae8b12a2c1aceb8c450af3a63e1c2caab" id="r_ae8b12a2c1aceb8c450af3a63e1c2caab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtext__layout.html">text_layout</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfreetype__font.html#ae8b12a2c1aceb8c450af3a63e1c2caab">get_text_dimensions</a> (const char *sMessage, size_t iMessageLength, int iMaxWidth=INT_MAX) const override</td></tr>
 <tr class="memdesc:ae8b12a2c1aceb8c450af3a63e1c2caab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of drawn text.  <br /></td></tr>
 <tr class="separator:ae8b12a2c1aceb8c450af3a63e1c2caab"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -466,8 +468,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af24a714044dca5490982eb8eda144351" name="af24a714044dca5490982eb8eda144351"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af24a714044dca5490982eb8eda144351">&#9670;&#160;</a></span>match_bitmap_font()</h2>
+<a id="a86c7e0be3823ee75af2bf6796b9b0073" name="a86c7e0be3823ee75af2bf6796b9b0073"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86c7e0be3823ee75af2bf6796b9b0073">&#9670;&#160;</a></span>match_bitmap_font()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -481,8 +483,20 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a>&#160;</td>
-          <td class="paramname"><em>colour</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a> *&#160;</td>
+          <td class="paramname"><em>color</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>height</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -492,12 +506,14 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the font size and colour to match that of a bitmap font. </p>
+<p>Find colour and size to best match a bitmap font. </p>
 <p>Note that the matching is done on a best-effort basis, and will likely not be perfect. This must be called after setFace().</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">font_spritesheet</td><td>The sprite sheet of the bitmap font. </td></tr>
-    <tr><td class="paramname">colour</td><td>Colour to use for the font. Colour 0 falls back to deriving the colour from the sprite sheet. </td></tr>
+    <tr><td class="paramname">color</td><td>[out] Colour to use for the font. Colour 0 falls back to deriving the colour from the sprite sheet. </td></tr>
+    <tr><td class="paramname">width</td><td>[out] Width of each character in pixels. </td></tr>
+    <tr><td class="paramname">height</td><td>[out] Height of each character in pixels. </td></tr>
   </table>
   </dd>
 </dl>
@@ -538,6 +554,24 @@ Static Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a7f17bd99d90e1da94a819ad0045db69f" name="a7f17bd99d90e1da94a819ad0045db69f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f17bd99d90e1da94a819ad0045db69f">&#9670;&#160;</a></span>set_font_color()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void freetype_font::set_font_color </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8">argb_colour</a>&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
