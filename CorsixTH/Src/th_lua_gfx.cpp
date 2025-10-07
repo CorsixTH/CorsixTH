@@ -287,24 +287,78 @@ int l_freetype_font_new(lua_State* L) {
   return 1;
 }
 
-int l_freetype_font_set_spritesheet(lua_State* L) {
+//! Set the font options for a freetype font.
+//!
+//! The lua stack contains three arguments:
+//! 1. The freetype_font userdata
+//! 2. A sprite_sheet userdata used to find a default size and colour
+//! 3. A table of options, which may contain:
+//!    <dl>
+//!    <dt>ttf_color</dt>
+//!    <dd>Either a number representing an ARGB colour, or a table
+//!        with fields "red", "green", "blue" and "alpha". If alpha is omitted
+//!        it defaults to 255 (fully opaque). All other color components default
+//!        to 0.</dd>
+//!    <dt>ttf_width</dt>
+//!    <dd>Desired nominal character width, in pixels. If omitted, the width is
+//!    calculated from the sprite sheet.</dd>
+//!    <dt>ttf_height</dt>
+//!    <dd>Desired nominal character height, in pixels. If omitted, the height
+//!    is calculated from the sprite sheet.</dd>
+//!    </dl>
+//! @param L Lua stack
+//! @return argument count
+int l_freetype_font_set_font_options(lua_State* L) {
   // Colour 0 falls back to using the average colour of the sprite sheet.
-  argb_colour colour = 0;
+  argb_colour color = 0;
+  int width = 0;
+  int height = 0;
 
   freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
-  if (!lua_isnoneornil(L, 3)) {
-    int red = static_cast<int>(luaL_checkinteger(L, 3));
-    int green = static_cast<int>(luaL_checkinteger(L, 4));
-    int blue = static_cast<int>(luaL_checkinteger(L, 5));
-    red = std::max(0, std::min(255, red));
-    green = std::max(0, std::min(255, green));
-    blue = std::max(0, std::min(255, blue));
-    colour = palette::pack_argb(255, red, green, blue);
-  }
-  lua_settop(L, 2);
 
-  l_freetype_throw_error_code(L, pFont->match_bitmap_font(pSheet, colour));
+  pFont->match_bitmap_font(pSheet, &color, &width, &height);
+
+  // Optional RGB colour parameters
+  lua_getfield(L, 3, "ttf_color");
+  if (!lua_isnil(L, -1)) {
+    if (lua_istable(L, -1)) {
+      lua_getfield(L, -1, "red");
+      lua_getfield(L, -2, "green");
+      lua_getfield(L, -3, "blue");
+      lua_getfield(L, -4, "alpha");
+
+      int red = static_cast<int>(luaL_optinteger(L, -4, 0));
+      int green = static_cast<int>(luaL_optinteger(L, -3, 0));
+      int blue = static_cast<int>(luaL_optinteger(L, -2, 0));
+      int alpha = static_cast<int>(luaL_optinteger(L, -1, 255));
+      color = palette::pack_argb(alpha, red, green, blue);
+      lua_pop(L, 4);
+    } else if (lua_isnumber(L, -1)) {
+      color = static_cast<argb_colour>(lua_tointeger(L, -1));
+      if ((color & 0xFF000000u) == 0) {
+        // If no alpha was specified, assume fully opaque.
+        color |= 0xFF000000u;
+      }
+    }
+  }
+  lua_pop(L, 1);
+
+  lua_getfield(L, 3, "ttf_width");
+  if (lua_isnumber(L, -1)) {
+    width = static_cast<int>(lua_tointeger(L, -1));
+  }
+  lua_pop(L, 1);
+
+  lua_getfield(L, 3, "ttf_height");
+  if (lua_isnumber(L, -1)) {
+    height = static_cast<int>(lua_tointeger(L, -1));
+  }
+  lua_pop(L, 1);
+
+  pFont->set_font_color(color);
+  l_freetype_throw_error_code(L,
+                              pFont->set_ideal_character_size(width, height));
   lua_settop(L, 1);
   return 1;
 }
@@ -925,7 +979,7 @@ void lua_register_gfx(const lua_register_state* pState) {
                                          l_freetype_font_new,
                                          lua_metatable::freetype_font);
     lcb.set_superclass(lua_metatable::font);
-    lcb.add_function(l_freetype_font_set_spritesheet, "setSheet",
+    lcb.add_function(l_freetype_font_set_font_options, "setFontOptions",
                      lua_metatable::sheet);
     lcb.add_function(l_freetype_font_set_face, "setFace");
     lcb.add_function(l_freetype_font_get_copyright, "getCopyrightNotice");

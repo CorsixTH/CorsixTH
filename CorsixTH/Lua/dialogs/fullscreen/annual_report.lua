@@ -62,7 +62,7 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     local stone_text_color = { red = 80, green = 60, blue = 35 }
     self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font45V", false, palette)
     self.write_font = gfx:loadFontAndSpriteTable("QData", "Font47V", false, palette)
-    self.stone_font = gfx:loadFontAndSpriteTable("QData", "Font46V", false, palette, 0, 0, stone_text_color)
+    self.stone_font = gfx:loadFontAndSpriteTable("QData", "Font46V", false, palette, {ttf_color = stone_text_color})
 
     self.panel_sprites = gfx:loadSpriteTable("QData", "Award03V", true, palette)
   end) then
