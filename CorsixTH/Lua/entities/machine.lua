@@ -74,24 +74,38 @@ function Machine:isMachine()
   return true
 end
 
+--! Return Tile position for smoke animation
+--!return (map, int, int)
+local function getSmokeTile(self)
+  local map, _, _ = self.th:getTile()
+  local x, y = self.tile_x, self.tile_y
+  local smoke_position = self.object_type.orientations[self.direction].smoke_position
+  if smoke_position then
+    x = x + smoke_position[1]
+    y = y + smoke_position[2]
+  end
+
+  return map, x, y
+end
+
 --! Set whether the smoke animation should be showing
 local function setSmoke(self, isSmoking)
   -- If turning smoke on for this machine
-  if isSmoking then
+  if isSmoking and self.object_type.smoke_animation then
     -- If there is no smoke animation for this machine, make one
     if not self.smokeInfo then
       self.smokeInfo = TH.animation()
       -- Note: Set the location of the smoke to that of the machine
       -- rather than setting the machine to the parent so that the smoke
       -- doesn't get hidden with the machine during use
-      self.smokeInfo:setTile(self.th:getTile())
+      self.smokeInfo:setTile(getSmokeTile(self))
       -- Always show the first smoke layer
       self.smokeInfo:setLayer(10, 2)
       -- tick to animate over all frames
       self.ticks = true
     end
-    -- TODO: select the smoke icon based on the type of machine
-    self.smokeInfo:setAnimation(self.world.anims, 3424)
+    local mirror = self.direction == "east" and 1 or 0
+    self.smokeInfo:setAnimation(self.world.anims, self.object_type.smoke_animation, mirror)
   else -- Otherwise, turning smoke off
     -- If there is currently a smoke animation, remove it
     if self.smokeInfo then
