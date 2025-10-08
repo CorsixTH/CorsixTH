@@ -67,7 +67,7 @@ var searchData=
   ['thdf_5fflip_5fvertical_64',['thdf_flip_vertical',['../th__gfx_8h.html#a43e9cb66d61948afed4b803a77a88baca7e44b3366cf4eac95eee8a0d4b2f3b9c',1,'th_gfx.h']]],
   ['thdf_5flist_5fbottom_65',['thdf_list_bottom',['../th__gfx_8h.html#a43e9cb66d61948afed4b803a77a88bacade1d03f1eb279ad17a0f0945c795a4ed',1,'th_gfx.h']]],
   ['thdf_5fnearest_66',['thdf_nearest',['../th__gfx_8h.html#a43e9cb66d61948afed4b803a77a88bacae900ecb1269e41b6f0ec96b1ade8b91b',1,'th_gfx.h']]],
-  ['tick_67',['tick',['../classsprite__render__list.html#ad09736d16bf8d01859c51bf776343e67',1,'sprite_render_list::tick()'],['../classanimation__manager.html#a8abe0e00f7fa5d61b757d4dd77e57123',1,'animation_manager::tick()'],['../classanimation.html#a19e1060d2fdc871b60e2b0f703752415',1,'animation::tick()']]],
+  ['tick_67',['tick',['../classsprite__render__list.html#ad09736d16bf8d01859c51bf776343e67',1,'sprite_render_list::tick()'],['../classanimation.html#a19e1060d2fdc871b60e2b0f703752415',1,'animation::tick()'],['../classanimation__manager.html#a8abe0e00f7fa5d61b757d4dd77e57123',1,'animation_manager::tick()']]],
   ['tile_68',['tile',['../classanimation__base.html#a90665a28eba2176a44c4ecfa05cdbac7',1,'animation_base']]],
   ['tile_5flayer_69',['tile_layer',['../th__map_8h.html#a073fc89e2a5359593c2b5f94a0229d79',1,'th_map.h']]],
   ['tile_5flayers_70',['tile_layers',['../structmap__tile.html#aaee346a3759afaa9051353511fbd8788',1,'map_tile']]],
@@ -77,10 +77,11 @@ var searchData=
   ['tile_5fy_74',['tile_y',['../classmap__tile__iterator.html#ae51990ca685aaa66054dc0e0f56387ff',1,'map_tile_iterator']]],
   ['tile_5fy_5fposition_5fon_5fscreen_75',['tile_y_position_on_screen',['../classmap__tile__iterator.html#a2ecf61b055726c8b7a35f616691d98d5',1,'map_tile_iterator']]],
   ['time_76',['time',['../structmidi__token.html#ac4edae626047cfa73fc5290b692abc07',1,'midi_token']]],
-  ['top_77',['top',['../structlua__register__state.html#a4fab0b5ba253b41f37b26258d423f7b5',1,'lua_register_state']]],
-  ['transcode_5fxmi_5fto_5fmidi_78',['transcode_xmi_to_midi',['../xmi2mid_8h.html#aa7b66b866f8af87e72fc03aa0105b0d7',1,'transcode_xmi_to_midi(const unsigned char *xmi_data, size_t xmi_length, size_t *midi_length):&#160;xmi2mid.cpp'],['../xmi2mid_8cpp.html#aa7b66b866f8af87e72fc03aa0105b0d7',1,'transcode_xmi_to_midi(const unsigned char *xmi_data, size_t xmi_length, size_t *midi_length):&#160;xmi2mid.cpp']]],
-  ['travel_5fdirection_79',['travel_direction',['../th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82',1,'th_pathfind.h']]],
-  ['try_5fnode_80',['try_node',['../classobject__visitor.html#a7d5fabfa3ee1f713147b0163108bc524',1,'object_visitor::try_node()'],['../classabstract__pathfinder.html#a53e19b7727287c1e82f99203e20ca93b',1,'abstract_pathfinder::try_node()'],['../classbasic__pathfinder.html#aa52087d074876bf9498537397ddc4d89',1,'basic_pathfinder::try_node()'],['../classhospital__finder.html#af0d4c5f8eaff909b4219d54453a51ca0',1,'hospital_finder::try_node()'],['../classidle__tile__finder.html#a1863d6f4aab26bb50be4a19b3b42caad',1,'idle_tile_finder::try_node()']]],
-  ['tv_81',['tv',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abac9a1fdac6e082dd89e7173244f34d7b3',1,'th_map.h']]],
-  ['type_82',['type',['../structmidi__token.html#a077fb958d8de2065921114dad88865b5',1,'midi_token']]]
+  ['togglepause_77',['togglePause',['../classmovie__player.html#aff5b3626729ff1cc6d608a51daa7b619',1,'movie_player']]],
+  ['top_78',['top',['../structlua__register__state.html#a4fab0b5ba253b41f37b26258d423f7b5',1,'lua_register_state']]],
+  ['transcode_5fxmi_5fto_5fmidi_79',['transcode_xmi_to_midi',['../xmi2mid_8cpp.html#aa7b66b866f8af87e72fc03aa0105b0d7',1,'transcode_xmi_to_midi(const unsigned char *xmi_data, size_t xmi_length, size_t *midi_length):&#160;xmi2mid.cpp'],['../xmi2mid_8h.html#aa7b66b866f8af87e72fc03aa0105b0d7',1,'transcode_xmi_to_midi(const unsigned char *xmi_data, size_t xmi_length, size_t *midi_length):&#160;xmi2mid.cpp']]],
+  ['travel_5fdirection_80',['travel_direction',['../th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82',1,'th_pathfind.h']]],
+  ['try_5fnode_81',['try_node',['../classobject__visitor.html#a7d5fabfa3ee1f713147b0163108bc524',1,'object_visitor::try_node()'],['../classabstract__pathfinder.html#a53e19b7727287c1e82f99203e20ca93b',1,'abstract_pathfinder::try_node()'],['../classbasic__pathfinder.html#aa52087d074876bf9498537397ddc4d89',1,'basic_pathfinder::try_node()'],['../classhospital__finder.html#af0d4c5f8eaff909b4219d54453a51ca0',1,'hospital_finder::try_node()'],['../classidle__tile__finder.html#a1863d6f4aab26bb50be4a19b3b42caad',1,'idle_tile_finder::try_node()']]],
+  ['tv_82',['tv',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abac9a1fdac6e082dd89e7173244f34d7b3',1,'th_map.h']]],
+  ['type_83',['type',['../structmidi__token.html#a077fb958d8de2065921114dad88865b5',1,'midi_token']]]
 ];
