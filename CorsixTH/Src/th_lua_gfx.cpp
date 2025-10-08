@@ -287,6 +287,35 @@ int l_freetype_font_new(lua_State* L) {
   return 1;
 }
 
+//! Read the color from the top of the Lua stack.
+//! The color may be either a number representing an ARGB color, or a table
+//! with fields "red", "green", "blue" and "alpha". If alpha is omitted it
+//! defaults to 255 (fully opaque). All other color components default to 0
+//! If neither a number nor a table is present, the color is left unchanged.
+argb_colour read_color_from_lua(lua_State* L, argb_colour defaultColor) {
+  argb_colour color = defaultColor;
+  if (lua_istable(L, -1)) {
+    lua_getfield(L, -1, "red");
+    lua_getfield(L, -2, "green");
+    lua_getfield(L, -3, "blue");
+    lua_getfield(L, -4, "alpha");
+
+    int red = static_cast<int>(luaL_optinteger(L, -4, 0));
+    int green = static_cast<int>(luaL_optinteger(L, -3, 0));
+    int blue = static_cast<int>(luaL_optinteger(L, -2, 0));
+    int alpha = static_cast<int>(luaL_optinteger(L, -1, 255));
+    color = palette::pack_argb(alpha, red, green, blue);
+    lua_pop(L, 4);
+  } else if (lua_isnumber(L, -1)) {
+    color = static_cast<argb_colour>(lua_tointeger(L, -1));
+    if ((color & 0xFF000000u) == 0) {
+      // If no alpha was specified, assume fully opaque.
+      color |= 0xFF000000u;
+    }
+  }
+  return color;
+}
+
 //! Set the font options for a freetype font.
 //!
 //! The lua stack contains three arguments:
@@ -305,14 +334,23 @@ int l_freetype_font_new(lua_State* L) {
 //!    <dt>ttf_height</dt>
 //!    <dd>Desired nominal character height, in pixels. If omitted, the height
 //!    is calculated from the sprite sheet.</dd>
+//!    <dt>ttf_shadow</dt>
+//!    <dd>A table with fields "offset_x", "offset_y" and "color". The color
+//!        field has the same format as ttf_color. If this field is present, the
+//!        font will be drawn with a shadow of the specified colour and offset.
+//!        color is optional and defaults to opaque black. offset_x and offset_y
+//!        are optional and default to 1. If the field is omitted entirely, no
+//!        shadow is drawn. Alternately ttf_shadow can be set to true to draw
+//!        a shadow with default parameters, or false to disable any shadow.
+//!        </dd>
 //!    </dl>
 //! @param L Lua stack
 //! @return argument count
 int l_freetype_font_set_font_options(lua_State* L) {
   // Colour 0 falls back to using the average colour of the sprite sheet.
-  argb_colour color = 0;
   int width = 0;
   int height = 0;
+  argb_colour color = 0;
 
   freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -321,27 +359,7 @@ int l_freetype_font_set_font_options(lua_State* L) {
 
   // Optional RGB colour parameters
   lua_getfield(L, 3, "ttf_color");
-  if (!lua_isnil(L, -1)) {
-    if (lua_istable(L, -1)) {
-      lua_getfield(L, -1, "red");
-      lua_getfield(L, -2, "green");
-      lua_getfield(L, -3, "blue");
-      lua_getfield(L, -4, "alpha");
-
-      int red = static_cast<int>(luaL_optinteger(L, -4, 0));
-      int green = static_cast<int>(luaL_optinteger(L, -3, 0));
-      int blue = static_cast<int>(luaL_optinteger(L, -2, 0));
-      int alpha = static_cast<int>(luaL_optinteger(L, -1, 255));
-      color = palette::pack_argb(alpha, red, green, blue);
-      lua_pop(L, 4);
-    } else if (lua_isnumber(L, -1)) {
-      color = static_cast<argb_colour>(lua_tointeger(L, -1));
-      if ((color & 0xFF000000u) == 0) {
-        // If no alpha was specified, assume fully opaque.
-        color |= 0xFF000000u;
-      }
-    }
-  }
+  color = read_color_from_lua(L, color);
   lua_pop(L, 1);
 
   lua_getfield(L, 3, "ttf_width");
@@ -356,7 +374,29 @@ int l_freetype_font_set_font_options(lua_State* L) {
   }
   lua_pop(L, 1);
 
+  font_shadow_options shadowOptions;
+  lua_getfield(L, 3, "ttf_shadow");
+  if (lua_istable(L, -1)) {
+    shadowOptions.enabled = true;
+
+    lua_getfield(L, -1, "offset_x");
+    shadowOptions.offset_x = static_cast<int>(luaL_optinteger(L, -1, 1));
+    lua_pop(L, 1);
+
+    lua_getfield(L, -1, "offset_y");
+    shadowOptions.offset_y = static_cast<int>(luaL_optinteger(L, -1, 1));
+    lua_pop(L, 1);
+
+    lua_getfield(L, -1, "color");
+    shadowOptions.color = read_color_from_lua(L, shadowOptions.color);
+    lua_pop(L, 1);
+  } else if (lua_isboolean(L, -1)) {
+    shadowOptions.enabled = lua_toboolean(L, -1);
+  }
+  lua_pop(L, 1);
+
   pFont->set_font_color(color);
+  pFont->set_shadow_options(shadowOptions);
   l_freetype_throw_error_code(L,
                               pFont->set_ideal_character_size(width, height));
   lua_settop(L, 1);

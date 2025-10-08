@@ -421,13 +421,26 @@ local ttf_col_to_cache_key = function(ttf_color)
   end
 end
 
+local shadow_to_cache_key = function(ttf_shadow)
+  if type(ttf_shadow) == "table" then
+    return string.format("sx%d,sy%d,s%s",
+      ttf_shadow.offset_x or 1,
+      ttf_shadow.offset_y or 1,
+      ttf_col_to_cache_key(ttf_shadow.color))
+  elseif ttf_shadow == true then
+    return "sx1,sy1,sa255,r0,g0,b0"
+  end
+  return "nil"
+end
+
 local language_font_cache_key = function(name, font_options)
-  return string.format("%s,%d,%d,%s,%s",
+  return string.format("%s,%d,%d,%s,%s,%s",
     name or "nil",
     font_options.x_sep or 0,
     font_options.y_sep or 0,
     ttf_col_to_cache_key(font_options.ttf_color),
-    font_options.force_bitmap and "T" or "F")
+    font_options.force_bitmap and "T" or "F",
+    shadow_to_cache_key(font_options.ttf_shadow))
 end
 
 --! Load a true type font
@@ -448,6 +461,13 @@ end
 --    width will be detected from the sprite table.
 --  ttf_height (integer) The nominal height of the font, in pixels. If nil, the
 --    height will be detected from the sprite table.
+--  ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
+--    The color field has the same format as ttf_color. If this field is
+--    present, the font will be drawn with a shadow of the specified colour and
+--    offset. color is optional and defaults to opaque black. offset_x and
+--    offset_y are optional and default to 1. If the field is omitted entirely,
+--    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+--    shadow with default parameters, or false to disable any shadow.
 --!param y_sep (int) Deprecated: use font_options.y_sep instead.
 --!param ttf_color (table) Deprecated: use font_options.ttf_color instead.
 --!param force_bitmap (boolean) Deprecated: use font_options.force_bitmap
@@ -510,6 +530,13 @@ end
 --    width will be detected from the sprite table.
 --  ttf_height (integer) The nominal height of the font, in pixels. If nil, the
 --    height will be detected from the sprite table.
+--  ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
+--    The color field has the same format as ttf_color. If this field is
+--    present, the font will be drawn with a shadow of the specified colour and
+--    offset. color is optional and defaults to opaque black. offset_x and
+--    offset_y are optional and default to 1. If the field is omitted entirely,
+--    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+--    shadow with default parameters, or false to disable any shadow.
 function Graphics:loadFontAndSpriteTable(dir, name, complex, palette, font_options)
   local sprite_table = self:loadSpriteTable(dir, name, complex, palette)
 
@@ -536,6 +563,13 @@ end
 --    width will be detected from the sprite table.
 --  ttf_height (integer) The nominal height of the font, in pixels. If nil, the
 --    height will be detected from the sprite table.
+--  ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
+--    The color field has the same format as ttf_color. If this field is
+--    present, the font will be drawn with a shadow of the specified colour and
+--    offset. color is optional and defaults to opaque black. offset_x and
+--    offset_y are optional and default to 1. If the field is omitted entirely,
+--    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+--    shadow with default parameters, or false to disable any shadow.
 function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_bitmap)
 
   -- afterLoad fix. Saves before 215 would double the y_sep argument, but did not have ttf_col

@@ -332,6 +332,10 @@ FT_Error freetype_font::set_ideal_character_size(int iWidth, int iHeight) {
 
 void freetype_font::set_font_color(argb_colour color) { font_color = color; }
 
+void freetype_font::set_shadow_options(const font_shadow_options& options) {
+  shadow_opts = options;
+}
+
 text_layout freetype_font::get_text_dimensions(const char* sMessage,
                                                size_t iMessageLength,
                                                int iMaxWidth) const {
@@ -410,6 +414,11 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
     pEntry->data = nullptr;
     pEntry->is_valid = false;
 
+    int width_before_shadow = iWidth;
+    if (iWidth < INT_MAX && shadow_opts.enabled) {
+      width_before_shadow -= abs(shadow_opts.offset_x);
+    }
+
     // Set the entry metadata to that of the new message.
     if (iMessageLength > pEntry->message_buffer_length) {
       delete[] pEntry->message;
@@ -477,7 +486,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
       long line_width_with_glyph =
           (ftvPen.x + oGlyph.metrics.horiBearingX + oGlyph.metrics.width + 63) /
           64;
-      if (line_width_with_glyph >= iWidth || bIsNewLine) {
+      if (line_width_with_glyph >= width_before_shadow || bIsNewLine) {
         if (bIsNewLine) {
           sLineBreakPosition = sOldMessage;
         }
@@ -616,8 +625,12 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
     if (iPriorLinesHeight > 0) iPriorLinesHeight -= iLineSpacing;
     pEntry->height = static_cast<int>(1 + (iPriorLinesHeight >> 6));
     pEntry->widest_line_width = static_cast<int>(1 + (iWidestLine >> 6));
-    pEntry->row_count = iNumRows;
+    if (shadow_opts.enabled) {
+      pEntry->widest_line_width += std::abs(shadow_opts.offset_x);
+      pEntry->height += std::abs(shadow_opts.offset_y);
+    }
     if (iWidth == INT_MAX) pEntry->width = pEntry->widest_line_width;
+    pEntry->row_count = iNumRows;
     pEntry->last_x = 1 + (static_cast<int>(iLineWidth + iAlignDelta) >> 6);
 
     // Get a bitmap for each glyph.
