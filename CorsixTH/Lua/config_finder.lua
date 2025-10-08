@@ -589,6 +589,7 @@ local hotkeys_defaults = {
   global_screenshot = {"ctrl", "s"},
   global_stop_movie = "escape",
   global_stop_movie_alt = "q",
+  global_pause_movie = "p",
   global_window_close = "escape",
   global_window_close_alt = "q",
   ingame_showmenubar = "escape",
@@ -731,6 +732,7 @@ if hotkeys_needs_rewrite and TheApp then
 'global_runDebugScript = ' .. hotkeys_values.global_runDebugScript .. '\n' ..
 'global_screenshot = ' .. hotkeys_values.global_screenshot .. '\n' ..
 'global_stop_movie = ' .. hotkeys_values.global_stop_movie .. '\n' ..
+'global_pause_movie = ' .. hotkeys_values.global_pause_movie .. '\n' ..
 'global_window_close = ' .. hotkeys_values.global_window_close .. '\n' ..
 'global_stop_movie_alt =' .. hotkeys_values.global_stop_movie_alt .. '\n' ..
 'global_window_close_alt =' .. hotkeys_values.global_window_close_alt .. '\n' .. [=[

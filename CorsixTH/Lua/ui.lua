@@ -215,6 +215,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler("global_cancel_alt", self, self.closeWindow)
   self:addKeyHandler("global_stop_movie", self, self.stopMovie)
   self:addKeyHandler("global_stop_movie_alt", self, self.stopMovie)
+  self:addKeyHandler("global_pause_movie", self, self.pauseMovie)
   self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
   self:addKeyHandler("global_fullscreen_toggle", self, self.fullscreenHotkey)
   self:addKeyHandler("global_exitApp", self, self.exitApplication)
@@ -1178,6 +1179,12 @@ end
 function UI:stopMovie()
   if self.app.moviePlayer.playing then
     self.app.moviePlayer:stop()
+  end
+end
+
+function UI:pauseMovie()
+  if self.app.moviePlayer.playing then
+    self.app.moviePlayer:togglePause()
   end
 end
 

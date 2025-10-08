@@ -331,6 +331,12 @@ class movie_player {
   //! Stop the currently playing movie
   void stop();
 
+  //! Pause the currently playing movie
+  //!
+  //! This method is not thread safe, it should only be called from the event
+  //! thread.
+  void togglePause();
+
   //! Return the original height of the movie
   int get_native_height() const;
 
@@ -438,6 +444,10 @@ class movie_player {
 
   //! Indicate that we are in the process of aborting playback
   std::atomic<bool> aborting;
+
+  //! Indicate that playback is paused
+  std::atomic<bool> paused{};
+  uint32_t pause_start_time{};  ///< The time in SDL ticks at which we paused
 
   std::mutex decoding_audio_mutex;  ///< Synchronize access to #m_pAudioBuffer
 

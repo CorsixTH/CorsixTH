@@ -83,6 +83,12 @@ int l_movie_stop(lua_State* L) {
   return 0;
 }
 
+int l_movie_toggle_pause(lua_State* L) {
+  movie_player* pVideo = luaT_testuserdata<movie_player>(L);
+  pVideo->togglePause();
+  return 0;
+}
+
 int l_movie_get_native_height(lua_State* L) {
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
   lua_pushinteger(L, pMovie->get_native_height());
@@ -142,6 +148,7 @@ void lua_register_movie(const lua_register_state* pState) {
   lcb.add_function(l_movie_unload, "unload");
   lcb.add_function(l_movie_play, "play");
   lcb.add_function(l_movie_stop, "stop");
+  lcb.add_function(l_movie_toggle_pause, "togglePause");
   lcb.add_function(l_movie_get_native_height, "getNativeHeight");
   lcb.add_function(l_movie_get_native_width, "getNativeWidth");
   lcb.add_function(l_movie_has_audio_track, "hasAudioTrack");

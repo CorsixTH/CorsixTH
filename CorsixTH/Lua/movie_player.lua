@@ -407,6 +407,8 @@ function MoviePlayer:updateRenderer()
 end
 
 function MoviePlayer:togglePause()
+  -- We cannot pause or skip the same movies (board game)
+  -- due to the out of band audio track
   if self.moviePlayer == nil or not self.can_skip then return end
 
   self.moviePlayer:togglePause()
