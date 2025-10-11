@@ -134,13 +134,13 @@ the other Lua code.
  <div class="method">
  <h5><a name="_0_1_graphics_1arabic_numerals">function Graphics:arabicNumerals()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L576">line 576 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L610">line 610 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1draw_numbers_from_unicode">function Graphics:drawNumbersFromUnicode()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L583">line 583 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L617">line 617 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -175,7 +175,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L587">line 587 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L621">line 621 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -240,7 +240,14 @@ numerals.
 ttf_width (integer) The nominal width of the font, in pixels. If nil, the
 width will be detected from the sprite table.
 ttf_height (integer) The nominal height of the font, in pixels. If nil, the
-height will be detected from the sprite table.</td>
+height will be detected from the sprite table.
+ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
+The color field has the same format as ttf_color. If this field is
+present, the font will be drawn with a shadow of the specified colour and
+offset. color is optional and defaults to opaque black. offset_x and
+offset_y are optional and default to 1. If the field is omitted entirely,
+no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+shadow with default parameters, or false to disable any shadow.</td>
  </tr>
  <tr>
  <td class="n">y_sep</td>
@@ -258,7 +265,7 @@ height will be detected from the sprite table.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L524">line 524 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L551">line 551 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -303,10 +310,17 @@ numerals.
 ttf_width (integer) The nominal width of the font, in pixels. If nil, the
 width will be detected from the sprite table.
 ttf_height (integer) The nominal height of the font, in pixels. If nil, the
-height will be detected from the sprite table.</td>
+height will be detected from the sprite table.
+ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
+The color field has the same format as ttf_color. If this field is
+present, the font will be drawn with a shadow of the specified colour and
+offset. color is optional and defaults to opaque black. offset_x and
+offset_y are optional and default to 1. If the field is omitted entirely,
+no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+shadow with default parameters, or false to disable any shadow.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L492">line 492 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L512">line 512 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -375,7 +389,14 @@ numerals.
 ttf_width (integer) The nominal width of the font, in pixels. If nil, the
 width will be detected from the sprite table.
 ttf_height (integer) The nominal height of the font, in pixels. If nil, the
-height will be detected from the sprite table.</td>
+height will be detected from the sprite table.
+ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
+The color field has the same format as ttf_color. If this field is
+present, the font will be drawn with a shadow of the specified colour and
+offset. color is optional and defaults to opaque black. offset_x and
+offset_y are optional and default to 1. If the field is omitted entirely,
+no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+shadow with default parameters, or false to disable any shadow.</td>
  </tr>
  <tr>
  <td class="n">y_sep</td>
@@ -394,7 +415,7 @@ height will be detected from the sprite table.</td>
 instead.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L433">line 433 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L446">line 446 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -523,7 +544,7 @@ instead.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L633">line 633 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L667">line 667 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -544,7 +565,7 @@ instead.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L659">line 659 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L693">line 693 of Lua/graphics.lua</a>.
  </p>
  </div>
 </div>
