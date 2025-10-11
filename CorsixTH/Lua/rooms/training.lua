@@ -1,4 +1,5 @@
 --[[ Copyright (c) 2010 Justin Pasher
+Copyright (c) 2023 lewri
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -51,21 +52,14 @@ function TrainingRoom:roomFinished()
   local fx, fy = self:getEntranceXY(true)
   local objects = self.world:findAllObjectsNear(fx, fy)
   local chairs = 0
-  local skeletons = 0
-  local bookcases = 0
   for object, _ in pairs(objects) do
     if object.object_type.id == "lecture_chair" then
       chairs = chairs + 1
-    elseif object.object_type.id == "skeleton" then
-      skeletons = skeletons + 1
-    elseif object.object_type.id == "bookcase" then
-      bookcases = bookcases + 1
     end
   end
   -- Total staff occupancy: number of lecture chairs plus projector
   self.maximum_staff = { Doctor = chairs + 1 }
-  -- factor is divided by ten so the result from new algroithm will be similar to the old algorithm
-  self.training_factor = self:calculateTrainingFactor(skeletons, bookcases) / 10.0
+  self.training_factor = self:calculateTrainingFactor(objects)
 
   -- Also tell the player if he/she doesn't have a consultant yet.
   if self.hospital:countStaffOfCategory("Consultant", 1) == 0 then
@@ -74,21 +68,55 @@ function TrainingRoom:roomFinished()
   Room.roomFinished(self)
 end
 
-function TrainingRoom:calculateTrainingFactor(skeletons, bookcases)
-  -- TODO: tweak/change this function, used in Staff:trainSkill(...)
+--! Determine the training factor of this room for teaching specialisms
+--!param objects (table) the list of objects in this room
+--!return total (number) The final training factor
+function TrainingRoom:calculateTrainingFactor(objects)
+  -- Tally relevant objects that affect training
+  local function countTrainingObjects()
+    local counts = { projector = 0, skeleton = 0, bookcase = 0 }
+    for object, _ in pairs(objects) do
+      local obj_id = object.object_type.id
+      counts[obj_id] = counts[obj_id] and counts[obj_id] + 1 or nil
+    end
+    return counts
+  end
+  -- Work out total training factor using two averaging methods, choosing the best one
+  -- param factors(table) An array containing a count of each object and its raw
+  -- training value
+  -- returns the total effect
+  local function calculateTotalEffect(factors)
+    assert(factors,
+        "Unable to determine the training factor of a training room! " ..
+        "Reason: No inputs given")
+    local total_objects = 0
+    local total_value = 0
+    local num_factors = #factors
+    for _, factor in ipairs (factors) do
+      total_objects = total_objects + factor.count
+      -- Check we have at least one of this object and action accordingly
+      local multiplier = factor.count > 0 and (math.log(factor.count) + 1) or 0
+      total_value = total_value + (multiplier * factor.value)
+    end
+    assert(total_value > 0 and total_objects > 0,
+        "Unable to determine the training factor of a training room! " ..
+        "Reason: total_value and total_objects are both 0")
+    local average_1 = total_value / num_factors
+    local average_2 = total_value / total_objects
+    return math.max(average_1, average_2)
+  end
+
   -- Object values and training rate set in level config
   local level_config = self.world.map.level_config
-  local proj_val = 10
-  local book_val = 15
-  local skel_val = 20
-  local training_rate = 40
-  if level_config and level_config.gbv.TrainingRate then
-    book_val = level_config.gbv.TrainingValue[1]
-    skel_val = level_config.gbv.TrainingValue[2]
-    training_rate = level_config.gbv.TrainingRate
-  end
-  -- Training factor is just everything added together
-  return proj_val + skeletons*skel_val + bookcases*book_val + training_rate
+  local training_objects = countTrainingObjects()
+  -- Consolidate elements of training factor to an array
+  local training_value = level_config.gbv.TrainingValue
+  local training_factors = {
+    {count = training_objects.projector, value = training_value[0]},
+    {count = training_objects.skeleton, value = training_value[1]},
+    {count = training_objects.bookcase, value = training_value[2]},
+  }
+  return calculateTotalEffect(training_factors)
 end
 
 function TrainingRoom:getStaffCount()
@@ -246,6 +274,18 @@ function TrainingRoom:onHumanoidLeave(humanoid)
   end
 
   Room.onHumanoidLeave(self, humanoid)
+end
+
+function TrainingRoom:afterLoad(old, new)
+  if old < 233 then
+    -- Calculate the new training factor, unless we're currently editing the room
+    if self.built then
+      local fx, fy = self:getEntranceXY(true)
+      local objects = self.world:findAllObjectsNear(fx, fy)
+      self.training_factor = self:calculateTrainingFactor(objects)
+    end
+  end
+  Room.afterLoad(self, old, new)
 end
 
 return room
