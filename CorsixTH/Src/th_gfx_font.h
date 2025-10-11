@@ -62,6 +62,20 @@ struct text_layout {
   int width;
 };
 
+struct font_shadow_options {
+  //! Whether to draw a shadow
+  bool enabled{false};
+
+  //! Horizontal offset of the shadow, in pixels
+  int offset_x{1};
+
+  //! Vertical offset of the shadow, in pixels
+  int offset_y{1};
+
+  //! Colour of the shadow
+  argb_colour color{0xFF000000u};
+};
+
 class font {
  public:
   virtual ~font() = default;
@@ -226,6 +240,8 @@ class freetype_font final : public font {
 
   void set_font_color(argb_colour color);
 
+  void set_shadow_options(const font_shadow_options& options);
+
   text_layout get_text_dimensions(const char* sMessage, size_t iMessageLength,
                                   int iMaxWidth = INT_MAX) const override;
 
@@ -289,6 +305,7 @@ class freetype_font final : public font {
   static constexpr int cache_size_log2{7};
   FT_Face font_face{nullptr};
   argb_colour font_color{0};
+  font_shadow_options shadow_opts{};
   bool is_done_freetype_init{false};
   mutable cached_text cache[1 << cache_size_log2]{};
 
@@ -311,8 +328,12 @@ class freetype_font final : public font {
           an object which can be used by the rendering engine, and store the
           result in the pTexture or iTexture field.
   */
-  void make_texture(render_target* pEventualCanvas,
+  void make_texture(const render_target* pEventualCanvas,
                     cached_text* pCacheEntry) const;
+
+  static void copy_pixel_data(const cached_text* cacheEntry, argb_colour color,
+                              int offsetX, int offsetY,
+                              std::vector<argb_colour>::iterator outIter);
 
   //! Free a previously-made texture of a cache entry.
   /*!

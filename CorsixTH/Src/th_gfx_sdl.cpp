@@ -1693,25 +1693,49 @@ void freetype_font::free_texture(cached_text* pCacheEntry) const {
   }
 }
 
-void freetype_font::make_texture(render_target* pEventualCanvas,
+void freetype_font::make_texture(const render_target* pEventualCanvas,
                                  cached_text* pCacheEntry) const {
-  uint32_t* pPixels = new uint32_t[pCacheEntry->width * pCacheEntry->height];
-  std::memset(pPixels, 0,
-              pCacheEntry->width * pCacheEntry->height * sizeof(uint32_t));
-  uint8_t* pInRow = pCacheEntry->data;
-  uint32_t* pOutRow = pPixels;
-  uint32_t colorBase = font_color & 0xFFFFFF;
-  uint32_t alphaBase = (font_color >> 24) & 0xFF;
-  for (int iY = 0; iY < pCacheEntry->height;
-       ++iY, pOutRow += pCacheEntry->width, pInRow += pCacheEntry->width) {
-    for (int iX = 0; iX < pCacheEntry->width; ++iX) {
-      pOutRow[iX] = (pInRow[iX] * alphaBase / 255) << 24 | colorBase;
-    }
+  std::vector<argb_colour> pPixels(pCacheEntry->width * pCacheEntry->height, 0);
+  auto outIter = pPixels.begin();
+
+  if (shadow_opts.enabled) {
+    // When drawing a shadow we need to draw the text twice, first the shadow
+    // then the text itself. The top left corner of the text area is fixed so
+    // when the shadow is above or to the left of the text we need to offset the
+    // text itself down or right, otherwise we offset the shadow text.
+    copy_pixel_data(pCacheEntry, shadow_opts.color,
+                    std::max(shadow_opts.offset_x, 0),
+                    std::max(shadow_opts.offset_y, 0), outIter);
+    outIter = pPixels.begin();
+    copy_pixel_data(pCacheEntry, font_color, std::max(-shadow_opts.offset_x, 0),
+                    std::max(-shadow_opts.offset_y, 0), outIter);
+  } else {
+    copy_pixel_data(pCacheEntry, font_color, 0, 0, outIter);
   }
 
   pCacheEntry->texture = pEventualCanvas->create_texture(
-      pCacheEntry->width, pCacheEntry->height, pPixels);
-  delete[] pPixels;
+      pCacheEntry->width, pCacheEntry->height, pPixels.data());
+}
+
+void freetype_font::copy_pixel_data(
+    const cached_text* cacheEntry, const argb_colour color, const int offsetX,
+    const int offsetY, std::vector<argb_colour>::iterator outIter) {
+  const uint32_t colorBase = color & 0xFFFFFF;
+  const uint32_t alphaBase = (color >> 24) & 0xFF;
+
+  const uint8_t* inData = cacheEntry->data;
+
+  for (int iY = 0; iY < cacheEntry->height; ++iY) {
+    for (int iX = 0; iX < cacheEntry->width; ++iX) {
+      if (const int inIndex =
+              (iY - offsetY) * cacheEntry->width + (iX - offsetX);
+          inIndex >= 0 && inIndex < cacheEntry->width * cacheEntry->height &&
+          inData[inIndex]) {
+        *outIter = (inData[inIndex] * alphaBase / 255) << 24 | colorBase;
+      }
+      ++outIter;
+    }
+  }
 }
 
 void freetype_font::draw_texture(render_target* pCanvas,
