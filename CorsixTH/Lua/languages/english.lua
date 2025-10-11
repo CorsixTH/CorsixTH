@@ -293,6 +293,10 @@ adviser = {
     roujin_off_cheat = "Roujin's challenge deactivated. Everything will be back to normal soon.",
     norest_on_cheat = "Oh no! It appears your staff have consumed too much caffeine and no longer feel a need to rest.",
     norest_off_cheat = "Phew! Looks like that buzz finally wore off. Your staff will now rest properly.",
+    queuejump_on_cheat = "Your patients know how to queue. They let nearly dead patients go to the front of the line.",
+    queuejump_off_cheat = "People have turned selfish and are no longer letting nearly dead patients jump the queues.",
+    superdoctor_on_cheat = "A superb medical school has recommended you to their graduates! Check the staff for hire.",
+    superdoctor_off_cheat = "The medical school chief no longer recommends you to their graduates.",
   },
   staff_place_advice = {
     not_enough_lecture_chairs = "Each student doctor needs a lecture chair to sit in!",
