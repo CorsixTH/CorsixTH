@@ -52,17 +52,18 @@ function Staff:tickDay()
 
   -- if you overwork your Dr's then there is a chance that they can go crazy
   -- when this happens, find him and get him to rest straight away
-  if not self:isVeryTired() and self:isResting() then
+  if self:isVeryTired() or not self:isResting() then
+    -- Working when you should be taking a break will make you unhappy
+    if self:getAttribute("fatigue") >= self.hospital.policies["goto_staffroom"] then
+      self:changeAttribute("happiness", -0.02)
+    end
+    -- You will also start to become unhappy as you become tired
+    if self:getAttribute("fatigue") >= 0.5 then
+      self:changeAttribute("happiness", -0.01)
+    end
+  else -- You are resting, and no longer very tired. Things can only get better!
     self:setMood("tired", "deactivate")
     self:changeAttribute("happiness", 0.006)
-  end
-  -- Working when you should be taking a break will make you unhappy
-  if self:getAttribute("fatigue") >= self.hospital.policies["goto_staffroom"] then
-    self:changeAttribute("happiness", -0.02)
-  end
-  -- You will also start to become unhappy as you become tired
-  if self:getAttribute("fatigue") >= 0.5 then
-    self:changeAttribute("happiness", -0.01)
   end
 
   -- It is nice to see plants, but dead plants make you unhappy
@@ -72,32 +73,31 @@ function Staff:tickDay()
       self:changeAttribute("happiness", -0.003 + (plant:isPleasingFactor() * 0.001))
     end
   end)
-  -- It always makes you happy to see you are in safe place
-  self.world:findObjectNear(self, "extinguisher", 2, function()
-    self:changeAttribute("happiness", 0.002)
-  end)
-  -- Extra room items add to your happiness (some more than others)
-  self.world:findObjectNear(self, "bin", 2, function()
-    self:changeAttribute("happiness", 0.001)
-  end)
-  self.world:findObjectNear(self, "bookcase", 2, function()
-    self:changeAttribute("happiness", 0.003)
-  end)
-  self.world:findObjectNear(self, "skeleton", 2, function()
-    self:changeAttribute("happiness", 0.002)
-  end)
-  self.world:findObjectNear(self, "tv", 2, function()
-    self:changeAttribute("happiness", 0.0005)
-  end)
+
+  -- Seeing various nearby objects boost your happiness, some more than others
+  local good_objects = {
+    ["extinguisher"] = 0.002, -- Makes you feel safe
+    ["bin"]          = 0.001,
+    ["bookcase"]     = 0.003,
+    ["skeleton"]     = 0.002,
+    ["tv"]           = 0.0005,
+  }
+  for obj_name, happiness_score in pairs(good_objects) do
+    self.world:findObjectNear(self, obj_name, 2, function()
+      self:changeAttribute("happiness", happiness_score)
+    end)
+  end
+
+  -- List of positive rest activities and their happiness effect
+  local recreation = {
+    ["video_game"] = 0.08,
+    ["pool_table"] = 0.074,
+    ["sofa"]       = 0.05,
+  }
   -- Being able to rest from work and play the video game or pool will make you happy
-  if (self:getCurrentAction().name == "use_object" and self:getCurrentAction().object.object_type.id == "video_game") then
-   self:changeAttribute("happiness", 0.08)
-  end
-  if (self:getCurrentAction().name == "use_object" and self:getCurrentAction().object.object_type.id == "pool_table") then
-   self:changeAttribute("happiness", 0.074)
-  end
-  if (self:getCurrentAction().name == "use_object" and self:getCurrentAction().object.object_type.id == "sofa") then
-   self:changeAttribute("happiness", 0.05)
+  if self:getCurrentAction().name == "use_object" then
+    local happiness = recreation[self:getCurrentAction().object.object_type.id]
+    if happiness then self:changeAttribute("happiness", happiness) end
   end
 
   local room = self:getRoom()
