@@ -46,8 +46,16 @@ extern "C" {
 #define UINT64_C(c) (c##ULL)
 #endif
 #include <libavcodec/avcodec.h>
+// IWYU pragma: no_include <libavcodec/codec.h>
+// IWYU pragma: no_include <libavcodec/packet.h>
+// IWYU pragma: no_include <libavcodec/version.h>
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>  // IWYU pragma: keep
+// IWYU pragma: no_include <libavutil/channel_layout.h>
+// IWYU pragma: no_include <libavutil/frame.h>
+// IWYU pragma: no_include <libavutil/mem.h>
+// IWYU pragma: no_include <libavutil/pixfmt.h>
+// IWYU pragma: no_include <libavutil/version.h>
 #include <libswresample/swresample.h>
 }
 
@@ -205,7 +213,7 @@ class movie_picture_buffer {
   //! Return whether there is space to add any more frame data to the queue
   //!
   //! \remark Requires external locking
-  bool unsafe_full();
+  bool unsafe_full() const;
 
   //! The number of elements to allocate in the picture queue
   static constexpr std::size_t picture_buffer_size = 4;
@@ -323,6 +331,12 @@ class movie_player {
   //! Stop the currently playing movie
   void stop();
 
+  //! Pause the currently playing movie
+  //!
+  //! This method is not thread safe, it should only be called from the event
+  //! thread.
+  void togglePause();
+
   //! Return the original height of the movie
   int get_native_height() const;
 
@@ -331,6 +345,9 @@ class movie_player {
 
   //! Return whether the movie has an audio stream
   bool has_audio_track() const;
+
+  //! Return the length of the movie in milliseconds
+  double get_movie_length() const;
 
   //! Return a text description of the last error encountered
   const char* get_last_error() const;
@@ -343,7 +360,8 @@ class movie_player {
   //!
   //! \param destination_rect The location and dimensions in the renderer on
   //! which to draw the movie
-  void refresh(const SDL_Rect& destination_rect);
+  //! \returns The current presentation time stamp of the movie in milliseconds
+  double refresh(const SDL_Rect& destination_rect);
 
   //! Deallocate the picture buffer and free any resources associated with it.
   //!
@@ -426,6 +444,10 @@ class movie_player {
 
   //! Indicate that we are in the process of aborting playback
   std::atomic<bool> aborting;
+
+  //! Indicate that playback is paused
+  std::atomic<bool> paused{};
+  uint32_t pause_start_time{};  ///< The time in SDL ticks at which we paused
 
   std::mutex decoding_audio_mutex;  ///< Synchronize access to #m_pAudioBuffer
 

@@ -31,6 +31,7 @@ Inherit("original_strings", 1)
 ----------------------------------------------------------- Override -----------------------------------------------------------
 rooms_short.ward = "Salle des malades"
 rooms_long.ward = "Salle des malades"
+confirmation.replace_machine = "Voulez-vous vraiment remplacer cette machine %s pour $%d ?" -- French originally did not show machine name or cost
 
 misc.save_failed = "ERREUR : partie non sauvegardée." -- Much more french
 misc.cant_treat_emergency = "Votre hôpital ne peut pas traiter cette urgence car la maladie n'a pas été découverte. N'hésitez pas à réessayer."
@@ -503,7 +504,6 @@ confirmation = {
   overwrite_save = "Il y a déjà une partie sauvegardée ici. Êtes-vous sûr de vouloir l'écraser ?",
   delete_room = "Voulez-vous vraiment détruire cette salle ?",
   sack_staff = "Êtes-vous sûr de vouloir licencier ?",
-  replace_machine = "Voulez-vous vraiment remplacer cette machine ?"
 }
 
 -- The originals of these strings contain one space too much
@@ -587,7 +587,12 @@ menu_charts = {
   research = "  (%1%) RECHERCHE  ",
   status = "  (%1%) STATUTS  ",
   graphs = "  (%1%) GRAPHIQUES  ",
-  policy = "  (%1%) POLITIQUE "
+  policy = "  (%1%) POLITIQUE ",
+  machine_menu  = "  (%1%) MENU DES MACHINES",
+}
+
+tooltip.toolbar = {
+  machine_menu = "Menu des machines",
 }
 
 -- Debug menu
@@ -767,7 +772,8 @@ tooltip.main_menu = {
 
 -- Load game window
 load_game_window = {
-  caption = "Charger une partie"
+  caption = "Charger une partie",
+  load_button = "Charger",
 }
 
 tooltip.load_game_window = {
@@ -916,7 +922,8 @@ customise_window = {
   aliens = "Extraterrestres",
   fractured_bones = "Fractures",
   average_contents = "Achats mémorisés",
-  remove_destroyed_rooms = "Supprimer les salles détruites"
+  remove_destroyed_rooms = "Supprimer les salles détruites",
+  machine_menu_button = "Bouton du menu des machines",
 }
 
 tooltip.customise_window = {
@@ -928,7 +935,8 @@ tooltip.customise_window = {
   fractured_bones = "En raison de la qualité faible de l'animation il n'y a pas de patientes avec des fractures. Désactivez cette option si vous désirez avoir des femmes avec des fractures.",
   average_contents = "Si vous voulez que le jeu se rappelle des articles supplémentaires que vous avez tendance à normalement magasiner pour une nouvelle salle, activer cette option",
   back = "Fermer ce menu et revenir au menu d'options",
-  remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option"
+  remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option",
+  machine_menu_button = "Si vous voulez avoir un bouton pour le menu des machines dans le panneau inférieur, activez cette option. Gardez à l'esprit que ce bouton ne sera pas disponible sur des petites résolutions d'écran.",
 }
 
 folders_window = {
@@ -1211,6 +1219,34 @@ tooltip.calls_dispatcher = {
   close = "Ferme la boîte de dialogue de répartitions des tâches"
 }
 
+machine_menu = {
+  percentage = "%d%",
+  machine = "Machine",
+  remaining_strength = "Restant",
+  total_strength = "Résistance",
+  ratio = "Ratio",
+  close = "Fermer",
+}
+
+tooltip.machine_menu = {
+  sort = "Cliquer pour trier selon cette valeur.",
+  machine = "Liste des machines – Cliquer pour ouvrir la fenêtre de la machine et se rendre à son emplacement.",
+  smoking = "Cette case est cochée si la machine risque d’exploser. Cliquer pour acheter une nouvelle machine.",
+  assigned = "Cette case est cochée si un agent d’entretien est affecté à la réparation de la machine correspondante. Cliquer pour afficher l’agent assigné.",
+  remaining_strength = "Cette valeur indique la résistance restante de la machine.",
+  total_strength = "Cette valeur indique la résistance totale de la machine.",
+  ratio = "Cette valeur indique le rapport entre la résistance restante et la résistance totale.",
+  header = {
+    smoking = "Indicateur de danger",
+    assigned = "Indicateur d’affectation à la réparation",
+    machine = "Nom de la machine",
+    remaining_strength = "Résistance restante des machines.",
+    total_strength = "Résistance totale des machines.",
+    ratio = "Pourcentage de résistance restante par rapport à la résistance totale des machines.",
+  },
+  close = "Fermer la fenêtre de la liste des machines.",
+}
+
 -- Updates
 update_window = {
   caption = "Une mise à jour est disponible !",
@@ -1223,10 +1259,6 @@ update_window = {
 tooltip.update_window = {
   download = "Accédez à la page de téléchargement pour la toute dernière version de CorsixTH",
   ignore = "Ignorer cette mise à jour pour l'instant. Vous serez averti à nouveau lorsque vous ouvrez CorsixTH de nouveau"
-}
-
-tooltip.machine_window = {
-  toggle_machine_menu = "Cliquez pour afficher le menu des machines",
 }
 
 map_editor_window = {

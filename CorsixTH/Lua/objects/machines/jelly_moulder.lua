@@ -30,6 +30,7 @@ object.build_preview_animation = 928
 object.default_strength = 7
 object.crashed_animation = 3312
 object.show_in_town_map = true
+object.smoke_animation = 3440
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -113,6 +114,7 @@ object.orientations = {
                   {-1, 0}, {0, 0, complete_cell = true}, {1, 0, only_passable = true},
                   {-1, 1, only_passable = true, need_east_side = true}, },
     render_attach_position = {0, -1},
+    smoke_position = {0, 0},
   },
   east = {
     handyman_position = {-1, 2},
@@ -126,6 +128,7 @@ object.orientations = {
                   {-1, 0}, {0, 0, complete_cell = true},
                   {-1, 1, only_passable = true}, {0, 1, only_passable = true}, },
     render_attach_position = {-1, 0},
+    smoke_position = {0, 0},
   },
 }
 

@@ -33,10 +33,6 @@ local orient_mirror = {
   south = "east",
 }
 
-function Object:getDrawingLayer()
-  return 4
-end
-
 function Object:Object(hospital, object_type, x, y, direction, etc)
   assert(class.is(hospital, Hospital), "First argument is not a Hospital instance.")
 
@@ -835,7 +831,8 @@ function Object.processTypeDefinition(object_type)
         end
         for _, key in ipairs({"use_position_secondary",
                               "finish_use_position",
-                              "finish_use_position_secondary"}) do
+                              "finish_use_position_secondary",
+                              "smoke_position"}) do
           if details[key] then
             details[key][1] = details[key][1] - x
             details[key][2] = details[key][2] - y

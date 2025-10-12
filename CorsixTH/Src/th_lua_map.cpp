@@ -27,6 +27,7 @@ SOFTWARE.
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -69,21 +70,22 @@ int l_map_persist(lua_State* L) {
 }
 
 int l_map_depersist(lua_State* L) {
-  level_map* pMap = luaT_testuserdata<level_map>(L);
+  void* map_ud = luaT_testuserdata<level_map>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
-  pMap->depersist(pReader);
+  level_map* map = new (map_ud) level_map();
+  map->depersist(pReader);
   luaT_getenvfield(L, 2, "sprites");
-  pMap->set_block_sheet((sprite_sheet*)lua_touserdata(L, -1));
+  map->set_block_sheet((sprite_sheet*)lua_touserdata(L, -1));
   lua_pop(L, 1);
   return 0;
 }
 
 void l_map_load_obj_cb(void* pL, int iX, int iY, object_type eTHOB,
                        uint8_t iFlags) {
-  lua_State* L = reinterpret_cast<lua_State*>(pL);
+  lua_State* L = static_cast<lua_State*>(pL);
   lua_createtable(L, 4, 0);
 
   lua_pushinteger(L, 1 + (lua_Integer)iX);
@@ -310,7 +312,7 @@ int l_map_updateblueprint(lua_State* L) {
                    (is_valid(entire_invalid, pNode, pMap, player_id)
                         ? 0
                         : thdf_alt_palette));
-  pAnim->attach_to_tile(pNode, 0);
+  pAnim->attach_to_tile(iNewX, iNewY, pNode, 0);
 
   for (int iX = iNewX; iX < iNewX + iNewW; ++iX) {
     if (iX != iNewX) {
@@ -321,8 +323,8 @@ int l_map_updateblueprint(lua_State* L) {
                        (is_valid(entire_invalid, pNode, pMap, player_id)
                             ? 0
                             : thdf_alt_palette));
-      pAnim->attach_to_tile(pNode, 0);
-      pAnim->set_position(0, 0);
+      pAnim->attach_to_tile(iX, iNewY, pNode, 0);
+      pAnim->set_pixel_offset(0, 0);
     }
     pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
     pNode = pMap->get_tile_unchecked(iX, iNewY + iNewH - 1);
@@ -332,8 +334,8 @@ int l_map_updateblueprint(lua_State* L) {
                           ? 0
                           : thdf_alt_palette));
     pNode = pMap->get_tile_unchecked(iX, iNewY + iNewH);
-    pAnim->attach_to_tile(pNode, 0);
-    pAnim->set_position(0, -1);
+    pAnim->attach_to_tile(iX, iNewY + iNewH, pNode, 0);
+    pAnim->set_pixel_offset(0, -1);
   }
   for (int iY = iNewY; iY < iNewY + iNewH; ++iY) {
     if (iY != iNewY) {
@@ -344,8 +346,8 @@ int l_map_updateblueprint(lua_State* L) {
                        (is_valid(entire_invalid, pNode, pMap, player_id)
                             ? 0
                             : thdf_alt_palette));
-      pAnim->attach_to_tile(pNode, 0);
-      pAnim->set_position(2, 0);
+      pAnim->attach_to_tile(iNewX, iY, pNode, 0);
+      pAnim->set_pixel_offset(2, 0);
     }
     pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
     pNode = pMap->get_tile_unchecked(iNewX + iNewW - 1, iY);
@@ -355,8 +357,8 @@ int l_map_updateblueprint(lua_State* L) {
                           ? 0
                           : thdf_alt_palette));
     pNode = pMap->get_tile_unchecked(iNewX + iNewW, iY);
-    pAnim->attach_to_tile(pNode, 0);
-    pAnim->set_position(2, -1);
+    pAnim->attach_to_tile(iNewX + iNewW, iY, pNode, 0);
+    pAnim->set_pixel_offset(2, -1);
   }
 
   // Clear away extra animations
@@ -509,9 +511,9 @@ const std::map<std::string, map_tile_flags::key> lua_tile_flag_map{
  * @param flag Flag of the tile to check (and report).
  * @param name Name of the flag in Lua code.
  */
-inline void add_cellflag(lua_State* L, const map_tile* tile,
-                         map_tile_flags::key flag, const std::string& name) {
-  lua_pushlstring(L, name.c_str(), name.size());
+void add_cellflag(lua_State* L, const map_tile* tile,
+                  const map_tile_flags::key flag, const std::string_view name) {
+  lua_pushlstring(L, name.data(), name.size());
   lua_pushboolean(L, tile->flags[flag] ? 1 : 0);
   lua_settable(L, 4);
 }
@@ -522,8 +524,8 @@ inline void add_cellflag(lua_State* L, const map_tile* tile,
  * @param value Value of the tile field to add.
  * @param name Name of the field in Lua code.
  */
-inline void add_cellint(lua_State* L, int value, const std::string& name) {
-  lua_pushlstring(L, name.c_str(), name.size());
+void add_cellint(lua_State* L, const int value, const std::string_view name) {
+  lua_pushlstring(L, name.data(), name.size());
   lua_pushinteger(L, value);
   lua_settable(L, 4);
 }
@@ -913,15 +915,15 @@ int l_path_persist(lua_State* L) {
 }
 
 int l_path_depersist(lua_State* L) {
-  pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
+  void* pathfinder_ud = luaT_testuserdata<pathfinder>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
-  pPathfinder->depersist(pReader);
+  pathfinder* pf = new (pathfinder_ud) pathfinder();
+  pf->depersist(pReader);
   luaT_getenvfield(L, 2, "map");
-  pPathfinder->set_default_map(
-      reinterpret_cast<level_map*>(lua_touserdata(L, -1)));
+  pf->set_default_map(static_cast<level_map*>(lua_touserdata(L, -1)));
   return 0;
 }
 

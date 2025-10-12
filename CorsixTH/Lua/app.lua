@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 230 -- Post 0.69.0 bump
+local SAVEGAME_VERSION = 232 -- Font options
 
 class "App"
 
@@ -285,7 +285,7 @@ function App:init()
   corsixth.require("string_extensions")
   self.strings = Strings(self)
   self.strings:init()
-  local language_load_success = self:initLanguage()
+  local language_load_success, language_error = self:initLanguage()
   if (self.command_line.dump or ""):match("strings") then
     -- Specify --dump=strings on the command line to dump strings
     -- (or insert "true or" after the "if" in the above)
@@ -368,9 +368,7 @@ function App:init()
     if not language_load_success then
       -- At this point we know the language is english, so no use having
       -- localized strings.
-      self.ui:addWindow(UIInformation(self.ui, { "The game language has been reverted" ..
-          " to English because the desired language could not be loaded. " ..
-          "Please make sure you have specified a font file in the config file." }))
+      self.ui:addWindow(UIInformation(self.ui, { language_error }))
     end
 
     -- If the player wants to continue then load the youngest file in the Autosaves folder
@@ -506,21 +504,41 @@ function App:initScreenshotsDir()
   return true
 end
 
+--! Initialises the application's language based on the player's choice.
+--!return success (boolean) Whether the chosen language was initialised
+--!return err (string) What to report back to the player on failure
 function App:initLanguage()
   -- Make sure that we can actually show the desired language.
-  -- If we can't, then the player probably didn't specify a font file
-  -- in the config file properly.
-  local success = true
+  -- If we can't, work out the most common issue and reset to English.
+  local success, err = true, nil
   local language = self.config.language
+  local function revertToEnglish()
+    language = [[English]]
+    self.config.language = language
+    self:saveConfig()
+    success = false
+  end
+
+  local exists = self.strings:checkLanguageExists(language)
+  if not exists then
+    -- Not existent language, revert to English.
+    err = "The game language set in the configuration file '" .. language ..
+          "' was not valid. It has been reverted to English. Please select your" ..
+          " desired language from the Settings screen again."
+    revertToEnglish()
+  end
+
   local font = self.strings:getFont(language)
   if self.gfx:hasLanguageFont(font) then
     self.gfx.language_font = font
   else
-    -- Otherwise revert to english.
-    self.gfx.language_font = self.strings:getFont("english")
-    language = "english"
-    self.config.language = "english"
-    success = false
+    -- Font unavailable, revert to English.
+    err = "The game language has been reverted to English because the desired" ..
+          " language '" .. language .. "' could not be loaded. Please make sure" ..
+          " you have specified a font file in Settings-Folders-Font or the" ..
+          " configuration file."
+    revertToEnglish()
+    self.gfx.language_font = self.strings:getFont([[English]])
   end
 
   local strings, speech_file = self.strings:load(language)
@@ -553,7 +571,7 @@ function App:initLanguage()
     self.ui:onChangeLanguage()
   end
   self.audio:initSpeech(speech_file)
-  return success
+  return success, err
 end
 
 function App:worldExited()
@@ -689,7 +707,7 @@ function App:readLevelFile(level, campaign_dir)
   if filename:match(self.level_dir .. "original%d%d%.level") then
     level_info.map_file = map_file
   elseif map_file then
-    if map_file:lower():match("^level") then
+    if map_file:lower():match("^level%.l%d+$") then
       level_info.map_file = map_file
     else
       level_info.map_file = self:_checkOrFind(map_file, campaign_dir)
@@ -985,24 +1003,33 @@ function App:fixConfig()
     -- For language, make language name lower case
     if key == "language" and type(value) == "string" then
       self.config[key] = value:lower()
-    end
 
     -- For resolution, check that resolution is at least 640x480
-    if key == "width" and type(value) == "number" and value < 640 then
+    elseif key == "width" and type(value) == "number" and value < 640 then
       self.config[key] = 640
-    end
 
-    if key == "height" and type(value) == "number" and value < 480 then
+    elseif key == "height" and type(value) == "number" and value < 480 then
       self.config[key] = 480
-    end
 
-    if (key == "scroll_speed" or key == "shift_scroll_speed") and
+    elseif (key == "scroll_speed" or key == "shift_scroll_speed") and
         type(value) == "number" then
       if value > 10 then
         self.config[key] = 10
       elseif value < 1 then
         self.config[key] = 1
       end
+
+    -- For player name, trim spaces or fill in from environment
+    elseif key == "player_name" then
+      value = value:match('^%s*(.*%S)') or "" -- Trim spaces
+      if value:len() == 0 then -- If empty, use computer user's name,
+        value = os.getenv("USER") or os.getenv("USERNAME")
+      end
+      value = value:match('^%s*(.*%S)') or ""
+      if value:len() == 0 then -- unless that is also empty
+        value = "PLAYER"
+      end
+      self.config[key] = value
     end
   end
 end
@@ -1713,6 +1740,7 @@ local release_table = {
   {major = 0, minor = 69, revision = 0, patch = "-beta2", version = 218},
   {major = 0, minor = 69, revision = 0, patch = "-rc1", version = 219},
   {major = 0, minor = 69, revision = 0, patch = "", version = 220},
+  {major = 0, minor = 69, revision = 1, patch = "", version = 221},
 }
 
 --! Retrieve the current savegame version as defined in the application.

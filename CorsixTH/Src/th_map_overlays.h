@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include <cstddef>
 #include <string>
+#include <string_view>
 
 class font;
 class level_map;
@@ -41,7 +42,7 @@ class map_overlay {
 
 class map_overlay_pair : public map_overlay {
  public:
-  map_overlay_pair();
+  map_overlay_pair() = default;
   ~map_overlay_pair() override;
 
   void set_first(map_overlay* pOverlay, bool bTakeOwnership);
@@ -51,33 +52,32 @@ class map_overlay_pair : public map_overlay {
                  const level_map* pMap, int iNodeX, int iNodeY) override;
 
  private:
-  map_overlay *first, *second;
-  bool owns_first, owns_second;
+  map_overlay *first{nullptr}, *second{nullptr};
+  bool owns_first{false}, owns_second{false};
 };
 
 class map_typical_overlay : public map_overlay {
  public:
-  map_typical_overlay();
+  map_typical_overlay() = default;
   ~map_typical_overlay() override;
 
   void set_sprites(sprite_sheet* pSheet, bool bTakeOwnership);
   void set_font(::font* font, bool take_ownership);
 
  protected:
-  void draw_text(render_target* pCanvas, int iX, int iY,
-                 const std::string& str);
+  void draw_text(render_target* pCanvas, int iX, int iY, std::string_view str);
 
-  sprite_sheet* sprites;
-  ::font* font;
+  sprite_sheet* sprites{nullptr};
+  ::font* font{nullptr};
 
  private:
-  bool owns_sprites;
-  bool owns_font;
+  bool owns_sprites{false};
+  bool owns_font{false};
 };
 
 class map_text_overlay : public map_typical_overlay {
  public:
-  map_text_overlay();
+  map_text_overlay() = default;
   ~map_text_overlay() override = default;
 
   void draw_cell(render_target* pCanvas, int iCanvasX, int iCanvasY,
@@ -88,7 +88,7 @@ class map_text_overlay : public map_typical_overlay {
                                      int iNodeY) = 0;
 
  private:
-  size_t background_sprite;
+  size_t background_sprite{};
 };
 
 class map_positions_overlay final : public map_text_overlay {

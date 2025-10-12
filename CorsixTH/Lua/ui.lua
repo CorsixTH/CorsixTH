@@ -215,6 +215,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler("global_cancel_alt", self, self.closeWindow)
   self:addKeyHandler("global_stop_movie", self, self.stopMovie)
   self:addKeyHandler("global_stop_movie_alt", self, self.stopMovie)
+  self:addKeyHandler("global_pause_movie", self, self.pauseMovie)
   self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
   self:addKeyHandler("global_fullscreen_toggle", self, self.fullscreenHotkey)
   self:addKeyHandler("global_exitApp", self, self.exitApplication)
@@ -1106,16 +1107,20 @@ end
 function UI:tutorialStep(...)
 end
 
+--! Perform the Screenshot action (usually by key bind 'global_screenshot')
 function UI:makeScreenshot()
-   -- Find an index for screenshot which is not already used
-  local i = 0
-  local filename
-  repeat
-    filename = TheApp.screenshot_dir .. ("screenshot%i.png"):format(i)
-    i = i + 1
-  until lfs.attributes(filename, "size") == nil
-  print("Taking screenshot: " .. filename)
-  local res, err = self.app.video:takeScreenshot(filename) -- Take screenshot
+  -- Generate filename
+  local timestamp = os.date("%Y%m%d-%H%M%S")
+  local filename = TheApp.screenshot_dir .. ("Screenshot_%s.png"):format(timestamp)
+
+  -- It's very unlikely you intentionally want multiple screenshots a second
+  if lfs.attributes(filename, "size") ~= nil then
+    print("Screenshot failed: File already exists")
+    return
+  end
+
+  -- Take screenshot
+  local res, err = self.app.video:takeScreenshot(filename)
   if not res then
     print("Screenshot failed: " .. err)
   else
@@ -1174,6 +1179,12 @@ end
 function UI:stopMovie()
   if self.app.moviePlayer.playing then
     self.app.moviePlayer:stop()
+  end
+end
+
+function UI:pauseMovie()
+  if self.app.moviePlayer.playing then
+    self.app.moviePlayer:togglePause()
   end
 end
 

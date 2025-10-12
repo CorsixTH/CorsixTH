@@ -20,6 +20,15 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.69.1" date="2025-08-16" type="stable">
+      <description>
+        <p>Bug fixes:</p>
+        <ul>
+          <li>Fixed a crash when placing staff in a room while a patient is being
+            treated</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.69.0" date="2025-07-26" type="stable">
       <description>
         <p>New Features/Enhancements:</p>

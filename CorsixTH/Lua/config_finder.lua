@@ -124,6 +124,8 @@ local config_defaults = {
   disable_fractured_bones_females = true,
   enable_avg_contents = false,
   remove_destroyed_rooms = false,
+  machine_menu_button = true,
+  enable_screen_shake = true,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
@@ -140,7 +142,6 @@ local config_defaults = {
   allow_blocking_off_areas = false,
   direct_zoom = nil,
   new_machine_extra_info = true,
-  debug_falling = false,
   player_name = [[]],
 }
 
@@ -392,7 +393,19 @@ local string_01 = [=[
 -- By default destroyed rooms can't be removed. If you would like the game to
 -- give you the option of removing a destroyed room change this option to true.
 --]=] .. '\n' ..
-'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[]=]
+'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default machine menu is shown in a bottom panel. If you would like the
+-- game to hide it change this option to false.
+--]=] .. '\n' ..
+'machine_menu_button = ' .. tostring(config_values.machine_menu_button) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default the entire screen will shake during earthquakes. If you would
+-- like the game to keep the screen stationary, change this option to false.
+--]=] .. '\n' ..
+'enable_screen_shake = ' .. tostring(config_values.enable_screen_shake) .. '\n' .. [=[]=]
 
 local string_02 = [=[
 
@@ -495,13 +508,6 @@ soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
 --]=] .. '\n' ..
 'debug = ' .. tostring(config_values.debug) .. '\n' .. [=[
 
--- Experimental setting for falling patients. (debug only!)
--- CorsixTH does not yet have reliable handling for falling actions and enabling it
--- could cause dropped action queues or undesired bugs. You should leave this setting
--- off unless you're developing with it
---]=] .. '\n' ..
-'debug_falling = ' .. tostring(config_values.debug_falling) .. '\n' .. [=[
-
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
 -- off the FPS limiter, causing much higher CPU utilisation, but resulting in
@@ -583,6 +589,7 @@ local hotkeys_defaults = {
   global_screenshot = {"ctrl", "s"},
   global_stop_movie = "escape",
   global_stop_movie_alt = "q",
+  global_pause_movie = "p",
   global_window_close = "escape",
   global_window_close_alt = "q",
   ingame_showmenubar = "escape",
@@ -725,6 +732,7 @@ if hotkeys_needs_rewrite and TheApp then
 'global_runDebugScript = ' .. hotkeys_values.global_runDebugScript .. '\n' ..
 'global_screenshot = ' .. hotkeys_values.global_screenshot .. '\n' ..
 'global_stop_movie = ' .. hotkeys_values.global_stop_movie .. '\n' ..
+'global_pause_movie = ' .. hotkeys_values.global_pause_movie .. '\n' ..
 'global_window_close = ' .. hotkeys_values.global_window_close .. '\n' ..
 'global_stop_movie_alt =' .. hotkeys_values.global_stop_movie_alt .. '\n' ..
 'global_window_close_alt =' .. hotkeys_values.global_window_close_alt .. '\n' .. [=[

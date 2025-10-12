@@ -262,7 +262,8 @@ function Room:getMissingStaff(criteria)
       -- check if answering a call to another room
       if class.is(humanoid, Staff) and humanoid:fulfillsCriterion(attribute) and
           not humanoid:isLeaving() and not humanoid.fired and
-          not (humanoid.on_call and humanoid.on_call.object ~= self) then
+          not (humanoid.on_call and humanoid.on_call.object ~= self) and
+          not humanoid.going_to_staffroom then
         count = count - 1
       end
     end

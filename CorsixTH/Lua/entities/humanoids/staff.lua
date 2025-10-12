@@ -510,17 +510,18 @@ function Staff:adviseWrongPersonForThisRoom()
 end
 
 --! Check whether staff are meandering
---"meander" action always insert "move" or "idle" action before itself.
---so when humanoid "meandering" his action queue usually looks like:
---[1 idle, 2 meander] or [1 walk, 2 meander].
 --!return true if staff currently has a meander action
 function Staff:isMeandering()
-  if ((self.action_queue[1].name == "idle") or
-    (self.action_queue[1].name == "walk")) and
-    (self.action_queue[2].name == "meander") then
-    return true
-  end
-  return false
+  if #self.action_queue < 2 then return false end
+
+  -- "meander" action always insert "move" or "idle" action before itself.
+  -- so when humanoid "meandering" his action queue usually looks like:
+  -- [1 idle, 2 meander] or [1 walk, 2 meander].
+  local idle_is_first = self.action_queue[1].name == "idle"
+  local walk_is_first = self.action_queue[1].name == "walk"
+  local meander_is_second = self.action_queue[2].name == "meander"
+
+  return (idle_is_first or walk_is_first) and meander_is_second
 end
 
 -- Function to decide if staff currently has nothing to do and can be called to a room where they're needed
@@ -559,15 +560,13 @@ function Staff:isIdle()
     -- or if the only one in sight is actually leaving.
     return not room:isRoomInDemand()
   else
-    -- In the corridor and not on_call (watering or going to room), the staff is free
-    -- unless going back to the training room or research department.
-    local x, y = self:getCurrentAction().x, self:getCurrentAction().y
-    if x then
-      room = self.world:getRoom(x, y)
-      if room and (room.room_info.id == "training" or room.room_info.id == "research") then
-        return false
-      end
+    -- In the corridor and not on_call (e.g. watering or going to room).
+    -- The staff is free, unless going back to the training/research.
+    room = self.last_room
+    if room and (room.room_info.id == "training" or room.room_info.id == "research") then
+      return false
     end
+
     return true
   end
 end
@@ -723,10 +722,6 @@ function Staff:afterLoad(old, new)
 
   self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
-end
-
-function Staff:getDrawingLayer()
-  return 4
 end
 
 --! Estimate staff service quality based on skills, restfulness (inverse of fatigue) and happiness.

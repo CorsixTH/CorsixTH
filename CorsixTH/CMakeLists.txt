@@ -95,11 +95,11 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/Src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/SrcUnshared)
 
 # Set language standard
-set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 14)
+set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 17)
 set_property(TARGET CorsixTH_lib PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD_REQUIRED ON)
 
-set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 14)
+set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 17)
 set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
@@ -307,7 +307,7 @@ if(NOT USE_SOURCE_DATADIRS)
   endif()
   install(DIRECTORY Campaigns Lua Levels DESTINATION ${CORSIX_TH_DATADIR})
   install(DIRECTORY Bitmap DESTINATION ${CORSIX_TH_DATADIR}
-    FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
+    FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png|pl8)$"
   )
   install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
 

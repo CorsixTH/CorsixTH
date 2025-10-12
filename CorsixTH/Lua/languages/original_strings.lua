@@ -1862,16 +1862,28 @@ bank_manager = {
   },
 }
 
+-- Lose movie headlines
 newspaper = {
-  -- Seven categories of funny headlines. I think each category is related
-  -- to one criterion you can lose to. TODO: categorize
-  { S[38][ 1], S[38][ 2], S[38][ 3], S[38][ 4], S[38][ 5]            },
+  -- LOSE1.SMK (Frankenstein)
+  { S[38][ 1], S[38][ 2], S[38][ 3], S[38][ 4], S[38][ 5] },
+
+  -- LOSE2.SMK (Drunk/party mess)
   { S[38][ 7], S[38][ 8], S[38][ 9], S[38][10], S[38][11], S[38][12] },
-  { S[38][14], S[38][15], S[38][16], S[38][17]                       },
-  { S[38][19], S[38][20], S[38][21], S[38][22]                       },
+
+  -- LOSE3.SMK (closet with nurse)
+  { S[38][14], S[38][15], S[38][16], S[38][17] },
+
+  -- LOSE4.SMK (sports car)
+  { S[38][19], S[38][20], S[38][21], S[38][22] },
+
+  -- LOSE5.SMK (grave digging)
   { S[38][24], S[38][25], S[38][26], S[38][27], S[38][28], S[38][29] },
-  { S[38][31], S[38][32], S[38][33], S[38][34],                      },
-  { S[38][36], S[38][37], S[38][38], S[38][39], S[38][40]            },
+
+  -- Unused headlines
+  -- { S[38][31], S[38][32], S[38][33], S[38][34] },
+
+  -- LOSE6.SMK (toilet with magazine)
+  { S[38][36], S[38][37], S[38][38], S[38][39], S[38][40] },
 }
 
 -- 39: letters

@@ -205,7 +205,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
         self.hospital:giveAdvice({_A.staff_place_advice.not_enough_lecture_chairs})
         humanoid:setNextAction(self:createLeaveAction())
         humanoid:queueAction(MeanderAction())
-        humanoid.last_room = nil
+        humanoid.last_room = nil -- Prevent Doctor returning to this room automatically
       end
     end
   elseif humanoid.humanoid_class ~= "Handyman" then

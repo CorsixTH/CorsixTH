@@ -36,7 +36,8 @@ SOFTWARE.
 #include "persist_lua.h"
 #include "th_map.h"
 
-abstract_pathfinder::abstract_pathfinder(pathfinder* pf) : parent(pf) {}
+abstract_pathfinder::abstract_pathfinder(pathfinder* pf)
+    : parent(pf), map(nullptr) {}
 
 path_node* abstract_pathfinder::init(const level_map* pMap, int iStartX,
                                      int iStartY) {
@@ -460,7 +461,6 @@ pathfinder::pathfinder()
     : default_map(nullptr),
       nodes({}),
       dirty_node_list(nullptr),
-      open_heap(),
       destination(nullptr),
       node_cache_width(0),
       node_cache_height(0),
@@ -639,8 +639,6 @@ void pathfinder::persist(lua_persist_writer* pWriter) const {
 }
 
 void pathfinder::depersist(lua_persist_reader* pReader) {
-  new (this) pathfinder;  // Call constructor
-
   int iLength;
   if (!pReader->read_uint(iLength)) {
     return;

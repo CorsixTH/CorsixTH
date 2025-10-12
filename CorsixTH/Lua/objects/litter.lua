@@ -108,7 +108,7 @@ function Litter:remove()
 end
 
 function Litter:getDrawingLayer()
-  return 0
+  return DrawingLayers.Litter
 end
 
 function Litter:vomitInducing()

@@ -248,30 +248,15 @@ map_tile_flags::operator uint32_t() const {
   return raw;
 }
 
-map_tile::map_tile() : iParcelId(0), iRoomId(0), flags({}), objects{}, raw{} {
-  tile_layers[tile_layer::ground] = 0;
-  tile_layers[tile_layer::north_wall] = 0;
-  tile_layers[tile_layer::west_wall] = 0;
-  tile_layers[tile_layer::ui] = 0;
-  aiTemperature[0] = aiTemperature[1] = 8192;
-}
+map_tile::map_tile()
+    : iParcelId(0),
+      iRoomId(0),
+      flags({}),
+      raw{},
+      tile_layers{},
+      aiTemperature{8192, 8192} {}
 
-level_map::level_map()
-    : cells(nullptr),
-      original_cells(nullptr),
-      wall_blocks(nullptr),
-      overlay(nullptr),
-      owns_overlay(false),
-      plot_owner(nullptr),
-      width(0),
-      height(0),
-      player_count(0),
-      parcel_count(0),
-      current_temperature_index(0),
-      current_temperature_theme(temperature_theme::red),
-      parcel_tile_counts(nullptr),
-      parcel_adjacency_matrix(nullptr),
-      purchasable_matrix(nullptr) {}
+level_map::level_map() = default;
 
 level_map::~level_map() {
   set_overlay(nullptr, false);
@@ -719,11 +704,11 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId,
       }
       if (addRemoveDividerWalls(this, pNode, pOriginalNode, iX, 1,
                                 tile_layer::west_wall, iParcelId)) {
-        vSplitTiles.push_back(std::make_pair(iX, iY));
+        vSplitTiles.emplace_back(iX, iY);
       }
       if (addRemoveDividerWalls(this, pNode, pOriginalNode, iY, this->width,
                                 tile_layer::north_wall, iParcelId)) {
-        vSplitTiles.push_back(std::make_pair(iX, iY));
+        vSplitTiles.emplace_back(iX, iY);
       }
     }
   }
@@ -1497,7 +1482,6 @@ void level_map::update_shadows() {
 
 void level_map::persist(lua_persist_writer* pWriter) const {
   lua_State* L = pWriter->get_stack();
-  integer_run_length_encoder oEncoder;
 
   uint32_t iVersion = 5;
   pWriter->write_uint(iVersion);
@@ -1518,7 +1502,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   pWriter->write_uint(width);
   pWriter->write_uint(height);
   pWriter->write_uint(current_temperature_index);
-  oEncoder.initialise(6);
+  integer_run_length_encoder oEncoder(6);
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
     oEncoder.write(pNode->tile_layers[tile_layer::ground]);
@@ -1547,7 +1531,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   oEncoder.finish();
   oEncoder.pump_output(pWriter);
 
-  oEncoder.initialise(5);
+  oEncoder = integer_run_length_encoder(5);
   for (map_tile *pNode = original_cells,
                 *pLimitNode = original_cells + width * height;
        pNode != pLimitNode; ++pNode) {
@@ -1561,12 +1545,21 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   oEncoder.pump_output(pWriter);
 }
 
-void level_map::depersist(lua_persist_reader* pReader) {
-  new (this) level_map;  // Call constructor
+namespace {
+//! Assign the tile position in the map to the just loaded animations.
+void restore_map_position(animation_base* anim, int tile_x_pos,
+                          int tile_y_pos) {
+  while (anim != nullptr) {
+    anim->set_tile(tile_x_pos, tile_y_pos);
+    anim = dynamic_cast<animation_base*>(anim->next);
+  }
+}
 
+}  // namespace
+
+void level_map::depersist(lua_persist_reader* pReader) {
   lua_State* L = pReader->get_stack();
   int iWidth, iHeight;
-  integer_run_length_decoder oDecoder;
 
   uint32_t iVersion;
   if (!pReader->read_uint(iVersion)) return;
@@ -1619,8 +1612,17 @@ void level_map::depersist(lua_persist_reader* pReader) {
     }
   }
 
+  int tile_x_pos = -1;
+  int tile_y_pos = 0;
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
+    // Update tile 2D position.
+    tile_x_pos++;
+    if (tile_x_pos == width) {
+      tile_x_pos = 0;
+      tile_y_pos++;
+    }
+
     uint32_t f;
     if (!pReader->read_uint(f)) return;
 
@@ -1636,26 +1638,36 @@ void level_map::depersist(lua_persist_reader* pReader) {
     }
 
     if (!pReader->read_stack_object()) return;
-    pNode->entities.next = luaT_toanimationbase(L, -1);
+
+    animation_base* anim = luaT_toanimationbase(L, -1);
+    restore_map_position(anim, tile_x_pos, tile_y_pos);
+
+    pNode->entities.next = anim;
     if (pNode->entities.next) {
       if (pNode->entities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
       }
       pNode->entities.next->prev = &pNode->entities;
     }
-    lua_pop(L, 1);
 
+    lua_pop(L, 1);
     if (!pReader->read_stack_object()) return;
-    pNode->oEarlyEntities.next = luaT_toanimationbase(L, -1);
+
+    animation_base* early_anim = luaT_toanimationbase(L, -1);
+    restore_map_position(early_anim, tile_x_pos, tile_y_pos);
+
+    pNode->oEarlyEntities.next = early_anim;
     if (pNode->oEarlyEntities.next) {
       if (pNode->oEarlyEntities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
       }
       pNode->oEarlyEntities.next->prev = &pNode->oEarlyEntities;
     }
+
     lua_pop(L, 1);
   }
-  oDecoder.initialise(6, pReader);
+
+  integer_run_length_decoder oDecoder(6, pReader);
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
     pNode->tile_layers[tile_layer::ground] =
@@ -1668,7 +1680,8 @@ void level_map::depersist(lua_persist_reader* pReader) {
     pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
     pNode->iRoomId = static_cast<uint16_t>(oDecoder.read());
   }
-  oDecoder.initialise(5, pReader);
+
+  oDecoder = integer_run_length_decoder(5, pReader);
   for (map_tile *pNode = original_cells,
                 *pLimitNode = original_cells + width * height;
        pNode != pLimitNode; ++pNode) {
@@ -1689,14 +1702,6 @@ void level_map::depersist(lua_persist_reader* pReader) {
   }
 }
 
-map_tile_iterator::map_tile_iterator()
-    : tile(nullptr),
-      container(nullptr),
-      screen_offset_x(0),
-      screen_offset_y(0),
-      screen_width(0),
-      screen_height(0) {}
-
 map_tile_iterator::map_tile_iterator(
     const level_map* pMap, int iScreenX, int iScreenY, int iWidth, int iHeight,
     map_scanline_iterator_direction eScanlineDirection)
@@ -1705,7 +1710,6 @@ map_tile_iterator::map_tile_iterator(
       screen_offset_y(iScreenY),
       screen_width(iWidth),
       screen_height(iHeight),
-      scanline_count(0),
       direction(eScanlineDirection) {
   if (direction == map_scanline_iterator_direction::forward) {
     base_x = 0;
@@ -1802,16 +1806,14 @@ map_scanline_iterator::map_scanline_iterator()
       tile_step(0),
       x_step(0),
       x_relative_to_screen(0),
-      y_relative_to_screen(0),
-      steps_taken(0) {}
+      y_relative_to_screen(0) {}
 
 map_scanline_iterator::map_scanline_iterator(
     const map_tile_iterator& itrNodes,
     map_scanline_iterator_direction eDirection, int iXOffset, int iYOffset)
     : tile_step((static_cast<int>(eDirection) - 1) *
                 (1 - itrNodes.container->get_width())),
-      x_step((static_cast<int>(eDirection) - 1) * 64),
-      steps_taken(0) {
+      x_step((static_cast<int>(eDirection) - 1) * 64) {
   if (eDirection == map_scanline_iterator_direction::backward) {
     tile = itrNodes.tile;
     x_relative_to_screen = itrNodes.tile_x_position_on_screen();

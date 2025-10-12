@@ -25,24 +25,21 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <cstdio>
-#include <cstring>
 #include <map>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
 #include "lua.hpp"
 #include "th.h"
 #include "th_gfx_common.h"
+#include "th_gfx_sdl.h"
 #include "th_lua.h"
 
 class lua_persist_reader;
 class lua_persist_writer;
 class memory_reader;
-class render_target;
-class sprite_sheet;
-struct clip_rect;
 struct map_tile;
 
 enum class scaled_items { none, sprite_sheets, bitmaps, all };
@@ -95,18 +92,6 @@ enum draw_flags : uint32_t {
   thdf_nearest = 1 << 14,
 };
 
-/** Helper structure with parameters to create a #render_target. */
-struct render_target_creation_params {
-  int width;               ///< Expected width of the render target.
-  int height;              ///< Expected height of the render target.
-  int bpp;                 ///< Expected colour depth of the render target.
-  bool fullscreen;         ///< Run full-screen.
-  bool present_immediate;  ///< Whether to present immediately to the user
-                           ///< (else wait for Vsync).
-  bool direct_zoom;  ///< Scale each texture when copying if true, otherwise
-                     ///< render to intermediate texture and scale.
-};
-
 /*!
     Base class for a linked list of drawable objects.
     Note that "object" is used as a generic term, not in specific reference to
@@ -114,7 +99,7 @@ struct render_target_creation_params {
 */
 // TODO: Replace this struct with something cleaner
 struct drawable : public link_list {
-  drawable() : link_list() { drawing_layer = 0; }
+  drawable() = default;
 
   //! Draw the object at a specific point on a render target
   /*!
@@ -138,10 +123,10 @@ struct drawable : public link_list {
   void set_drawing_layer(int layer) { drawing_layer = layer; }
 
   //! Drawing flags (zero or more list flags from #draw_flags).
-  uint32_t flags;
+  uint32_t flags{0};
 
  private:
-  int drawing_layer;
+  int drawing_layer{0};
 };
 
 /*!
@@ -154,16 +139,11 @@ class chunk_renderer {
   /*!
       @param width Pixel width of the resulting image
       @param height Pixel height of the resulting image
-      @param buffer If nullptr, then a new buffer is created to render the
-     image onto. Otherwise, should be an array at least width*height in size.
-        Ownership of this pointer is assumed by the class - call takeData()
-        to take ownership back again.
+      @param start An iterator to the start writing the resulting image to.
+                   Must point to a container of at least width * height.
   */
-  chunk_renderer(int width, int height, uint8_t* buffer = nullptr);
+  chunk_renderer(int width, int height, std::vector<uint8_t>::iterator start);
 
-  ~chunk_renderer();
-
-  // TODO: Should be function, not method of chunk_renderer
   //! Convert a stream of chunks into a raw bitmap
   /*!
       @param pData Stream data.
@@ -171,21 +151,8 @@ class chunk_renderer {
       @param bComplex true if pData is a stream of "complex" chunks, false if
         pData is a stream of "simple" chunks. Passing the wrong value will
         usually result in a very visible wrong result.
-
-      Use getData() or takeData() to obtain the resulting bitmap.
   */
   void decode_chunks(const uint8_t* pData, int iDataLen, bool bComplex);
-
-  //! Get the result buffer, and take ownership of it
-  /*!
-      This transfers ownership of the buffer to the caller. After calling,
-      the class will not have any buffer, and thus cannot be used for
-      anything.
-  */
-  uint8_t* take_data();
-
-  //! Get the result buffer
-  inline const uint8_t* get_data() const { return data; }
 
   //! Perform a "copy" chunk (normally called by decodeChunks)
   void chunk_copy(int npixels, const uint8_t* in_data);
@@ -200,13 +167,14 @@ class chunk_renderer {
   void chunk_finish(uint8_t value);
 
  private:
-  inline bool is_done() { return ptr == end; }
+  inline bool is_done() const { return ptr == end; }
   inline void fix_n_pixels(int& npixels) const;
   inline void increment_position(int npixels);
 
-  uint8_t *data, *ptr, *end;
-  int x, y, width, height;
-  bool skip_eol;
+  std::vector<uint8_t>::iterator ptr, end;
+  int x{0}, y{0};
+  int width, height;
+  bool skip_eol{false};
 };
 
 //! Number of available layers, must be less or equal to 16 as it is stored in
@@ -215,7 +183,7 @@ const int max_number_of_layers = 13;
 
 //! Layer information (see animation_manager::draw_frame)
 struct layers {
-  uint8_t layer_contents[max_number_of_layers];
+  uint8_t layer_contents[max_number_of_layers]{};
 };
 
 /** Key value for finding an animation. */
@@ -240,10 +208,10 @@ inline bool operator<(const animation_key& oK, const animation_key& oL) {
  * A negative number indicates there is no animation in that direction.
  */
 struct animation_start_frames {
-  long north;  ///< Animation start frame for the 'north' view.
-  long east;   ///< Animation start frame for the 'east' view.
-  long south;  ///< Animation start frame for the 'south' view.
-  long west;   ///< Animation start frame for the 'west' view.
+  long north{-1};  ///< Animation start frame for the 'north' view.
+  long east{-1};   ///< Animation start frame for the 'east' view.
+  long south{-1};  ///< Animation start frame for the 'south' view.
+  long west{-1};   ///< Animation start frame for the 'west' view.
 };
 
 /** Map holding the custom animations. */
@@ -261,7 +229,6 @@ typedef std::pair<animation_key, animation_start_frames> named_animation_pair;
 class animation_manager {
  public:
   animation_manager();
-  ~animation_manager();
 
   void set_sprite_sheet(sprite_sheet* pSpriteSheet);
 
@@ -373,55 +340,13 @@ class animation_manager {
       @param iTilesize Tile size of the animation.
       @return A set starting frames for the queried animation.
    */
-  const animation_start_frames& get_named_animations(const std::string& sName,
+  const animation_start_frames& get_named_animations(std::string_view sName,
                                                      int iTilesize) const;
 
   //! Notified every world tick to allow tracking rate of game time passage.
   void tick();
 
  private:
-#if CORSIX_TH_USE_PACK_PRAGMAS
-#pragma pack(push)
-#pragma pack(1)
-#endif
-  // Animation information structure reinterpreted from Theme Hospital data.
-  struct th_animation_properties {
-    uint16_t first_frame;
-    // It could be that frame is a uint32_t rather than a uint16_t, which
-    // would resolve the following unknown (which seems to always be zero).
-    uint16_t unknown;
-  } CORSIX_TH_PACKED_FLAGS;
-
-  // Frame information structure reinterpreted from Theme Hospital data.
-  struct th_frame_properties {
-    uint32_t list_index;
-    // These fields have something to do with width and height, but it's
-    // not clear quite exactly how.
-    uint8_t width;
-    uint8_t height;
-    // If non-zero, index into sound.dat filetable.
-    uint8_t sound;
-    // Combination of zero or more fame_flags values
-    uint8_t flags;
-    uint16_t next;
-  } CORSIX_TH_PACKED_FLAGS;
-
-  // Structure reinterpreted from Theme Hospital data.
-  struct th_element_properties {
-    uint16_t table_position;
-    uint8_t offx;
-    uint8_t offy;
-    // High nibble: The layer which the element belongs to
-    //              [0, max_number_of_layers)
-    // Low  nibble: Zero or more draw_flags
-    uint8_t flags;
-    // The layer option / layer id
-    uint8_t layerid;
-  } CORSIX_TH_PACKED_FLAGS;
-#if CORSIX_TH_USE_PACK_PRAGMAS
-#pragma pack(pop)
-#endif
-
   struct frame {
     size_t list_index;   ///< First entry in #element_list (pointing to an
                          ///< element) for this frame.
@@ -464,19 +389,19 @@ class animation_manager {
     uint8_t layer_id;  ///< Value of the layer class to match.
 
     sprite_sheet* element_sprite_sheet;  ///< Sprite sheet to use for this
-                                         ///< element.
+                                         ///< element. Not owned.
   };
 
   std::vector<size_t> first_frames;    ///< First frame number of an animation.
   std::vector<frame> frames;           ///< The loaded frames.
   std::vector<uint16_t> element_list;  ///< List of elements for a frame.
   std::vector<element> elements;       ///< Sprite Elements.
-  std::vector<sprite_sheet*>
+  std::vector<sprite_sheet>
       custom_sheets;  ///< Sprite sheets with custom graphics.
   named_animations_map named_animations;  ///< Collected named animations.
 
-  sprite_sheet* sheet;    ///< Sprite sheet to use.
-  render_target* canvas;  ///< Video surface to use.
+  sprite_sheet* sheet;    ///< Sprite sheet to use. Not owned.
+  render_target* canvas;  ///< Video surface to use. Not owned.
 
   size_t animation_count;     ///< Number of animations.
   size_t frame_count;         ///< Number of frames.
@@ -531,38 +456,43 @@ class animation_manager {
   void fix_next_frame(uint32_t iFirst, size_t iLength);
 };
 
+// Integer 2D pair.
+struct xy_pair {
+  int x{};  ///< Value of the X coordinate.
+  int y{};  ///< Value of the Y coordinate.
+};
+
 class animation_base : public drawable {
  public:
   animation_base();
 
   void remove_from_tile();
-  void attach_to_tile(map_tile* pMapNode, int layer);
+  void attach_to_tile(int x, int y, map_tile* node, int layer);
 
   uint32_t get_flags() const { return flags; }
-  int get_x() const { return x_relative_to_tile; }
-  int get_y() const { return y_relative_to_tile; }
+  const xy_pair& get_pixel_offset() const { return pixel_offset; }
+  const xy_pair& get_tile() const { return tile; }
 
   void set_flags(uint32_t iFlags) { flags = iFlags; }
-  void set_position(int iX, int iY) {
-    x_relative_to_tile = iX, y_relative_to_tile = iY;
+  void set_tile(int x, int y) {
+    tile.x = x;
+    tile.y = y;
+  }
+  void set_pixel_offset(int x, int y) {
+    pixel_offset.x = x;
+    pixel_offset.y = y;
   }
   void set_layer(int iLayer, int iId);
   void set_layers_from(const animation_base* pSrc) { layers = pSrc->layers; }
 
  protected:
-  //! X position on tile (not tile x-index)
-  int x_relative_to_tile;
-  //! Y position on tile (not tile y-index)
-  int y_relative_to_tile;
+  //! Tile containing the animation. A negative x or y means it is not active.
+  xy_pair tile{-1, -1};
 
-  ::layers layers;
-};
+  //! Offset in pixels relative to the center of the animation tile.
+  xy_pair pixel_offset{0, 0};
 
-struct xy_diff {
-  //! Amount to change x per tick
-  int dx;
-  //! Amount to change y per tick
-  int dy;
+  ::layers layers{};
 };
 
 //! The kind of animation.
@@ -631,7 +561,10 @@ class animation : public animation_base {
   void set_morph_target(animation* pMorphTarget, int iDurationFactor = 1);
   void set_frame(size_t iFrame);
 
-  void set_speed(int iX, int iY) { speed.dx = iX, speed.dy = iY; }
+  void set_speed(int x, int y) {
+    speed.x = x;
+    speed.y = y;
+  }
   void set_crop_column(int iColumn) { crop_column = iColumn; }
 
   void persist(lua_persist_writer* pWriter) const;
@@ -644,21 +577,22 @@ class animation : public animation_base {
   animation_manager* get_animation_manager() { return manager; }
 
  private:
-  animation_manager* manager;
-  animation* morph_target;
-  size_t animation_index;  ///< Animation number.
-  size_t frame_index;      ///< Frame number.
+  animation_manager* manager{nullptr};
+  animation* morph_target{nullptr};
+  size_t animation_index{};  ///< Animation number.
+  size_t frame_index{};      ///< Frame number.
   union {
-    xy_diff speed;
+    xy_pair speed{};  ///< Speed in pixels per tick.
+
     //! Some animations are tied to the primary or secondary marker of another
     //! animation and hence have a parent rather than a speed.
     animation* parent;
   };
 
-  size_t sound_to_play;
-  int crop_column;
-  animation_kind anim_kind;
-  animation_effect patient_effect;
+  size_t sound_to_play{};
+  int crop_column{};
+  animation_kind anim_kind{animation_kind::normal};
+  animation_effect patient_effect{animation_effect::none};
   //! Number of game_ticks to offset animation by so they aren't all
   //! running in sync.
   size_t patient_effect_offset;
@@ -666,9 +600,6 @@ class animation : public animation_base {
 
 class sprite_render_list : public animation_base {
  public:
-  sprite_render_list();
-  ~sprite_render_list() override;
-
   void tick();
   void draw(render_target* pCanvas, int iDestX, int iDestY);
   bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
@@ -700,20 +631,18 @@ class sprite_render_list : public animation_base {
     int y;
   };
 
-  sprite_sheet* sheet = nullptr;
-  sprite* sprites = nullptr;
-  int sprite_count = 0;
-  int buffer_size = 0;
+  sprite_sheet* sheet{nullptr};
+  std::vector<sprite> sprites{};
 
   //! Amount to change x per tick
-  int dx_per_tick = 0;
+  int dx_per_tick{0};
   //! Amount to change y per tick
-  int dy_per_tick = 0;
+  int dy_per_tick{0};
   //! Number of ticks until reports as dead (-1 = never dies)
-  int lifetime = -1;
+  int lifetime{-1};
   //! Whether to draw to an intermediate buffer. This is used to preserve text
   //! rendering quality when scaling.
-  bool use_intermediate_buffer = false;
+  bool use_intermediate_buffer{false};
 };
 
 // Find the appropriate subclass of animation_base for a given

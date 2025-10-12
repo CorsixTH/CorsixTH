@@ -63,7 +63,7 @@ function UIPlaceStaff:close()
     if room and room == employed_staff.last_room and room.crashed then
       employed_staff:die()
       employed_staff:despawn()
-      employed_staff:destroyEntity(employed_staff)
+      self.world:destroyEntity(employed_staff)
     else
       employed_staff:setNextAction(MeanderAction())
     end

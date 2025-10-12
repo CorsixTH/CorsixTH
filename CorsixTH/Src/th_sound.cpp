@@ -27,54 +27,72 @@ SOFTWARE.
 #include <SDL_mixer.h>
 #include <SDL_rwops.h>
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <new>
 
 #include "th.h"
 
-sound_archive::sound_archive() {
-  sound_files = nullptr;
-  data = nullptr;
-}
-
-sound_archive::~sound_archive() { delete[] data; }
+// https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#info
+constexpr size_t archive_header_size = 234;
+constexpr size_t archive_header_table_position_offset = 50;
+constexpr size_t archive_header_table_length_offset = 58;
+constexpr size_t sound_entry_size = 32;
+constexpr size_t sound_entry_position_offset = 18;
+constexpr size_t sound_entry_length_offset = 26;
 
 bool sound_archive::load_from_th_file(const uint8_t* pData,
                                       size_t iDataLength) {
-  if (iDataLength < sizeof(uint32_t) + sizeof(sound_dat_file_header)) {
+  if (iDataLength < sizeof(uint32_t) + archive_header_size) {
     return false;
   }
 
-  uint32_t iHeaderPosition =
+  // Last 4 bytes of the file is the position of the header
+  uint32_t headerPosition =
       bytes_to_uint32_le(pData + iDataLength - sizeof(uint32_t));
 
-  if (static_cast<size_t>(iHeaderPosition) >=
-      iDataLength - sizeof(sound_dat_file_header)) {
+  // safety check on header position
+  if (static_cast<size_t>(headerPosition) >=
+      iDataLength - archive_header_size) {
     return false;
   }
 
-  header =
-      *reinterpret_cast<const sound_dat_file_header*>(pData + iHeaderPosition);
+  // table position
+  size_t tablePosition = static_cast<size_t>(bytes_to_uint32_le(
+      pData + headerPosition + archive_header_table_position_offset));
+  size_t tableLength = static_cast<size_t>(bytes_to_uint32_le(
+      pData + headerPosition + archive_header_table_length_offset));
 
-  delete[] data;
-  data = new (std::nothrow) uint8_t[iDataLength];
-  if (data == nullptr) {
-    return false;
+  data.resize(iDataLength);
+  std::copy_n(pData, iDataLength, data.begin());
+
+  size_t soundFileCount = tableLength / sound_entry_size;
+  sound_files.clear();
+  for (int i = 0; i < soundFileCount; ++i) {
+    size_t offset = tablePosition + i * sound_entry_size;
+    if (offset + sound_entry_size > iDataLength) {
+      return false;  // Out of bounds
+    }
+    sound_dat_sound_info soundInfo{
+        {},
+        bytes_to_uint32_le(data.data() + offset + sound_entry_position_offset),
+        bytes_to_uint32_le(data.data() + offset + sound_entry_length_offset)};
+    std::copy_n(data.data() + offset, soundInfo.sound_name.size(),
+                soundInfo.sound_name.begin());
+    sound_files.push_back(soundInfo);
   }
-  std::memcpy(data, pData, iDataLength);
 
-  sound_files =
-      reinterpret_cast<sound_dat_sound_info*>(data + header.table_position);
-  sound_file_count = header.table_length / sizeof(sound_dat_sound_info);
   return true;
 }
 
-size_t sound_archive::get_number_of_sounds() const { return sound_file_count; }
+size_t sound_archive::get_number_of_sounds() const {
+  return sound_files.size();
+}
 
 const char* sound_archive::get_sound_name(size_t iIndex) const {
-  if (iIndex >= sound_file_count) return nullptr;
-  return sound_files[iIndex].sound_name;
+  if (iIndex >= sound_files.size()) return nullptr;
+  return sound_files[iIndex].sound_name.data();
 }
 
 constexpr uint32_t fourcc(const char c1, const char c2, const char c3,
@@ -171,31 +189,31 @@ size_t sound_archive::get_sound_duration(size_t iIndex) {
 }
 
 SDL_RWops* sound_archive::load_sound(size_t iIndex) {
-  if (iIndex >= sound_file_count) {
+  if (iIndex >= sound_files.size()) {
     return nullptr;
   }
 
-  sound_dat_sound_info* pFile = sound_files + iIndex;
-  return SDL_RWFromConstMem(data + pFile->position, pFile->length);
+  sound_dat_sound_info pFile = sound_files[iIndex];
+  return SDL_RWFromConstMem(data.data() + pFile.position,
+                            static_cast<int>(pFile.length));
 }
 
 constexpr int number_of_channels = 32;
 
 sound_player* sound_player::singleton = nullptr;
 
-sound_player::sound_player() {
-  sounds = nullptr;
-  sound_count = 0;
+sound_player::sound_player()
+    : sounds(nullptr),
+      sound_count(0),
+      available_channels_bitmap(~0),
+      camera_x(0),
+      camera_y(0),
+      camera_radius(1.0),
+      master_volume(1.0),
+      sound_effect_volume(0.5),
+      positionless_volume(MIX_MAX_VOLUME),
+      sound_effects_enabled(true) {
   singleton = this;
-  camera_x = 0;
-  camera_y = 0;
-  camera_radius = 1.0;
-  master_volume = 1.0;
-  sound_effect_volume = 0.5;
-  positionless_volume = MIX_MAX_VOLUME;
-  sound_effects_enabled = true;
-
-  available_channels_bitmap = ~0;
   Mix_AllocateChannels(number_of_channels);
 
   Mix_ChannelFinished(on_channel_finished);
