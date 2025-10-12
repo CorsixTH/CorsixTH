@@ -234,15 +234,6 @@ function Room:dealtWithPatient(patient)
     patient:queueAction(IdleAction())
   end
 
-  ----- BEGIN Save game compatibility -----
-  -- These function call are merely for save game compatibility.
-  -- For 0.69 gamesaves and below.
-  -- And they does not participate in the current game logic.
-  -- Do not move or edit
-  if self.dealt_patient_callback then
-    self.dealt_patient_callback(self.waiting_staff_member)
-  end
-  ----- END Save game compatibility -----
 end
 
 local profile_attributes = {
@@ -434,28 +425,6 @@ function Room:onHumanoidEnter(humanoid)
     end
   end
 end
-
------ BEGIN Save game compatibility -----
--- These function are merely for save game compatibility.
--- For 0.69 gamesaves and below.
--- And they does not participate in the current game logic.
--- Do not move or edit
-function Room:createDealtWithPatientCallback(humanoid)
-  self.dealt_patient_callback = --[[persistable:room_dealt_with_patient_callback]] function (staff_humanoid)
-    if not staff_humanoid.waiting_on_other_staff then
-      return
-    end
-    staff_humanoid:setCallCompleted()
-    staff_humanoid.waiting_on_other_staff = nil
-    staff_humanoid:setNextAction(self:createLeaveAction())
-    staff_humanoid:queueAction(MeanderAction())
-    staff_humanoid:setMood("staff_wait", "deactivate")
-    staff_humanoid:setDynamicInfoText("")
-    self.waiting_staff_member = nil
-    self.dealt_patient_callback = nil
-  end
-end
------ END Save game compatibility -----
 
 --! Get the current staff member.
 -- In multi-occupancy rooms this returns the staff member with the minimum service quality
@@ -1092,6 +1061,16 @@ function Room:afterLoad(old, new)
   if old < 186 then
     self:calculateHappinessFactor()
   end
+  if old < 233 then
+    if self.waiting_staff_member then
+      -- Cancel delayed replace existing staff member in room
+      self.waiting_staff_member:setNextAction(self:createLeaveAction())
+      self.waiting_staff_member:queueAction(MeanderAction())
+      self.waiting_staff_member.waiting_on_other_staff = nil
+    end
+    self.waiting_staff_member = nil
+    self.dealt_patient_callback = nil
+  end
 end
 
 --[[ Is the room one of the diagnosis rooms for the patient?
@@ -1189,3 +1168,10 @@ function Room:calculateHappinessFactor()
 
   self.happiness_factor = window_factor + space_factor
 end
+
+----- BEGIN Save game compatibility -----
+-- These function are merely for save game compatibility.
+-- For 0.69 gamesaves and below.
+-- And they does not participate in the current game logic.
+local --[[persistable:room_dealt_with_patient_callback]] function _(staff_humanoid) end
+----- END Save game compatibility -----
