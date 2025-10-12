@@ -1171,7 +1171,7 @@ end
 
 ----- BEGIN Save game compatibility -----
 -- These function are merely for save game compatibility.
--- For 0.69 gamesaves and below.
+-- For 0.69.x gamesaves and below.
 -- And they does not participate in the current game logic.
 local --[[persistable:room_dealt_with_patient_callback]] function _(staff_humanoid) end
 ----- END Save game compatibility -----
