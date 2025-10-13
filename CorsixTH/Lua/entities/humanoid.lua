@@ -662,6 +662,16 @@ function Humanoid:hasLeavingAction()
   return false
 end
 
+-- Check if there is "dress is_leaving" action in the action queue
+function Humanoid:isDressAndLeaving()
+    for _, action in ipairs(self.action_queue) do
+    if action.name == "use_screen" and action.is_leaving then
+      return true
+    end
+  end
+  return false
+end
+
 --! Handle an empty action queue in some way instead of crashing.
 function Humanoid:_handleEmptyActionQueue()
   -- if this is a patient that is going home, an empty
