@@ -511,7 +511,7 @@ function GameUI:onCursorWorldPositionChange()
     if room then
       local queue = room.door.queue
       if #queue > 0 then
-        TheApp.audio:playSound("HLIGHTP2.wav")
+        TheApp.ui:playSound("HLIGHTP2.wav")
       end
       if queue then
         for _, humanoid in ipairs(queue) do
@@ -528,7 +528,7 @@ function GameUI:onCursorWorldPositionChange()
       if value.on_hover then
         if not self.mood_info then
           if self.last_hovered_entity ~= entity then
-            TheApp.audio:playSound("HLIGHTP2.wav")
+            TheApp.ui:playSound("HLIGHTP2.wav")
             self.last_hovered_entity = entity
           end
           entity:setMoodInfo(value)
