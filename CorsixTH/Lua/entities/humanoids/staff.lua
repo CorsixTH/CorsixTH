@@ -83,8 +83,16 @@ function Staff:tickDay()
     ["tv"]           = 0.0005,
   }
   for obj_name, happiness_score in pairs(good_objects) do
-    self.world:findObjectNear(self, obj_name, 2, function()
-      self:changeAttribute("happiness", happiness_score)
+    -- findObjectNear() returns the object from every reachable direction.
+    -- To eliminate double counting, visited_positions only allows one visit
+    -- to every tile in each search.
+    local visited_positions = {}
+    self.world:findObjectNear(self, obj_name, 2, function(x, y)
+      local xy = x + y *256
+      if not visited_positions[xy] then
+        self:changeAttribute("happiness", happiness_score)
+        visited_positions[xy] = true
+      end
     end)
   end
 
