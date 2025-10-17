@@ -25,19 +25,22 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <wx/button.h>
-#include <wx/checkbox.h>
-#include <wx/dcclient.h>
+#include <wx/defs.h>
+#include <wx/event.h>
 #include <wx/frame.h>
-#include <wx/listbox.h>
-#include <wx/panel.h>
-#include <wx/spinctrl.h>
-#include <wx/textctrl.h>
+#include <wx/image.h>
+#include <wx/string.h>
 #include <wx/timer.h>
-#include <wx/txtstrm.h>
 
 #include "th.h"
-//#include <vector>
+
+class wxButton;
+class wxCheckBox;
+class wxListBox;
+class wxPaintDC;
+class wxPanel;
+class wxSpinEvent;
+class wxTextCtrl;
 
 class frmMain : public wxFrame {
  public:
@@ -67,6 +70,12 @@ class frmMain : public wxFrame {
     ID_EXPORT,
     ID_DRAW_MOOD,
     ID_DRAW_COORDINATES,
+    ID_MOOD_POS,
+    ID_MOOD_FRAME,
+    ID_MOOD_LEFT,
+    ID_MOOD_RIGHT,
+    ID_MOOD_UP,
+    ID_MOOD_DOWN,
     ID_LAYER_CHECKS,  // Must be last ID
   };
 
@@ -101,6 +110,11 @@ class frmMain : public wxFrame {
   void _onPanelPaint(wxPaintEvent& evt);
   void _onPanelClick(wxMouseEvent& evt);
   void _onTimer(wxTimerEvent& evt);
+  void _onMoodFrameApply(wxCommandEvent& evt);
+  void _onMoodLeft(wxCommandEvent& evt);
+  void _onMoodRight(wxCommandEvent& evt);
+  void _onMoodUp(wxCommandEvent& evt);
+  void _onMoodDown(wxCommandEvent& evt);
 
   void _onAnimChange(size_t iIndex);
 
@@ -112,29 +126,37 @@ class frmMain : public wxFrame {
   THLayerMask m_mskLayers;
   wxImage m_imgBackground;
   wxTimer m_tmrAnimate;
-  size_t m_iCurrentAnim;
-  size_t m_iCurrentFrame;
-  int m_iGhostFile;
-  int m_iGhostIndex;
-  int m_iMoodDrawX;
-  int m_iMoodDrawY;
-  bool m_bPlayingAnimation;
-  bool m_bDrawMood;
-  bool m_bDrawCoordinates;
+  size_t m_iCurrentAnim{};
+  size_t m_iCurrentFrame{};
+  int m_iGhostFile{};
+  int m_iGhostIndex{};
+  int m_iMoodDrawX{};
+  int m_iMoodDrawY{};
+  bool m_bPlayingAnimation{true};
+  bool m_bDrawMood{false};
+  bool m_bDrawCoordinates{false};
 
   wxButton* m_btnPlayPause;
-  wxButton* m_btnExport;
   wxTextCtrl* m_txtTHPath;
   wxTextCtrl* m_txtAnimIndex;
   wxTextCtrl* m_txtAnimCount;
   wxTextCtrl* m_txtFrameIndex;
   wxTextCtrl* m_txtFrameCount;
-  wxTextCtrl* m_txtFrameFlags[2];
-  wxTextCtrl* m_txtMoodPosition[2];
-  wxCheckBox* m_chkFrameFlags[16];
+  wxTextCtrl* m_txtFrameFlags[2]{};
+  wxTextCtrl* m_txtMoodPosition[2]{};
+  wxTextCtrl* m_txtMoodFramePos;
+  wxCheckBox* m_chkFrameFlags[16]{};
   wxListBox* m_lstSearchResults;
   wxPanel* m_panFrame;
   DECLARE_EVENT_TABLE()
+
+ private:
+  /**
+      Update the mood position of the current frame to the given coordinate.
+      @param centerX X coordinate of the center.
+      @param centerY Y coordinate of the center.
+   */
+  void updateMoodPosition(int centerX, int centerY);
 };
 
 #endif

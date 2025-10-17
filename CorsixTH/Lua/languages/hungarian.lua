@@ -71,6 +71,7 @@ Font("unicode")
 Language("Magyar", "Hungarian", "hu", "hun")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 
 -- 2. Faxes
@@ -241,7 +242,6 @@ tooltip.options_window = {
   height = "Add meg a kívánt magasságot",
   change_resolution = "Az ablak felbontásának alkalmazása a bal oldalon lévő adatok szerint",
   language = "%s nyelv kiválasztása",
-  original_path = "Az eredeti Theme Hospital telepítés jelenlegi elérési útvonala",
   browse = "Másik elérési útvonal kiválasztása a Theme Hospital fájljaihoz",
   back = "Beállítások ablak bezárása",
 }

@@ -95,17 +95,6 @@ local function wait_for_object(humanoid, obj, must_happen)
   return IdleAction():setMustHappen(must_happen):setLoopCallback(loop_callback_wait)
 end
 
---! Returns true if an operation is ongoing
-function OperatingTheatreRoom:isOperating()
-  for k, _ in pairs(self.staff_member_set) do
-    if k:getCurrentAction().name == "multi_use_object" then
-      return true
-    end
-  end
-
-  return false
-end
-
 --! Builds the second operation action (i.e. with the surgeon whose we
 --! see the back). Called either when the operation starts or when the
 --! operation is resumed after interruption caused by the picking up of
@@ -115,6 +104,7 @@ end
 --!param multi_use (action): the first operation action (built with via buildTableAction1()).
 --!param operation_table_b (OperatingTable): slave object representing the operation table.
 function OperatingTheatreRoom._buildTableAction2(multi_use, operation_table_b)
+  -- number of cutting and sewing animation
   local num_loops = math.random(2, 5)
 
   local loop_callback_use_object = --[[persistable:operatring_theatre_use_callback]] function(action)
@@ -128,8 +118,12 @@ function OperatingTheatreRoom._buildTableAction2(multi_use, operation_table_b)
     multi_use.prolonged_usage = false
   end
 
-  return UseObjectAction(operation_table_b):setLoopCallback(loop_callback_use_object)
-      :setAfterUse(after_use_use_object):setMustHappen(true):disableTruncate()
+  return UseObjectAction(operation_table_b)
+    :setLoopCallback(loop_callback_use_object)
+    :setAfterUse(after_use_use_object)
+    :setMustHappen(true)
+    :disableTruncate()
+    :setUninterruptible(true)
 end
 
 function OperatingTheatreRoom:commandEnteringStaff(staff)
@@ -139,18 +133,6 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   staff:queueAction(wait_for_object(staff, screen, false))
   staff:queueAction(UseScreenAction(screen))
 
-  -- Resume operation if already ongoing
-  if self:isOperating() then
-    local surgeon1 = next(self.staff_member_set)
-    local ongoing_action = surgeon1:getCurrentAction()
-    assert(ongoing_action.name == "multi_use_object")
-
-    local table, table_x, table_y = self.world:findObjectNear(staff, "operating_table_b")
-    self:queueWashHands(staff)
-    staff:queueAction(WalkAction(table_x, table_y))
-    staff:queueAction(self._buildTableAction2(ongoing_action, table))
-  end
-
   self.staff_member_set[staff] = true
 
   -- Wait around for patients
@@ -158,12 +140,19 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     self.staff_member_set[staff] = "ready"
     self:tryAdvanceQueue()
   end
-  staff:queueAction(MeanderAction():setMustHappen(true):setLoopCallback(loop_callback_more_patients))
+
+  staff:queueAction(MeanderAction()
+    :setMustHappen(true)
+    :setLoopCallback(loop_callback_more_patients))
 
   -- Ensure that surgeons turn back into doctors when they leave
-  staff:queueAction(WalkAction(screen_x, screen_y):setMustHappen(true):setIsLeaving(true)
-      :truncateOnHighPriority())
-  staff:queueAction(UseScreenAction(screen):setMustHappen(true):setIsLeaving(true))
+  staff:queueAction(WalkAction(screen_x, screen_y)
+    :setMustHappen(true)
+    :setIsLeaving(true)
+    :truncateOnHighPriority())
+  staff:queueAction(UseScreenAction(screen)
+    :setMustHappen(true)
+    :setIsLeaving(true))
 
   return Room.commandEnteringStaff(self, staff, true)
 end
@@ -180,7 +169,7 @@ end
 --!param patient (Patient): the patient to be operated.
 --!param operation_table (OperatingTable): master object representing
 --! the operation table.
-function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_table)
+function OperatingTheatreRoom:_buildTableAction1(surgeon1, patient, operation_table)
   local loop_callback_multi_use = --[[persistable:operatring_theatre_multi_use_callback]] function()
     -- dirty hack to make the truncated animation work
     surgeon1.animation_idx = nil
@@ -195,24 +184,35 @@ function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_tab
     end
   end
 
-  return MultiUseObjectAction(operation_table, patient):setProlongedUsage(true)
-      :setLoopCallback(loop_callback_multi_use):setAfterUse(after_use_table)
-      :setMustHappen(true):disableTruncate()
+  return MultiUseObjectAction(operation_table, patient)
+    :setProlongedUsage(true)
+    :setLoopCallback(loop_callback_multi_use)
+    :setAfterUse(after_use_table)
+    :setMustHappen(true)
+    :disableTruncate()
 end
 
 --! Sends the surgeon to the nearest operation sink ("op_sink1")
 --! and makes him wash his hands
---!param at_front (boolean): If true, add the actions at the front the action queue.
+--!param before_other_actions (boolean): If true, add the actions at the front the action queue.
 --! Add the actions at the end of the queue otherwise.
 --! Default value is true.
-function OperatingTheatreRoom:queueWashHands(surgeon, at_front)
+function OperatingTheatreRoom:queueWashHands(surgeon, before_other_actions)
   local sink, sink_x, sink_y = self.world:findObjectNear(surgeon, "op_sink1")
-  local walk = WalkAction(sink_x, sink_y):setMustHappen(true):disableTruncate()
+  local walk = WalkAction(sink_x, sink_y)
+    :setMustHappen(true)
+    :disableTruncate()
   local wait = wait_for_object(surgeon, sink, true)
-  local wash = UseObjectAction(sink):setMustHappen(true)
+    :setMustHappen(true)
+    :disableTruncate()
+    :setUninterruptible(true)
+  local wash = UseObjectAction(sink)
+    :setMustHappen(true)
+    :disableTruncate()
+    :setUninterruptible(true)
 
   for pos, action in pairs({walk, wait, wash}) do
-    if (at_front) then
+    if (before_other_actions) then
       surgeon:queueAction(action, pos)
     else
       surgeon:queueAction(action)
@@ -237,13 +237,19 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   local surgeon2 = next(self.staff_member_set, surgeon1)
   assert(surgeon1 and surgeon2, "Not enough staff in operating theatre")
 
-  -- Patient changes into surgical gown
   local screen, sx, sy = self.world:findObjectNear(patient, "surgeon_screen")
-  patient:walkTo(sx, sy)
-  patient:queueAction(UseScreenAction(screen))
+  -- Patient walk to surgeon screen
+  patient:queueAction(WalkAction(sx, sy)
+    :setMustHappen(true)
+    :disableTruncate())
+  -- Patient changes into surgical gown
+  patient:queueAction(UseScreenAction(screen)
+    :setMustHappen(true)
+    :disableTruncate())
 
   -- Meanwhile, surgeons wash their hands
   -- TODO: They sometimes overlap each other when doing that. Can we avoid that?
+  -- TODO: The "op_sink2" animation is missing to fix that.
   self:queueWashHands(surgeon1, true)
   self:queueWashHands(surgeon2, true)
 
@@ -281,11 +287,12 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
       -- Only if everyone (2 Surgeons and Patient) ready, we schedule the operation action
       local obj, _, _ = self.world:findObjectNear(surgeon1, "operating_table")
 
-      local table_action1 = self:buildTableAction1(surgeon1, patient, obj)
+      local table_action1 = self:_buildTableAction1(surgeon1, patient, obj)
       surgeon1:queueAction(table_action1, 1)
 
       obj, _, _ = self.world:findObjectNear(surgeon2, "operating_table_b")
-      surgeon2:queueAction(self._buildTableAction2(table_action1, obj), 1)
+      local table_action2 = self._buildTableAction2(table_action1, obj)
+      surgeon2:queueAction(table_action2, 1)
 
       -- Kick off
       surgeon1:finishAction()
@@ -295,25 +302,43 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
 
   ---- Everyone standby...and sync start the operation
   --
-  -- first surgeon walk over to the operating table
+  -- first surgeon walk over to the operating table to the patient side (surgeon face to camera)
   local obj, ox, oy = self.world:findObjectNear(surgeon1, "operating_table")
-  surgeon1:queueAction(WalkAction(ox, oy):setMustHappen(true):disableTruncate(), 4)
-  surgeon1:queueAction(IdleAction():setLoopCallback(operation_standby):setMustHappen(true), 5)
+  surgeon1:queueAction(WalkAction(ox, oy)
+    :setMustHappen(true)
+    :disableTruncate(), 4)
+  surgeon1:queueAction(IdleAction()
+    :setLoopCallback(operation_standby)
+    :setMustHappen(true)
+    :disableTruncate()
+    :setUninterruptible(true), 5)
 
   -- Patient walk to the side of the operating table
   ox, oy = obj:getSecondaryUsageTile()
-  patient:queueAction(WalkAction(ox, oy):setMustHappen(true):disableTruncate())
-  patient:queueAction(IdleAction():setLoopCallback(operation_standby):setMustHappen(true))
+  patient:queueAction(WalkAction(ox, oy)
+    :setMustHappen(true)
+    :disableTruncate())
+  patient:queueAction(IdleAction()
+    :setLoopCallback(operation_standby)
+    :setMustHappen(true))
 
   -- Patient changes out of the gown afterwards
-  patient:queueAction(WalkAction(sx, sy):setMustHappen(true):disableTruncate())
-  patient:queueAction(UseScreenAction(screen):setMustHappen(true))
+  patient:queueAction(WalkAction(sx, sy)
+    :setMustHappen(true)
+    :disableTruncate())
+  patient:queueAction(UseScreenAction(screen)
+    :setMustHappen(true))
 
-  -- Meanwhile, second surgeon walks over to other side of operating table
+  -- Meanwhile, second surgeon walks over to other side of operating table (surgeon back to camera)
   local _
   _, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")
-  surgeon2:queueAction(WalkAction(ox, oy):setMustHappen(true):disableTruncate(), 4)
-  surgeon2:queueAction(IdleAction():setLoopCallback(operation_standby):setMustHappen(true), 5)
+  surgeon2:queueAction(WalkAction(ox, oy):setMustHappen(true)
+    :disableTruncate(), 4)
+  surgeon2:queueAction(IdleAction()
+    :setLoopCallback(operation_standby)
+    :setMustHappen(true)
+    :disableTruncate()
+    :setUninterruptible(true), 5)
 
   return Room.commandEnteringPatient(self, patient)
 end

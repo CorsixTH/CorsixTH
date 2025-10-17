@@ -1,53 +1,80 @@
 # Cmake File for CorsixTH
 # OPTIONS AVAILABLE:
 # Any of the following: (default)
-#   - WITH_AUDIO      : Activate sound (yes)
-#   - WITH_FREETYPE2  : Active support for non-Latin script alphabets (yes)
+
+# CorsixTH Features and behaviour
+#   - WITH_FONT       : Path of a font that will be used if the user does not set one (empty, Arial on macOS)
 #   - WITH_MOVIES     : Activate movies (requires with_audio, FFmpeg) (yes)
-#   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
+#   - WITH_UPDATE_CHECK : Activates support to check for new version on launch (requires libcurl) (yes)
 #   - USE_SOURCE_DATADIRS : Use the source directory for loading resources. Incompatible with the install target (no)
 #   - SEARCH_LOCAL_DATADIRS : Search resources in the working directory and the
 #       program directory where the executable stores. Makes the executable
 #       portable (yes for Apple)
 
-#   - WITH_VLD        : Build with Visual Leak Detector (requires Visual Studio) (no)
-#   - USE_PRECOMPILED_DEPS : Use precompiled dependencies on *nix (no)
-#   - USE_VCPKG_DEPS : Build vcpkg dependencies locally (requires Visual Studio) (no)
+# Dependency resolution
+#   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
 #   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
+#   - FETCH_CATCH2: Use FetchContent to obtain Catch2 if ENABLE_UNIT_TESTS=yes
 
+# Tests and debug options
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
-#   - BUILD_ANIMVIEW : Generate AnimViewer build files (no)
+#   - ENABLE_SANITIZERS : Build with AddressSanitizer (ASan) and UndefinedBehaviorSanitizer (UBSan) enabled (no)
+
+# Additional build targets
+#   - BUILD_ANIMVIEW : Generate AnimView build files (no)
 #   - BUILD_TOOLS : Generate cli tools
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
+
+# Define our options
+option(BUILD_CORSIXTH "Builds the main game" ON)
+option(WITH_MOVIES "Activate in game movies" ON)
+option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
+option(WITH_UPDATE_CHECK "Check for new versions" ON)
+option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
+option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
+option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
+option(BUILD_TOOLS "Build additional CLI tools (rnc_decode)" OFF)
+option(ENABLE_SANITIZERS "Build with ASan and UBSan enabled" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
-option(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
-
-if(USE_VCPKG_DEPS)
-  # This must be before the project for the tool-chain to work correctly
-  message("Note: Using locally built vcpkg dependencies.")
-  include(VcpkgDeps)
+if(WITH_MOVIES)
+  list(APPEND VCPKG_MANIFEST_FEATURES "movies")
+endif()
+if(BUILD_ANIMVIEW)
+  list(APPEND VCPKG_MANIFEST_FEATURES "animview")
+endif()
+if(WITH_UPDATE_CHECK)
+  list(APPEND VCPKG_MANIFEST_FEATURES "updatecheck")
+endif()
+if(ENABLE_UNIT_TESTS)
+  list(APPEND VCPKG_MANIFEST_FEATURES "catch2")
 endif()
 
 project(CorsixTH_Top_Level)
+
+if(ENABLE_UNIT_TESTS)
+  enable_testing()
+endif()
 
 if(MINGW)
   set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 endif()
 
+if(ENABLE_SANITIZERS)
+  if(MSVC)
+    # https://learn.microsoft.com/en-us/cpp/build/reference/fsanitize?view=msvc-170
+    add_compile_options(/fsanitize=address)
+  else()
+    add_compile_options(-fsanitize=address,undefined)
+    add_link_options(-fsanitize=address,undefined)
+  endif()
+endif()
+
 include(CheckIncludeFiles)
 
 set(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
-
-# Define our options
-option(BUILD_CORSIXTH "Builds the main game" ON)
-option(WITH_AUDIO "Activate sound" ON)
-option(WITH_FREETYPE2 "Enhanced font support" ON)
-option(WITH_MOVIES "Activate in game movies" ON)
-option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
-option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
 
 if(APPLE)
   set(SEARCH_LOCAL_DATADIRS_DEFAULT ON)
@@ -59,67 +86,36 @@ option(SEARCH_LOCAL_DATADIRS
   "Search resources in the working directory and the program directory where the executable stores."
   ${SEARCH_LOCAL_DATADIRS_DEFAULT})
 
-if(MSVC)
-  option(WITH_VLD "Build with Visual Leak Detector for Visual Studio" OFF)
+if(APPLE)
+  set(WITH_FONT_DEFAULT "/Library/Fonts/Arial Unicode.ttf")
+else()
+  set(WITH_FONT_DEFAULT "")
 endif()
-# Dependency management
-if(UNIX AND CMAKE_COMPILER_IS_GNU)
-  option(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
-endif()
+set(WITH_FONT ${WITH_FONT_DEFAULT} CACHE FILEPATH "Use this font if one is not set in the game settings")
 
+# Dependency management
 if(APPLE)
   option(WITH_LUAROCKS "Install required luarocks in the app" OFF)
 endif()
 
-option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
-option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
-option(BUILD_TOOLS "Build additional CLI tools (rnc_decode)" OFF)
-
-if(WITH_AUDIO)
-  set(CORSIX_TH_USE_SDL_MIXER ON)
-  message("Note: SDL audio is enabled (default)")
-else()
-  set(CORSIX_TH_USE_SDL_MIXER OFF)
-  message("Note: SDL audio is disabled")
-endif()
-
 if(WITH_MOVIES)
-  if(WITH_AUDIO)
-    set(CORSIX_TH_USE_FFMPEG ON)
-    message("Note: FFmpeg video is enabled (default)")
-  else()
-    set(CORSIX_TH_USE_FFMPEG OFF)
-    message("Note: FFmpeg video disabled since it requires SDL audio.")
-  endif()
+  set(CORSIX_TH_USE_FFMPEG ON)
+  message("Note: FFmpeg video is enabled (default)")
 else()
   set(CORSIX_TH_USE_FFMPEG OFF)
   message("Note: FFmpeg video is disabled")
 endif()
 
-if(WITH_FREETYPE2)
-  set(CORSIX_TH_USE_FREETYPE2 ON)
-  message("Note: FreeType2 is enabled (default)")
+if(WITH_UPDATE_CHECK)
+  message("Note: Update check is enabled (default)")
 else()
-  set(CORSIX_TH_USE_FREETYPE2 OFF)
-  message("Note: FreeType2 is disabled")
+  message("Note: Update check is disabled")
 endif()
 
-if(MSVC)
-  if(WITH_VLD)
-    set(CORSIX_TH_USE_VLD ON)
-    message("Note: Visual Leak Detector is enabled")
-  else()
-    set(CORSIX_TH_USE_VLD OFF)
-    message("Note: Visual Leak Detector is disabled (default)")
-  endif()
+if(VCPKG_TARGET_TRIPLET AND NOT WITH_LUAROCKS)
+  set(CORSIX_TH_LINK_LUA_MODULES ON)
 else()
-  set(CORSIX_TH_USE_VLD OFF)
-endif()
-
-# Get precompiled dependencies before running the various find modules
-if(USE_PRECOMPILED_DEPS)
-  message("Note: Using precompiled dependencies.")
-  include(PrecompiledDeps)
+  set(CORSIX_TH_LINK_LUA_MODULES OFF)
 endif()
 
 include(GNUInstallDirs)

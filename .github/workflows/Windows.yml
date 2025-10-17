@@ -1,51 +1,113 @@
 ---
 name: Windows
 
-on:  # yamllint disable-line rule:trurhy
+on:
   push:
     branches-ignore:
       - 'gh-pages'
   pull_request:
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: 'Select CMake preset'
+        default: 'win-x64-rel'
+        type: choice
+        options:
+          - win-dev
+          - win-x64-rel
+          - win-x86-rel
+      animview:
+        description: 'Build AnimView?'
+        default: 'false'
+        type: boolean
+      pr:
+        description: 'Build this PR (optional)'
+        type: number
 
 jobs:
   Windows:
     runs-on: windows-2022
+    env:
+      PRESET: ${{inputs.preset || 'win-x64-rel'}}
+      ANIMVIEW: ${{inputs.animview && 'ON' || 'OFF'}}
+      NAME: CorsixTH${{inputs.animview && '_and_AnimView' || ''}}${{inputs.preset == 'win-x86-rel' && '_x86' || ''}}
+      VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}/vcpkg_cache,readwrite
+    defaults:
+      run:
+        shell: bash
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout selected PR
+        env:
+          GH_TOKEN: ${{github.token}}
+        if: inputs.PR
+        run: gh pr checkout --repo CorsixTH/CorsixTH ${{inputs.pr}}
 
       - name: Restore vcpkg cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
         with:
-          path: vcpkg
-          key: vcpkg-${{runner.os}}-${{hashFiles('CMake/VcpkgDeps.cmake','scripts/build_vcpkg_deps.ps1')}}
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-${{env.PRESET}}-${{hashFiles('vcpkg.json','vcpkg-configuration.json')}}
+          restore-keys: vcpkg-${{env.PRESET}}-
 
-      - name: Create Project 
-        run: cmake -G "Visual Studio 17 2022" -DUSE_VCPKG_DEPS=ON -DVCPKG_TARGET_TRIPLET=x64-windows-release -DENABLE_UNIT_TESTS=ON -Bbuild .
+      - name: Get CMake
+        uses: lukka/get-cmake@v3.28.3
 
-      - name: Build
-        run: cmake --build build/ --config RelWithDebInfo
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+          vcpkgConfigurationJsonGlob: 'vcpkg-configuration.json'
 
-      - name: Test
-        run: |
-          pushd build/CorsixTH
-          ctest --extra-verbose --build-config RelWithDebInfo --output-on-failure
-          popd
+      - name: Run CMake dev configure
+        if: inputs.PRESET == 'win-dev'
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: 'win-dev'
+
+      - name: Run CMake release build
+        if: inputs.PRESET != 'win-dev'
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: ${{env.PRESET}}
+          configurePresetAdditionalArgs: "['-DBUILD_ANIMVIEW=${{env.ANIMVIEW}}',
+            '-DCMAKE_INSTALL_PREFIX=build/${{env.PRESET}}/CorsixTH/RelWithDebInfo/']"
+          buildPreset: ${{env.PRESET}}
+          buildPresetAdditionalArgs: "['--verbose', '--target install']"
+          testPreset: ${{env.PRESET}}
+
+      - name: Save vcpkg cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-${{env.PRESET}}-${{hashFiles('vcpkg.json','vcpkg-configuration.json')}}
 
       - name: Download soundfont
-        run:
-          aria2c -d build/CorsixTH/RelWithDebInfo https://github.com/Jacalz/fluid-soundfont/raw/master/SF3/FluidR3.sf3
+        if: inputs.PRESET != 'win-dev'
+        run: |
+          aria2c -d "build/${{env.PRESET}}/CorsixTH/RelWithDebInfo" \
+            https://raw.githubusercontent.com/Jacalz/fluid-soundfont/master/SF3/FluidR3.sf3
 
       - name: Copy data files for archive
+        if: inputs.PRESET != 'win-dev'
         run: |
-          cp -R CorsixTH/Lua build/CorsixTH/RelWithDebInfo/Lua
-          cp -R CorsixTH/Bitmap build/CorsixTH/RelWithDebInfo/Bitmap
-          cp -R CorsixTH/Levels build/CorsixTH/RelWithDebInfo/Levels
-          cp -R CorsixTH/Campaigns build/CorsixTH/RelWithDebInfo/Campaigns
-          cp CorsixTH/CorsixTH.lua build/CorsixTH/RelWithDebInfo/
+          cp -r build/${{env.PRESET}}/. .
+          cp -Ru CorsixTH/RelWithDebInfo/CorsixTH/. CorsixTH/RelWithDebInfo/
+          rm -rf CorsixTH/RelWithDebInfo/CorsixTH/
+          if [ "${{inputs.animview}}" == "true" ]; then
+            mkdir -p artifact
+            mv AnimView/RelWithDebInfo artifact/AnimView
+            mv CorsixTH/RelWithDebInfo artifact/CorsixTH
+          else
+            mv CorsixTH/RelWithDebInfo artifact
+          fi
+          ls -R artifact
 
-      - name: Archive Release
-        uses: actions/upload-artifact@v3
+      - name: Upload build
+        if: inputs.PRESET != 'win-dev'
+        uses: actions/upload-artifact@v4
         with:
-          path: build/CorsixTH/RelWithDebInfo
-          name: CorsixTH
+          path: artifact
+          name: ${{env.NAME}}

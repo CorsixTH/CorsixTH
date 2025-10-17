@@ -311,7 +311,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   self.key_options = {{
       id = "global",
       title = _S.hotkey_window.panel_globalKeys,
-      tooltip = _S.hotkey_window.panel_globalKeys,
+      tooltip = _S.tooltip.hotkey_window.panel_globalKeys,
       sections = {{
           title = _S.hotkey_window.panel_globalKeys,
           keys = {
@@ -324,7 +324,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     {
       id = "ingame",
       title = _S.hotkey_window.panel_generalInGameKeys,
-      tooltip = _S.hotkey_window.panel_generalInGameKeys,
+      tooltip = _S.tooltip.hotkey_window.panel_generalInGameKeys,
       sections = {{
           title = _S.hotkey_window.panel_generalInGameKeys,
           keys = {
@@ -339,7 +339,8 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
             "ingame_quitLevel",
             "ingame_rotateobject",
             "ingame_patient_gohome",
-            "ingame_setTransparent" }}}},
+            "ingame_setTransparent",
+            "ingame_toggleTransparent" }}}},
     {
       id = "speed",
       title = _S.hotkey_window.button_gameSpeedKeys,
@@ -357,7 +358,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     {
       id = "scroll",
       title = _S.hotkey_window.panel_scrollKeys,
-      tooltip = _S.hotkey_window.panel_scrollKeys,
+      tooltip = _S.tooltip.hotkey_window.panel_scrollKeys,
       sections = {{
           title = _S.hotkey_window.panel_scrollKeys,
           keys = {
@@ -370,7 +371,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     {
       id = "zoom",
       title = _S.hotkey_window.panel_zoomKeys,
-      tooltip = _S.hotkey_window.panel_zoomKeys,
+      tooltip = _S.tooltip.hotkey_window.panel_zoomKeys,
       sections = {{
           title = _S.hotkey_window.panel_zoomKeys,
           keys = {
@@ -382,7 +383,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     {
       id = "toggle",
       title = _S.hotkey_window.panel_toggleKeys,
-      tooltip = _S.hotkey_window.panel_toggleKeys,
+      tooltip = _S.tooltip.hotkey_window.panel_toggleKeys,
       sections = {{
           title = _S.hotkey_window.panel_toggleKeys,
           keys = {
@@ -407,6 +408,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
             "ingame_panel_status",
             "ingame_panel_charts",
             "ingame_panel_policy",
+            "ingame_panel_machineMenu",
             "ingame_panel_buildRoom",
             "ingame_panel_furnishCorridor",
             "ingame_panel_editRoom",
@@ -450,11 +452,10 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     table.insert(self.key_options, {
         id = "debug",
         title = _S.hotkey_window.panel_debugKeys,
-        tooltip = _S.hotkey_window.panel_debugKeys,
+        tooltip = _S.tooltip.hotkey_window.panel_debugKeys,
         sections = {{
             title = _S.hotkey_window.panel_debugKeys,
             keys = {
-              "global_connectDebugger",
               "global_showLuaConsole",
               "global_runDebugScript",
               "ingame_showCheatWindow",

@@ -36,7 +36,7 @@ function UIMachine:UIMachine(ui, machine, room)
   self.height = 206
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req03V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
 
   self:addPanel(333,    0,   0) -- Dialog header
   self:addPanel(334,    0,  74) -- The next part
@@ -130,41 +130,43 @@ end
 function UIMachine:onMouseDown(code, x, y)
   -- cycle through all machines when you right click on the machine title
   if code == "right" then
-    if x > 18 and x < 139 then
-      if y > 19 and y < 42 then
-        -- select next machine
-        local ui = self.ui
-        local first_machine, next_machine = nil, self.machine
-        local next_room
-        for _, entity in ipairs(ui.app.world.entities) do
-          -- is a machine and not a slave (e.g. operating_table_b)
-          if class.is(entity, Machine) and not entity.master then
-            next_room = entity:getRoom()
-            if next_room.is_active then
-              if not first_machine then
-                first_machine = entity
-              end
-              if not next_machine then
-                next_machine = entity
-                break
-              elseif entity == next_machine then
-                next_machine = nil
-              end
+    local is_hit_namebox = x > self.tooltip_regions[1].x and x < self.tooltip_regions[1].r
+                       and y > self.tooltip_regions[1].y and y < self.tooltip_regions[1].b
+    if is_hit_namebox then
+      -- move to next machine
+      local ui = self.ui
+      local first_machine, next_machine = nil, self.machine
+      local next_room
+      for _, entity in ipairs(ui.app.world.entities) do
+        -- is a machine and not a slave (e.g. operating_table_b)
+        if class.is(entity, Machine) and not entity.master then
+          next_room = entity:getRoom()
+          if next_room.is_active then
+            if not first_machine then
+              first_machine = entity
+            end
+            if not next_machine then
+              next_machine = entity
+              break
+            elseif entity == next_machine then
+              next_machine = nil
             end
           end
         end
-        if not next_machine or next_machine == self.machine then
-          next_machine = first_machine
-        end
-        if next_machine and next_machine ~= self.machine then
-          -- center screen on machine
-          local sx, sy = ui.app.map:WorldToScreen(next_machine.tile_x, next_machine.tile_y)
-          local dx, dy = next_machine.th:getPosition()
-          ui:scrollMapTo(sx + dx, sy + dy)
-          -- change window
-          ui:addWindow(UIMachine(ui, next_machine, next_room))
-          ui:playSound("camclick.wav")
-        end
+      end
+      if not next_machine or next_machine == self.machine then
+        next_machine = first_machine
+      end
+      if next_machine and next_machine ~= self.machine then
+        -- center screen on machine
+        local sx, sy = ui.app.map:WorldToScreen(next_machine.tile_x, next_machine.tile_y)
+        local dx, dy = next_machine.th:getPosition()
+        ui:scrollMapTo(sx + dx, sy + dy)
+        -- switch machine window
+        ui:addWindow(UIMachine(ui, next_machine, next_room))
+        ui:playSound("camclick.wav")
+        -- show machine info in dynamic info
+        ui.bottom_panel:setDynamicInfo(next_machine:getDynamicInfo())
       end
     end
   end

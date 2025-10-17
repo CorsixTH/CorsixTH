@@ -45,7 +45,8 @@ local col_shadow = {
 function UISaveMap:UISaveMap(ui)
   local treenode = FilteredFileTreeNode(ui.app.user_level_dir, ".map")
   treenode.label = "Maps"
-  self:UIFileBrowser(ui, "map", _S.save_map_window.caption:format(".map"), 265, treenode, true)
+  self:UIFileBrowser(ui, "map", _S.save_map_window.caption:format(".map"), 265,
+      treenode, true, _S.save_map_window.save_button)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.
   self.control:sortByDate()
@@ -55,6 +56,11 @@ function UISaveMap:UISaveMap(ui)
     :setLabel(_S.save_map_window.new_map, nil, "left"):setTooltip(_S.tooltip.save_map_window.new_map)
     :makeTextbox(--[[persistable:save_map_new_map_textbox_confirm_callback]] function() self:confirmName() end,
     --[[persistable:save_map_new_map_textbox_abort_callback]] function() self:abortName() end)
+
+  local message = ui.app.world:validateMap()
+  if message then
+    ui:addWindow(UIInformation(ui, {message}))
+  end
 end
 
 --! Function called when textbox is aborted (e.g. by pressing escape)
@@ -75,6 +81,7 @@ function UISaveMap:confirmName()
   local filename = self.new_map_textbox.text
   local app = self.ui.app
   if filename == "" then
+    self.ui:addWindow(UIInformation(self.ui, { _S.save_map_window.missing_filename }))
     self:abortName()
     return
   end

@@ -63,7 +63,7 @@ function UICheats:UICheats(ui)
   self.cheats = ui.hospital.hosp_cheats
   self.cheat_list = ui.hospital.hosp_cheats.cheat_list
 
-  self:UIResizable(ui, 300, 200, col_bg)
+  self:UIResizable(ui, 300, 560, col_bg)
 
   self.default_button_sound = "selectx.wav"
 
@@ -72,14 +72,15 @@ function UICheats:UICheats(ui)
   self.resizable = false
 
   local y = 10
-  self:addBevelPanel(20, y, 260, 20, col_caption):setLabel(_S.cheats_window.caption)
+  self:addBevelPanel(100, y, 360, 20, col_caption):setLabel(_S.cheats_window.caption)
     .lowered = true
 
   y = y + 30
-  self:addColourPanel(20, y, 260, 40, col_bg.red, col_bg.green, col_bg.blue):setLabel({_S.cheats_window.warning})
+  self:addColourPanel(100, y, 360, 40, col_bg.red, col_bg.green, col_bg.blue)
+      :setLabel({_S.cheats_window.warning})
 
   y = y + 40
-  self.cheated_panel = self:addBevelPanel(20, y, 260, 18, col_cheated_no, col_border, col_border)
+  self.cheated_panel = self:addBevelPanel(100, y, 360, 18, col_cheated_no, col_border, col_border)
 
   local function button_clicked(num)
     return --[[persistable:cheats_button]] function(window)
@@ -91,20 +92,30 @@ function UICheats:UICheats(ui)
   self.item_buttons = {}
 
   y = y + 30
-  for num = 1, #self.cheat_list do
-    self.item_panels[num] = self:addBevelPanel(20, y, 260, 20, col_bg)
-      :setLabel(_S.cheats_window.cheats[self.cheat_list[num].name])
-    self.item_buttons[num] = self.item_panels[num]:makeButton(0, 0, 260, 20, nil, button_clicked(num))
-      :setTooltip(_S.tooltip.cheats_window.cheats[self.cheat_list[num].name])
+  local num = 1
+  local function add_cheat_button(x, number)
+    self.item_panels[number] = self:addBevelPanel(x, y, 260, 20, col_bg)
+      :setLabel(_S.cheats_window.cheats[self.cheat_list[number].name])
+    self.item_buttons[number] = self.item_panels[number]
+      :makeButton(0, 0, 260, 20, nil, button_clicked(number))
+      :setTooltip(_S.tooltip.cheats_window.cheats[self.cheat_list[number].name])
+  end
+  while self.cheat_list[num] do
+    add_cheat_button(20, num)
+    num = num + 1
+    if self.cheat_list[num] then
+      add_cheat_button(280, num)
+      num = num + 1
+    end
     y = y + 20
   end
 
   y = y + 20
-  self:addBevelPanel(20, y, 260, 40, col_bg):setLabel(_S.cheats_window.close)
-    :makeButton(0, 0, 260, 40, nil, self.buttonBack):setTooltip(_S.tooltip.cheats_window.close)
+  self:addBevelPanel(100, y, 360, 40, col_bg):setLabel(_S.cheats_window.close)
+    :makeButton(0, 0, 360, 40, nil, self.buttonBack):setTooltip(_S.tooltip.cheats_window.close)
 
   y = y + 60
-  self:setSize(300, y)
+  self:setSize(560, y)
   -- Position should be set after all panels/buttons are made
   self:setDefaultPosition(0.2, 0.4)
   self:updateCheatedStatus()
@@ -116,17 +127,23 @@ function UICheats:updateCheatedStatus()
   self.cheated_panel:setColour(cheated and col_cheated_yes or col_cheated_no)
 end
 
+--! Handles the choice of a cheat from the dialog
+--!param num (number) the index in the cheat list
 function UICheats:buttonClicked(num)
   -- If the menu was opened by fax code, allow player to use it
   if self.ui.hospital.world:isUserActionProhibited() and not self.ui:getWindow(UIFax) then
     --TODO: Prevent selectx.wav playing with this
     return self.ui:playSound("wrong2.wav")
   end
-  if self.cheats:performCheat(num) then
+  local success, message = self.cheats:performCheat(num)
+  if success then
     self.cheats.announceCheat(self.ui)
     self:updateCheatedStatus()
-  else
-    self.ui:addWindow(UIInformation(self.ui, {_S.information.cheat_not_possible}))
+  else -- cheat failed, make sure we provide feedback
+    message = message or _S.information.cheat_not_possible
+  end
+  if message then
+    self.ui:addWindow(UIInformation(self.ui, {message}))
   end
 end
 
@@ -135,12 +152,7 @@ function UICheats:buttonBack()
 end
 
 function UICheats:afterLoad(old, new)
-  if old < 145 then
-    -- Window must be closed if open for compatibility
-    local cheatWindow = self.ui:getWindow(UICheats)
-    if cheatWindow then
-      cheatWindow:close()
-    end
-  end
+  -- Window must be closed for compatibility
+  self:close()
   UIResizable.afterLoad(self, old, new)
 end

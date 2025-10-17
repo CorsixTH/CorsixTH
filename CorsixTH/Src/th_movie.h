@@ -25,17 +25,19 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL.h>
+#include <SDL_rect.h>
+#include <SDL_render.h>
 
 #include <array>
 #include <atomic>
 #include <condition_variable>
+#include <memory>
 #include <mutex>
 #include <queue>
 #include <string>
 #include <thread>
 
-#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
+#ifdef CORSIX_TH_USE_FFMPEG
 #include <SDL_mixer.h>
 
 extern "C" {
@@ -44,11 +46,20 @@ extern "C" {
 #define UINT64_C(c) (c##ULL)
 #endif
 #include <libavcodec/avcodec.h>
+// IWYU pragma: no_include <libavcodec/codec.h>
+// IWYU pragma: no_include <libavcodec/packet.h>
+// IWYU pragma: no_include <libavcodec/version.h>
 #include <libavformat/avformat.h>
-#include <libavutil/avutil.h>
+#include <libavutil/avutil.h>  // IWYU pragma: keep
+// IWYU pragma: no_include <libavutil/channel_layout.h>
+// IWYU pragma: no_include <libavutil/frame.h>
+// IWYU pragma: no_include <libavutil/mem.h>
+// IWYU pragma: no_include <libavutil/pixfmt.h>
+// IWYU pragma: no_include <libavutil/version.h>
 #include <libswresample/swresample.h>
-#include <libswscale/swscale.h>
 }
+
+struct SwsContext;
 
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59, 0, 100)
 using av_codec_ptr = AVCodec*;
@@ -202,7 +213,7 @@ class movie_picture_buffer {
   //! Return whether there is space to add any more frame data to the queue
   //!
   //! \remark Requires external locking
-  bool unsafe_full();
+  bool unsafe_full() const;
 
   //! The number of elements to allocate in the picture queue
   static constexpr std::size_t picture_buffer_size = 4;
@@ -314,11 +325,17 @@ class movie_player {
 
   //! Play the currently loaded movie
   //!
-  //! \param iChannel The audio channel to use
-  void play(int iChannel);
+  //! \param requested_audio_channel The audio channel to use
+  void play(int requested_audio_channel);
 
   //! Stop the currently playing movie
   void stop();
+
+  //! Pause the currently playing movie
+  //!
+  //! This method is not thread safe, it should only be called from the event
+  //! thread.
+  void togglePause();
 
   //! Return the original height of the movie
   int get_native_height() const;
@@ -328,6 +345,9 @@ class movie_player {
 
   //! Return whether the movie has an audio stream
   bool has_audio_track() const;
+
+  //! Return the length of the movie in milliseconds
+  double get_movie_length() const;
 
   //! Return a text description of the last error encountered
   const char* get_last_error() const;
@@ -340,7 +360,8 @@ class movie_player {
   //!
   //! \param destination_rect The location and dimensions in the renderer on
   //! which to draw the movie
-  void refresh(const SDL_Rect& destination_rect);
+  //! \returns The current presentation time stamp of the movie in milliseconds
+  double refresh(const SDL_Rect& destination_rect);
 
   //! Deallocate the picture buffer and free any resources associated with it.
   //!
@@ -374,13 +395,15 @@ class movie_player {
   void copy_audio_to_stream(uint8_t* pbStream, int iStreamSize);
 
  private:
-#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
+#ifdef CORSIX_TH_USE_FFMPEG
   static constexpr size_t movie_error_buffer_capacity =
       128;  ///< Buffer to hold last error description
 
   //! Get the AVCodecContext associated with a given stream
   av_codec_context_unique_ptr get_codec_context_for_stream(
       av_codec_ptr codec, AVStream* stream) const;
+
+  void play_audio(int requested_audio_channel);
 
   //! Get the time the given frame should be played (from the start of the
   //! stream)
@@ -421,6 +444,10 @@ class movie_player {
 
   //! Indicate that we are in the process of aborting playback
   std::atomic<bool> aborting;
+
+  //! Indicate that playback is paused
+  std::atomic<bool> paused{};
+  uint32_t pause_start_time{};  ///< The time in SDL ticks at which we paused
 
   std::mutex decoding_audio_mutex;  ///< Synchronize access to #m_pAudioBuffer
 

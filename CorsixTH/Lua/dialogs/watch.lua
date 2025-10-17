@@ -53,12 +53,14 @@ function UIWatch:UIWatch(ui, count_type)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Watch01V", true)
   self.epidemic = false
   self.count_type = count_type
+  self.active_hover = false
   -- For cycling the list of epidemic/emergency patients which index to use
   self.current_index = nil
   -- The last patient whose dialog was opened by clicking the timer
   self.lastCycledPatient = nil
 
   local end_sprite = (count_type == "epidemic") and 14 or 16
+  self.end_sprite = end_sprite
 
   local tooltips = {
     ["initial_opening"] = _S.tooltip.watch.hospital_opening,
@@ -70,6 +72,17 @@ function UIWatch:UIWatch(ui, count_type)
     self.end_button = self:addPanel(end_sprite, 4, 0)
     :makeButton(4, 0, 27, 28, end_sprite + 1, self.toggleVaccinationMode)
     :setTooltip(tooltips[count_type])
+
+    self:addPanel(end_sprite, 4, 0)
+    .custom_draw = --[[persistable:epidemic_timer_button]] function(panel, canvas, x, y)
+      x = x + panel.x
+      y = y + panel.y
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
+      if self.active_hover then
+        self.panel_sprites:draw(canvas, 15, x, y)
+      end
+    end
+
   elseif count_type ~= "emergency" then
     self.end_button = self:addPanel(end_sprite, 4, 0)
       :makeButton(4, 0, 27, 28, end_sprite + 1, self.onCountdownEnd)
@@ -84,6 +97,14 @@ function UIWatch:UIWatch(ui, count_type)
         self.scrollToTimerEventPatient, nil, self.cycleTimerEventPatient)
   else
     self:addPanel(timer_sprite, 0, 28):setTooltip(tooltips[count_type])
+    .custom_draw = --[[persistable:open_hospital_timer_button]] function(panel, canvas, x, y)
+      x = x + panel.x
+      y = y + panel.y
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
+      if self.active_hover then
+        self.panel_sprites:draw(canvas, 17, x + 4, y - 28)
+      end
+    end
   end
   self:addPanel(1, 2, 47)
 end
@@ -94,16 +115,18 @@ function UIWatch:onCountdownEnd()
     self.ui.hospital:resolveEmergency()
   elseif self.count_type == "epidemic" then
     local epidemic = self.hospital.epidemic
-    if epidemic and not epidemic.inspector then
-      epidemic:spawnInspector()
-      if epidemic.vaccination_mode_active then
-        epidemic:toggleVaccinationMode()
-      end
+    if epidemic then
+      epidemic:coverUpTimeIsUp()
     end
   elseif self.count_type == "initial_opening" then
-    self.ui.hospital.opened = true
+    self.hospital:open()
     self.ui:playSound("fanfare.wav")
   end
+end
+
+function UIWatch:onMouseMove(x, y, dx, dy)
+  self.active_hover = self:hoverTest(self.active_hover, x, y, 4, 31, 0, 29)
+  return Window:onMouseMove(x, y, dx, dy)
 end
 
 function UIWatch:onWorldTick()

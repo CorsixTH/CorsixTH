@@ -28,8 +28,6 @@ function StaffProfile:StaffProfile(world, humanoid_class, local_string)
   self.humanoid_class = humanoid_class
   self.name = "Initialised"
   self.initial = "UN"
-  -- 1009 is a prime number which avoids a modulo of 0 when we need
-  -- a positive number to randomly pick the initial letter
   self.name_seed = math.random(1, 1009)
   self.name_lang = self.world.app.config.language
   self.wage = 0
@@ -251,6 +249,11 @@ function StaffProfile:getFairWage()
     end
   end
   return math.max(math.floor(wage), level_config.staff[conf_id[self.humanoid_class]].MinSalary)
+end
+
+function StaffProfile:getRiseAmount()
+  local rise_amount = math.floor(math.max(self.wage * 1.1, (self:getFairWage(self.world) + self.wage) / 2) - self.wage)
+  return rise_amount
 end
 
 function StaffProfile:getFullName()

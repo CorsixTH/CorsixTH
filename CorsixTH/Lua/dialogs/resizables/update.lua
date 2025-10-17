@@ -66,7 +66,7 @@ function UIUpdate:UIUpdate(ui, this_version, new_version, brief_description, dow
   self.default_button_sound = "selectx.wav"
   self.description_text = brief_description
   self.app = app
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
   self.download_url = download_url
 
   self:addBevelPanel(20, 50, 140, 20, col_shadow, col_bg, col_bg)

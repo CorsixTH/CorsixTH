@@ -27,8 +27,8 @@ class "Machine" (Object)
 local Machine = _G["Machine"]
 
 function Machine:Machine(hospital, object_type, x, y, direction, etc)
-  self.total_usage = -1 -- Incremented in the constructor of Object.
   self:Object(hospital, object_type, x, y, direction, etc)
+  self.mood_marker = 1 -- Machine reuses the patient marker.
 
   if object_type.default_strength then
     -- Only for the main object. The slave doesn't need any strength
@@ -41,9 +41,11 @@ function Machine:Machine(hospital, object_type, x, y, direction, etc)
   -- Change hover cursor once the room has been finished.
   self.waiting_for_finalize = true -- Waiting until the room is completed (reset by new-room callback).
 
+  self.total_usage = 0
   self:setHandymanRepairPosition(direction)
 end
 
+--!param room (object) machine room
 function Machine:notifyNewRoom(room)
   if self.waiting_for_finalize and room.objects[self] then
     self:finalize(room)
@@ -56,34 +58,54 @@ function Machine:setCrashedAnimation()
 end
 
 --! Calculates the number of times the machine can be used before crashing (unless repaired first)
+--!return (int) remaining uses count
 function Machine:getRemainingUses()
   return self.strength - self.times_used
 end
 
 --! Returns true if a machine is smoking/needs repair
+--!return (bool)
 function Machine:isBreaking()
   local threshold = self:getRemainingUses()
   return threshold < 4
 end
 
+function Machine:isMachine()
+  return true
+end
+
+--! Return Tile position for smoke animation
+--!return (map, int, int)
+local function getSmokeTile(self)
+  local map, _, _ = self.th:getTile()
+  local x, y = self.tile_x, self.tile_y
+  local smoke_position = self.object_type.orientations[self.direction].smoke_position
+  if smoke_position then
+    x = x + smoke_position[1]
+    y = y + smoke_position[2]
+  end
+
+  return map, x, y
+end
+
 --! Set whether the smoke animation should be showing
 local function setSmoke(self, isSmoking)
   -- If turning smoke on for this machine
-  if isSmoking then
+  if isSmoking and self.object_type.smoke_animation then
     -- If there is no smoke animation for this machine, make one
     if not self.smokeInfo then
       self.smokeInfo = TH.animation()
       -- Note: Set the location of the smoke to that of the machine
       -- rather than setting the machine to the parent so that the smoke
       -- doesn't get hidden with the machine during use
-      self.smokeInfo:setTile(self.th:getTile())
+      self.smokeInfo:setTile(getSmokeTile(self))
       -- Always show the first smoke layer
       self.smokeInfo:setLayer(10, 2)
       -- tick to animate over all frames
       self.ticks = true
     end
-    -- TODO: select the smoke icon based on the type of machine
-    self.smokeInfo:setAnimation(self.world.anims, 3424)
+    local mirror = self.direction == "east" and 1 or 0
+    self.smokeInfo:setAnimation(self.world.anims, self.object_type.smoke_animation, mirror)
   else -- Otherwise, turning smoke off
     -- If there is currently a smoke animation, remove it
     if self.smokeInfo then
@@ -93,92 +115,145 @@ local function setSmoke(self, isSmoking)
   end
 end
 
---! Call on machine use. Handles crashing the machine & queueing repairs
+--! The function is called when an earthquake strike the machine.
+--! Function defines the machine's reaction to an earthquake.
+--! During an earthquake, this function is called one or several times.
+--!param room (object) machine room
+function Machine:earthquakeImpact(room)
+  self:machineUsed(room)
+end
+
+--! Call on machine use.
+--!param room (object) machine room
+--!return (bool) is room exploding after this use
 function Machine:machineUsed(room)
   -- Do nothing if the room has already crashed
   if room.crashed then
     return
   end
-  -- Update dynamic info (strength & times used)
+  local cheats = self.hospital.hosp_cheats
+  local is_invulnerable_machines_cheat_active = cheats:isCheatActive("invulnerable_machines")
+
+  self:incrementUsageCounts(is_invulnerable_machines_cheat_active)
+  -- Update dynamic info (machine strength & times used)
   self:updateDynamicInfo()
-  -- How many uses this machine has left until it explodes
-  local threshold = self:getRemainingUses()
-  -- Find a queued task for a handyman coming to repair this machine
-  local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
-  local num_extinguishers = 0
-  local explosion_chance
-  local explode = false
-  -- Room is set to explode
-  if threshold < 1 then
-    -- If a fire extinguisher in the room, room has chance not to explode
-    for object, _ in pairs(room.objects) do
-      if object.object_type.id == "extinguisher" and num_extinguishers < 4 then
-        num_extinguishers = num_extinguishers + 1
-      end
-    end
-    if num_extinguishers == 0 or threshold < -3 then
-      -- If no extinguisher in room, or machine used 5 times over its strength always explode
-      explode = true
-    else
-      -- Explosion chance increases 20% with every use over strength, and reduced by 5% for every additional extinguisher (up to 3 extra) in the room bar the first one
-      explosion_chance = (2 / self.strength) + (threshold * -0.2) - (num_extinguishers * 0.05) + 0.05
-      -- Cap it until guaranteed explosion
-      explosion_chance = explosion_chance > 0.95 and 0.95 or explosion_chance
-      explosion_chance = explosion_chance < 0.05 and 0.05 or explosion_chance
-      explode = math.random() < explosion_chance
-    end
-  end
-  -- Room failed to be saved, or no extinguishers were present
-  if explode then
-    -- Clean up any task of handyman coming to repair the machine
-    self.hospital:removeHandymanTask(taskIndex, "repairing")
-    -- Blow up the room
-    room:crashRoom()
-    self:setCrashedAnimation()
-    -- No special cursor required when hovering over the crashed room
-    self.hover_cursor = nil
-    -- Clear dynamic info (tracks machine usage which is no longer required)
-    self:clearDynamicInfo()
-    -- Prevent the machine from smoking, it's now just a pile of rubble
-    setSmoke(self, false)
-    -- If we have the window for this machine open, close it
-    local window = self.world.ui:getWindow(UIMachine)
-    if window and window.machine == self then
-      window:close()
-    end
-    -- Clear the icon showing a handyman is coming to repair the machine
-    self:setRepairing(nil)
+
+  -- If the cheat is active, the machine should not wear out or explode
+  local must_explode = not is_invulnerable_machines_cheat_active and self:calculateIsMachineMustExplode(room)
+  if must_explode then
+    -- Room failed to be saved, it must be explode
+    self:explodeMachine(room)
     return true
-  -- Else if urgent repair needed or room didn't explode
-  elseif threshold < 4 then
+  else
+    self:callHandymanForRepairIfNecessary(room)
+    -- Update whether smoke gets displayed for this machine (and if so, how much)
+    self:updateSmokeDisplay(room)
+  end
+end
+
+--! Call after use of the machine.
+function Machine:incrementUsageCounts(total_usage_only)
+  total_usage_only = total_usage_only or false
+  self.total_usage = self.total_usage + 1
+
+  if not total_usage_only then
+    self.times_used = self.times_used + 1
+  end
+end
+
+--! Call on machine use.
+--!param room (object) machine room
+function Machine:callHandymanForRepairIfNecessary(room)
+  local repair_task_index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
+  local repair_task_does_not_exist = repair_task_index == -1
+  local remaining_use_count = self:getRemainingUses()
+  if remaining_use_count < 4 then
     -- If the job of repairing the machine isn't queued, queue it now (higher priority)
-    if taskIndex == -1 then
+    if repair_task_does_not_exist then
       local call = self.world.dispatcher:callForRepair(self, true, false, true)
       self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
       self.hospital:announceRepair(room)
-    else -- Otherwise the task is already queued. Increase the priority to above that of machines with at least 4 uses left
-       -- Upgrades task from low (1) priority to high (2) priority
-       -- This does not lock the room, as happens when the task call starts at high priority
-      if self.hospital:getHandymanTaskPriority(taskIndex, "repairing") == 1 then
-        self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
+    else
+      -- Otherwise the task is already queued.
+      -- Increase the priority to above that of machines with at least 4 uses left
+      -- Upgrades task from low (1) priority to high (2) priority
+      -- This does not lock the room, as happens when the task call starts at high priority
+      if self.hospital:getHandymanTaskPriority(repair_task_index, "repairing") == 1 then
+        self.hospital:modifyHandymanTaskPriority(repair_task_index, 2, "repairing")
         self.hospital:announceRepair(room)
       end
     end
-  -- Else if repair is needed, but not urgently
-  elseif threshold < 6 then
-    -- If the job of repairing the machine isn't queued, queue it now (low priority)
-    if taskIndex == -1 then
-      local call = self.world.dispatcher:callForRepair(self)
-      self.hospital:addHandymanTask(self, "repairing", 1, self.tile_x, self.tile_y, call)
+  elseif remaining_use_count < 6 and repair_task_does_not_exist then
+    -- Else if (low priority) repair is needed, make sure there is a handyman task for it.
+    local call = self.world.dispatcher:callForRepair(self)
+    self.hospital:addHandymanTask(self, "repairing", 1, self.tile_x, self.tile_y, call)
+  end
+end
+
+--! Call on machine use. Handles crashing the machine
+function Machine:calculateIsMachineMustExplode(room)
+  -- Find a queued task for a handyman coming to repair this machine
+  local remaining_use_count = self:getRemainingUses()
+  local max_extinguishers_effective_count = 4
+  local num_extinguishers = 0
+  local explosion_chance
+  local must_explode = false
+  if remaining_use_count < 1 then
+    -- If a fire extinguisher in the room, room has chance not to explode
+    -- Calculate the number of extinguishers in the room.
+    for object, _ in pairs(room.objects) do
+      if object.object_type.id == "extinguisher" then
+        num_extinguishers = num_extinguishers + 1
+      end
+      if num_extinguishers == max_extinguishers_effective_count then
+        break
+      end
+    end
+    if num_extinguishers == 0 or remaining_use_count < -3 then
+      -- If not enough extinguishers in the room or machine is used 5 times over its strength, always explode.
+      must_explode = true
+    else
+      -- Explosion chance increases 20% with every use over strength, and reduced by 5% for every additional extinguisher (up to 3 extra) in the room bar the first one
+      explosion_chance = (2 / self.strength) + (remaining_use_count * -0.2) - (num_extinguishers * 0.05) + 0.05
+      explosion_chance = math.min(0.95, math.max(0.05, explosion_chance))
+      must_explode = math.random() < explosion_chance
     end
   end
+  return must_explode
+end
 
-  -- Update whether smoke gets displayed for this machine (and if so, how much)
-  self:calculateSmoke(room)
+--! Call on machine explode. Handles machine and room exploding
+--!param room (object) machine room
+function Machine:explodeMachine(room)
+  -- Clean up any task of handyman coming to repair the machine
+  self:removeHandymanRepairTask()
+
+  -- Blow up the room
+  room:crashRoom()
+  self:setCrashedAnimation()
+
+  -- No special cursor required when hovering over the crashed room
+  self.hover_cursor = nil
+
+  -- Clear dynamic info (tracks machine usage which is no longer required)
+  self:clearDynamicInfo()
+
+  -- Prevent the machine from smoking, it's now just a pile of rubble
+  setSmoke(self, false)
+
+  -- If we have the window for this machine open, close it
+  local window = self.world.ui:getWindow(UIMachine)
+  if window and window.machine == self then
+    window:close()
+  end
+
+  -- Clear the icon showing a handyman is coming to repair the machine
+  self:setRepairing(nil)
 end
 
 --! Calculates whether smoke gets displayed for this machine (and if so, how much)
-function Machine:calculateSmoke(room)
+--!param room (object) machine room
+function Machine:updateSmokeDisplay(room)
   -- Do nothing if the room has already crashed
   if room.crashed then
     return
@@ -200,6 +275,13 @@ function Machine:calculateSmoke(room)
       self.smokeInfo:setLayer(12, 2)
     end
   end
+end
+
+--! Call on machine place.
+--!param room (object) machine room
+function Machine:placed(room)
+  -- Machines may have smoke, recalculate it to ensure the animation is in the correct state.
+  self:updateSmokeDisplay(room)
 end
 
 function Machine:getRepairTile()
@@ -227,7 +309,7 @@ function Machine:createHandymanActions(handyman)
 
   local repair_action = UseObjectAction(self):setProlongedUsage(false)
       :setAfterUse(repair_after_use)
-  repair_action.min_length = 20
+  repair_action.min_length = 20 -- Minimum number of frames needed for the action.
 
   if handyman_room and handyman_room ~= this_room then
     handyman:setNextAction(handyman_room:createLeaveAction())
@@ -276,10 +358,7 @@ function Machine:replaceMachine(cost)
   self.strength = self.hospital.research.research_progress[self.object_type].start_strength
 
   -- Remove any queued repair jobs
-  local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
-  if index ~= -1 then
-    self.hospital:removeHandymanTask(index, "repairing")
-  end
+  self:removeHandymanRepairTask()
 
   -- Clear icon showing handyman is coming to repair the machine
   self:setRepairing(nil)
@@ -287,47 +366,74 @@ function Machine:replaceMachine(cost)
   setSmoke(self, false)
 end
 
-function Machine:machineRepaired(room)
-  room.needs_repair = nil
-  local str = self.strength
-  if self.times_used/str > 0.55 then
-    self.strength = str - 1
-  end
+--! Call on machine repaired.
+--!param room (object) machine room
+function Machine:machineRepaired(room, should_reduce_strength)
+  should_reduce_strength = should_reduce_strength or true
+  room.needs_repair = false
   self.times_used = 0
   self:setRepairing(nil)
   setSmoke(self, false)
+  self:removeHandymanRepairTask()
 
-  local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
-  self.hospital:removeHandymanTask(taskIndex, "repairing")
+  if should_reduce_strength then
+    self:reduceStrengthOnRepair()
+  end
+end
+
+--! Call on machine used. After machine use increment use values accordingly.
+function Machine:removeHandymanRepairTask()
+  -- Remove any queued repair jobs
+  local repair_task_index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
+  local repair_task_exist = repair_task_index ~= -1
+  if repair_task_exist then
+    self.hospital:removeHandymanTask(repair_task_index, "repairing")
+  end
+end
+
+--! Calculates if machine strength should be reduced as a result of repair
+function Machine:reduceStrengthOnRepair()
+  local minimum_possible_strength = 2
+  if self.strength <= minimum_possible_strength then return end
+
+  local current_strength = self.strength
+  local used_out_rate = self.times_used / current_strength
+
+  -- calculate chance of strength reducing
+  local should_reduce_strength = math.random() < used_out_rate
+  if should_reduce_strength then
+    self.strength = current_strength - 1
+  end
 end
 
 --! Tells the machine to start showing the icon that it needs repair.
 --!   also lock the room from patient entering
 --!param handyman The handyman heading to this machine. nil if repairing is finished
-function Machine:setRepairing(handyman)
-  -- If mode is set to true manually through the dialog, boost the urgency despite of the strength
+--!param is_manual_repair (bool) true if the repairing mode was set manually through the dialog; nil otherwise
+function Machine:setRepairing(handyman, is_manual_repair)
   local anim = {icon = 4564} -- The only icon for machinery
   local room = self:getRoom()
-  self:setMoodInfo(handyman and anim or nil)
-  room.needs_repair = handyman
-  if handyman then
+  local should_repair = handyman or is_manual_repair
+  self:setMoodInfo(should_repair and anim or nil)
+  room.needs_repair = should_repair
+  if should_repair then
     self.ticks = true
   else
     self.ticks = self.object_type.ticks
     self.world.dispatcher:dropFromQueue(self)
     if not room.crashed then
-      self:updateDynamicInfo(true)
+      self:updateDynamicInfo()
       self:getRoom():tryAdvanceQueue()
     end
   end
 end
 
-function Machine:setRepairingMode(lock_room)
+function Machine:setRepairingMode(lock_room, is_manual_repair)
   if lock_room ~= nil then
     self.repairing_lock_room = lock_room
   end
-  if self.repairing and self.repairing_lock_room then
-    self:setRepairing(self.repairing)
+  if (self.repairing or is_manual_repair) and self.repairing_lock_room then
+    self:setRepairing(self.repairing, is_manual_repair)
   end
 end
 
@@ -342,23 +448,21 @@ end
 
 -- Currently used to make the hover cursor of the machine be special
 -- only if the room is active at the moment (e.g. not being edited)
+--!param room (object) machine room
 function Machine:finalize(room)
   if room.is_active then
     self.hover_cursor = TheApp.gfx:loadMainCursor("repair")
-    self:updateDynamicInfo(true)
+    self:updateDynamicInfo()
   else
     self:clearDynamicInfo()
     self.hover_cursor = nil
   end
 end
 
-function Machine:updateDynamicInfo(only_update)
-  if not only_update then
-    self.times_used = self.times_used + 1
-    self.total_usage = self.total_usage + 1
-  end
+function Machine:updateDynamicInfo()
   if self.strength then
-    if self.world.ui.app.config.new_machine_extra_info then
+    local show_machine_max_available_strength_value = self.world.ui.app.config.new_machine_extra_info
+    if show_machine_max_available_strength_value then
       local hosp = self.world:getLocalPlayerHospital()
       self:setDynamicInfo("text", {
         self.object_type.name,
@@ -388,12 +492,9 @@ end
 function Machine:onDestroy()
   local room = self:getRoom()
   if room then
-    room.needs_repair = nil
+    room.needs_repair = false
   end
-  local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
-  if index ~= -1 then
-    self.hospital:removeHandymanTask(index, "repairing")
-  end
+  self:removeHandymanRepairTask()
 
   -- Stop this machine from smoking
   setSmoke(self, false)
@@ -413,11 +514,10 @@ function Machine:afterLoad(old, new)
   if old < 54 then
     local room = self:getRoom()
     if room.crashed then
-      local taskIndex = room.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
-      room.hospital:removeHandymanTask(taskIndex, "repairing")
+      self:removeHandymanRepairTask()
     end
   end
-  self:updateDynamicInfo(true)
+  self:updateDynamicInfo()
   return Object.afterLoad(self, old, new)
 end
 
@@ -438,7 +538,7 @@ end
 function Machine:getState()
   local state = Object.getState(self)
   state.total_usage = self.total_usage
-
+  state.strength = self.strength
   return state
 end
 
@@ -452,6 +552,7 @@ function Machine:setState(state)
   Object.setState(self, state)
   if state then
     self.total_usage = state.total_usage
+    self.strength = state.strength
   end
 end
 

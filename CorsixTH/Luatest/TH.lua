@@ -21,14 +21,19 @@ SOFTWARE. --]]
 -- A stub implementation of the TH C++ object, to be able to run
 -- unit tests without any backend.
 
+local loadFont = function()
+  return {
+    draw = function() end,
+    drawWrapped = function() end,
+  }
+end
+
 TheApp = {
   gfx = {
     loadMainCursor = function() end,
     loadSpriteTable = function() end,
-    loadFont = function() return {
-      draw = function() end,
-      drawWrapped = function() end,
-    } end,
+    loadFont = loadFont,
+    loadFontAndSpriteTable = loadFont,
   },
   runtime_config = {},
   config = {
@@ -39,6 +44,10 @@ TheApp = {
     speed = "Normal",
     isCurrentSpeed = function(self, s) return s == self.speed end,
     gameLog = function() end,
+  },
+  animation_manager = {
+    setPatientMarker = function(...) end,
+    setStaffMarker = function(...) end,
   },
 }
 

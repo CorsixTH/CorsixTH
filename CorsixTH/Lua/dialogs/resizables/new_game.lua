@@ -196,16 +196,18 @@ function UINewGame:buttonStart()
 end
 
 function UINewGame:startGame(difficulty)
-  self.ui.app:loadLevel(1, difficulty)
-  self.ui.app.moviePlayer:playAdvanceMovie(1)
+  if self.ui.app:loadLevel(1, difficulty, nil, nil, nil, nil,
+      _S.errors.load_level_prefix, nil) and self.ui.app.world then
+    self.ui.app.moviePlayer:playAdvanceMovie(1)
 
-  -- Initiate campaign progression. The UI above may now have changed.
-  if not TheApp.using_demo_files then
-    TheApp.world.campaign_info = "TH.campaign"
-  end
-  if self.start_tutorial then
-    TheApp.ui.start_tutorial = true
-    TheApp.ui:startTutorial()
+    -- Initiate campaign progression. The UI above may now have changed.
+    if not TheApp.using_demo_files then
+      TheApp.world.campaign_info = "TH.campaign"
+    end
+    if self.start_tutorial then
+      TheApp.ui.start_tutorial = true
+      TheApp.ui:startTutorial()
+    end
   end
 end
 

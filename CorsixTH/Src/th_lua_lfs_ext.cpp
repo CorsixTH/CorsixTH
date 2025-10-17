@@ -21,8 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "config.h"
-
+#include "lua.hpp"
+#include "th_lua.h"
 #include "th_lua_internal.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
 #include <windows.h>

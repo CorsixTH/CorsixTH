@@ -69,7 +69,7 @@ function GPRoom:doStaffUseCycle(humanoid)
       -- to remain alert, so might just remain at the desk and deal with the
       -- next patient quicker.
       if humanoid.profile.is_consultant and
-          math.random() >= humanoid.attributes.fatigue then
+          math.random() >= humanoid:getAttribute("fatigue") then
         desk_use_time = math.random(7, 14)
       else
         self:doStaffUseCycle(humanoid)
@@ -134,7 +134,11 @@ function GPRoom:dealtWithPatient(patient)
   elseif patient.disease and not patient.diagnosed then
     self.hospital:receiveMoneyForTreatment(patient)
     patient:completeDiagnosticStep(self)
-    if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
+    local no_need_diagnose_further =
+      patient.diagnosis_progress >= self.hospital.policies["stop_procedure"]
+    local cant_diagnose_further_but_can_set_diagnosis =
+      (patient.diagnosis_progress >= 1.0) and (not patient:hasMoreDiagnosisRoomsAvailable())
+    if no_need_diagnose_further or cant_diagnose_further_but_can_set_diagnosis then
       patient:setDiagnosed()
       if patient:agreesToPay(patient.disease.id) then
         patient:queueAction(SeekRoomAction(patient.disease.treatment_rooms[1]):enableTreatmentRoom())
@@ -155,18 +159,13 @@ function GPRoom:dealtWithPatient(patient)
     patient:queueAction(IdleAction())
   end
 
-  if self.dealt_patient_callback then
-    self.dealt_patient_callback(self.waiting_staff_member)
-  end
   if self.staff_member then
     self:setStaffMembersAttribute("dealing_with_patient", false)
   end
-  -- Maybe the staff member can go somewhere else
-  self:findWorkForStaff()
 end
 
 function GPRoom:sendPatientToNextDiagnosisRoom(patient)
-  if #patient.available_diagnosis_rooms == 0 then
+  if not patient:hasMoreDiagnosisRoomsAvailable() then
     -- The very rare case where the patient has visited all his/her possible diagnosis rooms
     -- There's not much to do then... Send home
     patient:goHome("kicked")

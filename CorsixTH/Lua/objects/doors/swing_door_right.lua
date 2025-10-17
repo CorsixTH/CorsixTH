@@ -38,28 +38,55 @@ local SwingDoor = _G["SwingDoor"]
 function SwingDoor:SwingDoor(hospital, object_type, x, y, direction, etc)
   self.is_master = object_type == object
   self:Door(hospital, object_type, x, y, direction, etc)
-  if self.is_master then
-    -- Wait one tick before finding the slave so that we're sure it has been created.
-    local --[[persistable:swing_door_creation]] function callback()
-      local slave_type = "swing_door_left"
-      self.slave = self.world:getObject(x - 1, y, slave_type) or self.world:getObject(x, y - 1, slave_type) or nil
-      self.slave:setAsSlave(self)
-      self.ticks = false
-    end
-    self:setTimer(1, callback)
-    self.ticks = true
-  end
+  self.paired = false
+  self:pairDoors(x, y)
   self.old_anim = self.th:getAnimation()
   self.old_flags = self.th:getFlag()
+  local --[[persistable:swing_door_creation]] function _() end -- Stub from Oct 2023, savegame version 181
 end
 
---[[ Makes the door mimic its master when it comes to hover cursor and what happens
-when the player clicks on it.
+--! Links the master to the slave swing door. This allows the slave to mimic the
+--! master in interactions
+--!param x (num) Coordinate
+--!param y (num) Coordinate
+function SwingDoor:pairDoors(x, y)
+  -- Because we don't know the build order of each door we must accommodate for this
+  if self.is_master then -- The master will check for an adjacent slave
+    local slave_type = "swing_door_left"
+    self.slave = self.world:getObject(x - 1, y, slave_type) or
+        self.world:getObject(x, y - 1, slave_type)
+    if self.slave then
+      self.slave.master = self
+      self.paired = true
+      self.slave.master.paired = true
+    end
+  else -- The slave will check for an adjacent master
+    local master_type = "swing_door_right"
+    self.master = self.world:getObject(x + 1, y, master_type) or
+        self.world:getObject(x, y + 1, master_type)
+    if self.master then
+      self.master.slave = self
+      self.paired = true
+      self.master.slave.paired = true
+    end
+  end
+  -- The second run of this function must check there was a successful pairing
+  self:checkPaired(x, y)
+end
 
-!param swing_door (Door) The master door to mimic.
-]]
-function SwingDoor:setAsSlave(swing_door)
-  self.master = swing_door
+--! Checks to see if the swing doors have paired correctly
+function SwingDoor:checkPaired(x, y)
+  if self.paired then
+    assert((self.master and self.master.slave == self) or
+        (self.slave and self.slave.master == self),
+        "Swing doors did not pair at (" .. x .. ", " .. y .. ")")
+  else -- The other door should not yet exist
+    local other_door_type = self.is_master and "swing_door_left" or "swing_door_right"
+    local other_door_offset = self.is_master and - 1 or 1
+    local other_door = self.world:getObject(x + other_door_offset, y, other_door_type) or
+        self.world:getObject(x, y + other_door_offset, other_door_type)
+    assert(not other_door, "Swing doors did not pair at (" .. x .. ", " .. y .. ")")
+  end
 end
 
 -- Depending on if this is a master or slave different onClick functions are called.
@@ -138,7 +165,7 @@ function SwingDoor:swing(anim, flags)
       self:getRoom():tryAdvanceQueue()
     end
   end
-  self:setTimer(self.world:getAnimLength(anim), callback)
+  self:setTimer(TheApp.animation_manager:getAnimLength(anim), callback)
 end
 
 function SwingDoor:getWalkableTiles()
@@ -158,6 +185,25 @@ function SwingDoor:getWalkableTiles()
       {x-1, y  }, {x, y  }, {x+1, y  },
     }
   end
+end
+
+function SwingDoor:afterLoad(old, new)
+  if old < 184 then
+    if (self.is_master and not self.slave) or (not self.is_master and
+        not self.master) then
+      local x, y =  self.tile_x, self.tile_y
+      self.paired = false -- other door will be rectified by pairDoors
+      self:pairDoors(x, y)
+    else
+      self.paired = true
+      if self.is_master then
+        self.slave.paired = true
+      else
+        self.master.paired = true
+      end
+    end
+  end
+  Door.afterLoad(self, old, new)
 end
 
 return object

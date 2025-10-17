@@ -42,7 +42,7 @@ local function action_tap_foot_start(action, humanoid)
   assert(humanoid.tap_foot_anim, "Error: foot tapping animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.tap_foot_anim, humanoid.last_move_direction == "east" and 0 or 1)
-  humanoid:setTimer(humanoid.world:getAnimLength(humanoid.tap_foot_anim), action_tap_foot_end)
+  humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.tap_foot_anim), action_tap_foot_end)
 end
 
 return action_tap_foot_start

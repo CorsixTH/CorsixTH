@@ -24,22 +24,22 @@ SOFTWARE.
 
 #include "config.h"
 
-#include "th_strings.h"
-#ifdef CORSIX_TH_USE_FREETYPE2
-#include FT_GLYPH_H
-#include <map>
-#include <vector>
-#endif
-#include <algorithm>
-#include <cstdio>
-#include <cstring>
-#include <stdexcept>
+#include <ft2build.h>  // IWYU pragma: keep
+// IWYU pragma: no_include "freetype/config/ftheader.h"
 
-bitmap_font::bitmap_font() {
-  sheet = nullptr;
-  letter_spacing = 0;
-  line_spacing = 0;
-}
+#include "th_strings.h"
+#include FT_FREETYPE_H
+#include FT_ERRORS_H
+#include FT_GLYPH_H
+#include FT_IMAGE_H
+#include FT_TYPES_H
+#include <algorithm>
+#include <cstring>
+#include <map>
+#include <utility>
+#include <vector>
+
+bitmap_font::bitmap_font() = default;
 
 void bitmap_font::set_sprite_sheet(sprite_sheet* pSpriteSheet) {
   sheet = pSpriteSheet;
@@ -179,13 +179,10 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
   return oDrawArea;
 }
 
-#ifdef CORSIX_TH_USE_FREETYPE2
 FT_Library freetype_font::freetype_library = nullptr;
 int freetype_font::freetype_init_count = 0;
 
 freetype_font::freetype_font() {
-  font_face = nullptr;
-  is_done_freetype_init = false;
   for (cached_text* pEntry = cache; pEntry != cache + (1 << cache_size_log2);
        ++pEntry) {
     pEntry->message = nullptr;
@@ -258,21 +255,20 @@ FT_Error freetype_font::set_face(const uint8_t* pData, size_t iLength) {
   return iError;
 }
 
-FT_Error freetype_font::match_bitmap_font(
-    sprite_sheet* pBitmapFontSpriteSheet) {
-  if (pBitmapFontSpriteSheet == nullptr) return FT_Err_Invalid_Argument;
+FT_Error freetype_font::match_bitmap_font(sprite_sheet* font_spritesheet,
+                                          argb_colour* color, int* width,
+                                          int* height) {
+  if (font_spritesheet == nullptr) return FT_Err_Invalid_Argument;
 
   // Try to take the size and colour of a standard character (em is generally
   // the standard font character, but for fonts which only have numbers, zero
   // seems like the next best choice).
   for (const char* sCharToTry = "M0"; *sCharToTry; ++sCharToTry) {
-    int iWidth;
-    int iHeight;
     unsigned int iSprite = *sCharToTry - 31;
-    if (pBitmapFontSpriteSheet->get_sprite_size(iSprite, &iWidth, &iHeight) &&
-        pBitmapFontSpriteSheet->get_sprite_average_colour(iSprite, &colour) &&
-        iWidth > 1 && iHeight > 1) {
-      return set_ideal_character_size(iWidth, iHeight);
+    if (font_spritesheet->get_sprite_size(iSprite, width, height) &&
+        font_spritesheet->get_sprite_average_colour(iSprite, color) &&
+        *width > 1 && *height > 1) {
+      return FT_Err_Ok;
     }
   }
 
@@ -280,21 +276,21 @@ FT_Error freetype_font::match_bitmap_font(
   int iWidthSum = 0;
   int iHeightSum = 0;
   int iAverageNum = 0;
-  for (size_t i = 0; i < pBitmapFontSpriteSheet->get_sprite_count(); ++i) {
+  for (size_t i = 0; i < font_spritesheet->get_sprite_count(); ++i) {
     int iWidth;
     int iHeight;
-    pBitmapFontSpriteSheet->get_sprite_size_unchecked(i, &iWidth, &iHeight);
+    font_spritesheet->get_sprite_size_unchecked(i, &iWidth, &iHeight);
     if (iWidth <= 1 || iHeight <= 1) continue;
-    if (!pBitmapFontSpriteSheet->get_sprite_average_colour(i, &colour))
-      continue;
-    iWidthSum += iWidth;
-    iHeightSum += iHeight;
+    if (!font_spritesheet->get_sprite_average_colour(i, color)) continue;
+    iWidthSum += *width;
+    iHeightSum += *height;
     ++iAverageNum;
   }
   if (iAverageNum == 0) return FT_Err_Divide_By_Zero;
 
-  return set_ideal_character_size((iWidthSum + iAverageNum / 2) / iAverageNum,
-                                  (iHeightSum + iAverageNum / 2) / iAverageNum);
+  *width = (iWidthSum + iAverageNum / 2) / iAverageNum;
+  *height = (iHeightSum + iAverageNum / 2) / iAverageNum;
+  return FT_Err_Ok;
 }
 
 FT_Error freetype_font::set_ideal_character_size(int iWidth, int iHeight) {
@@ -332,6 +328,12 @@ FT_Error freetype_font::set_ideal_character_size(int iWidth, int iHeight) {
     iWidth = 9;
   }
   return FT_Set_Pixel_Sizes(font_face, iWidth, iHeight);
+}
+
+void freetype_font::set_font_color(argb_colour color) { font_color = color; }
+
+void freetype_font::set_shadow_options(const font_shadow_options& options) {
+  shadow_opts = options;
 }
 
 text_layout freetype_font::get_text_dimensions(const char* sMessage,
@@ -412,6 +414,11 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
     pEntry->data = nullptr;
     pEntry->is_valid = false;
 
+    int width_before_shadow = iWidth;
+    if (iWidth < INT_MAX && shadow_opts.enabled) {
+      width_before_shadow -= abs(shadow_opts.offset_x);
+    }
+
     // Set the entry metadata to that of the new message.
     if (iMessageLength > pEntry->message_buffer_length) {
       delete[] pEntry->message;
@@ -479,7 +486,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
       long line_width_with_glyph =
           (ftvPen.x + oGlyph.metrics.horiBearingX + oGlyph.metrics.width + 63) /
           64;
-      if (line_width_with_glyph >= iWidth || bIsNewLine) {
+      if (line_width_with_glyph >= width_before_shadow || bIsNewLine) {
         if (bIsNewLine) {
           sLineBreakPosition = sOldMessage;
         }
@@ -575,7 +582,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
           mapGlyphs[decode_utf8(sLastChar, sMessageEnd)];
       iLineWidth = vCharPositions[sLastChar - sMessage].x +
                    oLastGlyph.metrics.horiBearingX + oLastGlyph.metrics.width;
-      if ((iLineWidth >> 6) < iWidth) {
+      if ((iLineWidth >> 6) < iWidth && eAlign != text_alignment::left) {
         iAlignDelta =
             ((iWidth * 64 - iLineWidth) * static_cast<int>(eAlign)) / 2;
       }
@@ -618,8 +625,12 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
     if (iPriorLinesHeight > 0) iPriorLinesHeight -= iLineSpacing;
     pEntry->height = static_cast<int>(1 + (iPriorLinesHeight >> 6));
     pEntry->widest_line_width = static_cast<int>(1 + (iWidestLine >> 6));
-    pEntry->row_count = iNumRows;
+    if (shadow_opts.enabled) {
+      pEntry->widest_line_width += std::abs(shadow_opts.offset_x);
+      pEntry->height += std::abs(shadow_opts.offset_y);
+    }
     if (iWidth == INT_MAX) pEntry->width = pEntry->widest_line_width;
+    pEntry->row_count = iNumRows;
     pEntry->last_x = 1 + (static_cast<int>(iLineWidth + iAlignDelta) >> 6);
 
     // Get a bitmap for each glyph.
@@ -743,5 +754,3 @@ void freetype_font::render_gray(cached_text* pCacheEntry, FT_Bitmap* pBitmap,
     }
   }
 }
-
-#endif  // CORSIX_TH_USE_FREETYPE2

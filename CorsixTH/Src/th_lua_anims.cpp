@@ -20,9 +20,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "config.h"
+
+#include <new>
+
+#include "lua.hpp"
+#include "persist_lua.h"
+#include "th.h"
 #include "th_gfx.h"
+#include "th_lua.h"
 #include "th_lua_internal.h"
 #include "th_map.h"
+
+class render_target;
+class sprite_sheet;
+enum class animation_effect;
 
 namespace {
 
@@ -171,12 +183,12 @@ int l_anims_set_alt_pal(lua_State* L) {
   return 1;
 }
 
-int l_anims_set_marker(lua_State* L) {
+int l_anims_set_primary_marker(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   lua_pushboolean(
-      L, pAnims->set_frame_marker(luaL_checkinteger(L, 2),
-                                  static_cast<int>(luaL_checkinteger(L, 3)),
-                                  static_cast<int>(luaL_checkinteger(L, 4)))
+      L, pAnims->set_frame_primary_marker(
+             luaL_checkinteger(L, 2), static_cast<int>(luaL_checkinteger(L, 3)),
+             static_cast<int>(luaL_checkinteger(L, 4)))
              ? 1
              : 0);
   return 1;
@@ -263,6 +275,8 @@ int l_anim_pre_depersist(lua_State* L) {
 
 template <typename T>
 int l_anim_depersist(lua_State* L) {
+  // Because anim has a pre_depersist function the userdata is already
+  // initialized as a T.
   T* pAnimation = luaT_testuserdata<T>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
@@ -374,6 +388,7 @@ int l_anim_get_anim(lua_State* L) {
 template <typename T>
 int l_anim_set_tile(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
+
   if (lua_isnoneornil(L, 2)) {
     pAnimation->remove_from_tile();
     lua_pushnil(L);
@@ -381,11 +396,11 @@ int l_anim_set_tile(lua_State* L) {
     lua_settop(L, 1);
   } else {
     level_map* pMap = luaT_testuserdata<level_map>(L, 2);
-    map_tile* pNode =
-        pMap->get_tile(static_cast<int>(luaL_checkinteger(L, 3) - 1),
-                       static_cast<int>(luaL_checkinteger(L, 4) - 1));
-    if (pNode) {
-      pAnimation->attach_to_tile(pNode, last_layer);
+    int x = static_cast<int>(luaL_checkinteger(L, 3)) - 1;
+    int y = static_cast<int>(luaL_checkinteger(L, 4)) - 1;
+    map_tile* node = pMap->get_tile(x, y);
+    if (node) {
+      pAnimation->attach_to_tile(x, y, node, last_layer);
     } else {
       luaL_argerror(L, 3,
                     lua_pushfstring(L,
@@ -408,27 +423,17 @@ int l_anim_get_tile(lua_State* L) {
   lua_getfield(L, 2, "map");
   lua_replace(L, 2);
   if (lua_isnil(L, 2)) {
-    return 0;
+    return 0;  // No map supplied.
   }
-  level_map* pMap = (level_map*)lua_touserdata(L, 2);
-  const link_list* pListNode = pAnimation->get_previous();
-  while (pListNode->prev) {
-    pListNode = pListNode->prev;
+
+  const xy_pair& tile = pAnimation->get_tile();
+  if (tile.x >= 0 && tile.y >= 0) {
+    lua_pushinteger(L, tile.x + 1);
+    lua_pushinteger(L, tile.y + 1);
+  } else {
+    lua_pushnil(L);
+    lua_pushnil(L);
   }
-  // Casting pListNode to a map_tile* is slightly dubious, but it should
-  // work. If on the normal list, then pListNode will be a map_tile*, and
-  // all is fine. However, if on the early list, pListNode will be pointing
-  // to a member of a map_tile, so we're relying on pointer arithmetic
-  // being a subtract and integer divide by sizeof(map_tile) to yield the
-  // correct map_tile.
-  const map_tile* pRootNode = pMap->get_tile_unchecked(0, 0);
-  uintptr_t iDiff = reinterpret_cast<const char*>(pListNode) -
-                    reinterpret_cast<const char*>(pRootNode);
-  int iIndex = (int)(iDiff / sizeof(map_tile));
-  int iY = iIndex / pMap->get_width();
-  int iX = iIndex - (iY * pMap->get_width());
-  lua_pushinteger(L, iX + 1);
-  lua_pushinteger(L, iY + 1);
   return 3;  // map, x, y
 }
 
@@ -436,7 +441,15 @@ int l_anim_set_parent(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   animation* pParent =
       luaT_testuserdata<animation>(L, 2, luaT_environindex, false);
-  pAnimation->set_parent(pParent);
+  bool use_primary = lua_isnone(L, 3);  // No number means '1'.
+  if (!use_primary) {
+    lua_Integer value = luaL_checkinteger(L, 3);
+    if (value < 1 || value > 2)
+      luaL_argerror(
+          L, 3, "Marker index out of bounds (only values 1 and 2 are allowed)");
+    use_primary = (value == 1);
+  }
+  pAnimation->set_parent(pParent, use_primary);
   lua_settop(L, 1);
   return 1;
 }
@@ -492,21 +505,23 @@ int l_anim_get_flag(lua_State* L) {
 }
 
 template <typename T>
-int l_anim_set_position(lua_State* L) {
+int l_anim_set_pixel_offset(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
 
-  pAnimation->set_position(static_cast<int>(luaL_checkinteger(L, 2)),
-                           static_cast<int>(luaL_checkinteger(L, 3)));
+  int x = static_cast<int>(luaL_checkinteger(L, 2));
+  int y = static_cast<int>(luaL_checkinteger(L, 3));
+  pAnimation->set_pixel_offset(x, y);
 
   lua_settop(L, 1);
   return 1;
 }
 
-int l_anim_get_position(lua_State* L) {
+int l_anim_get_pixel_offset(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
 
-  lua_pushinteger(L, pAnimation->get_x());
-  lua_pushinteger(L, pAnimation->get_y());
+  const xy_pair& offset = pAnimation->get_pixel_offset();
+  lua_pushinteger(L, offset.x);
+  lua_pushinteger(L, offset.y);
 
   return 2;
 }
@@ -515,8 +530,9 @@ template <typename T>
 int l_anim_set_speed(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
 
-  pAnimation->set_speed(static_cast<int>(luaL_optinteger(L, 2, 0)),
-                        static_cast<int>(luaL_optinteger(L, 3, 0)));
+  int x = static_cast<int>(luaL_optinteger(L, 2, 0));
+  int y = static_cast<int>(luaL_optinteger(L, 3, 0));
+  pAnimation->set_speed(x, y);
 
   lua_settop(L, 1);
   return 1;
@@ -559,11 +575,11 @@ int l_anim_get_tag(lua_State* L) {
   return 1;
 }
 
-int l_anim_get_marker(lua_State* L) {
+int l_anim_get_primary_marker(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   int iX = 0;
   int iY = 0;
-  pAnimation->get_marker(&iX, &iY);
+  pAnimation->get_primary_marker(&iX, &iY);
   lua_pushinteger(L, iX);
   lua_pushinteger(L, iY);
   return 2;
@@ -659,7 +675,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anims_getfirst, "getFirstFrame");
     lcb.add_function(l_anims_getnext, "getNextFrame");
     lcb.add_function(l_anims_set_alt_pal, "setAnimationGhostPalette");
-    lcb.add_function(l_anims_set_marker, "setFrameMarker");
+    lcb.add_function(l_anims_set_primary_marker, "setFramePrimaryMarker");
     lcb.add_function(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
     lcb.add_function(l_anims_draw, "draw", lua_metatable::surface,
                      lua_metatable::layers);
@@ -712,13 +728,13 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_make_invisible<animation>, "makeInvisible");
     lcb.add_function(l_anim_set_tag, "setTag");
     lcb.add_function(l_anim_get_tag, "getTag");
-    lcb.add_function(l_anim_set_position<animation>, "setPosition");
-    lcb.add_function(l_anim_get_position, "getPosition");
+    lcb.add_function(l_anim_set_pixel_offset<animation>, "setPosition");
+    lcb.add_function(l_anim_get_pixel_offset, "getPosition");
     lcb.add_function(l_anim_set_speed<animation>, "setSpeed");
     lcb.add_function(l_anim_set_layer<animation>, "setLayer");
     lcb.add_function(l_anim_set_layers_from, "setLayersFrom");
     lcb.add_function(l_anim_set_hitresult, "setHitTestResult");
-    lcb.add_function(l_anim_get_marker, "getMarker");
+    lcb.add_function(l_anim_get_primary_marker, "getPrimaryMarker");
     lcb.add_function(l_anim_get_secondary_marker, "getSecondaryMarker");
     lcb.add_function(l_anim_tick<animation>, "tick");
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
@@ -762,7 +778,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_make_visible<sprite_render_list>, "makeVisible");
     lcb.add_function(l_anim_make_invisible<sprite_render_list>,
                      "makeInvisible");
-    lcb.add_function(l_anim_set_position<sprite_render_list>, "setPosition");
+    lcb.add_function(l_anim_set_pixel_offset<sprite_render_list>,
+                     "setPosition");
     lcb.add_function(l_anim_set_speed<sprite_render_list>, "setSpeed");
     lcb.add_function(l_anim_set_layer<sprite_render_list>, "setLayer");
     lcb.add_function(l_anim_tick<sprite_render_list>, "tick");

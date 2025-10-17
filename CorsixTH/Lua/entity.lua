@@ -27,6 +27,13 @@ local Entity = _G["Entity"]
 local TH = require("TH")
 
 function Entity:Entity(animation)
+  -- World of the entity, set by World:newEntity()
+  self.world = nil
+
+  -- Index of the marker to use for displaying moods of the entity,
+  -- set by World:newEntity()
+  self.mood_marker = nil
+
   self.th = animation
   self.layers = {}
   animation:setHitTestResult(self)
@@ -122,7 +129,7 @@ function Entity:setTile(x, y)
   -- NB: (x, y) can be nil, in which case th:setTile expects all nil arguments
   self.th:setTile(x and self.world.map.th, x, y)
   if self.mood_info then
-    self.mood_info:setParent(self.th)
+    self.mood_info:setParent(self.th, self.mood_marker or 1)
   end
 
   -- Update the entity map for the new position
@@ -259,7 +266,7 @@ function Entity:setMoodInfo(new_mood)
     if not self.mood_info then
       self.mood_info = TH.animation()
       self.mood_info:setPosition(-1, -96)
-      self.mood_info:setParent(self.th)
+      self.mood_info:setParent(self.th, self.mood_marker or 1)
     end
     self.mood_info:setAnimation(self.world.anims, new_mood.icon)
   else
@@ -277,13 +284,6 @@ function Entity:onDestroy()
   self:setMoodInfo()
   self:setTile(nil)
   self.world.dispatcher:dropFromQueue(self)
-  -- Debug aid to check that there are no hanging references after the entity
-  -- has been destroyed:
-  --[[
-  self.gc_dummy = newproxy(true) -- undocumented Lua library function
-  getmetatable(self.gc_dummy).__gc = function()
-    print("Entity " .. tostring(self) .. " has been garbage collected.")
-  end --]]
   if self.waiting_for_sound_effects_to_be_turned_on then
     TheApp.audio:entityNoLongerWaitingForSoundsToBeTurnedOn(self)
   end
@@ -366,5 +366,5 @@ end
   objects layer 9.
 ]]
 function Entity:getDrawingLayer()
-  return 4
+  return DrawingLayers.Entity
 end

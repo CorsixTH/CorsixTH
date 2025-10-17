@@ -23,20 +23,21 @@ self = false
 globals = { -- Globals
             "_A", "_S",
             "corsixth",
-            "action_queue_leave_bench", "class", "compare_tables",
+            "action_queue_leave_bench", "class", "compare_tables", "DrawFlags",
+            "DrawingLayers",
             "destrict", "flag_clear", "flag_isset", "flag_set", "flag_toggle",
             "lfs", "list_to_set", "loadfile_envcall", "loadstring_envcall",
             "permanent", "print_table", "rangeMapLookup", "rnc",
             "strict_declare_global", "table_length", "unpermanent", "values",
             "serialize", "array_join", "shallow_clone", "staff_initials_cache",
-            "hasBit", "bitOr",
+            "hasBit", "bitOr", "inspect",
 
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
-            "CallsDispatcher", "Cheats", "ChildClass", "Command", "Door", "DrawFlags",
-            "DummyRootNode", "Entity", "EntityMap", "Epidemic", "FileSystem",
-            "FileTreeNode", "FilteredFileTreeNode", "GameUI", "Graphics",
-            "GrimReaper", "Hospital", "Humanoid", "HumanoidRawWalk",
+            "CallsDispatcher", "Cheats", "ChildClass", "Command", "Door",
+            "DummyRootNode", "Earthquake", "EndConditions", "Entity", "EntityMap",
+            "Epidemic", "FileSystem", "FileTreeNode", "FilteredFileTreeNode", "GameUI",
+            "Graphics", "GrimReaper", "Hospital", "Humanoid", "HumanoidRawWalk",
             "Inspector", "LoadGame", "LoadGameFile", "Litter", "Machine",
             "Map", "MoviePlayer", "NoRealClass", "Object", "ParentClass",
             "Patient", "Plant", "PlayerHospital", "Queue", "ResearchDepartment", "Room",
@@ -54,7 +55,7 @@ globals = { -- Globals
             "UIHotkeyAssignKeyPane", "UIInformation", "UIJukebox", "UILoadGame",
             "UILoadMap", "UILuaConsole", "UIMachine", "UIMakeDebugPatient",
             "UIMainMenu", "UIMapEditor", "UIMenuBar", "UIMenuList",
-            "UIMessage", "UINewGame", "UIOptions", "UIPatient",
+            "UIMessage", "UINewGame", "UIOptions", "UIPatient", "UIMachineMenu",
             "UIPlaceObjects", "UIPlaceStaff", "UIPolicy", "UIProgressReport",
             "UIQueue", "UIQueuePopup", "UIResizable", "UIResearch",
             "UIResolution", "UISaveGame", "UISaveMap", "UIScrollSpeed",
@@ -75,6 +76,7 @@ globals = { -- Globals
 
             -- Math extensions
             "math.n_random", "math.round", "math.randomdump", "math.t_random",
+            "math.p_random",
 
             -- Unit Tests
             "assertion_matches"
@@ -110,8 +112,8 @@ end
 -- W314: value assigned to field XYZ is unused
 for _, lng in ipairs({"brazilian_portuguese", "czech", "danish", "developer",
     "dutch", "english", "finnish", "french", "german", "greek", "hungarian",
-    "iberic_portuguese", "italian", "korean", "norwegian", "original_strings",
-    "polish", "russian", "simplified_chinese", "spanish", "swedish",
+    "iberic_portuguese", "italian", "japanese", "korean", "norwegian", "original_strings",
+    "polish", "russian", "simplified_chinese", "spanish", "swedish", "ukrainian",
     "traditional_chinese"}) do
   local filename = "CorsixTH/Lua/languages/" .. lng .. ".lua"
   add_ignore(filename, "111")

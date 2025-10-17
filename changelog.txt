@@ -1,4 +1,223 @@
 -------------------------------------------------------------------------------
+CorsixTH 0.70.0 - ???
+-------------------------------------------------------------------------------
+# Packager Notes
+* Now supports big-endian systems (tested on s390x)
+
+-------------------------------------------------------------------------------
+CorsixTH 0.69.1 - released August 2025
+-------------------------------------------------------------------------------
+# Bug Fixes
+* Fixed a crash when placing staff in a room while a patient is being treated.
+
+-------------------------------------------------------------------------------
+CorsixTH 0.69.0 - released July 2025
+-------------------------------------------------------------------------------
+# Features
+* Custom level/campaign creators can now use an existing level file as an
+  overlay to copy and extend their level file with the #overlay variable. See
+  the 'Custom Level' Wiki page for more information.
+* A new machine menu has been added. Now you can view the status of all your
+  hospital machines in one place!
+* Changing speed in game now happens immediately
+* Patient happiness can now be a win/lose factor in custom games
+* Transparent walls can now be toggled using Shift + X
+* Soda price can now be configured in the level file
+* Improvements and fixes for the ChirzmanTV custom campaign
+
+# Changes
+* You can now hear patients vomiting, instead of just the vomit splatters
+* Lakes no longer show in the Town Map as per the original game
+* Warns of incompatibility for saves more than 2 releases old
+* Improved how staff look for work if idle
+* Machine strength reduction after repair now more closely aligned with the
+  original game
+* Machine strength now has a minimum value of 2 after repair
+* Mouse is now only captured when in game, or using the map editor
+* Improved measurement on the progress report chart columns
+* Annual rewards and trophies now have more robust evaluation criteria
+* A patient's treatment cost is now decided at the point they agree to pay
+* VIPs now walk slower, as in the original game
+* Gamelogs now include the date and time of the crash in their file name, and
+  the last 10 logs are now held in the Logs folder
+* Finding files for custom campaigns is now more reliable, and supports storing
+  your campaign inside its own folder
+* Custom Campaigns can no longer be played in Free Build mode, as they could
+  break campaign progression
+* For games compiled using fluidsynth (such as our Windows and Flatpak builds),
+  you can now set the soundfont in the configuration file
+* Video files can now be missing during TH installation corruption checks
+
+# Bug Fixes
+* Fixed some anomalies in the original campaign's map files
+* Improved reliability of the Map Editor checking for a path to the hospital on
+  save
+* Game speed tick rates have been smoothed out again, improving animations and
+  sound playback for objects
+* Fixed timing issue with the demo movie playback trigger following game speed
+  changes in 0.68.0
+* Fixed timing issue with random announcements following game speed changes in
+  0.68.0
+* Improved colour accuracy for fonts in unicode languages now means you can
+  actually read when your game is paused
+* Many fixes for the position of staff and patient moods in the game! More are
+  scheduled to come in future
+* Fixed a bug where the visual mood for dying patients would disappear
+* Fixed an issue with the patient wait mood not clearing as expected
+* Fixed a (very annoying) bug with walks that caused new patients to enter
+  rooms along their path
+* Rework to the operating theatre room to prevent patient/staff lockups
+* Free build now always comes with free heating and free parcel purchases!
+* Heating controls can no longer be adjusted during a boiler breakdown
+* Epidemic timer now ends once all patients are resolved
+* Old serious radiation epidemics can no longer cause a game crash. In future,
+  this epidemic type will be reinstated again
+* Fixed the deactivate epidemic cheat not working as intended
+* Failed cheats will now always provide feedback messages
+* Failed create emergency cheats because you do not have a heliport now error
+  correctly
+* Spawning a contagious patient via cheating now works in levels without a
+  helipad
+* Fixed an issue where the win level cheat may not trigger correctly
+* Fixed a bug where loans were not preventing a lose game scenario for balance
+* The staff salary request window is now properly dismissed if auto grant wage
+  requests is enabled and triggers
+* Fixed an issue where the Staff Management window could interfere with the
+  world
+* Editing a room now closes the machine dialog of the room if it was open
+* Room statistics no longer reset when editing a room
+* Long windows now correctly count as a window
+* Dynamic info for machines now displays correctly when cycling between them
+* Fixed a bug in picking up objects when falling actions were enabled
+* Fixed a bug that caused staff members to be picked up multiple times
+* Fixed a bug where changing doctor in General Diagnosis could break the room
+  and patient
+* Fixed a scenario where clicking on a staff member in an exploding room caused
+  a game crash
+* Fixed an audible error when backing out of hiring a staff member
+* Additional safeguards to music volume playback added
+
+# Translations
+* The original game's numerals for the money bar can now be toggled by
+  translators using the isArabicNumerals flag. This setting is set to off
+  currently for CJK languages
+* Reworded cheat failure messages, some translations still require updating
+* Improved hotkey window and research tooltips, some translations still require
+  updating
+* A new Japanese translation has been added. Thanks @ShimaKen523
+* Russian translation has been updated. Thanks @Matroftt, @ARGAMX
+* French translation has been updated. Thanks @Sanndow @legluondunet
+* Brazilian Portuguese translation has been updated. Thanks @altiereslima
+* Dutch translation has been updated. Thanks @Alberth289346 & @jetenergy
+
+# Packager Notes
+* Packagers can now set a default unicode font at build time using the
+  WITH_FONT cmake option. For the highest level of compatibility with our
+  supported languages, we recommend using GoNotoKurrent-Regular
+* An additional interpreter path has been added for portable Linux installs:
+  ../share/corsix-th/
+
+-------------------------------------------------------------------------------
+CorsixTH 0.68.0 - released October 2024
+-------------------------------------------------------------------------------
+# New Features/Enhancements
+* In-game movies now play for users using TH Data directly from a .ISO file
+* Custom campaign creators can now optionally use the original level advance
+  movie when progressing through the campaign
+* The Map Editor has received some love including new features, fixes, and
+  jukebox controls
+* Long windows now behave properly in the game if they get intersected by an
+  adjacent wall
+* You can now control the Jukebox from the Main Menu by going to
+  Options > Jukebox
+* External (non-TH) XMI files are now supported by the Jukebox
+* The adviser now tells you the cost of replacing your machine if you cannot
+  currently afford it
+* More cheats!
+* [Experimental] Right mouse panning can now be used instead of using the
+  middle mouse button. Enable it in the configuration file
+* [Experimental] We’re closer to fully implementing falling actions! Get a
+  sneak peek and get the chance to push people over by enabling it in the
+  configuration file/debug menu
+
+# Changes
+* The demo movie will no longer play and cause jumpscares at the main menu if
+  the CorsixTH window is not in focus 
+* Game speeds are now more closely aligned with the original game
+* Improvements to handling of win/lose conditions, and the progress report
+* Staff tiredness levels are now taken from the level config file based on
+  difficulty level of the main campaign
+* You can no longer win a level if you still have outstanding loans
+* Emergencies will now be announced once patients actually begin arriving
+  instead of at the start
+* Errors with music playback will now attempt to provide more helpful
+  information in the console
+* Level briefings now show before the in-game tutorial
+* The first patient of a level will now arrive faster after opening the
+  hospital
+* The information dialog box is now more closely aligned with the original game
+* The tip of the day window should no longer be obscured in the main menu
+* The load/save windows now have better labelling
+* Unavailable languages are shown as disabled until you select a Unicode font
+* Support is added to auto-detect a Theme Hospital install via GOG Galaxy
+
+# Translations
+* Ukrainian translation added. Thanks @JurecStrongman
+* Dutch translation has been updated. Thanks @jetenergy and @Alberth289346
+* Italian translation has been updated. Thanks @SebastianoPistore & @Inkub0
+* Russian translation has been updated. Thanks @Matroftt
+* Spanish translation has been updated. Thanks @ShiroAka
+* French translation has been updated. Thanks @nMustaki & @Sanndow
+* Brazilian-Portuguese translation has been updated. Thanks @altiereslima
+* Some unused language strings have been cleaned up
+* Custom campaign and level creators can now optionally add translated strings
+  for campaign description, level briefing, and winning text
+
+# Bug Fixes
+* Swing (double) doors will no longer crash your game if you built rooms that
+  used them while paused
+* Fixed a bug for NVIDIA users who didn’t like graphical corruption when
+  playing fullscreen at non-native resolutions
+* Games should no longer crash irrecoverably because you have a 4k monitor :) 
+* The game will now exit to the main menu cleanly if a problem occurred trying
+  to load a new level or map
+* Staff who have left the hospital can no longer ask for a raise
+* Fixed a bug where some staff may have no initial before surname
+* Patients can no longer litter outdoors
+* Patients waiting for a player decision no longer lose their mood icon on
+  vomit/pee
+* Fixed a bug where an unreachable reception desk could cause a crash
+* The Computer and Atom Analyser now make button sounds as originally intended
+* The mark for vaccination action now makes a sound as originally intended
+* Fixed a rare bug where edges of map tiles for parcels could cause unintended
+  behaviour when purchasing plots
+* Active cheats will now persist across saves
+* Audio settings have better safeguards against no audio enabled/no background
+  music
+* Movies will no longer attempt to play audio when global audio is off
+* Config values using brackets (such as a custom music directory) will now work
+  properly
+* Custom campaigns menu now will use a scrollbar for long campaign descriptions
+* Continue Game now properly targets files explicitly ending in the .sav format
+* Tooltips for language menu now align with list items. Please note we are aware
+  of an issue where some languages don't show a tooltip
+* Fixed an instance where information boxes could load pink from older
+  savegames
+* Implemented a more permanent fix for the money bar being drawn incorrectly in
+  some CJK and Cyrillic languages
+* Fixed a crash on exit that could occur in some systems
+* Mouse panning behaviour has been made more responsive and accurate
+
+# Packager Notes
+* Minimum CMake version is now bumped to 3.14
+* CMake presets are now available for some common build scenarios
+* Dependencies can now be obtained automatically using vcpkg on Linux and
+  MacOS. If using Windows, please note that the CMake options have changed
+* If update checks are enabled you now require libcurl at build and run time
+  (update checks can be disabled using the WITH_UPDATE_CHECK CMake option).
+  Luasec and luasocket are no longer used
+
+-------------------------------------------------------------------------------
 Version 0.67 - released August 2023
 -------------------------------------------------------------------------------
 # New Features/Enhancements

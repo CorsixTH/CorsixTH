@@ -38,13 +38,14 @@ local details_width = 280
 local findLevelsInDir = function(path, items)
   for file in lfs.dir(path) do
     if file:match("%.level$") then
-      local level_info = TheApp:readLevelFile(file)
-      if level_info.name and level_info.map_file then
+      local level_info, err = TheApp:readLevelFile(path .. file)
+      if err then print(file, err)
+      elseif level_info.name and level_info.map_file then
         items[#items + 1] = {
           name = level_info.name,
           tooltip = _S.tooltip.custom_game_window.choose_game,
           map_file = level_info.map_file,
-          level_file = file,
+          level_file = path .. file,
           intro = level_info.briefing,
           deprecated_variable_used = level_info.deprecated_variable_used,
         }
@@ -54,7 +55,7 @@ local findLevelsInDir = function(path, items)
 end
 
 function UICustomGame:UICustomGame(ui)
-  self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
+  self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V")
 
   -- Supply the required list of items to UIMenuList
   -- Create the actual list
@@ -133,7 +134,8 @@ function UICustomGame:buttonLoadLevel()
       self.ui:addWindow(UIInformation(self.ui, {errors}))
       return
     end
-    app:loadLevel(item.level_file, nil, self.chosen_level_name, item.map_file, self.chosen_level_description)
+    app:loadLevel(item.level_file, nil, self.chosen_level_name, item.map_file,
+        self.chosen_level_description, nil, _S.errors.load_level_prefix, nil)
   end
 end
 

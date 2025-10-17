@@ -65,11 +65,7 @@ function Audio:init()
   if self.not_loaded then
     return
   end
-  if not SDL.audio.loaded then
-    print("Notice: Audio system not loaded as CorsixTH compiled without it")
-    self.not_loaded = true
-    return
-  end
+
   local music = self.app.config.audio_music or self.app.config.audio_mp3
   local music_dir
   if music then
@@ -100,8 +96,11 @@ function Audio:init()
     - Uses titles from MIDI.TXT if found, else the filename.
   --]]
   local midi_txt -- File name of midi.txt file, if any.
-  local waveform = { MP3=true, OGG=true, WAV=true, AIFF=true, VOC=true, FLAC=true }
-  local instructional = { MID=true, MOD=true, XM=true, XMI=true }
+  local waveform = list_to_set({"OGG", "OPUS", "FLAC", "WV", "WAV", "WAVE",
+      "MPG", "MPEG", "MP3", "MAD", "AIFF", "AIFC", "AIF"})
+  local instructional = list_to_set({"MID", "MIDI", "KAR", "669", "AMF", "AMS", "DBM",
+      "DSM", "FAR", "GDM", "IT", "MED", "MDL", "MOD", "MOL", "MTM", "NST", "OKT", "PTM",
+      "S3M", "STM", "ULT", "UMX", "WOW", "XM", "XMI"})
 
   local _f, _s, _v
   if music_dir then
@@ -117,6 +116,8 @@ function Audio:init()
       info = musicFileTable(filename)
       -- This title might be replaced later by the midi_txt.
       info.title = filename
+      -- XMI files are supported with our own conversion
+      info.is_xmi = ext == "XMI"
     end
     if instructional[ext] and not music_dir then
        info.filename = table.concat({"Sound", "Midi", file}, pathsep)
@@ -576,7 +577,7 @@ function Audio:playBackgroundTrack(index)
       if data:sub(1, 3) == "RNC" then
         data = assert(rnc.decompress(data))
       end
-      if not info.filename_music then
+      if not info.filename_music or info.is_xmi then
         data = SDL.audio.transcodeXmiToMid(data)
       end
       -- Loading of music files can incur a slight pause, which is why it is
@@ -584,11 +585,24 @@ function Audio:playBackgroundTrack(index)
       -- Someone might want to stop the player from
       -- starting to play once it's loaded though.
       self.load_music = true
-      SDL.audio.loadMusicAsync(data, function(music_data, e)
+      SDL.audio.loadMusicAsync(data, function(music_data, err)
 
         if music_data == nil then
-          error("Could not load music file \'" .. (info.filename_music or info.filename) .. "\'" ..
-              (e and (" (" .. e .. ")" or "")))
+          info.enabled = false
+          local name, msg = (info.filename_music or info.filename)
+          if not self.warned then -- Warn once per session
+            self.app.ui:addWindow(UIInformation(self.app.ui, {_S.errors.music}))
+          end
+          self.warned = true
+          if err == "No SoundFonts have been requested" then
+            msg = "Required soundfont is not found, please download one. A suitable soundfont is linked from the CorsixTH wiki."
+          elseif err == "XMP: Unrecognized file format" or err == "ModPlug_Load failed" then
+            msg = "Music format not supported for file " .. name
+          else
+            msg = "Could not load music file " .. name .. ". Error: " .. err
+          end
+          if self.app.world then self.app.world:gameLog(msg) end
+          if not self.app.world or not self.app.config.debug then print(msg) end
         else
           info.music = music_data
           -- Do we still want it to play?
@@ -599,8 +613,8 @@ function Audio:playBackgroundTrack(index)
       end)
       return
     end
-    SDL.audio.setMusicVolume(self.app.config.music_volume)
     assert(SDL.audio.playMusic(music))
+    SDL.audio.setMusicVolume(self.app.config.music_volume)
     self.background_music = music
 
     self:notifyJukebox()

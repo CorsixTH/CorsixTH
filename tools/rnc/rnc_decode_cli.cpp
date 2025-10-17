@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -114,6 +115,10 @@ int main(int argc, char* argv[]) {
   std::uint8_t* outdata = decompress(indata, insize, &outlen);
 
   FILE* outhandle = fopen(argv[2], "wb");
+  if (outhandle == nullptr) {
+    fprintf(stderr, "Cannot open output file.\n");
+    exit(1);
+  }
   count = fwrite(outdata, 1, outlen, outhandle);
   if (count != outlen) {
     fprintf(stderr, "Cannot write output file.\n");

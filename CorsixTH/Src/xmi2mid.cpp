@@ -21,10 +21,9 @@ SOFTWARE.
 */
 
 #include "config.h"
-#ifdef CORSIX_TH_USE_SDL_MIXER
+
 #include <algorithm>
 #include <cstring>
-#include <iterator>
 #include <new>
 #include <vector>
 
@@ -311,7 +310,8 @@ uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data, size_t xmi_length,
       return nullptr;
     iTokenTime = itr->time;
     if (itr->type >= 0xF0) {
-      if (!bufOutput.write(iTokenType = itr->type)) return nullptr;
+      iTokenType = itr->type;
+      if (!bufOutput.write(iTokenType)) return nullptr;
       if (iTokenType == 0xFF) {
         if (!bufOutput.write(itr->data)) return nullptr;
         if (itr->data == 0x2F) bEnd = true;
@@ -321,7 +321,8 @@ uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data, size_t xmi_length,
       if (!bufOutput.write(itr->buffer, itr->buffer_length)) return nullptr;
     } else {
       if (itr->type != iTokenType) {
-        if (!bufOutput.write(iTokenType = itr->type)) return nullptr;
+        iTokenType = itr->type;
+        if (!bufOutput.write(iTokenType)) return nullptr;
       }
       if (!bufOutput.write(itr->data)) return nullptr;
       if (itr->buffer) {
@@ -336,5 +337,3 @@ uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data, size_t xmi_length,
 
   return bufOutput.take_data(midi_length);
 }
-
-#endif

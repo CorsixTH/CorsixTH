@@ -32,6 +32,7 @@ object.build_preview_animation = 5080
 object.default_strength = 8
 object.crashed_animation = 3392
 object.show_in_town_map = true
+object.smoke_animation = 3472
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -84,7 +85,10 @@ anim_mgr:setAnimLength(2348, 1)
 anim_mgr:setAnimLength(2938, 1)
 
 -- Mood icon positions
-anim_mgr:setMarker(object.idle_animations.north, {-1.59, -2.41})
+anim_mgr:setPatientMarker(object.idle_animations.north, {-1.59, -2.41})
+anim_mgr:setStaffMarker({2318, 2322, 2348, 2346, 2338, 2318, 2932, 2938, 2936, 2238}, {-1, -2})
+
+anim_mgr:setStaffMarker(object.usage_animations.north.in_use.Handyman, {29, -52, "px"})
 
 
 object.orientations = {
@@ -99,6 +103,7 @@ object.orientations = {
     },
     render_attach_position = {0, -1},
     slave_position = {1, -1},
+    smoke_position = {0, 0},
   },
   east = {
     use_position = {-2, -1},
@@ -107,10 +112,11 @@ object.orientations = {
       {-1, -2, only_passable = true},
       {-1, -1, complete_cell = true}, {-2, -1, only_passable = true},
       {-1, 0, complete_cell = true}, {-2, 0, complete_cell = true},
-      {0, 1, complete_cell = true}, {-2, 1, complete_cell = true},  {-1, 1, only_passable = true},
+      {0, 1, complete_cell = true}, {-2, 1, complete_cell = true},  {-1, 1, only_passable = true}, {0, 0}
     },
     slave_position = {-1, 1},
     render_attach_position = {-1, 0},
+    smoke_position = {0, 0},
   },
 }
 

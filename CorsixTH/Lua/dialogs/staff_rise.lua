@@ -46,8 +46,8 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:setDefaultPosition(0.5, 0.5)
 
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req12V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.black_font = app.gfx:loadFont("QData", "Font00V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.black_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V")
   self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
 
   -- Left hand side
@@ -110,7 +110,7 @@ end
 function UIStaffRise:getStaffPosition(dx, dy)
   local staff = self.staff
   local x, y = self.ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
-  local px, py = staff.th:getMarker()
+  local px, py = staff.th:getSecondaryMarker()
   return x + px - (dx or 0), y + py - (dy or 0)
 end
 
@@ -182,13 +182,12 @@ function UIStaffRise:increaseSalary()
   self.staff.message_callback = nil
   self.staff:increaseWage(self.rise_amount)
   self.staff.quitting_in = nil
-  self.ui:playSound("bonusal2.wav")
   self:close()
 end
 
 function UIStaffRise:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   if not self.black_font then
-    self.black_font = self.ui.app.gfx:loadFont("QData", "Font00V")
+    self.black_font = self.ui.app.gfx:loadFontAndSpriteTable("QData", "Font00V")
   end
 end

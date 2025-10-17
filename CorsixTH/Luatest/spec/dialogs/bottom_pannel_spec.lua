@@ -39,7 +39,7 @@ describe("Bottom Panel:", function()
       draw = function() end,
       drawWrapped = function() end,
     }
-    TheApp.gfx.loadFont = function() return font end
+    TheApp.gfx.loadFontAndSpriteTable = function() return font end
 
     local mock_ui = {}
     mock_ui.app = _G['TheApp']

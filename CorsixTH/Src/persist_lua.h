@@ -24,10 +24,10 @@ SOFTWARE.
 #define CORSIX_TH_PERSIST_LUA_H_
 #include "config.h"
 
-#include <cstdlib>
+#include <type_traits>
 #include <vector>
 
-#include "th_lua.h"
+#include "lua.hpp"
 
 template <class T>
 struct lua_persist_int {};
@@ -52,7 +52,7 @@ class lua_persist_writer {
 
   // write_stack_object for userdata without growing the Lua call stack
   // The given index should be a userdata whose __persist metamethod supports
-  // fast persistance (being called with extra arguments and the wrong
+  // fast persistence (being called with extra arguments and the wrong
   // environment / upvalues).
   virtual void fast_write_stack_object(int iIndex) = 0;
 

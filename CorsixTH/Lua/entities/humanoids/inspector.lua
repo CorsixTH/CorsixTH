@@ -60,3 +60,12 @@ end
 function Inspector:announce()
   self.world.ui:playAnnouncement("vip008.wav", AnnouncementPriority.High)
 end
+
+function Inspector:afterLoad(old, new)
+  if old < 213 then
+    self.mood_marker = 2
+  end
+
+  self:updateDynamicInfo()
+  Humanoid.afterLoad(self, old, new)
+end

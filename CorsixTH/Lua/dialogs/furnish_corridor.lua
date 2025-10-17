@@ -1,4 +1,5 @@
 --[[ Copyright (c) 2009 Peter "Corsix" Cawley
+Copyright (c) 2024 Felipe "FMMazur" Mazur
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -44,9 +45,10 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self.width = 360
   self.height = 274
   self:setDefaultPosition(0.5, 0.4)
+  local selected_label_color = { red = 40, green = 40, blue = 250 }
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req10V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.blue_font = app.gfx:loadFont("QData", "Font02V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color})
   self.title_text = _S.buy_objects_window.choose_items
   self.price_text = (_S.buy_objects_window.price .. " "):gsub("  $", " ")
   self.total_text = (_S.buy_objects_window.total .. " "):gsub("  $", " ")
@@ -87,14 +89,19 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
 
   self:addPanel(235, 146, 0) -- List top
   self:addPanel(236, 146, 223) -- List bottom
-  self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm):setTooltip(_S.tooltip.buy_objects_window.confirm)
+  self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm):setTooltip(_S.tooltip.buy_objects_window.confirm):setSound("selectx.wav")
   local i = 1
   local function item_callback(index, qty)
     local is_negative_quantity = qty < 0
     return --[[persistable:furnish_corridor_item_callback]] function(window)
-      if window:purchaseItem(index, qty) == 0 and not is_negative_quantity then
-        -- give visual warning that player doesn't have enough $ to buy
-        window.ui.adviser:say(_A.warnings.cannot_afford_2, false, true)
+      -- lewri: a persistence bug from the 'decrease' button converts integer to a
+      -- float, for now, sanitise it back to an integer
+      qty = math.floor(qty)
+      local quantity, error = window:purchaseItem(index, qty)
+
+      if quantity == nil and not is_negative_quantity then
+        -- give visual warning that player doesn't have enough $ to buy or can't buy more
+        window.ui.adviser:say(error, false, true)
         window.ui:playSound("wrong2.wav")
       elseif qty > 0 then
         window.ui:playSound("AddItemJ.wav")
@@ -128,6 +135,11 @@ end
 function UIFurnishCorridor:purchaseItem(index, quantity)
   local o = self.objects[index]
   local is_negative_quantity = quantity < 0
+
+  if (quantity > 0 and o.qty >= 99) then
+    return nil, _A.warnings.cannot_buy:format(o.object.name)
+  end
+
   if self.ui.app.key_modifiers.ctrl then
     quantity = quantity * 10
   elseif self.ui.app.key_modifiers.shift then
@@ -139,11 +151,14 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
   elseif quantity > 99 then
     quantity = 99
   end
-  quantity = quantity - o.qty
+
+  local bought = quantity - o.qty
   local hospital = self.ui.hospital
-  if hospital.balance >= self.total_price + quantity * hospital:getObjectBuildCost(o.object.id) or is_negative_quantity then
-    o.qty = o.qty + quantity
-    self.total_price = self.total_price + quantity * hospital:getObjectBuildCost(o.object.id)
+  local total_price = self.total_price + bought * hospital:getObjectBuildCost(o.object.id)
+
+  if hospital.balance >= total_price or is_negative_quantity then
+    o.qty = o.qty + bought
+    self.total_price = total_price
     if o.object.id == "reception_desk" then
       if o.qty > 0 then
         self.ui:tutorialStep(1, 2, 3)
@@ -152,7 +167,7 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
       end
     end
   else
-    quantity = 0
+    return nil, _A.warnings.cannot_afford_2
   end
   return quantity
 end
@@ -229,6 +244,7 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
       local obj = self.objects[hover_idx].object
       self.item_price = self.ui.hospital:getObjectBuildCost(obj.id)
       self.preview_anim:setAnimation(self.anims, obj.build_preview_animation)
+      TheApp.audio:playSound("HLIGHT5.wav")
     end
     self.list_hover_index = hover_idx
     repaint = true
@@ -238,6 +254,12 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
 end
 
 function UIFurnishCorridor:afterLoad(old, new)
+  -- If we saved with the window open, quantities might get converted to floats
+  -- This may be overkill
+  for _, obj in pairs(self.objects) do
+    obj.qty = math.floor(obj.qty)
+  end
+
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end

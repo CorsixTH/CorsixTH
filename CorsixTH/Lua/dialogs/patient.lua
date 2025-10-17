@@ -42,7 +42,7 @@ function UIPatient:UIPatient(ui, patient)
   self.height = 310
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req02V", true)
-  self.font = app.gfx:loadFont("QData", "Font74V") -- Font used in the treatment history
+  self.font = app.gfx:loadFontAndSpriteTable("QData", "Font74V") -- Font used in the treatment history
   self.patient = patient
   self.visible_diamond = ui:makeVisibleDiamond(75, 76)
 
@@ -52,7 +52,7 @@ function UIPatient:UIPatient(ui, patient)
   self.history_panel = self:addColourPanel(36, 22, 99, 88, 223, 223, 223) -- Treatment history background
   self.history_panel:makeButton(0, 0, 99, 88, nil, --[[persistable:patient_toggle_history]] function()
     self.history_panel.visible = not self.history_panel.visible
-  end):setTooltip(_S.tooltip.patient_window.graph) -- Treatment history toggle
+  end):setTooltip(_S.tooltip.patient_window.graph):setSound("selectx.wav") -- Treatment history toggle
   self.history_panel.visible = false -- Hide the treatment history at start
 
   self:addPanel(322,  15, 126) -- Happiness / thirst / temperature sliders
@@ -146,7 +146,7 @@ function UIPatient:draw(canvas, x_, y_)
     return
   end
   local px, py = map:WorldToScreen(patient.tile_x, patient.tile_y)
-  local dx, dy = patient.th:getMarker()
+  local dx, dy = patient.th:getPrimaryMarker()
   px = px + dx - 37
   py = py + dy - 61
   -- If the patient is spawning or despawning, or just on the map edge, then
@@ -158,10 +158,10 @@ function UIPatient:draw(canvas, x_, y_)
   Window.draw(self, canvas, x_, y_)
 
   -- The patient bars (happiness, thirst, and warmth).
-  local warmth = self.normaliseWarmth(patient.attributes["warmth"])
+  local warmth = self.normaliseWarmth(patient:getAttribute("warmth"))
 
-  self:drawBar(canvas, 348, 126, x, y, patient.attributes["happiness"] or 0.5)
-  self:drawBar(canvas, 351, 154, x, y, 1 - (patient.attributes["thirst"] or 0.5))
+  self:drawBar(canvas, 348, 126, x, y, patient:getAttribute("happiness", 0.5))
+  self:drawBar(canvas, 351, 154, x, y, 1 - (patient:getAttribute("thirst", 0.5)))
   self:drawBar(canvas, 349, 183, x, y, warmth)
 
   if self.history_panel.visible then
@@ -172,12 +172,13 @@ function UIPatient:draw(canvas, x_, y_)
 end
 
 --! List the treatments that were performed on the patient.
+-- This text is always capitalised.
 --!param canvas Destination to draw on.
 --!param x (int) X position of the top of the list.
 --!param y (int) Y position of the top of the list.
 function UIPatient:drawTreatmentHistory(canvas, x, y)
   for _, room in ipairs(self.patient.treatment_history) do
-    y = self.font:drawWrapped(canvas, room, x, y, 95)
+    y = self.font:drawWrapped(canvas, room:upper(), x, y, 95)
   end
 end
 

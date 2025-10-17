@@ -87,9 +87,9 @@ end
 function Receptionist:getDrawingLayer()
   local direction = self.last_move_direction
   if direction == "west" or direction == "north" then
-    return 5
+    return DrawingLayers.ReceptionistFacingAway
   end
-  return 3
+  return DrawingLayers.ReceptionistFacingUser
 end
 
 function Receptionist:afterLoad(old, new)
@@ -99,4 +99,3 @@ function Receptionist:afterLoad(old, new)
   end
   Staff.afterLoad(self, old, new)
 end
-

@@ -124,17 +124,13 @@ local config_defaults = {
   disable_fractured_bones_females = true,
   enable_avg_contents = false,
   remove_destroyed_rooms = false,
+  machine_menu_button = true,
+  enable_screen_shake = true,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
   theme_hospital_install = [[X:\ThemeHospital\hospital]],
   debug = false,
-  DBGp_client_idehost = nil,
-  DBGp_client_ideport = nil,
-  DBGp_client_idekey = nil,
-  DBGp_client_transport = nil,
-  DBGp_client_platform = nil,
-  DBGp_client_workingdir = nil,
   track_fps = false,
   zoom_speed = 80,
   scroll_speed = 2,
@@ -227,6 +223,7 @@ local string_01 = [=[
 --  German                / de / ger / deu
 --  Hungarian             / hu / hun
 --  Italian               / it / ita
+--  Japanese              / ja / jp
 --  Korean                / kor / ko
 --  Norwegian             / nb / nob
 --  Polish                / pl / pol
@@ -234,13 +231,12 @@ local string_01 = [=[
 --  Russian               / ru / rus
 --  Spanish               / es / spa
 --  Swedish               / sv / swe
+--  Ukrainian             / uk / ukr
 --]=] .. '\n' ..
 'language = [['.. config_values.language ..']]' .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
--- Note that audio will also be disabled if CorsixTH was compiled without
--- the SDL_mixer library.
 --]=] .. '\n' ..
 'audio = ' .. tostring(config_values.audio) .. '\n' .. [=[
 
@@ -288,6 +284,8 @@ local string_01 = [=[
 -------------------------------------------------------------------------------
 -- Right Mouse Scrolling: By default, it is disabled (right_mouse_scrolling = false).
 -- This means that the default scrolling method is pressing the middle mouse button.
+-- Please note this an Experimental Feature and may interfere with other right mouse
+-- operations. Report bugs for this on Github Issue 2469.
 --]=] .. '\n' ..
 'right_mouse_scrolling = ' .. tostring(config_values.right_mouse_scrolling) .. '\n' .. [=[
 
@@ -395,7 +393,19 @@ local string_01 = [=[
 -- By default destroyed rooms can't be removed. If you would like the game to
 -- give you the option of removing a destroyed room change this option to true.
 --]=] .. '\n' ..
-'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[]=]
+'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default machine menu is shown in a bottom panel. If you would like the
+-- game to hide it change this option to false.
+--]=] .. '\n' ..
+'machine_menu_button = ' .. tostring(config_values.machine_menu_button) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default the entire screen will shake during earthquakes. If you would
+-- like the game to keep the screen stationary, change this option to false.
+--]=] .. '\n' ..
+'enable_screen_shake = ' .. tostring(config_values.enable_screen_shake) .. '\n' .. [=[]=]
 
 local string_02 = [=[
 
@@ -438,6 +448,7 @@ campaigns = nil -- [[X:\ThemeHospital\Campaigns]]
 -------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital
 -- or use new graphics created by the CorsixTH project.
+-- Developer use only, otherwise the game will very likely crash in normal use
 use_new_graphics = false
 
 -------------------------------------------------------------------------------
@@ -468,6 +479,15 @@ screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 --
 audio_music = nil -- [[X:\ThemeHospital\Music]]
 
+-------------------------------------------------------------------------------
+-- SoundFont: CorsixTH uses the FluidR3 SoundFont by default for playing MIDI music.
+-- Windows users, and other OS versions compiled with the FluidSynth software
+-- synthesiser can specify their own SoundFont file below (.sf2 or .sf3).
+-- Mac(OS) Source Ports build users, and OS versions compiled with TiMidity
+-- won't see any effect from this option. See our Wiki for alternative options.
+--
+soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
+
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
 -------------------------------------------------------------------------------
@@ -487,17 +507,6 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 -- and a debug menu will be visible.
 --]=] .. '\n' ..
 'debug = ' .. tostring(config_values.debug) .. '\n' .. [=[
-
---Optional settings for CorsixTH's Lua DBGp client. Default settings are
--- nil values, platform & workingdir will be autodected if nil.
---https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
---]=] .. '\n' ..
-'idehost = ' .. tostring(config_values.DBGp_client_idehost) .. '\n' ..
-'ideport = ' .. tostring(config_values.DBGp_client_ideport) .. '\n' ..
-'idekey = ' .. tostring(config_values.DBGp_client_idekey) .. '\n' ..
-'transport = ' .. tostring(config_values.DBGp_client_transport) .. '\n' ..
-'platform = ' .. tostring(config_values.DBGp_platform) .. '\n' ..
-'workingdir = ' .. tostring(config_values.DBGp_workingdir) .. '\n' .. [=[
 
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
@@ -575,12 +584,12 @@ local hotkeys_defaults = {
   global_exitApp = {"alt", "f4"},
   global_resetApp = {"shift", "f10"},
   global_releaseMouse = {"ctrl", "f10"},
-  global_connectDebugger = {"ctrl", "c"},
   global_showLuaConsole = "f12",
   global_runDebugScript = {"shift", "d"},
   global_screenshot = {"ctrl", "s"},
   global_stop_movie = "escape",
   global_stop_movie_alt = "q",
+  global_pause_movie = "p",
   global_window_close = "escape",
   global_window_close_alt = "q",
   ingame_showmenubar = "escape",
@@ -603,6 +612,7 @@ local hotkeys_defaults = {
   ingame_zoom_out_more = {"shift", "-"},
   ingame_reset_zoom = "0",
   ingame_setTransparent = "x",
+  ingame_toggleTransparent = {"shift", "x"},
   ingame_toggleAdvisor = {"shift", "a"},
   ingame_poopLog = {"ctrl", "d"},
   ingame_poopStrings = {"ctrl", "t"},
@@ -618,6 +628,7 @@ local hotkeys_defaults = {
   ingame_panel_status = "f7",
   ingame_panel_charts = "f8",
   ingame_panel_policy = "f9",
+  ingame_panel_machineMenu = "f10",
   ingame_panel_map_alt = "t",
   ingame_panel_research_alt = "r",
   ingame_panel_casebook_alt = "c",
@@ -717,11 +728,11 @@ if hotkeys_needs_rewrite and TheApp then
 'global_exitApp = ' .. hotkeys_values.global_exitApp .. '\n' ..
 'global_resetApp = ' .. hotkeys_values.global_resetApp .. '\n' ..
 'global_releaseMouse = ' .. hotkeys_values.global_releaseMouse .. '\n' ..
-'global_connectDebugger = ' .. hotkeys_values.global_connectDebugger .. '\n' ..
 'global_showLuaConsole = ' .. hotkeys_values.global_showLuaConsole .. '\n' ..
 'global_runDebugScript = ' .. hotkeys_values.global_runDebugScript .. '\n' ..
 'global_screenshot = ' .. hotkeys_values.global_screenshot .. '\n' ..
 'global_stop_movie = ' .. hotkeys_values.global_stop_movie .. '\n' ..
+'global_pause_movie = ' .. hotkeys_values.global_pause_movie .. '\n' ..
 'global_window_close = ' .. hotkeys_values.global_window_close .. '\n' ..
 'global_stop_movie_alt =' .. hotkeys_values.global_stop_movie_alt .. '\n' ..
 'global_window_close_alt =' .. hotkeys_values.global_window_close_alt .. '\n' .. [=[
@@ -778,6 +789,7 @@ if hotkeys_needs_rewrite and TheApp then
 'ingame_panel_status = ' .. hotkeys_values.ingame_panel_status .. '\n' ..
 'ingame_panel_charts = ' .. hotkeys_values.ingame_panel_charts .. '\n' ..
 'ingame_panel_policy = ' .. hotkeys_values.ingame_panel_policy .. '\n' ..
+'ingame_panel_machineMenu = ' .. hotkeys_values.ingame_panel_machineMenu .. '\n' ..
 'ingame_panel_map_alt = ' .. hotkeys_values.ingame_panel_map_alt .. '\n' ..
 'ingame_panel_research_alt = ' .. hotkeys_values.ingame_panel_research_alt .. '\n' ..
 'ingame_panel_casebook_alt = ' .. hotkeys_values.ingame_panel_casebook_alt .. '\n' ..
@@ -802,9 +814,10 @@ if hotkeys_needs_rewrite and TheApp then
 'ingame_quitLevel = ' .. hotkeys_values.ingame_quitLevel .. '\n' .. [=[
 
 ---------------------------------Set Transparent-------------------------------
--- While held down any walls will be transparent, allowing you to see behind them.
+-- Use these keys to make walls transparent, allowing you to see behind them.
 --]=] .. '\n' ..
-'ingame_setTransparent = ' .. hotkeys_values.ingame_setTransparent .. '\n' .. [=[
+'ingame_setTransparent = ' .. hotkeys_values.ingame_setTransparent .. '\n' ..
+'ingame_toggleTransparent = ' .. hotkeys_values.ingame_toggleTransparent .. '\n' .. [=[
 ]=]
 
 local string_05 = [=[

@@ -25,7 +25,7 @@ local FallingAction = _G["FallingAction"]
 
 function FallingAction:FallingAction()
   self:HumanoidAction("falling")
-  self.setMustHappen(true)
+  self:setMustHappen(true)
 end
 
 local action_falling_end = permanent"action_falling_end"( function(humanoid)
@@ -41,9 +41,9 @@ local function action_falling_start(action, humanoid)
   end
 
   assert(humanoid.falling_anim, "Error: no falling animation for humanoid " .. humanoid.humanoid_class)
-  action.must_happen = true
+
   humanoid:setAnimation(humanoid.falling_anim, humanoid.last_move_direction == "east" and 0 or 1)
-  humanoid:setTimer(humanoid.world:getAnimLength(humanoid.falling_anim), action_falling_end)
+  humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.falling_anim), action_falling_end)
 end
 
 return action_falling_start

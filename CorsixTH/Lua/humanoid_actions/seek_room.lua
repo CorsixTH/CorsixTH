@@ -170,7 +170,6 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
 end
 
 local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( function(action, humanoid)
-  humanoid:setMood("patient_wait", "deactivate")
   -- Just in case we are somehow started again:
   -- FIXME: This seems to be used for intermediate actions like peeing while the patient is waiting
   --        Unfortunately this means that if you finish the required room while the patient is peeing
@@ -327,12 +326,13 @@ local function action_seek_room_start(action, humanoid)
           humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.awaiting_decision)
         end
       else
-        -- No more diagnosis rooms can be found
-        -- The GP's office is a special case. TODO: Make a custom message anyway?
         if action.room_type == "gp" then
+          -- The GP's office is a special case.
           humanoid:setMood("patient_wait", "activate")
           humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.no_gp_available)
+          humanoid.hospital:adviseNoGPOffice()
         else
+          -- No more diagnosis rooms can be found
           action_still_valid = action_seek_room_no_diagnosis_room_found(action, humanoid)
         end
       end

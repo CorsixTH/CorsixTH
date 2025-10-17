@@ -42,16 +42,14 @@ function Doctor:tickDay()
 
   -- if you overwork your Dr's then there is a chance that they can go crazy
   -- when this happens, find him and get him to rest straight away
-  if self.attributes["fatigue"] then
-    if self.attributes["fatigue"] < 0.7 then
-      if self:isResting() then
-        self:setCrazy(false)
-      end
-    else
-      -- doctor can go crazy if they're too tired
-      if math.random(1, 300) == 1 then
-        self:setCrazy(true)
-      end
+  if not self:isVeryTired() then
+    if self:isResting() then
+      self:setCrazy(false)
+    end
+  else
+    -- doctor can go crazy if they're too tired
+    if math.random(1, 300) == 1 then
+      self:setCrazy(true)
     end
   end
 
@@ -175,7 +173,7 @@ function Doctor:updateSkill(consultant, trait, amount)
       if self:getRoom().room_info.id == "training" then
         self:setNextAction(self:getRoom():createLeaveAction())
         self:queueAction(MeanderAction())
-        self.last_room = nil
+        self.last_room = nil -- Consultant no longer needs to return to this room
       end
       self:updateStaffTitle()
     end
@@ -241,6 +239,20 @@ function Doctor:setCrazy(crazy)
         self.is_crazy = false
       end
     end
+  end
+end
+
+function Doctor:onPickup()
+  Staff.onPickup(self)
+  self:resetSurgeonState()
+end
+
+-- Function resets "Surgeon" state for Doctor.
+-- Useful for case when on picking up Doctor from Operating Theatre
+-- we need to switching him back to regular clothes and type.
+function Doctor:resetSurgeonState()
+  if self.humanoid_class == "Surgeon" then
+    self:setType("Doctor")
   end
 end
 

@@ -33,6 +33,7 @@ height = SCREEN_SIZE_HEIGHT
 --  German                / de / ger / deu
 --  Hungarian             / hu / hun
 --  Italian               / it / ita
+--  Japanese              / ja / jp
 --  Korean                / kor / ko
 --  Norwegian             / nb / nob
 --  Polish                / pl / pol
@@ -40,13 +41,12 @@ height = SCREEN_SIZE_HEIGHT
 --  Russian               / ru / rus
 --  Spanish               / es / spa
 --  Swedish               / sv / swe
+--  Ukrainian             / uk / ukr
 --
 language = [[LANGUAGE_CHOSEN]]
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
--- Note that audio will also be disabled if CorsixTH was compiled without
--- the SDL_mixer library.
 --
 audio = true
 
@@ -92,8 +92,10 @@ prevent_edge_scrolling = false
 capture_mouse = true
 
 -------------------------------------------------------------------------------
--- Right Mouse Panning: By default, it is disabled (right_mouse_scrolling = false).
--- This means that the default panning method is pressing the middle mouse button.
+-- Right Mouse Scrolling: By default, it is disabled (right_mouse_scrolling = false).
+-- This means that the default scrolling method is pressing the middle mouse button.
+-- Please note this an Experimental Feature and may interfere with other right mouse
+-- operations. Report bugs for this on Github Issue 2469.
 --
 right_mouse_scrolling = false
 
@@ -203,6 +205,18 @@ enable_avg_contents = false
 --
 remove_destroyed_rooms = false
 
+-------------------------------------------------------------------------------
+-- By default machine menu is shown in a bottom panel. If you would like the
+-- game to hide it change this option to false.
+--
+machine_menu_button = true
+
+-------------------------------------------------------------------------------
+-- By default the entire screen will shake during earthquakes. If you would
+-- like the game to keep the screen stationary, change this option to false.
+--
+enable_screen_shake = true
+
 ------------------------------- FOLDER SETTINGS -------------------------------
 -- These settings can also be changed from the Folders Menu
 -------------------------------------------------------------------------------
@@ -242,6 +256,7 @@ campaigns = nil -- [[X:\ThemeHospital\Campaigns]]
 -------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital
 -- or use new graphics created by the CorsixTH project.
+-- Developer use only, otherwise the game will very likely crash in normal use
 use_new_graphics = false
 
 -------------------------------------------------------------------------------
@@ -272,6 +287,15 @@ screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 --
 audio_music = nil -- [[X:\ThemeHospital\Music]]
 
+-------------------------------------------------------------------------------
+-- SoundFont: CorsixTH uses the FluidR3 SoundFont by default for playing MIDI music.
+-- Windows users, and other OS versions compiled with the FluidSynth software
+-- synthesiser can specify their own SoundFont file below (.sf2 or .sf3).
+-- Mac(OS) Source Ports build users, and OS versions compiled with TiMidity
+-- won't see any effect from this option. See our Wiki for alternative options.
+--
+soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
+
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
 -------------------------------------------------------------------------------
@@ -291,17 +315,6 @@ audio_buffer_size = 2048
 -- and a debug menu will be visible.
 --
 debug = false
-
---Optional settings for CorsixTH's Lua DBGp client. Default settings are
--- nil values, platform & workingdir will be autodected if nil.
---https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
---
-idehost = nil
-ideport = nil
-idekey = nil
-transport = nil
-platform = nil
-workingdir = nil
 
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns

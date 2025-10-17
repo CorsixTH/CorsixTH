@@ -313,7 +313,7 @@ function LoadGame(data)
   TheApp.ui:onChangeResolution()
   -- Check if the blueish tone should be applied.
   -- Note: Blue filter control should be handled from world or ui, however when
-  -- loading a game we should let persistance do it.
+  -- loading a game we should let persistence do it.
   if not TheApp.ui:checkForMustPauseWindows() and TheApp.world:isUserActionProhibited() then
     TheApp.video:setBlueFilterActive(true)
   end

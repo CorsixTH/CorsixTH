@@ -23,7 +23,6 @@ SOFTWARE.
 #ifndef ANIMVIEW_APP_H_
 #define ANIMVIEW_APP_H_
 
-#include "config.h"
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 

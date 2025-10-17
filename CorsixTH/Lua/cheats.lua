@@ -33,15 +33,16 @@ local Cheats = _G["Cheats"]
 function Cheats:Cheats(hospital)
   self.hospital = hospital
   -- Cheats to appear specifically in the cheats window
-  -- New cheats require an afterLoad when added
   self.cheat_list = {
     {name = "money",          func = self.cheatMoney},
     {name = "all_research",   func = self.cheatResearch},
     {name = "emergency",      func = self.cheatEmergency},
+    {name = "show_infected",  func = self.cheatShowInfected},
     {name = "epidemic",       func = self.cheatEpidemic},
-    {name = "toggle_infected", func = self.cheatToggleInfected},
-    {name = "vip",            func = self.cheatVip},
+    {name = "toggle_epidemic", func = self.cheatToggleEpidemic},
     {name = "earthquake",     func = self.cheatEarthquake},
+    {name = "toggle_earthquake", func = self.cheatToggleEarthquake},
+    {name = "vip",            func = self.cheatVip},
     {name = "create_patient", func = self.cheatPatient},
     {name = "end_month",      func = self.cheatMonth},
     {name = "end_year",       func = self.cheatYear},
@@ -49,6 +50,10 @@ function Cheats:Cheats(hospital)
     {name = "win_level",      func = self.cheatWin},
     {name = "increase_prices", func = self.cheatIncreasePrices},
     {name = "decrease_prices", func = self.cheatDecreasePrices},
+    {name = "reset_death_count", func = self.cheatResetDeathCount},
+    {name = "max_reputation",  func = self.cheatMaxReputation},
+    {name = "repair_all_machines", func = self.cheatRepairAllMachines},
+    {name = "toggle_invulnerable_machines", func = self.cheatToggleInvulnerableMachines},
   }
 
   self.active_cheats = {} -- Toggle cheat status
@@ -58,9 +63,11 @@ end
 --! Performs a cheat from the cheat_list (menu cheats)
 --!param num (integer) The cheat from the cheat_list called
 --!return true if cheat was successful, false otherwise
+--!return message (optional string) The text message of the cheat.
 function Cheats:performCheat(num)
-  local cheat_success = self.cheat_list[num].func(self) ~= false
-  return cheat_success and self.cheat_list[num].name ~= "lose_level"
+  local cheat_success, message = self.cheat_list[num].func(self)
+  cheat_success = cheat_success ~= false
+  return cheat_success and self.cheat_list[num].name ~= "lose_level", message
 end
 
 --! Updates the cheated status of the player, with a matching announcement
@@ -92,25 +99,21 @@ end
 
 function Cheats:cheatEmergency()
   local err = self.hospital:createEmergency()
-  local ui = self.hospital.world.ui
   if err == "undiscovered_disease" then
-    ui:addWindow(UIInformation(ui, {_S.misc.cant_treat_emergency}))
+    return false, _S.misc.cant_treat_emergency
   elseif err == "no_heliport" then
-    ui:addWindow(UIInformation(ui, {_S.misc.no_heliport}))
+    return false, _S.misc.no_heliport
   -- else 'err == nil', meaning success. The case doesn't need special handling
   end
 end
 
---[[ Creates a new contagious patient in the hospital - potentially an epidemic]]
-function Cheats:cheatEpidemic()
-  self.hospital:spawnContagiousPatient()
-end
+function Cheats:cheatToggleInfected() end -- Stub of the old name of the function below
 
---[[ Before an epidemic has been revealed toggle the infected icons
-to easily distinguish the infected patients -- will toggle icons
+--[[ Before an epidemic has been revealed, show/hide the infected mood icons
+to easily distinguish the infected patients. This will show/hide icons
 for ALL future epidemics you cannot distinguish between epidemics
 by disease ]]--
-function Cheats:cheatToggleInfected()
+function Cheats:cheatShowInfected()
   local hosp = self.hospital
   if hosp.future_epidemics_pool and #hosp.future_epidemics_pool > 0 then
     for _, future_epidemic in ipairs(hosp.future_epidemics_pool) do
@@ -122,16 +125,46 @@ function Cheats:cheatToggleInfected()
       end
     end
   else
-    self.hospital.world:gameLog("Unable to toggle icons - no epidemics in progress that are not revealed")
+    return false, _S.misc.epidemic_no_icon_to_toggle
   end
+end
+
+--[[ Creates a new contagious patient in the hospital - potentially an epidemic]]
+function Cheats:cheatEpidemic()
+  return self.hospital:spawnContagiousPatient()
+end
+
+--! Toggles the possibility of epidemics. Cancel any ongoing or preparing epidemics.
+function Cheats:cheatToggleEpidemic()
+  local hosp, msg = self.hospital
+  if hosp.epidemics_disabled then
+    msg = _S.misc.epidemics_on
+  else
+    msg = _S.misc.epidemics_off
+    hosp:cancelEpidemics()
+  end
+  hosp.epidemics_disabled = not hosp.epidemics_disabled
+  return true, msg
+end
+
+function Cheats:cheatEarthquake()
+  return self.hospital.world.earthquake:createEarthquake()
+end
+
+--! Toggles the possibility of earthquakes
+function Cheats:cheatToggleEarthquake()
+  local world, msg = self.hospital.world
+  if world.earthquake.disabled then
+    msg = _S.misc.earthquakes_on
+  else
+    msg = _S.misc.earthquakes_off
+  end
+  world.earthquake.disabled = not world.earthquake.disabled
+  return true, msg
 end
 
 function Cheats:cheatVip()
   self.hospital:createVip()
-end
-
-function Cheats:cheatEarthquake()
-  return self.hospital.world:createEarthquake()
 end
 
 function Cheats:cheatPatient()
@@ -178,6 +211,39 @@ function Cheats:cheatDecreasePrices()
   end
 end
 
+function Cheats:cheatResetDeathCount()
+  self.hospital:resetDeathCount()
+end
+
+function Cheats:cheatMaxReputation()
+  local hosp = self.hospital
+  hosp:unconditionalChangeReputation(hosp.reputation_max)
+end
+
+--! Instantly repairs all of the player's machines (regardless of condition, without decreasing strength)
+function Cheats:cheatRepairAllMachines()
+  local world = self.hospital.world
+  local machines = world:getPlayerMachines()
+
+  for _, machine in ipairs(machines) do
+    machine:machineRepaired(machine:getRoom(), false)
+  end
+end
+
+--! Toggles machine invulnerability (no wear or explosions)
+function Cheats:cheatToggleInvulnerableMachines()
+  local msg
+
+  if self:isCheatActive("invulnerable_machines") then
+    msg = _S.misc.invulnerable_machines_off
+  else
+    msg = _S.misc.invulnerable_machines_on
+  end
+
+  self.active_cheats["invulnerable_machines"] = not self.active_cheats["invulnerable_machines"]
+  return true, msg
+end
+
 --[[Begin toggle-based cheat functions]]
 
 --! Enable Roujin's challenge (spawn rate cheat)
@@ -195,8 +261,8 @@ end
 --! Enables no rest cheat (staff do not tire, fast movement)
 function Cheats:noRestOn()
   for _, staff in ipairs(self.hospital.staff) do
-    if staff.attributes["fatigue"] then
-      staff:wake(staff.attributes["fatigue"])
+    if staff:getAttribute("fatigue") then
+      staff:wake(staff:getAttribute("fatigue"))
     end
   end
   self.active_cheats["no_rest_cheat"] = true

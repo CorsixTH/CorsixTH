@@ -26,13 +26,15 @@ local WalkAction = _G["WalkAction"]
 --! Action to walk to a given position.
 --!param x (int) X coordinate of the destination tile.
 --!param y (int) Y coordinate of the destination tile.
-function WalkAction:WalkAction(x, y)
+--!param trimmed (boolean) Optional parameter to finish action on re-route
+function WalkAction:WalkAction(x, y, trimmed)
   assert(type(x) == "number", "Invalid value for parameter 'x'")
   assert(type(y) == "number", "Invalid value for parameter 'y'")
 
   self:HumanoidAction("walk")
   self.x = x
   self.y = y
+  self.trimmed = trimmed
   self.truncate_only_on_high_priority = false
   self.walking_to_vaccinate = false -- Nurse walking with the intention to vaccinate
   self.is_entering = false -- Whether the walk enters a room.
@@ -111,6 +113,10 @@ local flag_flip_h = 1
 local navigateDoor
 
 local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
+  -- The variables below must always make up factor*quantity = 8 or the
+  -- animation glitches
+  -- Factor must also be able to multiply by 2 to become an integer
+  -- Quantity must always be an integer
   local factor = 1
   local quantity = 8
   if humanoid.speed and humanoid.speed == "fast" then
@@ -205,9 +211,13 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
     local doorcheck = {[door] = true, [door2] = true}
     -- but we should see if this is the same room id we want to go to and cancel the reroute
     -- ensure we still have a door on this route
-    if recalc_route and (humanoid.world:getObject(x1, y1, doorcheck) or humanoid.world:getObject(x2, y2, doorcheck)) and -- is there any door
-        map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId == flags_there.roomId then
-      recalc_route = false
+    if recalc_route and (humanoid.world:getObject(x1, y1, doorcheck) or
+        humanoid.world:getObject(x2, y2, doorcheck)) and -- is there any door
+        map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ==
+        flags_there.roomId then
+      -- A walk including a trimmed path could have the last tile inside a room, and
+      -- might need a new route completely (e.g. seek reception)
+      recalc_route = action.trimmed
     end
   end
   if recalc_route then
@@ -215,6 +225,10 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
       humanoid:setTilePositionSpeed(x1, y1)
       if action.on_next_tile_set then
         action.on_next_tile_set()
+      end
+      if action.trimmed then -- request new route
+        humanoid:finishAction(action)
+        return
       end
       return action:on_restart(humanoid)
     end
@@ -248,15 +262,12 @@ end)
 
 navigateDoor = function(humanoid, x1, y1, dir)
   local action = humanoid:getCurrentAction()
-  local duration = 12
   local dx = x1
   local dy = y1
   if dir == "east" then
     dx = dx + 1
-    duration = 10
   elseif dir == "south" then
     dy = dy + 1
-    duration = 10
   end
   local swinging = false
   local door = humanoid.world:getObject(dx, dy, "door")
@@ -334,33 +345,35 @@ navigateDoor = function(humanoid, x1, y1, dir)
   humanoid:setTilePositionSpeed(dx, dy)
   humanoid.user_of = door
   door:setUser(humanoid)
-  local entering, leaving
-  if swinging then
-    entering = anims.entering_swing
-    leaving = anims.leaving_swing
-    duration = humanoid.world:getAnimLength(entering)
-  else
-    entering = anims.entering
-    leaving = anims.leaving
-  end
-  local direction = "in"
+  local entering = swinging and anims.entering_swing or anims.entering
+  local leaving = swinging and anims.leaving_swing or anims.leaving
+
+  local duration, direction
   if dir == "north" then
     humanoid:setAnimation(leaving, flag_list_bottom)
+    duration = TheApp.animation_manager:getAnimLength(leaving)
     to_x, to_y = dx, dy - 1
-    duration = humanoid.world:getAnimLength(leaving)
+    direction = "in"
+
   elseif dir == "west" then
     humanoid:setAnimation(leaving, flag_list_bottom + flag_flip_h)
+    duration = TheApp.animation_manager:getAnimLength(leaving)
     to_x, to_y = dx - 1, dy
-    duration = humanoid.world:getAnimLength(leaving)
+    direction = "in"
+
   elseif dir == "east" then
     humanoid:setAnimation(entering, flag_list_bottom)
+    duration = TheApp.animation_manager:getAnimLength(entering)
     to_x, to_y = dx, dy
     direction = "out"
+
   elseif dir == "south" then
     humanoid:setAnimation(entering, flag_list_bottom + flag_flip_h)
+    duration = TheApp.animation_manager:getAnimLength(entering)
     to_x, to_y = dx, dy
     direction = "out"
   end
+
   humanoid.last_move_direction = dir
   if swinging then
     door:swingDoors(direction, duration)

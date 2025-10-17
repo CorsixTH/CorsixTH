@@ -24,9 +24,12 @@ SOFTWARE.
 #define CORSIX_TH_LUA_HPP_
 
 extern "C" {
+// IWYU pragma: begin_exports
 #include <lauxlib.h>
 #include <lua.h>
+#include <luaconf.h>
 #include <lualib.h>
+// IWYU pragma: end_exports
 }
 
 #if LUA_VERSION_NUM >= 502

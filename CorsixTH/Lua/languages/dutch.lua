@@ -1,6 +1,7 @@
 --[[ Copyright (c) 2010 RAS
                    2011 FlyingBastard, L_konings, Nossah, KasperVld
                    2012-2013 Omni, Maarten
+                   2024 Jetenergy
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -103,6 +104,14 @@ misc = {
   force = "Forceer",
   pause = "Pauze",
   send_message_all = "Bericht sturen naar alle spelers",
+  cant_treat_emergency = "Je ziekenhuis kan deze noodsituatie niet behandelen omdat de ziekte nog niet is ontdekt. Probeer het gerust opnieuw.",
+  earthquakes_off = "Aardbevingen zijn uitgeschakeld",
+  earthquakes_on = "Aardbevingen zijn opnieuw ingeschakeld",
+  epidemics_off = "Epidemieën zijn uitgeschakeld",
+  epidemics_on = "Epidemieën zijn opnieuw ingeschakeld",
+  epidemic_no_diseases = "Kan geen epidemie creëren - er zijn geen beschikbare besmettelijke ziekten.",
+  epidemic_no_icon_to_toggle = "Kan geen geïnfecteerde iconen weergeven/verbergen - er zijn geen lopende epidemieën die niet zijn onthuld.",
+  epidemic_no_receptionist = "Kan geen epidemie aanmaken - geen bemande receptie",
 }
 staff_descriptions = {
   good = {
@@ -190,9 +199,9 @@ information = {
     reputation = "Je reputatie kwam onder %d",
     balance = "Je banksaldo was lager dan %d",
     percentage_killed = "Je hebt meer dan %d procent van je patiënten vermoord",
-    cheat = "Dit was jouw keuze of heb je op de verkeerde knop gedrukt? Dus je faalt zelfs om vals te spelen, niet zo grappig hè?",
+    cheat = "Je hebt (hopelijk niet per ongeluk) de \"Verlies het huidige level\" optie gebruikt", -- Zie ook cheats_window.cheats.lose_level
   },
-  cheat_not_possible = "Cheat kan niet toegepast worden op dit level. Je faalt zelfs om vals te spelen, niet zo grappig hè?",
+  cheat_not_possible = "Cheat kan niet toegepast worden op dit level.",
 }
 
 staff_list = {
@@ -254,6 +263,7 @@ totd_window = {
     "Patiënten krijgen dorst van het wachten, en het gaat helemaal hard als je de verwarming flink opschroeft! Plaats frisdrankautomaten op strategische locaties voor een extra zakcentje.",
     "Je kunt het diagnostische proces voor een patiënt vroegtijdig stopzetten als je al weet wat voor ziekte hij of zij heeft. Maar pas op, dit vergroot de kans op een verkeerde behandeling, wat fataal kan zijn voor de patiënt.",
     "Noodgevallen zijn vaak een goede bron van extra inkomsten. Maar je moet er wel zeker van zijn dat je deze patiënten binnen de tijd kunt behandelen.",
+    "Wist je dat je klusjes mensen aan specifieke percelen kunt toewijzen? Klik gewoon op de tekst 'Overal' in hun personeelsprofiel om er doorheen te bladeren!",
   },
   next = "Volgende tip",
 }
@@ -302,6 +312,18 @@ options_window = {
   folder = "Mappen",
   audio = "Audio algemeen",
   customise = "Aangepast",
+  capture_mouse = "Cursor Vangen",
+  check_for_updates = "Controleren op Updates",
+  hotkey = "Sneltoetsen",
+  jukebox = "Jukebox",
+  option_disabled = "Uitgeschakeld",
+  option_enabled = "Ingeschakeld",
+  right_mouse_scrolling = "Muis Scrollen",
+  right_mouse_scrolling_option_middle = "Middelste Knop",
+  right_mouse_scrolling_option_right = "Rechterknop",
+  scrollspeed = "Scrollsnelheid",
+  shift_scrollspeed = "Shift Scrollsnelheid",
+  zoom_speed = "Zoomsnelheid",
 }
 load_game_window = {
   caption = "Spel laden (%1%)",
@@ -347,6 +369,7 @@ customise_window = {
   fractured_bones = "Gebroken botten",
   average_contents = "Gemiddeld meubilair",
   aliens = "Alien patiënten",
+  remove_destroyed_rooms = "Verwijder verwoeste kamers",
 }
 
 trophy_room = { --gebruik hiervoor meer formele tekst
@@ -629,31 +652,22 @@ fax = {
   vip_visit_result = {
     telegram = "Telegram!",
     remarks = {
-      good = {
-        [1] = "Dat ziekenhuis draait goed. Bedankt voor de uitnodiging.",
-        [2] = "Hmm. Zeker een niet al te kwade medische instelling.",
-        [3] = "Ik heb genoten van je charmante ziekenhuis. Goed, iemand zin in Nasi Goreng van de Indonees?",
-      },
-      super = {
-        [1] = "Dat ziekenhuis loopt als een trein. Als mijn gezondheid me in de steek laat, wil ik daarnaartoe.",
-        [2] = "Dat is pas een ziekenhuis!",
-        [3] = "Wat een fantastisch ziekenhuis. En ik kan het weten: ik heb er wel een paar van binnen gezien.",
-      },
-      bad = {
-        [1] = "Was dat het nou? Het was nog erger dan een opera van vier uur!",
-        [2] = "Ik walg van wat ik gezien heb. Was dat een ziekenhuis? Het leek meer op een zwijnenstal!",
-        [3] = "Ik ben het zat een publiek figuur te zijn en zulke ranzige hokken te moeten bezoeken! Ik kap ermee.",
-      },
-      mediocre = {
-        [1] = "Nou ja, het kan erger. Maar je moet er wat aan werken.",
-        [2] = "Oh jee. Niet zo een fijne plaats als je je niet lekker voelt.",
-        [3] = "Een matig ziekenhuis, eerlijk gezegd. Ik had meer verwacht.",
-      },
-      very_bad = {
-        [1] = "Wat een zooi. Ik ga kijken of ik het kan laten sluiten.",
-        [2] = "Ik heb nog nooit zo'n verschrikkelijk ziekenhuis gezien. Wat een schande!",
-        [3] = "Ik ben geschokt. Dat is toch geen ziekenhuis? Ik heb een biertje nodig.",
-      },
+      [1] = "Dat ziekenhuis loopt als een trein. Als mijn gezondheid me in de steek laat, wil ik daarnaartoe.",
+      [2] = "Dat is pas een ziekenhuis!",
+      [3] = "Wat een fantastisch ziekenhuis. En ik kan het weten: ik heb er wel een paar van binnen gezien.",
+      [4] = "Dat ziekenhuis draait goed. Bedankt voor de uitnodiging.",
+      [5] = "Hmm. Zeker een niet al te kwade medische instelling.",
+      [6] = "Ik heb genoten van je charmante ziekenhuis. Goed, iemand zin in Nasi Goreng van de Indonees?",
+      [7] = "Nou ja, het kan erger. Maar je moet er wat aan werken.",
+      [8] = "Oh jee. Niet zo een fijne plaats als je je niet lekker voelt.",
+      [9] = "Een matig ziekenhuis, eerlijk gezegd. Ik had meer verwacht.",
+      [10] = "Was dat het nou? Het was nog erger dan een opera van vier uur!",
+      [11] = "Ik walg van wat ik gezien heb. Was dat een ziekenhuis? Het leek meer op een zwijnenstal!",
+      [12] = "Ik ben het zat een publiek figuur te zijn en zulke ranzige hokken te moeten bezoeken! Ik kap ermee.",
+      [13] = "Wat een zooi. Ik ga kijken of ik het kan laten sluiten.",
+      [14] = "Ik heb nog nooit zo'n verschrikkelijk ziekenhuis gezien. Wat een schande!",
+      [15] = "Ik ben geschokt. Dat is toch geen ziekenhuis? Ik heb een biertje nodig.",
+
       free_build = {
         [1] = "U heeft een heel mooi ziekenhuis neergezet. Dat is natuurlijk ook niet zo moeilijk als geld geen rol speelt he?",
         [2] = "Ik ben geen econoom, maar ik denk dat ik dit ziekenhuis ook wel zou kunnen besturen, als u begrijpt wat ik bedoel...",
@@ -811,12 +825,19 @@ tooltip = {
       win_level = "Win het huidige level",
       create_patient = "Creëer een patiënt op de rand van de kaart.",
       money = "Voegt 10.000 toe aan je saldo",
-      lose_level = "Verlies het huidige level",
+      lose_level = "Verlies het huidige level", -- Zie ook information.level_lost.cheat
       all_research = "Voltooi al het onderzoek",
       end_year = "Spring naar het einde van het jaar.",
       earthquake = "Creëer een aardbeving",
       epidemic = "Maakt een besmette patient aan die mogelijk een epidemie veroorzaakt",
       toggle_infected = "Aan/uit zetten van weergave van geïnfecteerden van de ontdekte epidemie",
+      increase_prices = "Verhoog alle prijzen met 50% (max. 200%)",
+      decrease_prices = "Verlaag alle prijzen met 50% (min. 50%)",
+      show_infected = "Toon/verberg de geïnfecteerde iconen voor de actieve, ontdekte epidemieën",
+      max_reputation = "Zet de reputatie van het ziekenhuis op maximaal",
+      toggle_epidemic = "Schakel epidemieën in of uit",
+      reset_death_count = "Zet het aantal ziekhuisdoden terug op nul",
+      toggle_earthquake = "Schakel aardbevingen in of uit",
     },
   },
   new_game_window = {
@@ -900,13 +921,13 @@ tooltip = {
     cure_inc = "Budget voor onderzoek verhogen",
     close = "Onderzoeksscherm sluiten",
     specialisation_dec = "Budget voor specialisatie verlagen",
-    diagnosis_dec = "Budget voor diagnostische apparatuur verhogen",
+    diagnosis_dec = "Budget voor diagnostische apparatuur verlagen",
     allocated_amount = "Totaal budget",
     improvements_inc = "Budget voor verbeteringen verhogen",
     drugs_dec = "Budget voor medicijnen verlagen",
     drugs_inc = "Budget voor medicijnen verhogen",
     cure_dec = "Budget voor behandelmethodes verlagen",
-    specialisation_inc = "Budget voor specialisatie verlagen",
+    specialisation_inc = "Budget voor specialisatie verhogen",
     improvements_dec = "Budget voor verbeteringen verlagen",
     diagnosis_inc = "Budget voor diagnostische apparatuur verhogen",
   },
@@ -1008,8 +1029,9 @@ tooltip = {
     heat_inc = "Verwarming hoger zetten",
   },
   custom_game_window = {
-    start_game_with_name = "%s starten",
+    choose_game = "Klik op een level om meer informatie in te zien",
     free_build = "Klik hier als je wilt spelen zonder geld, en zonder win en verliesvoorwaarden", --Kan ook overwinningsvoorwaarden worden genoemd, maar is misschien net te weinig info
+    load_selected_level = "laad en speel het geselecteerde level",
   },
   casebook = {
     sent_home = "Aantal afgewezen patiënten",
@@ -1081,6 +1103,8 @@ tooltip = {
     },
     new_game = "Begin met een compleet nieuw spel",
     load_game = "Een opgeslagen spel laden",
+    custom_campaign = "Start een campagne die door de community is gemaakt",
+    map_edit = "Creëer een aangepaste map"
   },
   patient_window = {
     graph = "Klik om te schakelen tussen de gezondheid en de geschiedenis van deze persoon",
@@ -1098,6 +1122,7 @@ tooltip = {
     back = "Dit venster sluiten",
     save_date = "Klik hier om te sorteren op datum van opslaan",
     name = "Klik hier om te sorteren op naam",
+    ok = "Bevestig keuze",
   },
   watch = {
     emergency = "Noodgeval: tijd over om alle patiënten te genezen.",
@@ -1247,6 +1272,7 @@ tooltip = {
     dna_fixer = "23 OB_DNA_FIXER",
     x_ray = "27 OB_XRAY",
     cabinet = "Dossierkast: bevat dossiers, aantekeningen en rapportages van patiënten.",
+    rathole = "De thuisbasis van een rattenfamilie die uw ziekenhuis vies genoeg vond om hier te komen wonen.",
   },
   build_room_window = {
     cost = "Kosten van deze kamer",
@@ -1277,6 +1303,21 @@ tooltip = {
     folder_button = "Mapopties.",
     audio_toggle = "Zet aan of uit.",
     customise_button = "Meer instellingen om je spel aan te passen.",
+    apply_scrollspeed = "Pas de ingevoerde scrollsnelheid toe.",
+    apply_shift_scrollspeed = "Pas de ingevoerde shift-scrollsnelheid toe.",
+    apply_zoomspeed = "Pas de ingevoerde zoomsnelheid toe.",
+    cancel_scrollspeed = "Ga terug zonder de scrollsnelheid te wijzigen.",
+    cancel_shift_scrollspeed = "Ga terug zonder de shift-scrollsnelheid te wijzigen.",
+    cancel_zoomspeed = "Ga terug zonder de zoomsnelheid te wijzigen.",
+    capture_mouse = "Klik om de cursor te vangen in het spelvenster",
+    check_for_updates = "Stel in of het spel bij het opstarten naar updates moet zoeken.",
+    hotkey = "Pas sneltoetsen aan.",
+    jukebox = "Open de Jukebox om de muziek te bedienen",
+    language_dropdown_no_font = "Selecteer een lettertype in de spelinstellingen om deze taal in te schakelen",
+    right_mouse_scrolling = "Wissel de muisknop die wordt gebruikt om door de kaart te scrollen",
+    scrollspeed = "Stel de scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 2",
+    shift_scrollspeed = "Stel de shift-scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 4",
+    zoom_speed = "Stel de zoomsnelheid van de camera in van 10 (langzaamst) en 1000 (snelst). De standaard waarde is 80",
   },
   research_policy = {
     research_progress = "Voortgang tot de volgende ontdekking in deze categorie: %1%/%2%",
@@ -1291,6 +1332,7 @@ tooltip = {
     paused = "In Theme Hospital was het niet mogelijk de menubalk te gebruiken als het spel was gepauzeerd. De standaard instelling in CorsixTH is het zelfde, maar met deze instelling aan is dit tijdens pauze wel toegestaan.",
     average_contents = "Als het spel moet onthouden wat je gemiddeld genomen aan meubilair in een kamer bouwt, zet deze instelling aan.",
     back = "Sluit dit menu af en ga terug naar het instellingen menu.",
+    remove_destroyed_rooms = "Schakel deze optie in als u vernielde kamers tegen betaling wilt kunnen verwijderen",
   },
   update_window = {
     download = "Ga naar de download pagina voor de nieuwste versie van CorsixTH",
@@ -1313,6 +1355,26 @@ tooltip = {
     default = "Standaard locatie.",
     no_font_specified = "Nog geen lettertype locatie ingesteld!",
     music_location = "Selecteer de locatie van je MP3 bestanden. Deze moet van te voren zijn gemaakt, zoek vervolgens hier naar de locatie.",
+  },
+  debug_patient_window = {
+    item = "Creëer een patiënt met %s",
+  },
+  hotkey_window = {
+    button_accept = "Bewaar sneltoetstoewijzingen",
+    button_back_02 = "Ga terug naar het hoofdvenster voor sneltoetsen. Sneltoetsen die in dit venster zijn gewijzigd, kunnen daar worden geaccepteerd",
+    button_cancel = "Herstel de wijzigingen en ga terug naar het optiemenu",
+    button_defaults = "Herstel alle sneltoetsen naar de standaardinstellingen",
+    button_gameSpeedKeys = "Open het venster van de sneltoetsen voor de spelsnelheid",
+    button_recallPosKeys = "Open het venster van de sneltoetsen voor de cameraposities",
+    caption_panels = "Open het venster om paneeltoetsen toe te wijzen",
+  },
+  save_map_window = {
+    map = "Overschrijf spel %s",
+    new_map = "Voer een naam in voor het opslagbestand",
+  },
+  custom_campaign_window = {
+    choose_campaign = "Kies een carrière om er meer over te lezen",
+    start_selected_campaign = "Laad het eerste scenario van deze carrière",
   },
 }
 menu_debug_overlay = {
@@ -1385,6 +1447,7 @@ dynamic_info = {                                      --[['' - '' is hier versch
     queue_size = "Rijlengte %d",
     strength = "Kracht %d",
     queue_expected = "Verwachte rijlengte %d",
+    strength_extra_info = "Vermogen %d (Te verbeteren naar %d)",
   },
   staff = {
     ability = "Competentie",
@@ -1395,6 +1458,7 @@ dynamic_info = {                                      --[['' - '' is hier versch
       going_to_repair = "Gaat %s repareren",
       heading_for = "Gaat naar %s",
       fired = "Ontslagen",
+      vaccine = "Een patiënt vaccineren",
     },
     tiredness = "Moeheid",
   },
@@ -1649,6 +1713,12 @@ adviser = {
     researcher_needs_desk_3 = "Elke onderzoeker heeft zijn eigen bureau nodig om aan te werken.",
     nurse_needs_desk_2 = "Je zuster is blij dat je haar een pauze gunt. Als het je bedoeling was om meer zusters tegelijk in de slaapzaal te laten werken, dan moet je voor elk van hen een bureau neerzetten.",
     nurse_needs_desk_1 = "Elke zuster heeft haar eigen bureau nodig om aan te werken.",
+    patient_not_paying = "Een patiënt is vertrokken zonder te betalen voor %s omdat het te duur is!",
+    cannot_afford_machine = "Je hebt minstens $%1% op de bank nodig om een nieuwe %2% te kunnen betalen!",
+    another_desk = "Je moet een andere balie bouwen voor de nieuwe receptioniste.",
+    fair_prices = "Je kosten voor %s lijken eerlijk en evenwichtig",
+    low_prices = "Je rekent te weinig voor %s. Dit zal mensen naar je ziekenhuis brengen, maar je zult er niet veel winst uit halen.",
+    high_prices = "Je kosten voor %s zijn hoog. Dit zal op korte termijn veel winst opleveren, maar uiteindelijk zul je mensen wegjagen.",
   },
   placement_info = {
     door_can_place = "Je kunt hier een deur plaatsen als je wilt.",
@@ -1720,7 +1790,12 @@ adviser = {
     th_cheat = "Gefeliciteerd, je hebt de cheats ontdekt!",
     roujin_on_cheat = "Roujin's uitdaging geactiveerd, succes...",
     roujin_off_cheat = "Roujin's uitdaging gedeactiveerd.",
+    norest_on_cheat = "Oh nee! Het lijkt erop dat je personeel te veel cafeïne heeft geconsumeerd en nu geen behoefte meer heeft aan rust.",
+    norest_off_cheat = "Oef! Het lijkt erop dat die buzz eindelijk is verdwenen. Het personeel zal nu goed rusten.",
   },
+  staff_place_advice = {
+    not_enough_lecture_chairs = "Elke student-arts heeft een collegestoel nodig om te zitten!",
+  }
 }
 room_descriptions = {
   ultrascan = {
@@ -2040,6 +2115,7 @@ vip_names = {
 custom_game_window = {
   caption = "Uitzendwerk",
   free_build = "Vrij bouwen",
+  load_selected_level = "Start"
 }
 transactions = {  --[[Hier geen veranderingen in aanbrengen. Sommige woorden zijn bewust weggelaten vanwege ruimtegebrek ingame!]]--
   severance = "Ontslagpremie",
@@ -2078,6 +2154,7 @@ transactions = {  --[[Hier geen veranderingen in aanbrengen. Sommige woorden zij
   build_room = "Constructie",
   insurance_colon = "Verzekering:",
   sell_object = "Verkoop",
+  remove_room = "Constructie: Vernielde kamer",
 }
 letter = {
   [1] = {
@@ -2147,6 +2224,9 @@ letter = {
   dear_player = "Beste %s",
   custom_level_completed = "Goed werk! Je hebt alle doelen voor dit ziekenhuis behaald!",
   return_to_main_menu = "Wil je teruggaan naar het hoofdmenu of doorspelen?",
+  campaign_completed = "Ongelofelijk! Je hebt alle levels gehaald. Je kunt nu ontspannen en genieten van het vullen van forums op internet over je prestaties. Veel succes!",
+  campaign_level_completed = "Goed gedaan! Je hebt het level gehaald. Maar het is nog niet voorbij!// Wil je een baan bij %s Hospital?",
+  campaign_level_missing = "Sorry, maar het volgende level van deze campagne lijkt te ontbreken. (Naam: %s)",
 }
 install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
@@ -2188,6 +2268,17 @@ errors = {
   fractured_bones = "LET OP: De animatie voor vrouwelijke patiënten met gebrokken botten is niet goed.",
   no_games_to_contine = "Er zijn geen opgeslagen spellen.",
   dialog_empty_queue = "Een mensachtige is de weg helemaal kwijt, er was geen informatie meer wat vervolgens te gaan doen. Meer gedetailleerde informatie kun je vinden in het kommando scherm. Een window met deze mensachtige is geopend, wil je dat ze het ziekenhuis verlaten?",
+  compatibility_error = {
+    demo_in_full = "Sorry, je kunt geen demo-savegame openen terwijl de volledige gamebestanden zijn geladen. Werk je TH Data-mapinstelling bij.",
+    full_in_demo = "Sorry, je kunt geen savegame van de volledige game openen terwijl de demobestanden zijn geladen. Werk je TH Data-mapinstelling bij.",
+    new_in_old = "Sorry, dit opslagbestand is aangemaakt met een nieuwere versie van CorsixTH en is niet compatibel. Update naar een recentere versie.",
+  },
+  could_not_find_first_campaign_level = "Kon het eerste level van deze campagne niet vinden: %s",
+  could_not_load_campaign = "Kan de campagne niet laden: %s",
+  load_level_prefix = "Fout bij het laden van level: ",
+  load_map_prefix = "Fout bij het laden van map: ",
+  music = "Er zijn afspeelproblemen met een of meer bestanden in uw muziekfolder. Problematische bestanden worden uitgeschakeld in de jukebox. Zie het consolevenster voor meer informatie.",
+  save_to_tmp = "Poging om naar %s te schrijven is mislukt. Het bestand is in plaats daarvan geschreven naar de tijdelijke locatie %s vanwege de fout: %s",
 }
 diseases = {
   diag_ward = {
@@ -2474,6 +2565,9 @@ main_menu = {
   version = "Versie: ",
   savegame_version = "Savegame versie: ",
   continue = "Zet spel voort",
+  custom_campaign = "Aangepaste carrière",
+  updates_off = "Niet controleren op updates",
+  map_edit = "Kaartbewerker",
 }
 confirmation = {  --spaces on the end make the text fit properly in text windows
   quit = "Weet je zeker dat je het spel wilt verlaten?                ",
@@ -2486,7 +2580,9 @@ confirmation = {  --spaces on the end make the text fit properly in text windows
   abort_edit_room = "Je bent een ruimte aan het bouwen of aanpassen. Wanneer alle benodigde objecten geplaatst zijn, is de ruimte af. Zo niet, dan wordt de ruimte vernietigd.                     ",
   restart_level = "Weet je zeker dat je het level opnieuw wilt beginnen?                      ",
   maximum_screen_size = "De resolutie die je hebt ingevoerd is groter dan 3000x2000. Een hoge resolutie is mogelijk, mits je hardware goed genoeg is om een speelbare framerate te behalen. Weet je zeker dat je wilt doorgaan?",
-  music_warning = "Voordat je MP3's gaat gebruiken als ingame muziek, heb je smpeg.dll (of gelijkwaardig voor je systeem) nodig, anders werkt de muziek niet. Wil je doorgaan?",
+  replace_machine_extra_info = "De nieuwe machine zal %d vermogen hebben (momenteel %d)",
+  remove_destroyed_room = "Wil je de kamer voor $%d verwijderen?",
+  very_old_save = "Er zijn veel updates geweest sinds je met dit level bent begonnen. Om zeker te zijn dat alles werkt zoals het hoort, zou je nu opnieuw willen beginnen dit level?//Je opgeslagen spel blijft beschikbaar tenzij je het overschrijft.",
 }
 menu_display = {
   mcga_lo_res = "  LAGE RES  ",
@@ -2497,6 +2593,7 @@ menu_list_window = {
   back = "Terug",
   save_date = "Gewijzigd op",
   name = "Naam",
+  ok = "OK"
 }
 menu_options_volume = {
   [50] = "  50%  ",
@@ -2596,6 +2693,7 @@ menu_debug = {
   jump_to_level = "  SPRING NAAR LEVEL  ",
   debug_script = "  (%1%) LAAT FOUTSCRIPT LOPEN  ",
   connect_debugger = "  (%1%) MAAK VERBINDING MET LUA DBGp SERVER  ",
+  allow_blocking_off_areas = "  STA TOE OM GEBIEDEN AF TE SLUITEN  ",
 }
 
 drug_companies = {
@@ -2620,8 +2718,6 @@ graphs = {
   },
   cures = "Genezingen",
   reputation = "Reputatie",
-}
-menu_file_save = {
 }
 months = {
   [1] = "Jan",
@@ -2655,6 +2751,7 @@ menu_options = {
   warmth_colors = "  WARMTE KLEUREN  ",
   twentyfour_hour_clock = "  24 UUR KLOK  ",
   wage_increase = "  SALARIS VERZOEKEN  ",
+  capture_mouse = "  MUIS VANGEN  ",
 }
 menu_options_wage_increase = {
   deny = "    AFWIJZEN ",
@@ -2679,6 +2776,7 @@ menu = {
   file = "  BESTAND  ",
   options = "  OPTIES  ",
   charts = "  OVERZICHTEN  ",
+  player_count = "  SPELERSAANTAL  ",
 }
 rooms_short = {
   ultrascan = "Echoscopie",
@@ -2771,6 +2869,7 @@ object = {
   dna_fixer = "DNA reparatiemachine",
   x_ray = "Röntgen",
   cabinet = "Dossierkast",
+  rathole = "Rattenhol"
 }
 pay_rise = {
   definite_quit = "Niets kan mij hier nog houden. Ik heb hier schoon genoeg van.",
@@ -2880,6 +2979,13 @@ cheats_window = {
     earthquake = "Creëer aardbeving",
     epidemic = "Besmettelijke patient laten verschijnen",
     toggle_infected = "Aan/uit zetten besmet iconen",
+    decrease_prices = "Prijzen verlagen",
+    increase_prices = "Prijzen verhogen",
+    max_reputation = "Maximale reputatie",
+    reset_death_count = "Reset sterfgevallen",
+    show_infected = "Geïnfecteerde iconen schakelen",
+    toggle_epidemic = "Epidemieën schakelen",
+    toggle_earthquake = "Aardbevingen schakelen",
   },
   cheated = {
     no = "Cheats gebruikt: Nee",
@@ -3255,4 +3361,188 @@ original_credits = {
   [359] = " ",
   [360] = " ",
   [361] = ".",
+}
+multiplayer = {
+  everyone_failed = "Niemand slaagde erin om aan dat laatste doel te voldoen. Dus krijgt iedereen nog een kans om te spelen!",
+  players_failed = "De volgende speler(s) slaagden er niet in om het laatste doel te behalen:",
+}
+save_map_window = {
+  caption = "Map opslaan (%1%)",
+  new_map = "Nieuwe map",
+}
+map_editor_window = {
+  pages = {
+    camera_1 = "Camera 1",
+    camera_2 = "Camera 2",
+    camera_3 = "Camera 3",
+    camera_4 = "Camera 4",
+    delete_wall = "Muren verwijderen",
+    foliage = "Beplanting",
+    hedgerow = "Haag",
+    helipad = "Helikopterplatform",
+    heliport_1 = "Heliport 1",
+    heliport_2 = "Heliport 2",
+    heliport_3 = "Heliport 3",
+    heliport_4 = "Heliport 4",
+    inside = "Binnen",
+    north_wall = "Noordelijke muur",
+    outside = "Buiten",
+    pond = "Vijver",
+    paste = "Gebied plakken",
+    parcel = "Pakket %d",
+    road = "Straat",
+    set_parcel_tooltip = "Kies een nummer en druk op enter.",
+    set_parcel = "Zet pakket nummer",
+    west_wall = "Westelijke muur",
+  },
+  checks = {
+    spawn_points_and_path = "Waarschuwing: Patiënten kunnen het ziekenhuis niet bereiken. Ze hebben 'weg'-tegels of 'buiten'-grijze tegels nodig aan de rand van de map en een pad van deze tegels naar de ingang van het ziekenhuis.",
+  },
+}
+warnings = {
+  levelfile_variable_is_deprecated = "Let op: Het level '%s' bevat een verouderde variabele definitie in het levelbestand. '%LevelFile' is hernoemd naar '%MapFile'. Geef de maker van dit scenario advies om het level bij te werken.",
+  newersave = "Waarschuwing, je hebt een spel geladen die in een nieuwere versie van CorsixTH is opgeslagen. Het wordt afgeraden om door te gaan, omdat er crashes kunnen optreden. Speel op eigen risico.",
+}
+disease_discovered_patient_choice = {
+  need_to_employ = "Schakel een %s in die deze situatie kan behandelen."
+}
+hotkeys_file_err = {
+  file_err_01 = "Kan hotkeys.txt-bestand niet laden. Zorg ervoor dat CorsixTH lees-/schrijfrechten heeft ",
+  file_err_02 = ", of gebruik de opdrachtregeloptie --hotkeys-file=bestandsnaam om een beschrijfbaar bestand op te geven. Ter referentie, de fout bij het laden van het hotkeys-bestand was: ",
+}
+level_progress = {
+  cured_enough_patients = "Je hebt genoeg patiënten genezen, maar je moet je ziekenhuis beter op orde krijgen om het level te winnen.",
+  hospital_value_enough = "Houd de waarde van je ziekenhuis boven %d en los je andere problemen op om het level te winnen.",
+}
+menu_player_count = {
+  players_1 = "  1 SPELER  ",
+  players_2 = "  2 SPELERS  ",
+  players_3 = "  3 SPELERS  ",
+  players_4 = "  4 SPELERS  ",
+}
+custom_campaign_window = {
+  caption = "Aangepaste carrière",
+  start_selected_campaign = "Start carrière",
+}
+hotkey_window = {
+  button_accept = "Opslaan",
+  button_back = "Terug",
+  button_cancel = "Annuleren",
+  button_defaults = "Herstel naar standaardinstellingen",
+  button_gameSpeedKeys = "Spel snelheid toetsen",
+  button_recallPosKeys = "Camera positie toetsen",
+  button_toggleKeys = "Schakel toetsen",
+
+  caption_main = "Sneltoetsen toewijzen",
+  caption_panels = "Paneeltoetsen",
+
+  global_cancel = "Annuleren",
+  global_cancel_alt = "Annuleren (alternatief)",
+  global_confirm = "Accepteren",
+  global_confirm_alt = "Accepteren (alternatief)",
+  global_connectDebugger = "Debugger",
+  global_exitApp = "Applicatie afsluiten",
+  global_fullscreen_toggle = "Volledig scherm",
+  global_releaseMouse = "Laat de muis los",
+  global_resetApp = "Applicatie herstarten",
+  global_runDebugScript = "Debugscript",
+  global_showLuaConsole = "Lua-console",
+  global_stop_movie_alt = "Stop Video",
+  global_screenshot = "Schermafbeelding",
+  global_window_close_alt = "Venster Sluiten",
+
+  panel_debugKeys = "Debug Toetsen",
+  panel_generalInGameKeys = "Algemene Spel Toetsen",
+  panel_globalKeys = "Globale Toetsen",
+  panel_gameSpeedKeys = "Spel Snelheid Toetsen",
+  panel_recallPosKeys = "Camera Positie Laden",
+  panel_scrollKeys = "Scroll Toetsen",
+  panel_toggleKeys = "Schakel Toetsen",
+  panel_storePosKeys = "Camera Positie Opslag",
+  panel_zoomKeys = "Zoom Toetsen",
+
+  ingame_gamespeed_speedup = "Versnellen",
+
+  ingame_gamespeed_slowest = "En Nog Langzamer",
+  ingame_gamespeed_slower = "Langzaam",
+  ingame_gamespeed_normal = "Normaal",
+  ingame_gamespeed_max = "Max Snelheid",
+  ingame_gamespeed_thensome = "En Nog Een Beetje",
+
+  ingame_jukebox = "Jukebox",
+
+  ingame_loadMenu = "Spel Laden",
+
+  ingame_openFirstMessage = "Level Bericht",
+
+  ingame_panel_bankManager = "Kasboek",
+  ingame_panel_bankStats = "Afschriften",
+  ingame_panel_buildRoom = "Kamer Bouwen",
+  ingame_panel_casebook = "Dossier",
+  ingame_panel_casebook_alt = "Dossier 2",
+  ingame_panel_casebook_alt02 = "Dossier 3",
+  ingame_panel_charts = "Grafieken",
+  ingame_panel_editRoom = "Kamer Verbouwen",
+  ingame_panel_furnishCorridor = "Gang Inrichten",
+  ingame_panel_hireStaff = "Personeel Inhuren",
+  ingame_panel_map_alt = "Kaart 2",
+  ingame_panel_policy = "Ziekenhuisbeleid",
+  ingame_panel_research = "Onderzoek",
+  ingame_panel_research_alt = "Onderzoek 2",
+  ingame_panel_staffManage = "Personeel Beheren",
+  ingame_panel_status = "Voortgang",
+  ingame_panel_townMap = "Kaart",
+  ingame_patient_gohome = "Stuur Naar Huis",
+  ingame_pause = "Pauzeren",
+  ingame_poopLog = "Dump Log",
+  ingame_poopStrings = "Dump Vertalingen",
+
+  ingame_quickLoad = "Snel Laden",
+  ingame_quickSave = "Snel Opslaan",
+  ingame_quitLevel = "Sluit Level",
+
+  ingame_recallPosition_0 = "10",
+  ingame_recallPosition_1 = "1",
+  ingame_recallPosition_2 = "2",
+  ingame_recallPosition_3 = "3",
+  ingame_recallPosition_4 = "4",
+  ingame_recallPosition_5 = "5",
+  ingame_recallPosition_6 = "6",
+  ingame_recallPosition_7 = "7",
+  ingame_recallPosition_8 = "8",
+  ingame_recallPosition_9 = "9",
+  ingame_reset_zoom = "Zoom Resetten",
+  ingame_restartLevel = "Herstart Level",
+  ingame_rotateobject = "Roteer Object",
+
+  ingame_saveMenu = "Spel Opslaan",
+  ingame_scroll_up = "Omhoog Scrollen",
+  ingame_scroll_down = "Omlaag Scrollen",
+  ingame_scroll_left = "Links Scrollen",
+  ingame_scroll_right = "Rechts Scrollen",
+  ingame_scroll_shift = "Snelheid Aanpassen",
+  ingame_setTransparent = "Transparant",
+  ingame_showCheatWindow = "Cheatsmenu",
+  ingame_showmenubar = "Menu Balk Weergeven",
+  ingame_storePosition_0 = "10",
+  ingame_storePosition_1 = "1",
+  ingame_storePosition_2 = "2",
+  ingame_storePosition_3 = "3",
+  ingame_storePosition_4 = "4",
+  ingame_storePosition_5 = "5",
+  ingame_storePosition_6 = "6",
+  ingame_storePosition_7 = "7",
+  ingame_storePosition_8 = "8",
+  ingame_storePosition_9 = "9",
+
+  ingame_toggleAdvisor = "Adviseur",
+  ingame_toggleAnnouncements = "Mededelingen",
+  ingame_toggleInfo = "Informatie",
+  ingame_toggleMusic = "Muziek",
+  ingame_toggleSounds = "Geluiden",
+
+  ingame_zoom_in = "Inzoomen",
+  ingame_zoom_in_more = "Meer Inzoomen",
+  ingame_zoom_out = "Uitzoomen",
+  ingame_zoom_out_more = "Meer Uitzoomen",
 }

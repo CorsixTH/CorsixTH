@@ -256,7 +256,7 @@ end
 --!  can be either of "left", "center", "right"
 function Panel:setLabel(label, font, align)
   self.label = label or ""
-  self.label_font = font or self.label_font or TheApp.gfx:loadFont("QData", "Font01V")
+  self.label_font = font or self.label_font or TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, {ttf_shadow = true})
   self.align = align or self.align
   return self
 end
@@ -1531,6 +1531,26 @@ function Window:hitTestPanel(x, y, panel)
   return false
 end
 
+--[[ Used to test if cursor is currently hovering over certain area in dialog.
+!param active_hover (bool) Is cursor already hovers over it?
+!param mouse_x (integer) Mouse X coordinate
+!param mouse_y (integer) Mouse Y coordinate
+!param min_x (integer) Minimum X area
+!param max_x (integer) Maximum X area
+!param min_y (integer) Minimum Y area
+!param max_y (integer) Maximum Y area
+]]
+function Window:hoverTest(active_hover, mouse_x, mouse_y, min_x, max_x, min_y, max_y)
+  local is_currently_hovering = mouse_x > min_x and mouse_x < max_x and mouse_y > min_y and mouse_y < max_y
+  if is_currently_hovering then
+    if not active_hover then
+      self.ui:playSound("HLight5.wav")
+    end
+    return true
+  end
+  return false
+end
+
 --[[ Used to test if the window has a (non-transparent) pixel at the given position.
 !param x (integer) The X coordinate of the pixel to test, relative to the
 top-left corner of the window.
@@ -1709,8 +1729,8 @@ local --[[persistable:window_drag_position_representation]] function getNicestPo
 end
 
 --[[ Initiate dragging of the window.
-!param x The X position of the cursor in window co-ordinatees.
-!param y The Y position of the cursor in window co-ordinatees.
+!param x The X position of the cursor in window coordinates.
+!param y The Y position of the cursor in window coordinates.
 ]]
 function Window:beginDrag(x, y)
   if not self.width or not self.height or not self.ui or

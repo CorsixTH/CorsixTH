@@ -24,6 +24,7 @@ Font("unicode")
 Language("繁體中文", "Chinese (traditional)", "zh(t)", "chi(t)", "zho(t)")
 Inherit("english")
 Encoding(utf8)
+IsArabicNumerals(false)
 
 -- Search OVERRIDE and NEW STRINGS for workspace
 
@@ -502,7 +503,7 @@ vip_names = {
   [3] = "來自荷蘭的伯那德國王",
   [4] = "緬甸民主黨領袖：翁山蘇姬",
   [5] = "克朗伯先生",
-  [6] = "比利先生",
+  -- [6] requires replacement (English uses 'Sir Lancelot Spratt')
   [7] = "克勞福議員",
   [8] = "羅尼",
   [9] = "一個超級聯賽球星",
@@ -3203,7 +3204,6 @@ tooltip.folders_window = {
   not_specified = "沒有指定資料夾位置！",
   default = "預設位置",
   reset_to_default = "重置到預設資料夾",
- -- original_path = "The currently chosen directory of the original Theme Hospital installation", -- where is this used, I have left if for the time being?
   back = "關閉此選單，並返回設定選單",
 }
 
@@ -3606,56 +3606,3 @@ multiplayer.everyone_failed = "所有玩家都沒有完成最終目標。因此�
 
 options_window.change_resolution = "修改解析度"
 tooltip.options_window.change_resolution = "修改視窗解析度為左方的值"
-
---[[ Compatibility mapping for VIP result faxes in old saves (< 0.66). Using non-
-standard string formatting here, which should not be repeated in normal
-circumstances. This mapping will cause the legacy string to print in English but only
-for the relevant fax. These should be deleted on 2024 release. ]]--
-fax = {
-  vip_visit_result = {
-    ordered_remarks = {
-      [1] = fax.vip_visit_result.remarks[1],
-      [2] = fax.vip_visit_result.remarks[2],
-      [3] = fax.vip_visit_result.remarks[3],
-      [4] = fax.vip_visit_result.remarks[4],
-      [5] = fax.vip_visit_result.remarks[5],
-      [6] = fax.vip_visit_result.remarks[6],
-      [7] = fax.vip_visit_result.remarks[7],
-      [8] = fax.vip_visit_result.remarks[8],
-      [9] = fax.vip_visit_result.remarks[9],
-      [10] = fax.vip_visit_result.remarks[10],
-      [11] = fax.vip_visit_result.remarks[11],
-      [12] = fax.vip_visit_result.remarks[12],
-      [13] = fax.vip_visit_result.remarks[13],
-      [14] = fax.vip_visit_result.remarks[14],
-      [15] = fax.vip_visit_result.remarks[15],
-    },
-    remarks = {
-      super = {
-        fax.vip_visit_result.remarks[1],
-        fax.vip_visit_result.remarks[2],
-        fax.vip_visit_result.remarks[3],
-      },
-      good = {
-        fax.vip_visit_result.remarks[4],
-        fax.vip_visit_result.remarks[5],
-        fax.vip_visit_result.remarks[6],
-      },
-      mediocre = {
-        fax.vip_visit_result.remarks[7],
-        fax.vip_visit_result.remarks[8],
-        fax.vip_visit_result.remarks[9],
-      },
-      bad = {
-        fax.vip_visit_result.remarks[10],
-        fax.vip_visit_result.remarks[11],
-        fax.vip_visit_result.remarks[12],
-      },
-      very_bad = {
-        fax.vip_visit_result.remarks[13],
-        fax.vip_visit_result.remarks[14],
-        fax.vip_visit_result.remarks[15],
-      }
-    }
-  }
-}

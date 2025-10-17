@@ -39,14 +39,15 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <stdint.h>
 #include <wx/file.h>
-#include <wx/image.h>
 #include <wx/string.h>
-#include <wx/txtstrm.h>
 
 #include <array>
+#include <cstring>
 #include <vector>
+
+class wxImage;
+class wxSize;
 
 #pragma pack(push)
 #pragma pack(1)
@@ -88,7 +89,7 @@ struct th_colour_t {
 
 class THLayerMask {
  public:
-  THLayerMask();
+  THLayerMask() = default;
 
   inline void set(int iLayer, int iID) {
     if (0 <= iLayer && iLayer < 13 && 0 <= iID && iID < 32)
@@ -117,7 +118,7 @@ class THLayerMask {
   }
 
  protected:
-  uint32_t m_iMask[13];
+  uint32_t m_iMask[13]{};
 };
 
 class Bitmap {
@@ -242,8 +243,8 @@ class THAnimations {
   std::vector<Bitmap> spriteBitmaps;
   std::vector<uint8_t> chunks;
   std::vector<th_colour_t> colours;
-  std::array<unsigned char, 256 * 256 * 4> ghostMaps;
-  size_t m_iGhostMapOffset;
+  std::array<unsigned char, 256 * 256 * 4> ghostMaps{};
+  size_t m_iGhostMapOffset{};
   wxString m_sSpritePath;
 };
 

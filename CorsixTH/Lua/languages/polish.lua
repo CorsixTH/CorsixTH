@@ -32,6 +32,7 @@ Font("unicode")
 Language("Polski", "Polish", "pl", "pol")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 font_location_window.caption = "Wybierz czcionkę (%1%)"
 
@@ -609,7 +610,6 @@ tooltip = {
     language = "Język, w którym wyświetlone zostaną teksty gry",
     select_language = "Wybierz język gry",
     language_dropdown_item = "Wybierz %s jako język gry",
-    original_path = "Aktualnie wybrany katalog z zainstalowaną grą Theme Hospital",
     browse = "Zmień ścieżkę zainstalowanej gry Theme Hospital (obecna lokalizacja: %1%)",
     browse_font = "Zmień ścieżkę dla innego pliku z czcionką (obecna lokalizacja: %1%)",
     no_font_specified = "Lokalizacja czcionki nie została jeszcze wybrana!",
@@ -643,7 +643,7 @@ vip_names = {
   [3] = "Bernard, król Niderlandów",
   [4] = "Aung Sang Su Kyi, lider birmańskiej opozycji demokratycznej",
   [5] = "Sir Reginald Crumbly",
-  [6] = "Billy Savile, Oficer Orderu",
+  -- [6] requires replacement (English uses 'Sir Lancelot Spratt')
   [7] = "Radny Crawford Purves",
   [8] = "Rakieta Ronnie Jepson",
   [9] = "Piłkarz ligi Premiership",

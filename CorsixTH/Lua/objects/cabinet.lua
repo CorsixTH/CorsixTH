@@ -42,8 +42,8 @@ object.usage_animations = {
   },
 }
 local anim_mgr = TheApp.animation_manager
-anim_mgr:setMarker(object.usage_animations.east.in_use, {-1, 0})
-anim_mgr:setMarker(object.usage_animations.north.in_use, {-1, 0})
+anim_mgr:setStaffMarker(object.usage_animations.east.in_use, {0, 0})
+anim_mgr:setStaffMarker(object.usage_animations.north.in_use, {0, 0})
 
 object.orientations = {
   north = {

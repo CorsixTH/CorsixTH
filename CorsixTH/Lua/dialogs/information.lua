@@ -39,8 +39,9 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
   self.on_top = true
   self.ui = ui
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PulldV", true)
+  self.active_hover = false
   if not use_built_in_font then
-    self.black_font = app.gfx:loadFont("QData", "Font00V")
+    self.black_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V")
   else
     self.black_font = app.gfx:loadBuiltinFont()
     self.black_background = true
@@ -57,10 +58,10 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
   -- Window size parameters
   self.text_width = 300
   self.spacing = {
-    l = 40,
-    r = 40,
-    t = 20,
-    b = 20,
+    l = 15,
+    r = 15,
+    t = 15,
+    b = 18 + 15, -- Size of close button + padding
   }
 
   self:onChangeLanguage()
@@ -89,19 +90,27 @@ function UIInformation:onChangeLanguage()
 
   for x = 4, self.width - 4, 4 do
     self:addPanel(12, x, 0)  -- Dialog top and bottom borders
-    self:addPanel(16, x, self.height-4)
+    self:addPanel(16, x, self.height - 4)
   end
   for y = 4, self.height - 4, 4 do
     self:addPanel(18, 0, y)  -- Dialog left and right borders
-    self:addPanel(14, self.width-4, y)
+    self:addPanel(14, self.width - 4, y)
   end
   self:addPanel(11, 0, 0)  -- Border top left corner
-  self:addPanel(17, 0, self.height-4)  -- Border bottom left corner
-  self:addPanel(13, self.width-4, 0)  -- Border top right corner
-  self:addPanel(15, self.width-4, self.height-4)  -- Border bottom right corner
+  self:addPanel(17, 0, self.height - 4)  -- Border bottom left corner
+  self:addPanel(13, self.width - 4, 0)  -- Border top right corner
+  self:addPanel(15, self.width - 4, self.height - 4)  -- Border bottom right corner
 
   -- Close button
-  self:addPanel(19, self.width - 30, self.height - 30):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
+  self:addPanel(19, self.width - 28, self.height - 28):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
+  .panel_for_sprite.custom_draw = --[[persistable:information_close_button]] function(panel, canvas, x, y)
+      x = x + panel.x
+      y = y + panel.y
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
+      if self.active_hover then
+        self.panel_sprites:draw(canvas, 20, x, y)
+      end
+    end
 end
 
 function UIInformation:draw(canvas, x, y)
@@ -114,6 +123,11 @@ function UIInformation:draw(canvas, x, y)
   end
 
   Window.draw(self, canvas, x, y)
+end
+
+function UIInformation:onMouseMove(x, y, dx, dy)
+  self.active_hover = self:hoverTest(self.active_hover, x, y, self.width - 29, self.width - 10, self.height - 29, self.height - 10)
+  return Window:onMouseMove(x, y, dx, dy)
 end
 
 function UIInformation:hitTest(x, y)
@@ -133,6 +147,16 @@ function UIInformation:close()
 end
 
 function UIInformation:afterLoad(old, new)
+  if old < 182 then
+    -- box resized to be more like the original
+    self.spacing = {
+    l = 15,
+    r = 15,
+    t = 15,
+    b = 33, -- includes space for close button (18px + 15px padding)
+    }
+    self:onChangeLanguage()
+  end
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end

@@ -74,7 +74,7 @@ function UIStaff:UIStaff(ui, staff)
   end
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req01V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
   self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
 
   self:addPanel(297,   15,   0) -- Dialog header
@@ -93,14 +93,14 @@ function UIStaff:UIStaff(ui, staff)
     end
     self:addPanel(302,   5, 205) -- View circle top/Wage
     self:addPanel(313,  15, 189) -- Tasks bottom
-    self:addPanel(314,  37, 145):makeRepeatButton(0, 0, 49, 48, 315, self.doMoreCleaning):setTooltip(_S.tooltip.handyman_window.prio_litter)
-    self:addPanel(316,  92, 145):makeRepeatButton(0, 0, 49, 48, 317, self.doMoreWatering):setTooltip(_S.tooltip.handyman_window.prio_plants)
-    self:addPanel(318, 148, 145):makeRepeatButton(0, 0, 49, 48, 319, self.doMoreRepairing):setTooltip(_S.tooltip.handyman_window.prio_machines)
-    self:addPanel(240,  21, 210):makeButton(0, 0, 73, 30, 240, self.changeParcel):setTooltip(_S.tooltip.handyman_window.parcel_select)
+    self:addPanel(314,  37, 145):makeRepeatButton(0, 0, 49, 48, 315, self.doMoreCleaning):setTooltip(_S.tooltip.handyman_window.prio_litter):setSound("selectx.wav")
+    self:addPanel(316,  92, 145):makeRepeatButton(0, 0, 49, 48, 317, self.doMoreWatering):setTooltip(_S.tooltip.handyman_window.prio_plants):setSound("selectx.wav")
+    self:addPanel(318, 148, 145):makeRepeatButton(0, 0, 49, 48, 319, self.doMoreRepairing):setTooltip(_S.tooltip.handyman_window.prio_machines):setSound("selectx.wav")
+    self:addPanel(240,  21, 210):makeButton(0, 0, 73, 30, 240, self.changeParcel):setTooltip(_S.tooltip.handyman_window.parcel_select):setSound("selectx.wav")
   self:addPanel(303,   0, 253) -- View circle midpiece
     self:addPanel(304,   6, 302) -- View circle bottom
-    self:addPanel(307, 106, 253):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack)
-    self:addPanel(309, 164, 253):makeButton(0, 0, 37, 50, 310, self.placeStaff):setTooltip(_S.tooltip.staff_window.pick_up)
+    self:addPanel(307, 106, 253):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack):setSound("selectx.wav")
+    self:addPanel(309, 164, 253):makeButton(0, 0, 37, 50, 310, self.pickupStaff):setTooltip(_S.tooltip.staff_window.pick_up)
   else
     self:addPanel(302,   5, 178) -- View circle top/Wage
     self:addPanel(303,   0, 226) -- View circle midpiece
@@ -108,8 +108,8 @@ function UIStaff:UIStaff(ui, staff)
     if profile.humanoid_class ~= "Doctor" then
       self:addColourPanel(32, 141, 171, 39, 85, 202, 219)  -- Hides Skills
     end
-    self:addPanel(307, 106, 226):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack)
-    self:addPanel(309, 164, 226):makeButton(0, 0, 37, 50, 310, self.placeStaff):setTooltip(_S.tooltip.staff_window.pick_up)
+    self:addPanel(307, 106, 226):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack):setSound("selectx.wav")
+    self:addPanel(309, 164, 226):makeButton(0, 0, 37, 50, 310, self.pickupStaff):setTooltip(_S.tooltip.staff_window.pick_up)
   end
 
   self:addPanel(305, 178,  18):makeButton(0, 0, 24, 24, 306, self.close):setTooltip(_S.tooltip.staff_window.close)
@@ -157,7 +157,7 @@ end
 function UIStaff:getStaffPosition(dx, dy)
   local staff = self.staff
   local x, y = self.ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
-  local px, py = staff.th:getMarker()
+  local px, py = staff.th:getSecondaryMarker()
   return x + px - (dx or 0), y + py - (dy or 0)
 end
 
@@ -176,32 +176,30 @@ function UIStaff:draw(canvas, x_, y_)
     font:draw(canvas, "$" .. profile.wage, x + 135, y + 226) -- Wage
     font:draw(canvas, self:getParcelText(), x + 35, y + 215, 50, 0)
     -- The concentration areas
-    if self.staff.attributes["cleaning"] then -- Backwards compatibility
-      local cleaning_width = math.floor(self.staff.attributes["cleaning"] * 40 + 0.5)
-      local watering_width = math.floor(self.staff.attributes["watering"] * 40 + 0.5)
-      local repairing_width = math.floor(self.staff.attributes["repairing"] * 40 + 0.5)
-      if cleaning_width ~= 0 then
-        for dx = 0, cleaning_width - 1 do
-          self.panel_sprites:draw(canvas, 351, x + 43 + dx, y + 200)
-        end
+    local cleaning_width = math.floor(self.staff:getAttribute("cleaning") * 40 + 0.5)
+    local watering_width = math.floor(self.staff:getAttribute("watering") * 40 + 0.5)
+    local repairing_width = math.floor(self.staff:getAttribute("repairing") * 40 + 0.5)
+    if cleaning_width ~= 0 then
+      for dx = 0, cleaning_width - 1 do
+        self.panel_sprites:draw(canvas, 351, x + 43 + dx, y + 200)
       end
-      if watering_width ~= 0 then
-        for dx = 0, watering_width - 1 do
-          self.panel_sprites:draw(canvas, 351, x + 99 + dx, y + 200)
-        end
+    end
+    if watering_width ~= 0 then
+      for dx = 0, watering_width - 1 do
+        self.panel_sprites:draw(canvas, 351, x + 99 + dx, y + 200)
       end
-      if repairing_width ~= 0 then
-        for dx = 0, repairing_width - 1 do
-          self.panel_sprites:draw(canvas, 351, x + 155 + dx, y + 200)
-        end
+    end
+    if repairing_width ~= 0 then
+      for dx = 0, repairing_width - 1 do
+        self.panel_sprites:draw(canvas, 351, x + 155 + dx, y + 200)
       end
     end
   else
     font:draw(canvas, "$" .. profile.wage, x + 135, y + 199) -- Wage
   end
 
-  if self.staff.attributes["happiness"] then
-    local happiness_bar_width = math.floor(self.staff.attributes["happiness"] * 40 + 0.5)
+  if self.staff:getAttribute("happiness") then
+    local happiness_bar_width = math.floor(self.staff:getAttribute("happiness") * 40 + 0.5)
     if happiness_bar_width ~= 0 then
       for dx = 0, happiness_bar_width - 1 do
         self.panel_sprites:draw(canvas, 348, x + 139 + dx, y + 56)
@@ -210,8 +208,8 @@ function UIStaff:draw(canvas, x_, y_)
   end
 
   local fatigue_bar_width = 40.5
-  if self.staff.attributes["fatigue"] then
-    fatigue_bar_width = math.floor((1 - self.staff.attributes["fatigue"]) * 40 + 0.5)
+  if self.staff:getAttribute("fatigue") then
+    fatigue_bar_width = math.floor((1 - self.staff:getAttribute("fatigue")) * 40 + 0.5)
   end
   if fatigue_bar_width ~= 0 then
     for dx = 0, fatigue_bar_width - 1 do
@@ -261,13 +259,21 @@ function UIStaff:onMouseUp(button, x, y)
     self.do_scroll = false
   end
   local repaint = Window.onMouseUp(self, button, x, y)
-  -- Test for hit within the view circle
-  if button == "right" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman") then
+  -- Test for hit within the view circle and name box
+  local hit_namebox = x > self.tooltip_regions[1].x and x < self.tooltip_regions[1].r
+                      and y > self.tooltip_regions[1].y and y < self.tooltip_regions[1].b
+  if button == "right" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
+     or button == "right" and hit_namebox then
     -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
     local staff_index = nil
     for i, staff in ipairs(ui.hospital.staff) do
       if staff_index and staff.profile.humanoid_class == self.staff.profile.humanoid_class then
         ui:addWindow(UIStaff(ui, staff))
+        if hit_namebox then
+          local sx, sy = ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
+          local dx, dy = staff.th:getPosition()
+          ui:scrollMapTo(sx + dx, sy + dy)
+        end
         return false
       end
       if staff == self.staff then
@@ -279,6 +285,11 @@ function UIStaff:onMouseUp(button, x, y)
       local staff = ui.hospital.staff[i]
       if staff.profile.humanoid_class == self.staff.profile.humanoid_class then
         ui:addWindow(UIStaff(ui, staff))
+        if hit_namebox then
+          local sx, sy = ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
+          local dx, dy = staff.th:getPosition()
+          ui:scrollMapTo(sx + dx, sy + dy)
+        end
         return false
       end
     end
@@ -302,9 +313,8 @@ function UIStaff:onTick()
   return Window.onTick(self)
 end
 
-function UIStaff:placeStaff()
-  self.staff.pickup = true
-  self.staff:setNextAction(PickupAction(self.ui):setTodoClose(self), true)
+function UIStaff:pickupStaff()
+  self.staff:setPickup(self.ui, self)
 end
 
 function UIStaff:fireStaff()
@@ -318,7 +328,7 @@ end
 --! one of them is increased, and the other two are decreased.
 --!param increased Attribute to increase.
 function UIStaff:changeHandymanAttributes(increased)
-  if not self.staff.attributes[increased] then
+  if not self.staff:getAttribute(increased) then
     return
   end
 
@@ -337,12 +347,12 @@ function UIStaff:changeHandymanAttributes(increased)
     if attr == increased then
       -- Adding too much is not a problem, it gets clipped to 1.
       self.staff:changeAttribute(attr, incr_value)
-      if self.staff.attributes[attr] == 1 then
+      if self.staff:getAttribute(attr) == 1 then
         incr_value = 2.0 -- Doing 'increased' 100%, set other attributes to 0.
       end
     else
       decr_attrs[#decr_attrs + 1] = attr
-      smallest_decr = math.min(smallest_decr, self.staff.attributes[attr])
+      smallest_decr = math.min(smallest_decr, self.staff:getAttribute(attr))
     end
   end
   assert(#decr_attrs == 2)
@@ -387,3 +397,9 @@ function UIStaff:hitTest(x, y)
   return Window.hitTest(self, x, y) or is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
 end
 
+function UIStaff:afterLoad(old, new)
+  if old < 205 then
+    self:close()
+  end
+  Window.afterLoad(self, old, new)
+end

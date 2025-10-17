@@ -63,6 +63,8 @@ function Strings:init()
   self.language_to_chunk = {}
   self.chunk_to_font = {}
   self.chunk_to_names = {}
+  self.language_to_lang_code = {}
+  self.languages_with_arabic_numerals = {}
   for chunk, filename in pairs(self.language_chunks) do
     -- To allow the file to set global variables without causing an error, it
     -- is given an infinite table as an environment. Reading a non-existent
@@ -89,11 +91,13 @@ function Strings:init()
         if names[1] ~= "original_strings" then
           self.languages[#self.languages + 1] = names[1]
           -- Also save the second name for tooltips and internal purposes.
+          assert(names[2], filename .. " does not have an English name.")
           self.languages_english[names[1]] = names[2]
         end
         -- Associate every passed name with this file, case-independently
         for _, name in pairs(names) do
           self.language_to_chunk[name:lower()] = chunk
+          self.language_to_lang_code[name:lower()] = names[3]
         end
         self.chunk_to_names[chunk] = names
         error(good_error_marker)
@@ -105,6 +109,7 @@ function Strings:init()
       Inherit = function() end,
       SetSpeechFile = function() end,
       Encoding = function() end,
+      IsArabicNumerals = function() end,
       -- Set LoadStrings to return an infinite table
       LoadStrings = infinite_table_mt.__index,
     }, infinite_table_mt)
@@ -230,6 +235,9 @@ function Strings:load(language, no_restriction, no_inheritance)
     SetSpeechFile = function(...)
       speech_file = ...
     end,
+    IsArabicNumerals = function(is_enabled)
+      self.languages_with_arabic_numerals[language] = is_enabled
+    end,
     _G = env,
     type = type,
   }
@@ -288,6 +296,34 @@ end
 function Strings:getLanguageNames(language)
   local chunk = self.language_to_chunk[language:lower()]
   return chunk and self.chunk_to_names[chunk]
+end
+
+function Strings:getLangCode(language)
+  local lang = language or self.app.config.language
+  return self.language_to_lang_code[lang:lower()]
+end
+
+function Strings:isArabicNumerals(language)
+  return self.languages_with_arabic_numerals[language:lower()]
+end
+
+--! Use local language text where possible.
+--!param string (string) The default, likely English, text
+--!param table (table) A table of translated text in language code fields
+--!return (string) The text in the current language if available, or in English, or the default string.
+function Strings:getLocalisedText(string, table)
+  if string and not table then return string
+  elseif table[self:getLangCode()] then return table[self:getLangCode()]
+  elseif table.en then return table.en
+  else return string
+  end
+end
+
+--! Checks the language we specify is known to the application.
+--!param language (string) Language to check
+--!return true if known
+function Strings:checkLanguageExists(language)
+  return not not self.language_to_chunk[language:lower()]
 end
 
 function Strings:_loadPrivate(language, env, ...)

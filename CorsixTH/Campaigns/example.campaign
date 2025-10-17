@@ -3,6 +3,15 @@ name = "Example campaign"
 description = "This is an example campaign where you get the chance to play " ..
   "through some of the levels shipped with CorsixTH. Happy gaming!"
 
+description_table = {
+  en = "This is an example campaign where you get the chance to play " ..
+    "through some of the levels shipped with CorsixTH. Happy gaming!",
+  fr = "Ceci est un exemple de campagne où vous avez la chance de jouer " ..
+    "à certains des niveaux fournis avec CorsixTH. Bon jeu !",
+}
+
+movie = true
+
 levels = {
   "finisham.level",
   "avatar.level",
@@ -10,4 +19,6 @@ levels = {
   "st.peter's.level",
 }
 
-winning_text = "Congratulations! You have successfully completed all the levels."
+winning_text_table = {}
+winning_text_table.en = "Congratulations! You have successfully completed all the levels."
+winning_text_table.fr = "Toutes nos félicitations! Vous avez terminé avec succès tous les niveaux."

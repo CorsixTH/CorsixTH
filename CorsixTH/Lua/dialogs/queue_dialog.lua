@@ -37,7 +37,7 @@ function UIQueue:UIQueue(ui, queue)
   self.height = 122
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req06V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
 
   self.queue = queue
 
@@ -365,7 +365,7 @@ function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
   self:addPanel(377, 0, 58)
 
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req06V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
 end
 
 function UIQueuePopup:draw(canvas, x, y)

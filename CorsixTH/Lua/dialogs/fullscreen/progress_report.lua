@@ -28,17 +28,21 @@ function UIProgressReport:UIProgressReport(ui)
   self:UIFullscreen(ui)
 
   local world = self.ui.app.world
-  local hospital = ui.hospital
   local gfx   = ui.app.gfx
 
   if not pcall(function()
     local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
 
     self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
-    self.red_font = gfx:loadFont("QData", "Font101V", false, palette)
-    self.normal_font = gfx:loadFont("QData", "Font100V", false, palette)
-    self.small_font = gfx:loadFont("QData", "Font106V")
-    self.panel_sprites = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+    self.red_font = gfx:loadFontAndSpriteTable("QData", "Font101V", false, palette)
+    self.normal_font = gfx:loadFontAndSpriteTable("QData", "Font100V", false, palette)
+    self.small_font = gfx:loadFontAndSpriteTable("QData", "Font106V")
+    -- Load all sprite tables needed for all goal icons
+    self.panel_sprites_table = {
+      MPointer = gfx:loadSpriteTable("Data", "MPointer"),
+      Rep02V = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+    }
+    self.panel_sprites = self.panel_sprites_table.Rep02V -- The default goals icons
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
     self:close()
@@ -49,53 +53,45 @@ function UIProgressReport:UIProgressReport(ui)
 
   -- Selected hospital number
   self.selected = 1
+  local hospital = world.hospitals[self.selected]
 
+  -- Collect which criteria to show here, draw columns in draw
   -- Add the icons for the criteria
   local x = 263
-  local world_goals = world.goals
-  for _, tab in ipairs(world_goals) do
-    local crit_name = world.level_criteria[tab.criterion].name
-    local res_value = world_goals[crit_name].win_value
-    world_goals[crit_name].visible = true
-    -- Special case for money, subtract loans
-    local cur_value = hospital[crit_name]
-    if crit_name == "balance" then
-      cur_value = cur_value - hospital.loan
+  local crit_data = world.endconditions:generateReportTable(hospital)
+  for _, crit_table in ipairs(crit_data) do
+    crit_table.visible = true
+    local crit_name = crit_table.name
+    local res_value = crit_table.win_value
+    local cur_value = world.endconditions:getAttribute(hospital, crit_name)
+    if crit_table.lose_value then
+      crit_table.red = true
+      res_value = crit_table.lose_value
     end
-    if world_goals[crit_name].lose_value then
-      world_goals[crit_name].red = false
-
-      if cur_value < world_goals[crit_name].boundary then
-        world_goals[crit_name].red = true
-        res_value = world_goals[crit_name].lose_value
-        -- TODO: Make the ugly workaround for the special case "percentage_killed" better
-        if crit_name:find("killed") then
-          res_value = nil
-          world_goals[crit_name].visible = false
-        end
-      elseif not world_goals[crit_name].win_value then
-        world_goals[crit_name].visible = false
-      end
+    -- FIXME: res_value and cure_value are depersisted as floating points, using
+    -- string.format("%.0f", x) is not suitable due to %d (num) param in _S string
+    local tooltip
+    if crit_table.two_tooltips then
+      local direction = crit_table.win_value and "over" or "under"
+      tooltip = _S.tooltip.status[direction][crit_name]
+    else
+      tooltip = _S.tooltip.status[crit_name]
     end
-    -- Only five criteria can be there at once.
-    if crit_name:find("killed") and world.winning_goal_count > 5 then
-      res_value = nil
-      world_goals[crit_name].visible = false
+    if crit_table.formats == 2 then
+      tooltip = tooltip:format(math.floor(res_value), math.floor(cur_value))
+    elseif crit_table.formats == 3 then
+      tooltip = tooltip:format(math.floor(res_value) / 1000,
+          math.floor(cur_value) / 1000)
+    else
+      tooltip = tooltip:format(math.floor(res_value))
     end
-    if res_value then
-      -- FIXME: res_value and cure_value are depersisted as floating points, using
-      -- string.format("%.0f", x) is not suitable due to %d (num) param in _S string
-      local tooltip
-      if world.level_criteria[tab.criterion].formats == 2 then
-        tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value), math.floor(cur_value))
-      else
-        tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value))
-      end
-      self:addPanel(world.level_criteria[tab.criterion].icon, x, 240)
-      self:makeTooltip(tooltip, x, 180, x + 30, 180 + 90)
-      x = x + 30
+    if not crit_table.icon_file then -- Icons from QData/Rep02V
+      self:addPanel(crit_table.icon, x, 240)
     end
+    self:makeTooltip(tooltip, x, 180, x + 30, 180 + 90)
+    x = x + 30
   end
+  self.crit_data = crit_data
 
   self:addPanel(0, 606, 447):makeButton(0, 0, 26, 26, 8, self.close):setTooltip(_S.tooltip.status.close)
 
@@ -182,9 +178,8 @@ function UIProgressReport:draw(canvas, x, y)
   UIFullscreen.draw(self, canvas, x, y)
 
   x, y = self.x + x, self.y + y
-  local hospital = self.ui.hospital
-  local world    = hospital.world
-  local world_goals = world.goals
+  local world    = self.ui.app.world
+  local hospital = world.hospitals[self.selected]
 
   -- Names of the players playing
   local ly = 73
@@ -194,23 +189,19 @@ function UIProgressReport:draw(canvas, x, y)
     ly = ly + 25
   end
 
-  -- Draw the vertical bars for the winning conditions
+  -- Draw the vertical bars for the selected conditions
   local lx = 270
-  for _, tab in ipairs(world_goals) do
-    local crit_name = world.level_criteria[tab.criterion].name
-    if world_goals[crit_name].visible then
-      local sprite_offset = world_goals[crit_name].red and 2 or 0
-      local cur_value = hospital[crit_name]
-      -- Balance is special
-      if crit_name == "balance" then
-        cur_value = cur_value - hospital.loan
-      end
+  for _, crit_table in ipairs(self.crit_data) do
+    if crit_table.visible then
+      local sprite_offset = crit_table.red and 2 or 0
+      local crit_name = crit_table.name
+      local cur_value = world.endconditions:getAttribute(hospital, crit_name)
       local height
-      if world_goals[crit_name].red then
-        local lose = world_goals[crit_name].lose_value
-        height = 1 + 49 * (1 - ((cur_value - lose)/(world_goals[crit_name].boundary - lose)))
+      if crit_table.red then
+        local lose = crit_table.lose_value
+        height = 1 + 49 * (1 - ((cur_value - lose)/(crit_table.boundary - lose)))
       else
-        height = 1 + 49 * (cur_value/world_goals[crit_name].win_value)
+        height = 1 + 49 * (cur_value/crit_table.win_value)
       end
       if height > 50 then height = 50 end
       local result_y = 0
@@ -219,6 +210,10 @@ function UIProgressReport:draw(canvas, x, y)
         result_y = result_y + 1
       end
       self.panel_sprites:draw(canvas, 2 + sprite_offset, x + lx, y + 237 - result_y)
+      if crit_table.icon_file then -- Icons not from QData/Rep02V
+        local icon_sprites = self.panel_sprites_table[crit_table.icon_file]
+        icon_sprites:draw(canvas, crit_table.icon, x + lx, y + 240)
+      end
       lx = lx + 30
     end
   end
@@ -233,15 +228,8 @@ function UIProgressReport:draw(canvas, x, y)
 end
 
 function UIProgressReport:afterLoad(old, new)
-  if old < 179 then
-    local gfx = TheApp.gfx
-
-    local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
-    self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
-    self.red_font = gfx:loadFont("QData", "Font101V", false, palette)
-    self.normal_font = gfx:loadFont("QData", "Font100V", false, palette)
-    self.small_font = gfx:loadFont("QData", "Font106V")
-    self.panel_sprites = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+  if old < 206 then
+    self:close()
   end
 
   UIFullscreen.afterLoad(self, old, new)

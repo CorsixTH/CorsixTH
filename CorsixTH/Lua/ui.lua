@@ -150,7 +150,7 @@ function UI:UI(app, minimal)
     self.tooltip_font = app.gfx:loadBuiltinFont()
   else
     local palette = app.gfx:loadPalette("QData", "PREF01V.PAL", true)
-    self.tooltip_font = app.gfx:loadFont("QData", "Font00V", false, palette)
+    self.tooltip_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette)
   end
   self.tooltip = nil
   self.tooltip_counter = 0
@@ -215,6 +215,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler("global_cancel_alt", self, self.closeWindow)
   self:addKeyHandler("global_stop_movie", self, self.stopMovie)
   self:addKeyHandler("global_stop_movie_alt", self, self.stopMovie)
+  self:addKeyHandler("global_pause_movie", self, self.pauseMovie)
   self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
   self:addKeyHandler("global_fullscreen_toggle", self, self.fullscreenHotkey)
   self:addKeyHandler("global_exitApp", self, self.exitApplication)
@@ -222,13 +223,6 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler("global_releaseMouse", self, self.releaseMouse)
 
   self:addOrRemoveDebugModeKeyHandlers()
-end
-
-function UI:connectDebugger()
-  local error_message = TheApp:connectDebugger()
-  if error_message then
-    self:addWindow(UIInformation(self, {error_message}))
-  end
 end
 
 -- Used for everything except music and announcements
@@ -934,8 +928,22 @@ end
 
 local UpdateCursorPosition = TH.cursor.setPosition
 
---! Called when the mouse enters or leaves the game window.
+--! Called when focus changes on game window.
+--!param gain (number) 1 for in-focus, 0 for out-of-focus
 function UI:onWindowActive(gain)
+  self:setWindowActiveStatus(gain == 1)
+end
+
+--! Stores the game window active status
+--!param state (boolean) true for in-focus, false for out-of-focus
+function UI:setWindowActiveStatus(state)
+  self.app.window_active_status = state
+end
+
+--! Gets the game window active status
+--!return true for in-focus, false for out-of-focus
+function UI:getWindowActiveStatus()
+  return self.app.window_active_status
 end
 
 --! Window has been resized by the user
@@ -1057,11 +1065,9 @@ function UI:getCursorPosition(window)
 end
 
 function UI:addOrRemoveDebugModeKeyHandlers()
-  self:removeKeyHandler("global_connectDebugger", self)
   self:removeKeyHandler("global_showLuaConsole", self)
   self:removeKeyHandler("global_runDebugScript", self)
   if self.app.config.debug then
-    self:addKeyHandler("global_connectDebugger", self, self.connectDebugger)
     self:addKeyHandler("global_showLuaConsole", self, self.showLuaConsole)
     self:addKeyHandler("global_runDebugScript", self, self.runDebugScript)
   end
@@ -1082,8 +1088,12 @@ function UI:afterLoad(old, new)
       gfx.cache.palette_greyscale_ghost = {}
       gfx.cache.language_fonts = {}
       gfx.builtin_font = nil
+
+      local palette = gfx:loadPalette("QData", "PREF01V.PAL", true)
+      self.tooltip_font = gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette)
     end
   end
+
   self:setupGlobalKeyHandlers()
 
   -- Cancel any saved screen movement from edge scrolling
@@ -1097,16 +1107,20 @@ end
 function UI:tutorialStep(...)
 end
 
+--! Perform the Screenshot action (usually by key bind 'global_screenshot')
 function UI:makeScreenshot()
-   -- Find an index for screenshot which is not already used
-  local i = 0
-  local filename
-  repeat
-    filename = TheApp.screenshot_dir .. ("screenshot%i.bmp"):format(i)
-    i = i + 1
-  until lfs.attributes(filename, "size") == nil
-  print("Taking screenshot: " .. filename)
-  local res, err = self.app.video:takeScreenshot(filename) -- Take screenshot
+  -- Generate filename
+  local timestamp = os.date("%Y%m%d-%H%M%S")
+  local filename = TheApp.screenshot_dir .. ("Screenshot_%s.png"):format(timestamp)
+
+  -- It's very unlikely you intentionally want multiple screenshots a second
+  if lfs.attributes(filename, "size") ~= nil then
+    print("Screenshot failed: File already exists")
+    return
+  end
+
+  -- Take screenshot
+  local res, err = self.app.video:takeScreenshot(filename)
   if not res then
     print("Screenshot failed: " .. err)
   else
@@ -1165,6 +1179,12 @@ end
 function UI:stopMovie()
   if self.app.moviePlayer.playing then
     self.app.moviePlayer:stop()
+  end
+end
+
+function UI:pauseMovie()
+  if self.app.moviePlayer.playing then
+    self.app.moviePlayer:togglePause()
   end
 end
 

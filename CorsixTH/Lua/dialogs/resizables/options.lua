@@ -63,8 +63,9 @@ local col_caption = {
 --- Calculates the Y position for the dialog box in the option menu
 -- and increments along the current position for the next element
 -- @return The Y position to place the element at
-
-function UIOptions:_getOptionYPos()
+--!param reset (boolean) Reset the index to start at the top of a column, below the title.
+function UIOptions:_getOptionYPos(reset)
+  if reset then self._current_option_index = 2 end
   -- Offset from top of options box
   local STARTING_Y_POS = 15
   -- Y Height is 20 for panel size + 10 for spacing
@@ -78,7 +79,7 @@ end
 
 
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 320, 500, col_bg)
+  self:UIResizable(ui, 620, 300, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -117,19 +118,30 @@ function UIOptions:UIOptions(ui, mode)
   -- Window parts definition
   -- Title
   local title_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(80, title_y_pos, 165, 20, col_caption):setLabel(_S.options_window.caption)
+  self:addBevelPanel(175, title_y_pos, BTN_WIDTH * 2, 20, col_caption):setLabel(_S.options_window.caption)
     .lowered = true
 
-  -- Check for updates
-  local updates_y_pos = self:_getOptionYPos()
-  local updates_string = app.config.check_for_updates and
-      _S.options_window.option_enabled or _S.options_window.option_disabled
-  self:addBevelPanel(20, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
-      :setLabel(_S.options_window.check_for_updates):setTooltip(_S.tooltip.options_window.check_for_updates).lowered = true
-  self.updates_panel =
-      self:addBevelPanel(165, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(updates_string)
-  self.updates_button = self.updates_panel:makeToggleButton(0, 0, 140, BTN_HEIGHT, nil, self.buttonUpdates)
-      :setToggleState(app.config.check_for_updates)
+  if app:isUpdateCheckAvailable() then
+    -- Check for updates
+    local updates_y_pos = self:_getOptionYPos()
+    local updates_string = app.config.check_for_updates and
+        _S.options_window.option_enabled or _S.options_window.option_disabled
+    self:addBevelPanel(20, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+        :setLabel(_S.options_window.check_for_updates):setTooltip(_S.tooltip.options_window.check_for_updates).lowered = true
+    self.updates_panel =
+        self:addBevelPanel(165, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(updates_string)
+    self.updates_button = self.updates_panel:makeToggleButton(0, 0, 140, BTN_HEIGHT, nil, self.buttonUpdates)
+        :setToggleState(app.config.check_for_updates)
+  end
+
+  -- add the Audio global switch.
+  local audio_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+    :setLabel(_S.options_window.audio):setTooltip(_S.tooltip.options_window.audio_button).lowered = true
+  self.volume_panel =
+    self:addBevelPanel(165, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
+  self.volume_button = self.volume_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonAudioGlobal)
+    :setToggleState(app.config.audio):setTooltip(_S.tooltip.options_window.audio_toggle)
 
   -- Fullscreen
   local fullscreen_y_pos = self:_getOptionYPos()
@@ -159,18 +171,6 @@ function UIOptions:UIOptions(ui, mode)
   self.mouse_capture_button = self.mouse_capture_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonMouseCapture)
     :setToggleState(app.config.capture_mouse):setTooltip(_S.tooltip.options_window.capture_mouse)
 
-  -- Mouse scroll key
-  local right_mouse_scrolling_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(20, right_mouse_scrolling_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
-    :setLabel(_S.options_window.right_mouse_scrolling):setTooltip(_S.tooltip.options_window.right_mouse_scrolling).lowered = true
-
-  self.right_mouse_scrolling_panel =
-    self:addBevelPanel(165, right_mouse_scrolling_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.right_mouse_scrolling and _S.options_window.right_mouse_scrolling_option_right or _S.options_window.right_mouse_scrolling_option_middle)
-
-  self.right_mouse_scrolling_button = self.right_mouse_scrolling_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonRightMouseScrolling)
-    :setToggleState(app.config.right_mouse_scrolling):setTooltip(_S.tooltip.options_window.right_mouse_scrolling)
-
-
   -- Language
   -- Get language name in the language to normalize display.
   -- If it doesn't exist, display the current config option.
@@ -181,59 +181,58 @@ function UIOptions:UIOptions(ui, mode)
     lang = app.config.language
   end
 
-  local lang_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(20, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+  -- Start a new column of buttons
+  -- Language setting.
+  local lang_y_pos = self:_getOptionYPos(true)
+  self:addBevelPanel(320, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.language):setTooltip(_S.tooltip.options_window.language).lowered = true
-  self.language_panel = self:addBevelPanel(165, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(lang)
+  self.language_panel = self:addBevelPanel(465, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(lang)
   self.language_button = self.language_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
 
-  -- add the Audio global switch.
-  local audio_status = app:isAudioEnabled()
-  local audio_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(20, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
-    :setLabel(_S.options_window.audio):setTooltip(_S.tooltip.options_window.audio_button).lowered = true
-  self.volume_panel =
-    self:addBevelPanel(165, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.audio and audio_status and _S.customise_window.option_on or _S.customise_window.option_off)
-  self.volume_button = self.volume_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonAudioGlobal)
-    :setToggleState(app.config.audio and audio_status):setTooltip(_S.tooltip.options_window.audio_toggle)
-  self.volume_button.enabled = audio_status
 
   -- Set scroll speed.
   local scroll_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(20, scroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.scrollspeed):setTooltip(_S.tooltip.options_window.scrollspeed).lowered = true
-  self.scrollspeed_panel = self:addBevelPanel(165, scroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(tostring(self.ui.app.config.scroll_speed))
+  self:addBevelPanel(320, scroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.scrollspeed):setTooltip(_S.tooltip.options_window.scrollspeed).lowered = true
+  self.scrollspeed_panel = self:addBevelPanel(465, scroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(tostring(self.ui.app.config.scroll_speed))
   self.scrollspeed_button = self.scrollspeed_panel : makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonScrollSpeed) : setTooltip(_S.tooltip.options_window.scrollspeed)
 
   -- Set shift scroll speed.
   local shiftscroll_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(20, shiftscroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.shift_scrollspeed):setTooltip(_S.tooltip.options_window.shift_scrollspeed).lowered = true
-  self.shift_scrollspeed_panel = self:addBevelPanel(165, shiftscroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel( tostring(self.ui.app.config.shift_scroll_speed) )
+  self:addBevelPanel(320, shiftscroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.shift_scrollspeed):setTooltip(_S.tooltip.options_window.shift_scrollspeed).lowered = true
+  self.shift_scrollspeed_panel = self:addBevelPanel(465, shiftscroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel( tostring(self.ui.app.config.shift_scroll_speed) )
   self.shift_scrollspeed_button = self.shift_scrollspeed_panel : makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonShiftScrollSpeed) : setTooltip(_S.tooltip.options_window.shift_scrollspeed)
 
   -- Set zoom speed.
   local zoom_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(20, zoom_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.zoom_speed):setTooltip(_S.tooltip.options_window.zoom_speed).lowered = true
-  self.zoomspeed_panel = self:addBevelPanel(165, zoom_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel( tostring(self.ui.app.config.zoom_speed) )
+  self:addBevelPanel(320, zoom_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.zoom_speed):setTooltip(_S.tooltip.options_window.zoom_speed).lowered = true
+  self.zoomspeed_panel = self:addBevelPanel(465, zoom_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel( tostring(self.ui.app.config.zoom_speed) )
   self.zoomspeed_button = self.zoomspeed_panel : makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonZoomSpeed) : setTooltip(_S.tooltip.options_window.zoom_speed)
 
+  -- The right row is currently uneven with the left row, add an additional spacer
+  -- to avoid an overlap.
+  self:_getOptionYPos()
+
+  local lower_row_y_pos = self:_getOptionYPos()
   -- "Customise" button
-  local customise_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(20, customise_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.customise)
+  self:addBevelPanel(20, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.customise)
     :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonCustomise):setTooltip(_S.tooltip.options_window.customise_button)
 
   -- "Folders" button
-  self:addBevelPanel(165, customise_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.folder)
+  self:addBevelPanel(165, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.folder)
     :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button)
 
   -- "Hotkeys" button
-  local hotkey_y_pos = self:_getOptionYPos() + 10
-  self:addBevelPanel(20, hotkey_y_pos, 280, 40, col_bg):setLabel(_S.options_window.hotkey)
-    :makeButton(0, 0, 280, 40, nil, self.buttonHotkey):setTooltip(_S.tooltip.options_window.hotkey)
+  self:addBevelPanel(320, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.hotkey)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonHotkey):setTooltip(_S.tooltip.options_window.hotkey)
+
+  -- "Jukebox" button
+  self:addBevelPanel(465, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.jukebox)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonJukebox):setTooltip(_S.tooltip.options_window.jukebox)
 
   -- "Back" button
   -- Give some extra space to back button. This is fine as long as it is the last button in the options menu
-  local back_button_y_pos = self:_getOptionYPos() + 30
-  self:addBevelPanel(20, back_button_y_pos, 280, 40, col_bg):setLabel(_S.options_window.back)
+  local back_button_y_pos = self:_getOptionYPos() + 20
+  self:addBevelPanel(175, back_button_y_pos, BTN_WIDTH * 2, 40, col_bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
 end
 
@@ -248,12 +247,17 @@ function UIOptions:checkForAvailableLanguages()
   local langs, c = {}, 1
   for _, lang in pairs(app.strings.languages) do
     local font = app.strings:getFont(lang)
-    if app.gfx:hasLanguageFont(font) and app.strings.languages_english[lang] then
-      local eng_name = app.strings.languages_english[lang]
-      c = c + 1
+    local eng_name = app.strings.languages_english[lang]
+    c = c + 1
+    -- If freetype support and a unicode font setting are not present then
+    -- languages not supported by the builtin font are named in English and cannot be selected
+    if app.gfx:hasLanguageFont(font) then
       font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"))
-      langs[#langs + 1] = { text = lang, font = font,
-      tooltip = { _S.tooltip.options_window.language_dropdown_item:format(eng_name), nil, BTN_HEIGHT * c } }
+      langs[#langs + 1] = { text = lang, name = lang, font = font, disabled = false,
+      tooltip = { _S.tooltip.options_window.language_dropdown_item:format(eng_name), 510, BTN_HEIGHT * c + 31 } }
+    else
+      langs[#langs + 1] = { text = eng_name, name = lang, font = self.builtin_font, disabled = true,
+      tooltip = { _S.tooltip.options_window.language_dropdown_no_font, 510, BTN_HEIGHT * c + 31 } }
     end
   end
   self.available_languages = langs
@@ -274,7 +278,7 @@ function UIOptions:dropdownLanguage(activate)
 end
 
 function UIOptions:selectLanguage(number)
-  local lang = self.app.strings.languages_english[self.available_languages[number]["text"]]
+  local lang = self.app.strings.languages_english[self.available_languages[number].name]
   local app = self.ui.app
   app.config.language = (lang)
   app:initLanguage()
@@ -341,15 +345,7 @@ function UIOptions:buttonMouseCapture()
   local app = self.ui.app
   app.config.capture_mouse = not app.config.capture_mouse
   app:saveConfig()
-  app:setCaptureMouse()
   self.mouse_capture_button:setLabel(app.config.capture_mouse and _S.options_window.option_on or _S.options_window.option_off)
-end
-
-function UIOptions:buttonRightMouseScrolling()
-  local app = self.ui.app
-  app.config.right_mouse_scrolling = not app.config.right_mouse_scrolling
-  app:saveConfig()
-  self.right_mouse_scrolling_button:setLabel(app.config.right_mouse_scrolling and _S.options_window.right_mouse_scrolling_option_right or _S.options_window.right_mouse_scrolling_option_middle)
 end
 
 function UIOptions:buttonCustomise()
@@ -365,6 +361,12 @@ end
 function UIOptions:buttonHotkey()
   local window = UIHotkeyAssign(self.ui, "menu")
   self.ui:addWindow(window)
+end
+
+function UIOptions:buttonJukebox()
+  if self.app.config.audio then
+    self.ui:addWindow(UIJukebox(self.app))
+  end
 end
 
 function UIOptions:buttonBrowseForTHInstall()

@@ -257,7 +257,6 @@ tooltip.options_window = {
   height = "Indtast den önskede skærmhöjde",
   change_resolution = "Skift skærmstörrelsen til dimmensionerne indtastet til höjre",
   language = "Vælg %s som sprog",
-  original_path = "Theme Hospitals mappe",
   browse = "Gennemse et andet sted for installation af Theme Hospital. %1%",
   back = "Luk indstillingsvinduet",
 }

@@ -26,13 +26,36 @@ SOFTWARE.
 
 #include <cassert>
 #include <cstdio>
+#include <cstring>
+#include <initializer_list>
+#include <memory>
 #include <new>
-#include <vector>
+#include <type_traits>
 
 #include "lua.hpp"
 
+class lua_state_deleter {
+ public:
+  void operator()(lua_State* L) const { lua_close(L); }
+};
+
+//! \brief Unique pointer for lua_State
+using lua_state_unique_ptr = std::unique_ptr<lua_State, lua_state_deleter>;
+
 int luaopen_th(lua_State* L);
 
+// Print debugging helper functions
+
+void luaT_printvalue(lua_State* L, int idx);
+
+void luaT_printstack(lua_State* L);
+
+void luaT_printrawtable(lua_State* L, int idx);
+
+//! Lua 5.3 lua_rotate backported to 5.1+
+/*!
+ /sa https://www.lua.org/manual/5.4/manual.html#lua_rotate
+ */
 inline void luaT_rotate(lua_State* L, int idx, int n) {
 #if LUA_VERSION_NUM >= 503
   lua_rotate(L, idx, n);
@@ -65,6 +88,15 @@ inline int luaT_upvalueindex(int i) {
 #endif
 }
 
+//! Compatibility function for Lua 5.1 luaL_register
+/*!
+ luaL_register was removed in Lua 5.2.
+
+ \param L The lua state
+ \param n The name of the library to register
+ \param l An array of functions to register in the library
+ \sa https://www.lua.org/manual/5.1/manual.html#luaL_register
+ */
 template <class Collection>
 inline void luaT_register(lua_State* L, const char* n, Collection& l) {
 #if LUA_VERSION_NUM >= 502
@@ -78,6 +110,12 @@ inline void luaT_register(lua_State* L, const char* n, Collection& l) {
 #endif
 }
 
+//! Register functions into the table on top of the stack
+/*!
+ \param L The lua state
+ \param R An array of functions to register
+ \sa https://www.lua.org/manual/5.1/manual.html#luaL_register
+ */
 inline void luaT_setfuncs(lua_State* L, const luaL_Reg* R) {
 #if LUA_VERSION_NUM >= 502
   lua_pushvalue(L, luaT_environindex);
@@ -178,10 +216,10 @@ void luaT_setenvfield(lua_State* L, int index, const char* k);
 */
 void luaT_getenvfield(lua_State* L, int index, const char* k);
 
-template <class T>
+template <class T, typename... Args>
 inline T* luaT_stdnew(lua_State* L, int mt_idx = luaT_environindex,
-                      bool env = false) {
-  T* p = luaT_new<T>(L);
+                      bool env = false, Args&&... args) {
+  T* p = luaT_new<T>(L, std::forward<Args>(args)...);
   lua_pushvalue(L, mt_idx);
   lua_setmetatable(L, -2);
   if (env) {
@@ -248,13 +286,11 @@ struct luaT_classinfo<bitmap_font> {
   static inline const char* name() { return "BitmapFont"; }
 };
 
-#ifdef CORSIX_TH_USE_FREETYPE2
 class freetype_font;
 template <>
 struct luaT_classinfo<freetype_font> {
   static inline const char* name() { return "FreeTypeFont"; }
 };
-#endif
 
 struct layers;
 template <>
@@ -367,10 +403,10 @@ T* luaT_testuserdata(lua_State* L, int idx, int mt_idx, bool required = true) {
 }
 
 template <class T>
-T* luaT_testuserdata(lua_State* L, int idx = 1) {
+T* luaT_testuserdata(lua_State* L, int idx = 1, bool required = true) {
   int iMetaIndex = luaT_environindex;
   if (idx > 1) iMetaIndex = luaT_upvalueindex(idx - 1);
-  return luaT_testuserdata<T>(L, idx, iMetaIndex);
+  return luaT_testuserdata<T>(L, idx, iMetaIndex, required);
 }
 
 template <class T, int mt>
@@ -427,12 +463,81 @@ void luaT_execute(lua_State* L, const char* sLuaString, T1 arg1, T2 arg2,
 
 void luaT_pushtablebool(lua_State* L, const char* k, bool v);
 
-// Print debugging helper functions
+void preload_lua_package(lua_State* L, const char* name, lua_CFunction fn);
 
-void luaT_printvalue(lua_State* L, int idx);
+namespace {
+int luaT_get_userdata_classname(lua_State* L, int idx, const char** class_name,
+                                void** userdata) {
+  void* p = lua_touserdata(L, idx);
+  *userdata = p;
+  if (p == nullptr) {
+    return 0;
+  }
+  int added_stack = 0;
+  if (lua_getmetatable(L, idx) == 0) {
+    std::printf("Warn: No metatable for userdata\n");
+    return 0;
+  }
+  lua_getfield(L, -1, "__index");
+  added_stack += 2;  // metadata and field
+  if (lua_type(L, -1) != LUA_TTABLE) {
+    lua_pop(L, added_stack);
+    std::printf("Warn: No __index field method table for userdata\n");
+    return 0;
+  }
 
-void luaT_printstack(lua_State* L);
+  if (lua_getmetatable(L, -1) == 0) {
+    lua_pop(L, added_stack);
+    std::printf("Warn: No metatable for method table of userdata\n");
+    return 0;
+  }
+  lua_getfield(L, -1, "__class_name");
+  added_stack += 2;  // method metatable and class name field
+  if (lua_type(L, -1) != LUA_TSTRING) {
+    lua_pop(L, added_stack);
+    std::printf("Warn: No __class_name field for userdata\n");
+    return 0;
+  }
+  *class_name = lua_tostring(L, -1);
 
-void luaT_printrawtable(lua_State* L, int idx);
+  return added_stack;
+}
+}  // namespace
+
+// Find the appropriate derived class of base for a given
+// userdata object.
+//
+// th_lua_internal.h defines our c++ binding class metatables:
+// metatable: { __index = method_table, ... }
+// method_table: { ... }
+// method_table metatable: { __class_name = class_name }
+template <typename B, typename T1, typename T2>
+B* luaT_touserdata_base(lua_State* L, int idx,
+                        const std::initializer_list<const char*>& class_names) {
+  static_assert(std::is_base_of<B, T1>::value, "B must be a base class for T1");
+  static_assert(std::is_base_of<B, T2>::value, "B must be a base class for T2");
+
+  const char* class_name = nullptr;
+  void* p;
+
+  int stack = luaT_get_userdata_classname(L, idx, &class_name, &p);
+  if (class_name == nullptr) {
+    return nullptr;
+  }
+
+  auto it = class_names.begin();
+  if (std::strcmp(class_name, *it) == 0) {
+    lua_pop(L, stack);
+    return static_cast<T1*>(p);
+  }
+  it++;
+  if (std::strcmp(class_name, *it) == 0) {
+    lua_pop(L, stack);
+    return static_cast<T2*>(p);
+  }
+  std::printf("Warn: Unknown class name for usertype %s\n", class_name);
+  lua_pop(L, stack);
+  return nullptr;
+}
 
 #endif  // CORSIX_TH_TH_LUA_H_

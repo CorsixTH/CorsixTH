@@ -22,6 +22,7 @@ Font("unicode")
 Language("Ελληνικά", "Greek", "el", "gre", "ell")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 menu_file = {
   quit = "  (%1%) ΕΞΟΔΟΣ   ",

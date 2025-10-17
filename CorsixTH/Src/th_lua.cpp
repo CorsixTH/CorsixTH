@@ -20,13 +20,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "config.h"
+
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
+#include <string>
+
+#ifdef WITH_UPDATE_CHECK
+#include <curl/curl.h>
+#endif
 
 #include "bootstrap.h"
+#include "lua.hpp"
 #include "th.h"
+#include "th_lua.h"
 #include "th_lua_internal.h"
+
+const char* update_check_url =
+    "https://corsixth.com/CorsixTH/check-for-updates";
 
 void lua_register_anims(const lua_register_state* pState);
 void lua_register_gfx(const lua_register_state* pState);
@@ -154,6 +166,55 @@ const uint8_t* luaT_checkfile(lua_State* L, int idx, size_t* pDataLen) {
 
 namespace {
 
+#ifdef WITH_UPDATE_CHECK
+// https://everything.curl.dev/transfers/callbacks/write.html
+size_t version_info_write_callback(char* ptr, size_t size, size_t nmemb,
+                                   void* userdata) {
+  size_t realsize = size * nmemb;
+  std::string* resp = static_cast<std::string*>(userdata);
+  resp->append(ptr, realsize);
+  return realsize;
+}
+#endif
+
+int l_fetch_latest_version_info(lua_State* L) {
+#ifdef WITH_UPDATE_CHECK
+  CURL* curl = curl_easy_init();
+
+  if (curl == nullptr) {
+    lua_pushnil(L);
+    lua_pushliteral(L, "Could not initialize curl");
+    return 2;
+  }
+
+  curl_easy_setopt(curl, CURLOPT_URL, update_check_url);
+  curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5L);
+  curl_easy_setopt(curl, CURLOPT_MAXFILESIZE, 4096L);
+
+  std::string response;
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, version_info_write_callback);
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&response);
+  CURLcode res = curl_easy_perform(curl);
+
+  curl_easy_cleanup(curl);
+
+  if (res != CURLE_OK) {
+    lua_pushnil(L);
+    lua_pushstring(L, curl_easy_strerror(res));
+    return 2;
+  }
+
+  lua_pushstring(L, response.c_str());
+  lua_pushnil(L);
+  return 2;
+#else
+  lua_pushnil(L);
+  lua_pushliteral(L, "Update check was not enabled at compile time.");
+  return 2;
+#endif
+}
+
 int l_load_strings(lua_State* L) {
   size_t iDataLength;
   const uint8_t* pData = luaT_checkfile(L, 1, &iDataLength);
@@ -178,7 +239,7 @@ int l_load_strings(lua_State* L) {
 }
 
 int get_api_version() {
-#include "../Lua/api_version.lua"
+#include "../Lua/api_version.lua"  // IWYU pragma: keep
 }
 
 int l_get_compile_options(lua_State* L) {
@@ -189,12 +250,12 @@ int l_get_compile_options(lua_State* L) {
   lua_pushliteral(L, CORSIX_TH_ARCH);
   lua_setfield(L, -2, "arch");
 
-#ifdef CORSIX_TH_USE_SDL_MIXER
+#ifdef WITH_UPDATE_CHECK
   lua_pushboolean(L, 1);
 #else
   lua_pushboolean(L, 0);
 #endif
-  lua_setfield(L, -2, "audio");
+  lua_setfield(L, -2, "update_check");
 
   lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
   lua_getfield(L, -1, "jit");
@@ -213,6 +274,12 @@ int l_get_compile_options(lua_State* L) {
 
   lua_pushinteger(L, get_api_version());
   lua_setfield(L, -2, "api_version");
+
+#ifdef CORSIX_TH_FONT
+  // Set default value of font file
+  lua_pushliteral(L, CORSIX_TH_FONT);
+  lua_setfield(L, -2, "font");
+#endif
 
   return 1;
 }
@@ -244,6 +311,8 @@ int luaopen_th(lua_State* L) {
   add_lua_function(pState, l_load_strings, "LoadStrings");
   add_lua_function(pState, l_get_compile_options, "GetCompileOptions");
   add_lua_function(pState, bootstrap_lua_resources, "GetBuiltinFont");
+  add_lua_function(pState, l_fetch_latest_version_info,
+                   "FetchLatestVersionInfo");
 
   // Classes
   lua_register_map(pState);
@@ -304,6 +373,12 @@ void luaT_execute_loadstring(lua_State* L, const char* sLuaString) {
 void luaT_execute(lua_State* L, const char* sLuaString) {
   luaT_execute_loadstring(L, sLuaString);
   lua_call(L, 0, LUA_MULTRET);
+}
+
+void preload_lua_package(lua_State* L, const char* name, lua_CFunction fn) {
+  luaT_execute(
+      L, std::string("package.preload.").append(name).append(" = ...").c_str(),
+      fn);
 }
 
 void luaT_push(lua_State* L, lua_CFunction f) { luaT_pushcfunction(L, f); }

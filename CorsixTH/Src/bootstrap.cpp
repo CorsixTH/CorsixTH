@@ -56,8 +56,8 @@ constexpr std::array<const char*, 45> bootstrap_code{
      "local function dernc(x) return x:match'^RNC' and assert(rnc(x)) or x end",
      "local video = TheApp and TheApp.video or TH.surface(w, h)",
      "video:setCaption('CorsixTH - Error during startup')",
-     "local palette, sheet, font = TH.palette(), TH.sheet(), TH.bitmap_font()",
-     "if not palette:load(dernc(pal)) then error'Unable to load palette' end",
+     "local sheet, font = TH.sheet(), TH.bitmap_font()",
+     "local palette = TH.palette(dernc(pal))",
      "sheet:setPalette(palette)",
      "if not sheet:load(dernc(tab), dernc(dat), true, video) then error'Unable to load sheet' end",
      "font:setSheet(sheet):setSeparation(1, 0)",
@@ -281,7 +281,7 @@ constexpr std::array<uint8_t, 47> bootstrap_font_pal{
 
 // Lua reader function for loading bootstrap_code
 const char* read_bootstrap_line(lua_State* L, void* data, size_t* size) {
-  int& iLine = *reinterpret_cast<int*>(data);
+  int& iLine = *static_cast<int*>(data);
   ++iLine;
   if (iLine < 0 || (iLine & 1)) {
     *size = 1;
