@@ -23,7 +23,7 @@
  <div class="content">
  <h2 class="class">TrainingRoom Class</h2>
 <div class="class_info">
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L40">line 40 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L41">line 41 of Lua/rooms/training.lua</a>.
  <br/><strong>Inheritance:</strong> <a href="_0_1_training_room.html">TrainingRoom</a>
  » <a href="_0_1_room.html">Room</a>
 </div>
@@ -42,9 +42,9 @@
  <a href="_0_1_room.html#_0_1_room_1__staff_wait_toggle">_staffWaitToggle</a>(<span class="p">activate</span>)
  (inherited from <a href="_0_1_room.html">Room</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_room.html#_0_1_room_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
- (inherited from <a href="_0_1_room.html">Room</a>)
+ <li class="self">
+ <a href="_0_1_training_room.html#_0_1_training_room_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_room.html#_0_1_room_1after_load">Room:afterLoad</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_room.html#_0_1_room_1calculate_happiness_factor">calculateHappinessFactor</a>()
@@ -55,7 +55,7 @@
  (inherited from <a href="_0_1_room.html">Room</a>)
  </li>
  <li class="self">
- <a href="_0_1_training_room.html#_0_1_training_room_1calculate_training_factor">calculateTrainingFactor</a>(<span class="p">skeletons</span>, <span class="p">bookcases</span>)
+ <a href="_0_1_training_room.html#_0_1_training_room_1calculate_training_factor">calculateTrainingFactor</a>(<span class="p">objects</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_room.html#_0_1_room_1can_humanoid_enter">canHumanoidEnter</a>(<span class="p">humanoid</span>)
@@ -227,7 +227,6 @@
  (*)
  </li>
  <li><span class="p">built</span>
- (*)
  </li>
  <li><span class="p">crashed</span>
  (*)
@@ -314,27 +313,44 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L45">line 45 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L46">line 46 of Lua/rooms/training.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_training_room_1calculate_training_factor">function TrainingRoom:calculateTrainingFactor(<span class="p">skeletons</span>, <span class="p">bookcases</span>)</a></h5>
+ <h5><a name="_0_1_training_room_1after_load">function TrainingRoom:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">skeletons</td>
+ <td class="n">old</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
  <tr>
- <td class="n">bookcases</td>
+ <td class="n">new</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L77">line 77 of Lua/rooms/training.lua</a>.
+ <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1after_load">Room:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L266">line 266 of Lua/rooms/training.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_training_room_1calculate_training_factor">function TrainingRoom:calculateTrainingFactor(<span class="p">objects</span>)</a></h5>
+ <p>
+ Determine the training factor of this room for teaching specialisms<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">objects</td>
+ <td class="t">table</td>
+ <td class="d"> the list of objects in this room</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L71">line 71 of Lua/rooms/training.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -350,7 +366,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1command_entering_staff">Room:commandEnteringStaff</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L171">line 171 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L199">line 199 of Lua/rooms/training.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -365,26 +381,26 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L121">line 121 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L149">line 149 of Lua/rooms/training.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_training_room_1get_maximum_staff_criteria">function TrainingRoom:getMaximumStaffCriteria()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1get_maximum_staff_criteria">Room:getMaximumStaffCriteria</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L117">line 117 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L145">line 145 of Lua/rooms/training.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_training_room_1get_staff_count">function TrainingRoom:getStaffCount()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L94">line 94 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L122">line 122 of Lua/rooms/training.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_training_room_1get_training_factor">function TrainingRoom:getTrainingFactor()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L113">line 113 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L141">line 141 of Lua/rooms/training.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -400,7 +416,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1on_humanoid_enter">Room:onHumanoidEnter</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L155">line 155 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L183">line 183 of Lua/rooms/training.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -416,14 +432,14 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1on_humanoid_leave">Room:onHumanoidLeave</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L222">line 222 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L250">line 250 of Lua/rooms/training.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_training_room_1room_finished">function TrainingRoom:roomFinished()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1room_finished">Room:roomFinished</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L49">line 49 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L50">line 50 of Lua/rooms/training.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -444,7 +460,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1test_staff_criteria">Room:testStaffCriteria</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L104">line 104 of Lua/rooms/training.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/training.lua#L132">line 132 of Lua/rooms/training.lua</a>.
  </p>
  </div>
 </div>
