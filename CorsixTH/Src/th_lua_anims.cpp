@@ -396,17 +396,16 @@ int l_anim_set_tile(lua_State* L) {
     lua_settop(L, 1);
   } else {
     level_map* pMap = luaT_testuserdata<level_map>(L, 2);
-    int x = static_cast<int>(luaL_checkinteger(L, 3)) - 1;
-    int y = static_cast<int>(luaL_checkinteger(L, 4)) - 1;
+    int x = static_cast<int>(luaL_checkinteger(L, 3));
+    int y = static_cast<int>(luaL_checkinteger(L, 4));
     map_tile* node = pMap->get_tile(x, y);
     if (node) {
-      pAnimation->attach_to_tile(x, y, node, last_layer);
+      pAnimation->attach_to_tile(x - 1, y - 1, node, last_layer);
     } else {
-      luaL_argerror(L, 3,
-                    lua_pushfstring(L,
-                                    "Map index out of bounds (" LUA_NUMBER_FMT
-                                    "," LUA_NUMBER_FMT ")",
-                                    lua_tonumber(L, 3), lua_tonumber(L, 4)));
+      // Off-map, report an error.
+      std::string msg = "Map index out of bounds (" + std::to_string(x) + ", " +
+                        std::to_string(y) + ")";
+      luaL_argerror(L, 3, lua_pushfstring(L, msg.c_str()));
     }
 
     lua_settop(L, 2);
