@@ -228,7 +228,8 @@ DrawingLayers.AtomAnalyser = 3
 DrawingLayers.ReceptionistFacingUser = 3 -- Facing east or south.
 DrawingLayers.Entity = 4 -- All 'normal' animations.
 DrawingLayers.ReceptionistFacingAway = 5 -- Facing west or north.
--- Values 6 and 7 not used.
+-- Value 6 is not used.
+DrawingLayers.FloatingDollars = 7
 DrawingLayers.EastSideObject = 8
 DrawingLayers.SouthSideObject = 9
 
