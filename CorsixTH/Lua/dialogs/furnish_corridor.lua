@@ -244,7 +244,7 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
       local obj = self.objects[hover_idx].object
       self.item_price = self.ui.hospital:getObjectBuildCost(obj.id)
       self.preview_anim:setAnimation(self.anims, obj.build_preview_animation)
-      TheApp.audio:playSound("HLIGHT5.wav")
+      self.ui:playSound("HLight5.wav")
     end
     self.list_hover_index = hover_idx
     repaint = true
