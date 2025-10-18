@@ -56,7 +56,7 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
   patient:walkTo(sx, sy)
 
   local after_use_screen1 = --[[persistable:general_diag_screen_after_use1]] function()
-    local after_use_screen2 = function() end
+    local after_use_screen2 = --[[persistable:general_diag_screen_after_use2_next]] function() end
     local staff = self:getStaffMember()
     if staff then
       local trolley, cx, cy = self.world:findObjectNear(patient, "crash_trolley")
