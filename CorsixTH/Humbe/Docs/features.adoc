@@ -1,0 +1,175 @@
+= Needed features
+:icons:
+
+What features are needed/useful in animating the humanoids?
+
+== Global level
+
+NOTE: Needs text.
+
+== Rooms
+
+The following rooms should be supported:
+
+* *Reception*: Has a receptionist and a reception desk.
+* *GPs office*: Has a chair for the patient, and a desk and cabinet for the doctor.
+* *General diagnosis*: Has a crash trolley for the examination and a screen for the
+  patient to change cloths.
+* *Cardiogram*: Has a cardio and a screen.
+* *Scanner*: Has a scanner, console, and screen.
+* *Ultrascan*: Has an ultrascanner.
+* *Blood machine*: Has a blood machine.
+* *X-ray*: Has an X-ray and a radiation shield.
+* *Psychiatric*: Has a couch for the patient, a comfy chair for the doctor, and a screen
+  for the patient that is sometimes used. Also may have bookcases and skeletons.
+* *Ward*: Has one or more desks for nurses, and one or more beds for patients.
+* *Operating Theatre*: Has an X-ray viewer, Operating table and a Sink for the
+  doctors, and a screen shared between the patient and the doctors.
+* *Pharmacy*: Has a cabinet for storing drugs and delivering them to the patients.
+* *Inflation*: Has an inflator machine.
+* *DNA fixer*: Has a console and a DNA-fixer.
+* *Hair restoration*: Has a console and a hair-restorer.
+* *Slack tongue clinic*: Has a slicer.
+* *Fracture clinic*: Has a cast remover.
+* *Elcectrolysis clinic*: Has an electrolyser.
+* *Jelly vat*: Has a jelly moulder.
+* *Decontamination*: Has a shower.
+* *Staff room*: Has sofas, pool tables, video games, and tvs.
+* *Research dept*: Has an auto-autopsy machine, atom analyser, desks and cabinets.
+* *Toilets*: Has toilets and one sinks.
+* *Training*: Has a projector, lecture chairs, book cases, and skeletons.
+
+=== Common room features
+
+*Room shape*: All rooms except the reception are rectangular, with walls around it, and a door to
+enter and leave the room. Patients knock before entering.
+*TODO: When do they knock?*
+
+*Staff presence*: For most rooms, the staff should be present in the room before a patient can enter.
+The exceptions are the _toilets_ which has no staff, and the _staff room_ which does
+not allow patients to enter.
+In _wards_, patients can stay even without a nurse. *TODO: But not enter?*
+
+*Meandering*: In most rooms, staff is meandering while waiting for the next patient. Exceptions
+are the _reception_ room, the _general diagnosis_ room, the _ward_ room, and
+the _research dept_ room. *TODO: Is this complete?*
+
+*Number of staff*: Most rooms need one staff member. Exceptions are
+the _ward_ room that allows zero or more nurses,
+the _operating theatre_ room that must have two surgeons,
+the _staff room_ that allows any number of staff,
+the _research dept_ room that allows multiple researchers,
+the _toilets_ room that allows an arbitrary number of patients, and
+the _training_ room that needs one consultant, and zero or more doctors.
+Receptionists never use the staff room.
+
+*Screen usage*: A screen can be used by one humanoid at a time. In most cases there is also exactly
+one humanoid that needs it. The exception is the _operating theatre_, where both
+staff members and the patient must take turns in using the screen.
+In the _general diagnosis_ and the _operating theatre_ rooms, humanoids that used
+the screen must use it again on the way out, in order to be clothed in the same
+outfit again.
+
+*Explosions*: In rooms with a machine, the machine may 'explode' due to bad maintenance.
+An explosion is shown as a large amount of smoke. It kills every humanoid in the room.
+An exploded room becomes permanently damaged and is not usable any more.
+
+*Payments:* For all rooms that patients visit, the patient has to pay an
+amount of money afterwards. They may refuse that before the treatment or diagnosis.
+The _toilets_ are free of charge.
+
+*TODO: Door handling, coming in versus going out, who goes first/last, vip visits.*
+
+=== Room usage cycles
+
+NOTE: Lots of open questions here that need an answer at some point.
+
+NOTE: As the amount of information expands, it may be useful to have a section
+for each room. Also, if a room is not sufficient different from another room, the
+descriptions can be shared.
+
+Below is a short explanation of what happens in each room.
+
+* *Reception*: The reception is operational as soon as a receptionist takes place
+  behind the desk. Patients that just entered the hospital visit the _reception_
+  for a short while, and then move to their first visit to the _GPs office_.
+* *GPs office*: The office is operational as soon as a doctor is in the room. The doctor
+  cycles between using the cabinet and using the desk.
+  A patient sits down in the chair, talks for a while, and then leaves for the next
+  room.
+* *General diagnosis*: The patient uses the screen to undress and then goes to the trolley.
+  The doctor in the mean time also goes to the trolley. Then the examination begins,
+  which is a series of steps performed by the doctor. When that is done, the doctor
+  starts meandering until the next patient, while the current patient changes back to
+  their original cloths, and leaves the room.
+* *Cardiogram*: *TODO: What is done here?*
+* *Scanner*: *TODO: What is done here?*
+* *Ultrascan*: *TODO: What is done here?*
+* *Blood machine*: *TODO: What is done here?*
+* *X-ray*: Patient walks to the X-ray machine, while the doctor walks to the console.
+  When both arrived at their place, the doctor sits down and repeatedly presses buttons.
+  The doctor gets up and meanders, while the patient leaves again.
+* *Psychiatric*: Patient walks to the couch and lies down. Doctor walks to the
+  comfy chair and sits down. Then they talk *TODO: do they?*. After a while, they
+  both stand again. In some cases the patient uses the screen before leaving the room.
+  *TODO: Role of bookcases and skeletons?*
+* *Ward*: A nurse must be present when a patient enters. They can only enter is there is a bed
+  available for them. The patient walks to their bed, lies down, and goes to sleep.
+  After a while they awake, leave the bed, and walk out. A nurse does not need to be in the room.
+* *Operating Theatre*: Two surgeons need to be in the room. They both change to surgeon cloths
+  when they enter, and stay that way until they leave. When a patient comes in,
+  both surgeons wash their hands at the sink. Then they move to the operating table.
+  The patient undresses and moves to the operating table. The patient lies
+  down *TODO: At what conditions?*
+  Doctors begin to operate *TODO: How?*. After a while, they are done. Doctors wander off,
+  and the patient changes their cloths back to what they had when they entered behind the
+  screen. Then the patient leaves.
+* *Pharmacy*: After the nurse and patient are at their right spots, the nurse opens the cabinet,
+  takes out a drink, and gives it to the patient. The patient drinks it,  gives the glass back,
+  and leaves.
+  The nurse puts it in the cabinet again.
+  +
+  A special animation here is _morphing_. The drug causes a change in the visual appearance
+  of the patient, which is animated while the drinking animation is playing.
+* *Inflation*: The doctor and the patient take their place around the inflator and a
+  sequence of animations is played. Then the patient leaves and the doctor wanders
+  until the next patient arrives.
+* *DNA fixer*: *TODO: What is done here?*
+* *Hair restoration*: *TODO: What is done here?*
+* *Slack tongue clinic*: The doctor and the patient take their place around the slicer and a
+  sequence of animations is played. Then the patient leaves and the doctor wanders
+  until the next patient arrives.
+* *Fracture clinic*: The patient sits down in the cast remover, the nurse closes it,
+  performs several steps, and opens it again. Then the patient leaves again.
+* *Elcectrolysis clinic*: *TODO: What is done here?*
+* *Jelly vat*:  *TODO: What is done here?*
+* *Decontamination*:  *TODO: What is done here?*
+* *Staff room*: Staff room always allows staff to enter. Once inside, they cycle
+  through using the sofas, pool tables, and video games (some of the objects are
+  only used by a subset of staff members). *TODO: TVs usage?* If all objects are
+  being used, the staff member just wanders in the room. After a while they leave again.
+* *Research dept*: The researchers are cycling between desks, the atom analyser, and the
+  cabinets. When a patient arrives, one of the doctor goes to the auto-autopsy machine.
+  The patient and the doctor at the machine perform a number of steps, and the patient
+  disappears. Then the doctor goes back to cycling between the desks, atom analyser, and
+  cabinets.
+* *Toilets*: After entering, each patient first goes to a loo. From the loo they visit the
+  sink, and then leave. *TODO: When exactly can a patient enter*
+* *Training*: The consultant stands near the projector and gives a lecture. Student
+  doctor may enter and leave at any time. *TODO: When does the consultant stop?*
+  *What is done with the book cases and skeletons?*
+
+== To include
+
+* Idling (should be in staff activities at a higher level)
+
+* Emergencies
+* Epidemics
+* VIP visits
+* A section about user interactions
+* Room explosions
+* Monitor the destination while walking, to detect moves or disappearances.
+* A room cannot be closed.
+* Order of using the screen in the operating theatre.
+* When does a patient knock at the door?
+* When leaving a room, does the staff leave after the patient?
