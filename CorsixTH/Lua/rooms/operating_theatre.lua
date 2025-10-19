@@ -239,7 +239,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
 
   local screen, sx, sy = self.world:findObjectNear(patient, "surgeon_screen")
   -- Patient walk to surgeon screen
-  patient:queueAction(WalkAction(sx, sy)
+  patient:setNextAction(WalkAction(sx, sy)
     :setMustHappen(true)
     :disableTruncate())
   -- Patient changes into surgical gown
