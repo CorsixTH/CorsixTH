@@ -662,7 +662,7 @@ function Humanoid:hasLeavingAction()
   return false
 end
 
--- Check if there is "dress is_leaving" action in the action queue
+-- Check if there is "use_screen is_leaving" action in the action queue
 function Humanoid:isDressingAndLeaving()
   for _, action in ipairs(self.action_queue) do
     if action.name == "use_screen" and action.is_leaving then
