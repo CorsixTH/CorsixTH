@@ -151,16 +151,9 @@ function EndConditions:generateReportTable(hospital)
     table.insert(report_table, crit_table)
     count = count + 1
   end
-  -- Limit the table to five goals, ordered by progress towards meeting the lose goal
-  if count > 5 then
-    table.sort(report_table, function(a,b) return a.progress > b.progress end)
-    for n = 6, #report_table do report_table[n] = nil end
-  end
-
   -- Fill up the report table with win criteria not already present as lose criteria
   for _, crit in pairs(report_table) do unique_criteria_set[crit.name] = true end
   for i = 1, #local_criteria_variable do
-    if count == 5 then break end
     local name = local_criteria_variable[i].name
     if win_group[name] and not unique_criteria_set[name] then
       count = count + 1

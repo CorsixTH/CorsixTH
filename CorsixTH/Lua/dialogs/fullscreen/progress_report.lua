@@ -57,8 +57,11 @@ function UIProgressReport:UIProgressReport(ui)
 
   -- Collect which criteria to show here, draw columns in draw
   -- Add the icons for the criteria
-  local x = 263
   local crit_data = world.endconditions:generateReportTable(hospital)
+  local x = 263
+  local crit_amount = #crit_data
+  -- 30 gap width value is used when there is 5 criterias or less.
+  local gap_width = math.floor(math.min(150/crit_amount, 30))
   for _, crit_table in ipairs(crit_data) do
     crit_table.visible = true
     local crit_name = crit_table.name
@@ -88,9 +91,10 @@ function UIProgressReport:UIProgressReport(ui)
     if not crit_table.icon_file then -- Icons from QData/Rep02V
       self:addPanel(crit_table.icon, x, 240)
     end
-    self:makeTooltip(tooltip, x, 180, x + 30, 180 + 90)
-    x = x + 30
+    self:makeTooltip(tooltip, x, 180, x + gap_width, 180 + 90)
+    x = x + gap_width
   end
+  self.gap_width = gap_width
   self.crit_data = crit_data
 
   self:addPanel(0, 606, 447):makeButton(0, 0, 26, 26, 8, self.close):setTooltip(_S.tooltip.status.close)
@@ -214,7 +218,7 @@ function UIProgressReport:draw(canvas, x, y)
         local icon_sprites = self.panel_sprites_table[crit_table.icon_file]
         icon_sprites:draw(canvas, crit_table.icon, x + lx, y + 240)
       end
-      lx = lx + 30
+      lx = lx + self.gap_width
     end
   end
 
