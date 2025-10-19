@@ -73,7 +73,8 @@ local action_staff_reception_idle_phase = permanent"action_staff_reception_idle_
   object.th:makeVisible()
   if direction == "north" or direction == "west" then
     -- Place desk behind receptionist in render order (they are on the same tile)
-    object.th:setTile(object.th:getTile())
+    local map, x, y  = object.th:getTile()
+    object.th:setTile(map, x, y, object:getDrawingLayer())
   end
   if action.on_interrupt then
     action.on_interrupt = action_staff_reception_interrupt

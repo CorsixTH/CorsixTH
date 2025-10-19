@@ -403,8 +403,8 @@ function Object:setTile(x, y)
   end
 
   if x then
-    self.th:setDrawingLayer(self:getDrawingLayer())
-    self.th:setTile(self.world.map.th, self:getRenderAttachTile())
+    local ra_x, ra_y = self:getRenderAttachTile()
+    self.th:setTile(self.world.map.th, ra_x, ra_y, self:getDrawingLayer())
     self.world:addObjectToTile(self, x, y)
     if self.footprint then
       local map = self.world.map.th
@@ -483,7 +483,8 @@ function Object:setTile(x, y)
       local map = self.world.map.th
       local pos = self.split_anim_positions
       for i = 2, #self.split_anims do
-        self.split_anims[i]:setTile(map, x + pos[i][1], y + pos[i][2])
+        self.split_anims[i]:setTile(map, x + pos[i][1], y + pos[i][2],
+            self:getDrawingLayer())
       end
     end
   else
@@ -685,8 +686,8 @@ end
 
 function Object:resetAnimation()
   self.world.map.th:setCellFlags(self.tile_x, self.tile_y, {thob = self.object_type.thob})
-  self.th:setDrawingLayer(self:getDrawingLayer())
-  self.th:setTile(self.world.map.th, self:getRenderAttachTile())
+  local ra_x, ra_y = self:getRenderAttachTile()
+  self.th:setTile(self.world.map.th, ra_x, ra_y, self:getDrawingLayer())
 end
 
 function Object:onDestroy()

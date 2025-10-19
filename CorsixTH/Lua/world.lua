@@ -1679,7 +1679,8 @@ function World:newFloatingDollarSign(patient, amount)
     amount = (amount - digit) / 10
     spritelist:append(2 + digit, xbase + 5 * (len - i), 5)
   end
-  spritelist:setTile(self.map.th, patient.tile_x, patient.tile_y)
+  spritelist:setTile(self.map.th, patient.tile_x, patient.tile_y,
+      DrawingLayers.FloatingDollars)
 
   self.floating_dollars[spritelist] = true
 end

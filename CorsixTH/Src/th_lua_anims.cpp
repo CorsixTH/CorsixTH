@@ -38,12 +38,6 @@ enum class animation_effect;
 
 namespace {
 
-/* this variable is used to determine the layer of the animation, it should be
-  rewritten at some
-  point so that the it is passed as an argument in the function l_anim_set_tile
-*/
-int last_layer = 2;
-
 int l_anims_new(lua_State* L) {
   luaT_stdnew<animation_manager>(L, luaT_environindex, true);
   return 1;
@@ -373,11 +367,6 @@ int l_anim_set_morph(lua_State* L) {
   return 1;
 }
 
-int l_anim_set_drawable_layer(lua_State* L) {
-  last_layer = static_cast<int>(luaL_checkinteger(L, 2));
-  return 1;
-}
-
 int l_anim_get_anim(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   lua_pushinteger(L, pAnimation->get_animation());
@@ -385,6 +374,8 @@ int l_anim_get_anim(lua_State* L) {
   return 1;
 }
 
+// setTile(anim/spr_list, map, x, y, drawing_layer).
+// If map is 'nil', remove animation from tile.
 template <typename T>
 int l_anim_set_tile(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
@@ -396,17 +387,18 @@ int l_anim_set_tile(lua_State* L) {
     lua_settop(L, 1);
   } else {
     level_map* pMap = luaT_testuserdata<level_map>(L, 2);
-    int x = static_cast<int>(luaL_checkinteger(L, 3)) - 1;
-    int y = static_cast<int>(luaL_checkinteger(L, 4)) - 1;
-    map_tile* node = pMap->get_tile(x, y);
+    int x = static_cast<int>(luaL_checkinteger(L, 3));
+    int y = static_cast<int>(luaL_checkinteger(L, 4));
+    int drawing_layer = static_cast<int>(luaL_checkinteger(L, 5));
+
+    map_tile* node = pMap->get_tile(x - 1, y - 1);
     if (node) {
-      pAnimation->attach_to_tile(x, y, node, last_layer);
+      pAnimation->attach_to_tile(x - 1, y - 1, node, drawing_layer);
     } else {
-      luaL_argerror(L, 3,
-                    lua_pushfstring(L,
-                                    "Map index out of bounds (" LUA_NUMBER_FMT
-                                    "," LUA_NUMBER_FMT ")",
-                                    lua_tonumber(L, 3), lua_tonumber(L, 4)));
+      // Off-map, report an error.
+      std::string msg = "Map index out of bounds (" + std::to_string(x) + ", " +
+                        std::to_string(y) + ")";
+      luaL_argerror(L, 3, lua_pushfstring(L, msg.c_str()));
     }
 
     lua_settop(L, 2);
@@ -738,7 +730,6 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_get_secondary_marker, "getSecondaryMarker");
     lcb.add_function(l_anim_tick<animation>, "tick");
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
-    lcb.add_function(l_anim_set_drawable_layer, "setDrawingLayer");
     lcb.add_function(l_anim_set_patient_effect, "setPatientEffect");
   }
 
