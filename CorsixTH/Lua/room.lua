@@ -1001,7 +1001,7 @@ function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
 
     if humanoid:getCurrentAction().name == "use_screen" then
       --The humanoid must be using the screen to undress because this isn't a leaving action:
-      if not humanoid:isDressAndLeaving() then
+      if not humanoid:isDressingAndLeaving() then
         humanoid:getCurrentAction().after_use = nil
         humanoid:setNextAction(use_screen)
       end
