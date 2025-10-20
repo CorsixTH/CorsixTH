@@ -143,16 +143,16 @@ function EntityMap:getAdjacentSquares(x, y)
   local adjacent_squares = {}
   if x and y then
     if x ~= 1 then
-      adjacent_squares[#adjacent_squares+1] = {x = x-1, y = y}
+      adjacent_squares[#adjacent_squares+1] = {x = x - 1, y = y}
     end
     if x ~= self.width then
-      adjacent_squares[#adjacent_squares+1] = {x = x+1, y = y}
+      adjacent_squares[#adjacent_squares+1] = {x = x + 1, y = y}
     end
     if y ~= 1 then
-      adjacent_squares[#adjacent_squares+1] = {x = x, y = y-1}
+      adjacent_squares[#adjacent_squares+1] = {x = x, y = y - 1}
     end
     if y ~= self.height then
-      adjacent_squares[#adjacent_squares+1] = {x = x, y = y+1}
+      adjacent_squares[#adjacent_squares+1] = {x = x, y = y + 1}
     end
   end
   return adjacent_squares
@@ -185,7 +185,7 @@ function EntityMap:getAdjacentFreeTiles(x, y)
   for _, coord in ipairs(self:getAdjacentSquares(x, y)) do
     local x_coord = coord['x']
     local y_coord = coord['y']
-    -- If no object or humanoid occupy the til_coorde
+    -- If no object or humanoid occupies the tile_coordinate, it is a free tile.
     if #self:getHumanoidsAtCoordinate(x_coord, y_coord) == 0 and
         #self:getObjectsAtCoordinate(x_coord, y_coord) == 0 then
       adjacent_free_tiles[#adjacent_free_tiles+1] = coord

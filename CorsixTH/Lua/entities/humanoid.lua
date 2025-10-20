@@ -525,6 +525,54 @@ function Humanoid:getCurrentMood()
   end
 end
 
+--! Collect the objects in a square around the humanoid within the same room.
+--!param size (int) Size of the square to be searched, as number of rows/columns
+--  around the humanoid. Size 0 only searched the tile of the humanoid, size 1
+--  adds the 8 tiles around the humanoid (one tile in all directions), and so on.
+--!param object_spec (str or array str) Name(s) of objects to find.
+--!return (array objs, or table str -> array objects) Found requested objects.
+--  One array is returned if an object name was supplied, else a table with
+--  object names to array of objects.
+function Humanoid:findObjectsInSquare(size, object_spec)
+  -- Prepare for the search.
+  local objs_table = {}
+  if type(object_spec) == "string" then
+    -- Find one type of objects.
+    objs_table[object_spec] = {}
+  else
+    -- Find more types of objects.
+    for _, name in ipairs(object_spec) do objs_table[name] = {} end
+  end
+
+  local world_map = self.world.map
+  local self_room_id = world_map:getRoomId(self.tile_x, self.tile_y)
+
+  -- Search the rectangle for as far as it is within the world.
+  local width, height = world_map.th:size()
+  local entity_map = self.world.entity_map
+
+  size = (size >= 0) and size or 0
+  for x = self.tile_x - size, self.tile_x + size do
+    if x >= 1 and x <= width then
+      for y = self.tile_y - size, self.tile_y + size do
+        if y >= 1 and y <= height and world_map:getRoomId(x, y) == self_room_id then
+          for _, obj in ipairs(entity_map:getObjectsAtCoordinate(x, y)) do
+            local entry = objs_table[obj.id]
+            if entry then entry[#entry + 1] = obj end
+          end
+        end
+      end
+    end
+  end
+
+  -- Return what was promised.
+  if type(object_spec) == "string" then
+    return objs_table[object_spec]
+  else
+    return objs_table
+  end
+end
+
 --! Start the next (always first) action in the queue.
 function Humanoid:startAction()
   local action = self.action_queue[1]

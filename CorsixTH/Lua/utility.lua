@@ -75,6 +75,15 @@ function table_length(table)
   return count
 end
 
+--! Get a random item from an array.
+--!param array Array with 0 or more items.
+--!return (nil or an item)
+function getRandomEntryFromArray(array)
+  if #array == 0 then return nil end
+  if #array == 1 then return array[1] end
+  return array[math.random(1, #array)]
+end
+
 -- Variation on loadfile() which allows for the loaded file to have global
 -- references resolved in supplied tables. On failure, returns nil and an
 -- error. On success, returns the file as a function just like loadfile() does
