@@ -111,7 +111,7 @@ Below is a short explanation of what happens in each room.
   The doctor gets up and meanders, while the patient leaves again.
 * *Psychiatric*: Patient walks to the couch and lies down. Doctor walks to the
   comfy chair and sits down. Then they talk *TODO: do they?*. After a while, they
-  both stand again. In some cases the patient uses the screen before leaving the room.
+  both stand again. _King Complex_ patient uses the screen to dress to regular clothes before leaving the room.
   *TODO: Role of bookcases and skeletons?*
 * *Ward*: A nurse must be present when a patient enters. They can only enter is there is a bed
   available for them. The patient walks to their bed, lies down, and goes to sleep.
