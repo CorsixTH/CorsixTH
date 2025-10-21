@@ -102,7 +102,7 @@ Below is a short explanation of what happens in each room.
   which is a series of steps performed by the doctor. When that is done, the doctor
   starts meandering until the next patient, while the current patient changes back to
   their original cloths, and leaves the room.
-* *Cardiogram*: *TODO: What is done here?*
+* *Cardiogram*: The patient uses the screen to undress and then goes to the treadmill. The doctor in the mean time also goes to the treadmill. Then the examination begins, which is a series of steps performed by the doctor. When that is done, patient changes back to their original cloths, and leaves the room. The doctor starts meandering until the next patient.
 * *Scanner*: *TODO: What is done here?*
 * *Ultrascan*: *TODO: What is done here?*
 * *Blood machine*: *TODO: What is done here?*
