@@ -88,6 +88,23 @@ NOTE: As the amount of information expands, it may be useful to have a section
 for each room. Also, if a room is not sufficient different from another room, the
 descriptions can be shared.
 
+*Cardiogram* cycle: 
+
+1. The patient enters the room.
+2. The doctor goes to his start point near the treadmill and wait here. The patient goes to the screen.
+3. The patient undresses.
+4. The patient goes to his place near the treadmill.
+5. When everything is in place, the animation starts.
+6. Animation: The doctor presses a button and the patient walks along the treadmill.
+7. After completing one cycle, the doctor presses a button and:
+8.1 Or the patient continues walking along the treadmill with the same speed for one more cycle.
+8.2 Or the patient continues walking along the treadmill but at a different speed (there are two available speeds in total) for one more cycle.
+8.3 Or the patient leaves the treadmill and goes to the screen get dressed. This is the last cycle.
+9. The patient approaches the dress screen.
+10. The patient changes clothes.
+11. Patient pays. The doctor now meandering.
+12. The patient leaves room.
+
 Below is a short explanation of what happens in each room.
 
 * *Reception*: The reception is operational as soon as a receptionist takes place
