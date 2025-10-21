@@ -1,4 +1,5 @@
 = Needed features
+:toc:
 :icons:
 
 What features are needed/useful in animating the humanoids?
@@ -31,28 +32,31 @@ The following rooms should be supported:
 * *Hair restoration*: Has a console and a hair-restorer.
 * *Slack tongue clinic*: Has a slicer.
 * *Fracture clinic*: Has a cast remover.
-* *Elcectrolysis clinic*: Has an electrolyser.
+* *Electrolysis clinic*: Has an electrolyser and a console for the doctor.
 * *Jelly vat*: Has a jelly moulder.
-* *Decontamination*: Has a shower.
+* *Decontamination*: Has a shower and a console for the doctor.
 * *Staff room*: Has sofas, pool tables, video games, and tvs.
 * *Research dept*: Has an auto-autopsy machine, atom analyser, desks and cabinets.
-* *Toilets*: Has toilets and one sinks.
+* *Toilets*: Has toilets and one or more sinks.
 * *Training*: Has a projector, lecture chairs, book cases, and skeletons.
 
 === Common room features
 
 *Room shape*: All rooms except the reception are rectangular, with walls around it, and a door to
 enter and leave the room. Patients knock before entering.
-*TODO: When do they knock?*
+Patient never knock at rooms with swing doors. They are _ward_, _operating theatre_ and _DNA Fixer_.
 
 *Staff presence*: For most rooms, the staff should be present in the room before a patient can enter.
 The exceptions are the _toilets_ which has no staff, and the _staff room_ which does
 not allow patients to enter.
-In _wards_, patients can stay even without a nurse. *TODO: But not enter?*
+In _wards_, patients can only enter when a nurse is present, but can stay or leave even without a nurse.
 
 *Meandering*: In most rooms, staff is meandering while waiting for the next patient. Exceptions
 are the _reception_ room, the _general diagnosis_ room, the _ward_ room, and
-the _research dept_ room. *TODO: Is this complete?*
+the _research dept_ room.
+
+*Idling*: Staff that has nothing to do for the moment and is not resting in the staff room,
+is idling in the corridors.
 
 *Number of staff*: Most rooms need one staff member. Exceptions are
 the _ward_ room that allows zero or more nurses,
@@ -78,7 +82,8 @@ An exploded room becomes permanently damaged and is not usable any more.
 amount of money afterwards. They may refuse that before the treatment or diagnosis.
 The _toilets_ are free of charge.
 
-*TODO: Door handling, coming in versus going out, who goes first/last, vip visits.*
+*Door handling*: Current behavior is satisfactory. Check `_getHumanoidQueuePriority`
+for details.
 
 === Room usage cycles
 
@@ -90,20 +95,19 @@ descriptions can be shared.
 
 *Cardiogram* cycle: 
 
-1. The patient enters the room.
-2. The doctor goes to his start point near the treadmill and wait here. The patient goes to the screen.
-3. The patient undresses.
-4. The patient goes to his place near the treadmill.
-5. When everything is in place, the animation starts.
-6. Animation: The doctor presses a button and the patient walks along the treadmill.
-7. After completing one cycle, the doctor presses a button and:
-8.1 Or the patient continues walking along the treadmill with the same speed for one more cycle.
-8.2 Or the patient continues walking along the treadmill but at a different speed (there are two available speeds in total) for one more cycle.
-8.3 Or the patient leaves the treadmill and goes to the screen get dressed. This is the last cycle.
-9. The patient approaches the dress screen.
-10. The patient changes clothes.
-11. Patient pays. The doctor now meandering.
-12. The patient leaves room.
+. The patient enters the room.
+. The doctor goes to his start point near the treadmill and wait here. The patient goes to the screen.
+. The patient undresses.
+. The patient goes to his place near the treadmill.
+. When everything is in place, the animation starts.
+. Animation: The doctor presses a button and the patient walks along the treadmill for a number of cycles. For each cycle, the doctor presses a button and:
+.. Either the patient continues to walk with the same speed, or
+.. Or the patient continues to walk at a different speed (there are two available speeds in total).
+.. In the last cycle, the patient leaves the treadmill and goes to the screen get dressed.
+. The patient approaches the dress screen.
+. The patient changes clothes.
+. Patient pays. The doctor now meandering.
+. The patient leaves room.
 
 Below is a short explanation of what happens in each room.
 
@@ -160,7 +164,7 @@ Below is a short explanation of what happens in each room.
   until the next patient arrives.
 * *Fracture clinic*: The patient sits down in the cast remover, the nurse closes it,
   performs several steps, and opens it again. Then the patient leaves again.
-* *Elcectrolysis clinic*: *TODO: What is done here?*
+* *Electrolysis clinic*: *TODO: What is done here?*
 * *Jelly vat*:  *TODO: What is done here?*
 * *Decontamination*:  *TODO: What is done here?*
 * *Staff room*: Staff room always allows staff to enter. Once inside, they cycle
@@ -178,16 +182,47 @@ Below is a short explanation of what happens in each room.
   doctor may enter and leave at any time. *TODO: When does the consultant stop?*
   *What is done with the book cases and skeletons?*
 
+== Queueing
+
+*TODO*
+
+== Special events
+
+NOTE: Expand
+
+* VIP visits
+* Emergencies
+* Epidemic (probably needs its own section)
+* Tutorial mode
+
+== User actions
+
+While the simulation is running, the user may make changes, which have to be detected and handled.
+In this discussion we exclude changes that do not directly influence animations, such as
+policy changes, loans, or end of the level.
+
+NOTE: Expand
+
+* Hire new staff
+* Sack staff
+* Pickup and drop staff
+* Send patients home
+* Initiate editing a room
+* Move or place or remove objects in the corridor. This may cause paths to become blocked or
+  destinations to suddenly disappear. Items to consider here:
+** Plants, radiators
+** Drink machines
+** Reception desks
+
+
+== Humanoids blocked in progress
+
+* Patients waiting for a new room.
+* Patients waiting for a decision.
+
+
 == To include
 
-* Idling (should be in staff activities at a higher level)
-
-* Emergencies
-* Epidemics
-* VIP visits
-* A section about user interactions
-* Room explosions
-* Monitor the destination while walking, to detect moves or disappearances.
 * A room cannot be closed.
 * Order of using the screen in the operating theatre.
 * When does a patient knock at the door?
