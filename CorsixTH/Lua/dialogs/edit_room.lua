@@ -1128,47 +1128,30 @@ end
 
 -- Remove door or window
 function UIEditRoom:onRightButtonDown(button, x, y)
-  if self.phase == "door" or self.phase == "windows" then
-    local map = TheApp.map.th
-    -- local cell_x, cell_y = self.ui:ScreenToWorld(self.x + x, self.y + y)
-    -- cell_x, cell_y = math.floor(cell_x), math.floor(cell_y)
-
+  if self.phase == "windows" then
     local cellx, celly, wall_dir = self:screenToWall(self.x + x, self.y + y)
-    print(cellx, celly, wall_dir)
     if not cellx then
       return
     end
 
+    local map = TheApp.map.th
     local cell_flag = map:getCell(cellx, celly, 4)
-    print("flag=", cell_flag, " is door ? ", cell_flag == door_floor_blueprint_markers[wall_dir])
-    local new_anim = 120
-    if cell_flag == door_floor_blueprint_markers[wall_dir] then
-      self.phase = "door" -- Changing phase to force the door to be the next item to add
-      self:setDoorPhasePanelInfo()
-      -- if self.blueprint_door and self.blueprint_door.old_anim == 130 then
-      --   new_anim
-      -- end
-    end
+    if cell_flag == window_floor_blueprint_markers[wall_dir] then -- right click on a wall with a window
+      local wall_x, wall_y = cellx, celly
+      local direction_flag = ( wall_dir == "south" or wall_dir == "north") and 0 or 1
+      if wall_dir == "south" then
+        wall_y = celly + 1
+      elseif wall_dir == "east" then
+        wall_x = cellx + 1
+      end
 
-    local wall_x, wall_y = cellx, celly
-
-    local direction_flag = ( wall_dir == "south" or wall_dir == "north") and 0 or 1
-    if wall_dir == "south" then
-      wall_y = celly + 1
-    elseif wall_dir == "east" then
-      wall_x = cellx + 1
-    end
-
-    local anim = self.blueprint_wall_anims[wall_x][wall_y]
-    if anim then
-      -- reset tile to wall/basic floor
-      map:setCell(cellx, celly, 4, 24)
-      local old_flag = anim:getFlag()
-      print("set animation 120 - ", direction_flag, " for ", wall_x, wall_y)
-      anim:setAnimation(self.anims, 120, direction_flag)
-      anim:setTag(nil)
-    else
-      print("Anim empty")
+      local anim = self.blueprint_wall_anims[wall_x][wall_y]
+      if anim then
+        -- reset tile to basic floor/wall
+        map:setCell(cellx, celly, 4, 24)
+        anim:setAnimation(self.anims, 120, direction_flag)
+        anim:setTag(nil)
+      end
     end
   end
 
