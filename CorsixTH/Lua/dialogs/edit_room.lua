@@ -960,7 +960,8 @@ function UIEditRoom:enterDoorPhase()
     end
   end
 
-  self:setDoorPhasePanelInfo()
+  self.desc_text = _S.place_objects_window.place_door
+  self.confirm_button:enable(false) -- Confirmation is via placing door
 
   -- Change the floor tiles to opaque blue
   local map = self.ui.app.map.th
@@ -980,11 +981,6 @@ function UIEditRoom:enterDoorPhase()
     walls[x][y] = wall
   end
   self.blueprint_wall_anims = walls
-end
-
-function UIEditRoom:setDoorPhasePanelInfo()
-  self.desc_text = _S.place_objects_window.place_door
-  self.confirm_button:enable(false) -- Confirmation is via placing door
 end
 
 function UIEditRoom:enterWindowsPhase()
@@ -1126,7 +1122,7 @@ function UIEditRoom:onLeftButtonDown(button, x, y)
   end
 end
 
--- Remove door or window
+-- Remove window
 function UIEditRoom:onRightButtonDown(button, x, y)
   if self.phase == "windows" then
     local cellx, celly, wall_dir = self:screenToWall(self.x + x, self.y + y)
@@ -1138,7 +1134,7 @@ function UIEditRoom:onRightButtonDown(button, x, y)
     local cell_flag = map:getCell(cellx, celly, 4)
     if cell_flag == window_floor_blueprint_markers[wall_dir] then -- right click on a wall with a window
       local wall_x, wall_y = cellx, celly
-      local direction_flag = ( wall_dir == "south" or wall_dir == "north") and 0 or 1
+      local direction_flag = (wall_dir == "south" or wall_dir == "north") and 0 or 1
       if wall_dir == "south" then
         wall_y = celly + 1
       elseif wall_dir == "east" then
