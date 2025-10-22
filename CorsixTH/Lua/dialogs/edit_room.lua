@@ -1096,7 +1096,7 @@ local window_floor_blueprint_markers = {
 }
 
 
-function UIEditRoom:onLeftButtonDown(button, x, y)
+function UIEditRoom:onLeftButtonDown(x, y)
   if self.phase == "walls" then
     if 0 <= x and x < self.width and 0 <= y and y < self.height then -- luacheck: ignore 542
     else
@@ -1123,35 +1123,32 @@ function UIEditRoom:onLeftButtonDown(button, x, y)
 end
 
 -- Remove window
-function UIEditRoom:onRightButtonDown(button, x, y)
-  if self.phase == "windows" then
-    local cellx, celly, wall_dir = self:screenToWall(self.x + x, self.y + y)
-    if not cellx then
-      return
-    end
-
-    local map = TheApp.map.th
-    local cell_flag = map:getCell(cellx, celly, 4)
-    if cell_flag == window_floor_blueprint_markers[wall_dir] then -- right click on a wall with a window
-      local wall_x, wall_y = cellx, celly
-      local direction_flag = (wall_dir == "south" or wall_dir == "north") and 0 or 1
-      if wall_dir == "south" then
-        wall_y = celly + 1
-      elseif wall_dir == "east" then
-        wall_x = cellx + 1
-      end
-
-      local anim = self.blueprint_wall_anims[wall_x][wall_y]
-      if anim then
-        -- reset tile to basic floor/wall
-        map:setCell(cellx, celly, 4, 24)
-        anim:setAnimation(self.anims, 120, direction_flag)
-        anim:setTag(nil)
-        self.ui:playSound("de_build.wav")
-      end
-    end
+function UIEditRoom:removeWindow(x, y)
+  local cell_x, cell_y, wall_dir = self:screenToWall(self.x + x, self.y + y)
+  if not cell_x then
+    return
   end
 
+  local map = TheApp.map.th
+  local cell_flag = map:getCell(cell_x, cell_y, 4)
+  if cell_flag == window_floor_blueprint_markers[wall_dir] then -- right click on a wall with a window
+    local wall_x, wall_y = cell_x, cell_y
+    local direction_flag = (wall_dir == "south" or wall_dir == "north") and 0 or 1
+    if wall_dir == "south" then
+      wall_y = cell_y + 1
+    elseif wall_dir == "east" then
+      wall_x = cell_x + 1
+    end
+
+    local anim = self.blueprint_wall_anims[wall_x][wall_y]
+    if anim then
+      -- reset tile to basic floor/wall
+      map:setCell(cell_x, cell_y, 4, 24)
+      anim:setAnimation(self.anims, 120, direction_flag)
+      anim:setTag(nil)
+      self.ui:playSound("de_build.wav")
+    end
+  end
 end
 
 function UIEditRoom:onMouseDown(button, x, y)
@@ -1159,7 +1156,9 @@ function UIEditRoom:onMouseDown(button, x, y)
     if button == "left" then
       self:onLeftButtonDown(button, x, y)
     elseif button == "right" then
-      self:onRightButtonDown(button, x, y)
+      if self.phase == "window" then
+        self:removeWindow(x, y)
+      end
     end
   end
   return UIPlaceObjects.onMouseDown(self, button, x, y) or true
