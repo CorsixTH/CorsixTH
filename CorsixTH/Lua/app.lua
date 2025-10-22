@@ -1892,18 +1892,21 @@ end
 --!param test_file (string) A full path or a filename of a level or map file
 --!return (string) A full path that exists
 function App:_checkOrFind(test_file, campaign_dir)
-  local folder_name = ""
-  if test_file:match("[\\/]") then
+  -- Check if test_file is a full path (file in a subfolder)
+  local folder_name, filename = test_file:match(".+[\\/](.+)[\\/](.+)")
+  if folder_name and folder_name:len() > 0 then
     -- Full path to the file is known, check file is present
     local file_handler, _ = io.open(test_file)
     if file_handler then
       file_handler:close()
       return test_file
     end
-    -- File not found, get the subfolder name and filename for the search
-    folder_name, test_file = test_file:match(".+[\\/](.+)[\\/](.+)")
+    -- File not found, prepare to search with the found filename
+    test_file = filename
     -- Add path separator of current computer
     folder_name = folder_name .. pathsep
+  else
+    folder_name = ""
   end
   -- Only filename is known, search for file
   local level = self.map and self.map.level_number:match("(.+[\\/])") or ""
