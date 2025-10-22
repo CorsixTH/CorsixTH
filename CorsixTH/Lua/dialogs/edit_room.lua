@@ -1123,7 +1123,7 @@ function UIEditRoom:onLeftButtonDown(x, y)
 end
 
 -- Remove window
-function UIEditRoom:removeWindow(x, y)
+function UIEditRoom:tryRemoveWindowFromWall(x, y)
   local cell_x, cell_y, wall_dir = self:screenToWall(self.x + x, self.y + y)
   if not cell_x then
     return
@@ -1154,10 +1154,10 @@ end
 function UIEditRoom:onMouseDown(button, x, y)
   if self.world.user_actions_allowed and not self.confirm_dialog_open then
     if button == "left" then
-      self:onLeftButtonDown(button, x, y)
+      self:onLeftButtonDown(x, y)
     elseif button == "right" then
-      if self.phase == "window" then
-        self:removeWindow(x, y)
+      if self.phase == "windows" then
+        self:tryRemoveWindowFromWall(x, y)
       end
     end
   end
