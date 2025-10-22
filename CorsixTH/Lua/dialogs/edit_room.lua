@@ -1147,6 +1147,7 @@ function UIEditRoom:onRightButtonDown(button, x, y)
         map:setCell(cellx, celly, 4, 24)
         anim:setAnimation(self.anims, 120, direction_flag)
         anim:setTag(nil)
+        self.ui:playSound("de_build.wav")
       end
     end
   end
