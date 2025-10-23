@@ -1616,10 +1616,10 @@ end
 
 --! Handyman has died. Remove all tasks assigned to this staff
 --!param staff The handyman deceased
-function Hospital:handymanDeath(staff)
+function Hospital:handymanDeath(handyman)
   for i = 1, #self.handymanTasks do
     for j = 1, #self.handymanTasks[i].subTable do
-      if self.handymanTasks[i].subTable[j].assignedHandyman == staff then
+      if self.handymanTasks[i].subTable[j].assignedHandyman == handyman then
         self.handymanTasks[i].subTable[j].assignedHandyman = nil
       end
     end
