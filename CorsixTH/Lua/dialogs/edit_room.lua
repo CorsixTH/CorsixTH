@@ -1072,31 +1072,94 @@ function UIEditRoom:draw(canvas, ...)
   UIPlaceObjects.draw(self, canvas, ...)
 end
 
+--25 north wall, west
+--26 north wall, east
+--27 east wall, south
+--28 east wall, north
+--29 south wall, west
+--30 south wall, east
+--31 west wall, south
+--32 west wall, north
+-- single door blue print values matching TH
+local door_floor_blueprint_markers = {
+  north = 26,
+  east = 27,
+  south = 30,
+  west = 31
+}
+
+local window_floor_blueprint_markers = {
+  north = 33,
+  east = 34,
+  south = 35,
+  west = 36,
+}
+
+
+function UIEditRoom:onLeftButtonDown(x, y)
+  if self.phase == "walls" then
+    if 0 <= x and x < self.width and 0 <= y and y < self.height then -- luacheck: ignore 542
+    else
+      local mouse_x, mouse_y = self.ui:ScreenToWorld(self.x + x, self.y + y)
+      self.mouse_down_x = math.floor(mouse_x)
+      self.mouse_down_y = math.floor(mouse_y)
+      if self.move_rect then
+        self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
+        self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
+      elseif not self.resize_rect then
+        self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
+      end
+    end
+  elseif self.phase == "door" then
+    if self.blueprint_door.valid then
+      self.ui:playSound("buildclk.wav")
+      self:confirm(true)
+    else
+      self.ui:tutorialStep(3, 9, 10)
+    end
+  elseif self.phase == "windows" then
+    self:placeWindowBlueprint()
+  end
+end
+
+--! Attempt to remove a window placed on the room blueprints
+--!param x co-ordinate
+--!param y co-ordinate
+function UIEditRoom:tryRemoveWindowFromWall(x, y)
+  local cell_x, cell_y, wall_dir = self:screenToWall(self.x + x, self.y + y)
+  if not cell_x then
+    return
+  end
+
+  local map = TheApp.map.th
+  local cell_flag = map:getCell(cell_x, cell_y, 4)
+  if cell_flag == window_floor_blueprint_markers[wall_dir] then -- right click on a wall with a window
+    local wall_x, wall_y = cell_x, cell_y
+    local direction_flag = (wall_dir == "south" or wall_dir == "north") and 0 or 1
+    if wall_dir == "south" then
+      wall_y = cell_y + 1
+    elseif wall_dir == "east" then
+      wall_x = cell_x + 1
+    end
+
+    local anim = self.blueprint_wall_anims[wall_x][wall_y]
+    if anim then
+      -- reset tile to basic floor/wall
+      map:setCell(cell_x, cell_y, 4, 24)
+      anim:setAnimation(self.anims, 120, direction_flag)
+      anim:setTag(nil)
+      self.ui:playSound("de_build.wav")
+    end
+  end
+end
+
 function UIEditRoom:onMouseDown(button, x, y)
   if self.world.user_actions_allowed and not self.confirm_dialog_open then
     if button == "left" then
-      if self.phase == "walls" then
-        if 0 <= x and x < self.width and 0 <= y and y < self.height then -- luacheck: ignore 542
-        else
-          local mouse_x, mouse_y = self.ui:ScreenToWorld(self.x + x, self.y + y)
-          self.mouse_down_x = math.floor(mouse_x)
-          self.mouse_down_y = math.floor(mouse_y)
-          if self.move_rect then
-            self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
-            self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
-          elseif not self.resize_rect then
-            self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
-          end
-        end
-      elseif self.phase == "door" then
-        if self.blueprint_door.valid then
-          self.ui:playSound("buildclk.wav")
-          self:confirm(true)
-        else
-          self.ui:tutorialStep(3, 9, 10)
-        end
-      elseif self.phase == "windows" then
-        self:placeWindowBlueprint()
+      self:onLeftButtonDown(x, y)
+    elseif button == "right" then
+      if self.phase == "windows" then
+        self:tryRemoveWindowFromWall(x, y)
       end
     end
   end
@@ -1165,29 +1228,6 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
   rect.w = w
   rect.h = h
 end
-
---25 north wall, west
---26 north wall, east
---27 east wall, south
---28 east wall, north
---29 south wall, west
---30 south wall, east
---31 west wall, south
---32 west wall, north
--- single door blue print values matching TH
-local door_floor_blueprint_markers = {
-  north = 26,
-  east = 27,
-  south = 30,
-  west = 31
-}
-
-local window_floor_blueprint_markers = {
-  north = 33,
-  east = 34,
-  south = 35,
-  west = 36,
-}
 
 --! Check walls for having room for the door
 --!param x (int) X tile position of the door.
