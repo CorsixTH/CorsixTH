@@ -1614,6 +1614,18 @@ function Hospital:humanoidDeath(patient)
   end
 end
 
+--! Handyman has died. Remove all tasks assigned to this staff
+--!param staff The handyman deceased
+function Hospital:handymanDeath(staff)
+  for i = 1, #self.handymanTasks do
+    for j = 1, #self.handymanTasks[i].subTable do
+      if self.handymanTasks[i].subTable[j].assignedHandyman == staff then
+        self.handymanTasks[i].subTable[j].assignedHandyman = nil
+      end
+    end
+  end
+end
+
 --! Checks if the hospital employs staff of a given category.
 --!param category (string) A humanoid_class or one of the specialists, i.e.
 --! "Doctor", "Nurse", "Handyman", "Receptionist", "Psychiatrist",
