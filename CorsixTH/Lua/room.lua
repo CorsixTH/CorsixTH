@@ -953,6 +953,7 @@ function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
     local leave = self:createLeaveAction():setMustHappen(true)
 
     if not string.find(humanoid.humanoid_class, "Stripped") then
+      --The humanoid is dressed
       humanoid:setNextAction(leave)
       return
     end
@@ -974,9 +975,12 @@ function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
 
     if humanoid:getCurrentAction().name == "use_screen" then
       --The humanoid must be using the screen to undress because this isn't a leaving action:
-      humanoid:getCurrentAction().after_use = nil
-      humanoid:setNextAction(use_screen)
+      if not humanoid:hasDressingAndLeavingAction() then
+        humanoid:getCurrentAction().after_use = nil
+        humanoid:setNextAction(use_screen)
+      end
     else
+      --The humanoid undressed but not using use_screen
       humanoid:setNextAction(WalkAction(sx, sy):setMustHappen(true):disableTruncate():setIsLeaving(true))
       humanoid:queueAction(use_screen)
     end
