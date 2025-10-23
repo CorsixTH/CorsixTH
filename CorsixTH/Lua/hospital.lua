@@ -1615,7 +1615,7 @@ function Hospital:humanoidDeath(patient)
 end
 
 --! Handyman has died. Remove all tasks assigned to this staff
---!param staff The handyman deceased
+--!param handyman The handyman deceased
 function Hospital:handymanDeath(handyman)
   for i = 1, #self.handymanTasks do
     for j = 1, #self.handymanTasks[i].subTable do
