@@ -198,6 +198,9 @@
  (overrides <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1on_cursor_world_position_change">UIPlaceObjects:onCursorWorldPositionChange</a>)
  </li>
  <li class="self">
+ <a href="_0_1_u_i_edit_room.html#_0_1_u_i_edit_room_1on_left_button_down">onLeftButtonDown</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_u_i_edit_room.html#_0_1_u_i_edit_room_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
  (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>)
  </li>
@@ -335,6 +338,9 @@
  <li class="inherited">
  <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1try_next_orientation">tryNextOrientation</a>()
  (inherited from <a href="_0_1_u_i_place_objects.html">UIPlaceObjects</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_edit_room.html#_0_1_u_i_edit_room_1try_remove_window_from_wall">tryRemoveWindowFromWall</a>(<span class="p">x</span>, <span class="p">y</span>)
  </li>
  <li class="self">
  <a href="_0_1_u_i_edit_room.html#_0_1_u_i_edit_room_1verify_or_abort_room">verifyOrAbortRoom</a>()
@@ -646,7 +652,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1after_load">UIPlaceObjects:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1624">line 1624 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1664">line 1664 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -661,7 +667,7 @@
  <p>
  checks if all required objects are placed, and enables/disables the confirm button accordingly.
 also returns the new state of the confirm button<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1585">line 1585 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1625">line 1625 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -781,7 +787,27 @@ of the same type.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1on_cursor_world_position_change">UIPlaceObjects:onCursorWorldPositionChange</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1484">line 1484 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1524">line 1524 of Lua/dialogs/edit_room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_edit_room_1on_left_button_down">function UIEditRoom:onLeftButtonDown(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1099">line 1099 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -807,7 +833,7 @@ of the same type.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1075">line 1075 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1156">line 1156 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -838,7 +864,7 @@ of the same type.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1on_mouse_move">UIPlaceObjects:onMouseMove</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1120">line 1120 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1183">line 1183 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -864,7 +890,7 @@ of the same type.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1on_mouse_up">UIPlaceObjects:onMouseUp</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1106">line 1106 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1169">line 1169 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -886,13 +912,13 @@ of the same type.<br/><br/>
  <h5><a name="_0_1_u_i_edit_room_1place_object">function UIEditRoom:placeObject()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1place_object">UIPlaceObjects:placeObject</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1617">line 1617 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1657">line 1657 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_edit_room_1place_window_blueprint">function UIEditRoom:placeWindowBlueprint()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1407">line 1407 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1447">line 1447 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1002,7 +1028,7 @@ of the same type.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1126">line 1126 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1189">line 1189 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1027,7 +1053,7 @@ of the same type.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1278">line 1278 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1318">line 1318 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1052,13 +1078,34 @@ of the same type.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1416">line 1416 of Lua/dialogs/edit_room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1456">line 1456 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_edit_room_1stop_pickup_items">function UIEditRoom:stopPickupItems()</a></h5>
  <p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L634">line 634 of Lua/dialogs/edit_room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_edit_room_1try_remove_window_from_wall">function UIEditRoom:tryRemoveWindowFromWall(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Attempt to remove a window placed on the room blueprints<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">co-ordinate</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">co-ordinate</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/edit_room.lua#L1125">line 1125 of Lua/dialogs/edit_room.lua</a>.
  </p>
  </div>
  <div class="method">
