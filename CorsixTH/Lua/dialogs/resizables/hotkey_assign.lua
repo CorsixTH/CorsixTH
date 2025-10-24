@@ -409,6 +409,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
             "ingame_panel_charts",
             "ingame_panel_policy",
             "ingame_panel_machineMenu",
+            "ingame_panel_adviserHistory",
             "ingame_panel_buildRoom",
             "ingame_panel_furnishCorridor",
             "ingame_panel_editRoom",
