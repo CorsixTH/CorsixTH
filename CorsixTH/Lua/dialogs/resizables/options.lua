@@ -213,24 +213,22 @@ function UIOptions:UIOptions(ui, mode)
   self:_getOptionYPos()
 
   local lower_row_y_pos = self:_getOptionYPos()
-  local showExtraOptions = os.getenv("SHOW_EXTRA_OPTIONS") == "ON"
-  if showExtraOptions then
-    -- "Customise" button
-    self:addBevelPanel(20, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.customise)
-      :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonCustomise):setTooltip(_S.tooltip.options_window.customise_button)
+  -- "Customise" button
+  self:addBevelPanel(20, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.customise)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonCustomise):setTooltip(_S.tooltip.options_window.customise_button)
 
-    -- "Folders" button
-    self:addBevelPanel(165, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.folder)
-      :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button)
+  -- "Folders" button
+  self:addBevelPanel(165, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.folder)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button)
 
-    -- "Hotkeys" button
-    self:addBevelPanel(320, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.hotkey)
-      :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonHotkey):setTooltip(_S.tooltip.options_window.hotkey)
+  -- "Hotkeys" button
+  self:addBevelPanel(320, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.hotkey)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonHotkey):setTooltip(_S.tooltip.options_window.hotkey)
 
-    -- "Jukebox" button
-    self:addBevelPanel(465, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.jukebox)
-      :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonJukebox):setTooltip(_S.tooltip.options_window.jukebox)
-  end
+  -- "Jukebox" button
+  self:addBevelPanel(465, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.jukebox)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonJukebox):setTooltip(_S.tooltip.options_window.jukebox)
+
   -- "Back" button
   -- Give some extra space to back button. This is fine as long as it is the last button in the options menu
   local back_button_y_pos = self:_getOptionYPos() + 20
