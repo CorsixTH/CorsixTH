@@ -61,7 +61,11 @@
             "avcodec",
             "avformat",
             "swresample",
-            "swscale"
+            "swscale",
+            {
+              "name": "openssl",
+              "platform": "osx, ios"
+            }
           ]
         }
       ]
