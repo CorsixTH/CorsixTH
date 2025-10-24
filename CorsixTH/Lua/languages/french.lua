@@ -725,7 +725,7 @@ letter = {
 -- Installation
 install = {
   title = "----------------------------- Installation de CorsixTH -----------------------------",
-  th_directory = "CorsixTH nécessite une copie des données du jeu CorsixTH originel (ou la démo) pour fonctionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de CorsixTH.",
+  th_directory = "CorsixTH nécessite une copie des données du jeu Theme Hospital originel (ou la démo) pour fonctionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
   ok = "OK",
   exit = "Quitter",
   cancel = "Annuler"
@@ -929,7 +929,7 @@ customise_window = {
 tooltip.customise_window = {
   movies = "Sélectionnez si les cinématiques doivent être joués.",
   intro = "Passer la cinématique d'introduction lorsque vous démarrez le jeu. Le contrôle des cinématiques doit être activé si vous jouez la cinématique d'introduction à chaque fois que vous chargez CorsixTH",
-  paused = "Dans CorsixTH le joueur ne sera autorisé à utiliser le menu principal que si le jeu est en pause. C'est le paramètre par défaut dans CorsixTH aussi, mais en l'activant tout est permis pendant que le jeu est en pause",
+  paused = "Dans Theme Hospital le joueur ne sera autorisé à utiliser le menu principal que si le jeu est en pause. C'est le paramètre par défaut dans CorsixTH aussi, mais en l'activant tout est permis pendant que le jeu est en pause",
   volume = "Si la touche de réduction du volume ouvre également le journal de médecine, activer cette option pour modifier le raccourci des dossiers médicaux à Maj + C",
   aliens = "Comme il y a des animations appropriées, nous avons fait de sorte que les patients avec l'ADN extraterrestre montrent seulement comme des situations d'urgence. Désactivez cette option pour obtenir cas de l'ADN extraterrestre visites régulières",
   fractured_bones = "En raison de la qualité faible de l'animation il n'y a pas de patientes avec des fractures. Désactivez cette option si vous désirez avoir des femmes avec des fractures.",
@@ -947,7 +947,7 @@ folders_window = {
   savegames_label = "Sauvegarde",
   screenshots_label = "Captures d'écran",
   -- next four are the captions for the browser window, which are called from the folder setting menu
-  new_th_location = "Ici vous pouvez spécifier un nouveau répertoire d'installation de CorsixTH. Dès que vous choisissez le nouveau répertoire, le jeu sera redémarré.",
+  new_th_location = "Ici vous pouvez spécifier un nouveau répertoire d'installation de Theme Hospital. Dès que vous choisissez le nouveau répertoire, le jeu sera redémarré.",
   savegames_location = "Sélectionner le répertoire que vous voulez utiliser pour les sauvegardes",
   music_location = "Sélectionner le répertoire que vous voulez utiliser pour la musique",
   screenshots_location = "Sélectionner le répertoire que vous voulez utiliser pour les captures d'écran",
@@ -956,12 +956,12 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "Parcourir l'emplacement du dossier",
-  data_location = "Le répertoire d'origine de l'installation de CorsixTH, qui est requis pour faire fonctionner CorsixTH",
+  data_location = "Le répertoire d'origine de l'installation de Theme Hospital, qui est requis pour faire fonctionner CorsixTH",
   font_location = "Emplacement d'un fichier de police qui est capable d'afficher des caractères Unicode requises par votre langue. Si aucun emplacement n'est spécifié vous ne serez pas en mesure de choisir des langues qui ont des caractères que le jeu original ne peut pas fournir. Exemple : Russe et Chinois",
   savegames_location = "Par défaut, le répertoire de sauvegardes est à côté du fichier de configuration et sera utilisé pour stocker les sauvegardes. Si cela n'est pas approprié vous pouvez modifier ce répertoire.",
   screenshots_location = "Par défaut, les captures d'écran sont stockés dans un dossier avec le fichier de configuration. Si cela ne convient pas vous pouvez choisir votre propre dossier.",
   music_location = "Sélectionnez un emplacement pour vos fichiers MP3.",
-  browse_data = "Parcourir un autre emplacement d'une installation de CorsixTH (emplacement actuel : %1%)",
+  browse_data = "Parcourir un autre emplacement d'une installation de Theme Hospital (emplacement actuel : %1%)",
   browse_font = "Parcourir un autre fichier de police (emplacement actuel : %1%)",
   browse_saves = "Parcourir un autre répertoire de sauvegardes (emplacement actuel : %1%)",
   browse_screenshots = "Parcourir un autre répertoire de captures d'écrans (emplacement actuel : %1%)",
@@ -1036,7 +1036,7 @@ errors = {
   map_file_missing = "Impossible de trouver le fichier de carte %s pour ce niveau !",
   minimum_screen_size = "Veuillez entrer une résolution supérieure à 640x480.",
   unavailable_screen_size = "La résolution que vous avez demandée n'est pas disponible en plein écran.",
-  alien_dna = "NOTE : Il n'y a pas d'animations pour les patients étrangers pour s'asseoir, ouvrir ou de frapper aux portes, etc. Donc, comme avec CorsixTH pour faire ces choses, ils semblent changer à la normale et ensuite changer de nouveau. Les patients avec l'ADN Alien apparaîtront seulement s'ils sont définis dans le fichier de niveau.",
+  alien_dna = "NOTE : Il n'y a pas d'animations pour les patients étrangers pour s'asseoir, ouvrir ou de frapper aux portes, etc. Donc, comme avec Theme Hospital pour faire ces choses, ils semblent changer à la normale et ensuite changer de nouveau. Les patients avec l'ADN Alien apparaîtront seulement s'ils sont définis dans le fichier de niveau.",
   fractured_bones = "NOTE : L'animation pour les patients de sexe féminin avec des os fracturés n'est pas parfaite.",
   load_quick_save = "Erreur, impossible de charger la sauvegarde rapide car elle n'existe pas, ne vous inquiétez pas nous avons créé une pour vous !",
   could_not_find_first_campaign_level = "Impossible de trouver le premier niveau de cette campagne : %s",
@@ -1095,7 +1095,7 @@ totd_window = {
     "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
     "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
     "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
-    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé à coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre serveur Discord, Sub-Reddit or serveur Matrix. Les liens sont sur notre site internet.",
+    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé à coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre serveur Discord, Sub-Reddit or serveur Matrix. Les liens sont sur notre site internet (CorsixTH.com).",
     "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de statuts pour voir votre progression dans les objectifs du niveau.",
     "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils en bas.",
     "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.",
