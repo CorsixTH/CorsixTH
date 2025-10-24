@@ -42,10 +42,8 @@ SOFTWARE.
  * track of available length. */
 class memory_reader {
  public:
-  memory_reader(const uint8_t* pData, size_t iLength) {
-    data = pData;
-    remaining_bytes = iLength;
-  }
+  memory_reader(const uint8_t* pData, const size_t iLength)
+      : data(pData), remaining_bytes(iLength) {}
 
   const uint8_t* data;     ///< Pointer to the remaining data.
   size_t remaining_bytes;  ///< Remaining number of bytes.
@@ -55,13 +53,15 @@ class memory_reader {
       @param iSize Number of bytes that are queried.
       @return Whether the requested number of bytes is still available.
    */
-  bool are_bytes_available(size_t iSize) { return iSize <= remaining_bytes; }
+  bool are_bytes_available(size_t iSize) const {
+    return iSize <= remaining_bytes;
+  }
 
   //! Is EOF reached?
   /*!
       @return Whether EOF has been reached.
    */
-  bool is_at_end_of_file() { return remaining_bytes == 0; }
+  bool is_at_end_of_file() const { return remaining_bytes == 0; }
 
   //! Get an 8 bit value from the file.
   /*!
@@ -140,41 +140,69 @@ class memory_reader {
   }
 };
 
-animation_manager::animation_manager() {
-  first_frames.clear();
-  frames.clear();
-  element_list.clear();
-  elements.clear();
-  custom_sheets.clear();
-
-  sheet = nullptr;
-
-  animation_count = 0;
-  frame_count = 0;
-  element_list_count = 0;
-  element_count = 0;
-  game_ticks = 0;
-}
-
-animation_manager::~animation_manager() {
-  for (size_t i = 0; i < custom_sheets.size(); i++) {
-    delete custom_sheets[i];
-  }
-}
+animation_manager::animation_manager()
+    : sheet(nullptr),
+      animation_count(0),
+      frame_count(0),
+      element_list_count(0),
+      element_count(0),
+      game_ticks(0),
+      canvas(nullptr) {}
 
 void animation_manager::set_sprite_sheet(sprite_sheet* pSpriteSheet) {
   sheet = pSpriteSheet;
 }
+
+constexpr size_t bytes_per_animation_property = 4;
+
+// Frame information structure reinterpreted from Theme Hospital data.
+// https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#frame
+struct th_frame_properties {
+  constexpr static size_t size = 10;
+
+  explicit th_frame_properties(const uint8_t* pData)
+      : list_index{bytes_to_uint32_le(pData)},
+        // skipping width and height (1 byte each)
+        sound{pData[6]},
+        flags{pData[7]},
+        next{bytes_to_uint16_le(pData + 8)} {}
+
+  uint32_t list_index;
+  uint8_t sound;
+  uint8_t flags;
+  uint16_t next;
+};
+
+// Structure reinterpreted from Theme Hospital data.
+// https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#spriteelement
+struct th_element_properties {
+  constexpr static size_t size = 6;
+
+  explicit th_element_properties(const uint8_t* pData)
+      : table_position{bytes_to_uint16_le(pData)},
+        offset_x{pData[2]},
+        offset_y{pData[3]},
+        layer{static_cast<uint8_t>(pData[4] >> 4)},
+        flags{static_cast<uint8_t>(pData[4] & 0xF)},
+        layer_id{pData[5]} {}
+
+  uint16_t table_position;
+  uint8_t offset_x;
+  uint8_t offset_y;
+  uint8_t layer;  // High nibble of byte 4
+  uint8_t flags;  // Low nibble of byte 4
+  uint8_t layer_id;
+};
 
 bool animation_manager::load_from_th_file(
     const uint8_t* pStartData, size_t iStartDataLength,
     const uint8_t* pFrameData, size_t iFrameDataLength,
     const uint8_t* pListData, size_t iListDataLength,
     const uint8_t* pElementData, size_t iElementDataLength) {
-  size_t iAnimationCount = iStartDataLength / sizeof(th_animation_properties);
-  size_t iFrameCount = iFrameDataLength / sizeof(th_frame_properties);
+  size_t iAnimationCount = iStartDataLength / bytes_per_animation_property;
+  size_t iFrameCount = iFrameDataLength / th_frame_properties::size;
   size_t iListCount = iListDataLength / 2;
-  size_t iElementCount = iElementDataLength / sizeof(th_element_properties);
+  size_t iElementCount = iElementDataLength / th_element_properties::size;
 
   if (iAnimationCount == 0 || iFrameCount == 0 || iListCount == 0 ||
       iElementCount == 0) {
@@ -208,8 +236,7 @@ bool animation_manager::load_from_th_file(
   // Read animations.
   for (size_t i = 0; i < iAnimationCount; ++i) {
     size_t iFirstFrame =
-        reinterpret_cast<const th_animation_properties*>(pStartData)[i]
-            .first_frame;
+        bytes_to_uint16_le(pStartData + i * bytes_per_animation_property);
     if (iFirstFrame > iFrameCount) {
       iFirstFrame = 0;
     }
@@ -220,16 +247,16 @@ bool animation_manager::load_from_th_file(
 
   // Read frames.
   for (size_t i = 0; i < iFrameCount; ++i) {
-    const th_frame_properties* pFrame =
-        reinterpret_cast<const th_frame_properties*>(pFrameData) + i;
+    const th_frame_properties thFrame(pFrameData +
+                                      i * th_frame_properties::size);
 
     frame oFrame;
     oFrame.list_index =
-        iListStart + (pFrame->list_index < iListCount ? pFrame->list_index : 0);
+        iListStart + (thFrame.list_index < iListCount ? thFrame.list_index : 0);
     oFrame.next_frame =
-        iFrameStart + (pFrame->next < iFrameCount ? pFrame->next : 0);
-    oFrame.sound = pFrame->sound;
-    oFrame.flags = pFrame->flags;
+        iFrameStart + (thFrame.next < iFrameCount ? thFrame.next : 0);
+    oFrame.sound = thFrame.sound;
+    oFrame.flags = thFrame.flags;
     // Bounding box fields initialised later
     oFrame.primary_marker_x = 0;
     oFrame.primary_marker_y = 0;
@@ -239,9 +266,9 @@ bool animation_manager::load_from_th_file(
     frames.push_back(oFrame);
   }
 
-  // Read element list.
+  // Read the element list.
   for (size_t i = 0; i < iListCount; ++i) {
-    uint16_t iElmNumber = *(reinterpret_cast<const uint16_t*>(pListData) + i);
+    uint16_t iElmNumber = bytes_to_uint16_le(pListData + i * 2);
     if (iElmNumber >= iElementCount) {
       iElmNumber = 0xFFFF;
     } else {
@@ -255,22 +282,22 @@ bool animation_manager::load_from_th_file(
   // Read elements.
   size_t iSpriteCount = sheet->get_sprite_count();
   for (size_t i = 0; i < iElementCount; ++i) {
-    const th_element_properties* pTHElement =
-        reinterpret_cast<const th_element_properties*>(pElementData) + i;
+    const th_element_properties thElement(pElementData +
+                                          i * th_element_properties::size);
 
     element oElement;
-    oElement.sprite = pTHElement->table_position / 6;
-    oElement.flags = pTHElement->flags & 0xF;
-    oElement.x = static_cast<int>(pTHElement->offx) - 141;
-    oElement.y = static_cast<int>(pTHElement->offy) - 186;
-    oElement.layer = static_cast<uint8_t>(
-        pTHElement->flags >> 4);  // High nibble, layer of the element.
+    oElement.sprite =
+        thElement.table_position / 6;  // sprite table entries are 6 bytes
+    oElement.flags = thElement.flags;
+    oElement.x = static_cast<int>(thElement.offset_x) - 141;
+    oElement.y = static_cast<int>(thElement.offset_y) - 186;
+    oElement.layer = thElement.layer;
 
     if (oElement.layer >= max_number_of_layers) {
       // Nothing lives on layer 6
       oElement.layer = 6;
     }
-    oElement.layer_id = pTHElement->layerid;
+    oElement.layer_id = thElement.layer_id;
     if (oElement.sprite < iSpriteCount) {
       oElement.element_sprite_sheet = sheet;
     } else {
@@ -520,8 +547,8 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
   elements.reserve(iElementStart + iElementCount);
 
   // Construct a sprite sheet for the sprites to be loaded.
-  sprite_sheet* pSheet = new sprite_sheet;
-  pSheet->set_sprite_count(iSpriteCount, canvas);
+  sprite_sheet pSheet;
+  pSheet.set_sprite_count(iSpriteCount, canvas);
   custom_sheets.push_back(pSheet);
 
   size_t iLoadedFrames = 0;
@@ -576,11 +603,6 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
           shift_first(iWestFirst, iNumFrames, iFrameStart, iLoadedFrames);
 
       animation_start_frames oFrames;
-      oFrames.north = -1;
-      oFrames.east = -1;
-      oFrames.south = -1;
-      oFrames.west = -1;
-
       if (iNorthFirst != 0xFFFFFFFFu) {
         fix_next_frame(iNorthFirst, iNumFrames);
         oFrames.north = static_cast<long>(first_frames.size());
@@ -619,7 +641,7 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
       int iSound = input.read_uint16();
       size_t iNumElements = input.read_uint16();
 
-      size_t iElm = load_elements(input, pSheet, iNumElements, iLoadedElements,
+      size_t iElm = load_elements(input, &pSheet, iNumElements, iLoadedElements,
                                   iElementStart, iElementCount);
       if (iElm == SIZE_MAX) {
         return false;
@@ -687,8 +709,8 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
         pData[i] = input.read_uint8();
       }
 
-      if (!pSheet->set_sprite_data(iLoadedSprites, pData, true, iSize, iWidth,
-                                   iHeight)) {
+      if (!pSheet.set_sprite_data(iLoadedSprites, pData, true, iSize, iWidth,
+                                  iHeight)) {
         return false;
       }
 
@@ -725,7 +747,7 @@ bool animation_manager::load_custom_animations(const uint8_t* pData,
 }
 
 const animation_start_frames& animation_manager::get_named_animations(
-    const std::string& sName, int iTilesize) const {
+    const std::string_view sName, const int iTilesize) const {
   static const animation_start_frames oNoneAnimations = {-1, -1, -1, -1};
 
   animation_key oKey;
@@ -1018,24 +1040,9 @@ void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
   if (pMaxY) *pMaxY = iMaxY;
 }
 
-chunk_renderer::chunk_renderer(int width, int height, uint8_t* buffer) {
-  data = buffer ? buffer : new uint8_t[width * height];
-  ptr = data;
-  end = data + width * height;
-  x = 0;
-  y = 0;
-  this->width = width;
-  this->height = height;
-  skip_eol = false;
-}
-
-chunk_renderer::~chunk_renderer() { delete[] data; }
-
-uint8_t* chunk_renderer::take_data() {
-  uint8_t* buffer = data;
-  data = nullptr;
-  return buffer;
-}
+chunk_renderer::chunk_renderer(const int width, const int height,
+                               std::vector<uint8_t>::iterator start)
+    : width(width), height(height), ptr(start), end(start + (width * height)) {}
 
 void chunk_renderer::chunk_fill_to_end_of_line(uint8_t value) {
   if (x != 0 || !skip_eol) {
@@ -1051,7 +1058,7 @@ void chunk_renderer::chunk_finish(uint8_t value) {
 void chunk_renderer::chunk_fill(int npixels, uint8_t value) {
   fix_n_pixels(npixels);
   if (npixels > 0) {
-    std::memset(ptr, value, npixels);
+    std::fill_n(ptr, npixels, value);
     increment_position(npixels);
   }
 }
@@ -1059,7 +1066,7 @@ void chunk_renderer::chunk_fill(int npixels, uint8_t value) {
 void chunk_renderer::chunk_copy(int npixels, const uint8_t* in_data) {
   fix_n_pixels(npixels);
   if (npixels > 0) {
-    std::memcpy(ptr, in_data, npixels);
+    std::copy_n(in_data, npixels, ptr);
     increment_position(npixels);
   }
 }
@@ -1138,6 +1145,46 @@ void chunk_renderer::decode_chunks(const uint8_t* data, int datalen,
   chunk_finish(0xFF);
 }
 
+animation_base::animation_base() : drawable() {}
+
+void animation_base::remove_from_tile() {
+  link_list::remove_from_list();
+  tile = {-1, -1};
+}
+
+void animation_base::attach_to_tile(int x, int y, map_tile* node, int layer) {
+  remove_from_tile();
+  link_list* pList;
+  if (flags & thdf_early_list) {
+    pList = &node->oEarlyEntities;
+  } else {
+    pList = &node->entities;
+  }
+
+  this->set_drawing_layer(layer);
+  this->set_tile(x, y);
+
+  while (pList->next &&
+         static_cast<drawable*>(pList->next)->get_drawing_layer() < layer) {
+    pList = pList->next;
+  }
+
+  prev = pList;
+  if (pList->next != nullptr) {
+    pList->next->prev = this;
+    this->next = pList->next;
+  } else {
+    next = nullptr;
+  }
+  pList->next = this;
+}
+
+void animation_base::set_layer(int iLayer, int iId) {
+  if (0 <= iLayer && iLayer < max_number_of_layers) {
+    layers.layer_contents[iLayer] = static_cast<uint8_t>(iId);
+  }
+}
+
 namespace {
 
 bool are_flags_set(uint32_t val, uint32_t flags) {
@@ -1146,11 +1193,11 @@ bool are_flags_set(uint32_t val, uint32_t flags) {
 
 }  // namespace
 
+animation::animation() { patient_effect_offset = rand(); }
+
 void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
 
-  iDestX += x_relative_to_tile;
-  iDestY += y_relative_to_tile;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
     if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY);
@@ -1164,11 +1211,13 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       rcNew.x = iDestX + (crop_column - 1) * 32;
       rcNew.w = 64;
       render_target::scoped_clip clip(pCanvas, &rcNew);
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
-                          patient_effect, patient_effect_offset);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX + pixel_offset.x,
+                          iDestY + pixel_offset.y, flags, patient_effect,
+                          patient_effect_offset);
     } else
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
-                          patient_effect, patient_effect_offset);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX + pixel_offset.x,
+                          iDestY + pixel_offset.y, flags, patient_effect,
+                          patient_effect_offset);
   }
 }
 
@@ -1182,8 +1231,8 @@ void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY,
   else
     parent->get_secondary_marker(&iX, &iY);
 
-  iX += x_relative_to_tile + iDestX;
-  iY += y_relative_to_tile + iDestY;
+  iX += pixel_offset.x + iDestX;
+  iY += pixel_offset.y + iDestY;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
     if (pSounds) pSounds->play_at(sound_to_play, iX, iY);
@@ -1202,8 +1251,8 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
 
   if (!manager) return;
 
-  iDestX += x_relative_to_tile;
-  iDestY += y_relative_to_tile;
+  iDestX += pixel_offset.x;
+  iDestY += pixel_offset.y;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
     if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY);
@@ -1215,15 +1264,14 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
   // vertical clipping is applied.
   oMorphRect.x = 0;
   oMorphRect.w = pCanvas->get_width();
-  oMorphRect.y = iDestY + morph_target->x_relative_to_tile;
-  oMorphRect.h =
-      morph_target->y_relative_to_tile - morph_target->x_relative_to_tile;
+  oMorphRect.y = iDestY + morph_target->pixel_offset.x;
+  oMorphRect.h = morph_target->pixel_offset.y - morph_target->pixel_offset.x;
   {
     render_target::scoped_clip clip(pCanvas, &oMorphRect);
     manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
   }
-  oMorphRect.y = iDestY + morph_target->y_relative_to_tile;
-  oMorphRect.h = morph_target->speed.dx - morph_target->y_relative_to_tile;
+  oMorphRect.y = iDestY + morph_target->pixel_offset.y;
+  oMorphRect.h = morph_target->speed.x - morph_target->pixel_offset.y;
   {
     render_target::scoped_clip clip(pCanvas, &oMorphRect);
     manager->draw_frame(pCanvas, morph_target->frame_index,
@@ -1241,8 +1289,8 @@ bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY) {
     return false;
   }
 
-  return manager->hit_test(frame_index, layers, x_relative_to_tile + iDestX,
-                           y_relative_to_tile + iDestY, flags, iTestX, iTestY);
+  return manager->hit_test(frame_index, layers, pixel_offset.x + iDestX,
+                           pixel_offset.y + iDestY, flags, iTestX, iTestY);
 }
 
 bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
@@ -1254,33 +1302,9 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
     return false;
   }
 
-  return manager->hit_test(frame_index, layers, x_relative_to_tile + iDestX,
-                           y_relative_to_tile + iDestY, flags, iTestX,
-                           iTestY) ||
+  return manager->hit_test(frame_index, layers, pixel_offset.x + iDestX,
+                           pixel_offset.y + iDestY, flags, iTestX, iTestY) ||
          morph_target->hit_test(iDestX, iDestY, iTestX, iTestY);
-}
-
-animation_base::animation_base() : drawable() {
-  x_relative_to_tile = 0;
-  y_relative_to_tile = 0;
-  for (int i = 0; i < max_number_of_layers; ++i) {
-    layers.layer_contents[i] = 0;
-  }
-  flags = 0;
-}
-
-animation::animation()
-    : animation_base(),
-      manager(nullptr),
-      morph_target(nullptr),
-      animation_index(0),
-      frame_index(0),
-      speed({0, 0}),
-      sound_to_play(0),
-      crop_column(0),
-      anim_kind(animation_kind::normal) {
-  patient_effect = animation_effect::none;
-  patient_effect_offset = rand();
 }
 
 void animation::persist(lua_persist_writer* pWriter) const {
@@ -1322,8 +1346,8 @@ void animation::persist(lua_persist_writer* pWriter) const {
   // Write the simple fields
   pWriter->write_uint(animation_index);
   pWriter->write_uint(frame_index);
-  pWriter->write_int(x_relative_to_tile);
-  pWriter->write_int(y_relative_to_tile);
+  pWriter->write_int(pixel_offset.x);
+  pWriter->write_int(pixel_offset.y);
 
   // Not a uint, for compatibility
   pWriter->write_int((int)sound_to_play);
@@ -1337,8 +1361,8 @@ void animation::persist(lua_persist_writer* pWriter) const {
   // Write the unioned fields
   if (anim_kind != animation_kind::primary_child &&
       anim_kind != animation_kind::secondary_child) {
-    pWriter->write_int(speed.dx);
-    pWriter->write_int(speed.dy);
+    pWriter->write_int(speed.x);
+    pWriter->write_int(speed.y);
   } else {
     lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, parent);
@@ -1385,7 +1409,7 @@ void animation::depersist(lua_persist_reader* pReader) {
       case 4:
         set_animation_kind(animation_kind::morph);
         pReader->read_stack_object();
-        morph_target = reinterpret_cast<animation*>(lua_touserdata(L, -1));
+        morph_target = static_cast<animation*>(lua_touserdata(L, -1));
         lua_pop(L, 1);
         break;
       case 5:
@@ -1400,8 +1424,8 @@ void animation::depersist(lua_persist_reader* pReader) {
     // Read the simple fields
     if (!pReader->read_uint(animation_index)) break;
     if (!pReader->read_uint(frame_index)) break;
-    if (!pReader->read_int(x_relative_to_tile)) break;
-    if (!pReader->read_int(y_relative_to_tile)) break;
+    if (!pReader->read_int(pixel_offset.x)) break;
+    if (!pReader->read_int(pixel_offset.y)) break;
     int iDummy;
     if (!pReader->read_int(iDummy)) break;
     if (iDummy >= 0) sound_to_play = (unsigned int)iDummy;
@@ -1418,8 +1442,8 @@ void animation::depersist(lua_persist_reader* pReader) {
     // Read the unioned fields
     if (anim_kind != animation_kind::primary_child &&
         anim_kind != animation_kind::secondary_child) {
-      if (!pReader->read_int(speed.dx)) break;
-      if (!pReader->read_int(speed.dy)) break;
+      if (!pReader->read_int(speed.x)) break;
+      if (!pReader->read_int(speed.y)) break;
     } else {
       if (!pReader->read_stack_object()) break;
       parent = static_cast<animation*>(lua_touserdata(L, -1));
@@ -1466,76 +1490,89 @@ void animation::set_animation_kind(animation_kind anim_kind) {
 }
 
 namespace {
+//! Storage of one or two sounds. If two sounds are stored, both are selected in
+//! 50% of the cases.
+struct sound_pair {
+  sound_pair(int16_t sound) : soundA(sound), soundB(-1) {}
+  sound_pair(int16_t soundA, int16_t soundB) : soundA(soundA), soundB(soundB) {}
+
+  int16_t get_sound() const {
+    if (soundB < 0) {
+      return soundA;
+    } else {
+      int value = rand();
+      int counter = 0;
+      for (int i = 0; i < 7; i++) {
+        counter = counter + (value & 1);
+        value >>= 1;
+      }
+      return (counter < 4) ? soundA : soundB;
+    }
+  }
+
+ private:
+  const int16_t soundA;  //!< First available sound.
+  const int16_t soundB;  //!< If non-negative, the second available sound.
+};
+
+typedef std::map<size_t, sound_pair> sound_replacement_map;
+
 // Map of frame numbers to sounds to play.
-const std::map<size_t, int> frame_sound_replacements{
+const sound_replacement_map frame_sound_replacements{
     // Female flying to heaven (anim 3220)
-    {6987, 123},
+    {6987, sound_pair(123)},
+
     // Using Computer (anim 2098)
-    {4213, 35},
-    {4215, 35},
-    {4224, 35},
-    {4230, 35},
+    {4213, sound_pair(35)},
+    {4215, sound_pair(35)},
+    {4224, sound_pair(35)},
+    {4230, sound_pair(35)},
+
+    // Vomit sounds.
+    {1902, sound_pair(58, 114)},   // Animation 1034
+    {4149, sound_pair(58, 114)},   // Animation 2056
+    {6901, sound_pair(58, 114)},   // Animation 3184
+    {8819, sound_pair(58, 114)},   // Animation 4138
+    {9105, sound_pair(58, 114)},   // Animation 4204
+    {9565, sound_pair(58, 114)},   // Animation 4324
+    {9654, sound_pair(58, 114)},   // Animation 4384
+    {9944, sound_pair(58, 114)},   // Animation 4452
+    {10007, sound_pair(58, 114)},  // Animation 4476
+    {10989, sound_pair(58, 114)},  // Animation 4792
+
     // Using Atom Analyser. Actually a generic animation of Researcher pushing
     // buttons (anim 4878)
-    {11136, 35},
-    {11138, 35},
-    {11147, 35},
-    {11152, 35},
-    {11153, 35},
-    {11154, 35}};
+    {11136, sound_pair(35)},
+    {11138, sound_pair(35)},
+    {11147, sound_pair(35)},
+    {11152, sound_pair(35)},
+    {11153, sound_pair(35)},
+    {11154, sound_pair(35)}};
 }  // Namespace
 
 void animation::tick() {
   frame_index = manager->get_next_frame(frame_index);
   if (anim_kind != animation_kind::primary_child &&
       anim_kind != animation_kind::secondary_child) {
-    x_relative_to_tile += speed.dx;
-    y_relative_to_tile += speed.dy;
+    pixel_offset.x += speed.x;
+    pixel_offset.y += speed.y;
   }
 
   if (morph_target) {
-    morph_target->y_relative_to_tile += morph_target->speed.dy;
-    if (morph_target->y_relative_to_tile < morph_target->x_relative_to_tile) {
-      morph_target->y_relative_to_tile = morph_target->x_relative_to_tile;
+    morph_target->pixel_offset.y += morph_target->speed.y;
+    if (morph_target->pixel_offset.y < morph_target->pixel_offset.x) {
+      morph_target->pixel_offset.y = morph_target->pixel_offset.x;
     }
   }
 
   // Decide sound to play.
-  std::map<size_t, int>::const_iterator pos =
+  sound_replacement_map::const_iterator pos =
       frame_sound_replacements.find(frame_index);
   if (pos == frame_sound_replacements.end()) {
     sound_to_play = manager->get_frame_sound(frame_index);
   } else {
-    sound_to_play = pos->second;
+    sound_to_play = pos->second.get_sound();
   }
-}
-
-void animation_base::remove_from_tile() { link_list::remove_from_list(); }
-
-void animation_base::attach_to_tile(map_tile* pMapNode, int layer) {
-  remove_from_tile();
-  link_list* pList;
-  if (flags & thdf_early_list) {
-    pList = &pMapNode->oEarlyEntities;
-  } else {
-    pList = &pMapNode->entities;
-  }
-
-  this->set_drawing_layer(layer);
-
-  while (pList->next &&
-         static_cast<drawable*>(pList->next)->get_drawing_layer() < layer) {
-    pList = pList->next;
-  }
-
-  prev = pList;
-  if (pList->next != nullptr) {
-    pList->next->prev = this;
-    this->next = pList->next;
-  } else {
-    next = nullptr;
-  }
-  pList->next = this;
 }
 
 void animation::set_parent(animation* pParent, bool use_primary) {
@@ -1573,8 +1610,8 @@ bool animation::get_primary_marker(int* pX, int* pY) {
     *pX = -*pX;
   }
 
-  *pX += x_relative_to_tile;
-  *pY += y_relative_to_tile + 16;
+  *pX += pixel_offset.x;
+  *pY += pixel_offset.y + 16;
   return true;
 }
 
@@ -1587,8 +1624,8 @@ bool animation::get_secondary_marker(int* pX, int* pY) {
     *pX = -*pX;
   }
 
-  *pX += x_relative_to_tile;
-  *pY += y_relative_to_tile + 16;
+  *pX += pixel_offset.x;
+  *pY += pixel_offset.y + 16;
   return true;
 }
 
@@ -1637,8 +1674,8 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
   the morph target animation:
     * The y value top limit - morph_target->x
     * The y value threshold - morph_target->y
-    * The y value bottom limit - morph_target->speed.dx
-    * The y value increment per frame - morph_target->speed.dy
+    * The y value bottom limit - morph_target->speed.x
+    * The y value increment per frame - morph_target->speed.y
   This obviously means that the morph target should not be ticked or rendered
   as it's position and speed contain other values.
   */
@@ -1657,59 +1694,48 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
 
   iMorphDuration *= iDurationFactor;
   if (iOrigMinY < iMorphMinY) {
-    morph_target->x_relative_to_tile = iOrigMinY;
+    morph_target->pixel_offset.x = iOrigMinY;
   } else {
-    morph_target->x_relative_to_tile = iMorphMinY;
+    morph_target->pixel_offset.x = iMorphMinY;
   }
 
   if (iOrigMaxY > iMorphMaxY) {
-    morph_target->speed.dx = iOrigMaxY;
+    morph_target->speed.x = iOrigMaxY;
   } else {
-    morph_target->speed.dx = iMorphMaxY;
+    morph_target->speed.x = iMorphMaxY;
   }
 
-  int iDist = morph_target->x_relative_to_tile - morph_target->speed.dx;
-  morph_target->speed.dy = (iDist - iMorphDuration + 1) / iMorphDuration;
-  morph_target->y_relative_to_tile = morph_target->speed.dx;
+  int iDist = morph_target->pixel_offset.x - morph_target->speed.x;
+  morph_target->speed.y = (iDist - iMorphDuration + 1) / iMorphDuration;
+  morph_target->pixel_offset.y = morph_target->speed.x;
 }
 
 void animation::set_frame(size_t iFrame) { frame_index = iFrame; }
 
-void animation_base::set_layer(int iLayer, int iId) {
-  if (0 <= iLayer && iLayer < max_number_of_layers) {
-    layers.layer_contents[iLayer] = static_cast<uint8_t>(iId);
-  }
-}
-
-sprite_render_list::sprite_render_list() : animation_base() {}
-
-sprite_render_list::~sprite_render_list() { delete[] sprites; }
-
 void sprite_render_list::tick() {
-  x_relative_to_tile += dx_per_tick;
-  y_relative_to_tile += dy_per_tick;
+  pixel_offset.x += dx_per_tick;
+  pixel_offset.y += dy_per_tick;
   if (lifetime > 0) {
     --lifetime;
   }
 }
 
 void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
-  if (!sheet || sprite_count == 0) {
+  if (!sheet || sprites.empty()) {
     return;
   }
 
-  iDestX += x_relative_to_tile;
-  iDestY += y_relative_to_tile;
-  sprite* pLast = sprites + sprite_count;
+  iDestX += pixel_offset.x;
+  iDestY += pixel_offset.y;
 
   std::unique_ptr<render_target::scoped_buffer> intermediate_buffer;
   if (use_intermediate_buffer) {
     int minX = INT_MAX, minY = INT_MAX, maxX = INT_MIN, maxY = INT_MIN;
-    for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
-      int spriteX = iDestX + pSprite->x;
-      int spriteY = iDestY + pSprite->y;
+    for (const sprite& pSprite : sprites) {
+      int spriteX = iDestX + pSprite.x;
+      int spriteY = iDestY + pSprite.y;
       int spriteWidth, spriteHeight;
-      sheet->get_sprite_size_unchecked(pSprite->index, &spriteWidth,
+      sheet->get_sprite_size_unchecked(pSprite.index, &spriteWidth,
                                        &spriteHeight);
       minX = std::min(minX, spriteX);
       minY = std::min(minY, spriteY);
@@ -1720,9 +1746,9 @@ void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
         minX, minY, maxX - minX, maxY - minY);
   }
 
-  for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
-    sheet->draw_sprite(pCanvas, pSprite->index, iDestX + pSprite->x,
-                       iDestY + pSprite->y, flags);
+  for (const sprite& pSprite : sprites) {
+    sheet->draw_sprite(pCanvas, pSprite.index, iDestX + pSprite.x,
+                       iDestY + pSprite.y, flags);
   }
 }
 
@@ -1744,45 +1770,25 @@ void sprite_render_list::set_use_intermediate_buffer() {
 }
 
 void sprite_render_list::append_sprite(size_t iSprite, int iX, int iY) {
-  if (buffer_size == sprite_count) {
-    int iNewSize = buffer_size * 2;
-    if (iNewSize == 0) {
-      iNewSize = 4;
-    }
-    sprite* pNewSprites = new sprite[iNewSize];
-#ifdef _MSC_VER
-#pragma warning(disable : 4996)
-#endif
-    std::copy(sprites, sprites + sprite_count, pNewSprites);
-#ifdef _MSC_VER
-#pragma warning(default : 4996)
-#endif
-    delete[] sprites;
-    sprites = pNewSprites;
-    buffer_size = iNewSize;
-  }
-  sprites[sprite_count].index = iSprite;
-  sprites[sprite_count].x = iX;
-  sprites[sprite_count].y = iY;
-  ++sprite_count;
+  sprite s{iSprite, iX, iY};
+  sprites.push_back(s);
 }
 
 void sprite_render_list::persist(lua_persist_writer* pWriter) const {
   lua_State* L = pWriter->get_stack();
 
-  pWriter->write_uint(sprite_count);
+  pWriter->write_uint(sprites.size());
   pWriter->write_uint(flags);
-  pWriter->write_int(x_relative_to_tile);
-  pWriter->write_int(y_relative_to_tile);
+  pWriter->write_int(pixel_offset.x);
+  pWriter->write_int(pixel_offset.y);
   pWriter->write_int(dx_per_tick);
   pWriter->write_int(dy_per_tick);
   pWriter->write_int(lifetime);
 
-  sprite* pLast = sprites + sprite_count;
-  for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
-    pWriter->write_uint(pSprite->index);
-    pWriter->write_int(pSprite->x);
-    pWriter->write_int(pSprite->y);
+  for (const sprite& pSprite : sprites) {
+    pWriter->write_uint(pSprite.index);
+    pWriter->write_int(pSprite.x);
+    pWriter->write_int(pSprite.y);
   }
 
   // Write the layers
@@ -1810,22 +1816,20 @@ void sprite_render_list::persist(lua_persist_writer* pWriter) const {
 void sprite_render_list::depersist(lua_persist_reader* pReader) {
   lua_State* L = pReader->get_stack();
 
+  uint32_t sprite_count;
   if (!pReader->read_uint(sprite_count)) return;
-  buffer_size = sprite_count;
-  delete[] sprites;
-  sprites = new sprite[buffer_size];
+  sprites.resize(sprite_count);
 
   if (!pReader->read_uint(flags)) return;
-  if (!pReader->read_int(x_relative_to_tile)) return;
-  if (!pReader->read_int(y_relative_to_tile)) return;
+  if (!pReader->read_int(pixel_offset.x)) return;
+  if (!pReader->read_int(pixel_offset.y)) return;
   if (!pReader->read_int(dx_per_tick)) return;
   if (!pReader->read_int(dy_per_tick)) return;
   if (!pReader->read_int(lifetime)) return;
-  for (sprite *pSprite = sprites, *pLast = sprites + sprite_count;
-       pSprite != pLast; ++pSprite) {
-    if (!pReader->read_uint(pSprite->index)) return;
-    if (!pReader->read_int(pSprite->x)) return;
-    if (!pReader->read_int(pSprite->y)) return;
+  for (sprite& pSprite : sprites) {
+    if (!pReader->read_uint(pSprite.index)) return;
+    if (!pReader->read_int(pSprite.x)) return;
+    if (!pReader->read_int(pSprite.y)) return;
   }
 
   // Read the layers

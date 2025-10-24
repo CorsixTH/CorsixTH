@@ -112,7 +112,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
     dropped = nil
   }
 
-  object:setRepairingMode(lock_room and true or false)
+  object:setRepairingMode(lock_room and true or false, true)
 
   if not manual and urgent then
     object.hospital:giveAdvice({_A.warnings.machines_falling_apart})

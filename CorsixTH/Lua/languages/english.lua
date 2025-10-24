@@ -43,6 +43,16 @@ adviser.goals.lose.kill = "Kill another %d patients to lose the level!"
 tooltip.staff_window.face = "This person's face - click to open management screen"
 tooltip.staff_window.center_view = "Left click to zoom to staff, right click to cycle through staff members"
 
+-- Improve tooltips in Build Rooms menu
+tooltip.rooms.inflation = "A Doctor uses the Inflation Room to cure patients with Bloaty Head"
+tooltip.rooms.tongue_clinic = "A Doctor uses the Slack Tongue Clinic to cure Slack Tongue"
+tooltip.rooms.fracture_clinic = "A Nurse uses the Fracture Clinic to repair Fractured Bones"
+tooltip.rooms.hair_restoration = "A Doctor uses the Hair Restoration Room to cure Baldness"
+tooltip.rooms.decontamination = "A Doctor uses the Decontamination Shower to cure Serious Radiation"
+tooltip.rooms.ward = "Wards are useful for both diagnosis and treatment. Patients are sent here for observation and also prepare for operations in a Ward with a Nurse"
+tooltip.rooms.research_room = "Doctors with Research skills can discover new drugs and machines in the Research Dept"
+tooltip.objects.reception_desk = "Reception Desk: requires a Receptionist who directs patients to the GP's office"
+
 -- Improve tooltips in Research Screen
 tooltip.research.cure_dec = "Decrease Cure research percentage"
 tooltip.research.cure_inc = "Increase Cure research percentage"
@@ -205,7 +215,6 @@ menu_debug = {
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
   allow_blocking_off_areas    = "  ALLOW BLOCKING OFF AREAS  ",
-  allow_falling               = "  ALLOW FALLING  ",
   make_debug_fax              = "  MAKE DEBUG FAX  ",
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
   cheats                      = "  (%1%) CHEATS  ",
@@ -237,6 +246,11 @@ menu_player_count = {
   players_3 = "  3 PLAYERS  ",
   players_4 = "  4 PLAYERS  ",
 }
+
+tooltip.toolbar = {
+  machine_menu = "Machine menu",
+}
+
 adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
   warnings = {
@@ -326,7 +340,7 @@ letter = {
 
 install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
-  th_directory = "CorsixTH needs a copy of the data files from the original CorsixTH game (or demo) in order to run. Please use the below selector to locate the CorsixTH install directory.",
+  th_directory = "CorsixTH needs a copy of the data files from the original Theme Hospital game (or demo) in order to run. Please use the below selector to locate the Theme Hospital install directory.",
   ok = "OK",
   exit = "Exit",
   cancel = "Cancel",
@@ -343,6 +357,8 @@ misc = {
   epidemic_no_icon_to_toggle = "Unable to show/hide infected icons - no epidemics in progress that are not revealed",
   epidemic_no_diseases = "Cannot create epidemic - no contagious diseases available",
   epidemic_no_receptionist = "Cannot create epidemic - no staffed reception desk",
+  invulnerable_machines_off = "Machines will wear and break down again.",
+  invulnerable_machines_on = "Machines will no longer wear or break down.",
 }
 
 main_menu = {
@@ -517,26 +533,34 @@ customise_window = {
   caption = "Custom Settings",
   option_on = "On",
   option_off = "Off",
+  emergency_only = "Emergency Only",
+  regular_patients = "Regular Patients",
+  male_only = "Male Only",
+  male_and_female = "Male and Female",
   back = "Back",
-  movies = "Global Movie Control",
+  movies = "Movies",
   intro = "Play Intro Movie",
-  paused = "Build on Paused",
+  paused = "Build While Paused",
   volume = "Volume Down Hotkey",
   aliens = "Alien Patients",
   fractured_bones = "Fractured Bones",
   average_contents = "Average Contents",
   remove_destroyed_rooms = "Remove destroyed rooms",
+  machine_menu_button = "Machine menu button",
+  enable_screen_shake = "Screen Shake",
 }
 
 tooltip.customise_window = {
-  movies = "Global movie control, this will allow you to disable all the movies",
-  intro = "Turn off or on the intro movie, global movies will need to be on if you want the intro movie to play each time you load CorsixTH",
-  paused = "In CorsixTH the player would only be allowed to use the top menu if the game was paused. That is the default setting in CorsixTH too, but by turning this on everything is allowed while the game is paused",
-  volume = "If the volume down button is also opening the casebook, turn this on to change the hotkey for the casebook to Shift + C",
-  aliens = "Because of the lack of proper animations we have by default made patients with Alien DNA only come from an emergency. To allow patients with Alien DNA to visit your hospital, other than by an emergency, turn this off",
-  fractured_bones = "Because of a poor animation we have by default made it so there are no female patients with Fractured Bones. To allow female patients with Fractured Bones to visit your hospital, turn this off",
-  average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",
-  remove_destroyed_rooms = "If you would like to be able to remove destroyed rooms, for a fee, turn this option on",
+  movies = "Global movie control. This will allow you to enable or disable all movies",
+  intro = "Turn the intro movie on and off. Global movies must be on if you want the intro movie to play each time you launch CorsixTH",
+  paused = "In the original Theme Hospital, the player could only use the top menu while the game was paused. This is the default behaviour in CorsixTH, but turning this option on will allow you to build rooms and pick up objects while the game is paused",
+  volume = "If the volume down button causes the Casebook to open, turn this option on to change the hotkey for the Casebook to Shift + C",
+  aliens = "Due to incomplete animations, patients with Alien DNA will only appear via Emergencies by default. To allow patients with Alien DNA to visit your hospital normally, set this option to Regular Patients",
+  fractured_bones = "Due to poor animation, female patients with Fractured Bones will not appear by default. To allow female patients with Fractured Bones to visit your hospital, set this option to Male and Female",
+  average_contents = "If you would like the game to remember which extra objects you usually add while building rooms, turn this option on",
+  remove_destroyed_rooms = "In the original Theme Hospital, exploded machines made rooms permanently unusable. If you would like to be able to remove destroyed rooms for a fee, turn this option on",
+  machine_menu_button = "If you would like to have a machine menu button in bottom panel, turn this option on. Keep in mind that this button will not be available in small screen resolutions",
+  enable_screen_shake = "Earthquakes will cause the entire screen to shake. If you would prefer the screen to remain still, turn this option off",
   back = "Close this menu and go back to the Settings Menu",
 }
 
@@ -548,7 +572,7 @@ folders_window = {
   savegames_label = "Saves",
   screenshots_label = "Screenshots",
   -- next four are the captions for the browser window, which are called from the folder setting menu
-  new_th_location = "Here you can specify a new CorsixTH installation directory or ISO file. As soon as you choose the new directory the game will be restarted. Note that file extensions are not currently shown.",
+  new_th_location = "Here you can specify a new Theme Hospital installation directory or ISO file. As soon as you choose the new directory the game will be restarted. Note that file extensions are not currently shown.",
   savegames_location = "Select the directory you want to use for Saves",
   music_location = "Select the directory you want to use for your Music",
   screenshots_location = "Select the directory you want to use for Screenshots",
@@ -557,12 +581,12 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "Browse for folder location",
-  data_location = "The directory or ISO file of the original CorsixTH installation, which is required to run CorsixTH",
+  data_location = "The directory or ISO file of the original Theme Hospital installation, which is required to run CorsixTH",
   font_location = "Location of a font file that is capable of displaying Unicode characters required by your language. If this is not specified you will not be able to choose languages that need more characters than the original game can supply. Example: Russian and Chinese",
   savegames_location = "By default, the Saves directory is alongside the config file and will be used for storing saved games in. Alternatively, you can choose your own by browsing to the directory that you want to use.",
   screenshots_location = "By default, the Screenshots are stored in a folder alongside the config file. Alternatively, you can choose your own by browsing to the directory that you want to use.",
   music_location = "Select a location for your music files by browsing to the directory you want to use (directory must already exist beforehand).",
-  browse_data = "Browse for another location for your CorsixTH installation ( Current location: %1% ) ",
+  browse_data = "Browse for another location for your Theme Hospital installation ( Current location: %1% ) ",
   browse_font = "Browse for another font file ( Current location: %1% ) ",
   browse_saves = "Browse for another location for your Saves directory ( Current location: %1% ) ",
   browse_screenshots = "Browse for another location for your Screenshots directory ( Current location: %1% ) ",
@@ -762,7 +786,7 @@ errors = {
   map_file_missing = "Could not find the map file %s for this level!",
   minimum_screen_size = "Please enter a screen size of at least 640x480.",
   unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
-  alien_dna = "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. Like with CorsixTH, performing those actions will change the patient to normal then back to Alien. Patients with Alien DNA will only appear if they are set to in the level file.",
+  alien_dna = "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. Like with Theme Hospital, performing those actions will change the patient to normal then back to Alien. Patients with Alien DNA will only appear if they are set to in the level file.",
   fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
   could_not_load_campaign = "Failed to load the campaign: %s",
   could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
@@ -774,7 +798,14 @@ errors = {
     full_in_demo = "Sorry, you can't open a full game save with the demo files loaded. Please update your TH Data folder setting.",
   },
   music = "There are playback issues with one or more files in your music directory. Problematic files will be disabled in the jukebox. See the console window for more information.",
-  missing_th_data_file = "Warning: Could not find file %s, the CorsixTH data is incomplete.",
+  missing_corsixth_file = "Warning: Could not find file %s, try reinstalling CorsixTH.",
+  missing_th_data_file = "Warning: Could not find file %s, the Theme Hospital data is incomplete.",
+  missing_level_file = "Error: Could not find the chosen level file.",
+  overlay = {
+    incorrect_difficulty = "Overlay difficulty must be easy, full or hard. Current value is ",
+    incorrect_level_number = "Overlay level number must be 1-12. Current value is ",
+    missing_setting = "No difficulty and level number given in overlay field of custom level.",
+  },
   cannot_restart_missing_files = "Sorry, but this level cannot be restarted because of missing files %s or %s.",
 }
 
@@ -792,13 +823,14 @@ confirmation = {
   replace_machine_extra_info = "The new machine will have %d strength (currently %d).",
   restart_mapeditor = "Are you sure you want to restart the map editor?",
   quit_mapeditor = "Are you sure you want to quit the map editor?",
+  very_old_save = "There have been a lot of updates to the game since you started. To be sure that all features work as intended would you like to restart this level now?//" ..
+  "Your old save won't be deleted unless you overwrite it.",
 }
 
 information = {
   custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
   no_custom_game_in_demo = "Sorry, but in the demo version you can't play any custom maps.",
   cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
-  very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it.",
   level_lost = {
     "Bummer! You failed the level. Better luck next time!",
     "The reason you lost:",
@@ -827,7 +859,7 @@ totd_window = {
     "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
     "You can adjust some settings such as the resolution and language in the options window found both in the main menu and ingame.",
     "You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
-    "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Discord Server, Sub-Reddit or Matrix Server.",
+    "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Discord Server, Sub-Reddit or Matrix Server. Links are on our website (CorsixTH.com).",
     "If you find a bug, please report it at our bugtracker: th-issues.corsix.org",
     "Each level has certain requirements to fulfill before you can move on to the next one. Check the status window to see your progression towards the level goals.",
     "If you want to edit or remove an existing room, you can do so with the edit room button found in the bottom toolbar.",
@@ -882,6 +914,8 @@ cheats_window = {
     decrease_prices = "Decrease prices",
     reset_death_count = "Reset death count",
     max_reputation = "Max reputation",
+    repair_all_machines = "Repair all machines",
+    toggle_invulnerable_machines = "Toggle invulnerable machines",
   },
   close = "Close",
 }
@@ -907,6 +941,8 @@ tooltip.cheats_window = {
     decrease_prices = "Decrease all prices by 50% (min. 50%)",
     reset_death_count = "Reset the hospital death count to zero",
     max_reputation = "Set the hospital reputation to the maximum",
+    repair_all_machines = "Repairs all machines in the hospital",
+    toggle_invulnerable_machines = "Toggle whether machines wear down when used",
   }
 }
 
@@ -1032,6 +1068,7 @@ tooltip.status = {
 
 options_window.change_resolution = "Change resolution"
 tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
+information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
 
 cheats_window.cheats = {
  toggle_infected = show_infected,

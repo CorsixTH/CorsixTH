@@ -25,16 +25,15 @@ SOFTWARE.
 #include "config.h"
 
 #include <SDL_render.h>
+#include <ft2build.h>  // IWYU pragma: keep
+// IWYU pragma: no_include "freetype/config/ftheader.h"
 
 #include <climits>
 
 #include "th_gfx_sdl.h"
-#ifdef CORSIX_TH_USE_FREETYPE2
-#include <ft2build.h>  // IWYU pragma: keep
 #include FT_FREETYPE_H
 #include FT_IMAGE_H
 #include FT_TYPES_H
-#endif
 
 enum class text_alignment {
   left = 0,
@@ -61,6 +60,20 @@ struct text_layout {
 
   //! Width of the widest line in the text
   int width;
+};
+
+struct font_shadow_options {
+  //! Whether to draw a shadow
+  bool enabled{false};
+
+  //! Horizontal offset of the shadow, in pixels
+  int offset_x{1};
+
+  //! Vertical offset of the shadow, in pixels
+  int offset_y{1};
+
+  //! Colour of the shadow
+  argb_colour color{0xFF000000u};
 };
 
 class font {
@@ -154,12 +167,11 @@ class bitmap_font final : public font {
       text_alignment eAlign = text_alignment::left) const override;
 
  private:
-  sprite_sheet* sheet;
-  int letter_spacing;
-  int line_spacing;
+  sprite_sheet* sheet{nullptr};
+  int letter_spacing{};
+  int line_spacing{};
 };
 
-#ifdef CORSIX_TH_USE_FREETYPE2
 //! Adaptor around the FreeType2 library to a THFont.
 /*!
     Due to the relatively high cost of rendering a message with FreeType, this
@@ -204,17 +216,19 @@ class freetype_font final : public font {
   */
   FT_Error set_face(const uint8_t* pData, size_t iLength);
 
-  //! Set the font size and colour to match that of a bitmap font.
+  //! Find colour and size to best match a bitmap font.
   /*!
       Note that the matching is done on a best-effort basis, and will likely
       not be perfect. This must be called after setFace().
 
       @param font_spritesheet The sprite sheet of the bitmap font.
-      @param colour Colour to use for the font. Colour 0 falls back to
+      @param color [out] Colour to use for the font. Colour 0 falls back to
           deriving the colour from the sprite sheet.
+      @param width [out] Width of each character in pixels.
+      @param height [out] Height of each character in pixels.
   */
-  FT_Error match_bitmap_font(sprite_sheet* font_spritesheet,
-                             argb_colour colour);
+  FT_Error match_bitmap_font(sprite_sheet* font_spritesheet, argb_colour* color,
+                             int* width, int* height);
 
   //! Set the ideal character size using pixel values.
   /*!
@@ -223,6 +237,10 @@ class freetype_font final : public font {
       setFace().
   */
   FT_Error set_ideal_character_size(int iWidth, int iHeight);
+
+  void set_font_color(argb_colour color);
+
+  void set_shadow_options(const font_shadow_options& options);
 
   text_layout get_text_dimensions(const char* sMessage, size_t iMessageLength,
                                   int iMaxWidth = INT_MAX) const override;
@@ -284,11 +302,12 @@ class freetype_font final : public font {
 
   static FT_Library freetype_library;
   static int freetype_init_count;
-  static const int cache_size_log2 = 7;
-  FT_Face font_face;
-  argb_colour font_colour;
-  bool is_done_freetype_init;
-  mutable cached_text cache[1 << cache_size_log2];
+  static constexpr int cache_size_log2{7};
+  FT_Face font_face{nullptr};
+  argb_colour font_color{0};
+  font_shadow_options shadow_opts{};
+  bool is_done_freetype_init{false};
+  mutable cached_text cache[1 << cache_size_log2]{};
 
   // The following five methods are implemented by the rendering engine.
 
@@ -309,8 +328,12 @@ class freetype_font final : public font {
           an object which can be used by the rendering engine, and store the
           result in the pTexture or iTexture field.
   */
-  void make_texture(render_target* pEventualCanvas,
+  void make_texture(const render_target* pEventualCanvas,
                     cached_text* pCacheEntry) const;
+
+  static void copy_pixel_data(const cached_text* cacheEntry, argb_colour color,
+                              int offsetX, int offsetY,
+                              std::vector<argb_colour>::iterator outIter);
 
   //! Free a previously-made texture of a cache entry.
   /*!
@@ -333,6 +356,5 @@ class freetype_font final : public font {
   void draw_texture(render_target* pCanvas, cached_text* pCacheEntry, int iX,
                     int iY) const;
 };
-#endif  // CORSIX_TH_USE_FREETYPE2
 
 #endif  // CORSIX_TH_TH_GFX_FONT_H_

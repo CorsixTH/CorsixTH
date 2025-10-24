@@ -90,7 +90,7 @@ function World:World(app, free_build_mode)
   self.floating_dollars = {}
   self.game_log = {} -- saves list of useful debugging information
   self.savegame_version = app.savegame_version -- Savegame version number
-  self.release_version = app:getVersion(self.savegame_version) -- Savegame release version (e.g. 0.60), or Trunk
+  self.release_version = app:getReleaseString() -- Savegame release version (e.g. 0.60), or Trunk
   -- Also preserve this throughout future updates.
   self.original_savegame_version = app.savegame_version
 
@@ -1152,14 +1152,18 @@ function World:nextEmergency()
     self:scheduleRandomEmergency(control)
     return
   end
-  repeat
+
+  -- Find the next valid emergency entry
+  local valid_emergency = false
+  while not valid_emergency do
     local emer_num = self.next_emergency_no
-    -- Account for missing Level 3 emergency[5]
+    -- First, handle the missing Level 3 emergency[5]
     if not control[emer_num] and control[emer_num + 1] then
       emer_num = emer_num + 1
       self.next_emergency_no = emer_num
     end
     local emergency = control[emer_num]
+
     -- No more emergencies?
     if not emergency then
       self.next_emergency_month = 0
@@ -1167,9 +1171,12 @@ function World:nextEmergency()
       self.next_emergency = nil
       return
     end
+
+    -- Test the emergency's validity
     self.next_emergency = emergency
     self.next_emergency_no = self.next_emergency_no + 1
-  until self:computeNextEmergencyDates(emergency)
+    valid_emergency = self:computeNextEmergencyDates(emergency)
+  end
 end
 
 --! If a level file specifies random emergencies we make the next one as defined by the mean/variance given
@@ -1316,10 +1323,11 @@ function World:getCampaignWinningText(player_no)
         end
       end
     end
+    local level_info = TheApp:readLevelFile(self.map.level_number)
     text[1] = _S.letter.dear_player:format(self.hospitals[player_no].name)
     if has_next then
-      if next_level_info.end_praise then
-        text[2] = next_level_info.end_praise:format(next_level_name)
+      if level_info.end_praise then
+        text[2] = level_info.end_praise:format(next_level_name)
       else
         text[2] = _S.letter.campaign_level_completed:format(next_level_name)
       end
@@ -1671,7 +1679,8 @@ function World:newFloatingDollarSign(patient, amount)
     amount = (amount - digit) / 10
     spritelist:append(2 + digit, xbase + 5 * (len - i), 5)
   end
-  spritelist:setTile(self.map.th, patient.tile_x, patient.tile_y)
+  spritelist:setTile(self.map.th, patient.tile_x, patient.tile_y,
+      DrawingLayers.FloatingDollars)
 
   self.floating_dollars[spritelist] = true
 end
@@ -2093,6 +2102,24 @@ function World:getRoomNameAndRequiredStaffName(room_id)
   return room_name, staff_name, StaffProfile.translateStaffClass(staff_name)
 end
 
+--! Gets a list of all the machines in the player's hospital.
+function World:getPlayerMachines()
+  local world = self
+  local hosp = world:getLocalPlayerHospital()
+  local playerMachines = {}
+
+  for _, entity in ipairs(world.entities) do
+    -- is entity a machine and not a slave (e.g. operating_table_b)
+    if class.is(entity, Machine) and not entity.master then
+      -- check if machine belongs to player hospital
+      if entity.hospital == hosp then
+        playerMachines[#playerMachines + 1] = entity
+      end
+    end
+  end
+  return playerMachines
+end
+
 --! Append a message to the game log.
 --!param message (string) The message to add.
 function World:gameLog(message)
@@ -2175,16 +2202,6 @@ end
 --!param old (integer) The old version of the save game.
 --!param new (integer) The current version of the save game format.
 function World:afterLoad(old, new)
-
-  if not self.original_savegame_version then
-    self.original_savegame_version = old
-  end
-  -- If the original save game version is considerably lower than the current, warn the player.
-  -- For 2024 release, bump cutoff from 20 to 25 pending new methods in PR2518
-  if new - 25 > self.original_savegame_version then
-    self.ui:addWindow(UIInformation(self.ui, {_S.information.very_old_save}))
-  end
-
   self:setUI(self.ui)
 
   -- insert global compatibility code here
@@ -2571,9 +2588,19 @@ function World:afterLoad(old, new)
   self:previousSpeed()
 
   self.earthquake:afterLoad(old, new)
+
+  -- Savegame version housekeeping
+  if not self.original_savegame_version then
+    self.original_savegame_version = old
+  end
+  -- If the original save game version is considerably lower than the current, ask
+  -- the player if they want to restart the level.
+  if TheApp:compareVersions(new, old, "release") > 2 then
+    TheApp:restart(_S.confirmation.very_old_save)
+  end
   self.savegame_version = new
-  self.release_version = TheApp:getVersion(new)
-  self.system_pause = false -- Reset flag on load
+  self.release_version = TheApp:getReleaseString(new)
+  self:setSystemPause(false) -- Reset flag on load
 end
 
 function World:playLoadedEntitySounds()
@@ -2654,6 +2681,7 @@ end
 --! Perform validity tests on the map in world
 --!return (string) The message relating to the first failed check
 function World:validateMap()
+  self.map.th:updatePathfinding()
   local spawn_points = self:calculateSpawnTiles()
   -- Do any passable tiles on the edge of the map have a path of
   -- passable tiles to the hospital

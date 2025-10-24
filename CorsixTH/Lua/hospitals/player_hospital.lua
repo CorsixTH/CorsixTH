@@ -518,8 +518,10 @@ function PlayerHospital:onEndDay()
     end
   end
 
+  -- Look for work for staff who have nothing to do
   for _, staff in ipairs(self.staff) do
-    if staff:isIdle() then
+    -- Handymen currently have their own method to look for work
+    if staff.humanoid_class ~= "Handyman" and staff:isIdle() then
       self.world.dispatcher:answerCall(staff)
     end
   end

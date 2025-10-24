@@ -216,6 +216,23 @@ DrawFlags.ListBottom      = 2^11
 DrawFlags.BoundBoxHitTest = 2^12
 DrawFlags.Crop            = 2^13
 
+-- Order of animations within a tile. Animations with a smaller number are
+-- drawn first.
+DrawingLayers = {}
+DrawingLayers.Litter = 0
+DrawingLayers.Door = 0
+DrawingLayers.RatHole = 0
+DrawingLayers.NorthSideObject = 1
+DrawingLayers.WestSideObject = 2
+DrawingLayers.AtomAnalyser = 3
+DrawingLayers.ReceptionistFacingUser = 3 -- Facing east or south.
+DrawingLayers.Entity = 4 -- All 'normal' animations.
+DrawingLayers.ReceptionistFacingAway = 5 -- Facing west or north.
+-- Value 6 is not used.
+DrawingLayers.FloatingDollars = 7
+DrawingLayers.EastSideObject = 8
+DrawingLayers.SouthSideObject = 9
+
 -- Keep in sync with animation_effect in th_gfx_common.h
 AnimationEffect = {}
 AnimationEffect.None = 0

@@ -66,7 +66,7 @@ function AtomAnalyser:AtomAnalyser(...)
 end
 
 function AtomAnalyser:getDrawingLayer()
-  return 3
+  return DrawingLayers.AtomAnalyser
 end
 
 return object

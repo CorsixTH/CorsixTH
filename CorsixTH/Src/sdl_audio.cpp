@@ -22,10 +22,6 @@ SOFTWARE.
 
 #include "config.h"
 
-#include "lua.hpp"
-#include "lua_sdl.h"
-#include "th_lua.h"
-#ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_events.h>
 #include <SDL_mixer.h>
 #include <SDL_rwops.h>
@@ -36,6 +32,9 @@ SOFTWARE.
 #include <cstdlib>
 #include <cstring>
 
+#include "lua.hpp"
+#include "lua_sdl.h"
+#include "th_lua.h"
 #include "xmi2mid.h"
 #ifdef _MSC_VER
 #pragma comment(lib, "SDL2_mixer")
@@ -43,9 +42,9 @@ SOFTWARE.
 
 class music {
  public:
-  Mix_Music* pMusic;
+  Mix_Music* pMusic{nullptr};
 
-  music() { pMusic = nullptr; }
+  music() = default;
 
   ~music() {
     if (pMusic) {
@@ -316,17 +315,3 @@ int luaopen_sdl_audio(lua_State* L) {
 
   return 1;
 }
-
-#else  // CORSIX_TH_USE_SDL_MIXER
-
-int luaopen_sdl_audio(lua_State* L) {
-  lua_newtable(L);
-  lua_pushboolean(L, 0);
-  lua_setfield(L, -2, "loaded");
-
-  return 1;
-}
-
-int l_load_music_async_callback(lua_State* L) { return 0; }
-
-#endif  // CORSIX_TH_USE_SDL_MIXER

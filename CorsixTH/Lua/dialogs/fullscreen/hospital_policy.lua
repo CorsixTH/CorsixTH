@@ -66,11 +66,13 @@ function UIPolicy:UIPolicy(ui)
 
   self.allow_button = self:addPanel(0, 348, 379)
       :makeToggleButton(0, 0, 48, 17, 4, allowStaff, "Allow")
-      :setTooltip(_S.tooltip.policy.staff_leave) -- Allow staff to move
+      :setTooltip(_S.tooltip.policy.staff_leave)
+      :setSound("selectx.wav") -- Allow staff to move
 
   self.prohibit_button = self:addPanel(0, 395, 379)
       :makeToggleButton(0, 0, 48, 17, 5, allowStaff, "Prohibit")
-      :setTooltip(_S.tooltip.policy.staff_stay) -- Prohibit staff to move
+      :setTooltip(_S.tooltip.policy.staff_stay)
+      :setSound("selectx.wav") -- Prohibit staff to move
 
   if self.hospital.policies["staff_allowed_to_move"] then
     self.allow_button:toggle()
@@ -124,22 +126,22 @@ function UIPolicy:draw(canvas, x, y)
   local text = self.text_font
   local label = self.label_font
 
-  -- Labels on the panels
+  -- Labels on the panels. Labels are always capitalised.
   local added_x = self.sliders["send_home"].x
   local added_y = self.sliders["send_home"].y
-  label:draw(canvas, _S.policy.sliders.send_home, x + added_x, y + added_y + 2, 82, 0)
+  label:draw(canvas, _S.policy.sliders.send_home:upper(), x + added_x, y + added_y + 2, 82, 0)
 
   added_x = self.sliders["guess_cure"].x
   added_y = self.sliders["guess_cure"].y
-  label:draw(canvas, _S.policy.sliders.guess, x + added_x, y + added_y + 2, 82, 0)
+  label:draw(canvas, _S.policy.sliders.guess:upper(), x + added_x, y + added_y + 2, 82, 0)
 
   added_x = self.sliders["stop_procedure"].x
   added_y = self.sliders["stop_procedure"].y
-  label:draw(canvas, _S.policy.sliders.stop, x + added_x, y + added_y + 2, 92, 0)
+  label:draw(canvas, _S.policy.sliders.stop:upper(), x + added_x, y + added_y + 2, 92, 0)
 
   added_x = self.sliders["goto_staffroom"].x
   added_y = self.sliders["goto_staffroom"].y
-  label:draw(canvas, _S.policy.sliders.staff_room, x + added_x, y + added_y + 2, 92, 0)
+  label:draw(canvas, _S.policy.sliders.staff_room:upper(), x + added_x, y + added_y + 2, 92, 0)
 
   -- All other text
   text:draw(canvas, _S.policy.header,            x + 160, y + 78, 300, 0)

@@ -266,13 +266,6 @@ int l_get_compile_options(lua_State* L) {
   lua_pushliteral(L, CORSIX_TH_ARCH);
   lua_setfield(L, -2, "arch");
 
-#ifdef CORSIX_TH_USE_SDL_MIXER
-  lua_pushboolean(L, 1);
-#else
-  lua_pushboolean(L, 0);
-#endif
-  lua_setfield(L, -2, "audio");
-
 #ifdef WITH_UPDATE_CHECK
   lua_pushboolean(L, 1);
 #else

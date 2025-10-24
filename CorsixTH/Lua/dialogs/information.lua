@@ -39,6 +39,7 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
   self.on_top = true
   self.ui = ui
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PulldV", true)
+  self.active_hover = false
   if not use_built_in_font then
     self.black_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V")
   else
@@ -102,6 +103,14 @@ function UIInformation:onChangeLanguage()
 
   -- Close button
   self:addPanel(19, self.width - 28, self.height - 28):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
+  .panel_for_sprite.custom_draw = --[[persistable:information_close_button]] function(panel, canvas, x, y)
+      x = x + panel.x
+      y = y + panel.y
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
+      if self.active_hover then
+        self.panel_sprites:draw(canvas, 20, x, y)
+      end
+    end
 end
 
 function UIInformation:draw(canvas, x, y)
@@ -114,6 +123,11 @@ function UIInformation:draw(canvas, x, y)
   end
 
   Window.draw(self, canvas, x, y)
+end
+
+function UIInformation:onMouseMove(x, y, dx, dy)
+  self.active_hover = self:hoverTest(self.active_hover, x, y, self.width - 29, self.width - 10, self.height - 29, self.height - 10)
+  return Window:onMouseMove(x, y, dx, dy)
 end
 
 function UIInformation:hitTest(x, y)

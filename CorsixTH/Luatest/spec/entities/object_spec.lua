@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 require("class_test_base")
 
+require("utility")
 require("entity")
 require("entities.object")
 

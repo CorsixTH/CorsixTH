@@ -30,6 +30,7 @@ object.build_preview_animation = 918
 object.default_strength = 12
 object.crashed_animation = 3308
 object.show_in_town_map = true
+object.smoke_animation = 3432
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -143,6 +144,7 @@ object.orientations = {
     use_position = {1, -1},
     use_position_secondary = {0, 0},
     added_handyman_animate_offset_while_in_use = {1, -1},
+    smoke_position = {0, 0},
   },
   east = {
     footprint = { {-1, -1, complete_cell = true}, {-1, 0}, {0, -1, complete_cell = true},
@@ -151,6 +153,7 @@ object.orientations = {
     use_position = {-1, 1},
     use_position_secondary = {0, 0},
     added_handyman_animate_offset_while_in_use = {-1, 1},
+    smoke_position = {0, 0},
   },
 }
 local anim_mgr = TheApp.animation_manager

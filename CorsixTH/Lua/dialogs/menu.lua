@@ -42,7 +42,7 @@ function UIMenuBar:UIMenuBar(ui, map_editor)
   local selected_label_color = { red = 40, green = 40, blue = 250 }
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PullDV", true)
   self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
-  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, 0, 0, selected_label_color)
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color})
   -- The list of top-level menus, from left to right
   self.menus = {}
   -- The menu which the cursor was most recently over
@@ -262,7 +262,11 @@ function UIMenuBar:onMouseMove(x, y, dx, dy)
         toparent = false
         visible = true
         if hit ~= true then
+          if hit ~= menu.prev_hover_index then
+            self.ui:playSound("HLight5.wav")
+          end
           menu.hover_index = hit
+          menu.prev_hover_index = menu.hover_index
         else
           menu.hover_index = 0
           if menu.parent and menu.parent:hitTest(x, y, 0) then
@@ -474,6 +478,7 @@ function UIMenu:UIMenu()
   self.items = {}
   self.parent = false
   self.hover_index = 0
+  self.prev_hover_index = nil
   self.has_size = false
 end
 
@@ -548,7 +553,6 @@ end
 -- game sounds controls are added.
 local function audio_options(menu, game)
   local app = TheApp
-  if not app:isAudioEnabled() then return end
 
   local function vol(level, setting)
     if setting == "music" then
@@ -808,9 +812,6 @@ function UIMenuBar:makeGameMenu(app)
   local function allowBlockingAreas(item)
     app.config.allow_blocking_off_areas = item.checked
   end
-  local function allowFalling(item)
-    app.config.debug_falling = item.checked
-  end
   local levels_menu = UIMenu()
   for L = 1, 12 do
     levels_menu:appendItem(("  L%i  "):format(L), function()
@@ -825,7 +826,6 @@ function UIMenuBar:makeGameMenu(app)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
       :appendCheckItem(_S.menu_debug.allow_blocking_off_areas, false, allowBlockingAreas, nil, function() return self.ui.app.config.allow_blocking_off_areas end)
-      :appendCheckItem(_S.menu_debug.allow_falling, false, allowFalling, nil, function() return self.ui.app.config.debug_falling end)
       :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui:addWindow(UIMakeDebugPatient(self.ui)) end)
       :appendItem(_S.menu_debug.cheats:format(hotkey_value_label("ingame_showCheatWindow", hotkeys)),             function() self.ui:addWindow(UICheats(self.ui)) end)
@@ -839,13 +839,13 @@ function UIMenuBar:makeGameMenu(app)
         :appendCheckItem(_S.menu_debug_overlay.flags,       false, overlay("flags"), "")
         :appendCheckItem(_S.menu_debug_overlay.positions,   false, overlay("positions"), "")
         :appendCheckItem(_S.menu_debug_overlay.heat,        false, overlay("heat"), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_0_1,    false, overlay(35, 8, 0, 1, false), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_floor,  false, overlay(35, 8, 2, 2, false), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_n_wall, false, overlay(35, 8, 3, 3, false), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_w_wall, false, overlay(35, 8, 4, 4, false), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_5,      false, overlay(35, 8, 5, 5, true), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_6,      false, overlay(35, 8, 6, 6, true), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_7,      false, overlay(35, 8, 7, 7, true), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_0_1,    false, overlay(0, 1, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_floor,  false, overlay(2, 2, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_n_wall, false, overlay(3, 3, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_w_wall, false, overlay(4, 4, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_5,      false, overlay(5, 5, true), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_6,      false, overlay(6, 6, true), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_7,      false, overlay(7, 7, true), "")
         :appendCheckItem(_S.menu_debug_overlay.parcel,      false, overlay("parcel"), "")
       )
       :appendItem(_S.menu_debug.sprite_viewer, function() corsixth.require("sprite_viewer") end)

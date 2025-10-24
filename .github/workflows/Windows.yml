@@ -31,6 +31,7 @@ jobs:
       PRESET: ${{inputs.preset || 'win-x64-rel'}}
       ANIMVIEW: ${{inputs.animview && 'ON' || 'OFF'}}
       NAME: CorsixTH${{inputs.animview && '_and_AnimView' || ''}}${{inputs.preset == 'win-x86-rel' && '_x86' || ''}}
+      VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}/vcpkg_cache,readwrite
     defaults:
       run:
         shell: bash
@@ -43,6 +44,13 @@ jobs:
           GH_TOKEN: ${{github.token}}
         if: inputs.PR
         run: gh pr checkout --repo CorsixTH/CorsixTH ${{inputs.pr}}
+
+      - name: Restore vcpkg cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-${{env.PRESET}}-${{hashFiles('vcpkg.json','vcpkg-configuration.json')}}
+          restore-keys: vcpkg-${{env.PRESET}}-
 
       - name: Get CMake
         uses: lukka/get-cmake@v3.28.3
@@ -69,6 +77,12 @@ jobs:
           buildPreset: ${{env.PRESET}}
           buildPresetAdditionalArgs: "['--verbose', '--target install']"
           testPreset: ${{env.PRESET}}
+
+      - name: Save vcpkg cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-${{env.PRESET}}-${{hashFiles('vcpkg.json','vcpkg-configuration.json')}}
 
       - name: Download soundfont
         if: inputs.PRESET != 'win-dev'

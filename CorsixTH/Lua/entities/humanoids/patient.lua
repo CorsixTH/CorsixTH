@@ -51,6 +51,9 @@ function Patient:Patient(...)
   self.vaccination_candidate = false
   -- Has the patient passed reception?
   self.has_passed_reception = false
+  -- Diagnostics progress to diagnose the patient.
+  -- Usually this value is in the range from 0 to ~2.5
+  self.diagnosis_progress = 0
 
   -- Is the patient trying to get to the toilet? ("yes", "no", or "no-toilets")
   self.going_to_toilet = "no"
@@ -67,10 +70,19 @@ function Patient:onClick(ui, button)
     if self.message_callback then
       self:message_callback()
     else
+
+      local function isValidEpidemicTarget(epidemic)
+        return epidemic and epidemic.coverup_selected and
+            (epidemic.vaccination_mode_active or
+            (self.infected and (not self.marked_for_vaccination)))
+      end
+
       local hospital = self.hospital or self.world:getLocalPlayerHospital()
       local epidemic = hospital and hospital.epidemic
-      if epidemic and epidemic.vaccination_mode_active then
-        epidemic:markForVaccination(self)
+      if isValidEpidemicTarget(epidemic) then
+          if not epidemic.timer.closed then
+            epidemic:markForVaccination(self)
+          end
       else
         ui:addWindow(UIPatient(ui, self))
       end
@@ -79,10 +91,8 @@ function Patient:onClick(ui, button)
     -- The object we're using is made invisible, as the animation contains both
     -- the humanoid and the object. Hence send the click onto the object.
     self.user_of:onClick(ui, button)
-  elseif TheApp.config.debug_falling and button == "right" then
+  elseif button == "right" then
     -- Attempt to push patient over
-    -- Currently debug-only, enable in config file for testing.
-    -- Once confirmed working, the debugging flag can be removed.
     if not self.world:isPaused() and not (self.cured or self.dead or self.going_home)
          and math.random(1, 2) == 2 then
       self:falling(true)
@@ -104,9 +114,10 @@ function Patient:setDisease(disease)
   for i, room in ipairs(self.disease.diagnosis_rooms) do
     self.available_diagnosis_rooms[i] = room
   end
-  local company = math.random(1,12)
-  if company < 4 then
-    self.insurance_company = company
+  -- 25% of the patients pay via insurance
+  if math.random(1,4) == 1 then
+    -- randomly select one of three insurance companies
+    self.insurance_company = math.random(1,3)
   end
   -- Randomise thirst and the need to visit the loo soon.
   -- Alien patients do not have the needed animations for these things, so exclude them
@@ -328,6 +339,10 @@ function Patient:isTreatmentEffective()
   cure_chance = cure_chance + (service_base * service_factor)
 
   return (cure_chance >= math.random(1,100))
+end
+
+function Patient:hasMoreDiagnosisRoomsAvailable()
+  return #self.available_diagnosis_rooms ~= 0
 end
 
 --! Change patient internal state to "cured".
@@ -1103,7 +1118,7 @@ end
 function Patient:removeAnyEpidemicStatus()
   self:setMood("epidemy1","deactivate") -- vaccinated (step 4)
   self:setMood("epidemy2","deactivate") -- marked (step 2)
-  self:setMood("epidemy3","deactivate") -- choosed by nurse (step 3)
+  self:setMood("epidemy3","deactivate") -- chosen by nurse (step 3)
   self:setMood("epidemy4","deactivate") -- infected (step 1)
 end
 

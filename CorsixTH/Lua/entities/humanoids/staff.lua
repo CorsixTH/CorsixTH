@@ -52,17 +52,18 @@ function Staff:tickDay()
 
   -- if you overwork your Dr's then there is a chance that they can go crazy
   -- when this happens, find him and get him to rest straight away
-  if not self:isVeryTired() and self:isResting() then
+  if self:isVeryTired() or not self:isResting() then
+    -- Working when you should be taking a break will make you unhappy
+    if self:getAttribute("fatigue") >= self.hospital.policies["goto_staffroom"] then
+      self:changeAttribute("happiness", -0.02)
+    end
+    -- You will also start to become unhappy as you become tired
+    if self:getAttribute("fatigue") >= 0.5 then
+      self:changeAttribute("happiness", -0.01)
+    end
+  else -- You are resting, and no longer very tired. Things can only get better!
     self:setMood("tired", "deactivate")
     self:changeAttribute("happiness", 0.006)
-  end
-  -- Working when you should be taking a break will make you unhappy
-  if self:getAttribute("fatigue") >= self.hospital.policies["goto_staffroom"] then
-    self:changeAttribute("happiness", -0.02)
-  end
-  -- You will also start to become unhappy as you become tired
-  if self:getAttribute("fatigue") >= 0.5 then
-    self:changeAttribute("happiness", -0.01)
   end
 
   -- It is nice to see plants, but dead plants make you unhappy
@@ -72,32 +73,31 @@ function Staff:tickDay()
       self:changeAttribute("happiness", -0.003 + (plant:isPleasingFactor() * 0.001))
     end
   end)
-  -- It always makes you happy to see you are in safe place
-  self.world:findObjectNear(self, "extinguisher", 2, function()
-    self:changeAttribute("happiness", 0.002)
-  end)
-  -- Extra room items add to your happiness (some more than others)
-  self.world:findObjectNear(self, "bin", 2, function()
-    self:changeAttribute("happiness", 0.001)
-  end)
-  self.world:findObjectNear(self, "bookcase", 2, function()
-    self:changeAttribute("happiness", 0.003)
-  end)
-  self.world:findObjectNear(self, "skeleton", 2, function()
-    self:changeAttribute("happiness", 0.002)
-  end)
-  self.world:findObjectNear(self, "tv", 2, function()
-    self:changeAttribute("happiness", 0.0005)
-  end)
+
+  -- Seeing various nearby objects boost your happiness, some more than others
+  local good_objects = {
+    ["extinguisher"] = 0.002, -- Makes you feel safe
+    ["bin"]          = 0.001,
+    ["bookcase"]     = 0.003,
+    ["skeleton"]     = 0.002,
+    ["tv"]           = 0.0005,
+  }
+  for obj_name, happiness_score in pairs(good_objects) do
+    self.world:findObjectNear(self, obj_name, 2, function()
+      self:changeAttribute("happiness", happiness_score)
+    end)
+  end
+
+  -- List of positive rest activities and their happiness effect
+  local recreation = {
+    ["video_game"] = 0.08,
+    ["pool_table"] = 0.074,
+    ["sofa"]       = 0.05,
+  }
   -- Being able to rest from work and play the video game or pool will make you happy
-  if (self:getCurrentAction().name == "use_object" and self:getCurrentAction().object.object_type.id == "video_game") then
-   self:changeAttribute("happiness", 0.08)
-  end
-  if (self:getCurrentAction().name == "use_object" and self:getCurrentAction().object.object_type.id == "pool_table") then
-   self:changeAttribute("happiness", 0.074)
-  end
-  if (self:getCurrentAction().name == "use_object" and self:getCurrentAction().object.object_type.id == "sofa") then
-   self:changeAttribute("happiness", 0.05)
+  if self:getCurrentAction().name == "use_object" then
+    local happiness = recreation[self:getCurrentAction().object.object_type.id]
+    if happiness then self:changeAttribute("happiness", happiness) end
   end
 
   local room = self:getRoom()
@@ -510,17 +510,18 @@ function Staff:adviseWrongPersonForThisRoom()
 end
 
 --! Check whether staff are meandering
---"meander" action always insert "move" or "idle" action before itself.
---so when humanoid "meandering" his action queue usually looks like:
---[1 idle, 2 meander] or [1 walk, 2 meander].
 --!return true if staff currently has a meander action
 function Staff:isMeandering()
-  if ((self.action_queue[1].name == "idle") or
-    (self.action_queue[1].name == "walk")) and
-    (self.action_queue[2].name == "meander") then
-    return true
-  end
-  return false
+  if #self.action_queue < 2 then return false end
+
+  -- "meander" action always insert "move" or "idle" action before itself.
+  -- so when humanoid "meandering" his action queue usually looks like:
+  -- [1 idle, 2 meander] or [1 walk, 2 meander].
+  local idle_is_first = self.action_queue[1].name == "idle"
+  local walk_is_first = self.action_queue[1].name == "walk"
+  local meander_is_second = self.action_queue[2].name == "meander"
+
+  return (idle_is_first or walk_is_first) and meander_is_second
 end
 
 -- Function to decide if staff currently has nothing to do and can be called to a room where they're needed
@@ -534,9 +535,6 @@ function Staff:isIdle()
     return false
   end
 
-  if self.waiting_on_other_staff then
-    return false
-  end
   -- if they are using a door they are not idle, this stops doctors being considered for staff selection
   -- for rooms they have not completely left yet, fixes issue 810
   if self.user_of and self.user_of.object_type.id == "door" then
@@ -562,15 +560,13 @@ function Staff:isIdle()
     -- or if the only one in sight is actually leaving.
     return not room:isRoomInDemand()
   else
-    -- In the corridor and not on_call (watering or going to room), the staff is free
-    -- unless going back to the training room or research department.
-    local x, y = self:getCurrentAction().x, self:getCurrentAction().y
-    if x then
-      room = self.world:getRoom(x, y)
-      if room and (room.room_info.id == "training" or room.room_info.id == "research") then
-        return false
-      end
+    -- In the corridor and not on_call (e.g. watering or going to room).
+    -- The staff is free, unless going back to the training/research.
+    room = self.last_room
+    if room and (room.room_info.id == "training" or room.room_info.id == "research") then
+      return false
     end
+
     return true
   end
 end
@@ -726,10 +722,6 @@ function Staff:afterLoad(old, new)
 
   self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
-end
-
-function Staff:getDrawingLayer()
-  return 4
 end
 
 --! Estimate staff service quality based on skills, restfulness (inverse of fatigue) and happiness.

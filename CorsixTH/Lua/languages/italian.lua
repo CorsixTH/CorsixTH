@@ -56,7 +56,7 @@ tooltip.casebook.cure_type.unknown = "Ancora non sei a conoscenza di una cura pe
 tooltip.research_policy.no_research = "Non c'è nessuna ricerca in corso in questa categoria al momento"
 tooltip.research_policy.research_progress = "Progresso verso una nuova scoperta in questa categoria: %1%/%2%"
 
-menu["player_count"] = "CONTA GIOCATORI"
+menu["player_count"] = "NUMERO GIOCATORI"
 
 menu_file = {
   load =    " (%1%) CARICA   ",
@@ -66,13 +66,13 @@ menu_file = {
 }
 
 menu_options = {
-  sound = "  (%1%) SONORO   ",
+  sound = "  (%1%) SUONO   ",
   announcements = "  (%1%) ANNUNCI   ",
   music = "  (%1%) MUSICA   ",
   jukebox = "  (%1%) JUKEBOX  ",
   lock_windows = "  BLOCCA FINESTRE  ",
-  edge_scrolling = "  SCORRIMENTO AI LATI  ",
-  capture_mouse = "  INTRAPPOLA MOUSE  ",
+  edge_scrolling = "  SCORRIMENTO AI BORDI  ",
+  capture_mouse = "  CATTURA MOUSE  ",
   adviser_disabled = "  (%1%) CONSIGLIERE  ",
   warmth_colors = "  COLORI RISCALDAMENTO  ",
   wage_increase = "  RICHIESTE STIPENDI",
@@ -157,14 +157,14 @@ menu_player_count = {
 adviser = {
   room_forbidden_non_reachable_parts = "Mettere la stanza in questa posizione bloccherebbe l'accesso ad alcune parti dell'ospedale.",
   staff_place_advice = {
-    not_enough_lecture_chairs = "Ogni studente medico ha bisogno di uno sgabello su cui sedersi!",
+    not_enough_lecture_chairs = "Agli studenti di medicina serve sempre uno sgabello per sedersi!",
   },
   warnings = {
-    no_desk = "Prima o poi dovrai costruire un banco di accettazione ed assumere una receptionist!",
-    no_desk_1 = "Se vuoi che i pazienti vengano nel tuo ospedale dovrai assumere una receptionist e costruirle una scrivania dove farla lavorare!",
+    no_desk = "Dovresti costruire un banco di accettazione ed assumere una receptionist!",
+    no_desk_1 = "Se vuoi che i pazienti vengano nel tuo ospedale dovrai assumere una receptionist e costruirle un banco accettazione dove farla lavorare!",
     no_desk_2 = "Ben fatto, deve essere un record mondiale: quasi un anno e nessun paziente! Se vuoi continuare come Manager di questo ospedale dovrai assumere una receptionist e costruire un banco di accettazione dove farla lavorare!",
     no_desk_3 = "Grandioso, quasi un anno e ancora non hai personale all'accettazione! Come ti aspetti di trovare pazienti, ora vedi di rimediare e di non fare più casini!",
-    no_desk_4 = "Una receptionist ha bisogno della sua stazione di lavoro per accogliere i clienti quando arrivano",
+    no_desk_4 = "Una receptionist ha bisogno del banco accettazione per accogliere i clienti quando arrivano",
     no_desk_5 = "Beh, era ora, presto dovresti cominciare a vedere arrivare i pazienti!",
     no_desk_6 = "Hai una receptionist, che ne dici quindi di costruirle un banco di accettazione dove poter lavorare?",
     no_desk_7 = "Hai costruito il banco di accettazione, quindi che ne dici di assumere una receptionist? Non vedrai pazienti finché non risolvi questa cosa!",
@@ -199,7 +199,7 @@ adviser = {
   },
 }
 
-dynamic_info.patient.actions.no_gp_available = "Aspetta che venga costruito un ambulatorio"
+dynamic_info.patient.actions.no_gp_available = "In attesa che venga costruito un ambulatorio"
 dynamic_info.staff.actions.heading_for = "Sta andando verso %s"
 dynamic_info.staff.actions.fired = "Licenziato"
 dynamic_info.patient.actions.epidemic_vaccinated = "Non sono più infetto"
@@ -233,14 +233,14 @@ letter = {
   dear_player = "Caro %s\n",
   custom_level_completed = "Ben fatto! Hai completato tutti gli obiettivi di questo livello personalizzato!",
   return_to_main_menu = "Vuoi tornare al menu principale o vuoi continuare a giocare?",
-  campaign_level_completed = "Ottimo lavoro! Hai battuto il livello. Ma non è ancora finita!\n Saresti interessato a una posizione nell'ospedale %s?",
+  campaign_level_completed = "Ottimo lavoro! Hai completato il livello. Ma non è ancora finita!\n Saresti interessato a una posizione nell'ospedale %s?",
   campaign_completed = "Incredibile! Sei riuscito a completare tutti i livelli. Ora puoi rilassarti e divertirti a riempire i forum su internet con i tuoi fantastici risultati. Buona fortuna!",
   campaign_level_missing = "Mi dispiace, ma sembra che il livello successivo di questa campagna non sia presente. (Nome: %s)",
 }
 
 install = {
   title = "----------------------------- Installazione CorsixTH -----------------------------",
-  th_directory = "CorsixTH ha bisogno di una copia dei file dati di CorsixTH (o della demo) per essere eseguito. Per favore indica la posizione della cartella HOSP nell'installazione di CorsixTH.",
+  th_directory = "CorsixTH ha bisogno di una copia dei file dati di Theme Hospital (o della demo) per essere eseguito. Per favore indica la posizione della cartella HOSP nell'installazione di Theme Hospital.",
   ok = "Ok",
   exit = "Esci",
   cancel = "Annulla",
@@ -252,11 +252,11 @@ misc = {
   epidemic_no_icon_to_toggle = "Impossibile mostrare/nascondere icone infezione - non ci sono epidemie in corso che non siano gia' state rivelate",
   epidemic_no_diseases = "Impossibile creare epidemia - non ci sono malattie contagiose disponibili.",
   cant_treat_emergency = "Il tuo ospedale non può affrontare questa emergenza perché la sua malattia non è stata scoperta. Sentiti libero di riprovare.",
-  earthquakes_on = "I terremoti sono riabilitati",
-  epidemics_on = "Le epidemie sono riabilitate",
+  earthquakes_on = "I terremoti sono abilitati",
+  epidemics_on = "Le epidemie sono abilitate",
   epidemic_no_receptionist = "Impossibile creare epidemia - nessuna reception funzioante",
-  epidemics_off = "Le epidemie sono abilitate",
-  earthquakes_off = "I terremoti sono abilitati",
+  epidemics_off = "Le epidemie sono disabilitate",
+  earthquakes_off = "I terremoti sono disabilitati",
 }
 
 hotkeys_file_err.file_err_01 = "Impossibile caricare il file hotkeys.txt. Assicurati che CorsixTH abbia permessi in lettura/scrittura "
@@ -273,11 +273,11 @@ main_menu = {
   savegame_version = "Versione salvataggi: ",
   version = "Versione: ",
   exit = "Esci",
-  updates_off = "Niente controllo aggiornamenti",
+  updates_off = "Disabilita aggiornamenti",
 }
 
 tooltip.main_menu = {
-  new_game = "Inizia una nuova partita",
+  new_game = "Nuova partita",
   custom_campaign = "Gioca una campagna creata dalla comunità",
   custom_level = "Costruisci il tuo ospedale in un livello personalizzato",
   load_game = "Carica una partita salvata in precedenza",
@@ -335,7 +335,7 @@ save_map_window = {
 
 tooltip.save_map_window = {
   map = "Sovrascrivi mappa %s",
-  new_map = "Inserisci il nome per salvataggio mappa",
+  new_map = "Inserisci il nome per il salvataggio della mappa",
 }
 
 menu_list_window = {
@@ -376,23 +376,20 @@ options_window = {
   hotkey = "Scorciatoie",
   cancel = "Cancella",
   back = "Indietro",
-  scrollspeed = "Velocità scorrimento",
   option_disabled = "Disabilitato",
   hotkey = "Scorciatoie",
   option_enabled = "Abilitato",
   zoom_speed = "Velocità zoom",
-  shift_scrollspeed = "Velocità di scorrimento con Maiusc",
   jukebox = "Jukebox",
   right_mouse_scrolling_option_right = "Bottone Destro",
   right_mouse_scrolling_option_middle = "Bottone Centrale",
-  check_for_updates = "Cerca  aggiornamenti",
   right_mouse_scrolling = "Scorrimento con Mouse",
 }
 
 tooltip.options_window = {
-  fullscreen = "Decide se il gioco verrà eseguito a schermo intero o in finestra",
+  fullscreen = "Decidi se il gioco verrà eseguito a schermo intero o in finestra",
   fullscreen_button = "Clicca per attivare o disattivare la modalità a schermo intero",
-  resolution = "La risoluzione a cui il gioco dovrebbe essere eseguito",
+  resolution = "La risoluzione alla quale verrà eseguito il gioco",
   select_resolution = "Seleziona una nuova risoluzione",
   capture_mouse = "Clicca per attivare o disattivare la cattura del puntatore all'interno della finestra di gioco",
   width = "Inserisci la larghezza dello schermo desiderata",
@@ -400,7 +397,7 @@ tooltip.options_window = {
   apply = "Applica la risoluzione inserita",
   cancel = "Esci senza cambiare la risoluzione",
   audio_button = "Attiva o disattiva tutti i suoni del gioco",
-  audio_toggle = "Audio on o off",
+  audio_toggle = "Attiva o Disattiva Audio",
   customise_button = "Altre impostazioni che puoi cambiare per personalizzare la tua esperienza di gioco",
   folder_button = "Opzioni cartelle",
   language = "La lingua in cui verrà mostrato il testo",
@@ -414,13 +411,13 @@ tooltip.options_window = {
   hotkey = "Cambia le scorciatoie da tastiera.",
   apply_shift_scrollspeed = "Applica la velocità di scorrimento dello spostamento selezionata.",
   right_mouse_scrolling = "Attiva/disattiva il pulsante del mouse utilizzato per scorrere la mappa",
-  cancel_scrollspeed = "Torna senza cambiare la velocità di scorrimento.",
+  cancel_scrollspeed = "Esci senza cambiare la velocità di scorrimento.",
   jukebox = "Apri il Jukebox per controllare la musica",
   zoom_speed = "Imposta la velocità di zoom della telecamera da 10 (minimo) a 1000 (massimo). Il valore predefinito è 80.",
   language_dropdown_no_font = "Seleziona un font nelle impostazioni delle cartelle per abilitare questa lingua",
-  cancel_zoomspeed = "Torna senza cambiare la velocità di zoom",
-  cancel_shift_scrollspeed = "Torna senza cambiare la velocità di scorrimento con Maiusc.",
-  check_for_updates = "Imposta se il gioco debba cercare aggiornamenti all'avvio.",
+  cancel_zoomspeed = "Esci senza cambiare la velocità di zoom",
+  cancel_shift_scrollspeed = "Esci senza cambiare la velocità di scorrimento con Maiusc.",
+  check_for_updates = "Imposta se il gioco deve cercare aggiornamenti all'avvio.",
   apply_zoomspeed = "Applica la velocità di zoom selezionata.",
   apply_scrollspeed = "Applica la velocità di scorrimento selezionata.",
 }
@@ -442,8 +439,8 @@ customise_window = {
 
 tooltip.customise_window = {
   movies = "Controllo filmati globale, questo ti permette di disattivare tutti i filmati",
-  intro = "Disattiva o attiva la riproduzione del filmato introduttivo. I filmati globali devono essere attivati se vuoi che il filmato introduttiva venga riprodotto ogni volta che avvii CorsixTH",
-  paused = "In CorsixTH al giocatore è consentito utilizzare il menu in alto solo se il gioco è in pausa. Questa è l'impostazione predefinita anche in CorsixTH, ma attivandola tutto è consentito mentre il gioco è in pausa",
+  intro = "Disattiva o attiva la riproduzione del filmato introduttivo. I filmati globali devono essere attivati se vuoi che il filmato introduttivo venga riprodotto ogni volta che avvii CorsixTH",
+  paused = "In Theme Hospital al giocatore è consentito utilizzare il menu in alto solo se il gioco è in pausa. Questa è l'impostazione predefinita anche in CorsixTH, ma attivandola tutto è consentito mentre il gioco è in pausa",
   volume = "Se il pulsante per abbassare il volume ti fa aprire anche il Registro Cure, attiva questa opzione per impostare Shift + C come scorciatoia per il Registro Cure",
   aliens = "A causa dell'assenza delle giuste animazioni abbiamo fatto sì che i pazienti con DNA Alieno possano arrivare solo con un'emergenza. Per permettere ai pazienti con DNA Alieno di visitare il tuo ospedale anche al di fuori delle emergenze disattiva questa opzione",
   fractured_bones = "A causa della scarsa qualità di alcune animazioni abbiamo fatto sì che non ci siano pazienti donne con Ossa Rotte. Per far sì che donne con Ossa Rotte visitino il tuo ospedale, disattiva questa opzione",
@@ -460,7 +457,7 @@ folders_window = {
   savegames_label = "Salvataggi",
   screenshots_label = "Screenshot",
   -- next four are the captions for the browser window, which are called from the folder setting menu
-  new_th_location = "Qui puoi specificare una nuova directory di installazione di CorsixTH o un file ISO. Non appena scegli la nuova directory, il gioco verrà riavviato. Tieni presente che le estensioni dei file non sono attualmente visualizzate.",
+  new_th_location = "Qui puoi specificare una nuova directory di installazione di Theme Hospital o un file ISO. Non appena scegli la nuova directory, il gioco verrà riavviato. Tieni presente che le estensioni dei file non sono attualmente visualizzate.",
   savegames_location = "Seleziona la cartella che vuoi usare per i salvataggi",
   music_location = "Seleziona la cartella che vuoi usare per la tua musica",
   screenshots_location = "Seleziona la cartella che vuoi usare per i tuoi screenshot",
@@ -469,12 +466,12 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "Sfoglia le cartelle",
-  data_location = "La cartella dell'installazione originale di CorsixTH, che è richiesto per eseguire CorsixTH",
+  data_location = "La cartella dell'installazione originale di Theme Hospital, che è richiesto per eseguire CorsixTH",
   font_location = "Posizione di un font che è in grado di mostrare i caratteri Unicode richiesti dalla tua lingua. Se non specificata, non potrai scegliere lingue che hanno bisogno di più caratteri rispetto a quelli di cui dispone il gioco originale. Esempio: Russo e Cinese",
   savegames_location = "Per impostazione predefinita, la cartella dei salvataggi si trova accanto al file di configurazione e verrà utilizzata per archiviare i giochi salvati. In alternativa, puoi usarne un'altra selezionando quella che desideri utilizzare.",
   screenshots_location = "Per impostazione predefinita, la cartella dei salvataggi si trova accanto al file di configurazione. In alternativa, puoi usarne un'altra selezionando quella che desideri utilizzare.",
   music_location = "Seleziona la posizione per i tuoi file MP3. Devi aver già creato la cartella e poi selezionare la cartella che hai creato.",
-  browse_data = "Sfoglia per selezionare un percorso diverso per l'installazione di CorsixTH ( Percorso attuale: %1% )",
+  browse_data = "Sfoglia per selezionare un percorso diverso per l'installazione di Theme Hospital ( Percorso attuale: %1% )",
   browse_font = "Sfoglia per selezionare un altro file font ( posizione attuale: %1% )",
   browse_saves = "Sfoglia per selezionare un percorso diverso per la tua cartella dei salvataggi ( Percorso attuale: %1% ) ",
   browse_screenshots = "Sfoglia per selezionare percorso diverso per la tua cartella degli screenshot ( Percorso attuale: %1% ) ",
@@ -522,9 +519,9 @@ hotkey_window = {
   ingame_panel_bankManager = "Azioni Banca",
   ingame_panel_bankStats = "Saldo in Banca",
   ingame_panel_buildRoom = "Costruisci Stanza",
-  ingame_panel_casebook = "Casebook",
-  ingame_panel_casebook_alt = "Casebook 2",
-  ingame_panel_casebook_alt02 = "Casebook 3",
+  ingame_panel_casebook = "Diario clinico",
+  ingame_panel_casebook_alt = "Diario clinico 2",
+  ingame_panel_casebook_alt02 = "Diario clinico 3",
   ingame_panel_charts = "Grafici",
   ingame_panel_editRoom = "Modifica Stanza",
   ingame_panel_furnishCorridor = "Arreda Corridoio",
@@ -654,7 +651,7 @@ errors = {
   map_file_missing = "Non ho potuto trovare la mappa %s per questo livello!",
   minimum_screen_size = "Per favore inserisci almeno una risoluzione di 640x480.",
   unavailable_screen_size = "La risoluzione che hai richiesto non è disponibile a schermo intero.",
-  alien_dna = "NOTA: Non ci sono animazioni per i pazienti Alieni per quando si siedono, aprono o bussano sulle porte etc. Quindi, così come in CorsixTH, mentre fanno queste cose appariranno normali per poi tornare ad apparire alieni. I pazienti con DNA Alieno appariranno solo se impostati dal file del livello",
+  alien_dna = "NOTA: Non ci sono animazioni per i pazienti Alieni per quando si siedono, aprono o bussano sulle porte etc. Quindi, così come in Theme Hospital, mentre fanno queste cose appariranno normali per poi tornare ad apparire alieni. I pazienti con DNA Alieno appariranno solo se impostati dal file del livello",
   fractured_bones = "NOTA: L'animazione per i pazienti donne con Ossa Rotte non è perfetta",
   could_not_load_campaign = "Errore nel caricare la campagna: %s",
   could_not_find_first_campaign_level = "Non è stato possibile trovare il primo livello di questa campagna: %s",
@@ -682,6 +679,7 @@ confirmation = {
   music_warning = "Nota: è necessario avere la libreria smpeg.dll o equivalente nel tuo sistema operativo, altrimenti non sentirai alcuna musica nel gioco. Vuoi continuare?",
  --This next line isn't in the english.lua, but when strings are dump it is reported missing
   restart_level = "Sei sicuro di voler riavviare il livello?",
+  remove_destroyed_room = "Vuoi rimuovere la stanza per $X?",
 }
 
 information = {

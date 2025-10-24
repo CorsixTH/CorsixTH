@@ -59,13 +59,13 @@ function HumanoidAction:setMustHappen(must_happen)
   return self
 end
 
---! Set the 'uninterruptable' flag (that is, action cannot be canceled or truncated by pickup).
---!param uninterruptable (bool) Whether or not the action uninterruptable.
+--! Set the 'uninterruptible' flag (that is, action cannot be canceled or truncated by pickup).
+--!param uninterruptible (bool) Whether or not the action uninterruptible.
 --!return (action) Returning self, for daisy-chaining.
-function HumanoidAction:setUninterruptable(uninterruptable)
-  assert(type(uninterruptable) == "boolean", "Invalid value for parameters 'uninterruptable'")
+function HumanoidAction:setUninterruptible(uninterruptible)
+  assert(type(uninterruptible) == "boolean", "Invalid value for parameters 'uninterruptible'")
 
-  self.uninterruptible = uninterruptable
+  self.uninterruptible = uninterruptible
   return self
 end
 

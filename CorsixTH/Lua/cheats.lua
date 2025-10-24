@@ -52,6 +52,8 @@ function Cheats:Cheats(hospital)
     {name = "decrease_prices", func = self.cheatDecreasePrices},
     {name = "reset_death_count", func = self.cheatResetDeathCount},
     {name = "max_reputation",  func = self.cheatMaxReputation},
+    {name = "repair_all_machines", func = self.cheatRepairAllMachines},
+    {name = "toggle_invulnerable_machines", func = self.cheatToggleInvulnerableMachines},
   }
 
   self.active_cheats = {} -- Toggle cheat status
@@ -209,6 +211,39 @@ function Cheats:cheatDecreasePrices()
   end
 end
 
+function Cheats:cheatResetDeathCount()
+  self.hospital:resetDeathCount()
+end
+
+function Cheats:cheatMaxReputation()
+  local hosp = self.hospital
+  hosp:unconditionalChangeReputation(hosp.reputation_max)
+end
+
+--! Instantly repairs all of the player's machines (regardless of condition, without decreasing strength)
+function Cheats:cheatRepairAllMachines()
+  local world = self.hospital.world
+  local machines = world:getPlayerMachines()
+
+  for _, machine in ipairs(machines) do
+    machine:machineRepaired(machine:getRoom(), false)
+  end
+end
+
+--! Toggles machine invulnerability (no wear or explosions)
+function Cheats:cheatToggleInvulnerableMachines()
+  local msg
+
+  if self:isCheatActive("invulnerable_machines") then
+    msg = _S.misc.invulnerable_machines_off
+  else
+    msg = _S.misc.invulnerable_machines_on
+  end
+
+  self.active_cheats["invulnerable_machines"] = not self.active_cheats["invulnerable_machines"]
+  return true, msg
+end
+
 --[[Begin toggle-based cheat functions]]
 
 --! Enable Roujin's challenge (spawn rate cheat)
@@ -306,13 +341,4 @@ function Cheats:toggleCheat(name)
   if cheatWindow then
     cheatWindow:updateCheatedStatus()
   end
-end
-
-function Cheats:cheatResetDeathCount()
-  self.hospital:resetDeathCount()
-end
-
-function Cheats:cheatMaxReputation()
-  local hosp = self.hospital
-  hosp:unconditionalChangeReputation(hosp.reputation_max)
 end

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019 Stephen "TheCycoONE" Baker
+Copyright (c) 2019,2025 Stephen "TheCycoONE" Baker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -22,6 +22,9 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <stdexcept>
+#include <string_view>
+
 #include "iso_fs.h"
 #include "lua.hpp"
 #include "th_lua.h"
@@ -29,31 +32,59 @@ SOFTWARE.
 
 namespace {
 
+/**
+ * Lua binding to construct a new iso_filesystem object.
+ *
+ * Expects the lua stack to contain:
+ *   -# metatable for iso_fs
+ *   -# path to .iso file
+ *   -# (optional) path separator, defaults to '/'
+ *
+ * Returns on the lua stack:
+ *   -# userdata (iso_filesystem) or nil on failure
+ *   -# string (path) or nil on failure
+ *   -# error message if the first return value is nil
+ *
+ * @param L Lua stack
+ * @return Number of return values
+ */
 int l_isofs_new(lua_State* L) {
-  luaT_stdnew<iso_filesystem>(L, luaT_environindex, true);
-  return 1;
-}
-
-int l_isofs_set_path_separator(lua_State* L) {
-  iso_filesystem* pSelf = luaT_testuserdata<iso_filesystem>(L);
-  pSelf->set_path_separator(luaL_checkstring(L, 2)[0]);
-  lua_settop(L, 1);
-  return 1;
-}
-
-int l_isofs_set_root(lua_State* L) {
-  iso_filesystem* pSelf = luaT_testuserdata<iso_filesystem>(L);
   const char* path = luaL_checkstring(L, 2);
-  if (pSelf->initialise(path)) {
-    lua_pushvalue(L, 2);
-    luaT_setenvfield(L, 1, "string");
-    lua_settop(L, 1);
-    return 1;
-  } else {
-    lua_pushnil(L);
-    lua_pushstring(L, pSelf->get_error());
-    return 2;
+  std::string_view sep = luaL_optstring(L, 3, "/");
+  if (sep.length() != 1) {
+    luaL_argerror(L, 3, "Path separator must be a single character");
   }
+
+  try {
+    luaT_stdnew<iso_filesystem>(L, luaT_environindex, true, path, sep.at(0));
+  } catch (std::runtime_error& e) {
+    lua_pushnil(L);
+    lua_pushnil(L);
+    lua_pushfstring(L, "%s", e.what());
+    return 3;
+  }
+
+  // L
+  // 1 - table (metatable)
+  // 2 - path
+  // 3 - separator
+  // 4 - userdata (iso_filesystem)
+
+  lua_pushvalue(L, 2);
+  luaT_setenvfield(L, 4, "string");
+  lua_pushvalue(L, 2);
+  return 2;
+}
+
+int l_isofs_is_valid_root(lua_State* L) {
+  // Static method so we don't need an instance
+  try {
+    iso_filesystem fs(luaL_checkstring(L, 1));
+    lua_pushboolean(L, true);
+  } catch (std::runtime_error&) {
+    lua_pushboolean(L, false);
+  }
+  return 1;
 }
 
 int l_isofs_file_exists(lua_State* L) {
@@ -120,7 +151,7 @@ int l_isofs_read_contents(lua_State* L) {
   void* pBuffer = lua_newuserdata(L, pSelf->get_file_size(iFile));
   if (!pSelf->get_file_data(iFile, reinterpret_cast<uint8_t*>(pBuffer))) {
     lua_pushnil(L);
-    lua_pushstring(L, pSelf->get_error());
+    lua_pushlstring(L, pSelf->get_error().data(), pSelf->get_error().size());
     return 2;
   }
   lua_pushlstring(L, reinterpret_cast<char*>(pBuffer),
@@ -149,11 +180,10 @@ int l_isofs_list_files(lua_State* L) {
 void lua_register_iso_fs(const lua_register_state* pState) {
   lua_class_binding<iso_filesystem> lcb(pState, "iso_fs", l_isofs_new,
                                         lua_metatable::iso_fs);
-  lcb.add_function(l_isofs_set_path_separator, "setPathSeparator");
-  lcb.add_function(l_isofs_set_root, "setRoot");
   lcb.add_function(l_isofs_file_exists, "fileExists");
   lcb.add_function(l_isofs_file_size, "fileSize");
   lcb.add_function(l_isofs_file_offsets, "fileOffsets");
   lcb.add_function(l_isofs_read_contents, "readContents");
   lcb.add_function(l_isofs_list_files, "listFiles");
+  lcb.add_function(l_isofs_is_valid_root, "isValidRoot");
 }

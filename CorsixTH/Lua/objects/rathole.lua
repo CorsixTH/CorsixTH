@@ -59,4 +59,8 @@ function Rathole:Rathole(hospital, oject_type, x, y, direction, etc)
   self:Object(hospital, oject_type, x, y, direction, etc)
 end
 
+function Rathole:getDrawingLayer()
+  return DrawingLayers.RatHole
+end
+
 return object

@@ -52,7 +52,7 @@ function UIPatient:UIPatient(ui, patient)
   self.history_panel = self:addColourPanel(36, 22, 99, 88, 223, 223, 223) -- Treatment history background
   self.history_panel:makeButton(0, 0, 99, 88, nil, --[[persistable:patient_toggle_history]] function()
     self.history_panel.visible = not self.history_panel.visible
-  end):setTooltip(_S.tooltip.patient_window.graph) -- Treatment history toggle
+  end):setTooltip(_S.tooltip.patient_window.graph):setSound("selectx.wav") -- Treatment history toggle
   self.history_panel.visible = false -- Hide the treatment history at start
 
   self:addPanel(322,  15, 126) -- Happiness / thirst / temperature sliders
@@ -172,12 +172,13 @@ function UIPatient:draw(canvas, x_, y_)
 end
 
 --! List the treatments that were performed on the patient.
+-- This text is always capitalised.
 --!param canvas Destination to draw on.
 --!param x (int) X position of the top of the list.
 --!param y (int) Y position of the top of the list.
 function UIPatient:drawTreatmentHistory(canvas, x, y)
   for _, room in ipairs(self.patient.treatment_history) do
-    y = self.font:drawWrapped(canvas, room, x, y, 95)
+    y = self.font:drawWrapped(canvas, room:upper(), x, y, 95)
   end
 end
 

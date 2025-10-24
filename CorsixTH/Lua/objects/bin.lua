@@ -51,9 +51,9 @@ end
 
 function SideObject:getDrawingLayer()
   if self.direction == "north" then
-    return 1
+    return DrawingLayers.NorthSideObject
   elseif self.direction == "west" then
-    return 2
+    return DrawingLayers.WestSideObject
   else
     if self.direction == "east" then
       if self.object_type.thob == 50 then
@@ -61,12 +61,12 @@ function SideObject:getDrawingLayer()
         the north and west part of the tile respectively which could lead to
         a graphical glitch in which a bin in the west part of the tile is
         displayed over a doctor in the middle of the tile ]]
-        return 2
+        return DrawingLayers.WestSideObject
       else
-        return 8
+        return DrawingLayers.EastSideObject
       end
     else --south
-      return 9
+      return DrawingLayers.SouthSideObject
     end
   end
 end

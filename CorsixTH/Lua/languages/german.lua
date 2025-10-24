@@ -701,6 +701,10 @@ handyman_window = {
   parcel = "Grundstück",
 }
 
+tooltip.toolbar = {
+  machine_menu = "Maschinenmenü",
+}
+
 tooltip.handyman_window = {
   parcel_select = "Der Arbeitsbereich des Handlangers. Klicken zum Ändern.",
 }

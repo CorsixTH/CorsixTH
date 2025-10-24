@@ -78,7 +78,6 @@ return {
     return {
         setHitTestResult = function() end,
         setAnimation = function() end,
-        setDrawingLayer = function() end,
         setTile = function() end,
       }
     end

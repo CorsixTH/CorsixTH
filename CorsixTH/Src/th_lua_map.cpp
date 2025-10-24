@@ -27,6 +27,7 @@ SOFTWARE.
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -69,21 +70,22 @@ int l_map_persist(lua_State* L) {
 }
 
 int l_map_depersist(lua_State* L) {
-  level_map* pMap = luaT_testuserdata<level_map>(L);
+  void* map_ud = luaT_testuserdata<level_map>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
-  pMap->depersist(pReader);
+  level_map* map = new (map_ud) level_map();
+  map->depersist(pReader);
   luaT_getenvfield(L, 2, "sprites");
-  pMap->set_block_sheet((sprite_sheet*)lua_touserdata(L, -1));
+  map->set_block_sheet((sprite_sheet*)lua_touserdata(L, -1));
   lua_pop(L, 1);
   return 0;
 }
 
 void l_map_load_obj_cb(void* pL, int iX, int iY, object_type eTHOB,
                        uint8_t iFlags) {
-  lua_State* L = reinterpret_cast<lua_State*>(pL);
+  lua_State* L = static_cast<lua_State*>(pL);
   lua_createtable(L, 4, 0);
 
   lua_pushinteger(L, 1 + (lua_Integer)iX);
@@ -259,7 +261,7 @@ int l_map_updateblueprint(lua_State* L) {
   for (int iY = iOldY; iY < iOldY + iOldH; ++iY) {
     for (int iX = iOldX; iX < iOldX + iOldW; ++iX) {
       map_tile* pNode = pMap->get_tile_unchecked(iX, iY);
-      pNode->iBlock[3] = 0;
+      pNode->tile_layers[tile_layer::ui] = 0;
       pNode->flags.passable |= pNode->flags.passable_if_not_for_blueprint;
       pNode->flags.passable_if_not_for_blueprint = false;
     }
@@ -270,9 +272,9 @@ int l_map_updateblueprint(lua_State* L) {
     for (int iX = iNewX; iX < iNewX + iNewW; ++iX) {
       map_tile* pNode = pMap->get_tile_unchecked(iX, iY);
       if (is_valid(entire_invalid, pNode, pMap, player_id)) {
-        pNode->iBlock[3] = iFloorTileGood;
+        pNode->tile_layers[tile_layer::ui] = iFloorTileGood;
       } else {
-        pNode->iBlock[3] = iFloorTileBad;
+        pNode->tile_layers[tile_layer::ui] = iFloorTileBad;
         valid = false;
       }
       pNode->flags.passable_if_not_for_blueprint = pNode->flags.passable;
@@ -285,20 +287,20 @@ int l_map_updateblueprint(lua_State* L) {
     int iCenterY = iNewY + (iNewH - 2) / 2;
 
     map_tile* pNode = pMap->get_tile_unchecked(iCenterX, iCenterY);
-    if (pNode->iBlock[3] == iFloorTileGood)
-      pNode->iBlock[3] = iFloorTileGoodCenter + 2;
+    if (pNode->tile_layers[tile_layer::ui] == iFloorTileGood)
+      pNode->tile_layers[tile_layer::ui] = iFloorTileGoodCenter + 2;
 
     pNode = pMap->get_tile_unchecked(iCenterX + 1, iCenterY);
-    if (pNode->iBlock[3] == iFloorTileGood)
-      pNode->iBlock[3] = iFloorTileGoodCenter + 1;
+    if (pNode->tile_layers[tile_layer::ui] == iFloorTileGood)
+      pNode->tile_layers[tile_layer::ui] = iFloorTileGoodCenter + 1;
 
     pNode = pMap->get_tile_unchecked(iCenterX, iCenterY + 1);
-    if (pNode->iBlock[3] == iFloorTileGood)
-      pNode->iBlock[3] = iFloorTileGoodCenter + 0;
+    if (pNode->tile_layers[tile_layer::ui] == iFloorTileGood)
+      pNode->tile_layers[tile_layer::ui] = iFloorTileGoodCenter + 0;
 
     pNode = pMap->get_tile_unchecked(iCenterX + 1, iCenterY + 1);
-    if (pNode->iBlock[3] == iFloorTileGood)
-      pNode->iBlock[3] = iFloorTileGoodCenter + 3;
+    if (pNode->tile_layers[tile_layer::ui] == iFloorTileGood)
+      pNode->tile_layers[tile_layer::ui] = iFloorTileGoodCenter + 3;
   }
 
   // Set wall animations
@@ -310,7 +312,7 @@ int l_map_updateblueprint(lua_State* L) {
                    (is_valid(entire_invalid, pNode, pMap, player_id)
                         ? 0
                         : thdf_alt_palette));
-  pAnim->attach_to_tile(pNode, 0);
+  pAnim->attach_to_tile(iNewX, iNewY, pNode, 0);
 
   for (int iX = iNewX; iX < iNewX + iNewW; ++iX) {
     if (iX != iNewX) {
@@ -321,8 +323,8 @@ int l_map_updateblueprint(lua_State* L) {
                        (is_valid(entire_invalid, pNode, pMap, player_id)
                             ? 0
                             : thdf_alt_palette));
-      pAnim->attach_to_tile(pNode, 0);
-      pAnim->set_position(0, 0);
+      pAnim->attach_to_tile(iX, iNewY, pNode, 0);
+      pAnim->set_pixel_offset(0, 0);
     }
     pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
     pNode = pMap->get_tile_unchecked(iX, iNewY + iNewH - 1);
@@ -332,8 +334,8 @@ int l_map_updateblueprint(lua_State* L) {
                           ? 0
                           : thdf_alt_palette));
     pNode = pMap->get_tile_unchecked(iX, iNewY + iNewH);
-    pAnim->attach_to_tile(pNode, 0);
-    pAnim->set_position(0, -1);
+    pAnim->attach_to_tile(iX, iNewY + iNewH, pNode, 0);
+    pAnim->set_pixel_offset(0, -1);
   }
   for (int iY = iNewY; iY < iNewY + iNewH; ++iY) {
     if (iY != iNewY) {
@@ -344,8 +346,8 @@ int l_map_updateblueprint(lua_State* L) {
                        (is_valid(entire_invalid, pNode, pMap, player_id)
                             ? 0
                             : thdf_alt_palette));
-      pAnim->attach_to_tile(pNode, 0);
-      pAnim->set_position(2, 0);
+      pAnim->attach_to_tile(iNewX, iY, pNode, 0);
+      pAnim->set_pixel_offset(2, 0);
     }
     pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
     pNode = pMap->get_tile_unchecked(iNewX + iNewW - 1, iY);
@@ -355,8 +357,8 @@ int l_map_updateblueprint(lua_State* L) {
                           ? 0
                           : thdf_alt_palette));
     pNode = pMap->get_tile_unchecked(iNewX + iNewW, iY);
-    pAnim->attach_to_tile(pNode, 0);
-    pAnim->set_position(2, -1);
+    pAnim->attach_to_tile(iNewX + iNewW, iY, pNode, 0);
+    pAnim->set_pixel_offset(2, -1);
   }
 
   // Clear away extra animations
@@ -467,16 +469,16 @@ int l_map_getcell(lua_State* L) {
                                          iX + 1, iY + 1));
   }
   if (lua_isnoneornil(L, 4)) {
-    lua_pushinteger(L, pNode->iBlock[0]);
-    lua_pushinteger(L, pNode->iBlock[1]);
-    lua_pushinteger(L, pNode->iBlock[2]);
-    lua_pushinteger(L, pNode->iBlock[3]);
+    lua_pushinteger(L, pNode->tile_layers[tile_layer::ground]);
+    lua_pushinteger(L, pNode->tile_layers[tile_layer::north_wall]);
+    lua_pushinteger(L, pNode->tile_layers[tile_layer::west_wall]);
+    lua_pushinteger(L, pNode->tile_layers[tile_layer::ui]);
     return 4;
   } else {
     lua_Integer iLayer = luaL_checkinteger(L, 4) - 1;
-    if (iLayer < 0 || iLayer >= 4)
-      return luaL_argerror(L, 4, "Layer index is out of bounds (1-4)");
-    lua_pushinteger(L, pNode->iBlock[iLayer]);
+    if (iLayer < tile_layer::ground || iLayer >= tile_layer::num_tile_layers)
+      return luaL_argerror(L, 4, "Tile layer index is out of bounds (1-4)");
+    lua_pushinteger(L, pNode->tile_layers[iLayer]);
     return 1;
   }
 }
@@ -509,9 +511,9 @@ const std::map<std::string, map_tile_flags::key> lua_tile_flag_map{
  * @param flag Flag of the tile to check (and report).
  * @param name Name of the flag in Lua code.
  */
-inline void add_cellflag(lua_State* L, const map_tile* tile,
-                         map_tile_flags::key flag, const std::string& name) {
-  lua_pushlstring(L, name.c_str(), name.size());
+void add_cellflag(lua_State* L, const map_tile* tile,
+                  const map_tile_flags::key flag, const std::string_view name) {
+  lua_pushlstring(L, name.data(), name.size());
   lua_pushboolean(L, tile->flags[flag] ? 1 : 0);
   lua_settable(L, 4);
 }
@@ -522,8 +524,8 @@ inline void add_cellflag(lua_State* L, const map_tile* tile,
  * @param value Value of the tile field to add.
  * @param name Name of the field in Lua code.
  */
-inline void add_cellint(lua_State* L, int value, const std::string& name) {
-  lua_pushlstring(L, name.c_str(), name.size());
+void add_cellint(lua_State* L, const int value, const std::string_view name) {
+  lua_pushlstring(L, name.data(), name.size());
   lua_pushinteger(L, value);
   lua_settable(L, 4);
 }
@@ -560,6 +562,20 @@ int l_map_getcellflags(lua_State* L) {
               static_cast<int>(pNode->objects.empty() ? object_type::no_object
                                                       : pNode->objects.front()),
               "thob");
+  return 1;
+}
+
+int l_map_getcellraw(lua_State* L) {
+  level_map* pMap = luaT_testuserdata<level_map>(L);
+  int iX = static_cast<int>(luaL_checkinteger(L, 2) -
+                            1);  // Lua arrays start at 1 - pretend
+  int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);  // the map does too.
+  map_tile* pNode = pMap->get_tile(iX, iY);
+  if (pNode == nullptr) {
+    return luaL_argerror(L, 2, "Map coordinates out of bounds");
+  }
+  lua_pushlstring(L, reinterpret_cast<const char*>(pNode->raw),
+                  map_tile::raw_length);
   return 1;
 }
 
@@ -658,16 +674,20 @@ int l_map_setcell(lua_State* L) {
     return luaL_argerror(L, 2, "Map coordinates out of bounds");
   }
   if (lua_gettop(L) >= 7) {
-    pNode->iBlock[0] = (uint16_t)luaL_checkinteger(L, 4);
-    pNode->iBlock[1] = (uint16_t)luaL_checkinteger(L, 5);
-    pNode->iBlock[2] = (uint16_t)luaL_checkinteger(L, 6);
-    pNode->iBlock[3] = (uint16_t)luaL_checkinteger(L, 7);
+    pNode->tile_layers[tile_layer::ground] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 4));
+    pNode->tile_layers[tile_layer::north_wall] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 5));
+    pNode->tile_layers[tile_layer::west_wall] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 6));
+    pNode->tile_layers[tile_layer::ui] =
+        static_cast<uint16_t>(luaL_checkinteger(L, 7));
   } else {
-    lua_Integer iLayer = luaL_checkinteger(L, 4) - 1;
-    if (iLayer < 0 || iLayer >= 4)
-      return luaL_argerror(L, 4, "Layer index is out of bounds (1-4)");
-    uint16_t iBlock = static_cast<uint16_t>(luaL_checkinteger(L, 5));
-    pNode->iBlock[iLayer] = iBlock;
+    lua_Integer layer = luaL_checkinteger(L, 4) - 1;
+    if (layer < tile_layer::ground || layer >= tile_layer::num_tile_layers)
+      return luaL_argerror(L, 4, "Tile layer index is out of bounds (1-4)");
+    uint16_t blk = static_cast<uint16_t>(luaL_checkinteger(L, 5));
+    pNode->tile_layers[layer] = blk;
   }
 
   lua_settop(L, 1);
@@ -705,8 +725,8 @@ int l_map_mark_room(lua_State* L) {
   for (int iY = iY_; iY < iY_ + iH; ++iY) {
     for (int iX = iX_; iX < iX_ + iW; ++iX) {
       map_tile* pNode = pMap->get_tile_unchecked(iX, iY);
-      pNode->iBlock[0] = iTile;
-      pNode->iBlock[3] = 0;
+      pNode->tile_layers[tile_layer::ground] = iTile;
+      pNode->tile_layers[tile_layer::ui] = 0;
       pNode->flags.room = true;
       pNode->flags.passable |= pNode->flags.passable_if_not_for_blueprint;
       pNode->flags.passable_if_not_for_blueprint = false;
@@ -735,7 +755,9 @@ int l_map_unmark_room(lua_State* L) {
   for (int iY = iY_; iY < iY_ + iH; ++iY) {
     for (int iX = iX_; iX < iX_ + iW; ++iX) {
       map_tile* pNode = pMap->get_tile_unchecked(iX, iY);
-      pNode->iBlock[0] = pMap->get_original_tile_unchecked(iX, iY)->iBlock[0];
+      pNode->tile_layers[tile_layer::ground] =
+          pMap->get_original_tile_unchecked(iX, iY)
+              ->tile_layers[tile_layer::ground];
       pNode->flags.room = false;
       pNode->iRoomId = 0;
     }
@@ -893,15 +915,15 @@ int l_path_persist(lua_State* L) {
 }
 
 int l_path_depersist(lua_State* L) {
-  pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
+  void* pathfinder_ud = luaT_testuserdata<pathfinder>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
-  pPathfinder->depersist(pReader);
+  pathfinder* pf = new (pathfinder_ud) pathfinder();
+  pf->depersist(pReader);
   luaT_getenvfield(L, 2, "map");
-  pPathfinder->set_default_map(
-      reinterpret_cast<level_map*>(lua_touserdata(L, -1)));
+  pf->set_default_map(static_cast<level_map*>(lua_touserdata(L, -1)));
   return 0;
 }
 
@@ -1009,6 +1031,7 @@ void lua_register_map(const lua_register_state* pState) {
     lcb.add_function(l_map_gettemperature, "getCellTemperature");
     lcb.add_function(l_map_getcellflags, "getCellFlags");
     lcb.add_function(l_map_setcellflags, "setCellFlags");
+    lcb.add_function(l_map_getcellraw, "getCellRaw");
     lcb.add_function(l_map_setcell, "setCell");
     lcb.add_function(l_map_setwallflags, "setWallDrawFlags");
     lcb.add_function(l_map_settemperaturedisplay, "setTemperatureDisplay");
