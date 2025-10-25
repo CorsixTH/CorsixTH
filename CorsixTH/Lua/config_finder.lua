@@ -18,6 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local TH = require("TH")
 local config_path, config_name, config_data
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
@@ -566,6 +567,7 @@ if needs_rewrite and TheApp then
   fi = TheApp:writeToFileOrTmp(config_filename)
   fi:write(config_data)
   fi:close()
+  TH.SyncEmscriptenFS()
 end
 
 -- Hotkey filename.
@@ -873,6 +875,7 @@ local string_05 = [=[
   fi = TheApp:writeToFileOrTmp(hotkeys_filename)
   fi:write(string_03 .. string_04 .. string_05)
   fi:close()
+  TH.SyncEmscriptenFS()
 end
 
 for k, str_val in pairs(hotkeys_values) do
