@@ -102,6 +102,17 @@ class sound_player {
   //! \return The channel the sound is played on, or -1 on error.
   int play_at(size_t iIndex, double dVolume, int iX, int iY);
 
+  //! Pause playback on a given channel if playing, or resume if paused.
+  //!
+  //! \param channel The channel to toggle pause on.
+  //! \return 1 if paused, 0 if resumed, -1 on invalid input.
+  int toggle_pause(int channel);
+
+  //! Stops playback on a given channel.
+  //!
+  //! \param channel The channel to stop.
+  void stop(int channel);
+
   //! Sets the default volume for sound effects.
   void set_sound_effect_volume(double dVolume);
 
