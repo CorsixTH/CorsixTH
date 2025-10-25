@@ -67,12 +67,10 @@ function Staff:tickDay()
   end
 
   -- It is nice to see plants, but dead plants make you unhappy
-  self.world:findObjectNear(self, "plant", 2, function(x, y)
-    local plant = self.world:getObject(x, y, "plant")
-    if plant then
-      self:changeAttribute("happiness", -0.003 + (plant:isPleasingFactor() * 0.001))
-    end
-  end)
+  local plant = getRandomEntryFromArray(self:findObjectsInSquare(2, "plant"))
+  if plant then
+    self:changeAttribute("happiness", -0.003 + (plant:isPleasingFactor() * 0.001))
+  end
 
   -- Seeing various nearby objects boost your happiness, some more than others
   local good_objects = {
@@ -82,10 +80,15 @@ function Staff:tickDay()
     ["skeleton"]     = 0.002,
     ["tv"]           = 0.0005,
   }
+
+  -- Construct an array with the object names.
+  local happy_objects = {}
+  for name, _ in pairs(good_objects) do happy_objects[#happy_objects + 1] = name end
+
+  -- Look what's around the humanoid, and adapt the happiness.
+  happy_objects = self:findObjectsInSquare(2, happy_objects)
   for obj_name, happiness_score in pairs(good_objects) do
-    self.world:findObjectNear(self, obj_name, 2, function()
-      self:changeAttribute("happiness", happiness_score)
-    end)
+    self:changeAttribute("happiness", #happy_objects[obj_name] * happiness_score)
   end
 
   -- List of positive rest activities and their happiness effect
@@ -139,18 +142,15 @@ function Staff:tick()
   else
     self.timer_until_raise = nil
   end
+
   -- seeing litter will make you unhappy. If it is pee or puke it is worse
-  self.world:findObjectNear(self, "litter", 2, function(x, y)
-  local litter = self.world:getObject(x, y, "litter")
-  if not litter then
-    return
-  end
+  for _, litter in ipairs(self:findObjectsInSquare(2, "litter")) do
     if litter:anyLitter() then
       self:changeAttribute("happiness", -0.0002)
     else
       self:changeAttribute("happiness", -0.0004)
     end
-  end)
+  end
   self:updateSpeed()
 end
 
