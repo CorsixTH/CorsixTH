@@ -527,7 +527,7 @@ end
 
 --! Collect the objects in a square around the humanoid within the same room.
 --!param size (int) Size of the square to be searched, as number of rows/columns
---  around the humanoid. Size 0 only searched the tile of the humanoid, size 1
+--  around the humanoid. Size 0 only searches the tile of the humanoid, size 1
 --  adds the 8 tiles around the humanoid (one tile in all directions), and so on.
 --!param object_spec (str or array str) Name(s) of objects to find.
 --!return (array objs, or table str -> array objects) Found requested objects.
