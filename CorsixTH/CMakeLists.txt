@@ -105,16 +105,6 @@ set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
 ## Finding libraries
 if (CMAKE_SYSTEM_NAME MATCHES "Emscripten")
-  include(ExternalProject)
-  ExternalProject_Add(lpeg
-          PREFIX "lpeg"
-          URL "https://github.com/roberto-ieru/LPeg/archive/refs/heads/master.zip"
-          BUILD_IN_SOURCE true
-          CONFIGURE_COMMAND ""
-          BUILD_COMMAND ""
-          INSTALL_COMMAND ""
-  )
-
   set(USE_FLAGS " \
   --use-port=sdl2 \
   --use-port=sdl2_image:formats=png,jpg --use-port=libpng --use-port=libjpeg \

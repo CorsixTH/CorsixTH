@@ -4,12 +4,30 @@ configure_file(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/
 
 set(LPEG_SRC_FILES "")
 set(LPEG_HRC_FILES "")
+set(LFS_SRC_FILES "")
+set(LFS_HRC_FILES "")
 if (CMAKE_SYSTEM_NAME MATCHES "Emscripten")
+    include(FetchContent)
+    FetchContent_Declare(lpeg
+            URL  https://github.com/roberto-ieru/LPeg/archive/refs/heads/master.zip
+    )
+    FetchContent_Declare(lfs
+            URL  https://github.com/lunarmodules/luafilesystem/archive/refs/tags/v1_8_0.zip
+    )
+    FetchContent_Populate(lpeg)
+    FetchContent_Populate(lfs)
+
     file(GLOB LPEG_SRC_FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/../lpeg/src/lpeg/*.c
+            ${lpeg_SOURCE_DIR}/*.c
     )
     file(GLOB LPEG_HRC_FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/../lpeg/src/lpeg/*.h
+            ${lpeg_SOURCE_DIR}/*.h
+    )
+    file(GLOB LFS_SRC_FILES
+            ${lfs_SOURCE_DIR}/src/*.c
+    )
+    file(GLOB LFS_HRC_FILES
+            ${lfs_SOURCE_DIR}/src/*.h
     )
 endif ()
 
@@ -46,8 +64,8 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/th_strings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.cpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/lua_lfs.c
     ${LPEG_SRC_FILES}
+    ${LFS_SRC_FILES}
 )
 
 # These are for IDEs such as XCode and MSVC to track headers within their
@@ -76,8 +94,8 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/th_strings.h
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.h
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/lua_lfs.h
     ${LPEG_HRC_FILES}
+    ${LFS_HRC_FILES}
 
     ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
 )

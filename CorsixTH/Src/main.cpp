@@ -49,12 +49,10 @@ SOFTWARE.
 
 extern "C" {
 int luaopen_random(lua_State* L);
-#ifdef CORSIX_TH_LINK_LUA_MODULES
+#if CORSIX_TH_LINK_LUA_MODULES || __EMSCRIPTEN__
 int luaopen_lfs(lua_State* L);
 int luaopen_lpeg(lua_State* L);
 #endif
-int luaopen_lfs(lua_State* L);
-int luaopen_lpeg(lua_State* L);
 }
 
 namespace {
@@ -156,15 +154,12 @@ int lua_main_no_eval(lua_State* L) {
 
   // Fill in package.preload table so that calls to require("X") from Lua
   // will call the appropriate luaopen_X function in C.
-  preload_lua_package(L, "lfs", luaopen_lfs);
-  preload_lua_package(L, "lpeg", luaopen_lpeg);
-
   preload_lua_package(L, "rnc", luaopen_rnc);
   preload_lua_package(L, "TH", luaopen_th);
   preload_lua_package(L, "persist", luaopen_persist);
   preload_lua_package(L, "sdl", luaopen_sdl);
 
-#ifdef CORSIX_TH_LINK_LUA_MODULES
+#if CORSIX_TH_LINK_LUA_MODULES || __EMSCRIPTEN__
   preload_lua_package(L, "lfs", luaopen_lfs);
   preload_lua_package(L, "lpeg", luaopen_lpeg);
 #endif
