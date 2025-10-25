@@ -291,6 +291,29 @@ int sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {
   return play_raw(iIndex, static_cast<int>(std::lround(fVolume)));
 }
 
+sound_player::toggle_pause_result sound_player::toggle_pause(int channel) {
+  if (channel < 0 || channel >= number_of_channels ||
+      (available_channels_bitmap & (1 << channel)) != 0) {
+    return toggle_pause_result::error;
+  }
+  if (Mix_Paused(channel)) {
+    Mix_Resume(channel);
+    return toggle_pause_result::resumed;
+  } else {
+    Mix_Pause(channel);
+    return toggle_pause_result::paused;
+  }
+}
+
+void sound_player::stop(int channel) {
+  if (channel < 0 || channel >= number_of_channels ||
+      (available_channels_bitmap & (1 << channel)) != 0) {
+    return;
+  }
+  Mix_HaltChannel(channel);
+  release_channel(channel);
+}
+
 void sound_player::set_sound_effect_volume(double dVolume) {
   sound_effect_volume = dVolume;
 }

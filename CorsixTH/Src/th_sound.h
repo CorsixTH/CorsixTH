@@ -63,6 +63,8 @@ class sound_archive {
 
 class sound_player {
  public:
+  enum class toggle_pause_result { error, paused, resumed };
+
   sound_player();
   sound_player(const sound_player&) = delete;
   sound_player& operator=(const sound_player&) = delete;
@@ -101,6 +103,17 @@ class sound_player {
   //! \param iY Y coordinate of the sound effect.
   //! \return The channel the sound is played on, or -1 on error.
   int play_at(size_t iIndex, double dVolume, int iX, int iY);
+
+  //! Pause playback on a given channel if playing, or resume if paused.
+  //!
+  //! \param channel The channel to toggle pause on.
+  //! \return The result of the toggle: paused, resumed, or error.
+  toggle_pause_result toggle_pause(int channel);
+
+  //! Stops playback on a given channel.
+  //!
+  //! \param channel The channel to stop.
+  void stop(int channel);
 
   //! Sets the default volume for sound effects.
   void set_sound_effect_volume(double dVolume);
