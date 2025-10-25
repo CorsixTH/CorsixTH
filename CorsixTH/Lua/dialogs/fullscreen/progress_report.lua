@@ -61,7 +61,7 @@ function UIProgressReport:UIProgressReport(ui)
   local x = 263
   local crit_amount = #crit_data
   -- 30 gap width value is used when there is 5 criterias or less.
-  local gap_width = math.floor(math.min(150/crit_amount, 30))
+  local gap_width = math.floor(math.min(150 / crit_amount, 30))
   for _, crit_table in ipairs(crit_data) do
     crit_table.visible = true
     local crit_name = crit_table.name
