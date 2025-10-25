@@ -14,7 +14,7 @@ such as the name of the level and where to find the map file. Available commands
   and as first information when you have just started a new level.
   Everything between the citation marks will get included. If you use new lines:
   One new line is simply discarded, while two new lines in a row creates
-  a new paragraph. So does the special expression // (legacy from CorsixTH)
+  a new paragraph. So does the special expression // (legacy from Theme Hospital)
 - LevelDebriefing: Text shown in the fax when you win a level.
 
 Lines that begin with # defines all parameters for the level.

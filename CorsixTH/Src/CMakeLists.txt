@@ -1,13 +1,17 @@
 # Modify the config.h based upon our selection of options
 configure_file(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
 
-file(GLOB LPEG_SRC_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/lpeg-1.1.0/*.c
-)
-file(GLOB LPEG_HRC_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/lpeg-1.1.0/*.h
-)
 
+set(LPEG_SRC_FILES "")
+set(LPEG_HRC_FILES "")
+if (CMAKE_SYSTEM_NAME MATCHES "Emscripten")
+    file(GLOB LPEG_SRC_FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/../lpeg/src/lpeg/*.c
+    )
+    file(GLOB LPEG_HRC_FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/../lpeg/src/lpeg/*.h
+    )
+endif ()
 
 target_sources(CorsixTH_lib
     PRIVATE

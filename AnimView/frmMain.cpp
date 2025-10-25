@@ -93,7 +93,7 @@ constexpr int make_id(int layer, int id) {
 }  // namespace
 
 frmMain::frmMain()
-    : wxFrame(nullptr, wxID_ANY, L"CorsixTH Animation Viewer") {
+    : wxFrame(nullptr, wxID_ANY, L"Theme Hospital Animation Viewer") {
   wxSizer* pMainSizer = new wxBoxSizer(wxHORIZONTAL);
 
   wxSizer* pSidebarSizer = new wxBoxSizer(wxVERTICAL);
@@ -108,7 +108,7 @@ frmMain::frmMain()
   buttonSizerFlags.Align(wxALIGN_CENTER_VERTICAL).Border(wxALL, 1);
 
   wxStaticBoxSizer* pThemeHospital =
-      new wxStaticBoxSizer(wxHORIZONTAL, this, L"CorsixTH");
+      new wxStaticBoxSizer(wxHORIZONTAL, this, L"Theme Hospital");
   pThemeHospital->Add(
       new wxStaticText(this, wxID_ANY, L"Directory:"),
       wxSizerFlags(0).Align(wxALIGN_CENTER_VERTICAL).Border(wxALL, 1));

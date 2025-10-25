@@ -31,7 +31,9 @@ SOFTWARE.
 #include <curl/curl.h>
 #endif
 
+#if __EMSCRIPTEN__
 #include <emscripten.h>
+#endif
 
 #include "bootstrap.h"
 #include "lua.hpp"
@@ -217,6 +219,7 @@ int l_fetch_latest_version_info(lua_State* L) {
 #endif
 }
 
+#if __EMSCRIPTEN__
 EM_ASYNC_JS(void, do_save_idbfs, (), {
     await new Promise((resolve, reject) => FS.syncfs(err => err ? reject(err) : resolve()))
 });
@@ -230,6 +233,17 @@ int l_module_game_ready(lua_State* L) {
   EM_ASM(Module?.gameReady?.());
   return 0;
 }
+#else
+
+int l_sync_emscripten_fs(lua_State* L) {
+  return 0;
+}
+int l_module_game_ready(lua_State* L) {
+  return 0;
+}
+
+#endif // __EMSCRIPTEN__
+
 
 int l_load_strings(lua_State* L) {
   size_t iDataLength;
