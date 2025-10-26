@@ -27,6 +27,13 @@ SOFTWARE.
 #include <new>
 #include <vector>
 
+//! Determines if the system is little-endian
+//! This function can be replaced with std::endian when we move to C++20
+bool is_little_endian() {
+  uint16_t i = 0x0102;
+  return *reinterpret_cast<uint8_t*>(&i) == 0x02;
+}
+
 /*!
     Utility class for reading or writing to memory as if it were a file.
 */
@@ -126,11 +133,11 @@ class memory_buffer {
   }
 
   bool write_big_endian_uint16(uint16_t iValue) {
-    return write(byte_swap(iValue));
+    return write(is_little_endian() ? byte_swap(iValue) : iValue);
   }
 
   bool write_big_endian_uint32(uint32_t iValue) {
-    return write(byte_swap(iValue));
+    return write(is_little_endian() ? byte_swap(iValue) : iValue);
   }
 
   bool write_variable_length_uint(unsigned int iValue) {
@@ -150,6 +157,8 @@ class memory_buffer {
   bool is_end_of_buffer() const { return pointer == data_end; }
 
  private:
+  //! Byte-swap a value
+  //! Replace with std::byteswap when we move to C++23
   template <class T>
   static T byte_swap(T value) {
     T swapped = 0;
