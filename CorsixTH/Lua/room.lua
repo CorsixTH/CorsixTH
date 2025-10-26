@@ -33,7 +33,8 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   -- Serving staff in single occupancy rooms (like GD, Pharmacy and etc)
   self.staff_member = nil
   -- Serving staff list in multi-occupancy rooms (like Operating Theatre)
-  self.staff_member_set = {}
+  -- Only set this for multi-occupancy, otherwise single occupancy rooms break
+  self.staff_member_set = nil -- Override with {} in derived class
 
   self.room_info = room_info
   self:initRoom(x, y, w, h, door, door2)
