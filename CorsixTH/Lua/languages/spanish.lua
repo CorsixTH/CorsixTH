@@ -86,7 +86,7 @@ high_score = {
     cures = "CURACIONES",
     visitors = "VISITANTES",
     staff_number = "PLANTILLA",
-    cure_death_ratio = "PROPORCION",
+  cure_death_ratio = "PROPORCIÓN",
     patient_happiness = "CLIENTES CONTENTOS",
     staff_happiness = "PERSONAL CONTENTO",
     salary = "SUELDO MAS ALTO",
@@ -122,7 +122,7 @@ adviser.information.patient_abducted = "Los alienígenas han raptado a uno de tu
 adviser.praise.plants_thriving = "Muy bien. Tus plantas están muy lozanas. Tienen un aspecto maravilloso. Si las mantienes así podrás ganar un premio."
 adviser.level_progress.reputation_good_enough = "De acuerdo, tu reputación lo es bastante buena para ganar este nivel, manténla por encima de %d y soluciona otros problemas para terminar."
 adviser.staff_place_advice.only_nurses_in_room = "Sólo pueden trabajar las Enfermeras en el(la) %s"
-adviser.tutorial.select_receptionists = "Haz click en el icono que parpadea para ver qué recepcionistas están disponibles."
+adviser.tutorial.select_receptionists = "Haz clic en el icono que parpadea para ver qué recepcionistas están disponibles."
 rooms_long.decontamination = "Consulta de Descontaminación"
 dynamic_info.staff.ability = "Habilidad"
 dynamic_info.staff.actions.going_to_repair = "Yendo a reparar %s"
@@ -760,7 +760,7 @@ adviser = {
     no_desk_5 = "¡Ya era hora! Los pacientes empezarán a llegar pronto.",
     no_desk_6 = "Tienes una recepcionista, ¿qué tal si construyes una mesa de recepción para que pueda trabajar?",
     no_desk_7 = "Has construido una mesa de recepción, ¿y si contratas a una recepcionista? No verás a ningún paciente hasta que lo arregles, ¿lo sabes, no?",
-    another_desk = "Necesitaras construir otro escritorio para la nueva recepcionista.",
+  another_desk = "Necesitarás construir otro escritorio para la nueva recepcionista.",
     cannot_afford = "¡No tienes dinero para contratar a esa persona!", -- I can't see anything like this in the original strings
     cannot_afford_2 = "¡No tienes dinero para comprar eso!",
     cannot_afford_machine = "Necesitas al menos $%1% en el banco para poder adquirir un nuevo %2%!",
@@ -999,7 +999,7 @@ tooltip.options_window = {
   fullscreen_button = "Haz clic aquí para activar el modo de pantalla completa.",
   resolution = "Cambia la resolución en la que funcionará el juego.",
   select_resolution = "Selecciona una nueva resolución.",
-  capture_mouse = "Haz clic aqui para activar o desactivar la captura del cursor dentro del juego",
+  capture_mouse = "Haz clic aquí para activar o desactivar la captura del cursor dentro del juego",
   right_mouse_scrolling = "Cambiar el boton del ratón usado para desplazarse por el mapa",
   width = "Introduce el ancho de la pantalla.",
   height = "Introduce la altura de la pantalla.",
@@ -1391,7 +1391,7 @@ cheats_window = {
     increase_prices = "Subir precios",
     decrease_prices = "Bajar precios",
     reset_death_count = "Reiniciar contador de muertes",
-    max_reputation = "Reputatión máxima",
+  max_reputation = "Reputación máxima",
     repair_all_machines = "Reparar todas las máquinas",
     toggle_invulnerable_machines = "Activar máquinas invulnerables",
   },
@@ -1459,7 +1459,7 @@ machine_menu = {
   machine = "Máquina",
   remaining_strength = "Restante",
   total_strength = "Fuerza",
-  ratio = "Indice",
+  ratio = "Índice",
   close = "Cerrar",
 }
 
@@ -1567,7 +1567,7 @@ tooltip.status = {
 
 level_progress = {
   cured_enough_patients = "Has curado suficientes pacientes, pero necesitas organizar mejor tu hospital para superar el nivel.",
-  hospital_value_enough = "Manten el valor de tu hospital por encima de %d y atiende tus otros problemas para superar el nivel."
+  hospital_value_enough = "Mantén el valor de tu hospital por encima de %d y atiende tus otros problemas para superar el nivel."
 }
 
 multiplayer = {
