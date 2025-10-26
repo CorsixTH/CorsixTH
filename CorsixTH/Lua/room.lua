@@ -1076,6 +1076,14 @@ function Room:afterLoad(old, new)
     self.waiting_staff_member = nil
     self.dealt_patient_callback = nil
   end
+  -- Patch the saves post 233 that labelled all rooms as having a staff_member_set
+  if old >= 233 and old < 235 then
+    local room_name = self.room_info.id
+    if room_name ~= "ward" and room_name ~= "operating_theatre" and
+        room_name ~= "research" then
+      self.staff_member_set = nil
+    end
+  end
 end
 
 --[[ Is the room one of the diagnosis rooms for the patient?
