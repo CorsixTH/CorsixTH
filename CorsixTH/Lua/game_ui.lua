@@ -510,7 +510,7 @@ function GameUI:onCursorWorldPositionChange()
     -- Set queue mood for patients queueing the new room
     if room then
       local queue = room.door.queue
-      if #queue > 0 then
+      if queue and #queue > 0 then
         TheApp.ui:playSound("HLIGHTP2.wav")
       end
       if queue then
