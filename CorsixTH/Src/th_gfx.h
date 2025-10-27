@@ -55,9 +55,11 @@ enum draw_flags : uint32_t {
   thdf_flip_horizontal = 1 << 0,
   //! Draw with the top becoming the bottom and vice versa
   thdf_flip_vertical = 1 << 1,
-  //! Draw with 50% transparency
+  //! Draw with 50% transparency. If set together with thdf_alpha_75, don't draw
+  //! at all.
   thdf_alpha_50 = 1 << 2,
-  //! Draw with 75% transparency
+  //! Draw with 75% transparency. If set together with thdf_alpha_50, don't draw
+  //! at all.
   thdf_alpha_75 = 1 << 3,
   //! Draw using a remapped palette
   thdf_alt_palette = 1 << 4,
