@@ -90,6 +90,10 @@ local destroyMovie = function(me)
   else
     me.audio:playRandomBackgroundTrack()
   end
+  if me.sound then
+    me.audio:stopSound(me.sound)
+    me.sound = nil
+  end
   me.refresh_overlay = nil
   me.playing = false
   me.movie_over = false
@@ -156,13 +160,13 @@ function MoviePlayer:MoviePlayer(app, audio, video)
   self.playing = false
   self.holding_bg_music = false
   self.channel = -1
+  self.sound = nil
   self.lose_movies = {}
   self.advance_movies = {}
   self.intro_movie = nil
   self.demo_movie = nil
   self.win_game_movie = nil
   self.win_level_movie = nil
-  self.can_skip = true
   self.wait_for_stop = false
   self.wait_for_over = false
   self.movie_over = false
@@ -225,22 +229,22 @@ end
 --! Plays the opening movie from TH
 --!param callback_after_movie (function) What to do once movie ends
 function MoviePlayer:playIntro(callback_after_movie)
-  self:playMovie(self.intro_movie, false, true, callback_after_movie)
+  self:playMovie(self.intro_movie, false, callback_after_movie)
 end
 
 --! Plays the demo gameplay footage movie from TH
 function MoviePlayer:playDemoMovie()
-  self:playMovie(self.demo_movie, false, true)
+  self:playMovie(self.demo_movie, false)
 end
 
 --! Plays the movie for winning the game
 function MoviePlayer:playWinMovie()
-  self:playMovie(self.win_game_movie, true, true)
+  self:playMovie(self.win_game_movie, true)
 end
 
 --! Play the movie for winning the level
 function MoviePlayer:playWinLevelMovie()
-  self:playMovie(self.win_level_movie, true, true)
+  self:playMovie(self.win_level_movie, true)
 end
 
 --! Plays the level advance movie, which is going to the next level on the game board
@@ -259,11 +263,11 @@ function MoviePlayer:playAdvanceMovie(level)
   end
 
   if level == 12 then
-    self.audio:playSound("DICE122M.WAV")
+    self.sound = self.audio:playSound("DICE122M.WAV")
   else
-    self.audio:playSound("DICEYFIN.WAV")
+    self.sound = self.audio:playSound("DICEYFIN.WAV")
   end
-  self:playMovie(filename, true, false)
+  self:playMovie(filename, true)
 end
 
 --! Plays one of the lose scenario movies at random
@@ -271,7 +275,7 @@ function MoviePlayer:playLoseMovie()
   if #self.lose_movies > 0 then
     local lose_movie_index = math.random(#self.lose_movies)
     local filename = self.lose_movies[lose_movie_index]
-    self:playMovie(filename, true, true)
+    self:playMovie(filename, true)
     self.refresh_overlay = loseMovieOverlay(self, lose_movie_index)
   end
 end
@@ -280,9 +284,8 @@ end
 --!param filename (string) Location of the movie file
 --!param wait_for_stop (boolean) If true, movie will not dismiss automatically
 --! (requires a mouse/key press)
---!param can_skip (boolean) If true, the player can end movie prematurely
 --!param callback (function) What to do after the movie ends
-function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
+function MoviePlayer:playMovie(filename, wait_for_stop, callback)
   local success, warning
 
   if self.moviePlayer == nil or not self.moviePlayer:getEnabled() or
@@ -324,7 +327,6 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
   self.video:fillBlack()
   self.video:endFrame()
 
-  self.can_skip = can_skip
   self.wait_for_stop = wait_for_stop
   self.wait_for_over = true
 
@@ -381,9 +383,7 @@ end
 function MoviePlayer:stop()
   if self.moviePlayer == nil then return end
 
-  if self.can_skip then
-    self.moviePlayer:stop()
-  end
+  self.moviePlayer:stop()
   self.wait_for_stop = false
   if not self.wait_for_over then
     destroyMovie(self)
@@ -407,9 +407,10 @@ function MoviePlayer:updateRenderer()
 end
 
 function MoviePlayer:togglePause()
-  -- We cannot pause or skip the same movies (board game)
-  -- due to the out of band audio track
-  if self.moviePlayer == nil or not self.can_skip then return end
+  if self.moviePlayer == nil then return end
 
   self.moviePlayer:togglePause()
+  if self.sound then
+    self.audio:togglePauseSound(self.sound)
+  end
 end
