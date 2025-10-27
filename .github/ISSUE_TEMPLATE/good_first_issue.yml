@@ -2,7 +2,7 @@
 name: Good First Issue [Developer Use Only]
 title: "Good First Issue: Enter Summary Here"
 description: For developer use only. Create a guided ticket for a first-time
-  contributor to the code to fix or implement something new.
+  contributor so that they fix the code or implement something new.
 projects: []
 labels:
   - Good First Issue
@@ -29,7 +29,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: What CorsixTH version was the issue first discovered in?
+      label: Which CorsixTH version was the issue first discovered in?
       description: Ideally a release version
       placeholder: "0.69.1"
     validations:
@@ -37,9 +37,9 @@ body:
   - type: textarea
     id: reproduction
     attributes:
-      label: How can a player reproduce/see this in CorsixTH?
+      label: How can this be reproduced in CorsixTH?
       description: If there is a problem method to replicate, this helps the
-        contributor to check any fix works as intended
+        contributor to check that any fix works as intended
       value: |-
         1. *Load save game attached to this ticket*
 
@@ -63,13 +63,13 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: dropdown-0
+    id: complexity
     attributes:
       label: Complexity Score
       description: |
        How difficult will this be for someone to undertake?
 
-       **Note: If this requires more than basic knowledge of Lua or C++ (arugably 
+       **Note: If this requires more than basic knowledge of Lua or C++ (arguably 
        any C++ is bad) it is not a Good First Issue!**
       options:
         - "1: Very Easy (no code knowledge required)"
@@ -91,9 +91,9 @@ body:
   - type: textarea
     id: savegame
     attributes:
-      label: Is a savegame to be provided?
+      label: Is a save game to be provided?
       description: Drag or upload it in the box below
-      value: "Savegame provided: Yes/No/Already in existing ticket"
+      value: "Save game provided: Yes/No/Already in existing ticket"
     validations:
       required: true
   # Auto-inserting help text, do not touch question below.
