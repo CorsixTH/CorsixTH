@@ -137,7 +137,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Emscripten")
 
   foreach(file ${files})
     file(RELATIVE_PATH relative_file ${CMAKE_CURRENT_SOURCE_DIR} ${file})
-    string(APPEND CMAKE_EXE_LINKER_FLAGS " --preload-file \"${file}@/corsix-th/${relative_file}\"")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " --preload-file \"${file}@/corsixth/${relative_file}\"")
   endforeach()
 else ()
   # Find SDL
