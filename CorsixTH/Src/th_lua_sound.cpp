@@ -41,9 +41,16 @@ SOFTWARE.
 
 namespace {
 
+struct map_timer_info {
+  SDL_TimerID timer_id;
+  Uint32 interval;
+  Uint32 start_time;
+  int* callback_id_ptr;
+};
+
 std::array<int, 1000> played_sound_callback_ids;
 int played_sound_callback_index = 0;
-std::map<int, SDL_TimerID> map_sound_timers;
+std::map<int, map_timer_info> map_sound_timers;
 
 int l_soundarc_new(lua_State* L) {
   luaT_stdnew<sound_archive>(L, luaT_environindex, true);
@@ -204,7 +211,7 @@ Uint32 played_sound_callback(Uint32 interval, void* param) {
   e.type = SDL_USEREVENT_SOUND_OVER;
   e.user.data1 = param;
   int iSoundID = *(static_cast<int*>(param));
-  SDL_RemoveTimer(map_sound_timers[iSoundID]);
+  SDL_RemoveTimer(map_sound_timers[iSoundID].timer_id);
   map_sound_timers.erase(iSoundID);
   SDL_PushEvent(&e);
 
@@ -225,12 +232,14 @@ int l_soundfx_play(lua_State* L) {
   lua_replace(L, 1);
   size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
   if (iIndex == pArchive->get_number_of_sounds()) return 2;
+
+  int channel;
   if (lua_isnil(L, 4)) {
-    pEffects->play(iIndex, luaL_checknumber(L, 3));
+    channel = pEffects->play(iIndex, luaL_checknumber(L, 3));
   } else {
-    pEffects->play_at(iIndex, luaL_checknumber(L, 3),
-                      static_cast<int>(luaL_checkinteger(L, 4)),
-                      static_cast<int>(luaL_checkinteger(L, 5)));
+    channel = pEffects->play_at(iIndex, luaL_checknumber(L, 3),
+                                static_cast<int>(luaL_checkinteger(L, 4)),
+                                static_cast<int>(luaL_checkinteger(L, 5)));
   }
   // SDL SOUND_OVER Callback Timer:
   // 6: unusedPlayedCallbackID
@@ -245,18 +254,62 @@ int l_soundfx_play(lua_State* L) {
 
     played_sound_callback_ids[played_sound_callback_index] =
         static_cast<int>(luaL_checkinteger(L, 6));
-    size_t interval =
-        pArchive->get_sound_duration(iIndex) + iPlayedCallbackDelay;
+    int& callback_id = played_sound_callback_ids[played_sound_callback_index];
+
+    Uint32 interval = static_cast<Uint32>(pArchive->get_sound_duration(iIndex) +
+                                          iPlayedCallbackDelay);
     SDL_TimerID timersID =
-        SDL_AddTimer(static_cast<Uint32>(interval), played_sound_callback,
-                     &(played_sound_callback_ids[played_sound_callback_index]));
-    map_sound_timers.insert(std::pair<int, SDL_TimerID>(
-        played_sound_callback_ids[played_sound_callback_index], timersID));
+        SDL_AddTimer(interval, played_sound_callback, &callback_id);
+    map_sound_timers.emplace(std::pair<int, map_timer_info>(
+        callback_id, {timersID, interval, SDL_GetTicks(), &callback_id}));
     played_sound_callback_index++;
   }
 
-  lua_pushboolean(L, 1);
+  lua_pushinteger(L, channel);
   return 1;
+}
+
+int l_soundfx_toggle_pause(lua_State* L) {
+  sound_player* pEffects = luaT_testuserdata<sound_player>(L);
+  const sound_player::toggle_pause_result pauseResult =
+      pEffects->toggle_pause(static_cast<int>(luaL_checkinteger(L, 2)));
+  int callbackId = static_cast<int>(luaL_optinteger(L, 3, -1));
+
+  if (auto itr = map_sound_timers.find(callbackId);
+      itr != map_sound_timers.end()) {
+    switch (pauseResult) {
+      case sound_player::toggle_pause_result::paused: {
+        Uint32 elapsed = SDL_GetTicks() - itr->second.start_time;
+        itr->second.interval -= elapsed;
+        SDL_RemoveTimer(itr->second.timer_id);
+        break;
+      }
+      case sound_player::toggle_pause_result::resumed:
+        itr->second.start_time = SDL_GetTicks();
+        itr->second.timer_id =
+            SDL_AddTimer(itr->second.interval, played_sound_callback,
+                         itr->second.callback_id_ptr);
+        break;
+      case sound_player::toggle_pause_result::error:
+        // Do nothing with callback on error
+        break;
+    };
+  }
+
+  return 0;
+}
+
+int l_soundfx_stop(lua_State* L) {
+  sound_player* pEffects = luaT_testuserdata<sound_player>(L);
+  pEffects->stop(static_cast<int>(luaL_checkinteger(L, 2)));
+  int callbackId = static_cast<int>(luaL_optinteger(L, 3, -1));
+
+  if (auto itr = map_sound_timers.find(callbackId);
+      itr != map_sound_timers.end()) {
+    SDL_RemoveTimer(itr->second.timer_id);
+    map_sound_timers.erase(itr);
+  }
+  return 0;
 }
 
 int l_soundfx_set_camera(lua_State* L) {
@@ -305,6 +358,8 @@ void lua_register_sound(const lua_register_state* pState) {
     lcb.add_function(l_soundfx_set_archive, "setSoundArchive",
                      lua_metatable::sound_archive);
     lcb.add_function(l_soundfx_play, "play");
+    lcb.add_function(l_soundfx_toggle_pause, "togglePause");
+    lcb.add_function(l_soundfx_stop, "stop");
     lcb.add_function(l_soundfx_set_sound_volume, "setSoundVolume");
     lcb.add_function(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");
     lcb.add_function(l_soundfx_set_camera, "setCamera");
