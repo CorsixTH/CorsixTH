@@ -33,11 +33,12 @@ var searchData=
   ['render_5ftarget_30',['render_target',['../classrender__target.html',1,'render_target'],['../classrender__target.html#a18d7dcbde3479f2784421de3a9affe92',1,'render_target::render_target(const render_target &amp;other)=delete'],['../classrender__target.html#a19afee709b38a69362ef506d87425419',1,'render_target::render_target(const render_target_creation_params &amp;params)'],['../classline__sequence.html#a15ba3db9dae52ed6651bc86f484c870f',1,'line_sequence::render_target']]],
   ['render_5ftarget_5fcreation_5fparams_31',['render_target_creation_params',['../structrender__target__creation__params.html',1,'']]],
   ['reserve_5fchannel_32',['reserve_channel',['../classsound__player.html#a161c2136e5ef64a9d40e7703b0958863',1,'sound_player']]],
-  ['right_33',['right',['../th__gfx__font_8h.html#a414e32cd1b4e18d9fdad6ef657794871a7c4f29407893c334a6cb7a87bf045c0d',1,'th_gfx_font.h']]],
-  ['room_34',['room',['../structmap__tile__flags.html#a89714e66a283ddf6c8d8a1dbb92a9e91',1,'map_tile_flags']]],
-  ['room_5fmask_35',['room_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa677e20625cb04d1cb0babb96f14754c0',1,'map_tile_flags']]],
-  ['row_5fcount_36',['row_count',['../structtext__layout.html#afdecea2e3787498df7c97d93545a3f22',1,'text_layout']]],
-  ['run_5flength_5fencoder_2ecpp_37',['run_length_encoder.cpp',['../run__length__encoder_8cpp.html',1,'']]],
-  ['run_5flength_5fencoder_2eh_38',['run_length_encoder.h',['../run__length__encoder_8h.html',1,'']]],
-  ['run_5fvideo_39',['run_video',['../classmovie__player.html#a3e76aa43db63f7792efefa3b316fd269',1,'movie_player']]]
+  ['resumed_33',['resumed',['../classsound__player.html#ad150da33ef9938c98e785628b9deb229a121ad2eb76415d284215a4c9deddf79c',1,'sound_player']]],
+  ['right_34',['right',['../th__gfx__font_8h.html#a414e32cd1b4e18d9fdad6ef657794871a7c4f29407893c334a6cb7a87bf045c0d',1,'th_gfx_font.h']]],
+  ['room_35',['room',['../structmap__tile__flags.html#a89714e66a283ddf6c8d8a1dbb92a9e91',1,'map_tile_flags']]],
+  ['room_5fmask_36',['room_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa677e20625cb04d1cb0babb96f14754c0',1,'map_tile_flags']]],
+  ['row_5fcount_37',['row_count',['../structtext__layout.html#afdecea2e3787498df7c97d93545a3f22',1,'text_layout']]],
+  ['run_5flength_5fencoder_2ecpp_38',['run_length_encoder.cpp',['../run__length__encoder_8cpp.html',1,'']]],
+  ['run_5flength_5fencoder_2eh_39',['run_length_encoder.h',['../run__length__encoder_8h.html',1,'']]],
+  ['run_5fvideo_40',['run_video',['../classmovie__player.html#a3e76aa43db63f7792efefa3b316fd269',1,'movie_player']]]
 ];

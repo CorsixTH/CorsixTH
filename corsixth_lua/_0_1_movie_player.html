@@ -53,7 +53,7 @@
  <a href="_0_1_movie_player.html#_0_1_movie_player_1play_lose_movie">playLoseMovie</a>()
  </li>
  <li class="self">
- <a href="_0_1_movie_player.html#_0_1_movie_player_1play_movie">playMovie</a>(<span class="p">filename</span>, <span class="p">wait_for_stop</span>, <span class="p">can_skip</span>, <span class="p">callback</span>)
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1play_movie">playMovie</a>(<span class="p">filename</span>, <span class="p">wait_for_stop</span>, <span class="p">callback</span>)
  </li>
  <li class="self">
  <a href="_0_1_movie_player.html#_0_1_movie_player_1play_win_level_movie">playWinLevelMovie</a>()
@@ -86,8 +86,6 @@
  </li>
  <li><span class="p">callback_on_destroy_movie</span>
  </li>
- <li><span class="p">can_skip</span>
- </li>
  <li><span class="p">channel</span>
  </li>
  <li><span class="p">demo_movie</span>
@@ -113,6 +111,8 @@
  <li><span class="p">playing</span>
  </li>
  <li><span class="p">refresh_overlay</span>
+ </li>
+ <li><span class="p">sound</span>
  </li>
  <li><span class="p">video</span>
  </li>
@@ -149,35 +149,35 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L152">line 152 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L156">line 156 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_movie_player_1allocate_picture_buffer">function MoviePlayer:allocatePictureBuffer()</a></h5>
  <p>
  NB: Call after any changes to TH.surface<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L357">line 357 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L359">line 359 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_movie_player_1deallocate_picture_buffer">function MoviePlayer:deallocatePictureBuffer()</a></h5>
  <p>
  NB: Call before any changes to TH.surface<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L364">line 364 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L366">line 366 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_movie_player_1init">function MoviePlayer:init()</a></h5>
  <p>
  Initialises the different movies used in the game<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L174">line 174 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L178">line 178 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_movie_player_1on_movie_over">function MoviePlayer:onMovieOver()</a></h5>
  <p>
  Handles when the movie ends<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L371">line 371 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L373">line 373 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -194,14 +194,14 @@
  <td class="d"> What level we're going to.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L248">line 248 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L252">line 252 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_movie_player_1play_demo_movie">function MoviePlayer:playDemoMovie()</a></h5>
  <p>
  Plays the demo gameplay footage movie from TH<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L233">line 233 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L237">line 237 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -217,18 +217,18 @@
  <td class="d"> What to do once movie ends</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L227">line 227 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L231">line 231 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_movie_player_1play_lose_movie">function MoviePlayer:playLoseMovie()</a></h5>
  <p>
  Plays one of the lose scenario movies at random<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L271">line 271 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L275">line 275 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_movie_player_1play_movie">function MoviePlayer:playMovie(<span class="p">filename</span>, <span class="p">wait_for_stop</span>, <span class="p">can_skip</span>, <span class="p">callback</span>)</a></h5>
+ <h5><a name="_0_1_movie_player_1play_movie">function MoviePlayer:playMovie(<span class="p">filename</span>, <span class="p">wait_for_stop</span>, <span class="p">callback</span>)</a></h5>
  <p>
  Function used to tell the Movie Player to play something.<br/><br/>
  (requires a mouse/key press)<br/><br/>
@@ -246,31 +246,26 @@
  <td class="d"> If true, movie will not dismiss automatically</td>
  </tr>
  <tr>
- <td class="n">can_skip</td>
- <td class="t">boolean</td>
- <td class="d"> If true, the player can end movie prematurely</td>
- </tr>
- <tr>
  <td class="n">callback</td>
  <td class="t">function</td>
  <td class="d"> What to do after the movie ends</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L281">line 281 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L285">line 285 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_movie_player_1play_win_level_movie">function MoviePlayer:playWinLevelMovie()</a></h5>
  <p>
  Play the movie for winning the level<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L243">line 243 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L247">line 247 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_movie_player_1play_win_movie">function MoviePlayer:playWinMovie()</a></h5>
  <p>
  Plays the movie for winning the game<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L238">line 238 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L242">line 242 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -283,7 +278,7 @@
  <h5><a name="_0_1_movie_player_1stop">function MoviePlayer:stop()</a></h5>
  <p>
  Handles ending the movie prematurely (user input)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L382">line 382 of Lua/movie_player.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L384">line 384 of Lua/movie_player.lua</a>.
  </p>
  </div>
  <div class="method">

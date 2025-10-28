@@ -71,6 +71,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classsound__player-members.html">List of all members</a>  </div>
@@ -80,6 +81,14 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="th__sound_8h_source.html">th_sound.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ad150da33ef9938c98e785628b9deb229" id="r_ad150da33ef9938c98e785628b9deb229"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#ad150da33ef9938c98e785628b9deb229">toggle_pause_result</a> { <a class="el" href="classsound__player.html#ad150da33ef9938c98e785628b9deb229acb5e100e5a9a3e7f6d1fd97512215282">error</a>
+, <a class="el" href="classsound__player.html#ad150da33ef9938c98e785628b9deb229ad13c3f7baed576768b11a714ef4d90e2">paused</a>
+, <a class="el" href="classsound__player.html#ad150da33ef9938c98e785628b9deb229a121ad2eb76415d284215a4c9deddf79c">resumed</a>
+ }</td></tr>
+<tr class="separator:ad150da33ef9938c98e785628b9deb229"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aefdca533df6ec423d01ceef5f0fff910" id="r_aefdca533df6ec423d01ceef5f0fff910"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#aefdca533df6ec423d01ceef5f0fff910">sound_player</a> ()</td></tr>
@@ -92,21 +101,28 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a002ec77b9fd73012dee8f68ce480126d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae142d80dc6029651ed3bd1655c89350a" id="r_ae142d80dc6029651ed3bd1655c89350a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#ae142d80dc6029651ed3bd1655c89350a">populate_from</a> (<a class="el" href="classsound__archive.html">sound_archive</a> *pArchive)</td></tr>
 <tr class="separator:ae142d80dc6029651ed3bd1655c89350a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72a4a94f6e3176400e6e7d312de2c743" id="r_a72a4a94f6e3176400e6e7d312de2c743"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#a72a4a94f6e3176400e6e7d312de2c743">play</a> (size_t iIndex, double dVolume)</td></tr>
-<tr class="separator:a72a4a94f6e3176400e6e7d312de2c743"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac730fd117c84fed20ca8c7270e059650" id="r_ac730fd117c84fed20ca8c7270e059650"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#ac730fd117c84fed20ca8c7270e059650">play_at</a> (size_t iIndex, int iX, int iY)</td></tr>
-<tr class="separator:ac730fd117c84fed20ca8c7270e059650"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae61e4de089d235f9f2309fa97f5e1d1b" id="r_ae61e4de089d235f9f2309fa97f5e1d1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#ae61e4de089d235f9f2309fa97f5e1d1b">play_at</a> (size_t iIndex, double dVolume, int iX, int iY)</td></tr>
-<tr class="separator:ae61e4de089d235f9f2309fa97f5e1d1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af64d178222bb17bdd4e80c2f9de72aa1" id="r_af64d178222bb17bdd4e80c2f9de72aa1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#af64d178222bb17bdd4e80c2f9de72aa1">play</a> (size_t iIndex, double dVolume)</td></tr>
+<tr class="separator:af64d178222bb17bdd4e80c2f9de72aa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3781c40beaec2c7a3b2b5989ab40cc7" id="r_aa3781c40beaec2c7a3b2b5989ab40cc7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#aa3781c40beaec2c7a3b2b5989ab40cc7">play_at</a> (size_t iIndex, int iX, int iY)</td></tr>
+<tr class="separator:aa3781c40beaec2c7a3b2b5989ab40cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a942f99d49b45dea6a50b0b560da32e1b" id="r_a942f99d49b45dea6a50b0b560da32e1b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#a942f99d49b45dea6a50b0b560da32e1b">play_at</a> (size_t iIndex, double dVolume, int iX, int iY)</td></tr>
+<tr class="separator:a942f99d49b45dea6a50b0b560da32e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a94f279cf66acdecb001fa6cf3f3f0e" id="r_a6a94f279cf66acdecb001fa6cf3f3f0e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsound__player.html#ad150da33ef9938c98e785628b9deb229">toggle_pause_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#a6a94f279cf66acdecb001fa6cf3f3f0e">toggle_pause</a> (int channel)</td></tr>
+<tr class="separator:a6a94f279cf66acdecb001fa6cf3f3f0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9e5763372df6d69201b27559047382d" id="r_ad9e5763372df6d69201b27559047382d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#ad9e5763372df6d69201b27559047382d">stop</a> (int channel)</td></tr>
+<tr class="separator:ad9e5763372df6d69201b27559047382d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5af500bea86470b88ca3d75dc1833f6" id="r_ab5af500bea86470b88ca3d75dc1833f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#ab5af500bea86470b88ca3d75dc1833f6">set_sound_effect_volume</a> (double dVolume)</td></tr>
+<tr class="memdesc:ab5af500bea86470b88ca3d75dc1833f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the default volume for sound effects.  <br /></td></tr>
 <tr class="separator:ab5af500bea86470b88ca3d75dc1833f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3706925c1c24054ff5ac8e7b6d1954a" id="r_ab3706925c1c24054ff5ac8e7b6d1954a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#ab3706925c1c24054ff5ac8e7b6d1954a">set_sound_effects_enabled</a> (bool bOn)</td></tr>
 <tr class="separator:ab3706925c1c24054ff5ac8e7b6d1954a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad10af9d329495d402fcce97071d02b49" id="r_ad10af9d329495d402fcce97071d02b49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#ad10af9d329495d402fcce97071d02b49">set_camera</a> (int iX, int iY, int iRadius)</td></tr>
+<tr class="memdesc:ad10af9d329495d402fcce97071d02b49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position of the camera for play_at calculations.  <br /></td></tr>
 <tr class="separator:ad10af9d329495d402fcce97071d02b49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a161c2136e5ef64a9d40e7703b0958863" id="r_a161c2136e5ef64a9d40e7703b0958863"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#a161c2136e5ef64a9d40e7703b0958863">reserve_channel</a> ()</td></tr>
 <tr class="separator:a161c2136e5ef64a9d40e7703b0958863"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a851a575dc94d0661beae921fa3c973a3" id="r_a851a575dc94d0661beae921fa3c973a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#a851a575dc94d0661beae921fa3c973a3">release_channel</a> (int iChannel)</td></tr>
+<tr class="memdesc:a851a575dc94d0661beae921fa3c973a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Releases a previously reserved SDL_mixer channel.  <br /></td></tr>
 <tr class="separator:a851a575dc94d0661beae921fa3c973a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
@@ -114,6 +130,34 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a1f94bcc35debe2279dffe5521c84aca4" id="r_a1f94bcc35debe2279dffe5521c84aca4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classsound__player.html">sound_player</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsound__player.html#a1f94bcc35debe2279dffe5521c84aca4">get_singleton</a> ()</td></tr>
 <tr class="separator:a1f94bcc35debe2279dffe5521c84aca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="ad150da33ef9938c98e785628b9deb229" name="ad150da33ef9938c98e785628b9deb229"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad150da33ef9938c98e785628b9deb229">&#9670;&#160;</a></span>toggle_pause_result</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="classsound__player.html#ad150da33ef9938c98e785628b9deb229">sound_player::toggle_pause_result</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad150da33ef9938c98e785628b9deb229acb5e100e5a9a3e7f6d1fd97512215282" name="ad150da33ef9938c98e785628b9deb229acb5e100e5a9a3e7f6d1fd97512215282"></a>error&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ad150da33ef9938c98e785628b9deb229ad13c3f7baed576768b11a714ef4d90e2" name="ad150da33ef9938c98e785628b9deb229ad13c3f7baed576768b11a714ef4d90e2"></a>paused&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ad150da33ef9938c98e785628b9deb229a121ad2eb76415d284215a4c9deddf79c" name="ad150da33ef9938c98e785628b9deb229a121ad2eb76415d284215a4c9deddf79c"></a>resumed&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aefdca533df6ec423d01ceef5f0fff910" name="aefdca533df6ec423d01ceef5f0fff910"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aefdca533df6ec423d01ceef5f0fff910">&#9670;&#160;</a></span>sound_player() <span class="overload">[1/2]</span></h2>
@@ -227,14 +271,14 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a72a4a94f6e3176400e6e7d312de2c743" name="a72a4a94f6e3176400e6e7d312de2c743"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72a4a94f6e3176400e6e7d312de2c743">&#9670;&#160;</a></span>play()</h2>
+<a id="af64d178222bb17bdd4e80c2f9de72aa1" name="af64d178222bb17bdd4e80c2f9de72aa1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af64d178222bb17bdd4e80c2f9de72aa1">&#9670;&#160;</a></span>play()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void sound_player::play </td>
+          <td class="memname">int sound_player::play </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>iIndex</em>, </td>
@@ -252,17 +296,26 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Plays the sound effect in the <a class="el" href="classsound__archive.html" title="Utility class for accessing Theme Hospital&#39;s SOUND-0.DAT.">sound_archive</a> with the given index.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iIndex</td><td>Index of the sound effect to play. </td></tr>
+    <tr><td class="paramname">dVolume</td><td>Volume to play the sound effect at, in the range 0.0 to 1.0. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The channel the sound is played on, or -1 on error. </dd></dl>
 
 </div>
 </div>
-<a id="ae61e4de089d235f9f2309fa97f5e1d1b" name="ae61e4de089d235f9f2309fa97f5e1d1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae61e4de089d235f9f2309fa97f5e1d1b">&#9670;&#160;</a></span>play_at() <span class="overload">[1/2]</span></h2>
+<a id="a942f99d49b45dea6a50b0b560da32e1b" name="a942f99d49b45dea6a50b0b560da32e1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a942f99d49b45dea6a50b0b560da32e1b">&#9670;&#160;</a></span>play_at() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void sound_player::play_at </td>
+          <td class="memname">int sound_player::play_at </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>iIndex</em>, </td>
@@ -292,17 +345,28 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Plays the sound effect in the <a class="el" href="classsound__archive.html" title="Utility class for accessing Theme Hospital&#39;s SOUND-0.DAT.">sound_archive</a> with the given index with volume attenuation based on the distance from the given position to the camera.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iIndex</td><td>Index of the sound effect to play. </td></tr>
+    <tr><td class="paramname">dVolume</td><td>Volume to play the sound effect at before attenuation, in the range 0.0 to 1.0. </td></tr>
+    <tr><td class="paramname">iX</td><td>X coordinate of the sound effect. </td></tr>
+    <tr><td class="paramname">iY</td><td>Y coordinate of the sound effect. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The channel the sound is played on, or -1 on error. </dd></dl>
 
 </div>
 </div>
-<a id="ac730fd117c84fed20ca8c7270e059650" name="ac730fd117c84fed20ca8c7270e059650"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac730fd117c84fed20ca8c7270e059650">&#9670;&#160;</a></span>play_at() <span class="overload">[2/2]</span></h2>
+<a id="aa3781c40beaec2c7a3b2b5989ab40cc7" name="aa3781c40beaec2c7a3b2b5989ab40cc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3781c40beaec2c7a3b2b5989ab40cc7">&#9670;&#160;</a></span>play_at() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void sound_player::play_at </td>
+          <td class="memname">int sound_player::play_at </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>iIndex</em>, </td>
@@ -326,6 +390,16 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Plays the sound effect in the <a class="el" href="classsound__archive.html" title="Utility class for accessing Theme Hospital&#39;s SOUND-0.DAT.">sound_archive</a> with the given index with volume attenuation based on the distance from the given position to the camera.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iIndex</td><td>Index of the sound effect to play. </td></tr>
+    <tr><td class="paramname">iX</td><td>X coordinate of the sound effect. </td></tr>
+    <tr><td class="paramname">iY</td><td>Y coordinate of the sound effect. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The channel the sound is played on, or -1 on error. </dd></dl>
 
 </div>
 </div>
@@ -363,6 +437,8 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Releases a previously reserved SDL_mixer channel. </p>
+
 </div>
 </div>
 <a id="a161c2136e5ef64a9d40e7703b0958863" name="a161c2136e5ef64a9d40e7703b0958863"></a>
@@ -379,6 +455,9 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Reserves an SDL_mixer channel for exclusive use.</p>
+<p>Not necessary to use in conjunction with <a class="el" href="classsound__player.html#af64d178222bb17bdd4e80c2f9de72aa1">play()</a> or <a class="el" href="classsound__player.html#aa3781c40beaec2c7a3b2b5989ab40cc7">play_at()</a>, as these methods will automatically reserve and release channels.</p>
+<dl class="section return"><dt>Returns</dt><dd>The reserved channel index, or -1 if no channels are available. </dd></dl>
 
 </div>
 </div>
@@ -414,6 +493,8 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the position of the camera for play_at calculations. </p>
+
 </div>
 </div>
 <a id="ab5af500bea86470b88ca3d75dc1833f6" name="ab5af500bea86470b88ca3d75dc1833f6"></a>
@@ -432,6 +513,8 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the default volume for sound effects. </p>
+
 </div>
 </div>
 <a id="ab3706925c1c24054ff5ac8e7b6d1954a" name="ab3706925c1c24054ff5ac8e7b6d1954a"></a>
@@ -449,6 +532,58 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Enables or disables sound effects. Note: Only affects sounds played via play_at(int, int, int). </p>
+
+</div>
+</div>
+<a id="ad9e5763372df6d69201b27559047382d" name="ad9e5763372df6d69201b27559047382d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9e5763372df6d69201b27559047382d">&#9670;&#160;</a></span>stop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sound_player::stop </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>channel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Stops playback on a given channel.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>The channel to stop. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6a94f279cf66acdecb001fa6cf3f3f0e" name="a6a94f279cf66acdecb001fa6cf3f3f0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a94f279cf66acdecb001fa6cf3f3f0e">&#9670;&#160;</a></span>toggle_pause()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classsound__player.html#ad150da33ef9938c98e785628b9deb229">sound_player::toggle_pause_result</a> sound_player::toggle_pause </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>channel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Pause playback on a given channel if playing, or resume if paused.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>The channel to toggle pause on. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The result of the toggle: paused, resumed, or error. </dd></dl>
 
 </div>
 </div>
