@@ -167,16 +167,18 @@ function MoviePlayer:MoviePlayer(app, audio, video)
   self.wait_for_over = false
   self.movie_over = false
   self.movie_length = 0
-
-  local lose_palette = app.gfx:loadPalette("Bitmap", "lose.pl8", true, true)
-  self.lose_font = app.gfx:loadFontAndSpriteTable("QData", "Font39v", false, lose_palette)
-  self.lose_font_narrow = app.gfx:loadFontAndSpriteTable("QData", "Font40v", false, lose_palette)
+  self.lose_font = nil
+  self.lose_font_narrow = nil
 end
 
 --! Initialises the different movies used in the game
 function MoviePlayer:init()
   self.moviePlayer = TH.moviePlayer()
   self.moviePlayer:setRenderer(self.video)
+
+  local lose_palette = self.app.gfx:loadPalette("Bitmap", "lose.pl8", true, true)
+  self.lose_font = self.app.gfx:loadFontAndSpriteTable("QData", "Font39v", false, lose_palette)
+  self.lose_font_narrow = self.app.gfx:loadFontAndSpriteTable("QData", "Font40v", false, lose_palette)
 
   --find movies in Anims folder
   local fs = self.app.fs
