@@ -248,8 +248,7 @@ void sound_player::populate_from(sound_archive* pArchive) {
   sounds = new Mix_Chunk*[pArchive->get_number_of_sounds()];
   for (; sound_count < pArchive->get_number_of_sounds(); ++sound_count) {
     sounds[sound_count] = nullptr;
-    SDL_RWops* pRwop = pArchive->load_sound(sound_count);
-    if (pRwop) {
+    if (SDL_RWops* pRwop = pArchive->load_sound(sound_count)) {
       sounds[sound_count] = Mix_LoadWAV_RW(pRwop, 1);
       if (sounds[sound_count]) {
         Mix_VolumeChunk(sounds[sound_count], MIX_MAX_VOLUME);
@@ -258,37 +257,61 @@ void sound_player::populate_from(sound_archive* pArchive) {
   }
 }
 
-void sound_player::play(size_t iIndex, double dVolume) {
+int sound_player::play(size_t iIndex, double dVolume) {
   if (available_channels_bitmap == 0 || iIndex >= sound_count ||
       !sounds[iIndex]) {
-    return;
+    return -1;
   }
 
-  play_raw(iIndex, (int)(positionless_volume * dVolume));
+  return play_raw(iIndex, static_cast<int>(positionless_volume * dVolume));
 }
 
-void sound_player::play_at(size_t iIndex, int iX, int iY) {
+int sound_player::play_at(size_t iIndex, int iX, int iY) {
   if (sound_effects_enabled) {
-    play_at(iIndex, sound_effect_volume, iX, iY);
+    return play_at(iIndex, sound_effect_volume, iX, iY);
   }
+  return -1;
 }
 
-void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {
+int sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {
   if (available_channels_bitmap == 0 || iIndex >= sound_count ||
       !sounds[iIndex]) {
-    return;
+    return -1;
   }
 
-  double fDX = (double)(iX - camera_x);
-  double fDY = (double)(iY - camera_y);
+  const double fDX = iX - camera_x;
+  const double fDY = iY - camera_y;
   double fDistance = sqrt(fDX * fDX + fDY * fDY);
-  if (fDistance > camera_radius) return;
+  if (fDistance > camera_radius) return -1;
   fDistance = fDistance / camera_radius;
 
-  double fVolume = master_volume * (1.0 - fDistance * 0.8) *
-                   (double)MIX_MAX_VOLUME * dVolume;
+  double fVolume =
+      master_volume * (1.0 - fDistance * 0.8) * (MIX_MAX_VOLUME * dVolume);
 
-  play_raw(iIndex, static_cast<int>(std::lround(fVolume)));
+  return play_raw(iIndex, static_cast<int>(std::lround(fVolume)));
+}
+
+sound_player::toggle_pause_result sound_player::toggle_pause(int channel) {
+  if (channel < 0 || channel >= number_of_channels ||
+      (available_channels_bitmap & (1 << channel)) != 0) {
+    return toggle_pause_result::error;
+  }
+  if (Mix_Paused(channel)) {
+    Mix_Resume(channel);
+    return toggle_pause_result::resumed;
+  } else {
+    Mix_Pause(channel);
+    return toggle_pause_result::paused;
+  }
+}
+
+void sound_player::stop(int channel) {
+  if (channel < 0 || channel >= number_of_channels ||
+      (available_channels_bitmap & (1 << channel)) != 0) {
+    return;
+  }
+  Mix_HaltChannel(channel);
+  release_channel(channel);
 }
 
 void sound_player::set_sound_effect_volume(double dVolume) {
@@ -313,16 +336,17 @@ void sound_player::release_channel(int iChannel) {
   available_channels_bitmap |= (1 << iChannel);
 }
 
-void sound_player::play_raw(size_t iIndex, int iVolume) {
+int sound_player::play_raw(size_t iIndex, int iVolume) {
   int iChannel = reserve_channel();
 
   Mix_Volume(iChannel, iVolume);
   Mix_PlayChannelTimed(iChannel, sounds[iIndex], 0, -1);
+  return iChannel;
 }
 
 void sound_player::set_camera(int iX, int iY, int iRadius) {
   camera_x = iX;
   camera_y = iY;
-  camera_radius = (double)iRadius;
+  camera_radius = static_cast<double>(iRadius);
   if (camera_radius < 0.001) camera_radius = 0.001;
 }

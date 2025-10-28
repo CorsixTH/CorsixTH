@@ -276,6 +276,21 @@ end
 
 local wilcard_cache = permanent "audio_wildcard_cache" {}
 
+
+--! Play a sound from the sound archive
+--!param name (string) The name of the sound to be played. Can include
+--  wildcards (*).
+--!param where (Entity) The entity that is the source of the sound, or nil if
+--  the audio is not positional.
+--!param is_announcement (boolean) Whether the sound is an announcement
+--  (affects volume).
+--!param played_callback (function) A function to be called when the sound has
+--  finished playing. Can be nil.
+--!param played_callback_delay (integer) An optional delay in milliseconds
+--  before the played_callback is called.
+--!return (table) A `sound` table for passing into functions that act on the
+--  playing sound. The fields are an implementation detail that should not be
+--  used outside of the Audio class.
 function Audio:playSound(name, where, is_announcement, played_callback, played_callback_delay)
   local sound_fx = self.sound_fx
   if sound_fx then
@@ -284,14 +299,13 @@ function Audio:playSound(name, where, is_announcement, played_callback, played_c
       local list = self:cacheSoundFilenamesAssociatedWithName(name)
       name = list[1] and list[math.random(1, #list)] or name
     end
-    local _, warning
     local volume = is_announcement and self.app.config.announcement_volume or self.app.config.sound_volume
     local x, y
-    local played_callbacks_id
+    local played_callback_id = nil
     if played_callback then
-      played_callbacks_id = self.unused_played_callback_id
+      played_callback_id = self.unused_played_callback_id
       self.unused_played_callback_id = self.unused_played_callback_id + 1
-      self.played_sound_callbacks[tostring(played_callbacks_id)] = played_callback
+      self.played_sound_callbacks[tostring(played_callback_id)] = played_callback
     end
     if where then
       x, y = Map:WorldToScreen(where.tile_x, where.tile_y)
@@ -300,12 +314,42 @@ function Audio:playSound(name, where, is_announcement, played_callback, played_c
       x = x + dx - ui.screen_offset_x
       y = y + dy - ui.screen_offset_y
     end
-    _, warning = sound_fx:play(name, volume, x, y, played_callbacks_id, played_callback_delay)
+    local channel, warning = sound_fx:play(name, volume, x, y, played_callback_id, played_callback_delay)
 
     if warning then
       -- Indicates something happened
       self.app.world:gameLog("Audio:playSound - Warning: " .. warning)
     end
+
+    return { channel = channel, played_callback_id = played_callback_id }
+  end
+end
+
+--! Pause or unpause a playing sound
+--!param sound (table) The `sound` table returned by `Audio:playSound`.
+function Audio:togglePauseSound(sound)
+  local sound_fx = self.sound_fx
+  if not sound_fx then
+    return
+  end
+
+  if sound.channel and sound.channel >= 0 then
+    sound_fx:togglePause(sound.channel, sound.played_callback_id)
+  end
+end
+
+--! Stop a playing sound.
+-- A stopped sound is destroyed and cannot be resumed. The callback will be not
+-- be called for the stopped sound.
+--!param sound (table) The `sound` table returned by `Audio:playSound`.
+function Audio:stopSound(sound)
+  local sound_fx = self.sound_fx
+  if not sound_fx then
+    return
+  end
+
+  if sound.channel and sound.channel >= 0 then
+    sound_fx:stop(sound.channel, sound.played_callback_id)
   end
 end
 

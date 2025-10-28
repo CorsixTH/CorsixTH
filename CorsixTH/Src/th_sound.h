@@ -63,6 +63,8 @@ class sound_archive {
 
 class sound_player {
  public:
+  enum class toggle_pause_result { error, paused, resumed };
+
   sound_player();
   sound_player(const sound_player&) = delete;
   sound_player& operator=(const sound_player&) = delete;
@@ -72,20 +74,73 @@ class sound_player {
 
   void populate_from(sound_archive* pArchive);
 
-  void play(size_t iIndex, double dVolume);
-  void play_at(size_t iIndex, int iX, int iY);
-  void play_at(size_t iIndex, double dVolume, int iX, int iY);
+  //! Plays the sound effect in the sound_archive with the given index.
+  //!
+  //! \param iIndex Index of the sound effect to play.
+  //! \param dVolume Volume to play the sound effect at, in the range 0.0 to
+  //!        1.0.
+  //! \return The channel the sound is played on, or -1 on error.
+  int play(size_t iIndex, double dVolume);
+
+  //! Plays the sound effect in the sound_archive with the given index with
+  //! volume attenuation based on the distance from the given position to the
+  //! camera.
+  //!
+  //! \param iIndex Index of the sound effect to play.
+  //! \param iX X coordinate of the sound effect.
+  //! \param iY Y coordinate of the sound effect.
+  //! \return The channel the sound is played on, or -1 on error.
+  int play_at(size_t iIndex, int iX, int iY);
+
+  //! Plays the sound effect in the sound_archive with the given index with
+  //! volume attenuation based on the distance from the given position to the
+  //! camera.
+  //!
+  //! \param iIndex Index of the sound effect to play.
+  //! \param dVolume Volume to play the sound effect at before attenuation, in
+  //!        the range 0.0 to 1.0.
+  //! \param iX X coordinate of the sound effect.
+  //! \param iY Y coordinate of the sound effect.
+  //! \return The channel the sound is played on, or -1 on error.
+  int play_at(size_t iIndex, double dVolume, int iX, int iY);
+
+  //! Pause playback on a given channel if playing, or resume if paused.
+  //!
+  //! \param channel The channel to toggle pause on.
+  //! \return The result of the toggle: paused, resumed, or error.
+  toggle_pause_result toggle_pause(int channel);
+
+  //! Stops playback on a given channel.
+  //!
+  //! \param channel The channel to stop.
+  void stop(int channel);
+
+  //! Sets the default volume for sound effects.
   void set_sound_effect_volume(double dVolume);
+
+  //! Enables or disables sound effects.
+  //! Note: Only affects sounds played via play_at(int, int, int).
   void set_sound_effects_enabled(bool bOn);
+
+  //! Sets the position of the camera for play_at calculations.
   void set_camera(int iX, int iY, int iRadius);
+
+  //! Reserves an SDL_mixer channel for exclusive use.
+  //!
+  //! Not necessary to use in conjunction with play() or play_at(), as these
+  //! methods will automatically reserve and release channels.
+  //!
+  //! \return The reserved channel index, or -1 if no channels are available.
   int reserve_channel();
+
+  //! Releases a previously reserved SDL_mixer channel.
   void release_channel(int iChannel);
 
  private:
   static sound_player* singleton;
   static void on_channel_finished(int iChannel);
 
-  inline void play_raw(size_t iIndex, int iVolume);
+  int play_raw(size_t iIndex, int iVolume);
 
   Mix_Chunk** sounds;
   size_t sound_count;
