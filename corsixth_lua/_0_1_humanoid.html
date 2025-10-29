@@ -61,6 +61,9 @@
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="self">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1find_objects_in_square">findObjectsInSquare</a>(<span class="p">size</span>, <span class="p">object_spec</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_humanoid.html#_0_1_humanoid_1finish_action">finishAction</a>(<span class="p">action</span>)
  </li>
  <li class="self">
@@ -411,7 +414,7 @@
  <h5><a name="_0_1_humanoid_1__handle_empty_action_queue">function Humanoid:_handleEmptyActionQueue()</a></h5>
  <p>
  Handle an empty action queue in some way instead of crashing.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L675">line 675 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L723">line 723 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -455,7 +458,7 @@
 and is then capped to be between 0 and 1.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L815">line 815 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L863">line 863 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -472,6 +475,29 @@ and is then capped to be between 0 and 1.</td>
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_humanoid_1find_objects_in_square">function Humanoid:findObjectsInSquare(<span class="p">size</span>, <span class="p">object_spec</span>)</a></h5>
+ <p>
+ Collect the objects in a square around the humanoid within the same room.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">size</td>
+ <td class="t">int</td>
+ <td class="d"> Size of the square to be searched, as number of rows/columns
+around the humanoid. Size 0 only searches the tile of the humanoid, size 1
+adds the 8 tiles around the humanoid (one tile in all directions), and so on.</td>
+ </tr>
+ <tr>
+ <td class="n">object_spec</td>
+ <td class="t">str&nbsp;or&nbsp;or&nbsp;or&nbsp;array&nbsp;or&nbsp;str</td>
+ <td class="d"> Name(s) of objects to find.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L528">line 528 of Lua/entities/humanoid.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_humanoid_1finish_action">function Humanoid:finishAction(<span class="p">action</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
@@ -483,7 +509,7 @@ and is then capped to be between 0 and 1.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L640">line 640 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L688">line 688 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -504,13 +530,13 @@ and is then capped to be between 0 and 1.</td>
  <td class="d"> Number to return if none found. If neither are present, 0 is returned</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1067">line 1067 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1115">line 1115 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_1get_current_action">function Humanoid:getCurrentAction()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L985">line 985 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1033">line 1033 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -555,7 +581,7 @@ and is then capped to be between 0 and 1.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L882">line 882 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L930">line 930 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -570,28 +596,28 @@ and is then capped to be between 0 and 1.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L783">line 783 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L831">line 831 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_1has_dressing_and_leaving_action">function Humanoid:hasDressingAndLeavingAction()</a></h5>
  <p>
  Check if there is "use_screen is_leaving" action in the action queue<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L665">line 665 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L713">line 713 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_1has_leaving_action">function Humanoid:hasLeavingAction()</a></h5>
  <p>
  Check if there is "is_leaving" action in the action queue<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L655">line 655 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L703">line 703 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_1is_leaving">function Humanoid:isLeaving()</a></h5>
  <p>
  Check if the humanoid is running actions intended to leave the room, as indicated by the flag<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L650">line 650 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L698">line 698 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -623,7 +649,7 @@ and is then capped to be between 0 and 1.</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1notify_new_room">Entity:notifyNewRoom</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L908">line 908 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L956">line 956 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -638,7 +664,7 @@ and is then capped to be between 0 and 1.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L914">line 914 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L962">line 962 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -687,7 +713,7 @@ and is then capped to be between 0 and 1.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L627">line 627 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L675">line 675 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -703,7 +729,7 @@ and is then capped to be between 0 and 1.</td>
  <td class="d"> The callback to call when a room has been built.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L892">line 892 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L940">line 940 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -719,7 +745,7 @@ and is then capped to be between 0 and 1.</td>
  <td class="d"> The callback to call when a room has been removed.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L920">line 920 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L968">line 968 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -735,7 +761,7 @@ and is then capped to be between 0 and 1.</td>
  <td class="d"> The callback to call when a staff member has been hired or fired</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L941">line 941 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L989">line 989 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -803,7 +829,7 @@ If mood_name is nil it is considered a refresh only.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L556">line 556 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L604">line 604 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -818,14 +844,14 @@ If mood_name is nil it is considered a refresh only.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L728">line 728 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L776">line 776 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_1start_action">function Humanoid:startAction()</a></h5>
  <p>
  Start the next (always first) action in the queue.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L528">line 528 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L576">line 576 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -834,7 +860,7 @@ If mood_name is nil it is considered a refresh only.<br/><br/>
  Check if it is cold or hot around the humanoid and increase/decrease the
 feeling of warmth accordingly. Returns whether the calling function should proceed.<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1tick_day">Entity:tickDay</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L844">line 844 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L892">line 892 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -851,7 +877,7 @@ but also defined here, so we can just call it on any humanoid<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L771">line 771 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L819">line 819 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -859,7 +885,7 @@ but also defined here, so we can just call it on any humanoid<br/><br/>
  <p>
  Return string representation<br/><br/>
  Returns string representation of the humanoid like status and action queue<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L993">line 993 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1041">line 1041 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -875,7 +901,7 @@ but also defined here, so we can just call it on any humanoid<br/><br/>
  <td class="d"> The room the humanoid maybe expected at</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1051">line 1051 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1099">line 1099 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -883,7 +909,7 @@ but also defined here, so we can just call it on any humanoid<br/><br/>
  <p>
  Function called when a humanoid is sent away from the hospital to prevent
 further actions taken as a result of a callback<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L963">line 963 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1011">line 1011 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -899,7 +925,7 @@ further actions taken as a result of a callback<br/><br/>
  <td class="d"> The callback to remove.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L902">line 902 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L950">line 950 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -915,7 +941,7 @@ further actions taken as a result of a callback<br/><br/>
  <td class="d"> The callback to remove.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L931">line 931 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L979">line 979 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -931,13 +957,13 @@ further actions taken as a result of a callback<br/><br/>
  <td class="d"> The callback to remove.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L951">line 951 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L999">line 999 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_1update_speed">function Humanoid:updateSpeed()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L779">line 779 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L827">line 827 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -952,7 +978,7 @@ further actions taken as a result of a callback<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L776">line 776 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L824">line 824 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -983,7 +1009,7 @@ tile to walk to.</td>
 interrupted.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L757">line 757 of Lua/entities/humanoid.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L805">line 805 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
 </div>
