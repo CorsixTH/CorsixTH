@@ -52,7 +52,7 @@ function UIMainMenu:UIMainMenu(ui)
     {_S.main_menu.options,         self.buttonOptions,        _S.tooltip.main_menu.options},
     {_S.main_menu.map_edit,        self.buttonMapEdit,        _S.tooltip.main_menu.map_edit}
   }
-  if TheApp and TheApp.os != 'emscripten' then
+  if TheApp and TheApp.os ~= 'emscripten' then
     table.insert(menu_items, {_S.main_menu.exit, self.buttonExit, _S.tooltip.main_menu.exit})
   end
   self.no_menu_entries = #menu_items
