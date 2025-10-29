@@ -687,57 +687,41 @@ function Patient:tickDay()
     local initialVomitMult = 0.002 --The initial chance of vomiting.
     local proximityVomitMult = 1.5 --The multiplier used when in proximity to vomit.
     local nausea = (1.0 - self:getAttribute("health")) * initialVomitMult
-    local foundVomit = {}
     local numVomit = 0
 
-    self.world:findObjectNear(self, "litter", 2, function(x, y)
-      local litter = self.world:getObject(x, y, "litter")
-    if not litter then
-    return
-    end
-      if litter:vomitInducing() then
-        local alreadyFound = false
-        for i=1,numVomit do
-          if foundVomit[i] == litter then
-            alreadyFound = true
-            break
-          end
-        end
+    for _, litter in ipairs(self:findObjectsInSquare(2, "litter")) do
+      -- Count vomit inducing litter.
+      if litter:vomitInducing() then numVomit = numVomit + 1 end
 
-        if not alreadyFound then
-          numVomit = numVomit + 1
-          foundVomit[numVomit] = litter
-        end
-      end
-      -- seeing litter will make you unhappy. If it is pee or puke it is worse
+      -- Seeing litter will make you unhappy. If it is pee or puke it is worse
       if litter:anyLitter() then
         self:changeAttribute("happiness", -0.0002)
       else
         self:changeAttribute("happiness", -0.0004)
       end
-    end) -- End of findObjectNear
+    end
+
     -- As we don't yet have rats, ratholes and dead rats the chances of vomitting are slim
     -- as a temp fix for this I have added 0.5 to the < nausea equation,
     -- this may want adjusting or removing when the other factors are in the game MarkL
     if self:getAttribute("health") <= 0.8 or numVomit > 0 or self:getAttribute("happiness") < 0.6 then
-      nausea = nausea * ((numVomit+1) * proximityVomitMult)
+      nausea = nausea * ((numVomit + 1) * proximityVomitMult)
       if math.random() < nausea + 0.5 then
         self:vomit()
       end
     end
   end
 
-  -- It is nice to see plants, but dead plants make you unhappy
-  self.world:findObjectNear(self, "plant", 2, function(x, y)
-    local plant = self.world:getObject(x, y, "plant")
-    if plant then
-      self:changeAttribute("happiness", -0.0003 + (plant:isPleasingFactor() * 0.0001))
-    end
-  end)
-  -- It always makes you happy to see you are in safe place
-  self.world:findObjectNear(self, "extinguisher", 2, function()
-    self:changeAttribute("happiness", 0.0002)
-  end)
+  -- It is nice to see plants, but dead plants make you unhappy.
+  local plant = getRandomEntryFromArray(self:findObjectsInSquare(2, "plant"))
+  if plant then
+    self:changeAttribute("happiness", -0.0003 + (plant:isPleasingFactor() * 0.0001))
+  end
+
+  -- It always makes you happy to see you are in safe place.
+  local extinguisher = getRandomEntryFromArray(self:findObjectsInSquare(2, "extinguisher"))
+  if extinguisher then self:changeAttribute("happiness", 0.0002) end
+
   -- sitting makes you happy whilst standing and walking does not
   if self:goingToUseObject("bench") then
     self:changeAttribute("happiness", 0.00002)
@@ -800,8 +784,7 @@ function Patient:tickDay()
     -- or idling/walking in the corridors
     -- Also make sure the walk action when leaving a room has a chance to finish.
     if not self:getRoom() and not self:getCurrentAction().is_leaving and not self.going_home then
-      local machine, lx, ly = self.world:
-          findObjectNear(self, "drinks_machine", 8)
+      local machine, lx, ly = self.world:findObjectNear(self, "drinks_machine", 8)
 
       -- If no machine can be found, resume previous action and wait a
       -- while before trying again. To get a little randomness into the picture
