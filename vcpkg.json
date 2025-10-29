@@ -12,7 +12,6 @@
     "libpng",
     {
        "name": "fluidsynth",
-       "platform": "!osx",
        "features": [
          "sndfile"
        ]
@@ -22,8 +21,7 @@
       "features": [
         "libmodplug",
         {
-          "name": "fluidsynth",
-          "platform": "!osx"
+          "name": "fluidsynth"
         },
         "libflac",
         "mpg123",
