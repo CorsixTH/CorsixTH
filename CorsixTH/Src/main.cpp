@@ -49,7 +49,7 @@ SOFTWARE.
 
 extern "C" {
 int luaopen_random(lua_State* L);
-#if CORSIX_TH_LINK_LUA_MODULES || __EMSCRIPTEN__
+#if defined(CORSIX_TH_LINK_LUA_MODULES) || defined(__EMSCRIPTEN__)
 int luaopen_lfs(lua_State* L);
 int luaopen_lpeg(lua_State* L);
 #endif
