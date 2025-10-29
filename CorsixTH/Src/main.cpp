@@ -159,7 +159,7 @@ int lua_main_no_eval(lua_State* L) {
   preload_lua_package(L, "persist", luaopen_persist);
   preload_lua_package(L, "sdl", luaopen_sdl);
 
-#if CORSIX_TH_LINK_LUA_MODULES || __EMSCRIPTEN__
+#if defined(CORSIX_TH_LINK_LUA_MODULES) || defined(__EMSCRIPTEN__)
   preload_lua_package(L, "lfs", luaopen_lfs);
   preload_lua_package(L, "lpeg", luaopen_lpeg);
 #endif
