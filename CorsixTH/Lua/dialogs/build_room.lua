@@ -41,6 +41,7 @@ function UIBuildRoom:UIBuildRoom(ui)
   self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color})
   self.category_index = 0
   self.list_hover_index = 0
+  self.hover_sound = nil
   self.preview_anim = false
   self.default_button_sound = "selectx.wav"
 
@@ -206,7 +207,10 @@ function UIBuildRoom:onMouseMove(x, y, dx, dy)
   end
 
   if hover_idx ~= self.list_hover_index then
-    self.ui:playSound("HLight5.wav")
+    if self.hover_sound then
+      self.ui:stopSound(self.hover_sound)
+    end
+    self.hover_sound = self.ui:playSound("HLight5.wav")
     if hover_idx == 0 then
       self.cost_box = _S.build_room_window.cost .. "0"
       self.preview_anim = false

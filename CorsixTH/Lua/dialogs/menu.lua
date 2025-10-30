@@ -263,7 +263,10 @@ function UIMenuBar:onMouseMove(x, y, dx, dy)
         visible = true
         if hit ~= true then
           if hit ~= menu.prev_hover_index then
-            self.ui:playSound("HLight5.wav")
+            if menu.hover_sound then
+              self.ui:stopSound(menu.hover_sound)
+            end
+            menu.hover_sound = self.ui:playSound("HLight5.wav")
           end
           menu.hover_index = hit
           menu.prev_hover_index = menu.hover_index
@@ -479,6 +482,7 @@ function UIMenu:UIMenu()
   self.parent = false
   self.hover_index = 0
   self.prev_hover_index = nil
+  self.hover_sound = nil
   self.has_size = false
 end
 

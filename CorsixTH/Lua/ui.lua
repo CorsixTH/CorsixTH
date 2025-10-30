@@ -228,8 +228,15 @@ end
 -- Used for everything except music and announcements
 function UI:playSound(name, played_callback, played_callback_delay)
   if self.app.config.play_sounds then
-    self.app.audio:playSound(name, nil, false, played_callback, played_callback_delay)
+    return self.app.audio:playSound(name, nil, false, played_callback, played_callback_delay)
   end
+end
+
+--! Stop the given sound
+-- see Audio:stopSound
+--!param sound (table) sound to stop
+function UI:stopSound(sound)
+  self.app.audio:stopSound(sound)
 end
 
 -- Stub with args for subclass GameUI.
