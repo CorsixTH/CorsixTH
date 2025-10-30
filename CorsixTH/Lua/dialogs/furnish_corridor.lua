@@ -56,6 +56,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self.total_price = 0
 
   self.list_hover_index = 0
+  self.hover_sound = nil
   self.preview_anim = TH.animation()
 
   self.objects = {
@@ -244,7 +245,10 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
       local obj = self.objects[hover_idx].object
       self.item_price = self.ui.hospital:getObjectBuildCost(obj.id)
       self.preview_anim:setAnimation(self.anims, obj.build_preview_animation)
-      self.ui:playSound("HLight5.wav")
+      if self.hover_sound then
+        self.ui:stopSound(self.hover_sound)
+      end
+      self.hover_sound = self.ui:playSound("HLight5.wav")
     end
     self.list_hover_index = hover_idx
     repaint = true

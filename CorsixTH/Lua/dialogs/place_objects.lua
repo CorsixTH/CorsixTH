@@ -234,6 +234,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
 
   self.active_index = 0 -- avoid case of index changing from 1 to 1
   self.active_hover_index = 0
+  self.hover_sound = nil
   self:setActiveIndex(1)
   self:onCursorWorldPositionChange(self.ui:getCursorPosition(self))
 end
@@ -596,7 +597,10 @@ function UIPlaceObjects:onMouseMove(x, y, dx, dy)
     if (header_height+y) % bar_height < 21 then
       current_hover_id = math_floor((y - header_height)/bar_height) + 1
       if self.active_hover_index ~= current_hover_id then
-        self.ui:playSound("Hlight5.wav")
+        if self.hover_sound then
+          self.ui:stopSound(self.hover_sound)
+        end
+        self.hover_sound = self.ui:playSound("Hlight5.wav")
         self.active_hover_index = current_hover_id
       end
     else
