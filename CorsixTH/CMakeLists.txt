@@ -56,6 +56,8 @@ if(WIN32)
   set(CORSIX_TH_OS "windows")
 elseif(APPLE)
   set(CORSIX_TH_OS "macos")
+elseif(EMSCRIPTEN)
+  set(CORSIX_TH_OS "emscripten")
 else()
   set(CORSIX_TH_OS "unix")
 endif()
@@ -104,7 +106,7 @@ set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
 ## Finding libraries
-if (CMAKE_SYSTEM_NAME MATCHES "Emscripten")
+if (EMSCRIPTEN)
   set(USE_FLAGS " \
   --use-port=sdl2 \
   --use-port=sdl2_image:formats=png,jpg --use-port=libpng --use-port=libjpeg \
