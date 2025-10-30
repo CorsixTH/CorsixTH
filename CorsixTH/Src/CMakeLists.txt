@@ -9,11 +9,11 @@ set(LFS_HRC_FILES "")
 if (EMSCRIPTEN)
     include(FetchContent)
     FetchContent_Declare(lpeg
-            URL  https://github.com/roberto-ieru/LPeg/archive/refs/heads/master.zip
+            URL  "https://github.com/roberto-ieru/LPeg/archive/refs/heads/master.zip"
             DOWNLOAD_EXTRACT_TIMESTAMP false
     )
     FetchContent_Declare(lfs
-            URL  https://github.com/lunarmodules/luafilesystem/archive/refs/tags/v1_8_0.zip
+            URL  "https://github.com/lunarmodules/luafilesystem/archive/refs/tags/v1_8_0.zip"
             DOWNLOAD_EXTRACT_TIMESTAMP false
     )
     FetchContent_MakeAvailable(lpeg lfs)
