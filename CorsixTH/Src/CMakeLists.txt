@@ -16,7 +16,8 @@ if (EMSCRIPTEN)
             URL  "https://github.com/lunarmodules/luafilesystem/archive/refs/tags/v1_8_0.zip"
             DOWNLOAD_EXTRACT_TIMESTAMP false
     )
-    FetchContent_MakeAvailable(lpeg lfs)
+    FetchContent_MakeAvailable(lpeg)
+    FetchContent_MakeAvailable(lfs)
 
     file(GLOB LPEG_SRC_FILES
             ${lpeg_SOURCE_DIR}/*.c
