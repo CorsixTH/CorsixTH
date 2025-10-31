@@ -248,6 +248,15 @@ function World:initLevel(app, avail_rooms)
       end
     end
   end
+  -- Apply level-defined pricing to diseases on new game:
+  if level_config and level_config.expertise and #self.available_diseases > 0 then
+    for _, dis in ipairs(self.available_diseases) do
+      local ex = dis.expertise_id and level_config.expertise[dis.expertise_id]
+      if ex and ex.StartPrice ~= nil then
+        dis.cure_price = ex.StartPrice
+      end
+    end
+  end
   if #self.available_diseases == 0 and self.map.level_number ~= "MAP EDITOR" then
     -- No diseases are needed if we're actually in the map editor!
     print("Warning: This level does not contain any diseases")
@@ -2202,7 +2211,18 @@ end
 --!param new (integer) The current version of the save game format.
 function World:afterLoad(old, new)
   self:setUI(self.ui)
-
+  -- Re-apply level-defined pricing when loading saves:
+  do
+    local lc = self.map and self.map.level_config
+    if lc and lc.expertise and self.available_diseases then
+      for _, dis in ipairs(self.available_diseases) do
+        local ex = dis.expertise_id and lc.expertise[dis.expertise_id]
+        if ex and ex.StartPrice ~= nil then
+          dis.cure_price = ex.StartPrice
+        end
+      end
+    end
+  end
   -- insert global compatibility code here
   if old < 4 then
     self.room_built = {}
