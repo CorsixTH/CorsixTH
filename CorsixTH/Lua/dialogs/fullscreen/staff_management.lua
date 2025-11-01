@@ -52,6 +52,8 @@ function UIStaffManagement:UIStaffManagement(ui)
   self.default_button_sound = "selectx.wav"
   self.hover_id = 0
   self.visual_hover_id = 0
+  self.hover_sound = nil;
+
 
   -- Close button
   self:addPanel(0, 603, 443):makeButton(0, 0, 26, 26, 10, self.close):setTooltip(_S.tooltip.staff_list.close)
@@ -462,7 +464,10 @@ function UIStaffManagement:onMouseMove(x, y, dx, dy)
     if #self.staff_members[self.category] - (self.page - 1)*10 > active_hover_id then
       current_hover_id = active_hover_id + 1 + (self.page - 1)*10
       if self.hover_id ~= current_hover_id then
-        self.ui:playSound("Hlight5.wav")
+        if self.hover_sound then
+          self.ui:stopSound(self.hover_sound)
+        end
+        self.hover_sound = self.ui:playSound("Hlight5.wav")
         self.hover_id = current_hover_id
         self.visual_hover_id = current_hover_id
       end
