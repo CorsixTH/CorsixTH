@@ -155,6 +155,11 @@ local configuration = {
     CrackUpTired = 800,
     -- How much soda costs at a drinks machine
     SodaPrice              = 20,
+    -- Rest values for actions taken in a staff room
+    RestStanding = 3,
+    RestSofa = 8,
+    RestGame = 60,
+    RestSnooker = 40,
   },
 
   towns = {

@@ -974,4 +974,10 @@ function Map:afterLoad(old, new)
     gbv.AllocIndRep   = gbv.AllocIndRep or 2
     gbv.AllocRand     = gbv.AllocRand or 4
   end
+  if old < 273 then
+    gbv.RestStanding = gbv.RestStanding or 3
+    gbv.RestSofa = gbv.RestSofa or 8
+    gbv.RestGame = gbv.RestGame or 60
+    gbv.RestSnooker = gbv.RestSnooker or 40
+  end
 end
