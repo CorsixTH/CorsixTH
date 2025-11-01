@@ -252,7 +252,7 @@ function World:initLevel(app, avail_rooms)
   if level_config and level_config.expertise and #self.available_diseases > 0 then
     for _, dis in ipairs(self.available_diseases) do
       local ex = dis.expertise_id and level_config.expertise[dis.expertise_id]
-      if ex and ex.StartPrice ~= nil then
+      if ex and ex.StartPrice then
         dis.cure_price = ex.StartPrice
       end
     end
@@ -2217,7 +2217,7 @@ function World:afterLoad(old, new)
     if lc and lc.expertise and self.available_diseases then
       for _, dis in ipairs(self.available_diseases) do
         local ex = dis.expertise_id and lc.expertise[dis.expertise_id]
-        if ex and ex.StartPrice ~= nil then
+        if ex and ex.StartPrice then
           dis.cure_price = ex.StartPrice
         end
       end
