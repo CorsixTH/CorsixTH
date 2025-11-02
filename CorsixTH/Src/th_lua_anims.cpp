@@ -55,7 +55,7 @@ int l_anims_set_spritesheet(lua_State* L) {
 
 //! Set the video target for the sprites.
 /*!
-    setCanvas(<video-surface>)
+ *  setCanvas(<video-surface>)
  */
 int l_anims_set_canvas(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
@@ -89,7 +89,7 @@ int l_anims_load(lua_State* L) {
 
 //! Load custom animations.
 /*!
-    loadCustom(<data-of-an-animation-file>) -> true/false
+ *  Anims:loadCustom(<data-of-an-animation-file>) -> true/false
  */
 int l_anims_loadcustom(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
@@ -108,8 +108,8 @@ int l_anims_loadcustom(lua_State* L) {
 //! Lua interface for getting a set of animations by name and tile size (one for
 //! each view direction, 'nil' if no animation is available for a direction).
 /*!
-    getAnimations(<tile-size>, <animation-name>) -> (<anim-north>, <anim-east>,
-   <anim-south>, <anim-west>)
+ *  Anims:getAnimations(<tile-size>, <animation-name>)
+ *      -> (<anim-north>, <anim-east>, <anim-south>, <anim-west>)
  */
 int l_anims_getanims(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
@@ -141,6 +141,10 @@ int l_anims_getanims(lua_State* L) {
   return 4;
 }
 
+//! Get the first frame of an animation.
+/*!
+ *  Anims:getFirstFrame(<anim-number>) -> <frame-number>
+ */
 int l_anims_getfirst(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   int iAnim = static_cast<int>(luaL_checkinteger(L, 2));
@@ -149,6 +153,10 @@ int l_anims_getfirst(lua_State* L) {
   return 1;
 }
 
+//! Get the next frame of an animation.
+/*!
+ *  Anims:getNextFrame(<frame-number>) -> <frame-number>
+ */
 int l_anims_getnext(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   int iFrame = static_cast<int>(luaL_checkinteger(L, 2));
@@ -177,6 +185,11 @@ int l_anims_set_alt_pal(lua_State* L) {
   return 1;
 }
 
+//! Set the primary (often patient) marker of an animation.
+/*!
+ *  Anims:setFramePrimaryMarker(<frame-num>, <x-pos>, <y-pos>) -> Anims
+ *  with x and y positions in pixels relative to tile-centre at floor level.
+ */
 int l_anims_set_primary_marker(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   lua_pushboolean(
@@ -188,12 +201,11 @@ int l_anims_set_primary_marker(lua_State* L) {
   return 1;
 }
 
-int l_anims_tick(lua_State* L) {
-  animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
-  pAnims->tick();
-  return 0;
-}
-
+//! Set the secondary (often staff) marker of an animation.
+/*!
+ *  Anims:setFrameSecondaryMarker(<frame-num>, <x-pos>, <y-pos>) -> Anims
+ *  with x and y positions in pixels relative to tile-centre at floor level.
+ */
 int l_anims_set_secondary_marker(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   lua_pushboolean(
@@ -203,6 +215,16 @@ int l_anims_set_secondary_marker(lua_State* L) {
              ? 1
              : 0);
   return 1;
+}
+
+//! Update the global patients effects counter for the next frame.
+/*!
+ * Anims:tick()
+ */
+int l_anims_tick(lua_State* L) {
+  animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
+  pAnims->tick();
+  return 0;
 }
 
 int l_anims_draw(lua_State* L) {
@@ -301,6 +323,10 @@ int l_anim_set_hitresult(lua_State* L) {
   return 1;
 }
 
+//! Set the frame of an animation.
+/*!
+ *  Animation:setFrame(<frame number>) -> Animation
+ */
 int l_anim_set_frame(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   pAnimation->set_frame(luaL_checkinteger(L, 2));
@@ -308,12 +334,25 @@ int l_anim_set_frame(lua_State* L) {
   return 1;
 }
 
+//! Get the current frame of an animation.
+/*!
+ *  Animation:getFrame(<frame number>) -> <current-frame-num>
+ */
 int l_anim_get_frame(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   lua_pushinteger(L, pAnimation->get_frame());
   return 1;
 }
 
+//! Set the tile column to draw.
+/*!
+ *  Anim:setCrop(<half-tile-offsets>) -> Anim
+ *
+ *  Tile column is specified as number of half-tile offsets relative to the
+ *  center of the center tile of the animation. Width of the column is always a
+ *  full tile.
+ *  Enabling cropping is controlled by the \c thdf_crop draw flag.
+ */
 int l_anim_set_crop(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   pAnimation->set_crop_column(static_cast<int>(luaL_checkinteger(L, 2)));
@@ -321,6 +360,15 @@ int l_anim_set_crop(lua_State* L) {
   return 1;
 }
 
+//! Get the tile column to draw.
+/*!
+ *  Anim:getCrop(<half-tile-offsets>) -> <column>
+ *
+ *  Tile column is specified as number of half-tile offsets relative to the
+ *  center of the center tile of the animation. Width of the column is always a
+ *  full tile.
+ *  Enabling cropping is controlled by the \c thdf_crop draw flag.
+ */
 int l_anim_get_crop(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   lua_pushinteger(L, pAnimation->get_crop_column());
@@ -367,6 +415,10 @@ int l_anim_set_morph(lua_State* L) {
   return 1;
 }
 
+//! Get the current animation.
+/*!
+ * Anim:getAnimation() -> <animation-number>
+ */
 int l_anim_get_anim(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   lua_pushinteger(L, pAnimation->get_animation());
@@ -374,8 +426,11 @@ int l_anim_get_anim(lua_State* L) {
   return 1;
 }
 
-// setTile(anim/spr_list, map, x, y, drawing_layer).
-// If map is 'nil', remove animation from tile.
+//! Set the base tile of the animation.
+/*!
+ * <animation/sprite-render-list>:setTile(<map>, <x>, <y>, <drawing_layer>)
+ * If map is 'nil', remove the animation from the tile.
+ */
 template <typename T>
 int l_anim_set_tile(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
@@ -391,9 +446,8 @@ int l_anim_set_tile(lua_State* L) {
     int y = static_cast<int>(luaL_checkinteger(L, 4));
     int drawing_layer = static_cast<int>(luaL_checkinteger(L, 5));
 
-    map_tile* node = pMap->get_tile(x - 1, y - 1);
-    if (node) {
-      pAnimation->attach_to_tile(x - 1, y - 1, node, drawing_layer);
+    if (pMap->is_on_map(x - 1, y - 1)) {
+      pAnimation->attach_to_map(pMap, x - 1, y - 1, drawing_layer);
     } else {
       // Off-map, report an error.
       std::string msg = "Map index out of bounds (" + std::to_string(x) + ", " +
@@ -552,6 +606,10 @@ int l_anim_set_layers_from(lua_State* L) {
   return 1;
 }
 
+//! Add a description to an animation.
+/*!
+ * Anim:setTag(<string/nil>) -> Anim
+ */
 int l_anim_set_tag(lua_State* L) {
   luaT_testuserdata<animation>(L);
   lua_settop(L, 2);
@@ -559,6 +617,10 @@ int l_anim_set_tag(lua_State* L) {
   return 1;
 }
 
+//! Get a description from an animation.
+/*!
+ * Anim:getTag() -> <string>
+ */
 int l_anim_get_tag(lua_State* L) {
   luaT_testuserdata<animation>(L);
   lua_settop(L, 1);
@@ -567,6 +629,10 @@ int l_anim_get_tag(lua_State* L) {
   return 1;
 }
 
+//! Get the position of the primary marker (often for patients).
+/*!
+ * Anim:getPrimaryMarker() -> x, y
+ */
 int l_anim_get_primary_marker(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   int iX = 0;
@@ -577,6 +643,10 @@ int l_anim_get_primary_marker(lua_State* L) {
   return 2;
 }
 
+//! Get the position of the secondary marker (often for staff).
+/*!
+ * Anim:getSecondaryMarker() -> x, y
+ */
 int l_anim_get_secondary_marker(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   int iX = 0;
@@ -587,6 +657,10 @@ int l_anim_get_secondary_marker(lua_State* L) {
   return 2;
 }
 
+//! Advance the animation to the next frame.
+/*!
+ * Anim/SpriteRenderList:tick() -> Anim/SpriteRenderList
+ */
 template <typename T>
 int l_anim_tick(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
@@ -595,6 +669,10 @@ int l_anim_tick(lua_State* L) {
   return 1;
 }
 
+//! Draw the animation.
+/*!
+ * Anim/SpriteRenderList:draw() -> Anim/SpriteRenderList
+ */
 template <typename T>
 int l_anim_draw(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
@@ -605,11 +683,47 @@ int l_anim_draw(lua_State* L) {
   return 1;
 }
 
+//! Add a proxy to an animation.
+/*!
+ * Anim:addProxy(<dx>, <dy>, opt-crop-column>, <opt-crop-width>)
+ */
+int l_anim_add_proxy(lua_State* L) {
+  animation* pAnimation = luaT_testuserdata<animation>(L);
+  std::int8_t dx = static_cast<std::int8_t>(luaL_checkinteger(L, 2));
+  std::int8_t dy = static_cast<std::int8_t>(luaL_checkinteger(L, 3));
+  if (lua_isnoneornil(L, 4) || lua_isnoneornil(L, 5)) {
+    pAnimation->add_proxy(dx, dy, 0, -1);
+  } else {
+    std::int8_t crop_base = static_cast<std::int8_t>(luaL_checkinteger(L, 4));
+    std::int8_t crop_width = static_cast<std::int8_t>(luaL_checkinteger(L, 5));
+    if (crop_width <= 0) {
+      return luaL_argerror(L, 5, "Crop width must be at least 1");
+    }
+    pAnimation->add_proxy(dx, dy, crop_base, crop_width);
+  }
+
+  lua_settop(L, 1);
+  return 1;
+}
+
+//! Remove all proxies from the animation.
+/*!
+ * Anim:removeAllProxies() -> Anim
+ */
+int l_anim_remove_all_proxies(lua_State* L) {
+  animation* pAnimation = luaT_testuserdata<animation>(L);
+  pAnimation->remove_all_proxies();
+
+  lua_settop(L, 1);
+  return 1;
+}
+
 int l_anim_set_patient_effect(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   animation_effect flags =
       static_cast<animation_effect>(luaL_checkinteger(L, 2));
   pAnimation->set_patient_effect(flags);
+
   lua_settop(L, 1);
   return 1;
 }
@@ -730,6 +844,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_get_secondary_marker, "getSecondaryMarker");
     lcb.add_function(l_anim_tick<animation>, "tick");
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
+    lcb.add_function(l_anim_add_proxy, "addProxy");
+    lcb.add_function(l_anim_remove_all_proxies, "removeAllProxies");
     lcb.add_function(l_anim_set_patient_effect, "setPatientEffect");
   }
 
