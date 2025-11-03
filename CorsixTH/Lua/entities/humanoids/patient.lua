@@ -39,13 +39,13 @@ function Patient:Patient(...)
   self.pay_amount = 0
   -- To distinguish between actually being dead and having a nil hospital
   self.dead = false
-  -- Indicates that the patient is being put on death. Patient may be busy,
-  -- But as soon as he is deoccupy he will start the dying scenario based on this flag
-  -- Except cases are when he is cured or sent home while being busy
+  -- Indicates that the patient is being marked for death. The patient may be busy,
+  -- But as soon as the patient is unoccupied he will start the dying scenario based
+  -- on this flag, except the cases when he is cured or sent home while being busy.
   self.set_to_die = false
   -- Indicates that the patient on the dying scenario
   -- Cure should not happen at this state. Patient can't be sent home
-  self.going_die = false
+  self.going_to_die = false
   -- Is the patient reserved for a particular nurse when being vaccinated
   self.reserved_for = false
   self.vaccinated = false
@@ -100,7 +100,7 @@ function Patient:onClick(ui, button)
     self.user_of:onClick(ui, button)
   elseif button == "right" then
     -- Attempt to push patient over
-    if not self.world:isPaused() and not (self.cured or self.going_die or self.dead or self.going_home)
+    if not self.world:isPaused() and not (self.cured or self.going_to_die or self.dead or self.going_home)
          and math.random(1, 2) == 2 then
       self:falling(true)
     end
@@ -373,7 +373,7 @@ function Patient:die()
   -- Remove any messages and/or callbacks related to the patient.
   self:unregisterCallbacks()
 
-  self.going_die = true
+  self.going_to_die = true
   if self:getRoom() then
     self:queueAction(MeanderAction():setCount(1))
   else
@@ -392,7 +392,7 @@ local good_actions = {walk=true, idle=true, seek_room=true, queue=true}
 --!return Whether the tile can be used for inserting an action.
 function Patient:atFullyEmptyTile(cur_action)
   if not good_actions[cur_action.name] then return false end
-  if self.going_home or self.going_die then return false end
+  if self.going_home or self.going_to_die then return false end
 
   local th = self.world.map.th
   local cell_flags = th:getCellFlags(self.tile_x, self.tile_y)
@@ -582,7 +582,7 @@ end
 
 function Patient:setToDying()
   -- Check that the patient is in a later state of dying
-  if self.going_die or self.dead then return end
+  if self.going_to_die or self.dead then return end
 
   self.set_to_die = true
 end
@@ -912,7 +912,7 @@ function Patient:setTile(x, y)
       self.litter_countdown = math.random(20, 100)
     end
 
-  elseif self.hospital and not self.going_die and not self.going_home then
+  elseif self.hospital and not self.going_to_die and not self.going_home then
     self.litter_countdown = self.litter_countdown - 1
 
     -- Is the patient about to drop some litter?
