@@ -260,13 +260,13 @@ end
 
 -- Apply level-defined pricing to all available diseases.
 function World:applyLevelStartPrices()
-  local lc = self.map and self.map.level_config
-  if not (lc and lc.expertise and self.available_diseases) then return end
+  local config = self.map and self.map.level_config
+  if not (config and config.expertise and self.available_diseases) then return end
 
-  for _, dis in ipairs(self.available_diseases) do
-    local ex = dis.expertise_id and lc.expertise[dis.expertise_id]
-    if ex and ex.StartPrice then
-      dis.cure_price = ex.StartPrice
+  for _, disease in ipairs(self.available_diseases) do
+    local expertise = disease.expertise_id and config.expertise[disease.expertise_id]
+    if expertise and expertise.StartPrice then
+      disease.cure_price = expertise.StartPrice
     end
   end
 end
