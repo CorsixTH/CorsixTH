@@ -990,7 +990,7 @@ end
 function Patient:updateDynamicInfo()
   local action_string = self.action_string or ""
   local info = ""
-  if self.going_home or self.going_die then
+  if self.going_home or self.going_to_die then
     self:setDynamicInfo('progress', nil)
   elseif self.diagnosed then
     if self.diagnosis_progress < 1.0 then
