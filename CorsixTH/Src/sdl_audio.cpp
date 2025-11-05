@@ -220,14 +220,18 @@ int l_transcode_xmi(lua_State* L) {
   size_t iLength, iMidLength;
   const uint8_t* pData = luaT_checkfile(L, 1, &iLength);
 
-  uint8_t* pMidData = transcode_xmi_to_midi(pData, iLength, &iMidLength);
-  if (pMidData == nullptr) {
-    lua_pushnil(L);
-    lua_pushliteral(L, "Unable to transcode XMI to MIDI");
-    return 2;
+  try {
+    uint8_t* pMidData = transcode_xmi_to_midi(pData, iLength, &iMidLength);
+    if (pMidData == nullptr) {
+      lua_pushnil(L);
+      lua_pushliteral(L, "Unable to transcode XMI to MIDI");
+      return 2;
+    }
+    lua_pushlstring(L, reinterpret_cast<char*>(pMidData), iMidLength);
+    delete[] pMidData;
+  } catch (const std::exception& e) {
+    luaL_error(L, "transcode_xmi exception: %s", e.what());
   }
-  lua_pushlstring(L, (const char*)pMidData, iMidLength);
-  delete[] pMidData;
 
   return 1;
 }
