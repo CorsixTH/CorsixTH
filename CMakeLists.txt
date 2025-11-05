@@ -10,6 +10,7 @@
 #   - SEARCH_LOCAL_DATADIRS : Search resources in the working directory and the
 #       program directory where the executable stores. Makes the executable
 #       portable (yes for Apple)
+#   - WITH_MIDI_DEVICE : Enable MIDI device support (yes)
 
 # Dependency resolution
 #   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
@@ -31,6 +32,7 @@ option(BUILD_CORSIXTH "Builds the main game" ON)
 option(WITH_MOVIES "Activate in game movies" ON)
 option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
 option(WITH_UPDATE_CHECK "Check for new versions" ON)
+option(WITH_MIDI_DEVICE "Enable MIDI device support" ON)
 option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
 option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
 option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
@@ -47,6 +49,9 @@ if(BUILD_ANIMVIEW)
 endif()
 if(WITH_UPDATE_CHECK)
   list(APPEND VCPKG_MANIFEST_FEATURES "updatecheck")
+endif()
+if(WITH_MIDI_DEVICE)
+  list(APPEND VCPKG_MANIFEST_FEATURES "midi")
 endif()
 if(ENABLE_UNIT_TESTS)
   list(APPEND VCPKG_MANIFEST_FEATURES "catch2")
