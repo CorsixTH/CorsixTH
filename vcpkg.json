@@ -64,6 +64,12 @@
         }
       ]
     },
+    "midi": {
+      "description": "Support MIDI devices",
+      "dependencies": [
+        "rtmidi"
+      ]
+    },
     "catch2": {
       "description": "Support Catch2 tests",
       "dependencies": [
