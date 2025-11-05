@@ -840,6 +840,7 @@ information = {
     cheat = "Hope you didn't click the Lose Level button by accident!",
     staff_happiness = "Your average staff happiness fell below %d%.",
     patient_happiness = "Your average patient happiness fell below %d%.",
+    months_played = "You didn't meet the level goals within %d months.",
   },
   cheat_not_possible = "You cannot use that cheat on this level.",
 }
@@ -1057,10 +1058,14 @@ tooltip.status = {
   over = {
     staff_happiness = "Your average staff happiness should be over %d%. Currently it's %d%",
     patient_happiness = "Your average patient happiness should be over %d%. Currently it's %d%",
+    months_played = "You need to reach the month %d (year %d). Currently it's the month %d",
+    years_played = "You need to reach the year %d. Currently it's the year %d",
   },
   under = {
     staff_happiness = "Your average staff happiness should not be less than %d%. Currently it's %d%",
     patient_happiness = "Your average patient happiness should not be less than %d%. Currently it's %d%",
+    months_played = "You need to win by the month %d (year %d). Currently it's the month %d",
+    years_played = "You need to win by the year %d. Currently it's the year %d",
   }
 }
 --------------------------------  UNUSED  -----------------------------------
