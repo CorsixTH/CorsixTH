@@ -603,6 +603,15 @@ function Patient:tickDay()
   else
     self:setMood("sad2", "deactivate")
   end
+
+  -- Avoid an empty action queue error if the player clicks a patient to fall
+  -- at the same time as the day changes. There is now a between "neutral" stage.
+  if self.has_fallen == 3 then
+    self.has_fallen = 1
+  elseif self.has_fallen == 2 then
+    self.has_fallen = 3
+  end
+
   -- Now call the parent function - it checks
   -- if we're outside the hospital or on our way home.
   if not Humanoid.tickDay(self) then
@@ -655,14 +664,6 @@ function Patient:tickDay()
     -- Patient died, will die when they leave the room, will be cured, or is leaving
     -- the hospital. Regardless we do not need to adjust any other attribute
     return
-  end
-
-  -- Note: to avoid empty action queue error if the player spam clicks a patient at the same time as the day changes
-  -- there is now an between "neutral" stage.
-  if self.has_fallen == 3 then
-    self.has_fallen = 1
-  elseif self.has_fallen == 2 then
-    self.has_fallen = 3
   end
 
   -- Update health history.
