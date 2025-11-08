@@ -285,7 +285,7 @@ function UIPatient:updateInformation()
   self.disease_blanker.visible = not show_dis_btn
 
   -- Show go home?
-  local show_home_btn = not patient.going_home
+  local show_home_btn = not patient.going_home and not patient.going_to_die
   self.home_button.enabled = show_home_btn
   self.home_button.visible = show_home_btn
   self.home_blanker.visible = not show_home_btn
@@ -294,6 +294,7 @@ function UIPatient:updateInformation()
   local show_guess_btn = not (patient.is_debug or
       patient.diagnosis_progress == 0 or
       patient.diagnosed or
+      patient.going_to_die or
       patient.going_home)
   self.guess_button.enabled = show_guess_btn
   self.guess_button.visible = show_guess_btn
@@ -330,7 +331,7 @@ function UIPatient:guessDisease()
   local patient = self.patient
   -- NB: the first line of conditions should already be ruled out by button being disabled, but just in case
   if patient.is_debug or patient.diagnosis_progress == 0 or patient.diagnosed or
-      patient.going_home or patient:getRoom() or
+      patient.going_home or patient.going_to_die or patient:getRoom() or
       not patient.hospital.disease_casebook[patient.disease.id].discovered then
     self.ui:playSound("wrong2.wav")
     return

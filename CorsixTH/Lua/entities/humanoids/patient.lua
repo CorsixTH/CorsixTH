@@ -39,6 +39,13 @@ function Patient:Patient(...)
   self.pay_amount = 0
   -- To distinguish between actually being dead and having a nil hospital
   self.dead = false
+  -- Indicates that the patient is being marked for death. The patient may be busy,
+  -- But as soon as the patient is unoccupied he will start the dying scenario based
+  -- on this flag, except the cases when he is cured or sent home while being busy.
+  self.set_to_die = false
+  -- Indicates that the patient on the dying scenario
+  -- Cure should not happen at this state. Patient can't be sent home
+  self.going_to_die = false
   -- Is the patient reserved for a particular nurse when being vaccinated
   self.reserved_for = false
   self.vaccinated = false
@@ -93,7 +100,7 @@ function Patient:onClick(ui, button)
     self.user_of:onClick(ui, button)
   elseif button == "right" then
     -- Attempt to push patient over
-    if not self.world:isPaused() and not (self.cured or self.dead or self.going_home)
+    if not self.world:isPaused() and not (self.cured or self.going_to_die or self.dead or self.going_home)
          and math.random(1, 2) == 2 then
       self:falling(true)
     end
@@ -354,14 +361,19 @@ end
 
 --! Patient died, process the event.
 function Patient:die()
+  self.set_to_die = false
+  if self.cured then return end
+
   -- It may happen that this patient was just cured and then the room blew up.
   self.hospital:humanoidDeath(self)
+
+  self:setMood("dying5", "deactivate")
   self:setMood("dead", "activate")
 
   -- Remove any messages and/or callbacks related to the patient.
   self:unregisterCallbacks()
 
-  self.going_home = true
+  self.going_to_die = true
   if self:getRoom() then
     self:queueAction(MeanderAction():setCount(1))
   else
@@ -380,7 +392,7 @@ local good_actions = {walk=true, idle=true, seek_room=true, queue=true}
 --!return Whether the tile can be used for inserting an action.
 function Patient:atFullyEmptyTile(cur_action)
   if not good_actions[cur_action.name] then return false end
-  if self.going_home then return false end
+  if self.going_home or self.going_to_die then return false end
 
   local th = self.world.map.th
   local cell_flags = th:getCellFlags(self.tile_x, self.tile_y)
@@ -568,6 +580,25 @@ function Patient:_checkIfCureRoom(room)
       and self.diagnosed)
 end
 
+function Patient:setToDying()
+  -- Check that the patient is in a later state of dying
+  if self.going_to_die or self.dead then return end
+
+  self.set_to_die = true
+end
+
+function Patient:tick()
+  Humanoid.tick(self)
+
+  if self.set_to_die and
+    not self:getRoom() and
+    not self:getCurrentAction().is_leaving and
+    not self:isKnockingDoor() and
+    not self:isEnteringRoom() then
+      self:die()
+  end
+end
+
 -- This function handles changing of the different attributes of the patient.
 -- For example if thirst gets over a certain level (now: 0.7), the patient
 -- tries to find a drinks machine nearby.
@@ -648,10 +679,7 @@ function Patient:tickDay()
     self.attributes["health"] = 0.0
   -- is there time to say a prayer
   elseif health == 0.0 then
-    if not self:getRoom() and not self:getCurrentAction().is_leaving then
-      self:setMood("dying5", "deactivate")
-      self:die()
-    end
+    self:setToDying()
     -- Patient died, will die when they leave the room, will be cured, or is leaving
     -- the hospital. Regardless we do not need to adjust any other attribute
     return
@@ -884,7 +912,7 @@ function Patient:setTile(x, y)
       self.litter_countdown = math.random(20, 100)
     end
 
-  elseif self.hospital and not self.going_home then
+  elseif self.hospital and not self.going_to_die and not self.going_home then
     self.litter_countdown = self.litter_countdown - 1
 
     -- Is the patient about to drop some litter?
@@ -962,7 +990,7 @@ end
 function Patient:updateDynamicInfo()
   local action_string = self.action_string or ""
   local info = ""
-  if self.going_home then
+  if self.going_home or self.going_to_die then
     self:setDynamicInfo('progress', nil)
   elseif self.diagnosed then
     if self.diagnosis_progress < 1.0 then

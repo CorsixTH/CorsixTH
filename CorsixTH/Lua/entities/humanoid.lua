@@ -700,6 +700,19 @@ function Humanoid:isLeaving()
   return self.action_queue[1].is_leaving and true or false
 end
 
+-- Check if the humanoid is knocking on a door
+function Humanoid:isKnockingDoor()
+  return class.is(self:getCurrentAction(), KnockDoorAction)
+end
+
+-- Check if the humanoid is entering room
+function Humanoid:isEnteringRoom()
+  if self.user_of and self.user_of.object_type.id == "door" then
+    return true
+  end
+  return false
+end
+
 -- Check if there is "is_leaving" action in the action queue
 function Humanoid:hasLeavingAction()
   for _, action in ipairs(self.action_queue) do
@@ -893,7 +906,7 @@ end
 -- feeling of warmth accordingly. Returns whether the calling function should proceed.
 function Humanoid:tickDay()
   -- No use doing anything if we're going home/fired (or dead)
-  if self.going_home or self.dead then
+  if self.going_home or self.going_to_die or self.dead then
     return false
   end
 

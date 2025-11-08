@@ -247,7 +247,7 @@ function Epidemic:checkInfectedLeftHospital()
   for _, infected_patient in ipairs(self.infected_patients) do
     local px, py = infected_patient.tile_x, infected_patient.tile_y
     -- If leaving and no longer in the hospital.
-    if infected_patient.going_home and not infected_patient.cured and
+    if (infected_patient.going_home or infected_patient.going_to_die) and not infected_patient.cured and
         px and py and not self.hospital:isInHospital(px,py) then
       -- Patient escaped from the hospital, discovery is inevitable.
       self:finishCoverUp()
@@ -274,7 +274,7 @@ otherwise a player may never win the epidemic in such a case.]]
 function Epidemic:checkPatientsForRemoval()
   for i = #self.infected_patients, 1, -1 do
     local infected_patient = self.infected_patients[i]
-    if (not self.coverup_selected and infected_patient.going_home) or
+    if (not self.coverup_selected and (infected_patient.going_home or infected_patient.going_to_die)) or
         infected_patient.dead or infected_patient.tile_x == nil then
       table.remove(self.infected_patients,i)
     end
@@ -532,8 +532,10 @@ end
 --[[ Forces evacuation of the hospital - it makes ALL patients leave and storm out. ]]
 function Epidemic:evacuateHospital()
   for _, patient in ipairs(self.hospital.patients) do
-    if patient.has_passed_reception and not patient.going_home then
-      patient:goHome("evacuated")
+    if patient.has_passed_reception and
+      not patient.going_home and
+      not patient.going_to_die then
+        patient:goHome("evacuated")
     end
   end
 end
