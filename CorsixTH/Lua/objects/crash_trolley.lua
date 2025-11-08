@@ -83,7 +83,7 @@ object.multi_usage_animations = {
 }
 object.orientations = {
   north = {
-    render_attach_position = { {0, 0}, {-1, 1} },
+    -- render_attach_position = { {0, 0}, {-1, 1} },
     footprint = { {-1, 0, complete_cell = true}, {-1, 1, only_passable = true},
       {0, 0, only_passable = true}, {0, 1, only_passable = true} },
     use_position = {-1, 1},
@@ -91,7 +91,7 @@ object.orientations = {
     list_bottom = true,
   },
   east = {
-    render_attach_position = { {0, 0}, {1, -1} },
+    -- render_attach_position = { {0, 0}, {1, -1} },
     footprint = { {0, -1, complete_cell = true}, {0, 0, only_passable = true},
       {1, -1, only_passable = true}, {1, 0, only_passable = true} },
     use_position = {1, -1},

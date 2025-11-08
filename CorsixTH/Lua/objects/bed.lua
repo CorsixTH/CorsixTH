@@ -90,7 +90,7 @@ object.orientations = {
                   {0, -1, complete_cell = true}, {-1, 0, complete_cell = true},
                   {0, 0, complete_cell = true} },
     use_position = {1, 0},
-    render_attach_position = {{-2,0},{-1,0},{0,0},{0,-1,}},
+    -- render_attach_position = {{-2,0},{-1,0},{0,0},{0,-1,}},
   },
   west = {
     footprint = { {-1, 1, only_passable = true}, {-1, -1, complete_cell = true},
