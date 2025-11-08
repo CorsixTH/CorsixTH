@@ -1156,12 +1156,7 @@ void animation_base::remove_from_tile() {
 
 void animation_base::attach_to_tile(int x, int y, map_tile* node, int layer) {
   remove_from_tile();
-  link_list* pList;
-  if (flags & thdf_early_list) {
-    pList = &node->oEarlyEntities;
-  } else {
-    pList = &node->entities;
-  }
+  link_list* pList = &node->entities;
 
   this->set_drawing_layer(layer);
   this->set_tile(x, y);
