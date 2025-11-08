@@ -178,9 +178,12 @@ local function _getHumanoidQueuePriority(queue, humanoid)
   elseif humanoid.is_emergency then
     -- Next are Emergency patients
     return 4
+  elseif humanoid.hospital.hosp_cheats:isCheatActive("queuejump") and humanoid:getAttribute("health") < 0.10 then
+    -- If the queue jump cheat is enabled, let these nearly dead patients move ahead
+    return 5
   else
     -- All other regular patients receive this priority
-    return 5
+    return 6
   end
 end
 
