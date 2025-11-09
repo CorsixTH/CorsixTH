@@ -38,10 +38,15 @@ constexpr uint8_t midi_event_control_change = 0xB0;
 constexpr uint8_t midi_event_program_change = 0xC0;
 constexpr uint8_t midi_event_channel_pressure = 0xD0;
 constexpr uint8_t midi_event_pitch_bend = 0xE0;
+
+constexpr uint8_t midi_event_sysex = 0xF0;
+constexpr uint8_t midi_event_end_of_sysex = 0xF7;
 constexpr uint8_t midi_event_meta = 0xFF;
 
 constexpr uint8_t midi_meta_event_end_of_track = 0x2F;
 constexpr uint8_t midi_meta_event_set_tempo = 0x51;
+
+constexpr uint8_t midi_control_code_volume = 7;
 
 constexpr uint8_t midi_channel_code_all_notes_off = 123;
 constexpr uint8_t midi_channel_code_all_sound_off = 120;

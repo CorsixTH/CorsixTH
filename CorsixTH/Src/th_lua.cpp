@@ -49,6 +49,7 @@ void lua_register_strings(const lua_register_state* pState);
 void lua_register_ui(const lua_register_state* pState);
 void lua_register_lfs_ext(const lua_register_state* pState);
 void lua_register_iso_fs(const lua_register_state* pState);
+void lua_register_midi(const lua_register_state* pState);
 
 //! Set a field on the environment table of an object
 void luaT_setenvfield(lua_State* L, int index, const char* k) {
@@ -257,6 +258,20 @@ int l_get_compile_options(lua_State* L) {
 #endif
   lua_setfield(L, -2, "update_check");
 
+#ifdef CORSIX_TH_USE_FFMPEG
+  lua_pushboolean(L, 1);
+#else
+  lua_pushboolean(L, 0);
+#endif
+  lua_setfield(L, -2, "movies");
+
+#ifdef WITH_MIDI_DEVICE
+  lua_pushboolean(L, 1);
+#else
+  lua_pushboolean(L, 0);
+#endif
+  lua_setfield(L, -2, "midi_device");
+
   lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
   lua_getfield(L, -1, "jit");
   if (lua_type(L, -1) == LUA_TNIL) {
@@ -324,6 +339,7 @@ int luaopen_th(lua_State* L) {
   lua_register_ui(pState);
   lua_register_lfs_ext(pState);
   lua_register_iso_fs(pState);
+  lua_register_midi(pState);
 
   lua_settop(L, oState.main_table);
   return 1;

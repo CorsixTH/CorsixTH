@@ -364,6 +364,8 @@ function App:init()
   -- Load main menu (which creates UI)
   local function callback_after_movie()
     self:loadMainMenu()
+    self.audio:playRandomBackgroundTrack()
+
     -- If we couldn't properly load the language, show an information dialog
     if not language_load_success then
       -- At this point we know the language is english, so no use having
