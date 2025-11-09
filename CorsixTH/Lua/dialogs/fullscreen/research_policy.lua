@@ -47,8 +47,11 @@ function UIResearch:UIResearch(ui)
   self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
   self.hospital = ui.hospital
   self.research = ui.hospital.research
-  self.bg_sound = nil
-  self.playing = false -- for background sound
+
+  -- lewri: This is a stopgap solution to work around sound states not being
+  -- implemented. It should be replaced as soon as it is possible to do so.
+  self.bg_sound = nil -- holds the constructed sound instance
+  self.playing = false -- denotes if background sound playback is called and running
 
   -- stubs for backwards compatibility
   local --[[persistable:research_policy_adjust]] function adjust() end
@@ -162,7 +165,8 @@ function UIResearch:adjustResearch(area, mode)
 end
 
 --! Construct and play this window's background sound.
-function UIResearch:playBgSound()
+function UIResearch:_playBgSound()
+  -- Note: See UIResearch:UIResearch function for improving this.
   self.bg_sound = self.ui:playSound("Research.wav",
     --[[persistable:research_policy_window_reset_bg_sound]] function()
       self.playing = false
@@ -174,7 +178,7 @@ end
 function UIResearch:onTick()
   -- Background sound will continuously play while the window is open.
   if not self.playing then
-    self:playBgSound()
+    self:_playBgSound()
   end
 
   -- sprite index for the water are between 5 and 12
@@ -268,6 +272,7 @@ function UIResearch:afterLoad(old, new)
   end
 
   -- Restart the background sound on load
+  -- Note: See UIResearch:UIResearch function for improving this.
   if self.playing then
     -- Reset the playing state to restart next window tick.
     self.playing = false
