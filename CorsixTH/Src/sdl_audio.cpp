@@ -217,10 +217,11 @@ int l_stop_music(lua_State* L) {
 }
 
 int l_transcode_xmi(lua_State* L) {
-  size_t iLength, iMidLength;
+  size_t iLength;
   const uint8_t* pData = luaT_checkfile(L, 1, &iLength);
 
   try {
+    size_t iMidLength;
     uint8_t* pMidData = transcode_xmi_to_midi(pData, iLength, &iMidLength);
     if (pMidData == nullptr) {
       lua_pushnil(L);
