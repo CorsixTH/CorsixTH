@@ -590,6 +590,7 @@ function Machine:setHandymanRepairPosition(direction)
   end
 end
 
+--! Access the dedicated DrawingLayer for the smoke animation attached to this machine
 function Machine:getSmokeDrawingLayer()
   return DrawingLayers.MachineSmoke
 end
