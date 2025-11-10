@@ -56,9 +56,11 @@ enum draw_flags : uint32_t {
   thdf_flip_horizontal = 1 << 0,
   //! Draw with the top becoming the bottom and vice versa
   thdf_flip_vertical = 1 << 1,
-  //! Draw with 50% transparency. If set together with thdf_alpha_75, don't draw at all.
+  //! Draw with 50% transparency. If set together with thdf_alpha_75, don't draw
+  //! at all.
   thdf_alpha_50 = 1 << 2,
-  //! Draw with 75% transparency. If set together with thdf_alpha_50, don't draw at all.
+  //! Draw with 75% transparency. If set together with thdf_alpha_50, don't draw
+  //! at all.
   thdf_alpha_75 = 1 << 3,
   //! Draw using a remapped palette
   thdf_alt_palette = 1 << 4,
@@ -497,7 +499,7 @@ class animation_base : public drawable {
   ::layers layers{};
 };
 
-class animation_proxy: public animation_base {
+class animation_proxy : public animation_base {
  public:
   animation_proxy(animation* const parent_anim, int8_t dx, int8_t dy,
                   int8_t crop_base, int8_t crop_width);
@@ -628,7 +630,7 @@ class animation : public animation_base {
 
  private:
   animation_manager* manager{nullptr};
-  std::vector<animation_proxy> proxies{}; ///< Proxies of the animation.
+  std::vector<animation_proxy> proxies{};  ///< Proxies of the animation.
   animation* morph_target{nullptr};
   size_t animation_index{};  ///< Animation number.
   size_t frame_index{};      ///< Frame number.

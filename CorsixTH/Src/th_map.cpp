@@ -254,7 +254,7 @@ map_tile::map_tile()
       iRoomId(0),
       aiTemperature{8192, 8192},
       flags({}),
-      raw{} { }
+      raw{} {}
 
 level_map::level_map() = default;
 
