@@ -40,34 +40,4 @@ object.orientations = {
   },
 }
 
-class "SideObject" (Object)
-
----@type SideObject
-local SideObject = _G["SideObject"]
-
-function SideObject:SideObject(...)
-  self:Object(...)
-end
-
-function SideObject:getDrawingLayer()
-  if self.direction == "north" then
-    return DrawingLayers.NorthSideObject
-  elseif self.direction == "west" then
-    return DrawingLayers.WestSideObject
-  else
-    if self.direction == "east" then
-      if self.object_type.thob == 50 then
-      --[[ bins have two orientations north and east by they are displayed in
-        the north and west part of the tile respectively which could lead to
-        a graphical glitch in which a bin in the west part of the tile is
-        displayed over a doctor in the middle of the tile ]]
-        return DrawingLayers.WestSideObject
-      else
-        return DrawingLayers.EastSideObject
-      end
-    else --south
-      return DrawingLayers.SouthSideObject
-    end
-  end
-end
 return object
