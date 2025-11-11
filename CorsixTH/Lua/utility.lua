@@ -237,7 +237,7 @@ DrawingLayers.AtomAnalyser = 3
 DrawingLayers.ReceptionistFacingUser = 3 -- Facing east or south.
 DrawingLayers.Entity = 4 -- All 'normal' animations.
 DrawingLayers.ReceptionistFacingAway = 5 -- Facing west or north.
--- Value 6 is not used.
+DrawingLayers.MachineSmoke = 6 -- smoke animation should be in front of machine (entity)
 DrawingLayers.FloatingDollars = 7
 DrawingLayers.EastSideObject = 8
 DrawingLayers.SouthSideObject = 9

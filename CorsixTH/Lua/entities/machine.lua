@@ -98,7 +98,8 @@ local function setSmoke(self, isSmoking)
       -- Note: Set the location of the smoke to that of the machine
       -- rather than setting the machine to the parent so that the smoke
       -- doesn't get hidden with the machine during use
-      self.smokeInfo:setTile(getSmokeTile(self))
+      local map, x, y = getSmokeTile(self)
+      self.smokeInfo:setTile(map, x, y, self:getSmokeDrawingLayer())
       -- Always show the first smoke layer
       self.smokeInfo:setLayer(10, 2)
       -- tick to animate over all frames
@@ -587,6 +588,11 @@ function Machine:setHandymanRepairPosition(direction)
   else
     self.handyman_position = {orientation.use_position[1], orientation.use_position[2]}
   end
+end
+
+--! Access the dedicated DrawingLayer for the smoke animation attached to this machine
+function Machine:getSmokeDrawingLayer()
+  return DrawingLayers.MachineSmoke
 end
 
 -- Dummy callbacks for savegame compatibility
