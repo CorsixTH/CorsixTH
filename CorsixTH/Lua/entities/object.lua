@@ -923,10 +923,10 @@ function SideObject:getDrawingLayer()
   else
     if self.direction == "east" then
       if self.object_type.thob == 50 then
-      --[[ Some side objects, such as the bin, have two orientations north and east
-        but they are displayed in the north and west part of the tile respectively.
-        This could lead to a graphical glitch where a side object in the west part
-        of the tile is displayed over a doctor in the middle of the tile. ]]
+        --[[ The bin has orientations north and east but they are displayed in
+        the north and west part of the tile respectively. This could lead to a
+        graphical glitch where a side object in the west part of the tile is
+        displayed over a doctor in the middle of the tile. ]]
         return DrawingLayers.WestSideObject
       else
         return DrawingLayers.EastSideObject
