@@ -82,7 +82,7 @@ Copyright (C) 2021 Zany XDev
 Copyright (C) 2021 Romain "rmnvgr" Vigier
 Copyright (C) 2021-2024 Robert "flackr" Flack
 Copyright (C) 2021 Alexandre Lavoie
-Copyright (C) 2021 Jan Sako
+Copyright (C) 2021, 2025 Jan Sako
 Copyright (C) 2022 Colin Matthews
 Copyright (C) 2022 Frazer Smith
 Copyright (C) 2022 "RetroGamerFan"
@@ -92,12 +92,12 @@ Copyright (C) 2022 Manuel K
 Copyright (C) 2022-2023 lokpro
 Copyright (C) 2022 Raven "Edgewurth" Penfold
 Copyright (C) 2022 "SilPho"
+Copyright (C) 2022-2025 Matthew "Matroftt"
 Copyright (C) 2023 "dfghjkjhgr"
 Copyright (C) 2023 Bob "bobidle" Idle
 Copyright (C) 2023 Michael "RednibCoding" Binder
 Copyright (C) 2023 Nathan "nMustaki" Mustaki
-Copyright (C) 2023 Damian "ShiroAka"
-Copyright (C) 2023-2025 Matthew "Matroftt"
+Copyright (C) 2023-2025 Damian "ShiroAka"
 Copyright (C) 2024 Peppe "Inkub0" Malara
 Copyright (C) 2024 Sandow "Sanndow"
 Copyright (C) 2024 Tomás Domínguez "tombolano" Bolaño
@@ -107,12 +107,16 @@ Copyright (C) 2024 SebastianoPistore
 Copryight (C) 2024 jetenergy
 Copyright (C) 2024 Yurii "JurecStrongman"
 Copyright (C) 2024 ShimaKen
-Copyright (C) 2024 "MandrakeHorse"
+Copyright (C) 2024-2025 "MandrakeHorse"
 Copyright (C) 2024-2025 Artem Argus "ARGAMX" Gusakov
 Copyright (C) 2025 Felipe Muñoz Mazur
 Copyright (C) 2025 "pizzadepollo"
 Copyright (C) 2025 "legluodunet"
 Copyright (C) 2025 "dodero4"
+Copyright (C) 2025 "PierreRic"
+Copyright (C) 2025 "jur4jmiklo5"
+Copyright (C) 2025 Aarón Rosa "sraaronrock" Díaz
+Copyright (C) 2025 "marcassin92"
 
 et al.
 
