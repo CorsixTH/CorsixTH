@@ -741,6 +741,10 @@ function Humanoid:_handleEmptyActionQueue()
     return
   end
 
+  -- Log what just happened.
+  self:dump()
+  self.world:gameLog("Empty action queue! Last action: " .. self.previous_action.name)
+
   -- First find out if this humanoid is in a room.
   local room = self:getRoom()
   if room then
@@ -752,38 +756,37 @@ function Humanoid:_handleEmptyActionQueue()
     self:queueAction(MeanderAction())
   elseif class.is(self, GrimReaper) then
     self:queueAction(IdleAction())
-  else
+  elseif class.is(self, Patient) then
     self:queueAction(SeekReceptionAction())
+  else
+    self:queueAction(IdleAction())
   end
 
-  -- Open the dialog of the humanoid as feedback to the user.
-  local ui = self.world.ui
-  if class.is(self, Patient) then
-    ui:addWindow(UIPatient(ui, self))
-  elseif class.is(self, Staff) then
-    ui:addWindow(UIStaff(ui, self))
+  if TheApp.config.debug then
+    -- Open the dialog of the humanoid as feedback to the user.
+    local ui = self.world.ui
+    if class.is(self, Patient) then
+      ui:addWindow(UIPatient(ui, self))
+    elseif class.is(self, Staff) then
+      ui:addWindow(UIStaff(ui, self))
+    end
+
+    -- Ask user to choose kick off humanoid or do nothing
+    ui:addWindow(UIConfirmDialog(ui, true, _S.errors.dialog_empty_queue,
+      --[[persistable:humanoid_leave_hospital]] function()
+        self.world:gameLog("The humanoid was told to leave the hospital...")
+        if class.is(self, Staff) then
+          self:fire()
+        else
+          -- Set these variables to increase the likelihood of the humanoid managing to get out of the hospital.
+          self.going_home = false
+          self.hospital = self.world:getLocalPlayerHospital()
+          self:goHome("kicked")
+        end
+      end,
+      nil -- Do nothing on cancel
+    ))
   end
-
-  -- Tell the player what just happened.
-  self.world:gameLog("")
-  self.world:gameLog("Empty action queue!")
-  self.world:gameLog("Last action: " .. self.previous_action.name)
-  self.world:gameLog(debug.traceback())
-
-  ui:addWindow(UIConfirmDialog(ui, true, _S.errors.dialog_empty_queue,
-    --[[persistable:humanoid_leave_hospital]] function()
-      self.world:gameLog("The humanoid was told to leave the hospital...")
-      if class.is(self, Staff) then
-        self:fire()
-      else
-        -- Set these variables to increase the likelihood of the humanoid managing to get out of the hospital.
-        self.going_home = false
-        self.hospital = self.world:getLocalPlayerHospital()
-        self:goHome("kicked")
-      end
-    end,
-    nil -- Do nothing on cancel
-  ))
 end
 
 function Humanoid:setType(humanoid_class)
