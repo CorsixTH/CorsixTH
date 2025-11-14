@@ -742,7 +742,7 @@ function Humanoid:_handleEmptyActionQueue()
   end
 
   -- Log what just happened.
-  self:dump()
+  self.world:gameLog(self:tostring())
   self.world:gameLog("Empty action queue! Last action: " .. self.previous_action.name)
 
   -- First find out if this humanoid is in a room.
@@ -759,7 +759,7 @@ function Humanoid:_handleEmptyActionQueue()
   elseif class.is(self, Patient) then
     self:queueAction(SeekReceptionAction())
   else
-    self:queueAction(IdleAction())
+    self:queueAction(SeekReceptionAction())
   end
 
   if TheApp.config.debug then
@@ -786,7 +786,10 @@ function Humanoid:_handleEmptyActionQueue()
       end,
       nil -- Do nothing on cancel
     ))
+  else
+    self.world:gameLog("Warning: Humanoid encountered an empty action queue. Recovery has been attempted.")
   end
+  self.world:dumpGameLog()
 end
 
 function Humanoid:setType(humanoid_class)
