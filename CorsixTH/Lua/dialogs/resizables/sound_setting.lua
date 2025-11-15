@@ -66,7 +66,16 @@ function UISoundSettings:UISoundSettings(ui, mode)
 
   self.volume_options = { { text = _S.customise_window.option_off, volume = 0 } }
   for i = 10, 100, 10 do
-    self.volume_options[#self.volume_options + 1] = { text = _S.menu_options_volume[i], volume = i / 100 }
+    self.volume_options[#self.volume_options + 1] = {
+      text = _S.menu_options_volume[i],
+      volume = i / 100
+    }
+  end
+
+  self.midi_api_options = { { text = _S.audio_window.default_midi_port, value = nil } }
+  for _, api in ipairs(app.audio:getMidiApiList()) do
+    print(api)
+    self.midi_api_options[#self.midi_api_options + 1] = { text = api, value = api }
   end
 
   local y = 30
@@ -125,6 +134,17 @@ function UISoundSettings:UISoundSettings(ui, mode)
 
   y = y + 25
 
+  local midi_api_label = app.config.midi_api or _S.audio_window.default_midi_port
+  self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
+      :setLabel(_S.audio_window.midi_api)
+      :setTooltip(_S.tooltip.audio_window.midi_api).lowered = true
+  self.midi_api_panel = self:addBevelPanel(BTN_X, y, BTN_WIDTH, BTN_HEIGHT, col_bg)
+      :setLabel(midi_api_label)
+  self.midi_api_button = self.midi_api_panel
+      :makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownMidiApi)
+      :setTooltip(_S.tooltip.audio_window.midi_api)
+
+  y = y + 25
   -- Location of soundfont file
   self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
       :setLabel(_S.audio_window.soundfont)
@@ -162,6 +182,11 @@ function UISoundSettings:reinitAudio()
   app.audio:playRandomBackgroundTrack()
 end
 
+function UISoundSettings:closeAllDropdowns()
+  self:dropdownVolume(false)
+  self:dropdownMidiApi(false)
+end
+
 function UISoundSettings:buttonAudioGlobal()
   local app = self.ui.app
   app.config.audio = not app.config.audio
@@ -172,7 +197,7 @@ end
 
 function UISoundSettings:dropdownVolume(activate, btn)
   if activate then
-    self:dropdownVolume(false)
+    self:closeAllDropdowns()
     btn:setToggleState(true)
 
     local select_callback
@@ -193,6 +218,22 @@ function UISoundSettings:dropdownVolume(activate, btn)
     if self.volume_dropdown then
       self.volume_dropdown:close()
       self.volume_dropdown = nil
+    end
+  end
+end
+
+function UISoundSettings:dropdownMidiApi(activate)
+  if activate then
+    self:closeAllDropdowns()
+    self.midi_api_button:setToggleState(true)
+
+    self.midi_api_dropdown = UIDropdown(self.ui, self, self.midi_api_button, self.midi_api_options, self.selectMidiApi)
+    self:addWindow(self.midi_api_dropdown)
+  else
+    self.midi_api_button:setToggleState(false)
+    if self.midi_api_dropdown then
+      self.midi_api_dropdown:close()
+      self.midi_api_dropdown = nil
     end
   end
 end
@@ -231,6 +272,14 @@ function UISoundSettings:selectMusicVolume(index)
   end
   self.music_volume_panel:setLabel(self.volume_options[index].text)
   self.app:saveConfig()
+end
+
+function UISoundSettings:selectMidiApi(index)
+  local value = self.midi_api_options[index].value
+
+  self.app.config.midi_api = value
+  self.app:saveConfig()
+  self:reinitAudio()
 end
 
 function UISoundSettings:buttonBrowseForSoundfont()
