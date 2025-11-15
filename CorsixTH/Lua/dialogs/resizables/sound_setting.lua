@@ -51,6 +51,17 @@ local col_caption = {
   blue = 218,
 }
 
+local function midi_port_options(app)
+  local ports = app.audio:getMidiPortList()
+
+  local res = {{ text = _S.audio_window.default_midi_port }}
+  for _, p in ipairs(ports) do
+    res[#res + 1] = { text = p, value = p }
+  end
+
+  return res
+end
+
 function UISoundSettings:UISoundSettings(ui, mode)
   self:UIResizable(ui, 320, 480, col_bg)
 
@@ -74,9 +85,10 @@ function UISoundSettings:UISoundSettings(ui, mode)
 
   self.midi_api_options = { { text = _S.audio_window.default_midi_port, value = nil } }
   for _, api in ipairs(app.audio:getMidiApiList()) do
-    print(api)
     self.midi_api_options[#self.midi_api_options + 1] = { text = api, value = api }
   end
+
+  self.midi_port_options = midi_port_options(app)
 
   local y = 30
 
@@ -121,20 +133,21 @@ function UISoundSettings:UISoundSettings(ui, mode)
 
   y = y + 25
 
-  local music_volume_label = app.config.play_music and _S.menu_options_volume[app.config.music_volume * 100] or
+  local music_volume_label_text = app.config.play_music and
+      _S.menu_options_volume[app.config.music_volume * 100] or
       _S.customise_window.option_off
   self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
       :setLabel(_S.audio_window.music_volume)
       :setTooltip(_S.tooltip.audio_window.music_volume).lowered = true
   self.music_volume_panel = self:addBevelPanel(BTN_X, y, BTN_WIDTH, BTN_HEIGHT, col_bg)
-      :setLabel(music_volume_label)
+      :setLabel(music_volume_label_text)
   self.music_volume_button = self.music_volume_panel
       :makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownVolume)
       :setTooltip(_S.tooltip.audio_window.music_volume)
 
   y = y + 25
 
-  local midi_api_label = app.config.midi_api or _S.audio_window.default_midi_port
+  local midi_api_label = app.config.midi_api or _S.audio_window.default_midi_api
   self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
       :setLabel(_S.audio_window.midi_api)
       :setTooltip(_S.tooltip.audio_window.midi_api).lowered = true
@@ -145,18 +158,50 @@ function UISoundSettings:UISoundSettings(ui, mode)
       :setTooltip(_S.tooltip.audio_window.midi_api)
 
   y = y + 25
-  -- Location of soundfont file
-  self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
+
+  -- Location of soundfont file (only for default api)
+  local soundfont_label_panel = self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
+  soundfont_label_panel
       :setLabel(_S.audio_window.soundfont)
-      :setTooltip(_S.tooltip.audio_window.soundfont_location).lowered = true
+      :setTooltip(_S.tooltip.audio_window.soundfont_location)
+      :setVisible(not app.config.midi_api)
+  soundfont_label_panel.lowered = true
   local tooltip_soundfont = app.config.soundfont and
       _S.tooltip.audio_window.browse_soundfont:format(app.config.soundfont) or
       _S.tooltip.audio_window.no_soundfont_specified
-  self:addBevelPanel(BTN_X, y, BTN_WIDTH, BTN_HEIGHT, col_bg)
+  local soundfont_button_panel = self:addBevelPanel(BTN_X, y, BTN_WIDTH, BTN_HEIGHT, col_bg)
+  soundfont_button_panel
       :setLabel(app.config.soundfont and app.config.soundfont or tooltip_soundfont)
       :setAutoClip(true)
+      :setVisible(not app.config.midi_api)
+  local soundfont_button = soundfont_button_panel
       :makeButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonBrowseForSoundfont)
       :setTooltip(tooltip_soundfont)
+      :setVisible(not app.config.midi_api)
+      :enable(not app.config.midi_api)
+
+  -- midi port (only for non-default api)
+  local midi_port_label_text = app.config.midi_port or _S.audio_window.default_midi_port
+  local midi_port_label_panel = self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
+  midi_port_label_panel
+      :setLabel(_S.audio_window.midi_port)
+      :setTooltip(_S.tooltip.audio_window.midi_port)
+      :setVisible(not not app.config.midi_api)
+  midi_port_label_panel.lowered = true
+
+  self.midi_port_panel = self:addBevelPanel(BTN_X, y, BTN_WIDTH, BTN_HEIGHT, col_bg)
+      :setLabel(midi_port_label_text)
+      :setVisible(not not app.config.midi_api)
+  self.midi_port_button = self.midi_port_panel
+      :makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownMidiPort)
+      :setTooltip(_S.tooltip.audio_window.midi_port)
+      :setVisible(not not app.config.midi_api)
+      :enable(not not app.config.midi_api)
+
+  self.default_api_panels = { soundfont_label_panel, soundfont_button_panel, soundfont_button }
+  self.midi_api_panels = { midi_port_label_panel, self.midi_port_panel, self.midi_port_button }
+
+  y = y + 25
 
   -- jukebox
   self:addBevelPanel(20, 300, BIG_BTN_WIDTH, BIG_BTN_HEIGHT, col_bg)
@@ -185,6 +230,7 @@ end
 function UISoundSettings:closeAllDropdowns()
   self:dropdownVolume(false)
   self:dropdownMidiApi(false)
+  self:dropdownMidiPort(false)
 end
 
 function UISoundSettings:buttonAudioGlobal()
@@ -238,6 +284,23 @@ function UISoundSettings:dropdownMidiApi(activate)
   end
 end
 
+function UISoundSettings:dropdownMidiPort(activate)
+  if activate then
+    self:closeAllDropdowns()
+    self.midi_port_button:setToggleState(true)
+
+    self.midi_port_dropdown = UIDropdown(self.ui, self, self.midi_port_button, self.midi_port_options, self.selectMidiPort)
+    self:addWindow(self.midi_port_dropdown)
+  else
+    self.midi_port_button:setToggleState(false)
+    if self.midi_port_dropdown then
+      self.midi_port_dropdown:close()
+      self.midi_port_dropdown = nil
+    end
+  end
+end
+
+
 function UISoundSettings:selectSoundVolume(index)
   local vol = self.volume_options[index].volume
   if vol == 0 then
@@ -278,6 +341,30 @@ function UISoundSettings:selectMidiApi(index)
   local value = self.midi_api_options[index].value
 
   self.app.config.midi_api = value
+  self.app.config.midi_port = nil
+  self.app:saveConfig()
+
+  self:reinitAudio()
+  self.midi_port_button:setLabel(_S.audio_window.default_midi_port)
+  self.midi_port_options = midi_port_options(self.app)
+
+  for _, p in ipairs(self.default_api_panels) do
+    p:setVisible(not value)
+    if p.enable then
+      p:enable(not value)
+    end
+  end
+  for _, p in ipairs(self.midi_api_panels) do
+    p:setVisible(not not value)
+    if p.enable then
+      p:enable(not not value)
+    end
+  end
+end
+
+function UISoundSettings:selectMidiPort(index)
+  local value = self.midi_port_options[index].value
+  self.app.config.midi_port = value
   self.app:saveConfig()
   self:reinitAudio()
 end

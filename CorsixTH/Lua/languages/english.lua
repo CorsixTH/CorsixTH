@@ -535,7 +535,8 @@ audio_window = {
   midi_api = "MIDI API",
   midi_port = "MIDI Port",
   soundfont = "SoundFont",
-  default_midi_port = "Default (Software)",
+  default_midi_api = "Default (Software)",
+  default_midi_port = "Default",
   jukebox = "Jukebox",
   back = "Back",
 }
