@@ -129,7 +129,7 @@ local config_defaults = {
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
-  midi_api = [[Default]],
+  midi_api = nil,
   midi_port = nil,
   midi_sysex_master_volume = false,
   theme_hospital_install = [[X:\ThemeHospital\hospital]],
@@ -497,7 +497,7 @@ soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
 -- You can change the API to target other available MIDI backends using these
 -- settings on supported platforms.
 -- Possible values for midi_api are:
---   Default    - Uses SDL_Mixer's MIDI backend, typically FluidSynth
+--   <nil>      - Uses SDL_Mixer's MIDI backend, typically FluidSynth
 --   Native     - Use any available platform MIDI API
 --   ALSA       - Use the ALSA MIDI API (Linux only)
 --   JACK       - Use the JACK MIDI API (Unix-like systems with JACK)
@@ -507,9 +507,9 @@ soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
 -- Possible values for midi_port depend on the selected midi_api, and can
 -- be left nil to use the system default port. A list of available ports
 -- can be obtained from the midi settings screen in game.
---]=] .. '\n' ..
-'midi_api = [[' .. config_values.midi_api .. ']]' .. '\n' ..
-'midi_port = [[' .. (config_values.midi_port or '') .. ']]' .. '\n' .. [=[
+--
+midi_api = nil -- [[Native]]
+midi_port = nil -- [[Midi Through:Midi Through Port-0 14:0]]
 
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here

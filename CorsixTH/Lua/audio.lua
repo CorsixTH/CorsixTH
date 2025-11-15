@@ -190,7 +190,7 @@ function Audio:init()
 end
 
 function Audio:initMidiPlayer()
-  if TH.GetCompileOptions().midi_device and self.app.config.midi_api ~= "Default" then
+  if TH.GetCompileOptions().midi_device and self.app.config.midi_api then
     self.midi_player = TH.midiPlayer(
       self.app.config.midi_api,
       self.app.config.midi_port,
@@ -205,7 +205,7 @@ function Audio:initMidiPlayer()
 end
 
 function Audio:getMidiApiList()
-  return TH.midiPlayer:getAvailableApis()
+  return TH.midiPlayer.getAvailableApis()
 end
 
 function Audio:getMidiPortList()

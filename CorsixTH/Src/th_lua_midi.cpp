@@ -218,7 +218,10 @@ int l_midi_player_resume(lua_State* L) {
 void lua_register_midi(const lua_register_state* pState) {
   lua_class_binding<midi_player> lcb(pState, "midiPlayer", l_midi_player_new,
                                      lua_metatable::midi_player);
-  lcb.add_metamethod(l_midi_player_api_list, "apiList");
+  // static
+  lcb.add_function(l_midi_player_api_list, "getAvailableApis");
+
+  // member
   lcb.add_function(l_midi_port_list, "portList");
   lcb.add_function(l_midi_player_play_xmi, "playXmi");
   lcb.add_function(l_midi_player_set_volume, "setVolume");
