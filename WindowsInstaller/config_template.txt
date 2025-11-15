@@ -302,7 +302,7 @@ soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
 -- You can change the API to target other available MIDI backends using these
 -- settings on supported platforms.
 -- Possible values for midi_api are:
---   Default    - Uses SDL_Mixer's MIDI backend, typically FluidSynth
+--   <nil>      - Uses SDL_Mixer's MIDI backend, typically FluidSynth
 --   Native     - Use any available platform MIDI API
 --   ALSA       - Use the ALSA MIDI API (Linux only)
 --   JACK       - Use the JACK MIDI API (Unix-like systems with JACK)

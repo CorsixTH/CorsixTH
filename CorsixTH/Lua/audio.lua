@@ -445,7 +445,7 @@ function Audio:playEntitySounds(names, entity, min_silence_lengths, max_silence_
 end
 
 local function canSoundsBePlayed()
-  return TheApp.config.play_sounds and not TheApp.world:isPaused()
+  return TheApp.config.play_sounds and TheApp.world and not TheApp.world:isPaused()
 end
 
 --[[
@@ -737,6 +737,7 @@ end
 
 function Audio:setBackgroundVolume(volume)
   if self.midi_player then
+    self.app.config.music_volume = volume
     self.midi_player:setVolume(volume)
   end
   if self.background_paused then

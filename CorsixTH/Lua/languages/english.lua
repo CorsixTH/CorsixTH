@@ -480,7 +480,6 @@ options_window = {
   custom_resolution = "Custom...",
   width = "Width",
   height = "Height",
-  audio = "Global Audio",
   customise = "Customise",
   folder = "Folders",
   language = "Game Language",
@@ -492,7 +491,7 @@ options_window = {
   zoom_speed = "Zoom Speed",
   hotkey = "Hotkeys",
   check_for_updates = "Check for Updates",
-  jukebox = "Jukebox",
+  sound = "Sound",
 }
 
 tooltip.options_window = {
@@ -506,8 +505,6 @@ tooltip.options_window = {
   height = "Enter desired screen height",
   apply = "Apply the entered resolution",
   cancel = "Return without changing the resolution",
-  audio_button = "Turn on or off all game audio",
-  audio_toggle = "Toggle on or off",
   customise_button = "More settings you can change to customise your game play experience",
   folder_button = "Folder Options",
   language = "The language texts in the game will appear in",
@@ -526,7 +523,39 @@ tooltip.options_window = {
   cancel_zoomspeed = "Return without changing the zoom speed.",
   hotkey = "Change keyboard hotkeys.",
   check_for_updates = "Sets whether the game should look for updates on launch.",
-  jukebox = "Open the Jukebox to control the music"
+  sound = "Change audio settings",
+}
+
+audio_window = {
+  caption = "Sound Settings",
+  audio = "Global Audio",
+  sound_volume = "Sound Volume",
+  announcement_volume = "Announcement Volume",
+  music_volume = "Music Volume",
+  midi_api = "MIDI API",
+  midi_port = "MIDI Port",
+  soundfont = "SoundFont",
+  default_midi_api = "Default (Software)",
+  default_midi_port = "Default",
+  jukebox = "Jukebox",
+  back = "Back",
+  soundfont_location_caption = "Choose soundfont (%1%)",
+}
+
+tooltip.audio_window = {
+  audio_button = "Turn on or off all game audio",
+  audio_toggle = "Toggle on or off",
+  sound_volume = "Sound volume",
+  announcement_volume = "Announcement volume",
+  music_volume = "Music volume",
+  midi_api = "The API to use for in game music. Not used with custom music folder.",
+  midi_port = "Device port to use for in game music.",
+  soundfont_location = "Location of a Soundfont file for playing MIDI music. A default Soundfont is used if not specified.",
+  browse = "Browse for folder location",
+  browse_soundfont = "Browse for another Soundfont file (sf2, or sf3) ( Current location: %1% ) ",
+  no_soundfont_specified = "Using default soundfont",
+  jukebox = "Open the Jukebox to control the music",
+  back = "Close the window",
 }
 
 customise_window = {

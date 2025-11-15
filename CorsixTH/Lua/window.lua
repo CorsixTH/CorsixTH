@@ -351,6 +351,7 @@ end
 --!param visibility (bool) New visibility of the panel.
 function Panel:setVisible(visibility)
   self.visible = visibility
+  return self
 end
 
 --[[ Add a `Panel` to the window.
@@ -737,6 +738,7 @@ end
 --!param visibility (bool) New visibility of the button.
 function Button:setVisible(visibility)
   self.panel_for_sprite:setVisible(visibility)
+  return self
 end
 
 --! Convenience function to allow setLabel to be called on a button, not only its panel.

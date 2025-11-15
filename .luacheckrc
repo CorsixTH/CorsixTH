@@ -48,10 +48,11 @@ globals = { -- Globals
             -- UI
             "UI", "UIAdviser", "UIAnnualReport", "UIAudio", "UIBankManager",
             "UIBottomPanel", "UIBuildRoom", "UICallsDispatcher", "UICasebook",
-            "UICheats", "UIChooseFont", "UIConfirmDialog", "UICustomCampaign",
-            "UICustomGame", "UICustomise", "UIDirectoryBrowser", "UIDropdown",
-            "UIEditRoom", "UIFax", "UIFileBrowser", "UIFolder", "UIFullscreen",
-            "UIFurnishCorridor", "UIGraphs", "UIHireStaff", "UIHotkeyAssign",
+            "UICheats", "UIChooseFont", "UIChooseSoundfont", "UIConfirmDialog",
+            "UICustomCampaign", "UICustomGame", "UICustomise",
+            "UIDirectoryBrowser", "UIDropdown", "UIEditRoom", "UIFax",
+            "UIFileBrowser", "UIFolder", "UIFullscreen", "UIFurnishCorridor",
+            "UIGraphs", "UIHireStaff", "UIHotkeyAssign",
             "UIHotkeyAssignKeyPane", "UIInformation", "UIJukebox", "UILoadGame",
             "UILoadMap", "UILuaConsole", "UIMachine", "UIMakeDebugPatient",
             "UIMainMenu", "UIMapEditor", "UIMenuBar", "UIMenuList",
@@ -59,8 +60,9 @@ globals = { -- Globals
             "UIPlaceObjects", "UIPlaceStaff", "UIPolicy", "UIProgressReport",
             "UIQueue", "UIQueuePopup", "UIResizable", "UIResearch",
             "UIResolution", "UISaveGame", "UISaveMap", "UIScrollSpeed",
-            "UIShiftScrollSpeed", "UIStaff", "UIStaffManagement", "UIStaffRise",
-            "UITipOfTheDay", "UITownMap", "UIUpdate", "UIWatch", "UIZoomSpeed",
+            "UIShiftScrollSpeed", "UISoundSettings", "UIStaff",
+            "UIStaffManagement", "UIStaffRise", "UITipOfTheDay", "UITownMap",
+            "UIUpdate", "UIWatch", "UIZoomSpeed",
 
             -- Actions
             "AnswerCallAction", "CallCheckPointAction", "CheckWatchAction",
