@@ -57,34 +57,45 @@ int l_midi_player_api_list(lua_State* L) {
   std::vector<RtMidi::Api> apis;
   RtMidi::getCompiledApi(apis);
 
-  lua_createtable(L, static_cast<int>(apis.size()) + 2, 0);
-  lua_pushinteger(L, 1);
-  lua_pushstring(L, "Default");
-  lua_settable(L, -3);
+  lua_createtable(L, static_cast<int>(apis.size()), 0);
+  lua_Number tblIdx = 1;
   for (size_t i = 0; i < apis.size(); ++i) {
-    lua_pushinteger(L, static_cast<lua_Integer>(i) + 2);
     switch (apis[i]) {
       case RtMidi::LINUX_ALSA:
+        lua_pushinteger(L, tblIdx++);
         lua_pushstring(L, "ALSA");
+        lua_settable(L, -3);
         break;
       case RtMidi::UNIX_JACK:
+        lua_pushinteger(L, tblIdx++);
         lua_pushstring(L, "JACK");
+        lua_settable(L, -3);
         break;
       case RtMidi::MACOSX_CORE:
+        lua_pushinteger(L, tblIdx++);
         lua_pushstring(L, "CoreMIDI");
+        lua_settable(L, -3);
         break;
       case RtMidi::WINDOWS_MM:
+        lua_pushinteger(L, tblIdx++);
         lua_pushstring(L, "Windows MM");
+        lua_settable(L, -3);
         break;
       case RtMidi::WEB_MIDI_API:
+        lua_pushinteger(L, tblIdx++);
         lua_pushstring(L, "Web MIDI API");
+        lua_settable(L, -3);
         break;
 #if RTMIDI_VERSION_MAJOR > 5
       case RtMidi::WINDOWS_UWP:
+        lua_pushinteger(L, tblIdx++);
         lua_pushstring(L, "Windows UWP");
+        lua_settable(L, -3);
         break;
       case RtMidi::ANDROID_AMIDI:
+        lua_pushinteger(L, tblIdx++);
         lua_pushstring(L, "Android AMidi");
+        lua_settable(L, -3);
         break;
 #endif
       case RtMidi::RTMIDI_DUMMY:
@@ -93,7 +104,6 @@ int l_midi_player_api_list(lua_State* L) {
         // These should not be selectable
         break;
     }
-    lua_settable(L, -3);
   }
 
   return 1;
@@ -168,10 +178,7 @@ int l_midi_player_resume(lua_State* L) {
 
 #else  // WITH_MIDI_DEVICE
 int l_midi_player_api_list(lua_State* L) {
-  lua_createtable(L, 1, 0);
-  lua_pushinteger(L, 1);
-  lua_pushstring(L, "Default");
-  lua_settable(L, -3);
+  lua_newtable(L);
 
   return 1;
 }
