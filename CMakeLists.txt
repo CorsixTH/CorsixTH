@@ -26,11 +26,20 @@
 
 cmake_minimum_required(VERSION 3.14)
 
+if(CMAKE_SYSTEM_NAME MATCHES "Emscripten")
+  set(EMSCRIPTEN ON)
+  set(WITH_UPDATE_CHECK_DEFAULT OFF)
+  set(WITH_MOVIES_DEFAULT OFF)
+else()
+  set(WITH_UPDATE_CHECK_DEFAULT ON)
+  set(WITH_MOVIES_DEFAULT ON)
+endif()
+
 # Define our options
 option(BUILD_CORSIXTH "Builds the main game" ON)
-option(WITH_MOVIES "Activate in game movies" ON)
+option(WITH_MOVIES "Activate in game movies" WITH_MOVIES_DEFAULT)
 option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
-option(WITH_UPDATE_CHECK "Check for new versions" ON)
+option(WITH_UPDATE_CHECK "Check for new versions" WITH_UPDATE_CHECK_DEFAULT)
 option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
 option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
 option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
