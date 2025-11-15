@@ -134,15 +134,6 @@ function UIOptions:UIOptions(ui, mode)
         :setToggleState(app.config.check_for_updates)
   end
 
-  -- add the Audio global switch.
-  local audio_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(20, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
-    :setLabel(_S.options_window.audio):setTooltip(_S.tooltip.options_window.audio_button).lowered = true
-  self.volume_panel =
-    self:addBevelPanel(165, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
-  self.volume_button = self.volume_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonAudioGlobal)
-    :setToggleState(app.config.audio):setTooltip(_S.tooltip.options_window.audio_toggle)
-
   -- Fullscreen
   local fullscreen_y_pos = self:_getOptionYPos()
   self:addBevelPanel(20, fullscreen_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
@@ -225,9 +216,9 @@ function UIOptions:UIOptions(ui, mode)
   self:addBevelPanel(320, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.hotkey)
     :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonHotkey):setTooltip(_S.tooltip.options_window.hotkey)
 
-  -- "Jukebox" button
-  self:addBevelPanel(465, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.jukebox)
-    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonJukebox):setTooltip(_S.tooltip.options_window.jukebox)
+  -- "Sound Options" button
+  self:addBevelPanel(465, lower_row_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.sound)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonSound):setTooltip(_S.tooltip.options_window.sound)
 
   -- "Back" button
   -- Give some extra space to back button. This is fine as long as it is the last button in the options menu
@@ -363,10 +354,9 @@ function UIOptions:buttonHotkey()
   self.ui:addWindow(window)
 end
 
-function UIOptions:buttonJukebox()
-  if self.app.config.audio then
-    self.ui:addWindow(UIJukebox(self.app))
-  end
+function UIOptions:buttonSound()
+  local window = UISoundSettings(self.ui, "menu")
+  self.ui:addWindow(window)
 end
 
 function UIOptions:buttonBrowseForTHInstall()
@@ -379,20 +369,6 @@ function UIOptions:buttonBrowseForTHInstall()
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.options_window.new_th_directory, "InstallDirTreeNode", callback)
   self.ui:addWindow(browser)
-end
-
-function UIOptions:buttonAudioGlobal()
-  local app = self.ui.app
-  app.config.audio = not app.config.audio
-  app:saveConfig()
-  self.volume_button:setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
-  -- Reinit audio
-  app.audio:stopBackgroundTrack()
-  app.audio.has_bg_music = false
-  app.audio.not_loaded = not app.config.audio
-  app.audio.speech_file_name = nil
-  app.audio:init()
-  app:initLanguage()
 end
 
 function UIOptions:buttonScrollSpeed()
