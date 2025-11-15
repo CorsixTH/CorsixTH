@@ -78,25 +78,27 @@ function Object:initOrientation(direction)
   if footprint and footprint.list_bottom then
     flags = flags + 2048
   end
-  local rap = footprint and footprint.render_attach_position
-  if rap and rap[1] and type(rap[1]) == "table" then
-    self.split_anims = {self.th}
-    self.split_anim_positions = rap
-    self.th:setCrop(rap[1].column)
-    for i = 2, #rap do
-      local point = rap[i]
-      local th = TH.animation()
-      th:setCrop(point.column)
-      th:setHitTestResult(self)
-      th:setPosition(Map:WorldToScreen(1-point[1], 1-point[2]))
-      self.split_anims[i] = th
-    end
-  else
+
+  -- local rap = footprint and footprint.render_attach_position
+  -- if rap and rap[1] and type(rap[1]) == "table" then
+  --   self.split_anims = {self.th}
+  --   self.split_anim_positions = rap
+  --   self.th:setCrop(rap[1].column)
+    -- for i = 2, #rap do
+    --   local point = rap[i]
+    --   local th = TH.animation()
+    --   th:setCrop(point.column)
+    --   th:setHitTestResult(self)
+    --   th:setPosition(Map:WorldToScreen(1-point[1], 1-point[2]))
+    --   self.split_anims[i] = th
+    -- end
+  -- else
     -- Make sure these variables aren't left behind. The object
     -- might just have been moved and rotated.
     self.split_anims = nil
     self.split_anim_positions = nil
-  end
+  -- end
+
   if footprint and footprint.animation_offset then
     self:setPosition(unpack(footprint.animation_offset))
   end

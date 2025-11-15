@@ -249,12 +249,12 @@ map_tile_flags::operator uint32_t() const {
 }
 
 map_tile::map_tile()
-    : iParcelId(0),
+    : tile_layers{},
+      iParcelId(0),
       iRoomId(0),
+      aiTemperature{8192, 8192},
       flags({}),
-      raw{},
-      tile_layers{},
-      aiTemperature{8192, 8192} {}
+      raw{} {}
 
 level_map::level_map() = default;
 
@@ -1061,149 +1061,32 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
   draw_floor(pCanvas, iScreenX, iScreenY, iWidth, iHeight, iCanvasX, iCanvasY);
 
-  bool bFirst = true;
-  map_scanline_iterator formerIterator;
-  for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
-       itrNode1; ++itrNode1) {
-    if (!itrNode1.is_last_on_scanline()) {
-      continue;
-    }
+  for (int y_tile = 0; y_tile < height; y_tile++) {
+    for (int x_tile = 0; x_tile < width; x_tile++) {
+      int x = iCanvasX - iScreenX + (x_tile - y_tile) * 32;
+      int y = iCanvasY - iScreenY + (x_tile + y_tile) * 16;
+      const map_tile* tile = get_tile_unchecked(x_tile, y_tile);
 
-    for (map_scanline_iterator itrNode(
-             itrNode1, map_scanline_iterator_direction::backward, iCanvasX,
-             iCanvasY);
-         itrNode; ++itrNode) {
-      draw_north_wall(itrNode.get_tile(), itrNode.x(), itrNode.y(), pCanvas);
+      draw_north_wall(tile, x, y, pCanvas);
+      draw_layer(tile, x, y, tile_layer::west_wall, pCanvas);
+      draw_layer(tile, x, y, tile_layer::ui, pCanvas);
 
-      // Draw early entities.
-      drawable* pItem = static_cast<drawable*>(itrNode->oEarlyEntities.next);
-      while (pItem) {
-        pItem->draw_fn(pCanvas, itrNode.x(), itrNode.y());
-        pItem = static_cast<drawable*>(pItem->next);
+      drawable* item = static_cast<drawable*>(tile->entities.next);
+      while (item) {
+        item->draw_fn(pCanvas, x, y);
+        item = static_cast<drawable*>(item->next);
       }
     }
-
-    map_scanline_iterator itrNode(
-        itrNode1, map_scanline_iterator_direction::forward, iCanvasX, iCanvasY);
-    if (!bFirst) {
-      // since the scanline count from one THMapScanlineIterator to
-      // another can differ synchronization between the current iterator
-      // and the former one is needed
-      if (itrNode.x() < -64) {
-        ++itrNode;
-      }
-      while (formerIterator.x() < itrNode.x()) {
-        ++formerIterator;
-      }
-    }
-    bool bPreviousTileNeedsRedraw = false;
-    for (; itrNode; ++itrNode) {
-      bool bNeedsRedraw = false;
-
-      // Draw the west wall and ui layers.
-      draw_layer(itrNode.get_tile(), itrNode.x(), itrNode.y(),
-                 tile_layer::west_wall, pCanvas);
-      draw_layer(itrNode.get_tile(), itrNode.x(), itrNode.y(), tile_layer::ui,
-                 pCanvas);
-
-      int height;
-      uint16_t layer = itrNode->tile_layers[tile_layer::north_wall];
-      if (layer_exists(layer, height)) {
-        bNeedsRedraw = true;
-      }
-      if (itrNode->oEarlyEntities.next) {
-        bNeedsRedraw = true;
-      }
-
-      bool bRedrawAnimations = false;
-
-      drawable* pItem = static_cast<drawable*>(itrNode->entities.next);
-      while (pItem) {
-        pItem->draw_fn(pCanvas, itrNode.x(), itrNode.y());
-        if (pItem->is_multiple_frame_animation_fn()) {
-          bRedrawAnimations = true;
-        }
-        if (pItem->get_drawing_layer() == 1) {
-          bNeedsRedraw = true;
-        }
-        pItem = static_cast<drawable*>(pItem->next);
-      }
-
-      // if the current tile contained a multiple frame animation (e.g. a
-      // doctor walking) check to see if in the tile to its left and above
-      // it there are items that need to be redrawn (i.e. in the tile to
-      // its left side objects to the south of the tile and in the tile
-      // above it side objects to the east of the tile).
-      if (bRedrawAnimations && !bFirst) {
-        bool bTileNeedsRedraw = bPreviousTileNeedsRedraw;
-
-        // check if an object in the adjacent tile to the left of the
-        // current tile needs to be redrawn and if necessary draw it
-        pItem = static_cast<drawable*>(
-            formerIterator.get_previous_tile()->entities.next);
-        while (pItem) {
-          if (pItem->get_drawing_layer() == 9) {
-            pItem->draw_fn(pCanvas, formerIterator.x() - 64,
-                           formerIterator.y());
-            bTileNeedsRedraw = true;
-          }
-          pItem = static_cast<drawable*>(pItem->next);
-        }
-
-        // check if an object in the adjacent tile above the current
-        // tile needs to be redrawn and if necessary draw it
-        pItem = formerIterator
-                    ? static_cast<drawable*>(formerIterator->entities.next)
-                    : nullptr;
-        while (pItem) {
-          if (pItem->get_drawing_layer() == 8) {
-            pItem->draw_fn(pCanvas, formerIterator.x(), formerIterator.y());
-          }
-          pItem = static_cast<drawable*>(pItem->next);
-        }
-
-        // If an object was redrawn in the tile to the left of the
-        // current tile, or if the tile below it had an object in the
-        // north side or a wall to the north, then redraw that tile.
-        if (bTileNeedsRedraw) {
-          const map_tile* prev_tile = itrNode.get_previous_tile();
-          int prev_tile_x = itrNode.x() - 64;
-          int prev_tile_y = itrNode.y();
-
-          // Redraw the north wall of the previous tile.
-          draw_north_wall(prev_tile, prev_tile_x, prev_tile_y, pCanvas);
-
-          // Redraw early entities of previous tile.
-          pItem = static_cast<drawable*>(prev_tile->oEarlyEntities.next);
-          for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
-            pItem->draw_fn(pCanvas, prev_tile_x, prev_tile_y);
-          }
-
-          // Redraw entities of previous tile.
-          pItem = static_cast<drawable*>(prev_tile->entities.next);
-          for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
-            pItem->draw_fn(pCanvas, prev_tile_x, prev_tile_y);
-          }
-        }
-      }
-      bPreviousTileNeedsRedraw = bNeedsRedraw;
-      if (!bFirst) {
-        ++formerIterator;
-      }
-    }
-
-    formerIterator = itrNode;
-    bFirst = false;
   }
 
   // Draw map overlay if active.
   if (overlay) {
-    for (map_tile_iterator itrNode(this, iScreenX, iScreenY, iWidth, iHeight);
-         itrNode; ++itrNode) {
-      overlay->draw_cell(pCanvas,
-                         itrNode.tile_x_position_on_screen() + iCanvasX - 32,
-                         itrNode.tile_y_position_on_screen() + iCanvasY, this,
-                         itrNode.tile_x(), itrNode.tile_y());
+    for (int y_tile = 0; y_tile < height; y_tile++) {
+      for (int x_tile = 0; x_tile < width; x_tile++) {
+        // XXX Changing iCanvasX and iCanvasY doesn't seem to do anything.
+        // Not sure why.
+        overlay->draw_cell(pCanvas, iCanvasX, iCanvasY, this, x_tile, y_tile);
+      }
     }
   }
 }

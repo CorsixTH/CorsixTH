@@ -285,6 +285,10 @@ class level_map {
   void update_temperatures(uint16_t iAirTemperature,
                            uint16_t iRadiatorTemperature);
 
+  bool is_on_map(int x, int y) {
+    return x >= 0 && x < get_width() && y >= 0 && y < get_height();
+  }
+
   //! Get the map width (in tiles)
   inline int get_width() const { return width; }
 
