@@ -129,16 +129,17 @@ end
 
 --! Generate table for the Progress Report dialog and progress advice.
 --!param hospital (Hospital) The hospital of the tests.
---!return report_table (table) Maximum five fields of
+--!param baseline_start (boolean) Use the start attribute for calculating progress, not boundary
+--!return report_table (table) Maximum five fields (unless baseline_start) of
 -- lose criteria with the smallest gap between current value and boundary,
--- then fill up to five with win criteria in the best group.
-function EndConditions:generateReportTable(hospital)
+-- then fill up to five (unlimited when baseline_start is true) with win criteria in the best group.
+function EndConditions:generateReportTable(hospital, baseline_start)
   local count, lose_table, key_lose_goals_table, report_table, unique_criteria_set = 0, {}, {}, {}, {}
   local win_group = self.win_goals[self:_findBestWinGroup(hospital)] or {}
 
   -- Collect lose criteria over the boundary
   for group, tbl in pairs(self.lose_goals) do
-    lose_table[group] = self:_checkLoseGroup(hospital, tbl, true)
+    lose_table[group] = self:_checkLoseGroup(hospital, tbl, true, baseline_start)
   end
   -- Get the most relevant of each criterion in all groups
   for _, group_table in pairs(lose_table) do
@@ -153,8 +154,8 @@ function EndConditions:generateReportTable(hospital)
     table.insert(report_table, crit_table)
     count = count + 1
   end
-  -- Limit the table to five goals, ordered by progress towards meeting the lose goal
-  if count > 5 then
+  -- Limit the table to five goals (unless generating advice), ordered by progress towards meeting the lose goal
+  if count > 5 and not baseline_start then
     table.sort(report_table, function(a,b) return a.progress > b.progress end)
     for n = 6, #report_table do report_table[n] = nil end
   end
@@ -162,7 +163,7 @@ function EndConditions:generateReportTable(hospital)
   -- Fill up the report table with win criteria not already present as lose criteria
   for _, crit in pairs(report_table) do unique_criteria_set[crit.name] = true end
   for i = 1, #local_criteria_variable do
-    if count == 5 then break end
+    if count == 5 and not baseline_start then break end
     local name = local_criteria_variable[i].name
     if win_group[name] and not unique_criteria_set[name] then
       count = count + 1
@@ -178,12 +179,14 @@ end
 --!param hospital (Hospital) The hospital of the tests.
 --!param lose_table (table) A group of lose conditions from level_config.
 --!param report (boolean) Whether a report table will be returned.
+--!param baseline_start (boolean) Use the start attribute for calculating progress, not boundary
 --!return Losing criteria name and the limit breached,
 -- or if report is true, the report table.
-function EndConditions:_checkLoseGroup(hospital, lose_table, report)
+function EndConditions:_checkLoseGroup(hospital, lose_table, report, baseline_start)
   local report_table, met_count, total_count, reason, limit = {}, 0, 0
   for crit_name, crit_table in pairs(lose_table) do
-    local boundary, lose_value = crit_table.boundary, crit_table.lose_value
+    local boundary = baseline_start and crit_table.start or crit_table.boundary
+    local lose_value = crit_table.lose_value
     local max_min = crit_table.max_min == 1 and 1 or -1
     local measure = self:getAttribute(hospital, crit_name)
     if report then -- Collect the criteria that should be reported on
@@ -248,4 +251,135 @@ function EndConditions:getAttribute(hospital, attribute)
   else
     return hospital[attribute]
   end
+end
+
+-- Judge the hospital on the criterion from lose to win
+-- Return the judgement as an integer on a scale of -3 to +4
+local function progress(measure, target, start)
+  if measure == target then return 0 end
+  if start then
+    measure = measure - start
+    target = target - start
+  end
+  local score = math.floor(measure / target * 4)
+  return math.min(math.max(-3, score), 4)
+end
+
+-- Map criteria and progress score to strings
+local advice = {
+  generic = {
+    [-3] = { "three_quarters_lost", "hospital_is_rubbish" },
+    [-2] = { "halfway_lost" },
+    [2] = { "halfway_won" },
+    [3] = { "three_quarters_won" },
+  },
+  reputation = {
+    [4] = { "reputation_good_enough" },
+    [-1] = { "improve_reputation" },
+  },
+  balance = {
+    [4] = { "financial_criteria_met" },
+    [-1] = { "money_low", "cash_low_consider_loan", "financial_trouble" },
+    [-2] = { "finanical_trouble2", "money_very_low_take_loan" },
+    [-3] = { "bankruptcy_imminent", "financial_trouble3" },
+  },
+  percentage_cured = {
+  },
+  num_cured = {
+    [4] = { "cured_enough_patients" },
+  },
+  percentage_killed = {
+   [-3] = { "dont_kill_more_patients" },
+  },
+  value = {
+    [4] = { "hospital_value_enough" },
+    [3] = { "close_to_win_increase_value" },
+  },
+  staff_happiness = {
+    [-2] = { "staff_unhappy" },
+    [-3] = { "staff_unhappy2" },
+  },
+  patient_happiness = {
+    [-2] = { "patients_unhappy" },
+    [-3] = { "patients_annoyed" },
+  },
+}
+
+-- These advice strings come from _A.warnings, everything else from _A.level_progress
+local warnings = list_to_set({ "money_low", "cash_low_consider_loan", "financial_trouble", "finanical_trouble2",
+  "money_very_low_take_loan", "bankruptcy_imminent", "financial_trouble3",
+  "staff_unhappy", "staff_unhappy2",
+  "patients_unhappy", "patients_annoyed",
+  "hospital_is_rubbish",
+})
+
+-- Map strings to the statistic they are formatted with
+local format_map = {
+  target = list_to_set({ "reputation_good_enough", "financial_criteria_met", "hospital_value_enough" }),
+  gap = list_to_set({ "improve_reputation", "close_to_win_increase_value", "financial_trouble",
+    "financial_trouble2", "financial_trouble3" }),
+  -- measure = list_to_set({""})
+}
+
+-- Generate advice for this hospital on achieving the world goals
+--!param hospital (hospital) The player's hospital
+--!return (table) All relevant advice
+--!return (table) All high priority and relevant advice
+function EndConditions:generateAdvice(hospital)
+  local advice_tbl, priority_advice_tbl = {}, {}
+  local function add_advice(string, target, gap, measure, step)
+    -- Create full string
+    local full_string
+    if warnings[string] then
+      full_string = _A.warnings[string].text
+    else
+      full_string = _A.level_progress[string].text
+    end
+    if format_map.target[string] then full_string = full_string:format(target)
+    elseif format_map.gap[string] then full_string = full_string:format(gap)
+    -- elseif format_map.measure[string] then full_string = full_string:format(measure)
+    end
+    table.insert(advice_tbl, {text = full_string})
+    -- Collect high priority advice
+    if step and step < -2 then
+      table.insert(priority_advice_tbl, {text = full_string})
+    end
+  end
+
+  local crit_data = self:generateReportTable(hospital, true)
+  local total, met = 0, 0
+  for _, crit_table in ipairs(crit_data) do
+    local crit_name = crit_table.name
+    local target = crit_table.win_value or crit_table.lose_value
+    local measure = self:getAttribute(hospital, crit_name)
+    local gap = math.abs(target - measure)
+    local step = progress(measure, target, crit_table.start)
+    total = total + 1
+    if step == 4 then met = met + 1 end
+    -- Criterion specific advice
+    if advice[crit_name] and advice[crit_name][step] then
+      for _, string in pairs(advice[crit_name][step]) do
+        add_advice(string, target, gap, measure, step)
+      end
+
+    end
+    -- Generic advice for progress within a criterion
+    if advice.generic[step] then
+      for _, string in pairs(advice.generic[step]) do
+        add_advice(string, nil, nil, nil, step)
+      end
+    end
+  end
+
+  if met > 1 then
+    -- Generic advice on the fraction of goals met
+    local goals_met_step = math.floor((met / total) * 4)
+    if advice.generic[goals_met_step] then
+      for _, string in pairs(advice.generic[goals_met_step]) do
+        add_advice(string)
+      end
+    end
+  end
+
+  return advice_tbl, priority_advice_tbl
 end
