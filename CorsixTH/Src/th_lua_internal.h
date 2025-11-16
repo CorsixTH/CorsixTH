@@ -52,6 +52,7 @@ enum class lua_metatable {
   string_proxy,
   line,
   iso_fs,
+  midi_player,
 
   count
 };

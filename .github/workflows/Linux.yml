@@ -23,9 +23,9 @@ jobs:
         include:
           - lua: LuaJIT
             packages: cmake libluajit2-5.1-dev # CMake 4, Openresty's luajit
-            cmakejit: '-DWITH_LUAJIT=ON -DLUA_LIBRARY=/usr/lib/x86_64-linux-gnu/libluajit-5.1.so -DWITH_MOVIES=OFF'
+            cmakejit: '-DWITH_LUAJIT=ON -DLUA_LIBRARY=/usr/lib/x86_64-linux-gnu/libluajit-5.1.so -DWITH_MOVIES=OFF -DWITH_MIDI_DEVICE=OFF'
           - lua: Lua 5.1
-            packages: 'libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev'
+            packages: 'libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev librtmidi-dev'
             cmake: 1
             static_analysis: 1
             docs: 1

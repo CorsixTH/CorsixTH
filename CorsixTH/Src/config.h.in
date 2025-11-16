@@ -53,6 +53,10 @@ SOFTWARE.
 // if the current version is the latest.
 #cmakedefine WITH_UPDATE_CHECK
 
+/** MIDI device support **/
+// If defined then support playing MIDI on attached MIDI devices.
+#cmakedefine WITH_MIDI_DEVICE
+
 /** Lua modules options */
 // If defined then lua modules are considered to have been linked into the
 // binary instead of loaded at runtime.
