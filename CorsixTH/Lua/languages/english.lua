@@ -539,6 +539,7 @@ audio_window = {
   default_midi_port = "Default",
   jukebox = "Jukebox",
   back = "Back",
+  soundfont_location_caption = "Choose soundfont (%1%)",
 }
 
 tooltip.audio_window = {

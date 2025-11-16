@@ -45,12 +45,6 @@ local col_shadow = {
   blue = 178,
 }
 
-local col_caption = {
-  red = 174,
-  green = 166,
-  blue = 218,
-}
-
 local function midi_port_options(app)
   local ports = app.audio:getMidiPortList()
 
@@ -200,8 +194,6 @@ function UISoundSettings:UISoundSettings(ui, mode)
 
   self.default_api_panels = { soundfont_label_panel, soundfont_button_panel, soundfont_button }
   self.midi_api_panels = { midi_port_label_panel, self.midi_port_panel, self.midi_port_button }
-
-  y = y + 25
 
   -- jukebox
   self:addBevelPanel(20, 300, BIG_BTN_WIDTH, BIG_BTN_HEIGHT, col_bg)
@@ -370,9 +362,14 @@ function UISoundSettings:selectMidiPort(index)
 end
 
 function UISoundSettings:buttonBrowseForSoundfont()
-  -- Todo: soundfont not font
-  local browser = UIChooseFont(self.ui, self.mode)
+  local browser = UIChooseSoundfont(self.ui, self.mode, self, self.selectSoundfont)
   self.ui:addWindow(browser)
+end
+
+function UISoundSettings:selectSoundfont(name)
+  self.app.config.soundfont = name
+  self.app:saveConfig()
+  self:reinitAudio()
 end
 
 function UISoundSettings:buttonJukebox()
