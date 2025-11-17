@@ -404,6 +404,7 @@ function App:init()
   else
     callback_after_movie()
   end
+  TH.moduleGameReady()
   return true
 end
 
@@ -414,6 +415,7 @@ function App:initGamelogFile()
   local sysinfo = self:gamelogHeader()
   fi:write(sysinfo)
   fi:close()
+  TH.SyncEmscriptenFS()
   if success then self:trimLogs() end -- Only trim logs if logs folder is writable
 end
 
@@ -1088,6 +1090,7 @@ function App:saveConfig()
     fi:write(line .. "\n")
   end
   fi:close()
+  TH.SyncEmscriptenFS()
 end
 
 --! Tries to open the given file or a file in OS's temp dir.
@@ -1193,6 +1196,7 @@ function App:saveHotkeys()
   end
 
   fi:close()
+  TH.SyncEmscriptenFS()
 end
 
 function App:run()

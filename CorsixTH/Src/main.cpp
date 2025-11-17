@@ -49,7 +49,7 @@ SOFTWARE.
 
 extern "C" {
 int luaopen_random(lua_State* L);
-#ifdef CORSIX_TH_LINK_LUA_MODULES
+#if defined(CORSIX_TH_LINK_LUA_MODULES) || defined(__EMSCRIPTEN__)
 int luaopen_lfs(lua_State* L);
 int luaopen_lpeg(lua_State* L);
 #endif
@@ -159,7 +159,7 @@ int lua_main_no_eval(lua_State* L) {
   preload_lua_package(L, "persist", luaopen_persist);
   preload_lua_package(L, "sdl", luaopen_sdl);
 
-#ifdef CORSIX_TH_LINK_LUA_MODULES
+#if defined(CORSIX_TH_LINK_LUA_MODULES) || defined(__EMSCRIPTEN__)
   preload_lua_package(L, "lfs", luaopen_lfs);
   preload_lua_package(L, "lpeg", luaopen_lpeg);
 #endif

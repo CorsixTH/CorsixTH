@@ -17,7 +17,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
-
+local TH = require("TH")
 local persist = require("persist")
 local saved_permanents = {}
 
@@ -258,6 +258,7 @@ function SaveGameFile(filename)
   local f = TheApp:writeToFileOrTmp(filename, "wb")
   f:write(data)
   f:close()
+  TH.SyncEmscriptenFS()
 end
 
 --! Compatibility function to work out the game's graphics set

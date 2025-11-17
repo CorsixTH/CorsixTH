@@ -1,6 +1,42 @@
 # Modify the config.h based upon our selection of options
 configure_file(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
 
+
+set(LPEG_SRC_FILES "")
+set(LPEG_HRC_FILES "")
+set(LFS_SRC_FILES "")
+set(LFS_HRC_FILES "")
+if (EMSCRIPTEN)
+    include(FetchContent)
+    FetchContent_Declare(lpeg
+            GIT_REPOSITORY "https://github.com/roberto-ieru/LPeg.git"
+            GIT_TAG 80ec9f932aa01d445e86c699523265359055e1bd
+            SOURCE_DIR "${CMAKE_BINARY_DIR}/ep_lpeg"
+            DOWNLOAD_EXTRACT_TIMESTAMP false
+    )
+    FetchContent_Declare(lfs
+            GIT_REPOSITORY "https://github.com/lunarmodules/luafilesystem.git"
+            GIT_TAG 09511782201302ade916d4b250d01a6c61b56844
+            SOURCE_DIR "${CMAKE_BINARY_DIR}/ep_lfs"
+            DOWNLOAD_EXTRACT_TIMESTAMP false
+    )
+    FetchContent_MakeAvailable(lpeg)
+    FetchContent_MakeAvailable(lfs)
+
+    file(GLOB LPEG_SRC_FILES
+            ${lpeg_SOURCE_DIR}/*.c
+    )
+    file(GLOB LPEG_HRC_FILES
+            ${lpeg_SOURCE_DIR}/*.h
+    )
+    file(GLOB LFS_SRC_FILES
+            ${lfs_SOURCE_DIR}/src/*.c
+    )
+    file(GLOB LFS_HRC_FILES
+            ${lfs_SOURCE_DIR}/src/*.h
+    )
+endif ()
+
 target_sources(CorsixTH_lib
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/random.c
@@ -33,6 +69,9 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/th_sound.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/th_strings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.cpp
+
+    ${LPEG_SRC_FILES}
+    ${LFS_SRC_FILES}
 )
 
 # These are for IDEs such as XCode and MSVC to track headers within their
@@ -60,6 +99,9 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/th_sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/th_strings.h
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.h
+
+    ${LPEG_HRC_FILES}
+    ${LFS_HRC_FILES}
 
     ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
 )
