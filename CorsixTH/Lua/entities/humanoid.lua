@@ -742,8 +742,10 @@ function Humanoid:_handleEmptyActionQueue()
   end
 
   -- Log what just happened.
+  self.world:gameLog("")
+  self.world:gameLog("Warning! Empty action queue! For humanoid at coord x:"
+    .. self.tile_x .. " y:" .. self.tile_y .. ". Last action: " .. self.previous_action.name)
   self.world:gameLog(self:tostring())
-  self.world:gameLog("Empty action queue! Last action: " .. self.previous_action.name)
 
   -- First find out if this humanoid is in a room.
   local room = self:getRoom()
@@ -777,7 +779,7 @@ function Humanoid:_handleEmptyActionQueue()
         self.world:gameLog("The humanoid was told to leave the hospital...")
         if class.is(self, Staff) then
           self:fire()
-        else
+        elseif class.is(self, Patient) then
           -- Set these variables to increase the likelihood of the humanoid managing to get out of the hospital.
           self.going_home = false
           self.hospital = self.world:getLocalPlayerHospital()
@@ -789,6 +791,7 @@ function Humanoid:_handleEmptyActionQueue()
   else
     self.world:gameLog("Warning: Humanoid encountered an empty action queue. Recovery has been attempted.")
   end
+  self.world:gameLog("")
   self.world:dumpGameLog()
 end
 
