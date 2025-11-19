@@ -175,7 +175,6 @@ options_window = {
   custom_resolution = "カスタム...",
   width = "横幅 / width",
   height = "高さ / Height",
-  audio = "オーディオ",
   customise = "カスタム設定",
   folder = "フォルダの場所",
   language = "言語",
@@ -186,7 +185,6 @@ options_window = {
   shift_scrollspeed = "スクロール速度 (+Shift)",
   zoom_speed = "ズーム速度",
   hotkey = "ホットキーの設定",
-  jukebox = "ジュークボックス",
   change_resolution = "解像度の変更",
 }
 
@@ -201,8 +199,6 @@ tooltip.options_window = {
   height = "ご希望の画面高さを入力してください",
   apply = "入力した解像度で決定する",
   cancel = "解像度を変更せずに戻る",
-  audio_button = "すべての音楽をオン/オフする",
-  audio_toggle = "オン / オフを設定してください",
   customise_button = "ゲーム体験のためのより詳細な設定ができます",
   folder_button = "フォルダオプションです",
   language = "ゲーム内の使用言語です",
@@ -221,6 +217,17 @@ tooltip.options_window = {
   cancel_zoomspeed = "ズーム速度を変更せずに戻る",
   hotkey = "ホットキーの設定を変更する",
   check_for_updates = "アップデートがないか確認する",
+}
+
+audio_window = {
+  audio = "オーディオ",
+  jukebox = "ジュークボックス",
+  back = "戻る",
+}
+
+tooltip.audio_window = {
+  audio_button = "すべての音楽をオン/オフする",
+  audio_toggle = "オン / オフを設定してください",
   jukebox = "ジュークボックスを開く",
 }
 

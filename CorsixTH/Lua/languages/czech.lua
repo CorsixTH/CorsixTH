@@ -1180,8 +1180,6 @@ tooltip = {
     apply = "Použít zadané rozlišení",
     cancel = "Vrátit se zpět bez změny rozlišení",
     height = "Zadejte požadovanou výšku obrazovky hry.",
-    audio_button = "Zapnout nebo vypnout všechny zvuky ve hře.",
-    audio_toggle = "Globální zapnutí zvuků, pokud je VYPNUTO, nebude se přehrávat žádný zvuk ze hry.",
     folder_button = "Nastavení složek",
     customise_button = "Další nastavení, pomocí kterých si můžete svoji hru přizpůsobit.",
     hotkey = "Změnit klávesové zkratky",
@@ -1198,6 +1196,10 @@ tooltip = {
     check_for_updates = "Nastavuje, zda má hra při spuštění kontrolovat aktualizace.",
     right_mouse_scrolling = "Přepnout tlačítko myši, kterým lze posouvat kameru",
     language_dropdown_no_font = "Pro použití tohoto jazyka musíte vybrat font podporující tento jazyk v Nastavení > Umístění složek > Písmo",
+  },
+  audio_window = {
+    audio_button = "Zapnout nebo vypnout všechny zvuky ve hře.",
+    audio_toggle = "Globální zapnutí zvuků, pokud je VYPNUTO, nebude se přehrávat žádný zvuk ze hry.",
     jukebox = "Otevře Jukebox pro ovládání hudby ve hře",
   },
   update_window = {
@@ -3355,7 +3357,6 @@ options_window = {
   back = "Zpět",
   folder = "Umístění složek",
   customise = "Přizpůsobit",
-  audio = "Zvuky",
   zoom_speed = "Rychlost přibližování",
   scrollspeed = "Rychlost kamery",
   capture_mouse = "Zachytávat myš v okně hry",
@@ -3366,8 +3367,12 @@ options_window = {
   check_for_updates = "Kontrola aktualizací",
   right_mouse_scrolling = "Scrolling myší",
   right_mouse_scrolling_option_middle = "Prostřední tlač. myši",
-  jukebox = "Jukebox",
   right_mouse_scrolling_option_right = "Pravé tlač. myši",
+}
+audio_window = {
+  audio = "Zvuky",
+  jukebox = "Jukebox",
+  back = "Zpět",
 }
 folders_window = {
   new_th_location = "Zde můžete vybrat novou instalační složku Theme Hospital. Jakmile ji zvolíte, hra bude restartována.",

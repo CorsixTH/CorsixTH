@@ -598,7 +598,6 @@ tooltip = {
     fullscreen_button = "Kliknij aby włączyć tryb pełnoekranowy",
     resolution = "Rozdzielczość w jakiej powinna działać gra",
     select_resolution = "Wybierz nową rozdzielczość",
-    audio_toggle = "Włącz/wyłącz",
     folder_button = "Opcje folderów",
     customise_button = "Dodatkowe ustawienia modifikujące twoją rozgrywkę",
     width = "Wpisz żądaną szerokość ekranu",
@@ -615,6 +614,9 @@ tooltip = {
     no_font_specified = "Lokalizacja czcionki nie została jeszcze wybrana!",
     back = "Zamknij okno opcji",
   },
+  audio_window = {
+    audio_toggle = "Włącz/wyłącz",
+  }
 }
 menu_charts = {
   bank_manager  = "  (%1%) MENADŻER BANKU  ",
@@ -2212,10 +2214,15 @@ options_window = {
   language = "Język gry",
   cancel = "Anuluj",
   back = "Wróć",
-  audio = "Dźwięk",
   customise = "Modyfikuj",
   folder = "Foldery",
 }
+
+audio_window = {
+  audio = "Dźwięk",
+  back = "Wróć",
+}
+
 folders_window = {
   caption = "Ścieżki folderów",
   data_label = "Dane TH",

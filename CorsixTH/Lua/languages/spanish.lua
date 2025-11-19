@@ -979,7 +979,6 @@ options_window = {
   right_mouse_scrolling_option_right = "Botón Derecho",
   width = "Ancho",
   height = "Alto",
-  audio = "Sonido",
   customise = "Personalizar",
   folder = "Carpetas",
   language = "Idioma del juego",
@@ -991,7 +990,6 @@ options_window = {
   zoom_speed = "Vel. de Acercamiento",
   hotkey = "Atajos de Teclado",
   check_for_updates = "Buscar Actualizaciones",
-  jukebox = "Reproductor",
 }
 
 tooltip.options_window = {
@@ -1005,8 +1003,6 @@ tooltip.options_window = {
   height = "Introduce la altura de la pantalla.",
   apply = "Aplica la resolución seleccionada.",
   cancel = "Vuelve sin cambiar la resolución.",
-  audio_button = "Activa o desactiva todos los sonidos del juego.",
-  audio_toggle = "Activa o desactiva el sonido.",
   customise_button = "Más opciones para personalizar tu experiencia de juego.",
   folder_button = "Opciones de carpetas.",
   language = "Selecciona el idioma de los textos.",
@@ -1025,7 +1021,18 @@ tooltip.options_window = {
   cancel_zoomspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
   hotkey = "Cambia las teclas de acceso rápido.",
   check_for_updates = "Establece si el juego debería buscar actualizaciones al iniciar.",
-  jukebox = "Abre el Reproductor para controlar la música"
+}
+
+audio_window = {
+  audio = "Sonido",
+  jukebox = "Reproductor",
+  back = "Atrás",
+}
+
+tooltip.audio_window = {
+  audio_button = "Activa o desactiva todos los sonidos del juego.",
+  audio_toggle = "Activa o desactiva el sonido.",
+  jukebox = "Abre el Reproductor para controlar la música",
 }
 
 customise_window = {

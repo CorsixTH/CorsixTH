@@ -454,7 +454,6 @@ options_window = {
   custom_resolution = "Personalizar...",
   width = "Largura",
   height = "Altura",
-  audio = "Audio Geral",
   customise = "Personalizar",
   folder = "Pastas",
   language = "Idioma do Jogo",
@@ -466,7 +465,6 @@ options_window = {
   zoom_speed = "Veloc. do Zoom",
   hotkey = "Atalhos",
   check_for_updates = "Verificar Atualizaçöes",
-  jukebox = "Jukebox",
 }
 
 tooltip.options_window = {
@@ -480,8 +478,6 @@ tooltip.options_window = {
   height = "Insira a altura da tela desejada",
   apply = "Aplicar a resoluçäo inserida",
   cancel = "Retornar sem alterar a resoluçäo",
-  audio_button = "Ligar ou desligar todo o áudio do jogo",
-  audio_toggle = "Ativar ou desativar",
   customise_button = "Você pode alterar mais configuraçöes para personalizar sua experiência de jogo",
   folder_button = "Opçöes de pastas",
   language = "O idioma em que os textos do jogo apareceräo",
@@ -500,6 +496,17 @@ tooltip.options_window = {
   cancel_zoomspeed = "Retorne sem alterar a velocidade de aproximaçäo.",
   hotkey = "Altere as teclas de atalho do teclado.",
   check_for_updates = "Define se o jogo deve procurar atualizaçöes ao iniciar.",
+}
+
+audio_window = {
+  audio = "Audio Geral",
+  jukebox = "Jukebox",
+  back = "Voltar",
+}
+
+tooltip.audio_window = {
+  audio_button = "Ligar ou desligar todo o áudio do jogo",
+  audio_toggle = "Ativar ou desativar",
   jukebox = "Abrir a Jukebox para controlar a música",
 }
 

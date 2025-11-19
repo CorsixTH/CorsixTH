@@ -45,8 +45,8 @@ confirmation.maximum_screen_size = "A resolução de ecrã que escolheu é maior
 confirmation.music_warning = "Antes de escolher usar mp3 para a música dentro do jogo, necessita de ter o smpeg.dll ou equivalente para o seu sistema operativo, caso contrário, não terá música no jogo. Deseja continuar?"
 menu_options_wage_increase.deny = "    NEGAR "
 menu_options_wage_increase.grant = "    PERMITIR "
-tooltip.options_window.audio_button = "Ligar ou desligar todo o som do jogo"
-tooltip.options_window.audio_toggle = "Ligar ou desligar"
+tooltip.audio_window.audio_button = "Ligar ou desligar todo o som do jogo"
+tooltip.audio_window.audio_toggle = "Ligar ou desligar"
 tooltip.options_window.folder_button = "Opções de pastas"
 tooltip.options_window.customise_button = "Mais opões que pode alterar para personalizar a sua experiência de jogo."
 tooltip.update_window.download = "Vá para a página de transferências para a última versão de CorsixTH"
@@ -107,7 +107,7 @@ customise_window.aliens = "Pacientes Extraterrestres"
 customise_window.fractured_bones = "Ossos Partidos"
 options_window.folder = "Pastas"
 options_window.customise = "Personalizar"
-options_window.audio = "Som Geral"
+audio_window.audio = "Som Geral"
 menu_options.twentyfour_hour_clock = "  RELÓGIO DE 24 HORAS  "
 menu_options.wage_increase = "  EXIGÊNCIAS SALARIAIS"
 install.ok = "OK"
@@ -488,6 +488,10 @@ options_window = {
   height = "Altura",
   new_th_directory = "Aqui podes escolher uma nova localizaçao da instalaçao de Theme Hospital,assim que o fizeres o jogo será reiniciado.",
   change_resolution = "Alterar resoluçao",
+  back = "Voltar",
+}
+
+audio_window = {
   back = "Voltar",
 }
 

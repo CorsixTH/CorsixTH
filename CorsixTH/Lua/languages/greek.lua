@@ -1268,7 +1268,6 @@ options_window = {
   fullscreen = "Πλήρης Οθόνη",
   shift_scrollspeed = "Ταχύτητα Κύλησης Shift",
   hotkey = "Hotkeys",
-  audio = "Καθολικός Ήχος",
   change_resolution = "Αλλαγή ανάλυσης",
   height = "Ύψος",
   language = "Γλώσσα παιχνιδιού",
@@ -1278,6 +1277,11 @@ options_window = {
   apply = "Εφαρμογή",
   cancel = "Ακύρωση",
   custom_resolution = "Προσαρμοσμένη...",
+  back = "Πίσω",
+}
+audio_window = {
+  audio = "Καθολικός Ήχος",
+  jukebox = "Jukebox",
   back = "Πίσω",
 }
 research = {
@@ -2182,8 +2186,6 @@ tooltip = {
     language_dropdown_item = "Επιλέξτε τα %s ως γλώσσα",
     select_language = "Επιλέξτε την γλώσσα του παιχνιδιού",
     cancel_zoomspeed = "Επιστροφή χωρίς αλλαγή της ταχύτητας zoom.",
-    audio_button = "Ενεργοποιήστε ή απενεργοποιήστε όλους τους ήχους του παιχνιδιού",
-    audio_toggle = "Ενεργοποιήστε ή απενεργοποιήστε",
     resolution = "Η ανάλυση στην οποία τρέχει το παιχνίδι",
     back = "Κλείσιμο παραθύρου Ρυθμίσεων",
     language = "Η γλώσσα στην οποία θα εμφανιστούν τα κείμενα του παιχνιδιού",
@@ -2205,6 +2207,10 @@ tooltip = {
     cancel = "Επιστροφή χωρίς να αλλάξετε την ανάλυση",
     shift_scrollspeed = "Θέστε την ταχύτητα της κύλισης όταν πιέζετε παρατεταμένα το Shift καθώς κάνετε scrolling. 1 (η πιο αργή) με 10 (η ταχύτερη). Προεπιλογή: 4.",
     height = "Εισάγετε επιθυμητό ύψος οθόνης",
+  },
+  audio_window = {
+    audio_button = "Ενεργοποιήστε ή απενεργοποιήστε όλους τους ήχους του παιχνιδιού",
+    audio_toggle = "Ενεργοποιήστε ή απενεργοποιήστε",
   },
   cheats_window = {
     close = "Κλείσιμο διαλόγου cheats",

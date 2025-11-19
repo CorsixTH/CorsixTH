@@ -3371,7 +3371,6 @@ options_window = {
   custom_resolution = "自定义...",
   width = "宽度",
   height = "高度",
-  audio = "全局音效",
   customise = "自定义",
   folder = "文件夹",
   language = "语言",
@@ -3395,8 +3394,6 @@ tooltip.options_window = {
   height = "输入想要的屏幕高度",
   apply = "应用此分辨率",
   cancel = "返回而不更改分辨率",
-  audio_button = "开关所有的声音",
-  audio_toggle = "切换开关",
   customise_button = "更多可以改变游戏体验的选项",
   folder_button = "文件夹选项",
   language = "游戏文字使用的语言",
@@ -3414,6 +3411,16 @@ tooltip.options_window = {
   cancel_zoomspeed = "返回而不更改缩放速度。",
   hotkey = "更改键盘热键。",
   check_for_updates = "游戏启动时自动检查更新",
+}
+
+audio_window = {
+  audio = "全局音效",
+  back = "返回",
+}
+
+tooltip.audio_window = {
+  audio_button = "开关所有的声音",
+  audio_toggle = "切换开关",
 }
 
 customise_window = {

@@ -593,9 +593,11 @@ tooltip = {
     resolution = "게임이 실행될 해상도",
     audio_button = "게임 전체의 오디오를 켜고 끕니다",
     folder_button = "폴더 옵션",
-    audio_toggle = "켜고 끄기",
     customise_button = "게임 플레이 경험을 커스터마이즈 하기 위한 세부 설정",
   },
+  audio_window = {
+    audio_toggle = "켜고 끄기",
+  }
 }
 menu_charts = {
   bank_manager =    "  (%1%) 은행 지점장  ",
@@ -1712,8 +1714,11 @@ options_window = {
   height = "높이",
   resolution = "해상도",
   folder = "폴더",
-  audio = "오디오",
   customise = "커스터마이즈",
+}
+audio_window = {
+  audio = "오디오",
+  back = "뒤로",
 }
 trophy_room = {
   all_cured = {
