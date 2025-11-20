@@ -377,6 +377,13 @@ function Patient:die()
   if self:getRoom() then
     self:queueAction(MeanderAction():setCount(1))
   else
+    -- Eject patient from queue, if they are in one.
+    for _, action in ipairs(self.action_queue) do
+      if action.name == "queue" then
+        action.queue:removeValue(self)
+        break
+      end
+    end
     self:setNextAction(MeanderAction():setCount(1))
   end
   self:queueAction(DieAction())
