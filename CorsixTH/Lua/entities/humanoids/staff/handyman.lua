@@ -99,7 +99,7 @@ function Handyman:interruptHandymanTask()
     self.on_call.assigned = nil
     self.on_call = nil
   end
-  self.task = nil
+  self:unassignTask()
   self:setNextAction(AnswerCallAction())
 end
 

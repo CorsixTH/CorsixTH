@@ -143,7 +143,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
           -- dropping a handyman should reset the assigned task
           -- as `AnswerCall` action queued later (in `room:onHumanoidEnter`) will reassign him another one.
           if class.is(self.staff, Handyman) then
-            self.staff:unassignTask()
+            self.staff:interruptHandymanTask()
           end
           self.staff:setTile(self.tile_x, self.tile_y)
         else
