@@ -2023,7 +2023,9 @@ function Window:getTooltipAt(x, y)
     end
   end
   for _, btn in ipairs(self.buttons) do
-    if btn.visible ~= false and btn.tooltip and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+    if btn.panel_for_sprite.visible ~= false and
+        btn.tooltip and
+        btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
       return self:getTooltipForElement(btn.tooltip, x, y)
     end
   end
