@@ -62,7 +62,7 @@ function SlackTongueRoom:commandEnteringPatient(patient)
   patient:setNextAction(WalkAction(pat_x, pat_y))
 
   local after_use_slack_tongue = --[[persistable:slack_tongue_after_use]] function()
-    if patient.humanoid_class == "Slack Male Patient" then
+    if patient:isType("Slack Male Patient") then
       patient:setType "Standard Male Patient" -- Change to normal head
     else
       patient:setLayer(0, patient.layers[0] - 8) -- Change to normal head

@@ -81,7 +81,7 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:makeTooltip(_S.tooltip.staff_window.salary, 14, 171, 168, 193)
   self:makeTooltip(_S.tooltip.staff_window.ability, 12, 213, 89, 243)
 
-  if profile.humanoid_class == "Doctor" then
+  if profile:isType("Doctor") then
     self:makeTooltip(_S.tooltip.staff_window.doctor_seniority, 89, 197, 168, 243)
     self:makeTooltip(_S.tooltip.staff_window.skills, 14, 132, 47, 166)
 
@@ -138,7 +138,7 @@ function UIStaffRise:draw(canvas, x, y)
     end
   end
 
-  if self.staff.profile.humanoid_class == "Doctor" then
+  if self.staff.profile:isType("Doctor") then
     self:drawDoctorAttributes(canvas)
   end
 

@@ -679,7 +679,7 @@ end
 --[[When the nurse is interrupted unreserve the patient and unassign the call.
   @param nurse (Nurse) the nurse whose vaccination actions we are interrupting]]
 function Epidemic:interruptVaccinationActions(nurse)
-  assert(nurse.humanoid_class == "Nurse")
+  assert(nurse:isType("Nurse"))
   local call = nurse.on_call
   if call then
     local patient = call.object

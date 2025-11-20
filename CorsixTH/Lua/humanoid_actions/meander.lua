@@ -31,7 +31,7 @@ local function meander_action_start(action, humanoid)
   local room = humanoid:getRoom()
   -- Answering call queue
   if class.is(humanoid, Staff) and humanoid:isIdle() and not room then
-    if humanoid.humanoid_class == "Handyman" then
+    if humanoid:isType("Handyman") then
       if humanoid:searchForHandymanTask() == true then
         return
       end
@@ -62,7 +62,7 @@ local function meander_action_start(action, humanoid)
   end
 
   -- Just wandering around
-  if humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Nurse" then
+  if humanoid:isType("Doctor") or humanoid:isType("Nurse") then
     if not room then
       humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.wandering)
     end
@@ -71,7 +71,7 @@ local function meander_action_start(action, humanoid)
   -- Handymen may have an assigned parcel, but they are free to visit any staff
   -- room to rest, or wait inside a room to repair
   local meander_parcel
-  if humanoid.humanoid_class == "Handyman" and humanoid.parcelNr > 0 and
+  if humanoid:isType("Handyman") and humanoid.parcelNr > 0 and
       not humanoid:getRoom() then
     meander_parcel = humanoid.parcelNr
   end

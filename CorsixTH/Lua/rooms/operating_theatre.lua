@@ -368,7 +368,7 @@ function OperatingTheatreRoom:canHumanoidEnter(humanoid)
   if can and class.is(humanoid, Patient) then
     -- Patients can only enter once all doctors are in surgeon clothes
     for staff, is_ready in pairs(self.staff_member_set) do
-      if staff.humanoid_class == "Doctor" or is_ready ~= "ready" then
+      if staff:isType("Doctor") or is_ready ~= "ready" then
         return false
       end
     end

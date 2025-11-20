@@ -1192,7 +1192,7 @@ function Patient:afterLoad(old, new)
     end
   end
   if old < 190 then
-    if self.humanoid_class == "Standard Female Patient" then
+    if self:isType("Standard Female Patient") then
       self.on_ground_anim = 1764
     end
   end

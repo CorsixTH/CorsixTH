@@ -93,7 +93,7 @@ function StaffProfile:randomise(month)
   self.skill = math.random()
   --self.skill_level_modifier = math.random(-50, 50) / 1000 -- [-0.05, +0.05]
 
-  if self.humanoid_class == "Doctor" then
+  if self:isType("Doctor") then
     -- find the correct config line (based on month) for generation of the doctor
     local i = 0
     while i < #level_config.staff_levels and
@@ -169,7 +169,7 @@ function StaffProfile:randomiseOrganical()
     descs[#descs] = nil
   end
   self.desc = our_concat(shuffle(descs))
-  if self.humanoid_class == "Doctor" then
+  if self:isType("Doctor") then
     self.is_black = math.random(0, 1) == 0
     if self.is_black then
       self.hair_index = math.random(5, 9)
@@ -182,15 +182,15 @@ function StaffProfile:randomiseOrganical()
       self.chin_index = math.random(0, 4)
       self.layer5 = 2
     end
-  elseif self.humanoid_class == "Nurse" then
+  elseif self:isType("Nurse") then
     self.hair_index = math.random(10, 12)
     self.face_index = math.random(10, 12)
     self.chin_index = math.random(10, 12)
-  elseif self.humanoid_class == "Receptionist" then
+  elseif self:isType("Receptionist") then
     self.hair_index = math.random(13, 14)
     self.face_index = math.random(13, 14)
     self.chin_index = math.random(13, 14)
-  elseif self.humanoid_class == "Handyman" then
+  elseif self:isType("Handyman") then
     self.hair_index = math.random(15, 17)
     self.face_index = math.random(15, 17)
     self.chin_index = math.random(15, 17)
@@ -238,7 +238,7 @@ function StaffProfile:getFairWage()
   local level_config = self.world.map.level_config
   local wage = level_config.staff[conf_id[self.humanoid_class]].MinSalary
   wage = wage + self.skill * 1000 / level_config.gbv.SalaryAbilityDivisor
-  if self.humanoid_class == "Doctor" then
+  if self:isType("Doctor") then
     for name, id in pairs(ability_conf_id) do
       if self[name] == 1 then
         wage = wage + level_config.gbv.SalaryAdd[id]
@@ -272,4 +272,8 @@ function StaffProfile.translateStaffClass(staff_class)
     Researcher   = _S.staff_title.researcher,
   }
   return staffclass_to_string[staff_class]
+end
+
+function StaffProfile:isType(humanoid_class)
+  return self.humanoid_class == humanoid_class
 end

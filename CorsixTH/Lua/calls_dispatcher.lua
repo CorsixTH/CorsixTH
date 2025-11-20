@@ -216,7 +216,7 @@ end
   have priority to vaccinate
   @return score (Integer) lowest score has higher priority to vaccinate ]]
 function CallsDispatcher.getPriorityForVaccination(patient, nurse)
-  assert(nurse.humanoid_class == "Nurse")
+  assert(nurse:isType("Nurse"))
   --Lower the priority "score" the more urgent it is
   --The closest nurse to the patient has the highest priority for vaccination
   --Any nurse who cannot reach the paitient suffers a priority penalty
@@ -241,7 +241,7 @@ end
   for vaccination @param nurse (Staff, humanoid_class Nurse) the nurse to perform
   the vaccination actions ]]
 function CallsDispatcher.sendNurseToVaccinate(patient, nurse)
-  assert(nurse.humanoid_class == "Nurse")
+  assert(nurse:isType("Nurse"))
 
   local epidemic = nurse.hospital.epidemic
   if epidemic then
@@ -330,7 +330,7 @@ function CallsDispatcher:answerCall(staff)
   assert(not staff.on_call, "Staff member looking for work while already answering a call.")
   assert(staff.hospital, "Staff should still be a member of the hospital to answer a call.")
 
-  if staff.humanoid_class == "Handyman" then
+  if staff:isType("Handyman") then
    staff:searchForHandymanTask()
    return true
   end

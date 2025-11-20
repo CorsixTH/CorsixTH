@@ -364,7 +364,7 @@ function Humanoid:afterLoad(old, new)
   end
   -- make sure female slack patients have the correct animation
   if old < 42 and new >= 42 then
-    if self.humanoid_class == "Slack Female Patient" then
+    if self:isType("Slack Female Patient") then
       self.die_anims = die_animations["Slack Female Patient"]
     end
   end
@@ -387,7 +387,7 @@ function Humanoid:afterLoad(old, new)
       self.toilet_callback = nil
     end
   end
-  if old < 83 and new >= 83 and self.humanoid_class == "Chewbacca Patient" then
+  if old < 83 and new >= 83 and self:isType("Chewbacca Patient") then
     self.die_anims.extra_east = 1682
   end
   if old < 134 and new >= 134 then
@@ -815,6 +815,10 @@ function Humanoid:setType(humanoid_class)
   self.th:setPartialFlag(self.permanent_flags or 0)
 end
 
+function Humanoid:isType(humanoid_class)
+  return self.humanoid_class == humanoid_class
+end
+
 -- Helper function for the common case of instructing a `Humanoid` to walk to
 -- a position on the map. Equivalent to calling `setNextAction` with a walk
 -- action.
@@ -843,7 +847,7 @@ end
 
 function Humanoid:handleRemovedObject(object)
   local replacement_action
-  if self.humanoid_class and self.humanoid_class == "Receptionist" then
+  if self.humanoid_class and self:isType("Receptionist") then
     replacement_action = MeanderAction()
   elseif object.object_type.id == "bench" or object.object_type.id == "drinks_machine" then
     replacement_action = IdleAction():setMustHappen(true)
@@ -881,7 +885,7 @@ function Humanoid:changeAttribute(attribute, amount)
   -- Handle some happiness special cases
   if attribute == "happiness" and self.humanoid_class then
     local max_salary = self.world.map.level_config.payroll.MaxSalary
-    if self.humanoid_class == "Receptionist" then
+    if self:isType("Receptionist") then
       -- A receptionist is never unhappy
       self.attributes[attribute] = 1
       return true
