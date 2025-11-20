@@ -67,7 +67,7 @@ function UIStaff:UIStaff(ui, staff)
   self.ui = ui
   self.modal_class = "humanoid_info"
   self.width = 220
-  if profile.humanoid_class == "Handyman" then
+  if profile:isType("Handyman") then
     self.height = 332
   else
     self.height = 304
@@ -86,7 +86,7 @@ function UIStaff:UIStaff(ui, staff)
   self:addPanel(301,   15, 114) -- Skills/Abilities
   self:addColourPanel(35, 51, 71, 81, 208, 252, 252):makeButton(0, 0, 71, 81, nil, self.openStaffManagement):setTooltip(_S.tooltip.staff_window.face) -- Portrait background
 
-  if profile.humanoid_class == "Handyman" then
+  if profile:isType("Handyman") then
     self:addPanel(311,  15, 131) -- Tasks top
     for y = 149, 184, 5 do
       self:addPanel(312, 15,  y) -- Tasks buttons
@@ -119,7 +119,7 @@ function UIStaff:UIStaff(ui, staff)
   self:makeTooltip(_S.tooltip.staff_window.tiredness, 113,  74, 204, 109)
   self:makeTooltip(_S.tooltip.staff_window.ability,   113, 109, 204, 134)
 
-  if profile.humanoid_class == "Doctor" then
+  if profile:isType("Doctor") then
     self:makeTooltip(_S.tooltip.staff_window.doctor_seniority, 30, 141, 111, 182)
     self:makeTooltip(_S.tooltip.staff_window.skills, 111, 146, 141, 179)
 
@@ -142,12 +142,12 @@ function UIStaff:UIStaff(ui, staff)
   end
 
   -- window for handyman is slightly different
-  local offset = profile.humanoid_class == "Handyman" and 27 or 0
+  local offset = profile:isType("Handyman") and 27 or 0
 
   self:makeTooltip(_S.tooltip.staff_window.salary, 90, 191 + offset, 204, 214 + offset)
   -- Non-rectangular tooltip has to be realized with dynamic tooltip at the moment
   self:makeDynamicTooltip(--[[persistable:staff_dialog_center_tooltip]]function(x, y)
-    if is_in_view_circle(x, y, profile.humanoid_class == "Handyman") then
+    if is_in_view_circle(x, y, profile:isType("Handyman")) then
       return _S.tooltip.staff_window.center_view
     end
   end, 17, 211 + offset, 92, 286 + offset)
@@ -172,7 +172,7 @@ function UIStaff:draw(canvas, x_, y_)
   local font = self.white_font
 
   font:draw(canvas, profile:getFullName(), x + 42, y + 28) -- Name
-  if profile.humanoid_class == "Handyman" then
+  if profile:isType("Handyman") then
     font:draw(canvas, "$" .. profile.wage, x + 135, y + 226) -- Wage
     font:draw(canvas, self:getParcelText(), x + 35, y + 215, 50, 0)
     -- The concentration areas
@@ -224,7 +224,7 @@ function UIStaff:draw(canvas, x_, y_)
     end
   end
 
-  if profile.humanoid_class == "Doctor" then
+  if profile:isType("Doctor") then
     -- Junior / Doctor / Consultant marker
     if profile.is_junior then
       self.panel_sprites:draw(canvas, 347, x + 38, y + 173)
@@ -249,7 +249,7 @@ function UIStaff:draw(canvas, x_, y_)
 end
 
 function UIStaff:onMouseDown(button, x, y)
-  self.do_scroll = button == "left" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
+  self.do_scroll = button == "left" and is_in_view_circle(x, y, self.staff.profile:isType("Handyman"))
   return Window.onMouseDown(self, button, x, y)
 end
 
@@ -262,12 +262,12 @@ function UIStaff:onMouseUp(button, x, y)
   -- Test for hit within the view circle and name box
   local hit_namebox = x > self.tooltip_regions[1].x and x < self.tooltip_regions[1].r
                       and y > self.tooltip_regions[1].y and y < self.tooltip_regions[1].b
-  if button == "right" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
+  if button == "right" and is_in_view_circle(x, y, self.staff.profile:isType("Handyman"))
      or button == "right" and hit_namebox then
     -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
     local staff_index = nil
     for i, staff in ipairs(ui.hospital.staff) do
-      if staff_index and staff.profile.humanoid_class == self.staff.profile.humanoid_class then
+      if staff_index and staff.profile:isType(self.staff.profile.humanoid_class) then
         ui:addWindow(UIStaff(ui, staff))
         if hit_namebox then
           local sx, sy = ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
@@ -283,7 +283,7 @@ function UIStaff:onMouseUp(button, x, y)
     -- Try again from beginning of list until staff_index
     for i = 1, staff_index - 1 do
       local staff = ui.hospital.staff[i]
-      if staff.profile.humanoid_class == self.staff.profile.humanoid_class then
+      if staff.profile:isType(self.staff.profile.humanoid_class) then
         ui:addWindow(UIStaff(ui, staff))
         if hit_namebox then
           local sx, sy = ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
@@ -298,7 +298,7 @@ function UIStaff:onMouseUp(button, x, y)
 end
 
 function UIStaff:onMouseMove(x, y, dx, dy)
-  self.do_scroll = self.do_scroll and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
+  self.do_scroll = self.do_scroll and is_in_view_circle(x, y, self.staff.profile:isType("Handyman"))
   return Window.onMouseMove(self, x, y, dx, dy)
 end
 
@@ -394,7 +394,7 @@ function UIStaff:openStaffManagement()
 end
 
 function UIStaff:hitTest(x, y)
-  return Window.hitTest(self, x, y) or is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
+  return Window.hitTest(self, x, y) or is_in_view_circle(x, y, self.staff.profile:isType("Handyman"))
 end
 
 function UIStaff:afterLoad(old, new)

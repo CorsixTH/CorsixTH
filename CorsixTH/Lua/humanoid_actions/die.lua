@@ -46,7 +46,7 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
   elseif phase == 2 then
     -- Female slack tongue head layer is missing from wings animation onwards
     -- So we change the head to its standard equivalent
-    if humanoid.humanoid_class == "Slack Female Patient" then
+    if humanoid:isType("Slack Female Patient") then
       humanoid:setLayer(0, humanoid.layers[0] - 8)
     end
 
@@ -280,7 +280,7 @@ local function action_die_start(action, humanoid)
   action.phase = 0
 
   local fall_anim_duration = TheApp.animation_manager:getAnimLength(fall)
-  if humanoid.humanoid_class == "Chewbacca Patient" then
+  if humanoid:isType("Chewbacca Patient") then
     --After 21 ticks the first frame of the buggy falling part of this animation is reached
     --so this animation is ended early, action_die_tick will then use the standard male fall animation:
     fall_anim_duration = 21

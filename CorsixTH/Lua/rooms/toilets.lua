@@ -77,7 +77,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
       loo.reserved_for = humanoid
       local use_time = math.random(0, 2)
       -- One class only have a 1 tick long usage animation
-      if humanoid.humanoid_class == "Transparent Female Patient" then
+      if humanoid:isType("Transparent Female Patient") then
         use_time = math.random(15, 40)
       end
 
@@ -89,8 +89,8 @@ function ToiletRoom:onHumanoidEnter(humanoid)
           humanoid.going_to_toilet = "no"
 
           -- There are only animations for standard patients to use the sinks.
-          if humanoid.humanoid_class == "Standard Female Patient" or
-              humanoid.humanoid_class == "Standard Male Patient" then
+          if humanoid:isType("Standard Female Patient") or
+              humanoid:isType("Standard Male Patient") then
             local --[[persistable:toilets_find_sink]] function after_use()
               local sink, sx, sy = self.world:findFreeObjectNearToUse(humanoid, "sink")
               if sink then

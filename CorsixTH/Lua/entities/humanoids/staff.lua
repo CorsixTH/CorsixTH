@@ -43,7 +43,7 @@ function Staff:tickDay()
   if not Humanoid.tickDay(self) then
     return false
   end
-  if self.humanoid_class == "Receptionist" then return true end
+  if self:isType("Receptionist") then return true end
   -- Pay too low  --> unhappy
   -- Pay too high -->   happy
   local fair_wage = self.profile:getFairWage()
@@ -550,7 +550,7 @@ function Staff:isIdle()
     end
 
     -- For handyman - just check the on_call flag
-    if self.humanoid_class == "Handyman" then return not self.on_call end
+    if self:isType("Handyman") then return not self.on_call end
 
     -- For other staff...
     -- Staff member might be leaving
@@ -637,7 +637,7 @@ end
 function Staff:updateDynamicInfo()
   local dynamic_text = self.dynamic_text or ""
   local fatigue_text = _S.dynamic_info.staff.tiredness
-  if self.humanoid_class == "Receptionist" then
+  if self:isType("Receptionist") then
     fatigue_text = nil
   else
     self:setDynamicInfo('progress', self:getAttribute("fatigue"))
@@ -670,7 +670,7 @@ function Staff:afterLoad(old, new)
 
   if old < 29 and new >= 29 then
     -- Handymen could have "staffroom_needed" flag set due to a bug, unset it.
-    if self.humanoid_class == "Handyman" then
+    if self:isType("Handyman") then
       self.staffroom_needed = nil
     end
   end
@@ -688,7 +688,7 @@ function Staff:afterLoad(old, new)
   end
 
   if old < 121 and new >= 121 then
-    if self.humanoid_class == "Handyman" and self.user_of and self.user_of.object_type.class == "Litter" then
+    if self:isType("Handyman") and self.user_of and self.user_of.object_type.class == "Litter" then
       local litter = self.user_of
       local hospital = self.world:getHospital(litter.tile_x, litter.tile_y)
       local taskIndex = hospital:getIndexOfTask(litter.tile_x, litter.tile_y, "cleaning", litter)
@@ -697,11 +697,11 @@ function Staff:afterLoad(old, new)
   end
 
   if old < 133 and new >= 133 then
-    if self.humanoid_class == "Handyman" then
+    if self:isType("Handyman") then
       setmetatable(self, Handyman._metatable)
-    elseif self.humanoid_class == "Receptionist" then
+    elseif self:isType("Receptionist") then
       setmetatable(self, Receptionist._metatable)
-    elseif self.humanoid_class == "Nurse" then
+    elseif self:isType("Nurse") then
       setmetatable(self, Nurse._metatable)
     else
       setmetatable(self, Doctor._metatable)
