@@ -1616,13 +1616,10 @@ end
 
 --! Handyman has died. Remove all tasks assigned to this staff
 --!param handyman The handyman deceased
-function Hospital:handymanDeath(handyman)
-  for i = 1, #self.handymanTasks do
-    for j = 1, #self.handymanTasks[i].subTable do
-      if self.handymanTasks[i].subTable[j].assignedHandyman == handyman then
-        self.handymanTasks[i].subTable[j].assignedHandyman = nil
-      end
-    end
+function Hospital:onHandymanDeath(handyman)
+  local tasks = self:findAssignedTasksToHandyman(handyman)
+  for _, task in ipairs(tasks) do
+    task.assignedHandyman = nil
   end
 end
 
@@ -2173,6 +2170,21 @@ function Hospital:findHandymanTaskSubtable(taskType)
   end
   table.insert(self.handymanTasks, {["taskType"] = taskType, ["subTable"] = {}})
   return self:findHandymanTaskSubtable(taskType)
+end
+
+--! Search all tasks assigned to a handyman, if any.
+--!param handyman The handyman instance to check for assigned tasks.
+--!return table of all assigned tasks.
+function Hospital:findAssignedTasksToHandyman(handyman)
+  local assignedTasks = {}
+  for i = 1, #self.handymanTasks do
+    for j = 1, #self.handymanTasks[i].subTable do
+      if self.handymanTasks[i].subTable[j].assignedHandyman == handyman then
+        table.insert(assignedTasks, self.handymanTasks[i].subTable[j])
+      end
+    end
+  end
+  return assignedTasks
 end
 
 function Hospital:getTaskObject(taskIndex, taskType)

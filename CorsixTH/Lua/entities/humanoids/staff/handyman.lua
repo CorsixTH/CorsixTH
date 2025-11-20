@@ -38,7 +38,7 @@ end
 function Handyman:die()
   self:unassignTask()
   Staff.die(self)
-  self.hospital:handymanDeath(self)
+  self.hospital:onHandymanDeath(self)
 end
 
 function Handyman:dump()
