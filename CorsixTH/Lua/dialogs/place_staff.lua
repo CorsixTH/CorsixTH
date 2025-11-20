@@ -140,6 +140,11 @@ function UIPlaceStaff:onMouseUp(button, x, y)
       self:onMouseMove(x, y)
       if self:_isValidStaffPlacement() then
         if self.staff then
+          -- dropping a handyman should reset the assigned task
+          -- as `AnswerCall` action queued later (in `room:onHumanoidEnter`) will reassign him another one.
+          if class.is(self.staff, Handyman) then
+            self.staff:unassignTask()
+          end
           self.staff:setTile(self.tile_x, self.tile_y)
         else
           local entity = self.world:newEntity(self.profile.humanoid_class, 2, 2)
