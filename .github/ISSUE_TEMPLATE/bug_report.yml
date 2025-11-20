@@ -3,7 +3,7 @@
 name: Bug report
 description: Create a report to help us improve
 title: "[Bug] Give a summary of the problem"
-labels: ["bug"]
+type: Bug
 ### Questions
 # What happened?
 body:
