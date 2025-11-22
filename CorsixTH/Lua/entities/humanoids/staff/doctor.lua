@@ -317,7 +317,7 @@ end
 -- Useful for case when on picking up Doctor from Operating Theatre
 -- we need to switching him back to regular clothes and type.
 function Doctor:resetSurgeonState()
-  if self.humanoid_class == "Surgeon" then
+  if self:isType("Surgeon") then
     self:setType("Doctor")
   end
 end

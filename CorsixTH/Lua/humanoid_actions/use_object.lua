@@ -132,7 +132,7 @@ local function setHumanoidTileSpeed(action, humanoid)
   else
     tx, ty = object:getRenderAttachTile()
   end
-  if humanoid.humanoid_class == "Handyman" and
+  if class.is(humanoid, Handyman) and
       obj_orient.added_handyman_animate_offset_while_in_use then
     tx = tx + obj_orient.added_handyman_animate_offset_while_in_use[1]
     ty = ty + obj_orient.added_handyman_animate_offset_while_in_use[2]
@@ -195,7 +195,7 @@ local function action_use_phase(action, humanoid, phase)
   local anim = anim_table[humanoid.humanoid_class]
   if not anim then
     -- Handymen have their own number of animations.
-    if humanoid.humanoid_class == "Handyman" then
+    if class.is(humanoid, Handyman) then
       --action_use_phase(action, humanoid, action_use_next_phase(action, phase))
       action_use_object_tick(humanoid)
       return
@@ -387,7 +387,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
     -- Check if the room is about to be destroyed
     local room_destroyed = false
     if object:isMachine() then
-      if humanoid.humanoid_class ~= "Handyman"  then
+      if not class.is(humanoid, Handyman) then
         room_destroyed = object:machineUsed(humanoid:getRoom())
       end
     elseif object:getDynamicInfo() and not object.master then
@@ -456,7 +456,7 @@ local function action_use_object_start(action, humanoid)
   end
 
   -- The handyman has his own place to be in
-  if spec.finish_use_position and humanoid.humanoid_class ~= "Handyman" then
+  if spec.finish_use_position and not class.is(humanoid, Handyman) then
     action.old_tile_x = object.tile_x + spec.finish_use_position[1]
     action.old_tile_y = object.tile_y + spec.finish_use_position[2]
   end

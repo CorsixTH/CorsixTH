@@ -58,8 +58,8 @@ function ScannerRoom:commandEnteringPatient(patient)
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
   local scanner, pat_x, pat_y = self.world:findObjectNear(patient, "scanner")
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
-  local do_change = (patient.humanoid_class == "Standard Male Patient") or
-    (patient.humanoid_class == "Standard Female Patient")
+  local do_change = (patient:isType("Standard Male Patient")) or
+    (patient:isType("Standard Female Patient"))
 
   local --[[persistable:scanner_shared_loop_callback]] function loop_callback()
     if staff:getCurrentAction().scanner_ready and patient:getCurrentAction().scanner_ready then
