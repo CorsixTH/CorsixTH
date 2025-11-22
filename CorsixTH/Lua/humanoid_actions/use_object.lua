@@ -132,7 +132,7 @@ local function setHumanoidTileSpeed(action, humanoid)
   else
     tx, ty = object:getRenderAttachTile()
   end
-  if humanoid:isType("Handyman") and
+  if class.is(humanoid, Handyman) and
       obj_orient.added_handyman_animate_offset_while_in_use then
     tx = tx + obj_orient.added_handyman_animate_offset_while_in_use[1]
     ty = ty + obj_orient.added_handyman_animate_offset_while_in_use[2]
@@ -195,7 +195,7 @@ local function action_use_phase(action, humanoid, phase)
   local anim = anim_table[humanoid.humanoid_class]
   if not anim then
     -- Handymen have their own number of animations.
-    if humanoid:isType("Handyman") then
+    if class.is(humanoid, Handyman) then
       --action_use_phase(action, humanoid, action_use_next_phase(action, phase))
       action_use_object_tick(humanoid)
       return

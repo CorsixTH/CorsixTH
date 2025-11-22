@@ -500,7 +500,7 @@ function PlayerHospital:onEndDay()
   if self.announce_vip > 0 then
     -- check if the VIP is in the building yet
     for _, e in ipairs(self.world.entities) do
-      if e:isType("VIP") and e.announced == false and
+      if class.is(e, Vip) and e.announced == false and
           self:isInHospital(e.tile_x, e.tile_y) then
         -- play VIP arrival sound and show tooltips
         local ui = self.world.ui

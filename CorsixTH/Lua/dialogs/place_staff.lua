@@ -106,7 +106,7 @@ function UIPlaceStaff:_isValidStaffPlacement()
   local staffable = (self.allow_in_rooms or flag_cache.roomId == 0)
   -- Or is it a receptionist placed on an unstaffed reception desk?
   local reception = false
-  if self.profile:isType("Receptionist") then
+  if class.is(self.profile, Receptionist) then
     local desk = world:getObject(x, y, "reception_desk") or
         world:findObjectNear(self, "reception_desk", 0)
     reception = desk and not desk.receptionist
