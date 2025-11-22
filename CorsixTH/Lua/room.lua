@@ -334,7 +334,7 @@ function Room:onHumanoidEnter(humanoid)
     end
     return
   end
-  if class.is(humanoid, "Handyman") then
+  if class.is(humanoid, Handyman) then
     -- Handymen can always enter a room (to repair stuff, water plants, etc.)
     self.humanoids[humanoid] = true
     -- Check for machines which need repair or plants which need watering if

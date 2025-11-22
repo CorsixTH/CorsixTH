@@ -131,7 +131,7 @@ function WardRoom:updateHealingAmount()
     if not humanoid:isLeaving() then
       if class.is(humanoid, Patient) then
         patient_count = patient_count + 1
-      elseif humanoid:isType("Nurse") and not humanoid.fired then
+      elseif class.is(humanoid, Nurse) and not humanoid.fired then
         nurse_factor = nurse_factor + 0.5 + humanoid:getServiceQuality()
       end
     end
