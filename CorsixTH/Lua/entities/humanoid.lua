@@ -847,7 +847,7 @@ end
 
 function Humanoid:handleRemovedObject(object)
   local replacement_action
-  if self.humanoid_class and self:isType("Receptionist") then
+  if class.is(self, Receptionist) then
     replacement_action = MeanderAction()
   elseif object.object_type.id == "bench" or object.object_type.id == "drinks_machine" then
     replacement_action = IdleAction():setMustHappen(true)
@@ -885,7 +885,7 @@ function Humanoid:changeAttribute(attribute, amount)
   -- Handle some happiness special cases
   if attribute == "happiness" and self.humanoid_class then
     local max_salary = self.world.map.level_config.payroll.MaxSalary
-    if self:isType("Receptionist") then
+    if class.is(self, Receptionist) then
       -- A receptionist is never unhappy
       self.attributes[attribute] = 1
       return true

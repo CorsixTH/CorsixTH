@@ -140,7 +140,7 @@ end)
 
 local function action_seek_room_no_diagnosis_room_found(action, humanoid)
    --If it's the VIP then there's been an explosion. Skip the exploded room
-  if humanoid:isType("VIP") then
+  if class.is(humanoid, Vip) then
     humanoid.waiting = 1
     return
   end
@@ -248,7 +248,7 @@ local function action_seek_room_start(action, humanoid)
     staff_change_callback = --[[persistable:action_seek_room_staff_change_callback]] function(staff)
       -- we might have hired or fired a staff member
       -- technically we don't care about Receptionist or Handyman
-      if staff:isType("Receptionist") or staff:isType("Handyman") then
+      if class.is(staff, Receptionist) or class.is(staff, Handyman) then
         return
       end
       -- update the message either way
