@@ -576,7 +576,7 @@ function Room:onHumanoidLeave(humanoid)
       -- A patient leaving allows doctors/nurses inside to go to staffroom, if needed
       -- In a rare case a handyman that just decided he wants to go to the staffroom
       -- could be in the room at the same time as a patient leaves.
-      if class.is(room_humanoid, Staff) and room_humanoid.humanoid_class ~= "Handyman" then
+      if class.is(room_humanoid, Staff) and not class.is(room_humanoid, Handyman) then
         if room_humanoid.staffroom_needed then
           room_humanoid.staffroom_needed = nil
           room_humanoid:goToStaffRoom()

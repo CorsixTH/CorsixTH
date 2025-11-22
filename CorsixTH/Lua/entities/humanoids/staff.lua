@@ -203,7 +203,7 @@ function Staff:isTiring()
     if room.room_info.id == "staff_room" and not self.on_call then
       tiring = false
     end
-  elseif self.humanoid_class ~= "Handyman" then
+  elseif not class.is(self, Handyman) then
     tiring = false
   end
 
@@ -355,7 +355,7 @@ function Staff:updateSpeed()
     level = 1
   elseif self.hospital and self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then
     level = 3 -- Cheat makes everyone speedy
-  elseif self.humanoid_class ~= "Receptionist" then
+  elseif not class.is(self, Receptionist) then
     if self:isCrackUpTired() then
       level = level - 2
     elseif self:isVeryTired() then
@@ -415,7 +415,7 @@ function Staff:checkIfNeedRest()
       return
     end
 
-    if self.humanoid_class ~= "Handyman" and room and room:getPatient() then
+    if not class.is(self, Handyman) and room and room:getPatient() then
       -- If occupied by patient, staff will go to the staffroom after the patient left.
       self.staffroom_needed = true
     else
@@ -680,7 +680,7 @@ function Staff:afterLoad(old, new)
     self.profile.world = self.world
   end
   if old < 68 and new >= 68 then
-    if self.humanoid_class ~= "Receptionist" and
+    if not class.is(self, Receptionist) and
         self:getAttribute("fatigue") >= self.hospital.policies["goto_staffroom"] then
       self:goToStaffRoom()
       self.going_to_staffroom = true

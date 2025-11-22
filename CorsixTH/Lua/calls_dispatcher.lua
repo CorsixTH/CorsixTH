@@ -188,7 +188,7 @@ end
   @return true if suitable for vaccination false otherwise (boolean) ]]
 function CallsDispatcher.verifyStaffForVaccination(patient, staff)
   -- If staff is not a nurse, or nurse is busy, or patient is busy, cannot vaccinate.
-  if staff.humanoid_class ~= "Nurse" or not staff:isIdle() or
+  if not class.is(staff, Nurse) or not staff:isIdle() or
       staff:getRoom() or patient:getRoom() then
     return false
   end
@@ -300,7 +300,7 @@ function CallsDispatcher:findSuitableStaff(call)
   local min_staff = nil
   for _, e in ipairs(self.world.entities) do
     if class.is(e, Staff) then
-      if e.humanoid_class ~= "Handyman" then
+      if not class.is(e, Handyman) then
         local score = call.verification(e) and call.priority(e) or nil
         if score ~= nil and score < min_score then
           min_score = score
