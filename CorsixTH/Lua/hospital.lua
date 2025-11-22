@@ -930,7 +930,7 @@ function Hospital:onEndDay()
   -- Count receptionists.
   self.receptionist_count = 0
   for _, staff in ipairs(self.staff) do
-    if staff:isType("Receptionist") then
+    if class.is(staff, Receptionist) then
       self.receptionist_count = self.receptionist_count + 1
     end
   end

@@ -200,7 +200,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
   local obj, ox, oy
   local profile = humanoid.profile
 
-  if profile:isType("Doctor") then
+  if class.is(humanoid, Doctor) then
     if profile.is_consultant then
       -- Consultant entered/placed in room.
       obj, ox, oy = self.world:findObjectNear(humanoid, "projector")
@@ -248,7 +248,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
 end
 
 function TrainingRoom:onHumanoidLeave(humanoid)
-  if humanoid:isType("Doctor") then
+  if class.is(humanoid, Doctor) then
     -- unreserve whatever it was they we using
     local fx, fy = self:getEntranceXY(true)
     local objects = self.world:findAllObjectsNear(fx,fy)
