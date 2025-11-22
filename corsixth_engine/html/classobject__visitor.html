@@ -91,39 +91,39 @@ Inheritance diagram for object_visitor:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:adb3696ca73eb04f1bda57533e7b2d916" id="r_adb3696ca73eb04f1bda57533e7b2d916"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#adb3696ca73eb04f1bda57533e7b2d916">object_visitor</a> (<a class="el" href="classpathfinder.html">pathfinder</a> *pf)</td></tr>
+<tr class="memitem:adb3696ca73eb04f1bda57533e7b2d916" id="r_adb3696ca73eb04f1bda57533e7b2d916"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#adb3696ca73eb04f1bda57533e7b2d916">object_visitor</a> (<a class="el" href="classpathfinder.html">pathfinder</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pf</a>)</td></tr>
 <tr class="separator:adb3696ca73eb04f1bda57533e7b2d916"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f82d1054ea30c033853409cc71a0b5c" id="r_a2f82d1054ea30c033853409cc71a0b5c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a2f82d1054ea30c033853409cc71a0b5c">guess_distance</a> (<a class="el" href="structpath__node.html">path_node</a> *pNode) override</td></tr>
+<tr class="memitem:a2f82d1054ea30c033853409cc71a0b5c" id="r_a2f82d1054ea30c033853409cc71a0b5c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a2f82d1054ea30c033853409cc71a0b5c">guess_distance</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>) <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">override</a></td></tr>
 <tr class="memdesc:a2f82d1054ea30c033853409cc71a0b5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Guess distance to the destination for <em>pNode</em>.  <br /></td></tr>
 <tr class="separator:a2f82d1054ea30c033853409cc71a0b5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d5fabfa3ee1f713147b0163108bc524" id="r_a7d5fabfa3ee1f713147b0163108bc524"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a7d5fabfa3ee1f713147b0163108bc524">try_node</a> (<a class="el" href="structpath__node.html">path_node</a> *pNode, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> flags, <a class="el" href="structpath__node.html">path_node</a> *pNeighbour, <a class="el" href="th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82">travel_direction</a> direction) override</td></tr>
+<tr class="memitem:a7d5fabfa3ee1f713147b0163108bc524" id="r_a7d5fabfa3ee1f713147b0163108bc524"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a7d5fabfa3ee1f713147b0163108bc524">try_node</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> flags, <a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNeighbour</a>, <a class="el" href="th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82">travel_direction</a> direction) <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">override</a></td></tr>
 <tr class="memdesc:a7d5fabfa3ee1f713147b0163108bc524"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try the <em>pNeighbour</em> node.  <br /></td></tr>
 <tr class="separator:a7d5fabfa3ee1f713147b0163108bc524"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59f6bd5d68a5cda948498f285134bdb5" id="r_a59f6bd5d68a5cda948498f285134bdb5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a59f6bd5d68a5cda948498f285134bdb5">visit_objects</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStartY, <a class="el" href="th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82ab">object_type</a> eTHOB, int iMaxDistance, lua_State *<a class="el" href="classobject__visitor.html#ac60d8cf09b1d28d3312404681e3c8a95">L</a>, int iVisitFunction, bool anyObjectType)</td></tr>
+<tr class="memitem:a59f6bd5d68a5cda948498f285134bdb5" id="r_a59f6bd5d68a5cda948498f285134bdb5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a59f6bd5d68a5cda948498f285134bdb5">visit_objects</a> (<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">const</a> <a class="el" href="classlevel__map.html">level_map</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pMap</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iStartX</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iStartY</a>, <a class="el" href="th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82ab">object_type</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">eTHOB</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iMaxDistance</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">lua_State</a> *<a class="el" href="classobject__visitor.html#ac60d8cf09b1d28d3312404681e3c8a95">L</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iVisitFunction</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">anyObjectType</a>)</td></tr>
 <tr class="separator:a59f6bd5d68a5cda948498f285134bdb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classabstract__pathfinder"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classabstract__pathfinder')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classabstract__pathfinder.html">abstract_pathfinder</a></td></tr>
-<tr class="memitem:a1fc8e0082b14b07039a2435d29b9cf91 inherit pub_methods_classabstract__pathfinder" id="r_a1fc8e0082b14b07039a2435d29b9cf91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a1fc8e0082b14b07039a2435d29b9cf91">abstract_pathfinder</a> (<a class="el" href="classpathfinder.html">pathfinder</a> *pf)</td></tr>
+<tr class="memitem:a1fc8e0082b14b07039a2435d29b9cf91 inherit pub_methods_classabstract__pathfinder" id="r_a1fc8e0082b14b07039a2435d29b9cf91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a1fc8e0082b14b07039a2435d29b9cf91">abstract_pathfinder</a> (<a class="el" href="classpathfinder.html">pathfinder</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pf</a>)</td></tr>
 <tr class="separator:a1fc8e0082b14b07039a2435d29b9cf91 inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a455de665ce5cc599d829a152fd7f5e27 inherit pub_methods_classabstract__pathfinder" id="r_a455de665ce5cc599d829a152fd7f5e27"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a455de665ce5cc599d829a152fd7f5e27">~abstract_pathfinder</a> ()=default</td></tr>
+<tr class="memitem:a455de665ce5cc599d829a152fd7f5e27 inherit pub_methods_classabstract__pathfinder" id="r_a455de665ce5cc599d829a152fd7f5e27"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">virtual</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a455de665ce5cc599d829a152fd7f5e27">~abstract_pathfinder</a> ()=<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">default</a></td></tr>
 <tr class="separator:a455de665ce5cc599d829a152fd7f5e27 inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5486c7697943a6390d06d0db3c8643e8 inherit pub_methods_classabstract__pathfinder" id="r_a5486c7697943a6390d06d0db3c8643e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structpath__node.html">path_node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a5486c7697943a6390d06d0db3c8643e8">init</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStarty)</td></tr>
+<tr class="memitem:a5486c7697943a6390d06d0db3c8643e8 inherit pub_methods_classabstract__pathfinder" id="r_a5486c7697943a6390d06d0db3c8643e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structpath__node.html">path_node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a5486c7697943a6390d06d0db3c8643e8">init</a> (<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">const</a> <a class="el" href="classlevel__map.html">level_map</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pMap</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iStartX</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iStarty</a>)</td></tr>
 <tr class="memdesc:a5486c7697943a6390d06d0db3c8643e8 inherit pub_methods_classabstract__pathfinder"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the path finder.  <br /></td></tr>
 <tr class="separator:a5486c7697943a6390d06d0db3c8643e8 inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61b7bf41d705d9461d4d772fe341acef inherit pub_methods_classabstract__pathfinder" id="r_a61b7bf41d705d9461d4d772fe341acef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a61b7bf41d705d9461d4d772fe341acef">search_neighbours</a> (<a class="el" href="structpath__node.html">path_node</a> *pNode, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> flags, int iWidth)</td></tr>
+<tr class="memitem:a61b7bf41d705d9461d4d772fe341acef inherit pub_methods_classabstract__pathfinder" id="r_a61b7bf41d705d9461d4d772fe341acef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a61b7bf41d705d9461d4d772fe341acef">search_neighbours</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> flags, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iWidth</a>)</td></tr>
 <tr class="memdesc:a61b7bf41d705d9461d4d772fe341acef inherit pub_methods_classabstract__pathfinder"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expand the <em>pNode</em> to its neighbours.  <br /></td></tr>
 <tr class="separator:a61b7bf41d705d9461d4d772fe341acef inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13f96752966a2ed07f146cc9675b0041 inherit pub_methods_classabstract__pathfinder" id="r_a13f96752966a2ed07f146cc9675b0041"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a13f96752966a2ed07f146cc9675b0041">record_neighbour_if_passable</a> (<a class="el" href="structpath__node.html">path_node</a> *pNode, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> neighbour_flags, bool passable, <a class="el" href="structpath__node.html">path_node</a> *pNeighbour)</td></tr>
+<tr class="memitem:a13f96752966a2ed07f146cc9675b0041 inherit pub_methods_classabstract__pathfinder" id="r_a13f96752966a2ed07f146cc9675b0041"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a13f96752966a2ed07f146cc9675b0041">record_neighbour_if_passable</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">neighbour_flags</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a> passable, <a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNeighbour</a>)</td></tr>
 <tr class="separator:a13f96752966a2ed07f146cc9675b0041 inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ac60d8cf09b1d28d3312404681e3c8a95" id="r_ac60d8cf09b1d28d3312404681e3c8a95"><td class="memItemLeft" align="right" valign="top">lua_State *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#ac60d8cf09b1d28d3312404681e3c8a95">L</a></td></tr>
+<tr class="memitem:ac60d8cf09b1d28d3312404681e3c8a95" id="r_ac60d8cf09b1d28d3312404681e3c8a95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">lua_State</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#ac60d8cf09b1d28d3312404681e3c8a95">L</a></td></tr>
 <tr class="separator:ac60d8cf09b1d28d3312404681e3c8a95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9338ef156278fec60aca97a99e2816e4" id="r_a9338ef156278fec60aca97a99e2816e4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a9338ef156278fec60aca97a99e2816e4">visit_function_index</a></td></tr>
+<tr class="memitem:a9338ef156278fec60aca97a99e2816e4" id="r_a9338ef156278fec60aca97a99e2816e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a9338ef156278fec60aca97a99e2816e4">visit_function_index</a></td></tr>
 <tr class="separator:a9338ef156278fec60aca97a99e2816e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48f119277253cb99fa7e4b73998aa679" id="r_a48f119277253cb99fa7e4b73998aa679"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a48f119277253cb99fa7e4b73998aa679">max_distance</a></td></tr>
+<tr class="memitem:a48f119277253cb99fa7e4b73998aa679" id="r_a48f119277253cb99fa7e4b73998aa679"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a48f119277253cb99fa7e4b73998aa679">max_distance</a></td></tr>
 <tr class="separator:a48f119277253cb99fa7e4b73998aa679"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a315f2228f1c4fc0cbdec5b65e755b4" id="r_a6a315f2228f1c4fc0cbdec5b65e755b4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a6a315f2228f1c4fc0cbdec5b65e755b4">target_any_object_type</a></td></tr>
+<tr class="memitem:a6a315f2228f1c4fc0cbdec5b65e755b4" id="r_a6a315f2228f1c4fc0cbdec5b65e755b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a6a315f2228f1c4fc0cbdec5b65e755b4">target_any_object_type</a></td></tr>
 <tr class="separator:a6a315f2228f1c4fc0cbdec5b65e755b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a572900f1cdac6a51dda48dcb7009c825" id="r_a572900f1cdac6a51dda48dcb7009c825"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82ab">object_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classobject__visitor.html#a572900f1cdac6a51dda48dcb7009c825">target</a></td></tr>
 <tr class="separator:a572900f1cdac6a51dda48dcb7009c825"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -176,7 +176,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int object_visitor::guess_distance </td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> object_visitor::guess_distance </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structpath__node.html">path_node</a> *&#160;</td>
           <td class="paramname"><em>pNode</em></td><td>)</td>
@@ -212,7 +212,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool object_visitor::try_node </td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a> object_visitor::try_node </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structpath__node.html">path_node</a> *&#160;</td>
           <td class="paramname"><em>pNode</em>, </td>
@@ -271,21 +271,21 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool object_visitor::visit_objects </td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a> object_visitor::visit_objects </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classlevel__map.html">level_map</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">const</a> <a class="el" href="classlevel__map.html">level_map</a> *&#160;</td>
           <td class="paramname"><em>pMap</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td>
           <td class="paramname"><em>iStartX</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td>
           <td class="paramname"><em>iStartY</em>, </td>
         </tr>
         <tr>
@@ -297,25 +297,25 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td>
           <td class="paramname"><em>iMaxDistance</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">lua_State *&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">lua_State</a> *&#160;</td>
           <td class="paramname"><em>L</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td>
           <td class="paramname"><em>iVisitFunction</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a>&#160;</td>
           <td class="paramname"><em>anyObjectType</em>&#160;</td>
         </tr>
         <tr>
@@ -336,7 +336,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">lua_State* object_visitor::L</td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">lua_State</a>* object_visitor::L</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -350,7 +350,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int object_visitor::max_distance</td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> object_visitor::max_distance</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -378,7 +378,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool object_visitor::target_any_object_type</td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a> object_visitor::target_any_object_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -392,7 +392,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int object_visitor::visit_function_index</td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> object_visitor::visit_function_index</td>
         </tr>
       </table>
 </div><div class="memdoc">

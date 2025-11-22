@@ -38,5 +38,6 @@ var searchData=
   ['luat_5fclassinfo_3c_20sound_5fplayer_20_3e_35',['luaT_classinfo&lt; sound_player &gt;',['../structluaT__classinfo_3_01sound__player_01_4.html',1,'']]],
   ['luat_5fclassinfo_3c_20sprite_5frender_5flist_20_3e_36',['luaT_classinfo&lt; sprite_render_list &gt;',['../structluaT__classinfo_3_01sprite__render__list_01_4.html',1,'']]],
   ['luat_5fclassinfo_3c_20sprite_5fsheet_20_3e_37',['luaT_classinfo&lt; sprite_sheet &gt;',['../structluaT__classinfo_3_01sprite__sheet_01_4.html',1,'']]],
-  ['luat_5fclassinfo_3c_20string_5fproxy_20_3e_38',['luaT_classinfo&lt; string_proxy &gt;',['../structluaT__classinfo_3_01string__proxy_01_4.html',1,'']]]
+  ['luat_5fclassinfo_3c_20string_5fproxy_20_3e_38',['luaT_classinfo&lt; string_proxy &gt;',['../structluaT__classinfo_3_01string__proxy_01_4.html',1,'']]],
+  ['luat_5fclassinfo_3c_20th_5flua_5fmidi_5fplayer_20_3e_39',['luaT_classinfo&lt; th_lua_midi_player &gt;',['../structluaT__classinfo_3_01th__lua__midi__player_01_4.html',1,'']]]
 ];

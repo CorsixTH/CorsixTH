@@ -91,36 +91,36 @@ Inheritance diagram for basic_pathfinder:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abb7b577d7f9832b5612bc8f621c0a4a2" id="r_abb7b577d7f9832b5612bc8f621c0a4a2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#abb7b577d7f9832b5612bc8f621c0a4a2">basic_pathfinder</a> (<a class="el" href="classpathfinder.html">pathfinder</a> *pf)</td></tr>
+<tr class="memitem:abb7b577d7f9832b5612bc8f621c0a4a2" id="r_abb7b577d7f9832b5612bc8f621c0a4a2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#abb7b577d7f9832b5612bc8f621c0a4a2">basic_pathfinder</a> (<a class="el" href="classpathfinder.html">pathfinder</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pf</a>)</td></tr>
 <tr class="separator:abb7b577d7f9832b5612bc8f621c0a4a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2bd427ccbd1cc76d6d2dec8140a5f92" id="r_aa2bd427ccbd1cc76d6d2dec8140a5f92"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#aa2bd427ccbd1cc76d6d2dec8140a5f92">guess_distance</a> (<a class="el" href="structpath__node.html">path_node</a> *pNode) override</td></tr>
+<tr class="memitem:aa2bd427ccbd1cc76d6d2dec8140a5f92" id="r_aa2bd427ccbd1cc76d6d2dec8140a5f92"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#aa2bd427ccbd1cc76d6d2dec8140a5f92">guess_distance</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>) <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">override</a></td></tr>
 <tr class="memdesc:aa2bd427ccbd1cc76d6d2dec8140a5f92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Guess distance to the destination for <em>pNode</em>.  <br /></td></tr>
 <tr class="separator:aa2bd427ccbd1cc76d6d2dec8140a5f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa52087d074876bf9498537397ddc4d89" id="r_aa52087d074876bf9498537397ddc4d89"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#aa52087d074876bf9498537397ddc4d89">try_node</a> (<a class="el" href="structpath__node.html">path_node</a> *pNode, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> flags, <a class="el" href="structpath__node.html">path_node</a> *pNeighbour, <a class="el" href="th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82">travel_direction</a> direction) override</td></tr>
+<tr class="memitem:aa52087d074876bf9498537397ddc4d89" id="r_aa52087d074876bf9498537397ddc4d89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#aa52087d074876bf9498537397ddc4d89">try_node</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> flags, <a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNeighbour</a>, <a class="el" href="th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82">travel_direction</a> direction) <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">override</a></td></tr>
 <tr class="memdesc:aa52087d074876bf9498537397ddc4d89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try the <em>pNeighbour</em> node.  <br /></td></tr>
 <tr class="separator:aa52087d074876bf9498537397ddc4d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af269ce62fdf30fb679102df8252d4e07" id="r_af269ce62fdf30fb679102df8252d4e07"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#af269ce62fdf30fb679102df8252d4e07">find_path</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStartY, int iEndX, int iEndY)</td></tr>
+<tr class="memitem:af269ce62fdf30fb679102df8252d4e07" id="r_af269ce62fdf30fb679102df8252d4e07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#af269ce62fdf30fb679102df8252d4e07">find_path</a> (<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">const</a> <a class="el" href="classlevel__map.html">level_map</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pMap</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iStartX</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iStartY</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iEndX</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iEndY</a>)</td></tr>
 <tr class="separator:af269ce62fdf30fb679102df8252d4e07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classabstract__pathfinder"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classabstract__pathfinder')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classabstract__pathfinder.html">abstract_pathfinder</a></td></tr>
-<tr class="memitem:a1fc8e0082b14b07039a2435d29b9cf91 inherit pub_methods_classabstract__pathfinder" id="r_a1fc8e0082b14b07039a2435d29b9cf91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a1fc8e0082b14b07039a2435d29b9cf91">abstract_pathfinder</a> (<a class="el" href="classpathfinder.html">pathfinder</a> *pf)</td></tr>
+<tr class="memitem:a1fc8e0082b14b07039a2435d29b9cf91 inherit pub_methods_classabstract__pathfinder" id="r_a1fc8e0082b14b07039a2435d29b9cf91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a1fc8e0082b14b07039a2435d29b9cf91">abstract_pathfinder</a> (<a class="el" href="classpathfinder.html">pathfinder</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pf</a>)</td></tr>
 <tr class="separator:a1fc8e0082b14b07039a2435d29b9cf91 inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a455de665ce5cc599d829a152fd7f5e27 inherit pub_methods_classabstract__pathfinder" id="r_a455de665ce5cc599d829a152fd7f5e27"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a455de665ce5cc599d829a152fd7f5e27">~abstract_pathfinder</a> ()=default</td></tr>
+<tr class="memitem:a455de665ce5cc599d829a152fd7f5e27 inherit pub_methods_classabstract__pathfinder" id="r_a455de665ce5cc599d829a152fd7f5e27"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">virtual</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a455de665ce5cc599d829a152fd7f5e27">~abstract_pathfinder</a> ()=<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">default</a></td></tr>
 <tr class="separator:a455de665ce5cc599d829a152fd7f5e27 inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5486c7697943a6390d06d0db3c8643e8 inherit pub_methods_classabstract__pathfinder" id="r_a5486c7697943a6390d06d0db3c8643e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structpath__node.html">path_node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a5486c7697943a6390d06d0db3c8643e8">init</a> (const <a class="el" href="classlevel__map.html">level_map</a> *pMap, int iStartX, int iStarty)</td></tr>
+<tr class="memitem:a5486c7697943a6390d06d0db3c8643e8 inherit pub_methods_classabstract__pathfinder" id="r_a5486c7697943a6390d06d0db3c8643e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structpath__node.html">path_node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a5486c7697943a6390d06d0db3c8643e8">init</a> (<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">const</a> <a class="el" href="classlevel__map.html">level_map</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pMap</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iStartX</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iStarty</a>)</td></tr>
 <tr class="memdesc:a5486c7697943a6390d06d0db3c8643e8 inherit pub_methods_classabstract__pathfinder"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the path finder.  <br /></td></tr>
 <tr class="separator:a5486c7697943a6390d06d0db3c8643e8 inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61b7bf41d705d9461d4d772fe341acef inherit pub_methods_classabstract__pathfinder" id="r_a61b7bf41d705d9461d4d772fe341acef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a61b7bf41d705d9461d4d772fe341acef">search_neighbours</a> (<a class="el" href="structpath__node.html">path_node</a> *pNode, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> flags, int iWidth)</td></tr>
+<tr class="memitem:a61b7bf41d705d9461d4d772fe341acef inherit pub_methods_classabstract__pathfinder" id="r_a61b7bf41d705d9461d4d772fe341acef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a61b7bf41d705d9461d4d772fe341acef">search_neighbours</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> flags, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iWidth</a>)</td></tr>
 <tr class="memdesc:a61b7bf41d705d9461d4d772fe341acef inherit pub_methods_classabstract__pathfinder"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expand the <em>pNode</em> to its neighbours.  <br /></td></tr>
 <tr class="separator:a61b7bf41d705d9461d4d772fe341acef inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13f96752966a2ed07f146cc9675b0041 inherit pub_methods_classabstract__pathfinder" id="r_a13f96752966a2ed07f146cc9675b0041"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a13f96752966a2ed07f146cc9675b0041">record_neighbour_if_passable</a> (<a class="el" href="structpath__node.html">path_node</a> *pNode, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> neighbour_flags, bool passable, <a class="el" href="structpath__node.html">path_node</a> *pNeighbour)</td></tr>
+<tr class="memitem:a13f96752966a2ed07f146cc9675b0041 inherit pub_methods_classabstract__pathfinder" id="r_a13f96752966a2ed07f146cc9675b0041"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a13f96752966a2ed07f146cc9675b0041">record_neighbour_if_passable</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">neighbour_flags</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a> passable, <a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNeighbour</a>)</td></tr>
 <tr class="separator:a13f96752966a2ed07f146cc9675b0041 inherit pub_methods_classabstract__pathfinder"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a0b86742bc65f6333fcbee345531e9914" id="r_a0b86742bc65f6333fcbee345531e9914"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#a0b86742bc65f6333fcbee345531e9914">destination_x</a></td></tr>
+<tr class="memitem:a0b86742bc65f6333fcbee345531e9914" id="r_a0b86742bc65f6333fcbee345531e9914"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#a0b86742bc65f6333fcbee345531e9914">destination_x</a></td></tr>
 <tr class="memdesc:a0b86742bc65f6333fcbee345531e9914"><td class="mdescLeft">&#160;</td><td class="mdescRight">X coordinate of the destination of the path.  <br /></td></tr>
 <tr class="separator:a0b86742bc65f6333fcbee345531e9914"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6afe2b661326722fda934ad10040a3a2" id="r_a6afe2b661326722fda934ad10040a3a2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#a6afe2b661326722fda934ad10040a3a2">destination_y</a></td></tr>
+<tr class="memitem:a6afe2b661326722fda934ad10040a3a2" id="r_a6afe2b661326722fda934ad10040a3a2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasic__pathfinder.html#a6afe2b661326722fda934ad10040a3a2">destination_y</a></td></tr>
 <tr class="memdesc:a6afe2b661326722fda934ad10040a3a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Y coordinate of the destination of the path.  <br /></td></tr>
 <tr class="separator:a6afe2b661326722fda934ad10040a3a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -169,33 +169,33 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool basic_pathfinder::find_path </td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a> basic_pathfinder::find_path </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classlevel__map.html">level_map</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">const</a> <a class="el" href="classlevel__map.html">level_map</a> *&#160;</td>
           <td class="paramname"><em>pMap</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td>
           <td class="paramname"><em>iStartX</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td>
           <td class="paramname"><em>iStartY</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td>
           <td class="paramname"><em>iEndX</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td>
           <td class="paramname"><em>iEndY</em>&#160;</td>
         </tr>
         <tr>
@@ -218,7 +218,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int basic_pathfinder::guess_distance </td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> basic_pathfinder::guess_distance </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structpath__node.html">path_node</a> *&#160;</td>
           <td class="paramname"><em>pNode</em></td><td>)</td>
@@ -254,7 +254,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool basic_pathfinder::try_node </td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a> basic_pathfinder::try_node </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structpath__node.html">path_node</a> *&#160;</td>
           <td class="paramname"><em>pNode</em>, </td>
@@ -314,7 +314,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int basic_pathfinder::destination_x</td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> basic_pathfinder::destination_x</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -330,7 +330,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int basic_pathfinder::destination_y</td>
+          <td class="memname"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> basic_pathfinder::destination_y</td>
         </tr>
       </table>
 </div><div class="memdoc">

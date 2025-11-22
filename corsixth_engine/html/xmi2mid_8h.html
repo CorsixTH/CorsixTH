@@ -75,20 +75,120 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">xmi2mid.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="config_8h_source.html">config.h</a>&quot;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 </div>
 <p><a href="xmi2mid_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmidi__token.html">midi_token</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a3ce2bb77118b5ee213650b45582c049f" id="r_a3ce2bb77118b5ee213650b45582c049f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a3ce2bb77118b5ee213650b45582c049f">midi_token_list</a> = <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::vector</a>&lt; <a class="el" href="structmidi__token.html">midi_token</a> &gt;</td></tr>
+<tr class="separator:a3ce2bb77118b5ee213650b45582c049f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa7b66b866f8af87e72fc03aa0105b0d7" id="r_aa7b66b866f8af87e72fc03aa0105b0d7"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#aa7b66b866f8af87e72fc03aa0105b0d7">transcode_xmi_to_midi</a> (const unsigned char *xmi_data, size_t xmi_length, size_t *midi_length)</td></tr>
+<tr class="memitem:a3f24ed1197d2d22d2ea8d6497f817abd" id="r_a3f24ed1197d2d22d2ea8d6497f817abd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a3f24ed1197d2d22d2ea8d6497f817abd">operator&lt;</a> (<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">const</a> <a class="el" href="structmidi__token.html">midi_token</a> &amp;<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">oLeft</a>, <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">const</a> <a class="el" href="structmidi__token.html">midi_token</a> &amp;<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">oRight</a>)</td></tr>
+<tr class="separator:a3f24ed1197d2d22d2ea8d6497f817abd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfc64fdf6d3ff9d3ddf2e2b355ccf159" id="r_acfc64fdf6d3ff9d3ddf2e2b355ccf159"><td class="memItemLeft" align="right" valign="top"><a class="el" href="xmi2mid_8h.html#a3ce2bb77118b5ee213650b45582c049f">midi_token_list</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#acfc64fdf6d3ff9d3ddf2e2b355ccf159">xmi_to_midi_token_list</a> (<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">const</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">unsigned</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">char</a> *<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">xmi_data</a>, size_t <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">xmi_length</a>, uint32_t &amp;<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">iTempo</a>)</td></tr>
+<tr class="separator:acfc64fdf6d3ff9d3ddf2e2b355ccf159"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7b66b866f8af87e72fc03aa0105b0d7" id="r_aa7b66b866f8af87e72fc03aa0105b0d7"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#aa7b66b866f8af87e72fc03aa0105b0d7">transcode_xmi_to_midi</a> (<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">const</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">unsigned</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">char</a> *<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">xmi_data</a>, size_t <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">xmi_length</a>, size_t *<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">midi_length</a>)</td></tr>
 <tr class="separator:aa7b66b866f8af87e72fc03aa0105b0d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a1d85c6195bd967fdd96790a0412d7160" id="r_a1d85c6195bd967fdd96790a0412d7160"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a1d85c6195bd967fdd96790a0412d7160">midi_event_note_off</a> = 0x80</td></tr>
+<tr class="separator:a1d85c6195bd967fdd96790a0412d7160"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3681911af5a831765724481513ca03d8" id="r_a3681911af5a831765724481513ca03d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a3681911af5a831765724481513ca03d8">midi_event_note_on</a> = 0x90</td></tr>
+<tr class="separator:a3681911af5a831765724481513ca03d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2dd3909e82d3c17a696a2ff2b5b3805" id="r_af2dd3909e82d3c17a696a2ff2b5b3805"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#af2dd3909e82d3c17a696a2ff2b5b3805">midi_event_poly_key_pressure</a> = 0xA0</td></tr>
+<tr class="separator:af2dd3909e82d3c17a696a2ff2b5b3805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a883dd46252077001f195947a85e96264" id="r_a883dd46252077001f195947a85e96264"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a883dd46252077001f195947a85e96264">midi_event_control_change</a> = 0xB0</td></tr>
+<tr class="separator:a883dd46252077001f195947a85e96264"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0537d6444da2f74e968afe46b66b5e27" id="r_a0537d6444da2f74e968afe46b66b5e27"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a0537d6444da2f74e968afe46b66b5e27">midi_event_program_change</a> = 0xC0</td></tr>
+<tr class="separator:a0537d6444da2f74e968afe46b66b5e27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6f89e9cb8d7493446f54556a23b5a8e" id="r_aa6f89e9cb8d7493446f54556a23b5a8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#aa6f89e9cb8d7493446f54556a23b5a8e">midi_event_channel_pressure</a> = 0xD0</td></tr>
+<tr class="separator:aa6f89e9cb8d7493446f54556a23b5a8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adac778982a1fe54c0066906a5e06c503" id="r_adac778982a1fe54c0066906a5e06c503"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#adac778982a1fe54c0066906a5e06c503">midi_event_pitch_bend</a> = 0xE0</td></tr>
+<tr class="separator:adac778982a1fe54c0066906a5e06c503"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3dccd5ce67524ac17a87937d10fde00" id="r_ab3dccd5ce67524ac17a87937d10fde00"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#ab3dccd5ce67524ac17a87937d10fde00">midi_event_sysex</a> = 0xF0</td></tr>
+<tr class="separator:ab3dccd5ce67524ac17a87937d10fde00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace963ec967b7205b3fbeaca21b82e413" id="r_ace963ec967b7205b3fbeaca21b82e413"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#ace963ec967b7205b3fbeaca21b82e413">midi_event_end_of_sysex</a> = 0xF7</td></tr>
+<tr class="separator:ace963ec967b7205b3fbeaca21b82e413"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab488803ef48dcc7c68bfd090336f343e" id="r_ab488803ef48dcc7c68bfd090336f343e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#ab488803ef48dcc7c68bfd090336f343e">midi_event_meta</a> = 0xFF</td></tr>
+<tr class="separator:ab488803ef48dcc7c68bfd090336f343e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaea3ac8e675a247f5d5de78f8a998a6e" id="r_aaea3ac8e675a247f5d5de78f8a998a6e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#aaea3ac8e675a247f5d5de78f8a998a6e">midi_meta_event_end_of_track</a> = 0x2F</td></tr>
+<tr class="separator:aaea3ac8e675a247f5d5de78f8a998a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab71f92ea8a4a90c85efd0af21478b717" id="r_ab71f92ea8a4a90c85efd0af21478b717"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#ab71f92ea8a4a90c85efd0af21478b717">midi_meta_event_set_tempo</a> = 0x51</td></tr>
+<tr class="separator:ab71f92ea8a4a90c85efd0af21478b717"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39841ec42f1f4c31fdf4fd9c8cce7910" id="r_a39841ec42f1f4c31fdf4fd9c8cce7910"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a39841ec42f1f4c31fdf4fd9c8cce7910">midi_control_code_volume</a> = 7</td></tr>
+<tr class="separator:a39841ec42f1f4c31fdf4fd9c8cce7910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a999b915d826bf826c5c791c34f52c300" id="r_a999b915d826bf826c5c791c34f52c300"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a999b915d826bf826c5c791c34f52c300">midi_channel_code_all_notes_off</a> = 123</td></tr>
+<tr class="separator:a999b915d826bf826c5c791c34f52c300"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2303911802665a747076110ef02c5fdd" id="r_a2303911802665a747076110ef02c5fdd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a2303911802665a747076110ef02c5fdd">midi_channel_code_all_sound_off</a> = 120</td></tr>
+<tr class="separator:a2303911802665a747076110ef02c5fdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71cb09a1ae6950628aa46d5209e04475" id="r_a71cb09a1ae6950628aa46d5209e04475"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a71cb09a1ae6950628aa46d5209e04475">midi_channel_code_reset_controllers</a> = 121</td></tr>
+<tr class="separator:a71cb09a1ae6950628aa46d5209e04475"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a881b5e7c1428717c25c0fe36221c38f4" id="r_a881b5e7c1428717c25c0fe36221c38f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a881b5e7c1428717c25c0fe36221c38f4">xmi_ticks_per_microsecond</a> = (3.0 * <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">time_multiplier</a>) / 25000.0</td></tr>
+<tr class="separator:a881b5e7c1428717c25c0fe36221c38f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d46d59bca3e24e21d966b1f2179a977" id="r_a3d46d59bca3e24e21d966b1f2179a977"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="xmi2mid_8h.html#a3d46d59bca3e24e21d966b1f2179a977">xmi_microseconds_per_tick</a> = 25000.0 / (3.0 * <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">time_multiplier</a>)</td></tr>
+<tr class="separator:a3d46d59bca3e24e21d966b1f2179a977"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="a3ce2bb77118b5ee213650b45582c049f" name="a3ce2bb77118b5ee213650b45582c049f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ce2bb77118b5ee213650b45582c049f">&#9670;&#160;</a></span>midi_token_list</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">using</a> <a class="el" href="xmi2mid_8h.html#a3ce2bb77118b5ee213650b45582c049f">midi_token_list</a> =  <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::vector</a>&lt;<a class="el" href="structmidi__token.html">midi_token</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a3f24ed1197d2d22d2ea8d6497f817abd" name="a3f24ed1197d2d22d2ea8d6497f817abd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f24ed1197d2d22d2ea8d6497f817abd">&#9670;&#160;</a></span>operator&lt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">bool</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">operator</a>&lt; </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">const</a> <a class="el" href="structmidi__token.html">midi_token</a> &amp;&#160;</td>
+          <td class="paramname"><em>oLeft</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">const</a> <a class="el" href="structmidi__token.html">midi_token</a> &amp;&#160;</td>
+          <td class="paramname"><em>oRight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa7b66b866f8af87e72fc03aa0105b0d7" name="aa7b66b866f8af87e72fc03aa0105b0d7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa7b66b866f8af87e72fc03aa0105b0d7">&#9670;&#160;</a></span>transcode_xmi_to_midi()</h2>
 
@@ -98,7 +198,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">uint8_t * transcode_xmi_to_midi </td>
           <td>(</td>
-          <td class="paramtype">const unsigned char *&#160;</td>
+          <td class="paramtype"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">const</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">unsigned</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">char</a> *&#160;</td>
           <td class="paramname"><em>xmi_data</em>, </td>
         </tr>
         <tr>
@@ -119,6 +219,437 @@ Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acfc64fdf6d3ff9d3ddf2e2b355ccf159" name="acfc64fdf6d3ff9d3ddf2e2b355ccf159"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfc64fdf6d3ff9d3ddf2e2b355ccf159">&#9670;&#160;</a></span>xmi_to_midi_token_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="xmi2mid_8h.html#a3ce2bb77118b5ee213650b45582c049f">midi_token_list</a> xmi_to_midi_token_list </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">const</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">unsigned</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">char</a> *&#160;</td>
+          <td class="paramname"><em>xmi_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>xmi_length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t &amp;&#160;</td>
+          <td class="paramname"><em>iTempo</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a999b915d826bf826c5c791c34f52c300" name="a999b915d826bf826c5c791c34f52c300"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a999b915d826bf826c5c791c34f52c300">&#9670;&#160;</a></span>midi_channel_code_all_notes_off</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_channel_code_all_notes_off = 123</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2303911802665a747076110ef02c5fdd" name="a2303911802665a747076110ef02c5fdd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2303911802665a747076110ef02c5fdd">&#9670;&#160;</a></span>midi_channel_code_all_sound_off</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_channel_code_all_sound_off = 120</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a71cb09a1ae6950628aa46d5209e04475" name="a71cb09a1ae6950628aa46d5209e04475"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71cb09a1ae6950628aa46d5209e04475">&#9670;&#160;</a></span>midi_channel_code_reset_controllers</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_channel_code_reset_controllers = 121</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a39841ec42f1f4c31fdf4fd9c8cce7910" name="a39841ec42f1f4c31fdf4fd9c8cce7910"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39841ec42f1f4c31fdf4fd9c8cce7910">&#9670;&#160;</a></span>midi_control_code_volume</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_control_code_volume = 7</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa6f89e9cb8d7493446f54556a23b5a8e" name="aa6f89e9cb8d7493446f54556a23b5a8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6f89e9cb8d7493446f54556a23b5a8e">&#9670;&#160;</a></span>midi_event_channel_pressure</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_event_channel_pressure = 0xD0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a883dd46252077001f195947a85e96264" name="a883dd46252077001f195947a85e96264"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a883dd46252077001f195947a85e96264">&#9670;&#160;</a></span>midi_event_control_change</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_event_control_change = 0xB0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ace963ec967b7205b3fbeaca21b82e413" name="ace963ec967b7205b3fbeaca21b82e413"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace963ec967b7205b3fbeaca21b82e413">&#9670;&#160;</a></span>midi_event_end_of_sysex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_event_end_of_sysex = 0xF7</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab488803ef48dcc7c68bfd090336f343e" name="ab488803ef48dcc7c68bfd090336f343e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab488803ef48dcc7c68bfd090336f343e">&#9670;&#160;</a></span>midi_event_meta</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_event_meta = 0xFF</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1d85c6195bd967fdd96790a0412d7160" name="a1d85c6195bd967fdd96790a0412d7160"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d85c6195bd967fdd96790a0412d7160">&#9670;&#160;</a></span>midi_event_note_off</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_event_note_off = 0x80</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3681911af5a831765724481513ca03d8" name="a3681911af5a831765724481513ca03d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3681911af5a831765724481513ca03d8">&#9670;&#160;</a></span>midi_event_note_on</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_event_note_on = 0x90</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adac778982a1fe54c0066906a5e06c503" name="adac778982a1fe54c0066906a5e06c503"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adac778982a1fe54c0066906a5e06c503">&#9670;&#160;</a></span>midi_event_pitch_bend</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_event_pitch_bend = 0xE0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af2dd3909e82d3c17a696a2ff2b5b3805" name="af2dd3909e82d3c17a696a2ff2b5b3805"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2dd3909e82d3c17a696a2ff2b5b3805">&#9670;&#160;</a></span>midi_event_poly_key_pressure</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_event_poly_key_pressure = 0xA0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0537d6444da2f74e968afe46b66b5e27" name="a0537d6444da2f74e968afe46b66b5e27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0537d6444da2f74e968afe46b66b5e27">&#9670;&#160;</a></span>midi_event_program_change</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_event_program_change = 0xC0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab3dccd5ce67524ac17a87937d10fde00" name="ab3dccd5ce67524ac17a87937d10fde00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3dccd5ce67524ac17a87937d10fde00">&#9670;&#160;</a></span>midi_event_sysex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_event_sysex = 0xF0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaea3ac8e675a247f5d5de78f8a998a6e" name="aaea3ac8e675a247f5d5de78f8a998a6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaea3ac8e675a247f5d5de78f8a998a6e">&#9670;&#160;</a></span>midi_meta_event_end_of_track</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_meta_event_end_of_track = 0x2F</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab71f92ea8a4a90c85efd0af21478b717" name="ab71f92ea8a4a90c85efd0af21478b717"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab71f92ea8a4a90c85efd0af21478b717">&#9670;&#160;</a></span>midi_meta_event_set_tempo</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> uint8_t midi_meta_event_set_tempo = 0x51</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3d46d59bca3e24e21d966b1f2179a977" name="a3d46d59bca3e24e21d966b1f2179a977"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d46d59bca3e24e21d966b1f2179a977">&#9670;&#160;</a></span>xmi_microseconds_per_tick</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">double</a> xmi_microseconds_per_tick = 25000.0 / (3.0 * <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">time_multiplier</a>)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a881b5e7c1428717c25c0fe36221c38f4" name="a881b5e7c1428717c25c0fe36221c38f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a881b5e7c1428717c25c0fe36221c38f4">&#9670;&#160;</a></span>xmi_ticks_per_microsecond</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">double</a> xmi_ticks_per_microsecond = (3.0 * <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">time_multiplier</a>) / 25000.0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

@@ -13,8 +13,8 @@ var searchData=
   ['map_5ftypical_5foverlay_10',['map_typical_overlay',['../classmap__typical__overlay.html',1,'']]],
   ['memory_5fbuffer_11',['memory_buffer',['../classmemory__buffer.html',1,'']]],
   ['memory_5freader_12',['memory_reader',['../classmemory__reader.html',1,'']]],
-  ['midi_5ftoken_13',['midi_token',['../structmidi__token.html',1,'']]],
-  ['midi_5ftoken_5flist_14',['midi_token_list',['../structmidi__token__list.html',1,'']]],
+  ['midi_5fplayer_13',['midi_player',['../classmidi__player.html',1,'']]],
+  ['midi_5ftoken_14',['midi_token',['../structmidi__token.html',1,'']]],
   ['movie_5fplayer_15',['movie_player',['../classmovie__player.html',1,'']]],
   ['music_16',['music',['../classmusic.html',1,'']]]
 ];
