@@ -845,7 +845,6 @@ tooltip.menu_list_window = {
 -- Options window
 options_window = {
   apply = "Appliquer",
-  audio = "Audio Global",
   back = "Précédent",
   cancel = "Annuler",
   caption = "Paramètres",
@@ -871,7 +870,6 @@ options_window = {
   right_mouse_scrolling = "Défilement Souris",
   right_mouse_scrolling_option_middle = "Bouton Milieu",
   right_mouse_scrolling_option_right = "Bouton Droit",
-  jukebox = "Jukebox"
 }
 
 tooltip.options_window = {
@@ -888,8 +886,6 @@ tooltip.options_window = {
   apply = "Appliquer la résolution choisie",
   language_dropdown_item = "Choisir %s comme langue",
   select_language = "Sélectionner la langue du jeu",
-  audio_button = "Activer ou désactiver le système audio dans le jeu",
-  audio_toggle = "Activer ou désactiver",
   folder_button = "Dossier des paramètres",
   customise_button = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
 
@@ -907,6 +903,17 @@ tooltip.options_window = {
   capture_mouse = "Cliquez pour activer la capture du curseur dans la fenêtre du jeu.",
   language_dropdown_no_font = "Sélectionnez une police d'écriture dans les paramètres pour activer ce langage",
   right_mouse_scrolling = "Activer le bouton qui est utilisé pour faire défiler la carte",
+}
+
+audio_window = {
+  audio = "Audio Global",
+  jukebox = "Jukebox",
+  back = "Précédent",
+}
+
+tooltip.audio_window = {
+  audio_button = "Activer ou désactiver le système audio dans le jeu",
+  audio_toggle = "Activer ou désactiver",
   jukebox = "Ouvrir le Jukebox pour changer la musique"
 }
 

@@ -182,13 +182,14 @@ tooltip = {
     select_language = "Velg språk",
     select_resolution = "Velg en ny opplösning",
     resolution = "Opplösningen spillet skal kjöres i.",
-    audio_button = "Slå av eller på all lyd",
     folder_button = "Mappeinnstillinger",
-    audio_toggle = "Slå av eller på",
     customise_button = "¨Flere innstillinger", --todo: mer utfyllende beskrivelse? var "More settings you can change to customise your game play experience"
     capture_mouse = "Slå av eller på låsing av musepeker i spillvinduet",
   },
-
+  audio_window = {
+    audio_button = "Slå av eller på all lyd",
+    audio_toggle = "Slå av eller på",
+  },
   folders_window = { --todo: skrive mer konsekvent på "se etter", "velg" osv.
     browse_font = "Se etter en annen font-fil ( nåværende beliggenhet: %1% )",
     screenshots_location = "Skjermdumper er normalt lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
@@ -838,11 +839,14 @@ options_window = {
   apply = "Bruk",
   resolution = "Opplösning",
   folder = "Mapper",
-  audio = "Global lyd",
   customise = "Tilpass",
   capture_mouse = "Lås musepeker",
 }
 
+audio_window = {
+  audio = "Global lyd",
+  back = "Tilbake",
+}
 
 folders_window = {
   screenshots_location = "Velg banen du vil bruke for skjermdumper",

@@ -341,7 +341,6 @@ options_window = {
   custom_resolution = "Anpassad...",
   width = "Bredd",
   height = "Höjd",
-  audio = "Globalt ljud",
   customise = "Anpassa",
   folder = "Mappar",
   language = "Spelspråk",
@@ -359,14 +358,22 @@ tooltip.options_window = {
   height = "Fyll i önskad skärmhöjd",
   apply = "Tillämpa den valda upplösningen",
   cancel = "Återvänd utan att ändra upplösning",
-  audio_button = "Stäng av eller sätt på allt ljud i spelet",
-  audio_toggle = "Slå av eller på",
   customise_button = "Fler inställningar som kan ändras för att anpassa din spelupplevelse",
   folder_button = "Mappinställningar",
   language = "Text i spelet kommer att visas på det här språket",
   select_language = "Väljs spelspråk",
   language_dropdown_item = "Ändra till %s som språk",
   back = "Stäng alternativmenyn",
+}
+
+audio_window = {
+  audio = "Globalt ljud",
+  back = "Tillbaka",
+}
+
+tooltip.audio_window = {
+  audio_button = "Stäng av eller sätt på allt ljud i spelet",
+  audio_toggle = "Slå av eller på",
 }
 
 customise_window = {

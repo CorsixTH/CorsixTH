@@ -129,6 +129,9 @@ local config_defaults = {
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
+  midi_api = nil,
+  midi_port = nil,
+  midi_sysex_master_volume = false,
   theme_hospital_install = [[X:\ThemeHospital\hospital]],
   debug = false,
   track_fps = false,
@@ -488,6 +491,26 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 --
 soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
 
+-------------------------------------------------------------------------------
+-- Midi API and Device settings.
+-- By default, CorsixTH uses FluidSynth or build defined MIDI synthesizer.
+-- You can change the API to target other available MIDI backends using these
+-- settings on supported platforms.
+-- Possible values for midi_api are:
+--   <nil>      - Uses SDL_Mixer's MIDI backend, typically FluidSynth
+--   Native     - Use any available platform MIDI API
+--   ALSA       - Use the ALSA MIDI API (Linux only)
+--   JACK       - Use the JACK MIDI API (Unix-like systems with JACK)
+--   CoreMIDI   - Use the CoreMIDI API (MacOS only)
+--   WindowsMM  - Use the Windows MultiMedia API (Windows only)
+--
+-- Possible values for midi_port depend on the selected midi_api, and can
+-- be left nil to use the system default port. A list of available ports
+-- can be obtained from the midi settings screen in game.
+--
+midi_api = nil -- [[Native]]
+midi_port = nil -- [[Midi Through:Midi Through Port-0 14:0]]
+
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
 -------------------------------------------------------------------------------
@@ -500,6 +523,16 @@ soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
 'audio_frequency = ' .. tostring(config_values.audio_frequency) .. '\n' ..
 'audio_channels = ' .. tostring(config_values.audio_channels) .. '\n' ..
 'audio_buffer_size = ' .. tostring(config_values.audio_buffer_size) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- Advanced MIDI settings.
+-- These settings can enable better MIDI playback on some systems but may also
+-- cause issues or be unsupported on others.
+--
+-- midi_sysex_master_volume: Use SysEx message instead of adjusted channel
+-- volume messages to set the music volume.
+--]=] .. '\n' ..
+'midi_sysex_master_volume = ' .. tostring(config_values.midi_sysex_master_volume) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Debug settings.

@@ -141,7 +141,6 @@ options_window = {
   caption = "Настройки",
   cancel = "Отмена",
   customise = "Настроить",
-  audio = "Звук",
   resolution = "Разрешение",
   language = "Язык в игре",
   zoom_speed = "Скорость приближения",
@@ -150,8 +149,13 @@ options_window = {
   hotkey = "Горячие клавиши",
   scrollspeed = "Скорость прокрутки",
   check_for_updates = "Проверка на обновления",
-  jukebox = "Муз. Автомат",
 }
+audio_window = {
+  audio = "Звук",
+  jukebox = "Муз. Автомат",
+  back = "Назад",
+}
+
 menu_list_window = {
   back = "Назад",
   save_date = "Изменено",
@@ -316,11 +320,13 @@ tooltip = {
     width = "Введите разрешение экрана по горизонтали",
     language = "Выбрать %s язык",
     back = "Закрыть окно настроек",
-    audio_button = "Включить/Выключить всё аудио в игре",
-    audio_toggle = "Включить/Выключить",
     folder_button = "Свойства папки",
     customise_button = "Больше настроек для улучшения игрового опыта",
     right_mouse_scrolling = "Переключение кнопки, которая используется для прокрутки карты",
+  },
+  audio_window = {
+    audio_button = "Включить/Выключить всё аудио в игре",
+    audio_toggle = "Включить/Выключить",
     jukebox = "Открыть музыкальный автомат, для настройки музыки"
   },
   save_game_window = {

@@ -104,6 +104,9 @@ set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
 ## Finding libraries
+if(NOT VCPKG_TARGET_TRIPLET)
+  find_package(PkgConfig QUIET)
+endif()
 
 # Find SDL
 if(VCPKG_TARGET_TRIPLET)
@@ -247,11 +250,29 @@ endif()
 
 # Find libpng
 find_package(PNG REQUIRED)
-target_link_libraries(CorsixTH_lib PUBLIC PNG::PNG)
+target_link_libraries(CorsixTH_lib PRIVATE PNG::PNG)
 
 # Find zlib
 find_package(ZLIB REQUIRED)
-target_link_libraries(CorsixTH_lib PUBLIC ZLIB::ZLIB)
+target_link_libraries(CorsixTH_lib PRIVATE ZLIB::ZLIB)
+
+if(WITH_MIDI_DEVICE)
+  find_package(RtMidi)
+  if(NOT RtMidi_FOUND)
+    if(PkgConfig_FOUND)
+      pkg_search_module(RTMIDI REQUIRED rtmidi)
+      add_library(RtMidi::rtmidi INTERFACE IMPORTED)
+      set_target_properties(RtMidi::rtmidi PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${RTMIDI_INCLUDE_DIRS}"
+        INTERFACE_LINK_LIBRARIES "${RTMIDI_LIBRARIES}")
+    else()
+      message(FATAL_ERROR "Error: RtMidi was not found. If not available, compile WITH_MIDI_DEVICE=OFF")
+    endif()
+  endif()
+  message("RtMidi Found")
+  target_link_libraries(CorsixTH_lib PRIVATE RtMidi::rtmidi)
+
+endif()
 
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)

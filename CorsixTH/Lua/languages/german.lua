@@ -467,7 +467,6 @@ options_window = {
   custom_resolution = "Benutzerdefiniert...",
   width = "Breite",
   height = "Höhe",
-  audio = "Audio", -- "Globale Audio-Einstellungen" would match eng, but it's too long
   customise = "Spezialeinstellungen",
   folder = "Pfade",
   language = "Spielsprache",
@@ -490,8 +489,6 @@ tooltip.options_window = {
   height = "Gewünschte Bildschirmhöhe eingeben",
   apply = "Die eingegebene Auflösung übernehmen",
   cancel = "Zurückkehren, ohne die Auflösung zu ändern",
-  audio_button = "Sämtliche Toneffekte des Spiels ein- bzw. ausschalten",
-  audio_toggle = "Ein- oder ausschalten",
   customise_button = "Weitere Einstellungen, die Sie ändern können, um Ihr Spielerlebnis anzupassen",
   folder_button = "Verzeichniseinstellungen",
   language = "Die Sprache, in der Texte im Spiel erscheinen",
@@ -508,6 +505,17 @@ tooltip.options_window = {
   apply_zoomspeed = "Eingegebene Zoom-Geschwindigkeit anwenden.",
   cancel_zoomspeed = "Ohne Änderung der Zoom-Geschwindigkeit zurückkehren.",
   hotkey = "Tastenkürzel ändern.",
+}
+
+audio_window = {
+  audio = "Audio", -- "Globale Audio-Einstellungen" would match eng, but it's too long
+  jukebox = "Jukebox",
+  back = "Zurück",
+}
+
+tooltip.audio_window = {
+  audio_button = "Sämtliche Toneffekte des Spiels ein- bzw. ausschalten",
+  audio_toggle = "Ein- oder ausschalten",
 }
 
 customise_window = {

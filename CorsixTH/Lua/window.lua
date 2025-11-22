@@ -351,6 +351,7 @@ end
 --!param visibility (bool) New visibility of the panel.
 function Panel:setVisible(visibility)
   self.visible = visibility
+  return self
 end
 
 --[[ Add a `Panel` to the window.
@@ -737,6 +738,7 @@ end
 --!param visibility (bool) New visibility of the button.
 function Button:setVisible(visibility)
   self.panel_for_sprite:setVisible(visibility)
+  return self
 end
 
 --! Convenience function to allow setLabel to be called on a button, not only its panel.
@@ -2021,7 +2023,9 @@ function Window:getTooltipAt(x, y)
     end
   end
   for _, btn in ipairs(self.buttons) do
-    if btn.visible ~= false and btn.tooltip and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+    if btn.panel_for_sprite.visible ~= false and
+        btn.tooltip and
+        btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
       return self:getTooltipForElement(btn.tooltip, x, y)
     end
   end

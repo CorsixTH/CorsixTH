@@ -370,6 +370,12 @@ struct luaT_classinfo<iso_filesystem> {
   static inline const char* name() { return "ISO Filesystem"; }
 };
 
+class th_lua_midi_player;
+template <>
+struct luaT_classinfo<th_lua_midi_player> {
+  static inline const char* name() { return "MidiPlayer"; }
+};
+
 template <class T>
 T* luaT_testuserdata(lua_State* L, int idx, int mt_idx, bool required = true) {
   // Turn mt_idx into an absolute index, as the stack size changes.

@@ -364,7 +364,6 @@ options_window = {
   width = "Largh",
   option_enabled = "Attiv.",
   height = "Alt",
-  audio = "Audio globale",
   scrollspeed = "Vel. scorrimento",
   shift_scrollspeed = "Vel. scorrimento veloce",
   zoom_speed = "Velocità zoom",
@@ -380,7 +379,6 @@ options_window = {
   hotkey = "Scorciatoie",
   option_enabled = "Abilitato",
   zoom_speed = "Velocità zoom",
-  jukebox = "Jukebox",
   right_mouse_scrolling_option_right = "Bottone Destro",
   right_mouse_scrolling_option_middle = "Bottone Centrale",
   right_mouse_scrolling = "Scorrimento con Mouse",
@@ -396,8 +394,6 @@ tooltip.options_window = {
   height = "Inserisci l'altezza dello schermo desiderata",
   apply = "Applica la risoluzione inserita",
   cancel = "Esci senza cambiare la risoluzione",
-  audio_button = "Attiva o disattiva tutti i suoni del gioco",
-  audio_toggle = "Attiva o Disattiva Audio",
   customise_button = "Altre impostazioni che puoi cambiare per personalizzare la tua esperienza di gioco",
   folder_button = "Opzioni cartelle",
   language = "La lingua in cui verrà mostrato il testo",
@@ -412,7 +408,6 @@ tooltip.options_window = {
   apply_shift_scrollspeed = "Applica la velocità di scorrimento dello spostamento selezionata.",
   right_mouse_scrolling = "Attiva/disattiva il pulsante del mouse utilizzato per scorrere la mappa",
   cancel_scrollspeed = "Esci senza cambiare la velocità di scorrimento.",
-  jukebox = "Apri il Jukebox per controllare la musica",
   zoom_speed = "Imposta la velocità di zoom della telecamera da 10 (minimo) a 1000 (massimo). Il valore predefinito è 80.",
   language_dropdown_no_font = "Seleziona un font nelle impostazioni delle cartelle per abilitare questa lingua",
   cancel_zoomspeed = "Esci senza cambiare la velocità di zoom",
@@ -420,6 +415,18 @@ tooltip.options_window = {
   check_for_updates = "Imposta se il gioco deve cercare aggiornamenti all'avvio.",
   apply_zoomspeed = "Applica la velocità di zoom selezionata.",
   apply_scrollspeed = "Applica la velocità di scorrimento selezionata.",
+}
+
+audio_window = {
+  audio = "Audio globale",
+  jukebox = "Jukebox",
+  back = "Indietro",
+}
+
+tooltip.audio_window = {
+  audio_button = "Attiva o disattiva tutti i suoni del gioco",
+  audio_toggle = "Attiva o Disattiva Audio",
+  jukebox = "Apri il Jukebox per controllare la musica",
 }
 
 customise_window = {
