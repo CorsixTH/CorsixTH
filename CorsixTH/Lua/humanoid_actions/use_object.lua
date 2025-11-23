@@ -387,7 +387,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
     -- Check if the room is about to be destroyed
     local room_destroyed = false
     if object:isMachine() then
-      if humanoid.humanoid_class ~= "Handyman"  then
+      if not class.is(humanoid, Handyman) then
         room_destroyed = object:machineUsed(humanoid:getRoom())
       end
     elseif object:getDynamicInfo() and not object.master then
@@ -456,7 +456,7 @@ local function action_use_object_start(action, humanoid)
   end
 
   -- The handyman has his own place to be in
-  if spec.finish_use_position and humanoid.humanoid_class ~= "Handyman" then
+  if spec.finish_use_position and not class.is(humanoid, Handyman) then
     action.old_tile_x = object.tile_x + spec.finish_use_position[1]
     action.old_tile_y = object.tile_y + spec.finish_use_position[2]
   end

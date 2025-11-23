@@ -1147,7 +1147,7 @@ function Patient:afterLoad(old, new)
 
     -- New humanoid animation: rise_hell_east:
     if self:isMalePatient() then
-      if self.humanoid_class ~= "Alternate Male Patient" then
+      if not self:isType("Alternate Male Patient") then
         self.die_anims.rise_hell_east = 384
       else
         self.die_anims.rise_hell_east = 3404

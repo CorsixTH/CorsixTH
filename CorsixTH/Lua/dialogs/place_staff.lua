@@ -40,7 +40,7 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
   self.profile = profile
   -- The receptionist has no door animations, and hence would not
   -- be able to leave a room if placed in one.
-  self.allow_in_rooms = profile.humanoid_class ~= "Receptionist"
+  self.allow_in_rooms = not profile:isType("Receptionist")
   self.anim = TH.animation()
   self.anim:setLayer(5, profile.layer5)
   local idle_anim = Humanoid.getIdleAnimation(profile.humanoid_class)
@@ -106,7 +106,7 @@ function UIPlaceStaff:_isValidStaffPlacement()
   local staffable = (self.allow_in_rooms or flag_cache.roomId == 0)
   -- Or is it a receptionist placed on an unstaffed reception desk?
   local reception = false
-  if class.is(self.profile, Receptionist) then
+  if self.profile:isType("Receptionist") then
     local desk = world:getObject(x, y, "reception_desk") or
         world:findObjectNear(self, "reception_desk", 0)
     reception = desk and not desk.receptionist

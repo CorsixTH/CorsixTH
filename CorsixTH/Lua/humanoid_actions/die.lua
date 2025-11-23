@@ -86,7 +86,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
   --1: The patient stays on the ground until phase 5:
   elseif phase == 1 then
     action.phase = 2
-    if humanoid.humanoid_class ~= "Standard Male Patient" then
+    if not humanoid:isType("Standard Male Patient") then
       humanoid:setType("Standard Male Patient")
     end
     humanoid:setAnimation(humanoid.on_ground_anim, mirror)
