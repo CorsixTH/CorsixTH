@@ -181,7 +181,7 @@ function TrainingRoom:doStaffUseCycle(humanoid)
 end
 
 function TrainingRoom:onHumanoidEnter(humanoid)
-  if humanoid.humanoid_class ~= "Doctor" then
+  if not class.is(humanoid, Doctor) then
     -- use default behavior for staff other than doctors
     return Room.onHumanoidEnter(self, humanoid)
   end
@@ -236,7 +236,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
         humanoid.last_room = nil -- Prevent Doctor returning to this room automatically
       end
     end
-  elseif humanoid.humanoid_class ~= "Handyman" then
+  elseif not class.is(humanoid, Handyman) then
     self.hospital:giveAdvice({_A.staff_place_advice.only_doctors_in_room
       :format(_S.rooms_long.training_room)})
     humanoid:setNextAction(self:createLeaveAction())

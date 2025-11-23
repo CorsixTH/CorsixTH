@@ -281,7 +281,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
   local is_entering_room = room and humanoid:getRoom() ~= room
 
   if class.is(humanoid, Staff) and is_entering_room and
-      humanoid.humanoid_class ~= "Handyman" then
+      not class.is(humanoid, Handyman) then
     -- A member of staff is entering, but is maybe no longer needed
     -- in this room?
     if not room.is_active or not room:staffFitsInRoom(humanoid) then
