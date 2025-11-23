@@ -36,7 +36,8 @@ local MoviePlayer = _G["MoviePlayer"]
 --!
 --! Theme Hospital movies were 320x240 but played in game at 640x480 so when
 --! scaling other assets to match the movies they should be scaled by half
---! the returned scaling factor.
+--! the returned scaling factor. Some movies were 320x200 and those should
+--! be aspect corrected to 4:3 during scaling.
 --!
 --!param me The MoviePlayer object
 local calculateSize = function(me)
@@ -45,6 +46,10 @@ local calculateSize = function(me)
   local screen_w, screen_h = me.app.config.width, me.app.config.height
   local native_w = me.moviePlayer:getNativeWidth()
   local native_h = me.moviePlayer:getNativeHeight()
+  if native_w == 320 and native_h == 200 then
+    -- This resolution was intended to be stretched for a 4:3 screen
+    native_h = 240
+  end
   if native_w ~= 0 and native_h ~= 0 then
     local ar = native_w / native_h
     if math.abs((screen_w / screen_h) - ar) < 0.001 then
