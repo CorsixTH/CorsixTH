@@ -55,6 +55,9 @@ RequestExecutionLevel admin
 
 ; -------------------- Definitions and macros that create the graphical interface -----------------
 
+; Set DPI awareness
+ManifestDPIAware true
+
 ; MUI Settings
 !define MUI_ABORTWARNING
 !define MUI_CUSTOMFUNCTION_UNGUIINIT un.onGUIInit2
