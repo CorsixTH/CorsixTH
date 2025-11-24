@@ -1899,6 +1899,7 @@ end
 function App:_checkOrFind(test_file, campaign_dir)
   -- Check if test_file is a full path (file in a subfolder)
   local folder_name, filename = test_file:match(".+[\\/](.+)[\\/](.+)")
+  local partial_folder, partial_file = test_file:match("(.+)[\\/](.+)")
   if folder_name and folder_name:len() > 0 then
     -- Full path to the file is known, check file is present
     local file_handler, _ = io.open(test_file)
@@ -1910,10 +1911,13 @@ function App:_checkOrFind(test_file, campaign_dir)
     test_file = filename
     -- Add path separator of current computer
     folder_name = folder_name .. pathsep
+  elseif partial_folder and partial_file then
+    -- A partial path is known
+    folder_name, test_file = partial_folder, partial_file
   else
     folder_name = ""
   end
-  -- Only filename is known, search for file
+  -- Filename, and possibly folder name, are known, search for file
   local level = self.map and self.map.level_number:match("(.+[\\/])") or ""
   local campaign_folder = (self.world and self.world.campaign_info and self.world.campaign_info.folder) or ""
   local search_paths = {
@@ -1938,14 +1942,13 @@ function App:restart(message)
     --[[persistable:app_confirm_restart]] function()
     self:worldExited()
     local campaign_info = self.world.campaign_info
-    local level = self.map.level_number
+    local level = self.map.level_filename or self.map.level_number
     local difficulty = self.map.difficulty
     local name, file, intro = self.map.level_name, self.map.map_file, self.map.level_intro
     if tonumber(level) then -- TH campaign
       self:loadLevel(level, difficulty, name, file, intro, nil, _S.errors.load_level_prefix, campaign_info)
       return
     end
-
     level = self:_checkOrFind(level)
     if not file:match("^LEVEL%.L%d") then -- Map file might be a TH map filename
       file = self:_checkOrFind(file)
