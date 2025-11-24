@@ -53,7 +53,14 @@ InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
 ; This is needed to be able to install into the program files directory
 RequestExecutionLevel admin
 
+; Set installer compression
+SetCompressor lzma
+SetCompressorDictSize 16
+
 ; -------------------- Definitions and macros that create the graphical interface -----------------
+
+; Set DPI awareness
+ManifestDPIAware true
 
 ; MUI Settings
 !define MUI_ABORTWARNING
