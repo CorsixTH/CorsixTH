@@ -51,7 +51,6 @@ function UIResearch:UIResearch(ui)
   -- lewri: This is a stopgap solution to work around sound states not being
   -- implemented. It should be replaced as soon as it is possible to do so.
   self.bg_sound = nil -- holds the constructed sound instance
-  self.playing = false -- denotes if background sound playback is called and running
 
   -- stubs for backwards compatibility
   local --[[persistable:research_policy_adjust]] function adjust() end
@@ -167,17 +166,12 @@ end
 --! Construct and play this window's background sound.
 function UIResearch:_playBgSound()
   -- Note: See UIResearch:UIResearch function for improving this.
-  self.bg_sound = self.ui:playSound("Research.wav",
-    --[[persistable:research_policy_window_reset_bg_sound]] function()
-      self.playing = false
-      self.bg_sound = nil
-  end)
-  self.playing = true
+  self.bg_sound = self.ui:playSound("Research.wav")
 end
 
 function UIResearch:onTick()
   -- Background sound will continuously play while the window is open.
-  if not self.playing then
+  if not TheApp.audio:isPlaying(self.bg_sound) then
     self:_playBgSound()
   end
 
@@ -269,14 +263,5 @@ function UIResearch:afterLoad(old, new)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
     self.label_font = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
     self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
-  end
-
-  -- Restart the background sound on load
-  -- Note: See UIResearch:UIResearch function for improving this.
-  if self.playing then
-    -- Reset the playing state to restart next window tick.
-    self.playing = false
-    -- In the rare case of double overlap, always try to destroy the current sound
-    if self.bg_sound then self.ui:stopSound(self.bg_sound) end
   end
 end

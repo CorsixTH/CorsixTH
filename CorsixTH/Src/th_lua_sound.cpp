@@ -233,13 +233,13 @@ int l_soundfx_play(lua_State* L) {
   size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
   if (iIndex == pArchive->get_number_of_sounds()) return 2;
 
-  int channel;
+  uint32_t handle;
   if (lua_isnil(L, 4)) {
-    channel = pEffects->play(iIndex, luaL_checknumber(L, 3));
+    handle = pEffects->play(iIndex, luaL_checknumber(L, 3));
   } else {
-    channel = pEffects->play_at(iIndex, luaL_checknumber(L, 3),
-                                static_cast<int>(luaL_checkinteger(L, 4)),
-                                static_cast<int>(luaL_checkinteger(L, 5)));
+    handle = pEffects->play_at(iIndex, luaL_checknumber(L, 3),
+                               static_cast<int>(luaL_checkinteger(L, 4)),
+                               static_cast<int>(luaL_checkinteger(L, 5)));
   }
   // SDL SOUND_OVER Callback Timer:
   // 6: unusedPlayedCallbackID
@@ -265,7 +265,7 @@ int l_soundfx_play(lua_State* L) {
     played_sound_callback_index++;
   }
 
-  lua_pushinteger(L, channel);
+  lua_pushinteger(L, handle);
   return 1;
 }
 
@@ -310,6 +310,14 @@ int l_soundfx_stop(lua_State* L) {
     map_sound_timers.erase(itr);
   }
   return 0;
+}
+
+int l_soundfx_is_playing(lua_State* L) {
+  sound_player* pEffects = luaT_testuserdata<sound_player>(L);
+  bool isPlaying =
+      pEffects->is_playing(static_cast<int>(luaL_checkinteger(L, 2)));
+  lua_pushboolean(L, isPlaying);
+  return 1;
 }
 
 int l_soundfx_set_camera(lua_State* L) {
@@ -360,6 +368,7 @@ void lua_register_sound(const lua_register_state* pState) {
     lcb.add_function(l_soundfx_play, "play");
     lcb.add_function(l_soundfx_toggle_pause, "togglePause");
     lcb.add_function(l_soundfx_stop, "stop");
+    lcb.add_function(l_soundfx_is_playing, "isPlaying");
     lcb.add_function(l_soundfx_set_sound_volume, "setSoundVolume");
     lcb.add_function(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");
     lcb.add_function(l_soundfx_set_camera, "setCamera");

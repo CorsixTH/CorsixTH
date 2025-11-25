@@ -340,14 +340,14 @@ function Audio:playSound(name, where, is_announcement, played_callback, played_c
       x = x + dx - ui.screen_offset_x
       y = y + dy - ui.screen_offset_y
     end
-    local channel, warning = sound_fx:play(name, volume, x, y, played_callback_id, played_callback_delay)
+    local handle, warning = sound_fx:play(name, volume, x, y, played_callback_id, played_callback_delay)
 
     if warning then
       -- Indicates something happened
       self.app.world:gameLog("Audio:playSound - Warning: " .. warning)
     end
 
-    return { channel = channel, played_callback_id = played_callback_id }
+    return { handle = handle, played_callback_id = played_callback_id }
   end
 end
 
@@ -359,8 +359,8 @@ function Audio:togglePauseSound(sound)
     return
   end
 
-  if sound.channel and sound.channel >= 0 then
-    sound_fx:togglePause(sound.channel, sound.played_callback_id)
+  if sound and sound.handle then
+    sound_fx:togglePause(sound.handle, sound.played_callback_id)
   end
 end
 
@@ -374,9 +374,23 @@ function Audio:stopSound(sound)
     return
   end
 
-  if sound.channel and sound.channel >= 0 then
-    sound_fx:stop(sound.channel, sound.played_callback_id)
+  if sound and sound.handle then
+    sound_fx:stop(sound.handle, sound.played_callback_id)
   end
+end
+
+--! Determine if a given sound is still playing
+--!param sound (table) The `sound` table returned by `Audio:playSound`.
+function Audio:isPlaying(sound)
+  local sound_fx = self.sound_fx
+  if not sound_fx then
+    return
+  end
+
+  if sound and sound.handle then
+    return sound_fx:isPlaying(sound.handle)
+  end
+  return false
 end
 
 function Audio:cacheSoundFilenamesAssociatedWithName(name)
