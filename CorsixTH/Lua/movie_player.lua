@@ -246,7 +246,7 @@ end
 
 --! Plays the movie for winning the game
 function MoviePlayer:playWinMovie()
-  self:playMovie(self.win_game_movie, true)
+  self:playMovie(self.win_game_movie, false)
 end
 
 --! Play the movie for winning the level
