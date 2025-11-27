@@ -261,22 +261,24 @@ void sound_player::populate_from(sound_archive* pArchive) {
   }
 }
 
-uint32_t sound_player::play(size_t iIndex, double dVolume) {
+uint32_t sound_player::play(size_t iIndex, double dVolume, int loops) {
   if (iIndex >= sound_count || !sounds[iIndex]) {
     return null_handle;
   }
 
-  return play_raw(iIndex, static_cast<int>(positionless_volume * dVolume));
+  return play_raw(iIndex, static_cast<int>(positionless_volume * dVolume),
+                  loops);
 }
 
-uint32_t sound_player::play_at(size_t iIndex, int iX, int iY) {
+uint32_t sound_player::play_at(size_t iIndex, int iX, int iY, int loops) {
   if (sound_effects_enabled) {
-    return play_at(iIndex, sound_effect_volume, iX, iY);
+    return play_at(iIndex, sound_effect_volume, iX, iY, loops);
   }
   return null_handle;
 }
 
-uint32_t sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {
+uint32_t sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY,
+                               int loops) {
   if (iIndex >= sound_count || !sounds[iIndex]) {
     return null_handle;
   }
@@ -290,7 +292,7 @@ uint32_t sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {
   double fVolume =
       master_volume * (1.0 - fDistance * 0.8) * (MIX_MAX_VOLUME * dVolume);
 
-  return play_raw(iIndex, static_cast<int>(std::lround(fVolume)));
+  return play_raw(iIndex, static_cast<int>(std::lround(fVolume)), loops);
 }
 
 sound_player::toggle_pause_result sound_player::toggle_pause(uint32_t handle) {
@@ -351,7 +353,7 @@ void sound_player::release_channel(int iChannel) {
   channels[iChannel] = null_handle;
 }
 
-uint32_t sound_player::play_raw(size_t iIndex, int iVolume) {
+uint32_t sound_player::play_raw(size_t iIndex, int iVolume, int loops) {
   std::scoped_lock lock(channel_mutex);
   int iChannel = reserve_channel();
   if (iChannel < 0) {
@@ -359,7 +361,7 @@ uint32_t sound_player::play_raw(size_t iIndex, int iVolume) {
   }
 
   Mix_Volume(iChannel, iVolume);
-  Mix_PlayChannelTimed(iChannel, sounds[iIndex], 0, -1);
+  Mix_PlayChannel(iChannel, sounds[iIndex], loops);
 
   return channels[iChannel];
 }

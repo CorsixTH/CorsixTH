@@ -314,10 +314,11 @@ local wilcard_cache = permanent "audio_wildcard_cache" {}
 --  finished playing. Can be nil.
 --!param played_callback_delay (integer) An optional delay in milliseconds
 --  before the played_callback is called.
+--!param loops (integer) number of times to play the audio
 --!return (table) A `sound` table for passing into functions that act on the
 --  playing sound. The fields are an implementation detail that should not be
 --  used outside of the Audio class.
-function Audio:playSound(name, where, is_announcement, played_callback, played_callback_delay)
+function Audio:playSound(name, where, is_announcement, played_callback, played_callback_delay, loops)
   local sound_fx = self.sound_fx
   if sound_fx then
     if name:find("*") then
@@ -340,7 +341,7 @@ function Audio:playSound(name, where, is_announcement, played_callback, played_c
       x = x + dx - ui.screen_offset_x
       y = y + dy - ui.screen_offset_y
     end
-    local handle, warning = sound_fx:play(name, volume, x, y, played_callback_id, played_callback_delay)
+    local handle, warning = sound_fx:play(name, volume, x, y, played_callback_id, played_callback_delay, loops)
 
     if warning then
       -- Indicates something happened

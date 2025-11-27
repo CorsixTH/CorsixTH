@@ -82,8 +82,12 @@ class sound_player {
   //! \param iIndex Index of the sound effect to play.
   //! \param dVolume Volume to play the sound effect at, in the range 0.0 to
   //!        1.0.
+  //! \param loops The number of times to play the sound, -1 for 'practically'
+  //!              infinite.
   //! \return The sound handle
-  uint32_t play(size_t iIndex, double dVolume);
+  //! \see <a
+  //! href="https://wiki.libsdl.org/SDL2_mixer/Mix_PlayChannel">Mix_PlayChannel</a>
+  uint32_t play(size_t iIndex, double dVolume, int loops);
 
   //! Plays the sound effect in the sound_archive with the given index with
   //! volume attenuation based on the distance from the given position to the
@@ -92,8 +96,10 @@ class sound_player {
   //! \param iIndex Index of the sound effect to play.
   //! \param iX X coordinate of the sound effect.
   //! \param iY Y coordinate of the sound effect.
+  //! \param loops The number of times to play the sound, -1 for 'practically'
+  //!              infinite.
   //! \return The sound handle or 0 on error
-  uint32_t play_at(size_t iIndex, int iX, int iY);
+  uint32_t play_at(size_t iIndex, int iX, int iY, int loops);
 
   //! Plays the sound effect in the sound_archive with the given index with
   //! volume attenuation based on the distance from the given position to the
@@ -104,8 +110,10 @@ class sound_player {
   //!        the range 0.0 to 1.0.
   //! \param iX X coordinate of the sound effect.
   //! \param iY Y coordinate of the sound effect.
+  //! \param loops The number of times to play the sound, -1 for 'practically'
+  //!              infinite.
   //! \return The sound handle or 0 on error
-  uint32_t play_at(size_t iIndex, double dVolume, int iX, int iY);
+  uint32_t play_at(size_t iIndex, double dVolume, int iX, int iY, int loops);
 
   //! Pause playback on a given channel if playing, or resume if paused.
   //!
@@ -146,7 +154,7 @@ class sound_player {
   static sound_player* singleton;
   static void on_channel_finished(int iChannel);
 
-  uint32_t play_raw(size_t iIndex, int iVolume);
+  uint32_t play_raw(size_t iIndex, int iVolume, int loops);
 
   //! Returns the channel that the handle is playing on or -1 if it is not
   //! playing.

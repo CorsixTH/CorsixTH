@@ -226,9 +226,9 @@ function UI:setupGlobalKeyHandlers()
 end
 
 -- Used for everything except music and announcements
-function UI:playSound(name, played_callback, played_callback_delay)
+function UI:playSound(name, played_callback, played_callback_delay, loops)
   if self.app.config.play_sounds then
-    return self.app.audio:playSound(name, nil, false, played_callback, played_callback_delay)
+    return self.app.audio:playSound(name, nil, false, played_callback, played_callback_delay, loops)
   end
 end
 
