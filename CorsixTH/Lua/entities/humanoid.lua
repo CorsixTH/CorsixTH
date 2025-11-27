@@ -742,9 +742,16 @@ function Humanoid:_handleEmptyActionQueue()
   end
 
   -- Log what just happened.
+  local message = "Warning: Empty action queue. For humanoid at coord x:"
+    .. self.tile_x .. " y:" .. self.tile_y .. ". Last action: " .. self.previous_action.name
+  if not TheApp.config.debug then
+    -- Notify the user about this in console even if debug mode is disabled.
+    -- Because gameLog() will be silent in console if debug mode is disabled.
+    print(message)
+    print("Automatic recovery has been attempted for empty queue.")
+  end
   self.world:gameLog("")
-  self.world:gameLog("Warning! Empty action queue! For humanoid at coord x:"
-    .. self.tile_x .. " y:" .. self.tile_y .. ". Last action: " .. self.previous_action.name)
+  self.world:gameLog(message)
   self.world:gameLog(self:tostring())
 
   -- First find out if this humanoid is in a room.
