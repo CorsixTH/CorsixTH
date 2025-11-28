@@ -106,7 +106,7 @@ movie_picture_buffer::~movie_picture_buffer() {
 
 void movie_picture_buffer::abort() {
   aborting = true;
-  std::lock_guard<std::mutex> lock(mutex);
+  std::scoped_lock lock(mutex);
   cond.notify_all();
 }
 
@@ -132,7 +132,7 @@ void movie_picture_buffer::allocate(SDL_Renderer* pRenderer, int iWidth,
   // read_index is only used in this thread.
   read_index = write_index;
 
-  std::lock_guard<std::mutex> lock(mutex);
+  std::scoped_lock lock(mutex);
   picture_count = 0;
   allocated = true;
   cond.notify_one();
@@ -140,12 +140,12 @@ void movie_picture_buffer::allocate(SDL_Renderer* pRenderer, int iWidth,
 
 void movie_picture_buffer::deallocate() {
   {
-    std::lock_guard<std::mutex> lock(mutex);
+    std::scoped_lock lock(mutex);
     allocated = false;
   }
 
   for (movie_picture& picture : picture_queue) {
-    std::lock_guard<std::mutex> pictureLock(picture.mutex);
+    std::scoped_lock pictureLock(picture.mutex);
     picture.deallocate();
   }
 
@@ -165,7 +165,7 @@ bool movie_picture_buffer::advance() {
     read_index = 0;
   }
 
-  std::lock_guard<std::mutex> lock(mutex);
+  std::scoped_lock lock(mutex);
   picture_count--;
   cond.notify_one();
 
@@ -177,7 +177,7 @@ void movie_picture_buffer::draw(SDL_Renderer* pRenderer,
   if (!empty()) {
     auto& cur_pic = picture_queue[read_index];
 
-    std::lock_guard<std::mutex> pictureLock(cur_pic.mutex);
+    std::scoped_lock pictureLock(cur_pic.mutex);
     if (cur_pic.buffer) {
       SDL_UpdateTexture(texture, nullptr, cur_pic.buffer, cur_pic.width * 3);
       int iError = SDL_RenderCopy(pRenderer, texture, nullptr, &dstrect);
@@ -190,7 +190,7 @@ void movie_picture_buffer::draw(SDL_Renderer* pRenderer,
 
 double movie_picture_buffer::get_next_pts() {
   double nextPts;
-  std::lock_guard<std::mutex> lock(mutex);
+  std::scoped_lock lock(mutex);
   if (!allocated || picture_count < 2) {
     nextPts = 0;
   } else {
@@ -200,12 +200,12 @@ double movie_picture_buffer::get_next_pts() {
 }
 
 bool movie_picture_buffer::empty() {
-  std::lock_guard<std::mutex> lock(mutex);
+  std::scoped_lock lock(mutex);
   return (!allocated || picture_count == 0);
 }
 
 bool movie_picture_buffer::full() {
-  std::lock_guard<std::mutex> lock(mutex);
+  std::scoped_lock lock(mutex);
   return unsafe_full();
 }
 
@@ -268,14 +268,14 @@ av_packet_queue::av_packet_queue() = default;
 std::size_t av_packet_queue::get_count() const { return data.size(); }
 
 void av_packet_queue::push(av_packet_unique_ptr pPacket) {
-  std::lock_guard<std::mutex> lock(mutex);
+  std::scoped_lock lock(mutex);
   data.push(std::move(pPacket));
 
   cond.notify_one();
 }
 
 av_packet_unique_ptr av_packet_queue::pull(bool block) {
-  std::unique_lock<std::mutex> lock(mutex);
+  std::unique_lock lock(mutex);
 
   if (data.empty() && block) {
     cond.wait(lock);
@@ -291,7 +291,7 @@ av_packet_unique_ptr av_packet_queue::pull(bool block) {
 }
 
 void av_packet_queue::release() {
-  std::lock_guard<std::mutex> lock(mutex);
+  std::scoped_lock lock(mutex);
   cond.notify_all();
 }
 
@@ -411,7 +411,7 @@ void movie_player::unload() {
     audio_channel = -1;
   }
 
-  std::lock_guard<std::mutex> audioLock(decoding_audio_mutex);
+  std::scoped_lock audioLock(decoding_audio_mutex);
 
   audio_codec_context.reset();
 
@@ -715,7 +715,7 @@ int movie_player::populate_frame(AVCodecContext& ctx, av_packet_queue& pq,
 }
 
 void movie_player::copy_audio_to_stream(uint8_t* pbStream, int iStreamSize) {
-  std::lock_guard<std::mutex> audioLock(decoding_audio_mutex);
+  std::scoped_lock audioLock(decoding_audio_mutex);
 
   while (iStreamSize > 0 && !aborting) {
     int iAudioSize = decode_audio_frame(pbStream, iStreamSize);

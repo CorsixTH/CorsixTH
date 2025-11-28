@@ -1,6 +1,6 @@
 ---
 # -bugprone-chained-comparison is needed for catch2 < v3.5.3
-Checks:          'bugprone-*,-bugprone-chained-comparison,-bugprone-easily-swappable-parameters,-bugprone-implicit-widening-of-multiplication-result,-bugprone-multi-level-implicit-pointer-conversion,-bugprone-narrowing-conversions,-bugprone-suspicious-enum-usage,-bugprone-switch-missing-default-case,clang-diagnostic-*,clang-analyzer-*,misc-throw-by-value-catch-by-reference,modernize-use-nullptr,modernize-use-equals-default,modernize-use-equals-delete,modernize-use-override,performance-*,-performance-enum-size'
+Checks:          'bugprone-*,-bugprone-chained-comparison,-bugprone-easily-swappable-parameters,-bugprone-implicit-widening-of-multiplication-result,-bugprone-multi-level-implicit-pointer-conversion,-bugprone-narrowing-conversions,-bugprone-suspicious-enum-usage,-bugprone-switch-missing-default-case,clang-diagnostic-*,clang-analyzer-*,misc-throw-by-value-catch-by-reference,modernize-use-nullptr,modernize-use-equals-default,modernize-use-equals-delete,modernize-use-override,modernize-use-scoped-lock,performance-*,-performance-enum-size'
 WarningsAsErrors: '*'
 HeaderFilterRegex: '/CorsixTH/Src/|/AnimView/|/common/'
 FormatStyle:     file
