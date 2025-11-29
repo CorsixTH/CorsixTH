@@ -124,7 +124,7 @@ var searchData=
   ['start_5fnonoverlapping_5fdraws_121',['start_nonoverlapping_draws',['../classrender__target.html#aaec844843dbd4ca7fc31730ff0e6c466',1,'render_target']]],
   ['start_5fx_122',['start_x',['../classidle__tile__finder.html#aa675283ea8ca4feca7711e12644be050',1,'idle_tile_finder::start_x'],['../structtext__layout.html#a6b5f6946412090cc2a0fdda4483cb446',1,'text_layout::start_x']]],
   ['start_5fy_123',['start_y',['../classidle__tile__finder.html#ad76ad8927c1dd6f35691ed0f26ea4117',1,'idle_tile_finder::start_y'],['../structtext__layout.html#a064c929e7da42670b65c123fe4f3aeef',1,'text_layout::start_y']]],
-  ['stop_124',['stop',['../classsound__player.html#ad9e5763372df6d69201b27559047382d',1,'sound_player::stop()'],['../classmovie__player.html#a7db3b2490cb81125a4458f5b9fbd7a25',1,'movie_player::stop()']]],
+  ['stop_124',['stop',['../classsound__player.html#af63ebe4b21470848960e2a2412ae98fc',1,'sound_player::stop()'],['../classmovie__player.html#a7db3b2490cb81125a4458f5b9fbd7a25',1,'movie_player::stop()']]],
   ['string_125',['string',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4ab45cffe084dd3d20d928bee85e7b0f21',1,'th_lua_internal.h']]],
   ['string_5fproxy_126',['string_proxy',['../classstring__proxy.html',1,'string_proxy'],['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a290484452a5fa7f1738b82137928e86a',1,'string_proxy:&#160;th_lua_internal.h']]],
   ['surface_127',['surface',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4ad302e976c9dd527a9521a88c012437c5',1,'th_lua_internal.h']]],

@@ -20,10 +20,11 @@ var searchData=
   ['is_5flittle_5fendian_17',['is_little_endian',['../xmi2mid_8cpp.html#a08173a4d0073275d4d0651fbcd2374ea',1,'xmi2mid.cpp']]],
   ['is_5fmultiple_5fframe_5fanimation_5ffn_18',['is_multiple_frame_animation_fn',['../structdrawable.html#a4ea66312e2dd33f55e2d371861ee6681',1,'drawable::is_multiple_frame_animation_fn()'],['../classanimation.html#ad275e768b8fda971e192648fa8559c09',1,'animation::is_multiple_frame_animation_fn()'],['../classsprite__render__list.html#a39d8583c68cf78a8a74895cd60191ab9',1,'sprite_render_list::is_multiple_frame_animation_fn()']]],
   ['is_5fparcel_5fpurchasable_19',['is_parcel_purchasable',['../classlevel__map.html#a65418c5f1e872e10672543dcd915bdb2',1,'level_map']]],
-  ['is_5fsprite_5fvisible_20',['is_sprite_visible',['../classsprite__sheet.html#a85ed582a9ddea549a73ee7a01eaa71f1',1,'sprite_sheet']]],
-  ['is_5ftarget_21',['is_target',['../classrender__target_1_1scoped__target__texture.html#af62446b152438ad7e3f01da2c2d2cb4c',1,'render_target::scoped_target_texture']]],
-  ['iso_5ffilesystem_22',['iso_filesystem',['../classiso__filesystem.html#ae6eb84acc762ac45e66bdba0cea9e9a8',1,'iso_filesystem::iso_filesystem()'],['../classiso__filesystem.html',1,'iso_filesystem']]],
-  ['iso_5ffs_23',['iso_fs',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a69ee82389230df0b417022523e293bf7',1,'th_lua_internal.h']]],
-  ['iso_5ffs_2ecpp_24',['iso_fs.cpp',['../iso__fs_8cpp.html',1,'']]],
-  ['iso_5ffs_2eh_25',['iso_fs.h',['../iso__fs_8h.html',1,'']]]
+  ['is_5fplaying_20',['is_playing',['../classsound__player.html#a0d661dee301fcefb14e716497613bbd4',1,'sound_player']]],
+  ['is_5fsprite_5fvisible_21',['is_sprite_visible',['../classsprite__sheet.html#a85ed582a9ddea549a73ee7a01eaa71f1',1,'sprite_sheet']]],
+  ['is_5ftarget_22',['is_target',['../classrender__target_1_1scoped__target__texture.html#af62446b152438ad7e3f01da2c2d2cb4c',1,'render_target::scoped_target_texture']]],
+  ['iso_5ffilesystem_23',['iso_filesystem',['../classiso__filesystem.html#ae6eb84acc762ac45e66bdba0cea9e9a8',1,'iso_filesystem::iso_filesystem()'],['../classiso__filesystem.html',1,'iso_filesystem']]],
+  ['iso_5ffs_24',['iso_fs',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a69ee82389230df0b417022523e293bf7',1,'th_lua_internal.h']]],
+  ['iso_5ffs_2ecpp_25',['iso_fs.cpp',['../iso__fs_8cpp.html',1,'']]],
+  ['iso_5ffs_2eh_26',['iso_fs.h',['../iso__fs_8h.html',1,'']]]
 ];

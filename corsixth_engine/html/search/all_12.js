@@ -79,7 +79,7 @@ var searchData=
   ['tile_5fy_76',['tile_y',['../classmap__tile__iterator.html#ae51990ca685aaa66054dc0e0f56387ff',1,'map_tile_iterator']]],
   ['tile_5fy_5fposition_5fon_5fscreen_77',['tile_y_position_on_screen',['../classmap__tile__iterator.html#a2ecf61b055726c8b7a35f616691d98d5',1,'map_tile_iterator']]],
   ['time_78',['time',['../structmidi__token.html#ac4edae626047cfa73fc5290b692abc07',1,'midi_token']]],
-  ['toggle_5fpause_79',['toggle_pause',['../classsound__player.html#a6a94f279cf66acdecb001fa6cf3f3f0e',1,'sound_player']]],
+  ['toggle_5fpause_79',['toggle_pause',['../classsound__player.html#a5aa0598ecacfbc257e4ae7a4996aaf1f',1,'sound_player']]],
   ['toggle_5fpause_5fresult_80',['toggle_pause_result',['../classsound__player.html#ad150da33ef9938c98e785628b9deb229',1,'sound_player']]],
   ['togglepause_81',['togglePause',['../classmovie__player.html#aff5b3626729ff1cc6d608a51daa7b619',1,'movie_player']]],
   ['top_82',['top',['../structlua__register__state.html#a4fab0b5ba253b41f37b26258d423f7b5',1,'lua_register_state']]],

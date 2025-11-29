@@ -80,5 +80,5 @@ var searchData=
   ['sprite_5fsheet_77',['sprite_sheet',['../classsprite__sheet.html#abc5bd06af9a0b2f826c7e8012046b045',1,'sprite_sheet']]],
   ['start_5fframe_78',['start_frame',['../classrender__target.html#a6111def8d036dfcec5066342142a69bc',1,'render_target']]],
   ['start_5fnonoverlapping_5fdraws_79',['start_nonoverlapping_draws',['../classrender__target.html#aaec844843dbd4ca7fc31730ff0e6c466',1,'render_target']]],
-  ['stop_80',['stop',['../classmovie__player.html#a7db3b2490cb81125a4458f5b9fbd7a25',1,'movie_player::stop()'],['../classsound__player.html#ad9e5763372df6d69201b27559047382d',1,'sound_player::stop()']]]
+  ['stop_80',['stop',['../classmovie__player.html#a7db3b2490cb81125a4458f5b9fbd7a25',1,'movie_player::stop()'],['../classsound__player.html#af63ebe4b21470848960e2a2412ae98fc',1,'sound_player::stop()']]]
 ];

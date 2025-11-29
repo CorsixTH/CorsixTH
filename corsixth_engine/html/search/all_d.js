@@ -14,6 +14,7 @@ var searchData=
   ['normal_11',['normal',['../th__gfx_8h.html#a762973ebb25ec988b09557fc414c01abafea087517c26fadd409bd4b9dc642555',1,'th_gfx.h']]],
   ['north_12',['north',['../structanimation__start__frames.html#a05d3ded037549c56aaf91218cb61cfc1',1,'animation_start_frames::north'],['../th__pathfind_8h.html#a1a54dca757fa5d61604c4eb1a8809f82a8d8d1437907bca79900ac5f0ea1f5c73',1,'north:&#160;th_pathfind.h']]],
   ['north_5fwall_13',['north_wall',['../th__map_8h.html#a073fc89e2a5359593c2b5f94a0229d79a4dae92b60dc7135e89a3b6dd4e131e48',1,'th_map.h']]],
-  ['num_5ftile_5flayers_14',['num_tile_layers',['../th__map_8h.html#a073fc89e2a5359593c2b5f94a0229d79ab12d35f8f0e3ea39e0f21801d6309bff',1,'th_map.h']]],
-  ['number_5fof_5fchannels_15',['number_of_channels',['../th__sound_8cpp.html#a166f574d07b962eb389a53430e8b21a0',1,'th_sound.cpp']]]
+  ['null_5fhandle_14',['null_handle',['../classsound__player.html#a1c342da818dd8503c82e1b3d85f01cf9',1,'sound_player']]],
+  ['num_5ftile_5flayers_15',['num_tile_layers',['../th__map_8h.html#a073fc89e2a5359593c2b5f94a0229d79ab12d35f8f0e3ea39e0f21801d6309bff',1,'th_map.h']]],
+  ['number_5fof_5fchannels_16',['number_of_channels',['../classsound__player.html#a438428902d26b83ddb016410ee3cfbfc',1,'sound_player']]]
 ];
