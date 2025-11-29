@@ -28,6 +28,7 @@ SOFTWARE.
 #include <SDL_rwops.h>
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <cstring>
 #include <new>
@@ -198,14 +199,11 @@ SDL_RWops* sound_archive::load_sound(size_t iIndex) {
                             static_cast<int>(pFile.length));
 }
 
-constexpr int number_of_channels = 32;
-
 sound_player* sound_player::singleton = nullptr;
 
 sound_player::sound_player()
     : sounds(nullptr),
       sound_count(0),
-      available_channels_bitmap(~0),
       camera_x(0),
       camera_y(0),
       camera_radius(1.0),
@@ -215,8 +213,14 @@ sound_player::sound_player()
       sound_effects_enabled(true) {
   singleton = this;
   Mix_AllocateChannels(number_of_channels);
-
   Mix_ChannelFinished(on_channel_finished);
+  channels.fill(null_handle);
+
+  // Avoid likely having the same handles in save games
+  auto seconds = std::chrono::duration_cast<std::chrono::seconds>(
+                     std::chrono::system_clock::now().time_since_epoch())
+                     .count();
+  next_playing_track_handle = static_cast<uint32_t>(seconds);
 }
 
 sound_player::~sound_player() {
@@ -257,43 +261,44 @@ void sound_player::populate_from(sound_archive* pArchive) {
   }
 }
 
-int sound_player::play(size_t iIndex, double dVolume) {
-  if (available_channels_bitmap == 0 || iIndex >= sound_count ||
-      !sounds[iIndex]) {
-    return -1;
+uint32_t sound_player::play(size_t iIndex, double dVolume, int loops) {
+  if (iIndex >= sound_count || !sounds[iIndex]) {
+    return null_handle;
   }
 
-  return play_raw(iIndex, static_cast<int>(positionless_volume * dVolume));
+  return play_raw(iIndex, static_cast<int>(positionless_volume * dVolume),
+                  loops);
 }
 
-int sound_player::play_at(size_t iIndex, int iX, int iY) {
+uint32_t sound_player::play_at(size_t iIndex, int iX, int iY, int loops) {
   if (sound_effects_enabled) {
-    return play_at(iIndex, sound_effect_volume, iX, iY);
+    return play_at(iIndex, sound_effect_volume, iX, iY, loops);
   }
-  return -1;
+  return null_handle;
 }
 
-int sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {
-  if (available_channels_bitmap == 0 || iIndex >= sound_count ||
-      !sounds[iIndex]) {
-    return -1;
+uint32_t sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY,
+                               int loops) {
+  if (iIndex >= sound_count || !sounds[iIndex]) {
+    return null_handle;
   }
 
   const double fDX = iX - camera_x;
   const double fDY = iY - camera_y;
   double fDistance = sqrt(fDX * fDX + fDY * fDY);
-  if (fDistance > camera_radius) return -1;
+  if (fDistance > camera_radius) return null_handle;
   fDistance = fDistance / camera_radius;
 
   double fVolume =
       master_volume * (1.0 - fDistance * 0.8) * (MIX_MAX_VOLUME * dVolume);
 
-  return play_raw(iIndex, static_cast<int>(std::lround(fVolume)));
+  return play_raw(iIndex, static_cast<int>(std::lround(fVolume)), loops);
 }
 
-sound_player::toggle_pause_result sound_player::toggle_pause(int channel) {
-  if (channel < 0 || channel >= number_of_channels ||
-      (available_channels_bitmap & (1 << channel)) != 0) {
+sound_player::toggle_pause_result sound_player::toggle_pause(uint32_t handle) {
+  std::scoped_lock lock(channel_mutex);
+  int channel = playing_channel_for_handle(handle);
+  if (channel < 0) {
     return toggle_pause_result::error;
   }
   if (Mix_Paused(channel)) {
@@ -305,13 +310,18 @@ sound_player::toggle_pause_result sound_player::toggle_pause(int channel) {
   }
 }
 
-void sound_player::stop(int channel) {
-  if (channel < 0 || channel >= number_of_channels ||
-      (available_channels_bitmap & (1 << channel)) != 0) {
+void sound_player::stop(uint32_t handle) {
+  std::scoped_lock lock(channel_mutex);
+  int channel = playing_channel_for_handle(handle);
+  if (channel < 0) {
     return;
   }
   Mix_HaltChannel(channel);
   release_channel(channel);
+}
+
+bool sound_player::is_playing(uint32_t handle) {
+  return playing_channel_for_handle(handle) >= 0;
 }
 
 void sound_player::set_sound_effect_volume(double dVolume) {
@@ -323,25 +333,37 @@ void sound_player::set_sound_effects_enabled(bool bOn) {
 }
 
 int sound_player::reserve_channel() {
-  // NB: Callers ensure that m_iChannelStatus != 0
-  int iChannel = 0;
-  for (; (available_channels_bitmap & (1 << iChannel)) == 0; ++iChannel) {
+  std::scoped_lock lock(channel_mutex);
+  for (size_t i = 0; i < channels.size(); ++i) {
+    if (channels[i] == null_handle) {
+      // Don't assign a null handle to a playing track
+      if (next_playing_track_handle == null_handle) {
+        next_playing_track_handle++;
+      }
+      channels[i] = next_playing_track_handle++;
+      return static_cast<int>(i);
+    }
   }
-  available_channels_bitmap &= ~(1 << iChannel);
 
-  return iChannel;
+  return -1;
 }
 
 void sound_player::release_channel(int iChannel) {
-  available_channels_bitmap |= (1 << iChannel);
+  std::scoped_lock lock(channel_mutex);
+  channels[iChannel] = null_handle;
 }
 
-int sound_player::play_raw(size_t iIndex, int iVolume) {
+uint32_t sound_player::play_raw(size_t iIndex, int iVolume, int loops) {
+  std::scoped_lock lock(channel_mutex);
   int iChannel = reserve_channel();
+  if (iChannel < 0) {
+    return null_handle;
+  }
 
   Mix_Volume(iChannel, iVolume);
-  Mix_PlayChannelTimed(iChannel, sounds[iIndex], 0, -1);
-  return iChannel;
+  Mix_PlayChannel(iChannel, sounds[iIndex], loops);
+
+  return channels[iChannel];
 }
 
 void sound_player::set_camera(int iX, int iY, int iRadius) {
@@ -349,4 +371,19 @@ void sound_player::set_camera(int iX, int iY, int iRadius) {
   camera_y = iY;
   camera_radius = static_cast<double>(iRadius);
   if (camera_radius < 0.001) camera_radius = 0.001;
+}
+
+int sound_player::playing_channel_for_handle(uint32_t handle) {
+  std::scoped_lock lock(channel_mutex);
+
+  if (handle == null_handle) {
+    return -1;
+  }
+
+  for (size_t i = 0; i < channels.size(); ++i) {
+    if (channels[i] == handle) {
+      return static_cast<int>(i);
+    }
+  }
+  return -1;
 }

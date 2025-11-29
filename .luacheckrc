@@ -127,9 +127,6 @@ end
 -- Ignore unused functions of save game compatibility
 add_ignore("CorsixTH/Lua/app.lua", "app_confirm_quit_stub")
 add_ignore("CorsixTH/Lua/dialogs/bottom_panel.lua", "stub")
-add_ignore("CorsixTH/Lua/dialogs/fullscreen/research_policy.lua", "adjust")
-add_ignore("CorsixTH/Lua/dialogs/fullscreen/research_policy.lua", "less_stub")
-add_ignore("CorsixTH/Lua/dialogs/fullscreen/research_policy.lua", "more_stub")
 add_ignore("CorsixTH/Lua/dialogs/resizables/options.lua", "language_button")
 add_ignore("CorsixTH/Lua/dialogs/resizables/options.lua", "width_textbox_reset")
 add_ignore("CorsixTH/Lua/dialogs/resizables/options.lua", "height_textbox_reset")

@@ -1200,7 +1200,7 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
 
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
-    if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY);
+    if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY, 0);
     sound_to_play = 0;
   }
   if (manager) {
@@ -1235,7 +1235,7 @@ void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY,
   iY += pixel_offset.y + iDestY;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
-    if (pSounds) pSounds->play_at(sound_to_play, iX, iY);
+    if (pSounds) pSounds->play_at(sound_to_play, iX, iY, 0);
     sound_to_play = 0;
   }
   if (manager) manager->draw_frame(pCanvas, frame_index, layers, iX, iY, flags);
@@ -1255,7 +1255,7 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
   iDestY += pixel_offset.y;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
-    if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY);
+    if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY, 0);
     sound_to_play = 0;
   }
 

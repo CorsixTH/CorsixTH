@@ -225,10 +225,20 @@ function UI:setupGlobalKeyHandlers()
   self:addOrRemoveDebugModeKeyHandlers()
 end
 
--- Used for everything except music and announcements
-function UI:playSound(name, played_callback, played_callback_delay)
+--! Play a sound effect
+--!param name (string) The name of the sound to be played. Can include
+--  wildcards (*).
+--!param played_callback (function) A function to be called when the sound has
+--  finished playing. Can be nil.
+--!param played_callback_delay (integer) An optional delay in milliseconds
+--  before the played_callback is called.
+--!param loops (integer) number of times to play the audio. -1 for infinite.
+--!return (table) A `sound` table for passing into functions that act on the
+--  playing sound. The fields are an implementation detail that should not be
+--  used outside of the Audio class.
+function UI:playSound(name, played_callback, played_callback_delay, loops)
   if self.app.config.play_sounds then
-    return self.app.audio:playSound(name, nil, false, played_callback, played_callback_delay)
+    return self.app.audio:playSound(name, nil, false, played_callback, played_callback_delay, loops)
   end
 end
 

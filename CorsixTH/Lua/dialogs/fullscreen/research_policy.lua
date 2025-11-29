@@ -48,15 +48,15 @@ function UIResearch:UIResearch(ui)
   self.hospital = ui.hospital
   self.research = ui.hospital.research
 
-  -- lewri: This is a stopgap solution to work around sound states not being
-  -- implemented. It should be replaced as soon as it is possible to do so.
-  self.bg_sound = nil -- holds the constructed sound instance
-  self.playing = false -- denotes if background sound playback is called and running
+  self:_playBgSound()
 
   -- stubs for backwards compatibility
-  local --[[persistable:research_policy_adjust]] function adjust() end
-  local --[[persistable:research_less_stub]] function less_stub() end
-  local --[[persistable:research_more_stub]] function more_stub() end
+  --luacheck: push no unused
+  local --[[persistable:research_policy_adjust]] function _1() end
+  local --[[persistable:research_less_stub]] function _2() end
+  local --[[persistable:research_more_stub]] function _3() end
+  local --[[persistable:research_policy_window_reset_bg_sound]] function _4() end
+  --luacheck: pop
 
   -- Close button
   self:addPanel(0, 607, 447):makeButton(0, 0, 40, 40, 4, self.close):setTooltip(_S.tooltip.research.close)
@@ -166,21 +166,10 @@ end
 
 --! Construct and play this window's background sound.
 function UIResearch:_playBgSound()
-  -- Note: See UIResearch:UIResearch function for improving this.
-  self.bg_sound = self.ui:playSound("Research.wav",
-    --[[persistable:research_policy_window_reset_bg_sound]] function()
-      self.playing = false
-      self.bg_sound = nil
-  end)
-  self.playing = true
+  self.bg_sound = self.ui:playSound("Research.wav", nil, nil, -1)
 end
 
 function UIResearch:onTick()
-  -- Background sound will continuously play while the window is open.
-  if not self.playing then
-    self:_playBgSound()
-  end
-
   -- sprite index for the water are between 5 and 12
   -- We use a sub clock
   self.waterclk = self.waterclk + 1
@@ -270,13 +259,5 @@ function UIResearch:afterLoad(old, new)
     self.label_font = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
     self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
   end
-
-  -- Restart the background sound on load
-  -- Note: See UIResearch:UIResearch function for improving this.
-  if self.playing then
-    -- Reset the playing state to restart next window tick.
-    self.playing = false
-    -- In the rare case of double overlap, always try to destroy the current sound
-    if self.bg_sound then self.ui:stopSound(self.bg_sound) end
-  end
+  self:_playBgSound()
 end

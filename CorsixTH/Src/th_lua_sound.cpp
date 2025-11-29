@@ -220,30 +220,37 @@ Uint32 played_sound_callback(Uint32 interval, void* param) {
 
 int l_soundfx_play(lua_State* L) {
   sound_player* pEffects = luaT_testuserdata<sound_player>(L);
-  lua_settop(L, 7);
+
+  // Get the current sound_archive. We don't want to disrupt the lua stack
+  // so we put this after any possible argument.
+  lua_settop(L, 8);
   lua_getfenv(L, 1);
   lua_pushliteral(L, "archive");
-  lua_rawget(L, 8);
-  sound_archive* pArchive = (sound_archive*)lua_touserdata(L, 9);
+  lua_rawget(L, 9);
+  sound_archive* pArchive = (sound_archive*)lua_touserdata(L, 10);
   if (pArchive == nullptr) {
     return 0;
   }
   // l_soundarc_checkidx requires the archive at the bottom of the stack
+  // so we swap with sound_player
   lua_replace(L, 1);
   size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
   if (iIndex == pArchive->get_number_of_sounds()) return 2;
 
-  int channel;
+  double volume = luaL_checknumber(L, 3);
+  int loops = static_cast<int>(luaL_optinteger(L, 8, 0));
+
+  uint32_t handle;
   if (lua_isnil(L, 4)) {
-    channel = pEffects->play(iIndex, luaL_checknumber(L, 3));
+    handle = pEffects->play(iIndex, volume, loops);
   } else {
-    channel = pEffects->play_at(iIndex, luaL_checknumber(L, 3),
-                                static_cast<int>(luaL_checkinteger(L, 4)),
-                                static_cast<int>(luaL_checkinteger(L, 5)));
+    handle = pEffects->play_at(
+        iIndex, volume, static_cast<int>(luaL_checkinteger(L, 4)),
+        static_cast<int>(luaL_checkinteger(L, 5)), loops);
   }
   // SDL SOUND_OVER Callback Timer:
   // 6: unusedPlayedCallbackID
-  if (!lua_isnil(L, 6)) {
+  if (!lua_isnil(L, 6) && loops >= 0) {
     // 7: Callback delay
     int iPlayedCallbackDelay = 0;  // ms
     if (!lua_isnil(L, 7))
@@ -256,8 +263,8 @@ int l_soundfx_play(lua_State* L) {
         static_cast<int>(luaL_checkinteger(L, 6));
     int& callback_id = played_sound_callback_ids[played_sound_callback_index];
 
-    Uint32 interval = static_cast<Uint32>(pArchive->get_sound_duration(iIndex) +
-                                          iPlayedCallbackDelay);
+    Uint32 interval = static_cast<Uint32>(
+        pArchive->get_sound_duration(iIndex) * loops + iPlayedCallbackDelay);
     SDL_TimerID timersID =
         SDL_AddTimer(interval, played_sound_callback, &callback_id);
     map_sound_timers.emplace(std::pair<int, map_timer_info>(
@@ -265,7 +272,7 @@ int l_soundfx_play(lua_State* L) {
     played_sound_callback_index++;
   }
 
-  lua_pushinteger(L, channel);
+  lua_pushinteger(L, handle);
   return 1;
 }
 
@@ -310,6 +317,14 @@ int l_soundfx_stop(lua_State* L) {
     map_sound_timers.erase(itr);
   }
   return 0;
+}
+
+int l_soundfx_is_playing(lua_State* L) {
+  sound_player* pEffects = luaT_testuserdata<sound_player>(L);
+  bool isPlaying =
+      pEffects->is_playing(static_cast<int>(luaL_checkinteger(L, 2)));
+  lua_pushboolean(L, isPlaying);
+  return 1;
 }
 
 int l_soundfx_set_camera(lua_State* L) {
@@ -360,6 +375,7 @@ void lua_register_sound(const lua_register_state* pState) {
     lcb.add_function(l_soundfx_play, "play");
     lcb.add_function(l_soundfx_toggle_pause, "togglePause");
     lcb.add_function(l_soundfx_stop, "stop");
+    lcb.add_function(l_soundfx_is_playing, "isPlaying");
     lcb.add_function(l_soundfx_set_sound_volume, "setSoundVolume");
     lcb.add_function(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");
     lcb.add_function(l_soundfx_set_camera, "setCamera");
