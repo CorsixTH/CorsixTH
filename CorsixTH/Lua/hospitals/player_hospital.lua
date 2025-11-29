@@ -500,7 +500,7 @@ function PlayerHospital:onEndDay()
   if self.announce_vip > 0 then
     -- check if the VIP is in the building yet
     for _, e in ipairs(self.world.entities) do
-      if e.humanoid_class == "VIP" and e.announced == false and
+      if class.is(e, Vip) and e.announced == false and
           self:isInHospital(e.tile_x, e.tile_y) then
         -- play VIP arrival sound and show tooltips
         local ui = self.world.ui
@@ -521,7 +521,7 @@ function PlayerHospital:onEndDay()
   -- Look for work for staff who have nothing to do
   for _, staff in ipairs(self.staff) do
     -- Handymen currently have their own method to look for work
-    if staff.humanoid_class ~= "Handyman" and staff:isIdle() then
+    if not class.is(staff, Handyman) and staff:isIdle() then
       self.world.dispatcher:answerCall(staff)
     end
   end

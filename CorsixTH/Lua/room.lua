@@ -334,7 +334,7 @@ function Room:onHumanoidEnter(humanoid)
     end
     return
   end
-  if humanoid.humanoid_class == "Handyman" then
+  if class.is(humanoid, Handyman) then
     -- Handymen can always enter a room (to repair stuff, water plants, etc.)
     self.humanoids[humanoid] = true
     -- Check for machines which need repair or plants which need watering if
@@ -368,7 +368,7 @@ function Room:onHumanoidEnter(humanoid)
         if staff_in_room.profile.is_researcher and self.room_info.id == "research" then
           self.hospital:giveAdvice(researcher_desks)
         end
-        if staff_in_room.humanoid_class == "Nurse" and self.room_info.id == "ward" then
+        if class.is(staff_in_room, Nurse) and self.room_info.id == "ward" then
           self.hospital:giveAdvice(nurse_desks)
         end
         if not staff_in_room.dealing_with_patient or staff_in_room:isMeandering() then
@@ -576,7 +576,7 @@ function Room:onHumanoidLeave(humanoid)
       -- A patient leaving allows doctors/nurses inside to go to staffroom, if needed
       -- In a rare case a handyman that just decided he wants to go to the staffroom
       -- could be in the room at the same time as a patient leaves.
-      if class.is(room_humanoid, Staff) and room_humanoid.humanoid_class ~= "Handyman" then
+      if class.is(room_humanoid, Staff) and not class.is(room_humanoid, Handyman) then
         if room_humanoid.staffroom_needed then
           room_humanoid.staffroom_needed = nil
           room_humanoid:goToStaffRoom()

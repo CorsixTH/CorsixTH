@@ -181,7 +181,7 @@ function TrainingRoom:doStaffUseCycle(humanoid)
 end
 
 function TrainingRoom:onHumanoidEnter(humanoid)
-  if humanoid.humanoid_class ~= "Doctor" then
+  if not class.is(humanoid, Doctor) then
     -- use default behavior for staff other than doctors
     return Room.onHumanoidEnter(self, humanoid)
   end
@@ -200,7 +200,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
   local obj, ox, oy
   local profile = humanoid.profile
 
-  if profile.humanoid_class == "Doctor" then
+  if class.is(humanoid, Doctor) then
     if profile.is_consultant then
       -- Consultant entered/placed in room.
       obj, ox, oy = self.world:findObjectNear(humanoid, "projector")
@@ -236,7 +236,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
         humanoid.last_room = nil -- Prevent Doctor returning to this room automatically
       end
     end
-  elseif humanoid.humanoid_class ~= "Handyman" then
+  elseif not class.is(humanoid, Handyman) then
     self.hospital:giveAdvice({_A.staff_place_advice.only_doctors_in_room
       :format(_S.rooms_long.training_room)})
     humanoid:setNextAction(self:createLeaveAction())
@@ -248,7 +248,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
 end
 
 function TrainingRoom:onHumanoidLeave(humanoid)
-  if humanoid.humanoid_class == "Doctor" then
+  if class.is(humanoid, Doctor) then
     -- unreserve whatever it was they we using
     local fx, fy = self:getEntranceXY(true)
     local objects = self.world:findAllObjectsNear(fx,fy)

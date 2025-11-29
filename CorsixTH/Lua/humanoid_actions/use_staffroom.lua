@@ -80,7 +80,7 @@ local relaxation = {
 -- main function of the staffroom action
 local function use_staffroom_action_start(action, humanoid)
   assert(class.is(humanoid, Staff), "use_staffroom action called for non-staff humanoid")
-  assert(humanoid.humanoid_class ~= "Receptionist", "use_staffroom action called for receptionist")
+  assert(not class.is(humanoid, Receptionist), "use_staffroom action called for receptionist")
 
   -- For initial call of this function we have to decide a new target now
   -- Else, there should be already a new target defined

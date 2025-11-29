@@ -83,7 +83,7 @@ end)
 
 
 local function vaccinate(action, nurse)
-  assert(nurse.humanoid_class == "Nurse")
+  assert(class.is(nurse, Nurse))
 
   local patient = action.patient
 

@@ -43,7 +43,7 @@ function Staff:tickDay()
   if not Humanoid.tickDay(self) then
     return false
   end
-  if self.humanoid_class == "Receptionist" then return true end
+  if class.is(self, Receptionist) then return true end
   -- Pay too low  --> unhappy
   -- Pay too high -->   happy
   local fair_wage = self.profile:getFairWage()
@@ -203,7 +203,7 @@ function Staff:isTiring()
     if room.room_info.id == "staff_room" and not self.on_call then
       tiring = false
     end
-  elseif self.humanoid_class ~= "Handyman" then
+  elseif not class.is(self, Handyman) then
     tiring = false
   end
 
@@ -355,7 +355,7 @@ function Staff:updateSpeed()
     level = 1
   elseif self.hospital and self.hospital.hosp_cheats:isCheatActive("no_rest_cheat") then
     level = 3 -- Cheat makes everyone speedy
-  elseif self.humanoid_class ~= "Receptionist" then
+  elseif not class.is(self, Receptionist) then
     if self:isCrackUpTired() then
       level = level - 2
     elseif self:isVeryTired() then
@@ -415,7 +415,7 @@ function Staff:checkIfNeedRest()
       return
     end
 
-    if self.humanoid_class ~= "Handyman" and room and room:getPatient() then
+    if not class.is(self, Handyman) and room and room:getPatient() then
       -- If occupied by patient, staff will go to the staffroom after the patient left.
       self.staffroom_needed = true
     else
@@ -550,7 +550,7 @@ function Staff:isIdle()
     end
 
     -- For handyman - just check the on_call flag
-    if self.humanoid_class == "Handyman" then return not self.on_call end
+    if class.is(self, Handyman) then return not self.on_call end
 
     -- For other staff...
     -- Staff member might be leaving
@@ -637,7 +637,7 @@ end
 function Staff:updateDynamicInfo()
   local dynamic_text = self.dynamic_text or ""
   local fatigue_text = _S.dynamic_info.staff.tiredness
-  if self.humanoid_class == "Receptionist" then
+  if class.is(self, Receptionist) then
     fatigue_text = nil
   else
     self:setDynamicInfo('progress', self:getAttribute("fatigue"))
@@ -670,7 +670,7 @@ function Staff:afterLoad(old, new)
 
   if old < 29 and new >= 29 then
     -- Handymen could have "staffroom_needed" flag set due to a bug, unset it.
-    if self.humanoid_class == "Handyman" then
+    if class.is(self, Handyman) then
       self.staffroom_needed = nil
     end
   end
@@ -680,7 +680,7 @@ function Staff:afterLoad(old, new)
     self.profile.world = self.world
   end
   if old < 68 and new >= 68 then
-    if self.humanoid_class ~= "Receptionist" and
+    if not class.is(self, Receptionist) and
         self:getAttribute("fatigue") >= self.hospital.policies["goto_staffroom"] then
       self:goToStaffRoom()
       self.going_to_staffroom = true
@@ -688,7 +688,7 @@ function Staff:afterLoad(old, new)
   end
 
   if old < 121 and new >= 121 then
-    if self.humanoid_class == "Handyman" and self.user_of and self.user_of.object_type.class == "Litter" then
+    if class.is(self, Handyman) and self.user_of and self.user_of.object_type.class == "Litter" then
       local litter = self.user_of
       local hospital = self.world:getHospital(litter.tile_x, litter.tile_y)
       local taskIndex = hospital:getIndexOfTask(litter.tile_x, litter.tile_y, "cleaning", litter)
@@ -697,11 +697,11 @@ function Staff:afterLoad(old, new)
   end
 
   if old < 133 and new >= 133 then
-    if self.humanoid_class == "Handyman" then
+    if class.is(self, Handyman) then
       setmetatable(self, Handyman._metatable)
-    elseif self.humanoid_class == "Receptionist" then
+    elseif class.is(self, Receptionist) then
       setmetatable(self, Receptionist._metatable)
-    elseif self.humanoid_class == "Nurse" then
+    elseif class.is(self, Nurse) then
       setmetatable(self, Nurse._metatable)
     else
       setmetatable(self, Doctor._metatable)
