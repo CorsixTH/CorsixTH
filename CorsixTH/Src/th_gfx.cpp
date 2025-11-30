@@ -1198,6 +1198,8 @@ animation::animation() { patient_effect_offset = rand(); }
 void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
 
+  iDestX += pixel_offset.x;
+  iDestY += pixel_offset.y;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
     if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY, 0);
@@ -1211,13 +1213,11 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       rcNew.x = iDestX + (crop_column - 1) * 32;
       rcNew.w = 64;
       render_target::scoped_clip clip(pCanvas, &rcNew);
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX + pixel_offset.x,
-                          iDestY + pixel_offset.y, flags, patient_effect,
-                          patient_effect_offset);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
+                          patient_effect, patient_effect_offset);
     } else
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX + pixel_offset.x,
-                          iDestY + pixel_offset.y, flags, patient_effect,
-                          patient_effect_offset);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
+                          patient_effect, patient_effect_offset);
   }
 }
 
