@@ -135,6 +135,9 @@ class memory_buffer {
 
   template <class T>
   bool write(const T* values, size_t count) {
+    if (count == 0) {
+      return true;
+    }
     if (!skip(static_cast<std::ptrdiff_t>(sizeof(T) * count))) return false;
     std::memcpy(pointer - sizeof(T) * count, values, sizeof(T) * count);
     return true;
