@@ -296,7 +296,6 @@ uint32_t sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY,
 }
 
 sound_player::toggle_pause_result sound_player::toggle_pause(uint32_t handle) {
-  std::scoped_lock lock(channel_mutex);
   int channel = playing_channel_for_handle(handle);
   if (channel < 0) {
     return toggle_pause_result::error;
@@ -311,7 +310,6 @@ sound_player::toggle_pause_result sound_player::toggle_pause(uint32_t handle) {
 }
 
 void sound_player::stop(uint32_t handle) {
-  std::scoped_lock lock(channel_mutex);
   int channel = playing_channel_for_handle(handle);
   if (channel < 0) {
     return;
@@ -354,7 +352,6 @@ void sound_player::release_channel(int iChannel) {
 }
 
 uint32_t sound_player::play_raw(size_t iIndex, int iVolume, int loops) {
-  std::scoped_lock lock(channel_mutex);
   int iChannel = reserve_channel();
   if (iChannel < 0) {
     return null_handle;
