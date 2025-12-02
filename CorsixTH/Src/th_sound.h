@@ -174,6 +174,12 @@ class sound_player {
   //! if it is free.
   std::array<uint32_t, number_of_channels> channels{};
   uint32_t next_playing_track_handle{0};
+
+  /// Mutex to protect access to channels array and next_playing_track_handle.
+  ///
+  /// \remark Do not hold this mutex while calling any SDL_mixer (Mix_*)
+  /// functions as SDL_mixer has its own internal lock which is held while
+  /// calling on_channel_finished and could lead to deadlocks.
   std::recursive_mutex channel_mutex{};
 };
 
