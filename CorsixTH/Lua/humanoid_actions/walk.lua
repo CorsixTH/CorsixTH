@@ -430,7 +430,7 @@ local function action_walk_start(action, humanoid)
   if not action.no_truncate then
     action.on_interrupt = action_walk_interrupt
   end
-  if action.action_on_restart ~= nil then
+  if action.on_restart ~= nil then
     action.saved_must_happen = action.must_happen
   end
   action.on_restart = action_walk_start
