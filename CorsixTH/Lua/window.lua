@@ -76,6 +76,9 @@ function Window:setPosition(x, y)
   self.y_original = y
   -- Convert x and y to absolute pixel positions with regard to top/left
   local w, h = TheApp.config.width, TheApp.config.height
+  local scale = TheApp.config.ui_scale
+  w = w / scale
+  h = h / scale
   if x < 0 then
     x = math.ceil(w - self.width + x)
   elseif x < 1 then
