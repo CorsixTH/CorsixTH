@@ -314,11 +314,13 @@ function UI:draw(canvas)
       self.background:draw(canvas, math.floor((screen_w - bg_w) / 2), math.floor((screen_h - bg_h) / 2))
     end
   end
+  canvas:scale(TheApp.config.ui_scale)
   Window.draw(self, canvas, 0, 0)
   self:drawTooltip(canvas)
   if self.simulated_cursor then
     self.simulated_cursor.draw(canvas, self.cursor_x, self.cursor_y)
   end
+  canvas:scale(1)
 end
 
 --! Register a key handler / hotkey for a window.
