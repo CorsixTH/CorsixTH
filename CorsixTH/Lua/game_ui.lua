@@ -261,7 +261,10 @@ function GameUI:draw(canvas)
   Window.draw(self, canvas, 0, 0) -- NB: not calling UI.draw on purpose
   self:drawTooltip(canvas)
   if self.simulated_cursor then
-    self.simulated_cursor.draw(canvas, self.cursor_x, self.cursor_y)
+    self.simulated_cursor.draw(
+        canvas,
+        math.floor(self.cursor_x / TheApp.config.ui_scale),
+        math.floor(self.cursor_y / TheApp.config.ui_scale))
   end
   canvas:scale(1)
 end
