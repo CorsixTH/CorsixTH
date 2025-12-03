@@ -39,6 +39,8 @@ SOFTWARE.
 #include <utility>
 #include <vector>
 
+#include "th_gfx.h"
+
 bitmap_font::bitmap_font() = default;
 
 void bitmap_font::set_sprite_sheet(sprite_sheet* pSpriteSheet) {
@@ -73,7 +75,7 @@ void bitmap_font::draw_text(render_target* pCanvas, const char* sMessage,
         iChar -= iFirstASCII;
         int iWidth;
         int iHeight;
-        sheet->draw_sprite(pCanvas, iChar, iX, iY, 0);
+        sheet->draw_sprite(pCanvas, iChar, iX, iY, thdf_nearest);
         sheet->get_sprite_size_unchecked(iChar, &iWidth, &iHeight);
         iX += iWidth + letter_spacing;
       }
