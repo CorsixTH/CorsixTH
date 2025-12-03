@@ -96,6 +96,7 @@ local config_defaults = {
   fullscreen = false,
   width = 800,
   height = 600,
+  ui_scale = 1,
   language = [[English]],
   audio = true,
   free_build_mode = false,
@@ -206,11 +207,15 @@ local string_01 = [=[
 -- Screen size. Must be at least 640x480. Larger sizes will require better
 -- hardware in order to maintain a playable framerate. The fullscreen setting
 -- can be true or false, and the game will run windowed if not fullscreen.
+-- ui_scale can be set to 1, 2, or 3 to scale the user interface for higher
+-- resolution displays. For example, at 1920x1080 resolution, setting ui_scale
+-- to 2 will make the interface elements twice as large.
 --]=] .. '\n' ..
 'fullscreen = ' .. tostring(config_values.fullscreen) .. '\n' ..
 '\n' ..
 'width = ' .. tostring(config_values.width) .. '\n' ..
-'height = ' .. tostring(config_values.height) .. '\n' .. [=[
+'height = ' .. tostring(config_values.height) .. '\n' ..
+'ui_scale = ' .. tostring(config_values.ui_scale) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
