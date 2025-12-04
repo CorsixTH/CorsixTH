@@ -314,13 +314,11 @@ function UI:draw(canvas)
       self.background:draw(canvas, math.floor((screen_w - bg_w) / 2), math.floor((screen_h - bg_h) / 2))
     end
   end
-  canvas:scale(TheApp.config.ui_scale)
   Window.draw(self, canvas, 0, 0)
   self:drawTooltip(canvas)
   if self.simulated_cursor then
     self.simulated_cursor.draw(canvas, self.cursor_x, self.cursor_y)
   end
-  canvas:scale(1)
 end
 
 --! Register a key handler / hotkey for a window.
@@ -722,8 +720,7 @@ function UI:onKeyDown(rawchar, modifiers)
   do
     local mapped_button = self.key_to_button_remaps[key]
     if mapped_button then
-      local s = TheApp.config.ui_scale
-      self:onMouseDown(mapped_button, self.cursor_x * s, self.cursor_y * s)
+      self:onMouseDown(mapped_button, self.cursor_x, self.cursor_y)
       return true
     end
     key = self.key_remaps[key] or key
@@ -852,10 +849,6 @@ function UI:onTextInput(text)
 end
 
 function UI:onMouseDown(code, x, y)
-  local ui_scale = TheApp.config.ui_scale
-  x = math.floor(x / ui_scale)
-  y = math.floor(y / ui_scale)
-
   self:setMouseReleased(false)
   local repaint = false
   local button = self.button_codes[code] or code
@@ -880,10 +873,6 @@ function UI:onMouseDown(code, x, y)
 end
 
 function UI:onMouseUp(code, x, y)
-  local ui_scale = TheApp.config.ui_scale
-  x = math.floor(x / ui_scale)
-  y = math.floor(y / ui_scale)
-
   local repaint = false
   local button = self.button_codes[code] or code
   self.down_count = self.down_count - 1
@@ -987,10 +976,6 @@ function UI:onMouseMove(x, y, dx, dy)
   if self.mouse_released then
     return false
   end
-
-  local ui_scale = TheApp.config.ui_scale
-  x = math.floor(x / ui_scale)
-  y = math.floor(y / ui_scale)
 
   local repaint = UpdateCursorPosition(self.app.video, x, y)
 

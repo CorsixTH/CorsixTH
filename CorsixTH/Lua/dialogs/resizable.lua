@@ -66,6 +66,9 @@ function UIResizable:setSize(width, height)
   width = math.max(self.min_width, width)
   height = math.max(self.min_height, height)
 
+  width = width * TheApp.config.ui_scale
+  height = height * TheApp.config.ui_scale
+
   self.width = width
   self.height = height
   self.background_panel.w = width
