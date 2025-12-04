@@ -257,16 +257,11 @@ function GameUI:draw(canvas)
     self:setZoom(1)
     app.map:draw(canvas, dx, dy, config.width, config.height, 0, 0)
   end
-  canvas:scale(TheApp.config.ui_scale)
   Window.draw(self, canvas, 0, 0) -- NB: not calling UI.draw on purpose
   self:drawTooltip(canvas)
   if self.simulated_cursor then
-    self.simulated_cursor.draw(
-        canvas,
-        math.floor(self.cursor_x / TheApp.config.ui_scale),
-        math.floor(self.cursor_y / TheApp.config.ui_scale))
+    self.simulated_cursor.draw(canvas, self.cursor_x, self.cursor_y)
   end
-  canvas:scale(1)
 end
 
 function GameUI:onChangeResolution()

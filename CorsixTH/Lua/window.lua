@@ -76,9 +76,6 @@ function Window:setPosition(x, y)
   self.y_original = y
   -- Convert x and y to absolute pixel positions with regard to top/left
   local w, h = TheApp.config.width, TheApp.config.height
-  local scale = TheApp.config.ui_scale
-  w = w / scale
-  h = h / scale
   if x < 0 then
     x = math.ceil(w - self.width + x)
   elseif x < 1 then
@@ -318,15 +315,18 @@ function Panel:drawLabel(canvas, x, y, limit)
       line = self:clipLine(line, self.w - 4)
     end
 
+    local scale = TheApp.config.ui_scale
+    canvas:scale(scale)
     if wrapped then
-      next_y, last_x = self.label_font:drawWrapped(canvas, line, x + self.x + 2, old_y, self.w - 4, self.align)
+      next_y, last_x = self.label_font:drawWrapped(canvas, line, math.floor((x + self.x + 2) / scale), math.floor(old_y / scale), math.floor((self.w - 4) / scale), self.align)
     else
-      next_y, last_x = self.label_font:draw(canvas, line, x + self.x + 2, old_y, self.w - 4, center_y and self.h or 0, self.align)
+      next_y, last_x = self.label_font:draw(canvas, line, math.floor((x + self.x + 2) / scale), math.floor(old_y / scale), math.floor((self.w - 4) / scale), math.floor((center_y and self.h or 0) / scale), self.align)
     end
     if not line:find("%S") then
       -- Special handling for empty lines or lines with only space
-      next_y = self.label_font:draw(nil, "A", x + self.x + 2, old_y, self.w - 4, center_y and self.h or 0, self.align)
+      next_y = self.label_font:draw(nil, "A", math.floor((x + self.x + 2) / scale), math.floor(old_y / scale), math.floor((self.w - 4) / scale), math.floor((center_y and self.h or 0) / scale), self.align)
     end
+    canvas:scale(1)
     if limit and limit[1] == i then
       break
     end
@@ -345,9 +345,11 @@ end
 --! Set the size of a panel.
 --!param width (int) New width of the panel.
 --!param height (int) New height of the panel.
-function Panel:setSize(width, height)
-  self.w = width
-  self.h = height
+--!param scale (int|nil) Scale factor to apply to width and height. Default is TheApp.config.ui_scale.
+function Panel:setSize(width, height, scale)
+  scale = scale or TheApp.config.ui_scale
+  self.w = width * scale
+  self.h = height * scale
 end
 
 --! Set the visibility of the panel.
@@ -375,10 +377,10 @@ panel (in pixels) is known, it should be specified here to speed up hit-tests.
 function Window:addPanel(sprite_index, x, y, w, h)
   local panel = setmetatable({
     window = self,
-    x = x,
-    y = y,
-    w = w,
-    h = h,
+    x = x * TheApp.config.ui_scale,
+    y = y * TheApp.config.ui_scale,
+    w = w and w * TheApp.config.ui_scale or w,
+    h = h and h * TheApp.config.ui_scale or h,
     sprite_index = sprite_index,
     visible = true,
   }, panel_mt)
@@ -472,10 +474,10 @@ function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colou
 
   local panel = setmetatable({
     window = self,
-    x = x,
-    y = y,
-    w = w,
-    h = h,
+    x = x * TheApp.config.ui_scale,
+    y = y * TheApp.config.ui_scale,
+    w = w * TheApp.config.ui_scale,
+    h = h * TheApp.config.ui_scale,
     colour = TheApp.video:mapRGB(colour.red, colour.green, colour.blue),
     highlight_colour = TheApp.video:mapRGB(highlight_colour.red, highlight_colour.green, highlight_colour.blue),
     shadow_colour = TheApp.video:mapRGB(shadow_colour.red, shadow_colour.green, shadow_colour.blue),
@@ -729,8 +731,8 @@ end
 --!param height (int) New height of the button.
 function Button:setSize(width, height)
   self.panel_for_sprite:setSize(width, height)
-  self.r = self.x + width
-  self.b = self.y + height
+  self.r = self.x + width * TheApp.config.ui_scale
+  self.b = self.y + height * TheApp.config.ui_scale
   if self.tooltip then
     self.tooltip.tooltip_x = math.round((self.x + self.r) / 2, 1)
     self.tooltip.tooltip_y = self.y
@@ -768,8 +770,10 @@ nil or not given, then the window is passed as the first argument.
 right-clicks the button.
 ]]
 function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_self, on_rightclick)
-  x = x + panel.x
-  y = y + panel.y
+  x = x * TheApp.config.ui_scale + panel.x
+  y = y * TheApp.config.ui_scale + panel.y
+  w = w * TheApp.config.ui_scale
+  h = h * TheApp.config.ui_scale
   local button = setmetatable({
     ui = self.ui,
     is_toggle = false,
@@ -1475,7 +1479,14 @@ function Window:draw(canvas, x, y)
         if panel.custom_draw then
           panel:custom_draw(canvas, x, y)
         else
-          panel_sprites_draw(panel_sprites, canvas, panel.sprite_index, x + panel.x, y + panel.y)
+          canvas:scale(TheApp.config.ui_scale)
+          panel_sprites_draw(
+              panel_sprites,
+              canvas,
+              panel.sprite_index,
+              math.floor((x + panel.x) / TheApp.config.ui_scale),
+              math.floor((y + panel.y) / TheApp.config.ui_scale))
+          canvas:scale(1)
         end
       end
     end
