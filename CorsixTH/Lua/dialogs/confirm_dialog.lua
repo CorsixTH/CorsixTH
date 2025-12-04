@@ -46,8 +46,8 @@ function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, call
   self.esc_closes = true
   self.on_top = true
   self.ui = ui
-  self.width = 183
-  self.height = 199
+  self.width = 183 * TheApp.config.ui_scale
+  self.height = 199 * TheApp.config.ui_scale
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req04V", true)
   self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
@@ -122,7 +122,10 @@ function UIConfirmDialog:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
   x, y = x + self.x, y + self.y
-  self.white_font:drawWrapped(canvas, self.text, x + 17, y + 17, text_width)
+  local s = TheApp.config.ui_scale
+  canvas:scale(TheApp.config.ui_scale)
+  self.white_font:drawWrapped(canvas, self.text, math.floor(x / s + 17), math.floor(y / s + 17), text_width)
+  canvas:scale(1)
 end
 
 function UIConfirmDialog:afterLoad(old, new)
