@@ -262,6 +262,13 @@ int l_bitmap_font_set_sep(lua_State* L) {
   return 1;
 }
 
+int l_bitmap_font_set_scale(lua_State* L) {
+  bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
+  pFont->set_scale_factor(static_cast<int>(luaL_checkinteger(L, 2)));
+  lua_settop(L, 1);
+  return 1;
+}
+
 void l_freetype_throw_error_code(lua_State* L, FT_Error e) {
   if (e != FT_Err_Ok) {
     switch (e) {
@@ -393,6 +400,14 @@ int l_freetype_font_set_font_options(lua_State* L) {
   } else if (lua_isboolean(L, -1)) {
     shadowOptions.enabled = lua_toboolean(L, -1);
   }
+  lua_pop(L, 1);
+
+  lua_getfield(L, -1, "scale_factor");
+  int scale_factor = static_cast<int>(luaL_optinteger(L, -1, 1));
+  width *= scale_factor;
+  height *= scale_factor;
+  shadowOptions.offset_x *= scale_factor;
+  shadowOptions.offset_y *= scale_factor;
   lua_pop(L, 1);
 
   pFont->set_font_color(color);
@@ -1011,6 +1026,7 @@ void lua_register_gfx(const lua_register_state* pState) {
     lcb.add_function(l_bitmap_font_get_spritesheet, "getSheet",
                      lua_metatable::sheet);
     lcb.add_function(l_bitmap_font_set_sep, "setSeparation");
+    lcb.add_function(l_bitmap_font_set_scale, "setScaleFactor");
   }
 
   // FreeTypeFont

@@ -52,6 +52,8 @@ void bitmap_font::set_separation(int iCharSep, int iLineSep) {
   line_spacing = iLineSep;
 }
 
+void bitmap_font::set_scale_factor(int factor) { scale_factor = factor; }
+
 text_layout bitmap_font::get_text_dimensions(const char* sMessage,
                                              size_t iMessageLength,
                                              int iMaxWidth) const {
@@ -67,6 +69,7 @@ void bitmap_font::draw_text(render_target* pCanvas, const char* sMessage,
     unsigned int iLastASCII =
         static_cast<unsigned int>(sheet->get_sprite_count()) + iFirstASCII;
     const char* sMessageEnd = sMessage + iMessageLength;
+    int scaled_letter_spacing = letter_spacing * scale_factor;
 
     while (sMessage != sMessageEnd) {
       unsigned int iChar =
@@ -75,9 +78,12 @@ void bitmap_font::draw_text(render_target* pCanvas, const char* sMessage,
         iChar -= iFirstASCII;
         int iWidth;
         int iHeight;
-        sheet->draw_sprite(pCanvas, iChar, iX, iY, thdf_nearest);
+        sheet->draw_sprite(pCanvas, iChar, iX, iY, thdf_nearest, 0,
+                           animation_effect::none, scale_factor);
         sheet->get_sprite_size_unchecked(iChar, &iWidth, &iHeight);
-        iX += iWidth + letter_spacing;
+        iWidth *= scale_factor;
+        iHeight *= scale_factor;
+        iX += iWidth + scaled_letter_spacing;
       }
     }
   }
@@ -101,7 +107,9 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
     while (sMessage != sMessageEnd && oDrawArea.row_count < iMaxRows) {
       const char* sBreakPosition = sMessageEnd;
       const char* sLastGoodBreakPosition = sBreakPosition;
-      int iMsgWidth = -letter_spacing;
+      int scaled_letter_spacing = letter_spacing * scale_factor;
+      int scaled_line_spacing = line_spacing * scale_factor;
+      int iMsgWidth = -scaled_letter_spacing;
       int iMsgBreakWidth = iMsgWidth;
       int iTallest = 0;
       const char* s;
@@ -125,8 +133,10 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
         if (iFirstASCII <= iChar && iChar <= iLastASCII) {
           sheet->get_sprite_size_unchecked(iChar - iFirstASCII, &iCharWidth,
                                            &iCharHeight);
+          iCharWidth *= scale_factor;
+          iCharHeight *= scale_factor;
         }
-        iMsgWidth += letter_spacing + iCharWidth;
+        iMsgWidth += scaled_letter_spacing + iCharWidth;
         if (iChar == ' ') {
           sLastGoodBreakPosition = sOld;
           iMsgBreakWidth = iMsgWidth - iCharWidth;
@@ -150,18 +160,18 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
           draw_text(pCanvas, sMessage, sBreakPosition - sMessage, iX + iXOffset,
                     iY);
         }
-        iY += static_cast<int>(iTallest) + line_spacing;
+        iY += static_cast<int>(iTallest) + scaled_line_spacing;
         oDrawArea.end_x = iMsgWidth;
         oDrawArea.row_count++;
         if (foundNewLine) {
-          iY += static_cast<int>(iTallest) + line_spacing;
+          iY += static_cast<int>(iTallest) + scaled_line_spacing;
           oDrawArea.row_count++;
         }
       } else {
         iSkippedRows++;
         if (foundNewLine) {
           if (iSkippedRows == iSkipRows) {
-            iY += static_cast<int>(iTallest) + line_spacing;
+            iY += static_cast<int>(iTallest) + scaled_line_spacing;
             oDrawArea.row_count++;
           }
           iSkippedRows++;
