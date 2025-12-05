@@ -1328,7 +1328,7 @@ bool sprite_sheet::is_sprite_visible(size_t iSprite) const {
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
                                int iY, uint32_t iFlags, size_t effect_ticks,
-                               animation_effect effect) {
+                               animation_effect effect, int scale_factor) {
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
   sprite& sprite = sprites[iSprite];
@@ -1391,7 +1391,9 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
           // If the current offset rounds to a different value, render the
           // previous offset and start a new offset.
           SDL_Rect rcSrc = {0, y1, sprite.width, y2 - y1};
-          SDL_Rect rcDest = {iX + x_offset, iY + y1, sprite.width, y2 - y1};
+          SDL_Rect rcDest = {iX + x_offset, iY + y1,
+                             sprite.width * scale_factor,
+                             (y2 - y1) * scale_factor};
           pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
         }
         y1 = y2;
@@ -1400,7 +1402,8 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     }
   } else {
     SDL_Rect rcSrc = {0, 0, sprite.width, sprite.height};
-    SDL_Rect rcDest = {iX, iY, sprite.width, sprite.height};
+    SDL_Rect rcDest = {iX, iY, sprite.width * scale_factor,
+                       sprite.height * scale_factor};
 
     pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
   }
