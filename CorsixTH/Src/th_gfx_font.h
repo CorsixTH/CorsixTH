@@ -146,6 +146,8 @@ class bitmap_font final : public font {
   */
   void set_sprite_sheet(sprite_sheet* pSpriteSheet);
 
+  void set_scale_factor(int factor);
+
   sprite_sheet* get_sprite_sheet() { return sheet; }
 
   //! Set the separation between characters and between lines
@@ -170,6 +172,7 @@ class bitmap_font final : public font {
   sprite_sheet* sheet{nullptr};
   int letter_spacing{};
   int line_spacing{};
+  int scale_factor{1};
 };
 
 //! Adaptor around the FreeType2 library to a THFont.

@@ -346,6 +346,7 @@ function UIOptions:selectUIScale(number)
   TheApp:saveConfig()
   self.scale_ui_panel:setLabel(res.text)
   self.ui:onChangeResolution()
+  TheApp.gfx:onChangeUIScale()
 end
 
 --! Changes check for update setting to on/of

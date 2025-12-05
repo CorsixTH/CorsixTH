@@ -256,7 +256,7 @@ end
 --!  can be either of "left", "center", "right"
 function Panel:setLabel(label, font, align)
   self.label = label or ""
-  self.label_font = font or self.label_font or TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, {ttf_shadow = true})
+  self.label_font = font or self.label_font or TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, {ttf_shadow = true, apply_ui_scale = true})
   self.align = align or self.align
   return self
 end
@@ -315,18 +315,15 @@ function Panel:drawLabel(canvas, x, y, limit)
       line = self:clipLine(line, self.w - 4)
     end
 
-    local scale = TheApp.config.ui_scale
-    canvas:scale(scale)
     if wrapped then
-      next_y, last_x = self.label_font:drawWrapped(canvas, line, math.floor((x + self.x + 2) / scale), math.floor(old_y / scale), math.floor((self.w - 4) / scale), self.align)
+      next_y, last_x = self.label_font:drawWrapped(canvas, line, x + self.x + 2, old_y, self.w - 4, self.align)
     else
-      next_y, last_x = self.label_font:draw(canvas, line, math.floor((x + self.x + 2) / scale), math.floor(old_y / scale), math.floor((self.w - 4) / scale), math.floor((center_y and self.h or 0) / scale), self.align)
+      next_y, last_x = self.label_font:draw(canvas, line, x + self.x + 2, old_y, (self.w - 4), (center_y and self.h or 0), self.align)
     end
     if not line:find("%S") then
       -- Special handling for empty lines or lines with only space
-      next_y = self.label_font:draw(nil, "A", math.floor((x + self.x + 2) / scale), math.floor(old_y / scale), math.floor((self.w - 4) / scale), math.floor((center_y and self.h or 0) / scale), self.align)
+      next_y = self.label_font:draw(nil, "A", (x + self.x + 2), old_y, (self.w - 4), (center_y and self.h or 0), self.align)
     end
-    canvas:scale(1)
     if limit and limit[1] == i then
       break
     end
