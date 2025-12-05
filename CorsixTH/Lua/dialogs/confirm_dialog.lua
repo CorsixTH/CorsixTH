@@ -50,14 +50,14 @@ function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, call
   self.height = 199 * TheApp.config.ui_scale
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req04V", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   self.text = text
   self.callback_ok = callback_ok  -- Callback function to launch if user chooses ok
   self.callback_cancel = callback_cancel -- Callback function to launch if user chooses cancel
   self.must_pause = must_pause
 
   -- Check how "high" the dialog must be
-  local _, text_height = self.white_font:sizeOf(text, text_width)
+  local _, text_height = self.white_font:sizeOf(text, text_width * TheApp.config.ui_scale)
 
   self:addPanel(top_frame, 0, 0)  -- Dialog header
   local last_y = top_frame_height
@@ -123,9 +123,7 @@ function UIConfirmDialog:draw(canvas, x, y)
 
   x, y = x + self.x, y + self.y
   local s = TheApp.config.ui_scale
-  canvas:scale(TheApp.config.ui_scale)
-  self.white_font:drawWrapped(canvas, self.text, math.floor(x / s + 17), math.floor(y / s + 17), text_width)
-  canvas:scale(1)
+  self.white_font:drawWrapped(canvas, self.text, x + 17 * s, y + 17 * s, text_width * s)
 end
 
 function UIConfirmDialog:afterLoad(old, new)
