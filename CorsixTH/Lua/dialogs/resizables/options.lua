@@ -347,6 +347,10 @@ function UIOptions:selectUIScale(number)
   self.scale_ui_panel:setLabel(res.text)
   self.ui:onChangeResolution()
   TheApp.gfx:onChangeUIScale()
+
+  -- Reset the options window to apply the new scale
+  UIResizable.close(self)
+  self.ui:addWindow(UIOptions(self.ui, self.mode))
 end
 
 --! Changes check for update setting to on/of
