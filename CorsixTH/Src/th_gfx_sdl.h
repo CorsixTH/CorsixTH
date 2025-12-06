@@ -599,10 +599,12 @@ class sprite_sheet {
       @param iFlags Flags to apply for drawing.
       @param effect_ticks The number of ticks into the effect animation.
       @param effect The animation effect to apply to the sprite.
+      @param scale_factor How much to scale the sprite when drawing.
   */
   void draw_sprite(render_target* pCanvas, size_t iSprite, int iX, int iY,
                    uint32_t iFlags, size_t effect_ticks = 0u,
-                   animation_effect effect = animation_effect::none);
+                   animation_effect effect = animation_effect::none,
+                   int scale_factor = 1);
 
   //! Test whether a sprite was hit.
   /*!
