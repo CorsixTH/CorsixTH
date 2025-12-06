@@ -64,6 +64,12 @@ function Window:mustPause()
   return false
 end
 
+function Window:setSize(width, height, scale)
+  scale = scale or TheApp.config.ui_scale
+  self.width = width * scale
+  self.height = height * scale
+end
+
 -- Sets the window's onscreen position. Each of x and y can be:
 -- Integers >= 0 - Absolute pixel positions of top/left edge of window relative
 --                 to top/left edge of screen
