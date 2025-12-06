@@ -32,8 +32,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.ui = ui
   self.world = app.world
   self.on_top = false
-  self.width = 640
-  self.height = 48
+  self:setSize(640, 48)
   self:setDefaultPosition(0.5, -0.1)
   self:_initFonts(app.gfx)
 
@@ -75,7 +74,7 @@ function UIBottomPanel:drawPanels()
 
   -- If there is a machine menu button, then lets adjust bottom panel width so it can fit
   if self:machineMenuButtonExists() then
-    self.width = 676
+    self.width = 676 * TheApp.config.ui_scale
     for x = 377, 660, 10 do
       self:addPanel(13, x, 0)
     end
@@ -83,7 +82,7 @@ function UIBottomPanel:drawPanels()
 
     self.offset = 38
   else
-    self.width = 640
+    self.width = 640 * TheApp.config.ui_scale
     for x = 377, 630, 10 do
       self:addPanel(13, x, 0)
     end
@@ -106,16 +105,19 @@ function UIBottomPanel:drawPanels()
       .panel_for_sprite.custom_draw = --[[persistable:machine_menu_buttons]] function(panel, canvas, x, y)
       x = x + panel.x
       y = y + panel.y
-      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
+      local s = TheApp.config.ui_scale
+      canvas:scale(s)
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, math.floor(x / s), math.floor(y / s))
       local btn = panel.window.active_button
       if panels[1].visible then
         local w = self.ui:getWindow(UIMachineMenu)
         if w or btn and btn.panel_for_sprite == panel and btn.active then
-          aux_sprites:draw(canvas, 23, x, y)
+          aux_sprites:draw(canvas, 23, math.floor(x / s), math.floor(y / s))
         else
-          aux_sprites:draw(canvas, 22, x, y)
+          aux_sprites:draw(canvas, 22, math.floor(x / s), math.floor(y / s))
         end
       end
+      canvas:scale(1)
     end
   end
   panels[2]  = self:addPanel(17, 407 + self.offset, 0) -- Town map button
@@ -149,10 +151,10 @@ function UIBottomPanel:_initFonts(gfx)
   local date_label_color = { red = 175, green = 50, blue = 15 }
   local pause_label_color = { red = 35, green = 138, blue = 173 }
   self.panel_sprites = gfx:loadSpriteTable("Data", "Panel02V", true)
-  self.money_font = gfx:loadFontAndSpriteTable("QData", "Font05V")
-  self.date_font = gfx:loadFontAndSpriteTable("QData", "Font16V", nil, nil, {ttf_color = date_label_color})
-  self.white_font = gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, {y_sep = -2})
-  self.pause_font = gfx:loadFontAndSpriteTable("QData", "Font124V", nil, nil, {ttf_color = pause_label_color})
+  self.money_font = gfx:loadFontAndSpriteTable("QData", "Font05V", nil, nil, { apply_ui_scale = true })
+  self.date_font = gfx:loadFontAndSpriteTable("QData", "Font16V", nil, nil, {ttf_color = date_label_color, apply_ui_scale = true})
+  self.white_font = gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, {y_sep = -2, apply_ui_scale = true})
+  self.pause_font = gfx:loadFontAndSpriteTable("QData", "Font124V", nil, nil, {ttf_color = pause_label_color, apply_ui_scale = true})
 end
 
 function UIBottomPanel:registerKeyHandlers()
@@ -233,6 +235,7 @@ function UIBottomPanel:draw(canvas, x, y)
 
   -- Draw balance with temporary offset in unicode languages
   x, y = x + self.x, y + self.y
+  local s = TheApp.config.ui_scale
   local offset_x, offset_y = 0, 0
   if self.ui.app.gfx:drawNumbersFromUnicode() then
     offset_x = 4
@@ -241,12 +244,12 @@ function UIBottomPanel:draw(canvas, x, y)
   local balance = math.floor(self.ui.hospital.balance)
   local i = 7 - tostring(balance):len() -- Indent balances under 100k
   for digit in ("%7i"):format(balance):gmatch("[-0-9]") do
-    self.money_font:draw(canvas, digit, x + offset_x + 44 + i * 13, y + offset_y + 9)
+    self.money_font:draw(canvas, digit, x + offset_x * s + 44 * s + i * 13 * s, y + offset_y * s + 9 * s)
     i = i + 1
   end
   local game_date = self.world:date()
   local month, day = game_date:monthOfYear(), game_date:dayOfMonth()
-  self.date_font:draw(canvas, _S.date_format.daymonth:format(day, month), x + 140, y + 20, 60, 0)
+  self.date_font:draw(canvas, _S.date_format.daymonth:format(day, month), x + 140 * s, y + 20 * s, 60 * s, 0)
 
   -- Draw possible information in the dynamic info bar
   if not self.additional_panels[1].visible then
@@ -941,6 +944,8 @@ function UIBottomPanel:editRoom()
 end
 
 function UIBottomPanel:afterLoad(old, new)
+  self:setSize(640, 48)
+  self:setDefaultPosition(0.5, -0.1)
   self:removeAllPanels()
   self:drawPanels()
   self:updateButtonStates()
