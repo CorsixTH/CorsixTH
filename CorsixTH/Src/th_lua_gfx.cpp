@@ -199,10 +199,44 @@ int l_spritesheet_draw(lua_State* L) {
   int iSprite =
       static_cast<int>(luaL_checkinteger(L, 3));  // No array adjustment
 
-  pSheet->draw_sprite(pCanvas, iSprite,
-                      static_cast<int>(luaL_optinteger(L, 4, 0)),
-                      static_cast<int>(luaL_optinteger(L, 5, 0)),
-                      static_cast<int>(luaL_optinteger(L, 6, 0)));
+  int x = static_cast<int>(luaL_optinteger(L, 4, 0));
+  int y = static_cast<int>(luaL_optinteger(L, 5, 0));
+
+  int scaleFactor = 1;
+  uint32_t flags = 0;
+  int arg6type = lua_type(L, 6);
+  if (arg6type == LUA_TTABLE) {
+    lua_getfield(L, 6, "flags");
+    flags = static_cast<uint32_t>(luaL_optinteger(L, -1, 0));
+    lua_pop(L, 1);
+
+    lua_getfield(L, 6, "nearest");
+    if (lua_toboolean(L, -1)) {
+      flags |= thdf_nearest;
+    }
+    lua_pop(L, 1);
+
+    lua_getfield(L, 6, "flipHorizontal");
+    if (lua_toboolean(L, -1)) {
+      flags |= thdf_flip_horizontal;
+    }
+    lua_pop(L, 1);
+
+    lua_getfield(L, 6, "flipVertical");
+    if (lua_toboolean(L, -1)) {
+      flags |= thdf_flip_vertical;
+    }
+    lua_pop(L, 1);
+
+    lua_getfield(L, 6, "scaleFactor");
+    scaleFactor = static_cast<int>(luaL_optinteger(L, -1, 1));
+    lua_pop(L, 1);
+  } else if (arg6type != LUA_TNONE) {
+    luaL_error(L, "Expected table for draw options");
+  }
+
+  pSheet->draw_sprite(pCanvas, iSprite, x, y, flags, 0, animation_effect::none,
+                      scaleFactor);
 
   lua_settop(L, 1);
   return 1;

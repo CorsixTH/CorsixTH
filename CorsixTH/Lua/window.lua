@@ -1482,14 +1482,13 @@ function Window:draw(canvas, x, y)
         if panel.custom_draw then
           panel:custom_draw(canvas, x, y)
         else
-          canvas:scale(TheApp.config.ui_scale)
           panel_sprites_draw(
               panel_sprites,
               canvas,
               panel.sprite_index,
-              math.floor((x + panel.x) / TheApp.config.ui_scale),
-              math.floor((y + panel.y) / TheApp.config.ui_scale))
-          canvas:scale(1)
+              x + panel.x,
+              y + panel.y,
+              { scaleFactor = TheApp.config.ui_scale })
         end
       end
     end
