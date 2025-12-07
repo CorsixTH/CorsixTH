@@ -106,18 +106,16 @@ function UIBottomPanel:drawPanels()
       x = x + panel.x
       y = y + panel.y
       local s = TheApp.config.ui_scale
-      canvas:scale(s)
-      panel.window.panel_sprites:draw(canvas, panel.sprite_index, math.floor(x / s), math.floor(y / s))
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
       local btn = panel.window.active_button
       if panels[1].visible then
         local w = self.ui:getWindow(UIMachineMenu)
         if w or btn and btn.panel_for_sprite == panel and btn.active then
-          aux_sprites:draw(canvas, 23, math.floor(x / s), math.floor(y / s))
+          aux_sprites:draw(canvas, 23, x, y, { scaleFactor = s })
         else
-          aux_sprites:draw(canvas, 22, math.floor(x / s), math.floor(y / s))
+          aux_sprites:draw(canvas, 22, x, y, { scaleFactor = s })
         end
       end
-      canvas:scale(1)
     end
   end
   panels[2]  = self:addPanel(17, 407 + self.offset, 0) -- Town map button
@@ -253,26 +251,26 @@ function UIBottomPanel:draw(canvas, x, y)
 
   -- Draw possible information in the dynamic info bar
   if not self.additional_panels[1].visible then
-    self:drawDynamicInfo(canvas, x + 364, y)
+    self:drawDynamicInfo(canvas, x + 364 * s, y)
   end
 
   if self.show_animation then
     if self.factory_counter >= 1 then
-        self.panel_sprites:draw(canvas, 40, x + 177, y + 1)
+        self.panel_sprites:draw(canvas, 40, x + 177 * s, y + 1, { scaleFactor = s })
     end
 
     if self.factory_counter > 1 and self.factory_counter <= 22 then
       for dx = 0, self.factory_counter do
-        self.panel_sprites:draw(canvas, 41, x + 179 + dx, y + 1)
+        self.panel_sprites:draw(canvas, 41, x + 179 * s + dx, y + 1 * s, { scaleFactor = s })
       end
     end
 
     if self.factory_counter == 22 then
-      self.panel_sprites:draw(canvas, 42, x + 201, y + 1)
+      self.panel_sprites:draw(canvas, 42, x + 201 * s, y + 1 * s, { scaleFactor = s })
     end
   end
 
-  self:drawReputationMeter(canvas, x + 55, y + 35)
+  self:drawReputationMeter(canvas, x + 55 * s, y + 35 * s)
 end
 
 function UIBottomPanel:setPosition(x, y)
@@ -284,9 +282,10 @@ end
 -- x_left is the leftmost x-coordinate of the reputation meter
 -- y is the y-coordinate of the reputation meter
 function UIBottomPanel:drawReputationMeter(canvas, x_left, y)
-  local width = 65 -- Reputation meter width
+  local s = TheApp.config.ui_scale
+  local width = 65 * s -- Reputation meter width
   local step = width / (self.ui.hospital.reputation_max - self.ui.hospital.reputation_min)
-  self.panel_sprites:draw(canvas, 36, x_left + math.floor(step * (self.ui.hospital.reputation - self.ui.hospital.reputation_min)), y)
+  self.panel_sprites:draw(canvas, 36, x_left + math.floor(step * (self.ui.hospital.reputation - self.ui.hospital.reputation_min)), y, { scaleFactor = s })
 end
 
 --! Adds dynamic text to the bottom panel based on cursor position
@@ -294,14 +293,15 @@ end
 --!param x (num) coordinate
 --!param y (num) coordinate
 function UIBottomPanel:drawDynamicInfo(canvas, x, y)
+  local s = TheApp.config.ui_scale
   if self.world:isCurrentSpeed("Pause") then
     if not self.world.user_actions_allowed then
       -- Original pause behaviour, show pause text
-      self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10, y + 14, 255, "center")
+      self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10 * s, y + 14 * s, 255 * s, "center")
       return
     elseif not (self.dynamic_info and self.dynamic_info["text"]) then
       -- User allows editing while paused, only show pause text where dynamic text not present
-      self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10, y + 14, 255, "center")
+      self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10 * s, y + 14 * s, 255 * s, "center")
       return
     end
   end
@@ -313,17 +313,17 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
   local info = self.dynamic_info
   local font = self.white_font
   for i, text in ipairs(info["text"]) do
-    font:drawWrapped(canvas, text, x + 20, y + 10 * i, 240)
+    font:drawWrapped(canvas, text, x + 20 * s, y + 10 * i * s, 240 * s)
     if i == #info["text"] and info["progress"] then
       local white = canvas:mapRGB(255, 255, 255)
       local black = canvas:mapRGB(0, 0, 0)
       local orange = canvas:mapRGB(221, 83, 0)
-      canvas:drawRect(white, x + 165, y + 10 * i, 100, 10)
-      canvas:drawRect(black, x + 166, y + 1 + 10 * i, 98, 8)
-      canvas:drawRect(orange, x + 166, y + 1 + 10 * i, math.floor(98 * info["progress"]), 8)
+      canvas:drawRect(white, x + 165 * s, y + 10 * i * s, 100 * s, 10 * s)
+      canvas:drawRect(black, x + 166 * s, y + s + 10 * i * s, 98 * s, 8 * s)
+      canvas:drawRect(orange, x + 166 * s, y + s + 10 * i * s, math.floor(98 * info["progress"] * s), 8 * s)
       if info["dividers"] then
         for _, value in ipairs(info["dividers"]) do
-          canvas:drawRect(white, x + 165 + math.floor(value * 100), y + 10 * i, 1, 10)
+          canvas:drawRect(white, x + 165 * s + math.floor(value * 100 * s), y + 10 * i * s, s, 10 * s)
         end
       end
     end
