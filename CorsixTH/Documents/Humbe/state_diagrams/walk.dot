@@ -1,0 +1,13 @@
+digraph G {
+    start [shape=plaintext];
+    ok [shape=plaintext];
+    nopath [label="No path", shape=plaintext];
+
+    computepath [label="Compute path", shape=octagon];
+    walk [label="Animate walk", shape=ellipse];
+
+    start -> computepath;
+    computepath -> nopath;
+    computepath -> walk;
+    walk -> ok;
+}
