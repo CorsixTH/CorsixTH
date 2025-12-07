@@ -337,6 +337,7 @@ function Graphics:loadBuiltinFont()
     font = TH.bitmap_font()
     font:setSheet(sheet)
     font:setSeparation(1, 0)
+    font:setScaleFactor(TheApp.config.ui_scale)
     self.load_info[font] = {self.loadBuiltinFont, self}
     self.builtin_font = font
   end

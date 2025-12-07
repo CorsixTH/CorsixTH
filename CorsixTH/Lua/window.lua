@@ -377,13 +377,14 @@ panel (in pixels) is known, it should be specified here to speed up hit-tests.
 !param h (integer, nil) If the panel is totally opaque, and the height of the
 panel (in pixels) is known, it should be specified here to speed up hit-tests.
 ]]
-function Window:addPanel(sprite_index, x, y, w, h)
+function Window:addPanel(sprite_index, x, y, w, h, scale)
+  scale = scale or TheApp.config.ui_scale
   local panel = setmetatable({
     window = self,
-    x = x * TheApp.config.ui_scale,
-    y = y * TheApp.config.ui_scale,
-    w = w and w * TheApp.config.ui_scale or w,
-    h = h and h * TheApp.config.ui_scale or h,
+    x = x * scale,
+    y = y * scale,
+    w = w and w * scale or w,
+    h = h and h * scale or h,
     sprite_index = sprite_index,
     visible = true,
   }, panel_mt)
