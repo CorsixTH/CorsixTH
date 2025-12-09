@@ -728,7 +728,7 @@ function UIMapEditor:buildSpriteButtons(buttons)
         for _, spr in ipairs(panel.editor_button.sprites) do
           local xspr = x + (spr.xpos - spr.ypos) * 32
           local yspr = y + (spr.xpos + spr.ypos) * 16 - 32
-          panel.window.panel_sprites:draw(canvas, spr.sprite % 256, xspr, yspr, math.floor(spr.sprite / 256))
+          panel.window.panel_sprites:draw(canvas, spr.sprite % 256, xspr, yspr, { flags = math.floor(spr.sprite / 256) })
         end
       end
 
