@@ -46,8 +46,8 @@ function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, call
   self.esc_closes = true
   self.on_top = true
   self.ui = ui
-  self.width = 183 * TheApp.config.ui_scale
-  self.height = 199 * TheApp.config.ui_scale
+  self.width = 183
+  self.height = 199
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req04V", true)
   self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
@@ -58,6 +58,7 @@ function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, call
 
   -- Check how "high" the dialog must be
   local _, text_height = self.white_font:sizeOf(text, text_width * TheApp.config.ui_scale)
+  text_height = text_height / TheApp.config.ui_scale -- Scale independent pixels
 
   self:addPanel(top_frame, 0, 0)  -- Dialog header
   local last_y = top_frame_height
