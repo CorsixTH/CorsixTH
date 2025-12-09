@@ -76,7 +76,7 @@ function UITipOfTheDay:draw(canvas, x, y)
 
   local s = TheApp.config.ui_scale
   local text = _S.totd_window.tips[self.tip_num]
-  self.white_font:drawWrapped(canvas, text, x + 10 * s, y + 10 * s, self.width - 20 * s)
+  self.white_font:drawWrapped(canvas, text, x + 10 * s, y + 10 * s, self.width * s - 20 * s)
 end
 
 function UITipOfTheDay:buttonPrev()

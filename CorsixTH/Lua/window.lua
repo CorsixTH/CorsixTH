@@ -57,6 +57,7 @@ function Window:Window()
   self.panel_sprites = false
   self.visible = true
   self.draggable = true
+  self.apply_ui_scale = true
 end
 
 -- Most windows don't pause the game. Specific windows: fax, annual report, staff rise, and errors do pause and are set in the specific files
@@ -64,10 +65,10 @@ function Window:mustPause()
   return false
 end
 
-function Window:setSize(width, height, scale)
-  scale = scale or TheApp.config.ui_scale
-  self.width = width * scale
-  self.height = height * scale
+function Window:setSize(width, height, apply_ui_scale)
+  self.apply_ui_scale = apply_ui_scale
+  self.width = width
+  self.height = height
 end
 
 -- Sets the window's onscreen position. Each of x and y can be:
@@ -82,15 +83,17 @@ function Window:setPosition(x, y)
   self.y_original = y
   -- Convert x and y to absolute pixel positions with regard to top/left
   local w, h = TheApp.config.width, TheApp.config.height
+  local sw = self.width * (self.apply_ui_scale and TheApp.config.ui_scale or 1)
+  local sh = self.height * (self.apply_ui_scale and TheApp.config.ui_scale or 1)
   if x < 0 then
-    x = math.ceil(w - self.width + x)
+    x = math.ceil(w - sw + x)
   elseif x < 1 then
-    x = math.floor((w - self.width) * x + 0.5)
+    x = math.floor((w - sw) * x + 0.5)
   end
   if y < 0 then
-    y = math.ceil(h - self.height + y)
+    y = math.ceil(h - sh + y)
   elseif y < 1 then
-    y = math.floor((h - self.height) * y + 0.5)
+    y = math.floor((h - sh) * y + 0.5)
   end
   self.x = x
   self.y = y
@@ -303,6 +306,7 @@ function Panel:drawLabel(canvas, x, y, limit)
   local multi_line = type(text) == "table"
   local wrapped = not self.auto_clip
   local center_y = false
+  local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
 
   if not multi_line then
     text = {text}
@@ -310,25 +314,25 @@ function Panel:drawLabel(canvas, x, y, limit)
     center_y = true
   end
 
-  local next_y = y + self.y + 1
-  local last_x = x + self.x + 2
+  local next_y = y + self.y * s + s
+  local last_x = x + self.x * s + 2 * s
   for i, line in ipairs(text) do
     local old_y = next_y
     if limit and limit[1] == i then
       line = line:sub(1, limit[2])
     end
     if self.auto_clip then
-      line = self:clipLine(line, self.w - 4)
+      line = self:clipLine(line, self.w * s - 4 * s)
     end
 
     if wrapped then
-      next_y, last_x = self.label_font:drawWrapped(canvas, line, x + self.x + 2, old_y, self.w - 4, self.align)
+      next_y, last_x = self.label_font:drawWrapped(canvas, line, x + self.x * s + 2 * s, old_y, self.w * s - 4 * s, self.align)
     else
-      next_y, last_x = self.label_font:draw(canvas, line, x + self.x + 2, old_y, (self.w - 4), (center_y and self.h or 0), self.align)
+      next_y, last_x = self.label_font:draw(canvas, line, x + self.x * s + 2 * s, old_y, (self.w * s - 4 * s), (center_y and self.h * s or 0), self.align)
     end
     if not line:find("%S") then
       -- Special handling for empty lines or lines with only space
-      next_y = self.label_font:draw(nil, "A", (x + self.x + 2), old_y, (self.w - 4), (center_y and self.h or 0), self.align)
+      next_y = self.label_font:draw(nil, "A", (x + self.x * s + 2 * s), old_y, (self.w * s - 4 * s), (center_y and self.h * s or 0), self.align)
     end
     if limit and limit[1] == i then
       break
@@ -349,10 +353,9 @@ end
 --!param width (int) New width of the panel.
 --!param height (int) New height of the panel.
 --!param scale (int|nil) Scale factor to apply to width and height. Default is TheApp.config.ui_scale.
-function Panel:setSize(width, height, scale)
-  scale = scale or TheApp.config.ui_scale
-  self.w = width * scale
-  self.h = height * scale
+function Panel:setSize(width, height)
+  self.w = width
+  self.h = height
 end
 
 --! Set the visibility of the panel.
@@ -398,7 +401,8 @@ function Window:removeAllPanels()
 end
 
 local --[[persistable: window_panel_colour_draw]] function panel_colour_draw(panel, canvas, x, y)
-  canvas:drawRect(panel.colour, x + panel.x, y + panel.y, panel.w, panel.h)
+  local s = panel.apply_ui_scale and TheApp.config.ui_scale or 1
+  canvas:drawRect(panel.colour, x + panel.x * s, y + panel.y * s, panel.w * s, panel.h * s)
   if panel.label then
     panel:drawLabel(canvas, x, y)
   end
@@ -414,10 +418,13 @@ colour rather than a bitmap.
 !param r (integer) Value in [0, 255] giving the red component of the colour.
 !param g (integer) Value in [0, 255] giving the green component of the colour.
 !param b (integer) Value in [0, 255] giving the blue component of the colour.
+!param apply_ui_scale (boolean) Whether to apply UI scale to position and size.
+  Default is to match window.
 ]]
-function Window:addColourPanel(x, y, w, h, r, g, b)
+function Window:addColourPanel(x, y, w, h, r, g, b, apply_ui_scale)
   local panel = setmetatable({
     window = self,
+    apply_ui_scale = apply_ui_scale ~= nil and apply_ui_scale or self.apply_ui_scale,
     x = x,
     y = y,
     w = w,
@@ -431,14 +438,16 @@ function Window:addColourPanel(x, y, w, h, r, g, b)
 end
 
 local --[[persistable: window_panel_bevel_draw]] function panel_bevel_draw(panel, canvas, x, y)
+  local s = panel.apply_ui_scale and TheApp.config.ui_scale or 1
+
   if panel.lowered then
-    canvas:drawRect(panel.highlight_colour, x + panel.x, y + panel.y, panel.w, panel.h)
-    canvas:drawRect(panel.shadow_colour, x + panel.x, y + panel.y, panel.w - 1, panel.h - 1)
-    canvas:drawRect(panel.lowered_colour, x + panel.x + 1, y + panel.y + 1, panel.w - 2, panel.h - 2)
+    canvas:drawRect(panel.highlight_colour, x + panel.x * s, y + panel.y * s, panel.w * s, panel.h * s)
+    canvas:drawRect(panel.shadow_colour, x + panel.x * s, y + panel.y * s, panel.w * s - s, panel.h * s - s)
+    canvas:drawRect(panel.lowered_colour, x + panel.x * s + s, y + panel.y * s + s, panel.w * s - 2 * s, panel.h * s - 2 * s)
   else
-    canvas:drawRect(panel.shadow_colour, x + panel.x + 1, y + panel.y + 1, panel.w - 1, panel.h - 1)
-    canvas:drawRect(panel.highlight_colour, x + panel.x, y + panel.y, panel.w - 1, panel.h - 1)
-    canvas:drawRect(panel.colour, x + panel.x + 1, y + panel.y + 1, panel.w - 2, panel.h - 2)
+    canvas:drawRect(panel.shadow_colour, x + panel.x * s + s, y + panel.y * s + s, panel.w * s - s, panel.h * s - s)
+    canvas:drawRect(panel.highlight_colour, x + panel.x * s, y + panel.y * s, panel.w * s - s, panel.h * s - s)
+    canvas:drawRect(panel.colour, x + panel.x * s + s, y + panel.y * s + s, panel.w * s - 2 * s, panel.h * s - 2 * s)
   end
   if panel.label then
     panel:drawLabel(canvas, x, y)
@@ -458,7 +467,7 @@ features a highlight and a shadow that makes it appear either lowered or raised.
 !param disabled_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the disabled panel.
 !param lowered_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the lowered (toggled) panel.
 ]]
-function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour, disabled_colour, lowered_colour)
+function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour, disabled_colour, lowered_colour, apply_ui_scale)
   highlight_colour = highlight_colour or {
     red = sanitize(colour.red + 40),
     green = sanitize(colour.green + 40),
@@ -478,10 +487,11 @@ function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colou
 
   local panel = setmetatable({
     window = self,
-    x = x * TheApp.config.ui_scale,
-    y = y * TheApp.config.ui_scale,
-    w = w * TheApp.config.ui_scale,
-    h = h * TheApp.config.ui_scale,
+    apply_ui_scale = apply_ui_scale ~= nil and apply_ui_scale or self.apply_ui_scale,
+    x = x,
+    y = y,
+    w = w,
+    h = h,
     colour = TheApp.video:mapRGB(colour.red, colour.green, colour.blue),
     highlight_colour = TheApp.video:mapRGB(highlight_colour.red, highlight_colour.green, highlight_colour.blue),
     shadow_colour = TheApp.video:mapRGB(shadow_colour.red, shadow_colour.green, shadow_colour.blue),
@@ -774,10 +784,8 @@ nil or not given, then the window is passed as the first argument.
 right-clicks the button.
 ]]
 function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_self, on_rightclick)
-  x = x * TheApp.config.ui_scale + panel.x
-  y = y * TheApp.config.ui_scale + panel.y
-  w = w * TheApp.config.ui_scale
-  h = h * TheApp.config.ui_scale
+  x = x + panel.x
+  y = y + panel.y
   local button = setmetatable({
     ui = self.ui,
     is_toggle = false,
@@ -1535,10 +1543,11 @@ function Window:onCursorWorldPositionChange(x, y)
 end
 
 function Window:hitTestPanel(x, y, panel)
-  local xpos, ypos = x - panel.x, y - panel.y
+  local s = panel.apply_ui_scale and TheApp.config.ui_scale or 1
+  local xpos, ypos = x - panel.x * s, y - panel.y * s
   if panel.visible and xpos >= 0 and ypos >= 0 then
     if panel.w and panel.h then
-      if xpos <= panel.w and ypos <= panel.h then
+      if xpos <= panel.w * s and ypos <= panel.h * s then
         return true
       end
     else
@@ -1607,7 +1616,10 @@ function Window:onMouseDown(button, x, y)
   end
   if not repaint and (button == "left" or button == "right") then
     for _, btn in ipairs(self.buttons) do
-      if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b and (button == "left" or btn.on_rightclick ~= nil) then
+      local bs = btn.panel_for_sprite.apply_ui_scale and TheApp.config.ui_scale or 1
+      if btn.enabled and
+          btn.x * bs <= x and x < btn.r * bs and btn.y * bs <= y and y < btn.b * bs and
+          (button == "left" or btn.on_rightclick ~= nil) then
         btn.panel_for_sprite.sprite_index = btn.sprite_index_active
         self.active_button = btn
         btn.active = true
@@ -1688,12 +1700,13 @@ function Window:onMouseUp(button, x, y)
   if button == "left" or button == "right" then
     local btn = self.active_button
     if btn then
+      local bs = btn.panel_for_sprite.apply_ui_scale and TheApp.config.ui_scale or 1
       btn.panel_for_sprite.sprite_index = btn.sprite_index_normal
       btn.active = false
       btn.panel_for_sprite.lowered = btn.panel_lowered_normal
       self.active_button = false
       self.btn_repeat_delay = nil
-      if btn.enabled and not btn.is_repeat and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+      if btn.enabled and not btn.is_repeat and btn.x * bs <= x and x < btn.r * bs and btn.y * bs <= y and y < btn.b * bs then
         btn:handleClick(button)
       end
       repaint = true
@@ -1813,7 +1826,8 @@ function Window:onMouseMove(x, y, dx, dy)
   if self.active_button then
     local btn = self.active_button
     local index = btn.sprite_index_blink or btn.sprite_index_normal
-    if btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+    local bs = btn.panel_for_sprite.apply_ui_scale and TheApp.config.ui_scale or 1
+    if btn.x * bs <= x and x < btn.r * bs and btn.y * bs <= y and y < btn.b * bs then
       index = btn.sprite_index_active
       self.active_button.active = true
       btn.panel_for_sprite.lowered = btn.panel_lowered_active
@@ -1821,7 +1835,8 @@ function Window:onMouseMove(x, y, dx, dy)
       self.active_button.active = false
       btn.panel_for_sprite.lowered = btn.panel_lowered_normal
       for _, button in ipairs(self.buttons) do
-        if button.enabled and button.x <= x and x < button.r and button.y <= y and y < button.b then
+        bs = btn.panel_for_sprite.apply_ui_scale and TheApp.config.ui_scale or 1
+        if button.enabled and button.x * bs <= x and x < button.r * bs and button.y * bs <= y and y < button.b * bs then
           button.panel_for_sprite.sprite_index = button.sprite_index_active
           button.active = true
           button.panel_for_sprite.lowered = button.panel_lowered_active
@@ -2029,7 +2044,8 @@ end
 --!param x (integer) The X coordinate relative to the top-left corner.
 --!param y (integer) The Y coordinate relative to the top-left corner.
 function Window:getTooltipAt(x, y)
-  if x < 0 or y < 0 or (self.width and x >= self.width) or (self.height and y >= self.height) then
+  local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
+  if x < 0 or y < 0 or (self.width and x >= self.width * s) or (self.height and y >= self.height * s) then
     return
   end
   if self.windows then

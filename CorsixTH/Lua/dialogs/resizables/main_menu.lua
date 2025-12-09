@@ -119,7 +119,7 @@ function UIMainMenu:draw(canvas, x, y)
   local s = TheApp.config.ui_scale
 
   -- The following strings are drawn in reverse order
-  local ly = y + self.height - (15 * s)
+  local ly = y + self.height * s - (15 * s)
   -- Move the version string up a bit if showing check for updates disabled warning.
   if TheApp:isUpdateCheckDisabledByConfig() then
     self.label_font:draw(canvas, _S.main_menu.updates_off, x + 5 * s, ly, 190, 0, "right")
