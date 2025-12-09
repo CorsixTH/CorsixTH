@@ -1771,6 +1771,7 @@ function Window:beginDrag(x, y)
     return false
   end
 
+  local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
   self.dragging = true
   self.ui.drag_mouse_move = --[[persistable:window_drag_mouse_move]] function (sx, sy)
     -- sx and sy are cursor screen co-ords. Convert to window's new abs co-ords
@@ -1779,8 +1780,8 @@ function Window:beginDrag(x, y)
     -- Calculate best positioning
     local w, h = TheApp.config.width, TheApp.config.height
     if TheApp.key_modifiers.ctrl then
-      local px = round(sx / (w - self.width), 0.1)
-      local py = round(sy / (h - self.height), 0.1)
+      local px = round(sx / (w - self.width * s), 0.1)
+      local py = round(sy / (h - self.height * s), 0.1)
       if px >= 1 then
         px = -0.1
       elseif px < 0 then
@@ -1793,8 +1794,8 @@ function Window:beginDrag(x, y)
       end
       self:setPosition(px, py)
     else
-      local px = getNicestPositionRepresentation(sx, self.width , w)
-      local py = getNicestPositionRepresentation(sy, self.height, h)
+      local px = getNicestPositionRepresentation(sx, self.width * s , w)
+      local py = getNicestPositionRepresentation(sy, self.height * s, h)
       self:setPosition(px, py)
     end
   end
