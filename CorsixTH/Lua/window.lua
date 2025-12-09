@@ -82,18 +82,17 @@ function Window:setPosition(x, y)
   self.x_original = x
   self.y_original = y
   -- Convert x and y to absolute pixel positions with regard to top/left
-  local w, h = TheApp.config.width, TheApp.config.height
-  local sw = self.width * (self.apply_ui_scale and TheApp.config.ui_scale or 1)
-  local sh = self.height * (self.apply_ui_scale and TheApp.config.ui_scale or 1)
+  local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
+  local w, h = TheApp.config.width / s, TheApp.config.height / s
   if x < 0 then
-    x = math.ceil(w - sw + x)
+    x = math.ceil(w - self.width + x)
   elseif x < 1 then
-    x = math.floor((w - sw) * x + 0.5)
+    x = math.floor((w - self.width) * x + 0.5)
   end
   if y < 0 then
-    y = math.ceil(h - sh + y)
+    y = math.ceil(h - self.height + y)
   elseif y < 1 then
-    y = math.floor((h - sh) * y + 0.5)
+    y = math.floor((h - self.height) * y + 0.5)
   end
   self.x = x
   self.y = y
@@ -384,10 +383,10 @@ function Window:addPanel(sprite_index, x, y, w, h, scale)
   scale = scale or TheApp.config.ui_scale
   local panel = setmetatable({
     window = self,
-    x = x * scale,
-    y = y * scale,
-    w = w and w * scale or w,
-    h = h and h * scale or h,
+    x = x,
+    y = y,
+    w = w,
+    h = h,
     sprite_index = sprite_index,
     visible = true,
   }, panel_mt)
@@ -1482,7 +1481,8 @@ function Window:makeHotkeyBoxOnPanel(panel, confirm_callback, abort_callback)
 end
 
 function Window:draw(canvas, x, y)
-  x, y = x + self.x, y + self.y
+  local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
+  x, y = x + self.x * s, y + self.y * s
   if self.panels[1] then
     local panel_sprites = self.panel_sprites
     local panel_sprites_draw = panel_sprites and panel_sprites.draw
@@ -1595,7 +1595,8 @@ function Window:hitTest(x, y)
   end
   if self.windows then
     for _, child in ipairs(self.windows) do
-      if child:hitTest(x - child.x, y - child.y) then
+      local s = child.apply_ui_scale and TheApp.config.ui_scale or 1
+      if child:hitTest(x - child.x * s, y - child.y * s) then
         return true
       end
     end
@@ -1608,7 +1609,8 @@ function Window:onMouseDown(button, x, y)
   if not self.visible then return false end
   if self.windows then
     for _, window in ipairs(self.windows) do
-      if window:onMouseDown(button, x - window.x, y - window.y) then
+      local ws = window.apply_ui_scale and TheApp.config.ui_scale or 1
+      if window:onMouseDown(button, x - window.x * ws, y - window.y * ws) then
         repaint = true
         break
       end
@@ -1690,7 +1692,8 @@ function Window:onMouseUp(button, x, y)
 
   if self.windows then
     for _, window in ipairs(self.windows) do
-      if window:onMouseUp(button, x - window.x, y - window.y) then
+      local s = window.apply_ui_scale and TheApp.config.ui_scale or 1
+      if window:onMouseUp(button, x - window.x * s, y - window.y * s) then
         repaint = true
         break -- Click has been handled. No need to look any further.
       end
@@ -1736,14 +1739,14 @@ function Window:onMouseWheel(x, y)
   return repaint
 end
 
-local --[[persistable:window_drag_position_representation]] function getNicestPositionRepresentation(pos, size, dim_size)
+local --[[persistable:window_drag_position_representation]] function getNicestPositionRepresentation(pos, scale, size, dim_size)
   if size == dim_size then
     return 0.5
   end
 
   local left_rel = pos
-  local right_rel = pos + size - dim_size
-  local rel = pos / (dim_size - size)
+  local right_rel = pos + size * scale - dim_size
+  local rel = pos / (dim_size - size * scale)
   if 0.15 < rel and rel < 0.85 then
     return rel
   end
@@ -1754,9 +1757,9 @@ local --[[persistable:window_drag_position_representation]] function getNicestPo
     return -0.1
   end
   if left_rel <= -right_rel then
-    return left_rel
+    return left_rel / scale
   else
-    return right_rel
+    return right_rel / scale
   end
 end
 
@@ -1794,8 +1797,8 @@ function Window:beginDrag(x, y)
       end
       self:setPosition(px, py)
     else
-      local px = getNicestPositionRepresentation(sx, self.width * s , w)
-      local py = getNicestPositionRepresentation(sy, self.height * s, h)
+      local px = getNicestPositionRepresentation(sx, s, self.width, w)
+      local py = getNicestPositionRepresentation(sy, s, self.height, h)
       self:setPosition(px, py)
     end
   end

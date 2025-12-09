@@ -87,8 +87,8 @@ function UIResizable:draw(canvas, x, y)
   local sprites = self.border_sprites
   if sprites then
     local s = TheApp.config.ui_scale
-    local xabs = self.x + x
-    local yabs = self.y + y
+    local xabs = self.x * s + x
+    local yabs = self.y * s + y
 
     for xpos = xabs + border_size_x * s, xabs + self.border_pos.corner_right * s - 1, border_size_x * s do
       sprites:draw(canvas, 11, xpos, yabs + self.border_pos.upper * s, { scaleFactor = s }) -- upper edge

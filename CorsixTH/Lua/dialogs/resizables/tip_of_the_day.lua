@@ -72,9 +72,9 @@ function UITipOfTheDay:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
 
   -- Draw tip
-  x, y = self.x + x, self.y + y
-
   local s = TheApp.config.ui_scale
+  x, y = self.x * s + x, self.y * s + y
+
   local text = _S.totd_window.tips[self.tip_num]
   self.white_font:drawWrapped(canvas, text, x + 10 * s, y + 10 * s, self.width * s - 20 * s)
 end
