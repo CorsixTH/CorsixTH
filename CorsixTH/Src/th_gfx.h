@@ -40,6 +40,7 @@ SOFTWARE.
 class lua_persist_reader;
 class lua_persist_writer;
 class memory_reader;
+class level_map;
 struct map_tile;
 
 enum class scaled_items { none, sprite_sheets, bitmaps, all };
@@ -55,9 +56,11 @@ enum draw_flags : uint32_t {
   thdf_flip_horizontal = 1 << 0,
   //! Draw with the top becoming the bottom and vice versa
   thdf_flip_vertical = 1 << 1,
-  //! Draw with 50% transparency
+  //! Draw with 50% transparency. If set together with thdf_alpha_75, don't draw
+  //! at all.
   thdf_alpha_50 = 1 << 2,
-  //! Draw with 75% transparency
+  //! Draw with 75% transparency. If set together with thdf_alpha_50, don't draw
+  //! at all.
   thdf_alpha_75 = 1 << 3,
   //! Draw using a remapped palette
   thdf_alt_palette = 1 << 4,
@@ -173,7 +176,7 @@ class chunk_renderer {
 
   std::vector<uint8_t>::iterator ptr, end;
   int x{0}, y{0};
-  int width, height;
+  int width;
   bool skip_eol{false};
 };
 
@@ -466,8 +469,9 @@ class animation_base : public drawable {
  public:
   animation_base();
 
-  void remove_from_tile();
+  virtual void remove_from_tile();
   void attach_to_tile(int x, int y, map_tile* node, int layer);
+  virtual void attach_to_map(level_map* game_map, int x, int y, int layer) = 0;
 
   uint32_t get_flags() const { return flags; }
   const xy_pair& get_pixel_offset() const { return pixel_offset; }
@@ -495,12 +499,41 @@ class animation_base : public drawable {
   ::layers layers{};
 };
 
+class animation_proxy : public animation_base {
+ public:
+  animation_proxy(animation* const parent_anim, int8_t dx, int8_t dy,
+                  int8_t crop_base, int8_t crop_width);
+
+  void attach_to_map(level_map* game_map, int x, int y, int layer) override;
+
+  void draw_fn(render_target* canvas, int dest_x, int dest_y) override;
+  bool hit_test_fn(int dest_x, int dest_y, int test_x, int test_y) override;
+  bool is_multiple_frame_animation_fn() override;
+  void remove_from_tile() override;
+
+  link_list* get_previous() { return prev; }
+
+  //! Removes itself from its tile.
+  void remove_self_from_tile();
+
+ private:
+  animation* const parent_anim;
+  const int8_t dx;
+  const int8_t dy;
+  const int8_t crop_base;
+  const int8_t crop_width;
+};
+
 //! The kind of animation.
 enum class animation_kind { primary_child, secondary_child, normal, morph };
 
 class animation : public animation_base {
  public:
   animation();
+  ~animation() override;
+
+  void attach_to_map(level_map* game_map, int x, int y, int layer) override;
+  void remove_from_tile() override;
 
   void set_parent(animation* pParent, bool use_primary);
 
@@ -576,8 +609,28 @@ class animation : public animation_base {
 
   animation_manager* get_animation_manager() { return manager; }
 
+  //! Add a proxy to the animation.
+  /*!
+   * @param dx X tiles shift relative to the map position of the animation.
+   * @param dy Y tiles shift relative to the map position of the animation.
+   * @param crop_base Base-position of the cropped area that is rendered
+   *    through the proxy. Number of half-tiles in positive X direction with
+   *    respect to the center of the base tile of the proxy.
+   * @param crop_width Width of the crop area in number of half tiles to the
+   *    right of the crop base. If less than 1, no cropping is applied.
+   */
+  void add_proxy(int8_t dx, int8_t dy, int8_t crop_base, int8_t crop_width);
+
+  //! Remove all proxies of the animation.
+  void remove_all_proxies();
+
+  //! Remove all proxies from their map tile. The proxies themselves are kept.
+  //! The method is safe to use even if proxies are not attach to a tile.
+  void remove_all_proxies_from_tile();
+
  private:
   animation_manager* manager{nullptr};
+  std::vector<animation_proxy> proxies{};  ///< Proxies of the animation.
   animation* morph_target{nullptr};
   size_t animation_index{};  ///< Animation number.
   size_t frame_index{};      ///< Frame number.
@@ -589,10 +642,14 @@ class animation : public animation_base {
     animation* parent;
   };
 
+  //! The number of the sound to play, or \c 0.
+  //! Is set on tick() and cleared to \c 0 directly after starting the sound.
   size_t sound_to_play{};
+
   int crop_column{};
   animation_kind anim_kind{animation_kind::normal};
   animation_effect patient_effect{animation_effect::none};
+
   //! Number of game_ticks to offset animation by so they aren't all
   //! running in sync.
   size_t patient_effect_offset;
@@ -623,6 +680,8 @@ class sprite_render_list : public animation_base {
   }
 
   bool is_multiple_frame_animation_fn() override { return false; }
+
+  void attach_to_map(level_map* game_map, int x, int y, int layer) override;
 
  private:
   struct sprite {

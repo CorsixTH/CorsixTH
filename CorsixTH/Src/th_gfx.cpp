@@ -142,12 +142,12 @@ class memory_reader {
 
 animation_manager::animation_manager()
     : sheet(nullptr),
+      canvas(nullptr),
       animation_count(0),
       frame_count(0),
       element_list_count(0),
       element_count(0),
-      game_ticks(0),
-      canvas(nullptr) {}
+      game_ticks(0) {}
 
 void animation_manager::set_sprite_sheet(sprite_sheet* pSpriteSheet) {
   sheet = pSpriteSheet;
@@ -1042,7 +1042,7 @@ void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
 
 chunk_renderer::chunk_renderer(const int width, const int height,
                                std::vector<uint8_t>::iterator start)
-    : width(width), height(height), ptr(start), end(start + (width * height)) {}
+    : ptr(start), end(start + (width * height)), width(width) {}
 
 void chunk_renderer::chunk_fill_to_end_of_line(uint8_t value) {
   if (x != 0 || !skip_eol) {
@@ -1154,12 +1154,7 @@ void animation_base::remove_from_tile() {
 
 void animation_base::attach_to_tile(int x, int y, map_tile* node, int layer) {
   remove_from_tile();
-  link_list* pList;
-  if (flags & thdf_early_list) {
-    pList = &node->oEarlyEntities;
-  } else {
-    pList = &node->entities;
-  }
+  link_list* pList = &node->entities;
 
   this->set_drawing_layer(layer);
   this->set_tile(x, y);
@@ -1185,6 +1180,58 @@ void animation_base::set_layer(int iLayer, int iId) {
   }
 }
 
+animation_proxy::animation_proxy(animation* const parent_anim, int8_t dx,
+                                 int8_t dy, int8_t crop_base, int8_t crop_width)
+    : parent_anim(parent_anim),
+      dx(dx),
+      dy(dy),
+      crop_base(crop_base),
+      crop_width(crop_width) {}
+
+void animation_proxy::attach_to_map(level_map* game_map, int x, int y,
+                                    int layer) {
+  throw std::runtime_error("Unexpected attach_to_map call.");
+}
+
+void animation_proxy::remove_from_tile() {
+  remove_self_from_tile();  // Better be safe than sorry.
+  parent_anim->remove_from_tile();
+}
+
+void animation_proxy::remove_self_from_tile() {
+  animation_base::remove_from_tile();
+}
+
+void animation_proxy::draw_fn(render_target* canvas, int dest_x, int dest_y) {
+  // Compute offset of the xy position of the proxy wrt the animation.
+  int delta_x = (dx - dy) * 32;
+  int delta_y = (dx + dy) * 16;
+
+  if (crop_width > 0) {
+    clip_rect new_clipt_rectangle;
+    new_clipt_rectangle.y = 0;
+    new_clipt_rectangle.h = canvas->get_height();
+    new_clipt_rectangle.x = delta_x + crop_base * 32;
+    new_clipt_rectangle.w = crop_width * 32;
+
+    parent_anim->draw_fn(canvas, dest_x - delta_x, dest_y - delta_y);
+  } else {
+    parent_anim->draw_fn(canvas, dest_x - delta_x, dest_y - delta_y);
+  }
+}
+bool animation_proxy::hit_test_fn(int dest_x, int dest_y, int test_x,
+                                  int test_y) {
+  // Compute offset of the xy position of the proxy wrt the animation.
+  int delta_x = (dx - dy) * 32;
+  int delta_y = (dx + dy) * 16;
+
+  return parent_anim->hit_test_fn(dest_x - delta_x, dest_y - delta_y, test_x,
+                                  test_y);
+}
+bool animation_proxy::is_multiple_frame_animation_fn() {
+  return parent_anim->is_multiple_frame_animation_fn();
+}
+
 namespace {
 
 bool are_flags_set(uint32_t val, uint32_t flags) {
@@ -1194,6 +1241,19 @@ bool are_flags_set(uint32_t val, uint32_t flags) {
 }  // namespace
 
 animation::animation() { patient_effect_offset = rand(); }
+
+animation::~animation() { animation::remove_from_tile(); }
+
+void animation::attach_to_map(level_map* game_map, int x, int y, int layer) {
+  map_tile* node = game_map->get_tile(x, y);
+  attach_to_tile(x, y, node, layer);
+  // XXX Attach proxies as well.
+}
+
+void animation::remove_from_tile() {
+  animation_base::remove_from_tile();
+  remove_all_proxies_from_tile();
+}
 
 void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
@@ -1712,6 +1772,22 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
 
 void animation::set_frame(size_t iFrame) { frame_index = iFrame; }
 
+void animation::add_proxy(int8_t dx, int8_t dy, int8_t crop_base,
+                          int8_t crop_width) {
+  proxies.emplace_back(this, dx, dy, crop_base, crop_width);
+}
+
+void animation::remove_all_proxies_from_tile() {
+  for (auto& proxy : proxies) {
+    proxy.remove_self_from_tile();
+  }
+}
+
+void animation::remove_all_proxies() {
+  remove_all_proxies_from_tile();
+  proxies.clear();
+}
+
 void sprite_render_list::tick() {
   pixel_offset.x += dx_per_tick;
   pixel_offset.y += dy_per_tick;
@@ -1756,6 +1832,12 @@ bool sprite_render_list::hit_test(int iDestX, int iDestY, int iTestX,
                                   int iTestY) {
   // TODO
   return false;
+}
+
+void sprite_render_list::attach_to_map(level_map* game_map, int x, int y,
+                                       int layer) {
+  map_tile* node = game_map->get_tile(x, y);
+  attach_to_tile(x, y, node, layer);
 }
 
 void sprite_render_list::set_lifetime(int iLifetime) {
