@@ -83,7 +83,7 @@ The diagram assumes there is no need to first walk away from the desk. Likely
 that is correct in the sense that the next activity of the patient is to walk
 to a different location.
 
-Several 'no path' exists exist here that should be handled differently.
+Several 'no path' cases exist here that should be handled differently.
 
 === Walking
 
