@@ -71,7 +71,7 @@ The process of visiting a reception is:
 image::state_diagrams/reception_visit.png[]
 
 Visiting the reception is different with visits to other rooms as there is no
-door. For thsi reason it currently has a diagram of its own, but maybe it is
+door. For this reason it currently has a diagram of its own, but maybe it is
 possible to unify the diagram with visit diagrams of other rooms.
 
 The visit starts with queueing, followed by walking to near the desk, claiming
