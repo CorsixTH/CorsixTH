@@ -55,15 +55,13 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
     self.text = text
   end
 
-  local s = TheApp.config.ui_scale
-
   -- Window size parameters
-  self.text_width = 300 * s
+  self.text_width = 300
   self.spacing = {
-    l = 15 * s,
-    r = 15 * s,
-    t = 15 * s,
-    b = 18 * s + 15 * s, -- Size of close button + padding
+    l = 15,
+    r = 15,
+    t = 15,
+    b = 18 + 15, -- Size of close button + padding
   }
 
   self:onChangeLanguage()
@@ -79,9 +77,10 @@ end
 
 function UIInformation:onChangeLanguage()
   local total_req_height = 0
+  local s = TheApp.config.ui_scale
   for _, text in ipairs(self.text) do
-    local _, req_height = self.black_font:sizeOf(text, self.text_width)
-    total_req_height = total_req_height + req_height
+    local _, req_height = self.black_font:sizeOf(text, self.text_width * s)
+    total_req_height = total_req_height + req_height / s
   end
 
   self.width = self.spacing.l + self.text_width + self.spacing.r
@@ -90,25 +89,25 @@ function UIInformation:onChangeLanguage()
 
   self:removeAllPanels()
 
-  local s = TheApp.config.ui_scale
-  for x = 4 * s, self.width - 4 * s, 4 do
+  for x = 4, self.width - 4, 4 do
     self:addPanel(12, x, 0, 0, 0, 1)  -- Dialog top and bottom borders
-    self:addPanel(16, x, self.height - 4 * s, 0, 0, 1)
+    self:addPanel(16, x, self.height - 4, 0, 0, 1)
   end
-  for y = 4 * s, self.height - 4 * s, 4 do
+  for y = 4, self.height - 4, 4 do
     self:addPanel(18, 0, y, 0, 0, 1)  -- Dialog left and right borders
-    self:addPanel(14, self.width - 4 * s, y, 0, 0, 1)
+    self:addPanel(14, self.width - 4, y, 0, 0, 1)
   end
   self:addPanel(11, 0, 0, 0, 0, 1)  -- Border top left corner
-  self:addPanel(17, 0, self.height - 4 * s, 0, 0, 1)  -- Border bottom left corner
-  self:addPanel(13, self.width - 4 * s, 0, 0, 0, 1)  -- Border top right corner
-  self:addPanel(15, self.width - 4 * s, self.height - 4 * s, 0, 0, 1)  -- Border bottom right corner
+  self:addPanel(17, 0, self.height - 4, 0, 0, 1)  -- Border bottom left corner
+  self:addPanel(13, self.width - 4, 0, 0, 0, 1)  -- Border top right corner
+  self:addPanel(15, self.width - 4, self.height - 4, 0, 0, 1)  -- Border bottom right corner
 
   -- Close button
-  self:addPanel(19, self.width - 28 * s, self.height - 28 * s, 18 * s, 18 * s, 1):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
+  self:addPanel(19, self.width - 28, self.height - 28, 18, 18, 1):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
   .panel_for_sprite.custom_draw = --[[persistable:information_close_button]] function(panel, canvas, x, y)
-      x = x + panel.x
-      y = y + panel.y
+      local s = TheApp.config.ui_scale
+      x = x + panel.x * s
+      y = y + panel.y * s
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
       if self.active_hover then
         self.panel_sprites:draw(canvas, 20, x, y, { scaleFactor = s })
@@ -117,13 +116,13 @@ function UIInformation:onChangeLanguage()
 end
 
 function UIInformation:draw(canvas, x, y)
-  local dx, dy = x + self.x, y + self.y
   local s = TheApp.config.ui_scale
+  local dx, dy = x + self.x * s, y + self.y * s
   local background = self.black_background and canvas:mapRGB(0, 0, 0) or canvas:mapRGB(255, 255, 255)
-  canvas:drawRect(background, dx + 4 * s, dy + 4 * s, self.width - 8 * s, self.height - 8 * s)
-  local last_y = dy + self.spacing.t
+  canvas:drawRect(background, dx + 4 * s, dy + 4 * s, self.width * s - 8 * s, self.height * s - 8 * s)
+  local last_y = dy + self.spacing.t * s
   for _, text in ipairs(self.text) do
-    last_y = self.black_font:drawWrapped(canvas, text, dx + self.spacing.l, last_y, self.text_width)
+    last_y = self.black_font:drawWrapped(canvas, text, dx + self.spacing.l, last_y, self.text_width * s)
   end
 
   Window.draw(self, canvas, x, y)
