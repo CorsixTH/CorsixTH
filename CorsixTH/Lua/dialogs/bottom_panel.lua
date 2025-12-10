@@ -74,7 +74,7 @@ function UIBottomPanel:drawPanels()
 
   -- If there is a machine menu button, then lets adjust bottom panel width so it can fit
   if self:machineMenuButtonExists() then
-    self.width = 676 * TheApp.config.ui_scale
+    self.width = 676
     for x = 377, 660, 10 do
       self:addPanel(13, x, 0)
     end
@@ -82,7 +82,7 @@ function UIBottomPanel:drawPanels()
 
     self.offset = 38
   else
-    self.width = 640 * TheApp.config.ui_scale
+    self.width = 640
     for x = 377, 630, 10 do
       self:addPanel(13, x, 0)
     end
@@ -103,9 +103,9 @@ function UIBottomPanel:drawPanels()
     self:addPanel(0, 407, 0):makeToggleButton(2, 6, 36, 36, 0, self.dialogMachineMenu)
       :setTooltip(_S.tooltip.toolbar.machine_menu)
       .panel_for_sprite.custom_draw = --[[persistable:machine_menu_buttons]] function(panel, canvas, x, y)
-      x = x + panel.x
-      y = y + panel.y
       local s = TheApp.config.ui_scale
+      x = x + panel.x * s
+      y = y + panel.y * s
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
       local btn = panel.window.active_button
       if panels[1].visible then
@@ -232,8 +232,8 @@ function UIBottomPanel:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
   -- Draw balance with temporary offset in unicode languages
-  x, y = x + self.x, y + self.y
   local s = TheApp.config.ui_scale
+  x, y = x + self.x * s, y + self.y * s
   local offset_x, offset_y = 0, 0
   if self.ui.app.gfx:drawNumbersFromUnicode() then
     offset_x = 4

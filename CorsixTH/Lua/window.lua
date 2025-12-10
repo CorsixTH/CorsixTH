@@ -66,7 +66,7 @@ function Window:mustPause()
 end
 
 function Window:setSize(width, height, apply_ui_scale)
-  self.apply_ui_scale = apply_ui_scale
+  self.apply_ui_scale = apply_ui_scale ~= nil and apply_ui_scale or self.apply_ui_scale
   self.width = width
   self.height = height
 end
