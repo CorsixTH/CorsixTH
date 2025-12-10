@@ -133,13 +133,14 @@ function UIInformation:onMouseMove(x, y, dx, dy)
   self.active_hover = self:hoverTest(
       self.active_hover,
       x, y,
-      self.width - 29 * s, self.width - 10 * s,
-      self.height - 29 * s, self.height - 10 * s)
+      self.width * s - 29 * s, self.width * s - 10 * s,
+      self.height * s - 29 * s, self.height * s - 10 * s)
   return Window:onMouseMove(x, y, dx, dy)
 end
 
 function UIInformation:hitTest(x, y)
-  if x >= 0 and y >= 0 and x < self.width and y < self.height then
+  local s = TheApp.config.ui_scale
+  if x >= 0 and y >= 0 and x < self.width * s and y < self.height * s then
     return true
   else
     return Window.hitTest(self, x, y)
@@ -156,12 +157,11 @@ end
 
 function UIInformation:afterLoad(old, new)
   -- box resized to be more like the original
-  local s = TheApp.config.ui_scale
   self.spacing = {
-    l = 15 * s,
-    r = 15 * s,
-    t = 15 * s,
-    b = 18 * s + 15 * s,
+    l = 15,
+    r = 15,
+    t = 15,
+    b = 18 + 15,
   }
   self:onChangeLanguage()
   Window.afterLoad(self, old, new)
