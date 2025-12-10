@@ -379,10 +379,10 @@ panel (in pixels) is known, it should be specified here to speed up hit-tests.
 !param h (integer, nil) If the panel is totally opaque, and the height of the
 panel (in pixels) is known, it should be specified here to speed up hit-tests.
 ]]
-function Window:addPanel(sprite_index, x, y, w, h, scale)
-  scale = scale or TheApp.config.ui_scale
+function Window:addPanel(sprite_index, x, y, w, h, apply_ui_scale)
   local panel = setmetatable({
     window = self,
+    apply_ui_scale = apply_ui_scale ~= nil and apply_ui_scale or self.apply_ui_scale,
     x = x,
     y = y,
     w = w,
@@ -1495,9 +1495,9 @@ function Window:draw(canvas, x, y)
               panel_sprites,
               canvas,
               panel.sprite_index,
-              x + panel.x,
-              y + panel.y,
-              { scaleFactor = TheApp.config.ui_scale })
+              x + panel.x * s,
+              y + panel.y * s,
+              { scaleFactor = s })
         end
       end
     end
@@ -1551,7 +1551,7 @@ function Window:hitTestPanel(x, y, panel)
         return true
       end
     else
-      if self.panel_sprites:hitTest(panel.sprite_index, xpos, ypos) then
+      if self.panel_sprites:hitTest(panel.sprite_index, math.floor(xpos / s), math.floor(ypos / s)) then
         return true
       end
     end
