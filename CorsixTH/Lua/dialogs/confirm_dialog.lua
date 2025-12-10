@@ -122,8 +122,8 @@ end
 function UIConfirmDialog:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
-  x, y = x + self.x, y + self.y
   local s = TheApp.config.ui_scale
+  x, y = x + self.x * s, y + self.y * s
   self.white_font:drawWrapped(canvas, self.text, x + 17 * s, y + 17 * s, text_width * s)
 end
 
