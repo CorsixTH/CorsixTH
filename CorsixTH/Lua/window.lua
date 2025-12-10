@@ -1821,7 +1821,8 @@ function Window:onMouseMove(x, y, dx, dy)
 
   if self.windows then
     for _, window in ipairs(self.windows) do
-      if window:onMouseMove(x - window.x, y - window.y, dx, dy) then
+      local s = window.apply_ui_scale and TheApp.config.ui_scale or 1
+      if window:onMouseMove(x - window.x * s, y - window.y * s, dx, dy) then
         repaint = true
       end
     end
