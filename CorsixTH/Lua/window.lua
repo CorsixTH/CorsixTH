@@ -2084,6 +2084,9 @@ function Panel:afterLoad(old, new)
   if old < 160 then
     self.lowered_colour = self.colour
   end
+  if old < 236 then
+    self.apply_ui_scale = true
+  end
 end
 
 --! Stub to be extended in subclasses, if needed.
@@ -2108,6 +2111,9 @@ function Window:afterLoad(old, new)
   if old < 132 then
     -- Hotkey boxes were added.
     self.hotkeyboxes = {}
+  end
+  if old < 236 then
+    self.apply_ui_scale = true
   end
 
   if self.windows then
