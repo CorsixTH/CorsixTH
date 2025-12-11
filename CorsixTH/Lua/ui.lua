@@ -1108,6 +1108,7 @@ function UI:afterLoad(old, new)
     end
   end
   if old < 236 then
+    local gfx = self.app.gfx
     local palette = gfx:loadPalette("QData", "PREF01V.PAL", true)
     self.tooltip_font = gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette, { apply_ui_scale = true })
   end
