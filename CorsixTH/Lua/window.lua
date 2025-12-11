@@ -1996,7 +1996,7 @@ end
 --!param b (integer) The bottom (Y + height) coordinate relative to the top-left corner.
 --!param tooltip_x (integer) [optional] The X coordinate to display the tooltip at.
 --!param tooltip_y (integer) [optional] The Y coordinate to display the tooltip at.
-function Window:makeTooltip(text, x, y, r, b, tooltip_x, tooltip_y)
+function Window:makeTooltip(text, x, y, r, b, tooltip_x, tooltip_y, apply_ui_scale)
   local region = {
     text = text, x = x, y = y, r = r, b = b,
     tooltip_x = tooltip_x or round((x + r) / 2, 1), -- optional
@@ -2033,9 +2033,19 @@ function Window:getTooltipForElement(elem, x, y)
   else
     text = elem.text
   end
-  local xpos, ypos = elem.tooltip_x, elem.tooltip_y
-  if xpos then xpos = xpos + self.x end -- NB: can be nil, then it means position at mouse cursor
-  if ypos then ypos = ypos + self.y end
+  local apply_ui_scale = self.apply_ui_scale
+  if elem.apply_ui_scale ~= nil then
+    apply_ui_scale = elem.apply_ui_scale
+  elseif elem.panel_for_sprite and elem.panel_for_sprite.apply_ui_scale ~= nil then
+    apply_ui_scale = elem.panel_for_sprite.apply_ui_scale
+  end
+  local elem_scale = apply_ui_scale and TheApp.config.ui_scale or 1
+  local xpos = elem.tooltip_x and elem.tooltip_x * elem_scale or nil
+  local ypos = elem.tooltip_y and elem.tooltip_y * elem_scale or nil
+
+  local window_scale = self.apply_ui_scale and TheApp.config.ui_scale or 1
+  if xpos then xpos = xpos + self.x * window_scale end -- NB: can be nil, then it means position at mouse cursor
+  if ypos then ypos = ypos + self.y * window_scale end
   if text then
     return { text = text, x = xpos, y = ypos }
   end
@@ -2055,21 +2065,22 @@ function Window:getTooltipAt(x, y)
   end
   if self.windows then
     for _, window in ipairs(self.windows) do
-      if window:hitTest(x - window.x, y - window.y) then
-        return window:getTooltipAt(x - window.x, y - window.y)
+      local ws = window.apply_ui_scale and TheApp.config.ui_scale or 1
+      if window:hitTest(x - window.x * ws, y - window.y * ws) then
+        return window:getTooltipAt(x - window.x * ws, y - window.y * ws)
       end
     end
   end
   for _, btn in ipairs(self.buttons) do
+    local bs = btn.panel_for_sprite.apply_ui_scale and TheApp.config.ui_scale or 1
     if btn.panel_for_sprite.visible ~= false and
         btn.tooltip and
-        btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+        btn.x * bs <= x and x < btn.r * bs and btn.y * bs <= y and y < btn.b * bs then
       return self:getTooltipForElement(btn.tooltip, x, y)
     end
   end
-  if not self.tooltip_regions then self.tooltip_regions = {} end -- TEMPORARY for compatibility of pre-r649 savegames. Remove when compatibility is broken anyway.
   for _, region in ipairs(self.tooltip_regions) do
-    if region.enabled ~= false and region.x <= x and x < region.r and region.y <= y and y < region.b then
+    if region.enabled ~= false and region.x * s <= x and x < region.r * s and region.y * s <= y and y < region.b * s then
       return self:getTooltipForElement(region, x, y)
     end
   end
