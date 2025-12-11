@@ -946,10 +946,14 @@ void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
   double lastY = pLine->line_elements[0].y;
   for (const line_sequence::line_element& op : pLine->line_elements) {
     if (op.type == line_sequence::line_command::line) {
-      SDL_RenderDrawLine(renderer, static_cast<int>((lastX + iX) * scale),
-                         static_cast<int>((lastY + iY) * scale),
-                         static_cast<int>((op.x + iX) * scale),
-                         static_cast<int>((op.y + iY) * scale));
+      // Not the true width, but good enough for graphs
+      for (int i = 0; i < pLine->width; ++i) {
+        int adjI = static_cast<int>(i - pLine->width / 2);
+        SDL_RenderDrawLine(renderer, static_cast<int>((lastX + iX) * scale),
+                           static_cast<int>((lastY + iY + adjI) * scale),
+                           static_cast<int>((op.x + iX) * scale),
+                           static_cast<int>((op.y + iY + adjI) * scale));
+      }
     }
 
     lastX = op.x;
