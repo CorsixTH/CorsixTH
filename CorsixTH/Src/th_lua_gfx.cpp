@@ -594,9 +594,9 @@ int l_font_draw_tooltip(lua_State* L) {
   const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
   int iX = static_cast<int>(luaL_checkinteger(L, 4));
   int iY = static_cast<int>(luaL_checkinteger(L, 5));
+  int iW = static_cast<int>(luaL_optinteger(L, 6, 200));
   int iScreenWidth = pCanvas->get_width();
 
-  int iW = 200;  // (for now) hardcoded width of tooltips
   uint32_t iBlack = render_target::map_colour(0x00, 0x00, 0x00);
   uint32_t iWhite = render_target::map_colour(0xFF, 0xFF, 0xFF);
   text_layout oArea = pFont->draw_text_wrapped(nullptr, sMsg, iMsgLen, iX + 2,
