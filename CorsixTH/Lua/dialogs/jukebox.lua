@@ -156,10 +156,10 @@ function UIJukebox:draw(canvas, x, y)
   for i, info in ipairs(TheApp.audio.background_playlist) do
     self.track_buttons[i]:setToggleState(not info.enabled)
   end
-  Window.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
-
   local s = TheApp.config.ui_scale
+  Window.draw(self, canvas, x, y)
+  x, y = self.x * s + x, self.y * s + y
+
   local playing = self.audio.background_music or ""
   for i, info in ipairs(self.audio.background_playlist) do
     local ypos = y + 47 * s + i * 30 * s
@@ -173,7 +173,7 @@ function UIJukebox:draw(canvas, x, y)
     end
     font:draw(canvas, str, x + 24 * s, ypos + 11 * s)
     if info.music == playing then
-      font:draw(canvas, str, x + 24 * s, self.y + 27 * s)
+      font:draw(canvas, str, x + 24 * s, self.y * s + 27 * s)
     end
   end
 end
