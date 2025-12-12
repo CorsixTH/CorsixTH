@@ -51,5 +51,4 @@ function UIMakeDebugPatient:buttonClicked(num)
   patient:setTile(math.floor(x), math.floor(y))
   patient:setMood("idea1", "activate") -- temporary, to make debug patients distinguishable from normal ones
   patient:setHospital(self.ui.hospital)
-
 end

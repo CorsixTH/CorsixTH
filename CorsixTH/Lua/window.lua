@@ -1635,12 +1635,13 @@ function Window:onMouseDown(button, x, y)
         break
       end
     end
+    local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
     for _, bar in ipairs(self.scrollbars) do
       if bar.enabled and self:hitTestPanel(x, y, bar.slider) then
         self.active_scrollbar = bar
         bar.active = true
-        bar.down_x = x - bar.slider.x
-        bar.down_y = y - bar.slider.y
+        bar.down_x = x / s - bar.slider.x
+        bar.down_y = y / s - bar.slider.y
         repaint = true
         break
       end
@@ -1858,11 +1859,12 @@ function Window:onMouseMove(x, y, dx, dy)
   end
 
   if self.active_scrollbar then
+    local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
     local bar = self.active_scrollbar
     if bar.direction == "x" then
-      bar:setXorY(x - bar.down_x)
+      bar:setXorY(math.floor(x / s - bar.down_x))
     elseif bar.direction == "y" then
-      bar:setXorY(y - bar.down_y)
+      bar:setXorY(math.floor(y / s - bar.down_y))
     end
   end
 
