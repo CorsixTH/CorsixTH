@@ -1,0 +1,24 @@
+digraph G {
+    spawn [label="Spawn patient" shape=plaintext];
+    visit_hosp1 [shape=box, label="Visit user\nhospital"];
+    visit_hosp2 [shape=box, label="Visit opponent1\nhospital"];
+    visit_hosp3 [shape=box, label="Visit opponent2\nhospital"];
+    visit_hosp4 [shape=box, label="Visit opponent3\nhospital"];
+    despawn [label="Despawn patient", shape=plaintext];
+    crash [label="Crash app", shape=plaintext];
+
+    spawn -> visit_hosp1;
+    spawn -> visit_hosp2;
+    spawn -> visit_hosp3;
+    spawn -> visit_hosp4;
+
+    visit_hosp1 -> despawn;
+    visit_hosp2 -> despawn;
+    visit_hosp3 -> despawn;
+    visit_hosp4 -> despawn;
+
+    visit_hosp1 -> crash;
+    visit_hosp2 -> crash;
+    visit_hosp3 -> crash;
+    visit_hosp4 -> crash;
+}

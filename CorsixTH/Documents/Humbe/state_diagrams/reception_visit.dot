@@ -1,0 +1,23 @@
+digraph G {
+    start [shape=plaintext];
+    ok [shape=plaintext];
+    nopath [label="No path", shape=plaintext];
+
+    queue [label="Queue" shape=rectangle];
+    walk_near_desk [label="Walk near desk", shape=rectangle];
+    claim_desk [label="Claim patient-side\nof the desk", shape=octagon];
+    walk_to_desk [label="Walk to desk", shape=rectangle];
+    idle [label="Timed idle", shape=ellipse];
+    unclaim_desk [label="Unclaim patient-side\n of the desk", shape=octagon];
+
+    start -> queue;
+    queue -> nopath;
+    queue -> walk_near_desk;
+    walk_near_desk -> claim_desk;
+    claim_desk ->walk_to_desk;
+    walk_to_desk -> idle;
+    idle -> unclaim_desk;
+    unclaim_desk -> ok;
+    walk_near_desk -> nopath;
+    walk_to_desk -> nopath;
+}

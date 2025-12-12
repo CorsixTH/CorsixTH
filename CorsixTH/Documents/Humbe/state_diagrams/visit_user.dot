@@ -1,0 +1,29 @@
+digraph G {
+    start [shape=plaintext];
+
+    walk_to_hosp [label="Walk to\nhospital", shape=box];
+    visit_recept [label="Visit reception", shape=box];
+    visit_gp [label="Visit GP", shape=box];
+    visit_diag [label="Visit diagnosis", shape=box];
+    visit_treat [label="Visit treatment", shape=box];
+    walk_home [label="Walk to home", shape=box];
+
+    done [shape=plaintext];
+    crash [shape=plaintext];
+
+    start -> walk_to_hosp;
+    walk_to_hosp -> visit_recept [label="Arrived"];
+    visit_recept -> visit_gp [label="Ok"];
+    visit_gp -> visit_diag [label="Ok"];
+    visit_gp -> visit_treat [label="Ok"];
+    visit_diag -> visit_gp [label="Ok"];
+    visit_treat -> walk_home [label="Ok"];
+    walk_home -> done [label="Ok"];
+
+    walk_to_hosp -> crash [label="No path"];
+    walk_home -> crash [label="No path"];
+    visit_recept -> crash[label="No path"];
+    visit_diag -> crash[label="No path"];
+    visit_gp -> crash[label="No path"];
+    visit_treat -> crash[label="No path"];
+}

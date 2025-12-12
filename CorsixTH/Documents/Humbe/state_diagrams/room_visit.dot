@@ -1,0 +1,9 @@
+digraph G {
+    start [shape=plaintext];
+    ok [shape=plaintext];
+    nopath [label="No path", shape=plaintext];
+
+    queue [label="Queue" shape=rectangle];
+    walk_door [label="Walk to door", shape=rectangle];
+    enter_room [label="
+}
