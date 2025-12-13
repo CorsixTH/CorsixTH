@@ -391,7 +391,8 @@ function UIBottomPanel:showAdditionalButtons(x, y)
 end
 
 function UIBottomPanel:hitTest(x, y, x_offset)
-  return x >= (x_offset and x_offset or 0) and y >= 0 and x < self.width and y < self.height
+  local s = TheApp.config.ui_scale
+  return x >= (x_offset and x_offset * s or 0) and y >= 0 and x < self.width * s and y < self.height * s
 end
 
 --! Queue a fax notification message to appear.
