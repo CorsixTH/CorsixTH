@@ -105,12 +105,12 @@ function UIInformation:onChangeLanguage()
   -- Close button
   self:addPanel(19, self.width - 28, self.height - 28, 18, 18, 1):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
   .panel_for_sprite.custom_draw = --[[persistable:information_close_button]] function(panel, canvas, x, y)
-      local s = TheApp.config.ui_scale
-      x = x + panel.x * s
-      y = y + panel.y * s
-      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
+      local ds = TheApp.config.ui_scale
+      x = x + panel.x * ds
+      y = y + panel.y * ds
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = ds })
       if self.active_hover then
-        self.panel_sprites:draw(canvas, 20, x, y, { scaleFactor = s })
+        self.panel_sprites:draw(canvas, 20, x, y, { scaleFactor = ds })
       end
     end
 end
