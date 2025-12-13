@@ -39,6 +39,7 @@ TheApp = {
   config = {
     width = 600,
     height = 800,
+    ui_scale = 1,
   },
   world = {
     speed = "Normal",
