@@ -33,7 +33,7 @@ local col_scrollbar = {
 local details_width = 280
 
 function UICustomCampaign:UICustomCampaign(ui)
-  self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
 
   self.unique_names, self.campaigns, self.duplicates = {}, {}, 0
   self.paths_table = {ui.app.campaign_dir, ui.app.user_campaign_dir}
@@ -124,7 +124,7 @@ function UICustomCampaign:buttonClicked(num)
   local item = self.items[num + self.scrollbar.value - 1]
   self.chosen_item = item
   if item.description then
-    local _, _, rows = self.label_font:sizeOf(item.description, details_width)
+    local _, _, rows = self.label_font:sizeOf(item.description, details_width * TheApp.config.ui_scale)
     self.details_scrollbar:setRange(1, rows, 13, 1)
   else
     self.details_scrollbar:setRange(1, 13, 13, 1)
@@ -140,16 +140,17 @@ end
 
 function UICustomCampaign:draw(canvas, x, y)
   UIMenuList.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  local s = TheApp.config.ui_scale
+  x, y = self.x * s + x, self.y * s + y
 
   if self.chosen_item and self.chosen_item.name then
     self.label_font:drawWrapped(canvas, self.chosen_item.name,
-                                x + 270, y + 10, details_width)
+                                x + 270 * s, y + 10 * s, details_width * s)
     self.label_font:drawWrapped(canvas, "(levels: " ..
-        self.chosen_item.no_levels .. ")", x+ 270, y + 22, details_width)
+        self.chosen_item.no_levels .. ")", x + 270 * s, y + 22 * s, details_width * s)
   end
   if self.chosen_item and self.chosen_item.description then
     self.label_font:drawWrapped(canvas, self.chosen_item.description,
-              x + 270, y + 40, details_width, nil, 13, self.description_offset)
+              x + 270 * s, y + 40 * s, details_width * s, nil, 13, self.description_offset)
   end
 end

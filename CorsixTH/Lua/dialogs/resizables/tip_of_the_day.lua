@@ -41,7 +41,7 @@ function UITipOfTheDay:UITipOfTheDay(ui)
   self.ui = ui
   self.resizable = false
   self:setDefaultPosition(-20, -20)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
 
   self.num_tips = #_S.totd_window.tips
   if self.num_tips == 0 then
@@ -72,9 +72,11 @@ function UITipOfTheDay:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
 
   -- Draw tip
-  x, y = self.x + x, self.y + y
+  local s = TheApp.config.ui_scale
+  x, y = self.x * s + x, self.y * s + y
+
   local text = _S.totd_window.tips[self.tip_num]
-  self.white_font:drawWrapped(canvas, text, x + 10, y + 10, self.width - 20)
+  self.white_font:drawWrapped(canvas, text, x + 10 * s, y + 10 * s, self.width * s - 20 * s)
 end
 
 function UITipOfTheDay:buttonPrev()

@@ -199,10 +199,44 @@ int l_spritesheet_draw(lua_State* L) {
   int iSprite =
       static_cast<int>(luaL_checkinteger(L, 3));  // No array adjustment
 
-  pSheet->draw_sprite(pCanvas, iSprite,
-                      static_cast<int>(luaL_optinteger(L, 4, 0)),
-                      static_cast<int>(luaL_optinteger(L, 5, 0)),
-                      static_cast<int>(luaL_optinteger(L, 6, 0)));
+  int x = static_cast<int>(luaL_optinteger(L, 4, 0));
+  int y = static_cast<int>(luaL_optinteger(L, 5, 0));
+
+  int scaleFactor = 1;
+  uint32_t flags = 0;
+  int arg6type = lua_type(L, 6);
+  if (arg6type == LUA_TTABLE) {
+    lua_getfield(L, 6, "flags");
+    flags = static_cast<uint32_t>(luaL_optinteger(L, -1, 0));
+    lua_pop(L, 1);
+
+    lua_getfield(L, 6, "nearest");
+    if (lua_toboolean(L, -1)) {
+      flags |= thdf_nearest;
+    }
+    lua_pop(L, 1);
+
+    lua_getfield(L, 6, "flipHorizontal");
+    if (lua_toboolean(L, -1)) {
+      flags |= thdf_flip_horizontal;
+    }
+    lua_pop(L, 1);
+
+    lua_getfield(L, 6, "flipVertical");
+    if (lua_toboolean(L, -1)) {
+      flags |= thdf_flip_vertical;
+    }
+    lua_pop(L, 1);
+
+    lua_getfield(L, 6, "scaleFactor");
+    scaleFactor = static_cast<int>(luaL_optinteger(L, -1, 1));
+    lua_pop(L, 1);
+  } else if (arg6type != LUA_TNONE) {
+    luaL_error(L, "Expected table for draw options");
+  }
+
+  pSheet->draw_sprite(pCanvas, iSprite, x, y, flags, 0, animation_effect::none,
+                      scaleFactor);
 
   lua_settop(L, 1);
   return 1;
@@ -258,6 +292,13 @@ int l_bitmap_font_set_sep(lua_State* L) {
   pFont->set_separation(static_cast<int>(luaL_checkinteger(L, 2)),
                         static_cast<int>(luaL_optinteger(L, 3, 0)));
 
+  lua_settop(L, 1);
+  return 1;
+}
+
+int l_bitmap_font_set_scale(lua_State* L) {
+  bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
+  pFont->set_scale_factor(static_cast<int>(luaL_checkinteger(L, 2)));
   lua_settop(L, 1);
   return 1;
 }
@@ -393,6 +434,14 @@ int l_freetype_font_set_font_options(lua_State* L) {
   } else if (lua_isboolean(L, -1)) {
     shadowOptions.enabled = lua_toboolean(L, -1);
   }
+  lua_pop(L, 1);
+
+  lua_getfield(L, -1, "scale_factor");
+  int scale_factor = static_cast<int>(luaL_optinteger(L, -1, 1));
+  width *= scale_factor;
+  height *= scale_factor;
+  shadowOptions.offset_x *= scale_factor;
+  shadowOptions.offset_y *= scale_factor;
   lua_pop(L, 1);
 
   pFont->set_font_color(color);
@@ -545,9 +594,9 @@ int l_font_draw_tooltip(lua_State* L) {
   const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
   int iX = static_cast<int>(luaL_checkinteger(L, 4));
   int iY = static_cast<int>(luaL_checkinteger(L, 5));
+  int iW = static_cast<int>(luaL_optinteger(L, 6, 200));
   int iScreenWidth = pCanvas->get_width();
 
-  int iW = 200;  // (for now) hardcoded width of tooltips
   uint32_t iBlack = render_target::map_colour(0x00, 0x00, 0x00);
   uint32_t iWhite = render_target::map_colour(0xFF, 0xFF, 0xFF);
   text_layout oArea = pFont->draw_text_wrapped(nullptr, sMsg, iMsgLen, iX + 2,
@@ -1011,6 +1060,7 @@ void lua_register_gfx(const lua_register_state* pState) {
     lcb.add_function(l_bitmap_font_get_spritesheet, "getSheet",
                      lua_metatable::sheet);
     lcb.add_function(l_bitmap_font_set_sep, "setSeparation");
+    lcb.add_function(l_bitmap_font_set_scale, "setScaleFactor");
   }
 
   // FreeTypeFont

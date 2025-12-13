@@ -150,7 +150,7 @@ function UI:UI(app, minimal)
     self.tooltip_font = app.gfx:loadBuiltinFont()
   else
     local palette = app.gfx:loadPalette("QData", "PREF01V.PAL", true)
-    self.tooltip_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette)
+    self.tooltip_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette, { apply_ui_scale = true })
   end
   self.tooltip = nil
   self.tooltip_counter = 0
@@ -296,7 +296,7 @@ function UI:drawTooltip(canvas)
   end
 
   if self.tooltip_font then
-    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y)
+    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y, 200 * TheApp.config.ui_scale)
   end
 end
 
@@ -1105,10 +1105,12 @@ function UI:afterLoad(old, new)
       gfx.cache.palette_greyscale_ghost = {}
       gfx.cache.language_fonts = {}
       gfx.builtin_font = nil
-
-      local palette = gfx:loadPalette("QData", "PREF01V.PAL", true)
-      self.tooltip_font = gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette)
     end
+  end
+  if old < 236 then
+    local gfx = self.app.gfx
+    local palette = gfx:loadPalette("QData", "PREF01V.PAL", true)
+    self.tooltip_font = gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette, { apply_ui_scale = true })
   end
 
   self:setupGlobalKeyHandlers()
