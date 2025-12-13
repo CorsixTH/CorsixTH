@@ -37,8 +37,8 @@ function UIBuildRoom:UIBuildRoom(ui)
   self:setDefaultPosition(0.5, 0.5)
   local selected_label_color = { red = 40, green = 40, blue = 250 }
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req09V", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
-  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color})
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   self.category_index = 0
   self.list_hover_index = 0
   self.hover_sound = nil
@@ -80,12 +80,13 @@ function UIBuildRoom:UIBuildRoom(ui)
   local build_room_dialog_close = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self:addPanel(224, 146, 224):makeButton(8, 34, 134, 27, 224, self.close):setTooltip(_S.tooltip.build_room_window.close)
   .panel_for_sprite.custom_draw = --[[persistable:build_room_draw_close_button]] function(panel, canvas, x, y)
-    x = x + panel.x
-    y = y + panel.y
-    panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
+    local s = TheApp.config.ui_scale
+    x = x + panel.x * s
+    y = y + panel.y * s
+    panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
     local btn = panel.window.active_button
     if btn and btn.panel_for_sprite == panel and btn.active then
-      build_room_dialog_close:draw(canvas, 1, x + 8, y + 34)
+      build_room_dialog_close:draw(canvas, 1, x + 8 * s, y + 34 * s, { scaleFactor = s })
     end
   end
 
@@ -128,22 +129,23 @@ local cat_label_y = {21, 53, 84, 116}
 function UIBuildRoom:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
-  x, y = self.x + x, self.y + y
-  self.white_font:draw(canvas, self.list_title, x + 163, y + 18)
+  local s = TheApp.config.ui_scale
+  x, y = self.x * s + x, self.y * s + y
+  self.white_font:draw(canvas, self.list_title, x + 163 * s, y + 18 * s)
   for i = 1, 4 do
     (i == self.category_index and self.blue_font or self.white_font)
-      :draw(canvas, self.category_titles[i], x + 19, y + cat_label_y[i])
+      :draw(canvas, self.category_titles[i], x + 19 * s, y + cat_label_y[i] * s)
   end
 
   for i, room in ipairs(self.list) do
     (i == self.list_hover_index and self.blue_font or self.white_font)
-      :draw(canvas, room.name, x + 163, y + 21 + i * 19)
+      :draw(canvas, room.name, x + 163 * s, y + 21 * s + i * 19 * s)
   end
 
-  self.white_font:draw(canvas, self.cost_box, x + 163, y + 232)
+  self.white_font:draw(canvas, self.cost_box, x + 163 * s, y + 232 * s)
 
   if self.preview_anim then
-    self.preview_anim:draw(canvas, x + 70, y + 200)
+    self.preview_anim:draw(canvas, x + 70 * s, y + 200 * s, { scaleFactor = s})
   end
 end
 
@@ -195,11 +197,12 @@ end
 function UIBuildRoom:onMouseMove(x, y, dx, dy)
   local repaint = Window.onMouseMove(self, x, y, dx, dy)
 
+  local s = TheApp.config.ui_scale
   local hover_idx = 0
-  if 156 <= x and x < 287 and 31 <= y and y < 226 then
+  if 156 * s <= x and x < 287 * s and 31 * s <= y and y < 226 * s then
     for i = 5, 14 do
       local btn = self.buttons[i]
-      if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+      if btn.enabled and btn.x * s <= x and x < btn.r * s and btn.y * s <= y and y < btn.b * s then
         hover_idx = i - 4
         break
       end
