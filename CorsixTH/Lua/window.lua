@@ -351,7 +351,6 @@ end
 --! Set the size of a panel.
 --!param width (int) New width of the panel.
 --!param height (int) New height of the panel.
---!param scale (int|nil) Scale factor to apply to width and height. Default is TheApp.config.ui_scale.
 function Panel:setSize(width, height)
   self.w = width
   self.h = height
@@ -378,6 +377,9 @@ bitmap to be displayed.
 panel (in pixels) is known, it should be specified here to speed up hit-tests.
 !param h (integer, nil) If the panel is totally opaque, and the height of the
 panel (in pixels) is known, it should be specified here to speed up hit-tests.
+!param apply_ui_scale (bool|nil) If true apply the ui_scale to the dimensions
+when doing the draw and hit test. If nil then apply_ui_scale if enabled for the
+parent window.
 ]]
 function Window:addPanel(sprite_index, x, y, w, h, apply_ui_scale)
   local panel = setmetatable({
