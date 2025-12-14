@@ -709,6 +709,12 @@ function Patient:tickDay()
     self.health_history["last"] = last
   end
 
+  -- Avoid vomiting, urinating in the hallway, going to the toilet,
+  -- or using vending machines on emergency patients.
+  if self.is_emergency then
+    return
+  end
+
   -- Vomitings.
   if self.vomit_anim and not self:getRoom() and not self:getCurrentAction().is_leaving and not self:getCurrentAction().is_entering then
     --Nausea level is based on health then proximity to vomit is used as a multiplier.
