@@ -447,10 +447,12 @@ class raw_bitmap {
       @param iPixelDataLength Size of the loaded image data.
       @param iWidth Width of the image.
       @param pEventualCanvas Canvas to render the image to (eventually).
+      @param spriteFlags
       @return Loading was a success.
   */
   void load_from_th_file(const uint8_t* pPixelData, size_t iPixelDataLength,
-                         int iWidth, render_target* pEventualCanvas);
+                         int iWidth, render_target* pEventualCanvas,
+                         uint32_t spriteFlags);
 
   //! Draw the image at a given position at the given canvas.
   /*!

@@ -288,7 +288,8 @@ end
 --!param paldir (string) The directory of the palette.
 --!param pal (string) The name of the palette
 --!param transparent_255 (boolean) Whether the 255th entry of the palette should be transparent
-function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255)
+--!param flags (table) Additional flags for loading the bitmap
+function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255, flags)
   if self.cache.raw[name] then
     return self.cache.raw[name]
   end
@@ -304,7 +305,7 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255
   local bitmap = TH.bitmap()
   local palette = self:loadPalette(paldir, pal, transparent_255)
   bitmap:setPalette(palette)
-  assert(bitmap:load(data, width, self.target))
+  assert(bitmap:load(data, width, self.target, flags))
 
   local function bitmap_reloader(bm)
     bm:setPalette(palette)
@@ -315,7 +316,7 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255
   self.reload_functions[bitmap] = bitmap_reloader
 
   self.cache.raw[name] = bitmap
-  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, paldir, pal, transparent_255}
+  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, paldir, pal, transparent_255, flags}
   return bitmap
 end
 

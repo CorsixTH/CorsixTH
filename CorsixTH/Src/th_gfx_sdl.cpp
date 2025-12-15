@@ -995,7 +995,8 @@ void raw_bitmap::set_palette(const palette* pPalette) {
 
 void raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
                                    size_t iPixelDataLength, int iWidth,
-                                   render_target* pEventualCanvas) {
+                                   render_target* pEventualCanvas,
+                                   uint32_t spriteFlags) {
   if (pEventualCanvas == nullptr) {
     throw std::invalid_argument("pEventualCanvas cannot be null");
   }
@@ -1004,7 +1005,8 @@ void raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
 
   int iHeight = static_cast<int>(iPixelDataLength) / iWidth;
   texture = pEventualCanvas->create_palettized_texture(
-      iWidth, iHeight, converted_sprite, bitmap_palette, thdf_alt32_plain);
+      iWidth, iHeight, converted_sprite, bitmap_palette,
+      thdf_alt32_plain | spriteFlags);
   delete[] converted_sprite;
 
   width = iWidth;

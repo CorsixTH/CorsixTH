@@ -43,6 +43,35 @@ SOFTWARE.
 #include FT_TYPES_H
 
 namespace {
+uint32_t flags_from_table(lua_State* L, int index) {
+  if (lua_type(L, index) != LUA_TTABLE) {
+    return 0;
+  }
+
+  lua_getfield(L, index, "flags");
+  uint32_t flags = static_cast<uint32_t>(luaL_optinteger(L, -1, 0));
+  lua_pop(L, 1);
+
+  lua_getfield(L, index, "nearest");
+  if (lua_toboolean(L, -1)) {
+    flags |= thdf_nearest;
+  }
+  lua_pop(L, 1);
+
+  lua_getfield(L, index, "flipHorizontal");
+  if (lua_toboolean(L, -1)) {
+    flags |= thdf_flip_horizontal;
+  }
+  lua_pop(L, 1);
+
+  lua_getfield(L, index, "flipVertical");
+  if (lua_toboolean(L, -1)) {
+    flags |= thdf_flip_vertical;
+  }
+  lua_pop(L, 1);
+
+  return flags;
+}
 
 font* luaT_getfont(lua_State* L) {
   font* p = luaT_touserdata_base<font, bitmap_font, freetype_font>(
@@ -104,9 +133,10 @@ int l_rawbitmap_load(lua_State* L) {
   int iWidth = static_cast<int>(luaL_checkinteger(L, 3));
   render_target* pSurface =
       luaT_testuserdata<render_target>(L, 4, luaT_upvalueindex(1), false);
+  uint32_t flags = flags_from_table(L, 5);
 
   try {
-    pBitmap->load_from_th_file(pData, iDataLen, iWidth, pSurface);
+    pBitmap->load_from_th_file(pData, iDataLen, iWidth, pSurface, flags);
   } catch (const std::exception& ex) {
     lua_pushstring(L, ex.what());
     lua_error(L);
@@ -206,27 +236,7 @@ int l_spritesheet_draw(lua_State* L) {
   uint32_t flags = 0;
   int arg6type = lua_type(L, 6);
   if (arg6type == LUA_TTABLE) {
-    lua_getfield(L, 6, "flags");
-    flags = static_cast<uint32_t>(luaL_optinteger(L, -1, 0));
-    lua_pop(L, 1);
-
-    lua_getfield(L, 6, "nearest");
-    if (lua_toboolean(L, -1)) {
-      flags |= thdf_nearest;
-    }
-    lua_pop(L, 1);
-
-    lua_getfield(L, 6, "flipHorizontal");
-    if (lua_toboolean(L, -1)) {
-      flags |= thdf_flip_horizontal;
-    }
-    lua_pop(L, 1);
-
-    lua_getfield(L, 6, "flipVertical");
-    if (lua_toboolean(L, -1)) {
-      flags |= thdf_flip_vertical;
-    }
-    lua_pop(L, 1);
+    flags = flags_from_table(L, 6);
 
     lua_getfield(L, 6, "scaleFactor");
     scaleFactor = static_cast<int>(luaL_optinteger(L, -1, 1));

@@ -33,8 +33,8 @@ function UIHireStaff:UIHireStaff(ui)
   self.height = 323
   self:setDefaultPosition(100, 100)
   self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "Req11V", true)
-  self.white_font = ui.app.gfx:loadFontAndSpriteTable("QData", "Font01V")
-  self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
+  self.white_font = ui.app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { nearest = true })
 
   -- Left hand side tab backgrounds
   self:addPanel(253, 0,   0)
@@ -144,6 +144,7 @@ function UIHireStaff:hire()
   table.remove(self.world.available_staff[self.category], self.current_index)
   self.ui:addWindow(UIPlaceStaff(self.ui, profile, self.mouse_up_x, self.mouse_up_y))
 end
+
 function UIHireStaff:cannotAfford()
   local msg = {
     (_A.warnings.cannot_afford),
@@ -153,60 +154,65 @@ function UIHireStaff:cannotAfford()
     self.world.ui.adviser:say(msg[math.random(1, #msg)])
   end
 end
+
 function UIHireStaff:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+
+  local s = TheApp.config.ui_scale
+  x, y = self.x * s + x, self.y * s + y
 
   local font = self.white_font
   local staff = self.world.available_staff
-  font:draw(canvas, #staff.Doctor      , x + 16, y +  58, 26, 0)
-  font:draw(canvas, #staff.Nurse       , x + 16, y + 137, 26, 0)
-  font:draw(canvas, #staff.Handyman    , x + 16, y + 216, 26, 0)
-  font:draw(canvas, #staff.Receptionist, x + 16, y + 295, 26, 0)
+  local staff_label_x = x + 16 * s
+  local staff_label_w = 26 * s
+  font:draw(canvas, #staff.Doctor      , staff_label_x, y +  58 * s, staff_label_w, 0)
+  font:draw(canvas, #staff.Nurse       , staff_label_x, y + 137 * s, staff_label_w, 0)
+  font:draw(canvas, #staff.Handyman    , staff_label_x, y + 216 * s, staff_label_w, 0)
+  font:draw(canvas, #staff.Receptionist, staff_label_x, y + 295 * s, staff_label_w, 0)
   if self.category and self.current_index then
     local profile = staff[self.category]
     profile = profile and profile[self.current_index]
     if not profile then
       return
     end
-    font:draw(canvas, profile:getFullName(), x + 79, y + 21)
-    profile:drawFace(canvas, x + 158, y + 48, self.face_parts)
-    font:draw(canvas, "$" .. profile.wage, x + 116, y + 179)
-    font:drawWrapped(canvas, profile.desc, x + 74, y + 205, 149)
+    font:draw(canvas, profile:getFullName(), x + 79 * s, y + 21 * s)
+    profile:drawFace(canvas, x + 158 * s, y + 48 * s, self.face_parts, s)
+    font:draw(canvas, "$" .. profile.wage, x + 116 * s, y + 179 * s)
+    font:drawWrapped(canvas, profile.desc, x + 74 * s, y + 205 * s, 149 * s)
     -- Skill bar
     if self.skill_bg_panel.visible then
-      local skill_bar_width = math.floor(profile.skill * 40 + 0.5)
+      local skill_bar_width = math.floor(profile.skill * 40 * s + 0.5)
       if skill_bar_width ~= 0 then
         local px, py = self.skill_bg_panel.x, self.skill_bg_panel.y
-        px = px + x
-        py = py + y
-        for dx = 0, skill_bar_width - 1 do
-          self.panel_sprites:draw(canvas, 3, px + 22 + dx, py + 9)
+        px = px * s + x
+        py = py * s + y
+        for dx = 0, skill_bar_width - 1, s do
+          self.panel_sprites:draw(canvas, 3, px + 22 * s + dx, py + 9 * s, { scaleFactor = s })
         end
       end
     end
     if self.category == "Doctor" then
       -- Junior / Doctor / Consultant marker
-      self.panel_sprites:draw(canvas, 258, x + 71, y + 49)
+      self.panel_sprites:draw(canvas, 258, x + 71 * s, y + 49 * s, { scaleFactor = s })
       if profile.is_junior then
-        self.panel_sprites:draw(canvas, 296, x +  79, y + 80)
+        self.panel_sprites:draw(canvas, 296, x +  79 * s, y + 80 * s, { scaleFactor = s })
       elseif profile.is_consultant then
-        self.panel_sprites:draw(canvas, 296, x + 131, y + 80)
+        self.panel_sprites:draw(canvas, 296, x + 131 * s, y + 80 * s, { scaleFactor = s })
       else
-        self.panel_sprites:draw(canvas, 296, x + 101, y + 80)
+        self.panel_sprites:draw(canvas, 296, x + 101 * s, y + 80 * s, { scaleFactor = s })
       end
       -- Ability markers
       local px, py = self.ability_bg_panel.x, self.ability_bg_panel.y
-      px = px + x
-      py = py + y
+      px = px * s + x
+      py = py * s + y
       if profile.is_surgeon >= 1.0 then
-        self.panel_sprites:draw(canvas, 292, px +  65, py + 22)
+        self.panel_sprites:draw(canvas, 292, px +  65 * s, py + 22 * s, { scaleFactor = s })
       end
       if profile.is_psychiatrist >= 1.0 then
-        self.panel_sprites:draw(canvas, 293, px +  82, py + 28)
+        self.panel_sprites:draw(canvas, 293, px +  82 * s, py + 28 * s, { scaleFactor = s })
       end
       if profile.is_researcher >= 1.0 then
-        self.panel_sprites:draw(canvas, 294, px + 109, py + 27)
+        self.panel_sprites:draw(canvas, 294, px + 109 * s, py + 27 * s, { scaleFactor = s })
       end
     end
   end
