@@ -359,4 +359,8 @@ end
 function UIPatient:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
+
+  if old < 236 then
+    self.font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font74V", nil, nil, { apply_ui_scale = true })
+  end
 end

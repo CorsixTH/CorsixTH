@@ -886,4 +886,9 @@ end
 function UIPlaceObjects:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   UIPlaceObjects.registerKeyHandlers(self)
+
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+    self.blue_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
+  end
 end

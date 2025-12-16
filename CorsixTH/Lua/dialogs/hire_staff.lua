@@ -280,4 +280,9 @@ end
 function UIHireStaff:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
+
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+    self.face_parts = TheApp.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { flags = DrawFlags.Nearest })
+  end
 end

@@ -183,4 +183,8 @@ function UIJukebox:afterLoad(old, new)
     self:close()
   end
   Window.afterLoad(self, old, new)
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+    self.blue_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, { apply_ui_scale = true })
+  end
 end

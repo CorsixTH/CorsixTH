@@ -130,4 +130,8 @@ end
 function UIConfirmDialog:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
+
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  end
 end

@@ -972,11 +972,11 @@ function UIBottomPanel:afterLoad(old, new)
     end
     self.bank_button = self.buttons[1]:makeToggle()
   end
-  if old < 215 then
+  if old < 236 then
    self:_initFonts(self.ui.app.gfx)
   end
   -- Hotfix to force re-calculation of the money font (see issue #1193)
-  self.money_font = self.ui.app.gfx:loadFontAndSpriteTable("QData", "Font05V")
+  self.money_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font05V", nil, nil, { apply_ui_scale = true })
   self:registerKeyHandlers()
 
   Window.afterLoad(self, old, new)
