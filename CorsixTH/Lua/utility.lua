@@ -224,6 +224,7 @@ DrawFlags.EarlyList       = 2^10
 DrawFlags.ListBottom      = 2^11
 DrawFlags.BoundBoxHitTest = 2^12
 DrawFlags.Crop            = 2^13
+DrawFlags.Nearest         = 2^14
 
 -- Order of animations within a tile. Animations with a smaller number are
 -- drawn first.

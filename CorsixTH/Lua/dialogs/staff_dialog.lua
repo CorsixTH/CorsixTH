@@ -76,7 +76,7 @@ function UIStaff:UIStaff(ui, staff)
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req01V", true)
   self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
-  self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { nearest = true })
+  self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { flags = DrawFlags.Nearest })
 
   self:addPanel(297,   15,   0) -- Dialog header
   for y = 51, 121, 10 do
