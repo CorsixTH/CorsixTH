@@ -33,7 +33,7 @@ function UIFax:UIFax(ui, icon)
   self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
   local palette = gfx:loadPalette("QData", "Fax01V.pal", true)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
-  self.fax_font = gfx:loadFontAndSpriteTable("QData", "Font51V", false, palette)
+  self.fax_font = gfx:loadFontAndSpriteTable("QData", "Font51V", false, palette, { apply_ui_scale = true })
   self.icon = icon
   self.message = icon.message or {}
   self.owner = icon.owner
@@ -102,24 +102,27 @@ function UIFax:updateChoices()
 end
 
 function UIFax:draw(canvas, x, y)
-  self.background:draw(canvas, self.x + x, self.y + y)
+  local s = TheApp.config.ui_scale
+  canvas:scale(s, "bitmap")
+  self.background:draw(canvas, self.x * s + x, self.y * s + y)
+  canvas:scale(1, "bitmap")
   UIFullscreen.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  x, y = self.x * s + x, self.y * s + y
 
   if self.message then
-    local last_y = y + 40
+    local last_y = y + 40 * s
     for _, message in ipairs(self.message) do
-      last_y = self.fax_font:drawWrapped(canvas, message.text, x + 190,
-                                         last_y + (message.offset or 0), 360,
+      last_y = self.fax_font:drawWrapped(canvas, message.text, x + 190 * s,
+                                         last_y + (message.offset or 0), 360 * s,
                                          "center")
     end
     local choices = self.message.choices
     if choices then
-      local orig_y = y + 190
+      local orig_y = y + 190 * s
       for i = 1, #choices do
-        last_y = orig_y + ((i - 1) + (3 - #choices)) * 48
-        self.fax_font:drawWrapped(canvas, choices[i].text, x + 190,
-                                  last_y + (choices[i].offset or 0), 300)
+        last_y = orig_y + ((i - 1) + (3 - #choices)) * 48 * s
+        self.fax_font:drawWrapped(canvas, choices[i].text, x + 190 * s,
+                                  last_y + (choices[i].offset or 0), 300 * s)
       end
     end
   end
@@ -292,12 +295,12 @@ function UIFax:close()
 end
 
 function UIFax:afterLoad(old, new)
-  if old < 179 then
+  if old < 236 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
     local palette = gfx:loadPalette("QData", "Fax01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
-    self.fax_font = gfx:loadFontAndSpriteTable("QData", "Font51V", false, palette)
+    self.fax_font = gfx:loadFontAndSpriteTable("QData", "Font51V", false, palette, { apply_ui_scale = true })
   end
   UIFullscreen.afterLoad(self, old, new)
   if old < 59 then
