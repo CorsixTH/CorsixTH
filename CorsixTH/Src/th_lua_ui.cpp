@@ -64,6 +64,7 @@ int l_town_map_draw(lua_State* L) {
   int iCanvasXBase = static_cast<int>(luaL_checkinteger(L, 4));
   int iCanvasYBase = static_cast<int>(luaL_checkinteger(L, 5));
   bool bShowHeat = lua_toboolean(L, 6) != 0;
+  int scale = static_cast<int>(luaL_optinteger(L, 7, 1));
 
   uint32_t iColourMyHosp = render_target::map_colour(0, 0, 70);
   uint32_t iColourWall = render_target::map_colour(255, 255, 255);
@@ -72,12 +73,12 @@ int l_town_map_draw(lua_State* L) {
 
   const map_tile* pNode = pMap->get_tile_unchecked(0, 0);
   const map_tile* pOriginalNode = pMap->get_original_tile_unchecked(0, 0);
-  int iCanvasY = iCanvasYBase + 3;
+  int iCanvasY = iCanvasYBase + 3 * scale;
   int iMapWidth = pMap->get_width();
-  for (int iY = 0; iY < pMap->get_height(); ++iY, iCanvasY += 3) {
+  for (int iY = 0; iY < pMap->get_height(); ++iY, iCanvasY += 3 * scale) {
     int iCanvasX = iCanvasXBase;
     for (int iX = 0; iX < iMapWidth;
-         ++iX, ++pNode, ++pOriginalNode, iCanvasX += 3) {
+         ++iX, ++pNode, ++pOriginalNode, iCanvasX += 3 * scale) {
       if (pOriginalNode->flags.hospital) {
         uint32_t iColour = iColourMyHosp;
         if (!(pNode->flags.hospital)) {
@@ -130,33 +131,37 @@ int l_town_map_draw(lua_State* L) {
 
           iColour = render_target::map_colour(iR, iG, iB);
         }
-        pCanvas->fill_rect(iColour, iCanvasX, iCanvasY, 3, 3);
+        pCanvas->fill_rect(iColour, iCanvasX, iCanvasY, 3 * scale, 3 * scale);
       }
     dont_paint_tile:
       if (is_wall_drawn(*pMap, *pNode, *pOriginalNode,
                         tile_layer::north_wall)) {
-        pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 3, 1);
+        pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 3 * scale, scale);
 
         // Draw entrance door
         auto l = (pNode - 1)->objects;
         if (!l.empty() && l.front() == object_type::entrance_right_door) {
           if (pNode->flags.hospital) {
-            pCanvas->fill_rect(iColourDoor, iCanvasX - 6, iCanvasY - 2, 9, 3);
+            pCanvas->fill_rect(iColourDoor, iCanvasX - 6 * scale,
+                               iCanvasY - 2 * scale, 9 * scale, 3 * scale);
           } else {
-            pCanvas->fill_rect(iColourDoor, iCanvasX - 6, iCanvasY, 9, 3);
+            pCanvas->fill_rect(iColourDoor, iCanvasX - 6 * scale, iCanvasY,
+                               9 * scale, 3 * scale);
           }
         }
       }
       if (is_wall_drawn(*pMap, *pNode, *pOriginalNode, tile_layer::west_wall)) {
-        pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 1, 3);
+        pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, scale, 3 * scale);
 
         // Draw entrance door
         auto l = (pNode - iMapWidth)->objects;
         if (!l.empty() && l.front() == object_type::entrance_right_door) {
           if (pNode->flags.hospital) {
-            pCanvas->fill_rect(iColourDoor, iCanvasX - 2, iCanvasY - 6, 3, 9);
+            pCanvas->fill_rect(iColourDoor, iCanvasX - 2 * scale,
+                               iCanvasY - 6 * scale, 3 * scale, 9 * scale);
           } else {
-            pCanvas->fill_rect(iColourDoor, iCanvasX, iCanvasY - 6, 3, 9);
+            pCanvas->fill_rect(iColourDoor, iCanvasX, iCanvasY - 6 * scale,
+                               3 * scale, 9 * scale);
           }
         }
       }

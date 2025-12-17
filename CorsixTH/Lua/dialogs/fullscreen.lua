@@ -44,7 +44,10 @@ end
 
 function UIFullscreen:onChangeResolution()
   local app = self.ui.app
-  if app.config.width > self.width or app.config.height > self.height then
+  local s = app.config.ui_scale
+  local sw = app.config.width / s
+  local sh = app.config.height / s
+  if sw > self.width or sh > self.height then
     if not self.border_sprites then
       self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
     end
@@ -62,36 +65,37 @@ function UIFullscreen:onChangeResolution()
     end
   end
 
-  self.x = math.floor((app.config.width - self.width) / 2)
+  self.x = math.floor((sw - self.width) / 2)
 
   -- NB: Bottom panel is 48 pixels high
-  if app.config.height > 480 + 48 then
-    self.y = math.floor((app.config.height - 48 - self.height) / 2)
+  if sh > 480 + 48 then
+    self.y = math.floor((sh - 48 - self.height) / 2)
   elseif app.config.height >= 480 then
     self.y = 0
   else
-    self.y = math.floor((app.config.height - self.height) / 2)
+    self.y = math.floor((sh - self.height) / 2)
   end
 end
 
 function UIFullscreen:draw(canvas, x, y)
   local sprites = self.border_sprites
   if sprites then
+    local s = TheApp.config.ui_scale
     local draw = sprites.draw
-    local scr_x = self.x + x
-    local scr_y = self.y + y
+    local scr_x = self.x * s + x
+    local scr_y = self.y * s + y
     canvas:nonOverlapping(true)
-    draw(sprites, canvas, 10, scr_x - 9, scr_y - 9)
-    draw(sprites, canvas, 12, scr_x + 600, scr_y - 9)
-    draw(sprites, canvas, 15, scr_x - 9, scr_y + 440)
-    draw(sprites, canvas, 17, scr_x + 600, scr_y + 440)
-    for loop_x = scr_x + 40, scr_x + 560, 40 do
-      draw(sprites, canvas, 11, loop_x, scr_y - 9)
-      draw(sprites, canvas, 16, loop_x, scr_y + 480)
+    draw(sprites, canvas, 10, scr_x - 9 * s, scr_y - 9 * s, { scaleFactor = s })
+    draw(sprites, canvas, 12, scr_x + 600 * s, scr_y - 9 * s, { scaleFactor = s })
+    draw(sprites, canvas, 15, scr_x - 9 * s, scr_y + 440 * s, { scaleFactor = s })
+    draw(sprites, canvas, 17, scr_x + 600 * s, scr_y + 440 * s, { scaleFactor = s })
+    for loop_x = scr_x + 40 * s, scr_x + 560 * s, 40 * s do
+      draw(sprites, canvas, 11, loop_x, scr_y - 9 * s, { scaleFactor = s })
+      draw(sprites, canvas, 16, loop_x, scr_y + 480 * s, { scaleFactor = s })
     end
-    for loop_y = scr_y + 40, scr_y + 400, 40 do
-      draw(sprites, canvas, 13, scr_x - 9, loop_y)
-      draw(sprites, canvas, 14, scr_x + 640, loop_y)
+    for loop_y = scr_y + 40 * s, scr_y + 400 * s, 40 * s do
+      draw(sprites, canvas, 13, scr_x - 9 * s, loop_y, { scaleFactor = s })
+      draw(sprites, canvas, 14, scr_x + 640 * s, loop_y, { scaleFactor = s })
     end
     canvas:nonOverlapping(false)
   end
@@ -100,32 +104,34 @@ end
 
 function UIFullscreen:onMouseDown(button, x, y)
   local repaint = Window.onMouseDown(self, button, x, y)
+  local s = TheApp.config.ui_scale
   if button == "left" and not repaint and not (x >= 0 and y >= 0 and
-      x < self.width and y < self.height) and self:hitTest(x, y) then
+      x < self.width * s and y < self.height * s) and self:hitTest(x, y) then
     return self:beginDrag(x, y)
   end
   return repaint
 end
 
 function UIFullscreen:hitTest(x, y)
-  if x >= 0 and y >= 0 and x < self.width and y < self.height then
+  local s = TheApp.config.ui_scale
+  if x >= 0 and y >= 0 and x < self.width * s and y < self.height * s then
     return true
   end
   local sprites = self.border_sprites
   if not sprites then
     return false
   end
-  if x < -9 or y < -9 or x >= self.width + 9 or y >= self.height + 9 then
+  if x < -9 * s or y < -9 * s or x >= self.width * s + 9 * s or y >= self.height * s + 9 * s then
     return false
   end
-  if (0 <= x and x < self.width) or (0 <= y and y < self.height) then
+  if (0 <= x and x < self.width * s) or (0 <= y and y < self.height * s) then
     return true
   end
 
-  return sprites.hitTest(sprites, 10, x + 9,   y + 9) or
-         sprites.hitTest(sprites, 12, x - 600, y + 9) or
-         sprites.hitTest(sprites, 15, x + 9,   y - 440) or
-         sprites.hitTest(sprites, 17, x - 600, y - 440)
+  return sprites.hitTest(sprites, 10, x + 9 * s,   y + 9 * s) or
+         sprites.hitTest(sprites, 12, x - 600 * s, y + 9 * s) or
+         sprites.hitTest(sprites, 15, x + 9 * s,   y - 440 * s) or
+         sprites.hitTest(sprites, 17, x - 600 * s, y - 440 * s)
 end
 
 function UIFullscreen:afterLoad(old, new)
