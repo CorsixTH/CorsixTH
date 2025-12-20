@@ -159,8 +159,8 @@ function UIPolicy:onMouseMove(x, y, dx, dy)
   if self.moving_panel then -- A slider is being moved.
     local s = TheApp.config.ui_scale
     local p = self.moving_panel
-    self.moved_x = self.moved_x + (dx / s)
-    local new_x = self.moved_x + self.down_x - self.moving_panel.w / 2 - self.offset
+    self.moved_x = self.moved_x + dx / s
+    local new_x = math.floor(self.moved_x + self.down_x - self.moving_panel.w / 2 - self.offset)
     if new_x > p.min_x then
       if new_x < p.max_x then
         self.moving_panel.x = new_x
