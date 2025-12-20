@@ -28,15 +28,15 @@ function UIProgressReport:UIProgressReport(ui)
   self:UIFullscreen(ui)
 
   local world = self.ui.app.world
-  local gfx   = ui.app.gfx
+  local gfx = ui.app.gfx
 
   if not pcall(function()
     local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
 
     self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
-    self.red_font = gfx:loadFontAndSpriteTable("QData", "Font101V", false, palette)
-    self.normal_font = gfx:loadFontAndSpriteTable("QData", "Font100V", false, palette)
-    self.small_font = gfx:loadFontAndSpriteTable("QData", "Font106V")
+    self.red_font = gfx:loadFontAndSpriteTable("QData", "Font101V", false, palette, { apply_ui_scale = true })
+    self.normal_font = gfx:loadFontAndSpriteTable("QData", "Font100V", false, palette, { apply_ui_scale = true })
+    self.small_font = gfx:loadFontAndSpriteTable("QData", "Font106V", nil, nil, { apply_ui_scale = true })
     -- Load all sprite tables needed for all goal icons
     self.panel_sprites_table = {
       MPointer = gfx:loadSpriteTable("Data", "MPointer"),
@@ -132,21 +132,23 @@ function UIProgressReport:close()
 end
 
 function UIProgressReport:drawMarkers(canvas, x, y)
-  local x_min = 455
-  local x_max = 551
+  local s = TheApp.config.ui_scale
+  local x_min = 455 * s
+  local x_max = 551 * s
+
   local width = x_max - x_min
   local happiness = self.ui.hospital:getAveragePatientAttribute("happiness", 0.5)
   local thirst = 1 - self.ui.hospital:getAveragePatientAttribute("thirst", 0.5)
   local warmth = self.ui.hospital:getAveragePatientAttribute("warmth", nil)
   warmth = UIPatient.normaliseWarmth(warmth)
 
-  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * happiness), y + 193)
-  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * thirst), y + 223)
-  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * warmth), y + 254)
+  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * happiness), y + 193 * s, { scaleFactor = s })
+  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * thirst), y + 223 * s, { scaleFactor = s })
+  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * warmth), y + 254 * s, { scaleFactor = s })
 
   local world = self.ui.app.world
   if world.free_build_mode then
-    self.normal_font:drawWrapped(canvas, _S.progress_report.free_build, x + 265, y + 194, 150, "center")
+    self.normal_font:drawWrapped(canvas, _S.progress_report.free_build, x + 265 * s, y + 194 * s, 150 * s, "center")
   end
 
   -- Possibly show warning that it's too cold, too hot, patients not happy
@@ -155,42 +157,45 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   local msg = self.ui.hospital.show_progress_screen_warnings
   if warmth < 0.3 and msg == 1 then
     self.warning.visible = true
-    self.normal_font:drawWrapped(canvas, _S.progress_report.too_cold, x + 285, y + 285, 285)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.too_cold, x + 285 * s, y + 285 * s, 285 * s)
   elseif warmth > 0.7 and msg == 1 then
     self.warning.visible = true
-    self.normal_font:drawWrapped(canvas, _S.progress_report.too_hot, x + 285, y + 285, 285)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.too_hot, x + 285 * s, y + 285 * s, 285 * s)
   elseif thirst > 0.7 and msg == 2 then
     self.warning.visible = true
-    self.normal_font:drawWrapped(canvas, _S.progress_report.more_drinks_machines, x + 285, y + 285, 285)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.more_drinks_machines, x + 285 * s, y + 285 * s, 285 * s)
   elseif happiness < 0.8 and happiness >= 0.6 and msg == 3 then
     self.warning.visible = true
-    self.normal_font:drawWrapped(canvas, _S.progress_report.quite_unhappy, x + 285, y + 285, 285)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.quite_unhappy, x + 285 * s, y + 285 * s, 285 * s)
   elseif happiness < 0.6 and msg == 3 then
     self.warning.visible = true
-    self.normal_font:drawWrapped(canvas, _S.progress_report.very_unhappy, x + 285, y + 285, 285)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.very_unhappy, x + 285 * s, y + 285 * s, 285 * s)
   else
     self.warning.visible = false
   end
 end
 
 function UIProgressReport:draw(canvas, x, y)
-  self.background:draw(canvas, self.x + x, self.y + y)
+  local s = TheApp.config.ui_scale
+  canvas:scale(s, "bitmap")
+  self.background:draw(canvas, self.x * s + x, self.y * s + y)
+  canvas:scale(1, "bitmap")
   UIFullscreen.draw(self, canvas, x, y)
 
-  x, y = self.x + x, self.y + y
+  x, y = self.x * s + x, self.y * s + y
   local world    = self.ui.app.world
   local hospital = world.hospitals[self.selected]
 
   -- Names of the players playing
-  local ly = 73
+  local ly = 73 * s
   for pnum, player in ipairs(world.hospitals) do
     local font = (pnum == self.selected) and self.red_font or self.normal_font
-    font:draw(canvas, player.name:upper(), x + 272, y + ly)
-    ly = ly + 25
+    font:draw(canvas, player.name:upper(), x + 272 * s, y + ly)
+    ly = ly + 25 * s
   end
 
   -- Draw the vertical bars for the selected conditions
-  local lx = 270
+  local lx = 270 * s
   for _, crit_table in ipairs(self.crit_data) do
     if crit_table.visible then
       local sprite_offset = crit_table.red and 2 or 0
@@ -199,37 +204,47 @@ function UIProgressReport:draw(canvas, x, y)
       local height
       if crit_table.red then
         local lose = crit_table.lose_value
-        height = 1 + 49 * (1 - ((cur_value - lose)/(crit_table.boundary - lose)))
+        height = s + 49 * (1 - ((cur_value - lose)/(crit_table.boundary - lose))) * s
       else
-        height = 1 + 49 * (cur_value/crit_table.win_value)
+        height = s + 49 * (cur_value/crit_table.win_value) * s
       end
-      if height > 50 then height = 50 end
+      if height > 50 * s then height = 50 * s end
       local result_y = 0
-      for dy = 0, height - 1 do
-        self.panel_sprites:draw(canvas, 1 + sprite_offset, x + lx, y + 237 - dy)
+      for dy = 0, height - 1, 1 do
+        self.panel_sprites:draw(canvas, 1 + sprite_offset, x + lx, y + 237 * s - dy, { scaleFactor = s })
         result_y = result_y + 1
       end
-      self.panel_sprites:draw(canvas, 2 + sprite_offset, x + lx, y + 237 - result_y)
+      self.panel_sprites:draw(canvas, 2 + sprite_offset, x + lx, y + 237 * s - result_y, { scaleFactor = s })
       if crit_table.icon_file then -- Icons not from QData/Rep02V
         local icon_sprites = self.panel_sprites_table[crit_table.icon_file]
-        icon_sprites:draw(canvas, crit_table.icon, x + lx, y + 240)
+        icon_sprites:draw(canvas, crit_table.icon, x + lx, y + 240 * s, { scaleFactor = s, flags = DrawFlags.Nearest })
       end
-      lx = lx + 30
+      lx = lx + 30 * s
     end
   end
 
   self:drawMarkers(canvas, x, y)
 
   self.normal_font:draw(canvas, _S.progress_report.header .. " " ..
-      (world:date():year() + 1999), x + 227, y + 40, 400, 0)
-  self.small_font:draw(canvas, _S.progress_report.win_criteria:upper(), x + 263, y + 172)
+      (world:date():year() + 1999), x + 227 * s, y + 40 * s, 400 * s, 0)
+  self.small_font:draw(canvas, _S.progress_report.win_criteria:upper(), x + 263 * s, y + 172 * s)
   self.small_font:draw(canvas, _S.progress_report.percentage_pop:upper() .. " " ..
-      (hospital.population * 100) .. "%", x + 450, y + 65)
+      (hospital.population * 100) .. "%", x + 450 * s, y + 65 * s)
 end
 
 function UIProgressReport:afterLoad(old, new)
   if old < 206 then
     self:close()
+  end
+
+  if old < 236 then
+    local gfx = TheApp.gfx
+    local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
+
+    self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
+    self.red_font = gfx:loadFontAndSpriteTable("QData", "Font101V", false, palette, { apply_ui_scale = true })
+    self.normal_font = gfx:loadFontAndSpriteTable("QData", "Font100V", false, palette, { apply_ui_scale = true })
+    self.small_font = gfx:loadFontAndSpriteTable("QData", "Font106V", nil, nil, { apply_ui_scale = true })
   end
 
   UIFullscreen.afterLoad(self, old, new)
