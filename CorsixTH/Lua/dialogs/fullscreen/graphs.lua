@@ -337,6 +337,7 @@ function UIGraphs:updateLines()
     local ideal_y = computeVerticalValuePosition(graph_datas[stat], value)
     local text = _S.graphs[stat] .. ":"
     local _, size_y, _ = self.black_font:sizeOf(text)
+    size_y = math.ceil(size_y / s) -- Size in unscaled pixels
     label_datas[#label_datas + 1] = {
         stat = stat, -- Name of the statistic it belongs to.
         text = text, -- Translated label text.
@@ -411,7 +412,7 @@ function UIGraphs:draw(canvas, x, y)
   -- TODO: These should be coloured according to the colour of the corresponding line.
   for _, label in pairs(self.label_datas) do
     if label.pos_y then
-      local ypos = label.pos_y + label.shift_y * s
+      local ypos = label.pos_y + label.shift_y
       self.black_font:draw(canvas, label.text, x + RIGHT_X * s + 3 * s, y + ypos * s)
       self.black_font:draw(canvas, string.format("%.0f", label.value), x + RIGHT_X * s + 60 * s, y + ypos * s)
     end
