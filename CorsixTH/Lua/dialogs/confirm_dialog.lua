@@ -75,6 +75,9 @@ function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, call
   self:addPanel(362, 90, last_y + 10):makeButton(0, 10, 82, 34, 363, self.ok)
     :setTooltip(_S.tooltip.window_general.confirm):setSound("YesX.wav")
 
+  -- Correct window height based on text height
+  self.height = last_y + 63
+
   self:registerKeyHandlers()
   if self.must_pause then self:systemPause() end
 end
