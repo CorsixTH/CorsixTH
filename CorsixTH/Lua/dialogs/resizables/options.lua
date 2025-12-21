@@ -257,7 +257,7 @@ function UIOptions:checkForAvailableLanguages()
     -- If freetype support and a unicode font setting are not present then
     -- languages not supported by the builtin font are named in English and cannot be selected
     if app.gfx:hasLanguageFont(font) then
-      font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"))
+      font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"), { apply_ui_scale = true })
       langs[#langs + 1] = { text = lang, name = lang, font = font, disabled = false,
       tooltip = { _S.tooltip.options_window.language_dropdown_item:format(eng_name), 510, BTN_HEIGHT * c + 31 } }
     else
