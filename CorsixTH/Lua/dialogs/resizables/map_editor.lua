@@ -715,7 +715,9 @@ function UIMapEditor:buildSpriteButtons(buttons)
       local bbutton_number = number
       local bbutton = self:addBevelPanel(xpos, ypos, width, height, col_bg)
       bbutton = bbutton:makeToggleButton(0, 0, width, height, nil,
-          --[[persistable:map_editor_block_clicked]] function() self:blockClicked(bbutton_number) end)
+          --[[persistable:map_editor_block_clicked]] function()
+            self:blockClicked(bbutton_number)
+          end)
       updateToggleButton(bbutton, "raised")
 
       local bpanel = self:addPanel(number, xpos+1, ypos+1, width-2, height-2)

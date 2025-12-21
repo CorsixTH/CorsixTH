@@ -746,8 +746,8 @@ end
 --!param height (int) New height of the button.
 function Button:setSize(width, height)
   self.panel_for_sprite:setSize(width, height)
-  self.r = self.x + width * TheApp.config.ui_scale
-  self.b = self.y + height * TheApp.config.ui_scale
+  self.r = self.x + width
+  self.b = self.y + height
   if self.tooltip then
     self.tooltip.tooltip_x = math.round((self.x + self.r) / 2, 1)
     self.tooltip.tooltip_y = self.y
