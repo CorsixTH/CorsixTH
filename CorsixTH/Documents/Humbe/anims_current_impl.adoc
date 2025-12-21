@@ -1,0 +1,295 @@
+== Animations in the current implementation
+
+An overview of how animations are used in the current implementation.
+
+It gives an overview of common patterns, in order to give starting points for
+more detailed code analysis.
+
+=== Basics of animations
+
+An animation is a sequence of frames. A single frame is (in a simplified view)
+an image that displays something happening in the hospital at one point in time.
+In an animation, these frame images are shown in quick succession. As we are not fast
+enough to see individual frames, our brain interprets the displayed images as a
+fluid motion.
+
+Every animation loops around. After the last frame, it continues to display the first
+frame again. This gives continuing motion in, for example, walking. It also
+gives continuous visibility of (seemingly) static objects like a radiator or a
+fire extinguisher.
+
+The floors (including street and garden) and walls that you can
+place in the game map editor are however proper single images in sprite sheets.
+
+
+=== The C++ layer
+
+The time critical part of animations is drawing all active animations at the
+screen. This job is done in the C++ layer. Each active animation in the
+hospital has an instance of the `animation` class that stores the details of
+the displayed animation, such as its current frame, links to other animations
+for drawing moods, layer flags for drawing the proper details of the animated
+humanoid, etcetera.
+
+Each active animation is linked to a tile in the game map, allowing it to
+be drawn at the correct moment while painting the entire displayed hospital.
+
+For actual drawing animations, the graphics of the original game must be
+available. This is implemented in the `animation_manager` class. It also knows
+how to draw a frame of an animation.
+
+Rendering the entire displayed hospital is performed by visiting all tiles of
+the map, and drawing the floor, walls, and animations in each tile. This
+happens for each frame of the animations.
+
+=== The Lua layer
+
+Lua code creates an `animation_manager` instance in `App:App()`:
+
+[source,lua]
+----
+self.anims = self.gfx:loadAnimations("Data", "V")
+self.animation_manager = AnimationManager(self.anims)
+----
+
+The first line loads all graphics files of the original game. The second line
+constructs the animation manager.
+The manager is globally available as `TheApp.animation_manager`. It can be used
+to query meta information about animations, such as the number of frames in an
+animation.
+
+Active animations are tightly linked to entities. A new entity is created in
+`World:newEntity`, which looks like
+
+[source,lua]
+----
+--! Create a new entity.
+--!param class Class to use for the new entity.
+--!param animation (int)Initial animation to use.
+--!param mood_marker (int) Whether to use the first (default), or the second marker.
+function World:newEntity(class, animation, mood_marker)
+  mood_marker = mood_marker and mood_marker or 1
+  assert(mood_marker == 1 or mood_marker == 2, "mood_marker is neither 1 nor 2.")
+
+  local th = TH.animation()
+  th:setAnimation(self.anims, animation)
+  local entity = _G[class](th)
+
+  self.entities[#self.entities + 1] = entity
+  entity.world = self
+  entity.mood_marker = mood_marker
+  return entity
+end
+----
+
+This method is called for each new entity. For example, to create a new
+patient, the code performs
+
+[source,lua]
+----
+local patient = self:newEntity("Patient", 2, 1)
+----
+
+in `World:spawnPatient(hospital)` (around line 455).
+The `"Patient"` string is used to create a patient object in Lua by calling
+the `Patient:Patient()` function (at line `local entity = _G[class](th)` above.
+It takes a `TH.animation()` object, which is the Lua representation of a C++
+`animation` object. The animation object is initialized with the
+`TheApp.animation_manager` object, and initial animation `2` of the entity.
+The other code lines connect the new entity to the world so it gets `tick`
+calls to update the entity, and the mood marker index of the new entity is set.
+
+The initial animation here makes sure the entity is visible. A Patient object
+in itself is a blob of memory in the computer system. It's not inherently visible
+at all. For consistency of the displayed hospital, entities should always be
+part of an animation.
+
+
+=== Pure single humanoid animations
+
+One group of animations display activity of single humanoids by themselves, like walking,
+idling, etcetera.
+The animation numbers are defined in `entities/humanoid.lua` for every
+humanoid, at the top of the file in large tables.
+Created humanoids get a copy of the animation numbers for easy access.
+To show how these animations are started, a simple action like `TapFootAction`
+is briefly discussed.
+
+The action starts in the `action_tap_foot_start` function.
+Actually starting the animation takes happens in the last two lines in the Lua
+code. Below, those lines are refactored and split to reduce line length:
+
+[source,lua]
+----
+local anim = humanoid.tap_foot_anim
+local draw_flags = humanoid.last_move_direction == "east" and 0 or 1
+humanoid:setAnimation(anim, draw_flags)
+
+local anim_length = (TheApp.animation_manager:getAnimLength(anim)
+humanoid:setTimer(anim_length, action_tap_foot_end)
+----
+
+First the animation is pulled from the humanoid animation tables. The `0` or
+`1` value for the `draw_flags` may set the `FlipHorizontal` flag of the animation,
+which may cause swapping left and right. That decides which foot is tapping.
+The `setAnimation` method starts the animation, and thus makes tapping of the
+foot visible.
+
+In the refactored second line, a timer is set to fire after `anim_length`
+ticks, which is equal to `anim_length` frames of the shown animation. In other words,
+the `action_tap_foot_end` function is called when the foot tapping animation
+is finished.
+That call ends the `TapFootAction`.
+
+
+=== Humanoid walking
+
+Walking is an extremely commonly used animation. The `WalkAction` is more complicated than
+the tap-foot animation because it aims to 'get the humanoid at tile (x, y)',
+which is much more involved than just showing a number of walk animations.
+This explanation does not aim to completely explain the action. Instead it
+concentrates on the animations that are performed. For understanding it is
+likely useful have the `walk.lua` nearby.
+
+The code starts near the bottom of the `walk.lua` file, in the
+`action_walk_start` function.
+It starts by finding a path to the given destination coordinates.
+Note that path finding completely ignores doors. It does however know about walls.
+
+Under the
+assumption that a path is found, it initializes the action (with the path tile positions in `action.path_x` and
+`action.path_y`), and moves on to  kicks off the animation in the
+`action_walk_tick` function. That function starts around line 180, where it
+retrieves the current and next tile of the path in the `(x1, y1)`,
+respectively the `(x2, y2)` pairs.
+If the end of the path has been found, the action finishes.
+
+In the more interesting case here, a walk animation from the `(x1, y1)` to the
+neighbouring tile `(x2, y2)` should be performed.
+It is important to note that the path being walked has been computed before
+the first step was made on the path. At the time that the humanoid aims to
+walk to tile `(x2, xy2)`, the destination tile may have been used for placing
+an object:
+
+[source,lua]
+----
+local map = humanoid.world.map.th
+  map:getCellFlags(x1, y1, flags_here)
+  map:getCellFlags(x2, y2, flags_there)
+  local recalc_route = not flags_there.passable and flags_here.passable
+----
+
+If either cell is not passable, an object is blocking the path.
+If there is no object, another possible problem is that the destination tile
+can now be in a different room because the user has built a new room in the mean
+time that blocks the path of the humanoid:
+
+[source,lua]
+----
+if not recalc_route and flags_here.roomId ~= flags_there.roomId then
+  -- if going to the corridor we don't care as we are at the door
+  -- as this will be false we won't bother checking for rerouting
+  recalc_route = flags_there.room
+  local door = TheApp.objects.door.id
+  local door2 = TheApp.objects.swing_door_right.id
+  local doorcheck = {[door] = true, [door2] = true}
+  -- but we should see if this is the same room id we want to go to and cancel the reroute
+  -- ensure we still have a door on this route
+  if recalc_route and (humanoid.world:getObject(x1, y1, doorcheck) or
+      humanoid.world:getObject(x2, y2, doorcheck)) and -- is there any door
+      map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ==
+      flags_there.roomId then
+    -- A walk including a trimmed path could have the last tile inside a room, and
+    -- might need a new route completely (e.g. seek reception)
+    recalc_route = action.trimmed
+  end
+end
+----
+
+If both tiles are in different rooms (and the destination is not the
+corridor), and we are not discarding entering the room where we want to
+arrive, then a new route is required. A further complication in the code is
+that the path may be trimmed. In this description, assume `action.trimmed == false`.
+Ignoring trouble with timing of calling callback functions, the actual
+animation is then performed in the `action_walk_raw` function around line 115.
+
+Walking can be `slow` or `fast`. It is achieved by changing the amount of
+waiting time between frames, which is decided first.
+Next, the humanoid tile jumps to the next tile at the start of the walk, and
+thus tile occupancy with respect to the humanoid must be updated.
+
+Arriving at the point where decisions for the animations are performed, `x`
+and `y` coordinates of both tiles are compared to find out the direction of
+walking. There may be a door between the source and destination tile. If detected, it
+jumps to a separate `navigateDoor` function that we ignore here.
+
+Without a door, the function sets up the walk to the next tile by code like
+(the example is for eastern direction):
+
+[source,lua]
+----
+humanoid.last_move_direction = "east"
+humanoid:setAnimation(anims.walk_east)
+humanoid:setTilePositionSpeed(x2, y2, -32, -16, 4 * factor, 2 * factor)
+----
+
+The calls vary in details depending on the direction, but it sets the movement
+direction of the humanoid in the first line. This is useful information for the animation after arriving at the destination tile, to avoid sudden changes in the orientation of the humanoid.
+Next, it sets the animation in the second line. In the third
+line it sets the tile of the animation to the destination tile, and an offset
+from the destination back to the start tile. The final two numbers are
+incremental updates to the offset that are applied each frame.
+The updates are needed here because in the walk animations, all
+frames at the center of the tile, while in the game the humanoid should move to the next tile.
+The `setTilePositionSpeed` is not often used. Most often, only `setTile` is needed.
+
+Not shown here, but after setting up the animation, a callback is set that jumps back to the
+`action_walk_tick` (back to where this explanation started) when the center of the next
+tile is reached. The walk to the next tile is immediately started in that way.
+
+=== Humanoid-object interaction animations
+
+The other animations with humanoids are mostly a single humanoid that interacts
+with an object. This includes using objects like benches or sofas, but also the
+machines.
+
+The animation numbers for the interactions are defined in the +`objects/*.lua`+
+and the +`objects/machines/*.lua`+ files.
+Objects and machines often have many animations. Besides an idle animation and
+a crashed animation, there are smoke animations. In addition, a repair animation, and usage
+animations with the various patient types also exist.
+
+In the animations where a humanoid is (actively) interacting with the object, the
+object and the humanoid often appear together in the animation. This gave
+the animators has more control on movements of the machine and/or the humanoid
+in the animation.
+
+Despite more control, machine usage animations are often split in a
+sequence of shorter animations that are intended to be shown immediately after
+each other.
+This becomes clear in the `UseObjectAction`, that supports five `begin_use`
+animations, one `in_use` animation, and again five `finish_use` animations to
+be shown. Before the first `begin_use` and after the last `finish_use`
+animation it can also show a walk animation in order to 'enter' or 'leave' the
+machine.
+
+For example, near the top of the `cast_remover.lua` machine file, there are
+idle, crashed, preview and smoke animation numbers.
+The `object.multi_usage_animations` list animation numbers for two types of
+patients. In the `footprint` layout (that defines
+requirements of tiles at and near the machine), there are various `*_position`
+fields that indicate needed positions of humanoids that interact with the
+machine.
+
+Performing an animation of a humanoid and interaction with an object is
+similar to performing a pure humanoid animation discussed above. The
+differences are that the relative position of the humanoid with respect to the
+object is critical, and that the animation of one of the entities must be made
+invisible, because both entities are already visible in the animation
+performed by the other entity.
+A `makeInvisible()` call exists for this purpose.
+
+In a limited number of occasions both humanoids must be visible. One example
+is the examination in the General Diagnosis room. What should also happens is that actions by
+a doctor and movements of a machine must be synchronized such that it looks like
+the doctor controls the movements.
