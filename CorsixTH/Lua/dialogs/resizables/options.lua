@@ -259,10 +259,10 @@ function UIOptions:checkForAvailableLanguages()
     if app.gfx:hasLanguageFont(font) then
       font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"), { apply_ui_scale = true })
       langs[#langs + 1] = { text = lang, name = lang, font = font, disabled = false,
-      tooltip = { _S.tooltip.options_window.language_dropdown_item:format(eng_name), 510, BTN_HEIGHT * c + 31 } }
+      tooltip = { _S.tooltip.options_window.language_dropdown_item:format(eng_name) } }
     else
       langs[#langs + 1] = { text = eng_name, name = lang, font = self.builtin_font, disabled = true,
-      tooltip = { _S.tooltip.options_window.language_dropdown_no_font, 510, BTN_HEIGHT * c + 31 } }
+      tooltip = { _S.tooltip.options_window.language_dropdown_no_font } }
     end
   end
   self.available_languages = langs
