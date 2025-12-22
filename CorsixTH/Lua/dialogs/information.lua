@@ -80,7 +80,7 @@ function UIInformation:onChangeLanguage()
   local s = TheApp.config.ui_scale
   for _, text in ipairs(self.text) do
     local _, req_height = self.black_font:sizeOf(text, self.text_width * s)
-    total_req_height = total_req_height + req_height / s
+    total_req_height = total_req_height + math.ceil(req_height / s)
   end
 
   self.width = self.spacing.l + self.text_width + self.spacing.r
