@@ -35,7 +35,7 @@ function UIStaffManagement:UIStaffManagement(ui)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette)
     self.title_font = gfx:loadFontAndSpriteTable("QData", "Font01V", false, palette, { apply_ui_scale = true })
     self.blue_font = gfx:loadFontAndSpriteTable("QData", "Font02V", false, palette, { apply_ui_scale = true })
-    self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { flags = DrawFlags.Nearest })
+    self.face_parts = gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { flags = DrawFlags.Nearest })
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
     self:close()

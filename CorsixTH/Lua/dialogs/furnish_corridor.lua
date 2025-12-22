@@ -269,6 +269,7 @@ function UIFurnishCorridor:afterLoad(old, new)
   end
 
   if old < 236 then
+    local selected_label_color = { red = 40, green = 40, blue = 250 }
     self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
     self.blue_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   end
