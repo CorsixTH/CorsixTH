@@ -144,7 +144,7 @@ function UIMenuBar:addMenu(title, menu)
   if self.menus[1] then
     menu_item.x = self.menus[#self.menus].x + self.menus[#self.menus].width
   end
-  menu_item.width = self.white_font:sizeOf(title) / TheApp.config.ui_scale + 32
+  menu_item.width = math.ceil(self.white_font:sizeOf(title) / TheApp.config.ui_scale + 32)
   self.menus[#self.menus + 1] = menu_item
 end
 
@@ -449,7 +449,7 @@ function UIMenuBar:calculateMenuSize(menu)
     local w = 20
     local h = 6
     for _, item in ipairs(menu.items) do
-      local item_w = self.white_font:sizeOf(item.title) / TheApp.config.ui_scale + 10
+      local item_w = math.ceil(self.white_font:sizeOf(item.title) / TheApp.config.ui_scale + 10)
       if item_w > w then
         w = item_w
       end
