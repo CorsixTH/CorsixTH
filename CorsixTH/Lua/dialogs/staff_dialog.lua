@@ -263,9 +263,10 @@ function UIStaff:onMouseUp(button, x, y)
     self.do_scroll = false
   end
   local repaint = Window.onMouseUp(self, button, x, y)
+  local s = TheApp.config.ui_scale
   -- Test for hit within the view circle and name box
-  local hit_namebox = x > self.tooltip_regions[1].x and x < self.tooltip_regions[1].r
-                      and y > self.tooltip_regions[1].y and y < self.tooltip_regions[1].b
+  local hit_namebox = x > self.tooltip_regions[1].x * s and x < self.tooltip_regions[1].r * s
+                      and y > self.tooltip_regions[1].y * s and y < self.tooltip_regions[1].b * s
   if button == "right" and is_in_view_circle(x, y, class.is(self.staff, Handyman))
      or button == "right" and hit_namebox then
     -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
