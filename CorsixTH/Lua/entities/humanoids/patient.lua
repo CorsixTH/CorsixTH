@@ -599,10 +599,20 @@ function Patient:tick()
   end
 end
 
--- Handle processing of a patient waiting for something (like a room or player action)
+-- Different events happen while a patient is waiting, based on the total number of days.
+local waiting_events = {
+  [0]  = "go_home",
+  [10] = "tap_foot",
+  [20] = "yawn",
+  [30] = "check_watch"
+}
+
+--! Handle processing of a patient waiting for something (like a room or player action)
 function Patient:_dailyWaitChecks()
   self.waiting = self.waiting - 1
-  if self.waiting == 0 then
+  local wait_event = waiting_events[self.waiting]
+  if not wait_event then return end
+  if wait_event == "go_home" then
     self:goHome("kicked")
     if self.diagnosed then
       -- No treatment rooms
@@ -611,14 +621,13 @@ function Patient:_dailyWaitChecks()
       -- No diagnosis rooms
       self:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
     end
-  elseif self.waiting == 10 then
+  elseif wait_event == "tap_foot" then
     self:tapFoot()
-  elseif self.waiting == 20 then
+  elseif wait_event == "yawn" then
     self:yawn()
-  elseif self.waiting == 30 then
+  elseif wait_event == "check_watch" then
     self:checkWatch()
   end
-  return
 end
 
 --! Handle processing of a patient's current health state and perform necessary actions
@@ -685,7 +694,6 @@ function Patient:_dailyHealthHistoryRefresh()
     self.health_history[last] = self:getAttribute("health")
     self.health_history["last"] = last
   end
-  return
 end
 
 --! Process a patient's exposure to vomit and calculate their level of nausea
@@ -704,7 +712,7 @@ function Patient:_calculateNausea(num_nearby_vomit)
   end
 end
 
---! Process a patient's current state of needing the loo, and action accordingly.
+--! Process a patient's current state of toilet need, and action accordingly.
 function Patient:_dailyBowelChecks()
   if self.disease.more_loo_use then
     self:changeAttribute("toilet_need", 0.018 * math.random() + 0.008)
@@ -712,27 +720,32 @@ function Patient:_dailyBowelChecks()
     self:changeAttribute("toilet_need", 0.006 * math.random() + 0.002)
   end
   -- Maybe it's time to visit the loo?
-  if self:getAttribute("toilet_need") > 0.75 then
-    if self.pee_anim and not self:getCurrentAction().is_leaving and
-        not self:getCurrentAction().is_entering and not self.in_room then
-      if math.random(1, 10) < 5 then
-        self:pee()
-        self:changeAttribute("toilet_need", -(0.5 + math.random()*0.15))
-        self.going_to_toilet = "no"
-      else
-        -- If waiting for user response, do not send to toilets, as this messes
-        -- things up.
-        if self.going_to_toilet == "no" and not self.waiting then
-          self:setMood("poo", "activate")
-          -- Check if any room exists.
-          if not self.world:findRoomNear(self, "toilets") then
-            self.going_to_toilet = "no-toilets" -- Gets reset when a new toilet is built (then, patient will try again).
-          -- Otherwise we can queue the action, but only if not in any rooms right now.
-          elseif not self:getRoom() and not self:getCurrentAction().is_leaving and not self:getCurrentAction().pee then
-            self:setNextAction(SeekToiletsAction():setMustHappen(true))
-            self.going_to_toilet = "yes"
-          end
-        end
+  if self:getAttribute("toilet_need") > 0.75 and self.pee_anim and
+      not self:getRoom() and not self:getCurrentAction().is_leaving and
+      not self:getCurrentAction().is_entering then
+    self:handleToiletNeed()
+  end
+end
+
+--! Process a patient's sudden need for the toilet.
+--! We will either do it on the floor (10% chance, daily), or seek out a toilet.
+function Patient:handleToiletNeed()
+  if math.random(1, 10) < 5 then
+    self:pee()
+    self:changeAttribute("toilet_need", -(0.5 + math.random()*0.15))
+    self.going_to_toilet = "no"
+  else
+    -- If waiting for user response, do not send to toilets, as this messes
+    -- things up.
+    if self.going_to_toilet == "no" and not self.waiting then
+      self:setMood("poo", "activate")
+      -- Check if any room exists.
+      if not self.world:findRoomNear(self, "toilets") then
+        self.going_to_toilet = "no-toilets" -- Gets reset when a new toilet is built (then, patient will try again).
+      -- Otherwise we can queue the action, but only if not in any rooms right now.
+      elseif not self:getRoom() and not self:getCurrentAction().is_leaving and not self:getCurrentAction().pee then
+        self:setNextAction(SeekToiletsAction():setMustHappen(true))
+        self.going_to_toilet = "yes"
       end
     end
   end
@@ -924,21 +937,22 @@ function Patient:tickDay()
   -- Update health history.
   self:_dailyHealthHistoryRefresh()
 
-  -- Happiness and nausea from nearby objects when not interacting with a room.
+  -- Perform Happiness and nausea calculations from nearby objects when not interacting
+  -- with a room.
   if not self:getRoom() and not self:getCurrentAction().is_entering and
       not self:getCurrentAction().is_leaving then
     local num_nearby_vomit = self:_dailyObjectHappinessEffects()
-      -- We only want to calculate vomit chance on patients who have the relevant animation
-      -- and aren't an emergency.
+    -- We only want to calculate vomit chance on patients who have the relevant animation
+    -- and aren't an emergency.
     if self.vomit_anim and not self.is_emergency then
-      local nausea = self:_calculateNausea(num_nearby_vomit)
-      if nausea and math.random() < nausea + 0.5 then
+      local nausea_level = self:_calculateNausea(num_nearby_vomit)
+      if nausea_level and math.random() < nausea_level + 0.5 then
         self:vomit()
       end
     end
   end
 
-  -- Each tick both thirst and toilet_need changes, and health decreases.
+  -- Each day both thirst and toilet_need changes, and health decreases.
   self:changeAttribute("health", - 0.004)
   if not self.is_emergency then
     self:changeAttribute("thirst", self:getAttribute("warmth") * 0.02 + 0.004 * math.random() + 0.004)
@@ -951,7 +965,9 @@ function Patient:tickDay()
   end
 
   -- See if a patient should yawn today.
-  if self.disease.yawn and math.random(1, 10) == 5 then
+  -- Don't attempt if the patient is already waiting with a yawn event
+  local will_yawn = self.waiting and waiting_events[self.waiting] == "yawn"
+  if self.disease.yawn and not will_yawn and math.random(1, 10) == 5 then
     self:yawn()
   end
 
