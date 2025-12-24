@@ -490,6 +490,7 @@ function World:spawnVIP(name)
   if #self.rooms > rooms_threshold then
     vip.room_visit_chance = math.floor(#self.rooms / 40)
   end
+  vip.hover_moods = false
 
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   vip:setNextAction(SpawnAction("spawn", spawn_point))

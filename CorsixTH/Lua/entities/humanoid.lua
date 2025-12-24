@@ -353,6 +353,8 @@ function Humanoid:Humanoid(...)
   self.build_callbacks  = {--[[set]]}
   self.remove_callbacks = {--[[set]]}
   self.staff_change_callbacks = {--[[set]]}
+
+  self.hover_moods = true
 end
 
 -- Save game compatibility

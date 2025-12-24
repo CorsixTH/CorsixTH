@@ -531,7 +531,9 @@ function GameUI:onCursorWorldPositionChange()
             TheApp.ui:playSound("HLIGHTP2.wav")
             self.last_hovered_entity = entity
           end
-          entity:setMoodInfo(value)
+          if entity.hover_moods then
+            entity:setMoodInfo(value)
+          end
         end
         break
       end
