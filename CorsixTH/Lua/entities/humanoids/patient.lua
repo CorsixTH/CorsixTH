@@ -599,7 +599,7 @@ function Patient:tick()
   end
 end
 
--- Different events happen while a patient is waiting, based on the total number of days.
+-- Different events happen while a patient is waiting, based on the total number of remaining days.
 local waiting_events = {
   [0]  = "go_home",
   [10] = "tap_foot",
