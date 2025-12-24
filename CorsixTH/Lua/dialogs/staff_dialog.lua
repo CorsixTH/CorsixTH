@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 -- Test for hit within the view circle
 local --[[persistable:staff_dialog_is_in_view_circle]] function is_in_view_circle(x, y, is_handyman)
-  local circle_center_y = is_handyman and 276 or 248
-  return (x - 55)^2 + (y - circle_center_y)^2 < 39^2
+  local s = TheApp.config.ui_scale
+  local circle_center_y = is_handyman and 276 * s or 248 * s
+  return (x - 55 * s)^2 + (y - circle_center_y)^2 < (39 * s)^2
 end
 
 --! Individual staff information dialog
@@ -74,8 +75,8 @@ function UIStaff:UIStaff(ui, staff)
   end
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req01V", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
-  self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { flags = DrawFlags.Nearest })
 
   self:addPanel(297,   15,   0) -- Dialog header
   for y = 51, 121, 10 do
@@ -162,90 +163,93 @@ function UIStaff:getStaffPosition(dx, dy)
 end
 
 function UIStaff:draw(canvas, x_, y_)
-  local x, y = self.x + x_, self.y + y_
+  local s = TheApp.config.ui_scale
+  local x, y = self.x * s + x_, self.y * s + y_
 
   local px, py = self:getStaffPosition(37, 61)
-  self.ui.app.map:draw(canvas, px, py, 75, 75, x + 17, y + self.height - 93)
+  canvas:scale(s)
+  self.ui.app.map:draw(canvas, px, py, 75, 75, math.floor(x / s) + 17, math.floor(y / s) + self.height - 93)
+  canvas:scale(1)
   Window.draw(self, canvas, x_, y_)
 
   local profile = self.staff.profile
   local font = self.white_font
 
-  font:draw(canvas, profile:getFullName(), x + 42, y + 28) -- Name
+  font:draw(canvas, profile:getFullName(), x + 42 * s, y + 28 * s) -- Name
   if class.is(self.staff, Handyman)then
-    font:draw(canvas, "$" .. profile.wage, x + 135, y + 226) -- Wage
-    font:draw(canvas, self:getParcelText(), x + 35, y + 215, 50, 0)
+    font:draw(canvas, "$" .. profile.wage, x + 135 * s, y + 225 * s) -- Wage
+    font:draw(canvas, self:getParcelText(), x + 35 * s, y + 215 * s, 50 * s, 0)
     -- The concentration areas
-    local cleaning_width = math.floor(self.staff:getAttribute("cleaning") * 40 + 0.5)
-    local watering_width = math.floor(self.staff:getAttribute("watering") * 40 + 0.5)
-    local repairing_width = math.floor(self.staff:getAttribute("repairing") * 40 + 0.5)
+    local cleaning_width = math.floor(self.staff:getAttribute("cleaning") * 40 * s + 0.5)
+    local watering_width = math.floor(self.staff:getAttribute("watering") * 40 * s + 0.5)
+    local repairing_width = math.floor(self.staff:getAttribute("repairing") * 40 * s + 0.5)
     if cleaning_width ~= 0 then
-      for dx = 0, cleaning_width - 1 do
-        self.panel_sprites:draw(canvas, 351, x + 43 + dx, y + 200)
+      for dx = 0, cleaning_width - 1, s do
+        self.panel_sprites:draw(canvas, 351, x + 43 * s + dx, y + 200 * s, { scaleFactor = s })
       end
     end
     if watering_width ~= 0 then
       for dx = 0, watering_width - 1 do
-        self.panel_sprites:draw(canvas, 351, x + 99 + dx, y + 200)
+        self.panel_sprites:draw(canvas, 351, x + 99 * s + dx, y + 200 * s, { scaleFactor = s })
       end
     end
     if repairing_width ~= 0 then
       for dx = 0, repairing_width - 1 do
-        self.panel_sprites:draw(canvas, 351, x + 155 + dx, y + 200)
+        self.panel_sprites:draw(canvas, 351, x + 155 * s + dx, y + 200 * s, { scaleFactor = s })
       end
     end
   else
-    font:draw(canvas, "$" .. profile.wage, x + 135, y + 199) -- Wage
+    font:draw(canvas, "$" .. profile.wage, x + 135 * s, y + 198 * s) -- Wage
   end
 
   if self.staff:getAttribute("happiness") then
-    local happiness_bar_width = math.floor(self.staff:getAttribute("happiness") * 40 + 0.5)
+    local happiness_bar_width = math.floor(self.staff:getAttribute("happiness") * 40 * s + 0.5)
     if happiness_bar_width ~= 0 then
-      for dx = 0, happiness_bar_width - 1 do
-        self.panel_sprites:draw(canvas, 348, x + 139 + dx, y + 56)
+      for dx = 0, happiness_bar_width - 1, s do
+        self.panel_sprites:draw(canvas, 348, x + 139 * s + dx, y + 56 * s, { scaleFactor = s })
       end
     end
   end
 
   local fatigue_bar_width = 40.5
   if self.staff:getAttribute("fatigue") then
-    fatigue_bar_width = math.floor((1 - self.staff:getAttribute("fatigue")) * 40 + 0.5)
+    fatigue_bar_width = math.floor((1 - self.staff:getAttribute("fatigue")) * 40 * s + 0.5)
   end
   if fatigue_bar_width ~= 0 then
-    for dx = 0, fatigue_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 349, x + 139 + dx, y + 89)
+    for dx = 0, fatigue_bar_width - 1, s do
+      self.panel_sprites:draw(canvas, 349, x + 139 * s + dx, y + 89 * s, { scaleFactor = s })
     end
   end
 
-  local skill_bar_width = math.floor(profile.skill * 40 + 0.5)
+  local skill_bar_width = math.floor(profile.skill * 40 * s + 0.5)
   if skill_bar_width ~= 0 then
-    for dx = 0, skill_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 350, x + 139 + dx, y + 120)
+    for dx = 0, skill_bar_width - 1, s do
+      self.panel_sprites:draw(canvas, 350, x + 139 * s + dx, y + 120 * s, { scaleFactor = s })
     end
   end
 
   if class.is(self.staff, Doctor) then
     -- Junior / Doctor / Consultant marker
     if profile.is_junior then
-      self.panel_sprites:draw(canvas, 347, x + 38, y + 173)
+      self.panel_sprites:draw(canvas, 347, x + 38 * s, y + 173 * s, { scaleFactor = s })
     elseif profile.is_consultant then
-      self.panel_sprites:draw(canvas, 347, x + 89, y + 173)
+      self.panel_sprites:draw(canvas, 347, x + 89 * s, y + 173 * s, { scaleFactor = s })
     else
-      self.panel_sprites:draw(canvas, 347, x + 60, y + 173)
+      self.panel_sprites:draw(canvas, 347, x + 60 * s, y + 173 * s, { scaleFactor = s })
     end
     -- Ability markers
     if profile.is_surgeon >= 1.0 then
-      self.panel_sprites:draw(canvas, 344, x + 144, y + 148)
+      self.panel_sprites:draw(canvas, 344, x + 144 * s, y + 148 * s, { scaleFactor = s })
     end
     if profile.is_psychiatrist >= 1.0 then
-      self.panel_sprites:draw(canvas, 345, x + 155, y + 154)
+      self.panel_sprites:draw(canvas, 345, x + 155 * s, y + 154 * s, { scaleFactor = s })
     end
     if profile.is_researcher >= 1.0 then
-      self.panel_sprites:draw(canvas, 346, x + 178, y + 153)
+      self.panel_sprites:draw(canvas, 346, x + 178 * s, y + 153 * s, { scaleFactor = s })
     end
   end
 
-  profile:drawFace(canvas, x + 38, y + 54, self.face_parts) -- Portrait
+  profile:drawFace(canvas, x + 38 * s, y + 54 * s, self.face_parts, s) -- Portrait
 end
 
 function UIStaff:onMouseDown(button, x, y)
@@ -259,9 +263,10 @@ function UIStaff:onMouseUp(button, x, y)
     self.do_scroll = false
   end
   local repaint = Window.onMouseUp(self, button, x, y)
+  local s = TheApp.config.ui_scale
   -- Test for hit within the view circle and name box
-  local hit_namebox = x > self.tooltip_regions[1].x and x < self.tooltip_regions[1].r
-                      and y > self.tooltip_regions[1].y and y < self.tooltip_regions[1].b
+  local hit_namebox = x > self.tooltip_regions[1].x * s and x < self.tooltip_regions[1].r * s
+                      and y > self.tooltip_regions[1].y * s and y < self.tooltip_regions[1].b * s
   if button == "right" and is_in_view_circle(x, y, class.is(self.staff, Handyman))
      or button == "right" and hit_namebox then
     -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
@@ -402,4 +407,8 @@ function UIStaff:afterLoad(old, new)
     self:close()
   end
   Window.afterLoad(self, old, new)
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+    self.face_parts = TheApp.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { flags = DrawFlags.Nearest })
+  end
 end

@@ -37,7 +37,7 @@ function UIQueue:UIQueue(ui, queue)
   self.height = 122
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req06V", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
 
   self.queue = queue
 
@@ -86,23 +86,24 @@ end
 
 function UIQueue:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  local s = TheApp.config.ui_scale
+  x, y = self.x * s + x, self.y * s + y
 
   local font = self.white_font
   local queue = self.queue
   local num_patients = queue:reportedSize()
 
-  font:draw(canvas, _S.queue_window.num_in_queue, x + 22, y + 22)
-  font:draw(canvas, num_patients, x + 140, y + 22)
+  font:draw(canvas, _S.queue_window.num_in_queue, x + 22 * s, y + 22 * s)
+  font:draw(canvas, num_patients, x + 140 * s, y + 22 * s)
 
-  font:draw(canvas, _S.queue_window.num_expected, x + 22, y + 45)
-  font:draw(canvas, queue:expectedSize(), x + 140, y + 45)
+  font:draw(canvas, _S.queue_window.num_expected, x + 22 * s, y + 45 * s)
+  font:draw(canvas, queue:expectedSize(), x + 140 * s, y + 45 * s)
 
-  font:draw(canvas, _S.queue_window.num_entered, x + 22, y + 68)
-  font:draw(canvas, queue.visitor_count, x + 140, y + 68)
+  font:draw(canvas, _S.queue_window.num_entered, x + 22 * s, y + 68 * s)
+  font:draw(canvas, queue.visitor_count, x + 140 * s, y + 68 * s)
 
-  font:draw(canvas, _S.queue_window.max_queue_size, x + 22, y + 93)
-  font:draw(canvas, queue.max_size, x + 119, y + 93)
+  font:draw(canvas, _S.queue_window.max_queue_size, x + 22 * s, y + 93 * s)
+  font:draw(canvas, queue.max_size, x + 119 * s, y + 93 * s)
 
   self:drawPatients(canvas, x, y)
 
@@ -113,10 +114,11 @@ function UIQueue:draw(canvas, x, y)
 end
 
 local function isInsideQueueBoundingBox(x, y)
-  local x_min = 219
-  local x_max = 534
-  local y_min = 15
-  local y_max = 105
+  local s = TheApp.config.ui_scale
+  local x_min = 219 * s
+  local x_max = 534 * s
+  local y_min = 15 * s
+  local y_max = 105 * s
   return not (x < x_min or x > x_max or y < y_min or y > y_max)
 end
 
@@ -125,19 +127,22 @@ function UIQueue:onMouseDown(button, x, y)
   if not isInsideQueueBoundingBox(x, y) then
     return Window.onMouseDown(self, button, x, y)
   end
-  local x_min = 219
+  local s = TheApp.config.ui_scale
+  local x_min = 219 * s
   self.hovered = self:getHoveredPatient(x - x_min)
   -- Select patient to drag - if left clicking.
   if button == "left" then
     self.dragged = self.hovered
     if self.dragged then
-      self.dragged.x = x + self.x
-      self.dragged.y = y + self.y
+      self.dragged.x = x + self.x * s
+      self.dragged.y = y + self.y * s
     end
   elseif button == "right" and self.hovered then
     -- Otherwise bring up the choice screen.
     self.just_added = true
-    self.ui:addWindow(UIQueuePopup(self.ui, self.x + x, self.y + y, self.hovered.patient))
+    local px = self.x + math.floor(x / s)
+    local py = self.y + math.floor(y / s)
+    self.ui:addWindow(UIQueuePopup(self.ui, px, py, self.hovered.patient))
   end
 end
 
@@ -152,9 +157,10 @@ function UIQueue:onMouseUp(button, x, y)
     end
   end
   if button == "left" then
+    local s = TheApp.config.ui_scale
     local queue = self.queue
     local num_patients = queue:reportedSize()
-    local width = 276
+    local width = 276 * s
     self.ui:setCursor(self.ui.default_cursor) -- reset cursor
 
     if not self.dragged then
@@ -174,16 +180,16 @@ function UIQueue:onMouseUp(button, x, y)
       self.dragged = nil
       return
     end
-    if x > 170 and x < 210 and y > 25 and y < 105 then -- Inside door bounding box
+    if x > 170 * s and x < 210 * s and y > 25 * s and y < 105 * s then -- Inside door bounding box
       queue:movePatient(index, 'front') -- move to front
-    elseif x > 542 and x < 585 and y > 50 and y < 105 then -- Inside exit sign bounding box
+    elseif x > 542 * s and x < 585 * s and y > 50 * s and y < 105 * s then -- Inside exit sign bounding box
       queue:movePatient(index, 'back') -- move to back
     elseif isInsideQueueBoundingBox(x, y) then
       local dx = 1
       if num_patients ~= 1 then
         dx = math.floor(width / (num_patients - 1))
       end
-      queue:movePatient(index, math.floor((x - 220) / dx)) -- move to dropped position
+      queue:movePatient(index, math.floor((x - 220 * s) / dx)) -- move to dropped position
       self:onMouseMove(x, y, 0, 0)
     end
 
@@ -216,13 +222,14 @@ function UIQueue:onMouseUp(button, x, y)
 end
 
 function UIQueue:onMouseMove(x, y, dx, dy)
-  local x_min = 219
+  local s = TheApp.config.ui_scale
+  local x_min = 219 * s
   if self.dragged then
-    self.dragged.x = x + self.x
-    self.dragged.y = y + self.y
+    self.dragged.x = x + self.x * s
+    self.dragged.y = y + self.y * s
 
     -- Change cursor when outside queue dialog
-    if x > 0 and x < 605 and y > 0 and y < 120 then
+    if x > 0 and x < 605 * s and y > 0 and y < 120 * s then
       self.ui:setCursor(self.ui.default_cursor)
     else
       self.ui:setCursor(self.ui.app.gfx:loadMainCursor("queue_drag"))
@@ -251,9 +258,10 @@ end
 function UIQueue:getHoveredPatient(x)
   local queue = self.queue
   local num_patients = queue:reportedSize()
-  local width = 276
-  local gap = 10
-  x = x - 15 -- sprite offset
+  local s = TheApp.config.ui_scale
+  local width = 276 * s
+  local gap = 10 * s
+  x = x - 15 * s -- sprite offset
 
   local dx = 0
   if num_patients ~= 1 then
@@ -281,7 +289,7 @@ function UIQueue:getHoveredPatient(x)
   end
 
   -- The closest patient must be close enough (i.e. almost over the patient sprite)
-  if not closest or closest.diff > 25 then
+  if not closest or closest.diff > 25 * s then
     return nil
   end
 
@@ -289,10 +297,11 @@ function UIQueue:getHoveredPatient(x)
 end
 
 function UIQueue:drawPatients(canvas, x, y)
+  local s = TheApp.config.ui_scale
   local queue = self.queue
   local num_patients = queue:reportedSize()
-  local width = 276
-  local gap = 10
+  local width = 276 * s
+  local gap = 10 * s
   local dx = 0
 
   if not self.hovered then
@@ -302,20 +311,20 @@ function UIQueue:drawPatients(canvas, x, y)
 
     for index = 1, num_patients do
       local patient = queue:reportedHumanoid(index)
-      self:drawPatient(canvas, x + 239 + dx * (index - 1), y + 75, patient)
+      self:drawPatient(canvas, x + 239 * s + dx * (index - 1), y + 75 * s, patient)
     end
   else
     if num_patients ~= 1 then
       dx = math.floor((width - 2 * gap) / (num_patients - 1))
     end
 
-    x = x + 239
-    y = y + 75
+    x = x + 239 * s
+    y = y + 75 * s
     for index = 1, num_patients do
       local patient = queue:reportedHumanoid(index)
       if patient == self.hovered.patient then
         x = x + gap
-        self:drawPatient(canvas, x, y - 10, patient)
+        self:drawPatient(canvas, x, y - 10 * s, patient)
         x = x + gap + dx
       else
         self:drawPatient(canvas, x, y, patient)
@@ -332,12 +341,22 @@ function UIQueue:drawPatient(canvas, x, y, patient)
   for layer, id in pairs(patient.layers) do
     anim:setLayer(layer, id)
   end
-  anim:draw(canvas, x, y)
+  local s = TheApp.config.ui_scale
+  canvas:scale(s)
+  anim:draw(canvas, math.floor(x / s), math.floor(y / s))
   -- Also draw the mood of the patient, if any.
   local mood = patient:getCurrentMood()
   if mood then
-    mood:draw(canvas, x, y + 24)
+    mood:draw(canvas, math.floor(x / s), math.floor(y / s) + 24)
   end
+  canvas:scale(1)
+end
+
+function UIQueue:afterLoad(old, new)
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  end
+  Window.afterLoad(self, old, new)
 end
 
 class "UIQueuePopup" (Window)
@@ -365,7 +384,7 @@ function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
   self:addPanel(377, 0, 58)
 
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req06V", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
 end
 
 function UIQueuePopup:draw(canvas, x, y)
@@ -385,4 +404,11 @@ end
 function UIQueuePopup:sendHome()
   self.patient:goHome("kicked")
   self:close()
+end
+
+function UIQueuePopup:afterLoad(old, new)
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  end
+  Window.afterLoad(self, old, new)
 end

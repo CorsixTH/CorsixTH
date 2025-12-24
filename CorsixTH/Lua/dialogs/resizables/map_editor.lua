@@ -715,7 +715,9 @@ function UIMapEditor:buildSpriteButtons(buttons)
       local bbutton_number = number
       local bbutton = self:addBevelPanel(xpos, ypos, width, height, col_bg)
       bbutton = bbutton:makeToggleButton(0, 0, width, height, nil,
-          --[[persistable:map_editor_block_clicked]] function() self:blockClicked(bbutton_number) end)
+          --[[persistable:map_editor_block_clicked]] function()
+            self:blockClicked(bbutton_number)
+          end)
       updateToggleButton(bbutton, "raised")
 
       local bpanel = self:addPanel(number, xpos+1, ypos+1, width-2, height-2)
@@ -723,12 +725,13 @@ function UIMapEditor:buildSpriteButtons(buttons)
       bpanel.editor_button = button
 
       bpanel.custom_draw = --[[persistable:map_editor_draw_block_sprite]] function(panel, canvas, x, y)
-        x = x + panel.x + panel.editor_button.xorigin
-        y = y + panel.y + panel.editor_button.yorigin
+        local s = TheApp.config.ui_scale
+        x = x + panel.x * s + panel.editor_button.xorigin * s
+        y = y + panel.y * s + panel.editor_button.yorigin * s
         for _, spr in ipairs(panel.editor_button.sprites) do
-          local xspr = x + (spr.xpos - spr.ypos) * 32
-          local yspr = y + (spr.xpos + spr.ypos) * 16 - 32
-          panel.window.panel_sprites:draw(canvas, spr.sprite % 256, xspr, yspr, math.floor(spr.sprite / 256))
+          local xspr = x + (spr.xpos - spr.ypos) * 32 * s
+          local yspr = y + (spr.xpos + spr.ypos) * 16 * s - 32 * s
+          panel.window.panel_sprites:draw(canvas, spr.sprite % 256, xspr, yspr, { flags = math.floor(spr.sprite / 256), scaleFactor = s })
         end
       end
 
@@ -998,8 +1001,9 @@ end
 --!return (int, int) Tile x,y coordinates, limited to the map.
 function UIMapEditor:mouseToWorld(mx, my)
   local ui = self.ui
+  local s = TheApp.config.ui_scale
 
-  local wxr, wyr = ui:ScreenToWorld(self.x + mx, self.y + my)
+  local wxr, wyr = ui:ScreenToWorld(self.x * s + mx, self.y * s + my)
   local wx = math.floor(wxr)
   local wy = math.floor(wyr)
   return self:areaOnWorld(wx, wy, 1, 1)

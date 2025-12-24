@@ -55,7 +55,7 @@ local findLevelsInDir = function(path, items)
 end
 
 function UICustomGame:UICustomGame(ui)
-  self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
 
   -- Supply the required list of items to UIMenuList
   -- Create the actual list
@@ -110,9 +110,9 @@ function UICustomGame:buttonClicked(num)
   self.chosen_level_name = item.name
   self.chosen_level_description = item.intro
   if self.chosen_level_description then
-    local _, y, rows = self.label_font:sizeOf(self.chosen_level_description, details_width)
-    local row_height = y / rows
-    self.max_rows_shown = math.floor(self.num_rows*17 / row_height)
+    local _, y, rows = self.label_font:sizeOf(self.chosen_level_description, details_width * TheApp.config.ui_scale)
+    local row_height = y / rows / TheApp.config.ui_scale
+    self.max_rows_shown = math.floor(self.num_rows * 17 / row_height)
     self.details_scrollbar:setRange(1, rows, math.min(rows, self.max_rows_shown), 1)
   else
     self.details_scrollbar:setRange(1, 1, 1, 1)
@@ -145,14 +145,15 @@ end
 
 function UICustomGame:draw(canvas, x, y)
   UIMenuList.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  local s = TheApp.config.ui_scale
+  x, y = self.x * s + x, self.y * s + y
 
   if self.chosen_level_name then
     self.label_font:drawWrapped(canvas, self.chosen_level_name,
-                                x + 270, y + 10, details_width)
+                                x + 270 * s, y + 10 * s, details_width * s)
   end
   if self.chosen_level_description then
     self.label_font:drawWrapped(canvas, self.chosen_level_description,
-              x + 270, y + 40, details_width, nil, self.max_rows_shown, self.description_offset)
+              x + 270 * s, y + 40 * s, details_width * s, nil, self.max_rows_shown, self.description_offset)
   end
 end

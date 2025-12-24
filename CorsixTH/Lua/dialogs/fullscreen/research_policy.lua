@@ -43,8 +43,8 @@ function UIResearch:UIResearch(ui)
   self.background = gfx:loadRaw("Res01V", 640, 480, "QData", "QData", "Res01V.pal", true)
   local palette = gfx:loadPalette("QData", "Res01V.pal", true)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
-  self.label_font = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
-  self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
+  self.label_font = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette, { apply_ui_scale = true })
+  self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette, { apply_ui_scale = true })
   self.hospital = ui.hospital
   self.research = ui.hospital.research
 
@@ -197,41 +197,44 @@ function UIResearch:onTick()
 end
 
 function UIResearch:draw(canvas, x, y)
-  self.background:draw(canvas, self.x + x, self.y + y)
+  local s = TheApp.config.ui_scale
+  canvas:scale(s, "bitmap")
+  self.background:draw(canvas, self.x * s + x, self.y * s + y)
+  canvas:scale(1, "bitmap")
   UIFullscreen.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  x, y = self.x * s + x, self.y * s + y
 
   local num_font = self.number_font
   local lbl_font = self.label_font
 
-  local ytop = 28
-  local spacing = 41
+  local ytop = 28 * s
+  local spacing = 41 * s
   local research = self.research.research_policy
 
   for i, category in ipairs(research_categories) do
     local ypos = y + ytop + i * spacing
-    lbl_font:draw(canvas, _S.research.categories[category], x + 170, ypos)
+    lbl_font:draw(canvas, _S.research.categories[category], x + 170 * s, ypos)
     if not research[category].current then
-      num_font:draw(canvas, _S.misc.done, x + 270, ypos, 300, 0)
+      num_font:draw(canvas, _S.misc.done, x + 270 * s, ypos, 300 * s, 0)
     else
-      num_font:draw(canvas, research[category].frac, x + 270, ypos, 300, 0)
+      num_font:draw(canvas, research[category].frac, x + 270 * s, ypos, 300 * s, 0)
     end
     -- Display research progress.
     if research[category].current and not research[category].current.dummy then
-      local ly = ypos + 26
-      local lx = x + 172
+      local ly = ypos + 26 * s
+      local lx = x + 172 * s
       local required = self.research:getResearchRequired(research[category].current)
       local available = self.research.research_progress[research[category].current].points
-      local length = 290 * available / required
+      local length = 290 * s * available / required
       local dx = 0
-      while dx + 10 < length do
-        self.panel_sprites:draw(canvas, 3, lx + dx, ly)
-        dx = dx + 10
+      while dx + 10 * s < length do
+        self.panel_sprites:draw(canvas, 3, lx + dx, ly, { scaleFactor = s })
+        dx = dx + 10 * s
       end
     end
   end
 
-  num_font:draw(canvas, research.global, x + 270, y + 288, 300, 0)
+  num_font:draw(canvas, research.global, x + 270 * s, y + 288 * s, 300 * s, 0)
 end
 
 function UIResearch:close()
@@ -251,13 +254,13 @@ function UIResearch:afterLoad(old, new)
       }
     end
   end
-  if old < 179 then
+  if old < 236 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Res01V", 640, 480, "QData", "QData", "Res01V.pal", true)
     local palette = gfx:loadPalette("QData", "Res01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
-    self.label_font = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
-    self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette)
+    self.label_font = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette, { apply_ui_scale = true })
+    self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette, { apply_ui_scale = true })
   end
   self:_playBgSound()
 end

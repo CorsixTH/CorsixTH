@@ -41,8 +41,8 @@ function UIMenuBar:UIMenuBar(ui, map_editor)
   self.visible = false
   local selected_label_color = { red = 40, green = 40, blue = 250 }
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PullDV", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
-  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color})
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   -- The list of top-level menus, from left to right
   self.menus = {}
   -- The menu which the cursor was most recently over
@@ -138,13 +138,13 @@ function UIMenuBar:addMenu(title, menu)
     title = title,
     menu = menu,
     x = 0,
-    y = 0,
+    y = 1,
     height = 16,
   }
   if self.menus[1] then
     menu_item.x = self.menus[#self.menus].x + self.menus[#self.menus].width
   end
-  menu_item.width = self.white_font:sizeOf(title) + 32
+  menu_item.width = math.ceil(self.white_font:sizeOf(title) / TheApp.config.ui_scale + 32)
   self.menus[#self.menus + 1] = menu_item
 end
 
@@ -152,29 +152,34 @@ function UIMenuBar:draw(canvas)
   if not self.visible then
     return
   end
+  local s = TheApp.config.ui_scale
   local panel_sprites = self.panel_sprites
   local panel_sprites_draw = panel_sprites.draw
   canvas:nonOverlapping()
-  panel_sprites_draw(panel_sprites, canvas, 1, 0,  0)
-  panel_sprites_draw(panel_sprites, canvas, 4, 0,  6)
-  panel_sprites_draw(panel_sprites, canvas, 7, 0, 10)
-  for x = 10, self.width - 10, 10 do
-    panel_sprites_draw(panel_sprites, canvas, 2, x,  0)
+  panel_sprites_draw(panel_sprites, canvas, 1, 0,  0, { scaleFactor = s })
+  panel_sprites_draw(panel_sprites, canvas, 4, 0,  6 * s, { scaleFactor = s })
+  panel_sprites_draw(panel_sprites, canvas, 7, 0, 10 * s, { scaleFactor = s })
+
+  -- Currently the width is the full pixel width of the window, unlike
+  -- the height and other panels which are in scale units.
+  local scaled_width = self.width
+  for x = 10 * s, scaled_width - 10 * s, 10 * s do
+    panel_sprites_draw(panel_sprites, canvas, 2, x, 0, { scaleFactor = s })
   end
-  for x = 10, self.width - 10, 10 do
-    panel_sprites_draw(panel_sprites, canvas, 5, x,  6)
+  for x = 10 * s, scaled_width - 10 * s, 10 * s do
+    panel_sprites_draw(panel_sprites, canvas, 5, x, 6 * s, { scaleFactor = s })
   end
-  for x = 10, self.width - 10, 10 do
-    panel_sprites_draw(panel_sprites, canvas, 8, x, 10)
+  for x = 10 * s, scaled_width - 10 * s, 10 * s do
+    panel_sprites_draw(panel_sprites, canvas, 8, x, 10 * s, { scaleFactor = s })
   end
   canvas:nonOverlapping(false)
-  local x = self.width - 10
-  panel_sprites_draw(panel_sprites, canvas, 3, x,  0)
-  panel_sprites_draw(panel_sprites, canvas, 6, x,  6)
-  panel_sprites_draw(panel_sprites, canvas, 9, x, 10)
+  local x = scaled_width - 10 * s
+  panel_sprites_draw(panel_sprites, canvas, 3, x,  0, { scaleFactor = s })
+  panel_sprites_draw(panel_sprites, canvas, 6, x,  6 * s, { scaleFactor = s })
+  panel_sprites_draw(panel_sprites, canvas, 9, x, 10 * s, { scaleFactor = s })
 
   for _, menu in ipairs(self.menus) do
-    self.white_font:draw(canvas, menu.title, menu.x, menu.y, 0, menu.height)
+    self.white_font:draw(canvas, menu.title, menu.x * s, menu.y * s, 0, menu.height * s)
   end
   for _, menu in ipairs(self.open_menus) do
     self:drawMenu(menu, canvas)
@@ -182,28 +187,32 @@ function UIMenuBar:draw(canvas)
 
   -- Draw clock
   if self.ui.app.config.twentyfour_hour_clock then
-    self.white_font:draw(canvas, os.date("%H:%M"), self.width-45, 2,  0)
+    self.white_font:draw(canvas, os.date("%H:%M"), scaled_width - 45 * s, s, 0, 16 * s)
   else
-    self.white_font:draw(canvas, os.date("%I:%M %p"), self.width-65, 2,  0)
+    self.white_font:draw(canvas, os.date("%I:%M %p"), scaled_width - 65 * s, s, 0, 16 * s)
   end
 end
 
 function UIMenuBar:drawMenu(menu, canvas)
+  local s = TheApp.config.ui_scale
   local panel_sprites = self.panel_sprites
   local panel_sprites_draw = panel_sprites.draw
-  local x, y, w, h = menu.x, menu.y, menu.width, menu.height
-  canvas:nonOverlapping()
-  menu.render_list:draw(canvas, x, y)
-  canvas:nonOverlapping(false)
-  local btmy = y + h - 6
-  panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10, y)
-  for ypos = y + 6, y + h - 6, 4 do
-    panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10, ypos)
-  end
-  panel_sprites_draw(panel_sprites, canvas, 9, x + w - 10, btmy)
+  local x, y, w, h = menu.x * s, menu.y * s, menu.width * s, menu.height * s
 
-  x = menu.x
-  y = menu.y + 4
+  -- It would be better if spriteList supported scaling directly
+  canvas:scale(s)
+  menu.render_list:draw(canvas, menu.x, menu.y)
+  canvas:scale(1)
+
+  local btmy = y + h - 6 * s
+  panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10 * s, y, { scaleFactor = s })
+  for ypos = y + 6 * s, y + h - 6 * s, 4 * s do
+    panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10 * s, ypos, { scaleFactor = s })
+  end
+  panel_sprites_draw(panel_sprites, canvas, 9, x + w - 10 * s, btmy, { scaleFactor = s })
+
+  x = menu.x * s
+  y = menu.y * s + 4 * s
   for i, item in ipairs(menu.items) do
     -- Update the checkbox status if necessary before drawing
     if item.is_check_item and item.condition then
@@ -216,18 +225,19 @@ function UIMenuBar:drawMenu(menu, canvas)
     end
     font:draw(canvas, item.title, x, y)
     if item.submenu then
-      font:draw(canvas, "+", x + w - 10, y)
+      font:draw(canvas, "+", x + w - 10 * s, y)
     elseif item.checked then
-      panel_sprites_draw(panel_sprites, canvas, 10, x, y)
+      panel_sprites_draw(panel_sprites, canvas, 10, x, y, { scaleFactor = s })
     end
-    y = y + 14
+    y = y + 14 * s
   end
 end
 
 function UIMenuBar:hitTestBar(x, y)
-  if y < 16 then
+  local s = TheApp.config.ui_scale
+  if y < 16 * s then
     for _, menu in ipairs(self.menus) do
-      if menu.x <= x and x < menu.x + menu.width then
+      if menu.x * s <= x and x < menu.x * s + menu.width * s then
         local submenu = menu.menu
         submenu.x = menu.x
         submenu.y = menu.y + menu.height - 2
@@ -241,8 +251,9 @@ function UIMenuBar:hitTestBar(x, y)
 end
 
 function UIMenuBar:onMouseMove(x, y, dx, dy)
+  local s = TheApp.config.ui_scale
   local padding = 6
-  local visible = y < self.height + padding
+  local visible = y < self.height * s + padding * s
   local newactive = false
   if not self.active_menu then
     for i = #self.open_menus, 1, -1 do
@@ -379,10 +390,11 @@ function UIMenuBar:onMouseUp(button, x, y)
     return
   end
   local repaint = false
+  local s = TheApp.config.ui_scale
   while self.active_menu do
     local index = self.active_menu:hitTest(x, y, 0)
     if index == false then
-      if not self.active_menu.parent and y < 16 then
+      if not self.active_menu.parent and y < 16 * s then
         break
       else
         self.active_menu = self.active_menu.parent
@@ -416,7 +428,7 @@ function UIMenuBar:onMouseUp(button, x, y)
         if item.handler then
           item.handler(item, self.active_menu)
         end
-        if y > 22 then
+        if y > 22 * s then
           self:disappear()
         end
         self.active_menu = false
@@ -437,7 +449,7 @@ function UIMenuBar:calculateMenuSize(menu)
     local w = 20
     local h = 6
     for _, item in ipairs(menu.items) do
-      local item_w = self.white_font:sizeOf(item.title) + 10
+      local item_w = math.ceil(self.white_font:sizeOf(item.title) / TheApp.config.ui_scale + 10)
       if item_w > w then
         w = item_w
       end
@@ -490,10 +502,11 @@ function UIMenu:hitTest(x, y, padding)
   -- number -> hit that item
   -- true   -> hit menu, but not an item
   -- false  -> no hit
-  if self.x - padding <= x and x < self.x + self.width + padding and
-      self.y - padding <= y and y < self.y + self.height + padding then
-    if self.x <= x and x < self.x + self.width then
-      local index = math_floor((y - self.y + 12) / 14)
+  local s = TheApp.config.ui_scale
+  if self.x * s - padding * s <= x and x < self.x * s + self.width * s + padding * s and
+      self.y * s - padding * s <= y and y < self.y * s + self.height * s + padding * s then
+    if self.x * s <= x and x < self.x * s + self.width * s then
+      local index = math_floor((y - self.y * s + 12 * s) / (14 * s))
       if 1 <= index and index <= #self.items then
         return index
       end

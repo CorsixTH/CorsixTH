@@ -197,10 +197,13 @@ function StaffProfile:randomiseOrganical()
   end
 end
 
-function StaffProfile:drawFace(canvas, x, y, parts_bitmap)
-  parts_bitmap:draw(canvas, x, y     , 0,       self.hair_index * 29, 65, 29)
-  parts_bitmap:draw(canvas, x, y + 29, 0, 522 + self.face_index * 24, 65, 24)
-  parts_bitmap:draw(canvas, x, y + 53, 0, 954 + self.chin_index * 22, 65, 22)
+function StaffProfile:drawFace(canvas, x, y, parts_bitmap, scale)
+  scale = scale or 1
+  canvas:scale(scale, "bitmap")
+  parts_bitmap:draw(canvas, x, y             , 0,       self.hair_index * 29, 65, 29)
+  parts_bitmap:draw(canvas, x, y + 29 * scale, 0, 522 + self.face_index * 24, 65, 24)
+  parts_bitmap:draw(canvas, x, y + 53 * scale, 0, 954 + self.chin_index * 22, 65, 22)
+  canvas:scale(1, "bitmap")
 end
 
 -- Update junior and consultant status

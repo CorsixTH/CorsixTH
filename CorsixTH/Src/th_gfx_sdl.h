@@ -447,10 +447,12 @@ class raw_bitmap {
       @param iPixelDataLength Size of the loaded image data.
       @param iWidth Width of the image.
       @param pEventualCanvas Canvas to render the image to (eventually).
+      @param spriteFlags
       @return Loading was a success.
   */
   void load_from_th_file(const uint8_t* pPixelData, size_t iPixelDataLength,
-                         int iWidth, render_target* pEventualCanvas);
+                         int iWidth, render_target* pEventualCanvas,
+                         uint32_t spriteFlags);
 
   //! Draw the image at a given position at the given canvas.
   /*!
@@ -599,10 +601,12 @@ class sprite_sheet {
       @param iFlags Flags to apply for drawing.
       @param effect_ticks The number of ticks into the effect animation.
       @param effect The animation effect to apply to the sprite.
+      @param scale_factor How much to scale the sprite when drawing.
   */
   void draw_sprite(render_target* pCanvas, size_t iSprite, int iX, int iY,
                    uint32_t iFlags, size_t effect_ticks = 0u,
-                   animation_effect effect = animation_effect::none);
+                   animation_effect effect = animation_effect::none,
+                   int scale_factor = 1);
 
   //! Test whether a sprite was hit.
   /*!

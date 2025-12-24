@@ -72,7 +72,7 @@ function UIMachineMenu:createControls()
   local rows = self.rows
 
   self.panel_sprites = self.ui.app.gfx:loadSpriteTable("QData", "Req03V", true)
-  self.white_font = self.ui.app.gfx:loadFontAndSpriteTable("QData", "Font01V")
+  self.white_font = self.ui.app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
 
   if rows ~= self.rows_shown then
     local function assigned_factory(num)
@@ -337,4 +337,11 @@ end
 
 function UIMachineMenu:close()
   Window.close(self)
+end
+
+function UIMachineMenu:afterLoad(old, new)
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  end
+  Window.afterLoad(self, old, new)
 end

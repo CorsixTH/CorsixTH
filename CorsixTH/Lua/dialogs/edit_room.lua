@@ -1095,12 +1095,12 @@ local window_floor_blueprint_markers = {
   west = 36,
 }
 
-
 function UIEditRoom:onLeftButtonDown(x, y)
+  local s = TheApp.config.ui_scale
   if self.phase == "walls" then
-    if 0 <= x and x < self.width and 0 <= y and y < self.height then -- luacheck: ignore 542
+    if 0 <= x and x < self.width * s and 0 <= y and y < self.height * s then -- luacheck: ignore 542
     else
-      local mouse_x, mouse_y = self.ui:ScreenToWorld(self.x + x, self.y + y)
+      local mouse_x, mouse_y = self.ui:ScreenToWorld(self.x * s + x, self.y * s + y)
       self.mouse_down_x = math.floor(mouse_x)
       self.mouse_down_y = math.floor(mouse_y)
       if self.move_rect then

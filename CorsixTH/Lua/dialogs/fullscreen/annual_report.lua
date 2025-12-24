@@ -60,9 +60,9 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     self.background = self.stat_background
 
     local stone_text_color = { red = 80, green = 60, blue = 35 }
-    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font45V", false, palette)
-    self.write_font = gfx:loadFontAndSpriteTable("QData", "Font47V", false, palette)
-    self.stone_font = gfx:loadFontAndSpriteTable("QData", "Font46V", false, palette, {ttf_color = stone_text_color})
+    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font45V", false, palette, { apply_ui_scale = true })
+    self.write_font = gfx:loadFontAndSpriteTable("QData", "Font47V", false, palette, { apply_ui_scale = true })
+    self.stone_font = gfx:loadFontAndSpriteTable("QData", "Font46V", false, palette, {ttf_color = stone_text_color, apply_ui_scale = true })
 
     self.panel_sprites = gfx:loadSpriteTable("QData", "Award03V", true, palette)
   end) then
@@ -510,10 +510,14 @@ function UIAnnualReport:changePage(page_no)
 end
 
 function UIAnnualReport:draw(canvas, x, y)
-  self.background:draw(canvas, self.x + x, self.y + y)
+  local s = TheApp.config.ui_scale
+  canvas:scale(s, "bitmap")
+  self.background:draw(canvas, self.x * s + x, self.y * s + y)
+  canvas:scale(1, "bitmap")
+
   UIFullscreen.draw(self, canvas, x, y)
 
-  x, y = self.x + x, self.y + y
+  x, y = self.x * s + x, self.y * s + y
   local font = self.stat_font
   local world = self.ui.app.world
 
@@ -524,18 +528,18 @@ function UIAnnualReport:draw(canvas, x, y)
     -- it no longer becomes accessible.
 
     -- Title and column names
-    font:draw(canvas, _S.high_score.best_scores, x + 220, y + 104, 200, 0)
-    font:draw(canvas, _S.high_score.pos, x + 218, y + 132)
-    font:draw(canvas, _S.high_score.player, x + 260, y + 132)
-    font:draw(canvas, _S.high_score.score, x + 360, y + 132)
+    font:draw(canvas, _S.high_score.best_scores, x + 220 * s, y + 104 * s, 200 * s, 0)
+    font:draw(canvas, _S.high_score.pos, x + 218 * s, y + 132 * s)
+    font:draw(canvas, _S.high_score.player, x + 260 * s, y + 132 * s)
+    font:draw(canvas, _S.high_score.score, x + 360 * s, y + 132 * s)
 
     -- Players and their score
     local i = 1
     local dy = 0
     --for i = 1, 10 do
-      font:draw(canvas, i .. ".", x + 220, y + 160 + dy)
-      font:draw(canvas, world:getLocalPlayerHospital().name:upper(), x + 260, y + 160 + dy)
-      font:draw(canvas, "NA", x + 360, y + 160 + dy)
+      font:draw(canvas, i .. ".", x + 220 * s, y + 160 * s + dy)
+      font:draw(canvas, world:getLocalPlayerHospital().name:upper(), x + 260 * s, y + 160 * s + dy)
+      font:draw(canvas, "NA", x + 360 * s, y + 160 * s + dy)
       -- dy = dy + 25
     --end
   elseif self.state == 2 then -- Statistics screen
@@ -546,26 +550,26 @@ function UIAnnualReport:draw(canvas, x, y)
     if self.trophy_motivation then
       -- If it is a plaque showing we write in stone text.
       local info = self.trophies[self.trophy_motivation].info
-      self.stone_font:drawWrapped(canvas, info.text, x + 225, y + 105, 185, "center")
+      self.stone_font:drawWrapped(canvas, info.text, x + 225 * s, y + 105 * s, 185 * s, "center")
       -- Type of award
       local award_type = _S.trophy_room.cash
       if info.award_type == "reputation" then
         award_type = _S.trophy_room.reputation
       end
-      self.stone_font:draw(canvas, award_type, x + 220, y + 330, 200, 0)
+      self.stone_font:draw(canvas, award_type, x + 220 * s, y + 330 * s, 200 * s, 0)
       -- Amount won/lost
-      self.stone_font:draw(canvas, string.format("+%.0f", info.amount), x + 220, y + 355, 200, 0)
+      self.stone_font:draw(canvas, string.format("+%.0f", info.amount), x + 220 * s, y + 355 * s, 200 * s, 0)
     elseif self.award_motivation then
       local info = self.awards[self.award_motivation].info
-      self.write_font:drawWrapped(canvas, info.text, x + 235, y + 125, 165, "center")
+      self.write_font:drawWrapped(canvas, info.text, x + 235 * s, y + 125 * s, 165 * s, "center")
       -- Type of award
       local award_type = _S.trophy_room.cash
       if info.award_type == "reputation" then
         award_type = _S.trophy_room.reputation
       end
-      self.write_font:draw(canvas, award_type, x + 220, y + 290, 200, 0)
+      self.write_font:draw(canvas, award_type, x + 220 * s, y + 290 * s, 200 * s, 0)
       -- The amount won/lost
-      self.write_font:draw(canvas, string.format("%+.0f", info.amount), x + 220, y + 315, 200, 0)
+      self.write_font:draw(canvas, string.format("%+.0f", info.amount), x + 220 * s, y + 315 * s, 200 * s, 0)
     end
   end
 end
@@ -574,16 +578,17 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
 
   local font = self.stat_font
   local world = self.ui.app.world
+  local s = TheApp.config.ui_scale
 
   -- Draw titles
   -- world date year is + 1, so adding it to 1998 realigns it
-  font:draw(canvas, _S.menu.charts .. " " .. (world:date():year() + 1998), x + 210, y + 30, 200, 0)
-  font:draw(canvas, _S.high_score.categories.money, x + 140, y + 98, 170, 0)
-  font:draw(canvas, _S.high_score.categories.salary, x + 328, y + 98, 170, 0)
-  font:draw(canvas, _S.high_score.categories.cures, x + 140, y + 205, 170, 0)
-  font:draw(canvas, _S.high_score.categories.deaths, x + 328, y + 205, 170, 0)
-  font:draw(canvas, _S.high_score.categories.visitors, x + 140, y + 310, 170, 0)
-  font:draw(canvas, _S.high_score.categories.total_value, x + 328, y + 310, 170, 0)
+  font:draw(canvas, _S.menu.charts .. " " .. (world:date():year() + 1998), x + 210 * s, y + 30 * s, 200 * s, 0)
+  font:draw(canvas, _S.high_score.categories.money, x + 140 * s, y + 98 * s, 170 * s, 0)
+  font:draw(canvas, _S.high_score.categories.salary, x + 328 * s, y + 98 * s, 170 * s, 0)
+  font:draw(canvas, _S.high_score.categories.cures, x + 140 * s, y + 205 * s, 170 * s, 0)
+  font:draw(canvas, _S.high_score.categories.deaths, x + 328 * s, y + 205 * s, 170 * s, 0)
+  font:draw(canvas, _S.high_score.categories.visitors, x + 140 * s, y + 310 * s, 170 * s, 0)
+  font:draw(canvas, _S.high_score.categories.total_value, x + 328 * s, y + 310 * s, 170 * s, 0)
 
   -- TODO: Add possibility to right align text.
 
@@ -597,10 +602,10 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
     end
   end
 
-  local row_y = 128
-  local row_dy = 15
-  local col_x = 190
-  local row_no_y = 106
+  local row_y = 128 * s
+  local row_dy = 15 * s
+  local col_x = 190 * s
+  local row_no_y = 106 * s
 
   for i, hospital in ipairs(world.hospitals) do
     local name = hospital.name
@@ -611,59 +616,60 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
     -- index_* is the returned value of the sorted place for this player.
     -- However there might be many players with the same value, so each iteration a
     -- duplicate has been found, one additional row lower is the right place to be.
-    font:draw(canvas, name:upper(), x + 140,
+    font:draw(canvas, name:upper(), x + 140 * s,
         y + row_y + row_dy * (index_m - 1))
-    font:draw(canvas, string.format("%.0f", self.money_sort[index_m].value), x + 240,
-        y + row_y + row_dy * (index_m - 1), 70, 0, "right")
+    font:draw(canvas, string.format("%.0f", self.money_sort[index_m].value), x + 240 * s,
+        y + row_y + row_dy * (index_m - 1), 70 * s, 0, "right")
 
     -- Highest Salary
     local index_s = getindex(self.salary_sort, i)
-    font:draw(canvas, name:upper(), x + 140 + col_x,
+    font:draw(canvas, name:upper(), x + 140 * s + col_x,
         y + row_y + row_dy * (index_s - 1))
-    font:draw(canvas, string.format("%.0f", self.salary_sort[index_s].value), x + 240 + col_x,
-        y + row_y + row_dy * (index_s - 1), 70, 0, "right")
+    font:draw(canvas, string.format("%.0f", self.salary_sort[index_s].value), x + 240 * s + col_x,
+        y + row_y + row_dy * (index_s - 1), 70 * s, 0, "right")
 
     -- Most Cures
     local index_c = getindex(self.cures_sort, i)
-    font:draw(canvas, name:upper(), x + 140,
+    font:draw(canvas, name:upper(), x + 140 * s,
         y + row_y + row_no_y + row_dy * (index_c - 1))
-    font:draw(canvas, string.format("%.0f", self.cures_sort[index_c].value), x + 240,
-        y + row_y + row_no_y + row_dy * (index_c - 1), 70, 0, "right")
+    font:draw(canvas, string.format("%.0f", self.cures_sort[index_c].value), x + 240 * s,
+        y + row_y + row_no_y + row_dy * (index_c - 1), 70 * s, 0, "right")
 
     -- Most Deaths
     local index_d = getindex(self.deaths_sort, i)
-    font:draw(canvas, name:upper(), x + 140 + col_x,
+    font:draw(canvas, name:upper(), x + 140 * s + col_x,
         y + row_y + row_no_y + row_dy * (index_d - 1))
-    font:draw(canvas, string.format("%.0f", self.deaths_sort[index_d].value), x + 240 + col_x,
-        y + row_y + row_no_y + row_dy * (index_d - 1), 70, 0, "right")
+    font:draw(canvas, string.format("%.0f", self.deaths_sort[index_d].value), x + 240 * s + col_x,
+        y + row_y + row_no_y + row_dy * (index_d - 1), 70 * s, 0, "right")
 
     -- Most Visitors
     local index_v = getindex(self.visitors_sort, i)
-    font:draw(canvas, name:upper(), x + 140,
+    font:draw(canvas, name:upper(), x + 140 * s,
         y + row_y + row_no_y * 2 + row_dy * (index_v - 1))
-    font:draw(canvas, string.format("%.0f", self.visitors_sort[index_v].value), x + 240,
-        y + row_y + row_no_y * 2 + row_dy * (index_v - 1), 70, 0, "right")
+    font:draw(canvas, string.format("%.0f", self.visitors_sort[index_v].value), x + 240 * s,
+        y + row_y + row_no_y * 2 + row_dy * (index_v - 1), 70 * s, 0, "right")
 
     -- Highest Value
     local index_v2 = getindex(self.value_sort, i)
-    font:draw(canvas, name:upper(), x + 140 + col_x,
+    font:draw(canvas, name:upper(), x + 140 * s + col_x,
         y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1))
-    font:draw(canvas, string.format("%.0f", self.value_sort[index_v2].value), x + 240 + col_x,
-        y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1), 70, 0, "right")
+    font:draw(canvas, string.format("%.0f", self.value_sort[index_v2].value), x + 240 * s + col_x,
+        y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1), 70 * s, 0, "right")
   end
 end
 
 function UIAnnualReport:afterLoad(old, new)
-  if old < 179 then
+  if old < 236 then
     local gfx = TheApp.gfx
 
     local palette = gfx:loadPalette("QData", "Award02V.pal", true)
     self.award_background = gfx:loadRaw("Award01V", 640, 480)
     self.stat_background = gfx:loadRaw("Award02V", 640, 480, "QData", "QData", "Award02V.pal", true)
     self.background = self.stat_background
-    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font45V", false, palette)
-    self.write_font = gfx:loadFontAndSpriteTable("QData", "Font47V", false, palette)
-    self.stone_font = gfx:loadFontAndSpriteTable("QData", "Font46V", false, palette)
+    local stone_text_color = { red = 80, green = 60, blue = 35 }
+    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font45V", false, palette, { apply_ui_scale = true })
+    self.write_font = gfx:loadFontAndSpriteTable("QData", "Font47V", false, palette, { apply_ui_scale = true })
+    self.stone_font = gfx:loadFontAndSpriteTable("QData", "Font46V", false, palette, {ttf_color = stone_text_color, apply_ui_scale = true })
     self.panel_sprites = gfx:loadSpriteTable("QData", "Award03V", true, palette)
   end
 
