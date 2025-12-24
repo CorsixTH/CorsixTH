@@ -33,11 +33,11 @@
  <h4>Method Index</h4>
  <ul>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -48,7 +48,7 @@
  <a href="_0_1_u_i_main_menu.html#_0_1_u_i_main_menu_1add_menu_item">addMenuItem</a>(<span class="p">label</span>, <span class="p">callback</span>, <span class="p">tooltip</span>, <span class="p">y_pos</span>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -160,7 +160,7 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -256,6 +256,9 @@
  (*)
  </li>
  <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">apply_ui_scale</span>
  (*)
  </li>
  <li><span class="p">background_panel</span>
@@ -423,49 +426,49 @@
  <div class="method">
  <h5><a name="_0_1_u_i_main_menu_1button_continue_game">function UIMainMenu:buttonContinueGame()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L166">line 166 of Lua/dialogs/resizables/main_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L167">line 167 of Lua/dialogs/resizables/main_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_main_menu_1button_custom_campaign">function UIMainMenu:buttonCustomCampaign()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L148">line 148 of Lua/dialogs/resizables/main_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L149">line 149 of Lua/dialogs/resizables/main_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_main_menu_1button_custom_game">function UIMainMenu:buttonCustomGame()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L157">line 157 of Lua/dialogs/resizables/main_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L158">line 158 of Lua/dialogs/resizables/main_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_main_menu_1button_exit">function UIMainMenu:buttonExit()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L198">line 198 of Lua/dialogs/resizables/main_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L199">line 199 of Lua/dialogs/resizables/main_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_main_menu_1button_load_game">function UIMainMenu:buttonLoadGame()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L184">line 184 of Lua/dialogs/resizables/main_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L185">line 185 of Lua/dialogs/resizables/main_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_main_menu_1button_map_edit">function UIMainMenu:buttonMapEdit()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L194">line 194 of Lua/dialogs/resizables/main_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L195">line 195 of Lua/dialogs/resizables/main_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_main_menu_1button_new_game">function UIMainMenu:buttonNewGame()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L143">line 143 of Lua/dialogs/resizables/main_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L144">line 144 of Lua/dialogs/resizables/main_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_main_menu_1button_options">function UIMainMenu:buttonOptions()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L189">line 189 of Lua/dialogs/resizables/main_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L190">line 190 of Lua/dialogs/resizables/main_menu.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -529,14 +532,14 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L138">line 138 of Lua/dialogs/resizables/main_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L139">line 139 of Lua/dialogs/resizables/main_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_main_menu_1on_tick">function UIMainMenu:onTick()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L134">line 134 of Lua/dialogs/resizables/main_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/main_menu.lua#L135">line 135 of Lua/dialogs/resizables/main_menu.lua</a>.
  </p>
  </div>
 </div>

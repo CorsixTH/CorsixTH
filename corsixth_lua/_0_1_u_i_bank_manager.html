@@ -33,11 +33,11 @@
  <h4>Method Index</h4>
  <ul>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -45,7 +45,7 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -138,7 +138,7 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -215,6 +215,10 @@
  <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>, <span class="p">apply_ui_scale</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
  <li class="self">
  <a href="_0_1_u_i_bank_manager.html#_0_1_u_i_bank_manager_1show_graph">showGraph</a>()
  </li>
@@ -247,6 +251,9 @@
  (*)
  </li>
  <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">apply_ui_scale</span>
  (*)
  </li>
  <li><span class="p">background</span>
@@ -432,13 +439,13 @@
  <h5><a name="_0_1_u_i_bank_manager_1close">function UIBankManager:close()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L324">line 324 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L331">line 331 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bank_manager_1decrease_loan">function UIBankManager:decreaseLoan()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L438">line 438 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L445">line 445 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -470,13 +477,13 @@
  <div class="method">
  <h5><a name="_0_1_u_i_bank_manager_1hide_statistics">function UIBankManager:hideStatistics()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L362">line 362 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L369">line 369 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bank_manager_1increase_loan">function UIBankManager:increaseLoan()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L425">line 425 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L432">line 432 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -507,7 +514,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L311">line 311 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L316">line 316 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -521,37 +528,37 @@
  <div class="method">
  <h5><a name="_0_1_u_i_bank_manager_1open_town_map">function UIBankManager:openTownMap()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L456">line 456 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L463">line 463 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bank_manager_1return_from_graph">function UIBankManager:returnFromGraph()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L414">line 414 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L421">line 421 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bank_manager_1show_graph">function UIBankManager:showGraph()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L386">line 386 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L393">line 393 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bank_manager_1show_graph1">function UIBankManager:showGraph1()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L399">line 399 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L406">line 406 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bank_manager_1show_graph2">function UIBankManager:showGraph2()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L404">line 404 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L411">line 411 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bank_manager_1show_graph3">function UIBankManager:showGraph3()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L409">line 409 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L416">line 416 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -566,7 +573,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L331">line 331 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/bank_manager.lua#L338">line 338 of Lua/dialogs/fullscreen/bank_manager.lua</a>.
  </p>
  </div>
 </div>

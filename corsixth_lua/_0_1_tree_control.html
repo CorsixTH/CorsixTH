@@ -34,11 +34,11 @@ tree of items and select one item from it.</h3>
  <h4>Method Index</h4>
  <ul>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -46,7 +46,7 @@ tree of items and select one item from it.</h3>
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -132,7 +132,7 @@ tree of items and select one item from it.</h3>
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -212,6 +212,10 @@ tree of items and select one item from it.</h3>
  <li class="self">
  <a href="_0_1_tree_control.html#_0_1_tree_control_1set_select_callback">setSelectCallback</a>(<span class="p">callback</span>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>, <span class="p">apply_ui_scale</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
  <li class="self">
  <a href="_0_1_tree_control.html#_0_1_tree_control_1set_value_change_callback">setValueChangeCallback</a>(<span class="p">callback</span>)
  </li>
@@ -232,6 +236,9 @@ tree of items and select one item from it.</h3>
  (*)
  </li>
  <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">apply_ui_scale</span>
  (*)
  </li>
  <li><span class="p">blink_counter</span>
@@ -431,7 +438,7 @@ and 255.</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L679">line 679 of Lua/dialogs/tree_ctrl.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L681">line 681 of Lua/dialogs/tree_ctrl.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -463,7 +470,7 @@ or additional flavour to it.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L674">line 674 of Lua/dialogs/tree_ctrl.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L676">line 676 of Lua/dialogs/tree_ctrl.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -509,7 +516,7 @@ or additional flavour to it.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L589">line 589 of Lua/dialogs/tree_ctrl.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L590">line 590 of Lua/dialogs/tree_ctrl.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -540,7 +547,7 @@ or additional flavour to it.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L576">line 576 of Lua/dialogs/tree_ctrl.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L577">line 577 of Lua/dialogs/tree_ctrl.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -566,7 +573,7 @@ or additional flavour to it.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L620">line 620 of Lua/dialogs/tree_ctrl.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L622">line 622 of Lua/dialogs/tree_ctrl.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -587,19 +594,19 @@ or additional flavour to it.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">Window:onMouseWheel</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L652">line 652 of Lua/dialogs/tree_ctrl.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L654">line 654 of Lua/dialogs/tree_ctrl.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_tree_control_1on_num_visible_nodes_change">function TreeControl:onNumVisibleNodesChange()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L656">line 656 of Lua/dialogs/tree_ctrl.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L658">line 658 of Lua/dialogs/tree_ctrl.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_tree_control_1on_scroll">function TreeControl:onScroll()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L661">line 661 of Lua/dialogs/tree_ctrl.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L663">line 663 of Lua/dialogs/tree_ctrl.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -616,7 +623,7 @@ or additional flavour to it.<br/><br/>
  <td class="d"> Code to execute on trigger</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L602">line 602 of Lua/dialogs/tree_ctrl.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L604">line 604 of Lua/dialogs/tree_ctrl.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -633,7 +640,7 @@ or additional flavour to it.<br/><br/>
  <td class="d"> Code to execute on trigger</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L611">line 611 of Lua/dialogs/tree_ctrl.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L613">line 613 of Lua/dialogs/tree_ctrl.lua</a>.
  </p>
  </div>
 </div>

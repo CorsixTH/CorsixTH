@@ -35,11 +35,11 @@
  <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1__init_fonts">_initFonts</a>(<span class="p">gfx</span>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="self">
@@ -50,7 +50,7 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -199,7 +199,7 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -210,9 +210,9 @@
  <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1on_change_resolution">onChangeResolution</a>()
- (inherited from <a href="_0_1_window.html">Window</a>)
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1on_change_resolution">onChangeResolution</a>()
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_change_resolution">Window:onChangeResolution</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
@@ -309,6 +309,10 @@
  <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
  (overrides <a href="_0_1_window.html#_0_1_window_1set_position">Window:setPosition</a>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>, <span class="p">apply_ui_scale</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
  <li class="self">
  <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1show_additional_buttons">showAdditionalButtons</a>(<span class="p">x</span>, <span class="p">y</span>)
  </li>
@@ -343,6 +347,9 @@
  <li><span class="p">additional_buttons</span>
  </li>
  <li><span class="p">additional_panels</span>
+ </li>
+ <li><span class="p">apply_ui_scale</span>
+ (*)
  </li>
  <li><span class="p">bank_button</span>
  </li>
@@ -481,7 +488,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L148">line 148 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L154">line 154 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -501,7 +508,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L896">line 896 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L906">line 906 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -522,7 +529,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L943">line 943 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L953">line 953 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -542,7 +549,7 @@ and epidemics use the timer, so both faxes cannot appear at the same time.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L439">line 439 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L449">line 449 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -560,7 +567,7 @@ Handles the cancelling of the event which the fax pertains to.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L477">line 477 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L487">line 487 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -577,7 +584,7 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L544">line 544 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L554">line 554 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -597,7 +604,7 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L639">line 639 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L649">line 649 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -612,7 +619,7 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L631">line 631 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L641">line 641 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -627,13 +634,13 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L635">line 635 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L645">line 645 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1dialog_build_room">function UIBottomPanel:dialogBuildRoom()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L662">line 662 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L672">line 672 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -648,7 +655,7 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L834">line 834 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L844">line 844 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -663,19 +670,19 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L765">line 765 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L775">line 775 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1dialog_furnish_corridor">function UIBottomPanel:dialogFurnishCorridor()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L686">line 686 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L696">line 696 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1dialog_hire_staff">function UIBottomPanel:dialogHireStaff()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L710">line 710 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L720">line 720 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -690,7 +697,7 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L864">line 864 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L874">line 874 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -705,7 +712,7 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L849">line 849 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L859">line 859 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -720,7 +727,7 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L780">line 780 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L790">line 790 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -735,7 +742,7 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L735">line 735 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L745">line 745 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -750,7 +757,7 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L819">line 819 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L829">line 829 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -765,7 +772,7 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L750">line 750 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L760">line 760 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -791,7 +798,7 @@ message window; if no index is provided the first message in the queue is popped
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L231">line 231 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L237">line 237 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -817,13 +824,13 @@ message window; if no index is provided the first message in the queue is popped
  <td class="d"> coordinate</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L289">line 289 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L297">line 297 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1draw_panels">function UIBottomPanel:drawPanels()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L65">line 65 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L70">line 70 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -851,19 +858,19 @@ y is the y-coordinate of the reputation meter<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L280">line 280 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L287">line 287 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1edit_room">function UIBottomPanel:editRoom()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L928">line 928 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L938">line 938 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1give_research_advice">function UIBottomPanel:giveResearchAdvice()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L805">line 805 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L815">line 815 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -889,13 +896,20 @@ y is the y-coordinate of the reputation meter<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1hit_test">Window:hitTest</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L390">line 390 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L399">line 399 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1machine_menu_button_exists">function UIBottomPanel:machineMenuButtonExists()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L55">line 55 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L54">line 54 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1on_change_resolution">function UIBottomPanel:onChangeResolution()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_change_resolution">Window:onChangeResolution</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L64">line 64 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -926,46 +940,46 @@ y is the y-coordinate of the reputation meter<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L365">line 365 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L374">line 374 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1on_tick">function UIBottomPanel:onTick()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L581">line 581 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L591">line 591 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1open_first_message">function UIBottomPanel:openFirstMessage()</a></h5>
  <p>
  Opens the first available message in the list of message_windows.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L517">line 517 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L527">line 527 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1open_jukebox">function UIBottomPanel:openJukebox()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L201">line 201 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L207">line 207 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1open_last_message">function UIBottomPanel:openLastMessage()</a></h5>
  <p>
  Opens the last available message. Currently used to open the level completed message.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L490">line 490 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L500">line 500 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1open_load">function UIBottomPanel:openLoad()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L211">line 211 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L217">line 217 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1open_save">function UIBottomPanel:openSave()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L207">line 207 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L213">line 213 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1017,31 +1031,31 @@ choices = {
  <td class="d"> If given, it will be called when the message is closed.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L394">line 394 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L404">line 404 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1quick_load">function UIBottomPanel:quickLoad()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L219">line 219 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L225">line 225 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1quick_save">function UIBottomPanel:quickSave()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L215">line 215 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L221">line 221 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1quit">function UIBottomPanel:quit()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L227">line 227 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L233">line 233 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1register_key_handlers">function UIBottomPanel:registerKeyHandlers()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L158">line 158 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L164">line 164 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1058,13 +1072,13 @@ says what to do with the patient.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L524">line 524 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L534">line 534 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1restart">function UIBottomPanel:restart()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L223">line 223 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L229">line 229 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1081,7 +1095,7 @@ says what to do with the patient.<br/><br/>
  <td class="d"> A table containing the information to display. The text</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L330">line 330 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L339">line 339 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1102,7 +1116,7 @@ says what to do with the patient.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1set_position">Window:setPosition</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L275">line 275 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L282">line 282 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1122,7 +1136,7 @@ says what to do with the patient.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L373">line 373 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L382">line 382 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1130,19 +1144,19 @@ says what to do with the patient.<br/><br/>
  <p>
  Trigger a message to be moved from the queue into a actual window, after
 first performing the necessary animation.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L499">line 499 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L509">line 509 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1toggle_information">function UIBottomPanel:toggleInformation()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L874">line 874 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L884">line 884 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1update_button_states">function UIBottomPanel:updateButtonStates()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L889">line 889 of Lua/dialogs/bottom_panel.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L899">line 899 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
 </div>

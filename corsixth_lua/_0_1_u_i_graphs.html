@@ -33,11 +33,11 @@
  <h4>Method Index</h4>
  <ul>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -45,7 +45,7 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -135,7 +135,7 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -146,9 +146,9 @@
  <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1on_change_resolution">onChangeResolution</a>()
- (inherited from <a href="_0_1_u_i_fullscreen.html">UIFullscreen</a>)
+ <li class="self">
+ <a href="_0_1_u_i_graphs.html#_0_1_u_i_graphs_1on_change_resolution">onChangeResolution</a>()
+ (overrides <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1on_change_resolution">UIFullscreen:onChangeResolution</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
@@ -207,6 +207,10 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>, <span class="p">apply_ui_scale</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
@@ -232,6 +236,9 @@
  (*)
  </li>
  <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">apply_ui_scale</span>
  (*)
  </li>
  <li><span class="p">aux_lines</span>
@@ -393,14 +400,14 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1after_load">UIFullscreen:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L472">line 472 of Lua/dialogs/fullscreen/graphs.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L488">line 488 of Lua/dialogs/fullscreen/graphs.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_graphs_1close">function UIGraphs:close()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L467">line 467 of Lua/dialogs/fullscreen/graphs.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L475">line 475 of Lua/dialogs/fullscreen/graphs.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -426,7 +433,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1draw">UIFullscreen:draw</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L372">line 372 of Lua/dialogs/fullscreen/graphs.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L374">line 374 of Lua/dialogs/fullscreen/graphs.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -444,6 +451,13 @@
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_u_i_graphs_1on_change_resolution">function UIGraphs:onChangeResolution()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1on_change_resolution">UIFullscreen:onChangeResolution</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L480">line 480 of Lua/dialogs/fullscreen/graphs.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_u_i_graphs_1toggle_graph">function UIGraphs:toggleGraph(<span class="p">name</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
@@ -455,13 +469,13 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L461">line 461 of Lua/dialogs/fullscreen/graphs.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L469">line 469 of Lua/dialogs/fullscreen/graphs.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_graphs_1toggle_graph_scale">function UIGraphs:toggleGraphScale()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L446">line 446 of Lua/dialogs/fullscreen/graphs.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/graphs.lua#L454">line 454 of Lua/dialogs/fullscreen/graphs.lua</a>.
  </p>
  </div>
  <div class="method">
