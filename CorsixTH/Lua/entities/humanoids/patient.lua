@@ -633,49 +633,59 @@ end
 --! Handle processing of a patient's current health state and perform necessary actions
 --!return health (number) A patient's current health value, from 0 to 1.
 function Patient:_dailyHealthChecks()
-  -- Die before we poo or drink
-  -- Patient has been in the hospital for over 6 months and is still not well, so
+  -- If a Patient has been in the hospital for over 6 months and is still not well, they
   -- will become sad and will either get fed up and leave or stay in the hope that you
   -- will cure them before they die.
   -- Note: This behaviour intentionally differs from Theme Hospital where being close to
   -- death does not impact happiness.
-  -- TODO clean up this block, nonmagical numbers
+
   local health = self:getAttribute("health")
-  if health >= 0.18 and health < 0.22 then
-    self:setMood("dying1", "activate")
-    self:changeAttribute("happiness", -0.0002) -- waiting too long will make you sad
-    -- There is a 1/3 chance that the patient will get fed up and leave.
-    -- This is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
-    -- If patient is already in the cure room, let the treatment happen.
-    if not self:_checkIfCureRoom(self:getRoom()) and math.random(1,30) == 1 then
-      self:setDynamicInfoText(_S.dynamic_info.patient.actions.fed_up)
-      self:setMood("dying1", "deactivate")
-      self:goHome("kicked")
+  -- Define different thresholds for deteriorating health and their mood changes.
+  -- First value is the mood to deactivate, the second to activate (as applicable).
+  local health_treshold_rangemap = {
+    {upper = 0.06, value = {"dying4", "dying5"}}, -- Not looking good
+    {upper = 0.10, value = {"dying3", "dying4"}}, -- Fading fast
+    {upper = 0.14, value = {"dying2", "dying3"}}, -- Starts to take a turn for the worse
+    {upper = 0.18, value = {"dying1", "dying2"}}, -- Wishes they went to that other hospital
+    {upper = 0.22, value = {false, "dying1"}},    -- Getting rather unwell now
+    {value = false}
+  }
+  -- Special handling for a patient almost passed.
+  local almost_dead_value, dying_value = 0.01, 0.0
+  if health < almost_dead_value then
+    if health == dying_value then
+      -- Patient died, will die when they leave the room, will be cured, or is leaving
+      -- the hospital. Regardless we do not need to adjust any other attribute
+      self:setToDying()
+    else
+      -- Is there time to say a prayer (will be dying tomorrow)
+      self.attributes["health"] = dying_value
     end
-  elseif health >= 0.14 and health < 0.18 then
-    self:setMood("dying1", "deactivate")
-    self:setMood("dying2", "activate")
-  -- now wishes they had gone to that other hospital
-  elseif health >= 0.10 and health < 0.14 then
-    self:setMood("dying2", "deactivate")
-    self:setMood("dying3", "activate")
-  -- starts to take a turn for the worse and is slipping away
-  elseif health >= 0.06 and health < 0.10 then
-    self:setMood("dying3", "deactivate")
-    self:setMood("dying4", "activate")
-  -- fading fast
-  elseif health >= 0.01 and health < 0.06 then
-    self:setMood("dying4", "deactivate")
-    self:setMood("dying5", "activate")
-  -- it's not looking good
-  elseif health > 0.00 and health < 0.01 then
-    self.attributes["health"] = 0.0
-  -- is there time to say a prayer
-  elseif health == 0.0 then
-    self:setToDying()
-    -- Patient died, will die when they leave the room, will be cured, or is leaving
-    -- the hospital. Regardless we do not need to adjust any other attribute
+    return health
   end
+
+  local old_dying_mood, new_dying_mood = rangeMapLookup(health_treshold_rangemap, health, true)
+  if not old_dying_mood then
+    if new_dying_mood then
+      -- Patient has entered the road of deterioration.
+      self:setMood(new_dying_mood, "activate")
+      self:changeAttribute("happiness", -0.0002) -- waiting too long will make you sad
+      -- There is a 1/3 chance that the patient will get fed up and leave.
+      -- This is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
+      -- If patient is already in the cure room, let the treatment happen.
+      if not self:_checkIfCureRoom(self:getRoom()) and math.random(1,30) == 1 then
+        self:setDynamicInfoText(_S.dynamic_info.patient.actions.fed_up)
+        self:setMood("dying1", "deactivate")
+        self:goHome("kicked")
+      end
+    end
+    return health
+  end
+
+  -- All other stages of deterioration simply cycle through the stages of dying mood.
+  self:setMood(old_dying_mood, "deactivate")
+  self:setMood(new_dying_mood, "activate")
+
   return health
 end
 

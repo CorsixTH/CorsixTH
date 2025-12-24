@@ -277,12 +277,17 @@ end
 --!param number (number) Value to accept by the bucket.
 --!param buckets (list) Available buckets, pairs of {upper=x, value=y} tables,
 --  in increasing x value, where nil is taken as infinite. The y value is
---  returned for the first bucket in the list where number <= x. If y is nil,
---  the index of the bucket in the list is returned.
+--  returned for the first bucket in the list where number <= x (in normal mode).
+--  If y is nil, the index of the bucket in the list is returned.
+--!param alt_mode (boolean) If true, the comparison becomes number < x instead.
 --!return (number) Value or index of the matching bucket.
-function rangeMapLookup(number, buckets)
+function rangeMapLookup(number, buckets, alt_mode)
+  local function boundaryCheck(upper)
+    return alt_mode and upper > number or upper >= number
+  end
+
   for index, bucket in ipairs(buckets) do
-    if not bucket.upper or bucket.upper >= number then
+    if not bucket.upper or boundaryCheck(bucket.upper) then
       return bucket.value or index
     end
   end
