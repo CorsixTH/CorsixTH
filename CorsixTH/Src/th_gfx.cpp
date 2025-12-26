@@ -142,12 +142,12 @@ class memory_reader {
 
 animation_manager::animation_manager()
     : sheet(nullptr),
+      canvas(nullptr),
       animation_count(0),
       frame_count(0),
       element_list_count(0),
       element_count(0),
-      game_ticks(0),
-      canvas(nullptr) {}
+      game_ticks(0) {}
 
 void animation_manager::set_sprite_sheet(sprite_sheet* pSpriteSheet) {
   sheet = pSpriteSheet;
@@ -1042,7 +1042,7 @@ void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
 
 chunk_renderer::chunk_renderer(const int width, const int height,
                                std::vector<uint8_t>::iterator start)
-    : width(width), height(height), ptr(start), end(start + (width * height)) {}
+    : ptr(start), end(start + (width * height)), width(width), height(height) {}
 
 void chunk_renderer::chunk_fill_to_end_of_line(uint8_t value) {
   if (x != 0 || !skip_eol) {

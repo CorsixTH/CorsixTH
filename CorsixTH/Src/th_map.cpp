@@ -249,12 +249,12 @@ map_tile_flags::operator uint32_t() const {
 }
 
 map_tile::map_tile()
-    : iParcelId(0),
+    : tile_layers{},
+      iParcelId(0),
       iRoomId(0),
+      aiTemperature{8192, 8192},
       flags({}),
-      raw{},
-      tile_layers{},
-      aiTemperature{8192, 8192} {}
+      raw{} {}
 
 level_map::level_map() = default;
 
