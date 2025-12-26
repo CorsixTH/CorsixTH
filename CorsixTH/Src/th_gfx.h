@@ -230,7 +230,7 @@ typedef std::pair<animation_key, animation_start_frames> named_animation_pair;
 */
 class animation_manager {
  public:
-  animation_manager();
+  animation_manager() = default;
 
   void set_sprite_sheet(sprite_sheet* pSpriteSheet);
 
@@ -402,16 +402,16 @@ class animation_manager {
       custom_sheets;  ///< Sprite sheets with custom graphics.
   named_animations_map named_animations;  ///< Collected named animations.
 
-  sprite_sheet* sheet;    ///< Sprite sheet to use. Not owned.
-  render_target* canvas;  ///< Video surface to use. Not owned.
+  sprite_sheet* sheet{nullptr};    ///< Sprite sheet to use. Not owned.
+  render_target* canvas{nullptr};  ///< Video surface to use. Not owned.
 
-  size_t animation_count;     ///< Number of animations.
-  size_t frame_count;         ///< Number of frames.
-  size_t element_list_count;  ///< Number of list elements.
-  size_t element_count;       ///< Number of sprite elements.
+  size_t animation_count{0};     ///< Number of animations.
+  size_t frame_count{0};         ///< Number of frames.
+  size_t element_list_count{0};  ///< Number of list elements.
+  size_t element_count{0};       ///< Number of sprite elements.
 
-  size_t
-      game_ticks;  ///< Number of game ticks, used for global animation timing.
+  //! Number of game ticks, used for global animation timing.
+  size_t game_ticks{0};
 
   //! Compute the bounding box of the frame.
   /*!
