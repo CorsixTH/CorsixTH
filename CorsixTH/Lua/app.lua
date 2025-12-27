@@ -35,6 +35,9 @@ class "App"
 ---@type App
 local App = _G["App"]
 
+App.MIN_WINDOW_WIDTH = 640
+App.MIN_WINDOW_HEIGHT = 480
+
 function App:App()
   self.command_line = {}
   self.config = {}
@@ -160,7 +163,12 @@ function App:init()
     modes[#modes + 1] = "direct zoom"
   end
   self.modes = modes
-  self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
+  self.video = assert(TH.surface(
+      self.config.width,
+      self.config.height,
+      App.MIN_WINDOW_WIDTH * self.config.ui_scale,
+      App.MIN_WINDOW_HEIGHT * self.config.ui_scale,
+      unpack(modes)))
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
 
