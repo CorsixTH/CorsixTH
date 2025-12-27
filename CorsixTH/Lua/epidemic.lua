@@ -553,7 +553,6 @@ function Epidemic:spawnInspector()
   local inspector = self.world:newEntity("Inspector", 2, 2)
   self.inspector = inspector
   inspector:setType("Inspector")
-  inspector.hover_moods = false
 
   local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
   inspector:setNextAction(SpawnAction("spawn", spawn_point))

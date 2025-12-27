@@ -490,7 +490,6 @@ function World:spawnVIP(name)
   if #self.rooms > rooms_threshold then
     vip.room_visit_chance = math.floor(#self.rooms / 40)
   end
-  vip.hover_moods = false
 
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   vip:setNextAction(SpawnAction("spawn", spawn_point))
@@ -2587,6 +2586,13 @@ function World:afterLoad(old, new)
   end
   if old < 214 then
     self.animation_manager = nil -- Use TheApp.animation_manager instead.
+  end
+  if old < 237 then
+    for _, entity in ipairs(self.entities) do
+      if class.is(entity, Humanoid) then
+        entity:setIfHoverMoodsVisible()
+      end
+    end
   end
 
   -- Fix the initial of staff names
