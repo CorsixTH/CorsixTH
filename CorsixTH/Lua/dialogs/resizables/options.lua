@@ -77,6 +77,50 @@ function UIOptions:_getOptionYPos(reset)
   return calculated_pos
 end
 
+local available_resolutions = function()
+  local suggested_resolutions = {
+    {text = "640x480 (4:3)",     width = 640,  height = 480  },
+    {text = "800x600 (4:3)",     width = 800,  height = 600  },
+    {text = "1024x768 (4:3)",    width = 1024, height = 768  },
+    {text = "1280x960 (4:3)",    width = 1280, height = 960  },
+    {text = "1600x1200 (4:3)",   width = 1600, height = 1200 },
+    {text = "1920x1440 (4:3)",   width = 1920, height = 1440 },
+    {text = "1280x1024 (5:4)",   width = 1280, height = 1024 },
+    {text = "1280x720 (16:9)",   width = 1280, height = 720  },
+    {text = "1366x768 (16:9)",   width = 1366, height = 768  },
+    {text = "1600x900 (16:9)",   width = 1600, height = 900  },
+    {text = "1920x1080 (16:9)",  width = 1920, height = 1080 },
+    {text = "2560x1440 (16:9)",  width = 2560, height = 1440 },
+    {text = "3840x2160 (16:9)",  width = 3840, height = 2160 },
+    {text = "1280x800 (16:10)",  width = 1280, height = 800  },
+    {text = "1440x900 (16:10)",  width = 1440, height = 900  },
+    {text = "1680x1050 (16:10)", width = 1680, height = 1050 },
+    {text = "1920x1200 (16:10)", width = 1920, height = 1200 },
+  }
+
+  local res = {}
+  local s = TheApp.config.ui_scale
+  for _, opt in ipairs(suggested_resolutions) do
+    if App.MIN_WINDOW_WIDTH * s <= opt.width and App.MIN_WINDOW_HEIGHT * s <= opt.height then
+      res[#res + 1] = opt
+    end
+  end
+
+  res[#res + 1] = {
+    text = _S.options_window.custom_resolution, custom = true }
+
+  return res
+end
+
+local available_ui_scales = function()
+  local res = {}
+  local s = 1
+  while s * App.MIN_WINDOW_WIDTH <= TheApp.config.width and s * App.MIN_WINDOW_HEIGHT <= TheApp.config.height do
+    res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
+    s = s + 1
+  end
+  return res
+end
 
 function UIOptions:UIOptions(ui, mode)
   self:UIResizable(ui, 620, 300, col_bg)
@@ -95,31 +139,6 @@ function UIOptions:UIOptions(ui, mode)
   self._current_option_index = 1
 
   self:checkForAvailableLanguages()
-
-  -- Set up list of resolutions
-  self.available_resolutions = {
-    {text = "640x480 (4:3)",    width = 640,  height = 480},
-    {text = "800x600 (4:3)",    width = 800,  height = 600},
-    {text = "1024x768 (4:3)",   width = 1024, height = 768},
-    {text = "1280x960 (4:3)",   width = 1280, height = 960},
-    {text = "1600x1200 (4:3)",  width = 1600, height = 1200},
-    {text = "1280x1024 (5:4)",  width = 1280, height = 1024},
-    {text = "1280x720 (16:9)",  width = 1280, height = 720},
-    {text = "1366x768 (16:9)",  width = 1366, height = 768},
-    {text = "1600x900 (16:9)",  width = 1600, height = 900},
-    {text = "1920x1080 (16:9)", width = 1920, height = 1080},
-    {text = "1280x800 (16:10)",  width = 1280, height = 800},
-    {text = "1440x900 (16:10)",  width = 1440, height = 900},
-    {text = "1680x1050 (16:10)",  width = 1680, height = 1050},
-    {text = "1920x1200 (16:10)", width = 1920, height = 1200},
-    {text = _S.options_window.custom_resolution, custom = true},
-  }
-
-  self.available_ui_scales = {
-    {text = "100%", scale = 1},
-    {text = "200%", scale = 2},
-    {text = "300%", scale = 3},
-  }
 
   -- Window parts definition
   -- Title
@@ -293,6 +312,7 @@ end
 
 function UIOptions:dropdownResolution(activate)
   if activate then
+    self.available_resolutions = available_resolutions()
     self:dropdownLanguage(false)
     self:dropdownUIScale(false)
     self.resolution_dropdown = UIDropdown(self.ui, self, self.resolution_button, self.available_resolutions, self.selectResolution)
@@ -327,6 +347,7 @@ end
 
 function UIOptions:dropdownUIScale(activate)
   if activate then
+    self.available_ui_scales = available_ui_scales()
     self:dropdownLanguage(false)
     self:dropdownResolution(false)
     self.scale_ui_dropdown = UIDropdown(self.ui, self, self.scale_ui_button, self.available_ui_scales, self.selectUIScale)
@@ -501,8 +522,11 @@ end
 
 function UIResolution:ok()
   local width, height = tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0
-  if width < 640 or height < 480 then
-    local err = {_S.errors.minimum_screen_size}
+  local s = TheApp.config.ui_scale
+  local min_w = App.MIN_WINDOW_WIDTH * s
+  local min_h = App.MIN_WINDOW_HEIGHT * s
+  if width < min_w or height < min_h then
+    local err = {_S.errors.minimum_screen_size:format(min_w, min_h)}
     self.ui:addWindow(UIInformation(self.ui, err))
   elseif width > 3000 or height > 2000 then
     self.ui:addWindow(UIConfirmDialog(self.ui, false,

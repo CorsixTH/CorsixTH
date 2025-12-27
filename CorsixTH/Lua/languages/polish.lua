@@ -806,7 +806,7 @@ errors = {
   no_games_to_contine = "Nie ma zapisanych gier.",
   save_prefix = "Błąd podczas zapisywania gry: ",
   map_file_missing = "Nie można znaleźć pliku z mapą %s dla tego poziomu!",
-  minimum_screen_size = "Proszę wpisać rozmiar ekranu, minimum 640x480.",
+  minimum_screen_size = "Proszę wpisać rozmiar ekranu, minimum %dx%d.",
 }
 bank_manager = {
   current_loan = "Pożyczka",
