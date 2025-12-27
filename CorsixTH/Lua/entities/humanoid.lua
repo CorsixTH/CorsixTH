@@ -353,6 +353,8 @@ function Humanoid:Humanoid(...)
   self.build_callbacks  = {--[[set]]}
   self.remove_callbacks = {--[[set]]}
   self.staff_change_callbacks = {--[[set]]}
+
+  self:setIfHoverMoodsVisible()
 end
 
 -- Save game compatibility
@@ -513,6 +515,11 @@ function Humanoid:isMoodActive(mood)
     end
   end
   return false
+end
+
+--! Set whether this humanoid should display its mood on hover.
+function Humanoid:setIfHoverMoodsVisible()
+  self.hover_moods = true
 end
 
 function Humanoid.getIdleAnimation(humanoid_class)
