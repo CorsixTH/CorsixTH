@@ -33,11 +33,11 @@ function UIBankManager:UIBankManager(ui)
     self.stat_background = gfx:loadRaw("Stat01V", 640, 480, "QData", "QData", "Stat01V.pal", true)
     local palette = gfx:loadPalette("QData", "Bank01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Bank02V", true, palette)
-    self.font = gfx:loadFontAndSpriteTable("QData", "Font36V", false, palette)
+    self.font = gfx:loadFontAndSpriteTable("QData", "Font36V", false, palette, { apply_ui_scale = true })
 
     -- The statistics font
     palette = gfx:loadPalette("QData", "Stat01V.pal", true)
-    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font37V", false, palette)
+    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font37V", false, palette, { apply_ui_scale = true })
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
     self:close()
@@ -119,16 +119,16 @@ function UIBankManager:afterLoad(old, new)
     self.eyesblink = self:addPanel(7, 298, 173)
     self.browslift = self:addPanel(9, 296, 165)
   end
-  if old < 179 then
+  if old < 236 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Bank01V", 640, 480, "QData", "QData", "Bank01V.pal", true)
     self.stat_background = gfx:loadRaw("Stat01V", 640, 480, "QData", "QData", "Stat01V.pal", true)
     local palette = gfx:loadPalette("QData", "Bank01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Bank02V", true, palette)
-    self.font = gfx:loadFontAndSpriteTable("QData", "Font36V", false, palette)
+    self.font = gfx:loadFontAndSpriteTable("QData", "Font36V", false, palette, { apply_ui_scale = true })
 
     palette = gfx:loadPalette("QData", "Stat01V.pal", true)
-    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font37V", false, palette)
+    self.stat_font = gfx:loadFontAndSpriteTable("QData", "Font37V", false, palette, { apply_ui_scale = true })
   end
   UIFullscreen.afterLoad(self, old, new)
 end
@@ -226,20 +226,23 @@ end
 
 function UIBankManager:draw(canvas, x, y)
   local hospital = self.ui.hospital
+  local s = TheApp.config.ui_scale
 
   -- Either draw the statistics page or the normal bank page
   if self.showingStatistics then
     local font = self.stat_font
-    self.stat_background:draw(canvas, self.x + x, self.y + y)
+    canvas:scale(s, "bitmap")
+    self.stat_background:draw(canvas, self.x * s + x, self.y * s + y)
+    canvas:scale(1, "bitmap")
     UIFullscreen.draw(self, canvas, x, y)
-    x, y = self.x + x, self.y + y
+    x, y = self.x * s + x, self.y * s + y
 
     -- Titles
-    font:draw(canvas, _S.bank_manager.statistics_page.date, x + 44, y + 37, 65, 0)
-    font:draw(canvas, _S.bank_manager.statistics_page.details, x + 125, y + 40, 230, 0)
-    font:draw(canvas, _S.bank_manager.statistics_page.money_out, x + 373, y + 42, 70, 0)
-    font:draw(canvas, _S.bank_manager.statistics_page.money_in, x + 449, y + 41, 70, 0)
-    font:draw(canvas, _S.bank_manager.statistics_page.balance, x + 525, y + 40, 70, 0)
+    font:draw(canvas, _S.bank_manager.statistics_page.date, x + 44 * s, y + 37 * s, 65 * s, 0)
+    font:draw(canvas, _S.bank_manager.statistics_page.details, x + 125 * s, y + 40 * s, 230 * s, 0)
+    font:draw(canvas, _S.bank_manager.statistics_page.money_out, x + 373 * s, y + 42 * s, 70 * s, 0)
+    font:draw(canvas, _S.bank_manager.statistics_page.money_in, x + 449 * s, y + 41 * s, 70 * s, 0)
+    font:draw(canvas, _S.bank_manager.statistics_page.balance, x + 525 * s, y + 40 * s, 70 * s, 0)
 
     --[[
       Lua < 5.3 stored integer money amount in floating point values.
@@ -258,67 +261,71 @@ function UIBankManager:draw(canvas, x, y)
     -- A for loop going backwards
     for no = 1, #hospital.transactions do
       local values = hospital.transactions[#hospital.transactions - no + 1]
-      local current_y = no * 15 + y + 60
-      font:draw(canvas, _S.date_format.daymonth:format(values.day, values.month), x + 48, current_y)
-      font:draw(canvas, values.desc, x + 129, current_y)
+      local current_y = no * 15 * s + y + 60 * s
+      font:draw(canvas, _S.date_format.daymonth:format(values.day, values.month), x + 48 * s, current_y)
+      font:draw(canvas, values.desc, x + 129 * s, current_y)
       if values.spend then
-        font:draw(canvas, "$ " .. math.floor(values.spend), x + 377, current_y)
+        font:draw(canvas, "$ " .. math.floor(values.spend), x + 377 * s, current_y)
       else
-        font:draw(canvas, "$ " .. math.floor(values.receive), x + 453, current_y)
+        font:draw(canvas, "$ " .. math.floor(values.receive), x + 453 * s, current_y)
       end
-      font:draw(canvas, "$ " .. math.floor(values.balance), x + 529, current_y)
+      font:draw(canvas, "$ " .. math.floor(values.balance), x + 529 * s, current_y)
     end
 
     -- Summary
-    font:draw(canvas, _S.bank_manager.statistics_page.current_balance, x + 373, y + 420, 140, 0)
-    font:draw(canvas, string.format("$%.0f", hospital.balance), x + 526, y + 421, 70, 0)
+    font:draw(canvas, _S.bank_manager.statistics_page.current_balance, x + 373 * s, y + 420 * s, 140 * s, 0)
+    font:draw(canvas, string.format("$%.0f", hospital.balance), x + 526 * s, y + 421 * s, 70 * s, 0)
   else
     local font = self.font
-    self.background:draw(canvas, self.x + x, self.y + y)
+    canvas:scale(s, "bitmap")
+    self.background:draw(canvas, self.x * s + x, self.y * s + y)
+    canvas:scale(1, "bitmap")
     UIFullscreen.draw(self, canvas, x, y)
-    x, y = self.x + x, self.y + y
+    x, y = self.x * s + x, self.y * s + y
 
     -- The left side
-    font:draw(canvas, _S.bank_manager.hospital_value, x + 60, y + 109, 143, 0)
-    font:draw(canvas, "$ " .. math.floor(hospital.value), x + 60, y + 139, 143, 0)
-    font:draw(canvas, _S.bank_manager.balance, x + 60, y + 174, 143, 0)
-    font:draw(canvas, "$ " .. math.floor(hospital.balance), x + 60, y + 204, 143, 0)
-    font:draw(canvas, _S.bank_manager.current_loan, x + 60, y + 239, 143, 0)
-    font:draw(canvas, "$ " .. math.floor(hospital.loan), x + 60, y + 269, 143, 0)
-    font:draw(canvas, _S.bank_manager.interest_payment, x + 60, y + 305, 143, 0)
+    font:draw(canvas, _S.bank_manager.hospital_value, x + 60 * s, y + 109 * s, 143 * s, 0)
+    font:draw(canvas, "$ " .. math.floor(hospital.value), x + 60 * s, y + 139 * s, 143 * s, 0)
+    font:draw(canvas, _S.bank_manager.balance, x + 60 * s, y + 174 * s, 143 * s, 0)
+    font:draw(canvas, "$ " .. math.floor(hospital.balance), x + 60 * s, y + 204 * s, 143 * s, 0)
+    font:draw(canvas, _S.bank_manager.current_loan, x + 60 * s, y + 239 * s, 143 * s, 0)
+    font:draw(canvas, "$ " .. math.floor(hospital.loan), x + 60 * s, y + 269 * s, 143 * s, 0)
+    font:draw(canvas, _S.bank_manager.interest_payment, x + 60 * s, y + 305 * s, 143 * s, 0)
     local interest = math.floor(hospital.loan * hospital.interest_rate / 12)
-    font:draw(canvas, "$ " .. interest, x + 60, y + 334, 143, 0)
+    font:draw(canvas, "$ " .. interest, x + 60 * s, y + 334 * s, 143 * s, 0)
 
     -- The right side
-    font:draw(canvas, _S.bank_manager.insurance_owed, x + 430, y + 102, 158, 0)
+    font:draw(canvas, _S.bank_manager.insurance_owed, x + 430 * s, y + 102 * s, 158 * s, 0)
     if self.graph.visible then
-      font:draw(canvas, hospital.insurance[self.chosen_insurance], x + 430, y + 132, 158, 0)
+      font:draw(canvas, hospital.insurance[self.chosen_insurance], x + 430 * s, y + 132 * s, 158 * s, 0)
     else
-      font:draw(canvas, hospital.insurance[1], x + 430, y + 132, 158, 0)
-      font:draw(canvas, "$ ".. math.floor(sum(hospital.insurance_balance[1])), x + 430, y + 162, 100, 0)
-      font:draw(canvas, hospital.insurance[2], x + 430, y + 192, 158, 0)
-      font:draw(canvas, "$ ".. math.floor(sum(hospital.insurance_balance[2])), x + 430, y + 222, 100, 0)
-      font:draw(canvas, hospital.insurance[3], x + 430, y + 252, 158, 0)
-      font:draw(canvas, "$ ".. math.floor(sum(hospital.insurance_balance[3])), x + 430, y + 282, 100, 0)
+      font:draw(canvas, hospital.insurance[1], x + 430 * s, y + 132 * s, 158 * s, 0)
+      font:draw(canvas, "$ ".. math.floor(sum(hospital.insurance_balance[1])), x + 430 * s, y + 162 * s, 100 * s, 0)
+      font:draw(canvas, hospital.insurance[2], x + 430 * s, y + 192 * s, 158 * s, 0)
+      font:draw(canvas, "$ ".. math.floor(sum(hospital.insurance_balance[2])), x + 430 * s, y + 222 * s, 100 * s, 0)
+      font:draw(canvas, hospital.insurance[3], x + 430 * s, y + 252 * s, 158 * s, 0)
+      font:draw(canvas, "$ ".. math.floor(sum(hospital.insurance_balance[3])), x + 430 * s, y + 282 * s, 100 * s, 0)
     end
-    font:draw(canvas, _S.bank_manager.inflation_rate, x + 430, y + 312, 100, 0)
-    font:draw(canvas, hospital.inflation_rate*100 .. " %", x + 550, y + 313, 38, 0)
-    font:draw(canvas, _S.bank_manager.interest_rate, x + 430, y + 342, 100, 0)
-    font:draw(canvas, hospital.interest_rate*100 .. " %", x + 550, y + 342, 38, 0)
+    font:draw(canvas, _S.bank_manager.inflation_rate, x + 430 * s, y + 312 * s, 100 * s, 0)
+    font:draw(canvas, hospital.inflation_rate * 100 .. " %", x + 550 * s, y + 313 * s, 38 * s, 0)
+    font:draw(canvas, _S.bank_manager.interest_rate, x + 430 * s, y + 342 * s, 100 * s, 0)
+    font:draw(canvas, hospital.interest_rate * 100 .. " %", x + 550 * s, y + 342 * s, 38 * s, 0)
   end
 end
 
 function UIBankManager:onMouseMove(x, y, dx, dy)
-    local ui = self.ui
-    if x > 0 and x < 640 and y > 0 and y < 480 then
-      if self.showingStatistics then
-        ui:setCursor(ui.app.gfx:loadMainCursor("banksummary")) -- Set pie chart cursor
-      else
-        ui:setCursor(ui.app.gfx:loadMainCursor("bank")) -- Set dollar cursor
-      end
+  local ui = self.ui
+  local s = TheApp.config.ui_scale
+
+  if x > 0 and x < 640 * s and y > 0 and y < 480 * s then
+    if self.showingStatistics then
+      ui:setCursor(ui.app.gfx:loadMainCursor("banksummary")) -- Set pie chart cursor
     else
-      ui:setCursor(ui.default_cursor) -- Return to default cursor
+      ui:setCursor(ui.app.gfx:loadMainCursor("bank")) -- Set dollar cursor
     end
+  else
+    ui:setCursor(ui.default_cursor) -- Return to default cursor
+  end
 end
 
 function UIBankManager:close()

@@ -115,6 +115,12 @@ function UIOptions:UIOptions(ui, mode)
     {text = _S.options_window.custom_resolution, custom = true},
   }
 
+  self.available_ui_scales = {
+    {text = "100%", scale = 1},
+    {text = "200%", scale = 2},
+    {text = "300%", scale = 3},
+  }
+
   -- Window parts definition
   -- Title
   local title_y_pos = self:_getOptionYPos()
@@ -150,6 +156,14 @@ function UIOptions:UIOptions(ui, mode)
   self.resolution_panel = self:addBevelPanel(165, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.width .. "x" .. app.config.height)
 
   self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
+
+  local scale_ui_y_pos = self:_getOptionYPos()
+  local scale_label = TheApp.config.ui_scale * 100 .. "%"
+  self:addBevelPanel(20, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+      :setLabel(_S.options_window.scale_ui):setTooltip(_S.tooltip.options_window.scale_ui).lowered = true
+  self.scale_ui_panel = self:addBevelPanel(165, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(scale_label)
+
+  self.scale_ui_button = self.scale_ui_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownUIScale):setTooltip(_S.tooltip.options_window.select_ui_scale)
 
   -- Mouse capture
   local capture_mouse_y_pos = self:_getOptionYPos()
@@ -243,12 +257,12 @@ function UIOptions:checkForAvailableLanguages()
     -- If freetype support and a unicode font setting are not present then
     -- languages not supported by the builtin font are named in English and cannot be selected
     if app.gfx:hasLanguageFont(font) then
-      font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"))
+      font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"), { apply_ui_scale = true })
       langs[#langs + 1] = { text = lang, name = lang, font = font, disabled = false,
-      tooltip = { _S.tooltip.options_window.language_dropdown_item:format(eng_name), 510, BTN_HEIGHT * c + 31 } }
+      tooltip = { _S.tooltip.options_window.language_dropdown_item:format(eng_name) } }
     else
       langs[#langs + 1] = { text = eng_name, name = lang, font = self.builtin_font, disabled = true,
-      tooltip = { _S.tooltip.options_window.language_dropdown_no_font, 510, BTN_HEIGHT * c + 31 } }
+      tooltip = { _S.tooltip.options_window.language_dropdown_no_font } }
     end
   end
   self.available_languages = langs
@@ -257,6 +271,7 @@ end
 function UIOptions:dropdownLanguage(activate)
   if activate then
     self:dropdownResolution(false)
+    self:dropdownUIScale(false)
     self.language_dropdown = UIDropdown(self.ui, self, self.language_button, self.available_languages, self.selectLanguage)
     self:addWindow(self.language_dropdown)
   else
@@ -279,6 +294,7 @@ end
 function UIOptions:dropdownResolution(activate)
   if activate then
     self:dropdownLanguage(false)
+    self:dropdownUIScale(false)
     self.resolution_dropdown = UIDropdown(self.ui, self, self.resolution_button, self.available_resolutions, self.selectResolution)
     self:addWindow(self.resolution_dropdown)
   else
@@ -307,6 +323,30 @@ function UIOptions:selectResolution(number)
   else
     callback(res.width, res.height)
   end
+end
+
+function UIOptions:dropdownUIScale(activate)
+  if activate then
+    self:dropdownLanguage(false)
+    self:dropdownResolution(false)
+    self.scale_ui_dropdown = UIDropdown(self.ui, self, self.scale_ui_button, self.available_ui_scales, self.selectUIScale)
+    self:addWindow(self.scale_ui_dropdown)
+  else
+    self.scale_ui_button:setToggleState(false)
+    if self.scale_ui_dropdown then
+      self.scale_ui_dropdown:close()
+      self.scale_ui_dropdown = nil
+    end
+  end
+end
+
+function UIOptions:selectUIScale(number)
+  local res = self.available_ui_scales[number]
+  TheApp.config.ui_scale = res.scale
+  TheApp:saveConfig()
+  self.scale_ui_panel:setLabel(res.text)
+  self.ui:onChangeResolution()
+  TheApp.gfx:onChangeUIScale()
 end
 
 --! Changes check for update setting to on/of

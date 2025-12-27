@@ -37,8 +37,8 @@ function UIJukebox:UIJukebox(app)
   self.height = 74 + 30 * #self.audio.background_playlist + 18
   self:setDefaultPosition(26, 26)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req13V", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
-  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, { apply_ui_scale = true })
 
   -- Dialog head (current track title & exit button)
   self:addPanel(389, 0, 0)
@@ -156,23 +156,24 @@ function UIJukebox:draw(canvas, x, y)
   for i, info in ipairs(TheApp.audio.background_playlist) do
     self.track_buttons[i]:setToggleState(not info.enabled)
   end
+  local s = TheApp.config.ui_scale
   Window.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  x, y = self.x * s + x, self.y * s + y
 
   local playing = self.audio.background_music or ""
   for i, info in ipairs(self.audio.background_playlist) do
-    local ypos = y + 47 + i * 30
+    local ypos = y + 47 * s + i * 30 * s
     local font = self.white_font
     if info.music == playing then
       font = self.blue_font
     end
     local str = info.title
-    while font:sizeOf(str) > 185 do
+    while font:sizeOf(str) > 185 * s do
       str = string.sub(str, 1, string.len(str) - 5) .. "..."
     end
-    font:draw(canvas, str, x + 24, ypos + 11)
+    font:draw(canvas, str, x + 24 * s, ypos + 11 * s)
     if info.music == playing then
-      font:draw(canvas, str, x + 24, self.y + 27)
+      font:draw(canvas, str, x + 24 * s, self.y * s + 27 * s)
     end
   end
 end
@@ -182,4 +183,8 @@ function UIJukebox:afterLoad(old, new)
     self:close()
   end
   Window.afterLoad(self, old, new)
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+    self.blue_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, { apply_ui_scale = true })
+  end
 end

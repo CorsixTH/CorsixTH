@@ -47,8 +47,8 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:setDefaultPosition(0.5, 0.4)
   local selected_label_color = { red = 40, green = 40, blue = 250 }
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req10V", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V")
-  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color})
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   self.title_text = _S.buy_objects_window.choose_items
   self.price_text = (_S.buy_objects_window.price .. " "):gsub("  $", " ")
   self.total_text = (_S.buy_objects_window.total .. " "):gsub("  $", " ")
@@ -215,29 +215,33 @@ end
 function UIFurnishCorridor:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
-  x, y = x + self.x, y + self.y
-  self.white_font:draw(canvas, self.title_text, x + 163, y + 18)
-  self.white_font:draw(canvas, self.price_text .. self.item_price, x + 24, y + 173)
-  self.white_font:draw(canvas, self.total_text .. self.total_price, x + 24, y + 202)
+  local s = TheApp.config.ui_scale
+  x, y = x + self.x * s, y + self.y * s
+  self.white_font:draw(canvas, self.title_text, x + 163 * s, y + 18 * s)
+  self.white_font:draw(canvas, self.price_text .. self.item_price, x + 24 * s, y + 173 * s)
+  self.white_font:draw(canvas, self.total_text .. self.total_price, x + 24 * s, y + 202 * s)
 
   for i, o in ipairs(self.objects) do
     local font = self.white_font
     if i == self.list_hover_index then
       font = self.blue_font
     end
-    font:draw(canvas, o.object.name, x + 163, y + 20 + i * 19)
-    font:draw(canvas, o.qty, x + 306, y + 20 + i * 19, 19, 0)
+    font:draw(canvas, o.object.name, x + 163 * s, y + 20 * s + i * 19 * s)
+    font:draw(canvas, o.qty, x + 306 * s, y + 20 * s + i * 19 * s, 19 * s, 0)
   end
 
-  self.preview_anim:draw(canvas, x + 72, y + 57)
+  canvas:scale(s)
+  self.preview_anim:draw(canvas, math.floor(x / s) + 72, math.floor(y / s) + 57)
+  canvas:scale(1)
 end
 
 function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
   local repaint = Window.onMouseMove(self, x, y, dx, dy)
 
+  local s = TheApp.config.ui_scale
   local hover_idx = 0
-  if 158 <= x and x < 346 and 34 <= y and y < 224 then
-    hover_idx = math_floor((y - 15) / 19)
+  if 158 * s <= x and x < 346 * s and 34 * s <= y and y < 224 * s then
+    hover_idx = math_floor((y - 15 * s) / (19 * s))
   end
 
   if hover_idx ~= self.list_hover_index then
@@ -262,6 +266,12 @@ function UIFurnishCorridor:afterLoad(old, new)
   -- This may be overkill
   for _, obj in pairs(self.objects) do
     obj.qty = math.floor(obj.qty)
+  end
+
+  if old < 236 then
+    local selected_label_color = { red = 40, green = 40, blue = 250 }
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+    self.blue_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   end
 
   Window.afterLoad(self, old, new)

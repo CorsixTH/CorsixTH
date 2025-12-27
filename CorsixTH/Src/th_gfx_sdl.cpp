@@ -946,10 +946,14 @@ void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
   double lastY = pLine->line_elements[0].y;
   for (const line_sequence::line_element& op : pLine->line_elements) {
     if (op.type == line_sequence::line_command::line) {
-      SDL_RenderDrawLine(renderer, static_cast<int>((lastX + iX) * scale),
-                         static_cast<int>((lastY + iY) * scale),
-                         static_cast<int>((op.x + iX) * scale),
-                         static_cast<int>((op.y + iY) * scale));
+      // Not the true width, but good enough for graphs
+      for (int i = 0; i < pLine->width; ++i) {
+        int adjI = static_cast<int>(i - pLine->width / 2);
+        SDL_RenderDrawLine(renderer, static_cast<int>((lastX + iX) * scale),
+                           static_cast<int>((lastY + iY + adjI) * scale),
+                           static_cast<int>((op.x + iX) * scale),
+                           static_cast<int>((op.y + iY + adjI) * scale));
+      }
     }
 
     lastX = op.x;
@@ -991,7 +995,8 @@ void raw_bitmap::set_palette(const palette* pPalette) {
 
 void raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
                                    size_t iPixelDataLength, int iWidth,
-                                   render_target* pEventualCanvas) {
+                                   render_target* pEventualCanvas,
+                                   uint32_t spriteFlags) {
   if (pEventualCanvas == nullptr) {
     throw std::invalid_argument("pEventualCanvas cannot be null");
   }
@@ -1000,7 +1005,8 @@ void raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
 
   int iHeight = static_cast<int>(iPixelDataLength) / iWidth;
   texture = pEventualCanvas->create_palettized_texture(
-      iWidth, iHeight, converted_sprite, bitmap_palette, thdf_alt32_plain);
+      iWidth, iHeight, converted_sprite, bitmap_palette,
+      thdf_alt32_plain | spriteFlags);
   delete[] converted_sprite;
 
   width = iWidth;
@@ -1328,7 +1334,7 @@ bool sprite_sheet::is_sprite_visible(size_t iSprite) const {
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
                                int iY, uint32_t iFlags, size_t effect_ticks,
-                               animation_effect effect) {
+                               animation_effect effect, int scale_factor) {
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
   sprite& sprite = sprites[iSprite];
@@ -1391,7 +1397,9 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
           // If the current offset rounds to a different value, render the
           // previous offset and start a new offset.
           SDL_Rect rcSrc = {0, y1, sprite.width, y2 - y1};
-          SDL_Rect rcDest = {iX + x_offset, iY + y1, sprite.width, y2 - y1};
+          SDL_Rect rcDest = {iX + x_offset, iY + y1,
+                             sprite.width * scale_factor,
+                             (y2 - y1) * scale_factor};
           pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
         }
         y1 = y2;
@@ -1400,7 +1408,8 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     }
   } else {
     SDL_Rect rcSrc = {0, 0, sprite.width, sprite.height};
-    SDL_Rect rcDest = {iX, iY, sprite.width, sprite.height};
+    SDL_Rect rcDest = {iX, iY, sprite.width * scale_factor,
+                       sprite.height * scale_factor};
 
     pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
   }

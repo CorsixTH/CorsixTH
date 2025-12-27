@@ -288,7 +288,8 @@ end
 --!param paldir (string) The directory of the palette.
 --!param pal (string) The name of the palette
 --!param transparent_255 (boolean) Whether the 255th entry of the palette should be transparent
-function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255)
+--!param flags (table) Additional flags for loading the bitmap
+function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255, flags)
   if self.cache.raw[name] then
     return self.cache.raw[name]
   end
@@ -304,7 +305,7 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255
   local bitmap = TH.bitmap()
   local palette = self:loadPalette(paldir, pal, transparent_255)
   bitmap:setPalette(palette)
-  assert(bitmap:load(data, width, self.target))
+  assert(bitmap:load(data, width, self.target, flags))
 
   local function bitmap_reloader(bm)
     bm:setPalette(palette)
@@ -315,7 +316,7 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255
   self.reload_functions[bitmap] = bitmap_reloader
 
   self.cache.raw[name] = bitmap
-  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, paldir, pal, transparent_255}
+  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, paldir, pal, transparent_255, flags}
   return bitmap
 end
 
@@ -337,6 +338,7 @@ function Graphics:loadBuiltinFont()
     font = TH.bitmap_font()
     font:setSheet(sheet)
     font:setSeparation(1, 0)
+    font:setScaleFactor(TheApp.config.ui_scale)
     self.load_info[font] = {self.loadBuiltinFont, self}
     self.builtin_font = font
   end
@@ -390,6 +392,11 @@ function Graphics:onChangeLanguage()
   self.load_info = load_info
 end
 
+function Graphics:onChangeUIScale()
+  -- Reload fonts
+  self:onChangeLanguage()
+end
+
 --! Font reload function.
 --!param font The font to (force) reloading.
 local function font_reloader(font)
@@ -434,13 +441,14 @@ local shadow_to_cache_key = function(ttf_shadow)
 end
 
 local language_font_cache_key = function(name, font_options)
-  return string.format("%s,%d,%d,%s,%s,%s",
+  return string.format("%s,%d,%d,%s,%s,%s,%s",
     name or "nil",
     font_options.x_sep or 0,
     font_options.y_sep or 0,
     ttf_col_to_cache_key(font_options.ttf_color),
     font_options.force_bitmap and "T" or "F",
-    shadow_to_cache_key(font_options.ttf_shadow))
+    shadow_to_cache_key(font_options.ttf_shadow),
+    font_options.apply_ui_scale and "s" or "f")
 end
 
 --! Load a true type font
@@ -468,6 +476,8 @@ end
 --    offset_y are optional and default to 1. If the field is omitted entirely,
 --    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
 --    shadow with default parameters, or false to disable any shadow.
+--  apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
+--    size.
 --!param y_sep (int) Deprecated: use font_options.y_sep instead.
 --!param ttf_color (table) Deprecated: use font_options.ttf_color instead.
 --!param force_bitmap (boolean) Deprecated: use font_options.force_bitmap
@@ -491,7 +501,12 @@ function Graphics:loadLanguageFont(name, sprite_table, font_options, y_sep, ttf_
     local cache_key = language_font_cache_key(name, font_options)
     local cache = self.cache.language_fonts[cache_key]
     font = cache and cache[sprite_table]
-    if not font then
+    if not font or (font_options.apply_ui_scale and font_options.scale_factor ~= self.app.config.ui_scale) then
+      -- Adjust scale based on current UI scale factor
+      if font_options.apply_ui_scale then
+        font_options.scale_factor = self.app.config.ui_scale
+      end
+
       font = TH.freetype_font()
       -- TODO: Choose face based on "name" rather than always using same face.
       font:setFace(self.ttf_font_data)
@@ -537,6 +552,8 @@ end
 --    offset_y are optional and default to 1. If the field is omitted entirely,
 --    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
 --    shadow with default parameters, or false to disable any shadow.
+--  apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
+--    size.
 function Graphics:loadFontAndSpriteTable(dir, name, complex, palette, font_options)
   local sprite_table = self:loadSpriteTable(dir, name, complex, palette)
 
@@ -570,6 +587,8 @@ end
 --    offset_y are optional and default to 1. If the field is omitted entirely,
 --    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
 --    shadow with default parameters, or false to disable any shadow.
+--  apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
+--    size.
 function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_bitmap)
 
   -- afterLoad fix. Saves before 215 would double the y_sep argument, but did not have ttf_col
@@ -596,6 +615,9 @@ function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_b
     font = TH.bitmap_font()
     font:setSeparation(font_options.x_sep or 0, font_options.y_sep or 0)
     font:setSheet(sprite_table)
+    if font_options.apply_ui_scale then
+      font:setScaleFactor(TheApp.config.ui_scale)
+    end
   else
     font = self:loadLanguageFont(self.language_font, sprite_table, font_options)
   end
