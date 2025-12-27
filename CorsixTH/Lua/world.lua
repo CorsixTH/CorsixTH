@@ -2611,15 +2611,6 @@ function World:afterLoad(old, new)
 
   self.earthquake:afterLoad(old, new)
 
-  -- Fix VIPs to not show mood on hover
-  for _, entity in ipairs(self.entities) do
-    if class.is(entity, Humanoid) and entity:isType() then
-      if entity:isType("VIP") or entity:isType("Inspector") then
-        entity.hover_moods = false
-      end
-    end
-  end
-
   -- Savegame version housekeeping
   if not self.original_savegame_version then
     self.original_savegame_version = old
