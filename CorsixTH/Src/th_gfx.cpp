@@ -934,7 +934,7 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
     return;
   }
 
-  uint32_t iPassOnFlags = iFlags & thdf_alt_palette;
+  uint32_t iPassOnFlags = iFlags & (thdf_alt_palette | thdf_nearest);
 
   size_t iListIndex = frames[iFrame].list_index;
   for (;; ++iListIndex) {
