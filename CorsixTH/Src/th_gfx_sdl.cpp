@@ -457,7 +457,7 @@ render_target::render_target(const render_target_creation_params& params)
   apply_opengl_clip_fix = std::strncmp(info.name, "opengl", 6) == 0 &&
                           sdlVersion.major == 2 && sdlVersion.minor == 0 &&
                           sdlVersion.patch < 4;
-  SDL_SetWindowMinimumSize(window, 640, 480);
+  SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
   SDL_RenderSetLogicalSize(renderer, width, height);
 
   update(params);
@@ -503,6 +503,8 @@ bool render_target::update(const render_target_creation_params& params) {
   if (bUpdateSize) {
     SDL_RenderSetLogicalSize(renderer, width, height);
   }
+
+  SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
 
   return true;
 }

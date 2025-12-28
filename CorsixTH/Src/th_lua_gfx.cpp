@@ -721,13 +721,15 @@ render_target_creation_params l_surface_creation_params(lua_State* L,
   render_target_creation_params params;
   params.width = static_cast<int>(luaL_checkinteger(L, iArgStart));
   params.height = static_cast<int>(luaL_checkinteger(L, iArgStart + 1));
+  params.min_width = static_cast<int>(luaL_checkinteger(L, iArgStart + 2));
+  params.min_height = static_cast<int>(luaL_checkinteger(L, iArgStart + 3));
 
   params.fullscreen = false;
   params.present_immediate = false;
   params.direct_zoom = false;
 
   // Parse string arguments, looking for matching parameter names.
-  for (int iArg = iArgStart + 2, iArgCount = lua_gettop(L); iArg <= iArgCount;
+  for (int iArg = iArgStart + 4, iArgCount = lua_gettop(L); iArg <= iArgCount;
        ++iArg) {
     const char* sOption = luaL_checkstring(L, iArg);
     if (sOption[0] == 0) continue;

@@ -35,6 +35,9 @@ class "App"
 ---@type App
 local App = _G["App"]
 
+App.MIN_WINDOW_WIDTH = 640
+App.MIN_WINDOW_HEIGHT = 480
+
 function App:App()
   self.command_line = {}
   self.config = {}
@@ -160,7 +163,12 @@ function App:init()
     modes[#modes + 1] = "direct zoom"
   end
   self.modes = modes
-  self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
+  self.video = assert(TH.surface(
+      self.config.width,
+      self.config.height,
+      App.MIN_WINDOW_WIDTH * self.config.ui_scale,
+      App.MIN_WINDOW_HEIGHT * self.config.ui_scale,
+      unpack(modes)))
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
 
@@ -1006,12 +1014,20 @@ function App:fixConfig()
     if key == "language" and type(value) == "string" then
       self.config[key] = value:lower()
 
-    -- For resolution, check that resolution is at least 640x480
-    elseif key == "width" and type(value) == "number" and value < 640 then
-      self.config[key] = 640
+    -- For resolution, clamp resolution to at least 640x480
+    elseif key == "width" and (type(value) ~= "number" or value < App.MIN_WINDOW_WIDTH) then
+      self.config[key] = App.MIN_WINDOW_WIDTH
 
-    elseif key == "height" and type(value) == "number" and value < 480 then
-      self.config[key] = 480
+    elseif key == "height" and (type(value) ~= "number" or value < App.MIN_WINDOW_HEIGHT) then
+      self.config[key] = App.MIN_WINDOW_HEIGHT
+
+    -- For scale, clamp to integer scale >= 1
+    elseif key == "ui_scale" then
+      if type(value) == "number" then
+        self.config[key] = math.max(math.floor(value), 1)
+      else
+        self.config[key] = 1
+      end
 
     elseif (key == "scroll_speed" or key == "shift_scroll_speed") and
         type(value) == "number" then
@@ -1033,6 +1049,14 @@ function App:fixConfig()
       end
       self.config[key] = value
     end
+  end
+
+  -- clamp scale to suitable values for current resolution
+  if self.config.ui_scale * App.MIN_WINDOW_WIDTH > self.config.width or
+      self.config.ui_scale * App.MIN_WINDOW_HEIGHT > self.config.height then
+    self.config.ui_scale = math.floor(math.min(
+        self.config.width / App.MIN_WINDOW_WIDTH,
+        self.config.height / App.MIN_WINDOW_HEIGHT))
   end
 end
 

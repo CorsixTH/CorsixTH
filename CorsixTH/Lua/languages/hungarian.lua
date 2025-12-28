@@ -328,7 +328,7 @@ errors = {
   save_prefix = "Hiba mentés közben",
   load_prefix = "Hiba betöltés közben",
   map_file_missing = "Nem találom a %s fájlt ehhez a pályához!",
-  minimum_screen_size = "Kérlek írj be olyan felbontást ami nagyobb mint 640x480.",
+  minimum_screen_size = "Kérlek írj be olyan felbontást ami nagyobb mint %dx%d.",
   maximum_screen_size = "Kérlek olyan felbontást írj be ami kisebb mint 3000x2000.",
   unavailable_screen_size = "A felbontás amit szeretnél nem elérhető teljes képernyős módban.",
 }
