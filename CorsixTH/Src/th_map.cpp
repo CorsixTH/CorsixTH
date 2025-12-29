@@ -959,30 +959,18 @@ bool level_map::layer_exists(uint16_t layer, int& height) const {
   return false;
 }
 
-void level_map::draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
-                           int iWidth, int iHeight, int iCanvasX,
-                           int iCanvasY) const {
-  for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
-       itrNode1; ++itrNode1) {
-    int tile_x = itrNode1.tile_x_position_on_screen() + iCanvasX - 32;
-    int tile_y = itrNode1.tile_y_position_on_screen() + iCanvasY;
+void level_map::draw_ground(const map_tile* tile, int tile_x, int tile_y,
+                            render_target* pCanvas) const {
+  draw_layer(tile, tile_x, tile_y, tile_layer::ground, pCanvas);
 
-    // First, draw the floor tile as it should be below everything else.
-    int height = 32;
-    uint16_t layer = itrNode1->tile_layers[tile_layer::ground];
-    wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &height);
-    wall_blocks->draw_sprite(pCanvas, layer & 0xFF, tile_x,
-                             tile_y - height + 32, (layer >> 8) | thdf_nearest);
-
-    // Draw floor shadows immediately after floor tiles ensuring that all
-    // shadow pixels are drawn onto freshly drawn opaque floor tile pixels.
-    if (itrNode1->flags.shadow_full) {
-      wall_blocks->draw_sprite(pCanvas, 74, tile_x, tile_y,
-                               thdf_alpha_75 | thdf_nearest);
-    } else if (itrNode1->flags.shadow_half) {
-      wall_blocks->draw_sprite(pCanvas, 75, tile_x, tile_y,
-                               thdf_alpha_75 | thdf_nearest);
-    }
+  // Draw floor shadows immediately after floor tiles ensuring that all
+  // shadow pixels are drawn onto freshly drawn opaque floor tile pixels.
+  if (tile->flags.shadow_full) {
+    wall_blocks->draw_sprite(pCanvas, 74, tile_x - 32, tile_y,
+                             thdf_alpha_75 | thdf_nearest);
+  } else if (tile->flags.shadow_half) {
+    wall_blocks->draw_sprite(pCanvas, 75, tile_x - 32, tile_y,
+                             thdf_alpha_75 | thdf_nearest);
   }
 }
 
@@ -1059,8 +1047,6 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   rcClip.h = static_cast<clip_rect::w_h_type>(iHeight);
   render_target::scoped_clip clip(pCanvas, &rcClip);
 
-  draw_floor(pCanvas, iScreenX, iScreenY, iWidth, iHeight, iCanvasX, iCanvasY);
-
   bool bFirst = true;
   map_scanline_iterator formerIterator;
   for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
@@ -1073,6 +1059,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
              itrNode1, map_scanline_iterator_direction::backward, iCanvasX,
              iCanvasY);
          itrNode; ++itrNode) {
+      draw_ground(itrNode.get_tile(), itrNode.x(), itrNode.y(), pCanvas);
       draw_north_wall(itrNode.get_tile(), itrNode.x(), itrNode.y(), pCanvas);
 
       // Draw early entities.

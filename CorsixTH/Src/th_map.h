@@ -402,8 +402,8 @@ class level_map {
   void set_overlay(map_overlay* pOverlay, bool bTakeOwnership);
 
  private:
-  void draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
-                  int iWidth, int iHeight, int iCanvasX, int iCanvasY) const;
+  void draw_ground(const map_tile* tile, int tile_x, int tile_y,
+                   render_target* pCanvas) const;
   void draw_north_wall(const map_tile* tile, int tile_x, int tile_y,
                        render_target* pCanvas) const;
 
