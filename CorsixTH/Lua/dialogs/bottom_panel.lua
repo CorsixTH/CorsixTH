@@ -267,7 +267,7 @@ function UIBottomPanel:draw(canvas, x, y)
 
     if self.factory_counter > 1 and self.factory_counter <= 22 then
       for dx = 0, self.factory_counter do
-        self.panel_sprites:draw(canvas, 41, x + 179 * s + dx, y + 1 * s, { scaleFactor = s })
+        self.panel_sprites:draw(canvas, 41, x + 179 * s + dx * s, y + 1 * s, { scaleFactor = s })
       end
     end
 
