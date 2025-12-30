@@ -884,7 +884,7 @@ end
 --! If the patient is sitting on a bench or standing and queued, it may be a situation
 --! where he/she is not in the queue anymore, but should be. If this is the case for
 --! more than 2 ticks, go to reception.
-function Patient:checkPatientIsStillQueueingForARoom()
+function Patient:_checkPatientIsStillQueueingForARoom()
   if #self.action_queue > 1 and (self:getCurrentAction().name == "use_object" or
       self:getCurrentAction().name == "idle") and
       self.action_queue[2].name == "queue" then
@@ -984,7 +984,7 @@ function Patient:tickDay()
     self:yawn()
   end
 
-  self:checkPatientIsStillQueueingForARoom()
+  self:_checkPatientIsStillQueueingForARoom()
 end
 
 function Patient:notifyNewRoom(room)
