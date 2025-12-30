@@ -654,9 +654,9 @@ function Patient:_dailyHealthChecks()
   local almost_dead_value, dying_value = 0.01, 0.0
   if health < almost_dead_value then
     if health == dying_value then
-      -- Patient died, will die when they leave the room, will be cured, or is leaving
-      -- the hospital. Regardless we do not need to adjust any other attribute
-      self:setToDying()
+      self:setToDying() -- Patient is going to die.
+      -- If patient is busy, they will die when they leave the room, will be cured,
+      -- or is leaving the hospital. Regardless we do not need to do anything else.
     else
       -- Is there time to say a prayer (will be dying tomorrow)
       self.attributes["health"] = dying_value
@@ -738,7 +738,7 @@ function Patient:_dailyBowelChecks()
 end
 
 --! Process a patient's sudden need for the toilet.
---! We will either do it on the floor (10% chance, daily), or seek out a toilet.
+--! We will either do it on the floor (40% chance, daily), or seek out a toilet.
 function Patient:handleToiletNeed()
   if math.random(1, 10) < 5 then
     self:pee()
@@ -796,9 +796,11 @@ function Patient:_dailyObjectHappinessEffects()
   return num_vomit_inducing
 end
 
---! Handle a pateint who is very thirsty. They'll start getting unhappy and wanting to
---! look for a drink.
-function Patient:_handleExcessThirst()
+--! Take the necessary steps to let a patient to get a soda.
+--!param machine (object) The drinks machine to target
+--!param lx (int) X usage coordinate of the drinks machine
+--!param ly (int) Y usage coordinate of the drinks machine
+function Patient:_constructGetSodaAction(machine, lx, ly)
   -- Callback function when the machine has been used
   local --[[persistable:patient_drinks_machine_after_use]] function after_use()
     self:changeAttribute("thirst", -(0.7 + math.random()*0.3))
@@ -815,35 +817,36 @@ function Patient:_handleExcessThirst()
     end
   end
 
-  -- Take the necessary steps to let the patient to get a soda.
-  local function constructGetSodaAction(machine, lx, ly)
-    -- If we are queueing, let the queue handle the situation.
-    for _, current_action in ipairs(self.action_queue) do
-      if current_action.name == "queue" then
-        local callbacks = current_action.queue.callbacks[self]
-        if callbacks then
-          callbacks:onGetSoda(self, machine, lx, ly, after_use)
-          return
-        end
+  -- If we are queueing, let the queue handle the situation.
+  for _, current_action in ipairs(self.action_queue) do
+    if current_action.name == "queue" then
+      local callbacks = current_action.queue.callbacks[self]
+      if callbacks then
+        callbacks:onGetSoda(self, machine, lx, ly, after_use)
+        return
       end
-    end
-
-    -- Or, if walking or idling insert the needed actions in
-    -- the beginning of the queue
-    local current = self:getCurrentAction()
-    if current.name == "walk" or current.name == "idle" or current.name == "seek_room" then
-      -- Go to the machine, use it, and then continue with
-      -- whatever he/she was doing.
-      current.keep_reserved = true
-      self:queueAction(WalkAction(lx, ly):setMustHappen(true):disableTruncate(), 1)
-      self:queueAction(UseObjectAction(machine):setAfterUse(after_use):setMustHappen(true), 2)
-      machine:addReservedUser(self)
-      -- Insert the old action again, a little differently depending on
-      -- what the previous action was.
-      self:interruptAndRequeueAction(current, 3, true)
     end
   end
 
+  -- Or, if walking or idling insert the needed actions in
+  -- the beginning of the queue
+  local current = self:getCurrentAction()
+  if current.name == "walk" or current.name == "idle" or current.name == "seek_room" then
+    -- Go to the machine, use it, and then continue with
+    -- whatever he/she was doing.
+    current.keep_reserved = true
+    self:queueAction(WalkAction(lx, ly):setMustHappen(true):disableTruncate(), 1)
+    self:queueAction(UseObjectAction(machine):setAfterUse(after_use):setMustHappen(true), 2)
+    machine:addReservedUser(self)
+    -- Insert the old action again, a little differently depending on
+    -- what the previous action was.
+    self:interruptAndRequeueAction(current, 3, true)
+  end
+end
+
+--! Handle a pateint who is very thirsty. They'll start getting unhappy and wanting to
+--! look for a drink.
+function Patient:_handleExcessThirst()
   self:changeAttribute("happiness", -0.002)
   self:setMood("thirsty", "activate")
   -- If there's already an action to buy a drink in the action queue, or
@@ -875,7 +878,7 @@ function Patient:_handleExcessThirst()
   end
 
   -- Go get a drink.
-  constructGetSodaAction(machine, lx, ly)
+  self:_constructGetSodaAction(machine, lx, ly)
 end
 
 --! If the patient is sitting on a bench or standing and queued, it may be a situation
