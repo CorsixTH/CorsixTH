@@ -73,7 +73,7 @@ local action_seek_room_find_room = permanent"action_seek_room_find_room"( functi
       rooms_to_check[i] = i
     end
 
-    while tried_rooms < #rooms_to_check do
+    while tried_rooms < #diagnosis_rooms do
       -- Choose a diagnosis room from the list at random. Note: This ignores the initial diagnosis room!
       local room_at_index = math.random(1,#rooms_to_check)
       room_type = diagnosis_rooms[rooms_to_check[room_at_index]]
