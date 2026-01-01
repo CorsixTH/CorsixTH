@@ -1049,6 +1049,9 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   rcClip.h = static_cast<clip_rect::w_h_type>(iHeight);
   render_target::scoped_clip clip(pCanvas, &rcClip);
 
+  // For proper hit-testing, the 'level_map::hit_test' function below should
+  // 'paint' in the same way as here, except reversed.
+
   draw_floor(pCanvas, iScreenX, iScreenY, iWidth, iHeight, iCanvasX, iCanvasY);
 
   bool bFirst = true;
