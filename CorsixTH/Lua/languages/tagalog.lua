@@ -1,0 +1,1112 @@
+--[[ Copyright (c) 2025 Rafael "Rain" Barredo
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE. --]]
+
+Font("unicode")
+Language("Tagalog", "Filipino", "tgl", "tl")
+Inherit("english")
+Encoding(utf8)
+
+--Note: All strings should use a single space after full-stops. Only exception is level descriptions.
+-------------------------------  OVERRIDE  ----------------------------------
+adviser.warnings.money_low = "Maliit na na ang iyong pera!" -- Funny. Exists in German translation, but not existent in english?
+tooltip.graphs.reputation = "I-toggle ang reputasyon" -- Incorrectly said "toggle hospital value"
+tooltip.status.close = "Isara ang status window" -- Incorrectly said "close overview window"
+
+-- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
+tooltip.staff_list.next_person = "Ipakita ang susunod na pahina"
+tooltip.staff_list.prev_person = "Ipakita ang nakaraang pahina"
+tooltip.status.reputation = "Ang iyong reputasyon ay hindi dapat mas mababa sa %d. Sa kasalukuyan, ito ay %d"
+tooltip.status.balance = "Ang iyong balanse sa bangko ay hindi dapat mas mababa sa %d. Sa kasalukuyan, ito ay %d"
+
+-- The originals of these two contain one space too much
+fax.emergency.cure_not_possible_build = "Kakailanganin mong bumuo ng %s"
+fax.emergency.cure_not_possible_build_and_employ = "Kakailanganin mong magtayo ng %s at kumuha ng %s"
+fax.emergency.num_disease = "Mayroong %d na tao na may %s at nangangailangan sila ng agarang atensyon."
+adviser.goals.lose.kill = "Pumatay pa ng %d pasyente upang matalo ang antas!"
+
+-- Improve tooltips in staff window to mention hidden features
+tooltip.staff_window.face = "Mukha ng taong ito – i-click upang buksan ang management screen"
+tooltip.staff_window.center_view = "I-left click upang mag-zoom sa kawani, i-right click upang lumipat sa susunod na miyembro ng kawani"
+
+-- Improve tooltips in Build Rooms menu
+tooltip.rooms.inflation = "Gumagamit ang isang Doktor ng Inflation Room upang gamutin ang mga pasyenteng may Bloaty Head"
+tooltip.rooms.tongue_clinic = "Gumagamit ang isang Doktor ng Slack Tongue Clinic upang gamutin ang Slack Tongue"
+tooltip.rooms.fracture_clinic = "Gumagamit ang isang Nars ng Fracture Clinic upang ayusin ang mga Basag na Buto"
+tooltip.rooms.hair_restoration = "Gumagamit ang isang Doktor ng Hair Restoration Room upang gamutin ang Pagkalbo"
+tooltip.rooms.decontamination = "Gumagamit ang isang Doktor ng Decontamination Shower upang gamutin ang Malubhang Radiation"
+tooltip.rooms.ward = "Kapaki-pakinabang ang mga Ward para sa parehong diagnosis at paggamot. Dito ipinapadala ang mga pasyente para sa pagmamasid at paghahanda rin para sa operasyon sa isang Ward na may Nars"
+tooltip.rooms.research_room = "Maaaring makadiskubre ng mga Doktor na may kasanayan sa Pananaliksik ang mga bagong gamot at makina sa Research Dept"
+tooltip.objects.reception_desk = "Reception Desk: nangangailangan ng isang Receptionist na naggagabay sa mga pasyente papunta sa opisina ng GP"
+
+-- Improve tooltips in Research Screen
+tooltip.research.cure_dec = "Bawasan ang porsyento ng pananaliksik sa gamot"
+tooltip.research.cure_inc = "Taasan ang porsyento ng pananaliksik sa gamot"
+tooltip.research.diagnosis_dec = "Bawasan ang porsyento ng pananaliksik sa diagnosis"
+tooltip.research.diagnosis_inc = "Taasan ang porsyento ng pananaliksik sa diagnosis"
+tooltip.research.drugs_dec = "Bawasan ang porsyento ng pananaliksik sa gamot"
+tooltip.research.improvements_dec = "Bawasan ang porsyento ng pananaliksik sa pagpapabuti"
+tooltip.research.improvements_inc = "Taasan ang porsyento ng pananaliksik sa pagpapabuti"
+tooltip.research.specialisation_dec = "Bawasan ang porsyento ng pananaliksik sa espesyalidad"
+tooltip.research.specialisation_inc = "Taasan ang porsyento ng pananaliksik sa espesyalidad"
+
+-- These strings are missing in some versions of TH (unpatched?)
+confirmation.restart_level = "Sigurado ka bang gusto mong i-restart ang antas?"
+-- TODO adviser.multiplayer.objective_completed
+-- TODO adviser.multiplayer.objective_failed
+
+-- Replace Billy Savile
+-- this is only relevant to the English game so does not need adding
+-- in other language files
+vip_names = {
+ [6] = "Sir Lancelot Spratt",
+}
+
+-- An override for the squits becoming the the squits see issue 1646
+adviser.research.drug_improved_1 = "Ang %s na gamot ay naipahusay ng iyong Research Department."
+
+-- Disease overrides where there are typos
+diseases.golf_stones.cure = "Gamot – Ito ay dapat alisin sa pamamagitan ng isang operasyon na nangangailangan ng dalawang Surgeon."
+diseases.ruptured_nodules.cure = "Gamot – Dapat alisin ng dalawang kwalipikadong Surgeon ang mga nodule gamit ang matatag na kamay."
+diseases.slack_tongue.cause = "Sanhi – Paulit-ulit na sobrang diskusyon tungkol sa mga soap opera."
+diseases.slack_tongue.cure = "Gamot – Ilalagay ang dila sa Slicer Machine at aalisin nang mabilis, mahusay, at masakit."
+diseases.the_squits.cure = "Gamot – Isang malagkit na halo ng maliliit na kemikal na pampagamot ang pinatigas ang mga bituka ng pasyente."
+diseases.bloaty_head.cure = "Gamot – Pinapasabog ang namuong ulo, pagkatapos muling pinapalaki sa tamang PSI gamit ang isang matalinong makina."
+
+-- Rooms overrides where there are typos
+room_descriptions.inflation[2] = "Dapat pumunta ang mga pasyenteng may masakit ngunit nakakatawang kondisyon na Bloaty Head sa Inflation Clinic, kung saan papasabugin ang sobrang laki nilang bungo at agad na muling popalalain sa tamang presyon."
+room_descriptions.staff_room[2] = "Napapagod ang iyong kawani habang ginagawa ang kanilang trabaho. Nangangailangan sila ng silid na ito upang magpahinga at mag-refresh. Ang pagod na kawani ay bumabagal sa trabaho, humihingi ng mas mataas na sahod, at sa huli ay maaaring mag-resign. Mas marami rin silang nagkakamaling pagkakamali. Napakahalaga na magtayo ng isang staff room na may maraming bagay na maaari nilang gawin. Siguraduhin na may sapat na espasyo para sa ilang kawani nang sabay-sabay. "
+
+-- Staff description overrides where there are typos
+staff_descriptions.bad[14] = "Matalino, tuso, at mapanlinlang. "
+staff_descriptions.misc[11] = "Distils whisky. "
+
+-- Correction to a pay rise prompt with typos
+pay_rise.regular[1] = "I'm totally frazzled. I need a good rest, plus a rise of %d if you don't want to see me jack in this poxy job."
+
+-- Level description overrides where there are typos. Note: This is the only portion of the game that SHOULD use double space after fullstops etc.
+introduction_texts.level17 = " Last word of warning - keep a keen eye on your Reputation - this is what will attract the patients from far and wide to your establishment.  If you don't kill too many people and keep them reasonably happy you shouldn't have too much trouble on this level!// You're on you own now.  Good luck and all that."
+introduction_texts.level11 = " You've been given the chance to build the ultimate in hospitals.  This is an exceedingly prestigious area, and the Ministry would like to see the best possible hospital.  We'll be expecting you to make big money, have a superbly high reputation and cover every possible eventuality.  It's an important job, this.  You'll have to be something special to pull it off.  Note, too, that there have been sightings of UFOs in the area.  Make sure your staff are prepared for some unexpected visitors.  Your hospital will need to be worth $240,000, you'll need $500,000 in the bank, and your reputation will need to be 700."
+introduction_texts.level9 = " Having filled the Ministry's bank account and paid for a new limousine for the Minister himself, you can now get back to creating a caring, well-run hospital for the benefit of the unwell and needy.  You can expect a lot of different problems to crop up here.  If you have enough well-trained staff and rooms, you should have all the angles covered.  Your hospital will need to be worth $200,000, and you'll need $400,000 in the bank.  Any less and you won't be able to finish the level."
+introduction_texts.level16 = " Once you have diagnosed some of the patients you will need to build treatment facilities and clinics to cure them - a good one to start off with is the Pharmacy.  You'll also need a Nurse to dispense the various drugs in the Pharmacy."
+introduction_texts.level10 = " As well as covering all the illnesses which crop up in this neck of the woods, the Ministry request that you spend some time concentrating on the efficiency of your drugs.  There have been some complaints from Ofsick, the Health Watchdog, so in order to look good you must make sure all your drugs are extremely efficient.  Also, make sure your hospital is above reproach as well. Keep those deaths down.  As a hint, you might like to keep space free for a Jelly Vat.  Develop all your drugs to at least 80 per cent efficiency, get a reputation of 650 and stash $500,000 in the bank to win."
+introduction_texts.level12 = " You've got the mother of all challenges now.  Impressed with your success, the Ministry has got the top job for you; they want someone to build another ultimate hospital, make a vast amount of dosh and have an incredible reputation.  You'll also be expected to buy all the land you can, cure everything (and we mean everything) and win all the awards.  Think you're up to it?  Earn $650,000, cure 750 people, and get a reputation of 800 to win this one."
+introduction_texts.level15 = " Okay that's the basic mechanics of putting a hospital together.// Your Doctors are going to need all the help they can get to diagnose some of these patients.  You can assist them by building another diagnosis facility such as the General Diagnosis Room."
+-- A small error in the introduction text of level 2
+introduction_texts.level2 = " There is a greater variety of ailments in this area.  Set up your hospital to deal with more patients, " ..
+                            "and plan to build a Research Department.  Remember to keep your establishment clean, and try to get your " ..
+                            "reputation as high as possible - you'll be dealing with diseases like Slack Tongue, so you'll need a Slack " ..
+                            "Tongue Clinic.  You can also build a Cardiogram to help you diagnose new illnesses.  Both these rooms will " ..
+                            "need to be researched before you can build them.  Now you can also buy extra plots of land to expand your " ..
+                            "hospital - use the Town map for this.  Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
+
+-- Override for level progress typo
+level_progress.hospital_value_enough = "Keep the value of your hospital above %d and attend to your other problems to win the level."
+level_progress.cured_enough_patients = "You've cured enough of your patients, but you need to get your hospital in better order to win the level."
+
+-- Override for multiplayer typos
+multiplayer.players_failed = "The following player(s) failed to achieve the last objective:"
+multiplayer.everyone_failed = "Everyone failed to satisfy that last objective. So everyone gets to play on!"
+
+-- Override for a disease patient choice typo
+disease_discovered_patient_choice.need_to_employ = "Employ a %s to be able to handle this situation."
+
+-- Override for shorter messages and a typo in 12.2
+letter[9][2] = "You have proved yourself to be the best hospital administrator in medicine's long and chequered history. Such a momentous achievement cannot go unrewarded, so we would like to offer you the honorary post of Supreme Chief of All Hospitals. This comes with a salary of $%d. You will be given a tickertape parade, and people will show their appreciation wherever you go.//"
+letter[10][2] = "Congratulations on successfully running every hospital we assigned you to. Such a superb performance qualifies you for the freedom of all the world's cities. You are to be given a pension of $%d, and all we ask is that you travel, for free, around the nation, promoting the work of all hospitals to your adoring public.//"
+letter[11][2] = "Your career has been exemplary, and you are an inspiration to all of us. Thank you for running so many hospitals so well. We would like to grant you a lifetime salary of $%d, and would ask simply that you travel by official open-topped car from city to city, giving lectures about how you achieved so much so fast.//"
+letter[11][3] = "You are an example to every wise person, and without exception, everybody in the world regards you as a supreme asset.//"
+letter[12][2] = "Your successful career as the best hospital administrator since Moses is nearing an end. Befitting your impact on the nation, the Ministry would like to offer you a salary of $%d simply to appear on our behalf, opening fetes, launching ships, and doing chat shows. It would be great PR for us all!//"
+
+-------------------------------  NEW STRINGS  -------------------------------
+date_format = {
+  daymonth = "%1% %2:months%",
+}
+
+object.litter = "Litter"
+tooltip.objects.litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in."
+
+object.rathole = "Rathole"
+tooltip.objects.rathole = "Home of a rat family that found your hospital dirty enough to live here."
+
+tooltip.fax.close = "Close this window without deleting the message"
+tooltip.message.button = "Left click to open message"
+tooltip.message.button_dismiss = "Left click to open message, right click to dismiss it"
+tooltip.casebook.cure_requirement.hire_staff = "You need to employ staff to handle this treatment"
+tooltip.casebook.cure_type.unknown = "You do not yet know how to treat this disease"
+tooltip.research_policy.no_research = "No research is being carried out in this category at the moment"
+tooltip.research_policy.research_progress = "Progress towards the next discovery in this category: %1%/%2%"
+
+menu["player_count"] = "PLAYER COUNT"
+
+menu_file = {
+  load =    "  (%1%) LOAD  ",
+  save =    "  (%1%) SAVE   ",
+  restart = "  (%1%) RESTART",
+  quit =    "  (%1%) QUIT   "
+}
+
+menu_options = {
+  sound = "  (%1%) SOUND   ",
+  announcements = "  (%1%) ANNOUNCEMENTS   ",
+  music = "  (%1%) MUSIC   ",
+  jukebox = "  (%1%) JUKEBOX  ",
+  lock_windows = "  LOCK WINDOWS  ",
+  edge_scrolling = "  EDGE SCROLLING  ",
+  capture_mouse = "  CAPTURE MOUSE  ",
+  adviser_disabled = "  (%1%) ADVISER  ",
+  warmth_colors = "  WARMTH COLOURS  ",
+  wage_increase = "  WAGE REQUESTS  ",
+  twentyfour_hour_clock = "  24 HOUR CLOCK  "
+}
+
+menu_options_game_speed = {
+  pause               = "  (%1%) PAUSE  ",
+  slowest             = "  (%1%) SLOWEST  ",
+  slower              = "  (%1%) SLOWER  ",
+  normal              = "  (%1%) NORMAL  ",
+  max_speed           = "  (%1%) MAX SPEED  ",
+  and_then_some_more  = "  (%1%) AND THEN SOME MORE  ",
+}
+
+menu_options_warmth_colors = {
+  choice_1 = "  RED  ",
+  choice_2 = "  BLUE GREEN RED  ",
+  choice_3 = "  YELLOW ORANGE RED  ",
+}
+
+menu_options_wage_increase = {
+  grant = "    GRANT ",
+  deny =  "    DENY ",
+}
+
+-- Add F-keys to entries in charts menu (except briefing), also town_map was added.
+menu_charts = {
+  bank_manager  = "  (%1%) BANK MANAGER  ",
+  statement     = "  (%1%) STATEMENT  ",
+  staff_listing = "  (%1%) STAFF LISTING  ",
+  town_map      = "  (%1%) TOWN MAP  ",
+  casebook      = "  (%1%) CASEBOOK  ",
+  research      = "  (%1%) RESEARCH  ",
+  status        = "  (%1%) STATUS  ",
+  graphs        = "  (%1%) GRAPHS  ",
+  policy        = "  (%1%) POLICY  ",
+  machine_menu  = "  (%1%) MACHINES MENU",
+}
+
+menu_debug = {
+  jump_to_level               = "  JUMP TO LEVEL  ",
+  connect_debugger            = "  (%1%) CONNECT LUA DBGp SERVER  ",
+  transparent_walls           = "  (%1%) TRANSPARENT WALLS  ",
+  limit_camera                = "  LIMIT CAMERA  ",
+  disable_salary_raise        = "  DISABLE SALARY RAISE  ",
+  allow_blocking_off_areas    = "  ALLOW BLOCKING OFF AREAS  ",
+  make_debug_fax              = "  MAKE DEBUG FAX  ",
+  make_debug_patient          = "  MAKE DEBUG PATIENT  ",
+  cheats                      = "  (%1%) CHEATS  ",
+  lua_console                 = "  (%1%) LUA CONSOLE  ",
+  debug_script                = "  (%1%) RUN DEBUG SCRIPT  ",
+  calls_dispatcher            = "  CALLS DISPATCHER  ",
+  dump_strings                = "  (%1%) DUMP STRINGS  ",
+  dump_gamelog                = "  (%1%) DUMP GAME LOG  ",
+  map_overlay                 = "  MAP OVERLAY  ",
+  sprite_viewer               = "  SPRITE VIEWER  ",
+}
+menu_debug_overlay = {
+  none                        = "  NONE  ",
+  flags                       = "  FLAGS  ",
+  positions                   = "  POSITIONS  ",
+  heat                        = "  TEMPERATURE  ",
+  byte_0_1                    = "  BYTE 0 & 1  ",
+  byte_floor                  = "  BYTE FLOOR  ",
+  byte_n_wall                 = "  BYTE N WALL  ",
+  byte_w_wall                 = "  BYTE W WALL  ",
+  byte_5                      = "  BYTE 5  ",
+  byte_6                      = "  BYTE 6  ",
+  byte_7                      = "  BYTE 7  ",
+  parcel                      = "  PARCEL  ",
+}
+menu_player_count = {
+  players_1 = "  1 PLAYER  ",
+  players_2 = "  2 PLAYERS  ",
+  players_3 = "  3 PLAYERS  ",
+  players_4 = "  4 PLAYERS  ",
+}
+
+tooltip.toolbar = {
+  machine_menu = "Machine menu",
+}
+
+adviser = {
+  room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
+  warnings = {
+    no_desk = "You should build a reception desk and hire a receptionist at some point!",
+    no_desk_1 = "If you want patients to come to your hospital, you will need to hire a receptionist and build her a desk to work at!",
+    no_desk_2 = "Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from!",
+    no_desk_3 = "That's just brilliant, nearly a year and you don't have a staffed reception! How do you expect to get any patients? Now get it sorted out and stop messing around!",
+    no_desk_4 = "A Receptionist needs to have her own work station to greet your patients as they arrive.",
+    no_desk_5 = "Well it's about time, you should start to see some patients arriving soon!",
+    no_desk_6 = "You have a receptionist, so how about building a reception desk for her to work from?",
+    no_desk_7 = "You've built the reception desk, so how about hiring a receptionist? You won't see any patients until you get this sorted out you know!",
+    another_desk = "You'll need to build another desk for that new receptionist.",
+    cannot_buy = "You can't buy more of that item!",
+    cannot_afford = "You don't have enough money in the bank to hire that person!", -- I can't see anything like this in the original strings
+    cannot_afford_2 = "You don't have enough money in the bank to make that purchase!",
+    cannot_afford_machine = "You need at least $%1% in the bank to afford a new %2%!",
+    falling_1 = "Hey! That is not funny, watch where you click that mouse; someone could get hurt!",
+    falling_2 = "Stop messing about, how would you like it?",
+    falling_3 = "Ouch, that had to hurt, someone call a Doctor!",
+    falling_4 = "This is a Hospital, not a Theme Park!",
+    falling_5 = "This is not the place for knocking people over, they're ill you know!",
+    falling_6 = "This is not a bowling alley, sick people should not be treated like that!",
+    research_screen_open_1 = "You have to build a Research Department before you can access the Research screen.",
+    research_screen_open_2 = "Research is disabled for the current level.",
+    researcher_needs_desk_1 = "A Researcher needs to have a desk to work at.",
+    researcher_needs_desk_2 = "Your Researcher is pleased that you have allowed him to have a break. If you were intending to have more staff researching, then you need to provide them each with a desk to work from.",
+    researcher_needs_desk_3 = "Each Researcher needs to have his own desk to work from.",
+    nurse_needs_desk_1 = "Each Nurse needs to have her own desk to work from.",
+    nurse_needs_desk_2 = "Your Nurse is pleased that you have allowed her to have a break. If you were intending to have more than one working in the ward, then you need to provide them each with a desk to work from.",
+    low_prices = "You're charging too little for %s. This will bring people to your hospital, but you won't make a lot of profit from each one.",
+    high_prices = "Your charges for %s are high. This will make big profits in the short-term, but ultimately you'll start to drive people away.",
+    fair_prices = "Your charges for %s seem fair and balanced.",
+    patient_not_paying = "A patient left without paying for %s because it's too expensive!",
+    no_doctor_no_gp_office = "You should build a GP's Office and hire a doctor at some point!",
+    no_gp_office = "You haven't built a GP's Office where your doctors can diagnose the patients!",
+  },
+  cheats = {
+    th_cheat = "Congratulations, you have unlocked cheats!",
+    roujin_on_cheat = "Roujin's challenge activated! Good luck in the coming months...",
+    roujin_off_cheat = "Roujin's challenge deactivated. Everything will be back to normal soon.",
+    norest_on_cheat = "Oh no! It appears your staff have consumed too much caffeine and no longer feel a need to rest.",
+    norest_off_cheat = "Phew! Looks like that buzz finally wore off. Your staff will now rest properly.",
+  },
+  staff_place_advice = {
+    not_enough_lecture_chairs = "Each student doctor needs a lecture chair to sit in!",
+  },
+}
+
+dynamic_info.patient.actions.no_gp_available = "Waiting for you to build a GP's office"
+dynamic_info.staff.actions.heading_for = "Heading for %s"
+dynamic_info.staff.actions.fired = "Fired"
+dynamic_info.staff.actions.vaccine = "Vaccinating a patient"
+dynamic_info.patient.actions.epidemic_vaccinated = "I am no longer contagious"
+dynamic_info.object.strength_extra_info = "Strength %d (Upgradeable to %d)"
+
+progress_report.free_build = "FREE BUILD"
+
+fax = {
+  choices = {
+    return_to_main_menu = "Return to the main menu",
+    accept_new_level = "Move on to the next level",
+    decline_new_level = "Continue playing a while longer",
+  },
+  emergency = {
+    num_disease_singular = "There is 1 person with %s and they require immediate attention.",
+    free_build = "If you are successful your reputation will increase but if you fail your reputation will be seriously dented.",
+  },
+  vip_visit_result = {
+    remarks = {
+      free_build = {
+        "It is a very nice hospital you have there! Not very hard to get it working without money limitations though, eh?",
+        "I'm no economist, but I think I could run this hospital too if you know what I mean...",
+        "A very well run hospital. Watch out for the recession though! Right... you don't have to worry about that.",
+      }
+    }
+  }
+}
+
+letter = {
+  dear_player = "Dear %s\n",
+  custom_level_completed = "Well done! You've completed all goals on this custom level!",
+  return_to_main_menu = "Would you like to return to the main menu or continue playing?",
+  campaign_level_completed = "Good job! You beat the level. But it's not over yet!\n Would you like a position at %s Hospital?",
+  campaign_completed = "Incredible! You managed to finish all the levels. You can now relax and enjoy filling forums across the Internet of your achievements. Good luck!",
+  campaign_level_missing = "Sorry, but the next level of this campaign seems to be missing. (Name: %s)",
+}
+
+install = {
+  title = "--------------------------------- CorsixTH Setup ---------------------------------",
+  th_directory = "CorsixTH needs a copy of the data files from the original Theme Hospital game (or demo) in order to run. Please use the below selector to locate the Theme Hospital install directory.",
+  ok = "OK",
+  exit = "Exit",
+  cancel = "Cancel",
+}
+
+misc = {
+  not_yet_implemented = "(not yet implemented)",
+  no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map. It might be that you need to build a reception desk and hire a receptionist",
+  cant_treat_emergency = "Your hospital cannot treat this emergency because its disease has not been discovered. Feel free to try again.",
+  epidemics_off = "Epidemics are disabled. No new epidemics will be created",
+  epidemics_on = "Epidemics are re-enabled",
+  earthquakes_off = "Earthquakes are disabled",
+  earthquakes_on = "Earthquakes are re-enabled",
+  epidemic_no_icon_to_toggle = "Unable to show/hide infected icons - no epidemics in progress that are not revealed",
+  epidemic_no_diseases = "Cannot create epidemic - no contagious diseases available",
+  epidemic_no_receptionist = "Cannot create epidemic - no staffed reception desk",
+  invulnerable_machines_off = "Machines will wear and break down again.",
+  invulnerable_machines_on = "Machines will no longer wear or break down.",
+}
+
+main_menu = {
+  new_game = "Campaign",
+  custom_campaign = "Custom Campaign",
+  custom_level = "Single Scenario",
+  continue = "Continue Game",
+  load_game = "Load Game",
+  options = "Settings",
+  map_edit = "Map Editor",
+  savegame_version = "Savegame version: ",
+  updates_off = "Not checking for updates",
+  version = "Version: ",
+  exit = "Exit",
+}
+
+tooltip.main_menu = {
+  new_game = "Start the first level on the campaign",
+  custom_campaign = "Play a campaign created by the community",
+  custom_level = "Build your hospital in a single scenario",
+  continue = "Continue your latest saved game",
+  load_game = "Load a saved game",
+  options = "Tweak various settings",
+  map_edit = "Create a custom map",
+  exit = "No, no, please don't leave!",
+  quit = "You are about to quit from CorsixTH. Are you sure this is what you want to do?",
+}
+
+load_game_window = {
+  caption = "Load Game (%1%)",
+  load_button = "Load",
+}
+
+tooltip.load_game_window = {
+  load_game = "Load game %s",
+  load_game_number = "Load game %d",
+  load_autosave = "Load autosave",
+}
+
+custom_game_window = {
+  caption = "Custom Game",
+  free_build = "Free Build",
+  load_selected_level = "Start",
+}
+
+tooltip.custom_game_window = {
+  choose_game = "Click a level to read more about it",
+  free_build = "Tick this box if you want to play without money or winning and losing conditions",
+  load_selected_level = "Load and play the selected level",
+}
+
+custom_campaign_window = {
+  caption = "Custom Campaign",
+  start_selected_campaign = "Start campaign",
+  duplicates_warning = "%d campaign(s) with duplicate names have been hidden",
+}
+
+tooltip.custom_campaign_window = {
+  choose_campaign = "Choose a campaign to read more about it",
+  start_selected_campaign = "Load the first level of this campaign",
+  duplicates_warning = "See the console window for specific errors",
+}
+
+save_game_window = {
+  caption = "Save Game (%1%)",
+  new_save_game = "New Savegame",
+  save_button = "Save",
+  missing_filename = "Please enter the name of the new save or select the save to overwrite.",
+}
+
+tooltip.save_game_window = {
+  save_game = "Overwrite savegame %s",
+  new_save_game = "Enter name for a new savegame",
+}
+
+save_map_window = {
+  caption = "Save Map (%1%)",
+  new_map = "New Map",
+  save_button = "Save",
+  missing_filename = "Please enter the name of the new map file or select the map file to overwrite.",
+}
+
+tooltip.save_map_window = {
+  map = "Overwrite map %s",
+  new_map = "Enter name for a map savegame",
+}
+
+load_map_window = {
+  caption = "Load Map (%1%)",
+  load_button = "Load",
+}
+
+menu_list_window = {
+  name = "Name",
+  save_date = "Modified",
+  ok = "OK",
+  back = "Back",
+}
+
+tooltip.menu_list_window = {
+  name = "Click here to sort the list by name",
+  save_date = "Click here to sort the list by last modification date",
+  ok = "Confirm choice",
+  back = "Close this window",
+}
+
+options_window = {
+  caption = "Settings",
+  option_on = "On",
+  option_off = "Off",
+  option_enabled = "Enabled",
+  option_disabled = "Disabled",
+  fullscreen = "Fullscreen",
+  resolution = "Resolution",
+  scale_ui = "UI Scale",
+  capture_mouse = "Capture Mouse",
+  right_mouse_scrolling = "Mouse Scrolling",
+  right_mouse_scrolling_option_middle = "Middle Button",
+  right_mouse_scrolling_option_right = "Right Button",
+  custom_resolution = "Custom...",
+  width = "Width",
+  height = "Height",
+  customise = "Customise",
+  folder = "Folders",
+  language = "Game Language",
+  apply = "Apply",
+  cancel = "Cancel",
+  back = "Back",
+  scrollspeed = "Scroll Speed",
+  shift_scrollspeed = "Shift Scroll Speed",
+  zoom_speed = "Zoom Speed",
+  hotkey = "Hotkeys",
+  check_for_updates = "Check for Updates",
+  sound = "Sound",
+}
+
+tooltip.options_window = {
+  fullscreen = "Whether the game should run in fullscreen or windowed mode",
+  fullscreen_button = "Click to toggle fullscreen mode",
+  resolution = "The resolution the game should run in",
+  select_resolution = "Select a new resolution",
+  scale_ui = "Scale the user interface. Only scale options that fit the display are shown, for more increase the resolution.",
+  select_ui_scale = "Select a new user interface scale",
+  capture_mouse = "Click to toggle capturing the cursor while in game",
+  right_mouse_scrolling = "Toggle the mouse button that is used to scroll the map",
+  width = "Enter desired screen width",
+  height = "Enter desired screen height",
+  apply = "Apply the entered resolution",
+  cancel = "Return without changing the resolution",
+  customise_button = "More settings you can change to customise your game play experience",
+  folder_button = "Folder Options",
+  language = "The language texts in the game will appear in",
+  select_language = "Select the game language",
+  language_dropdown_item = "Choose %s as language",
+  language_dropdown_no_font = "Select a font in the folders settings to enable this language",
+  back = "Close the Settings window",
+  scrollspeed = "Set the scroll speed between 1 (slowest) to 10 (fastest). The default is 2.",
+  shift_scrollspeed = "Set the speed of scrolling while the shift key is pressed. 1 (slowest) to 10 (fastest). The default is 4.",
+  zoom_speed = "Set the camera zoom speed from 10 (slowest) to 1000 (fastest). The default is 80.",
+  apply_scrollspeed = "Apply the entered scroll speed.",
+  cancel_scrollspeed = "Return without changing the scroll speed.",
+  apply_shift_scrollspeed = "Apply the entered shift scroll speed.",
+  cancel_shift_scrollspeed = "Return without changing the shift scroll speed.",
+  apply_zoomspeed = "Apply the entered zoom speed.",
+  cancel_zoomspeed = "Return without changing the zoom speed.",
+  hotkey = "Change keyboard hotkeys.",
+  check_for_updates = "Sets whether the game should look for updates on launch.",
+  sound = "Change audio settings",
+}
+
+audio_window = {
+  caption = "Sound Settings",
+  audio = "Global Audio",
+  sound_volume = "Sound Volume",
+  announcement_volume = "Announcement Volume",
+  music_volume = "Music Volume",
+  midi_api = "MIDI API",
+  midi_port = "MIDI Port",
+  soundfont = "SoundFont",
+  default_midi_api = "Default (Software)",
+  default_midi_port = "Default",
+  jukebox = "Jukebox",
+  back = "Back",
+  soundfont_location_caption = "Choose soundfont (%1%)",
+}
+
+tooltip.audio_window = {
+  audio_button = "Turn on or off all game audio",
+  audio_toggle = "Toggle on or off",
+  sound_volume = "Sound volume",
+  announcement_volume = "Announcement volume",
+  music_volume = "Music volume",
+  midi_api = "The API to use for in game music. Not used with custom music folder.",
+  midi_port = "Device port to use for in game music.",
+  soundfont_location = "Location of a Soundfont file for playing MIDI music. A default Soundfont is used if not specified.",
+  browse = "Browse for folder location",
+  browse_soundfont = "Browse for another Soundfont file (sf2, or sf3) ( Current location: %1% ) ",
+  no_soundfont_specified = "Using default soundfont",
+  jukebox = "Open the Jukebox to control the music",
+  back = "Close the window",
+}
+
+customise_window = {
+  caption = "Custom Settings",
+  option_on = "On",
+  option_off = "Off",
+  emergency_only = "Emergency Only",
+  regular_patients = "Regular Patients",
+  male_only = "Male Only",
+  male_and_female = "Male and Female",
+  back = "Back",
+  movies = "Movies",
+  intro = "Play Intro Movie",
+  paused = "Build While Paused",
+  volume = "Volume Down Hotkey",
+  aliens = "Alien Patients",
+  fractured_bones = "Fractured Bones",
+  average_contents = "Average Contents",
+  remove_destroyed_rooms = "Remove destroyed rooms",
+  machine_menu_button = "Machine menu button",
+  enable_screen_shake = "Screen Shake",
+}
+
+tooltip.customise_window = {
+  movies = "Global movie control. This will allow you to enable or disable all movies",
+  intro = "Turn the intro movie on and off. Global movies must be on if you want the intro movie to play each time you launch CorsixTH",
+  paused = "In the original Theme Hospital, the player could only use the top menu while the game was paused. This is the default behaviour in CorsixTH, but turning this option on will allow you to build rooms and pick up objects while the game is paused",
+  volume = "If the volume down button causes the Casebook to open, turn this option on to change the hotkey for the Casebook to Shift + C",
+  aliens = "Due to incomplete animations, patients with Alien DNA will only appear via Emergencies by default. To allow patients with Alien DNA to visit your hospital normally, set this option to Regular Patients",
+  fractured_bones = "Due to poor animation, female patients with Fractured Bones will not appear by default. To allow female patients with Fractured Bones to visit your hospital, set this option to Male and Female",
+  average_contents = "If you would like the game to remember which extra objects you usually add while building rooms, turn this option on",
+  remove_destroyed_rooms = "In the original Theme Hospital, exploded machines made rooms permanently unusable. If you would like to be able to remove destroyed rooms for a fee, turn this option on",
+  machine_menu_button = "If you would like to have a machine menu button in bottom panel, turn this option on. Keep in mind that this button will not be available in small screen resolutions",
+  enable_screen_shake = "Earthquakes will cause the entire screen to shake. If you would prefer the screen to remain still, turn this option off",
+  back = "Close this menu and go back to the Settings Menu",
+}
+
+folders_window = {
+  caption = "Folder Locations",
+  data_label = "TH Data",
+  font_label = "Font",
+  music_label = "Music",
+  savegames_label = "Saves",
+  screenshots_label = "Screenshots",
+  -- next four are the captions for the browser window, which are called from the folder setting menu
+  new_th_location = "Here you can specify a new Theme Hospital installation directory or ISO file. As soon as you choose the new directory the game will be restarted. Note that file extensions are not currently shown.",
+  savegames_location = "Select the directory you want to use for Saves",
+  music_location = "Select the directory you want to use for your Music",
+  screenshots_location = "Select the directory you want to use for Screenshots",
+  back  = "Back",
+}
+
+tooltip.folders_window = {
+  browse = "Browse for folder location",
+  data_location = "The directory or ISO file of the original Theme Hospital installation, which is required to run CorsixTH",
+  font_location = "Location of a font file that is capable of displaying Unicode characters required by your language. If this is not specified you will not be able to choose languages that need more characters than the original game can supply. Example: Russian and Chinese",
+  savegames_location = "By default, the Saves directory is alongside the config file and will be used for storing saved games in. Alternatively, you can choose your own by browsing to the directory that you want to use.",
+  screenshots_location = "By default, the Screenshots are stored in a folder alongside the config file. Alternatively, you can choose your own by browsing to the directory that you want to use.",
+  music_location = "Select a location for your music files by browsing to the directory you want to use (directory must already exist beforehand).",
+  browse_data = "Browse for another location for your Theme Hospital installation ( Current location: %1% ) ",
+  browse_font = "Browse for another font file ( Current location: %1% ) ",
+  browse_saves = "Browse for another location for your Saves directory ( Current location: %1% ) ",
+  browse_screenshots = "Browse for another location for your Screenshots directory ( Current location: %1% ) ",
+  browse_music = "Browse for another location for your Music directory ( Current location: %1% ) ",
+  no_font_specified = "No font location specified yet!",
+  not_specified = "No folder location specified yet!",
+  default = "Default location",
+  reset_to_default = "Reset the directory to its default location",
+  back  = "Close this menu and go back to the Settings Menu",
+}
+
+hotkey_window = {
+  caption_main = "Hotkey Assignment",
+  caption_panels = "Panel Keys",
+  button_accept = "Accept",
+  button_defaults = "Reset to Defaults",
+  button_cancel = "Cancel",
+  button_back = "Back",
+  button_toggleKeys = "Toggle Keys",
+  button_gameSpeedKeys = "Game Speed Keys",
+  button_recallPosKeys = "Recall Position Keys",
+  panel_globalKeys = "Global Keys",
+  panel_generalInGameKeys = "General In-Game Keys",
+  panel_scrollKeys = "Scroll Keys",
+  panel_zoomKeys = "Zoom Keys",
+  panel_gameSpeedKeys = "Game Speed Keys",
+  panel_toggleKeys = "Toggle Keys",
+  panel_debugKeys = "Debug Keys",
+  panel_storePosKeys = "Store Position Keys",
+  panel_recallPosKeys = "Recall Position Keys",
+  panel_altPanelKeys = "Alternate Panel Keys",
+  global_confirm = "Confirm",
+  global_confirm_alt = "Confirm Alt",
+  global_cancel = "Cancel",
+  global_cancel_alt = "Cancel Alt",
+  global_fullscreen_toggle = "Fullscreen",
+  global_exitApp = "Exit App",
+  global_resetApp = "Reset App",
+  global_releaseMouse = "Release Mouse",
+  global_connectDebugger = "Debugger",
+  global_showLuaConsole = "Lua Console",
+  global_runDebugScript = "Debug Script",
+  global_screenshot = "Screenshot",
+  global_stop_movie_alt = "Stop Movie",
+  global_window_close_alt = "Close Window",
+  ingame_scroll_up = "Scroll Up",
+  ingame_scroll_down = "Scroll Down",
+  ingame_scroll_left = "Scroll Left",
+  ingame_scroll_right = "Scroll Right",
+  ingame_scroll_shift = "Speed Shift",
+  ingame_zoom_in = "Zoom In",
+  ingame_zoom_in_more = "Zoom In More",
+  ingame_zoom_out = "Zoom Out",
+  ingame_zoom_out_more = "Zoom Out More",
+  ingame_reset_zoom = "Reset Zoom",
+  ingame_showmenubar = "Show Menu Bar",
+  ingame_showCheatWindow = "Cheat Menu",
+  ingame_loadMenu = "Load Game",
+  ingame_saveMenu = "Save Game",
+  ingame_jukebox = "Jukebox",
+  ingame_openFirstMessage = "Level Message",
+  ingame_pause = "Pause",
+  ingame_gamespeed_slowest = "Slowest",
+  ingame_gamespeed_slower = "Slower",
+  ingame_gamespeed_normal = "Normal",
+  ingame_gamespeed_max = "Max",
+  ingame_gamespeed_thensome = "Then Some",
+  ingame_gamespeed_speedup = "Speed Up",
+  ingame_panel_bankManager = "Bank Manager",
+  ingame_panel_bankStats = "Bank Status",
+  ingame_panel_staffManage = "Manage Staff",
+  ingame_panel_townMap = "Town Map",
+  ingame_panel_casebook = "Casebook",
+  ingame_panel_research = "Research",
+  ingame_panel_status = "Status",
+  ingame_panel_charts = "Charts",
+  ingame_panel_policy = "Policy",
+  ingame_panel_machineMenu = "Machines Menu",
+  ingame_panel_map_alt = "Town Map 2",
+  ingame_panel_research_alt = "Research 2",
+  ingame_panel_casebook_alt = "Casebook 2",
+  ingame_panel_casebook_alt02 = "Casebook 3",
+  ingame_panel_buildRoom = "Build Room",
+  ingame_panel_furnishCorridor = "Furnish Corridor",
+  ingame_panel_editRoom = "Edit Room",
+  ingame_panel_hireStaff = "Hire Staff",
+  ingame_rotateobject = "Rotate Object",
+  ingame_quickSave = "Quick Save",
+  ingame_quickLoad = "Quick Load",
+  ingame_restartLevel = "Restart Level",
+  ingame_quitLevel = "Quit Level",
+  ingame_setTransparent = "Transparent",
+  ingame_toggleTransparent = "Toggle transparent",
+  ingame_toggleAnnouncements = "Announcements",
+  ingame_toggleSounds = "Sounds",
+  ingame_toggleMusic = "Music",
+  ingame_toggleAdvisor = "Advisor",
+  ingame_toggleInfo = "Info",
+  ingame_poopLog = "Dump Log",
+  ingame_poopStrings = "Dump Strings",
+  ingame_patient_gohome = "Send Home",
+  ingame_storePosition_1 = "1",
+  ingame_storePosition_2 = "2",
+  ingame_storePosition_3 = "3",
+  ingame_storePosition_4 = "4",
+  ingame_storePosition_5 = "5",
+  ingame_storePosition_6 = "6",
+  ingame_storePosition_7 = "7",
+  ingame_storePosition_8 = "8",
+  ingame_storePosition_9 = "9",
+  ingame_storePosition_0 = "10",
+  ingame_recallPosition_1 = "1",
+  ingame_recallPosition_2 = "2",
+  ingame_recallPosition_3 = "3",
+  ingame_recallPosition_4 = "4",
+  ingame_recallPosition_5 = "5",
+  ingame_recallPosition_6 = "6",
+  ingame_recallPosition_7 = "7",
+  ingame_recallPosition_8 = "8",
+  ingame_recallPosition_9 = "9",
+  ingame_recallPosition_0 = "10",
+}
+
+tooltip.hotkey_window = {
+  button_accept = "Accept and save hotkey assignments",
+  button_defaults = "Reset all hotkeys to the program's defaults",
+  button_cancel = "Cancel the assignment and go back to the options menu",
+  panel_globalKeys = "Assign global hotkeys",
+  panel_generalInGameKeys = "Assign general in-game hotkeys",
+  button_gameSpeedKeys = "Assign hotkeys to control the game speed",
+  panel_scrollKeys = "Assign hotkeys to scroll the screen",
+  panel_zoomKeys = "Assign hotkeys to zoom in and out",
+  panel_toggleKeys = "Assign hotkeys to toggle options",
+  caption_panels = "Assign hotkeys to open panels",
+  button_recallPosKeys = "Assign hotkeys to save and recall camera positions",
+  panel_debugKeys = "Assign hotkeys for debugging",
+  button_back_02 = "Go back to the main hotkey window. Hotkeys changed in this window can be accepted there",
+}
+
+font_location_window = {
+  caption = "Choose font (%1%)",
+}
+
+handyman_window = {
+  all_parcels = "All plots",
+  parcel = "Plot"
+}
+
+tooltip.handyman_window = {
+  parcel_select = "The plot where the handyman accepts tasks, click to change setting"
+}
+
+new_game_window = {
+  caption = "Campaign",
+  player_name = "Player name",
+  option_on = "On",
+  option_off = "Off",
+  difficulty = "Difficulty",
+  easy = "Junior (Easy)",
+  medium = "Doctor (Medium)",
+  hard = "Consultant (Hard)",
+  tutorial = "Tutorial",
+  start = "Start",
+  cancel = "Cancel",
+}
+
+tooltip.new_game_window = {
+  player_name = "Enter the name you wish to be referred to as in the game",
+  difficulty = "Select the difficulty level you want to play the game in",
+  easy = "If you are new to simulation games this is the option for you",
+  medium = "This is the middle way to go if you are unsure what to choose",
+  hard = "If you are used to this kind of game and want more of a challenge, pick this option",
+  tutorial = "Click here to turn on some help to get you started once in the game",
+  start = "Start the game with the chosen settings",
+  cancel = "Oh, I didn't really mean to start a new game!",
+}
+
+lua_console = {
+  execute_code = "Execute",
+  close = "Close",
+}
+
+tooltip.lua_console = {
+  textbox = "Enter Lua code to run here",
+  execute_code = "Run the code you have entered",
+  close = "Close the console",
+}
+
+errors = {
+  dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
+  save_prefix = "Error while saving game: ",
+  load_prefix = "Error while loading game: ",
+  load_map_prefix = "Error while loading map: ",
+  load_level_prefix = "Error while loading level: ",
+  no_games_to_contine = "There are no saved games.",
+  load_quick_save = "Error, cannot load the quicksave as it does not exist, not to worry as we have now created one for you!",
+  map_file_missing = "Could not find the map file %s for this level!",
+  minimum_screen_size = "Please enter a screen size of at least %dx%d.",
+  unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
+  alien_dna = "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. Like with Theme Hospital, performing those actions will change the patient to normal then back to Alien. Patients with Alien DNA will only appear if they are set to in the level file.",
+  fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
+  could_not_load_campaign = "Failed to load the campaign: %s",
+  could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
+  save_to_tmp = "Attempt to write to %s failed. File was written instead to temporary location %s because of the error: %s",
+  dialog_empty_queue = "Sorry, a humanoid just had an empty action queue, which means that they didn't know what to do next. Please consult the command window for more detailed information. A dialog with the offending humanoid has been opened. Would you like them to leave the hospital?",
+  compatibility_error = {
+    new_in_old = "Sorry, this save was created with a newer version of CorsixTH and is not compatible. Please update to a more recent version.",
+    demo_in_full = "Sorry, you can't open a demo savegame with the full game files loaded. Please update your TH Data folder setting.",
+    full_in_demo = "Sorry, you can't open a full game save with the demo files loaded. Please update your TH Data folder setting.",
+  },
+  music = "There are playback issues with one or more files in your music directory. Problematic files will be disabled in the jukebox. See the console window for more information.",
+  missing_corsixth_file = "Warning: Could not find file %s, try reinstalling CorsixTH.",
+  missing_th_data_file = "Warning: Could not find file %s, the Theme Hospital data is incomplete.",
+  missing_level_file = "Error: Could not find the chosen level file.",
+  overlay = {
+    incorrect_difficulty = "Overlay difficulty must be easy, full or hard. Current value is ",
+    incorrect_level_number = "Overlay level number must be 1-12. Current value is ",
+    missing_setting = "No difficulty and level number given in overlay field of custom level.",
+  },
+  cannot_restart_missing_files = "Sorry, but this level cannot be restarted because of missing files %s or %s.",
+}
+
+warnings = {
+  levelfile_variable_is_deprecated = "Notice: The level '%s' contains a deprecated variable definition in the level file." ..
+                                     "'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level.",
+  newersave = "Warning, you have loaded a save from a newer version of CorsixTH. It is not recommended to continue as crashes may occur. Play at your own risk."
+}
+
+confirmation = {
+  needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
+  abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
+  maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000. Larger resolutions are possible but will require better hardware in order to maintain a playable frame rate. Are you sure you want to continue?",
+  remove_destroyed_room = "Would you like to remove the room for $%d?",
+  replace_machine_extra_info = "The new machine will have %d strength (currently %d).",
+  restart_mapeditor = "Are you sure you want to restart the map editor?",
+  quit_mapeditor = "Are you sure you want to quit the map editor?",
+  very_old_save = "There have been a lot of updates to the game since you started. To be sure that all features work as intended would you like to restart this level now?//" ..
+  "Your old save won't be deleted unless you overwrite it.",
+}
+
+information = {
+  custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
+  no_custom_game_in_demo = "Sorry, but in the demo version you can't play any custom maps.",
+  cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
+  level_lost = {
+    "Bummer! You failed the level. Better luck next time!",
+    "The reason you lost:",
+    reputation = "Your reputation fell below %d.",
+    balance = "Your bank balance fell below %d.",
+    percentage_killed = "You killed more than %d percent of the patients.",
+    cheat = "Hope you didn't click the Lose Level button by accident!",
+    staff_happiness = "Your average staff happiness fell below %d%.",
+    patient_happiness = "Your average patient happiness fell below %d%.",
+  },
+  cheat_not_possible = "You cannot use that cheat on this level.",
+}
+
+tooltip.information = {
+  close = "Close the information dialog",
+}
+
+totd_window = {
+  tips = {
+    "Every hospital needs a reception desk and a GP's office to get going. After that, it depends on what kind of patients are visiting your hospital. A pharmacy is always a good choice, though.",
+    "Machines such as the Inflator need maintenance. Employ a handyman or two to repair your machines, or you'll risk your staff and patients getting hurt.",
+    "After a while, your staff will get tired. Be sure to build a staff room, so they can relax.",
+    "Place enough radiators to keep your staff and patients warm, or they will become unhappy. Use the town map to locate any spots in your hospital that need more heating.",
+    "A doctor's skill level greatly influences the quality and speed of his diagnoses. Place a skilled doctor in your GP's office, and you won't need as many additional diagnosis rooms.",
+    "Juniors and doctors can improve their skills by learning from a consultant in the training room. If the consultant has a special qualification (surgeon, psychiatrist, or researcher), he will also pass on this knowledge to his pupil(s).",
+    "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
+    "You can adjust some settings such as the resolution and language in the options window found both in the main menu and ingame.",
+    "You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
+    "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Discord Server, Sub-Reddit or Matrix Server. Links are on our website (CorsixTH.com).",
+    "If you find a bug, please report it at our bugtracker: th-issues.corsix.org",
+    "Each level has certain requirements to fulfill before you can move on to the next one. Check the status window to see your progression towards the level goals.",
+    "If you want to edit or remove an existing room, you can do so with the edit room button found in the bottom toolbar.",
+    "In a horde of waiting patients, you can quickly find out which ones are waiting for a particular room by hovering over that room with your mouse cursor.",
+    "Click on the door of a room to see its queue. You can do useful fine tuning here, such as reordering the queue or sending a patient to another room.",
+    "Unhappy staff will ask for salary rises frequently. Make sure your staff is working in a comfortable environment to keep that from happening.",
+    "Patients will get thirsty while waiting in your hospital, even more so if you turn up the heating! Place vending machines in strategic positions for some extra income.",
+    "You can abort the diagnosis progress for a patient prematurely and guess the cure, if you already encountered the disease. Beware that this may increase the risk of a wrong cure, resulting in death for the patient.",
+    "Emergencies can be a good source for some extra cash, provided that you have enough capacities to handle the emergency patients in time.",
+    "Did you know you can assign Handymen to specific plots? Just click the All Plots text in their staff profile to cycle through them!",
+  },
+  previous = "Previous Tip",
+  next = "Next Tip",
+}
+
+tooltip.totd_window = {
+  previous = "Display the previous tip",
+  next = "Display the next tip",
+}
+
+debug_patient_window = {
+  caption = "Debug Patient",
+}
+
+tooltip.debug_patient_window = {
+  item = "Create a debug patient with %s",
+}
+
+cheats_window = {
+  caption = "Cheats",
+  warning = "Warning: You will not get any bonus points at the end of the level if you cheat!",
+  cheated = {
+    no = "Cheats used: No",
+    yes = "Cheats used: Yes",
+  },
+  cheats = {
+    money = "Money Cheat",
+    all_research = "All Research Cheat",
+    emergency = "Create Emergency",
+    vip = "Create VIP",
+    toggle_earthquake = "Toggle earthquakes",
+    earthquake = "Create Earthquake",
+    toggle_epidemic = "Toggle epidemics",
+    epidemic = "Spawn contagious patient",
+    show_infected = "Show or hide infected icons",
+    create_patient = "Create Patient",
+    end_month = "End of Month",
+    end_year = "End of Year",
+    lose_level = "Lose Level",
+    win_level = "Win Level",
+    increase_prices = "Increase prices",
+    decrease_prices = "Decrease prices",
+    reset_death_count = "Reset death count",
+    max_reputation = "Max reputation",
+    repair_all_machines = "Repair all machines",
+    toggle_invulnerable_machines = "Toggle invulnerable machines",
+  },
+  close = "Close",
+}
+
+tooltip.cheats_window = {
+  close = "Close the cheats dialog",
+  cheats = {
+    money = "Adds $10,000 to your bank balance",
+    all_research = "Completes all research",
+    emergency = "Creates an emergency",
+    vip = "Creates a VIP",
+    toggle_earthquake = "Toggle earthquakes",
+    earthquake = "Creates an earthquake",
+    toggle_epidemic = "Toggle whether epidemics can happen",
+    epidemic = "Creates a contagious patient who may cause an epidemic to happen",
+    show_infected = "Show/hide the infected icons for the active, discovered epidemic",
+    create_patient = "Creates a Patient at the map border",
+    end_month = "Jumps to the end of the month",
+    end_year = "Jumps to the end of the year",
+    lose_level = "Lose the current level",
+    win_level = "Win the current level",
+    increase_prices = "Increase all prices by 50% (max. 200%)",
+    decrease_prices = "Decrease all prices by 50% (min. 50%)",
+    reset_death_count = "Reset the hospital death count to zero",
+    max_reputation = "Set the hospital reputation to the maximum",
+    repair_all_machines = "Repairs all machines in the hospital",
+    toggle_invulnerable_machines = "Toggle whether machines wear down when used",
+  }
+}
+
+--Level description, can be double spaced after full-stop
+introduction_texts = {
+  demo =
+    "Welcome to the demo hospital!//" ..
+    "Unfortunately the demo version only contains this level.  However, there is more than enough to do here to keep you busy for a while!  " ..
+    "You will encounter various diseases that require different rooms to cure.  From time to time, emergencies may occur.  And you will need to research additional rooms using a research room.  " ..
+    "Your goal is to earn $100,000, have a hospital value of $70,000 and a reputation of 700, while having cured at least 75% of your patients.  " ..
+    "Make sure your reputation does not fall below 300 and that you don't kill off more than 40% of your patients, or you will lose.//" ..
+    "Good luck!",
+}
+
+calls_dispatcher = {
+  -- Dispatcher description message. Visible in Calls Dispatcher dialog
+  summary = "%d calls; %d assigned",
+  staff = "%s - %s",
+  watering = "Watering @ %d,%d",
+  repair = "Repair %s",
+  close = "Close",
+}
+
+tooltip.calls_dispatcher = {
+  task = "List of tasks - click task to open assigned staff's window and scroll to location of task",
+  assigned = "This box is marked if someone is assigned to the corresponding task.",
+  close = "Close the calls dispatcher dialog",
+}
+
+machine_menu = {
+  percentage = "%d%",
+  machine = "Machine",
+  remaining_strength = "Remain",
+  total_strength = "Strength",
+  ratio = "Ratio",
+  close = "Close",
+}
+
+tooltip.machine_menu = {
+  sort = "Click to sort by this value.",
+  machine = "List of machines - click machine to open machine's window and scroll to its location",
+  smoking = "This box is marked if the machine is at risk of exploding. Click to buy a new machine.",
+  assigned = "This box is marked if a handyman is assigned to fix corresponding machine. Click to show assigned handyman.",
+  remaining_strength = "This value shows remaining strength of the machine",
+  total_strength = "This value shows total strength of the machine",
+  ratio = "This value shows ratio of remaining strength and total strength",
+  header = {
+    smoking = "Danger Indicator",
+    assigned = "Repair assignment Indicator",
+    machine = "Machine name",
+    remaining_strength = "Remaining Strength of the machines.",
+    total_strength = "Total Strength of the machines.",
+    ratio = "Remaining Strength to Total Strength percentage ratio of the machines.",
+  },
+  close = "Close the machine list dialog",
+}
+
+
+update_window = {
+  caption = "Update Available!",
+  new_version = "New Version:",
+  current_version = "Current Version:",
+  download = "Go to download page",
+  ignore = "Skip and go to main menu",
+}
+
+tooltip.update_window = {
+  download = "Go to the download page for the very latest version of CorsixTH",
+  ignore = "Ignore this update for now. You will be notified again when you next open CorsixTH",
+}
+
+map_editor_window = {
+  pages = {
+    inside = "Inside",
+    outside = "Outside",
+    foliage = "Foliage",
+    hedgerow = "Hedgerow",
+    pond = "Pond",
+    road = "Road",
+    north_wall = "North wall",
+    west_wall = "West wall",
+    helipad = "Helipad",
+    set_parcel = "Set parcel num",
+    delete_wall = "Delete walls",
+    parcel = "Parcel %d",
+    set_parcel_tooltip = "Choose a number and press enter.",
+    camera_1 = "Camera 1",
+    camera_2 = "Camera 2",
+    camera_3 = "Camera 3",
+    camera_4 = "Camera 4",
+    heliport_1 = "Heliport 1",
+    heliport_2 = "Heliport 2",
+    heliport_3 = "Heliport 3",
+    heliport_4 = "Heliport 4",
+    paste = "Paste area",
+  },
+  checks = {
+    spawn_points_and_path = "Warning: Patients cannot reach the hospital. They need 'road' tiles or 'outside' grey tiles at the edge of the map and a path of these tiles to the hospital entrance.",
+  },
+}
+
+hotkeys_file_err = {
+  file_err_01 = "Unable to load hotkeys.txt file. Please ensure that CorsixTH " ..
+        "has permission to read/write ",
+  file_err_02 = ", or use the --hotkeys-file=filename command line option to specify a writable file. " ..
+        "For reference, the error loading the hotkeys file was: ",
+}
+
+transactions.remove_room = "Build: Remove destroyed room"
+
+tooltip.status = {
+  over = {
+    staff_happiness = "Your average staff happiness should be over %d%. Currently it's %d%",
+    patient_happiness = "Your average patient happiness should be over %d%. Currently it's %d%",
+  },
+  under = {
+    staff_happiness = "Your average staff happiness should not be less than %d%. Currently it's %d%",
+    patient_happiness = "Your average patient happiness should not be less than %d%. Currently it's %d%",
+  }
+}
+--------------------------------  UNUSED  -----------------------------------
+------------------- (kept for backwards compatibility) ----------------------
+
+options_window.change_resolution = "Change resolution"
+tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
+information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
+
+cheats_window.cheats = {
+ toggle_infected = show_infected,
+}
+tooltip.cheats_window.cheats = {
+ toggle_infected = show_infected,
+}
