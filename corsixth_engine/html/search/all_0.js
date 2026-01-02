@@ -16,7 +16,7 @@ var searchData=
   ['animation_5feffect_13',['animation_effect',['../th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870',1,'th_gfx_common.h']]],
   ['animation_5fkey_14',['animation_key',['../structanimation__key.html',1,'']]],
   ['animation_5fkind_15',['animation_kind',['../th__gfx_8h.html#a762973ebb25ec988b09557fc414c01ab',1,'th_gfx.h']]],
-  ['animation_5fmanager_16',['animation_manager',['../classanimation__manager.html#a8fe1d1c8a160d39e50f24ccaaeb50f23',1,'animation_manager::animation_manager()'],['../classanimation__manager.html',1,'animation_manager']]],
+  ['animation_5fmanager_16',['animation_manager',['../classanimation__manager.html#a5818f65757ec6be5673ebaddcab0cb3d',1,'animation_manager::animation_manager()'],['../classanimation__manager.html',1,'animation_manager']]],
   ['animation_5fstart_5fframes_17',['animation_start_frames',['../structanimation__start__frames.html',1,'']]],
   ['anims_18',['anims',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a666821b4e0ab412117d5981094b078eb',1,'th_lua_internal.h']]],
   ['append_5fsprite_19',['append_sprite',['../classsprite__render__list.html#aa131c341a420e37752a695e9881b568f',1,'sprite_render_list']]],

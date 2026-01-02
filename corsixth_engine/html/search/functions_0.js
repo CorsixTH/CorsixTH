@@ -9,7 +9,7 @@ var searchData=
   ['allocate_5fpicture_5fbuffer_6',['allocate_picture_buffer',['../classmovie__player.html#ae79634faafbdc511729354d054c6cdd7',1,'movie_player']]],
   ['animation_7',['animation',['../classanimation.html#a18195c5c1bbe9b1e064df4ac8369a89a',1,'animation']]],
   ['animation_5fbase_8',['animation_base',['../classanimation__base.html#adb0d38637edd978dd6a921548f3b0658',1,'animation_base']]],
-  ['animation_5fmanager_9',['animation_manager',['../classanimation__manager.html#a8fe1d1c8a160d39e50f24ccaaeb50f23',1,'animation_manager']]],
+  ['animation_5fmanager_9',['animation_manager',['../classanimation__manager.html#a5818f65757ec6be5673ebaddcab0cb3d',1,'animation_manager']]],
   ['append_5fsprite_10',['append_sprite',['../classsprite__render__list.html#aa131c341a420e37752a695e9881b568f',1,'sprite_render_list']]],
   ['are_5fbytes_5favailable_11',['are_bytes_available',['../classmemory__reader.html#a3550e113facd16b87d041dbb72c368a0',1,'memory_reader']]],
   ['are_5fparcels_5fadjacent_12',['are_parcels_adjacent',['../classlevel__map.html#a3200a67d20b2a15786a59b6a15ff389b',1,'level_map']]],
