@@ -98,102 +98,102 @@ staff_descriptions.bad[14] = "Matalino, tuso, at mapanlinlang. "
 staff_descriptions.misc[11] = "Distils whisky. "
 
 -- Correction to a pay rise prompt with typos
-pay_rise.regular[1] = "I'm totally frazzled. I need a good rest, plus a rise of %d if you don't want to see me jack in this poxy job."
+pay_rise.regular[1] = "Lubos na akong pagod at lutang. Kailangan ko ng maayos na pahinga, at dagdag na %d sa sahod kung ayaw ninyong makita akong magbitiw sa lintik na trabahong ’to."
 
 -- Level description overrides where there are typos. Note: This is the only portion of the game that SHOULD use double space after fullstops etc.
-introduction_texts.level17 = " Last word of warning - keep a keen eye on your Reputation - this is what will attract the patients from far and wide to your establishment.  If you don't kill too many people and keep them reasonably happy you shouldn't have too much trouble on this level!// You're on you own now.  Good luck and all that."
-introduction_texts.level11 = " You've been given the chance to build the ultimate in hospitals.  This is an exceedingly prestigious area, and the Ministry would like to see the best possible hospital.  We'll be expecting you to make big money, have a superbly high reputation and cover every possible eventuality.  It's an important job, this.  You'll have to be something special to pull it off.  Note, too, that there have been sightings of UFOs in the area.  Make sure your staff are prepared for some unexpected visitors.  Your hospital will need to be worth $240,000, you'll need $500,000 in the bank, and your reputation will need to be 700."
-introduction_texts.level9 = " Having filled the Ministry's bank account and paid for a new limousine for the Minister himself, you can now get back to creating a caring, well-run hospital for the benefit of the unwell and needy.  You can expect a lot of different problems to crop up here.  If you have enough well-trained staff and rooms, you should have all the angles covered.  Your hospital will need to be worth $200,000, and you'll need $400,000 in the bank.  Any less and you won't be able to finish the level."
-introduction_texts.level16 = " Once you have diagnosed some of the patients you will need to build treatment facilities and clinics to cure them - a good one to start off with is the Pharmacy.  You'll also need a Nurse to dispense the various drugs in the Pharmacy."
-introduction_texts.level10 = " As well as covering all the illnesses which crop up in this neck of the woods, the Ministry request that you spend some time concentrating on the efficiency of your drugs.  There have been some complaints from Ofsick, the Health Watchdog, so in order to look good you must make sure all your drugs are extremely efficient.  Also, make sure your hospital is above reproach as well. Keep those deaths down.  As a hint, you might like to keep space free for a Jelly Vat.  Develop all your drugs to at least 80 per cent efficiency, get a reputation of 650 and stash $500,000 in the bank to win."
-introduction_texts.level12 = " You've got the mother of all challenges now.  Impressed with your success, the Ministry has got the top job for you; they want someone to build another ultimate hospital, make a vast amount of dosh and have an incredible reputation.  You'll also be expected to buy all the land you can, cure everything (and we mean everything) and win all the awards.  Think you're up to it?  Earn $650,000, cure 750 people, and get a reputation of 800 to win this one."
-introduction_texts.level15 = " Okay that's the basic mechanics of putting a hospital together.// Your Doctors are going to need all the help they can get to diagnose some of these patients.  You can assist them by building another diagnosis facility such as the General Diagnosis Room."
+introduction_texts.level17 = " Huling babala — bantayang mabuti ang iyong Reputasyon. Ito ang huhumak sa mga pasyente mula sa malalayong lugar papunta sa iyong ospital. Kung hindi ka makakapatay ng masyadong marami at mapapanatili mong medyo masaya ang mga pasyente, hindi ka dapat magkaroon ng malaking problema sa antas na ito!// Mag-isa ka na ngayon. Suwertehin ka nawa."
+introduction_texts.level11 = " Binigyan ka ng pagkakataong magtayo ng sukdulang ospital. Ito ay isang napakaprestihiyosong lugar, at nais ng Ministry na makita ang pinakamahusay na posibleng ospital. Inaasahan naming kikita ka nang malaki, magkakaroon ng napakataas na reputasyon, at matutugunan ang lahat ng posibleng sitwasyon. Mahalaga ang trabahong ito, at kakailanganin mong maging kakaiba upang magtagumpay. Tandaan din na may mga naiulat na paglitaw ng mga UFO sa lugar, kaya siguraduhing handa ang iyong mga tauhan para sa ilang hindi inaasahang bisita. Ang iyong ospital ay kailangang nagkakahalaga ng $240,000, kailangan mong magkaroon ng $500,000 sa bangko, at ang iyong reputasyon ay dapat umabot sa 700."
+introduction_texts.level9 = " Matapos mapuno ang bank account ng Ministry at mabayaran ang isang bagong limousine para mismo sa Ministro, maaari ka nang bumalik sa paglikha ng isang maalaga at maayos na pinapatakbong ospital para sa kapakanan ng mga maysakit at nangangailangan. Asahan mong maraming iba’t ibang problema ang lilitaw dito, at kung mayroon kang sapat na bilang ng mga kuwarto at mga tauhang mahusay ang pagsasanay, dapat ay matatakpan mo ang lahat ng anggulo. Ang iyong ospital ay kailangang nagkakahalaga ng $200,000 at kailangan mong magkaroon ng $400,000 sa bangko; kung mas mababa pa rito, hindi mo matatapos ang antas."
+introduction_texts.level16 = " Kapag na-diagnose mo na ang ilan sa mga pasyente, kakailanganin mong magtayo ng mga pasilidad sa gamutan at mga klinika upang sila ay gumaling — isang magandang panimulang itayo ay ang Botika. Kakailanganin mo rin ng isang Nars upang magbigay ng iba’t ibang gamot sa loob ng Botika."
+introduction_texts.level10 = " Bukod sa pagtugon sa lahat ng mga sakit na lumilitaw sa bahaging ito ng lugar, hinihiling ng Ministry na maglaan ka rin ng oras sa pagpapahusay ng kahusayan ng iyong mga gamot. May ilang reklamo mula sa Ofsick, ang Health Watchdog, kaya upang magmukhang maayos ang iyong pamamahala, kailangan mong tiyaking ang lahat ng iyong gamot ay lubhang mahusay ang bisa. Siguraduhin din na ang iyong ospital ay walang bahid ng kapintasan - panatilihing mababa ang bilang ng mga namamatay. Bilang isang pahiwatig, mainam na maglaan ka ng bakanteng espasyo para sa isang Tangke ng Halaya (Jelly Vat). Upang manalo, paunlarin ang lahat ng iyong mga gamot hanggang hindi bababa sa 80 porsiyentong kahusayan, makamit ang 650 na reputasyon, at mag-impok ng $500,000 sa bangko."
+introduction_texts.level12 = " Ngayon ay hinarap mo ang pinakamalaking hamon. Humanga ang Ministry sa iyong tagumpay at ibinigay sa iyo ang pinakamataas na tungkulin; nais nilang may magtayo ng isa pang sukdulang ospital, kumita ng napakalaking halaga ng pera, at magkaroon ng kamangha-manghang reputasyon. Inaasahan ka ring bilhin ang lahat ng lupa na maaari mong makuha, pagalingin ang lahat ng pasyente (talagang lahat), at manalo sa lahat ng parangal. Sa tingin mo ba ay kaya mo ito? Kumita ng $650,000, pagalingin ang 750 na pasyente, at makamit ang 800 na reputasyon upang manalo sa antas na ito."
+introduction_texts.level15 = " Okay, ito ang mga pangunahing mekanismo sa pagbuo ng isang ospital.// Kailangan ng iyong mga Doktor ang lahat ng tulong na maaari nilang makuha upang ma-diagnose ang ilan sa mga pasyente. Maaari mo silang tulungan sa pamamagitan ng pagtatayo ng isa pang pasilidad sa diagnosis, tulad ng Pangkalahatang Silid-Diagnosis (General Diagnosis Room)."
 -- A small error in the introduction text of level 2
-introduction_texts.level2 = " There is a greater variety of ailments in this area.  Set up your hospital to deal with more patients, " ..
-                            "and plan to build a Research Department.  Remember to keep your establishment clean, and try to get your " ..
-                            "reputation as high as possible - you'll be dealing with diseases like Slack Tongue, so you'll need a Slack " ..
-                            "Tongue Clinic.  You can also build a Cardiogram to help you diagnose new illnesses.  Both these rooms will " ..
-                            "need to be researched before you can build them.  Now you can also buy extra plots of land to expand your " ..
-                            "hospital - use the Town map for this.  Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
+introduction_texts.level2 = " Mas marami ang uri ng karamdaman sa bahaging ito. Ayusin ang iyong ospital upang makapaglingkod sa mas maraming pasyente, " ..
+                            "at planuhin ang pagtatayo ng isang Departamento ng Pananaliksik (Research Department). Tandaan na panatilihing malinis ang iyong ospital, at sikaping makuha ang iyong " ..
+                            "reputasyon nang kasing taas hangga’t maaari - makakaharap ka ng mga sakit tulad ng Slack Tongue, kaya kakailanganin mo ng isang Slack " ..
+                            "Tongue Clinic. Maaari ka ring magtayo ng Cardiogram upang matulungan kang ma-diagnose ang mga bagong karamdaman. Parehong silid na ito ay " ..
+                            "kailangang mapananaliksik muna bago mo sila maitayo. Ngayon, maaari ka ring bumili ng dagdag na lupa upang palawakin ang iyong " ..
+                            "ospital - gamitin ang Town map para dito. Sikaping makamit ang reputasyon na 300, balanse sa bangko na $10,000, at 40 na pasyente ang magaling."
 
 -- Override for level progress typo
-level_progress.hospital_value_enough = "Keep the value of your hospital above %d and attend to your other problems to win the level."
-level_progress.cured_enough_patients = "You've cured enough of your patients, but you need to get your hospital in better order to win the level."
+level_progress.hospital_value_enough = "Panatilihing higit sa %d ang halaga ng iyong ospital at tugunan ang iba mo pang mga problema upang manalo sa antas."
+level_progress.cured_enough_patients = "Nakapagpagaling ka na ng sapat na pasyente, ngunit kailangan mong ayusin pa ang iyong ospital upang manalo sa antas."
 
 -- Override for multiplayer typos
-multiplayer.players_failed = "The following player(s) failed to achieve the last objective:"
-multiplayer.everyone_failed = "Everyone failed to satisfy that last objective. So everyone gets to play on!"
+multiplayer.players_failed = "Ang mga sumusunod na manlalaro ay nabigong makamit ang huling layunin:"
+multiplayer.everyone_failed = "Lahat ay nabigong matupad ang huling layunin. Kaya lahat ay maaaring magpatuloy sa paglalaro!"
 
 -- Override for a disease patient choice typo
-disease_discovered_patient_choice.need_to_employ = "Employ a %s to be able to handle this situation."
+disease_discovered_patient_choice.need_to_employ = "Mag-hire ng %s upang magampanan ang sitwasyong ito."
 
 -- Override for shorter messages and a typo in 12.2
-letter[9][2] = "You have proved yourself to be the best hospital administrator in medicine's long and chequered history. Such a momentous achievement cannot go unrewarded, so we would like to offer you the honorary post of Supreme Chief of All Hospitals. This comes with a salary of $%d. You will be given a tickertape parade, and people will show their appreciation wherever you go.//"
-letter[10][2] = "Congratulations on successfully running every hospital we assigned you to. Such a superb performance qualifies you for the freedom of all the world's cities. You are to be given a pension of $%d, and all we ask is that you travel, for free, around the nation, promoting the work of all hospitals to your adoring public.//"
-letter[11][2] = "Your career has been exemplary, and you are an inspiration to all of us. Thank you for running so many hospitals so well. We would like to grant you a lifetime salary of $%d, and would ask simply that you travel by official open-topped car from city to city, giving lectures about how you achieved so much so fast.//"
-letter[11][3] = "You are an example to every wise person, and without exception, everybody in the world regards you as a supreme asset.//"
-letter[12][2] = "Your successful career as the best hospital administrator since Moses is nearing an end. Befitting your impact on the nation, the Ministry would like to offer you a salary of $%d simply to appear on our behalf, opening fetes, launching ships, and doing chat shows. It would be great PR for us all!//"
+letter[9][2] = "Napatunayan mo na ang iyong sarili bilang pinakamahusay na administrator ng ospital sa mahabang at makulay na kasaysayan ng medisina. Ang isang napakahalagang tagumpay na ito ay hindi dapat walang gantimpala, kaya nais naming ialok sa iyo ang pambihirang posisyon ng Kataas-taasang Pinuno ng Lahat ng Ospital (Supreme Chief of All Hospitals). Kasama nito ang suweldo na $%d. Bibigyan ka ng tickertape parade, at ipapakita ng mga tao ang kanilang pagpapahalaga saan ka man pumunta."
+letter[10][2] = "Binabati ka namin sa matagumpay na pamamahala ng bawat ospital na aming itinalaga sa iyo. Ang napakahusay na pagganap na ito ay nagbibigay sa iyo ng karapatang makalaya at makapasok sa lahat ng lungsod sa buong mundo. Ikaw ay pagkakalooban ng pensiyon na $%d, at ang tanging hinihiling namin ay maglakbay ka, nang libre, sa buong bansa, upang itaguyod ang gawain ng lahat ng mga ospital sa harap ng iyong humahangang publiko.//"
+letter[11][2] = "Ang iyong karera ay kahanga-hanga, at ikaw ay isang inspirasyon sa aming lahat. Salamat sa mahusay na pamamahala sa napakaraming ospital. Nais naming pagkalooban ka ng habambuhay na suweldo na $%d, at ang tanging hinihiling namin ay maglakbay ka gamit ang opisyal na kotse na bukas ang bubong mula lungsod sa lungsod, nagbibigay ng mga lektyur tungkol sa kung paano mo naabot ang napakaraming tagumpay nang mabilis.//"
+letter[11][3] = "Ikaw ay isang huwaran para sa bawat matalinong tao, at walang anumang pagbubukod, itinuturing ka ng lahat sa buong mundo bilang isang pinakamahalagang yaman.//"
+letter[12][2] = "Ang iyong matagumpay na karera bilang pinakamahusay na administrator ng ospital mula pa kay Moses ay papalapit na sa katapusan. Alinsunod sa iyong malaking kontribusyon sa bansa, nais ng Ministry na ialok sa iyo ang suweldo na $%d upang kumatawan sa amin, magbukas ng mga pista, ilunsad ang mga barko, at lumahok sa mga chat show. Ito ay magiging mahusay na PR para sa ating lahat!"
 
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",
 }
 
-object.litter = "Litter"
-tooltip.objects.litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in."
+object.litter = "Basura"
+tooltip.objects.litter = "Basura: Naiwan sa sahig ng isang pasyente dahil hindi siya nakakita ng basurahan para itapon ito."
 
-object.rathole = "Rathole"
-tooltip.objects.rathole = "Home of a rat family that found your hospital dirty enough to live here."
+object.rathole = "Bahay ng daga"
+tooltip.objects.rathole = "Tirahan ng daga: Bahay ng isang pamilya ng daga na natagpuan ang iyong ospital na sapat na marumi para tirahan ito."
 
-tooltip.fax.close = "Close this window without deleting the message"
-tooltip.message.button = "Left click to open message"
-tooltip.message.button_dismiss = "Left click to open message, right click to dismiss it"
-tooltip.casebook.cure_requirement.hire_staff = "You need to employ staff to handle this treatment"
-tooltip.casebook.cure_type.unknown = "You do not yet know how to treat this disease"
-tooltip.research_policy.no_research = "No research is being carried out in this category at the moment"
-tooltip.research_policy.research_progress = "Progress towards the next discovery in this category: %1%/%2%"
+tooltip.fax.close = "Isara ang bintana na ito nang hindi binubura ang mensahe."
+tooltip.message.button = "I-left click upang buksan ang mensahe."
+tooltip.message.button_dismiss = "I-left click upang buksan ang mensahe, i-right click upang isara ito."
+tooltip.casebook.cure_requirement.hire_staff = "Kakailanganin mong mag-hire ng tauhan upang pangasiwaan ang gamutan na ito."
+tooltip.casebook.cure_type.unknown = "Hindi mo pa alam kung paano gamutin ang sakit na ito."
+tooltip.research_policy.no_research = "Walang pananaliksik na isinasagawa sa kategoryang ito sa kasalukuyan."
+tooltip.research_policy.research_progress = "Progreso patungo sa susunod na diskubre sa kategoryang ito: %1%/%2%"
 
-menu["player_count"] = "PLAYER COUNT"
+menu["player_count"] = "BILANG NG MANLALARO"
 
 menu_file = {
-  load =    "  (%1%) LOAD  ",
-  save =    "  (%1%) SAVE   ",
-  restart = "  (%1%) RESTART",
-  quit =    "  (%1%) QUIT   "
+  load =    "  (%1%) I-LOAD  ",
+  save =    "  (%1%) I-SAVE   ",
+  restart = "  (%1%) I-RESTART",
+  quit =    "  (%1%) LUMABAS   "
 }
 
 menu_options = {
-  sound = "  (%1%) SOUND   ",
-  announcements = "  (%1%) ANNOUNCEMENTS   ",
-  music = "  (%1%) MUSIC   ",
+  sound = "  (%1%) TUNOG   ",
+  announcements = "  (%1%) MGA ANUNSYO   ",
+  music = "  (%1%) MUSIKA   ",
   jukebox = "  (%1%) JUKEBOX  ",
-  lock_windows = "  LOCK WINDOWS  ",
-  edge_scrolling = "  EDGE SCROLLING  ",
-  capture_mouse = "  CAPTURE MOUSE  ",
-  adviser_disabled = "  (%1%) ADVISER  ",
-  warmth_colors = "  WARMTH COLOURS  ",
-  wage_increase = "  WAGE REQUESTS  ",
-  twentyfour_hour_clock = "  24 HOUR CLOCK  "
+  lock_windows = "  I-LOCK ANG MGA BINTANA  ",
+  edge_scrolling = "  PAG-SCROLL SA GILID  ",
+  capture_mouse = "  I-CAPTURE ANG MOUSE  ",
+  adviser_disabled = "  (%1%) TAGAPAYO  ",
+  warmth_colors = "  MGA KULAY NG INIT  ",
+  wage_increase = "  MGA HILING SA SAHOD  ",
+  twentyfour_hour_clock = "  24 ORAS NA ORASAN  "
 }
 
 menu_options_game_speed = {
-  pause               = "  (%1%) PAUSE  ",
-  slowest             = "  (%1%) SLOWEST  ",
-  slower              = "  (%1%) SLOWER  ",
+  pause               = "  (%1%) PAHINTO  ",
+  slowest             = "  (%1%) PINAKAMABAGAL  ",
+  slower              = "  (%1%) MAS MABGAL  ",
   normal              = "  (%1%) NORMAL  ",
-  max_speed           = "  (%1%) MAX SPEED  ",
-  and_then_some_more  = "  (%1%) AND THEN SOME MORE  ",
+  max_speed           = "  (%1%) PINAKAMABILIS  ",
+  and_then_some_more  = "  (%1%) AT HIGIT PA  ",
 }
 
 menu_options_warmth_colors = {
-  choice_1 = "  RED  ",
-  choice_2 = "  BLUE GREEN RED  ",
-  choice_3 = "  YELLOW ORANGE RED  ",
+  choice_1 = "  PULA  ",
+  choice_2 = "  ASUL BERDE PULA  ",
+  choice_3 = "  DILAW KAHEL PULA  ",
 }
 
 menu_options_wage_increase = {
-  grant = "    GRANT ",
-  deny =  "    DENY ",
+  grant = "    PAYAGAN ",
+  deny =  "    IBALEWALA ",
 }
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
