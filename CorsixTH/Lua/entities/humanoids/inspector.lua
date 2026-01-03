@@ -39,6 +39,11 @@ function Inspector:updateDynamicInfo(action_string)
   self:setDynamicInfo('text', {_S.dynamic_info.health_inspector})
 end
 
+-- Disable showing inspector mood on hover
+function Inspector:setIfHoverMoodsVisible()
+  self.hover_moods = false
+end
+
 --[[ Sends the inspector home ]]
 function Inspector:goHome()
   if self.going_home then
