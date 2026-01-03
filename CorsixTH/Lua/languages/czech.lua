@@ -2733,7 +2733,7 @@ information = {
   },
 }
 errors = {
-  minimum_screen_size = "Minimální rozlišení obrazovky je 640x480",
+  minimum_screen_size = "Minimální rozlišení obrazovky je %dx%d.",
   map_file_missing = "Nelze nalézt soubor s mapou %s",
   dialog_missing_graphics = "Soubory z demoverze toto dialogové okno neobsahují",
   load_prefix = "CHYBA při načítání hry: ",

@@ -382,7 +382,7 @@ errors = {
   unavailable_screen_size = "Esta resolução não está disponível no modo de tela cheia.",
   maximum_screen_size = "Resolução máxima de 3000x2000.",
   map_file_missing = "Não foi encontrado o ficheiro do mapa %s para este nível!",
-  minimum_screen_size = "Resolução mínima de 640x480.",
+  minimum_screen_size = "Resolução mínima de %dx%d.",
 }
 
 
