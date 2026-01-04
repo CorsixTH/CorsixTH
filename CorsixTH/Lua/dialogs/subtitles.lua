@@ -40,7 +40,8 @@ function Subtitles:queueSubtitle(name)
   if _S.subtitles ~= nil then
     local subtitleString = _S.subtitles[string.gsub(string.lower(name), ".wav", "")]
 	if subtitleString ~= nil then
-	  --
+	  --Second field of subtitle object is the subtitle's display lifetime, measured in ticks
+	  --280 ticks = ~5 seconds
 	  self.queue:push({subtitleString, 280})
 	end
   end
