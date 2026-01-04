@@ -599,8 +599,10 @@ template <typename T>
 int l_anim_draw(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
-  pAnimation->draw(pCanvas, static_cast<int>(luaL_checkinteger(L, 3)),
-                   static_cast<int>(luaL_checkinteger(L, 4)));
+  int x = static_cast<int>(luaL_checkinteger(L, 3));
+  int y = static_cast<int>(luaL_checkinteger(L, 4));
+  pAnimation->draw(pCanvas, {x, y});
+
   lua_settop(L, 1);
   return 1;
 }

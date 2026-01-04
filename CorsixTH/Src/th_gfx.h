@@ -507,30 +507,31 @@ class animation : public animation_base {
   void set_parent(animation* pParent, bool use_primary);
 
   void tick();
-  void draw(render_target* pCanvas, int iDestX, int iDestY);
-  bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
-  void draw_morph(render_target* pCanvas, int iDestX, int iDestY);
-  bool hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY);
-  void draw_child(render_target* pCanvas, int iDestX, int iDestY,
+  void draw(render_target* pCanvas, const xy_pair& draw_pos);
+  void draw_morph(render_target* pCanvas, const xy_pair& draw_pos);
+  void draw_child(render_target* pCanvas, const xy_pair& draw_pos,
                   bool use_primary);
-  bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
 
   void draw_fn(render_target* pCanvas, const xy_pair& draw_pos) override {
     switch (anim_kind) {
       case animation_kind::normal:
-        draw(pCanvas, draw_pos.x, draw_pos.y);
+        draw(pCanvas, draw_pos);
         return;
       case animation_kind::primary_child:
-        draw_child(pCanvas, draw_pos.x, draw_pos.y, true);
+        draw_child(pCanvas, draw_pos, true);
         return;
       case animation_kind::secondary_child:
-        draw_child(pCanvas, draw_pos.x, draw_pos.y, false);
+        draw_child(pCanvas, draw_pos, false);
         return;
       case animation_kind::morph:
-        draw_morph(pCanvas, draw_pos.x, draw_pos.y);
+        draw_morph(pCanvas, draw_pos);
         return;
     }
   }
+
+  bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
+  bool hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY);
+  bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
 
   bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) override {
     switch (anim_kind) {
@@ -603,7 +604,7 @@ class animation : public animation_base {
 class sprite_render_list : public animation_base {
  public:
   void tick();
-  void draw(render_target* pCanvas, int iDestX, int iDestY);
+  void draw(render_target* pCanvas, const xy_pair& draw_pos);
   bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
 
   void set_sheet(sprite_sheet* pSheet) { sheet = pSheet; }
@@ -617,7 +618,7 @@ class sprite_render_list : public animation_base {
   void depersist(lua_persist_reader* pReader);
 
   void draw_fn(render_target* pCanvas, const xy_pair& draw_pos) override {
-    draw(pCanvas, draw_pos.x, draw_pos.y);
+    draw(pCanvas, draw_pos);
   }
 
   bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) override {

@@ -1186,14 +1186,14 @@ bool are_flags_set(uint32_t val, uint32_t flags) {
 
 animation::animation() { patient_effect_offset = rand(); }
 
-void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
+void animation::draw(render_target* pCanvas, const xy_pair& draw_pos) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
 
-  iDestX += pixel_offset.x;
-  iDestY += pixel_offset.y;
+  int x = draw_pos.x + pixel_offset.x;
+  int y = draw_pos.y + pixel_offset.y;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
-    if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY, 0);
+    if (pSounds) pSounds->play_at(sound_to_play, x, y, 0);
     sound_to_play = 0;
   }
   if (manager) {
@@ -1201,35 +1201,35 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       clip_rect rcNew;
       rcNew.y = 0;
       rcNew.h = pCanvas->get_height();
-      rcNew.x = iDestX + (crop_column - 1) * 32;
+      rcNew.x = x + (crop_column - 1) * 32;
       rcNew.w = 64;
       render_target::scoped_clip clip(pCanvas, &rcNew);
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
+      manager->draw_frame(pCanvas, frame_index, layers, x, y, flags,
                           patient_effect, patient_effect_offset);
     } else
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
+      manager->draw_frame(pCanvas, frame_index, layers, x, y, flags,
                           patient_effect, patient_effect_offset);
   }
 }
 
-void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY,
+void animation::draw_child(render_target* pCanvas, const xy_pair& draw_pos,
                            bool use_primary) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
   if (are_flags_set(parent->flags, thdf_alpha_50 | thdf_alpha_75)) return;
-  int iX = 0, iY = 0;
+  int x = 0, y = 0;
   if (use_primary)
-    parent->get_primary_marker(&iX, &iY);
+    parent->get_primary_marker(&x, &y);
   else
-    parent->get_secondary_marker(&iX, &iY);
+    parent->get_secondary_marker(&x, &y);
 
-  iX += pixel_offset.x + iDestX;
-  iY += pixel_offset.y + iDestY;
+  x += pixel_offset.x + draw_pos.x;
+  y += pixel_offset.y + draw_pos.y;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
-    if (pSounds) pSounds->play_at(sound_to_play, iX, iY, 0);
+    if (pSounds) pSounds->play_at(sound_to_play, x, y, 0);
     sound_to_play = 0;
   }
-  if (manager) manager->draw_frame(pCanvas, frame_index, layers, iX, iY, flags);
+  if (manager) manager->draw_frame(pCanvas, frame_index, layers, x, y, flags);
 }
 
 bool animation::hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY) {
@@ -1237,16 +1237,16 @@ bool animation::hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY) {
   return false;
 }
 
-void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
+void animation::draw_morph(render_target* pCanvas, const xy_pair& draw_pos) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
 
   if (!manager) return;
 
-  iDestX += pixel_offset.x;
-  iDestY += pixel_offset.y;
+  int x = draw_pos.x + pixel_offset.x;
+  int y = draw_pos.y + pixel_offset.y;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
-    if (pSounds) pSounds->play_at(sound_to_play, iDestX, iDestY, 0);
+    if (pSounds) pSounds->play_at(sound_to_play, x, y, 0);
     sound_to_play = 0;
   }
 
@@ -1255,19 +1255,18 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
   // vertical clipping is applied.
   oMorphRect.x = 0;
   oMorphRect.w = pCanvas->get_width();
-  oMorphRect.y = iDestY + morph_target->pixel_offset.x;
+  oMorphRect.y = y + morph_target->pixel_offset.x;
   oMorphRect.h = morph_target->pixel_offset.y - morph_target->pixel_offset.x;
   {
     render_target::scoped_clip clip(pCanvas, &oMorphRect);
-    manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
+    manager->draw_frame(pCanvas, frame_index, layers, x, y, flags);
   }
-  oMorphRect.y = iDestY + morph_target->pixel_offset.y;
+  oMorphRect.y = y + morph_target->pixel_offset.y;
   oMorphRect.h = morph_target->speed.x - morph_target->pixel_offset.y;
   {
     render_target::scoped_clip clip(pCanvas, &oMorphRect);
     manager->draw_frame(pCanvas, morph_target->frame_index,
-                        morph_target->layers, iDestX, iDestY,
-                        morph_target->flags);
+                        morph_target->layers, x, y, morph_target->flags);
   }
 }
 
@@ -1711,20 +1710,20 @@ void sprite_render_list::tick() {
   }
 }
 
-void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
+void sprite_render_list::draw(render_target* pCanvas, const xy_pair& draw_pos) {
   if (!sheet || sprites.empty()) {
     return;
   }
 
-  iDestX += pixel_offset.x;
-  iDestY += pixel_offset.y;
+  int x = draw_pos.x + pixel_offset.x;
+  int y = draw_pos.y + pixel_offset.y;
 
   std::unique_ptr<render_target::scoped_buffer> intermediate_buffer;
   if (use_intermediate_buffer) {
     int minX = INT_MAX, minY = INT_MAX, maxX = INT_MIN, maxY = INT_MIN;
     for (const sprite& pSprite : sprites) {
-      int spriteX = iDestX + pSprite.x;
-      int spriteY = iDestY + pSprite.y;
+      int spriteX = x + pSprite.x;
+      int spriteY = y + pSprite.y;
       int spriteWidth, spriteHeight;
       sheet->get_sprite_size_unchecked(pSprite.index, &spriteWidth,
                                        &spriteHeight);
@@ -1738,8 +1737,8 @@ void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
   }
 
   for (const sprite& pSprite : sprites) {
-    sheet->draw_sprite(pCanvas, pSprite.index, iDestX + pSprite.x,
-                       iDestY + pSprite.y, flags);
+    sheet->draw_sprite(pCanvas, pSprite.index, x + pSprite.x,
+                       y + pSprite.y, flags);
   }
 }
 
