@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 221 -- CorsixTH 0.69.1
+local SAVEGAME_VERSION = 222 -- CorsixTH 0.69.2
 
 class "App"
 
@@ -1719,6 +1719,7 @@ local release_table = {
   {major = 0, minor = 69, revision = 0, patch = "-rc1", version = 219},
   {major = 0, minor = 69, revision = 0, patch = "", version = 220},
   {major = 0, minor = 69, revision = 1, patch = "", version = 221},
+  {major = 0, minor = 69, revision = 2, patch = "", version = 222},
 }
 
 --! Retrieve the current savegame version as defined in the application.
