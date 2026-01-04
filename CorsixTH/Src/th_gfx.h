@@ -94,6 +94,12 @@ enum draw_flags : uint32_t {
   thdf_nearest = 1 << 14,
 };
 
+// Integer 2D pair.
+struct xy_pair {
+  int x{};  ///< Value of the X coordinate.
+  int y{};  ///< Value of the Y coordinate.
+};
+
 /*!
     Base class for a linked list of drawable objects.
     Note that "object" is used as a generic term, not in specific reference to
@@ -107,7 +113,7 @@ struct drawable : public link_list {
   /*!
       Can also "draw" the object to the speakers, i.e. play sounds.
   */
-  virtual void draw_fn(render_target* pCanvas, int iDestX, int iDestY) = 0;
+  virtual void draw_fn(render_target* pCanvas, const xy_pair& draw_pos) = 0;
 
   //! Perform a hit test against the object
   /*!
@@ -458,12 +464,6 @@ class animation_manager {
   void fix_next_frame(uint32_t iFirst, size_t iLength);
 };
 
-// Integer 2D pair.
-struct xy_pair {
-  int x{};  ///< Value of the X coordinate.
-  int y{};  ///< Value of the Y coordinate.
-};
-
 class animation_base : public drawable {
  public:
   animation_base();
@@ -515,19 +515,19 @@ class animation : public animation_base {
                   bool use_primary);
   bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
 
-  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override {
+  void draw_fn(render_target* pCanvas, const xy_pair& draw_pos) override {
     switch (anim_kind) {
       case animation_kind::normal:
-        draw(pCanvas, iDestX, iDestY);
+        draw(pCanvas, draw_pos.x, draw_pos.y);
         return;
       case animation_kind::primary_child:
-        draw_child(pCanvas, iDestX, iDestY, true);
+        draw_child(pCanvas, draw_pos.x, draw_pos.y, true);
         return;
       case animation_kind::secondary_child:
-        draw_child(pCanvas, iDestX, iDestY, false);
+        draw_child(pCanvas, draw_pos.x, draw_pos.y, false);
         return;
       case animation_kind::morph:
-        draw_morph(pCanvas, iDestX, iDestY);
+        draw_morph(pCanvas, draw_pos.x, draw_pos.y);
         return;
     }
   }
@@ -616,8 +616,8 @@ class sprite_render_list : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
-  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override {
-    draw(pCanvas, iDestX, iDestY);
+  void draw_fn(render_target* pCanvas, const xy_pair& draw_pos) override {
+    draw(pCanvas, draw_pos.x, draw_pos.y);
   }
 
   bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override {
