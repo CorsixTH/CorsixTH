@@ -1252,7 +1252,7 @@ drawable* level_map::hit_test_drawables(link_list* pListStart, int iXs, int iYs,
   drawable* pList = static_cast<drawable*>(pListEnd);
 
   while (true) {
-    if (pList->hit_test_fn(iXs, iYs, iTestX, iTestY)) return pList;
+    if (pList->hit_test_fn({iXs, iYs}, {iTestX, iTestY})) return pList;
 
     if (pList == pListStart) {
       return nullptr;

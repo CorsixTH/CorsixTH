@@ -117,10 +117,10 @@ struct drawable : public link_list {
 
   //! Perform a hit test against the object
   /*!
-      Should return true if when the object is drawn at (iDestX, iDestY) on a
-     canvas, the point (iTestX, iTestY) is within / on the object.
+      Should return true if when the object is drawn at \p draw_pos on a
+     canvas, the point \p obj_pos is within / on the object.
   */
-  virtual bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) = 0;
+  virtual bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) = 0;
 
   /** Returns true if instance is a multiple frame animation.
       Should be overloaded in derived class.
@@ -532,15 +532,15 @@ class animation : public animation_base {
     }
   }
 
-  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override {
+  bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) override {
     switch (anim_kind) {
       case animation_kind::normal:
-        return hit_test(iDestX, iDestY, iTestX, iTestY);
+        return hit_test(draw_pos.x, draw_pos.y, obj_pos.x, obj_pos.y);
       case animation_kind::primary_child:
       case animation_kind::secondary_child:
-        return hit_test_child(iDestX, iDestY, iTestX, iTestY);
+        return hit_test_child(draw_pos.x, draw_pos.y, obj_pos.x, obj_pos.y);
       case animation_kind::morph:
-        return hit_test_morph(iDestX, iDestY, iTestX, iTestY);
+        return hit_test_morph(draw_pos.x, draw_pos.y, obj_pos.x, obj_pos.y);
     }
     return false;
   }
@@ -620,8 +620,8 @@ class sprite_render_list : public animation_base {
     draw(pCanvas, draw_pos.x, draw_pos.y);
   }
 
-  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override {
-    return hit_test(iDestX, iDestY, iTestX, iTestY);
+  bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) override {
+    return hit_test(draw_pos.x, draw_pos.y, obj_pos.x, obj_pos.y);
   }
 
   bool is_multiple_frame_animation_fn() override { return false; }
