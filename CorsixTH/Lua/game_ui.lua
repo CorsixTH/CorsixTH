@@ -68,7 +68,9 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   -- UI widgets
   self.menu_bar = UIMenuBar(self, self.map_editor)
   self:addWindow(self.menu_bar)
-
+  self.subtitles = Subtitles(self)
+  self:addWindow(self.subtitles)
+  
   local scr_w = app.config.width
   local scr_h = app.config.height
   self.visible_diamond = self:makeVisibleDiamond(scr_w, scr_h)
@@ -817,6 +819,7 @@ end
 
 function GameUI:playAnnouncement(name, priority, played_callback, played_callback_delay)
   self.announcer:playAnnouncement(name, priority, played_callback, played_callback_delay)
+  self.subtitles:queueSubtitle(name)
 end
 
 --! Check whether the configured mouse drag button is being held down (true) or not (false).
@@ -1310,6 +1313,10 @@ function GameUI:afterLoad(old, new)
   if old < 130 then
     self.ticks_since_last_announcement = nil -- cleanup
     self.announcer = Announcer(self.app)
+  end
+  if old < 239 then
+    self.subtitles = Subtitles(self)
+    self:addWindow(self.subtitles)
   end
 
   self.announcer.playing = false

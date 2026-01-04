@@ -127,6 +127,7 @@ local config_defaults = {
   remove_destroyed_rooms = false,
   machine_menu_button = true,
   enable_screen_shake = true,
+  enable_announcer_subtitles = false,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,

@@ -411,6 +411,12 @@ function Audio:cacheSoundFilenamesAssociatedWithName(name)
   return list
 end
 
+function Audio:resolveFilenameWildcard(name)
+  local list = self:cacheSoundFilenamesAssociatedWithName(name)
+  name = list[1] and list[math.random(1, #list)] or name
+  return name
+end
+
 --[[
 This function's integer array parameters for the min and max silence lengths should provide lengths
 for this game's different speeds, indexed as follows:

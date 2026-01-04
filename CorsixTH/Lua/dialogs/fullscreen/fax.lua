@@ -270,7 +270,8 @@ function UIFax:validate()
   elseif code == "112" then
     -- simple, unobfuscated cheat for everyone :)
     -- not that critical, but we want to make to make sure it's played fairly soon
-    self.ui:playAnnouncement("rand*.wav", AnnouncementPriority.Critical)
+    local name = self.ui.app.audio:resolveFilenameWildcard("rand*.wav")
+    self.ui:playAnnouncement(name, AnnouncementPriority.Critical)
 
   -- Pass cheat code to the Cheats system to handle
   elseif not cheats:processCheatCode(x) then

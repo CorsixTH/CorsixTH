@@ -189,7 +189,9 @@ function Announcer:onTick()
   if not self.app.world:isCurrentSpeed("Pause") then
     local ticks_since_last_announcement = self.ticks_since_last_announcement
     if ticks_since_last_announcement >= self.random_announcement_ticks_target then
-      self:playAnnouncement("rand*.wav", AnnouncementPriority.Low)
+      local name = self.app.audio:resolveFilenameWildcard("rand*.wav")
+      self:playAnnouncement(name, AnnouncementPriority.Low)
+      self.app.ui.subtitles:queueSubtitle(name)
       self:_setRandomAnnouncementTarget()
     else
       self.ticks_since_last_announcement = ticks_since_last_announcement + 1
