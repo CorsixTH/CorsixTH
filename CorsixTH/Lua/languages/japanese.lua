@@ -21,6 +21,7 @@ SOFTWARE. --]]
 Font("unicode")
 Language("日本語", "Japanese", "ja", "jp")
 Inherit("english")
+Inherit("original_strings", 6)
 Encoding(utf8)
 IsArabicNumerals(false)
 
