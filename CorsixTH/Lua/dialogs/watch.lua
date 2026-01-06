@@ -137,7 +137,7 @@ function UIWatch:onWorldTick()
     self.tick_timer = self.tick_rate
     self.open_timer = self.open_timer - 1
     if self.open_timer == 11 then
-      self:addPanel(2, 2, 47)
+      self:addPanel(2, 2, 47, nil, nil, true, DrawFlags.Nearest)
     elseif self.open_timer == 0 then
       self.panels[#self.panels].sprite_index = 0
     elseif self.open_timer < 11 and self.open_timer > 0 then
@@ -205,6 +205,16 @@ function UIWatch:scrollToTimerEventPatient()
       patient_dialog:scrollToPatient()
     elseif patient == current_patient_dialog.patient then
       current_patient_dialog:scrollToPatient()
+    end
+  end
+end
+
+function UIWatch:afterLoad(old, new)
+  Window.afterLoad(self, old, new)
+  if old < 237 then
+    local pnl = self.panels[#self.panels]
+    if pnl.sprite_index >= 2 and pnl.sprite_index < 13 then
+      pnl.draw_flags = DrawFlags.Nearest
     end
   end
 end
