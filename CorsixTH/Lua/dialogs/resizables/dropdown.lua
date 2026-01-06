@@ -51,6 +51,7 @@ function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback
 
   local width = panel.w
   local height = panel.h
+  self.min_height = height
 
   self:setPosition(panel.x, panel.y + panel.h)
 

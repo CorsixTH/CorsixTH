@@ -248,16 +248,6 @@ map_tile_flags::operator uint32_t() const {
   return raw;
 }
 
-map_tile::map_tile()
-    : iParcelId(0),
-      iRoomId(0),
-      flags({}),
-      raw{},
-      tile_layers{},
-      aiTemperature{8192, 8192} {}
-
-level_map::level_map() = default;
-
 level_map::~level_map() {
   set_overlay(nullptr, false);
   delete[] cells;
@@ -1058,6 +1048,9 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   rcClip.w = static_cast<clip_rect::w_h_type>(iWidth);
   rcClip.h = static_cast<clip_rect::w_h_type>(iHeight);
   render_target::scoped_clip clip(pCanvas, &rcClip);
+
+  // For proper hit-testing, the 'level_map::hit_test' function below should
+  // 'paint' in the same way as here, except reversed.
 
   draw_floor(pCanvas, iScreenX, iScreenY, iWidth, iHeight, iCanvasX, iCanvasY);
 
