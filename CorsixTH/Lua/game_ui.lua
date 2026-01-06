@@ -70,7 +70,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self:addWindow(self.menu_bar)
   self.subtitles = Subtitles(self)
   self:addWindow(self.subtitles)
-  
+
   local scr_w = app.config.width
   local scr_h = app.config.height
   self.visible_diamond = self:makeVisibleDiamond(scr_w, scr_h)

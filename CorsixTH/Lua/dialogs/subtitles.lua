@@ -30,7 +30,7 @@ function Subtitles:Subtitles()
   self.x = 0
   self.y = 0
   self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
-  
+
   self.queue = SubtitleQueue()
 end
 
@@ -50,7 +50,6 @@ end
 function Subtitles:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   local s = TheApp.config.ui_scale
-  x, y = x + self.x * s, y + self.y * s
 
   if not self.queue:isEmpty() then
     if TheApp.config.enable_announcer_subtitles then
@@ -69,7 +68,7 @@ function Subtitles:onTick()
   if not self.queue:isEmpty() then
     for _, subtitle in ipairs(self.queue.subtitles) do
 	  local subtitleLifetime = subtitle[2]
-	  if subtitleLifetime <= 1 then 
+	  if subtitleLifetime <= 1 then
 	    self.queue:pop()
 	  else
 	    subtitle[2] = subtitleLifetime - 1
