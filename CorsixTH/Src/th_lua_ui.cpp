@@ -20,9 +20,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "th_lua_ui.h"
+
 #include "config.h"
 
-#include <algorithm>
 #include <list>
 
 #include "lua.hpp"
@@ -39,13 +40,6 @@ int l_abstract_window_new(lua_State* L) {
   return luaL_error(L,
                     "windowBase can only be used a base class - "
                     " do not create a windowBase directly.");
-}
-
-//! Scale val in [low, high] to [start, end]
-uint8_t range_scale(uint16_t low, uint16_t high, uint16_t val, uint16_t start,
-                    uint16_t end) {
-  return static_cast<uint8_t>(
-      std::clamp(start + (end - start) * (val - low) / (high - low), 0, 0xFF));
 }
 
 inline bool is_wall(uint16_t blk) {
@@ -97,8 +91,8 @@ int l_town_map_draw(lua_State* L) {
           else  // NB: 108 == (32767 - 5200) / 255
             iTemp = static_cast<uint16_t>((iTemp - 5200) / 108);
 
-          const uint16_t minOkTemp = 140;
-          const uint16_t maxOkTemp = 180;
+          constexpr uint16_t minOkTemp = 140;
+          constexpr uint16_t maxOkTemp = 180;
 
           uint8_t iR = 0;
           uint8_t iG = 0;
@@ -107,21 +101,22 @@ int l_town_map_draw(lua_State* L) {
             case temperature_theme::multi_colour:
               iB = 70;
               if (iTemp < minOkTemp) {
-                iB = range_scale(0, minOkTemp - 1, iTemp, 200, 60);
+                iB = map_color_channel(0, minOkTemp - 1, iTemp, 200, 60);
               } else if (iTemp < maxOkTemp) {
-                iG = range_scale(minOkTemp, maxOkTemp - 1, iTemp, 140, 224);
+                iG = map_color_channel(minOkTemp, maxOkTemp - 1, iTemp, 140,
+                                       224);
               } else {
-                iR = range_scale(maxOkTemp, 255, iTemp, 224, 255);
+                iR = map_color_channel(maxOkTemp, 255, iTemp, 224, 255);
               }
               break;
             case temperature_theme::yellow_red:
               if (iTemp < minOkTemp) {  // Below 11 degrees
-                iR = range_scale(0, minOkTemp - 1, iTemp, 100, 213);
-                iG = range_scale(0, minOkTemp - 1, iTemp, 80, 180);
+                iR = map_color_channel(0, minOkTemp - 1, iTemp, 100, 213);
+                iG = map_color_channel(0, minOkTemp - 1, iTemp, 80, 180);
               } else {
-                iR = range_scale(minOkTemp, 255, iTemp, 223, 235);
-                iG = range_scale(minOkTemp, 255, iTemp, 184, 104);
-                iB = range_scale(minOkTemp, 255, iTemp, 0, 53);
+                iR = map_color_channel(minOkTemp, 255, iTemp, 223, 235);
+                iG = map_color_channel(minOkTemp, 255, iTemp, 184, 104);
+                iB = map_color_channel(minOkTemp, 255, iTemp, 0, 53);
               }
               break;
             case temperature_theme::red:
