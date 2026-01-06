@@ -41,10 +41,11 @@ int l_abstract_window_new(lua_State* L) {
                     " do not create a windowBase directly.");
 }
 
+//! Scale val in [low, high] to [start, end]
 uint8_t range_scale(uint16_t low, uint16_t high, uint16_t val, uint16_t start,
                     uint16_t end) {
   return static_cast<uint8_t>(
-      std::max(start + (end - start) * (val - low) / (high - low), 0xFF));
+      std::clamp(start + (end - start) * (val - low) / (high - low), 0, 0xFF));
 }
 
 inline bool is_wall(uint16_t blk) {
