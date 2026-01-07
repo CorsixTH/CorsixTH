@@ -414,7 +414,13 @@ local string_01 = [=[
 -- By default the entire screen will shake during earthquakes. If you would
 -- like the game to keep the screen stationary, change this option to false.
 --]=] .. '\n' ..
-'enable_screen_shake = ' .. tostring(config_values.enable_screen_shake) .. '\n' .. [=[]=]
+'enable_screen_shake = ' .. tostring(config_values.enable_screen_shake) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default subtitles are not displayed. If you would like the game to
+-- display subtitles for your hospital's announcements, turn this option on.
+--]=] .. '\n' ..
+'enable_announcer_subtitles = ' .. tostring(config_values.enable_announcer_subtitles) .. '\n' .. [=[]=]
 
 local string_02 = [=[
 

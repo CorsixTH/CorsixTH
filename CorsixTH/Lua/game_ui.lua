@@ -819,7 +819,6 @@ end
 
 function GameUI:playAnnouncement(name, priority, played_callback, played_callback_delay)
   self.announcer:playAnnouncement(name, priority, played_callback, played_callback_delay)
-  self.subtitles:queueSubtitle(name)
 end
 
 --! Check whether the configured mouse drag button is being held down (true) or not (false).
@@ -1314,7 +1313,7 @@ function GameUI:afterLoad(old, new)
     self.ticks_since_last_announcement = nil -- cleanup
     self.announcer = Announcer(self.app)
   end
-  if old < 239 then
+  if old < 238 then
     self.subtitles = Subtitles(self)
     self:addWindow(self.subtitles)
   end

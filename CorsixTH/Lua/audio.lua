@@ -411,9 +411,13 @@ function Audio:cacheSoundFilenamesAssociatedWithName(name)
   return list
 end
 
+--! Resolves sound filename containing wildcard character from its associated variants
+--!param name (string) Filename containing wildcard character to resolve
 function Audio:resolveFilenameWildcard(name)
-  local list = self:cacheSoundFilenamesAssociatedWithName(name)
-  name = list[1] and list[math.random(1, #list)] or name
+  if name:find("*") then
+    local list = self:cacheSoundFilenamesAssociatedWithName(name)
+    name = list[1] and list[math.random(1, #list)] or name
+  end
   return name
 end
 

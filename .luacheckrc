@@ -43,7 +43,8 @@ globals = { -- Globals
             "Patient", "Plant", "PlayerHospital", "Queue", "ResearchDepartment", "Room",
             "SaveGame", "SaveGameFile", "Staff", "StaffProfile", "StaffRoom",
             "Strings", "SwingDoor", "TheApp", "TreeControl", "Vip", "Window",
-            "World", "Date", "Doctor", "Handyman", "Nurse", "Receptionist",
+            "World", "Date", "Doctor", "Handyman", "Nurse", "Receptionist", "Subtitles",
+            "SubtitleQueue",
 
             -- UI
             "UI", "UIAdviser", "UIAnnualReport", "UIAudio", "UIBankManager",
