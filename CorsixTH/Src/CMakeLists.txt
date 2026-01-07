@@ -55,6 +55,7 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/th_gfx_sdl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/th_lua.h
     ${CMAKE_CURRENT_SOURCE_DIR}/th_lua_internal.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/th_lua_ui.h
     ${CMAKE_CURRENT_SOURCE_DIR}/th_map.h
     ${CMAKE_CURRENT_SOURCE_DIR}/th_map_overlays.h
     ${CMAKE_CURRENT_SOURCE_DIR}/th_movie.h
