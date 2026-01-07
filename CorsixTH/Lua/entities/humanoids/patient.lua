@@ -664,7 +664,7 @@ function Patient:_dailyHealthChecks()
     return health
   end
 
-  local old_dying_mood, new_dying_mood = rangeMapLookup(health_treshold_rangemap, health, true)
+  local old_dying_mood, new_dying_mood = rangeMapLookup(health, health_treshold_rangemap, true)
   if not old_dying_mood then
     if new_dying_mood then
       -- Patient has entered the road of deterioration.
