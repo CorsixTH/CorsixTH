@@ -469,16 +469,15 @@ class animation_base : public drawable {
   animation_base();
 
   void remove_from_tile();
-  void attach_to_tile(int x, int y, map_tile* node, int layer);
+  void attach_to_tile(const xy_pair& tile_pos, map_tile* node, int layer);
 
   uint32_t get_flags() const { return flags; }
   const xy_pair& get_pixel_offset() const { return pixel_offset; }
   const xy_pair& get_tile() const { return tile; }
 
   void set_flags(uint32_t iFlags) { flags = iFlags; }
-  void set_tile(int x, int y) {
-    tile.x = x;
-    tile.y = y;
+  void set_tile(const xy_pair& tile_pos) {
+    tile = tile_pos;
   }
   void set_pixel_offset(int x, int y) {
     pixel_offset.x = x;

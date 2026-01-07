@@ -1544,7 +1544,7 @@ namespace {
 void restore_map_position(animation_base* anim, int tile_x_pos,
                           int tile_y_pos) {
   while (anim != nullptr) {
-    anim->set_tile(tile_x_pos, tile_y_pos);
+    anim->set_tile({tile_x_pos, tile_y_pos});
     anim = dynamic_cast<animation_base*>(anim->next);
   }
 }

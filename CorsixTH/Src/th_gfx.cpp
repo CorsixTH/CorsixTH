@@ -1143,7 +1143,8 @@ void animation_base::remove_from_tile() {
   tile = {-1, -1};
 }
 
-void animation_base::attach_to_tile(int x, int y, map_tile* node, int layer) {
+void animation_base::attach_to_tile(const xy_pair& tile_pos, map_tile* node,
+                                    int layer) {
   remove_from_tile();
   link_list* pList;
   if (flags & thdf_early_list) {
@@ -1153,7 +1154,7 @@ void animation_base::attach_to_tile(int x, int y, map_tile* node, int layer) {
   }
 
   this->set_drawing_layer(layer);
-  this->set_tile(x, y);
+  this->set_tile(tile_pos);
 
   while (pList->next &&
          static_cast<drawable*>(pList->next)->get_drawing_layer() < layer) {

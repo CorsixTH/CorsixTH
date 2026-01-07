@@ -393,7 +393,7 @@ int l_anim_set_tile(lua_State* L) {
 
     map_tile* node = pMap->get_tile(x - 1, y - 1);
     if (node) {
-      pAnimation->attach_to_tile(x - 1, y - 1, node, drawing_layer);
+      pAnimation->attach_to_tile({x - 1, y - 1}, node, drawing_layer);
     } else {
       // Off-map, report an error.
       std::string msg = "Map index out of bounds (" + std::to_string(x) + ", " +
