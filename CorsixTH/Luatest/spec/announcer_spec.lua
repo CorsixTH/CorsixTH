@@ -75,6 +75,9 @@ local function create_app_mock(speed_set, desk_set)
         v.played_callback()
         played_sounds[k] = nil -- clear
       end
+    end,
+    resolveFilenameWildcard = function(_, name)
+      return name
     end
   }
 
