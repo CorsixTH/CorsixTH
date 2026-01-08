@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 237 -- Scale Fixes
+local SAVEGAME_VERSION = 238 -- Lua 5.5
 
 class "App"
 
