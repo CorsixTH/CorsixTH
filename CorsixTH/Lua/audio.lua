@@ -574,11 +574,11 @@ function Audio:playNextOrPreviousBackgroundTrack(direction)
 
   local index = self:findIndexOfCurrentTrack()
 
-  -- Find next/previous track
+  -- Find next/previous enabled track
   for i = 1, #self.background_playlist do
-    i = ((index + direction * i - 1) % #self.background_playlist) + 1
-    if self.background_playlist[i].enabled then
-      self:playBackgroundTrack(i)
+    local next_index = ((index + direction * i - 1) % #self.background_playlist) + 1
+    if self.background_playlist[next_index].enabled then
+      self:playBackgroundTrack(next_index)
       return
     end
   end

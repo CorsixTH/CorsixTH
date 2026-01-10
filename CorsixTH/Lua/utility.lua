@@ -115,7 +115,20 @@ function loadfile_envcall(filename)
   return loadstring_envcall(result, "@" .. filename)
 end
 
-if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" or _G._VERSION == "Lua 5.4" then
+if _G._VERSION == "Lua 5.1" then
+  function loadstring_envcall(contents, chunkname)
+    -- Lua 5.1 has setfenv(), which allows environments to be set at runtime
+    local result, err = loadstring(contents, chunkname)
+    if result then
+      return function(env, ...)
+        setfenv(result, env)
+        return result(...)
+      end
+    else
+      return result, err
+    end
+  end
+else
   function loadstring_envcall(contents, chunkname)
     -- Lua 5.2+ lacks setfenv()
     -- load() still only allows a chunk to have an environment set once, so
@@ -127,19 +140,6 @@ if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" or _G._VERSION == "Lua 5
       return function(env, ...)
         env_mt.__index = env
         env_mt.__newindex = env
-        return result(...)
-      end
-    else
-      return result, err
-    end
-  end
-else
-  function loadstring_envcall(contents, chunkname)
-    -- Lua 5.1 has setfenv(), which allows environments to be set at runtime
-    local result, err = loadstring(contents, chunkname)
-    if result then
-      return function(env, ...)
-        setfenv(result, env)
         return result(...)
       end
     else
