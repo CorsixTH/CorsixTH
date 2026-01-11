@@ -476,9 +476,7 @@ class animation_base : public drawable {
   const xy_pair& get_tile() const { return tile; }
 
   void set_flags(uint32_t iFlags) { flags = iFlags; }
-  void set_tile(const xy_pair& tile_pos) {
-    tile = tile_pos;
-  }
+  void set_tile(const xy_pair& tile_pos) { tile = tile_pos; }
   void set_pixel_offset(int x, int y) {
     pixel_offset.x = x;
     pixel_offset.y = y;

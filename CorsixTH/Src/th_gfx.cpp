@@ -1267,8 +1267,8 @@ void animation::draw_morph(render_target* canvas, const xy_pair& draw_pos) {
   oMorphRect.h = morph_target->speed.x - morph_target->pixel_offset.y;
   {
     render_target::scoped_clip clip(canvas, &oMorphRect);
-    manager->draw_frame(canvas, morph_target->frame_index,
-                        morph_target->layers, x, y, morph_target->flags);
+    manager->draw_frame(canvas, morph_target->frame_index, morph_target->layers,
+                        x, y, morph_target->flags);
   }
 }
 
@@ -1454,11 +1454,11 @@ void animation::depersist(lua_persist_reader* reader) {
 
     if (iNumLayers > max_number_of_layers) {
       if (!reader->read_byte_stream(layers.layer_contents,
-                                     max_number_of_layers)) {
+                                    max_number_of_layers)) {
         break;
       }
       if (!reader->read_byte_stream(nullptr,
-                                     iNumLayers - max_number_of_layers)) {
+                                    iNumLayers - max_number_of_layers)) {
         break;
       }
     } else {
@@ -1744,8 +1744,8 @@ void sprite_render_list::draw(render_target* canvas, const xy_pair& draw_pos) {
   }
 
   for (const sprite& pSprite : sprites) {
-    sheet->draw_sprite(canvas, pSprite.index, x + pSprite.x,
-                       y + pSprite.y, flags);
+    sheet->draw_sprite(canvas, pSprite.index, x + pSprite.x, y + pSprite.y,
+                       flags);
   }
 }
 
@@ -1838,12 +1838,11 @@ void sprite_render_list::depersist(lua_persist_reader* reader) {
 
   if (iNumLayers > max_number_of_layers) {
     if (!reader->read_byte_stream(layers.layer_contents,
-                                   max_number_of_layers)) {
+                                  max_number_of_layers)) {
       return;
     }
 
-    if (!reader->read_byte_stream(nullptr,
-                                   iNumLayers - max_number_of_layers)) {
+    if (!reader->read_byte_stream(nullptr, iNumLayers - max_number_of_layers)) {
       return;
     }
   } else {

@@ -1136,8 +1136,8 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
             formerIterator.get_previous_tile()->entities.next);
         while (pItem) {
           if (pItem->get_drawing_layer() == 9) {
-            pItem->draw_fn(pCanvas, {formerIterator.x() - 64,
-                           formerIterator.y()});
+            pItem->draw_fn(pCanvas,
+                           {formerIterator.x() - 64, formerIterator.y()});
             bTileNeedsRedraw = true;
           }
           pItem = static_cast<drawable*>(pItem->next);
