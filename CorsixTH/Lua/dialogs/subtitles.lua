@@ -39,11 +39,11 @@ end
 function Subtitles:queueSubtitle(name)
   if _S.subtitles ~= nil then
     local subtitleString = _S.subtitles[string.gsub(string.lower(name), ".wav", "")]
-	if subtitleString ~= nil then
-	  --Second field of subtitle object is the subtitle's display lifetime, measured in ticks
-	  --280 ticks = ~5 seconds
-	  self.queue:push({subtitleString, 280})
-	end
+    if subtitleString ~= nil then
+      --Second field of subtitle object is the subtitle's display lifetime, measured in ticks
+      --280 ticks = ~5 seconds
+      self.queue:push({subtitleString, 280})
+    end
   end
 end
 
@@ -53,12 +53,12 @@ function Subtitles:draw(canvas, x, y)
 
   if not self.queue:isEmpty() then
     if TheApp.config.enable_announcer_subtitles then
-	  local displayIndex = 1
+      local displayIndex = 1
       for _, subtitle in ipairs(self.queue.subtitles) do
-	    self.white_font:draw(canvas, subtitle[1], 5, (5 + 16 * s) * displayIndex, 0, 16)
-	    displayIndex = displayIndex + 1
+        self.white_font:draw(canvas, subtitle[1], 5, (5 + 16 * s) * displayIndex, 0, 16)
+        displayIndex = displayIndex + 1
       end
-	end
+    end
   end
 end
 
@@ -67,13 +67,13 @@ end
 function Subtitles:onTick()
   if not self.queue:isEmpty() then
     for _, subtitle in ipairs(self.queue.subtitles) do
-	  local subtitleLifetime = subtitle[2]
-	  if subtitleLifetime <= 1 then
-	    self.queue:pop()
-	  else
-	    subtitle[2] = subtitleLifetime - 1
-	  end
-	end
+      local subtitleLifetime = subtitle[2]
+      if subtitleLifetime <= 1 then
+        self.queue:pop()
+      else
+        subtitle[2] = subtitleLifetime - 1
+      end
+    end
   end
 end
 
@@ -100,7 +100,7 @@ end
 function SubtitleQueue:pop()
   if self.subtitles[1] ~= nil then
     table.remove(self.subtitles, 1)
-	self.count = self.count - 1
+    self.count = self.count - 1
   end
 end
 
