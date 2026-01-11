@@ -312,7 +312,7 @@ int l_map_updateblueprint(lua_State* L) {
                    (is_valid(entire_invalid, pNode, pMap, player_id)
                         ? 0
                         : thdf_alt_palette));
-  pAnim->attach_to_tile(iNewX, iNewY, pNode, 0);
+  pAnim->attach_to_tile({iNewX, iNewY}, pNode, 0);
 
   for (int iX = iNewX; iX < iNewX + iNewW; ++iX) {
     if (iX != iNewX) {
@@ -323,7 +323,7 @@ int l_map_updateblueprint(lua_State* L) {
                        (is_valid(entire_invalid, pNode, pMap, player_id)
                             ? 0
                             : thdf_alt_palette));
-      pAnim->attach_to_tile(iX, iNewY, pNode, 0);
+      pAnim->attach_to_tile({iX, iNewY}, pNode, 0);
       pAnim->set_pixel_offset(0, 0);
     }
     pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
@@ -334,7 +334,7 @@ int l_map_updateblueprint(lua_State* L) {
                           ? 0
                           : thdf_alt_palette));
     pNode = pMap->get_tile_unchecked(iX, iNewY + iNewH);
-    pAnim->attach_to_tile(iX, iNewY + iNewH, pNode, 0);
+    pAnim->attach_to_tile({iX, iNewY + iNewH}, pNode, 0);
     pAnim->set_pixel_offset(0, -1);
   }
   for (int iY = iNewY; iY < iNewY + iNewH; ++iY) {
@@ -346,7 +346,7 @@ int l_map_updateblueprint(lua_State* L) {
                        (is_valid(entire_invalid, pNode, pMap, player_id)
                             ? 0
                             : thdf_alt_palette));
-      pAnim->attach_to_tile(iNewX, iY, pNode, 0);
+      pAnim->attach_to_tile({iNewX, iY}, pNode, 0);
       pAnim->set_pixel_offset(2, 0);
     }
     pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
@@ -357,7 +357,7 @@ int l_map_updateblueprint(lua_State* L) {
                           ? 0
                           : thdf_alt_palette));
     pNode = pMap->get_tile_unchecked(iNewX + iNewW, iY);
-    pAnim->attach_to_tile(iNewX + iNewW, iY, pNode, 0);
+    pAnim->attach_to_tile({iNewX + iNewW, iY}, pNode, 0);
     pAnim->set_pixel_offset(2, -1);
   }
 
