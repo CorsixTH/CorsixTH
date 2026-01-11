@@ -1375,21 +1375,21 @@ void animation::persist(lua_persist_writer* writer) const {
   writer->write_byte_stream(layers.layer_contents, iNumLayers);
 }
 
-void animation::depersist(lua_persist_reader* pReader) {
-  lua_State* L = pReader->get_stack();
+void animation::depersist(lua_persist_reader* reader) {
+  lua_State* L = reader->get_stack();
 
   do {
     // Read the chain
-    if (!pReader->read_stack_object()) break;
+    if (!reader->read_stack_object()) break;
 
     next = luaT_toanimationbase(L, -1);
     if (next) next->prev = this;
     lua_pop(L, 1);
 
     // Read drawable fields
-    if (!pReader->read_uint(flags)) break;
+    if (!reader->read_uint(flags)) break;
     int iFunctionSet;
-    if (!pReader->read_uint(iFunctionSet)) break;
+    if (!reader->read_uint(iFunctionSet)) break;
     switch (iFunctionSet) {
       case 3:
         // 3 should be the morph set, but the actual morph target is
@@ -1403,7 +1403,7 @@ void animation::depersist(lua_persist_reader* pReader) {
         break;
       case 4:
         set_animation_kind(animation_kind::morph);
-        pReader->read_stack_object();
+        reader->read_stack_object();
         morph_target = static_cast<animation*>(lua_touserdata(L, -1));
         lua_pop(L, 1);
         break;
@@ -1411,23 +1411,23 @@ void animation::depersist(lua_persist_reader* pReader) {
         set_animation_kind(animation_kind::secondary_child);
         break;
       default:
-        pReader->set_error(lua_pushfstring(
+        reader->set_error(lua_pushfstring(
             L, "Unknown animation function set #%i", iFunctionSet));
         return;
     }
 
     // Read the simple fields
-    if (!pReader->read_uint(animation_index)) break;
-    if (!pReader->read_uint(frame_index)) break;
-    if (!pReader->read_int(pixel_offset.x)) break;
-    if (!pReader->read_int(pixel_offset.y)) break;
+    if (!reader->read_uint(animation_index)) break;
+    if (!reader->read_uint(frame_index)) break;
+    if (!reader->read_int(pixel_offset.x)) break;
+    if (!reader->read_int(pixel_offset.y)) break;
     int iDummy;
-    if (!pReader->read_int(iDummy)) break;
+    if (!reader->read_int(iDummy)) break;
     if (iDummy >= 0) sound_to_play = (unsigned int)iDummy;
-    if (!pReader->read_int(iDummy)) break;
+    if (!reader->read_int(iDummy)) break;
     patient_effect = static_cast<animation_effect>(iDummy);
     if (flags & thdf_crop) {
-      if (!pReader->read_int(crop_column)) {
+      if (!reader->read_int(crop_column)) {
         break;
       }
     } else {
@@ -1437,10 +1437,10 @@ void animation::depersist(lua_persist_reader* pReader) {
     // Read the unioned fields
     if (anim_kind != animation_kind::primary_child &&
         anim_kind != animation_kind::secondary_child) {
-      if (!pReader->read_int(speed.x)) break;
-      if (!pReader->read_int(speed.y)) break;
+      if (!reader->read_int(speed.x)) break;
+      if (!reader->read_int(speed.y)) break;
     } else {
-      if (!pReader->read_stack_object()) break;
+      if (!reader->read_stack_object()) break;
       parent = static_cast<animation*>(lua_touserdata(L, -1));
       lua_pop(L, 1);
     }
@@ -1448,21 +1448,21 @@ void animation::depersist(lua_persist_reader* pReader) {
     // Read the layers
     std::memset(layers.layer_contents, 0, sizeof(layers.layer_contents));
     int iNumLayers;
-    if (!pReader->read_uint(iNumLayers)) {
+    if (!reader->read_uint(iNumLayers)) {
       break;
     }
 
     if (iNumLayers > max_number_of_layers) {
-      if (!pReader->read_byte_stream(layers.layer_contents,
+      if (!reader->read_byte_stream(layers.layer_contents,
                                      max_number_of_layers)) {
         break;
       }
-      if (!pReader->read_byte_stream(nullptr,
+      if (!reader->read_byte_stream(nullptr,
                                      iNumLayers - max_number_of_layers)) {
         break;
       }
     } else {
-      if (!pReader->read_byte_stream(layers.layer_contents, iNumLayers)) break;
+      if (!reader->read_byte_stream(layers.layer_contents, iNumLayers)) break;
     }
 
     // Fix the m_pAnimator field
@@ -1473,7 +1473,7 @@ void animation::depersist(lua_persist_reader* pReader) {
     return;
   } while (false);
 
-  pReader->set_error("Cannot depersist animation instance");
+  reader->set_error("Cannot depersist animation instance");
 }
 
 void animation::set_patient_effect(animation_effect patient_effect) {
@@ -1810,50 +1810,50 @@ void sprite_render_list::persist(lua_persist_writer* writer) const {
   lua_pop(L, 2);
 }
 
-void sprite_render_list::depersist(lua_persist_reader* pReader) {
-  lua_State* L = pReader->get_stack();
+void sprite_render_list::depersist(lua_persist_reader* reader) {
+  lua_State* L = reader->get_stack();
 
   uint32_t sprite_count;
-  if (!pReader->read_uint(sprite_count)) return;
+  if (!reader->read_uint(sprite_count)) return;
   sprites.resize(sprite_count);
 
-  if (!pReader->read_uint(flags)) return;
-  if (!pReader->read_int(pixel_offset.x)) return;
-  if (!pReader->read_int(pixel_offset.y)) return;
-  if (!pReader->read_int(dx_per_tick)) return;
-  if (!pReader->read_int(dy_per_tick)) return;
-  if (!pReader->read_int(lifetime)) return;
+  if (!reader->read_uint(flags)) return;
+  if (!reader->read_int(pixel_offset.x)) return;
+  if (!reader->read_int(pixel_offset.y)) return;
+  if (!reader->read_int(dx_per_tick)) return;
+  if (!reader->read_int(dy_per_tick)) return;
+  if (!reader->read_int(lifetime)) return;
   for (sprite& pSprite : sprites) {
-    if (!pReader->read_uint(pSprite.index)) return;
-    if (!pReader->read_int(pSprite.x)) return;
-    if (!pReader->read_int(pSprite.y)) return;
+    if (!reader->read_uint(pSprite.index)) return;
+    if (!reader->read_int(pSprite.x)) return;
+    if (!reader->read_int(pSprite.y)) return;
   }
 
   // Read the layers
   std::memset(layers.layer_contents, 0, sizeof(layers.layer_contents));
   int iNumLayers;
-  if (!pReader->read_uint(iNumLayers)) {
+  if (!reader->read_uint(iNumLayers)) {
     return;
   }
 
   if (iNumLayers > max_number_of_layers) {
-    if (!pReader->read_byte_stream(layers.layer_contents,
+    if (!reader->read_byte_stream(layers.layer_contents,
                                    max_number_of_layers)) {
       return;
     }
 
-    if (!pReader->read_byte_stream(nullptr,
+    if (!reader->read_byte_stream(nullptr,
                                    iNumLayers - max_number_of_layers)) {
       return;
     }
   } else {
-    if (!pReader->read_byte_stream(layers.layer_contents, iNumLayers)) {
+    if (!reader->read_byte_stream(layers.layer_contents, iNumLayers)) {
       return;
     }
   }
 
   // Read the chain
-  if (!pReader->read_stack_object()) {
+  if (!reader->read_stack_object()) {
     return;
   }
 
