@@ -1313,7 +1313,7 @@ function GameUI:afterLoad(old, new)
     self.ticks_since_last_announcement = nil -- cleanup
     self.announcer = Announcer(self.app)
   end
-  if old < 238 then
+  if old < 239 then
     self.subtitles = Subtitles(self)
     self:addWindow(self.subtitles)
   end
