@@ -394,6 +394,11 @@ end
 
 function Graphics:onChangeUIScale()
   -- Reload fonts
+  if self.builtin_font then
+    self.load_info[self.builtin_font] = nil
+    self.builtin_font = nil
+    self:loadBuiltinFont()
+  end
   self:onChangeLanguage()
 end
 
@@ -407,7 +412,7 @@ end
 function Graphics:loadMenuFont()
   local font
   if self.language_font then
-    font = self:loadFontAndSpriteTable("QData", "Font01V")
+    font = self:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   else
     font = self:loadBuiltinFont()
   end
