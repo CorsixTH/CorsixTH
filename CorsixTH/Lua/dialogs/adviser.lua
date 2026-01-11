@@ -62,7 +62,7 @@ end
 -- Then moves on to the next phase automatically.
 function UIAdviser:show()
   self.phase = 1
-  self.th:setAnimation(self.ui.app.world.anims, 438)
+  self.th:setAnimation(self.ui.app.world.anims, 438, DrawFlags.Nearest)
   self.frame = 1
   self.number_frames = 4
 end
@@ -71,7 +71,11 @@ end
 -- from the queue.
 function UIAdviser:talk()
   self.phase = 2
-  self.th:setAnimation(self.ui.app.world.anims, 460)
+
+  -- Preferably without the Nearest draw flag for a less pixelated look but
+  -- without it if direct zoom is enabled and ui_scale is > 1 then there is
+  -- artifacting around the mouth of the adviser.
+  self.th:setAnimation(self.ui.app.world.anims, 460, DrawFlags.Nearest)
   self.frame = 1
   self.timer = nil -- Reset the idle timer
   self.number_frames = 45
@@ -120,7 +124,7 @@ end
 function UIAdviser:hide()
   self.timer = nil
   self.phase = 4
-  self.th:setAnimation(self.ui.app.world.anims, 440)
+  self.th:setAnimation(self.ui.app.world.anims, 440, DrawFlags.Nearest)
   self.frame = 1
   self.number_frames = 4
 end

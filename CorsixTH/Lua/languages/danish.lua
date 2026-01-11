@@ -293,7 +293,7 @@ dialog_missing_graphics = "Undskyld, men demo datafilerne har ikke en tekst.",
   save_prefix = "Fejl under gem af spil: ",
   load_prefix = "Fejl under indlæsning af spil: ",
   map_file_missing = "Kunne ikke finde kort filen %s for denne bane!",
-  minimum_screen_size = "Indtast en oplösning på mindst 640x480.",
+  minimum_screen_size = "Indtast en oplösning på mindst %dx%d.",
    maximum_screen_size = "Indtast en oplösning på maksimalt 3000x2000.",
   unavailable_screen_size = "Skærmoplösningen du valgte er ikke tilgængelig i fuldskærmsvisning.",
 }

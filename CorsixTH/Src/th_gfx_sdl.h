@@ -55,6 +55,8 @@ struct render_target_creation_params {
                            ///< (else wait for Vsync).
   bool direct_zoom;  ///< Scale each texture when copying if true, otherwise
                      ///< render to intermediate texture and scale.
+  int min_width;     ///< Minimum width of the render target.
+  int min_height;    ///< Minimum height of the render target.
 };
 
 enum class scaled_items;
@@ -275,6 +277,9 @@ class render_target {
 
   //! Fill a rectangle of the render target with a solid colour
   bool fill_rect(uint32_t iColour, int iX, int iY, int iW, int iH);
+
+  //! Sets a minimum size for the render target
+  int set_minimum_size(int width, int height);
 
   class scoped_clip {
    public:

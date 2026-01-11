@@ -380,11 +380,13 @@ panel (in pixels) is known, it should be specified here to speed up hit-tests.
 !param apply_ui_scale (bool|nil) If true apply the ui_scale to the dimensions
 when doing the draw and hit test. If nil then apply_ui_scale if enabled for the
 parent window.
+!param draw_flags (integer) Draw flags to apply to the sprite
 ]]
-function Window:addPanel(sprite_index, x, y, w, h, apply_ui_scale)
+function Window:addPanel(sprite_index, x, y, w, h, apply_ui_scale, draw_flags)
   local panel = setmetatable({
     window = self,
     apply_ui_scale = apply_ui_scale ~= nil and apply_ui_scale or self.apply_ui_scale,
+    draw_flags = draw_flags,
     x = x,
     y = y,
     w = w,
@@ -1499,7 +1501,7 @@ function Window:draw(canvas, x, y)
               panel.sprite_index,
               x + panel.x * s,
               y + panel.y * s,
-              { scaleFactor = s })
+              { flags = panel.draw_flags, scaleFactor = s })
         end
       end
     end
