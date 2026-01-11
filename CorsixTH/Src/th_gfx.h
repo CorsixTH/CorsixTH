@@ -528,19 +528,19 @@ class animation : public animation_base {
     }
   }
 
-  bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
-  bool hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY);
-  bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
+  bool hit_test(const xy_pair& draw_pos, const xy_pair& obj_pos);
+  bool hit_test_morph(const xy_pair& draw_pos, const xy_pair& obj_pos);
+  bool hit_test_child(const xy_pair& draw_pos, const xy_pair& obj_pos);
 
   bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) override {
     switch (anim_kind) {
       case animation_kind::normal:
-        return hit_test(draw_pos.x, draw_pos.y, obj_pos.x, obj_pos.y);
+        return hit_test(draw_pos, obj_pos);
       case animation_kind::primary_child:
       case animation_kind::secondary_child:
-        return hit_test_child(draw_pos.x, draw_pos.y, obj_pos.x, obj_pos.y);
+        return hit_test_child(draw_pos, obj_pos);
       case animation_kind::morph:
-        return hit_test_morph(draw_pos.x, draw_pos.y, obj_pos.x, obj_pos.y);
+        return hit_test_morph(draw_pos, obj_pos);
     }
     return false;
   }
@@ -603,8 +603,6 @@ class animation : public animation_base {
 class sprite_render_list : public animation_base {
  public:
   void tick();
-  void draw(render_target* pCanvas, const xy_pair& draw_pos);
-  bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
 
   void set_sheet(sprite_sheet* pSheet) { sheet = pSheet; }
   void set_speed(int iX, int iY) { dx_per_tick = iX, dy_per_tick = iY; }
@@ -616,12 +614,16 @@ class sprite_render_list : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
+  void draw(render_target* pCanvas, const xy_pair& draw_pos);
+
   void draw_fn(render_target* pCanvas, const xy_pair& draw_pos) override {
     draw(pCanvas, draw_pos);
   }
 
+  bool hit_test(const xy_pair& draw_pos, const xy_pair& obj_pos);
+
   bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) override {
-    return hit_test(draw_pos.x, draw_pos.y, obj_pos.x, obj_pos.y);
+    return hit_test(draw_pos, obj_pos);
   }
 
   bool is_multiple_frame_animation_fn() override { return false; }

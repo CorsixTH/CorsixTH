@@ -1233,7 +1233,8 @@ void animation::draw_child(render_target* pCanvas, const xy_pair& draw_pos,
   if (manager) manager->draw_frame(pCanvas, frame_index, layers, x, y, flags);
 }
 
-bool animation::hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY) {
+bool animation::hit_test_child(const xy_pair& draw_pos,
+                               const xy_pair& obj_pos) {
   // TODO
   return false;
 }
@@ -1271,7 +1272,7 @@ void animation::draw_morph(render_target* pCanvas, const xy_pair& draw_pos) {
   }
 }
 
-bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY) {
+bool animation::hit_test(const xy_pair& draw_pos, const xy_pair& obj_pos) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) {
     return false;
   }
@@ -1280,11 +1281,13 @@ bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY) {
     return false;
   }
 
-  return manager->hit_test(frame_index, layers, pixel_offset.x + iDestX,
-                           pixel_offset.y + iDestY, flags, iTestX, iTestY);
+  return manager->hit_test(frame_index, layers, pixel_offset.x + draw_pos.x,
+                           pixel_offset.y + draw_pos.y, flags, obj_pos.x,
+                           obj_pos.y);
 }
 
-bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
+bool animation::hit_test_morph(const xy_pair& draw_pos,
+                               const xy_pair& obj_pos) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) {
     return false;
   }
@@ -1293,9 +1296,10 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
     return false;
   }
 
-  return manager->hit_test(frame_index, layers, pixel_offset.x + iDestX,
-                           pixel_offset.y + iDestY, flags, iTestX, iTestY) ||
-         morph_target->hit_test(iDestX, iDestY, iTestX, iTestY);
+  return manager->hit_test(frame_index, layers, pixel_offset.x + draw_pos.x,
+                           pixel_offset.y + draw_pos.y, flags, obj_pos.x,
+                           obj_pos.y) ||
+         morph_target->hit_test(draw_pos, obj_pos);
 }
 
 void animation::persist(lua_persist_writer* pWriter) const {
@@ -1743,8 +1747,8 @@ void sprite_render_list::draw(render_target* pCanvas, const xy_pair& draw_pos) {
   }
 }
 
-bool sprite_render_list::hit_test(int iDestX, int iDestY, int iTestX,
-                                  int iTestY) {
+bool sprite_render_list::hit_test(const xy_pair& draw_pos,
+                                  const xy_pair& obj_pos) {
   // TODO
   return false;
 }
