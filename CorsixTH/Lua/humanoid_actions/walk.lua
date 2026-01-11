@@ -430,8 +430,10 @@ local function action_walk_start(action, humanoid)
   if not action.no_truncate then
     action.on_interrupt = action_walk_interrupt
   end
+  if action.on_restart ~= nil then
+    action.saved_must_happen = action.must_happen
+  end
   action.on_restart = action_walk_start
-  action.saved_must_happen = action.must_happen
   action.must_happen = true
   if action.reserve_on_resume and not action.todo_interrupt then
     action.reserve_on_resume.reserved_for = humanoid

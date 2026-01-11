@@ -74,9 +74,9 @@ end
 corsixth.require("utility")
 
 -- Check Lua version
-local support = list_to_set({"Lua 5.1", "Lua 5.2", "Lua 5.3", "Lua 5.4"})
+local support = list_to_set({"Lua 5.1", "Lua 5.2", "Lua 5.3", "Lua 5.4", "Lua 5.5"})
 if not support[_VERSION] then
-  error "Please recompile CorsixTH and link against Lua version 5.1, 5.2, 5.3 or 5.4"
+  error "Please recompile CorsixTH and link against Lua version 5.1 to 5.5"
 end
 if _VERSION ~= "Lua 5.1" then
   -- Compatibility: Keep the global unpack function

@@ -107,7 +107,7 @@ function ResearchDepartment:initResearch()
   if sum == 20 then
     -- No research to be done
     policy.specialisation.frac = 0
-    policy.global = 0
+    policy.total = 0
   else
     -- If some category is already done, put the free points in another one.
     if sum < 100 then
@@ -119,7 +119,7 @@ function ResearchDepartment:initResearch()
         end
       end
     end
-    policy.global = sum
+    policy.total = sum
   end
   self.research_policy = policy
 
@@ -175,13 +175,13 @@ function ResearchDepartment:redistributeResearchPoints()
       end
       for _, categ  in ipairs(policy) do
         if self.research_policy[categ].current then
-          self.research_policy[categ].frac = math.floor(self.research_policy.global / num_cat)
+          self.research_policy[categ].frac = math.floor(self.research_policy.total / num_cat)
         end
       end
-      sum = math.floor(self.research_policy.global / num_cat) * num_cat
+      sum = math.floor(self.research_policy.total / num_cat) * num_cat
       for _, categ  in ipairs(policy) do
         if self.research_policy[categ].current then
-          if sum == self.research_policy.global then
+          if sum == self.research_policy.total then
             break
           end
           self.research_policy[categ].frac = self.research_policy[categ].frac + 1
@@ -196,17 +196,17 @@ function ResearchDepartment:redistributeResearchPoints()
           max_value = research_cat.frac
           max_category = categ
         end
-        research_cat.frac = math.floor(self.research_policy.global * research_cat.frac / sum)
+        research_cat.frac = math.floor(self.research_policy.total * research_cat.frac / sum)
         new_sum = new_sum + research_cat.frac
       end
       --if there are still some points left redistribute them to the research category with the maximum points
-      if new_sum < self.research_policy.global then
-        local frac = self.research_policy[max_category].frac + self.research_policy.global - new_sum
+      if new_sum < self.research_policy.total then
+        local frac = self.research_policy[max_category].frac + self.research_policy.total - new_sum
         self.research_policy[max_category].frac = frac
       end
     end
   else
-    self.research_policy.global = 0
+    self.research_policy.total = 0
     self.research_policy.specialisation.current = nil
   end
 end
@@ -355,19 +355,19 @@ end
 --!param points (integer) The total amount of points before applying any level specific divisors to add to research.
 function ResearchDepartment:addResearchPoints(points)
   local level_config = self.world.map.level_config
-  -- Divide the points into the different areas. If global is not at 100 %
+  -- Divide the points into the different areas. If total is not at 100 %
   -- the total amount is lowered, but then cost is also reduced.
 
   -- Fetch the level research divisor.
   local divisor = level_config.gbv.ResearchPointsDivisor or 5
 
-  points = math.ceil(points * self.research_policy.global / (100 * divisor))
+  points = math.ceil(points * self.research_policy.total / (100 * divisor))
 
   -- Divide the points into the different categories and check if
   -- it is time to discover something
   local areas = self.research_policy
   for _, info in pairs(areas) do
-    -- Don't touch the value "global".
+    -- Don't touch the value "total".
     if type(info) == "table" then
       -- Some categories may be finished
       if info.current then
@@ -710,5 +710,9 @@ end
 function ResearchDepartment:afterLoad(old, new)
   if old < 106 then
     self.level_config = nil
+  end
+  if old < 238 then
+    self.research_policy.total = self.research_policy['global']
+    self.research_policy['global'] = nil
   end
 end

@@ -417,8 +417,8 @@ function Map:loadMapConfig(filename, config, custom)
         for i = 2, nkeys + 1 do
           local key = parts[1] .. parts[i]
           local t, n
-          for name in key:gmatch("[^.%[%]]+") do
-            name = tonumber(name) or name
+          for match in key:gmatch("[^.%[%]]+") do
+            local name = tonumber(match) or match
             if t then
               if not t[n] then
                 t[n] = {}

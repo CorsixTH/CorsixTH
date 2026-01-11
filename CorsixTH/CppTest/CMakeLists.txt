@@ -56,6 +56,7 @@ target_sources(UnitTests
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua_map.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua_ui.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_strings.cpp
 )
 
