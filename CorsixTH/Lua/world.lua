@@ -2587,7 +2587,7 @@ function World:afterLoad(old, new)
   if old < 214 then
     self.animation_manager = nil -- Use TheApp.animation_manager instead.
   end
-  if old < 237 then
+  if old < 240 then
     for _, entity in ipairs(self.entities) do
       if class.is(entity, Humanoid) then
         entity:setIfHoverMoodsVisible()
