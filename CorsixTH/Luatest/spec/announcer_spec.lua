@@ -53,6 +53,12 @@ local function create_app_mock(speed_set, desk_set)
     }
   end
 
+  local ui_mock = {}
+  local subtitles_mock = {
+    queueSubtitle = function() end,
+  }
+  ui_mock.subtitles = subtitles_mock
+
   local config_mock = {
     play_announcements = true
   }
@@ -83,6 +89,7 @@ local function create_app_mock(speed_set, desk_set)
 
   local app = {
     world = world_mock,
+    ui = ui_mock,
     config = config_mock,
     audio = audio_mock
   }
