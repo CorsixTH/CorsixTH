@@ -113,7 +113,7 @@ struct drawable : public link_list {
   /*!
       Can also "draw" the object to the speakers, i.e. play sounds.
   */
-  virtual void draw_fn(render_target* pCanvas, const xy_pair& draw_pos) = 0;
+  virtual void draw_fn(render_target* canvas, const xy_pair& draw_pos) = 0;
 
   //! Perform a hit test against the object
   /*!
@@ -506,24 +506,24 @@ class animation : public animation_base {
   void set_parent(animation* pParent, bool use_primary);
 
   void tick();
-  void draw(render_target* pCanvas, const xy_pair& draw_pos);
-  void draw_morph(render_target* pCanvas, const xy_pair& draw_pos);
-  void draw_child(render_target* pCanvas, const xy_pair& draw_pos,
+  void draw(render_target* canvas, const xy_pair& draw_pos);
+  void draw_morph(render_target* canvas, const xy_pair& draw_pos);
+  void draw_child(render_target* canvas, const xy_pair& draw_pos,
                   bool use_primary);
 
-  void draw_fn(render_target* pCanvas, const xy_pair& draw_pos) override {
+  void draw_fn(render_target* canvas, const xy_pair& draw_pos) override {
     switch (anim_kind) {
       case animation_kind::normal:
-        draw(pCanvas, draw_pos);
+        draw(canvas, draw_pos);
         return;
       case animation_kind::primary_child:
-        draw_child(pCanvas, draw_pos, true);
+        draw_child(canvas, draw_pos, true);
         return;
       case animation_kind::secondary_child:
-        draw_child(pCanvas, draw_pos, false);
+        draw_child(canvas, draw_pos, false);
         return;
       case animation_kind::morph:
-        draw_morph(pCanvas, draw_pos);
+        draw_morph(canvas, draw_pos);
         return;
     }
   }
@@ -614,10 +614,10 @@ class sprite_render_list : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
-  void draw(render_target* pCanvas, const xy_pair& draw_pos);
+  void draw(render_target* canvas, const xy_pair& draw_pos);
 
-  void draw_fn(render_target* pCanvas, const xy_pair& draw_pos) override {
-    draw(pCanvas, draw_pos);
+  void draw_fn(render_target* canvas, const xy_pair& draw_pos) override {
+    draw(canvas, draw_pos);
   }
 
   bool hit_test(const xy_pair& draw_pos, const xy_pair& obj_pos);
