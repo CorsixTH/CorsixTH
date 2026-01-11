@@ -503,7 +503,7 @@ class animation : public animation_base {
  public:
   animation();
 
-  void set_parent(animation* pParent, bool use_primary);
+  void set_parent(animation* parent_anim, bool use_primary);
 
   void tick();
   void draw(render_target* canvas, const xy_pair& draw_pos);
@@ -546,10 +546,10 @@ class animation : public animation_base {
   }
 
   bool is_multiple_frame_animation_fn() override {
-    size_t firstFrame =
-        get_animation_manager()->get_first_frame(get_animation());
-    size_t nextFrame = get_animation_manager()->get_next_frame(firstFrame);
-    return nextFrame != firstFrame;
+    size_t anim = get_animation();
+    size_t first_frame = get_animation_manager()->get_first_frame(anim);
+    size_t next_frame = get_animation_manager()->get_next_frame(first_frame);
+    return next_frame != first_frame;
   }
 
   link_list* get_previous() { return prev; }
@@ -559,15 +559,15 @@ class animation : public animation_base {
   size_t get_frame() const { return frame_index; }
   int get_crop_column() const { return crop_column; }
 
-  void set_animation(animation_manager* pManager, size_t iAnimation);
-  void set_morph_target(animation* pMorphTarget, int iDurationFactor = 1);
-  void set_frame(size_t iFrame);
+  void set_animation(animation_manager* mgr, size_t anim);
+  void set_morph_target(animation* target, int duration = 1);
+  void set_frame(size_t new_frame);
 
   void set_speed(int x, int y) {
     speed.x = x;
     speed.y = y;
   }
-  void set_crop_column(int iColumn) { crop_column = iColumn; }
+  void set_crop_column(int column) { crop_column = column; }
 
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
@@ -604,11 +604,14 @@ class sprite_render_list : public animation_base {
  public:
   void tick();
 
-  void set_sheet(sprite_sheet* pSheet) { sheet = pSheet; }
-  void set_speed(int iX, int iY) { dx_per_tick = iX, dy_per_tick = iY; }
-  void set_lifetime(int iLifetime);
+  void set_sheet(sprite_sheet* new_sheet) { sheet = new_sheet; }
+  void set_speed(int x_speed, int y_speed) {
+    dx_per_tick = x_speed;
+    dy_per_tick = y_speed;
+  }
+  void set_lifetime(int life_time);
   void set_use_intermediate_buffer();
-  void append_sprite(size_t iSprite, int iX, int iY);
+  void append_sprite(size_t spr_num, int xpos, int ypos);
   bool is_dead() const { return lifetime == 0; }
 
   void persist(lua_persist_writer* pWriter) const;

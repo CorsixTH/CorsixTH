@@ -1570,15 +1570,15 @@ void animation::tick() {
   }
 }
 
-void animation::set_parent(animation* pParent, bool use_primary) {
+void animation::set_parent(animation* parent_anim, bool use_primary) {
   remove_from_tile();
-  if (pParent == nullptr) {
+  if (parent_anim == nullptr) {
     set_animation_kind(animation_kind::normal);
     speed = {0, 0};
   } else {
     set_animation_kind(use_primary ? animation_kind::primary_child
                                    : animation_kind::secondary_child);
-    parent = pParent;
+    parent = parent_anim;
     next = parent->next;
     if (next) next->prev = this;
     prev = parent;
@@ -1586,10 +1586,11 @@ void animation::set_parent(animation* pParent, bool use_primary) {
   }
 }
 
-void animation::set_animation(animation_manager* pManager, size_t iAnimation) {
-  manager = pManager;
-  animation_index = iAnimation;
-  frame_index = pManager->get_first_frame(iAnimation);
+void animation::set_animation(animation_manager* mgr, size_t anim) {
+  manager = mgr;
+  animation_index = anim;
+  frame_index = mgr->get_first_frame(anim);
+
   if (morph_target) {
     morph_target = nullptr;
     set_animation_kind(animation_kind::normal);
@@ -1643,6 +1644,7 @@ int GetAnimationDurationAndExtent(animation_manager* pManager, size_t iFrame,
     iCurFrame = pManager->get_next_frame(iCurFrame);
     ++iDuration;
   } while (iCurFrame != iFrame);
+
   if (pMinY) {
     *pMinY = iMinY;
   }
@@ -1654,8 +1656,8 @@ int GetAnimationDurationAndExtent(animation_manager* pManager, size_t iFrame,
 
 }  // namespace
 
-void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
-  morph_target = pMorphTarget;
+void animation::set_morph_target(animation* target, int duration) {
+  morph_target = target;
   set_animation_kind(animation_kind::morph);
 
   /* Morphing is the process by which two animations are combined to give a
@@ -1687,7 +1689,7 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
     iMorphDuration = iOriginalDuration;
   }
 
-  iMorphDuration *= iDurationFactor;
+  iMorphDuration *= duration;
   if (iOrigMinY < iMorphMinY) {
     morph_target->pixel_offset.x = iOrigMinY;
   } else {
@@ -1705,7 +1707,7 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
   morph_target->pixel_offset.y = morph_target->speed.x;
 }
 
-void animation::set_frame(size_t iFrame) { frame_index = iFrame; }
+void animation::set_frame(size_t new_frame) { frame_index = new_frame; }
 
 void sprite_render_list::tick() {
   pixel_offset.x += dx_per_tick;
@@ -1753,19 +1755,19 @@ bool sprite_render_list::hit_test(const xy_pair& draw_pos,
   return false;
 }
 
-void sprite_render_list::set_lifetime(int iLifetime) {
-  if (iLifetime < 0) {
-    iLifetime = -1;
+void sprite_render_list::set_lifetime(int life_time) {
+  if (life_time < 0) {
+    life_time = -1;
   }
-  lifetime = iLifetime;
+  lifetime = life_time;
 }
 
 void sprite_render_list::set_use_intermediate_buffer() {
   use_intermediate_buffer = true;
 }
 
-void sprite_render_list::append_sprite(size_t iSprite, int iX, int iY) {
-  sprite s{iSprite, iX, iY};
+void sprite_render_list::append_sprite(size_t spr_num, int xpos, int ypos) {
+  sprite s{spr_num, xpos, ypos};
   sprites.push_back(s);
 }
 
