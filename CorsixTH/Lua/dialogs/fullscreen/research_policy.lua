@@ -149,18 +149,18 @@ function UIResearch:adjustResearch(area, mode)
       self.ui:playSound("Wrong2.wav")
     end
   elseif mode == "more" then
-    if res.research_policy.global < 100 and res.research_policy[area].current then
+    if res.research_policy.total < 100 and res.research_policy[area].current then
       res.research_policy[area].frac = res.research_policy[area].frac +
-        math.min(amount, 100 - res.research_policy.global)
+        math.min(amount, 100 - res.research_policy.total)
       self.ui:playSound("selectx.wav")
     else
       self.ui:playSound("Wrong2.wav")
     end
   end
 
-  res.research_policy.global = 0
+  res.research_policy.total = 0
   for _, category in ipairs(research_categories) do
-    res.research_policy.global = res.research_policy.global + res.research_policy[category].frac
+    res.research_policy.total = res.research_policy.total + res.research_policy[category].frac
   end
 end
 
@@ -234,7 +234,7 @@ function UIResearch:draw(canvas, x, y)
     end
   end
 
-  num_font:draw(canvas, research.global, x + 270 * s, y + 288 * s, 300 * s, 0)
+  num_font:draw(canvas, research.total, x + 270 * s, y + 288 * s, 300 * s, 0)
 end
 
 function UIResearch:close()
