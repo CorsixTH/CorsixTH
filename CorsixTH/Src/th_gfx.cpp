@@ -1302,8 +1302,8 @@ bool animation::hit_test_morph(const xy_pair& draw_pos,
          morph_target->hit_test(draw_pos, obj_pos);
 }
 
-void animation::persist(lua_persist_writer* pWriter) const {
-  lua_State* L = pWriter->get_stack();
+void animation::persist(lua_persist_writer* writer) const {
+  lua_State* L = writer->get_stack();
 
   // Write the next chained thing
   lua_rawgeti(L, luaT_environindex, 2);
@@ -1313,56 +1313,56 @@ void animation::persist(lua_persist_writer* pWriter) const {
   }
   lua_pushlightuserdata(L, np);
   lua_rawget(L, -2);
-  pWriter->fast_write_stack_object(-1);
+  writer->fast_write_stack_object(-1);
   lua_pop(L, 2);
 
   // Write the drawable fields
-  pWriter->write_uint(flags);
+  writer->write_uint(flags);
 
   if (anim_kind == animation_kind::normal) {
-    pWriter->write_uint(1);
+    writer->write_uint(1);
   } else if (anim_kind == animation_kind::primary_child) {
-    pWriter->write_uint(2);
+    writer->write_uint(2);
   } else if (anim_kind == animation_kind::morph) {
     // NB: Prior version of code used the number 3 here, and forgot
     // to persist the morph target.
-    pWriter->write_uint(4);
+    writer->write_uint(4);
     lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, morph_target);
     lua_rawget(L, -2);
-    pWriter->write_stack_object(-1);
+    writer->write_stack_object(-1);
     lua_pop(L, 2);
   } else if (anim_kind == animation_kind::secondary_child) {
-    pWriter->write_uint(5);
+    writer->write_uint(5);
   } else {
-    pWriter->write_uint(0);
+    writer->write_uint(0);
   }
 
   // Write the simple fields
-  pWriter->write_uint(animation_index);
-  pWriter->write_uint(frame_index);
-  pWriter->write_int(pixel_offset.x);
-  pWriter->write_int(pixel_offset.y);
+  writer->write_uint(animation_index);
+  writer->write_uint(frame_index);
+  writer->write_int(pixel_offset.x);
+  writer->write_int(pixel_offset.y);
 
   // Not a uint, for compatibility
-  pWriter->write_int((int)sound_to_play);
+  writer->write_int((int)sound_to_play);
 
-  pWriter->write_int(static_cast<int>(patient_effect));
+  writer->write_int(static_cast<int>(patient_effect));
 
   if (flags & thdf_crop) {
-    pWriter->write_int(crop_column);
+    writer->write_int(crop_column);
   }
 
   // Write the unioned fields
   if (anim_kind != animation_kind::primary_child &&
       anim_kind != animation_kind::secondary_child) {
-    pWriter->write_int(speed.x);
-    pWriter->write_int(speed.y);
+    writer->write_int(speed.x);
+    writer->write_int(speed.y);
   } else {
     lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, parent);
     lua_rawget(L, -2);
-    pWriter->write_stack_object(-1);
+    writer->write_stack_object(-1);
     lua_pop(L, 2);
   }
 
@@ -1371,8 +1371,8 @@ void animation::persist(lua_persist_writer* pWriter) const {
   for (; iNumLayers >= 1; --iNumLayers) {
     if (layers.layer_contents[iNumLayers - 1] != 0) break;
   }
-  pWriter->write_uint(iNumLayers);
-  pWriter->write_byte_stream(layers.layer_contents, iNumLayers);
+  writer->write_uint(iNumLayers);
+  writer->write_byte_stream(layers.layer_contents, iNumLayers);
 }
 
 void animation::depersist(lua_persist_reader* pReader) {
@@ -1771,21 +1771,21 @@ void sprite_render_list::append_sprite(size_t spr_num, int xpos, int ypos) {
   sprites.push_back(s);
 }
 
-void sprite_render_list::persist(lua_persist_writer* pWriter) const {
-  lua_State* L = pWriter->get_stack();
+void sprite_render_list::persist(lua_persist_writer* writer) const {
+  lua_State* L = writer->get_stack();
 
-  pWriter->write_uint(sprites.size());
-  pWriter->write_uint(flags);
-  pWriter->write_int(pixel_offset.x);
-  pWriter->write_int(pixel_offset.y);
-  pWriter->write_int(dx_per_tick);
-  pWriter->write_int(dy_per_tick);
-  pWriter->write_int(lifetime);
+  writer->write_uint(sprites.size());
+  writer->write_uint(flags);
+  writer->write_int(pixel_offset.x);
+  writer->write_int(pixel_offset.y);
+  writer->write_int(dx_per_tick);
+  writer->write_int(dy_per_tick);
+  writer->write_int(lifetime);
 
   for (const sprite& pSprite : sprites) {
-    pWriter->write_uint(pSprite.index);
-    pWriter->write_int(pSprite.x);
-    pWriter->write_int(pSprite.y);
+    writer->write_uint(pSprite.index);
+    writer->write_int(pSprite.x);
+    writer->write_int(pSprite.y);
   }
 
   // Write the layers
@@ -1795,8 +1795,8 @@ void sprite_render_list::persist(lua_persist_writer* pWriter) const {
       break;
     }
   }
-  pWriter->write_uint(iNumLayers);
-  pWriter->write_byte_stream(layers.layer_contents, iNumLayers);
+  writer->write_uint(iNumLayers);
+  writer->write_byte_stream(layers.layer_contents, iNumLayers);
 
   // Write the next chained thing
   lua_rawgeti(L, luaT_environindex, 2);
@@ -1806,7 +1806,7 @@ void sprite_render_list::persist(lua_persist_writer* pWriter) const {
   }
   lua_pushlightuserdata(L, np);
   lua_rawget(L, -2);
-  pWriter->fast_write_stack_object(-1);
+  writer->fast_write_stack_object(-1);
   lua_pop(L, 2);
 }
 

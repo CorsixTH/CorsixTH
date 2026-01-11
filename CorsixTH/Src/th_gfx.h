@@ -569,7 +569,7 @@ class animation : public animation_base {
   }
   void set_crop_column(int column) { crop_column = column; }
 
-  void persist(lua_persist_writer* pWriter) const;
+  void persist(lua_persist_writer* writer) const;
   void depersist(lua_persist_reader* pReader);
 
   void set_patient_effect(animation_effect patient_effect);
@@ -614,7 +614,7 @@ class sprite_render_list : public animation_base {
   void append_sprite(size_t spr_num, int xpos, int ypos);
   bool is_dead() const { return lifetime == 0; }
 
-  void persist(lua_persist_writer* pWriter) const;
+  void persist(lua_persist_writer* writer) const;
   void depersist(lua_persist_reader* pReader);
 
   void draw(render_target* canvas, const xy_pair& draw_pos);
