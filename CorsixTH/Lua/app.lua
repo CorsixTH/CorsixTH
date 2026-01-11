@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 238 -- Announcer Subtitles
+local SAVEGAME_VERSION = 239 -- Announcer Subtitles
 
 class "App"
 
@@ -886,15 +886,13 @@ function App:dumpStrings()
   local function dump_grouped(file, obj, prefix)
     for n, o in pairs(obj) do
       if n ~= "deprecated" then
-        if type(n) == "number" then
-          n = "[" .. n .. "]"
-        end
+        local n1 = type(n) == "number" and "[" .. n .. "]" or n
         if is_table(o) then
-          file:write(prefix .. n .. " = {\n")
+          file:write(prefix .. n1 .. " = {\n")
           dump_grouped(file, o, prefix .. "  ")
           file:write(prefix .. "}")
         else
-          file:write(prefix .. n .. " = " .. "\"" .. val(o) .. "\"")
+          file:write(prefix .. n1 .. " = " .. "\"" .. val(o) .. "\"")
         end
         if prefix ~= "" then
           file:write(",")
@@ -1512,6 +1510,7 @@ function App:checkInstallFolder()
     for _, dir in pairs(possible_locations) do
       if status then break end
       for _, folder in pairs(possible_folders) do
+        local _
         local path = dir .. pathsep .. folder
         if lfs.attributes(path, "mode") == "directory" and self:isThemeHospitalPath(path) then
           print("Game data found at: " .. path)
