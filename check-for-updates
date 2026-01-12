@@ -1,7 +1,7 @@
 return {
   major = 0,
   minor = 69,
-  revision = 1,
-  changelog_en = 'Fixes a crash when placing staff in rooms while a patient is being treated.',
+  revision = 2,
+  changelog_en = 'Fixes a stuck Operating Theatre when rerouting patients.',
   download_url = 'https://github.com/CorsixTH/CorsixTH/releases',
 }
