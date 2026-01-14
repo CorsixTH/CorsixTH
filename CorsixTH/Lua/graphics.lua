@@ -377,19 +377,21 @@ local font_proxy_mt = {
 }
 
 function Graphics:onChangeLanguage()
-  -- Some fonts might need changing between bitmap and freetype
-  local load_info = self.load_info
-  self.load_info = {} -- Any newly made objects are temporary, and shouldn't
-                      -- remember reload information (also avoids insertions
-                      -- into a table being iterated over).
-  for object, info in pairs(load_info) do
-    if object._proxy then
-      local fn = info[1]
-      local new_object = fn(unpack(info, 2))
-      object._proxy = new_object._proxy
+  pause_gc_and_use_weak_keys(function(g)
+    -- Some fonts might need changing between bitmap and freetype
+    local load_info = g.load_info
+    g.load_info = {} -- Any newly made objects are temporary, and shouldn't
+    -- remember reload information (also avoids insertions
+    -- into a table being iterated over).
+    for object, info in pairs(load_info) do
+      if object._proxy then
+        local fn = info[1]
+        local new_object = fn(unpack(info, 2))
+        object._proxy = new_object._proxy
+      end
     end
-  end
-  self.load_info = load_info
+    g.load_info = load_info
+  end, self)
 end
 
 function Graphics:onChangeUIScale()
@@ -754,11 +756,13 @@ end
 
 function Graphics:updateTarget(target)
   self.target = target
-  for _, res_set in ipairs({"reload_functions", "reload_functions_last"}) do
-    for resource, reloader in pairs(self[res_set]) do
-      reloader(resource)
+  pause_gc_and_use_weak_keys(function(g)
+    for _, res_set in ipairs({"reload_functions", "reload_functions_last"}) do
+      for resource, reloader in pairs(g[res_set]) do
+        reloader(resource)
+      end
     end
-  end
+  end, self)
 end
 
 --! Utility class for setting animation markers and querying animation length.
