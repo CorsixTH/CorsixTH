@@ -43,7 +43,7 @@ local col_caption = {
 }
 
 function UICustomise:UICustomise(ui, mode)
-  self:UIResizable(ui, 340, 350, col_bg)
+  self:UIResizable(ui, 340, 375, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -140,8 +140,15 @@ function UICustomise:UICustomise(ui, mode)
   self.screen_shake_button = self.screen_shake_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonScreen_shake)
     :setToggleState(app.config.enable_screen_shake):setTooltip(_S.tooltip.customise_window.enable_screen_shake)
 
-  -- "Back" button
-  self:addBevelPanel(15, 295, 310, 40, col_bg):setLabel(_S.customise_window.back)
+  self:addBevelPanel(15, 290, 165, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.customise_window.enable_announcer_subtitles):setTooltip(_S.tooltip.customise_window.enable_announcer_subtitles).lowered = true
+  self.announcer_subtitles_panel =
+    self:addBevelPanel(185, 290, 140, 20, col_bg):setLabel(app.config.enable_announcer_subtitles and _S.customise_window.option_on or _S.customise_window.option_off)
+  self.announcer_subtitles_button = self.announcer_subtitles_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonAnnouncer_subtitles)
+    :setToggleState(app.config.enable_announcer_subtitles):setTooltip(_S.tooltip.customise_window.enable_announcer_subtitles)
+
+    -- "Back" button
+  self:addBevelPanel(15, 320, 310, 40, col_bg):setLabel(_S.customise_window.back)
     :makeButton(0, 0, 310, 40, nil, self.buttonBack):setTooltip(_S.tooltip.customise_window.back)
 end
 
@@ -242,6 +249,15 @@ function UICustomise:buttonScreen_shake()
   app.config.enable_screen_shake = not app.config.enable_screen_shake
   self.screen_shake_button:toggle()
   self.screen_shake_panel:setLabel(app.config.enable_screen_shake and _S.customise_window.option_on or _S.customise_window.option_off)
+  app:saveConfig()
+  self:reload()
+end
+
+function UICustomise:buttonAnnouncer_subtitles()
+  local app = self.ui.app
+  app.config.enable_announcer_subtitles = not app.config.enable_announcer_subtitles
+  self.announcer_subtitles_button:toggle()
+  self.screen_shake_panel:setLabel(app.config.enable_announcer_subtitles and _S.customise_window.option_on or _S.customise_window.option_off)
   app:saveConfig()
   self:reload()
 end
