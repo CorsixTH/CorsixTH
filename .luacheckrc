@@ -27,10 +27,11 @@ globals = { -- Globals
             "DrawingLayers",
             "destrict", "flag_clear", "flag_isset", "flag_set", "flag_toggle",
             "lfs", "list_to_set", "loadfile_envcall", "loadstring_envcall",
-            "permanent", "print_table", "rangeMapLookup", "rnc",
-            "strict_declare_global", "table_length", "unpermanent", "values",
-            "serialize", "array_join", "shallow_clone", "staff_initials_cache",
-            "hasBit", "bitOr", "inspect", "getRandomEntryFromArray",
+            "pause_gc_and_use_weak_keys", "permanent", "print_table",
+            "rangeMapLookup", "rnc", "strict_declare_global", "table_length",
+            "unpermanent", "values", "serialize", "array_join", "shallow_clone",
+            "staff_initials_cache", "hasBit", "bitOr", "inspect",
+            "getRandomEntryFromArray",
 
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",

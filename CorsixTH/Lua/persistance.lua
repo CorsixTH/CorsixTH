@@ -163,9 +163,11 @@ local function MakePermanentObjectsTable(inverted)
     end
   else
     -- load_info is a table containing a method and parameters to load obj
-    for obj, load_info in pairs(TheApp.gfx.load_info) do
-      permanent[obj] = load_info
-    end
+    pause_gc_and_use_weak_keys(function(p)
+      for obj, load_info in pairs(TheApp.gfx.load_info) do
+        p[obj] = load_info
+      end
+    end, permanent)
   end
 
   -- Things requested to be permanent by other bits of code

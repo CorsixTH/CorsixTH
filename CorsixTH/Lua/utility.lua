@@ -458,3 +458,28 @@ function shallow_clone(tbl)
   setmetatable(target, meta)
   return target
 end
+
+--! Complete key removal and pause collection for the duration of the function
+--! call.
+--!
+--! Note that the function is run as a pcall, so any error will be caught and
+--! returned.
+--!param fn (function) Function to call while GC is paused.
+--!param ... Arguments to pass to fn.
+function pause_gc_and_use_weak_keys(fn, ...)
+  -- In Lua 5.2 and later tables with weak keys (__mode = "k") may hold keys
+  -- that have already been finalized. According to the Lua reference manual
+  -- the objects are marked and finalized in one cycle and collected and
+  -- removed from the weak table keys in the next cycle. So to ensure that
+  -- all finalized keys are removed from weak tables we need to run GC for 2
+  -- complete cycles. We then stop the GC to prevent it from running during
+  -- the function call to ensure that pairs on weak tables work as expected.
+  -- Finally we restart the GC after the function call.
+  collectgarbage()
+  collectgarbage()
+  collectgarbage("stop")
+  local res = {pcall(fn, ...)}
+  collectgarbage("restart")
+
+  return unpack(res)
+end
