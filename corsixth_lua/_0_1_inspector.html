@@ -211,6 +211,10 @@
  <a href="_0_1_humanoid.html#_0_1_humanoid_1set_hospital">setHospital</a>(<span class="p">hospital</span>)
  (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_inspector.html#_0_1_inspector_1set_if_hover_moods_visible">setIfHoverMoodsVisible</a>()
+ (overrides <a href="_0_1_humanoid.html#_0_1_humanoid_1set_if_hover_moods_visible">Humanoid:setIfHoverMoodsVisible</a>)
+ </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
@@ -383,6 +387,8 @@
  </li>
  <li><span class="p">hover_cursor</span>
  </li>
+ <li><span class="p">hover_moods</span>
+ </li>
  <li><span class="p">humanoid_class</span>
  (*)
  </li>
@@ -534,13 +540,13 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1after_load">Humanoid:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L64">line 64 of Lua/entities/humanoids/inspector.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L69">line 69 of Lua/entities/humanoids/inspector.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_inspector_1announce">function Inspector:announce()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L60">line 60 of Lua/entities/humanoids/inspector.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L65">line 65 of Lua/entities/humanoids/inspector.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -548,7 +554,7 @@
  <p>
  Sends the inspector home<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1go_home">Humanoid:goHome</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L42">line 42 of Lua/entities/humanoids/inspector.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L47">line 47 of Lua/entities/humanoids/inspector.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -556,7 +562,15 @@
  <p>
  Called when the inspector has left the map<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1on_destroy">Humanoid:onDestroy</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L55">line 55 of Lua/entities/humanoids/inspector.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L60">line 60 of Lua/entities/humanoids/inspector.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_inspector_1set_if_hover_moods_visible">function Inspector:setIfHoverMoodsVisible()</a></h5>
+ <p>
+ Disable showing inspector mood on hover<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1set_if_hover_moods_visible">Humanoid:setIfHoverMoodsVisible</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L42">line 42 of Lua/entities/humanoids/inspector.lua</a>.
  </p>
  </div>
  <div class="method">
