@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 238 -- Lua 5.5
+local SAVEGAME_VERSION = 239 -- Do not show the mood of the VIP and Inspector
 
 class "App"
 
