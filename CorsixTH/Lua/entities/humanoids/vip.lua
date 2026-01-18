@@ -164,6 +164,11 @@ function Vip:updateDynamicInfo(action_string)
   self:setDynamicInfo('text', {self.name})
 end
 
+-- Disable showing VIP mood on hover
+function Vip:setIfHoverMoodsVisible()
+  self.hover_moods = false
+end
+
 --[[--VIP is leaving--]]
 function Vip:goHome()
   if self.going_home then

@@ -393,7 +393,7 @@ int l_anim_set_tile(lua_State* L) {
 
     map_tile* node = pMap->get_tile(x - 1, y - 1);
     if (node) {
-      pAnimation->attach_to_tile(x - 1, y - 1, node, drawing_layer);
+      pAnimation->attach_to_tile({x - 1, y - 1}, node, drawing_layer);
     } else {
       // Off-map, report an error.
       std::string msg = "Map index out of bounds (" + std::to_string(x) + ", " +
@@ -599,8 +599,10 @@ template <typename T>
 int l_anim_draw(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
-  pAnimation->draw(pCanvas, static_cast<int>(luaL_checkinteger(L, 3)),
-                   static_cast<int>(luaL_checkinteger(L, 4)));
+  int x = static_cast<int>(luaL_checkinteger(L, 3));
+  int y = static_cast<int>(luaL_checkinteger(L, 4));
+  pAnimation->draw(pCanvas, {x, y});
+
   lua_settop(L, 1);
   return 1;
 }

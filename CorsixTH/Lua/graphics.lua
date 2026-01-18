@@ -372,7 +372,7 @@ local font_proxy_mt = {
     end,
     isBitmap = function(self)
       return self._proxy:isBitmap()
-    end,
+    end
   }
 }
 
@@ -393,7 +393,10 @@ function Graphics:onChangeLanguage()
 end
 
 function Graphics:onChangeUIScale()
-  -- Reload fonts
+  if self.builtin_font then
+    self.builtin_font:setScaleFactor(TheApp.config.ui_scale)
+  end
+  -- Update / replace fonts
   self:onChangeLanguage()
 end
 
@@ -407,7 +410,7 @@ end
 function Graphics:loadMenuFont()
   local font
   if self.language_font then
-    font = self:loadFontAndSpriteTable("QData", "Font01V")
+    font = self:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   else
     font = self:loadBuiltinFont()
   end
@@ -494,33 +497,70 @@ function Graphics:loadLanguageFont(name, sprite_table, font_options, y_sep, ttf_
     font_options = fo
   end
 
-  local font
   if name == nil then
-    font = self:loadFont(sprite_table, font_options)
-  else
-    local cache_key = language_font_cache_key(name, font_options)
-    local cache = self.cache.language_fonts[cache_key]
-    font = cache and cache[sprite_table]
-    if not font or (font_options.apply_ui_scale and font_options.scale_factor ~= self.app.config.ui_scale) then
-      -- Adjust scale based on current UI scale factor
-      if font_options.apply_ui_scale then
-        font_options.scale_factor = self.app.config.ui_scale
-      end
-
-      font = TH.freetype_font()
-      -- TODO: Choose face based on "name" rather than always using same face.
-      font:setFace(self.ttf_font_data)
-      font:setFontOptions(sprite_table, font_options)
-      self.reload_functions_last[font] = font_reloader
-
-      if not cache then
-        cache = {}
-        self.cache.language_fonts[cache_key] = cache
-      end
-      cache[sprite_table] = font
-    end
+    return self:loadFont(sprite_table, font_options)
   end
+
+  local font = self:_loadTrueTypeFont(name, sprite_table, font_options)
+
+  -- A change of language or scale might cause the font to change,
+  -- so wrap it in a proxy object which allows the actual object to
+  -- be changed easily.
+  font = setmetatable({ _proxy = font }, font_proxy_mt)
   self.load_info[font] = {self.loadLanguageFont, self, name, sprite_table, font_options}
+  return font
+end
+
+--! Load a true type font
+--!
+--!param name (string) The name of the font from the language file. Always
+--  'unicode'.
+--!param sprite_table (userdata) The sprite table of the font this font is
+--  replacing. Used for default colour and metrics.
+--!param font_options (table) A table of font options:
+--  x_sep (integer) The horizontal separation of the font. Defaults to 0.
+--  y_sep (integer) The vertical separation of the font. Defaults to 0.
+--  ttf_color (table) The colour of the font in form .red, .green and .blue. If
+--    nil, the colour will be detected from the sprite table.
+--  ttf_width (integer) The nominal width of the font, in pixels. If nil, the
+--    width will be detected from the sprite table.
+--  ttf_height (integer) The nominal height of the font, in pixels. If nil, the
+--    height will be detected from the sprite table.
+--  ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
+--    The color field has the same format as ttf_color. If this field is
+--    present, the font will be drawn with a shadow of the specified colour and
+--    offset. color is optional and defaults to opaque black. offset_x and
+--    offset_y are optional and default to 1. If the field is omitted entirely,
+--    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+--    shadow with default parameters, or false to disable any shadow.
+--  apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
+--    size.
+function Graphics:_loadTrueTypeFont(name, sprite_table, font_options)
+  local cache_key = language_font_cache_key(name, font_options)
+  local cache = self.cache.language_fonts[cache_key]
+  local font = cache and cache[sprite_table]
+
+  if font and font_options.apply_ui_scale and font_options.scale_factor ~= self.app.config.ui_scale then
+    font_options.scale_factor = self.app.config.ui_scale
+    font:setFontOptions(sprite_table, font_options)
+    font:clearCache()
+  elseif not font then
+    if font_options.apply_ui_scale then
+      font_options.scale_factor = self.app.config.ui_scale
+    end
+
+    font = TH.freetype_font()
+    -- TODO: Choose face based on "name" rather than always using same face.
+    font:setFace(self.ttf_font_data)
+    font:setFontOptions(sprite_table, font_options)
+    self.reload_functions_last[font] = font_reloader
+
+    if not cache then
+      cache = {}
+      self.cache.language_fonts[cache_key] = cache
+    end
+    cache[sprite_table] = font
+  end
   return font
 end
 
@@ -619,10 +659,10 @@ function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_b
       font:setScaleFactor(TheApp.config.ui_scale)
     end
   else
-    font = self:loadLanguageFont(self.language_font, sprite_table, font_options)
+    font = self:_loadTrueTypeFont(self.language_font, sprite_table, font_options)
   end
-  -- A change of language might cause the font to change between bitmap and
-  -- freetype, so wrap it in a proxy object which allows the actual object to
+  -- A change of language or scale might cause the font to change,
+  -- so wrap it in a proxy object which allows the actual object to
   -- be changed easily.
   font = setmetatable({ _proxy = font }, font_proxy_mt)
   self.load_info[font] = { self.loadFont, self, sprite_table, font_options }

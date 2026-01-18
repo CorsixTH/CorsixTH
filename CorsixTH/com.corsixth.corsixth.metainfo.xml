@@ -20,6 +20,14 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.69.2" date="2026-01-10" type="stable">
+      <description>
+        <p>Bug fixes:</p>
+        <ul>
+          <li>Fixed stuck Operating Theatre after rerouting patients</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.69.1" date="2025-08-16" type="stable">
       <description>
         <p>Bug fixes:</p>
