@@ -322,12 +322,11 @@ function Patient:agreesToPay(disease_id)
   local hosp = self.hospital
   local casebook = hosp.disease_casebook[disease_id]
   local agrees_to_pay = true
-  local price = casebook.price
-  local is_over_priced = price > 1.0
+  local price_multiplier = casebook.price
+  local is_over_priced = price_multiplier > 1.0
   if is_over_priced then
-    local overprice_size = price - 1.0
+    local overprice_size = price_multiplier - 1.0
     -- payment chance modificator was chosen experimentally to match the chance in the original game.
-    -- check github issue 2428 for details.
     local payment_chance_modificator = 4
     local payment_chance = math.exp(-1 * payment_chance_modificator * overprice_size)
     agrees_to_pay = math.random() <= payment_chance
