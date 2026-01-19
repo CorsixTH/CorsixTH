@@ -286,7 +286,7 @@ function UIEditRoom:clearArea()
   local rect = self.blueprint_rect
   local world = self.ui.app.world
   world:clearCaches() -- To invalidate idle tiles in case we need to move people
-  local humanoids_to_watch = setmetatable({}, {__mode = "k"})
+  local humanoids_to_watch = {}
   do
     local x1 = rect.x - 1
     local x2 = rect.x + rect.w
