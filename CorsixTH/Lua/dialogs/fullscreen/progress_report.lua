@@ -40,7 +40,8 @@ function UIProgressReport:UIProgressReport(ui)
     -- Load all sprite tables needed for all goal icons
     self.panel_sprites_table = {
       MPointer = gfx:loadSpriteTable("Data", "MPointer"),
-      Rep02V = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+      Rep02V = gfx:loadSpriteTable("QData", "Rep02V", true, palette),
+      Font04V = gfx:loadSpriteTable("QData", "Font04V"),
     }
     self.panel_sprites = self.panel_sprites_table.Rep02V -- The default goals icons
   end) then
@@ -55,6 +56,13 @@ function UIProgressReport:UIProgressReport(ui)
   self.selected = 1
   local hospital = world.hospitals[self.selected]
 
+  -- Get the localised name for the month
+  local function get_month_string(num)
+    num = math.fmod(num, 12)
+    if num == 0 then num = 12 end
+    return _S.months[num]
+  end
+
   -- Collect which criteria to show here, draw columns in draw
   -- Add the icons for the criteria
   local x = 263
@@ -68,11 +76,11 @@ function UIProgressReport:UIProgressReport(ui)
       crit_table.red = true
       res_value = crit_table.lose_value
     end
-    -- FIXME: res_value and cure_value are depersisted as floating points, using
+    -- FIXME: res_value and cur_value are depersisted as floating points, using
     -- string.format("%.0f", x) is not suitable due to %d (num) param in _S string
-    local tooltip
+    local tooltip, direction
     if crit_table.two_tooltips then
-      local direction = crit_table.win_value and "over" or "under"
+      direction = crit_table.win_value and "over" or "under"
       tooltip = _S.tooltip.status[direction][crit_name]
     else
       tooltip = _S.tooltip.status[crit_name]
@@ -82,6 +90,15 @@ function UIProgressReport:UIProgressReport(ui)
     elseif crit_table.formats == 3 then
       tooltip = tooltip:format(math.floor(res_value) / 1000,
           math.floor(cur_value) / 1000)
+    elseif crit_table.formats == 4 then -- Criterion months_played
+      -- Years are shown starting at 2000
+      if math.fmod(res_value, 12) == 0 then -- For whole years, use years_played string
+        tooltip = _S.tooltip.status[direction].years_played
+            :format(math.floor(res_value / 12) + 2000, math.floor((cur_value - 1) / 12) + 2000)
+      else
+        tooltip = tooltip:format(get_month_string(res_value), math.floor(res_value / 12) + 2000,
+          get_month_string(cur_value), math.floor((cur_value - 1) / 12) + 2000)
+      end
     else
       tooltip = tooltip:format(math.floor(res_value))
     end
