@@ -41,8 +41,8 @@ function Subtitles:queueSubtitle(name)
     local subtitleString = _S.subtitles[string.gsub(string.lower(name), ".wav", "")]
     if subtitleString ~= nil then
       --Second field of subtitle object is the subtitle's display lifetime, measured in ticks
-      --280 ticks = ~5 seconds
-      self.queue:push({subtitleString, 280})
+      local duration = 280 -- ~5 seconds in ticks
+      self.queue:push({subtitleString, duration})
     end
   end
 end
@@ -75,6 +75,10 @@ function Subtitles:onTick()
       end
     end
   end
+end
+
+function Subtitles:afterLoad(old, new)
+    self.queue = SubtitleQueue()
 end
 
 --! First in, first out queue for concurrently displayed subtitles

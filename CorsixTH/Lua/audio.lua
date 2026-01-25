@@ -321,11 +321,7 @@ local wilcard_cache = permanent "audio_wildcard_cache" {}
 function Audio:playSound(name, where, is_announcement, played_callback, played_callback_delay, loops)
   local sound_fx = self.sound_fx
   if sound_fx then
-    if name:find("*") then
-      -- Resolve wildcard to one particular sound
-      local list = self:cacheSoundFilenamesAssociatedWithName(name)
-      name = list[1] and list[math.random(1, #list)] or name
-    end
+    name = self:resolveFilenameWildcard(name)
     local volume = is_announcement and self.app.config.announcement_volume or self.app.config.sound_volume
     local x, y
     local played_callback_id = nil
