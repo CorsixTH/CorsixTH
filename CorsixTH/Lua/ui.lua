@@ -689,7 +689,10 @@ function UI:toggleFullscreen()
 
   local success = true
   self.app:prepareVideoUpdate()
-  local error_message = self.app.video:update(self.app.config.width, self.app.config.height, unpack(modes))
+  local error_message = self.app.video:update(self.app.config.width, self.app.config.height,
+      self.app.MIN_WINDOW_WIDTH * self.app.config.ui_scale,
+      self.app.MIN_WINDOW_HEIGHT * self.app.config.ui_scale,
+      unpack(self.app.modes))
   self.app:finishVideoUpdate()
 
   if error_message then
