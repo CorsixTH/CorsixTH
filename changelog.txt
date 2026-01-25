@@ -4,6 +4,11 @@ CorsixTH 0.70.0 - ???
 # Packager Notes
 * Now supports big-endian systems (tested on s390x)
 
+CorsixTH 0.69.2 - released January 2026
+-------------------------------------------------------------------------------
+# Bug Fixes
+* Fixed stuck Operating Theatre after rerouting patients.
+
 -------------------------------------------------------------------------------
 CorsixTH 0.69.1 - released August 2025
 -------------------------------------------------------------------------------

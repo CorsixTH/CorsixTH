@@ -1766,6 +1766,7 @@ local release_table = {
   {major = 0, minor = 69, revision = 0, patch = "-rc1", version = 219},
   {major = 0, minor = 69, revision = 0, patch = "", version = 220},
   {major = 0, minor = 69, revision = 1, patch = "", version = 221},
+  {major = 0, minor = 69, revision = 2, patch = "", version = 222},
 }
 
 --! Retrieve the current savegame version as defined in the application.

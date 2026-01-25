@@ -94,6 +94,12 @@ enum draw_flags : uint32_t {
   thdf_nearest = 1 << 14,
 };
 
+// Integer 2D pair.
+struct xy_pair {
+  int x{};  ///< Value of the X coordinate.
+  int y{};  ///< Value of the Y coordinate.
+};
+
 /*!
     Base class for a linked list of drawable objects.
     Note that "object" is used as a generic term, not in specific reference to
@@ -107,14 +113,14 @@ struct drawable : public link_list {
   /*!
       Can also "draw" the object to the speakers, i.e. play sounds.
   */
-  virtual void draw_fn(render_target* pCanvas, int iDestX, int iDestY) = 0;
+  virtual void draw_fn(render_target* canvas, const xy_pair& draw_pos) = 0;
 
   //! Perform a hit test against the object
   /*!
-      Should return true if when the object is drawn at (iDestX, iDestY) on a
-     canvas, the point (iTestX, iTestY) is within / on the object.
+      Should return true if when the object is drawn at \p draw_pos on a
+     canvas, the point \p obj_pos is within / on the object.
   */
-  virtual bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) = 0;
+  virtual bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) = 0;
 
   /** Returns true if instance is a multiple frame animation.
       Should be overloaded in derived class.
@@ -458,28 +464,19 @@ class animation_manager {
   void fix_next_frame(uint32_t iFirst, size_t iLength);
 };
 
-// Integer 2D pair.
-struct xy_pair {
-  int x{};  ///< Value of the X coordinate.
-  int y{};  ///< Value of the Y coordinate.
-};
-
 class animation_base : public drawable {
  public:
   animation_base();
 
   void remove_from_tile();
-  void attach_to_tile(int x, int y, map_tile* node, int layer);
+  void attach_to_tile(const xy_pair& tile_pos, map_tile* node, int layer);
 
   uint32_t get_flags() const { return flags; }
   const xy_pair& get_pixel_offset() const { return pixel_offset; }
   const xy_pair& get_tile() const { return tile; }
 
   void set_flags(uint32_t iFlags) { flags = iFlags; }
-  void set_tile(int x, int y) {
-    tile.x = x;
-    tile.y = y;
-  }
+  void set_tile(const xy_pair& tile_pos) { tile = tile_pos; }
   void set_pixel_offset(int x, int y) {
     pixel_offset.x = x;
     pixel_offset.y = y;
@@ -504,52 +501,53 @@ class animation : public animation_base {
  public:
   animation();
 
-  void set_parent(animation* pParent, bool use_primary);
+  void set_parent(animation* parent_anim, bool use_primary);
 
   void tick();
-  void draw(render_target* pCanvas, int iDestX, int iDestY);
-  bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
-  void draw_morph(render_target* pCanvas, int iDestX, int iDestY);
-  bool hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY);
-  void draw_child(render_target* pCanvas, int iDestX, int iDestY,
+  void draw(render_target* canvas, const xy_pair& draw_pos);
+  void draw_morph(render_target* canvas, const xy_pair& draw_pos);
+  void draw_child(render_target* canvas, const xy_pair& draw_pos,
                   bool use_primary);
-  bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
 
-  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override {
+  void draw_fn(render_target* canvas, const xy_pair& draw_pos) override {
     switch (anim_kind) {
       case animation_kind::normal:
-        draw(pCanvas, iDestX, iDestY);
+        draw(canvas, draw_pos);
         return;
       case animation_kind::primary_child:
-        draw_child(pCanvas, iDestX, iDestY, true);
+        draw_child(canvas, draw_pos, true);
         return;
       case animation_kind::secondary_child:
-        draw_child(pCanvas, iDestX, iDestY, false);
+        draw_child(canvas, draw_pos, false);
         return;
       case animation_kind::morph:
-        draw_morph(pCanvas, iDestX, iDestY);
+        draw_morph(canvas, draw_pos);
         return;
     }
   }
 
-  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override {
+  bool hit_test(const xy_pair& draw_pos, const xy_pair& obj_pos);
+  bool hit_test_morph(const xy_pair& draw_pos, const xy_pair& obj_pos);
+  bool hit_test_child(const xy_pair& draw_pos, const xy_pair& obj_pos);
+
+  bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) override {
     switch (anim_kind) {
       case animation_kind::normal:
-        return hit_test(iDestX, iDestY, iTestX, iTestY);
+        return hit_test(draw_pos, obj_pos);
       case animation_kind::primary_child:
       case animation_kind::secondary_child:
-        return hit_test_child(iDestX, iDestY, iTestX, iTestY);
+        return hit_test_child(draw_pos, obj_pos);
       case animation_kind::morph:
-        return hit_test_morph(iDestX, iDestY, iTestX, iTestY);
+        return hit_test_morph(draw_pos, obj_pos);
     }
     return false;
   }
 
   bool is_multiple_frame_animation_fn() override {
-    size_t firstFrame =
-        get_animation_manager()->get_first_frame(get_animation());
-    size_t nextFrame = get_animation_manager()->get_next_frame(firstFrame);
-    return nextFrame != firstFrame;
+    size_t anim = get_animation();
+    size_t first_frame = get_animation_manager()->get_first_frame(anim);
+    size_t next_frame = get_animation_manager()->get_next_frame(first_frame);
+    return next_frame != first_frame;
   }
 
   link_list* get_previous() { return prev; }
@@ -559,18 +557,18 @@ class animation : public animation_base {
   size_t get_frame() const { return frame_index; }
   int get_crop_column() const { return crop_column; }
 
-  void set_animation(animation_manager* pManager, size_t iAnimation);
-  void set_morph_target(animation* pMorphTarget, int iDurationFactor = 1);
-  void set_frame(size_t iFrame);
+  void set_animation(animation_manager* mgr, size_t anim);
+  void set_morph_target(animation* target, int duration = 1);
+  void set_frame(size_t new_frame);
 
   void set_speed(int x, int y) {
     speed.x = x;
     speed.y = y;
   }
-  void set_crop_column(int iColumn) { crop_column = iColumn; }
+  void set_crop_column(int column) { crop_column = column; }
 
-  void persist(lua_persist_writer* pWriter) const;
-  void depersist(lua_persist_reader* pReader);
+  void persist(lua_persist_writer* writer) const;
+  void depersist(lua_persist_reader* reader);
 
   void set_patient_effect(animation_effect patient_effect);
   void set_animation_kind(animation_kind anim_kind);
@@ -603,25 +601,30 @@ class animation : public animation_base {
 class sprite_render_list : public animation_base {
  public:
   void tick();
-  void draw(render_target* pCanvas, int iDestX, int iDestY);
-  bool hit_test(int iDestX, int iDestY, int iTestX, int iTestY);
 
-  void set_sheet(sprite_sheet* pSheet) { sheet = pSheet; }
-  void set_speed(int iX, int iY) { dx_per_tick = iX, dy_per_tick = iY; }
-  void set_lifetime(int iLifetime);
+  void set_sheet(sprite_sheet* new_sheet) { sheet = new_sheet; }
+  void set_speed(int x_speed, int y_speed) {
+    dx_per_tick = x_speed;
+    dy_per_tick = y_speed;
+  }
+  void set_lifetime(int life_time);
   void set_use_intermediate_buffer();
-  void append_sprite(size_t iSprite, int iX, int iY);
+  void append_sprite(size_t spr_num, int xpos, int ypos);
   bool is_dead() const { return lifetime == 0; }
 
-  void persist(lua_persist_writer* pWriter) const;
-  void depersist(lua_persist_reader* pReader);
+  void persist(lua_persist_writer* writer) const;
+  void depersist(lua_persist_reader* reader);
 
-  void draw_fn(render_target* pCanvas, int iDestX, int iDestY) override {
-    draw(pCanvas, iDestX, iDestY);
+  void draw(render_target* canvas, const xy_pair& draw_pos);
+
+  void draw_fn(render_target* canvas, const xy_pair& draw_pos) override {
+    draw(canvas, draw_pos);
   }
 
-  bool hit_test_fn(int iDestX, int iDestY, int iTestX, int iTestY) override {
-    return hit_test(iDestX, iDestY, iTestX, iTestY);
+  bool hit_test(const xy_pair& draw_pos, const xy_pair& obj_pos);
+
+  bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) override {
+    return hit_test(draw_pos, obj_pos);
   }
 
   bool is_multiple_frame_animation_fn() override { return false; }
