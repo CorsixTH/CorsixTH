@@ -502,6 +502,7 @@ tooltip.options_window = {
   select_resolution = "Select a new resolution",
   scale_ui = "Scale the user interface. Only scale options that fit the display are shown, for more increase the resolution.",
   select_ui_scale = "Select a new user interface scale",
+  ui_scale_unavailable = "User interface scaling not available, please select a higher resolution first.",
   capture_mouse = "Click to toggle capturing the cursor while in game",
   right_mouse_scrolling = "Toggle the mouse button that is used to scroll the map",
   width = "Enter desired screen width",

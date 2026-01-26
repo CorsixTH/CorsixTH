@@ -176,13 +176,15 @@ function UIOptions:UIOptions(ui, mode)
 
   self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
 
+  -- UI Scale
   local scale_ui_y_pos = self:_getOptionYPos()
   local scale_label = TheApp.config.ui_scale * 100 .. "%"
   self:addBevelPanel(20, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
       :setLabel(_S.options_window.scale_ui):setTooltip(_S.tooltip.options_window.scale_ui).lowered = true
   self.scale_ui_panel = self:addBevelPanel(165, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(scale_label)
 
-  self.scale_ui_button = self.scale_ui_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownUIScale):setTooltip(_S.tooltip.options_window.select_ui_scale)
+  self.scale_ui_button = self.scale_ui_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownUIScale)
+  self:updateUIScaleAvailabilityState()
 
   -- Mouse capture
   local capture_mouse_y_pos = self:_getOptionYPos()
@@ -343,6 +345,7 @@ function UIOptions:selectResolution(number)
   else
     callback(res.width, res.height)
   end
+  self:updateUIScaleAvailabilityState()
 end
 
 function UIOptions:dropdownUIScale(activate)
@@ -359,6 +362,15 @@ function UIOptions:dropdownUIScale(activate)
       self.scale_ui_dropdown = nil
     end
   end
+end
+
+-- Check if UI scale button should be enabled, and update the tooltip.
+function UIOptions:updateUIScaleAvailabilityState()
+  local ui_scales_available = #available_ui_scales() > 1
+  self.scale_ui_button:enable(ui_scales_available)
+  self.scale_ui_button:setTooltip(ui_scales_available and
+      _S.tooltip.options_window.select_ui_scale or
+      _S.tooltip.options_window.ui_scale_unavailable)
 end
 
 function UIOptions:selectUIScale(number)
