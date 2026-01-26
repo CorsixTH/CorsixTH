@@ -78,7 +78,7 @@ function Subtitles:onTick()
 end
 
 function Subtitles:afterLoad(old, new)
-    self.queue = SubtitleQueue()
+  self.queue = SubtitleQueue()
 end
 
 --! First in, first out queue for concurrently displayed subtitles
