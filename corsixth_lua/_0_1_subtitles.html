@@ -4,7 +4,7 @@
  <head>
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  <meta http-equiv="Content-Language" content="en-gb" />
- <title>UICustomise Class - CorsixTH Lua Documentation</title>
+ <title>Subtitles Class - CorsixTH Lua Documentation</title>
  <link rel="stylesheet" href="main.css" type="text/css" media="all" />
  </head>
  <body>
@@ -21,12 +21,11 @@
  <li class="last"><a href="class_index.html">Index</a></li>
  </ul>
  <div class="content">
- <h2 class="class">UICustomise Class</h2>
-<h3 class="class">Customise window used in the main menu and ingame.</h3> 
+ <h2 class="class">Subtitles Class</h2>
+<h3 class="class">UI display area for announcer subtitles</h3> 
 <div class="class_info">
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L21">line 21 of Lua/dialogs/resizables/customise.lua</a>.
- <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_customise.html">UICustomise</a>
- » <a href="_0_1_u_i_resizable.html">UIResizable</a>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/subtitles.lua#L21">line 21 of Lua/dialogs/subtitles.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_subtitles.html">Subtitles</a>
  » <a href="_0_1_window.html">Window</a>
 </div>
 <div class="method_list">
@@ -52,68 +51,25 @@
  <a href="_0_1_window.html#_0_1_window_1add_window">addWindow</a>(<span class="p">window</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <li class="self">
+ <a href="_0_1_subtitles.html#_0_1_subtitles_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1begin_resize">beginResize</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">mode</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
- </li>
- <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_aliens">buttonAliens</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_announcer__subtitles">buttonAnnouncer_subtitles</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_audio_global">buttonAudioGlobal</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_average__contents">buttonAverage_contents</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_back">buttonBack</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_destroyed__rooms">buttonDestroyed_rooms</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_fractured__bones">buttonFractured_bones</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_intro">buttonIntro</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_machine__menu">buttonMachine_menu</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_movies_global">buttonMoviesGlobal</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_paused">buttonPaused</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_screen__shake">buttonScreen_shake</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1button_volume">buttonVolume</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1close">close</a>()
- (overrides <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>)
- </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <a href="_0_1_window.html#_0_1_window_1close">close</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_subtitles.html#_0_1_subtitles_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
@@ -136,12 +92,8 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
- </li>
- <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1hit_test_corners">hitTestCorners</a>(<span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <a href="_0_1_window.html#_0_1_window_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
@@ -192,8 +144,8 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
@@ -207,16 +159,16 @@
  <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1on_tick">onTick</a>()
- (inherited from <a href="_0_1_window.html">Window</a>)
+ <li class="self">
+ <a href="_0_1_subtitles.html#_0_1_subtitles_1on_tick">onTick</a>()
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="self">
- <a href="_0_1_u_i_customise.html#_0_1_u_i_customise_1reload">reload</a>()
+ <a href="_0_1_subtitles.html#_0_1_subtitles_1queue_subtitle">queueSubtitle</a>(<span class="p">name</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
@@ -239,10 +191,6 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1set_colour">setColour</a>(<span class="p">colour</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
- </li>
- <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
@@ -251,8 +199,8 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <a href="_0_1_window.html#_0_1_window_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>, <span class="p">apply_ui_scale</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
@@ -273,36 +221,13 @@
  <li><span class="p">active_scrollbar</span>
  (*)
  </li>
- <li><span class="p">aliens_button</span>
- </li>
- <li><span class="p">aliens_panel</span>
- </li>
- <li><span class="p">announcer_subtitles_button</span>
- </li>
- <li><span class="p">announcer_subtitles_panel</span>
- </li>
- <li><span class="p">app</span>
- </li>
  <li><span class="p">apply_ui_scale</span>
- (*)
- </li>
- <li><span class="p">average_contents_button</span>
- </li>
- <li><span class="p">average_contents_panel</span>
- </li>
- <li><span class="p">background_panel</span>
  (*)
  </li>
  <li><span class="p">blink_counter</span>
  (*)
  </li>
  <li><span class="p">blinking_button</span>
- (*)
- </li>
- <li><span class="p">border_pos</span>
- (*)
- </li>
- <li><span class="p">border_sprites</span>
  (*)
  </li>
  <li><span class="p">btn_repeat_delay</span>
@@ -317,9 +242,6 @@
  <li><span class="p">closed</span>
  (*)
  </li>
- <li><span class="p">colour</span>
- (*)
- </li>
  <li><span class="p">cursor_x</span>
  (*)
  </li>
@@ -327,10 +249,7 @@
  (*)
  </li>
  <li><span class="p">default_button_sound</span>
- </li>
- <li><span class="p">destroyed_rooms_button</span>
- </li>
- <li><span class="p">destroyed_rooms_panel</span>
+ (*)
  </li>
  <li><span class="p">draggable</span>
  (*)
@@ -338,44 +257,14 @@
  <li><span class="p">dragging</span>
  (*)
  </li>
- <li><span class="p">esc_closes</span>
- </li>
- <li><span class="p">fractured_bones_button</span>
- </li>
- <li><span class="p">fractured_bones_panel</span>
- </li>
  <li><span class="p">height</span>
  (*)
  </li>
  <li><span class="p">hotkeyboxes</span>
  (*)
  </li>
- <li><span class="p">intro_button</span>
- </li>
- <li><span class="p">intro_panel</span>
- </li>
  <li><span class="p">key_handlers</span>
  (*)
- </li>
- <li><span class="p">machine_menu_button</span>
- </li>
- <li><span class="p">machine_menu_panel</span>
- </li>
- <li><span class="p">min_height</span>
- (*)
- </li>
- <li><span class="p">min_width</span>
- (*)
- </li>
- <li><span class="p">modal_class</span>
- </li>
- <li><span class="p">mode</span>
- </li>
- <li><span class="p">movies_button</span>
- </li>
- <li><span class="p">movies_panel</span>
- </li>
- <li><span class="p">on_top</span>
  </li>
  <li><span class="p">panel_sprites</span>
  (*)
@@ -386,15 +275,7 @@
  <li><span class="p">parent</span>
  (*)
  </li>
- <li><span class="p">paused_button</span>
- </li>
- <li><span class="p">paused_panel</span>
- </li>
- <li><span class="p">resizable</span>
- </li>
- <li><span class="p">screen_shake_button</span>
- </li>
- <li><span class="p">screen_shake_panel</span>
+ <li><span class="p">queue</span>
  </li>
  <li><span class="p">scrollbars</span>
  (*)
@@ -406,13 +287,12 @@
  (*)
  </li>
  <li><span class="p">ui</span>
+ (*)
  </li>
  <li><span class="p">visible</span>
  (*)
  </li>
- <li><span class="p">volume_button</span>
- </li>
- <li><span class="p">volume_panel</span>
+ <li><span class="p">white_font</span>
  </li>
  <li><span class="p">width</span>
  (*)
@@ -421,13 +301,11 @@
  (*)
  </li>
  <li><span class="p">x</span>
- (*)
  </li>
  <li><span class="p">x_original</span>
  (*)
  </li>
  <li><span class="p">y</span>
- (*)
  </li>
  <li><span class="p">y_original</span>
  (*)
@@ -437,115 +315,82 @@
 </div>
 <div class="methods">
  <div class="method">
- <h5><a name="_0_1_u_i_customise_1_u_i_customise">function UICustomise:UICustomise(<span class="p">ui</span>, <span class="p">mode</span>)</a></h5>
+ <h5><a name="_0_1_subtitles_1_subtitles">function Subtitles:Subtitles()</a></h5>
+ <p>
+ Subtitles constructor<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/subtitles.lua#L27">line 27 of Lua/dialogs/subtitles.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_subtitles_1after_load">function Subtitles:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">ui</td>
+ <td class="n">old</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
  <tr>
- <td class="n">mode</td>
+ <td class="n">new</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L45">line 45 of Lua/dialogs/resizables/customise.lua</a>.
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/subtitles.lua#L80">line 80 of Lua/dialogs/subtitles.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_aliens">function UICustomise:buttonAliens()</a></h5>
+ <h5><a name="_0_1_subtitles_1draw">function Subtitles:draw(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L196">line 196 of Lua/dialogs/resizables/customise.lua</a>.
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/subtitles.lua#L50">line 50 of Lua/dialogs/subtitles.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_announcer__subtitles">function UICustomise:buttonAnnouncer_subtitles()</a></h5>
+ <h5><a name="_0_1_subtitles_1on_tick">function Subtitles:onTick()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L256">line 256 of Lua/dialogs/resizables/customise.lua</a>.
+ Subtitle area's tick handler
+Removes a subtitle from the queue if it has reached its tick lifetime<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/subtitles.lua#L65">line 65 of Lua/dialogs/subtitles.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_audio_global">function UICustomise:buttonAudioGlobal()</a></h5>
+ <h5><a name="_0_1_subtitles_1queue_subtitle">function Subtitles:queueSubtitle(<span class="p">name</span>)</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L155">line 155 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_average__contents">function UICustomise:buttonAverage_contents()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L220">line 220 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_back">function UICustomise:buttonBack()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L265">line 265 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_destroyed__rooms">function UICustomise:buttonDestroyed_rooms()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L229">line 229 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_fractured__bones">function UICustomise:buttonFractured_bones()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L209">line 209 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_intro">function UICustomise:buttonIntro()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L169">line 169 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_machine__menu">function UICustomise:buttonMachine_menu()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L238">line 238 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_movies_global">function UICustomise:buttonMoviesGlobal()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L160">line 160 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_paused">function UICustomise:buttonPaused()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L178">line 178 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_screen__shake">function UICustomise:buttonScreen_shake()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L247">line 247 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1button_volume">function UICustomise:buttonVolume()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L187">line 187 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1close">function UICustomise:close()</a></h5>
- <p>
- <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L277">line 277 of Lua/dialogs/resizables/customise.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_customise_1reload">function UICustomise:reload()</a></h5>
- <p>
- So that we can see the option has been changed reload the menu<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/customise.lua#L271">line 271 of Lua/dialogs/resizables/customise.lua</a>.
+ Pushes an announcer audio file's associated subtitle text to the queue for display<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">string</td>
+ <td class="d"> Filename of the announcer sound to display</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/subtitles.lua#L37">line 37 of Lua/dialogs/subtitles.lua</a>.
  </p>
  </div>
 </div>
