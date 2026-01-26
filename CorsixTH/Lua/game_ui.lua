@@ -68,6 +68,8 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   -- UI widgets
   self.menu_bar = UIMenuBar(self, self.map_editor)
   self:addWindow(self.menu_bar)
+  self.subtitles = Subtitles(self)
+  self:addWindow(self.subtitles)
 
   local scr_w = app.config.width
   local scr_h = app.config.height
@@ -1312,6 +1314,10 @@ function GameUI:afterLoad(old, new)
   if old < 130 then
     self.ticks_since_last_announcement = nil -- cleanup
     self.announcer = Announcer(self.app)
+  end
+  if old < 240 then
+    self.subtitles = Subtitles(self)
+    self:addWindow(self.subtitles)
   end
 
   self.announcer.playing = false

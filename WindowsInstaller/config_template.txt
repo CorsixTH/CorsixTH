@@ -221,6 +221,12 @@ machine_menu_button = true
 --
 enable_screen_shake = true
 
+-------------------------------------------------------------------------------
+-- By default subtitles are not displayed. If you would like the game to
+-- display subtitles for your hospital's announcements, turn this option on.
+--
+enable_announcer_subtitles = false
+
 ------------------------------- FOLDER SETTINGS -------------------------------
 -- These settings can also be changed from the Folders Menu
 -------------------------------------------------------------------------------

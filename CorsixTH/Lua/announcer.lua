@@ -237,7 +237,9 @@ end
 --!param entry (AnnouncementEntry) The announcement to play.
 function Announcer:_play(entry)
   self.playing = true
-  self.app.audio:playSound(entry.name, nil, true, function () self:_onPlayed(entry) end, entry.played_callback_delay)
+  local name = self.app.audio:resolveFilenameWildcard(entry.name)
+  self.app.audio:playSound(name, nil, true, function () self:_onPlayed(entry) end, entry.played_callback_delay)
+  self.app.ui.subtitles:queueSubtitle(name)
   self.ticks_since_last_announcement = 0
 end
 
