@@ -337,6 +337,7 @@ function UIOptions:selectResolution(number)
       self.ui:addWindow(UIInformation(self.ui, err))
     end
     self.resolution_panel:setLabel(self.ui.app.config.width .. "x" .. self.ui.app.config.height)
+    self:updateUIScaleAvailabilityState()
   end
 
   if res.custom then
@@ -345,7 +346,6 @@ function UIOptions:selectResolution(number)
   else
     callback(res.width, res.height)
   end
-  self:updateUIScaleAvailabilityState()
 end
 
 function UIOptions:dropdownUIScale(activate)
@@ -477,6 +477,13 @@ function UIOptions:buttonZoomSpeed()
   end
 
   self.ui:addWindow( UIZoomSpeed(self.ui, callback) )
+end
+
+-- Handle required button changes from a window resize event from the user
+function UIOptions:processWindowResizeEvent()
+  self:updateUIScaleAvailabilityState()
+  self.resolution_panel:setLabel(self.ui.app.config.width .. "x" ..
+      self.ui.app.config.height)
 end
 
 function UIOptions:close()
