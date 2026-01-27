@@ -169,10 +169,11 @@ function UIOptions:UIOptions(ui, mode)
     :setToggleState(app.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen_button)
 
   -- Screen resolution
+  -- We will set the button label after making up the UI scale option below
   local screen_res_y_pos = self:_getOptionYPos()
   self:addBevelPanel(20, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.resolution):setTooltip(_S.tooltip.options_window.resolution).lowered = true
-  self.resolution_panel = self:addBevelPanel(165, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.width .. "x" .. app.config.height)
+  self.resolution_panel = self:addBevelPanel(165, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg)
 
   self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
 
@@ -184,7 +185,9 @@ function UIOptions:UIOptions(ui, mode)
   self.scale_ui_panel = self:addBevelPanel(165, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(scale_label)
 
   self.scale_ui_button = self.scale_ui_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownUIScale)
-  self:updateUIScaleAvailabilityState()
+
+  -- Now set the resolution button label and the ui scale button state
+  self:processWindowResizeEvent()
 
   -- Mouse capture
   local capture_mouse_y_pos = self:_getOptionYPos()
@@ -336,8 +339,7 @@ function UIOptions:selectResolution(number)
       local err = {_S.errors.unavailable_screen_size}
       self.ui:addWindow(UIInformation(self.ui, err))
     end
-    self.resolution_panel:setLabel(self.ui.app.config.width .. "x" .. self.ui.app.config.height)
-    self:updateUIScaleAvailabilityState()
+    self:processWindowResizeEvent()
   end
 
   if res.custom then
@@ -479,7 +481,8 @@ function UIOptions:buttonZoomSpeed()
   self.ui:addWindow( UIZoomSpeed(self.ui, callback) )
 end
 
--- Handle required button changes from a window resize event from the user
+-- Handle required button changes from a window resize event from the user (via UI
+-- or adjusting window boundaries)
 function UIOptions:processWindowResizeEvent()
   self:updateUIScaleAvailabilityState()
   self.resolution_panel:setLabel(self.ui.app.config.width .. "x" ..
