@@ -975,8 +975,12 @@ end
 --!param width (integer) New window width
 --!param height (integer) New window height
 function UI:onWindowResize(width, height)
-  if not self.app.config.fullscreen then
-    self:changeResolution(width, height)
+  if not self.app.config.fullscreen and self:changeResolution(width, height) then
+    -- Update the Options window, if open
+    local window = self:getWindow(UIOptions)
+    if window then
+      window:processWindowResizeEvent()
+    end
   end
 end
 
