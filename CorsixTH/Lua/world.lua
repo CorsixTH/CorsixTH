@@ -2738,7 +2738,6 @@ function World:chooseHospitalForPatient(disease)
       return self.hospitals[i]
     end
   end
-end  
 end
 
 --! Returns whether the level being played is part of a campaign or not
