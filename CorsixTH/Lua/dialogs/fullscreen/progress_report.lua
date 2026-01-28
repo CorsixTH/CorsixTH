@@ -194,7 +194,7 @@ function UIProgressReport:draw(canvas, x, y)
     local font = (pnum == self.selected) and self.red_font or self.normal_font
     font:draw(canvas, player.name:upper(), x + 272 * s, y + ly)
     ly = ly + 25 * s
-    total_spawns = total_spawns + math.max(1, player.population)    
+    total_spawns = total_spawns + math.max(1, player.population)
   end
 
   -- Draw the vertical bars for the selected conditions
