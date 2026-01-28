@@ -339,7 +339,6 @@ function UIOptions:selectResolution(number)
       local err = {_S.errors.unavailable_screen_size}
       self.ui:addWindow(UIInformation(self.ui, err))
     end
-    self:processWindowResizeEvent()
   end
 
   if res.custom then
@@ -479,6 +478,10 @@ function UIOptions:buttonZoomSpeed()
   end
 
   self.ui:addWindow( UIZoomSpeed(self.ui, callback) )
+end
+
+function UIOptions:onChangeResolution()
+  self:processWindowResizeEvent()
 end
 
 -- Handle required button changes from a window resize event from the user (via UI
