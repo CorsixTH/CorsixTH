@@ -28,7 +28,8 @@ function UILoadMap:UILoadMap(ui, mode)
   local path = ui.app.user_level_dir
   local treenode = FilteredFileTreeNode(path, ".map")
   treenode.label = "Maps"
-  self:UIFileBrowser(ui, mode, _S.load_game_window.caption:format(".map"), 295, treenode, true)
+  self:UIFileBrowser(ui, mode, _S.load_map_window.caption:format(".map"), 295,
+      treenode, true, _S.load_game_window.load_button)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.
   self.control:sortByDate()
@@ -38,14 +39,7 @@ function UILoadMap:choiceMade(name)
   local app = self.ui.app
   -- Make sure there is no blue filter active.
   app.video:setBlueFilterActive(false)
-  name = name:sub(app.user_level_dir:len() + 1)
-  local status, err = pcall(app.loadLevel, app, name, nil, nil, nil, nil, true)
-  if not status then
-    err = _S.errors.load_prefix .. err
-    print(err)
-    app:loadMainMenu()
-    app.ui:addWindow(UIInformation(self.ui, {err}))
-  end
+  app:loadLevel(name, nil, nil, nil, nil, true, _S.errors.load_map_prefix, nil)
 end
 
 function UILoadMap:close()

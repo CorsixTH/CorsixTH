@@ -55,9 +55,10 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.width = 186
   self.height = 167 + #object_list * 29
   self:setDefaultPosition(0.9, 0.1)
+  local selected_label_color = { red = 40, green = 40, blue = 250 }
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.blue_font = app.gfx:loadFont("QData", "Font02V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   self.title_text = _S.rooms_short.corridor_objects
   self.desc_text = _S.place_objects_window.place_objects_in_corridor
 
@@ -69,10 +70,10 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound("no4.wav"):setTooltip(_S.tooltip.place_objects_window.cancel)
   self.purchase_button =
   self:addPanel(117,  50, 100):makeButton(1, 8, 41, 42, 118, self.purchaseItems):setTooltip(_S.tooltip.place_objects_window.buy_sell)
-    :setDisabledSprite(127):enable(false) -- Disabled purchase items button
+    :setDisabledSprite(127):setSound("selectx.wav"):enable(false) -- Disabled purchase items button
   self.pickup_button =
   self:addPanel(119,  92, 100):makeButton(1, 8, 41, 42, 120, self.pickupItems):setTooltip(_S.tooltip.place_objects_window.pick_up)
-    :setDisabledSprite(128):enable(false):makeToggle() -- Disabled pick up items button
+    :setDisabledSprite(128):setSound("selectx.wav"):enable(false):makeToggle() -- Disabled pick up items button
   self.confirm_button =
   self:addPanel(121, 134, 100):makeButton(1, 8, 43, 42, 122, self.confirm):setTooltip(_S.tooltip.place_objects_window.confirm)
     :setDisabledSprite(129):enable(false):setSound("YesX.wav") -- Disabled confirm button
@@ -134,12 +135,12 @@ function UIPlaceObjects:resize(num_slots)
     -- add new panels (save last one)
     for i = self.num_slots + 1, num_slots - 1 do
       self:addPanel(124, 0, 121 + i * 29)
-        :makeButton(15, 8, 130, 23, 125, idx(i))
+        :makeButton(15, 8, 130, 23, 125, idx(i)):setSound("selectx.wav")
         :preservePanel()
     end
     -- add last new panel
     self:addPanel(156, 0, 117 + num_slots * 29)
-      :makeButton(15, 12, 130, 23, 125, idx(num_slots))
+      :makeButton(15, 12, 130, 23, 125, idx(num_slots)):setSound("selectx.wav")
       :preservePanel()
   else
     -- remove buttons
@@ -232,6 +233,8 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
   end)
 
   self.active_index = 0 -- avoid case of index changing from 1 to 1
+  self.active_hover_index = 0
+  self.hover_sound = nil
   self:setActiveIndex(1)
   self:onCursorWorldPositionChange(self.ui:getCursorPosition(self))
 end
@@ -270,6 +273,7 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
     table.remove(self.objects, idx)
     self:resize(#self.objects)
     self.active_index = 0 -- avoid case of index changing from 1 to 1
+    self.active_hover_index = 0
     self:setActiveIndex(1)
   else
     -- Make sure the correct frame is shown for the next object
@@ -462,7 +466,8 @@ function UIPlaceObjects:onMouseUp(button, x, y)
     repaint = true
   elseif button == "left" then
     if #self.objects > 0 then
-      if 0 <= x and x < self.width and 0 <= y and y < self.height then -- luacheck: ignore 542
+      local s = TheApp.config.ui_scale
+      if 0 <= x and x < self.width * s and 0 <= y and y < self.height * s then -- luacheck: ignore 542
         -- Click within window - do nothing
       elseif self.object_cell_x and self.object_cell_y and self.object_blueprint_good then
         self:placeObject()
@@ -505,9 +510,9 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     end
     -- Some objects (e.g. the plant) uses this flag to avoid doing stupid things when picked up.
     real_obj.picked_up = false
-    -- Machines may have smoke, recalculate it to ensure the animation is in the correct state
-    if real_obj.strength then
-      real_obj:calculateSmoke(room)
+    if real_obj:isMachine() then
+      -- Machines may have some state like smoke and etc. Update it.
+      real_obj:placed(room)
     end
     if class.is(real_obj, Machine) then
       real_obj:setHandymanRepairPosition(self.object_orientation)
@@ -555,19 +560,59 @@ function UIPlaceObjects:draw(canvas, x, y)
 
   Window.draw(self, canvas, x, y)
 
-  x, y = x + self.x, y + self.y
-  self.white_font:draw(canvas, self.title_text, x + 17, y + 21, 153, 0)
-  self.white_font:drawWrapped(canvas, self.desc_text, x + 20, y + 46, 147)
+  local s = TheApp.config.ui_scale
+  x, y = x + self.x * s, y + self.y * s
+  self.white_font:draw(canvas, self.title_text, x + 17 * s, y + 21 * s, 153 * s, 0)
+  self.white_font:drawWrapped(canvas, self.desc_text, x + 20 * s, y + 46 * s, 147 * s)
 
   for i, o in ipairs(self.objects) do
     local font = self.white_font
-    local ypos = y + 136 + i * 29
+    local font_ypos = y + 136 * s + i * 29 * s
+
     if i == self.active_index then
+      local frame_xpos = x + 20 * s
+      local frame_ypos = y + 134 * s + i * 29 * s
+      local frame_width = 119 * s
+      local frame_height = 12 * s
+
+      local red = canvas:mapRGB(221, 83, 0)
+      canvas:drawRect(red, frame_xpos, frame_ypos, frame_width, s)
+      canvas:drawRect(red, frame_xpos, frame_ypos + frame_height, frame_width + s, s)
+      canvas:drawRect(red, frame_xpos, frame_ypos, s, frame_height)
+      canvas:drawRect(red, frame_xpos + frame_width, frame_ypos, s, frame_height)
+    end
+    if i == self.active_hover_index then
       font = self.blue_font
     end
-    font:draw(canvas, o.object.name, x + 15, ypos, 130, 0)
-    font:draw(canvas, o.qty, x + 151, ypos, 19, 0)
+    font:draw(canvas, o.object.name, x + 15 * s, font_ypos, 130 * s, 0)
+    font:draw(canvas, o.qty, x + 151 * s, font_ypos, 19 * s, 0)
   end
+end
+
+function UIPlaceObjects:onMouseMove(x, y, dx, dy)
+  local s = TheApp.config.ui_scale
+  local current_hover_id
+  local header_height = 159 * s
+  local bar_height = 29 * s
+  local inside_objects_area = (x > 0 and x < 186 * s) and (y > header_height and y < header_height + bar_height * #self.objects)
+  if inside_objects_area then
+    -- Check if player hovers over a button, not between.
+    if (header_height + y) % bar_height < 21 * s then
+      current_hover_id = math_floor((y - header_height)/bar_height) + 1
+      if self.active_hover_index ~= current_hover_id then
+        if self.hover_sound then
+          self.ui:stopSound(self.hover_sound)
+        end
+        self.hover_sound = self.ui:playSound("Hlight5.wav")
+        self.active_hover_index = current_hover_id
+      end
+    else
+      self.active_hover_index = 0
+    end
+  else
+    self.active_hover_index = nil
+  end
+  return Window:onMouseMove(x, y, dx, dy)
 end
 
 function UIPlaceObjects:clearBlueprint()
@@ -841,4 +886,10 @@ end
 function UIPlaceObjects:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   UIPlaceObjects.registerKeyHandlers(self)
+
+  if old < 236 then
+    local selected_label_color = { red = 40, green = 40, blue = 250 }
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+    self.blue_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
+  end
 end

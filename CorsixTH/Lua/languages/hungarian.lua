@@ -71,6 +71,7 @@ Font("unicode")
 Language("Magyar", "Hungarian", "hu", "hun")
 Inherit("English")
 Encoding(utf8)
+IsArabicNumerals(true)
 
 
 -- 2. Faxes
@@ -241,7 +242,6 @@ tooltip.options_window = {
   height = "Add meg a kívánt magasságot",
   change_resolution = "Az ablak felbontásának alkalmazása a bal oldalon lévő adatok szerint",
   language = "%s nyelv kiválasztása",
-  original_path = "Az eredeti Theme Hospital telepítés jelenlegi elérési útvonala",
   browse = "Másik elérési útvonal kiválasztása a Theme Hospital fájljaihoz",
   back = "Beállítások ablak bezárása",
 }
@@ -328,7 +328,7 @@ errors = {
   save_prefix = "Hiba mentés közben",
   load_prefix = "Hiba betöltés közben",
   map_file_missing = "Nem találom a %s fájlt ehhez a pályához!",
-  minimum_screen_size = "Kérlek írj be olyan felbontást ami nagyobb mint 640x480.",
+  minimum_screen_size = "Kérlek írj be olyan felbontást ami nagyobb mint %dx%d.",
   maximum_screen_size = "Kérlek olyan felbontást írj be ami kisebb mint 3000x2000.",
   unavailable_screen_size = "A felbontás amit szeretnél nem elérhető teljes képernyős módban.",
 }
@@ -1823,8 +1823,8 @@ confirmation.maximum_screen_size = "Az általad beállított képernyőfelbontá
 confirmation.music_warning = "Mielőtt kiválaszthatnád az mp3-akat amelyek játék közben fognak szólni szükséged lesz az smpeg.dll nevű (vagy azzal egyenértékű) file-ra, különben nem lesz zene. Folytatod?"
 menu_options_wage_increase.deny = " MEGTAGAD"
 menu_options_wage_increase.grant = " ENGEDÉLYEZ"
-tooltip.options_window.audio_button = "Minden hang ki/be kapcsolása"
-tooltip.options_window.audio_toggle = "Ki vagy bekapcsol"
+tooltip.audio_window.audio_button = "Minden hang ki/be kapcsolása"
+tooltip.audio_window.audio_toggle = "Ki vagy bekapcsol"
 tooltip.options_window.folder_button = "Könyvtár opciók"
 tooltip.options_window.customise_button = "További beállítások, hogy finomhangolhasd a játékélményt"
 tooltip.update_window.download = "Látogasd meg a letöltőoldalt, hogy megszerezhesd a CorsixTH legfrissebb verzióját"
@@ -1885,7 +1885,7 @@ customise_window.aliens = "Alien páciensek"
 customise_window.fractured_bones = "Törött Csontok"
 options_window.folder = "Könyvtárak"
 options_window.customise = "Személyre szab"
-options_window.audio = "Fő hangerő"
+audio_window.audio = "Fő hangerő"
 menu_options.twentyfour_hour_clock = " 24 ÓRÁS MEGJELENÍTÉS"
 menu_options.wage_increase = " FIZETÉSIGÉNYEK"
 install.ok = "OK"

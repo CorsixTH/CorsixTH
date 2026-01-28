@@ -33,7 +33,7 @@ function UIFax:UIFax(ui, icon)
   self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
   local palette = gfx:loadPalette("QData", "Fax01V.pal", true)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
-  self.fax_font = gfx:loadFont("QData", "Font51V", false, palette)
+  self.fax_font = gfx:loadFontAndSpriteTable("QData", "Font51V", false, palette, { apply_ui_scale = true })
   self.icon = icon
   self.message = icon.message or {}
   self.owner = icon.owner
@@ -102,24 +102,27 @@ function UIFax:updateChoices()
 end
 
 function UIFax:draw(canvas, x, y)
-  self.background:draw(canvas, self.x + x, self.y + y)
+  local s = TheApp.config.ui_scale
+  canvas:scale(s, "bitmap")
+  self.background:draw(canvas, self.x * s + x, self.y * s + y)
+  canvas:scale(1, "bitmap")
   UIFullscreen.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  x, y = self.x * s + x, self.y * s + y
 
   if self.message then
-    local last_y = y + 40
+    local last_y = y + 40 * s
     for _, message in ipairs(self.message) do
-      last_y = self.fax_font:drawWrapped(canvas, message.text, x + 190,
-                                         last_y + (message.offset or 0), 330,
+      last_y = self.fax_font:drawWrapped(canvas, message.text, x + 190 * s,
+                                         last_y + (message.offset or 0), 360 * s,
                                          "center")
     end
     local choices = self.message.choices
     if choices then
-      local orig_y = y + 190
+      local orig_y = y + 190 * s
       for i = 1, #choices do
-        last_y = orig_y + ((i - 1) + (3 - #choices)) * 48
-        self.fax_font:drawWrapped(canvas, choices[i].text, x + 190,
-                                  last_y + (choices[i].offset or 0), 300)
+        last_y = orig_y + ((i - 1) + (3 - #choices)) * 48 * s
+        self.fax_font:drawWrapped(canvas, choices[i].text, x + 190 * s,
+                                  last_y + (choices[i].offset or 0), 300 * s)
       end
     end
   end
@@ -139,40 +142,41 @@ function UIFax:choice(choice_number)
   end
 
   local owner = self.owner
-  if owner then
+  if owner and owner.humanoid_class then
+    local humanoid = owner
     -- A choice was made, the patient is no longer waiting for a decision
-    owner:setMood("patient_wait", "deactivate")
-    owner.message_callback = nil
+    humanoid:setMood("patient_wait", "deactivate")
+    humanoid.message_callback = nil
     if choice == "send_home" then
-      owner:goHome("kicked")
-      if owner.diagnosed then
+      humanoid:goHome("kicked")
+      if humanoid.diagnosed then
         -- No treatment rooms
-        owner:setDynamicInfoText(_S.dynamic_info.patient.actions.no_treatment_available)
+        humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.no_treatment_available)
       else
         -- No diagnosis rooms
-        owner:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
+        humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
       end
     elseif choice == "wait" then
       -- Wait two months before going home
-      owner.waiting = 60
-      if owner.diagnosed then
+      humanoid.waiting = 60
+      if humanoid.diagnosed then
         -- Waiting for treatment room
-        owner:setDynamicInfoText(_S.dynamic_info.patient.actions.waiting_for_treatment_rooms)
+        humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.waiting_for_treatment_rooms)
       else
         -- Waiting for diagnosis room
-        owner:setDynamicInfoText(_S.dynamic_info.patient.actions.waiting_for_diagnosis_rooms)
+        humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.waiting_for_diagnosis_rooms)
       end
     elseif choice == "guess_cure" then
-      owner:setDiagnosed()
-      if owner:agreesToPay(owner.disease.id) then
-        owner:setNextAction(SeekRoomAction(owner.disease.treatment_rooms[1]):enableTreatmentRoom())
+      humanoid:setDiagnosed()
+      if humanoid:agreesToPay(humanoid.disease.id) then
+        humanoid:setNextAction(SeekRoomAction(humanoid.disease.treatment_rooms[1]):enableTreatmentRoom())
       else
-        owner:goHome("over_priced", owner.disease.id)
+        humanoid:goHome("over_priced", humanoid.disease.id)
       end
     elseif choice == "research" then
-      owner:unregisterCallbacks()
-      owner:setMood("idea", "activate")
-      owner:setNextAction(SeekRoomAction("research"))
+      humanoid:unregisterCallbacks()
+      humanoid:setMood("idea", "activate")
+      humanoid:setNextAction(SeekRoomAction("research"))
     end
   end
   local vip_ignores_refusal = math.random(1, 2)
@@ -207,16 +211,23 @@ function UIFax:choice(choice_number)
     self.ui.hospital.player_salary = self.ui.hospital.salary_offer
     if tonumber(self.ui.app.world.map.level_number) then
       local next_level = self.ui.app.world.map.level_number + 1
-      self.ui.app:loadLevel(next_level, self.ui.app.map.difficulty)
-      self.ui.app.moviePlayer:playAdvanceMovie(next_level)
+      if self.ui.app:loadLevel(next_level, self.ui.app.map.difficulty, nil, nil,
+          nil, nil, _S.errors.load_level_prefix) then
+        self.ui.app.moviePlayer:playAdvanceMovie(next_level)
+      end
     else
-      for i, level in ipairs(self.ui.app.world.campaign_info.levels) do
-        if self.ui.app.world.map.level_number == level then
-          local next_level = self.ui.app.world.campaign_info.levels[i + 1]
-          local level_info, _ = self.ui.app:readLevelFile(next_level)
+      local campaign_info = self.ui.app.world.campaign_info
+      for i, level in ipairs(campaign_info.levels) do
+        local filename = self.ui.app.world.map.level_filename or self.ui.app.world.map.level_number
+        if filename == level then
+          local level_info, _ = self.ui.app:readLevelFile(campaign_info.levels[i + 1], campaign_info.folder)
           if level_info then
-            self.ui.app:loadLevel(next_level, nil, level_info.name,
-                     level_info.map_file, level_info.briefing)
+            self.ui.app:loadLevel(level_info.path, nil, level_info.name,
+                level_info.map_file, level_info.briefing, nil, _S.errors.load_level_prefix, campaign_info)
+            if campaign_info.movie then
+              local n = math.max(1, 12 - #campaign_info.levels + i)
+              self.ui.app.moviePlayer:playAdvanceMovie(n)
+            end
             break
           end
         end
@@ -284,12 +295,12 @@ function UIFax:close()
 end
 
 function UIFax:afterLoad(old, new)
-  if old < 179 then
+  if old < 236 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
     local palette = gfx:loadPalette("QData", "Fax01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
-    self.fax_font = gfx:loadFont("QData", "Font51V", false, palette)
+    self.fax_font = gfx:loadFontAndSpriteTable("QData", "Font51V", false, palette, { apply_ui_scale = true })
   end
   UIFullscreen.afterLoad(self, old, new)
   if old < 59 then

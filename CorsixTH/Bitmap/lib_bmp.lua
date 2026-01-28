@@ -18,12 +18,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+-- This is a custom written BMP library for CorsixTH. It currently only supports
+-- BMP files 8bpp without compression
+
+
 local io_open, table_concat, setmetatable, ipairs, string_reverse, string_char
     = io.open, table.concat, setmetatable, ipairs, string.reverse, string.char
 local math_floor
     = math.floor
 
-module "bmp"
+local B = {}
 local mt = {__index = _M}
 
 -- Convert a little endian byte string into an integer
@@ -35,7 +39,7 @@ local function LE(s)
   return value
 end
 
-function open(filename)
+function B.open(filename)
   local file, err = io_open(filename, "rb")
   if not file then
     return nil, err
@@ -69,7 +73,7 @@ function open(filename)
   for pal_idx = 1, pal_size do
     local bgr = file:read(3)
     file:seek("cur", 1)
-    palette[pal_idx] = convertPal(bgr)
+    palette[pal_idx] = B.convertPal(bgr)
   end
   return setmetatable({
     file = file,
@@ -81,7 +85,7 @@ function open(filename)
   }, mt)
 end
 
-function getPixel(bmp, x, y)
+function B.getPixel(bmp, x, y)
   local file, width = bmp.file, bmp.width
   if x < 0 or y < 0 or x >= width or y >= bmp.height then
     return nil, "Invalid pixel"
@@ -94,7 +98,7 @@ function getPixel(bmp, x, y)
   return file:read(1)
 end
 
-function getPixels(bmp)
+function B.getPixels(bmp)
   local file, width = bmp.file, bmp.width
   if not file:seek("set", bmp.bits_offset) then
     return nil, "Invalid data offset"
@@ -108,7 +112,7 @@ function getPixels(bmp)
   return table_concat(rows)
 end
 
-function getSubPixels(bmp, x, y, w, h)
+function B.getSubPixels(bmp, x, y, w, h)
   local file, width = bmp.file, bmp.width
   local stride = width + ((4 - (width % 4)) % 4)
   local offset = (bmp.height - y - h) * stride + x
@@ -124,8 +128,10 @@ function getSubPixels(bmp, x, y, w, h)
   return table_concat(rows)
 end
 
-function convertPal(data)
+function B.convertPal(data)
   return (data:gsub("...", string_reverse):gsub(".", function(c)
     return string_char(math_floor(c:byte() / 255 * 63 + 0.5))
   end))
 end
+
+return B

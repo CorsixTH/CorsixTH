@@ -286,7 +286,7 @@ function UIEditRoom:clearArea()
   local rect = self.blueprint_rect
   local world = self.ui.app.world
   world:clearCaches() -- To invalidate idle tiles in case we need to move people
-  local humanoids_to_watch = setmetatable({}, {__mode = "k"})
+  local humanoids_to_watch = {}
   do
     local x1 = rect.x - 1
     local x2 = rect.x + rect.w
@@ -394,11 +394,25 @@ function UIEditRoom:finishRoom()
     flag = 1024
   end
   local function check_external_window(x, y, layer)
+    -- Test it is a wall, but not spr_num.
+    local function is_wall_and_not(wall_x, wall_y, spr_num)
+      return map:getCell(wall_x, wall_y, layer) ~= 0
+          and map:getCell(wall_x, wall_y, layer) ~= spr_num
+    end
+    -- Test that the wall is either spr_num1 or spr_num2.
+    local function is_one_of_wall(wall_x, wall_y, spr_num1, spr_num2)
+      return  map:getCell(wall_x, wall_y, layer) == spr_num1
+          or map:getCell(wall_x, wall_y, layer) == spr_num2
+    end
+
+
     -- If a wall is built which is normal to an external window, then said
-    -- window needs to be removed, otherwise it looks odd (see issue #59).
+    -- window needs to be removed, otherwise it looks odd.
     local block = map:getCell(x, y, layer)
     local dir = world:getWallDirFromBlockId(block)
     local tiles = self.ui.app.walls.external[world:getWallSetFromBlockId(block)]
+
+    -- Dispatch on the wall tiles at (x, y)
     if dir == "north_window_1" then
       if x ~= rect.x then
         map:setCell(x, y, layer, flag + tiles.north)
@@ -406,6 +420,7 @@ function UIEditRoom:finishRoom()
           map:setCell(x + 1, y, layer, flag + tiles.north)
         end
       end
+
     elseif dir == "north_window_2" then
       if x == rect.x then
         if map:getCell(x - 1, y, layer) ~= 0 then
@@ -413,6 +428,7 @@ function UIEditRoom:finishRoom()
         end
         map:setCell(x, y, layer, flag + tiles.north)
       end
+
     elseif dir == "west_window_1" then
       if y == rect.y then
         map:setCell(x, y, layer, flag + tiles.west)
@@ -420,6 +436,7 @@ function UIEditRoom:finishRoom()
           map:setCell(x, y - 1, layer, flag + tiles.west)
         end
       end
+
     elseif dir == "west_window_2" then
       if y ~= rect.y then
         if map:getCell(x, y + 1, layer) ~= 0 then
@@ -427,8 +444,58 @@ function UIEditRoom:finishRoom()
         end
         map:setCell(x, y, layer, flag + tiles.west)
       end
+
+    elseif dir == "north_window_long" then
+      if x == rect.x then
+        map:setCell(x, y, layer, flag + tiles.north_window_1)
+        -- Check if the window_long continues.
+        -- If yes, replace the window_long with window_n.
+        -- if no, replace it with the wall.
+        if is_wall_and_not(x - 1, y, tiles.north_window_2) then
+          if is_one_of_wall(x - 2, y,
+              tiles.north_window_long, tiles.north_window_1) then
+            map:setCell(x - 1, y, layer, flag + tiles.north_window_2)
+          else
+            map:setCell(x - 1, y, layer, flag + tiles.north)
+          end
+        end
+      else
+        map:setCell(x, y, layer, flag + tiles.north_window_2)
+        if is_wall_and_not(x + 1, y, tiles.north_window_1) then
+          if is_one_of_wall(x + 2, y,
+              tiles.north_window_long, tiles.north_window_2) then
+            map:setCell(x + 1, y, layer, flag + tiles.north_window_1)
+          else
+            map:setCell(x + 1, y, layer, flag + tiles.north)
+          end
+        end
+      end
+
+    elseif dir == "west_window_long" then
+      if y == rect.y then
+        map:setCell(x, y, layer, flag + tiles.west_window_2)
+        if is_wall_and_not(x, y - 1, tiles.west_window_1) then
+          if is_one_of_wall(x, y - 2,
+              tiles.west_window_long, tiles.west_window_2) then
+            map:setCell(x, y - 1, layer, flag + tiles.west_window_1)
+          else
+            map:setCell(x, y - 1, layer, flag + tiles.west)
+          end
+        end
+      else
+        map:setCell(x, y, layer, flag + tiles.west_window_1)
+        if is_wall_and_not(x, y + 1, tiles.west_window_2) then
+          if is_one_of_wall(x, y + 2,
+              tiles.west_window_long, tiles.west_window_1) then
+            map:setCell(x, y + 1, layer, flag + tiles.west_window_2)
+          else
+            map:setCell(x, y + 1, layer, flag + tiles.west)
+          end
+        end
+      end
     end
   end
+
   for x, obj in pairs(self.blueprint_wall_anims) do
     for y, anim in pairs(obj) do
       if x == rect.x and y == rect.y then
@@ -1005,31 +1072,94 @@ function UIEditRoom:draw(canvas, ...)
   UIPlaceObjects.draw(self, canvas, ...)
 end
 
+--25 north wall, west
+--26 north wall, east
+--27 east wall, south
+--28 east wall, north
+--29 south wall, west
+--30 south wall, east
+--31 west wall, south
+--32 west wall, north
+-- single door blue print values matching TH
+local door_floor_blueprint_markers = {
+  north = 26,
+  east = 27,
+  south = 30,
+  west = 31
+}
+
+local window_floor_blueprint_markers = {
+  north = 33,
+  east = 34,
+  south = 35,
+  west = 36,
+}
+
+function UIEditRoom:onLeftButtonDown(x, y)
+  local s = TheApp.config.ui_scale
+  if self.phase == "walls" then
+    if 0 <= x and x < self.width * s and 0 <= y and y < self.height * s then -- luacheck: ignore 542
+    else
+      local mouse_x, mouse_y = self.ui:ScreenToWorld(self.x * s + x, self.y * s + y)
+      self.mouse_down_x = math.floor(mouse_x)
+      self.mouse_down_y = math.floor(mouse_y)
+      if self.move_rect then
+        self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
+        self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
+      elseif not self.resize_rect then
+        self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
+      end
+    end
+  elseif self.phase == "door" then
+    if self.blueprint_door.valid then
+      self.ui:playSound("buildclk.wav")
+      self:confirm(true)
+    else
+      self.ui:tutorialStep(3, 9, 10)
+    end
+  elseif self.phase == "windows" then
+    self:placeWindowBlueprint()
+  end
+end
+
+--! Attempt to remove a window placed on the room blueprints
+--!param x co-ordinate
+--!param y co-ordinate
+function UIEditRoom:tryRemoveWindowFromWall(x, y)
+  local cell_x, cell_y, wall_dir = self:screenToWall(self.x + x, self.y + y)
+  if not cell_x then
+    return
+  end
+
+  local map = TheApp.map.th
+  local cell_flag = map:getCell(cell_x, cell_y, 4)
+  if cell_flag == window_floor_blueprint_markers[wall_dir] then -- right click on a wall with a window
+    local wall_x, wall_y = cell_x, cell_y
+    local direction_flag = (wall_dir == "south" or wall_dir == "north") and 0 or 1
+    if wall_dir == "south" then
+      wall_y = cell_y + 1
+    elseif wall_dir == "east" then
+      wall_x = cell_x + 1
+    end
+
+    local anim = self.blueprint_wall_anims[wall_x][wall_y]
+    if anim then
+      -- reset tile to basic floor/wall
+      map:setCell(cell_x, cell_y, 4, 24)
+      anim:setAnimation(self.anims, 120, direction_flag)
+      anim:setTag(nil)
+      self.ui:playSound("de_build.wav")
+    end
+  end
+end
+
 function UIEditRoom:onMouseDown(button, x, y)
   if self.world.user_actions_allowed and not self.confirm_dialog_open then
     if button == "left" then
-      if self.phase == "walls" then
-        if 0 <= x and x < self.width and 0 <= y and y < self.height then -- luacheck: ignore 542
-        else
-          local mouse_x, mouse_y = self.ui:ScreenToWorld(self.x + x, self.y + y)
-          self.mouse_down_x = math.floor(mouse_x)
-          self.mouse_down_y = math.floor(mouse_y)
-          if self.move_rect then
-            self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
-            self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
-          elseif not self.resize_rect then
-            self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
-          end
-        end
-      elseif self.phase == "door" then
-        if self.blueprint_door.valid then
-          self.ui:playSound("buildclk.wav")
-          self:confirm(true)
-        else
-          self.ui:tutorialStep(3, 9, 10)
-        end
-      elseif self.phase == "windows" then
-        self:placeWindowBlueprint()
+      self:onLeftButtonDown(x, y)
+    elseif button == "right" then
+      if self.phase == "windows" then
+        self:tryRemoveWindowFromWall(x, y)
       end
     end
   end
@@ -1098,29 +1228,6 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
   rect.w = w
   rect.h = h
 end
-
---25 north wall, west
---26 north wall, east
---27 east wall, south
---28 east wall, north
---29 south wall, west
---30 south wall, east
---31 west wall, south
---32 west wall, north
--- single door blue print values matching TH
-local door_floor_blueprint_markers = {
-  north = 26,
-  east = 27,
-  south = 30,
-  west = 31
-}
-
-local window_floor_blueprint_markers = {
-  north = 33,
-  east = 34,
-  south = 35,
-  west = 36,
-}
 
 --! Check walls for having room for the door
 --!param x (int) X tile position of the door.

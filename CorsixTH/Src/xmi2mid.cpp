@@ -20,13 +20,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "xmi2mid.h"
+
 #include "config.h"
-#ifdef CORSIX_TH_USE_SDL_MIXER
+
 #include <algorithm>
+#include <cmath>
 #include <cstring>
-#include <iterator>
 #include <new>
+#include <stdexcept>
 #include <vector>
+
+//! Determines if the system is little-endian
+//! This function can be replaced with std::endian when we move to C++20
+bool is_little_endian() {
+  uint16_t i = 0x0102;
+  return *reinterpret_cast<uint8_t*>(&i) == 0x02;
+}
+
+bool operator<(const midi_token& oLeft, const midi_token& oRight) {
+  return oLeft.time < oRight.time;
+}
 
 /*!
     Utility class for reading or writing to memory as if it were a file.
@@ -121,17 +135,20 @@ class memory_buffer {
 
   template <class T>
   bool write(const T* values, size_t count) {
+    if (count == 0) {
+      return true;
+    }
     if (!skip(static_cast<std::ptrdiff_t>(sizeof(T) * count))) return false;
     std::memcpy(pointer - sizeof(T) * count, values, sizeof(T) * count);
     return true;
   }
 
   bool write_big_endian_uint16(uint16_t iValue) {
-    return write(byte_swap(iValue));
+    return write(is_little_endian() ? byte_swap(iValue) : iValue);
   }
 
   bool write_big_endian_uint32(uint32_t iValue) {
-    return write(byte_swap(iValue));
+    return write(is_little_endian() ? byte_swap(iValue) : iValue);
   }
 
   bool write_variable_length_uint(unsigned int iValue) {
@@ -151,6 +168,8 @@ class memory_buffer {
   bool is_end_of_buffer() const { return pointer == data_end; }
 
  private:
+  //! Byte-swap a value
+  //! Replace with std::byteswap when we move to C++23
   template <class T>
   static T byte_swap(T value) {
     T swapped = 0;
@@ -184,157 +203,190 @@ class memory_buffer {
   char *data, *pointer, *data_end, *buffer_end;
 };
 
-struct midi_token {
-  int time;
-  unsigned int buffer_length;
-  const char* buffer;
-  uint8_t type;
-  uint8_t data;
-};
+void early_eof() { throw std::runtime_error("unexpected end of XMI data"); }
 
-bool operator<(const midi_token& oLeft, const midi_token& oRight) {
-  return oLeft.time < oRight.time;
-}
-
-struct midi_token_list : std::vector<midi_token> {
-  midi_token* append(int iTime, uint8_t iType) {
-    push_back(midi_token());
-    midi_token* pToken = &back();
-    pToken->time = iTime;
-    pToken->type = iType;
-    return pToken;
-  }
-};
-
-uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data, size_t xmi_length,
-                               size_t* midi_length) {
+midi_token_list xmi_to_midi_token_list(const unsigned char* xmi_data,
+                                       size_t xmi_length, uint32_t& iTempo) {
   if (xmi_data == nullptr) {
-    return nullptr;
+    throw std::invalid_argument("xmi_data is null");
   }
 
   memory_buffer bufInput(xmi_data, xmi_length);
 
-  if (!bufInput.scan_to("EVNT", 4) || !bufInput.skip(8)) return nullptr;
+  // CorsixTH uses a simplified XMI format with no RBRN chunk and only a single
+  // song per file.
+
+  // There is a TIMB chunk, but on all tracks it has a length of zero and
+  // appears to be otherwise gibberish, so we skip it.
+
+  if (!bufInput.scan_to("EVNT", 4) || !bufInput.skip(8)) {
+    throw std::runtime_error("XMI EVNT chunk not found");
+  }
 
   midi_token_list lstTokens;
-  midi_token* pToken;
   int iTokenTime = 0;
-  uint32_t iTempo = 500000;
+  iTempo = 500000;
   bool bTempoSet = false;
   bool bEnd = false;
-  uint8_t iTokenType, iExtendedType;
+  uint8_t iTokenType;
+  uint8_t iExtendedType;
 
   while (!bufInput.is_end_of_buffer() && !bEnd) {
     while (true) {
-      if (!bufInput.read(iTokenType)) return nullptr;
+      if (!bufInput.read(iTokenType)) {
+        early_eof();
+      }
 
-      if (iTokenType & 0x80)
-        break;
-      else
-        iTokenTime += static_cast<int>(iTokenType) * 3;
+      // If the high bit is set this is a MIDI event, otherwise it is part of
+      // the duration of the previous event. Durations are summed together in
+      // XMI and omitted entirely if zero.
+      if (iTokenType & 0x80) break;
+
+      iTokenTime += static_cast<int>(iTokenType) * time_multiplier;
     }
-    pToken = lstTokens.append(iTokenTime, iTokenType);
-    pToken->buffer = bufInput.get_pointer() + 1;
+    midi_token& token = lstTokens.emplace_back(iTokenTime, iTokenType);
+    // XMI events type ids match their corresponding MIDI event type ids.
+    // The high nibble is the event type, the low nibble is the channel except
+    // for 0xFn.
     switch (iTokenType & 0xF0) {
-      case 0xC0:
-      case 0xD0:
-        if (!bufInput.read(pToken->data)) return nullptr;
-        pToken->buffer = nullptr;
+      case midi_event_program_change:
+      case midi_event_channel_pressure:
+        // Single data byte.
+        if (!bufInput.read(token.data)) early_eof();
         break;
-      case 0x80:
-      case 0xA0:
-      case 0xB0:
-      case 0xE0:
-        if (!bufInput.read(pToken->data)) return nullptr;
-        if (!bufInput.skip(1)) return nullptr;
-        break;
-      case 0x90:
-        if (!bufInput.read(iExtendedType)) return nullptr;
-        pToken->data = iExtendedType;
-        if (!bufInput.skip(1)) return nullptr;
-        pToken = lstTokens.append(
+      case midi_event_note_off:
+      case midi_event_poly_key_pressure:
+      case midi_event_control_change:
+      case midi_event_pitch_bend: {
+        if (!bufInput.read(token.data)) early_eof();
+        // Two data bytes.
+        uint8_t b1;
+        if (!bufInput.read(b1)) early_eof();
+        token.buffer.push_back(b1);
+      } break;
+      case midi_event_note_on: {
+        // Note on: read note and velocity
+        uint8_t note;
+        if (!bufInput.read(note)) early_eof();
+        token.data = note;
+
+        uint8_t velocity;
+        if (!bufInput.read(velocity)) early_eof();
+        token.buffer.push_back(velocity);
+        // Insert a note off event after the specified duration since MIDI
+        // does not support duration. A note on event with a velocity of zero
+        // is a note off (alternative to 0x8n) according to the MIDI spec.
+        midi_token& offToken = lstTokens.emplace_back(
             iTokenTime +
-                static_cast<int>(bufInput.read_variable_length_uint()) * 3,
+                static_cast<int>(bufInput.read_variable_length_uint()) *
+                    time_multiplier,
             iTokenType);
-        pToken->data = iExtendedType;
-        pToken->buffer = "\0";
-        break;
+        offToken.data = note;
+        offToken.buffer.push_back(0);
+      } break;
       case 0xF0:
         iExtendedType = 0;
-        if (iTokenType == 0xFF) {
-          if (!bufInput.read(iExtendedType)) return nullptr;
+        if (iTokenType == midi_event_meta) {
+          if (!bufInput.read(iExtendedType)) {
+            early_eof();
+          }
 
-          if (iExtendedType == 0x2F)
+          if (iExtendedType == midi_meta_event_end_of_track)
             bEnd = true;
-          else if (iExtendedType == 0x51) {
+          else if (iExtendedType == midi_meta_event_set_tempo) {
             if (!bTempoSet) {
               bufInput.skip(1);
-              iTempo = bufInput.read_big_endian_uint24() * 3;
+              iTempo = bufInput.read_big_endian_uint24();
               bTempoSet = true;
               bufInput.skip(-4);
             } else {
               lstTokens.pop_back();
               if (!bufInput.skip(static_cast<std::ptrdiff_t>(
-                      bufInput.read_variable_length_uint())))
-                return nullptr;
+                      bufInput.read_variable_length_uint()))) {
+                early_eof();
+              }
               break;
             }
           }
         }
-        pToken->data = iExtendedType;
-        pToken->buffer_length = bufInput.read_variable_length_uint();
-        pToken->buffer = bufInput.get_pointer();
-        if (!bufInput.skip(pToken->buffer_length)) return nullptr;
+        token.data = iExtendedType;
+        uint32_t buffer_length = bufInput.read_variable_length_uint();
+        token.buffer.assign(bufInput.get_pointer(),
+                            bufInput.get_pointer() + buffer_length);
+        if (!bufInput.skip(buffer_length)) {
+          early_eof();
+        }
         break;
     }
   }
 
+  std::sort(lstTokens.begin(), lstTokens.end());
+  return lstTokens;
+}
+
+uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data, size_t xmi_length,
+                               size_t* midi_length) {
+  uint32_t iTempo;
+  midi_token_list lstTokens =
+      xmi_to_midi_token_list(xmi_data, xmi_length, iTempo);
+
   if (lstTokens.empty()) return nullptr;
 
   memory_buffer bufOutput;
+  // SMF header for single track type 0.
   if (!bufOutput.write("MThd\0\0\0\x06\0\0\0\x01", 12)) return nullptr;
-  if (!bufOutput.write_big_endian_uint16(
-          static_cast<uint16_t>((iTempo * 3) / 25000)))
+
+  // Write the division (ticks per quarter note if positive).
+  // XMI files run at 120Hz, which works out to 25000/3 microseconds per tick.
+  // The MIDI tempo is specified in microseconds per quarter note.
+  // To get ticks per quarter note we need to invert microseconds per tick and
+  // multiply by microseconds per quarter note, giving the formula below.
+  long division = std::clamp(
+      std::lround(static_cast<long double>(iTempo) * xmi_ticks_per_microsecond),
+      1L, 0x7FFFL);
+  if (!bufOutput.write_big_endian_uint16(static_cast<uint16_t>(division)))
     return nullptr;
+
+  // Track chunk header with placeholder length.
   if (!bufOutput.write("MTrk\xBA\xAD\xF0\x0D", 8)) return nullptr;
 
-  std::sort(lstTokens.begin(), lstTokens.end());
+  int iTokenTime = 0;
+  uint8_t iTokenType = 0;
+  bool bEnd = false;
 
-  iTokenTime = 0;
-  iTokenType = 0;
-  bEnd = false;
-
-  for (midi_token_list::iterator itr = lstTokens.begin(),
-                                 itrEnd = lstTokens.end();
+  for (auto itr = lstTokens.begin(), itrEnd = lstTokens.end();
        itr != itrEnd && !bEnd; ++itr) {
     if (!bufOutput.write_variable_length_uint(itr->time - iTokenTime))
       return nullptr;
     iTokenTime = itr->time;
     if (itr->type >= 0xF0) {
-      if (!bufOutput.write(iTokenType = itr->type)) return nullptr;
+      iTokenType = itr->type;
+      if (!bufOutput.write(iTokenType)) return nullptr;
       if (iTokenType == 0xFF) {
         if (!bufOutput.write(itr->data)) return nullptr;
         if (itr->data == 0x2F) bEnd = true;
       }
-      if (!bufOutput.write_variable_length_uint(itr->buffer_length))
+      if (!bufOutput.write_variable_length_uint(
+              static_cast<unsigned int>(itr->buffer.size())))
         return nullptr;
-      if (!bufOutput.write(itr->buffer, itr->buffer_length)) return nullptr;
+      if (!bufOutput.write(itr->buffer.data(), itr->buffer.size()))
+        return nullptr;
     } else {
       if (itr->type != iTokenType) {
-        if (!bufOutput.write(iTokenType = itr->type)) return nullptr;
+        iTokenType = itr->type;
+        if (!bufOutput.write(iTokenType)) return nullptr;
       }
       if (!bufOutput.write(itr->data)) return nullptr;
-      if (itr->buffer) {
-        if (!bufOutput.write(itr->buffer, 1)) return nullptr;
+      if (!itr->buffer.empty()) {
+        if (!bufOutput.write(itr->buffer.data(), 1)) return nullptr;
       }
     }
   }
 
+  // Replace the placeholder length in the header with the actual length.
   uint32_t iLength = static_cast<uint32_t>(bufOutput.tell() - 22);
   bufOutput.seek(18);
   bufOutput.write_big_endian_uint32(iLength);
 
   return bufOutput.take_data(midi_length);
 }
-
-#endif

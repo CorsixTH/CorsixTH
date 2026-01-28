@@ -41,6 +41,10 @@ local multigesture_pinch_sensitivity_factor = 0.002
 -- will result in a call to adjustZoom in the onTick method
 local multigesture_pinch_amplification_factor = 100
 
+-- Speed of scrolling when using keys. Pixels / tick (18ms)
+-- This scroll speed is further adjusted by the configured scroll_speed
+local key_scroll_speed = 10
+
 --! Game UI constructor.
 --!param app (Application) Application object.
 --!param local_hospital Hospital to display
@@ -64,6 +68,8 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   -- UI widgets
   self.menu_bar = UIMenuBar(self, self.map_editor)
   self:addWindow(self.menu_bar)
+  self.subtitles = Subtitles(self)
+  self:addWindow(self.subtitles)
 
   local scr_w = app.config.width
   local scr_h = app.config.height
@@ -72,7 +78,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
     -- For a standard 128x128 map, screen size would have to be in the
     -- region of 3276x2457 in order to be too large.
     if not self.map_editor then
-      error("Screen size too large for the map")
+      error("Screen size too large for the map. Adjust your resolution in Settings.")
     end
   end
   self.screen_offset_x, self.screen_offset_y = app.map:WorldToScreen(
@@ -90,6 +96,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.recallpositions = {}
 
   self.speed_up_key_pressed = false
+  self.last_hovered_entity = nil
 
   -- The currently specified intensity value for earthquakes. To abstract
   -- the effect from the implementation this value is a number between 0
@@ -97,6 +104,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.shake_screen_intensity = 0
 
   self.announcer = Announcer(app)
+  self.app:setCaptureMouse()
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -104,10 +112,10 @@ function GameUI:setupGlobalKeyHandlers()
 
   -- Set the scrolling keys.
   self.scroll_keys = {
-     [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
-     [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
-     [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
-     [tostring(self.app.hotkeys["ingame_scroll_right"])] = {x = 10, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -key_scroll_speed},
+     [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = key_scroll_speed},
+     [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -key_scroll_speed, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_right"])] = {x = key_scroll_speed, y = 0},
   }
 
   -- This is the long version of the shift speed key.
@@ -148,6 +156,7 @@ function GameUI:setupGlobalKeyHandlers()
   self:addKeyHandler("ingame_showmenubar", self, self.showMenuBar)
   self:addKeyHandler("ingame_gamespeed_speedup", self, self.keySpeedUp)
   self:addKeyHandler("ingame_setTransparent", self, self.keyTransparent)
+  self:addKeyHandler("ingame_toggleTransparent", self, self.toggleTransparent)
   self:addKeyHandler("ingame_toggleAdvisor", self, self.toggleAdviser)
   self:addKeyHandler("ingame_poopLog", self.app.world, self.app.world.dumpGameLog)
   self:addKeyHandler("ingame_poopStrings", self.app, self.app.dumpStrings)
@@ -163,7 +172,7 @@ function GameUI:setupGlobalKeyHandlers()
     self:addKeyHandler(string.format("ingame_recallPosition_%d", i), self, self.recallMapPosition, i)
   end
 
-  if self.app.config.debug then
+  if self.app.config.debug and self.app.world.map.level_number ~= "MAP EDITOR" then
     self:addKeyHandler("ingame_showCheatWindow", self, self.showCheatsWindow)
   end
 end
@@ -315,9 +324,9 @@ function GameUI:updateKeyScroll()
   if dx ~= 0 or dy ~= 0 then
     --Get the length of the scrolling vector.
     local mag = (dx^2 + dy^2) ^ 0.5
-    --Then normalize the scrolling vector, after which multiply it by the scroll speed variable used in self.scroll_keys, which is 10 as of 14/10/18.
-    dx = (dx / mag) * 10
-    dy = (dy / mag) * 10
+    --Then normalize the scrolling vector, after which multiply it by the scroll speed variable.
+    dx = (dx / mag) * key_scroll_speed
+    dy = (dy / mag) * key_scroll_speed
     -- Set the scroll amount to be used.
     self.tick_scroll_amount = {x = dx, y = dy}
     return true
@@ -334,6 +343,11 @@ end
 
 function GameUI:keyTransparent()
   self:setWallsTransparent(true)
+end
+
+function GameUI:toggleTransparent()
+  self.toggled_transparency = not self.toggled_transparency
+  self:setWallsTransparent(self.toggled_transparency)
 end
 
 function GameUI:onKeyDown(rawchar, modifiers, is_repeat)
@@ -377,7 +391,7 @@ function GameUI:onKeyUp(rawchar)
     self.app.world:previousSpeed()
   end
 
-  self:setWallsTransparent(false)
+  if not self.toggled_transparency then self:setWallsTransparent(false) end
 end
 
 function GameUI:makeDebugFax()
@@ -449,7 +463,7 @@ function GameUI:onCursorWorldPositionChange()
       local cursor = self.default_cursor
       if self.app.world.user_actions_allowed then
         --- If the patient is infected show the infected cursor
-        if epidemic and epidemic.coverup_in_progress and
+        if epidemic and epidemic.coverup_selected and
           entity and entity.infected and not epidemic.timer.closed then
           cursor = infected_cursor
           -- In vaccination mode display epidemic hover cursor for all entities
@@ -498,6 +512,9 @@ function GameUI:onCursorWorldPositionChange()
     -- Set queue mood for patients queueing the new room
     if room then
       local queue = room.door.queue
+      if queue and #queue > 0 then
+        TheApp.ui:playSound("HLIGHTP2.wav")
+      end
       if queue then
         for _, humanoid in ipairs(queue) do
           humanoid:setMood("queue", "activate")
@@ -511,12 +528,23 @@ function GameUI:onCursorWorldPositionChange()
   if class.is(entity, Humanoid) then
     for _, value in pairs(entity.active_moods) do
       if value.on_hover then
-        entity:setMoodInfo(value)
+        if not self.mood_info then
+          if self.last_hovered_entity ~= entity then
+            TheApp.ui:playSound("HLIGHTP2.wav")
+            self.last_hovered_entity = entity
+          end
+          if entity.hover_moods then
+            entity:setMoodInfo(value)
+          end
+        end
         break
       end
     end
+  else
+    self.last_hovered_entity = nil
   end
-  -- Dynamic info
+
+  -- Dynamic Info
   if entity and self.bottom_panel then
     self.bottom_panel:setDynamicInfo(entity:getDynamicInfo())
   end
@@ -528,11 +556,13 @@ local UpdateCursorPosition = TH.cursor.setPosition
 
 local highlight_x, highlight_y
 
---! Called when the mouse enters or leaves the game window.
+--! Called when focus changes on game window.
+--!param gain (number) 1 for in-focus, 0 for out-of-focus
 function GameUI:onWindowActive(gain)
   if gain == 0 then
     self.tick_scroll_amount_mouse = false
   end
+  UI.onWindowActive(self, gain)
 end
 
 -- TODO: try to remove duplication with UI:onMouseMove
@@ -554,11 +584,19 @@ function GameUI:onMouseMove(x, y, dx, dy)
 
   if self:_isMouseScrollButtonDown() then
     local zoom = self.zoom_factor
-    self.current_momentum.x = -dx/zoom
-    self.current_momentum.y = -dy/zoom
+    self.current_momentum.x = self.current_momentum.x - dx/zoom
+    self.current_momentum.y = self.current_momentum.y - dy/zoom
+
+    local momentum_x_int = math.round(self.current_momentum.x)
+    local momentum_y_int = math.round(self.current_momentum.y)
+
     -- Stop zooming when the middle mouse button is pressed
     self.current_momentum.z = 0
-    self:scrollMap(self.current_momentum.x, self.current_momentum.y)
+    self:scrollMap(momentum_x_int, momentum_y_int)
+
+    self.current_momentum.x = self.current_momentum.x - momentum_x_int
+    self.current_momentum.y = self.current_momentum.y - momentum_y_int
+
     repaint = true
   end
 
@@ -786,6 +824,7 @@ function GameUI:playAnnouncement(name, priority, played_callback, played_callbac
 end
 
 --! Check whether the configured mouse drag button is being held down (true) or not (false).
+-- fixme: right mouse scrolling currently breaks other mouse operations (see issue 2469).
 function GameUI:_isMouseScrollButtonDown()
   local mouse_scroll_button_down
   if self.app.config.right_mouse_scrolling then
@@ -850,11 +889,12 @@ function GameUI:onTick()
     -- and defaulted to 2, where 1 was regular scroll speed. By
     -- By multiplying by 0.5, we allow for setting slower than normal
     -- scroll speeds, and ensure there is no behaviour change for players
-    -- who do not modify their config file.
+    -- who do not modify their config file. Later the tick speed was
+    -- doubled so now we multiply by 0.25.
     if self.shift_scroll_speed_pressed then
-      mult = mult * self.app.config.shift_scroll_speed * 0.5
+      mult = mult * self.app.config.shift_scroll_speed * 0.25
     else
-      mult = mult * self.app.config.scroll_speed * 0.5
+      mult = mult * self.app.config.scroll_speed * 0.25
     end
 
     self:scrollMap(dx * mult, dy * mult)
@@ -942,11 +982,15 @@ function GameUI:scrollMap(dx, dy)
   self.screen_offset_y = floor(dy + 0.5)
 end
 
---! Start shaking the screen, e.g. an earthquake effect
+--! Start shaking the screen, e.g. an earthquake effect (unless disabled in config)
 --!param intensity (number) The magnitude of the effect, between 0 for no
 -- movement to 1 for significant shaking.
 function GameUI:beginShakeScreen(intensity)
-  self.shake_screen_intensity = intensity
+  if self.app.config.enable_screen_shake then
+    self.shake_screen_intensity = intensity
+  else
+    self.shake_screen_intensity = 0
+  end
 end
 
 --! Stop the screen from shaking after beginShakeScreen is called.
@@ -1106,13 +1150,14 @@ tutorial_phases = {
         -- the real game uses three.
         local texts = TheApp.using_demo_files and {
           {_S.introduction_texts["level15"]},
-          {_S.introduction_texts["demo"]},
         } or {
           {_S.introduction_texts["level15"]},
           {_S.introduction_texts["level16"]},
           {_S.introduction_texts["level17"]},
-          {_S.introduction_texts["level1"]},
         }
+        if TheApp.world.map.level_number ~= 1 then
+          table.insert(texts, _S.introduction_texts["level1"])
+        end
         TheApp.ui:addWindow(UIInformation(TheApp.ui, texts))
         TheApp.ui:addWindow(UIWatch(TheApp.ui, "initial_opening"))
       end,
@@ -1270,9 +1315,14 @@ function GameUI:afterLoad(old, new)
     self.ticks_since_last_announcement = nil -- cleanup
     self.announcer = Announcer(self.app)
   end
+  if old < 240 then
+    self.subtitles = Subtitles(self)
+    self:addWindow(self.subtitles)
+  end
 
   self.announcer.playing = false
 
+  self.app:setCaptureMouse()
   return UI.afterLoad(self, old, new)
 end
 
@@ -1289,9 +1339,13 @@ end
 
 --! Offers a confirmation window to quit the game and return to main menu
 -- NB: overrides UI.quit, do NOT call it from here
-function GameUI:quit()
-  self:addWindow(UIConfirmDialog(self, false, _S.confirmation.quit, --[[persistable:gameui_confirm_quit]] function()
+--!param mapeditor (boolean) If the user is quitting the map editor
+function GameUI:quit(mapeditor)
+  local msg = mapeditor and _S.confirmation.quit_mapeditor or _S.confirmation.quit
+  self:addWindow(UIConfirmDialog(self, false, msg, --[[persistable:gameui_confirm_quit]] function()
     self.app:loadMainMenu()
+    -- Release the mouse regardless of setting
+    self.app.video:setCaptureMouse(false)
   end))
 end
 
@@ -1301,4 +1355,9 @@ end
 
 function GameUI:showMenuBar()
   self.menu_bar:appear()
+end
+
+function GameUI:restartMapEditor()
+  self:addWindow(UIConfirmDialog(self, false, _S.confirmation.restart_mapeditor,
+    --[[persistable:app_hotkey_confirm_mapeditor_restart]] function() self.app:mapEdit() end))
 end

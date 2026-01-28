@@ -1,0 +1,180 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "linux-dev",
+      "binaryDir": "${sourceDir}/build/dev",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "USE_SOURCE_DATADIRS": "ON",
+        "ENABLE_UNIT_TESTS": "ON",
+        "ENABLE_SANITIZERS": "ON",
+        "BUILD_ANIMVIEW": "ON",
+        "BUILD_TOOLS": "ON",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-dev-vcpkg",
+      "binaryDir": "${sourceDir}/build/dev-vcpkg",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "USE_SOURCE_DATADIRS": "ON",
+        "ENABLE_UNIT_TESTS": "ON",
+        "ENABLE_SANITIZERS": "ON",
+        "BUILD_ANIMVIEW": "ON",
+        "BUILD_TOOLS": "ON",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "win-dev",
+      "binaryDir": "${sourceDir}/build/dev",
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "USE_SOURCE_DATADIRS": "ON",
+        "ENABLE_UNIT_TESTS": "ON",
+        "BUILD_ANIMVIEW": "ON",
+        "BUILD_TOOLS": "ON"
+      }
+    },
+    {
+      "name": "win-x64-rel",
+      "binaryDir": "${sourceDir}/build/win-x64-rel",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-release",
+        "ENABLE_UNIT_TESTS": "ON"
+      }
+    },
+    {
+      "name": "win-x86-rel",
+      "binaryDir": "${sourceDir}/build/win-x86-rel",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "Win32",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x86-windows",
+        "ENABLE_UNIT_TESTS": "ON"
+      }
+    },
+    {
+      "name": "macos-arm64-rel",
+      "binaryDir": "${sourceDir}/build/macos-arm64-rel",
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-osx-release",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_MAKE_PROGRAM": "/usr/bin/make"
+      }
+    },
+    {
+      "name": "macos-x64-rel",
+      "binaryDir": "${sourceDir}/build/macos-arm64-rel",
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-osx-release",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_MAKE_PROGRAM": "/usr/bin/make"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-dev",
+      "configurePreset": "linux-dev",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux-dev-vcpkg",
+      "configurePreset": "linux-dev-vcpkg",
+      "configuration": "Debug"
+    },
+    {
+      "name": "win-x64-rel",
+      "configurePreset": "win-x64-rel",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "win-x86-rel",
+      "configurePreset": "win-x86-rel",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos-arm64-rel",
+      "configurePreset": "macos-arm64-rel",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos-x64-rel",
+      "configurePreset": "macos-x64-rel",
+      "configuration": "RelWithDebInfo"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "linux-dev",
+      "configurePreset": "linux-dev",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux-dev-vcpkg",
+      "configurePreset": "linux-dev-vcpkg",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "Debug"
+    },
+    {
+      "name": "win-x64-rel",
+      "configurePreset": "win-x64-rel",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "win-x86-rel",
+      "configurePreset": "win-x86-rel",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos-arm64-rel",
+      "configurePreset": "macos-arm64-rel",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "macos-x64-rel",
+      "configurePreset": "macos-x64-rel",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    }
+  ]
+}

@@ -241,7 +241,7 @@ errors = {
   save_prefix                   = "Virhe tallennettaessa peliä: ",
   load_prefix                   = "Virhe ladattaessa peliä: ",
   map_file_missing              = "Tasolle %s ei löydetty karttatiedostoa!",
-  minimum_screen_size           = "Ole hyvä ja syötä resoluutio, joka on vähintään 640x480.",
+  minimum_screen_size           = "Ole hyvä ja syötä resoluutio, joka on vähintään %dx%d.",
   maximum_screen_size           = "Ole hyvä ja syötä resoluutio, joka on enintään 3000x2000.",
   unavailable_screen_size       = "Syöttämäsi resoluutio ei ole käytettävissä koko ruutu -tilassa.",
 }
@@ -301,7 +301,6 @@ tooltip = {
     height              = "Syötä peli-ikkunan haluttu korkeus",
     change_resolution   = "Muuta ikkunan resoluutio vasemmalla annettujen arvojen mukaiseksi",
     language            = "Valitse kieleksi %s",
-    original_path       = "Käytössä oleva Theme Hospital -pelin asennushakemisto",
     browse              = "Selaa hakemistoja valitaksesi uuden Theme Hospital -pelin asennushakemiston",
     back                = "Sulje tämä ikkuna",
   },

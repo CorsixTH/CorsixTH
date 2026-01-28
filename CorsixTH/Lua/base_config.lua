@@ -139,6 +139,14 @@ local configuration = {
     RschImproveCostPercent = 10,
     -- %-point increase in improve cost per improvement
     RschImproveIncrementPercent = 10,
+    -- Per mille point of attribute fatigue to be just tired (hospital policy "go to staffroom")
+    Tired = 600,
+    -- Per mille point of attribute fatigue to be very tired
+    VeryTired = 700,
+    -- Per mille point of attribute fatigue to be crack up (extremely) tired
+    CrackUpTired = 800,
+    -- How much soda costs at a drinks machine
+    SodaPrice              = 20,
   },
 
   towns = {

@@ -53,12 +53,14 @@ function UIWatch:UIWatch(ui, count_type)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Watch01V", true)
   self.epidemic = false
   self.count_type = count_type
+  self.active_hover = false
   -- For cycling the list of epidemic/emergency patients which index to use
   self.current_index = nil
   -- The last patient whose dialog was opened by clicking the timer
   self.lastCycledPatient = nil
 
   local end_sprite = (count_type == "epidemic") and 14 or 16
+  self.end_sprite = end_sprite
 
   local tooltips = {
     ["initial_opening"] = _S.tooltip.watch.hospital_opening,
@@ -70,6 +72,18 @@ function UIWatch:UIWatch(ui, count_type)
     self.end_button = self:addPanel(end_sprite, 4, 0)
     :makeButton(4, 0, 27, 28, end_sprite + 1, self.toggleVaccinationMode)
     :setTooltip(tooltips[count_type])
+
+    self:addPanel(end_sprite, 4, 0)
+    .custom_draw = --[[persistable:epidemic_timer_button]] function(panel, canvas, x, y)
+      local s = TheApp.config.ui_scale
+      x = x + panel.x * s
+      y = y + panel.y * s
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
+      if self.active_hover then
+        self.panel_sprites:draw(canvas, 15, x, y, { scaleFactor = s })
+      end
+    end
+
   elseif count_type ~= "emergency" then
     self.end_button = self:addPanel(end_sprite, 4, 0)
       :makeButton(4, 0, 27, 28, end_sprite + 1, self.onCountdownEnd)
@@ -84,6 +98,15 @@ function UIWatch:UIWatch(ui, count_type)
         self.scrollToTimerEventPatient, nil, self.cycleTimerEventPatient)
   else
     self:addPanel(timer_sprite, 0, 28):setTooltip(tooltips[count_type])
+    .custom_draw = --[[persistable:open_hospital_timer_button]] function(panel, canvas, x, y)
+      local s = TheApp.config.ui_scale
+      x = x + panel.x * s
+      y = y + panel.y * s
+      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
+      if self.active_hover then
+        self.panel_sprites:draw(canvas, 17, x + 4 * s, y - 28 * s, { scaleFactor = s })
+      end
+    end
   end
   self:addPanel(1, 2, 47)
 end
@@ -94,16 +117,19 @@ function UIWatch:onCountdownEnd()
     self.ui.hospital:resolveEmergency()
   elseif self.count_type == "epidemic" then
     local epidemic = self.hospital.epidemic
-    if epidemic and not epidemic.inspector then
-      epidemic:spawnInspector()
-      if epidemic.vaccination_mode_active then
-        epidemic:toggleVaccinationMode()
-      end
+    if epidemic then
+      epidemic:coverUpTimeIsUp()
     end
   elseif self.count_type == "initial_opening" then
-    self.ui.hospital.opened = true
+    self.hospital:open()
     self.ui:playSound("fanfare.wav")
   end
+end
+
+function UIWatch:onMouseMove(x, y, dx, dy)
+  local s = TheApp.config.ui_scale
+  self.active_hover = self:hoverTest(self.active_hover, x, y, 4 * s, 31 * s, 0, 29 * s)
+  return Window:onMouseMove(x, y, dx, dy)
 end
 
 function UIWatch:onWorldTick()
@@ -111,7 +137,7 @@ function UIWatch:onWorldTick()
     self.tick_timer = self.tick_rate
     self.open_timer = self.open_timer - 1
     if self.open_timer == 11 then
-      self:addPanel(2, 2, 47)
+      self:addPanel(2, 2, 47, nil, nil, true, DrawFlags.Nearest)
     elseif self.open_timer == 0 then
       self.panels[#self.panels].sprite_index = 0
     elseif self.open_timer < 11 and self.open_timer > 0 then
@@ -179,6 +205,16 @@ function UIWatch:scrollToTimerEventPatient()
       patient_dialog:scrollToPatient()
     elseif patient == current_patient_dialog.patient then
       current_patient_dialog:scrollToPatient()
+    end
+  end
+end
+
+function UIWatch:afterLoad(old, new)
+  Window.afterLoad(self, old, new)
+  if old < 237 then
+    local pnl = self.panels[#self.panels]
+    if pnl.sprite_index >= 2 and pnl.sprite_index < 13 then
+      pnl.draw_flags = DrawFlags.Nearest
     end
   end
 end

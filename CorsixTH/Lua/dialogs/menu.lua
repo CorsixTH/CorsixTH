@@ -39,9 +39,10 @@ function UIMenuBar:UIMenuBar(ui, map_editor)
   self.width = app.config.width
   self.height = 16
   self.visible = false
+  local selected_label_color = { red = 40, green = 40, blue = 250 }
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PullDV", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.blue_font = app.gfx:loadFont("QData", "Font02V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   -- The list of top-level menus, from left to right
   self.menus = {}
   -- The menu which the cursor was most recently over
@@ -137,13 +138,13 @@ function UIMenuBar:addMenu(title, menu)
     title = title,
     menu = menu,
     x = 0,
-    y = 0,
+    y = 1,
     height = 16,
   }
   if self.menus[1] then
     menu_item.x = self.menus[#self.menus].x + self.menus[#self.menus].width
   end
-  menu_item.width = self.white_font:sizeOf(title) + 32
+  menu_item.width = math.ceil(self.white_font:sizeOf(title) / TheApp.config.ui_scale + 32)
   self.menus[#self.menus + 1] = menu_item
 end
 
@@ -151,29 +152,34 @@ function UIMenuBar:draw(canvas)
   if not self.visible then
     return
   end
+  local s = TheApp.config.ui_scale
   local panel_sprites = self.panel_sprites
   local panel_sprites_draw = panel_sprites.draw
   canvas:nonOverlapping()
-  panel_sprites_draw(panel_sprites, canvas, 1, 0,  0)
-  panel_sprites_draw(panel_sprites, canvas, 4, 0,  6)
-  panel_sprites_draw(panel_sprites, canvas, 7, 0, 10)
-  for x = 10, self.width - 10, 10 do
-    panel_sprites_draw(panel_sprites, canvas, 2, x,  0)
+  panel_sprites_draw(panel_sprites, canvas, 1, 0,  0, { scaleFactor = s })
+  panel_sprites_draw(panel_sprites, canvas, 4, 0,  6 * s, { scaleFactor = s })
+  panel_sprites_draw(panel_sprites, canvas, 7, 0, 10 * s, { scaleFactor = s })
+
+  -- Currently the width is the full pixel width of the window, unlike
+  -- the height and other panels which are in scale units.
+  local scaled_width = self.width
+  for x = 10 * s, scaled_width - 10 * s, 10 * s do
+    panel_sprites_draw(panel_sprites, canvas, 2, x, 0, { scaleFactor = s })
   end
-  for x = 10, self.width - 10, 10 do
-    panel_sprites_draw(panel_sprites, canvas, 5, x,  6)
+  for x = 10 * s, scaled_width - 10 * s, 10 * s do
+    panel_sprites_draw(panel_sprites, canvas, 5, x, 6 * s, { scaleFactor = s })
   end
-  for x = 10, self.width - 10, 10 do
-    panel_sprites_draw(panel_sprites, canvas, 8, x, 10)
+  for x = 10 * s, scaled_width - 10 * s, 10 * s do
+    panel_sprites_draw(panel_sprites, canvas, 8, x, 10 * s, { scaleFactor = s })
   end
   canvas:nonOverlapping(false)
-  local x = self.width - 10
-  panel_sprites_draw(panel_sprites, canvas, 3, x,  0)
-  panel_sprites_draw(panel_sprites, canvas, 6, x,  6)
-  panel_sprites_draw(panel_sprites, canvas, 9, x, 10)
+  local x = scaled_width - 10 * s
+  panel_sprites_draw(panel_sprites, canvas, 3, x,  0, { scaleFactor = s })
+  panel_sprites_draw(panel_sprites, canvas, 6, x,  6 * s, { scaleFactor = s })
+  panel_sprites_draw(panel_sprites, canvas, 9, x, 10 * s, { scaleFactor = s })
 
   for _, menu in ipairs(self.menus) do
-    self.white_font:draw(canvas, menu.title, menu.x, menu.y, 0, menu.height)
+    self.white_font:draw(canvas, menu.title, menu.x * s, menu.y * s, 0, menu.height * s)
   end
   for _, menu in ipairs(self.open_menus) do
     self:drawMenu(menu, canvas)
@@ -181,28 +187,32 @@ function UIMenuBar:draw(canvas)
 
   -- Draw clock
   if self.ui.app.config.twentyfour_hour_clock then
-    self.white_font:draw(canvas, os.date("%H:%M"), self.width-45, 2,  0)
+    self.white_font:draw(canvas, os.date("%H:%M"), scaled_width - 45 * s, s, 0, 16 * s)
   else
-    self.white_font:draw(canvas, os.date("%I:%M %p"), self.width-65, 2,  0)
+    self.white_font:draw(canvas, os.date("%I:%M %p"), scaled_width - 65 * s, s, 0, 16 * s)
   end
 end
 
 function UIMenuBar:drawMenu(menu, canvas)
+  local s = TheApp.config.ui_scale
   local panel_sprites = self.panel_sprites
   local panel_sprites_draw = panel_sprites.draw
-  local x, y, w, h = menu.x, menu.y, menu.width, menu.height
-  canvas:nonOverlapping()
-  menu.render_list:draw(canvas, x, y)
-  canvas:nonOverlapping(false)
-  local btmy = y + h - 6
-  panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10, y)
-  for ypos = y + 6, y + h - 6, 4 do
-    panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10, ypos)
-  end
-  panel_sprites_draw(panel_sprites, canvas, 9, x + w - 10, btmy)
+  local x, y, w, h = menu.x * s, menu.y * s, menu.width * s, menu.height * s
 
-  x = menu.x
-  y = menu.y + 4
+  -- It would be better if spriteList supported scaling directly
+  canvas:scale(s)
+  menu.render_list:draw(canvas, menu.x, menu.y)
+  canvas:scale(1)
+
+  local btmy = y + h - 6 * s
+  panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10 * s, y, { scaleFactor = s })
+  for ypos = y + 6 * s, y + h - 6 * s, 4 * s do
+    panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10 * s, ypos, { scaleFactor = s })
+  end
+  panel_sprites_draw(panel_sprites, canvas, 9, x + w - 10 * s, btmy, { scaleFactor = s })
+
+  x = menu.x * s
+  y = menu.y * s + 4 * s
   for i, item in ipairs(menu.items) do
     -- Update the checkbox status if necessary before drawing
     if item.is_check_item and item.condition then
@@ -215,18 +225,19 @@ function UIMenuBar:drawMenu(menu, canvas)
     end
     font:draw(canvas, item.title, x, y)
     if item.submenu then
-      font:draw(canvas, "+", x + w - 10, y)
+      font:draw(canvas, "+", x + w - 10 * s, y)
     elseif item.checked then
-      panel_sprites_draw(panel_sprites, canvas, 10, x, y)
+      panel_sprites_draw(panel_sprites, canvas, 10, x, y, { scaleFactor = s })
     end
-    y = y + 14
+    y = y + 14 * s
   end
 end
 
 function UIMenuBar:hitTestBar(x, y)
-  if y < 16 then
+  local s = TheApp.config.ui_scale
+  if y < 16 * s then
     for _, menu in ipairs(self.menus) do
-      if menu.x <= x and x < menu.x + menu.width then
+      if menu.x * s <= x and x < menu.x * s + menu.width * s then
         local submenu = menu.menu
         submenu.x = menu.x
         submenu.y = menu.y + menu.height - 2
@@ -240,8 +251,9 @@ function UIMenuBar:hitTestBar(x, y)
 end
 
 function UIMenuBar:onMouseMove(x, y, dx, dy)
+  local s = TheApp.config.ui_scale
   local padding = 6
-  local visible = y < self.height + padding
+  local visible = y < self.height * s + padding * s
   local newactive = false
   if not self.active_menu then
     for i = #self.open_menus, 1, -1 do
@@ -261,7 +273,14 @@ function UIMenuBar:onMouseMove(x, y, dx, dy)
         toparent = false
         visible = true
         if hit ~= true then
+          if hit ~= menu.prev_hover_index then
+            if menu.hover_sound then
+              self.ui:stopSound(menu.hover_sound)
+            end
+            menu.hover_sound = self.ui:playSound("HLight5.wav")
+          end
           menu.hover_index = hit
+          menu.prev_hover_index = menu.hover_index
         else
           menu.hover_index = 0
           if menu.parent and menu.parent:hitTest(x, y, 0) then
@@ -371,10 +390,11 @@ function UIMenuBar:onMouseUp(button, x, y)
     return
   end
   local repaint = false
+  local s = TheApp.config.ui_scale
   while self.active_menu do
     local index = self.active_menu:hitTest(x, y, 0)
     if index == false then
-      if not self.active_menu.parent and y < 16 then
+      if not self.active_menu.parent and y < 16 * s then
         break
       else
         self.active_menu = self.active_menu.parent
@@ -408,7 +428,7 @@ function UIMenuBar:onMouseUp(button, x, y)
         if item.handler then
           item.handler(item, self.active_menu)
         end
-        if y > 22 then
+        if y > 22 * s then
           self:disappear()
         end
         self.active_menu = false
@@ -429,7 +449,7 @@ function UIMenuBar:calculateMenuSize(menu)
     local w = 20
     local h = 6
     for _, item in ipairs(menu.items) do
-      local item_w = self.white_font:sizeOf(item.title) + 10
+      local item_w = math.ceil(self.white_font:sizeOf(item.title) / TheApp.config.ui_scale + 10)
       if item_w > w then
         w = item_w
       end
@@ -473,6 +493,8 @@ function UIMenu:UIMenu()
   self.items = {}
   self.parent = false
   self.hover_index = 0
+  self.prev_hover_index = nil
+  self.hover_sound = nil
   self.has_size = false
 end
 
@@ -480,10 +502,11 @@ function UIMenu:hitTest(x, y, padding)
   -- number -> hit that item
   -- true   -> hit menu, but not an item
   -- false  -> no hit
-  if self.x - padding <= x and x < self.x + self.width + padding and
-      self.y - padding <= y and y < self.y + self.height + padding then
-    if self.x <= x and x < self.x + self.width then
-      local index = math_floor((y - self.y + 12) / 14)
+  local s = TheApp.config.ui_scale
+  if self.x * s - padding * s <= x and x < self.x * s + self.width * s + padding * s and
+      self.y * s - padding * s <= y and y < self.y * s + self.height * s + padding * s then
+    if self.x * s <= x and x < self.x * s + self.width * s then
+      local index = math_floor((y - self.y * s + 12 * s) / (14 * s))
       if 1 <= index and index <= #self.items then
         return index
       end
@@ -540,23 +563,162 @@ local function hotkey_value_label(hotkey_name, hotkeys)
   return string.upper(array_join(hotkey_value, "+"))
 end
 
+-- Add audio options to the menu. These are on/off and volume control for
+-- announcements, game sounds and music, and open the jukebox.
+--!param menu (object) The menu that the options are added to.
+--!param game (boolean) True if this menu is for the game, where announcements and
+-- game sounds controls are added.
+local function audio_options(menu, game)
+  local app = TheApp
+
+  local function vol(level, setting)
+    if setting == "music" then
+      return level == app.config.music_volume,
+        function()
+          app.audio:setBackgroundVolume(level)
+        end,
+        ""
+    elseif setting == "sound" then
+      return level == app.config.sound_volume,
+        function()
+          app.audio:setSoundVolume(level)
+        end,
+        ""
+    else
+      return level == app.config.announcement_volume,
+        function()
+          app.audio:setAnnouncementVolume(level)
+        end,
+        ""
+    end
+  end
+
+  local hotkeys = app.hotkeys
+  if game then
+    -- Hospital sounds
+    menu:appendCheckItem(_S.menu_options.sound:format(hotkey_value_label("ingame_toggleSounds", hotkeys)),
+      app.config.play_sounds,
+      function(item)
+        app.audio:playSoundEffects(item.checked)
+      end,
+      nil,
+      function()
+        return app.config.play_sounds
+      end)
+
+    -- Hospital announcements
+    menu:appendCheckItem(_S.menu_options.announcements:format(hotkey_value_label("ingame_toggleAnnouncements", hotkeys)),
+      app.config.play_announcements,
+      function(item)
+        app.config.play_announcements = item.checked
+      end,
+      nil,
+      function()
+        return app.config.play_announcements
+      end)
+  end
+
+  -- Jukebox music
+  if app.audio.has_bg_music then
+    menu:appendCheckItem(_S.menu_options.music:format(hotkey_value_label("ingame_toggleMusic", hotkeys)),
+      app.config.play_music,
+      function(item)
+        app.config.play_music = item.checked
+        app.ui:togglePlayMusic(item)
+      end,
+      nil,
+      function()
+        return app.config.play_music
+      end)
+  end
+
+  -- The three volume menus, and jukebox
+  local function appendVolume(setting)
+    local volume_menu = UIMenu()
+    for level = 10, 100, 10 do
+      volume_menu:appendCheckItem(_S.menu_options_volume[level], vol(level / 100, setting))
+    end
+    return volume_menu
+  end
+  if game then
+    menu:appendMenu(_S.menu_options.sound_vol, appendVolume("sound"))
+      :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
+  end
+  if app.audio.has_bg_music then
+    menu:appendMenu(_S.menu_options.music_vol, appendVolume("music"))
+      :appendItem(_S.menu_options.jukebox:format(hotkey_value_label("ingame_jukebox", hotkeys)),
+          function() app.ui:addWindow(UIJukebox(app)) end)
+  end
+end
+
+-- Add display options to the menu.
+--!param menu (object) The menu that the options are added to.
+local function display_options(menu)
+  local app = TheApp
+
+  -- Lock windows
+  local function boolean_runtime_config(option)
+    return not not app.runtime_config[option], function(item)
+      app.runtime_config[option] = item.checked
+    end
+  end
+  menu:appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config("lock_windows"))
+
+  -- Edge scrolling
+  menu:appendCheckItem(_S.menu_options.edge_scrolling,
+    not app.config.prevent_edge_scrolling,
+    function(item) app.config.prevent_edge_scrolling = not item.checked end,
+    nil,
+    function() return not app.config.prevent_edge_scrolling end)
+
+  -- Mouse capture
+  menu:appendCheckItem(_S.menu_options.capture_mouse,
+    app.config.capture_mouse,
+    function(item) app.config.capture_mouse = item.checked
+      app:setCaptureMouse()
+    end)
+
+  -- 24 hour clock
+  menu:appendCheckItem(_S.menu_options.twentyfour_hour_clock,
+    app.config.twentyfour_hour_clock,
+    function(item)
+      app.config.twentyfour_hour_clock = item.checked
+    end)
+end
+
+local function overlay(...)
+  local args = {n = select('#', ...), ...}
+  return function(item, m)
+    if args.n > 0 then
+      TheApp.map:loadDebugText(unpack(args, 1, args.n))
+    else
+      TheApp.map:clearDebugText()
+    end
+  end
+end
+
 --! Make a menu for the map editor.
 --!param app Application.
 function UIMenuBar:makeMapeditorMenu(app)
   local menu = UIMenu()
   local hotkeys = app.hotkeys
 
-  local function mapeditorSave(ui)
-    local message = app.world:validateMap()
-    if message then
-      ui:addWindow(UIInformation(ui, {message}))
-    end
-    ui:addWindow(UISaveMap(ui))
-  end
   menu:appendItem(_S.menu_file.load:format(hotkey_value_label("ingame_loadMenu", hotkeys)), function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
-    :appendItem(_S.menu_file.save:format(hotkey_value_label("ingame_saveMenu", hotkeys)), function() mapeditorSave(self.ui) end)
-    :appendItem(_S.menu_file.quit:format(hotkey_value_label("ingame_quitLevel", hotkeys)), function() self.ui:quit() end)
+    :appendItem(_S.menu_file.save:format(hotkey_value_label("ingame_saveMenu", hotkeys)), function() self.ui:addWindow(UISaveMap(self.ui)) end)
+    :appendItem(_S.menu_file.restart:format(hotkey_value_label("ingame_restartLevel", hotkeys)), function() self.ui:restartMapEditor() end)
+    :appendItem(_S.menu_file.quit:format(hotkey_value_label("ingame_quitLevel", hotkeys)), function() self.ui:quit(true) end)
   self:addMenu(_S.menu.file, menu)
+
+  menu = UIMenu()
+  audio_options(menu)
+  display_options(menu)
+
+  menu:appendMenu(_S.menu_debug.map_overlay, UIMenu()
+    :appendCheckItem(_S.menu_debug_overlay.none, true, overlay(), "overlay")
+    :appendCheckItem(_S.menu_debug_overlay.flags, false, overlay("flags"), "overlay")
+    :appendCheckItem(_S.menu_debug_overlay.positions, false, overlay("positions"), "overlay")
+    :appendCheckItem(_S.menu_debug_overlay.parcel, false, overlay("parcel"), "overlay"))
+  self:addMenu(_S.menu.options, menu)
 
   menu = UIMenu()
   for i = 1, 4 do
@@ -582,96 +744,8 @@ function UIMenuBar:makeGameMenu(app)
   self:addMenu(_S.menu.file, menu)
 
   local options = UIMenu()
-  if app.audio.has_bg_music then
-    local function vol(level, setting)
-      if setting == "music" then
-        return level == app.config.music_volume,
-          function()
-            app.audio:setBackgroundVolume(level)
-          end,
-          ""
-      elseif setting == "sound" then
-        return level == app.config.sound_volume,
-          function()
-            app.audio:setSoundVolume(level)
-          end,
-          ""
-      else
-        return level == app.config.announcement_volume,
-          function()
-            app.audio:setAnnouncementVolume(level)
-          end,
-          ""
-      end
-    end
-
-    local function appendVolume(setting)
-      local volume_menu = UIMenu() -- The three Volume menus
-      for level = 10, 100, 10 do
-        volume_menu:appendCheckItem(_S.menu_options_volume[level], vol(level / 100, setting))
-      end
-      return volume_menu
-    end
-
-  options:appendCheckItem(_S.menu_options.sound:format(hotkey_value_label("ingame_toggleSounds", hotkeys)),
-    app.config.play_sounds,
-    function(item)
-      app.audio:playSoundEffects(item.checked)
-    end,
-    nil,
-    function()
-      return app.config.play_sounds
-    end)
-
-
-  options:appendCheckItem(_S.menu_options.announcements:format(hotkey_value_label("ingame_toggleAnnouncements", hotkeys)),
-    app.config.play_announcements,
-    function(item)
-      app.config.play_announcements = item.checked
-    end,
-    nil,
-    function()
-      return app.config.play_announcements
-    end)
-
-  options:appendCheckItem(_S.menu_options.music:format(hotkey_value_label("ingame_toggleMusic", hotkeys)),
-    app.config.play_music,
-    function(item)
-      app.config.play_music = item.checked
-      self.ui:togglePlayMusic(item)
-    end,
-    nil,
-    function()
-      return app.config.play_music
-    end)
-
-  options
-    :appendMenu(_S.menu_options.sound_vol,         appendVolume("sound"))
-    :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
-    :appendMenu(_S.menu_options.music_vol,         appendVolume("music"))
-    :appendItem(_S.menu_options.jukebox:format(hotkey_value_label("ingame_jukebox", hotkeys)), function() self.ui:addWindow(UIJukebox(app)) end)
-  end
-
-  local function boolean_runtime_config(option)
-    return not not app.runtime_config[option], function(item)
-      app.runtime_config[option] = item.checked
-    end
-  end
-  options:appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config("lock_windows"))
-
-  -- Edge Scrolling
-  options:appendCheckItem(_S.menu_options.edge_scrolling,
-    not app.config.prevent_edge_scrolling,
-    function(item) app.config.prevent_edge_scrolling = not item.checked end,
-    nil,
-    function() return not app.config.prevent_edge_scrolling end)
-
-  -- Mouse Capture
-  options:appendCheckItem(_S.menu_options.capture_mouse,
-    app.config.capture_mouse,
-    function(item) app.config.capture_mouse = item.checked
-      app:setCaptureMouse()
-    end)
+  audio_options(options, true)
+  display_options(options)
 
   options:appendCheckItem(_S.menu_options.adviser_disabled:format(hotkey_value_label("ingame_toggleAdvisor", hotkeys)),
     not app.config.adviser_disabled,
@@ -681,12 +755,6 @@ function UIMenuBar:makeGameMenu(app)
     nil,
     function()
       return not app.config.adviser_disabled
-    end)
-
-  options:appendCheckItem(_S.menu_options.twentyfour_hour_clock,
-    app.config.twentyfour_hour_clock,
-    function(item)
-      app.config.twentyfour_hour_clock = item.checked
     end)
 
   local function temperatureDisplay(method)
@@ -748,10 +816,10 @@ function UIMenuBar:makeGameMenu(app)
     :appendItem(_S.menu_charts.status:format(hotkey_value_label("ingame_panel_status", hotkeys)), function() self.ui.bottom_panel:dialogStatus(true) end)
     :appendItem(_S.menu_charts.graphs:format(hotkey_value_label("ingame_panel_charts", hotkeys)), function() self.ui.bottom_panel:dialogCharts(true) end)
     :appendItem(_S.menu_charts.policy:format(hotkey_value_label("ingame_panel_policy", hotkeys)), function() self.ui.bottom_panel:dialogPolicy(true) end)
+    :appendItem(_S.menu_charts.machine_menu:format(hotkey_value_label("ingame_panel_machineMenu", hotkeys)), function() self.ui:addWindow(UIMachineMenu(self.ui)) end)
     :appendItem(_S.menu_charts.briefing, function() self.ui:showBriefing() end)
   )
 
-  local function _(s) return "  " .. s:upper() .. "  " end
   local function limit_camera(item)
     app.ui:limitCamera(item.checked)
   end
@@ -761,33 +829,17 @@ function UIMenuBar:makeGameMenu(app)
   local function allowBlockingAreas(item)
     app.config.allow_blocking_off_areas = item.checked
   end
-  local function overlay(...)
-    local args = {n = select('#', ...), ...}
-    return function(item, m)
-      if args.n > 0 then
-        app.map:loadDebugText(unpack(args, 1, args.n))
-      else
-        app.map:clearDebugText()
-      end
-    end
-  end
   local levels_menu = UIMenu()
   for L = 1, 12 do
     levels_menu:appendItem(("  L%i  "):format(L), function()
-      local status, err = pcall(app.loadLevel, app, L)
-      if status then
+      if app:loadLevel(L, nil, nil, nil, nil, nil, _S.errors.load_level_prefix, nil) then
         self.ui.app.moviePlayer:playAdvanceMovie(L)
-      else
-        err = _S.errors.load_prefix .. err
-        print(err)
-        self.ui:addWindow(UIInformation(self.ui, {err}))
       end
     end)
   end
   if self.ui.app.config.debug then
     self:addMenu(_S.menu.debug, UIMenu() -- Debug
       :appendMenu(_S.menu_debug.jump_to_level, levels_menu)
-      :appendItem(_S.menu_debug.connect_debugger:format(hotkey_value_label("global_connectDebugger", hotkeys)), function() self.ui:connectDebugger() end)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
       :appendCheckItem(_S.menu_debug.allow_blocking_off_areas, false, allowBlockingAreas, nil, function() return self.ui.app.config.allow_blocking_off_areas end)
@@ -804,13 +856,13 @@ function UIMenuBar:makeGameMenu(app)
         :appendCheckItem(_S.menu_debug_overlay.flags,       false, overlay("flags"), "")
         :appendCheckItem(_S.menu_debug_overlay.positions,   false, overlay("positions"), "")
         :appendCheckItem(_S.menu_debug_overlay.heat,        false, overlay("heat"), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_0_1,    false, overlay(35, 8, 0, 1, false), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_floor,  false, overlay(35, 8, 2, 2, false), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_n_wall, false, overlay(35, 8, 3, 3, false), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_w_wall, false, overlay(35, 8, 4, 4, false), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_5,      false, overlay(35, 8, 5, 5, true), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_6,      false, overlay(35, 8, 6, 6, true), "")
-        :appendCheckItem(_S.menu_debug_overlay.byte_7,      false, overlay(35, 8, 7, 7, true), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_0_1,    false, overlay(0, 1, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_floor,  false, overlay(2, 2, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_n_wall, false, overlay(3, 3, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_w_wall, false, overlay(4, 4, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_5,      false, overlay(5, 5, true), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_6,      false, overlay(6, 6, true), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_7,      false, overlay(7, 7, true), "")
         :appendCheckItem(_S.menu_debug_overlay.parcel,      false, overlay("parcel"), "")
       )
       :appendItem(_S.menu_debug.sprite_viewer, function() corsixth.require("sprite_viewer") end)

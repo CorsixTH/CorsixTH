@@ -3,7 +3,7 @@
 name: Feature request
 description: Suggest an idea for this project
 title: "Give a feature/enhancement summary"
-labels: ["enhancement"]
+type: Enhancement
 ### Questions
 # What is wanted?
 body:

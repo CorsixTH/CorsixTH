@@ -44,6 +44,14 @@ object.usage_animations = copy_north_to_south {
   }
 }
 
+local anim_mgr = TheApp.animation_manager
+local kf1, kf2 = {0, 0}, {-0.7, -0.4}
+anim_mgr:setStaffMarker({2306, 2342}, kf1)
+anim_mgr:setStaffMarker(2330, kf1, kf2)
+anim_mgr:setStaffMarker({4890, 2326}, kf2)
+anim_mgr:setStaffMarker(2334, kf2, kf1)
+
+
 object.orientations = {
   north = {
     use_position = {0, 0},

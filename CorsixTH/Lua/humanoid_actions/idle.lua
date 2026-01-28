@@ -78,7 +78,8 @@ local function action_idle_start(action, humanoid)
   elseif direction == "west" then
     humanoid:setAnimation(anims.idle_north, 1)
   end
-  humanoid.th:setTile(humanoid.th:getTile())
+  local map, x, y = humanoid.th:getTile()
+  humanoid.th:setTile(map, x, y, humanoid:getDrawingLayer())
   humanoid:setSpeed(0, 0)
   if action.count then
     humanoid:setTimer(action.count, action_timer)

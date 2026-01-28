@@ -30,6 +30,13 @@ local col_bg = {
   blue = 198,
 }
 
+local label_ttf_col = { -- slightly translucent
+  red = 255,
+  green = 255,
+  blue = 255,
+  alpha = 192,
+}
+
 local menu_item_height = 40
 
 function UIMainMenu:UIMainMenu(ui)
@@ -62,7 +69,8 @@ function UIMainMenu:UIMainMenu(ui)
   -- Work out the menu's height, giving extra space for the version information
   local line_height = 15
   local top_padding = 20
-  local num_lines = computeSize({not ui.app.config.check_for_updates, ui.app.config.debug, TheApp:getVersion()}) -- see UIMainMenu:draw for how these are used
+  local release_string = TheApp:getReleaseString()
+  local num_lines = computeSize({TheApp:isUpdateCheckDisabledByConfig(), TheApp.config.debug, release_string}) -- see UIMainMenu:draw for how these are used
   local bottom_text_height = (line_height * num_lines)
   self.height = top_padding + ((menu_item_height + 10) * #menu_items) + bottom_text_height
 
@@ -74,8 +82,8 @@ function UIMainMenu:UIMainMenu(ui)
   self:setDefaultPosition(0.5, 0.25)
 
   -- The main menu also shows the version number of the player's copy of the game.
-  self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
-  self.version_number = TheApp:getVersion()
+  self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, {ttf_color = label_ttf_col, apply_ui_scale = true})
+  self.release_string = release_string
 
   -- individual buttons
   self.default_button_sound = "selectx.wav"
@@ -106,21 +114,25 @@ end
 
 function UIMainMenu:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  local s = TheApp.config.ui_scale
+  x, y = self.x * s + x, self.y * s + y
 
   -- The following strings are drawn in reverse order
-  local ly = y + self.height - 15
+  local ly = y + self.height * s - (15 * s)
   -- Move the version string up a bit if showing check for updates disabled warning.
-  if not TheApp.config.check_for_updates then
-    self.label_font:draw(canvas, _S.main_menu.updates_off, x + 5, ly, 190, 0, "right")
-    ly = ly - 15
+  if TheApp:isUpdateCheckDisabledByConfig() then
+    self.label_font:draw(canvas, _S.main_menu.updates_off, x + 5 * s, ly, 190, 0, "right")
+    ly = ly - (15 * s)
   end
   -- Move if also showing the savegame version.
   if TheApp.config.debug then
-    self.label_font:draw(canvas, _S.main_menu.savegame_version .. TheApp.savegame_version, x + 5, ly, 190, 0, "right")
-    ly = ly - 15
+    self.label_font:draw(canvas, _S.main_menu.savegame_version .. TheApp.savegame_version, x + 5 * s, ly, 190, 0, "right")
+    ly = ly - (15 * s)
   end
-  self.label_font:draw(canvas, _S.main_menu.version .. self.version_number, x + 5, ly, 190, 0, "right")
+  self.label_font:draw(canvas, _S.main_menu.version .. self.release_string, x + 5 * s, ly, 190, 0, "right")
+end
+
+function UIMainMenu:onTick()
   TheApp:idle()
 end
 

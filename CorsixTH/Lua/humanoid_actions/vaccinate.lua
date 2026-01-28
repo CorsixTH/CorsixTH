@@ -83,7 +83,7 @@ end)
 
 
 local function vaccinate(action, nurse)
-  assert(nurse.humanoid_class == "Nurse")
+  assert(class.is(nurse, Nurse))
 
   local patient = action.patient
 
@@ -92,16 +92,11 @@ local function vaccinate(action, nurse)
     if is_in_adjacent_square(nurse, patient) then
       CallsDispatcher.queueCallCheckpointAction(nurse)
       nurse:queueAction(AnswerCallAction())
-      -- Disable either vaccination icon that may be present (edge case)
-      patient:setMood("epidemy2", "deactivate")
-      patient:setMood("epidemy3", "deactivate")
-      patient:setMood("epidemy1", "activate")
-      patient.vaccinated = true
+      patient:setVaccinatedStatus()
       patient.hospital:spendMoney(action.vaccination_fee, _S.transactions.vaccination)
       patient:updateDynamicInfo()
     else
-      patient:setMood("epidemy3", "deactivate")
-      patient:setMood("epidemy2", "activate")
+      patient:removeVaccinationCandidateStatus()
       -- Drop it they may not even be the vacc candidate anymore
       CallsDispatcher.queueCallCheckpointAction(nurse)
       nurse:queueAction(AnswerCallAction())

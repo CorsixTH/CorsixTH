@@ -36,18 +36,31 @@ function Patient:Patient(...)
   self.action_string = ""
   self.cured = false
   self.infected = false
+  self.pay_amount = 0
   -- To distinguish between actually being dead and having a nil hospital
   self.dead = false
+  -- Indicates that the patient is being marked for death. The patient may be busy,
+  -- But as soon as the patient is unoccupied he will start the dying scenario based
+  -- on this flag, except the cases when he is cured or sent home while being busy.
+  self.set_to_die = false
+  -- Indicates that the patient on the dying scenario
+  -- Cure should not happen at this state. Patient can't be sent home
+  self.going_to_die = false
   -- Is the patient reserved for a particular nurse when being vaccinated
   self.reserved_for = false
   self.vaccinated = false
   -- Has the patient been sent to the wrong room and needs redirecting
   self.needs_redirecting = false
-  self.attempted_to_infect= false
+  -- Indicates is currently some infected patient trying to infect this patient
+  -- Prevents the situation when several infectors trying to infect the same victim
+  self.under_infection_attempt = false
   -- Is the patient about to be vaccinated?
   self.vaccination_candidate = false
   -- Has the patient passed reception?
   self.has_passed_reception = false
+  -- Diagnostics progress to diagnose the patient.
+  -- Usually this value is in the range from 0 to ~2.5
+  self.diagnosis_progress = 0
 
   -- Is the patient trying to get to the toilet? ("yes", "no", or "no-toilets")
   self.going_to_toilet = "no"
@@ -64,10 +77,19 @@ function Patient:onClick(ui, button)
     if self.message_callback then
       self:message_callback()
     else
+
+      local function isValidEpidemicTarget(epidemic)
+        return epidemic and epidemic.coverup_selected and
+            (epidemic.vaccination_mode_active or
+            (self.infected and (not self.marked_for_vaccination)))
+      end
+
       local hospital = self.hospital or self.world:getLocalPlayerHospital()
       local epidemic = hospital and hospital.epidemic
-      if epidemic and epidemic.vaccination_mode_active then
-        epidemic:markForVaccination(self)
+      if isValidEpidemicTarget(epidemic) then
+          if not epidemic.timer.closed then
+            epidemic:markForVaccination(self)
+          end
       else
         ui:addWindow(UIPatient(ui, self))
       end
@@ -76,6 +98,12 @@ function Patient:onClick(ui, button)
     -- The object we're using is made invisible, as the animation contains both
     -- the humanoid and the object. Hence send the click onto the object.
     self.user_of:onClick(ui, button)
+  elseif button == "right" then
+    -- Attempt to push patient over
+    if not self.world:isPaused() and not (self.cured or self.going_to_die or self.dead or self.going_home)
+         and math.random(1, 2) == 2 then
+      self:falling(true)
+    end
   end
   Humanoid.onClick(self, ui, button)
 end
@@ -93,9 +121,10 @@ function Patient:setDisease(disease)
   for i, room in ipairs(self.disease.diagnosis_rooms) do
     self.available_diagnosis_rooms[i] = room
   end
-  local company = math.random(1,12)
-  if company < 4 then
-    self.insurance_company = company
+  -- 25% of the patients pay via insurance
+  if math.random(1,4) == 1 then
+    -- randomly select one of three insurance companies
+    self.insurance_company = math.random(1,3)
   end
   -- Randomise thirst and the need to visit the loo soon.
   -- Alien patients do not have the needed animations for these things, so exclude them
@@ -150,7 +179,7 @@ function Patient:setDiagnosed()
   self:updateDynamicInfo()
 end
 
--- Modifies the diagnosis progress of a patient.
+--! Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
   self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
@@ -163,7 +192,7 @@ function Patient:modifyDiagnosisProgress(incrementValue)
   self:updateDynamicInfo()
 end
 
--- Updates the patients diagnostic progress based on the doctors skill
+--! Updates the patients diagnostic progress based on the doctors skill
 -- called when they are done using a diagnosis room
 function Patient:completeDiagnosticStep(room)
   -- Base: depending on difficulty of disease as set in sam file
@@ -178,7 +207,7 @@ function Patient:completeDiagnosticStep(room)
   -- Did the staff member manage to leave the room before the patient had
   -- a chance to get diagnosed? Then use a default middle value.
   if room.staff_member then
-    local fatigue = room.staff_member.attributes["fatigue"] or 0
+    local fatigue = room.staff_member:getAttribute("fatigue")
 
     -- Bonus: based on skill and attn to detail (with some randomness).
     -- additional bonus if the staff member is highly skilled / consultant
@@ -196,7 +225,7 @@ function Patient:completeDiagnosticStep(room)
   self:modifyDiagnosisProgress(diagnosis_base + (diagnosis_bonus * multiplier))
 end
 
--- Sets the hospital for the patient - additionally removing them from a
+--! Sets the hospital for the patient - additionally removing them from a
 -- hospital if they already belong to one. For player hospitals, patients who
 -- are not debug or emergency patients are made to seek a reception desk.
 --!param hospital (Hospital): hospital to assign to patient
@@ -246,7 +275,7 @@ function Patient:getPriceDistortion(casebook)
   local reputation = casebook.reputation or self.hospital.reputation
   local effectiveness = casebook.cure_effectiveness
 
-  local weighted_happiness = happiness_weight * self.attributes.happiness
+  local weighted_happiness = happiness_weight * self:getAttribute("happiness")
   local weighted_reputation = reputation_weight * (reputation / 1000)
   local weighted_effectiveness = effectiveness_weight * (effectiveness / 100)
 
@@ -290,11 +319,23 @@ end
 --! Returns true if patient agrees to pay for the given treatment.
 --!param disease_id (string): The id of the disease to test
 function Patient:agreesToPay(disease_id)
-  local casebook = self.hospital.disease_casebook[disease_id]
-  local price_distortion = self:getPriceDistortion(casebook)
-  local is_over_priced = price_distortion > self.hospital.over_priced_threshold
-
-  return not (is_over_priced and math.random(1, 5) == 1)
+  local hosp = self.hospital
+  local casebook = hosp.disease_casebook[disease_id]
+  local agrees_to_pay = true
+  local price_multiplier = casebook.price
+  local is_over_priced = price_multiplier > 1.0
+  if is_over_priced then
+    local overprice_size = price_multiplier - 1.0
+    -- payment chance modificator was chosen experimentally to match the chance in the original game.
+    local payment_chance_modificator = 4
+    local payment_chance = math.exp(-1 * payment_chance_modificator * overprice_size)
+    agrees_to_pay = math.random() <= payment_chance
+  end
+  if agrees_to_pay then
+    -- save the price the patient agrees to
+    self.pay_amount = hosp:getTreatmentPrice(disease_id)
+  end
+  return agrees_to_pay
 end
 
 --! Either the patient is cured, or he/she dies.
@@ -315,6 +356,10 @@ function Patient:isTreatmentEffective()
   return (cure_chance >= math.random(1,100))
 end
 
+function Patient:hasMoreDiagnosisRoomsAvailable()
+  return #self.available_diagnosis_rooms ~= 0
+end
+
 --! Change patient internal state to "cured".
 function Patient:cure()
   self.cured = true
@@ -324,14 +369,19 @@ end
 
 --! Patient died, process the event.
 function Patient:die()
+  self.set_to_die = false
+  if self.cured then return end
+
   -- It may happen that this patient was just cured and then the room blew up.
   self.hospital:humanoidDeath(self)
+
+  self:setMood("dying5", "deactivate")
   self:setMood("dead", "activate")
 
   -- Remove any messages and/or callbacks related to the patient.
   self:unregisterCallbacks()
 
-  self.going_home = true
+  self.going_to_die = true
   if self:getRoom() then
     self:queueAction(MeanderAction():setCount(1))
   else
@@ -341,12 +391,16 @@ function Patient:die()
   self:setDynamicInfoText(_S.dynamic_info.patient.actions.dying)
 end
 
--- Actions we can interrupt for in the canPeeOrPuke function
+-- Actions we can interrupt when at a fully empty tile.
 local good_actions = {walk=true, idle=true, seek_room=true, queue=true}
 
-function Patient:canPeeOrPuke(current)
-  if not good_actions[current.name] then return false end
-  if self.going_home then return false end
+--! Test whether the current tile of the patient is useful for inserting an
+-- action that needs a fully empty tile in the hospital.
+--!param cur_action Current action of the patient.
+--!return Whether the tile can be used for inserting an action.
+function Patient:atFullyEmptyTile(cur_action)
+  if not good_actions[cur_action.name] then return false end
+  if self.going_home or self.going_to_die then return false end
 
   local th = self.world.map.th
   local cell_flags = th:getCellFlags(self.tile_x, self.tile_y)
@@ -356,30 +410,25 @@ function Patient:canPeeOrPuke(current)
   return parcel ~= 0 and th:getPlotOwner(parcel) == self.hospital:getPlayerIndex()
 end
 
---! Animations for when there is an earth quake
-function Patient:falling()
+--! Falling animations for when there is an earth quake or the player is being very mean
+--!param player_init (bool) if true, player triggered the fall
+function Patient:falling(player_init)
   local current = self:getCurrentAction()
   current.keep_reserved = true
-  if self.falling_anim and self:canPeeOrPuke(current) and self.has_fallen == 1 then
-    self:setNextAction(FallingAction(), 0)
+  if self.falling_anim and self:atFullyEmptyTile(current) and self.has_fallen == 1 then
     self.has_fallen = 2
-    if self.has_fallen == 2 then
-      self:setNextAction(OnGroundAction())
-      self.on_ground = true
+    self:queueAction(FallingAction(), 1)
+    self:queueAction(OnGroundAction(), 2)
+    self:queueAction(GetUpAction(), 3)
+    -- show the patient is annoyed, if possible
+    if math.random(1, 5) == 3 and self.shake_fist_anim then
+      self:queueAction(ShakeFistAction(), 4)
+      self:interruptAndRequeueAction(current, 5)
+    else
+      self:interruptAndRequeueAction(current, 4)
     end
-    if self.on_ground then
-      self:setNextAction(GetUpAction())
-    end
-    -- TODO: falls are broken, the will change once implemented
-    self:interruptAndRequeueAction(current, 2)
-    self.on_ground = false
-    if math.random(1, 5) == 3 then
-      self:shakeFist()
-    end
-    self:fallingAnnounce()
+    if player_init then self:fallingAnnounce() end
     self:changeAttribute("happiness", -0.05) -- falling makes you very unhappy
-  else
-    return
   end
 end
 
@@ -395,17 +444,10 @@ function Patient:fallingAnnounce()
   self.hospital:giveAdvice(msg)
 end
 
---! Perform 'shake fist' action.
-function Patient:shakeFist()
-  if self.shake_fist_anim then
-    self:queueAction(ShakeFistAction(), 1)
-  end
-end
-
 function Patient:vomit()
   local current = self:getCurrentAction()
   --Only vomit under these conditions. Maybe I should add a vomit for patients in queues too?
-  if self:canPeeOrPuke(current) and self.has_vomitted == 0 then
+  if self:atFullyEmptyTile(current) and self.has_vomitted == 0 then
     self:queueAction(VomitAction(), 1)
     self:interruptAndRequeueAction(current, 2)
     self.has_vomitted = self.has_vomitted + 1
@@ -418,7 +460,7 @@ end
 function Patient:pee()
   local current = self:getCurrentAction()
   --Only pee under these conditions. As with vomit, should they also pee if in a queue?
-  if self:canPeeOrPuke(current) then
+  if self:atFullyEmptyTile(current) then
     self:queueAction(PeeAction(), 1)
     self:interruptAndRequeueAction(current, 2)
     self:setMood("poo", "deactivate")
@@ -504,9 +546,11 @@ function Patient:goHome(reason, disease_id)
 
   hosp:updatePercentages()
 
+  -- Debug patients must be removed from the debug list so they can despawn properly
   if self.is_debug then
     hosp:removeDebugPatient(self)
   end
+
   -- Remove any messages and/or callbacks related to the patient.
   self:unregisterCallbacks()
 
@@ -544,175 +588,200 @@ function Patient:_checkIfCureRoom(room)
       and self.diagnosed)
 end
 
--- This function handles changing of the different attributes of the patient.
--- For example if thirst gets over a certain level (now: 0.7), the patient
--- tries to find a drinks machine nearby.
-function Patient:tickDay()
-  -- First of all it may happen that this patient is tired of waiting and goes home.
-  if self.waiting then
-    self.waiting = self.waiting - 1
-    if self.waiting == 0 then
-      self:goHome("kicked")
-      if self.diagnosed then
-        -- No treatment rooms
-        self:setDynamicInfoText(_S.dynamic_info.patient.actions.no_treatment_available)
-      else
-        -- No diagnosis rooms
-        self:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
-      end
-    elseif self.waiting == 10 then
-      self:tapFoot()
-    elseif self.waiting == 20 then
-      self:yawn()
-    elseif self.waiting == 30 then
-      self:checkWatch()
+function Patient:setToDying()
+  -- Check that the patient is in a later state of dying
+  if self.going_to_die or self.dead then return end
+
+  self.set_to_die = true
+end
+
+function Patient:tick()
+  Humanoid.tick(self)
+
+  if self.set_to_die and
+    not self:getRoom() and
+    not self:getCurrentAction().is_leaving and
+    not self:isKnockingDoor() and
+    not self:isEnteringRoom() then
+      self:die()
+  end
+end
+
+-- Different events happen while a patient is waiting, based on the total number of remaining days.
+local waiting_events = {
+  [0]  = "go_home",
+  [10] = "tap_foot",
+  [20] = "yawn",
+  [30] = "check_watch"
+}
+
+--! Handle processing of a patient waiting for something (like a room or player action)
+function Patient:_dailyWaitChecks()
+  self.waiting = self.waiting - 1
+  local wait_event = waiting_events[self.waiting]
+  if not wait_event then return end
+  if wait_event == "go_home" then
+    self:goHome("kicked")
+    if self.diagnosed then
+      -- No treatment rooms
+      self:setDynamicInfoText(_S.dynamic_info.patient.actions.no_treatment_available)
+    else
+      -- No diagnosis rooms
+      self:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
     end
-
-    if self.has_vomitted and self.has_vomitted > 0 then
-      self.has_vomitted = 0
-    end
+  elseif wait_event == "tap_foot" then
+    self:tapFoot()
+  elseif wait_event == "yawn" then
+    self:yawn()
+  elseif wait_event == "check_watch" then
+    self:checkWatch()
   end
+end
 
-  -- if patients are getting unhappy, then maybe we should see this!
-  if self.attributes["happiness"] < 0.3 then
-    self:setMood("sad7", "activate")
-  else
-    self:setMood("sad7", "deactivate")
-  end
-  -- Now call the parent function - it checks
-  -- if we're outside the hospital or on our way home.
-  if not Humanoid.tickDay(self) then
-    return
-  end
-
-  -- Die before we poo or drink
-  -- Patient has been in the hospital for over 6 months and is still not well, so
+--! Handle processing of a patient's current health state and perform necessary actions
+--!return health (number) A patient's current health value, from 0 to 1.
+function Patient:_dailyHealthChecks()
+  -- If a Patient has been in the hospital for over 6 months and is still not well, they
   -- will become sad and will either get fed up and leave or stay in the hope that you
   -- will cure them before they die.
   -- Note: This behaviour intentionally differs from Theme Hospital where being close to
   -- death does not impact happiness.
-  -- TODO clean up this block, nonmagical numbers
-  if self.attributes["health"] >= 0.18 and self.attributes["health"] < 0.22 then
-    self:setMood("sad2", "activate")
-    self:changeAttribute("happiness", -0.0002) -- waiting too long will make you sad
-    -- There is a 1/3 chance that the patient will get fed up and leave.
-    -- This is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
-    -- If patient is already in the cure room, let the treatment happen.
-    if not self:_checkIfCureRoom(self:getRoom()) and math.random(1,30) == 1 then
-      self:setDynamicInfoText(_S.dynamic_info.patient.actions.fed_up)
-      self:setMood("sad2", "deactivate")
-      self:goHome("kicked")
+
+  local health = self:getAttribute("health")
+  -- Define different thresholds for deteriorating health and their mood changes.
+  -- First value is the mood to deactivate, the second to activate (as applicable).
+  local health_treshold_rangemap = {
+    {upper = 0.06, value = {"dying4", "dying5"}}, -- Not looking good
+    {upper = 0.10, value = {"dying3", "dying4"}}, -- Fading fast
+    {upper = 0.14, value = {"dying2", "dying3"}}, -- Starts to take a turn for the worse
+    {upper = 0.18, value = {"dying1", "dying2"}}, -- Wishes they went to that other hospital
+    {upper = 0.22, value = {false, "dying1"}},    -- Getting rather unwell now
+    {value = false}
+  }
+  -- Special handling for a patient almost passed.
+  local almost_dead_value, dying_value = 0.01, 0.0
+  if health < almost_dead_value then
+    if health == dying_value then
+      self:setToDying() -- Patient is going to die.
+      -- If patient is busy, they will die when they leave the room, will be cured,
+      -- or is leaving the hospital. Regardless we do not need to do anything else.
+    else
+      -- Is there time to say a prayer (will be dying tomorrow)
+      self.attributes["health"] = dying_value
     end
-  elseif self.attributes["health"] >= 0.14 and self.attributes["health"] < 0.18 then
-    self:setMood("sad2", "deactivate")
-    self:setMood("sad3", "activate")
-  -- now wishes they had gone to that other hospital
-  elseif self.attributes["health"] >= 0.10 and self.attributes["health"] < 0.14 then
-    self:setMood("sad3", "deactivate")
-    self:setMood("sad4", "activate")
-  -- starts to take a turn for the worse and is slipping away
-  elseif self.attributes["health"] >= 0.06 and self.attributes["health"] < 0.10 then
-    self:setMood("sad4", "deactivate")
-    self:setMood("sad5", "activate")
-  -- fading fast
-  elseif self.attributes["health"] >= 0.01 and self.attributes["health"] < 0.06 then
-    self:setMood("sad5", "deactivate")
-    self:setMood("sad6", "activate")
-  -- it's not looking good
-  elseif self.attributes["health"] > 0.00 and self.attributes["health"] < 0.01 then
-    self.attributes["health"] = 0.0
-  -- is there time to say a prayer
-  elseif self.attributes["health"] == 0.0 then
-    if not self:getRoom() and not self:getCurrentAction().is_leaving then
-      self:setMood("sad6", "deactivate")
-      self:die()
-    end
-    -- Patient died, will die when they leave the room, will be cured, or is leaving
-    -- the hospital. Regardless we do not need to adjust any other attribute
-    return
+    return health
   end
 
-  -- Note: to avoid empty action queue error if the player spam clicks a patient at the same time as the day changes
-  -- there is now an between "neutral" stage.
-  if self.has_fallen == 3 then
-    self.has_fallen = 1
-  elseif self.has_fallen == 2 then
-    self.has_fallen = 3
+  local old_dying_mood, new_dying_mood = rangeMapLookup(health, health_treshold_rangemap, true)
+  if not old_dying_mood then
+    if new_dying_mood then
+      -- Patient has entered the road of deterioration.
+      self:setMood(new_dying_mood, "activate")
+      self:changeAttribute("happiness", -0.0002) -- waiting too long will make you sad
+      -- There is a 1/3 chance that the patient will get fed up and leave.
+      -- This is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
+      -- If patient is already in the cure room, let the treatment happen.
+      if not self:_checkIfCureRoom(self:getRoom()) and math.random(1,30) == 1 then
+        self:setDynamicInfoText(_S.dynamic_info.patient.actions.fed_up)
+        self:setMood("dying1", "deactivate")
+        self:goHome("kicked")
+      end
+    end
+    return health
   end
 
-  -- Update health history.
+  -- All other stages of deterioration simply cycle through the stages of dying mood.
+  self:setMood(old_dying_mood, "deactivate")
+  self:setMood(new_dying_mood, "activate")
+
+  return health
+end
+
+--! Generate or refresh the patient's health chart
+function Patient:_dailyHealthHistoryRefresh()
   if not self.health_history then
     -- First day, initialize health history.
     self.health_history = {}
-    self.health_history[1] = self.attributes["health"]
+    self.health_history[1] = self:getAttribute("health")
     self.health_history["last"] = 1
     self.health_history["size"] = 20
   else
     -- Update the health history, wrapping around the array.
     local last = self.health_history["last"] + 1
     if last > self.health_history["size"] then last = 1 end
-    self.health_history[last] = self.attributes["health"]
+    self.health_history[last] = self:getAttribute("health")
     self.health_history["last"] = last
   end
+end
 
-  -- Vomitings.
-  if self.vomit_anim and not self:getRoom() and not self:getCurrentAction().is_leaving and not self:getCurrentAction().is_entering then
-    --Nausea level is based on health then proximity to vomit is used as a multiplier.
-    --Only a patient with a health value of less than 0.8 can be the initial vomiter, however :)
-    local initialVomitMult = 0.002 --The initial chance of vomiting.
-    local proximityVomitMult = 1.5 --The multiplier used when in proximity to vomit.
-    local nausea = (1.0 - self.attributes["health"]) * initialVomitMult
-    local foundVomit = {}
-    local numVomit = 0
+--! Process a patient's exposure to vomit and calculate their level of nausea
+function Patient:_calculateNausea(num_nearby_vomit)
+  --Nausea level is based on health then proximity to vomit is used as a multiplier.
+  --Only a patient with a health value of less than 0.8 can be the initial vomiter, however :)
+  local initialVomitMult = 0.002 --The initial chance of vomiting.
+  local proximityVomitMult = 1.5 --The multiplier used when in proximity to vomit.
+  local nausea = (1.0 - self:getAttribute("health")) * initialVomitMult
 
-    self.world:findObjectNear(self, "litter", 2, function(x, y)
-      local litter = self.world:getObject(x, y, "litter")
-    if not litter then
-    return
-    end
-      if litter:vomitInducing() then
-        local alreadyFound = false
-        for i=1,numVomit do
-          if foundVomit[i] == litter then
-            alreadyFound = true
-            break
-          end
-        end
+  -- As we don't yet have rats, ratholes and dead rats the chances of vomitting are slim
+  -- as a temp fix for this I have added 0.5 to the < nausea equation,
+  -- this may want adjusting or removing when the other factors are in the game MarkL
+  if self:getAttribute("health") <= 0.8 or num_nearby_vomit > 0 or self:getAttribute("happiness") < 0.6 then
+    return nausea * ((num_nearby_vomit + 1) * proximityVomitMult)
+  end
+end
 
-        if not alreadyFound then
-          numVomit = numVomit + 1
-          foundVomit[numVomit] = litter
-        end
-      end
-      -- seeing litter will make you unhappy. If it is pee or puke it is worse
-      if litter:anyLitter() then
-        self:changeAttribute("happiness", -0.0002)
-      else
-        self:changeAttribute("happiness", -0.0004)
-      end
-    end) -- End of findObjectNear
-    -- As we don't yet have rats, ratholes and dead rats the chances of vomitting are slim
-    -- as a temp fix for this I have added 0.5 to the < nausea equation,
-    -- this may want adjusting or removing when the other factors are in the game MarkL
-    if self.attributes["health"] <= 0.8 or numVomit > 0 or self.attributes["happiness"] < 0.6 then
-      nausea = nausea * ((numVomit+1) * proximityVomitMult)
-      if math.random() < nausea + 0.5 then
-        self:vomit()
+--! Process a patient's current state of toilet need, and action accordingly.
+function Patient:_dailyBowelChecks()
+  if self.disease.more_loo_use then
+    self:changeAttribute("toilet_need", 0.018 * math.random() + 0.008)
+  else
+    self:changeAttribute("toilet_need", 0.006 * math.random() + 0.002)
+  end
+  -- Maybe it's time to visit the loo?
+  if self:getAttribute("toilet_need") > 0.75 and self.pee_anim and
+      not self:getRoom() and not self:getCurrentAction().is_leaving and
+      not self:getCurrentAction().is_entering then
+    self:handleToiletNeed()
+  end
+end
+
+--! Process a patient's sudden need for the toilet.
+--! We will either do it on the floor (40% chance, daily), or seek out a toilet.
+function Patient:handleToiletNeed()
+  if math.random(1, 10) < 5 then
+    self:pee()
+    self:changeAttribute("toilet_need", -(0.5 + math.random()*0.15))
+    self.going_to_toilet = "no"
+  else
+    -- If waiting for user response, do not send to toilets, as this messes
+    -- things up.
+    if self.going_to_toilet == "no" and not self.waiting then
+      self:setMood("poo", "activate")
+      -- Check if any room exists.
+      if not self.world:findRoomNear(self, "toilets") then
+        self.going_to_toilet = "no-toilets" -- Gets reset when a new toilet is built (then, patient will try again).
+      -- Otherwise we can queue the action, but only if not in any rooms right now.
+      elseif not self:getRoom() and not self:getCurrentAction().is_leaving and not self:getCurrentAction().pee then
+        self:setNextAction(SeekToiletsAction():setMustHappen(true))
+        self.going_to_toilet = "yes"
       end
     end
   end
+end
 
-  -- It is nice to see plants, but dead plants make you unhappy
-  self.world:findObjectNear(self, "plant", 2, function(x, y)
-    local plant = self.world:getObject(x, y, "plant")
-    if plant then
-      self:changeAttribute("happiness", -0.0003 + (plant:isPleasingFactor() * 0.0001))
-    end
-  end)
-  -- It always makes you happy to see you are in safe place
-  self.world:findObjectNear(self, "extinguisher", 2, function()
-    self:changeAttribute("happiness", 0.0002)
-  end)
+--! Process specific objects near the patient and their effect on happiness factors.
+--!return (number) Quanitity of vomit inducing litter
+function Patient:_dailyObjectHappinessEffects()
+  -- It is nice to see plants, but dead plants make you unhappy.
+  local plant = getRandomEntryFromArray(self:findObjectsInSquare(2, "plant"))
+  if plant then
+    self:changeAttribute("happiness", -0.0003 + (plant:isPleasingFactor() * 0.0001))
+  end
+
+  -- It always makes you happy to see you are in safe place.
+  local extinguisher = getRandomEntryFromArray(self:findObjectsInSquare(2, "extinguisher"))
+  if extinguisher then self:changeAttribute("happiness", 0.0002) end
+
   -- sitting makes you happy whilst standing and walking does not
   if self:goingToUseObject("bench") then
     self:changeAttribute("happiness", 0.00002)
@@ -720,120 +789,110 @@ function Patient:tickDay()
     self:changeAttribute("happiness", -0.00002)
   end
 
-  -- Each tick both thirst, warmth and toilet_need changes and health decreases.
-  self:changeAttribute("thirst", self.attributes["warmth"]*0.02+0.004*math.random() + 0.004)
-  self:changeAttribute("health", - 0.004)
-  if self.disease.more_loo_use then
-    self:changeAttribute("toilet_need", 0.018*math.random() + 0.008)
-  else
-    self:changeAttribute("toilet_need", 0.006*math.random() + 0.002)
-  end
-  -- Maybe it's time to visit the loo?
-  if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.75 then
-    if self.pee_anim and not self:getCurrentAction().is_leaving and
-        not self:getCurrentAction().is_entering and not self.in_room then
-      if math.random(1, 10) < 5 then
-        self:pee()
-        self:changeAttribute("toilet_need", -(0.5 + math.random()*0.15))
-        self.going_to_toilet = "no"
-      else
-        -- If waiting for user response, do not send to toilets, as this messes
-        -- things up.
-        if self.going_to_toilet == "no" and not self.waiting then
-          self:setMood("poo", "activate")
-          -- Check if any room exists.
-          if not self.world:findRoomNear(self, "toilets") then
-            self.going_to_toilet = "no-toilets" -- Gets reset when a new toilet is built (then, patient will try again).
-          -- Otherwise we can queue the action, but only if not in any rooms right now.
-          elseif not self:getRoom() and not self:getCurrentAction().is_leaving and not self:getCurrentAction().pee then
-            self:setNextAction(SeekToiletsAction():setMustHappen(true))
-            self.going_to_toilet = "yes"
-          end
-        end
-      end
+  local num_vomit_inducing = 0
+  for _, litter in ipairs(self:findObjectsInSquare(2, "litter")) do
+    -- Count vomit inducing litter.
+    if litter:vomitInducing() then num_vomit_inducing = num_vomit_inducing + 1 end
+
+    -- Seeing litter will make you unhappy. If it is pee or puke it is worse
+    if litter:anyLitter() then
+      self:changeAttribute("happiness", -0.0002)
+    else
+      self:changeAttribute("happiness", -0.0004)
     end
   end
-  if self.disease.yawn and math.random(1, 10) == 5 then
-    self:yawn()
+  return num_vomit_inducing
+end
+
+--! Take the necessary steps to let a patient to get a soda.
+--!param machine (object) The drinks machine to target
+--!param lx (int) X usage coordinate of the drinks machine
+--!param ly (int) Y usage coordinate of the drinks machine
+function Patient:_constructGetSodaAction(machine, lx, ly)
+  -- Callback function when the machine has been used
+  local --[[persistable:patient_drinks_machine_after_use]] function after_use()
+    self:changeAttribute("thirst", -(0.7 + math.random()*0.3))
+    self:changeAttribute("toilet_need", 0.05 + math.random()*0.05)
+    self:setMood("thirsty", "deactivate")
+    -- The patient might be kicked while buying a drink
+    if not self.going_home then
+      self.hospital:sellSodaToPatient(self)
+    end
+    -- The patient might also throw the can on the floor, bad patient!
+    if math.random() < 0.6 then
+      -- It will be dropped between 1 and 12 tiles away (litter bin catches 8 radius).
+      self.litter_countdown = math.random(1, 12)
+    end
   end
 
-  -- If thirsty enough a soda would be nice
-  if self.attributes["thirst"] and self.attributes["thirst"] > 0.7 then
-    self:changeAttribute("happiness", -0.002)
-    self:setMood("thirsty", "activate")
-    -- If there's already an action to buy a drink in the action queue, or
-    -- if we're going to the loo, do nothing
-    if self:goingToUseObject("drinks_machine") or self.going_to_toilet ~= "no" then
-      return
-    end
-    -- Don't check for a drinks machine too often
-    if self.timeout and self.timeout > 0 then
-      self.timeout = self.timeout - 1
-      return
-    end
-    -- The only allowed situations to grab a soda is when queueing
-    -- or idling/walking in the corridors
-    -- Also make sure the walk action when leaving a room has a chance to finish.
-    if not self:getRoom() and not self:getCurrentAction().is_leaving and not self.going_home then
-      local machine, lx, ly = self.world:
-          findObjectNear(self, "drinks_machine", 8)
-
-      -- If no machine can be found, resume previous action and wait a
-      -- while before trying again. To get a little randomness into the picture
-      -- it's not certain we go for it right now.
-      if not machine or not lx or not ly or math.random(1,10) < 3 then
-        self.timeout = math.random(2,4)
+  -- If we are queueing, let the queue handle the situation.
+  for _, current_action in ipairs(self.action_queue) do
+    if current_action.name == "queue" then
+      local callbacks = current_action.queue.callbacks[self]
+      if callbacks then
+        callbacks:onGetSoda(self, machine, lx, ly, after_use)
         return
       end
-
-      -- Callback function when the machine has been used
-      local --[[persistable:patient_drinks_machine_after_use]] function after_use()
-        self:changeAttribute("thirst", -(0.7 + math.random()*0.3))
-        self:changeAttribute("toilet_need", 0.05 + math.random()*0.05)
-        self:setMood("thirsty", "deactivate")
-        -- The patient might be kicked while buying a drink
-        if not self.going_home then
-          self.hospital:sellSodaToPatient(self)
-        end
-        -- The patient might also throw the can on the floor, bad patient!
-        if math.random() < 0.6 then
-          -- It will be dropped between 1 and 12 tiles away (litter bin catches 8 radius).
-          self.litter_countdown = math.random(1, 12)
-        end
-      end
-
-      -- If we are queueing, let the queue handle the situation.
-      for _, current_action in ipairs(self.action_queue) do
-        if current_action.name == "queue" then
-          local callbacks = current_action.queue.callbacks[self]
-          if callbacks then
-            callbacks:onGetSoda(self, machine, lx, ly, after_use)
-            return
-          end
-        end
-      end
-
-      -- Or, if walking or idling insert the needed actions in
-      -- the beginning of the queue
-      local current = self:getCurrentAction()
-      if current.name == "walk" or current.name == "idle" or current.name == "seek_room" then
-        -- Go to the machine, use it, and then continue with
-        -- whatever he/she was doing.
-        current.keep_reserved = true
-        self:queueAction(WalkAction(lx, ly):setMustHappen(true):disableTruncate(), 1)
-        self:queueAction(UseObjectAction(machine):setAfterUse(after_use):setMustHappen(true), 2)
-        machine:addReservedUser(self)
-        -- Insert the old action again, a little differently depending on
-        -- what the previous action was.
-        self:interruptAndRequeueAction(current, 3, true)
-      end
     end
   end
 
-  -- If the patient is sitting on a bench or standing and queued,
-  -- it may be a situation where he/she is not in the queue
-  -- anymore, but should be. If this is the case for more than
-  -- 2 ticks, go to reception
+  -- Or, if walking or idling insert the needed actions in
+  -- the beginning of the queue
+  local current = self:getCurrentAction()
+  if current.name == "walk" or current.name == "idle" or current.name == "seek_room" then
+    -- Go to the machine, use it, and then continue with
+    -- whatever he/she was doing.
+    current.keep_reserved = true
+    self:queueAction(WalkAction(lx, ly):setMustHappen(true):disableTruncate(), 1)
+    self:queueAction(UseObjectAction(machine):setAfterUse(after_use):setMustHappen(true), 2)
+    machine:addReservedUser(self)
+    -- Insert the old action again, a little differently depending on
+    -- what the previous action was.
+    self:interruptAndRequeueAction(current, 3, true)
+  end
+end
+
+--! Handle a pateint who is very thirsty. They'll start getting unhappy and wanting to
+--! look for a drink.
+function Patient:_handleExcessThirst()
+  self:changeAttribute("happiness", -0.002)
+  self:setMood("thirsty", "activate")
+  -- If there's already an action to buy a drink in the action queue, or
+  -- if we're going to the loo, do nothing
+  if self:goingToUseObject("drinks_machine") or self.going_to_toilet ~= "no" then
+    return
+  end
+  -- Don't check for a drinks machine too often
+  if self.timeout and self.timeout > 0 then
+    self.timeout = self.timeout - 1
+    return
+  end
+  -- The only allowed situations to grab a soda is when queueing
+  -- or idling/walking in the corridors
+  -- Also make sure the walk action when leaving a room has a chance to finish.
+  if self:getRoom() or self:getCurrentAction().is_entering or
+      self:getCurrentAction().is_leaving or self.going_home then
+    return
+  end
+
+  local machine, lx, ly = self.world:findObjectNear(self, "drinks_machine", 8)
+
+  -- If no machine can be found, resume previous action and wait a
+  -- while before trying again. To get a little randomness into the picture
+  -- it's not certain we go for it right now.
+  if not machine or not lx or not ly or math.random(1,10) < 3 then
+    self.timeout = math.random(2,4)
+    return
+  end
+
+  -- Go get a drink.
+  self:_constructGetSodaAction(machine, lx, ly)
+end
+
+--! If the patient is sitting on a bench or standing and queued, it may be a situation
+--! where he/she is not in the queue anymore, but should be. If this is the case for
+--! more than 2 ticks, go to reception.
+function Patient:_checkPatientIsStillQueueingForARoom()
   if #self.action_queue > 1 and (self:getCurrentAction().name == "use_object" or
       self:getCurrentAction().name == "idle") and
       self.action_queue[2].name == "queue" then
@@ -860,6 +919,82 @@ function Patient:tickDay()
   end
 end
 
+-- This function handles changing of the different attributes of the patient.
+-- For example if thirst gets over a certain level (now: 0.7), the patient
+-- tries to find a drinks machine nearby.
+function Patient:tickDay()
+  -- First of all it may happen that this patient is tired of waiting and goes home.
+  if self.waiting then
+    self:_dailyWaitChecks()
+    if self.has_vomitted and self.has_vomitted > 0 then
+      self.has_vomitted = 0
+    end
+  end
+
+  -- if patients are getting unhappy, then maybe we should see this!
+  if self:getAttribute("happiness") < 0.3 then
+    self:setMood("sad2", "activate")
+  else
+    self:setMood("sad2", "deactivate")
+  end
+
+  -- Avoid an empty action queue error if the player clicks a patient to fall
+  -- at the same time as the day changes. There is now a between "neutral" stage.
+  if self.has_fallen == 3 then
+    self.has_fallen = 1
+  elseif self.has_fallen == 2 then
+    self.has_fallen = 3
+  end
+
+  -- Now call the parent function - it checks
+  -- if we're outside the hospital or on our way home.
+  if not Humanoid.tickDay(self) then
+    return
+  end
+
+  -- If we've hit zero health today, we should no longer continue performing daily actions.
+  if self:_dailyHealthChecks() == 0.0 then return end
+
+  -- Update health history.
+  self:_dailyHealthHistoryRefresh()
+
+  -- Perform Happiness and nausea calculations from nearby objects when not interacting
+  -- with a room.
+  if not self:getRoom() and not self:getCurrentAction().is_entering and
+      not self:getCurrentAction().is_leaving then
+    local num_nearby_vomit = self:_dailyObjectHappinessEffects()
+    -- We only want to calculate vomit chance on patients who have the relevant animation
+    -- and aren't an emergency.
+    if self.vomit_anim and not self.is_emergency then
+      local nausea_level = self:_calculateNausea(num_nearby_vomit)
+      if nausea_level and math.random() < nausea_level + 0.5 then
+        self:vomit()
+      end
+    end
+  end
+
+  -- Each day both thirst and toilet_need changes, and health decreases.
+  self:changeAttribute("health", - 0.004)
+  if not self.is_emergency then
+    self:changeAttribute("thirst", self:getAttribute("warmth") * 0.02 + 0.004 * math.random() + 0.004)
+    self:_dailyBowelChecks()
+
+    -- If thirsty enough a soda would be nice
+    if self:getAttribute("thirst") > 0.7 then
+      self:_handleExcessThirst()
+    end
+  end
+
+  -- See if a patient should yawn today.
+  -- Don't attempt if the patient is already waiting with a yawn event
+  local will_yawn = self.waiting and waiting_events[self.waiting] == "yawn"
+  if self.disease.yawn and not will_yawn and math.random(1, 10) == 5 then
+    self:yawn()
+  end
+
+  self:_checkPatientIsStillQueueingForARoom()
+end
+
 function Patient:notifyNewRoom(room)
   Humanoid.notifyNewRoom(self, room)
   if self.going_to_toilet == "no-toilets" and room.room_info.id == "toilets" then
@@ -876,7 +1011,7 @@ function Patient:setTile(x, y)
       self.litter_countdown = math.random(20, 100)
     end
 
-  elseif self.hospital and not self.going_home then
+  elseif self.hospital and not self.going_to_die and not self.going_home then
     self.litter_countdown = self.litter_countdown - 1
 
     -- Is the patient about to drop some litter?
@@ -954,7 +1089,7 @@ end
 function Patient:updateDynamicInfo()
   local action_string = self.action_string or ""
   local info = ""
-  if self.going_home then
+  if self.going_home or self.going_to_die then
     self:setDynamicInfo('progress', nil)
   elseif self.diagnosed then
     if self.diagnosis_progress < 1.0 then
@@ -982,7 +1117,7 @@ function Patient:updateDynamicInfo()
   end
   -- Set the centre line of dynamic info based on contagiousness, if appropriate
   local epidemic = self.hospital and self.hospital.epidemic
-  if epidemic and self.infected and epidemic.coverup_in_progress then
+  if epidemic and self.infected and epidemic.coverup_selected then
     if self.vaccinated then
       self:setDynamicInfo('text',
         {action_string, _S.dynamic_info.patient.actions.epidemic_vaccinated, info})
@@ -1051,21 +1186,50 @@ function Patient:updateMessage(choice)
   end
 end
 
---[[ If the patient is not a vaccination candidate then
-  give them the arrow icon and candidate status ]]
+--[[ Show patient infected status ]]
+function Patient:setInfectedStatus()
+  self:removeAnyEpidemicStatus()
+  self:setMood("epidemy4","activate")
+  self.vaccination_candidate = false
+end
+
+--[[ Show patient as ready for vaccination status ]]
+function Patient:setToReadyForVaccinationStatus()
+  self:removeAnyEpidemicStatus()
+  self:setMood("epidemy2","activate")
+  self.marked_for_vaccination = true
+end
+
+--[[ Show patient selected vaccination candidate status ]]
 function Patient:giveVaccinationCandidateStatus()
-  self:setMood("epidemy2","deactivate")
+  self:removeAnyEpidemicStatus()
   self:setMood("epidemy3","activate")
   self.vaccination_candidate = true
 end
 
---[[Remove the vaccination candidate icon and status from the patient]]
+--[[ Remove the vaccination candidate icon and status from the patient ]]
 function Patient:removeVaccinationCandidateStatus()
   if not self.vaccinated then
-    self:setMood("epidemy3","deactivate")
+    self:removeAnyEpidemicStatus()
     self:setMood("epidemy2","activate")
     self.vaccination_candidate = false
   end
+end
+
+--[[ Show vaccinated status for vaccinated patient ]]
+function Patient:setVaccinatedStatus()
+  self:removeAnyEpidemicStatus()
+  self:setMood("epidemy1","activate")
+  self.marked_for_vaccination = false
+  self.vaccinated = true
+end
+
+--[[ Clear all epidemic status ]]
+function Patient:removeAnyEpidemicStatus()
+  self:setMood("epidemy1","deactivate") -- vaccinated (step 4)
+  self:setMood("epidemy2","deactivate") -- marked (step 2)
+  self:setMood("epidemy3","deactivate") -- chosen by nurse (step 3)
+  self:setMood("epidemy4","deactivate") -- infected (step 1)
 end
 
 function Patient:afterLoad(old, new)
@@ -1081,7 +1245,7 @@ function Patient:afterLoad(old, new)
 
     -- New humanoid animation: rise_hell_east:
     if self:isMalePatient() then
-      if self.humanoid_class ~= "Alternate Male Patient" then
+      if not self:isType("Alternate Male Patient") then
         self.die_anims.rise_hell_east = 384
       else
         self.die_anims.rise_hell_east = 3404
@@ -1125,6 +1289,20 @@ function Patient:afterLoad(old, new)
       end
     end
   end
+  if old < 190 then
+    if self:isType("Standard Female Patient") then
+      self.on_ground_anim = 1764
+    end
+  end
+  if old < 211 then
+    self.under_infection_attempt = self.attempted_to_infect
+    self.attempted_to_infect = nil
+  end
+
+  if old < 213 then
+    self.mood_marker = 1
+  end
+
   self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
 end

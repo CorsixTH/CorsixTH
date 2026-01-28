@@ -31,8 +31,8 @@ function UIPolicy:UIPolicy(ui)
     self.background = gfx:loadRaw("Pol01V", 640, 480, "QData", "QData", "Pol01V.pal", true)
     local palette = gfx:loadPalette("QData", "Pol01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Pol02V", true, palette)
-    self.label_font = gfx:loadFont("QData", "Font74V", false, palette)
-    self.text_font = gfx:loadFont("QData", "Font105V", false, palette)
+    self.label_font = gfx:loadFontAndSpriteTable("QData", "Font74V", false, palette, { apply_ui_scale = true })
+    self.text_font = gfx:loadFontAndSpriteTable("QData", "Font105V", false, palette, { apply_ui_scale = true })
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
     self:close()
@@ -66,11 +66,13 @@ function UIPolicy:UIPolicy(ui)
 
   self.allow_button = self:addPanel(0, 348, 379)
       :makeToggleButton(0, 0, 48, 17, 4, allowStaff, "Allow")
-      :setTooltip(_S.tooltip.policy.staff_leave) -- Allow staff to move
+      :setTooltip(_S.tooltip.policy.staff_leave)
+      :setSound("selectx.wav") -- Allow staff to move
 
   self.prohibit_button = self:addPanel(0, 395, 379)
       :makeToggleButton(0, 0, 48, 17, 5, allowStaff, "Prohibit")
-      :setTooltip(_S.tooltip.policy.staff_stay) -- Prohibit staff to move
+      :setTooltip(_S.tooltip.policy.staff_stay)
+      :setSound("selectx.wav") -- Prohibit staff to move
 
   if self.hospital.policies["staff_allowed_to_move"] then
     self.allow_button:toggle()
@@ -117,44 +119,48 @@ function UIPolicy:UIPolicy(ui)
 end
 
 function UIPolicy:draw(canvas, x, y)
-  self.background:draw(canvas, self.x + x, self.y + y)
+  local s = TheApp.config.ui_scale
+  canvas:scale(s, "bitmap")
+  self.background:draw(canvas, self.x * s + x, self.y * s + y)
+  canvas:scale(1, "bitmap")
   UIFullscreen.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  x, y = self.x * s + x, self.y * s + y
 
   local text = self.text_font
   local label = self.label_font
 
-  -- Labels on the panels
-  local added_x = self.sliders["send_home"].x
-  local added_y = self.sliders["send_home"].y
-  label:draw(canvas, _S.policy.sliders.send_home, x + added_x, y + added_y + 2, 82, 0)
+  -- Labels on the panels. Labels are always capitalised.
+  local added_x = self.sliders["send_home"].x * s
+  local added_y = (self.sliders["send_home"].y + 2) * s
+  label:draw(canvas, _S.policy.sliders.send_home:upper(), x + added_x, y + added_y, 82 * s, 0)
 
-  added_x = self.sliders["guess_cure"].x
-  added_y = self.sliders["guess_cure"].y
-  label:draw(canvas, _S.policy.sliders.guess, x + added_x, y + added_y + 2, 82, 0)
+  added_x = self.sliders["guess_cure"].x * s
+  added_y = (self.sliders["guess_cure"].y + 2) * s
+  label:draw(canvas, _S.policy.sliders.guess:upper(), x + added_x, y + added_y, 82 * s, 0)
 
-  added_x = self.sliders["stop_procedure"].x
-  added_y = self.sliders["stop_procedure"].y
-  label:draw(canvas, _S.policy.sliders.stop, x + added_x, y + added_y + 2, 92, 0)
+  added_x = self.sliders["stop_procedure"].x * s
+  added_y = (self.sliders["stop_procedure"].y + 2) * s
+  label:draw(canvas, _S.policy.sliders.stop:upper(), x + added_x, y + added_y, 92 * s, 0)
 
-  added_x = self.sliders["goto_staffroom"].x
-  added_y = self.sliders["goto_staffroom"].y
-  label:draw(canvas, _S.policy.sliders.staff_room, x + added_x, y + added_y + 2, 92, 0)
+  added_x = self.sliders["goto_staffroom"].x * s
+  added_y = (self.sliders["goto_staffroom"].y + 2) * s
+  label:draw(canvas, _S.policy.sliders.staff_room:upper(), x + added_x, y + added_y, 92 * s, 0)
 
   -- All other text
-  text:draw(canvas, _S.policy.header,            x + 160, y + 78, 300, 0)
-  text:draw(canvas, _S.policy.diag_procedure,    x + 161, y + 100)
-  text:draw(canvas, _S.policy.diag_termination,  x + 161, y + 181)
-  text:draw(canvas, _S.policy.staff_rest,        x + 161, y + 262)
-  text:draw(canvas, _S.policy.staff_leave_rooms, x + 161, y + 374)
+  text:draw(canvas, _S.policy.header,            x + 160 * s, y + 78 * s, 300 * s, 0)
+  text:draw(canvas, _S.policy.diag_procedure,    x + 161 * s, y + 100 * s)
+  text:draw(canvas, _S.policy.diag_termination,  x + 161 * s, y + 181 * s)
+  text:draw(canvas, _S.policy.staff_rest,        x + 161 * s, y + 262 * s)
+  text:draw(canvas, _S.policy.staff_leave_rooms, x + 161 * s, y + 374 * s)
 end
 
 function UIPolicy:onMouseMove(x, y, dx, dy)
   local repaint = UIFullscreen.onMouseMove(self, x, y, dx, dy)
   if self.moving_panel then -- A slider is being moved.
+    local s = TheApp.config.ui_scale
     local p = self.moving_panel
-    self.moved_x = self.moved_x + dx
-    local new_x = self.moved_x + self.down_x - self.moving_panel.w / 2 - self.offset
+    self.moved_x = self.moved_x + dx / s
+    local new_x = math.floor(self.moved_x + self.down_x - self.moving_panel.w / 2 - self.offset)
     if new_x > p.min_x then
       if new_x < p.max_x then
         self.moving_panel.x = new_x
@@ -203,6 +209,9 @@ end
 --!param y (int) Y position of the mouse.
 --!return Slider that was detected at the given position, or nil
 function UIPolicy:panelHit(x, y)
+  local s = TheApp.config.ui_scale
+  x = x / s
+  y = y / s
   for _, panel in ipairs(self.sliders_z) do
     if x > panel.x and y > panel.y and x < panel.x + panel.w and y < panel.y + panel.h then
       return panel
@@ -228,14 +237,14 @@ function UIPolicy:afterLoad(old, new)
     self.sliders_z = {self.sliders["send_home"], self.sliders["guess_cure"],
         self.sliders["stop_procedure"], self.sliders["goto_staffroom"]}
   end
-  if old < 179 then
+  if old < 236 then
     local gfx = TheApp.gfx
 
     self.background = gfx:loadRaw("Pol01V", 640, 480, "QData", "QData", "Pol01V.pal", true)
     local palette = gfx:loadPalette("QData", "Pol01V.pal", true)
     self.panel_sprites = gfx:loadSpriteTable("QData", "Pol02V", true, palette)
-    self.label_font = gfx:loadFont("QData", "Font74V", false, palette)
-    self.text_font = gfx:loadFont("QData", "Font105V", false, palette)
+    self.label_font = gfx:loadFontAndSpriteTable("QData", "Font74V", false, palette, { apply_ui_scale = true })
+    self.text_font = gfx:loadFontAndSpriteTable("QData", "Font105V", false, palette, { apply_ui_scale = true })
   end
 
   UIFullscreen.afterLoad(self, old, new)

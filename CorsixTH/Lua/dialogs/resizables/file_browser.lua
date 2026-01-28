@@ -57,20 +57,9 @@ function FilteredFileTreeNode:createNewNode(path)
 end
 
 function FilteredFileTreeNode:getLabel()
-  -- The label was previously only the file name without extension or
-  -- folder hierarchy. TODO: Is there some reason to not show the extension?
   local label = self.label
   if not label then
     label = FileTreeNode.getLabel(self)
-    --[[if type(self.filter_by) == "table" then
-      for _, ext in ipairs(self.filter_by) do
-        if string.sub(label:lower(), -string.len(ext)) == ext then
-          label = string.sub(label:lower(), 0, -string.len(ext) - 1)
-        end
-      end
-    elseif string.sub(label:lower(), -string.len(self.filter_by)) == self.filter_by then
-      label = string.sub(label:lower(), 0, -string.len(self.filter_by) - 1)
-    end--]]
     self.label = label
   end
   return label
@@ -147,7 +136,8 @@ function FilteredTreeControl:drawExtraOnRow(canvas, node, x, y)
   if not node:hasChildren() and self.show_dates then
     local last_mod = node:getLastModification()
     local daytime = _S.date_format.daymonth:format(os.date("%d", last_mod), tonumber(os.date("%m", last_mod)))
-    self.font:draw(canvas, daytime .. " " .. os.date("%Y %X", last_mod), x + self.tree_rect.w  - 140, y)
+    local s = TheApp.config.ui_scale
+    self.font:draw(canvas, daytime .. " " .. os.date("%Y %X", last_mod), x + self.tree_rect.w * s - 140 * s, y)
   end
 end
 
@@ -167,8 +157,12 @@ local col_caption = {
 !param ui (UI) The active ui.
 !param mode (string) Either "menu" or "game" depending on which mode the game is in right now.
 !param title (string) The desired title of the dialog.
+!param vertical_size (number)
+!param root
+!param show_dates (boolean) Whether to show date last modified
+!param submit_text (string) Optional alternative labelling of the OK button
 ]]
-function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_dates)
+function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_dates, submit_text)
   self.col_bg = {
     red = 154,
     green = 146,
@@ -212,7 +206,7 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
     :makeButton(0, 0, button_size, 40, nil, self.buttonBack):setTooltip(_S.tooltip.menu_list_window.back)
 
   self:addBevelPanel(h_size - button_size - indent, 340, button_size, 30,
-  self.col_bg):setLabel(_S.menu_list_window.ok)
+  self.col_bg):setLabel(submit_text or _S.menu_list_window.ok)
     :makeButton(0, 0, button_size, 40, nil, (--[[persistable:filebrowser_ok_callback]] function()
       if self.confirmName then
         self:confirmName()

@@ -26,18 +26,19 @@ SOFTWARE.
 #include "config.h"
 
 #include <wx/bitmap.h>
-#include <wx/button.h>
-#include <wx/checkbox.h>
+#include <wx/defs.h>
+#include <wx/event.h>
 #include <wx/frame.h>
-#include <wx/listbox.h>
-#include <wx/panel.h>
-#include <wx/textctrl.h>
-#include <wx/timer.h>
+#include <wx/string.h>
+#include <wx/types.h>
 #include <wx/vscroll.h>
 
 #include <vector>
 
 #include "th.h"
+
+class wxTextCtrl;
+class wxWindow;
 
 static const int ROW_COUNT = 1000;
 

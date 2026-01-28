@@ -50,14 +50,15 @@ function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, call
   self.height = 199
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req04V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   self.text = text
   self.callback_ok = callback_ok  -- Callback function to launch if user chooses ok
   self.callback_cancel = callback_cancel -- Callback function to launch if user chooses cancel
   self.must_pause = must_pause
 
   -- Check how "high" the dialog must be
-  local _, text_height = self.white_font:sizeOf(text, text_width)
+  local _, text_height = self.white_font:sizeOf(text, text_width * TheApp.config.ui_scale)
+  text_height = text_height / TheApp.config.ui_scale -- Scale independent pixels
 
   self:addPanel(top_frame, 0, 0)  -- Dialog header
   local last_y = top_frame_height
@@ -73,6 +74,9 @@ function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, call
     :setTooltip(_S.tooltip.window_general.cancel):setSound("No4.wav")
   self:addPanel(362, 90, last_y + 10):makeButton(0, 10, 82, 34, 363, self.ok)
     :setTooltip(_S.tooltip.window_general.confirm):setSound("YesX.wav")
+
+  -- Correct window height based on text height
+  self.height = last_y + 63
 
   self:registerKeyHandlers()
   if self.must_pause then self:systemPause() end
@@ -121,11 +125,16 @@ end
 function UIConfirmDialog:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
-  x, y = x + self.x, y + self.y
-  self.white_font:drawWrapped(canvas, self.text, x + 17, y + 17, text_width)
+  local s = TheApp.config.ui_scale
+  x, y = x + self.x * s, y + self.y * s
+  self.white_font:drawWrapped(canvas, self.text, x + 17 * s, y + 17 * s, text_width * s)
 end
 
 function UIConfirmDialog:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
+
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  end
 end

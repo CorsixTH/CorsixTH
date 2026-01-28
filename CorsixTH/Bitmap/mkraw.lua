@@ -18,34 +18,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-if not ... then
-  print "Usage: lua mkraw.lua <bitmap-file>"
-  print "Converts a bitmap into a raw .dat file and a .pal file"
-  return
-end
+-- Creates a dat and palette file from a single BMP image to be used in Graphics:loadRaw(...)
+-- file: the target BMP image
+-- Output goes to the same location of the BMP image
+function makeRaw(file)
+  if not file then
+    print "Usage: lua mkraw.lua <bitmap-file>"
+    print "Converts a bitmap into a raw .dat file and a .pal file"
+    return
+  end
 
-package.path = (debug.getinfo(1, "S").source:match("@(.*[" .. package.config
-               :sub(1, 1) .. "])") or "") .. "lib_" .. package.config:sub(5, 5)
-               .. ".lua" .. package.config:sub(3, 3) .. package.path
-require("bmp")
+  package.path = (debug.getinfo(1, "S").source:match("@(.*[" .. package.config
+                 :sub(1, 1) .. "])") or "") .. "lib_" .. package.config:sub(5, 5)
+                 .. ".lua" .. package.config:sub(3, 3) .. package.path
+  local bmp = require("lib_bmp")
 
-local filename = ...
-if not filename:match("%.bmp$") then
-  print("Error: Extension must must be .bmp")
-  return
-end
-local filename_base = filename:match"^(.*%.)[^.]*$"
-local dat, pal = filename_base .."dat", filename_base .. "pal"
-local bitmap = assert(bmp.open(filename))
-dat = assert(io.open(dat, "wb"))
-pal = assert(io.open(pal, "wb"))
+  local filename = file
+  if not filename:match("%.bmp$") then
+    print("Error: Extension must must be .bmp")
+    return
+  end
+  local filename_base = filename:match"^(.*%.)[^.]*$"
+  local dat, pal = filename_base .."dat", filename_base .. "pal"
+  local bitmap = assert(bmp.open(filename))
+  dat = assert(io.open(dat, "wb"))
+  pal = assert(io.open(pal, "wb"))
 
--- palette
-pal:write(bitmap.palette)
+  -- palette
+  pal:write(bitmap.palette)
+  pal:close()
 
--- image data
-dat:write(assert(bitmap:getPixels()))
+  -- image data
+  dat:write(assert(bmp.getPixels(bitmap)))
+  dat:close()
 
-if bitmap.pal_size ~= 256 then
-  print("Warning: palette size is " .. bitmap.pal_size .. ". Currently only palettes of size 256 will work in CorsixTH.")
+  if bitmap.pal_size ~= 256 then
+    print("Warning: palette size is " .. bitmap.pal_size .. ". Currently only palettes of size 256 will work in CorsixTH.")
+  end
 end

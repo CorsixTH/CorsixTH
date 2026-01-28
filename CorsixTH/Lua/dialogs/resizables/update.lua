@@ -66,7 +66,7 @@ function UIUpdate:UIUpdate(ui, this_version, new_version, brief_description, dow
   self.default_button_sound = "selectx.wav"
   self.description_text = brief_description
   self.app = app
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   self.download_url = download_url
 
   self:addBevelPanel(20, 50, 140, 20, col_shadow, col_bg, col_bg)
@@ -94,9 +94,11 @@ function UIUpdate:draw(canvas, x, y)
   -- Draw window components
   UIResizable.draw(self, canvas, x, y)
 
+  local s = TheApp.config.ui_scale
+
   -- Draw description
-  x, y = self.x + x, self.y + y
-  self.white_font:drawWrapped(canvas, self.description_text, x + 20, y + 100, self.width - 20)
+  x, y = self.x * s + x, self.y * s + y
+  self.white_font:drawWrapped(canvas, self.description_text, x + 20 * s, y + 100 * s, (self.width - 20) * s)
 end
 
 function UIUpdate:buttonDownload()

@@ -182,13 +182,14 @@ tooltip = {
     select_language = "Velg språk",
     select_resolution = "Velg en ny opplösning",
     resolution = "Opplösningen spillet skal kjöres i.",
-    audio_button = "Slå av eller på all lyd",
     folder_button = "Mappeinnstillinger",
-    audio_toggle = "Slå av eller på",
     customise_button = "¨Flere innstillinger", --todo: mer utfyllende beskrivelse? var "More settings you can change to customise your game play experience"
     capture_mouse = "Slå av eller på låsing av musepeker i spillvinduet",
   },
-
+  audio_window = {
+    audio_button = "Slå av eller på all lyd",
+    audio_toggle = "Slå av eller på",
+  },
   folders_window = { --todo: skrive mer konsekvent på "se etter", "velg" osv.
     browse_font = "Se etter en annen font-fil ( nåværende beliggenhet: %1% )",
     screenshots_location = "Skjermdumper er normalt lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
@@ -838,11 +839,14 @@ options_window = {
   apply = "Bruk",
   resolution = "Opplösning",
   folder = "Mapper",
-  audio = "Global lyd",
   customise = "Tilpass",
   capture_mouse = "Lås musepeker",
 }
 
+audio_window = {
+  audio = "Global lyd",
+  back = "Tilbake",
+}
 
 folders_window = {
   screenshots_location = "Velg banen du vil bruke for skjermdumper",
@@ -952,7 +956,7 @@ errors = {
   load_prefix = "Feil under lasting av spill: ",
   load_quick_save = "Spillet kunne ikke laste inn sist hurtiglagring, siden den ikke eksisterer. Vi har ikke tenkt til å lage en for deg!",
   map_file_missing = "Kunne ikke finne kartfilen %s for dette nivået!",
-  minimum_screen_size = "Vennligst sett opplösningen til minst 640x480.",
+  minimum_screen_size = "Vennligst sett opplösningen til minst %dx%d.",
   unavailable_screen_size = "Skjermopplösningen du valgte er ikke tilgjengelig i fullskjermmodus.",
   alien_dna = "Merk: Det er ingen originale animasjoner for utenomjordiske pasienter som sitter, åpner eller banker på dörer osv. Utenomjordiske vil bare komme på besök om det er slått på i levelfila", --todo: bedre beskrivelse? levelfila? var "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file"
   fractured_bones = "Merk: De originale animasjonene for kvinnelige personer med benbrudd er ikke perfekte",
@@ -2693,16 +2697,16 @@ humanoid_name_ends = {
 -- VIP names
 vip_names = {
   health_minister = "Helseministeren",
-  "Ordföreren i Greater Trumpton", -- the rest is better organized in an array.
-  "Lawrence Nightingale",
-  "Kong Bernard av Nederland",
-  "Aung Sang Su Kyi, den Burmesisk Demokratiske Opposisjonslederen",
-  "Sir Reginald Crumbly",
-  "Billy Savile OBE",
-  "Rådgiver Crawford Purves",
-  "Rocket Ronnie Jepson",
-  "En Fotballspiller i Eliteserien",
-  "L. F. Probst, III",
+  [1] = "Ordföreren i Greater Trumpton", -- the rest is better organized in an array.
+  [2] = "Lawrence Nightingale",
+  [3] = "Kong Bernard av Nederland",
+  [4] = "Aung Sang Su Kyi, den Burmesisk Demokratiske Opposisjonslederen",
+  [5] = "Sir Reginald Crumbly",
+  -- [6] requires replacement (English uses 'Sir Lancelot Spratt')
+  [7] = "Rådgiver Crawford Purves",
+  [8] = "Rocket Ronnie Jepson",
+  [9] = "En Fotballspiller i Eliteserien",
+  [10] = "L. F. Probst, III",
 }
 
 -- Deseases

@@ -24,54 +24,76 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <SDL_mixer.h>
+#include <SDL_rwops.h>
+
+#include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <cstring>
 #include <new>
 
 #include "th.h"
 
-sound_archive::sound_archive() {
-  sound_files = nullptr;
-  data = nullptr;
-}
-
-sound_archive::~sound_archive() { delete[] data; }
+// https://github.com/CorsixTH/theme-hospital-spec/blob/master/format-specification.md#info
+constexpr size_t archive_header_size = 234;
+constexpr size_t archive_header_table_position_offset = 50;
+constexpr size_t archive_header_table_length_offset = 58;
+constexpr size_t sound_entry_size = 32;
+constexpr size_t sound_entry_position_offset = 18;
+constexpr size_t sound_entry_length_offset = 26;
 
 bool sound_archive::load_from_th_file(const uint8_t* pData,
                                       size_t iDataLength) {
-  if (iDataLength < sizeof(uint32_t) + sizeof(sound_dat_file_header)) {
+  if (iDataLength < sizeof(uint32_t) + archive_header_size) {
     return false;
   }
 
-  uint32_t iHeaderPosition =
+  // Last 4 bytes of the file is the position of the header
+  uint32_t headerPosition =
       bytes_to_uint32_le(pData + iDataLength - sizeof(uint32_t));
 
-  if (static_cast<size_t>(iHeaderPosition) >=
-      iDataLength - sizeof(sound_dat_file_header)) {
+  // safety check on header position
+  if (static_cast<size_t>(headerPosition) >=
+      iDataLength - archive_header_size) {
     return false;
   }
 
-  header =
-      *reinterpret_cast<const sound_dat_file_header*>(pData + iHeaderPosition);
+  // table position
+  size_t tablePosition = static_cast<size_t>(bytes_to_uint32_le(
+      pData + headerPosition + archive_header_table_position_offset));
+  size_t tableLength = static_cast<size_t>(bytes_to_uint32_le(
+      pData + headerPosition + archive_header_table_length_offset));
 
-  delete[] data;
-  data = new (std::nothrow) uint8_t[iDataLength];
-  if (data == nullptr) {
-    return false;
+  data.resize(iDataLength);
+  std::copy_n(pData, iDataLength, data.begin());
+
+  size_t soundFileCount = tableLength / sound_entry_size;
+  sound_files.clear();
+  for (int i = 0; i < soundFileCount; ++i) {
+    size_t offset = tablePosition + i * sound_entry_size;
+    if (offset + sound_entry_size > iDataLength) {
+      return false;  // Out of bounds
+    }
+    sound_dat_sound_info soundInfo{
+        {},
+        bytes_to_uint32_le(data.data() + offset + sound_entry_position_offset),
+        bytes_to_uint32_le(data.data() + offset + sound_entry_length_offset)};
+    std::copy_n(data.data() + offset, soundInfo.sound_name.size(),
+                soundInfo.sound_name.begin());
+    sound_files.push_back(soundInfo);
   }
-  std::memcpy(data, pData, iDataLength);
 
-  sound_files =
-      reinterpret_cast<sound_dat_sound_info*>(data + header.table_position);
-  sound_file_count = header.table_length / sizeof(sound_dat_sound_info);
   return true;
 }
 
-size_t sound_archive::get_number_of_sounds() const { return sound_file_count; }
+size_t sound_archive::get_number_of_sounds() const {
+  return sound_files.size();
+}
 
 const char* sound_archive::get_sound_name(size_t iIndex) const {
-  if (iIndex >= sound_file_count) return nullptr;
-  return sound_files[iIndex].sound_name;
+  if (iIndex >= sound_files.size()) return nullptr;
+  return sound_files[iIndex].sound_name.data();
 }
 
 constexpr uint32_t fourcc(const char c1, const char c2, const char c3,
@@ -168,36 +190,37 @@ size_t sound_archive::get_sound_duration(size_t iIndex) {
 }
 
 SDL_RWops* sound_archive::load_sound(size_t iIndex) {
-  if (iIndex >= sound_file_count) {
+  if (iIndex >= sound_files.size()) {
     return nullptr;
   }
 
-  sound_dat_sound_info* pFile = sound_files + iIndex;
-  return SDL_RWFromConstMem(data + pFile->position, pFile->length);
+  sound_dat_sound_info pFile = sound_files[iIndex];
+  return SDL_RWFromConstMem(data.data() + pFile.position,
+                            static_cast<int>(pFile.length));
 }
-
-#ifdef CORSIX_TH_USE_SDL_MIXER
-
-constexpr int number_of_channels = 32;
 
 sound_player* sound_player::singleton = nullptr;
 
-sound_player::sound_player() {
-  sounds = nullptr;
-  sound_count = 0;
+sound_player::sound_player()
+    : sounds(nullptr),
+      sound_count(0),
+      camera_x(0),
+      camera_y(0),
+      camera_radius(1.0),
+      master_volume(1.0),
+      sound_effect_volume(0.5),
+      positionless_volume(MIX_MAX_VOLUME),
+      sound_effects_enabled(true) {
   singleton = this;
-  camera_x = 0;
-  camera_y = 0;
-  camera_radius = 1.0;
-  master_volume = 1.0;
-  sound_effect_volume = 0.5;
-  positionless_volume = MIX_MAX_VOLUME;
-  sound_effects_enabled = true;
-
-  available_channels_bitmap = ~0;
   Mix_AllocateChannels(number_of_channels);
-
   Mix_ChannelFinished(on_channel_finished);
+  channels.fill(null_handle);
+
+  // Avoid likely having the same handles in save games
+  auto seconds = std::chrono::duration_cast<std::chrono::seconds>(
+                     std::chrono::system_clock::now().time_since_epoch())
+                     .count();
+  next_playing_track_handle = static_cast<uint32_t>(seconds);
 }
 
 sound_player::~sound_player() {
@@ -229,8 +252,7 @@ void sound_player::populate_from(sound_archive* pArchive) {
   sounds = new Mix_Chunk*[pArchive->get_number_of_sounds()];
   for (; sound_count < pArchive->get_number_of_sounds(); ++sound_count) {
     sounds[sound_count] = nullptr;
-    SDL_RWops* pRwop = pArchive->load_sound(sound_count);
-    if (pRwop) {
+    if (SDL_RWops* pRwop = pArchive->load_sound(sound_count)) {
       sounds[sound_count] = Mix_LoadWAV_RW(pRwop, 1);
       if (sounds[sound_count]) {
         Mix_VolumeChunk(sounds[sound_count], MIX_MAX_VOLUME);
@@ -239,37 +261,65 @@ void sound_player::populate_from(sound_archive* pArchive) {
   }
 }
 
-void sound_player::play(size_t iIndex, double dVolume) {
-  if (available_channels_bitmap == 0 || iIndex >= sound_count ||
-      !sounds[iIndex]) {
-    return;
+uint32_t sound_player::play(size_t iIndex, double dVolume, int loops) {
+  if (iIndex >= sound_count || !sounds[iIndex]) {
+    return null_handle;
   }
 
-  play_raw(iIndex, (int)(positionless_volume * dVolume));
+  return play_raw(iIndex, static_cast<int>(positionless_volume * dVolume),
+                  loops);
 }
 
-void sound_player::play_at(size_t iIndex, int iX, int iY) {
+uint32_t sound_player::play_at(size_t iIndex, int iX, int iY, int loops) {
   if (sound_effects_enabled) {
-    play_at(iIndex, sound_effect_volume, iX, iY);
+    return play_at(iIndex, sound_effect_volume, iX, iY, loops);
   }
+  return null_handle;
 }
 
-void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {
-  if (available_channels_bitmap == 0 || iIndex >= sound_count ||
-      !sounds[iIndex]) {
-    return;
+uint32_t sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY,
+                               int loops) {
+  if (iIndex >= sound_count || !sounds[iIndex]) {
+    return null_handle;
   }
 
-  double fDX = (double)(iX - camera_x);
-  double fDY = (double)(iY - camera_y);
+  const double fDX = iX - camera_x;
+  const double fDY = iY - camera_y;
   double fDistance = sqrt(fDX * fDX + fDY * fDY);
-  if (fDistance > camera_radius) return;
+  if (fDistance > camera_radius) return null_handle;
   fDistance = fDistance / camera_radius;
 
-  double fVolume = master_volume * (1.0 - fDistance * 0.8) *
-                   (double)MIX_MAX_VOLUME * dVolume;
+  double fVolume =
+      master_volume * (1.0 - fDistance * 0.8) * (MIX_MAX_VOLUME * dVolume);
 
-  play_raw(iIndex, static_cast<int>(std::lround(fVolume)));
+  return play_raw(iIndex, static_cast<int>(std::lround(fVolume)), loops);
+}
+
+sound_player::toggle_pause_result sound_player::toggle_pause(uint32_t handle) {
+  int channel = playing_channel_for_handle(handle);
+  if (channel < 0) {
+    return toggle_pause_result::error;
+  }
+  if (Mix_Paused(channel)) {
+    Mix_Resume(channel);
+    return toggle_pause_result::resumed;
+  } else {
+    Mix_Pause(channel);
+    return toggle_pause_result::paused;
+  }
+}
+
+void sound_player::stop(uint32_t handle) {
+  int channel = playing_channel_for_handle(handle);
+  if (channel < 0) {
+    return;
+  }
+  Mix_HaltChannel(channel);
+  release_channel(channel);
+}
+
+bool sound_player::is_playing(uint32_t handle) {
+  return playing_channel_for_handle(handle) >= 0;
 }
 
 void sound_player::set_sound_effect_volume(double dVolume) {
@@ -281,46 +331,56 @@ void sound_player::set_sound_effects_enabled(bool bOn) {
 }
 
 int sound_player::reserve_channel() {
-  // NB: Callers ensure that m_iChannelStatus != 0
-  int iChannel = 0;
-  for (; (available_channels_bitmap & (1 << iChannel)) == 0; ++iChannel) {
+  std::scoped_lock lock(channel_mutex);
+  for (size_t i = 0; i < channels.size(); ++i) {
+    if (channels[i] == null_handle) {
+      // Don't assign a null handle to a playing track
+      if (next_playing_track_handle == null_handle) {
+        next_playing_track_handle++;
+      }
+      channels[i] = next_playing_track_handle++;
+      return static_cast<int>(i);
+    }
   }
-  available_channels_bitmap &= ~(1 << iChannel);
 
-  return iChannel;
+  return -1;
 }
 
 void sound_player::release_channel(int iChannel) {
-  available_channels_bitmap |= (1 << iChannel);
+  std::scoped_lock lock(channel_mutex);
+  channels[iChannel] = null_handle;
 }
 
-void sound_player::play_raw(size_t iIndex, int iVolume) {
+uint32_t sound_player::play_raw(size_t iIndex, int iVolume, int loops) {
   int iChannel = reserve_channel();
+  if (iChannel < 0) {
+    return null_handle;
+  }
 
   Mix_Volume(iChannel, iVolume);
-  Mix_PlayChannelTimed(iChannel, sounds[iIndex], 0, -1);
+  Mix_PlayChannel(iChannel, sounds[iIndex], loops);
+
+  return channels[iChannel];
 }
 
 void sound_player::set_camera(int iX, int iY, int iRadius) {
   camera_x = iX;
   camera_y = iY;
-  camera_radius = (double)iRadius;
+  camera_radius = static_cast<double>(iRadius);
   if (camera_radius < 0.001) camera_radius = 0.001;
 }
 
-#else  // CORSIX_TH_USE_SDL_MIXER
+int sound_player::playing_channel_for_handle(uint32_t handle) {
+  std::scoped_lock lock(channel_mutex);
 
-sound_player::sound_player() {}
-sound_player::~sound_player() {}
-sound_player* sound_player::get_singleton() { return nullptr; }
-void sound_player::populate_from(sound_archive* pArchive) {}
-void sound_player::play(size_t iIndex, double dVolume) {}
-void sound_player::play_at(size_t iIndex, int iX, int iY) {}
-void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {}
-int sound_player::reserve_channel() { return 0; }
-void sound_player::release_channel(int iChannel) {}
-void sound_player::set_camera(int iX, int iY, int iRadius) {}
-void sound_player::set_sound_effect_volume(double dVolume) {}
-void sound_player::set_sound_effects_enabled(bool iOn) {}
+  if (handle == null_handle) {
+    return -1;
+  }
 
-#endif  // CORSIX_TH_USE_SDL_MIXER
+  for (size_t i = 0; i < channels.size(); ++i) {
+    if (channels[i] == handle) {
+      return static_cast<int>(i);
+    }
+  }
+  return -1;
+}

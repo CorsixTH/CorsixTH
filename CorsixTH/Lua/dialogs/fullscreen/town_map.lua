@@ -37,9 +37,9 @@ function UITownMap:UITownMap(ui)
     local palette = gfx:loadPalette("QData", "Town01V.pal", true)
 
     self.background = gfx:loadRaw("Town01V", 640, 480, "QData", "QData", "Town01V.pal", true)
-    self.info_font  = gfx:loadFont("QData", "Font34V", false, palette)
-    self.city_font = gfx:loadFont("QData", "Font31V", false, palette)
-    self.money_font = gfx:loadFont("QData", "Font05V")
+    self.info_font  = gfx:loadFontAndSpriteTable("QData", "Font34V", false, palette, { apply_ui_scale = true })
+    self.city_font = gfx:loadFontAndSpriteTable("QData", "Font31V", false, palette, { apply_ui_scale = true })
+    self.money_font = gfx:loadFontAndSpriteTable("QData", "Font05V", nil, nil, { apply_ui_scale = true })
     self.panel_sprites = gfx:loadSpriteTable("QData", "Town02V", true, palette)
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
@@ -108,8 +108,9 @@ end
 
 local flag_cache = {}
 function UITownMap:onMouseMove(x, y, dx, dy)
-  local tx = math.floor((x - 227) / 3)
-  local ty = math.floor((y - 25) / 3)
+  local s = TheApp.config.ui_scale
+  local tx = math.floor((x - 227 * s) / (3 * s))
+  local ty = math.floor((y - 25 * s) / (3 * s))
   self.hover_plot = nil
   local map = self.ui.hospital.world.map.th
   local width, height = map:size()
@@ -121,9 +122,10 @@ end
 
 function UITownMap:onMouseUp(button, x, y)
   local redraw = false
+  local s = TheApp.config.ui_scale
   if button == "left" then
-    local tx = math.floor((x - 227) / 3)
-    local ty = math.floor((y - 25) / 3)
+    local tx = math.floor((x - 227 * s) / (3 * s))
+    local ty = math.floor((y - 25 * s) / (3 * s))
     local map = self.ui.hospital.world.map.th
     local width, height = map:size()
     if 0 <= tx and tx < width and 0 <= ty and ty < height then
@@ -138,8 +140,8 @@ function UITownMap:onMouseUp(button, x, y)
       end
     end
   elseif button == "right" then
-    local tx = math.floor((x - 227) / 3)
-    local ty = math.floor((y - 25) / 3)
+    local tx = math.floor((x - 227 * s) / (3 * s))
+    local ty = math.floor((y - 25 * s) / (3 * s))
     local map = self.ui.hospital.world.map.th
     local width, height = map:size()
     if 0 <= tx and tx < width and 0 <= ty and ty < height then
@@ -156,10 +158,13 @@ function UITownMap:onMouseUp(button, x, y)
 end
 
 function UITownMap:draw(canvas, x, y)
-  self.background:draw(canvas, self.x + x, self.y + y)
+  local s = TheApp.config.ui_scale
+  canvas:scale(s, "bitmap")
+  self.background:draw(canvas, self.x * s + x, self.y * s + y)
+  canvas:scale(1, "bitmap")
   UIFullscreen.draw(self, canvas, x, y)
 
-  x, y = self.x + x, self.y + y
+  x, y = self.x * s + x, self.y * s + y
   local app      = self.ui.app
   local hospital = self.ui.hospital
   local world    = hospital.world
@@ -181,40 +186,51 @@ function UITownMap:draw(canvas, x, y)
   local objs = hospital:countGeneralObjects()
   local radiators = hospital:countRadiators()
 
-  self.info_font:draw(canvas, patientcount, x +  95, y +  57)
-  self.info_font:draw(canvas, plants,       x +  95, y + 110)
-  self.info_font:draw(canvas, fireext,      x +  95, y + 157)
-  self.info_font:draw(canvas, objs,         x +  95, y + 211)
-  self.info_font:draw(canvas, radiators,    x +  95, y + 265)
+  self.info_font:draw(canvas, patientcount, x + 95 * s, y +  57 * s)
+  self.info_font:draw(canvas, plants,       x + 95 * s, y + 110 * s)
+  self.info_font:draw(canvas, fireext,      x + 95 * s, y + 157 * s)
+  self.info_font:draw(canvas, objs,         x + 95 * s, y + 211 * s)
+  self.info_font:draw(canvas, radiators,    x + 95 * s, y + 265 * s)
 
   -- Heating costs
-  local heating_costs = math.floor(((hospital.heating.radiator_heat *10)* radiators)* 7.5)
-  self.info_font:draw(canvas, ("%8i"):format(heating_costs),  x + 100, y + 355)
+  local heating_costs = world.free_build_mode and 0 or
+      math.floor(((hospital.heating.radiator_heat *10)* radiators)* 7.5)
+  self.info_font:draw(canvas, ("%8i"):format(heating_costs),  x + 100 * s, y + 355 * s)
 
-  -- draw money balance
-  self.money_font:draw(canvas, ("%7i"):format(hospital.balance), x + 49, y + 431)
+  -- Draw balance with temporary offset in unicode languages
+  local offset_x, offset_y = 0, 0
+  if self.ui.app.gfx:drawNumbersFromUnicode() then
+    offset_x = 4 * s
+    offset_y = 2 * s
+  end
+  local balance = math.floor(hospital.balance)
+  local i = 7 - tostring(balance):len() -- Indent balances under 100k
+  for digit in ("%7i"):format(balance):gmatch("[-0-9]") do
+    self.money_font:draw(canvas, digit, x + offset_x + 49 * s + i * 13 * s, y + offset_y + 431 * s)
+    i = i + 1
+  end
 
   -- radiator heat
-  local rad_max_width = 60 -- Radiator indicator width
+  local rad_max_width = 60 * s -- Radiator indicator width
   local rad_width = rad_max_width * hospital.heating.radiator_heat
-  for dx = 0, rad_width do
-    self.panel_sprites:draw(canvas, 9, x + 101 + dx, y + 319)
+  for dx = 0, rad_width, s do
+    self.panel_sprites:draw(canvas, 9, x + 101 * s + dx, y + 319 * s, { scaleFactor = s })
   end
 
   -- city name
-  self.city_font:draw(canvas, map.level_name, x + 300, y + 43, 260, 15)
+  self.city_font:draw(canvas, map.level_name, x + 300 * s, y + 43 * s, 260 * s, 15 * s)
 
-  local town_map_offset_x = x + 227
-  local town_map_offset_y = y + 25
+  local town_map_offset_x = x + 227 * s
+  local town_map_offset_y = y + 25 * s
   TH.windowHelpers.townMapDraw(self, map.th, canvas, town_map_offset_x, town_map_offset_y,
-    config.radiators_enabled)
+    config.radiators_enabled, s)
 
   -- Draw entities
   local function draw_entities(list, color, size)
     for _, ent in ipairs(list) do
       -- 3 is the number of pixel that are used to represent one world tile in the map
-      canvas:drawRect(color, town_map_offset_x + ent.tile_x * 3 - 2,
-        town_map_offset_y + ent.tile_y * 3 + 1, size, size)
+      canvas:drawRect(color, town_map_offset_x + ent.tile_x * 3 * s - 2 * s,
+        town_map_offset_y + ent.tile_y * 3 * s + s, size * s, size * s)
     end
   end
 
@@ -223,8 +239,8 @@ function UITownMap:draw(canvas, x, y)
       local tile_x, tile_y = ent.tile_x, ent.tile_y
       if tile_x and hospital:isInHospital(tile_x, tile_y) then
         -- 3 is the number of pixel that are used to represent one world tile in the map
-        canvas:drawRect(color, town_map_offset_x + tile_x * 3 - 2,
-          town_map_offset_y + tile_y * 3 + 1, size, size)
+        canvas:drawRect(color, town_map_offset_x + tile_x * 3 * s - 2 * s,
+          town_map_offset_y + tile_y * 3 * s + s, size * s, size * s)
       end
     end
   end
@@ -293,31 +309,32 @@ function UITownMap:draw(canvas, x, y)
       local owner_num = map.th:getPlotOwner(self.hover_plot)
       if owner_num == 0 then
         owner = _S.town_map.for_sale
-        price = "$" .. map:getParcelPrice(self.hover_plot)
+        price = world.free_build_mode and "$0" or
+            ("$" .. map:getParcelPrice(self.hover_plot))
       else
         owner = world.hospitals[owner_num].name
       end
       plot_num = self.hover_plot
     end
   end
-  self.city_font:draw(canvas, _S.town_map.number, x + 227, y + 435)
-  self.city_font:draw(canvas, ":",                x + 300, y + 435)
-  self.city_font:draw(canvas, plot_num,           x + 315, y + 435)
-  self.city_font:draw(canvas, _S.town_map.owner,  x + 227, y + 450)
-  self.city_font:draw(canvas, ":",                x + 300, y + 450)
-  self.city_font:draw(canvas, owner,              x + 315, y + 450)
-  self.city_font:draw(canvas, _S.town_map.area,   x + 432, y + 435)
-  self.city_font:draw(canvas, ":",                x + 495, y + 435)
-  self.city_font:draw(canvas, tile_count,         x + 515, y + 435)
-  self.city_font:draw(canvas, _S.town_map.price,  x + 432, y + 450)
-  self.city_font:draw(canvas, ":",                x + 495, y + 450)
-  self.city_font:draw(canvas, price,              x + 515, y + 450)
+  self.city_font:draw(canvas, _S.town_map.number, x + 227 * s, y + 435 * s)
+  self.city_font:draw(canvas, ":",                x + 300 * s, y + 435 * s)
+  self.city_font:draw(canvas, plot_num,           x + 315 * s, y + 435 * s)
+  self.city_font:draw(canvas, _S.town_map.owner,  x + 227 * s, y + 450 * s)
+  self.city_font:draw(canvas, ":",                x + 300 * s, y + 450 * s)
+  self.city_font:draw(canvas, owner,              x + 315 * s, y + 450 * s)
+  self.city_font:draw(canvas, _S.town_map.area,   x + 432 * s, y + 435 * s)
+  self.city_font:draw(canvas, ":",                x + 495 * s, y + 435 * s)
+  self.city_font:draw(canvas, tile_count,         x + 515 * s, y + 435 * s)
+  self.city_font:draw(canvas, _S.town_map.price,  x + 432 * s, y + 450 * s)
+  self.city_font:draw(canvas, ":",                x + 495 * s, y + 450 * s)
+  self.city_font:draw(canvas, price,              x + 515 * s, y + 450 * s)
 end
 
 function UITownMap:decreaseHeat()
   local h = self.ui.hospital
   local heat = math.floor(h.heating.radiator_heat * 10 + 0.5)
-  if not h.heating_broke then
+  if not h.heating.heating_broke then
     heat = math.max(heat - 1, 1)
     h.heating.radiator_heat = heat / 10
   end
@@ -326,7 +343,7 @@ end
 function UITownMap:increaseHeat()
   local h = self.ui.hospital
   local heat = math.floor(h.heating.radiator_heat * 10 + 0.5)
-  if not h.heating_broke then
+  if not h.heating.heating_broke then
     heat = math.min(heat + 1, 10)
     h.heating.radiator_heat = heat / 10
   end
@@ -346,13 +363,13 @@ function UITownMap:bankStats()
 end
 
 function UITownMap:afterLoad(old, new)
-  if old < 179 then
+  if old < 236 then
     local gfx = TheApp.gfx
     local palette = gfx:loadPalette("QData", "Town01V.pal", true)
     self.background = gfx:loadRaw("Town01V", 640, 480, "QData", "QData", "Town01V.pal", true)
-    self.info_font = gfx:loadFont("QData", "Font34V", false, palette)
-    self.city_font = gfx:loadFont("QData", "Font31V", false, palette)
-    self.panel_sprites = gfx:loadSpriteTable("QData", "Town02V", true, palette)
+    self.info_font = gfx:loadFontAndSpriteTable("QData", "Font34V", false, palette, { apply_ui_scale = true })
+    self.city_font = gfx:loadFontAndSpriteTable("QData", "Font31V", false, palette, { apply_ui_scale = true })
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Town02V", true, palette, { apply_ui_scale = true })
   end
 
   UIFullscreen.afterLoad(self, old, new)

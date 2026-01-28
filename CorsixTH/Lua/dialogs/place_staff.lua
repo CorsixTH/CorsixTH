@@ -40,7 +40,7 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
   self.profile = profile
   -- The receptionist has no door animations, and hence would not
   -- be able to leave a room if placed in one.
-  self.allow_in_rooms = profile.humanoid_class ~= "Receptionist"
+  self.allow_in_rooms = not profile:isType("Receptionist")
   self.anim = TH.animation()
   self.anim:setLayer(5, profile.layer5)
   local idle_anim = Humanoid.getIdleAnimation(profile.humanoid_class)
@@ -53,19 +53,31 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
 end
 
 function UIPlaceStaff:close()
-  if self.staff then
-    self.staff.pickup = false
-    self.staff.going_to_staffroom = nil
-    self.staff:getCurrentAction().window = nil
-    self.staff:setNextAction(MeanderAction())
-  elseif self.profile then
+  local employed_staff = self.staff
+  local play_placement_sound = true
+  if employed_staff then
+    employed_staff.pickup = false
+    employed_staff.going_to_staffroom = nil
+    employed_staff:getCurrentAction().window = nil
+    local room = self.world:getRoom(employed_staff.tile_x, employed_staff.tile_y)
+    if room and room == employed_staff.last_room and room.crashed then
+      employed_staff:die()
+      employed_staff:despawn()
+      self.world:destroyEntity(employed_staff)
+    else
+      employed_staff:setNextAction(MeanderAction())
+    end
+  elseif self.profile then -- Cancel hiring newcomer
     self.ui:tutorialStep(2, {6, 7}, 1)
     self.ui:tutorialStep(4, {4, 5}, 1)
     -- Return the profile to the available staff list
     local staff_pool = self.world.available_staff[self.profile.humanoid_class]
     staff_pool[#staff_pool + 1] = self.profile
+    play_placement_sound = false
   end
-  self.ui:playSound("plac_st2.wav")
+  if play_placement_sound then
+    self.ui:playSound("plac_st2.wav")
+  end
   Window.close(self)
 end
 
@@ -94,7 +106,7 @@ function UIPlaceStaff:_isValidStaffPlacement()
   local staffable = (self.allow_in_rooms or flag_cache.roomId == 0)
   -- Or is it a receptionist placed on an unstaffed reception desk?
   local reception = false
-  if self.profile.humanoid_class == "Receptionist" then
+  if self.profile:isType("Receptionist") then
     local desk = world:getObject(x, y, "reception_desk") or
         world:findObjectNear(self, "reception_desk", 0)
     reception = desk and not desk.receptionist
@@ -130,7 +142,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
         if self.staff then
           self.staff:setTile(self.tile_x, self.tile_y)
         else
-          local entity = self.world:newEntity(self.profile.humanoid_class, 2)
+          local entity = self.world:newEntity(self.profile.humanoid_class, 2, 2)
           entity:setProfile(self.profile)
           self.profile = nil
           entity:setTile(self.tile_x, self.tile_y)

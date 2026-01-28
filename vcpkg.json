@@ -1,0 +1,80 @@
+{
+  "dependencies": [
+    {
+      "name": "lua",
+      "features": [
+        "tools"
+      ]
+    },
+    "sdl2",
+    "luafilesystem",
+    "lpeg",
+    "libpng",
+    {
+       "name": "fluidsynth",
+       "features": [
+         "sndfile"
+       ]
+    },
+    {
+      "name": "sdl2-mixer",
+      "features": [
+        "libmodplug",
+        {
+          "name": "fluidsynth"
+        },
+        "libflac",
+        "mpg123",
+        "opusfile"
+      ]
+    },
+    "freetype"
+  ],
+  "features": {
+    "animview": {
+      "description": "Support building AnimView",
+      "dependencies": [
+        "wxwidgets"
+      ]
+    },
+    "updatecheck": {
+      "description": "Support checking for game updates",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        }
+      ]
+    },
+    "movies": {
+      "description": "In game video support",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
+      ]
+    },
+    "midi": {
+      "description": "Support MIDI devices",
+      "dependencies": [
+        "rtmidi"
+      ]
+    },
+    "catch2": {
+      "description": "Support Catch2 tests",
+      "dependencies": [
+        "catch2"
+      ]
+    }
+  }
+}

@@ -13,11 +13,15 @@
 -- Screen size. Must be at least 640x480. Larger sizes will require better
 -- hardware in order to maintain a playable framerate. The fullscreen setting
 -- can be true or false, and the game will run windowed if not fullscreen.
+-- ui_scale can be set to 1, 2, or 3 to scale the user interface for higher
+-- resolution displays. For example, at 1920x1080 resolution, setting ui_scale
+-- to 2 will make the interface elements twice as large.
 --
 fullscreen = SCREEN_FULLSCREEN
 
 width = SCREEN_SIZE_WIDTH
 height = SCREEN_SIZE_HEIGHT
+ui_scale = 1
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
@@ -33,6 +37,7 @@ height = SCREEN_SIZE_HEIGHT
 --  German                / de / ger / deu
 --  Hungarian             / hu / hun
 --  Italian               / it / ita
+--  Japanese              / ja / jp
 --  Korean                / kor / ko
 --  Norwegian             / nb / nob
 --  Polish                / pl / pol
@@ -40,13 +45,12 @@ height = SCREEN_SIZE_HEIGHT
 --  Russian               / ru / rus
 --  Spanish               / es / spa
 --  Swedish               / sv / swe
+--  Ukrainian             / uk / ukr
 --
 language = [[LANGUAGE_CHOSEN]]
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
--- Note that audio will also be disabled if CorsixTH was compiled without
--- the SDL_mixer library.
 --
 audio = true
 
@@ -94,6 +98,8 @@ capture_mouse = true
 -------------------------------------------------------------------------------
 -- Right Mouse Scrolling: By default, it is disabled (right_mouse_scrolling = false).
 -- This means that the default scrolling method is pressing the middle mouse button.
+-- Please note this an Experimental Feature and may interfere with other right mouse
+-- operations. Report bugs for this on Github Issue 2469.
 --
 right_mouse_scrolling = false
 
@@ -203,6 +209,24 @@ enable_avg_contents = false
 --
 remove_destroyed_rooms = false
 
+-------------------------------------------------------------------------------
+-- By default machine menu is shown in a bottom panel. If you would like the
+-- game to hide it change this option to false.
+--
+machine_menu_button = true
+
+-------------------------------------------------------------------------------
+-- By default the entire screen will shake during earthquakes. If you would
+-- like the game to keep the screen stationary, change this option to false.
+--
+enable_screen_shake = true
+
+-------------------------------------------------------------------------------
+-- By default subtitles are not displayed. If you would like the game to
+-- display subtitles for your hospital's announcements, turn this option on.
+--
+enable_announcer_subtitles = false
+
 ------------------------------- FOLDER SETTINGS -------------------------------
 -- These settings can also be changed from the Folders Menu
 -------------------------------------------------------------------------------
@@ -242,6 +266,7 @@ campaigns = nil -- [[X:\ThemeHospital\Campaigns]]
 -------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital
 -- or use new graphics created by the CorsixTH project.
+-- Developer use only, otherwise the game will very likely crash in normal use
 use_new_graphics = false
 
 -------------------------------------------------------------------------------
@@ -272,6 +297,35 @@ screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 --
 audio_music = nil -- [[X:\ThemeHospital\Music]]
 
+-------------------------------------------------------------------------------
+-- SoundFont: CorsixTH uses the FluidR3 SoundFont by default for playing MIDI music.
+-- Windows users, and other OS versions compiled with the FluidSynth software
+-- synthesiser can specify their own SoundFont file below (.sf2 or .sf3).
+-- Mac(OS) Source Ports build users, and OS versions compiled with TiMidity
+-- won't see any effect from this option. See our Wiki for alternative options.
+--
+soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
+
+-------------------------------------------------------------------------------
+-- Midi API and Device settings.
+-- By default, CorsixTH uses FluidSynth or build defined MIDI synthesizer.
+-- You can change the API to target other available MIDI backends using these
+-- settings on supported platforms.
+-- Possible values for midi_api are:
+--   <nil>      - Uses SDL_Mixer's MIDI backend, typically FluidSynth
+--   Native     - Use any available platform MIDI API
+--   ALSA       - Use the ALSA MIDI API (Linux only)
+--   JACK       - Use the JACK MIDI API (Unix-like systems with JACK)
+--   CoreMIDI   - Use the CoreMIDI API (MacOS only)
+--   WindowsMM  - Use the Windows MultiMedia API (Windows only)
+--
+-- Possible values for midi_port depend on the selected midi_api, and can
+-- be left nil to use the system default port. A list of available ports
+-- can be obtained from the midi settings screen in game.
+--
+midi_api = nil -- [[Native]]
+midi_port = nil -- [[Midi Through:Midi Through Port-0 14:0]]
+
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
 -------------------------------------------------------------------------------
@@ -286,22 +340,21 @@ audio_channels = 2
 audio_buffer_size = 2048
 
 -------------------------------------------------------------------------------
+-- Advanced MIDI settings.
+-- These settings can enable better MIDI playback on some systems but may also
+-- cause issues or be unsupported on others.
+--
+-- midi_sysex_master_volume: Use SysEx message instead of adjusted channel
+-- volume messages to set the music volume.
+--
+midi_sysex_master_volume = false
+
+-------------------------------------------------------------------------------
 -- Debug settings.
 -- If set to true more detailed information will be printed in the terminal
 -- and a debug menu will be visible.
 --
 debug = false
-
---Optional settings for CorsixTH's Lua DBGp client. Default settings are
--- nil values, platform & workingdir will be autodected if nil.
---https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
---
-idehost = nil
-ideport = nil
-idekey = nil
-transport = nil
-platform = nil
-workingdir = nil
 
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns

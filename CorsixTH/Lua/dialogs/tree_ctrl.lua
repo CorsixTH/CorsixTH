@@ -512,7 +512,7 @@ function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_of
   if not has_font then
     self.font = gfx:loadBuiltinFont()
   else
-    self.font = TheApp.gfx:loadFont("QData", "Font01V")
+    self.font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   end
   self.tree_sprites = gfx:loadSpriteTable("Bitmap", "tree_ctrl", true,
     gfx:loadPalette("Bitmap", "tree_ctrl.pal"))
@@ -548,11 +548,12 @@ end
 
 
 function TreeControl:hitTestTree(x, y)
+  local s = TheApp.config.ui_scale
   local rect = self.tree_rect
-  x = x - rect.x
-  y = y - rect.y - self.y_offset
-  if 0 <= x and 0 <= y and x < rect.w and y < rect.h then
-    local n = math.floor(y / self.row_height)
+  x = x - rect.x * s
+  y = y - rect.y * s - self.y_offset * s
+  if 0 <= x and 0 <= y and x < rect.w * s and y < rect.h * s then
+    local n = math.floor(y / (self.row_height * s))
     local node = self.first_visible_node
     while n ~= 0 and node do
       node = node:getNextVisible()
@@ -561,8 +562,8 @@ function TreeControl:hitTestTree(x, y)
     if n == 0 then
       if node then
         local level = node:getLevel()
-        if x > level * 14 then
-          if x < (level+1) * 14 then
+        if x > level * 14 * s then
+          if x < (level+1) * 14 * s then
             return node, true
           else
             return node, false
@@ -589,9 +590,10 @@ end
 function TreeControl:onMouseDown(button, x, y)
   local redraw = Window.onMouseDown(self, button, x, y)
   if button ~= 4 and button ~= 5 then
+    local s = TheApp.config.ui_scale
     -- NB: 4 and 5 are scrollwheel
     self.mouse_down_in_self = false
-    if 0 <= x and 0 <= y and x < self.width and y < self.height then
+    if 0 <= x and 0 <= y and x < self.width * s and y < self.height * s then
       self.mouse_down_in_self = true
       redraw = true
     end
@@ -678,26 +680,27 @@ end
 
 function TreeControl:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  x = x + self.x + self.tree_rect.x
-  y = y + self.y + self.tree_rect.y + self.y_offset
+  local s = TheApp.config.ui_scale
+  x = x + self.x * s + self.tree_rect.x * s
+  y = y + self.y * s + self.tree_rect.y * s + self.y_offset * s
 
   local node = self.first_visible_node
   local num_nodes_drawn = 0
   while node and num_nodes_drawn < self.num_rows do
     local level = node:getLevel()
     for i = 0, level - 1 do
-      self.tree_sprites:draw(canvas, 1, x + i * 14, y)
+      self.tree_sprites:draw(canvas, 1, x + i * 14 * s, y, { scaleFactor = s })
     end
 
     if node == self.highlighted_node then
       local offset = (level + 1) * 14
       local colour = node:getHighlightColour(canvas) or self.scrollbar.slider.colour
-      canvas:drawRect(colour, x + offset - 1, y, self.tree_rect.w - offset - 1, self.row_height)
+      canvas:drawRect(colour, x + offset * s - s, y, self.tree_rect.w * s - offset * s - s, self.row_height * s)
     end
     if node == self.selected_node then
       local offset = (level + 1) * 14
       local colour = node:getSelectColour(canvas) or self.scrollbar.slider.colour
-      canvas:drawRect(colour, x + offset - 1, y, self.tree_rect.w - offset - 1, self.row_height)
+      canvas:drawRect(colour, x + offset * s - s, y, self.tree_rect.w * s - offset * s - s, self.row_height * s)
     end
 
     local icon
@@ -708,10 +711,10 @@ function TreeControl:draw(canvas, x, y)
     else
       icon = 3
     end
-    self.tree_sprites:draw(canvas, icon, x + level * 14, y)
-    self.font:draw(canvas, node:getLabel(), x + (level + 1) * 14, y + 2)
+    self.tree_sprites:draw(canvas, icon, x + level * 14 * s, y, { scaleFactor = s })
+    self.font:draw(canvas, node:getLabel(), x + (level + 1) * 14 * s, y + 2 * s)
     self:drawExtraOnRow(canvas, node, x, y)
-    y = y + self.row_height
+    y = y + self.row_height * s
     num_nodes_drawn = num_nodes_drawn + 1
     node = node:getNextVisible()
   end

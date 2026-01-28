@@ -30,10 +30,10 @@ function UICasebook:UICasebook(ui, disease_selection)
   if not pcall(function()
     self.background = gfx:loadRaw("DrugN01V", 640, 480, "QData", "QData", "DrugN01V.pal", true)
     local palette = gfx:loadPalette("QData", "DrugN01V.pal", true)
-    self.panel_sprites = gfx:loadSpriteTable("QData", "DrugN02V", true, palette)
-    self.title_font = gfx:loadFont("QData", "Font25V", false, palette)
-    self.selected_title_font = gfx:loadFont("QData", "Font26V", false, palette)
-    self.drug_font = gfx:loadFont("QData", "Font24V", false, palette)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "DrugN02V", true, palette, { apply_ui_scale = true })
+    self.title_font = gfx:loadFontAndSpriteTable("QData", "Font25V", false, palette, { apply_ui_scale = true })
+    self.selected_title_font = gfx:loadFontAndSpriteTable("QData", "Font26V", false, palette, { apply_ui_scale = true })
+    self.drug_font = gfx:loadFontAndSpriteTable("QData", "Font24V", false, palette, { apply_ui_scale = true })
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
     self:close()
@@ -201,30 +201,33 @@ function UICasebook:updateIcons()
 end
 
 function UICasebook:draw(canvas, x, y)
-  self.background:draw(canvas, self.x + x, self.y + y)
+  local s = TheApp.config.ui_scale
+  canvas:scale(s, "bitmap")
+  self.background:draw(canvas, self.x * s + x, self.y * s + y)
+  canvas:scale(1, "bitmap")
   UIFullscreen.draw(self, canvas, x, y)
 
-  x, y = self.x + x, self.y + y
+  x, y = self.x * s + x, self.y * s + y
   local titles = self.title_font
   local book = self.casebook
   local disease = self.selected_disease
   local selected = self.selected_index
 
   -- All titles
-  titles:draw(canvas, _S.casebook.reputation,       x + 278, y + 68)
-  titles:draw(canvas, _S.casebook.treatment_charge, x + 260, y + 113)
-  titles:draw(canvas, _S.casebook.earned_money,     x + 265, y + 157)
-  titles:draw(canvas, _S.casebook.cured,            x + 276, y + 201)
-  titles:draw(canvas, _S.casebook.deaths,           x + 279, y + 245)
-  titles:draw(canvas, _S.casebook.sent_home,        x + 270, y + 289)
-  titles:draw(canvas, _S.casebook.cure,             x + 255, y + 354)
+  titles:draw(canvas, _S.casebook.reputation,       x + 278 * s, y + 68 * s)
+  titles:draw(canvas, _S.casebook.treatment_charge, x + 260 * s, y + 113 * s)
+  titles:draw(canvas, _S.casebook.earned_money,     x + 265 * s, y + 157 * s)
+  titles:draw(canvas, _S.casebook.cured,            x + 276 * s, y + 201 * s)
+  titles:draw(canvas, _S.casebook.deaths,           x + 279 * s, y + 245 * s)
+  titles:draw(canvas, _S.casebook.sent_home,        x + 270 * s, y + 289 * s)
+  titles:draw(canvas, _S.casebook.cure,             x + 255 * s, y + 354 * s)
 
   -- Specific disease information
   if self.hospital:canConcentrateResearch(disease) then
     if book[disease].concentrate_research then  -- Concentrate research
-      self.selected_title_font:draw(canvas, _S.casebook.research, x + 245, y + 398)
+      self.selected_title_font:draw(canvas, _S.casebook.research, x + 245 * s, y + 398 * s)
     else
-      titles:draw(canvas, _S.casebook.research, x + 245, y + 398)
+      titles:draw(canvas, _S.casebook.research, x + 245 * s, y + 398 * s)
     end
   end
   local rep = book[disease].reputation or self.hospital.reputation
@@ -234,32 +237,32 @@ function UICasebook:draw(canvas, x, y)
     rep = self.hospital.reputation_max
   end
 
-  titles:draw(canvas, rep, x + 248, y + 92, 114, 0) -- Reputation
+  titles:draw(canvas, rep, x + 248 * s, y + 92 * s, 114 * s, 0) -- Reputation
 
   -- Treatment Charge is either displayed in percent, or normally
   local price_text = self.percentage_counter and ("%.0f%%"):format(book[disease].price * 100) or
       "$" .. self.hospital:getTreatmentPrice(disease)
-  titles:draw(canvas, price_text, x + 262, y + 137, 90, 0) -- Treatment Charge
+  titles:draw(canvas, price_text, x + 262 * s, y + 137 * s, 90 * s, 0) -- Treatment Charge
 
-  titles:draw(canvas, "$" .. book[disease].money_earned, x + 248, y + 181, 114, 0) -- Money Earned
-  titles:draw(canvas, book[disease].recoveries, x + 248, y + 225, 114, 0) -- Recoveries
-  titles:draw(canvas, book[disease].fatalities, x + 248, y + 269, 114, 0) -- Fatalities
-  titles:draw(canvas, book[disease].turned_away, x + 248, y + 313, 114, 0) -- Turned away
+  titles:draw(canvas, "$" .. book[disease].money_earned, x + 248 * s, y + 181 * s, 114 * s, 0) -- Money Earned
+  titles:draw(canvas, book[disease].recoveries, x + 248 * s, y + 225 * s, 114 * s, 0) -- Recoveries
+  titles:draw(canvas, book[disease].fatalities, x + 248 * s, y + 269 * s, 114 * s, 0) -- Fatalities
+  titles:draw(canvas, book[disease].turned_away, x + 248 * s, y + 313 * s, 114 * s, 0) -- Turned away
 
   -- Cure percentage
   if self.drug.visible then
-    self.drug_font:draw(canvas, book[disease].cure_effectiveness, x + 313, y + 364, 16, 0)
+    self.drug_font:draw(canvas, book[disease].cure_effectiveness, x + 313 * s, y + 364 * s, 16 * s, 0)
   end
   -- Right-hand side list of diseases (and pseudo diseases)
   local index = 1
   while selected - index > 0 and index <= 7 do
-    titles:draw(canvas, book[self.names_sorted[selected - index]].disease.name:upper(), x + 409, y + 203 - index*18)
+    titles:draw(canvas, book[self.names_sorted[selected - index]].disease.name:upper(), x + 409 * s, y + 203 * s - index * 18 * s)
     index = index + 1
   end
-  self.selected_title_font:draw(canvas, book[disease].disease.name:upper(), x + 409, y + 227)
+  self.selected_title_font:draw(canvas, book[disease].disease.name:upper(), x + 409 * s, y + 227 * s)
   index = 1
   while index + selected <= #self.names_sorted and index <= 7 do
-    titles:draw(canvas, book[self.names_sorted[index + selected]].disease.name:upper(), x + 409, y + 251 + index*18)
+    titles:draw(canvas, book[self.names_sorted[index + selected]].disease.name:upper(), x + 409 * s, y + 251 * s + index * 18 * s)
     index = index + 1
   end
 end
@@ -341,16 +344,17 @@ function UICasebook:concentrateResearch()
 end
 
 function UICasebook:onMouseDown(button, x, y)
+  local s = TheApp.config.ui_scale
   -- Normal window operations if outside the disease list
-  if x < 395 or x > 540 or y < 77 or y > 394 then
+  if x < 395 * s or x > 540 * s or y < 77 * s or y > 394 * s then
     return UIFullscreen.onMouseDown(self, button, x, y)
   end
 
   local index_diff
-  if y < 203 then
-    index_diff = -7 + math.floor((y - 77) / 18)
-  elseif y > 269 then
-    index_diff = math.floor((y - 269) / 18) + 1
+  if y < 203 * s then
+    index_diff = -7 + math.floor((y - (77 * s)) / (18 * s))
+  elseif y > 269 * s then
+    index_diff = math.floor((y - (269 * s)) / (18 * s)) + 1
   else
     return
   end
@@ -394,14 +398,14 @@ function UICasebook:onTick()
 end
 
 function UICasebook:afterLoad(old, new)
-  if old < 179 then
+  if old < 236 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("DrugN01V", 640, 480, "QData", "QData", "DrugN01V.pal", true)
     local palette = gfx:loadPalette("QData", "DrugN01V.pal", true)
-    self.panel_sprites = gfx:loadSpriteTable("QData", "DrugN02V", true, palette)
-    self.title_font = gfx:loadFont("QData", "Font25V", false, palette)
-    self.selected_title_font = gfx:loadFont("QData", "Font26V", false, palette)
-    self.drug_font = gfx:loadFont("QData", "Font24V", false, palette)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "DrugN02V", true, palette, { apply_ui_scale = true })
+    self.title_font = gfx:loadFontAndSpriteTable("QData", "Font25V", false, palette, { apply_ui_scale = true })
+    self.selected_title_font = gfx:loadFontAndSpriteTable("QData", "Font26V", false, palette, { apply_ui_scale = true })
+    self.drug_font = gfx:loadFontAndSpriteTable("QData", "Font24V", false, palette, { apply_ui_scale = true })
   end
 
   UIFullscreen.afterLoad(self, old, new)

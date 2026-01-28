@@ -45,7 +45,7 @@ local function action_pee_start(action, humanoid)
   assert(humanoid.pee_anim, "Error: no pee animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.pee_anim, humanoid.last_move_direction == "east" and 0 or 1)
-  humanoid:setTimer(humanoid.world:getAnimLength(humanoid.pee_anim), action_pee_end)
+  humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.pee_anim), action_pee_end)
 end
 
 return action_pee_start

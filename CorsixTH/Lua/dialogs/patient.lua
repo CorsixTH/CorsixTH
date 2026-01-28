@@ -22,7 +22,8 @@ local TH = require("TH")
 
 -- Test for hit within the view circle
 local --[[persistable:patient_window_is_in_view_circle]] function is_in_view_circle(x, y)
-  return (x - 55)^2 + (y - 254)^2 < 39^2
+  local s = TheApp.config.ui_scale
+  return (x - 55 * s)^2 + (y - 254 * s)^2 < (39 * s)^2
 end
 
 --! Individual patient information dialog
@@ -42,7 +43,7 @@ function UIPatient:UIPatient(ui, patient)
   self.height = 310
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req02V", true)
-  self.font = app.gfx:loadFont("QData", "Font74V") -- Font used in the treatment history
+  self.font = app.gfx:loadFontAndSpriteTable("QData", "Font74V", nil, nil, { apply_ui_scale = true }) -- Font used in the treatment history
   self.patient = patient
   self.visible_diamond = ui:makeVisibleDiamond(75, 76)
 
@@ -52,7 +53,7 @@ function UIPatient:UIPatient(ui, patient)
   self.history_panel = self:addColourPanel(36, 22, 99, 88, 223, 223, 223) -- Treatment history background
   self.history_panel:makeButton(0, 0, 99, 88, nil, --[[persistable:patient_toggle_history]] function()
     self.history_panel.visible = not self.history_panel.visible
-  end):setTooltip(_S.tooltip.patient_window.graph) -- Treatment history toggle
+  end):setTooltip(_S.tooltip.patient_window.graph):setSound("selectx.wav") -- Treatment history toggle
   self.history_panel.visible = false -- Hide the treatment history at start
 
   self:addPanel(322,  15, 126) -- Happiness / thirst / temperature sliders
@@ -118,20 +119,22 @@ end
 
 --! Draw a bar in the patient dialogue window.
 --!param canvas Canvas to draw at.
---!param xbase Horizontal base position.
+--!param sprite The sprite to draw
 --!param ybase Vertical base position.
 --!param xpos Horizontal offset.
 --!param ypos Vertical offset.
 --!param value Fraction to draw.
-function UIPatient:drawBar(canvas, xbase, ybase, xpos, ypos, value)
+function UIPatient:drawBar(canvas, sprite, ybase, xpos, ypos, value)
+  local s = TheApp.config.ui_scale
   local width = math.floor(value * 40 + 0.5)
   for dx = 0, width - 1 do
-    self.panel_sprites:draw(canvas, xbase, xpos + 58 + dx, ypos + ybase)
+    self.panel_sprites:draw(canvas, sprite, xpos + 58 * s + dx * s, ypos + ybase * s, { scaleFactor = s })
   end
 end
 
 function UIPatient:draw(canvas, x_, y_)
-  local x, y = self.x + x_, self.y + y_
+  local s = TheApp.config.ui_scale
+  local x, y = self.x * s + x_, self.y * s + y_
   local map = self.ui.app.map
   local patient = self.patient
   -- If the patient has just despawned, then it will have no tile, hence
@@ -146,7 +149,7 @@ function UIPatient:draw(canvas, x_, y_)
     return
   end
   local px, py = map:WorldToScreen(patient.tile_x, patient.tile_y)
-  local dx, dy = patient.th:getMarker()
+  local dx, dy = patient.th:getPrimaryMarker()
   px = px + dx - 37
   py = py + dy - 61
   -- If the patient is spawning or despawning, or just on the map edge, then
@@ -154,30 +157,34 @@ function UIPatient:draw(canvas, x_, y_)
   -- within the map (this situation doesn't occur very often, but we need to
   -- handle it properly when it does occur).
   px, py = self.ui.limitPointToDiamond(px, py, self.visible_diamond, true)
-  self.ui.app.map:draw(canvas, px, py, 75, 76, x + 17, y + 216)
+  canvas:scale(s)
+  self.ui.app.map:draw(canvas, px, py, 75, 76, math.floor(x / s) + 17, math.floor(y / s) + 216)
+  canvas:scale(1)
   Window.draw(self, canvas, x_, y_)
 
   -- The patient bars (happiness, thirst, and warmth).
-  local warmth = self.normaliseWarmth(patient.attributes["warmth"])
+  local warmth = self.normaliseWarmth(patient:getAttribute("warmth"))
 
-  self:drawBar(canvas, 348, 126, x, y, patient.attributes["happiness"] or 0.5)
-  self:drawBar(canvas, 351, 154, x, y, 1 - (patient.attributes["thirst"] or 0.5))
+  self:drawBar(canvas, 348, 126, x, y, patient:getAttribute("happiness", 0.5))
+  self:drawBar(canvas, 351, 154, x, y, 1 - (patient:getAttribute("thirst", 0.5)))
   self:drawBar(canvas, 349, 183, x, y, warmth)
 
   if self.history_panel.visible then
-    self:drawTreatmentHistory(canvas, x + 40, y + 25)
+    self:drawTreatmentHistory(canvas, x + 40 * s, y + 25 * s)
   elseif patient.health_history then
     self:drawHealthHistory(canvas, x, y)
   end
 end
 
 --! List the treatments that were performed on the patient.
+-- This text is always capitalised.
 --!param canvas Destination to draw on.
 --!param x (int) X position of the top of the list.
 --!param y (int) Y position of the top of the list.
 function UIPatient:drawTreatmentHistory(canvas, x, y)
+  local s = TheApp.config.ui_scale
   for _, room in ipairs(self.patient.treatment_history) do
-    y = self.font:drawWrapped(canvas, room, x, y, 95)
+    y = self.font:drawWrapped(canvas, room:upper(), x, y, 95 * s)
   end
 end
 
@@ -186,11 +193,13 @@ end
 --!param x (int) X position of the top-left of the graph.
 --!param y (int) Y position of the top-left of the graph.
 function UIPatient:drawHealthHistory(canvas, x, y)
+  local s = TheApp.config.ui_scale
+
   -- Sizes and positions of the graph in the window.
-  local hor_length = 76
-  local vert_length = 70
-  local startx = 58
-  local starty = 27
+  local hor_length = 76 * s
+  local vert_length = 70 * s
+  local startx = 58 * s
+  local starty = 27 * s
 
   -- Health history information.
   local hh = self.patient.health_history
@@ -206,7 +215,7 @@ function UIPatient:drawHealthHistory(canvas, x, y)
 
       if not line then
         line = TH.line()
-        line:setWidth(2)
+        line:setWidth(2 * s)
         line:setColour(200, 55, 30, 255)
         line:moveTo(startx, posy)
       else
@@ -284,7 +293,7 @@ function UIPatient:updateInformation()
   self.disease_blanker.visible = not show_dis_btn
 
   -- Show go home?
-  local show_home_btn = not patient.going_home
+  local show_home_btn = not patient.going_home and not patient.going_to_die
   self.home_button.enabled = show_home_btn
   self.home_button.visible = show_home_btn
   self.home_blanker.visible = not show_home_btn
@@ -293,6 +302,7 @@ function UIPatient:updateInformation()
   local show_guess_btn = not (patient.is_debug or
       patient.diagnosis_progress == 0 or
       patient.diagnosed or
+      patient.going_to_die or
       patient.going_home)
   self.guess_button.enabled = show_guess_btn
   self.guess_button.visible = show_guess_btn
@@ -329,7 +339,7 @@ function UIPatient:guessDisease()
   local patient = self.patient
   -- NB: the first line of conditions should already be ruled out by button being disabled, but just in case
   if patient.is_debug or patient.diagnosis_progress == 0 or patient.diagnosed or
-      patient.going_home or patient:getRoom() or
+      patient.going_home or patient.going_to_die or patient:getRoom() or
       not patient.hospital.disease_casebook[patient.disease.id].discovered then
     self.ui:playSound("wrong2.wav")
     return
@@ -349,4 +359,8 @@ end
 function UIPatient:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
+
+  if old < 236 then
+    self.font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font74V", nil, nil, { apply_ui_scale = true })
+  end
 end

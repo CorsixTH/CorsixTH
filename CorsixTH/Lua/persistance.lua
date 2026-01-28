@@ -26,7 +26,10 @@ strict_declare_global "unpermanent"
 
 local th_getfenv
 local th_getupvalue -- luacheck: ignore 231
-if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" or _G._VERSION == "Lua 5.4" then
+if _G._VERSION == "Lua 5.1" then
+  th_getfenv = debug.getfenv
+  th_getupvalue = debug.getupvalue
+else
   th_getfenv = function(f)
     local _, val = nil, nil
     if type(f) == "function" then
@@ -42,9 +45,6 @@ if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" or _G._VERSION == "Lua 5
   th_getupvalue = function(f, n)
     return debug.getupvalue(f, n + 1)
   end
-else
-  th_getfenv = debug.getfenv
-  th_getupvalue = debug.getupvalue
 end
 
 function permanent(name, ...)
@@ -163,9 +163,11 @@ local function MakePermanentObjectsTable(inverted)
     end
   else
     -- load_info is a table containing a method and parameters to load obj
-    for obj, load_info in pairs(TheApp.gfx.load_info) do
-      permanent[obj] = load_info
-    end
+    pause_gc_and_use_weak_keys(function(p)
+      for obj, load_info in pairs(TheApp.gfx.load_info) do
+        p[obj] = load_info
+      end
+    end, permanent)
   end
 
   -- Things requested to be permanent by other bits of code
@@ -313,7 +315,7 @@ function LoadGame(data)
   TheApp.ui:onChangeResolution()
   -- Check if the blueish tone should be applied.
   -- Note: Blue filter control should be handled from world or ui, however when
-  -- loading a game we should let persistance do it.
+  -- loading a game we should let persistence do it.
   if not TheApp.ui:checkForMustPauseWindows() and TheApp.world:isUserActionProhibited() then
     TheApp.video:setBlueFilterActive(true)
   end

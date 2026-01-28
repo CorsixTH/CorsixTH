@@ -1,6 +1,8 @@
 #ifndef CORSIX_TH_CP437_TO_UNICODE_TABLE_H
 #define CORSIX_TH_CP437_TO_UNICODE_TABLE_H
 
+#include "config.h"
+
 #include <array>
 
 // clang-format off

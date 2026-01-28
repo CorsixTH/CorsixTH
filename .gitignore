@@ -22,6 +22,10 @@ Release/
 MinSizeRel/
 RelWithDebInfo/
 
+# For KDevelop
+.kdev4/
+*.kdev4
+
 # Ignore the folder where libraries are pre-compiled
 vcpkg/
 
@@ -79,6 +83,7 @@ CMakeScripts/
 
 # Clang tools
 compile_commands.json
+.cache/
 
 # This is for the CMake-generated Visual Studio project
 *.vcxproj
@@ -97,6 +102,10 @@ CorsixTH/CorsixTH.sln
 .cproject/
 .vscode/
 .cproject
+.vs/
+
+# CLion / IntelliJ
+.idea/
 
 # Default build path
 CorsixTH/CorsixTH

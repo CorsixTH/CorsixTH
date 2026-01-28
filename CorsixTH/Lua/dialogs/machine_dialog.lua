@@ -36,7 +36,7 @@ function UIMachine:UIMachine(ui, machine, room)
   self.height = 206
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req03V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
 
   self:addPanel(333,    0,   0) -- Dialog header
   self:addPanel(334,    0,  74) -- The next part
@@ -66,7 +66,9 @@ end
 
 function UIMachine:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+
+  local s = TheApp.config.ui_scale
+  x, y = self.x * s + x, self.y * s + y
   local mach = self.machine
 
   local font = self.white_font
@@ -76,13 +78,13 @@ function UIMachine:draw(canvas, x, y)
   else
     output = mach.object_type.name
   end
-  font:draw(canvas, output, x + 27, y + 27) -- Name
-  font:draw(canvas, mach.total_usage, x + 60, y + 59) -- Total number of times used
+  font:draw(canvas, output, x + 27 * s, y + 27 * s) -- Name
+  font:draw(canvas, mach.total_usage, x + 60 * s, y + 59 * s) -- Total number of times used
 
-  local status_bar_width = math.floor((1 - mach.times_used/mach.strength) * 40 + 0.5)
+  local status_bar_width = math.floor((1 - mach.times_used/mach.strength) * 40 * s + 0.5)
   if status_bar_width ~= 0 then
     for dx = 0, status_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 352, x + 53 + dx, y + 99) -- Or 5
+      self.panel_sprites:draw(canvas, 352, x + 53 * s + dx, y + 99 * s, { scaleFactor = s })
     end
   end
 end
@@ -130,43 +132,53 @@ end
 function UIMachine:onMouseDown(code, x, y)
   -- cycle through all machines when you right click on the machine title
   if code == "right" then
-    if x > 18 and x < 139 then
-      if y > 19 and y < 42 then
-        -- select next machine
-        local ui = self.ui
-        local first_machine, next_machine = nil, self.machine
-        local next_room
-        for _, entity in ipairs(ui.app.world.entities) do
-          -- is a machine and not a slave (e.g. operating_table_b)
-          if class.is(entity, Machine) and not entity.master then
-            next_room = entity:getRoom()
-            if next_room.is_active then
-              if not first_machine then
-                first_machine = entity
-              end
-              if not next_machine then
-                next_machine = entity
-                break
-              elseif entity == next_machine then
-                next_machine = nil
-              end
+    local s = TheApp.config.ui_scale
+    local is_hit_namebox = x > self.tooltip_regions[1].x * s and x < self.tooltip_regions[1].r * s
+                       and y > self.tooltip_regions[1].y * s and y < self.tooltip_regions[1].b * s
+    if is_hit_namebox then
+      -- move to next machine
+      local ui = self.ui
+      local first_machine, next_machine = nil, self.machine
+      local next_room
+      for _, entity in ipairs(ui.app.world.entities) do
+        -- is a machine and not a slave (e.g. operating_table_b)
+        if class.is(entity, Machine) and not entity.master then
+          next_room = entity:getRoom()
+          if next_room.is_active then
+            if not first_machine then
+              first_machine = entity
+            end
+            if not next_machine then
+              next_machine = entity
+              break
+            elseif entity == next_machine then
+              next_machine = nil
             end
           end
         end
-        if not next_machine or next_machine == self.machine then
-          next_machine = first_machine
-        end
-        if next_machine and next_machine ~= self.machine then
-          -- center screen on machine
-          local sx, sy = ui.app.map:WorldToScreen(next_machine.tile_x, next_machine.tile_y)
-          local dx, dy = next_machine.th:getPosition()
-          ui:scrollMapTo(sx + dx, sy + dy)
-          -- change window
-          ui:addWindow(UIMachine(ui, next_machine, next_room))
-          ui:playSound("camclick.wav")
-        end
+      end
+      if not next_machine or next_machine == self.machine then
+        next_machine = first_machine
+      end
+      if next_machine and next_machine ~= self.machine then
+        -- center screen on machine
+        local sx, sy = ui.app.map:WorldToScreen(next_machine.tile_x, next_machine.tile_y)
+        local dx, dy = next_machine.th:getPosition()
+        ui:scrollMapTo(sx + dx, sy + dy)
+        -- switch machine window
+        ui:addWindow(UIMachine(ui, next_machine, next_room))
+        ui:playSound("camclick.wav")
+        -- show machine info in dynamic info
+        ui.bottom_panel:setDynamicInfo(next_machine:getDynamicInfo())
       end
     end
   end
   return Window.onMouseDown(self, code, x, y)
+end
+
+function UIMachine:afterLoad(old, new)
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  end
+  Window:afterLoad(old, new)
 end

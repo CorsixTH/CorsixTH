@@ -34,7 +34,7 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
   if phase == 0 then
     action.phase = 1
     if humanoid.die_anims.extra_east ~= nil then
-      humanoid:setTimer(humanoid.world:getAnimLength(humanoid.die_anims.extra_east), action_die_tick)
+      humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.die_anims.extra_east), action_die_tick)
       humanoid:setAnimation(humanoid.die_anims.extra_east, mirror)
     else
       action_die_tick(humanoid)
@@ -46,7 +46,7 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
   elseif phase == 2 then
     -- Female slack tongue head layer is missing from wings animation onwards
     -- So we change the head to its standard equivalent
-    if humanoid.humanoid_class == "Slack Female Patient" then
+    if humanoid:isType("Slack Female Patient") then
       humanoid:setLayer(0, humanoid.layers[0] - 8)
     end
 
@@ -77,7 +77,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
     action.phase = 1
 
     if humanoid.die_anims.extra_east ~= nil then
-      humanoid:setTimer(humanoid.world:getAnimLength(humanoid.die_anims.extra_east), action_die_tick_reaper)
+      humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.die_anims.extra_east), action_die_tick_reaper)
       humanoid:setAnimation(humanoid.die_anims.extra_east, mirror)
     else
       action_die_tick_reaper(humanoid)
@@ -86,7 +86,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
   --1: The patient stays on the ground until phase 5:
   elseif phase == 1 then
     action.phase = 2
-    if humanoid.humanoid_class ~= "Standard Male Patient" then
+    if not humanoid:isType("Standard Male Patient") then
       humanoid:setType("Standard Male Patient")
     end
     humanoid:setAnimation(humanoid.on_ground_anim, mirror)
@@ -172,7 +172,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
 
     --Spawn the grim reaper and the lava hole:
     local lava_hole = humanoid.world:newObject("gates_to_hell", hole_x, hole_y, holes_orientation)
-    local grim_reaper = humanoid.world:newEntity("GrimReaper", 1660)
+    local grim_reaper = humanoid.world:newEntity("GrimReaper", 1660, 2)
 
     local point_dir = {x = grim_x, y = grim_y, direction = grim_spawn_idle_direction}
     grim_reaper:setNextAction(IdleSpawnAction(1660, point_dir):setCount(40))
@@ -212,7 +212,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
   -- 5: The dead patient will now stand up:
   elseif phase == 5 then
     action.phase = 6
-    humanoid:setTimer(humanoid.world:getAnimLength(humanoid.die_anims.rise_hell_east), action_die_tick_reaper)
+    humanoid:setTimer(TheApp.animation_manager:getAnimLength(humanoid.die_anims.rise_hell_east), action_die_tick_reaper)
     humanoid:setAnimation(humanoid.die_anims.rise_hell_east, mirror)
 
   --6: The dead patient will now walk in to the lava hole, falling in as the grim reaper does his "sending patient to hell" animation:
@@ -223,19 +223,19 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
     local loop_callback_swipe =--[[persistable:reaper_swipe]]function()
       grim:setAnimation(1670, grim.mirror)
     end
-    grim:queueAction(IdleAction():setCount(grim.world:getAnimLength(1670)):setLoopCallback(loop_callback_swipe))
+    grim:queueAction(IdleAction():setCount(TheApp.animation_manager:getAnimLength(1670)):setLoopCallback(loop_callback_swipe))
 
     local loop_callback_leave =--[[persistable:reaper_leave]]function()
       grim:setAnimation(1678, grim.mirror)
     end
-    grim:queueAction(IdleAction():setCount(grim.world:getAnimLength(1678)):setLoopCallback(loop_callback_leave))
+    grim:queueAction(IdleAction():setCount(TheApp.animation_manager:getAnimLength(1678)):setLoopCallback(loop_callback_leave))
 
     local lava_destroy = --[[persistable:lava_destroy]]function()
       humanoid.world:destroyEntity(lava_hole)
     end
     local loop_callback_destroy =--[[persistable:reaper_destroy]]function()
       lava_hole.playing_sounds_in_random_sequence = false
-      lava_hole:setTimer(lava_hole.world:getAnimLength(2552), lava_destroy)
+      lava_hole:setTimer(TheApp.animation_manager:getAnimLength(2552), lava_destroy)
       lava_hole:setAnimation(2552)
       grim.world:destroyEntity(grim)
     end
@@ -279,8 +279,8 @@ local function action_die_start(action, humanoid)
 
   action.phase = 0
 
-  local fall_anim_duration = humanoid.world:getAnimLength(fall)
-  if humanoid.humanoid_class == "Chewbacca Patient" then
+  local fall_anim_duration = TheApp.animation_manager:getAnimLength(fall)
+  if humanoid:isType("Chewbacca Patient") then
     --After 21 ticks the first frame of the buggy falling part of this animation is reached
     --so this animation is ended early, action_die_tick will then use the standard male fall animation:
     fall_anim_duration = 21

@@ -96,6 +96,7 @@ local config_defaults = {
   fullscreen = false,
   width = 800,
   height = 600,
+  ui_scale = 1,
   language = [[English]],
   audio = true,
   free_build_mode = false,
@@ -124,17 +125,17 @@ local config_defaults = {
   disable_fractured_bones_females = true,
   enable_avg_contents = false,
   remove_destroyed_rooms = false,
+  machine_menu_button = true,
+  enable_screen_shake = true,
+  enable_announcer_subtitles = false,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
+  midi_api = nil,
+  midi_port = nil,
+  midi_sysex_master_volume = false,
   theme_hospital_install = [[X:\ThemeHospital\hospital]],
   debug = false,
-  DBGp_client_idehost = nil,
-  DBGp_client_ideport = nil,
-  DBGp_client_idekey = nil,
-  DBGp_client_transport = nil,
-  DBGp_client_platform = nil,
-  DBGp_client_workingdir = nil,
   track_fps = false,
   zoom_speed = 80,
   scroll_speed = 2,
@@ -207,11 +208,15 @@ local string_01 = [=[
 -- Screen size. Must be at least 640x480. Larger sizes will require better
 -- hardware in order to maintain a playable framerate. The fullscreen setting
 -- can be true or false, and the game will run windowed if not fullscreen.
+-- ui_scale can be set to 1, 2, or 3 to scale the user interface for higher
+-- resolution displays. For example, at 1920x1080 resolution, setting ui_scale
+-- to 2 will make the interface elements twice as large.
 --]=] .. '\n' ..
 'fullscreen = ' .. tostring(config_values.fullscreen) .. '\n' ..
 '\n' ..
 'width = ' .. tostring(config_values.width) .. '\n' ..
-'height = ' .. tostring(config_values.height) .. '\n' .. [=[
+'height = ' .. tostring(config_values.height) .. '\n' ..
+'ui_scale = ' .. tostring(config_values.ui_scale) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
@@ -227,6 +232,7 @@ local string_01 = [=[
 --  German                / de / ger / deu
 --  Hungarian             / hu / hun
 --  Italian               / it / ita
+--  Japanese              / ja / jp
 --  Korean                / kor / ko
 --  Norwegian             / nb / nob
 --  Polish                / pl / pol
@@ -234,13 +240,12 @@ local string_01 = [=[
 --  Russian               / ru / rus
 --  Spanish               / es / spa
 --  Swedish               / sv / swe
+--  Ukrainian             / uk / ukr
 --]=] .. '\n' ..
 'language = [['.. config_values.language ..']]' .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
--- Note that audio will also be disabled if CorsixTH was compiled without
--- the SDL_mixer library.
 --]=] .. '\n' ..
 'audio = ' .. tostring(config_values.audio) .. '\n' .. [=[
 
@@ -288,6 +293,8 @@ local string_01 = [=[
 -------------------------------------------------------------------------------
 -- Right Mouse Scrolling: By default, it is disabled (right_mouse_scrolling = false).
 -- This means that the default scrolling method is pressing the middle mouse button.
+-- Please note this an Experimental Feature and may interfere with other right mouse
+-- operations. Report bugs for this on Github Issue 2469.
 --]=] .. '\n' ..
 'right_mouse_scrolling = ' .. tostring(config_values.right_mouse_scrolling) .. '\n' .. [=[
 
@@ -395,7 +402,25 @@ local string_01 = [=[
 -- By default destroyed rooms can't be removed. If you would like the game to
 -- give you the option of removing a destroyed room change this option to true.
 --]=] .. '\n' ..
-'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[]=]
+'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default machine menu is shown in a bottom panel. If you would like the
+-- game to hide it change this option to false.
+--]=] .. '\n' ..
+'machine_menu_button = ' .. tostring(config_values.machine_menu_button) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default the entire screen will shake during earthquakes. If you would
+-- like the game to keep the screen stationary, change this option to false.
+--]=] .. '\n' ..
+'enable_screen_shake = ' .. tostring(config_values.enable_screen_shake) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default subtitles are not displayed. If you would like the game to
+-- display subtitles for your hospital's announcements, turn this option on.
+--]=] .. '\n' ..
+'enable_announcer_subtitles = ' .. tostring(config_values.enable_announcer_subtitles) .. '\n' .. [=[]=]
 
 local string_02 = [=[
 
@@ -438,6 +463,7 @@ campaigns = nil -- [[X:\ThemeHospital\Campaigns]]
 -------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital
 -- or use new graphics created by the CorsixTH project.
+-- Developer use only, otherwise the game will very likely crash in normal use
 use_new_graphics = false
 
 -------------------------------------------------------------------------------
@@ -468,6 +494,35 @@ screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 --
 audio_music = nil -- [[X:\ThemeHospital\Music]]
 
+-------------------------------------------------------------------------------
+-- SoundFont: CorsixTH uses the FluidR3 SoundFont by default for playing MIDI music.
+-- Windows users, and other OS versions compiled with the FluidSynth software
+-- synthesiser can specify their own SoundFont file below (.sf2 or .sf3).
+-- Mac(OS) Source Ports build users, and OS versions compiled with TiMidity
+-- won't see any effect from this option. See our Wiki for alternative options.
+--
+soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
+
+-------------------------------------------------------------------------------
+-- Midi API and Device settings.
+-- By default, CorsixTH uses FluidSynth or build defined MIDI synthesizer.
+-- You can change the API to target other available MIDI backends using these
+-- settings on supported platforms.
+-- Possible values for midi_api are:
+--   <nil>      - Uses SDL_Mixer's MIDI backend, typically FluidSynth
+--   Native     - Use any available platform MIDI API
+--   ALSA       - Use the ALSA MIDI API (Linux only)
+--   JACK       - Use the JACK MIDI API (Unix-like systems with JACK)
+--   CoreMIDI   - Use the CoreMIDI API (MacOS only)
+--   WindowsMM  - Use the Windows MultiMedia API (Windows only)
+--
+-- Possible values for midi_port depend on the selected midi_api, and can
+-- be left nil to use the system default port. A list of available ports
+-- can be obtained from the midi settings screen in game.
+--
+midi_api = nil -- [[Native]]
+midi_port = nil -- [[Midi Through:Midi Through Port-0 14:0]]
+
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
 -------------------------------------------------------------------------------
@@ -482,22 +537,21 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 'audio_buffer_size = ' .. tostring(config_values.audio_buffer_size) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
+-- Advanced MIDI settings.
+-- These settings can enable better MIDI playback on some systems but may also
+-- cause issues or be unsupported on others.
+--
+-- midi_sysex_master_volume: Use SysEx message instead of adjusted channel
+-- volume messages to set the music volume.
+--]=] .. '\n' ..
+'midi_sysex_master_volume = ' .. tostring(config_values.midi_sysex_master_volume) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
 -- Debug settings.
 -- If set to true more detailed information will be printed in the terminal
 -- and a debug menu will be visible.
 --]=] .. '\n' ..
 'debug = ' .. tostring(config_values.debug) .. '\n' .. [=[
-
---Optional settings for CorsixTH's Lua DBGp client. Default settings are
--- nil values, platform & workingdir will be autodected if nil.
---https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
---]=] .. '\n' ..
-'idehost = ' .. tostring(config_values.DBGp_client_idehost) .. '\n' ..
-'ideport = ' .. tostring(config_values.DBGp_client_ideport) .. '\n' ..
-'idekey = ' .. tostring(config_values.DBGp_client_idekey) .. '\n' ..
-'transport = ' .. tostring(config_values.DBGp_client_transport) .. '\n' ..
-'platform = ' .. tostring(config_values.DBGp_platform) .. '\n' ..
-'workingdir = ' .. tostring(config_values.DBGp_workingdir) .. '\n' .. [=[
 
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
@@ -575,12 +629,12 @@ local hotkeys_defaults = {
   global_exitApp = {"alt", "f4"},
   global_resetApp = {"shift", "f10"},
   global_releaseMouse = {"ctrl", "f10"},
-  global_connectDebugger = {"ctrl", "c"},
   global_showLuaConsole = "f12",
   global_runDebugScript = {"shift", "d"},
   global_screenshot = {"ctrl", "s"},
   global_stop_movie = "escape",
   global_stop_movie_alt = "q",
+  global_pause_movie = "p",
   global_window_close = "escape",
   global_window_close_alt = "q",
   ingame_showmenubar = "escape",
@@ -603,6 +657,7 @@ local hotkeys_defaults = {
   ingame_zoom_out_more = {"shift", "-"},
   ingame_reset_zoom = "0",
   ingame_setTransparent = "x",
+  ingame_toggleTransparent = {"shift", "x"},
   ingame_toggleAdvisor = {"shift", "a"},
   ingame_poopLog = {"ctrl", "d"},
   ingame_poopStrings = {"ctrl", "t"},
@@ -618,6 +673,7 @@ local hotkeys_defaults = {
   ingame_panel_status = "f7",
   ingame_panel_charts = "f8",
   ingame_panel_policy = "f9",
+  ingame_panel_machineMenu = "f10",
   ingame_panel_map_alt = "t",
   ingame_panel_research_alt = "r",
   ingame_panel_casebook_alt = "c",
@@ -717,11 +773,11 @@ if hotkeys_needs_rewrite and TheApp then
 'global_exitApp = ' .. hotkeys_values.global_exitApp .. '\n' ..
 'global_resetApp = ' .. hotkeys_values.global_resetApp .. '\n' ..
 'global_releaseMouse = ' .. hotkeys_values.global_releaseMouse .. '\n' ..
-'global_connectDebugger = ' .. hotkeys_values.global_connectDebugger .. '\n' ..
 'global_showLuaConsole = ' .. hotkeys_values.global_showLuaConsole .. '\n' ..
 'global_runDebugScript = ' .. hotkeys_values.global_runDebugScript .. '\n' ..
 'global_screenshot = ' .. hotkeys_values.global_screenshot .. '\n' ..
 'global_stop_movie = ' .. hotkeys_values.global_stop_movie .. '\n' ..
+'global_pause_movie = ' .. hotkeys_values.global_pause_movie .. '\n' ..
 'global_window_close = ' .. hotkeys_values.global_window_close .. '\n' ..
 'global_stop_movie_alt =' .. hotkeys_values.global_stop_movie_alt .. '\n' ..
 'global_window_close_alt =' .. hotkeys_values.global_window_close_alt .. '\n' .. [=[
@@ -778,6 +834,7 @@ if hotkeys_needs_rewrite and TheApp then
 'ingame_panel_status = ' .. hotkeys_values.ingame_panel_status .. '\n' ..
 'ingame_panel_charts = ' .. hotkeys_values.ingame_panel_charts .. '\n' ..
 'ingame_panel_policy = ' .. hotkeys_values.ingame_panel_policy .. '\n' ..
+'ingame_panel_machineMenu = ' .. hotkeys_values.ingame_panel_machineMenu .. '\n' ..
 'ingame_panel_map_alt = ' .. hotkeys_values.ingame_panel_map_alt .. '\n' ..
 'ingame_panel_research_alt = ' .. hotkeys_values.ingame_panel_research_alt .. '\n' ..
 'ingame_panel_casebook_alt = ' .. hotkeys_values.ingame_panel_casebook_alt .. '\n' ..
@@ -802,9 +859,10 @@ if hotkeys_needs_rewrite and TheApp then
 'ingame_quitLevel = ' .. hotkeys_values.ingame_quitLevel .. '\n' .. [=[
 
 ---------------------------------Set Transparent-------------------------------
--- While held down any walls will be transparent, allowing you to see behind them.
+-- Use these keys to make walls transparent, allowing you to see behind them.
 --]=] .. '\n' ..
-'ingame_setTransparent = ' .. hotkeys_values.ingame_setTransparent .. '\n' .. [=[
+'ingame_setTransparent = ' .. hotkeys_values.ingame_setTransparent .. '\n' ..
+'ingame_toggleTransparent = ' .. hotkeys_values.ingame_toggleTransparent .. '\n' .. [=[
 ]=]
 
 local string_05 = [=[

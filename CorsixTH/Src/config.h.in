@@ -42,23 +42,25 @@ SOFTWARE.
 #define CORSIX_TH_USE_WIN32_SDK
 #endif
 
-/** Audio options **/
-// SDL_mixer is used for ingame audio. If this library is not present on your
-// system, then you can comment out the next line and the game will not have
-// any music.
-#cmakedefine CORSIX_TH_USE_SDL_MIXER
-
 /** Movie options **/
 // FFmpeg
 // If this library is not present on your system, then you can comment out the
 // next line and the game will not have movies.
 #cmakedefine CORSIX_TH_USE_FFMPEG
 
-/** Font options **/
-// FreeType2 can be used for font support beyond the CP437 bitmap fonts which
-// come with Theme Hospital. It must be used if translations like Russian or
-// Chinese are desired.
-#cmakedefine CORSIX_TH_USE_FREETYPE2
+/** Update check options **/
+// If defined then an http request will be made using libcurl to check to see
+// if the current version is the latest.
+#cmakedefine WITH_UPDATE_CHECK
+
+/** MIDI device support **/
+// If defined then support playing MIDI on attached MIDI devices.
+#cmakedefine WITH_MIDI_DEVICE
+
+/** Lua modules options */
+// If defined then lua modules are considered to have been linked into the
+// binary instead of loaded at runtime.
+#cmakedefine CORSIX_TH_LINK_LUA_MODULES
 
 #ifdef _MSC_VER
 #define CORSIX_TH_USE_PACK_PRAGMAS 1
@@ -69,8 +71,8 @@ SOFTWARE.
 #endif
 
 /** Standard includes **/
-#include <cstddef>
-#include <cstdint>
+#include <cstddef>  // IWYU pragma: export
+#include <cstdint>  // IWYU pragma: export
 
 // We bring in the most common stddef and stdint types to avoid typing
 // clang-format off
@@ -85,14 +87,13 @@ using std::uint32_t;
 using std::uint64_t;
 // clang-format on
 
-/** Visual Leak Detector **/
-// In Visual Studio, Visual Leak Detector can be used to find memory leaks.
-#cmakedefine CORSIX_TH_USE_VLD
-
 /** Report operating system **/
 #cmakedefine CORSIX_TH_OS "@CORSIX_TH_OS@"
 
 /** Report system architecture **/
 #cmakedefine CORSIX_TH_ARCH "@CORSIX_TH_ARCH@"
+
+/** Set default value of font file **/
+#cmakedefine CORSIX_TH_FONT "@CORSIX_TH_FONT@"
 
 #endif  // CORSIX_TH_CONFIG_H_

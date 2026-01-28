@@ -28,17 +28,21 @@ function UIProgressReport:UIProgressReport(ui)
   self:UIFullscreen(ui)
 
   local world = self.ui.app.world
-  local hospital = ui.hospital
-  local gfx   = ui.app.gfx
+  local gfx = ui.app.gfx
 
   if not pcall(function()
     local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
 
     self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
-    self.red_font = gfx:loadFont("QData", "Font101V", false, palette)
-    self.normal_font = gfx:loadFont("QData", "Font100V", false, palette)
-    self.small_font = gfx:loadFont("QData", "Font106V")
-    self.panel_sprites = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+    self.red_font = gfx:loadFontAndSpriteTable("QData", "Font101V", false, palette, { apply_ui_scale = true })
+    self.normal_font = gfx:loadFontAndSpriteTable("QData", "Font100V", false, palette, { apply_ui_scale = true })
+    self.small_font = gfx:loadFontAndSpriteTable("QData", "Font106V", nil, nil, { apply_ui_scale = true })
+    -- Load all sprite tables needed for all goal icons
+    self.panel_sprites_table = {
+      MPointer = gfx:loadSpriteTable("Data", "MPointer"),
+      Rep02V = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+    }
+    self.panel_sprites = self.panel_sprites_table.Rep02V -- The default goals icons
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
     self:close()
@@ -49,53 +53,45 @@ function UIProgressReport:UIProgressReport(ui)
 
   -- Selected hospital number
   self.selected = 1
+  local hospital = world.hospitals[self.selected]
 
+  -- Collect which criteria to show here, draw columns in draw
   -- Add the icons for the criteria
   local x = 263
-  local world_goals = world.goals
-  for _, tab in ipairs(world_goals) do
-    local crit_name = world.level_criteria[tab.criterion].name
-    local res_value = world_goals[crit_name].win_value
-    world_goals[crit_name].visible = true
-    -- Special case for money, subtract loans
-    local cur_value = hospital[crit_name]
-    if crit_name == "balance" then
-      cur_value = cur_value - hospital.loan
+  local crit_data = world.endconditions:generateReportTable(hospital)
+  for _, crit_table in ipairs(crit_data) do
+    crit_table.visible = true
+    local crit_name = crit_table.name
+    local res_value = crit_table.win_value
+    local cur_value = world.endconditions:getAttribute(hospital, crit_name)
+    if crit_table.lose_value then
+      crit_table.red = true
+      res_value = crit_table.lose_value
     end
-    if world_goals[crit_name].lose_value then
-      world_goals[crit_name].red = false
-
-      if cur_value < world_goals[crit_name].boundary then
-        world_goals[crit_name].red = true
-        res_value = world_goals[crit_name].lose_value
-        -- TODO: Make the ugly workaround for the special case "percentage_killed" better
-        if crit_name:find("killed") then
-          res_value = nil
-          world_goals[crit_name].visible = false
-        end
-      elseif not world_goals[crit_name].win_value then
-        world_goals[crit_name].visible = false
-      end
+    -- FIXME: res_value and cure_value are depersisted as floating points, using
+    -- string.format("%.0f", x) is not suitable due to %d (num) param in _S string
+    local tooltip
+    if crit_table.two_tooltips then
+      local direction = crit_table.win_value and "over" or "under"
+      tooltip = _S.tooltip.status[direction][crit_name]
+    else
+      tooltip = _S.tooltip.status[crit_name]
     end
-    -- Only five criteria can be there at once.
-    if crit_name:find("killed") and world.winning_goal_count > 5 then
-      res_value = nil
-      world_goals[crit_name].visible = false
+    if crit_table.formats == 2 then
+      tooltip = tooltip:format(math.floor(res_value), math.floor(cur_value))
+    elseif crit_table.formats == 3 then
+      tooltip = tooltip:format(math.floor(res_value) / 1000,
+          math.floor(cur_value) / 1000)
+    else
+      tooltip = tooltip:format(math.floor(res_value))
     end
-    if res_value then
-      -- FIXME: res_value and cure_value are depersisted as floating points, using
-      -- string.format("%.0f", x) is not suitable due to %d (num) param in _S string
-      local tooltip
-      if world.level_criteria[tab.criterion].formats == 2 then
-        tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value), math.floor(cur_value))
-      else
-        tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value))
-      end
-      self:addPanel(world.level_criteria[tab.criterion].icon, x, 240)
-      self:makeTooltip(tooltip, x, 180, x + 30, 180 + 90)
-      x = x + 30
+    if not crit_table.icon_file then -- Icons from QData/Rep02V
+      self:addPanel(crit_table.icon, x, 240)
     end
+    self:makeTooltip(tooltip, x, 180, x + 30, 180 + 90)
+    x = x + 30
   end
+  self.crit_data = crit_data
 
   self:addPanel(0, 606, 447):makeButton(0, 0, 26, 26, 8, self.close):setTooltip(_S.tooltip.status.close)
 
@@ -136,21 +132,23 @@ function UIProgressReport:close()
 end
 
 function UIProgressReport:drawMarkers(canvas, x, y)
-  local x_min = 455
-  local x_max = 551
+  local s = TheApp.config.ui_scale
+  local x_min = 455 * s
+  local x_max = 551 * s
+
   local width = x_max - x_min
   local happiness = self.ui.hospital:getAveragePatientAttribute("happiness", 0.5)
   local thirst = 1 - self.ui.hospital:getAveragePatientAttribute("thirst", 0.5)
   local warmth = self.ui.hospital:getAveragePatientAttribute("warmth", nil)
   warmth = UIPatient.normaliseWarmth(warmth)
 
-  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * happiness), y + 193)
-  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * thirst), y + 223)
-  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * warmth), y + 254)
+  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * happiness), y + 193 * s, { scaleFactor = s })
+  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * thirst), y + 223 * s, { scaleFactor = s })
+  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * warmth), y + 254 * s, { scaleFactor = s })
 
   local world = self.ui.app.world
   if world.free_build_mode then
-    self.normal_font:drawWrapped(canvas, _S.progress_report.free_build, x + 265, y + 194, 150, "center")
+    self.normal_font:drawWrapped(canvas, _S.progress_report.free_build, x + 265 * s, y + 194 * s, 150 * s, "center")
   end
 
   -- Possibly show warning that it's too cold, too hot, patients not happy
@@ -159,92 +157,97 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   local msg = self.ui.hospital.show_progress_screen_warnings
   if warmth < 0.3 and msg == 1 then
     self.warning.visible = true
-    self.normal_font:drawWrapped(canvas, _S.progress_report.too_cold, x + 285, y + 285, 285)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.too_cold, x + 285 * s, y + 285 * s, 285 * s)
   elseif warmth > 0.7 and msg == 1 then
     self.warning.visible = true
-    self.normal_font:drawWrapped(canvas, _S.progress_report.too_hot, x + 285, y + 285, 285)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.too_hot, x + 285 * s, y + 285 * s, 285 * s)
   elseif thirst > 0.7 and msg == 2 then
     self.warning.visible = true
-    self.normal_font:drawWrapped(canvas, _S.progress_report.more_drinks_machines, x + 285, y + 285, 285)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.more_drinks_machines, x + 285 * s, y + 285 * s, 285 * s)
   elseif happiness < 0.8 and happiness >= 0.6 and msg == 3 then
     self.warning.visible = true
-    self.normal_font:drawWrapped(canvas, _S.progress_report.quite_unhappy, x + 285, y + 285, 285)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.quite_unhappy, x + 285 * s, y + 285 * s, 285 * s)
   elseif happiness < 0.6 and msg == 3 then
     self.warning.visible = true
-    self.normal_font:drawWrapped(canvas, _S.progress_report.very_unhappy, x + 285, y + 285, 285)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.very_unhappy, x + 285 * s, y + 285 * s, 285 * s)
   else
     self.warning.visible = false
   end
 end
 
 function UIProgressReport:draw(canvas, x, y)
-  self.background:draw(canvas, self.x + x, self.y + y)
+  local s = TheApp.config.ui_scale
+  canvas:scale(s, "bitmap")
+  self.background:draw(canvas, self.x * s + x, self.y * s + y)
+  canvas:scale(1, "bitmap")
   UIFullscreen.draw(self, canvas, x, y)
 
-  x, y = self.x + x, self.y + y
-  local world = self.ui.app.world
+  x, y = self.x * s + x, self.y * s + y
+  local world    = self.ui.app.world
   local hospital = world.hospitals[self.selected]
-  local world_goals = world.goals
 
   local total_spawns = 0
 
   -- Names of the players playing
-  local ly = 73
+  local ly = 73 * s
   for pnum, player in ipairs(world.hospitals) do
     local font = (pnum == self.selected) and self.red_font or self.normal_font
-    font:draw(canvas, player.name:upper(), x + 272, y + ly)
-    ly = ly + 25
-    total_spawns = total_spawns + math.max(1, player.population)
+    font:draw(canvas, player.name:upper(), x + 272 * s, y + ly)
+    ly = ly + 25 * s
+    total_spawns = total_spawns + math.max(1, player.population)    
   end
 
-  -- Draw the vertical bars for the winning conditions
-  local lx = 270
-  for _, tab in ipairs(world_goals) do
-    local crit_name = world.level_criteria[tab.criterion].name
-    if world_goals[crit_name].visible then
-      local sprite_offset = world_goals[crit_name].red and 2 or 0
-      local cur_value = hospital[crit_name]
-      -- Balance is special
-      if crit_name == "balance" then
-        cur_value = cur_value - hospital.loan
-      end
+  -- Draw the vertical bars for the selected conditions
+  local lx = 270 * s
+  for _, crit_table in ipairs(self.crit_data) do
+    if crit_table.visible then
+      local sprite_offset = crit_table.red and 2 or 0
+      local crit_name = crit_table.name
+      local cur_value = world.endconditions:getAttribute(hospital, crit_name)
       local height
-      if world_goals[crit_name].red then
-        local lose = world_goals[crit_name].lose_value
-        height = 1 + 49 * (1 - ((cur_value - lose)/(world_goals[crit_name].boundary - lose)))
+      if crit_table.red then
+        local lose = crit_table.lose_value
+        height = s + 49 * (1 - ((cur_value - lose)/(crit_table.boundary - lose))) * s
       else
-        height = 1 + 49 * (cur_value/world_goals[crit_name].win_value)
+        height = s + 49 * (cur_value/crit_table.win_value) * s
       end
-      if height > 50 then height = 50 end
+      if height > 50 * s then height = 50 * s end
       local result_y = 0
-      for dy = 0, height - 1 do
-        self.panel_sprites:draw(canvas, 1 + sprite_offset, x + lx, y + 237 - dy)
+      for dy = 0, height - 1, 1 do
+        self.panel_sprites:draw(canvas, 1 + sprite_offset, x + lx, y + 237 * s - dy, { scaleFactor = s })
         result_y = result_y + 1
       end
-      self.panel_sprites:draw(canvas, 2 + sprite_offset, x + lx, y + 237 - result_y)
-      lx = lx + 30
+      self.panel_sprites:draw(canvas, 2 + sprite_offset, x + lx, y + 237 * s - result_y, { scaleFactor = s })
+      if crit_table.icon_file then -- Icons not from QData/Rep02V
+        local icon_sprites = self.panel_sprites_table[crit_table.icon_file]
+        icon_sprites:draw(canvas, crit_table.icon, x + lx, y + 240 * s, { scaleFactor = s, flags = DrawFlags.Nearest })
+      end
+      lx = lx + 30 * s
     end
   end
 
   self:drawMarkers(canvas, x, y)
 
   self.normal_font:draw(canvas, _S.progress_report.header .. " " ..
-      (world:date():year() + 1999), x + 227, y + 40, 400, 0)
-  self.small_font:draw(canvas, _S.progress_report.win_criteria:upper(), x + 263, y + 172)
+      (world:date():year() + 1999), x + 227 * s, y + 40 * s, 400 * s, 0)
+  self.small_font:draw(canvas, _S.progress_report.win_criteria:upper(), x + 263 * s, y + 172 * s)
   self.small_font:draw(canvas, _S.progress_report.percentage_pop:upper() .. " " ..
-      math.floor(math.max(1, hospital.population) / total_spawns * 100) .. "%", x + 450, y + 65)
+      math.floor(math.max(1, hospital.population) / total_spawns * 100) .. "%", x + 450 * s, y + 65 * s)
 end
 
 function UIProgressReport:afterLoad(old, new)
-  if old < 179 then
-    local gfx = TheApp.gfx
+  if old < 206 then
+    self:close()
+  end
 
+  if old < 236 then
+    local gfx = TheApp.gfx
     local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
+
     self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
-    self.red_font = gfx:loadFont("QData", "Font101V", false, palette)
-    self.normal_font = gfx:loadFont("QData", "Font100V", false, palette)
-    self.small_font = gfx:loadFont("QData", "Font106V")
-    self.panel_sprites = gfx:loadSpriteTable("QData", "Rep02V", true, palette)
+    self.red_font = gfx:loadFontAndSpriteTable("QData", "Font101V", false, palette, { apply_ui_scale = true })
+    self.normal_font = gfx:loadFontAndSpriteTable("QData", "Font100V", false, palette, { apply_ui_scale = true })
+    self.small_font = gfx:loadFontAndSpriteTable("QData", "Font106V", nil, nil, { apply_ui_scale = true })
   end
 
   UIFullscreen.afterLoad(self, old, new)

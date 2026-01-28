@@ -139,35 +139,6 @@ function UINewGame:saveToConfig()
   self.ui.app:saveConfig()
 end
 
-function UINewGame:onMouseDown(button, x, y)
-  local repaint = UIResizable.onMouseDown(self, button, x, y)
-  if button == "left" and not repaint and not (x >= 0 and y >= 0 and
-  x < self.width and y < self.height) and self:hitTest(x, y) then
-    return self:beginDrag(x, y)
-  end
-  return repaint
-end
-
-function UINewGame:hitTest(x, y)
-  if x >= 0 and y >= 0 and x < self.width and y < self.height then
-    return true
-  end
-  local sprites = self.border_sprites
-  if not sprites then
-    return false
-  end
-  if x < -9 or y < -9 or x >= self.width + 9 or y >= self.height + 9 then
-    return false
-  end
-  if (0 <= x and x < self.width) or (0 <= y and y < self.height) then
-    return true
-  end
-  return sprites.hitTest(sprites, 10, x + 9,   y + 9) or
-         sprites.hitTest(sprites, 12, x - 160, y + 9) or
-         sprites.hitTest(sprites, 15, x + 9,   y - 240) or
-         sprites.hitTest(sprites, 17, x - 160, y - 240)
-end
-
 function UINewGame:buttonTutorial(checked, button)
   self.start_tutorial = checked
   button.panel_for_sprite:setLabel(checked and _S.new_game_window.option_on or _S.new_game_window.option_off)
@@ -196,16 +167,18 @@ function UINewGame:buttonStart()
 end
 
 function UINewGame:startGame(difficulty)
-  self.ui.app:loadLevel(1, difficulty)
-  self.ui.app.moviePlayer:playAdvanceMovie(1)
+  if self.ui.app:loadLevel(1, difficulty, nil, nil, nil, nil,
+      _S.errors.load_level_prefix, nil) and self.ui.app.world then
+    self.ui.app.moviePlayer:playAdvanceMovie(1)
 
-  -- Initiate campaign progression. The UI above may now have changed.
-  if not TheApp.using_demo_files then
-    TheApp.world.campaign_info = "TH.campaign"
-  end
-  if self.start_tutorial then
-    TheApp.ui.start_tutorial = true
-    TheApp.ui:startTutorial()
+    -- Initiate campaign progression. The UI above may now have changed.
+    if not TheApp.using_demo_files then
+      TheApp.world.campaign_info = "TH.campaign"
+    end
+    if self.start_tutorial then
+      TheApp.ui.start_tutorial = true
+      TheApp.ui:startTutorial()
+    end
   end
 end
 

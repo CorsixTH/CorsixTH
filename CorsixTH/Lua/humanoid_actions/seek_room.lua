@@ -41,6 +41,9 @@ function SeekRoomAction:enableTreatmentRoom()
   return self
 end
 
+--! Sets the index of the room to use from the disease's available diagnosis
+-- rooms
+--!param room (integer) key in the available diagnosis room list
 function SeekRoomAction:setDiagnosisRoom(room)
   assert(type(room) == "number", "Invalid value for parameter 'room'")
 
@@ -61,25 +64,35 @@ local action_seek_room_find_room = permanent"action_seek_room_find_room"( functi
     end
 
     local tried_rooms = 0
+    local diagnosis_rooms = humanoid.available_diagnosis_rooms
     -- Make numbers for each available diagnosis room. A random index from this list will be chosen,
     -- and then the corresponding room index is taken as next room. (The list decreases for each room
     -- missing)
-    local available_rooms = {}
-    for i=1, #humanoid.available_diagnosis_rooms do
-      available_rooms[i] = i
+    local rooms_to_check = {}
+    for i=1, #diagnosis_rooms do
+      rooms_to_check[i] = i
     end
-    while tried_rooms < #humanoid.available_diagnosis_rooms do
+
+    while tried_rooms < #rooms_to_check do
       -- Choose a diagnosis room from the list at random. Note: This ignores the initial diagnosis room!
-      local room_at_index = math.random(1,#available_rooms)
-      room_type = humanoid.available_diagnosis_rooms[available_rooms[room_at_index]]
+      local room_at_index = math.random(1,#rooms_to_check)
+      room_type = diagnosis_rooms[rooms_to_check[room_at_index]]
       -- Try to find the room
       local room = humanoid.world:findRoomNear(humanoid, room_type, nil, "advanced")
       if room then
+        -- Update action with the room to be used
+        for k, v in pairs(diagnosis_rooms) do
+          if room_type == v then
+            action:setDiagnosisRoom(k)
+            break
+          end
+        end
+        action.room_type = room_type
         return room
       else
         tried_rooms = tried_rooms + 1
         -- Remove the index of this room from the list of indices available in available_diagnosis_rooms
-        table.remove(available_rooms, room_at_index)
+        table.remove(rooms_to_check, room_at_index)
         -- If the room can be built, set the flag for it.
         local diag = humanoid.world.available_rooms[room_type]
         if diag and humanoid.hospital:isRoomDiscovered(diag.id) then
@@ -127,7 +140,7 @@ end)
 
 local function action_seek_room_no_diagnosis_room_found(action, humanoid)
    --If it's the VIP then there's been an explosion. Skip the exploded room
-  if humanoid.humanoid_class == "VIP" then
+  if class.is(humanoid, Vip) then
     humanoid.waiting = 1
     return
   end
@@ -170,7 +183,6 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
 end
 
 local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( function(action, humanoid)
-  humanoid:setMood("patient_wait", "deactivate")
   -- Just in case we are somehow started again:
   -- FIXME: This seems to be used for intermediate actions like peeing while the patient is waiting
   --        Unfortunately this means that if you finish the required room while the patient is peeing
@@ -236,7 +248,7 @@ local function action_seek_room_start(action, humanoid)
     staff_change_callback = --[[persistable:action_seek_room_staff_change_callback]] function(staff)
       -- we might have hired or fired a staff member
       -- technically we don't care about Receptionist or Handyman
-      if staff.humanoid_class == "Receptionist" or staff.humanoid_class == "Handyman" then
+      if class.is(staff, Receptionist) or class.is(staff, Handyman) then
         return
       end
       -- update the message either way
@@ -327,12 +339,13 @@ local function action_seek_room_start(action, humanoid)
           humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.awaiting_decision)
         end
       else
-        -- No more diagnosis rooms can be found
-        -- The GP's office is a special case. TODO: Make a custom message anyway?
         if action.room_type == "gp" then
+          -- The GP's office is a special case.
           humanoid:setMood("patient_wait", "activate")
           humanoid:setDynamicInfoText(_S.dynamic_info.patient.actions.no_gp_available)
+          humanoid.hospital:adviseNoGPOffice()
         else
+          -- No more diagnosis rooms can be found
           action_still_valid = action_seek_room_no_diagnosis_room_found(action, humanoid)
         end
       end

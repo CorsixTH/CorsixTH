@@ -22,15 +22,19 @@ SOFTWARE.
 
 #include "config.h"
 
-#include "lua_sdl.h"
-#include "th_lua.h"
-#ifdef CORSIX_TH_USE_SDL_MIXER
+#include <SDL_events.h>
 #include <SDL_mixer.h>
+#include <SDL_rwops.h>
+#include <SDL_thread.h>
 
 #include <array>
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 
+#include "lua.hpp"
+#include "lua_sdl.h"
+#include "th_lua.h"
 #include "xmi2mid.h"
 #ifdef _MSC_VER
 #pragma comment(lib, "SDL2_mixer")
@@ -38,9 +42,9 @@ SOFTWARE.
 
 class music {
  public:
-  Mix_Music* pMusic;
+  Mix_Music* pMusic{nullptr};
 
-  music() { pMusic = nullptr; }
+  music() = default;
 
   ~music() {
     if (pMusic) {
@@ -213,17 +217,22 @@ int l_stop_music(lua_State* L) {
 }
 
 int l_transcode_xmi(lua_State* L) {
-  size_t iLength, iMidLength;
+  size_t iLength;
   const uint8_t* pData = luaT_checkfile(L, 1, &iLength);
 
-  uint8_t* pMidData = transcode_xmi_to_midi(pData, iLength, &iMidLength);
-  if (pMidData == nullptr) {
-    lua_pushnil(L);
-    lua_pushliteral(L, "Unable to transcode XMI to MIDI");
-    return 2;
+  try {
+    size_t iMidLength;
+    uint8_t* pMidData = transcode_xmi_to_midi(pData, iLength, &iMidLength);
+    if (pMidData == nullptr) {
+      lua_pushnil(L);
+      lua_pushliteral(L, "Unable to transcode XMI to MIDI");
+      return 2;
+    }
+    lua_pushlstring(L, reinterpret_cast<char*>(pMidData), iMidLength);
+    delete[] pMidData;
+  } catch (const std::exception& e) {
+    luaL_error(L, "transcode_xmi exception: %s", e.what());
   }
-  lua_pushlstring(L, (const char*)pMidData, iMidLength);
-  delete[] pMidData;
 
   return 1;
 }
@@ -311,17 +320,3 @@ int luaopen_sdl_audio(lua_State* L) {
 
   return 1;
 }
-
-#else  // CORSIX_TH_USE_SDL_MIXER
-
-int luaopen_sdl_audio(lua_State* L) {
-  lua_newtable(L);
-  lua_pushboolean(L, 0);
-  lua_setfield(L, -2, "loaded");
-
-  return 1;
-}
-
-int l_load_music_async_callback(lua_State* L) { return 0; }
-
-#endif  // CORSIX_TH_USE_SDL_MIXER

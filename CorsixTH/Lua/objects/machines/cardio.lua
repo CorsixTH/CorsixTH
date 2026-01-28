@@ -30,6 +30,7 @@ object.build_preview_animation = 918
 object.default_strength = 12
 object.crashed_animation = 3308
 object.show_in_town_map = true
+object.smoke_animation = 3432
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -47,6 +48,20 @@ object.usage_animations = copy_north_to_south {
     },
   },
 }
+
+local kfp1, kfp2, kfp3, kfp4, kfp5, kfp6, kfp7
+kfp1, kfp2, kfp3, kfp4 = {-10, -7, "px"}, {-13, -11, "px"}, {-17, -11, "px"}, {-21, -13, "px"}
+kfp5, kfp6, kfp7 = {-27, -14, "px"}, {-31, -16, "px"}, {-37, -17, "px"}
+TheApp.animation_manager:setStaffMarker(object.usage_animations.north.in_use.Handyman,
+  0, kfp1, 1, kfp2, 2, kfp3, 3, kfp4, 4, kfp5, 5, kfp6, 6, kfp7
+)
+
+kfp1, kfp2, kfp3, kfp4 = {-37, -17, "px"}, {-29, -15, "px"}, {-25, -15, "px"}, {-20, -13, "px"}
+kfp5, kfp6, kfp7 = {-19, -13, "px"}, {-18, -13, "px"}, {-12, -10, "px"}
+TheApp.animation_manager:setStaffMarker(object.usage_animations.north.finish_use.Handyman,
+  0, kfp1, 5, kfp1, 6, kfp2, 7, kfp3, 8, kfp4, 9, kfp5, 10, kfp6, 11, kfp7
+)
+
 object.multi_usage_animations = {
   ["Stripped Male Patient - Doctor"] = copy_north_to_south {
     north = {
@@ -129,6 +144,7 @@ object.orientations = {
     use_position = {1, -1},
     use_position_secondary = {0, 0},
     added_handyman_animate_offset_while_in_use = {1, -1},
+    smoke_position = {0, 0},
   },
   east = {
     footprint = { {-1, -1, complete_cell = true}, {-1, 0}, {0, -1, complete_cell = true},
@@ -137,9 +153,10 @@ object.orientations = {
     use_position = {-1, 1},
     use_position_secondary = {0, 0},
     added_handyman_animate_offset_while_in_use = {-1, 1},
+    smoke_position = {0, 0},
   },
 }
 local anim_mgr = TheApp.animation_manager
-anim_mgr:setMarker(object.idle_animations.north, {-0.9, -0.9})
+anim_mgr:setPatientMarker(object.idle_animations.north, {-0.9, -0.9})
 
 return object

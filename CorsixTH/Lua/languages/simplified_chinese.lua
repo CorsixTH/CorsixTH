@@ -24,6 +24,7 @@ Font("unicode")
 Language("简体中文", "Chinese (simplified)", "zh(s)", "chi(s)", "zho(s)")
 Inherit("english")
 Encoding(utf8)
+IsArabicNumerals(false)
 
 -- Search OVERRIDE and NEW STRINGS for workspace
 
@@ -2093,16 +2094,16 @@ letter = {
 
 vip_names = {
   health_minister = "卫生部部长",
-  "伟大的查普顿市长", -- the rest is better organized in an array.
-  "南丁格尔",
-  "来自荷兰的伯那德国王",
-  "缅甸民主党领袖：昂山苏蒂",
-  "克朗伯先生",
-  "比利先生",
-  "克劳福议员",
-  "罗尼",
-  "一个超级联赛球星",
-  "拉里普罗斯特",
+  [1] = "伟大的查普顿市长", -- the rest is better organized in an array.
+  [2] = "南丁格尔",
+  [3] = "来自荷兰的伯那德国王",
+  [4] = "缅甸民主党领袖：昂山苏蒂",
+  [5] = "克朗伯先生",
+  -- [6] requires replacement (English uses 'Sir Lancelot Spratt')
+  [7] = "克劳福议员",
+  [8] = "罗尼",
+  [9] = "一个超级联赛球星",
+  [10] = "拉里普罗斯特",
 }
 
 -- 43: credits
@@ -3370,7 +3371,6 @@ options_window = {
   custom_resolution = "自定义...",
   width = "宽度",
   height = "高度",
-  audio = "全局音效",
   customise = "自定义",
   folder = "文件夹",
   language = "语言",
@@ -3394,8 +3394,6 @@ tooltip.options_window = {
   height = "输入想要的屏幕高度",
   apply = "应用此分辨率",
   cancel = "返回而不更改分辨率",
-  audio_button = "开关所有的声音",
-  audio_toggle = "切换开关",
   customise_button = "更多可以改变游戏体验的选项",
   folder_button = "文件夹选项",
   language = "游戏文字使用的语言",
@@ -3413,6 +3411,16 @@ tooltip.options_window = {
   cancel_zoomspeed = "返回而不更改缩放速度。",
   hotkey = "更改键盘热键。",
   check_for_updates = "游戏启动时自动检查更新",
+}
+
+audio_window = {
+  audio = "全局音效",
+  back = "返回",
+}
+
+tooltip.audio_window = {
+  audio_button = "开关所有的声音",
+  audio_toggle = "切换开关",
 }
 
 customise_window = {
@@ -3473,7 +3481,6 @@ tooltip.folders_window = {
   not_specified = "没有指定文件夹位置！",
   default = "默认位置",
   reset_to_default = "重置到默认文件夹",
- -- original_path = "The currently chosen directory of the original Theme Hospital installation", -- where is this used, I have left if for the time being?
   back = "关闭此菜单，并返回设置菜单",
 }
 
@@ -3653,7 +3660,7 @@ errors = {
   no_games_to_contine = "无游戏存档。",
   load_quick_save = "错误，不存在快速存档，无法加载。不用担心，我们已经为您创建了一个！",
   map_file_missing = "找不到该关卡的地图文件 %s！",
-  minimum_screen_size = "最小屏幕大小为 640x480。",
+  minimum_screen_size = "最小屏幕大小为 %dx%d。",
   unavailable_screen_size = "您设置的屏幕大小无法应用于全屏模式。",
   alien_dna = "注意：对于外星人病人来说，坐下、打开或敲门等都没有动画。因此，像在主题医院中做这些事情一样，它们看起来会恢复正常外观，然后又变回原状。外星人 DNA 仅当它们在关卡文件中设置启动时才会显示",
   fractured_bones = "注意：女性骨折患者的动画效果不理想",
@@ -3874,56 +3881,3 @@ multiplayer.everyone_failed = "所有玩家都没有完成最终目标。因此�
 
 options_window.change_resolution = "更改分辨率"
 tooltip.options_window.change_resolution = "更改窗口分辨率为左方的值"
-
---[[ Compatibility mapping for VIP result faxes in old saves (< 0.66). Using non-
-standard string formatting here, which should not be repeated in normal
-circumstances. This mapping will cause the legacy string to print in English but only
-for the relevant fax. These should be deleted on 2024 release. ]]--
-fax = {
-  vip_visit_result = {
-    ordered_remarks = {
-      [1] = fax.vip_visit_result.remarks[1],
-      [2] = fax.vip_visit_result.remarks[2],
-      [3] = fax.vip_visit_result.remarks[3],
-      [4] = fax.vip_visit_result.remarks[4],
-      [5] = fax.vip_visit_result.remarks[5],
-      [6] = fax.vip_visit_result.remarks[6],
-      [7] = fax.vip_visit_result.remarks[7],
-      [8] = fax.vip_visit_result.remarks[8],
-      [9] = fax.vip_visit_result.remarks[9],
-      [10] = fax.vip_visit_result.remarks[10],
-      [11] = fax.vip_visit_result.remarks[11],
-      [12] = fax.vip_visit_result.remarks[12],
-      [13] = fax.vip_visit_result.remarks[13],
-      [14] = fax.vip_visit_result.remarks[14],
-      [15] = fax.vip_visit_result.remarks[15],
-    },
-    remarks = {
-      super = {
-        fax.vip_visit_result.remarks[1],
-        fax.vip_visit_result.remarks[2],
-        fax.vip_visit_result.remarks[3],
-      },
-      good = {
-        fax.vip_visit_result.remarks[4],
-        fax.vip_visit_result.remarks[5],
-        fax.vip_visit_result.remarks[6],
-      },
-      mediocre = {
-        fax.vip_visit_result.remarks[7],
-        fax.vip_visit_result.remarks[8],
-        fax.vip_visit_result.remarks[9],
-      },
-      bad = {
-        fax.vip_visit_result.remarks[10],
-        fax.vip_visit_result.remarks[11],
-        fax.vip_visit_result.remarks[12],
-      },
-      very_bad = {
-        fax.vip_visit_result.remarks[13],
-        fax.vip_visit_result.remarks[14],
-        fax.vip_visit_result.remarks[15],
-      }
-    }
-  }
-}

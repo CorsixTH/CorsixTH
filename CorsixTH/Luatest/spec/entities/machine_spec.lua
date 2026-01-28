@@ -21,6 +21,7 @@ require("corsixth")
 
 require("class_test_base")
 
+require("utility")
 require("announcer")
 require("entity")
 require("entities/object")
@@ -51,6 +52,7 @@ describe("object.lua: ", function()
 
   it("can update dynamic Info", function()
     local machine = createMachineWithFakeInput()
+    machine:incrementUsageCounts()
     machine:updateDynamicInfo()
     assert.are.equal(1, machine.times_used)
     assert.are.equal(1, machine.total_usage)
@@ -67,6 +69,7 @@ describe("object.lua: ", function()
   end)
   it("setting null state doesn't clear values", function()
     local machine = createMachineWithFakeInput()
+    machine:incrementUsageCounts()
     machine:updateDynamicInfo()
 
     assert.are.equal(1, machine.times_used)

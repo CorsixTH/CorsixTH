@@ -54,9 +54,9 @@ function Handyman:dump()
       print("Last room: ", self.last_room.room_info.id .. '@' .. self.last_room.x ..','.. self.last_room.y)
   end
 
-  print("Cleaning: " .. self.attributes["cleaning"],
-        "Watering: " .. self.attributes["watering"],
-        "Repairing: " .. self.attributes["repairing"])
+  print("Cleaning: " .. self:getAttribute("cleaning"),
+        "Watering: " .. self:getAttribute("watering"),
+        "Repairing: " .. self:getAttribute("repairing"))
 
   Humanoid.dump(self)
 end
@@ -108,9 +108,9 @@ function Handyman:searchForHandymanTask()
   local nr = math.random()
   local task, task2, task3
   local assignedTask = false
-  if nr < self.attributes["cleaning"] then
+  if nr < self:getAttribute("cleaning") then
     task, task2, task3 = "cleaning", "watering", "repairing"
-  elseif nr < self.attributes["cleaning"] + self.attributes["watering"] then
+  elseif nr < self:getAttribute("cleaning") + self:getAttribute("watering") then
     task, task2, task3 = "watering", "cleaning", "repairing"
   else
     task, task2, task3 = "repairing", "watering", "cleaning"
@@ -120,16 +120,16 @@ function Handyman:searchForHandymanTask()
     self:assignHandymanTask(index, task)
     assignedTask = true
   else
-    if self.attributes[task] < 1 then
-      local sum = self.attributes[task2] + self.attributes[task3]
-      if math.random(0, math.floor(sum * 100)) > math.floor(self.attributes[task2] * 100) then
+    if self:getAttribute(task) < 1 then
+      local sum = self:getAttribute(task2) + self:getAttribute(task3)
+      if math.random(0, math.floor(sum * 100)) > math.floor(self:getAttribute(task2) * 100) then
         task2, task3 =  task3, task2
       end
       index = self.hospital:searchForHandymanTask(self, task2)
       if index ~= -1 then
         self:assignHandymanTask(index, task2)
         assignedTask = true
-      elseif self.attributes[task3] > 0 then
+      elseif self:getAttribute(task3) > 0 then
         index = self.hospital:searchForHandymanTask(self, task3)
         if index ~= -1 then
           self:assignHandymanTask(index, task3)

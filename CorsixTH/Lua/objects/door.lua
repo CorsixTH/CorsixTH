@@ -49,6 +49,18 @@ function Door:Door(...)
   -- self.user = "locked" -- prevents doors from being used (debug aid)
 end
 
+--! Updates room new door with values from previous door.
+-- New door is typically result of room editing.
+--!param room (Room) The room this door belongs to.
+--!param old_door (Door) Previous door of this room.
+function Door:setupDoor(room, old_door)
+  if old_door and old_door.queue then
+    -- for room edit case update new queue with values from old queue
+    self.queue.visitor_count = old_door.queue.visitor_count
+    self.queue.max_size = old_door.queue.max_size
+  end
+  self.room = room
+end
 
 function Door:getRoom()
   return self.room
@@ -154,7 +166,7 @@ function Door:closeDoor()
 end
 
 function Door:getDrawingLayer()
-  return 0
+  return DrawingLayers.Door
 end
 
 function Door:checkForDeadlock()

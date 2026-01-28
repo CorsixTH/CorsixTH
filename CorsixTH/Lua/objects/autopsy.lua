@@ -109,7 +109,7 @@ object.orientations = {
   },
 }
 local anim_mgr = TheApp.animation_manager
-anim_mgr:setMarker(object.idle_animations.north, {0.0 , 0.0})
+anim_mgr:setPatientMarker(object.idle_animations.north, {0.0 , 0.0})
 
 -- In (some versions of?) the original animations, 4086 has a builtin repeat,
 -- which looks very wrong, hence trim it to the length of a similar animation.

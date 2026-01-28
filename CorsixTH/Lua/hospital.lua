@@ -75,6 +75,8 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- epidemics. If epidemic_limit = 1 then only one epidemic can exist at a
   -- time either in the futures pool or as a current epidemic.
   self.concurrent_epidemic_limit = level_config.gbv.EpidemicConcurrentLimit or 1
+  -- For Cheat - flag determines possibility of epidemics
+  self.epidemics_disabled = false
 
   -- Initial values
   self.interest_rate = interest_rate_numerator / 10000
@@ -154,8 +156,8 @@ function Hospital:Hospital(world, avail_rooms, name)
   self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
 
   self.sodas_sold = 0
-  self.num_vips_ty  = 0 -- used to count how many VIP visits in the year for an award
-  self.pleased_vips_ty  = 0
+  self.num_vips_ty = 0 -- used to count how many VIP visits in the year for an award
+  self.pleased_vips_ty = 0
   self.num_cured_ty = 0
   self.not_cured_ty = 0
   self.num_visitors_ty = 0
@@ -169,7 +171,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.patients = {}
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
-  self.policies = {}
   self.discovered_diseases = {} -- a list
 
   -- Create a cheats instance for each hospital. AIHospitals don't know how to cheat (we hope!)
@@ -185,12 +186,15 @@ function Hospital:Hospital(world, avail_rooms, name)
     }
   end
 
-  self.policies["staff_allowed_to_move"] = true
-  self.policies["send_home"] = 0.1
-  self.policies["guess_cure"] = 0.9
-  self.policies["stop_procedure"] = 1 -- Note that this is between 1 and 2 ( = 100% - 200%)
-  self.policies["goto_staffroom"] = 0.6
-  self.policies["grant_wage_increase"] = TheApp.config.grant_wage_increase
+  local gbv = level_config.gbv
+  self.policies = {
+    staff_allowed_to_move = true,
+    send_home = 0.1,
+    guess_cure = 0.9,
+    stop_procedure = 1, -- Note that this is between 1 and 2 ( = 100% - 200%)
+    goto_staffroom = gbv.Tired / 1000, -- Defaults to 0.6 on normal difficulty
+    grant_wage_increase = TheApp.config.grant_wage_increase,
+  }
 
   -- Semi-randomly select three insurance companies to use, only different by name right now.
   -- The companies in the first quarter of the list are more likely to be selected
@@ -217,7 +221,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- Initialize diseases
   local diseases = TheApp.diseases
   local expertise = level_config.expertise
-  local gbv = level_config.gbv
   for _, disease in ipairs(diseases) do
     local disease_available = true
     local drug_effectiveness = 95
@@ -279,187 +282,6 @@ end
 --!param old Version of the loaded game.
 --!param new Version of the code being executed.
 function Hospital:afterLoad(old, new)
-  if old < 8 then
-    -- The list of discovered rooms was not saved. The best we can do is make everything
-    -- discovered which is available for the level.
-    self.discovered_rooms = {}
-    for _, room in ipairs(self.world.available_rooms) do
-      self.discovered_rooms[room] = true
-    end
-  end
-  if old < 9 then
-    -- Initial opening added
-    self.opened = true
-  end
-  if old < 14 then
-    -- NOTE: This will no longer work, but cluttering the code with stub functions
-    -- for this "old" compatibility, is it necessary?
-    self:_initResearch()
-  end
-  if old < 19 then
-    -- The statistics on the current map will be wrong, but it's better than nothing.
-    self.num_visitors = 0
-    self.player_salary = 10000
-    self.sodas_sold = 0
-  end
-  if old < 20 then
-    -- New variables
-    self.acc_loan_interest = 0
-    self.acc_research_cost = 0
-    -- Go through all diseases and remove individual reputation for diagnoses
-    for _, disease in pairs(self.disease_casebook) do
-      if disease.pseudo == true then
-        disease.reputation = nil
-      end
-    end
-    -- Go through all possible rooms and add those not researched to the research list.
-    self.research_rooms = {}
-    local next_diag = nil
-    local next_cure = nil
-    for _, room in ipairs(self.world.available_rooms) do
-      if not self.discovered_rooms[room] then
-        self.research_rooms[room] = 0
-        if room.categories.diagnosis then
-          next_diag = room
-        else
-          next_cure = room
-        end
-      end
-    end
-    -- Go through all rooms and find if a research department has been built
-    -- Also check for training rooms where the training_factor needs to be set
-    for _, room in pairs(self.world.rooms) do
-      if room.room_info.id == "research" then
-        self.research_dep_built = true
-      elseif room.room_info.id == "training" then
-        -- A standard value to keep things going
-        room.training_factor = 5
-      end
-    end
-    -- Redefine the research table
-    self.research = {
-      improvements =   {frac = 20, points = 0, current = "inflation"},
-      drugs =          {frac = 20, points = 0, current = "invisibility"},
-      diagnosis =      {frac = 20, points = 0, current = next_diag},
-      cure =           {frac = 20, points = 0, current = next_cure},
-      specialisation = {frac = 20, points = 0, current = "special"},
-      global = 100,
-    }
-    self.discover_autopsy_risk = 10
-  end
-  if old < 24 then
-    -- New variables
-    self.salary_incr = 300
-    self.sal_min = 50
-    self.salary_offer = 0
-  end
-  if old < 25 then
-    self.insurance_balance = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
-    self.num_deaths_this_year = 0
-  end
-  if old < 30 then
-    if self.emergency then
-      self.emergency.percentage = 0.75
-    end
-  end
-  if old < 33 then
-    -- Research has been revamped and expanded. Drugs and improvements
-    -- will work fine, but room research needs to be rebuilt.
-    local research = ResearchDepartment(self)
-    self.undiscovered_rooms = {}
-    local cure, diagnosis
-    local cfg_objects = self.world.map.level_config.objects
-    for _, room in ipairs(self.world.available_rooms) do
-      -- If a room is discovered, make sure its objects are also
-      -- discovered, otherwise add it to the undiscovered list.
-      if self.discovered_rooms[room] then
-        for name, _ in pairs(room.objects_needed) do
-          local object = TheApp.objects[name]
-          if cfg_objects[object.thob] and cfg_objects[object.thob].AvailableForLevel == 1 and
-              object.research_category and not research.research_progress[object].discovered then
-            local progress = self.research_rooms[room]
-            if self.research.cure.current == room or self.research.diagnosis.current == room then
-              progress = progress + self.research.diagnosis.points
-            end
-            research.research_progress[object].discovered = true
-            research.research_progress[object].points = progress
-          end
-        end
-      else
-        self.undiscovered_rooms[room] = true
-        if not cure or not diagnosis then
-          for name, _ in pairs(room.objects_needed) do
-            local object = TheApp.objects[name]
-            if cfg_objects[object.thob] and cfg_objects[object.thob].AvailableForLevel == 1 and
-                object.research_category and not research.research_progress[object].discovered then
-              if object.research_category == "cure" then
-                cure = object
-              elseif object.research_category == "diagnosis" then
-                diagnosis = object
-              end
-            end
-          end
-        end
-      end
-    end
-    local policy = research.research_policy
-    if cure then
-      policy.cure.current = cure
-    else
-      policy.global = policy.global - policy.cure.frac
-      policy.cure.frac = 0
-    end
-    if diagnosis then
-      research.research_policy.diagnosis.current = diagnosis
-    else
-      policy.global = policy.global - policy.diagnosis.frac
-      policy.diagnosis.frac = 0
-    end
-    self.research = research
-    self.research_rooms = nil
-    -- Cost of rooms has also been changed
-    local rooms = self.world.map.level_config.rooms
-    if not rooms then
-      -- Add the new variables manually.
-      rooms = {
-        [7] = {Cost = 2280}, -- GP_OFFICE
-        [8] = {Cost = 2270}, -- PSYCHO
-        [9] = {Cost = 1700}, -- WARD
-        [10] = {Cost = 2250}, -- OP_THEATRE
-        [11] = {Cost = 500}, -- PHARMACY
-        [12] = {Cost = 470}, -- CARDIO
-        [13] = {Cost = 3970}, -- SCANNER
-        [14] = {Cost = 2000}, -- ULTRASCAN
-        [15] = {Cost = 3000}, -- BLOOD_MACHINE
-        [16] = {Cost = 2000}, -- XRAY
-        [17] = {Cost = 1500}, -- INFLATOR
-        [18] = {Cost = 7000}, -- ALIEN
-        [19] = {Cost = 500}, -- HAIR_RESTORER
-        [20] = {Cost = 1500}, -- SLACK_TONGUE
-        [21] = {Cost = 500}, -- FRACTURE
-        [22] = {Cost = 1850}, -- TRAINING
-        [23] = {Cost = 500}, -- ELECTRO
-        [24] = {Cost = 4500}, -- JELLY_VAT
-        [25] = {Cost = 1350}, -- STAFF ROOM
-        [26] = {Cost = 5}, -- TV ??
-        [27] = {Cost = 720}, -- GENERAL_DIAG
-        [28] = {Cost = 800}, -- RESEARCH
-        [29] = {Cost = 1170}, -- TOILETS
-        [30] = {Cost = 5500}, -- DECON_SHOWER
-      }
-      self.world.map.level_config.rooms = rooms
-    end
-    for _, room in ipairs(TheApp.rooms) do
-      -- Sum up the build cost of the room
-      local build_cost = rooms[room.level_config_id].Cost
-      for name, no in pairs(room.objects_needed) do
-        -- Add cost for this object.
-        build_cost = build_cost + cfg_objects[TheApp.objects[name].thob].StartCost * no
-      end
-      -- Now define the total build cost for the room.
-      room.build_cost = build_cost
-    end
-  end
   if old < 34 then
     -- New variable
     self.acc_overdraft = 0
@@ -681,11 +503,11 @@ function Hospital:afterLoad(old, new)
   end
 
   -- Update other objects in the hospital (added in version 106).
-  if self.epidemic then self.epidemic.afterLoad(old, new) end
+  if self.epidemic then self.epidemic:afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
-    future_epidemic.afterLoad(old, new)
+    future_epidemic:afterLoad(old, new)
   end
-  self.research.afterLoad(old, new)
+  self.research:afterLoad(old, new)
 end
 
 --! Count the number of patients in the hospital.
@@ -925,7 +747,7 @@ function Hospital:onEndDay()
   -- Count receptionists.
   self.receptionist_count = 0
   for _, staff in ipairs(self.staff) do
-    if staff.humanoid_class == "Receptionist" then
+    if class.is(staff, Receptionist) then
       self.receptionist_count = self.receptionist_count + 1
     end
   end
@@ -1017,7 +839,8 @@ function Hospital:onEndMonth()
   self.research:checkAutomaticDiscovery(self.world:date():monthOfGame())
 
   -- Add some interesting statistics.
-  self.statistics[self.world:date():monthOfGame() + 1] = {
+  local newMonth = self.world:date():monthOfGame() + 1
+  self.statistics[newMonth] = {
     money_in = self.money_in,
     money_out = self.money_out,
     wages = wages,
@@ -1045,6 +868,17 @@ function Hospital:hasStaffedDesk()
   return false
 end
 
+--! Returns a list of all reception desks that are staffed
+function Hospital:getStaffedDesks()
+  local staffed_desks = {}
+  for _, desk in ipairs(self:findReceptionDesks()) do
+    if desk.receptionist or desk.reserved_for then
+      staffed_desks[#staffed_desks + 1] = desk
+    end
+  end
+  return staffed_desks
+end
+
 --! Collect the reception desks in the hospital.
 --!return (list) The reception desks in the hospital.
 function Hospital:findReceptionDesks()
@@ -1062,7 +896,11 @@ end
 --! Called at the end of each year
 function Hospital:onEndYear()
   self.sodas_sold = 0
-  self.num_vips_ty  = 0
+  self.num_vips_ty = 0
+  self.pleased_vips_ty = 0
+  self.num_cured_ty = 0
+  self.not_cured_ty = 0
+  self.num_visitors_ty = 0
   self.num_deaths_this_year = 0
 
   self.has_impressive_reputation = true
@@ -1106,7 +944,7 @@ function Hospital:createEmergency(emergency)
     self:makeEmergencyStartFax()
     return -- successfully created
   end
-  return "no heliport"
+  return "no_heliport"
 end
 
 -- Called when the timer runs out during an emergency or when all emergency patients are cured or dead.
@@ -1115,8 +953,8 @@ function Hospital:resolveEmergency()
   local rescued_patients = emer.cured_emergency_patients
   for _, patient in ipairs(self.emergency_patients) do
     if patient and not patient.cured and not patient.dead
-        and not patient.going_home and not patient:getRoom() then
-      patient:die()
+        and not patient.going_home then
+      patient:setToDying()
     end
   end
   local total = emer.victims
@@ -1155,7 +993,11 @@ end
  see @Hospital:determineIfContagious() to see how epidemics are typically started]]
 function Hospital:spawnContagiousPatient()
   --[[ Gets the available non-visual disease in the current world
-    @return non_visuals (table) table of available non-visual diseases]]
+    @return non_visuals (table) table of available non-visual diseases or
+      false if the patient cannot be spawned.
+    @return message (optional string) The error message that may be caused by using cheats.]]
+  if self.epidemics_disabled then return false, _S.misc.epidemics_off end
+
   local function get_available_contagious_diseases()
     local contagious = {}
     for _, disease in ipairs(self.world.available_diseases) do
@@ -1167,21 +1009,25 @@ function Hospital:spawnContagiousPatient()
   end
 
   if self:hasStaffedDesk() then
-    local patient = self.world:newEntity("Patient", 2)
+    local patient = self.world:newEntity("Patient", 2, 1)
     local contagious_diseases = get_available_contagious_diseases()
     if #contagious_diseases > 0 then
       local disease = contagious_diseases[math.random(1,#contagious_diseases)]
       patient:setDisease(disease)
       --Move the first patient closer (FOR TESTING ONLY)
       local x,y = self:getHeliportSpawnPosition()
+      if not x then
+        local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
+        x, y = spawn_point.x, spawn_point.y
+      end
       patient:setTile(x,y)
       patient:setHospital(self)
       self:addToEpidemic(patient)
     else
-      print("Cannot create epidemic - no contagious diseases available")
+      return false, _S.misc.epidemic_no_diseases
     end
   else
-    print("Cannot create epidemic - no staffed reception desk")
+    return false, _S.misc.epidemic_no_receptionist
   end
 end
 
@@ -1226,11 +1072,35 @@ function Hospital:manageEpidemics()
   end
 end
 
+--! Cancel ongoing and future epidemics.
+--!param disease (table) Optional, if specified only epidemics of a certain disease
+-- will be cancelled.
+function Hospital:cancelEpidemics(disease)
+  local function cancelEpidemic(epidemic)
+    if disease and disease ~= epidemic.disease then return false end
+    epidemic:cancelEpidemic()
+    return true
+  end
+  -- Cancel ongoing epidemic
+  if self.epidemic ~= nil then
+    if cancelEpidemic(self.epidemic) then self.epidemic = nil end
+  end
+  -- Cancel not revealed epidemics
+  if self.future_epidemics_pool then
+    local future_epidemics = self.future_epidemics_pool
+    for i=#future_epidemics, 1, -1 do
+      if cancelEpidemic(future_epidemics[i]) then
+        table.remove(self.future_epidemics_pool, i)
+      end
+    end
+  end
+end
+
 --[[ Determines if a patient is contagious and then attempts to add them the
  appropriate epidemic if so.
  @param patient (Patient) patient to determine if contagious]]
 function Hospital:determineIfContagious(patient)
-  if patient.is_emergency or not patient.disease.contagious then
+  if self.epidemics_disabled or patient.is_emergency or not patient.disease.contagious then
     return false
   end
   -- ContRate treated like a percentage with ContRate% of patients with
@@ -1262,11 +1132,11 @@ function Hospital:addToEpidemic(patient)
   local epidemic = self.epidemic
   -- Don't add a new contagious patient if the player is trying to cover up
   -- an existing epidemic - not really fair
-  if epidemic and not epidemic.coverup_in_progress and
+  if epidemic and not epidemic.coverup_selected and
       (patient.disease == epidemic.disease) then
     epidemic:addContagiousPatient(patient)
   elseif self.future_epidemics_pool and
-      not (epidemic and epidemic.coverup_in_progress) then
+      not (epidemic and epidemic.coverup_selected) then
     local added = false
     for _, future_epidemic in ipairs(self.future_epidemics_pool) do
       if future_epidemic.disease == patient.disease then
@@ -1290,15 +1160,6 @@ end
 
 function Hospital:spawnPatient()
   self.world:spawnPatient(self)
-end
-
-function Hospital:removeDebugPatient(patient)
-  for i, p in ipairs(self.debug_patients) do
-    if p == patient then
-      table.remove(self.debug_patients, i)
-      return
-    end
-  end
 end
 
 local debug_n
@@ -1383,7 +1244,8 @@ function Hospital:receiveMoneyForTreatment(patient)
     else
       reason = _S.transactions.cure_colon .. " " .. casebook.disease.name
     end
-    local amount = self:getTreatmentPrice(disease_id)
+    local amount = patient.pay_amount or 0
+    amount = amount > 0 and amount or self:getTreatmentPrice(disease_id)
 
     -- 25% of the payments now go through insurance
     if patient.insurance_company then
@@ -1396,13 +1258,15 @@ function Hospital:receiveMoneyForTreatment(patient)
     end
     casebook.money_earned = casebook.money_earned + amount
     patient.world:newFloatingDollarSign(patient, amount)
+    patient.pay_amount = 0
   end
 end
 
---! Sell a soda to a patient.
+--! Sell a soda to a patient for the price in the level config (default $20).
 --!param patient (patient) The patient buying the soda.
 function Hospital:sellSodaToPatient(patient)
-  self:receiveMoneyForProduct(patient, 20, _S.transactions.drinks)
+  local soda_price = self.world.map.level_config.gbv.SodaPrice
+  self:receiveMoneyForProduct(patient, soda_price, _S.transactions.drinks)
   self.sodas_sold = self.sodas_sold + 1
 end
 
@@ -1494,7 +1358,7 @@ function Hospital:initStaff()
         added_staff = false
       end
       if added_staff then
-        local staff = self.world:newEntity(profile.humanoid_class, 2)
+        local staff = self.world:newEntity(profile.humanoid_class, 2, 2)
         staff:setProfile(profile)
 
         -- Identify a safe starting place and
@@ -1712,9 +1576,17 @@ function Hospital:removeStaff(staff)
 end
 
 --! Remove a patient from the hospital.
+--  Also if a debug patient, they are also removed from the debug list.
 --!param patient (Patient) Patient to remove.
 function Hospital:removePatient(patient)
+  if patient.is_debug then self:removeDebugPatient(patient) end
   RemoveByValue(self.patients, patient)
+end
+
+--! Remove a debug patient from the debug list.
+--!param patient (Patient) Patient to remove
+function Hospital:removeDebugPatient(patient)
+  RemoveByValue(self.debug_patients, patient)
 end
 
 -- TODO: This should depend on difficulty and level
@@ -2363,6 +2235,28 @@ function Hospital:getRandomBusyRoom()
   if #chosen_room.door.queue >= busy_threshold then return chosen_room end
 end
 
+--! Open the hospital
+function Hospital:open()
+  self.opened = true
+end
+
+--! Check if the hospital is ready to accept patients
+function Hospital:canAcceptPatients()
+  return self.opened and self:hasStaffedDesk()
+end
+
+--! Has this hospital received any patients yet?
+function Hospital:hadPatients()
+  return self.num_visitors > 0
+end
+
+--! Reset the death counts. This is used by a cheat to reset key lose conditions.
+function Hospital:resetDeathCount()
+  self.num_deaths = 0
+  self.num_deaths_this_year = 0
+  self.statistics.deaths = 0
+end
+
 ---- Stubs section - these functions have nothing to do here, are overridden in a derived class.
 
 --! Give advice to the user about the need to buy the first reception desk.
@@ -2473,4 +2367,12 @@ function Hospital:getDiseaseReputationPriceFactor(disease)
   local reputation = self.disease_casebook[disease].reputation or self.reputation
   local percentage = self.disease_casebook[disease].price
   return math.min(1.5, math.max(0.5, reputation / 500 / percentage))
+end
+
+--! The UI parts of earthquake ticks
+function Hospital:tickEarthquake(stage)
+end
+
+--! Give advice that a patient is waiting for the player to build a GP's office
+function Hospital:adviseNoGPOffice()
 end

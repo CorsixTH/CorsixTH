@@ -67,6 +67,11 @@ else()
   set(CORSIX_TH_ARCH ${CMAKE_SYSTEM_PROCESSOR})
 endif()
 
+# Set default value of font file in compile_opts.font
+if(WITH_FONT)
+  set(CORSIX_TH_FONT ${WITH_FONT})
+endif()
+
 # Ensure config.h is picked up by cmake - moving this into subdir cmake files will
 # prevent it applying to the CorsixTH project
 set(CorsixTH_generated_src_dir ${CMAKE_BINARY_DIR}/CorsixTH/Src/)
@@ -74,11 +79,11 @@ add_library(CorsixTH_lib STATIC ${CorsixTH_generated_src_dir})
 
 target_include_directories(CorsixTH_lib PUBLIC ${CorsixTH_generated_src_dir})
 
-target_link_libraries(CorsixTH_lib RncLib)
+target_link_libraries(CorsixTH_lib PRIVATE RncLib)
 if(SEARCH_LOCAL_DATADIRS)
-  target_link_libraries(CorsixTH_lib WhereamiLib)
+  target_link_libraries(CorsixTH_lib PRIVATE WhereamiLib)
 endif()
-target_link_libraries(CorsixTH CorsixTH_lib)
+target_link_libraries(CorsixTH PRIVATE CorsixTH_lib)
 
 if(UNIX AND NOT APPLE)
   set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME corsix-th)
@@ -90,26 +95,26 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/Src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/SrcUnshared)
 
 # Set language standard
-set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 14)
+set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 17)
 set_property(TARGET CorsixTH_lib PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD_REQUIRED ON)
 
-set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 14)
+set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 17)
 set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
-# Add an extra step to copy built DLLs on MSVC
-if(USE_VCPKG_DEPS)
-  include(CopyVcpkgLua)
+## Finding libraries
+if(NOT VCPKG_TARGET_TRIPLET)
+  find_package(PkgConfig QUIET)
 endif()
 
-## Finding libraries
-
 # Find SDL
-if(MSVC AND USE_VCPKG_DEPS)
+if(VCPKG_TARGET_TRIPLET)
   find_package(SDL2 CONFIG REQUIRED)
-  target_link_libraries(CorsixTH_lib SDL2::SDL2)
-  target_link_libraries(CorsixTH SDL2::SDL2main)
+  target_link_libraries(CorsixTH_lib
+    PUBLIC
+      $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>)
+  target_link_libraries(CorsixTH PRIVATE SDL2::SDL2main)
 else()
   find_package(SDL2 REQUIRED)
   if(SDL_FOUND)
@@ -119,7 +124,7 @@ else()
       message("Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
     endif()
     # No need to specify sdl2main separately, the FindSDL.cmake file will take care of that. If not we get an error about it
-    target_link_libraries(CorsixTH ${SDL_LIBRARY})
+    target_link_libraries(CorsixTH_lib PUBLIC ${SDL_LIBRARY})
     message("  SDL2 found")
   else()
     message(FATAL_ERROR "Error: SDL2 library not found, it is required to build. Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
@@ -127,14 +132,13 @@ else()
 endif()
 
 # Find Lua
-if(MSVC AND USE_VCPKG_DEPS)
+if(VCPKG_TARGET_TRIPLET)
   find_package(Lua CONFIG REQUIRED)
-  target_link_libraries(CorsixTH_lib lua)
-  target_link_libraries(CorsixTH lua)
+  target_link_libraries(CorsixTH_lib PUBLIC lua)
 else()
   find_package(Lua REQUIRED)
   if(Lua_FOUND OR LUA_FOUND)
-    target_link_libraries(CorsixTH ${LUA_LIBRARY})
+    target_link_libraries(CorsixTH_lib PUBLIC ${LUA_LIBRARY})
     include_directories(${LUA_INCLUDE_DIR})
     # Special link flags needed on macOS 64bit, according to: http://luajit.org/install.html
     # If these are not specified, luaL_newstate() returns NULL and we get this:
@@ -158,22 +162,23 @@ endif()
 
 # Add threading library
 find_package(Threads)
-target_link_libraries(CorsixTH ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(CorsixTH PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 
 # Find SDL_mixer
-if(CORSIX_TH_USE_SDL_MIXER)
-  if(MSVC AND USE_VCPKG_DEPS)
-    find_package(SDL2_mixer CONFIG REQUIRED)
-    target_link_libraries(CorsixTH SDL2_mixer::SDL2_mixer)
+if(VCPKG_TARGET_TRIPLET)
+  find_package(SDL2_mixer CONFIG REQUIRED)
+  target_link_libraries(
+    CorsixTH_lib
+    PUBLIC
+      $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)
+else()
+  find_package(SDL2_mixer REQUIRED)
+  if(SDLMIXER_FOUND)
+    target_link_libraries(CorsixTH_lib PUBLIC ${SDLMIXER_LIBRARY})
+    include_directories(${SDLMIXER_INCLUDE_DIR})
+    message("  SDL_mixer found")
   else()
-    find_package(SDL2_mixer REQUIRED)
-    if(SDLMIXER_FOUND)
-      target_link_libraries(CorsixTH ${SDLMIXER_LIBRARY})
-      include_directories(${SDLMIXER_INCLUDE_DIR})
-      message("  SDL_mixer found")
-    else()
-      message(FATAL_ERROR "Error: SDL_mixer library not found, even though it was selected to be included")
-    endif()
+    message(FATAL_ERROR "Error: SDL_mixer library not found, it is required to build")
   endif()
 endif()
 
@@ -181,12 +186,12 @@ endif()
 if(CORSIX_TH_USE_FFMPEG)
   find_package(FFmpeg COMPONENTS AVFORMAT AVCODEC AVUTIL SWSCALE SWRESAMPLE REQUIRED)
   if(FFMPEG_FOUND)
-    target_link_libraries(CorsixTH ${FFMPEG_LIBRARIES})
+    target_link_libraries(CorsixTH_lib PUBLIC ${FFMPEG_LIBRARIES})
     include_directories(${FFMPEG_INCLUDE_DIRS})
     if(APPLE)
-      target_link_libraries(CorsixTH libz.dylib)
+      target_link_libraries(CorsixTH PRIVATE libz.dylib)
       # These LDFLAGS are necessary for static ffmpeg, harmless for dynamic ffmpeg
-      set(CMAKE_EXE_LINKER_FLAGS "-liconv -framework CoreVideo")
+      set(CMAKE_EXE_LINKER_FLAGS "-liconv -framework CoreMedia -framework CoreVideo -framework VideoToolbox")
     endif()
     message("  FFmpeg found")
   else()
@@ -195,35 +200,78 @@ if(CORSIX_TH_USE_FFMPEG)
 endif()
 
 # Find Freetype2
-if(CORSIX_TH_USE_FREETYPE2)
-  if(MSVC AND USE_VCPKG_DEPS)
-    find_package(Freetype REQUIRED)
-    target_link_libraries(CorsixTH Freetype::Freetype)
-  else()
-    find_package(Freetype REQUIRED)
-    if(FREETYPE_FOUND)
-      target_link_libraries(CorsixTH ${FREETYPE_LIBRARIES})
-      include_directories(${FREETYPE_INCLUDE_DIRS})
-      if(APPLE)
-        target_link_libraries(CorsixTH libz.dylib)
-        target_link_libraries(CorsixTH libbz2.dylib)
-      endif()
-      message("  FreeType2 found")
-    else()
-      message(FATAL_ERROR "Error: FreeType2 library not found, even though it was selected to be used")
+if(VCPKG_TARGET_TRIPLET)
+  find_package(Freetype REQUIRED)
+  target_link_libraries(CorsixTH_lib PUBLIC Freetype::Freetype)
+else()
+  find_package(Freetype REQUIRED)
+  if(FREETYPE_FOUND)
+    target_link_libraries(CorsixTH_lib PUBLIC ${FREETYPE_LIBRARIES})
+    include_directories(${FREETYPE_INCLUDE_DIRS})
+    if(APPLE)
+      target_link_libraries(CorsixTH_lib PRIVATE libz.dylib)
+      target_link_libraries(CorsixTH_lib PRIVATE libbz2.dylib)
     endif()
+    message("  FreeType2 found")
+  else()
+    message(FATAL_ERROR "Error: FreeType2 library not found, it is required to build")
   endif()
 endif()
 
-if(MSVC AND CORSIX_TH_USE_VLD)
-  find_package(VLD REQUIRED)
-  if(VLD_FOUND)
-    target_link_libraries(CorsixTH ${VLD_LIBRARY})
-    include_directories(CorsixTH ${VLD_INCLUDE_DIR})
-    message("  VLD found")
+if(WITH_UPDATE_CHECK)
+  find_package(CURL REQUIRED COMPONENTS HTTPS SSL)
+  if(CURL_FOUND)
+    target_link_libraries(CorsixTH_lib PRIVATE CURL::libcurl)
+    message("  Curl found")
   else()
-    message(FATAL_ERROR "Error: VLD Library not found, it is required to build when USE_VLD is set")
+    message(FATAL_ERROR "Error: curl not found")
   endif()
+endif()
+
+if(CORSIX_TH_LINK_LUA_MODULES)
+  message("Linking lua modules")
+  find_package(unofficial-luafilesystem CONFIG REQUIRED)
+  target_link_libraries(CorsixTH_lib PRIVATE unofficial::luafilesystem::lfs)
+
+  find_package(unofficial-lpeg CONFIG REQUIRED)
+  target_link_libraries(CorsixTH_lib PRIVATE unofficial::lpeg::lpeg)
+
+  add_custom_command(TARGET CorsixTH POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${UNOFFICIAL_LPEG_LUA_FILES}
+    $<TARGET_FILE_DIR:CorsixTH>)
+
+  if(NOT USE_SOURCE_DATADIRS)
+    install(FILES ${UNOFFICIAL_LPEG_LUA_FILES} DESTINATION ${CORSIX_TH_DATADIR})
+  endif()
+else()
+  message("Lua modules are not linked and will be loaded at runtime")
+endif()
+
+# Find libpng
+find_package(PNG REQUIRED)
+target_link_libraries(CorsixTH_lib PRIVATE PNG::PNG)
+
+# Find zlib
+find_package(ZLIB REQUIRED)
+target_link_libraries(CorsixTH_lib PRIVATE ZLIB::ZLIB)
+
+if(WITH_MIDI_DEVICE)
+  find_package(RtMidi)
+  if(NOT RtMidi_FOUND)
+    if(PkgConfig_FOUND)
+      pkg_search_module(RTMIDI REQUIRED rtmidi)
+      add_library(RtMidi::rtmidi INTERFACE IMPORTED)
+      set_target_properties(RtMidi::rtmidi PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${RTMIDI_INCLUDE_DIRS}"
+        INTERFACE_LINK_LIBRARIES "${RTMIDI_LIBRARIES}")
+    else()
+      message(FATAL_ERROR "Error: RtMidi was not found. If not available, compile WITH_MIDI_DEVICE=OFF")
+    endif()
+  endif()
+  message("RtMidi Found")
+  target_link_libraries(CorsixTH_lib PRIVATE RtMidi::rtmidi)
+
 endif()
 
 # Launch script to facilitate out of source builds
@@ -243,7 +291,6 @@ endif()
 if(ENABLE_UNIT_TESTS)
   message("Building Unit Tests")
   # Enable testing if set at this level so we can use CTest from the root of the build dir
-  enable_testing()
   add_subdirectory(${PROJECT_SOURCE_DIR}/CppTest)
 endif()
 
@@ -268,6 +315,10 @@ if(NOT USE_SOURCE_DATADIRS)
     if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/mime")
       install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/mime" "${CMAKE_CURRENT_BINARY_DIR}/socket" DESTINATION ${CORSIX_TH_DATADIR})
     endif()
+    # Include this module to search for compiler-provided system runtime
+    # libraries and add install rules for them.
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ".")
+    include(InstallRequiredSystemLibraries)
   else()
     install(TARGETS CorsixTH
       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -277,7 +328,7 @@ if(NOT USE_SOURCE_DATADIRS)
   endif()
   install(DIRECTORY Campaigns Lua Levels DESTINATION ${CORSIX_TH_DATADIR})
   install(DIRECTORY Bitmap DESTINATION ${CORSIX_TH_DATADIR}
-    FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
+    FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png|pl8)$"
   )
   install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
 

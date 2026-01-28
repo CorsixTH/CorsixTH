@@ -22,16 +22,19 @@ SOFTWARE.
 
 #include "persist_lua.h"
 
+#include "config.h"
+
 #include <errno.h>
 
 #include <array>
+#include <climits>
 #include <cmath>
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
+#include <new>
 #include <string>
-#include <vector>
 
+#include "lua.hpp"
 #include "th_lua.h"
 #ifdef _MSC_VER
 #pragma warning( \
@@ -64,52 +67,83 @@ template <class T>
 int l_crude_gc(lua_State* L) {
   // This __gc metamethod does not verify that the given value is the correct
   // type of userdata, or that the value is userdata at all.
-  reinterpret_cast<T*>(lua_touserdata(L, 1))->~T();
+  static_cast<T*>(lua_touserdata(L, 1))->~T();
   return 0;
 }
 
 }  // namespace
 
+constexpr size_t load_multi_buffer_capacity = 3;
+
 //! Structure for loading multiple strings as a Lua chunk, avoiding
 //! concatenation
 /*!
-    luaL_loadbuffer() is a good way to load a string as a Lua chunk. If there
+   luaL_loadbuffer() is a good way to load a string as a Lua chunk. If there
    are several strings which need to be concatenated before being loaded, then
-   it can be more efficient to use this structure, which can load them without
-    concatenating them. Sample usage is:
+   it can be more efficient to call lua_load with a callback function for
+   loading the strings one at a time than to concatenate the strings into a
+   single buffer.
+
+   This class provides the data structure and callback function to do this.
 
     ```
     load_multi_buffer ls;
-    ls.s[0] = lua_tolstring(L, -2, &ls.i[0]);
-    ls.s[1] = lua_tolstring(L, -1, &ls.i[1]);
-    lua_load(L, LoadMultiBuffer_t::load_fn, &ls, "chunk name");
+    ls.piece[0] = lua_tolstring(L, -2, &ls.piece_size[0]);
+    ls.piece[1] = lua_tolstring(L, -1, &ls.piece_size[1]);
+    luaT_load(L, load_multi_buffer::load_fn, &ls, "chunk name", "bt");
     ```
+
+    Because of the api of lua_tolstring the API of this class allows direct
+    and independent assignment of the chunk pieces and their sizes.
+
+    It is up to the caller to keep track of how many pieces are used and to
+    ensure that no more than load_multi_buffer_capacity pieces are used.
 */
 class load_multi_buffer {
  public:
-  const char* s[3];
-  size_t i[3];
-  int n;
+  /// lua_Reader callback function for lua_load or luaT_load
+  /*!
+   Called repeatedly by lua to get the next piece of data to load until a
+   null pointer is returned.
 
-  load_multi_buffer() {
-    s[0] = s[1] = s[2] = nullptr;
-    i[0] = i[1] = i[2] = 0;
-    n = 0;
-  }
+   \param L The Lua state
+   \param ud Pointer to the load_multi_buffer instance
+   \param size Pointer to size_t to receive the size of the returned string
 
+   \see https://www.lua.org/manual/5.4/manual.html#lua_Reader
+  */
   static const char* load_fn(lua_State* L, void* ud, size_t* size) {
-    load_multi_buffer* pThis = reinterpret_cast<load_multi_buffer*>(ud);
+    auto* me = static_cast<load_multi_buffer*>(ud);
 
-    for (; pThis->n < 3; ++pThis->n) {
-      if (pThis->i[pThis->n] != 0) {
-        *size = pThis->i[pThis->n];
-        return pThis->s[pThis->n++];
-      }
+    // Skip empty chunks if any which would cause lua_load to stop early
+    while (me->n < load_multi_buffer_capacity && me->piece_size[me->n] == 0) {
+      ++me->n;
+    }
+
+    if (me->n < load_multi_buffer_capacity) {
+      *size = me->piece_size[me->n];
+      return me->piece[me->n++];
     }
 
     *size = 0;
     return nullptr;
   }
+
+  /// Insert the given chunk at the given index in the buffer
+  void insert(std::string_view piece, size_t index) {
+    this->piece[index] = piece.data();
+    this->piece_size[index] = piece.size();
+  }
+
+  /// Pieces of the lua code chunk to be loaded.
+  const char* piece[load_multi_buffer_capacity]{nullptr};
+
+  /// Lengths of the pieces.
+  size_t piece_size[load_multi_buffer_capacity]{};
+
+ private:
+  /// The next piece index to be loaded
+  int n{};
 };
 
 //! Basic implementation of persistence interface
@@ -128,7 +162,7 @@ class load_multi_buffer {
 */
 class lua_persist_basic_writer : public lua_persist_writer {
  public:
-  lua_persist_basic_writer(lua_State* L) : L(L), data() {}
+  explicit lua_persist_basic_writer(lua_State* L) : L(L) {}
 
   ~lua_persist_basic_writer() override = default;
 
@@ -147,10 +181,6 @@ class lua_persist_basic_writer : public lua_persist_writer {
     lua_pushvalue(L, luaT_upvalueindex(1));  // Prototype persistence names
     lua_rawseti(L, -2, 1);
     lua_setmetatable(L, 1);
-
-    next_index = 1;
-    data_size = 0;
-    had_error = false;
   }
 
   int finish() {
@@ -610,10 +640,10 @@ class lua_persist_basic_writer : public lua_persist_writer {
 
  private:
   lua_State* L;
-  uint64_t next_index;
+  uint64_t next_index{1};
   std::string data;
-  size_t data_size;
-  bool had_error;
+  size_t data_size{0};
+  bool had_error{false};
 };
 
 //! Basic implementation of depersistence interface
@@ -633,7 +663,8 @@ class lua_persist_basic_writer : public lua_persist_writer {
 */
 class lua_persist_basic_reader : public lua_persist_reader {
  public:
-  lua_persist_basic_reader(lua_State* L) : L(L), string_buffer() {}
+  lua_persist_basic_reader(lua_State* L, const uint8_t* pData, size_t iLength)
+      : L(L), data(pData), data_buffer_size(iLength) {}
 
   ~lua_persist_basic_reader() override = default;
 
@@ -644,11 +675,7 @@ class lua_persist_basic_reader : public lua_persist_reader {
     string_buffer.assign(sError);
   }
 
-  void init(const uint8_t* pData, size_t iLength) {
-    data = pData;
-    data_buffer_size = iLength;
-    next_index = 1;
-    had_error = false;
+  void init() {
     lua_createtable(L, 32, 0);  // Environment
     lua_pushvalue(L, 2);
     lua_rawseti(L, -2, 0);
@@ -826,8 +853,8 @@ class lua_persist_basic_reader : public lua_persist_reader {
           lua_remove(L, -3);
           // Construct the closure factory
           load_multi_buffer ls;
-          ls.s[0] = lua_tolstring(L, -3, &ls.i[0]);
-          ls.s[1] = lua_tolstring(L, -1, &ls.i[1]);
+          ls.piece[0] = lua_tolstring(L, -3, &ls.piece_size[0]);
+          ls.piece[1] = lua_tolstring(L, -1, &ls.piece_size[1]);
           if (luaT_load(L, load_multi_buffer::load_fn, &ls, lua_tostring(L, -2),
                         "bt") != 0) {
             // Should never happen
@@ -891,6 +918,12 @@ class lua_persist_basic_reader : public lua_persist_reader {
           if (lua_isnil(L, -1))
             lua_pop(L, 1);
           else {
+            // Call the __depersist function with the userdata.
+            // Note: Unless the __pre_depersist method was called above, the
+            // new userdata has been created but any initialization such as
+            // the constructor normally called by luaT_stdnew has not yet been
+            // run. If the object is a C++ class, call the placement new
+            // constructor before performing any other operations on the object.
             lua_pushvalue(L, -2);
             lua_rawgeti(L, 1, -3);
             lua_call(L, 2, 1);
@@ -1059,11 +1092,11 @@ class lua_persist_basic_reader : public lua_persist_reader {
 
  private:
   lua_State* L;
-  uint64_t next_index;
+  uint64_t next_index{1};
   const uint8_t* data;
   size_t data_buffer_size;
   std::string string_buffer;
-  bool had_error;
+  bool had_error{false};
 };
 
 namespace {
@@ -1089,9 +1122,9 @@ int l_load_toplevel(lua_State* L) {
   lua_pushvalue(L, 1);
   lua_persist_basic_reader* pReader =
       new (lua_newuserdata(L, sizeof(lua_persist_basic_reader)))
-          lua_persist_basic_reader(L);
+          lua_persist_basic_reader(L, pData, iDataLength);
   lua_replace(L, 1);
-  pReader->init(pData, iDataLength);
+  pReader->init();
   if (!pReader->read_stack_object() || !pReader->finish()) {
     int iNumObjects = (int)pReader->get_object_count();
     int iNumBytes = (int)(pReader->get_pointer() - pData);
@@ -1132,10 +1165,9 @@ const char* find_function_end(lua_State* L, const char* sStart) {
     if (sEnd) {
       sEnd += 3;
       load_multi_buffer ls;
-      ls.s[0] = "return function";
-      ls.i[0] = sizeof("return function") - 1;
-      ls.s[1] = sStart;
-      ls.i[1] = sEnd - sStart;
+      ls.insert("return function", 0);
+      ls.piece[1] = sStart;
+      ls.piece_size[1] = sEnd - sStart;
       if (luaT_load(L, load_multi_buffer::load_fn, &ls, "", "bt") == 0) {
         lua_pop(L, 1);
         return sEnd;
@@ -1158,11 +1190,11 @@ int l_persist_dofile(lua_State* L) {
   }
   size_t iBufferSize = lua_objlen(L, luaT_upvalueindex(1));
   size_t iBufferUsed = 0;
-  while (!std::feof(fFile)) {
-    iBufferUsed += std::fread(
-        reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1))) +
-            iBufferUsed,
-        1, iBufferSize - iBufferUsed, fFile);
+  while (!std::ferror(fFile) && !std::feof(fFile)) {
+    iBufferUsed +=
+        std::fread(static_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1))) +
+                       iBufferUsed,
+                   1, iBufferSize - iBufferUsed, fFile);
     if (iBufferUsed == iBufferSize) {
       iBufferSize *= 2;
       std::memcpy(lua_newuserdata(L, iBufferSize),
@@ -1179,8 +1211,7 @@ int l_persist_dofile(lua_State* L) {
   }
 
   // Check file
-  char* sFile =
-      reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
+  char* sFile = static_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
   sFile[iBufferUsed] = 0;
   if (sFile[0] == '#') {
     do {
@@ -1204,7 +1235,7 @@ int l_persist_dofile(lua_State* L) {
   std::memcpy(lua_newuserdata(L, iBufferUsed + 1), sFile, iBufferUsed + 1);
   lua_insert(L, -2);
   lua_call(L, 0, LUA_MULTRET);
-  sFile = reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
+  sFile = static_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
   std::memcpy(sFile, lua_touserdata(L, iBufferCopyIndex), iBufferUsed + 1);
   lua_remove(L, iBufferCopyIndex);
 

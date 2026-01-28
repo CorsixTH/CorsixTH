@@ -341,7 +341,6 @@ options_window = {
   custom_resolution = "Anpassad...",
   width = "Bredd",
   height = "Höjd",
-  audio = "Globalt ljud",
   customise = "Anpassa",
   folder = "Mappar",
   language = "Spelspråk",
@@ -359,14 +358,22 @@ tooltip.options_window = {
   height = "Fyll i önskad skärmhöjd",
   apply = "Tillämpa den valda upplösningen",
   cancel = "Återvänd utan att ändra upplösning",
-  audio_button = "Stäng av eller sätt på allt ljud i spelet",
-  audio_toggle = "Slå av eller på",
   customise_button = "Fler inställningar som kan ändras för att anpassa din spelupplevelse",
   folder_button = "Mappinställningar",
   language = "Text i spelet kommer att visas på det här språket",
   select_language = "Väljs spelspråk",
   language_dropdown_item = "Ändra till %s som språk",
   back = "Stäng alternativmenyn",
+}
+
+audio_window = {
+  audio = "Globalt ljud",
+  back = "Tillbaka",
+}
+
+tooltip.audio_window = {
+  audio_button = "Stäng av eller sätt på allt ljud i spelet",
+  audio_toggle = "Slå av eller på",
 }
 
 customise_window = {
@@ -473,7 +480,7 @@ errors = {
   no_games_to_contine = "Det finns inga sparade spel.",
   load_quick_save = "Fel, kan inte ladda en snabbsparning eftersom det inte finns någon. Men oroa dig inte, nu har vi skapat en åt dig!",
   map_file_missing = "Kunde inte hitta kartfilen %s till den här nivån!",
-  minimum_screen_size = "Skärmupplösningen måste vara åtminstone 640x480.",
+  minimum_screen_size = "Skärmupplösningen måste vara åtminstone %dx%d.",
   unavailable_screen_size = "Skärmupplösningen du valde finns inte i fullskärmsläge.",
   alien_dna = "NOTERA: Det finns inga animeringar för patienter med utomjordiskt DNA när de sitter ner, öppnar dörrar osv. Precis som i Theme Hospital gör de därför det i mänsklig skepnad. Dessa patienter anländer som vanligt endast om nivån du spelar definierat att sjukdomen ska finnas",
   fractured_bones = "NOTERA: Animeringen för kvinnliga Krossade patienter är inte perfekt",

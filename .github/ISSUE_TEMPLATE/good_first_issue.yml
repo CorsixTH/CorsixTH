@@ -1,0 +1,111 @@
+# Note: This form can't be locked down to organisation memebers in GitHub currently.
+name: Good First Issue [Developer Use Only]
+title: "Good First Issue: Enter Summary Here"
+description: For developer use only. Create a guided ticket for a first-time
+  contributor so that they fix the code or implement something new.
+projects: []
+labels:
+  - Good First Issue
+body:
+  # Section only shown in form
+  - type: markdown
+    attributes:
+      value: >-
+        **CorsixTH Issue template for good first issues.**
+
+        This ticket aims to provide the outline of the problem, the relevant
+        code sources you need to know about, and what possible fixes there are,
+        if any.
+
+        Please ensure the original ticket is closed, if there was one, and link
+        it in the question further below. Set the appropriate labels after submission.
+  - type: textarea
+    id: what-is-issue
+    attributes:
+      label: Describe the issue
+      description: Give as much detail as possible
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Which CorsixTH version was the issue first discovered in?
+      description: Ideally a release version
+      placeholder: "0.69.1"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How can this be reproduced in CorsixTH?
+      description: If there is a problem method to replicate, this helps the
+        contributor to check that any fix works as intended
+      value: |-
+        1. *Load save game attached to this ticket*
+
+        2. 
+
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: cause
+    attributes:
+      label: What is the idenitifed cause of the problem (if a bug)?
+      description: Provide examples of the codebase where the problem lies, including
+        any reasoning why this happens
+  - type: textarea
+    id: fixes
+    attributes:
+      label: What is the recommended approach(es) to resolve this?
+      description: Provide as much detail as needed, including any caveats/code traps
+        that might occur
+    validations:
+      required: true
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Complexity Score
+      description: |
+       How difficult will this be for someone to undertake?
+
+       **Note: If this requires more than basic knowledge of Lua or C++ (arguably 
+       any C++ is bad) it is not a Good First Issue!**
+      options:
+        - "1: Very Easy (no code knowledge required)"
+        - "2: Easy (Needs a basic understanding of coding concepts)"
+        - "3: Slight Complexity (Needs a basic understanding of Lua or C++)"
+    validations:
+      required: true
+  - type: textarea
+    id: resources
+    attributes:
+      label: Are there any resources in our Wiki that may be of use?
+      description: Link them below.
+  - type: input
+    id: parent-issue
+    attributes:
+      label: If this has been created from an existing issue, please add it below
+      description: Separate multiple issues with a comma
+      placeholder: "#1234"
+  - type: textarea
+    id: savegame
+    attributes:
+      label: Is a save game to be provided?
+      description: Drag or upload it in the box below
+      value: "Save game provided: Yes/No/Already in existing ticket"
+    validations:
+      required: true
+  # Auto-inserting help text, do not touch question below.
+  - type: textarea
+    id: help
+    attributes:
+      label: You may wish to check out the following resources if you are interested in picking up this issue
+      description: DO NOT MODIFY
+      value: |-
+        [Programming in Lua 5.1 Manual](https://www.lua.org/pil/contents.html) (we mostly follow the 5.1 standard due to supporting LuaJIT)
+        [CorsixTH Flavoured Lua and C++ Coding Practices](https://github.com/CorsixTH/CorsixTH/wiki/Coding-Conventions)
+        [Contributing Guidelines](https://github.com/CorsixTH/CorsixTH/blob/master/CONTRIBUTING.md)
+
+        **Seeking Technical Support**
+        You can either reach out in this issue for support; or using our Technical channel in Discord/Matrix. This repo's homepage contains links to reach us there.

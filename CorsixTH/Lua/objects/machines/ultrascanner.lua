@@ -30,6 +30,7 @@ object.build_preview_animation = 5068
 object.default_strength = 12
 object.crashed_animation = 3396
 object.show_in_town_map = true
+object.smoke_animation = 3436
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -75,6 +76,7 @@ object.orientations = {
     use_position = {-1, 0, need_west_side = true},
     use_position_secondary = {1, -1},
     handyman_position = {2, 0},
+    smoke_position = {0, 0},
   },
   east = {
     render_attach_position = { {0, 0}, {1, 0}, {-1, 1} },
@@ -86,9 +88,12 @@ object.orientations = {
     use_position_secondary = {-1, 1},
     handyman_position = {0, 2},
     list_bottom = true,
+    smoke_position = {0, 0},
   },
 }
 local anim_mgr = TheApp.animation_manager
-anim_mgr:setMarker(object.idle_animations.north, {-0.9, -0.9})
+anim_mgr:setPatientMarker(object.idle_animations.north, {-0.9, -0.9})
+
+anim_mgr:setStaffMarker(object.usage_animations.north.in_use.Handyman, {60, -4, "px"})
 
 return object

@@ -112,7 +112,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
     dropped = nil
   }
 
-  object:setRepairingMode(lock_room and true or false)
+  object:setRepairingMode(lock_room and true or false, true)
 
   if not manual and urgent then
     object.hospital:giveAdvice({_A.warnings.machines_falling_apart})
@@ -188,7 +188,7 @@ end
   @return true if suitable for vaccination false otherwise (boolean) ]]
 function CallsDispatcher.verifyStaffForVaccination(patient, staff)
   -- If staff is not a nurse, or nurse is busy, or patient is busy, cannot vaccinate.
-  if staff.humanoid_class ~= "Nurse" or not staff:isIdle() or
+  if not class.is(staff, Nurse) or not staff:isIdle() or
       staff:getRoom() or patient:getRoom() then
     return false
   end
@@ -216,7 +216,7 @@ end
   have priority to vaccinate
   @return score (Integer) lowest score has higher priority to vaccinate ]]
 function CallsDispatcher.getPriorityForVaccination(patient, nurse)
-  assert(nurse.humanoid_class == "Nurse")
+  assert(class.is(nurse, Nurse))
   --Lower the priority "score" the more urgent it is
   --The closest nurse to the patient has the highest priority for vaccination
   --Any nurse who cannot reach the paitient suffers a priority penalty
@@ -241,7 +241,7 @@ end
   for vaccination @param nurse (Staff, humanoid_class Nurse) the nurse to perform
   the vaccination actions ]]
 function CallsDispatcher.sendNurseToVaccinate(patient, nurse)
-  assert(nurse.humanoid_class == "Nurse")
+  assert(class.is(nurse, Nurse))
 
   local epidemic = nurse.hospital.epidemic
   if epidemic then
@@ -300,7 +300,7 @@ function CallsDispatcher:findSuitableStaff(call)
   local min_staff = nil
   for _, e in ipairs(self.world.entities) do
     if class.is(e, Staff) then
-      if e.humanoid_class ~= "Handyman" then
+      if not class.is(e, Handyman) then
         local score = call.verification(e) and call.priority(e) or nil
         if score ~= nil and score < min_score then
           min_score = score
@@ -327,10 +327,10 @@ end
 function CallsDispatcher:answerCall(staff)
   local min_score = 2^30
   local min_call = nil
-  assert(not staff.on_call, "Staff should be idea before he can answer another call")
-  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call")
+  assert(not staff.on_call, "Staff member looking for work while already answering a call.")
+  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call.")
 
-  if staff.humanoid_class == "Handyman" then
+  if class.is(staff, Handyman) then
    staff:searchForHandymanTask()
    return true
   end
@@ -512,7 +512,12 @@ function CallsDispatcher.getPriorityForRoom(room, attribute, staff)
   end
 
   -- Prefer the tirer staff (such that less chance to have "resting synchronization issue")
-  score = score - staff.attributes["fatigue"] * 40 -- 40 is just a weighting scale
+  score = score - staff:getAttribute("fatigue") * 40 -- 40 is just a weighting scale
+
+  -- Prefer a wandering staff member over a staff member in a room
+  if not staff:getRoom() then
+    score = score - 50
+  end
 
   -- TODO: Assign doctor with higher ability
 

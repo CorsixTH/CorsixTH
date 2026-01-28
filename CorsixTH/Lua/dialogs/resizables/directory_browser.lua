@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local lfs = require("lfs")
 local TH = require("TH")
-local iso_fs = TH.iso_fs()
+local iso_fs = TH.iso_fs
 local lfsext = TH.lfsExt()
 
 --! A tree node representing a directory in the physical file-system.
@@ -105,7 +105,7 @@ function InstallDirTreeNode:getHighlightColour(canvas)
     elseif self:getChildCount() >= 3 and TheApp:isThemeHospitalPath(self.path) then
       highlight_colour = canvas:mapRGB(0, 255, 0)
       self.is_valid_directory = true
-    elseif FileSystem:isIso(self.path) and iso_fs:setRoot(self.path) then
+    elseif FileSystem:isIso(self.path) and iso_fs.isValidRoot(self.path) then
       highlight_colour = canvas:mapRGB(0, 255, 0)
       self.is_valid_directory = true
     end
@@ -152,7 +152,7 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
   self.exit_button = self:addBevelPanel(260, 400, 100, 18, self.col_bg)
 
   if mode ~= nil then
-    self.font = TheApp.gfx:loadFont("QData", "Font01V")
+    self.font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
     self:setDefaultPosition(0.5, 0.25)
     self.on_top = true
     self.esc_closes = true
@@ -212,11 +212,12 @@ end
 
 function UIDirectoryBrowser:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  local s = TheApp.config.ui_scale
+  x, y = self.x * s + x, self.y * s + y
   if not self.mode then
-    self.font:drawWrapped(canvas, _S.install.title, x + 5, y + 5, self.width - 10, "center")
-    self.font:drawWrapped(canvas, self.instruction, x + 5, y + 15, self.width - 10)
+    self.font:drawWrapped(canvas, _S.install.title, x + 5 * s, y + 5 * s, self.width * s - 10 * s, "center")
+    self.font:drawWrapped(canvas, self.instruction, x + 5 * s, y + 15 * s, self.width * s - 10 * s)
   else
-    self.font:drawWrapped(canvas, self.instruction, x + 5, y + 15, self.width - 10)
+    self.font:drawWrapped(canvas, self.instruction, x + 5 * s, y + 15 * s, self.width * s - 10 * s)
   end
 end

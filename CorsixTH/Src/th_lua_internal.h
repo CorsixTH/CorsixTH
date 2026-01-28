@@ -34,9 +34,7 @@ enum class lua_metatable {
   sheet,
   font,
   bitmap_font,
-#ifdef CORSIX_TH_USE_FREETYPE2
   freetype_font,
-#endif
   layers,
   anims,
   anim,
@@ -54,6 +52,7 @@ enum class lua_metatable {
   string_proxy,
   line,
   iso_fs,
+  midi_player,
 
   count
 };

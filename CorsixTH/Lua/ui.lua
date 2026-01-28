@@ -150,7 +150,7 @@ function UI:UI(app, minimal)
     self.tooltip_font = app.gfx:loadBuiltinFont()
   else
     local palette = app.gfx:loadPalette("QData", "PREF01V.PAL", true)
-    self.tooltip_font = app.gfx:loadFont("QData", "Font00V", false, palette)
+    self.tooltip_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette, { apply_ui_scale = true })
   end
   self.tooltip = nil
   self.tooltip_counter = 0
@@ -215,6 +215,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler("global_cancel_alt", self, self.closeWindow)
   self:addKeyHandler("global_stop_movie", self, self.stopMovie)
   self:addKeyHandler("global_stop_movie_alt", self, self.stopMovie)
+  self:addKeyHandler("global_pause_movie", self, self.pauseMovie)
   self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
   self:addKeyHandler("global_fullscreen_toggle", self, self.fullscreenHotkey)
   self:addKeyHandler("global_exitApp", self, self.exitApplication)
@@ -224,18 +225,28 @@ function UI:setupGlobalKeyHandlers()
   self:addOrRemoveDebugModeKeyHandlers()
 end
 
-function UI:connectDebugger()
-  local error_message = TheApp:connectDebugger()
-  if error_message then
-    self:addWindow(UIInformation(self, {error_message}))
+--! Play a sound effect
+--!param name (string) The name of the sound to be played. Can include
+--  wildcards (*).
+--!param played_callback (function) A function to be called when the sound has
+--  finished playing. Can be nil.
+--!param played_callback_delay (integer) An optional delay in milliseconds
+--  before the played_callback is called.
+--!param loops (integer) number of times to play the audio. -1 for infinite.
+--!return (table) A `sound` table for passing into functions that act on the
+--  playing sound. The fields are an implementation detail that should not be
+--  used outside of the Audio class.
+function UI:playSound(name, played_callback, played_callback_delay, loops)
+  if self.app.config.play_sounds then
+    return self.app.audio:playSound(name, nil, false, played_callback, played_callback_delay, loops)
   end
 end
 
--- Used for everything except music and announcements
-function UI:playSound(name, played_callback, played_callback_delay)
-  if self.app.config.play_sounds then
-    self.app.audio:playSound(name, nil, false, played_callback, played_callback_delay)
-  end
+--! Stop the given sound
+-- see Audio:stopSound
+--!param sound (table) sound to stop
+function UI:stopSound(sound)
+  self.app.audio:stopSound(sound)
 end
 
 -- Stub with args for subclass GameUI.
@@ -285,7 +296,7 @@ function UI:drawTooltip(canvas)
   end
 
   if self.tooltip_font then
-    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y)
+    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y, 200 * TheApp.config.ui_scale)
   end
 end
 
@@ -579,7 +590,12 @@ end
 
 function UI:changeResolution(width, height)
   self.app:prepareVideoUpdate()
-  local error_message = self.app.video:update(width, height, unpack(self.app.modes))
+  local error_message = self.app.video:update(
+      width,
+      height,
+      App.MIN_WINDOW_WIDTH * TheApp.config.ui_scale,
+      App.MIN_WINDOW_HEIGHT * TheApp.config.ui_scale,
+      unpack(self.app.modes))
   self.app:finishVideoUpdate()
 
   if error_message then
@@ -673,7 +689,10 @@ function UI:toggleFullscreen()
 
   local success = true
   self.app:prepareVideoUpdate()
-  local error_message = self.app.video:update(self.app.config.width, self.app.config.height, unpack(modes))
+  local error_message = self.app.video:update(self.app.config.width, self.app.config.height,
+      self.app.MIN_WINDOW_WIDTH * self.app.config.ui_scale,
+      self.app.MIN_WINDOW_HEIGHT * self.app.config.ui_scale,
+      unpack(self.app.modes))
   self.app:finishVideoUpdate()
 
   if error_message then
@@ -934,8 +953,22 @@ end
 
 local UpdateCursorPosition = TH.cursor.setPosition
 
---! Called when the mouse enters or leaves the game window.
+--! Called when focus changes on game window.
+--!param gain (number) 1 for in-focus, 0 for out-of-focus
 function UI:onWindowActive(gain)
+  self:setWindowActiveStatus(gain == 1)
+end
+
+--! Stores the game window active status
+--!param state (boolean) true for in-focus, false for out-of-focus
+function UI:setWindowActiveStatus(state)
+  self.app.window_active_status = state
+end
+
+--! Gets the game window active status
+--!return true for in-focus, false for out-of-focus
+function UI:getWindowActiveStatus()
+  return self.app.window_active_status
 end
 
 --! Window has been resized by the user
@@ -1057,11 +1090,9 @@ function UI:getCursorPosition(window)
 end
 
 function UI:addOrRemoveDebugModeKeyHandlers()
-  self:removeKeyHandler("global_connectDebugger", self)
   self:removeKeyHandler("global_showLuaConsole", self)
   self:removeKeyHandler("global_runDebugScript", self)
   if self.app.config.debug then
-    self:addKeyHandler("global_connectDebugger", self, self.connectDebugger)
     self:addKeyHandler("global_showLuaConsole", self, self.showLuaConsole)
     self:addKeyHandler("global_runDebugScript", self, self.runDebugScript)
   end
@@ -1084,6 +1115,12 @@ function UI:afterLoad(old, new)
       gfx.builtin_font = nil
     end
   end
+  if old < 236 then
+    local gfx = self.app.gfx
+    local palette = gfx:loadPalette("QData", "PREF01V.PAL", true)
+    self.tooltip_font = gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette, { apply_ui_scale = true })
+  end
+
   self:setupGlobalKeyHandlers()
 
   -- Cancel any saved screen movement from edge scrolling
@@ -1097,16 +1134,20 @@ end
 function UI:tutorialStep(...)
 end
 
+--! Perform the Screenshot action (usually by key bind 'global_screenshot')
 function UI:makeScreenshot()
-   -- Find an index for screenshot which is not already used
-  local i = 0
-  local filename
-  repeat
-    filename = TheApp.screenshot_dir .. ("screenshot%i.bmp"):format(i)
-    i = i + 1
-  until lfs.attributes(filename, "size") == nil
-  print("Taking screenshot: " .. filename)
-  local res, err = self.app.video:takeScreenshot(filename) -- Take screenshot
+  -- Generate filename
+  local timestamp = os.date("%Y%m%d-%H%M%S")
+  local filename = TheApp.screenshot_dir .. ("Screenshot_%s.png"):format(timestamp)
+
+  -- It's very unlikely you intentionally want multiple screenshots a second
+  if lfs.attributes(filename, "size") ~= nil then
+    print("Screenshot failed: File already exists")
+    return
+  end
+
+  -- Take screenshot
+  local res, err = self.app.video:takeScreenshot(filename)
   if not res then
     print("Screenshot failed: " .. err)
   else
@@ -1165,6 +1206,12 @@ end
 function UI:stopMovie()
   if self.app.moviePlayer.playing then
     self.app.moviePlayer:stop()
+  end
+end
+
+function UI:pauseMovie()
+  if self.app.moviePlayer.playing then
+    self.app.moviePlayer:togglePause()
   end
 end
 

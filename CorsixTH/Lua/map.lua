@@ -167,32 +167,26 @@ the original game levels are considered.
 !param map_file (string) The path to the map file as supplied by the config file.
 !param level_intro (string) If loading a custom level this message will be shown as soon as the level
 has been loaded.
+!return objects (table) The loaded map objects if successfully loaded
+!return errors (string) A localised error message if objects were not successfully loaded
 ]]
 function Map:load(level, difficulty, level_name, map_file, level_intro, map_editor)
-  local objects, _
+  local objects
   if not difficulty then
     difficulty = "full"
   end
-  -- Load CorsixTH base configuration for all levels.
-  -- We want to load the file again each time.
-  local function file (filename)
-      local f = assert(loadfile(filename))
-      return f()
-    end
 
-  local result = file(self.app:getFullPath({"Lua", "base_config.lua"}))
-  local base_config = result
+  -- Load CorsixTH base configuration for all levels.
+  local base_config = loadfile(self.app:getFullPath({"Lua", "base_config.lua"}))
+  if not base_config then
+    return nil, _S.errors.missing_corsixth_file:format("base_config.lua")
+  end
+  base_config = base_config()
+  assert(base_config, "No base config has been loaded!")
+
   if type(level) == "number" then
-    local errors, data
     -- Playing the original campaign.
-    -- Add TH's base config if possible, otherwise our own config
-    -- roughly corresponds to "full".
-    errors, base_config = self:loadMapConfig(difficulty .. "00.SAM", base_config)
-    -- If it couldn't be loaded the new difficulty level is full no matter what.
-    if errors then
-      difficulty = "full"
-    end
-    self.difficulty = difficulty
+    local errors, data, _, result
     self.level_number = level
     data, errors = self:getRawData(map_file)
     if data then
@@ -207,22 +201,19 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
       local demo_path = self.app:getFullPath({"Levels", "demo.level"})
       errors, result = self:loadMapConfig(demo_path, base_config, true)
       if errors then
-        print("Warning: Could not find the demo configuration, try reinstalling the game")
+        return nil, _S.errors.missing_corsixth_file:format("demo.level")
       end
+      self.difficulty = "full"
       self.level_config = result
     else
-      local level_no = level
-      if level_no < 10 then
-        level_no = "0" .. level
+      errors, result = self:_loadOriginalCampaignLevel(difficulty, level, base_config)
+      if errors then
+        return nil, errors
       end
-      -- Override with the specific configuration for this level
-      _, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
-      -- Finally load additional CorsixTH config per level
-      local level_path = self.app:getFullPath({"Levels", "original" .. level_no .. ".level"})
-      _, result = self:loadMapConfig(level_path, result, true)
       self.level_config = result
     end
   elseif map_editor then
+    local _
     -- We're being fed data by the map editor.
     self.level_name = "MAP EDITOR"
     self.level_number = "MAP EDITOR"
@@ -236,14 +227,14 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
         return nil, errors
       end
     end
-    assert(base_config, "No base config has been loaded!")
-
     self.level_config = base_config
   else
+    local _, result
     -- We're loading a custom level.
     self.level_name = level_name
     self.level_intro = level_intro
     self.level_number = level
+    self.level_filename = level:match(".+" .. package.config:sub(1, 1) .. "(.+)$")
     self.map_file = map_file
     local data, errors = self:getRawData(map_file)
     if data then
@@ -251,10 +242,9 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     else
       return nil, errors
     end
-    assert(base_config, "No base config has been loaded!")
-    errors, result = self:loadMapConfig(self.app:getAbsolutePathToLevelFile(level), base_config, true)
+    errors, result = self:loadMapConfig(level, base_config, true)
     if errors then
-      print(errors)
+      return nil, errors
     end
     self.level_config = result
   end
@@ -269,13 +259,48 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     end
   end
 
-  -- fix original level 6 map
-  if level == 6 and not map_file and not map_editor then
-    self:setCellFlags(56, 71, {hospital = true, buildable = true, buildableNorth = true, buildableSouth = true, buildableEast = true, buildableWest = true})
-    self:setCellFlags(58, 72, {passable = false})
-  end
-
+  self:_fixTiles()
   return objects
+end
+
+-- A set of the TH campaign levels with additional CorsixTH config files, found in CorsixTH/Levels.
+local additional_config = list_to_set({"05", "07", "08", 11, 12})
+
+--! Load further level configurations for the main campaign.
+--!param difficulty (string)
+--!param level_number (integer)
+--!param config (table) The level config created so far
+--!return error (string) Localised error message if error happens
+--!return config (table) Level config, if loaded successfully
+function Map:_loadOriginalCampaignLevel(difficulty, level_number, config)
+  local errors
+   if level_number < 10 then
+     level_number = "0" .. level_number
+   end
+   -- Add TH's base config if possible, otherwise our own config,
+   --  which roughly corresponds to "full".
+   local filename_diff = difficulty .. "00.SAM"
+   errors, config = self:loadMapConfig(filename_diff, config)
+   if errors then
+     return _S.errors.missing_th_data_file:format(filename_diff)
+   end
+   self.difficulty = difficulty
+   -- Load the Theme Hospital configuration for this difficulty and level
+   local filename_th_data = difficulty .. level_number .. ".SAM"
+   errors, config = self:loadMapConfig(filename_th_data, config)
+   if errors then
+     return _S.errors.missing_th_data_file:format(filename_th_data)
+   end
+   if additional_config[level_number] then
+     -- Load additional CorsixTH config per level.
+     local filename_cth = "original" .. level_number .. ".level"
+     local level_path = self.app:getFullPath({"Levels", filename_cth})
+     errors, config = self:loadMapConfig(level_path, config, true)
+     if errors then
+       return _S.errors.missing_corsixth_file:format(filename_cth)
+     end
+   end
+  return nil, config
 end
 
 --! Get the difficulty of the level. Custom levels and campaign always have medium difficulty.
@@ -341,7 +366,9 @@ function Map:setPlotOwner(plot_number, new_owner)
       end
     end
   end
+  -- Refresh the map's paths and flags
   self.th:updatePathfinding()
+  self:_fixTiles()
 end
 
 --[[! Saves the map to a .map file
@@ -351,13 +378,17 @@ function Map:save(filename)
   self.th:save(filename)
 end
 
---[[! Loads map configurations from files. Returns nil as first result
-if no configuration could be loaded and config as second result no matter what.
+-- A set of the level difficulties. Full is default
+local correct_difficulties = list_to_set({"easy", "full", "hard"})
+
+--[[! Loads map configurations from files.
 !param filename (string) The absolute path to the config file to load
 !param config (string) If a base config already exists and only some values should be overridden
 this is the base config
 !param custom If true The configuration file is searched for where filename points, otherwise
 it is assumed that we're looking in the theme_hospital_install path.
+!return error The specific localised error message, if error occurred
+!return config The successfully loaded config
 ]]
 function Map:loadMapConfig(filename, config, custom)
   local function iterator()
@@ -367,7 +398,7 @@ function Map:loadMapConfig(filename, config, custom)
       return self.app.fs:readContents("Levels", filename):gmatch"[^\r\n]+"
     end
   end
-  if self.app.fs:readContents("Levels", filename) or io.open(filename) then
+  if filename and (self.app.fs:readContents("Levels", filename) or io.open(filename)) then
     for line in iterator() do
       if line:sub(1, 1) == "#" then
         local parts = {}
@@ -386,8 +417,8 @@ function Map:loadMapConfig(filename, config, custom)
         for i = 2, nkeys + 1 do
           local key = parts[1] .. parts[i]
           local t, n
-          for name in key:gmatch("[^.%[%]]+") do
-            name = tonumber(name) or name
+          for match in key:gmatch("[^.%[%]]+") do
+            local name = tonumber(match) or match
             if t then
               if not t[n] then
                 t[n] = {}
@@ -402,9 +433,34 @@ function Map:loadMapConfig(filename, config, custom)
         end
       end
     end
+
+    -- If the level file overlay field gives a difficulty and number (from the TH campaign),
+    --   try to load that on top of the config loaded so far.
+    if config.overlay then
+      local difficulty, level_number = config.overlay.difficulty, config.overlay.level_number
+      local errors
+      config.overlay = nil -- Prevent recursive loop
+
+      if difficulty and level_number then
+        -- Validate the difficulty and level number
+        if not correct_difficulties[difficulty] then
+          return _S.errors.overlay.incorrect_difficulty .. difficulty
+        end
+        if type(level_number) ~= "number" or level_number < 1 or level_number > 12 then
+          return _S.errors.overlay.incorrect_level_number .. level_number
+        end
+        -- Load difficulty and level from Theme Hospital and CorsixTH configs
+        errors, config = self:_loadOriginalCampaignLevel(difficulty, level_number, config)
+        if errors then
+          return errors
+        end
+      else
+        return _S.errors.overlay.missing_setting
+      end
+    end
     return nil, config
   else
-    return "Error: Could not find the configuration file, only 'Base Config' will be loaded for this level.", config
+    return _S.errors.missing_level_file
   end
 end
 
@@ -522,11 +578,12 @@ function Map:updateDebugOverlayHeliport()
   end
 end
 
-function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
+-- If both 'first' and 'last' are numbers, they are indices starting at 0.
+function Map:loadDebugText(first, last, bits_)
   self.debug_text = false
   self.debug_flags = false
   self.updateDebugOverlay = nil
-  if base_offset == "flags" then
+  if first == "flags" then
     self.debug_flags = {}
     for x = 1, self.width do
       for y = 1, self.height do
@@ -536,7 +593,7 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
     end
     self.updateDebugOverlay = self.updateDebugOverlayFlags
     self:updateDebugOverlay()
-  elseif base_offset == "positions" then
+  elseif first == "positions" then
     self.debug_text = {}
     for x = 1, self.width do
       for y = 1, self.height do
@@ -544,32 +601,30 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
         self.debug_text[xy] = x .. "," .. y
       end
     end
-  elseif base_offset == "heat" then
+  elseif first == "heat" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayHeat
     self:updateDebugOverlay()
-  elseif base_offset == "parcel" then
+  elseif first == "parcel" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayParcels
     self:updateDebugOverlay()
-  elseif base_offset == "camera" then
+  elseif first == "camera" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayCamera
     self:updateDebugOverlay()
-  elseif base_offset == "heliport" then
+  elseif first == "heliport" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayHeliport
     self:updateDebugOverlay()
   else
-    local thData = self:getRawData()
     for x = 1, self.width do
       for y = 1, self.height do
-        local xy = (y - 1) * self.width + x - 1
-        local offset = base_offset + xy * xy_offset
+        local raw = self.th:getCellRaw(x, y)
         if bits_ then
-          self:setDebugText(x, y, bits(thData:byte(offset + first, offset + last)))
+          self:setDebugText(x, y, bits(raw:byte(first + 1, last + 1)))
         else
-          self:setDebugText(x, y, thData:byte(offset + first, offset + last))
+          self:setDebugText(x, y, raw:byte(first + 1, last + 1))
         end
       end
     end
@@ -620,6 +675,46 @@ function Map:setDebugText(x, y, msg, ...)
   self.debug_text[(y - 1) * self.width + x - 1] = text
 end
 
+function Map:_drawDebugTiles(canvas, x, y, xpos, ypos)
+  local xy = y * self.width + x
+  if self.debug_flags then
+    local flags = self.debug_flags[xy]
+    if flags.passable then
+      self.cell_outline:draw(canvas, 3, xpos, ypos)
+    end
+    if flags.hospital then
+      self.cell_outline:draw(canvas, 8, xpos, ypos)
+    end
+    if flags.buildable then
+      self.cell_outline:draw(canvas, 9, xpos, ypos)
+    end
+    if flags.travelNorth and self.debug_flags[xy - self.width].passable then
+      self.cell_outline:draw(canvas, 4, xpos, ypos)
+    end
+    if flags.travelEast and self.debug_flags[xy + 1].passable then
+      self.cell_outline:draw(canvas, 5, xpos, ypos)
+    end
+    if flags.travelSouth and self.debug_flags[xy + self.width].passable then
+      self.cell_outline:draw(canvas, 6, xpos, ypos)
+    end
+    if flags.travelWest and self.debug_flags[xy - 1].passable then
+      self.cell_outline:draw(canvas, 7, xpos, ypos)
+    end
+    if flags.thob ~= 0 then
+      self.debug_font:draw(canvas, "T"..flags.thob, xpos, ypos, 64, 16)
+    end
+    if flags.roomId ~= 0 then
+      self.debug_font:draw(canvas, "R"..flags.roomId, xpos, ypos + 16, 64, 16)
+    end
+  else
+    local msg = self.debug_text[xy]
+    if msg and msg ~= "" then
+      self.cell_outline:draw(canvas, 2, xpos, ypos)
+      self.debug_font:draw(canvas, msg, xpos, ypos, 64, 32)
+    end
+  end
+end
+
 --! Draws the rectangle of the map given by (sx, sy, sw, sh) at position (dx, dy) on the canvas
 --!param canvas
 --!param sx Horizontal start position at the screen.
@@ -633,87 +728,50 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
   -- All the heavy work is done by C code:
   self.th:draw(canvas, sx, sy, sw, sh, dx, dy)
 
+  if not self.debug_font or not (self.debug_text or self.debug_flags) then return end
   -- Draw any debug overlays
-  if self.debug_font and (self.debug_text or self.debug_flags) then
-    local startX = 0
-    local startY = math_floor((sy - 32) / 16)
-    if startY < 0 then
-      startY = 0
-    elseif startY >= self.height then
-      startX = startY - self.height + 1
-      startY = self.height - 1
-      if startX >= self.width then
-        startX = self.width - 1
-      end
+  local startX = 0
+  local startY = math_floor((sy - 32) / 16)
+  if startY < 0 then
+    startY = 0
+  elseif startY >= self.height then
+    startX = startY - self.height + 1
+    startY = self.height - 1
+    if startX >= self.width then
+      startX = self.width - 1
     end
-    local baseX = startX
-    local baseY = startY
-    while true do
-      local x = baseX
-      local y = baseY
-      local screenX = 32 * (x - y) - sx
-      local screenY = 16 * (x + y) - sy
-      if screenY >= sh + 70 then
-        break
-      elseif screenY > -32 then
-        repeat
-          if screenX < -32 then -- luacheck: ignore 542
-          elseif screenX < sw + 32 then
-            local xy = y * self.width + x
-            local xpos = dx + screenX - 32
-            local ypos = dy + screenY
-            if self.debug_flags then
-              local flags = self.debug_flags[xy]
-              if flags.passable then
-                self.cell_outline:draw(canvas, 3, xpos, ypos)
-              end
-              if flags.hospital then
-                self.cell_outline:draw(canvas, 8, xpos, ypos)
-              end
-              if flags.buildable then
-                self.cell_outline:draw(canvas, 9, xpos, ypos)
-              end
-              if flags.travelNorth and self.debug_flags[xy - self.width].passable then
-                self.cell_outline:draw(canvas, 4, xpos, ypos)
-              end
-              if flags.travelEast and self.debug_flags[xy + 1].passable then
-                self.cell_outline:draw(canvas, 5, xpos, ypos)
-              end
-              if flags.travelSouth and self.debug_flags[xy + self.width].passable then
-                self.cell_outline:draw(canvas, 6, xpos, ypos)
-              end
-              if flags.travelWest and self.debug_flags[xy - 1].passable then
-                self.cell_outline:draw(canvas, 7, xpos, ypos)
-              end
-              if flags.thob ~= 0 then
-                self.debug_font:draw(canvas, "T"..flags.thob, xpos, ypos, 64, 16)
-              end
-              if flags.roomId ~= 0 then
-                self.debug_font:draw(canvas, "R"..flags.roomId, xpos, ypos + 16, 64, 16)
-              end
-            else
-              local msg = self.debug_text[xy]
-              if msg and msg ~= "" then
-                self.cell_outline:draw(canvas, 2, xpos, ypos)
-                self.debug_font:draw(canvas, msg, xpos, ypos, 64, 32)
-              end
-            end
+  end
+  local baseX = startX
+  local baseY = startY
+  while true do -- TODO: replace this with a scanline
+    local x = baseX
+    local y = baseY
+    local screenX = 32 * (x - y) - sx
+    local screenY = 16 * (x + y) - sy
+    local ypos = dy + screenY
+    if screenY >= sh + 70 then
+      break
+    elseif screenY > -32 then
+      repeat
+        if screenX >= -32 then
+          if screenX < sw + 32 then
+            self:_drawDebugTiles(canvas, x, y, dx + screenX - 32, ypos)
           else
             break
           end
-          x = x + 1
-          y = y - 1
-          screenX = screenX + 64
-        until y < 0 or x >= self.width
-      end
-      if baseY == self.height - 1 then
-        baseX = baseX + 1
-        if baseX == self.width then
-          break
         end
-      else
-        baseY = baseY + 1
+        x = x + 1
+        y = y - 1
+        screenX = screenX + 64
+      until y < 0 or x >= self.width
+    end
+    if baseY == self.height - 1 then
+      baseX = baseX + 1
+      if baseX == self.width then
+        break
       end
+    else
+      baseY = baseY + 1
     end
   end
 end
@@ -733,6 +791,66 @@ end
 --!return Number of tiles in the queried parcel.
 function Map:getParcelTileCount(parcel)
   return self.parcelTileCounts[parcel] or 0
+end
+
+--! Expandable private function to fix tile issues on loading a map.
+--! Each fix should be rendered in a local function.
+function Map:_fixTiles()
+  local function isOriginalCampaign()
+    return type(self.level_number) == "number" and not self.map_file
+  end
+
+ -- Fix the original campaign's outdoor tiles from being marked with bad flags
+  local function fixOutdoorTiles()
+    local function unsetFlags(cell, x, y, allowed_set, flags_to_set)
+      if not allowed_set[cell] then
+        self:setCellFlags(x, y, flags_to_set)
+      end
+    end
+
+    -- Only buildings should be part of the hospital.
+    local hosp_tiles = list_to_set( {
+      17, 70, 18, 19, 23, 16, 21, 22, 66, 76, 20 -- indoor tiles
+    } )
+    local non_hosp_flags = { hospital = false }
+
+    -- Only indoor and certain outdoor tiles should be transverable.
+    local pathable_tiles = list_to_set( {
+      17, 70, 18, 19, 23, 16, 21, 22, 66, 76, 20, -- indoor tiles
+      4, 15, 5, -- concrete paths and helipad
+      41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58 -- road tiles
+    } )
+    -- Also make ineligible outdoor tiles non-buildable, which sometimes got set in
+    -- the original campaign.
+    local non_path_flags = {
+      passable = false, buildable = false, buildableNorth = false,
+      buildableEast = false, buildableSouth = false, buildableWest = false
+    }
+
+    for x=1, self.width do
+      for y=1, self.height do
+        local cell = self.th:getCell(x, y, 1)
+        unsetFlags(cell, x, y, hosp_tiles, non_hosp_flags)
+        unsetFlags(cell, x, y, pathable_tiles, non_path_flags)
+      end
+    end
+  end
+
+  -- Fix the original level 6 map
+  local function fixLevel6Flags()
+    if self.level_number ~= 6 then return end
+    self:setCellFlags(56, 71, {
+      hospital = true, buildable = true,
+      buildableNorth = true, buildableSouth = true,
+      buildableEast = true, buildableWest = true
+    })
+    self:setCellFlags(58, 72, {passable = false})
+  end
+
+  if isOriginalCampaign() then
+    fixOutdoorTiles()
+    fixLevel6Flags()
+  end
 end
 
 function Map:afterLoad(old, new)
@@ -793,12 +911,6 @@ function Map:afterLoad(old, new)
     -- Issue #1105 update pathfinding (rebuild walls) potentially broken by side object placement
     self.th:updatePathfinding()
   end
-  if old < 136 then
-    if self.level_number == 6 then
-      self:setCellFlags(56, 71, {hospital = true, buildable = true, buildableNorth = true, buildableSouth = true, buildableEast = true, buildableWest = true})
-      self:setCellFlags(58, 72, {passable = false})
-    end
-  end
   if old < 161 then
     -- Permanently fix the 0.65 trophy bug (#2004)
     -- make sure we erase the hofix variable too
@@ -837,5 +949,17 @@ function Map:afterLoad(old, new)
     self.level_config.payroll = {
       MaxSalary = 2000,
     }
+  end
+  if old < 187 then
+    local gbv = self.level_config.gbv
+    gbv.Tired = gbv.Tired or 600
+    gbv.VeryTired = gbv.VeryTired or 700
+    gbv.CrackUpTired = gbv.CrackUpTired or 800
+  end
+  if old < 209 then
+    self.level_config.gbv.SodaPrice = 20
+  end
+  if old < 217 then
+    self:_fixTiles()
   end
 end

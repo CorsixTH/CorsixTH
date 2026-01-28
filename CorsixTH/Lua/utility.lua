@@ -75,6 +75,15 @@ function table_length(table)
   return count
 end
 
+--! Get a random item from an array.
+--!param array Array with 0 or more items.
+--!return (nil or an item)
+function getRandomEntryFromArray(array)
+  if #array == 0 then return nil end
+  if #array == 1 then return array[1] end
+  return array[math.random(1, #array)]
+end
+
 -- Variation on loadfile() which allows for the loaded file to have global
 -- references resolved in supplied tables. On failure, returns nil and an
 -- error. On success, returns the file as a function just like loadfile() does
@@ -106,7 +115,20 @@ function loadfile_envcall(filename)
   return loadstring_envcall(result, "@" .. filename)
 end
 
-if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" or _G._VERSION == "Lua 5.4" then
+if _G._VERSION == "Lua 5.1" then
+  function loadstring_envcall(contents, chunkname)
+    -- Lua 5.1 has setfenv(), which allows environments to be set at runtime
+    local result, err = loadstring(contents, chunkname)
+    if result then
+      return function(env, ...)
+        setfenv(result, env)
+        return result(...)
+      end
+    else
+      return result, err
+    end
+  end
+else
   function loadstring_envcall(contents, chunkname)
     -- Lua 5.2+ lacks setfenv()
     -- load() still only allows a chunk to have an environment set once, so
@@ -118,19 +140,6 @@ if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" or _G._VERSION == "Lua 5
       return function(env, ...)
         env_mt.__index = env
         env_mt.__newindex = env
-        return result(...)
-      end
-    else
-      return result, err
-    end
-  end
-else
-  function loadstring_envcall(contents, chunkname)
-    -- Lua 5.1 has setfenv(), which allows environments to be set at runtime
-    local result, err = loadstring(contents, chunkname)
-    if result then
-      return function(env, ...)
-        setfenv(result, env)
         return result(...)
       end
     else
@@ -215,6 +224,24 @@ DrawFlags.EarlyList       = 2^10
 DrawFlags.ListBottom      = 2^11
 DrawFlags.BoundBoxHitTest = 2^12
 DrawFlags.Crop            = 2^13
+DrawFlags.Nearest         = 2^14
+
+-- Order of animations within a tile. Animations with a smaller number are
+-- drawn first.
+DrawingLayers = {}
+DrawingLayers.Litter = 0
+DrawingLayers.Door = 0
+DrawingLayers.RatHole = 0
+DrawingLayers.NorthSideObject = 1
+DrawingLayers.WestSideObject = 2
+DrawingLayers.AtomAnalyser = 3
+DrawingLayers.ReceptionistFacingUser = 3 -- Facing east or south.
+DrawingLayers.Entity = 4 -- All 'normal' animations.
+DrawingLayers.ReceptionistFacingAway = 5 -- Facing west or north.
+DrawingLayers.MachineSmoke = 6 -- smoke animation should be in front of machine (entity)
+DrawingLayers.FloatingDollars = 7
+DrawingLayers.EastSideObject = 8
+DrawingLayers.SouthSideObject = 9
 
 -- Keep in sync with animation_effect in th_gfx_common.h
 AnimationEffect = {}
@@ -251,12 +278,17 @@ end
 --!param number (number) Value to accept by the bucket.
 --!param buckets (list) Available buckets, pairs of {upper=x, value=y} tables,
 --  in increasing x value, where nil is taken as infinite. The y value is
---  returned for the first bucket in the list where number <= x. If y is nil,
---  the index of the bucket in the list is returned.
+--  returned for the first bucket in the list where number <= x (in normal mode).
+--  If y is nil, the index of the bucket in the list is returned.
+--!param alt_mode (boolean) If true, the comparison becomes number < x instead.
 --!return (number) Value or index of the matching bucket.
-function rangeMapLookup(number, buckets)
+function rangeMapLookup(number, buckets, alt_mode)
+  local function boundaryCheck(upper)
+    return alt_mode and upper > number or upper >= number
+  end
+
   for index, bucket in ipairs(buckets) do
-    if not bucket.upper or bucket.upper >= number then
+    if not bucket.upper or boundaryCheck(bucket.upper) then
       return bucket.value or index
     end
   end
@@ -311,8 +343,8 @@ function array_join(array, separator)
   return result
 end
 
-local function serialize_string(val)
-  local level = 0
+local function serialize_string(val, options)
+  local level = options and options.long_bracket_level_start or 0
   while string.find(val, ']' .. string.rep('=', level) .. ']') do
     level = level + 1
   end
@@ -391,12 +423,14 @@ end
 --!param options Option settings, table, 'detect_cycles' field boolean that
 --  ends recursion on a cycle, and 'max_depth' integer that ends recursion at the
 --  specified depth. By default initialized with "{detect_cycles = True}"
+--  'long_bracket_level_start' field integer that sets the starting long bracket level for escaping strings.
+--  If not set, level zero is used.
 --!param depth Recursion depth, should be omitted.
 --!param pt_reflist Seen nodes, should be omitted.
 --!return The serialized output.
 function serialize(val, options, depth, pt_reflist)
   if type(val) == "string" then
-    return serialize_string(val)
+    return serialize_string(val, options)
   elseif type(val) == "table" then
     return serialize_table(val, options, depth, pt_reflist)
   else
@@ -423,4 +457,29 @@ function shallow_clone(tbl)
   end
   setmetatable(target, meta)
   return target
+end
+
+--! Complete key removal and pause collection for the duration of the function
+--! call.
+--!
+--! Note that the function is run as a pcall, so any error will be caught and
+--! returned.
+--!param fn (function) Function to call while GC is paused.
+--!param ... Arguments to pass to fn.
+function pause_gc_and_use_weak_keys(fn, ...)
+  -- In Lua 5.2 and later tables with weak keys (__mode = "k") may hold keys
+  -- that have already been finalized. According to the Lua reference manual
+  -- the objects are marked and finalized in one cycle and collected and
+  -- removed from the weak table keys in the next cycle. So to ensure that
+  -- all finalized keys are removed from weak tables we need to run GC for 2
+  -- complete cycles. We then stop the GC to prevent it from running during
+  -- the function call to ensure that pairs on weak tables work as expected.
+  -- Finally we restart the GC after the function call.
+  collectgarbage()
+  collectgarbage()
+  collectgarbage("stop")
+  local res = {pcall(fn, ...)}
+  collectgarbage("restart")
+
+  return unpack(res)
 end

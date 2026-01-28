@@ -1,4 +1,5 @@
 --[[ Copyright (c) 2010 Justin Pasher
+Copyright (c) 2023 lewri
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -51,21 +52,14 @@ function TrainingRoom:roomFinished()
   local fx, fy = self:getEntranceXY(true)
   local objects = self.world:findAllObjectsNear(fx, fy)
   local chairs = 0
-  local skeletons = 0
-  local bookcases = 0
   for object, _ in pairs(objects) do
     if object.object_type.id == "lecture_chair" then
       chairs = chairs + 1
-    elseif object.object_type.id == "skeleton" then
-      skeletons = skeletons + 1
-    elseif object.object_type.id == "bookcase" then
-      bookcases = bookcases + 1
     end
   end
   -- Total staff occupancy: number of lecture chairs plus projector
   self.maximum_staff = { Doctor = chairs + 1 }
-  -- factor is divided by ten so the result from new algroithm will be similar to the old algorithm
-  self.training_factor = self:calculateTrainingFactor(skeletons, bookcases) / 10.0
+  self.training_factor = self:calculateTrainingFactor(objects)
 
   -- Also tell the player if he/she doesn't have a consultant yet.
   if self.hospital:countStaffOfCategory("Consultant", 1) == 0 then
@@ -74,21 +68,55 @@ function TrainingRoom:roomFinished()
   Room.roomFinished(self)
 end
 
-function TrainingRoom:calculateTrainingFactor(skeletons, bookcases)
-  -- TODO: tweak/change this function, used in Staff:trainSkill(...)
+--! Determine the training factor of this room for teaching specialisms
+--!param objects (table) the list of objects in this room
+--!return total (number) The final training factor
+function TrainingRoom:calculateTrainingFactor(objects)
+  -- Tally relevant objects that affect training
+  local function countTrainingObjects()
+    local counts = { projector = 0, skeleton = 0, bookcase = 0 }
+    for object, _ in pairs(objects) do
+      local obj_id = object.object_type.id
+      counts[obj_id] = counts[obj_id] and counts[obj_id] + 1 or nil
+    end
+    return counts
+  end
+  -- Work out total training factor using two averaging methods, choosing the best one
+  -- param factors(table) An array containing a count of each object and its raw
+  -- training value
+  -- returns the total effect
+  local function calculateTotalEffect(factors)
+    assert(factors,
+        "Unable to determine the training factor of a training room! " ..
+        "Reason: No inputs given")
+    local total_objects = 0
+    local total_value = 0
+    local num_factors = #factors
+    for _, factor in ipairs (factors) do
+      total_objects = total_objects + factor.count
+      -- Check we have at least one of this object and action accordingly
+      local multiplier = factor.count > 0 and (math.log(factor.count) + 1) or 0
+      total_value = total_value + (multiplier * factor.value)
+    end
+    assert(total_value > 0 and total_objects > 0,
+        "Unable to determine the training factor of a training room! " ..
+        "Reason: total_value and total_objects are both 0")
+    local average_1 = total_value / num_factors
+    local average_2 = total_value / total_objects
+    return math.max(average_1, average_2)
+  end
+
   -- Object values and training rate set in level config
   local level_config = self.world.map.level_config
-  local proj_val = 10
-  local book_val = 15
-  local skel_val = 20
-  local training_rate = 40
-  if level_config and level_config.gbv.TrainingRate then
-    book_val = level_config.gbv.TrainingValue[1]
-    skel_val = level_config.gbv.TrainingValue[2]
-    training_rate = level_config.gbv.TrainingRate
-  end
-  -- Training factor is just everything added together
-  return proj_val + skeletons*skel_val + bookcases*book_val + training_rate
+  local training_objects = countTrainingObjects()
+  -- Consolidate elements of training factor to an array
+  local training_value = level_config.gbv.TrainingValue
+  local training_factors = {
+    {count = training_objects.projector, value = training_value[0]},
+    {count = training_objects.skeleton, value = training_value[1]},
+    {count = training_objects.bookcase, value = training_value[2]},
+  }
+  return calculateTotalEffect(training_factors)
 end
 
 function TrainingRoom:getStaffCount()
@@ -122,12 +150,13 @@ function TrainingRoom:doStaffUseCycle(humanoid)
   local projector, ox, oy = self.world:findObjectNear(humanoid, "projector")
   humanoid:queueAction(WalkAction(ox, oy))
   local projector_use_time = math.random(6,20)
+
   local loop_callback_training = --[[persistable:training_loop_callback]] function()
     projector_use_time = projector_use_time - 1
     if projector_use_time == 0 then
       local skeleton, sox, soy = self.world:findFreeObjectNearToUse(humanoid, "skeleton", "near")
       local bookcase, box, boy = self.world:findFreeObjectNearToUse(humanoid, "bookcase", "near")
-      if math.random(0, 1) == 0 and bookcase then skeleton = nil end -- choose one
+      if math.random(0, 1) == 0 and bookcase then skeleton = nil end -- choose bookcase or skeleton
       if skeleton then
         humanoid:walkTo(sox, soy)
         for _ = 1, math.random(3, 10) do
@@ -152,7 +181,7 @@ function TrainingRoom:doStaffUseCycle(humanoid)
 end
 
 function TrainingRoom:onHumanoidEnter(humanoid)
-  if humanoid.humanoid_class ~= "Doctor" then
+  if not class.is(humanoid, Doctor) then
     -- use default behavior for staff other than doctors
     return Room.onHumanoidEnter(self, humanoid)
   end
@@ -171,48 +200,43 @@ function TrainingRoom:commandEnteringStaff(humanoid)
   local obj, ox, oy
   local profile = humanoid.profile
 
-  if profile.humanoid_class == "Doctor" then
-    -- Consultants try to use the projector and/or skeleton
+  if class.is(humanoid, Doctor) then
     if profile.is_consultant then
-      obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "projector")
+      -- Consultant entered/placed in room.
+      obj, ox, oy = self.world:findObjectNear(humanoid, "projector")
+      local projector = obj
+      -- Check if another consultant is teaching the lecture
       if self.staff_member then
-        if self.waiting_staff_member then
-          local staff = self.waiting_staff_member
-          staff.waiting_on_other_staff = nil
-          staff:setNextAction(self:createLeaveAction())
-          staff:queueAction(MeanderAction())
-        end
-        humanoid.waiting_on_other_staff = true
-        humanoid:setNextAction(MeanderAction())
-        self.waiting_staff_member = humanoid
-        self.staff_member:setNextAction(self:createLeaveAction())
+        -- Release projector and dismiss current lector
+        projector.reserved_for = nil
+        self.staff_member:setNextAction(self:createLeaveAction(), true)
         self.staff_member:queueAction(MeanderAction())
-      else
-        if obj then
-          obj.reserved_for = humanoid
-          humanoid:walkTo(ox, oy)
-          self:doStaffUseCycle(humanoid)
-          self:setStaffMember(humanoid)
-        else
-          humanoid:setNextAction(self:createLeaveAction())
-          humanoid:queueAction(MeanderAction())
-        end
       end
+      -- Start lecture with entered consultant
+      projector.reserved_for = humanoid
+      humanoid:walkTo(ox, oy)
+      self:doStaffUseCycle(humanoid)
+      self:setStaffMember(humanoid)
     else
+      -- Student entered/placed in room
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "lecture_chair")
-      if obj then
-        obj.reserved_for = humanoid
+      local lecture_chair = obj
+      -- If any chair available
+      if lecture_chair then
+        -- Student occupy chair
+        lecture_chair.reserved_for = humanoid
         humanoid:walkTo(ox, oy)
         humanoid:queueAction(UseObjectAction(obj))
         humanoid:queueAction(MeanderAction())
       else
+        -- Student leave room
         self.hospital:giveAdvice({_A.staff_place_advice.not_enough_lecture_chairs})
         humanoid:setNextAction(self:createLeaveAction())
         humanoid:queueAction(MeanderAction())
-        humanoid.last_room = nil
+        humanoid.last_room = nil -- Prevent Doctor returning to this room automatically
       end
     end
-  elseif humanoid.humanoid_class ~= "Handyman" then
+  elseif not class.is(humanoid, Handyman) then
     self.hospital:giveAdvice({_A.staff_place_advice.only_doctors_in_room
       :format(_S.rooms_long.training_room)})
     humanoid:setNextAction(self:createLeaveAction())
@@ -224,7 +248,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
 end
 
 function TrainingRoom:onHumanoidLeave(humanoid)
-  if humanoid.humanoid_class == "Doctor" then
+  if class.is(humanoid, Doctor) then
     -- unreserve whatever it was they we using
     local fx, fy = self:getEntranceXY(true)
     local objects = self.world:findAllObjectsNear(fx,fy)
@@ -234,18 +258,21 @@ function TrainingRoom:onHumanoidLeave(humanoid)
       end
     end
 
-    if humanoid.profile.is_consultant and humanoid == self.staff_member then
-      local staff = self.waiting_staff_member
-      self:setStaffMember(nil)
-      if staff then
-        staff.waiting_on_other_staff = nil
-        self.waiting_staff_member = nil
-        self:commandEnteringStaff(staff)
-      end
-    end
   end
 
   Room.onHumanoidLeave(self, humanoid)
+end
+
+function TrainingRoom:afterLoad(old, new)
+  if old < 234 then
+    -- Calculate the new training factor, unless we're currently editing the room
+    if self.built then
+      local fx, fy = self:getEntranceXY(true)
+      local objects = self.world:findAllObjectsNear(fx, fy)
+      self.training_factor = self:calculateTrainingFactor(objects)
+    end
+  end
+  Room.afterLoad(self, old, new)
 end
 
 return room

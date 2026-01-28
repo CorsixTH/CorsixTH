@@ -1,6 +1,8 @@
 #ifndef CORSIX_TH_CP936_TO_UNICODE_TABLE_H
 #define CORSIX_TH_CP936_TO_UNICODE_TABLE_H
 
+#include "config.h"
+
 #include <array>
 // Generated from the following document:
 // http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP936.TXT

@@ -122,12 +122,7 @@ function ReceptionDesk:tick()
     if inspector.going_home then return end
     local epidemic = self.hospital.epidemic
     if epidemic then
-      -- The result of the epidemic may already be decided
-      -- i.e if an infected patient has left the hospital
-      if not epidemic.result_determined then
-        epidemic:finishCoverUp()
-      end
-      epidemic:applyOutcome()
+      epidemic:handleInspectorArrival()
       inspector:goHome()
     end
   end
@@ -182,7 +177,7 @@ function ReceptionDesk:checkForNearbyStaff()
   local nearest_staff, nearest_d
   local use_x, use_y = self:getSecondaryUsageTile()
   for _, entity in ipairs(self.world.entities) do
-    if entity.humanoid_class == "Receptionist" and not entity.associated_desk and not entity.fired then
+    if class.is(entity, Receptionist) and not entity.associated_desk and not entity.fired then
       local distance = self.world.pathfinder:findDistance(entity.tile_x, entity.tile_y, use_x, use_y)
       if not nearest_d or distance < nearest_d then
         nearest_staff = entity

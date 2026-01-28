@@ -39,6 +39,11 @@ function Inspector:updateDynamicInfo(action_string)
   self:setDynamicInfo('text', {_S.dynamic_info.health_inspector})
 end
 
+-- Disable showing inspector mood on hover
+function Inspector:setIfHoverMoodsVisible()
+  self.hover_moods = false
+end
+
 --[[ Sends the inspector home ]]
 function Inspector:goHome()
   if self.going_home then
@@ -59,4 +64,13 @@ end
 
 function Inspector:announce()
   self.world.ui:playAnnouncement("vip008.wav", AnnouncementPriority.High)
+end
+
+function Inspector:afterLoad(old, new)
+  if old < 213 then
+    self.mood_marker = 2
+  end
+
+  self:updateDynamicInfo()
+  Humanoid.afterLoad(self, old, new)
 end

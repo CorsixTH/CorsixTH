@@ -27,15 +27,22 @@ By default there are no diseases and only some basic rooms are available.
 
 Everything within citation marks will be the briefing/debriefing.
 Two new lines creates a new paragraph, but additional new lines in a row are discarded.
-%LevelBriefing = "This is an example map that shows aspiring map makers
+%LevelBriefingTable.en = "This is an example map that shows aspiring map makers
  what can be done when making new fantastic creations!"
+%LevelBriefingTable.fr = "Ceci est un exemple de carte qui montre les futurs créateurs de cartes
+  que peut-on faire en réalisant de nouvelles créations fantastiques !"
 
-%LevelDebriefing = "Congratulations! You played through the example map. Time to do your own?"
+%LevelDebriefingTable.en = "Congratulations! You played through the example map. Time to do your own?"
+%LevelDebriefingTable.fr = "Toutes nos félicitations! Vous avez joué à travers l'exemple de carte.
+  Il est temps de faire le vôtre ?"
 
 Town properties
 InterestRate is defined as centiprocent to allow for two decimals precision, i.e.
 300 means 3 %
 #town.StartCash.InterestRate 100000 300
+
+Soda price at drinks machines
+#gbv.SodaPrice 20
 
 -------------------- Disease Configuration -------------------------
 

@@ -42,7 +42,7 @@ end
 
 function UIMakeDebugPatient:buttonClicked(num)
   local item = self.items[num + self.scrollbar.value - 1]
-  local patient = self.ui.app.world:newEntity("Patient", 2)
+  local patient = self.ui.app.world:newEntity("Patient", 2, 1)
   patient.is_debug = true
   table.insert(self.ui.hospital.debug_patients, patient)
   patient:setDisease(item.disease)
@@ -51,5 +51,4 @@ function UIMakeDebugPatient:buttonClicked(num)
   patient:setTile(math.floor(x), math.floor(y))
   patient:setMood("idea1", "activate") -- temporary, to make debug patients distinguishable from normal ones
   patient:setHospital(self.ui.hospital)
-
 end
