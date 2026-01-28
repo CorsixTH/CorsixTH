@@ -2739,7 +2739,8 @@ function World:chooseHospitalForPatient(disease)
     end
   end
 end  
-  
+end
+
 --! Returns whether the level being played is part of a campaign or not
 function World:isCampaign()
   return type(self.map.level_number) == "number" or self.campaign_info
