@@ -30,40 +30,43 @@ local col_shadow = { red = 36, green = 138, blue = 158 }
 local col_delete_button = { red = 219, green = 36, blue = 36 }
 
 -- Timer, used to update the dialog only once per X ticks to reduce the burden.
-local ticks_to_skip = 5
+local ticks_to_skip = 10
 local tick_timer = ticks_to_skip
-
-local row_height = 40
-local header_height = 20
-local window_margin = 15
 
 function UIAdviserHistory:UIAdviserHistory(ui)
   local app = ui.app
 
-  -- Calculate menu's height
-  local height_divisor = 4
-  local approx_rows_space = math.floor(app.config.height / height_divisor)
-  self.rows = math.ceil(approx_rows_space / row_height)
-  local rows_space = self.rows * row_height
-
-  local width = 500
-  local height = header_height + rows_space + window_margin * 2  -- header + values + margin (top and bottom)
-  self:UIResizable(ui, width, height, col_bg)
   self.ui = ui
   self.modal_class = "adviser_history"
 
   self.esc_closes = true
   self.resizable = false
-  self:setDefaultPosition(0.05, 0.05)
 
-  self.adviser_messages = {}
-  self.list_table = {}
+  self.adviser_messages = {} -- Contains all the messages in the adviser.adviser_history prop
+  self.list_table = {}       -- List of controls in this dialog
 
   self.default_button_sound = "selectx.wav"
 
   self.rows_shown = 0
-  self:createControls()
 
+  self.row_height = 40
+  self.header_height = 20
+  self.window_margin = 15
+  self.delete_col_width = 30
+  self.message_col_width = 400
+
+  local total_width = 500
+  local height_divisor = 4
+
+  self.approx_rows_space = math.floor(app.config.height / height_divisor)
+  self.num_visible_rows = math.ceil(self.approx_rows_space / self.row_height)
+
+  local rows_space = self.num_visible_rows * self.row_height
+  local total_height = self.header_height + rows_space + self.window_margin * 2  -- header + values + margin (top and bottom)
+
+  self:UIResizable(ui, total_width, total_height, col_bg)
+  self:setDefaultPosition(0.05, 0.05)
+  self:createControls()
   self:update()
 end
 
@@ -76,7 +79,7 @@ local deleteAllButtonClicked = --[[persistable:adviser_history_delete_all_button
 end
 
 function UIAdviserHistory:createControls()
-  local rows = self.rows
+  local rows = self.num_visible_rows
 
   self.panel_sprites = self.ui.app.gfx:loadSpriteTable("QData", "Req03V", true)
   self.white_font = self.ui.app.gfx:loadFontAndSpriteTable("QData", "Font01V")
@@ -93,34 +96,32 @@ function UIAdviserHistory:createControls()
 
     self.rows_shown = rows
     self.list_table = {}
-    local delete_width = 30
-    local message_width = 400
-    local x = window_margin
-    local y = window_margin
+    local x = self.window_margin
+    local y = self.window_margin
 
 
     -- Draw headers
-    local delete_header = self:addBevelPanel(x, window_margin, delete_width, header_height, col_highlight)
-    local delete_all_button = delete_header:makeButton(0, 0, delete_width, header_height, nil, deleteAllButtonClicked)
+    local delete_header = self:addBevelPanel(x, self.window_margin, self.delete_col_width, self.header_height, col_highlight)
+    local delete_all_button = delete_header:makeButton(0, 0, self.delete_col_width, self.header_height, nil, deleteAllButtonClicked)
           :setTooltip(_S.tooltip.adviser_history.header.delete_message):setLabel("X", self.white_font, "center")
-    x = x + delete_width
+    x = x + self.delete_col_width
 
-    local message_header = self:addBevelPanel(x, window_margin, message_width, header_height, col_highlight)
+    local message_header = self:addBevelPanel(x, self.window_margin, self.message_col_width, self.header_height, col_highlight)
         :setLabel(_S.adviser_history.message):setTooltip(_S.tooltip.adviser_history.header.message)
-    x = x + message_width
-    y = y + header_height
+    x = x + self.message_col_width
+    y = y + self.header_height
 
     -- Draw rows
     for i = 1, rows, 1 do
-      x = window_margin
-      local delete_panel = self:addBevelPanel(x, y, delete_width, row_height, col_delete_button)
-      local delete_button = delete_panel:makeButton(0, 0, delete_width, row_height, nil, delete_factory(i))
-      x = x + delete_width
+      x = self.window_margin
+      local delete_panel = self:addBevelPanel(x, y, self.delete_col_width, self.row_height, col_delete_button)
+      local delete_button = delete_panel:makeButton(0, 0, self.delete_col_width, self.row_height, nil, delete_factory(i))
+      x = x + self.delete_col_width
 
-      local message_panel = self:addBevelPanel(x, y, message_width, row_height, col_bg)
-          :setTooltip(_S.tooltip.adviser_history.message):setForceWrap(true)
-      x = x + message_width
-      y = y + row_height
+      local message_panel = self:addBevelPanel(x, y, self.message_col_width, self.row_height, col_bg)
+          :setTooltip(_S.tooltip.adviser_history.message):setForceTextWrap(true)
+      x = x + self.message_col_width
+      y = y + self.row_height
 
       table.insert(self.list_table, {
         delete_header = delete_header,
@@ -135,7 +136,7 @@ function UIAdviserHistory:createControls()
     x = x + 10 -- Add 10 pixels from end of the message rows
 
     -- Add scrollbar
-    self.scrollbar = self:addColourPanel(x, window_margin + 20, 24, row_height * rows, --y = window_margin + close button height
+    self.scrollbar = self:addColourPanel(x, self.window_margin + 20, 24, self.row_height * rows, --y = self.window_margin + close button height
           col_shadow.red, col_shadow.green, col_shadow.blue)
         :makeScrollbar(col_bg, scrollbarMovedCallback, 1, 1, 10, 1)
     -- Add close button

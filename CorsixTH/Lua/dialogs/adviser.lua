@@ -61,39 +61,26 @@ function UIAdviser:UIAdviser(ui)
   self.th = th
 end
 
---! Checks if an adviser message should be filtered out from the history.
---! param speech (string) The message text to check
-function UIAdviser:filterMessage(speech)
-  --All these string comparisons work really fast in Lua, no performance issues.
-  local messages_to_filter = {
-    --Staff placement
-    _A.staff_place_advice.receptionists_only_at_desk,
-    _A.staff_place_advice.only_psychiatrists,
-    _A.staff_place_advice.only_surgeons,
-    _A.staff_place_advice.only_nurses_in_room,
-    _A.staff_place_advice.only_doctors_in_room,
-    _A.staff_place_advice.only_researchers,
-    _A.staff_place_advice.nurses_cannot_work_in_room,
-    _A.staff_place_advice.doctors_cannot_work_in_room,
-    _A.placement_info.staff_cannot_place,
-  }
-  for _, msg in ipairs(messages_to_filter) do
-    if speech == msg.text then
-      return true
+function UIAdviser:isMessageInHistory(message)
+  for index, msg in ipairs(self.message_history) do
+    if msg == message then
+      return true, index
     end
   end
-  return false
+  return false, -1
 end
 
 --! Adds a message to the adviser's message history.
 --! If the history exceeds a certain limit, the oldest messages are removed.
 function UIAdviser:addMessageToHistory(speech)
-  -- Filter out messages we don't want in the history dialog
-  if self:filterMessage(speech) then
-    return
+  local isMessageInHistory, messageIndexInHistory = self:isMessageInHistory(speech)
+
+  if isMessageInHistory then
+    -- If the message is already in history, remove it first
+    table.remove(self.message_history, messageIndexInHistory)
   end
 
-  -- Add the message to the history list (newest messages first)
+  -- Add the message at the top of the history
   table.insert(self.message_history, 1, speech)
 
   -- If the history exceeds the limit, remove the oldest messages (the last ones in the list)

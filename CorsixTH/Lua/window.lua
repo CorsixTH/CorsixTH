@@ -177,7 +177,7 @@ function Panel:Panel()
   self.colour = nil
   self.custom_draw = nil
   self.visible = nil
-  self.force_wrap = false
+  self.force_text_wrap = false
 end
 
 local panel_mt = permanent("Window.<panel_mt>", getmetatable(Panel()))
@@ -310,7 +310,7 @@ function Panel:drawLabel(canvas, x, y, limit)
 
   if not multi_line then
     text = {text}
-    wrapped = false or self.force_wrap
+    wrapped = false or self.force_text_wrap
     center_y = true
   end
 
@@ -364,8 +364,10 @@ function Panel:setVisible(visibility)
   return self
 end
 
-function Panel:setForceWrap(force_wrap)
-  self.force_wrap = force_wrap
+--! Set whether text wrapping is forced for this panel.
+--!param should_force_wrap (bool) Whether to force text wrapping.
+function Panel:setForceTextWrap(should_force_wrap)
+  self.force_text_wrap = should_force_wrap
   return self
 end
 
