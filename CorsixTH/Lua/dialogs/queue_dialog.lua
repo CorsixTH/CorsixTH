@@ -195,7 +195,7 @@ function UIQueue:onMouseUp(button, x, y)
 
     -- Try to drop to another room
     local room
-    local wx, wy = self.ui:ScreenToWorld(x + self.x, y + self.y)
+    local wx, wy = self.ui:ScreenToWorld(x + self.x * s, y + self.y * s)
     wx = math.floor(wx)
     wy = math.floor(wy)
     if wx > 0 and wy > 0 and wx < self.ui.app.map.width and wy < self.ui.app.map.height then
