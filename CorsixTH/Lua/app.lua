@@ -109,6 +109,32 @@ function App:init()
   print("")
 
   -- Prereq 1: C++ and lua sides are compatible
+  -- Note: These errors cannot be translated, as the config file specifies the language
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  local conf_chunk, conf_err = loadfile_envcall(conf_path)
+  if not conf_chunk then
+    error("Unable to load the config file. Please ensure that CorsixTH " ..
+      "has permission to read/write " .. conf_path .. ", or use the " ..
+      "--config-file=filename command line option to specify a writable file. " ..
+      "For reference, the error loading the config file was: " .. conf_err)
+  else
+    conf_chunk(self.config)
+  end
+  self:fixConfig()
+  corsixth.require("filesystem")
+  local good_install_folder, error_message = self:checkInstallFolder()
+  self.good_install_folder = good_install_folder
+  self.level_dir = self:getFullPath("Levels", true)
+  self.campaign_dir = self:getFullPath("Campaigns", true)
+  self:initUserDirectories()
+  self:initSavegameDir()
+  self:initScreenshotsDir()
+  self:initMusicDir()
+
+  -- Create the window
+  if not SDL.init("video", "timer", "audio") then
+    return false, "Cannot initialise SDL"
+  end
   local compile_opts = TH.GetCompileOptions()
   local api_version = corsixth.require("api_version")
   if api_version ~= compile_opts.api_version then
@@ -513,6 +539,52 @@ function App:initScreenshotsDir()
   if self.screenshot_dir:sub(-1, -1) ~= pathsep then
     self.screenshot_dir = self.screenshot_dir .. pathsep
   end
+  return true
+end
+
+function App:initMusicDir()
+  -- No need to set the music dir if it's already configured
+  if self.config.audio_music then
+    return true
+  end
+
+  -- Checks if the specified directory exists and has music files
+  local function dirHasMusic(path)
+    if lfs.attributes(path, "mode") ~= "directory" then
+      return false
+    end
+    for file in lfs.dir(path) do
+      if file:match("%.ogg$") or file:match("%.wav$") or file:match("%.mp3$") then
+        return true
+      end
+    end
+    return false
+  end
+
+  -- Checks if the specified path contains a music directory and if it has music files
+  -- If found, the directory's path is returned
+  local function findMusicDir(path)
+    local posible_dirs = {"music", "Music"}
+    for _, name in ipairs(posible_dirs) do
+      local candidate = path .. pathsep .. name
+      if dirHasMusic(candidate) then
+        return candidate
+      end
+    end
+    return nil
+  end
+
+  local corsixth_path = lfs.currentdir()
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  conf_path = conf_path:match("^(.-)[^" .. pathsep .. "]*$")
+
+  -- Check corsixth's install directory first, then the config file directory
+  local music_dir = findMusicDir(corsixth_path) or findMusicDir(conf_path)
+  if music_dir then
+    self.config.audio_music = music_dir
+    self:saveConfig()
+  end
+
   return true
 end
 
