@@ -541,6 +541,13 @@ function UIResolution:ok()
   end
 end
 
+function UIResolution:onMouseDown(button, x, y)
+  if not self:hitTest(x, y) then
+    self:close(false)
+  end
+  UIResizable.onMouseDown(self, button, x, y)
+end
+
 --! Closes the resolution dialog
 --!param ok (boolean or nil) whether the resolution entry was confirmed (true) or aborted (false)
 function UIResolution:close(ok)
@@ -597,6 +604,13 @@ end
 
 function UIScrollSpeed:cancel()
   self:close(false)
+end
+
+function UIScrollSpeed:onMouseDown(button, x, y)
+  if not self:hitTest(x, y) then
+    self:close(false)
+  end
+  UIResizable.onMouseDown(self, button, x, y)
 end
 
 --!param ok (boolean or nil) whether the resolution entry was confirmed (true) or aborted (false)
@@ -662,6 +676,13 @@ function UIShiftScrollSpeed:cancel()
   self:close(false)
 end
 
+function UIShiftScrollSpeed:onMouseDown(button, x, y)
+  if not self:hitTest(x, y) then
+    self:close(false)
+  end
+  UIResizable.onMouseDown(self, button, x, y)
+end
+
 --!param ok (boolean or nil) whether the resolution entry was confirmed (true) or aborted (false)
 function UIShiftScrollSpeed:close(ok)
   UIResizable.close(self)
@@ -725,6 +746,13 @@ end
 
 function UIZoomSpeed:cancel()
   self:close(false)
+end
+
+function UIZoomSpeed:onMouseDown(button, x, y)
+  if not self:hitTest(x, y) then
+    self:close(false)
+  end
+  UIResizable.onMouseDown(self, button, x, y)
 end
 
 --!param ok (boolean or nil) whether the resolution entry was confirmed (true) or aborted (false)
