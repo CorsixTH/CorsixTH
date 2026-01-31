@@ -247,8 +247,21 @@ menu_player_count = {
   players_4 = "  4 PLAYERS  ",
 }
 
+-- machine_menu is new, the rest are the original strings plus the "(%s) for the hotkey"
 tooltip.toolbar = {
-  machine_menu = "Machine menu",
+  bank_button = "Left Click (or %s) for Bank Manager, Right Click (or %s) for Bank Statement",
+  rooms = "Build rooms (%s)",
+  objects = "Furnish corridor (%s)",
+  edit = "Edit rooms/items (%s)",
+  hire = "Hire staff (%s)",
+  staff_list = "Staff management (%s)",
+  machine_menu = "Machine menu (%s)",
+  town_map = "Town map (%s)",
+  casebook = "Drug casebook (%s)",
+  research = "Research (%s)",
+  status = "Status (%s)",
+  charts = "Charts (5s)",
+  policy = "Policy (%s)",
 }
 
 adviser = {
