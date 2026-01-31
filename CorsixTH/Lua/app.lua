@@ -129,6 +129,7 @@ function App:init()
   self:initUserDirectories()
   self:initSavegameDir()
   self:initScreenshotsDir()
+  self:initMusicDir()
 
   -- Create the window
   if not SDL.init("video", "timer", "audio") then
@@ -511,6 +512,52 @@ function App:initScreenshotsDir()
   if self.screenshot_dir:sub(-1, -1) ~= pathsep then
     self.screenshot_dir = self.screenshot_dir .. pathsep
   end
+  return true
+end
+
+function App:initMusicDir()
+  -- No need to set the music dir if it's already configured
+  if self.config.audio_music then
+    return true
+  end
+
+  -- Checks if the specified directory exists and has music files
+  local function dirHasMusic(path)
+    if lfs.attributes(path, "mode") ~= "directory" then
+      return false
+    end
+    for file in lfs.dir(path) do
+      if file:match("%.ogg$") or file:match("%.wav$") or file:match("%.mp3$") then
+        return true
+      end
+    end
+    return false
+  end
+
+  -- Checks if the specified path contains a music directory and if it has music files
+  -- If found, the directory's path is returned
+  local function findMusicDir(path)
+    local posible_dirs = {"music", "Music"}
+    for _, name in ipairs(posible_dirs) do
+      local candidate = path .. pathsep .. name
+      if dirHasMusic(candidate) then
+        return candidate
+      end
+    end
+    return nil
+  end
+
+  local corsixth_path = lfs.currentdir()
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  conf_path = conf_path:match("^(.-)[^" .. pathsep .. "]*$")
+
+  -- Check corsixth's install directory first, then the config file directory
+  local music_dir = findMusicDir(corsixth_path) or findMusicDir(conf_path)
+  if music_dir then
+    self.config.audio_music = music_dir
+    self:saveConfig()
+  end
+
   return true
 end
 
