@@ -521,27 +521,65 @@ function App:initMusicDir()
     return true
   end
 
-  -- Checks if the specified directory exists and has music files
-  local function dirHasMusic(path)
-    if lfs.attributes(path, "mode") ~= "directory" then
-      return false
-    end
-    for file in lfs.dir(path) do
-      if file:match("%.ogg$") or file:match("%.wav$") or file:match("%.mp3$") then
+  local function stripTrailingSlash(path)
+    -- Remove one or more trailing / or \ characters
+    return path:gsub("[/\\]+$", "")
+  end
+
+  -- Checks if the given directory name is a valid music directory name
+  local function isDirectoryNameValid(name)
+    local posible_dirs = {"music", "sounds"}
+
+    for _, valid_name in ipairs(posible_dirs) do
+      if name == valid_name then
         return true
       end
     end
     return false
   end
 
+  -- Checks if the specified directory has music files
+  local function dirHasMusic(path)
+    -- Build a lookup table of allowed extensions (waveform + instructional)
+    local allowed = {}
+    for extension in pairs(self.audio.allowed_waveform_formats) do
+      allowed[extension:lower()] = true
+    end
+    for extension in pairs(self.audio.allowed_instructional_formats) do
+      allowed[extension:lower()] = true
+    end
+
+    -- Scan directory for files with matching extensions
+    for file in lfs.dir(path) do
+      local ext = file:match("%.([^.]+)$") -- capture extension without dot
+      if ext and allowed[ext:lower()] then
+        return true
+      end
+    end
+
+    return false
+  end
+
   -- Checks if the specified path contains a music directory and if it has music files
   -- If found, the directory's path is returned
   local function findMusicDir(path)
-    local posible_dirs = {"music", "Music"}
-    for _, name in ipairs(posible_dirs) do
-      local candidate = path .. pathsep .. name
-      if dirHasMusic(candidate) then
-        return candidate
+    -- Used to guard against the case where the TH install path is not valid/set
+    if path == nil then
+      return nil
+    end
+
+    local lower_case_path = path:lower()
+    lower_case_path = stripTrailingSlash(lower_case_path)
+
+    -- Check every file and folder inside the given path
+    for entry in lfs.dir(lower_case_path) do
+      local entry_path = lower_case_path .. pathsep .. entry
+      local isDirectory = lfs.attributes(entry_path, "mode") == "directory"
+
+      if isDirectory and isDirectoryNameValid(entry:lower()) then
+        if dirHasMusic(entry_path) then
+          return entry_path
+        end
       end
     end
     return nil
@@ -549,10 +587,14 @@ function App:initMusicDir()
 
   local corsixth_path = lfs.currentdir()
   local conf_path = self.command_line["config-file"] or "config.txt"
-  conf_path = conf_path:match("^(.-)[^" .. pathsep .. "]*$")
+  local th_install_path = self.config.theme_hospital_install
+
+  if not self:checkInstallFolder() then
+    th_install_path = nil
+  end
 
   -- Check corsixth's install directory first, then the config file directory
-  local music_dir = findMusicDir(corsixth_path) or findMusicDir(conf_path)
+  local music_dir = findMusicDir(corsixth_path) or findMusicDir(conf_path) or findMusicDir(th_install_path)
   if music_dir then
     self.config.audio_music = music_dir
     self:saveConfig()
