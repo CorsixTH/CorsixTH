@@ -28,14 +28,14 @@ suggestion or enhancement.
 ![image](https://user-images.githubusercontent.com/20030128/123638352-fc609400-d816-11eb-88ad-11030e041fc4.png)
 
 
-## Pull Requests ##
+## Pull Requests (PRs) ##
 
 When providing a pull request ensure the description field describes the major
 changes from the request. If your pull request relates to any existing issues,
-link those issues to the description by referencing them with a `#` followed by the issue number. 
+link those issues to the description by referencing them with a `#` followed by the issue number.\
 The pull request provides a default layout to help you fill out this information.
 
-#### Pull Request Statuses ####
+### Pull Request Statuses ###
 CorsixTH encourages using the following labels inside your Pull Request's title
 to denote its current progress. Unlabelled pull request will be considered
 *Ready* and may be merged without warning.
@@ -49,8 +49,27 @@ Please make sure you label and update your Pull Request accordingly.
 You can also submit a **Draft Pull Request** as an alternative to the
 **[WIP]** label.
 
+### CorsixTH Developers: Configuring Pull Requests ###
+All pull requests in CorsixTH must have an appropriate PR label before merging
+(current Humbe project excepted). This ensures it goes into the current project.
+More than one PR label can be applied, if appropriate. Those in Draft/[WIP] do not
+need a label until past that stage.
 
-#### CONTRIBUTING CODE: ####
+Available labels are:
+| Label | Description |
+| ----- | ----------- |
+| **PR:Bugfix** | Code that fixes something broken. |
+| **PR:DevTools/Repo** | Code that mainly serves the CorsixTH repository, developer assets, or compilation and CI tools. |
+| **PR:Feature** | Implementation of something brand new to CorsixTH. |
+| **PR:Improvement** | Improvements to current functionality of the code. |
+| **PR:Refactor** | Altering the structure of existing code without necessarily changing desired functionality. |
+| **PR:Translation** | Contributions to CorsixTH's translations. |
+
+There is also the label `PR:need-rebase`, that developers should apply to any pull
+request that requires syncing/rebase with master before merge. It can be removed
+after a rebase.
+
+## CONTRIBUTING CODE: ##
 **Important!**\
 Ensure you have read our [Coding Conventions](https://github.com/CorsixTH/CorsixTH/wiki/Coding-Conventions)
 before starting your work. CorsixTH may use styles different to your previous experience with ``Lua``
