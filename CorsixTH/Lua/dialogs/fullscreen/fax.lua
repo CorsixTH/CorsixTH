@@ -53,8 +53,10 @@ function UIFax:UIFax(ui, icon)
       local --[[persistable:fax_choice_button]] function callback()
         self:choice(i)
       end
-      self.choice_buttons[i] = self:addPanel(17, 492, y):makeButton(0, 0, 43, 43, 18, callback)
-        :setDisabledSprite(19):enable(enabled)
+      self.choice_buttons[i] = self:addPanel(17, 492, y, nil, nil, true, DrawFlags.Nearest)
+        :makeButton(0, 0, 43, 43, 18, callback)
+        :setDisabledSprite(19)
+        :enable(enabled)
     end
   end
 
