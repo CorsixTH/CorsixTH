@@ -63,7 +63,6 @@ local action_seek_room_find_room = permanent"action_seek_room_find_room"( functi
       if room then return room end
     end
 
-    local tried_rooms = 0
     local diagnosis_rooms = humanoid.available_diagnosis_rooms
     -- Make numbers for each available diagnosis room. A random index from this list will be chosen,
     -- and then the corresponding room index is taken as next room. (The list decreases for each room
@@ -73,7 +72,7 @@ local action_seek_room_find_room = permanent"action_seek_room_find_room"( functi
       rooms_to_check[i] = i
     end
 
-    while tried_rooms < #rooms_to_check do
+    while #rooms_to_check > 0 do
       -- Choose a diagnosis room from the list at random. Note: This ignores the initial diagnosis room!
       local room_at_index = math.random(1,#rooms_to_check)
       room_type = diagnosis_rooms[rooms_to_check[room_at_index]]
@@ -90,7 +89,6 @@ local action_seek_room_find_room = permanent"action_seek_room_find_room"( functi
         action.room_type = room_type
         return room
       else
-        tried_rooms = tried_rooms + 1
         -- Remove the index of this room from the list of indices available in available_diagnosis_rooms
         table.remove(rooms_to_check, room_at_index)
         -- If the room can be built, set the flag for it.
