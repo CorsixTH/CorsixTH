@@ -1616,7 +1616,7 @@ end
 
 --! Handyman has died. Remove all tasks assigned to this staff
 --!param handyman The handyman deceased
-function Hospital:onHandymanDeath(handyman)
+function Hospital:unassignHandymanTasks(handyman)
   local tasks = self:findAssignedTasksToHandyman(handyman)
   for _, task in ipairs(tasks) do
     task.assignedHandyman = nil
