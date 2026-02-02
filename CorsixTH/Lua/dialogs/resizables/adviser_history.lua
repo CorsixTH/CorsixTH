@@ -189,3 +189,4 @@ end
 function UIAdviserHistory:close()
   Window.close(self)
 end
+
