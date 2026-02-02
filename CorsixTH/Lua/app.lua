@@ -129,7 +129,6 @@ function App:init()
   self:initUserDirectories()
   self:initSavegameDir()
   self:initScreenshotsDir()
-  self:initMusicDir()
 
   -- Create the window
   if not SDL.init("video", "timer", "audio") then
@@ -280,6 +279,7 @@ function App:init()
   -- Load audio
   corsixth.require("audio")
   self.audio = Audio(self)
+  self:initMusicDir()
   self.audio:init()
 
   -- Load movie player
@@ -527,8 +527,8 @@ function App:initMusicDir()
   end
 
   -- Checks if the given directory name is a valid music directory name
-  local function isDirectoryNameValid(name)
-    local posible_dirs = {"music", "sounds"}
+  local function isValidMusicDirName(name)
+    local posible_dirs = {"music", "sound"}
 
     for _, valid_name in ipairs(posible_dirs) do
       if name == valid_name then
@@ -542,10 +542,10 @@ function App:initMusicDir()
   local function dirHasMusic(path)
     -- Build a lookup table of allowed extensions (waveform + instructional)
     local allowed = {}
-    for extension in pairs(self.audio.allowed_waveform_formats) do
+    for _, extension in ipairs(self.audio.allowed_waveform_formats) do
       allowed[extension:lower()] = true
     end
-    for extension in pairs(self.audio.allowed_instructional_formats) do
+    for _, extension in ipairs(self.audio.allowed_instructional_formats) do
       allowed[extension:lower()] = true
     end
 
@@ -568,15 +568,14 @@ function App:initMusicDir()
       return nil
     end
 
-    local lower_case_path = path:lower()
-    lower_case_path = stripTrailingSlash(lower_case_path)
+    local normalized_path = stripTrailingSlash(path)
 
     -- Check every file and folder inside the given path
-    for entry in lfs.dir(lower_case_path) do
-      local entry_path = lower_case_path .. pathsep .. entry
+    for entry in lfs.dir(normalized_path) do
+      local entry_path = normalized_path .. "/" .. entry -- paths with "/" work on all operating systems
       local isDirectory = lfs.attributes(entry_path, "mode") == "directory"
 
-      if isDirectory and isDirectoryNameValid(entry:lower()) then
+      if isDirectory and isValidMusicDirName(entry:lower()) then
         if dirHasMusic(entry_path) then
           return entry_path
         end
@@ -586,8 +585,9 @@ function App:initMusicDir()
   end
 
   local corsixth_path = lfs.currentdir()
-  local conf_path = self.command_line["config-file"] or "config.txt"
   local th_install_path = self.config.theme_hospital_install
+  local conf_path = self.command_line["config-file"] or lfs.currentdir()  -- Gets the path of the config file
+  conf_path = conf_path:match("^(.-)[^" .. pathsep .. "]*$") -- Removes the config file name from the above path
 
   if not self:checkInstallFolder() then
     th_install_path = nil
