@@ -146,7 +146,14 @@ function UIAdviserHistory:createControls()
 end
 
 function UIAdviserHistory:update()
-  self.adviser_messages = self.ui.adviser.message_history
+  -- self.adviser_messages = self.ui.adviser.message_history --> WRONG, this way both variables point to the same table
+
+  self.adviser_messages = {}
+  -- Clone the list
+  for i = 1, #self.ui.adviser.message_history do
+    self.adviser_messages[i] = self.ui.adviser.message_history[i]
+  end
+
   self.scrollbar:setRange(1, math.max(1, #self.adviser_messages), self.rows_shown, self.scrollbar.value)
   self:scrollbarMoved()
 end
@@ -169,10 +176,16 @@ function UIAdviserHistory:scrollbarMoved()
 end
 
 function UIAdviserHistory:onTick()
-  -- Dialog does not update on every tick
-  tick_timer = tick_timer - 1
-  if tick_timer <= 0 then
-    tick_timer = ticks_to_skip
+  -- The adviser.message_history has a cap of 20 messages by default
+  -- New messages only get added to the top (it's a stack) or, if duplicate, a message
+  -- gets moved from the middle to the top.
+
+  -- Checking the lenght of both lists would fail if a message was moved from the middle to the top due to duplication.
+  -- So we just check if the top string between lists has changed to determine if we need to update
+  local current_history_top = self.adviser_messages[1]
+  local new_history_top = self.ui.adviser.message_history[1]
+
+  if current_history_top ~= new_history_top then
     self:update()
   end
 end
