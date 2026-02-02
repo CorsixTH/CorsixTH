@@ -29,10 +29,6 @@ local col_highlight = { red = 47, green = 154, blue = 190, }
 local col_shadow = { red = 36, green = 138, blue = 158 }
 local col_delete_button = { red = 219, green = 36, blue = 36 }
 
--- Timer, used to update the dialog only once per X ticks to reduce the burden.
-local ticks_to_skip = 10
-local tick_timer = ticks_to_skip
-
 function UIAdviserHistory:UIAdviserHistory(ui)
   local app = ui.app
 
