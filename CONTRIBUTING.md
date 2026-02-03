@@ -50,9 +50,8 @@ You can also submit a **Draft Pull Request** as an alternative to the
 **[WIP]** label.
 
 ### CorsixTH Developers: Configuring Pull Requests ###
-All pull requests in CorsixTH must have an appropriate PR label before merging
-(current Humbe project excepted). This ensures it goes into the current project.
-More than one PR label can be applied, if appropriate. Those in Draft/[WIP] do not
+All pull requests in CorsixTH must have an appropriate PR label before merging to
+master. This ensures it goes into the current project. Those in Draft/[WIP] do not
 need a label until past that stage.
 
 Available labels are:
@@ -60,8 +59,8 @@ Available labels are:
 | ----- | ----------- |
 | **PR:Bugfix** | Code that fixes something broken. |
 | **PR:DevTools/Repo** | Code that mainly serves the CorsixTH repository, developer assets, or compilation and CI tools. |
-| **PR:Feature** | Implementation of something brand new to CorsixTH. |
-| **PR:Improvement** | Improvements to current functionality of the code. |
+| **PR:Feature** | Implementation of something brand new to CorsixTH that did not exist before. Includes creating a missing feature of TH. |
+| **PR:Improvement** | Improvements to a feature or function that already exists. This includes changes to achieve closer matching behaviour with TH.
 | **PR:Refactor** | Altering the structure of existing code without necessarily changing desired functionality. |
 | **PR:Translation** | Contributions to CorsixTH's translations. |
 
