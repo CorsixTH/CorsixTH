@@ -517,13 +517,8 @@ end
 
 function App:initMusicDir()
   -- No need to set the music dir if it's already configured
-  if self.config.audio_music then
+  if self.config.audio_music and not self.config.find_music_dir_on_start then
     return true
-  end
-
-  local function stripTrailingSlash(path)
-    -- Remove one or more trailing / or \ characters
-    return path:gsub("[/\\]+$", "")
   end
 
   -- Checks if the given directory name is a valid music directory name
@@ -541,18 +536,13 @@ function App:initMusicDir()
   -- Checks if the specified directory has music files
   local function dirHasMusic(path)
     -- Build a lookup table of allowed extensions (waveform + instructional)
-    local allowed = {}
-    for _, extension in ipairs(self.audio.allowed_waveform_formats) do
-      allowed[extension:lower()] = true
-    end
-    for _, extension in ipairs(self.audio.allowed_instructional_formats) do
-      allowed[extension:lower()] = true
-    end
+    local waveform = list_to_set(self.audio.allowed_waveform_formats)
+    local instructional = list_to_set(self.audio.allowed_instructional_formats)
 
     -- Scan directory for files with matching extensions
     for file in lfs.dir(path) do
-      local ext = file:match("%.([^.]+)$") -- capture extension without dot
-      if ext and allowed[ext:lower()] then
+      local ext = file:match("%.([^.]+)$")
+      if ext and (waveform[ext:upper()] or instructional[ext:upper()]) then
         return true
       end
     end
@@ -563,12 +553,14 @@ function App:initMusicDir()
   -- Checks if the specified path contains a music directory and if it has music files
   -- If found, the directory's path is returned
   local function findMusicDir(path)
-    -- Used to guard against the case where the TH install path is not valid/set
+    -- Used to guard against the following cases:
+    --    # The TH install path is not valid/set
+    --    # The config file is in CorsixTH's folder
     if path == nil then
       return nil
     end
 
-    local normalized_path = stripTrailingSlash(path)
+    local normalized_path = stripTrailingSlashes(path)
 
     -- Check every file and folder inside the given path
     for entry in lfs.dir(normalized_path) do
@@ -584,21 +576,24 @@ function App:initMusicDir()
     return nil
   end
 
+  local operating_system = detectOS()
   local corsixth_path = lfs.currentdir()
-  local th_install_path = self.config.theme_hospital_install
-  local conf_path = self.command_line["config-file"] or lfs.currentdir()  -- Gets the path of the config file
+  local conf_path = self.command_line["config-file"] or nil  -- Gets the path of the config file ('nil' if it's in CorsixTH's dir)
   conf_path = conf_path:match("^(.-)[^" .. pathsep .. "]*$") -- Removes the config file name from the above path
 
-  if not self:checkInstallFolder() then
-    th_install_path = nil
+  if(operating_system == "macOS") then
+    -- On macOS skip checking the game's directory, since it's difficult to obtain and/or open
+    corsixth_path = nil
   end
 
   -- Check corsixth's install directory first, then the config file directory
-  local music_dir = findMusicDir(corsixth_path) or findMusicDir(conf_path) or findMusicDir(th_install_path)
+  local music_dir = findMusicDir(corsixth_path) or findMusicDir(conf_path)
   if music_dir then
     self.config.audio_music = music_dir
-    self:saveConfig()
   end
+
+  self.config.find_music_dir_on_start = true
+  self:saveConfig()
 
   return true
 end
