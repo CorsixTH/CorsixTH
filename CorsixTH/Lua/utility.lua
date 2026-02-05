@@ -486,11 +486,14 @@ end
 
 --! Strip trailing slashes from a path.
 --!param path (string) The path to strip.
+--!return (string) The path without trailing slashes.
 function stripTrailingSlashes(path)
   -- Remove one or more trailing / or \ characters
   return path:gsub("[/\\]+$", "")
 end
 
+--! Detects the operating system the game is running on.
+--!return (string) One of "Windows", "macOS", "Linux", "Unix-like", or "Unknown".
 function detectOS()
   local home = os.getenv("HOME")
   local windir = os.getenv("WINDIR")
