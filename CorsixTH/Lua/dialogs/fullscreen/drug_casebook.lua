@@ -86,6 +86,8 @@ function UICasebook:UICasebook(ui, disease_selection)
 
   if disease_selection then
     self:selectDisease(disease_selection)
+  elseif self.ui.casebook_selected_disease then
+    self:selectDisease(self.ui.casebook_selected_disease)
   else
     self.selected_index = #self.names_sorted
     self.selected_disease = self.names_sorted[self.selected_index]
@@ -198,6 +200,7 @@ function UICasebook:updateIcons()
 
   self.ui:updateTooltip() -- for the case that mouse is hovering over icon while player scrolls through list with keys
   self.percentage_counter = 50
+  self.ui.casebook_selected_disease = disease
 end
 
 function UICasebook:draw(canvas, x, y)
