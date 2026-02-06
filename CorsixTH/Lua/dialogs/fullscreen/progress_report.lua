@@ -109,7 +109,7 @@ function UIProgressReport:UIProgressReport(ui)
     self:addPanel(0, 265, 71 + (num - 1) * 25)
       :makeButton(0, 0, 147, 20, 9, btn_handler(num))
       :setTooltip(tooltip(num))
-      :enable(num == 1)
+      :enable(true)
   end
 
   for i = 1, math.min(#world.hospitals, 4) do
@@ -186,12 +186,15 @@ function UIProgressReport:draw(canvas, x, y)
   local world    = self.ui.app.world
   local hospital = world.hospitals[self.selected]
 
+  local total_spawns = 0
+
   -- Names of the players playing
   local ly = 73 * s
   for pnum, player in ipairs(world.hospitals) do
     local font = (pnum == self.selected) and self.red_font or self.normal_font
     font:draw(canvas, player.name:upper(), x + 272 * s, y + ly)
     ly = ly + 25 * s
+    total_spawns = total_spawns + math.max(1, player.population)
   end
 
   -- Draw the vertical bars for the selected conditions
@@ -229,7 +232,7 @@ function UIProgressReport:draw(canvas, x, y)
       (world:date():year() + 1999), x + 227 * s, y + 40 * s, 400 * s, 0)
   self.small_font:draw(canvas, _S.progress_report.win_criteria:upper(), x + 263 * s, y + 172 * s)
   self.small_font:draw(canvas, _S.progress_report.percentage_pop:upper() .. " " ..
-      (hospital.population * 100) .. "%", x + 450 * s, y + 65 * s)
+      math.floor(math.max(1, hospital.population) / total_spawns * 100) .. "%", x + 450 * s, y + 65 * s)
 end
 
 function UIProgressReport:afterLoad(old, new)
