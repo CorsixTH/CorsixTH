@@ -483,3 +483,35 @@ function pause_gc_and_use_weak_keys(fn, ...)
 
   return unpack(res)
 end
+
+--! Strip trailing slashes from a path.
+--!param path (string) The path to strip.
+--!return (string) The path without trailing slashes.
+function stripTrailingSlashes(path)
+  -- Remove one or more trailing / or \ characters
+  return path:gsub("[/\\]+$", "")
+end
+
+--! Detects the operating system the game is running on.
+--!return (string) One of "Windows", "macOS", "Linux", "Unix-like", or "Unknown".
+function detectOS()
+  local home = os.getenv("HOME")
+  local windir = os.getenv("WINDIR")
+
+  if windir then
+      return "Windows"
+  elseif home then
+      -- Could be Linux or macOS
+      -- Check another variable
+      local uname = io.popen("uname"):read("*l")
+      if uname == "Darwin" then
+          return "macOS"
+      elseif uname == "Linux" then
+          return "Linux"
+      else
+          return "Unix-like"
+      end
+  else
+      return "Unknown"
+  end
+end
