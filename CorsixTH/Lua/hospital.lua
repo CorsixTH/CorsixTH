@@ -2164,10 +2164,11 @@ end
 function Hospital:computePriceLevelImpact(patient, casebook)
   local price_distortion = patient:getPriceDistortion(casebook)
   patient:changeAttribute("happiness", -(price_distortion / 2))
-
   if price_distortion < self.under_priced_threshold then
     if math.random(1, 100) == 1 then
-      self:advisePriceLevelImpact("under", casebook.disease.name)
+      if casebook.price < 1 then
+        self:advisePriceLevelImpact("under", casebook.disease.name)
+      end
       self:changeReputation("under_priced")
     end
   elseif price_distortion > self.over_priced_threshold then
