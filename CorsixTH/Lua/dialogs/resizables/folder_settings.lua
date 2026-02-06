@@ -83,31 +83,34 @@ function UIFolder:UIFolder(ui, mode)
   self:addBevelPanel(20, 100, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.savegames_label):setTooltip(_S.tooltip.folders_window.savegames_location)
     .lowered = true
-  local tooltip_saves = app.config.savegames and _S.tooltip.folders_window.browse_saves:format(app.config.savegames) or _S.tooltip.folders_window.default
+  local saves_location = app.config.savegames or app.savegame_dir
+  local tooltip_saves = saves_location and _S.tooltip.folders_window.browse_saves:format(saves_location)
   self.saves_panel = self:addBevelPanel(160, 100, 160, 20, col_bg)
-  self.saves_panel:setLabel(app.config.savegames and app.config.savegames or tooltip_saves , built_in):setAutoClip(true)
+  self.saves_panel:setLabel(saves_location , built_in):setAutoClip(true)
     :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForSavegames):setTooltip(tooltip_saves)
-  self:addBevelPanel(320, 100, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetSavegameDir):setTooltip(_S.tooltip.folders_window.reset_to_default)
+  self:addBevelPanel(320, 100, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetSavegameDir):setTooltip(_S.tooltip.folders_window.reset_to_default:format(app.savegame_dir))
 
   -- location for screenshots
   self:addBevelPanel(20, 125, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.screenshots_label):setTooltip(_S.tooltip.folders_window.screenshots_location)
     .lowered = true
-  local tooltip_screenshots = app.config.screenshots and _S.tooltip.folders_window.browse_screenshots:format(app.config.screenshots) or _S.tooltip.folders_window.default
+  local screenshots_location = app.config.screenshots or app.screenshot_dir
+  local tooltip_screenshots = screenshots_location and _S.tooltip.folders_window.browse_screenshots:format(screenshots_location)
   self.screenshots_panel = self:addBevelPanel(160, 125, 160, 20, col_bg)
-  self.screenshots_panel:setLabel(app.config.screenshots and app.config.screenshots or tooltip_screenshots, built_in):setAutoClip(true)
+  self.screenshots_panel:setLabel(screenshots_location, built_in):setAutoClip(true)
     :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForScreenshots):setTooltip(tooltip_screenshots)
-  self:addBevelPanel(320, 125, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetScreenshotDir):setTooltip(_S.tooltip.folders_window.reset_to_default)
+  self:addBevelPanel(320, 125, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetScreenshotDir):setTooltip(_S.tooltip.folders_window.reset_to_default:format(app.screenshot_dir))
 
  -- location for music files
   self:addBevelPanel(20, 150, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.music_label):setTooltip(_S.tooltip.folders_window.music_location)
     .lowered = true
+  local music_location_label = app.config.audio_music or app.audio_music_dir or _S.tooltip.folders_window.not_specified
   local tooltip_audio = app.config.audio_music and _S.tooltip.folders_window.browse_music:format(app.config.audio_music) or _S.tooltip.folders_window.not_specified
   self.music_panel = self:addBevelPanel(160, 150, 180, 20, col_bg)
-  self.music_panel:setLabel(app.config.audio_music and app.config.audio_music or tooltip_audio, built_in):setAutoClip(true)
+  self.music_panel:setLabel(music_location_label, built_in):setAutoClip(true)
     :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForAudio_music):setTooltip(tooltip_audio)
-  self:addBevelPanel(320, 150, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetmusicDir):setTooltip(_S.tooltip.folders_window.reset_to_default)
+  self:addBevelPanel(320, 150, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetmusicDir):setTooltip(_S.tooltip.folders_window.reset_to_default:format(app.config.audio_music))
 
   -- "Back" button
   self:addBevelPanel(20, 180, 320, 40, col_bg):setLabel(_S.folders_window.back)
@@ -120,7 +123,7 @@ function UIFolder:resetSavegameDir()
   app.config.savegames = nil
   app:saveConfig()
   app:initSavegameDir()
-  self.saves_panel:setLabel(_S.tooltip.folders_window.default, self.built_in_font)
+  self.saves_panel:setLabel(app.savegame_dir, self.built_in_font)
 end
 
 function UIFolder:resetScreenshotDir()
@@ -128,7 +131,7 @@ function UIFolder:resetScreenshotDir()
   app.config.screenshots = nil
   app:saveConfig()
   app:initScreenshotsDir()
-  self.screenshots_panel:setLabel(_S.tooltip.folders_window.default, self.built_in_font)
+  self.screenshots_panel:setLabel(app.screenshot_dir, self.built_in_font)
 end
 
 function UIFolder:resetmusicDir()
