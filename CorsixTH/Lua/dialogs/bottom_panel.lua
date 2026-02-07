@@ -67,14 +67,31 @@ function UIBottomPanel:onChangeResolution()
   self:drawPanels()
 end
 
+-- A function to set the menu hotkey strings, whether a string or table.
+-- Usage: hotkey_value_label(hotkey name as string)
+-- Ex: hotkey_value_label("ingame_loadMenu") will produce (SHIFT+L) by default.
+--!param hotkey_name (string) Name of hotkey to be converted to string.
+--!return (string) The hotkey returned in this format: (KEY+KEY)
+local function hotkey_value_label(hotkey_name)
+  local hotkey_value = TheApp.hotkeys[hotkey_name]
+  if hotkey_value == nil then
+    return ""
+  end
+  return string.upper(" (" .. array_join(hotkey_value, "+") .. ")")
+end
+
 function UIBottomPanel:drawPanels()
-  self.bank_button = self:addPanel( 1,   0, 0):makeToggleButton(6, 6, 35, 36, 2, self.dialogBankManager, nil, self.dialogBankStats):setTooltip(_S.tooltip.toolbar.bank_button)
+  self.bank_button = self:addPanel( 1,   0, 0):makeToggleButton(6, 6, 35, 36, 2, self.dialogBankManager, nil, self.dialogBankStats)
+    :setTooltip(_S.tooltip.toolbar.bank_button)
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
-  self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom):setTooltip(_S.tooltip.toolbar.rooms)
-  self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor):setTooltip(_S.tooltip.toolbar.objects)
-  self:addPanel( 8, 285, 0):makeButton(1, 6, 35, 36, 9, self.editRoom)
-    :setSound():setTooltip(_S.tooltip.toolbar.edit) -- Remove default sound for this button
-  self:addPanel(10, 322, 0):makeButton(1, 6, 35, 36, 11, self.dialogHireStaff):setTooltip(_S.tooltip.toolbar.hire)
+  self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom)
+    :setTooltip(_S.tooltip.toolbar.rooms .. hotkey_value_label("ingame_panel_buildRoom"))
+  self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor)
+    :setTooltip(_S.tooltip.toolbar.objects .. hotkey_value_label("ingame_panel_furnishCorridor"))
+  self:addPanel( 8, 285, 0):makeButton(1, 6, 35, 36, 9, self.editRoom):setSound() -- Remove default sound for this button
+    :setTooltip(_S.tooltip.toolbar.edit .. hotkey_value_label("ingame_panel_editRoom"))
+  self:addPanel(10, 322, 0):makeButton(1, 6, 35, 36, 11, self.dialogHireStaff)
+    :setTooltip(_S.tooltip.toolbar.hire .. hotkey_value_label("ingame_panel_hireStaff"))
   -- The dynamic info bar
   self:addPanel(12, 364, 0)
 
@@ -102,12 +119,13 @@ function UIBottomPanel:drawPanels()
   local buttons = {}
   local app = self.ui.app
   panels[1]  = self:addPanel(15, 364, 0) -- Staff management button
-  buttons[1] = panels[1]:makeToggleButton(6, 6, 35, 36, 16, self.dialogStaffManagement):setTooltip(_S.tooltip.toolbar.staff_list)
+  buttons[1] = panels[1]:makeToggleButton(6, 6, 35, 36, 16, self.dialogStaffManagement)
+    :setTooltip(_S.tooltip.toolbar.staff_list .. hotkey_value_label("ingame_panel_staffManage"))
   if self:machineMenuButtonExists() then
     -- Sprites for machine menu button doesn't exist in original game. Let's import them from aux_ui.dat and draw
     local aux_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
     self:addPanel(0, 407, 0):makeToggleButton(2, 6, 36, 36, 0, self.dialogMachineMenu)
-      :setTooltip(_S.tooltip.toolbar.machine_menu)
+      :setTooltip(_S.tooltip.toolbar.machine_menu .. hotkey_value_label("ingame_panel_machineMenu"))
       .panel_for_sprite.custom_draw = --[[persistable:machine_menu_buttons]] function(panel, canvas, x, y)
       local s = TheApp.config.ui_scale
       x = x + panel.x * s
@@ -125,18 +143,23 @@ function UIBottomPanel:drawPanels()
     end
   end
   panels[2]  = self:addPanel(17, 407 + self.offset, 0) -- Town map button
-  buttons[2] = panels[2]:makeToggleButton(1, 6, 35, 36, 18, self.dialogTownMap):setTooltip(_S.tooltip.toolbar.town_map)
+  buttons[2] = panels[2]:makeToggleButton(1, 6, 35, 36, 18, self.dialogTownMap)
+    :setTooltip(_S.tooltip.toolbar.town_map .. hotkey_value_label("ingame_panel_townMap"))
   panels[3]  = self:addPanel(19, 445 + self.offset, 0) -- Casebook button
-  buttons[3] = panels[3]:makeToggleButton(1, 6, 35, 36, 20, self.dialogDrugCasebook):setTooltip(_S.tooltip.toolbar.casebook)
+  buttons[3] = panels[3]:makeToggleButton(1, 6, 35, 36, 20, self.dialogDrugCasebook)
+    :setTooltip(_S.tooltip.toolbar.casebook .. hotkey_value_label("ingame_panel_casebook"))
   panels[4]  = self:addPanel(21, 483 + self.offset, 0) -- Research button
-  buttons[4] = panels[4]:makeToggleButton(1, 6, 35, 36, 22, self.dialogResearch)
-    :setSound():setTooltip(_S.tooltip.toolbar.research) -- Remove default sound for this button
+  buttons[4] = panels[4]:makeToggleButton(1, 6, 35, 36, 22, self.dialogResearch):setSound() -- Remove default sound for this button
+    :setTooltip(_S.tooltip.toolbar.research .. hotkey_value_label("ingame_panel_research"))
   panels[5]  = self:addPanel(23, 521 + self.offset, 0) -- Status button
-  buttons[5] = panels[5]:makeToggleButton(1, 6, 35, 36, 24, self.dialogStatus):setTooltip(_S.tooltip.toolbar.status)
+  buttons[5] = panels[5]:makeToggleButton(1, 6, 35, 36, 24, self.dialogStatus)
+    :setTooltip(_S.tooltip.toolbar.status .. hotkey_value_label("ingame_panel_status"))
   panels[6]  = self:addPanel(25, 559 + self.offset, 0) -- Charts button
-  buttons[6] = panels[6]:makeToggleButton(1, 6, 35, 36, 26, self.dialogCharts):setTooltip(_S.tooltip.toolbar.charts)
+  buttons[6] = panels[6]:makeToggleButton(1, 6, 35, 36, 26, self.dialogCharts)
+    :setTooltip(_S.tooltip.toolbar.charts .. hotkey_value_label("ingame_panel_charts"))
   panels[7]  = self:addPanel(27, 597 + self.offset, 0) -- Policy button
-  buttons[7] = panels[7]:makeToggleButton(1, 6, 35, 36, 28, self.dialogPolicy):setTooltip(_S.tooltip.toolbar.policy)
+  buttons[7] = panels[7]:makeToggleButton(1, 6, 35, 36, 28, self.dialogPolicy)
+    :setTooltip(_S.tooltip.toolbar.policy .. hotkey_value_label("ingame_panel_policy"))
   for _, panel in ipairs(panels) do
     panel.visible = false
   end
