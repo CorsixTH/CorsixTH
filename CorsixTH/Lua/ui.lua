@@ -193,9 +193,8 @@ function UI:UI(app, minimal)
   end
 
   self:setCursor(self.default_cursor)
-
-
   self:setupGlobalKeyHandlers()
+  self.casebook_selected_disease = false
 end
 
 function UI:runDebugScript()
