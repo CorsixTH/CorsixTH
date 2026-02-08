@@ -83,7 +83,8 @@ function UIAdviser:talk()
   local best = 1
   if self.queued_messages[1].priority then
     for i = 1, #self.queued_messages do
-      if best ~= i and self.queued_messages[best].priority < self.queued_messages[i].priority then
+      if best ~= i and self.queued_messages[i].priority and
+          self.queued_messages[best].priority < self.queued_messages[i].priority then
         best = i
       end
     end
