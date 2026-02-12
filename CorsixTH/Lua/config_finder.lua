@@ -128,6 +128,7 @@ local config_defaults = {
   machine_menu_button = true,
   enable_screen_shake = true,
   enable_announcer_subtitles = false,
+  autosave_periodicity = 1,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
@@ -420,7 +421,14 @@ local string_01 = [=[
 -- By default subtitles are not displayed. If you would like the game to
 -- display subtitles for your hospital's announcements, turn this option on.
 --]=] .. '\n' ..
-'enable_announcer_subtitles = ' .. tostring(config_values.enable_announcer_subtitles) .. '\n' .. [=[]=]
+'enable_announcer_subtitles = ' .. tostring(config_values.enable_announcer_subtitles) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------
+-- By default, the game autosaves every in-game month. If you would like to
+-- autosave more ofter, every week or every day, change this setting to 2 or 3.
+-- Set 1 for Monthly, 2 for Weekly, 3 for Daily autosaves.
+--]=] .. '\n' ..
+'autosave_periodicity = ' .. tostring(config_values.autosave_periodicity) .. '\n' .. [=[]=]
 
 local string_02 = [=[
 
