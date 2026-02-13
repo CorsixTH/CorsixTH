@@ -128,7 +128,7 @@ local config_defaults = {
   machine_menu_button = true,
   enable_screen_shake = true,
   enable_announcer_subtitles = false,
-  autosave_periodicity = 1,
+  autosave_frequency = 1,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
@@ -426,9 +426,11 @@ local string_01 = [=[
 -------------------------------------------------------------------------------
 -- By default, the game autosaves every in-game month. If you would like to
 -- autosave more ofter, every week or every day, change this setting to 2 or 3.
+-- Please note that a typical save can take up to 1 megabyte or even more.
+-- This way your autosaves folder can grow to 300-500 MB with daily autosaves.
 -- Set 1 for Monthly, 2 for Weekly, 3 for Daily autosaves.
 --]=] .. '\n' ..
-'autosave_periodicity = ' .. tostring(config_values.autosave_periodicity) .. '\n' .. [=[]=]
+'autosave_frequency = ' .. tostring(config_values.autosave_frequency) .. '\n' .. [=[]=]
 
 local string_02 = [=[
 

@@ -1066,10 +1066,10 @@ function World:onEndDay()
   end
 
   -- Autosave
-  if self.app.config.autosave_periodicity == 3 then
+  if self.app.config.autosave_frequency == 3 then
     -- Daily autosave
     self.autosave_next_tick = true
-  elseif self.app.config.autosave_periodicity == 2 then
+  elseif self.app.config.autosave_frequency == 2 then
     if day == self.game_date:lastDayOfMonth() or day == 6 or day == 13 or day == 20 or day == 27 then
       -- Weekly autosave
       self.autosave_next_tick = true
@@ -1118,7 +1118,7 @@ function World:onEndMonth()
   self.current_tick_entity = nil
 
   -- Autosave
-  if self.app.config.autosave_periodicity == 1 then
+  if self.app.config.autosave_frequency == 1 then
     -- Monthly autosave
     self.autosave_next_tick = true
   end

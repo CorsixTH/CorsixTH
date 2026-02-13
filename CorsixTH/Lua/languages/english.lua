@@ -490,19 +490,19 @@ options_window = {
   scrollspeed = "Scroll Speed",
   shift_scrollspeed = "Shift Scroll Speed",
   zoom_speed = "Zoom Speed",
-  autosave_periodicity = "Autosave Periodicity",
+  autosave_frequency = "Autosave Frequency",
   hotkey = "Hotkeys",
   check_for_updates = "Check for Updates",
   sound = "Sound",
 }
 
-autosave_periodicity = {
+autosave_frequency = {
     monthly = "Monthly",
     weekly = "Weekly",
     daily = "Daily",
 }
 
-tooltip.autosave_periodicity = {
+tooltip.autosave_frequency = {
     monthly = "Autosave once per month, on the first day of each month. A total of 12 saves with a depth of 1 year.",
     weekly = "Autosave once per week on the 1st, 7th, 14th, 21nd, and 28th of each month. A total of 60 saves with a depth of 1 year.",
     daily = "Autosave once per day at the start of each in-game day. A total of 365 saves with a depth of 1 year. Please note that a typical save can take up to 1 megabyte or even more. This way your autosaves folder can grow to 300-500 MB.",
@@ -532,7 +532,7 @@ tooltip.options_window = {
   scrollspeed = "Set the scroll speed between 1 (slowest) to 10 (fastest). The default is 2.",
   shift_scrollspeed = "Set the speed of scrolling while the shift key is pressed. 1 (slowest) to 10 (fastest). The default is 4.",
   zoom_speed = "Set the camera zoom speed from 10 (slowest) to 1000 (fastest). The default is 80.",
-  autosave_periodicity = "Set how often the game will make autosaves.",
+  autosave_frequency = "Set how often the game will make autosaves.",
   apply_scrollspeed = "Apply the entered scroll speed.",
   cancel_scrollspeed = "Return without changing the scroll speed.",
   apply_shift_scrollspeed = "Apply the entered shift scroll speed.",
