@@ -41,6 +41,15 @@ function Audio:Audio(app)
   self.played_sound_callbacks = {}
   self.entities_waiting_for_sound_to_be_enabled = {}
   self.midi_player = nil
+  self.allowed_waveform_formats = {
+    "OGG", "OPUS", "FLAC", "WV", "WAV", "WAVE",
+    "MPG", "MPEG", "MP3", "MAD", "AIFF", "AIFC", "AIF"
+  }
+  self.allowed_instructional_formats = {
+    "MID", "MIDI", "KAR", "669", "AMF", "AMS", "DBM",
+    "DSM", "FAR", "GDM", "IT", "MED", "MDL", "MOD", "MOL", "MTM", "NST", "OKT", "PTM",
+    "S3M", "STM", "ULT", "UMX", "WOW", "XM", "XMI"
+  }
 end
 
 function Audio:clearCallbacks()
@@ -97,11 +106,8 @@ function Audio:init()
     - Uses titles from MIDI.TXT if found, else the filename.
   --]]
   local midi_txt -- File name of midi.txt file, if any.
-  local waveform = list_to_set({"OGG", "OPUS", "FLAC", "WV", "WAV", "WAVE",
-      "MPG", "MPEG", "MP3", "MAD", "AIFF", "AIFC", "AIF"})
-  local instructional = list_to_set({"MID", "MIDI", "KAR", "669", "AMF", "AMS", "DBM",
-      "DSM", "FAR", "GDM", "IT", "MED", "MDL", "MOD", "MOL", "MTM", "NST", "OKT", "PTM",
-      "S3M", "STM", "ULT", "UMX", "WOW", "XM", "XMI"})
+  local waveform = list_to_set(self.allowed_waveform_formats)
+  local instructional = list_to_set(self.allowed_instructional_formats)
 
   local _f, _s, _v
   if music_dir then
