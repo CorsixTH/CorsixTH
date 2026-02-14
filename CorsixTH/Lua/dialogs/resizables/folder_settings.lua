@@ -64,57 +64,85 @@ function UIFolder:UIFolder(ui, mode)
   local built_in = app.gfx:loadMenuFont()
 
   self:addBevelPanel(20, 50, 130, 20, col_shadow, col_bg, col_bg)
-    :setLabel(_S.folders_window.data_label):setTooltip(_S.tooltip.folders_window.data_location)
+    :setLabel(_S.folders_window.data_label)
+    :setTooltip(_S.tooltip.folders_window.data_location)
     .lowered = true
   self:addBevelPanel(160, 50, 180, 20, col_bg)
-    :setLabel(app.config.theme_hospital_install, built_in):setAutoClip(true)
-    :makeButton(0, 0, 180, 20, nil, self.buttonBrowseForTHInstall):setTooltip(_S.tooltip.folders_window.browse_data:format(app.config.theme_hospital_install))
+    :setLabel(app.config.theme_hospital_install, built_in)
+    :setAutoClip(true)
+    :makeButton(0, 0, 180, 20, nil, self.buttonBrowseForTHInstall)
+    :setTooltip(_S.tooltip.folders_window.browse_data:format(app.config.theme_hospital_install))
 
   -- Location of font file
+  local tooltip_font = app.config.unicode_font and _S.tooltip.folders_window.browse_font:format(app.config.unicode_font) or _S.tooltip.folders_window.no_font_specified
+
   self:addBevelPanel(20, 75, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.font_label):setTooltip(_S.tooltip.folders_window.font_location)
     .lowered = true
-  local tooltip_font = app.config.unicode_font and _S.tooltip.folders_window.browse_font:format(app.config.unicode_font) or _S.tooltip.folders_window.no_font_specified
   self:addBevelPanel(160, 75, 180, 20, col_bg)
-    :setLabel(app.config.unicode_font and app.config.unicode_font or tooltip_font, built_in):setAutoClip(true)
+    :setLabel(app.config.unicode_font and app.config.unicode_font or tooltip_font, built_in)
+    :setAutoClip(true)
     :makeButton(0, 0, 180, 20, nil, self.buttonBrowseForFont):setTooltip(tooltip_font)
 
   -- Location saves alternative
+  local default_saves_dir = app.savegame_dir
+  local saves_location = app.config.savegames or default_saves_dir
+  local tooltip_saves = saves_location and _S.tooltip.folders_window.browse_saves:format(saves_location)
+
   self:addBevelPanel(20, 100, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.savegames_label):setTooltip(_S.tooltip.folders_window.savegames_location)
     .lowered = true
-  local saves_location = app.config.savegames or app.savegame_dir
-  local tooltip_saves = saves_location and _S.tooltip.folders_window.browse_saves:format(saves_location)
   self.saves_panel = self:addBevelPanel(160, 100, 160, 20, col_bg)
-  self.saves_panel:setLabel(saves_location , built_in):setAutoClip(true)
-    :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForSavegames):setTooltip(tooltip_saves)
-  self:addBevelPanel(320, 100, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetSavegameDir):setTooltip(_S.tooltip.folders_window.reset_to_default:format(app.savegame_dir))
+  self.saves_panel
+    :setLabel(saves_location , built_in)
+    :setAutoClip(true)
+    :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForSavegames)
+    :setTooltip(tooltip_saves)
+  self:addBevelPanel(320, 100, 20, 20, col_bg):setLabel("X")
+    :makeButton(0, 0, 20, 20, nil, self.resetSavegameDir)
+    :setTooltip(_S.tooltip.folders_window.reset_to_default:format(default_saves_dir))
 
   -- location for screenshots
+  local default_screenshots_dir = app.screenshot_dir
+  local screenshots_location = app.config.screenshots or default_screenshots_dir
+  local tooltip_screenshots = screenshots_location and _S.tooltip.folders_window.browse_screenshots:format(screenshots_location)
+
   self:addBevelPanel(20, 125, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.screenshots_label):setTooltip(_S.tooltip.folders_window.screenshots_location)
     .lowered = true
-  local screenshots_location = app.config.screenshots or app.screenshot_dir
-  local tooltip_screenshots = screenshots_location and _S.tooltip.folders_window.browse_screenshots:format(screenshots_location)
   self.screenshots_panel = self:addBevelPanel(160, 125, 160, 20, col_bg)
-  self.screenshots_panel:setLabel(screenshots_location, built_in):setAutoClip(true)
+  self.screenshots_panel
+    :setLabel(screenshots_location, built_in)
+    :setAutoClip(true)
     :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForScreenshots):setTooltip(tooltip_screenshots)
-  self:addBevelPanel(320, 125, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetScreenshotDir):setTooltip(_S.tooltip.folders_window.reset_to_default:format(app.screenshot_dir))
+  self:addBevelPanel(320, 125, 20, 20, col_bg)
+    :setLabel("X")
+    :makeButton(0, 0, 20, 20, nil, self.resetScreenshotDir)
+    :setTooltip(_S.tooltip.folders_window.reset_to_default:format(default_screenshots_dir))
 
  -- location for music files
+  local music_location_label = app.config.audio_music or _S.tooltip.folders_window.not_specified
+  local tooltip_music = app.config.audio_music and _S.tooltip.folders_window.browse_music:format(app.config.audio_music) or _S.tooltip.folders_window.not_specified
+
   self:addBevelPanel(20, 150, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.music_label):setTooltip(_S.tooltip.folders_window.music_location)
     .lowered = true
-  local music_location_label = app.config.audio_music or app.audio_music_dir or _S.tooltip.folders_window.not_specified
-  local tooltip_audio = app.config.audio_music and _S.tooltip.folders_window.browse_music:format(app.config.audio_music) or _S.tooltip.folders_window.not_specified
   self.music_panel = self:addBevelPanel(160, 150, 180, 20, col_bg)
-  self.music_panel:setLabel(music_location_label, built_in):setAutoClip(true)
-    :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForAudio_music):setTooltip(tooltip_audio)
-  self:addBevelPanel(320, 150, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetmusicDir):setTooltip(_S.tooltip.folders_window.reset_to_default:format(app.config.audio_music))
+  self.music_panel
+    :setLabel(music_location_label, built_in)
+    :setAutoClip(true)
+    :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForAudio_music)
+    :setTooltip(tooltip_music)
+  self:addBevelPanel(320, 150, 20, 20, col_bg)
+    :setLabel("X")
+    :makeButton(0, 0, 20, 20, nil, self.resetmusicDir)
+    :setTooltip(_S.tooltip.folders_window.clear_directory)
 
   -- "Back" button
-  self:addBevelPanel(20, 180, 320, 40, col_bg):setLabel(_S.folders_window.back)
-    :makeButton(0, 0, 320, 40, nil, self.buttonBack):setTooltip(_S.tooltip.folders_window.back)
+  self:addBevelPanel(20, 180, 320, 40, col_bg)
+    :setLabel(_S.folders_window.back)
+    :makeButton(0, 0, 320, 40, nil, self.buttonBack)
+    :setTooltip(_S.tooltip.folders_window.back)
   self.built_in_font = built_in
 end
 

@@ -629,6 +629,7 @@ tooltip.folders_window = {
   not_specified = "No folder location specified yet!",
   default = "Default location",
   reset_to_default = "Reset the directory to its default location ( %1% )",
+  clear_directory = "Clear current directory selection",
   back  = "Close this menu and go back to the Settings Menu",
 }
 
