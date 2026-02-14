@@ -32,6 +32,7 @@ globals = { -- Globals
             "table_length", "unpermanent", "values", "serialize",
             "array_join", "shallow_clone", "staff_initials_cache",
             "hasBit", "bitOr", "inspect", "getRandomEntryFromArray",
+            "stripTrailingSlashes", "isDirectory", "canOpenDirectory",
 
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
