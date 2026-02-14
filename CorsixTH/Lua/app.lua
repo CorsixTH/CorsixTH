@@ -517,8 +517,8 @@ end
 
 function App:initMusicDir()
   -- No need to set the music dir if it's already configured
-  if self.config.audio_music and not self.config.find_music_dir_on_start then
-    return true
+  if self.config.audio_music then
+    return
   end
 
   -- Checks if the given directory name is a valid music directory name
@@ -553,10 +553,7 @@ function App:initMusicDir()
   -- Checks if the specified path contains a music directory and if it has music files
   -- If found, the directory's path is returned
   local function findMusicDir(path)
-    -- Used to guard against the following cases:
-    --    # The TH install path is not valid/set
-    --    # The config file is in CorsixTH's folder
-    if path == nil then
+    if path == nil or not isDirectory(path) then
       return nil
     end
 
@@ -565,12 +562,12 @@ function App:initMusicDir()
     -- Check every file and folder inside the given path
     for entry in lfs.dir(normalized_path) do
       local entry_path = normalized_path .. "/" .. entry -- paths with "/" work on all operating systems
-      local isDirectory = lfs.attributes(entry_path, "mode") == "directory"
 
-      if isDirectory and isValidMusicDirName(entry:lower()) then
-        if dirHasMusic(entry_path) then
-          return entry_path
-        end
+      if isValidMusicDirName(entry:lower()) and
+         canOpenDirectory(entry_path) and
+         dirHasMusic(entry_path)
+      then
+        return entry_path
       end
     end
     return nil
@@ -592,10 +589,7 @@ function App:initMusicDir()
     self.config.audio_music = music_dir
   end
 
-  self.config.find_music_dir_on_start = true
   self:saveConfig()
-
-  return true
 end
 
 --! Initialises the application's language based on the player's choice.

@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local lfs = require("lfs")
+
 --[[ Iterator factory for iterating over the deep children of a table.
   For example: for fn in values(_G, "*.remove") do fn() end
   Will call os.remove() and table.remove()
@@ -514,4 +516,22 @@ function detectOS()
   else
       return "Unknown"
   end
+end
+
+--! Checks if a given path is a directory.
+--! param path (string) The path to check.
+--! return (boolean) True if the path is a directory, false otherwise.
+function isDirectory(path)
+  return lfs.attributes(path, "mode") == "directory"
+end
+
+--! Checks if a given path is a directory and can be opened.
+--! param path (string) The path to check.
+--! return (boolean) True if the path is a directory and is accessible, false otherwise.
+function canOpenDirectory(path)
+  local ok, _ = pcall(lfs.dir, path)
+  return ok
+
+  -- "lfs.dir()" will throw an error if the directory isn't accessible/doesn't exist
+  -- (it does the same job of the "isDirectory()" function, but also checks if the directory can be opened)
 end
