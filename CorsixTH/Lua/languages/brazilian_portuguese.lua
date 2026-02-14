@@ -29,9 +29,9 @@ Encoding(utf8)
 
 --Note: All strings should use a single space after full-stops. Only exception is level descriptions.
 -------------------------------  OVERRIDE  ----------------------------------
-adviser.warnings.money_low = "Você está ficando sem dinheiro!" -- Funny. Exists in German translation, but not existent in english?
-tooltip.graphs.reputation = "Alternar reputaçäo" -- Incorrectly said "toggle hospital value"
-tooltip.status.close = "Fechar janela de status" -- Incorrectly said "close overview window"
+adviser.warnings.money_low = "Você está ficando sem dinheiro!"
+tooltip.graphs.reputation = "Alternar reputaçäo"
+tooltip.status.close = "Fechar janela de status"
 
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
 tooltip.staff_list.next_person = "Mostrar a página seguinte"
@@ -567,7 +567,8 @@ tooltip.folders_window = {
   no_font_specified = "Pasta de fontes näo especificada!",
   not_specified = "Pasta näo especificada!",
   default = "Localizaçäo padräo",
-  reset_to_default = "Volta a atribuir a pasta a sua localizaçäo padräo",
+  reset_to_default = "Volta a atribuir a pasta a sua localizaçäo padräo ( %1% )",
+  clear_directory = "Limpar seleção de diretório atual",
   back  = "Fechar este menu e voltar para o menu de Configuraçöes",
 }
 
