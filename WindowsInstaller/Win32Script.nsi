@@ -53,6 +53,9 @@ InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
 ; This is needed to be able to install into the program files directory
 RequestExecutionLevel admin
 
+; Also use the all users scope exclusively
+SetShellVarContext all
+
 ; Set installer compression
 SetCompressor lzma
 SetCompressorDictSize 16
