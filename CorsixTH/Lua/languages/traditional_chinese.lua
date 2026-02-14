@@ -3210,8 +3210,8 @@ tooltip.folders_window = {
   no_font_specified = "沒有指定字型的位置！",
   not_specified = "沒有指定資料夾位置！",
   default = "預設位置",
-  reset_to_default = "重置到預設資料夾 ( %1% )",
-  clear_directory = "	清除目前目錄選擇",
+  reset_to_default = "重置到預設資料夾 (%1%）",
+  clear_directory = "清除目前目錄選擇",
   back = "關閉此選單，並返回設定選單",
 }
 
