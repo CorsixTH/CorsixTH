@@ -956,6 +956,8 @@ function Hospital:resolveEmergency()
   for _, patient in ipairs(self.emergency_patients) do
     if patient and not patient.cured and not patient.dead
         and not patient.going_home then
+      -- Set the patient's health to 0 before we die
+      patient:changeAttribute("health", patient:getAttribute("health") * -1)
       patient:setToDying()
     end
   end
