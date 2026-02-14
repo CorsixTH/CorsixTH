@@ -337,7 +337,7 @@ function UIPlaceObjects:setActiveIndex(index)
   end
   local anims = self.anims
   local grey_scale = anims.Alt32_GreyScale
-  local _, ghost = self.ui.app.gfx:loadPalette()
+  local _, ghost = self.ui.app.gfx:getPalette("MPalette.dat")
   for _, anim in pairs(object.idle_animations) do
     anims:setAnimationGhostPalette(anim, ghost, grey_scale)
   end

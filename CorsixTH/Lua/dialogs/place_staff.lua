@@ -45,7 +45,7 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
   self.anim:setLayer(5, profile.layer5)
   local idle_anim = Humanoid.getIdleAnimation(profile.humanoid_class)
   self.anim:setAnimation(self.world.anims, idle_anim)
-  local _, ghost = ui.app.gfx:loadPalette()
+  local _, ghost = ui.app.gfx:getPalette("MPalette.dat")
   local grey_scale = self.world.anims.Alt32_GreyScale
   self.world.anims:setAnimationGhostPalette(idle_anim, ghost, grey_scale)
   self:onCursorWorldPositionChange(x, y)

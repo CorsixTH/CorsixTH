@@ -51,7 +51,7 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   self.rep_amount = 0
 
   if not pcall(function()
-    local palette = gfx:loadPalette("QData", "Award02V.pal", true)
+    local palette = gfx:getPalette("Award02V.pal")
 
     -- Right now the statistics are first
     --self.background = gfx:loadRaw("Fame01V", 640, 480)
@@ -662,7 +662,7 @@ function UIAnnualReport:afterLoad(old, new)
   if old < 236 then
     local gfx = TheApp.gfx
 
-    local palette = gfx:loadPalette("QData", "Award02V.pal", true)
+    local palette = gfx:getPalette("Award02V.pal")
     self.award_background = gfx:loadRaw("Award01V", 640, 480)
     self.stat_background = gfx:loadRaw("Award02V", 640, 480, "QData", "QData", "Award02V.pal", true)
     self.background = self.stat_background
