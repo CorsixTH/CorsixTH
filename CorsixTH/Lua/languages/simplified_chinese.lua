@@ -3480,7 +3480,8 @@ tooltip.folders_window = {
   no_font_specified = "没有指定字体的位置！",
   not_specified = "没有指定文件夹位置！",
   default = "默认位置",
-  reset_to_default = "重置到默认文件夹",
+  reset_to_default = "重置到默认文件夹 ( %1% )",
+  clear_directory = "清除当前目录选择",
   back = "关闭此菜单，并返回设置菜单",
 }
 
