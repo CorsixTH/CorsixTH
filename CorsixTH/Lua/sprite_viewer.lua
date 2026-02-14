@@ -27,7 +27,7 @@ gfx.cache.tabled = {}
 local font = gfx:loadFontAndSpriteTable("QData", "Font00V")
 local need_draw = true
 local sprite_table_paths = {}
-local palettes = {{"Data", "MPalette.dat"}}
+local palettes = {}
 local palette_index = 1
 local palette_name
 local sprite_table_index
@@ -42,18 +42,17 @@ for _, dir in ipairs({"Data", "QData", "DataM", "QDataM"}) do
   for item in pairs(TheApp.fs:listFiles(dir) or {}) do
     if item:match("%.TAB$") then
       sprite_table_paths[#sprite_table_paths + 1] = {dir, item:sub(1, -5)}
-    elseif item:match("%.PAL$") then
-      palettes[#palettes + 1] = {dir, item, false}
-    elseif item:match("%.PL8$") then
-      palettes[#palettes + 1] = {dir, item, true}
     end
   end
 end
 table.sort(sprite_table_paths, function(lhs, rhs)
   return lhs[1] < rhs[1] or (lhs[1] == rhs[1] and lhs[2] < rhs[2])
 end)
-palettes[#palettes + 1] = {"Bitmap", "lose.pl8", true}
-palettes[#palettes + 1] = {"Bitmap", "winlevel.pl8", true}
+
+for name, _ in pairs(TheApp.gfx:allPalettes()) do
+  palettes[#palettes + 1] = name
+end
+table.sort(palettes)
 
 local function LoadTable(n, complex)
   sprite_table_index = n
@@ -61,12 +60,11 @@ local function LoadTable(n, complex)
   local path = sprite_table_paths[n]
   local pal
   if TheApp.fs:readContents(path[1], path[2] .. ".PAL") then
-    pal = gfx:loadPalette(path[1], path[2] .. ".PAL", false, false)
-    palette_name = path[1] .. '/' .. path[2] .. ".PAL"
+    palette_name = path[2] .. ".PAL"
   else
-    pal = gfx:loadPalette(palettes[palette_index][1], palettes[palette_index][2], false, palettes[palette_index][3])
-    palette_name = palettes[palette_index][1] .. '/' .. palettes[palette_index][2]
+    palette_name = palettes[palette_index]
   end
+  pal = gfx:getPalette(palette_name)
   sprite_table = gfx:loadSpriteTable(path[1], path[2], complex, pal)
   need_draw = true
   y_off = 0

@@ -149,7 +149,7 @@ function UI:UI(app, minimal)
   if minimal then
     self.tooltip_font = app.gfx:loadBuiltinFont()
   else
-    local palette = app.gfx:loadPalette("QData", "PREF01V.PAL", true)
+    local palette = app.gfx:getPalette("Pref01V.pal")
     self.tooltip_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette, { apply_ui_scale = true })
   end
   self.tooltip = nil
@@ -1116,7 +1116,7 @@ function UI:afterLoad(old, new)
   end
   if old < 236 then
     local gfx = self.app.gfx
-    local palette = gfx:loadPalette("QData", "PREF01V.PAL", true)
+    local palette = gfx:getPalette("Pref01V.pal")
     self.tooltip_font = gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette, { apply_ui_scale = true })
   end
 

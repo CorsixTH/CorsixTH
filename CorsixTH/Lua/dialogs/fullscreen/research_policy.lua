@@ -41,7 +41,7 @@ function UIResearch:UIResearch(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   self.background = gfx:loadRaw("Res01V", 640, 480, "QData", "QData", "Res01V.pal", true)
-  local palette = gfx:loadPalette("QData", "Res01V.pal", true)
+  local palette = gfx:getPalette("Res01V.pal")
   self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
   self.label_font = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette, { apply_ui_scale = true })
   self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette, { apply_ui_scale = true })
@@ -257,7 +257,7 @@ function UIResearch:afterLoad(old, new)
   if old < 236 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Res01V", 640, 480, "QData", "QData", "Res01V.pal", true)
-    local palette = gfx:loadPalette("QData", "Res01V.pal", true)
+    local palette = gfx:getPalette("Res01V.pal")
     self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
     self.label_font = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette, { apply_ui_scale = true })
     self.number_font  = gfx:loadFontAndSpriteTable("QData", "Font43V", false, palette, { apply_ui_scale = true })

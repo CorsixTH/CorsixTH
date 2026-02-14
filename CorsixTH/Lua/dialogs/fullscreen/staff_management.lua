@@ -31,7 +31,7 @@ function UIStaffManagement:UIStaffManagement(ui)
   local gfx = ui.app.gfx
   if not pcall(function()
     self.background = gfx:loadRaw("Staff01V", 640, 480, "QData", "QData", "Staff01V.pal", true)
-    local palette = gfx:loadPalette("QData", "Staff01V.pal", true)
+    local palette = gfx:getPalette("Staff01V.pal")
     self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette)
     self.title_font = gfx:loadFontAndSpriteTable("QData", "Font01V", false, palette, { apply_ui_scale = true })
     self.blue_font = gfx:loadFontAndSpriteTable("QData", "Font02V", false, palette, { apply_ui_scale = true })
@@ -656,7 +656,7 @@ function UIStaffManagement:afterLoad(old, new)
   if old < 236 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Staff01V", 640, 480, "QData", "QData", "Staff01V.pal", true)
-    local palette = gfx:loadPalette("QData", "Staff01V.pal", true)
+    local palette = gfx:getPalette("Staff01V.pal")
     self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette, { apply_ui_scale = true })
     self.title_font = gfx:loadFontAndSpriteTable("QData", "Font01V", false, palette, { apply_ui_scale = true })
     self.face_parts = gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { flags = DrawFlags.Nearest })
