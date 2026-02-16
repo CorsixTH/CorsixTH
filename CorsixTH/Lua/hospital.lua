@@ -1748,11 +1748,15 @@ function Hospital:updatePercentages()
   self.percentage_cured = math.round(cured)
 end
 
---! Compute average of an attribute for all patients in the hospital.
+--! Compute average of an attribute for all patients in the hospital. There must be
+--! enough patients available to get a useful value.
 --!param attribute (str) Name of the attribute.
---!param default_value Value to return if there are no patients.
+--!param default_value Value to return if there are not enough patients.
+--!param min_count (number) Minimal number of sampled patients, 7 by default.
 --!return Average value of the attribute for all hospital patients, or the default value.
-function Hospital:getAveragePatientAttribute(attribute, default_value)
+function Hospital:getAveragePatientAttribute(attribute, default_value, min_count)
+  if type(min_count) ~= "number" or min_count < 1 then min_count = 7 end
+
   local sum = 0
   local count = 0
   for _, patient in ipairs(self.patients) do
@@ -1764,7 +1768,7 @@ function Hospital:getAveragePatientAttribute(attribute, default_value)
     end
   end
 
-  if count == 0 then
+  if count < min_count then
     return default_value
   else
     return sum / count
