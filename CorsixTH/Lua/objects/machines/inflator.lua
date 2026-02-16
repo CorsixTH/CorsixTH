@@ -84,4 +84,7 @@ kf1, kf2 = {0, 0}, {1, 0}
 anim_mgr:setPatientMarker(object.multi_usage_animations["Standard Male Patient - Doctor"].north.finish_use, 1, kf1, 11, kf2)
 anim_mgr:setPatientMarker(object.idle_animations.north, {-0.9, -1.0})
 
+anim_mgr:setStaffMarker(object.usage_animations.north.in_use.Handyman, {59, -3, "px"})
+anim_mgr:setStaffMarker(object.usage_animations.south.in_use.Handyman, {59, -3, "px"})
+
 return object
