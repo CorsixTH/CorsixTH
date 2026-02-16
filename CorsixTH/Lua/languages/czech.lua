@@ -1145,7 +1145,6 @@ tooltip = {
     font_location = "Umístění souboru s písmem, které je schopno zobrazit znaky Unicode vyžadované vaším jazykem. Pokud toto není zadáno, nebudete moci zvolit jazyky, které potřebují více znaků, než původní hra obsahuje. Příklad: čeština, čínština",
     screenshots_location = "Standardně je složka se snímky obrazovky ve stejném umístění jako soubor s nastavením. Pokud toto není žádané, pak si můžete zvolit vlastní. Stačí zvolit adresář, který chcete použít.",
     reset_to_default = "Resetovat adresář na jeho výchozí umístění ( %1% )",
-    clear_directory = "Vymazat aktuální výběr adresáře",
     back = "Zavřít tuto nabídku a vrátit se zpět do nabídky Nastavení",
     music_location = "Vyberte umístění .mp3 souborů s hudbou. Adresář musí být již vytvořen, až pak jej můžete zde zvolit.",
     savegames_location = "Standardně je adresář uložených her na stejném místě jako soubor s nastavením. Pokud toto nechcete, můžete si zvolit svůj vlastní. Stačí zvolit adresář, který chcete používat.",

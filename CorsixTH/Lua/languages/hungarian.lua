@@ -1832,7 +1832,6 @@ tooltip.update_window.ignore = "A frissítés kihagyása. Újra értesítést fo
 tooltip.folders_window.browse_font = "Válassz másik betűtípusfile-t ( jelenlegi hely: %1% )"
 tooltip.folders_window.screenshots_location = "Alaphelyzetben a kilopott képek a konfigurációs file-ok könyvtárába kerülnek. Amennyiben máshova szeretnéd menteni őket csak tallózd ki a számodra megfelelő célkönyvtárat."
 tooltip.folders_window.reset_to_default = "Elérési út alaphelyzetbe állítása ( %1% )"
-tooltip.folders_window.clear_directory = "Aktuális könyvtárválasztás törlése"
 tooltip.folders_window.back = "Menü bezárása, és vissza a Beállításokhoz"
 tooltip.folders_window.music_location = "Válaszd ki az mp3 file-jaid elérési útját. A könyvtárt először létre kell hoznod, utána pedig  ki kell választanod."
 tooltip.folders_window.font_location = "Szükség van egy olyan betűtípusfile elérési útjára, amely alkalmas a magyar nyelv betűit Unicode karakterek segítségével megjeleníteni. Amennyiben ezt elmulasztod nem leszel képes olyan nyelveket beállítani, amelyeknek szükségük van a játék eredeti nyelvében nem fellelhető karakterekre. Például: orosz és kínai"

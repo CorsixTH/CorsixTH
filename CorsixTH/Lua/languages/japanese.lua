@@ -130,7 +130,6 @@ tooltip.folders_window = {
   not_specified = "フォルダが設定されていません！",
   default = "デフォルト設定のまま",
   reset_to_default = "デフォルト設定にリセットします ( %1% )",
-  clear_directory = "現在のディレクトリ選択をクリア",
   back  = "メニューを閉じて設定メニューに戻ります",
 }
 

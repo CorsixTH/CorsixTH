@@ -977,7 +977,6 @@ tooltip.folders_window = {
   not_specified = "Aucun répertoire spécifié !",
   default = "Emplacement par défaut",
   reset_to_default = "Réinitialiser le répertoire à son emplacement par défaut (%1%)",
-  clear_directory = "Effacer la sélection du répertoire actuel",
   back = "Fermer ce menu et revenir au menu Paramètres"
 }
 

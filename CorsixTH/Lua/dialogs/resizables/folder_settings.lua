@@ -86,10 +86,6 @@ function UIFolder:UIFolder(ui, mode)
     :setAutoClip(true)
     :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForFont)
     :setTooltip(tooltip_font)
-  self:addBevelPanel(320, 75, 20, 20, col_bg)
-    :setLabel("X")
-    :makeButton(0, 0, 20, 20, nil, self.resetFontsDir)
-    :setTooltip(_S.tooltip.folders_window.clear_directory)
 
   -- Location saves alternative
   local default_savegame_dir = app:getDefaultSavegameDir()
@@ -183,16 +179,6 @@ function UIFolder:resetMusicDir()
   app.audio:init()
   self.music_panel:setLabel(label_music, self.built_in_font)
   self.music_panel:setTooltip(tooltip_music)
-end
-
-function UIFolder:resetFontsDir()
-  local app = TheApp
-  local label_font = _S.tooltip.folders_window.no_font_specified
-  local tooltip_font = _S.tooltip.folders_window.no_font_specified
-  app.config.unicode_font = nil
-  app:saveConfig()
-  self.fonts_panel:setLabel(label_font, self.built_in_font)
-  self.fonts_panel:setTooltip(tooltip_font)
 end
 
 function UIFolder:buttonBrowseForFont()

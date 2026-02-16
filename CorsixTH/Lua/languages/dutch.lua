@@ -1357,7 +1357,6 @@ tooltip = {
     not_specified = "Nog geen map ingesteld!",
     font_location = "Locatie van een lettertype bestand dat de Unicode karakters van je taal kan weergeven. Als dit niet is ingesteld is het niet mogelijk talen te kiezen die meer karakters nodig hebben dan het originele spel kan tonen. Bijvoorbeeld Russisch of Chinees.",
     reset_to_default = "Herstel de map naar de standaard locatie ( %1% )",
-    clear_directory = "Huidige mapselectie wissen",
     default = "Standaard locatie.",
     no_font_specified = "Nog geen lettertype locatie ingesteld!",
     music_location = "Selecteer de locatie van je MP3 bestanden. Deze moet van te voren zijn gemaakt, zoek vervolgens hier naar de locatie.",

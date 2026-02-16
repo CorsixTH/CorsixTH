@@ -432,7 +432,6 @@ tooltip.folders_window = {
   not_specified = "Ingen sökväg vald än!",
   default = "Standardsökväg",
   reset_to_default = "Återställ mappen till standardsökvägen ( %1% )",
-  clear_directory = "Rensa aktuell katalogval",
   back  = "Stäng den här dialogen och återgå till alternativmenyn",
 }
 

@@ -468,7 +468,6 @@ tooltip = {
     not_specified = "폴더 위치 지정되지 않음!",
     font_location = "사용중인 언어를 표시하는데 필요한 폰트 파일의 위치를 지정합니다. 이것을 설정하지 않으면 오리지널 게임에 포함되지 않은 문자들은 표시되지 않습니다 (예: 러시아어, 중국어)",
     reset_to_default = "디렉토리를 기본 위치로 되돌립니다 ( %1% )",
-    clear_directory = "현재 디렉터리 선택 지우기",
     default = "기본 위치",
     no_font_specified = "폰트 위치 지정되지 않음!",
   },

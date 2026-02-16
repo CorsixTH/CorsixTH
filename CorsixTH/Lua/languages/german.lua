@@ -576,7 +576,6 @@ tooltip.folders_window = {
   not_specified = "Kein Verzeichnis festgelegt!",
   default = "Standard",
   reset_to_default = "Das Verzeichnis zur Standardeinstellung zurücksetzen (%1%)",
-  clear_directory = "Aktuelle Verzeichnisauswahl löschen",
   --
   back = "Dieses Menü schließen und zum Einstellungsmenü zurückkehren",
 }

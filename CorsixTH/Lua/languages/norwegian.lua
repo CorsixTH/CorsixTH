@@ -205,7 +205,6 @@ tooltip = {
     not_specified = "Ingen mappe er valgt enda!",
     font_location = "Lokasjon for en font som kan vise Unicode-bokstaver som er nödvendig for ditt språk. Om denne ikke velges så er bokstavtyåene begrenset til de som er i Theme Hospital.",
     reset_to_default = "Tilbakestill mappen til standard lokasjon ( %1% )",
-    clear_directory = "Tøm gjeldende katalogvalg",
     default = "Standard lokasjon",
     no_font_specified = "Ingen font-fil er valgt enda!",
   },
