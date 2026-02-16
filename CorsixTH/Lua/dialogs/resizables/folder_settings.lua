@@ -204,7 +204,6 @@ function UIFolder:buttonBrowseForSavegames()
   local app = TheApp
   local old_path = app.config.savegames
   local function callback(path)
-    local tooltip_saves = _S.tooltip.folders_window.browse_saves:format(path)
     if old_path ~= path then
       app.config.savegames = path
       app:saveConfig()
@@ -232,7 +231,6 @@ function UIFolder:buttonBrowseForScreenshots()
   local app = TheApp
   local old_path = app.config.screenshots
   local function callback(path)
-    local tooltip_screenshots = _S.tooltip.folders_window.browse_screenshots:format(path)
     if old_path ~= path then
       app.config.screenshots = path
       app:saveConfig()
