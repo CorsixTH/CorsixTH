@@ -136,6 +136,8 @@ local function action_queue_find_drink_action(action, humanoid)
   end
 end
 
+local action_queue_leave_bench -- Defined below the next function.
+
 -- Finish standing includes currently going to the drinks machine.
 local function action_queue_finish_standing(action, humanoid)
   local index = action_queue_find_idle(action, humanoid)
@@ -165,7 +167,7 @@ local function action_queue_finish_standing(action, humanoid)
   error("Queue action not in action_queue")
 end
 
-local function action_queue_leave_bench(action, humanoid)
+action_queue_leave_bench = function(action, humanoid)
   local index
   for i, current_action in ipairs(humanoid.action_queue) do
     -- Check to see that we haven't
