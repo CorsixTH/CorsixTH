@@ -147,9 +147,6 @@ Icon "..\CorsixTH\CorsixTH.ico"
 !include ReplaceInFile.nsh
 
 Function .onInit
-  ; Use the all users scope exclusively
-  SetShellVarContext all
-
   ; Set default Theme Hospital vanilla install directory.
   StrCpy $OriginalPath "$PROGRAMFILES\Bullfrog\Hospital\"
 
@@ -295,10 +292,13 @@ SectionEnd
 
 Section -AdditionalIcons
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
+  ; Make app shortcuts available for everyone
+  SetShellVarContext all
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\CorsixTH.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\CorsixTH AppData Folder.lnk" "$APPDATA\CorsixTH"
+  ; Override the AppData NSIS variable for all user context, or it points to ProgramData
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\CorsixTH AppData Folder.lnk" "%APPDATA%\CorsixTH"
   !insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
 
@@ -320,9 +320,6 @@ Function un.onUninstSuccess
 FunctionEnd
 
 Function un.onInit
-  ; Use the all users scope exclusively
-  SetShellVarContext all
-
   !insertmacro MUI_UNGETLANGUAGE
 FunctionEnd
 
@@ -335,8 +332,6 @@ FunctionEnd
 
 ; -------------------------- What to remove when uninstalling -------------------------------
 Section Uninstall
-  ; Use the all users scope exclusively
-  SetShellVarContext all
 
   RMDir /r "$INSTDIR\Lua"
   RMDir /r "$INSTDIR\Bitmap"
@@ -348,9 +343,12 @@ Section Uninstall
 
   Delete "$INSTDIR\*.*"
 
+  ; Our shortcuts are in the all user scope, change the context to remove them.
+  SetShellVarContext all
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
 
   RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
+  SetShellVarContext current
 
   ; Maybe the user wants to keep saved games?
   MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "$(remove_saves)" IDYES afterSaves
