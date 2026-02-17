@@ -53,9 +53,6 @@ InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
 ; This is needed to be able to install into the program files directory
 RequestExecutionLevel admin
 
-; Also use the all users scope exclusively
-SetShellVarContext all
-
 ; Set installer compression
 SetCompressor lzma
 SetCompressorDictSize 16
@@ -150,6 +147,9 @@ Icon "..\CorsixTH\CorsixTH.ico"
 !include ReplaceInFile.nsh
 
 Function .onInit
+  ; Use the all users scope exclusively
+  SetShellVarContext all
+
   ; Set default Theme Hospital vanilla install directory.
   StrCpy $OriginalPath "$PROGRAMFILES\Bullfrog\Hospital\"
 
@@ -320,6 +320,9 @@ Function un.onUninstSuccess
 FunctionEnd
 
 Function un.onInit
+  ; Use the all users scope exclusively
+  SetShellVarContext all
+
   !insertmacro MUI_UNGETLANGUAGE
 FunctionEnd
 
@@ -332,6 +335,8 @@ FunctionEnd
 
 ; -------------------------- What to remove when uninstalling -------------------------------
 Section Uninstall
+  ; Use the all users scope exclusively
+  SetShellVarContext all
 
   RMDir /r "$INSTDIR\Lua"
   RMDir /r "$INSTDIR\Bitmap"
