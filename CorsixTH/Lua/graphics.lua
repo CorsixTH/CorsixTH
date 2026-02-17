@@ -302,8 +302,13 @@ function Graphics:_loadPalette(dir, name, transparent_255, pal8bit)
   if transparent_255 then
     palette:setEntry(255, 0xFF, 0x00, 0xFF)
   end
-  self.cache.palette_greyscale_ghost[name] = makeGreyscaleGhost(data)
+  local ghost_palette = makeGreyscaleGhost(data)
   self.cache.palette[name] = palette
+  self.cache.palette_greyscale_ghost[name] = ghost_palette
+
+  permanent("palette_" .. name, palette)
+  permanent("ghost_palette_" .. name, ghost_palette)
+
   return palette, self.cache.palette_greyscale_ghost[name]
 end
 
@@ -1015,4 +1020,10 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
 end
 
 -- Kept for load compatibility
-function Graphics:loadPalette() end
+function Graphics:loadPalette(_, name)
+  -- Was named PREF01V.PAL in ui.lua until version 240
+  if name == "PREF01V.PAL" then
+    name = "Pref01V.pal"
+  end
+  return self:getPalette(name)
+end

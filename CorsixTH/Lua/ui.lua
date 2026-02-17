@@ -1108,8 +1108,6 @@ function UI:afterLoad(old, new)
       local gfx = self.app.gfx
       gfx.cache.raw = {}
       gfx.cache.tabled = {}
-      gfx.cache.palette = {}
-      gfx.cache.palette_greyscale_ghost = {}
       gfx.cache.language_fonts = {}
       gfx.builtin_font = nil
     end
