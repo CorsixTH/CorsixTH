@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 240 -- Announcer Subtitles
+local SAVEGAME_VERSION = 241 -- Load palette on init
 
 class "App"
 
