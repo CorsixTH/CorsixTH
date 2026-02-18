@@ -99,7 +99,6 @@ anim_mgr:setPatientMarker(object.idle_animations.north, {-2, -2})
 
 local kf0 = {59, -4, "px"}
 local kf1 = {55, -8, "px"}
-local kf2 = {54, -8, "px"}
 local kf2 = {51, -8, "px"}
 local kf3 = {47, -11, "px"}
 local kf4 = {43, -12, "px"}
