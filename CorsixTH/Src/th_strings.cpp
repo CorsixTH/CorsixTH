@@ -144,5 +144,146 @@ unsigned int unicode_to_codepage_437(unsigned int iCodePoint) {
     case 0x25A0:
       return 0xFE;
   }
-  return 0x3F;
+  return 0x3F;  // '?'
+}
+
+unsigned int unicode_to_codepage_mik(unsigned int code_point) {
+  if (code_point < 0x80) {
+    return code_point;
+  }
+  if (code_point >= 0x410 && code_point <= 0x44F) {
+    return code_point - 0x410 + 0x80;
+  }
+  switch (code_point) {
+    case 0x2514:
+      return 0xC0;
+    case 0x2534:
+      return 0xC1;
+    case 0x252C:
+      return 0xC2;
+    case 0x251C:
+      return 0xC3;
+    case 0x2500:
+      return 0xC4;
+    case 0x253C:
+      return 0xC5;
+    case 0x2563:
+      return 0xC6;
+    case 0x2551:
+      return 0xC7;
+    case 0x255A:
+      return 0xC8;
+    case 0x2554:
+      return 0xC9;
+    case 0x2569:
+      return 0xCA;
+    case 0x2566:
+      return 0xCB;
+    case 0x2560:
+      return 0xCC;
+    case 0x2550:
+      return 0xCD;
+    case 0x256C:
+      return 0xCE;
+    case 0x2510:
+      return 0xCF;
+    case 0x2591:
+      return 0xD0;
+    case 0x2592:
+      return 0xD1;
+    case 0x2593:
+      return 0xD2;
+    case 0x2502:
+      return 0xD3;
+    case 0x2524:
+      return 0xD4;
+    case 0x2116:
+      return 0xD5;
+    case 0x00A7:
+      return 0xD6;
+    case 0x2557:
+      return 0xD7;
+    case 0x255D:
+      return 0xD8;
+    case 0x2518:
+      return 0xD9;
+    case 0x250C:
+      return 0xDA;
+    case 0x2588:
+      return 0xDB;
+    case 0x2584:
+      return 0xDC;
+    case 0x258C:
+      return 0xDD;
+    case 0x2590:
+      return 0xDE;
+    case 0x2580:
+      return 0xDF;
+    case 0x03B1:
+      return 0xE0;
+    case 0x00DF:
+      return 0xE1;
+    case 0x0393:
+      return 0xE2;
+    case 0x03C0:
+      return 0xE3;
+    case 0x03A3:
+      return 0xE4;
+    case 0x03C3:
+      return 0xE5;
+    case 0x00B5:
+      return 0xE6;
+    case 0x03C4:
+      return 0xE7;
+    case 0x03A6:
+      return 0xE8;
+    case 0x0398:
+      return 0xE9;
+    case 0x03A9:
+      return 0xEA;
+    case 0x03B4:
+      return 0xEB;
+    case 0x221E:
+      return 0xEC;
+    case 0x03C6:
+      return 0xED;
+    case 0x03B5:
+      return 0xEE;
+    case 0x2229:
+      return 0xEF;
+    case 0x2261:
+      return 0xF0;
+    case 0x00B1:
+      return 0xF1;
+    case 0x2265:
+      return 0xF2;
+    case 0x2264:
+      return 0xF3;
+    case 0x2320:
+      return 0xF4;
+    case 0x2321:
+      return 0xF5;
+    case 0x00F7:
+      return 0xF6;
+    case 0x2248:
+      return 0xF7;
+    case 0x00B0:
+      return 0xF8;
+    case 0x2219:
+      return 0xF9;
+    case 0x00B7:
+      return 0xFA;
+    case 0x221A:
+      return 0xFB;
+    case 0x207F:
+      return 0xFC;
+    case 0x00B2:
+      return 0xFD;
+    case 0x25A0:
+      return 0xFE;
+    case 0x00A0:
+      return 0xFF;
+    default:
+      return 0x3F;  // '?'
+  }
 }
