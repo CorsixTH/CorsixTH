@@ -18,9 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+Font("cp437")
 Language(utf8 "Français", "French", "fr", "fre", "fra")
 Inherit("english")
 Inherit("original_strings", 1)
+IsArabicNumerals(true)
 
 --[[
   Notice: Theme Hospital's font lacks support for certain character types used in

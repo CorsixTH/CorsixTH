@@ -403,6 +403,8 @@ function Graphics:hasLanguageFont(font)
   if font == nil then
     -- Original game fonts are always present.
     return true
+  elseif charsets[font] == self.th_charset then
+    return true
   else
     -- TODO: Handle more than one font
     return not not self.ttf_font_data
@@ -462,10 +464,14 @@ local function font_reloader(font)
   font:clearCache()
 end
 
+function Graphics:_isLanguageSupportedByTHAssets()
+  return self.language_font == nil or charsets[self.language_font] == self.th_charset
+end
+
 --! Utility function to return preferred font for main menu ui
 function Graphics:loadMenuFont()
   local font
-  if self.language_font then
+  if self:_isLanguageSupportedByTHAssets() then
     font = self:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   else
     font = self:loadBuiltinFont()
@@ -553,11 +559,11 @@ function Graphics:loadLanguageFont(name, sprite_table, font_options, y_sep, ttf_
     font_options = fo
   end
 
-  if name == nil then
+  if name == nil or charsets[name] == self.th_charset then
     return self:loadFont(sprite_table, font_options)
   end
 
-  local font = self:_loadTrueTypeFont(name, sprite_table, font_options)
+  local font = self:_loadTrueTypeFont("unicode", sprite_table, font_options)
 
   -- A change of language or scale might cause the font to change,
   -- so wrap it in a proxy object which allows the actual object to
@@ -705,7 +711,8 @@ function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_b
 
   -- Use a bitmap font if forced, or the language uses bitmap, or the
   -- sprite_table has no M in it, indicating it's probably a symbol file.
-  local use_bitmap_font = font_options.force_bitmap or not self.language_font or not sprite_table:isVisible(46)
+  local use_bitmap_font = font_options.force_bitmap or
+      self:_isLanguageSupportedByTHAssets() or not sprite_table:isVisible(46)
   local font
   if use_bitmap_font then
     font = TH.bitmap_font()
@@ -715,7 +722,7 @@ function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_b
       font:setScaleFactor(TheApp.config.ui_scale)
     end
   else
-    font = self:_loadTrueTypeFont(self.language_font, sprite_table, font_options)
+    font = self:_loadTrueTypeFont("unicode", sprite_table, font_options)
   end
   -- A change of language or scale might cause the font to change,
   -- so wrap it in a proxy object which allows the actual object to
