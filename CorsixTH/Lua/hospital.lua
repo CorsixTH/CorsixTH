@@ -26,8 +26,8 @@ class "Hospital"
 local Hospital = _G["Hospital"]
 
 function Hospital:Hospital(world, avail_rooms, name)
-    _advice_patient_not_paying_shown = nil
-    _advice_flags_month = nil
+  local advice_patient_not_paying_shown = nil 
+  local advice_last_month = nil
   self.world = world
   local advice_patient_not_paying_shown = nil 
   local advice_last_month = nil
