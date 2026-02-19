@@ -25,7 +25,6 @@ class "Machine" (Object)
 
 ---@type Machine
 local Machine = _G["Machine"]
-local earthquake_activated = false;
 
 function Machine:Machine(hospital, object_type, x, y, direction, etc)
   self:Object(hospital, object_type, x, y, direction, etc)
@@ -122,14 +121,16 @@ end
 --! During an earthquake, this function is called one or several times.
 --!param room (object) machine room
 function Machine:earthquakeImpact(room)
-  earthquake_activated = true;
-  self:machineUsed(room)
+  self:machineUsed(room, true)
 end
 
 --! Call on machine use.
 --!param room (object) machine room
 --!return (bool) is room exploding after this use
-function Machine:machineUsed(room)
+function Machine:machineUsed(room, earthquake_activated)
+  if type(earthquake_activated) ~= "boolean" then
+      earthquake_activated = false
+  end
   -- Do nothing if the room has already crashed
   if room.crashed then
     return
@@ -137,7 +138,7 @@ function Machine:machineUsed(room)
   local cheats = self.hospital.hosp_cheats
   local is_invulnerable_machines_cheat_active = cheats:isCheatActive("invulnerable_machines")
 
-  self:incrementUsageCounts(is_invulnerable_machines_cheat_active)
+  self:incrementUsageCounts(is_invulnerable_machines_cheat_active, earthquake_activated)
   -- Update dynamic info (machine strength & times used)
   self:updateDynamicInfo()
 
@@ -155,12 +156,11 @@ function Machine:machineUsed(room)
 end
 
 --! Call after use of the machine.
-function Machine:incrementUsageCounts(total_usage_only)
+function Machine:incrementUsageCounts(total_usage_only, is_earthquake)
   total_usage_only = total_usage_only or false
-  if not earthquake_activated then
+  if not is_earthquake then
       self.total_usage = self.total_usage + 1
   end
-  earthquake_activated = false
 
   if not total_usage_only then
     self.times_used = self.times_used + 1
