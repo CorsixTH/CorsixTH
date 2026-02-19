@@ -65,7 +65,7 @@ local charsets = {
   ["mik"] = 2
 }
 
-function Graphics:Graphics(app, good_install_dir)
+function Graphics:Graphics(app, good_install_dir, charset)
   self.app = app
   self.target = self.app.video
   -- The cache is used to avoid reloading an object if it is already loaded
@@ -79,7 +79,7 @@ function Graphics:Graphics(app, good_install_dir)
     language_fonts = {},
     cursors = setmetatable({}, {__mode = "k"}),
   }
-  self.th_charset = 1
+  self.th_charset = charset and charsets[charset] or charsets["cp437"]
 
   self.custom_graphics = {}
   -- The load info table records how objects were loaded, and is used to

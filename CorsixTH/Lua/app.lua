@@ -122,7 +122,7 @@ function App:init()
   end
   self:fixConfig()
   corsixth.require("filesystem")
-  local good_install_folder, error_message = self:checkInstallFolder()
+  local good_install_folder, error_message, charset = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   self.level_dir = self:getFullPath("Levels", true)
   self.campaign_dir = self:getFullPath("Campaigns", true)
@@ -180,7 +180,7 @@ function App:init()
   -- Prereq 2: Load and initialise the graphics subsystem
   corsixth.require("persistance")
   corsixth.require("graphics")
-  self.gfx = Graphics(self, good_install_folder)
+  self.gfx = Graphics(self, good_install_folder, charset)
 
   -- Put up the loading screen
   if good_install_folder then
@@ -1584,7 +1584,6 @@ function App:checkInstallFolder()
     check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656, true)
     check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 335220, true)
     check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520, true)
-    check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
     check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728, true)
   end
 
@@ -1594,7 +1593,17 @@ function App:checkInstallFolder()
     table.insert(corrupt, message)
   end
 
-  return true, #corrupt ~= 0 and corrupt or nil
+  local fontData = assert(self.fs:readContents("QData" .. pathsep .. "Font00V.dat"))
+  local fontcrc = TH.CRC32File(fontData)
+
+  local charset
+  if fontcrc == 0x0033FA05 then
+    charset = "mik"
+  else
+    charset = "cp437"
+  end
+
+  return true, #corrupt ~= 0 and corrupt or nil, charset
 end
 
 function App:findSoundFont()
