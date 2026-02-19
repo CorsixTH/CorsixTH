@@ -25,6 +25,7 @@ class "Machine" (Object)
 
 ---@type Machine
 local Machine = _G["Machine"]
+local earthquake_activated = false;
 
 function Machine:Machine(hospital, object_type, x, y, direction, etc)
   self:Object(hospital, object_type, x, y, direction, etc)
@@ -121,6 +122,7 @@ end
 --! During an earthquake, this function is called one or several times.
 --!param room (object) machine room
 function Machine:earthquakeImpact(room)
+  earthquake_activated = true;
   self:machineUsed(room)
 end
 
@@ -155,7 +157,10 @@ end
 --! Call after use of the machine.
 function Machine:incrementUsageCounts(total_usage_only)
   total_usage_only = total_usage_only or false
-  self.total_usage = self.total_usage + 1
+  if not earthquake_activated then
+      self.total_usage = self.total_usage + 1
+  end
+  earthquake_activated = false
 
   if not total_usage_only then
     self.times_used = self.times_used + 1
