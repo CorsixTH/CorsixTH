@@ -519,36 +519,44 @@ end
 --!return err (string) What to report back to the player on failure
 function App:initLanguage()
   -- Make sure that we can actually show the desired language.
-  -- If we can't, work out the most common issue and reset to English.
+  -- If we can't, work out the most common issue and reset to English or Russian.
   local success, err = true, nil
   local language = self.config.language
-  local function revertToEnglish()
-    language = [[English]]
-    self.config.language = language
+  local function revertToSupportedLanguage()
+    local l
+    if self.gfx:hasLanguageFont("cp437") then
+      l = [[English]]
+    elseif self.gfx:hasLanguageFont("mik") then
+      l = [[Russian]]
+    else
+      print("Warning: No suitable font found for English or Russian. Defaulting to English, but the game may be broken.")
+      l = [[English]]
+    end
+    self.config.language = l
     self:saveConfig()
     success = false
   end
 
   local exists = self.strings:checkLanguageExists(language)
   if not exists then
-    -- Not existent language, revert to English.
+    revertToSupportedLanguage()
     err = "The game language set in the configuration file '" .. language ..
-          "' was not valid. It has been reverted to English. Please select your" ..
-          " desired language from the Settings screen again."
-    revertToEnglish()
+          "' was not valid. It has been reverted to '" .. self.config.language ..
+          "'. Please select your desired language from the Settings screen again."
+    language = self.config.language
   end
 
   local font = self.strings:getFont(language)
   if self.gfx:hasLanguageFont(font) then
     self.gfx.language_font = font
   else
-    -- Font unavailable, revert to English.
-    err = "The game language has been reverted to English because the desired" ..
-          " language '" .. language .. "' could not be loaded. Please make sure" ..
-          " you have specified a font file in Settings-Folders-Font or the" ..
+    revertToSupportedLanguage()
+    err = "The game language has been reverted to '" .. self.config.language ..
+          "' because the desired language '" .. language .. "' could not be loaded." ..
+          " Please make sure you have specified a font file in Settings-Folders-Font or the" ..
           " configuration file."
-    revertToEnglish()
-    self.gfx.language_font = self.strings:getFont([[English]])
+    self.gfx.language_font = self.strings:getFont(self.config.language)
+    language = self.config.language
   end
 
   local strings, speech_file = self.strings:load(language)
