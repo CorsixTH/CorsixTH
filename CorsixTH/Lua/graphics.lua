@@ -60,6 +60,11 @@ local cursors_palette = {
   [44] = "Stat01V.pal",
 }
 
+local charsets = {
+  ["cp437"] = 1,
+  ["mik"] = 2
+}
+
 function Graphics:Graphics(app, good_install_dir)
   self.app = app
   self.target = self.app.video
@@ -74,6 +79,7 @@ function Graphics:Graphics(app, good_install_dir)
     language_fonts = {},
     cursors = setmetatable({}, {__mode = "k"}),
   }
+  self.th_charset = 1
 
   self.custom_graphics = {}
   -- The load info table records how objects were loaded, and is used to
@@ -384,7 +390,7 @@ function Graphics:loadBuiltinFont()
     sheet:setPalette(palette)
     sheet:load(dernc(tab), dernc(dat), true, self.target)
     font = TH.bitmap_font()
-    font:setSheet(sheet)
+    font:setSheet(sheet, 1) -- CorsixTH only ships with a cp437 font
     font:setSeparation(1, 0)
     font:setScaleFactor(TheApp.config.ui_scale)
     self.load_info[font] = {self.loadBuiltinFont, self}
@@ -704,7 +710,7 @@ function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_b
   if use_bitmap_font then
     font = TH.bitmap_font()
     font:setSeparation(font_options.x_sep or 0, font_options.y_sep or 0)
-    font:setSheet(sprite_table)
+    font:setSheet(sprite_table, self.th_charset)
     if font_options.apply_ui_scale then
       font:setScaleFactor(TheApp.config.ui_scale)
     end

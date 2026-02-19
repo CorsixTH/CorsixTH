@@ -41,6 +41,8 @@ enum class text_alignment {
   right = 2,
 };
 
+enum class bitmap_font_character_set { cp437, mik };
+
 /** Structure for the bounds of a text string that is rendered to the screen. */
 struct text_layout {
   //! Number of rows the rendered text spans
@@ -143,8 +145,12 @@ class bitmap_font final : public font {
       The sprite sheet should have the space character (ASCII 0x20) at sprite
       index 1, and other ASCII characters following on in simple order (i.e.
       '!' (ASCII 0x21) at index 2, 'A' (ASCII 0x41) at index 34, etc.)
+      \param pSpriteSheet The sprite sheet to use for the font.
+      \param character_set The character set to use when mapping unicode to
+         sprite indexes.
   */
-  void set_sprite_sheet(sprite_sheet* pSpriteSheet);
+  void set_sprite_sheet(sprite_sheet* pSpriteSheet,
+                        bitmap_font_character_set character_set);
 
   void set_scale_factor(int factor);
 
@@ -173,6 +179,7 @@ class bitmap_font final : public font {
   int letter_spacing{};
   int line_spacing{};
   int scale_factor{1};
+  bitmap_font_character_set character_set{bitmap_font_character_set::cp437};
 };
 
 //! Adaptor around the FreeType2 library to a THFont.
