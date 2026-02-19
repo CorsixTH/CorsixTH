@@ -27,8 +27,8 @@ local Hospital = _G["Hospital"]
 
 function Hospital:Hospital(world, avail_rooms, name)
   self.world = world
-  _advice_patient_not_paying_shown = nil
-  _advice_flags_month = nil
+  local advice_patient_not_paying_shown = nil 
+  local advice_last_month = nil
   local level_config = world.map.level_config
   local level = world.map.level_number
   local balance, interest_rate_numerator, reputation, overdraft_differential_numerator
