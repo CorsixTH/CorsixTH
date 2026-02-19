@@ -24,6 +24,11 @@ class "Patient" (Humanoid)
 ---@type Patient
 local Patient = _G["Patient"]
 
+local function getRandomEntryFromArray(arr)
+    if not arr or #arr == 0 then return nil end
+    return arr[math.random(#arr)]
+end
+
 function Patient:Patient(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("patient")
@@ -530,10 +535,10 @@ function Patient:goHome(reason, disease_id)
     self:changeAttribute("happiness", -0.5)
 
     local treatment_name = self.hospital.disease_casebook[disease_id].disease.name 
-    if hosp and not hosp.advice_patient_not_paying_shown then
-        hosp:giveAdvice({_A.warnings.patient_not_paying:format(treatment_name)}) 
-        hosp.advice_patient_not_paying_shown = true
-    end
+      if hosp and not hosp._advice_patient_not_paying_shown then
+          hosp:giveAdvice({_A.warnings.patient_not_paying:format(treatment_name)})
+          hosp._advice_patient_not_paying_shown = true
+      end
     hosp:updateNotCuredCounts(self, reason)
     self:clearDynamicInfo()
     self:setDynamicInfo('text', {"", _S.dynamic_info.patient.actions.prices_too_high})
@@ -600,15 +605,15 @@ end
 
 function Patient:tick()
   Humanoid.tick(self)
-
-  local hosp = self.hospital
-  if hosp then
-      local month = TheApp.world.game_date:monthOfYear()
-      if hosp.advice_last_month ~= month then
-          hosp.advice_last_month = month
-      hosp.advice_patient_not_paying_shown = false
-      end
-  end
+    
+    local hosp = self.hospital
+    if hosp then
+        local month = TheApp.world.game_date:monthOfYear()
+        if hosp._advice_flags_month ~= month then
+            hosp._advice_flags_month = month
+            hosp._advice_patient_not_paying_shown = false
+        end
+    end
   if self.set_to_die and
     not self:getRoom() and
     not self:getCurrentAction().is_leaving and
@@ -783,6 +788,9 @@ end
 --! Process specific objects near the patient and their effect on happiness factors.
 --!return (number) Quanitity of vomit inducing litter
 function Patient:_dailyObjectHappinessEffects()
+    if type(self.findObjectsInSquare) ~= "function" then
+        return 0
+    end
   -- It is nice to see plants, but dead plants make you unhappy.
   local plant = getRandomEntryFromArray(self:findObjectsInSquare(2, "plant"))
   if plant then
