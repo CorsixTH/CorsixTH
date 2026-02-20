@@ -10,6 +10,7 @@
     "luafilesystem",
     "lpeg",
     "libpng",
+    "zlib",
     {
        "name": "fluidsynth",
        "features": [

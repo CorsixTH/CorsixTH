@@ -18,4 +18,6 @@ void skip_utf8_whitespace(const char*& sString, const char* end);
 
 unsigned int unicode_to_codepage_437(unsigned int iCodePoint);
 
+unsigned int unicode_to_codepage_mik(unsigned int iCodePoint);
+
 #endif

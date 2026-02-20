@@ -22,9 +22,11 @@ SOFTWARE. --]]
 
 -- Note: This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 
+Font("cp437")
 Language("Deutsch", "German", "de", "ger", "deu")
 Inherit("english")
 Inherit("original_strings", 2)
+IsArabicNumerals(true)
 
 -------------------------------  OVERRIDE  ----------------------------------
 diseases.broken_wind.cure = " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt für Windstille." -- original string mentioned inflation, which is plain wrong.

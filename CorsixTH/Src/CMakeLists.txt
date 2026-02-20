@@ -44,6 +44,7 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/bootstrap.h
     ${CMAKE_CURRENT_SOURCE_DIR}/cp437_table.h
     ${CMAKE_CURRENT_SOURCE_DIR}/cp936_table.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/cpmik_table.h
     ${CMAKE_CURRENT_SOURCE_DIR}/iso_fs.h
     ${CMAKE_CURRENT_SOURCE_DIR}/lua_rnc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/lua_sdl.h

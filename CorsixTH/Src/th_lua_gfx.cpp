@@ -256,14 +256,28 @@ int l_bitmap_font_new(lua_State* L) {
 }
 
 int l_bitmap_font_set_spritesheet(lua_State* L) {
+  // Note: l_freetype_font_set_spritesheet and l_bitmap_font_set_spritesheet
+  // differ in their expected arguments.
+
   bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
-  // Note: l_freetype_font_set_spritesheet has additional RGB parameters for
-  // the colour.
+  int charset_idx = static_cast<int>(luaL_optinteger(L, 3, 1));
+
+  bitmap_font_character_set charset;
+  switch (charset_idx) {
+    case 1:
+      charset = bitmap_font_character_set::cp437;
+      break;
+    case 2:
+      charset = bitmap_font_character_set::mik;
+      break;
+    default:
+      return luaL_argerror(L, 3, "Invalid character set");
+  }
 
   lua_settop(L, 2);
 
-  pFont->set_sprite_sheet(pSheet);
+  pFont->set_sprite_sheet(pSheet, charset);
   luaT_setenvfield(L, 1, "sprites");
   return 1;
 }

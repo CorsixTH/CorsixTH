@@ -41,10 +41,28 @@ SOFTWARE.
 
 #include "th_gfx.h"
 
+namespace {
+
+constexpr unsigned int unicode_to_font_character(
+    unsigned int codepoint, bitmap_font_character_set charset) {
+  switch (charset) {
+    case bitmap_font_character_set::cp437:
+      return unicode_to_codepage_437(codepoint);
+    case bitmap_font_character_set::mik:
+      return unicode_to_codepage_mik(codepoint);
+    default:
+      return '?';
+  }
+}
+
+}  // namespace
+
 bitmap_font::bitmap_font() = default;
 
-void bitmap_font::set_sprite_sheet(sprite_sheet* pSpriteSheet) {
+void bitmap_font::set_sprite_sheet(sprite_sheet* pSpriteSheet,
+                                   bitmap_font_character_set character_set) {
   sheet = pSpriteSheet;
+  this->character_set = character_set;
 }
 
 void bitmap_font::set_separation(int iCharSep, int iLineSep) {
@@ -72,8 +90,8 @@ void bitmap_font::draw_text(render_target* pCanvas, const char* sMessage,
     int scaled_letter_spacing = letter_spacing * scale_factor;
 
     while (sMessage != sMessageEnd) {
-      unsigned int iChar =
-          unicode_to_codepage_437(next_utf8_codepoint(sMessage, sMessageEnd));
+      unsigned int iChar = unicode_to_font_character(
+          next_utf8_codepoint(sMessage, sMessageEnd), character_set);
       if (iFirstASCII <= iChar && iChar <= iLastASCII) {
         iChar -= iFirstASCII;
         int iWidth;
@@ -118,9 +136,10 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
 
       for (s = sMessage; s != sMessageEnd;) {
         const char* sOld = s;
-        unsigned int iChar =
-            unicode_to_codepage_437(next_utf8_codepoint(s, sMessageEnd));
-        iNextChar = unicode_to_codepage_437(static_cast<unsigned char>(*s));
+        unsigned int iChar = unicode_to_font_character(
+            next_utf8_codepoint(s, sMessageEnd), character_set);
+        iNextChar = unicode_to_font_character(static_cast<unsigned char>(*s),
+                                              character_set);
         if ((iChar == '\n' && iNextChar == '\n') ||
             (iChar == '/' && iNextChar == '/')) {
           foundNewLine = true;

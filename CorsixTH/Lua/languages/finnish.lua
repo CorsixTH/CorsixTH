@@ -66,8 +66,10 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 -------------------------------------------------------------------------------
 
 -- 1. Global settings (do not edit!)
+Font("cp437")
 Language("Suomi", "Finnish", "fi", "fin")
 Inherit("english")
+IsArabicNumerals(true)
 
 -- 2. Faxes
 fax = {
