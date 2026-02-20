@@ -126,11 +126,10 @@ end
 
 --! Call on machine use.
 --!param room (object) machine room
+--!param earthquake_activated (boolean) If true, machine was damaged by an active earthquake
 --!return (bool) is room exploding after this use
 function Machine:machineUsed(room, earthquake_activated)
-  if type(earthquake_activated) ~= "boolean" then
-      earthquake_activated = false
-  end
+  earthquake_activated = not not earthquake_activated
   -- Do nothing if the room has already crashed
   if room.crashed then
     return
@@ -157,7 +156,6 @@ end
 
 --! Call after use of the machine.
 function Machine:incrementUsageCounts(total_usage_only, is_earthquake)
-  total_usage_only = total_usage_only or false
   if not is_earthquake then
       self.total_usage = self.total_usage + 1
   end
