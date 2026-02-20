@@ -1083,8 +1083,13 @@ function App:saveConfig()
           -- replace the line, if needed
           handled_ids[identifier] = true
           if value ~= tostring(self.config[identifier]) then
-            lines[#lines] = string.format("%s = %s", identifier,
-                serialize(self.config[identifier], { long_bracket_level_start = 1 } ))
+            local new_value = self.config[identifier]
+            if type(new_value) == "string" then
+              new_value = string.format("[[%s]]", new_value)
+            else
+              new_value = tostring(new_value)
+            end
+            lines[#lines] = string.format("%s = %s", identifier, new_value)
           end
         end
       end
