@@ -227,6 +227,15 @@ enable_screen_shake = true
 --
 enable_announcer_subtitles = false
 
+-------------------------------------------------------------------------------
+-- By default, the game autosaves every in-game month. If you would like to
+-- autosave more often, every week or every day, change this setting to 2 or 3.
+-- Please note that a typical save can take up to 1 megabyte or even more.
+-- This way your autosaves folder can grow to 300-500 MB with daily autosaves.
+-- Set 1 for Monthly, 2 for Weekly, 3 for Daily autosaves.
+--
+autosave_frequency = 1
+
 ------------------------------- FOLDER SETTINGS -------------------------------
 -- These settings can also be changed from the Folders Menu
 -------------------------------------------------------------------------------

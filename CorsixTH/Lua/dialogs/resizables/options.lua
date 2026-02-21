@@ -122,8 +122,30 @@ local available_ui_scales = function()
   return res
 end
 
+local available_autosave_frequency = function()
+  local options = {
+    { text = _S.autosave_frequency.monthly, value = 1, tooltip = { _S.tooltip.autosave_frequency.monthly } },
+    { text = _S.autosave_frequency.weekly, value = 2, tooltip = { _S.tooltip.autosave_frequency.weekly } },
+    { text = _S.autosave_frequency.daily, value = 3, tooltip = { _S.tooltip.autosave_frequency.daily } },
+  }
+  return options
+end
+
+local current_autosave_frequency = function()
+  local value = TheApp.config.autosave_frequency
+  local options = available_autosave_frequency()
+  for _, option in pairs(options) do
+    if option.value == value then
+      return option.text
+    end
+  end
+  return ""
+end
+
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 620, 300, col_bg)
+  local width = 620
+  local height = 330
+  self:UIResizable(ui, width, height, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -174,7 +196,6 @@ function UIOptions:UIOptions(ui, mode)
   self:addBevelPanel(20, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.resolution):setTooltip(_S.tooltip.options_window.resolution).lowered = true
   self.resolution_panel = self:addBevelPanel(165, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg)
-
   self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
 
   -- UI Scale
@@ -183,7 +204,6 @@ function UIOptions:UIOptions(ui, mode)
   self:addBevelPanel(20, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
       :setLabel(_S.options_window.scale_ui):setTooltip(_S.tooltip.options_window.scale_ui).lowered = true
   self.scale_ui_panel = self:addBevelPanel(165, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(scale_label)
-
   self.scale_ui_button = self.scale_ui_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownUIScale)
 
   -- Now set the resolution button label and the ui scale button state
@@ -193,10 +213,8 @@ function UIOptions:UIOptions(ui, mode)
   local capture_mouse_y_pos = self:_getOptionYPos()
   self:addBevelPanel(20, capture_mouse_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.capture_mouse):setTooltip(_S.tooltip.options_window.capture_mouse).lowered = true
-
   self.mouse_capture_panel =
     self:addBevelPanel(165, capture_mouse_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.capture_mouse and _S.options_window.option_on or _S.options_window.option_off)
-
   self.mouse_capture_button = self.mouse_capture_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonMouseCapture)
     :setToggleState(app.config.capture_mouse):setTooltip(_S.tooltip.options_window.capture_mouse)
 
@@ -218,7 +236,6 @@ function UIOptions:UIOptions(ui, mode)
   self.language_panel = self:addBevelPanel(465, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(lang)
   self.language_button = self.language_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
 
-
   -- Set scroll speed.
   local scroll_y_pos = self:_getOptionYPos()
   self:addBevelPanel(320, scroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.scrollspeed):setTooltip(_S.tooltip.options_window.scrollspeed).lowered = true
@@ -236,6 +253,14 @@ function UIOptions:UIOptions(ui, mode)
   self:addBevelPanel(320, zoom_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.zoom_speed):setTooltip(_S.tooltip.options_window.zoom_speed).lowered = true
   self.zoomspeed_panel = self:addBevelPanel(465, zoom_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel( tostring(self.ui.app.config.zoom_speed) )
   self.zoomspeed_button = self.zoomspeed_panel : makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonZoomSpeed) : setTooltip(_S.tooltip.options_window.zoom_speed)
+
+  -- Autosave frequency
+  local autosave_frequency_y_pos = self:_getOptionYPos()
+  local autosave_frequency_label = current_autosave_frequency()
+  self:addBevelPanel(320, autosave_frequency_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+      :setLabel(_S.options_window.autosave_frequency):setTooltip(_S.tooltip.options_window.autosave_frequency).lowered = true
+  self.autosave_frequency_panel = self:addBevelPanel(465, autosave_frequency_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(autosave_frequency_label)
+  self.autosave_frequency_button = self.autosave_frequency_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownAutosaveFrequency):setTooltip(_S.tooltip.options_window.autosave_frequency)
 
   -- The right row is currently uneven with the left row, add an additional spacer
   -- to avoid an overlap.
@@ -296,6 +321,7 @@ function UIOptions:dropdownLanguage(activate)
   if activate then
     self:dropdownResolution(false)
     self:dropdownUIScale(false)
+    self:dropdownAutosaveFrequency(false)
     self.language_dropdown = UIDropdown(self.ui, self, self.language_button, self.available_languages, self.selectLanguage)
     self:addWindow(self.language_dropdown)
   else
@@ -320,6 +346,7 @@ function UIOptions:dropdownResolution(activate)
     self.available_resolutions = available_resolutions()
     self:dropdownLanguage(false)
     self:dropdownUIScale(false)
+    self:dropdownAutosaveFrequency(false)
     self.resolution_dropdown = UIDropdown(self.ui, self, self.resolution_button, self.available_resolutions, self.selectResolution)
     self:addWindow(self.resolution_dropdown)
   else
@@ -381,6 +408,29 @@ function UIOptions:selectUIScale(number)
   self.scale_ui_panel:setLabel(res.text)
   self.ui:changeResolution(TheApp.config.width, TheApp.config.height)
   TheApp.gfx:onChangeUIScale()
+end
+
+function UIOptions:dropdownAutosaveFrequency(activate)
+  if activate then
+    self:dropdownLanguage(false)
+    self:dropdownResolution(false)
+    self:dropdownUIScale(false)
+    self.autosave_dropdown = UIDropdown(self.ui, self, self.autosave_frequency_button, available_autosave_frequency(), self.selectAutosaveFrequency)
+    self:addWindow(self.autosave_dropdown)
+  else
+    self.autosave_frequency_button:setToggleState(false)
+    if self.autosave_dropdown then
+      self.autosave_dropdown:close()
+      self.autosave_dropdown = nil
+    end
+  end
+end
+
+function UIOptions:selectAutosaveFrequency(number)
+  local option = available_autosave_frequency()[number]
+  self.autosave_frequency_panel:setLabel(option.text)
+  TheApp.config.autosave_frequency = option.value
+  TheApp:saveConfig()
 end
 
 --! Changes check for update setting to on/of
