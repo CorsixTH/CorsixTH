@@ -1074,6 +1074,11 @@ function World:onEndDay()
       -- Weekly autosave
       self.autosave_next_tick = true
     end
+  elseif self.app.config.autosave_frequency == 1 then
+    if day == self.game_date:lastDayOfMonth() then
+      -- Monthly autosave
+      self.autosave_next_tick = true
+    end
   end
 end
 
@@ -1116,12 +1121,6 @@ function World:onEndMonth()
     end
   end
   self.current_tick_entity = nil
-
-  -- Autosave
-  if self.app.config.autosave_frequency == 1 then
-    -- Monthly autosave
-    self.autosave_next_tick = true
-  end
 end
 
 -- Called when a month ends. Decides on which dates patients arrive
