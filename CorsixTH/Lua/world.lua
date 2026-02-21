@@ -853,7 +853,7 @@ function World:onTick()
 
   if self.tick_timer == 0 then
     if self.autosave_next_tick then
-      self:executeAutosave()
+      self:_executeAutosave()
       self.autosave_next_tick = false
     end
     if self.game_date == start_date then
@@ -939,7 +939,7 @@ end
 
 --! Creates a save file in the "Autosaves" folder, using the "Autosave-mm-dd.sav" name template for filename.
 -- If the "Autosaves" folder does not exist, folder will be created.
-function World:executeAutosave()
+function World:_executeAutosave()
   local pathsep = package.config:sub(1, 1)
   local dir = TheApp.savegame_dir
   if dir:sub(-1, -1) ~= pathsep then
