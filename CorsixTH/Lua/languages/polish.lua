@@ -2251,7 +2251,7 @@ tooltip.folders_window = {
   no_font_specified = "Nie podano jeszcze pliku czcionki!",
   not_specified = "Nie podano jeszcze ścieżki folderu!",
   default = "Domyślna ścieżka",
-  reset_to_default = "Przywróć domyślną ścieżkę dla folderu",
+  reset_to_default = "Przywróć domyślną ścieżkę dla folderu ( %1% )",
   back  = "Zamknij to menu i wróć do ustawień",
 }
 customise_window = {

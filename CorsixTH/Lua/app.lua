@@ -441,10 +441,24 @@ function App:trimLogs()
   for i=log_retention, #log_table do os.remove(log_table[i]) end
 end
 
+function App:getConfigPath()
+  return self.command_line["config-file"] or "config.txt"
+end
+
+function App:getDefaultScreenshotsDir()
+  local conf_path = self:getConfigPath()
+  return conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Screenshots"
+end
+
+function App:getDefaultSavegameDir()
+  local conf_path = self:getConfigPath()
+  return conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Saves"
+end
+
 --! Tries to initialize the user level and campaign directories
 -- TODO: Integrate other directory initialisations into this function
 function App:initUserDirectories()
-  local conf_path = self.command_line["config-file"] or "config.txt"
+  local conf_path = self:getConfigPath()
 
   -- Attempt to set the user's directory choice
   -- param dir (path) The defined path of the folder by the user
@@ -475,9 +489,8 @@ end
 --! Tries to initialize the savegame directory, returns true on success and
 --! false on failure.
 function App:initSavegameDir()
-  local conf_path = self.command_line["config-file"] or "config.txt"
-  self.savegame_dir = self.config.savegames or
-      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Saves"
+  local default_savegame_dir = self:getDefaultSavegameDir()
+  self.savegame_dir = self.config.savegames or default_savegame_dir
 
   if self.savegame_dir:sub(-1, -1) == pathsep then
     self.savegame_dir = self.savegame_dir:sub(1, -2)
@@ -495,9 +508,8 @@ function App:initSavegameDir()
 end
 
 function App:initScreenshotsDir()
-  local conf_path = self.command_line["config-file"] or "config.txt"
-  self.screenshot_dir = self.config.screenshots or
-      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Screenshots"
+  local default_screenshots_dir = self:getDefaultScreenshotsDir()
+  self.screenshot_dir = self.config.screenshots or default_screenshots_dir
 
   if self.screenshot_dir:sub(-1, -1) == pathsep then
     self.screenshot_dir = self.screenshot_dir:sub(1, -2)
