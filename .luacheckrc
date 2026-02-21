@@ -30,7 +30,8 @@ globals = { -- Globals
             "rangeMapLookup", "rnc", "strict_declare_global", "table_length",
             "unpermanent", "values", "serialize", "array_join", "shallow_clone",
             "staff_initials_cache", "hasBit", "bitOr", "inspect",
-            "getRandomEntryFromArray",
+            "getRandomEntryFromArray", "stripTrailingSlashes", "detectOS",
+            "isDirectory", "canOpenDirectory",
 
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
