@@ -519,9 +519,17 @@ end
 --!return err (string) What to report back to the player on failure
 function App:initLanguage()
   -- Make sure that we can actually show the desired language.
-  -- If we can't, work out the most common issue and reset to English or Russian.
+  -- If we can't, work out the most common issue and reset to a revert to a
+  -- language that is likely to be supported for the version of Theme Hospital
+  -- the player has.
   local success, err = true, nil
   local language = self.config.language
+
+  -- Revert to Russian for the Russian regional release of Theme Hospital or
+  -- English otherwise.
+  --
+  -- When we support more regional versions of Theme Hospital this function
+  -- should be extended to cover those as well.
   local function revertToSupportedLanguage()
     local l
     if self.gfx:hasLanguageFont("cp437") then
@@ -529,7 +537,7 @@ function App:initLanguage()
     elseif self.gfx:hasLanguageFont("mik") then
       l = [[Russian]]
     else
-      print("Warning: No suitable font found for English or Russian. Defaulting to English, but the game may be broken.")
+      print("Warning: No suitable font found. Defaulting to English, but the game may be broken.")
       l = [[English]]
     end
     self.config.language = l
