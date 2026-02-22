@@ -390,7 +390,7 @@ function Graphics:loadBuiltinFont()
     sheet:setPalette(palette)
     sheet:load(dernc(tab), dernc(dat), true, self.target)
     font = TH.bitmap_font()
-    font:setSheet(sheet, 1) -- CorsixTH only ships with a cp437 font
+    font:setSheet(sheet, charsets["cp437"]) -- CorsixTH only ships with a cp437 font
     font:setSeparation(1, 0)
     font:setScaleFactor(TheApp.config.ui_scale)
     self.load_info[font] = {self.loadBuiltinFont, self}
