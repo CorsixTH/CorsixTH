@@ -18,10 +18,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+Font("cp437")
 Language("Svenska", "Swedish", "sv", "swe")
 Inherit("english")
 Inherit("original_strings", 5)
 Encoding(utf8)
+IsArabicNumerals(true)
 
 -------------------------------  OVERRIDE  ----------------------------------
 object.reception_desk = "Reception"

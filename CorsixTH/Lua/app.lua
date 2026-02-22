@@ -122,7 +122,7 @@ function App:init()
   end
   self:fixConfig()
   corsixth.require("filesystem")
-  local good_install_folder, error_message = self:checkInstallFolder()
+  local good_install_folder, error_message, charset = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   self.level_dir = self:getFullPath("Levels", true)
   self.campaign_dir = self:getFullPath("Campaigns", true)
@@ -180,7 +180,7 @@ function App:init()
   -- Prereq 2: Load and initialise the graphics subsystem
   corsixth.require("persistance")
   corsixth.require("graphics")
-  self.gfx = Graphics(self, good_install_folder)
+  self.gfx = Graphics(self, good_install_folder, charset)
 
   -- Put up the loading screen
   if good_install_folder then
@@ -519,36 +519,52 @@ end
 --!return err (string) What to report back to the player on failure
 function App:initLanguage()
   -- Make sure that we can actually show the desired language.
-  -- If we can't, work out the most common issue and reset to English.
+  -- If we can't, work out the most common issue and reset to a revert to a
+  -- language that is likely to be supported for the version of Theme Hospital
+  -- the player has.
   local success, err = true, nil
   local language = self.config.language
-  local function revertToEnglish()
-    language = [[English]]
-    self.config.language = language
+
+  -- Revert to Russian for the Russian regional release of Theme Hospital or
+  -- English otherwise.
+  --
+  -- When we support more regional versions of Theme Hospital this function
+  -- should be extended to cover those as well.
+  local function revertToSupportedLanguage()
+    local l
+    if self.gfx:hasLanguageFont("cp437") then
+      l = [[English]]
+    elseif self.gfx:hasLanguageFont("mik") then
+      l = [[Russian]]
+    else
+      print("Warning: No suitable font found. Defaulting to English, but the game may be broken.")
+      l = [[English]]
+    end
+    self.config.language = l
     self:saveConfig()
     success = false
   end
 
   local exists = self.strings:checkLanguageExists(language)
   if not exists then
-    -- Not existent language, revert to English.
+    revertToSupportedLanguage()
     err = "The game language set in the configuration file '" .. language ..
-          "' was not valid. It has been reverted to English. Please select your" ..
-          " desired language from the Settings screen again."
-    revertToEnglish()
+          "' was not valid. It has been reverted to '" .. self.config.language ..
+          "'. Please select your desired language from the Settings screen again."
+    language = self.config.language
   end
 
   local font = self.strings:getFont(language)
   if self.gfx:hasLanguageFont(font) then
     self.gfx.language_font = font
   else
-    -- Font unavailable, revert to English.
-    err = "The game language has been reverted to English because the desired" ..
-          " language '" .. language .. "' could not be loaded. Please make sure" ..
-          " you have specified a font file in Settings-Folders-Font or the" ..
+    revertToSupportedLanguage()
+    err = "The game language has been reverted to '" .. self.config.language ..
+          "' because the desired language '" .. language .. "' could not be loaded." ..
+          " Please make sure you have specified a font file in Settings-Folders-Font or the" ..
           " configuration file."
-    revertToEnglish()
-    self.gfx.language_font = self.strings:getFont([[English]])
+    self.gfx.language_font = self.strings:getFont(self.config.language)
+    language = self.config.language
   end
 
   local strings, speech_file = self.strings:load(language)
@@ -1584,7 +1600,6 @@ function App:checkInstallFolder()
     check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656, true)
     check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 335220, true)
     check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520, true)
-    check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
     check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728, true)
   end
 
@@ -1594,7 +1609,17 @@ function App:checkInstallFolder()
     table.insert(corrupt, message)
   end
 
-  return true, #corrupt ~= 0 and corrupt or nil
+  local fontData = assert(self.fs:readContents("QData" .. pathsep .. "Font00V.dat"))
+  local fontcrc = TH.CRC32File(fontData)
+
+  local charset
+  if fontcrc == 0x0033FA05 then
+    charset = "mik"
+  else
+    charset = "cp437"
+  end
+
+  return true, #corrupt ~= 0 and corrupt or nil, charset
 end
 
 function App:findSoundFont()

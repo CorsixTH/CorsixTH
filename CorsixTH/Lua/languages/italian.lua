@@ -19,10 +19,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+Font("cp437")
 Language("Italiano", "Italian", "it", "ita")
 Inherit("english")
 Inherit("original_strings", 3)
 Encoding(utf8)
+IsArabicNumerals(true)
 
 -- override
 -- TODO? Any more original strings that are off in italian translation?

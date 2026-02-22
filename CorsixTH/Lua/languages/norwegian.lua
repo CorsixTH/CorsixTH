@@ -64,10 +64,11 @@ because the letters ø and Ø is not included in the original ingame-font.
 
 -- 1. Global settings (do not edit!)
 --Font("unicode") --todo: Add unicode/freefont
+Font("cp437")
 Language("Norsk", "Norwegian", "nb", "nob")
 Inherit("english")
 Encoding(utf8)
-
+IsArabicNumerals(true)
 
 -- 2. Faxes
 fax = {

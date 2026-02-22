@@ -30,8 +30,10 @@ Artsen; Zusters; Conciërges; Receptionistes
 
 ---------------------------------------------------------------------------------]]
 
+Font("cp437")
 Language("Nederlands", "Dutch", "nl", "dut", "nld")
 Inherit("English")
+IsArabicNumerals(true)
 
 newspaper = {
   [1] = {

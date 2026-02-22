@@ -71,8 +71,10 @@ because the letters ø and Ø is not included in the original ingame-font.
 -------------------------------------------------------------------------------
 
 -- 1. Global settings (do not edit!)
+Font("cp437")
 Language("Dansk", "Danish", "da", "dk")
 Inherit("english")
+IsArabicNumerals(true)
 
 date_format = {
   daymonth = "%1% %2:months%",

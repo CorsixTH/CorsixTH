@@ -60,7 +60,12 @@ local cursors_palette = {
   [44] = "Stat01V.pal",
 }
 
-function Graphics:Graphics(app, good_install_dir)
+local charsets = {
+  ["cp437"] = 1,
+  ["mik"] = 2
+}
+
+function Graphics:Graphics(app, good_install_dir, charset)
   self.app = app
   self.target = self.app.video
   -- The cache is used to avoid reloading an object if it is already loaded
@@ -74,6 +79,7 @@ function Graphics:Graphics(app, good_install_dir)
     language_fonts = {},
     cursors = setmetatable({}, {__mode = "k"}),
   }
+  self.th_charset = charset and charsets[charset] or charsets["cp437"]
 
   self.custom_graphics = {}
   -- The load info table records how objects were loaded, and is used to
@@ -389,7 +395,7 @@ function Graphics:loadBuiltinFont()
     sheet:setPalette(palette)
     sheet:load(dernc(tab), dernc(dat), true, self.target)
     font = TH.bitmap_font()
-    font:setSheet(sheet)
+    font:setSheet(sheet, charsets["cp437"]) -- CorsixTH only ships with a cp437 font
     font:setSeparation(1, 0)
     font:setScaleFactor(TheApp.config.ui_scale)
     self.load_info[font] = {self.loadBuiltinFont, self}
@@ -401,6 +407,8 @@ end
 function Graphics:hasLanguageFont(font)
   if font == nil then
     -- Original game fonts are always present.
+    return true
+  elseif charsets[font] == self.th_charset then
     return true
   else
     -- TODO: Handle more than one font
@@ -461,10 +469,14 @@ local function font_reloader(font)
   font:clearCache()
 end
 
+function Graphics:_isLanguageSupportedByTHAssets()
+  return self.language_font == nil or charsets[self.language_font] == self.th_charset
+end
+
 --! Utility function to return preferred font for main menu ui
 function Graphics:loadMenuFont()
   local font
-  if self.language_font then
+  if self:_isLanguageSupportedByTHAssets() then
     font = self:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   else
     font = self:loadBuiltinFont()
@@ -552,11 +564,11 @@ function Graphics:loadLanguageFont(name, sprite_table, font_options, y_sep, ttf_
     font_options = fo
   end
 
-  if name == nil then
+  if name == nil or charsets[name] == self.th_charset then
     return self:loadFont(sprite_table, font_options)
   end
 
-  local font = self:_loadTrueTypeFont(name, sprite_table, font_options)
+  local font = self:_loadTrueTypeFont("unicode", sprite_table, font_options)
 
   -- A change of language or scale might cause the font to change,
   -- so wrap it in a proxy object which allows the actual object to
@@ -704,17 +716,18 @@ function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_b
 
   -- Use a bitmap font if forced, or the language uses bitmap, or the
   -- sprite_table has no M in it, indicating it's probably a symbol file.
-  local use_bitmap_font = font_options.force_bitmap or not self.language_font or not sprite_table:isVisible(46)
+  local use_bitmap_font = font_options.force_bitmap or
+      self:_isLanguageSupportedByTHAssets() or not sprite_table:isVisible(46)
   local font
   if use_bitmap_font then
     font = TH.bitmap_font()
     font:setSeparation(font_options.x_sep or 0, font_options.y_sep or 0)
-    font:setSheet(sprite_table)
+    font:setSheet(sprite_table, self.th_charset)
     if font_options.apply_ui_scale then
       font:setScaleFactor(TheApp.config.ui_scale)
     end
   else
-    font = self:_loadTrueTypeFont(self.language_font, sprite_table, font_options)
+    font = self:_loadTrueTypeFont("unicode", sprite_table, font_options)
   end
   -- A change of language or scale might cause the font to change,
   -- so wrap it in a proxy object which allows the actual object to
