@@ -61,7 +61,7 @@ function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback
       :setTooltip(item.tooltip and unpack(item.tooltip) or nil)
       :setLabel(item.text, item.font)
       :makeToggleButton(-1, -1, width, height, nil,
-          --[[persistable:dropdown_tooltip_callback]] function() self:selectItem(i) end)
+          --[[persistable:dropdown_callback]] function() self:selectItem(i) end)
       :enable(not item.disabled)
     y = y + height
   end
