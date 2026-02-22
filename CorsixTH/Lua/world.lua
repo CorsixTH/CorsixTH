@@ -853,19 +853,8 @@ function World:onTick()
 
   if self.tick_timer == 0 then
     if self.autosave_next_tick then
-      self.autosave_next_tick = nil
-      local pathsep = package.config:sub(1, 1)
-      local dir = TheApp.savegame_dir
-      if dir:sub(-1, -1) ~= pathsep then
-        dir = dir .. pathsep
-      end
-      if not lfs.attributes(dir .. "Autosaves", "modification") then
-        lfs.mkdir(dir .. "Autosaves")
-      end
-      local status, err = pcall(TheApp.save, TheApp, dir .. "Autosaves" .. pathsep .. "Autosave" .. self.game_date:monthOfYear() .. ".sav")
-      if not status then
-        print("Error while autosaving game: " .. err)
-      end
+      self:_executeAutosave()
+      self.autosave_next_tick = false
     end
     if self.game_date == start_date then
       if not self.ui.start_tutorial then
@@ -946,6 +935,26 @@ function World:onTick()
     end
   end
   self.tick_timer = self.tick_timer - 1
+end
+
+--! Creates a save file in the "Autosaves" folder, using the "Autosave-mm-dd.sav" name template for filename.
+-- If the "Autosaves" folder does not exist, folder will be created.
+function World:_executeAutosave()
+  local pathsep = package.config:sub(1, 1)
+  local dir = TheApp.savegame_dir
+  if dir:sub(-1, -1) ~= pathsep then
+    dir = dir .. pathsep
+  end
+  if not lfs.attributes(dir .. "Autosaves", "modification") then
+    lfs.mkdir(dir .. "Autosaves")
+  end
+  local month = string.format("%02d", self.game_date:monthOfYear())
+  local day = string.format("%02d", self.game_date:dayOfMonth())
+  local filename = "Autosave" .. "-" .. month .. "-" .. day .. ".sav"
+  local status, err = pcall(TheApp.save, TheApp, dir .. "Autosaves" .. pathsep .. filename)
+  if not status then
+    print("Error while autosaving game: " .. err)
+  end
 end
 
 --! Change the date of the game to the last hour of this month.
@@ -1055,6 +1064,22 @@ function World:onEndDay()
       self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
     end
   end
+
+  -- Autosave
+  if self.app.config.autosave_frequency == 3 then
+    -- Daily autosave
+    self.autosave_next_tick = true
+  elseif self.app.config.autosave_frequency == 2 then
+    if day == self.game_date:lastDayOfMonth() or day == 6 or day == 13 or day == 20 or day == 27 then
+      -- Weekly autosave
+      self.autosave_next_tick = true
+    end
+  elseif self.app.config.autosave_frequency == 1 then
+    if day == self.game_date:lastDayOfMonth() then
+      -- Monthly autosave
+      self.autosave_next_tick = true
+    end
+  end
 end
 
 function World:checkIfGameWon()
@@ -1089,7 +1114,6 @@ function World:onEndMonth()
   self:updateSpawnDates()
 
   self:makeAvailableStaff(self.game_date:monthOfGame())
-  self.autosave_next_tick = true
   for _, entity in ipairs(self.entities) do
     if entity.checkForDeadlock then
       self.current_tick_entity = entity
