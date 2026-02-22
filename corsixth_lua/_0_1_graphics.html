@@ -33,6 +33,9 @@ the other Lua code.
  <h4>Method Index</h4>
  <ul>
  <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1__is_language_supported_by_t_h_assets">_isLanguageSupportedByTHAssets</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_graphics.html#_0_1_graphics_1__load_palette">_loadPalette</a>(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">transparent_255</span>, <span class="p">pal8bit</span>)
  </li>
  <li class="self">
@@ -129,13 +132,15 @@ the other Lua code.
  </li>
  <li><span class="p">target</span>
  </li>
+ <li><span class="p">th_charset</span>
+ </li>
  <li><span class="p">ttf_font_data</span>
  </li>
  </ul>
 </div>
 <div class="methods">
  <div class="method">
- <h5><a name="_0_1_graphics_1_graphics">function Graphics:Graphics(<span class="p">app</span>, <span class="p">good_install_dir</span>)</a></h5>
+ <h5><a name="_0_1_graphics_1_graphics">function Graphics:Graphics(<span class="p">app</span>, <span class="p">good_install_dir</span>, <span class="p">charset</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
@@ -150,8 +155,19 @@ the other Lua code.
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
+ <tr>
+ <td class="n">charset</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L63">line 63 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L68">line 68 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1__is_language_supported_by_t_h_assets">function Graphics:_isLanguageSupportedByTHAssets()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L472">line 472 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -182,7 +198,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L282">line 282 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L288">line 288 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -197,7 +213,7 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L120">line 120 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L126">line 126 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -242,25 +258,25 @@ apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
 size.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L569">line 569 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L581">line 581 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1all_palettes">function Graphics:allPalettes()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L323">line 323 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L329">line 329 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1arabic_numerals">function Graphics:arabicNumerals()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L727">line 727 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L740">line 740 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1draw_numbers_from_unicode">function Graphics:drawNumbersFromUnicode()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L734">line 734 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L747">line 747 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -275,7 +291,7 @@ size.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L315">line 315 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L321">line 321 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -290,7 +306,7 @@ size.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L401">line 401 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L407">line 407 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -310,13 +326,13 @@ size.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L738">line 738 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L751">line 751 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_builtin_font">function Graphics:loadBuiltinFont()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L376">line 376 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L382">line 382 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -346,7 +362,7 @@ size.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L219">line 219 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L225">line 225 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -402,7 +418,7 @@ size.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L663">line 663 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L675">line 675 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -459,7 +475,7 @@ apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
 size.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L622">line 622 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L634">line 634 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -467,7 +483,7 @@ size.</td>
  <p>
  If it is not found it tries to use the font file from the compile setting WITH_FONT,<br/><br/>
  or look for one in the CorsixTH folder, the grandparent of this file.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L158">line 158 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L164">line 164 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -492,7 +508,7 @@ size.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L327">line 327 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L333">line 333 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -556,7 +572,7 @@ size.</td>
 instead.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L512">line 512 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L524">line 524 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -571,14 +587,14 @@ instead.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L207">line 207 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L213">line 213 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_menu_font">function Graphics:loadMenuFont()</a></h5>
  <p>
  Utility function to return preferred font for main menu ui<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L464">line 464 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L476">line 476 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -599,7 +615,7 @@ instead.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L1022">line 1022 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L1035">line 1035 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -650,7 +666,7 @@ instead.</td>
  <td class="d"> Additional flags for loading the bitmap</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L337">line 337 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L343">line 343 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -680,19 +696,19 @@ instead.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L784">line 784 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L797">line 797 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1on_change_language">function Graphics:onChangeLanguage()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L432">line 432 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L440">line 440 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1on_change_u_i_scale">function Graphics:onChangeUIScale()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L450">line 450 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L458">line 458 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -707,7 +723,7 @@ instead.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L810">line 810 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L823">line 823 of Lua/graphics.lua</a>.
  </p>
  </div>
 </div>

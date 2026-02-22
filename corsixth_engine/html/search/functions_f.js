@@ -66,7 +66,7 @@ var searchData=
   ['set_5fsprite_5falt_5fpalette_5fmap_63',['set_sprite_alt_palette_map',['../classsprite__sheet.html#a65aee32d8ab1e0559ba78448c9953bdd',1,'sprite_sheet']]],
   ['set_5fsprite_5fcount_64',['set_sprite_count',['../classsprite__sheet.html#ab90337a3160ffd895025560c5d99ae0a',1,'sprite_sheet']]],
   ['set_5fsprite_5fdata_65',['set_sprite_data',['../classsprite__sheet.html#a3cc5d60b0f91cd551daae25557ace389',1,'sprite_sheet']]],
-  ['set_5fsprite_5fsheet_66',['set_sprite_sheet',['../classanimation__manager.html#a2f1adc2214f45ac59abdca3b583013ba',1,'animation_manager::set_sprite_sheet()'],['../classbitmap__font.html#ab50419b04c79ed5c341fd23c2f2f6548',1,'bitmap_font::set_sprite_sheet()']]],
+  ['set_5fsprite_5fsheet_66',['set_sprite_sheet',['../classanimation__manager.html#a2f1adc2214f45ac59abdca3b583013ba',1,'animation_manager::set_sprite_sheet()'],['../classbitmap__font.html#a95a84f549f58488cce6813bb0fa9e348',1,'bitmap_font::set_sprite_sheet()']]],
   ['set_5fsprites_67',['set_sprites',['../classmap__typical__overlay.html#a41b5be53d17358a7c8d8fdeaf3588e1d',1,'map_typical_overlay']]],
   ['set_5fsuperclass_68',['set_superclass',['../classlua__class__binding.html#a0c7d333b6bb75689af1385617f14a473',1,'lua_class_binding']]],
   ['set_5ftemperature_5fdisplay_69',['set_temperature_display',['../classlevel__map.html#a36c5b5a7c6f5c06dd935e38b08048a6d',1,'level_map']]],

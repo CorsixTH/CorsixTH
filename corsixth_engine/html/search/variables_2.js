@@ -7,5 +7,6 @@ var searchData=
   ['color_4',['color',['../structfont__shadow__options.html#aa000b30d5b9640d6f89680041a92803c',1,'font_shadow_options']]],
   ['color_5fcount_5',['color_count',['../classpalette.html#add64c77dcd47df72201ea5cc2a3bed67',1,'palette']]],
   ['cp437_5fto_5funicode_5ftable_6',['cp437_to_unicode_table',['../cp437__table_8h.html#a3675cb297505297f036393c6adc74f56',1,'cp437_table.h']]],
-  ['cp936_5fto_5funicode_5ftable_7',['cp936_to_unicode_table',['../cp936__table_8h.html#af8d8ba45aa6e4d71d402f5c78bcab2f3',1,'cp936_table.h']]]
+  ['cp936_5fto_5funicode_5ftable_7',['cp936_to_unicode_table',['../cp936__table_8h.html#af8d8ba45aa6e4d71d402f5c78bcab2f3',1,'cp936_table.h']]],
+  ['cpmik_5fto_5funicode_5ftable_8',['cpmik_to_unicode_table',['../cpmik__table_8h.html#a577a92337207f7999fc9777a69e9b44f',1,'cpmik_table.h']]]
 ];
