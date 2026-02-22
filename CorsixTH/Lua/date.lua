@@ -263,6 +263,13 @@ function Date:isSameDay(other)
   return self._year == other._year and self._month == other._month and self._day == other._day
 end
 
+--[[ Calculates the number of months played until a time an hour in the future. This is used in EndConditions
+!return (number) Integer of months since Jan 2000
+]]
+function Date:getProgressInMonths()
+  return self:plusHours(1):monthOfGame()
+end
+
 -- METAMETHODS
 
 local Date_mt = Date._metatable
