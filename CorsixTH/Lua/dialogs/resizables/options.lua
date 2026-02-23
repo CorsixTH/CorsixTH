@@ -532,6 +532,7 @@ end
 
 function UIOptions:onChangeResolution()
   self:processWindowResizeEvent()
+  self:setDefaultPosition(0.5, 0.25)
 end
 
 -- Handle required button changes from a window resize event from the user (via UI
