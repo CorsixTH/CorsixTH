@@ -286,8 +286,13 @@ function UIOptions:UIOptions(ui, mode)
   -- "Back" button
   -- Give some extra space to back button. This is fine as long as it is the last button in the options menu
   local back_button_y_pos = self:_getOptionYPos() + 20
-  self:addBevelPanel(175, back_button_y_pos, BTN_WIDTH * 2, 40, col_bg):setLabel(_S.options_window.back)
-    :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
+
+  -- Position on left with width of Customize + Folders buttons combined
+  local back_x = 20  -- Same left margin as other left-aligned buttons
+  local back_width = BTN_WIDTH * 2 + 10  -- Width of two buttons plus spacing between them
+
+  self:addBevelPanel(back_x, back_button_y_pos, back_width, 40, col_bg):setLabel(_S.options_window.back)
+    :makeButton(0, 0, back_width, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
 end
 
 -- Stubs for backward compatibility
