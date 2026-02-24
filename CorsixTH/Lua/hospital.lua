@@ -121,7 +121,7 @@ function Hospital:Hospital(world, avail_rooms, name)
     general = 0,
   }
 
-  self.num_visitors = 0 -- Counts patients only
+  self.num_visitors = 0 -- Count of actual spawned patients
   self.num_deaths = 0
   self.num_deaths_this_year = 0
   self.num_cured = 0
@@ -131,9 +131,7 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.num_vips = 0 -- used to check if it's the user's first vip
   self.percentage_cured = 0
   self.percentage_killed = 0
-  self.population = 0.25 -- TODO: Percentage showing how much of
-  -- the total population that goes to the player's hospital,
-  -- used for one of the goals. Change when competitors are there.
+  self.population = 0 -- Count of total attempted spawned patients
 
   -- Statistics used in the graph dialog. Each entry is the month, inside it
   -- is "money in", "money out", wages, balance, visitors, cures, deaths, reputation
@@ -2378,6 +2376,22 @@ end
 
 --! Play a sound file
 function Hospital:playSound(sound)
+end
+
+--! Return reputation value for disease or hospital
+--!param disease id (string) - name of the disease
+--!return reputation (int)
+function Hospital:getDiseaseReputation(disease)
+  return self.disease_casebook[disease].reputation or self.reputation
+end
+
+--! Calculate value to influence spawn chance based on the price relative to reputation
+--!param disease id (string) - name of the disease
+--!return (float) Multiplier to apply for spawn chance
+function Hospital:getDiseaseReputationPriceFactor(disease)
+  local reputation = self.disease_casebook[disease].reputation or self.reputation
+  local percentage = self.disease_casebook[disease].price
+  return math.min(1.5, math.max(0.5, reputation / 500 / percentage))
 end
 
 --! The UI parts of earthquake ticks
