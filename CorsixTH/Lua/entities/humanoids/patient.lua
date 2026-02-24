@@ -534,11 +534,8 @@ function Patient:goHome(reason, disease_id)
       self:setMood("sad_money", "activate")
       self:changeAttribute("happiness", -0.5)
 
-    local treatment_name = self.hospital.disease_casebook[disease_id].disease.name 
-    if hosp and not hosp.advice_patient_not_paying_shown then
-        hosp:giveAdvice({_A.warnings.patient_not_paying:format(treatment_name)}) 
-        hosp.advice_patient_not_paying_shown = true
-    end
+    local treatment_name = self.hospital.disease_casebook[disease_id].disease.name
+    self.hospital:warnPatientNotPaying(treatment_name)
     hosp:updateNotCuredCounts(self, reason)
     self:clearDynamicInfo()
     self:setDynamicInfo('text', {"", _S.dynamic_info.patient.actions.prices_too_high})
