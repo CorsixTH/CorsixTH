@@ -158,7 +158,7 @@ end
 --! all the other categories.
 function ResearchDepartment:redistributeResearchPoints()
   local sum, all_finished = 0, true
-  local policy = {"cure", "diagnosis", "drugs", "improvements", "specialisation"}
+  local policy = {"cure", "diagnosis", "drugs", "improvements"}
   for _, research_category in ipairs(policy) do
     sum = sum + self.research_policy[research_category].frac
     if self.research_policy[research_category].current and self.research_policy[research_category].current ~= self.drain then
