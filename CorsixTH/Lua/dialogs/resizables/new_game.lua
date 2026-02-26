@@ -110,7 +110,7 @@ function UINewGame:UINewGame(ui)
       if not name:find("%S") then
         self.name_textbox:setText(self.player_name)
       else
-        self.player_name = name
+        self.player_name = name:sub(1, 8)
         self:saveToConfig()
       end
     end,
