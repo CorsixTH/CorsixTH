@@ -163,6 +163,7 @@ function GameUI:setupGlobalKeyHandlers()
   self:addKeyHandler("ingame_toggleAnnouncements", self, self.togglePlayAnnouncements)
   self:addKeyHandler("ingame_toggleSounds", self, self.togglePlaySounds)
   self:addKeyHandler("ingame_toggleMusic", self, self.togglePlayMusic)
+  self:addKeyHandler("ingame_moveRoom", self, self.startMoveRoom)
 
   -- scroll to map position
   for i = 0, 9 do
@@ -175,6 +176,26 @@ function GameUI:setupGlobalKeyHandlers()
   if self.app.config.debug and self.app.world.map.level_number ~= "MAP EDITOR" then
     self:addKeyHandler("ingame_showCheatWindow", self, self.showCheatsWindow)
   end
+end
+
+function GameUI:startMoveRoom()
+    if self.app.world.mode_deplacement then
+        return
+    end
+    local wx, wy = self:ScreenToWorld(self.cursor_x, self.cursor_y)
+    wx, wy = math.floor(wx), math.floor(wy)
+    local room = self.app.world:getRoom(wx, wy)
+
+    if not room then
+        return
+    end
+    
+    local edit_dlg = self:getWindow(UIEditRoom)
+    if edit_dlg and edit_dlg.room == room then
+        edit_dlg:close()
+    end
+    
+    self:addWindow(UIMoveRoom(self, room))
 end
 
 function GameUI:makeVisibleDiamond(scr_w, scr_h)

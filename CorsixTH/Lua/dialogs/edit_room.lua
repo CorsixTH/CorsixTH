@@ -80,7 +80,6 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   end
 
   self.blueprint_wall_anims = {}
-  self.blueprint_window = {}
 
   self.mouse_down_x = false
   self.mouse_down_y = false

@@ -65,6 +65,7 @@ function World:World(app, free_build_mode)
   self.objects_notify_occupants = {}
   self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
   self.entity_map = EntityMap(self.map)
+  self.mode_deplacement = false;
 
   -- Time
   self.hours_per_tick = 1
@@ -2739,4 +2740,92 @@ end
 --! Returns whether the level being played is part of a campaign or not
 function World:isCampaign()
   return type(self.map.level_number) == "number" or self.campaign_info
+end
+
+function World:hasRadiator(x, y, w, h)
+    local x2, y2 = x + w - 1, y + h - 1
+
+    for _, e in ipairs(self.entities) do
+        if e and e.object_type and e.object_type.id == "radiator"
+                and e.tile_x and e.tile_y then
+            if e.tile_x >= x and e.tile_x <= x2 and e.tile_y >= y and e.tile_y <= y2 then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
+--! Check whether a room can be moved so its top-left corner is at (new_x, new_y).
+--! Verifies all target tiles are in-bounds and not occupied by another room.
+--!param room  (Room)    The room to move.
+--!param new_x (integer) Target X for the room's top-left corner.
+--!param new_y (integer) Target Y for the room's top-left corner.
+--!return (boolean) true if the position is valid.
+function World:canMoveRoomTo(room, new_x, new_y)
+    -- Iterate over every tile the room would occupy at its new position
+    for tileX = new_x, new_x + room.width - 1 do
+        for tileY = new_y, new_y + room.height - 1 do
+            local other = self:getRoom(tileX, tileY)
+            if other and other ~= room then
+                self.app.world.mode_deplacement = false
+                return false -- Return if occupied by a different room
+            end
+            local radiator = self:hasRadiator(tileX, tileY, room.width, room.height)
+            if radiator then
+                self.app.world.mode_deplacement = false
+                return false
+            end
+        end
+    end
+    return true
+end
+
+--! Physically move a room by offset (dx, dy) on the map.
+--! Updates the TH map flags, the door entity position, the pathfinder,
+--! and notifies humanoids that were heading to this room.
+--!param room (Room)    The room to move.
+--!param dx   (integer) X offset.
+--!param dy   (integer) Y offset.
+function World:moveRoom(room, directionX, directionY)
+    local map  = self.map.th
+    local new_x = room.x + directionX
+    local new_y = room.y + directionY
+
+    if not self:canMoveRoomTo(room, new_x, new_y) then
+        return -- Get out of the function if the room can't move
+    end
+    
+    for tileX = room.x, room.x + room.width do
+        for tileY = room.y, room.y + room.height do
+            map:setCellFlags(tileX, tileY, { roomId = 0})
+        end
+    end
+    room.x = new_x
+    room.y = new_y
+    
+    map:markRoom(new_x, new_y, room.width, room.height,
+            room.room_info.floor_tile, room.id)
+    
+    if room.door then
+        local door_rel_x = room.door.tile_x - (room.x - directionX)  -- relative to OLD origin
+        local door_rel_y = room.door.tile_y - (room.y - directionY)
+        room.door:setTile(room.x + door_rel_x, room.y + door_rel_y)
+    end
+    
+    self.pathfinder:setMap(map)
+    
+    for _, entity in ipairs(self.entities) do
+        if class.is(entity, Humanoid) and entity.action_queue then
+            for _, action in ipairs(entity.action_queue) do
+                if action.room == room then
+                    entity:setNextAction(SeekRoomAction(room.room_info.id))
+                    break
+                end
+            end
+        end
+    end
+    self.mode_deplacement = false
+    self:clearCaches()
 end
