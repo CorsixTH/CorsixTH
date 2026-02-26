@@ -108,7 +108,21 @@ function App:init()
   print("---------------------------------------------------------------")
   print("")
 
-  -- Prereq 1: Config file (for screen width / height / TH folder)
+  -- Prereq 1: C++ and lua sides are compatible
+  local compile_opts = TH.GetCompileOptions()
+  local api_version = corsixth.require("api_version")
+  if api_version ~= compile_opts.api_version then
+    api_version = api_version or 0
+    compile_opts.api_version = compile_opts.api_version or 0
+    if api_version < compile_opts.api_version then
+      print("Notice: Compiled binary is more recent than Lua scripts.")
+    elseif api_version > compile_opts.api_version then
+      print("Warning: Compiled binary is out of date. CorsixTH will likely" ..
+        " fail to run until you recompile the binary.")
+    end
+  end
+
+  -- Prereq 2: Config file (for screen width / height / TH folder)
   -- Note: These errors cannot be translated, as the config file specifies the language
   local conf_path = self.command_line["config-file"] or "config.txt"
   local conf_chunk, conf_err = loadfile_envcall(conf_path)
@@ -133,18 +147,6 @@ function App:init()
   -- Create the window
   if not SDL.init("video", "timer", "audio") then
     return false, "Cannot initialise SDL"
-  end
-  local compile_opts = TH.GetCompileOptions()
-  local api_version = corsixth.require("api_version")
-  if api_version ~= compile_opts.api_version then
-    api_version = api_version or 0
-    compile_opts.api_version = compile_opts.api_version or 0
-    if api_version < compile_opts.api_version then
-      print("Notice: Compiled binary is more recent than Lua scripts.")
-    elseif api_version > compile_opts.api_version then
-      print("Warning: Compiled binary is out of date. CorsixTH will likely" ..
-        " fail to run until you recompile the binary.")
-    end
   end
 
   -- Report operating system
