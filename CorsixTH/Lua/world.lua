@@ -66,7 +66,7 @@ function World:World(app, free_build_mode)
   self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
   self.entity_map = EntityMap(self.map)
   self.mode_deplacement = false;
-
+  
   -- Time
   self.hours_per_tick = 1
   self.tick_rate = 3
@@ -2681,6 +2681,9 @@ passable tiles (the norm for most objects)]]
 --!return (boolean) indicating if exclusively passable or not
 function World:isTileExclusivelyPassable(x, y, distance)
   for o in pairs(self:findAllObjectsNear(x, y, distance)) do
+    if not o or not o.tile_x or not o.tile_y then
+        goto continue
+    end
     if o and o.footprint then
       for _, footprint in pairs(o.footprint) do
         if footprint[1] + o.tile_x == x and footprint[2] + o.tile_y == y and footprint.only_passable and not footprint.shareable then
@@ -2696,6 +2699,7 @@ function World:isTileExclusivelyPassable(x, y, distance)
       end
     end
   end
+  ::continue::
   return true
 end
 
@@ -2742,6 +2746,13 @@ function World:isCampaign()
   return type(self.map.level_number) == "number" or self.campaign_info
 end
 
+---! Checks whether a radiator object exists inside a rectangular tile area.
+--!
+--! Parameters:
+--! @param x (integer) Left X coordinate of the area (inclusive).
+--! @param y (integer) Top Y coordinate of the area (inclusive).
+--! @param w (integer) Width of the area in tiles.
+--! @param h (integer) Height of the area in tiles.
 function World:hasRadiator(x, y, w, h)
     local x2, y2 = x + w - 1, y + h - 1
 
@@ -2759,21 +2770,65 @@ end
 
 --! Check whether a room can be moved so its top-left corner is at (new_x, new_y).
 --! Verifies all target tiles are in-bounds and not occupied by another room.
---!param room  (Room)    The room to move.
---!param new_x (integer) Target X for the room's top-left corner.
---!param new_y (integer) Target Y for the room's top-left corner.
---!return (boolean) true if the position is valid.
+--!
+--! This function validates that every tile the room would occupy at the new position:
+--!  1) Has no humanoid currently standing on it (patients / staff / VIP / etc.).
+--!  2) Belongs to the hospital buildable area (flags.hospital must be true).
+--!  3) Is not already occupied by a different room.
+--!  4) Does not overlap a radiator (custom rule in this project).
+--!
+--! Parameters:
+--! @param room  (Room)    The room to test for movement.
+--! @param new_x (integer) Target X coordinate for the room's top-left corner.
+--! @param new_y (integer) Target Y coordinate for the room's top-left corner.
+--!
+--! Returns:
+--! @return (boolean) true if the room can legally be placed at (new_x, new_y),
 function World:canMoveRoomTo(room, new_x, new_y)
+    local map = self.map.th
+
+    for tx = room.x, room.x + room.width - 1 do
+        for ty = room.y, room.y + room.height - 1 do
+            local humanoids = self.entity_map:getHumanoidsAtCoordinate(tx, ty)
+            if humanoids and #humanoids > 0 then
+                self:showError("You can't move this room: someone is inside.")
+                return false
+            end
+        end
+    end
     -- Iterate over every tile the room would occupy at its new position
     for tileX = new_x, new_x + room.width - 1 do
         for tileY = new_y, new_y + room.height - 1 do
+
+            -- Verify if a humanoid(character) is on the new position
+            local humanoids = self.entity_map:getHumanoidsAtCoordinate(tileX, tileY)
+            if humanoids and #humanoids > 0 then
+                self:showError("You can't move this room: someone is on the new location.")
+                self.mode_deplacement = false
+                return false
+            end
+            
+            -- verify if the flag is constructable (in the hospital)
+            local flags = {}
+            map:getCellFlags(tileX, tileY, flags)
+            if not flags.hospital then
+                self:showError("You can't move this room: this location is out of the hospital.")
+                self.mode_deplacement = false
+                return false
+            end
+            
+            -- verify if another room is on the new location
             local other = self:getRoom(tileX, tileY)
             if other and other ~= room then
                 self.app.world.mode_deplacement = false
-                return false -- Return if occupied by a different room
+                self:showError("You can't move this room: another room is in the way.")
+                return false
             end
+            
+            -- verify if a radiator is on the new location
             local radiator = self:hasRadiator(tileX, tileY, room.width, room.height)
             if radiator then
+                self:showError("You can't move this room: a radiator is in the way.")
                 self.app.world.mode_deplacement = false
                 return false
             end
@@ -2782,12 +2837,13 @@ function World:canMoveRoomTo(room, new_x, new_y)
     return true
 end
 
---! Physically move a room by offset (dx, dy) on the map.
+--! Physically move a room by offset (directionX, directionY) on the map.
 --! Updates the TH map flags, the door entity position, the pathfinder,
+--! Remove the old Wall and add the new to the new location
 --! and notifies humanoids that were heading to this room.
 --!param room (Room)    The room to move.
---!param dx   (integer) X offset.
---!param dy   (integer) Y offset.
+--!param directionX (integer) X offset.
+--!param directionY (integer) Y offset.
 function World:moveRoom(room, directionX, directionY)
     local map  = self.map.th
     local new_x = room.x + directionX
@@ -2796,26 +2852,49 @@ function World:moveRoom(room, directionX, directionY)
     if not self:canMoveRoomTo(room, new_x, new_y) then
         return -- Get out of the function if the room can't move
     end
+
+    self.l_wall_layer = { top = {}, right = {}, bottom = {}, left = {} } -- reset the last wall saved
+    self:_remove_wall_line(room.x, room.y, 0, 1, room.height, 3, -1,  0, "top") -- top room
+    self:_remove_wall_line(room.x, room.y, 1, 0, room.width , 2,  0, -1, "right") -- right room
+    self:_remove_wall_line(room.x, room.y + room.height, 1, 0, room.width , 2, 0, 0, "left") -- left room
+    self:_remove_wall_line(room.x + room.width, room.y , 0, 1, room.height, 3, 0, 0, "bottom") -- bottom room
     
-    for tileX = room.x, room.x + room.width do
-        for tileY = room.y, room.y + room.height do
+    -- Will put the last position cell flags back to hospital floor
+    for tileX = room.x, room.x + room.width - 1 do
+        for tileY = room.y, room.y + room.height - 1 do
             map:setCellFlags(tileX, tileY, { roomId = 0})
+            map:setCell(tileX, tileY, 1, 76)
         end
     end
+    
+    -- Finaly we will change the location of the room with the new position
     room.x = new_x
     room.y = new_y
     
     map:markRoom(new_x, new_y, room.width, room.height,
             room.room_info.floor_tile, room.id)
+
+    -- Will place the tile depending on the direction of the list
+    for _, side in ipairs({"top","right","bottom","left"}) do
+        local list = self.l_wall_layer[side]
+        if list then
+            for _, w in ipairs(list) do
+                map:setCell(w.x + directionX, w.y + directionY, w.layer, w.block_id)
+            end
+        end
+    end
     
+    -- Will put the door back to the same location as the old location
     if room.door then
         local door_rel_x = room.door.tile_x - (room.x - directionX)  -- relative to OLD origin
         local door_rel_y = room.door.tile_y - (room.y - directionY)
         room.door:setTile(room.x + door_rel_x, room.y + door_rel_y)
     end
     
+    -- Will adjust the path of humanoid
     self.pathfinder:setMap(map)
     
+    -- Will update the action to the new location
     for _, entity in ipairs(self.entities) do
         if class.is(entity, Humanoid) and entity.action_queue then
             for _, action in ipairs(entity.action_queue) do
@@ -2826,6 +2905,96 @@ function World:moveRoom(room, directionX, directionY)
             end
         end
     end
+    
+    --! Will update the path again
+    --! Update the map
+    --! put back l_wall_layer to nil so we don't keep the last wall
+    --! We will rebuild the entity map so we don't have entity error
+    self.map.th:updatePathfinding()
+    self.pathfinder:setMap(self.map.th)
     self.mode_deplacement = false
+    self.l_wall_layer = nil
+    self:rebuildEntityMap()
     self:clearCaches()
+end
+
+---! Removes (or replaces) a straight wall line on the map and stores the removed walls.
+--! Parameters:
+--! @param x        (integer) Start X coordinate for the wall line (map tile coords).
+--! @param y        (integer) Start Y coordinate for the wall line (map tile coords).
+--! @param step_x   (integer) Step in X direction for each iteration (e.g. 1, 0, -1).
+--! @param step_y   (integer) Step in Y direction for each iteration (e.g. 0, 1, -1).
+--! @param n_steps  (integer) Number of tiles to process along the line.
+--! @param layer    (integer) Tile layer index (CorsixTH TH map layers are 1..4).
+--! @param neigh_x  (integer) Neighbour offset X used to inspect the tile outside the wall.
+--! @param neigh_y  (integer) Neighbour offset Y used to inspect the tile outside the wall.
+--! @param from     (string)  Side name key: "top", "right", "bottom", or "left".
+function World:_remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y, from)
+    self.l_wall_layer = self.l_wall_layer or { top = {}, bottom = {}, left = {}, right = {} } -- Initiate list of last wall or will use the one already created
+    local map = self.map.th
+    local flag = (self.ui.transparent_walls and 1024) or 0
+
+    -- Verify if the tile is from the hospital
+    local function isHospitalTile(tx, ty)
+        local f = {}
+        map:getCellFlags(tx, ty, f)
+        return f.hospital == true
+    end
+
+    -- The fun part, n_steps will depend on the with or the height of the room
+    for _ = 1, n_steps do
+        local existing = map:getCell(x, y, layer) -- get the cell id
+        local set = self:getWallSetFromBlockId(existing) -- type of wall
+        local dir = self:getWallDirFromBlockId(existing) -- direction north-east-etc..
+
+        if set and dir then
+            -- Save the last wall we take
+            table.insert(self.l_wall_layer[from], {
+                x = x, y = y, layer = layer,
+                block_id = existing,
+                set = set, dir = dir,
+            })
+            
+            local neighbour_room = self:getRoom(x + neigh_x, y + neigh_y)
+
+            if neighbour_room and (neigh_x ~= 0 or neigh_y ~= 0) then
+                local new_set = set
+                if new_set == "inside_tiles" then new_set = "outside_tiles" end
+                map:setCell(x, y, layer, flag + self.wall_types[neighbour_room.room_info.wall_type][new_set][dir])
+            else
+                local neigh_is_hosp = isHospitalTile(x + neigh_x, y + neigh_y)
+                if not neigh_is_hosp then
+                    local hosp_wall_type = (self.ui and self.ui.hospital and self.ui.hospital.wall_type) or 1
+                    map:setCell(x, y, layer, flag + self.wall_types[hosp_wall_type]["outside_tiles"][dir])
+                else
+                    map:setCell(x, y, layer, flag)
+                end
+            end
+        end
+
+        x = x + step_x
+        y = y + step_y
+    end
+end
+
+---! Rebuilds the entity map from the current list of world entities.
+--!
+--! This function recreates `self.entity_map` from scratch and re-registers
+--! every entity that currently has a valid tile position.
+--!
+--! - The previous entity map is discarded.
+--! - All entities are re-added based on their current position.
+function World:rebuildEntityMap()
+    self.entity_map = EntityMap(self.map)
+    for _, e in ipairs(self.entities) do
+        if e and e.tile_x and e.tile_y then
+            self.entity_map:addEntity(e.tile_x, e.tile_y, e)
+        end
+    end
+end
+
+-- Affiche une fenêtre d'info/erreur sans arrêter le jeu
+function World:showError(message)
+    if not (self.ui and self.ui.addWindow) then return end
+    self.ui:addWindow(UIInformation(self.ui, { message }))
 end

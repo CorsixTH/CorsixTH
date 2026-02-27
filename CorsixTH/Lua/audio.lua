@@ -391,6 +391,10 @@ function Audio:isPlaying(sound)
 end
 
 function Audio:cacheSoundFilenamesAssociatedWithName(name)
+    -- Guard: So we are not crashing if sound_archive is empty
+  if not self.sound_archive then
+      self.sound_archive = {}
+  end
   local list = wilcard_cache[name]
   if not list then
     local filename

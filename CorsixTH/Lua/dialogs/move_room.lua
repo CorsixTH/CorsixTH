@@ -90,11 +90,18 @@ function UIMoveRoom:_liftObjects()
     }
 
       self.world:removeObjectFromTile(obj, ox, oy)
+      self.world.map.th:setCellFlags(ox, oy, { buildable = true })
   end
   
   return lifted
 end
 
+---! Draw callback for the room move dialog.
+--!
+--! Parameters:
+--! @param canvas (Canvas) Rendering canvas used by the UI system.
+--! @param x      (integer) X offset of the window draw origin.
+--! @param y      (integer) Y offset of the window draw origin.
 function UIMoveRoom:draw(canvas, x, y)
     self.ui:setCursor(self.ui.grab_cursor)
     Window.draw(self, canvas, x, y)
@@ -156,9 +163,20 @@ function UIMoveRoom:_applyMove(new_x, new_y)
         local ny = room.y + entry.rel_y
 
         if world:getRoom(nx, ny) == room then
-            obj:setTile(nx, ny)
+            -- 0) Safety: detach if still registered somewhere
+            if obj.tile_x and obj.tile_y then
+                world:removeObjectFromTile(obj, obj.tile_x, obj.tile_y)
+            end
+
+            -- 1) Direction first
             obj.direction = entry.direction
+
+            -- 2) Place on map
+            obj:setTile(nx, ny)
             world:addObjectToTile(obj, nx, ny)
+
+            -- 3) Re-attach to room ownership
+            room.objects[obj] = true    
         else
             -- IMPORTANT: ne pas laisser un objet "sans tile" dans room.objects
             room.objects[obj] = nil
@@ -168,6 +186,15 @@ function UIMoveRoom:_applyMove(new_x, new_y)
                 world:addObjectToTile(obj, entry.old_x, entry.old_y)
             end
 
+            -- remove from the tile list if it is still registered somewhere
+            if obj.tile_x and obj.tile_y then
+                world:removeObjectFromTile(obj, obj.tile_x, obj.tile_y)
+            end
+
+            -- also ensure it doesn't remain positioned
+            obj:setTile(nil)
+
+            -- refund money
             room.hospital:refundObject(obj)
         end
     end
