@@ -221,13 +221,13 @@ end
 function Panel:setColour(col)
   self.colour = self.colour and TheApp.video:mapRGB(col.red, col.green, col.blue)
   self.highlight_colour = self.highlight_colour and TheApp.video:mapRGB(
-    sanitize(col.red + 40),
-    sanitize(col.green + 40),
-    sanitize(col.blue + 40))
+    sanitize(col.red + 60),
+    sanitize(col.green + 60),
+    sanitize(col.blue + 60))
   self.shadow_colour = self.shadow_colour and TheApp.video:mapRGB(
-    sanitize(col.red - 40),
-    sanitize(col.green - 40),
-    sanitize(col.blue - 40))
+    sanitize(col.red - 60),
+    sanitize(col.green - 60),
+    sanitize(col.blue - 60))
   self.disabled_colour = self.disabled_colour and TheApp.video:mapRGB(
     sanitize(math.floor((col.red + 100) / 2)),
     sanitize(math.floor((col.green + 100) / 2)),
@@ -472,14 +472,14 @@ features a highlight and a shadow that makes it appear either lowered or raised.
 ]]
 function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour, disabled_colour, lowered_colour, apply_ui_scale)
   highlight_colour = highlight_colour or {
-    red = sanitize(colour.red + 40),
-    green = sanitize(colour.green + 40),
-    blue = sanitize(colour.blue + 40),
+    red = sanitize(colour.red + 60),
+    green = sanitize(colour.green + 60),
+    blue = sanitize(colour.blue + 60),
   }
   shadow_colour = shadow_colour or {
-    red = sanitize(colour.red - 40),
-    green = sanitize(colour.green - 40),
-    blue = sanitize(colour.blue - 40),
+    red = sanitize(colour.red - 60),
+    green = sanitize(colour.green - 60),
+    blue = sanitize(colour.blue - 60),
   }
   disabled_colour = disabled_colour or {
     red = sanitize(math.floor((colour.red + 100) / 2)),
