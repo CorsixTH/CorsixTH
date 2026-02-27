@@ -286,7 +286,7 @@ Colours.Green = {
   red = 000, green = 255, blue = 000
 }
 Colours.Blue = {
-  red = 000, green = 000, blue = 000
+  red = 000, green = 000, blue = 255
 }
 
 -- Compare values of two simple (non-nested) tables
