@@ -249,43 +249,43 @@ AnimationEffect.None = 0
 AnimationEffect.Glowing = 1
 AnimationEffect.Jelly = 2
 
--- Predefined colours
-Colours = {}
-Colours.Default = { -- CorsixTH's default panel colour (pale purple)
+-- Predefined colours for panels (such as backgrounds, buttons, bevels etc)
+PanelColour = {}
+PanelColour.Default = { -- CorsixTH's default panel colour (pale purple)
   red = 154, green = 146, blue = 198
 }
-Colours.Disabled = { -- Grey
+PanelColour.Disabled = { -- Grey
   red = 127, green = 123, blue = 149
 }
-Colours.Setting = { -- Purple
+PanelColour.Setting = { -- Purple
   red = 081, green = 076, blue = 150
 }
-Colours.SettingActive = { -- Deep purple
+PanelColour.SettingActive = { -- Deep purple
   red = 041, green = 036, blue = 090
 }
-Colours.Title = { -- Pale purple
+PanelColour.Title = { -- Pale purple
   red = 174, green = 166, blue = 218
 }
-Colours.Caption = { -- Murky purple
+PanelColour.Caption = { -- Murky purple
   red = 134, green = 126, blue = 178
 }
-Colours.Textbox = { -- Black
+PanelColour.Textbox = { -- Black
   red = 000, green = 000, blue = 000
 }
 -- Include the standard colours also
-Colours.White = {
+PanelColour.White = {
   red = 255, green = 255, blue = 255
 }
-Colours.Black = {
+PanelColour.Black = {
   red = 000, green = 000, blue = 000
 }
-Colours.Red = {
+PanelColour.Red = {
   red = 255, green = 000, blue = 000
 }
-Colours.Green = {
+PanelColour.Green = {
   red = 000, green = 255, blue = 000
 }
-Colours.Blue = {
+PanelColour.Blue = {
   red = 000, green = 000, blue = 255
 }
 

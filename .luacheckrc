@@ -23,11 +23,11 @@ self = false
 globals = { -- Globals
             "_A", "_S",
             "corsixth",
-            "class", "Colours", "compare_tables", "DrawFlags",
+            "class", "compare_tables", "DrawFlags",
             "DrawingLayers", "destrict", "flag_clear", "flag_isset",
             "flag_set", "flag_toggle", "lfs", "list_to_set",
             "loadfile_envcall", "loadstring_envcall",
-            "pause_gc_and_use_weak_keys", "permanent",
+            "pause_gc_and_use_weak_keys", "PanelColour", "permanent",
             "rangeMapLookup", "rnc", "strict_declare_global",
             "table_length", "unpermanent", "values", "serialize",
             "array_join", "shallow_clone", "staff_initials_cache",
