@@ -93,13 +93,18 @@ function Handyman:afterLoad(old, new)
   Staff.afterLoad(self, old, new)
 end
 
+function Handyman:onPickup()
+  self:interruptHandymanTask()
+  Staff.onPickup(self)
+end
+
 function Handyman:interruptHandymanTask()
   self:setDynamicInfoText("")
   if self.on_call then
     self.on_call.assigned = nil
     self.on_call = nil
   end
-  self.task = nil
+  self:unassignTask()
   self:setNextAction(AnswerCallAction())
 end
 
