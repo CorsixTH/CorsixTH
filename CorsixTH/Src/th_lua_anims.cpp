@@ -625,7 +625,7 @@ int l_anim_draw(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
   int x = static_cast<int>(luaL_checkinteger(L, 3));
   int y = static_cast<int>(luaL_checkinteger(L, 4));
-  pAnimation->draw(pCanvas, {x, y});
+  pAnimation->draw_fn(pCanvas, {x, y});
 
   lua_settop(L, 1);
   return 1;
