@@ -1750,25 +1750,15 @@ end
 
 --! Compute average of an attribute for all patients in the hospital.
 --!param attribute (str) Name of the attribute.
---!param default_value Value to return if there are no patients.
---!return Average value of the attribute for all hospital patients, or the default value.
-function Hospital:getAveragePatientAttribute(attribute, default_value)
-  local sum = 0
-  local count = 0
-  for _, patient in ipairs(self.patients) do
-    local tx, ty = patient.tile_x, patient.tile_y
-    -- Some patients (i.e. Alien) may not have the attribute in question, so check for that
-    if tx and ty and self:isInHospital(tx, ty) and patient.attributes[attribute] then
-      sum = sum + patient.attributes[attribute]
-      count = count + 1
-    end
-  end
+--!param default_value Value to return if there are not enough patients.
+--!param min_count (number) Minimal number of sampled patients, 4 by default.
+--!return Average value of the attribute for all hospital patients, compensated
+--  towards the default if there are not enough patients in the hospital.
+function Hospital:getAveragePatientAttribute(attribute, default_value, min_count)
+  if type(min_count) ~= "number" or min_count < 1 then min_count = 4 end
 
-  if count == 0 then
-    return default_value
-  else
-    return sum / count
-  end
+  return self:_getAverageHumanoidsAttribute(self.patients, attribute, default_value,
+      min_count)
 end
 
 --! Compute average of an attribute for all staff in the hospital.
@@ -1776,16 +1766,49 @@ end
 --!param default_value Value to return if there is no staff.
 --!return Average value of the attribute for all staff, or the default value.
 function Hospital:getAverageStaffAttribute(attribute, default_value)
+  return self:_getAverageHumanoidsAttribute(self.staff, attribute, default_value, 1)
+end
+
+--! Compute average of an attribute for all given humanoids.
+--!param humanoids The collection of humanoids to query.
+--!param attribute (str) Name of the attribute.
+--!param default_value (any type) Value to return if there are not enough humanoids.
+--!param min_count (number) Minimal number of sampled humanoids required, 4 by
+--  default. If less humanoids are available than the minimal count, additional
+--  fake humanoids are 'counted' with the default value of the attribute if
+--  possible. Use 1 as min_count to avoid compensating.
+--!return Average value of the attribute for all humanoids, possibly compensated
+--  towards the default if there are not enough humanoids in the hospital.
+function Hospital:_getAverageHumanoidsAttribute(humanoids, attribute,
+    default_value, min_count)
+  assert(type(min_count) == "number" and min_count >= 1)
+
+  -- Sum the attribute for all humanoids.
   local sum = 0
   local count = 0
-  for _, staff in ipairs(self.staff) do
-    if staff.attributes[attribute] then
-      sum = sum + staff.attributes[attribute]
+  for _, hum in ipairs(humanoids) do
+    local tx, ty = hum.tile_x, hum.tile_y
+    -- Skip counting the humanoid if they don't have the attribute (eg Alien).
+    if tx and ty and self:isInHospital(tx, ty) and hum.attributes[attribute] then
+      sum = sum + hum.attributes[attribute]
       count = count + 1
     end
   end
 
-  return count == 0 and default_value or sum / count
+  -- Handle compensation for not enough humanoids.
+  if count < min_count then
+    -- Skip compensating if the default is not a number.
+    if type(default_value) ~= "number" then return default_value end
+
+    -- Add fake humanoids until the min_count is satisfied. This gives a more
+    -- gradual change towards the real average as more humanoids become available.
+    while count < min_count do
+      sum = sum + default_value
+      count = count + 1
+    end
+  end
+
+  return sum / count
 end
 
 --! Checks if the requirements for the given disease are met in the hospital and returns the ones missing.
