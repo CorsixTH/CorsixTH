@@ -107,7 +107,6 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
   end
 end)
 
-local flag_list_bottom = 2048
 local flag_flip_h = 1
 
 local navigateDoor
@@ -350,25 +349,25 @@ navigateDoor = function(humanoid, x1, y1, dir)
 
   local duration, direction
   if dir == "north" then
-    humanoid:setAnimation(leaving, flag_list_bottom)
+    humanoid:setAnimation(leaving)
     duration = TheApp.animation_manager:getAnimLength(leaving)
     to_x, to_y = dx, dy - 1
     direction = "in"
 
   elseif dir == "west" then
-    humanoid:setAnimation(leaving, flag_list_bottom + flag_flip_h)
+    humanoid:setAnimation(leaving, flag_flip_h)
     duration = TheApp.animation_manager:getAnimLength(leaving)
     to_x, to_y = dx - 1, dy
     direction = "in"
 
   elseif dir == "east" then
-    humanoid:setAnimation(entering, flag_list_bottom)
+    humanoid:setAnimation(entering)
     duration = TheApp.animation_manager:getAnimLength(entering)
     to_x, to_y = dx, dy
     direction = "out"
 
   elseif dir == "south" then
-    humanoid:setAnimation(entering, flag_list_bottom + flag_flip_h)
+    humanoid:setAnimation(entering, flag_flip_h)
     duration = TheApp.animation_manager:getAnimLength(entering)
     to_x, to_y = dx, dy
     direction = "out"

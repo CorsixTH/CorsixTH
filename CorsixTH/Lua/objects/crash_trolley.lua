@@ -88,7 +88,6 @@ object.orientations = {
       {0, 0, only_passable = true}, {0, 1, only_passable = true} },
     use_position = {-1, 1},
     use_position_secondary = {0, 0},
-    list_bottom = true,
   },
   east = {
     render_attach_position = { {0, 0}, {1, -1} },
@@ -96,7 +95,6 @@ object.orientations = {
       {1, -1, only_passable = true}, {1, 0, only_passable = true} },
     use_position = {1, -1},
     use_position_secondary = {0, 0},
-    list_bottom = true,
   },
 }
 
