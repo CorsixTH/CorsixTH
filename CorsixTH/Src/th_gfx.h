@@ -497,15 +497,21 @@ class animation : public animation_base {
   void set_parent(animation* parent_anim, bool use_primary);
 
   void tick();
-  void draw(render_target* canvas, const xy_pair& draw_pos);
+  void draw(render_target* canvas, const xy_pair& draw_pos, int8_t crop_base,
+            int8_t crop_width);
   void draw_morph(render_target* canvas, const xy_pair& draw_pos);
   void draw_child(render_target* canvas, const xy_pair& draw_pos,
                   bool use_primary);
 
   void draw_fn(render_target* canvas, const xy_pair& draw_pos) override {
+    internal_draw(canvas, draw_pos, crop_base, crop_width);
+  }
+
+  void internal_draw(render_target* canvas, const xy_pair& draw_pos,
+                     int8_t crop_base, int8_t crop_width) {
     switch (anim_kind) {
       case animation_kind::normal:
-        draw(canvas, draw_pos);
+        draw(canvas, draw_pos, crop_base, crop_width);
         return;
       case animation_kind::primary_child:
         draw_child(canvas, draw_pos, true);

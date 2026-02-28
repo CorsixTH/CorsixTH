@@ -1182,7 +1182,8 @@ bool are_flags_set(uint32_t val, uint32_t flags) {
 
 animation::animation() { patient_effect_offset = rand(); }
 
-void animation::draw(render_target* canvas, const xy_pair& draw_pos) {
+void animation::draw(render_target* canvas, const xy_pair& draw_pos,
+                     int8_t crop_base, int8_t crop_width) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
 
   int x = draw_pos.x + pixel_offset.x;
