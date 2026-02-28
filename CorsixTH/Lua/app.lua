@@ -1102,7 +1102,7 @@ function App:saveConfig()
           handled_ids[identifier] = true
           if value ~= tostring(self.config[identifier]) then
             lines[#lines] = string.format("%s = %s", identifier,
-                serialize(self.config[identifier], { long_bracket_level_start = 1 } ))
+                serialize(self.config[identifier], { long_bracket_level_start = 0 } ))
           end
         end
       end
