@@ -488,7 +488,7 @@ tooltip.folders_window = {
   no_font_specified = "Non è stata ancora specificata nessuna posizione per il font!",
   not_specified = "Non è stato ancora specificato nessun percorso per la cartella!",
   default = "Posizione di default",
-  reset_to_default = "Ripristina la cartella al suo percorso originario",
+  reset_to_default = "Ripristina la cartella al suo percorso originario ( %1% )",
   back  = "Chiudi questo menù e torna al menù delle impostazioni",
 }
 
