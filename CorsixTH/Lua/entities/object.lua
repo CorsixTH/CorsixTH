@@ -75,9 +75,6 @@ function Object:initOrientation(direction)
   if footprint and footprint.early_list then
     flags = flags + 1024
   end
-  if footprint and footprint.list_bottom then
-    flags = flags + 2048
-  end
   local rap = footprint and footprint.render_attach_position
   if rap and rap[1] and type(rap[1]) == "table" then
     self.split_anims = {self.th}

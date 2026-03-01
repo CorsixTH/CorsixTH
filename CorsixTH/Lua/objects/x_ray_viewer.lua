@@ -44,13 +44,11 @@ object.orientations = {
     footprint = {
       {0, 0, need_west_side = true },
     },
-    list_bottom = true,
   },
   east = {
     footprint = {
       {0, 0, need_north_side = true},
     },
-    list_bottom = true,
     early_list = true,
   },
 }
