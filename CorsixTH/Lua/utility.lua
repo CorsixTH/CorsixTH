@@ -254,7 +254,7 @@ PanelColour = {}
 PanelColour.Default = { -- CorsixTH's default panel colour (pale purple)
   red = 154, green = 146, blue = 198
 }
-PanelColour.Disabled = { -- Grey
+PanelColour.Disabled = { -- Specific grey with purplish aspect
   red = 127, green = 123, blue = 149
 }
 PanelColour.Setting = { -- Purple
