@@ -217,8 +217,9 @@ end
 --[[ Set the colour of a panel
 ! Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
 !param col (table) Colour given as a table with three fields red, green and blue, each an integer value in [0, 255].
+!param preserve_disable (boolean) If true, do not adjust the panel's disabled colour.
 ]]
-function Panel:setColour(col)
+function Panel:setColour(col, preserve_disable)
   self.colour = self.colour and TheApp.video:mapRGB(col.red, col.green, col.blue)
   self.highlight_colour = self.highlight_colour and TheApp.video:mapRGB(
     sanitize(col.red + 60),
@@ -228,6 +229,7 @@ function Panel:setColour(col)
     sanitize(col.red - 60),
     sanitize(col.green - 60),
     sanitize(col.blue - 60))
+  if preserve_disable then return self end
   self.disabled_colour = self.disabled_colour and TheApp.video:mapRGB(
     sanitize(math.floor((col.red + 100) / 2)),
     sanitize(math.floor((col.green + 100) / 2)),
