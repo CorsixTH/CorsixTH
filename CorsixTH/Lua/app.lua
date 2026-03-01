@@ -1010,7 +1010,7 @@ end
 
 function App:fixConfig()
   -- Fill in default values for things which don't exist
-  local config_defaults = select(3, corsixth.require("config_finder"))
+  local config_defaults = corsixth.require("config_finder").config_defaults
   for k, v in pairs(config_defaults) do
     if self.config[k] == nil then
       self.config[k] = v
@@ -1153,7 +1153,7 @@ end
 
 function App:fixHotkeys()
   -- Fill in default values for things which don't exist
-  local hotkeys_defaults = select(6, corsixth.require("config_finder"))
+  local hotkeys_defaults = corsixth.require("config_finder").hotkeys_defaults
 
   for k, v in pairs(hotkeys_defaults) do
     if self.hotkeys[k] == nil then
@@ -1510,7 +1510,7 @@ function App:checkInstallFolder()
       user_dir,
       user_dir and (user_dir .. pathsep .. "Documents"),
       win_home_dir,
-      select(1, corsixth.require("config_finder")):match("(.*[/\\])"):sub(1, -2),
+      corsixth.require("config_finder").config_filename:match("(.*[/\\])"):sub(1, -2),
       mac_app_dir,
       mac_app_dir and mac_app_dir:match("(.*)/.*%.app"),
       "/Applications/Theme Hospital.app/Contents/Resources/game/Theme Hospital.app/" ..
