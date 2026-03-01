@@ -248,6 +248,46 @@ AnimationEffect.None = 0
 AnimationEffect.Glowing = 1
 AnimationEffect.Jelly = 2
 
+-- Predefined colours for panels (such as backgrounds, buttons, bevels etc)
+PanelColour = {}
+PanelColour.Default = { -- CorsixTH's default panel colour (pale purple)
+  red = 154, green = 146, blue = 198
+}
+PanelColour.Disabled = { -- Specific grey with purplish aspect
+  red = 127, green = 123, blue = 149
+}
+PanelColour.Setting = { -- Purple
+  red = 081, green = 076, blue = 150
+}
+PanelColour.SettingActive = { -- Deep purple
+  red = 041, green = 036, blue = 090
+}
+PanelColour.Title = { -- Pale purple
+  red = 174, green = 166, blue = 218
+}
+PanelColour.Caption = { -- Murky purple
+  red = 134, green = 126, blue = 178
+}
+PanelColour.Textbox = { -- Black
+  red = 000, green = 000, blue = 000
+}
+-- Include the standard colours also
+PanelColour.White = {
+  red = 255, green = 255, blue = 255
+}
+PanelColour.Black = {
+  red = 000, green = 000, blue = 000
+}
+PanelColour.Red = {
+  red = 255, green = 000, blue = 000
+}
+PanelColour.Green = {
+  red = 000, green = 255, blue = 000
+}
+PanelColour.Blue = {
+  red = 000, green = 000, blue = 255
+}
+
 -- Compare values of two simple (non-nested) tables
 function compare_tables(t1, t2)
   local count1 = 0
