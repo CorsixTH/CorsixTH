@@ -2799,7 +2799,6 @@ function World:canMoveRoomTo(room, new_x, new_y)
     -- Iterate over every tile the room would occupy at its new position
     for tileX = new_x, new_x + room.width - 1 do
         for tileY = new_y, new_y + room.height - 1 do
-
             -- Verify if a humanoid(character) is on the new position
             local humanoids = self.entity_map:getHumanoidsAtCoordinate(tileX, tileY)
             if humanoids and #humanoids > 0 then
@@ -2846,8 +2845,7 @@ end
 --!param directionY (integer) Y offset.
 function World:moveRoom(room, directionX, directionY)
     local map  = self.map.th
-    local new_x = room.x + directionX
-    local new_y = room.y + directionY
+    local new_x, new_y = (room.x + directionX), (room.y + directionY)
 
     if not self:canMoveRoomTo(room, new_x, new_y) then
         return -- Get out of the function if the room can't move
@@ -2868,8 +2866,7 @@ function World:moveRoom(room, directionX, directionY)
     end
     
     -- Finaly we will change the location of the room with the new position
-    room.x = new_x
-    room.y = new_y
+    room.x, room.y = new_x, new_y
     
     map:markRoom(new_x, new_y, room.width, room.height,
             room.room_info.floor_tile, room.id)
@@ -2886,8 +2883,7 @@ function World:moveRoom(room, directionX, directionY)
     
     -- Will put the door back to the same location as the old location
     if room.door then
-        local door_rel_x = room.door.tile_x - (room.x - directionX)  -- relative to OLD origin
-        local door_rel_y = room.door.tile_y - (room.y - directionY)
+        local door_rel_x, door_rel_y = (room.door.tile_x - (room.x - directionX)), (room.door.tile_y - (room.y - directionY))  -- relative to OLD origin
         room.door:setTile(room.x + door_rel_x, room.y + door_rel_y)
     end
     
@@ -2944,8 +2940,7 @@ function World:_remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, 
     -- The fun part, n_steps will depend on the with or the height of the room
     for _ = 1, n_steps do
         local existing = map:getCell(x, y, layer) -- get the cell id
-        local set = self:getWallSetFromBlockId(existing) -- type of wall
-        local dir = self:getWallDirFromBlockId(existing) -- direction north-east-etc..
+        local set, dir = self:getWallSetFromBlockId(existing), self:getWallDirFromBlockId(existing) -- type and direction of wall
 
         if set and dir then
             -- Save the last wall we take
@@ -2972,8 +2967,7 @@ function World:_remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, 
             end
         end
 
-        x = x + step_x
-        y = y + step_y
+        x, y = (x + step_x), (y + step_y)
     end
 end
 
@@ -2993,7 +2987,7 @@ function World:rebuildEntityMap()
     end
 end
 
--- Affiche une fenêtre d'info/erreur sans arrêter le jeu
+-- Show a error custom message just to alert the player
 function World:showError(message)
     if not (self.ui and self.ui.addWindow) then return end
     self.ui:addWindow(UIInformation(self.ui, { message }))

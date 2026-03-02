@@ -35,7 +35,6 @@ function UIMoveRoom:UIMoveRoom(ui, room)
   self.ui = ui
   self.world = ui.app.world
   self.world.mode_deplacement = true
-  self.preview_color = {r = 0, g = 255, b = 255, a = 120}
   
   self.preview_anim = TH.animation()
   self.preview_anim:setAnimation(ui.app.anims, room.room_info.build_preview_animation or room.room_info.build_preview)
@@ -43,28 +42,10 @@ function UIMoveRoom:UIMoveRoom(ui, room)
   self.room = room
   
   -- Store original position if cancel
-  self.origin_x = room.x
-  self.origin_y = room.y
+  self.origin_x, self.origin_y = room.x, room.y
 
   -- Current position (follows cursor)
-  self.target_x = room.x
-  self.target_y = room.y
-    
-  self._old_speed = nil
-  pcall(function()
-      if ui.app.getGameSpeed then
-          self._old_speed = ui.app:getGameSpeed()
-      end
-  end)
-  pcall(function()
-      if ui.app.setGameSpeed then
-          ui.app:setGameSpeed(0)
-      elseif ui.app.setSpeed then
-          ui.app:setSpeed(0)
-      elseif ui.app.pause then
-          ui.app:pause()
-      end
-  end)
+  self.target_x, self.target_y = room.x, room.y
   
   self.lifted_objects = self:_liftObjects()
     
@@ -144,10 +125,8 @@ end
 
 --! Validates the position, moves room tiles, then replaces or refunds objects.
 function UIMoveRoom:_applyMove(new_x, new_y)
-    local room  = self.room
-    local world = self.world
-    local direction_X = new_x - self.origin_x
-    local direction_Y = new_y - self.origin_y
+    local room, world  = self.room, self.world
+    local direction_X, direction_Y = (new_x - self.origin_x), (new_y - self.origin_y)
 
     if direction_X == 0 and direction_Y == 0 then
         self:_restoreObjects(self.origin_x, self.origin_y)
@@ -163,38 +142,21 @@ function UIMoveRoom:_applyMove(new_x, new_y)
         local ny = room.y + entry.rel_y
 
         if world:getRoom(nx, ny) == room then
-            -- 0) Safety: detach if still registered somewhere
-            if obj.tile_x and obj.tile_y then
-                world:removeObjectFromTile(obj, obj.tile_x, obj.tile_y)
-            end
-
-            -- 1) Direction first
             obj.direction = entry.direction
-
-            -- 2) Place on map
             obj:setTile(nx, ny)
             world:addObjectToTile(obj, nx, ny)
-
-            -- 3) Re-attach to room ownership
             room.objects[obj] = true    
         else
-            -- IMPORTANT: ne pas laisser un objet "sans tile" dans room.objects
             room.objects[obj] = nil
-            
             if entry.old_x and entry.old_y then
                 obj:setTile(entry.old_x, entry.old_y)
                 world:addObjectToTile(obj, entry.old_x, entry.old_y)
             end
-
             -- remove from the tile list if it is still registered somewhere
             if obj.tile_x and obj.tile_y then
                 world:removeObjectFromTile(obj, obj.tile_x, obj.tile_y)
             end
-
-            -- also ensure it doesn't remain positioned
             obj:setTile(nil)
-
-            -- refund money
             room.hospital:refundObject(obj)
         end
     end
@@ -216,8 +178,7 @@ end
 function UIMoveRoom:_restoreObjects(base_x, base_y)
   for _, entry in ipairs(self.lifted_objects) do
     local obj = entry.object
-    local relative_X = base_x + entry.rel_x
-    local relative_Y = base_y + entry.rel_y
+    local relative_X, relative_Y = (base_x + entry.rel_x), (base_y + entry.rel_y)
     obj:setTile(relative_X, relative_Y)
     self.world:addObjectToTile(obj, relative_X, relative_Y)
   end
@@ -231,17 +192,6 @@ end
 
 ---! Common cleanup: restore cursor and close this dialog.
 function UIMoveRoom:_cleanup()
-    pcall(function()
-        if self._old_speed ~= nil then
-            if self.ui.app.setGameSpeed then
-                self.ui.app:setGameSpeed(self._old_speed)
-            elseif self.ui.app.setSpeed then
-                self.ui.app:setSpeed(self._old_speed)
-            end
-        elseif self.ui.app.unpause then
-            self.ui.app:unpause()
-        end
-    end)
   self.ui:setCursor(self.ui.default_cursor)
   self.world.mode_deplacement = false;
   self:close()
