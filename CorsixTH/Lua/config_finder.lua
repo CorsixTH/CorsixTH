@@ -18,9 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local config_path, config_name, config_data
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
+
+local serialize = serialize -- from utility
+
 local function pathconcat(a, b)
   if a:sub(-1) == pathsep then
     return a .. b
@@ -29,62 +31,63 @@ local function pathconcat(a, b)
   end
 end
 
--- Decide on a sensible place to put config.txt, etc.
-if pathsep == "\\" then
-  -- Windows
-  config_path = os.getenv("AppData") or ourpath
-else
-  -- Linux, OS X, etc.
-  config_path = os.getenv("XDG_CONFIG_HOME") or pathconcat(os.getenv("HOME") or "~", ".config")
-end
-if config_path ~= ourpath then
-  config_path = pathconcat(config_path, "CorsixTH")
-end
-
--- Config filename.
-config_name = "config.txt"
-
--- Check for config.path.txt
-local fi = io.open(pathconcat(ourpath, "config.path.txt"), "r")
-if fi then
-  local contents = fi:read("*a")
-  contents = contents:match("^%s*(.-)%s*$")
-  fi:close()
-  if #contents ~= 0 then
-    config_path = contents
-    if config_path:sub(-4, -1):lower() == ".txt" then
-      config_name = config_path:match("([^" .. pathsep .. "]*)$")
-      config_path = config_path:sub(1, -1-#config_name)
-    end
-  end
-end
-
--- Check / create config_path
-local lfs = require("lfs")
-local function check_dir_exists(path)
-  if path:sub(-1) == pathsep then
-    path = path:sub(1, -2)
-  end
-  if lfs.attributes(path, "mode") == "directory" then
-    return true
+local function find_config()
+  local config_path
+  -- Decide on a sensible place to put config.txt, etc.
+  if pathsep == "\\" then
+    -- Windows
+    config_path = os.getenv("AppData") or ourpath
   else
-    local subpath = path:match("^(.*)[" .. pathsep .. "]")
-    if subpath then
-      return check_dir_exists(subpath) and lfs.mkdir(path)
-    else
-      return false
+    -- Linux, OS X, etc.
+    config_path = os.getenv("XDG_CONFIG_HOME") or pathconcat(os.getenv("HOME") or "~", ".config")
+  end
+  if config_path ~= ourpath then
+    config_path = pathconcat(config_path, "CorsixTH")
+  end
+
+  -- Config filename.
+  local config_name = "config.txt"
+
+  -- Check for config.path.txt
+  local fi = io.open(pathconcat(ourpath, "config.path.txt"), "r")
+  if fi then
+    local contents = fi:read("*a")
+    contents = contents:match("^%s*(.-)%s*$")
+    fi:close()
+    if #contents ~= 0 then
+      config_path = contents
+      if config_path:sub(-4, -1):lower() == ".txt" then
+        config_name = config_path:match("([^" .. pathsep .. "]*)$")
+        config_path = config_path:sub(1, -1-#config_name)
+      end
     end
   end
-end
-if not check_dir_exists(config_path) then
-  config_path = ourpath
+
+  -- Check / create config_path
+  local lfs = require("lfs")
+  local function check_dir_exists(path)
+    if path:sub(-1) == pathsep then
+      path = path:sub(1, -2)
+    end
+    if lfs.attributes(path, "mode") == "directory" then
+      return true
+    else
+      local subpath = path:match("^(.*)[" .. pathsep .. "]")
+      if subpath then
+        return check_dir_exists(subpath) and lfs.mkdir(path)
+      else
+        return false
+      end
+    end
+  end
+  if not check_dir_exists(config_path) then
+    config_path = ourpath
+  end
+
+  return pathconcat(config_path, config_name), config_path, config_name
 end
 
--- Config file with full path as string.
-local config_filename = pathconcat(config_path, config_name)
-
--- Create config.txt if it doesn't exist
-local config_defaults = {
+local function new_config_defaults()
   --[[
   All the folders settings have default paths that likely do not exist.
   When adding new fields, please try and keep the end results user friendly.
@@ -93,107 +96,167 @@ local config_defaults = {
   for the config as it this is where it always ends up when the file is recreated.
   The following list is in the same order.
   ]]
-  fullscreen = false,
-  width = 800,
-  height = 600,
-  ui_scale = 1,
-  language = [[English]],
-  audio = true,
-  free_build_mode = false,
-  play_sounds = true,
-  sound_volume = 0.5,
-  play_announcements = true,
-  announcement_volume = 0.5,
-  play_music = true,
-  music_volume = 0.5,
-  prevent_edge_scrolling = false,
-  capture_mouse = true,
-  right_mouse_scrolling = false,
-  adviser_disabled = false,
-  scrolling_momentum = 0.8,
-  twentyfour_hour_clock = true,
-  warmth_colors_display_default = 1,
-  grant_wage_increase = false,
-  movies = true,
-  play_intro = true,
-  play_demo = true,
-  allow_user_actions_while_paused = false,
-  volume_opens_casebook = false,
-  alien_dna_only_by_emergency = true,
-  alien_dna_must_stand = true,
-  alien_dna_can_knock_on_doors = false,
-  disable_fractured_bones_females = true,
-  enable_avg_contents = false,
-  remove_destroyed_rooms = false,
-  machine_menu_button = true,
-  enable_screen_shake = true,
-  enable_announcer_subtitles = false,
-  autosave_frequency = 1,
-  audio_frequency = 22050,
-  audio_channels = 2,
-  audio_buffer_size = 2048,
-  midi_api = nil,
-  midi_port = nil,
-  midi_sysex_master_volume = false,
-  theme_hospital_install = [[X:\ThemeHospital\hospital]],
-  debug = false,
-  track_fps = false,
-  zoom_speed = 80,
-  scroll_speed = 2,
-  shift_scroll_speed = 4,
-  new_graphics_folder = nil,
-  use_new_graphics = false,
-  check_for_updates = true,
-  room_information_dialogs = true,
-  allow_blocking_off_areas = false,
-  direct_zoom = nil,
-  new_machine_extra_info = true,
-  player_name = [[]],
-}
-
--- For the windows template, restore the values that will be replaced during the install process
-if not TheApp then
-  config_defaults.fullscreen = [[SCREEN_FULLSCREEN]]
-  config_defaults.width = [[SCREEN_SIZE_WIDTH]]
-  config_defaults.height = [[SCREEN_SIZE_HEIGHT]]
-  config_defaults.language = [[LANGUAGE_CHOSEN]]
-  config_defaults.theme_hospital_install = [[ORIGINAL_HOSPITAL_DIRECTORY]]
-else
-  fi = io.open(config_filename, "r")
+  return {
+    fullscreen = false,
+    width = 800,
+    height = 600,
+    ui_scale = 1,
+    language = [[English]],
+    audio = true,
+    free_build_mode = false,
+    play_sounds = true,
+    sound_volume = 0.5,
+    play_announcements = true,
+    announcement_volume = 0.5,
+    play_music = true,
+    music_volume = 0.5,
+    prevent_edge_scrolling = false,
+    capture_mouse = true,
+    right_mouse_scrolling = false,
+    adviser_disabled = false,
+    scrolling_momentum = 0.8,
+    twentyfour_hour_clock = true,
+    warmth_colors_display_default = 1,
+    grant_wage_increase = false,
+    movies = true,
+    play_intro = true,
+    play_demo = true,
+    allow_user_actions_while_paused = false,
+    volume_opens_casebook = false,
+    alien_dna_only_by_emergency = true,
+    alien_dna_must_stand = true,
+    alien_dna_can_knock_on_doors = false,
+    disable_fractured_bones_females = true,
+    enable_avg_contents = false,
+    remove_destroyed_rooms = false,
+    machine_menu_button = true,
+    enable_screen_shake = true,
+    enable_announcer_subtitles = false,
+    autosave_frequency = 1,
+    audio_frequency = 22050,
+    audio_channels = 2,
+    audio_buffer_size = 2048,
+    midi_api = nil,
+    midi_port = nil,
+    midi_sysex_master_volume = false,
+    theme_hospital_install = [[X:\ThemeHospital\hospital]],
+    debug = false,
+    track_fps = false,
+    zoom_speed = 80,
+    scroll_speed = 2,
+    shift_scroll_speed = 4,
+    new_graphics_folder = nil,
+    use_new_graphics = false,
+    check_for_updates = true,
+    room_information_dialogs = true,
+    allow_blocking_off_areas = false,
+    direct_zoom = nil,
+    new_machine_extra_info = true,
+    player_name = [[]],
+  }
 end
 
-local config_values = {}
-local needs_rewrite = false
-for key, value in pairs(config_defaults) do
-  config_values[key] = value
+-- Defaults for hotkeys.
+local function new_hotkeys_defaults()
+  return {
+    global_confirm = "return",
+    global_confirm_alt = "e",
+    global_cancel = "escape",
+    global_cancel_alt = "q",
+    global_fullscreen_toggle = {"alt", "return"},
+    global_exitApp = {"alt", "f4"},
+    global_resetApp = {"shift", "f10"},
+    global_releaseMouse = {"ctrl", "f10"},
+    global_showLuaConsole = "f12",
+    global_runDebugScript = {"shift", "d"},
+    global_screenshot = {"ctrl", "s"},
+    global_stop_movie = "escape",
+    global_stop_movie_alt = "q",
+    global_pause_movie = "p",
+    global_window_close = "escape",
+    global_window_close_alt = "q",
+    ingame_showmenubar = "escape",
+    ingame_showCheatWindow = "f11",
+    ingame_pause = "p",
+    ingame_gamespeed_slowest = "1",
+    ingame_gamespeed_slower = "2",
+    ingame_gamespeed_normal = "3",
+    ingame_gamespeed_max = "4",
+    ingame_gamespeed_thensome = "5",
+    ingame_gamespeed_speedup = "z",
+    ingame_scroll_up = "up",
+    ingame_scroll_down = "down",
+    ingame_scroll_left = "left",
+    ingame_scroll_right = "right",
+    ingame_scroll_shift = "shift",
+    ingame_zoom_in = "=",
+    ingame_zoom_in_more = {"shift", "="},
+    ingame_zoom_out = "-",
+    ingame_zoom_out_more = {"shift", "-"},
+    ingame_reset_zoom = "0",
+    ingame_setTransparent = "x",
+    ingame_toggleTransparent = {"shift", "x"},
+    ingame_toggleAdvisor = {"shift", "a"},
+    ingame_poopLog = {"ctrl", "d"},
+    ingame_poopStrings = {"ctrl", "t"},
+    ingame_toggleAnnouncements = {"alt", "a"},
+    ingame_toggleSounds = {"alt", "s"},
+    ingame_toggleMusic = {"alt", "m"},
+    ingame_panel_bankManager = "f1",
+    ingame_panel_bankStats = "f2",
+    ingame_panel_staffManage = "f3",
+    ingame_panel_townMap = "f4",
+    ingame_panel_casebook = "f5",
+    ingame_panel_research = "f6",
+    ingame_panel_status = "f7",
+    ingame_panel_charts = "f8",
+    ingame_panel_policy = "f9",
+    ingame_panel_machineMenu = "f10",
+    ingame_panel_map_alt = "t",
+    ingame_panel_research_alt = "r",
+    ingame_panel_casebook_alt = "c",
+    ingame_panel_casebook_alt02 = {"shift", "c"},
+    ingame_panel_buildRoom = "f",
+    ingame_panel_furnishCorridor = "g",
+    ingame_panel_editRoom = "v",
+    ingame_panel_hireStaff = "b",
+    ingame_loadMenu = {"shift", "l"},
+    ingame_saveMenu = {"shift", "s"},
+    ingame_restartLevel = {"shift", "r"},
+    ingame_quitLevel = {"shift", "q"},
+    ingame_quickSave = {"alt", "shift", "s"},
+    ingame_quickLoad = {"alt", "shift", "l"},
+    ingame_openFirstMessage = "m",
+    ingame_toggleInfo = "i",
+    ingame_jukebox = "j",
+    ingame_rotateobject = "space",
+    ingame_patient_gohome = "h",
+    ingame_storePosition_1 = {"alt", "1"},
+    ingame_storePosition_2 = {"alt", "2"},
+    ingame_storePosition_3 = {"alt", "3"},
+    ingame_storePosition_4 = {"alt", "4"},
+    ingame_storePosition_5 = {"alt", "5"},
+    ingame_storePosition_6 = {"alt", "6"},
+    ingame_storePosition_7 = {"alt", "7"},
+    ingame_storePosition_8 = {"alt", "8"},
+    ingame_storePosition_9 = {"alt", "9"},
+    ingame_storePosition_0 = {"alt", "0"},
+    ingame_recallPosition_1 = {"ctrl", "1"},
+    ingame_recallPosition_2 = {"ctrl", "2"},
+    ingame_recallPosition_3 = {"ctrl", "3"},
+    ingame_recallPosition_4 = {"ctrl", "4"},
+    ingame_recallPosition_5 = {"ctrl", "5"},
+    ingame_recallPosition_6 = {"ctrl", "6"},
+    ingame_recallPosition_7 = {"ctrl", "7"},
+    ingame_recallPosition_8 = {"ctrl", "8"},
+    ingame_recallPosition_9 = {"ctrl", "9"},
+    ingame_recallPosition_0 = {"ctrl", "0"},
+  }
 end
 
-if fi and TheApp then
-  -- Read all the values from the config file and put them in config_values. If at least one value is missing rewrite the configuration file.
-  -- Don't do this if this file is run from outside CorsixTH, ie generate_windows_config.lua
-  local file_contents = fi:read("*all")
-  fi:close()
-  for key, value in pairs(config_defaults) do
-    local ind = string.find(file_contents, "\n" .. "%s*" .. key .. "%s*=")
-    if not ind then
-      needs_rewrite = true
-    else
-      ind = ind + (string.find(file_contents, key, ind) - ind) + string.len(key)
-      ind = string.find(file_contents, "=", ind) + 1
-      if type(value) ~= "string" then
-        ind = string.find(file_contents, "[%a%d]", ind)
-        config_values[key] = string.sub(file_contents, ind, string.find(file_contents, "[ \n-]", ind + 1) - 1)
-      else
-        ind = string.find(file_contents, "[", ind + 1, true) + 1
-        config_values[key] = string.sub(file_contents, ind + 1, string.find(file_contents, "]", ind, true) - 1)
-      end
-    end
-  end
-else
-  needs_rewrite = true
-end
-
-local string_01 = [=[
+local function config_contents(config_values)
+  local parts = {}
+  parts[1] = [=[
 ------------------------- CorsixTH configuration file -------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
@@ -243,13 +306,14 @@ local string_01 = [=[
 --  Swedish               / sv / swe
 --  Ukrainian             / uk / ukr
 --]=] .. '\n' ..
-'language = [['.. config_values.language ..']]' .. '\n' .. [=[
+'language = ' .. serialize(config_values.language) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
 --]=] .. '\n' ..
-'audio = ' .. tostring(config_values.audio) .. '\n' .. [=[
+'audio = ' .. tostring(config_values.audio) .. '\n'
 
+parts[2] = [=[
 ------------------------------ CUSTOM GAME MENU -------------------------------
 -- These settings can also be changed from the opening menu screen
 -- in the custom games or new game menus
@@ -259,8 +323,9 @@ local string_01 = [=[
 -- You also don't have to worry about money.
 -- This setting does not apply to any of the campaign maps.
 --]=] .. '\n' ..
-'free_build_mode = ' .. tostring(config_values.free_build_mode) .. '\n' .. [=[
+'free_build_mode = ' .. tostring(config_values.free_build_mode) .. '\n'
 
+parts[3] = [=[
 --------------------------------- OPTIONS MENU --------------------------------
 --These settings can also be changed from within the game from the options menu
 -------------------------------------------------------------------------------
@@ -331,11 +396,11 @@ local string_01 = [=[
 -- This specifies which display method is set for warmth colours by default.
 -- Possible values: 1 (Red), 2 (Blue Green Red) and 3 (Yellow Orange Red).
 --]=] .. '\n' ..
-'warmth_colors_display_default = ' .. tostring(config_values.warmth_colors_display_default) .. '\n' .. [=[
+'warmth_colors_display_default = ' .. tostring(config_values.warmth_colors_display_default) .. '\n'
 
+parts[4] = [=[
 ------------------------------ CUSTOMISE SETTINGS -----------------------------
 -- These settings can also be changed from the Customise Menu
-
 -------------------------------------------------------------------------------
 -- Wage increase request settings.
 -- If set to true when wage increase requests expire automatically grant them
@@ -430,10 +495,9 @@ local string_01 = [=[
 -- This way your autosaves folder can grow to 300-500 MB with daily autosaves.
 -- Set 1 for Monthly, 2 for Weekly, 3 for Daily autosaves.
 --]=] .. '\n' ..
-'autosave_frequency = ' .. tostring(config_values.autosave_frequency) .. '\n' .. [=[]=]
+'autosave_frequency = ' .. tostring(config_values.autosave_frequency) .. '\n'
 
-local string_02 = [=[
-
+  parts[5] = [=[
 ------------------------------- FOLDER SETTINGS -------------------------------
 -- These settings can also be changed from the Folders Menu
 -------------------------------------------------------------------------------
@@ -443,22 +507,22 @@ local string_02 = [=[
 -- the Theme Hospital demo, though a full install of the original game is
 -- preferred.
 --]=] .. '\n' ..
-'theme_hospital_install = [[' .. config_values.theme_hospital_install ..']]' .. '\n' .. [=[
+'theme_hospital_install = ' .. (config_values.theme_hospital_install and serialize(config_values.theme_hospital_install) or 'nil -- [[X:\\ThemeHospital]]') .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Font file setting. Can be changed from main game menu
 -- Specify a font file here if you wish to play the game in a language not
 -- present in the original game. Examples include Russian, Chinese and Polish.
---
-unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
+--]=] .. '\n' ..
+'unicode_font = ' .. (config_values.unicode_font and serialize(config_values.unicode_font) or 'nil -- [[X:\\ThemeHospital\\font.ttc]]') .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Savegames. By default, the "Saves" directory alongside this config file will
 -- be used for storing saved games in. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
---
-savegames = nil -- [[X:\ThemeHospital\Saves]]
+--]=] .. '\n' ..
+'savegames = ' .. (config_values.savegames and serialize(config_values.savegames) or 'nil -- [[X:\\ThemeHospital\\Saves]]') .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Levels and Campaigns. By default, the "Levels" and "Campaigns" directory next to
@@ -466,15 +530,16 @@ savegames = nil -- [[X:\ThemeHospital\Saves]]
 -- this is not suitable, then uncomment the following lines, and point it to a directory
 -- which exists and is more suitable.
 -- Note: Newly created maps in the Map Editor go into the "Levels" folder currently.
---
-levels = nil -- [[X:\ThemeHospital\Levels]]
-campaigns = nil -- [[X:\ThemeHospital\Campaigns]]
+--]=] .. '\n' ..
+'levels = ' .. (config_values.levels and serialize(config_values.levels) or 'nil -- [[X:\\ThemeHospital\\Levels]]') .. '\n' ..
+'campaigns = ' .. (config_values.campaigns and serialize(config_values.campaigns) or 'nil -- [[X:\\ThemeHospital\\Campaigns]]') .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital
 -- or use new graphics created by the CorsixTH project.
 -- Developer use only, otherwise the game will very likely crash in normal use
-use_new_graphics = false
+--]=] .. '\n' ..
+'use_new_graphics = ' .. tostring(config_values.use_new_graphics) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Graphics folder. All graphics are initially taken from the original
@@ -483,15 +548,16 @@ use_new_graphics = false
 -- will be used if you just switch on new graphics. If you however have
 -- acquired graphics from somewhere else, then uncomment the following line
 -- and point it to the directory which contains the new graphics.
-new_graphics_folder = nil -- [[X:\ThemeHospital\Graphics]]
+--]=] .. '\n' ..
+'new_graphics_folder = ' .. (config_values.new_graphics_folder and serialize(config_values.new_graphics_folder) or 'nil -- [[X:\\ThemeHospital\\Graphics]]') .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- Screenshots. By default, the "Screenshots" directory alongside this config
 -- file will be used for saving screenshots. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
---
-screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
+--]=] .. '\n' ..
+'screenshots = ' .. (config_values.screenshots and serialize(config_values.screenshots) or 'nil -- [[X:\\ThemeHospital\\Screenshots]]') .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- If you want to listen to non-Theme-Hospital music, then follow these steps:
@@ -501,8 +567,8 @@ screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 --  3) If you want to change the names of songs ingame, make a file called
 --     "names.txt" and write the file name on one row, followed by the desired
 --     ingame name on the next row.
---
-audio_music = nil -- [[X:\ThemeHospital\Music]]
+--]=] .. '\n' ..
+'audio_music = ' .. (config_values.audio_music and serialize(config_values.audio_music) or 'nil -- [[X:\\ThemeHospital\\Music]]') .. '\n' .. [=[
 
 -------------------------------------------------------------------------------
 -- SoundFont: CorsixTH uses the FluidR3 SoundFont by default for playing MIDI music.
@@ -510,9 +576,10 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 -- synthesiser can specify their own SoundFont file below (.sf2 or .sf3).
 -- Mac(OS) Source Ports build users, and OS versions compiled with TiMidity
 -- won't see any effect from this option. See our Wiki for alternative options.
---
-soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
+--]=] .. '\n' ..
+'soundfont = ' .. (config_values.soundfont and serialize(config_values.soundfont) or 'nil -- [[X:\\ThemeHospital\\FluidR3.sf3]]') .. '\n'
 
+  parts[6] = [=[
 -------------------------------------------------------------------------------
 -- Midi API and Device settings.
 -- By default, CorsixTH uses FluidSynth or build defined MIDI synthesizer.
@@ -529,9 +596,9 @@ soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
 -- Possible values for midi_port depend on the selected midi_api, and can
 -- be left nil to use the system default port. A list of available ports
 -- can be obtained from the midi settings screen in game.
---
-midi_api = nil -- [[Native]]
-midi_port = nil -- [[Midi Through:Midi Through Port-0 14:0]]
+--]=] .. '\n' ..
+'midi_api = ' .. (config_values.midi_api and serialize(config_values.midi_api) or 'nil -- [[Native]]') .. '\n' ..
+'midi_port = ' .. (config_values.midi_port and serialize(config_values.midi_port) or 'nil -- [[Midi Through:Midi Through Port-0 14:0]]') .. '\n' .. [=[
 
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
@@ -613,14 +680,51 @@ midi_port = nil -- [[Midi Through:Midi Through Port-0 14:0]]
 -- the New Game menu or between the brace brackets below like [[NAME]].
 -- Note: space is limited in the game, so don't enter a name that is too long!
 --]=] .. '\n' ..
-"player_name = [[" .. (config_values.player_name or '') .. ']]' .. '\n' .. '\n'
+"player_name = " .. serialize(config_values.player_name or '') .. '\n' .. '\n'
 
-config_data = string_01 .. string_02
+  return table.concat(parts)
+end
 
-if needs_rewrite and TheApp then
-  fi = TheApp:writeToFileOrTmp(config_filename)
+local function load_config(path, res)
+  res = res or {}
+  local chunk, err = loadfile_envcall(path)
+  if not chunk then
+    return nil, err
+  end
+  chunk(res)
+  return res, err
+end
+
+local function save_config(path, values)
+  local config_data = config_contents(values)
+  local fi, err = TheApp and TheApp:writeToFileOrTmp(path) or io.open(path, "w")
+  if not fi then
+    return nil, err
+  end
   fi:write(config_data)
   fi:close()
+  return true
+end
+
+-- Create config.txt if it doesn't exist
+local config_filename, config_path = find_config()
+
+local config_values = {}
+if TheApp then
+  -- it doesn't actually matter whether we successfully load a config file or
+  -- not. Either way we want to replace any missing values with the defaults
+  -- and rewrite the file.
+  load_config(config_filename, config_values)
+  local config_defaults = new_config_defaults()
+  for key, value in pairs(config_defaults) do
+    if config_values[key] == nil then
+      config_values[key] = serialize(value)
+    end
+  end
+
+  -- Save the config file to capture any missing values and to update formatting.
+  -- This will also create the file if it doesn't exist.
+  save_config(config_filename, config_values)
 end
 
 -- Hotkey filename.
@@ -629,104 +733,11 @@ local hotkeys_name = "hotkeys.txt"
 -- Hotkey file with full path as string.
 local hotkeys_filename = pathconcat(config_path, hotkeys_name)
 
--- Defaults for hotkeys.
-local hotkeys_defaults = {
-  global_confirm = "return",
-  global_confirm_alt = "e",
-  global_cancel = "escape",
-  global_cancel_alt = "q",
-  global_fullscreen_toggle = {"alt", "return"},
-  global_exitApp = {"alt", "f4"},
-  global_resetApp = {"shift", "f10"},
-  global_releaseMouse = {"ctrl", "f10"},
-  global_showLuaConsole = "f12",
-  global_runDebugScript = {"shift", "d"},
-  global_screenshot = {"ctrl", "s"},
-  global_stop_movie = "escape",
-  global_stop_movie_alt = "q",
-  global_pause_movie = "p",
-  global_window_close = "escape",
-  global_window_close_alt = "q",
-  ingame_showmenubar = "escape",
-  ingame_showCheatWindow = "f11",
-  ingame_pause = "p",
-  ingame_gamespeed_slowest = "1",
-  ingame_gamespeed_slower = "2",
-  ingame_gamespeed_normal = "3",
-  ingame_gamespeed_max = "4",
-  ingame_gamespeed_thensome = "5",
-  ingame_gamespeed_speedup = "z",
-  ingame_scroll_up = "up",
-  ingame_scroll_down = "down",
-  ingame_scroll_left = "left",
-  ingame_scroll_right = "right",
-  ingame_scroll_shift = "shift",
-  ingame_zoom_in = "=",
-  ingame_zoom_in_more = {"shift", "="},
-  ingame_zoom_out = "-",
-  ingame_zoom_out_more = {"shift", "-"},
-  ingame_reset_zoom = "0",
-  ingame_setTransparent = "x",
-  ingame_toggleTransparent = {"shift", "x"},
-  ingame_toggleAdvisor = {"shift", "a"},
-  ingame_poopLog = {"ctrl", "d"},
-  ingame_poopStrings = {"ctrl", "t"},
-  ingame_toggleAnnouncements = {"alt", "a"},
-  ingame_toggleSounds = {"alt", "s"},
-  ingame_toggleMusic = {"alt", "m"},
-  ingame_panel_bankManager = "f1",
-  ingame_panel_bankStats = "f2",
-  ingame_panel_staffManage = "f3",
-  ingame_panel_townMap = "f4",
-  ingame_panel_casebook = "f5",
-  ingame_panel_research = "f6",
-  ingame_panel_status = "f7",
-  ingame_panel_charts = "f8",
-  ingame_panel_policy = "f9",
-  ingame_panel_machineMenu = "f10",
-  ingame_panel_map_alt = "t",
-  ingame_panel_research_alt = "r",
-  ingame_panel_casebook_alt = "c",
-  ingame_panel_casebook_alt02 = {"shift", "c"},
-  ingame_panel_buildRoom = "f",
-  ingame_panel_furnishCorridor = "g",
-  ingame_panel_editRoom = "v",
-  ingame_panel_hireStaff = "b",
-  ingame_loadMenu = {"shift", "l"},
-  ingame_saveMenu = {"shift", "s"},
-  ingame_restartLevel = {"shift", "r"},
-  ingame_quitLevel = {"shift", "q"},
-  ingame_quickSave = {"alt", "shift", "s"},
-  ingame_quickLoad = {"alt", "shift", "l"},
-  ingame_openFirstMessage = "m",
-  ingame_toggleInfo = "i",
-  ingame_jukebox = "j",
-  ingame_rotateobject = "space",
-  ingame_patient_gohome = "h",
-  ingame_storePosition_1 = {"alt", "1"},
-  ingame_storePosition_2 = {"alt", "2"},
-  ingame_storePosition_3 = {"alt", "3"},
-  ingame_storePosition_4 = {"alt", "4"},
-  ingame_storePosition_5 = {"alt", "5"},
-  ingame_storePosition_6 = {"alt", "6"},
-  ingame_storePosition_7 = {"alt", "7"},
-  ingame_storePosition_8 = {"alt", "8"},
-  ingame_storePosition_9 = {"alt", "9"},
-  ingame_storePosition_0 = {"alt", "0"},
-  ingame_recallPosition_1 = {"ctrl", "1"},
-  ingame_recallPosition_2 = {"ctrl", "2"},
-  ingame_recallPosition_3 = {"ctrl", "3"},
-  ingame_recallPosition_4 = {"ctrl", "4"},
-  ingame_recallPosition_5 = {"ctrl", "5"},
-  ingame_recallPosition_6 = {"ctrl", "6"},
-  ingame_recallPosition_7 = {"ctrl", "7"},
-  ingame_recallPosition_8 = {"ctrl", "8"},
-  ingame_recallPosition_9 = {"ctrl", "9"},
-  ingame_recallPosition_0 = {"ctrl", "0"},
-}
+
+local hotkeys_defaults = new_hotkeys_defaults()
 
 -- Clear the loaded file variable.
-fi = io.open(hotkeys_filename, "r")
+local fi = io.open(hotkeys_filename, "r")
 local hotkeys_values = {}
 local hotkeys_needs_rewrite = false
 for key, value in pairs(hotkeys_defaults) do
@@ -940,9 +951,11 @@ end
 return {
   config_filename = config_filename,
   config_values = config_values,
-  config_defaults = config_defaults,
+  config_defaults = new_config_defaults,
   hotkeys_filename = hotkeys_filename,
   hotkeys_values = hotkeys_values,
-  hotkeys_defaults = hotkeys_defaults,
-  config_data = config_data
+  hotkeys_defaults = new_hotkeys_defaults,
+  config_data = config_data,
+  load_config = load_config,
+  save_config = save_config,
 }
