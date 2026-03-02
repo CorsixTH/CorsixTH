@@ -40,6 +40,7 @@ function UIMoveRoom:UIMoveRoom(ui, room)
   self.preview_anim:setAnimation(ui.app.anims, room.room_info.build_preview_animation or room.room_info.build_preview)
     
   self.room = room
+  self.preview_tiles = {}
   
   -- Store original position if cancel
   self.origin_x, self.origin_y = room.x, room.y
@@ -97,7 +98,10 @@ end
 
 ---! Called on every mouse move: update ghost position.
 function UIMoveRoom:onMouseMove(x, y, dx, dy)
+    self:clearPreview()
+    self:drawPreview()
     local wx, wy = self.ui:ScreenToWorld(x, y)
+    
     if wx and wy then
         self.target_x = math.floor(wx)
         self.target_y = math.floor(wy)
@@ -106,11 +110,47 @@ function UIMoveRoom:onMouseMove(x, y, dx, dy)
     return Window.onMouseMove(self, x, y, dx, dy)
 end
 
+function UIMoveRoom:drawPreview()
+    local w = self.room.width
+    local h = self.room.height
+    local map = self.world.map.th
+
+    for dy = 0, h - 1 do
+        for dx = 0, w - 1 do
+            local x = self.target_x + dx
+            local y = self.target_y + dy
+            local flags = {}
+            map:getCellFlags(x, y, flags)
+            if flags.hospital then
+                map:setCell(x, y, 1, 1)
+
+                table.insert(self.preview_tiles, {
+                    x = x,
+                    y = y
+                })
+            end
+        end
+    end
+end
+
+function UIMoveRoom:clearPreview()
+    if not self.preview_tiles then return end
+    local map  = self.world.map.th
+
+    for _, tile in ipairs(self.preview_tiles) do
+        map:setCell(tile.x, tile.y, 1, 76)
+    end
+
+    self.preview_tiles = {}
+end
+
 function UIMoveRoom:onMouseDown(button, x, y)
     if button == "left" then
         self:confirmCurrentPosition()
+        self:clearPreview()
         return true
     elseif button == "right" then
+        self:clearPreview()
         self:cancelMove()
         return true
     end
@@ -133,6 +173,9 @@ function UIMoveRoom:_applyMove(new_x, new_y)
         self:_cleanup()
         return
     end
+
+    self.room_width = room.width
+    self.room_height = room.height
 
     world:moveRoom(room, direction_X, direction_Y)
 
