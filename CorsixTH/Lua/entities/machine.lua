@@ -374,7 +374,7 @@ end
 --!param room (object) machine room
 function Machine:machineRepaired(room, should_reduce_strength)
   should_reduce_strength = should_reduce_strength or true
-  room.needs_repair = false
+  room:unlockRoomOnRepair()
   self.times_used = 0
   self:setRepairing(nil)
   setSmoke(self, false)
@@ -418,11 +418,14 @@ function Machine:setRepairing(handyman, is_manual_repair)
   local anim = {icon = 4564} -- The only icon for machinery
   local room = self:getRoom()
   local should_repair = handyman or is_manual_repair
+  room.manual_repair = handyman and is_manual_repair
+  -- put/remove gear icon above machine
   self:setMoodInfo(should_repair and anim or nil)
-  room.needs_repair = should_repair
   if should_repair then
+    room:lockRoomOnRepair()
     self.ticks = true
   else
+    room:unlockRoomOnRepair()
     self.ticks = self.object_type.ticks
     self.world.dispatcher:dropFromQueue(self)
     if not room.crashed then
@@ -433,11 +436,9 @@ function Machine:setRepairing(handyman, is_manual_repair)
 end
 
 function Machine:setRepairingMode(lock_room, is_manual_repair)
-  if lock_room ~= nil then
-    self.repairing_lock_room = lock_room
-  end
-  if (self.repairing or is_manual_repair) and self.repairing_lock_room then
-    self:setRepairing(self.repairing, is_manual_repair)
+  local handyman = self.repairing
+  if (self.repairing or is_manual_repair) and lock_room then
+    self:setRepairing(handyman, is_manual_repair)
   end
 end
 
@@ -496,7 +497,7 @@ end
 function Machine:onDestroy()
   local room = self:getRoom()
   if room then
-    room.needs_repair = false
+    room:unlockRoomOnRepair()
   end
   self:removeHandymanRepairTask()
 
