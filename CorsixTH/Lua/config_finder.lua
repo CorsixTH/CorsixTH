@@ -20,7 +20,6 @@ SOFTWARE. --]]
 
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
-
 local serialize = serialize -- from utility
 
 local function pathconcat(a, b)
@@ -685,13 +684,23 @@ parts[4] = [=[
   return table.concat(parts)
 end
 
+local function apply_defaults(res)
+  local config_defaults = new_config_defaults()
+  for key, value in pairs(config_defaults) do
+    if res[key] == nil then
+      res[key] = serialize(value)
+    end
+  end
+end
+
 local function load_config(path, res)
   res = res or {}
   local chunk, err = loadfile_envcall(path)
-  if not chunk then
-    return nil, err
+  if chunk then
+    chunk(res)
   end
-  chunk(res)
+  apply_defaults(res)
+
   return res, err
 end
 
@@ -706,26 +715,7 @@ local function save_config(path, values)
   return true
 end
 
--- Create config.txt if it doesn't exist
 local config_filename, config_path = find_config()
-
-local config_values = {}
-if TheApp then
-  -- it doesn't actually matter whether we successfully load a config file or
-  -- not. Either way we want to replace any missing values with the defaults
-  -- and rewrite the file.
-  load_config(config_filename, config_values)
-  local config_defaults = new_config_defaults()
-  for key, value in pairs(config_defaults) do
-    if config_values[key] == nil then
-      config_values[key] = serialize(value)
-    end
-  end
-
-  -- Save the config file to capture any missing values and to update formatting.
-  -- This will also create the file if it doesn't exist.
-  save_config(config_filename, config_values)
-end
 
 -- Hotkey filename.
 local hotkeys_name = "hotkeys.txt"
@@ -950,7 +940,6 @@ end
 
 return {
   config_filename = config_filename,
-  config_values = config_values,
   config_defaults = new_config_defaults,
   hotkeys_filename = hotkeys_filename,
   hotkeys_values = hotkeys_values,

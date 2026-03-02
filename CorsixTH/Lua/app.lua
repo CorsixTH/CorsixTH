@@ -125,8 +125,8 @@ function App:init()
   -- Prereq 2: Config file (for screen width / height / TH folder)
   -- Note: These errors cannot be translated, as the config file specifies the language
   local conf_path = self.command_line["config-file"] or "config.txt"
-  local conf_res, conf_err = require('config_finder').load_config(conf_path, self.config)
-  if not conf_res then
+  local _, conf_err = require('config_finder').load_config(conf_path, self.config)
+  if conf_err then
     error("Unable to load the config file. Please ensure that CorsixTH " ..
       "has permission to read/write " .. conf_path .. ", or use the " ..
       "--config-file=filename command line option to specify a writable file. " ..
