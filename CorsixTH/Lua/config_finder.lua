@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
 local serialize = serialize -- from utility
+local lfs = lfs
 
 local function pathconcat(a, b)
   if a:sub(-1) == pathsep then
@@ -874,28 +875,6 @@ local function apply_hotkeys_defaults(res)
   end
 end
 
-local function load_config(path, res)
-  res = res or {}
-  local chunk, err = loadfile_envcall(path)
-  if chunk then
-    chunk(res)
-  end
-  apply_config_defaults(res)
-
-  return res, err
-end
-
-local function load_hotkeys(path, res)
-  res = res or {}
-  local chunk, err = loadfile_envcall(path)
-  if chunk then
-    chunk(res)
-  end
-  apply_hotkeys_defaults(res)
-
-  return res, err
-end
-
 local function open_for_write(path)
   if TheApp then
     return TheApp:writeToFileOrTmp(path)
@@ -926,10 +905,32 @@ local function save_hotkeys(path, values)
   return true
 end
 
-local function create_if_not_exists(path, default_fn)
+local function load_config(path, res)
+  res = res or {}
   if not lfs.attributes(path) then
-    save_config(path, default_fn())
+    save_config(path, new_config_defaults())
   end
+  local chunk, err = loadfile_envcall(path)
+  if chunk then
+    chunk(res)
+  end
+  apply_config_defaults(res)
+
+  return res, err
+end
+
+local function load_hotkeys(path, res)
+  res = res or {}
+  if not lfs.attributes(path) then
+    save_hotkeys(path, new_hotkeys_defaults())
+  end
+  local chunk, err = loadfile_envcall(path)
+  if chunk then
+    chunk(res)
+  end
+  apply_hotkeys_defaults(res)
+
+  return res, err
 end
 
 local config_filename, config_path = find_config()
@@ -939,9 +940,6 @@ local hotkeys_name = "hotkeys.txt"
 
 -- Hotkey file with full path as string.
 local hotkeys_filename = pathconcat(config_path, hotkeys_name)
-
-create_if_not_exists(config_filename, new_config_defaults)
-create_if_not_exists(hotkeys_filename, new_hotkeys_defaults)
 
 return {
   config_filename = config_filename,
