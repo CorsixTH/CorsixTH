@@ -310,7 +310,7 @@ local function config_contents(config_values)
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
 --]=] .. '\n' ..
-'audio = ' .. tostring(config_values.audio) .. '\n'
+'audio = ' .. tostring(config_values.audio) .. '\n\n'
 
 parts[2] = [=[
 ------------------------------ CUSTOM GAME MENU -------------------------------
@@ -322,7 +322,7 @@ parts[2] = [=[
 -- You also don't have to worry about money.
 -- This setting does not apply to any of the campaign maps.
 --]=] .. '\n' ..
-'free_build_mode = ' .. tostring(config_values.free_build_mode) .. '\n'
+'free_build_mode = ' .. tostring(config_values.free_build_mode) .. '\n\n'
 
 parts[3] = [=[
 --------------------------------- OPTIONS MENU --------------------------------
@@ -395,11 +395,12 @@ parts[3] = [=[
 -- This specifies which display method is set for warmth colours by default.
 -- Possible values: 1 (Red), 2 (Blue Green Red) and 3 (Yellow Orange Red).
 --]=] .. '\n' ..
-'warmth_colors_display_default = ' .. tostring(config_values.warmth_colors_display_default) .. '\n'
+'warmth_colors_display_default = ' .. tostring(config_values.warmth_colors_display_default) .. '\n\n'
 
 parts[4] = [=[
 ------------------------------ CUSTOMISE SETTINGS -----------------------------
 -- These settings can also be changed from the Customise Menu
+
 -------------------------------------------------------------------------------
 -- Wage increase request settings.
 -- If set to true when wage increase requests expire automatically grant them
@@ -494,7 +495,7 @@ parts[4] = [=[
 -- This way your autosaves folder can grow to 300-500 MB with daily autosaves.
 -- Set 1 for Monthly, 2 for Weekly, 3 for Daily autosaves.
 --]=] .. '\n' ..
-'autosave_frequency = ' .. tostring(config_values.autosave_frequency) .. '\n'
+'autosave_frequency = ' .. tostring(config_values.autosave_frequency) .. '\n\n'
 
   parts[5] = [=[
 ------------------------------- FOLDER SETTINGS -------------------------------
@@ -576,7 +577,7 @@ parts[4] = [=[
 -- Mac(OS) Source Ports build users, and OS versions compiled with TiMidity
 -- won't see any effect from this option. See our Wiki for alternative options.
 --]=] .. '\n' ..
-'soundfont = ' .. (config_values.soundfont and serialize(config_values.soundfont) or 'nil -- [[X:\\ThemeHospital\\FluidR3.sf3]]') .. '\n'
+'soundfont = ' .. (config_values.soundfont and serialize(config_values.soundfont) or 'nil -- [[X:\\ThemeHospital\\FluidR3.sf3]]') .. '\n\n'
 
   parts[6] = [=[
 -------------------------------------------------------------------------------

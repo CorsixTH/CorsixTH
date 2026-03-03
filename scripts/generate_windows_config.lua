@@ -23,7 +23,7 @@ SOFTWARE.
 This will write the default configuration to WindowsInstaller/config_template.txt
 --]]
 
-function serialize(s) return s end
+function serialize(s) return '[[' .. s .. ']]' end
 function loadstring_envcall() end
 local pathsep = package.config:sub(1, 1)
 local function path(tbl)
