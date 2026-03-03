@@ -896,9 +896,17 @@ local function load_hotkeys(path, res)
   return res, err
 end
 
+local function open_for_write(path)
+  if TheApp then
+    return TheApp:writeToFileOrTmp(path)
+  else
+    return io.open(path, "w")
+  end
+end
+
 local function save_config(path, values)
   local config_data = config_contents(values)
-  local fi, err = TheApp and TheApp:writeToFileOrTmp(path) or io.open(path, "w")
+  local fi, err = open_for_write(path)
   if not fi then
     return nil, err
   end
@@ -909,7 +917,7 @@ end
 
 local function save_hotkeys(path, values)
   local hotkeys_data = hotkeys_contents(values)
-  local fi, err = TheApp and TheApp:writeToFileOrTmp(path) or io.open(path, "w")
+  local fi, err = open_for_write(path)
   if not fi then
     return nil, err
   end

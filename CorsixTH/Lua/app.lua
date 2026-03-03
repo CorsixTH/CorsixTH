@@ -407,6 +407,10 @@ function App:init()
     end
   end
 
+  -- Finished init, save any config changes applied
+  TheApp:saveConfig()
+  TheApp:saveHotkeys()
+
   if self.config.play_intro then
     self.moviePlayer:playIntro(callback_after_movie)
   else
@@ -1902,6 +1906,7 @@ end
 function App:exit()
   -- Save config before exiting
   self:saveConfig()
+  self:saveHotkeys()
   self.running = false
 end
 
