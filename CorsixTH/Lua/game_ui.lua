@@ -190,11 +190,6 @@ function GameUI:startMoveRoom()
         return
     end
     
-    local edit_dlg = self:getWindow(UIEditRoom)
-    if edit_dlg and edit_dlg.room == room then
-        edit_dlg:close()
-    end
-    
     self:addWindow(UIMoveRoom(self, room))
 end
 
