@@ -1009,14 +1009,6 @@ function App:checkMissingStringsInLanguage(dir, language)
 end
 
 function App:fixConfig()
-  -- Fill in default values for things which don't exist
-  local config_defaults = corsixth.require("config_finder").config_defaults()
-  for k, v in pairs(config_defaults) do
-    if self.config[k] == nil then
-      self.config[k] = v
-    end
-  end
-
   for key, value in pairs(self.config) do
     -- Trim whitespace from beginning and end string values - it shouldn't be
     -- there (at least in any current configuration options).
@@ -1101,15 +1093,6 @@ function App:writeToFileOrTmp(file, mode)
 end
 
 function App:fixHotkeys()
-  -- Fill in default values for things which don't exist
-  local hotkeys_defaults = corsixth.require("config_finder").hotkeys_defaults()
-
-  for k, v in pairs(hotkeys_defaults) do
-    if self.hotkeys[k] == nil then
-      self.hotkeys[k] = v
-    end
-  end
-
   for key, value in pairs(self.hotkeys) do
     -- Trim whitespace from beginning and end string values - it shouldn't be
     -- there (at least in any current configuration options).
