@@ -86,14 +86,6 @@ end
 --! @param y      (integer) Y offset of the window draw origin.
 function UIMoveRoom:draw(canvas, x, y)
     self.ui:setCursor(self.ui.grab_cursor)
-    Window.draw(self, canvas, x, y)
-
-    if self.preview_anim and self.mouse_x then
-        local s = TheApp.config.ui_scale
-        canvas:scale(s)
-        self.preview_anim:draw(canvas, math.floor(self.mouse_x / s), math.floor(self.mouse_y / s))
-        canvas:scale(1)
-    end
 end
 
 ---! Called on every mouse move: update ghost position.
@@ -122,40 +114,36 @@ function UIMoveRoom:drawPreview()
             local flags = {}
             local humanoids = self.world.entity_map:getHumanoidsAtCoordinate(x, y)
             map:getCellFlags(x, y, flags)
-            if flags.hospital then
-                if not self.world:hasRadiator(x, y, w, h) and not self.world:getRoom(x, y) and #humanoids <= 0 then
+            if flags.hospital then -- Show green tile if can place here else black tile will appear
+                if not self.world:hasRadiator(x, y, w, h) and not self.world:getRoom(x, y) and #humanoids <= 0 then -- Show green tile if can place here else black tile will appear
                     local tile_id = map:getCell(x, y)
                     map:setCell(x, y, 1, 1)
-
                     table.insert(self.preview_tiles, {
                         x = x,
                         y = y,
                         tile_id = tile_id
                     })
                 else
-                    local tile_id = map:getCell(x, y)
-                    map:setCell(x, y, 1, 0)
-
-                    table.insert(self.preview_tiles, {
-                        x = x,
-                        y = y,
-                        tile_id = tile_id
-                    })
+                    self:_insertBlackTiles(map, x, y)
                 end
             else
-                local tile_id = map:getCell(x, y)
-                map:setCell(x, y, 1, 0)
-
-                table.insert(self.preview_tiles, {
-                    x = x,
-                    y = y,
-                    tile_id = tile_id
-                })
+                self:_insertBlackTiles(map,x, y)
             end
         end
     end
 end
 
+function UIMoveRoom:_insertBlackTiles(map, x, y)
+    local tile_id = map:getCell(x, y)
+    map:setCell(x, y, 1, 0)
+    table.insert(self.preview_tiles, {
+        x = x,
+        y = y,
+        tile_id = tile_id
+    })
+end
+
+--- Clear de tile preview and put back the old tiles
 function UIMoveRoom:clearPreview()
     if not self.preview_tiles then return end
     local map  = self.world.map.th
@@ -167,7 +155,7 @@ function UIMoveRoom:clearPreview()
     self.preview_tiles = {}
 end
 
-function UIMoveRoom:onMouseDown(button, x, y)
+function UIMoveRoom:onMouseDown(button)
     if button == "left" then
         self:confirmCurrentPosition()
         self:clearPreview()
