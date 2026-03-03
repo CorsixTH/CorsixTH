@@ -302,11 +302,9 @@ function App:init()
 
   -- Load/setup hotkeys.
   local hotkeys_path = self.command_line["hotkeys-file"] or "hotkeys.txt"
-  local hotkeys_chunk, hotkeys_err = loadfile_envcall(hotkeys_path)
-  if not hotkeys_chunk then
+  local _, hotkeys_err = require('config_finder').load_hotkeys(hotkeys_path, self.hotkeys)
+  if hotkeys_err then
     error(_S.hotkeys_file_err.file_err_01 .. hotkeys_path .. _S.hotkeys_file_err.file_err_02 .. hotkeys_err)
-  else
-    hotkeys_chunk(self.hotkeys)
   end
   self:fixHotkeys()
 
@@ -1122,66 +1120,7 @@ end
 function App:saveHotkeys()
   -- Load lines from config file
   local hotkeys_filename = self.command_line["hotkeys-file"] or "hotkeys.txt"
-  local fi = io.open(hotkeys_filename, "r")
-  local lines = {}
-  local handled_ids = {}
-
-  if fi then
-    for line in fi:lines() do
-      lines[#lines + 1] = line
-      if not (string.find(line, "^%s*$") or string.find(line, "^%s*%-%-")) then -- empty lines or comments
-        -- Look for identifiers we want to save
-        local _, _, identifier, value = string.find(line, "^%s*([_%a][_%w]*)%s*=%s*(.-)%s*$")
-        if identifier then
-          local _, temp
-          -- Trim possible trailing comment from value
-          _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
-          value = temp or value
-          -- Remove enclosing [[]], if necessary
-          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
-          value = temp or value
-
-          -- If identifier also exists in runtime options, compare their values and
-          -- replace the line, if needed
-          handled_ids[identifier] = true
-
-          if value ~= serialize(self.hotkeys[identifier]) then
-            local new_value = self.hotkeys[identifier]
-            if type(new_value) == "string" then
-              new_value = string.format("[[%s]]", new_value)
-            else
-              new_value = serialize(new_value)
-            end
-            lines[#lines] = string.format("%s = %s", identifier, new_value)
-          end
-        end
-      end
-    end
-    fi:close()
-  end
-
-  -- Append options that were not found
-  for identifier, value in pairs(self.hotkeys) do
-    if not handled_ids[identifier] then
-      if type(value) == "string" then
-        value = string.format("[[%s]]", value)
-      else
-        value = tostring(value)
-      end
-      lines[#lines + 1] = string.format("%s = %s", identifier, value)
-    end
-  end
-  -- Trim trailing newlines
-  while lines[#lines] == "" do
-    lines[#lines] = nil
-  end
-
-  fi = self:writeToFileOrTmp(hotkeys_filename)
-  for _, line in ipairs(lines) do
-    fi:write(line .. "\n")
-  end
-
-  fi:close()
+  require('config_finder').save_hotkeys(hotkeys_filename, self.hotkeys)
 end
 
 function App:run()
