@@ -926,6 +926,12 @@ local function save_hotkeys(path, values)
   return true
 end
 
+local function create_if_not_exists(path, default_fn)
+  if not lfs.attributes(path) then
+    save_config(path, default_fn())
+  end
+end
+
 local config_filename, config_path = find_config()
 
 -- Hotkey filename.
@@ -933,6 +939,9 @@ local hotkeys_name = "hotkeys.txt"
 
 -- Hotkey file with full path as string.
 local hotkeys_filename = pathconcat(config_path, hotkeys_name)
+
+create_if_not_exists(config_filename, new_config_defaults)
+create_if_not_exists(hotkeys_filename, new_hotkeys_defaults)
 
 return {
   config_filename = config_filename,
