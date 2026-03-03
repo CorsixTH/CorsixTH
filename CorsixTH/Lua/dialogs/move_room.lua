@@ -120,13 +120,36 @@ function UIMoveRoom:drawPreview()
             local x = self.target_x + dx
             local y = self.target_y + dy
             local flags = {}
+            local humanoids = self.world.entity_map:getHumanoidsAtCoordinate(x, y)
             map:getCellFlags(x, y, flags)
             if flags.hospital then
-                map:setCell(x, y, 1, 1)
+                if not self.world:hasRadiator(x, y, w, h) and not self.world:getRoom(x, y) and #humanoids <= 0 then
+                    local tile_id = map:getCell(x, y)
+                    map:setCell(x, y, 1, 1)
+
+                    table.insert(self.preview_tiles, {
+                        x = x,
+                        y = y,
+                        tile_id = tile_id
+                    })
+                else
+                    local tile_id = map:getCell(x, y)
+                    map:setCell(x, y, 1, 0)
+
+                    table.insert(self.preview_tiles, {
+                        x = x,
+                        y = y,
+                        tile_id = tile_id
+                    })
+                end
+            else
+                local tile_id = map:getCell(x, y)
+                map:setCell(x, y, 1, 0)
 
                 table.insert(self.preview_tiles, {
                     x = x,
-                    y = y
+                    y = y,
+                    tile_id = tile_id
                 })
             end
         end
@@ -138,7 +161,7 @@ function UIMoveRoom:clearPreview()
     local map  = self.world.map.th
 
     for _, tile in ipairs(self.preview_tiles) do
-        map:setCell(tile.x, tile.y, 1, 76)
+        map:setCell(tile.x, tile.y, 1, tile.tile_id)
     end
 
     self.preview_tiles = {}
@@ -203,11 +226,9 @@ function UIMoveRoom:_applyMove(new_x, new_y)
             room.hospital:refundObject(obj)
         end
     end
-
-    -- Sanity check: aucun objet de room ne doit avoir tile nil
+    
     for obj, _ in pairs(room.objects) do
         if obj.tile_x == nil or obj.tile_y == nil then
-            -- Le sortir de la room pour éviter les crashs du place_objects.lua
             room.objects[obj] = nil
         end
     end

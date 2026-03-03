@@ -2784,7 +2784,7 @@ end
 --!
 --! Returns:
 --! @return (boolean) true if the room can legally be placed at (new_x, new_y),
-function World:canMoveRoomTo(room, new_x, new_y)
+function World:canMoveRoomTo(room, new_x, new_y, showMessage)
     local map = self.map.th
 
     for tx = room.x, room.x + room.width - 1 do
@@ -2847,7 +2847,7 @@ function World:moveRoom(room, directionX, directionY)
     local map  = self.map.th
     local new_x, new_y = (room.x + directionX), (room.y + directionY)
 
-    if not self:canMoveRoomTo(room, new_x, new_y) then
+    if not self:canMoveRoomTo(room, new_x, new_y, true) then
         return -- Get out of the function if the room can't move
     end
 
@@ -2871,7 +2871,7 @@ function World:moveRoom(room, directionX, directionY)
     map:markRoom(new_x, new_y, room.width, room.height,
             room.room_info.floor_tile, room.id)
 
-    -- Will place the tile depending on the direction of the list
+    -- Will place the wall on the tile depending on the direction of the list
     for _, side in ipairs({"top","right","bottom","left"}) do
         local list = self.l_wall_layer[side]
         if list then
