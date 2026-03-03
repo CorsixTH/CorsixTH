@@ -108,18 +108,17 @@ function PlayerHospital:dailyAdviceChecks()
     self.adviser_data.temperature_advice = false
     self.adviser_data.no_gp_office = false
     self.adviser_data.no_doctor_no_gp_office = false
+    self.adviser_data.last_patient_not_paying_month = false
   end
 end
 
 --! Warns the player that a patient left without paying for a treatment.
 --! To avoid spamming the player, the notification is only shown once per month.
 --! param treatment_name (string) The name of the treatment the patient refused to pay for.
-function PlayerHospital:_warnPatientNotPaying(treatment_name)
-    local current_month = self.world:date():monthOfGame()
-
-    if self.last_patient_not_paying_month ~= current_month then
+function PlayerHospital:warnPatientNotPaying(treatment_name)
+    if not self.adviser_data.last_patient_not_paying_month then
+        self.adviser_data.last_patient_not_paying_month = true
         self:giveAdvice({_A.warnings.patient_not_paying:format(treatment_name)})
-        self.last_patient_not_paying_month = current_month
     end
 end
 
