@@ -124,9 +124,9 @@ function UINewGame:UINewGame(ui)
     :makeToggleButton(0, 0, 135, 30, nil, self.buttonTutorial):setTooltip(_S.tooltip.new_game_window.tutorial)
 
   -- Difficulty
-  self:addBevelPanel(20, 115, 140, 30, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, 115, 140, 30, Colours.Caption, Colours.PanelDefault, Colours.PanelDefault)
     :setLabel(_S.new_game_window.difficulty).lowered = true
-  self:addBevelPanel(165, 115, 140, 30, col_bg):setLabel(self.available_difficulties[self.difficulty].text)
+  self:addBevelPanel(165, 115, 140, 30, Colours.Setting, nil, nil, nil, Colours.SettingActive):setLabel(self.available_difficulties[self.difficulty].text)
     :makeToggleButton(0, 0, 135, 30, nil, self.dropdownDifficulty):setTooltip(_S.tooltip.new_game_window.difficulty)
 
   -- Start and Cancel
@@ -146,7 +146,7 @@ end
 
 function UINewGame:dropdownDifficulty(activate, button)
   if activate and #self.available_difficulties > 1 then
-    self.difficulty_dropdown = UIDropdown(self.ui, self, button, self.available_difficulties, self.selectDifficulty)
+    self.difficulty_dropdown = UIDropdown(self.ui, self, button, self.available_difficulties, self.selectDifficulty, Colours.SettingActive, Colours.Scrollbar)
     self:addWindow(self.difficulty_dropdown)
   else
     if self.difficulty_dropdown then
