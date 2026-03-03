@@ -14,7 +14,6 @@ CorsixTH/config.txt
 *.exe
 Thumbs.db
 
-README-remise.md
 
 # This is for the CMake-generated XCode project and output
 /build/
