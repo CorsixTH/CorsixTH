@@ -21,7 +21,6 @@ SOFTWARE. --]]
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
 local serialize = serialize -- from utility
-local lfs = lfs
 
 local function pathconcat(a, b)
   if a:sub(-1) == pathsep then
@@ -915,6 +914,7 @@ end
 
 local function load_config(path, res)
   res = res or {}
+  local lfs = require("lfs")
   if not lfs.attributes(path) then
     save_config(path, new_config_defaults())
   end
