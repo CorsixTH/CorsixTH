@@ -23,7 +23,18 @@ SOFTWARE.
 This will write the default configuration to WindowsInstaller/config_template.txt
 --]]
 
-function serialize(s) return '[[' .. s .. ']]' end
+local do_not_wrap = {}
+do_not_wrap['SCREEN_FULLSCREEN'] = true
+do_not_wrap['SCREEN_SIZE_WIDTH'] = true
+do_not_wrap['SCREEN_SIZE_HEIGHT'] = true
+
+function serialize(s)
+  if type(s) ~= 'string' or do_not_wrap[s] then
+    return tostring(s)
+  end
+
+  return '[[' .. s .. ']]'
+end
 function loadstring_envcall() end
 local pathsep = package.config:sub(1, 1)
 local function path(tbl)

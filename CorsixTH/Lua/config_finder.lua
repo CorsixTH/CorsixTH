@@ -254,6 +254,14 @@ local function new_hotkeys_defaults()
   }
 end
 
+local function param(params, param_name, nil_example)
+  if nil_example then
+    return param_name .. ' = ' ..
+        (params[param_name] and serialize(params[param_name]) or 'nil -- ' .. nil_example) .. '\n'
+  end
+  return param_name .. ' = ' .. serialize(params[param_name]) .. '\n'
+end
+
 local function config_contents(config_values)
   local parts = {}
   parts[1] = [=[
@@ -276,11 +284,11 @@ local function config_contents(config_values)
 -- resolution displays. For example, at 1920x1080 resolution, setting ui_scale
 -- to 2 will make the interface elements twice as large.
 --]=] .. '\n' ..
-'fullscreen = ' .. tostring(config_values.fullscreen) .. '\n' ..
+param(config_values, 'fullscreen') ..
 '\n' ..
-'width = ' .. tostring(config_values.width) .. '\n' ..
-'height = ' .. tostring(config_values.height) .. '\n' ..
-'ui_scale = ' .. tostring(config_values.ui_scale) .. '\n' .. [=[
+param(config_values, 'width') ..
+param(config_values, 'height') ..
+param(config_values, 'ui_scale') .. [=[
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
@@ -306,12 +314,12 @@ local function config_contents(config_values)
 --  Swedish               / sv / swe
 --  Ukrainian             / uk / ukr
 --]=] .. '\n' ..
-'language = ' .. serialize(config_values.language) .. '\n' .. [=[
+param(config_values, 'language') .. [=[
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
 --]=] .. '\n' ..
-'audio = ' .. tostring(config_values.audio) .. '\n\n'
+param(config_values, 'audio') .. '\n'
 
 parts[2] = [=[
 ------------------------------ CUSTOM GAME MENU -------------------------------
@@ -323,7 +331,7 @@ parts[2] = [=[
 -- You also don't have to worry about money.
 -- This setting does not apply to any of the campaign maps.
 --]=] .. '\n' ..
-'free_build_mode = ' .. tostring(config_values.free_build_mode) .. '\n\n'
+param(config_values, 'free_build_mode') .. '\n'
 
 parts[3] = [=[
 --------------------------------- OPTIONS MENU --------------------------------
@@ -331,30 +339,30 @@ parts[3] = [=[
 -------------------------------------------------------------------------------
 -- Sounds: By default enabled and set at level 0.5
 --]=] .. '\n' ..
-'play_sounds = ' .. tostring(config_values.play_sounds) .. '\n' ..
-'sound_volume = ' .. tostring(config_values.sound_volume) .. '\n' .. [=[
+param(config_values, 'play_sounds') ..
+param(config_values, 'sound_volume') .. [=[
 
 -------------------------------------------------------------------------------
 -- Announcements: By default set at level 0.5
 --]=] .. '\n' ..
-'play_announcements = ' .. tostring(config_values.play_announcements) .. '\n' ..
-'announcement_volume = ' .. tostring(config_values.announcement_volume) .. '\n' .. [=[
+param(config_values, 'play_announcements') ..
+param(config_values, 'announcement_volume') .. [=[
 
 -------------------------------------------------------------------------------
 -- Background music: By default enabled and set at level 0.5
 --]=] .. '\n' ..
-'play_music = ' .. tostring(config_values.play_music) .. '\n' ..
-'music_volume = ' .. tostring(config_values.music_volume) .. '\n' .. [=[
+param(config_values, 'play_music') ..
+param(config_values, 'music_volume') .. [=[
 
 -------------------------------------------------------------------------------
 -- Edge scrolling: By default enabled (prevent_edge_scrolling = false).
 --]=] .. '\n' ..
-'prevent_edge_scrolling = ' .. tostring(config_values.prevent_edge_scrolling) .. '\n' .. [=[
+param(config_values, 'prevent_edge_scrolling') .. [=[
 
 -------------------------------------------------------------------------------
 -- Capture mouse: By default enabled (capture mouse = true).
 --]=] .. '\n' ..
-'capture_mouse = ' .. tostring(config_values.capture_mouse) .. '\n' .. [=[
+param(config_values, 'capture_mouse') .. [=[
 
 -------------------------------------------------------------------------------
 -- Right Mouse Scrolling: By default, it is disabled (right_mouse_scrolling = false).
@@ -362,41 +370,41 @@ parts[3] = [=[
 -- Please note this an Experimental Feature and may interfere with other right mouse
 -- operations. Report bugs for this on Github Issue 2469.
 --]=] .. '\n' ..
-'right_mouse_scrolling = ' .. tostring(config_values.right_mouse_scrolling) .. '\n' .. [=[
+param(config_values, 'right_mouse_scrolling') .. [=[
 
 -------------------------------------------------------------------------------
 -- Adviser on/off: If you set this to true the adviser will no longer
 -- pop up.
 --]=] .. '\n' ..
-'adviser_disabled = ' .. tostring(config_values.adviser_disabled) .. '\n' .. [=[
+param(config_values, 'adviser_disabled') .. [=[
 
 -------------------------------------------------------------------------------
 -- Scrolling Momentum.
 -- Determines the amount of momentum when scrolling the map with the mouse.
 -- This should be a value between 0 and 1 where 0 is no momentum
 --]=] .. '\n' ..
-'scrolling_momentum = ' .. tostring(config_values.scrolling_momentum) .. '\n' .. [=[
+param(config_values, 'scrolling_momentum') .. [=[
 
 -------------------------------------------------------------------------------
 -- Top menu clock is by default is always on
 -- setting to true will give you a twentyfour hours display
 -- change to false if you want AM / PM time displayed.
 --]=] .. '\n' ..
-'twentyfour_hour_clock = ' .. tostring(config_values.twentyfour_hour_clock) .. '\n' .. [=[
+param(config_values, 'twentyfour_hour_clock') .. [=[
 
 -------------------------------------------------------------------------------
 -- Automatically check for updates.
 -- If set to true, CorsixTH will automatically check for and alert you to newer
 -- versions on startup.
 --]=] .. '\n' ..
-'check_for_updates = ' .. tostring(config_values.check_for_updates) .. '\n' .. [=[
+param(config_values, 'check_for_updates') .. [=[
 
 -------------------------------------------------------------------------------
 -- Warmth Colors display settings.
 -- This specifies which display method is set for warmth colours by default.
 -- Possible values: 1 (Red), 2 (Blue Green Red) and 3 (Yellow Orange Red).
 --]=] .. '\n' ..
-'warmth_colors_display_default = ' .. tostring(config_values.warmth_colors_display_default) .. '\n\n'
+param(config_values, 'warmth_colors_display_default') .. '\n'
 
 parts[4] = [=[
 ------------------------------ CUSTOMISE SETTINGS -----------------------------
@@ -407,22 +415,22 @@ parts[4] = [=[
 -- If set to true when wage increase requests expire automatically grant them
 -- otherwise let the staff member quit.
 --]=] .. '\n' ..
-'grant_wage_increase = ' .. tostring(config_values.grant_wage_increase) .. '\n' .. [=[
+param(config_values, 'grant_wage_increase') .. [=[
 
 -------------------------------------------------------------------------------
 -- Movie global on/off switch.
 -- Note that movies will also be disabled if CorsixTH was compiled without the
 -- FFMPEG library.
 --]=] .. '\n' ..
-'movies = ' .. tostring(config_values.movies) .. '\n' .. [=[
+param(config_values, 'movies') .. [=[
 
 -- Intro movie: Enabled by default
 --]=] .. '\n' ..
-'play_intro = ' .. tostring(config_values.play_intro) .. '\n' .. [=[
+param(config_values, 'play_intro') .. [=[
 
 -- Demo movie (played on idle at main menu): Enabled by default
 --]=] .. '\n' ..
-'play_demo = ' .. tostring(config_values.play_demo) .. '\n' .. [=[
+param(config_values, 'play_demo') .. [=[
 
 -------------------------------------------------------------------------------
 -- Allow user actions while game is paused
@@ -430,7 +438,7 @@ parts[4] = [=[
 -- the game was paused. That is the default setting in CorsixTH too, but by
 -- setting this to true everything is allowed while the game is paused.
 --]=] .. '\n' ..
-'allow_user_actions_while_paused = ' .. tostring(config_values.allow_user_actions_while_paused) .. '\n' .. [=[
+param(config_values, 'allow_user_actions_while_paused') .. [=[
 
 -------------------------------------------------------------------------------
 -- VOLUME CONTROL IS OPENING THE DRUG CASEBOOK?
@@ -440,7 +448,7 @@ parts[4] = [=[
 -- the Casebook and volume down will not open it.
 -- For example for shift + C to open casebook change the setting below to = true
 --]=] .. '\n' ..
-'volume_opens_casebook = ' .. tostring(config_values.volume_opens_casebook) .. '\n' .. [=[
+param(config_values, 'volume_opens_casebook') .. [=[
 
 -------------------------------------------------------------------------------
 -- To allow patients with Alien DNA to visit your hospital other than by an
@@ -449,45 +457,45 @@ parts[4] = [=[
 -- So, like with Theme Hospital to do these things they will appear to change
 -- to normal looking and then change back.
 --]=] .. '\n' ..
-'alien_dna_only_by_emergency = ' .. tostring(config_values.alien_dna_only_by_emergency) .. '\n' ..
-'alien_dna_must_stand = ' .. tostring(config_values.alien_dna_must_stand) .. '\n' ..
-'alien_dna_can_knock_on_doors = ' .. tostring(config_values.alien_dna_can_knock_on_doors) .. '\n' .. [=[
+param(config_values, 'alien_dna_only_by_emergency') ..
+param(config_values, 'alien_dna_must_stand') ..
+param(config_values, 'alien_dna_can_knock_on_doors') .. [=[
 
 -- To allow female patients with fractured bones, which are by default
 -- disabled due to poor animation that skips and jumps a bit
 --]=] .. '\n' ..
-'disable_fractured_bones_females = ' .. tostring(config_values.disable_fractured_bones_females) .. '\n' .. [=[
+param(config_values, 'disable_fractured_bones_females') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default the player selects any extra objects they want for each room they
 -- build. If you would like the game to remember what you usually add, then
 -- change this option to true.
 --]=] .. '\n' ..
-'enable_avg_contents = ' .. tostring(config_values.enable_avg_contents) .. '\n' .. [=[
+param(config_values, 'enable_avg_contents') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default destroyed rooms can't be removed. If you would like the game to
 -- give you the option of removing a destroyed room change this option to true.
 --]=] .. '\n' ..
-'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[
+param(config_values, 'remove_destroyed_rooms') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default machine menu is shown in a bottom panel. If you would like the
 -- game to hide it change this option to false.
 --]=] .. '\n' ..
-'machine_menu_button = ' .. tostring(config_values.machine_menu_button) .. '\n' .. [=[
+param(config_values, 'machine_menu_button') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default the entire screen will shake during earthquakes. If you would
 -- like the game to keep the screen stationary, change this option to false.
 --]=] .. '\n' ..
-'enable_screen_shake = ' .. tostring(config_values.enable_screen_shake) .. '\n' .. [=[
+param(config_values, 'enable_screen_shake') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default subtitles are not displayed. If you would like the game to
 -- display subtitles for your hospital's announcements, turn this option on.
 --]=] .. '\n' ..
-'enable_announcer_subtitles = ' .. tostring(config_values.enable_announcer_subtitles) .. '\n' .. [=[
+param(config_values, 'enable_announcer_subtitles') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default, the game autosaves every in-game month. If you would like to
@@ -496,7 +504,7 @@ parts[4] = [=[
 -- This way your autosaves folder can grow to 300-500 MB with daily autosaves.
 -- Set 1 for Monthly, 2 for Weekly, 3 for Daily autosaves.
 --]=] .. '\n' ..
-'autosave_frequency = ' .. tostring(config_values.autosave_frequency) .. '\n\n'
+param(config_values, 'autosave_frequency') .. '\n'
 
   parts[5] = [=[
 ------------------------------- FOLDER SETTINGS -------------------------------
@@ -508,14 +516,14 @@ parts[4] = [=[
 -- the Theme Hospital demo, though a full install of the original game is
 -- preferred.
 --]=] .. '\n' ..
-'theme_hospital_install = ' .. (config_values.theme_hospital_install and serialize(config_values.theme_hospital_install) or 'nil -- [[X:\\ThemeHospital]]') .. '\n' .. [=[
+param(config_values, 'theme_hospital_install', '[[X:\\ThemeHospital]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- Font file setting. Can be changed from main game menu
 -- Specify a font file here if you wish to play the game in a language not
 -- present in the original game. Examples include Russian, Chinese and Polish.
 --]=] .. '\n' ..
-'unicode_font = ' .. (config_values.unicode_font and serialize(config_values.unicode_font) or 'nil -- [[X:\\ThemeHospital\\font.ttc]]') .. '\n' .. [=[
+param(config_values, 'unicode_font', '[[X:\\ThemeHospital\\font.ttc]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- Savegames. By default, the "Saves" directory alongside this config file will
@@ -523,7 +531,7 @@ parts[4] = [=[
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
 --]=] .. '\n' ..
-'savegames = ' .. (config_values.savegames and serialize(config_values.savegames) or 'nil -- [[X:\\ThemeHospital\\Saves]]') .. '\n' .. [=[
+param(config_values, 'savegames', '[[X:\\ThemeHospital\\Saves]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- Levels and Campaigns. By default, the "Levels" and "Campaigns" directory next to
@@ -532,15 +540,15 @@ parts[4] = [=[
 -- which exists and is more suitable.
 -- Note: Newly created maps in the Map Editor go into the "Levels" folder currently.
 --]=] .. '\n' ..
-'levels = ' .. (config_values.levels and serialize(config_values.levels) or 'nil -- [[X:\\ThemeHospital\\Levels]]') .. '\n' ..
-'campaigns = ' .. (config_values.campaigns and serialize(config_values.campaigns) or 'nil -- [[X:\\ThemeHospital\\Campaigns]]') .. '\n' .. [=[
+param(config_values, 'levels', '[[X:\\ThemeHospital\\Levels]]') ..
+param(config_values, 'campaigns', '[[X:\\ThemeHospital\\Campaigns]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital
 -- or use new graphics created by the CorsixTH project.
 -- Developer use only, otherwise the game will very likely crash in normal use
 --]=] .. '\n' ..
-'use_new_graphics = ' .. tostring(config_values.use_new_graphics) .. '\n' .. [=[
+param(config_values, 'use_new_graphics') .. [=[
 
 -------------------------------------------------------------------------------
 -- Graphics folder. All graphics are initially taken from the original
@@ -550,7 +558,7 @@ parts[4] = [=[
 -- acquired graphics from somewhere else, then uncomment the following line
 -- and point it to the directory which contains the new graphics.
 --]=] .. '\n' ..
-'new_graphics_folder = ' .. (config_values.new_graphics_folder and serialize(config_values.new_graphics_folder) or 'nil -- [[X:\\ThemeHospital\\Graphics]]') .. '\n' .. [=[
+param(config_values, 'new_graphics_folder', '[[X:\\ThemeHospital\\Graphics]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- Screenshots. By default, the "Screenshots" directory alongside this config
@@ -558,7 +566,7 @@ parts[4] = [=[
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
 --]=] .. '\n' ..
-'screenshots = ' .. (config_values.screenshots and serialize(config_values.screenshots) or 'nil -- [[X:\\ThemeHospital\\Screenshots]]') .. '\n' .. [=[
+param(config_values, 'screenshots', '[[X:\\ThemeHospital\\Screenshots]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- If you want to listen to non-Theme-Hospital music, then follow these steps:
@@ -569,7 +577,7 @@ parts[4] = [=[
 --     "names.txt" and write the file name on one row, followed by the desired
 --     ingame name on the next row.
 --]=] .. '\n' ..
-'audio_music = ' .. (config_values.audio_music and serialize(config_values.audio_music) or 'nil -- [[X:\\ThemeHospital\\Music]]') .. '\n' .. [=[
+param(config_values, 'audio_music', '[[X:\\ThemeHospital\\Music]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- SoundFont: CorsixTH uses the FluidR3 SoundFont by default for playing MIDI music.
@@ -578,7 +586,7 @@ parts[4] = [=[
 -- Mac(OS) Source Ports build users, and OS versions compiled with TiMidity
 -- won't see any effect from this option. See our Wiki for alternative options.
 --]=] .. '\n' ..
-'soundfont = ' .. (config_values.soundfont and serialize(config_values.soundfont) or 'nil -- [[X:\\ThemeHospital\\FluidR3.sf3]]') .. '\n\n'
+param(config_values, 'soundfont', '[[X:\\ThemeHospital\\FluidR3.sf3]]') .. '\n'
 
   parts[6] = [=[
 -------------------------------------------------------------------------------
@@ -598,8 +606,8 @@ parts[4] = [=[
 -- be left nil to use the system default port. A list of available ports
 -- can be obtained from the midi settings screen in game.
 --]=] .. '\n' ..
-'midi_api = ' .. (config_values.midi_api and serialize(config_values.midi_api) or 'nil -- [[Native]]') .. '\n' ..
-'midi_port = ' .. (config_values.midi_port and serialize(config_values.midi_port) or 'nil -- [[Midi Through:Midi Through Port-0 14:0]]') .. '\n' .. [=[
+param(config_values, 'midi_api', '[[Native]]') ..
+param(config_values, 'midi_port', '[[Midi Through:Midi Through Port-0 14:0]]') .. [=[
 
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
@@ -610,9 +618,9 @@ parts[4] = [=[
 -- sound effects and music audio. If you are experiencing poor audio playback,
 -- then try doubling the buffer size.
 --]=] .. '\n' ..
-'audio_frequency = ' .. tostring(config_values.audio_frequency) .. '\n' ..
-'audio_channels = ' .. tostring(config_values.audio_channels) .. '\n' ..
-'audio_buffer_size = ' .. tostring(config_values.audio_buffer_size) .. '\n' .. [=[
+param(config_values, 'audio_frequency') ..
+param(config_values, 'audio_channels') ..
+param(config_values, 'audio_buffer_size') .. [=[
 
 -------------------------------------------------------------------------------
 -- Advanced MIDI settings.
@@ -622,66 +630,66 @@ parts[4] = [=[
 -- midi_sysex_master_volume: Use SysEx message instead of adjusted channel
 -- volume messages to set the music volume.
 --]=] .. '\n' ..
-'midi_sysex_master_volume = ' .. tostring(config_values.midi_sysex_master_volume) .. '\n' .. [=[
+param(config_values, 'midi_sysex_master_volume') .. [=[
 
 -------------------------------------------------------------------------------
 -- Debug settings.
 -- If set to true more detailed information will be printed in the terminal
 -- and a debug menu will be visible.
 --]=] .. '\n' ..
-'debug = ' .. tostring(config_values.debug) .. '\n' .. [=[
+param(config_values, 'debug') .. [=[
 
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
 -- off the FPS limiter, causing much higher CPU utilisation, but resulting in
 -- more useful FPS values, as they are not artificially capped.
 --]=] .. '\n' ..
-'track_fps = ' .. tostring(config_values.track_fps) .. '\n' .. [=[
+param(config_values, 'track_fps') .. [=[
 
 -------------------------------------------------------------------------------
 -- Zoom Speed: By default this is set at 80
 -- Any number value between 10 and 1000, 10 is very slow and 1000 is very fast!
 --]=] .. '\n' ..
-'zoom_speed = ' .. tostring(config_values.zoom_speed) .. '\n' .. [=[
+param(config_values, 'zoom_speed') .. [=[
 
 -------------------------------------------------------------------------------
 -- Scroll Speeds: The speed of scrolling with and without shift being held.
 -- Any number value between 1 and 10, 1 is very slow and 10 is fast!
 --]=] .. '\n' ..
-'scroll_speed = ' .. tostring(config_values.scroll_speed) .. '\n' ..
-'shift_scroll_speed = ' .. tostring(config_values.shift_scroll_speed) .. '\n' .. [=[
+param(config_values, 'scroll_speed') ..
+param(config_values, 'shift_scroll_speed') .. [=[
 
 -------------------------------------------------------------------------------
 -- Room information dialogs: Information about new rooms, important for
 -- additional rooms in later levels. Affects campaign only.
 --]=] .. '\n' ..
-'room_information_dialogs = ' .. tostring(config_values.room_information_dialogs)  .. '\n' .. [=[
+param(config_values, 'room_information_dialogs') .. [=[
 
 -------------------------------------------------------------------------------
 -- If true, parts of the hospital can be made inaccessible by blocking the path
 -- with rooms or objects. If false, all parts of the hospital must be kept
 -- accessible, the game will disallow any attempt to blocking the path.
 --]=] .. '\n' ..
-'allow_blocking_off_areas = ' .. tostring(config_values.allow_blocking_off_areas) .. '\n' .. [=[
+param(config_values, 'allow_blocking_off_areas') .. [=[
 
 -------------------------------------------------------------------------------
 -- Direct Zoom: Avoid rendering to an intermediate texture when zooming.
 -- Improves performance and reliability on some hardware.
 --]=] .. '\n' ..
-'direct_zoom = ' .. tostring(config_values.direct_zoom) .. '\n' .. [=[
+param(config_values, 'direct_zoom') .. [=[
 
 -------------------------------------------------------------------------------
 -- Replacing Machines: By default, you will see a new machines initial strength
 -- before purchasing it. If you don't want this change the value to false.
 --]=] .. '\n' ..
-'new_machine_extra_info = ' .. tostring(config_values.new_machine_extra_info)  .. '\n' .. [=[
+param(config_values, 'new_machine_extra_info') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default your username will be your name in the game. You can change it in
 -- the New Game menu or between the brace brackets below like [[NAME]].
 -- Note: space is limited in the game, so don't enter a name that is too long!
 --]=] .. '\n' ..
-"player_name = " .. serialize(config_values.player_name or '') .. '\n' .. '\n'
+param(config_values, 'player_name') .. '\n'
 
   return table.concat(parts)
 end
@@ -703,104 +711,104 @@ local function hotkeys_contents(hotkeys_values)
 -----------------------------------Global Keys---------------------------------
 -- These are global keys to be used at anytime while the application is open.
 --]=] .. '\n' ..
-'global_confirm = ' .. serialize(hotkeys_values.global_confirm) .. '\n' ..
-'global_confirm_alt = ' .. serialize(hotkeys_values.global_confirm_alt) .. '\n' ..
-'global_cancel = ' .. serialize(hotkeys_values.global_cancel) .. '\n' ..
-'global_cancel_alt = ' .. serialize(hotkeys_values.global_cancel_alt) .. '\n' ..
-'global_fullscreen_toggle = ' .. serialize(hotkeys_values.global_fullscreen_toggle) .. '\n' ..
-'global_exitApp = ' .. serialize(hotkeys_values.global_exitApp) .. '\n' ..
-'global_resetApp = ' .. serialize(hotkeys_values.global_resetApp) .. '\n' ..
-'global_releaseMouse = ' .. serialize(hotkeys_values.global_releaseMouse) .. '\n' ..
-'global_showLuaConsole = ' .. serialize(hotkeys_values.global_showLuaConsole) .. '\n' ..
-'global_runDebugScript = ' .. serialize(hotkeys_values.global_runDebugScript) .. '\n' ..
-'global_screenshot = ' .. serialize(hotkeys_values.global_screenshot) .. '\n' ..
-'global_stop_movie = ' .. serialize(hotkeys_values.global_stop_movie) .. '\n' ..
-'global_pause_movie = ' .. serialize(hotkeys_values.global_pause_movie) .. '\n' ..
-'global_window_close = ' .. serialize(hotkeys_values.global_window_close) .. '\n' ..
-'global_stop_movie_alt = ' .. serialize(hotkeys_values.global_stop_movie_alt) .. '\n' ..
-'global_window_close_alt = ' .. serialize(hotkeys_values.global_window_close_alt) .. '\n' .. [=[
+param(hotkeys_values, 'global_confirm') ..
+param(hotkeys_values, 'global_confirm_alt') ..
+param(hotkeys_values, 'global_cancel') ..
+param(hotkeys_values, 'global_cancel_alt') ..
+param(hotkeys_values, 'global_fullscreen_toggle') ..
+param(hotkeys_values, 'global_exitApp') ..
+param(hotkeys_values, 'global_resetApp') ..
+param(hotkeys_values, 'global_releaseMouse') ..
+param(hotkeys_values, 'global_showLuaConsole') ..
+param(hotkeys_values, 'global_runDebugScript') ..
+param(hotkeys_values, 'global_screenshot') ..
+param(hotkeys_values, 'global_stop_movie') ..
+param(hotkeys_values, 'global_pause_movie') ..
+param(hotkeys_values, 'global_window_close') ..
+param(hotkeys_values, 'global_stop_movie_alt') ..
+param(hotkeys_values, 'global_window_close_alt') .. [=[
 
 -----------------------------------Scroll Keys---------------------------------
 -- These are the keys to be used to scroll the camera around in-game.
 --]=] .. '\n' ..
-'ingame_scroll_up = ' .. serialize(hotkeys_values.ingame_scroll_up) .. '\n' ..
-'ingame_scroll_down = ' .. serialize(hotkeys_values.ingame_scroll_down) .. '\n' ..
-'ingame_scroll_left = ' .. serialize(hotkeys_values.ingame_scroll_left) .. '\n' ..
-'ingame_scroll_right = ' .. serialize(hotkeys_values.ingame_scroll_right) .. '\n' ..
-'ingame_scroll_shift = ' .. serialize(hotkeys_values.ingame_scroll_shift) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_scroll_up') ..
+param(hotkeys_values, 'ingame_scroll_down') ..
+param(hotkeys_values, 'ingame_scroll_left') ..
+param(hotkeys_values, 'ingame_scroll_right') ..
+param(hotkeys_values, 'ingame_scroll_shift') .. [=[
 
 --------------------------------------Zoom-------------------------------------
 -- These are keys used to zoom the camera in and out.
 --]=] .. '\n' ..
-'ingame_zoom_in = '.. serialize(hotkeys_values.ingame_zoom_in) .. '\n' ..
-'ingame_zoom_in_more = ' .. serialize(hotkeys_values.ingame_zoom_in_more) .. '\n' ..
-'ingame_zoom_out = ' .. serialize(hotkeys_values.ingame_zoom_out) .. '\n' ..
-'ingame_zoom_out_more = ' .. serialize(hotkeys_values.ingame_zoom_out_more) .. '\n' ..
-'ingame_reset_zoom = ' .. serialize(hotkeys_values.ingame_reset_zoom) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_zoom_in') ..
+param(hotkeys_values, 'ingame_zoom_in_more') ..
+param(hotkeys_values, 'ingame_zoom_out') ..
+param(hotkeys_values, 'ingame_zoom_out_more') ..
+param(hotkeys_values, 'ingame_reset_zoom') .. [=[
 
 ----------------------------------In-Game Menus--------------------------------
 -- These are quick keys to show the in-game menu bar and some other windows.
 --]=] .. '\n' ..
-'ingame_showmenubar = ' .. serialize(hotkeys_values.ingame_showmenubar) .. '\n' ..
-'ingame_showCheatWindow = ' .. serialize(hotkeys_values.ingame_showCheatWindow) .. '\n' ..
-'ingame_loadMenu = ' .. serialize(hotkeys_values.ingame_loadMenu) .. '\n' ..
-'ingame_saveMenu = ' .. serialize(hotkeys_values.ingame_saveMenu) .. '\n' ..
-'ingame_jukebox = ' .. serialize(hotkeys_values.ingame_jukebox) .. '\n' ..
-'ingame_openFirstMessage = ' .. serialize(hotkeys_values.ingame_openFirstMessage) .. '\n'
+param(hotkeys_values, 'ingame_showmenubar') ..
+param(hotkeys_values, 'ingame_showCheatWindow') ..
+param(hotkeys_values, 'ingame_loadMenu') ..
+param(hotkeys_values, 'ingame_saveMenu') ..
+param(hotkeys_values, 'ingame_jukebox') ..
+param(hotkeys_values, 'ingame_openFirstMessage')
 
   parts[2] = [=[
 
 -- These pause and control the speed of the game.
 --]=] .. '\n' ..
-'ingame_pause = ' .. serialize(hotkeys_values.ingame_pause) .. '\n' ..
-'ingame_gamespeed_slowest = ' .. serialize(hotkeys_values.ingame_gamespeed_slowest) .. '\n' ..
-'ingame_gamespeed_slower = ' .. serialize(hotkeys_values.ingame_gamespeed_slower) .. '\n' ..
-'ingame_gamespeed_normal = ' .. serialize(hotkeys_values.ingame_gamespeed_normal) .. '\n' ..
-'ingame_gamespeed_max = ' .. serialize(hotkeys_values.ingame_gamespeed_max) .. '\n' ..
-'ingame_gamespeed_thensome = ' .. serialize(hotkeys_values.ingame_gamespeed_thensome) .. '\n' ..
-'ingame_gamespeed_speedup = ' .. serialize(hotkeys_values.ingame_gamespeed_speedup) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_pause') ..
+param(hotkeys_values, 'ingame_gamespeed_slowest') ..
+param(hotkeys_values, 'ingame_gamespeed_slower') ..
+param(hotkeys_values, 'ingame_gamespeed_normal') ..
+param(hotkeys_values, 'ingame_gamespeed_max') ..
+param(hotkeys_values, 'ingame_gamespeed_thensome') ..
+param(hotkeys_values, 'ingame_gamespeed_speedup') .. [=[
 
 ------------------------------In-Game Bottom Panel-----------------------------
 -- These open in-game panel windows like the town map or the build room dialog.
 --]=] .. '\n' ..
-'ingame_panel_bankManager = ' .. serialize(hotkeys_values.ingame_panel_bankManager) .. '\n' ..
-'ingame_panel_bankStats = ' .. serialize(hotkeys_values.ingame_panel_bankStats) .. '\n' ..
-'ingame_panel_staffManage = ' .. serialize(hotkeys_values.ingame_panel_staffManage) .. '\n' ..
-'ingame_panel_townMap = ' .. serialize(hotkeys_values.ingame_panel_townMap) .. '\n' ..
-'ingame_panel_casebook = ' .. serialize(hotkeys_values.ingame_panel_casebook) .. '\n' ..
-'ingame_panel_research = ' .. serialize(hotkeys_values.ingame_panel_research) .. '\n' ..
-'ingame_panel_status = ' .. serialize(hotkeys_values.ingame_panel_status) .. '\n' ..
-'ingame_panel_charts = ' .. serialize(hotkeys_values.ingame_panel_charts) .. '\n' ..
-'ingame_panel_policy = ' .. serialize(hotkeys_values.ingame_panel_policy) .. '\n' ..
-'ingame_panel_machineMenu = ' .. serialize(hotkeys_values.ingame_panel_machineMenu) .. '\n' ..
-'ingame_panel_map_alt = ' .. serialize(hotkeys_values.ingame_panel_map_alt) .. '\n' ..
-'ingame_panel_research_alt = ' .. serialize(hotkeys_values.ingame_panel_research_alt) .. '\n' ..
-'ingame_panel_casebook_alt = ' .. serialize(hotkeys_values.ingame_panel_casebook_alt) .. '\n' ..
-'ingame_panel_casebook_alt02 = ' .. serialize(hotkeys_values.ingame_panel_casebook_alt02) .. '\n' ..
-'ingame_panel_buildRoom = ' .. serialize(hotkeys_values.ingame_panel_buildRoom) .. '\n' ..
-'ingame_panel_furnishCorridor = ' .. serialize(hotkeys_values.ingame_panel_furnishCorridor) .. '\n' ..
-'ingame_panel_editRoom = ' .. serialize(hotkeys_values.ingame_panel_editRoom) .. '\n' ..
-'ingame_panel_hireStaff = ' .. serialize(hotkeys_values.ingame_panel_hireStaff) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_panel_bankManager') ..
+param(hotkeys_values, 'ingame_panel_bankStats') ..
+param(hotkeys_values, 'ingame_panel_staffManage') ..
+param(hotkeys_values, 'ingame_panel_townMap') ..
+param(hotkeys_values, 'ingame_panel_casebook') ..
+param(hotkeys_values, 'ingame_panel_research') ..
+param(hotkeys_values, 'ingame_panel_status') ..
+param(hotkeys_values, 'ingame_panel_charts') ..
+param(hotkeys_values, 'ingame_panel_policy') ..
+param(hotkeys_values, 'ingame_panel_machineMenu') ..
+param(hotkeys_values, 'ingame_panel_map_alt') ..
+param(hotkeys_values, 'ingame_panel_research_alt') ..
+param(hotkeys_values, 'ingame_panel_casebook_alt') ..
+param(hotkeys_values, 'ingame_panel_casebook_alt02') ..
+param(hotkeys_values, 'ingame_panel_buildRoom') ..
+param(hotkeys_values, 'ingame_panel_furnishCorridor') ..
+param(hotkeys_values, 'ingame_panel_editRoom') ..
+param(hotkeys_values, 'ingame_panel_hireStaff') .. [=[
 
 ----------------------------------Rotate Object--------------------------------
 -- This key rotates objects while they are being placed.
 -- ]=] .. '\n' ..
-'ingame_rotateobject = ' .. serialize(hotkeys_values.ingame_rotateobject) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_rotateobject') .. [=[
 
 -----------------------------------Quick Keys----------------------------------
 -- These are keys for quick saving and loading, and for quickly restarting and
 -- quitting the level.
 --]=] .. '\n' ..
-'ingame_quickSave = ' .. serialize(hotkeys_values.ingame_quickSave) .. '\n' ..
-'ingame_quickLoad = ' .. serialize(hotkeys_values.ingame_quickLoad) .. '\n' ..
-'ingame_restartLevel = ' .. serialize(hotkeys_values.ingame_restartLevel) .. '\n' ..
-'ingame_quitLevel = ' .. serialize(hotkeys_values.ingame_quitLevel) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_quickSave') ..
+param(hotkeys_values, 'ingame_quickLoad') ..
+param(hotkeys_values, 'ingame_restartLevel') ..
+param(hotkeys_values, 'ingame_quitLevel') .. [=[
 
 ---------------------------------Set Transparent-------------------------------
 -- Use these keys to make walls transparent, allowing you to see behind them.
 --]=] .. '\n' ..
-'ingame_setTransparent = ' .. serialize(hotkeys_values.ingame_setTransparent) .. '\n' ..
-'ingame_toggleTransparent = ' .. serialize(hotkeys_values.ingame_toggleTransparent) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_setTransparent') ..
+param(hotkeys_values, 'ingame_toggleTransparent') .. [=[
 ]=]
 
   parts[3] = [=[
@@ -812,46 +820,46 @@ local function hotkeys_contents(hotkeys_values)
 -- you can press "ingame_recallPosition_1" whenever you want to go back to
 -- the operating room instantly.
 --]=] .. '\n' ..
-'ingame_storePosition_1 = ' .. serialize(hotkeys_values.ingame_storePosition_1) .. '\n' ..
-'ingame_storePosition_2 = ' .. serialize(hotkeys_values.ingame_storePosition_2) .. '\n' ..
-'ingame_storePosition_3 = ' .. serialize(hotkeys_values.ingame_storePosition_3) .. '\n' ..
-'ingame_storePosition_4 = ' .. serialize(hotkeys_values.ingame_storePosition_4) .. '\n' ..
-'ingame_storePosition_5 = ' .. serialize(hotkeys_values.ingame_storePosition_5) .. '\n' ..
-'ingame_storePosition_6 = ' .. serialize(hotkeys_values.ingame_storePosition_6) .. '\n' ..
-'ingame_storePosition_7 = ' .. serialize(hotkeys_values.ingame_storePosition_7) .. '\n' ..
-'ingame_storePosition_8 = ' .. serialize(hotkeys_values.ingame_storePosition_8) .. '\n' ..
-'ingame_storePosition_9 = ' .. serialize(hotkeys_values.ingame_storePosition_9) .. '\n' ..
-'ingame_storePosition_0 = ' .. serialize(hotkeys_values.ingame_storePosition_0) .. '\n' ..
-'ingame_recallPosition_1 = ' .. serialize(hotkeys_values.ingame_recallPosition_1) .. '\n' ..
-'ingame_recallPosition_2 = ' .. serialize(hotkeys_values.ingame_recallPosition_2) .. '\n' ..
-'ingame_recallPosition_3 = ' .. serialize(hotkeys_values.ingame_recallPosition_3) .. '\n' ..
-'ingame_recallPosition_4 = ' .. serialize(hotkeys_values.ingame_recallPosition_4) .. '\n' ..
-'ingame_recallPosition_5 = ' .. serialize(hotkeys_values.ingame_recallPosition_5) .. '\n' ..
-'ingame_recallPosition_6 = ' .. serialize(hotkeys_values.ingame_recallPosition_6) .. '\n' ..
-'ingame_recallPosition_7 = ' .. serialize(hotkeys_values.ingame_recallPosition_7) .. '\n' ..
-'ingame_recallPosition_8 = ' .. serialize(hotkeys_values.ingame_recallPosition_8) .. '\n' ..
-'ingame_recallPosition_9 = ' .. serialize(hotkeys_values.ingame_recallPosition_9) .. '\n' ..
-'ingame_recallPosition_0 = ' .. serialize(hotkeys_values.ingame_recallPosition_0) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_storePosition_1') ..
+param(hotkeys_values, 'ingame_storePosition_2') ..
+param(hotkeys_values, 'ingame_storePosition_3') ..
+param(hotkeys_values, 'ingame_storePosition_4') ..
+param(hotkeys_values, 'ingame_storePosition_5') ..
+param(hotkeys_values, 'ingame_storePosition_6') ..
+param(hotkeys_values, 'ingame_storePosition_7') ..
+param(hotkeys_values, 'ingame_storePosition_8') ..
+param(hotkeys_values, 'ingame_storePosition_9') ..
+param(hotkeys_values, 'ingame_storePosition_0') ..
+param(hotkeys_values, 'ingame_recallPosition_1') ..
+param(hotkeys_values, 'ingame_recallPosition_2') ..
+param(hotkeys_values, 'ingame_recallPosition_3') ..
+param(hotkeys_values, 'ingame_recallPosition_4') ..
+param(hotkeys_values, 'ingame_recallPosition_5') ..
+param(hotkeys_values, 'ingame_recallPosition_6') ..
+param(hotkeys_values, 'ingame_recallPosition_7') ..
+param(hotkeys_values, 'ingame_recallPosition_8') ..
+param(hotkeys_values, 'ingame_recallPosition_9') ..
+param(hotkeys_values, 'ingame_recallPosition_0') .. [=[
 
 ---------------------------------Toggle Various--------------------------------
 -- These toggle various things. The names tell all.
 --]=] .. '\n' ..
-'ingame_toggleAnnouncements = ' .. serialize(hotkeys_values.ingame_toggleAnnouncements) .. '\n' ..
-'ingame_toggleSounds = ' .. serialize(hotkeys_values.ingame_toggleSounds) .. '\n' ..
-'ingame_toggleMusic = ' .. serialize(hotkeys_values.ingame_toggleMusic) .. '\n' ..
-'ingame_toggleAdvisor = ' .. serialize(hotkeys_values.ingame_toggleAdvisor) .. '\n' ..
-'ingame_toggleInfo = ' .. serialize(hotkeys_values.ingame_toggleInfo) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_toggleAnnouncements') ..
+param(hotkeys_values, 'ingame_toggleSounds') ..
+param(hotkeys_values, 'ingame_toggleMusic') ..
+param(hotkeys_values, 'ingame_toggleAdvisor') ..
+param(hotkeys_values, 'ingame_toggleInfo') .. [=[
 
 ------------------------------------Dump Log-----------------------------------
 -- These keys dump logs. And strings, if too much fiber was taken.
 --]=] .. '\n' ..
-'ingame_poopLog = ' .. serialize(hotkeys_values.ingame_poopLog) .. '\n' ..
-'ingame_poopStrings = ' .. serialize(hotkeys_values.ingame_poopStrings) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_poopLog') ..
+param(hotkeys_values, 'ingame_poopStrings') .. [=[
 
 --------------------------------Patient, Go Home-------------------------------
 -- This sends a patient home. Also a good anime episode name.
 --]=] .. '\n' ..
-'ingame_patient_gohome = ' .. serialize(hotkeys_values.ingame_patient_gohome) .. '\n' .. [=[
+param(hotkeys_values, 'ingame_patient_gohome') .. [=[
 ]=]
 
   return table.concat(parts)
