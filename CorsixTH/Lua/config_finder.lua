@@ -18,6 +18,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+-- This module detects the appropriate path for the config.txt and hotkeys.txt
+-- files. It also manages saving and loading from these files and their
+-- contents.
+--
+-- To add a new config property add it's default value to the table in
+-- new_config_defaults, then update the string in the config_contents with a
+-- description of the property under the most relevant heading followed by
+-- param(config_values, 'your_parameter_name').
+--
+-- If your config property does not have a default value (defaults to nil) it
+-- can be helpful to include an example of the expected input, with the
+-- following syntax: param(config_values, 'param_name', '[[example]]')
+--
+-- For new hotkeys the process is similar but use the new_hotkeys_defaults
+-- function table for the default value and the string in the hotkeys_contents
+-- function to include the parameter in the hotkeys.txt configuration file.
+-- The same params syntax applies.
+--
+-- The format of the configuration files should not be depended on anywhere
+-- outside of this module. It is a layering violation to attempt to parse or
+-- update the file anywhere else in the codebase e.g. app.lua.
+
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
 local serialize = serialize -- from utility
