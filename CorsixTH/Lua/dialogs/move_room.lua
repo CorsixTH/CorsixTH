@@ -35,21 +35,15 @@ function UIMoveRoom:UIMoveRoom(ui, room)
   self.ui = ui
   self.world = ui.app.world
   self.world.mode_deplacement = true
-  
   self.preview_anim = TH.animation()
   self.preview_anim:setAnimation(ui.app.anims, room.room_info.build_preview_animation or room.room_info.build_preview)
-    
   self.room = room
   self.preview_tiles = {}
-  
   -- Store original position if cancel
   self.origin_x, self.origin_y = room.x, room.y
-
   -- Current position (follows cursor)
   self.target_x, self.target_y = room.x, room.y
-  
   self.lifted_objects = self:_liftObjects()
-    
   self:addKeyHandler("global_cancel", self, self.cancelMove)
   self:addKeyHandler("global_confirm", self, self.confirmCurrentPosition)
 end
@@ -93,7 +87,6 @@ function UIMoveRoom:onMouseMove(x, y, dx, dy)
     self:clearPreview()
     self:drawPreview()
     local wx, wy = self.ui:ScreenToWorld(x, y)
-    
     if wx and wy then
         self.target_x = math.floor(wx)
         self.target_y = math.floor(wy)

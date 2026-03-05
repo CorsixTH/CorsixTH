@@ -189,7 +189,6 @@ function GameUI:startMoveRoom()
     if not room then
         return
     end
-    
     self:addWindow(UIMoveRoom(self, room))
 end
 

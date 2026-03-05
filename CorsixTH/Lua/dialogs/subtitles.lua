@@ -44,7 +44,6 @@ function Subtitles:queueSubtitle(name)
     if name:find("%*") then
         return
     end
-    
     local key = string.lower(name):gsub("%.wav$", "")
 
     -- Safe access: _S.subtitles is userdata and may error on missing keys
