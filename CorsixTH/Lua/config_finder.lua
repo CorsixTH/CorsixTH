@@ -36,6 +36,10 @@ SOFTWARE. --]]
 -- function to include the parameter in the hotkeys.txt configuration file.
 -- The same params syntax applies.
 --
+-- After changing the config.txt file you need to generate a new template for
+-- the windows installer by running `lua scripts/generate_windows_config.lua`
+-- from the root of the repository.
+--
 -- The format of the configuration files should not be depended on anywhere
 -- outside of this module. It is a layering violation to attempt to parse or
 -- update the file anywhere else in the codebase e.g. app.lua.
