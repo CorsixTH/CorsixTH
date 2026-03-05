@@ -68,7 +68,6 @@ function UIMoveRoom:_liftObjects()
       self.world:removeObjectFromTile(obj, ox, oy)
       self.world.map.th:setCellFlags(ox, oy, { buildable = true })
   end
-  
   return lifted
 end
 
@@ -192,7 +191,7 @@ function UIMoveRoom:_applyMove(new_x, new_y)
             obj.direction = entry.direction
             obj:setTile(nx, ny)
             world:addObjectToTile(obj, nx, ny)
-            room.objects[obj] = true    
+            room.objects[obj] = true
         else
             room.objects[obj] = nil
             if entry.old_x and entry.old_y then
@@ -207,7 +206,6 @@ function UIMoveRoom:_applyMove(new_x, new_y)
             room.hospital:refundObject(obj)
         end
     end
-    
     for obj, _ in pairs(room.objects) do
         if obj.tile_x == nil or obj.tile_y == nil then
             room.objects[obj] = nil

@@ -2810,15 +2810,14 @@ function World:canMoveRoomTo(room, new_x, new_y, showMessage)
                 return false
             end
             -- verify if another room is on the new location
-            local other = self:getRoom(tileX, tileY) 
+            local other = self:getRoom(tileX, tileY)
             if other and other ~= room then
                 self.app.world.mode_deplacement = false
                 self:showError("You can't move this room: another room is in the way.")
                 return false
             end
-            
             -- verify if a radiator is on the new location
-            local radiator = self:hasRadiator(tileX, tileY, room.width, room.height) 
+            local radiator = self:hasRadiator(tileX, tileY, room.width, room.height)
             if radiator then
                 self:showError("You can't move this room: a radiator is in the way.")
                 self.app.world.mode_deplacement = false
@@ -2849,7 +2848,6 @@ function World:moveRoom(room, directionX, directionY)
     self:_remove_wall_line(room.x, room.y, 1, 0, room.width , 2,  0, -1, "right") -- right room
     self:_remove_wall_line(room.x, room.y + room.height, 1, 0, room.width , 2, 0, 0, "left") -- left room
     self:_remove_wall_line(room.x + room.width, room.y , 0, 1, room.height, 3, 0, 0, "bottom") -- bottom room
-    
     -- Will put the last position cell flags back to hospital floor
     for tileX = room.x, room.x + room.width - 1 do
         for tileY = room.y, room.y + room.height - 1 do
@@ -2857,11 +2855,9 @@ function World:moveRoom(room, directionX, directionY)
             map:setCell(tileX, tileY, 1, 76)
         end
     end
-    
     -- Finaly we will change the location of the room with the new position
-    room.x, room.y = new_x, new_y
-    map:markRoom(new_x, new_y, room.width, room.height,
-            room.room_info.floor_tile, room.id)
+    room.x, room.y = new_x, new_y 
+    map:markRoom(new_x, new_y, room.width, room.height, room.room_info.floor_tile, room.id)
     -- Will place the wall on the tile depending on the direction of the list
     for _, side in ipairs({"top","right","bottom","left"}) do
         local list = self.l_wall_layer[side]
@@ -2877,10 +2873,8 @@ function World:moveRoom(room, directionX, directionY)
         local door_rel_x, door_rel_y = (room.door.tile_x - (room.x - directionX)), (room.door.tile_y - (room.y - directionY))-- relative to OLD origin
         room.door:setTile(room.x + door_rel_x, room.y + door_rel_y)
     end
-    
     -- Will adjust the path of humanoid
     self.pathfinder:setMap(map)
-    
     -- Will update the action to the new location
     for _, entity in ipairs(self.entities) do
         if class.is(entity, Humanoid) and entity.action_queue then
@@ -2897,7 +2891,7 @@ function World:moveRoom(room, directionX, directionY)
     --! Update the map
     --! put back l_wall_layer to nil so we don't keep the last wall
     --! We will rebuild the entity map so we don't have entity error
-    self.map.th:updatePathfinding()
+    self.map.th:updatePathfinding() 
     self.pathfinder:setMap(self.map.th)
     self.mode_deplacement = false
     self.l_wall_layer = nil
