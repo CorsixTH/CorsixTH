@@ -37,14 +37,24 @@ end
 --! Pushes an announcer audio file's associated subtitle text to the queue for display
 --!param name (string) Filename of the announcer sound to display
 function Subtitles:queueSubtitle(name)
-  if _S.subtitles ~= nil then
-    local subtitleString = _S.subtitles[string.gsub(string.lower(name), ".wav", "")]
-    if subtitleString ~= nil then
-      --Second field of subtitle object is the subtitle's display lifetime, measured in ticks
-      local duration = 280 -- ~5 seconds in ticks
-      self.queue:push({subtitleString, duration})
+    if _S.subtitles == nil then return end
+    if type(name) ~= "string" then return end
+
+    -- Ignore wildcards like "rand*"
+    if name:find("%*") then
+        return
     end
-  end
+    local key = string.lower(name):gsub("%.wav$", "")
+
+    -- Safe access: _S.subtitles is userdata and may error on missing keys
+    local ok, subtitleString = pcall(function()
+        return _S.subtitles[key]
+    end)
+
+    if ok and subtitleString ~= nil then
+        local duration = 280
+        self.queue:push({ subtitleString, duration })
+    end
 end
 
 function Subtitles:draw(canvas, x, y)

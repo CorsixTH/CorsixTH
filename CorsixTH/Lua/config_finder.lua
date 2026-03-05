@@ -723,6 +723,7 @@ local hotkeys_defaults = {
   ingame_recallPosition_8 = {"ctrl", "8"},
   ingame_recallPosition_9 = {"ctrl", "9"},
   ingame_recallPosition_0 = {"ctrl", "0"},
+  ingame_moveRoom = {"ctrl", "m"},
 }
 
 -- Clear the loaded file variable.
@@ -852,7 +853,8 @@ if hotkeys_needs_rewrite and TheApp then
 'ingame_panel_buildRoom = ' .. hotkeys_values.ingame_panel_buildRoom .. '\n' ..
 'ingame_panel_furnishCorridor = ' .. hotkeys_values.ingame_panel_furnishCorridor .. '\n' ..
 'ingame_panel_editRoom = ' .. hotkeys_values.ingame_panel_editRoom .. '\n' ..
-'ingame_panel_hireStaff = ' .. hotkeys_values.ingame_panel_hireStaff .. '\n' .. [=[
+'ingame_panel_hireStaff = ' .. hotkeys_values.ingame_panel_hireStaff .. '\n' ..
+'ingame_moveRoom = ' .. hotkeys_values.ingame_moveRoom .. '\n' .. [=[
 
 ----------------------------------Rotate Object--------------------------------
 -- This key rotates objects while they are being placed.
