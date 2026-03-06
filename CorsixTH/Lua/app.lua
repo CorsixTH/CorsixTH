@@ -125,14 +125,12 @@ function App:init()
   -- Prereq 2: Config file (for screen width / height / TH folder)
   -- Note: These errors cannot be translated, as the config file specifies the language
   local conf_path = self.command_line["config-file"] or "config.txt"
-  local conf_chunk, conf_err = loadfile_envcall(conf_path)
-  if not conf_chunk then
+  local _, conf_err = require('config_finder').load_config(conf_path, self.config)
+  if conf_err then
     error("Unable to load the config file. Please ensure that CorsixTH " ..
       "has permission to read/write " .. conf_path .. ", or use the " ..
       "--config-file=filename command line option to specify a writable file. " ..
       "For reference, the error loading the config file was: " .. conf_err)
-  else
-    conf_chunk(self.config)
   end
   self:fixConfig()
   corsixth.require("filesystem")
@@ -304,11 +302,9 @@ function App:init()
 
   -- Load/setup hotkeys.
   local hotkeys_path = self.command_line["hotkeys-file"] or "hotkeys.txt"
-  local hotkeys_chunk, hotkeys_err = loadfile_envcall(hotkeys_path)
-  if not hotkeys_chunk then
+  local _, hotkeys_err = require('config_finder').load_hotkeys(hotkeys_path, self.hotkeys)
+  if hotkeys_err then
     error(_S.hotkeys_file_err.file_err_01 .. hotkeys_path .. _S.hotkeys_file_err.file_err_02 .. hotkeys_err)
-  else
-    hotkeys_chunk(self.hotkeys)
   end
   self:fixHotkeys()
 
@@ -410,6 +406,10 @@ function App:init()
       self.ui:addWindow(UIInformation(self.ui, error_message, true))
     end
   end
+
+  -- Finished init, save any config changes applied
+  TheApp:saveConfig()
+  TheApp:saveHotkeys()
 
   if self.config.play_intro then
     self.moviePlayer:playIntro(callback_after_movie)
@@ -1009,14 +1009,6 @@ function App:checkMissingStringsInLanguage(dir, language)
 end
 
 function App:fixConfig()
-  -- Fill in default values for things which don't exist
-  local config_defaults = select(3, corsixth.require("config_finder"))
-  for k, v in pairs(config_defaults) do
-    if self.config[k] == nil then
-      self.config[k] = v
-    end
-  end
-
   for key, value in pairs(self.config) do
     -- Trim whitespace from beginning and end string values - it shouldn't be
     -- there (at least in any current configuration options).
@@ -1077,59 +1069,8 @@ function App:fixConfig()
 end
 
 function App:saveConfig()
-  -- Load lines from config file
-  local config_file = self.command_line["config-file"] or "config.txt"
-  local fi = io.open(config_file, "r")
-  local lines = {}
-  local handled_ids = {}
-  if fi then
-    for line in fi:lines() do
-      lines[#lines + 1] = line
-      if not (string.find(line, "^%s*$") or string.find(line, "^%s*%-%-")) then -- empty lines or comments
-        -- Look for identifiers we want to save
-        local _, _, identifier, value = string.find(line, "^%s*([_%a][_%w]*)%s*=%s*(.-)%s*$")
-        if identifier then
-          local _, temp
-          -- Trim possible trailing comment from value
-          _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
-          value = temp or value
-          -- Remove enclosing [[]], if necessary
-          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
-          value = temp or value
-
-          -- If identifier also exists in runtime options, compare their values and
-          -- replace the line, if needed
-          handled_ids[identifier] = true
-          if value ~= tostring(self.config[identifier]) then
-            lines[#lines] = string.format("%s = %s", identifier,
-                serialize(self.config[identifier], { long_bracket_level_start = 1 } ))
-          end
-        end
-      end
-    end
-    fi:close()
-  end
-  -- Append options that were not found
-  for identifier, value in pairs(self.config) do
-    if not handled_ids[identifier] then
-      if type(value) == "string" then
-        value = string.format("[[%s]]", value)
-      else
-        value = tostring(value)
-      end
-      lines[#lines + 1] = string.format("%s = %s", identifier, value)
-    end
-  end
-  -- Trim trailing newlines
-  while lines[#lines] == "" do
-    lines[#lines] = nil
-  end
-
-  fi = self:writeToFileOrTmp(config_file)
-  for _, line in ipairs(lines) do
-    fi:write(line .. "\n")
-  end
-  fi:close()
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  require('config_finder').save_config(conf_path, self.config)
 end
 
 --! Tries to open the given file or a file in OS's temp dir.
@@ -1152,15 +1093,6 @@ function App:writeToFileOrTmp(file, mode)
 end
 
 function App:fixHotkeys()
-  -- Fill in default values for things which don't exist
-  local hotkeys_defaults = select(6, corsixth.require("config_finder"))
-
-  for k, v in pairs(hotkeys_defaults) do
-    if self.hotkeys[k] == nil then
-      self.hotkeys[k] = v
-    end
-  end
-
   for key, value in pairs(self.hotkeys) do
     -- Trim whitespace from beginning and end string values - it shouldn't be
     -- there (at least in any current configuration options).
@@ -1175,66 +1107,7 @@ end
 function App:saveHotkeys()
   -- Load lines from config file
   local hotkeys_filename = self.command_line["hotkeys-file"] or "hotkeys.txt"
-  local fi = io.open(hotkeys_filename, "r")
-  local lines = {}
-  local handled_ids = {}
-
-  if fi then
-    for line in fi:lines() do
-      lines[#lines + 1] = line
-      if not (string.find(line, "^%s*$") or string.find(line, "^%s*%-%-")) then -- empty lines or comments
-        -- Look for identifiers we want to save
-        local _, _, identifier, value = string.find(line, "^%s*([_%a][_%w]*)%s*=%s*(.-)%s*$")
-        if identifier then
-          local _, temp
-          -- Trim possible trailing comment from value
-          _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
-          value = temp or value
-          -- Remove enclosing [[]], if necessary
-          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
-          value = temp or value
-
-          -- If identifier also exists in runtime options, compare their values and
-          -- replace the line, if needed
-          handled_ids[identifier] = true
-
-          if value ~= serialize(self.hotkeys[identifier]) then
-            local new_value = self.hotkeys[identifier]
-            if type(new_value) == "string" then
-              new_value = string.format("[[%s]]", new_value)
-            else
-              new_value = serialize(new_value)
-            end
-            lines[#lines] = string.format("%s = %s", identifier, new_value)
-          end
-        end
-      end
-    end
-    fi:close()
-  end
-
-  -- Append options that were not found
-  for identifier, value in pairs(self.hotkeys) do
-    if not handled_ids[identifier] then
-      if type(value) == "string" then
-        value = string.format("[[%s]]", value)
-      else
-        value = tostring(value)
-      end
-      lines[#lines + 1] = string.format("%s = %s", identifier, value)
-    end
-  end
-  -- Trim trailing newlines
-  while lines[#lines] == "" do
-    lines[#lines] = nil
-  end
-
-  fi = self:writeToFileOrTmp(hotkeys_filename)
-  for _, line in ipairs(lines) do
-    fi:write(line .. "\n")
-  end
-
-  fi:close()
+  require('config_finder').save_hotkeys(hotkeys_filename, self.hotkeys)
 end
 
 function App:run()
@@ -1510,7 +1383,7 @@ function App:checkInstallFolder()
       user_dir,
       user_dir and (user_dir .. pathsep .. "Documents"),
       win_home_dir,
-      select(1, corsixth.require("config_finder")):match("(.*[/\\])"):sub(1, -2),
+      corsixth.require("config_finder").config_filename:match("(.*[/\\])"):sub(1, -2),
       mac_app_dir,
       mac_app_dir and mac_app_dir:match("(.*)/.*%.app"),
       "/Applications/Theme Hospital.app/Contents/Resources/game/Theme Hospital.app/" ..
@@ -2016,6 +1889,7 @@ end
 function App:exit()
   -- Save config before exiting
   self:saveConfig()
+  self:saveHotkeys()
   self.running = false
 end
 

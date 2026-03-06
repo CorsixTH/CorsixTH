@@ -276,6 +276,7 @@ campaigns = nil -- [[X:\ThemeHospital\Campaigns]]
 -- Use new graphics. Whether to use the original graphics from Theme Hospital
 -- or use new graphics created by the CorsixTH project.
 -- Developer use only, otherwise the game will very likely crash in normal use
+--
 use_new_graphics = false
 
 -------------------------------------------------------------------------------
@@ -285,6 +286,7 @@ use_new_graphics = false
 -- will be used if you just switch on new graphics. If you however have
 -- acquired graphics from somewhere else, then uncomment the following line
 -- and point it to the directory which contains the new graphics.
+--
 new_graphics_folder = nil -- [[X:\ThemeHospital\Graphics]]
 
 -------------------------------------------------------------------------------

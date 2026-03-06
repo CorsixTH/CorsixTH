@@ -18,9 +18,36 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local config_path, config_name, config_data
+-- This module detects the appropriate path for the config.txt and hotkeys.txt
+-- files. It also manages saving and loading from these files and their
+-- contents.
+--
+-- To add a new config property add it's default value to the table in
+-- new_config_defaults, then update the string in the config_contents with a
+-- description of the property under the most relevant heading followed by
+-- param(config_values, 'your_parameter_name').
+--
+-- If your config property does not have a default value (defaults to nil) it
+-- can be helpful to include an example of the expected input, with the
+-- following syntax: param(config_values, 'param_name', '[[example]]')
+--
+-- For new hotkeys the process is similar but use the new_hotkeys_defaults
+-- function table for the default value and the string in the hotkeys_contents
+-- function to include the parameter in the hotkeys.txt configuration file.
+-- The same params syntax applies.
+--
+-- After changing the config.txt file you need to generate a new template for
+-- the windows installer by running `lua scripts/generate_windows_config.lua`
+-- from the root of the repository.
+--
+-- The format of the configuration files should not be depended on anywhere
+-- outside of this module. It is a layering violation to attempt to parse or
+-- update the file anywhere else in the codebase e.g. app.lua.
+
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
+local serialize = serialize -- from utility
+
 local function pathconcat(a, b)
   if a:sub(-1) == pathsep then
     return a .. b
@@ -29,62 +56,63 @@ local function pathconcat(a, b)
   end
 end
 
--- Decide on a sensible place to put config.txt, etc.
-if pathsep == "\\" then
-  -- Windows
-  config_path = os.getenv("AppData") or ourpath
-else
-  -- Linux, OS X, etc.
-  config_path = os.getenv("XDG_CONFIG_HOME") or pathconcat(os.getenv("HOME") or "~", ".config")
-end
-if config_path ~= ourpath then
-  config_path = pathconcat(config_path, "CorsixTH")
-end
-
--- Config filename.
-config_name = "config.txt"
-
--- Check for config.path.txt
-local fi = io.open(pathconcat(ourpath, "config.path.txt"), "r")
-if fi then
-  local contents = fi:read("*a")
-  contents = contents:match("^%s*(.-)%s*$")
-  fi:close()
-  if #contents ~= 0 then
-    config_path = contents
-    if config_path:sub(-4, -1):lower() == ".txt" then
-      config_name = config_path:match("([^" .. pathsep .. "]*)$")
-      config_path = config_path:sub(1, -1-#config_name)
-    end
-  end
-end
-
--- Check / create config_path
-local lfs = require("lfs")
-local function check_dir_exists(path)
-  if path:sub(-1) == pathsep then
-    path = path:sub(1, -2)
-  end
-  if lfs.attributes(path, "mode") == "directory" then
-    return true
+local function find_config()
+  local config_path
+  -- Decide on a sensible place to put config.txt, etc.
+  if pathsep == "\\" then
+    -- Windows
+    config_path = os.getenv("AppData") or ourpath
   else
-    local subpath = path:match("^(.*)[" .. pathsep .. "]")
-    if subpath then
-      return check_dir_exists(subpath) and lfs.mkdir(path)
-    else
-      return false
+    -- Linux, OS X, etc.
+    config_path = os.getenv("XDG_CONFIG_HOME") or pathconcat(os.getenv("HOME") or "~", ".config")
+  end
+  if config_path ~= ourpath then
+    config_path = pathconcat(config_path, "CorsixTH")
+  end
+
+  -- Config filename.
+  local config_name = "config.txt"
+
+  -- Check for config.path.txt
+  local fi = io.open(pathconcat(ourpath, "config.path.txt"), "r")
+  if fi then
+    local contents = fi:read("*a")
+    contents = contents:match("^%s*(.-)%s*$")
+    fi:close()
+    if #contents ~= 0 then
+      config_path = contents
+      if config_path:sub(-4, -1):lower() == ".txt" then
+        config_name = config_path:match("([^" .. pathsep .. "]*)$")
+        config_path = config_path:sub(1, -1-#config_name)
+      end
     end
   end
-end
-if not check_dir_exists(config_path) then
-  config_path = ourpath
+
+  -- Check / create config_path
+  local lfs = require("lfs")
+  local function check_dir_exists(path)
+    if path:sub(-1) == pathsep then
+      path = path:sub(1, -2)
+    end
+    if lfs.attributes(path, "mode") == "directory" then
+      return true
+    else
+      local subpath = path:match("^(.*)[" .. pathsep .. "]")
+      if subpath then
+        return check_dir_exists(subpath) and lfs.mkdir(path)
+      else
+        return false
+      end
+    end
+  end
+  if not check_dir_exists(config_path) then
+    config_path = ourpath
+  end
+
+  return pathconcat(config_path, config_name), config_path, config_name
 end
 
--- Config file with full path as string.
-local config_filename = pathconcat(config_path, config_name)
-
--- Create config.txt if it doesn't exist
-local config_defaults = {
+local function new_config_defaults()
   --[[
   All the folders settings have default paths that likely do not exist.
   When adding new fields, please try and keep the end results user friendly.
@@ -93,107 +121,175 @@ local config_defaults = {
   for the config as it this is where it always ends up when the file is recreated.
   The following list is in the same order.
   ]]
-  fullscreen = false,
-  width = 800,
-  height = 600,
-  ui_scale = 1,
-  language = [[English]],
-  audio = true,
-  free_build_mode = false,
-  play_sounds = true,
-  sound_volume = 0.5,
-  play_announcements = true,
-  announcement_volume = 0.5,
-  play_music = true,
-  music_volume = 0.5,
-  prevent_edge_scrolling = false,
-  capture_mouse = true,
-  right_mouse_scrolling = false,
-  adviser_disabled = false,
-  scrolling_momentum = 0.8,
-  twentyfour_hour_clock = true,
-  warmth_colors_display_default = 1,
-  grant_wage_increase = false,
-  movies = true,
-  play_intro = true,
-  play_demo = true,
-  allow_user_actions_while_paused = false,
-  volume_opens_casebook = false,
-  alien_dna_only_by_emergency = true,
-  alien_dna_must_stand = true,
-  alien_dna_can_knock_on_doors = false,
-  disable_fractured_bones_females = true,
-  enable_avg_contents = false,
-  remove_destroyed_rooms = false,
-  machine_menu_button = true,
-  enable_screen_shake = true,
-  enable_announcer_subtitles = false,
-  autosave_frequency = 1,
-  audio_frequency = 22050,
-  audio_channels = 2,
-  audio_buffer_size = 2048,
-  midi_api = nil,
-  midi_port = nil,
-  midi_sysex_master_volume = false,
-  theme_hospital_install = [[X:\ThemeHospital\hospital]],
-  debug = false,
-  track_fps = false,
-  zoom_speed = 80,
-  scroll_speed = 2,
-  shift_scroll_speed = 4,
-  new_graphics_folder = nil,
-  use_new_graphics = false,
-  check_for_updates = true,
-  room_information_dialogs = true,
-  allow_blocking_off_areas = false,
-  direct_zoom = nil,
-  new_machine_extra_info = true,
-  player_name = [[]],
-}
-
--- For the windows template, restore the values that will be replaced during the install process
-if not TheApp then
-  config_defaults.fullscreen = [[SCREEN_FULLSCREEN]]
-  config_defaults.width = [[SCREEN_SIZE_WIDTH]]
-  config_defaults.height = [[SCREEN_SIZE_HEIGHT]]
-  config_defaults.language = [[LANGUAGE_CHOSEN]]
-  config_defaults.theme_hospital_install = [[ORIGINAL_HOSPITAL_DIRECTORY]]
-else
-  fi = io.open(config_filename, "r")
+  return {
+    fullscreen = false,
+    width = 800,
+    height = 600,
+    ui_scale = 1,
+    language = [[English]],
+    audio = true,
+    free_build_mode = false,
+    play_sounds = true,
+    sound_volume = 0.5,
+    play_announcements = true,
+    announcement_volume = 0.5,
+    play_music = true,
+    music_volume = 0.5,
+    prevent_edge_scrolling = false,
+    capture_mouse = true,
+    right_mouse_scrolling = false,
+    adviser_disabled = false,
+    scrolling_momentum = 0.8,
+    twentyfour_hour_clock = true,
+    warmth_colors_display_default = 1,
+    grant_wage_increase = false,
+    movies = true,
+    play_intro = true,
+    play_demo = true,
+    allow_user_actions_while_paused = false,
+    volume_opens_casebook = false,
+    alien_dna_only_by_emergency = true,
+    alien_dna_must_stand = true,
+    alien_dna_can_knock_on_doors = false,
+    disable_fractured_bones_females = true,
+    enable_avg_contents = false,
+    remove_destroyed_rooms = false,
+    machine_menu_button = true,
+    enable_screen_shake = true,
+    enable_announcer_subtitles = false,
+    autosave_frequency = 1,
+    audio_frequency = 22050,
+    audio_channels = 2,
+    audio_buffer_size = 2048,
+    midi_api = nil,
+    midi_port = nil,
+    midi_sysex_master_volume = false,
+    theme_hospital_install = [[X:\ThemeHospital\hospital]],
+    debug = false,
+    track_fps = false,
+    zoom_speed = 80,
+    scroll_speed = 2,
+    shift_scroll_speed = 4,
+    new_graphics_folder = nil,
+    use_new_graphics = false,
+    check_for_updates = true,
+    room_information_dialogs = true,
+    allow_blocking_off_areas = false,
+    direct_zoom = nil,
+    new_machine_extra_info = true,
+    player_name = [[]],
+  }
 end
 
-local config_values = {}
-local needs_rewrite = false
-for key, value in pairs(config_defaults) do
-  config_values[key] = value
+-- Defaults for hotkeys.
+local function new_hotkeys_defaults()
+  return {
+    global_confirm = "return",
+    global_confirm_alt = "e",
+    global_cancel = "escape",
+    global_cancel_alt = "q",
+    global_fullscreen_toggle = {"alt", "return"},
+    global_exitApp = {"alt", "f4"},
+    global_resetApp = {"shift", "f10"},
+    global_releaseMouse = {"ctrl", "f10"},
+    global_showLuaConsole = "f12",
+    global_runDebugScript = {"shift", "d"},
+    global_screenshot = {"ctrl", "s"},
+    global_stop_movie = "escape",
+    global_stop_movie_alt = "q",
+    global_pause_movie = "p",
+    global_window_close = "escape",
+    global_window_close_alt = "q",
+    ingame_showmenubar = "escape",
+    ingame_showCheatWindow = "f11",
+    ingame_pause = "p",
+    ingame_gamespeed_slowest = "1",
+    ingame_gamespeed_slower = "2",
+    ingame_gamespeed_normal = "3",
+    ingame_gamespeed_max = "4",
+    ingame_gamespeed_thensome = "5",
+    ingame_gamespeed_speedup = "z",
+    ingame_scroll_up = "up",
+    ingame_scroll_down = "down",
+    ingame_scroll_left = "left",
+    ingame_scroll_right = "right",
+    ingame_scroll_shift = "shift",
+    ingame_zoom_in = "=",
+    ingame_zoom_in_more = {"shift", "="},
+    ingame_zoom_out = "-",
+    ingame_zoom_out_more = {"shift", "-"},
+    ingame_reset_zoom = "0",
+    ingame_setTransparent = "x",
+    ingame_toggleTransparent = {"shift", "x"},
+    ingame_toggleAdvisor = {"shift", "a"},
+    ingame_poopLog = {"ctrl", "d"},
+    ingame_poopStrings = {"ctrl", "t"},
+    ingame_toggleAnnouncements = {"alt", "a"},
+    ingame_toggleSounds = {"alt", "s"},
+    ingame_toggleMusic = {"alt", "m"},
+    ingame_panel_bankManager = "f1",
+    ingame_panel_bankStats = "f2",
+    ingame_panel_staffManage = "f3",
+    ingame_panel_townMap = "f4",
+    ingame_panel_casebook = "f5",
+    ingame_panel_research = "f6",
+    ingame_panel_status = "f7",
+    ingame_panel_charts = "f8",
+    ingame_panel_policy = "f9",
+    ingame_panel_machineMenu = "f10",
+    ingame_panel_map_alt = "t",
+    ingame_panel_research_alt = "r",
+    ingame_panel_casebook_alt = "c",
+    ingame_panel_casebook_alt02 = {"shift", "c"},
+    ingame_panel_buildRoom = "f",
+    ingame_panel_furnishCorridor = "g",
+    ingame_panel_editRoom = "v",
+    ingame_panel_hireStaff = "b",
+    ingame_loadMenu = {"shift", "l"},
+    ingame_saveMenu = {"shift", "s"},
+    ingame_restartLevel = {"shift", "r"},
+    ingame_quitLevel = {"shift", "q"},
+    ingame_quickSave = {"alt", "shift", "s"},
+    ingame_quickLoad = {"alt", "shift", "l"},
+    ingame_openFirstMessage = "m",
+    ingame_toggleInfo = "i",
+    ingame_jukebox = "j",
+    ingame_rotateobject = "space",
+    ingame_patient_gohome = "h",
+    ingame_storePosition_1 = {"alt", "1"},
+    ingame_storePosition_2 = {"alt", "2"},
+    ingame_storePosition_3 = {"alt", "3"},
+    ingame_storePosition_4 = {"alt", "4"},
+    ingame_storePosition_5 = {"alt", "5"},
+    ingame_storePosition_6 = {"alt", "6"},
+    ingame_storePosition_7 = {"alt", "7"},
+    ingame_storePosition_8 = {"alt", "8"},
+    ingame_storePosition_9 = {"alt", "9"},
+    ingame_storePosition_0 = {"alt", "0"},
+    ingame_recallPosition_1 = {"ctrl", "1"},
+    ingame_recallPosition_2 = {"ctrl", "2"},
+    ingame_recallPosition_3 = {"ctrl", "3"},
+    ingame_recallPosition_4 = {"ctrl", "4"},
+    ingame_recallPosition_5 = {"ctrl", "5"},
+    ingame_recallPosition_6 = {"ctrl", "6"},
+    ingame_recallPosition_7 = {"ctrl", "7"},
+    ingame_recallPosition_8 = {"ctrl", "8"},
+    ingame_recallPosition_9 = {"ctrl", "9"},
+    ingame_recallPosition_0 = {"ctrl", "0"},
+  }
 end
 
-if fi and TheApp then
-  -- Read all the values from the config file and put them in config_values. If at least one value is missing rewrite the configuration file.
-  -- Don't do this if this file is run from outside CorsixTH, ie generate_windows_config.lua
-  local file_contents = fi:read("*all")
-  fi:close()
-  for key, value in pairs(config_defaults) do
-    local ind = string.find(file_contents, "\n" .. "%s*" .. key .. "%s*=")
-    if not ind then
-      needs_rewrite = true
-    else
-      ind = ind + (string.find(file_contents, key, ind) - ind) + string.len(key)
-      ind = string.find(file_contents, "=", ind) + 1
-      if type(value) ~= "string" then
-        ind = string.find(file_contents, "[%a%d]", ind)
-        config_values[key] = string.sub(file_contents, ind, string.find(file_contents, "[ \n-]", ind + 1) - 1)
-      else
-        ind = string.find(file_contents, "[", ind + 1, true) + 1
-        config_values[key] = string.sub(file_contents, ind + 1, string.find(file_contents, "]", ind, true) - 1)
-      end
-    end
+local function param(params, param_name, nil_example)
+  if nil_example then
+    return param_name .. ' = ' ..
+        (params[param_name] and serialize(params[param_name]) or 'nil -- ' .. nil_example) .. '\n'
   end
-else
-  needs_rewrite = true
+  return param_name .. ' = ' .. serialize(params[param_name]) .. '\n'
 end
 
-local string_01 = [=[
+local function config_contents(config_values)
+  local parts = {}
+  parts[1] = [=[
 ------------------------- CorsixTH configuration file -------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
@@ -213,11 +309,11 @@ local string_01 = [=[
 -- resolution displays. For example, at 1920x1080 resolution, setting ui_scale
 -- to 2 will make the interface elements twice as large.
 --]=] .. '\n' ..
-'fullscreen = ' .. tostring(config_values.fullscreen) .. '\n' ..
+param(config_values, 'fullscreen') ..
 '\n' ..
-'width = ' .. tostring(config_values.width) .. '\n' ..
-'height = ' .. tostring(config_values.height) .. '\n' ..
-'ui_scale = ' .. tostring(config_values.ui_scale) .. '\n' .. [=[
+param(config_values, 'width') ..
+param(config_values, 'height') ..
+param(config_values, 'ui_scale') .. [=[
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
@@ -243,13 +339,14 @@ local string_01 = [=[
 --  Swedish               / sv / swe
 --  Ukrainian             / uk / ukr
 --]=] .. '\n' ..
-'language = [['.. config_values.language ..']]' .. '\n' .. [=[
+param(config_values, 'language') .. [=[
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
 --]=] .. '\n' ..
-'audio = ' .. tostring(config_values.audio) .. '\n' .. [=[
+param(config_values, 'audio') .. '\n'
 
+parts[2] = [=[
 ------------------------------ CUSTOM GAME MENU -------------------------------
 -- These settings can also be changed from the opening menu screen
 -- in the custom games or new game menus
@@ -259,37 +356,38 @@ local string_01 = [=[
 -- You also don't have to worry about money.
 -- This setting does not apply to any of the campaign maps.
 --]=] .. '\n' ..
-'free_build_mode = ' .. tostring(config_values.free_build_mode) .. '\n' .. [=[
+param(config_values, 'free_build_mode') .. '\n'
 
+parts[3] = [=[
 --------------------------------- OPTIONS MENU --------------------------------
 --These settings can also be changed from within the game from the options menu
 -------------------------------------------------------------------------------
 -- Sounds: By default enabled and set at level 0.5
 --]=] .. '\n' ..
-'play_sounds = ' .. tostring(config_values.play_sounds) .. '\n' ..
-'sound_volume = ' .. tostring(config_values.sound_volume) .. '\n' .. [=[
+param(config_values, 'play_sounds') ..
+param(config_values, 'sound_volume') .. [=[
 
 -------------------------------------------------------------------------------
 -- Announcements: By default set at level 0.5
 --]=] .. '\n' ..
-'play_announcements = ' .. tostring(config_values.play_announcements) .. '\n' ..
-'announcement_volume = ' .. tostring(config_values.announcement_volume) .. '\n' .. [=[
+param(config_values, 'play_announcements') ..
+param(config_values, 'announcement_volume') .. [=[
 
 -------------------------------------------------------------------------------
 -- Background music: By default enabled and set at level 0.5
 --]=] .. '\n' ..
-'play_music = ' .. tostring(config_values.play_music) .. '\n' ..
-'music_volume = ' .. tostring(config_values.music_volume) .. '\n' .. [=[
+param(config_values, 'play_music') ..
+param(config_values, 'music_volume') .. [=[
 
 -------------------------------------------------------------------------------
 -- Edge scrolling: By default enabled (prevent_edge_scrolling = false).
 --]=] .. '\n' ..
-'prevent_edge_scrolling = ' .. tostring(config_values.prevent_edge_scrolling) .. '\n' .. [=[
+param(config_values, 'prevent_edge_scrolling') .. [=[
 
 -------------------------------------------------------------------------------
 -- Capture mouse: By default enabled (capture mouse = true).
 --]=] .. '\n' ..
-'capture_mouse = ' .. tostring(config_values.capture_mouse) .. '\n' .. [=[
+param(config_values, 'capture_mouse') .. [=[
 
 -------------------------------------------------------------------------------
 -- Right Mouse Scrolling: By default, it is disabled (right_mouse_scrolling = false).
@@ -297,42 +395,43 @@ local string_01 = [=[
 -- Please note this an Experimental Feature and may interfere with other right mouse
 -- operations. Report bugs for this on Github Issue 2469.
 --]=] .. '\n' ..
-'right_mouse_scrolling = ' .. tostring(config_values.right_mouse_scrolling) .. '\n' .. [=[
+param(config_values, 'right_mouse_scrolling') .. [=[
 
 -------------------------------------------------------------------------------
 -- Adviser on/off: If you set this to true the adviser will no longer
 -- pop up.
 --]=] .. '\n' ..
-'adviser_disabled = ' .. tostring(config_values.adviser_disabled) .. '\n' .. [=[
+param(config_values, 'adviser_disabled') .. [=[
 
 -------------------------------------------------------------------------------
 -- Scrolling Momentum.
 -- Determines the amount of momentum when scrolling the map with the mouse.
 -- This should be a value between 0 and 1 where 0 is no momentum
 --]=] .. '\n' ..
-'scrolling_momentum = ' .. tostring(config_values.scrolling_momentum) .. '\n' .. [=[
+param(config_values, 'scrolling_momentum') .. [=[
 
 -------------------------------------------------------------------------------
 -- Top menu clock is by default is always on
 -- setting to true will give you a twentyfour hours display
 -- change to false if you want AM / PM time displayed.
 --]=] .. '\n' ..
-'twentyfour_hour_clock = ' .. tostring(config_values.twentyfour_hour_clock) .. '\n' .. [=[
+param(config_values, 'twentyfour_hour_clock') .. [=[
 
 -------------------------------------------------------------------------------
 -- Automatically check for updates.
 -- If set to true, CorsixTH will automatically check for and alert you to newer
 -- versions on startup.
 --]=] .. '\n' ..
-'check_for_updates = ' .. tostring(config_values.check_for_updates) .. '\n' .. [=[
+param(config_values, 'check_for_updates') .. [=[
 
 -------------------------------------------------------------------------------
 -- Warmth Colors display settings.
 -- This specifies which display method is set for warmth colours by default.
 -- Possible values: 1 (Red), 2 (Blue Green Red) and 3 (Yellow Orange Red).
 --]=] .. '\n' ..
-'warmth_colors_display_default = ' .. tostring(config_values.warmth_colors_display_default) .. '\n' .. [=[
+param(config_values, 'warmth_colors_display_default') .. '\n'
 
+parts[4] = [=[
 ------------------------------ CUSTOMISE SETTINGS -----------------------------
 -- These settings can also be changed from the Customise Menu
 
@@ -341,22 +440,22 @@ local string_01 = [=[
 -- If set to true when wage increase requests expire automatically grant them
 -- otherwise let the staff member quit.
 --]=] .. '\n' ..
-'grant_wage_increase = ' .. tostring(config_values.grant_wage_increase) .. '\n' .. [=[
+param(config_values, 'grant_wage_increase') .. [=[
 
 -------------------------------------------------------------------------------
 -- Movie global on/off switch.
 -- Note that movies will also be disabled if CorsixTH was compiled without the
 -- FFMPEG library.
 --]=] .. '\n' ..
-'movies = ' .. tostring(config_values.movies) .. '\n' .. [=[
+param(config_values, 'movies') .. [=[
 
 -- Intro movie: Enabled by default
 --]=] .. '\n' ..
-'play_intro = ' .. tostring(config_values.play_intro) .. '\n' .. [=[
+param(config_values, 'play_intro') .. [=[
 
 -- Demo movie (played on idle at main menu): Enabled by default
 --]=] .. '\n' ..
-'play_demo = ' .. tostring(config_values.play_demo) .. '\n' .. [=[
+param(config_values, 'play_demo') .. [=[
 
 -------------------------------------------------------------------------------
 -- Allow user actions while game is paused
@@ -364,7 +463,7 @@ local string_01 = [=[
 -- the game was paused. That is the default setting in CorsixTH too, but by
 -- setting this to true everything is allowed while the game is paused.
 --]=] .. '\n' ..
-'allow_user_actions_while_paused = ' .. tostring(config_values.allow_user_actions_while_paused) .. '\n' .. [=[
+param(config_values, 'allow_user_actions_while_paused') .. [=[
 
 -------------------------------------------------------------------------------
 -- VOLUME CONTROL IS OPENING THE DRUG CASEBOOK?
@@ -374,7 +473,7 @@ local string_01 = [=[
 -- the Casebook and volume down will not open it.
 -- For example for shift + C to open casebook change the setting below to = true
 --]=] .. '\n' ..
-'volume_opens_casebook = ' .. tostring(config_values.volume_opens_casebook) .. '\n' .. [=[
+param(config_values, 'volume_opens_casebook') .. [=[
 
 -------------------------------------------------------------------------------
 -- To allow patients with Alien DNA to visit your hospital other than by an
@@ -383,45 +482,45 @@ local string_01 = [=[
 -- So, like with Theme Hospital to do these things they will appear to change
 -- to normal looking and then change back.
 --]=] .. '\n' ..
-'alien_dna_only_by_emergency = ' .. tostring(config_values.alien_dna_only_by_emergency) .. '\n' ..
-'alien_dna_must_stand = ' .. tostring(config_values.alien_dna_must_stand) .. '\n' ..
-'alien_dna_can_knock_on_doors = ' .. tostring(config_values.alien_dna_can_knock_on_doors) .. '\n' .. [=[
+param(config_values, 'alien_dna_only_by_emergency') ..
+param(config_values, 'alien_dna_must_stand') ..
+param(config_values, 'alien_dna_can_knock_on_doors') .. [=[
 
 -- To allow female patients with fractured bones, which are by default
 -- disabled due to poor animation that skips and jumps a bit
 --]=] .. '\n' ..
-'disable_fractured_bones_females = ' .. tostring(config_values.disable_fractured_bones_females) .. '\n' .. [=[
+param(config_values, 'disable_fractured_bones_females') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default the player selects any extra objects they want for each room they
 -- build. If you would like the game to remember what you usually add, then
 -- change this option to true.
 --]=] .. '\n' ..
-'enable_avg_contents = ' .. tostring(config_values.enable_avg_contents) .. '\n' .. [=[
+param(config_values, 'enable_avg_contents') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default destroyed rooms can't be removed. If you would like the game to
 -- give you the option of removing a destroyed room change this option to true.
 --]=] .. '\n' ..
-'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[
+param(config_values, 'remove_destroyed_rooms') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default machine menu is shown in a bottom panel. If you would like the
 -- game to hide it change this option to false.
 --]=] .. '\n' ..
-'machine_menu_button = ' .. tostring(config_values.machine_menu_button) .. '\n' .. [=[
+param(config_values, 'machine_menu_button') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default the entire screen will shake during earthquakes. If you would
 -- like the game to keep the screen stationary, change this option to false.
 --]=] .. '\n' ..
-'enable_screen_shake = ' .. tostring(config_values.enable_screen_shake) .. '\n' .. [=[
+param(config_values, 'enable_screen_shake') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default subtitles are not displayed. If you would like the game to
 -- display subtitles for your hospital's announcements, turn this option on.
 --]=] .. '\n' ..
-'enable_announcer_subtitles = ' .. tostring(config_values.enable_announcer_subtitles) .. '\n' .. [=[
+param(config_values, 'enable_announcer_subtitles') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default, the game autosaves every in-game month. If you would like to
@@ -430,10 +529,9 @@ local string_01 = [=[
 -- This way your autosaves folder can grow to 300-500 MB with daily autosaves.
 -- Set 1 for Monthly, 2 for Weekly, 3 for Daily autosaves.
 --]=] .. '\n' ..
-'autosave_frequency = ' .. tostring(config_values.autosave_frequency) .. '\n' .. [=[]=]
+param(config_values, 'autosave_frequency') .. '\n'
 
-local string_02 = [=[
-
+  parts[5] = [=[
 ------------------------------- FOLDER SETTINGS -------------------------------
 -- These settings can also be changed from the Folders Menu
 -------------------------------------------------------------------------------
@@ -443,22 +541,22 @@ local string_02 = [=[
 -- the Theme Hospital demo, though a full install of the original game is
 -- preferred.
 --]=] .. '\n' ..
-'theme_hospital_install = [[' .. config_values.theme_hospital_install ..']]' .. '\n' .. [=[
+param(config_values, 'theme_hospital_install', '[[X:\\ThemeHospital]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- Font file setting. Can be changed from main game menu
 -- Specify a font file here if you wish to play the game in a language not
 -- present in the original game. Examples include Russian, Chinese and Polish.
---
-unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
+--]=] .. '\n' ..
+param(config_values, 'unicode_font', '[[X:\\ThemeHospital\\font.ttc]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- Savegames. By default, the "Saves" directory alongside this config file will
 -- be used for storing saved games in. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
---
-savegames = nil -- [[X:\ThemeHospital\Saves]]
+--]=] .. '\n' ..
+param(config_values, 'savegames', '[[X:\\ThemeHospital\\Saves]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- Levels and Campaigns. By default, the "Levels" and "Campaigns" directory next to
@@ -466,15 +564,16 @@ savegames = nil -- [[X:\ThemeHospital\Saves]]
 -- this is not suitable, then uncomment the following lines, and point it to a directory
 -- which exists and is more suitable.
 -- Note: Newly created maps in the Map Editor go into the "Levels" folder currently.
---
-levels = nil -- [[X:\ThemeHospital\Levels]]
-campaigns = nil -- [[X:\ThemeHospital\Campaigns]]
+--]=] .. '\n' ..
+param(config_values, 'levels', '[[X:\\ThemeHospital\\Levels]]') ..
+param(config_values, 'campaigns', '[[X:\\ThemeHospital\\Campaigns]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital
 -- or use new graphics created by the CorsixTH project.
 -- Developer use only, otherwise the game will very likely crash in normal use
-use_new_graphics = false
+--]=] .. '\n' ..
+param(config_values, 'use_new_graphics') .. [=[
 
 -------------------------------------------------------------------------------
 -- Graphics folder. All graphics are initially taken from the original
@@ -483,15 +582,16 @@ use_new_graphics = false
 -- will be used if you just switch on new graphics. If you however have
 -- acquired graphics from somewhere else, then uncomment the following line
 -- and point it to the directory which contains the new graphics.
-new_graphics_folder = nil -- [[X:\ThemeHospital\Graphics]]
+--]=] .. '\n' ..
+param(config_values, 'new_graphics_folder', '[[X:\\ThemeHospital\\Graphics]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- Screenshots. By default, the "Screenshots" directory alongside this config
 -- file will be used for saving screenshots. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
---
-screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
+--]=] .. '\n' ..
+param(config_values, 'screenshots', '[[X:\\ThemeHospital\\Screenshots]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- If you want to listen to non-Theme-Hospital music, then follow these steps:
@@ -501,8 +601,8 @@ screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 --  3) If you want to change the names of songs ingame, make a file called
 --     "names.txt" and write the file name on one row, followed by the desired
 --     ingame name on the next row.
---
-audio_music = nil -- [[X:\ThemeHospital\Music]]
+--]=] .. '\n' ..
+param(config_values, 'audio_music', '[[X:\\ThemeHospital\\Music]]') .. [=[
 
 -------------------------------------------------------------------------------
 -- SoundFont: CorsixTH uses the FluidR3 SoundFont by default for playing MIDI music.
@@ -510,9 +610,10 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 -- synthesiser can specify their own SoundFont file below (.sf2 or .sf3).
 -- Mac(OS) Source Ports build users, and OS versions compiled with TiMidity
 -- won't see any effect from this option. See our Wiki for alternative options.
---
-soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
+--]=] .. '\n' ..
+param(config_values, 'soundfont', '[[X:\\ThemeHospital\\FluidR3.sf3]]') .. '\n'
 
+  parts[6] = [=[
 -------------------------------------------------------------------------------
 -- Midi API and Device settings.
 -- By default, CorsixTH uses FluidSynth or build defined MIDI synthesizer.
@@ -529,9 +630,9 @@ soundfont = nil -- [[X:\ThemeHospital\FluidR3.sf3]]
 -- Possible values for midi_port depend on the selected midi_api, and can
 -- be left nil to use the system default port. A list of available ports
 -- can be obtained from the midi settings screen in game.
---
-midi_api = nil -- [[Native]]
-midi_port = nil -- [[Midi Through:Midi Through Port-0 14:0]]
+--]=] .. '\n' ..
+param(config_values, 'midi_api', '[[Native]]') ..
+param(config_values, 'midi_port', '[[Midi Through:Midi Through Port-0 14:0]]') .. [=[
 
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
@@ -542,9 +643,9 @@ midi_port = nil -- [[Midi Through:Midi Through Port-0 14:0]]
 -- sound effects and music audio. If you are experiencing poor audio playback,
 -- then try doubling the buffer size.
 --]=] .. '\n' ..
-'audio_frequency = ' .. tostring(config_values.audio_frequency) .. '\n' ..
-'audio_channels = ' .. tostring(config_values.audio_channels) .. '\n' ..
-'audio_buffer_size = ' .. tostring(config_values.audio_buffer_size) .. '\n' .. [=[
+param(config_values, 'audio_frequency') ..
+param(config_values, 'audio_channels') ..
+param(config_values, 'audio_buffer_size') .. [=[
 
 -------------------------------------------------------------------------------
 -- Advanced MIDI settings.
@@ -554,213 +655,73 @@ midi_port = nil -- [[Midi Through:Midi Through Port-0 14:0]]
 -- midi_sysex_master_volume: Use SysEx message instead of adjusted channel
 -- volume messages to set the music volume.
 --]=] .. '\n' ..
-'midi_sysex_master_volume = ' .. tostring(config_values.midi_sysex_master_volume) .. '\n' .. [=[
+param(config_values, 'midi_sysex_master_volume') .. [=[
 
 -------------------------------------------------------------------------------
 -- Debug settings.
 -- If set to true more detailed information will be printed in the terminal
 -- and a debug menu will be visible.
 --]=] .. '\n' ..
-'debug = ' .. tostring(config_values.debug) .. '\n' .. [=[
+param(config_values, 'debug') .. [=[
 
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
 -- off the FPS limiter, causing much higher CPU utilisation, but resulting in
 -- more useful FPS values, as they are not artificially capped.
 --]=] .. '\n' ..
-'track_fps = ' .. tostring(config_values.track_fps) .. '\n' .. [=[
+param(config_values, 'track_fps') .. [=[
 
 -------------------------------------------------------------------------------
 -- Zoom Speed: By default this is set at 80
 -- Any number value between 10 and 1000, 10 is very slow and 1000 is very fast!
 --]=] .. '\n' ..
-'zoom_speed = ' .. tostring(config_values.zoom_speed) .. '\n' .. [=[
+param(config_values, 'zoom_speed') .. [=[
 
 -------------------------------------------------------------------------------
 -- Scroll Speeds: The speed of scrolling with and without shift being held.
 -- Any number value between 1 and 10, 1 is very slow and 10 is fast!
 --]=] .. '\n' ..
-'scroll_speed = ' .. tostring(config_values.scroll_speed) .. '\n' ..
-'shift_scroll_speed = ' .. tostring(config_values.shift_scroll_speed) .. '\n' .. [=[
+param(config_values, 'scroll_speed') ..
+param(config_values, 'shift_scroll_speed') .. [=[
 
 -------------------------------------------------------------------------------
 -- Room information dialogs: Information about new rooms, important for
 -- additional rooms in later levels. Affects campaign only.
 --]=] .. '\n' ..
-'room_information_dialogs = ' .. tostring(config_values.room_information_dialogs)  .. '\n' .. [=[
+param(config_values, 'room_information_dialogs') .. [=[
 
 -------------------------------------------------------------------------------
 -- If true, parts of the hospital can be made inaccessible by blocking the path
 -- with rooms or objects. If false, all parts of the hospital must be kept
 -- accessible, the game will disallow any attempt to blocking the path.
 --]=] .. '\n' ..
-'allow_blocking_off_areas = ' .. tostring(config_values.allow_blocking_off_areas) .. '\n' .. [=[
+param(config_values, 'allow_blocking_off_areas') .. [=[
 
 -------------------------------------------------------------------------------
 -- Direct Zoom: Avoid rendering to an intermediate texture when zooming.
 -- Improves performance and reliability on some hardware.
 --]=] .. '\n' ..
-'direct_zoom = ' .. tostring(config_values.direct_zoom) .. '\n' .. [=[
+param(config_values, 'direct_zoom') .. [=[
 
 -------------------------------------------------------------------------------
 -- Replacing Machines: By default, you will see a new machines initial strength
 -- before purchasing it. If you don't want this change the value to false.
 --]=] .. '\n' ..
-'new_machine_extra_info = ' .. tostring(config_values.new_machine_extra_info)  .. '\n' .. [=[
+param(config_values, 'new_machine_extra_info') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default your username will be your name in the game. You can change it in
 -- the New Game menu or between the brace brackets below like [[NAME]].
 -- Note: space is limited in the game, so don't enter a name that is too long!
 --]=] .. '\n' ..
-"player_name = [[" .. (config_values.player_name or '') .. ']]' .. '\n' .. '\n'
+param(config_values, 'player_name') .. '\n'
 
-config_data = string_01 .. string_02
-
-if needs_rewrite and TheApp then
-  fi = TheApp:writeToFileOrTmp(config_filename)
-  fi:write(config_data)
-  fi:close()
+  return table.concat(parts)
 end
 
--- Hotkey filename.
-local hotkeys_name = "hotkeys.txt"
-
--- Hotkey file with full path as string.
-local hotkeys_filename = pathconcat(config_path, hotkeys_name)
-
--- Defaults for hotkeys.
-local hotkeys_defaults = {
-  global_confirm = "return",
-  global_confirm_alt = "e",
-  global_cancel = "escape",
-  global_cancel_alt = "q",
-  global_fullscreen_toggle = {"alt", "return"},
-  global_exitApp = {"alt", "f4"},
-  global_resetApp = {"shift", "f10"},
-  global_releaseMouse = {"ctrl", "f10"},
-  global_showLuaConsole = "f12",
-  global_runDebugScript = {"shift", "d"},
-  global_screenshot = {"ctrl", "s"},
-  global_stop_movie = "escape",
-  global_stop_movie_alt = "q",
-  global_pause_movie = "p",
-  global_window_close = "escape",
-  global_window_close_alt = "q",
-  ingame_showmenubar = "escape",
-  ingame_showCheatWindow = "f11",
-  ingame_pause = "p",
-  ingame_gamespeed_slowest = "1",
-  ingame_gamespeed_slower = "2",
-  ingame_gamespeed_normal = "3",
-  ingame_gamespeed_max = "4",
-  ingame_gamespeed_thensome = "5",
-  ingame_gamespeed_speedup = "z",
-  ingame_scroll_up = "up",
-  ingame_scroll_down = "down",
-  ingame_scroll_left = "left",
-  ingame_scroll_right = "right",
-  ingame_scroll_shift = "shift",
-  ingame_zoom_in = "=",
-  ingame_zoom_in_more = {"shift", "="},
-  ingame_zoom_out = "-",
-  ingame_zoom_out_more = {"shift", "-"},
-  ingame_reset_zoom = "0",
-  ingame_setTransparent = "x",
-  ingame_toggleTransparent = {"shift", "x"},
-  ingame_toggleAdvisor = {"shift", "a"},
-  ingame_poopLog = {"ctrl", "d"},
-  ingame_poopStrings = {"ctrl", "t"},
-  ingame_toggleAnnouncements = {"alt", "a"},
-  ingame_toggleSounds = {"alt", "s"},
-  ingame_toggleMusic = {"alt", "m"},
-  ingame_panel_bankManager = "f1",
-  ingame_panel_bankStats = "f2",
-  ingame_panel_staffManage = "f3",
-  ingame_panel_townMap = "f4",
-  ingame_panel_casebook = "f5",
-  ingame_panel_research = "f6",
-  ingame_panel_status = "f7",
-  ingame_panel_charts = "f8",
-  ingame_panel_policy = "f9",
-  ingame_panel_machineMenu = "f10",
-  ingame_panel_map_alt = "t",
-  ingame_panel_research_alt = "r",
-  ingame_panel_casebook_alt = "c",
-  ingame_panel_casebook_alt02 = {"shift", "c"},
-  ingame_panel_buildRoom = "f",
-  ingame_panel_furnishCorridor = "g",
-  ingame_panel_editRoom = "v",
-  ingame_panel_hireStaff = "b",
-  ingame_loadMenu = {"shift", "l"},
-  ingame_saveMenu = {"shift", "s"},
-  ingame_restartLevel = {"shift", "r"},
-  ingame_quitLevel = {"shift", "q"},
-  ingame_quickSave = {"alt", "shift", "s"},
-  ingame_quickLoad = {"alt", "shift", "l"},
-  ingame_openFirstMessage = "m",
-  ingame_toggleInfo = "i",
-  ingame_jukebox = "j",
-  ingame_rotateobject = "space",
-  ingame_patient_gohome = "h",
-  ingame_storePosition_1 = {"alt", "1"},
-  ingame_storePosition_2 = {"alt", "2"},
-  ingame_storePosition_3 = {"alt", "3"},
-  ingame_storePosition_4 = {"alt", "4"},
-  ingame_storePosition_5 = {"alt", "5"},
-  ingame_storePosition_6 = {"alt", "6"},
-  ingame_storePosition_7 = {"alt", "7"},
-  ingame_storePosition_8 = {"alt", "8"},
-  ingame_storePosition_9 = {"alt", "9"},
-  ingame_storePosition_0 = {"alt", "0"},
-  ingame_recallPosition_1 = {"ctrl", "1"},
-  ingame_recallPosition_2 = {"ctrl", "2"},
-  ingame_recallPosition_3 = {"ctrl", "3"},
-  ingame_recallPosition_4 = {"ctrl", "4"},
-  ingame_recallPosition_5 = {"ctrl", "5"},
-  ingame_recallPosition_6 = {"ctrl", "6"},
-  ingame_recallPosition_7 = {"ctrl", "7"},
-  ingame_recallPosition_8 = {"ctrl", "8"},
-  ingame_recallPosition_9 = {"ctrl", "9"},
-  ingame_recallPosition_0 = {"ctrl", "0"},
-}
-
--- Clear the loaded file variable.
-fi = io.open(hotkeys_filename, "r")
-local hotkeys_values = {}
-local hotkeys_needs_rewrite = false
-for key, value in pairs(hotkeys_defaults) do
-  hotkeys_values[key] = serialize(value)
-end
-
--- If the file opened successfully...
-if fi and TheApp then
-  local file_contents = fi:read("*all")
-  fi:close()
-
-  for key, _ in pairs(hotkeys_defaults) do
-    local ind = string.find(file_contents, "\n" .. "%s*" .. key .. "%s*=")
-
-    -- If we couldn't find the key in the hotkeys.txt file...
-    if not ind then
-      hotkeys_needs_rewrite = true
-    else
-      ind = ind + (string.find(file_contents, key, ind) - ind) + string.len(key)
-      ind = string.find(file_contents, "=", ind) + 1
-
-      ind = string.find(file_contents, "[%[{]", ind)
-      hotkeys_values[key] = string.sub(file_contents, ind, string.find(file_contents, "[\n]", ind + 1) - 1)
-    end
-  end
-else
-  hotkeys_needs_rewrite = true
-end
-
-if hotkeys_needs_rewrite and TheApp then
-  -- The config file that will be written is divided into separate strings,
-  -- which are concatenated when they are written into the file.
-  -- This is done to avoid a "Too many C levels" error.
-  local string_03 = [=[
+local function hotkeys_contents(hotkeys_values)
+  local parts = {}
+  parts[1] = [=[
 --------------------------CorsixTH Hotkey Mappings File------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
@@ -775,107 +736,107 @@ if hotkeys_needs_rewrite and TheApp then
 -----------------------------------Global Keys---------------------------------
 -- These are global keys to be used at anytime while the application is open.
 --]=] .. '\n' ..
-'global_confirm = ' .. hotkeys_values.global_confirm .. '\n' ..
-'global_confirm_alt = ' .. hotkeys_values.global_confirm_alt .. '\n' ..
-'global_cancel = ' .. hotkeys_values.global_cancel .. '\n' ..
-'global_cancel_alt = ' .. hotkeys_values.global_cancel_alt .. '\n' ..
-'global_fullscreen_toggle = ' .. hotkeys_values.global_fullscreen_toggle .. '\n' ..
-'global_exitApp = ' .. hotkeys_values.global_exitApp .. '\n' ..
-'global_resetApp = ' .. hotkeys_values.global_resetApp .. '\n' ..
-'global_releaseMouse = ' .. hotkeys_values.global_releaseMouse .. '\n' ..
-'global_showLuaConsole = ' .. hotkeys_values.global_showLuaConsole .. '\n' ..
-'global_runDebugScript = ' .. hotkeys_values.global_runDebugScript .. '\n' ..
-'global_screenshot = ' .. hotkeys_values.global_screenshot .. '\n' ..
-'global_stop_movie = ' .. hotkeys_values.global_stop_movie .. '\n' ..
-'global_pause_movie = ' .. hotkeys_values.global_pause_movie .. '\n' ..
-'global_window_close = ' .. hotkeys_values.global_window_close .. '\n' ..
-'global_stop_movie_alt =' .. hotkeys_values.global_stop_movie_alt .. '\n' ..
-'global_window_close_alt =' .. hotkeys_values.global_window_close_alt .. '\n' .. [=[
+param(hotkeys_values, 'global_confirm') ..
+param(hotkeys_values, 'global_confirm_alt') ..
+param(hotkeys_values, 'global_cancel') ..
+param(hotkeys_values, 'global_cancel_alt') ..
+param(hotkeys_values, 'global_fullscreen_toggle') ..
+param(hotkeys_values, 'global_exitApp') ..
+param(hotkeys_values, 'global_resetApp') ..
+param(hotkeys_values, 'global_releaseMouse') ..
+param(hotkeys_values, 'global_showLuaConsole') ..
+param(hotkeys_values, 'global_runDebugScript') ..
+param(hotkeys_values, 'global_screenshot') ..
+param(hotkeys_values, 'global_stop_movie') ..
+param(hotkeys_values, 'global_pause_movie') ..
+param(hotkeys_values, 'global_window_close') ..
+param(hotkeys_values, 'global_stop_movie_alt') ..
+param(hotkeys_values, 'global_window_close_alt') .. [=[
 
 -----------------------------------Scroll Keys---------------------------------
 -- These are the keys to be used to scroll the camera around in-game.
 --]=] .. '\n' ..
-'ingame_scroll_up = ' .. hotkeys_values.ingame_scroll_up .. '\n' ..
-'ingame_scroll_down = ' .. hotkeys_values.ingame_scroll_down .. '\n' ..
-'ingame_scroll_left = ' .. hotkeys_values.ingame_scroll_left .. '\n' ..
-'ingame_scroll_right = ' .. hotkeys_values.ingame_scroll_right .. '\n' ..
-'ingame_scroll_shift = ' .. hotkeys_values.ingame_scroll_shift .. '\n' .. [=[
+param(hotkeys_values, 'ingame_scroll_up') ..
+param(hotkeys_values, 'ingame_scroll_down') ..
+param(hotkeys_values, 'ingame_scroll_left') ..
+param(hotkeys_values, 'ingame_scroll_right') ..
+param(hotkeys_values, 'ingame_scroll_shift') .. [=[
 
 --------------------------------------Zoom-------------------------------------
 -- These are keys used to zoom the camera in and out.
 --]=] .. '\n' ..
-'ingame_zoom_in = '.. hotkeys_values.ingame_zoom_in .. '\n' ..
-'ingame_zoom_in_more = ' .. hotkeys_values.ingame_zoom_in_more .. '\n' ..
-'ingame_zoom_out = ' .. hotkeys_values.ingame_zoom_out .. '\n' ..
-'ingame_zoom_out_more = ' .. hotkeys_values.ingame_zoom_out_more .. '\n' ..
-'ingame_reset_zoom = ' .. hotkeys_values.ingame_reset_zoom .. '\n' .. [=[
+param(hotkeys_values, 'ingame_zoom_in') ..
+param(hotkeys_values, 'ingame_zoom_in_more') ..
+param(hotkeys_values, 'ingame_zoom_out') ..
+param(hotkeys_values, 'ingame_zoom_out_more') ..
+param(hotkeys_values, 'ingame_reset_zoom') .. [=[
 
 ----------------------------------In-Game Menus--------------------------------
 -- These are quick keys to show the in-game menu bar and some other windows.
 --]=] .. '\n' ..
-'ingame_showmenubar = ' .. hotkeys_values.ingame_showmenubar .. '\n' ..
-'ingame_showCheatWindow = ' .. hotkeys_values.ingame_showCheatWindow .. '\n' ..
-'ingame_loadMenu = ' .. hotkeys_values.ingame_loadMenu .. '\n' ..
-'ingame_saveMenu = ' .. hotkeys_values.ingame_saveMenu .. '\n' ..
-'ingame_jukebox = ' .. hotkeys_values.ingame_jukebox .. '\n' ..
-'ingame_openFirstMessage = ' .. hotkeys_values.ingame_openFirstMessage .. '\n'
+param(hotkeys_values, 'ingame_showmenubar') ..
+param(hotkeys_values, 'ingame_showCheatWindow') ..
+param(hotkeys_values, 'ingame_loadMenu') ..
+param(hotkeys_values, 'ingame_saveMenu') ..
+param(hotkeys_values, 'ingame_jukebox') ..
+param(hotkeys_values, 'ingame_openFirstMessage')
 
-  local string_04 = [=[
+  parts[2] = [=[
 
 -- These pause and control the speed of the game.
 --]=] .. '\n' ..
-'ingame_pause = ' .. hotkeys_values.ingame_pause .. '\n' ..
-'ingame_gamespeed_slowest = ' .. hotkeys_values.ingame_gamespeed_slowest .. '\n' ..
-'ingame_gamespeed_slower = ' .. hotkeys_values.ingame_gamespeed_slower .. '\n' ..
-'ingame_gamespeed_normal = ' .. hotkeys_values.ingame_gamespeed_normal .. '\n' ..
-'ingame_gamespeed_max = ' .. hotkeys_values.ingame_gamespeed_max .. '\n' ..
-'ingame_gamespeed_thensome = ' .. hotkeys_values.ingame_gamespeed_thensome .. '\n' ..
-'ingame_gamespeed_speedup = ' .. hotkeys_values.ingame_gamespeed_speedup .. '\n' .. [=[
+param(hotkeys_values, 'ingame_pause') ..
+param(hotkeys_values, 'ingame_gamespeed_slowest') ..
+param(hotkeys_values, 'ingame_gamespeed_slower') ..
+param(hotkeys_values, 'ingame_gamespeed_normal') ..
+param(hotkeys_values, 'ingame_gamespeed_max') ..
+param(hotkeys_values, 'ingame_gamespeed_thensome') ..
+param(hotkeys_values, 'ingame_gamespeed_speedup') .. [=[
 
 ------------------------------In-Game Bottom Panel-----------------------------
 -- These open in-game panel windows like the town map or the build room dialog.
 --]=] .. '\n' ..
-'ingame_panel_bankManager = ' .. hotkeys_values.ingame_panel_bankManager .. '\n' ..
-'ingame_panel_bankStats = ' .. hotkeys_values.ingame_panel_bankStats .. '\n' ..
-'ingame_panel_staffManage = ' .. hotkeys_values.ingame_panel_staffManage .. '\n' ..
-'ingame_panel_townMap = ' .. hotkeys_values.ingame_panel_townMap .. '\n' ..
-'ingame_panel_casebook = ' .. hotkeys_values.ingame_panel_casebook .. '\n' ..
-'ingame_panel_research = ' .. hotkeys_values.ingame_panel_research .. '\n' ..
-'ingame_panel_status = ' .. hotkeys_values.ingame_panel_status .. '\n' ..
-'ingame_panel_charts = ' .. hotkeys_values.ingame_panel_charts .. '\n' ..
-'ingame_panel_policy = ' .. hotkeys_values.ingame_panel_policy .. '\n' ..
-'ingame_panel_machineMenu = ' .. hotkeys_values.ingame_panel_machineMenu .. '\n' ..
-'ingame_panel_map_alt = ' .. hotkeys_values.ingame_panel_map_alt .. '\n' ..
-'ingame_panel_research_alt = ' .. hotkeys_values.ingame_panel_research_alt .. '\n' ..
-'ingame_panel_casebook_alt = ' .. hotkeys_values.ingame_panel_casebook_alt .. '\n' ..
-'ingame_panel_casebook_alt02 = ' .. hotkeys_values.ingame_panel_casebook_alt02 .. '\n' ..
-'ingame_panel_buildRoom = ' .. hotkeys_values.ingame_panel_buildRoom .. '\n' ..
-'ingame_panel_furnishCorridor = ' .. hotkeys_values.ingame_panel_furnishCorridor .. '\n' ..
-'ingame_panel_editRoom = ' .. hotkeys_values.ingame_panel_editRoom .. '\n' ..
-'ingame_panel_hireStaff = ' .. hotkeys_values.ingame_panel_hireStaff .. '\n' .. [=[
+param(hotkeys_values, 'ingame_panel_bankManager') ..
+param(hotkeys_values, 'ingame_panel_bankStats') ..
+param(hotkeys_values, 'ingame_panel_staffManage') ..
+param(hotkeys_values, 'ingame_panel_townMap') ..
+param(hotkeys_values, 'ingame_panel_casebook') ..
+param(hotkeys_values, 'ingame_panel_research') ..
+param(hotkeys_values, 'ingame_panel_status') ..
+param(hotkeys_values, 'ingame_panel_charts') ..
+param(hotkeys_values, 'ingame_panel_policy') ..
+param(hotkeys_values, 'ingame_panel_machineMenu') ..
+param(hotkeys_values, 'ingame_panel_map_alt') ..
+param(hotkeys_values, 'ingame_panel_research_alt') ..
+param(hotkeys_values, 'ingame_panel_casebook_alt') ..
+param(hotkeys_values, 'ingame_panel_casebook_alt02') ..
+param(hotkeys_values, 'ingame_panel_buildRoom') ..
+param(hotkeys_values, 'ingame_panel_furnishCorridor') ..
+param(hotkeys_values, 'ingame_panel_editRoom') ..
+param(hotkeys_values, 'ingame_panel_hireStaff') .. [=[
 
 ----------------------------------Rotate Object--------------------------------
 -- This key rotates objects while they are being placed.
 -- ]=] .. '\n' ..
-'ingame_rotateobject = ' .. hotkeys_values.ingame_rotateobject .. '\n' .. [=[
+param(hotkeys_values, 'ingame_rotateobject') .. [=[
 
 -----------------------------------Quick Keys----------------------------------
 -- These are keys for quick saving and loading, and for quickly restarting and
 -- quitting the level.
 --]=] .. '\n' ..
-'ingame_quickSave = ' .. hotkeys_values.ingame_quickSave .. '\n' ..
-'ingame_quickLoad = ' .. hotkeys_values.ingame_quickLoad .. '\n' ..
-'ingame_restartLevel = ' .. hotkeys_values.ingame_restartLevel .. '\n' ..
-'ingame_quitLevel = ' .. hotkeys_values.ingame_quitLevel .. '\n' .. [=[
+param(hotkeys_values, 'ingame_quickSave') ..
+param(hotkeys_values, 'ingame_quickLoad') ..
+param(hotkeys_values, 'ingame_restartLevel') ..
+param(hotkeys_values, 'ingame_quitLevel') .. [=[
 
 ---------------------------------Set Transparent-------------------------------
 -- Use these keys to make walls transparent, allowing you to see behind them.
 --]=] .. '\n' ..
-'ingame_setTransparent = ' .. hotkeys_values.ingame_setTransparent .. '\n' ..
-'ingame_toggleTransparent = ' .. hotkeys_values.ingame_toggleTransparent .. '\n' .. [=[
+param(hotkeys_values, 'ingame_setTransparent') ..
+param(hotkeys_values, 'ingame_toggleTransparent') .. [=[
 ]=]
 
-local string_05 = [=[
+  parts[3] = [=[
 
 ----------------------------Store and Recall Position--------------------------
 -- These keys store and recall camera positions. If you press the key(s) that
@@ -884,57 +845,143 @@ local string_05 = [=[
 -- you can press "ingame_recallPosition_1" whenever you want to go back to
 -- the operating room instantly.
 --]=] .. '\n' ..
-'ingame_storePosition_1 = ' .. hotkeys_values.ingame_storePosition_1 .. '\n' ..
-'ingame_storePosition_2 = ' .. hotkeys_values.ingame_storePosition_2 .. '\n' ..
-'ingame_storePosition_3 = ' .. hotkeys_values.ingame_storePosition_3 .. '\n' ..
-'ingame_storePosition_4 = ' .. hotkeys_values.ingame_storePosition_4 .. '\n' ..
-'ingame_storePosition_5 = ' .. hotkeys_values.ingame_storePosition_5 .. '\n' ..
-'ingame_storePosition_6 = ' .. hotkeys_values.ingame_storePosition_6 .. '\n' ..
-'ingame_storePosition_7 = ' .. hotkeys_values.ingame_storePosition_7 .. '\n' ..
-'ingame_storePosition_8 = ' .. hotkeys_values.ingame_storePosition_8 .. '\n' ..
-'ingame_storePosition_9 = ' .. hotkeys_values.ingame_storePosition_9 .. '\n' ..
-'ingame_storePosition_0 = ' .. hotkeys_values.ingame_storePosition_0 .. '\n' ..
-'ingame_recallPosition_1 = ' .. hotkeys_values.ingame_recallPosition_1 .. '\n' ..
-'ingame_recallPosition_2 = ' .. hotkeys_values.ingame_recallPosition_2 .. '\n' ..
-'ingame_recallPosition_3 = ' .. hotkeys_values.ingame_recallPosition_3 .. '\n' ..
-'ingame_recallPosition_4 = ' .. hotkeys_values.ingame_recallPosition_4 .. '\n' ..
-'ingame_recallPosition_5 = ' .. hotkeys_values.ingame_recallPosition_5 .. '\n' ..
-'ingame_recallPosition_6 = ' .. hotkeys_values.ingame_recallPosition_6 .. '\n' ..
-'ingame_recallPosition_7 = ' .. hotkeys_values.ingame_recallPosition_7 .. '\n' ..
-'ingame_recallPosition_8 = ' .. hotkeys_values.ingame_recallPosition_8 .. '\n' ..
-'ingame_recallPosition_9 = ' .. hotkeys_values.ingame_recallPosition_9 .. '\n' ..
-'ingame_recallPosition_0 = ' .. hotkeys_values.ingame_recallPosition_0 .. '\n' .. [=[
+param(hotkeys_values, 'ingame_storePosition_1') ..
+param(hotkeys_values, 'ingame_storePosition_2') ..
+param(hotkeys_values, 'ingame_storePosition_3') ..
+param(hotkeys_values, 'ingame_storePosition_4') ..
+param(hotkeys_values, 'ingame_storePosition_5') ..
+param(hotkeys_values, 'ingame_storePosition_6') ..
+param(hotkeys_values, 'ingame_storePosition_7') ..
+param(hotkeys_values, 'ingame_storePosition_8') ..
+param(hotkeys_values, 'ingame_storePosition_9') ..
+param(hotkeys_values, 'ingame_storePosition_0') ..
+param(hotkeys_values, 'ingame_recallPosition_1') ..
+param(hotkeys_values, 'ingame_recallPosition_2') ..
+param(hotkeys_values, 'ingame_recallPosition_3') ..
+param(hotkeys_values, 'ingame_recallPosition_4') ..
+param(hotkeys_values, 'ingame_recallPosition_5') ..
+param(hotkeys_values, 'ingame_recallPosition_6') ..
+param(hotkeys_values, 'ingame_recallPosition_7') ..
+param(hotkeys_values, 'ingame_recallPosition_8') ..
+param(hotkeys_values, 'ingame_recallPosition_9') ..
+param(hotkeys_values, 'ingame_recallPosition_0') .. [=[
 
 ---------------------------------Toggle Various--------------------------------
 -- These toggle various things. The names tell all.
 --]=] .. '\n' ..
-'ingame_toggleAnnouncements = ' .. hotkeys_values.ingame_toggleAnnouncements .. '\n' ..
-'ingame_toggleSounds = ' .. hotkeys_values.ingame_toggleSounds .. '\n' ..
-'ingame_toggleMusic = ' .. hotkeys_values.ingame_toggleMusic .. '\n' ..
-'ingame_toggleAdvisor = ' .. hotkeys_values.ingame_toggleAdvisor .. '\n' ..
-'ingame_toggleInfo = ' .. hotkeys_values.ingame_toggleInfo .. '\n' .. [=[
+param(hotkeys_values, 'ingame_toggleAnnouncements') ..
+param(hotkeys_values, 'ingame_toggleSounds') ..
+param(hotkeys_values, 'ingame_toggleMusic') ..
+param(hotkeys_values, 'ingame_toggleAdvisor') ..
+param(hotkeys_values, 'ingame_toggleInfo') .. [=[
 
 ------------------------------------Dump Log-----------------------------------
 -- These keys dump logs. And strings, if too much fiber was taken.
 --]=] .. '\n' ..
-'ingame_poopLog = ' .. hotkeys_values.ingame_poopLog .. '\n' ..
-'ingame_poopStrings = ' .. hotkeys_values.ingame_poopStrings .. '\n' .. [=[
+param(hotkeys_values, 'ingame_poopLog') ..
+param(hotkeys_values, 'ingame_poopStrings') .. [=[
 
 --------------------------------Patient, Go Home-------------------------------
 -- This sends a patient home. Also a good anime episode name.
 --]=] .. '\n' ..
-'ingame_patient_gohome = ' .. hotkeys_values.ingame_patient_gohome .. '\n' .. [=[
+param(hotkeys_values, 'ingame_patient_gohome') .. [=[
 ]=]
-  fi = TheApp:writeToFileOrTmp(hotkeys_filename)
-  fi:write(string_03 .. string_04 .. string_05)
-  fi:close()
+
+  return table.concat(parts)
 end
 
-for k, str_val in pairs(hotkeys_values) do
-  local status, lua_val = pcall(loadstring_envcall('return ' .. str_val), {})
-  if status then
-    hotkeys_values[k] = lua_val
+local function apply_config_defaults(res)
+  local config_defaults = new_config_defaults()
+  for key, value in pairs(config_defaults) do
+    if res[key] == nil then
+      res[key] = value
+    end
   end
 end
 
-return config_filename, config_values, config_defaults, hotkeys_filename, hotkeys_values, hotkeys_defaults, config_data
+local function apply_hotkeys_defaults(res)
+  local hotkeys_defaults = new_hotkeys_defaults()
+  for key, value in pairs(hotkeys_defaults) do
+    if res[key] == nil then
+      res[key] = value
+    end
+  end
+end
+
+local function open_for_write(path)
+  if TheApp then
+    return TheApp:writeToFileOrTmp(path)
+  else
+    return io.open(path, "w")
+  end
+end
+
+local function save_config(path, values)
+  local config_data = config_contents(values)
+  local fi, err = open_for_write(path)
+  if not fi then
+    return nil, err
+  end
+  fi:write(config_data)
+  fi:close()
+  return true
+end
+
+local function save_hotkeys(path, values)
+  local hotkeys_data = hotkeys_contents(values)
+  local fi, err = open_for_write(path)
+  if not fi then
+    return nil, err
+  end
+  fi:write(hotkeys_data)
+  fi:close()
+  return true
+end
+
+local function load_config(path, res)
+  res = res or {}
+  local lfs = require("lfs")
+  if not lfs.attributes(path) then
+    save_config(path, new_config_defaults())
+  end
+  local chunk, err = loadfile_envcall(path)
+  if chunk then
+    chunk(res)
+  end
+  apply_config_defaults(res)
+
+  return res, err
+end
+
+local function load_hotkeys(path, res)
+  res = res or {}
+  if not lfs.attributes(path) then
+    save_hotkeys(path, new_hotkeys_defaults())
+  end
+  local chunk, err = loadfile_envcall(path)
+  if chunk then
+    chunk(res)
+  end
+  apply_hotkeys_defaults(res)
+
+  return res, err
+end
+
+local config_filename, config_path = find_config()
+
+-- Hotkey filename.
+local hotkeys_name = "hotkeys.txt"
+
+-- Hotkey file with full path as string.
+local hotkeys_filename = pathconcat(config_path, hotkeys_name)
+
+return {
+  config_filename = config_filename,
+  config_defaults = new_config_defaults,
+  load_config = load_config,
+  save_config = save_config,
+  hotkeys_filename = hotkeys_filename,
+  hotkeys_defaults = new_hotkeys_defaults,
+  load_hotkeys = load_hotkeys,
+  save_hotkeys = save_hotkeys,
+}
