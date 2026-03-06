@@ -114,6 +114,7 @@ function UIDropdown:updateButtons()
     local item_index = self.scrollbar and num + self.scrollbar.value - 1 or num
     local item = self.items[item_index]
     if item then
+      panel.label_font = nil
       panel:setLabel(item.text, item.font)
       panel:setTooltip(item.tooltip and unpack(item.tooltip) or nil)
       button:enable(not item.disabled)
