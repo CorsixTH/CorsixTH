@@ -248,6 +248,55 @@ AnimationEffect.None = 0
 AnimationEffect.Glowing = 1
 AnimationEffect.Jelly = 2
 
+-- Predefined colours
+Colours = {}
+Colours.PanelDefault = { -- CorsixTH's default panel colour (pale purple)
+  red = 154, green = 146, blue = 198
+}
+Colours.Disabled = { -- Specific grey with purplish aspect
+  red = 127, green = 123, blue = 149
+}
+Colours.Setting = Colours.PanelDefault
+Colours.SettingHover = { -- Slightly darkened from a pale purple
+  red = 133, green = 128, blue = 183,
+}
+Colours.SettingActive = Colours.SettingHover
+Colours.HotkeyBox = { -- Purple
+  red = 081, green = 076, blue = 150,
+}
+Colours.HotkeyBoxActive = { -- Deep purple
+  red = 041, green = 036, blue = 090,
+}
+Colours.Textbox = { -- Black
+  red = 000, green = 000, blue = 000
+}
+Colours.Scrollbar = { -- Purple
+  red = 081, green = 076, blue = 150,
+}
+Colours.Title = { -- Very pale purple
+  red = 174, green = 166, blue = 218
+}
+Colours.Caption = { -- Murky purple
+  red = 134, green = 126, blue = 178
+}
+
+-- Include the standard colours also
+Colours.White = {
+  red = 255, green = 255, blue = 255
+}
+Colours.Black = {
+  red = 000, green = 000, blue = 000
+}
+Colours.Red = {
+  red = 255, green = 000, blue = 000
+}
+Colours.Green = {
+  red = 000, green = 255, blue = 000
+}
+Colours.Blue = {
+  red = 000, green = 000, blue = 255
+}
+
 -- Compare values of two simple (non-nested) tables
 function compare_tables(t1, t2)
   local count1 = 0

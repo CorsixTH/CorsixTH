@@ -23,14 +23,15 @@ self = false
 globals = { -- Globals
             "_A", "_S",
             "corsixth",
-            "class", "compare_tables", "DrawFlags", "DrawingLayers",
-            "destrict", "flag_clear", "flag_isset", "flag_set", "flag_toggle",
-            "lfs", "list_to_set", "loadfile_envcall", "loadstring_envcall",
+            "class", "Colours", "compare_tables", "DrawFlags",
+            "DrawingLayers", "destrict", "flag_clear", "flag_isset",
+            "flag_set", "flag_toggle", "lfs", "list_to_set",
+            "loadfile_envcall", "loadstring_envcall",
             "pause_gc_and_use_weak_keys", "permanent",
-            "rangeMapLookup", "rnc", "strict_declare_global", "table_length",
-            "unpermanent", "values", "serialize", "array_join", "shallow_clone",
-            "staff_initials_cache", "hasBit", "bitOr", "inspect",
-            "getRandomEntryFromArray",
+            "rangeMapLookup", "rnc", "strict_declare_global",
+            "table_length", "unpermanent", "values", "serialize",
+            "array_join", "shallow_clone", "staff_initials_cache",
+            "hasBit", "bitOr", "inspect", "getRandomEntryFromArray",
 
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
