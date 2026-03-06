@@ -101,6 +101,7 @@ function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback
     width = width + scrollbar_width
   end
   -- Adjust size
+  self:overrideMinSize(width, height)
   self:setSize(width, y)
   self:updateButtons()
 end
