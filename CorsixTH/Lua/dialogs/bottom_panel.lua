@@ -318,18 +318,24 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
 
   local info = self.dynamic_info
   local font = self.white_font
+
+  local bar_x_offset = 0
+  if TheApp.config.machine_menu_button then
+    bar_x_offset = 38 * s
+  end
+
   for i, text in ipairs(info["text"]) do
     font:drawWrapped(canvas, text, x + 20 * s, y + 10 * i * s, 240 * s)
     if i == #info["text"] and info["progress"] then
       local white = canvas:mapRGB(255, 255, 255)
       local black = canvas:mapRGB(0, 0, 0)
       local orange = canvas:mapRGB(221, 83, 0)
-      canvas:drawRect(white, x + 165 * s, y + 10 * i * s, 100 * s, 10 * s)
-      canvas:drawRect(black, x + 166 * s, y + s + 10 * i * s, 98 * s, 8 * s)
-      canvas:drawRect(orange, x + 166 * s, y + s + 10 * i * s, math.floor(98 * info["progress"] * s), 8 * s)
+      canvas:drawRect(white, x + bar_x_offset + 165 * s, y + 10 * i * s, 100 * s, 10 * s)
+      canvas:drawRect(black, x + bar_x_offset + 166 * s, y + s + 10 * i * s, 98 * s, 8 * s)
+      canvas:drawRect(orange, x + bar_x_offset + 166 * s, y + s + 10 * i * s, math.floor(98 * info["progress"] * s), 8 * s)
       if info["dividers"] then
         for _, value in ipairs(info["dividers"]) do
-          canvas:drawRect(white, x + 165 * s + math.floor(value * 100 * s), y + 10 * i * s, s, 10 * s)
+          canvas:drawRect(white, x + bar_x_offset + 165 * s + math.floor(value * 100 * s), y + 10 * i * s, s, 10 * s)
         end
       end
     end
