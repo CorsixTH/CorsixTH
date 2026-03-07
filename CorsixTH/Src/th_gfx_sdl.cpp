@@ -603,6 +603,15 @@ bool render_target::fill_black() {
   return true;
 }
 
+bool render_target::fill_colour(uint32_t colour) {
+  SDL_SetRenderDrawColor(renderer, palette::get_red(colour),
+                         palette::get_green(colour), palette::get_blue(colour),
+                         palette::get_alpha(colour));
+  SDL_RenderClear(renderer);
+
+  return true;
+}
+
 void render_target::set_blue_filter_active(bool bActivate) {
   blue_filter_active = bActivate;
 }

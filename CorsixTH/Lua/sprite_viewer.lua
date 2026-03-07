@@ -35,13 +35,28 @@ local sprite_table
 local is_complex = false
 local wdown = false
 local sdown = false
+local scale = 1
+local bg_colour_index = 1
 local y_off
 local old_event_handlers
+
+local background_colours = {
+  Colours.Black,
+  Colours.White,
+  Colours.Magenta,
+  Colours.Cyan,
+  Colours.Yellow,
+}
 
 for _, dir in ipairs({"Data", "QData", "DataM", "QDataM"}) do
   for item in pairs(TheApp.fs:listFiles(dir) or {}) do
     if item:match("%.TAB$") then
-      sprite_table_paths[#sprite_table_paths + 1] = {dir, item:sub(1, -5)}
+      local basename = item:sub(1, -5)
+      if TheApp.fs:fileExists(dir, basename .. ".DAT") then
+        sprite_table_paths[#sprite_table_paths + 1] = {dir, item:sub(1, -5)}
+      else
+        print("Sprite table " .. dir .. "/" .. item .. " has no matching .DAT file. Skipping.")
+      end
     end
   end
 end
@@ -97,6 +112,19 @@ local function DoKey(_, rawchar)
   elseif key == "q" then
     TheApp.eventHandlers = old_event_handlers
     need_draw = false
+  elseif key == "-" then
+    if scale > 1 then
+      scale = scale - 1
+      need_draw = true
+    end
+  elseif key == "=" then
+    if scale < 8 then
+      scale = scale + 1
+      need_draw = true
+    end
+  elseif key == "b" then
+    bg_colour_index = bg_colour_index % #background_colours + 1
+    need_draw = true
   end
   return need_draw
 end
@@ -117,8 +145,10 @@ local function Render(canvas)
   local _, fonth = font:sizeOf(msg)
   local sep = 2
   local y = y_off
-  font:draw(canvas, "CorsixTH Debug Sprite Viewer - W/A/S/D to navigate, C to change mode, P to switch palette, Q to quit", 0, y)
-  y = y + fonth + sep
+  font:draw(canvas, "CorsixTH Debug Sprite Viewer", 0, y)
+  y = y + (fonth + sep)
+  font:draw(canvas, "W/A/S/D to navigate, C to change mode, P to switch palette, -/= to scale, B to change background, Q to quit", 0, y)
+  y = y + (fonth + sep)
   font:draw(canvas, msg, 0, y)
   y = y + fonth + sep
   local x = 0
@@ -126,6 +156,8 @@ local function Render(canvas)
   local tallest = 0
   for i = 0, #sprite_table - 1 do
     local w, h = sprite_table:size(i)
+    w = w * scale
+    h = h * scale
     local lbl = "#" .. i .. " (" .. w .. "x" .. h .. ")"
     local lw = font:sizeOf(lbl)
     if lw > w then w = lw end
@@ -139,7 +171,12 @@ local function Render(canvas)
     end
     if h > tallest then tallest = h end
     font:draw(canvas, lbl, x, y)
-    sprite_table:draw(canvas, i, x, y + fonth)
+    sprite_table:draw(
+        canvas,
+        i,
+        x,
+        y + fonth,
+        { scaleFactor = scale })
     x = x + w + sep
   end
 end
@@ -149,7 +186,7 @@ local function DoFrame(app)
   canvas:startFrame()
   if need_draw then
     need_draw = app.config.track_fps
-    canvas:fillBlack()
+    canvas:fillColour(background_colours[bg_colour_index])
     Render(canvas)
   end
   canvas:endFrame()

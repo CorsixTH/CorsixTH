@@ -296,6 +296,15 @@ Colours.Green = {
 Colours.Blue = {
   red = 000, green = 000, blue = 255
 }
+Colours.Magenta = {
+  red = 255, green = 000, blue = 255
+}
+Colours.Cyan = {
+  red = 000, green = 255, blue = 255
+}
+Colours.Yellow = {
+  red = 255, green = 255, blue = 000
+}
 
 -- Compare values of two simple (non-nested) tables
 function compare_tables(t1, t2)
