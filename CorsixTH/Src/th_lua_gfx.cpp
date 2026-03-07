@@ -796,6 +796,16 @@ int l_surface_fill_black(lua_State* L) {
   return 2;
 }
 
+int l_surface_fill_colour(lua_State* L) {
+  render_target* pCanvas = luaT_testuserdata<render_target>(L);
+  uint32_t c = read_color_from_lua(L, 0xFF000000);
+  lua_settop(L, 2);
+  if (pCanvas->fill_colour(c)) return 1;
+  lua_pushnil(L);
+  lua_pushstring(L, pCanvas->get_last_error());
+  return 2;
+}
+
 int l_surface_start_frame(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   lua_settop(L, 1);
@@ -1105,6 +1115,7 @@ void lua_register_gfx(const lua_register_state* pState) {
                                          lua_metatable::surface);
     lcb.add_function(l_surface_update, "update");
     lcb.add_function(l_surface_fill_black, "fillBlack");
+    lcb.add_function(l_surface_fill_colour, "fillColour");
     lcb.add_function(l_surface_start_frame, "startFrame");
     lcb.add_function(l_surface_end_frame, "endFrame");
     lcb.add_function(l_surface_nonoverlapping, "nonOverlapping");
