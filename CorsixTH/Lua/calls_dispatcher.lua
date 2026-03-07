@@ -94,10 +94,7 @@ end
 -- Call for repair
 --!param urgent Announcement should be made
 --!param manual This call should not trigger advisor for "your machine is failing"
---!param lock_room This is a minor maintence. Rooms needed not to be locked.
---  If urgent or manual is specified, lock_room will be true automatically
-function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
-  lock_room = manual or lock_room
+function CallsDispatcher:callForRepair(object, urgent, manual)
 
   local call = {
     verification = --[[persistable:call_dispatcher_repair_verification]] function() return false end,
@@ -111,8 +108,6 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
     assigned = nil,
     dropped = nil
   }
-
-  object:setRepairingMode(lock_room and true or false, true)
 
   if not manual and urgent then
     object.hospital:giveAdvice({_A.warnings.machines_falling_apart})
