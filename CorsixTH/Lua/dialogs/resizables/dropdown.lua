@@ -160,7 +160,7 @@ end
 function UIDropdown:onMouseMove(x, y, dx, dy)
   local panels = self.item_panels
   local buttons = self.item_buttons
-  -- Ietms in the dropdown list overlap on the last pixel, causing two
+  -- Items in the dropdown list overlap on the last pixel, causing two
   -- panels to appear 'active', however the higher up panel is what is
   -- actually selected. Separation by 1px causes gaps when UI scaled.
   local hit = false
