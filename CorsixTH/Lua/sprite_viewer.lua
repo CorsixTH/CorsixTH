@@ -41,10 +41,11 @@ local y_off
 local old_event_handlers
 
 local background_colours = {
-  {red = 0, green = 0, blue = 0},
-  {red = 255, green = 0, blue = 255},
-  {red = 255, green = 255, blue = 255},
-  {red = 0, green = 255, blue = 255},
+  Colours.Black,
+  Colours.White,
+  Colours.Magenta,
+  Colours.Cyan,
+  Colours.Yellow,
 }
 
 for _, dir in ipairs({"Data", "QData", "DataM", "QDataM"}) do
