@@ -551,30 +551,6 @@ function stripTrailingSlashes(path)
   return path:gsub("[/\\]+$", "")
 end
 
---! Detects the operating system the game is running on.
---!return (string) One of "Windows", "macOS", "Linux", "Unix-like", or "Unknown".
-function detectOS()
-  local home = os.getenv("HOME")
-  local windir = os.getenv("WINDIR")
-
-  if windir then
-      return "Windows"
-  elseif home then
-      -- Could be Linux or macOS
-      -- Check another variable
-      local uname = io.popen("uname"):read("*l")
-      if uname == "Darwin" then
-          return "macOS"
-      elseif uname == "Linux" then
-          return "Linux"
-      else
-          return "Unix-like"
-      end
-  else
-      return "Unknown"
-  end
-end
-
 --! Checks if a given path is a directory.
 --! param path (string) The path to check.
 --! return (boolean) True if the path is a directory, false otherwise.

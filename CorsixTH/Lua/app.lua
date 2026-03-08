@@ -172,7 +172,7 @@ function App:init()
     return false, "Cannot initialise SDL"
   end
 
-  -- Report operating system
+  -- Report operating system (possible values: "windows", "macos", "unix")
   self.os = compile_opts.os
 
   local modes = {}
@@ -550,7 +550,7 @@ function App:initMusicDir()
 
   -- Checks if the given directory name is a valid music directory name
   local function isValidMusicDirName(name)
-    local posible_dirs = {"music", "sound"}
+    local posible_dirs = {"music"}
 
     for _, valid_name in ipairs(posible_dirs) do
       if name == valid_name then
@@ -600,23 +600,23 @@ function App:initMusicDir()
     return nil
   end
 
-  local operating_system = detectOS()
+  local operating_system = self.os
   local corsixth_path = lfs.currentdir()
   local conf_path = self.command_line["config-file"] or nil  -- Gets the path of the config file ('nil' if it's in CorsixTH's dir)
   conf_path = conf_path:match("^(.-)[^" .. pathsep .. "]*$") -- Removes the config file name from the above path
 
-  if(operating_system == "macOS") then
+  if(operating_system == "macos") then
     -- On macOS skip checking the game's directory, since it's difficult to obtain and/or open
     corsixth_path = nil
   end
 
   -- Check corsixth's install directory first, then the config file directory
-  local music_dir = findMusicDir(corsixth_path) or findMusicDir(conf_path)
+  local music_dir = findMusicDir(conf_path) or findMusicDir(corsixth_path)
   if music_dir then
     self.config.audio_music = music_dir
   end
 
-  self:saveConfig()
+  -- self:saveConfig()  --> Don't save the config here, it'll get saved later in the app initialization process
 end
 
 --! Initialises the application's language based on the player's choice.
