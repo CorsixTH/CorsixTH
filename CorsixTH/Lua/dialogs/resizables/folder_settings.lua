@@ -84,7 +84,7 @@ function UIFolder:UIFolder(ui, mode)
   self.fonts_panel = self:addBevelPanel(160, 75, 180, 20, col_bg)
     :setLabel(font_location_label, built_in)
     :setAutoClip(true)
-    :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForFont)
+    :makeButton(0, 0, 180, 20, nil, self.buttonBrowseForFont)
     :setTooltip(tooltip_font)
 
   -- Location saves alternative
