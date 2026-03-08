@@ -109,31 +109,6 @@ function App:init()
   print("")
 
   -- Prereq 1: C++ and lua sides are compatible
-  -- Note: These errors cannot be translated, as the config file specifies the language
-  local conf_path = self.command_line["config-file"] or "config.txt"
-  local conf_chunk, conf_err = loadfile_envcall(conf_path)
-  if not conf_chunk then
-    error("Unable to load the config file. Please ensure that CorsixTH " ..
-      "has permission to read/write " .. conf_path .. ", or use the " ..
-      "--config-file=filename command line option to specify a writable file. " ..
-      "For reference, the error loading the config file was: " .. conf_err)
-  else
-    conf_chunk(self.config)
-  end
-  self:fixConfig()
-  corsixth.require("filesystem")
-  local good_install_folder, error_message = self:checkInstallFolder()
-  self.good_install_folder = good_install_folder
-  self.level_dir = self:getFullPath("Levels", true)
-  self.campaign_dir = self:getFullPath("Campaigns", true)
-  self:initUserDirectories()
-  self:initSavegameDir()
-  self:initScreenshotsDir()
-
-  -- Create the window
-  if not SDL.init("video", "timer", "audio") then
-    return false, "Cannot initialise SDL"
-  end
   local compile_opts = TH.GetCompileOptions()
   local api_version = corsixth.require("api_version")
   if api_version ~= compile_opts.api_version then
