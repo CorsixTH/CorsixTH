@@ -196,6 +196,7 @@ function UIOptions:UIOptions(ui, mode)
   self:addBevelPanel(20, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Caption, Colours.PanelDefault, Colours.PanelDefault)
     :setLabel(_S.options_window.resolution):setTooltip(_S.tooltip.options_window.resolution).lowered = true
   self.resolution_panel = self:addBevelPanel(165, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Setting, nil, nil, nil, Colours.SettingActive)
+  self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
 
   -- UI Scale
   local scale_ui_y_pos = self:_getOptionYPos()
@@ -203,6 +204,7 @@ function UIOptions:UIOptions(ui, mode)
   self:addBevelPanel(20, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Caption, Colours.PanelDefault, Colours.PanelDefault)
       :setLabel(_S.options_window.scale_ui):setTooltip(_S.tooltip.options_window.scale_ui).lowered = true
   self.scale_ui_panel = self:addBevelPanel(165, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Setting, nil, nil, nil, Colours.SettingActive):setLabel(scale_label)
+  self.scale_ui_button = self.scale_ui_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownUIScale)
 
   -- Now set the resolution button label and the ui scale button state
   self:processWindowResizeEvent()
