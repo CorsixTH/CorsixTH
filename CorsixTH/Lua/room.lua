@@ -1214,7 +1214,7 @@ function Room:getRoomMachine()
   end
 end
 
---! Locks the room to prevent patient from entering due to repair in roon.
+--! Locks the room to prevent patient from entering due to repair in room.
 function Room:lockRoomOnRepair()
   self.needs_repair = true
 end
