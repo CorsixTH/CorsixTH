@@ -193,17 +193,17 @@ function UIOptions:UIOptions(ui, mode)
   -- Screen resolution
   -- We will set the button label after making up the UI scale option below
   local screen_res_y_pos = self:_getOptionYPos()
-  self:addBevelPanel(20, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Caption, Colours.PanelDefault, Colours.PanelDefault)
     :setLabel(_S.options_window.resolution):setTooltip(_S.tooltip.options_window.resolution).lowered = true
-  self.resolution_panel = self:addBevelPanel(165, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg)
+  self.resolution_panel = self:addBevelPanel(165, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Setting, nil, nil, nil, Colours.SettingActive)
   self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
 
   -- UI Scale
   local scale_ui_y_pos = self:_getOptionYPos()
   local scale_label = TheApp.config.ui_scale * 100 .. "%"
-  self:addBevelPanel(20, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Caption, Colours.PanelDefault, Colours.PanelDefault)
       :setLabel(_S.options_window.scale_ui):setTooltip(_S.tooltip.options_window.scale_ui).lowered = true
-  self.scale_ui_panel = self:addBevelPanel(165, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(scale_label)
+  self.scale_ui_panel = self:addBevelPanel(165, scale_ui_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Setting, nil, nil, nil, Colours.SettingActive):setLabel(scale_label)
   self.scale_ui_button = self.scale_ui_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownUIScale)
 
   -- Now set the resolution button label and the ui scale button state
@@ -231,9 +231,10 @@ function UIOptions:UIOptions(ui, mode)
   -- Start a new column of buttons
   -- Language setting.
   local lang_y_pos = self:_getOptionYPos(true)
-  self:addBevelPanel(320, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(320, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Caption, Colours.PanelDefault, Colours.PanelDefault)
     :setLabel(_S.options_window.language):setTooltip(_S.tooltip.options_window.language).lowered = true
-  self.language_panel = self:addBevelPanel(465, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(lang)
+  self.language_panel = self:addBevelPanel(465, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Setting, nil, nil, nil, Colours.SettingActive)
+    :setLabel(lang)
   self.language_button = self.language_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
 
   -- Set scroll speed.
@@ -257,9 +258,9 @@ function UIOptions:UIOptions(ui, mode)
   -- Autosave frequency
   local autosave_frequency_y_pos = self:_getOptionYPos()
   local autosave_frequency_label = current_autosave_frequency()
-  self:addBevelPanel(320, autosave_frequency_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(320, autosave_frequency_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Caption, Colours.PanelDefault, Colours.PanelDefault)
       :setLabel(_S.options_window.autosave_frequency):setTooltip(_S.tooltip.options_window.autosave_frequency).lowered = true
-  self.autosave_frequency_panel = self:addBevelPanel(465, autosave_frequency_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(autosave_frequency_label)
+  self.autosave_frequency_panel = self:addBevelPanel(465, autosave_frequency_y_pos, BTN_WIDTH, BTN_HEIGHT, Colours.Setting, nil, nil, nil, Colours.SettingActive):setLabel(autosave_frequency_label)
   self.autosave_frequency_button = self.autosave_frequency_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownAutosaveFrequency):setTooltip(_S.tooltip.options_window.autosave_frequency)
 
   -- The right row is currently uneven with the left row, add an additional spacer
@@ -322,7 +323,7 @@ function UIOptions:dropdownLanguage(activate)
     self:dropdownResolution(false)
     self:dropdownUIScale(false)
     self:dropdownAutosaveFrequency(false)
-    self.language_dropdown = UIDropdown(self.ui, self, self.language_button, self.available_languages, self.selectLanguage)
+    self.language_dropdown = UIDropdown(self.ui, self, self.language_button, self.available_languages, self.selectLanguage, Colours.SettingActive, Colours.Scrollbar, Colours.Disabled)
     self:addWindow(self.language_dropdown)
   else
     self.language_button:setToggleState(false)
@@ -347,7 +348,7 @@ function UIOptions:dropdownResolution(activate)
     self:dropdownLanguage(false)
     self:dropdownUIScale(false)
     self:dropdownAutosaveFrequency(false)
-    self.resolution_dropdown = UIDropdown(self.ui, self, self.resolution_button, self.available_resolutions, self.selectResolution)
+    self.resolution_dropdown = UIDropdown(self.ui, self, self.resolution_button, self.available_resolutions, self.selectResolution, Colours.SettingActive, Colours.Scrollbar, Colours.Disabled)
     self:addWindow(self.resolution_dropdown)
   else
     self.resolution_button:setToggleState(false)
@@ -381,7 +382,8 @@ function UIOptions:dropdownUIScale(activate)
     self.available_ui_scales = available_ui_scales()
     self:dropdownLanguage(false)
     self:dropdownResolution(false)
-    self.scale_ui_dropdown = UIDropdown(self.ui, self, self.scale_ui_button, self.available_ui_scales, self.selectUIScale)
+    self:dropdownAutosaveFrequency(false)
+    self.scale_ui_dropdown = UIDropdown(self.ui, self, self.scale_ui_button, self.available_ui_scales, self.selectUIScale, Colours.SettingActive, Colours.Scrollbar)
     self:addWindow(self.scale_ui_dropdown)
   else
     self.scale_ui_button:setToggleState(false)
@@ -415,7 +417,7 @@ function UIOptions:dropdownAutosaveFrequency(activate)
     self:dropdownLanguage(false)
     self:dropdownResolution(false)
     self:dropdownUIScale(false)
-    self.autosave_dropdown = UIDropdown(self.ui, self, self.autosave_frequency_button, available_autosave_frequency(), self.selectAutosaveFrequency)
+    self.autosave_dropdown = UIDropdown(self.ui, self, self.autosave_frequency_button, available_autosave_frequency(), self.selectAutosaveFrequency, Colours.SettingActive, Colours.Scrollbar)
     self:addWindow(self.autosave_dropdown)
   else
     self.autosave_frequency_button:setToggleState(false)

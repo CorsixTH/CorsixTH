@@ -62,6 +62,9 @@ function UIResizable:UIResizable(ui, width, height, colour, no_borders, backgrou
   self:setColour(colour)
 end
 
+--! Apply the initial width and height of the window
+--!param width (int) The initial width
+--!param height (int) The initial height
 function UIResizable:setSize(width, height)
   width = math.max(self.min_width, width)
   height = math.max(self.min_height, height)
@@ -76,6 +79,14 @@ function UIResizable:setSize(width, height)
 
   self.border_pos.lower = self.height
   self.border_pos.corner_lower = self.height - border_size_y
+end
+
+--! Must be called before UIResizable:setSize
+--!param min_width (int) The new minimum width of the window
+--!param min_height (int) The new minimum height of the window
+function UIResizable:overrideMinSize(min_width, min_height)
+  self.min_width = min_width
+  self.min_height = min_height
 end
 
 function UIResizable:setColour(colour)
