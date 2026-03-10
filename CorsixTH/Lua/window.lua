@@ -1733,6 +1733,14 @@ function Window:onMouseUp(button, x, y)
   return repaint
 end
 
+--! This function can be used to control mousewheel input (i.e. scrolling).
+--! Override this function in dervied classes, with what you'd like to happen
+--! on this event.
+--!param x (int) Mousewheel has moved on the horizontal axis (-1 is
+-- leftward movement, +1 is rightward movement)
+--!param y (int) Mousewheel has moved on the vertical axis (-1 is downward
+-- movement, +1 is upward movement)
+--!return repaint (boolean) if screen is to be redrawn.
 function Window:onMouseWheel(x, y)
   local repaint = false
   if self.windows then

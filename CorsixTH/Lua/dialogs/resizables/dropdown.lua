@@ -158,8 +158,8 @@ function UIDropdown:onMouseDown(button, x, y)
 end
 
 --! Allow the dropdown to scroll through mousewheel input
---!param x (int) UNUSED, 1 on down scroll, -1 on up scroll
---!param y (int) 1 on down scroll, -1 on up scroll
+--!param x (int) UNUSED, 1 on right scroll, -1 on left scroll
+--!param y (int) 1 on up scroll, -1 on down scroll
 function UIDropdown:onMouseWheel(x, y)
   if x ~= 0 then return false end -- Do nothing on x scroll
   local bar = self.scrollbar
