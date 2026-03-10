@@ -66,7 +66,7 @@ thus reducing the amount of work that each individual dialog has to do.
  <a href="_0_1_panel.html#_0_1_panel_1set_auto_clip">setAutoClip</a>(<span class="p">mode</span>)
  </li>
  <li class="self">
- <a href="_0_1_panel.html#_0_1_panel_1set_colour">setColour</a>(<span class="p">col</span>)
+ <a href="_0_1_panel.html#_0_1_panel_1set_colour">setColour</a>(<span class="p">col</span>, <span class="p">preserve_disable</span>)
  </li>
  <li class="self">
  <a href="_0_1_panel.html#_0_1_panel_1set_dynamic_tooltip">setDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>)
@@ -153,7 +153,7 @@ thus reducing the amount of work that each individual dialog has to do.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2100">line 2100 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2102">line 2102 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -175,7 +175,7 @@ thus reducing the amount of work that each individual dialog has to do.
  <td class="d"> the maximum length in pixels the line should have</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L279">line 279 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L281">line 281 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -206,7 +206,7 @@ thus reducing the amount of work that each individual dialog has to do.
  <td class="d"> limit after which line and with character on that line to stop drawing</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L297">line 297 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L299">line 299 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -312,11 +312,11 @@ thus reducing the amount of work that each individual dialog has to do.
  <td class="d"> true to activate, false to deactivate.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L272">line 272 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L274">line 274 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_panel_1set_colour">function Panel:setColour(<span class="p">col</span>)</a></h5>
+ <h5><a name="_0_1_panel_1set_colour">function Panel:setColour(<span class="p">col</span>, <span class="p">preserve_disable</span>)</a></h5>
  <p>
  Set the colour of a panel<br/><br/>
  Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.<br/><br/>
@@ -327,6 +327,11 @@ thus reducing the amount of work that each individual dialog has to do.
  <td class="n">col</td>
  <td class="t">table</td>
  <td class="d"> Colour given as a table with three fields red, green and blue, each an integer value in [0, 255].</td>
+ </tr>
+ <tr>
+ <td class="n">preserve_disable</td>
+ <td class="t">boolean</td>
+ <td class="d"> If true, do not adjust the panel's disabled colour.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L217">line 217 of Lua/window.lua</a>.
@@ -354,7 +359,7 @@ thus reducing the amount of work that each individual dialog has to do.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L250">line 250 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L252">line 252 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -382,7 +387,7 @@ Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panel
  <td class="d"> [optional] Alignment for non-multiline labels (multiline is always left)</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L259">line 259 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L261">line 261 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -403,7 +408,7 @@ Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panel
  <td class="d"> New vertical position of the panel.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L343">line 343 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L345">line 345 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -424,7 +429,7 @@ Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panel
  <td class="d"> New height of the panel.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L351">line 351 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L353">line 353 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -452,7 +457,7 @@ If not specified, will default to mouse position.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L238">line 238 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L240">line 240 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -468,7 +473,7 @@ If not specified, will default to mouse position.<br/><br/>
  <td class="d"> New visibility of the panel.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L359">line 359 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L361">line 361 of Lua/window.lua</a>.
  </p>
  </div>
 </div>

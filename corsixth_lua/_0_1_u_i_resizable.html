@@ -176,6 +176,9 @@ any of the corners.
  <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1override_min_size">overrideMinSize</a>(<span class="p">min_width</span>, <span class="p">min_height</span>)
+ </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
@@ -387,7 +390,7 @@ any of the corners.
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L200">line 200 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L211">line 211 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -413,7 +416,7 @@ any of the corners.
  <td class="d">Either one of "ul", "ur", "ll" or "lr" to denote in which direction to resize. (upper/lower + left/right)</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L159">line 159 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L170">line 170 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -439,7 +442,7 @@ any of the corners.
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L86">line 86 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L97">line 97 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -460,7 +463,7 @@ any of the corners.
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1hit_test">Window:hitTest</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L120">line 120 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L131">line 131 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -481,7 +484,7 @@ any of the corners.
  <td class="d">the y coordinate to test</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L138">line 138 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L149">line 149 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -507,7 +510,28 @@ any of the corners.
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L111">line 111 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L122">line 122 of Lua/dialogs/resizable.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_resizable_1override_min_size">function UIResizable:overrideMinSize(<span class="p">min_width</span>, <span class="p">min_height</span>)</a></h5>
+ <p>
+ Must be called before UIResizable:setSize<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">min_width</td>
+ <td class="t">int</td>
+ <td class="d"> The new minimum width of the window</td>
+ </tr>
+ <tr>
+ <td class="n">min_height</td>
+ <td class="t">int</td>
+ <td class="d"> The new minimum height of the window</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L84">line 84 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -522,24 +546,25 @@ any of the corners.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L81">line 81 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L92">line 92 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_resizable_1set_size">function UIResizable:setSize(<span class="p">width</span>, <span class="p">height</span>)</a></h5>
  <p>
+ Apply the initial width and height of the window<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">width</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">int</td>
+ <td class="d"> The initial width</td>
  </tr>
  <tr>
  <td class="n">height</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">int</td>
+ <td class="d"> The initial height</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1set_size">Window:setSize</a>.<br/>

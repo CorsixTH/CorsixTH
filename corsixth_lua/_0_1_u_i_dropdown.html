@@ -24,7 +24,7 @@
  <h2 class="class">UIDropdown Class</h2>
 <h3 class="class">Dropdown "window" used for selection of one item from a list.</h3> 
 <div class="class_info">
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L21">line 21 of Lua/dialogs/resizables/dropdown.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L22">line 22 of Lua/dialogs/resizables/dropdown.lua</a>.
  <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_dropdown.html">UIDropdown</a>
  » <a href="_0_1_u_i_resizable.html">UIResizable</a>
  » <a href="_0_1_window.html">Window</a>
@@ -156,9 +156,9 @@
  <a href="_0_1_u_i_dropdown.html#_0_1_u_i_dropdown_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
  (overrides <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1on_mouse_down">UIResizable:onMouseDown</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
- (inherited from <a href="_0_1_window.html">Window</a>)
+ <li class="self">
+ <a href="_0_1_u_i_dropdown.html#_0_1_u_i_dropdown_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
@@ -175,6 +175,10 @@
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1override_min_size">overrideMinSize</a>(<span class="p">min_width</span>, <span class="p">min_height</span>)
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
@@ -223,6 +227,9 @@
  <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_u_i_dropdown.html#_0_1_u_i_dropdown_1update_buttons">updateButtons</a>()
+ </li>
  </ul>
 </div>
 <div class="member_list">
@@ -267,7 +274,6 @@
  (*)
  </li>
  <li><span class="p">colour</span>
- (*)
  </li>
  <li><span class="p">cursor_x</span>
  (*)
@@ -276,6 +282,8 @@
  (*)
  </li>
  <li><span class="p">default_button_sound</span>
+ </li>
+ <li><span class="p">disabled_colour</span>
  </li>
  <li><span class="p">draggable</span>
  (*)
@@ -291,17 +299,24 @@
  <li><span class="p">hotkeyboxes</span>
  (*)
  </li>
+ <li><span class="p">item_buttons</span>
+ </li>
+ <li><span class="p">item_panels</span>
+ </li>
  <li><span class="p">items</span>
  </li>
  <li><span class="p">key_handlers</span>
  (*)
  </li>
  <li><span class="p">min_height</span>
+ (*)
  </li>
  <li><span class="p">min_width</span>
  (*)
  </li>
  <li><span class="p">modal_class</span>
+ </li>
+ <li><span class="p">num_rows</span>
  </li>
  <li><span class="p">panel_sprites</span>
  (*)
@@ -317,6 +332,10 @@
  <li><span class="p">parent_window</span>
  </li>
  <li><span class="p">resizable</span>
+ </li>
+ <li><span class="p">scrollbar</span>
+ </li>
+ <li><span class="p">scrollbar_colour</span>
  </li>
  <li><span class="p">scrollbars</span>
  (*)
@@ -356,7 +375,7 @@
 </div>
 <div class="methods">
  <div class="method">
- <h5><a name="_0_1_u_i_dropdown_1_u_i_dropdown">function UIDropdown:UIDropdown(<span class="p">ui</span>, <span class="p">parent_window</span>, <span class="p">parent_button</span>, <span class="p">items</span>, <span class="p">callback</span>, <span class="p">colour</span>)</a></h5>
+ <h5><a name="_0_1_u_i_dropdown_1_u_i_dropdown">function UIDropdown:UIDropdown(<span class="p">ui</span>, <span class="p">parent_window</span>, <span class="p">parent_button</span>, <span class="p">items</span>, <span class="p">callback</span>, <span class="p">colour</span>, <span class="p">scrollbar_colour</span>, <span class="p">disabled_colour</span>)</a></h5>
  <p>
  Constructor for the dropdown "window"<br/><br/>
  <strong>Parameters:</strong>
@@ -392,10 +411,24 @@ The parent window and the index of the selected item</td>
  <tr>
  <td class="n">colour</td>
  <td class="t">table</td>
- <td class="d"> A colour in the form of {red = ..., green = ..., blue = ...}. Optional if parent_window is a UIResizable</td>
+ <td class="d"> Colour of the dropdown's list items, in the form of {red = ..., green = ..., blue = ...}.
+Optional if parent_window is a UIResizable</td>
+ </tr>
+ <tr>
+ <td class="n">scrollbar_colour</td>
+ <td class="t">table</td>
+ <td class="d"> Colour of the scrollbar's 'thumb', and
+button hover in the form of {red = ..., green = ..., blue = ...}.
+Optional if parent_window is a UIResizable</td>
+ </tr>
+ <tr>
+ <td class="n">disabled_colour</td>
+ <td class="t">table</td>
+ <td class="d"> Colour of the disabled items in the form of {red = ..., green = ..., blue = ...}.
+Optional.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L27">line 27 of Lua/dialogs/resizables/dropdown.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L28">line 28 of Lua/dialogs/resizables/dropdown.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -416,7 +449,7 @@ The parent window and the index of the selected item</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1begin_drag">Window:beginDrag</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L81">line 81 of Lua/dialogs/resizables/dropdown.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L139">line 139 of Lua/dialogs/resizables/dropdown.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -443,7 +476,38 @@ The parent window and the index of the selected item</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1on_mouse_down">UIResizable:onMouseDown</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L88">line 88 of Lua/dialogs/resizables/dropdown.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L146">line 146 of Lua/dialogs/resizables/dropdown.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_dropdown_1on_mouse_move">function UIDropdown:onMouseMove(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L160">line 160 of Lua/dialogs/resizables/dropdown.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -458,7 +522,14 @@ The parent window and the index of the selected item</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L73">line 73 of Lua/dialogs/resizables/dropdown.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L129">line 129 of Lua/dialogs/resizables/dropdown.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_dropdown_1update_buttons">function UIDropdown:updateButtons()</a></h5>
+ <p>
+ Updates buttons when scrolling.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L109">line 109 of Lua/dialogs/resizables/dropdown.lua</a>.
  </p>
  </div>
 </div>
