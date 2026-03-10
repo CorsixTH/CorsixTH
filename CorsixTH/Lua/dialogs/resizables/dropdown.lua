@@ -157,6 +157,35 @@ function UIDropdown:onMouseDown(button, x, y)
   return UIResizable.onMouseDown(self, button, x, y)
 end
 
+--! Allow the dropdown to scroll through mousewheel input
+--!param x (int) UNUSED, 1 on down scroll, -1 on up scroll
+--!param y (int) 1 on down scroll, -1 on up scroll
+function UIDropdown:onMouseWheel(x, y)
+  if x ~= 0 then return false end -- Do nothing on x scroll
+  local bar = self.scrollbar
+
+  if not self:hitTest(self.cursor_x, self.cursor_y) or not (bar and bar.enabled) then
+    return false
+  end
+
+  local slider = bar.slider
+  local track_len = slider.max_y - slider.min_y
+  local steps = bar.max_value - bar.page_size
+
+  -- Identify the nearest normalised slider position to our y position
+  local slider_y = bar:getXorY() - slider.min_y
+  local nearest_slot = math.round((slider_y * steps) / track_len)
+
+  -- Next position
+  local next_slot = nearest_slot - y
+
+  -- Calculate the new slider y position
+  local offset = math.round((next_slot * track_len) / steps)
+  bar:setXorY(slider.min_y + offset)
+
+  return true
+end
+
 function UIDropdown:onMouseMove(x, y, dx, dy)
   local panels = self.item_panels
   local buttons = self.item_buttons
