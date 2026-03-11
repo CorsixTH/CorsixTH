@@ -316,6 +316,9 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
     return
   end
 
+  local info = self.dynamic_info
+  local font = self.white_font
+
   local dynamic_info_panel_x = 364
   local progress_bar_r_offset = 11
   local progress_bar_width = 100
