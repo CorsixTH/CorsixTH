@@ -39,6 +39,7 @@ local scale = 1
 local bg_colour_index = 1
 local y_off
 local old_event_handlers
+local mpalette_index
 
 local background_colours = {
   Colours.Black,
@@ -69,40 +70,79 @@ for name, _ in pairs(TheApp.gfx:allPalettes()) do
 end
 table.sort(palettes)
 
-local function LoadTable(n, complex)
+for i, name in ipairs(palettes) do
+  if name == "MPalette.dat" then
+    mpalette_index = i
+    break
+  end
+end
+
+-- Find the palette with the longest common prefix with the sprite table path,
+-- as this is likely the correct palette to use for the sprite table.
+-- Avoids hardcoding a mapping of sprites to palettes and accounts for THs
+-- naming e.g. AWARD01.PAL and AWARD02.PAL used for AWARD03.TAB
+--
+--!param sprite_table_name (string) The name of the sprite table, without the
+--        .TAB extension
+--!return (number) The index of the closest matching palette in the palettes
+local function closest_matching_palette(sprite_table_name)
+  local best_score = 0
+  local best_index
+  local lower_st = sprite_table_name:lower()
+
+  for i, pal_name in ipairs(palettes) do
+    local score = 0
+    local lower_pal = pal_name:lower()
+
+    for j = 3, math.min(#lower_pal, #lower_st) do
+      if lower_pal:sub(1, j) == lower_st:sub(1, j) then
+        score = j
+      else
+        break
+      end
+    end
+    if score > best_score then
+      best_score = score
+      best_index = i
+    end
+  end
+
+  return best_index
+end
+
+local function LoadTable(n, complex, detect_palette)
   sprite_table_index = n
   is_complex = complex
   local path = sprite_table_paths[n]
   local pal
-  if TheApp.fs:readContents(path[1], path[2] .. ".PAL") then
-    palette_name = path[2] .. ".PAL"
-  else
-    palette_name = palettes[palette_index]
+  if detect_palette then
+    palette_index = closest_matching_palette(path[2]) or mpalette_index
   end
+  palette_name = palettes[palette_index]
   pal = gfx:getPalette(palette_name)
   sprite_table = gfx:loadSpriteTable(path[1], path[2], complex, pal)
   need_draw = true
   y_off = 0
 end
-LoadTable(1, false)
+LoadTable(1, false, true)
 
 local function DoKey(_, rawchar)
   local key = rawchar:lower()
   if key == "c" then
     gfx.cache.tabled = {}
-    LoadTable(sprite_table_index, not is_complex)
+    LoadTable(sprite_table_index, not is_complex, false)
   elseif key == "a" then
     if sprite_table_index > 1 then
-      LoadTable(sprite_table_index - 1, is_complex)
+      LoadTable(sprite_table_index - 1, is_complex, true)
     end
   elseif key == "d" then
     if sprite_table_index < #sprite_table_paths then
-      LoadTable(sprite_table_index + 1, is_complex)
+      LoadTable(sprite_table_index + 1, is_complex, true)
     end
   elseif key == "p" then
     palette_index = (palette_index or 1) % #palettes + 1
     gfx.cache.tabled = {}
-    LoadTable(sprite_table_index, is_complex)
+    LoadTable(sprite_table_index, is_complex, false)
   elseif key == "w" then
     wdown = true
     need_draw = true
