@@ -487,21 +487,23 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
 
   self:showKeyPane("global")
 
-  -- "Accept" button
+  -- "Cancel" button (rename to "Back" and move to left)
   self:addBevelPanel(self.panel_pos_table_x[1], 430, 200, 40, col_bg)
-      :setLabel(_S.hotkey_window.button_accept)
-      :makeButton(0, 0, 180, 40, nil, self.buttonAccept)
-      :setTooltip(_S.tooltip.hotkey_window.button_accept)
-  -- Reset to defaults button.
+      :setLabel(_S.hotkey_window.button_back)
+      :makeButton(0, 0, 180, 40, nil, self.buttonCancel)
+      :setTooltip(_S.tooltip.hotkey_window.button_back)
+
+  -- Reset to defaults button (keep in middle)
   self:addBevelPanel(self.panel_pos_table_x[2], 430, 200, 40, col_bg)
       :setLabel(_S.hotkey_window.button_defaults)
       :makeButton(0, 0, 180, 40, nil, self.buttonDefaults)
       :setTooltip(_S.tooltip.hotkey_window.button_defaults)
-  -- "Cancel" button
+
+  -- "Accept" button (move to right)
   self:addBevelPanel(self.panel_pos_table_x[3], 430, 200, 40, col_bg)
-      :setLabel(_S.hotkey_window.button_cancel)
-      :makeButton(0, 0, 180, 40, nil, self.buttonCancel)
-      :setTooltip(_S.tooltip.hotkey_window.button_cancel)
+      :setLabel(_S.hotkey_window.button_accept)
+      :makeButton(0, 0, 180, 40, nil, self.buttonAccept)
+      :setTooltip(_S.tooltip.hotkey_window.button_accept)
 
   self.built_in_font = built_in
 end
