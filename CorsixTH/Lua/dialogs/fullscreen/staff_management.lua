@@ -179,13 +179,38 @@ function UIStaffManagement:updateStaffList(staff_member_removed)
     Handyman = {},
     Receptionist = {},
   }
-  for _, staff in ipairs(hosp.staff) do
+  for i, staff in ipairs(hosp.staff) do
+    staff.hire_order = i
     local list = staff_members[staff.profile.humanoid_class]
     list[#list + 1] = staff
     -- The selected staff might have been moved because someone else was removed from the list.
     if selected_staff == staff then
       self.selected_staff = #list
     end
+  end
+  -- Sort staff tables by attribute and direction
+  for _, staff_tbl in pairs(staff_members) do
+  if self.list_direction == "up" then
+    if self.list_order == "hire" then
+      table.sort(staff_tbl, function(a, b) return a.hire_order > b.hire_order end)
+    elseif self.list_order == "morale" then
+      table.sort(staff_tbl, function(a, b) return a:getAttribute("happiness") > b:getAttribute("happiness") end)
+    elseif self.list_order == "tiredness" then
+      table.sort(staff_tbl, function(a, b) return a:getAttribute("fatigue") > b:getAttribute("fatigue") end)
+    elseif self.list_order == "skill" then
+      table.sort(staff_tbl, function(a, b) return a.profile.skill > b.profile.skill end)
+    end
+  else
+    if self.list_order == "hire" then
+      table.sort(staff_tbl, function(a, b) return a.hire_order < b.hire_order end)
+    elseif self.list_order == "morale" then
+      table.sort(staff_tbl, function(a, b) return a:getAttribute("happiness") < b:getAttribute("happiness") end)
+    elseif self.list_order == "tiredness" then
+      table.sort(staff_tbl, function(a, b) return a:getAttribute("fatigue") < b:getAttribute("fatigue") end)
+    elseif self.list_order == "skill" then
+      table.sort(staff_tbl, function(a, b) return a.profile.skill < b.profile.skill end)
+    end
+  end
   end
   self.staff_members = staff_members
   if staff_member_removed then
@@ -440,11 +465,30 @@ function UIStaffManagement:onMouseDown(code, x, y)
   if code == "left" then
     local s = TheApp.config.ui_scale
     local inside_staff_list_area = (x > 50 * s and x < 624 * s) and (y > 82 * s and y < 351 * s)
+    local inside_header_area = (x > 321 * s and x < 629 * s) and (y > 22 * s and y < 46 * s)
     if inside_staff_list_area then
       -- Hit staff row
       if #self.staff_members[self.category] - (self.page - 1)*10 > math_floor((y - 81 * s)/(27 * s)) then
         self.selected_staff = math_floor((y - 81 * s)/(27 * s)) + 1 + (self.page - 1)*10
         TheApp.audio:playSound("selectx.wav")
+      end
+    elseif inside_header_area then
+      local function order_by(attribute)
+        if self.list_order == attribute then -- Change direction
+          if not self.list_direction or self.list_direction == "down" then
+            self.list_direction = "up"
+          else
+            self.list_order = "hire"
+            self.list_direction = "down"
+          end
+        else
+          self.list_order = attribute -- Switch order attribute
+        end
+        self:updateStaffList()
+      end
+      if x < 422 * s then order_by("morale")
+      elseif x > 425 * s and x < 527 * s then order_by("tiredness")
+      elseif x > 529 * s then order_by("skill")
       end
     else
       local inside_view_of_the_staff_area = (x > 497 * s and x < 580 * s) and (y > 373 * s and y < 455 * s)
