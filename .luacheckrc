@@ -29,9 +29,9 @@ globals = { -- Globals
             "loadfile_envcall", "loadstring_envcall",
             "pause_gc_and_use_weak_keys", "permanent",
             "rangeMapLookup", "rnc", "strict_declare_global",
-            "table_length", "unpermanent", "values", "serialize",
+            "unpermanent", "values", "serialize",
             "array_join", "shallow_clone", "staff_initials_cache",
-            "hasBit", "bitOr", "inspect", "getRandomEntryFromArray",
+            "hasBit", "bitOr", "inspect", "getRandomEntryFromArray", "isTableEmpty",
             "stripTrailingSlashes", "isDirectory", "canOpenDirectory",
 
             -- Game classes

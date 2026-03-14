@@ -68,13 +68,10 @@ function values(root_table, wildcard)
   return f
 end
 
--- Can return the length of any table, where as #table_name is only suitable for use with arrays of one contiguous part without nil values.
-function table_length(table)
-  local count = 0
-  for _,_ in pairs(table) do
-    count = count + 1
-  end
-  return count
+--! Check whether the table is empty.
+--!return (bool) Whether the table has no entries of any kind.
+function isTableEmpty(table)
+  return next(table) == nil
 end
 
 --! Get a random item from an array.
