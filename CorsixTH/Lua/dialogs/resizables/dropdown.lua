@@ -161,7 +161,7 @@ end
 --!param x (int) UNUSED, 1 on right scroll, -1 on left scroll
 --!param y (int) 1 on up scroll, -1 on down scroll
 function UIDropdown:onMouseWheel(x, y)
-  if x ~= 0 then return false end -- Do nothing on x scroll
+  if y == 0 then return false end -- Do nothing on x only scroll
   local bar = self.scrollbar
 
   if not self:hitTest(self.cursor_x, self.cursor_y) or not (bar and bar.enabled) then
