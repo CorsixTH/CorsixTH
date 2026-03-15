@@ -64,17 +64,20 @@ end
 function Object:initOrientation(direction)
   self.direction = direction
   local object_type = self.object_type
-  local flags = self.init_anim_flags or 0
+
+  -- Decide the animation and the draw flags for it.
+  local flags = 0
   local anim = object_type.idle_animations[direction]
   if not anim then
     anim = object_type.idle_animations[orient_mirror[direction]]
-    flags = 1
+    flags = DrawFlags.FlipHorizontal
   end
   local footprint = object_type.orientations
   footprint = footprint and footprint[direction]
   if footprint and footprint.early_list then
-    flags = flags + 1024
+    flags = flags + DrawFlags.EarlyList
   end
+
   local rap = footprint and footprint.render_attach_position
   if rap and rap[1] and type(rap[1]) == "table" then
     self.split_anims = {self.th}
