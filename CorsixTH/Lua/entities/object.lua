@@ -306,10 +306,6 @@ function Object:setTile(x, y)
     return false
   end
 
-  local function isEmpty(table)
-    return next(table) == nil
-  end
-
   local function getComplementaryPassableFlag(passable_flag)
     if passable_flag == "travelNorth" or passable_flag == "travelSouth" then
       return passable_flag == "travelNorth" and "travelSouth" or "travelNorth"
@@ -365,7 +361,7 @@ function Object:setTile(x, y)
             end
           end
 
-          if not isEmpty(flags_to_set) then
+          if not isTableEmpty(flags_to_set) then
             map:setCellFlags(xpos, ypos, flags_to_set)
           end
           if not map:getCellFlags(xpos, ypos).passable then
@@ -467,7 +463,7 @@ function Object:setTile(x, y)
               passable = not not xy.only_passable,
             })
           end
-          if not isEmpty(flags_to_set) then
+          if not isTableEmpty(flags_to_set) then
             map:setCellFlags(lx, ly, flags_to_set)
           end
           if xy.only_side then

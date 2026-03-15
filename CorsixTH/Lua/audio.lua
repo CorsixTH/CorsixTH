@@ -797,7 +797,7 @@ function Audio:playSoundEffects(play_effects)
 end
 
 function Audio:tellInterestedEntitiesTheyCanNowPlaySounds()
-  if table_length(self.entities_waiting_for_sound_to_be_enabled) > 0 then
+  if not isTableEmpty(self.entities_waiting_for_sound_to_be_enabled) then
     for entity, callback in pairs(self.entities_waiting_for_sound_to_be_enabled) do
       callback()
       self.entities_waiting_for_sound_to_be_enabled[entity] = nil
