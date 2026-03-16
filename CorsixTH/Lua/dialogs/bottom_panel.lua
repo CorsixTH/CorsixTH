@@ -107,6 +107,7 @@ function UIBottomPanel:drawPanels()
     -- Sprites for machine menu button doesn't exist in original game. Let's import them from aux_ui.dat and draw
     local aux_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
     self:addPanel(0, 407, 0):makeToggleButton(2, 6, 36, 36, 0, self.dialogMachineMenu)
+      :setSound() -- override
       :setTooltip(_S.tooltip.toolbar.machine_menu)
       .panel_for_sprite.custom_draw = --[[persistable:machine_menu_buttons]] function(panel, canvas, x, y)
       local s = TheApp.config.ui_scale
