@@ -425,7 +425,7 @@ end
 --! Spawn a patient from a spawn point for the given hospital.
 --!param hospital (Hospital) Hospital that the new patient should visit.
 --!return (Patient entity) The spawned patient, or 'nil' if no patient spawned.
-function World:spawnPatient(hospital)
+function World:spawnPatient(hospital, disease)
   if not hospital then
     hospital = self:getLocalPlayerHospital()
   end
@@ -440,22 +440,11 @@ function World:spawnPatient(hospital)
     return
   end
 
-  if not hospital:hasStaffedDesk() then return nil end
-
-  -- Construct disease, take a random guess first, as a quick clear-sky attempt.
-  local disease = self.available_diseases[math.random(1, #self.available_diseases)]
-  if not isDiseaseUsableForNewPatient(self, disease, hospital) then
-    -- Lucky shot failed, do a proper calculation.
-    local usable_diseases = {}
-    for _, d in ipairs(self.available_diseases) do
-      if isDiseaseUsableForNewPatient(self, d, hospital) then
-        usable_diseases[#usable_diseases + 1] = d
-      end
-    end
-
-    if #usable_diseases == 0 then return nil end
-
-    disease = usable_diseases[math.random(1, #usable_diseases)]
+  -- Still need to count them even though you haven't got a staffed desk
+  -- and you also don't want to spawn them on the map
+  hospital.population = hospital.population + 1
+  if not hospital:hasStaffedDesk() then
+    return
   end
 
   -- Construct patient.
@@ -906,7 +895,8 @@ function World:onTick()
       local spawn_count = self.spawn_hours[self.game_date:hourOfDay() + i - 1]
       if spawn_count and self.hospitals[1].opened then
         for _ = 1, spawn_count do
-          self:spawnPatient()
+          local disease = self:getNewPatientDisease()
+          self:spawnPatient(self:chooseHospitalForPatient(disease), disease)
         end
       end
       for _, entity in ipairs(self.entities) do
@@ -1060,7 +1050,7 @@ function World:onEndDay()
   local day = self.game_date:dayOfMonth()
   if self.spawn_dates[day] then
     for _ = 1, self.spawn_dates[day] do
-      local hour = math.random(1, Date.hoursPerDay())
+      local hour = math.random(0, Date.hoursPerDay() - 1)
       self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
     end
   end
@@ -1093,17 +1083,11 @@ end
 -- Called immediately prior to the ingame month changing.
 -- returns true if the game was killed due to the player losing
 function World:onEndMonth()
-  local local_hospital = self:getLocalPlayerHospital()
-  local_hospital.population = 0.25
-  if self.game_date:monthOfGame() >= self.map.level_config.gbv.AllocDelay then
-    local_hospital.population = local_hospital.population * self:getReputationImpact(local_hospital)
-  end
-
   -- Also possibly change world spawn rate according to the level configuration.
   local index = 0
   local popn = self.map.level_config.popn
   while popn[index] do
-    if popn[index].Month == self.game_date:monthOfGame() then
+    if popn[index].Month == self.game_date:monthOfGame() - 1 then
       self.monthly_spawn_increase = popn[index].Change
       break
     end
@@ -1130,7 +1114,8 @@ function World:updateSpawnDates()
   local local_hospital = self:getLocalPlayerHospital()
 
   -- Decide on number of visitors
-  local no_of_spawns = self.spawn_rate * local_hospital.population
+  -- Use ceil so that at least one patient arrives (unless population = 0)
+  local no_of_spawns = math.ceil(self.spawn_rate * local_hospital.population)
   -- If Roujin's Challenge is on, add a fixed bonus to the spawn pool for this player.
   if local_hospital.hosp_cheats:isCheatActive("spawn_rate_cheat") then
     local roujin_bonus = 40
@@ -1158,28 +1143,6 @@ function World:updateSpawnDates()
     if force_arrival then
       self.spawn_dates[math.floor(1 + math.random() * last_day)] = 1
     end
-  end
-end
-
---! Computes the impact of hospital reputation on the spawn rate.
---! The relation between reputation and its impact is linear.
---! Returns a percentage (as a float):
---!     1% if reputation < 253
---!    60% if reputation == 400
---!   100% if reputation == 500
---!   140% if reputation == 600
---!   180% if reputation == 700
---!   300% if reputation == 1000
---!param hospital (hospital): the hospital used to compute the
---! reputation impact
-function World:getReputationImpact(hospital)
-  local result = 1 + ((hospital.reputation - 500) / 250)
-
-  -- The result must be positive
-  if result <= 0 then
-    return 0.01
-  else
-    return result
   end
 end
 
@@ -2733,6 +2696,71 @@ function World:validateMap()
   -- passable tiles to the hospital
   if not spawn_points[1] then
     return _S.map_editor_window.checks.spawn_points_and_path
+  end
+end
+
+--! Find a valid disease that a patient can use
+--!return disease (table)
+function World:getNewPatientDisease()
+  -- Construct disease, take a random guess first, as a quick clear-sky attempt.
+  local hospital = self:getLocalPlayerHospital()
+  local disease = self.available_diseases[math.random(1, #self.available_diseases)]
+  if not isDiseaseUsableForNewPatient(self, disease, hospital) then
+    -- Lucky shot failed, do a proper calculation.
+    local usable_diseases = {}
+    for _, d in ipairs(self.available_diseases) do
+      if isDiseaseUsableForNewPatient(self, d, hospital) then
+        usable_diseases[#usable_diseases + 1] = d
+      end
+    end
+
+    if #usable_diseases == 0 then return nil end
+
+    disease = usable_diseases[math.random(1, #usable_diseases)]
+  end
+  return disease
+end
+
+--! Choose hospital for normal patient
+--!param disease (table) - the disease assigned to this patient
+--!return hospital (Hospital)
+function World:chooseHospitalForPatient(disease)
+  -- round robin if less than gbvAllocDelay
+  if self.map.level_config.gbv.AllocDelay and self.game_date:monthOfGame() <= self.map.level_config.gbv.AllocDelay then
+    local total_population = 0
+    for _, hospital in ipairs(self.hospitals) do
+      total_population = total_population + hospital.population
+    end
+    return self.hospitals[total_population % 4 + 1]
+  end
+
+  -- sometimes randomly choose a hospital
+  if self.map.level_config.gbv.AllocRand and math.random(1, self.map.level_config.gbv.AllocRand) == 1 then
+    return self.hospitals[math.random(1, 4)]
+  end
+
+  -- From all hospitals randomly select a hospital based on the reputation
+  -- and cost of treatment of the patients disease
+  local value_proposition = 0
+  local hosp_patient_value = {}
+  -- calculate the threshold values for each hospital
+  for s, hosp in ipairs(self.hospitals) do
+    local rep_multiplier = self.map.level_config.gbv.AllocIndRep and self.map.level_config.gbv.AllocIndRep or 2
+    local reputation = hosp:getDiseaseReputation(disease.id)
+    value_proposition = hosp:getDiseaseReputationPriceFactor(disease.id)
+    value_proposition = value_proposition * rep_multiplier * reputation
+    if s > 1 then
+      value_proposition = value_proposition + hosp_patient_value[s - 1]
+    end
+    hosp_patient_value[s] = value_proposition
+  end
+
+  -- Check random value, against individual hospital thresholds
+  local threshold = math.random(0, math.floor(value_proposition - 1))
+  for i, hosp_value in ipairs(hosp_patient_value) do
+    if threshold < hosp_value then
+      return self.hospitals[i]
+    end
   end
 end
 
