@@ -160,7 +160,7 @@ function UIOptions:UIOptions(ui, mode)
         :setLabel(_S.options_window.check_for_updates):setTooltip(_S.tooltip.options_window.check_for_updates).lowered = true
     self.updates_panel =
         self:addBevelPanel(165, updates_y_pos, BTN_WIDTH, BTN_HEIGHT, col.setting):setLabel(updates_string)
-    self.updates_button = self.updates_panel:makeToggleButton(0, 0, 140, BTN_HEIGHT, nil, self.buttonUpdates)
+    self.updates_button = self.updates_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonUpdates)
         :setToggleState(app.config.check_for_updates)
   end
 
@@ -170,7 +170,7 @@ function UIOptions:UIOptions(ui, mode)
     :setLabel(_S.options_window.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen).lowered = true
   self.fullscreen_panel =
     self:addBevelPanel(165, fullscreen_y_pos, BTN_WIDTH, BTN_HEIGHT, col.setting):setLabel(app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
-  self.fullscreen_button = self.fullscreen_panel:makeToggleButton(0, 0, 140, BTN_HEIGHT, nil, self.buttonFullscreen)
+  self.fullscreen_button = self.fullscreen_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonFullscreen)
     :setToggleState(app.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen_button)
 
   -- Screen resolution
