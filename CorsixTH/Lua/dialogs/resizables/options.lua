@@ -65,6 +65,10 @@ function UIOptions:_startNewColumn()
   self.column_count = self.column_count + 1
 end
 
+-- Generate predefined resolutions the player can choose from; as well as
+-- including the custom option at the bottom. Where UI scaling prevents a
+-- resolution option from being selected, grey it out instead and move to
+-- the bottom of the list.
 local available_resolutions = function()
   local suggested_resolutions = {
     {text = "640x480 (4:3)",     width = 640,  height = 480  },
@@ -86,12 +90,23 @@ local available_resolutions = function()
     {text = "1920x1200 (16:10)", width = 1920, height = 1200 },
   }
 
-  local res = {}
   local s = TheApp.config.ui_scale
+  local enable_list, disable_list = {}, {}
   for _, opt in ipairs(suggested_resolutions) do
-    if App.MIN_WINDOW_WIDTH * s <= opt.width and App.MIN_WINDOW_HEIGHT * s <= opt.height then
-      res[#res + 1] = opt
+    local enabled = App.MIN_WINDOW_WIDTH * s <= opt.width and
+    App.MIN_WINDOW_HEIGHT * s <= opt.height
+    opt.disabled = not enabled
+    opt.tooltip = opt.disabled and { _S.tooltip.options_window.resolution_unavailable }
+    if enabled then
+      enable_list[#enable_list + 1] = opt
+    else
+      disable_list[#disable_list + 1] = opt
     end
+  end
+
+  local res = enable_list
+  for i = 1, #disable_list do
+    res[#res + 1] = disable_list[i]
   end
 
   res[#res + 1] = {
