@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-Font("mik")
+Font("unicode")
 Language("Русский", "Russian", "ru", "rus")
 Inherit("English")
 Encoding(utf8)
@@ -3147,21 +3147,20 @@ tooltip = {
     close = "Закрыть окно диспетчера",
   },
   machine_menu = {
-    sort = "Нажмите, чтобы отсортировать список по этой переменной.",
+    sort = "Нажмите, чтобы отсортировать список по этому значению.",
     machine = "Список машин - нажмите на машину, чтобы открыть соответствующее окно и показать ее на карте",
     smoking = "Это окошко отмечено, если машина скоро сломается.",
     assigned = "Это окошко отмечено, если разнорабочий назначен на починку машины.",
-    remaining_strength = "Это поле отображает Остаток Прочности машины",
+    remaining_strength = "Это поле отображает остаток от прочности машины",
     total_strength = "Это поле отображает полную прочность машины",
-    ratio = "Это поле отображает соотношение остатка прочности и полной прочности машины в процентах.",
     close = "Закрыть меню машин",
     header = {
       smoking = "Индикатор тревоги",
       assigned = "Индикатор назначения",
       machine = "Название машины",
-      remaining_strength = "Остаток Прочности машин.",
-      total_strength = "Полная Прочность машин.",
-      ratio = "Соотношение Остатка прочности и Полной прочности машин в процентах.",
+      remaining_strength = "Остаток от прочности машин.",
+      total_strength = "Полная прочность машин.",
+      status = "Состояние машины.",
     },
   },
   information = {
@@ -3669,9 +3668,9 @@ calls_dispatcher = {
 
 machine_menu = {
   machine = "Mашина",
+  status = "Состояние",
   remaining_strength = "Остаток",
   total_strength = "Прочность",
-  ratio = "Соотнош.",
   close = "Закрыть",
 }
 

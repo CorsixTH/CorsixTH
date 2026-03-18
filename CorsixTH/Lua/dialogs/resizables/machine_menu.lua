@@ -28,13 +28,16 @@ local col_bg = { red = 219, green = 81, blue = 12, }
 local col_shadow = { red = 202, green = 69, blue = 8, }
 local col_highlight = { red = 232, green = 95, blue = 16 }
 local col_assigned_button = { red = 84, green = 200, blue = 84 }
+local col_shaded_assigned_button = { red = 92, green = 150, blue = 92 }
+local col_disabled_assigned_button = { red = 84, green = 112, blue = 84 }
 local col_warning_button = { red = 219, green = 36, blue = 36 }
+local col_disabled = { red = 159, green = 90, blue = 56 }
 
 -- Timer, used to update machine menu only once per X ticks to reduce the burden.
 local ticks_to_skip = 10
 local tick_timer = ticks_to_skip
 
-local row_height = 20
+local row_height = 32
 local window_margin = 15
 
 function UIMachineMenu:UIMachineMenu(ui)
@@ -46,7 +49,7 @@ function UIMachineMenu:UIMachineMenu(ui)
   self.rows = math.ceil(approx_rows_space / row_height)
   local rows_space = self.rows * row_height
 
-  local width = 500
+  local width = 480
   local height = row_height + rows_space + window_margin * 2  -- header + values + margin (top and bottom)
   self:UIResizable(ui, width, height, col_bg)
   self.ui = ui
@@ -96,9 +99,9 @@ function UIMachineMenu:createControls()
 
     self.rows_shown = rows
     self.list_table = {}
-    local indicator_width = 20
+    local indicator_width = 32
     local name_width = 180
-    local values_width = 70
+    local status_width = 112
     local x = window_margin
     local y = window_margin
 
@@ -111,23 +114,23 @@ function UIMachineMenu:createControls()
         :setLabel("X"):setTooltip(_S.tooltip.machine_menu.header.assigned)
     x = x + indicator_width
     local name_header = self:addBevelPanel(x, window_margin, name_width, row_height, col_highlight)
-        :setLabel(_S.machine_menu.machine):setTooltip(_S.tooltip.machine_menu.header.machine)
+        :setLabel(_S.machine_menu.machine)
+        :makeButton(0, 0, name_width, row_height, nil, self.setSortByName)
+        :setTooltip(_S.tooltip.machine_menu.header.machine)
     x = x + name_width
-    local remaining_strength_panel_header = self:addBevelPanel(x, window_margin, values_width, row_height,
+    local status_panel_header = self:addBevelPanel(x, window_margin, status_width, row_height,
           col_highlight)
-        :setLabel(_S.machine_menu.remaining_strength)
-        :makeButton(0, 0, 70, 20, nil, self.setSortByRemain)
+        :setLabel(_S.machine_menu.status)
+        :makeButton(0, 0, status_width, row_height, nil, self.setSortByRatio)
+        :setTooltip(_S.tooltip.machine_menu.header.status .. " " .. _S.tooltip.machine_menu.sort)
+    x = x + status_width
+    local remaining_strength_panel_header = self:addBevelPanel(x, window_margin, indicator_width, row_height, col_highlight)
+        :makeButton(0, 0, indicator_width, row_height, nil, self.setSortByRemain)
         :setTooltip(_S.tooltip.machine_menu.header.remaining_strength .. " " .. _S.tooltip.machine_menu.sort)
-    x = x + values_width
-    local strength_panel_header = self:addBevelPanel(x, window_margin, values_width, row_height, col_highlight)
-        :setLabel(_S.machine_menu.total_strength)
-        :makeButton(0, 0, 70, 20, nil, self.setSortByStrength)
+    x = x + indicator_width
+    local strength_panel_header = self:addBevelPanel(x, window_margin, indicator_width, row_height, col_highlight)
+        :makeButton(0, 0, indicator_width, row_height, nil, self.setSortByStrength)
         :setTooltip(_S.tooltip.machine_menu.header.total_strength .. " " .. _S.tooltip.machine_menu.sort)
-    x = x + values_width
-    local ratio_panel_header = self:addBevelPanel(x, window_margin, values_width, row_height, col_highlight)
-        :setLabel(_S.machine_menu.ratio)
-        :makeButton(0, 0, 70, 20, nil, self.setSortByRatio)
-        :setTooltip(_S.tooltip.machine_menu.header.ratio .. " " .. _S.tooltip.machine_menu.sort)
 
     -- Draw rows
     for i = 1, rows, 1 do
@@ -144,41 +147,41 @@ function UIMachineMenu:createControls()
       local name_button = name_panel:makeButton(0, 0, 200, row_height, nil, name_factory(i))
           :setTooltip(_S.tooltip.machine_menu.machine)
       x = x + name_width
-      local remaining_strength_panel = self:addBevelPanel(x, y + row_height, 70, row_height, col_shadow)
+      local status_panel = self:addBevelPanel(x, y + row_height, status_width, row_height, col_bg)
+          :setTooltip(_S.tooltip.machine_window.status)
+      x = x + status_width
+      local remaining_strength_panel = self:addBevelPanel(x, y + row_height, indicator_width, row_height, col_bg)
           :setTooltip(_S.tooltip.machine_menu.remaining_strength)
-      x = x + values_width
-      local strength_panel = self:addBevelPanel(x, y + row_height, 70, row_height, col_shadow)
+      x = x + indicator_width
+      local strength_panel = self:addBevelPanel(x, y + row_height, indicator_width, row_height, col_bg)
           :setTooltip(_S.tooltip.machine_menu.total_strength)
-      x = x + values_width
-      local percentage_panel = self:addBevelPanel(x, y + row_height, 70, row_height, col_shadow)
-          :setTooltip(_S.tooltip.machine_menu.ratio)
 
       table.insert(self.list_table, {
         warning_header = warning_header,
         assigned_header = assigned_header,
         name_header = name_header,
+        status_panel_header = status_panel_header,
         remaining_strength_panel_header = remaining_strength_panel_header,
         strength_panel_header = strength_panel_header,
-        ratio_panel_header = ratio_panel_header,
         assigned_panel = assigned_panel,
         assigned_button = assigned_button,
         warning_panel = warning_panel,
         warning_button = warning_button,
         name_panel = name_panel,
         name_button = name_button,
+        status_panel = status_panel,
         remaining_strength_panel = remaining_strength_panel,
         strength_panel = strength_panel,
-        percentage_panel = percentage_panel,
       })
       y = y + row_height
     end
 
     -- Add scrollbar
-    self.scrollbar = self:addColourPanel(461, window_margin + 20, 24, row_height * rows,
+    self.scrollbar = self:addColourPanel(446, window_margin + 30, 24, row_height * rows,
           col_shadow.red, col_shadow.green, col_shadow.blue)
         :makeScrollbar(col_bg, scrollbarMovedCallback, 1, 1, 10, 1)
     -- Add close button
-    self:addPanel(337, 461,  8):makeButton(0, 0, 24, 24, 338, self.close)
+    self:addPanel(337, 446,  15):makeButton(0, 0, 24, 24, 338, self.close)
         :setTooltip(_S.tooltip.machine_menu.close)
   end
 end
@@ -225,16 +228,20 @@ function UIMachineMenu:assignedHandymanButtonClicked(index)
   end
 end
 
+function UIMachineMenu:setSortByName()
+  self.sort_method = "sortByName"
+end
+
 function UIMachineMenu:setSortByRemain()
   self.sort_method = "sortByRemain"
 end
 
-function UIMachineMenu:setSortByStrength()
-  self.sort_method = "sortByStrength"
-end
-
 function UIMachineMenu:setSortByRatio()
   self.sort_method = "sortByRatio"
+end
+
+function UIMachineMenu:setSortByStrength()
+  self.sort_method = "sortByStrength"
 end
 
 function UIMachineMenu:sortMachines(method)
@@ -254,7 +261,23 @@ function UIMachineMenu:sortMachines(method)
     table.sort(self.machine_list,
       function(a, b)
         if a.percentage_strength == nil or b.percentage_strength == nil then return false end
+
+        if a.smoking and not b.smoking then
+          return true
+        elseif not a.smoking and b.smoking then
+          return false
+        end
+
+        if (a.smoking or b.smoking) and not a.remaining_strength == b.remaining_strength then
+          return a.remaining_strength < b.remaining_strength
+        end
+
         return a.percentage_strength < b.percentage_strength
+     end)
+  elseif method == "sortByName" then
+    table.sort(self.machine_list,
+      function(a, b)
+        return a.object.object_type.name < b.object.object_type.name
       end)
   end
 end
@@ -290,6 +313,7 @@ function UIMachineMenu:update()
       if repair_call then
         assigned_handyman = repair_call["repair"].assigned
       end
+
       local machine_for_list = machineForList(machine, assigned_handyman)
       table.insert(self.machine_list, machine_for_list)
     end
@@ -301,27 +325,62 @@ function UIMachineMenu:update()
   self:scrollbarMoved()
 end
 
+function UIMachineMenu:draw(canvas, x, y)
+  UIResizable.draw(self, canvas, x, y)
+  local panel_sprites = self.ui.app.gfx:loadSpriteTable("QData", "Req03V", true)
+  local bitmap_sprites = self.ui.app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
+  local scroll_pos = self.scrollbar.value
+  local s = TheApp.config.ui_scale
+  x, y = self.x * s, self.y * s
+  bitmap_sprites:draw(canvas, 25, x + 374 * s, y + (window_margin + 2) * s, { scaleFactor = s })
+  bitmap_sprites:draw(canvas, 26, x + 407 * s, y + (window_margin + 2) * s, { scaleFactor = s })
+
+  for i = 1, self.rows_shown, 1 do
+    local machine = self.machine_list[i + scroll_pos - 1]
+    if machine then
+      bitmap_sprites:draw(canvas, 24, x + 264 * s, y + (window_margin + row_height * i + 3) * s, { scaleFactor = s })
+      local status_bar_width = math.floor((1 - machine.object.times_used/machine.object.strength) * 40 * s + 0.5)
+      if status_bar_width ~= 0 then
+        for dx = 0, status_bar_width - 1 do
+          panel_sprites:draw(canvas, 352, x + 293 * s + dx, y + (window_margin + row_height * i + math.floor(row_height/2) - 2) * s, { scaleFactor = s })
+        end
+      end
+    end
+  end
+end
+
 function UIMachineMenu:scrollbarMoved()
   local scroll_pos = self.scrollbar.value
   for i = 1, self.rows_shown, 1 do
     local machine = self.machine_list[i + scroll_pos - 1]
     local row = self.list_table[i]
     if machine then
+      row.assigned_panel:setColour(machine.assigned and col_assigned_button or col_shaded_assigned_button)
       row.assigned_panel:setLabel(machine.assigned and "X" or "")
       row.assigned_button:enable(machine.assigned and true or false)
       row.warning_panel:setLabel(machine.smoking and "!" or "")
+      row.warning_panel:setColour(machine.smoking and col_warning_button or col_bg)
       row.warning_button:enable(true)
       row.name_panel:setLabel(" " .. machine.name, nil, "left")
+      row.name_panel:setColour(col_bg)
       row.name_button:enable(true)
+      row.status_panel:setColour(col_bg)
       row.remaining_strength_panel:setLabel(tostring(machine.remaining_strength))
+      row.remaining_strength_panel:setColour(col_bg)
       row.strength_panel:setLabel(tostring(machine.strength))
-      row.percentage_panel:setLabel(_S.machine_menu.percentage:format(machine.percentage_strength))
+      row.strength_panel:setColour(col_bg)
     else
+      row.warning_panel:setColour(col_disabled)
+      row.assigned_panel:setColour(col_disabled_assigned_button)
       row.assigned_panel:setLabel("")
       row.name_panel:setLabel("")
       row.assigned_button:enable(false)
       row.warning_button:enable(false)
       row.name_button:enable(false)
+      row.status_panel:setColour(col_disabled)
+      row.remaining_strength_panel:setColour(col_disabled)
+      row.name_panel:setColour(col_disabled)
+      row.strength_panel:setColour(col_disabled)
     end
   end
 end
@@ -342,6 +401,9 @@ end
 function UIMachineMenu:afterLoad(old, new)
   if old < 236 then
     self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  end
+  if old < 242 then
+    self:close()
   end
   Window.afterLoad(self, old, new)
 end
