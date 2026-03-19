@@ -38,7 +38,7 @@
  <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1answer_call">answerCall</a>(<span class="p">staff</span>)
  </li>
  <li class="self">
- <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1call_for_repair">callForRepair</a>(<span class="p">object</span>, <span class="p">urgent</span>, <span class="p">manual</span>, <span class="p">lock_room</span>)
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1call_for_repair">callForRepair</a>(<span class="p">object</span>, <span class="p">urgent</span>, <span class="p">manual</span>)
  </li>
  <li class="self">
  <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1call_for_staff">callForStaff</a>(<span class="p">room</span>)
@@ -166,7 +166,7 @@ Reset the assigned status, and find an replacement staff<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L415">line 415 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L410">line 410 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -205,11 +205,11 @@ Return true if a call is answered. False if there is no suitable call waiting an
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L324">line 324 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L319">line 319 of Lua/calls_dispatcher.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_calls_dispatcher_1call_for_repair">function CallsDispatcher:callForRepair(<span class="p">object</span>, <span class="p">urgent</span>, <span class="p">manual</span>, <span class="p">lock_room</span>)</a></h5>
+ <h5><a name="_0_1_calls_dispatcher_1call_for_repair">function CallsDispatcher:callForRepair(<span class="p">object</span>, <span class="p">urgent</span>, <span class="p">manual</span>)</a></h5>
  <p>
  Call for repair<br/><br/>
  <strong>Parameters:</strong>
@@ -229,12 +229,6 @@ Return true if a call is answered. False if there is no suitable call waiting an
  <td class="n">manual</td>
  <td class="t">?</td>
  <td class="d">This call should not trigger advisor for "your machine is failing"</td>
- </tr>
- <tr>
- <td class="n">lock_room</td>
- <td class="t">?</td>
- <td class="d">This is a minor maintence. Rooms needed not to be locked.
-If urgent or manual is specified, lock_room will be true automatically</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L94">line 94 of Lua/calls_dispatcher.lua</a>.
@@ -292,7 +286,7 @@ If urgent or manual is specified, lock_room will be true automatically</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L131">line 131 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L126">line 126 of Lua/calls_dispatcher.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -310,7 +304,7 @@ If urgent or manual is specified, lock_room will be true automatically</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L153">line 153 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L148">line 148 of Lua/calls_dispatcher.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -334,14 +328,14 @@ or when the object is destroyed, etc.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L445">line 445 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L440">line 440 of Lua/calls_dispatcher.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_calls_dispatcher_1dump">function CallsDispatcher:dump()</a></h5>
  <p>
  Dump the current call table for debugging<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L370">line 370 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L365">line 365 of Lua/calls_dispatcher.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -361,7 +355,7 @@ or when the object is destroyed, etc.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L381">line 381 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L376">line 376 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -405,7 +399,7 @@ False if the call is served right away, or has been queued and assigned<br/><br/
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L260">line 260 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L255">line 255 of Lua/calls_dispatcher.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -425,7 +419,7 @@ False if the call is served right away, or has been queued and assigned<br/><br/
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L435">line 435 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L430">line 430 of Lua/calls_dispatcher.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -442,7 +436,7 @@ True<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L286">line 286 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L281">line 281 of Lua/calls_dispatcher.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -467,7 +461,7 @@ True<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L496">line 496 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L491">line 491 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -494,7 +488,7 @@ True<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L212">line 212 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L207">line 207 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -517,7 +511,7 @@ True<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L425">line 425 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L420">line 420 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -549,7 +543,7 @@ If not, the default would be reinsert the call into the queue<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L405">line 405 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L400">line 400 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -590,7 +584,7 @@ If not, the default would be reinsert the call into the queue<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L238">line 238 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L233">line 233 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -612,7 +606,7 @@ If not, the default would be reinsert the call into the queue<br/><br/>
  <td class="d">Staff to use.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L554">line 554 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L549">line 549 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -633,7 +627,7 @@ If not, the default would be reinsert the call into the queue<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L532">line 532 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L527">line 527 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -655,7 +649,7 @@ If not, the default would be reinsert the call into the queue<br/><br/>
  <td class="d">Staff to use.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L561">line 561 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L556">line 556 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -676,7 +670,7 @@ If not, the default would be reinsert the call into the queue<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L544">line 544 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L539">line 539 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -692,7 +686,7 @@ If not, the default would be reinsert the call into the queue<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L473">line 473 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L468">line 468 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -718,7 +712,7 @@ If not, the default would be reinsert the call into the queue<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L481">line 481 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L476">line 476 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -744,7 +738,7 @@ If not, the default would be reinsert the call into the queue<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L184">line 184 of Lua/calls_dispatcher.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L179">line 179 of Lua/calls_dispatcher.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
