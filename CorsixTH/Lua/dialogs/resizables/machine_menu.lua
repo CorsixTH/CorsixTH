@@ -268,7 +268,7 @@ function UIMachineMenu:sortMachines(method)
           return false
         end
 
-        if (a.smoking or b.smoking) and not a.remaining_strength == b.remaining_strength then
+        if (a.smoking or b.smoking) and (a.remaining_strength ~= b.remaining_strength) then
           return a.remaining_strength < b.remaining_strength
         end
 
