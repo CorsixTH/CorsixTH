@@ -174,14 +174,13 @@ function Machine:callHandymanForRepairIfNecessary(room)
   if remaining_use_count < 4 then
     -- If the job of repairing the machine isn't queued, queue it now (higher priority)
     if repair_task_does_not_exist then
-      local call = self.world.dispatcher:callForRepair(self, true, false, true)
+      local call = self.world.dispatcher:callForRepair(self, true, false)
       self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
       self.hospital:announceRepair(room)
     else
       -- Otherwise the task is already queued.
       -- Increase the priority to above that of machines with at least 4 uses left
       -- Upgrades task from low (1) priority to high (2) priority
-      -- This does not lock the room, as happens when the task call starts at high priority
       if self.hospital:getHandymanTaskPriority(repair_task_index, "repairing") == 1 then
         self.hospital:modifyHandymanTaskPriority(repair_task_index, 2, "repairing")
         self.hospital:announceRepair(room)
@@ -251,8 +250,8 @@ function Machine:explodeMachine(room)
     window:close()
   end
 
-  -- Clear the icon showing a handyman is coming to repair the machine
-  self:setRepairing(nil)
+  -- Clear gear icon
+  self:removeRepairingStatus()
 end
 
 --! Calculates whether smoke gets displayed for this machine (and if so, how much)
@@ -301,7 +300,6 @@ function Machine:createHandymanActions(handyman)
   assert(this_room, "machine should always in a room")
 
   self.repairing = handyman
-  self:setRepairingMode()
 
   local --[[persistable:handyman_repair_after_use]] function repair_after_use()
     handyman:setCallCompleted()
@@ -364,8 +362,8 @@ function Machine:replaceMachine(cost)
   -- Remove any queued repair jobs
   self:removeHandymanRepairTask()
 
-  -- Clear icon showing handyman is coming to repair the machine
-  self:setRepairing(nil)
+  -- Clear gear icon
+  self:removeRepairingStatus()
   -- Clear smoke
   setSmoke(self, false)
 end
@@ -374,9 +372,9 @@ end
 --!param room (object) machine room
 function Machine:machineRepaired(room, should_reduce_strength)
   should_reduce_strength = should_reduce_strength or true
-  room.needs_repair = false
+  room:unlockRoomOnRepair()
   self.times_used = 0
-  self:setRepairing(nil)
+  self:removeRepairingStatus()
   setSmoke(self, false)
   self:removeHandymanRepairTask()
 
@@ -410,34 +408,30 @@ function Machine:reduceStrengthOnRepair()
   end
 end
 
---! Tells the machine to start showing the icon that it needs repair.
---!   also lock the room from patient entering
---!param handyman The handyman heading to this machine. nil if repairing is finished
---!param is_manual_repair (bool) true if the repairing mode was set manually through the dialog; nil otherwise
-function Machine:setRepairing(handyman, is_manual_repair)
-  local anim = {icon = 4564} -- The only icon for machinery
+--! Set the room's repair status manually. Lock room and show gear icon.
+function Machine:setRepairingStatus()
   local room = self:getRoom()
-  local should_repair = handyman or is_manual_repair
-  self:setMoodInfo(should_repair and anim or nil)
-  room.needs_repair = should_repair
-  if should_repair then
-    self.ticks = true
-  else
-    self.ticks = self.object_type.ticks
-    self.world.dispatcher:dropFromQueue(self)
-    if not room.crashed then
-      self:updateDynamicInfo()
-      self:getRoom():tryAdvanceQueue()
-    end
-  end
+  local anim = {icon = 4564} -- The only icon for machinery
+  room.manual_repair = true
+  -- put gear icon above machine
+  self:setMoodInfo(anim)
+  -- make gear icon animate
+  self.ticks = true
+  room:lockRoomOnRepair()
 end
 
-function Machine:setRepairingMode(lock_room, is_manual_repair)
-  if lock_room ~= nil then
-    self.repairing_lock_room = lock_room
-  end
-  if (self.repairing or is_manual_repair) and self.repairing_lock_room then
-    self:setRepairing(self.repairing, is_manual_repair)
+--! Remove the room's repair status. Unlock room and remove gear icon.
+function Machine:removeRepairingStatus()
+  local room = self:getRoom()
+  room.manual_repair = false
+  self:setMoodInfo(nil)
+  room:unlockRoomOnRepair()
+  self.repairing = nil
+  self.ticks = self.object_type.ticks
+  self.world.dispatcher:dropFromQueue(self)
+  if not room.crashed then
+    self:updateDynamicInfo()
+    self:getRoom():tryAdvanceQueue()
   end
 end
 
@@ -496,7 +490,7 @@ end
 function Machine:onDestroy()
   local room = self:getRoom()
   if room then
-    room.needs_repair = false
+    room:unlockRoomOnRepair()
   end
   self:removeHandymanRepairTask()
 
