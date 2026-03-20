@@ -164,9 +164,9 @@
  <a href="_0_1_window.html#_0_1_window_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_window.html">Window</a>)
+ <li class="self">
+ <a href="_0_1_u_i_dropdown.html#_0_1_u_i_dropdown_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">Window:onMouseWheel</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_tick">onTick</a>()
@@ -276,10 +276,8 @@
  <li><span class="p">colour</span>
  </li>
  <li><span class="p">cursor_x</span>
- (*)
  </li>
  <li><span class="p">cursor_y</span>
- (*)
  </li>
  <li><span class="p">default_button_sound</span>
  </li>
@@ -507,6 +505,28 @@ Optional.</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L189">line 189 of Lua/dialogs/resizables/dropdown.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_dropdown_1on_mouse_wheel">function UIDropdown:onMouseWheel(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Allow the dropdown to scroll through mousewheel input<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> UNUSED, 1 on right scroll, -1 on left scroll</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> 1 on up scroll, -1 on down scroll</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">Window:onMouseWheel</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L160">line 160 of Lua/dialogs/resizables/dropdown.lua</a>.
  </p>
  </div>
