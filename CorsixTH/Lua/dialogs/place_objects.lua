@@ -633,6 +633,10 @@ end
 local flag_alpha75 = 256 * 8
 local flag_altpal = 16
 
+--! Method for displaying a blueprint when placing object by coordinates under the user cursor.
+--! Draws a blueprint and determines its color depending on whether the object can be placed
+--! at the given coordinates or not. A gray blueprint means placement is prohibited.
+--! A colored blueprint means placement is permitted.
 function UIPlaceObjects:setBlueprintCell(x, y)
   self:clearBlueprint()
   self.object_cell_x = x
@@ -740,59 +744,174 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       self.object_footprint[i][1] = xpos
       self.object_footprint[i][2] = ypos
     end
-    if self.object_anim and object.class ~= "SideObject" then
-      if allgood then
-        if world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, self.object_orientation, roomId) then
-          if self.ui.app.config.allow_blocking_off_areas then
-            print("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
-          else
-            allgood = false
-          end
-        end
-      end
-      if ATTACH_BLUEPRINT_TO_TILE then
-        self.object_anim:setTile(map, x, y)
-      end
-      self.object_anim:setPartialFlag(flag_altpal, not allgood)
-      self.object_slave_anim:setPartialFlag(flag_altpal, not allgood)
-      self.object_blueprint_good = allgood
-      self.ui:tutorialStep(1, allgood and 5 or 4, allgood and 4 or 5)
-    elseif object.class == "SideObject" then
-      if map:getCellFlags(x, y)[passable_flag] == true then
-        local checked_x, checked_y = x, y
-        if passable_flag == "travelNorth" or passable_flag == "travelSouth" then
-          checked_y =  checked_y + (passable_flag == "travelNorth" and -1 or 1)
-        else
-          checked_x = checked_x + (passable_flag == "travelEast" and 1 or -1)
-        end
 
-        flags = {}
-        flags[passable_flag] = false
-        map:setCellFlags(x, y, flags)
-        if not world.pathfinder:findDistance(x, y, checked_x, checked_y) then
-          --we need to check if the failure to get the distance is due to the presence of an object in the adjacent tile
-          if map:getCellFlags(checked_x, checked_y)["passable"] then
-            if self.ui.app.config.allow_blocking_off_areas then
-              print("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
-            else
-              allgood = false
-            end
-          end
-        end
-        flags[passable_flag] = true
-        map:setCellFlags(x, y, flags)
-      end
+    local function _setPartialFlags(x_, f_, map_, flag_altpal_, allgood_)
       if ATTACH_BLUEPRINT_TO_TILE then
-        self.object_anim:setTile(map, x, y)
+        self.object_anim:setTile(map_, x_, f_, 0)
       end
-      self.object_anim:setPartialFlag(flag_altpal, not allgood)
-      self.object_slave_anim:setPartialFlag(flag_altpal, not allgood)
-      self.object_blueprint_good = allgood
-      self.ui:tutorialStep(1, allgood and 5 or 4, allgood and 4 or 5)
+      self.object_anim:setPartialFlag(flag_altpal_, not allgood_)
+      self.object_slave_anim:setPartialFlag(flag_altpal_, not allgood_)
+      self.object_blueprint_good = allgood_
+      self.ui:tutorialStep(1, allgood_ and 5 or 4, allgood_ and 4 or 5)
     end
 
+    if self.object_anim and object.class ~= "SideObject" then
+      -- Not SideObject - an object that occupies the whole title or several of them
+      -- (Drinks machine, plant, reception desk, room machines and etc).
+      allgood = allgood and self:_isNonSideObjectValidPlacement(x, y, object, self.object_orientation, roomId, world)
+      _setPartialFlags(x, y, map, flag_altpal, allgood)
+    elseif object.class == "SideObject" then
+      -- SideObject - an object that lives on the edge of a tile (radiator, bin, extinguisher).
+      if map:getCellFlags(x, y)[passable_flag] == true then
+        allgood = allgood and self:_isSideObjectValidPlacement(x, y, roomId, passable_flag, map, world)
+      end
+      _setPartialFlags(x, y, map, flag_altpal, allgood)
+    end
   else
     self.object_footprint = {}
+  end
+end
+
+function UIPlaceObjects:_isNonSideObjectValidPlacement(x, y, object, object_orientation, roomId, world)
+  local invalid_placement
+  if self.ui.app.config.blocking_off_areas == 2 then
+    -- soft placing approach ('safe blocking off areas enabled')
+    if roomId > 0 and x and y then
+      -- placing an object in a room
+      local room = world:getRoom(x, y)
+      if room and room.door and room.door.tile_x and room.door.tile_y then
+        -- a valid room with a door
+        if not room.is_active then
+          -- user in a room editing mode
+          local object_layout = object.orientations[object_orientation]
+          invalid_placement = world:wouldNonSideObjectDontHaveAccessToTheRoomDoor(x, y, room, object_layout)
+          if not invalid_placement then
+            -- also check that after placing the object, all usage titles of objects already placed in the room
+            -- will remain accessible from the door room tile.
+            invalid_placement = world:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(x, y, room, object_layout, false)
+          end
+        else
+          -- user not in a room editing mode.
+          -- as we are not in a room editing mode, then there possbile be humanoids in the room.
+          -- this means that placing object can block a humanoid's passage to the door.
+          -- to prevent that case we fallback to strict placing approach ('blocking off areas disabled').
+          invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, roomId)
+        end
+      else
+        -- not a valid room with a door. corner case like a transition state.
+        invalid_placement = true
+      end
+    else
+      -- placing an object outside of any room.
+      -- fallback to strict placing approach ('blocking off areas disabled').
+      invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, roomId)
+    end
+  else
+    -- self.ui.app.config.blocking_off_areas == 1 or 3
+    -- soft placing approach disabled ('safe blocking off areas disabled').
+    -- in thas case follow strict placing approach ('blocking off areas disabled').
+    invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, roomId)
+  end
+
+  if invalid_placement then
+    if self.ui.app.config.blocking_off_areas == 3 then
+      -- all-permissive placing approach ('blocking off areas enabled')
+      -- This could lead to crashes, so we'll record this in the log so that during investigation
+      -- we'll be able to get know that safe placement was disabled.
+      TheApp.world:gameLog("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
+      return true
+    else
+      return false
+    end
+  else
+    return true
+  end
+end
+
+function UIPlaceObjects:_isSideObjectValidPlacement(x, y, roomId, passable_flag, map, world)
+  local invalid_placement
+  -- Depending on the orientation of the side object, we will check the accessibility of the cell
+  -- that is located just behind the edge that this side object creates with its placement
+  local to_check_x, to_check_y = x, y
+  if passable_flag == "travelNorth" or passable_flag == "travelSouth" then
+    to_check_y = to_check_y + (passable_flag == "travelNorth" and -1 or 1)
+  else
+    to_check_x = to_check_x + (passable_flag == "travelEast" and 1 or -1)
+  end
+  local opposite_passable_flag = Object:getComplementaryPassableFlag(passable_flag)
+
+  local function _isNoConnectingPathBetween(x1, y1, x2, y2)
+    if not world.pathfinder:findDistance(x1, y1, x2, y2) then
+      -- we need to check if the failure to get the distance is due to the presence of an object in the adjacent tile
+      if map:getCellFlags(x2, y2)["passable"] then
+        return true
+      end
+    end
+    return false
+  end
+
+  -- 1. Let's simulate it as if we've already placed the object and make tile edge unpassable
+  -- SideObject cell
+  local flags_main = {}
+  flags_main[passable_flag] = false
+  map:setCellFlags(x, y, flags_main)
+  -- adjacent cell to SideObject
+  local flags_adjacent = {}
+  flags_adjacent[opposite_passable_flag] = false
+  map:setCellFlags(to_check_x, to_check_y, flags_adjacent)
+
+  if self.ui.app.config.blocking_off_areas == 2 then
+    -- soft placing approach ('safe blocking off areas enabled')
+    -- 2. Check if the passability to objects is broken.
+    if roomId > 0 and x and y then
+      -- placing an object in a room
+      local room = world:getRoom(x, y)
+      if room and room.door and room.door.tile_x and room.door.tile_y then
+        -- a valid room with a door
+        if not room.is_active then
+          -- user in a room editing mode
+          invalid_placement = world:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(x, y, room, nil, true)
+        else
+          -- user not in a room editing mode.
+          -- as we are not in a room editing mode, then there possbile be humanoids in the room.
+          -- this means that placing object can block a humanoid's passage to the door.
+          -- to prevent that case we fallback to strict placing approach ('blocking off areas disabled').
+          invalid_placement = _isNoConnectingPathBetween(x, y, to_check_x, to_check_y)
+        end
+      else
+        -- not a valid room with a door. corner case like a transition state.
+        invalid_placement = true
+      end
+    else
+      -- placing an object outside of any room.
+      -- fallback to strict placing approach ('blocking off areas disabled').
+      invalid_placement = _isNoConnectingPathBetween(x, y, to_check_x, to_check_y)
+    end
+  else
+    -- self.ui.app.config.blocking_off_areas == 1 or 3
+    -- soft placing approach disabled ('safe blocking off areas disabled').
+    -- in thas case follow strict placing approach ('blocking off areas disabled').
+    invalid_placement = _isNoConnectingPathBetween(x, y, to_check_x, to_check_y)
+  end
+
+  -- 3. Make tiles sides passable back
+  flags_main[passable_flag] = true
+  map:setCellFlags(x, y, flags_main)
+  flags_adjacent[opposite_passable_flag] = true
+  map:setCellFlags(to_check_x, to_check_y, flags_adjacent)
+
+  if invalid_placement then
+    if self.ui.app.config.blocking_off_areas == 3 then
+      -- all-permissive placing approach ('blocking off areas enabled')
+      -- This could lead to crashes, so we'll record this in the log so that during investigation
+      -- we'll be able to get know that safe placement was disabled.
+      TheApp.world:gameLog("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
+      return true
+    else
+      return false
+    end
+  else
+    return true
   end
 end
 
