@@ -399,6 +399,17 @@ function array_join(array, separator)
   return result
 end
 
+--! Merge tables in one table
+function table_merge(...)
+  local result = {}
+   for _, t in ipairs({...}) do
+      for _, v in ipairs(t) do
+        table.insert(result, v)
+      end
+  end
+  return result
+end
+
 local function serialize_string(val, options)
   local level = options and options.long_bracket_level_start or 0
   while string.find(val, ']' .. string.rep('=', level) .. ']') do
