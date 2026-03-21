@@ -1883,7 +1883,6 @@ function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, require
   end
 end
 
---! Strict placing approach ('blocking off areas disabled') function.
 --! Check that pathfinding still works, i.e. that placing the object
 --! wouldn't disconnect one part of the hospital from another. To do
 --! this, we provisionally mark the footprint as unpassable (as it will
@@ -1964,7 +1963,6 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
   return not pathfinding_fine
 end
 
---! Soft placing approach ('safe blocking off areas enabled') function.
 --! Check that pathfinding between object and room door still works,
 --! i.e. that placing the object wouldn't disconnect it from the world.
 --! For that it mark the footprint as unpassable (as it will
@@ -1975,7 +1973,7 @@ end
 --!param room (object) target room for placing the object.
 --!param object_layout (table) object orientation description with footprint.
 --!return (bool) is such placement will break pathfinding.
-function World:wouldNonSideObjectDontHaveAccessToTheRoomDoor(object_x, object_y, room, object_layout)
+function World:wouldNonSideObjectsNotHaveAccessToRoomDoor(object_x, object_y, room, object_layout)
   if not room.door or not room.door.tile_x or not room.door.tile_y then return true end
 
   local door_x, door_y = room:getEntranceXY(true)
@@ -1983,7 +1981,7 @@ function World:wouldNonSideObjectDontHaveAccessToTheRoomDoor(object_x, object_y,
   local map = self.map.th
 
   -- To switch the tiles passability
-  local function _setFootprintTilesPassable(passable)
+  local function setFootprintTilesPassable(passable)
     for _, tile in ipairs(object_footprint) do
       if not tile.only_passable then
         map:setCellFlags(object_x + tile[1], object_y + tile[2], {passable = passable})
@@ -1993,10 +1991,10 @@ function World:wouldNonSideObjectDontHaveAccessToTheRoomDoor(object_x, object_y,
 
   local function _isIsolated(tile_x, tile_y, poi_x, poi_y)
     -- Make footprint tiles unpassable except only_passable ones
-    _setFootprintTilesPassable(false)
+    setFootprintTilesPassable(false)
     -- And check is there is a valid path
     local getPathDistance = self:getPathDistance(tile_x, tile_y, poi_x, poi_y)
-    _setFootprintTilesPassable(true)
+    setFootprintTilesPassable(true)
 
     -- Let's also check that there is a path even without the footprint apply.
     -- This will help to avoid cases where the path starts on an inaccessible tile.
@@ -2036,7 +2034,6 @@ function World:wouldNonSideObjectDontHaveAccessToTheRoomDoor(object_x, object_y,
   return not pathfinding_fine
 end
 
---! Soft placing approach ('safe blocking off areas enabled') function.
 --! Check that pathfinding between already placed in the room objects
 --! and room door still works. i.e. that placing the target object
 --! wouldn't disconnect the existing objects from the world.
@@ -2063,7 +2060,7 @@ function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y
   end
 
   -- To switch the tiles passability
-  local function _setFootprintTilesPassable(passable) -- don't used for SideObjects
+  local function setFootprintTilesPassable(passable) -- not used for SideObjects
     for _, tile in ipairs(object_footprint) do
       if not tile.only_passable then
         map:setCellFlags(object_x + tile[1], object_y + tile[2], {passable = passable})
@@ -2087,7 +2084,7 @@ function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y
 
   --2. Make footprint tiles unpassable except only_passable ones
   if not is_side_object then
-    _setFootprintTilesPassable(false)
+    setFootprintTilesPassable(false)
   end
 
   --3. Find out which use position tiles would become isolated:
@@ -2114,7 +2111,7 @@ function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y
 
   -- 4. For each footprint tile passable flag set to false by step 2 undo this change:
   if not is_side_object then
-    _setFootprintTilesPassable(true)
+    setFootprintTilesPassable(true)
     for tiles_index, tile in ipairs(object_footprint) do
       map:setCellFlags(object_x + tile[1], object_y + tile[2], {passable = tiles_passable_flags[tiles_index]})
     end

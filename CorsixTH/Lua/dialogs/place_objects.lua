@@ -662,7 +662,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     local opt_tiles_blocked = 0
     local world = self.ui.app.world
     local player_id = self.ui.hospital:getPlayerIndex()
-    local roomId = self.room and self.room.id
+    local room_id = self.room and self.room.id
     local passable_flag
     local direction = self.object_orientation
     local direction_parameters =  {
@@ -709,9 +709,9 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         end
 
         -- Check 2: Is the tile in the object's allowed room?:
-        local result = world:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(xpos, ypos, object, roomId)
+        local result = world:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(xpos, ypos, object, room_id)
         local is_object_allowed = result.within_room
-        roomId = result.roomId
+        room_id = result.roomId
 
         -- Check 3: The footprint tile should either be buildable or passable, is it?:
         if not tile.only_side and is_object_allowed then
@@ -758,13 +758,11 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     if self.object_anim and object.class ~= "SideObject" then
       -- Not SideObject - an object that occupies the whole title or several of them
       -- (Drinks machine, plant, reception desk, room machines and etc).
-      allgood = allgood and self:_isNonSideObjectValidPlacement(x, y, object, self.object_orientation, roomId, world)
+      allgood = allgood and self:_isNonSideObjectPlacementValid(x, y, object, self.object_orientation, room_id, world)
       _setPartialFlags(x, y, map, flag_altpal, allgood)
     elseif object.class == "SideObject" then
       -- SideObject - an object that lives on the edge of a tile (radiator, bin, extinguisher).
-      if map:getCellFlags(x, y)[passable_flag] == true then
-        allgood = allgood and self:_isSideObjectValidPlacement(x, y, roomId, passable_flag, map, world)
-      end
+      allgood = allgood and self:_isSideObjectPlacementValid(x, y, room_id, passable_flag, map, world)
       _setPartialFlags(x, y, map, flag_altpal, allgood)
     end
   else
@@ -772,19 +770,27 @@ function UIPlaceObjects:setBlueprintCell(x, y)
   end
 end
 
-function UIPlaceObjects:_isNonSideObjectValidPlacement(x, y, object, object_orientation, roomId, world)
+--! Function for checking the valid placement of "SideObject".
+--! param x (integer) target tile x coordinate.
+--! param y (integer) target tile y coordinate.
+--! param object (object) target SideObject.
+--! param object_orientation (string) footprint orientation name.
+--! param room_id (integer) room id if we in a build mode.
+--! param world (object) target world object.
+--! return (bool) is such placement will not break pathfinding.
+function UIPlaceObjects:_isNonSideObjectPlacementValid(x, y, object, object_orientation, room_id, world)
   local invalid_placement
-  if self.ui.app.config.blocking_off_areas == 2 then
-    -- soft placing approach ('safe blocking off areas enabled')
-    if roomId > 0 and x and y then
-      -- placing an object in a room
-      local room = world:getRoom(x, y)
-      if room and room.door and room.door.tile_x and room.door.tile_y then
-        -- a valid room with a door
+  if room_id > 0 and x and y then
+    -- placing an object in a room
+    local room = world:getRoom(x, y)
+    if room and not room.crashed and room.door and room.door.tile_x and room.door.tile_y then
+      -- a valid room with a door
+      if self.ui.app.config.blocking_off_areas == 2 then
+        -- soft placing approach ('safe blocking off areas enabled')
         if not room.is_active then
           -- user in a room editing mode
           local object_layout = object.orientations[object_orientation]
-          invalid_placement = world:wouldNonSideObjectDontHaveAccessToTheRoomDoor(x, y, room, object_layout)
+          invalid_placement = world:wouldNonSideObjectsNotHaveAccessToRoomDoor(x, y, room, object_layout)
           if not invalid_placement then
             -- also check that after placing the object, all usage titles of objects already placed in the room
             -- will remain accessible from the door room tile.
@@ -795,29 +801,28 @@ function UIPlaceObjects:_isNonSideObjectValidPlacement(x, y, object, object_orie
           -- as we are not in a room editing mode, then there possbile be humanoids in the room.
           -- this means that placing object can block a humanoid's passage to the door.
           -- to prevent that case we fallback to strict placing approach ('blocking off areas disabled').
-          invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, roomId)
+          invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, room_id)
         end
       else
-        -- not a valid room with a door. corner case like a transition state.
-        invalid_placement = true
+        -- soft placing approach disabled ('safe blocking off areas disabled').
+        -- in that case follow strict placing approach ('blocking off areas disabled').
+        invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, room_id)
       end
     else
-      -- placing an object outside of any room.
-      -- fallback to strict placing approach ('blocking off areas disabled').
-      invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, roomId)
+      -- not a valid room with a door. corner case like a transition state.
+      invalid_placement = true
     end
   else
-    -- self.ui.app.config.blocking_off_areas == 1 or 3
-    -- soft placing approach disabled ('safe blocking off areas disabled').
-    -- in thas case follow strict placing approach ('blocking off areas disabled').
-    invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, roomId)
+    -- placing an object outside of any room.
+    -- fallback to strict placing approach ('blocking off areas disabled').
+    invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, room_id)
   end
 
   if invalid_placement then
     if self.ui.app.config.blocking_off_areas == 3 then
       -- all-permissive placing approach ('blocking off areas enabled')
       -- This could lead to crashes, so we'll record this in the log so that during investigation
-      -- we'll be able to get know that safe placement was disabled.
+      -- we'll be able to know that safe placement was disabled.
       TheApp.world:gameLog("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
       return true
     else
@@ -828,7 +833,15 @@ function UIPlaceObjects:_isNonSideObjectValidPlacement(x, y, object, object_orie
   end
 end
 
-function UIPlaceObjects:_isSideObjectValidPlacement(x, y, roomId, passable_flag, map, world)
+--! Function for checking the valid placement of "SideObject".
+--! param x (integer) target tile x coordinate.
+--! param y (integer) target tile y coordinate.
+--! param room_id (integer) room id if we in a build mode.
+--! param passable_flag (string) passable flag name. orientation of an object relative to the cardinal directions.
+--! param map (object) target map object.
+--! param world (object) target world object.
+--! return (bool) is such placement will not break pathfinding.
+function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag, map, world)
   local invalid_placement
   -- Depending on the orientation of the side object, we will check the accessibility of the cell
   -- that is located just behind the edge that this side object creates with its placement
@@ -839,8 +852,9 @@ function UIPlaceObjects:_isSideObjectValidPlacement(x, y, roomId, passable_flag,
     to_check_x = to_check_x + (passable_flag == "travelEast" and 1 or -1)
   end
   local opposite_passable_flag = Object:getComplementaryPassableFlag(passable_flag)
+  local not_along_wall = map:getCellFlags(x, y)[passable_flag] == true
 
-  local function _isNoConnectingPathBetween(x1, y1, x2, y2)
+  local function hasNoConnectingPath(x1, y1, x2, y2)
     if not world.pathfinder:findDistance(x1, y1, x2, y2) then
       -- we need to check if the failure to get the distance is due to the presence of an object in the adjacent tile
       if map:getCellFlags(x2, y2)["passable"] then
@@ -860,41 +874,41 @@ function UIPlaceObjects:_isSideObjectValidPlacement(x, y, roomId, passable_flag,
   flags_adjacent[opposite_passable_flag] = false
   map:setCellFlags(to_check_x, to_check_y, flags_adjacent)
 
-  if self.ui.app.config.blocking_off_areas == 2 then
-    -- soft placing approach ('safe blocking off areas enabled')
-    -- 2. Check if the passability to objects is broken.
-    if roomId > 0 and x and y then
-      -- placing an object in a room
-      local room = world:getRoom(x, y)
-      if room and room.door and room.door.tile_x and room.door.tile_y then
-        -- a valid room with a door
+  -- 2. Check if the passability to objects is broken.
+  if room_id > 0 and x and y then
+    -- placing an object in a room
+    local room = world:getRoom(x, y)
+    if room and not room.crashed and room.door and room.door.tile_x and room.door.tile_y then
+      -- a valid room with a door
+      if self.ui.app.config.blocking_off_areas == 2 then
+        -- soft placing approach ('safe blocking off areas enabled')
         if not room.is_active then
           -- user in a room editing mode
-          invalid_placement = world:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(x, y, room, nil, true)
+          invalid_placement = not_along_wall and world:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(x, y, room, nil, true)
         else
           -- user not in a room editing mode.
           -- as we are not in a room editing mode, then there possbile be humanoids in the room.
           -- this means that placing object can block a humanoid's passage to the door.
           -- to prevent that case we fallback to strict placing approach ('blocking off areas disabled').
-          invalid_placement = _isNoConnectingPathBetween(x, y, to_check_x, to_check_y)
+          invalid_placement = not_along_wall and hasNoConnectingPath(x, y, to_check_x, to_check_y)
         end
       else
-        -- not a valid room with a door. corner case like a transition state.
-        invalid_placement = true
+        -- self.ui.app.config.blocking_off_areas == 1 or 3
+        -- soft placing approach disabled ('safe blocking off areas disabled').
+        -- in thas case follow strict placing approach ('blocking off areas disabled').
+        invalid_placement = not_along_wall and hasNoConnectingPath(x, y, to_check_x, to_check_y)
       end
     else
-      -- placing an object outside of any room.
-      -- fallback to strict placing approach ('blocking off areas disabled').
-      invalid_placement = _isNoConnectingPathBetween(x, y, to_check_x, to_check_y)
+      -- not a valid room with a door. corner case like a transition state.
+      invalid_placement = true
     end
   else
-    -- self.ui.app.config.blocking_off_areas == 1 or 3
-    -- soft placing approach disabled ('safe blocking off areas disabled').
-    -- in thas case follow strict placing approach ('blocking off areas disabled').
-    invalid_placement = _isNoConnectingPathBetween(x, y, to_check_x, to_check_y)
+    -- placing an object outside of any room.
+    -- fallback to strict placing approach ('blocking off areas disabled').
+    invalid_placement = not_along_wall and hasNoConnectingPath(x, y, to_check_x, to_check_y)
   end
 
-  -- 3. Make tiles sides passable back
+  -- 3. Restore the original tile's passable properties, thus undoing the actions taken in step 1.
   flags_main[passable_flag] = true
   map:setCellFlags(x, y, flags_main)
   flags_adjacent[opposite_passable_flag] = true
@@ -904,7 +918,7 @@ function UIPlaceObjects:_isSideObjectValidPlacement(x, y, roomId, passable_flag,
     if self.ui.app.config.blocking_off_areas == 3 then
       -- all-permissive placing approach ('blocking off areas enabled')
       -- This could lead to crashes, so we'll record this in the log so that during investigation
-      -- we'll be able to get know that safe placement was disabled.
+      -- we'll be able to know that safe placement was disabled.
       TheApp.world:gameLog("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
       return true
     else

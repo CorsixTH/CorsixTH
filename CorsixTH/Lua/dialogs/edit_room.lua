@@ -951,7 +951,7 @@ function UIEditRoom:enterDoorPhase()
     if self.ui.app.config.blocking_off_areas == 3 then
       -- all-permissive placing approach ('blocking off areas enabled')
       -- This could lead to crashes, so we'll record this in the log so that during investigation
-      -- we'll be able to get know that safe placement was disabled.
+      -- we'll be able to know that safe placement was disabled.
       TheApp.world:gameLog("Blocking off areas is allowed with room " .. self.blueprint_rect.x .. ", " .. self.blueprint_rect.y .. ".")
     else
       -- undo passable flags and go back to walls phase
