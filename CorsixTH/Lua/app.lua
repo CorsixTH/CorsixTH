@@ -874,6 +874,7 @@ end
 function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, error_prefix, campaign_info)
   local status, err = pcall(self._loadLevel, self, level, difficulty, level_name,
       level_file, level_intro, map_editor, campaign_info)
+  tracy.Message("Loading level: " .. (level_name or level or "map editor"))
   if not status then
     err = error_prefix and error_prefix .. err or "Error while loading level: " .. err
     print(err)
@@ -1816,6 +1817,7 @@ function App:quickSave()
 end
 
 function App:load(filepath)
+  tracy.Message("Loading game from " .. filepath)
   if self.world then
     self:worldExited()
   end

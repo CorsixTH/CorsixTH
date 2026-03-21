@@ -287,6 +287,11 @@ if(FETCH_SOUNDFONT)
   set(FLUIDR3_FILE ${fluidr3_SOURCE_DIR}/FluidR3.sf3)
 endif()
 
+if(WITH_TRACY)
+  find_package(Tracy CONFIG REQUIRED)
+  target_link_libraries(CorsixTH_lib PUBLIC Tracy::TracyClient)
+endif()
+
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
   # Do not generate launch script. The default is fine for this case.

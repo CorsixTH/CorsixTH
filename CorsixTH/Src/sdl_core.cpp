@@ -24,6 +24,10 @@ SOFTWARE.
 
 #include <SDL.h>
 
+#ifdef TRACY_ENABLE
+#include <tracy/Tracy.hpp>
+#endif
+
 #include <array>
 #include <cstdio>
 #include <cstring>

@@ -576,3 +576,16 @@ function canOpenDirectory(path)
   -- "lfs.dir()" will throw an error if the directory isn't accessible/doesn't exist
   -- (it does the same job of the "isDirectory()" function, but also checks if the directory can be opened)
 end
+
+-- Tracy Profiler stubs
+if not tracy then
+  local function noop() end
+  tracy = {
+    ZoneBegin = noop,
+    ZoneBeginN = noop,
+    ZoneBeginS = noop,
+    ZoneBeginNS = noop,
+    ZoneEnd = noop,
+    Message = noop
+  }
+end

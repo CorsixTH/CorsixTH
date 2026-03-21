@@ -1,4 +1,5 @@
 # Modify the config.h based upon our selection of options
+# Tracy requires a specific define to work
 configure_file(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
 
 target_sources(CorsixTH_lib

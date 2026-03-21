@@ -24,6 +24,10 @@ SOFTWARE.
 
 #include "config.h"
 
+#ifdef WITH_TRACY
+#include <tracy/Tracy.hpp>
+#endif
+
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
@@ -1732,6 +1736,7 @@ map_tile_iterator& map_tile_iterator::operator++() {
 }
 
 void map_tile_iterator::advance_until_visible() {
+  ZoneScoped;
   tile = nullptr;
 
   while (true) {
