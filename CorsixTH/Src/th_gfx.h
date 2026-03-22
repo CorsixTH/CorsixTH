@@ -91,49 +91,6 @@ enum draw_flags : uint32_t {
   thdf_nearest = 1 << 14,
 };
 
-// Integer 2D pair.
-struct xy_pair {
-  int x{};  ///< Value of the X coordinate.
-  int y{};  ///< Value of the Y coordinate.
-};
-
-/*!
-    Base class for a linked list of drawable objects.
-    Note that "object" is used as a generic term, not in specific reference to
-    game objects (though they are the most common thing in drawing lists).
-*/
-// TODO: Replace this struct with something cleaner
-struct drawable : public link_list {
-  drawable() = default;
-
-  //! Draw the object at a specific point on a render target
-  /*!
-      Can also "draw" the object to the speakers, i.e. play sounds.
-  */
-  virtual void draw_fn(render_target* canvas, const xy_pair& draw_pos) = 0;
-
-  //! Perform a hit test against the object
-  /*!
-      Should return true if when the object is drawn at \p draw_pos on a
-     canvas, the point \p obj_pos is within / on the object.
-  */
-  virtual bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) = 0;
-
-  /** Returns true if instance is a multiple frame animation.
-      Should be overloaded in derived class.
-  */
-  virtual bool is_multiple_frame_animation_fn() = 0;
-
-  int get_drawing_layer() { return drawing_layer; }
-  void set_drawing_layer(int layer) { drawing_layer = layer; }
-
-  //! Drawing flags (zero or more list flags from #draw_flags).
-  uint32_t flags{0};
-
- private:
-  int drawing_layer{0};
-};
-
 /*!
     Utility class for decoding Theme Hospital "chunked" graphics files.
     Generally used internally by sprite_sheet.
@@ -459,6 +416,49 @@ class animation_manager {
       @param iLength Number of frames in the animation.
    */
   void fix_next_frame(uint32_t iFirst, size_t iLength);
+};
+
+//! Integer 2D pair.
+struct xy_pair {
+  int x{};  ///< Value of the X coordinate.
+  int y{};  ///< Value of the Y coordinate.
+};
+
+/*!
+    Base class for a linked list of drawable objects.
+    Note that "object" is used as a generic term, not in specific reference to
+    game objects (though they are the most common thing in drawing lists).
+*/
+// TODO: Replace this struct with something cleaner
+struct drawable : public link_list {
+  drawable() = default;
+
+  //! Draw the object at a specific point on a render target
+  /*!
+      Can also "draw" the object to the speakers, i.e. play sounds.
+  */
+  virtual void draw_fn(render_target* canvas, const xy_pair& draw_pos) = 0;
+
+  //! Perform a hit test against the object
+  /*!
+      Should return true if when the object is drawn at \p draw_pos on a
+     canvas, the point \p obj_pos is within / on the object.
+  */
+  virtual bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) = 0;
+
+  /** Returns true if instance is a multiple frame animation.
+      Should be overloaded in derived class.
+  */
+  virtual bool is_multiple_frame_animation_fn() = 0;
+
+  int get_drawing_layer() { return drawing_layer; }
+  void set_drawing_layer(int layer) { drawing_layer = layer; }
+
+  //! Drawing flags (zero or more list flags from #draw_flags).
+  uint32_t flags{0};
+
+ private:
+  int drawing_layer{0};
 };
 
 class animation_base : public drawable {
