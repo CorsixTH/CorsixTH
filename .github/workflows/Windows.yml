@@ -63,13 +63,13 @@ jobs:
 
       - name: Run CMake dev configure
         if: inputs.PRESET == 'win-dev'
-        uses: lukka/run-cmake@v10
+        uses: lukka/run-cmake@main
         with:
           configurePreset: 'win-dev'
 
       - name: Run CMake release build
         if: inputs.PRESET != 'win-dev'
-        uses: lukka/run-cmake@v10
+        uses: lukka/run-cmake@main
         with:
           configurePreset: ${{env.PRESET}}
           configurePresetAdditionalArgs: "['-DBUILD_ANIMVIEW=${{env.ANIMVIEW}}',
