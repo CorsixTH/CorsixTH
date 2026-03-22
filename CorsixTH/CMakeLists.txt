@@ -133,8 +133,9 @@ endif()
 
 # Find Lua
 if(VCPKG_TARGET_TRIPLET)
-  find_package(Lua CONFIG REQUIRED)
-  target_link_libraries(CorsixTH_lib PUBLIC lua)
+  find_package(Lua REQUIRED)
+  target_include_directories(CorsixTH_lib PUBLIC ${LUA_INCLUDE_DIRS})
+  target_link_libraries(CorsixTH_lib PUBLIC ${LUA_LIBRARIES})
 else()
   find_package(Lua REQUIRED)
   if(Lua_FOUND OR LUA_FOUND)
