@@ -307,7 +307,7 @@ function Machine:createHandymanActions(handyman)
     self:machineRepaired(self:getRoom())
   end
 
-  local action = WalkAction(ux, uy):setIsEntering(this_room and true or false)
+  local walk_action = WalkAction(ux, uy):setIsEntering(this_room and true or false)
 
   local repair_action = UseObjectAction(self):setProlongedUsage(false)
       :setAfterUse(repair_after_use)
@@ -315,9 +315,9 @@ function Machine:createHandymanActions(handyman)
 
   if handyman_room and handyman_room ~= this_room then
     handyman:setNextAction(handyman_room:createLeaveAction())
-    handyman:queueAction(action)
+    handyman:queueAction(walk_action)
   else
-    handyman:setNextAction(action)
+    handyman:setNextAction(walk_action)
   end
 
   local meander_loop_callback = --[[persistable:handyman_meander_repair_loop_callback]] function()
@@ -338,7 +338,7 @@ function Machine:createHandymanActions(handyman)
 
   -- The last one is another walk action to the repair tile. If the handyman goes directly
   -- to repair it will simply complete in an instant.
-  handyman:queueAction(action)
+  handyman:queueAction(walk_action)
   handyman:queueAction(repair_action)
   CallsDispatcher.queueCallCheckpointAction(handyman)
   handyman:queueAction(AnswerCallAction())
@@ -383,7 +383,7 @@ function Machine:machineRepaired(room, should_reduce_strength)
   end
 end
 
---! Call on machine used. After machine use increment use values accordingly.
+--! Call on machine repaired. Removes repair task for that machine.
 function Machine:removeHandymanRepairTask()
   -- Remove any queued repair jobs
   local repair_task_index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
