@@ -89,6 +89,11 @@ int l_init(lua_State* L) {
   }
 }
 
+int l_destroy(lua_State* L) {
+  Mix_CloseAudio();
+  return 0;
+}
+
 struct load_music_async_data {
   lua_State* L;
   Mix_Music* music;
@@ -237,9 +242,10 @@ int l_transcode_xmi(lua_State* L) {
   return 1;
 }
 
-constexpr std::array<struct luaL_Reg, 3> sdl_audiolib{
+constexpr std::array<struct luaL_Reg, 4> sdl_audiolib{
     {{"init", l_init},
      {"transcodeXmiToMid", l_transcode_xmi},
+     {"destroy", l_destroy},
      {nullptr, nullptr}}};
 
 constexpr std::array<struct luaL_Reg, 8> sdl_musiclib{
