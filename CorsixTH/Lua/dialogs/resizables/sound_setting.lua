@@ -233,9 +233,7 @@ end
 function UISoundSettings:reinitAudio()
   local app = self.ui.app
   app.audio:stopBackgroundTrack()
-  app.audio.has_bg_music = false
-  app.audio.not_loaded = not app.config.audio
-  app.audio.speech_file_name = nil
+  app.audio:destroy()
   app.audio:init()
   app:initLanguage()
   app.audio:playRandomBackgroundTrack()
