@@ -35,10 +35,18 @@ function Handyman:Handyman(...)
   self.leave_sounds = {"sack006.wav"}
 end
 
-function Handyman:die()
-  Staff.die(self)
-  self:unassignTask()
-  self.hospital:unassignHandymanTasks(self)
+-- Set task type priority value
+--!param task_type (string) task type
+--!param priority (float) priority to set
+function Handyman:setPriority(task_type, priority)
+  self.attributes[task_type] = priority
+end
+
+-- Get task type priority value
+--!param task_type (string) task type
+--!return (float) priority
+function Handyman:getPriority(task_type)
+  return self:getAttribute(task_type)
 end
 
 function Handyman:dump()
@@ -150,10 +158,8 @@ end
 
 function Handyman:doMeandering()
   -- Make sure that the handyman isn't meandering already.
-  for _, action in ipairs(self.action_queue) do
-    if action.name == "meander" then
-      return
-    end
+  if self:isMeandering() then
+    return
   end
   if self:getRoom() then
     self:queueAction(self:getRoom():createLeaveAction())
@@ -203,18 +209,10 @@ function Handyman:unassignCall()
   end
 end
 
--- Set task type priority value
---!param task_type (string) task type
---!param priority (float) priority to set
-function Handyman:setPriority(task_type, priority)
-  self.attributes[task_type] = priority
-end
-
--- Get task type priority value
---!param task_type (string) task type
---!return (float) priority
-function Handyman:getPriority(task_type)
-  return self:getAttribute(task_type)
+function Handyman:die()
+  Staff.die(self)
+  self:unassignTask()
+  self.hospital:unassignHandymanTasks(self)
 end
 
 function Handyman:afterLoad(old, new)

@@ -2045,15 +2045,24 @@ function Hospital:assignHandymanToTask(handyman, task_index, task_type)
   return nil
 end
 
---!return index (int) The task index.
-function Hospital:searchForHandymanTask(handyman, taskType)
-  local subTable = self:findHandymanTaskSubtable(taskType)
-  --if a distance is smaller than this value stop the search to
-  --save performance
+--! Function for search a new task for a handyman.
+--!param handyman (object) handyman instance for which we want to find a task.
+--!param task_type (string) handyman task type: repairing, watering, cleaning.
+--!return index (int) index of the found task.
+function Hospital:searchForHandymanTask(handyman, task_type)
+  local subTable = self:findHandymanTaskSubtable(task_type)
+
+  -- if a distance is smaller than this value stop the search to
+  -- save performance
   local thresholdForStopping = 3
-  -- information about the best task found
-  local found_any_task, dist, index, priority = false, 0, -1, 0
+
+  -- information about the best task found so far
+  local dist = 0
+  local index = -1
+  local priority = 0
   local multiplier = 1
+  local found_any_task = false
+
   if handyman.profile.is_consultant then
     multiplier = 0.5
   elseif handyman.profile.is_junior then
@@ -2113,7 +2122,7 @@ function Hospital:searchForHandymanTask(handyman, taskType)
             else
               distance = distance / multiplier
             end
-          elseif taskType == "repairing" and v.assignedHandyman:getRoom() == self.world:getRoom(v.tile_x, v.tile_y) then
+          elseif task_type == "repairing" and v.assignedHandyman:getRoom() == self.world:getRoom(v.tile_x, v.tile_y) then
             -- Don't take repair task from another handyman if that assigned handyman already in the target room.
             found_suitable_task = false
           end

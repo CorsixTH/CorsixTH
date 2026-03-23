@@ -352,7 +352,7 @@ function CallsDispatcher:answerCall(staff)
   if min_call then
     if debug_enabled then self:dump() CallsDispatcher.dumpCall(min_call, 'answered') end
     if min_call.assigned then
-      CallsDispatcher.unassignCall(min_call)
+      CallsDispatcher.unassignCall(min_call, true)
     end
     -- Check if the object is still in the world, live and not destroy
     assert(min_call.object.tile_x or min_call.object.x, "An destroyed object still has requested in the dispatching queue. Please check the Entity:onDestroy function")
@@ -449,7 +449,7 @@ function CallsDispatcher:dropFromQueue(object, key)
     if call then
       call.dropped = true
       if call.assigned then
-        CallsDispatcher.unassignCall(call)
+        CallsDispatcher.unassignCall(call, true)
       end
       self.call_queue[object][key] = nil
     end
@@ -457,7 +457,7 @@ function CallsDispatcher:dropFromQueue(object, key)
     for _, call in pairs(self.call_queue[object]) do
       call.dropped = true
       if call.assigned then
-        CallsDispatcher.unassignCall(call)
+        CallsDispatcher.unassignCall(call, true)
       end
     end
     self.call_queue[object] = nil
@@ -465,8 +465,11 @@ function CallsDispatcher:dropFromQueue(object, key)
   self:onChange()
 end
 
+--! Unassign call
+--!param call call to unassign from assigned humanoid.
+--!param answer_next_call (bool) should the humanoid assigned to this call then
+-- answer for another new call or not
 function CallsDispatcher.unassignCall(call, answer_next_call)
-  if answer_next_call == nil then answer_next_call = true end
   local assigned = call.assigned
   assert(assigned.on_call == call, "Unassigning call but the staff was not on call or a different call")
   call.assigned = nil
