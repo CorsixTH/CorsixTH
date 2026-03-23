@@ -699,7 +699,7 @@ function Audio:playBackgroundTrack(index)
     local music = info.music
     if not music or type(music) == 'number' then
       local data = self:getFileData(index)
-      if (not info.filename_music or info.is_xmi) then
+      if info.is_xmi then
         if self.midi_player then
           self.midi_player:setVolume(self.app.config.music_volume)
           self.midi_player:playXmi(data)
