@@ -2097,6 +2097,19 @@ function Window:getTooltipAt(x, y)
   end
 end
 
+-- A function to set the menu hotkey strings, whether a string or table.
+-- Usage: getHotkeyValueLabel(hotkey name as string)
+-- Ex: getHotkeyValueLabel("ingame_loadMenu") will produce (SHIFT+L) by default.
+--!param getHotkeyValueLabel (string) Name of hotkey to be converted to string.
+--!return (string) The hotkey returned in this format: (KEY+KEY)
+function Window:getHotkeyValueLabel(hotkey_name, hotkeys)
+  local hotkey_value = hotkeys and hotkeys[hotkey_name]
+  if hotkey_value == nil then
+    return ""
+  end
+  return string.upper(array_join(hotkey_value, "+"))
+end
+
 function Panel:afterLoad(old, new)
   if old < 160 then
     self.lowered_colour = self.colour

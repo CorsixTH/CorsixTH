@@ -549,26 +549,12 @@ function UIMenu:appendMenu(text, menu)
   }
 end
 
--- A function to set the menu hotkey strings, whether a string or table.
--- Usage: hotkey_value_label(hotkey name as string)
--- Ex: hotkey_value_label("ingame_loadMenu") will produce (SHIFT+L) by default.
---!param hotkey_name (string) Name of hotkey to be converted to string.
---!param hotkeys (table) The app's hotkey table. I.E. app.hotkeys
---!return (string) The hotkey returned in this format: (KEY+KEY)
-local function hotkey_value_label(hotkey_name, hotkeys)
-  local hotkey_value = hotkeys[hotkey_name]
-  if hotkey_value == nil then
-    return ""
-  end
-  return string.upper(array_join(hotkey_value, "+"))
-end
-
 -- Add audio options to the menu. These are on/off and volume control for
 -- announcements, game sounds and music, and open the jukebox.
 --!param menu (object) The menu that the options are added to.
 --!param game (boolean) True if this menu is for the game, where announcements and
 -- game sounds controls are added.
-local function audio_options(menu, game)
+local function audio_options(menu, game, window)
   local app = TheApp
 
   local function vol(level, setting)
@@ -596,7 +582,7 @@ local function audio_options(menu, game)
   local hotkeys = app.hotkeys
   if game then
     -- Hospital sounds
-    menu:appendCheckItem(_S.menu_options.sound:format(hotkey_value_label("ingame_toggleSounds", hotkeys)),
+    menu:appendCheckItem(_S.menu_options.sound:format(window:getHotkeyValueLabel("ingame_toggleSounds", hotkeys)),
       app.config.play_sounds,
       function(item)
         app.audio:playSoundEffects(item.checked)
@@ -607,7 +593,7 @@ local function audio_options(menu, game)
       end)
 
     -- Hospital announcements
-    menu:appendCheckItem(_S.menu_options.announcements:format(hotkey_value_label("ingame_toggleAnnouncements", hotkeys)),
+    menu:appendCheckItem(_S.menu_options.announcements:format(window:getHotkeyValueLabel("ingame_toggleAnnouncements", hotkeys)),
       app.config.play_announcements,
       function(item)
         app.config.play_announcements = item.checked
@@ -620,7 +606,7 @@ local function audio_options(menu, game)
 
   -- Jukebox music
   if app.audio.has_bg_music then
-    menu:appendCheckItem(_S.menu_options.music:format(hotkey_value_label("ingame_toggleMusic", hotkeys)),
+    menu:appendCheckItem(_S.menu_options.music:format(window:getHotkeyValueLabel("ingame_toggleMusic", hotkeys)),
       app.config.play_music,
       function(item)
         app.config.play_music = item.checked
@@ -646,7 +632,7 @@ local function audio_options(menu, game)
   end
   if app.audio.has_bg_music then
     menu:appendMenu(_S.menu_options.music_vol, appendVolume("music"))
-      :appendItem(_S.menu_options.jukebox:format(hotkey_value_label("ingame_jukebox", hotkeys)),
+      :appendItem(_S.menu_options.jukebox:format(window:getHotkeyValueLabel("ingame_jukebox", hotkeys)),
           function() app.ui:addWindow(UIJukebox(app)) end)
   end
 end
@@ -703,15 +689,15 @@ function UIMenuBar:makeMapeditorMenu(app)
   local menu = UIMenu()
   local hotkeys = app.hotkeys
 
-  menu:appendItem(_S.menu_file.load:format(hotkey_value_label("ingame_loadMenu", hotkeys)), function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
-    :appendItem(_S.menu_file.save:format(hotkey_value_label("ingame_saveMenu", hotkeys)), function() self.ui:addWindow(UISaveMap(self.ui)) end)
-    :appendItem(_S.menu_file.restart:format(hotkey_value_label("ingame_restartLevel", hotkeys)), function() self.ui:restartMapEditor() end)
-    :appendItem(_S.menu_file.quit:format(hotkey_value_label("ingame_quitLevel", hotkeys)), function() self.ui:quit(true) end)
+  menu:appendItem(_S.menu_file.load:format(self:getHotkeyValueLabel("ingame_loadMenu", hotkeys)), function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
+    :appendItem(_S.menu_file.save:format(self:getHotkeyValueLabel("ingame_saveMenu", hotkeys)), function() self.ui:addWindow(UISaveMap(self.ui)) end)
+    :appendItem(_S.menu_file.restart:format(self:getHotkeyValueLabel("ingame_restartLevel", hotkeys)), function() self.ui:restartMapEditor() end)
+    :appendItem(_S.menu_file.quit:format(self:getHotkeyValueLabel("ingame_quitLevel", hotkeys)), function() self.ui:quit(true) end)
   self:addMenu(_S.menu.file, menu)
 
   menu = UIMenu()
-  audio_options(menu)
-  display_options(menu)
+  audio_options(menu, false, self)
+  display_options(menu, self)
 
   menu:appendMenu(_S.menu_debug.map_overlay, UIMenu()
     :appendCheckItem(_S.menu_debug_overlay.none, true, overlay(), "overlay")
@@ -737,17 +723,17 @@ function UIMenuBar:makeGameMenu(app)
   local menu = UIMenu()
   local hotkeys = app.hotkeys
 
-  menu:appendItem(_S.menu_file.load:format(hotkey_value_label("ingame_loadMenu", hotkeys)), function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
-    :appendItem(_S.menu_file.save:format(hotkey_value_label("ingame_saveMenu", hotkeys)), function() self.ui:addWindow(UISaveGame(self.ui)) end)
-    :appendItem(_S.menu_file.restart:format(hotkey_value_label("ingame_restartLevel", hotkeys)), function() app:restart() end)
-    :appendItem(_S.menu_file.quit:format(hotkey_value_label("ingame_quitLevel", hotkeys)), function() self.ui:quit() end)
+  menu:appendItem(_S.menu_file.load:format(self:getHotkeyValueLabel("ingame_loadMenu", hotkeys)), function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
+    :appendItem(_S.menu_file.save:format(self:getHotkeyValueLabel("ingame_saveMenu", hotkeys)), function() self.ui:addWindow(UISaveGame(self.ui)) end)
+    :appendItem(_S.menu_file.restart:format(self:getHotkeyValueLabel("ingame_restartLevel", hotkeys)), function() app:restart() end)
+    :appendItem(_S.menu_file.quit:format(self:getHotkeyValueLabel("ingame_quitLevel", hotkeys)), function() self.ui:quit() end)
   self:addMenu(_S.menu.file, menu)
 
   local options = UIMenu()
-  audio_options(options, true)
+  audio_options(options, true, self)
   display_options(options)
 
-  options:appendCheckItem(_S.menu_options.adviser_disabled:format(hotkey_value_label("ingame_toggleAdvisor", hotkeys)),
+  options:appendCheckItem(_S.menu_options.adviser_disabled:format(self:getHotkeyValueLabel("ingame_toggleAdvisor", hotkeys)),
     not app.config.adviser_disabled,
     function(item)
       app.config.adviser_disabled = not item.checked
@@ -796,27 +782,27 @@ function UIMenuBar:makeGameMenu(app)
   end
 
   options:appendMenu(_S.menu_options.game_speed, UIMenu()
-    :appendCheckItem(_S.menu_options_game_speed.pause:format(hotkey_value_label("ingame_pause", hotkeys)),                          rate("Pause"))
-    :appendCheckItem(_S.menu_options_game_speed.slowest:format(hotkey_value_label("ingame_gamespeed_slowest", hotkeys)),             rate("Slowest"))
-    :appendCheckItem(_S.menu_options_game_speed.slower:format(hotkey_value_label("ingame_gamespeed_slower", hotkeys)),               rate("Slower"))
-    :appendCheckItem(_S.menu_options_game_speed.normal:format(hotkey_value_label("ingame_gamespeed_normal", hotkeys)),               rate("Normal")) -- (default)
-    :appendCheckItem(_S.menu_options_game_speed.max_speed:format(hotkey_value_label("ingame_gamespeed_max", hotkeys)),               rate("Max speed"))
-    :appendCheckItem(_S.menu_options_game_speed.and_then_some_more:format(hotkey_value_label("ingame_gamespeed_thensome", hotkeys)), rate("And then some more"))
+    :appendCheckItem(_S.menu_options_game_speed.pause:format(self:getHotkeyValueLabel("ingame_pause", hotkeys)),                          rate("Pause"))
+    :appendCheckItem(_S.menu_options_game_speed.slowest:format(self:getHotkeyValueLabel("ingame_gamespeed_slowest", hotkeys)),             rate("Slowest"))
+    :appendCheckItem(_S.menu_options_game_speed.slower:format(self:getHotkeyValueLabel("ingame_gamespeed_slower", hotkeys)),               rate("Slower"))
+    :appendCheckItem(_S.menu_options_game_speed.normal:format(self:getHotkeyValueLabel("ingame_gamespeed_normal", hotkeys)),               rate("Normal")) -- (default)
+    :appendCheckItem(_S.menu_options_game_speed.max_speed:format(self:getHotkeyValueLabel("ingame_gamespeed_max", hotkeys)),               rate("Max speed"))
+    :appendCheckItem(_S.menu_options_game_speed.and_then_some_more:format(self:getHotkeyValueLabel("ingame_gamespeed_thensome", hotkeys)), rate("And then some more"))
   )
 
   self:addMenu(_S.menu.options, options)
 
   self:addMenu(_S.menu.charts, UIMenu()
-    :appendItem(_S.menu_charts.bank_manager:format(hotkey_value_label("ingame_panel_bankManager", hotkeys)), function() self.ui.bottom_panel:dialogBankManager(true) end)
-    :appendItem(_S.menu_charts.statement:format(hotkey_value_label("ingame_panel_bankStats", hotkeys)), function() self.ui.bottom_panel:dialogBankStats(true) end)
-    :appendItem(_S.menu_charts.staff_listing:format(hotkey_value_label("ingame_panel_staffManage", hotkeys)), function() self.ui.bottom_panel:dialogStaffManagement(true) end)
-    :appendItem(_S.menu_charts.town_map:format(hotkey_value_label("ingame_panel_townMap", hotkeys)), function() self.ui.bottom_panel:dialogTownMap(true) end)
-    :appendItem(_S.menu_charts.casebook:format(hotkey_value_label("ingame_panel_casebook", hotkeys)), function() self.ui.bottom_panel:dialogDrugCasebook(true) end)
-    :appendItem(_S.menu_charts.research:format(hotkey_value_label("ingame_panel_research", hotkeys)), function() self.ui.bottom_panel:dialogResearch(true) end)
-    :appendItem(_S.menu_charts.status:format(hotkey_value_label("ingame_panel_status", hotkeys)), function() self.ui.bottom_panel:dialogStatus(true) end)
-    :appendItem(_S.menu_charts.graphs:format(hotkey_value_label("ingame_panel_charts", hotkeys)), function() self.ui.bottom_panel:dialogCharts(true) end)
-    :appendItem(_S.menu_charts.policy:format(hotkey_value_label("ingame_panel_policy", hotkeys)), function() self.ui.bottom_panel:dialogPolicy(true) end)
-    :appendItem(_S.menu_charts.machine_menu:format(hotkey_value_label("ingame_panel_machineMenu", hotkeys)), function() self.ui:addWindow(UIMachineMenu(self.ui)) end)
+    :appendItem(_S.menu_charts.bank_manager:format(self:getHotkeyValueLabel("ingame_panel_bankManager", hotkeys)), function() self.ui.bottom_panel:dialogBankManager(true) end)
+    :appendItem(_S.menu_charts.statement:format(self:getHotkeyValueLabel("ingame_panel_bankStats", hotkeys)), function() self.ui.bottom_panel:dialogBankStats(true) end)
+    :appendItem(_S.menu_charts.staff_listing:format(self:getHotkeyValueLabel("ingame_panel_staffManage", hotkeys)), function() self.ui.bottom_panel:dialogStaffManagement(true) end)
+    :appendItem(_S.menu_charts.town_map:format(self:getHotkeyValueLabel("ingame_panel_townMap", hotkeys)), function() self.ui.bottom_panel:dialogTownMap(true) end)
+    :appendItem(_S.menu_charts.casebook:format(self:getHotkeyValueLabel("ingame_panel_casebook", hotkeys)), function() self.ui.bottom_panel:dialogDrugCasebook(true) end)
+    :appendItem(_S.menu_charts.research:format(self:getHotkeyValueLabel("ingame_panel_research", hotkeys)), function() self.ui.bottom_panel:dialogResearch(true) end)
+    :appendItem(_S.menu_charts.status:format(self:getHotkeyValueLabel("ingame_panel_status", hotkeys)), function() self.ui.bottom_panel:dialogStatus(true) end)
+    :appendItem(_S.menu_charts.graphs:format(self:getHotkeyValueLabel("ingame_panel_charts", hotkeys)), function() self.ui.bottom_panel:dialogCharts(true) end)
+    :appendItem(_S.menu_charts.policy:format(self:getHotkeyValueLabel("ingame_panel_policy", hotkeys)), function() self.ui.bottom_panel:dialogPolicy(true) end)
+    :appendItem(_S.menu_charts.machine_menu:format(self:getHotkeyValueLabel("ingame_panel_machineMenu", hotkeys)), function() self.ui:addWindow(UIMachineMenu(self.ui)) end)
     :appendItem(_S.menu_charts.briefing, function() self.ui:showBriefing() end)
   )
 
@@ -845,12 +831,12 @@ function UIMenuBar:makeGameMenu(app)
       :appendCheckItem(_S.menu_debug.allow_blocking_off_areas, false, allowBlockingAreas, nil, function() return self.ui.app.config.allow_blocking_off_areas end)
       :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui:addWindow(UIMakeDebugPatient(self.ui)) end)
-      :appendItem(_S.menu_debug.cheats:format(hotkey_value_label("ingame_showCheatWindow", hotkeys)),             function() self.ui:addWindow(UICheats(self.ui)) end)
-      :appendItem(_S.menu_debug.lua_console:format(hotkey_value_label("global_showLuaConsole", hotkeys)),        function() self.ui:addWindow(UILuaConsole(self.ui)) end)
-      :appendItem(_S.menu_debug.debug_script:format(hotkey_value_label("global_runDebugScript", hotkeys)),       function() self.ui:runDebugScript() end)
+      :appendItem(_S.menu_debug.cheats:format(self:getHotkeyValueLabel("ingame_showCheatWindow", hotkeys)),             function() self.ui:addWindow(UICheats(self.ui)) end)
+      :appendItem(_S.menu_debug.lua_console:format(self:getHotkeyValueLabel("global_showLuaConsole", hotkeys)),        function() self.ui:addWindow(UILuaConsole(self.ui)) end)
+      :appendItem(_S.menu_debug.debug_script:format(self:getHotkeyValueLabel("global_runDebugScript", hotkeys)),       function() self.ui:runDebugScript() end)
       :appendItem(_S.menu_debug.calls_dispatcher,   function() self.ui:addWindow(UICallsDispatcher(self.ui)) end)
-      :appendItem(_S.menu_debug.dump_strings:format(hotkey_value_label("ingame_poopStrings", hotkeys)),       function() self.ui.app:dumpStrings() end)
-      :appendItem(_S.menu_debug.dump_gamelog:format(hotkey_value_label("ingame_poopLog", hotkeys)),       function() self.ui.app.world:dumpGameLog() end)
+      :appendItem(_S.menu_debug.dump_strings:format(self:getHotkeyValueLabel("ingame_poopStrings", hotkeys)),       function() self.ui.app:dumpStrings() end)
+      :appendItem(_S.menu_debug.dump_gamelog:format(self:getHotkeyValueLabel("ingame_poopLog", hotkeys)),       function() self.ui.app.world:dumpGameLog() end)
       :appendMenu(_S.menu_debug.map_overlay,        UIMenu()
         :appendCheckItem(_S.menu_debug_overlay.none,         true, overlay(), "")
         :appendCheckItem(_S.menu_debug_overlay.flags,       false, overlay("flags"), "")
