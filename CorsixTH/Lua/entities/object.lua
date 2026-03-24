@@ -366,18 +366,19 @@ function Object:getWalkableTiles()
   return tiles
 end
 
+local opposite_flags = {
+  travelNorth = "travelSouth",
+  travelSouth = "travelNorth",
+  travelEast = "travelWest",
+  travelWest = "travelEast"
+}
 --! The function returns the direction opposite to the one passed as a parameter.
 --! For North, it returns South, and so on.
 --! param passable_flag (string) 'passable_flag' that we want to invert.
 --! return (string) inverted 'passable_flag'.
 function Object:getComplementaryPassableFlag(passable_flag)
-  if passable_flag == "travelNorth" or passable_flag == "travelSouth" then
-    return passable_flag == "travelNorth" and "travelSouth" or "travelNorth"
-  else
-    return passable_flag == "travelEast" and "travelWest" or "travelEast"
-  end
+  return opposite_flags[passable_flag]
 end
-
 function Object:setTile(x, y)
   local function coordinatesAreInFootprint(object_footprint, xpos, ypos)
     for _, xy in ipairs(object_footprint) do
