@@ -887,7 +887,7 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
           invalid_placement = not_along_wall and world:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(x, y, room, nil, true)
         else
           -- user not in a room editing mode.
-          -- as we are not in a room editing mode, then there possbile be humanoids in the room.
+          -- as we are not in a room editing mode, then there could be humanoids in the room.
           -- this means that placing object can block a humanoid's passage to the door.
           -- to prevent that case we fallback to strict placing approach ('blocking off areas disabled').
           invalid_placement = not_along_wall and hasNoConnectingPath(x, y, to_check_x, to_check_y)
