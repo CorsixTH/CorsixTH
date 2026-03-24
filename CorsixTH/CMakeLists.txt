@@ -309,16 +309,25 @@ if(NOT USE_SOURCE_DATADIRS)
     install(FILES CorsixTH.ico DESTINATION ${CORSIX_TH_DATADIR})
 
     # Install dependencies
-    file(GLOB DLL_DEPS "${CMAKE_CURRENT_BINARY_DIR}/*.dll")
-    install(FILES ${DLL_DEPS} DESTINATION ${CORSIX_TH_DATADIR})
-    file(GLOB LUA_DEPS "${CMAKE_CURRENT_BINARY_DIR}/*.lua")
-    install(FILES ${LUA_DEPS} DESTINATION ${CORSIX_TH_DATADIR})
-    if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/mime")
-      install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/mime" "${CMAKE_CURRENT_BINARY_DIR}/socket" DESTINATION ${CORSIX_TH_DATADIR})
+    if(CMAKE_CONFIGURATION_TYPES)
+      install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/"
+        DESTINATION ${CORSIX_TH_DATADIR}
+        FILES_MATCHING
+        PATTERN "*.dll"
+        PATTERN "*.lua"
+      )
+    else()
+      install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/"
+        DESTINATION ${CORSIX_TH_DATADIR}
+        FILES_MATCHING
+        PATTERN "*.dll"
+        PATTERN "*.lua"
+      )
     endif()
+
     # Include this module to search for compiler-provided system runtime
     # libraries and add install rules for them.
-    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ".")
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${CORSIX_TH_DATADIR})
     include(InstallRequiredSystemLibraries)
   else()
     install(TARGETS CorsixTH
