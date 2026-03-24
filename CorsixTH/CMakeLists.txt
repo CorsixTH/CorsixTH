@@ -272,7 +272,19 @@ if(WITH_MIDI_DEVICE)
   endif()
   message("RtMidi Found")
   target_link_libraries(CorsixTH_lib PRIVATE RtMidi::rtmidi)
+endif()
 
+if(FETCH_SOUNDFONT)
+  include(FetchContent)
+
+  fetchcontent_declare(
+    FluidR3
+    URL https://raw.githubusercontent.com/Jacalz/fluid-soundfont/master/SF3/FluidR3.sf3
+    URL_HASH SHA256=32039e039c2f708467a6f171fbfd9fecdcadfe40a2327837c391490c8de70021
+    DOWNLOAD_NO_EXTRACT TRUE)
+
+  fetchcontent_makeavailable(FluidR3)
+  set(FLUIDR3_FILE ${fluidr3_SOURCE_DIR}/FluidR3.sf3)
 endif()
 
 # Launch script to facilitate out of source builds
@@ -341,6 +353,10 @@ if(NOT USE_SOURCE_DATADIRS)
     FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png|pl8)$"
   )
   install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
+
+  if(FETCH_SOUNDFONT)
+    install(FILES ${FLUIDR3_FILE} DESTINATION ${CORSIX_TH_DATADIR})
+  endif()
 
   if(UNIX AND NOT APPLE)
     install(FILES corsix-th.6 DESTINATION ${CMAKE_INSTALL_MANDIR}/man6)

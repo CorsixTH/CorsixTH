@@ -102,12 +102,6 @@ jobs:
         run: |
           cmake --install build/%PRESET% --prefix ./artifact --config RelWithDebInfo
 
-      - name: Download soundfont
-        if: inputs.PRESET != 'win-dev'
-        run: |
-          aria2c -d "artifact/CorsixTH" \
-            https://raw.githubusercontent.com/Jacalz/fluid-soundfont/master/SF3/FluidR3.sf3
-
       - name: List the artifact files
         if: inputs.PRESET != 'win-dev'
         run: |

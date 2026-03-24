@@ -50,7 +50,8 @@
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "VCPKG_TARGET_TRIPLET": "x64-windows-release",
-        "ENABLE_UNIT_TESTS": "ON"
+        "ENABLE_UNIT_TESTS": "ON",
+        "FETCH_SOUNDFONT": "ON"
       }
     },
     {
@@ -61,7 +62,8 @@
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "VCPKG_TARGET_TRIPLET": "x86-windows",
-        "ENABLE_UNIT_TESTS": "ON"
+        "ENABLE_UNIT_TESTS": "ON",
+        "FETCH_SOUNDFONT": "ON"
       }
     },
     {
