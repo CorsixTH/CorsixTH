@@ -180,7 +180,8 @@ function App:init()
   -- Prereq 2: Load and initialise the graphics subsystem
   corsixth.require("persistance")
   corsixth.require("graphics")
-  self.gfx = Graphics(self, good_install_folder, charset)
+  local gfx_set = good_install_folder and (self.using_demo_files and "demo" or "full") or "base"
+  self.gfx = Graphics(self, gfx_set, charset)
 
   -- Put up the loading screen
   if good_install_folder then
