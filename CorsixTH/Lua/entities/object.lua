@@ -288,7 +288,7 @@ function Object:_getUsageTile(usage_position_name)
   end
 end
 
---! This function returns an absolete world coordinates for use position.
+--! This function returns an absolute world coordinates for use position.
 --! param object_x (integer) world tile x coordinate.
 --! param object_y (integer) world tile y coordinate.
 --! param object_layout (table) object orientation description with footprint.
