@@ -1913,7 +1913,7 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
     return result
   end
 
-  local pathfinding_fine = true
+  local pathfinding_success = true
 
   --1. Find out which footprint tiles are passable now before this function makes some unpassable
   --during its test:
@@ -1941,7 +1941,7 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
           -- connected before.
           if not isIsolated(xpos, ypos) then
             if not isIsolated(prev_x, prev_y) then
-              pathfinding_fine = false
+              pathfinding_success = false
               break
             end
           else
@@ -1960,7 +1960,7 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
     map:setCellFlags(x + tile[1], y + tile[2], {passable = tiles_passable_flags[tiles_index]})
   end
 
-  return not pathfinding_fine
+  return not pathfinding_success
 end
 
 --! Check that pathfinding between object and room door still works,
@@ -2013,7 +2013,7 @@ function World:wouldNonSideObjectsNotHaveAccessToRoomDoor(object_x, object_y, ro
   end
 
   -- 2. Find out which use position tiles would become isolated:
-  local pathfinding_fine = true
+  local pathfinding_success = true
   local usage_tiles = {}
   local object_use_positions_names = Object:usePositionNames()
   for _, usage_position_type in ipairs(object_use_positions_names) do
@@ -2022,8 +2022,8 @@ function World:wouldNonSideObjectsNotHaveAccessToRoomDoor(object_x, object_y, ro
   end
 
   for _, usage_tile in ipairs(usage_tiles) do
-    pathfinding_fine = pathfinding_fine and not _isIsolated(usage_tile[1], usage_tile[2], door_x, door_y)
-    if not pathfinding_fine then break end
+    pathfinding_success = pathfinding_success and not _isIsolated(usage_tile[1], usage_tile[2], door_x, door_y)
+    if not pathfinding_success then break end
   end
 
   -- 3. For each footprint tile passable flag set to false by step 2 undo this change:
@@ -2031,7 +2031,7 @@ function World:wouldNonSideObjectsNotHaveAccessToRoomDoor(object_x, object_y, ro
     map:setCellFlags(object_x + tile[1], object_y + tile[2], {passable = tiles_passable_flags[tiles_index]})
   end
 
-  return not pathfinding_fine
+  return not pathfinding_success
 end
 
 --! Check that pathfinding between already placed in the room objects
@@ -2088,7 +2088,7 @@ function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y
   end
 
   --3. Find out which use position tiles would become isolated:
-  local pathfinding_fine = true
+  local pathfinding_success = true
   for room_object, _ in pairs(room.objects) do
     -- check that for each already placed object there is a valid path to the door
     local object_usage_tiles = room_object:getAllUsageTiles()
@@ -2100,13 +2100,13 @@ function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y
       if (room_object.object_type.class ~= "SideObject") and use_x and use_y then
         -- check that the placing object itself does not occupy 'use_position'
         local tile_overlap = (object_x == use_x) and (object_y == use_y)
-        pathfinding_fine = pathfinding_fine and not tile_overlap
+        pathfinding_success = pathfinding_success and not tile_overlap
         -- also check that the placing object does not break the path from 'use_position' to the room door.
-        pathfinding_fine = pathfinding_fine and not _isIsolated(use_x, use_y, door_x, door_y)
+        pathfinding_success = pathfinding_success and not _isIsolated(use_x, use_y, door_x, door_y)
       end
-      if not pathfinding_fine then break end
+      if not pathfinding_success then break end
     end
-    if not pathfinding_fine then break end
+    if not pathfinding_success then break end
   end
 
   -- 4. For each footprint tile passable flag set to false by step 2 undo this change:
@@ -2117,7 +2117,7 @@ function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y
     end
   end
 
-  return not pathfinding_fine
+  return not pathfinding_success
 end
 
 --! Notifies the world that an object has been placed, notifying

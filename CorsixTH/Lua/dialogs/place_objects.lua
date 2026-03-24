@@ -745,9 +745,9 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       self.object_footprint[i][2] = ypos
     end
 
-    local function _setPartialFlags(x_, f_, map_, flag_altpal_, allgood_)
+    local function _setPartialFlags(x_, y_, map_, flag_altpal_, allgood_)
       if ATTACH_BLUEPRINT_TO_TILE then
-        self.object_anim:setTile(map_, x_, f_, 0)
+        self.object_anim:setTile(map_, x_, y_, 0)
       end
       self.object_anim:setPartialFlag(flag_altpal_, not allgood_)
       self.object_slave_anim:setPartialFlag(flag_altpal_, not allgood_)
@@ -893,9 +893,7 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
           invalid_placement = not_along_wall and hasNoConnectingPath(x, y, to_check_x, to_check_y)
         end
       else
-        -- self.ui.app.config.blocking_off_areas == 1 or 3
-        -- soft placing approach disabled ('safe blocking off areas disabled').
-        -- in thas case follow strict placing approach ('blocking off areas disabled').
+        -- follow strict placing approach ('blocking off areas disabled').
         invalid_placement = not_along_wall and hasNoConnectingPath(x, y, to_check_x, to_check_y)
       end
     else

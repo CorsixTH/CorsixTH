@@ -691,27 +691,25 @@ param(config_values, 'shift_scroll_speed') .. [=[
 param(config_values, 'room_information_dialogs') .. [=[
 
 -------------------------------------------------------------------------------
--- Possibility to blocking off areas when building and placing objects.
+-- Ability to block off areas when building and placing objects.
 --
 -- There are 3 possible options:
 --
--- 1. Totally forbidden - user is not allowed to make any dead ended,
--- inaccessible spaces that are not accessible from the hospital entrance.
--- Before version 0.70 this was a default option in CorsixTH.
--- This avoided issues that could arise from area blocking, but it also
--- deprived of the opportunity to build rooms in the same layouts which
--- was possible to build in the original TH. Although this is a safe option,
--- it is now deprecated but is still available.
+-- 1. Totally forbidden - requires every passable tile in the hospital
+-- to remain reachable from a hospital entrance. This avoids issues that
+-- could arise from area blocking, but it also deprived of the opportunity
+-- to build rooms in the same layouts which was possible to build in the
+-- original TH. Before version 0.70 this was a default option in CorsixTH.
 --
 -- 2. Partially allowed - user is allowed to make dead ended, inaccessible
 -- spaces that are not accessible from the hospital entrance but only if
 -- certain conditions are met. The condition is that the rooms themselves
 -- and usable objects inside the room must remain accessible. This ensures
 -- the preservation of the hospital's functionality and ensures the validity
--- of the path routing in the hospital. This is the style that the blocking
--- off areas were implemented in the original TH. This is a safe option.
+-- of the path routing in the hospital. This allows user to build rooms with
+-- the same layout as in the original TH. This is a safe option.
 --
--- 3. Completely allowed - user is allowed to make any dead ended,
+-- 3. Completely allowed - user is allowed to make dead ended,
 -- inaccessible spaces that are not accessible from the hospital entrance.
 -- This is a dangerous feature that can lead to game crashes. Use it only
 -- at your own risk and if you fully understand why you enabling it.
