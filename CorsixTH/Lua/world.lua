@@ -2099,8 +2099,8 @@ function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y
       -- because these 'use_position' are not actually used in the game, so skip them.
       if (room_object.object_type.class ~= "SideObject") and use_x and use_y then
         -- check that the placing object itself does not occupy 'use_position'
-        local the_same_title = (object_x == use_x) and (object_y == use_y)
-        pathfinding_fine = pathfinding_fine and not the_same_title
+        local tile_overlap = (object_x == use_x) and (object_y == use_y)
+        pathfinding_fine = pathfinding_fine and not tile_overlap
         -- also check that the placing object does not break the path from 'use_position' to the room door.
         pathfinding_fine = pathfinding_fine and not _isIsolated(use_x, use_y, door_x, door_y)
       end
