@@ -489,6 +489,16 @@ int l_anim_make_invisible(lua_State* L) {
 }
 
 template <typename T>
+int l_anim_is_visible(lua_State* L) {
+  T* pAnimation = luaT_testuserdata<T>(L);
+  constexpr uint32_t alpha_flags =
+      static_cast<uint32_t>(thdf_alpha_50 | thdf_alpha_75);
+  uint32_t object_alpha_flags = pAnimation->get_flags() & alpha_flags;
+  lua_pushboolean(L, object_alpha_flags == alpha_flags ? 0 : 1);
+  return 1;
+}
+
+template <typename T>
 int l_anim_get_flag(lua_State* L) {
   T* pAnimation = luaT_testuserdata<T>(L);
   lua_pushinteger(L, pAnimation->get_flags());
@@ -718,6 +728,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_set_flag<animation>, "setFlag");
     lcb.add_function(l_anim_set_flag_partial<animation>, "setPartialFlag");
     lcb.add_function(l_anim_get_flag<animation>, "getFlag");
+    lcb.add_function(l_anim_is_visible<animation>, "isVisible");
     lcb.add_function(l_anim_make_visible<animation>, "makeVisible");
     lcb.add_function(l_anim_make_invisible<animation>, "makeInvisible");
     lcb.add_function(l_anim_set_tag, "setTag");
@@ -768,6 +779,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_set_flag_partial<sprite_render_list>,
                      "setPartialFlag");
     lcb.add_function(l_anim_get_flag<sprite_render_list>, "getFlag");
+    lcb.add_function(l_anim_is_visible<sprite_render_list>, "isVisible");
     lcb.add_function(l_anim_make_visible<sprite_render_list>, "makeVisible");
     lcb.add_function(l_anim_make_invisible<sprite_render_list>,
                      "makeInvisible");
