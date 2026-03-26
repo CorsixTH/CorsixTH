@@ -50,7 +50,8 @@
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "VCPKG_TARGET_TRIPLET": "x64-windows-release",
-        "ENABLE_UNIT_TESTS": "ON"
+        "ENABLE_UNIT_TESTS": "ON",
+        "FETCH_SOUNDFONT": "ON"
       }
     },
     {
@@ -61,7 +62,8 @@
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "VCPKG_TARGET_TRIPLET": "x86-windows",
-        "ENABLE_UNIT_TESTS": "ON"
+        "ENABLE_UNIT_TESTS": "ON",
+        "FETCH_SOUNDFONT": "ON"
       }
     },
     {
@@ -101,6 +103,11 @@
       "configuration": "Debug"
     },
     {
+      "name": "win-dev",
+      "configurePreset": "win-dev",
+      "configuration": "Debug"
+    },
+    {
       "name": "win-x64-rel",
       "configurePreset": "win-x64-rel",
       "configuration": "RelWithDebInfo"
@@ -134,6 +141,15 @@
     {
       "name": "linux-dev-vcpkg",
       "configurePreset": "linux-dev-vcpkg",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "Debug"
+    },
+    {
+      "name": "win-dev",
+      "configurePreset": "win-dev",
       "output": {
         "verbosity": "extra",
         "outputOnFailure": true
