@@ -96,7 +96,8 @@ function Handyman:onPickup()
 end
 
 -- Deattaches the handyman from the task and forces him to search for a new one.
---!param reset_action_queue (bool) Should the worker interrupt the current action to search for a new task
+--!param reset_action_queue (bool) Should the handyman interrupt
+-- the current action to search for a new task
 function Handyman:releaseHandymanFromTask(reset_action_queue)
   self:setDynamicInfoText("")
   self:unassignTask()
@@ -167,10 +168,13 @@ function Handyman:doMeandering()
   self:queueAction(MeanderAction())
 end
 
-function Handyman:assignHandymanTask(taskIndex, taskType)
-  local task_object = self.hospital:assignHandymanToTask(self, taskIndex, taskType)
+-- Assign a handyman to a task
+--!param task_index (integer) task index
+--!param task_type (string) task type
+function Handyman:assignHandymanTask(task_index, task_type)
+  local task_object = self.hospital:assignHandymanToTask(self, task_index, task_type)
   if task_object then
-    if taskType == "cleaning" then
+    if task_type == "cleaning" then
       self:processCleaningTask(task_object)
     else
       if task_object.call.dropped then

@@ -2061,7 +2061,7 @@ function Hospital:searchForHandymanTask(handyman, task_type)
   local index = -1
   local priority = 0
   local multiplier = 1
-  local found_any_task = false
+  local first_attempt = true
 
   if handyman.profile.is_consultant then
     multiplier = 0.5
@@ -2075,7 +2075,7 @@ function Hospital:searchForHandymanTask(handyman, task_type)
     local v = task_candidate
     local distance = self.world:getPathDistance(v.tile_x, v.tile_y, handyman.tile_x, handyman.tile_y)
     local found_suitable_task = true
-    if found_any_task and v.priority < priority then
+    if not first_attempt and v.priority < priority then
       found_suitable_task = false
     end
     if not v.parcelId then
@@ -2130,11 +2130,11 @@ function Hospital:searchForHandymanTask(handyman, task_type)
       end
 
       if found_suitable_task then
-        if not found_any_task then
+        if first_attempt then
           if distance <= thresholdForStopping then
             return task_index
           end
-          found_any_task, dist, index, priority = true, distance, task_index, v.priority
+          first_attempt, dist, index, priority = false, distance, task_index, v.priority
         elseif  priority < v.priority or distance < dist then
           if distance < thresholdForStopping then
             return task_index

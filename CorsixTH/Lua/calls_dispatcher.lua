@@ -468,7 +468,7 @@ end
 --! Unassign call
 --!param call call to unassign from assigned humanoid.
 --!param answer_next_call (bool) should the humanoid assigned to this call then
--- answer for another new call or not
+-- answer for another new call
 function CallsDispatcher.unassignCall(call, answer_next_call)
   local assigned = call.assigned
   assert(assigned.on_call == call, "Unassigning call but the staff was not on call or a different call")
