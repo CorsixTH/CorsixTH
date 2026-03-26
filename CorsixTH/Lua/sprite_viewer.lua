@@ -149,9 +149,6 @@ local function DoKey(_, rawchar)
   elseif key == "s" then
     sdown = true
     need_draw = true
-  elseif key == "q" then
-    TheApp.eventHandlers = old_event_handlers
-    need_draw = false
   elseif key == "-" then
     if scale > 1 then
       scale = scale - 1
@@ -171,6 +168,10 @@ end
 
 local function DoKeyUp(_, rawchar)
     local key = rawchar:lower()
+    if key == "q" then -- Exit sprite viewer
+      TheApp.eventHandlers = old_event_handlers
+      return
+    end
     if key == "w" then
         wdown = false
     end
