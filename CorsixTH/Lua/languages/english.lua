@@ -1271,7 +1271,14 @@ subtitles = {
 options_window.change_resolution = "Change resolution"
 tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
 information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
-
+machine_menu = {
+  ratio = "Ratio",
+  percentage = "%d%",
+}
+tooltip.machine_menu = {
+   ratio = "This value shows ratio of remaining strength and total strength",
+   header.ratio = "Remaining Strength to Total Strength percentage ratio of the machines.",
+}
 cheats_window.cheats = {
  toggle_infected = show_infected,
 }
