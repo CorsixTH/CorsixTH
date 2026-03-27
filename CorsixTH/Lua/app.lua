@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 242 -- Machine menu enchantments
+local SAVEGAME_VERSION = 242 -- Machine menu enhancements
 
 class "App"
 
