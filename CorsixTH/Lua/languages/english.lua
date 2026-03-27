@@ -1276,8 +1276,10 @@ machine_menu = {
   percentage = "%d%",
 }
 tooltip.machine_menu = {
-   ratio = "This value shows ratio of remaining strength and total strength",
-   header.ratio = "Remaining Strength to Total Strength percentage ratio of the machines.",
+  ratio = "This value shows ratio of remaining strength and total strength",
+  header = {
+    ratio = "Remaining Strength to Total Strength percentage ratio of the machines.",
+  }
 }
 cheats_window.cheats = {
  toggle_infected = show_infected,
