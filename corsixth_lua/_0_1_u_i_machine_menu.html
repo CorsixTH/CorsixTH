@@ -78,9 +78,9 @@
  <li class="self">
  <a href="_0_1_u_i_machine_menu.html#_0_1_u_i_machine_menu_1create_controls">createControls</a>()
  </li>
- <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <li class="self">
+ <a href="_0_1_u_i_machine_menu.html#_0_1_u_i_machine_menu_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">UIResizable:draw</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
@@ -232,6 +232,9 @@
  (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
  <li class="self">
+ <a href="_0_1_u_i_machine_menu.html#_0_1_u_i_machine_menu_1set_sort_by_name">setSortByName</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_u_i_machine_menu.html#_0_1_u_i_machine_menu_1set_sort_by_ratio">setSortByRatio</a>()
  </li>
  <li class="self">
@@ -381,13 +384,11 @@
  (*)
  </li>
  <li><span class="p">x</span>
- (*)
  </li>
  <li><span class="p">x_original</span>
  (*)
  </li>
  <li><span class="p">y</span>
- (*)
  </li>
  <li><span class="p">y_original</span>
  (*)
@@ -408,7 +409,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L40">line 40 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L43">line 43 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -429,7 +430,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1after_load">UIResizable:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L342">line 342 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L401">line 401 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -444,20 +445,46 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L217">line 217 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L220">line 220 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_machine_menu_1close">function UIMachineMenu:close()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L338">line 338 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L397">line 397 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_machine_menu_1create_controls">function UIMachineMenu:createControls()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L71">line 71 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L74">line 74 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_machine_menu_1draw">function UIMachineMenu:draw(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">UIResizable:draw</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L328">line 328 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -472,14 +499,14 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L192">line 192 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L195">line 195 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_machine_menu_1on_tick">function UIMachineMenu:onTick()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L329">line 329 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L388">line 388 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -494,31 +521,37 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L186">line 186 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L189">line 189 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_machine_menu_1scrollbar_moved">function UIMachineMenu:scrollbarMoved()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L304">line 304 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L352">line 352 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_machine_menu_1set_sort_by_name">function UIMachineMenu:setSortByName()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L231">line 231 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_machine_menu_1set_sort_by_ratio">function UIMachineMenu:setSortByRatio()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L236">line 236 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L239">line 239 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_machine_menu_1set_sort_by_remain">function UIMachineMenu:setSortByRemain()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L228">line 228 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L235">line 235 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_machine_menu_1set_sort_by_strength">function UIMachineMenu:setSortByStrength()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L232">line 232 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L243">line 243 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -533,13 +566,13 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L240">line 240 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L247">line 247 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_machine_menu_1update">function UIMachineMenu:update()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L262">line 262 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L285">line 285 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -554,7 +587,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L204">line 204 of Lua/dialogs/resizables/machine_menu.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/machine_menu.lua#L207">line 207 of Lua/dialogs/resizables/machine_menu.lua</a>.
  </p>
  </div>
 </div>
