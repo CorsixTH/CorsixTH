@@ -94,7 +94,7 @@ local available_resolutions = function()
   local enable_list, disable_list = {}, {}
   for _, opt in ipairs(suggested_resolutions) do
     local enabled = App.MIN_WINDOW_WIDTH * s <= opt.width and
-    App.MIN_WINDOW_HEIGHT * s <= opt.height
+        App.MIN_WINDOW_HEIGHT * s <= opt.height
     opt.disabled = not enabled
     opt.tooltip = opt.disabled and { _S.tooltip.options_window.resolution_unavailable }
     if enabled then
@@ -120,7 +120,8 @@ end
 local available_ui_scales = function()
   local res = {}
   local s = 1
-  while s * App.MIN_WINDOW_WIDTH <= TheApp.config.width and s * App.MIN_WINDOW_HEIGHT <= TheApp.config.height do
+  while s * App.MIN_WINDOW_WIDTH <= TheApp.config.width and
+      s * App.MIN_WINDOW_HEIGHT <= TheApp.config.height do
     res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
     s = s + 1
   end
@@ -191,11 +192,14 @@ function UIOptions:UIOptions(ui, mode)
       .lowered = true
     local s_col = setting_colours
     -- Make the setting value panel
-    local setting_panel = self:addBevelPanel(setting_x, y_pos, BTN_WIDTH, BTN_HEIGHT, s_col.bg, s_col.highlight, s_col.shadow, s_col.disabled, s_col.active)
+    local setting_panel = self:addBevelPanel(setting_x, y_pos, BTN_WIDTH,
+        BTN_HEIGHT, s_col.bg, s_col.highlight, s_col.shadow,
+        s_col.disabled, s_col.active)
       :setLabel(setting_label)
       :setTooltip(setting_tooltip)
     -- Make the value panel a button
-    local setting_button = setting_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, callback)
+    local setting_button = setting_panel:makeToggleButton(0, 0, BTN_WIDTH,
+        BTN_HEIGHT, nil, callback)
       :setToggleState(toggle_state)
     -- Return the setting value info
     return setting_panel, setting_button
@@ -310,25 +314,30 @@ function UIOptions:UIOptions(ui, mode)
   local lower_row_y_pos = self:_getOptionYPos()
   -- "Customise" button
   self:addBevelPanel(20, lower_row_y_pos, BTN_WIDTH, 30, col.button):setLabel(_S.options_window.customise)
-    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonCustomise):setTooltip(_S.tooltip.options_window.customise_button)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonCustomise)
+    :setTooltip(_S.tooltip.options_window.customise_button)
 
   -- "Folders" button
   self:addBevelPanel(165, lower_row_y_pos, BTN_WIDTH, 30, col.button):setLabel(_S.options_window.folder)
-    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonFolder)
+    :setTooltip(_S.tooltip.options_window.folder_button)
 
   -- "Hotkeys" button
   self:addBevelPanel(320, lower_row_y_pos, BTN_WIDTH, 30, col.button):setLabel(_S.options_window.hotkey)
-    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonHotkey):setTooltip(_S.tooltip.options_window.hotkey)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonHotkey)
+    :setTooltip(_S.tooltip.options_window.hotkey)
 
   -- "Sound Options" button
   self:addBevelPanel(465, lower_row_y_pos, BTN_WIDTH, 30, col.button):setLabel(_S.options_window.sound)
-    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonSound):setTooltip(_S.tooltip.options_window.sound)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonSound)
+    :setTooltip(_S.tooltip.options_window.sound)
 
   -- "Back" button
   -- Give some extra space to back button. This is fine as long as it is the last button in the options menu
   local back_button_y_pos = self:_getOptionYPos() + 20
   self:addBevelPanel(175, back_button_y_pos, BTN_WIDTH * 2, 40, col.button):setLabel(_S.options_window.back)
-    :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
+    :makeButton(0, 0, 280, 40, nil, self.buttonBack)
+    :setTooltip(_S.tooltip.options_window.back)
 end
 
 -- Stubs for backward compatibility
