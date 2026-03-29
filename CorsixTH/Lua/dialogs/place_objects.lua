@@ -777,7 +777,7 @@ end
 --! param object_orientation (string) footprint orientation name.
 --! param room_id (integer) room id if we in a build mode.
 --! param world (object) target world object.
---! return (bool) is such placement will not break pathfinding.
+--! return (bool) is this placement not going to break path finding.
 function UIPlaceObjects:_isNonSideObjectPlacementValid(x, y, object, object_orientation, room_id, world)
   local invalid_placement
   if room_id > 0 and x and y then
@@ -840,7 +840,7 @@ end
 --! param passable_flag (string) passable flag name. orientation of an object relative to the cardinal directions.
 --! param map (object) target map object.
 --! param world (object) target world object.
---! return (bool) is such placement will not break pathfinding.
+--! return (bool) is this placement not going to break path finding.
 function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag, map, world)
   local invalid_placement
   -- Depending on the orientation of the side object, we will check the accessibility of the cell

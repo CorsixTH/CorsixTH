@@ -1893,7 +1893,7 @@ end
 --!param object (object) target object for placing.
 --!param objects_orientation (table) object orientations description with footprints.
 --!param room_id (integer) target room for placing the object.
---!return (bool) is such placement will break pathfinding.
+--!return (bool) will this placement break path finding.
 function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objects_orientation, room_id)
   local objects_footprint = object.orientations[objects_orientation].footprint
   local map = self.map.th
@@ -1972,7 +1972,7 @@ end
 --!param object_y (integer) target tile y coordinate.
 --!param room (object) target room for placing the object.
 --!param object_layout (table) object orientation description with footprint.
---!return (bool) is such placement will break pathfinding.
+--!return (bool) will this placement break path finding.
 function World:wouldNonSideObjectsNotHaveAccessToRoomDoor(object_x, object_y, room, object_layout)
   if not room.door or not room.door.tile_x or not room.door.tile_y then return true end
 
@@ -2048,7 +2048,7 @@ end
 --!param room (object) target room for placing the object.
 --!param object_layout (table) object orientation description with footprint.
 --!param is_side_object (bool) is that object is side object.
---!return (bool) is such placement will break pathfinding.
+--!return (bool) will this placement break path finding.
 function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y, room, object_layout, is_side_object)
   if not room.door or not room.door.tile_x or not room.door.tile_y then return true end
 
