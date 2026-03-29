@@ -1287,7 +1287,7 @@ local done_no_handler_warning = {}
 function App:dispatch(evt_type, ...)
   local handler = self.eventHandlers[evt_type]
   if handler then
-    self:resetInfiniteLoopChecker()
+    -- self:resetInfiniteLoopChecker()
     self.last_dispatch_type = evt_type
     return handler(self, ...)
   else

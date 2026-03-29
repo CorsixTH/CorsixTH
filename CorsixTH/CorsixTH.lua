@@ -106,7 +106,6 @@ TheApp:setCommandLine(
   ...
 )
 assert(TheApp:init())
-return TheApp:run()
 
 --[[!file
 ! Application bootstrap code
