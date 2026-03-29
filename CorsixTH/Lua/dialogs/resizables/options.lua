@@ -105,12 +105,14 @@ local available_resolutions = function()
   end
 
   local res = enable_list
+  -- Show custom button before disabled items
+  res[#res + 1] = {
+    text = _S.options_window.custom_resolution, custom = true
+  }
+
   for i = 1, #disable_list do
     res[#res + 1] = disable_list[i]
   end
-
-  res[#res + 1] = {
-    text = _S.options_window.custom_resolution, custom = true }
 
   return res
 end
