@@ -1433,8 +1433,8 @@ function Hospital:humanoidDeath(patient)
   end
 end
 
---! Handyman has died. Remove all tasks assigned to this staff
---!param handyman The handyman deceased
+--! Remove all tasks assigned to Handyman
+--!param handyman (object) target handyman
 function Hospital:unassignHandymanTasks(handyman)
   local tasks = self:findAssignedTasksToHandyman(handyman)
   for _, task in ipairs(tasks) do
@@ -1998,7 +1998,8 @@ function Hospital:removeHandymanTask(taskIndex, taskType)
     table.remove(subTable, taskIndex)
     if task.assignedHandyman then
       if task.object.ticks ~= true then
-        task.assignedHandyman:interruptHandymanTask()
+        task.assignedHandyman:releaseHandymanFromTask(true)
+        task.assignedHandyman = nil
       end
     end
   end
@@ -2018,40 +2019,50 @@ end
 --!param handyman The handyman instance to check for assigned tasks.
 --!return table of all assigned tasks.
 function Hospital:findAssignedTasksToHandyman(handyman)
-  local assignedTasks = {}
+  local assigned_tasks = {}
   for i = 1, #self.handymanTasks do
     for j = 1, #self.handymanTasks[i].subTable do
       if self.handymanTasks[i].subTable[j].assignedHandyman == handyman then
-        table.insert(assignedTasks, self.handymanTasks[i].subTable[j])
+        table.insert(assigned_tasks, self.handymanTasks[i].subTable[j])
       end
     end
   end
-  return assignedTasks
+  return assigned_tasks
 end
 
-function Hospital:getTaskObject(taskIndex, taskType)
-  return self:findHandymanTaskSubtable(taskType)[taskIndex]
-end
-
-function Hospital:assignHandymanToTask(handyman, taskIndex, taskType)
-  if taskIndex ~= -1 then
-    local subTable = self:findHandymanTaskSubtable(taskType)
-    if not subTable[taskIndex].assignedHandyman then
-      subTable[taskIndex].assignedHandyman = handyman
-    else
-      local formerHandyman = subTable[taskIndex].assignedHandyman
-      subTable[taskIndex].assignedHandyman = handyman
-      formerHandyman:interruptHandymanTask()
+function Hospital:assignHandymanToTask(handyman, task_index, task_type)
+  if task_index ~= -1 then
+    local subtable = self:findHandymanTaskSubtable(task_type)
+    local task_object = subtable[task_index]
+    local former_handyman = task_object.assignedHandyman
+    if former_handyman then
+      former_handyman:releaseHandymanFromTask(true)
     end
+    handyman.task = task_object
+    task_object.assignedHandyman = handyman
+    return task_object
   end
+  return nil
 end
 
-function Hospital:searchForHandymanTask(handyman, taskType)
-  local subTable = self:findHandymanTaskSubtable(taskType)
-  --if a distance is smaller than this value stop the search to
-  --save performance
+--! Function for search a new task for a handyman.
+--!param handyman (object) handyman instance for which we want to find a task.
+--!param task_type (string) handyman task type: repairing, watering, cleaning.
+--!return index (int) index of the found task.
+function Hospital:searchForHandymanTask(handyman, task_type)
+  local subTable = self:findHandymanTaskSubtable(task_type)
+
+  -- if a distance is smaller than this value stop the search to
+  -- save performance
   local thresholdForStopping = 3
-  local first, dist, index, priority, multiplier = true, 0, -1, 0, 1
+
+  -- information about the best task found so far
+  local dist = 0
+  local index = -1
+  local priority = 0
+  local multiplier = 1
+  local first_attempt = true
+
   if handyman.profile.is_consultant then
     multiplier = 0.5
   elseif handyman.profile.is_junior then
@@ -2060,23 +2071,34 @@ function Hospital:searchForHandymanTask(handyman, taskType)
   if not handyman.parcelNr then
     handyman.parcelNr = 0
   end
-  for i, v in ipairs(subTable) do
+  for task_index, task_candidate in ipairs(subTable) do
+    local v = task_candidate
     local distance = self.world:getPathDistance(v.tile_x, v.tile_y, handyman.tile_x, handyman.tile_y)
-    local canContinue = true
-    if not first and v.priority < priority then
-      canContinue = false
+    local found_suitable_task = true
+    if not first_attempt and v.priority < priority then
+      found_suitable_task = false
     end
     if not v.parcelId then
        v.parcelId = self.world.map.th:getCellFlags(v.tile_x, v.tile_y).parcelId
     end
+    -- Check that the task is in the plot to which the handyman is assigned to. If he assigned to plot.
     if handyman.parcelNr ~= 0 and handyman.parcelNr ~= v.parcelId then
-      canContinue = false
+      found_suitable_task = false
     end
+    -- Check that a route can be built to this task
     if distance == false then
-      canContinue = false
+      found_suitable_task = false
     end
-    if canContinue then
+
+    if found_suitable_task then
+      -- Handymen can take over other handymen tasks. If there any handyman that goes to water
+      -- a plant in the other side of the hospital and later a second handyman near that plant becomes
+      -- available for a new task and also chooses task to water that plant, then that second handyman
+      -- will take away this task from first handymen to himself. The first handymen will be released
+      -- from this task.
       if v.assignedHandyman then
+        -- Another handyman is already assigned to this task
+        -- Let's check if we can take this task away from him.
         if v.assignedHandyman.fired then
           v.assignedHandyman:unassignTask()
         elseif not v.assignedHandyman.hospital then
@@ -2096,30 +2118,32 @@ function Hospital:searchForHandymanTask(handyman, taskType)
             end
             distance = distance * multiplier
             if distance + 5 > assignedDistance then
-              canContinue = false
+              found_suitable_task = false
             else
               distance = distance / multiplier
             end
-          elseif taskType == "repairing" and v.assignedHandyman:getRoom() == self.world:getRoom(v.tile_x, v.tile_y) then
+          elseif task_type == "repairing" and v.assignedHandyman:getRoom() == self.world:getRoom(v.tile_x, v.tile_y) then
             -- Don't take repair task from another handyman if that assigned handyman already in the target room.
-            canContinue = false
+            found_suitable_task = false
           end
         end
       end
-      if canContinue then
-        if first then
+
+      if found_suitable_task then
+        if first_attempt then
           if distance <= thresholdForStopping then
-            return i
+            return task_index
           end
-          first, dist, index, priority = false, distance, i, v.priority
+          first_attempt, dist, index, priority = false, distance, task_index, v.priority
         elseif  priority < v.priority or distance < dist then
           if distance < thresholdForStopping then
-            return i
+            return task_index
           end
-          dist, index, priority = distance, i, v.priority
+          dist, index, priority = distance, task_index, v.priority
         end
       end
     end
+
   end
   return index
 end

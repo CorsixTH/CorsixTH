@@ -27,7 +27,7 @@ class "CallsDispatcher"
 ---@type CallsDispatcher
 local CallsDispatcher = _G["CallsDispatcher"]
 
-local debug = false -- Turn on for debug message
+local debug_enabled = false -- Turn on for debug message
 
 function CallsDispatcher:CallsDispatcher(world)
   self.world = world
@@ -306,11 +306,11 @@ function CallsDispatcher:findSuitableStaff(call)
   end
 
   if min_staff then
-    if debug then CallsDispatcher.dumpCall(call, 'executed right away') end
+    if debug_enabled then CallsDispatcher.dumpCall(call, 'executed right away') end
     self:executeCall(call, min_staff)
     return true
   else
-    if debug then CallsDispatcher.dumpCall(call, 'queued') self:dump(self.call_queue) end
+    if debug_enabled then CallsDispatcher.dumpCall(call, 'queued') self:dump(self.call_queue) end
     self:onChange()
     return false
   end
@@ -350,9 +350,9 @@ function CallsDispatcher:answerCall(staff)
   end
 
   if min_call then
-    if debug then self:dump() CallsDispatcher.dumpCall(min_call, 'answered') end
+    if debug_enabled then self:dump() CallsDispatcher.dumpCall(min_call, 'answered') end
     if min_call.assigned then
-      CallsDispatcher.unassignCall(min_call)
+      CallsDispatcher.unassignCall(min_call, true)
     end
     -- Check if the object is still in the world, live and not destroy
     assert(min_call.object.tile_x or min_call.object.x, "An destroyed object still has requested in the dispatching queue. Please check the Entity:onDestroy function")
@@ -420,7 +420,7 @@ end
 --! Called when a call is completed successfully.
 function CallsDispatcher.onCheckpointCompleted(call)
   if not call.dropped and call.assigned then
-    if debug then CallsDispatcher.dumpCall(call, "completed") end
+    if debug_enabled then CallsDispatcher.dumpCall(call, "completed") end
     call.assigned.on_call = nil
     call.assigned = nil
     call.dispatcher:dropFromQueue(call.object, call.key)
@@ -443,13 +443,13 @@ end
 --   (like a machine that needed repaired were replaced),
 --   or when the object is destroyed, etc.
 function CallsDispatcher:dropFromQueue(object, key)
-  if debug then self:dump() end
+  if debug_enabled then self:dump() end
   if key and self.call_queue[object] then
     local call = self.call_queue[object][key]
     if call then
       call.dropped = true
       if call.assigned then
-        CallsDispatcher.unassignCall(call)
+        CallsDispatcher.unassignCall(call, true)
       end
       self.call_queue[object][key] = nil
     end
@@ -457,7 +457,7 @@ function CallsDispatcher:dropFromQueue(object, key)
     for _, call in pairs(self.call_queue[object]) do
       call.dropped = true
       if call.assigned then
-        CallsDispatcher.unassignCall(call)
+        CallsDispatcher.unassignCall(call, true)
       end
     end
     self.call_queue[object] = nil
@@ -465,12 +465,18 @@ function CallsDispatcher:dropFromQueue(object, key)
   self:onChange()
 end
 
-function CallsDispatcher.unassignCall(call)
+--! Unassign call
+--!param call call to unassign from assigned humanoid.
+--!param answer_next_call (bool) should the humanoid assigned to this call then
+-- answer for another new call
+function CallsDispatcher.unassignCall(call, answer_next_call)
   local assigned = call.assigned
   assert(assigned.on_call == call, "Unassigning call but the staff was not on call or a different call")
   call.assigned = nil
   assigned.on_call = nil
-  assigned:setNextAction(AnswerCallAction())
+  if answer_next_call then
+    assigned:setNextAction(AnswerCallAction())
+  end
 end
 
 function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)
