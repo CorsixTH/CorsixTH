@@ -50,7 +50,7 @@
  (overrides <a href="_0_1_staff.html#_0_1_staff_1after_load">Staff:afterLoad</a>)
  </li>
  <li class="self">
- <a href="_0_1_handyman.html#_0_1_handyman_1assign_handyman_task">assignHandymanTask</a>(<span class="p">taskIndex</span>, <span class="p">taskType</span>)
+ <a href="_0_1_handyman.html#_0_1_handyman_1assign_handyman_task">assignHandymanTask</a>(<span class="p">task_index</span>, <span class="p">task_type</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_humanoid.html#_0_1_humanoid_1change_attribute">changeAttribute</a>(<span class="p">attribute</span>, <span class="p">amount</span>)
@@ -75,6 +75,9 @@
  <li class="self">
  <a href="_0_1_handyman.html#_0_1_handyman_1die">die</a>()
  (overrides <a href="_0_1_staff.html#_0_1_staff_1die">Staff:die</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_handyman.html#_0_1_handyman_1do_meandering">doMeandering</a>()
  </li>
  <li class="self">
  <a href="_0_1_handyman.html#_0_1_handyman_1dump">dump</a>()
@@ -124,6 +127,9 @@
  <a href="_0_1_humanoid.html#_0_1_humanoid_1get_idle_animation">getIdleAnimation</a>(<span class="p">humanoid_class</span>)
  (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_handyman.html#_0_1_handyman_1get_priority">getPriority</a>(<span class="p">task_type</span>)
+ </li>
  <li class="inherited">
  <a href="_0_1_humanoid.html#_0_1_humanoid_1get_room">getRoom</a>()
  (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
@@ -155,9 +161,6 @@
  <li class="inherited">
  <a href="_0_1_staff.html#_0_1_staff_1increase_wage">increaseWage</a>(<span class="p">amount</span>)
  (inherited from <a href="_0_1_staff.html">Staff</a>)
- </li>
- <li class="self">
- <a href="_0_1_handyman.html#_0_1_handyman_1interrupt_handyman_task">interruptHandymanTask</a>()
  </li>
  <li class="inherited">
  <a href="_0_1_staff.html#_0_1_staff_1is_crack_up_tired">isCrackUpTired</a>()
@@ -227,9 +230,9 @@
  <a href="_0_1_handyman.html#_0_1_handyman_1on_pickup">onPickup</a>()
  (overrides <a href="_0_1_staff.html#_0_1_staff_1on_pickup">Staff:onPickup</a>)
  </li>
- <li class="self">
- <a href="_0_1_handyman.html#_0_1_handyman_1on_place_in_corridor">onPlaceInCorridor</a>()
- (overrides <a href="_0_1_staff.html#_0_1_staff_1on_place_in_corridor">Staff:onPlaceInCorridor</a>)
+ <li class="inherited">
+ <a href="_0_1_staff.html#_0_1_staff_1on_place_in_corridor">onPlaceInCorridor</a>()
+ (inherited from <a href="_0_1_staff.html">Staff</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
@@ -242,6 +245,9 @@
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_handyman.html#_0_1_handyman_1process_cleaning_task">processCleaningTask</a>(<span class="p">task</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_humanoid.html#_0_1_humanoid_1queue_action">queueAction</a>(<span class="p">action</span>, <span class="p">pos</span>)
@@ -258,6 +264,9 @@
  <li class="inherited">
  <a href="_0_1_humanoid.html#_0_1_humanoid_1register_staff_change_callback">registerStaffChangeCallback</a>(<span class="p">callback</span>)
  (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_handyman.html#_0_1_handyman_1release_handyman_from_task">releaseHandymanFromTask</a>(<span class="p">reset_action_queue</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_staff.html#_0_1_staff_1remove_queued_staff_message">removeQueuedStaffMessage</a>()
@@ -323,6 +332,9 @@
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="self">
+ <a href="_0_1_handyman.html#_0_1_handyman_1set_priority">setPriority</a>(<span class="p">task_type</span>, <span class="p">priority</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_handyman.html#_0_1_handyman_1set_profile">setProfile</a>(<span class="p">profile</span>)
  (overrides <a href="_0_1_staff.html#_0_1_staff_1set_profile">Staff:setProfile</a>)
  </li>
@@ -371,6 +383,9 @@
  (inherited from <a href="_0_1_staff.html">Staff</a>)
  </li>
  <li class="self">
+ <a href="_0_1_handyman.html#_0_1_handyman_1unassign_call">unassignCall</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_handyman.html#_0_1_handyman_1unassign_task">unassignTask</a>()
  </li>
  <li class="inherited">
@@ -415,6 +430,7 @@
  <h4>Member Index</h4>
  <ul>
  <li><span class="p">action_queue</span>
+ (*)
  </li>
  <li><span class="p">active_moods</span>
  (*)
@@ -663,41 +679,48 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1after_load">Staff:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L88">line 88 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L222">line 222 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_handyman_1assign_handyman_task">function Handyman:assignHandymanTask(<span class="p">taskIndex</span>, <span class="p">taskType</span>)</a></h5>
+ <h5><a name="_0_1_handyman_1assign_handyman_task">function Handyman:assignHandymanTask(<span class="p">task_index</span>, <span class="p">task_type</span>)</a></h5>
  <p>
+ Assign a handyman to a task<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">taskIndex</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="n">task_index</td>
+ <td class="t">integer</td>
+ <td class="d"> task index</td>
  </tr>
  <tr>
- <td class="n">taskType</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="n">task_type</td>
+ <td class="t">string</td>
+ <td class="d"> task type</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L161">line 161 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L171">line 171 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_handyman_1die">function Handyman:die()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1die">Staff:die</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L38">line 38 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L216">line 216 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_handyman_1do_meandering">function Handyman:doMeandering()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L160">line 160 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_handyman_1dump">function Handyman:dump()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1dump">Staff:dump</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L43">line 43 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L52">line 52 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -715,40 +738,96 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1fulfills_criterion">Staff:fulfillsCriterion</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L82">line 82 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L87">line 87 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_handyman_1get_priority">function Handyman:getPriority(<span class="p">task_type</span>)</a></h5>
+ <p>
+ Get task type priority value<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">task_type</td>
+ <td class="t">string</td>
+ <td class="d"> task type</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L45">line 45 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_handyman_1go_to_staff_room">function Handyman:goToStaffRoom()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1go_to_staff_room">Staff:goToStaffRoom</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L72">line 72 of Lua/entities/humanoids/staff/handyman.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_handyman_1interrupt_handyman_task">function Handyman:interruptHandymanTask()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L101">line 101 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L82">line 82 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_handyman_1on_pickup">function Handyman:onPickup()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1on_pickup">Staff:onPickup</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L96">line 96 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L93">line 93 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_handyman_1on_place_in_corridor">function Handyman:onPlaceInCorridor()</a></h5>
+ <h5><a name="_0_1_handyman_1process_cleaning_task">function Handyman:processCleaningTask(<span class="p">task</span>)</a></h5>
  <p>
- <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1on_place_in_corridor">Staff:onPlaceInCorridor</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L77">line 77 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">task</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L188">line 188 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_handyman_1release_handyman_from_task">function Handyman:releaseHandymanFromTask(<span class="p">reset_action_queue</span>)</a></h5>
+ <p>
+ Deattaches the handyman from the task and forces him to search for a new one.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">reset_action_queue</td>
+ <td class="t">bool</td>
+ <td class="d"> Should the handyman interrupt
+the current action to search for a new task</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L98">line 98 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_handyman_1search_for_handyman_task">function Handyman:searchForHandymanTask()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L111">line 111 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L112">line 112 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_handyman_1set_priority">function Handyman:setPriority(<span class="p">task_type</span>, <span class="p">priority</span>)</a></h5>
+ <p>
+ Set task type priority value<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">task_type</td>
+ <td class="t">string</td>
+ <td class="d"> task type</td>
+ </tr>
+ <tr>
+ <td class="n">priority</td>
+ <td class="t">float</td>
+ <td class="d"> priority to set</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L38">line 38 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -764,7 +843,13 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1set_profile">Staff:setProfile</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L64">line 64 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L73">line 73 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_handyman_1unassign_call">function Handyman:unassignCall()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L210">line 210 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -772,7 +857,7 @@
  <p>
  If the staff member had a task outstanding, unassigning them from that task.
 Tasks with no handyman assigned will be eligible for reassignment by the hospital.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L182">line 182 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L200">line 200 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
 </div>
