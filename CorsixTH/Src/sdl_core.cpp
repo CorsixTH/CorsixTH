@@ -136,6 +136,13 @@ int l_get_key_modifiers(lua_State* L) {
   return 1;
 }
 
+int l_quit(lua_State* L) {
+  SDL_Event e;
+  e.type = SDL_QUIT;
+  SDL_PushEvent(&e);
+  return 0;
+}
+
 /// Lua CFunction error handler for dispatch calls
 /**
  * Calls TheApp:errorHandler with the dispatch type and stacktrace of the
@@ -211,8 +218,9 @@ int l_get_ticks(lua_State* L) {
   return 1;
 }
 
-constexpr std::array<luaL_Reg, 7> sdllib{
+constexpr std::array<luaL_Reg, 8> sdllib{
     {{"init", l_init},
+     {"quit", l_quit},
      {"getTicks", l_get_ticks},
      {"getKeyModifiers", l_get_key_modifiers},
      {"getFPS", l_get_fps},

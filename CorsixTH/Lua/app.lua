@@ -43,7 +43,6 @@ function App:App()
   self.config = {}
   self.hotkeys = {}
   self.runtime_config = {}
-  self.running = false
   self.key_modifiers = {}
   self.gfx = {}
   self.eventHandlers = {
@@ -364,8 +363,7 @@ function App:init()
     local function callback(path)
       TheApp.config.theme_hospital_install = path
       TheApp:saveConfig()
-      debug.getregistry()._RESTART = true
-      TheApp.running = false
+      TheApp:reset()
     end
 
     self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
@@ -1202,15 +1200,8 @@ function App:run()
   --     Lua can query or print the call stack as required, rather than
   --     hardcoding error behaviour in C.
   local co = coroutine.create(function(app)
-    local yield = coroutine.yield
-    local dispatch = app.dispatch
-    local repaint = true
-    while app.running do
-      repaint = dispatch(app, yield(repaint))
-    end
   end)
 
-  self.running = true
   do
     local num_iterations = 0
     self.resetInfiniteLoopChecker = function()
@@ -1226,7 +1217,6 @@ function App:run()
   coroutine.resume(co, self)
   local e, where = SDL.mainloop(co)
   debug.sethook(co, nil)
-  self.running = false
   if e ~= nil then
     self:errorHandler(where, debug.traceback(co, e, 0))
     return self:run()
@@ -1964,12 +1954,17 @@ function App:exit()
   -- Save config before exiting
   self:saveConfig()
   self:saveHotkeys()
-  self.running = false
+  SDL.quit()
 end
 
 --! Exits the game completely without saving the config i.e. Alt+F4 for Quit Application
 function App:abandon()
-  self.running = false
+  SDL.quit()
+end
+
+function App:reset()
+  debug.getregistry()._RESTART = true
+  SDL.quit()
 end
 
 --! This function is automatically called after loading a game and serves for compatibility.
