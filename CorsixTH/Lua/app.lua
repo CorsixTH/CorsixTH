@@ -46,7 +46,6 @@ function App:App()
   self.running = false
   self.key_modifiers = {}
   self.gfx = {}
-  self.last_dispatch_type = ""
   self.eventHandlers = {
     frame = self.drawFrame,
     timer = self.onTick,
@@ -173,6 +172,11 @@ function App:init()
   SDL.wm.setIconWin32()
 
   self.caption = "CorsixTH"
+  if self.config.track_fps then
+    SDL.trackFPS(true)
+    SDL.limitFPS(false)
+  end
+
 
   -- Create gamelog file.
   self:initGamelogFile()
@@ -1206,11 +1210,6 @@ function App:run()
     end
   end)
 
-  if self.config.track_fps then
-    SDL.trackFPS(true)
-    SDL.limitFPS(false)
-  end
-
   self.running = true
   do
     local num_iterations = 0
@@ -1228,57 +1227,54 @@ function App:run()
   local e, where = SDL.mainloop(co)
   debug.sethook(co, nil)
   self.running = false
-  self.video:setCaptureMouse(false) -- Free the mouse, so the user can eg close the window.
   if e ~= nil then
-    if where then
-      -- Errors from an asynchronous callback done on the dispatcher coroutine
-      -- will end up here. As the error didn't originate from a dispatched
-      -- event, self.last_dispatch_type is wrong. Therefore, an extra value is
-      -- returned from mainloop(), meaning that where == "callback".
-      self.last_dispatch_type = where
-    end
-    print("An error has occurred!")
-    print("Almost anything can be the cause, but the detailed information " ..
-      "below can help the developers find the source of the error.")
-    print("Running: The " .. self.last_dispatch_type .. " handler.")
-    print("A stack trace is included below, and the handler has been disconnected.")
-    print(debug.traceback(co, e, 0))
-    print("")
-    if self.world then
-      self.world:gameLog("Error in " .. self.last_dispatch_type .. " handler: ")
-      self.world:gameLog(debug.traceback(co, e, 0))
-      self.world:dumpGameLog()
-    end
-    if self.world and self.last_dispatch_type == "timer" and self.world.current_tick_entity then
-      -- Disconnecting the tick handler is quite a drastic measure, so give
-      -- the option of just disconnecting the offending entity and attempting
-      -- to continue.
-      local handler = self.eventHandlers[self.last_dispatch_type]
-      local entity = self.world.current_tick_entity
-      self.world.current_tick_entity = nil
-      if class.is(entity, Patient) then
-        self.ui:addWindow(UIPatient(self.ui, entity))
-      elseif class.is(entity, Staff) then
-        self.ui:addWindow(UIStaff(self.ui, entity))
-      end
-      self.ui:addWindow(UIConfirmDialog(self.ui, true,
-        "Sorry, but an error has occurred. There can be many reasons - see the " ..
-        "log window for details. Would you like to attempt a recovery?",
-        --[[persistable:app_attempt_recovery]] function()
-        self.world:gameLog("Recovering from error in timer handler...")
-        entity.ticks = false
-        self.eventHandlers.timer = handler
-      end
-      ))
-    end
-    self.eventHandlers[self.last_dispatch_type] = nil
-    if self.last_dispatch_type ~= "frame" then
-      -- If it wasn't the drawing code which failed, then it would be useful
-      -- to ensure that a draw happens, as with events disconnected, a frame
-      -- might not otherwise be drawn for a while.
-      pcall(self.drawFrame, self)
-    end
+    self:errorHandler(where, debug.traceback(co, e, 0))
     return self:run()
+  end
+end
+
+function App:errorHandler(last_dispatch_type, st)
+  print("An error has occurred!")
+  print("Almost anything can be the cause, but the detailed information " ..
+          "below can help the developers find the source of the error.")
+  print("Running: The " .. last_dispatch_type .. " handler.")
+  print("A stack trace is included below, and the handler has been disconnected.")
+  print(st)
+  print("")
+  self.video:setCaptureMouse(false) -- Free the mouse, so the user can eg close the window.
+  if self.world then
+    self.world:gameLog("Error in " .. last_dispatch_type .. " handler: ")
+    self.world:gameLog(st)
+    self.world:dumpGameLog()
+  end
+  if self.world and last_dispatch_type == "timer" and self.world.current_tick_entity then
+    -- Disconnecting the tick handler is quite a drastic measure, so give
+    -- the option of just disconnecting the offending entity and attempting
+    -- to continue.
+    local handler = self.eventHandlers[last_dispatch_type]
+    local entity = self.world.current_tick_entity
+    self.world.current_tick_entity = nil
+    if class.is(entity, Patient) then
+      self.ui:addWindow(UIPatient(self.ui, entity))
+    elseif class.is(entity, Staff) then
+      self.ui:addWindow(UIStaff(self.ui, entity))
+    end
+    self.ui:addWindow(UIConfirmDialog(self.ui, true,
+            "Sorry, but an error has occurred. There can be many reasons - see the " ..
+                    "log window for details. Would you like to attempt a recovery?",
+    --[[persistable:app_attempt_recovery]] function()
+              self.world:gameLog("Recovering from error in timer handler...")
+              entity.ticks = false
+              self.eventHandlers.timer = handler
+            end
+    ))
+  end
+  self.eventHandlers[last_dispatch_type] = nil
+  if last_dispatch_type ~= "frame" then
+    -- If it wasn't the drawing code which failed, then it would be useful
+    -- to ensure that a draw happens, as with events disconnected, a frame
+    -- might not otherwise be drawn for a while.
+    pcall(self.drawFrame, self)
   end
 end
 
@@ -1288,7 +1284,6 @@ function App:dispatch(evt_type, ...)
   local handler = self.eventHandlers[evt_type]
   if handler then
     -- self:resetInfiniteLoopChecker()
-    self.last_dispatch_type = evt_type
     return handler(self, ...)
   else
     if not done_no_handler_warning[evt_type] then
