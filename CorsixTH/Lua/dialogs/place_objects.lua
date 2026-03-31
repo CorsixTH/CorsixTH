@@ -842,6 +842,12 @@ end
 --! param world (object) target world object.
 --! return (bool) is this placement not going to break path finding.
 function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag, map, world)
+  -- if we consider to place a SideObject against a wall, it is always a valid placement.
+  -- also, for SideObject, do not change 'passable_flag according to the algorithm below in 1.,
+  -- as this will make the wall passable through.
+  local along_wall = map:getCellFlags(x, y)[passable_flag] == false
+  if along_wall then return true end
+
   local invalid_placement
   -- Depending on the orientation of the side object, we will check the accessibility of the cell
   -- that is located just behind the edge that this side object creates with its placement
@@ -852,7 +858,6 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
     to_check_x = to_check_x + (passable_flag == "travelEast" and 1 or -1)
   end
   local opposite_passable_flag = Object:getComplementaryPassableFlag(passable_flag)
-  local not_along_wall = map:getCellFlags(x, y)[passable_flag] == true
 
   local function hasNoConnectingPath(x1, y1, x2, y2)
     if not world.pathfinder:findDistance(x1, y1, x2, y2) then
@@ -884,17 +889,17 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
         -- soft placing approach ('safe blocking off areas enabled')
         if not room.is_active then
           -- user in a room editing mode
-          invalid_placement = not_along_wall and world:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(x, y, room, nil, true)
+          invalid_placement = world:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(x, y, room, nil, true)
         else
           -- user not in a room editing mode.
           -- as we are not in a room editing mode, then there could be humanoids in the room.
           -- this means that placing object can block a humanoid's passage to the door.
           -- to prevent that case we fallback to strict placing approach ('blocking off areas disabled').
-          invalid_placement = not_along_wall and hasNoConnectingPath(x, y, to_check_x, to_check_y)
+          invalid_placement = hasNoConnectingPath(x, y, to_check_x, to_check_y)
         end
       else
         -- follow strict placing approach ('blocking off areas disabled').
-        invalid_placement = not_along_wall and hasNoConnectingPath(x, y, to_check_x, to_check_y)
+        invalid_placement = hasNoConnectingPath(x, y, to_check_x, to_check_y)
       end
     else
       -- not a valid room with a door. corner case like a transition state.
@@ -903,7 +908,7 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
   else
     -- placing an object outside of any room.
     -- fallback to strict placing approach ('blocking off areas disabled').
-    invalid_placement = not_along_wall and hasNoConnectingPath(x, y, to_check_x, to_check_y)
+    invalid_placement = hasNoConnectingPath(x, y, to_check_x, to_check_y)
   end
 
   -- 3. Restore the original tile's passable properties, thus undoing the actions taken in step 1.
