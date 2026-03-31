@@ -111,6 +111,15 @@ class fps_ctrl {
 };
 
 fps_ctrl fps;
+constexpr uint32_t infinite_loop_limit{100};
+uint32_t infinite_loop_counter{0};
+
+void l_infinite_loop_hook(lua_State* L, lua_Debug*) {
+  infinite_loop_counter++;
+  if (infinite_loop_counter >= infinite_loop_limit) {
+    luaL_error(L, "Suspected infinite loop");
+  }
+}
 
 void l_push_modifiers_table(lua_State* L, Uint16 mod) {
   lua_newtable(L);
@@ -228,7 +237,7 @@ constexpr std::array<luaL_Reg, 8> sdllib{
      {"limitFPS", l_limit_fps},
      {nullptr, nullptr}}};
 
-inline void load_extra(lua_State* L, const char* name, lua_CFunction fn) {
+void load_extra(lua_State* L, const char* name, lua_CFunction fn) {
   luaT_pushcfunction(L, fn);
   lua_call(L, 0, 1);
   lua_setfield(L, -2, name);
@@ -258,6 +267,14 @@ int mainloop(lua_State* L) {
   SDL_TimerID timer =
       SDL_AddTimer(usertick_period_ms, timer_frame_callback, nullptr);
   SDL_Event e;
+
+  lua_Hook hookFn = lua_gethook(L);
+  if (!hookFn) {
+    lua_sethook(L, l_infinite_loop_hook, LUA_MASKCOUNT, 1e7);
+  } else {
+    std::printf(
+        "Warning: Infinite loop detection disabled due to existing Lua hook\n");
+  }
 
   std::string_view last_dispatch;
   int wait_error = 0;
@@ -434,11 +451,13 @@ int mainloop(lua_State* L) {
           do_frame = do_frame || (lua_toboolean(L, -1) != 0);
           lua_pop(L, 2);
         }
+        infinite_loop_counter = 0;
       } while (fps.limit_fps == false && SDL_PollEvent(nullptr) == 0);
     }
 
     // No events pending - a good time to do a bit of garbage collection
     lua_gc(L, LUA_GCSTEP, 2);
+    infinite_loop_counter = 0;
   }
 
   if (wait_error != 0) {

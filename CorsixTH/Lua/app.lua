@@ -1191,38 +1191,6 @@ function App:saveHotkeys()
   require('config_finder').save_hotkeys(hotkeys_filename, self.hotkeys)
 end
 
-function App:run()
-  -- The application "main loop" is an SDL event loop written in C, which calls
-  -- a coroutine whenever an event occurs. Initially it may seem odd to involve
-  -- coroutines, but it does give a few advantages:
-  --  1) Lua can signal the main loop to exit by finishing the coroutine
-  --  2) If an error occurs, the call stack is preserved in the coroutine, so
-  --     Lua can query or print the call stack as required, rather than
-  --     hardcoding error behaviour in C.
-  local co = coroutine.create(function(app)
-  end)
-
-  do
-    local num_iterations = 0
-    self.resetInfiniteLoopChecker = function()
-      num_iterations = 0
-    end
-    debug.sethook(co, function()
-      num_iterations = num_iterations + 1
-      if num_iterations == 100 then
-        error("Suspected infinite loop", 2)
-      end
-    end, "", 1e7)
-  end
-  coroutine.resume(co, self)
-  local e, where = SDL.mainloop(co)
-  debug.sethook(co, nil)
-  if e ~= nil then
-    self:errorHandler(where, debug.traceback(co, e, 0))
-    return self:run()
-  end
-end
-
 function App:errorHandler(last_dispatch_type, st)
   print("An error has occurred!")
   print("Almost anything can be the cause, but the detailed information " ..
@@ -1273,7 +1241,6 @@ local done_no_handler_warning = {}
 function App:dispatch(evt_type, ...)
   local handler = self.eventHandlers[evt_type]
   if handler then
-    -- self:resetInfiniteLoopChecker()
     return handler(self, ...)
   else
     if not done_no_handler_warning[evt_type] then
