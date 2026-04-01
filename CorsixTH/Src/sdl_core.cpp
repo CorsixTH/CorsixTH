@@ -397,7 +397,7 @@ void mainloop(lua_State* L) {
           if (lua_pcall(L, 1, 0, -3) != LUA_OK) {
             SDL_RemoveTimer(timer);
           }
-          lua_pop(L, 1); // Remove l_error_handler
+          lua_pop(L, 1);  // Remove l_error_handler
           nargs = 0;
           break;
         case SDL_USEREVENT_TICK:
@@ -422,8 +422,9 @@ void mainloop(lua_State* L) {
       if (nargs != 0) {
         int res = lua_pcall(L, nargs + 1, 1, -3 - nargs);
         if (res != LUA_OK) {
-          std::fprintf(stderr, "Error in %s: %s\n", last_dispatch.data(),
-                       lua_tostring(L, -1));
+          std::fprintf(stderr, "Error in %.*s: %s\n",
+                       static_cast<int>(last_dispatch.size()),
+                       last_dispatch.data(), lua_tostring(L, -1));
         }
         do_frame = do_frame || (lua_toboolean(L, -1) != 0);
         lua_pop(L, 2);
