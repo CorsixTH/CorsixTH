@@ -741,6 +741,7 @@ hotkey_window = {
   ingame_poopLog = "Dump Log",
   ingame_poopStrings = "Dump Strings",
   ingame_patient_gohome = "Send Home",
+  ingame_sellPickedItem = "Sell Picked Item",
   ingame_storePosition_1 = "1",
   ingame_storePosition_2 = "2",
   ingame_storePosition_3 = "3",

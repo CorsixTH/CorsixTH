@@ -331,7 +331,8 @@ function Object:setTile(x, y)
             }
 
   local direction = self.direction
-  if self.object_type.thob == 50 and direction == "east" then
+  local trash_bin_thob = 50
+  if self.object_type.thob == trash_bin_thob and direction == "east" then
     direction = "west"
   end
 
@@ -495,6 +496,27 @@ function Object:setTile(x, y)
   return self
 end
 
+--! Set object invisible state.
+--! param invisible (bool) 'true' to make the object invisible,
+-- 'false' to make the object visible.
+function Object:setInvisible(invisible)
+  if self.split_anims then
+    for _, th_anim in ipairs(self.split_anims) do
+      if invisible then
+        th_anim:makeInvisible()
+      else
+        th_anim:makeVisible()
+      end
+    end
+  else
+    if invisible then
+      self.th:makeInvisible()
+    else
+      self.th:makeVisible()
+    end
+  end
+end
+
 -- Sets the user of this object to the given user. Note that if multiple_users_allowed
 -- is set to true for this object "user" will always be the last added user to this object.
 -- Please do not modify object.user directly.
@@ -627,16 +649,23 @@ end
 ]]
 function Object:onClick(ui, button, data)
   local window = ui:getWindow(UIEditRoom)
+  -- flag 'in_pickup_mode' can be used if for example some things
+  -- should only happen as long as the object is not picked up.
   if button == "right" or (button == "left" and window and window.in_pickup_mode) then
-    -- This flag can be used if for example some things should only happen as long as the
-    -- object is not picked up. How lovely when it is so logical. :-)
-    local object_list = {{object = self.object_type, qty = 1, existing_object = self}}
     local room = self:getRoom()
     window = window and window.visible and window
-    local direction = self.direction
-    if (not room and window) or
-        (room and not (window and window.room == room) and not self.object_type.corridor_object) or
-        (not room and not self.object_type.corridor_object) then
+
+    if (not room and window) then
+      return
+    end
+
+    if (not room and not self.object_type.corridor_object) then
+      -- Trying to pickup an object in corridor not intended for pickup (sliding doors of the hospital).
+      return
+    end
+
+    if (room and not (window and window.room == room) and not self.object_type.corridor_object) then
+      -- Trying to pickup an object key to a room (sofa, machine), but not the room we're editing.
       return
     end
 
@@ -646,6 +675,7 @@ function Object:onClick(ui, button, data)
     end
 
     if self.object_type.class == "Plant" or self.object_type.class == "Machine" then
+      -- remove the task associated with this object
       local taskType = "watering"
       if self.object_type.class == "Machine" then
         taskType = "repairing"
@@ -657,21 +687,29 @@ function Object:onClick(ui, button, data)
       end
     end
 
+    local room_editing_mode = window ~= nil
+    local initial_orientation = self.direction
+    local object_list = {{object = self.object_type, qty = 1, existing_object = self}}
+
     self.picked_up = true
-    self.world:destroyEntity(self)
-    -- NB: the object has to be destroyed before updating/creating the window,
-    -- or the blueprint will be wrong
-    if not window then
+    if not room_editing_mode then
+      -- do not actually delete the object, but make it invisible during the pickup.
+      self:setInvisible(true)
       window = UIPlaceObjects(ui, object_list, false) -- don't pay for
       ui:addWindow(window)
     else
+      -- NB: the object has to be destroyed before updating/creating the window,
+      -- or the blueprint will be wrong
+      self.world:destroyEntity(self)
       window:stopPickupItems()
       window:addObjects(object_list, false) -- don't pay for
       window:selectObjectType(self.object_type)
       window:checkEnableConfirm() -- since we removed an object from the room, the requirements may not be met anymore
     end
-    window:setOrientation(direction)
-    self.orientation_before = self.direction
+
+    -- blueprint orientation should be as orientation was on object pickup
+    window:setOrientation(initial_orientation)
+    self.orientation_before = initial_orientation
     ui:playSound("pickup.wav")
   end
 end
@@ -918,7 +956,8 @@ function SideObject:getDrawingLayer()
     return DrawingLayers.WestSideObject
   else
     if self.direction == "east" then
-      if self.object_type.thob == 50 then
+      local trash_bin_thob = 50
+      if self.object_type.thob == trash_bin_thob then
         --[[ The bin has orientations north and east but they are displayed in
         the north and west part of the tile respectively. This could lead to a
         graphical glitch where a side object in the west part of the tile is

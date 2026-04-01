@@ -91,8 +91,9 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
 end
 
 function UIPlaceObjects:registerKeyHandlers()
-  self:addKeyHandler("global_cancel", self.cancel)
+  self:addKeyHandler("global_cancel", self.undo)
   self:addKeyHandler("global_cancel_alt", self.cancel)
+  self:addKeyHandler("ingame_sellPickedItem", self.cancel)
   self:addKeyHandler("ingame_rotateobject", self.tryNextOrientation)
 end
 
@@ -216,6 +217,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
       object.existing_objects = {object.existing_object}
     end
     self.objects[#self.objects + 1] = object
+
     if pay_for then
       local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
       local msg = _S.transactions.buy_object .. ": " .. object.object.name
@@ -240,11 +242,20 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
 end
 
 -- precondition: self.active_index has to correspond to the object to be removed
-function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
+function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund, move_canceled)
   if refund then
     local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
     local msg = _S.transactions.sell_object .. ": " .. object.object.name
     self.ui.hospital:receiveMoney(build_cost, msg, build_cost)
+  end
+
+  if move_canceled and object.existing_object then
+    -- previously grabbed an existing object so the object was not deleted
+    -- from its previous location, but simply made invisible.
+    -- place object back (actually make it visible back)
+    object.existing_object:setInvisible(false)
+    object.existing_object.picked_up = false
+    self.ui:playSound("place_r.wav")
   end
 
   object.qty = object.qty - 1
@@ -265,7 +276,7 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
         self.list_header.visible = false
         self.place_objects = false -- No object to place
       else
-        self:close()
+        self:close(false)
         return
       end
     end
@@ -283,12 +294,16 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
 end
 
-function UIPlaceObjects:removeAllObjects(refund)
+--! Remove all items from the menu.
+--!param refund (bool) Should the player be reimbursed for the cost
+-- of the items, i.e. whether they were previously purchased.
+--!param move_canceled (bool) moving objects has been cancelled.
+function UIPlaceObjects:removeAllObjects(refund, move_canceled)
   -- There is surely a nicer way to implement this than the current hack. Rewrite it sometime later.
   self:setActiveIndex(1)
   for _ = 1, #self.objects do
     for _ = 1, self.objects[1].qty do
-      self:removeObject(self.objects[1], true, refund)
+      self:removeObject(self.objects[1], true, refund, move_canceled)
     end
   end
 end
@@ -311,16 +326,22 @@ function UIPlaceObjects:removeObjects(object_list, refund)
   end
 end
 
-function UIPlaceObjects:close()
+--! Close menu.
+--!param move_canceled (bool) moving objects has been cancelled.
+function UIPlaceObjects:close(move_canceled)
   self.ui:tutorialStep(1, {4, 5}, 1)
-  self:removeAllObjects(true)
+  self:removeAllObjects(true, move_canceled)
   self:clearBlueprint()
   self.ui:setWorldHitTest(true)
   return Window.close(self)
 end
 
 function UIPlaceObjects:cancel()
-  self:close()
+  self:close(false)
+end
+
+function UIPlaceObjects:undo()
+  self:close(true)
 end
 
 function UIPlaceObjects:setActiveIndex(index)
@@ -499,6 +520,13 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   local room = self.room or self.world:getRoom(self.object_cell_x, self.object_cell_y)
   if real_obj then
     -- If there is such an object then we don't want to make a new one, but move this one instead.
+    if real_obj.picked_up and not real_obj.th:isVisible() then
+      -- previously grabbed an existing object so the object was not actually
+      -- deleted from its previous location, but simply made invisible.
+      self.world:destroyEntity(real_obj)
+      real_obj:setInvisible(false)
+    end
+
     if real_obj.orientation_before and real_obj.orientation_before ~= self.object_orientation then
       real_obj:initOrientation(self.object_orientation)
     end
@@ -638,7 +666,8 @@ function UIPlaceObjects:setBlueprintCell(x, y)
   self.object_cell_x = x
   self.object_cell_y = y
   if x and y and #self.objects > 0 then
-    local object = self.objects[self.active_index].object
+    local real_obj = self.objects[self.active_index]
+    local object = real_obj.object
     local object_footprint = object.orientations[self.object_orientation].footprint
     local map = self.map.th
     if #object_footprint ~= #self.object_footprint then
@@ -681,6 +710,58 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       end
     end
 
+    -- flags for the case of moving a previously placed object to a new location
+    local existing_object = real_obj.existing_object
+    local same_placement = false -- same cell and same orientation
+    local moving_existing_object = existing_object and
+        existing_object.picked_up and
+        not existing_object.th:isVisible()
+    if moving_existing_object then
+      -- moving a previously placed object to a new location
+      local same_tile = existing_object.tile_x == x and existing_object.tile_y == y
+      same_placement = same_tile and existing_object.direction == direction
+    end
+
+    -- functions for the case of moving a previously placed object to a new location
+    local original_flags_table = {}
+    local function deoccupySpace(object_x, object_y, footprint)
+      -- switch the tiles passability and buildability for checking the tile
+      for _, tile in ipairs(footprint) do
+        local target_x = object_x + tile[1]
+        local target_y = object_y + tile[2]
+        -- keep original flags to revert changes later
+        local original_flags = map:getCellFlags(target_x, target_y)
+        original_flags["owner"] = nil -- that flag can't be set via setCellFlags
+        original_flags["thob"] = nil -- don't need to touch that flag
+        table.insert(original_flags_table, {target_x, target_y, original_flags})
+
+        local completely_free_flags = {
+          passable = true,
+          buildable = true,
+          buildableNorth = true,
+          buildableEast = true,
+          buildableSouth = true,
+          buildableWest = true
+        }
+        map:setCellFlags(target_x, target_y, completely_free_flags)
+      end
+    end
+    local function occupySpaceBack()
+      -- we've tested the placement and now we need to re-occupy the cells.
+      for i, tile_flags in pairs(original_flags_table) do
+        map:setCellFlags(tile_flags[1], tile_flags[2], tile_flags[3]) -- target_x, target_y, original_flags
+      end
+      original_flags_table = {}
+    end
+
+    if moving_existing_object and self.object_anim and object.class ~= "SideObject" then
+      -- we placing previously 'grabbed' an existing object which actually just made invisible
+      -- free up the space occupied by the object during the test for suitability
+      local existing_object_footprint = object.orientations[existing_object.direction].footprint
+      deoccupySpace(existing_object.tile_x, existing_object.tile_y, existing_object_footprint)
+    end
+
+    -- for each tile in object_footprint check map tile availability
     for i, tile in ipairs(object_footprint) do
       local xpos = x + tile[1]
       local ypos = y + tile[2]
@@ -697,7 +778,8 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           flag = "passable"
         end
         if tile.only_side then
-          if object.thob == 50 and direction == "east" then
+          local trash_bin_thob = 50
+          if object.thob == trash_bin_thob and direction == "east" then
             direction = "west"
           end
           flag = direction_parameters[direction]["buildable_flag"]
@@ -711,9 +793,11 @@ function UIPlaceObjects:setBlueprintCell(x, y)
 
         -- Check 3: The footprint tile should either be buildable or passable, is it?:
         if not tile.only_side and is_object_allowed then
-          is_object_allowed = world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id)
+          is_object_allowed =
+            world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id)
         elseif is_object_allowed then
-          is_object_allowed = map:getCellFlags(xpos, ypos, flags)[flag] and (player_id == 0 or flags.owner == player_id)
+          is_object_allowed = (map:getCellFlags(xpos, ypos, flags)[flag] or same_placement) and
+            (player_id == 0 or flags.owner == player_id)
         end
 
         -- ignore placed object tile if it is shareable
@@ -721,8 +805,13 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           -- Check 4: only one object per tile allowed original TH
           -- can build on litter and unoccupied tiles and only placeable if not on another objects passable footprint unless that too is a shareable tile
           local objchk = map:getCellFlags(xpos, ypos, flags)["thob"]
-          is_object_allowed = objchk == 0 or objchk == 62 or objchk == 64 -- no object, litter/puke, ratholes
-          is_object_allowed = is_object_allowed and world:isTileExclusivelyPassable(xpos, ypos, 10)
+          local objects_do_not_interfere =
+            (objchk == 0) or (objchk == 62) or (objchk == 64) -- no other object, except litter/puke, ratholes
+          local moving_existing_object_on_same_place =
+            existing_object and (existing_object.tile_x == xpos) and (existing_object.tile_y == ypos)
+          local tile_exclusively_passable = world:isTileExclusivelyPassable(xpos, ypos, 10)
+          is_object_allowed = tile_exclusively_passable and
+            (moving_existing_object_on_same_place or objects_do_not_interfere)
         end
 
         -- Having checked if the tile is good set its blueprint appearance flag:
@@ -740,6 +829,11 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       self.object_footprint[i][1] = xpos
       self.object_footprint[i][2] = ypos
     end
+
+    if moving_existing_object and self.object_anim and object.class ~= "SideObject" then
+      occupySpaceBack()
+    end
+
     if self.object_anim and object.class ~= "SideObject" then
       if allgood then
         if world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, self.object_orientation, roomId) then
