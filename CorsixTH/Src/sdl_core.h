@@ -25,7 +25,7 @@ SOFTWARE.
 
 #include "lua.hpp"
 
-int mainloop(lua_State* L);
+void mainloop(lua_State* L);
 int luaopen_sdl_audio(lua_State* L);
 int luaopen_sdl_wm(lua_State* L);
 int luaopen_sdl(lua_State* L);

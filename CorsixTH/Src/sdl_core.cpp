@@ -145,7 +145,7 @@ int l_get_key_modifiers(lua_State* L) {
   return 1;
 }
 
-int l_quit(lua_State* L) {
+int l_quit(lua_State*) {
   SDL_Event e;
   e.type = SDL_QUIT;
   SDL_PushEvent(&e);
@@ -157,7 +157,7 @@ int l_quit(lua_State* L) {
  * Calls TheApp:errorHandler with the dispatch type and stacktrace of the
  * error.
  */
-int error_handler(lua_State* L) {
+int l_error_handler(lua_State* L) {
   lua_getglobal(L, "debug");
   lua_getfield(L, -1, "traceback");
   int traceArgs = 1;
@@ -194,7 +194,7 @@ int error_handler(lua_State* L) {
  */
 void push_app_dispatch(lua_State* L, std::string_view dispatch_event) {
   lua_pushlstring(L, dispatch_event.data(), dispatch_event.size());
-  luaT_pushcclosure(L, &error_handler, 1);
+  luaT_pushcclosure(L, &l_error_handler, 1);
   lua_getglobal(L, "TheApp");
   lua_getfield(L, -1, "dispatch");
   lua_pushvalue(L, -2);
@@ -263,7 +263,7 @@ constexpr std::string_view dispatch_callback("callback");
 constexpr std::string_view dispatch_window_resize("window_resize");
 constexpr std::string_view dispatch_frame("frame");
 
-int mainloop(lua_State* L) {
+void mainloop(lua_State* L) {
   SDL_TimerID timer =
       SDL_AddTimer(usertick_period_ms, timer_frame_callback, nullptr);
   SDL_Event e;
@@ -278,6 +278,7 @@ int mainloop(lua_State* L) {
 
   std::string_view last_dispatch;
   int wait_error = 0;
+
   while ((wait_error = SDL_WaitEvent(&e)) != 0) {
     bool do_frame = false;
     bool do_timer = false;
@@ -389,11 +390,14 @@ int mainloop(lua_State* L) {
           break;
         case SDL_USEREVENT_MUSIC_LOADED:
           last_dispatch = dispatch_callback;
-          if (luaT_cpcall(L, l_load_music_async_callback, e.user.data1)) {
+          lua_pushlstring(L, last_dispatch.data(), last_dispatch.size());
+          luaT_pushcclosure(L, &l_error_handler, 1);
+          lua_pushcfunction(L, &l_load_music_async_callback);
+          lua_pushlightuserdata(L, e.user.data1);
+          if (lua_pcall(L, 1, 0, -3) != LUA_OK) {
             SDL_RemoveTimer(timer);
-            lua_pushliteral(L, "callback");
-            return 2;
           }
+          lua_pop(L, 1); // Remove l_error_handler
           nargs = 0;
           break;
         case SDL_USEREVENT_TICK:
@@ -466,12 +470,6 @@ int mainloop(lua_State* L) {
 
 leave_loop:
   SDL_RemoveTimer(timer);
-  int n = lua_gettop(L);
-  if (lua_status(L) >= LUA_ERRRUN) {
-    n = 1;
-  }
-  lua_checkstack(L, n);
-  return n;
 }
 
 int luaopen_sdl(lua_State* L) {
