@@ -2689,8 +2689,8 @@ function World:isTileExclusivelyPassable(x, y, distance)
     else
       -- doors don't have a footprint but objects can't be built blocking them either
       for _, footprint in pairs(o:getWalkableTiles()) do
-        local litter_thob = 62
-        if not o.picked_up and o.object_type and o.object_type.thob ~= litter_thob and footprint[1] == x and footprint[2] == y then
+        -- 62 is a litter thob
+        if not o.picked_up and o.object_type and o.object_type.thob ~= 62 and footprint[1] == x and footprint[2] == y then
           return false
         end
       end

@@ -331,8 +331,8 @@ function Object:setTile(x, y)
             }
 
   local direction = self.direction
-  local trash_bin_thob = 50
-  if self.object_type.thob == trash_bin_thob and direction == "east" then
+  -- 50 is a trash bin thob
+  if self.object_type.thob == 50 and direction == "east" then
     direction = "west"
   end
 
@@ -956,8 +956,8 @@ function SideObject:getDrawingLayer()
     return DrawingLayers.WestSideObject
   else
     if self.direction == "east" then
-      local trash_bin_thob = 50
-      if self.object_type.thob == trash_bin_thob then
+      -- 50 is a trash bin thob
+      if self.object_type.thob == 50 then
         --[[ The bin has orientations north and east but they are displayed in
         the north and west part of the tile respectively. This could lead to a
         graphical glitch where a side object in the west part of the tile is
