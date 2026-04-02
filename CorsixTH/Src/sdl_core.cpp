@@ -160,7 +160,8 @@ int l_mainloop(lua_State* L) {
         case SDL_KEYUP:
           lua_pushliteral(dispatcher, "keyup");
           lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
-          nargs = 2;
+          l_push_modifiers_table(dispatcher, e.key.keysym.mod);
+          nargs = 3;
           break;
         case SDL_TEXTINPUT:
           lua_pushliteral(dispatcher, "textinput");
