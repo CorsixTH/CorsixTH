@@ -839,5 +839,6 @@ function Audio:destroy()
   self.has_bg_music = false
   self.not_loaded = not TheApp.config.audio
   self.speech_file_name = nil
+  self.sound_fx = nil
   SDL.audio.destroy()
 end
