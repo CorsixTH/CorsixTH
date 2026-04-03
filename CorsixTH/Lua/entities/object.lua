@@ -372,6 +372,7 @@ local opposite_flags = {
   travelEast = "travelWest",
   travelWest = "travelEast"
 }
+
 --! The function returns the direction opposite to the one passed as a parameter.
 --! For North, it returns South, and so on.
 --! param passable_flag (string) 'passable_flag' that we want to invert.
@@ -379,6 +380,7 @@ local opposite_flags = {
 function Object:getComplementaryPassableFlag(passable_flag)
   return opposite_flags[passable_flag]
 end
+
 function Object:setTile(x, y)
   local function coordinatesAreInFootprint(object_footprint, xpos, ypos)
     for _, xy in ipairs(object_footprint) do

@@ -400,9 +400,9 @@ room_information_dialogs = true
 --
 -- 1. Totally forbidden - requires every passable tile in the hospital
 -- to remain reachable from a hospital entrance. This avoids issues that
--- could arise from area blocking, but it also deprived of the opportunity
--- to build rooms in the same layouts which was possible to build in the
--- original TH. Before version 0.70 this was a default option in CorsixTH.
+-- could arise from area blocking, but it also prevents room layouts
+-- which are allowed in Theme Hospital. Before version 0.70 this was
+-- a default option in CorsixTH.
 --
 -- 2. Partially allowed - user is allowed to make dead ended, inaccessible
 -- spaces that are not accessible from the hospital entrance but only if
