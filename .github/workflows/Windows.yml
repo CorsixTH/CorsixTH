@@ -111,5 +111,5 @@ jobs:
         if: inputs.PRESET != 'win-dev'
         uses: actions/upload-artifact@v6
         with:
-          path: artifact
+          path: artifact/CorsixTH
           name: ${{env.NAME}}
