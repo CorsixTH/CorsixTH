@@ -79,24 +79,500 @@ $(function() {
   <div class="headertitle"><div class="title">sdl_core.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;SDL.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="sdl__core_8h_source.html">sdl_core.h</a>&quot;</code><br />
+<code>#include &lt;SDL.h&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
 <code>#include &lt;cstdio&gt;</code><br />
 <code>#include &lt;cstring&gt;</code><br />
+<code>#include &lt;string_view&gt;</code><br />
 <code>#include &quot;<a class="el" href="lua_8hpp_source.html">lua.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="lua__sdl_8h_source.html">lua_sdl.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="th__lua_8h_source.html">th_lua.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2fffd8f19c4287bc388e352ae9382dd3" id="r_a2fffd8f19c4287bc388e352ae9382dd3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a2fffd8f19c4287bc388e352ae9382dd3">luaopen_sdl_audio</a> (<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">lua_State</a> *L)</td></tr>
-<tr class="separator:a2fffd8f19c4287bc388e352ae9382dd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4413f3775799643f4cb6dcef3bef93e4" id="r_a4413f3775799643f4cb6dcef3bef93e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a4413f3775799643f4cb6dcef3bef93e4">luaopen_sdl_wm</a> (<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">lua_State</a> *L)</td></tr>
-<tr class="separator:a4413f3775799643f4cb6dcef3bef93e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad314baf2f1ba7563911ea939b5481e54" id="r_ad314baf2f1ba7563911ea939b5481e54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#ad314baf2f1ba7563911ea939b5481e54">dispatch_keydown</a> (&quot;keydown&quot;)</td></tr>
+<tr class="separator:ad314baf2f1ba7563911ea939b5481e54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abeaf61f231a135b6f22851c89c5c88ed" id="r_abeaf61f231a135b6f22851c89c5c88ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#abeaf61f231a135b6f22851c89c5c88ed">dispatch_keyup</a> (&quot;keyup&quot;)</td></tr>
+<tr class="separator:abeaf61f231a135b6f22851c89c5c88ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7aa077ded605ed2ec8a474b09645ff68" id="r_a7aa077ded605ed2ec8a474b09645ff68"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a7aa077ded605ed2ec8a474b09645ff68">dispatch_textinput</a> (&quot;textinput&quot;)</td></tr>
+<tr class="separator:a7aa077ded605ed2ec8a474b09645ff68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7605c23a73336777a643e43a00e2aa5" id="r_ae7605c23a73336777a643e43a00e2aa5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#ae7605c23a73336777a643e43a00e2aa5">dispatch_textediting</a> (&quot;textediting&quot;)</td></tr>
+<tr class="separator:ae7605c23a73336777a643e43a00e2aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c1ba0650cb38185c5ca75c53775ec62" id="r_a0c1ba0650cb38185c5ca75c53775ec62"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a0c1ba0650cb38185c5ca75c53775ec62">dispatch_buttondown</a> (&quot;buttondown&quot;)</td></tr>
+<tr class="separator:a0c1ba0650cb38185c5ca75c53775ec62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02d66a40f90587c9d448eb52fe308472" id="r_a02d66a40f90587c9d448eb52fe308472"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a02d66a40f90587c9d448eb52fe308472">dispatch_buttonup</a> (&quot;buttonup&quot;)</td></tr>
+<tr class="separator:a02d66a40f90587c9d448eb52fe308472"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a732b5e2b4de1c4e39bf07e4c405aeb9d" id="r_a732b5e2b4de1c4e39bf07e4c405aeb9d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a732b5e2b4de1c4e39bf07e4c405aeb9d">dispatch_mousewheel</a> (&quot;mousewheel&quot;)</td></tr>
+<tr class="separator:a732b5e2b4de1c4e39bf07e4c405aeb9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4dc8b4f20203a29e360fde02af27bfe" id="r_ac4dc8b4f20203a29e360fde02af27bfe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#ac4dc8b4f20203a29e360fde02af27bfe">dispatch_motion</a> (&quot;motion&quot;)</td></tr>
+<tr class="separator:ac4dc8b4f20203a29e360fde02af27bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae04a91206a60f9e167bff85dce4a1d82" id="r_ae04a91206a60f9e167bff85dce4a1d82"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#ae04a91206a60f9e167bff85dce4a1d82">dispatch_multigesture</a> (&quot;multigesture&quot;)</td></tr>
+<tr class="separator:ae04a91206a60f9e167bff85dce4a1d82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab00a9baba729bc6b07d00b7c2c3639e7" id="r_ab00a9baba729bc6b07d00b7c2c3639e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#ab00a9baba729bc6b07d00b7c2c3639e7">dispatch_active</a> (&quot;active&quot;)</td></tr>
+<tr class="separator:ab00a9baba729bc6b07d00b7c2c3639e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5ba98201634a7cd9e5c6e9589edc22f" id="r_ad5ba98201634a7cd9e5c6e9589edc22f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#ad5ba98201634a7cd9e5c6e9589edc22f">dispatch_music_over</a> (&quot;music_over&quot;)</td></tr>
+<tr class="separator:ad5ba98201634a7cd9e5c6e9589edc22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cc1a0d692a7eab3f8112e766f46fc16" id="r_a1cc1a0d692a7eab3f8112e766f46fc16"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a1cc1a0d692a7eab3f8112e766f46fc16">dispatch_movie_over</a> (&quot;movie_over&quot;)</td></tr>
+<tr class="separator:a1cc1a0d692a7eab3f8112e766f46fc16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fdd0fcb13ee71914a612a254c3a32ae" id="r_a1fdd0fcb13ee71914a612a254c3a32ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a1fdd0fcb13ee71914a612a254c3a32ae">dispatch_sound_over</a> (&quot;sound_over&quot;)</td></tr>
+<tr class="separator:a1fdd0fcb13ee71914a612a254c3a32ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0358534c90ffc0652e2cdf38022d6905" id="r_a0358534c90ffc0652e2cdf38022d6905"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a0358534c90ffc0652e2cdf38022d6905">dispatch_timer</a> (&quot;timer&quot;)</td></tr>
+<tr class="separator:a0358534c90ffc0652e2cdf38022d6905"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e48733c8a088372e5df7ab22f5a5c9f" id="r_a7e48733c8a088372e5df7ab22f5a5c9f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a7e48733c8a088372e5df7ab22f5a5c9f">dispatch_callback</a> (&quot;callback&quot;)</td></tr>
+<tr class="separator:a7e48733c8a088372e5df7ab22f5a5c9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9e89db56bc72c4576d8b581fa0ad646" id="r_ad9e89db56bc72c4576d8b581fa0ad646"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#ad9e89db56bc72c4576d8b581fa0ad646">dispatch_window_resize</a> (&quot;window_resize&quot;)</td></tr>
+<tr class="separator:ad9e89db56bc72c4576d8b581fa0ad646"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26f5fc12e41f8e2fd590bfaf5ce8ad68" id="r_a26f5fc12e41f8e2fd590bfaf5ce8ad68"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a26f5fc12e41f8e2fd590bfaf5ce8ad68">dispatch_frame</a> (&quot;frame&quot;)</td></tr>
+<tr class="separator:a26f5fc12e41f8e2fd590bfaf5ce8ad68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a669e100c8d1448417d121d40c711fff6" id="r_a669e100c8d1448417d121d40c711fff6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#a669e100c8d1448417d121d40c711fff6">mainloop</a> (<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">lua_State</a> *L)</td></tr>
+<tr class="separator:a669e100c8d1448417d121d40c711fff6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3e21cbeca8c1a3b181e91bc5c358931" id="r_ae3e21cbeca8c1a3b181e91bc5c358931"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sdl__core_8cpp.html#ae3e21cbeca8c1a3b181e91bc5c358931">luaopen_sdl</a> (<a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">lua_State</a> *L)</td></tr>
 <tr class="separator:ae3e21cbeca8c1a3b181e91bc5c358931"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ab00a9baba729bc6b07d00b7c2c3639e7" name="ab00a9baba729bc6b07d00b7c2c3639e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab00a9baba729bc6b07d00b7c2c3639e7">&#9670;&#160;</a></span>dispatch_active()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_active </td>
+          <td>(</td>
+          <td class="paramtype">&quot;active&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0c1ba0650cb38185c5ca75c53775ec62" name="a0c1ba0650cb38185c5ca75c53775ec62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c1ba0650cb38185c5ca75c53775ec62">&#9670;&#160;</a></span>dispatch_buttondown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_buttondown </td>
+          <td>(</td>
+          <td class="paramtype">&quot;buttondown&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a02d66a40f90587c9d448eb52fe308472" name="a02d66a40f90587c9d448eb52fe308472"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02d66a40f90587c9d448eb52fe308472">&#9670;&#160;</a></span>dispatch_buttonup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_buttonup </td>
+          <td>(</td>
+          <td class="paramtype">&quot;buttonup&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7e48733c8a088372e5df7ab22f5a5c9f" name="a7e48733c8a088372e5df7ab22f5a5c9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e48733c8a088372e5df7ab22f5a5c9f">&#9670;&#160;</a></span>dispatch_callback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_callback </td>
+          <td>(</td>
+          <td class="paramtype">&quot;callback&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a26f5fc12e41f8e2fd590bfaf5ce8ad68" name="a26f5fc12e41f8e2fd590bfaf5ce8ad68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26f5fc12e41f8e2fd590bfaf5ce8ad68">&#9670;&#160;</a></span>dispatch_frame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_frame </td>
+          <td>(</td>
+          <td class="paramtype">&quot;frame&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad314baf2f1ba7563911ea939b5481e54" name="ad314baf2f1ba7563911ea939b5481e54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad314baf2f1ba7563911ea939b5481e54">&#9670;&#160;</a></span>dispatch_keydown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_keydown </td>
+          <td>(</td>
+          <td class="paramtype">&quot;keydown&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abeaf61f231a135b6f22851c89c5c88ed" name="abeaf61f231a135b6f22851c89c5c88ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abeaf61f231a135b6f22851c89c5c88ed">&#9670;&#160;</a></span>dispatch_keyup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_keyup </td>
+          <td>(</td>
+          <td class="paramtype">&quot;keyup&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac4dc8b4f20203a29e360fde02af27bfe" name="ac4dc8b4f20203a29e360fde02af27bfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4dc8b4f20203a29e360fde02af27bfe">&#9670;&#160;</a></span>dispatch_motion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_motion </td>
+          <td>(</td>
+          <td class="paramtype">&quot;motion&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a732b5e2b4de1c4e39bf07e4c405aeb9d" name="a732b5e2b4de1c4e39bf07e4c405aeb9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a732b5e2b4de1c4e39bf07e4c405aeb9d">&#9670;&#160;</a></span>dispatch_mousewheel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_mousewheel </td>
+          <td>(</td>
+          <td class="paramtype">&quot;mousewheel&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1cc1a0d692a7eab3f8112e766f46fc16" name="a1cc1a0d692a7eab3f8112e766f46fc16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cc1a0d692a7eab3f8112e766f46fc16">&#9670;&#160;</a></span>dispatch_movie_over()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_movie_over </td>
+          <td>(</td>
+          <td class="paramtype">&quot;movie_over&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae04a91206a60f9e167bff85dce4a1d82" name="ae04a91206a60f9e167bff85dce4a1d82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae04a91206a60f9e167bff85dce4a1d82">&#9670;&#160;</a></span>dispatch_multigesture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_multigesture </td>
+          <td>(</td>
+          <td class="paramtype">&quot;multigesture&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad5ba98201634a7cd9e5c6e9589edc22f" name="ad5ba98201634a7cd9e5c6e9589edc22f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5ba98201634a7cd9e5c6e9589edc22f">&#9670;&#160;</a></span>dispatch_music_over()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_music_over </td>
+          <td>(</td>
+          <td class="paramtype">&quot;music_over&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1fdd0fcb13ee71914a612a254c3a32ae" name="a1fdd0fcb13ee71914a612a254c3a32ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fdd0fcb13ee71914a612a254c3a32ae">&#9670;&#160;</a></span>dispatch_sound_over()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_sound_over </td>
+          <td>(</td>
+          <td class="paramtype">&quot;sound_over&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7605c23a73336777a643e43a00e2aa5" name="ae7605c23a73336777a643e43a00e2aa5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7605c23a73336777a643e43a00e2aa5">&#9670;&#160;</a></span>dispatch_textediting()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_textediting </td>
+          <td>(</td>
+          <td class="paramtype">&quot;textediting&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7aa077ded605ed2ec8a474b09645ff68" name="a7aa077ded605ed2ec8a474b09645ff68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7aa077ded605ed2ec8a474b09645ff68">&#9670;&#160;</a></span>dispatch_textinput()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_textinput </td>
+          <td>(</td>
+          <td class="paramtype">&quot;textinput&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0358534c90ffc0652e2cdf38022d6905" name="a0358534c90ffc0652e2cdf38022d6905"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0358534c90ffc0652e2cdf38022d6905">&#9670;&#160;</a></span>dispatch_timer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_timer </td>
+          <td>(</td>
+          <td class="paramtype">&quot;timer&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad9e89db56bc72c4576d8b581fa0ad646" name="ad9e89db56bc72c4576d8b581fa0ad646"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9e89db56bc72c4576d8b581fa0ad646">&#9670;&#160;</a></span>dispatch_window_resize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">constexpr</a> <a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">std::string_view</a> dispatch_window_resize </td>
+          <td>(</td>
+          <td class="paramtype">&quot;window_resize&quot;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ae3e21cbeca8c1a3b181e91bc5c358931" name="ae3e21cbeca8c1a3b181e91bc5c358931"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae3e21cbeca8c1a3b181e91bc5c358931">&#9670;&#160;</a></span>luaopen_sdl()</h2>
 
@@ -115,32 +591,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2fffd8f19c4287bc388e352ae9382dd3" name="a2fffd8f19c4287bc388e352ae9382dd3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2fffd8f19c4287bc388e352ae9382dd3">&#9670;&#160;</a></span>luaopen_sdl_audio()</h2>
+<a id="a669e100c8d1448417d121d40c711fff6" name="a669e100c8d1448417d121d40c711fff6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a669e100c8d1448417d121d40c711fff6">&#9670;&#160;</a></span>mainloop()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">int</a> luaopen_sdl_audio </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">lua_State</a> *&#160;</td>
-          <td class="paramname"><em>L</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4413f3775799643f4cb6dcef3bef93e4" name="a4413f3775799643f4cb6dcef3bef93e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4413f3775799643f4cb6dcef3bef93e4">&#9670;&#160;</a></span>luaopen_sdl_wm()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">int</a> luaopen_sdl_wm </td>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">void</a> mainloop </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">lua_State</a> *&#160;</td>
           <td class="paramname"><em>L</em></td><td>)</td>
