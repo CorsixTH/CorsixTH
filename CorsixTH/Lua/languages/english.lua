@@ -515,6 +515,7 @@ tooltip.options_window = {
   fullscreen_button = "Click to toggle fullscreen mode",
   resolution = "The resolution the game should run in",
   select_resolution = "Select a new resolution",
+  resolution_unavailable = "Resolution unavailable at current UI Scale",
   scale_ui = "Scale the user interface. Only scale options that fit the display are shown, for more increase the resolution.",
   select_ui_scale = "Select a new user interface scale",
   ui_scale_unavailable = "User interface scaling not available, please select a higher resolution first.",
