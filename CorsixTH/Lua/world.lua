@@ -440,7 +440,7 @@ function World:spawnPatient(hospital)
     return
   end
 
-  if not hospital:hasStaffedDesk() then return nil end
+  if not hospital:hasReceptionDesk(true) then return nil end
 
   -- Construct disease, take a random guess first, as a quick clear-sky attempt.
   local disease = self.available_diseases[math.random(1, #self.available_diseases)]
@@ -462,7 +462,7 @@ function World:spawnPatient(hospital)
   local spawns = self.spawn_points
   -- Let the first patient to the player use the shortest path to a reception desk
   local spawn_point = hospital:isPlayerHospital() and not hospital:hadPatients() and
-      self:_findClosestSpawnToDesk(hospital:getStaffedDesks(), spawns) or
+      self:_findClosestSpawnToDesk(hospital:getReceptionDesks(true), spawns) or
       spawns[math.random(1, #spawns)]
 
   local patient = self:newEntity("Patient", 2, 1)
@@ -1004,7 +1004,7 @@ function World:onEndDay()
 
   --check if it's time for a VIP visit
   if self.game_date:isSameDay(self.next_vip_date) then
-    if #self.rooms > 0 and local_hospital:hasStaffedDesk() then
+    if #self.rooms > 0 and local_hospital:hasReceptionDesk(true) then
       local_hospital:createVip()
     else
       self.next_vip_date = self:_generateNextVipDate()

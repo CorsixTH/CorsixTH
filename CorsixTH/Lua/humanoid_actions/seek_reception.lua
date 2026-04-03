@@ -70,25 +70,23 @@ local function action_seek_reception_start(action, humanoid)
   assert(humanoid.hospital, "humanoid must be associated with a hospital to seek reception")
 
   -- Go through all receptions desks.
-  for _, desk in ipairs(humanoid.hospital:findReceptionDesks()) do
-    if desk.receptionist or desk.reserved_for then
-      -- Ok, so we found one with staff at it or on the way.
-      -- Is this one better than the last one?
-      -- A lower score is better.
-      -- First find out where the usage tile is.
-      local orientation = desk.object_type.orientations[desk.direction]
-      local x = desk.tile_x + orientation.use_position[1]
-      local y = desk.tile_y + orientation.use_position[2]
+  for _, desk in ipairs(humanoid.hospital:getReceptionDesks(true)) do
+    -- Ok, so we found one with staff at it or on the way.
+    -- Is this one better than the last one?
+    -- A lower score is better.
+    -- First find out where the usage tile is.
+    local orientation = desk.object_type.orientations[desk.direction]
+    local x = desk.tile_x + orientation.use_position[1]
+    local y = desk.tile_y + orientation.use_position[2]
 
-      local distance_from_desk = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
-      if distance_from_desk then
-        local this_score = distance_from_desk + desk:getUsageScore()
-        if not score or this_score < score then
-          -- It is better, or the first one!
-          score = this_score
-          best_desk = desk
-          best_distance_from_desk = distance_from_desk
-        end
+    local distance_from_desk = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
+    if distance_from_desk then
+      local this_score = distance_from_desk + desk:getUsageScore()
+      if not score or this_score < score then
+        -- It is better, or the first one!
+        score = this_score
+        best_desk = desk
+        best_distance_from_desk = distance_from_desk
       end
     end
   end

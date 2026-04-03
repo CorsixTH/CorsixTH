@@ -658,6 +658,9 @@ function Object:onClick(ui, button, data)
     end
 
     self.picked_up = true
+    if self.object_type.id == "reception_desk" then -- Rebuild cache of reception desks
+      self.hospital:buildReceptionDesksCache()
+    end
     self.world:destroyEntity(self)
     -- NB: the object has to be destroyed before updating/creating the window,
     -- or the blueprint will be wrong
