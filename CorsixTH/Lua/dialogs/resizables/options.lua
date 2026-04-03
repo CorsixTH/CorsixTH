@@ -534,18 +534,6 @@ function UIOptions:buttonSound()
   self.ui:addWindow(window)
 end
 
-function UIOptions:buttonBrowseForTHInstall()
-  local function callback(path)
-    local app = TheApp
-    app.config.theme_hospital_install = path
-    app:saveConfig()
-    debug.getregistry()._RESTART = true
-    app.running = false
-  end
-  local browser = UIDirectoryBrowser(self.ui, self.mode, _S.options_window.new_th_directory, "InstallDirTreeNode", callback)
-  self.ui:addWindow(browser)
-end
-
 function UIOptions:buttonScrollSpeed()
   local callback = function(scrollspeed_number)
     self.scrollspeed_panel : setLabel(tostring(scrollspeed_number))

@@ -164,8 +164,7 @@ function UIFolder:buttonBrowseForTHInstall()
     local app = TheApp
     app.config.theme_hospital_install = path
     app:saveConfig()
-    debug.getregistry()._RESTART = true
-    app.running = false
+    app:reset()
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.new_th_location, "InstallDirTreeNode", callback)
   self.ui:addWindow(browser)
