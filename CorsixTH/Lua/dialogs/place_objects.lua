@@ -818,19 +818,16 @@ function UIPlaceObjects:_isNonSideObjectPlacementValid(x, y, object, object_orie
     invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, room_id)
   end
 
-  if invalid_placement then
-    if self.ui.app.config.blocking_off_areas == 3 then
-      -- all-permissive placing approach ('blocking off areas enabled')
-      -- This could lead to crashes, so we'll record this in the log so that during investigation
-      -- we'll be able to know that safe placement was disabled.
-      TheApp.world:gameLog("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
-      return true
-    else
-      return false
-    end
-  else
+  if not invalid_placement then
+    return true
+  elseif self.ui.app.config.blocking_off_areas == 3 then
+    -- all-permissive placing approach ('blocking off areas enabled')
+    -- This could lead to crashes, so we'll record this in the log so that during investigation
+    -- we'll be able to know that safe placement was disabled.
+    TheApp.world:gameLog("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
     return true
   end
+  return false
 end
 
 --! Function for checking the valid placement of "SideObject".
@@ -917,19 +914,16 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
   flags_adjacent[opposite_passable_flag] = true
   map:setCellFlags(to_check_x, to_check_y, flags_adjacent)
 
-  if invalid_placement then
-    if self.ui.app.config.blocking_off_areas == 3 then
-      -- all-permissive placing approach ('blocking off areas enabled')
-      -- This could lead to crashes, so we'll record this in the log so that during investigation
-      -- we'll be able to know that safe placement was disabled.
-      TheApp.world:gameLog("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
-      return true
-    else
-      return false
-    end
-  else
+  if not invalid_placement then
+    return true
+  elseif self.ui.app.config.blocking_off_areas == 3 then
+    -- all-permissive placing approach ('blocking off areas enabled')
+    -- This could lead to crashes, so we'll record this in the log so that during investigation
+    -- we'll be able to know that safe placement was disabled.
+    TheApp.world:gameLog("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
     return true
   end
+  return false
 end
 
 local function NearestPointOnLine(lx1, ly1, lx2, ly2, px, py)
