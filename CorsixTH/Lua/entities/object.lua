@@ -377,7 +377,7 @@ local opposite_flags = {
 --! For North, it returns South, and so on.
 --! param passable_flag (string) 'passable_flag' that we want to invert.
 --! return (string) inverted 'passable_flag'.
-function Object:getComplementaryPassableFlag(passable_flag)
+function Object.getComplementaryPassableFlag(passable_flag)
   return opposite_flags[passable_flag]
 end
 
@@ -396,7 +396,7 @@ function Object:setTile(x, y)
     flags1[passable_flag] = value
     self.world.map.th:setCellFlags(xpos, ypos, flags1)
     local flags2 = {}
-    flags2[Object:getComplementaryPassableFlag(passable_flag)] = value
+    flags2[Object.getComplementaryPassableFlag(passable_flag)] = value
     self.world.map.th:setCellFlags(next_x, next_y, flags2)
   end
 

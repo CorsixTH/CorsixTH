@@ -714,10 +714,8 @@ param(config_values, 'room_information_dialogs') .. [=[
 -- This is a dangerous feature that can lead to game crashes. Use it only
 -- at your own risk and if you fully understand why you enabling it.
 --
--- Recommended option is '2. Partially allowed'.
---
 -- Set '1' for '1. Totally forbidden',
--- Set '2' for '2. Partially allowed',
+-- Set '2' for '2. Partially allowed' (Default),
 -- Set '3' for '3. Completely allowed'.
 --]=] .. '\n' ..
 param(config_values, 'blocking_off_areas') .. [=[

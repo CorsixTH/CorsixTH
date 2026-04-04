@@ -949,7 +949,7 @@ function UIEditRoom:enterDoorPhase()
   -- check if all adjacent tiles of the rooms are still connected
   if not self:checkReachability() then
     if self.ui.app.config.blocking_off_areas == 3 then
-      -- all-permissive placing approach ('blocking off areas enabled')
+      -- all-permissive placing approach
       -- This could lead to crashes, so we'll record this in the log so that during investigation
       -- we'll be able to know that safe placement was disabled.
       TheApp.world:gameLog("Blocking off areas is allowed with room " .. self.blueprint_rect.x .. ", " .. self.blueprint_rect.y .. ".")
