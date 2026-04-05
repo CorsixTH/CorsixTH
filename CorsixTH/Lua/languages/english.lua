@@ -228,6 +228,11 @@ menu_debug = {
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
 }
+menu_debug_overlay_blocking_off_areas = {
+  choice_1 = "  TOTALLY FORBIDDEN  ",
+  choice_2 = "  PARTIALLY ALLOWED  ",
+  choice_3 = "  COMPLETELY ALLOWED  ",
+}
 menu_debug_overlay = {
   none                        = "  NONE  ",
   flags                       = "  FLAGS  ",
