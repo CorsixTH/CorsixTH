@@ -20,11 +20,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "sdl_core.h"
+
 #include <SDL.h>
 
 #include <array>
 #include <cstdio>
 #include <cstring>
+#include <string_view>
 
 #include "lua.hpp"
 #include "lua_sdl.h"
@@ -107,6 +110,17 @@ class fps_ctrl {
   }
 };
 
+fps_ctrl fps;
+constexpr uint32_t infinite_loop_limit{100};
+uint32_t infinite_loop_counter{0};
+
+void l_infinite_loop_hook(lua_State* L, lua_Debug*) {
+  infinite_loop_counter++;
+  if (infinite_loop_counter >= infinite_loop_limit) {
+    luaL_error(L, "Suspected infinite loop");
+  }
+}
+
 void l_push_modifiers_table(lua_State* L, Uint16 mod) {
   lua_newtable(L);
   if ((mod & KMOD_SHIFT) != 0) {
@@ -131,17 +145,140 @@ int l_get_key_modifiers(lua_State* L) {
   return 1;
 }
 
-int l_mainloop(lua_State* L) {
-  luaL_checktype(L, 1, LUA_TTHREAD);
-  lua_State* dispatcher = lua_tothread(L, 1);
-  int resume_stack_size = 0;
+int l_quit(lua_State*) {
+  SDL_Event e;
+  e.type = SDL_QUIT;
+  SDL_PushEvent(&e);
+  return 0;
+}
 
-  fps_ctrl* fps_control = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
+/// Lua CFunction error handler for dispatch calls
+/**
+ * Calls TheApp:errorHandler with the dispatch type and stacktrace of the
+ * error.
+ */
+int l_error_handler(lua_State* L) {
+  lua_getglobal(L, "debug");
+  lua_getfield(L, -1, "traceback");
+  int traceArgs = 1;
+  if (lua_type(L, 1) == LUA_TSTRING) {
+    traceArgs = 2;
+    lua_pushvalue(L, 1);
+  }
+  lua_pushinteger(L, 2);  // skip this level of the traceback
+  int err = lua_pcall(L, traceArgs, 1, 0);
+  if (err != LUA_OK) {
+    return err;
+  }
+
+  lua_getglobal(L, "TheApp");
+  lua_getfield(L, -1, "errorHandler");
+  lua_pushvalue(L, -2);  // TheApp
+  lua_pushvalue(L, luaT_upvalueindex(1));
+  lua_pushvalue(L, -5);  // The traceback result
+
+  err = lua_pcall(L, 3, 0, 0);
+  lua_pushinteger(L, err);
+  return 1;
+}
+
+/// Add dispatch call to the stack
+/**
+ * The resulting lua stack becomes:
+ * L(-4) - error handler function
+ * L(-3) - dispatch function
+ * L(-2) - TheApp global (first argument)
+ * L(-1) - dispatch type string
+ *
+ * Further arguments can be added before calling with lua_pcall
+ */
+void push_app_dispatch(lua_State* L, std::string_view dispatch_event) {
+  lua_pushlstring(L, dispatch_event.data(), dispatch_event.size());
+  luaT_pushcclosure(L, &l_error_handler, 1);
+  lua_getglobal(L, "TheApp");
+  lua_getfield(L, -1, "dispatch");
+  lua_pushvalue(L, -2);
+  lua_pushlstring(L, dispatch_event.data(), dispatch_event.size());
+
+  lua_remove(L, -4);  // TheApp global
+}
+
+int l_track_fps(lua_State* L) {
+  fps.track_fps = lua_isnone(L, 1) ? true : (lua_toboolean(L, 1) != 0);
+  return 0;
+}
+
+int l_limit_fps(lua_State* L) {
+  fps.limit_fps = lua_isnone(L, 1) ? true : (lua_toboolean(L, 1) != 0);
+  return 0;
+}
+
+int l_get_fps(lua_State* L) {
+  if (fps.track_fps) {
+    lua_pushinteger(L, fps.frame_count);
+  } else {
+    lua_pushnil(L);
+  }
+  return 1;
+}
+
+int l_get_ticks(lua_State* L) {
+  lua_pushinteger(L, SDL_GetTicks());
+  return 1;
+}
+
+constexpr std::array<luaL_Reg, 8> sdllib{
+    {{"init", l_init},
+     {"quit", l_quit},
+     {"getTicks", l_get_ticks},
+     {"getKeyModifiers", l_get_key_modifiers},
+     {"getFPS", l_get_fps},
+     {"trackFPS", l_track_fps},
+     {"limitFPS", l_limit_fps},
+     {nullptr, nullptr}}};
+
+void load_extra(lua_State* L, const char* name, lua_CFunction fn) {
+  luaT_pushcfunction(L, fn);
+  lua_call(L, 0, 1);
+  lua_setfield(L, -2, name);
+}
+
+}  // namespace
+
+constexpr std::string_view dispatch_keydown("keydown");
+constexpr std::string_view dispatch_keyup("keyup");
+constexpr std::string_view dispatch_textinput("textinput");
+constexpr std::string_view dispatch_textediting("textediting");
+constexpr std::string_view dispatch_buttondown("buttondown");
+constexpr std::string_view dispatch_buttonup("buttonup");
+constexpr std::string_view dispatch_mousewheel("mousewheel");
+constexpr std::string_view dispatch_motion("motion");
+constexpr std::string_view dispatch_multigesture("multigesture");
+constexpr std::string_view dispatch_active("active");
+constexpr std::string_view dispatch_music_over("music_over");
+constexpr std::string_view dispatch_movie_over("movie_over");
+constexpr std::string_view dispatch_sound_over("sound_over");
+constexpr std::string_view dispatch_timer("timer");
+constexpr std::string_view dispatch_callback("callback");
+constexpr std::string_view dispatch_window_resize("window_resize");
+constexpr std::string_view dispatch_frame("frame");
+
+void mainloop(lua_State* L) {
   SDL_TimerID timer =
       SDL_AddTimer(usertick_period_ms, timer_frame_callback, nullptr);
   SDL_Event e;
 
+  lua_Hook hookFn = lua_gethook(L);
+  if (!hookFn) {
+    lua_sethook(L, l_infinite_loop_hook, LUA_MASKCOUNT, 1e7);
+  } else {
+    std::printf(
+        "Warning: Infinite loop detection disabled due to existing Lua hook\n");
+  }
+
+  std::string_view last_dispatch;
   int wait_error = 0;
+
   while ((wait_error = SDL_WaitEvent(&e)) != 0) {
     bool do_frame = false;
     bool do_timer = false;
@@ -151,82 +288,94 @@ int l_mainloop(lua_State* L) {
         case SDL_QUIT:
           goto leave_loop;
         case SDL_KEYDOWN:
-          lua_pushliteral(dispatcher, "keydown");
-          lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
-          l_push_modifiers_table(dispatcher, e.key.keysym.mod);
-          lua_pushboolean(dispatcher, e.key.repeat != 0);
+          last_dispatch = dispatch_keydown;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushstring(L, SDL_GetKeyName(e.key.keysym.sym));
+          l_push_modifiers_table(L, e.key.keysym.mod);
+          lua_pushboolean(L, e.key.repeat != 0);
           nargs = 4;
           break;
         case SDL_KEYUP:
-          lua_pushliteral(dispatcher, "keyup");
-          lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
+          last_dispatch = dispatch_keyup;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushstring(L, SDL_GetKeyName(e.key.keysym.sym));
           nargs = 2;
           break;
         case SDL_TEXTINPUT:
-          lua_pushliteral(dispatcher, "textinput");
-          lua_pushstring(dispatcher, e.text.text);
+          last_dispatch = dispatch_textinput;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushstring(L, e.text.text);
           nargs = 2;
           break;
         case SDL_TEXTEDITING:
-          lua_pushliteral(dispatcher, "textediting");
-          lua_pushstring(dispatcher, e.edit.text);
-          lua_pushinteger(dispatcher, e.edit.start);
-          lua_pushinteger(dispatcher, e.edit.length);
+          last_dispatch = dispatch_textediting;
+          push_app_dispatch(L, dispatch_textediting);
+          lua_pushstring(L, e.edit.text);
+          lua_pushinteger(L, e.edit.start);
+          lua_pushinteger(L, e.edit.length);
           nargs = 4;
           break;
         case SDL_MOUSEBUTTONDOWN:
-          lua_pushliteral(dispatcher, "buttondown");
-          lua_pushinteger(dispatcher, e.button.button);
-          lua_pushinteger(dispatcher, e.button.x);
-          lua_pushinteger(dispatcher, e.button.y);
+          last_dispatch = dispatch_buttondown;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushinteger(L, e.button.button);
+          lua_pushinteger(L, e.button.x);
+          lua_pushinteger(L, e.button.y);
           nargs = 4;
           break;
         case SDL_MOUSEBUTTONUP:
-          lua_pushliteral(dispatcher, "buttonup");
-          lua_pushinteger(dispatcher, e.button.button);
-          lua_pushinteger(dispatcher, e.button.x);
-          lua_pushinteger(dispatcher, e.button.y);
+          last_dispatch = dispatch_buttonup;
+          push_app_dispatch(L, dispatch_buttonup);
+          lua_pushinteger(L, e.button.button);
+          lua_pushinteger(L, e.button.x);
+          lua_pushinteger(L, e.button.y);
           nargs = 4;
           break;
         case SDL_MOUSEWHEEL:
-          lua_pushliteral(dispatcher, "mousewheel");
-          lua_pushinteger(dispatcher, e.wheel.x);
-          lua_pushinteger(dispatcher, e.wheel.y);
+          last_dispatch = dispatch_mousewheel;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushinteger(L, e.wheel.x);
+          lua_pushinteger(L, e.wheel.y);
           nargs = 3;
           break;
         case SDL_MOUSEMOTION:
-          lua_pushliteral(dispatcher, "motion");
-          lua_pushinteger(dispatcher, e.motion.x);
-          lua_pushinteger(dispatcher, e.motion.y);
-          lua_pushinteger(dispatcher, e.motion.xrel);
-          lua_pushinteger(dispatcher, e.motion.yrel);
+          last_dispatch = dispatch_motion;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushinteger(L, e.motion.x);
+          lua_pushinteger(L, e.motion.y);
+          lua_pushinteger(L, e.motion.xrel);
+          lua_pushinteger(L, e.motion.yrel);
           nargs = 5;
           break;
         case SDL_MULTIGESTURE:
-          lua_pushliteral(dispatcher, "multigesture");
-          lua_pushinteger(dispatcher, e.mgesture.numFingers);
-          lua_pushnumber(dispatcher, e.mgesture.dTheta);
-          lua_pushnumber(dispatcher, e.mgesture.dDist);
-          lua_pushnumber(dispatcher, e.mgesture.x);
-          lua_pushnumber(dispatcher, e.mgesture.y);
+          last_dispatch = dispatch_multigesture;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushinteger(L, e.mgesture.numFingers);
+          lua_pushnumber(L, e.mgesture.dTheta);
+          lua_pushnumber(L, e.mgesture.dDist);
+          lua_pushnumber(L, e.mgesture.x);
+          lua_pushnumber(L, e.mgesture.y);
           nargs = 6;
           break;
         case SDL_WINDOWEVENT:
           switch (e.window.event) {
             case SDL_WINDOWEVENT_FOCUS_GAINED:
-              lua_pushliteral(dispatcher, "active");
-              lua_pushinteger(dispatcher, 1);
+              last_dispatch = dispatch_active;
+              push_app_dispatch(L, last_dispatch);
+              lua_pushinteger(L, 1);
               nargs = 2;
               break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
-              lua_pushliteral(dispatcher, "active");
-              lua_pushinteger(dispatcher, 0);
+              last_dispatch = dispatch_active;
+              push_app_dispatch(L, last_dispatch);
+              lua_pushinteger(L, 0);
               nargs = 2;
               break;
             case SDL_WINDOWEVENT_SIZE_CHANGED:
-              lua_pushliteral(dispatcher, "window_resize");
-              lua_pushinteger(dispatcher, e.window.data1);
-              lua_pushinteger(dispatcher, e.window.data2);
+              last_dispatch = dispatch_window_resize;
+              push_app_dispatch(L, last_dispatch);
+              lua_pushinteger(L, e.window.data1);
+              lua_pushinteger(L, e.window.data2);
               nargs = 3;
               break;
             default:
@@ -235,16 +384,20 @@ int l_mainloop(lua_State* L) {
           }
           break;
         case SDL_USEREVENT_MUSIC_OVER:
-          lua_pushliteral(dispatcher, "music_over");
+          last_dispatch = dispatch_music_over;
+          push_app_dispatch(L, last_dispatch);
           nargs = 1;
           break;
         case SDL_USEREVENT_MUSIC_LOADED:
-          if (luaT_cpcall(L, (lua_CFunction)l_load_music_async_callback,
-                          e.user.data1)) {
+          last_dispatch = dispatch_callback;
+          lua_pushlstring(L, last_dispatch.data(), last_dispatch.size());
+          luaT_pushcclosure(L, &l_error_handler, 1);
+          lua_pushcfunction(L, &l_load_music_async_callback);
+          lua_pushlightuserdata(L, e.user.data1);
+          if (lua_pcall(L, 1, 0, -3) != LUA_OK) {
             SDL_RemoveTimer(timer);
-            lua_pushliteral(L, "callback");
-            return 2;
           }
+          lua_pop(L, 1);  // Remove l_error_handler
           nargs = 0;
           break;
         case SDL_USEREVENT_TICK:
@@ -252,12 +405,14 @@ int l_mainloop(lua_State* L) {
           nargs = 0;
           break;
         case SDL_USEREVENT_MOVIE_OVER:
-          lua_pushliteral(dispatcher, "movie_over");
+          last_dispatch = dispatch_movie_over;
+          push_app_dispatch(L, last_dispatch);
           nargs = 1;
           break;
         case SDL_USEREVENT_SOUND_OVER:
-          lua_pushliteral(dispatcher, "sound_over");
-          lua_pushinteger(dispatcher, *(static_cast<int*>(e.user.data1)));
+          last_dispatch = dispatch_sound_over;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushinteger(L, *(static_cast<int*>(e.user.data1)));
           nargs = 2;
           break;
         default:
@@ -265,37 +420,49 @@ int l_mainloop(lua_State* L) {
           break;
       }
       if (nargs != 0) {
-        if (luaT_resume(dispatcher, L, nargs, &resume_stack_size) !=
-            LUA_YIELD) {
-          goto leave_loop;
+        int res = lua_pcall(L, nargs + 1, 1, -3 - nargs);
+        if (res != LUA_OK) {
+          std::fprintf(stderr, "Error in %.*s: %s\n",
+                       static_cast<int>(last_dispatch.size()),
+                       last_dispatch.data(), lua_tostring(L, -1));
         }
-        do_frame = do_frame || (lua_toboolean(dispatcher, 1) != 0);
-        lua_pop(dispatcher, resume_stack_size);
+        do_frame = do_frame || (lua_toboolean(L, -1) != 0);
+        lua_pop(L, 2);
       }
     } while (SDL_PollEvent(&e) != 0);
     if (do_timer) {
-      lua_pushliteral(dispatcher, "timer");
-      if (luaT_resume(dispatcher, L, 1, &resume_stack_size) != LUA_YIELD) {
-        break;
+      last_dispatch = dispatch_timer;
+      push_app_dispatch(L, last_dispatch);
+      int res = lua_pcall(L, 2, 1, -4);
+      if (res != LUA_OK) {
+        std::fprintf(stderr, "Error in timer callback: %s\n",
+                     lua_tostring(L, -1));
       }
-      do_frame = do_frame || (lua_toboolean(dispatcher, 1) != 0);
-      lua_pop(dispatcher, resume_stack_size);
+      do_frame = do_frame || (lua_toboolean(L, -1) != 0);
+      lua_pop(L, 2);
     }
-    if (do_frame || !fps_control->limit_fps) {
+    if (do_frame || !fps.limit_fps) {
+      last_dispatch = dispatch_frame;
       do {
-        if (fps_control->track_fps) {
-          fps_control->count_frame();
+        if (fps.track_fps) {
+          fps.count_frame();
         }
-        lua_pushliteral(dispatcher, "frame");
-        if (luaT_resume(dispatcher, L, 1, &resume_stack_size) != LUA_YIELD) {
-          goto leave_loop;
+        push_app_dispatch(L, last_dispatch);
+        int res = lua_pcall(L, 2, 1, -4);
+        if (res != LUA_OK) {
+          std::fprintf(stderr, "Error in frame callback: %s\n",
+                       lua_tostring(L, -1));
+        } else {
+          do_frame = do_frame || (lua_toboolean(L, -1) != 0);
+          lua_pop(L, 2);
         }
-        lua_pop(dispatcher, resume_stack_size);
-      } while (fps_control->limit_fps == false && SDL_PollEvent(nullptr) == 0);
+        infinite_loop_counter = 0;
+      } while (fps.limit_fps == false && SDL_PollEvent(nullptr) == 0);
     }
 
     // No events pending - a good time to do a bit of garbage collection
     lua_gc(L, LUA_GCSTEP, 2);
+    infinite_loop_counter = 0;
   }
 
   if (wait_error != 0) {
@@ -304,76 +471,11 @@ int l_mainloop(lua_State* L) {
 
 leave_loop:
   SDL_RemoveTimer(timer);
-  int n = lua_gettop(dispatcher);
-  if (lua_status(dispatcher) >= LUA_ERRRUN) {
-    n = 1;
-  }
-  lua_checkstack(L, n);
-  lua_xmove(dispatcher, L, n);
-  return n;
 }
-
-int l_track_fps(lua_State* L) {
-  fps_ctrl* ctrl = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
-  ctrl->track_fps = lua_isnone(L, 1) ? true : (lua_toboolean(L, 1) != 0);
-  return 0;
-}
-
-int l_limit_fps(lua_State* L) {
-  fps_ctrl* ctrl = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
-  ctrl->limit_fps = lua_isnone(L, 1) ? true : (lua_toboolean(L, 1) != 0);
-  return 0;
-}
-
-int l_get_fps(lua_State* L) {
-  fps_ctrl* ctrl = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
-  if (ctrl->track_fps) {
-    lua_pushinteger(L, ctrl->frame_count);
-  } else {
-    lua_pushnil(L);
-  }
-  return 1;
-}
-
-int l_get_ticks(lua_State* L) {
-  lua_pushinteger(L, (lua_Integer)SDL_GetTicks());
-  return 1;
-}
-
-constexpr std::array<luaL_Reg, 4> sdllib{
-    {{"init", l_init},
-     {"getTicks", l_get_ticks},
-     {"getKeyModifiers", l_get_key_modifiers},
-     {nullptr, nullptr}}};
-
-constexpr std::array<luaL_Reg, 5> sdllib_with_upvalue{
-    {{"mainloop", l_mainloop},
-     {"getFPS", l_get_fps},
-     {"trackFPS", l_track_fps},
-     {"limitFPS", l_limit_fps},
-     {nullptr, nullptr}}};
-
-inline void load_extra(lua_State* L, const char* name, lua_CFunction fn) {
-  luaT_pushcfunction(L, fn);
-  lua_call(L, 0, 1);
-  lua_setfield(L, -2, name);
-}
-
-}  // namespace
-
-int luaopen_sdl_audio(lua_State* L);
-int luaopen_sdl_wm(lua_State* L);
 
 int luaopen_sdl(lua_State* L) {
-  fps_ctrl* ctrl = (fps_ctrl*)lua_newuserdata(L, sizeof(fps_ctrl));
-  ctrl->init();
+  fps.init();
   luaT_register(L, "sdl", sdllib);
-  for (auto reg = sdllib_with_upvalue.begin(); reg->name; ++reg) {
-    lua_pushvalue(L, -2);
-    luaT_pushcclosure(L, reg->func, 1);
-    lua_setfield(L, -2, reg->name);
-  }
-
   load_extra(L, "audio", luaopen_sdl_audio);
   load_extra(L, "wm", luaopen_sdl_wm);
 

@@ -32,6 +32,7 @@ SOFTWARE.
 
 #include "../Src/bootstrap.h"
 #include "../Src/lua.hpp"
+#include "../Src/sdl_core.h"
 #include "../Src/th_lua.h"
 #ifdef WITH_UPDATE_CHECK
 #include <curl/curl.h>
@@ -54,10 +55,10 @@ struct types_equal<T1, T1> {
 
 //! Program entry point
 /*!
-    Prepares a Lua state for, and catches errors from, lua_main(). By
+    Prepares a Lua state for, and catches errors from, lua_init(). By
     executing in Lua mode as soon as possible, errors can be nicely caught
     sooner, hence this function does as little as possible and leaves the rest
-    for lua_main().
+    for lua_init().
 */
 int main(int argc, char** argv) {
   struct compile_time_lua_check {
@@ -87,7 +88,7 @@ int main(int argc, char** argv) {
     luaL_openlibs(L.get());
     lua_settop(L.get(), 0);
     lua_pushcfunction(L.get(), lua_stacktrace);
-    lua_pushcfunction(L.get(), lua_main);
+    lua_pushcfunction(L.get(), lua_init);
 
     // Move command line parameters onto the Lua stack
     lua_checkstack(L.get(), argc);
@@ -110,6 +111,7 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "%s\n", lua_tostring(L.get(), -1));
       }
     }
+    mainloop(L.get());
 
     lua_getfield(L.get(), LUA_REGISTRYINDEX, "_RESTART");
     bRun = lua_toboolean(L.get(), -1) != 0;

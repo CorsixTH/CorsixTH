@@ -224,6 +224,17 @@ Section "MainSection" SEC01
     File /nonfatal /r x86\*.*
   ${EndIf}
 
+  ; Remove old shortcuts (old installs wrote to APPDATA instead of ProgramData)
+  ; Non-existent files are ignored
+  SetShellVarContext all
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
+
+  RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
+  SetShellVarContext current
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
+
+  RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
+  
   ; Time to make the configuration file and Saves folder at the correct location
   ${If} $CONFIGAPPDATA == ${BST_CHECKED}
     SetOutPath "$APPDATA\CorsixTH"
@@ -292,10 +303,16 @@ SectionEnd
 
 Section -AdditionalIcons
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
+  ; Make app shortcuts available for everyone
+  SetShellVarContext all
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\CorsixTH.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\CorsixTH AppData Folder.lnk" "$APPDATA\CorsixTH"
+  ; Only make AppData shortcut if user told us to use it for saves
+  ${If} $CONFIGAPPDATA == ${BST_CHECKED}
+    ; Use environment variable or it points to ProgramData
+    CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\CorsixTH AppData Folder.lnk" "%APPDATA%\CorsixTH"
+  ${EndIf}
   !insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
 
@@ -340,9 +357,12 @@ Section Uninstall
 
   Delete "$INSTDIR\*.*"
 
+  ; Our shortcuts are in the all user scope, change the context to remove them.
+  SetShellVarContext all
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
 
   RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
+  SetShellVarContext current
 
   ; Maybe the user wants to keep saved games?
   MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "$(remove_saves)" IDYES afterSaves

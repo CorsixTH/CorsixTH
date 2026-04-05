@@ -1783,6 +1783,9 @@ function World:newObject(id, x, y, flags, name)
   return entity
 end
 
+-- Checks whether object can be spawned at some coordinates.
+-- For example, when searching for a suitable placement for "gates_to_hell".
+-- 'NonSideObject' is a object that do occupy the tile entirely, not only one side of it.
 function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_rooms_id, player_id)
   local object = self.object_types[objects_id]
   local objects_footprint = object.orientations[orientation].footprint
@@ -1880,14 +1883,18 @@ function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, require
   end
 end
 
----
--- Check that pathfinding still works, i.e. that placing the object
--- wouldn't disconnect one part of the hospital from another. To do
--- this, we provisionally mark the footprint as unpassable (as it will
--- become when the object is placed), and then check that the cells
--- surrounding the footprint have not had their connectedness changed.
----
-function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objects_orientation, spawn_rooms_id)
+--! Check that pathfinding still works, i.e. that placing the object
+--! wouldn't disconnect one part of the hospital from another. To do
+--! this, we provisionally mark the footprint as unpassable (as it will
+--! become when the object is placed), and then check that the cells
+--! surrounding the footprint have not had their connectedness changed.
+--!param x (integer) target tile x coordinate.
+--!param y (integer) target tile y coordinate.
+--!param object (object) target object for placing.
+--!param objects_orientation (table) object orientations description with footprints.
+--!param room_id (integer) target room for placing the object.
+--!return (bool) will this placement break path finding.
+function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objects_orientation, room_id)
   local objects_footprint = object.orientations[objects_orientation].footprint
   local map = self.map.th
 
@@ -1906,7 +1913,7 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
     return result
   end
 
-  local all_good = true
+  local pathfinding_success = true
 
   --1. Find out which footprint tiles are passable now before this function makes some unpassable
   --during its test:
@@ -1922,7 +1929,7 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
     local xpos = x + tile[1]
     local ypos = y + tile[2]
     local flags = {}
-    if map:getCellFlags(xpos, ypos, flags).roomId == spawn_rooms_id and flags.passable then
+    if map:getCellFlags(xpos, ypos, flags).roomId == room_id and flags.passable then
       if prev_x then
         if not self.pathfinder:findDistance(xpos, ypos, prev_x, prev_y) then
           -- There is no route between the two map nodes. In most cases,
@@ -1934,7 +1941,7 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
           -- connected before.
           if not isIsolated(xpos, ypos) then
             if not isIsolated(prev_x, prev_y) then
-              all_good = false
+              pathfinding_success = false
               break
             end
           else
@@ -1953,7 +1960,164 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
     map:setCellFlags(x + tile[1], y + tile[2], {passable = tiles_passable_flags[tiles_index]})
   end
 
-  return not all_good
+  return not pathfinding_success
+end
+
+--! Check that pathfinding between object and room door still works,
+--! i.e. that placing the object wouldn't disconnect it from the world.
+--! For that it mark the footprint as unpassable (as it will
+--! become when the object is placed), and then check that the
+--! "use_position" cells have path to the room door.
+--!param object_x (integer) target tile x coordinate.
+--!param object_y (integer) target tile y coordinate.
+--!param room (object) target room for placing the object.
+--!param object_layout (table) object orientation description with footprint.
+--!return (bool) will this placement break path finding.
+function World:wouldNonSideObjectsNotHaveAccessToRoomDoor(object_x, object_y, room, object_layout)
+  if not room.door or not room.door.tile_x or not room.door.tile_y then return true end
+
+  local door_x, door_y = room:getEntranceXY(true)
+  local object_footprint = object_layout.footprint
+  local map = self.map.th
+
+  -- To switch the tiles passability
+  local function setFootprintTilesPassable(passable)
+    for _, tile in ipairs(object_footprint) do
+      if not tile.only_passable then
+        map:setCellFlags(object_x + tile[1], object_y + tile[2], {passable = passable})
+      end
+    end
+  end
+
+  local function _isIsolated(tile_x, tile_y, poi_x, poi_y)
+    -- Make footprint tiles unpassable except only_passable ones
+    setFootprintTilesPassable(false)
+    -- And check is there is a valid path
+    local getPathDistance = self:getPathDistance(tile_x, tile_y, poi_x, poi_y)
+    setFootprintTilesPassable(true)
+
+    -- Let's also check that there is a path even without the footprint apply.
+    -- This will help to avoid cases where the path starts on an inaccessible tile.
+    -- For some reason, "getPathDistance" successfully constructs a path from inaccessible tiles.
+    -- So filtering such cases there.
+    getPathDistance = getPathDistance and self:getPathDistance(tile_x, tile_y, poi_x, poi_y)
+    return not getPathDistance
+  end
+
+  -- 1. Let's simulate it as if we've already placed the object and make some tiles unpassable.
+  -- Find out which footprint tiles are passable now before this function makes some unpassable
+  -- during its test:
+  local tiles_passable_flags = {}
+  for _, tile in ipairs(object_footprint) do
+    table.insert(tiles_passable_flags, map:getCellFlags(object_x + tile[1], object_y + tile[2], {}).passable)
+  end
+
+  -- 2. Find out which use position tiles would become isolated:
+  local pathfinding_success = true
+  local usage_tiles = {}
+  local object_use_positions_names = Object:usePositionNames()
+  for _, usage_position_type in ipairs(object_use_positions_names) do
+    local more_usage_tiles = Object:getXYforUsePosition(object_x, object_y, object_layout, usage_position_type)
+    usage_tiles = table_merge(usage_tiles, more_usage_tiles)
+  end
+
+  for _, usage_tile in ipairs(usage_tiles) do
+    pathfinding_success = pathfinding_success and not _isIsolated(usage_tile[1], usage_tile[2], door_x, door_y)
+    if not pathfinding_success then break end
+  end
+
+  -- 3. For each footprint tile passable flag set to false by step 2 undo this change:
+  for tiles_index, tile in ipairs(object_footprint) do
+    map:setCellFlags(object_x + tile[1], object_y + tile[2], {passable = tiles_passable_flags[tiles_index]})
+  end
+
+  return not pathfinding_success
+end
+
+--! Check that pathfinding between already placed in the room objects
+--! and room door still works. i.e. that placing the target object
+--! wouldn't disconnect the existing objects from the world.
+--! For 'NonSideObject' it mark the footprint as unpassable
+--! (as it will become when the object is placed).
+--! For 'SideObject' this function expects that mark the footprint
+--! as unpassable will be executed outside of this function.
+--! And then this function check that the "use_position" cells
+--! of existing objects have path to the room door.
+--!param object_x (integer) target tile x coordinate.
+--!param object_y (integer) target tile y coordinate.
+--!param room (object) target room for placing the object.
+--!param object_layout (table) object orientation description with footprint.
+--!param is_side_object (bool) is that object is side object.
+--!return (bool) will this placement break path finding.
+function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y, room, object_layout, is_side_object)
+  if not room.door or not room.door.tile_x or not room.door.tile_y then return true end
+
+  local object_footprint
+  local door_x, door_y = room:getEntranceXY(true)
+  local map = self.map.th
+  if not is_side_object then
+    object_footprint = object_layout.footprint
+  end
+
+  -- To switch the tiles passability
+  local function setFootprintTilesPassable(passable) -- not used for SideObjects
+    for _, tile in ipairs(object_footprint) do
+      if not tile.only_passable then
+        map:setCellFlags(object_x + tile[1], object_y + tile[2], {passable = passable})
+      end
+    end
+  end
+
+  local function _isIsolated(tile_x, tile_y, poi_x, poi_y)
+    local getPathDistance = self:getPathDistance(tile_x, tile_y, poi_x, poi_y)
+    return not getPathDistance
+  end
+
+  --1. Find out which footprint tiles are passable now before this function makes some unpassable
+  --during its test:
+  local tiles_passable_flags = {}
+  if not is_side_object then
+    for _, tile in ipairs(object_footprint) do
+      table.insert(tiles_passable_flags, map:getCellFlags(object_x + tile[1], object_y + tile[2], {}).passable)
+    end
+  end
+
+  --2. Make footprint tiles unpassable except only_passable ones
+  if not is_side_object then
+    setFootprintTilesPassable(false)
+  end
+
+  --3. Find out which use position tiles would become isolated:
+  local pathfinding_success = true
+  for room_object, _ in pairs(room.objects) do
+    -- check that for each already placed object there is a valid path to the door
+    local object_usage_tiles = room_object:getAllUsageTiles()
+    for _, usage_tile in pairs(object_usage_tiles) do
+      local use_x, use_y = usage_tile[1], usage_tile[2]
+      -- 'SideObject' somehow has 'use_position', even though they don't have it in the footprint.
+      -- We don't need to check that 'use_position' for 'SideObjects',
+      -- because these 'use_position' are not actually used in the game, so skip them.
+      if (room_object.object_type.class ~= "SideObject") and use_x and use_y then
+        -- check that the placing object itself does not occupy 'use_position'
+        local tile_overlap = (object_x == use_x) and (object_y == use_y)
+        pathfinding_success = pathfinding_success and not tile_overlap
+        -- also check that the placing object does not break the path from 'use_position' to the room door.
+        pathfinding_success = pathfinding_success and not _isIsolated(use_x, use_y, door_x, door_y)
+      end
+      if not pathfinding_success then break end
+    end
+    if not pathfinding_success then break end
+  end
+
+  -- 4. For each footprint tile passable flag set to false by step 2 undo this change:
+  if not is_side_object then
+    setFootprintTilesPassable(true)
+    for tiles_index, tile in ipairs(object_footprint) do
+      map:setCellFlags(object_x + tile[1], object_y + tile[2], {passable = tiles_passable_flags[tiles_index]})
+    end
+  end
+
+  return not pathfinding_success
 end
 
 --! Notifies the world that an object has been placed, notifying

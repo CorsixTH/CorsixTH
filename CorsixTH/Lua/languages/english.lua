@@ -228,6 +228,11 @@ menu_debug = {
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
 }
+menu_debug_overlay_blocking_off_areas = {
+  choice_1 = "  TOTALLY FORBIDDEN  ",
+  choice_2 = "  PARTIALLY ALLOWED  ",
+  choice_3 = "  COMPLETELY ALLOWED  ",
+}
 menu_debug_overlay = {
   none                        = "  NONE  ",
   flags                       = "  FLAGS  ",
@@ -515,6 +520,7 @@ tooltip.options_window = {
   fullscreen_button = "Click to toggle fullscreen mode",
   resolution = "The resolution the game should run in",
   select_resolution = "Select a new resolution",
+  resolution_unavailable = "Resolution unavailable at current UI Scale",
   scale_ui = "Scale the user interface. Only scale options that fit the display are shown, for more increase the resolution.",
   select_ui_scale = "Select a new user interface scale",
   ui_scale_unavailable = "User interface scaling not available, please select a higher resolution first.",
@@ -647,7 +653,8 @@ tooltip.folders_window = {
   no_font_specified = "No font location specified yet!",
   not_specified = "No folder location specified yet!",
   default = "Default location",
-  reset_to_default = "Reset the directory to its default location",
+  reset_to_default = "Reset the directory to its default location ( %1% )",
+  clear_directory = "Clear current directory selection",
   back  = "Close this menu and go back to the Settings Menu",
 }
 

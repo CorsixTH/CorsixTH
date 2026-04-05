@@ -43,10 +43,8 @@ function App:App()
   self.config = {}
   self.hotkeys = {}
   self.runtime_config = {}
-  self.running = false
   self.key_modifiers = {}
   self.gfx = {}
-  self.last_dispatch_type = ""
   self.eventHandlers = {
     frame = self.drawFrame,
     timer = self.onTick,
@@ -173,6 +171,11 @@ function App:init()
   SDL.wm.setIconWin32()
 
   self.caption = "CorsixTH"
+  if self.config.track_fps then
+    SDL.trackFPS(true)
+    SDL.limitFPS(false)
+  end
+
 
   -- Create gamelog file.
   self:initGamelogFile()
@@ -360,8 +363,7 @@ function App:init()
     local function callback(path)
       TheApp.config.theme_hospital_install = path
       TheApp:saveConfig()
-      debug.getregistry()._RESTART = true
-      TheApp.running = false
+      TheApp:reset()
     end
 
     self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
@@ -445,10 +447,24 @@ function App:trimLogs()
   for i=log_retention, #log_table do os.remove(log_table[i]) end
 end
 
+function App:getConfigPath()
+  return self.command_line["config-file"] or "config.txt"
+end
+
+function App:getDefaultScreenshotsDir()
+  local conf_path = self:getConfigPath()
+  return conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Screenshots"
+end
+
+function App:getDefaultSavegameDir()
+  local conf_path = self:getConfigPath()
+  return conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Saves"
+end
+
 --! Tries to initialize the user level and campaign directories
 -- TODO: Integrate other directory initialisations into this function
 function App:initUserDirectories()
-  local conf_path = self.command_line["config-file"] or "config.txt"
+  local conf_path = self:getConfigPath()
 
   -- Attempt to set the user's directory choice
   -- param dir (path) The defined path of the folder by the user
@@ -479,9 +495,8 @@ end
 --! Tries to initialize the savegame directory, returns true on success and
 --! false on failure.
 function App:initSavegameDir()
-  local conf_path = self.command_line["config-file"] or "config.txt"
-  self.savegame_dir = self.config.savegames or
-      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Saves"
+  local default_savegame_dir = self:getDefaultSavegameDir()
+  self.savegame_dir = self.config.savegames or default_savegame_dir
 
   if self.savegame_dir:sub(-1, -1) == pathsep then
     self.savegame_dir = self.savegame_dir:sub(1, -2)
@@ -499,9 +514,8 @@ function App:initSavegameDir()
 end
 
 function App:initScreenshotsDir()
-  local conf_path = self.command_line["config-file"] or "config.txt"
-  self.screenshot_dir = self.config.screenshots or
-      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Screenshots"
+  local default_screenshots_dir = self:getDefaultScreenshotsDir()
+  self.screenshot_dir = self.config.screenshots or default_screenshots_dir
 
   if self.screenshot_dir:sub(-1, -1) == pathsep then
     self.screenshot_dir = self.screenshot_dir:sub(1, -2)
@@ -1189,96 +1203,48 @@ function App:saveHotkeys()
   require('config_finder').save_hotkeys(hotkeys_filename, self.hotkeys)
 end
 
-function App:run()
-  -- The application "main loop" is an SDL event loop written in C, which calls
-  -- a coroutine whenever an event occurs. Initially it may seem odd to involve
-  -- coroutines, but it does give a few advantages:
-  --  1) Lua can signal the main loop to exit by finishing the coroutine
-  --  2) If an error occurs, the call stack is preserved in the coroutine, so
-  --     Lua can query or print the call stack as required, rather than
-  --     hardcoding error behaviour in C.
-  local co = coroutine.create(function(app)
-    local yield = coroutine.yield
-    local dispatch = app.dispatch
-    local repaint = true
-    while app.running do
-      repaint = dispatch(app, yield(repaint))
-    end
-  end)
-
-  if self.config.track_fps then
-    SDL.trackFPS(true)
-    SDL.limitFPS(false)
-  end
-
-  self.running = true
-  do
-    local num_iterations = 0
-    self.resetInfiniteLoopChecker = function()
-      num_iterations = 0
-    end
-    debug.sethook(co, function()
-      num_iterations = num_iterations + 1
-      if num_iterations == 100 then
-        error("Suspected infinite loop", 2)
-      end
-    end, "", 1e7)
-  end
-  coroutine.resume(co, self)
-  local e, where = SDL.mainloop(co)
-  debug.sethook(co, nil)
-  self.running = false
+function App:errorHandler(last_dispatch_type, st)
+  print("An error has occurred!")
+  print("Almost anything can be the cause, but the detailed information " ..
+          "below can help the developers find the source of the error.")
+  print("Running: The " .. last_dispatch_type .. " handler.")
+  print("A stack trace is included below, and the handler has been disconnected.")
+  print(st)
+  print("")
   self.video:setCaptureMouse(false) -- Free the mouse, so the user can eg close the window.
-  if e ~= nil then
-    if where then
-      -- Errors from an asynchronous callback done on the dispatcher coroutine
-      -- will end up here. As the error didn't originate from a dispatched
-      -- event, self.last_dispatch_type is wrong. Therefore, an extra value is
-      -- returned from mainloop(), meaning that where == "callback".
-      self.last_dispatch_type = where
+  if self.world then
+    self.world:gameLog("Error in " .. last_dispatch_type .. " handler: ")
+    self.world:gameLog(st)
+    self.world:dumpGameLog()
+  end
+  if self.world and last_dispatch_type == "timer" and self.world.current_tick_entity then
+    -- Disconnecting the tick handler is quite a drastic measure, so give
+    -- the option of just disconnecting the offending entity and attempting
+    -- to continue.
+    local handler = self.eventHandlers[last_dispatch_type]
+    local entity = self.world.current_tick_entity
+    self.world.current_tick_entity = nil
+    if class.is(entity, Patient) then
+      self.ui:addWindow(UIPatient(self.ui, entity))
+    elseif class.is(entity, Staff) then
+      self.ui:addWindow(UIStaff(self.ui, entity))
     end
-    print("An error has occurred!")
-    print("Almost anything can be the cause, but the detailed information " ..
-      "below can help the developers find the source of the error.")
-    print("Running: The " .. self.last_dispatch_type .. " handler.")
-    print("A stack trace is included below, and the handler has been disconnected.")
-    print(debug.traceback(co, e, 0))
-    print("")
-    if self.world then
-      self.world:gameLog("Error in " .. self.last_dispatch_type .. " handler: ")
-      self.world:gameLog(debug.traceback(co, e, 0))
-      self.world:dumpGameLog()
-    end
-    if self.world and self.last_dispatch_type == "timer" and self.world.current_tick_entity then
-      -- Disconnecting the tick handler is quite a drastic measure, so give
-      -- the option of just disconnecting the offending entity and attempting
-      -- to continue.
-      local handler = self.eventHandlers[self.last_dispatch_type]
-      local entity = self.world.current_tick_entity
-      self.world.current_tick_entity = nil
-      if class.is(entity, Patient) then
-        self.ui:addWindow(UIPatient(self.ui, entity))
-      elseif class.is(entity, Staff) then
-        self.ui:addWindow(UIStaff(self.ui, entity))
-      end
-      self.ui:addWindow(UIConfirmDialog(self.ui, true,
-        "Sorry, but an error has occurred. There can be many reasons - see the " ..
-        "log window for details. Would you like to attempt a recovery?",
-        --[[persistable:app_attempt_recovery]] function()
-        self.world:gameLog("Recovering from error in timer handler...")
-        entity.ticks = false
-        self.eventHandlers.timer = handler
-      end
-      ))
-    end
-    self.eventHandlers[self.last_dispatch_type] = nil
-    if self.last_dispatch_type ~= "frame" then
-      -- If it wasn't the drawing code which failed, then it would be useful
-      -- to ensure that a draw happens, as with events disconnected, a frame
-      -- might not otherwise be drawn for a while.
-      pcall(self.drawFrame, self)
-    end
-    return self:run()
+    self.ui:addWindow(UIConfirmDialog(self.ui, true,
+            "Sorry, but an error has occurred. There can be many reasons - see the " ..
+                    "log window for details. Would you like to attempt a recovery?",
+    --[[persistable:app_attempt_recovery]] function()
+              self.world:gameLog("Recovering from error in timer handler...")
+              entity.ticks = false
+              self.eventHandlers.timer = handler
+            end
+    ))
+  end
+  self.eventHandlers[last_dispatch_type] = nil
+  if last_dispatch_type ~= "frame" then
+    -- If it wasn't the drawing code which failed, then it would be useful
+    -- to ensure that a draw happens, as with events disconnected, a frame
+    -- might not otherwise be drawn for a while.
+    pcall(self.drawFrame, self)
   end
 end
 
@@ -1287,8 +1253,6 @@ local done_no_handler_warning = {}
 function App:dispatch(evt_type, ...)
   local handler = self.eventHandlers[evt_type]
   if handler then
-    self:resetInfiniteLoopChecker()
-    self.last_dispatch_type = evt_type
     return handler(self, ...)
   else
     if not done_no_handler_warning[evt_type] then
@@ -1969,12 +1933,17 @@ function App:exit()
   -- Save config before exiting
   self:saveConfig()
   self:saveHotkeys()
-  self.running = false
+  SDL.quit()
 end
 
 --! Exits the game completely without saving the config i.e. Alt+F4 for Quit Application
 function App:abandon()
-  self.running = false
+  SDL.quit()
+end
+
+function App:reset()
+  debug.getregistry()._RESTART = true
+  SDL.quit()
 end
 
 --! This function is automatically called after loading a game and serves for compatibility.

@@ -174,7 +174,7 @@ local function new_config_defaults()
     use_new_graphics = false,
     check_for_updates = true,
     room_information_dialogs = true,
-    allow_blocking_off_areas = false,
+    blocking_off_areas = 2,
     direct_zoom = nil,
     new_machine_extra_info = true,
     player_name = [[]],
@@ -692,11 +692,34 @@ param(config_values, 'shift_scroll_speed') .. [=[
 param(config_values, 'room_information_dialogs') .. [=[
 
 -------------------------------------------------------------------------------
--- If true, parts of the hospital can be made inaccessible by blocking the path
--- with rooms or objects. If false, all parts of the hospital must be kept
--- accessible, the game will disallow any attempt to blocking the path.
+-- Ability to block off areas when building and placing objects.
+--
+-- There are 3 possible options:
+--
+-- 1. Totally forbidden - requires every passable tile in the hospital
+-- to remain reachable from a hospital entrance. This avoids issues that
+-- could arise from area blocking, but it also prevents room layouts
+-- which are allowed in Theme Hospital. Before version 0.70 this was
+-- a default option in CorsixTH.
+--
+-- 2. Partially allowed - user is allowed to make dead ended, inaccessible
+-- spaces that are not accessible from the hospital entrance but only if
+-- certain conditions are met. The condition is that the rooms themselves
+-- and usable objects inside the room must remain accessible. This ensures
+-- the preservation of the hospital's functionality and ensures the validity
+-- of the path routing in the hospital. This allows user to build rooms with
+-- the same layout as in the original TH. This is a safe option.
+--
+-- 3. Completely allowed - user is allowed to make dead ended,
+-- inaccessible spaces that are not accessible from the hospital entrance.
+-- This is a dangerous feature that can lead to game crashes. Use it only
+-- at your own risk and if you fully understand why you enabling it.
+--
+-- Set '1' for '1. Totally forbidden',
+-- Set '2' for '2. Partially allowed' (Default),
+-- Set '3' for '3. Completely allowed'.
 --]=] .. '\n' ..
-param(config_values, 'allow_blocking_off_areas') .. [=[
+param(config_values, 'blocking_off_areas') .. [=[
 
 -------------------------------------------------------------------------------
 -- Direct Zoom: Avoid rendering to an intermediate texture when zooming.
