@@ -535,7 +535,12 @@ end
 function App:initMusicDir()
   -- No need to set the music dir if it's already configured
   if self.config.audio_music then
-    return
+    if isDirectory(self.config.audio_music) then
+      return
+    else
+      print("Warning: Configured music directory '" .. self.config.audio_music .. "' is not a valid directory.")
+      self.config.audio_music = nil
+    end
   end
 
   -- Checks if the given directory name is a valid music directory name
