@@ -685,18 +685,10 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       self.object_footprint[i] = {}
     end
   end
-  local world = self.ui.app.world
-  local direction = self.object_orientation
-  local direction_parameters =  {
-    north = { x = 0, y = -1, buildable_flag = "buildableNorth", passable_flag = "travelNorth", needed_side = "need_north_side"},
-    east = { x = 1, y = 0, buildable_flag =  "buildableEast", passable_flag = "travelEast", needed_side = "need_east_side"},
-    south = { x = 0, y = 1, buildable_flag = "buildableSouth", passable_flag = "travelSouth", needed_side = "need_south_side"},
-    west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
-    }
 
   local room = self.room and self.room.id
   local valid_placement, room_id, passable_flag = self:_placementAvailableHereAndOtherObjectsDoNotInterfere(
-      x, y, object, real_obj, object_footprint, direction, direction_parameters, room, map, world)
+      x, y, object, real_obj, object_footprint, room, map)
 
   local function _setPartialFlags(x_, y_, map_, flag_altpal_, allgood)
     if ATTACH_BLUEPRINT_TO_TILE then
@@ -711,26 +703,33 @@ function UIPlaceObjects:setBlueprintCell(x, y)
   if self.object_anim and object.class ~= "SideObject" then
     -- Not SideObject - object is occupying one or more tiles entirely
     -- (Drinks machine, plant, reception desk, room machines and etc).
-    valid_placement = valid_placement and self:_isNonSideObjectPlacementValid(x, y, object, self.object_orientation, room_id, world)
+    valid_placement = valid_placement and self:_isNonSideObjectPlacementValid(x, y, object, self.object_orientation, room_id)
     _setPartialFlags(x, y, map, flag_altpal, valid_placement)
   elseif object.class == "SideObject" then
     -- SideObject - an object that lives on the edge of a tile (radiator, bin, extinguisher).
-    valid_placement = valid_placement and self:_isSideObjectPlacementValid(x, y, room_id, passable_flag, map, world)
+    valid_placement = valid_placement and self:_isSideObjectPlacementValid(x, y, room_id, passable_flag, map)
     _setPartialFlags(x, y, map, flag_altpal, valid_placement)
   end
 end
 
---! Function checks whether it is available for placing the object and
+--! Function checks whether this space is available for placing an object and
 -- whether the space is not occupied by other objects.
 function UIPlaceObjects:_placementAvailableHereAndOtherObjectsDoNotInterfere(
-    x, y, object, real_obj, object_footprint, direction, direction_parameters, room, map, world)
+    x, y, object, real_obj, object_footprint, room, map)
   local flags = {}
   local passable_flag
   local room_id = room
   local valid_placement = true
   local opt_tiles_blocked = 0
+  local world = self.ui.app.world
   local player_id = self.ui.hospital:getPlayerIndex()
-
+  local direction = self.object_orientation
+  local direction_parameters =  {
+    north = { x = 0, y = -1, buildable_flag = "buildableNorth", passable_flag = "travelNorth", needed_side = "need_north_side"},
+    east = { x = 1, y = 0, buildable_flag =  "buildableEast", passable_flag = "travelEast", needed_side = "need_east_side"},
+    south = { x = 0, y = 1, buildable_flag = "buildableSouth", passable_flag = "travelSouth", needed_side = "need_south_side"},
+    west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
+  }
   local optional_tiles = 0
   for _, tile in ipairs(object_footprint) do
     if tile.optional then
@@ -779,6 +778,7 @@ function UIPlaceObjects:_placementAvailableHereAndOtherObjectsDoNotInterfere(
   for i, tile in ipairs(object_footprint) do
     local xpos = x + tile[1]
     local ypos = y + tile[2]
+
     -- Check 1: Does the tile have valid map coordinates?:
     if not world:isOnMap(xpos, ypos) then
       updateResult(tile)
@@ -896,8 +896,10 @@ end
 --! param room_id (integer) room id if we in a build mode.
 --! param world (object) world class instance.
 --! return (bool) is this placement not going to break path finding.
-function UIPlaceObjects:_isNonSideObjectPlacementValid(x, y, object, object_orientation, room_id, world)
+function UIPlaceObjects:_isNonSideObjectPlacementValid(x, y, object, object_orientation, room_id)
+  local world = self.ui.app.world
   local invalid_placement
+
   if room_id > 0 and x and y then
     -- placing an object in a room
     local room = world:getRoom(x, y)
@@ -955,14 +957,16 @@ end
 --! param map (object) map class instance.
 --! param world (object) world class instance.
 --! return (bool) is this placement not going to break path finding.
-function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag, map, world)
+function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag, map)
   -- if we consider to place a SideObject against a wall, it is always a valid placement.
   -- also, for SideObject, do not change 'passable_flag according to the algorithm below in 1.,
   -- as this will make the wall passable through.
   local along_wall = map:getCellFlags(x, y)[passable_flag] == false
   if along_wall then return true end
 
+  local world = self.ui.app.world
   local invalid_placement
+
   -- Depending on the orientation of the side object, we will check the accessibility of the cell
   -- that is located just behind the edge that this side object creates with its placement
   local to_check_x, to_check_y = x, y
