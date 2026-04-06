@@ -272,6 +272,7 @@ void mainloop(lua_State* L) {
       SDL_AddTimer(usertick_period_ms, timer_frame_callback, nullptr);
   SDL_Event e;
 
+#ifndef TRACY_ENABLE
   lua_Hook hookFn = lua_gethook(L);
   if (!hookFn) {
     lua_sethook(L, l_infinite_loop_hook, LUA_MASKCOUNT, 1e7);
@@ -279,6 +280,7 @@ void mainloop(lua_State* L) {
     std::printf(
         "Warning: Infinite loop detection disabled due to existing Lua hook\n");
   }
+#endif
 
   std::string_view last_dispatch;
   int wait_error = 0;
