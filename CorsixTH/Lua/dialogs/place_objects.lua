@@ -690,25 +690,15 @@ function UIPlaceObjects:setBlueprintCell(x, y)
   local valid_placement, room_id, passable_flag = self:_placementAvailableHereAndOtherObjectsDoNotInterfere(
       x, y, object, real_obj, object_footprint, room, map)
 
-  local function _setPartialFlags(x_, y_, map_, flag_altpal_, allgood)
-    if ATTACH_BLUEPRINT_TO_TILE then
-      self.object_anim:setTile(map_, x_, y_, 0)
-    end
-    self.object_anim:setPartialFlag(flag_altpal_, not allgood)
-    self.object_slave_anim:setPartialFlag(flag_altpal_, not allgood)
-    self.object_blueprint_good = allgood
-    self.ui:tutorialStep(1, allgood and 5 or 4, allgood and 4 or 5)
-  end
-
   if self.object_anim and object.class ~= "SideObject" then
     -- Not SideObject - object is occupying one or more tiles entirely
     -- (Drinks machine, plant, reception desk, room machines and etc).
     valid_placement = valid_placement and self:_isNonSideObjectPlacementValid(x, y, object, self.object_orientation, room_id)
-    _setPartialFlags(x, y, map, flag_altpal, valid_placement)
+    self:_setBlueprintPartialFlags(x, y, map, valid_placement)
   elseif object.class == "SideObject" then
     -- SideObject - an object that lives on the edge of a tile (radiator, bin, extinguisher).
     valid_placement = valid_placement and self:_isSideObjectPlacementValid(x, y, room_id, passable_flag, map)
-    _setPartialFlags(x, y, map, flag_altpal, valid_placement)
+    self:_setBlueprintPartialFlags(x, y, map, valid_placement)
   end
 end
 
@@ -1045,6 +1035,16 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
     return true
   end
   return false
+end
+
+function UIPlaceObjects:_setBlueprintPartialFlags(x, y, map, valid_placement)
+  if ATTACH_BLUEPRINT_TO_TILE then
+    self.object_anim:setTile(map, x, y, 0)
+  end
+  self.object_anim:setPartialFlag(flag_altpal, not valid_placement)
+  self.object_slave_anim:setPartialFlag(flag_altpal, not valid_placement)
+  self.object_blueprint_good = valid_placement
+  self.ui:tutorialStep(1, valid_placement and 5 or 4, valid_placement and 4 or 5)
 end
 
 local function NearestPointOnLine(lx1, ly1, lx2, ly2, px, py)
