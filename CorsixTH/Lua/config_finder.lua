@@ -829,8 +829,8 @@ param(hotkeys_values, 'ingame_panel_research') ..
 param(hotkeys_values, 'ingame_panel_status') ..
 param(hotkeys_values, 'ingame_panel_charts') ..
 param(hotkeys_values, 'ingame_panel_policy') ..
+param(hotkeys_values, 'ingame_panel_machineMenu') ..
 param(hotkeys_values, 'ingame_panel_adviserHistory') ..
-param(hotkeys_values, 'ingame_panel_machineMenu') ..  
 param(hotkeys_values, 'ingame_panel_map_alt') ..
 param(hotkeys_values, 'ingame_panel_research_alt') ..
 param(hotkeys_values, 'ingame_panel_casebook_alt') ..
