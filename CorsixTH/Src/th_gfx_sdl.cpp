@@ -507,7 +507,13 @@ bool render_target::update(const render_target_creation_params& params) {
     SDL_RenderSetLogicalSize(renderer, width, height);
   }
 
-  SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
+  int old_min_width;
+  int old_min_height;
+  SDL_GetWindowMinimumSize(window, &old_min_width, &old_min_height);
+  if (old_min_width != params.min_width ||
+      old_min_height != params.min_height) {
+    SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
+  }
 
   return true;
 }
