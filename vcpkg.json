@@ -74,6 +74,15 @@
       "dependencies": [
         "catch2"
       ]
+    },
+    "tracy": {
+      "description": "Support Tracy profiling",
+      "dependencies": [{
+        "name": "tracy",
+        "features": [
+          "cli-tools"
+        ]
+      }]
     }
   }
 }

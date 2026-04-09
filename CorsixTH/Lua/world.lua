@@ -762,6 +762,7 @@ function World:setSpeed(speed)
   if self:isCurrentSpeed(speed) then
     return
   end
+  tracy.Message("Changing speed to " .. speed)
   if speed == "Pause" or self.system_pause then
     self.ui.hospital:tickEarthquake("pause")
     -- By default actions are not allowed when the game is paused.

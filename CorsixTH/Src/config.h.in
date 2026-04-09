@@ -62,6 +62,25 @@ SOFTWARE.
 // binary instead of loaded at runtime.
 #cmakedefine CORSIX_TH_LINK_LUA_MODULES
 
+//* Tracy profiler linked */
+// If defined then the Tracy profiler is linked.
+#cmakedefine WITH_TRACY
+
+// Stubs for macros provided by Tracy when not linked.
+#ifndef WITH_TRACY
+#define FrameMark
+#define ZoneScoped
+#define ZoneScopedN(x)
+#define ZoneText(x,y)
+#define ZoneTextV(x,y,z)
+#define ZoneTextF(x,...)
+#define ZoneTextVF(x,y,...)
+#define ZoneName(x,y)
+#define ZoneNameV(x,y,z)
+#define ZoneNameF(x,...)
+#define ZoneNameVF(x,y,...)
+#endif
+
 #ifdef _MSC_VER
 #define CORSIX_TH_USE_PACK_PRAGMAS 1
 #define CORSIX_TH_PACKED_FLAGS
