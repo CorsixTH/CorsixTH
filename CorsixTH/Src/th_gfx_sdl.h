@@ -271,6 +271,9 @@ class render_target {
   //! Paint the entire render target black
   bool fill_black();
 
+  //! Paint the entire render target with a solid colour
+  bool fill_colour(uint32_t colour);
+
   //! Sets a blue filter on the current surface.
   // Used to add the blue effect when the game is paused.
   void set_blue_filter_active(bool bActivate);

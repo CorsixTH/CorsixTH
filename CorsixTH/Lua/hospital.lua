@@ -120,6 +120,7 @@ function Hospital:Hospital(world, avail_rooms, name)
     bench = 0,
     general = 0,
   }
+  self:buildReceptionDesksCache()
 
   self.num_visitors = 0 -- Counts patients only
   self.num_deaths = 0
@@ -503,6 +504,9 @@ function Hospital:afterLoad(old, new)
     self.hosp_cheats.active_cheats["spawn_rate_cheat"] = self.spawn_rate_cheat
     self.spawn_rate_cheat = nil
   end
+  if old < 243 then
+    self:buildReceptionDesksCache()
+  end
 
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic:afterLoad(old, new) end
@@ -861,38 +865,36 @@ function Hospital:isPlayerHospital()
   return self == self.world:getLocalPlayerHospital()
 end
 
---! Does the hospital have a working reception?
---!return (bool) Whether there is a working reception in the hospital.
-function Hospital:hasStaffedDesk()
-  for _, desk in ipairs(self:findReceptionDesks()) do
-    if desk.receptionist or desk.reserved_for then return true end
-  end
-  return false
+--! Does the hospital have a reception desk
+--!param is_staffed (bool) Does the desk need to be staffed
+--!return (bool) Whether there is a reception desk in the hospital.
+function Hospital:hasReceptionDesk(is_staffed)
+  return not not self:getReceptionDesks(is_staffed)[1]
 end
 
---! Returns a list of all reception desks that are staffed
-function Hospital:getStaffedDesks()
-  local staffed_desks = {}
-  for _, desk in ipairs(self:findReceptionDesks()) do
-    if desk.receptionist or desk.reserved_for then
-      staffed_desks[#staffed_desks + 1] = desk
-    end
-  end
-  return staffed_desks
+--! Fetches a list of all reception desks
+--!param is_staffed (bool) Do the desks need to be staffed
+--!return (table) A list of relevant desks
+function Hospital:getReceptionDesks(is_staffed)
+  return is_staffed and self.staffed_reception_desks or self.reception_desks
 end
 
---! Collect the reception desks in the hospital.
---!return (list) The reception desks in the hospital.
-function Hospital:findReceptionDesks()
-  local reception_desks = {}
+--! Collect the reception desks in the hospital into a list for the above function
+function Hospital:buildReceptionDesksCache()
+  local reception_desks, staffed_desks = {}, {}
   for _, obj_list in pairs(self.world.objects) do
     for _, obj in ipairs(obj_list) do
-      if obj.hospital == self and obj.object_type.id == "reception_desk" then
+      if obj.hospital == self and obj.object_type.id == "reception_desk" and
+          not obj.picked_up then
         reception_desks[#reception_desks + 1] = obj
+        if obj.receptionist or obj.reserved_for then
+          staffed_desks[#staffed_desks + 1] = obj
+        end
       end
     end
   end
-  return reception_desks
+  self.staffed_reception_desks = staffed_desks
+  self.reception_desks = reception_desks
 end
 
 --! Called at the end of each year
@@ -924,7 +926,7 @@ function Hospital:createEmergency(emergency)
   local random_disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)]
   local disease = TheApp.diseases[random_disease.id]
   local number = math.random(2, disease.emergency_number)
-  if self:getHeliportSpawnPosition() and self:hasStaffedDesk() then
+  if self:getHeliportSpawnPosition() and self:hasReceptionDesk(true) then
     if not emergency then
       -- Create a random emergency if parameters are not specified already.
       emergency = {
@@ -1010,7 +1012,7 @@ function Hospital:spawnContagiousPatient()
     return contagious
   end
 
-  if self:hasStaffedDesk() then
+  if self:hasReceptionDesk(true) then
     local patient = self.world:newEntity("Patient", 2, 1)
     local contagious_diseases = get_available_contagious_diseases()
     if #contagious_diseases > 0 then
@@ -1433,6 +1435,15 @@ function Hospital:humanoidDeath(patient)
   end
 end
 
+--! Remove all tasks assigned to Handyman
+--!param handyman (object) target handyman
+function Hospital:unassignHandymanTasks(handyman)
+  local tasks = self:findAssignedTasksToHandyman(handyman)
+  for _, task in ipairs(tasks) do
+    task.assignedHandyman = nil
+  end
+end
+
 --! Checks if the hospital employs staff of a given category.
 --!param category (string) A humanoid_class or one of the specialists, i.e.
 --! "Doctor", "Nurse", "Handyman", "Receptionist", "Psychiatrist",
@@ -1741,25 +1752,15 @@ end
 
 --! Compute average of an attribute for all patients in the hospital.
 --!param attribute (str) Name of the attribute.
---!param default_value Value to return if there are no patients.
---!return Average value of the attribute for all hospital patients, or the default value.
-function Hospital:getAveragePatientAttribute(attribute, default_value)
-  local sum = 0
-  local count = 0
-  for _, patient in ipairs(self.patients) do
-    local tx, ty = patient.tile_x, patient.tile_y
-    -- Some patients (i.e. Alien) may not have the attribute in question, so check for that
-    if tx and ty and self:isInHospital(tx, ty) and patient.attributes[attribute] then
-      sum = sum + patient.attributes[attribute]
-      count = count + 1
-    end
-  end
+--!param default_value Value to return if there are not enough patients.
+--!param min_count (number) Minimal number of sampled patients, 4 by default.
+--!return Average value of the attribute for all hospital patients, compensated
+--  towards the default if there are not enough patients in the hospital.
+function Hospital:getAveragePatientAttribute(attribute, default_value, min_count)
+  if type(min_count) ~= "number" or min_count < 1 then min_count = 4 end
 
-  if count == 0 then
-    return default_value
-  else
-    return sum / count
-  end
+  return self:_getAverageHumanoidsAttribute(self.patients, attribute, default_value,
+      min_count)
 end
 
 --! Compute average of an attribute for all staff in the hospital.
@@ -1767,16 +1768,49 @@ end
 --!param default_value Value to return if there is no staff.
 --!return Average value of the attribute for all staff, or the default value.
 function Hospital:getAverageStaffAttribute(attribute, default_value)
+  return self:_getAverageHumanoidsAttribute(self.staff, attribute, default_value, 1)
+end
+
+--! Compute average of an attribute for all given humanoids.
+--!param humanoids The collection of humanoids to query.
+--!param attribute (str) Name of the attribute.
+--!param default_value (any type) Value to return if there are not enough humanoids.
+--!param min_count (number) Minimal number of sampled humanoids required, 4 by
+--  default. If less humanoids are available than the minimal count, additional
+--  fake humanoids are 'counted' with the default value of the attribute if
+--  possible. Use 1 as min_count to avoid compensating.
+--!return Average value of the attribute for all humanoids, possibly compensated
+--  towards the default if there are not enough humanoids in the hospital.
+function Hospital:_getAverageHumanoidsAttribute(humanoids, attribute,
+    default_value, min_count)
+  assert(type(min_count) == "number" and min_count >= 1)
+
+  -- Sum the attribute for all humanoids.
   local sum = 0
   local count = 0
-  for _, staff in ipairs(self.staff) do
-    if staff.attributes[attribute] then
-      sum = sum + staff.attributes[attribute]
+  for _, hum in ipairs(humanoids) do
+    local tx, ty = hum.tile_x, hum.tile_y
+    -- Skip counting the humanoid if they don't have the attribute (eg Alien).
+    if tx and ty and self:isInHospital(tx, ty) and hum.attributes[attribute] then
+      sum = sum + hum.attributes[attribute]
       count = count + 1
     end
   end
 
-  return count == 0 and default_value or sum / count
+  -- Handle compensation for not enough humanoids.
+  if count < min_count then
+    -- Skip compensating if the default is not a number.
+    if type(default_value) ~= "number" then return default_value end
+
+    -- Add fake humanoids until the min_count is satisfied. This gives a more
+    -- gradual change towards the real average as more humanoids become available.
+    while count < min_count do
+      sum = sum + default_value
+      count = count + 1
+    end
+  end
+
+  return sum / count
 end
 
 --! Checks if the requirements for the given disease are met in the hospital and returns the ones missing.
@@ -1966,7 +2000,8 @@ function Hospital:removeHandymanTask(taskIndex, taskType)
     table.remove(subTable, taskIndex)
     if task.assignedHandyman then
       if task.object.ticks ~= true then
-        task.assignedHandyman:interruptHandymanTask()
+        task.assignedHandyman:releaseHandymanFromTask(true)
+        task.assignedHandyman = nil
       end
     end
   end
@@ -1982,29 +2017,54 @@ function Hospital:findHandymanTaskSubtable(taskType)
   return self:findHandymanTaskSubtable(taskType)
 end
 
-function Hospital:getTaskObject(taskIndex, taskType)
-  return self:findHandymanTaskSubtable(taskType)[taskIndex]
-end
-
-function Hospital:assignHandymanToTask(handyman, taskIndex, taskType)
-  if taskIndex ~= -1 then
-    local subTable = self:findHandymanTaskSubtable(taskType)
-    if not subTable[taskIndex].assignedHandyman then
-      subTable[taskIndex].assignedHandyman = handyman
-    else
-      local formerHandyman = subTable[taskIndex].assignedHandyman
-      subTable[taskIndex].assignedHandyman = handyman
-      formerHandyman:interruptHandymanTask()
+--! Search all tasks assigned to a handyman, if any.
+--!param handyman The handyman instance to check for assigned tasks.
+--!return table of all assigned tasks.
+function Hospital:findAssignedTasksToHandyman(handyman)
+  local assigned_tasks = {}
+  for i = 1, #self.handymanTasks do
+    for j = 1, #self.handymanTasks[i].subTable do
+      if self.handymanTasks[i].subTable[j].assignedHandyman == handyman then
+        table.insert(assigned_tasks, self.handymanTasks[i].subTable[j])
+      end
     end
   end
+  return assigned_tasks
 end
 
-function Hospital:searchForHandymanTask(handyman, taskType)
-  local subTable = self:findHandymanTaskSubtable(taskType)
-  --if a distance is smaller than this value stop the search to
-  --save performance
+function Hospital:assignHandymanToTask(handyman, task_index, task_type)
+  if task_index ~= -1 then
+    local subtable = self:findHandymanTaskSubtable(task_type)
+    local task_object = subtable[task_index]
+    local former_handyman = task_object.assignedHandyman
+    if former_handyman then
+      former_handyman:releaseHandymanFromTask(true)
+    end
+    handyman.task = task_object
+    task_object.assignedHandyman = handyman
+    return task_object
+  end
+  return nil
+end
+
+--! Function for search a new task for a handyman.
+--!param handyman (object) handyman instance for which we want to find a task.
+--!param task_type (string) handyman task type: repairing, watering, cleaning.
+--!return index (int) index of the found task.
+function Hospital:searchForHandymanTask(handyman, task_type)
+  local subTable = self:findHandymanTaskSubtable(task_type)
+
+  -- if a distance is smaller than this value stop the search to
+  -- save performance
   local thresholdForStopping = 3
-  local first, dist, index, priority, multiplier = true, 0, -1, 0, 1
+
+  -- information about the best task found so far
+  local dist = 0
+  local index = -1
+  local priority = 0
+  local multiplier = 1
+  local first_attempt = true
+
   if handyman.profile.is_consultant then
     multiplier = 0.5
   elseif handyman.profile.is_junior then
@@ -2013,23 +2073,34 @@ function Hospital:searchForHandymanTask(handyman, taskType)
   if not handyman.parcelNr then
     handyman.parcelNr = 0
   end
-  for i, v in ipairs(subTable) do
+  for task_index, task_candidate in ipairs(subTable) do
+    local v = task_candidate
     local distance = self.world:getPathDistance(v.tile_x, v.tile_y, handyman.tile_x, handyman.tile_y)
-    local canContinue = true
-    if not first and v.priority < priority then
-      canContinue = false
+    local found_suitable_task = true
+    if not first_attempt and v.priority < priority then
+      found_suitable_task = false
     end
     if not v.parcelId then
        v.parcelId = self.world.map.th:getCellFlags(v.tile_x, v.tile_y).parcelId
     end
+    -- Check that the task is in the plot to which the handyman is assigned to. If he assigned to plot.
     if handyman.parcelNr ~= 0 and handyman.parcelNr ~= v.parcelId then
-      canContinue = false
+      found_suitable_task = false
     end
+    -- Check that a route can be built to this task
     if distance == false then
-      canContinue = false
+      found_suitable_task = false
     end
-    if canContinue then
+
+    if found_suitable_task then
+      -- Handymen can take over other handymen tasks. If there any handyman that goes to water
+      -- a plant in the other side of the hospital and later a second handyman near that plant becomes
+      -- available for a new task and also chooses task to water that plant, then that second handyman
+      -- will take away this task from first handymen to himself. The first handymen will be released
+      -- from this task.
       if v.assignedHandyman then
+        -- Another handyman is already assigned to this task
+        -- Let's check if we can take this task away from him.
         if v.assignedHandyman.fired then
           v.assignedHandyman:unassignTask()
         elseif not v.assignedHandyman.hospital then
@@ -2039,6 +2110,7 @@ function Hospital:searchForHandymanTask(handyman, taskType)
           print("Warning: Orphaned handyman is still assigned a task. Removing.")
           v.assignedHandyman:unassignTask()
         else
+          -- Check if handyman are closer to the task than the assigned handyman.
           local assignedDistance = self.world:getPathDistance(v.tile_x, v.tile_y, v.assignedHandyman.tile_x, v.assignedHandyman.tile_y)
           if assignedDistance ~= false then
             if v.assignedHandyman.profile.is_consultant then
@@ -2048,27 +2120,32 @@ function Hospital:searchForHandymanTask(handyman, taskType)
             end
             distance = distance * multiplier
             if distance + 5 > assignedDistance then
-              canContinue = false
+              found_suitable_task = false
             else
               distance = distance / multiplier
             end
+          elseif task_type == "repairing" and v.assignedHandyman:getRoom() == self.world:getRoom(v.tile_x, v.tile_y) then
+            -- Don't take repair task from another handyman if that assigned handyman already in the target room.
+            found_suitable_task = false
           end
         end
       end
-      if canContinue then
-        if first then
+
+      if found_suitable_task then
+        if first_attempt then
           if distance <= thresholdForStopping then
-            return i
+            return task_index
           end
-          first, dist, index, priority = false, distance, i, v.priority
+          first_attempt, dist, index, priority = false, distance, task_index, v.priority
         elseif  priority < v.priority or distance < dist then
           if distance < thresholdForStopping then
-            return i
+            return task_index
           end
-          dist, index, priority = distance, i, v.priority
+          dist, index, priority = distance, task_index, v.priority
         end
       end
     end
+
   end
   return index
 end
@@ -2164,10 +2241,11 @@ end
 function Hospital:computePriceLevelImpact(patient, casebook)
   local price_distortion = patient:getPriceDistortion(casebook)
   patient:changeAttribute("happiness", -(price_distortion / 2))
-
   if price_distortion < self.under_priced_threshold then
     if math.random(1, 100) == 1 then
-      self:advisePriceLevelImpact("under", casebook.disease.name)
+      if casebook.price < 1 then
+        self:advisePriceLevelImpact("under", casebook.disease.name)
+      end
       self:changeReputation("under_priced")
     end
   elseif price_distortion > self.over_priced_threshold then
@@ -2244,7 +2322,7 @@ end
 
 --! Check if the hospital is ready to accept patients
 function Hospital:canAcceptPatients()
-  return self.opened and self:hasStaffedDesk()
+  return self.opened and self:hasReceptionDesk(true)
 end
 
 --! Has this hospital received any patients yet?

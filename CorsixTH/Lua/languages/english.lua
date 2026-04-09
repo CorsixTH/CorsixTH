@@ -18,8 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+Font("cp437")
 Language("English", "English", "en", "eng")
 Inherit("original_strings", 0)
+IsArabicNumerals(true)
 
 --Note: All strings should use a single space after full-stops. Only exception is level descriptions.
 -------------------------------  OVERRIDE  ----------------------------------
@@ -226,6 +228,11 @@ menu_debug = {
   dump_gamelog                = "  (%1%) DUMP GAME LOG  ",
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
+}
+menu_debug_overlay_blocking_off_areas = {
+  choice_1 = "  TOTALLY FORBIDDEN  ",
+  choice_2 = "  PARTIALLY ALLOWED  ",
+  choice_3 = "  COMPLETELY ALLOWED  ",
 }
 menu_debug_overlay = {
   none                        = "  NONE  ",
@@ -491,9 +498,22 @@ options_window = {
   scrollspeed = "Scroll Speed",
   shift_scrollspeed = "Shift Scroll Speed",
   zoom_speed = "Zoom Speed",
+  autosave_frequency = "Autosave Frequency",
   hotkey = "Hotkeys",
   check_for_updates = "Check for Updates",
   sound = "Sound",
+}
+
+autosave_frequency = {
+    monthly = "Monthly",
+    weekly = "Weekly",
+    daily = "Daily",
+}
+
+tooltip.autosave_frequency = {
+    monthly = "Autosave once per month, on the first day of each month. A total of 12 saves with a depth of 1 year.",
+    weekly = "Autosave once per week on the 1st, 7th, 14th, 21nd, and 28th of each month. A total of 60 saves with a depth of 1 year.",
+    daily = "Autosave once per day at the start of each in-game day. A total of 365 saves with a depth of 1 year. Please note that a typical save can take up to 1 megabyte or even more. This way your autosaves folder can grow to 300-500 MB.",
 }
 
 tooltip.options_window = {
@@ -501,8 +521,10 @@ tooltip.options_window = {
   fullscreen_button = "Click to toggle fullscreen mode",
   resolution = "The resolution the game should run in",
   select_resolution = "Select a new resolution",
+  resolution_unavailable = "Resolution unavailable at current UI Scale",
   scale_ui = "Scale the user interface. Only scale options that fit the display are shown, for more increase the resolution.",
   select_ui_scale = "Select a new user interface scale",
+  ui_scale_unavailable = "User interface scaling not available, please select a higher resolution first.",
   capture_mouse = "Click to toggle capturing the cursor while in game",
   right_mouse_scrolling = "Toggle the mouse button that is used to scroll the map",
   width = "Enter desired screen width",
@@ -519,6 +541,7 @@ tooltip.options_window = {
   scrollspeed = "Set the scroll speed between 1 (slowest) to 10 (fastest). The default is 2.",
   shift_scrollspeed = "Set the speed of scrolling while the shift key is pressed. 1 (slowest) to 10 (fastest). The default is 4.",
   zoom_speed = "Set the camera zoom speed from 10 (slowest) to 1000 (fastest). The default is 80.",
+  autosave_frequency = "Set how often the game will make autosaves.",
   apply_scrollspeed = "Apply the entered scroll speed.",
   cancel_scrollspeed = "Return without changing the scroll speed.",
   apply_shift_scrollspeed = "Apply the entered shift scroll speed.",
@@ -570,6 +593,8 @@ customise_window = {
   regular_patients = "Regular Patients",
   male_only = "Male Only",
   male_and_female = "Male and Female",
+  every_month = "Every Month",
+  every_day = "Every Day",
   back = "Back",
   movies = "Movies",
   intro = "Play Intro Movie",
@@ -629,7 +654,8 @@ tooltip.folders_window = {
   no_font_specified = "No font location specified yet!",
   not_specified = "No folder location specified yet!",
   default = "Default location",
-  reset_to_default = "Reset the directory to its default location",
+  reset_to_default = "Reset the directory to its default location ( %1% )",
+  clear_directory = "Clear current directory selection",
   back  = "Close this menu and go back to the Settings Menu",
 }
 
@@ -1009,11 +1035,10 @@ tooltip.calls_dispatcher = {
 }
 
 machine_menu = {
-  percentage = "%d%",
   machine = "Machine",
+  status = "Status",
   remaining_strength = "Remain",
   total_strength = "Strength",
-  ratio = "Ratio",
   close = "Close",
 }
 
@@ -1024,14 +1049,13 @@ tooltip.machine_menu = {
   assigned = "This box is marked if a handyman is assigned to fix corresponding machine. Click to show assigned handyman.",
   remaining_strength = "This value shows remaining strength of the machine",
   total_strength = "This value shows total strength of the machine",
-  ratio = "This value shows ratio of remaining strength and total strength",
   header = {
     smoking = "Danger Indicator",
     assigned = "Repair assignment Indicator",
     machine = "Machine name",
     remaining_strength = "Remaining Strength of the machines.",
+    status = "Status of the machines.",
     total_strength = "Total Strength of the machines.",
-    ratio = "Remaining Strength to Total Strength percentage ratio of the machines.",
   },
   close = "Close the machine list dialog",
 }
@@ -1271,7 +1295,16 @@ subtitles = {
 options_window.change_resolution = "Change resolution"
 tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
 information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
-
+machine_menu = {
+  ratio = "Ratio",
+  percentage = "%d%",
+}
+tooltip.machine_menu = {
+  ratio = "This value shows ratio of remaining strength and total strength",
+  header = {
+    ratio = "Remaining Strength to Total Strength percentage ratio of the machines.",
+  }
+}
 cheats_window.cheats = {
  toggle_infected = show_infected,
 }

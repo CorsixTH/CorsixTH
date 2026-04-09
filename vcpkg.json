@@ -10,6 +10,7 @@
     "luafilesystem",
     "lpeg",
     "libpng",
+    "zlib",
     {
        "name": "fluidsynth",
        "features": [
@@ -20,9 +21,7 @@
       "name": "sdl2-mixer",
       "features": [
         "libmodplug",
-        {
-          "name": "fluidsynth"
-        },
+        "fluidsynth",
         "libflac",
         "mpg123",
         "opusfile"
@@ -75,6 +74,15 @@
       "dependencies": [
         "catch2"
       ]
+    },
+    "tracy": {
+      "description": "Support Tracy profiling",
+      "dependencies": [{
+        "name": "tracy",
+        "features": [
+          "cli-tools"
+        ]
+      }]
     }
   }
 }

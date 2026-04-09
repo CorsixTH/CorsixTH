@@ -31,7 +31,7 @@ function UIProgressReport:UIProgressReport(ui)
   local gfx = ui.app.gfx
 
   if not pcall(function()
-    local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
+    local palette = gfx:getPalette("Rep01V.pal")
 
     self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
     self.red_font = gfx:loadFontAndSpriteTable("QData", "Font101V", false, palette, { apply_ui_scale = true })
@@ -239,7 +239,7 @@ function UIProgressReport:afterLoad(old, new)
 
   if old < 236 then
     local gfx = TheApp.gfx
-    local palette = gfx:loadPalette("QData", "Rep01V.pal", true)
+    local palette = gfx:getPalette("Rep01V.pal")
 
     self.background = gfx:loadRaw("Rep01V", 640, 480, "QData", "QData", "Rep01V.pal", true)
     self.red_font = gfx:loadFontAndSpriteTable("QData", "Font101V", false, palette, { apply_ui_scale = true })

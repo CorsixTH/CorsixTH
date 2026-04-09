@@ -29,7 +29,7 @@ function UIPolicy:UIPolicy(ui)
   local gfx = ui.app.gfx
   if not pcall(function()
     self.background = gfx:loadRaw("Pol01V", 640, 480, "QData", "QData", "Pol01V.pal", true)
-    local palette = gfx:loadPalette("QData", "Pol01V.pal", true)
+    local palette = gfx:getPalette("Pol01V.pal")
     self.panel_sprites = gfx:loadSpriteTable("QData", "Pol02V", true, palette)
     self.label_font = gfx:loadFontAndSpriteTable("QData", "Font74V", false, palette, { apply_ui_scale = true })
     self.text_font = gfx:loadFontAndSpriteTable("QData", "Font105V", false, palette, { apply_ui_scale = true })
@@ -241,7 +241,7 @@ function UIPolicy:afterLoad(old, new)
     local gfx = TheApp.gfx
 
     self.background = gfx:loadRaw("Pol01V", 640, 480, "QData", "QData", "Pol01V.pal", true)
-    local palette = gfx:loadPalette("QData", "Pol01V.pal", true)
+    local palette = gfx:getPalette("Pol01V.pal")
     self.panel_sprites = gfx:loadSpriteTable("QData", "Pol02V", true, palette)
     self.label_font = gfx:loadFontAndSpriteTable("QData", "Font74V", false, palette, { apply_ui_scale = true })
     self.text_font = gfx:loadFontAndSpriteTable("QData", "Font105V", false, palette, { apply_ui_scale = true })

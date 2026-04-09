@@ -76,7 +76,7 @@ function UICustomGame:UICustomGame(ui)
 
   -- Now add the free build button beside the list.
   if not pcall(function()
-    local palette = ui.app.gfx:loadPalette("QData", "DrugN01V.pal", true)
+    local palette = ui.app.gfx:getPalette("DrugN01V.pal")
     self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "DrugN02V", true, palette)
     self.border_sprites = ui.app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   end) then

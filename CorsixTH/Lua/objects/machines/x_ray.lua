@@ -97,4 +97,25 @@ object.orientations = {
 local anim_mgr = TheApp.animation_manager
 anim_mgr:setPatientMarker(object.idle_animations.north, {-2, -2})
 
+local kf0 = {59, -4, "px"}
+local kf1 = {55, -8, "px"}
+local kf2 = {51, -8, "px"}
+local kf3 = {47, -11, "px"}
+local kf4 = {43, -12, "px"}
+local kf5 = {43, -13, "px"}
+local kf6 = {39, -15, "px"}
+local kf7 = {34, -18, "px"}
+local kf8 = {31, -20, "px"}
+local kf9 = {29, -21, "px"}
+local kf10 = {24, -23, "px"}
+local kf11 = {18, -27, "px"}
+local kf12 = {15, -33, "px"}
+local kf13 = {14, -34, "px"}
+local kf14 = {6, -36, "px"}
+
+anim_mgr:setStaffMarker(3558, 0, kf0, 1, kf1, 2, kf2, 3, kf3, 4, kf4, 5, kf5,
+    6, kf6, 7, kf7, 8, kf8, 9, kf9, 10, kf10, 11, kf11, 12, kf12, 13, kf13,
+    14, kf14)
+anim_mgr:setStaffMarker(3562, kf14)
+
 return object

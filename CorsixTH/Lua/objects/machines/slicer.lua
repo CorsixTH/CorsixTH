@@ -65,7 +65,6 @@ object.orientations = {
     use_position = {0, 0},
     handyman_position = {1, -1},
     use_position_secondary = {-1, -1},
-    list_bottom = true,
     smoke_position = {0, 0},
   },
   east = {
@@ -77,11 +76,12 @@ object.orientations = {
     handyman_position = {-1, 1},
     use_position_secondary = {-1, -1},
     early_list = true,
-    list_bottom = true,
     smoke_position = {0, 0},
   },
 }
 local anim_mgr = TheApp.animation_manager
 anim_mgr:setPatientMarker(object.idle_animations.north, {-1.2, -0.8})
+
+anim_mgr:setStaffMarker(3490, {28, -20, "px"})
 
 return object

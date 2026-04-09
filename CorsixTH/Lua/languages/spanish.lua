@@ -18,9 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+Font("cp437")
 Language("Español", "Spanish", "es", "spa", "esp", "sp")
 Inherit("english")
 Inherit("original_strings", 4)
+IsArabicNumerals(true)
 
 -------------------------------  OVERRIDE  ----------------------------------
 tooltip.graphs.reputation = "Cambiar reputación"
@@ -1096,7 +1098,8 @@ tooltip.folders_window = {
   no_font_specified = "¡No se ha especificado una carpeta de fuentes!",
   not_specified = "¡No se ha especificado una carpeta!",
   default = "Ubicación predeterminada",
-  reset_to_default = "Vuelve a asignar la carpeta a su ubicación predeterminada.",
+  reset_to_default = "Vuelve a asignar la carpeta a su ubicación predeterminada ( %1% )",
+  clear_directory = "Borrar la selección de directorio actual",
   back  = "Cerrar este menú y volver al menú de Opciones.",
 }
 

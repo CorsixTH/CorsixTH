@@ -60,7 +60,12 @@ local cursors_palette = {
   [44] = "Stat01V.pal",
 }
 
-function Graphics:Graphics(app)
+local charsets = {
+  ["cp437"] = 1,
+  ["mik"] = 2
+}
+
+function Graphics:Graphics(app, gfx_set, charset)
   self.app = app
   self.target = self.app.video
   -- The cache is used to avoid reloading an object if it is already loaded
@@ -74,6 +79,7 @@ function Graphics:Graphics(app)
     language_fonts = {},
     cursors = setmetatable({}, {__mode = "k"}),
   }
+  self.th_charset = charset and charsets[charset] or charsets["cp437"]
 
   self.custom_graphics = {}
   -- The load info table records how objects were loaded, and is used to
@@ -91,6 +97,7 @@ function Graphics:Graphics(app)
   self.reload_functions_last = setmetatable({}, {__mode = "k"})
 
   self:loadFontFile()
+  self:_loadPalettes(gfx_set)
 
   local graphics_folder = nil
   if self.app.config.use_new_graphics then
@@ -114,6 +121,52 @@ function Graphics:Graphics(app)
     end
   end
   self.custom_graphics_folder = graphics_folder
+end
+
+function Graphics:_loadPalettes(gfx_set)
+  -- Load base palettes
+  self:_loadPalette("Bitmap", "bootstrap_font.pal", true, false)
+  self:_loadPalette("Bitmap", "lose.pl8", true, true)
+  self:_loadPalette("Bitmap", "mainmenu1080.pal", false, false)
+  self:_loadPalette("Bitmap", "mainmenu480.pal", false, false)
+  self:_loadPalette("Bitmap", "mainmenu720.pal", false, false)
+  self:_loadPalette("Bitmap", "winlevel.pl8", true, true)
+  self:_loadPalette("Bitmap", "tree_ctrl.pal", false, false)
+
+  if gfx_set == "base" then
+    return
+  end
+
+  -- Load demo palettes
+  self:_loadPalette("Data", "MPalette.dat", true, false)
+  self:_loadPalette("QData", "Area01V.pal", true, false)
+  self:_loadPalette("QData", "Award01V.pal", true, false)
+  self:_loadPalette("QData", "Award02V.pal", true, false)
+  self:_loadPalette("QData", "Bid01V.pal", true, false)
+  self:_loadPalette("QData", "Brief01V.pal", true, false)
+  self:_loadPalette("QData", "Cred01V.pal", true, false)
+  self:_loadPalette("QData", "Fame01V.pal", true, false)
+  self:_loadPalette("QData", "Fax01V.pal", true, false)
+  self:_loadPalette("QData", "Load01V.pal", true, false)
+  self:_loadPalette("QData", "Main01M.pal", true, false)
+  self:_loadPalette("QData", "Pref01V.pal", true, false)
+  self:_loadPalette("QData", "Score01V.pal", true, false)
+
+  if gfx_set == "demo" then
+    return
+  end
+
+  -- Load full palettes
+  self:_loadPalette("QData", "Bank01V.pal", true, false)
+  self:_loadPalette("QData", "DrugN01V.pal", true, false)
+  self:_loadPalette("QData", "Graph01V.pal", true, false)
+  self:_loadPalette("QData", "Pol01V.pal", true, false)
+  self:_loadPalette("QData", "Rep01V.pal", true, false)
+  self:_loadPalette("QData", "Res01V.pal", true, false)
+  self:_loadPalette("QData", "Staff01V.pal", true, false)
+  self:_loadPalette("QData", "Stat01V.pal", true, false)
+  self:_loadPalette("QData", "Title01V.pal", true, false)
+  self:_loadPalette("QData", "Town01V.pal", true, false)
 end
 
 --! Tries to load the font file given in the config file as unicode_font.
@@ -170,7 +223,7 @@ function Graphics:loadMainCursor(id)
     id = cursors_name[id]
   end
   if id > 20 then -- SPointer cursors
-    local cursor_palette = self:loadPalette("QData", cursors_palette[id], true)
+    local cursor_palette = self:getPalette(cursors_palette[id])
     return self:loadCursor(self:loadSpriteTable("QData", "SPointer", false, cursor_palette), id - 20)
   else
     return self:loadCursor(self:loadSpriteTable("Data", "MPointer"), id)
@@ -245,7 +298,7 @@ end
 --!param name (string) The name of the palette file
 --!param transparent_255 (boolean) Whether the 255th entry in the palette should be transparent
 --!return (palette, string) The palette and a string representing the palette converted to greyscale
-function Graphics:loadPalette(dir, name, transparent_255, pal8bit)
+function Graphics:_loadPalette(dir, name, transparent_255, pal8bit)
   name = name or "MPalette.dat"
 
   if self.cache.palette[name] then
@@ -263,10 +316,26 @@ function Graphics:loadPalette(dir, name, transparent_255, pal8bit)
   if transparent_255 then
     palette:setEntry(255, 0xFF, 0x00, 0xFF)
   end
-  self.cache.palette_greyscale_ghost[name] = makeGreyscaleGhost(data)
+  local ghost_palette = makeGreyscaleGhost(data)
   self.cache.palette[name] = palette
-  self.load_info[palette] = {self.loadPalette, self, dir, name, transparent_255}
+  self.cache.palette_greyscale_ghost[name] = ghost_palette
+
+  permanent("palette_" .. name, palette)
+  permanent("ghost_palette_" .. name, ghost_palette)
+
   return palette, self.cache.palette_greyscale_ghost[name]
+end
+
+function Graphics:getPalette(name)
+  name = name or "MPalette.dat"
+  if not self.cache.palette[name] then
+    error("Palette " .. name .. " not found")
+  end
+  return self.cache.palette[name], self.cache.palette_greyscale_ghost[name]
+end
+
+function Graphics:allPalettes()
+  return self.cache.palette
 end
 
 function Graphics:loadGhost(dir, name, index)
@@ -285,11 +354,11 @@ end
 --!param width (int) The width of the bitmap. Defaults to 640
 --!param height (int) The height of the bitmap. Defaults to 480
 --!param dir (string) The directory of the bitmap. Defaults to QData
---!param paldir (string) The directory of the palette.
+--!param _paldir (string) ignored
 --!param pal (string) The name of the palette
---!param transparent_255 (boolean) Whether the 255th entry of the palette should be transparent
+--!param _transparent_255 (boolean) ignored
 --!param flags (table) Additional flags for loading the bitmap
-function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255, flags)
+function Graphics:loadRaw(name, width, height, dir, _paldir, pal, _transparent_255, flags)
   if self.cache.raw[name] then
     return self.cache.raw[name]
   end
@@ -297,13 +366,11 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255
   width = width or 640
   height = height or 480
   dir = dir or "QData"
-  paldir = paldir or dir
-  pal = pal or (name .. ".pal")
   local data = self.app:readDataFile(dir, name .. ".dat")
   data = data:sub(1, width * height)
 
   local bitmap = TH.bitmap()
-  local palette = self:loadPalette(paldir, pal, transparent_255)
+  local palette = self:getPalette(pal or name .. ".pal")
   bitmap:setPalette(palette)
   assert(bitmap:load(data, width, self.target, flags))
 
@@ -316,7 +383,7 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal, transparent_255
   self.reload_functions[bitmap] = bitmap_reloader
 
   self.cache.raw[name] = bitmap
-  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, paldir, pal, transparent_255, flags}
+  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, nil, pal, nil, flags}
   return bitmap
 end
 
@@ -336,7 +403,7 @@ function Graphics:loadBuiltinFont()
     sheet:setPalette(palette)
     sheet:load(dernc(tab), dernc(dat), true, self.target)
     font = TH.bitmap_font()
-    font:setSheet(sheet)
+    font:setSheet(sheet, charsets["cp437"]) -- CorsixTH only ships with a cp437 font
     font:setSeparation(1, 0)
     font:setScaleFactor(TheApp.config.ui_scale)
     self.load_info[font] = {self.loadBuiltinFont, self}
@@ -348,6 +415,8 @@ end
 function Graphics:hasLanguageFont(font)
   if font == nil then
     -- Original game fonts are always present.
+    return true
+  elseif charsets[font] == self.th_charset then
     return true
   else
     -- TODO: Handle more than one font
@@ -408,10 +477,14 @@ local function font_reloader(font)
   font:clearCache()
 end
 
+function Graphics:_isLanguageSupportedByTHAssets()
+  return self.language_font == nil or charsets[self.language_font] == self.th_charset
+end
+
 --! Utility function to return preferred font for main menu ui
 function Graphics:loadMenuFont()
   local font
-  if self.language_font then
+  if self:_isLanguageSupportedByTHAssets() then
     font = self:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   else
     font = self:loadBuiltinFont()
@@ -499,11 +572,11 @@ function Graphics:loadLanguageFont(name, sprite_table, font_options, y_sep, ttf_
     font_options = fo
   end
 
-  if name == nil then
+  if name == nil or charsets[name] == self.th_charset then
     return self:loadFont(sprite_table, font_options)
   end
 
-  local font = self:_loadTrueTypeFont(name, sprite_table, font_options)
+  local font = self:_loadTrueTypeFont("unicode", sprite_table, font_options)
 
   -- A change of language or scale might cause the font to change,
   -- so wrap it in a proxy object which allows the actual object to
@@ -651,17 +724,18 @@ function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_b
 
   -- Use a bitmap font if forced, or the language uses bitmap, or the
   -- sprite_table has no M in it, indicating it's probably a symbol file.
-  local use_bitmap_font = font_options.force_bitmap or not self.language_font or not sprite_table:isVisible(46)
+  local use_bitmap_font = font_options.force_bitmap or
+      self:_isLanguageSupportedByTHAssets() or not sprite_table:isVisible(46)
   local font
   if use_bitmap_font then
     font = TH.bitmap_font()
     font:setSeparation(font_options.x_sep or 0, font_options.y_sep or 0)
-    font:setSheet(sprite_table)
+    font:setSheet(sprite_table, self.th_charset)
     if font_options.apply_ui_scale then
       font:setScaleFactor(TheApp.config.ui_scale)
     end
   else
-    font = self:_loadTrueTypeFont(self.language_font, sprite_table, font_options)
+    font = self:_loadTrueTypeFont("unicode", sprite_table, font_options)
   end
   -- A change of language or scale might cause the font to change,
   -- so wrap it in a proxy object which allows the actual object to
@@ -735,7 +809,7 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   end
 
   local function sheet_reloader(sheet)
-    sheet:setPalette(palette or self:loadPalette())
+    sheet:setPalette(palette or self.cache.palette["MPalette.dat"])
     local data_tab, data_dat
     data_tab = self.app:readDataFile(dir, name .. ".tab")
     data_dat = self.app:readDataFile(dir, name .. ".dat")
@@ -964,4 +1038,13 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
   else
     error("Invalid arguments to setMarker", 2)
   end
+end
+
+-- Kept for load compatibility
+function Graphics:loadPalette(_, name)
+  -- Was named PREF01V.PAL in ui.lua until version 240
+  if name == "PREF01V.PAL" then
+    name = "Pref01V.pal"
+  end
+  return self:getPalette(name)
 end

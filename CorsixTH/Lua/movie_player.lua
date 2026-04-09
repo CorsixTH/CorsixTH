@@ -92,8 +92,6 @@ local destroyMovie = function(me)
   if me.holding_bg_music then
     -- If possible we want to continue playing music where we were
     me.audio:pauseBackgroundTrack()
-  else
-    me.audio:playRandomBackgroundTrack()
   end
   if me.sound then
     me.audio:stopSound(me.sound)
@@ -185,7 +183,7 @@ function MoviePlayer:init()
   self.moviePlayer = TH.moviePlayer()
   self.moviePlayer:setRenderer(self.video)
 
-  local lose_palette = self.app.gfx:loadPalette("Bitmap", "lose.pl8", true, true)
+  local lose_palette = self.app.gfx:getPalette("lose.pl8")
   self.lose_font = self.app.gfx:loadFontAndSpriteTable("QData", "Font39v", false, lose_palette)
   self.lose_font_narrow = self.app.gfx:loadFontAndSpriteTable("QData", "Font40v", false, lose_palette)
 

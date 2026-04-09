@@ -25,6 +25,9 @@ SOFTWARE.
 #include <SDL_stdinc.h>
 #include <ft2build.h>  // IWYU pragma: keep
 // IWYU pragma: no_include "freetype/config/ftheader.h"
+#ifdef WITH_TRACY
+#include <tracy/Tracy.hpp>
+#endif
 
 #include <algorithm>
 #include <climits>
@@ -97,6 +100,8 @@ int l_rawbitmap_set_pal(lua_State* L) {
 }
 
 int l_rawbitmap_load(lua_State* L) {
+  ZoneScoped;
+
   raw_bitmap* pBitmap = luaT_testuserdata<raw_bitmap>(L);
   size_t iDataLen;
   const uint8_t* pData = luaT_checkfile(L, 2, &iDataLen);
@@ -124,6 +129,8 @@ int l_rawbitmap_load(lua_State* L) {
 }
 
 int l_rawbitmap_draw(lua_State* L) {
+  ZoneScoped;
+
   raw_bitmap* pBitmap = luaT_testuserdata<raw_bitmap>(L);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
 
@@ -158,6 +165,8 @@ int l_spritesheet_set_pal(lua_State* L) {
 }
 
 int l_spritesheet_load(lua_State* L) {
+  ZoneScoped;
+
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
   size_t iDataLenTable, iDataLenChunk;
   const uint8_t* pDataTable = luaT_checkfile(L, 2, &iDataLenTable);
@@ -200,6 +209,8 @@ int l_spritesheet_size(lua_State* L) {
 }
 
 int l_spritesheet_draw(lua_State* L) {
+  ZoneScoped;
+
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
   int iSprite =
@@ -231,6 +242,8 @@ int l_spritesheet_draw(lua_State* L) {
 }
 
 int l_spritesheet_hittest(lua_State* L) {
+  ZoneScoped;
+
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
   size_t iSprite = luaL_checkinteger(L, 2);
   int iX = static_cast<int>(luaL_checkinteger(L, 3));
@@ -256,14 +269,28 @@ int l_bitmap_font_new(lua_State* L) {
 }
 
 int l_bitmap_font_set_spritesheet(lua_State* L) {
+  // Note: l_freetype_font_set_spritesheet and l_bitmap_font_set_spritesheet
+  // differ in their expected arguments.
+
   bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
-  // Note: l_freetype_font_set_spritesheet has additional RGB parameters for
-  // the colour.
+  int charset_idx = static_cast<int>(luaL_optinteger(L, 3, 1));
+
+  bitmap_font_character_set charset;
+  switch (charset_idx) {
+    case 1:
+      charset = bitmap_font_character_set::cp437;
+      break;
+    case 2:
+      charset = bitmap_font_character_set::mik;
+      break;
+    default:
+      return luaL_argerror(L, 3, "Invalid character set");
+  }
 
   lua_settop(L, 2);
 
-  pFont->set_sprite_sheet(pSheet);
+  pFont->set_sprite_sheet(pSheet, charset);
   luaT_setenvfield(L, 1, "sprites");
   return 1;
 }
@@ -376,6 +403,8 @@ argb_colour read_color_from_lua(lua_State* L, argb_colour defaultColor) {
 //! @param L Lua stack
 //! @return argument count
 int l_freetype_font_set_font_options(lua_State* L) {
+  ZoneScoped;
+
   // Colour 0 falls back to using the average colour of the sprite sheet.
   int width = 0;
   int height = 0;
@@ -467,6 +496,8 @@ int l_font_get_size(lua_State* L) {
   size_t iMsgLen;
   const char* sMsg = luaT_checkstring(L, 2, &iMsgLen);
 
+  ZoneScoped;
+
   int iMaxWidth = INT_MAX;
   if (!lua_isnoneornil(L, 3))
     iMaxWidth = static_cast<int>(luaL_checkinteger(L, 3));
@@ -481,6 +512,8 @@ int l_font_get_size(lua_State* L) {
 }
 
 int l_font_draw(lua_State* L) {
+  ZoneScoped;
+
   font* pFont = luaT_getfont(L);
   render_target* pCanvas = nullptr;
   if (!lua_isnoneornil(L, 2)) {
@@ -529,6 +562,8 @@ int l_font_draw(lua_State* L) {
 }
 
 int l_font_draw_wrapped(lua_State* L) {
+  ZoneScoped;
+
   font* pFont = luaT_getfont(L);
   render_target* pCanvas = nullptr;
   if (!lua_isnoneornil(L, 2)) {
@@ -576,6 +611,8 @@ int l_font_draw_wrapped(lua_State* L) {
 }
 
 int l_font_draw_tooltip(lua_State* L) {
+  ZoneScoped;
+
   font* pFont = luaT_getfont(L);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
   size_t iMsgLen;
@@ -683,6 +720,8 @@ int l_cursor_new(lua_State* L) {
 }
 
 int l_cursor_load(lua_State* L) {
+  ZoneScoped;
+
   cursor* pCursor = luaT_testuserdata<cursor>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
   if (pCursor->create_from_sprite(pSheet,
@@ -774,6 +813,8 @@ int l_surface_update(lua_State* L) {
 }
 
 int l_surface_fill_black(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   lua_settop(L, 1);
   if (pCanvas->fill_black()) return 1;
@@ -782,7 +823,21 @@ int l_surface_fill_black(lua_State* L) {
   return 2;
 }
 
+int l_surface_fill_colour(lua_State* L) {
+  ZoneScoped;
+
+  render_target* pCanvas = luaT_testuserdata<render_target>(L);
+  uint32_t c = read_color_from_lua(L, 0xFF000000);
+  lua_settop(L, 2);
+  if (pCanvas->fill_colour(c)) return 1;
+  lua_pushnil(L);
+  lua_pushstring(L, pCanvas->get_last_error());
+  return 2;
+}
+
 int l_surface_start_frame(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   lua_settop(L, 1);
   if (pCanvas->start_frame()) return 1;
@@ -792,6 +847,8 @@ int l_surface_start_frame(lua_State* L) {
 }
 
 int l_surface_end_frame(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   lua_settop(L, 1);
   if (pCanvas->end_frame()) return 1;
@@ -801,6 +858,8 @@ int l_surface_end_frame(lua_State* L) {
 }
 
 int l_surface_nonoverlapping(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   if (lua_isnone(L, 2) || lua_toboolean(L, 2) != 0)
     pCanvas->start_nonoverlapping_draws();
@@ -818,6 +877,8 @@ int l_surface_set_blue_filter_active(lua_State* L) {
 }
 
 int l_surface_map(lua_State* L) {
+  ZoneScoped;
+
   lua_pushnumber(
       L, (lua_Number)render_target::map_colour((Uint8)luaL_checkinteger(L, 2),
                                                (Uint8)luaL_checkinteger(L, 3),
@@ -826,6 +887,8 @@ int l_surface_map(lua_State* L) {
 }
 
 int l_surface_rect(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   if (pCanvas->fill_rect(static_cast<uint32_t>(luaL_checkinteger(L, 2)),
                          static_cast<int>(luaL_checkinteger(L, 3)),
@@ -841,6 +904,8 @@ int l_surface_rect(lua_State* L) {
 }
 
 int l_surface_screenshot(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   const char* file_path = luaL_checkstring(L, 2);
   if (pCanvas->take_screenshot(file_path)) {
@@ -853,6 +918,8 @@ int l_surface_screenshot(lua_State* L) {
 }
 
 int l_surface_push_clip(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   clip_rect rcClip;
   rcClip.x = static_cast<clip_rect::x_y_type>(luaL_checkinteger(L, 2));
@@ -865,6 +932,8 @@ int l_surface_push_clip(lua_State* L) {
 }
 
 int l_surface_pop_clip(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   pCanvas->pop_clip_rect();
   lua_settop(L, 1);
@@ -884,6 +953,8 @@ int l_surface_get_height(lua_State* L) {
 }
 
 int l_surface_scale(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   scaled_items eToScale = scaled_items::none;
   if (lua_isnoneornil(L, 3)) {
@@ -912,6 +983,8 @@ int l_surface_set_caption(lua_State* L) {
 }
 
 int l_surface_get_renderer_details(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   lua_pushstring(L, pCanvas->get_renderer_details());
   return 1;
@@ -919,6 +992,8 @@ int l_surface_get_renderer_details(lua_State* L) {
 
 // Lua to THRenderTarget->setWindowGrab
 int l_surface_set_capture_mouse(lua_State* L) {
+  ZoneScoped;
+
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   pCanvas->set_window_grab(
       (lua_isnoneornil(L, 2) != 0) ? false : (lua_toboolean(L, 2) != 0));
@@ -966,6 +1041,8 @@ int l_set_colour(lua_State* L) {
 }
 
 int l_line_draw(lua_State* L) {
+  ZoneScoped;
+
   line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
   pLine->draw(pCanvas, static_cast<int>(luaL_optinteger(L, 3, 0)),
@@ -1091,6 +1168,7 @@ void lua_register_gfx(const lua_register_state* pState) {
                                          lua_metatable::surface);
     lcb.add_function(l_surface_update, "update");
     lcb.add_function(l_surface_fill_black, "fillBlack");
+    lcb.add_function(l_surface_fill_colour, "fillColour");
     lcb.add_function(l_surface_start_frame, "startFrame");
     lcb.add_function(l_surface_end_frame, "endFrame");
     lcb.add_function(l_surface_nonoverlapping, "nonOverlapping");

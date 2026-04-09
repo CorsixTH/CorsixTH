@@ -22,14 +22,15 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <zlib.h>
+#ifdef WITH_UPDATE_CHECK
+#include <curl/curl.h>
+#endif
+
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
 #include <string>
-
-#ifdef WITH_UPDATE_CHECK
-#include <curl/curl.h>
-#endif
 
 #include "bootstrap.h"
 #include "lua.hpp"
@@ -299,6 +300,16 @@ int l_get_compile_options(lua_State* L) {
   return 1;
 }
 
+int l_crc32(lua_State* L) {
+  size_t iDataLen;
+  const uint8_t* pData = luaT_checkfile(L, 1, &iDataLen);
+
+  lua_pushinteger(L, static_cast<lua_Integer>(crc32(
+                         0L, pData, static_cast<unsigned int>(iDataLen))));
+
+  return 1;
+}
+
 }  // namespace
 
 void luaT_setclosure(const lua_register_state* pState, lua_CFunction fn,
@@ -328,6 +339,7 @@ int luaopen_th(lua_State* L) {
   add_lua_function(pState, bootstrap_lua_resources, "GetBuiltinFont");
   add_lua_function(pState, l_fetch_latest_version_info,
                    "FetchLatestVersionInfo");
+  add_lua_function(pState, l_crc32, "CRC32File");
 
   // Classes
   lua_register_map(pState);

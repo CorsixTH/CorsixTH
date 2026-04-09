@@ -27,6 +27,9 @@ SOFTWARE.
 #include <SDL.h>
 #include <png.h>
 // IWYU pragma: no_include <pngconf.h>
+#ifdef WITH_TRACY
+#include <tracy/Tracy.hpp>
+#endif
 
 #include <algorithm>
 #include <cmath>
@@ -593,11 +596,21 @@ bool render_target::end_frame() {
   }
 
   SDL_RenderPresent(renderer);
+  FrameMark;
   return true;
 }
 
 bool render_target::fill_black() {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+  SDL_RenderClear(renderer);
+
+  return true;
+}
+
+bool render_target::fill_colour(uint32_t colour) {
+  SDL_SetRenderDrawColor(renderer, palette::get_red(colour),
+                         palette::get_green(colour), palette::get_blue(colour),
+                         palette::get_alpha(colour));
   SDL_RenderClear(renderer);
 
   return true;

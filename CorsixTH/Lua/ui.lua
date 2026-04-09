@@ -149,7 +149,7 @@ function UI:UI(app, minimal)
   if minimal then
     self.tooltip_font = app.gfx:loadBuiltinFont()
   else
-    local palette = app.gfx:loadPalette("QData", "PREF01V.PAL", true)
+    local palette = app.gfx:getPalette("Pref01V.pal")
     self.tooltip_font = app.gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette, { apply_ui_scale = true })
   end
   self.tooltip = nil
@@ -193,9 +193,8 @@ function UI:UI(app, minimal)
   end
 
   self:setCursor(self.default_cursor)
-
-
   self:setupGlobalKeyHandlers()
+  self.casebook_selected_disease = false
 end
 
 function UI:runDebugScript()
@@ -1109,15 +1108,13 @@ function UI:afterLoad(old, new)
       local gfx = self.app.gfx
       gfx.cache.raw = {}
       gfx.cache.tabled = {}
-      gfx.cache.palette = {}
-      gfx.cache.palette_greyscale_ghost = {}
       gfx.cache.language_fonts = {}
       gfx.builtin_font = nil
     end
   end
   if old < 236 then
     local gfx = self.app.gfx
-    local palette = gfx:loadPalette("QData", "PREF01V.PAL", true)
+    local palette = gfx:getPalette("Pref01V.pal")
     self.tooltip_font = gfx:loadFontAndSpriteTable("QData", "Font00V", false, palette, { apply_ui_scale = true })
   end
 
@@ -1189,9 +1186,9 @@ end
 
 --! Triggers reset of the application (reloads .lua files)
 function UI:resetApp()
-  debug.getregistry()._RESTART = true
-  TheApp.running = false
+  self.app:reset()
 end
+
 -- Added this function as quit does not exit the application, it only exits the game to the menu screen
 function UI:exitApplication()
   self.app:abandon()

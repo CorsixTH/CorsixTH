@@ -515,7 +515,7 @@ function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_of
     self.font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   end
   self.tree_sprites = gfx:loadSpriteTable("Bitmap", "tree_ctrl", true,
-    gfx:loadPalette("Bitmap", "tree_ctrl.pal"))
+    gfx:getPalette("tree_ctrl.pal"))
 
   -- Calculate sizes and counts
   local scrollbar_width = 20

@@ -24,7 +24,9 @@ SOFTWARE. --]]
 
 --Language("Developer", "Developer", "dev")
 
+Font("cp437")
 Inherit("english")
+IsArabicNumerals(true)
 
 --! Construct a 'translation' with the string names as text value.
 local function fixup(t, str_name)

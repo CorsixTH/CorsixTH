@@ -64,10 +64,11 @@ because the letters ø and Ø is not included in the original ingame-font.
 
 -- 1. Global settings (do not edit!)
 --Font("unicode") --todo: Add unicode/freefont
+Font("cp437")
 Language("Norsk", "Norwegian", "nb", "nob")
 Inherit("english")
 Encoding(utf8)
-
+IsArabicNumerals(true)
 
 -- 2. Faxes
 fax = {
@@ -204,7 +205,7 @@ tooltip = {
     browse_screenshots = "Se etter en annen lokasjon for skjermdumper  ( nåværende beliggenhet: %1% ) ",
     not_specified = "Ingen mappe er valgt enda!",
     font_location = "Lokasjon for en font som kan vise Unicode-bokstaver som er nödvendig for ditt språk. Om denne ikke velges så er bokstavtyåene begrenset til de som er i Theme Hospital.",
-    reset_to_default = "Tilbakestill mappen til standard lokasjon",
+    reset_to_default = "Tilbakestill mappen til standard lokasjon ( %1% )",
     default = "Standard lokasjon",
     no_font_specified = "Ingen font-fil er valgt enda!",
   },

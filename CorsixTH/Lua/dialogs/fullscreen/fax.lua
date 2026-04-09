@@ -31,7 +31,7 @@ function UIFax:UIFax(ui, icon)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
-  local palette = gfx:loadPalette("QData", "Fax01V.pal", true)
+  local palette = gfx:getPalette("Fax01V.pal")
   self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
   self.fax_font = gfx:loadFontAndSpriteTable("QData", "Font51V", false, palette, { apply_ui_scale = true })
   self.icon = icon
@@ -53,8 +53,10 @@ function UIFax:UIFax(ui, icon)
       local --[[persistable:fax_choice_button]] function callback()
         self:choice(i)
       end
-      self.choice_buttons[i] = self:addPanel(17, 492, y):makeButton(0, 0, 43, 43, 18, callback)
-        :setDisabledSprite(19):enable(enabled)
+      self.choice_buttons[i] = self:addPanel(17, 492, y, nil, nil, true, DrawFlags.Nearest)
+        :makeButton(0, 0, 43, 43, 18, callback)
+        :setDisabledSprite(19)
+        :enable(enabled)
     end
   end
 
@@ -298,7 +300,7 @@ function UIFax:afterLoad(old, new)
   if old < 236 then
     local gfx = TheApp.gfx
     self.background = gfx:loadRaw("Fax01V", 640, 480, "QData", "QData", "Fax01V.pal", true)
-    local palette = gfx:loadPalette("QData", "Fax01V.pal", true)
+    local palette = gfx:getPalette("Fax01V.pal")
     self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
     self.fax_font = gfx:loadFontAndSpriteTable("QData", "Font51V", false, palette, { apply_ui_scale = true })
   end

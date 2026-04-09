@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 240 -- Announcer Subtitles
+local SAVEGAME_VERSION = 243 -- Cache list of reception desks
 
 class "App"
 
@@ -43,10 +43,8 @@ function App:App()
   self.config = {}
   self.hotkeys = {}
   self.runtime_config = {}
-  self.running = false
   self.key_modifiers = {}
   self.gfx = {}
-  self.last_dispatch_type = ""
   self.eventHandlers = {
     frame = self.drawFrame,
     timer = self.onTick,
@@ -108,32 +106,7 @@ function App:init()
   print("---------------------------------------------------------------")
   print("")
 
-  -- Prereq 1: Config file (for screen width / height / TH folder)
-  -- Note: These errors cannot be translated, as the config file specifies the language
-  local conf_path = self.command_line["config-file"] or "config.txt"
-  local conf_chunk, conf_err = loadfile_envcall(conf_path)
-  if not conf_chunk then
-    error("Unable to load the config file. Please ensure that CorsixTH " ..
-      "has permission to read/write " .. conf_path .. ", or use the " ..
-      "--config-file=filename command line option to specify a writable file. " ..
-      "For reference, the error loading the config file was: " .. conf_err)
-  else
-    conf_chunk(self.config)
-  end
-  self:fixConfig()
-  corsixth.require("filesystem")
-  local good_install_folder, error_message = self:checkInstallFolder()
-  self.good_install_folder = good_install_folder
-  self.level_dir = self:getFullPath("Levels", true)
-  self.campaign_dir = self:getFullPath("Campaigns", true)
-  self:initUserDirectories()
-  self:initSavegameDir()
-  self:initScreenshotsDir()
-
-  -- Create the window
-  if not SDL.init("video", "timer", "audio") then
-    return false, "Cannot initialise SDL"
-  end
+  -- Prereq 1: C++ and lua sides are compatible
   local compile_opts = TH.GetCompileOptions()
   local api_version = corsixth.require("api_version")
   if api_version ~= compile_opts.api_version then
@@ -147,7 +120,32 @@ function App:init()
     end
   end
 
-  -- Report operating system
+  -- Prereq 2: Config file (for screen width / height / TH folder)
+  -- Note: These errors cannot be translated, as the config file specifies the language
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  local _, conf_err = require('config_finder').load_config(conf_path, self.config)
+  if conf_err then
+    error("Unable to load the config file. Please ensure that CorsixTH " ..
+      "has permission to read/write " .. conf_path .. ", or use the " ..
+      "--config-file=filename command line option to specify a writable file. " ..
+      "For reference, the error loading the config file was: " .. conf_err)
+  end
+  self:fixConfig()
+  corsixth.require("filesystem")
+  local good_install_folder, error_message, charset = self:checkInstallFolder()
+  self.good_install_folder = good_install_folder
+  self.level_dir = self:getFullPath("Levels", true)
+  self.campaign_dir = self:getFullPath("Campaigns", true)
+  self:initUserDirectories()
+  self:initSavegameDir()
+  self:initScreenshotsDir()
+
+  -- Create the window
+  if not SDL.init("video", "timer", "audio") then
+    return false, "Cannot initialise SDL"
+  end
+
+  -- Report operating system (possible values: "windows", "macos", "unix")
   self.os = compile_opts.os
 
   local modes = {}
@@ -173,6 +171,11 @@ function App:init()
   SDL.wm.setIconWin32()
 
   self.caption = "CorsixTH"
+  if self.config.track_fps then
+    SDL.trackFPS(true)
+    SDL.limitFPS(false)
+  end
+
 
   -- Create gamelog file.
   self:initGamelogFile()
@@ -180,7 +183,8 @@ function App:init()
   -- Prereq 2: Load and initialise the graphics subsystem
   corsixth.require("persistance")
   corsixth.require("graphics")
-  self.gfx = Graphics(self)
+  local gfx_set = good_install_folder and (self.using_demo_files and "demo" or "full") or "base"
+  self.gfx = Graphics(self, gfx_set, charset)
 
   -- Put up the loading screen
   if good_install_folder then
@@ -279,6 +283,7 @@ function App:init()
   -- Load audio
   corsixth.require("audio")
   self.audio = Audio(self)
+  self:initMusicDir()
   self.audio:init()
 
   -- Load movie player
@@ -302,11 +307,9 @@ function App:init()
 
   -- Load/setup hotkeys.
   local hotkeys_path = self.command_line["hotkeys-file"] or "hotkeys.txt"
-  local hotkeys_chunk, hotkeys_err = loadfile_envcall(hotkeys_path)
-  if not hotkeys_chunk then
+  local _, hotkeys_err = require('config_finder').load_hotkeys(hotkeys_path, self.hotkeys)
+  if hotkeys_err then
     error(_S.hotkeys_file_err.file_err_01 .. hotkeys_path .. _S.hotkeys_file_err.file_err_02 .. hotkeys_err)
-  else
-    hotkeys_chunk(self.hotkeys)
   end
   self:fixHotkeys()
 
@@ -360,8 +363,7 @@ function App:init()
     local function callback(path)
       TheApp.config.theme_hospital_install = path
       TheApp:saveConfig()
-      debug.getregistry()._RESTART = true
-      TheApp.running = false
+      TheApp:reset()
     end
 
     self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
@@ -409,6 +411,10 @@ function App:init()
     end
   end
 
+  -- Finished init, save any config changes applied
+  TheApp:saveConfig()
+  TheApp:saveHotkeys()
+
   if self.config.play_intro then
     self.moviePlayer:playIntro(callback_after_movie)
   else
@@ -441,10 +447,24 @@ function App:trimLogs()
   for i=log_retention, #log_table do os.remove(log_table[i]) end
 end
 
+function App:getConfigPath()
+  return self.command_line["config-file"] or "config.txt"
+end
+
+function App:getDefaultScreenshotsDir()
+  local conf_path = self:getConfigPath()
+  return conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Screenshots"
+end
+
+function App:getDefaultSavegameDir()
+  local conf_path = self:getConfigPath()
+  return conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Saves"
+end
+
 --! Tries to initialize the user level and campaign directories
 -- TODO: Integrate other directory initialisations into this function
 function App:initUserDirectories()
-  local conf_path = self.command_line["config-file"] or "config.txt"
+  local conf_path = self:getConfigPath()
 
   -- Attempt to set the user's directory choice
   -- param dir (path) The defined path of the folder by the user
@@ -475,9 +495,8 @@ end
 --! Tries to initialize the savegame directory, returns true on success and
 --! false on failure.
 function App:initSavegameDir()
-  local conf_path = self.command_line["config-file"] or "config.txt"
-  self.savegame_dir = self.config.savegames or
-      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Saves"
+  local default_savegame_dir = self:getDefaultSavegameDir()
+  self.savegame_dir = self.config.savegames or default_savegame_dir
 
   if self.savegame_dir:sub(-1, -1) == pathsep then
     self.savegame_dir = self.savegame_dir:sub(1, -2)
@@ -495,9 +514,8 @@ function App:initSavegameDir()
 end
 
 function App:initScreenshotsDir()
-  local conf_path = self.command_line["config-file"] or "config.txt"
-  self.screenshot_dir = self.config.screenshots or
-      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Screenshots"
+  local default_screenshots_dir = self:getDefaultScreenshotsDir()
+  self.screenshot_dir = self.config.screenshots or default_screenshots_dir
 
   if self.screenshot_dir:sub(-1, -1) == pathsep then
     self.screenshot_dir = self.screenshot_dir:sub(1, -2)
@@ -514,41 +532,139 @@ function App:initScreenshotsDir()
   return true
 end
 
+function App:initMusicDir()
+  -- No need to set the music dir if it's already configured
+  if self.config.audio_music then
+    if isDirectory(self.config.audio_music) then
+      return
+    else
+      print("Warning: Configured music directory '" .. self.config.audio_music .. "' is not a valid directory.")
+      self.config.audio_music = nil
+    end
+  end
+
+  -- Checks if the given directory name is a valid music directory name
+  local function isValidMusicDirName(name)
+    local posible_dirs = {"music"}
+
+    for _, valid_name in ipairs(posible_dirs) do
+      if name == valid_name then
+        return true
+      end
+    end
+    return false
+  end
+
+  -- Checks if the specified directory has music files
+  local function dirHasMusic(path)
+    -- Build a lookup table of allowed extensions (waveform + instructional)
+    local waveform = list_to_set(self.audio.allowed_waveform_formats)
+    local instructional = list_to_set(self.audio.allowed_instructional_formats)
+
+    -- Scan directory for files with matching extensions
+    for file in lfs.dir(path) do
+      local ext = file:match("%.([^.]+)$")
+      if ext and (waveform[ext:upper()] or instructional[ext:upper()]) then
+        return true
+      end
+    end
+
+    return false
+  end
+
+  -- Checks if the specified path contains a music directory and if it has music files
+  -- If found, the directory's path is returned
+  local function findMusicDir(path)
+    if path == nil or not isDirectory(path) then
+      return nil
+    end
+
+    local normalized_path = stripTrailingSlashes(path)
+
+    -- Check every file and folder inside the given path
+    for entry in lfs.dir(normalized_path) do
+      local entry_path = normalized_path .. "/" .. entry -- paths with "/" work on all operating systems
+
+      if isValidMusicDirName(entry:lower()) and
+         canOpenDirectory(entry_path) and
+         dirHasMusic(entry_path)
+      then
+        return entry_path
+      end
+    end
+    return nil
+  end
+
+  local operating_system = self.os
+  local corsixth_path = lfs.currentdir()
+  local conf_path = self.command_line["config-file"] or nil  -- Gets the path of the config file ('nil' if it's in CorsixTH's dir)
+  conf_path = conf_path:match("^(.-)[^" .. pathsep .. "]*$") -- Removes the config file name from the above path
+
+  if(operating_system == "macos") then
+    -- On macOS skip checking the game's directory, since it's difficult to obtain and/or open
+    corsixth_path = nil
+  end
+
+  -- Check corsixth's install directory first, then the config file directory
+  local music_dir = findMusicDir(conf_path) or findMusicDir(corsixth_path)
+  if music_dir then
+    self.config.audio_music = music_dir
+  end
+
+  -- self:saveConfig()  --> Don't save the config here, it'll get saved later in the app initialization process
+end
+
 --! Initialises the application's language based on the player's choice.
 --!return success (boolean) Whether the chosen language was initialised
 --!return err (string) What to report back to the player on failure
 function App:initLanguage()
   -- Make sure that we can actually show the desired language.
-  -- If we can't, work out the most common issue and reset to English.
+  -- If we can't, work out the most common issue and reset to a revert to a
+  -- language that is likely to be supported for the version of Theme Hospital
+  -- the player has.
   local success, err = true, nil
   local language = self.config.language
-  local function revertToEnglish()
-    language = [[English]]
-    self.config.language = language
+
+  -- Revert to Russian for the Russian regional release of Theme Hospital or
+  -- English otherwise.
+  --
+  -- When we support more regional versions of Theme Hospital this function
+  -- should be extended to cover those as well.
+  local function revertToSupportedLanguage()
+    local l
+    if self.gfx:hasLanguageFont("cp437") then
+      l = [[English]]
+    elseif self.gfx:hasLanguageFont("mik") then
+      l = [[Russian]]
+    else
+      print("Warning: No suitable font found. Defaulting to English, but the game may be broken.")
+      l = [[English]]
+    end
+    self.config.language = l
     self:saveConfig()
     success = false
   end
 
   local exists = self.strings:checkLanguageExists(language)
   if not exists then
-    -- Not existent language, revert to English.
+    revertToSupportedLanguage()
     err = "The game language set in the configuration file '" .. language ..
-          "' was not valid. It has been reverted to English. Please select your" ..
-          " desired language from the Settings screen again."
-    revertToEnglish()
+          "' was not valid. It has been reverted to '" .. self.config.language ..
+          "'. Please select your desired language from the Settings screen again."
+    language = self.config.language
   end
 
   local font = self.strings:getFont(language)
   if self.gfx:hasLanguageFont(font) then
     self.gfx.language_font = font
   else
-    -- Font unavailable, revert to English.
-    err = "The game language has been reverted to English because the desired" ..
-          " language '" .. language .. "' could not be loaded. Please make sure" ..
-          " you have specified a font file in Settings-Folders-Font or the" ..
+    revertToSupportedLanguage()
+    err = "The game language has been reverted to '" .. self.config.language ..
+          "' because the desired language '" .. language .. "' could not be loaded." ..
+          " Please make sure you have specified a font file in Settings-Folders-Font or the" ..
           " configuration file."
-    revertToEnglish()
-    self.gfx.language_font = self.strings:getFont([[English]])
+    self.gfx.language_font = self.strings:getFont(self.config.language)
+    language = self.config.language
   end
 
   local strings, speech_file = self.strings:load(language)
@@ -763,6 +879,7 @@ end
 function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, error_prefix, campaign_info)
   local status, err = pcall(self._loadLevel, self, level, difficulty, level_name,
       level_file, level_intro, map_editor, campaign_info)
+  tracy.Message("Loading level: " .. (level_name or level or "map editor"))
   if not status then
     err = error_prefix and error_prefix .. err or "Error while loading level: " .. err
     print(err)
@@ -991,14 +1108,6 @@ function App:checkMissingStringsInLanguage(dir, language)
 end
 
 function App:fixConfig()
-  -- Fill in default values for things which don't exist
-  local config_defaults = select(3, corsixth.require("config_finder"))
-  for k, v in pairs(config_defaults) do
-    if self.config[k] == nil then
-      self.config[k] = v
-    end
-  end
-
   for key, value in pairs(self.config) do
     -- Trim whitespace from beginning and end string values - it shouldn't be
     -- there (at least in any current configuration options).
@@ -1059,59 +1168,8 @@ function App:fixConfig()
 end
 
 function App:saveConfig()
-  -- Load lines from config file
-  local config_file = self.command_line["config-file"] or "config.txt"
-  local fi = io.open(config_file, "r")
-  local lines = {}
-  local handled_ids = {}
-  if fi then
-    for line in fi:lines() do
-      lines[#lines + 1] = line
-      if not (string.find(line, "^%s*$") or string.find(line, "^%s*%-%-")) then -- empty lines or comments
-        -- Look for identifiers we want to save
-        local _, _, identifier, value = string.find(line, "^%s*([_%a][_%w]*)%s*=%s*(.-)%s*$")
-        if identifier then
-          local _, temp
-          -- Trim possible trailing comment from value
-          _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
-          value = temp or value
-          -- Remove enclosing [[]], if necessary
-          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
-          value = temp or value
-
-          -- If identifier also exists in runtime options, compare their values and
-          -- replace the line, if needed
-          handled_ids[identifier] = true
-          if value ~= tostring(self.config[identifier]) then
-            lines[#lines] = string.format("%s = %s", identifier,
-                serialize(self.config[identifier], { long_bracket_level_start = 1 } ))
-          end
-        end
-      end
-    end
-    fi:close()
-  end
-  -- Append options that were not found
-  for identifier, value in pairs(self.config) do
-    if not handled_ids[identifier] then
-      if type(value) == "string" then
-        value = string.format("[[%s]]", value)
-      else
-        value = tostring(value)
-      end
-      lines[#lines + 1] = string.format("%s = %s", identifier, value)
-    end
-  end
-  -- Trim trailing newlines
-  while lines[#lines] == "" do
-    lines[#lines] = nil
-  end
-
-  fi = self:writeToFileOrTmp(config_file)
-  for _, line in ipairs(lines) do
-    fi:write(line .. "\n")
-  end
-  fi:close()
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  require('config_finder').save_config(conf_path, self.config)
 end
 
 --! Tries to open the given file or a file in OS's temp dir.
@@ -1134,15 +1192,6 @@ function App:writeToFileOrTmp(file, mode)
 end
 
 function App:fixHotkeys()
-  -- Fill in default values for things which don't exist
-  local hotkeys_defaults = select(6, corsixth.require("config_finder"))
-
-  for k, v in pairs(hotkeys_defaults) do
-    if self.hotkeys[k] == nil then
-      self.hotkeys[k] = v
-    end
-  end
-
   for key, value in pairs(self.hotkeys) do
     -- Trim whitespace from beginning and end string values - it shouldn't be
     -- there (at least in any current configuration options).
@@ -1157,158 +1206,51 @@ end
 function App:saveHotkeys()
   -- Load lines from config file
   local hotkeys_filename = self.command_line["hotkeys-file"] or "hotkeys.txt"
-  local fi = io.open(hotkeys_filename, "r")
-  local lines = {}
-  local handled_ids = {}
-
-  if fi then
-    for line in fi:lines() do
-      lines[#lines + 1] = line
-      if not (string.find(line, "^%s*$") or string.find(line, "^%s*%-%-")) then -- empty lines or comments
-        -- Look for identifiers we want to save
-        local _, _, identifier, value = string.find(line, "^%s*([_%a][_%w]*)%s*=%s*(.-)%s*$")
-        if identifier then
-          local _, temp
-          -- Trim possible trailing comment from value
-          _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
-          value = temp or value
-          -- Remove enclosing [[]], if necessary
-          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
-          value = temp or value
-
-          -- If identifier also exists in runtime options, compare their values and
-          -- replace the line, if needed
-          handled_ids[identifier] = true
-
-          if value ~= serialize(self.hotkeys[identifier]) then
-            local new_value = self.hotkeys[identifier]
-            if type(new_value) == "string" then
-              new_value = string.format("[[%s]]", new_value)
-            else
-              new_value = serialize(new_value)
-            end
-            lines[#lines] = string.format("%s = %s", identifier, new_value)
-          end
-        end
-      end
-    end
-    fi:close()
-  end
-
-  -- Append options that were not found
-  for identifier, value in pairs(self.hotkeys) do
-    if not handled_ids[identifier] then
-      if type(value) == "string" then
-        value = string.format("[[%s]]", value)
-      else
-        value = tostring(value)
-      end
-      lines[#lines + 1] = string.format("%s = %s", identifier, value)
-    end
-  end
-  -- Trim trailing newlines
-  while lines[#lines] == "" do
-    lines[#lines] = nil
-  end
-
-  fi = self:writeToFileOrTmp(hotkeys_filename)
-  for _, line in ipairs(lines) do
-    fi:write(line .. "\n")
-  end
-
-  fi:close()
+  require('config_finder').save_hotkeys(hotkeys_filename, self.hotkeys)
 end
 
-function App:run()
-  -- The application "main loop" is an SDL event loop written in C, which calls
-  -- a coroutine whenever an event occurs. Initially it may seem odd to involve
-  -- coroutines, but it does give a few advantages:
-  --  1) Lua can signal the main loop to exit by finishing the coroutine
-  --  2) If an error occurs, the call stack is preserved in the coroutine, so
-  --     Lua can query or print the call stack as required, rather than
-  --     hardcoding error behaviour in C.
-  local co = coroutine.create(function(app)
-    local yield = coroutine.yield
-    local dispatch = app.dispatch
-    local repaint = true
-    while app.running do
-      repaint = dispatch(app, yield(repaint))
-    end
-  end)
-
-  if self.config.track_fps then
-    SDL.trackFPS(true)
-    SDL.limitFPS(false)
-  end
-
-  self.running = true
-  do
-    local num_iterations = 0
-    self.resetInfiniteLoopChecker = function()
-      num_iterations = 0
-    end
-    debug.sethook(co, function()
-      num_iterations = num_iterations + 1
-      if num_iterations == 100 then
-        error("Suspected infinite loop", 2)
-      end
-    end, "", 1e7)
-  end
-  coroutine.resume(co, self)
-  local e, where = SDL.mainloop(co)
-  debug.sethook(co, nil)
-  self.running = false
+function App:errorHandler(last_dispatch_type, st)
+  print("An error has occurred!")
+  print("Almost anything can be the cause, but the detailed information " ..
+          "below can help the developers find the source of the error.")
+  print("Running: The " .. last_dispatch_type .. " handler.")
+  print("A stack trace is included below, and the handler has been disconnected.")
+  print(st)
+  print("")
   self.video:setCaptureMouse(false) -- Free the mouse, so the user can eg close the window.
-  if e ~= nil then
-    if where then
-      -- Errors from an asynchronous callback done on the dispatcher coroutine
-      -- will end up here. As the error didn't originate from a dispatched
-      -- event, self.last_dispatch_type is wrong. Therefore, an extra value is
-      -- returned from mainloop(), meaning that where == "callback".
-      self.last_dispatch_type = where
+  if self.world then
+    self.world:gameLog("Error in " .. last_dispatch_type .. " handler: ")
+    self.world:gameLog(st)
+    self.world:dumpGameLog()
+  end
+  if self.world and last_dispatch_type == "timer" and self.world.current_tick_entity then
+    -- Disconnecting the tick handler is quite a drastic measure, so give
+    -- the option of just disconnecting the offending entity and attempting
+    -- to continue.
+    local handler = self.eventHandlers[last_dispatch_type]
+    local entity = self.world.current_tick_entity
+    self.world.current_tick_entity = nil
+    if class.is(entity, Patient) then
+      self.ui:addWindow(UIPatient(self.ui, entity))
+    elseif class.is(entity, Staff) then
+      self.ui:addWindow(UIStaff(self.ui, entity))
     end
-    print("An error has occurred!")
-    print("Almost anything can be the cause, but the detailed information " ..
-      "below can help the developers find the source of the error.")
-    print("Running: The " .. self.last_dispatch_type .. " handler.")
-    print("A stack trace is included below, and the handler has been disconnected.")
-    print(debug.traceback(co, e, 0))
-    print("")
-    if self.world then
-      self.world:gameLog("Error in " .. self.last_dispatch_type .. " handler: ")
-      self.world:gameLog(debug.traceback(co, e, 0))
-      self.world:dumpGameLog()
-    end
-    if self.world and self.last_dispatch_type == "timer" and self.world.current_tick_entity then
-      -- Disconnecting the tick handler is quite a drastic measure, so give
-      -- the option of just disconnecting the offending entity and attempting
-      -- to continue.
-      local handler = self.eventHandlers[self.last_dispatch_type]
-      local entity = self.world.current_tick_entity
-      self.world.current_tick_entity = nil
-      if class.is(entity, Patient) then
-        self.ui:addWindow(UIPatient(self.ui, entity))
-      elseif class.is(entity, Staff) then
-        self.ui:addWindow(UIStaff(self.ui, entity))
-      end
-      self.ui:addWindow(UIConfirmDialog(self.ui, true,
-        "Sorry, but an error has occurred. There can be many reasons - see the " ..
-        "log window for details. Would you like to attempt a recovery?",
-        --[[persistable:app_attempt_recovery]] function()
-        self.world:gameLog("Recovering from error in timer handler...")
-        entity.ticks = false
-        self.eventHandlers.timer = handler
-      end
-      ))
-    end
-    self.eventHandlers[self.last_dispatch_type] = nil
-    if self.last_dispatch_type ~= "frame" then
-      -- If it wasn't the drawing code which failed, then it would be useful
-      -- to ensure that a draw happens, as with events disconnected, a frame
-      -- might not otherwise be drawn for a while.
-      pcall(self.drawFrame, self)
-    end
-    return self:run()
+    self.ui:addWindow(UIConfirmDialog(self.ui, true,
+            "Sorry, but an error has occurred. There can be many reasons - see the " ..
+                    "log window for details. Would you like to attempt a recovery?",
+    --[[persistable:app_attempt_recovery]] function()
+              self.world:gameLog("Recovering from error in timer handler...")
+              entity.ticks = false
+              self.eventHandlers.timer = handler
+            end
+    ))
+  end
+  self.eventHandlers[last_dispatch_type] = nil
+  if last_dispatch_type ~= "frame" then
+    -- If it wasn't the drawing code which failed, then it would be useful
+    -- to ensure that a draw happens, as with events disconnected, a frame
+    -- might not otherwise be drawn for a while.
+    pcall(self.drawFrame, self)
   end
 end
 
@@ -1317,8 +1259,6 @@ local done_no_handler_warning = {}
 function App:dispatch(evt_type, ...)
   local handler = self.eventHandlers[evt_type]
   if handler then
-    self:resetInfiniteLoopChecker()
-    self.last_dispatch_type = evt_type
     return handler(self, ...)
   else
     if not done_no_handler_warning[evt_type] then
@@ -1492,7 +1432,7 @@ function App:checkInstallFolder()
       user_dir,
       user_dir and (user_dir .. pathsep .. "Documents"),
       win_home_dir,
-      select(1, corsixth.require("config_finder")):match("(.*[/\\])"):sub(1, -2),
+      corsixth.require("config_finder").config_filename:match("(.*[/\\])"):sub(1, -2),
       mac_app_dir,
       mac_app_dir and mac_app_dir:match("(.*)/.*%.app"),
       "/Applications/Theme Hospital.app/Contents/Resources/game/Theme Hospital.app/" ..
@@ -1584,7 +1524,6 @@ function App:checkInstallFolder()
     check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656, true)
     check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 335220, true)
     check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520, true)
-    check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
     check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728, true)
   end
 
@@ -1594,7 +1533,17 @@ function App:checkInstallFolder()
     table.insert(corrupt, message)
   end
 
-  return true, #corrupt ~= 0 and corrupt or nil
+  local fontData = assert(self.fs:readContents("QData" .. pathsep .. "Font00V.dat"))
+  local fontcrc = TH.CRC32File(fontData)
+
+  local charset
+  if fontcrc == 0x0033FA05 then
+    charset = "mik"
+  else
+    charset = "cp437"
+  end
+
+  return true, #corrupt ~= 0 and corrupt or nil, charset
 end
 
 function App:findSoundFont()
@@ -1873,6 +1822,7 @@ function App:quickSave()
 end
 
 function App:load(filepath)
+  tracy.Message("Loading game from " .. filepath)
   if self.world then
     self:worldExited()
   end
@@ -1989,12 +1939,18 @@ end
 function App:exit()
   -- Save config before exiting
   self:saveConfig()
-  self.running = false
+  self:saveHotkeys()
+  SDL.quit()
 end
 
 --! Exits the game completely without saving the config i.e. Alt+F4 for Quit Application
 function App:abandon()
-  self.running = false
+  SDL.quit()
+end
+
+function App:reset()
+  debug.getregistry()._RESTART = true
+  SDL.quit()
 end
 
 --! This function is automatically called after loading a game and serves for compatibility.

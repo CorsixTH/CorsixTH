@@ -133,8 +133,9 @@ endif()
 
 # Find Lua
 if(VCPKG_TARGET_TRIPLET)
-  find_package(Lua CONFIG REQUIRED)
-  target_link_libraries(CorsixTH_lib PUBLIC lua)
+  find_package(Lua REQUIRED)
+  target_include_directories(CorsixTH_lib PUBLIC ${LUA_INCLUDE_DIRS})
+  target_link_libraries(CorsixTH_lib PUBLIC ${LUA_LIBRARIES})
 else()
   find_package(Lua REQUIRED)
   if(Lua_FOUND OR LUA_FOUND)
@@ -184,7 +185,7 @@ endif()
 
 # Find FFMPEG
 if(CORSIX_TH_USE_FFMPEG)
-  find_package(FFmpeg COMPONENTS AVFORMAT AVCODEC AVUTIL SWSCALE SWRESAMPLE REQUIRED)
+  find_package(FFmpeg COMPONENTS AVFORMAT AVCODEC SWSCALE SWRESAMPLE AVUTIL REQUIRED)
   if(FFMPEG_FOUND)
     target_link_libraries(CorsixTH_lib PUBLIC ${FFMPEG_LIBRARIES})
     include_directories(${FFMPEG_INCLUDE_DIRS})
@@ -258,20 +259,40 @@ target_link_libraries(CorsixTH_lib PRIVATE ZLIB::ZLIB)
 
 if(WITH_MIDI_DEVICE)
   find_package(RtMidi)
-  if(NOT RtMidi_FOUND)
-    if(PkgConfig_FOUND)
-      pkg_search_module(RTMIDI REQUIRED rtmidi)
+  if(NOT RtMidi_FOUND AND PkgConfig_FOUND)
+    pkg_search_module(RTMIDI REQUIRED rtmidi)
+    if(RTMIDI_FOUND)
       add_library(RtMidi::rtmidi INTERFACE IMPORTED)
       set_target_properties(RtMidi::rtmidi PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${RTMIDI_INCLUDE_DIRS}"
         INTERFACE_LINK_LIBRARIES "${RTMIDI_LIBRARIES}")
-    else()
-      message(FATAL_ERROR "Error: RtMidi was not found. If not available, compile WITH_MIDI_DEVICE=OFF")
+      set(RtMidi_FOUND TRUE)
     endif()
   endif()
-  message("RtMidi Found")
-  target_link_libraries(CorsixTH_lib PRIVATE RtMidi::rtmidi)
+  if(RtMidi_FOUND)
+    message("  RtMidi found")
+    target_link_libraries(CorsixTH_lib PRIVATE RtMidi::rtmidi)
+  else()
+    message(FATAL_ERROR "Error: RtMidi was not found. If not available, compile WITH_MIDI_DEVICE=OFF")
+  endif()
+endif()
 
+if(FETCH_SOUNDFONT)
+  include(FetchContent)
+
+  fetchcontent_declare(
+    FluidR3
+    URL https://raw.githubusercontent.com/Jacalz/fluid-soundfont/master/SF3/FluidR3.sf3
+    URL_HASH SHA256=32039e039c2f708467a6f171fbfd9fecdcadfe40a2327837c391490c8de70021
+    DOWNLOAD_NO_EXTRACT TRUE)
+
+  fetchcontent_makeavailable(FluidR3)
+  set(FLUIDR3_FILE ${fluidr3_SOURCE_DIR}/FluidR3.sf3)
+endif()
+
+if(WITH_TRACY)
+  find_package(Tracy CONFIG REQUIRED)
+  target_link_libraries(CorsixTH_lib PUBLIC Tracy::TracyClient)
 endif()
 
 # Launch script to facilitate out of source builds
@@ -308,16 +329,25 @@ if(NOT USE_SOURCE_DATADIRS)
     install(FILES CorsixTH.ico DESTINATION ${CORSIX_TH_DATADIR})
 
     # Install dependencies
-    file(GLOB DLL_DEPS "${CMAKE_CURRENT_BINARY_DIR}/*.dll")
-    install(FILES ${DLL_DEPS} DESTINATION ${CORSIX_TH_DATADIR})
-    file(GLOB LUA_DEPS "${CMAKE_CURRENT_BINARY_DIR}/*.lua")
-    install(FILES ${LUA_DEPS} DESTINATION ${CORSIX_TH_DATADIR})
-    if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/mime")
-      install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/mime" "${CMAKE_CURRENT_BINARY_DIR}/socket" DESTINATION ${CORSIX_TH_DATADIR})
+    if(CMAKE_CONFIGURATION_TYPES)
+      install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/"
+        DESTINATION ${CORSIX_TH_DATADIR}
+        FILES_MATCHING
+        PATTERN "*.dll"
+        PATTERN "*.lua"
+      )
+    else()
+      install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/"
+        DESTINATION ${CORSIX_TH_DATADIR}
+        FILES_MATCHING
+        PATTERN "*.dll"
+        PATTERN "*.lua"
+      )
     endif()
+
     # Include this module to search for compiler-provided system runtime
     # libraries and add install rules for them.
-    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ".")
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${CORSIX_TH_DATADIR})
     include(InstallRequiredSystemLibraries)
   else()
     install(TARGETS CorsixTH
@@ -331,6 +361,10 @@ if(NOT USE_SOURCE_DATADIRS)
     FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png|pl8)$"
   )
   install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
+
+  if(FETCH_SOUNDFONT)
+    install(FILES ${FLUIDR3_FILE} DESTINATION ${CORSIX_TH_DATADIR})
+  endif()
 
   if(UNIX AND NOT APPLE)
     install(FILES corsix-th.6 DESTINATION ${CMAKE_INSTALL_MANDIR}/man6)

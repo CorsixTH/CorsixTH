@@ -34,7 +34,7 @@ function UITownMap:UITownMap(ui)
   self.app = app
 
   if not pcall(function()
-    local palette = gfx:loadPalette("QData", "Town01V.pal", true)
+    local palette = gfx:getPalette("Town01V.pal")
 
     self.background = gfx:loadRaw("Town01V", 640, 480, "QData", "QData", "Town01V.pal", true)
     self.info_font  = gfx:loadFontAndSpriteTable("QData", "Font34V", false, palette, { apply_ui_scale = true })
@@ -365,7 +365,7 @@ end
 function UITownMap:afterLoad(old, new)
   if old < 236 then
     local gfx = TheApp.gfx
-    local palette = gfx:loadPalette("QData", "Town01V.pal", true)
+    local palette = gfx:getPalette("Town01V.pal")
     self.background = gfx:loadRaw("Town01V", 640, 480, "QData", "QData", "Town01V.pal", true)
     self.info_font = gfx:loadFontAndSpriteTable("QData", "Font34V", false, palette, { apply_ui_scale = true })
     self.city_font = gfx:loadFontAndSpriteTable("QData", "Font31V", false, palette, { apply_ui_scale = true })

@@ -32,9 +32,14 @@ SOFTWARE.
 
 #include "../Src/bootstrap.h"
 #include "../Src/lua.hpp"
+#include "../Src/sdl_core.h"
 #include "../Src/th_lua.h"
 #ifdef WITH_UPDATE_CHECK
 #include <curl/curl.h>
+#endif
+#ifdef WITH_TRACY
+#include <tracy/Tracy.hpp>
+#include <tracy/TracyLua.hpp>
 #endif
 
 // Template magic for checking type equality
@@ -52,12 +57,48 @@ struct types_equal<T1, T1> {
   };
 };
 
+#ifdef WITH_TRACY
+
+/// Replacement Lua Hook for Tracy Lua instrumentation
+/**
+ * As of this implementation the lua hook included in Tracy does not handle
+ * errors caught by pcall, so we implement our own hook that does. See:
+ * https://github.com/wolfpld/tracy/issues/1320
+ */
+void l_tracy_hook(lua_State* L, lua_Debug* ar) {
+  using namespace tracy;
+  static int depth = 0;
+  if (ar->event == LUA_HOOKCALL) {
+    lua_getinfo(L, "Snl", ar);
+    depth++;
+
+    char src[256];
+    detail::LuaShortenSrc(src, ar->short_src);
+
+    const auto srcloc = Profiler::AllocSourceLocation(
+        ar->currentline, src, ar->name ? ar->name : ar->short_src);
+    TracyQueuePrepare(QueueType::ZoneBeginAllocSrcLoc);
+    MemWrite(&item->zoneBegin.time, Profiler::GetTime());
+    MemWrite(&item->zoneBegin.srcloc, srcloc);
+    TracyQueueCommit(zoneBeginThread);
+  } else if (ar->event == LUA_HOOKRET) {
+    do {
+      depth--;
+      TracyQueuePrepare(QueueType::ZoneEnd);
+      MemWrite(&item->zoneEnd.time, Profiler::GetTime());
+      TracyQueueCommit(zoneEndThread);
+    } while (lua_getstack(L, depth, ar) == 0);
+  }
+}
+
+#endif
+
 //! Program entry point
 /*!
-    Prepares a Lua state for, and catches errors from, lua_main(). By
+    Prepares a Lua state for, and catches errors from, lua_init(). By
     executing in Lua mode as soon as possible, errors can be nicely caught
     sooner, hence this function does as little as possible and leaves the rest
-    for lua_main().
+    for lua_init().
 */
 int main(int argc, char** argv) {
   struct compile_time_lua_check {
@@ -83,11 +124,17 @@ int main(int argc, char** argv) {
                    "Cannot open Lua state.\n");
       return 0;
     }
+#ifdef WITH_TRACY
+    tracy::LuaRegister(L.get());
+#endif
+#ifdef TRACY_ENABLE
+    lua_sethook(L.get(), l_tracy_hook, LUA_MASKCALL | LUA_MASKRET, 0);
+#endif
     lua_atpanic(L.get(), lua_panic);
     luaL_openlibs(L.get());
     lua_settop(L.get(), 0);
     lua_pushcfunction(L.get(), lua_stacktrace);
-    lua_pushcfunction(L.get(), lua_main);
+    lua_pushcfunction(L.get(), lua_init);
 
     // Move command line parameters onto the Lua stack
     lua_checkstack(L.get(), argc);
@@ -110,6 +157,7 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "%s\n", lua_tostring(L.get(), -1));
       }
     }
+    mainloop(L.get());
 
     lua_getfield(L.get(), LUA_REGISTRYINDEX, "_RESTART");
     bRun = lua_toboolean(L.get(), -1) != 0;

@@ -18,10 +18,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+Font("cp437")
 Language("Svenska", "Swedish", "sv", "swe")
 Inherit("english")
 Inherit("original_strings", 5)
 Encoding(utf8)
+IsArabicNumerals(true)
 
 -------------------------------  OVERRIDE  ----------------------------------
 object.reception_desk = "Reception"
@@ -431,7 +433,7 @@ tooltip.folders_window = {
   no_font_specified = "Ingen typsnittsfil vald än!",
   not_specified = "Ingen sökväg vald än!",
   default = "Standardsökväg",
-  reset_to_default = "Återställ mappen till standardsökvägen",
+  reset_to_default = "Återställ mappen till standardsökvägen ( %1% )",
   back  = "Stäng den här dialogen och återgå till alternativmenyn",
 }
 

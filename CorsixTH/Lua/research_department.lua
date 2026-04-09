@@ -158,7 +158,8 @@ end
 --! all the other categories.
 function ResearchDepartment:redistributeResearchPoints()
   local sum, all_finished = 0, true
-  local policy = {"cure", "diagnosis", "drugs", "improvements", "specialisation"}
+  local policy = {"cure", "diagnosis", "drugs", "improvements"}
+  local specialisation_point = self.research_policy["specialisation"].frac
   for _, research_category in ipairs(policy) do
     sum = sum + self.research_policy[research_category].frac
     if self.research_policy[research_category].current and self.research_policy[research_category].current ~= self.drain then
@@ -166,6 +167,7 @@ function ResearchDepartment:redistributeResearchPoints()
     end
   end
   if not all_finished then
+    self.research_policy.total = self.research_policy.total - specialisation_point
     if sum == 0 then
       local num_cat = 0
       for _, categ  in ipairs(policy) do
@@ -190,6 +192,7 @@ function ResearchDepartment:redistributeResearchPoints()
       end
     else
       local new_sum, max_value, max_category = 0, 0, ""
+      new_sum = new_sum + specialisation_point
       for _, categ  in ipairs(policy) do
         local research_cat = self.research_policy[categ]
         if research_cat.frac > max_value then
@@ -205,6 +208,7 @@ function ResearchDepartment:redistributeResearchPoints()
         self.research_policy[max_category].frac = frac
       end
     end
+    self.research_policy.total = self.research_policy.total + specialisation_point
   else
     self.research_policy.total = 0
     self.research_policy.specialisation.current = nil

@@ -218,17 +218,19 @@ end
 --[[ Set the colour of a panel
 ! Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
 !param col (table) Colour given as a table with three fields red, green and blue, each an integer value in [0, 255].
+!param preserve_disable (boolean) If true, do not adjust the panel's disabled colour.
 ]]
-function Panel:setColour(col)
+function Panel:setColour(col, preserve_disable)
   self.colour = self.colour and TheApp.video:mapRGB(col.red, col.green, col.blue)
   self.highlight_colour = self.highlight_colour and TheApp.video:mapRGB(
-    sanitize(col.red + 40),
-    sanitize(col.green + 40),
-    sanitize(col.blue + 40))
+    sanitize(col.red + 60),
+    sanitize(col.green + 60),
+    sanitize(col.blue + 60))
   self.shadow_colour = self.shadow_colour and TheApp.video:mapRGB(
-    sanitize(col.red - 40),
-    sanitize(col.green - 40),
-    sanitize(col.blue - 40))
+    sanitize(col.red - 60),
+    sanitize(col.green - 60),
+    sanitize(col.blue - 60))
+  if preserve_disable then return self end
   self.disabled_colour = self.disabled_colour and TheApp.video:mapRGB(
     sanitize(math.floor((col.red + 100) / 2)),
     sanitize(math.floor((col.green + 100) / 2)),
@@ -480,14 +482,14 @@ features a highlight and a shadow that makes it appear either lowered or raised.
 ]]
 function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour, disabled_colour, lowered_colour, apply_ui_scale)
   highlight_colour = highlight_colour or {
-    red = sanitize(colour.red + 40),
-    green = sanitize(colour.green + 40),
-    blue = sanitize(colour.blue + 40),
+    red = sanitize(colour.red + 60),
+    green = sanitize(colour.green + 60),
+    blue = sanitize(colour.blue + 60),
   }
   shadow_colour = shadow_colour or {
-    red = sanitize(colour.red - 40),
-    green = sanitize(colour.green - 40),
-    blue = sanitize(colour.blue - 40),
+    red = sanitize(colour.red - 60),
+    green = sanitize(colour.green - 60),
+    blue = sanitize(colour.blue - 60),
   }
   disabled_colour = disabled_colour or {
     red = sanitize(math.floor((colour.red + 100) / 2)),
@@ -1739,6 +1741,14 @@ function Window:onMouseUp(button, x, y)
   return repaint
 end
 
+--! This function can be used to control mousewheel input (i.e. scrolling).
+--! Override this function in dervied classes, with what you'd like to happen
+--! on this event.
+--!param x (int) Mousewheel has moved on the horizontal axis (-1 is
+-- leftward movement, +1 is rightward movement)
+--!param y (int) Mousewheel has moved on the vertical axis (-1 is downward
+-- movement, +1 is upward movement)
+--!return repaint (boolean) if screen is to be redrawn.
 function Window:onMouseWheel(x, y)
   local repaint = false
   if self.windows then
