@@ -27,6 +27,9 @@ SOFTWARE.
 #include <SDL.h>
 #include <png.h>
 // IWYU pragma: no_include <pngconf.h>
+#ifdef WITH_TRACY
+#include <tracy/Tracy.hpp>
+#endif
 
 #include <algorithm>
 #include <cmath>
@@ -593,6 +596,7 @@ bool render_target::end_frame() {
   }
 
   SDL_RenderPresent(renderer);
+  FrameMark;
   return true;
 }
 

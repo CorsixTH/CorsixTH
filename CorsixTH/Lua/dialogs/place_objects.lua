@@ -292,6 +292,9 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund, move_c
   end
   -- Update blueprint
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
+  if object.object.id == "reception_desk" then -- Rebuild cache of reception desks
+    self.ui.hospital:buildReceptionDesksCache()
+  end
 end
 
 --! Remove all items from the menu.
@@ -562,6 +565,9 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   self:removeObject(object, dont_close_if_empty)
   object.orientation_before = nil
 
+  if object.object.id == "reception_desk" then -- Rebuild cache of reception desks
+    self.ui.hospital:buildReceptionDesksCache()
+  end
   return real_obj
 end
 

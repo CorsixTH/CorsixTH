@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 242 -- Machine menu enhancements
+local SAVEGAME_VERSION = 243 -- Cache list of reception desks
 
 class "App"
 
@@ -535,7 +535,12 @@ end
 function App:initMusicDir()
   -- No need to set the music dir if it's already configured
   if self.config.audio_music then
-    return
+    if isDirectory(self.config.audio_music) then
+      return
+    else
+      print("Warning: Configured music directory '" .. self.config.audio_music .. "' is not a valid directory.")
+      self.config.audio_music = nil
+    end
   end
 
   -- Checks if the given directory name is a valid music directory name
@@ -874,6 +879,7 @@ end
 function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, error_prefix, campaign_info)
   local status, err = pcall(self._loadLevel, self, level, difficulty, level_name,
       level_file, level_intro, map_editor, campaign_info)
+  tracy.Message("Loading level: " .. (level_name or level or "map editor"))
   if not status then
     err = error_prefix and error_prefix .. err or "Error while loading level: " .. err
     print(err)
@@ -1816,6 +1822,7 @@ function App:quickSave()
 end
 
 function App:load(filepath)
+  tracy.Message("Loading game from " .. filepath)
   if self.world then
     self:worldExited()
   end

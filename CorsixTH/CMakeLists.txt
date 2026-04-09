@@ -259,19 +259,22 @@ target_link_libraries(CorsixTH_lib PRIVATE ZLIB::ZLIB)
 
 if(WITH_MIDI_DEVICE)
   find_package(RtMidi)
-  if(NOT RtMidi_FOUND)
-    if(PkgConfig_FOUND)
-      pkg_search_module(RTMIDI REQUIRED rtmidi)
+  if(NOT RtMidi_FOUND AND PkgConfig_FOUND)
+    pkg_search_module(RTMIDI REQUIRED rtmidi)
+    if(RTMIDI_FOUND)
       add_library(RtMidi::rtmidi INTERFACE IMPORTED)
       set_target_properties(RtMidi::rtmidi PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${RTMIDI_INCLUDE_DIRS}"
         INTERFACE_LINK_LIBRARIES "${RTMIDI_LIBRARIES}")
-    else()
-      message(FATAL_ERROR "Error: RtMidi was not found. If not available, compile WITH_MIDI_DEVICE=OFF")
+      set(RtMidi_FOUND TRUE)
     endif()
   endif()
-  message("RtMidi Found")
-  target_link_libraries(CorsixTH_lib PRIVATE RtMidi::rtmidi)
+  if(RtMidi_FOUND)
+    message("  RtMidi found")
+    target_link_libraries(CorsixTH_lib PRIVATE RtMidi::rtmidi)
+  else()
+    message(FATAL_ERROR "Error: RtMidi was not found. If not available, compile WITH_MIDI_DEVICE=OFF")
+  endif()
 endif()
 
 if(FETCH_SOUNDFONT)
@@ -285,6 +288,11 @@ if(FETCH_SOUNDFONT)
 
   fetchcontent_makeavailable(FluidR3)
   set(FLUIDR3_FILE ${fluidr3_SOURCE_DIR}/FluidR3.sf3)
+endif()
+
+if(WITH_TRACY)
+  find_package(Tracy CONFIG REQUIRED)
+  target_link_libraries(CorsixTH_lib PUBLIC Tracy::TracyClient)
 endif()
 
 # Launch script to facilitate out of source builds
