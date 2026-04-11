@@ -242,13 +242,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
 end
 
 -- precondition: self.active_index has to correspond to the object to be removed
-function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund, move_canceled)
-  if refund then
-    local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
-    local msg = _S.transactions.sell_object .. ": " .. object.object.name
-    self.ui.hospital:receiveMoney(build_cost, msg, build_cost)
-  end
-
+function UIPlaceObjects:removeObject(object, dont_close_if_empty, placed, move_canceled)
   if move_canceled and object.existing_object then
     -- previously grabbed an existing object so the object was not deleted
     -- from its previous location, but simply made invisible.
@@ -256,6 +250,12 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund, move_c
     object.existing_object:setInvisible(false)
     object.existing_object.picked_up = false
     self.ui:playSound("place_r.wav")
+  elseif not placed then
+    -- The player should be reimbursed for the cost of the item, i.e.
+    -- whether they were previously purchased. So do refund.
+    local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
+    local msg = _S.transactions.sell_object .. ": " .. object.object.name
+    self.ui.hospital:receiveMoney(build_cost, msg, build_cost)
   end
 
   object.qty = object.qty - 1
@@ -298,20 +298,18 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund, move_c
 end
 
 --! Remove all items from the menu.
---!param refund (bool) Should the player be reimbursed for the cost
--- of the items, i.e. whether they were previously purchased.
 --!param move_canceled (bool) moving objects has been cancelled.
-function UIPlaceObjects:removeAllObjects(refund, move_canceled)
+function UIPlaceObjects:removeAllObjects(move_canceled)
   -- There is surely a nicer way to implement this than the current hack. Rewrite it sometime later.
   self:setActiveIndex(1)
   for _ = 1, #self.objects do
     for _ = 1, self.objects[1].qty do
-      self:removeObject(self.objects[1], true, refund, move_canceled)
+      self:removeObject(self.objects[1], true, false, move_canceled)
     end
   end
 end
 
-function UIPlaceObjects:removeObjects(object_list, refund)
+function UIPlaceObjects:removeObjects(object_list)
   -- rewrite at some point..
   if not object_list then
     object_list = {}
@@ -322,7 +320,7 @@ function UIPlaceObjects:removeObjects(object_list, refund)
       if o.object.id == p.object.id then
         self.active_index = j
         for _ = 1, o.qty do
-          self:removeObject(p, true, refund)
+          self:removeObject(p, true, false)
         end
       end
     end
@@ -333,7 +331,7 @@ end
 --!param move_canceled (bool) moving objects has been cancelled.
 function UIPlaceObjects:close(move_canceled)
   self.ui:tutorialStep(1, {4, 5}, 1)
-  self:removeAllObjects(true, move_canceled)
+  self:removeAllObjects(move_canceled)
   self:clearBlueprint()
   self.ui:setWorldHitTest(true)
   return Window.close(self)
