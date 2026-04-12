@@ -953,29 +953,73 @@ bool level_map::layer_exists(uint16_t layer, int& height) const {
   return false;
 }
 
-void level_map::draw_floor(render_target* canvas, int map_base_x, int map_base_y,
-                           int pix_width, int pix_height, int scr_base_x,
-                           int scr_base_y) const {
-  for (map_tile_iterator itrNode1(this, map_base_x, map_base_y, pix_width, pix_height);
-       itrNode1; ++itrNode1) {
-    int scr_tile_x = itrNode1.tile_x_position_on_screen() + scr_base_x - 32;
-    int scr_tile_y = itrNode1.tile_y_position_on_screen() + scr_base_y;
+namespace {
+const int left_safety = 3 * 64;
+const int right_safety = 3 * 64;
+const int up_safety = 3 * 32;
+const int down_safety = 3 * 32;
 
-    // First, draw the floor tile as it should be below everything else.
-    int height = 32;
-    uint16_t layer = itrNode1->tile_layers[tile_layer::ground];
-    wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &height);
-    wall_blocks->draw_sprite(canvas, layer & 0xFF, scr_tile_x,
-                             scr_tile_y - height + 32, (layer >> 8) | thdf_nearest);
+//! Check if the tile at (scr_tile_x, scr_tile_y) is off-screen.
+/**!
+ * @param scr_base_x X coordinate of the top-left of the visible area.
+ * @param scr_base_y Y coordinate of the top-left of the visible area.
+ * @param pix_width Width of the visible area.
+ * @param pix_height Height of the visible area.
+ * @param scr_tile_x X coordinate of the top-left corner of the tile at the
+ *     screen.
+ * @param scr_tile_y Y coordinate of the top-left corner of the tile at the
+ *     screen.
+ */
+bool outside_screen(int scr_base_x, int scr_base_y, int pix_width,
+                    int pix_height, int scr_tile_x, int scr_tile_y) {
+  // Left border check, relative to the right of the tile.
+  if (scr_tile_x + 64 + right_safety < scr_base_x) return true;
 
-    // Draw floor shadows immediately after floor tiles ensuring that all
-    // shadow pixels are drawn onto freshly drawn opaque floor tile pixels.
-    if (itrNode1->flags.shadow_full) {
-      wall_blocks->draw_sprite(canvas, 74, scr_tile_x, scr_tile_y,
-                               thdf_alpha_75 | thdf_nearest);
-    } else if (itrNode1->flags.shadow_half) {
-      wall_blocks->draw_sprite(canvas, 75, scr_tile_x, scr_tile_y,
-                               thdf_alpha_75 | thdf_nearest);
+  // Right border check, relative to the left of the tile.
+  if (scr_tile_x - left_safety > scr_base_x + pix_width) return true;
+
+  // Top border check, relative to the bottom of the tile.
+  if (scr_tile_y + 32 + down_safety < scr_base_y) return true;
+
+  // Bottom border check, relative to the top of the tile.
+  return scr_tile_y - up_safety > scr_base_y + pix_height;
+}
+
+}  // Namespace.
+
+void level_map::draw_all_floor(render_target* canvas, int map_base_x,
+                               int map_base_y, int pix_width, int pix_height,
+                               int scr_base_x, int scr_base_y) const {
+  for (int y = 0; y < get_height(); y++) {
+    for (int x = 0; x < get_width(); x++) {
+      const map_tile* tile = get_tile_unchecked(x, y);
+      int scr_tile_x =
+          level_map::world_to_screen_x(x, y) - map_base_x + scr_base_x - 32;
+      int scr_tile_y =
+          level_map::world_to_screen_y(x, y) - map_base_y + scr_base_y;
+
+      if (outside_screen(scr_base_x, scr_base_y, pix_width, pix_height,
+                         scr_tile_x, scr_tile_y)) {
+        continue;
+      }
+
+      // First, draw the floor tile as it should be below everything else.
+      int height = 32;
+      uint16_t layer = tile->tile_layers[tile_layer::ground];
+      wall_blocks->get_sprite_size(layer & 0xFF, nullptr, &height);
+      wall_blocks->draw_sprite(canvas, layer & 0xFF, scr_tile_x,
+                               scr_tile_y - height + 32,
+                               (layer >> 8) | thdf_nearest);
+
+      // Draw floor shadows immediately after floor tiles ensuring that all
+      // shadow pixels are drawn onto freshly drawn opaque floor tile pixels.
+      if (tile->flags.shadow_full) {
+        wall_blocks->draw_sprite(canvas, 74, scr_tile_x, scr_tile_y,
+                                 thdf_alpha_75 | thdf_nearest);
+      } else if (tile->flags.shadow_half) {
+        wall_blocks->draw_sprite(canvas, 75, scr_tile_x, scr_tile_y,
+                                 thdf_alpha_75 | thdf_nearest);
+      }
     }
   }
 }
@@ -1056,7 +1100,8 @@ void level_map::draw(render_target* canvas, int map_base_x, int map_base_y,
   // For proper hit-testing, the 'level_map::hit_test' function below should
   // 'paint' in the same way as here, except reversed.
 
-  draw_floor(canvas, map_base_x, map_base_y, pix_width, pix_height, scr_base_x, scr_base_y);
+  draw_all_floor(canvas, map_base_x, map_base_y, pix_width, pix_height,
+                 scr_base_x, scr_base_y);
 
   bool bFirst = true;
   map_scanline_iterator formerIterator;

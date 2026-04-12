@@ -388,6 +388,16 @@ class level_map {
     y = (T)16 * (x_ + y);
   }
 
+  //! Convert a map-tile coordinate to its relative x screen coordinate.
+  static int world_to_screen_x(int x, int y) {
+    return 32 * (x - y);
+  }
+
+  //! Convert a map-tile coordinate to its relative y screen coordinate.
+  static int world_to_screen_y(int x, int y) {
+    return 16 * (x + y);
+  }
+
   //! Convert absolute screen coordinates to world (tile) coordinates
   template <typename T>
   static inline void screen_to_world(T& x, T& y) {
@@ -402,8 +412,9 @@ class level_map {
   void set_overlay(map_overlay* pOverlay, bool bTakeOwnership);
 
  private:
-  void draw_floor(render_target* canvas, int map_base_x, int map_base_y,
-                  int pix_width, int pix_height, int scr_base_x, int scr_base_y) const;
+  void draw_all_floor(render_target* canvas, int map_base_x, int map_base_y,
+                      int pix_width, int pix_height, int scr_base_x,
+                      int scr_base_y) const;
   void draw_north_wall(const map_tile* tile, int scr_tile_x, int scr_tile_y,
                        render_target* canvas) const;
 
