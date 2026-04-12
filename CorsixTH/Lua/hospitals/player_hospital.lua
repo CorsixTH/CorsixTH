@@ -283,7 +283,7 @@ function PlayerHospital:monthlyAdviceChecks()
   local current_month = today:monthOfYear()
   local current_year = today:year()
 
-  if not self:hasStaffedDesk() then
+  if not self:hasReceptionDesk(true) then
     self:checkReceptionAdvice(current_month, current_year)
     -- No other checks should happen in this month
     return
@@ -344,14 +344,11 @@ end
 
 --! Give advice about having more desks.
 function PlayerHospital:msgMultiReceptionDesks()
+  local num_desks = #self:getReceptionDesks()
   -- Compute total queue length at staffed receptions.
-  local num_desks = 0
   local queue_total = 0
-  for _, desk in ipairs(self:findReceptionDesks()) do
-    num_desks = num_desks + 1
-    if desk.receptionist or desk.reserved_for then
-      queue_total = queue_total + #desk.queue
-    end
+  for _, desk in ipairs(self:getReceptionDesks(true)) do
+    queue_total = queue_total + #desk.queue
   end
 
   local receptionists = self:countStaffOfCategory("Receptionist")

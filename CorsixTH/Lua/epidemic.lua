@@ -513,7 +513,7 @@ end
 --as they leave the reception desks.]]
 function Epidemic:markPatientsAsPassedReception()
   local queuing_patients = {}
-  for _, desk in ipairs(self.hospital:findReceptionDesks()) do
+  for _, desk in ipairs(self.hospital:getReceptionDesks()) do
     for _, patient in ipairs(desk.queue) do
       -- Use patient as map key to speed up lookup
       queuing_patients[patient] = true

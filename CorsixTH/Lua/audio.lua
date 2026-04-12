@@ -699,7 +699,7 @@ function Audio:playBackgroundTrack(index)
     local music = info.music
     if not music or type(music) == 'number' then
       local data = self:getFileData(index)
-      if (not info.filename_music or info.is_xmi) then
+      if info.is_xmi then
         if self.midi_player then
           self.midi_player:setVolume(self.app.config.music_volume)
           self.midi_player:playXmi(data)
@@ -839,5 +839,6 @@ function Audio:destroy()
   self.has_bg_music = false
   self.not_loaded = not TheApp.config.audio
   self.speech_file_name = nil
+  self.sound_fx = nil
   SDL.audio.destroy()
 end

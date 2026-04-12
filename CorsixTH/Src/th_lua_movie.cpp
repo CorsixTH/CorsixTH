@@ -20,7 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "config.h"
+
 #include <SDL_rect.h>
+
+#ifdef WITH_TRACY
+#include <tracy/Tracy.hpp>
+#endif
 
 #include "lua.hpp"
 #include "th_gfx_sdl.h"
@@ -49,6 +55,8 @@ int l_movie_enabled(lua_State* L) {
 }
 
 int l_movie_load(lua_State* L) {
+  ZoneScoped;
+
   bool loaded;
   const char* warning;
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
@@ -62,12 +70,16 @@ int l_movie_load(lua_State* L) {
 }
 
 int l_movie_unload(lua_State* L) {
+  ZoneScoped;
+
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
   pMovie->unload();
   return 0;
 }
 
 int l_movie_play(lua_State* L) {
+  ZoneScoped;
+
   const char* warning;
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
   pMovie->clear_last_error();
@@ -78,12 +90,16 @@ int l_movie_play(lua_State* L) {
 }
 
 int l_movie_stop(lua_State* L) {
+  ZoneScoped;
+
   movie_player* pVideo = luaT_testuserdata<movie_player>(L);
   pVideo->stop();
   return 0;
 }
 
 int l_movie_toggle_pause(lua_State* L) {
+  ZoneScoped;
+
   movie_player* pVideo = luaT_testuserdata<movie_player>(L);
   pVideo->togglePause();
   return 0;
@@ -114,6 +130,8 @@ int l_movie_get_length(lua_State* L) {
 }
 
 int l_movie_refresh(lua_State* L) {
+  ZoneScoped;
+
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
   double pts =
       pMovie->refresh(SDL_Rect{static_cast<int>(luaL_checkinteger(L, 2)),
@@ -126,12 +144,16 @@ int l_movie_refresh(lua_State* L) {
 }
 
 int l_movie_allocate_picture_buffer(lua_State* L) {
+  ZoneScoped;
+
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
   pMovie->allocate_picture_buffer();
   return 0;
 }
 
 int l_movie_deallocate_picture_buffer(lua_State* L) {
+  ZoneScoped;
+
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
   pMovie->deallocate_picture_buffer();
   return 0;

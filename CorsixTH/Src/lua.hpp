@@ -66,4 +66,9 @@ inline void lua_getfenv(lua_State* L, int n) { luaT_getfenv52(L, n); }
 
 #endif  // LUA_VERSION_NUM >= 502
 
+// LUA_OK was added in 5.2, 5.1 just used 0
+#ifndef LUA_OK
+#define LUA_OK 0
+#endif
+
 #endif  // CORSIX_TH_LUA_HPP_

@@ -273,15 +273,85 @@ function Object:updateDynamicInfo()
   end
 end
 
-function Object:getSecondaryUsageTile()
-  local x, y = self.tile_x, self.tile_y
-  local offset = self.object_type.orientations
-  if offset then
-    offset = offset[self.direction].use_position_secondary
-    x = x + offset[1]
-    y = y + offset[2]
+--! This function returns a tiles offset coordinates for
+--! object use position
+--! param usage_position_name (string) usage position name
+--! return (table) table with {x, y, usage_position_name} table
+function Object:_getUsageTile(usage_position_name)
+  local object_x, object_y = self.tile_x, self.tile_y
+  local orientations = self.object_type.orientations
+  if orientations then
+    local object_layout = orientations[self.direction]
+    return Object:getXYforUsePosition(object_x, object_y, object_layout, usage_position_name)
+  else
+    return nil
   end
-  return x, y
+end
+
+--! This function returns an absolute world coordinates for use position.
+--! param object_x (integer) world tile x coordinate.
+--! param object_y (integer) world tile y coordinate.
+--! param object_layout (table) object orientation description with footprint.
+--! param usage_position_name (string) usage position name.
+--! return (array) array with '{x, y, usage_position_name}' tables inside.
+function Object:getXYforUsePosition(object_x, object_y, object_layout, usage_position_name)
+  local usage_tile_offset = object_layout[usage_position_name]
+  if usage_tile_offset then
+    local first = usage_tile_offset[1]
+    local second = usage_tile_offset[2]
+    if type(first) == "table" then -- for 'handyman_position' in 'cast_remover' case as it store table
+      local result = {}
+      for _, xy in ipairs(usage_tile_offset) do
+        local x = object_x + xy[1]
+        local y = object_y + xy[2]
+        table.insert(result, {x, y, usage_position_name})
+      end
+      return result
+    else -- for other regular cases
+      local x = object_x + first
+      local y = object_y + second
+      return {{x, y, usage_position_name}}
+    end
+  else
+    return nil
+  end
+end
+
+--! This function returns an array with use positions names
+--! return (array) use positions names
+function Object:usePositionNames()
+  return {
+    "use_position",
+    "use_position_secondary",
+    "finish_use_position",
+    "finish_use_position_secondary",
+    "handyman_position",
+  }
+end
+
+--! This function returns a table with tiles offset coordinates for
+--! object use positions
+--! return (table) use positions offsets
+function Object:getAllUsageTiles()
+  local result_table = {}
+  local object_use_positions_names = Object:usePositionNames()
+  for key, use_position_name in pairs(object_use_positions_names) do
+    local usage_tile = self:_getUsageTile(use_position_name)
+    result_table = table_merge(result_table, usage_tile)
+  end
+  return result_table
+end
+
+--! This function returns tile offset coordinate for "use_position_secondary"
+--! return (int, int) x, y tile offset
+function Object:getSecondaryUsageTile()
+  local secondary_usage_tile = self:_getUsageTile("use_position_secondary")
+  if secondary_usage_tile then
+    local xy = secondary_usage_tile[1]
+    return xy[1], xy[2]
+  else
+    return nil, nil
+  end
 end
 
 -- This function returns a list of all "only_passable" tiles belonging to an object.
@@ -296,6 +366,21 @@ function Object:getWalkableTiles()
   return tiles
 end
 
+local opposite_flags = {
+  travelNorth = "travelSouth",
+  travelSouth = "travelNorth",
+  travelEast = "travelWest",
+  travelWest = "travelEast"
+}
+
+--! The function returns the direction opposite to the one passed as a parameter.
+--! For North, it returns South, and so on.
+--! param passable_flag (string) 'passable_flag' that we want to invert.
+--! return (string) inverted 'passable_flag'.
+function Object.getComplementaryPassableFlag(passable_flag)
+  return opposite_flags[passable_flag]
+end
+
 function Object:setTile(x, y)
   local function coordinatesAreInFootprint(object_footprint, xpos, ypos)
     for _, xy in ipairs(object_footprint) do
@@ -306,20 +391,12 @@ function Object:setTile(x, y)
     return false
   end
 
-  local function getComplementaryPassableFlag(passable_flag)
-    if passable_flag == "travelNorth" or passable_flag == "travelSouth" then
-      return passable_flag == "travelNorth" and "travelSouth" or "travelNorth"
-    else
-      return passable_flag == "travelEast" and "travelWest" or "travelEast"
-    end
-  end
-
   local function setPassableFlags(passable_flag, xpos, ypos, next_x, next_y, value)
     local flags1 = {}
     flags1[passable_flag] = value
     self.world.map.th:setCellFlags(xpos, ypos, flags1)
     local flags2 = {}
-    flags2[getComplementaryPassableFlag(passable_flag)] = value
+    flags2[Object.getComplementaryPassableFlag(passable_flag)] = value
     self.world.map.th:setCellFlags(next_x, next_y, flags2)
   end
 
@@ -658,6 +735,9 @@ function Object:onClick(ui, button, data)
     end
 
     self.picked_up = true
+    if self.object_type.id == "reception_desk" then -- Rebuild cache of reception desks
+      self.hospital:buildReceptionDesksCache()
+    end
     self.world:destroyEntity(self)
     -- NB: the object has to be destroyed before updating/creating the window,
     -- or the blueprint will be wrong

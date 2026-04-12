@@ -399,6 +399,17 @@ function array_join(array, separator)
   return result
 end
 
+--! Merge tables in one table
+function table_merge(...)
+  local result = {}
+   for _, t in ipairs({...}) do
+      for _, v in ipairs(t) do
+        table.insert(result, v)
+      end
+  end
+  return result
+end
+
 local function serialize_string(val, options)
   local level = options and options.long_bracket_level_start or 0
   while string.find(val, ']' .. string.rep('=', level) .. ']') do
@@ -564,4 +575,17 @@ function canOpenDirectory(path)
 
   -- "lfs.dir()" will throw an error if the directory isn't accessible/doesn't exist
   -- (it does the same job of the "isDirectory()" function, but also checks if the directory can be opened)
+end
+
+-- Tracy Profiler stubs
+if not tracy then
+  local function noop() end
+  tracy = {
+    ZoneBegin = noop,
+    ZoneBeginN = noop,
+    ZoneBeginS = noop,
+    ZoneBeginNS = noop,
+    ZoneEnd = noop,
+    Message = noop
+  }
 end

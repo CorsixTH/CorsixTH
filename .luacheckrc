@@ -30,9 +30,9 @@ globals = { -- Globals
             "pause_gc_and_use_weak_keys", "permanent",
             "rangeMapLookup", "rnc", "strict_declare_global",
             "unpermanent", "values", "serialize",
-            "array_join", "shallow_clone", "staff_initials_cache",
+            "array_join", "table_merge", "shallow_clone", "staff_initials_cache",
             "hasBit", "bitOr", "inspect", "getRandomEntryFromArray", "isTableEmpty",
-            "stripTrailingSlashes", "isDirectory", "canOpenDirectory",
+            "stripTrailingSlashes", "isDirectory", "canOpenDirectory", "tracy",
 
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",

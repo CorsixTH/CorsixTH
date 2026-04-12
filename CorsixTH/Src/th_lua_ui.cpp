@@ -24,6 +24,10 @@ SOFTWARE.
 
 #include "config.h"
 
+#ifdef WITH_TRACY
+#include <tracy/Tracy.hpp>
+#endif
+
 #include <list>
 
 #include "lua.hpp"
@@ -53,6 +57,8 @@ inline bool is_wall_drawn(const level_map& map, const map_tile& node,
 }
 
 int l_town_map_draw(lua_State* L) {
+  ZoneScoped;
+
   luaL_checktype(L, 1, LUA_TTABLE);
   level_map* pMap = luaT_testuserdata<level_map>(L, 2);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 3);

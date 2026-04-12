@@ -1202,9 +1202,9 @@ end
 
 --! Triggers reset of the application (reloads .lua files)
 function UI:resetApp()
-  debug.getregistry()._RESTART = true
-  TheApp.running = false
+  self.app:reset()
 end
+
 -- Added this function as quit does not exit the application, it only exits the game to the menu screen
 function UI:exitApplication()
   self.app:abandon()

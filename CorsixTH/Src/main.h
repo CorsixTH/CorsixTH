@@ -26,18 +26,23 @@ SOFTWARE.
 
 //! Lua mode entry point
 /*!
-    Performs the Lua initialisation tasks which have to be done in C, and then
-    transfers control to CorsixTH.lua as soon as possible (so that as little as
-    possible behaviour is hardcoded into C rather than Lua).
+    Performs initialization tasks for setting up the lua environment, and
+    then calls the main lua entry point: CorsixTH.lua or an alternative
+    script passed in via the command line.
+
+    \see lua_init_no_eval
 */
-int lua_main(lua_State* L);
+int lua_init(lua_State* L);
 
 //! Alternative lua mode entry point
 /*!
-    Behaves like CorsixTH_lua_main, except that it doesn't transfer control
-    over to Lua scripts - it just prepares everything for them and loads them.
+    Performs initialization tasks for setting up the lua environment,
+    including preloading libraries and registering C functions; verifying
+    the lua runtime version matches; and preparing the stack to call
+    CorsixTH.lua or an alternate Lua entry script passed via the command
+    line.
 */
-int lua_main_no_eval(lua_State* L);
+int lua_init_no_eval(lua_State* L);
 
 //! Process a caught error before returning it to the caller
 /*!

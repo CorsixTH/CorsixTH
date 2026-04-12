@@ -21,6 +21,7 @@
 # Tests and debug options
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
 #   - ENABLE_SANITIZERS : Build with AddressSanitizer (ASan) and UndefinedBehaviorSanitizer (UBSan) enabled (no)
+#   - WITH_TRACY : Build with Tracy profiling enabled (no)
 
 # Additional build targets
 #   - BUILD_ANIMVIEW : Generate AnimView build files (no)
@@ -39,6 +40,7 @@ option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
 option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
 option(BUILD_TOOLS "Build additional CLI tools (rnc_decode)" OFF)
 option(ENABLE_SANITIZERS "Build with ASan and UBSan enabled" OFF)
+option(WITH_TRACY "Build with Tracy profiling enabled" OFF)
 option(FETCH_SOUNDFONT "Download soundfont asset" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
@@ -57,6 +59,9 @@ if(WITH_MIDI_DEVICE)
 endif()
 if(ENABLE_UNIT_TESTS)
   list(APPEND VCPKG_MANIFEST_FEATURES "catch2")
+endif()
+if(WITH_TRACY)
+  list(APPEND VCPKG_MANIFEST_FEATURES "tracy")
 endif()
 
 project(CorsixTH_Top_Level)

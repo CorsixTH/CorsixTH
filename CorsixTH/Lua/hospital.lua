@@ -120,6 +120,7 @@ function Hospital:Hospital(world, avail_rooms, name)
     bench = 0,
     general = 0,
   }
+  self:buildReceptionDesksCache()
 
   self.num_visitors = 0 -- Counts patients only
   self.num_deaths = 0
@@ -503,6 +504,9 @@ function Hospital:afterLoad(old, new)
     self.hosp_cheats.active_cheats["spawn_rate_cheat"] = self.spawn_rate_cheat
     self.spawn_rate_cheat = nil
   end
+  if old < 243 then
+    self:buildReceptionDesksCache()
+  end
 
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic:afterLoad(old, new) end
@@ -861,38 +865,36 @@ function Hospital:isPlayerHospital()
   return self == self.world:getLocalPlayerHospital()
 end
 
---! Does the hospital have a working reception?
---!return (bool) Whether there is a working reception in the hospital.
-function Hospital:hasStaffedDesk()
-  for _, desk in ipairs(self:findReceptionDesks()) do
-    if desk.receptionist or desk.reserved_for then return true end
-  end
-  return false
+--! Does the hospital have a reception desk
+--!param is_staffed (bool) Does the desk need to be staffed
+--!return (bool) Whether there is a reception desk in the hospital.
+function Hospital:hasReceptionDesk(is_staffed)
+  return not not self:getReceptionDesks(is_staffed)[1]
 end
 
---! Returns a list of all reception desks that are staffed
-function Hospital:getStaffedDesks()
-  local staffed_desks = {}
-  for _, desk in ipairs(self:findReceptionDesks()) do
-    if desk.receptionist or desk.reserved_for then
-      staffed_desks[#staffed_desks + 1] = desk
-    end
-  end
-  return staffed_desks
+--! Fetches a list of all reception desks
+--!param is_staffed (bool) Do the desks need to be staffed
+--!return (table) A list of relevant desks
+function Hospital:getReceptionDesks(is_staffed)
+  return is_staffed and self.staffed_reception_desks or self.reception_desks
 end
 
---! Collect the reception desks in the hospital.
---!return (list) The reception desks in the hospital.
-function Hospital:findReceptionDesks()
-  local reception_desks = {}
+--! Collect the reception desks in the hospital into a list for the above function
+function Hospital:buildReceptionDesksCache()
+  local reception_desks, staffed_desks = {}, {}
   for _, obj_list in pairs(self.world.objects) do
     for _, obj in ipairs(obj_list) do
-      if obj.hospital == self and obj.object_type.id == "reception_desk" then
+      if obj.hospital == self and obj.object_type.id == "reception_desk" and
+          not obj.picked_up then
         reception_desks[#reception_desks + 1] = obj
+        if obj.receptionist or obj.reserved_for then
+          staffed_desks[#staffed_desks + 1] = obj
+        end
       end
     end
   end
-  return reception_desks
+  self.staffed_reception_desks = staffed_desks
+  self.reception_desks = reception_desks
 end
 
 --! Called at the end of each year
@@ -924,7 +926,7 @@ function Hospital:createEmergency(emergency)
   local random_disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)]
   local disease = TheApp.diseases[random_disease.id]
   local number = math.random(2, disease.emergency_number)
-  if self:getHeliportSpawnPosition() and self:hasStaffedDesk() then
+  if self:getHeliportSpawnPosition() and self:hasReceptionDesk(true) then
     if not emergency then
       -- Create a random emergency if parameters are not specified already.
       emergency = {
@@ -1010,7 +1012,7 @@ function Hospital:spawnContagiousPatient()
     return contagious
   end
 
-  if self:hasStaffedDesk() then
+  if self:hasReceptionDesk(true) then
     local patient = self.world:newEntity("Patient", 2, 1)
     local contagious_diseases = get_available_contagious_diseases()
     if #contagious_diseases > 0 then
@@ -2320,7 +2322,7 @@ end
 
 --! Check if the hospital is ready to accept patients
 function Hospital:canAcceptPatients()
-  return self.opened and self:hasStaffedDesk()
+  return self.opened and self:hasReceptionDesk(true)
 end
 
 --! Has this hospital received any patients yet?
