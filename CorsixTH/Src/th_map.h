@@ -254,7 +254,7 @@ class level_map {
   level_map() = default;
   ~level_map();
 
-  bool set_size(int iWidth, int iHeight);
+  bool set_size(int map_width, int map_height);
   bool load_blank();
   bool load_from_th_file(const uint8_t* pData, size_t iDataLength,
                          map_load_object_callback_fn fnObjectCallback,
@@ -349,14 +349,14 @@ class level_map {
 
   //! Draw the map (and any attached animations)
   /*!
-      Draws the world pixel rectangle (iScreenX, iScreenY, iWidth, iHeight)
-      to the rectangle (iCanvasX, iCanvasY, iWidth, iHeight) on pCanvas. Note
+      Draws the world pixel rectangle (map_base_x, map_base_y, pix_width, pix_height)
+      to the rectangle (scr_base_x, scr_base_y, pix_width, pix_height) on canvas. Note
       that world pixel coordinates are also known as absolute screen
       coordinates - they are not world (tile) coordinates, nor (relative)
       screen coordinates.
   */
-  void draw(render_target* pCanvas, int iScreenX, int iScreenY, int iWidth,
-            int iHeight, int iCanvasX, int iCanvasY) const;
+  void draw(render_target* canvas, int map_base_x, int map_base_y, int pix_width,
+            int pix_height, int scr_base_x, int scr_base_y) const;
 
   //! Perform a hit-test against the animations attached to the map
   /*!
@@ -402,13 +402,13 @@ class level_map {
   void set_overlay(map_overlay* pOverlay, bool bTakeOwnership);
 
  private:
-  void draw_floor(render_target* pCanvas, int iScreenX, int iScreenY,
-                  int iWidth, int iHeight, int iCanvasX, int iCanvasY) const;
-  void draw_north_wall(const map_tile* tile, int tile_x, int tile_y,
-                       render_target* pCanvas) const;
+  void draw_floor(render_target* canvas, int map_base_x, int map_base_y,
+                  int pix_width, int pix_height, int scr_base_x, int scr_base_y) const;
+  void draw_north_wall(const map_tile* tile, int scr_tile_x, int scr_tile_y,
+                       render_target* canvas) const;
 
-  int draw_layer(const map_tile* tile, int tile_x, int tile_y, tile_layer layer,
-                 render_target* pCanvas) const;
+  int draw_layer(const map_tile* tile, int scr_tile_x, int scr_tile_y, tile_layer layer,
+                 render_target* canvas) const;
 
   //! Check that the sprite indicated by the layer can be found and has height.
   /*
@@ -495,18 +495,18 @@ class map_tile_iterator {
   map_tile_iterator() = delete;
 
   /*!
-      @arg pMap The map whose tiles should be iterated
-      @arg iScreenX The X coordinate of the top-left corner of the
+      @arg tile_map The map whose tiles should be iterated
+      @arg map_base_x The X coordinate of the top-left corner of the
           screen-space rectangle to iterate.
-      @arg iScreenY The Y coordinate of the top-left corner of the
+      @arg map_base_y The Y coordinate of the top-left corner of the
           screen-space rectangle to iterate.
-      @arg iWidth The width of the screen-space rectangle to iterate.
-      @arg iHeight The width of the screen-space rectangle to iterate.
+      @arg pix_width The width of the screen-space rectangle to iterate.
+      @arg pix_height The width of the screen-space rectangle to iterate.
       @arg eScanlineDirection The direction in which to iterate scanlines;
           forward for top-to-bottom, backward for bottom-to-top.
   */
-  map_tile_iterator(const level_map* pMap, int iScreenX, int iScreenY,
-                    int iWidth, int iHeight,
+  map_tile_iterator(const level_map* tile_map, int map_base_x, int map_base_y,
+                    int pix_width, int pix_height,
                     map_scanline_iterator_direction eScanlineDirection =
                         map_scanline_iterator_direction::forward);
 
@@ -527,7 +527,9 @@ class map_tile_iterator {
   //! screen-space rectangle
   inline int tile_y_position_on_screen() const { return y_relative_to_screen; }
 
+  //! Get the x coordinate of the tile in the map.
   inline int tile_x() const { return world_x; }
+  //! Get the y coordinate of the tile in the map.
   inline int tile_y() const { return world_y; }
 
   inline const level_map* get_map() { return container; }
@@ -597,8 +599,8 @@ class map_scanline_iterator {
   inline map_scanline_iterator& operator++();
 
   inline const map_tile* operator->() const { return tile; }
-  inline int x() const { return x_relative_to_screen; }
-  inline int y() const { return y_relative_to_screen; }
+  inline int rel_tile_x() const { return x_relative_to_screen; }
+  inline int rel_tile_y() const { return y_relative_to_screen; }
   inline const map_tile* get_next_tile() { return tile + tile_step; }
   inline const map_tile* get_previous_tile() { return tile - tile_step; }
   map_scanline_iterator operator=(const map_scanline_iterator& iterator);
