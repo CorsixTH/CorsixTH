@@ -22,12 +22,9 @@ SOFTWARE. --]]
 -- when you don't have a copy of AnimView, or the means to compile it, then a
 -- crude sprite viewer is better than no sprite viewer.
 
-local SpriteViewer = {}
 local is_open = false
-
 local gfx = TheApp.gfx
-gfx.cache.tabled = {}
-local font = gfx:loadFontAndSpriteTable("QData", "Font00V")
+local font -- Set on open
 local need_draw = true
 local sprite_table_paths = {}
 local palettes = {}
@@ -184,6 +181,10 @@ local function DoKeyUp(_, rawchar)
     end
 end
 
+local function DoTextInput()
+  return false
+end
+
 local function Render(canvas)
   local encoding = is_complex and " (Complex) " or " (Simple) "
   local msg = table.concat(sprite_table_paths[sprite_table_index], package.config:sub(1, 1)) .. encoding .. palette_name
@@ -249,11 +250,13 @@ local function DoTimer()
   return need_draw
 end
 
-function SpriteViewer.open()
+local function open()
   if is_open then
     return
   end
   is_open = true
+  gfx.cache.tabled = {}
+  font = gfx:loadFontAndSpriteTable("QData", "Font00V")
 
   old_event_handlers = TheApp.eventHandlers
   TheApp.eventHandlers = {
@@ -261,11 +264,10 @@ function SpriteViewer.open()
     keydown = DoKey,
     keyup = DoKeyUp,
     timer = DoTimer,
+    textinput = DoTextInput
   }
 
   need_draw = true
 end
 
-return function()
-  SpriteViewer.open()
-end
+return open
