@@ -22,6 +22,9 @@ SOFTWARE. --]]
 -- when you don't have a copy of AnimView, or the means to compile it, then a
 -- crude sprite viewer is better than no sprite viewer.
 
+local SpriteViewer = {}
+local is_open = false
+
 local gfx = TheApp.gfx
 gfx.cache.tabled = {}
 local font = gfx:loadFontAndSpriteTable("QData", "Font00V")
@@ -170,6 +173,7 @@ local function DoKeyUp(_, rawchar)
     local key = rawchar:lower()
     if key == "q" then -- Exit sprite viewer
       TheApp.eventHandlers = old_event_handlers
+      is_open = false
       return
     end
     if key == "w" then
@@ -245,10 +249,23 @@ local function DoTimer()
   return need_draw
 end
 
-old_event_handlers = TheApp.eventHandlers
-TheApp.eventHandlers = {
-  frame = DoFrame,
-  keydown = DoKey,
-  keyup = DoKeyUp,
-  timer = DoTimer,
-}
+function SpriteViewer.open()
+  if is_open then
+    return
+  end
+  is_open = true
+
+  old_event_handlers = TheApp.eventHandlers
+  TheApp.eventHandlers = {
+    frame = DoFrame,
+    keydown = DoKey,
+    keyup = DoKeyUp,
+    timer = DoTimer,
+  }
+
+  need_draw = true
+end
+
+return function()
+  SpriteViewer.open()
+end
