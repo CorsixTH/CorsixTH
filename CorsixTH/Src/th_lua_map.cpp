@@ -543,6 +543,31 @@ void add_cellint(lua_State* L, const int value, const std::string_view name) {
 }
 
 /**
+ * Get the room id at the given position
+ * @param L Lua context.
+ *   [1] - The world map object
+ *   [2] - The X coordinate
+ *   [3] - The Y coordinate
+ * @return Number of results of the call. The roomId is pushed onto L.
+ */
+int l_map_get_room_id(lua_State* L) {
+  ZoneScoped;
+
+  level_map* pMap = luaT_testuserdata<level_map>(L);
+  int iX = static_cast<int>(luaL_checkinteger(L, 2) -
+                            1);  // Lua arrays start at 1 - pretend
+  int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);  // the map does too.
+
+  map_tile* pNode = pMap->get_tile(iX, iY);
+  if (pNode == nullptr) {
+    return luaL_argerror(L, 2, "Map coordinates out of bounds");
+  }
+
+  lua_pushinteger(L, pNode->iRoomId);
+  return 1;
+}
+
+/**
  * Get the value of all cell flags at a position.
  * @param L Lua context.
  * @return Number of results of the call.
@@ -1069,6 +1094,7 @@ void lua_register_map(const lua_register_state* pState) {
     lcb.add_function(l_map_set_player_heliport, "setHeliportTile");
     lcb.add_function(l_map_getcell, "getCell");
     lcb.add_function(l_map_gettemperature, "getCellTemperature");
+    lcb.add_function(l_map_get_room_id, "getRoomId");
     lcb.add_function(l_map_getcellflags, "getCellFlags");
     lcb.add_function(l_map_setcellflags, "setCellFlags");
     lcb.add_function(l_map_getcellraw, "getCellRaw");
