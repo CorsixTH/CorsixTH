@@ -122,13 +122,15 @@ local function new_config_defaults()
   The following list is in the same order.
   ]]
   return {
+    -- Options dialog
     fullscreen = false,
     width = 800,
     height = 600,
     ui_scale = 1,
     language = [[English]],
+    -- Sound dialog
     audio = true,
-    free_build_mode = false,
+    free_build_mode = false, -- Custom game dialog
     play_sounds = true,
     sound_volume = 0.5,
     play_announcements = true,
@@ -143,11 +145,11 @@ local function new_config_defaults()
     twentyfour_hour_clock = true,
     warmth_colors_display_default = 1,
     grant_wage_increase = false,
+    -- Customise dialog
     movies = true,
     play_intro = true,
     play_demo = true,
     allow_user_actions_while_paused = false,
-    volume_opens_casebook = false,
     alien_dna_only_by_emergency = true,
     alien_dna_must_stand = true,
     alien_dna_can_knock_on_doors = false,
@@ -155,9 +157,14 @@ local function new_config_defaults()
     enable_avg_contents = false,
     remove_destroyed_rooms = false,
     machine_menu_button = true,
+    autosave_frequency = 1,
+    -- Accessibility dialog
     enable_screen_shake = true,
     enable_announcer_subtitles = false,
-    autosave_frequency = 1,
+    volume_opens_casebook = false,
+    zoom_speed = 80,
+    scroll_speed = 2,
+    shift_scroll_speed = 4,
     audio_frequency = 22050,
     audio_channels = 2,
     audio_buffer_size = 2048,
@@ -167,9 +174,6 @@ local function new_config_defaults()
     theme_hospital_install = [[X:\ThemeHospital\hospital]],
     debug = false,
     track_fps = false,
-    zoom_speed = 80,
-    scroll_speed = 2,
-    shift_scroll_speed = 4,
     new_graphics_folder = nil,
     use_new_graphics = false,
     check_for_updates = true,
@@ -466,16 +470,6 @@ param(config_values, 'play_demo') .. [=[
 param(config_values, 'allow_user_actions_while_paused') .. [=[
 
 -------------------------------------------------------------------------------
--- VOLUME CONTROL IS OPENING THE DRUG CASEBOOK?
-
--- If your keyboard volume control opens the Drug Casebook at the same time
--- then change this to true. From then on you will have to use Shift + C to open
--- the Casebook and volume down will not open it.
--- For example for shift + C to open casebook change the setting below to = true
---]=] .. '\n' ..
-param(config_values, 'volume_opens_casebook') .. [=[
-
--------------------------------------------------------------------------------
 -- To allow patients with Alien DNA to visit your hospital other than by an
 -- emergency change the settings below. Understand that there are no animations
 -- for sitting down, opening or knocking on doors etc.
@@ -511,6 +505,19 @@ param(config_values, 'remove_destroyed_rooms') .. [=[
 param(config_values, 'machine_menu_button') .. [=[
 
 -------------------------------------------------------------------------------
+-- By default, the game autosaves every in-game month. If you would like to
+-- autosave more often, every week or every day, change this setting to 2 or 3.
+-- Please note that a typical save can take up to 1 megabyte or even more.
+-- This way your autosaves folder can grow to 300-500 MB with daily autosaves.
+-- Set 1 for Monthly, 2 for Weekly, 3 for Daily autosaves.
+--]=] .. '\n' ..
+param(config_values, 'autosave_frequency') .. '\n'
+
+parts[5] = [=[
+--------------------------- ACCESSIBILITY SETTINGS ----------------------------
+-- These settings can also be changed from the Accessibility Menu
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- By default the entire screen will shake during earthquakes. If you would
 -- like the game to keep the screen stationary, change this option to false.
 --]=] .. '\n' ..
@@ -523,15 +530,28 @@ param(config_values, 'enable_screen_shake') .. [=[
 param(config_values, 'enable_announcer_subtitles') .. [=[
 
 -------------------------------------------------------------------------------
--- By default, the game autosaves every in-game month. If you would like to
--- autosave more often, every week or every day, change this setting to 2 or 3.
--- Please note that a typical save can take up to 1 megabyte or even more.
--- This way your autosaves folder can grow to 300-500 MB with daily autosaves.
--- Set 1 for Monthly, 2 for Weekly, 3 for Daily autosaves.
+-- VOLUME CONTROL IS OPENING THE DRUG CASEBOOK?
+-- If your keyboard volume control opens the Drug Casebook at the same time
+-- then change this to true. From then on you will have to use Shift + C to open
+-- the Casebook and volume down will not open it.
+-- For example for shift + C to open casebook change the setting below to = true
 --]=] .. '\n' ..
-param(config_values, 'autosave_frequency') .. '\n'
+param(config_values, 'volume_opens_casebook') .. [=[
 
-  parts[5] = [=[
+-------------------------------------------------------------------------------
+-- Zoom Speed: By default this is set at 80
+-- Any number value between 10 and 1000, 10 is very slow and 1000 is very fast!
+--]=] .. '\n' ..
+param(config_values, 'zoom_speed') .. [=[
+
+-------------------------------------------------------------------------------
+-- Scroll Speeds: The speed of scrolling with and without shift being held.
+-- Any number value between 1 and 10, 1 is very slow and 10 is fast!
+--]=] .. '\n' ..
+param(config_values, 'scroll_speed') ..
+param(config_values, 'shift_scroll_speed') .. '\n'
+
+parts[6] = [=[
 ------------------------------- FOLDER SETTINGS -------------------------------
 -- These settings can also be changed from the Folders Menu
 -------------------------------------------------------------------------------
@@ -613,7 +633,7 @@ param(config_values, 'audio_music', '[[X:\\ThemeHospital\\Music]]') .. [=[
 --]=] .. '\n' ..
 param(config_values, 'soundfont', '[[X:\\ThemeHospital\\FluidR3.sf3]]') .. '\n'
 
-  parts[6] = [=[
+  parts[7] = [=[
 -------------------------------------------------------------------------------
 -- Midi API and Device settings.
 -- By default, CorsixTH uses FluidSynth or build defined MIDI synthesizer.
@@ -670,19 +690,6 @@ param(config_values, 'debug') .. [=[
 -- more useful FPS values, as they are not artificially capped.
 --]=] .. '\n' ..
 param(config_values, 'track_fps') .. [=[
-
--------------------------------------------------------------------------------
--- Zoom Speed: By default this is set at 80
--- Any number value between 10 and 1000, 10 is very slow and 1000 is very fast!
---]=] .. '\n' ..
-param(config_values, 'zoom_speed') .. [=[
-
--------------------------------------------------------------------------------
--- Scroll Speeds: The speed of scrolling with and without shift being held.
--- Any number value between 1 and 10, 1 is very slow and 10 is fast!
---]=] .. '\n' ..
-param(config_values, 'scroll_speed') ..
-param(config_values, 'shift_scroll_speed') .. [=[
 
 -------------------------------------------------------------------------------
 -- Room information dialogs: Information about new rooms, important for
