@@ -305,7 +305,8 @@ void mainloop(lua_State* L) {
           last_dispatch = dispatch_keyup;
           push_app_dispatch(L, last_dispatch);
           lua_pushstring(L, SDL_GetKeyName(e.key.keysym.sym));
-          nargs = 2;
+          l_push_modifiers_table(L, e.key.keysym.mod);
+          nargs = 3;
           break;
         case SDL_TEXTINPUT:
           last_dispatch = dispatch_textinput;

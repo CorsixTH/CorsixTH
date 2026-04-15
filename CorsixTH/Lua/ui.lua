@@ -716,22 +716,36 @@ function UI:toggleFullscreen()
   return success
 end
 
---! Called when the user presses a key on the keyboard
---!param rawchar (string) The name of the key the user pressed.
-function UI:onKeyDown(rawchar, modifiers)
-  local handled = false
+--! Private function to determine the key pressed based on current modifiers
+--!param rawchar (string) The key pressed as given by SDL
+--!param modifiers (table) Current key modifiers, e.g. numlock
+--!param btn_maps (table) Used for keydown events only, a table of keys that
+-- are designated to perform mouse actions.
+--!return (string, string) Modified raw character, or false if remapped to a button.
+-- And lowercase or remapped key
+function UI:_determineKeyPressed(rawchar, modifiers, btn_maps)
   -- Apply key-remapping and normalisation
   rawchar = string.sub(rawchar,1,6) == "Keypad" and
             modifiers["numlockactive"] and string.sub(rawchar,8) or rawchar
   local key = rawchar:lower()
-  do
-    local mapped_button = self.key_to_button_remaps[key]
-    if mapped_button then
-      self:onMouseDown(mapped_button, self.cursor_x, self.cursor_y)
-      return true
-    end
-    key = self.key_remaps[key] or key
+  if btn_maps and btn_maps[key] then
+    -- Buttons remaps to mouse
+    self:onMouseDown(btn_maps[key], self.cursor_x, self.cursor_y)
+    return false
   end
+  key = self.key_remaps[key] or key
+
+  return rawchar, key
+end
+
+--! Called when the user presses a key on the keyboard
+--!param rawchar (string) The name of the key the user pressed.
+--!param modifiers (table) The current applied modifers to key input e.g. numlock
+function UI:onKeyDown(rawchar, modifiers)
+  local handled = false
+  local rawchar_transformed, key = self:_determineKeyPressed(
+      rawchar, modifiers, self.key_to_button_remaps)
+  if not rawchar_transformed then return end
 
   -- Remove numlock modifier
   modifiers["numlockactive"] = nil
@@ -739,14 +753,14 @@ function UI:onKeyDown(rawchar, modifiers)
   -- It will not process any text at this point though.
   for _, box in ipairs(self.textboxes) do
     if box.enabled and box.active and not handled then
-      handled = box:keyInput(key, rawchar)
+      handled = box:keyInput(key, rawchar_transformed)
     end
   end
 
   -- If there is a hotkey box
   for _, hotkeybox in ipairs(self.hotkeyboxes) do
     if hotkeybox.enabled and hotkeybox.active and not handled then
-      handled = hotkeybox:keyInput(key, rawchar, modifiers)
+      handled = hotkeybox:keyInput(key, rawchar_transformed, modifiers)
     end
   end
 
@@ -766,6 +780,7 @@ function UI:onKeyDown(rawchar, modifiers)
     end
   end
 
+  -- Store information about the key
   self.buttons_down[key] = true
   self.modifiers_down = modifiers
   self.key_press_handled = handled
@@ -774,12 +789,9 @@ end
 
 --! Called when the user releases a key on the keyboard
 --!param rawchar (string) The name of the key the user pressed.
-function UI:onKeyUp(rawchar)
-  rawchar = SDL.getKeyModifiers().numlockactive and
-            string.sub(rawchar,1,6) == "Keypad" and string.sub(rawchar,8) or
-            rawchar
-  local key = rawchar:lower()
-
+--!param modifiers (table) The current applied modifers to key input e.g. numlock
+function UI:onKeyUp(rawchar, modifiers)
+  local _, key = self:_determineKeyPressed(rawchar, modifiers)
   self.buttons_down[key] = nil
 
   -- Go through all the hotkeyboxes.
@@ -822,6 +834,10 @@ function UI:onKeyUp(rawchar)
       end
     end
   end
+
+  -- Clean up
+  self.modifiers_down = nil
+  self.key_press_handled = nil
 end
 
 function UI:onEditingText(text, start, length)
