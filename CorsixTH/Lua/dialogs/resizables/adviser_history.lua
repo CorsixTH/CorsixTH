@@ -38,7 +38,7 @@ function UIAdviserHistory:UIAdviserHistory(ui)
   self.esc_closes = true
   self.resizable = false
 
-  self.adviser_messages = {} -- Contains all the messages in the adviser.adviser_history prop
+  self.last_seen_history_top = nil  -- Stores the top message in the adviser's 'message_history' list at the time of the last update
   self.list_table = {}       -- List of controls in this dialog
 
   self.default_button_sound = "selectx.wav"
@@ -97,12 +97,12 @@ function UIAdviserHistory:createControls()
 
 
     -- Draw headers
-    local delete_header = self:addBevelPanel(x, self.window_margin, self.delete_col_width, self.header_height, col_highlight)
+    local delete_header = self:addBevelPanel(x, y, self.delete_col_width, self.header_height, col_highlight)
     local delete_all_button = delete_header:makeButton(0, 0, self.delete_col_width, self.header_height, nil, deleteAllButtonClicked)
           :setTooltip(_S.tooltip.adviser_history.header.delete_message):setLabel("X", self.white_font, "center")
     x = x + self.delete_col_width
 
-    local message_header = self:addBevelPanel(x, self.window_margin, self.message_col_width, self.header_height, col_highlight)
+    local message_header = self:addBevelPanel(x, y, self.message_col_width, self.header_height, col_highlight)
         :setLabel(_S.adviser_history.message):setTooltip(_S.tooltip.adviser_history.header.message)
     x = x + self.message_col_width
     y = y + self.header_height
@@ -130,10 +130,10 @@ function UIAdviserHistory:createControls()
     end
 
     x = x + 10 -- Add 10 pixels from end of the message rows
+    y = self.window_margin + self.header_height
 
     -- Add scrollbar
-    self.scrollbar = self:addColourPanel(x, self.window_margin + 20, 24, self.row_height * rows, --y = self.window_margin + close button height
-          col_shadow.red, col_shadow.green, col_shadow.blue)
+    self.scrollbar = self:addColourPanel(x, y, 24, self.row_height * rows, col_shadow.red, col_shadow.green, col_shadow.blue)
         :makeScrollbar(col_bg, scrollbarMovedCallback, 1, 1, 10, 1)
     -- Add close button
     self:addPanel(337, x,  8):makeButton(0, 0, 24, 24, 338, self.close)
@@ -142,22 +142,19 @@ function UIAdviserHistory:createControls()
 end
 
 function UIAdviserHistory:update()
-  -- self.adviser_messages = self.ui.adviser.message_history --> WRONG, this way both variables point to the same table
+  local adviser_messages = self.ui.adviser.message_history
+  self.last_seen_history_top = adviser_messages[1]
 
-  self.adviser_messages = {}
-  -- Clone the list
-  for i = 1, #self.ui.adviser.message_history do
-    self.adviser_messages[i] = self.ui.adviser.message_history[i]
-  end
-
-  self.scrollbar:setRange(1, math.max(1, #self.adviser_messages), self.rows_shown, self.scrollbar.value)
+  self.scrollbar:setRange(1, math.max(1, #adviser_messages), self.rows_shown, self.scrollbar.value)
   self:scrollbarMoved()
 end
 
 function UIAdviserHistory:scrollbarMoved()
   local scroll_pos = self.scrollbar.value
+  local adviser_messages = self.ui.adviser.message_history
+
   for i = 1, self.rows_shown, 1 do
-    local message = self.adviser_messages[i + scroll_pos - 1]
+    local message = adviser_messages[i + scroll_pos - 1]
     local row = self.list_table[i]
     if message then
       row.message_panel:setLabel(" " .. message, nil, "left"):setColour(col_bg)
@@ -178,10 +175,9 @@ function UIAdviserHistory:onTick()
 
   -- Checking the lenght of both lists would fail if a message was moved from the middle to the top due to duplication.
   -- So we just check if the top string between lists has changed to determine if we need to update
-  local current_history_top = self.adviser_messages[1]
   local new_history_top = self.ui.adviser.message_history[1]
 
-  if current_history_top ~= new_history_top then
+  if self.last_seen_history_top ~= new_history_top then
     self:update()
   end
 end
@@ -189,4 +185,3 @@ end
 function UIAdviserHistory:close()
   Window.close(self)
 end
-
