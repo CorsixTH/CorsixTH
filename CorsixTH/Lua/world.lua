@@ -2845,7 +2845,7 @@ passable tiles (the norm for most objects)]]
 --!return (boolean) indicating if exclusively passable or not
 function World:isTileExclusivelyPassable(x, y, distance)
   for o in pairs(self:findAllObjectsNear(x, y, distance)) do
-    if o and o.footprint then
+    if o and not o.picked_up and o.footprint then
       for _, footprint in pairs(o.footprint) do
         if footprint[1] + o.tile_x == x and footprint[2] + o.tile_y == y and footprint.only_passable and not footprint.shareable then
           return false
@@ -2854,7 +2854,8 @@ function World:isTileExclusivelyPassable(x, y, distance)
     else
       -- doors don't have a footprint but objects can't be built blocking them either
       for _, footprint in pairs(o:getWalkableTiles()) do
-        if o.object_type and o.object_type.thob ~= 62 and footprint[1] == x and footprint[2] == y then
+        -- 62 is a litter thob
+        if not o.picked_up and o.object_type and o.object_type.thob ~= 62 and footprint[1] == x and footprint[2] == y then
           return false
         end
       end

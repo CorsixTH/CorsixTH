@@ -220,6 +220,7 @@ local function new_hotkeys_defaults()
     ingame_zoom_out_more = {"shift", "-"},
     ingame_reset_zoom = "0",
     ingame_setTransparent = "x",
+    ingame_sellPickedItem = "delete",
     ingame_toggleTransparent = {"shift", "x"},
     ingame_toggleAdvisor = {"shift", "a"},
     ingame_poopLog = {"ctrl", "d"},
@@ -842,6 +843,11 @@ param(hotkeys_values, 'ingame_panel_hireStaff') .. [=[
 -- This key rotates objects while they are being placed.
 -- ]=] .. '\n' ..
 param(hotkeys_values, 'ingame_rotateobject') .. [=[
+
+----------------------------------Sell Object--------------------------------
+-- This key sell objects while they are being picked up.
+-- ]=] .. '\n' ..
+param(hotkeys_values, 'ingame_sellPickedItem') .. [=[
 
 -----------------------------------Quick Keys----------------------------------
 -- These are keys for quick saving and loading, and for quickly restarting and

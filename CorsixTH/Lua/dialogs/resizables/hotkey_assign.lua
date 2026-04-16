@@ -338,6 +338,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
             "ingame_restartLevel",
             "ingame_quitLevel",
             "ingame_rotateobject",
+            "ingame_sellPickedItem",
             "ingame_patient_gohome",
             "ingame_setTransparent",
             "ingame_toggleTransparent" }}}},

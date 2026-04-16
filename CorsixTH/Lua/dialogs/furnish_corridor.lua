@@ -193,7 +193,7 @@ function UIFurnishCorridor:confirm()
 
   if self.edit_dialog then
     self.edit_dialog:addObjects(to_purchase, false) -- payment already handled here
-    self.edit_dialog:removeObjects(to_sell, false) -- payment already handled here
+    self.edit_dialog:removeObjects(to_sell) -- payment already handled here
     self:close()
   else
     if #to_purchase == 0 then
