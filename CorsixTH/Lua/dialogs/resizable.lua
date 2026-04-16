@@ -31,6 +31,23 @@ local border_offset_y = 9
 local border_size_x = 40
 local border_size_y = 40
 
+-- Constants for most button's width and height
+local BTN_WIDTH = 135
+local BTN_HEIGHT = 20
+
+-- Colour definitions
+local col = {
+  bg             = Colours.PanelDefault,
+  button         = Colours.PanelDefault,
+  setting        = Colours.Setting,
+  setting_active = Colours.SettingActive,
+  scrollbar      = Colours.Scrollbar,
+  disabled       = Colours.Disabled,
+  title          = Colours.Title,
+  caption        = Colours.Caption,
+  textbox        = Colours.Textbox,
+}
+
 function UIResizable:UIResizable(ui, width, height, colour, no_borders, background_bevel)
   self:Window()
 
@@ -60,6 +77,10 @@ function UIResizable:UIResizable(ui, width, height, colour, no_borders, backgrou
   -- NB: intentionally calling like this to allow subclasses to extend setSize without being called from here
   UIResizable.setSize(self, width, height)
   self:setColour(colour)
+
+  -- Tracks the current position of the object
+  self._current_option_index = 1
+  self.column_count = 1
 end
 
 --! Apply the initial width and height of the window
@@ -206,6 +227,58 @@ function UIResizable:beginResize(x, y, mode)
       self:setPosition(new_x or orig_x, new_y or orig_y)
     end
   end
+end
+
+-- Create our setting items. This create a caption/label for the setting
+-- and the setting itself. We return both elements of the setting (panel
+-- and the button made from the panel)
+function UIResizable:createOptionsElement(option_label, option_tooltip,
+    setting_label, setting_tooltip, setting_colours, callback,
+    toggle_state)
+  local y_pos = self:_getOptionYPos()
+  local x_offset = 300 * (self.column_count - 1)
+  local label_x, setting_x = 20 + x_offset, 165 + x_offset
+
+  -- Make the setting name panel
+  self:addBevelPanel(label_x, y_pos, BTN_WIDTH, BTN_HEIGHT, col.caption, col.bg, col.bg)
+    :setLabel(option_label)
+    :setTooltip(option_tooltip)
+    .lowered = true
+  local s_col = setting_colours
+  -- Make the setting value panel
+  local setting_panel = self:addBevelPanel(setting_x, y_pos, BTN_WIDTH,
+      BTN_HEIGHT, s_col.bg, s_col.highlight, s_col.shadow,
+      s_col.disabled, s_col.active)
+    :setLabel(setting_label)
+    :setTooltip(setting_tooltip)
+  -- Make the value panel a button
+  local setting_button = setting_panel:makeToggleButton(0, 0, BTN_WIDTH,
+      BTN_HEIGHT, nil, callback)
+    :setToggleState(toggle_state)
+  -- Return the setting value info
+  return setting_panel, setting_button
+end
+
+--- Calculates the Y position for the dialog box in the option menu
+-- and increments along the current position for the next element
+-- @return The Y position to place the element at
+function UIResizable:_getOptionYPos()
+  -- Offset from top of options box
+  local STARTING_Y_POS = 15
+  -- Y Height is 20 for panel size + 10 for spacing
+  local Y_HEIGHT = 30
+
+  -- Multiply by the index so that index=1 is at STARTING_Y_POS
+  local calculated_pos = STARTING_Y_POS + Y_HEIGHT * (self._current_option_index - 1)
+  self._current_option_index = self._current_option_index + 1
+  return calculated_pos
+end
+
+--! Resets the index to start at the top of a new column, below the title,
+-- for the Y position calculation.
+function UIResizable:_startNewColumn()
+  self._current_option_index = 2
+  self.column_count = self.column_count + 1
 end
 
 function UIResizable:afterLoad(old, new)

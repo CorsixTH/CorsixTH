@@ -24,10 +24,6 @@ class "UIAccessibility" (UIResizable)
 ---@type UIAccessibility
 local UIAccessibility = _G["UIAccessibility"]
 
--- Constants for most button's width and height
-local BTN_WIDTH = 135
-local BTN_HEIGHT = 20
-
 local col = {
    bg = Colours.PanelDefault,
    setting = Colours.Setting,
@@ -50,40 +46,6 @@ function UIAccessibility:UIAccessibility(ui, mode)
   self.default_button_sound = "selectx.wav"
   self.app = app
 
-  -- Tracks the current position of the object
-  self._current_option_index = 1
-  self.column_count = 1
-
-  -- Create our setting items. This create a caption/label for the setting
-  -- and the setting itself. We return both elements of the setting (panel
-  -- and the button made from the panel)
-  local function createOptionsElement(option_label, option_tooltip,
-      setting_label, setting_tooltip, setting_colours, callback,
-      toggle_state)
-    local y_pos = self:_getOptionYPos()
-    local x_offset = 300 * (self.column_count - 1)
-    local label_x, setting_x = 20 + x_offset, 165 + x_offset
-
-    -- Make the setting name panel
-    self:addBevelPanel(label_x, y_pos, BTN_WIDTH, BTN_HEIGHT, col.caption, col.bg, col.bg)
-      :setLabel(option_label)
-      :setTooltip(option_tooltip)
-      .lowered = true
-    local s_col = setting_colours
-    -- Make the setting value panel
-    local setting_panel = self:addBevelPanel(setting_x, y_pos, BTN_WIDTH,
-        BTN_HEIGHT, s_col.bg, s_col.highlight, s_col.shadow,
-        s_col.disabled, s_col.active)
-      :setLabel(setting_label)
-      :setTooltip(setting_tooltip)
-    -- Make the value panel a button
-    local setting_button = setting_panel:makeToggleButton(0, 0, BTN_WIDTH,
-        BTN_HEIGHT, nil, callback)
-      :setToggleState(toggle_state)
-    -- Return the setting value info
-    return setting_panel, setting_button
-  end
-
   -- Window parts definition
   -- Title
   local title_y_pos = self:_getOptionYPos()
@@ -93,7 +55,7 @@ function UIAccessibility:UIAccessibility(ui, mode)
   -- Disable screen shake during earthquakes
   local cur_screen_shake = app.config.enable_screen_shake and _S.accessibility_window.option_on
     or _S.accessibility_window.option_off
-  self.screen_shake_panel, self.screen_shake_button = createOptionsElement(
+  self.screen_shake_panel, self.screen_shake_button = self:createOptionsElement(
       _S.accessibility_window.enable_screen_shake, _S.tooltip.accessibility_window.enable_screen_shake,
       cur_screen_shake, _S.tooltip.accessibility_window.enable_screen_shake,
       { bg = col.setting, active = col.setting_active },
@@ -102,7 +64,7 @@ function UIAccessibility:UIAccessibility(ui, mode)
   -- Enable subtitles
   local cur_subtitle = app.config.enable_announcer_subtitles and _S.accessibility_window.option_on
     or _S.accessibility_window.option_off
-  self.subtitles_panel, self.subtitles_button = createOptionsElement(
+  self.subtitles_panel, self.subtitles_button = self:createOptionsElement(
       _S.accessibility_window.enable_announcer_subtitles, _S.tooltip.accessibility_window.enable_announcer_subtitles,
       cur_subtitle, _S.tooltip.accessibility_window.enable_announcer_subtitles,
       { bg = col.setting, active = col.setting_active },
@@ -111,7 +73,7 @@ function UIAccessibility:UIAccessibility(ui, mode)
   -- Set volume down as opening casebook
   local cur_volume_casebook = app.config.volume_opens_casebook and _S.accessibility_window.option_on
     or _S.accessibility_window.option_off
-  self.volume_casebook_panel, self.volume_casebook_button = createOptionsElement(
+  self.volume_casebook_panel, self.volume_casebook_button = self:createOptionsElement(
       _S.accessibility_window.volume, _S.tooltip.accessibility_window.volume,
       cur_volume_casebook, _S.tooltip.accessibility_window.volume,
       { bg = col.setting, active = col.setting_active },
@@ -119,7 +81,7 @@ function UIAccessibility:UIAccessibility(ui, mode)
 
   -- Set scroll speed.
   local cur_scrollspeed = tostring(self.ui.app.config.scroll_speed)
-  self.scrollspeed_panel, self.scrollspeed_button = createOptionsElement(
+  self.scrollspeed_panel, self.scrollspeed_button = self:createOptionsElement(
       _S.accessibility_window.scrollspeed, _S.tooltip.accessibility_window.scrollspeed,
       cur_scrollspeed, _S.tooltip.accessibility_window.scrollspeed,
       { bg = col.setting, active = col.setting_active },
@@ -127,7 +89,7 @@ function UIAccessibility:UIAccessibility(ui, mode)
 
   -- Set shift scroll speed.
   local cur_shiftscrollspeed = tostring(self.ui.app.config.shift_scroll_speed)
-  self.shift_scrollspeed_panel, self.shift_scrollspeed_button = createOptionsElement(
+  self.shift_scrollspeed_panel, self.shift_scrollspeed_button = self:createOptionsElement(
       _S.accessibility_window.shift_scrollspeed, _S.tooltip.accessibility_window.shift_scrollspeed,
       cur_shiftscrollspeed, _S.tooltip.accessibility_window.shift_scrollspeed,
       { bg = col.setting, active = col.setting_active },
@@ -135,7 +97,7 @@ function UIAccessibility:UIAccessibility(ui, mode)
 
   -- Set zoom speed.
   local cur_zoomspeed = tostring(self.ui.app.config.zoom_speed)
-  self.zoomspeed_panel, self.zoomspeed_button = createOptionsElement(
+  self.zoomspeed_panel, self.zoomspeed_button = self:createOptionsElement(
       _S.accessibility_window.zoom_speed, _S.tooltip.accessibility_window.zoom_speed,
       cur_zoomspeed, _S.tooltip.accessibility_window.zoom_speed,
       { bg = col.setting, active = col.setting_active },
@@ -224,29 +186,6 @@ function UIAccessibility:close()
   end
 end
 
--- Private functions
-
---- Calculates the Y position for the dialog box in the option menu
--- and increments along the current position for the next element
--- @return The Y position to place the element at
-function UIAccessibility:_getOptionYPos()
-  -- Offset from top of options box
-  local STARTING_Y_POS = 45
-  -- Y Height is 20 for panel size + 10 for spacing
-  local Y_HEIGHT = 30
-
-  -- Multiply by the index so that index=1 is at STARTING_Y_POS
-  local calculated_pos = STARTING_Y_POS + Y_HEIGHT * (self._current_option_index - 1)
-  self._current_option_index = self._current_option_index + 1
-  return calculated_pos
-end
-
---! Resets the index to start at the top of a new column, below the title,
--- for the Y position calculation.
-function UIAccessibility:_startNewColumn()
-  self._current_option_index = 2
-  self.column_count = self.column_count + 1
-end
 
 --! A window for setting the scroll speed of the camera.
 class "UIScrollSpeed" (UIResizable)

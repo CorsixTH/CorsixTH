@@ -24,9 +24,8 @@ class "UIOptions" (UIResizable)
 ---@type UIOptions
 local UIOptions = _G["UIOptions"]
 
--- Constants for most button's width and height
+-- Constants for most button's width
 local BTN_WIDTH = 135
-local BTN_HEIGHT = 20
 
 -- Colour definitions
 local col = {
@@ -40,30 +39,6 @@ local col = {
   caption        = Colours.Caption,
   textbox        = Colours.Textbox,
 }
-
--- Private functions
-
---- Calculates the Y position for the dialog box in the option menu
--- and increments along the current position for the next element
--- @return The Y position to place the element at
-function UIOptions:_getOptionYPos()
-  -- Offset from top of options box
-  local STARTING_Y_POS = 15
-  -- Y Height is 20 for panel size + 10 for spacing
-  local Y_HEIGHT = 30
-
-  -- Multiply by the index so that index=1 is at STARTING_Y_POS
-  local calculated_pos = STARTING_Y_POS + Y_HEIGHT * (self._current_option_index - 1)
-  self._current_option_index = self._current_option_index + 1
-  return calculated_pos
-end
-
---! Resets the index to start at the top of a new column, below the title,
--- for the Y position calculation.
-function UIOptions:_startNewColumn()
-  self._current_option_index = 2
-  self.column_count = self.column_count + 1
-end
 
 -- Generate predefined resolutions the player can choose from; as well as
 -- including the custom option at the bottom. Where UI scaling prevents a
@@ -163,10 +138,6 @@ function UIOptions:UIOptions(ui, mode)
   self.default_button_sound = "selectx.wav"
   self.app = app
 
-  -- Tracks the current position of the object
-  self._current_option_index = 1
-  self.column_count = 1
-
   self:checkForAvailableLanguages()
 
   -- Window parts definition
@@ -175,41 +146,11 @@ function UIOptions:UIOptions(ui, mode)
   self:addBevelPanel(175, title_y_pos, BTN_WIDTH * 2, 20, col.title):setLabel(_S.options_window.caption)
     .lowered = true
 
-  -- Create our setting items. This create a caption/label for the setting
-  -- and the setting itself. We return both elements of the setting (panel
-  -- and the button made from the panel)
-  local function createOptionsElement(option_label, option_tooltip,
-      setting_label, setting_tooltip, setting_colours, callback,
-      toggle_state)
-    local y_pos = self:_getOptionYPos()
-    local x_offset = 300 * (self.column_count - 1)
-    local label_x, setting_x = 20 + x_offset, 165 + x_offset
-
-    -- Make the setting name panel
-    self:addBevelPanel(label_x, y_pos, BTN_WIDTH, BTN_HEIGHT, col.caption, col.bg, col.bg)
-      :setLabel(option_label)
-      :setTooltip(option_tooltip)
-      .lowered = true
-    local s_col = setting_colours
-    -- Make the setting value panel
-    local setting_panel = self:addBevelPanel(setting_x, y_pos, BTN_WIDTH,
-        BTN_HEIGHT, s_col.bg, s_col.highlight, s_col.shadow,
-        s_col.disabled, s_col.active)
-      :setLabel(setting_label)
-      :setTooltip(setting_tooltip)
-    -- Make the value panel a button
-    local setting_button = setting_panel:makeToggleButton(0, 0, BTN_WIDTH,
-        BTN_HEIGHT, nil, callback)
-      :setToggleState(toggle_state)
-    -- Return the setting value info
-    return setting_panel, setting_button
-  end
-
   if app:isUpdateCheckAvailable() then
     -- Check for updates
     local updates_string = app.config.check_for_updates and
         _S.options_window.option_enabled or _S.options_window.option_disabled
-    self.updates_panel, self.updates_button = createOptionsElement(
+    self.updates_panel, self.updates_button = self:createOptionsElement(
         _S.options_window.check_for_updates, _S.tooltip.options_window.check_for_updates,
         updates_string, nil, { bg = col.setting },
         self.buttonUpdates, app.config.check_for_updates)
@@ -218,14 +159,14 @@ function UIOptions:UIOptions(ui, mode)
   -- Fullscreen
   local fullscreen_label = app.fullscreen and _S.options_window.option_on
     or _S.options_window.option_off
-  self.fullscreen_panel, self.fullscreen_button = createOptionsElement(
+  self.fullscreen_panel, self.fullscreen_button = self:createOptionsElement(
       _S.options_window.fullscreen, _S.tooltip.options_window.fullscreen,
       fullscreen_label, _S.tooltip.options_window.fullscreen_button, { bg = col.setting },
       self.buttonFullscreen, app.fullscreen)
 
   -- Screen resolution
   -- We will set the button label after making up the UI scale option below
-  self.resolution_panel, self.resolution_button = createOptionsElement(
+  self.resolution_panel, self.resolution_button = self:createOptionsElement(
       _S.options_window.resolution, _S.tooltip.options_window.resolution,
       "", _S.tooltip.options_window.select_resolution,
       { bg = col.setting, active = col.setting_active },
@@ -233,7 +174,7 @@ function UIOptions:UIOptions(ui, mode)
 
   -- UI Scale
   local scale_label = TheApp.config.ui_scale * 100 .. "%"
-  self.scale_ui_panel, self.scale_ui_button = createOptionsElement(
+  self.scale_ui_panel, self.scale_ui_button = self:createOptionsElement(
       _S.options_window.scale_ui, _S.tooltip.options_window.scale_ui,
       scale_label, nil,
       { bg = col.setting, active = col.setting_active },
@@ -256,7 +197,7 @@ function UIOptions:UIOptions(ui, mode)
   self:_startNewColumn()
 
   -- Language setting.
-  self.language_panel, self.language_button = createOptionsElement(
+  self.language_panel, self.language_button = self:createOptionsElement(
       _S.options_window.language, _S.tooltip.options_window.language,
       lang, _S.tooltip.options_window.select_language,
       { bg = col.setting, active = col.setting_active },
@@ -265,14 +206,14 @@ function UIOptions:UIOptions(ui, mode)
   -- Mouse capture
   local capture_label = app.config.capture_mouse and
       _S.options_window.option_on or _S.options_window.option_off
-  self.mouse_capture_panel, self.mouse_capture_button = createOptionsElement(
+  self.mouse_capture_panel, self.mouse_capture_button = self:createOptionsElement(
       _S.options_window.capture_mouse, _S.tooltip.options_window.capture_mouse,
       capture_label, _S.tooltip.options_window.capture_mouse, { bg = col.setting },
       self.buttonMouseCapture, app.config.capture_mouse)
 
   -- Autosave frequency
   local autosave_frequency_label = current_autosave_frequency()
-  self.autosave_frequency_panel, self.autosave_frequency_button = createOptionsElement(
+  self.autosave_frequency_panel, self.autosave_frequency_button = self:createOptionsElement(
       _S.options_window.autosave_frequency, _S.tooltip.options_window.autosave_frequency,
       autosave_frequency_label, _S.tooltip.options_window.autosave_frequency,
       { bg = col.setting, active = col.setting_active },
