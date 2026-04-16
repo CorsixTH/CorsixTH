@@ -237,6 +237,7 @@ local function new_hotkeys_defaults()
     ingame_panel_charts = "f8",
     ingame_panel_policy = "f9",
     ingame_panel_machineMenu = "f10",
+    ingame_panel_adviserHistory = {"ctrl", "h"},
     ingame_panel_map_alt = "t",
     ingame_panel_research_alt = "r",
     ingame_panel_casebook_alt = "c",
@@ -829,6 +830,7 @@ param(hotkeys_values, 'ingame_panel_status') ..
 param(hotkeys_values, 'ingame_panel_charts') ..
 param(hotkeys_values, 'ingame_panel_policy') ..
 param(hotkeys_values, 'ingame_panel_machineMenu') ..
+param(hotkeys_values, 'ingame_panel_adviserHistory') ..
 param(hotkeys_values, 'ingame_panel_map_alt') ..
 param(hotkeys_values, 'ingame_panel_research_alt') ..
 param(hotkeys_values, 'ingame_panel_casebook_alt') ..

@@ -177,6 +177,7 @@ function UIBottomPanel:registerKeyHandlers()
   ui:addKeyHandler("ingame_panel_charts", buttons[6], buttons[6].handleClick, "left")    -- charts
   ui:addKeyHandler("ingame_panel_policy", buttons[7], buttons[7].handleClick, "left")    -- policy
   ui:addKeyHandler("ingame_panel_machineMenu", self, self.dialogMachineMenu)    -- machine menu
+
   -- Hotkeys for building a room, furnishing the corridor, editing a room, and hiring staff.
   ui:addKeyHandler("ingame_panel_buildRoom", self, self.dialogBuildRoom)    -- Build room.
   ui:addKeyHandler("ingame_panel_furnishCorridor", self, self.dialogFurnishCorridor)    -- Furnish corridor.
@@ -203,6 +204,7 @@ function UIBottomPanel:registerKeyHandlers()
   ui:addKeyHandler("ingame_openFirstMessage", self, self.openFirstMessage)    -- message
   ui:addKeyHandler("ingame_toggleInfo", self, self.toggleInformation)   -- information when you first build
   ui:addKeyHandler("ingame_jukebox", self, self.openJukebox)   -- jukebox
+  ui:addKeyHandler("ingame_panel_adviserHistory", self, self.dialogAdviserHistory)    -- adviser history
 end
 
 function UIBottomPanel:openJukebox()
@@ -885,6 +887,16 @@ function UIBottomPanel:dialogMachineMenu(enable)
     w:close()
   else
     self:addDialog("UIMachineMenu")
+  end
+  self.ui:playSound("selectx.wav")
+end
+
+function UIBottomPanel:dialogAdviserHistory(enable)
+  local w = self.ui:getWindow(UIAdviserHistory)
+  if w then
+    w:close()
+  else
+    self:addDialog("UIAdviserHistory")
   end
   self.ui:playSound("selectx.wav")
 end
