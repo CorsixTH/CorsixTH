@@ -987,9 +987,6 @@ options_window = {
   apply = "Aplicar",
   cancel = "Cancelar",
   back = "Atrás",
-  scrollspeed = "Vel. de Desplazamiento",
-  shift_scrollspeed = "Vel. de Despl. (Shift)",
-  zoom_speed = "Vel. de Acercamiento",
   hotkey = "Atajos de Teclado",
   check_for_updates = "Buscar Actualizaciones",
 }
@@ -1012,15 +1009,6 @@ tooltip.options_window = {
   language_dropdown_item = "Seleccionar el idioma %s.",
   language_dropdown_no_font = "Selecciona una fuente en las opciones de carpeta para habilitar este lenguaje.",
   back = "Cierra la ventana de opciones.",
-  scrollspeed = "Establece la velocidad de desplazamiento de 1 (más lenta) a 10 (más rápida). El valor por defecto es 2.",
-  shift_scrollspeed = "Establece la velocidad de desplazamiento (cuando la tecla Shift se encuentra presionada) de 1 (más lenta) a 10 (más rápida). El valor por defecto es 4.",
-  zoom_speed = "Establece la velocidad de acercamiento de la cámara de 10 (más lenta) a 1000 (más rápida). El valor por defecto 80.",
-  apply_scrollspeed = "Aplica la velocidad de desplazamiento ingresada.",
-  cancel_scrollspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
-  apply_shift_scrollspeed = "Aplica la velocidad de desplazamiento (tecla Shift) ingresada.",
-  cancel_shift_scrollspeed = "Vuelve sin cambiar la velocidad de desplazamiento (tecla Shift).",
-  apply_zoomspeed = "Aplica la velocidad de acercamiento ingresada.",
-  cancel_zoomspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
   hotkey = "Cambia las teclas de acceso rápido.",
   check_for_updates = "Establece si el juego debería buscar actualizaciones al iniciar.",
 }
@@ -1037,6 +1025,30 @@ tooltip.audio_window = {
   jukebox = "Abre el Reproductor para controlar la música",
 }
 
+accessibility_window = {
+  option_on = "Activado",
+  option_off = "Desactivado",
+  back = "Atrás",
+  volume = "Tecla de volumen",
+  scrollspeed = "Vel. de Desplazamiento",
+  shift_scrollspeed = "Vel. de Despl. (Shift)",
+  zoom_speed = "Vel. de Acercamiento",
+}
+
+tooltip.accessibility_window = {
+  volume = "Si la tecla de bajar volumen abre también el botiquín, utiliza esta opción para cambiar el acceso directo a Mayúsculas + C.",
+  back = "Cerrar este menú y volver al menú de opciones.",
+  scrollspeed = "Establece la velocidad de desplazamiento de 1 (más lenta) a 10 (más rápida). El valor por defecto es 2.",
+  shift_scrollspeed = "Establece la velocidad de desplazamiento (cuando la tecla Shift se encuentra presionada) de 1 (más lenta) a 10 (más rápida). El valor por defecto es 4.",
+  zoom_speed = "Establece la velocidad de acercamiento de la cámara de 10 (más lenta) a 1000 (más rápida). El valor por defecto 80.",
+  apply_scrollspeed = "Aplica la velocidad de desplazamiento ingresada.",
+  cancel_scrollspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
+  apply_shift_scrollspeed = "Aplica la velocidad de desplazamiento (tecla Shift) ingresada.",
+  cancel_shift_scrollspeed = "Vuelve sin cambiar la velocidad de desplazamiento (tecla Shift).",
+  apply_zoomspeed = "Aplica la velocidad de acercamiento ingresada.",
+  cancel_zoomspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
+}
+
 customise_window = {
   caption = "Opciones personalizadas",
   option_on = "Activado",
@@ -1047,7 +1059,6 @@ customise_window = {
   movies = "Control de vídeos",
   intro = "Mostrar introducción",
   paused = "Construir en pausa",
-  volume = "Tecla de volumen",
   aliens = "Pacientes alienígenas",
   fractured_bones = "Fracturas óseas",
   average_contents = "Contenidos habituales",

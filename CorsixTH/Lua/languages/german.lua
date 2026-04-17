@@ -475,9 +475,6 @@ options_window = {
   apply = "Übernehmen",
   cancel = "Abbrechen",
   back = "Zurück",
-  scrollspeed = "Scrolling", -- "Scrolling-Geschwindigkeit" is too long
-  shift_scrollspeed = "Scrolling (Mod.)", --"schnelles Scrollen" or "Umschalt-Scrolling-Geschwindigkeit" are worse
-  zoom_speed = "Zoomen", --"Zoom-Geschwindigkeit" is too long
   hotkey = "Tastenkürzel",
 }
 
@@ -497,15 +494,6 @@ tooltip.options_window = {
   select_language = "Die Spielsprache ändern",
   language_dropdown_item = "%s als Sprache auswählen",
   back = "Das Optionsfenster schließen",
-  scrollspeed = "Scrolling-Geschwindigkeit von 1 (langsamste) bis 10 (schnellste) einstellen. Standard ist 2.",
-  shift_scrollspeed = "Scrolling-Geschwindigkeit während der Modifikator (Standard: Umschalttaste) gedrückt wird einstellen. 1 (langsamste) bis 10 (schnellste). Standard ist 4.",
-  zoom_speed = "Zoom-Geschwindigkeit der Kamera von 10 (langsamste) bis 1000 (schnellste) einstellen. Standard ist 80.",
-  apply_scrollspeed = "Eingegebene Scrolling-Geschwindigkeit anwenden.",
-  cancel_scrollspeed = "Ohne Änderung der Scrolling-Geschwindigkeit zurückkehren.",
-  apply_shift_scrollspeed = "Eingegebene Modifikator-Scrolling-Geschwindigkeit anwenden.",
-  cancel_shift_scrollspeed = "Ohne Änderung der Modifikator-Scrolling-Geschwindigkeit zurückkehren.",
-  apply_zoomspeed = "Eingegebene Zoom-Geschwindigkeit anwenden.",
-  cancel_zoomspeed = "Ohne Änderung der Zoom-Geschwindigkeit zurückkehren.",
   hotkey = "Tastenkürzel ändern.",
 }
 
@@ -520,6 +508,30 @@ tooltip.audio_window = {
   audio_toggle = "Ein- oder ausschalten",
 }
 
+accessibility_window = {
+  option_on = "Ein",
+  option_off = "Aus",
+  volume = "Leiser-Taste",
+  scrollspeed = "Scrolling", -- "Scrolling-Geschwindigkeit" is too long
+  shift_scrollspeed = "Scrolling (Mod.)", --"schnelles Scrollen" or "Umschalt-Scrolling-Geschwindigkeit" are worse
+  zoom_speed = "Zoomen", --"Zoom-Geschwindigkeit" is too long
+  back = "Zurück",
+}
+
+tooltip.accessibility_window = {
+  volume = "Wenn die Leiser-Taste auch das Fallbuch öffnet, dann schalten Sie dies ein, um die Schnellzugriffstaste für das Fallbuch auf Umschalt + C zu wechseln.",
+  scrollspeed = "Scrolling-Geschwindigkeit von 1 (langsamste) bis 10 (schnellste) einstellen. Standard ist 2.",
+  shift_scrollspeed = "Scrolling-Geschwindigkeit während der Modifikator (Standard: Umschalttaste) gedrückt wird einstellen. 1 (langsamste) bis 10 (schnellste). Standard ist 4.",
+  zoom_speed = "Zoom-Geschwindigkeit der Kamera von 10 (langsamste) bis 1000 (schnellste) einstellen. Standard ist 80.",
+  apply_scrollspeed = "Eingegebene Scrolling-Geschwindigkeit anwenden.",
+  cancel_scrollspeed = "Ohne Änderung der Scrolling-Geschwindigkeit zurückkehren.",
+  apply_shift_scrollspeed = "Eingegebene Modifikator-Scrolling-Geschwindigkeit anwenden.",
+  cancel_shift_scrollspeed = "Ohne Änderung der Modifikator-Scrolling-Geschwindigkeit zurückkehren.",
+  apply_zoomspeed = "Eingegebene Zoom-Geschwindigkeit anwenden.",
+  cancel_zoomspeed = "Ohne Änderung der Zoom-Geschwindigkeit zurückkehren.",
+  back = "Dieses Menü schließen und zum Einstellungsmenü zurückkehren",
+}
+
 customise_window = {
   caption = "Spezialeinstellungen",
   option_on = "Ein",
@@ -528,7 +540,6 @@ customise_window = {
   movies = "Alle Filme zeigen",
   intro = "Introfilm abspielen",
   paused = "In Pause bauen",
-  volume = "Leiser-Taste",
   aliens = "Alien-Patienten", -- "Außerirdische Patienten"/"Ex­t­ra­ter­res­t­risch Patienten" is too long
   fractured_bones = "Gebrochene Knochen",
   average_contents = "Einrichtung merken",
@@ -539,7 +550,6 @@ tooltip.customise_window = {
   movies = "Globale Filmsteuerung: Hiermit können Sie sämtliche Filme abschalten",
   intro = "Den Introfilm abschalten. Das Intro wird nur gespielt, wenn Sie nicht auch gleichzeitig alle Filme abgeschaltet haben.",
   paused = "In Theme Hospital würde es dem Spieler während der Pause nur gestattet sein, das obere Menü zu benutzen. Dies ist in CorsixTH ebenfalls die Standardeinstellung, aber wenn Sie dies einschalten, ist alles in der Pause erlaubt.",
-  volume = "Wenn die Leiser-Taste auch das Fallbuch öffnet, dann schalten Sie dies ein, um die Schnellzugriffstaste für das Fallbuch auf Umschalt + C zu wechseln.",
   aliens = "Aufgrund des Fehlens einer anständigen Animation haben wir standardmäßig Patienten mit außerirdischer DNA deaktiviert, damit sie nur zu einem Notfall kommen. Um Patienten mit außerirdischer DNA es zu erlauben, Ihr Krankenhaus nicht nur bei Notfällen zu besuchen, schalten Sie dies ab.",
   fractured_bones = "Aufgrund einer armseligen Animation haben wir uns entschieden, dass es standardmäßig keine weiblichen Patienten mit gebrochenen Knochen gibt. Wenn weibliche Patienten mit gebrochenen Knochen Ihr Krankenhaus besuchen sollen, dann schalten Sie dies ab.",
   average_contents = "Wenn Sie möchten, dass sich das Spiel merkt, welche zusätzlichen Objekte Sie üblicherweise beim Gebäudebau hinzufügen, dann schalten Sie diese Option ein.",
