@@ -128,6 +128,13 @@ adviser.warnings.nurse_needs_desk_2 = "A sua Enfermeira está satisfeita que a t
 object.litter = "Lixo"
 tooltip.objects.litter = "Lixo: Deitado fora por um paciente porque não encontrou um caixote do lixo onde o colocar."
 
+accessibility_window = {
+  ption_on = "Ligado",
+  option_off = "Desligado",
+  back = "Retroceder",
+  volume = "Atalho para baixar o volume",
+}
+
 menu_options.lock_windows = "  BLOQUEAR JANELAS  "
 menu_options_game_speed.pause = "  (%1%) PAUSA  "
 
@@ -345,7 +352,10 @@ tooltip = {
     language = "Escolhe %s como a tua linguagem.",
     back = "Fecha a janela de opçoes.",
     },
-
+  accessibility_window = {
+    back = "Fecha a janela de opçoes.",
+    volume = "Se o botão para baixar o volume está a abrir também o livro médico, ligue esta opção para mudar o atalho para o livro médico para Shift + C"
+  },
 }
 
 

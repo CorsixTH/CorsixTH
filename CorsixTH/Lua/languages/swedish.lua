@@ -378,6 +378,18 @@ tooltip.audio_window = {
   audio_toggle = "Slå av eller på",
 }
 
+accessibility_window = {
+  option_on = "På",
+  option_off = "Av",
+  back = "Tillbaka",
+  volume = "Tangent: volym ner",
+}
+
+tooltip.accessibility_window = {
+  volume = "Om du råkat ut för att tangenten som sänker volymen även öppnar medicinjournalen, slå på det här alternativet för att ändra snabbkommando till medicinjournalen till Shift + C",
+  back = "Stäng den här menyn och gå tillbaka till Alternativmenyn",
+}
+
 customise_window = {
   caption = "Extra inställningar",
   option_on = "På",
@@ -386,7 +398,6 @@ customise_window = {
   movies = "Global filmkontroll",
   intro = "Spela introfilmen",
   paused = "Bygg i pausläge",
-  volume = "Tangent: volym ner",
   aliens = "Utomjordingar",
   fractured_bones = "Krossad patient",
   average_contents = "Genomsnittsinnehåll",

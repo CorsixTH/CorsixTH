@@ -321,9 +321,6 @@ options_window = {
   right_mouse_scrolling = "Muis Scrollen",
   right_mouse_scrolling_option_middle = "Middelste Knop",
   right_mouse_scrolling_option_right = "Rechterknop",
-  scrollspeed = "Scrollsnelheid",
-  shift_scrollspeed = "Shift Scrollsnelheid",
-  zoom_speed = "Zoomsnelheid",
 }
 audio_window = {
   audio = "Audio algemeen",
@@ -362,6 +359,15 @@ folders_window = {
   music_location = "Selecteer de map die je wilt gebruiken voor muziek.",
   data_label = "TH Data",
 }
+accessibility_window = {
+  volume = "Volume lager koppeling",
+  scrollspeed = "Scrollsnelheid",
+  shift_scrollspeed = "Shift Scrollsnelheid",
+  zoom_speed = "Zoomsnelheid",
+  option_on = "Aan",
+  option_off = "Uit",
+  back = "Terug",
+}
 customise_window = {
   movies = "Video algemeen",
   option_on = "Aan",
@@ -369,7 +375,6 @@ customise_window = {
   back = "Terug",
   paused = "Bouwen tijdens pause",
   intro = "Speel intro video",
-  volume = "Volume lager koppeling",
   caption = "Aangepaste instellingen",
   fractured_bones = "Gebroken botten",
   average_contents = "Gemiddeld meubilair",
@@ -1317,10 +1322,7 @@ tooltip = {
     hotkey = "Pas sneltoetsen aan.",
     language_dropdown_no_font = "Selecteer een lettertype in de spelinstellingen om deze taal in te schakelen",
     right_mouse_scrolling = "Wissel de muisknop die wordt gebruikt om door de kaart te scrollen",
-    scrollspeed = "Stel de scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 2",
-    shift_scrollspeed = "Stel de shift-scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 4",
-    zoom_speed = "Stel de zoomsnelheid van de camera in van 10 (langzaamst) en 1000 (snelst). De standaard waarde is 80",
-  },
+    },
   audio_window = {
     audio_button = "Zet alle spelgeluiden aan of uit.",
     audio_toggle = "Zet aan of uit.",
@@ -1330,11 +1332,17 @@ tooltip = {
     research_progress = "Voortgang tot de volgende ontdekking in deze categorie: %1%/%2%",
     no_research = "Naar deze categorie wordt momenteel geen onderzoek gedaan",
   },
+  accessibility_window = {
+    volume = "Als de 'volume-lager' knop ook het behandelingenboek opent, zet deze instelling aan om de sneltoets naar het behandelingenboek te veranderen naar shift+C",
+    scrollspeed = "Stel de scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 2",
+    shift_scrollspeed = "Stel de shift-scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 4",
+    zoom_speed = "Stel de zoomsnelheid van de camera in van 10 (langzaamst) en 1000 (snelst). De standaard waarde is 80",
+    back = "Sluit dit menu af en ga terug naar het instellingen menu.",
+  },
   customise_window = {
     intro = "Zet de intro video aan of uit. Zet deze instelling aan om de intro video te tonen als CorsixTH wordt gestart.",
     fractured_bones = "Omdat de animatie niet mooi is, zijn vrouwelijke patiëntien met gebroken botten standaard uitgeschakeld. Om vrouwelijke patiënten met gebroken botten in je ziekenhuis te ontvangen zet je deze instelling uit.",
     movies = "Met algemene video instellingen zet je alle video's aan of uit.",
-    volume = "Als de 'volume-lager' knop ook het behandelingenboek opent, zet deze instelling aan om de sneltoets naar het behandelingenboek te veranderen naar shift+C",
     aliens = "Vanwege de sleche animatie bezoeken patiënten met alien-DNA je ziekenhuis alleen bij een noodgeval. Om patiënten met alien-DNA ook buiten noodgevallen je ziekenhuis te laten bezoeken zet je deze instelling uit.",
     paused = "In Theme Hospital was het niet mogelijk de menubalk te gebruiken als het spel was gepauzeerd. De standaard instelling in CorsixTH is het zelfde, maar met deze instelling aan is dit tijdens pauze wel toegestaan.",
     average_contents = "Als het spel moet onthouden wat je gemiddeld genomen aan meubilair in een kamer bouwt, zet deze instelling aan.",

@@ -1901,3 +1901,18 @@ adviser.warnings.no_desk_4 = "A recepciósnak szüksége van egy saját pultra, 
 adviser.warnings.researcher_needs_desk_3 = "Minden Kutatónak szüksége van egy íróasztalra aminél dolgozhat."
 adviser.warnings.cannot_afford_2 = "Nincs elég pénzed a számládon ehhez a vásárláshoz!"
 adviser.warnings.nurse_needs_desk_2 = "A nővérke boldog, hogy megengedted neki, hogy szünetet tartson. Ha a kórtermeid személyzetének bővítését fontolgatod ne felejtsd el, hogy mindegyiknek szüksége lesz külön asztalra."
+
+accessibility_window = {
+  option_on = "Be",
+  option_off = "Ki",
+  caption = "Egyéni beállítások",
+  back = "Vissza",
+  volume = "Halkítás gyorsbillentyű",
+}
+
+tooltip.accessibility_window = {
+  back = "Menü bezárása, és vissza a Beállításokhoz",
+  movies = "Ezzel le tudod tiltani az összes átvezető videót",
+  fractured_bones = "Mivel csak félkész animációink van a törött csontú női páciensek megjelenítésére, ezért ők nem jelennek meg a kórházadban. Ha mégis szeretnéd, hogy érkezzenek ilyen betegek is, akkor ezt kapcsold ki",
+  volume = "Ha hangerő halkítása gomb használata megnyitja az esetleírásokat is, akkor ezt bekapcsolva átállíthatod az esetleírások gyorsbillentyű kombinációját Shift + C -re",
+}

@@ -462,9 +462,6 @@ options_window = {
   apply = "Aplicar",
   cancel = "Cancelar",
   back = "Voltar",
-  scrollspeed = "Veloc. de Rolagem",
-  shift_scrollspeed = "Veloc. Rolagem Acel.",
-  zoom_speed = "Veloc. do Zoom",
   hotkey = "Atalhos",
   check_for_updates = "Verificar Atualizaçöes",
 }
@@ -487,15 +484,6 @@ tooltip.options_window = {
   language_dropdown_item = "Selecionar %s como idioma",
   language_dropdown_no_font = "Selecione uma fonte nas configuraçöes de pastas para ativar este idioma",
   back = "Fechar a janela de Configuraçöes",
-  scrollspeed = "Defina a velocidade de rolagem entre 1 (mais lenta) até 10 (mais rápida). O padräo é 2.",
-  shift_scrollspeed = "Defina a velocidade da rolagem enquanto a tecla Shift é pressionada. 1 (mais lento) até 10 (mais rápido). O padräo é 4.",
-  zoom_speed = "Defina a velocidade da aproximaçäo da câmera de 10 (mais lenta) até 1000 (mais rápida). O padräo é 80.",
-  apply_scrollspeed = "Aplique a velocidade de rolagem inserida.",
-  cancel_scrollspeed = "Retornar sem alterar a velocidade de rolagem.",
-  apply_shift_scrollspeed = "Aplique a velocidade de rolagem de acelerada inserida.",
-  cancel_shift_scrollspeed = "Retorne sem alterar a velocidade de rolagem acelerada.",
-  apply_zoomspeed = "Aplique a velocidade de aproximaçäo inserida.",
-  cancel_zoomspeed = "Retorne sem alterar a velocidade de aproximaçäo.",
   hotkey = "Altere as teclas de atalho do teclado.",
   check_for_updates = "Define se o jogo deve procurar atualizaçöes ao iniciar.",
 }
@@ -512,6 +500,30 @@ tooltip.audio_window = {
   jukebox = "Abrir a Jukebox para controlar a música",
 }
 
+accessibility_window = {
+  option_on = "Ligar",
+  option_off = "Desligar",
+  volume = "Tecla de Volume",
+  scrollspeed = "Veloc. de Rolagem",
+  shift_scrollspeed = "Veloc. Rolagem Acel.",
+  zoom_speed = "Veloc. do Zoom",
+  back = "Voltar",
+}
+
+tooltip.accessibility_window = {
+  volume = "Se a tecla de baixar volume abrir também a ficha clínica, utilize esta opçäo para mudar  o atalho para direto a ficha clínica para Shift + C.",
+  scrollspeed = "Defina a velocidade de rolagem entre 1 (mais lenta) até 10 (mais rápida). O padräo é 2.",
+  shift_scrollspeed = "Defina a velocidade da rolagem enquanto a tecla Shift é pressionada. 1 (mais lento) até 10 (mais rápido). O padräo é 4.",
+  zoom_speed = "Defina a velocidade da aproximaçäo da câmera de 10 (mais lenta) até 1000 (mais rápida). O padräo é 80.",
+  apply_scrollspeed = "Aplique a velocidade de rolagem inserida.",
+  cancel_scrollspeed = "Retornar sem alterar a velocidade de rolagem.",
+  apply_shift_scrollspeed = "Aplique a velocidade de rolagem de acelerada inserida.",
+  cancel_shift_scrollspeed = "Retorne sem alterar a velocidade de rolagem acelerada.",
+  apply_zoomspeed = "Aplique a velocidade de aproximaçäo inserida.",
+  cancel_zoomspeed = "Retorne sem alterar a velocidade de aproximaçäo.",
+  back = "Close this menu and go back to the Settings Menu",
+}
+
 customise_window = {
   caption = "Config. Personalizadas",
   option_on = "Ligado",
@@ -520,7 +532,6 @@ customise_window = {
   movies = "Vídeo Geral",
   intro = "Vídeo de Introduçäo",
   paused = "Construir em Pausa",
-  volume = "Tecla de Volume",
   aliens = "Pacientes Alienígenas",
   fractured_bones = "Fraturas Osseas",
   average_contents = "Conteúdos Habituais",
@@ -531,7 +542,6 @@ tooltip.customise_window = {
   movies = "Controle geral de vídeos, que permitirá a você desativar todos os vídeos",
   intro = "Desligar ou ligar o vídeo de introduçäo, vídeos gerais precisaräo estar ligados se você quiser o vídeo de introduçäo rode quando você carregar o CorsixTH",
   paused = "No Theme Hospital o jogador só teria permissäo para utilizar o menu superior se o jogo estivesse pausado. Esta é também a configuraçäo padräo no CorsixTH, mas habilitando isso você tem permissäo para acessar tudo enquanto o jogo está pausado",
-  volume = "Se a tecla de baixar volume abrir também a ficha clínica, utilize esta opçäo para mudar  o atalho para direto a ficha clínica para Shift + C.",
   aliens = "Devido à falta de animaçöes decentes disponíveis, fizemos com que os pacientes com DNA alienígena só apareçam em uma emergência. Para permitir que os pacientes com DNA alienígena possam visitar seu hospital, desative esta opçäo.",
   fractured_bones = "Devido a uma animaçäo deficiente, fizemos que näo existam pacientes com Fraturas ósseas femininas. Para permitir que as pacientes com Fraturas ósseas visitem seu hospital, desative esta opçäo.",
   average_contents = "Se você quiser que o jogo lembre que objetos extras você normalmente adiciona quando constrói salas, entäo ligue esta opçäo",

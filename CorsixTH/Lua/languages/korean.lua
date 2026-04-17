@@ -184,6 +184,10 @@ tooltip = {
     allocated_amount = "할당된 예산",
     close = "연구 화면 닫기",
   },
+  accessibility_window = {
+    volume = "음량 감소 버튼이  약물 사례집을 열게 되는 경우, 이 옵션을 켜서 약물 사례집 단축키를 Shift + C 로 변경하세요",
+    back = "이 메뉴를 닫고 옵션 메뉴로 돌아감",
+  },
   customise_window = {
     intro = "인트로 영상을 켜거나 끕니다. CorsixTH 를 플레이할 때마다 인트로 영상을 재생하게 하려면 영상 컨트롤이 켜져 있어야 합니다",
     fractured_bones = "조잡한 애니메이션의 문제로, 기본적으로 여성 골절 환자는 등장하지 않도록 되어있습니다. 여성 골절 환자들이 병원을 방문하게 하려면 이 옵션을 끄세요",
@@ -1436,6 +1440,12 @@ folders_window = {
   screenshots_label = "스크린샷",
   music_location = "음악을 재생할 디렉토리를 선택하세요",
   data_label = "테마 병원 데이터",
+}
+accessibility_window = {
+  option_on = "켜짐",
+  option_off = "꺼짐",
+  volume = "음량 감소 단축키",
+  back = "뒤로",
 }
 customise_window = {
   movies = "영상 컨트롤",

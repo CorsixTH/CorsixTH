@@ -263,7 +263,10 @@ tooltip = {
       toggle_infected = "Slå av eller på ikoner for smittsomme pasienter for den aktive, oppdagede epidemien",
     },
   },
-
+  accessibility_window = {
+    volume = "Om en fysisk volum ned-knapp åpner Medisinboka i spillet, så kan du slå på denne for å endre hurtigtasten til Shift+C",
+    back = "Gå tilbake",
+  },
   customise_window = { --todo kanskje en opprensking her. få det mer konsekvent.
     movies = "Slår av alle videoer i spillet",
     paused = " I Theme Hospital ville spilleren kun få lov til å bruke toppmenyen om spillet var satt til pause. Dette er standard i CorsixTH også, men ved å slå denne på, så er alle bevegelser lov",
@@ -932,6 +935,13 @@ new_game_window = {
   start = "Start",
 }
 
+accessibility_window = {
+  option_on = "På",
+  option_off = "Av",
+  volume = "Hurtigtast volumsenking",
+  back = "Tilbake",
+}
+
 customise_window = {
   movies = "Global videostyring",
   option_on = "På",
@@ -939,7 +949,6 @@ customise_window = {
   back = "Tilbake",
   paused = "Bygging i pause",
   intro = "Spill introvideo",
-  volume = "Hurtigtast volumsenking",
   caption = "Egendefinerte innstillinger",
   fractured_bones = "Benbrudd",
   average_contents = "Gjennomsnittlig rominnhold",

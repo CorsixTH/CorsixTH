@@ -2693,3 +2693,15 @@ adviser.warnings.researcher_needs_desk_1 = "En Forsker har brug for et bord til 
 adviser.warnings.nurse_needs_desk_1 = "Hver Sygeplejerske har brug sit eget bord til at arbejde fra."
 adviser.warnings.no_desk_5 = "Nu er det ved at være på tide, du burde snart se patienter ankomme!"
 adviser.warnings.no_desk_4 = "En receptionist skal have sit eget bord for at tage imod nye patienter"
+
+accessibility_window = {
+  option_on = "Til",
+  option_off = "Fra",
+  volume = "Volume ned tast",
+  back = "Tilbage",
+}
+
+tooltip.accessibility_window = {
+  volume = "If the volume down button causes the Casebook to open, turn this option on to change the hotkey for the Casebook to Shift + C",
+  back = "Luk denne menu og gå tilbage til indstillinger",
+}

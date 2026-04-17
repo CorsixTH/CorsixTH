@@ -133,6 +133,30 @@ tooltip.folders_window = {
   back  = "メニューを閉じて設定メニューに戻ります",
 }
 
+accessibility_window = {
+  option_on = "オン",
+  option_off = "オフ",
+  back = "戻る",
+  volume = "音量を下げるホットキー",
+  scrollspeed = "スクロール速度",
+  shift_scrollspeed = "スクロール速度 (+Shift)",
+  zoom_speed = "ズーム速度",
+}
+
+tooltip.accessibility_window = {
+  volume = "ボリュームを下げるボタンでケースブックも開いてしまう場合には、これをオンにしてケースブックのホットキーを Shift + C に変更します",
+  back = "メニューを閉じて設定メニューに戻ります",
+  scrollspeed = "スクロール速度を 1(遅い) から 10(速い) の間で設定します。デフォルトは2です。",
+  shift_scrollspeed = "Shiftキーを押した時のスクロール速度を 1(遅い) から 10(速い) の間で設定します。 デフォルトは4です。",
+  zoom_speed = "カメラのズーム速度を 10(遅い) から 1000(速い) の間で設定します。 デフォルトは80です。",
+  apply_scrollspeed = "入力したスクロール速度で決定する",
+  cancel_scrollspeed = "スクロール速度を変更せずに戻る",
+  apply_shift_scrollspeed = "入力した+Shiftスクロール速度で決定する",
+  cancel_shift_scrollspeed = "+Shiftスクロール速度を変更せずに戻る",
+  apply_zoomspeed = "入力したズーム速度で決定する",
+  cancel_zoomspeed = "ズーム速度を変更せずに戻る",
+}
+
 customise_window = {
   caption = "カスタム設定",
   option_on = "オン",
@@ -141,7 +165,6 @@ customise_window = {
   movies = "グローバルムービーの設定",
   intro = "オープニングムービーの再生",
   paused = "一時停止中に建築する",
-  volume = "音量を下げるホットキー",
   aliens = "エイリアンDNA病",
   fractured_bones = "骨折",
   average_contents = "いつもの設備",
@@ -152,7 +175,6 @@ tooltip.customise_window = {
   movies = "すべてのムービーをオフに設定できます",
   intro = "オープニングムービーをオン/オフできます。 CorsixTHをロードするたびにオープニングムービーを再生したい場合は、グローバルムービーをオンにする必要があります",
   paused = "テーマホスピタルではゲームが一時停止されている場合、プレーヤーはメニューのみを使用できます。 これはCorsixTHでもデフォルト設定ですが、これをオンにすると、ゲームが一時停止されている間にすべての行動が許可されます",
-  volume = "ボリュームを下げるボタンでケースブックも開いてしまう場合には、これをオンにしてケースブックのホットキーを Shift + C に変更します",
   aliens = "適切なアニメーションがないため、エイリアンDNA病の患者は緊急要請の場合のみに来院する設定をデフォルトとしています。 エイリアンDNA病の患者が緊急要請以外でも来院するようにするには、これをオフにします。",
   fractured_bones = "アニメーションが不十分であるため、骨折した女性患者が来院しない設定をデフォルトとしています。 骨折した女性患者も来院するようにするには、このオプションをオフにしてください。",
   average_contents = "部屋を建てるときにあなたがいつも追加する設備をゲームに記憶させたい場合は、このオプションをオンにしてください",
@@ -182,9 +204,6 @@ options_window = {
   apply = "決定",
   cancel = "キャンセル",
   back = "戻る",
-  scrollspeed = "スクロール速度",
-  shift_scrollspeed = "スクロール速度 (+Shift)",
-  zoom_speed = "ズーム速度",
   hotkey = "ホットキーの設定",
   change_resolution = "解像度の変更",
 }
@@ -207,15 +226,6 @@ tooltip.options_window = {
   language_dropdown_item = " %s を選択する",
   language_dropdown_no_font = "この言語を選択するためにはフォルダの設定からフォントを選択してください",
   back = "ウインドウを閉じて戻ります",
-  scrollspeed = "スクロール速度を 1(遅い) から 10(速い) の間で設定します。デフォルトは2です。",
-  shift_scrollspeed = "Shiftキーを押した時のスクロール速度を 1(遅い) から 10(速い) の間で設定します。 デフォルトは4です。",
-  zoom_speed = "カメラのズーム速度を 10(遅い) から 1000(速い) の間で設定します。 デフォルトは80です。",
-  apply_scrollspeed = "入力したスクロール速度で決定する",
-  cancel_scrollspeed = "スクロール速度を変更せずに戻る",
-  apply_shift_scrollspeed = "入力した+Shiftスクロール速度で決定する",
-  cancel_shift_scrollspeed = "+Shiftスクロール速度を変更せずに戻る",
-  apply_zoomspeed = "入力したズーム速度で決定する",
-  cancel_zoomspeed = "ズーム速度を変更せずに戻る",
   hotkey = "ホットキーの設定を変更する",
   check_for_updates = "アップデートがないか確認する",
 }

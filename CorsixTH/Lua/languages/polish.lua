@@ -2254,6 +2254,19 @@ tooltip.folders_window = {
   reset_to_default = "Przywróć domyślną ścieżkę dla folderu ( %1% )",
   back  = "Zamknij to menu i wróć do ustawień",
 }
+
+accessibility_window = {
+  option_on = "Wł",
+  option_off = "Wył",
+  volume = "Skrót ściszania",
+  back = "Wróć",
+}
+
+tooltip.accessibility_window = {
+  volume = "Jeśli przycisk ściszania otwiera również 'Teczkę z lekami' , włącz tę opcję aby zmienić skrót do 'Teczki...' na Shift + C",
+  back = "Zamknij to menu i wróć do ustawień",
+}
+
 customise_window = {
   caption = "Własne ustawienia",
   option_on = "Wł",
@@ -2262,7 +2275,6 @@ customise_window = {
   movies = "Zarządzanie filmami",
   intro = "Odtwórz intro",
   paused = "Budoowanie w czasie pauzy",
-  volume = "Skrót ściszania",
   aliens = "Pacjenci Obcy",
   fractured_bones = "Pogruchotane kości",
   average_contents = "Standardowe wyposarzenie",
@@ -2272,7 +2284,6 @@ tooltip.customise_window = {
   movies = "Globalne zarządzanie filmami pozwoli Tobie na wyłączenie wszystkich filmików",
   intro = "Włącz lub wyłącz intro. Filmiki muszą być globalnie włączone jeśli chcesz oglądać intro przy każdym uruchomieniu CorsixTH",
   paused = "W grze Theme Hospital gracz mógł jedynie używać górnego menu podczas pauzy. Jest to również domyślne ustawianie CorsixTH, ale przez włączenie tej opcji wszystko jest dozwolone podczas pauzy",
-  volume = "Jeśli przycisk ściszania otwiera również 'Teczkę z lekami' , włącz tę opcję aby zmienić skrót do 'Teczki...' na Shift + C",
   aliens = "Z powodu braku dobrych animacji dokonaliśmy zmian aby pacjęci z DNA Obcego domyślnie przybywali tylko z nagłych wypadków. Jeśli chcesz aby pacjensi z DNA Obcego mogli odwiedzać twój szpital nie tylko po nagłym wypadku wyłącz tę opcję",
   fractured_bones = "Z powodu kiepskich animacji domyślnie wyłączyliśmy damskie modele pacjętów ze Zgruchotanymi Koścmi. Aby zezwolić, żeby pacjentki ze Zgruchotanymi koścmi odwiedzały twój szpital, wyłącz tę opcję",
   average_contents = "Jeśli chcesz, żeby gra zapamiętała jakie dodatkowe wyposarzenie używasz zazwyczaj budując dany typ pomieszczenia, włącz tę opcję",

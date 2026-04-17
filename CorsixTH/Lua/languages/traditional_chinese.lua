@@ -3107,9 +3107,6 @@ options_window = {
   apply = "應用",
   cancel = "取消",
   back = "返回",
-  scrollspeed = "捲動速度",
-  shift_scrollspeed = "加速捲動速度",
-  zoom_speed = "縮放速度",
   hotkey = "熱鍵",
   check_for_updates = "自動檢查更新",
 }
@@ -3130,15 +3127,6 @@ tooltip.options_window = {
   select_language = "選擇語言",
   language_dropdown_item = "選擇 %s 為語言",
   back = "關閉設定視窗",
-  scrollspeed = "將捲動速度設為1（最慢）到10（最快）。預設為2。",
-  shift_scrollspeed = "設定在捲動時按下 Shift 鍵時的捲動速度。1（最慢）到10（最快）。預設：4。",
-  zoom_speed = "將相機變焦速度設為10（最慢）到1000（最快）。預設值為80。",
-  apply_scrollspeed = "應用輸入的捲動速度",
-  cancel_scrollspeed = "返回而不更改捲動速度",
-  apply_shift_scrollspeed = "應用輸入的加速捲動速度",
-  cancel_shift_scrollspeed = "返回而不更改加速捲動速度",
-  apply_zoomspeed = "應用輸入的縮放速度",
-  cancel_zoomspeed = "返回而不更改縮放速度",
   hotkey = "更改鍵盤熱鍵",
   check_for_updates = "遊戲啟動時自動檢查更新",
 }
@@ -3153,6 +3141,30 @@ tooltip.audio_window = {
   audio_toggle = "切換開關",
 }
 
+accessibility_window = {
+  option_on = "啟用",
+  option_off = "關閉",
+  back = "返回",
+  volume = "減小音量熱鍵",
+  scrollspeed = "捲動速度",
+  shift_scrollspeed = "加速捲動速度",
+  zoom_speed = "縮放速度",
+}
+
+tooltip.accessibility_window = {
+  volume = "如果減小音量按鈕同時打開了治療手冊，請將開啟治療手冊的熱鍵更改為 Shift + C",
+  scrollspeed = "將捲動速度設為1（最慢）到10（最快）。預設為2。",
+  shift_scrollspeed = "設定在捲動時按下 Shift 鍵時的捲動速度。1（最慢）到10（最快）。預設：4。",
+  zoom_speed = "將相機變焦速度設為10（最慢）到1000（最快）。預設值為80。",
+  apply_scrollspeed = "應用輸入的捲動速度",
+  cancel_scrollspeed = "返回而不更改捲動速度",
+  apply_shift_scrollspeed = "應用輸入的加速捲動速度",
+  cancel_shift_scrollspeed = "返回而不更改加速捲動速度",
+  apply_zoomspeed = "應用輸入的縮放速度",
+  cancel_zoomspeed = "返回而不更改縮放速度",
+  back = "關閉此選單，並返回設定選單",
+}
+
 customise_window = {
   caption = "自訂設定",
   option_on = "啟用",
@@ -3161,7 +3173,6 @@ customise_window = {
   movies = "全域性 CG 控制",
   intro = "播放啟動 CG",
   paused = "建造時暫停",
-  volume = "減小音量熱鍵",
   aliens = "外星人只限緊急情況",
   fractured_bones = "骨折只限男性",
   average_contents = "房間常用物件",
@@ -3172,7 +3183,6 @@ tooltip.customise_window = {
   movies = "全域性 CG 控制，這將允許您禁用所有 CG",
   intro = "關閉或開啟啟動 CG，如果您希望每次啟動 CorsixTH 時都播放啟動 CG，則必須開啟全域性 CG",
   paused = "在杏林也瘋狂中，只有在遊戲暫停的情況下，才允許玩家使用頂部選單，這也是 CorsixTH 的預設設定。但是將此選項開啟，遊戲暫停時可以進行所有操作",
-  volume = "如果減小音量按鈕同時打開了治療手冊，請將開啟治療手冊的熱鍵更改為 Shift + C",
   aliens = "因為缺少合適的動畫，預設外星人 DNA 病人只會來自緊急事件。要允許緊急事件外出現外星人 DNA 病人，請關閉此選項",
   fractured_bones = "由於動畫效果不佳，預設不會有女性骨折患者。要允許女性骨折患者就診，請關閉此功能",
   average_contents = "如果您想讓遊戲記住在建造房間時通常會新增哪些其他物件，請啟用此選項。",
