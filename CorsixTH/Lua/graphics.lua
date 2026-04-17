@@ -65,7 +65,7 @@ local charsets = {
   ["mik"] = 2
 }
 
-function Graphics:Graphics(app, good_install_dir, charset)
+function Graphics:Graphics(app, gfx_set, charset)
   self.app = app
   self.target = self.app.video
   -- The cache is used to avoid reloading an object if it is already loaded
@@ -97,7 +97,7 @@ function Graphics:Graphics(app, good_install_dir, charset)
   self.reload_functions_last = setmetatable({}, {__mode = "k"})
 
   self:loadFontFile()
-  self:_loadPalettes(good_install_dir)
+  self:_loadPalettes(gfx_set)
 
   local graphics_folder = nil
   if self.app.config.use_new_graphics then
@@ -123,7 +123,8 @@ function Graphics:Graphics(app, good_install_dir, charset)
   self.custom_graphics_folder = graphics_folder
 end
 
-function Graphics:_loadPalettes(good_install_dir)
+function Graphics:_loadPalettes(gfx_set)
+  -- Load base palettes
   self:_loadPalette("Bitmap", "bootstrap_font.pal", true, false)
   self:_loadPalette("Bitmap", "lose.pl8", true, true)
   self:_loadPalette("Bitmap", "mainmenu1080.pal", false, false)
@@ -132,29 +133,36 @@ function Graphics:_loadPalettes(good_install_dir)
   self:_loadPalette("Bitmap", "winlevel.pl8", true, true)
   self:_loadPalette("Bitmap", "tree_ctrl.pal", false, false)
 
-  if not good_install_dir then
+  if gfx_set == "base" then
     return
   end
 
+  -- Load demo palettes
   self:_loadPalette("Data", "MPalette.dat", true, false)
   self:_loadPalette("QData", "Area01V.pal", true, false)
   self:_loadPalette("QData", "Award01V.pal", true, false)
   self:_loadPalette("QData", "Award02V.pal", true, false)
-  self:_loadPalette("QData", "Bank01V.pal", true, false)
   self:_loadPalette("QData", "Bid01V.pal", true, false)
   self:_loadPalette("QData", "Brief01V.pal", true, false)
   self:_loadPalette("QData", "Cred01V.pal", true, false)
-  self:_loadPalette("QData", "DrugN01V.pal", true, false)
   self:_loadPalette("QData", "Fame01V.pal", true, false)
   self:_loadPalette("QData", "Fax01V.pal", true, false)
-  self:_loadPalette("QData", "Graph01V.pal", true, false)
   self:_loadPalette("QData", "Load01V.pal", true, false)
   self:_loadPalette("QData", "Main01M.pal", true, false)
-  self:_loadPalette("QData", "Pol01V.pal", true, false)
   self:_loadPalette("QData", "Pref01V.pal", true, false)
+  self:_loadPalette("QData", "Score01V.pal", true, false)
+
+  if gfx_set == "demo" then
+    return
+  end
+
+  -- Load full palettes
+  self:_loadPalette("QData", "Bank01V.pal", true, false)
+  self:_loadPalette("QData", "DrugN01V.pal", true, false)
+  self:_loadPalette("QData", "Graph01V.pal", true, false)
+  self:_loadPalette("QData", "Pol01V.pal", true, false)
   self:_loadPalette("QData", "Rep01V.pal", true, false)
   self:_loadPalette("QData", "Res01V.pal", true, false)
-  self:_loadPalette("QData", "Score01V.pal", true, false)
   self:_loadPalette("QData", "Staff01V.pal", true, false)
   self:_loadPalette("QData", "Stat01V.pal", true, false)
   self:_loadPalette("QData", "Title01V.pal", true, false)

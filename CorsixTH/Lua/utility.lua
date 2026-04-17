@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local lfs = require("lfs")
+
 --[[ Iterator factory for iterating over the deep children of a table.
   For example: for fn in values(_G, "*.remove") do fn() end
   Will call os.remove() and table.remove()
@@ -66,13 +68,10 @@ function values(root_table, wildcard)
   return f
 end
 
--- Can return the length of any table, where as #table_name is only suitable for use with arrays of one contiguous part without nil values.
-function table_length(table)
-  local count = 0
-  for _,_ in pairs(table) do
-    count = count + 1
-  end
-  return count
+--! Check whether the table is empty.
+--!return (bool) Whether the table has no entries of any kind.
+function isTableEmpty(table)
+  return next(table) == nil
 end
 
 --! Get a random item from an array.
@@ -221,7 +220,6 @@ DrawFlags.Alpha50         = 2^2
 DrawFlags.Alpha75         = 2^3
 DrawFlags.AltPalette      = 2^4
 DrawFlags.EarlyList       = 2^10
-DrawFlags.ListBottom      = 2^11
 DrawFlags.BoundBoxHitTest = 2^12
 DrawFlags.Crop            = 2^13
 DrawFlags.Nearest         = 2^14
@@ -248,6 +246,64 @@ AnimationEffect = {}
 AnimationEffect.None = 0
 AnimationEffect.Glowing = 1
 AnimationEffect.Jelly = 2
+
+-- Predefined colours
+Colours = {}
+Colours.PanelDefault = { -- CorsixTH's default panel colour (pale purple)
+  red = 154, green = 146, blue = 198
+}
+Colours.Disabled = { -- Specific grey with purplish aspect
+  red = 127, green = 123, blue = 149
+}
+Colours.Setting = Colours.PanelDefault
+Colours.SettingHover = { -- Slightly darkened from a pale purple
+  red = 133, green = 128, blue = 183,
+}
+Colours.SettingActive = Colours.SettingHover
+Colours.HotkeyBox = { -- Purple
+  red = 081, green = 076, blue = 150,
+}
+Colours.HotkeyBoxActive = { -- Deep purple
+  red = 041, green = 036, blue = 090,
+}
+Colours.Textbox = { -- Black
+  red = 000, green = 000, blue = 000
+}
+Colours.Scrollbar = { -- Purple
+  red = 081, green = 076, blue = 150,
+}
+Colours.Title = { -- Very pale purple
+  red = 174, green = 166, blue = 218
+}
+Colours.Caption = { -- Murky purple
+  red = 134, green = 126, blue = 178
+}
+
+-- Include the standard colours also
+Colours.White = {
+  red = 255, green = 255, blue = 255
+}
+Colours.Black = {
+  red = 000, green = 000, blue = 000
+}
+Colours.Red = {
+  red = 255, green = 000, blue = 000
+}
+Colours.Green = {
+  red = 000, green = 255, blue = 000
+}
+Colours.Blue = {
+  red = 000, green = 000, blue = 255
+}
+Colours.Magenta = {
+  red = 255, green = 000, blue = 255
+}
+Colours.Cyan = {
+  red = 000, green = 255, blue = 255
+}
+Colours.Yellow = {
+  red = 255, green = 255, blue = 000
+}
 
 -- Compare values of two simple (non-nested) tables
 function compare_tables(t1, t2)
@@ -340,6 +396,17 @@ function array_join(array, separator)
     i = i + 1
   end
 
+  return result
+end
+
+--! Merge tables in one table
+function table_merge(...)
+  local result = {}
+   for _, t in ipairs({...}) do
+      for _, v in ipairs(t) do
+        table.insert(result, v)
+      end
+  end
   return result
 end
 
@@ -482,4 +549,43 @@ function pause_gc_and_use_weak_keys(fn, ...)
   collectgarbage("restart")
 
   return unpack(res)
+end
+
+--! Strip trailing slashes from a path.
+--!param path (string) The path to strip.
+--!return (string) The path without trailing slashes.
+function stripTrailingSlashes(path)
+  -- Remove one or more trailing / or \ characters
+  return path:gsub("[/\\]+$", "")
+end
+
+--! Checks if a given path is a directory.
+--! param path (string) The path to check.
+--! return (boolean) True if the path is a directory, false otherwise.
+function isDirectory(path)
+  return lfs.attributes(path, "mode") == "directory"
+end
+
+--! Checks if a given path is a directory and can be opened.
+--! param path (string) The path to check.
+--! return (boolean) True if the path is a directory and is accessible, false otherwise.
+function canOpenDirectory(path)
+  local ok, _ = pcall(lfs.dir, path)
+  return ok
+
+  -- "lfs.dir()" will throw an error if the directory isn't accessible/doesn't exist
+  -- (it does the same job of the "isDirectory()" function, but also checks if the directory can be opened)
+end
+
+-- Tracy Profiler stubs
+if not tracy then
+  local function noop() end
+  tracy = {
+    ZoneBegin = noop,
+    ZoneBeginN = noop,
+    ZoneBeginS = noop,
+    ZoneBeginNS = noop,
+    ZoneEnd = noop,
+    Message = noop
+  }
 end

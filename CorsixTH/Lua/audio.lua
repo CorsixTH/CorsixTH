@@ -41,6 +41,15 @@ function Audio:Audio(app)
   self.played_sound_callbacks = {}
   self.entities_waiting_for_sound_to_be_enabled = {}
   self.midi_player = nil
+  self.allowed_waveform_formats = {
+    "OGG", "OPUS", "FLAC", "WV", "WAV", "WAVE",
+    "MPG", "MPEG", "MP3", "MAD", "AIFF", "AIFC", "AIF"
+  }
+  self.allowed_instructional_formats = {
+    "MID", "MIDI", "KAR", "669", "AMF", "AMS", "DBM",
+    "DSM", "FAR", "GDM", "IT", "MED", "MDL", "MOD", "MOL", "MTM", "NST", "OKT", "PTM",
+    "S3M", "STM", "ULT", "UMX", "WOW", "XM", "XMI"
+  }
 end
 
 function Audio:clearCallbacks()
@@ -97,11 +106,8 @@ function Audio:init()
     - Uses titles from MIDI.TXT if found, else the filename.
   --]]
   local midi_txt -- File name of midi.txt file, if any.
-  local waveform = list_to_set({"OGG", "OPUS", "FLAC", "WV", "WAV", "WAVE",
-      "MPG", "MPEG", "MP3", "MAD", "AIFF", "AIFC", "AIF"})
-  local instructional = list_to_set({"MID", "MIDI", "KAR", "669", "AMF", "AMS", "DBM",
-      "DSM", "FAR", "GDM", "IT", "MED", "MDL", "MOD", "MOL", "MTM", "NST", "OKT", "PTM",
-      "S3M", "STM", "ULT", "UMX", "WOW", "XM", "XMI"})
+  local waveform = list_to_set(self.allowed_waveform_formats)
+  local instructional = list_to_set(self.allowed_instructional_formats)
 
   local _f, _s, _v
   if music_dir then
@@ -693,7 +699,7 @@ function Audio:playBackgroundTrack(index)
     local music = info.music
     if not music or type(music) == 'number' then
       local data = self:getFileData(index)
-      if (not info.filename_music or info.is_xmi) then
+      if info.is_xmi then
         if self.midi_player then
           self.midi_player:setVolume(self.app.config.music_volume)
           self.midi_player:playXmi(data)
@@ -791,7 +797,7 @@ function Audio:playSoundEffects(play_effects)
 end
 
 function Audio:tellInterestedEntitiesTheyCanNowPlaySounds()
-  if table_length(self.entities_waiting_for_sound_to_be_enabled) > 0 then
+  if not isTableEmpty(self.entities_waiting_for_sound_to_be_enabled) then
     for entity, callback in pairs(self.entities_waiting_for_sound_to_be_enabled) do
       callback()
       self.entities_waiting_for_sound_to_be_enabled[entity] = nil
@@ -827,4 +833,12 @@ function Audio:releaseChannel(channel)
   if self.sound_fx and channel > -1 then
     self.sound_fx:releaseChannel(channel)
   end
+end
+
+function Audio:destroy()
+  self.has_bg_music = false
+  self.not_loaded = not TheApp.config.audio
+  self.speech_file_name = nil
+  self.sound_fx = nil
+  SDL.audio.destroy()
 end

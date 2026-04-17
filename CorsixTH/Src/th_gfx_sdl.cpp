@@ -27,6 +27,9 @@ SOFTWARE.
 #include <SDL.h>
 #include <png.h>
 // IWYU pragma: no_include <pngconf.h>
+#ifdef WITH_TRACY
+#include <tracy/Tracy.hpp>
+#endif
 
 #include <algorithm>
 #include <cmath>
@@ -504,7 +507,13 @@ bool render_target::update(const render_target_creation_params& params) {
     SDL_RenderSetLogicalSize(renderer, width, height);
   }
 
-  SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
+  int old_min_width;
+  int old_min_height;
+  SDL_GetWindowMinimumSize(window, &old_min_width, &old_min_height);
+  if (old_min_width != params.min_width ||
+      old_min_height != params.min_height) {
+    SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
+  }
 
   return true;
 }
@@ -593,11 +602,21 @@ bool render_target::end_frame() {
   }
 
   SDL_RenderPresent(renderer);
+  FrameMark;
   return true;
 }
 
 bool render_target::fill_black() {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+  SDL_RenderClear(renderer);
+
+  return true;
+}
+
+bool render_target::fill_colour(uint32_t colour) {
+  SDL_SetRenderDrawColor(renderer, palette::get_red(colour),
+                         palette::get_green(colour), palette::get_blue(colour),
+                         palette::get_alpha(colour));
   SDL_RenderClear(renderer);
 
   return true;

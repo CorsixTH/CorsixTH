@@ -820,14 +820,18 @@ function UIMenuBar:makeGameMenu(app)
     :appendItem(_S.menu_charts.briefing, function() self.ui:showBriefing() end)
   )
 
+  local function allowBlockingAreas(option)
+    return option == 2, function()
+      app.config.blocking_off_areas = option
+    end, "", function ()
+      return app.config.blocking_off_areas == option
+    end
+  end
   local function limit_camera(item)
     app.ui:limitCamera(item.checked)
   end
   local function disable_salary_raise(item)
     app.world:debugDisableSalaryRaise(item.checked)
-  end
-  local function allowBlockingAreas(item)
-    app.config.allow_blocking_off_areas = item.checked
   end
   local levels_menu = UIMenu()
   for L = 1, 12 do
@@ -840,9 +844,13 @@ function UIMenuBar:makeGameMenu(app)
   if self.ui.app.config.debug then
     self:addMenu(_S.menu.debug, UIMenu() -- Debug
       :appendMenu(_S.menu_debug.jump_to_level, levels_menu)
+      :appendMenu(_S.menu_debug.allow_blocking_off_areas, UIMenu()
+        :appendCheckItem(_S.menu_debug_overlay_blocking_off_areas.choice_1, allowBlockingAreas(1))
+        :appendCheckItem(_S.menu_debug_overlay_blocking_off_areas.choice_2, allowBlockingAreas(2))
+        :appendCheckItem(_S.menu_debug_overlay_blocking_off_areas.choice_3, allowBlockingAreas(3))
+      )
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
-      :appendCheckItem(_S.menu_debug.allow_blocking_off_areas, false, allowBlockingAreas, nil, function() return self.ui.app.config.allow_blocking_off_areas end)
       :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui:addWindow(UIMakeDebugPatient(self.ui)) end)
       :appendItem(_S.menu_debug.cheats:format(hotkey_value_label("ingame_showCheatWindow", hotkeys)),             function() self.ui:addWindow(UICheats(self.ui)) end)

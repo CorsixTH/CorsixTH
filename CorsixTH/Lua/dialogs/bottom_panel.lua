@@ -107,6 +107,7 @@ function UIBottomPanel:drawPanels()
     -- Sprites for machine menu button doesn't exist in original game. Let's import them from aux_ui.dat and draw
     local aux_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
     self:addPanel(0, 407, 0):makeToggleButton(2, 6, 36, 36, 0, self.dialogMachineMenu)
+      :setSound() -- override
       :setTooltip(_S.tooltip.toolbar.machine_menu)
       .panel_for_sprite.custom_draw = --[[persistable:machine_menu_buttons]] function(panel, canvas, x, y)
       local s = TheApp.config.ui_scale
@@ -318,18 +319,25 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
 
   local info = self.dynamic_info
   local font = self.white_font
+
+  local dynamic_info_panel_x = 364
+  local progress_bar_r_offset = 11
+  local progress_bar_width = 100
+
+  local w = x + (self.width - dynamic_info_panel_x) * s
+
   for i, text in ipairs(info["text"]) do
     font:drawWrapped(canvas, text, x + 20 * s, y + 10 * i * s, 240 * s)
     if i == #info["text"] and info["progress"] then
       local white = canvas:mapRGB(255, 255, 255)
       local black = canvas:mapRGB(0, 0, 0)
       local orange = canvas:mapRGB(221, 83, 0)
-      canvas:drawRect(white, x + 165 * s, y + 10 * i * s, 100 * s, 10 * s)
-      canvas:drawRect(black, x + 166 * s, y + s + 10 * i * s, 98 * s, 8 * s)
-      canvas:drawRect(orange, x + 166 * s, y + s + 10 * i * s, math.floor(98 * info["progress"] * s), 8 * s)
+      canvas:drawRect(white, w - (progress_bar_width + progress_bar_r_offset + 1) * s, y + 10 * i * s, 100 * s, 10 * s)
+      canvas:drawRect(black, w - (progress_bar_width + progress_bar_r_offset) * s, y + s + 10 * i * s, 98 * s, 8 * s)
+      canvas:drawRect(orange, w - (progress_bar_width + progress_bar_r_offset) * s, y + s + 10 * i * s, math.floor(98 * info["progress"] * s), 8 * s)
       if info["dividers"] then
         for _, value in ipairs(info["dividers"]) do
-          canvas:drawRect(white, x + 165 * s + math.floor(value * 100 * s), y + 10 * i * s, s, 10 * s)
+          canvas:drawRect(white, w - (progress_bar_width+progress_bar_r_offset) * s + math.floor(value * 100 * s), y + 10 * i * s, s, 10 * s)
         end
       end
     end

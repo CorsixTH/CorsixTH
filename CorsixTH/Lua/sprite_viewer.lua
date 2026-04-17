@@ -35,13 +35,29 @@ local sprite_table
 local is_complex = false
 local wdown = false
 local sdown = false
+local scale = 1
+local bg_colour_index = 1
 local y_off
 local old_event_handlers
+local mpalette_index
+
+local background_colours = {
+  Colours.Black,
+  Colours.White,
+  Colours.Magenta,
+  Colours.Cyan,
+  Colours.Yellow,
+}
 
 for _, dir in ipairs({"Data", "QData", "DataM", "QDataM"}) do
   for item in pairs(TheApp.fs:listFiles(dir) or {}) do
     if item:match("%.TAB$") then
-      sprite_table_paths[#sprite_table_paths + 1] = {dir, item:sub(1, -5)}
+      local basename = item:sub(1, -5)
+      if TheApp.fs:fileExists(dir, basename .. ".DAT") then
+        sprite_table_paths[#sprite_table_paths + 1] = {dir, item:sub(1, -5)}
+      else
+        print("Sprite table " .. dir .. "/" .. item .. " has no matching .DAT file. Skipping.")
+      end
     end
   end
 end
@@ -54,55 +70,108 @@ for name, _ in pairs(TheApp.gfx:allPalettes()) do
 end
 table.sort(palettes)
 
-local function LoadTable(n, complex)
+for i, name in ipairs(palettes) do
+  if name == "MPalette.dat" then
+    mpalette_index = i
+    break
+  end
+end
+
+-- Find the palette with the longest common prefix with the sprite table path,
+-- as this is likely the correct palette to use for the sprite table.
+-- Avoids hardcoding a mapping of sprites to palettes and accounts for THs
+-- naming e.g. AWARD01.PAL and AWARD02.PAL used for AWARD03.TAB
+--
+--!param sprite_table_name (string) The name of the sprite table, without the
+--        .TAB extension
+--!return (number) The index of the closest matching palette in the palettes
+local function closest_matching_palette(sprite_table_name)
+  local best_score = 0
+  local best_index
+  local lower_st = sprite_table_name:lower()
+
+  for i, pal_name in ipairs(palettes) do
+    local score = 0
+    local lower_pal = pal_name:lower()
+
+    for j = 3, math.min(#lower_pal, #lower_st) do
+      if lower_pal:sub(1, j) == lower_st:sub(1, j) then
+        score = j
+      else
+        break
+      end
+    end
+    if score > best_score then
+      best_score = score
+      best_index = i
+    end
+  end
+
+  return best_index
+end
+
+local function LoadTable(n, complex, detect_palette)
   sprite_table_index = n
   is_complex = complex
   local path = sprite_table_paths[n]
   local pal
-  if TheApp.fs:readContents(path[1], path[2] .. ".PAL") then
-    palette_name = path[2] .. ".PAL"
-  else
-    palette_name = palettes[palette_index]
+  if detect_palette then
+    palette_index = closest_matching_palette(path[2]) or mpalette_index
   end
+  palette_name = palettes[palette_index]
   pal = gfx:getPalette(palette_name)
   sprite_table = gfx:loadSpriteTable(path[1], path[2], complex, pal)
   need_draw = true
   y_off = 0
 end
-LoadTable(1, false)
+LoadTable(1, false, true)
 
 local function DoKey(_, rawchar)
   local key = rawchar:lower()
   if key == "c" then
     gfx.cache.tabled = {}
-    LoadTable(sprite_table_index, not is_complex)
+    LoadTable(sprite_table_index, not is_complex, false)
   elseif key == "a" then
     if sprite_table_index > 1 then
-      LoadTable(sprite_table_index - 1, is_complex)
+      LoadTable(sprite_table_index - 1, is_complex, true)
     end
   elseif key == "d" then
     if sprite_table_index < #sprite_table_paths then
-      LoadTable(sprite_table_index + 1, is_complex)
+      LoadTable(sprite_table_index + 1, is_complex, true)
     end
   elseif key == "p" then
     palette_index = (palette_index or 1) % #palettes + 1
     gfx.cache.tabled = {}
-    LoadTable(sprite_table_index, is_complex)
+    LoadTable(sprite_table_index, is_complex, false)
   elseif key == "w" then
     wdown = true
     need_draw = true
   elseif key == "s" then
     sdown = true
     need_draw = true
-  elseif key == "q" then
-    TheApp.eventHandlers = old_event_handlers
-    need_draw = false
+  elseif key == "-" then
+    if scale > 1 then
+      scale = scale - 1
+      need_draw = true
+    end
+  elseif key == "=" then
+    if scale < 8 then
+      scale = scale + 1
+      need_draw = true
+    end
+  elseif key == "b" then
+    bg_colour_index = bg_colour_index % #background_colours + 1
+    need_draw = true
   end
   return need_draw
 end
 
 local function DoKeyUp(_, rawchar)
     local key = rawchar:lower()
+    if key == "q" then -- Exit sprite viewer
+      TheApp.eventHandlers = old_event_handlers
+      return
+    end
     if key == "w" then
         wdown = false
     end
@@ -117,8 +186,10 @@ local function Render(canvas)
   local _, fonth = font:sizeOf(msg)
   local sep = 2
   local y = y_off
-  font:draw(canvas, "CorsixTH Debug Sprite Viewer - W/A/S/D to navigate, C to change mode, P to switch palette, Q to quit", 0, y)
-  y = y + fonth + sep
+  font:draw(canvas, "CorsixTH Debug Sprite Viewer", 0, y)
+  y = y + (fonth + sep)
+  font:draw(canvas, "W/A/S/D to navigate, C to change mode, P to switch palette, -/= to scale, B to change background, Q to quit", 0, y)
+  y = y + (fonth + sep)
   font:draw(canvas, msg, 0, y)
   y = y + fonth + sep
   local x = 0
@@ -126,6 +197,8 @@ local function Render(canvas)
   local tallest = 0
   for i = 0, #sprite_table - 1 do
     local w, h = sprite_table:size(i)
+    w = w * scale
+    h = h * scale
     local lbl = "#" .. i .. " (" .. w .. "x" .. h .. ")"
     local lw = font:sizeOf(lbl)
     if lw > w then w = lw end
@@ -139,7 +212,12 @@ local function Render(canvas)
     end
     if h > tallest then tallest = h end
     font:draw(canvas, lbl, x, y)
-    sprite_table:draw(canvas, i, x, y + fonth)
+    sprite_table:draw(
+        canvas,
+        i,
+        x,
+        y + fonth,
+        { scaleFactor = scale })
     x = x + w + sep
   end
 end
@@ -149,7 +227,7 @@ local function DoFrame(app)
   canvas:startFrame()
   if need_draw then
     need_draw = app.config.track_fps
-    canvas:fillBlack()
+    canvas:fillColour(background_colours[bg_colour_index])
     Render(canvas)
   end
   canvas:endFrame()
