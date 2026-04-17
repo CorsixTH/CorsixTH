@@ -92,7 +92,7 @@ function UINewGame:UINewGame(ui)
       if not name:find("%S") then
         self.name_textbox:setText(self.player_name)
       else
-        self.player_name = name
+        self.player_name = name:sub(1, 15)
         self:saveToConfig()
       end
     end,
@@ -151,19 +151,23 @@ function UINewGame:buttonStart()
 end
 
 function UINewGame:startGame(difficulty)
-  if self.ui.app:loadLevel(1, difficulty, nil, nil, nil, nil,
-      _S.errors.load_level_prefix, nil) and self.ui.app.world then
-    self.ui.app.moviePlayer:playAdvanceMovie(1)
+    local len = #self.name_textbox.text
 
-    -- Initiate campaign progression. The UI above may now have changed.
-    if not TheApp.using_demo_files then
-      TheApp.world.campaign_info = "TH.campaign"
+    if len <= 15 then
+        if self.ui.app:loadLevel(1, difficulty, nil, nil, nil, nil,
+                _S.errors.load_level_prefix, nil) and self.ui.app.world then
+            self.ui.app.moviePlayer:playAdvanceMovie(1)
+
+            -- Initiate campaign progression. The UI above may now have changed.
+            if not TheApp.using_demo_files then
+                TheApp.world.campaign_info = "TH.campaign"
+            end
+            if self.start_tutorial then
+                TheApp.ui.start_tutorial = true
+                TheApp.ui:startTutorial()
+            end
+        end
     end
-    if self.start_tutorial then
-      TheApp.ui.start_tutorial = true
-      TheApp.ui:startTutorial()
-    end
-  end
 end
 
 function UINewGame:buttonCancel()
@@ -174,4 +178,31 @@ end
 function UINewGame:close()
   UIResizable.close(self)
   self.ui:addWindow(UIMainMenu(self.ui))
+end
+
+function UINewGame:onTick()
+    UIResizable.onTick(self)
+
+    if self.name_textbox then
+        local text = self.name_textbox.text or ""
+        local len = #text
+
+        -- Truncate if the length 15 is reached
+        if len > 15 then
+            text = text:sub(1, 15)
+            self.name_textbox.text = text
+            len = 15
+        end
+
+        -- Keep the count above 0
+        local chars_left = math.max(0, 15 - len)
+        self.char_limit_label:setLabel(chars_left .. " character left")
+
+        -- Change the button Start
+        if len >= 15 then
+            self.start_button_panel:setLabel("Max reached")
+        else
+            self.start_button_panel:setLabel(_S.new_game_window.start)
+        end
+    end
 end
