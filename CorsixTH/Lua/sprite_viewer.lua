@@ -39,6 +39,8 @@ local scale = 1
 local bg_colour_index = 1
 local y_off
 local old_event_handlers
+local old_gfx_cache = {}
+local sprite_viewer_gfx_cache = {}
 local mpalette_index
 
 local background_colours = {
@@ -170,6 +172,8 @@ local function DoKeyUp(_, rawchar)
     local key = rawchar:lower()
     if key == "q" then -- Exit sprite viewer
       TheApp.eventHandlers = old_event_handlers
+      sprite_viewer_gfx_cache = gfx.cache.tabled
+      gfx.cache.tabled = old_gfx_cache
       is_open = false
       return
     end
@@ -255,7 +259,8 @@ local function open()
     return
   end
   is_open = true
-  gfx.cache.tabled = {}
+  old_gfx_cache = gfx.cache.tabled
+  gfx.cache.tabled = sprite_viewer_gfx_cache
   font = gfx:loadFontAndSpriteTable("QData", "Font00V")
 
   old_event_handlers = TheApp.eventHandlers
