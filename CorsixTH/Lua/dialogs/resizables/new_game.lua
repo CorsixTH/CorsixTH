@@ -110,7 +110,7 @@ function UINewGame:UINewGame(ui)
       if not name:find("%S") then
         self.name_textbox:setText(self.player_name)
       else
-        self.player_name = name:sub(1, 8)
+        self.player_name = name:sub(1, 15)
         self:saveToConfig()
       end
     end,
@@ -118,20 +118,24 @@ function UINewGame:UINewGame(ui)
     :allowedInput({"alpha", "numbers", "misc"}):characterLimit(15):setText(self.player_name)
 
   -- Tutorial
-  self:addBevelPanel(20, 80, 140, 30, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, 100, 140, 30, col_shadow, col_bg, col_bg)
     :setLabel(_S.new_game_window.tutorial).lowered = true
-  self:addBevelPanel(165, 80, 140, 30, col_bg):setLabel(_S.new_game_window.option_off)
+  self:addBevelPanel(165, 100, 140, 30, col_bg):setLabel(_S.new_game_window.option_off)
     :makeToggleButton(0, 0, 135, 30, nil, self.buttonTutorial):setTooltip(_S.tooltip.new_game_window.tutorial)
 
   -- Difficulty
-  self:addBevelPanel(20, 115, 140, 30, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, 135, 140, 30, col_shadow, col_bg, col_bg)
     :setLabel(_S.new_game_window.difficulty).lowered = true
-  self:addBevelPanel(165, 115, 140, 30, col_bg):setLabel(self.available_difficulties[self.difficulty].text)
+  self:addBevelPanel(165, 135, 140, 30, col_bg):setLabel(self.available_difficulties[self.difficulty].text)
     :makeToggleButton(0, 0, 135, 30, nil, self.dropdownDifficulty):setTooltip(_S.tooltip.new_game_window.difficulty)
-
+    
   -- Start and Cancel
-  self:addBevelPanel(20, 165, 140, 40, col_bg):setLabel(_S.new_game_window.start):makeButton(0, 0, 135, 40, nil, self.buttonStart):setTooltip(_S.tooltip.new_game_window.start)
-  self:addBevelPanel(165, 165, 140, 40, col_bg):setLabel(_S.new_game_window.cancel):makeButton(0, 0, 135, 40, nil, self.buttonCancel):setTooltip(_S.tooltip.new_game_window.cancel)
+    self.start_button_panel = self:addBevelPanel(20, 175, 140, 40, col_bg)
+    self.start_button = self.start_button_panel
+                            :setLabel(_S.new_game_window.start)
+                            :makeButton(0, 0, 135, 40, nil, self.buttonStart)
+                            :setTooltip(_S.tooltip.new_game_window.start)self:addBevelPanel(165, 175, 140, 40, col_bg):setLabel(_S.new_game_window.cancel):makeButton(0, 0, 135, 40, nil, self.buttonCancel):setTooltip(_S.tooltip.new_game_window.cancel)
+    self.char_limit_label = self:addBevelPanel(165, 76, 140, 14, col_bg):setLabel(15 - #self.name_textbox.text .. " character left")
 end
 
 function UINewGame:saveToConfig()
@@ -167,19 +171,23 @@ function UINewGame:buttonStart()
 end
 
 function UINewGame:startGame(difficulty)
-  if self.ui.app:loadLevel(1, difficulty, nil, nil, nil, nil,
-      _S.errors.load_level_prefix, nil) and self.ui.app.world then
-    self.ui.app.moviePlayer:playAdvanceMovie(1)
+    local len = #self.name_textbox.text
 
-    -- Initiate campaign progression. The UI above may now have changed.
-    if not TheApp.using_demo_files then
-      TheApp.world.campaign_info = "TH.campaign"
+    if len <= 15 then
+        if self.ui.app:loadLevel(1, difficulty, nil, nil, nil, nil,
+                _S.errors.load_level_prefix, nil) and self.ui.app.world then
+            self.ui.app.moviePlayer:playAdvanceMovie(1)
+
+            -- Initiate campaign progression. The UI above may now have changed.
+            if not TheApp.using_demo_files then
+                TheApp.world.campaign_info = "TH.campaign"
+            end
+            if self.start_tutorial then
+                TheApp.ui.start_tutorial = true
+                TheApp.ui:startTutorial()
+            end
+        end
     end
-    if self.start_tutorial then
-      TheApp.ui.start_tutorial = true
-      TheApp.ui:startTutorial()
-    end
-  end
 end
 
 function UINewGame:buttonCancel()
@@ -190,4 +198,31 @@ end
 function UINewGame:close()
   UIResizable.close(self)
   self.ui:addWindow(UIMainMenu(self.ui))
+end
+
+function UINewGame:onTick()
+    UIResizable.onTick(self)
+
+    if self.name_textbox then
+        local text = self.name_textbox.text or ""
+        local len = #text
+
+        -- Truncate if the length 15 is reached
+        if len > 15 then
+            text = text:sub(1, 15)
+            self.name_textbox.text = text
+            len = 15
+        end
+
+        -- Keep the count above 0
+        local chars_left = math.max(0, 15 - len)
+        self.char_limit_label:setLabel(chars_left .. " character left")
+
+        -- Change the button Start
+        if len >= 15 then
+            self.start_button_panel:setLabel("Max reached")
+        else
+            self.start_button_panel:setLabel(_S.new_game_window.start)
+        end
+    end
 end
