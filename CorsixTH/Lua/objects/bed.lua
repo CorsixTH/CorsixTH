@@ -76,14 +76,12 @@ object.orientations = {
                   {0, -1, complete_cell = true}, {-1, 0, complete_cell = true},
                   {0, 0, complete_cell = true} },
     use_position = {1, -1},
-    early_list = true,
   },
   east = {
     footprint = { {0, 1, only_passable = true}, {-1, -1, complete_cell = true},
                   {0, -1, complete_cell = true}, {-1, 0, complete_cell = true},
                   {0, 0, complete_cell = true} },
     use_position = {0, 1},
-    early_list = true,
   },
   south = {
     footprint = { {1, 0, only_passable = true}, {-1, -1, complete_cell = true},

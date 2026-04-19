@@ -74,9 +74,6 @@ function Object:initOrientation(direction)
   end
   local footprint = object_type.orientations
   footprint = footprint and footprint[direction]
-  if footprint and footprint.early_list then
-    flags = flags + DrawFlags.EarlyList
-  end
 
   local rap = footprint and footprint.render_attach_position
   if rap and rap[1] and type(rap[1]) == "table" then

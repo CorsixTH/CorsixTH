@@ -93,7 +93,6 @@ object.orientations = {
       {-1, -1, complete_cell = true},  {-1, 0, complete_cell = true}, {-1, 1, only_passable = true},
       {0, -1, complete_cell = true}, {0, 0, complete_cell = true}, {0, 1, only_passable = true},
     },
-    early_list = true,
   },
   east = {
     render_attach_position = {-1, 0},
@@ -104,7 +103,7 @@ object.orientations = {
       {-1, -2, complete_cell = true}, {-1, -1, complete_cell = true}, {-1, 0, complete_cell = true},
       {0, -2, complete_cell = true}, {0, -1, complete_cell = true}, {0, 0, complete_cell = true},
       {1, -2, only_passable = true}, {1, -1, only_passable = true},
-        {1, -0, only_passable = true},
+      {1, -0, only_passable = true},
     },
   },
 }
