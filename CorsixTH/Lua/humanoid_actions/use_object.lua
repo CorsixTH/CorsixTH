@@ -450,10 +450,6 @@ local function action_use_object_start(action, humanoid)
     flags = flags + DrawFlags.FlipHorizontal
   end
   local spec = object.object_type.orientations[object.direction]
-  -- early_list_while_in_use (if defined) will take precedence over early_list
-  if spec.early_list_while_in_use or (spec.early_list_while_in_use == nil and spec.early_list) then
-    flags = flags + DrawFlags.EarlyList
-  end
 
   -- The handyman has his own place to be in
   if spec.finish_use_position and not class.is(humanoid, Handyman) then

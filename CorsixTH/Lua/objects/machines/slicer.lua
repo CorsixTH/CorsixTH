@@ -75,7 +75,6 @@ object.orientations = {
     use_position = {0, 0},
     handyman_position = {-1, 1},
     use_position_secondary = {-1, -1},
-    early_list = true,
     smoke_position = {0, 0},
   },
 }

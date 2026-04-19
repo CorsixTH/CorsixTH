@@ -66,7 +66,6 @@ object.orientations = {
                   {-2,  0, complete_cell = true}, {-1,  0}, {0,  0, need_south_side = true},
                   {-1,  1, only_passable = true} },
     use_position = "passable",
-    early_list = true,
     smoke_position = {0, 0}
   },
   east = {

@@ -366,11 +366,6 @@ local function action_multi_use_object_start(action, humanoid)
   if object.split_anims then
     flags = flags + DrawFlags.Crop
   end
-  local spec = object.object_type.orientations[object.direction]
-  -- early_list_while_in_use (if defined) will take precedence over early_list
-  if spec.early_list_while_in_use or (spec.early_list_while_in_use == nil and spec.early_list) then
-    flags = flags + 1024
-  end
   local anims = object.object_type.multi_usage_animations[anim_set][orient]
   action.anims = anims
   action.mirror_flags = flags

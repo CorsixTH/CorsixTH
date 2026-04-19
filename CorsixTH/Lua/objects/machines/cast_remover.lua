@@ -143,7 +143,6 @@ object.orientations = {
                   {-1, 1, only_passable = true},
                   {-2, -1, only_passable = true, invisible = true, optional = true},
                   {-1, -2, only_passable = true, invisible = true, optional = true} },
-    early_list = true,
     smoke_position = {0, 0},
   },
 }
