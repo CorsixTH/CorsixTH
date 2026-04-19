@@ -1146,16 +1146,11 @@ void animation_base::remove_from_tile() {
 void animation_base::attach_to_tile(const xy_pair& tile_pos, map_tile* node,
                                     int layer) {
   remove_from_tile();
-  link_list* pList;
-  if (flags & thdf_early_list) {
-    pList = &node->oEarlyEntities;
-  } else {
-    pList = &node->entities;
-  }
 
   this->set_drawing_layer(layer);
   this->set_tile(tile_pos);
 
+  link_list* pList = &node->entities;
   while (pList->next &&
          static_cast<drawable*>(pList->next)->get_drawing_layer() < layer) {
     pList = pList->next;

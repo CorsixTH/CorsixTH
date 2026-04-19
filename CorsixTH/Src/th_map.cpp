@@ -1115,16 +1115,10 @@ void level_map::draw(render_target* canvas, int map_base_x, int map_base_y,
       draw_layer(tile, scr_tile_x, scr_tile_y, tile_layer::ui, canvas);
 
       // Draw the entities.
-      drawable* pItem = static_cast<drawable*>(tile->oEarlyEntities.next);
-      while (pItem) {
-        pItem->draw_fn(canvas, {scr_tile_x, scr_tile_y});
-        pItem = static_cast<drawable*>(pItem->next);
-      }
-
-      pItem = static_cast<drawable*>(tile->entities.next);
-      while (pItem) {
-        pItem->draw_fn(canvas, {scr_tile_x, scr_tile_y});
-        pItem = static_cast<drawable*>(pItem->next);
+      drawable* item = static_cast<drawable*>(tile->entities.next);
+      while (item) {
+        item->draw_fn(canvas, {scr_tile_x, scr_tile_y});
+        item = static_cast<drawable*>(item->next);
       }
     }
   }
@@ -1167,11 +1161,6 @@ drawable* level_map::hit_test(int test_x, int test_y) const {
       if (tile->entities.next != nullptr) {
         drawable* result = hit_test_drawables(tile->entities.next, scr_tile_x,
                                               scr_tile_y, 0, 0);
-        if (result) return result;
-      }
-      if (tile->oEarlyEntities.next != nullptr) {
-        drawable* result = hit_test_drawables(tile->oEarlyEntities.next,
-                                              scr_tile_x, scr_tile_y, 0, 0);
         if (result) return result;
       }
     }
@@ -1454,7 +1443,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
     lua_rawget(L, -2);
     pWriter->write_stack_object(-1);
     lua_pop(L, 1);
-    lua_pushlightuserdata(L, pNode->oEarlyEntities.next);
+    lua_pushlightuserdata(L, nullptr);
     lua_rawget(L, -2);
     pWriter->write_stack_object(-1);
     lua_pop(L, 2);
@@ -1584,18 +1573,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     lua_pop(L, 1);
     if (!pReader->read_stack_object()) return;
 
-    animation_base* early_anim = luaT_toanimationbase(L, -1);
-    restore_map_position(early_anim, tile_x_pos, tile_y_pos);
-
-    pNode->oEarlyEntities.next = early_anim;
-    if (pNode->oEarlyEntities.next) {
-      if (pNode->oEarlyEntities.next->prev != nullptr) {
-        std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
-      }
-      pNode->oEarlyEntities.next->prev = &pNode->oEarlyEntities;
-    }
-
-    lua_pop(L, 1);
+    lua_pop(L, 1); // Previously contained the early list animations.
   }
 
   integer_run_length_decoder oDecoder(6, pReader);

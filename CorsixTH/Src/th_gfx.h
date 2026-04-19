@@ -79,10 +79,6 @@ enum draw_flags : uint32_t {
   //! Draw the sprite with red and blue colours swapped.
   thdf_alt32_blue_red_swap = 2 << thdf_alt32_start,
 
-  //! Attach to the early sprite list (right-to-left pass)
-  /* (should be set prior to attaching to a tile) */
-  thdf_early_list = 1 << 10,
-
   //! Hit-test using bounding-box precision rather than pixel-perfect
   thdf_bound_box_hit_test = 1 << 12,
   //! Apply a cropping operation prior to drawing

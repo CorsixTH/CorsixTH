@@ -198,9 +198,6 @@ struct map_tile {
   // Linked list for entities rendered at this tile
   link_list entities;
 
-  //! Linked list for entities rendered in an early (right-to-left) pass
-  link_list oEarlyEntities;
-
   //! Tile layers for rendering.
   //! For each layer, the lower byte is the index in the sprite sheet, and the
   //! upper byte is for the drawing flags.
