@@ -1133,7 +1133,6 @@ void level_map::draw(render_target* canvas, int map_base_x, int map_base_y,
   if (overlay) {
     for (int y = 0; y < get_height(); y++) {
       for (int x = 0; x < get_width(); x++) {
-        const map_tile* tile = get_tile_unchecked(x, y);
         int scr_tile_x =
             level_map::world_to_screen_x(x, y) - map_base_x + scr_base_x - 32;
         int scr_tile_y =
@@ -1151,43 +1150,29 @@ void level_map::draw(render_target* canvas, int map_base_x, int map_base_y,
   }
 }
 
-drawable* level_map::hit_test(int iTestX, int iTestY) const {
+drawable* level_map::hit_test(int test_x, int test_y) const {
   // This function needs to hitTest each drawable object, in the reverse
   // order to that in which they would be drawn.
-
-  // XXX Needs to be changed!!!
 
   if (wall_blocks == nullptr || cells == nullptr) {
     return nullptr;
   }
 
-  for (map_tile_iterator itrNode2(this, iTestX, iTestY, 1, 1,
-                                  map_scanline_iterator_direction::backward);
-       itrNode2; ++itrNode2) {
-    if (!itrNode2.is_last_on_scanline()) {
-      continue;
-    }
+  for (int y = get_height() - 1; y >= 0; y--) {
+    for (int x = get_width() - 1; x >= 0; x--) {
+      const map_tile* tile = get_tile_unchecked(x, y);
+      int scr_tile_x = level_map::world_to_screen_x(x, y) - test_x;
+      int scr_tile_y = level_map::world_to_screen_y(x, y) - test_y;
 
-    for (map_scanline_iterator itrNode(
-             itrNode2, map_scanline_iterator_direction::backward);
-         itrNode; ++itrNode) {
-      if (itrNode->entities.next != nullptr) {
-        drawable* pResult = hit_test_drawables(itrNode->entities.next,
-                                               itrNode.rel_tile_x(), itrNode.rel_tile_y(), 0, 0);
-        if (pResult) {
-          return pResult;
-        }
+      if (tile->entities.next != nullptr) {
+        drawable* result = hit_test_drawables(tile->entities.next, scr_tile_x,
+                                              scr_tile_y, 0, 0);
+        if (result) return result;
       }
-    }
-    for (map_scanline_iterator itrNode(
-             itrNode2, map_scanline_iterator_direction::forward);
-         itrNode; ++itrNode) {
-      if (itrNode->oEarlyEntities.next != nullptr) {
-        drawable* pResult = hit_test_drawables(itrNode->oEarlyEntities.next,
-                                               itrNode.rel_tile_x(), itrNode.rel_tile_y(), 0, 0);
-        if (pResult) {
-          return pResult;
-        }
+      if (tile->oEarlyEntities.next != nullptr) {
+        drawable* result = hit_test_drawables(tile->oEarlyEntities.next,
+                                              scr_tile_x, scr_tile_y, 0, 0);
+        if (result) return result;
       }
     }
   }
