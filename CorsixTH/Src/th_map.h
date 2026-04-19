@@ -360,13 +360,13 @@ class level_map {
 
   //! Perform a hit-test against the animations attached to the map
   /*!
-      If there is an animation at world pixel coordinates (iTestX, iTestY),
+      If there is an animation at world pixel coordinates (test_x, test_y),
       then it is returned. Otherwise nullptr is returned.
       To perform a hit-test using world (tile) coordinates, get the tile
       itself and query the top 8 bits of map_tile::flags, or traverse the
       tile's animation lists.
   */
-  drawable* hit_test(int iTestX, int iTestY) const;
+  drawable* hit_test(int test_x, int test_y) const;
 
   // When using the unchecked versions, the map coordinates MUST be valid.
   // When using the normal versions, nullptr is returned for invalid co-ords.
