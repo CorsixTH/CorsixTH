@@ -381,84 +381,21 @@ function Object.getComplementaryPassableFlag(passable_flag)
   return opposite_flags[passable_flag]
 end
 
+function Object.directionParameters()
+  return
+    {
+      north = { x = 0, y = -1, buildable_flag = "buildableNorth", passable_flag = "travelNorth", needed_side = "need_north_side"},
+      east = { x = 1, y = 0, buildable_flag =  "buildableEast", passable_flag = "travelEast", needed_side = "need_east_side"},
+      south = { x = 0, y = 1, buildable_flag = "buildableSouth", passable_flag = "travelSouth", needed_side = "need_south_side"},
+      west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
+    }
+end
+
 function Object:setTile(x, y)
-  local function coordinatesAreInFootprint(object_footprint, xpos, ypos)
-    for _, xy in ipairs(object_footprint) do
-      if xy[1] == xpos and xy[2] == ypos then
-        return true
-      end
-    end
-    return false
-  end
-
-  local function setPassableFlags(passable_flag, xpos, ypos, next_x, next_y, value)
-    local flags1 = {}
-    flags1[passable_flag] = value
-    self.world.map.th:setCellFlags(xpos, ypos, flags1)
-    local flags2 = {}
-    flags2[Object.getComplementaryPassableFlag(passable_flag)] = value
-    self.world.map.th:setCellFlags(next_x, next_y, flags2)
-  end
-
-  local direction_parameters = {
-            north = { x = 0, y = -1, buildable_flag = "buildableNorth", passable_flag = "travelNorth", needed_side = "need_north_side"},
-            east = { x = 1, y = 0, buildable_flag =  "buildableEast", passable_flag = "travelEast", needed_side = "need_east_side"},
-            south = { x = 0, y = 1, buildable_flag = "buildableSouth", passable_flag = "travelSouth", needed_side = "need_south_side"},
-            west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
-            }
-
-  local direction = self.direction
-  -- 50 is a trash bin thob
-  if self.object_type.thob == 50 and direction == "east" then
-    direction = "west"
-  end
-
+  -- Are there any tiles previously occupied by this object?
   if self.tile_x ~= nil then
-    self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
-    if self.footprint then
-      local map = self.world.map.th
-      for _, xy in ipairs(self.footprint) do
-        local xpos, ypos = self.tile_x + xy[1], self.tile_y + xy[2]
-
-        if xy.only_side then
-          if self.set_passable_flags then
-            self.set_passable_flags = nil
-            local par = direction_parameters[direction]
-            local passableFlag, next_tile_x, next_tile_y = par.passable_flag, xpos + par.x, ypos + par.y
-            setPassableFlags(passableFlag, xpos, ypos, next_tile_x, next_tile_y, true)
-          end
-          local flags_to_set= {}
-          flags_to_set[direction_parameters[direction].buildable_flag] = true
-          map:setCellFlags(xpos, ypos, flags_to_set)
-        else
-          local flags_to_set = {}
-          for _, value in pairs(direction_parameters) do
-            if coordinatesAreInFootprint(self.footprint, xy[1] + value.x, xy[2] + value.y) or
-                xy.complete_cell or xy[value.needed_side] then
-              flags_to_set[value.buildable_flag] = true
-            end
-          end
-
-          if not isTableEmpty(flags_to_set) then
-            map:setCellFlags(xpos, ypos, flags_to_set)
-          end
-          if not map:getCellFlags(xpos, ypos).passable then
-            map:setCellFlags(xpos, ypos, {
-              buildable = true,
-              passable = true,
-            })
-          else
-            -- passable tiles can "belong" to multiple objects, so we have to check that
-            if not self.world:isTilePartOfNearbyObject(xpos, ypos, 10) then
-              -- assumption: no object defines a passable tile further than 10 tiles away from its origin
-              map:setCellFlags(xpos, ypos, {
-                buildable = true,
-              })
-            end
-          end
-        end
-      end
-    end
+    -- Deoccupy object tiles
+    self:deoccupyTilesByObjectFootprintAt(x, y)
   end
 
   local entity_map = self.world.entity_map
@@ -477,83 +414,11 @@ function Object:setTile(x, y)
   end
 
   if x then
-    local ra_x, ra_y = self:getRenderAttachTile()
-    self.th:setTile(self.world.map.th, ra_x, ra_y, self:getDrawingLayer())
-    self.world:addObjectToTile(self, x, y)
-    if self.footprint then
-      local map = self.world.map.th
-      local optional_found = false
-      local room = self.world:getRoom(x, y)
-      local roomId = room and room.id
-      local next_tile_x, next_tile_y = x,y
-      local passable_flag
+    -- Occupy tiles by the object
+    self:occupyTilesByObjectFootprintAt(x, y)
 
-      for _, xy in ipairs(self.footprint) do
-        local change_flags = true
-        local flags_to_set = {}
-        local lx = x + xy[1]
-        local ly = y + xy[2]
-        local flags
-
-        if xy.optional then
-          if optional_found then
-            -- An optional tile has been accepted, we don't need anymore such tiles.
-            change_flags = false
-          else
-            flags = map:getCellFlags(lx, ly)
-            local is_object_allowed = true
-            if roomId and flags.roomId ~= roomId then
-              is_object_allowed = false
-            elseif xy.only_passable and not self.world.pathfinder:isReachableFromHospital(lx, ly) then
-              is_object_allowed = false
-            end
-
-            if is_object_allowed then
-              change_flags = true
-              optional_found = true
-            else
-              change_flags = false
-            end
-          end
-        end
-
-        flags = map:getCellFlags(lx, ly)
-        if xy.only_side then
-          local par = direction_parameters[direction]
-          flags_to_set[par["buildable_flag"]] = false
-          passable_flag, next_tile_x, next_tile_y = par["passable_flag"], x + par["x"], y + par["y"]
-        else
-          for _, value in pairs(direction_parameters) do
-            if coordinatesAreInFootprint(self.footprint, xy[1] + value["x"], xy[2] + value["y"]) or
-            xy.complete_cell or xy[value["needed_side"]] then
-              if map:getCellFlags(x, y, flags)[value["buildable_flag"]] == 0 then
-                change_flags = false
-              end
-              flags_to_set[value["buildable_flag"]] = false
-            end
-          end
-        end
-
-        if change_flags then
-          if not xy.only_side then
-            map:setCellFlags(lx, ly, {
-              buildable = false,
-              passable = not not xy.only_passable,
-            })
-          end
-          if not isTableEmpty(flags_to_set) then
-            map:setCellFlags(lx, ly, flags_to_set)
-          end
-          if xy.only_side then
-            if map:getCellFlags(lx, ly)[passable_flag] == true then
-              self.set_passable_flags = true
-              setPassableFlags(passable_flag, lx, ly, next_tile_x, next_tile_y, false)
-            end
-          end
-        end
-      end
-    end
     if self.split_anims then
+      -- Draw corresponding object animations
       local map = self.world.map.th
       local pos = self.split_anim_positions
       for i = 2, #self.split_anims do
@@ -563,7 +428,9 @@ function Object:setTile(x, y)
     end
   else
     self.th:setTile(nil)
+
     if self.split_anims then
+      -- Clear corresponding object animations
       for i = 2, #self.split_anims do
         self.split_anims[i]:setTile(nil)
       end
@@ -571,6 +438,171 @@ function Object:setTile(x, y)
   end
   self.world:clearCaches()
   return self
+end
+
+local function coordinatesAreInFootprint(object_footprint, xpos, ypos)
+  for _, xy in ipairs(object_footprint) do
+    if xy[1] == xpos and xy[2] == ypos then
+      return true
+    end
+  end
+  return false
+end
+
+local function setPassableFlags(map, passable_flag, xpos, ypos, next_x, next_y, value)
+  local flags1 = {}
+  flags1[passable_flag] = value
+  map.th:setCellFlags(xpos, ypos, flags1)
+  local flags2 = {}
+  flags2[Object.getComplementaryPassableFlag(passable_flag)] = value
+  map.th:setCellFlags(next_x, next_y, flags2)
+end
+
+--! Set cell flags on the tiles that fall under this object's footprint as occupied.
+--! param x (integer) target tile x coordinate.
+--! param y (integer) target tile y coordinate.
+function Object:occupyTilesByObjectFootprintAt(x, y)
+  local direction_parameters = Object.directionParameters()
+  local direction = self.direction
+  -- 50 is a trash bin thob
+  if self.object_type.thob == 50 and direction == "east" then
+    direction = "west"
+  end
+
+  local ra_x, ra_y = self:getRenderAttachTile()
+  self.th:setTile(self.world.map.th, ra_x, ra_y, self:getDrawingLayer())
+  self.world:addObjectToTile(self, x, y)
+  if self.footprint then
+    local map = self.world.map.th
+    local optional_found = false
+    local room = self.world:getRoom(x, y)
+    local roomId = room and room.id
+    local next_tile_x, next_tile_y = x,y
+    local passable_flag
+
+    for _, xy in ipairs(self.footprint) do
+      local change_flags = true
+      local flags_to_set = {}
+      local lx = x + xy[1]
+      local ly = y + xy[2]
+      local flags
+
+      if xy.optional then
+        if optional_found then
+          -- An optional tile has been accepted, we don't need anymore such tiles.
+          change_flags = false
+        else
+          flags = map:getCellFlags(lx, ly)
+          local is_object_allowed = true
+          if roomId and flags.roomId ~= roomId then
+            is_object_allowed = false
+          elseif xy.only_passable and not self.world.pathfinder:isReachableFromHospital(lx, ly) then
+            is_object_allowed = false
+          end
+
+          if is_object_allowed then
+            change_flags = true
+            optional_found = true
+          else
+            change_flags = false
+          end
+        end
+      end
+
+      flags = map:getCellFlags(lx, ly)
+      if xy.only_side then
+        local par = direction_parameters[direction]
+        flags_to_set[par["buildable_flag"]] = false
+        passable_flag, next_tile_x, next_tile_y = par["passable_flag"], x + par["x"], y + par["y"]
+      else
+        for _, value in pairs(direction_parameters) do
+          if coordinatesAreInFootprint(self.footprint, xy[1] + value["x"], xy[2] + value["y"]) or
+          xy.complete_cell or xy[value["needed_side"]] then
+            if map:getCellFlags(x, y, flags)[value["buildable_flag"]] == 0 then
+              change_flags = false
+            end
+            flags_to_set[value["buildable_flag"]] = false
+          end
+        end
+      end
+
+      if change_flags then
+        if not xy.only_side then
+          map:setCellFlags(lx, ly, {
+            buildable = false,
+            passable = not not xy.only_passable,
+          })
+        end
+        if not isTableEmpty(flags_to_set) then
+          map:setCellFlags(lx, ly, flags_to_set)
+        end
+        if xy.only_side then
+          if map:getCellFlags(lx, ly)[passable_flag] == true then
+            self.set_passable_flags = true
+            setPassableFlags(self.world.map, passable_flag, lx, ly, next_tile_x, next_tile_y, false)
+          end
+        end
+      end
+    end
+  end
+end
+
+--! Set cell flags on the tiles that fall under this object's footprint as unoccupied.
+--! param x (integer) target tile x coordinate.
+--! param y (integer) target tile y coordinate.
+function Object:deoccupyTilesByObjectFootprintAt(x, y)
+  local direction_parameters = Object.directionParameters()
+  local direction = self.direction
+  -- 50 is a trash bin thob
+  if self.object_type.thob == 50 and direction == "east" then
+    direction = "west"
+  end
+
+  self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
+  if self.footprint then
+    local map = self.world.map.th
+    for _, xy in ipairs(self.footprint) do
+      local xpos, ypos = self.tile_x + xy[1], self.tile_y + xy[2]
+
+      if xy.only_side then
+        if self.set_passable_flags then
+          self.set_passable_flags = nil
+          local par = direction_parameters[direction]
+          local passableFlag, next_tile_x, next_tile_y = par.passable_flag, xpos + par.x, ypos + par.y
+          setPassableFlags(self.world.map, passableFlag, xpos, ypos, next_tile_x, next_tile_y, true)
+        end
+        local flags_to_set= {}
+        flags_to_set[direction_parameters[direction].buildable_flag] = true
+        map:setCellFlags(xpos, ypos, flags_to_set)
+      else
+        local flags_to_set = {}
+        for _, value in pairs(direction_parameters) do
+          if coordinatesAreInFootprint(self.footprint, xy[1] + value.x, xy[2] + value.y) or
+              xy.complete_cell or xy[value.needed_side] then
+            flags_to_set[value.buildable_flag] = true
+          end
+        end
+
+        if not isTableEmpty(flags_to_set) then
+          map:setCellFlags(xpos, ypos, flags_to_set)
+        end
+        if not map:getCellFlags(xpos, ypos).passable then
+          map:setCellFlags(xpos, ypos, {
+            buildable = true,
+            passable = true,
+          })
+        else
+          -- passable tiles can "belong" to multiple objects, so we have to check that
+          if not self.world:isTilePartOfNearbyObject(xpos, ypos, 10) then
+            -- assumption: no object defines a passable tile further than 10 tiles away from its origin
+            map:setCellFlags(xpos, ypos, {
+              buildable = true,
+            })
+          end
+        end
+      end
+    end
+  end
 end
 
 --! Set object invisible state.

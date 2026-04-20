@@ -718,12 +718,7 @@ function UIPlaceObjects:_placementAvailableHereAndOtherObjectsDoNotInterfere(
   local world = self.ui.app.world
   local player_id = self.ui.hospital:getPlayerIndex()
   local direction = self.object_orientation
-  local direction_parameters =  {
-    north = { x = 0, y = -1, buildable_flag = "buildableNorth", passable_flag = "travelNorth", needed_side = "need_north_side"},
-    east = { x = 1, y = 0, buildable_flag =  "buildableEast", passable_flag = "travelEast", needed_side = "need_east_side"},
-    south = { x = 0, y = 1, buildable_flag = "buildableSouth", passable_flag = "travelSouth", needed_side = "need_south_side"},
-    west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
-  }
+  local direction_parameters = Object.directionParameters()
   local optional_tiles = 0
   for _, tile in ipairs(object_footprint) do
     if tile.optional then
@@ -756,16 +751,10 @@ function UIPlaceObjects:_placementAvailableHereAndOtherObjectsDoNotInterfere(
     same_placement = same_tile and existing_object.direction == direction
   end
 
-  local original_footprint_flags = nil
   if moving_existing_object and self.object_anim and object.class ~= "SideObject" then
     -- we placing previously 'grabbed' an existing object which actually just made invisible
     -- free up the space occupied by the object during the test for tiles availability
-    local existing_object_footprint = object.orientations[existing_object.direction].footprint
-    original_footprint_flags = self:_deoccupyObjectSpace(
-        existing_object.tile_x,
-        existing_object.tile_y,
-        existing_object_footprint,
-        map)
+    existing_object:deoccupyTilesByObjectFootprintAt(existing_object.tile_x, existing_object.tile_y)
   end
 
   -- for each tile in object_footprint check map tile availability
@@ -840,46 +829,12 @@ function UIPlaceObjects:_placementAvailableHereAndOtherObjectsDoNotInterfere(
     self.object_footprint[i][2] = ypos
   end
 
-  if moving_existing_object and original_footprint_flags then
+  if moving_existing_object and self.object_anim and object.class ~= "SideObject" then
     -- we've tested the placement and now we need to re-occupy the cells.
-    self:_occupyObjectSpaceBack(original_footprint_flags, map)
+    existing_object:occupyTilesByObjectFootprintAt(existing_object.tile_x, existing_object.tile_y)
   end
 
   return valid_placement, room_id, passable_flag
-end
-
---! Set cell flags in accordance that the tile is available for build and placement.
-function UIPlaceObjects:_deoccupyObjectSpace(object_x, object_y, footprint, map)
-  local original_footprint_flags_table = {}
-  for _, tile in ipairs(footprint) do
-    local target_x = object_x + tile[1]
-    local target_y = object_y + tile[2]
-
-    -- keep original flags to revert changes later
-    local original_flags = map:getCellFlags(target_x, target_y)
-    original_flags["owner"] = nil -- that flag can't be set via setCellFlags
-    original_flags["thob"] = nil -- don't need to touch that flag
-    table.insert(original_footprint_flags_table, {target_x, target_y, original_flags})
-
-    -- enable tiles passability and buildability
-    local completely_availability_flags = {
-      passable = true,
-      buildable = true,
-      buildableNorth = true,
-      buildableEast = true,
-      buildableSouth = true,
-      buildableWest = true
-    }
-    map:setCellFlags(target_x, target_y, completely_availability_flags)
-  end
-  return original_footprint_flags_table
-end
-
---! Restore cell flags to its original state
-function UIPlaceObjects:_occupyObjectSpaceBack(original_flags_table, map)
-  for i, tile_flags in pairs(original_flags_table) do
-    map:setCellFlags(tile_flags[1], tile_flags[2], tile_flags[3]) -- target_x, target_y, original_flags
-  end
 end
 
 --! Function for checking the valid placement of "NonSideObject".
