@@ -190,27 +190,20 @@ function UIStaffManagement:updateStaffList(staff_member_removed)
   end
   -- Sort staff tables by attribute and direction
   for _, staff_tbl in pairs(staff_members) do
-  if self.list_direction == "up" then
-    if self.list_order == "hire" then
-      table.sort(staff_tbl, function(a, b) return a.hire_order > b.hire_order end)
-    elseif self.list_order == "morale" then
-      table.sort(staff_tbl, function(a, b) return a:getAttribute("happiness") > b:getAttribute("happiness") end)
-    elseif self.list_order == "tiredness" then
-      table.sort(staff_tbl, function(a, b) return a:getAttribute("fatigue") > b:getAttribute("fatigue") end)
-    elseif self.list_order == "skill" then
-      table.sort(staff_tbl, function(a, b) return a.profile.skill > b.profile.skill end)
-    end
-  else
-    if self.list_order == "hire" then
-      table.sort(staff_tbl, function(a, b) return a.hire_order < b.hire_order end)
-    elseif self.list_order == "morale" then
-      table.sort(staff_tbl, function(a, b) return a:getAttribute("happiness") < b:getAttribute("happiness") end)
-    elseif self.list_order == "tiredness" then
-      table.sort(staff_tbl, function(a, b) return a:getAttribute("fatigue") < b:getAttribute("fatigue") end)
-    elseif self.list_order == "skill" then
-      table.sort(staff_tbl, function(a, b) return a.profile.skill < b.profile.skill end)
-    end
-  end
+    table.sort(staff_tbl, function(left, right)
+      local ascending = self.list_direction == "up"
+      local a = ascending and left or right
+      local b = not ascending and left or right
+      if self.list_order == "hire" then
+        return a.hire_order > b.hire_order
+      elseif self.list_order == "morale" then
+        return a:getAttribute("happiness") > b:getAttribute("happiness")
+      elseif self.list_order == "tiredness" then
+        return a:getAttribute("fatigue") > b:getAttribute("fatigue")
+      elseif self.list_order == "skill" then
+        return a.profile.skill > b.profile.skill
+      end
+    end)
   end
   self.staff_members = staff_members
   if staff_member_removed then
