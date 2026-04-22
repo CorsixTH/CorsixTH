@@ -2681,6 +2681,9 @@ passable tiles (the norm for most objects)]]
 function World:isTileExclusivelyPassable(x, y, distance)
   for o in pairs(self:findAllObjectsNear(x, y, distance)) do
     if o and o.footprint then
+      if not o.tile_x or not o.tile_y then
+        goto continue -- Skip objects without valid tile coordinates
+      end
       for _, footprint in pairs(o.footprint) do
         if footprint[1] + o.tile_x == x and footprint[2] + o.tile_y == y and footprint.only_passable and not footprint.shareable then
           return false
@@ -2694,6 +2697,8 @@ function World:isTileExclusivelyPassable(x, y, distance)
         end
       end
     end
+
+    ::continue::
   end
   return true
 end
