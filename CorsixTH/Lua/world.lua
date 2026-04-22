@@ -2748,18 +2748,21 @@ end
 --! @param y (integer) Top Y coordinate of the area (inclusive).
 --! @param w (integer) Width of the area in tiles.
 --! @param h (integer) Height of the area in tiles.
-function World:hasRadiator(x, y, w, h)
+function World:hasRadiator(x, y, w, h, ignored_room)
     local x2, y2 = x + w - 1, y + h - 1
 
     for _, e in ipairs(self.entities) do
         if e and e.object_type and e.object_type.id == "radiator"
                 and e.tile_x and e.tile_y then
-            if e.tile_x >= x and e.tile_x <= x2 and e.tile_y >= y and e.tile_y <= y2 then
-                return true
+
+            -- Ignore radiators belonging to the room being moved
+            if not ignored_room or self:getRoom(e.tile_x, e.tile_y) ~= ignored_room then
+                if e.tile_x >= x and e.tile_x <= x2 and e.tile_y >= y and e.tile_y <= y2 then
+                    return true
+                end
             end
         end
     end
-
     return false
 end
 
@@ -2791,7 +2794,15 @@ function World:canMoveRoomTo(room, new_x, new_y, showMessage)
             end
         end
     end
-    -- Iterate over every tile the room would occupy at its new position
+
+    -- verify one time if a radiator is on the new location
+    local radiator = self:hasRadiator(new_x, new_y, room.width, room.height, room)
+    if radiator then
+        self:showError("You can't move this room: a radiator is in the way.")
+        self.app.world.mode_deplacement = false
+        return false
+    end
+
     for tileX = new_x, new_x + room.width - 1 do
         for tileY = new_y, new_y + room.height - 1 do
             -- Verify if a humanoid(character) is on the new position
@@ -2816,15 +2827,9 @@ function World:canMoveRoomTo(room, new_x, new_y, showMessage)
                 self:showError("You can't move this room: another room is in the way.")
                 return false
             end
-            -- verify if a radiator is on the new location
-            local radiator = self:hasRadiator(tileX, tileY, room.width, room.height)
-            if radiator then
-                self:showError("You can't move this room: a radiator is in the way.")
-                self.app.world.mode_deplacement = false
-                return false
-            end
         end
     end
+
     return true
 end
 
@@ -2856,7 +2861,7 @@ function World:moveRoom(room, directionX, directionY)
         end
     end
     -- Finaly we will change the location of the room with the new position
-    room.x, room.y = new_x, new_y 
+    room.x, room.y = new_x, new_y
     map:markRoom(new_x, new_y, room.width, room.height, room.room_info.floor_tile, room.id)
     -- Will place the wall on the tile depending on the direction of the list
     for _, side in ipairs({"top","right","bottom","left"}) do
@@ -2867,7 +2872,7 @@ function World:moveRoom(room, directionX, directionY)
             end
         end
     end
-    
+
     -- Will put the door back to the same location as the old location
     if room.door then
         local door_rel_x, door_rel_y = (room.door.tile_x - (room.x - directionX)), (room.door.tile_y - (room.y - directionY))-- relative to OLD origin
@@ -2878,7 +2883,7 @@ function World:moveRoom(room, directionX, directionY)
     -- Will update the action to the new location
     for _, entity in ipairs(self.entities) do
         if class.is(entity, Humanoid) and entity.action_queue then
-            for _, action in ipairs(entity.action_queue) do 
+            for _, action in ipairs(entity.action_queue) do
                 if action.room == room then
                     entity:setNextAction(SeekRoomAction(room.room_info.id))
                     break
@@ -2886,17 +2891,24 @@ function World:moveRoom(room, directionX, directionY)
             end
         end
     end
-    
+
     --! Will update the path again
     --! Update the map
     --! put back l_wall_layer to nil so we don't keep the last wall
     --! We will rebuild the entity map so we don't have entity error
-    self.map.th:updatePathfinding() 
+    self.map.th:updatePathfinding()
     self.pathfinder:setMap(self.map.th)
     self.mode_deplacement = false
+    local moved_walls = {
+        top = self.l_wall_layer.top,
+        right = self.l_wall_layer.right,
+        bottom = self.l_wall_layer.bottom,
+        left = self.l_wall_layer.left,
+    }
     self.l_wall_layer = nil
     self:rebuildEntityMap()
     self:clearCaches()
+    return moved_walls
 end
 
 ---! Removes (or replaces) a straight wall line on the map and stores the removed walls.
@@ -2934,11 +2946,11 @@ function World:_remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, 
                 block_id = existing,
                 set = set, dir = dir,
             })
-            
+
             local neighbour_room = self:getRoom(x + neigh_x, y + neigh_y)
 
             if neighbour_room and (neigh_x ~= 0 or neigh_y ~= 0) then
-                local new_set = set 
+                local new_set = set
                 if new_set == "inside_tiles" then new_set = "outside_tiles" end
                 map:setCell(x, y, layer, flag + self.wall_types[neighbour_room.room_info.wall_type][new_set][dir])
             else

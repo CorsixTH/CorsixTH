@@ -43,6 +43,7 @@ function UIMoveRoom:UIMoveRoom(ui, room)
   self.origin_x, self.origin_y = room.x, room.y
   -- Current position (follows cursor)
   self.target_x, self.target_y = room.x, room.y
+    self.replacement_tiles = self:_captureReplacementTiles()
   self.lifted_objects = self:_liftObjects()
   self:addKeyHandler("global_cancel", self, self.cancelMove)
   self:addKeyHandler("global_confirm", self, self.confirmCurrentPosition)
@@ -98,6 +99,7 @@ function UIMoveRoom:drawPreview()
     local w = self.room.width
     local h = self.room.height
     local map = self.world.map.th
+    local has_radiator = self.world:hasRadiator(self.target_x, self.target_y, w, h)
 
     for dy = 0, h - 1 do
         for dx = 0, w - 1 do
@@ -106,20 +108,17 @@ function UIMoveRoom:drawPreview()
             local flags = {}
             local humanoids = self.world.entity_map:getHumanoidsAtCoordinate(x, y)
             map:getCellFlags(x, y, flags)
-            if flags.hospital then -- Show green tile if can place here else black tile will appear
-                if not self.world:hasRadiator(x, y, w, h) and not self.world:getRoom(x, y) and #humanoids <= 0 then -- Show green tile if can place here else black tile will appear
-                    local tile_id = map:getCell(x, y)
-                    map:setCell(x, y, 1, 1)
-                    table.insert(self.preview_tiles, {
-                        x = x,
-                        y = y,
-                        tile_id = tile_id
-                    })
-                else
-                    self:_insertBlackTiles(map, x, y)
-                end
+
+            if flags.hospital and not has_radiator and not self.world:getRoom(x, y) and #humanoids <= 0 then
+                local tile_id = map:getCell(x, y)
+                map:setCell(x, y, 1, 1)
+                table.insert(self.preview_tiles, {
+                    x = x,
+                    y = y,
+                    tile_id = tile_id
+                })
             else
-                self:_insertBlackTiles(map,x, y)
+                self:_insertBlackTiles(map, x, y)
             end
         end
     end
@@ -149,8 +148,8 @@ end
 
 function UIMoveRoom:onMouseDown(button)
     if button == "left" then
-        self:confirmCurrentPosition()
         self:clearPreview()
+        self:confirmCurrentPosition()
         return true
     elseif button == "right" then
         self:clearPreview()
@@ -170,6 +169,7 @@ end
 function UIMoveRoom:_applyMove(new_x, new_y)
     local room, world  = self.room, self.world
     local direction_X, direction_Y = (new_x - self.origin_x), (new_y - self.origin_y)
+    local old_x, old_y = room.x, room.y
 
     if direction_X == 0 and direction_Y == 0 then
         self:_restoreObjects(self.origin_x, self.origin_y)
@@ -180,7 +180,19 @@ function UIMoveRoom:_applyMove(new_x, new_y)
     self.room_width = room.width
     self.room_height = room.height
 
-    world:moveRoom(room, direction_X, direction_Y)
+    local adjacent_sides = self:_getAdjacentRoomSides(room.x, room.y, room.width, room.height)
+    local moved_walls = world:moveRoom(room, direction_X, direction_Y)
+
+    local room_really_moved = (room.x ~= old_x) or (room.y ~= old_y)
+
+    if room_really_moved then
+        self:_refreshAdjacentRoomWalls(adjacent_sides, moved_walls)
+        self:_restoreReplacementTiles()
+    else
+        self:_restoreObjects(self.origin_x, self.origin_y)
+        self:_cleanup()
+        return
+    end
 
     for _, entry in ipairs(self.lifted_objects) do
         local obj = entry.object
@@ -238,4 +250,178 @@ function UIMoveRoom:_cleanup()
   self.ui:setCursor(self.ui.default_cursor)
   self.world.mode_deplacement = false;
   self:close()
+end
+
+---! Generate replacement tiles for the room's original area.
+--! Uses the dominant surrounding tile to fill the old position after moving.
+--! @return (table) list of tiles {x, y, tile_id}
+function UIMoveRoom:_captureReplacementTiles()
+    local room = self.room
+    local tiles = {}
+    local dominant_tile = self:_getMostCommonSurroundingTile()
+
+    for dy = 0, room.height - 1 do
+        for dx = 0, room.width - 1 do
+            tiles[#tiles + 1] = {
+                x = room.x + dx,
+                y = room.y + dy,
+                tile_id = dominant_tile,
+            }
+        end
+    end
+
+    return tiles
+end
+
+---! Restore floor tiles at the room's old position after moving.
+--! Only applies tiles that are no longer covered by the moved room.
+function UIMoveRoom:_restoreReplacementTiles()
+    local map = self.world.map.th
+    local room = self.room
+
+    if not self.replacement_tiles then return end
+
+    for _, tile in ipairs(self.replacement_tiles) do
+        local still_inside_new_room =
+        tile.x >= room.x and tile.x < room.x + room.width and
+                tile.y >= room.y and tile.y < room.y + room.height
+
+        if not still_inside_new_room then
+            map:setCell(tile.x, tile.y, 1, tile.tile_id)
+        end
+    end
+end
+
+---! Get the most common tile surrounding the room.
+--! Used to fill the old room area with a visually consistent floor.
+--! @return (integer) dominant tile ID
+function UIMoveRoom:_getMostCommonSurroundingTile()
+    local room = self.room
+    local map = self.world.map.th
+    local counts = {}
+    local best_tile = nil
+    local best_count = 0
+
+    local function addTile(x, y)
+        local flags = {}
+        map:getCellFlags(x, y, flags)
+
+        if flags.hospital then
+            local tile_id = map:getCell(x, y)
+            counts[tile_id] = (counts[tile_id] or 0) + 1
+
+            if counts[tile_id] > best_count then
+                best_count = counts[tile_id]
+                best_tile = tile_id
+            end
+        end
+    end
+
+    -- top and bottom line
+    for x = room.x, room.x + room.width - 1 do
+        addTile(x, room.y - 1)
+        addTile(x, room.y + room.height)
+    end
+
+    -- left and right column
+    for y = room.y, room.y + room.height - 1 do
+        addTile(room.x - 1, y)
+        addTile(room.x + room.width, y)
+    end
+
+    -- diagonal corners
+    addTile(room.x - 1, room.y - 1)
+    addTile(room.x + room.width, room.y - 1)
+    addTile(room.x - 1, room.y + room.height)
+    addTile(room.x + room.width, room.y + room.height)
+
+    -- fallback
+    if not best_tile then
+        best_tile = map:getCell(room.x, room.y)
+    end
+
+    return best_tile
+end
+
+---! Detect adjacent rooms on each side of the given area.
+--! Returns which sides (left, right, top, bottom) are touching another room.
+--! @return (table) sides {left, right, top, bottom} as booleans
+function UIMoveRoom:_getAdjacentRoomSides(x, y, w, h)
+    local world = self.world
+    local sides = {
+        left = false,
+        right = false,
+        top = false,
+        bottom = false,
+    }
+
+    for ty = y, y + h - 1 do
+        if world:getRoom(x - 1, ty) and world:getRoom(x - 1, ty) ~= self.room then
+            sides.left = true
+            break
+        end
+    end
+
+    for ty = y, y + h - 1 do
+        if world:getRoom(x + w, ty) and world:getRoom(x + w, ty) ~= self.room then
+            sides.right = true
+            break
+        end
+    end
+
+    for tx = x, x + w - 1 do
+        if world:getRoom(tx, y - 1) and world:getRoom(tx, y - 1) ~= self.room then
+            sides.top = true
+            break
+        end
+    end
+
+    for tx = x, x + w - 1 do
+        if world:getRoom(tx, y + h) and world:getRoom(tx, y + h) ~= self.room then
+            sides.bottom = true
+            break
+        end
+    end
+
+    return sides
+end
+
+---! Restore walls for adjacent rooms after a room move.
+--! Re-applies saved wall segments on sides where neighboring rooms exist.
+--! @param adjacent_sides (table) sides {left, right, top, bottom}
+--! @param moved_walls (table) saved wall segments from moveRoom
+function UIMoveRoom:_refreshAdjacentRoomWalls(adjacent_sides, moved_walls)
+    local map = self.world.map.th
+    local saved = moved_walls
+
+    if not saved then return end
+
+    local function restoreWallList(list)
+        if not list then return end
+        for _, wall in ipairs(list) do
+            map:setCell(wall.x, wall.y, wall.layer, wall.block_id)
+        end
+    end
+
+    -- Mapping based on the current moveRoom implementation:
+    -- saved.top    = left vertical wall
+    -- saved.bottom = right vertical wall
+    -- saved.right  = top horizontal wall
+    -- saved.left   = bottom horizontal wall
+
+    if adjacent_sides.left then
+        restoreWallList(saved.top)
+    end
+
+    if adjacent_sides.right then
+        restoreWallList(saved.bottom)
+    end
+
+    if adjacent_sides.top then
+        restoreWallList(saved.right)
+    end
+
+    if adjacent_sides.bottom then
+        restoreWallList(saved.left)
+    end
 end
