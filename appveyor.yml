@@ -28,7 +28,6 @@ test_script:
   - cmd: ctest --extra-verbose --build-config Release --output-on-failure
 
 after_build:
-- curl -L -o %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/FluidR3.sf3 https://github.com/Jacalz/fluid-soundfont/raw/master/SF3/FluidR3.sf3
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Lua %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Lua
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Bitmap %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Bitmap
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Levels %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Levels

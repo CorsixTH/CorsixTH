@@ -98,6 +98,7 @@ function UIMachine:callHandyman()
     else
       self.machine.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
     end
+    self.machine:setRepairingStatus()
   end
 end
 

@@ -228,6 +228,11 @@ menu_debug = {
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
 }
+menu_debug_overlay_blocking_off_areas = {
+  choice_1 = "  TOTALLY FORBIDDEN  ",
+  choice_2 = "  PARTIALLY ALLOWED  ",
+  choice_3 = "  COMPLETELY ALLOWED  ",
+}
 menu_debug_overlay = {
   none                        = "  NONE  ",
   flags                       = "  FLAGS  ",
@@ -515,6 +520,7 @@ tooltip.options_window = {
   fullscreen_button = "Click to toggle fullscreen mode",
   resolution = "The resolution the game should run in",
   select_resolution = "Select a new resolution",
+  resolution_unavailable = "Resolution unavailable at current UI Scale",
   scale_ui = "Scale the user interface. Only scale options that fit the display are shown, for more increase the resolution.",
   select_ui_scale = "Select a new user interface scale",
   ui_scale_unavailable = "User interface scaling not available, please select a higher resolution first.",
@@ -647,7 +653,8 @@ tooltip.folders_window = {
   no_font_specified = "No font location specified yet!",
   not_specified = "No folder location specified yet!",
   default = "Default location",
-  reset_to_default = "Reset the directory to its default location",
+  reset_to_default = "Reset the directory to its default location ( %1% )",
+  clear_directory = "Clear current directory selection",
   back  = "Close this menu and go back to the Settings Menu",
 }
 
@@ -1026,11 +1033,10 @@ tooltip.calls_dispatcher = {
 }
 
 machine_menu = {
-  percentage = "%d%",
   machine = "Machine",
+  status = "Status",
   remaining_strength = "Remain",
   total_strength = "Strength",
-  ratio = "Ratio",
   close = "Close",
 }
 
@@ -1041,14 +1047,13 @@ tooltip.machine_menu = {
   assigned = "This box is marked if a handyman is assigned to fix corresponding machine. Click to show assigned handyman.",
   remaining_strength = "This value shows remaining strength of the machine",
   total_strength = "This value shows total strength of the machine",
-  ratio = "This value shows ratio of remaining strength and total strength",
   header = {
     smoking = "Danger Indicator",
     assigned = "Repair assignment Indicator",
     machine = "Machine name",
     remaining_strength = "Remaining Strength of the machines.",
+    status = "Status of the machines.",
     total_strength = "Total Strength of the machines.",
-    ratio = "Remaining Strength to Total Strength percentage ratio of the machines.",
   },
   close = "Close the machine list dialog",
 }
@@ -1273,7 +1278,16 @@ subtitles = {
 options_window.change_resolution = "Change resolution"
 tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
 information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
-
+machine_menu = {
+  ratio = "Ratio",
+  percentage = "%d%",
+}
+tooltip.machine_menu = {
+  ratio = "This value shows ratio of remaining strength and total strength",
+  header = {
+    ratio = "Remaining Strength to Total Strength percentage ratio of the machines.",
+  }
+}
 cheats_window.cheats = {
  toggle_infected = show_infected,
 }

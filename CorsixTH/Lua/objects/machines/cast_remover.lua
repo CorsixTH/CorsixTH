@@ -129,7 +129,6 @@ object.orientations = {
                   {-1, 1, only_passable = true, need_west_side = true},
                   {-1, -2, only_passable = true, invisible = true, optional = true},
                   {-2, -1, only_passable = true, invisible = true, optional = true} },
-    list_bottom = true,
     render_attach_position = {-1, 1},
     smoke_position = {0, 0},
   },
@@ -145,7 +144,6 @@ object.orientations = {
                   {-2, -1, only_passable = true, invisible = true, optional = true},
                   {-1, -2, only_passable = true, invisible = true, optional = true} },
     early_list = true,
-    list_bottom = true,
     smoke_position = {0, 0},
   },
 }

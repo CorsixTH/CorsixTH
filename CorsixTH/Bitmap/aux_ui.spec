@@ -23,6 +23,9 @@ local SPEC = {
     "map_cell_outline_west.bmp",
     "toolbar_machinemenu_idle.bmp",
     "toolbar_machinemenu_pressed.bmp",
+    "machine_dialog_bar.bmp",
+    "machine_dialog_used.bmp",
+    "machine_dialog_strength.bmp",
   },
 
   -- Palette options
@@ -33,8 +36,8 @@ local SPEC = {
   rnc = false,
 
   -- Output filenames
-  output_tab = "aux_ui.tab"
-  output_dat = "aux_ui.dat"
+  output_tab = "aux_ui.tab",
+  output_dat = "aux_ui.dat",
 }
 
 return SPEC

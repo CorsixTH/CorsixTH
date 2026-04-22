@@ -92,6 +92,11 @@ describe("serialize", function()
     assert.has_no.match('<reference loop>', res, nil, true)
     assert.has.match('{...}', res, nil, true)
   end)
+
+  it("serializes nil", function()
+    local res = serialize(nil)
+    assert.equals('nil', res)
+  end)
 end)
 
 describe("array_join", function()

@@ -133,7 +133,7 @@ std::string search_script_file(lua_State* L) {
 
 }  // namespace
 
-int lua_main_no_eval(lua_State* L) {
+int lua_init_no_eval(lua_State* L) {
   // assert(_VERSION == LUA_VERSION)
   size_t iLength;
   lua_getglobal(L, "_VERSION");
@@ -186,8 +186,8 @@ int lua_main_no_eval(lua_State* L) {
   return lua_gettop(L);
 }
 
-int lua_main(lua_State* L) {
-  lua_call(L, lua_main_no_eval(L) - 1, LUA_MULTRET);
+int lua_init(lua_State* L) {
+  lua_call(L, lua_init_no_eval(L) - 1, LUA_MULTRET);
   return lua_gettop(L);
 }
 
