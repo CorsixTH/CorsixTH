@@ -27,6 +27,7 @@ class "GameUI" (UI)
 
 ---@type GameUI
 local GameUI = _G["GameUI"]
+local UIMoveRoom = _G["UIMoveRoom"]
 
 local TH = require("TH")
 
