@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 corsixth.require("ui")
 corsixth.require("announcer")
+corsixth.require("dialogs.move_room")
 
 --! Variant of UI for running games
 class "GameUI" (UI)
