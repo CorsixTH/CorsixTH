@@ -101,7 +101,16 @@ function UIPlaceStaff:_isValidStaffPlacement()
   end
   local room = world:getRoom(x, y)
   -- On a tile humanoids can walk on?
-  local walkable = flag_cache.passable and (not room and true or not room.crashed)
+  local walkable = flag_cache.passable
+  if room then
+    if room.door and room.door.tile_x and room.door.tile_y then
+      -- Check that the door is accessible from this tile. Otherwise, forbid placement.
+      local reachable = world.pathfinder:findDistance(x, y, room.door.tile_x, room.door.tile_y)
+      walkable = walkable and not room.crashed and reachable
+    else
+      walkable = false
+    end
+  end
   -- and in an area the regular staff (doctors, nurses and handymen) can go?
   local staffable = (self.allow_in_rooms or flag_cache.roomId == 0)
   -- Or is it a receptionist placed on an unstaffed reception desk?

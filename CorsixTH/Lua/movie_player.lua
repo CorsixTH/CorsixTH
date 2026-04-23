@@ -92,8 +92,6 @@ local destroyMovie = function(me)
   if me.holding_bg_music then
     -- If possible we want to continue playing music where we were
     me.audio:pauseBackgroundTrack()
-  else
-    me.audio:playRandomBackgroundTrack()
   end
   if me.sound then
     me.audio:stopSound(me.sound)

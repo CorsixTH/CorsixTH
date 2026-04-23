@@ -561,6 +561,8 @@ function Staff:isIdle()
     return not room:isRoomInDemand()
   else
     -- In the corridor and not on_call (e.g. watering or going to room).
+    if class.is(self, Handyman) then return not self.on_call end
+
     -- The staff is free, unless going back to the training/research.
     room = self.last_room
     if room and (room.room_info.id == "training" or room.room_info.id == "research") then

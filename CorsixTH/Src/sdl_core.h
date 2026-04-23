@@ -1,4 +1,5 @@
---[[ Copyright (c) 2010 Peter "Corsix" Cawley
+/*
+Copyright (c) 2026 Stephen Baker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -16,41 +17,17 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. --]]
+SOFTWARE.
+*/
 
-local object = {}
-object.id = "x_ray_viewer"
-object.thob = 29
-object.name = _S.object.x_ray_viewer
-object.tooltip = _S.tooltip.objects.x_ray_viewer
-object.ticks = false
-object.build_preview_animation = 5078
-object.show_in_town_map = true
-object.locked_to_wall = {
-  -- permittable wall -> orientation
-  north = "east",
-  west = "north",
-}
-local function copy_north_to_south(t)
-  t.south = t.north
-  return t
-end
-object.idle_animations = copy_north_to_south {
-  north = 2390,
-}
+#ifndef CORSIXTH_SDL_CORE_H
+#define CORSIXTH_SDL_CORE_H
 
-object.orientations = {
-  north = {
-    footprint = {
-      {0, 0, need_west_side = true },
-    },
-  },
-  east = {
-    footprint = {
-      {0, 0, need_north_side = true},
-    },
-    early_list = true,
-  },
-}
+#include "lua.hpp"
 
-return object
+void mainloop(lua_State* L);
+int luaopen_sdl_audio(lua_State* L);
+int luaopen_sdl_wm(lua_State* L);
+int luaopen_sdl(lua_State* L);
+
+#endif  // CORSIXTH_SDL_CORE_H

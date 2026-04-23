@@ -60,7 +60,7 @@ end
 --!param x (int) Vertical position of the tile to query in the map.
 --!return ID of the room at the queried tile.
 function Map:getRoomId(x, y)
-  return self.th:getCellFlags(math.floor(x), math.floor(y)).roomId
+  return self.th:getRoomId(math.floor(x), math.floor(y))
 end
 
 function Map:setPlayerCount(count)

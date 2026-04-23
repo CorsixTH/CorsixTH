@@ -146,10 +146,9 @@ function Door:getWalkableTiles()
 end
 
 local flag_early_list = 1024
-local flag_list_bottom = 2048
 
 function Door:setAnimation(animation, flags)
-  flags = (flags or 0) + flag_list_bottom
+  flags = (flags or 0)
   if self.direction == "north" then
     flags = flags + flag_early_list
   end

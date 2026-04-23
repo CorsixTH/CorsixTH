@@ -49,7 +49,7 @@ local function create_app_mock(speed_set, desk_set)
   world_mock.isCurrentSpeed = function() return speed_set end
   world_mock.getLocalPlayerHospital = function()
     return {
-      hasStaffedDesk = function() return desk_set end
+      hasReceptionDesk = function() return desk_set end
     }
   end
 
