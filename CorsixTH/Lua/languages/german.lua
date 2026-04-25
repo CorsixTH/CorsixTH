@@ -475,9 +475,6 @@ options_window = {
   apply = "Übernehmen",
   cancel = "Abbrechen",
   back = "Zurück",
-  scrollspeed = "Scrolling", -- "Scrolling-Geschwindigkeit" is too long
-  shift_scrollspeed = "Scrolling (Mod.)", --"schnelles Scrollen" or "Umschalt-Scrolling-Geschwindigkeit" are worse
-  zoom_speed = "Zoomen", --"Zoom-Geschwindigkeit" is too long
   hotkey = "Tastenkürzel",
 }
 
@@ -497,15 +494,6 @@ tooltip.options_window = {
   select_language = "Die Spielsprache ändern",
   language_dropdown_item = "%s als Sprache auswählen",
   back = "Das Optionsfenster schließen",
-  scrollspeed = "Scrolling-Geschwindigkeit von 1 (langsamste) bis 10 (schnellste) einstellen. Standard ist 2.",
-  shift_scrollspeed = "Scrolling-Geschwindigkeit während der Modifikator (Standard: Umschalttaste) gedrückt wird einstellen. 1 (langsamste) bis 10 (schnellste). Standard ist 4.",
-  zoom_speed = "Zoom-Geschwindigkeit der Kamera von 10 (langsamste) bis 1000 (schnellste) einstellen. Standard ist 80.",
-  apply_scrollspeed = "Eingegebene Scrolling-Geschwindigkeit anwenden.",
-  cancel_scrollspeed = "Ohne Änderung der Scrolling-Geschwindigkeit zurückkehren.",
-  apply_shift_scrollspeed = "Eingegebene Modifikator-Scrolling-Geschwindigkeit anwenden.",
-  cancel_shift_scrollspeed = "Ohne Änderung der Modifikator-Scrolling-Geschwindigkeit zurückkehren.",
-  apply_zoomspeed = "Eingegebene Zoom-Geschwindigkeit anwenden.",
-  cancel_zoomspeed = "Ohne Änderung der Zoom-Geschwindigkeit zurückkehren.",
   hotkey = "Tastenkürzel ändern.",
 }
 
@@ -518,6 +506,24 @@ audio_window = {
 tooltip.audio_window = {
   audio_button = "Sämtliche Toneffekte des Spiels ein- bzw. ausschalten",
   audio_toggle = "Ein- oder ausschalten",
+}
+
+accessibility_window = {
+  scrollspeed = "Scrolling", -- "Scrolling-Geschwindigkeit" is too long
+  shift_scrollspeed = "Scrolling (Mod.)", --"schnelles Scrollen" or "Umschalt-Scrolling-Geschwindigkeit" are worse
+  zoom_speed = "Zoomen", --"Zoom-Geschwindigkeit" is too long
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "Scrolling-Geschwindigkeit von 1 (langsamste) bis 10 (schnellste) einstellen. Standard ist 2.",
+  shift_scrollspeed = "Scrolling-Geschwindigkeit während der Modifikator (Standard: Umschalttaste) gedrückt wird einstellen. 1 (langsamste) bis 10 (schnellste). Standard ist 4.",
+  zoom_speed = "Zoom-Geschwindigkeit der Kamera von 10 (langsamste) bis 1000 (schnellste) einstellen. Standard ist 80.",
+  apply_scrollspeed = "Eingegebene Scrolling-Geschwindigkeit anwenden.",
+  cancel_scrollspeed = "Ohne Änderung der Scrolling-Geschwindigkeit zurückkehren.",
+  apply_shift_scrollspeed = "Eingegebene Modifikator-Scrolling-Geschwindigkeit anwenden.",
+  cancel_shift_scrollspeed = "Ohne Änderung der Modifikator-Scrolling-Geschwindigkeit zurückkehren.",
+  apply_zoomspeed = "Eingegebene Zoom-Geschwindigkeit anwenden.",
+  cancel_zoomspeed = "Ohne Änderung der Zoom-Geschwindigkeit zurückkehren.",
 }
 
 customise_window = {

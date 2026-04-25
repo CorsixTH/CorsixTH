@@ -74,6 +74,7 @@ tooltip.customise_window.average_contents = "Se quer que o jogo lhe lembre que o
 tooltip.customise_window.back = "Fechar este menu e voltar às definições."
 tooltip.customise_window.movies = "Controle geral de vídeos, isto irá permitir desligar todos os vídeos"
 tooltip.customise_window.fractured_bones = "Devido a uma má animação colocamos por defeito que não existem pacientes femininas com Ossos Partidos. De forma a permitir que pacientes femininas com Ossos Partidos visitem o hospital, desligue esta opção."
+tooltip.customise_window.volume = "Se o botão para baixar o volume está a abrir também o livro médico, ligue esta opção para mudar o atalho para o livro médico para Shift + C"
 tooltip.customise_window.intro = "Ligar ou desligar o vídeo de introdução, o controle geral de vídeos tem que estar ligado se quer ver a introdução cada vez que começa o CorsixTH"
 tooltip.customise_window.paused = "No Theme Hospital o jogador apenas podia utilizar o menu de topo se o jogo estivesse pausado. Esta é também a opção por defeito no CorsixTH, mas ao activar esta opção, tudo é permitido com o jogo pausado."
 update_window.caption = "Actualização Disponível!"
@@ -103,6 +104,7 @@ customise_window.intro = "Reproduzir vídeo de introdução"
 customise_window.caption = "Definições Personalizadas"
 customise_window.back = "Retroceder"
 customise_window.movies = "Controle Geral de Vídeos"
+customise_window.volume = "Atalho para baixar o volume"
 customise_window.aliens = "Pacientes Extraterrestres"
 customise_window.fractured_bones = "Ossos Partidos"
 options_window.folder = "Pastas"
@@ -343,7 +345,6 @@ tooltip = {
     language = "Escolhe %s como a tua linguagem.",
     back = "Fecha a janela de opçoes.",
     },
-
 }
 
 

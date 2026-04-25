@@ -3107,9 +3107,6 @@ options_window = {
   apply = "應用",
   cancel = "取消",
   back = "返回",
-  scrollspeed = "捲動速度",
-  shift_scrollspeed = "加速捲動速度",
-  zoom_speed = "縮放速度",
   hotkey = "熱鍵",
   check_for_updates = "自動檢查更新",
 }
@@ -3130,15 +3127,6 @@ tooltip.options_window = {
   select_language = "選擇語言",
   language_dropdown_item = "選擇 %s 為語言",
   back = "關閉設定視窗",
-  scrollspeed = "將捲動速度設為1（最慢）到10（最快）。預設為2。",
-  shift_scrollspeed = "設定在捲動時按下 Shift 鍵時的捲動速度。1（最慢）到10（最快）。預設：4。",
-  zoom_speed = "將相機變焦速度設為10（最慢）到1000（最快）。預設值為80。",
-  apply_scrollspeed = "應用輸入的捲動速度",
-  cancel_scrollspeed = "返回而不更改捲動速度",
-  apply_shift_scrollspeed = "應用輸入的加速捲動速度",
-  cancel_shift_scrollspeed = "返回而不更改加速捲動速度",
-  apply_zoomspeed = "應用輸入的縮放速度",
-  cancel_zoomspeed = "返回而不更改縮放速度",
   hotkey = "更改鍵盤熱鍵",
   check_for_updates = "遊戲啟動時自動檢查更新",
 }
@@ -3151,6 +3139,24 @@ audio_window = {
 tooltip.audio_window = {
   audio_button = "開關所有的聲音",
   audio_toggle = "切換開關",
+}
+
+accessibility_window = {
+  scrollspeed = "捲動速度",
+  shift_scrollspeed = "加速捲動速度",
+  zoom_speed = "縮放速度",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "將捲動速度設為1（最慢）到10（最快）。預設為2。",
+  shift_scrollspeed = "設定在捲動時按下 Shift 鍵時的捲動速度。1（最慢）到10（最快）。預設：4。",
+  zoom_speed = "將相機變焦速度設為10（最慢）到1000（最快）。預設值為80。",
+  apply_scrollspeed = "應用輸入的捲動速度",
+  cancel_scrollspeed = "返回而不更改捲動速度",
+  apply_shift_scrollspeed = "應用輸入的加速捲動速度",
+  cancel_shift_scrollspeed = "返回而不更改加速捲動速度",
+  apply_zoomspeed = "應用輸入的縮放速度",
+  cancel_zoomspeed = "返回而不更改縮放速度",
 }
 
 customise_window = {

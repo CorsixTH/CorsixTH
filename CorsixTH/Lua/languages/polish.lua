@@ -2254,6 +2254,7 @@ tooltip.folders_window = {
   reset_to_default = "Przywróć domyślną ścieżkę dla folderu ( %1% )",
   back  = "Zamknij to menu i wróć do ustawień",
 }
+
 customise_window = {
   caption = "Własne ustawienia",
   option_on = "Wł",

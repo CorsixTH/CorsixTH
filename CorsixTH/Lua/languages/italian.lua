@@ -366,9 +366,6 @@ options_window = {
   width = "Largh",
   option_enabled = "Attiv.",
   height = "Alt",
-  scrollspeed = "Vel. scorrimento",
-  shift_scrollspeed = "Vel. scorrimento veloce",
-  zoom_speed = "Velocità zoom",
   check_for_updates = "Cerca aggiornamenti",
   customise = "Personalizza",
   folder = "Cartelle",
@@ -401,22 +398,11 @@ tooltip.options_window = {
   language = "La lingua in cui verrà mostrato il testo",
   select_language = "Seleziona la lingua del gioco",
   language_dropdown_item = "Seleziona %s come lingua",
-  scrollspeed = "Imposta la velocità di scorrimento con il mouse tra 1 (più bassa) e 10 (più veloce). Il default è 2.",
-  shift_scrollspeed = "Imposta la velocità di scorrimento con il tasto MAIUSC premuto tra 1 (più bassa) e 10 (più veloce). Il default è 4.",
   back = "Chiudi la finestra delle opzioni",
-  scrollspeed = "Imposta la velocità di scorrimento tra 1 (minimo) e 10 (massimo). Il valore predefinito è 2.",
-  shift_scrollspeed = "Imposta la velocità di scorrimento mentre si tiene premuto il tasto Maiusc. Da 1 (minimo) a 10 (massimo). Il valore predefinito è 4.",
   hotkey = "Cambia le scorciatoie da tastiera.",
-  apply_shift_scrollspeed = "Applica la velocità di scorrimento dello spostamento selezionata.",
   right_mouse_scrolling = "Attiva/disattiva il pulsante del mouse utilizzato per scorrere la mappa",
-  cancel_scrollspeed = "Esci senza cambiare la velocità di scorrimento.",
-  zoom_speed = "Imposta la velocità di zoom della telecamera da 10 (minimo) a 1000 (massimo). Il valore predefinito è 80.",
   language_dropdown_no_font = "Seleziona un font nelle impostazioni delle cartelle per abilitare questa lingua",
-  cancel_zoomspeed = "Esci senza cambiare la velocità di zoom",
-  cancel_shift_scrollspeed = "Esci senza cambiare la velocità di scorrimento con Maiusc.",
   check_for_updates = "Imposta se il gioco deve cercare aggiornamenti all'avvio.",
-  apply_zoomspeed = "Applica la velocità di zoom selezionata.",
-  apply_scrollspeed = "Applica la velocità di scorrimento selezionata.",
 }
 
 audio_window = {
@@ -429,6 +415,26 @@ tooltip.audio_window = {
   audio_button = "Attiva o disattiva tutti i suoni del gioco",
   audio_toggle = "Attiva o Disattiva Audio",
   jukebox = "Apri il Jukebox per controllare la musica",
+}
+
+accessibility_window = {
+  scrollspeed = "Vel. scorrimento",
+  shift_scrollspeed = "Vel. scorrimento veloce",
+  zoom_speed = "Velocità zoom",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "Imposta la velocità di scorrimento con il mouse tra 1 (più bassa) e 10 (più veloce). Il default è 2.",
+  shift_scrollspeed = "Imposta la velocità di scorrimento con il tasto MAIUSC premuto tra 1 (più bassa) e 10 (più veloce). Il default è 4.",
+  scrollspeed = "Imposta la velocità di scorrimento tra 1 (minimo) e 10 (massimo). Il valore predefinito è 2.",
+  shift_scrollspeed = "Imposta la velocità di scorrimento mentre si tiene premuto il tasto Maiusc. Da 1 (minimo) a 10 (massimo). Il valore predefinito è 4.",
+  apply_shift_scrollspeed = "Applica la velocità di scorrimento dello spostamento selezionata.",
+  cancel_scrollspeed = "Esci senza cambiare la velocità di scorrimento.",
+  zoom_speed = "Imposta la velocità di zoom della telecamera da 10 (minimo) a 1000 (massimo). Il valore predefinito è 80.",
+  cancel_zoomspeed = "Esci senza cambiare la velocità di zoom",
+  cancel_shift_scrollspeed = "Esci senza cambiare la velocità di scorrimento con Maiusc.",
+  apply_zoomspeed = "Applica la velocità di zoom selezionata.",
+  apply_scrollspeed = "Applica la velocità di scorrimento selezionata.",
 }
 
 customise_window = {

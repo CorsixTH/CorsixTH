@@ -3377,9 +3377,6 @@ options_window = {
   apply = "应用",
   cancel = "取消",
   back = "返回",
-  scrollspeed = "滚动速度",
-  shift_scrollspeed = "加速滚动速度",
-  zoom_speed = "缩放速度",
   hotkey = "快捷键",
   check_for_updates = "自动检查更新",
 }
@@ -3400,15 +3397,6 @@ tooltip.options_window = {
   select_language = "选择语言",
   language_dropdown_item = "选择 %s 为语言",
   back = "关闭设置窗口",
-  scrollspeed = "将滚动速度设为1（最慢）到10（最快）。默认为2。",
-  shift_scrollspeed = "设定在滚动时按下 Shift 键时的滚动速度。1（最慢）到10（最快）。默认：4。",
-  zoom_speed = "将相机变焦速度设为10（最慢）到1000（最快）。默认值为80。",
-  apply_scrollspeed = "应用输入的滚动速度。",
-  cancel_scrollspeed = "返回而不更改滚动速度。",
-  apply_shift_scrollspeed = "应用输入的加速滚动速度。",
-  cancel_shift_scrollspeed = "返回而不更改加速滚动速度。",
-  apply_zoomspeed = "应用输入的缩放速度。",
-  cancel_zoomspeed = "返回而不更改缩放速度。",
   hotkey = "更改键盘热键。",
   check_for_updates = "游戏启动时自动检查更新",
 }
@@ -3421,6 +3409,24 @@ audio_window = {
 tooltip.audio_window = {
   audio_button = "开关所有的声音",
   audio_toggle = "切换开关",
+}
+
+accessibility_window = {
+  scrollspeed = "滚动速度",
+  shift_scrollspeed = "加速滚动速度",
+  zoom_speed = "缩放速度",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "将滚动速度设为1（最慢）到10（最快）。默认为2。",
+  shift_scrollspeed = "设定在滚动时按下 Shift 键时的滚动速度。1（最慢）到10（最快）。默认：4。",
+  zoom_speed = "将相机变焦速度设为10（最慢）到1000（最快）。默认值为80。",
+  apply_scrollspeed = "应用输入的滚动速度。",
+  cancel_scrollspeed = "返回而不更改滚动速度。",
+  apply_shift_scrollspeed = "应用输入的加速滚动速度。",
+  cancel_shift_scrollspeed = "返回而不更改加速滚动速度。",
+  apply_zoomspeed = "应用输入的缩放速度。",
+  cancel_zoomspeed = "返回而不更改缩放速度。",
 }
 
 customise_window = {
@@ -3441,6 +3447,7 @@ tooltip.customise_window = {
   movies = "全局 CG 控制，这将允许您禁用所有 CG",
   intro = "关闭或打开启动 CG，如果您希望每次启动 CorsixTH 时都播放启动 CG，则必须打开全局 CG",
   paused = "在主题医院中，只有在游戏暂停的情况下，才允许玩家使用顶部菜单，这也是 CorsixTH 的默认设置。但是将此选项打开，游戏暂停时可以进行所有操作",
+  volume = "如果减小音量按钮同时打开了治疗手册，请将打开治疗手册的快捷键更改为 Shift + C",
   aliens = "因为缺少合适的动画，默认外星人 DNA 病人只会来自紧急事件。要允许紧急事件外出现外星人 DNA 病人，请关闭此选项",
   fractured_bones = "由于动画效果不佳，默认不会有女性骨折患者。要允许女性骨折患者就诊，请关闭此功能",
   average_contents = "如果您想让游戏记住在建造房间时通常会添加哪些其他对象，请启用此选项。",

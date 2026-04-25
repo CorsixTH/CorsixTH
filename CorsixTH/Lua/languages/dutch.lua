@@ -321,9 +321,6 @@ options_window = {
   right_mouse_scrolling = "Muis Scrollen",
   right_mouse_scrolling_option_middle = "Middelste Knop",
   right_mouse_scrolling_option_right = "Rechterknop",
-  scrollspeed = "Scrollsnelheid",
-  shift_scrollspeed = "Shift Scrollsnelheid",
-  zoom_speed = "Zoomsnelheid",
 }
 audio_window = {
   audio = "Audio algemeen",
@@ -361,6 +358,12 @@ folders_window = {
   screenshots_label = "Screenshots",
   music_location = "Selecteer de map die je wilt gebruiken voor muziek.",
   data_label = "TH Data",
+}
+accessibility_window = {
+  volume = "Volume lager koppeling",
+  scrollspeed = "Scrollsnelheid",
+  shift_scrollspeed = "Shift Scrollsnelheid",
+  zoom_speed = "Zoomsnelheid",
 }
 customise_window = {
   movies = "Video algemeen",
@@ -1316,10 +1319,7 @@ tooltip = {
     hotkey = "Pas sneltoetsen aan.",
     language_dropdown_no_font = "Selecteer een lettertype in de spelinstellingen om deze taal in te schakelen",
     right_mouse_scrolling = "Wissel de muisknop die wordt gebruikt om door de kaart te scrollen",
-    scrollspeed = "Stel de scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 2",
-    shift_scrollspeed = "Stel de shift-scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 4",
-    zoom_speed = "Stel de zoomsnelheid van de camera in van 10 (langzaamst) en 1000 (snelst). De standaard waarde is 80",
-  },
+    },
   audio_window = {
     audio_button = "Zet alle spelgeluiden aan of uit.",
     audio_toggle = "Zet aan of uit.",
@@ -1328,6 +1328,11 @@ tooltip = {
   research_policy = {
     research_progress = "Voortgang tot de volgende ontdekking in deze categorie: %1%/%2%",
     no_research = "Naar deze categorie wordt momenteel geen onderzoek gedaan",
+  },
+  accessibility_window = {
+    scrollspeed = "Stel de scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 2",
+    shift_scrollspeed = "Stel de shift-scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 4",
+    zoom_speed = "Stel de zoomsnelheid van de camera in van 10 (langzaamst) en 1000 (snelst). De standaard waarde is 80",
   },
   customise_window = {
     intro = "Zet de intro video aan of uit. Zet deze instelling aan om de intro video te tonen als CorsixTH wordt gestart.",

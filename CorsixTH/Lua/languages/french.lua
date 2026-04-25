@@ -865,8 +865,6 @@ options_window = {
   option_off = "Désactiver",
   option_on = "Activer",
   resolution = "Résolution",
-  scrollspeed = "Vitesse de défilement",
-  shift_scrollspeed = "Vitesse de défilement avec Maj",
   width = "Largeur",
   zoom_speed = "Vitesse de zoom",
   right_mouse_scrolling = "Défilement Souris",
@@ -890,18 +888,8 @@ tooltip.options_window = {
   select_language = "Sélectionner la langue du jeu",
   folder_button = "Dossier des paramètres",
   customise_button = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
-
-  apply_shift_scrollspeed = "Appliquer la vitesse de défilement en mode Maj.",
-  shift_scrollspeed = "Définir la vitesse de défilement lorsque la touche Maj est enfoncée. De 1 (la plus lente) à 10 (la plus rapide). La valeur par  défaut est 4.",
   hotkey = "Modifier les touches de raccourci du clavier.",
   check_for_updates = "Choisir si le jeu doit rechercher des mises à jour au démarrage.",
-  zoom_speed = "Définir la vitesse de zoom de la caméra de 10 (la plus lente) à 1000 (la plus rapide). La valeur par défaut est 80.",
-  cancel_zoomspeed = "Revenir sans changer la vitesse de zoom.",
-  apply_zoomspeed = "Appliquer la vitesse de zoom choisie.",
-  cancel_scrollspeed = "Revenir sans changer la vitesse de défilement.",
-  cancel_shift_scrollspeed = "Revenir sans changer la vitesse de défilement de la touche Maj.",
-  scrollspeed = "Réglez la vitesse de défilement de 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 2.",
-  apply_scrollspeed = "Appliquer la vitesse de défilement entrée.",
   capture_mouse = "Cliquez pour activer la capture du curseur dans la fenêtre du jeu.",
   language_dropdown_no_font = "Sélectionnez une police d'écriture dans les paramètres pour activer ce langage",
   right_mouse_scrolling = "Activer le bouton qui est utilisé pour faire défiler la carte",
@@ -919,6 +907,23 @@ tooltip.audio_window = {
   jukebox = "Ouvrir le Jukebox pour changer la musique"
 }
 
+accessibility_window = {
+  scrollspeed = "Vitesse de défilement",
+  shift_scrollspeed = "Vitesse de défilement avec Maj",
+  zoom_speed = "Zoom Speed",
+}
+
+tooltip.accessibility_window = {
+  apply_shift_scrollspeed = "Appliquer la vitesse de défilement en mode Maj.",
+  shift_scrollspeed = "Définir la vitesse de défilement lorsque la touche Maj est enfoncée. De 1 (la plus lente) à 10 (la plus rapide). La valeur par  défaut est 4.",
+  zoom_speed = "Définir la vitesse de zoom de la caméra de 10 (la plus lente) à 1000 (la plus rapide). La valeur par défaut est 80.",
+  cancel_zoomspeed = "Revenir sans changer la vitesse de zoom.",
+  apply_zoomspeed = "Appliquer la vitesse de zoom choisie.",
+  cancel_scrollspeed = "Revenir sans changer la vitesse de défilement.",
+  cancel_shift_scrollspeed = "Revenir sans changer la vitesse de défilement de la touche Maj.",
+  scrollspeed = "Réglez la vitesse de défilement de 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 2.",
+  apply_scrollspeed = "Appliquer la vitesse de défilement entrée.",
+}
 customise_window = {
   caption = "Paramètres Supplémentaires",
   option_on = "Activer",

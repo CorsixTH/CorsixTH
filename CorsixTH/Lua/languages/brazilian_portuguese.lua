@@ -462,9 +462,6 @@ options_window = {
   apply = "Aplicar",
   cancel = "Cancelar",
   back = "Voltar",
-  scrollspeed = "Veloc. de Rolagem",
-  shift_scrollspeed = "Veloc. Rolagem Acel.",
-  zoom_speed = "Veloc. do Zoom",
   hotkey = "Atalhos",
   check_for_updates = "Verificar Atualizaçöes",
 }
@@ -487,15 +484,6 @@ tooltip.options_window = {
   language_dropdown_item = "Selecionar %s como idioma",
   language_dropdown_no_font = "Selecione uma fonte nas configuraçöes de pastas para ativar este idioma",
   back = "Fechar a janela de Configuraçöes",
-  scrollspeed = "Defina a velocidade de rolagem entre 1 (mais lenta) até 10 (mais rápida). O padräo é 2.",
-  shift_scrollspeed = "Defina a velocidade da rolagem enquanto a tecla Shift é pressionada. 1 (mais lento) até 10 (mais rápido). O padräo é 4.",
-  zoom_speed = "Defina a velocidade da aproximaçäo da câmera de 10 (mais lenta) até 1000 (mais rápida). O padräo é 80.",
-  apply_scrollspeed = "Aplique a velocidade de rolagem inserida.",
-  cancel_scrollspeed = "Retornar sem alterar a velocidade de rolagem.",
-  apply_shift_scrollspeed = "Aplique a velocidade de rolagem de acelerada inserida.",
-  cancel_shift_scrollspeed = "Retorne sem alterar a velocidade de rolagem acelerada.",
-  apply_zoomspeed = "Aplique a velocidade de aproximaçäo inserida.",
-  cancel_zoomspeed = "Retorne sem alterar a velocidade de aproximaçäo.",
   hotkey = "Altere as teclas de atalho do teclado.",
   check_for_updates = "Define se o jogo deve procurar atualizaçöes ao iniciar.",
 }
@@ -510,6 +498,24 @@ tooltip.audio_window = {
   audio_button = "Ligar ou desligar todo o áudio do jogo",
   audio_toggle = "Ativar ou desativar",
   jukebox = "Abrir a Jukebox para controlar a música",
+}
+
+accessibility_window = {
+  scrollspeed = "Veloc. de Rolagem",
+  shift_scrollspeed = "Veloc. Rolagem Acel.",
+  zoom_speed = "Veloc. do Zoom",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "Defina a velocidade de rolagem entre 1 (mais lenta) até 10 (mais rápida). O padräo é 2.",
+  shift_scrollspeed = "Defina a velocidade da rolagem enquanto a tecla Shift é pressionada. 1 (mais lento) até 10 (mais rápido). O padräo é 4.",
+  zoom_speed = "Defina a velocidade da aproximaçäo da câmera de 10 (mais lenta) até 1000 (mais rápida). O padräo é 80.",
+  apply_scrollspeed = "Aplique a velocidade de rolagem inserida.",
+  cancel_scrollspeed = "Retornar sem alterar a velocidade de rolagem.",
+  apply_shift_scrollspeed = "Aplique a velocidade de rolagem de acelerada inserida.",
+  cancel_shift_scrollspeed = "Retorne sem alterar a velocidade de rolagem acelerada.",
+  apply_zoomspeed = "Aplique a velocidade de aproximaçäo inserida.",
+  cancel_zoomspeed = "Retorne sem alterar a velocidade de aproximaçäo.",
 }
 
 customise_window = {

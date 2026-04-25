@@ -576,6 +576,7 @@ tooltip.audio_window = {
 
 accessibility_window = {
   caption = "Accessibility Settings",
+  volume_opens_casebook = "Volume Down Hotkey",
   enable_screen_shake = "Screen Shake",
   enable_announcer_subtitles = "Announcer Subtitles",
   scroll_speed = "Scroll Speed",
@@ -586,6 +587,7 @@ accessibility_window = {
 tooltip.accessibility_window = {
   enable_screen_shake = "Earthquakes will cause the entire screen to shake. If you would prefer the screen to remain still, turn this option off",
   enable_announcer_subtitles = "If you would like the game to display subtitles for your hospital's announcements, turn this option on",
+  volume_opens_casebook = "If the volume down button causes the Casebook to open, turn this option on to change the hotkey for the Casebook to Shift + C",
   scroll_speed = "Set the scroll speed between 1 (slowest) to 10 (fastest). The default is 2.",
   shift_scroll_speed = "Set the speed of scrolling while the shift key is pressed. 1 (slowest) to 10 (fastest). The default is 4.",
   zoom_speed = "Set the camera zoom speed from 10 (slowest) to 1000 (fastest). The default is 80.",

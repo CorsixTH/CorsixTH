@@ -133,6 +133,24 @@ tooltip.folders_window = {
   back  = "メニューを閉じて設定メニューに戻ります",
 }
 
+accessibility_window = {
+  scrollspeed = "スクロール速度",
+  shift_scrollspeed = "スクロール速度 (+Shift)",
+  zoom_speed = "ズーム速度",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "スクロール速度を 1(遅い) から 10(速い) の間で設定します。デフォルトは2です。",
+  shift_scrollspeed = "Shiftキーを押した時のスクロール速度を 1(遅い) から 10(速い) の間で設定します。 デフォルトは4です。",
+  zoom_speed = "カメラのズーム速度を 10(遅い) から 1000(速い) の間で設定します。 デフォルトは80です。",
+  apply_scrollspeed = "入力したスクロール速度で決定する",
+  cancel_scrollspeed = "スクロール速度を変更せずに戻る",
+  apply_shift_scrollspeed = "入力した+Shiftスクロール速度で決定する",
+  cancel_shift_scrollspeed = "+Shiftスクロール速度を変更せずに戻る",
+  apply_zoomspeed = "入力したズーム速度で決定する",
+  cancel_zoomspeed = "ズーム速度を変更せずに戻る",
+}
+
 customise_window = {
   caption = "カスタム設定",
   option_on = "オン",
@@ -180,9 +198,6 @@ options_window = {
   apply = "決定",
   cancel = "キャンセル",
   back = "戻る",
-  scrollspeed = "スクロール速度",
-  shift_scrollspeed = "スクロール速度 (+Shift)",
-  zoom_speed = "ズーム速度",
   hotkey = "ホットキーの設定",
   change_resolution = "解像度の変更",
 }
@@ -205,15 +220,6 @@ tooltip.options_window = {
   language_dropdown_item = " %s を選択する",
   language_dropdown_no_font = "この言語を選択するためにはフォルダの設定からフォントを選択してください",
   back = "ウインドウを閉じて戻ります",
-  scrollspeed = "スクロール速度を 1(遅い) から 10(速い) の間で設定します。デフォルトは2です。",
-  shift_scrollspeed = "Shiftキーを押した時のスクロール速度を 1(遅い) から 10(速い) の間で設定します。 デフォルトは4です。",
-  zoom_speed = "カメラのズーム速度を 10(遅い) から 1000(速い) の間で設定します。 デフォルトは80です。",
-  apply_scrollspeed = "入力したスクロール速度で決定する",
-  cancel_scrollspeed = "スクロール速度を変更せずに戻る",
-  apply_shift_scrollspeed = "入力した+Shiftスクロール速度で決定する",
-  cancel_shift_scrollspeed = "+Shiftスクロール速度を変更せずに戻る",
-  apply_zoomspeed = "入力したズーム速度で決定する",
-  cancel_zoomspeed = "ズーム速度を変更せずに戻る",
   hotkey = "ホットキーの設定を変更する",
   check_for_updates = "アップデートがないか確認する",
 }

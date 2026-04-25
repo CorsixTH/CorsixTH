@@ -987,9 +987,6 @@ options_window = {
   apply = "Aplicar",
   cancel = "Cancelar",
   back = "Atrás",
-  scrollspeed = "Vel. de Desplazamiento",
-  shift_scrollspeed = "Vel. de Despl. (Shift)",
-  zoom_speed = "Vel. de Acercamiento",
   hotkey = "Atajos de Teclado",
   check_for_updates = "Buscar Actualizaciones",
 }
@@ -1012,15 +1009,6 @@ tooltip.options_window = {
   language_dropdown_item = "Seleccionar el idioma %s.",
   language_dropdown_no_font = "Selecciona una fuente en las opciones de carpeta para habilitar este lenguaje.",
   back = "Cierra la ventana de opciones.",
-  scrollspeed = "Establece la velocidad de desplazamiento de 1 (más lenta) a 10 (más rápida). El valor por defecto es 2.",
-  shift_scrollspeed = "Establece la velocidad de desplazamiento (cuando la tecla Shift se encuentra presionada) de 1 (más lenta) a 10 (más rápida). El valor por defecto es 4.",
-  zoom_speed = "Establece la velocidad de acercamiento de la cámara de 10 (más lenta) a 1000 (más rápida). El valor por defecto 80.",
-  apply_scrollspeed = "Aplica la velocidad de desplazamiento ingresada.",
-  cancel_scrollspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
-  apply_shift_scrollspeed = "Aplica la velocidad de desplazamiento (tecla Shift) ingresada.",
-  cancel_shift_scrollspeed = "Vuelve sin cambiar la velocidad de desplazamiento (tecla Shift).",
-  apply_zoomspeed = "Aplica la velocidad de acercamiento ingresada.",
-  cancel_zoomspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
   hotkey = "Cambia las teclas de acceso rápido.",
   check_for_updates = "Establece si el juego debería buscar actualizaciones al iniciar.",
 }
@@ -1035,6 +1023,24 @@ tooltip.audio_window = {
   audio_button = "Activa o desactiva todos los sonidos del juego.",
   audio_toggle = "Activa o desactiva el sonido.",
   jukebox = "Abre el Reproductor para controlar la música",
+}
+
+accessibility_window = {
+  scrollspeed = "Vel. de Desplazamiento",
+  shift_scrollspeed = "Vel. de Despl. (Shift)",
+  zoom_speed = "Vel. de Acercamiento",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "Establece la velocidad de desplazamiento de 1 (más lenta) a 10 (más rápida). El valor por defecto es 2.",
+  shift_scrollspeed = "Establece la velocidad de desplazamiento (cuando la tecla Shift se encuentra presionada) de 1 (más lenta) a 10 (más rápida). El valor por defecto es 4.",
+  zoom_speed = "Establece la velocidad de acercamiento de la cámara de 10 (más lenta) a 1000 (más rápida). El valor por defecto 80.",
+  apply_scrollspeed = "Aplica la velocidad de desplazamiento ingresada.",
+  cancel_scrollspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
+  apply_shift_scrollspeed = "Aplica la velocidad de desplazamiento (tecla Shift) ingresada.",
+  cancel_shift_scrollspeed = "Vuelve sin cambiar la velocidad de desplazamiento (tecla Shift).",
+  apply_zoomspeed = "Aplica la velocidad de acercamiento ingresada.",
+  cancel_zoomspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
 }
 
 customise_window = {
@@ -1058,6 +1064,7 @@ tooltip.customise_window = {
   movies = "Control global de videos, permite desactivar todos los videos.",
   intro = "Activa o desactiva el video de introducción. Necesitas activar el control global de videos si quieres ver la introducción cada vez que inicies CorsixTH.",
   paused = "En Theme Hospital el jugador solo podía utilizar el menú superior si la partida estaba en pausa. CorsixTH funciona así de forma predeterminada, pero al activar esta opción se puede realizar cualquier acción mientras el juego esté en pausa.",
+  volume = "Si la tecla de bajar volumen abre también el botiquín, utiliza esta opción para cambiar el acceso directo a Mayúsculas + C.",
   aliens = "Debido a la falta de animaciones decentes disponibles, hemos hecho que los pacientes con ADN alienígena solo aparezcan en una emergencia. Para permitir que los pacientes con ADN alienígena puedan visitar tu hospital, desactiva esta opción.",
   fractured_bones = "Debido a una animación deficiente, hemos hecho que no existan pacientes con Fracturas óseas femeninas. Para permitir que las pacientes con Fracturas óseas visiten tu hospital, desactiva esta opción.",
   average_contents = "Activa esta opción si quieres que el juego recuerde los objetos adicionales que sueles añadir cuando construyes habitaciones.",
