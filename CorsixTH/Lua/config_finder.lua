@@ -147,7 +147,6 @@ local function new_config_defaults()
     play_intro = true,
     play_demo = true,
     allow_user_actions_while_paused = false,
-    volume_opens_casebook = false,
     alien_dna_only_by_emergency = true,
     alien_dna_must_stand = true,
     alien_dna_can_knock_on_doors = false,
@@ -240,7 +239,6 @@ local function new_hotkeys_defaults()
     ingame_panel_map_alt = "t",
     ingame_panel_research_alt = "r",
     ingame_panel_casebook_alt = "c",
-    ingame_panel_casebook_alt02 = {"shift", "c"},
     ingame_panel_buildRoom = "f",
     ingame_panel_furnishCorridor = "g",
     ingame_panel_editRoom = "v",
@@ -464,16 +462,6 @@ param(config_values, 'play_demo') .. [=[
 -- setting this to true everything is allowed while the game is paused.
 --]=] .. '\n' ..
 param(config_values, 'allow_user_actions_while_paused') .. [=[
-
--------------------------------------------------------------------------------
--- VOLUME CONTROL IS OPENING THE DRUG CASEBOOK?
-
--- If your keyboard volume control opens the Drug Casebook at the same time
--- then change this to true. From then on you will have to use Shift + C to open
--- the Casebook and volume down will not open it.
--- For example for shift + C to open casebook change the setting below to = true
---]=] .. '\n' ..
-param(config_values, 'volume_opens_casebook') .. [=[
 
 -------------------------------------------------------------------------------
 -- To allow patients with Alien DNA to visit your hospital other than by an
@@ -832,7 +820,6 @@ param(hotkeys_values, 'ingame_panel_machineMenu') ..
 param(hotkeys_values, 'ingame_panel_map_alt') ..
 param(hotkeys_values, 'ingame_panel_research_alt') ..
 param(hotkeys_values, 'ingame_panel_casebook_alt') ..
-param(hotkeys_values, 'ingame_panel_casebook_alt02') ..
 param(hotkeys_values, 'ingame_panel_buildRoom') ..
 param(hotkeys_values, 'ingame_panel_furnishCorridor') ..
 param(hotkeys_values, 'ingame_panel_editRoom') ..
