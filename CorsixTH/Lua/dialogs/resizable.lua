@@ -269,25 +269,14 @@ function UIResizable:buildDialog()
     self.labels[name], self.buttons[name] = self:createOptionsElement(
       _S.accessibility_window[name], _S.tooltip.accessibility_window[name],
       current_value, _S.tooltip.accessibility_window[name],
-      { bg = col.setting, active = col.setting_active },
-      entry.func or self.onButtonClick(name, current_value), (not entry.raised) and self.app.config[name])
+      { bg = col.setting, active = entry.raised and col.setting_active },
+      entry.func, (not entry.raised) and self.app.config[name])
   end
 
   -- Back
   local back_button_y_pos = self:_getOptionYPos()
   self:addBevelPanel(20, back_button_y_pos, 280, 40, col.bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
-end
-
-function UIResizable:onButtonClick(setting, value)
-  return function()
-    local app = TheApp
-    app.config[setting] = not app.config[setting]
-    self.buttons[setting]:toggle()
-    self.labels[setting]:setLabel(get_button_label(setting, value))
-    app:saveConfig()
-    self:reload()
-  end
 end
 
 -- Create our setting items. This create a caption/label for the setting

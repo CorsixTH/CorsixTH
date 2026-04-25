@@ -43,7 +43,7 @@ local col_caption = {
 }
 
 function UICustomise:UICustomise(ui, mode)
-  self:UIResizable(ui, 340, 375, col_bg)
+  self:UIResizable(ui, 340, 300, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -124,23 +124,8 @@ function UICustomise:UICustomise(ui, mode)
   self.machine_menu_button = self.machine_menu_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonMachine_menu)
     :setToggleState(app.config.machine_menu_button):setTooltip(_S.tooltip.customise_window.machine_menu_button)
 
-  -- Allow user to disable screen shake during earthquakes
-  self:addBevelPanel(15, 240, 165, 20, col_shadow, col_bg, col_bg)
-    :setLabel(_S.customise_window.enable_screen_shake):setTooltip(_S.tooltip.customise_window.enable_screen_shake).lowered = true
-  self.screen_shake_panel =
-    self:addBevelPanel(185, 240, 140, 20, col_bg):setLabel(app.config.enable_screen_shake and _S.customise_window.option_on or _S.customise_window.option_off)
-  self.screen_shake_button = self.screen_shake_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonScreen_shake)
-    :setToggleState(app.config.enable_screen_shake):setTooltip(_S.tooltip.customise_window.enable_screen_shake)
-
-  self:addBevelPanel(15, 265, 165, 20, col_shadow, col_bg, col_bg)
-    :setLabel(_S.customise_window.enable_announcer_subtitles):setTooltip(_S.tooltip.customise_window.enable_announcer_subtitles).lowered = true
-  self.announcer_subtitles_panel =
-    self:addBevelPanel(185, 265, 140, 20, col_bg):setLabel(app.config.enable_announcer_subtitles and _S.customise_window.option_on or _S.customise_window.option_off)
-  self.announcer_subtitles_button = self.announcer_subtitles_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonAnnouncer_subtitles)
-    :setToggleState(app.config.enable_announcer_subtitles):setTooltip(_S.tooltip.customise_window.enable_announcer_subtitles)
-
-    -- "Back" button
-  self:addBevelPanel(15, 320, 310, 40, col_bg):setLabel(_S.customise_window.back)
+   -- "Back" button
+  self:addBevelPanel(15, 245, 310, 40, col_bg):setLabel(_S.customise_window.back)
     :makeButton(0, 0, 310, 40, nil, self.buttonBack):setTooltip(_S.tooltip.customise_window.back)
 end
 
@@ -172,15 +157,6 @@ function UICustomise:buttonPaused()
   app.config.allow_user_actions_while_paused = not app.config.allow_user_actions_while_paused
   self.paused_button:toggle()
   self.paused_panel:setLabel(app.config.allow_user_actions_while_paused and _S.customise_window.option_on or _S.customise_window.option_off)
-  self:reload()
-  app:saveConfig()
-end
-
-function UICustomise:buttonVolume()
-  local app = self.ui.app
-  app.config.volume_opens_casebook = not app.config.volume_opens_casebook
-  self.volume_button:toggle()
-  self.volume_panel:setLabel(app.config.volume_opens_casebook and _S.customise_window.option_on or _S.customise_window.option_off)
   self:reload()
   app:saveConfig()
 end
@@ -232,24 +208,6 @@ function UICustomise:buttonMachine_menu()
   app.config.machine_menu_button = not app.config.machine_menu_button
   self.destroyed_rooms_button:toggle()
   self.destroyed_rooms_panel:setLabel(app.config.machine_menu_button and _S.customise_window.option_on or _S.customise_window.option_off)
-  app:saveConfig()
-  self:reload()
-end
-
-function UICustomise:buttonScreen_shake()
-  local app = self.ui.app
-  app.config.enable_screen_shake = not app.config.enable_screen_shake
-  self.screen_shake_button:toggle()
-  self.screen_shake_panel:setLabel(app.config.enable_screen_shake and _S.customise_window.option_on or _S.customise_window.option_off)
-  app:saveConfig()
-  self:reload()
-end
-
-function UICustomise:buttonAnnouncer_subtitles()
-  local app = self.ui.app
-  app.config.enable_announcer_subtitles = not app.config.enable_announcer_subtitles
-  self.announcer_subtitles_button:toggle()
-  self.screen_shake_panel:setLabel(app.config.enable_announcer_subtitles and _S.customise_window.option_on or _S.customise_window.option_off)
   app:saveConfig()
   self:reload()
 end
