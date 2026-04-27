@@ -487,6 +487,36 @@ class animation_base : public drawable {
   ::layers layers{};
 };
 
+class animation;
+
+class animation_proxy : public animation_base {
+ public:
+  animation_proxy(animation* const parent_anim_value,
+                  const xy_pair& rel_pos_value,
+                  int8_t crop_base_value, int8_t crop_width_value);
+
+  xy_pair get_tile(const xy_pair& anim_pos) const {
+    return {anim_pos.x - rel_to_anim.x, anim_pos.y - rel_to_anim.y};
+  }
+
+  void draw_fn(render_target* canvas, const xy_pair& draw_pos) override;
+  bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) override;
+  bool is_multiple_frame_animation_fn() override;
+
+ private:
+  //! Main animation object that performs the actual rendering.
+  animation* const parent_anim;
+
+  //! Relative position from the proxy to the parent animation in tiles.
+  const xy_pair rel_to_anim;
+
+  //! Left edge of the cropping area in number of half tiles relative to the
+  //! left edge of the tile containing the proxy object.
+  const int8_t crop_base;
+  //! Width of the cropping area in number of half tiles.
+  const int8_t crop_width;
+};
+
 //! The kind of animation.
 enum class animation_kind { primary_child, secondary_child, normal, morph };
 

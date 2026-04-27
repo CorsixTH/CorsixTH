@@ -1180,6 +1180,63 @@ bool are_flags_set(uint32_t val, uint32_t flags) {
 
 }  // namespace
 
+//! A proxy of an animation.
+//! Uses its parent animation object to draw the same frame, but has its own
+//! cropping and a different map tile.
+animation_proxy::animation_proxy(animation* const parent_anim_value,
+                                 const xy_pair& rel_pos_value,
+                                 int8_t crop_base_value,
+                                 int8_t crop_width_value)
+    : parent_anim(parent_anim_value),
+      rel_to_anim(rel_pos_value),
+      crop_base(crop_base_value),
+      crop_width(crop_width_value) {}
+
+void animation_proxy::draw_fn(render_target* canvas, const xy_pair& draw_pos) {
+  // The animation should be drawn as-if the draw request originated from the
+  // tile of the parent animation (so it draws everything at the exact same
+  // spot). The 'draw_pos' should thus be adjusted to point again at the tile
+  // of the parent animation tile.
+  int delta_tile_x = 32 * (rel_to_anim.x - rel_to_anim.y);
+  int delta_tile_y = 16 * (rel_to_anim.x + rel_to_anim.y);
+  xy_pair parent_pos = {draw_pos.x + delta_tile_x, draw_pos.y + delta_tile_y};
+
+  // The proxy cropping area should not move. Therefore, the left edge should
+  // be moved in the opposite direction. Note that 'crop_base' is in horizontal
+  // half-tiles.
+  int parent_base = crop_base - rel_to_anim.x + rel_to_anim.y;
+
+  parent_anim->internal_draw(canvas, parent_pos, parent_base, crop_width);
+}
+
+bool animation_proxy::hit_test_fn(const xy_pair& draw_pos,
+                                  const xy_pair& obj_pos) {
+  return parent_anim->hit_test_fn(draw_pos, obj_pos);
+}
+
+bool animation_proxy::is_multiple_frame_animation_fn() {
+  return parent_anim->is_multiple_frame_animation_fn();
+}
+
+//! An animation in the game.
+//!
+//! This class is attached to a map_tile, and renders the correct animation
+//! frame of its animation. This may include additional animations such as
+//! mood markers or child animations.
+//!
+//! For animations that cover more than one tile, drawing it entirely from a
+//! single tile in the map without glitches is often non-trivial to impossible.
+//! Often, other animations are nearby and there is overlap between them. The
+//! order of drawing then becomes critical. Rendering an entire animation from a
+//! single tile is not flexible enough to eliminate glitches in all cases.
+//! To address this problem, an animation can have cropping (thus allowing to
+//! draw only a part of the animation from a tile), and it can have animation
+//! proxies. The latter act the same as their parent animation, but they have
+//! their own cropping and are attached to a different map tile. The latter
+//! enables rendering a part of an animation at a different point in time while
+//! rendering the map. This gives more control on when a part of an animation
+//! is drawn relative to (other parts of) other animations, and allow avoiding
+//! graphical glitches much better.
 animation::animation() { patient_effect_offset = rand(); }
 
 void animation::draw(render_target* canvas, const xy_pair& draw_pos,
