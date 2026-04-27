@@ -1193,13 +1193,17 @@ void animation::draw(render_target* canvas, const xy_pair& draw_pos,
     if (pSounds) pSounds->play_at(sound_to_play, x, y, 0);
     sound_to_play = 0;
   }
+
   if (manager) {
     if (flags & thdf_crop) {
       if (crop_width <= 0) return;
+
+      // Clip the cropping area. The left edge is moved by -32 pixels to put
+      // the crop origin at the left edge of the tile.
       clip_rect rcNew;
       rcNew.y = 0;
       rcNew.h = canvas->get_height();
-      rcNew.x = x + (crop_base - 1) * 32;  // - 1 for relative to left edge.
+      rcNew.x = draw_pos.x + (crop_base - 1) * 32;
       rcNew.w = crop_width * 32;
       render_target::scoped_clip clip(canvas, &rcNew);
       manager->draw_frame(canvas, frame_index, layers, x, y, flags,
