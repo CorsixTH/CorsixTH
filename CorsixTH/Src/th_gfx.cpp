@@ -1234,6 +1234,14 @@ bool animation_proxy::is_multiple_frame_animation_fn() {
   return parent_anim->is_multiple_frame_animation_fn();
 }
 
+// animation_proxy::remove_from_tile:
+//
+// The "animation_proxy::remove_from_tile" method is not overridden because
+// nothing except the animation class knows that proxies exist.
+// As removal always happens through the animation class (rather than eg through
+// a map tile), calls to the "remove_from_tile" from other sources are not
+// expected.
+
 //! An animation in the game.
 //!
 //! This class is attached to a map_tile, and renders the correct animation
@@ -1665,6 +1673,11 @@ void animation::add_proxy(const xy_pair& rel_pos_value, int8_t crop_base_value,
   proxies.emplace_back(this, rel_pos_value, crop_base_value, crop_width_value);
 }
 
+void animation::remove_all_proxies() {
+  remove_from_tile();
+  proxies.clear();
+}
+
 bool animation::attach_to_map(const xy_pair& tile_pos, level_map* the_map,
                               int layer) {
   // Check if all needed tiles exist.
@@ -1683,6 +1696,14 @@ bool animation::attach_to_map(const xy_pair& tile_pos, level_map* the_map,
     proxy.attach_to_map(proxy.get_tile(tile_pos), the_map, layer);
   }
   return true;
+}
+
+//! Request to remove the animation, and thus also all proxies from the tiles.
+void animation::remove_from_tile() {
+  for (auto& p : proxies) {
+    p.remove_from_list();
+  }
+  remove_from_list();
 }
 
 void animation::set_parent(animation* parent_anim, bool use_primary) {

@@ -461,7 +461,7 @@ class animation_base : public drawable {
  public:
   animation_base();
 
-  void remove_from_tile();
+  virtual void remove_from_tile();
 
   //! Try to attach the animation to the map.
   //! The default implementation performs connecting to a single tile.
@@ -599,6 +599,8 @@ class animation : public animation_base {
   bool attach_to_map(const xy_pair& tile_pos, level_map* the_map, int layer)
                      override;
 
+  void remove_from_tile() override;
+
   link_list* get_previous() { return prev; }
   size_t get_animation() const { return animation_index; }
   bool get_primary_marker(int* pX, int* pY);
@@ -630,6 +632,8 @@ class animation : public animation_base {
 
   void add_proxy(const xy_pair& rel_pos_value, int8_t crop_base_value,
                  int8_t crop_width_value);
+  void remove_all_proxies();
+
   animation_manager* get_animation_manager() { return manager; }
 
  private:

@@ -653,6 +653,13 @@ int l_anim_add_proxy(lua_State* L) {
   return 1;
 }
 
+// removeAllProxies(anim) -> anim
+int l_anim_remove_all_proxies(lua_State* L) {
+  animation* anim = luaT_testuserdata<animation>(L);
+  anim->remove_all_proxies();
+
+  lua_settop(L, 1);
+}
 
 int l_srl_set_sheet(lua_State* L) {
   sprite_render_list* pSrl = luaT_testuserdata<sprite_render_list>(L);
@@ -773,6 +780,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
     lcb.add_function(l_anim_set_patient_effect, "setPatientEffect");
     lcb.add_function(l_anim_add_proxy, "addProxy");
+    lcb.add_function(l_anim_remove_all_proxies, "removeAllProxies");
   }
 
   // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]
