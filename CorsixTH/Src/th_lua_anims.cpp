@@ -314,16 +314,30 @@ int l_anim_get_frame(lua_State* L) {
   return 1;
 }
 
+// Anim:setCrop(base-column, opt-width) -> Anim
+// Default width is 2 half-tiles.
 int l_anim_set_crop(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
-  pAnimation->set_crop_column(static_cast<int>(luaL_checkinteger(L, 2)));
+
+  lua_Integer base = luaL_checkinteger(L, 2);
+  if (base < -128 || base > 127) {
+    luaL_argerror(L, 2, "Crop base column out of bounds");
+  }
+  lua_Integer width = lua_isnoneornil(L, 3) ? 2 : luaL_checkinteger(L, 3);
+  if (width < -128 || width > 127) {
+    luaL_argerror(L, 3, "Crop width out of bounds");
+  }
+  pAnimation->set_crop(static_cast<int8_t>(base), static_cast<int8_t>(width));
+
   lua_settop(L, 1);
   return 1;
 }
 
+// Anim:getCrop() -> base-column, width
 int l_anim_get_crop(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
-  lua_pushinteger(L, pAnimation->get_crop_column());
+  lua_pushinteger(L, pAnimation->get_crop_base());
+  lua_pushinteger(L, pAnimation->get_crop_width());
   return 1;
 }
 

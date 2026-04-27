@@ -548,7 +548,13 @@ class animation : public animation_base {
   bool get_primary_marker(int* pX, int* pY);
   bool get_secondary_marker(int* pX, int* pY);
   size_t get_frame() const { return frame_index; }
-  int get_crop_column() const { return crop_column; }
+
+  void set_crop(int8_t base, int8_t width) {
+    crop_base = base;
+    crop_width = width;
+  }
+  int8_t get_crop_base() const { return crop_base; }
+  int8_t get_crop_width() const { return crop_width; }
 
   void set_animation(animation_manager* mgr, size_t anim);
   void set_morph_target(animation* target, int duration = 1);
@@ -558,7 +564,6 @@ class animation : public animation_base {
     speed.x = x;
     speed.y = y;
   }
-  void set_crop_column(int column) { crop_column = column; }
 
   void persist(lua_persist_writer* writer) const;
   void depersist(lua_persist_reader* reader);
@@ -583,12 +588,17 @@ class animation : public animation_base {
   };
 
   size_t sound_to_play{};
-  int crop_column{};
   animation_kind anim_kind{animation_kind::normal};
   animation_effect patient_effect{animation_effect::none};
   //! Number of game_ticks to offset animation by so they aren't all
   //! running in sync.
   size_t patient_effect_offset;
+
+  //! Base at the left of the cropped area. In half-tiles relative to the left
+  //! edge of the animation tile.
+  int8_t crop_base{};
+  //! Width of the cropped area in half-tiles.
+  int8_t crop_width{2};
 };
 
 class sprite_render_list : public animation_base {

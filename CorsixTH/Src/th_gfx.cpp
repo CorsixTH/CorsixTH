@@ -1194,17 +1194,19 @@ void animation::draw(render_target* canvas, const xy_pair& draw_pos) {
   }
   if (manager) {
     if (flags & thdf_crop) {
+      if (crop_width <= 0) return;
       clip_rect rcNew;
       rcNew.y = 0;
       rcNew.h = canvas->get_height();
-      rcNew.x = x + (crop_column - 1) * 32;
-      rcNew.w = 64;
+      rcNew.x = x + (crop_base - 1) * 32;  // - 1 for relative to left edge.
+      rcNew.w = crop_width * 32;
       render_target::scoped_clip clip(canvas, &rcNew);
       manager->draw_frame(canvas, frame_index, layers, x, y, flags,
                           patient_effect, patient_effect_offset);
-    } else
+    } else {
       manager->draw_frame(canvas, frame_index, layers, x, y, flags,
                           patient_effect, patient_effect_offset);
+    }
   }
 }
 
@@ -1345,7 +1347,9 @@ void animation::persist(lua_persist_writer* writer) const {
   writer->write_int(static_cast<int>(patient_effect));
 
   if (flags & thdf_crop) {
-    writer->write_int(crop_column);
+    // XXX Write something to say there are 2 values to read now.
+    writer->write_int((int)crop_base);
+    writer->write_int((int)crop_width);
   }
 
   // Write the unioned fields
@@ -1421,12 +1425,25 @@ void animation::depersist(lua_persist_reader* reader) {
     if (iDummy >= 0) sound_to_play = (unsigned int)iDummy;
     if (!reader->read_int(iDummy)) break;
     patient_effect = static_cast<animation_effect>(iDummy);
+
+    // XXX Read something to know whether 1 or 2 values are to be expected.
     if (flags & thdf_crop) {
-      if (!reader->read_int(crop_column)) {
-        break;
-      }
+      if (!reader->read_int(iDummy)) break;
+      crop_base = static_cast<int8_t>(iDummy);
     } else {
-      crop_column = 0;
+      crop_base = 0;
+    }
+
+    if (flags & thdf_crop) {
+      // XXX  if (<<2-values-expected>>) {
+      //        if (!reader->read_int(iDummy)) break;
+      //        crop_width = static_cast<int8_t>(iDummy);
+      //      } else {
+      //        crop_width = 2; // Old version.
+      //      }
+      crop_width = 2;  // Good enough for testing.
+    } else {
+      crop_width = 2;
     }
 
     // Read the unioned fields
