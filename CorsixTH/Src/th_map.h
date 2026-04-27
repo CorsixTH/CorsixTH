@@ -288,6 +288,11 @@ class level_map {
   //! Get the map height (in tiles)
   inline int get_height() const { return height; }
 
+  //! Return whether the given tile is at the map.
+  bool is_on_map(int x, int y) const {
+    return x >= 0 && x < get_width() && y >= 0 && y < get_height();
+  }
+
   //! Get the number of plots of land in this map
   inline int get_parcel_count() const { return parcel_count - 1; }
 

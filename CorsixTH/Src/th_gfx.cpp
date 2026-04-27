@@ -1145,17 +1145,22 @@ void animation_base::remove_from_tile() {
 
 void animation_base::attach_to_tile(const xy_pair& tile_pos, map_tile* node,
                                     int layer) {
+  // Remove the animation from any tile that it may still be connected to, in
+  // order to avoid calls from unexpected tiles.
   remove_from_tile();
 
+  // Record drawing layer and tile for the animation base.
   this->set_drawing_layer(layer);
   this->set_tile(tile_pos);
 
+  // Find the correct spot in the drawing layers of the map tile to insert.
   link_list* pList = &node->entities;
   while (pList->next &&
          static_cast<drawable*>(pList->next)->get_drawing_layer() < layer) {
     pList = pList->next;
   }
 
+  // Insert the animation base at the found spot.
   prev = pList;
   if (pList->next != nullptr) {
     pList->next->prev = this;
@@ -1164,6 +1169,17 @@ void animation_base::attach_to_tile(const xy_pair& tile_pos, map_tile* node,
     next = nullptr;
   }
   pList->next = this;
+}
+
+bool animation_base::attach_to_map(const xy_pair& tile_pos, level_map* the_map,
+                                   int layer) {
+  map_tile* tile = the_map->get_tile(tile_pos.x, tile_pos.y);
+  if (tile) {
+    attach_to_tile(tile_pos, tile, layer);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 void animation_base::set_layer(int iLayer, int iId) {
@@ -1642,6 +1658,31 @@ void animation::tick() {
   } else {
     sound_to_play = pos->second.get_sound();
   }
+}
+
+void animation::add_proxy(const xy_pair& rel_pos_value, int8_t crop_base_value,
+                          int8_t crop_width_value) {
+  proxies.emplace_back(this, rel_pos_value, crop_base_value, crop_width_value);
+}
+
+bool animation::attach_to_map(const xy_pair& tile_pos, level_map* the_map,
+                              int layer) {
+  // Check if all needed tiles exist.
+  if (!the_map->is_on_map(tile_pos.x, tile_pos.y)) return false;
+
+  for (auto& p : proxies) {
+    xy_pair proxy_pos = p.get_tile(tile_pos);
+    if (!the_map->is_on_map(proxy_pos.x, proxy_pos.y)) return false;
+  }
+
+  // All ok, connect to the map.
+  map_tile* tile = the_map->get_tile(tile_pos.x, tile_pos.y);
+  attach_to_tile(tile_pos, tile, layer);
+
+  for (auto& proxy : proxies) {
+    proxy.attach_to_map(proxy.get_tile(tile_pos), the_map, layer);
+  }
+  return true;
 }
 
 void animation::set_parent(animation* parent_anim, bool use_primary) {

@@ -407,7 +407,7 @@ int l_anim_set_tile(lua_State* L) {
 
     map_tile* node = pMap->get_tile(x - 1, y - 1);
     if (node) {
-      pAnimation->attach_to_tile({x - 1, y - 1}, node, drawing_layer);
+      pAnimation->attach_to_map({x - 1, y - 1}, pMap, drawing_layer);
     } else {
       // Off-map, report an error.
       std::string msg = "Map index out of bounds (" + std::to_string(x) + ", " +
@@ -640,6 +640,20 @@ int l_anim_set_patient_effect(lua_State* L) {
   return 1;
 }
 
+// addProxy(anim, relx, rely, crop_pos, crop_width) -> anim
+int l_anim_add_proxy(lua_State* L) {
+  animation* anim = luaT_testuserdata<animation>(L);
+  int rel_x = static_cast<int>(luaL_checkinteger(L, 2));
+  int rel_y = static_cast<int>(luaL_checkinteger(L, 3));
+  int crop_base = static_cast<int>(luaL_checkinteger(L, 4));
+  int crop_width = static_cast<int>(luaL_checkinteger(L, 5));
+  anim->add_proxy({rel_x, rel_y}, crop_base, crop_width);
+
+  lua_settop(L, 1);
+  return 1;
+}
+
+
 int l_srl_set_sheet(lua_State* L) {
   sprite_render_list* pSrl = luaT_testuserdata<sprite_render_list>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -758,6 +772,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_tick<animation>, "tick");
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
     lcb.add_function(l_anim_set_patient_effect, "setPatientEffect");
+    lcb.add_function(l_anim_add_proxy, "addProxy");
   }
 
   // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]

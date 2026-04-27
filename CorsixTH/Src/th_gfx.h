@@ -462,7 +462,16 @@ class animation_base : public drawable {
   animation_base();
 
   void remove_from_tile();
-  void attach_to_tile(const xy_pair& tile_pos, map_tile* node, int layer);
+
+  //! Try to attach the animation to the map.
+  //! The default implementation performs connecting to a single tile.
+  /*!
+   * @param tile_pos Desired tile to attach to.
+   * @param the_map The map to attach to.
+   * @param layer Drawing layer of the animation.
+   * @return Whether attaching succeeded.
+   */
+  virtual bool attach_to_map(const xy_pair& tile_pos, level_map* the_map, int layer);
 
   uint32_t get_flags() const { return flags; }
   const xy_pair& get_pixel_offset() const { return pixel_offset; }
@@ -478,6 +487,14 @@ class animation_base : public drawable {
   void set_layers_from(const animation_base* pSrc) { layers = pSrc->layers; }
 
  protected:
+  //! Attach an animation to the given tile.
+  /*!
+   * @param tile_pos Desired tile to attach to.
+   * @param tile The map tile to attach to.
+   * @param layer Drawing layer of the animation.
+   */
+  void attach_to_tile(const xy_pair& tile_pos, map_tile* tile, int layer);
+
   //! Tile containing the animation. A negative x or y means it is not active.
   xy_pair tile{-1, -1};
 
@@ -579,6 +596,9 @@ class animation : public animation_base {
     return next_frame != first_frame;
   }
 
+  bool attach_to_map(const xy_pair& tile_pos, level_map* the_map, int layer)
+                     override;
+
   link_list* get_previous() { return prev; }
   size_t get_animation() const { return animation_index; }
   bool get_primary_marker(int* pX, int* pY);
@@ -608,6 +628,8 @@ class animation : public animation_base {
   void set_animation_kind(animation_kind anim_kind);
   animation_kind get_animation_kind() { return anim_kind; }
 
+  void add_proxy(const xy_pair& rel_pos_value, int8_t crop_base_value,
+                 int8_t crop_width_value);
   animation_manager* get_animation_manager() { return manager; }
 
  private:
@@ -635,6 +657,9 @@ class animation : public animation_base {
   int8_t crop_base{};
   //! Width of the cropped area in half-tiles.
   int8_t crop_width{2};
+
+  //! The proxies of the animation.
+  std::vector<animation_proxy> proxies{};
 };
 
 class sprite_render_list : public animation_base {
