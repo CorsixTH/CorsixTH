@@ -1491,7 +1491,7 @@ function World:getFreeBench(x, y, distance)
   local object_type = self.object_types.bench
   x, y, distance = math.floor(x), math.floor(y), math.ceil(distance)
   self.pathfinder:findObject(x, y, object_type.thob, distance, function(xpos, ypos, d, dist)
-    local b = self:getObject(xpos, ypos, "bench")
+    local b = self:getObject(xpos, ypos, "bench", true)
     if b and not b.user and not b.reserved_for then
       local orientation = object_type.orientations[b.direction]
       if orientation.pathfind_allowed_dirs[d] then
@@ -1567,6 +1567,7 @@ then call findFreeObjectNearToUse instead.
 !param object_type_name The objects to search for
 !param distance Maximum L1 distance to search from humanoid. If nil then
        everywhere in range will be searched.
+!param only_usable Bool If true the object must be permitted for use
 !param callback Function to call for each result. If it returns true then
        the search will be ended.
 --]]
@@ -1579,18 +1580,20 @@ function World:findObjectNear(humanoid, object_type_name, distance, only_usable,
     -- The default callback returns the first object found
     callback = function(x, y, d)
       obj = self:getObject(x, y, object_type_name, only_usable)
-      local orientation = obj.object_type.orientations
-      if orientation then
-        orientation = orientation[obj.direction]
-        if not orientation.pathfind_allowed_dirs[d] then
-          return
+      if obj then
+        local orientation = obj.object_type.orientations
+        if orientation then
+          orientation = orientation[obj.direction]
+          if not orientation.pathfind_allowed_dirs[d] then
+            return
+          end
+          x = x + orientation.use_position[1]
+          y = y + orientation.use_position[2]
         end
-        x = x + orientation.use_position[1]
-        y = y + orientation.use_position[2]
+        ox = x
+        oy = y
+        return true
       end
-      ox = x
-      oy = y
-      return true
     end
   end
   local thob = 0
@@ -2195,13 +2198,18 @@ end
 --!param x (int) X position of the object to retrieve.
 --!param y (int) Y position of the object to retrieve.
 --!param id Id to search, nil gets first object, string gets first object with
+--!param only_usable (bool) If true the object must be permitted for use
 --! that id, set of strings gets first object that matches an entry in the set.
 --!return (Object or nil) The found object, or nil if the object is not found.
 function World:getObject(x, y, id, only_usable)
   local objects = self:getObjects(x, y)
   if objects then
-    if not id and (not only_usable or not obj.picked_up) then
-      return objects[1]
+    if not id then
+      for _, obj in ipairs(objects) do
+        if not only_usable or not obj.picked_up then
+          return obj
+        end
+      end
     elseif type(id) == "table" then
       for _, obj in ipairs(objects) do
         if id[obj.object_type.id] and (not only_usable or not obj.picked_up) then
