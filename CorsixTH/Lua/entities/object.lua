@@ -758,7 +758,7 @@ end
 ]]
 function Object:onClick(ui, button, data)
   local window = ui:getWindow(UIEditRoom)
-  -- flag 'in_pickup_mode' can be used if for example some things
+  -- Flag 'in_pickup_mode' can be used if for example some things
   -- should only happen as long as the object is not picked up.
   if button == "right" or (button == "left" and window and window.in_pickup_mode) then
     local room = self:getRoom()
@@ -802,7 +802,9 @@ function Object:onClick(ui, button, data)
 
     self.picked_up = true
     if not room_editing_mode then
-      -- do not actually delete the object, but make it invisible during the pickup.
+      -- Do not actually delete the object, but make it invisible during the pickup.
+      self:cancelUsage()
+      self:denyReservation()
       self:setInvisible(true)
       window = UIPlaceObjects(ui, object_list, false) -- don't pay for
       ui:addWindow(window)
@@ -834,10 +836,25 @@ function Object:resetAnimation()
 end
 
 function Object:onDestroy()
+  -- Remove from room
   local room = self:getRoom()
   if room then
     room.objects[self] = nil
   end
+
+  self:cancelUsage()
+  self:denyReservation()
+
+  Entity.onDestroy(self)
+
+  -- Issue 1105 - rebuild wall travel<dir> and pathfinding on side object removal
+  if self.object_type.class == "SideObject" then
+    self.world.map.th:updatePathfinding()
+    self.world:resetSideObjects()
+  end
+end
+
+function Object:cancelUsage()
   if self.user_list then
     for _, user in ipairs(self.user_list) do
       user:handleRemovedObject(self)
@@ -847,6 +864,9 @@ function Object:onDestroy()
     self.user:handleRemovedObject(self)
   end
   self.user = nil
+end
+
+function Object:denyReservation()
   if self.reserved_for_list then
     for _, reserver in ipairs(self.reserved_for_list) do
       reserver:handleRemovedObject(self)
@@ -856,14 +876,6 @@ function Object:onDestroy()
     self.reserved_for:handleRemovedObject(self)
   end
   self.reserved_for = nil
-
-  Entity.onDestroy(self)
-
-  -- Issue 1105 - rebuild wall travel<dir> and pathfinding on side object removal
-  if self.object_type.class == "SideObject" then
-    self.world.map.th:updatePathfinding()
-    self.world:resetSideObjects()
-  end
 end
 
 function Object:afterLoad(old, new)

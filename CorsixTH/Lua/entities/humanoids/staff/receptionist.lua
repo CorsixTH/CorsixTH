@@ -71,7 +71,7 @@ function Receptionist:onPlaceInCorridor()
   Staff.onPlaceInCorridor(self)
 
   local world = self.world
-  world:findObjectNear(self, "reception_desk", nil, function(x, y)
+  world:findObjectNear(self, "reception_desk", nil, true, function(x, y)
     local obj = world:getObject(x, y, "reception_desk")
     return obj and obj:occupy(self)
   end)

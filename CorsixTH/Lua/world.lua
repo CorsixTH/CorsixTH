@@ -1570,7 +1570,7 @@ then call findFreeObjectNearToUse instead.
 !param callback Function to call for each result. If it returns true then
        the search will be ended.
 --]]
-function World:findObjectNear(humanoid, object_type_name, distance, callback)
+function World:findObjectNear(humanoid, object_type_name, distance, only_usable, callback)
   if not distance then
     distance = 2^30
   end
@@ -1578,7 +1578,7 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   if not callback then
     -- The default callback returns the first object found
     callback = function(x, y, d)
-      obj = self:getObject(x, y, object_type_name)
+      obj = self:getObject(x, y, object_type_name, only_usable)
       local orientation = obj.object_type.orientations
       if orientation then
         orientation = orientation[obj.direction]
@@ -1597,7 +1597,7 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   if type(object_type_name) == "table" then
     local original_callback = callback
     callback = function(x, y, ...)
-      local cb_obj = self:getObject(x, y, object_type_name)
+      local cb_obj = self:getObject(x, y, object_type_name, only_usable)
       if cb_obj then
         return original_callback(x, y, ...)
       end
@@ -1623,7 +1623,7 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
   -- Other values for which may be added in the future.
   -- Specify current_object if you want to exclude the currently used object from the search
   local object, ox, oy
-  self:findObjectNear(humanoid, object_type_name, nil, function(x, y, d)
+  self:findObjectNear(humanoid, object_type_name, nil, true, function(x, y, d)
     local obj = self:getObject(x, y, object_type_name)
     if obj.user or (obj.reserved_for and obj.reserved_for ~= humanoid) or (current_object and obj == current_object) then
       return
@@ -1742,14 +1742,14 @@ function World:newEntity(class, animation, mood_marker)
   return entity
 end
 
-function World:destroyEntity(entity)
+function World:destroyEntity(obj)
   for i, e in ipairs(self.entities) do
-    if e == entity then
+    if e == obj then
       table.remove(self.entities, i)
       break
     end
   end
-  entity:onDestroy()
+  obj:onDestroy()
 end
 
 function World:newObjectType(new_object)
@@ -2197,20 +2197,20 @@ end
 --!param id Id to search, nil gets first object, string gets first object with
 --! that id, set of strings gets first object that matches an entry in the set.
 --!return (Object or nil) The found object, or nil if the object is not found.
-function World:getObject(x, y, id)
+function World:getObject(x, y, id, only_usable)
   local objects = self:getObjects(x, y)
   if objects then
-    if not id then
+    if not id and (not only_usable or not obj.picked_up) then
       return objects[1]
     elseif type(id) == "table" then
       for _, obj in ipairs(objects) do
-        if id[obj.object_type.id] then
+        if id[obj.object_type.id] and (not only_usable or not obj.picked_up) then
           return obj
         end
       end
     else
       for _, obj in ipairs(objects) do
-        if obj.object_type.id == id then
+        if obj.object_type.id == id  and (not only_usable or not obj.picked_up) then
           return obj
         end
       end

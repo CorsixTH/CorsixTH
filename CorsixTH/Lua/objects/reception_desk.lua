@@ -221,7 +221,7 @@ function ReceptionDesk:onDestroy()
     self.reserved_for = nil
 
     -- Find a new reception desk for the receptionist
-    self.world:findObjectNear(receptionist, "reception_desk", nil,
+    self.world:findObjectNear(receptionist, "reception_desk", nil, false,
         function(x, y)
           local obj = self.world:getObject(x, y, "reception_desk")
           -- Make sure we are not selecting the same desk again
