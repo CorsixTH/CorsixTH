@@ -243,19 +243,23 @@ end
 
 -- precondition: self.active_index has to correspond to the object to be removed
 function UIPlaceObjects:removeObject(object, dont_close_if_empty, placed, move_canceled)
-  if move_canceled and object.existing_object then
-    -- previously grabbed an existing object so the object was not deleted
+  if object.existing_object then
+    -- Previously grabbed an existing object so the object was not deleted
     -- from its previous location, but simply made invisible.
-    -- place object back (actually make it visible back)
     object.existing_object:setInvisible(false)
     object.existing_object.picked_up = false
-    self.ui:playSound("place_r.wav")
-  elseif not placed then
-    -- The player should be reimbursed for the cost of the item, i.e.
-    -- whether they were previously purchased. So do refund.
-    local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
-    local msg = _S.transactions.sell_object .. ": " .. object.object.name
-    self.ui.hospital:receiveMoney(build_cost, msg, build_cost)
+    if move_canceled then
+      -- Object placed back
+      self.ui:playSound("place_r.wav")
+    elseif not placed then
+      -- Destroy object
+      -- The player should be reimbursed for the cost of the item, i.e.
+      -- whether they were previously purchased. So do refund.
+      local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
+      local msg = _S.transactions.sell_object .. ": " .. object.object.name
+      self.ui.hospital:receiveMoney(build_cost, msg, build_cost)
+      self.world:destroyEntity(object.existing_object)
+    end
   end
 
   object.qty = object.qty - 1
@@ -524,8 +528,8 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     if real_obj.picked_up and not real_obj.th:isVisible() then
       -- previously grabbed an existing object so the object was not actually
       -- deleted from its previous location, but simply made invisible.
-      self.world:destroyEntity(real_obj)
       real_obj:setInvisible(false)
+      self.world:destroyEntity(real_obj)
     end
 
     if real_obj.orientation_before and real_obj.orientation_before ~= self.object_orientation then
@@ -560,7 +564,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
 
   self.ui:playSound("place_r.wav")
 
-  self:removeObject(object, dont_close_if_empty)
+  self:removeObject(object, dont_close_if_empty, true, false)
   object.orientation_before = nil
 
   if object.object.id == "reception_desk" then -- Rebuild cache of reception desks
