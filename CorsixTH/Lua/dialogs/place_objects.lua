@@ -93,7 +93,7 @@ end
 function UIPlaceObjects:registerKeyHandlers()
   self:addKeyHandler("global_cancel", self.undo)
   self:addKeyHandler("global_cancel_alt", self.cancel)
-  self:addKeyHandler("ingame_sellPickedItem", self.cancel)
+  self:addKeyHandler("ingame_sellPickedUpItem", self.cancel)
   self:addKeyHandler("ingame_rotateobject", self.tryNextOrientation)
 end
 
