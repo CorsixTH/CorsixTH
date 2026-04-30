@@ -659,6 +659,7 @@ int l_anim_remove_all_proxies(lua_State* L) {
   anim->remove_all_proxies();
 
   lua_settop(L, 1);
+  return 1;
 }
 
 int l_srl_set_sheet(lua_State* L) {

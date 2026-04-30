@@ -400,19 +400,15 @@ function UIPlaceObjects:setOrientation(orient)
   if present_object and present_object.current_frame then
     self.object_anim:setFrame(present_object.current_frame)
   end
+
   local px, py = unpack(object.orientations[orient].render_attach_position)
-  if type(px) == "table" then
-    px, py = unpack(px)
-  end
   px, py = Map:WorldToScreen(px + 1, py + 1)
   px = object.orientations[orient].animation_offset[1] + px
   py = object.orientations[orient].animation_offset[2] + py
   self.object_anim:setPosition(px, py)
+
   if object.slave_type then
     px, py = unpack(object.slave_type.orientations[orient].render_attach_position)
-    if type(px) == "table" then
-      px, py = unpack(px)
-    end
     local offset = object.orientations[orient].slave_position
     if offset then
       px = px + offset[1]

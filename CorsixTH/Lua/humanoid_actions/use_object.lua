@@ -245,16 +245,6 @@ local function action_use_phase(action, humanoid, phase)
     object.th:makeInvisible()
   end
 
-  -- For split animations, add a Crop flag to the selected animations.
-  if object.split_anims then
-    flags = flags + DrawFlags.Crop
-    local anims = humanoid.world.anims
-    for i = 2, #object.split_anims do
-      local th = object.split_anims[i]
-      th:setAnimation(anims, anim, flags)
-    end
-  end
-
   -- Morph from one animation to another.
   if type(anim) == "table" and anim[1] == "morph" then
     -- If a table with entries {"morph", A, B} is given rather than a single
@@ -302,43 +292,10 @@ local function action_use_phase(action, humanoid, phase)
   end
 end
 
---! Setup split animations by copying the humanoid layers and hit-test
---  to the other animations.
-local function init_split_anims(object, humanoid)
-  if object.split_anims then
-    for i = 2, #object.split_anims do
-      local th = object.split_anims[i]
-      th:setLayersFrom(humanoid.th)
-      th:setHitTestResult(humanoid)
-    end
-    object.ticks = true
-  end
-end
-
 --! Cleanup function after usage.
 local function finish_using(object, humanoid)
   object:removeUser(humanoid) -- Disconnect the humanoid from the object.
   humanoid.user_of = nil
-
-  -- Restore the layers and hit-test of the object, and set all animations
-  -- to the same frame.
-  if object.split_anims then
-    local anims = humanoid.world.anims
-    local anim = object.th:getAnimation()
-    local frame = object.th:getFrame()
-    local flags = object.th:getFlag()
-
-    for i = 2, #object.split_anims do
-      local th = object.split_anims[i]
-      th:setLayersFrom(object.th)
-      th:setHitTestResult(object)
-      th:setAnimation(anims, anim, flags)
-      th:setFrame(frame)
-    end
-
-    -- Restore ticks to default of the object.
-    object.ticks = object.object_type.ticks
-  end
 end
 
 --! Callback after an animation.
@@ -352,7 +309,6 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   if oldphase == -6 then
     object:setUser(humanoid)
     humanoid.user_of = object
-    init_split_anims(object, humanoid)
     if action.after_walk_in then
       action:after_walk_in()
     end
@@ -479,7 +435,6 @@ local function action_use_object_start(action, humanoid)
   else
     object:setUser(humanoid)
     humanoid.user_of = object
-    init_split_anims(object, humanoid)
   end
 
   if action.watering_plant then
