@@ -616,9 +616,11 @@ function Humanoid:setNextAction(action, high_priority)
   local i = 1
   local queue = self.action_queue
   local interrupted = false
+  local pickup_stuck_humanoid = class.is(action, PickupAction) and queue[i].stuck
 
-  -- Skip over any actions which must happen
-  while queue[i] and queue[i].must_happen do
+  -- Skip over any actions which must happen,
+  -- except when adding PickupAction for stuck humanoid
+  while queue[i] and queue[i].must_happen and not pickup_stuck_humanoid do
     interrupted = true
     i = i + 1
   end
@@ -719,6 +721,21 @@ function Humanoid:isEnteringRoom()
     return true
   end
   return false
+end
+
+--! Check whether humanoid are meandering
+--!return (bool) if humanoid currently has a meander action
+function Humanoid:isMeandering()
+  if #self.action_queue < 2 then return false end
+
+  -- "meander" action always insert "move" or "idle" action before itself.
+  -- so when humanoid "meandering" his action queue usually looks like:
+  -- [1 idle, 2 meander] or [1 walk, 2 meander].
+  local idle_is_first = self.action_queue[1].name == "idle"
+  local walk_is_first = self.action_queue[1].name == "walk"
+  local meander_is_second = self.action_queue[2].name == "meander"
+
+  return (idle_is_first or walk_is_first) and meander_is_second
 end
 
 -- Check if there is "is_leaving" action in the action queue
@@ -855,6 +872,14 @@ end
 function Humanoid:walkTo(tile_x, tile_y, must_happen)
   self:setNextAction(WalkAction(tile_x, tile_y)
       :setMustHappen(not not must_happen))
+end
+
+-- Retry walk action. Suitable when humanoid stuck.
+function Humanoid:retryWalk()
+  local action = self.action_queue[1]
+  if action and class.is(action, WalkAction) and action.stuck then
+    self:startAction()
+  end
 end
 
 -- Stub functions for handling fatigue. These are overridden by the staff subclass,
