@@ -22,9 +22,9 @@ SOFTWARE. --]]
 -- when you don't have a copy of AnimView, or the means to compile it, then a
 -- crude sprite viewer is better than no sprite viewer.
 
+local is_open = false
 local gfx = TheApp.gfx
-gfx.cache.tabled = {}
-local font = gfx:loadFontAndSpriteTable("QData", "Font00V")
+local font -- Set on open
 local need_draw = true
 local sprite_table_paths = {}
 local palettes = {}
@@ -39,6 +39,8 @@ local scale = 1
 local bg_colour_index = 1
 local y_off
 local old_event_handlers
+local old_gfx_cache = {}
+local sprite_viewer_gfx_cache = {}
 local mpalette_index
 
 local background_colours = {
@@ -170,6 +172,9 @@ local function DoKeyUp(_, rawchar)
     local key = rawchar:lower()
     if key == "q" then -- Exit sprite viewer
       TheApp.eventHandlers = old_event_handlers
+      sprite_viewer_gfx_cache = gfx.cache.tabled
+      gfx.cache.tabled = old_gfx_cache
+      is_open = false
       return
     end
     if key == "w" then
@@ -178,6 +183,10 @@ local function DoKeyUp(_, rawchar)
     if key == "s" then
         sdown = false
     end
+end
+
+local function DoTextInput()
+  return false
 end
 
 local function Render(canvas)
@@ -245,10 +254,25 @@ local function DoTimer()
   return need_draw
 end
 
-old_event_handlers = TheApp.eventHandlers
-TheApp.eventHandlers = {
-  frame = DoFrame,
-  keydown = DoKey,
-  keyup = DoKeyUp,
-  timer = DoTimer,
-}
+local function open()
+  if is_open then
+    return
+  end
+  is_open = true
+  old_gfx_cache = gfx.cache.tabled
+  gfx.cache.tabled = sprite_viewer_gfx_cache
+  font = gfx:loadFontAndSpriteTable("QData", "Font00V")
+
+  old_event_handlers = TheApp.eventHandlers
+  TheApp.eventHandlers = {
+    frame = DoFrame,
+    keydown = DoKey,
+    keyup = DoKeyUp,
+    timer = DoTimer,
+    textinput = DoTextInput
+  }
+
+  need_draw = true
+end
+
+return open
