@@ -76,20 +76,13 @@ function Object:initOrientation(direction)
   footprint = footprint and footprint[direction]
 
   local rap = footprint and footprint.render_attach_position
-  if rap and (rap.crop_base or rap.proxies) then
-      flags = flags + DrawFlags.Crop
-  end
 
   if footprint and footprint.animation_offset then
     self:setPosition(unpack(footprint.animation_offset))
   end
-  footprint = footprint and footprint.footprint
-  if footprint then
-    self.footprint = footprint
-  else
-    self.footprint = nil
-  end
-  self:setAnimation(anim, flags)
+  self.footprint = footprint and footprint.footprint
+
+  self:setAnimation(anim, flags, rap)
 end
 
 --! Add methods to a class for creating and controlling a slave object
