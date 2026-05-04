@@ -847,7 +847,6 @@ end
 --! param object (object) target SideObject.
 --! param object_orientation (string) footprint orientation name.
 --! param room_id (integer) room id if we in a build mode.
---! param world (object) world class instance.
 --! return (bool) is this placement not going to break path finding.
 function UIPlaceObjects:_isNonSideObjectPlacementValid(x, y, object, object_orientation, room_id)
   local world = self.ui.app.world
@@ -908,7 +907,6 @@ end
 --! param room_id (integer) room id if we in a build mode.
 --! param passable_flag (string) passable flag name. orientation of an object relative to the cardinal directions.
 --! param map (object) map class instance.
---! param world (object) world class instance.
 --! return (bool) is this placement not going to break path finding.
 function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag, map)
   -- if we consider to place a SideObject against a wall, it is always a valid placement.
