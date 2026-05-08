@@ -421,7 +421,7 @@ local function action_walk_start(action, humanoid)
       humanoid:setTimer(1, humanoid.finishAction)
       return
     else
-      -- Somebody stuck in your hospital!
+      -- TODO: Call to show "Someone has got stuck. Plan your hospital better" Adviser message should be here.
       -- Humanoid unable to follow the route.
       -- Wait a little and try to rebuild the route.
       --
