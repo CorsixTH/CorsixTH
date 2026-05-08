@@ -81,8 +81,7 @@ local function meander_action_start(action, humanoid)
 
   if not x or (x == humanoid.tile_x and y == humanoid.tile_y and #humanoid.action_queue == 1) then
     -- Somebody stuck in your hospital!
-    -- 'not x' - There weren't any available tiles for meander found.
-    -- Nowhere to walk to. We might be at a tight dead end. Let's just try Idle instead.
+    -- Unable to find valid tiles for meandering. Queue an idle animation.
     action.can_idle = false
     humanoid:queueAction(IdleAction():setCount(5):setMustHappen(action.must_happen), 0)
     return
