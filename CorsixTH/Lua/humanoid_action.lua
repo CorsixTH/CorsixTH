@@ -37,7 +37,7 @@ function HumanoidAction:HumanoidAction(name)
   self.is_leaving = false -- Whether the humanoid is leaving.
   self.no_truncate = false -- If set, disable shortening the action.
   self.uninterruptible = false -- If true, can not be interrupted/cancelled by pickup.
-  self.stuck = false -- If true, humanoid had stuck during executing this action.
+  self.stuck = false -- If true, humanoid has become stuck during the execution of this action.
 end
 
 --! Set the number of times the action should happen.

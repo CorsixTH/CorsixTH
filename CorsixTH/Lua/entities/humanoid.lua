@@ -616,11 +616,11 @@ function Humanoid:setNextAction(action, high_priority)
   local i = 1
   local queue = self.action_queue
   local interrupted = false
-  local pickup_stuck_humanoid = class.is(action, PickupAction) and queue[i].stuck
 
   -- Skip over any actions which must happen,
   -- except when adding PickupAction for stuck humanoid
-  while queue[i] and queue[i].must_happen and not pickup_stuck_humanoid do
+  while queue[i] and queue[i].must_happen and
+    not (class.is(action, PickupAction) and queue[i].stuck) do
     interrupted = true
     i = i + 1
   end
