@@ -68,22 +68,36 @@ object.usage_animations = copy_north_to_south {
 
 object.orientations = {
   north = {
-    render_attach_position = {-1, -1},
     footprint = { {-2, -2, need_west_side = true}, {-1, -2}, {0, -2, need_east_side = true},
                   {-2, -1, complete_cell = true}, {-1, -1}, {0, -1, complete_cell = true},
                   {-2,  0, complete_cell = true}, {-1,  0}, {0,  0, complete_cell = true},
                   {-1, 1, only_passable = true, need_south_side = true} },
     use_position = "passable",
     smoke_position = {0, 0},
+    render_attach_position = {
+      0, -2, crop_base = 1, crop_width = 1,
+      proxies = {
+        {0, -1, crop_base = 1, crop_width = 1},
+        {0, 0, crop_base = 0, crop_width = 2},
+        {-1, 1, crop_base = 0, crop_width = 2}
+      }
+    }
   },
   east = {
-    render_attach_position = {-1, -1},
     footprint = { {-2, -2, need_north_side = true}, {-1, -2}, {0, -2, complete_cell = true},
                   {-2, -1}, {-1, -1}, {0, -1, complete_cell = true},
                   {-2,  0, need_south_side = true}, {-1,  0}, {0,  0, complete_cell = true},
                   {1, -1, only_passable = true, need_east_side = true} },
     use_position = "passable",
     smoke_position = {0, 0},
+    render_attach_position = {
+      0, -2, crop_base = 1, crop_width = 1,
+      proxies = {
+        {0, -1, crop_base = 1, crop_width = 1},
+        {0, 0, crop_base = 1, crop_width = 1},
+        {-2, 0, crop_base = 0, crop_width = 3}
+      }
+    }
   },
 }
 local anim_mgr = TheApp.animation_manager

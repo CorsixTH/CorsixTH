@@ -52,6 +52,10 @@ object.orientations = {
     },
     use_position = {1, 0},
     slave_position = {0, -1},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 0, crop_width = 2}}
+    }
   },
   east = {
     footprint = {
@@ -60,6 +64,10 @@ object.orientations = {
     },
     use_position = {0, 1},
     slave_position = {-1, 0},
+    render_attach_position = {
+      0, 0, crop_base = 1, crop_width = 1,
+      proxies = {{0, 1, crop_base = 0, crop_width = 2}}
+    }
   },
 }
 

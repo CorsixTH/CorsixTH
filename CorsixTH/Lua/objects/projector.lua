@@ -56,11 +56,19 @@ anim_mgr:setStaffMarker(object.usage_animations.north.finish_use_2, 0, kf2, 11, 
 object.orientations = {
   north = {
     footprint = { {0, 0, only_passable = true}, {0, 1}, {-1, 0}, {-1, 1} },
-    use_position = "passable"
+    use_position = "passable",
+    render_attach_position = {
+      0, 0, crop_base = 1, crop_width = 1,
+      proxies = {{-1, 1, crop_base = 0, crop_width = 3}}
+    }
   },
   east = {
     footprint = { {0, 0, only_passable = true}, {0, -1}, {1, 0}, {1, -1} },
-    use_position = "passable"
+    use_position = "passable",
+    render_attach_position = {
+      1, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 0, crop_width = 3}}
+    }
   },
 }
 

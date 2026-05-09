@@ -52,7 +52,10 @@ object.orientations = {
       {-1, 0, complete_cell = true},
       {0, -1, complete_cell = true},
       {0, 0, complete_cell = true, only_passable = true} },
-    render_attach_position = {0, -1},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{-1, 0, crop_base = 0, crop_width = 3}},
+    },
     use_position = "passable"
   },
   east = {
@@ -61,7 +64,10 @@ object.orientations = {
       {-1, 0, complete_cell = true},
       {0, -1, complete_cell = true},
       {0, 0, complete_cell = true, only_passable = true} },
-    render_attach_position = {-1, 0},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{-1, 0, crop_base = 0, crop_width = 3}},
+    },
     use_position = "passable"
   },
 }
