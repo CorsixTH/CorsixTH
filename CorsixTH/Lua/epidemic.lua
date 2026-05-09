@@ -342,7 +342,7 @@ function Epidemic:sendInitialFax()
       {text = _S.fax.epidemic.choices.cover_up, choice = "cover_up_epidemic"},
     },
   }
-  self.world.ui.bottom_panel:queueMessage("epidemy", message, self, 24*20,2)
+  self.world.ui.bottom_panel:sendIncomingMessage("epidemy", message, self, 24*20,2)
 end
 
 --[[ Calculate the fine for having a given number of infected patients
@@ -543,7 +543,7 @@ end
 --[[ Send the results of the cover up to the player - will be a
 success/compensation or fail/fines + reputation hit]]
 function Epidemic:sendResultFax()
-  self.world.ui.bottom_panel:queueMessage("report", self.cover_up_result_fax, nil, 24*20, 1)
+  self.world.ui.bottom_panel:sendIncomingMessage("report", self.cover_up_result_fax, nil, 24*20, 1)
   self:announceEndOfEpidemic()
 end
 
@@ -735,7 +735,7 @@ end
 --[[ For Cheat - Cancel the epidemic. ]]
 function Epidemic:cancelEpidemic()
   -- Remove init epidemic fax
-  self.world.ui.bottom_panel:removeMessage(self)
+  self.world.ui.bottom_panel:deleteMessage(self)
   -- Turn vaccination mode off if enabled
   self:turnOffVaccinationMode()
   -- Remove epidemic timer

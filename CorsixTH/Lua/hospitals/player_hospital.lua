@@ -442,7 +442,7 @@ function PlayerHospital:adviseDiscoverDisease(disease)
       {text = _S.fax.disease_discovered.close_text, choice = "close"},
     },
   }
-  self.world.ui.bottom_panel:queueMessage("disease", message, nil, 25*24, 1)
+  self.world.ui.bottom_panel:sendIncomingMessage("disease", message, nil, 25*24, 1)
 
   -- If the drug casebook is open, update it.
   local window = self.world.ui:getWindow(UICasebook)
@@ -580,7 +580,7 @@ function PlayerHospital:makeRaiseRequest(amount, staff)
     self.world.ui.adviser:say(_A.information.pay_rise)
     self.has_seen_pay_rise = true
   end
-  self.world.ui.bottom_panel:queueMessage("strike", amount, staff)
+  self.world.ui.bottom_panel:sendIncomingMessage("strike", amount, staff)
 end
 
 --! Announce to the player that a staff member is leaving the hospital
@@ -624,7 +624,7 @@ function PlayerHospital:makeNoTreatmentRoomFax(patient)
     },
   }
   -- Ok, send the message in all channels.
-  self.world.ui.bottom_panel:queueMessage("information", message, patient)
+  self.world.ui.bottom_panel:sendIncomingMessage("information", message, patient)
 end
 
 --! Makes the fax requesting player action for the patient who needs a diagnosis room
@@ -646,7 +646,7 @@ function PlayerHospital:makeNoDiagnosisRoomFax(patient)
     table.insert(message, 3, {text = diag_failed.partial_diagnosis_percentage_name
       :format(math.round(patient.diagnosis_progress * 100), patient.disease.name)})
   end
-  self.world.ui.bottom_panel:queueMessage("information", message, patient)
+  self.world.ui.bottom_panel:sendIncomingMessage("information", message, patient)
 end
 
 --! Makes the fax at the start of an emergency
@@ -701,7 +701,7 @@ function PlayerHospital:makeEmergencyStartFax()
     },
   }
   -- Automatically refuse after 16 days
-  self.world.ui.bottom_panel:queueMessage("emergency", message, nil, Date.hoursPerDay() * 16, 2)
+  self.world.ui.bottom_panel:sendIncomingMessage("emergency", message, nil, Date.hoursPerDay() * 16, 2)
 end
 
 --! Makes the fax at the end of an emergency
@@ -714,7 +714,7 @@ function PlayerHospital:makeEmergencyEndFax(rescued_patients, total, max_bonus, 
       {text = _S.fax.emergency_result.close_text, choice = "close"},
     },
   }
-  self.world.ui.bottom_panel:queueMessage("report", message, nil, Date.hoursPerDay() * 25, 1)
+  self.world.ui.bottom_panel:sendIncomingMessage("report", message, nil, Date.hoursPerDay() * 25, 1)
 end
 
 --! Makes the fax which may spawn a VIP
@@ -728,14 +728,14 @@ function PlayerHospital:createVip()
     },
   }
   -- Automatically accept after 20 days
-  self.world.ui.bottom_panel:queueMessage("personality", message, nil, Date.hoursPerDay() * 20, 1)
+  self.world.ui.bottom_panel:sendIncomingMessage("personality", message, nil, Date.hoursPerDay() * 20, 1)
 end
 
 --! Remove any message (fax) relating to this humanoid
 --!param humanoid (table) The humanoid
 function PlayerHospital:removeMessage(humanoid)
   if humanoid.message then
-    self.world.ui.bottom_panel:removeMessage(humanoid)
+    self.world.ui.bottom_panel:deleteMessage(humanoid)
   end
 end
 
@@ -771,7 +771,7 @@ function PlayerHospital:makeVipEndFax(vip_rating, name, cash_reward, vip_message
   table.insert(message, 1, {text = _S.fax.vip_visit_result.vip_remarked_name:format(name)})
   message["choices"] = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
 
-  self.world.ui.bottom_panel:queueMessage("report", message, nil, Date.hoursPerDay() * 20, 1)
+  self.world.ui.bottom_panel:sendIncomingMessage("report", message, nil, Date.hoursPerDay() * 20, 1)
 end
 
 --! Play a sound file

@@ -1313,7 +1313,7 @@ function World:winGame(player_no)
     end
     self.hospitals[player_no].game_won = true
     self:previousSpeed()
-    self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
+    self.ui.bottom_panel:sendIncomingMessage("information", message, nil, 0, 2, callback)
     self.ui.bottom_panel:openLastMessage()
   end
 end

@@ -40,8 +40,9 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.show_animation = true
   self.factory_counter = 22
   self.factory_direction = 0
-  self.message_windows = {}
-  self.message_queue = {}
+  self.message_windows = {} -- fax icons in bottom inbox drawer. stores no more than 5 items in total and no more than 1 item of each message type.
+  self.message_queue = {} -- fax messages which have not yet reached the bottom inbox drawer. can store more than 5 items, but no more than 1 item of each message type.
+  self.message_queue_unshowed = {} -- postponed fax messages. all fax messages that do not pass the limit above are kept here.
 
   self.default_button_sound = "selectx.wav"
   self.countdown = 0
@@ -410,8 +411,7 @@ function UIBottomPanel:hitTest(x, y, x_offset)
 end
 
 --! Queue a fax notification message to appear.
---! The arguments specify a message, which is added to a FIFO queue, and will
--- appear on screen once there is space.
+--! The arguments specify a message, which is added to a FIFO queue
 --!param type (string) The type of message, can be: "emergency", "epidemy", "personality", "information", "disease", "report" or "strike"
 --!param message (table or number) If type == "strike", the amount of pay rise. Else a list of texts to display, including a "choices" table with choices. See below for structure.
 --!param owner (object or nil) Some messages are related to one staff or patient or epidemic. Otherwise this is nil.
@@ -428,13 +428,13 @@ end
 --     ...
 --   }
 -- }
-function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choice, callback)
+function UIBottomPanel:sendIncomingMessage(type, message, owner, timeout, default_choice, callback)
   -- Show a helpful message if there has been no messages before - only in campaign though
   if not self.ui.hospital.message_popup and tonumber(self.world.map.level_number) then
     self.world.ui.adviser:say(_A.information.fax_received)
     self.ui.hospital.message_popup = true
   end
-  local fax = {
+  local message_info = {
     type = type,
     message = message,
     owner = owner,
@@ -443,64 +443,121 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     callback = callback,
   }
 
-  if self:canQueueFax(fax) then
-    self.message_queue[#self.message_queue + 1] = fax
-    -- create reference to message in owner
-    if owner then
-      owner.message = message
+  if self:_canProcessMessage(message_info) then
+    -- Create reference to message in owner
+    if message_info.owner then
+      message_info.owner.message = message_info.message
+    end
+    -- Can display in inbox drawer?
+    if not self:_isMessageTypeAlreadyQueued(message_info.type) then
+      self:_queueMessage(message_info)
+    else
+      -- Don't show message yet
+      self:_pushToStorageMessage(message_info)
     end
   else
-    self:cancelFax(fax.type)
+    -- Ignoring message/event
+    self:_ignoreMessage(message_info)
   end
 end
 
---[[ A fax can be queued if the event the fax causes does not affect
+--! Set fax notification message to display in inbox drawer
+--!param message_info (table) Table with message information
+function UIBottomPanel:_queueMessage(message_info)
+  self.message_queue[#self.message_queue + 1] = message_info
+end
+
+--! Try to move fax notification message from storage to queue
+--!param type (string) The type of message
+function UIBottomPanel:_tryAdvanceQueue(type)
+  if not self:_isMessageTypeAlreadyQueued(type) then
+    -- Pop next message
+    local next_message = self:_popFromStorageMessage(type)
+    if next_message then
+      self:_queueMessage(next_message)
+    end
+  end
+end
+
+-- Put fax notification message into storage
+--!param message_info (table) Table with message information
+function UIBottomPanel:_pushToStorageMessage(message_info)
+  if not self.message_queue_unshowed[message_info.type] then
+    self.message_queue_unshowed[message_info.type] = {}
+  end
+  table.insert(self.message_queue_unshowed[message_info.type], message_info)
+end
+
+-- Extract next fax notification message from storage
+--!param type (string) The type of message
+--!return (table) Table with next message information or nil if no queued messages
+function UIBottomPanel:_popFromStorageMessage(type)
+  local messages_that_type = self.message_queue_unshowed[type]
+  if messages_that_type then
+    local next_message = messages_that_type[1]
+    if next_message then
+      table.remove(messages_that_type, 1)
+      return next_message
+    end
+  end
+  return nil
+end
+
+--[[ A fax can be displayed if the event the fax causes does not affect
 an event caused by any other fax that is queued. i.e both emergency
 and epidemics use the timer, so both faxes cannot appear at the same time.
 @param fax (table) the fax we want to determine if can be queued.
 @return true if fax can be queued, false otherwise (boolean) ]]
-function UIBottomPanel:canQueueFax(fax)
-  --[[ Determine if fax of a particular type is queued either in the
-  message queue or the message window (ui)
-  @param fax_type (string) the fax type to check if any queued
-  @return true if any of fax_type is queued false otherwise (boolean) ]]
-  local function isFaxTypeQueued(fax_type)
-    -- Check the queued messages
-    for _, fax_msg in ipairs(self.message_queue) do
-      if fax_msg.type == fax_type then
-        return true
-      end
-    end
-    -- Then the messages displayed on the bottom bar
-    for _, fax_msg in ipairs(self.message_windows) do
-      if fax_msg.type == fax_type then
-        return true
-      end
-    end
-    return false
-  end
-
-  if fax.type == "epidemy" then
-    if isFaxTypeQueued("emergency") then
+function UIBottomPanel:_canProcessMessage(message_info)
+  if message_info.type == "epidemy" then
+    if self:_isMessageTypeAlreadyQueued("emergency") then
       return false
     end
-  elseif fax.type == "emergency" then
-    if isFaxTypeQueued("epidemy") then
+  elseif message_info.type == "emergency" then
+    if self:_isMessageTypeAlreadyQueued("epidemy") then
       return false
     end
   end
   return true
 end
 
+--[[ Determine if fax of a particular type is queued either in the
+message queue or the message window (ui)
+@param message_type (string) the fax type to check if any queued
+@return true if any of message_type is queued false otherwise (boolean) ]]
+function UIBottomPanel:_isMessageTypeAlreadyQueued(message_type)
+  -- Check the queued messages
+  for _, fax_msg in ipairs(self.message_queue) do
+    if fax_msg.type == message_type then
+      return true
+    end
+  end
+  -- Then the messages displayed on the bottom bar
+  return self:_isMessageTypeAlreadyDisplayed(message_type)
+end
+
+--[[ Determine if fax of a particular type is in the message window (ui)
+@param message_type (string) the fax type to check if any queued
+@return true if any of message_type is queued false otherwise (boolean) ]]
+function UIBottomPanel:_isMessageTypeAlreadyDisplayed(message_type)
+  -- Then the messages displayed on the bottom bar
+  for _, fax_msg in ipairs(self.message_windows) do
+    if fax_msg.type == message_type then
+      return true
+    end
+  end
+  return false
+end
+
 --[[ Cancels a fax of a particular type currently only "emergency" and "epidemy"
 Handles the cancelling of the event which the fax pertains to.
-@param fax_type (string) type of fax event to be cancelled]]
-function UIBottomPanel:cancelFax(fax_type)
+@param message_info (table) message to be cancelled]]
+function UIBottomPanel:_ignoreMessage(message_info)
   local hospital = self.ui.hospital
-  if fax_type == "epidemy" then
+  if message_info.type == "epidemy" then
     hospital.epidemic:clearAllInfectedPatients()
     hospital.epidemic = nil
-  elseif fax_type == "emergency" then
+  elseif message_info.type == "emergency" then
     self.world:nextEmergency()
   end
 end
@@ -508,15 +565,14 @@ end
 -- Opens the last available message. Currently used to open the level completed message.
 function UIBottomPanel:openLastMessage()
   if #self.message_queue > 0 then
-    self:createMessageWindow(#self.message_queue)
-    table.remove(self.message_queue, #self.message_queue)
+    self:_createMessageWindow(true)
   end
   self.message_windows[#self.message_windows]:openMessage()
 end
 
 --! Trigger a message to be moved from the queue into a actual window, after
 -- first performing the necessary animation.
-function UIBottomPanel:showMessage()
+function UIBottomPanel:_showMessage()
   if self.factory_direction ~= -1 then
     self.factory_direction = -1
     if self.factory_counter < 0 then
@@ -541,19 +597,33 @@ end
 
 -- Removes a message from the message queue (for example if a room is built before the player
 -- says what to do with the patient.
-function UIBottomPanel:removeMessage(owner)
+function UIBottomPanel:deleteMessage(owner)
+  -- Remove message from the message queue
   for i, msg_info in ipairs(self.message_queue) do
     if msg_info.owner == owner then
       -- TODO: restructure message_queue to contain UIMessage objects already, so this special handling isn't required
       owner.message = nil
       table.remove(self.message_queue, i)
+      self:_tryAdvanceQueue(msg_info.type)
       return true
     end
   end
+  -- Remove message from botton drawer
   for _, window in ipairs(self.message_windows) do
     if window.owner == owner then
       window:removeMessage()
+      self:_tryAdvanceQueue(window.type)
       return true
+    end
+  end
+  -- Remove message from the unshowed message queue
+  for _, messages_group in pairs(self.message_queue_unshowed) do
+    for i, msg_info in ipairs(messages_group) do
+      if msg_info.owner == owner then
+        owner.message = nil
+        table.remove(messages_group, i)
+        return true
+      end
     end
   end
   return false
@@ -561,39 +631,43 @@ end
 
 --! Pop the message with the given index from the message queue and turn it into an actual
 -- message window; if no index is provided the first message in the queue is popped.
-function UIBottomPanel:createMessageWindow(index)
-  local --[[persistable:bottom_panel_message_window_close]] function onClose(window)
+function UIBottomPanel:_createMessageWindow(show_last)
+  local --[[persistable:bottom_panel_message_window_close]] function onClose(current_window)
     local index_to_remove
-    for i, win in ipairs(self.message_windows) do
+    for i, window in ipairs(self.message_windows) do
+      -- If icon position found
       if index_to_remove ~= nil then
-        win:setXLimit(1 + (i - 2) * 30)
-      elseif win == window then
+        -- Shift all icons that are on the right to the left
+        window:setXLimit(1 + (i - 2) * 30)
+      elseif window == current_window then
         index_to_remove = i
-        if win.callback then
-          win.callback()
+        if window.callback then
+          window.callback()
         end
       end
     end
     table.remove(self.message_windows, index_to_remove)
+    self:_tryAdvanceQueue(current_window.type)
   end
 
-  if not index then
-    index = 1
-  end
-  local message_windows = self.message_windows
-  local message_info = self.message_queue[index]
-  if not message_info then
+  if #self.message_queue == 0 then
     return
   end
+
+  local index = show_last and #self.message_queue or 1
+  local message_windows = self.message_windows
+  local message_info = self.message_queue[index]
+
   -- Create the message window, note this does not show it to the player on creation.
   local alert_window = UIMessage(self.ui, 175, 1 + #message_windows * 30,
-    onClose, message_info.type, message_info.message, message_info.owner, message_info.timeout, message_info.default_choice, message_info.callback)
+    onClose, message_info.type, message_info.message, message_info.owner,
+    message_info.timeout, message_info.default_choice, message_info.callback)
   message_windows[#message_windows + 1] = alert_window
   self:addWindow(alert_window)
   self.factory_direction = 1
   self.show_animation = true
   self.factory_counter = -50                -- Delay close of message factory
-  table.remove(self.message_queue, index)   -- Delete the last element of the queue
+  table.remove(self.message_queue, index)   -- Delete element of the queue
 end
 
 function UIBottomPanel:onTick()
@@ -613,7 +687,7 @@ function UIBottomPanel:onTick()
     if self.factory_counter >= 0 then
       if self.factory_counter == 0 then
         -- Animation ends so we can now show the message
-        self:createMessageWindow()
+        self:_createMessageWindow(false)
       end
       self.factory_counter = self.factory_counter - 1
     end
@@ -640,7 +714,7 @@ function UIBottomPanel:onTick()
 
   -- Move an item out of the message queue if there is room
   if #self.message_windows < 5 and #self.message_queue > 0 then
-    self:showMessage()
+    self:_showMessage()
   end
 
   Window.onTick(self)
@@ -989,6 +1063,10 @@ function UIBottomPanel:afterLoad(old, new)
   if old < 236 then
    self:_initFonts(self.ui.app.gfx)
   end
+  if old < 244 then
+    self.message_queue_unshowed = {}
+  end
+
   -- Hotfix to force re-calculation of the money font (see issue #1193)
   self.money_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font05V", nil, nil, { apply_ui_scale = true })
   self:registerKeyHandlers()

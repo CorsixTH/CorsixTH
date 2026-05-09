@@ -401,7 +401,7 @@ function GameUI:makeDebugFax()
   }
   -- Don't use "strike" type here, as these open a different window and must have an owner
   local types = {"emergency", "epidemy", "personality", "information", "disease", "report"}
-  self.bottom_panel:queueMessage(types[math.random(1, #types)], message)
+  self.bottom_panel:sendIncomingMessage(types[math.random(1, #types)], message)
 end
 
 function GameUI:ScreenToWorld(x, y)

@@ -164,6 +164,7 @@ function UIMessage:dismissMessage()
   end
 end
 
+-- Sets the offset for the icon position relative to the right edge of the messages drawer.
 function UIMessage:setXLimit(stop_x)
   assert(stop_x <= self.stop_x, "UIMessage moved in wrong direction")
   self.stop_x = stop_x
