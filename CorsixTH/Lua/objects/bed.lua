@@ -76,25 +76,40 @@ object.orientations = {
                   {0, -1, complete_cell = true}, {-1, 0, complete_cell = true},
                   {0, 0, complete_cell = true} },
     use_position = {1, -1},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 2,
+      proxies = {{-1, 0, crop_base = 0, crop_width = 3}}
+    }
   },
   east = {
     footprint = { {0, 1, only_passable = true}, {-1, -1, complete_cell = true},
                   {0, -1, complete_cell = true}, {-1, 0, complete_cell = true},
                   {0, 0, complete_cell = true} },
     use_position = {0, 1},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 1, crop_width = 1}, {0, 1, crop_base = 0, crop_width = 2}}
+    }
   },
   south = {
     footprint = { {1, 0, only_passable = true}, {-1, -1, complete_cell = true},
                   {0, -1, complete_cell = true}, {-1, 0, complete_cell = true},
                   {0, 0, complete_cell = true} },
     use_position = {1, 0},
-    render_attach_position = {-1, 0},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies={{-1, 0, crop_base = 0, crop_width = 3}}
+    }
   },
   west = {
     footprint = { {-1, 1, only_passable = true}, {-1, -1, complete_cell = true},
                   {0, -1, complete_cell = true}, {-1, 0, complete_cell = true},
                   {0, 0, complete_cell = true} },
     use_position = {-1, 1},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies={{0, 0, crop_base = 1, crop_width = 1}, {-1, 1, crop_base = 0, crop_width = 3}}
+    }
   },
 }
 

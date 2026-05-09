@@ -39,6 +39,10 @@ object.orientations = {
                 },
     use_position = {0, -1},
     use_position_secondary = {0, 1},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 1, crop_base = 0, crop_width = 3}}
+    }
   },
   east = {
     footprint = { {0, 0}, {0, -1, need_west_side = true, need_east_side = true},
@@ -47,6 +51,10 @@ object.orientations = {
                 },
     use_position = {1, 0},
     use_position_secondary = {-1, 0},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 1, crop_base = 0, crop_width = 3}}
+    }
   },
   south = {
     footprint = { {0, 0}, {0, -1, only_passable = true}, {0, 1, only_passable = true},
@@ -55,6 +63,10 @@ object.orientations = {
                 },
     use_position = {0, 1},
     use_position_secondary = {0, -1},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 1, crop_base = 0, crop_width = 3}}
+    }
   },
   west = {
     footprint = { {0, 0}, {0, -1, need_west_side = true, need_east_side = true},
@@ -63,6 +75,10 @@ object.orientations = {
                 },
     use_position = {-1, 0},
     use_position_secondary = {1, 0},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 1, crop_base = 0, crop_width = 3}}
+    }
   },
 }
 

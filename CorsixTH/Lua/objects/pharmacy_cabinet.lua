@@ -74,12 +74,20 @@ object.orientations = {
     use_position = {0, 1},
     use_position_secondary = {-1, 1},
     use_animate_from_use_position = true,
+    render_attach_position = {
+      0, 0, crop_base = 1, crop_width = 1,
+      proxies = {{-1, 1, crop_base = 0, crop_width = 3}}
+    }
   },
   east = {
     footprint = { {0, 0, complete_cell = true}, {1, 0, only_passable = true}, {2, 0, only_passable = true}, {1, -1, only_passable = true} },
     use_position = {1, 0},
     use_position_secondary = {1, -1},
     use_animate_from_use_position = true,
+    render_attach_position = {
+      1, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 0, crop_width = 3}}
+    }
   },
 }
 
