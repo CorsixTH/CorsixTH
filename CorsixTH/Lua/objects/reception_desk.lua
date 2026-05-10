@@ -213,13 +213,7 @@ function ReceptionDesk:setTile(x, y)
   return self
 end
 
-function ReceptionDesk:onDestroy()
-  self:resetUsageAndReservaton()
-  return Object.onDestroy(self)
-end
-
 function ReceptionDesk:onPickUp()
-  self:resetUsageAndReservaton()
   self.hospital:buildReceptionDesksCache()
   Object.onPickUp(self)
 end

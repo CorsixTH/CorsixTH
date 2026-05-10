@@ -172,17 +172,6 @@ function Bench:removeUser(user)
   return Object.removeUser(self, user)
 end
 
-function Bench:onDestroy()
-  self:resetUsageAndReservaton()
-  Object.onDestroy(self)
-end
-
---! Called when the player picks up a bench
-function Bench:onPickUp()
-  self:resetUsageAndReservaton()
-  Object.onPickUp(self)
-end
-
 function Bench:resetUsageAndReservaton()
   -- make sure that action:isStanding() will be true, see issue 404
   if self.user then
