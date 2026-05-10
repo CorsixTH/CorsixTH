@@ -282,10 +282,15 @@ function Entity:onDestroy()
   -- Clear any mood
   self:setMoodInfo()
   self:setTile(nil)
-  self.world.dispatcher:dropFromQueue(self)
+  self:onPickUp()
   if self.waiting_for_sound_effects_to_be_turned_on then
     TheApp.audio:entityNoLongerWaitingForSoundsToBeTurnedOn(self)
   end
+end
+
+-- Function which is called when entity is picked up
+function Entity:onPickUp()
+  self.world.dispatcher:dropFromQueue(self)
 end
 
 -- Function which is called at the end of each ingame day. Should be used to

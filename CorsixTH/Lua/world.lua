@@ -1492,7 +1492,7 @@ function World:getFreeBench(x, y, distance)
   x, y, distance = math.floor(x), math.floor(y), math.ceil(distance)
   self.pathfinder:findObject(x, y, object_type.thob, distance, function(xpos, ypos, d, dist)
     local b = self:getObject(xpos, ypos, "bench", true)
-    if b and not b.user and not b.reserved_for then
+    if b and not b.user and not b.reserved_for and not b.picked_up then
       local orientation = object_type.orientations[b.direction]
       if orientation.pathfind_allowed_dirs[d] then
         rx = xpos + orientation.use_position[1]
@@ -1628,7 +1628,7 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
   local object, ox, oy
   self:findObjectNear(humanoid, object_type_name, nil, true, function(x, y, d)
     local obj = self:getObject(x, y, object_type_name)
-    if obj.user or (obj.reserved_for and obj.reserved_for ~= humanoid) or (current_object and obj == current_object) then
+    if obj.user or obj.picked_up or (obj.reserved_for and obj.reserved_for ~= humanoid) or (current_object and obj == current_object) then
       return
     end
     local orientation = obj.object_type.orientations
@@ -2205,10 +2205,8 @@ function World:getObject(x, y, id, only_usable)
   local objects = self:getObjects(x, y)
   if objects then
     if not id then
-      for _, obj in ipairs(objects) do
-        if not only_usable or not obj.picked_up then
-          return obj
-        end
+      if not only_usable or not objects[1].picked_up then
+        return objects[1]
       end
     elseif type(id) == "table" then
       for _, obj in ipairs(objects) do

@@ -802,10 +802,7 @@ function Object:onClick(ui, button, data)
 
     self.picked_up = true
     if not room_editing_mode then
-      -- Do not actually delete the object, but make it invisible during the pickup.
-      self:cancelUsage()
-      self:denyReservation()
-      self:setInvisible(true)
+      self:onPickUp()
       window = UIPlaceObjects(ui, object_list, false) -- don't pay for
       ui:addWindow(window)
     else
@@ -842,9 +839,7 @@ function Object:onDestroy()
     room.objects[self] = nil
   end
 
-  self:cancelUsage()
-  self:denyReservation()
-
+  self:resetUsageAndReservaton()
   Entity.onDestroy(self)
 
   -- Issue 1105 - rebuild wall travel<dir> and pathfinding on side object removal
@@ -852,6 +847,17 @@ function Object:onDestroy()
     self.world.map.th:updatePathfinding()
     self.world:resetSideObjects()
   end
+end
+
+function Object:onPickUp()
+  self:resetUsageAndReservaton()
+  Entity.onPickUp(self)
+  self:setInvisible(true)
+end
+
+function Object:resetUsageAndReservaton()
+  self:cancelUsage()
+  self:denyReservation()
 end
 
 function Object:cancelUsage()

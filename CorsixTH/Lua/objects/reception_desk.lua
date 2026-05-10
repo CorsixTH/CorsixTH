@@ -208,12 +208,25 @@ function ReceptionDesk:setTile(x, y)
   Object.setTile(self, x, y)
   if x and y then
     self:checkForNearbyStaff()
+    self.hospital:buildReceptionDesksCache()
   end
   return self
 end
 
 function ReceptionDesk:onDestroy()
+  self:resetUsageAndReservaton()
+  return Object.onDestroy(self)
+end
+
+function ReceptionDesk:onPickUp()
+  self:resetUsageAndReservaton()
+  self.hospital:buildReceptionDesksCache()
+  Object.onPickUp(self)
+end
+
+function ReceptionDesk:resetUsageAndReservaton()
   self.being_destroyed = true -- temporary flag for receptionist (re-)routing logic
+
   local receptionist = self.receptionist or self.reserved_for
   if receptionist then
     receptionist:handleRemovedObject(self)
@@ -233,7 +246,7 @@ function ReceptionDesk:onDestroy()
   self.queue:rerouteAllPatients(nil)
 
   self.being_destroyed = nil
-  return Object.onDestroy(self)
+  Object.resetUsageAndReservaton(self)
 end
 
 --[[ Create orders for the specified receptionist to walk to and then staff the reception desk,

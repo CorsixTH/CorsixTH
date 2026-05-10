@@ -246,11 +246,12 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, placed, move_c
   if object.existing_object then
     -- Previously grabbed an existing object so the object was not deleted
     -- from its previous location, but simply made invisible.
-    object.existing_object:setInvisible(false)
-    object.existing_object.picked_up = false
     if move_canceled then
-      -- Object placed back
-      self.ui:playSound("place_r.wav")
+      -- Object placed back. Restore coordinate and orientation.
+      self.object_cell_x = object.existing_object.tile_x
+      self.object_cell_y = object.existing_object.tile_y
+      self.object_orientation = object.existing_object.direction
+      self:placeObject()
     elseif not placed then
       -- Destroy object
       -- The player should be reimbursed for the cost of the item, i.e.
@@ -526,10 +527,11 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   if real_obj then
     -- If there is such an object then we don't want to make a new one, but move this one instead.
     if real_obj.picked_up and not real_obj.th:isVisible() then
-      -- previously grabbed an existing object so the object was not actually
+      -- Previously grabbed an existing object so the object was not actually
       -- deleted from its previous location, but simply made invisible.
+      real_obj:setTile(nil)
       real_obj:setInvisible(false)
-      self.world:destroyEntity(real_obj)
+      real_obj.picked_up = false
     end
 
     if real_obj.orientation_before and real_obj.orientation_before ~= self.object_orientation then
@@ -541,8 +543,6 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     if real_obj.slave then
       self.world:objectPlaced(real_obj.slave)
     end
-    -- Some objects (e.g. the plant) uses this flag to avoid doing stupid things when picked up.
-    real_obj.picked_up = false
     if real_obj:isMachine() then
       -- Machines may have some state like smoke and etc. Update it.
       real_obj:placed(room)
@@ -567,9 +567,6 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   self:removeObject(object, dont_close_if_empty, true, false)
   object.orientation_before = nil
 
-  if object.object.id == "reception_desk" then -- Rebuild cache of reception desks
-    self.ui.hospital:buildReceptionDesksCache()
-  end
   return real_obj
 end
 

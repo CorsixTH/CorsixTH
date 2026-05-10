@@ -307,11 +307,21 @@ function Plant:isDying()
 end
 
 function Plant:onDestroy()
+  self:resetUsageAndReservaton()
+  Object.onDestroy(self)
+end
+
+function Plant:onPickUp()
+  self:resetUsageAndReservaton()
+  Object.onPickUp(self)
+end
+
+function Plant:resetUsageAndReservaton()
   local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
   if index ~= -1 then
     self.hospital:removeHandymanTask(index, "watering")
   end
-  Object.onDestroy(self)
+  Object.resetUsageAndReservaton(self)
 end
 
 function Plant:afterLoad(old, new)
