@@ -256,7 +256,7 @@ function UIEditRoom:confirm(force)
   end
 end
 
-local function isHumanoidObscuringArea(humanoid, x1, x2, y1, y2)
+function UIEditRoom.isHumanoidObscuringArea(humanoid, x1, x2, y1, y2)
   if humanoid.tile_x then
     if x1 <= humanoid.tile_x and humanoid.tile_x <= x2 and
         y1 <= humanoid.tile_y and humanoid.tile_y <= y2 then
@@ -294,7 +294,7 @@ function UIEditRoom:clearArea()
     local y2 = rect.y + rect.h
     for _, entity in ipairs(world.entities) do
       if class.is(entity, Humanoid) and
-          isHumanoidObscuringArea(entity, x1, x2, y1, y2) then
+          UIEditRoom.isHumanoidObscuringArea(entity, x1, x2, y1, y2) then
         humanoids_to_watch[entity] = true
 
         -- Try to make the humanoid leave the area
@@ -366,7 +366,7 @@ function UIEditRoom:onTick()
           if not humanoid.hospital then
             self.humanoids_to_watch[humanoid] = nil
           end
-        elseif not isHumanoidObscuringArea(humanoid, x1, x2, y1, y2) then
+        elseif not UIEditRoom.isHumanoidObscuringArea(humanoid, x1, x2, y1, y2) then
           self.humanoids_to_watch[humanoid] = nil
         end
       end
