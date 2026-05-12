@@ -1511,7 +1511,7 @@ function World:anyHumanoidObscuringArea(x, y)
   -- Search for humanoids on the given tile and all neighboring tiles, but not diagonal ones
   local humanoids = self.entity_map:getHumanoidsInSquareAndInAdjacentSquares(x, y)
   for _, humanoid in ipairs(humanoids) do
-    if UIEditRoom.isHumanoidObscuringArea(humanoid, x - 1, x + 1, y - 1, y + 1) then
+    if humanoid:isObscuringArea(x - 1, x + 1, y - 1, y + 1) then
       return true
     end
   end
