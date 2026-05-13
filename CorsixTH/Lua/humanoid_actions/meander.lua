@@ -79,12 +79,11 @@ local function meander_action_start(action, humanoid)
   local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,
       humanoid.tile_y, math.random(1, 24), meander_parcel)
 
-  if x == humanoid.tile_x and y == humanoid.tile_y then
-    -- Nowhere to walk to - go idle instead, or go onto the next action
-    if #humanoid.action_queue == 1 then
-      humanoid:queueAction(IdleAction())
-    end
-    humanoid:finishAction()
+  if not x or (x == humanoid.tile_x and y == humanoid.tile_y and #humanoid.action_queue == 1) then
+    -- TODO: Call to show "Someone has got stuck. Plan your hospital better" adviser message should be here.
+    -- Unable to find valid tiles for meandering. Queue an idle animation.
+    action.can_idle = false
+    humanoid:queueAction(IdleAction():setCount(5):setMustHappen(action.must_happen), 0)
     return
   end
   if action.todo_interrupt then

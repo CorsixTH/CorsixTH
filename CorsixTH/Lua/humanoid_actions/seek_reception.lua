@@ -124,8 +124,8 @@ local function action_seek_reception_start(action, humanoid)
     humanoid.hospital:msgMultiReceptionDesks()
 
   else
-    -- No reception desk found. One will probably be built soon, somewhere in
-    -- the hospital, so either walk to the hospital, or walk around the hospital.
+    -- No reachable reception desk found. One will probably be built soon, somewhere
+    -- in the hospital, so either walk to the hospital, or walk around the hospital.
     local procrastination
     if humanoid.hospital:isInHospital(humanoid.tile_x, humanoid.tile_y) then
       procrastination = MeanderAction():setCount(1):setMustHappen(action.must_happen)
