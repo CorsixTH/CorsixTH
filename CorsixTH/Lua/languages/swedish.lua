@@ -386,7 +386,6 @@ customise_window = {
   movies = "Global filmkontroll",
   intro = "Spela introfilmen",
   paused = "Bygg i pausläge",
-  volume = "Tangent: volym ner",
   aliens = "Utomjordingar",
   fractured_bones = "Krossad patient",
   average_contents = "Genomsnittsinnehåll",

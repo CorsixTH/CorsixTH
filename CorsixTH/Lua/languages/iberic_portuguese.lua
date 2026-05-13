@@ -345,7 +345,6 @@ tooltip = {
     language = "Escolhe %s como a tua linguagem.",
     back = "Fecha a janela de opçoes.",
     },
-
 }
 
 

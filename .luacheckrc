@@ -49,7 +49,7 @@ globals = { -- Globals
             "SubtitleQueue",
 
             -- UI
-            "UI", "UIAdviser", "UIAnnualReport", "UIAudio", "UIBankManager",
+            "UI", "UIAdviser", "UIAccessibility", "UIAnnualReport", "UIAudio", "UIBankManager",
             "UIBottomPanel", "UIBuildRoom", "UICallsDispatcher", "UICasebook",
             "UICheats", "UIChooseFont", "UIChooseSoundfont", "UIConfirmDialog",
             "UICustomCampaign", "UICustomGame", "UICustomise",
