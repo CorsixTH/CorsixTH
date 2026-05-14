@@ -1492,8 +1492,8 @@ function World:getFreeBench(x, y, distance)
   local object_type = self.object_types.bench
   x, y, distance = math.floor(x), math.floor(y), math.ceil(distance)
   self.pathfinder:findObject(x, y, object_type.thob, distance, function(xpos, ypos, d, dist)
-    local b = self:getObject(xpos, ypos, "bench")
-    if b and not b.user and not b.reserved_for then
+    local b = self:getObject(xpos, ypos, "bench", true)
+    if b and not b.user and not b.reserved_for and not b.picked_up then
       local orientation = object_type.orientations[b.direction]
       if orientation.pathfind_allowed_dirs[d] then
         rx = xpos + orientation.use_position[1]
@@ -1568,10 +1568,11 @@ then call findFreeObjectNearToUse instead.
 !param object_type_name The objects to search for
 !param distance Maximum L1 distance to search from humanoid. If nil then
        everywhere in range will be searched.
+!param only_usable Bool If true the object must be permitted for use
 !param callback Function to call for each result. If it returns true then
        the search will be ended.
 --]]
-function World:findObjectNear(humanoid, object_type_name, distance, callback)
+function World:findObjectNear(humanoid, object_type_name, distance, only_usable, callback)
   if not distance then
     distance = 2^30
   end
@@ -1579,26 +1580,28 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   if not callback then
     -- The default callback returns the first object found
     callback = function(x, y, d)
-      obj = self:getObject(x, y, object_type_name)
-      local orientation = obj.object_type.orientations
-      if orientation then
-        orientation = orientation[obj.direction]
-        if not orientation.pathfind_allowed_dirs[d] then
-          return
+      obj = self:getObject(x, y, object_type_name, only_usable)
+      if obj then
+        local orientation = obj.object_type.orientations
+        if orientation then
+          orientation = orientation[obj.direction]
+          if not orientation.pathfind_allowed_dirs[d] then
+            return
+          end
+          x = x + orientation.use_position[1]
+          y = y + orientation.use_position[2]
         end
-        x = x + orientation.use_position[1]
-        y = y + orientation.use_position[2]
+        ox = x
+        oy = y
+        return true
       end
-      ox = x
-      oy = y
-      return true
     end
   end
   local thob = 0
   if type(object_type_name) == "table" then
     local original_callback = callback
     callback = function(x, y, ...)
-      local cb_obj = self:getObject(x, y, object_type_name)
+      local cb_obj = self:getObject(x, y, object_type_name, only_usable)
       if cb_obj then
         return original_callback(x, y, ...)
       end
@@ -1624,9 +1627,9 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
   -- Other values for which may be added in the future.
   -- Specify current_object if you want to exclude the currently used object from the search
   local object, ox, oy
-  self:findObjectNear(humanoid, object_type_name, nil, function(x, y, d)
+  self:findObjectNear(humanoid, object_type_name, nil, true, function(x, y, d)
     local obj = self:getObject(x, y, object_type_name)
-    if obj.user or (obj.reserved_for and obj.reserved_for ~= humanoid) or (current_object and obj == current_object) then
+    if obj.user or obj.picked_up or (obj.reserved_for and obj.reserved_for ~= humanoid) or (current_object and obj == current_object) then
       return
     end
     local orientation = obj.object_type.orientations
@@ -1743,14 +1746,14 @@ function World:newEntity(class, animation, mood_marker)
   return entity
 end
 
-function World:destroyEntity(entity)
+function World:destroyEntity(obj)
   for i, e in ipairs(self.entities) do
-    if e == entity then
+    if e == obj then
       table.remove(self.entities, i)
       break
     end
   end
-  entity:onDestroy()
+  obj:onDestroy()
 end
 
 function World:newObjectType(new_object)
@@ -2196,22 +2199,25 @@ end
 --!param x (int) X position of the object to retrieve.
 --!param y (int) Y position of the object to retrieve.
 --!param id Id to search, nil gets first object, string gets first object with
+--!param only_usable (bool) If true the object must be permitted for use
 --! that id, set of strings gets first object that matches an entry in the set.
 --!return (Object or nil) The found object, or nil if the object is not found.
-function World:getObject(x, y, id)
+function World:getObject(x, y, id, only_usable)
   local objects = self:getObjects(x, y)
   if objects then
     if not id then
-      return objects[1]
+      if not only_usable or not objects[1].picked_up then
+        return objects[1]
+      end
     elseif type(id) == "table" then
       for _, obj in ipairs(objects) do
-        if id[obj.object_type.id] then
+        if id[obj.object_type.id] and (not only_usable or not obj.picked_up) then
           return obj
         end
       end
     else
       for _, obj in ipairs(objects) do
-        if obj.object_type.id == id then
+        if obj.object_type.id == id  and (not only_usable or not obj.picked_up) then
           return obj
         end
       end
@@ -2846,7 +2852,7 @@ passable tiles (the norm for most objects)]]
 --!return (boolean) indicating if exclusively passable or not
 function World:isTileExclusivelyPassable(x, y, distance)
   for o in pairs(self:findAllObjectsNear(x, y, distance)) do
-    if o and o.footprint then
+    if o and not o.picked_up and o.footprint then
       for _, footprint in pairs(o.footprint) do
         if footprint[1] + o.tile_x == x and footprint[2] + o.tile_y == y and footprint.only_passable and not footprint.shareable then
           return false
@@ -2855,7 +2861,8 @@ function World:isTileExclusivelyPassable(x, y, distance)
     else
       -- doors don't have a footprint but objects can't be built blocking them either
       for _, footprint in pairs(o:getWalkableTiles()) do
-        if o.object_type and o.object_type.thob ~= 62 and footprint[1] == x and footprint[2] == y then
+        -- 62 is a litter thob
+        if not o.picked_up and o.object_type and o.object_type.thob ~= 62 and footprint[1] == x and footprint[2] == y then
           return false
         end
       end

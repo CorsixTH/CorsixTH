@@ -875,7 +875,7 @@ function Patient:_handleExcessThirst()
     return
   end
 
-  local machine, lx, ly = self.world:findObjectNear(self, "drinks_machine", 8)
+  local machine, lx, ly = self.world:findObjectNear(self, "drinks_machine", 8, true)
 
   -- If no machine can be found, resume previous action and wait a
   -- while before trying again. To get a little randomness into the picture

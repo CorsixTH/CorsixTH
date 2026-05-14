@@ -738,7 +738,7 @@ function UIEditRoom:removeRoom(save_objects, room, world)
       self.objects_backup[k] = { object = o.object, qty = o.qty, state = o.state }
     end
 
-    UIPlaceObjects.removeAllObjects(self, true)
+    UIPlaceObjects.removeAllObjects(self)
   end
 
   self:_remove_wall_line(room.x, room.y, 0, 1, room.height, 3, -1,  0, world)
