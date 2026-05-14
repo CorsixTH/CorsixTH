@@ -1437,6 +1437,15 @@ function World:getPathDistance(x1, y1, x2, y2)
   return self.pathfinder:findDistance(x1, y1, x2, y2)
 end
 
+--! Get the shortest passable path between the two given map tiles.
+--!param x (integer) X-cordinate of start tile's Lua tile coordinates.
+--!param y (integer) Y-cordinate of start tile's Lua tile coordinates.
+--!param dest_x (integer) X-cordinate of destination tile's Lua tile coordinates.
+--!param dest_y (integer) Y-cordinate of destination tile's Lua tile coordinates.
+--!return (array, array) Two arrays - array of x's and array of y's - pairs
+-- with the same index from each array represent intermediate tiles
+-- from start to destination. If there is no path then (nil, nil)
+-- will be returned.
 function World:getPath(x, y, dest_x, dest_y)
   return self.pathfinder:findPath(x, y, dest_x, dest_y)
 end
