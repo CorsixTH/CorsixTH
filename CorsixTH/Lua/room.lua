@@ -209,14 +209,9 @@ function Room:dealtWithPatient(patient)
     if not patient.diagnosed then
       -- Patient not yet diagnosed, hence just been in a diagnosis room.
       -- Increment diagnosis_progress, and send patient back to GP.
-
-      patient:completeDiagnosticStep(self)
       self.hospital:receiveMoneyForTreatment(patient)
-      if patient:agreesToPay("diag_gp") then
-        patient:queueAction(SeekRoomAction("gp"))
-      else
-        patient:goHome("over_priced", "diag_gp")
-      end
+      patient:advanceDiagnosticProgress(self)
+      patient:decideWhichRoomToGoToNext()
     else
       -- Patient just been in a cure room, so either patient now cured, or needs
       -- to move onto next cure room.
@@ -234,7 +229,6 @@ function Room:dealtWithPatient(patient)
     patient:queueAction(MeanderAction():setCount(2))
     patient:queueAction(IdleAction())
   end
-
 end
 
 local profile_attributes = {

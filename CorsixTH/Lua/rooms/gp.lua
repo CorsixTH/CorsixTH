@@ -126,34 +126,26 @@ function GPRoom:dealtWithPatient(patient)
   patient:setNextAction(self:createLeaveAction())
   patient:addToTreatmentHistory(self.room_info)
 
-  -- If the patient got sent to the wrong room and needs telling where
-  -- to go next - this happens when a disease changes for an epidemic
+  local doctor = self.staff_member
   if patient.needs_redirecting then
-    self:sendPatientToNextDiagnosisRoom(patient)
+    -- The patient got sent to the wrong room and needs telling where
+    -- to go next - this happens when a disease changes for an epidemic
+    patient:decideWhichRoomToGoToNext()
     patient.needs_redirecting = false
   elseif patient.disease and not patient.diagnosed then
     self.hospital:receiveMoneyForTreatment(patient)
-    patient:completeDiagnosticStep(self)
-    local no_need_diagnose_further =
-      patient.diagnosis_progress >= self.hospital.policies["stop_procedure"]
-    local cant_diagnose_further_but_can_set_diagnosis =
-      (patient.diagnosis_progress >= 1.0) and (not patient:hasMoreDiagnosisRoomsAvailable())
-    if no_need_diagnose_further or cant_diagnose_further_but_can_set_diagnosis then
-      patient:setDiagnosed()
-      if patient:agreesToPay(patient.disease.id) then
-        patient:queueAction(SeekRoomAction(patient.disease.treatment_rooms[1]):enableTreatmentRoom())
-      else
-        patient:goHome("over_priced", patient.disease.id)
-      end
-
-      self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
+    patient:advanceDiagnosticProgress(self)
+    patient:attemptToSetFinalDiagnosis()
+    if patient.diagnosed then
+      doctor:setMood("idea3", "activate") -- Show the light bulb over the doctor
       -- Check if this disease has just been discovered
       if not self.hospital.disease_casebook[patient.disease.id].discovered then
         self.hospital.research:discoverDisease(patient.disease)
       end
     else
-      self:sendPatientToNextDiagnosisRoom(patient)
+      doctor:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
     end
+    patient:decideWhichRoomToGoToNext()
   else
     patient:queueAction(MeanderAction():setCount(2))
     patient:queueAction(IdleAction())
@@ -161,24 +153,6 @@ function GPRoom:dealtWithPatient(patient)
 
   if self.staff_member then
     self:setStaffMembersAttribute("dealing_with_patient", false)
-  end
-end
-
-function GPRoom:sendPatientToNextDiagnosisRoom(patient)
-  if not patient:hasMoreDiagnosisRoomsAvailable() then
-    -- The very rare case where the patient has visited all his/her possible diagnosis rooms
-    -- There's not much to do then... Send home
-    patient:goHome("kicked")
-    patient:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
-  else
-    self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
-    local next_room_id = math.random(1, #patient.available_diagnosis_rooms)
-    local next_room = patient.available_diagnosis_rooms[next_room_id]
-    if patient:agreesToPay("diag_" .. next_room) then
-      patient:queueAction(SeekRoomAction(next_room):setDiagnosisRoom(next_room_id))
-    else
-      patient:goHome("over_priced", "diag_" .. next_room)
-    end
   end
 end
 

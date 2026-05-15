@@ -194,7 +194,7 @@ end
 
 --! Updates the patients diagnostic progress based on the doctors skill
 -- called when they are done using a diagnosis room
-function Patient:completeDiagnosticStep(room)
+function Patient:advanceDiagnosticProgress(room)
   -- Base: depending on difficulty of disease as set in sam file
   -- tiredness reduces the chance of diagnosis if staff member is above 50% tired
   local multiplier = 1
@@ -354,10 +354,6 @@ function Patient:isTreatmentEffective()
   cure_chance = cure_chance + (service_base * service_factor)
 
   return (cure_chance >= math.random(1,100))
-end
-
-function Patient:hasMoreDiagnosisRoomsAvailable()
-  return #self.available_diagnosis_rooms ~= 0
 end
 
 --! Change patient internal state to "cured".
@@ -1363,6 +1359,73 @@ function Patient:interruptAndRequeueAction(current_action, queue_pos, meander_be
     current_action.on_interrupt(current_action, self)
   else
     self:finishAction()
+  end
+end
+
+function Patient:hasMoreDiagnosisRoomsAvailable()
+  return #self.available_diagnosis_rooms ~= 0
+end
+
+function Patient:decideWhichRoomToGoToNext()
+  if not self.has_passed_reception then
+    self:setNextAction(SeekReceptionAction())
+    return
+  end
+
+  if self.diagnosed then
+    self:sendPatientToTreatmentRoom()
+    return
+  end
+
+  local last_room_gp = self.treatment_history[#self.treatment_history] == _S.rooms_short.gps_office
+  if last_room_gp then
+    self:sendPatientToNextDiagnosisRoom()
+  else
+    self:sendPatientToGPRoom()
+  end
+end
+
+function Patient:attemptToSetFinalDiagnosis()
+  local no_need_diagnose_further =
+    self.diagnosis_progress >= self.hospital.policies["stop_procedure"]
+  local cant_diagnose_further_but_can_set_diagnosis =
+    (self.diagnosis_progress >= 1.0) and (not self:hasMoreDiagnosisRoomsAvailable())
+
+  if no_need_diagnose_further or cant_diagnose_further_but_can_set_diagnosis then
+    self:setDiagnosed()
+  end
+end
+
+function Patient:sendPatientToGPRoom()
+  if self:agreesToPay("diag_gp") then
+    self:queueAction(SeekRoomAction("gp"))
+  else
+    self:goHome("over_priced", "diag_gp")
+  end
+end
+
+function Patient:sendPatientToNextDiagnosisRoom()
+  if self:hasMoreDiagnosisRoomsAvailable() then
+    local next_room_id = math.random(1, #self.available_diagnosis_rooms)
+    local next_room = self.available_diagnosis_rooms[next_room_id]
+    if self:agreesToPay("diag_" .. next_room) then
+      self:queueAction(SeekRoomAction(next_room):setDiagnosisRoom(next_room_id))
+    else
+      self:goHome("over_priced", "diag_" .. next_room)
+    end
+  else
+    -- The very rare case where the patient has visited all his/her possible diagnosis rooms
+    -- There's not much to do then... Send home
+    self:goHome("kicked")
+    self:setDynamicInfoText(_S.dynamic_info.patient.actions.no_diagnoses_available)
+  end
+end
+
+function Patient:sendPatientToTreatmentRoom()
+  if self:agreesToPay(self.disease.id) then
+    self:queueAction(SeekRoomAction(self.disease.treatment_rooms[1]):enableTreatmentRoom())
+  else
+    self:goHome("over_priced", self.disease.id)
   end
 end
 
