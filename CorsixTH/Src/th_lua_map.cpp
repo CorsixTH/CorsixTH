@@ -343,7 +343,6 @@ int l_map_updateblueprint(lua_State* L) {
     pAnim->set_flags(is_valid(entire_invalid, pNode, pMap, player_id)
                          ? 0
                          : thdf_alt_palette);
-    pNode = pMap->get_tile_unchecked(iX, iNewY + iNewH);
     pAnim->attach_to_map({iX, iNewY + iNewH}, pMap, 0);
     pAnim->set_pixel_offset(0, -1);
   }
@@ -366,7 +365,6 @@ int l_map_updateblueprint(lua_State* L) {
                      (is_valid(entire_invalid, pNode, pMap, player_id)
                           ? 0
                           : thdf_alt_palette));
-    pNode = pMap->get_tile_unchecked(iNewX + iNewW, iY);
     pAnim->attach_to_map({iNewX + iNewW, iY}, pMap, 0);
     pAnim->set_pixel_offset(2, -1);
   }

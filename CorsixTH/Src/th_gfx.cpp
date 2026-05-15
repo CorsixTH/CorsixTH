@@ -1520,17 +1520,19 @@ void animation::depersist(lua_persist_reader* reader) {
       crop_base = 0;
     }
 
-    if (flags & thdf_crop) {
-      // XXX  if (<<2-values-expected>>) {
-      //        if (!reader->read_int(iDummy)) break;
-      //        crop_width = static_cast<int8_t>(iDummy);
-      //      } else {
-      //        crop_width = 2; // Old version.
-      //      }
-      crop_width = 2;  // Good enough for testing.
-    } else {
+// Disabled completely, since the code checker doesn't like place-holder code.
+//    if (flags & thdf_crop) {
+//      // XXX  if (<<2-values-expected>>) {
+//      //        if (!reader->read_int(iDummy)) break;
+//      //        crop_width = static_cast<int8_t>(iDummy);
+//      //      } else {
+//      //        crop_width = 2; // Old version.
+//      //      }
+//      crop_width = 2;  // Good enough for testing.
+//    } else {
+//      crop_width = 2;
+//    }
       crop_width = 2;
-    }
 
     // Read the unioned fields
     if (anim_kind != animation_kind::primary_child &&
