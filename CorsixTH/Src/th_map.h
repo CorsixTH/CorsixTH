@@ -351,14 +351,15 @@ class level_map {
 
   //! Draw the map (and any attached animations)
   /*!
-      Draws the world pixel rectangle (map_base_x, map_base_y, pix_width, pix_height)
-      to the rectangle (scr_base_x, scr_base_y, pix_width, pix_height) on canvas. Note
-      that world pixel coordinates are also known as absolute screen
-      coordinates - they are not world (tile) coordinates, nor (relative)
-      screen coordinates.
+      Draws the world pixel rectangle (map_base_x, map_base_y, pix_width,
+      pix_height) to the rectangle (scr_base_x, scr_base_y, pix_width,
+      pix_height) on canvas. Note that world pixel coordinates are also known as
+      absolute screen coordinates - they are not world (tile) coordinates, nor
+      (relative) screen coordinates.
   */
-  void draw(render_target* canvas, int map_base_x, int map_base_y, int pix_width,
-            int pix_height, int scr_base_x, int scr_base_y) const;
+  void draw(render_target* canvas, int map_base_x, int map_base_y,
+            int pix_width, int pix_height, int scr_base_x,
+            int scr_base_y) const;
 
   //! Perform a hit-test against the animations attached to the map
   /*!
@@ -391,14 +392,10 @@ class level_map {
   }
 
   //! Convert a map-tile coordinate to its relative x screen coordinate.
-  static int world_to_screen_x(int x, int y) {
-    return 32 * (x - y);
-  }
+  static int world_to_screen_x(int x, int y) { return 32 * (x - y); }
 
   //! Convert a map-tile coordinate to its relative y screen coordinate.
-  static int world_to_screen_y(int x, int y) {
-    return 16 * (x + y);
-  }
+  static int world_to_screen_y(int x, int y) { return 16 * (x + y); }
 
   //! Convert absolute screen coordinates to world (tile) coordinates
   template <typename T>
@@ -420,8 +417,8 @@ class level_map {
   void draw_north_wall(const map_tile* tile, int scr_tile_x, int scr_tile_y,
                        render_target* canvas) const;
 
-  int draw_layer(const map_tile* tile, int scr_tile_x, int scr_tile_y, tile_layer layer,
-                 render_target* canvas) const;
+  int draw_layer(const map_tile* tile, int scr_tile_x, int scr_tile_y,
+                 tile_layer layer, render_target* canvas) const;
 
   //! Check that the sprite indicated by the layer can be found and has height.
   /*
