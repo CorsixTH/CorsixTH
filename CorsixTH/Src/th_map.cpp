@@ -1024,8 +1024,8 @@ void level_map::draw_all_floor(render_target* canvas, int map_base_x,
   }
 }
 
-void level_map::draw_north_wall(const map_tile* tile, int scr_tile_x, int scr_tile_y,
-                                render_target* canvas) const {
+void level_map::draw_north_wall(const map_tile* tile, int scr_tile_x,
+                                int scr_tile_y, render_target* canvas) const {
   int height =
       draw_layer(tile, scr_tile_x, scr_tile_y, tile_layer::north_wall, canvas);
 
@@ -1033,7 +1033,8 @@ void level_map::draw_north_wall(const map_tile* tile, int scr_tile_x, int scr_ti
   if (height > 0 && tile->flags.shadow_wall) {
     clip_rect rcNewClip;
     rcNewClip.x = static_cast<clip_rect::x_y_type>(scr_tile_x - 32);
-    rcNewClip.y = static_cast<clip_rect::x_y_type>(scr_tile_y - height + 32 + 4);
+    rcNewClip.y =
+        static_cast<clip_rect::x_y_type>(scr_tile_y - height + 32 + 4);
     rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
     rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
     render_target::scoped_clip clip(canvas, &rcNewClip);
@@ -1074,7 +1075,7 @@ void level_map::draw(render_target* canvas, int map_base_x, int map_base_y,
    * * The second pass draws the north and west walls, the UI layer, and the
    *   object animations.
    * * The (optional) third pass draws the overlay if it is enabled.
-  */
+   */
 
   if (wall_blocks == nullptr || cells == nullptr) {
     return;
@@ -1573,7 +1574,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     lua_pop(L, 1);
     if (!pReader->read_stack_object()) return;
 
-    lua_pop(L, 1); // Previously contained the early list animations.
+    lua_pop(L, 1);  // Previously contained the early list animations.
   }
 
   integer_run_length_decoder oDecoder(6, pReader);

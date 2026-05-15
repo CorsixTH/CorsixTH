@@ -471,7 +471,8 @@ class animation_base : public drawable {
    * @param layer Drawing layer of the animation.
    * @return Whether attaching succeeded.
    */
-  virtual bool attach_to_map(const xy_pair& tile_pos, level_map* the_map, int layer);
+  virtual bool attach_to_map(const xy_pair& tile_pos, level_map* the_map,
+                             int layer);
 
   uint32_t get_flags() const { return flags; }
   const xy_pair& get_pixel_offset() const { return pixel_offset; }
@@ -509,8 +510,8 @@ class animation;
 class animation_proxy : public animation_base {
  public:
   animation_proxy(animation* const parent_anim_value,
-                  const xy_pair& rel_pos_value,
-                  int8_t crop_base_value, int8_t crop_width_value);
+                  const xy_pair& rel_pos_value, int8_t crop_base_value,
+                  int8_t crop_width_value);
 
   xy_pair get_tile(const xy_pair& anim_pos) const {
     return {anim_pos.x - rel_to_anim.x, anim_pos.y - rel_to_anim.y};
