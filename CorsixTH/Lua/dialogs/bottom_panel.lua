@@ -640,6 +640,8 @@ function UIBottomPanel:createMessageWindow(index)
 end
 
 function UIBottomPanel:onTick()
+  local msg_to_show = self:_findMessageToShow()
+
   -- Advance the animation on the message factory
   if self.factory_direction == FACTORY_DIR_CLOSING then
     -- Close factory animation
@@ -647,7 +649,7 @@ function UIBottomPanel:onTick()
       self.factory_counter = self.factory_counter + 1
     end
   elseif self.factory_direction == FACTORY_DIR_OPENING then
-    if #self.message_queue == 0 then
+    if not msg_to_show then
       -- Message was removed before we could display it. Reset.
       self.factory_direction = FACTORY_DIR_CLOSING
       self.factory_counter = FACTORY_ANIM_TICKS
@@ -661,6 +663,12 @@ function UIBottomPanel:onTick()
       self.factory_counter = self.factory_counter - 1
     end
   end
+
+  -- Start moving message out of the queue if a suitable one is available
+  if msg_to_show then
+    self:_showMessage()
+  end
+
 
   -- The dynamic info bar is there a while longer when hovering an entity has stopped
   if self.countdown then
@@ -679,11 +687,6 @@ function UIBottomPanel:onTick()
     else
       self.countdown = self.countdown - 1
     end
-  end
-
-  -- Start moving message out of the queue if a suitable one is available
-  if self:_findMessageToShow() then
-    self:_showMessage()
   end
 
   Window.onTick(self)
