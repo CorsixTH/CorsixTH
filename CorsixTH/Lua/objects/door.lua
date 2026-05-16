@@ -145,16 +145,6 @@ function Door:getWalkableTiles()
   return { {self.tile_x, self.tile_y}, {x, y} }
 end
 
-local flag_early_list = 1024
-
-function Door:setAnimation(animation, flags)
-  flags = (flags or 0)
-  if self.direction == "north" then
-    flags = flags + flag_early_list
-  end
-  return Object.setAnimation(self, animation, flags)
-end
-
 function Door:closeDoor()
   if self.queue then
     self.queue:rerouteAllPatients(self:getRoom().room_info.id)

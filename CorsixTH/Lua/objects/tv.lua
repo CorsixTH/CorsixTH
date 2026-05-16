@@ -23,7 +23,6 @@ object.id = "tv"
 object.thob = 21
 object.name = _S.object.tv
 object.tooltip = _S.tooltip.objects.tv
-object.ticks = false
 object.build_preview_animation = 5052
 object.idle_animations = {
   north = 396,
@@ -31,16 +30,26 @@ object.idle_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {0, 0, complete_cell = true}, {0, -1, only_passable = true} }
+    footprint = { {0, 0, complete_cell = true}, {0, -1, only_passable = true} },
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 0, crop_width = 2}}
+    }
   },
   east = {
-    footprint = { {0, 0, complete_cell = true}, {1, 0, only_passable = true} }
+    footprint = { {0, 0, complete_cell = true}, {1, 0, only_passable = true} },
+    render_attach_position = {-1, 0}
   },
   south = {
-    footprint = { {0, 0, complete_cell = true}, {0, 1, only_passable = true} }
+    footprint = { {0, 0, complete_cell = true}, {0, 1, only_passable = true} },
+    render_attach_position = {
+      0, 0, crop_base = 1, crop_width = 1,
+      proxies = {{0, 1, crop_base = 0, crop_width = 2}}
+    }
   },
   west = {
-    footprint = { {0, 0, complete_cell = true}, {-1, 0, only_passable = true} }
+    footprint = { {0, 0, complete_cell = true}, {-1, 0, only_passable = true} },
+    render_attach_position = {0, 0}
   },
 }
 

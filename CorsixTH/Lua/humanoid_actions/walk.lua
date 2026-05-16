@@ -107,7 +107,40 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
   end
 end)
 
-local flag_flip_h = 1
+function WalkAction.setWalkEastAnim(humanoid, x, y, factor)
+  humanoid.last_move_direction = "east"
+  humanoid:setAnimation(humanoid.walk_anims.walk_east)
+  humanoid:setTilePositionSpeed(x, y, -32, -16, 4 * factor, 2 * factor)
+end
+
+function WalkAction.setWalkWestAnim(humanoid, x, y, factor)
+  humanoid.last_move_direction = "west"
+  humanoid:setAnimation(humanoid.walk_anims.walk_north, DrawFlags.FlipHorizontal)
+  humanoid:setTilePositionSpeed(x, y, 0, 0, -4 * factor, -2 * factor)
+end
+
+function WalkAction.setWalkNorthAnim(humanoid, x, y, factor)
+  local raps = {
+    0, 0, crop_base=0, crop_width=2,
+    proxies={{0, -1, crop_base=1, crop_width=1}}
+  }
+
+  humanoid.last_move_direction = "north"
+  humanoid:setAnimation(humanoid.walk_anims.walk_north, 0, raps)
+  humanoid:setTilePositionSpeed(x, y, 0, 0, 4 * factor, -2 * factor)
+end
+
+function WalkAction.setWalkSouthAnim(humanoid, x, y, factor)
+  local raps = {
+    0, 1, crop_base=0, crop_width=2,
+    proxies={{0, 0, crop_base=1, crop_width=1}}
+  }
+
+  local flags = DrawFlags.FlipHorizontal
+  humanoid.last_move_direction = "south"
+  humanoid:setAnimation(humanoid.walk_anims.walk_east, flags, raps)
+  humanoid:setTilePositionSpeed(x, y, 32, -16, -4 * factor, 2 * factor)
+end
 
 local navigateDoor
 
@@ -123,7 +156,6 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
     quantity = 4
   end
 
-  local anims = humanoid.walk_anims
   local world = humanoid.world
   local notify_object = world:getObjectToNotifyOfOccupants(x2, y2)
   if notify_object then
@@ -138,17 +170,13 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
       if map and map:getCellFlags(x2, y2).doorWest then
         return navigateDoor(humanoid, x1, y1, "east")
       else
-        humanoid.last_move_direction = "east"
-        humanoid:setAnimation(anims.walk_east)
-        humanoid:setTilePositionSpeed(x2, y2, -32, -16, 4*factor, 2*factor)
+        WalkAction.setWalkEastAnim(humanoid, x2, y2, factor)
       end
     else
       if map and map:getCellFlags(x1, y1).doorWest then
         return navigateDoor(humanoid, x1, y1, "west")
       else
-        humanoid.last_move_direction = "west"
-        humanoid:setAnimation(anims.walk_north, flag_flip_h)
-        humanoid:setTilePositionSpeed(x1, y1, 0, 0, -4*factor, -2*factor)
+        WalkAction.setWalkWestAnim(humanoid, x1, y1, factor)
       end
     end
   else
@@ -156,17 +184,13 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
       if map and map:getCellFlags(x2, y2).doorNorth then
         return navigateDoor(humanoid, x1, y1, "south")
       else
-        humanoid.last_move_direction = "south"
-        humanoid:setAnimation(anims.walk_east, flag_flip_h)
-        humanoid:setTilePositionSpeed(x2, y2, 32, -16, -4*factor, 2*factor)
+        WalkAction.setWalkSouthAnim(humanoid, x2, y2, factor)
       end
     else
       if map and map:getCellFlags(x1, y1).doorNorth then
         return navigateDoor(humanoid, x1, y1, "north")
       else
-        humanoid.last_move_direction = "north"
-        humanoid:setAnimation(anims.walk_north)
-        humanoid:setTilePositionSpeed(x1, y1, 0, 0, 4*factor, -2*factor)
+        WalkAction.setWalkNorthAnim(humanoid, x1, y1, factor)
       end
     end
   end
@@ -355,7 +379,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     direction = "in"
 
   elseif dir == "west" then
-    humanoid:setAnimation(leaving, flag_flip_h)
+    humanoid:setAnimation(leaving, DrawFlags.FlipHorizontal)
     duration = TheApp.animation_manager:getAnimLength(leaving)
     to_x, to_y = dx - 1, dy
     direction = "in"
@@ -367,7 +391,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     direction = "out"
 
   elseif dir == "south" then
-    humanoid:setAnimation(entering, flag_flip_h)
+    humanoid:setAnimation(entering, DrawFlags.FlipHorizontal)
     duration = TheApp.animation_manager:getAnimLength(entering)
     to_x, to_y = dx, dy
     direction = "out"

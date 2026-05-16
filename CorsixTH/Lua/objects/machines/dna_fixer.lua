@@ -66,8 +66,11 @@ object.orientations = {
                   {-2,  0, complete_cell = true}, {-1,  0}, {0,  0, need_south_side = true},
                   {-1,  1, only_passable = true} },
     use_position = "passable",
-    early_list = true,
-    smoke_position = {0, 0}
+    smoke_position = {0, 0},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 1, crop_width = 1}, {-1, 1, crop_base = 0, crop_width = 3}}
+    }
   },
   east = {
     footprint = { {-1,  -2, complete_cell = true}, {0,  -2, complete_cell = true},
@@ -75,7 +78,11 @@ object.orientations = {
                   {-1,  0}, {0,  0},
                   {1,  -1, only_passable = true} },
     use_position = "passable",
-    smoke_position = {0, 0}
+    smoke_position = {0, 0},
+    render_attach_position = {
+      0, -2, crop_base = 1, crop_width = 1,
+      proxies = {{0, -1, crop_base = 1, crop_width = 1}, {-1, 0, crop_base = 0, crop_width = 3}}
+    }
   },
 }
 

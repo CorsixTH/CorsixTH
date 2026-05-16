@@ -102,6 +102,11 @@ object.orientations = {
                   {-1, 0}, {0, 0, complete_cell = true}, {1, 0, only_passable = true},
                   {-1, 1, need_east_side = true, need_west_side = true} },
     smoke_position = {0, 0},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 0, crop_width = 2}, {-1, 1, crop_base = 0, crop_width = 2}}
+    }
+
   },
   east = {
     handyman_position = {-1, 0},
@@ -113,6 +118,10 @@ object.orientations = {
                   {-1, 0, only_passable = true, need_west_side = true},
                   {0, 0, complete_cell = true}, {0, 1, only_passable = true} },
     smoke_position = {0, 0},
+    render_attach_position = {
+      0, -2, crop_base = 0, crop_width = 2,
+      proxies = {{0, 0, crop_base = 1, crop_width = 1}, {0, 1, crop_base = 0, crop_width = 2}}
+    }
   },
 }
 local anim_mgr = TheApp.animation_manager

@@ -66,6 +66,13 @@ object.orientations = {
     handyman_position = {1, -1},
     use_position_secondary = {-1, -1},
     smoke_position = {0, 0},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {
+        {0, 0, crop_base = 1, crop_width = 1},
+        {-1, 1, crop_base = 0, crop_width = 3}
+      }
+    }
   },
   east = {
     footprint = {
@@ -75,8 +82,11 @@ object.orientations = {
     use_position = {0, 0},
     handyman_position = {-1, 1},
     use_position_secondary = {-1, -1},
-    early_list = true,
     smoke_position = {0, 0},
+    render_attach_position = {
+      1, -1, crop_base = 1, crop_width = 1,
+      proxies = {{-1, 0, crop_base = 0, crop_width = 4}}
+    }
   },
 }
 local anim_mgr = TheApp.animation_manager

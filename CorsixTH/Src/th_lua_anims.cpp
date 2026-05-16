@@ -314,16 +314,30 @@ int l_anim_get_frame(lua_State* L) {
   return 1;
 }
 
+// Anim:setCrop(base-column, opt-width) -> Anim
+// Default width is 2 half-tiles.
 int l_anim_set_crop(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
-  pAnimation->set_crop_column(static_cast<int>(luaL_checkinteger(L, 2)));
+
+  lua_Integer base = luaL_checkinteger(L, 2);
+  if (base < -128 || base > 127) {
+    luaL_argerror(L, 2, "Crop base column out of bounds");
+  }
+  lua_Integer width = lua_isnoneornil(L, 3) ? 2 : luaL_checkinteger(L, 3);
+  if (width < -128 || width > 127) {
+    luaL_argerror(L, 3, "Crop width out of bounds");
+  }
+  pAnimation->set_crop(static_cast<int8_t>(base), static_cast<int8_t>(width));
+
   lua_settop(L, 1);
   return 1;
 }
 
+// Anim:getCrop() -> base-column, width
 int l_anim_get_crop(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
-  lua_pushinteger(L, pAnimation->get_crop_column());
+  lua_pushinteger(L, pAnimation->get_crop_base());
+  lua_pushinteger(L, pAnimation->get_crop_width());
   return 1;
 }
 
@@ -393,7 +407,7 @@ int l_anim_set_tile(lua_State* L) {
 
     map_tile* node = pMap->get_tile(x - 1, y - 1);
     if (node) {
-      pAnimation->attach_to_tile({x - 1, y - 1}, node, drawing_layer);
+      pAnimation->attach_to_map({x - 1, y - 1}, pMap, drawing_layer);
     } else {
       // Off-map, report an error.
       std::string msg = "Map index out of bounds (" + std::to_string(x) + ", " +
@@ -611,7 +625,7 @@ int l_anim_draw(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
   int x = static_cast<int>(luaL_checkinteger(L, 3));
   int y = static_cast<int>(luaL_checkinteger(L, 4));
-  pAnimation->draw(pCanvas, {x, y});
+  pAnimation->draw_fn(pCanvas, {x, y});
 
   lua_settop(L, 1);
   return 1;
@@ -622,6 +636,28 @@ int l_anim_set_patient_effect(lua_State* L) {
   animation_effect flags =
       static_cast<animation_effect>(luaL_checkinteger(L, 2));
   pAnimation->set_patient_effect(flags);
+  lua_settop(L, 1);
+  return 1;
+}
+
+// addProxy(anim, relx, rely, crop_pos, crop_width) -> anim
+int l_anim_add_proxy(lua_State* L) {
+  animation* anim = luaT_testuserdata<animation>(L);
+  int rel_x = static_cast<int>(luaL_checkinteger(L, 2));
+  int rel_y = static_cast<int>(luaL_checkinteger(L, 3));
+  int crop_base = static_cast<int>(luaL_checkinteger(L, 4));
+  int crop_width = static_cast<int>(luaL_checkinteger(L, 5));
+  anim->add_proxy({rel_x, rel_y}, crop_base, crop_width);
+
+  lua_settop(L, 1);
+  return 1;
+}
+
+// removeAllProxies(anim) -> anim
+int l_anim_remove_all_proxies(lua_State* L) {
+  animation* anim = luaT_testuserdata<animation>(L);
+  anim->remove_all_proxies();
+
   lua_settop(L, 1);
   return 1;
 }
@@ -744,6 +780,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_tick<animation>, "tick");
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
     lcb.add_function(l_anim_set_patient_effect, "setPatientEffect");
+    lcb.add_function(l_anim_add_proxy, "addProxy");
+    lcb.add_function(l_anim_remove_all_proxies, "removeAllProxies");
   }
 
   // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]

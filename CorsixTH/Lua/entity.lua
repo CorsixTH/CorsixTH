@@ -94,9 +94,42 @@ is used both to mean things which are animated and things which are static.
 !param animation (integer) The ordinal into the main animation set
 !param flags (integer) A combination of zero or more drawing flags to control
 the use of alternative palettes, transparency, and other similar settings. See
-`THDF_` values in `th_gfx.h` for the possible bit values.
+`DrawFlags` values in `utility.lua` for the possible bit values.
+!param raps Render attach point(s). Data of a single render attach point (RAP)
+is a table of the form {[1]=x, [2]=y crop_base=b, crop_width=w}. In the table,
+(x, y) is the render attach tile. b is left edge of the cropping area in
+halt-tiles relative to the left-edge of the tile, and w is the number of
+half-tiles at the right of the left-edge. The parameter takes such a data table
+to describes the settings of the main animation. In addition, it may have a
+proxies={...} list with one or more RAP data tables, one for each proxy.
 ]]
-function Entity:setAnimation(animation, flags)
+function Entity:setAnimation(animation, flags, raps)
+  -- Setup cropping and proxies.
+  self.th:removeAllProxies()
+
+  if raps then
+    -- Set cropping and position of the animation.
+    if raps.crop_base then
+      self.th:setCrop(raps.crop_base, raps.crop_width)
+    end
+
+    -- If there are proxies, add them as well.
+    if raps.proxies then
+      self.th:removeAllProxies()
+      -- From proxy to animation in map coordinates.
+      for _, proxy in ipairs(raps.proxies) do
+        local dx, dy = raps[1] - proxy[1], raps[2] - proxy[2]
+        self.th:addProxy(dx, dy, proxy.crop_base, proxy.crop_width)
+      end
+    end
+
+    -- Enable cropping if needed.
+    if raps.crop_base or raps.proxies then
+      flags = bitOr(flags or 0, DrawFlags.Crop)
+    end
+  end
+
+  -- Set draw flags and the animation if they are not the same.
   flags = flags or 0
   if self.permanent_flags then
     flags = flags + self.permanent_flags
@@ -106,6 +139,7 @@ function Entity:setAnimation(animation, flags)
     self.animation_flags = flags
     self.th:setAnimation(self.world.anims, animation, flags)
   end
+
   return self
 end
 

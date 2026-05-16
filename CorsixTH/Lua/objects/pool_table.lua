@@ -95,15 +95,21 @@ object.orientations = {
                   {-1, -1, only_passable = true}, {0, -1},                        {1, -1, only_passable = true},
                   {-1,  0, only_passable = true}, {0,  0, only_passable = true, complete_cell = true},
                   {1,  0, only_passable = true} },
-    render_attach_position = {-1, 0},
+    render_attach_position = {
+      1, -2, crop_base = 1, crop_width = 1,
+      proxies = {{1, -1, crop_base = 1, crop_width = 1}, {-1, 0, crop_base = 0, crop_width = 4}}
+    },
     use_position = {0, 0},
   },
   east = {
     footprint = {{-2, -1, only_passable = true}, {-1, -1, only_passable = true}, {0, -1, only_passable = true},
                  {-2,  0, complete_cell = true}, {-1,  0},                       {0,  0, only_passable = true, complete_cell = true},
                  {-2,  1, only_passable = true}, {-1,  1, only_passable = true}, {0,  1, only_passable = true} },
-    render_attach_position = {0, -1},
     use_position = {0, 0},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 1, crop_width = 1}, {-2, 1, crop_base = 0, crop_width = 4}}
+    },
   },
 }
 

@@ -1145,22 +1145,22 @@ void animation_base::remove_from_tile() {
 
 void animation_base::attach_to_tile(const xy_pair& tile_pos, map_tile* node,
                                     int layer) {
+  // Remove the animation from any tile that it may still be connected to, in
+  // order to avoid calls from unexpected tiles.
   remove_from_tile();
-  link_list* pList;
-  if (flags & thdf_early_list) {
-    pList = &node->oEarlyEntities;
-  } else {
-    pList = &node->entities;
-  }
 
+  // Record drawing layer and tile for the animation base.
   this->set_drawing_layer(layer);
   this->set_tile(tile_pos);
 
+  // Find the correct spot in the drawing layers of the map tile to insert.
+  link_list* pList = &node->entities;
   while (pList->next &&
          static_cast<drawable*>(pList->next)->get_drawing_layer() < layer) {
     pList = pList->next;
   }
 
+  // Insert the animation base at the found spot.
   prev = pList;
   if (pList->next != nullptr) {
     pList->next->prev = this;
@@ -1169,6 +1169,17 @@ void animation_base::attach_to_tile(const xy_pair& tile_pos, map_tile* node,
     next = nullptr;
   }
   pList->next = this;
+}
+
+bool animation_base::attach_to_map(const xy_pair& tile_pos, level_map* the_map,
+                                   int layer) {
+  map_tile* tile = the_map->get_tile(tile_pos.x, tile_pos.y);
+  if (tile) {
+    attach_to_tile(tile_pos, tile, layer);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 void animation_base::set_layer(int iLayer, int iId) {
@@ -1185,9 +1196,75 @@ bool are_flags_set(uint32_t val, uint32_t flags) {
 
 }  // namespace
 
+//! A proxy of an animation.
+//! Uses its parent animation object to draw the same frame, but has its own
+//! cropping and a different map tile.
+animation_proxy::animation_proxy(animation* const parent_anim_value,
+                                 const xy_pair& rel_pos_value,
+                                 int8_t crop_base_value,
+                                 int8_t crop_width_value)
+    : parent_anim(parent_anim_value),
+      rel_to_anim(rel_pos_value),
+      crop_base(crop_base_value),
+      crop_width(crop_width_value) {}
+
+void animation_proxy::draw_fn(render_target* canvas, const xy_pair& draw_pos) {
+  // The animation should be drawn as-if the draw request originated from the
+  // tile of the parent animation (so it draws everything at the exact same
+  // spot). The 'draw_pos' should thus be adjusted to point again at the tile
+  // of the parent animation tile.
+  int delta_tile_x = 32 * (rel_to_anim.x - rel_to_anim.y);
+  int delta_tile_y = 16 * (rel_to_anim.x + rel_to_anim.y);
+  xy_pair parent_pos = {draw_pos.x + delta_tile_x, draw_pos.y + delta_tile_y};
+
+  // The proxy cropping area should not move. Therefore, the left edge should
+  // be moved in the opposite direction. Note that 'crop_base' is in horizontal
+  // half-tiles.
+  int parent_base = crop_base - rel_to_anim.x + rel_to_anim.y;
+
+  parent_anim->internal_draw(canvas, parent_pos, parent_base, crop_width);
+}
+
+bool animation_proxy::hit_test_fn(const xy_pair& draw_pos,
+                                  const xy_pair& obj_pos) {
+  return parent_anim->hit_test_fn(draw_pos, obj_pos);
+}
+
+bool animation_proxy::is_multiple_frame_animation_fn() {
+  return parent_anim->is_multiple_frame_animation_fn();
+}
+
+// animation_proxy::remove_from_tile:
+//
+// The "animation_proxy::remove_from_tile" method is not overridden because
+// nothing except the animation class knows that proxies exist.
+// As removal always happens through the animation class (rather than eg through
+// a map tile), calls to the "remove_from_tile" from other sources are not
+// expected.
+
+//! An animation in the game.
+//!
+//! This class is attached to a map_tile, and renders the correct animation
+//! frame of its animation. This may include additional animations such as
+//! mood markers or child animations.
+//!
+//! For animations that cover more than one tile, drawing it entirely from a
+//! single tile in the map without glitches is often non-trivial to impossible.
+//! Often, other animations are nearby and there is overlap between them. The
+//! order of drawing then becomes critical. Rendering an entire animation from a
+//! single tile is not flexible enough to eliminate glitches in all cases.
+//! To address this problem, an animation can have cropping (thus allowing to
+//! draw only a part of the animation from a tile), and it can have animation
+//! proxies. The latter act the same as their parent animation, but they have
+//! their own cropping and are attached to a different map tile. The latter
+//! enables rendering a part of an animation at a different point in time while
+//! rendering the map. This gives more control on when a part of an animation
+//! is drawn relative to (other parts of) other animations, and allow avoiding
+//! graphical glitches much better.
 animation::animation() { patient_effect_offset = rand(); }
 
-void animation::draw(render_target* canvas, const xy_pair& draw_pos) {
+void animation::draw(render_target* canvas, const xy_pair& draw_pos,
+                     int8_t crop_base, int8_t crop_width) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
 
   int x = draw_pos.x + pixel_offset.x;
@@ -1197,19 +1274,25 @@ void animation::draw(render_target* canvas, const xy_pair& draw_pos) {
     if (pSounds) pSounds->play_at(sound_to_play, x, y, 0);
     sound_to_play = 0;
   }
+
   if (manager) {
     if (flags & thdf_crop) {
+      if (crop_width <= 0) return;
+
+      // Clip the cropping area. The left edge is moved by -32 pixels to put
+      // the crop origin at the left edge of the tile.
       clip_rect rcNew;
       rcNew.y = 0;
       rcNew.h = canvas->get_height();
-      rcNew.x = x + (crop_column - 1) * 32;
-      rcNew.w = 64;
+      rcNew.x = draw_pos.x + (crop_base - 1) * 32;
+      rcNew.w = crop_width * 32;
       render_target::scoped_clip clip(canvas, &rcNew);
       manager->draw_frame(canvas, frame_index, layers, x, y, flags,
                           patient_effect, patient_effect_offset);
-    } else
+    } else {
       manager->draw_frame(canvas, frame_index, layers, x, y, flags,
                           patient_effect, patient_effect_offset);
+    }
   }
 }
 
@@ -1350,7 +1433,9 @@ void animation::persist(lua_persist_writer* writer) const {
   writer->write_int(static_cast<int>(patient_effect));
 
   if (flags & thdf_crop) {
-    writer->write_int(crop_column);
+    // XXX Write something to say there are 2 values to read now.
+    writer->write_int((int)crop_base);
+    writer->write_int((int)crop_width);
   }
 
   // Write the unioned fields
@@ -1426,13 +1511,29 @@ void animation::depersist(lua_persist_reader* reader) {
     if (iDummy >= 0) sound_to_play = (unsigned int)iDummy;
     if (!reader->read_int(iDummy)) break;
     patient_effect = static_cast<animation_effect>(iDummy);
+
+    // XXX Read something to know whether 1 or 2 values are to be expected.
     if (flags & thdf_crop) {
-      if (!reader->read_int(crop_column)) {
-        break;
-      }
+      if (!reader->read_int(iDummy)) break;
+      crop_base = static_cast<int8_t>(iDummy);
     } else {
-      crop_column = 0;
+      crop_base = 0;
     }
+
+    // Disabled completely, since the code checker doesn't like place-holder
+    // code.
+    //    if (flags & thdf_crop) {
+    //      // XXX  if (<<2-values-expected>>) {
+    //      //        if (!reader->read_int(iDummy)) break;
+    //      //        crop_width = static_cast<int8_t>(iDummy);
+    //      //      } else {
+    //      //        crop_width = 2; // Old version.
+    //      //      }
+    //      crop_width = 2;  // Good enough for testing.
+    //    } else {
+    //      crop_width = 2;
+    //    }
+    crop_width = 2;
 
     // Read the unioned fields
     if (anim_kind != animation_kind::primary_child &&
@@ -1568,6 +1669,44 @@ void animation::tick() {
   } else {
     sound_to_play = pos->second.get_sound();
   }
+}
+
+void animation::add_proxy(const xy_pair& rel_pos_value, int8_t crop_base_value,
+                          int8_t crop_width_value) {
+  proxies.emplace_back(this, rel_pos_value, crop_base_value, crop_width_value);
+}
+
+void animation::remove_all_proxies() {
+  remove_from_tile();
+  proxies.clear();
+}
+
+bool animation::attach_to_map(const xy_pair& tile_pos, level_map* the_map,
+                              int layer) {
+  // Check if all needed tiles exist.
+  if (!the_map->is_on_map(tile_pos.x, tile_pos.y)) return false;
+
+  for (auto& p : proxies) {
+    xy_pair proxy_pos = p.get_tile(tile_pos);
+    if (!the_map->is_on_map(proxy_pos.x, proxy_pos.y)) return false;
+  }
+
+  // All ok, connect to the map.
+  map_tile* tile = the_map->get_tile(tile_pos.x, tile_pos.y);
+  attach_to_tile(tile_pos, tile, layer);
+
+  for (auto& proxy : proxies) {
+    proxy.attach_to_map(proxy.get_tile(tile_pos), the_map, layer);
+  }
+  return true;
+}
+
+//! Request to remove the animation, and thus also all proxies from the tiles.
+void animation::remove_from_tile() {
+  for (auto& p : proxies) {
+    p.remove_from_list();
+  }
+  remove_from_list();
 }
 
 void animation::set_parent(animation* parent_anim, bool use_primary) {

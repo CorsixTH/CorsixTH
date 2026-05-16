@@ -97,21 +97,35 @@ anim_mgr:setStaffMarker(object.usage_animations.east.finish_use, 0, kf1, 1, kf1,
 object.orientations = {
   north = {
     footprint = { {-1, 0, complete_cell = true}, {0, 0, complete_cell = true}, {-1, -1, only_passable = true} },
-    render_attach_position = {-1, 0},
     use_position = "passable",
+    render_attach_position = {
+      -1, -1, crop_base = 1, crop_width = 1,
+      proxies = {{-1, 0, crop_base = 0, crop_width = 2}}
+    }
   },
   east = {
     footprint = { {0, -1, complete_cell = true}, {0, 0, complete_cell = true}, {1, -1, only_passable = true} },
     use_position = "passable",
+    render_attach_position = {
+      1, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 0, crop_width = 3}}
+    }
   },
   south = {
-    render_attach_position = { {0, 0}, {-1, 1} },
     footprint = { {-1, 0, complete_cell = true}, {0, 0, complete_cell = true}, {-1, 1, only_passable = true} },
     use_position = "passable",
+    render_attach_position = {
+      0, 0, crop_base = 1, crop_width = 1,
+      proxies = {{-1, 1, crop_base = 0, crop_width = 3}}
+    }
   },
   west = {
     footprint = { {0, -1, complete_cell = true}, {0, 0, complete_cell = true}, {-1, -1, only_passable = true} },
     use_position = "passable",
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 0, crop_width = 2}}
+    }
   },
 }
 
