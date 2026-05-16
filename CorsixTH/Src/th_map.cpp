@@ -954,10 +954,11 @@ bool level_map::layer_exists(uint16_t layer, int& height) const {
 }
 
 namespace {
-const int left_safety = 3 * 64;
-const int right_safety = 3 * 64;
-const int up_safety = 3 * 32;
-const int down_safety = 3 * 32;
+// 3 tiles around the tile being painted is likely enough.
+constexpr int left_safety = 3 * 64;
+constexpr int right_safety = 3 * 64;
+constexpr int up_safety = 3 * 32;
+constexpr int down_safety = 3 * 32;
 
 //! Check if the tile at (scr_tile_x, scr_tile_y) is off-screen.
 /**!
