@@ -597,8 +597,8 @@ class animation : public animation_base {
     return next_frame != first_frame;
   }
 
-  bool attach_to_map(const xy_pair& tile_pos, level_map* the_map, int layer)
-                     override;
+  bool attach_to_map(const xy_pair& tile_pos, level_map* the_map,
+                     int layer) override;
 
   void remove_from_tile() override;
 
