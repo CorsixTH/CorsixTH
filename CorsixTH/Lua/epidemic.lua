@@ -735,7 +735,7 @@ end
 --[[ For Cheat - Cancel the epidemic. ]]
 function Epidemic:cancelEpidemic()
   -- Remove init epidemic fax
-  self.world.ui.bottom_panel:removeMessage(self)
+  self.world.ui.bottom_panel:deleteMessage(self)
   -- Turn vaccination mode off if enabled
   self:turnOffVaccinationMode()
   -- Remove epidemic timer

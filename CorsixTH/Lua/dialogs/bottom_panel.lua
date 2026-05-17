@@ -27,8 +27,9 @@ local UIBottomPanel = _G["UIBottomPanel"]
 local FACTORY_DIR_OPENING = -1
 local FACTORY_DIR_CLOSING = 1
 local FACTORY_DIR_NONE = 0
-
+local FACTORY_PAUSE_BEFORE_NEXT_TICKS = 9
 local FACTORY_ANIM_TICKS = 22
+local FACTORY_ICON_WIDTH = 30
 
 function UIBottomPanel:UIBottomPanel(ui)
   self:Window()
@@ -453,7 +454,23 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     self.world.ui.adviser:say(_A.information.fax_received)
     self.ui.hospital.message_popup = true
   end
-  local fax = {
+
+  local --[[persistable:bottom_panel_message_window_close]] function onClose(this_icon)
+    local this_icon_index
+    for i, icon in ipairs(self.message_windows) do
+      -- If icon position found
+      if this_icon_index ~= nil then
+        -- Shift all icons that are on the right to the left
+        icon:setXLimit(1 + (i - 2) * FACTORY_ICON_WIDTH)
+      elseif icon == this_icon then
+        this_icon_index = i
+      end
+    end
+    table.remove(self.message_windows, this_icon_index)
+    self:deleteMessage(this_icon.owner)
+  end
+
+  local message_info = {
     type = type,
     message = message,
     owner = owner,
@@ -462,14 +479,19 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     callback = callback,
   }
 
-  if self:canQueueFax(fax) then
-    self.message_queue[#self.message_queue + 1] = fax
-    -- create reference to message in owner
+  if self:canQueueFax(message_info) then
+    self.message_queue[#self.message_queue + 1] = message_info
+    -- Create the drawer message icon, note this does not show it to the player on creation.
+    local drawer_icon = UIMessage(self.ui, 175, nil,
+      onClose, message_info.type, message_info.message, message_info.owner,
+      message_info.timeout, message_info.default_choice, message_info.callback)
+    message_info["drawer_icon"] = drawer_icon
+    -- Сreate reference to message in owner
     if owner then
       owner.message = message
     end
   else
-    self:cancelFax(fax.type)
+    self:cancelFax(message_info.type)
   end
 end
 
@@ -527,8 +549,7 @@ end
 -- Opens the last available message. Currently used to open the level completed message.
 function UIBottomPanel:openLastMessage()
   if #self.message_queue > 0 then
-    self:createMessageWindow(#self.message_queue)
-    table.remove(self.message_queue, #self.message_queue)
+    self:_showMessageIcon(#self.message_queue)
   end
   self.message_windows[#self.message_windows]:openMessage()
 end
@@ -541,7 +562,7 @@ function UIBottomPanel:_showMessage()
     if self.factory_counter < 0 then
       -- Factory is already opened so don't wait to show the message
       self.show_animation = false
-      self.factory_counter = 9
+      self.factory_counter = FACTORY_PAUSE_BEFORE_NEXT_TICKS
     else
       -- Delay the appearance of the message to when the factory is opened
       self.show_animation = true
@@ -582,18 +603,20 @@ end
 
 -- Removes a message from the message queue (for example if a room is built before the player
 -- says what to do with the patient.
-function UIBottomPanel:removeMessage(owner)
+function UIBottomPanel:deleteMessage(owner)
   for i, msg_info in ipairs(self.message_queue) do
     if msg_info.owner == owner then
       -- TODO: restructure message_queue to contain UIMessage objects already, so this special handling isn't required
-      owner.message = nil
       table.remove(self.message_queue, i)
+      msg_info.drawer_icon.onClose = nil
+      msg_info.drawer_icon = nil
+      owner.message = nil
       return true
     end
   end
-  for _, window in ipairs(self.message_windows) do
-    if window.owner == owner then
-      window:removeMessage()
+  for index, drawer_icon in ipairs(self.message_windows) do
+    if drawer_icon.owner == owner then
+      drawer_icon:removeMessage()
       return true
     end
   end
@@ -604,22 +627,7 @@ end
 -- an actual message window; if no index is provided the first suitable message
 -- in the queue is popped.
 --!param index (integer|nil) the index in the message_queue to pop
-function UIBottomPanel:createMessageWindow(index)
-  local --[[persistable:bottom_panel_message_window_close]] function onClose(window)
-    local index_to_remove
-    for i, win in ipairs(self.message_windows) do
-      if index_to_remove ~= nil then
-        win:setXLimit(1 + (i - 2) * 30)
-      elseif win == window then
-        index_to_remove = i
-        if win.callback then
-          win.callback()
-        end
-      end
-    end
-    table.remove(self.message_windows, index_to_remove)
-  end
-
+function UIBottomPanel:_showMessageIcon(index)
   if not index then
     index = self:_findMessageToShow()
   end
@@ -628,15 +636,15 @@ function UIBottomPanel:createMessageWindow(index)
   if not message_info then
     return
   end
-  -- Create the message window, note this does not show it to the player on creation.
-  local alert_window = UIMessage(self.ui, 175, 1 + #message_windows * 30,
-    onClose, message_info.type, message_info.message, message_info.owner, message_info.timeout, message_info.default_choice, message_info.callback)
-  message_windows[#message_windows + 1] = alert_window
-  self:addWindow(alert_window)
+
+  local drawer_icon = message_info.drawer_icon
+  drawer_icon:setXLimit(1 + #message_windows * FACTORY_ICON_WIDTH)
+  message_windows[#message_windows + 1] = drawer_icon
+  self:addWindow(drawer_icon)
   self.factory_direction = FACTORY_DIR_CLOSING
   self.show_animation = true
   self.factory_counter = -50                -- Delay close of message factory
-  table.remove(self.message_queue, index)   -- Delete the last element of the queue
+  table.remove(self.message_queue, index)   -- Delete element of the queue
 end
 
 function UIBottomPanel:onTick()
@@ -656,7 +664,7 @@ function UIBottomPanel:onTick()
     if self.factory_counter >= 0 then
       if self.factory_counter == 0 then
         -- Animation ends so we can now show the message
-        self:createMessageWindow()
+        self:_showMessageIcon()
       end
       self.factory_counter = self.factory_counter - 1
     end
