@@ -1318,8 +1318,6 @@ function GameUI:afterLoad(old, new)
   if old < 240 then
     self.subtitles = Subtitles(self)
     self:addWindow(self.subtitles)
-    self.adviser.message_history = {}
-    self.adviser.message_history_limit = 20
   end
 
   self.announcer.playing = false

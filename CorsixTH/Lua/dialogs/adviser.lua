@@ -342,5 +342,9 @@ function UIAdviser:afterLoad(old, new)
   if old < 236 then
     self.black_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font50V", nil, nil, { apply_ui_scale = true })
   end
+  if old < 244 then
+    self.message_history = {}
+    self.message_history_limit = 20
+  end
   Window.afterLoad(self, old, new)
 end

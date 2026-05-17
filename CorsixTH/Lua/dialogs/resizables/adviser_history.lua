@@ -95,7 +95,6 @@ function UIAdviserHistory:createControls()
     local x = self.window_margin
     local y = self.window_margin
 
-
     -- Draw headers
     local delete_header = self:addBevelPanel(x, y, self.delete_col_width, self.header_height, col_highlight)
     local delete_all_button = delete_header:makeButton(0, 0, self.delete_col_width, self.header_height, nil, deleteAllButtonClicked)
