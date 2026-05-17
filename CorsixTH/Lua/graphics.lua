@@ -179,27 +179,30 @@ function Graphics:loadFontFile()
 
   local function getFontPath()
     local config_err, compile_err = "", ""
+    -- Check for font specified in config file
     if config_path then
       if check(config_path) then return config_path
       else config_err = "Configured font set but not found. Check path " .. config_path
       end
     end
+    -- Check for font specified in compile options
     if compile_path then
       if check(compile_path) then return compile_path
       else compile_err = " Compiled font path set but not found. Check path " .. compile_path
       end
     end
-    local path = self.app:getFullPath({})
-    for file in lfs.dir(path) do
-      for _, ext in pairs({"%.ttc$", "%.ttf$", "%.otc$", "%.otf$"}) do
-        if file:match(ext) then
-          return path .. file
-        end
+    -- Check the CorsixTH directory for our unicode font
+    local path = self.app:getFullPath()
+    local font_names = { "CorsixTHUnicode.ttf", "GoNotoKurrent-Regular.ttf" }
+    for _, name in ipairs(font_names) do
+      if check(path .. name) then
+        return path .. name
       end
     end
     return nil, config_err .. compile_err
   end
   local font_file, err = getFontPath()
+
   if not font_file then
     print("Unicode font not found, no fallback available.", err)
     return
@@ -483,9 +486,11 @@ end
 
 --! Utility function to return preferred font for main menu ui
 function Graphics:loadMenuFont()
-  local font
-  if self:_isLanguageSupportedByTHAssets() then
-    font = self:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  -- Use the defined unicode font if set
+  local font = self:hasLanguageFont("unicode")
+  if font then
+    font = self:loadLanguageFont(font, self:loadSpriteTable("QData", "Font01V"), { apply_ui_scale = true })
+  -- Otherwise, fall back to the built in font
   else
     font = self:loadBuiltinFont()
   end

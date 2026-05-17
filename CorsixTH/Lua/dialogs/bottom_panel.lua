@@ -24,6 +24,12 @@ class "UIBottomPanel" (Window)
 ---@type UIBottomPanel
 local UIBottomPanel = _G["UIBottomPanel"]
 
+local FACTORY_DIR_OPENING = -1
+local FACTORY_DIR_CLOSING = 1
+local FACTORY_DIR_NONE = 0
+
+local FACTORY_ANIM_TICKS = 22
+
 function UIBottomPanel:UIBottomPanel(ui)
   self:Window()
 
@@ -38,9 +44,22 @@ function UIBottomPanel:UIBottomPanel(ui)
 
   -- State relating to fax notification messages
   self.show_animation = true
-  self.factory_counter = 22
-  self.factory_direction = 0
+
+  -- The factory counter is a tick counter that is used for opening and closing
+  -- the fax message door. When it is equal to FACTORY_ANIM_TICKS then the door
+  -- is fully closed. When it is less than 0 the door is fully open. At times it
+  -- is explicitly set to another value (less than zero when counting up, or
+  -- greater than zero when counting down) to delay the opening or closing of
+  -- the door.
+  self.factory_counter = FACTORY_ANIM_TICKS
+
+  -- Whether the door is opening, closing, or neutral
+  self.factory_direction = FACTORY_DIR_NONE
+
+  -- Visible fax panels on the left side of the bottom panel
   self.message_windows = {}
+
+  -- Queued fax panels waiting to be shown
   self.message_queue = {}
 
   self.default_button_sound = "selectx.wav"
@@ -268,13 +287,13 @@ function UIBottomPanel:draw(canvas, x, y)
         self.panel_sprites:draw(canvas, 40, x + 177 * s, y + 1, { scaleFactor = s })
     end
 
-    if self.factory_counter > 1 and self.factory_counter <= 22 then
+    if self.factory_counter > 1 and self.factory_counter <= FACTORY_ANIM_TICKS then
       for dx = 0, self.factory_counter do
         self.panel_sprites:draw(canvas, 41, x + 179 * s + dx * s, y + 1 * s, { scaleFactor = s })
       end
     end
 
-    if self.factory_counter == 22 then
+    if self.factory_counter == FACTORY_ANIM_TICKS then
       self.panel_sprites:draw(canvas, 42, x + 201 * s, y + 1 * s, { scaleFactor = s })
     end
   end
@@ -518,20 +537,42 @@ end
 
 --! Trigger a message to be moved from the queue into a actual window, after
 -- first performing the necessary animation.
-function UIBottomPanel:showMessage()
-  if self.factory_direction ~= -1 then
-    self.factory_direction = -1
+function UIBottomPanel:_showMessage()
+  if self.factory_direction ~= FACTORY_DIR_OPENING then
+    self.factory_direction = FACTORY_DIR_OPENING
     if self.factory_counter < 0 then
       -- Factory is already opened so don't wait to show the message
       self.show_animation = false
       self.factory_counter = 9
     else
       -- Delay the appearance of the message to when the factory is opened
-      self.factory_direction = -1
-      self.factory_counter = 22
       self.show_animation = true
+      self.factory_counter = FACTORY_ANIM_TICKS
     end
   end
+end
+
+-- Return the index of the first fax message in the queue that is suitable to be
+-- shown, and nil if there are none. A message is suitable to be shown if there
+-- are less than 5 currently shown messages, no message of the same type is
+-- already shown.
+function UIBottomPanel:_findMessageToShow()
+  if #self.message_windows >= 5 then
+    return nil
+  end
+
+  local shown_types = {}
+  for _, fax_msg in ipairs(self.message_windows) do
+    shown_types[fax_msg.type] = true
+  end
+
+  for i, fax_msg in ipairs(self.message_queue) do
+    if not shown_types[fax_msg.type] then
+      return i
+    end
+  end
+
+  return nil
 end
 
 -- Opens the first available message in the list of message_windows.
@@ -561,8 +602,10 @@ function UIBottomPanel:removeMessage(owner)
   return false
 end
 
---! Pop the message with the given index from the message queue and turn it into an actual
--- message window; if no index is provided the first message in the queue is popped.
+--! Pop the message with the given index from the message queue and turn it into
+-- an actual message window; if no index is provided the first suitable message
+-- in the queue is popped.
+--!param index (integer|nil) the index in the message_queue to pop
 function UIBottomPanel:createMessageWindow(index)
   local --[[persistable:bottom_panel_message_window_close]] function onClose(window)
     local index_to_remove
@@ -580,10 +623,10 @@ function UIBottomPanel:createMessageWindow(index)
   end
 
   if not index then
-    index = 1
+    index = self:_findMessageToShow()
   end
   local message_windows = self.message_windows
-  local message_info = self.message_queue[index]
+  local message_info = index and self.message_queue[index]
   if not message_info then
     return
   end
@@ -592,7 +635,7 @@ function UIBottomPanel:createMessageWindow(index)
     onClose, message_info.type, message_info.message, message_info.owner, message_info.timeout, message_info.default_choice, message_info.callback)
   message_windows[#message_windows + 1] = alert_window
   self:addWindow(alert_window)
-  self.factory_direction = 1
+  self.factory_direction = FACTORY_DIR_CLOSING
   self.show_animation = true
   self.factory_counter = -50                -- Delay close of message factory
   table.remove(self.message_queue, index)   -- Delete the last element of the queue
@@ -600,16 +643,16 @@ end
 
 function UIBottomPanel:onTick()
   -- Advance the animation on the message factory
-  if self.factory_direction == 1 then
+  if self.factory_direction == FACTORY_DIR_CLOSING then
     -- Close factory animation
-    if self.factory_counter < 22 then
+    if self.factory_counter < FACTORY_ANIM_TICKS then
       self.factory_counter = self.factory_counter + 1
     end
-  elseif self.factory_direction == -1 then
+  elseif self.factory_direction == FACTORY_DIR_OPENING then
     if #self.message_queue == 0 then
       -- Message was removed before we could display it. Reset.
-      self.factory_direction = 1
-      self.factory_counter = 22
+      self.factory_direction = FACTORY_DIR_CLOSING
+      self.factory_counter = FACTORY_ANIM_TICKS
     end
     -- Open factory animation
     if self.factory_counter >= 0 then
@@ -640,9 +683,9 @@ function UIBottomPanel:onTick()
     end
   end
 
-  -- Move an item out of the message queue if there is room
-  if #self.message_windows < 5 and #self.message_queue > 0 then
-    self:showMessage()
+  -- Start moving message out of the queue if a suitable one is available
+  if self:_findMessageToShow() then
+    self:_showMessage()
   end
 
   Window.onTick(self)

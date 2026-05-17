@@ -17,6 +17,7 @@
 #   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
 #   - FETCH_CATCH2 : Use FetchContent to obtain Catch2 if ENABLE_UNIT_TESTS=yes
 #   - FETCH_SOUNDFONT : Use FetchContent to download a soundfont to use (no)
+#   - FETCH_UNICODE_FONT: Use FetchContent to download the GoNoto Unicode font (no)
 
 # Tests and debug options
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
@@ -42,6 +43,7 @@ option(BUILD_TOOLS "Build additional CLI tools (rnc_decode)" OFF)
 option(ENABLE_SANITIZERS "Build with ASan and UBSan enabled" OFF)
 option(WITH_TRACY "Build with Tracy profiling enabled" OFF)
 option(FETCH_SOUNDFONT "Download soundfont asset" OFF)
+option(FETCH_UNICODE_FONT "Download GoNoto Unicode font" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 

@@ -7,6 +7,10 @@ endif()
 # Project Declaration
 project(CorsixTH)
 
+if(WITH_FONT AND FETCH_UNICODE_FONT)
+  message(WARNING "CorsixTH will attempt to use the WITH_FONT value ${WITH_FONT} before the fetched Unicode font.")
+endif()
+
 if(MSVC)
   # We want to bind against the very latest versions of the MSVC runtimes
   add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
@@ -290,6 +294,20 @@ if(FETCH_SOUNDFONT)
   set(FLUIDR3_FILE ${fluidr3_SOURCE_DIR}/FluidR3.sf3)
 endif()
 
+if(FETCH_UNICODE_FONT)
+  include(FetchContent)
+
+  fetchcontent_declare(
+    GoNoto
+    URL https://github.com/satbyy/go-noto-universal/releases/download/v7.0/GoNotoKurrent-Regular.ttf
+    URL_HASH SHA256=2f2cee5fbb2403df352ca2005247f6c4faa70f3086ebd31b6c62308b5f2f9865
+    DOWNLOAD_NO_EXTRACT TRUE
+    DOWNLOAD_NAME CorsixTHUnicode.ttf)
+
+  fetchcontent_makeavailable(GoNoto)
+  set(GONOTO_FILE ${gonoto_SOURCE_DIR}/CorsixTHUnicode.ttf)
+endif()
+
 if(WITH_TRACY)
   find_package(Tracy CONFIG REQUIRED)
   target_link_libraries(CorsixTH_lib PUBLIC Tracy::TracyClient)
@@ -364,6 +382,9 @@ if(NOT USE_SOURCE_DATADIRS)
 
   if(FETCH_SOUNDFONT)
     install(FILES ${FLUIDR3_FILE} DESTINATION ${CORSIX_TH_DATADIR})
+  endif()
+  if(FETCH_UNICODE_FONT)
+    install(FILES ${GONOTO_FILE} DESTINATION ${CORSIX_TH_DATADIR})
   endif()
 
   if(UNIX AND NOT APPLE)
