@@ -51,7 +51,7 @@ function UIAdviserHistory:UIAdviserHistory(ui)
   self.delete_col_width = 30
   self.message_col_width = 400
 
-  local total_width = 500
+  local total_width = 489
   local height_divisor = 4
 
   self.approx_rows_space = math.floor(app.config.height / height_divisor)
@@ -130,13 +130,15 @@ function UIAdviserHistory:createControls()
     end
 
     x = x + 10 -- Add 10 pixels from end of the message rows
-    y = self.window_margin + self.header_height
+    y = self.window_margin + self.header_height + 10
 
     -- Add scrollbar
-    self.scrollbar = self:addColourPanel(x, y, 24, self.row_height * rows, col_shadow.red, col_shadow.green, col_shadow.blue)
+    self.scrollbar = self:addColourPanel(x, y, 24, self.row_height * rows - 10,
+        col_shadow.red, col_shadow.green, col_shadow.blue)
         :makeScrollbar(col_bg, scrollbarMovedCallback, 1, 1, 10, 1)
+
     -- Add close button
-    self:addPanel(337, x,  8):makeButton(0, 0, 24, 24, 338, self.close)
+    self:addPanel(337, x, 15):makeButton(0, 0, 24, 24, 338, self.close)
         :setTooltip(_S.tooltip.adviser_history.close)
   end
 end
