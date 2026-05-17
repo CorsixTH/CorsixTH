@@ -735,7 +735,7 @@ end
 --!param humanoid (table) The humanoid
 function PlayerHospital:removeMessage(humanoid)
   if humanoid.message then
-    self.world.ui.bottom_panel:removeMessage(humanoid)
+    self.world.ui.bottom_panel:deleteMessage(humanoid)
   end
 end
 
