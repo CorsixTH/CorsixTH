@@ -817,6 +817,7 @@ function UIMenuBar:makeGameMenu(app)
     :appendItem(_S.menu_charts.graphs:format(hotkey_value_label("ingame_panel_charts", hotkeys)), function() self.ui.bottom_panel:dialogCharts(true) end)
     :appendItem(_S.menu_charts.policy:format(hotkey_value_label("ingame_panel_policy", hotkeys)), function() self.ui.bottom_panel:dialogPolicy(true) end)
     :appendItem(_S.menu_charts.machine_menu:format(hotkey_value_label("ingame_panel_machineMenu", hotkeys)), function() self.ui:addWindow(UIMachineMenu(self.ui)) end)
+    :appendItem(_S.menu_charts.adviser_history:format(hotkey_value_label("ingame_panel_adviserHistory", hotkeys)), function() self.ui:addWindow(UIAdviserHistory(self.ui)) end)
     :appendItem(_S.menu_charts.briefing, function() self.ui:showBriefing() end)
   )
 
