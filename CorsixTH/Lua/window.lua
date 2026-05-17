@@ -312,7 +312,7 @@ function Panel:drawLabel(canvas, x, y, limit)
 
   if not multi_line then
     text = {text}
-    wrapped = false or self.force_text_wrap
+    wrapped = self.force_text_wrap
     center_y = true
   end
 

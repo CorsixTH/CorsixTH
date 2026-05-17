@@ -61,23 +61,23 @@ function UIAdviser:UIAdviser(ui)
   self.th = th
 end
 
-function UIAdviser:isMessageInHistory(message)
+function UIAdviser:messageIndexInHistory(message)
   for index, msg in ipairs(self.message_history) do
     if msg == message then
-      return true, index
+      return index
     end
   end
-  return false, -1
+  return nil
 end
 
 --! Adds a message to the adviser's message history.
 --! If the history exceeds a certain limit, the oldest messages are removed.
 function UIAdviser:addMessageToHistory(speech)
-  local isMessageInHistory, messageIndexInHistory = self:isMessageInHistory(speech)
+  local message_index_in_history = self:messageIndexInHistory(speech)
 
-  if isMessageInHistory then
+  if message_index_in_history then
     -- If the message is already in history, remove it first
-    table.remove(self.message_history, messageIndexInHistory)
+    table.remove(self.message_history, message_index_in_history)
   end
 
   -- Add the message at the top of the history
@@ -283,7 +283,7 @@ function UIAdviser:onMouseDown(button, x, y)
     end
   elseif button == "right" then
     self:hide()
-    --Dump dismissed messages to history
+    -- Dump dismissed messages to history
     self:addQueuedMessagesToHistory()
     self.queued_messages = {}
   end
