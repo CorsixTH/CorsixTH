@@ -673,6 +673,7 @@ function GameUI:onMouseUp(code, x, y)
     return UI.onMouseUp(self, code, x, y)
   end
 
+  -- Controlling debug patients movement with a cursor
   local button = self.button_codes[code]
   if button == "right" and not self.map_editor and highlight_x then
     local window = self:getWindow(UIPatient)

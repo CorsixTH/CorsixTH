@@ -114,6 +114,13 @@ function EntityMap:getEntitiesAtCoordinate(x, y)
 end
 
 --[[Returns a table of all humanoids at a specified coordinate
+! Please note that when a humanoid moves, they will only be
+attached to one tile at the moment. When moving from tile to
+tile, they will only attach to the next tile after they has fully
+completed the animation for moving to the that next tile.
+Therefore, at the last frame of the transition animation from
+tile to tile, they will still attached to the previous one tile, on
+which they is no longer visually located.
 @param x (integer) the x coordinate to retrieve entities from
 @param y (integer) the y coordinate to retrieve entities from
 @return (table) containing the humanoids at the (x, y) coordinate ]]
@@ -137,9 +144,9 @@ end
 --[[ Returns a map of coordinates {{x1, y1}, ... {xn, yn}} directly
 adjacent to a given (x, y) coordinate - no diagonals
 @param x (integer) the x coordinate to obtain adjacent tiles from
-@param y (integer) the y coordinate to obtain adjacent tiles from ]]
+@param y (integer) the y coordinate to obtain adjacent tiles from
+@return (table) containing coordinates {x=integer, y=integer} ]]
 function EntityMap:getAdjacentSquares(x, y)
-  -- Table of coordinates {x=integer, y=integer} representing (x, y) coordinates
   local adjacent_squares = {}
   if x and y then
     if x ~= 1 then
@@ -156,6 +163,21 @@ function EntityMap:getAdjacentSquares(x, y)
     end
   end
   return adjacent_squares
+end
+
+--[[ Returns all humanoids in the squares directly adjacent
+to the given (x, y) coordinate - diagonals are not considered
+@param x (integer) the x coordinate to obtain adjacent patients from
+@param y (integer) the y coordinate to obtain adjacent patients from ]]
+function EntityMap:getHumanoidsInSquareAndInAdjacentSquares(x, y)
+  local adjacent_patients = {}
+  local tiles = table_merge({{x = x , y = y}}, self:getAdjacentSquares(x, y))
+  for _, coord in ipairs(tiles) do
+    for _, humanoid in ipairs(self:getHumanoidsAtCoordinate(coord.x, coord.y)) do
+      adjacent_patients[#adjacent_patients + 1] = humanoid
+    end
+  end
+  return adjacent_patients
 end
 
 --[[ Returns all the entities which are patients in the squares directly adjacent

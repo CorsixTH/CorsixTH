@@ -1477,14 +1477,45 @@ in a room.
 !return (boolean) whether all checks hold.
 --]]
 function World:isTileEmpty(x, y, not_in_room)
-  if #self.entity_map:getHumanoidsAtCoordinate(x, y) ~= 0 or
-      #self.entity_map:getObjectsAtCoordinate(x, y) ~= 0 then
+  if self:atLeastOneHumanoidLocatedAtTile(x, y) or
+    self:atLeastOneObjectLocatedAtTile(x, y) then
     return false
   end
   if not_in_room then
     return self:getRoom(x, y) == nil
   end
   return true
+end
+
+--! Checks if any object is located on a tile.
+--!param x (integer) the queried tile's x coordinate.
+--!param y (integer) the queried tile's y coordinate.
+--!return (boolean) true if any object is located on a tile.
+function World:atLeastOneObjectLocatedAtTile(x, y)
+  return #self.entity_map:getObjectsAtCoordinate(x, y) ~= 0
+end
+
+--! Checks if any humanoid is located on a tile.
+--!param x (integer) the queried tile's x coordinate.
+--!param y (integer) the queried tile's y coordinate.
+--!return (boolean) true if any humanoid is located on a tile.
+function World:atLeastOneHumanoidLocatedAtTile(x, y)
+  return #self.entity_map:getHumanoidsAtCoordinate(x, y) ~= 0
+end
+
+--! Сhecks whether a tile is occupied by any humanoid.
+--!param x (integer) the queried tile's x coordinate.
+--!param y (integer) the queried tile's y coordinate.
+--!return (boolean) true if any humanoid is occupy the tile.
+function World:anyHumanoidObscuringArea(x, y)
+  -- Search for humanoids on the given tile and all neighboring tiles, but not diagonal ones
+  local humanoids = self.entity_map:getHumanoidsInSquareAndInAdjacentSquares(x, y)
+  for _, humanoid in ipairs(humanoids) do
+    if humanoid:isObscuringArea(x - 1, x + 1, y - 1, y + 1) then
+      return true
+    end
+  end
+  return false
 end
 
 function World:getFreeBench(x, y, distance)
