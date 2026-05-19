@@ -44,6 +44,9 @@
  <a href="_0_1_entity_map.html#_0_1_entity_map_1get_humanoids_at_coordinate">getHumanoidsAtCoordinate</a>(<span class="p">x</span>, <span class="p">y</span>)
  </li>
  <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1get_humanoids_in_square_and_in_adjacent_squares">getHumanoidsInSquareAndInAdjacentSquares</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_entity_map.html#_0_1_entity_map_1get_objects_at_coordinate">getObjectsAtCoordinate</a>(<span class="p">x</span>, <span class="p">y</span>)
  </li>
  <li class="self">
@@ -139,7 +142,7 @@ different room
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L177">line 177 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L199">line 199 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -148,7 +151,8 @@ different room
  Returns a map of coordinates {{x1, y1}, ... {xn, yn}} directly
 adjacent to a given (x, y) coordinate - no diagonals
 @param x (integer) the x coordinate to obtain adjacent tiles from
-@param y (integer) the y coordinate to obtain adjacent tiles from<br/><br/>
+@param y (integer) the y coordinate to obtain adjacent tiles from
+@return (table) containing coordinates {x=integer, y=integer}<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -163,7 +167,7 @@ adjacent to a given (x, y) coordinate - no diagonals
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L137">line 137 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L144">line 144 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -193,7 +197,14 @@ adjacent to a given (x, y) coordinate - no diagonals
  <div class="method">
  <h5><a name="_0_1_entity_map_1get_humanoids_at_coordinate">function EntityMap:getHumanoidsAtCoordinate(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
  <p>
- Returns a table of all humanoids at a specified coordinate
+ Returns a table of all humanoids at a specified coordinate<br/><br/>
+ Please note that when a humanoid moves, they will only be
+attached to one tile at the moment. When moving from tile to
+tile, they will only attach to the next tile after they has fully
+completed the animation for moving to the that next tile.
+Therefore, at the last frame of the transition animation from
+tile to tile, they will still attached to the previous one tile, on
+which they is no longer visually located.
 @param x (integer) the x coordinate to retrieve entities from
 @param y (integer) the y coordinate to retrieve entities from
 @return (table) containing the humanoids at the (x, y) coordinate<br/><br/>
@@ -212,6 +223,30 @@ adjacent to a given (x, y) coordinate - no diagonals
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L116">line 116 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1get_humanoids_in_square_and_in_adjacent_squares">function EntityMap:getHumanoidsInSquareAndInAdjacentSquares(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Returns all humanoids in the squares directly adjacent
+to the given (x, y) coordinate - diagonals are not considered
+@param x (integer) the x coordinate to obtain adjacent patients from
+@param y (integer) the y coordinate to obtain adjacent patients from<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L168">line 168 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -235,7 +270,7 @@ adjacent to a given (x, y) coordinate - no diagonals
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L126">line 126 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L133">line 133 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -259,7 +294,7 @@ to the given (x, y) coordinate - diagonals are not considered
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L161">line 161 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L183">line 183 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">

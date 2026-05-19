@@ -115,6 +115,9 @@
  <a href="_0_1_humanoid.html#_0_1_humanoid_1is_mood_active">isMoodActive</a>(<span class="p">mood</span>)
  </li>
  <li class="self">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1is_obscuring_area">isObscuringArea</a>(<span class="p">x1</span>, <span class="p">x2</span>, <span class="p">y1</span>, <span class="p">y2</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_humanoid.html#_0_1_humanoid_1is_type">isType</a>(<span class="p">humanoid_class</span>)
  </li>
  <li class="inherited">
@@ -663,6 +666,42 @@ adds the 8 tiles around the humanoid (one tile in all directions), and so on.</t
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L510">line 510 of Lua/entities/humanoid.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_humanoid_1is_obscuring_area">function Humanoid:isObscuringArea(<span class="p">x1</span>, <span class="p">x2</span>, <span class="p">y1</span>, <span class="p">y2</span>)</a></h5>
+ <p>
+ Checks whether a humanoid is within the specified area or is currently
+walking into it. To properly check whether a humanoid is entering an area,
+pass coordinates 1 tile outside the square where actually need to build.
+For example, if the intended wall of the room being built is outside the
+perimeter (x1, y1) (x2, y2), then need to pass (x1-1, y1-1) (x2+1, y2+1).
+Example input parameters: (50, 55, 60, 65).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x1</td>
+ <td class="t">int</td>
+ <td class="d"> north-west X position of target area.</td>
+ </tr>
+ <tr>
+ <td class="n">x2</td>
+ <td class="t">int</td>
+ <td class="d"> south-east X position of target area.</td>
+ </tr>
+ <tr>
+ <td class="n">y1</td>
+ <td class="t">int</td>
+ <td class="d"> north-west Y position of target area.</td>
+ </tr>
+ <tr>
+ <td class="n">y2</td>
+ <td class="t">int</td>
+ <td class="d"> south-east Y position of target area.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1164">line 1164 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
  <div class="method">
