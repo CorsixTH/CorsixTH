@@ -1052,13 +1052,10 @@ function UI:addWindow(window)
     end
     self.modal_windows[window.modal_class] = window
   end
-  if self.app.world and window:mustPause() then
-    self.app.world:setSpeed("Pause")
-    self.app.video:setBlueFilterActive(false) -- mustPause windows shouldn't cause tainting
-  end
   if window.modal_class == "main" or window.modal_class == "fullscreen" then
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
   end
+  self:updateSystemPause(true, window)
   Window.addWindow(self, window)
 end
 
@@ -1068,18 +1065,26 @@ function UI:removeWindow(closing_window)
     if class and self.modal_windows[class] == closing_window then
       self.modal_windows[class] = nil
     end
-    if self.app.world and self.app.world:isCurrentSpeed("Pause") then
-      local pauseGame = self:checkForMustPauseWindows()
-      if not pauseGame and closing_window:mustPause() then
-        self.app.world:setSpeed(self.app.world.prev_speed)
-      end
-    end
     if closing_window.modal_class == "main" or closing_window.modal_class == "fullscreen" then
       self.editing_allowed = true -- allow editing rooms again when main window is closed
     end
+    self:updateSystemPause(false, closing_window)
     return true
   else
     return false
+  end
+end
+
+--! Toggles system pause on and off if needed
+--!param pause (bool) flag indicating whether to turn the pause state on or off
+--!param window (object) window causing the status update
+function UI:updateSystemPause(pause, window)
+  if not self.app.world then return end
+  if window:mustPause() then
+    local otherPauseWindows = self:checkForMustPauseWindows()
+    if not otherPauseWindows then
+      self.app.world:setSystemPause(pause)
+    end
   end
 end
 

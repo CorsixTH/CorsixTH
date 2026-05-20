@@ -758,18 +758,22 @@ end
 -- Set the (approximate) number of seconds per tick.
 --!param speed (string) One of: "Pause", "Slowest", "Slower", "Normal",
 -- "Max speed", or "And then some more".
-function World:setSpeed(speed)
-  if self:isCurrentSpeed(speed) then
-    return
-  end
-  tracy.Message("Changing speed to " .. speed)
-  if speed == "Pause" or self.system_pause then
+function World:setSpeed(new_speed)
+  local isSystemPause = self:isSystemPauseActive()
+  if self:isCurrentSpeed(new_speed) then return end
+  if isSystemPause and new_speed ~= "Pause" then return end -- System pause takes precedence
+  tracy.Message("Changing speed to " .. new_speed)
+
+  if isSystemPause then
     self.ui.hospital:tickEarthquake("pause")
-    -- By default actions are not allowed when the game is paused.
-    self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
-  elseif self:getCurrentSpeed() == "Pause" then
-    self.user_actions_allowed = true
   end
+
+  -- Actions are not allowed when the game is System paused.
+  self.user_actions_allowed = not isSystemPause and
+    (new_speed ~= "Pause" or TheApp.config.allow_user_actions_while_paused)
+
+  -- Set the blue filter according to whether the user can build or not.
+  TheApp.video:setBlueFilterActive(not isSystemPause and not self.user_actions_allowed)
 
   local old_speed = self:getCurrentSpeed()
   if old_speed ~= "Pause" and old_speed ~= "Speed Up" then
@@ -778,7 +782,7 @@ function World:setSpeed(speed)
 
   local was_paused = old_speed == "Pause"
   local old_tick_rate = self.tick_rate or 1
-  local new_hours_per_tick, new_tick_rate = unpack(tick_rates[speed])
+  local new_hours_per_tick, new_tick_rate = unpack(tick_rates[new_speed])
 
   if was_paused then
     TheApp.audio:onEndPause()
@@ -790,8 +794,6 @@ function World:setSpeed(speed)
   self.hours_per_tick = new_hours_per_tick
   self.tick_rate = new_tick_rate
 
-  -- Set the blue filter according to whether the user can build or not.
-  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self.ui:checkForMustPauseWindows())
   return false
 end
 
@@ -810,9 +812,16 @@ function World:pauseOrUnpause()
 end
 
 --! Sets the system_pause parameter
---!param state (bool)
-function World:setSystemPause(state)
-  self.system_pause = state
+--!param enabled (bool)
+function World:setSystemPause(enabled)
+  self.system_pause = enabled
+  if enabled then
+    self:setSpeed("Pause")
+  else
+    if self.prev_speed then
+      self:setSpeed(self.prev_speed)
+    end
+  end
 end
 
 --! Reports the system pause status
