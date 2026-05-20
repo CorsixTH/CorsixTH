@@ -76,6 +76,11 @@ function World:World(app, free_build_mode)
   -- This is false when the game is paused.
   self.user_actions_allowed = true
 
+  -- Some windows intentionally pause the game, record if the player was
+  -- already paused when those things happen.
+  self.already_paused = false
+
+
   -- If set, do not create salary raise requests.
   self.debug_disable_salary_raise = self.free_build_mode
   self.idle_cache = {} -- Cached queue standing positions for all queues.
@@ -774,6 +779,7 @@ function World:setSpeed(new_speed)
   local new_hours_per_tick, new_tick_rate = unpack(tick_rates[new_speed])
 
   if was_paused then
+    self:setAlreadyPaused(false)
     TheApp.audio:onEndPause()
     self.tick_timer = new_tick_rate
   else
@@ -819,6 +825,10 @@ end
 --! Set the blue filter according to whether the user can build or not.
 function World:updateScreenBlueFilter()
   TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self:mustPause())
+end
+
+function World:setAlreadyPaused(state)
+  self.already_paused = state
 end
 
 --! Dedicated function to allow unpausing by pressing 'p' again
