@@ -80,7 +80,6 @@ function World:World(app, free_build_mode)
   -- already paused when those things happen.
   self.already_paused = false
 
-
   -- If set, do not create salary raise requests.
   self.debug_disable_salary_raise = self.free_build_mode
   self.idle_cache = {} -- Cached queue standing positions for all queues.

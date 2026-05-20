@@ -1040,7 +1040,9 @@ function UI:onTick()
   return repaint
 end
 
-
+--! Adds a window to the game
+--! This also handles pause and permitted interaction behaviour as required
+--!param window (window) What is to be displayed
 function UI:addWindow(window)
   if window.closed then
     return
@@ -1059,6 +1061,9 @@ function UI:addWindow(window)
   self:_onAddWindow(window)
 end
 
+--! Remove a window from the game
+--! This also handles pause and permitted interaction behaviour as required
+--!param closing_window (window) What is to be removed
 function UI:removeWindow(closing_window)
   if Window.removeWindow(self, closing_window) then
     local class = closing_window.modal_class
