@@ -1055,8 +1055,8 @@ function UI:addWindow(window)
   if window.modal_class == "main" or window.modal_class == "fullscreen" then
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
   end
-  self:updateSystemPause(true, window)
   Window.addWindow(self, window)
+  self:updateSystemPause(true, window)
 end
 
 function UI:removeWindow(closing_window)
@@ -1081,9 +1081,10 @@ end
 function UI:updateSystemPause(pause, window)
   if not self.app.world then return end
   if window:mustPause() then
-    local otherPauseWindows = self:checkForMustPauseWindows()
-    if not otherPauseWindows then
-      self.app.world:setSystemPause(pause)
+    if pause then
+      self.app.world:systemPause()
+    else
+      self.app.world:systemUnpause()
     end
   end
 end

@@ -76,10 +76,6 @@ function World:World(app, free_build_mode)
   -- This is false when the game is paused.
   self.user_actions_allowed = true
 
-  -- The system pause method is used as an additional layer to pause the game, where the user
-  -- needs to deal with a recoverable error
-  self.system_pause = false
-
   -- If set, do not create salary raise requests.
   self.debug_disable_salary_raise = self.free_build_mode
   self.idle_cache = {} -- Cached queue standing positions for all queues.
@@ -756,7 +752,8 @@ function World:getCurrentSpeed()
 end
 
 -- Set the (approximate) number of seconds per tick.
---!param speed (string) One of: "Pause", "Slowest", "Slower", "Normal",
+--!param new_speed (string) New speed to set.
+-- One of: "Pause", "Slowest", "Slower", "Normal",
 -- "Max speed", or "And then some more".
 function World:setSpeed(new_speed)
   local isSystemPause = self:isSystemPauseActive()
@@ -764,7 +761,7 @@ function World:setSpeed(new_speed)
   if isSystemPause and new_speed ~= "Pause" then return end -- System pause takes precedence
   tracy.Message("Changing speed to " .. new_speed)
 
-  if isSystemPause then
+  if isSystemPause or new_speed == "Pause" then
     self.ui.hospital:tickEarthquake("pause")
   end
 
@@ -797,6 +794,16 @@ function World:setSpeed(new_speed)
   return false
 end
 
+function World:systemPause()
+  self:setSpeed("Pause")
+end
+
+function World:systemUnpause()
+  if self:isCurrentSpeed("Pause") and not self:isSystemPauseActive() then
+    self:pauseOrUnpause()
+  end
+end
+
 function World:isPaused()
   return self:isCurrentSpeed("Pause")
 end
@@ -811,23 +818,10 @@ function World:pauseOrUnpause()
   end
 end
 
---! Sets the system_pause parameter
---!param enabled (bool)
-function World:setSystemPause(enabled)
-  self.system_pause = enabled
-  if enabled then
-    self:setSpeed("Pause")
-  else
-    if self.prev_speed then
-      self:setSpeed(self.prev_speed)
-    end
-  end
-end
-
 --! Reports the system pause status
 --!return (bool) true is system pause is active, else false
 function World:isSystemPauseActive()
-  return self.system_pause
+  return self.ui:checkForMustPauseWindows()
 end
 
 --! Function to check if player can perform actions when paused
@@ -2821,7 +2815,6 @@ function World:afterLoad(old, new)
   end
   self.savegame_version = new
   self.release_version = TheApp:getReleaseString(new)
-  self:setSystemPause(false) -- Reset flag on load
 end
 
 function World:playLoadedEntitySounds()
