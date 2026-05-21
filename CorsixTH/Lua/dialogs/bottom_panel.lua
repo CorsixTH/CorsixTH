@@ -46,8 +46,8 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.show_animation = true
 
   self.fax_door = {
-    closed_amount = FAX_DOOR_FULLY_OPEN -- How open or shut the door is
-    next_action_ticks = 0
+    closed_amount = FAX_DOOR_FULLY_OPEN, -- How open or shut the door is
+    next_action_delay = 0
   }
 
   -- Visible fax panels on the left side of the bottom panel
@@ -1002,6 +1002,20 @@ function UIBottomPanel:afterLoad(old, new)
   end
   if old < 236 then
    self:_initFonts(self.ui.app.gfx)
+  end
+  if old < 244 then
+    -- ignore the delay logic for save games, minor
+    if self.factory_counter < FAX_DOOR_FULLY_OPEN then
+      self.factory_counter = FAX_DOOR_FULLY_OPEN
+    elseif self.factory_counter > FAX_DOOR_FULLY_SHUT then
+      self.factory_counter = FAX_DOOR_FULLY_SHUT
+    end
+    self.fax_door = {
+      closed_amount = self.factory_counter,
+      next_action_delay = 0
+    }
+    self.factory_counter = nil
+    self.factory_direction = nil
   end
   -- Hotfix to force re-calculation of the money font (see issue #1193)
   self.money_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font05V", nil, nil, { apply_ui_scale = true })
