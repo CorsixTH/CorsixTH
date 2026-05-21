@@ -26,9 +26,9 @@ local UIBottomPanel = _G["UIBottomPanel"]
 
 local FACTORY_DIR_OPENING = -1
 local FACTORY_DIR_CLOSING = 1
-local FACTORY_DIR_NONE = 0
 
-local FACTORY_ANIM_TICKS = 22
+local FAX_DOOR_FULLY_OPEN = 0
+local FAX_DOOR_FULLY_SHUT = 22
 
 function UIBottomPanel:UIBottomPanel(ui)
   self:Window()
@@ -45,16 +45,10 @@ function UIBottomPanel:UIBottomPanel(ui)
   -- State relating to fax notification messages
   self.show_animation = true
 
-  -- The factory counter is a tick counter that is used for opening and closing
-  -- the fax message door. When it is equal to FACTORY_ANIM_TICKS then the door
-  -- is fully closed. When it is less than 0 the door is fully open. At times it
-  -- is explicitly set to another value (less than zero when counting up, or
-  -- greater than zero when counting down) to delay the opening or closing of
-  -- the door.
-  self.factory_counter = FACTORY_ANIM_TICKS
-
-  -- Whether the door is opening, closing, or neutral
-  self.factory_direction = FACTORY_DIR_NONE
+  self.fax_door = {
+    closed_amount = FAX_DOOR_FULLY_OPEN -- How open or shut the door is
+    next_action_ticks = 0
+  }
 
   -- Visible fax panels on the left side of the bottom panel
   self.message_windows = {}
@@ -280,20 +274,18 @@ function UIBottomPanel:draw(canvas, x, y)
     self:drawDynamicInfo(canvas, x + 364 * s, y)
   end
 
-  if self.show_animation then
-    if self.factory_counter >= 1 then
-        self.panel_sprites:draw(canvas, 40, x + 177 * s, y + 1, { scaleFactor = s })
-    end
+  if self.fax_door.closed_amount >= 1 then
+      self.panel_sprites:draw(canvas, 40, x + 177 * s, y + 1, { scaleFactor = s })
+  end
 
-    if self.factory_counter > 1 and self.factory_counter <= FACTORY_ANIM_TICKS then
-      for dx = 0, self.factory_counter do
-        self.panel_sprites:draw(canvas, 41, x + 179 * s + dx * s, y + 1 * s, { scaleFactor = s })
-      end
+  if self.fax_door.closed_amount > 1 then
+    for dx = 0, self.fax_door.closed_amount do
+      self.panel_sprites:draw(canvas, 41, x + 179 * s + dx * s, y + 1 * s, { scaleFactor = s })
     end
+  end
 
-    if self.factory_counter == FACTORY_ANIM_TICKS then
-      self.panel_sprites:draw(canvas, 42, x + 201 * s, y + 1 * s, { scaleFactor = s })
-    end
+  if self.fax_door.closed_amount == FAX_DOOR_FULLY_SHUT then
+    self.panel_sprites:draw(canvas, 42, x + 201 * s, y + 1 * s, { scaleFactor = s })
   end
 
   self:drawReputationMeter(canvas, x + 55 * s, y + 35 * s)
@@ -533,23 +525,6 @@ function UIBottomPanel:openLastMessage()
   self.message_windows[#self.message_windows]:openMessage()
 end
 
---! Trigger a message to be moved from the queue into a actual window, after
--- first performing the necessary animation.
-function UIBottomPanel:_showMessage()
-  if self.factory_direction ~= FACTORY_DIR_OPENING then
-    self.factory_direction = FACTORY_DIR_OPENING
-    if self.factory_counter < 0 then
-      -- Factory is already opened so don't wait to show the message
-      self.show_animation = false
-      self.factory_counter = 9
-    else
-      -- Delay the appearance of the message to when the factory is opened
-      self.show_animation = true
-      self.factory_counter = FACTORY_ANIM_TICKS
-    end
-  end
-end
-
 -- Return the index of the first fax message in the queue that is suitable to be
 -- shown, and nil if there are none. A message is suitable to be shown if there
 -- are less than 5 currently shown messages, no message of the same type is
@@ -640,36 +615,6 @@ function UIBottomPanel:createMessageWindow(index)
 end
 
 function UIBottomPanel:onTick()
-  local msg_to_show = self:_findMessageToShow()
-
-  -- Advance the animation on the message factory
-  if self.factory_direction == FACTORY_DIR_CLOSING then
-    -- Close factory animation
-    if self.factory_counter < FACTORY_ANIM_TICKS then
-      self.factory_counter = self.factory_counter + 1
-    end
-  elseif self.factory_direction == FACTORY_DIR_OPENING then
-    if not msg_to_show then
-      -- Message was removed before we could display it. Reset.
-      self.factory_direction = FACTORY_DIR_CLOSING
-      self.factory_counter = FACTORY_ANIM_TICKS
-    end
-    -- Open factory animation
-    if self.factory_counter >= 0 then
-      if self.factory_counter == 0 then
-        -- Animation ends so we can now show the message
-        self:createMessageWindow()
-      end
-      self.factory_counter = self.factory_counter - 1
-    end
-  end
-
-  -- Start moving message out of the queue if a suitable one is available
-  if msg_to_show then
-    self:_showMessage()
-  end
-
-
   -- The dynamic info bar is there a while longer when hovering an entity has stopped
   if self.countdown then
     if self.countdown < 1 then
@@ -689,7 +634,30 @@ function UIBottomPanel:onTick()
     end
   end
 
+  self:_faxDoorTick()
+
   Window.onTick(self)
+end
+
+function UIBottomPanel:_faxDoorTick()
+  if self.fax_door.next_action_delay > 0 then
+    self.fax_door.next_action_delay = self.fax_door.next_action_delay - 1
+    return
+  end
+
+  local msg_to_show = self:_findMessageToShow()
+
+  if msg_to_show and self.fax_door.closed_amount == 0 then
+    self:createMessageWindow()
+    self.fax_door.next_action_delay = 9
+    return
+  end
+
+  if msg_to_show and self.fax_door.closed_amount > 0 then
+    self.fax_door.closed_amount = self.fax_door.closed_amount - 1
+  elseif not msg_to_show and self.fax_door.closed_amount < FAX_DOOR_FULLY_SHUT then
+    self.fax_door.closed_amount = self.fax_door.closed_amount + 1
+  end
 end
 
 function UIBottomPanel:dialogBankManager(enable)
