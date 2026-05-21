@@ -24,9 +24,6 @@ class "UIBottomPanel" (Window)
 ---@type UIBottomPanel
 local UIBottomPanel = _G["UIBottomPanel"]
 
-local FACTORY_DIR_OPENING = -1
-local FACTORY_DIR_CLOSING = 1
-
 local FAX_DOOR_FULLY_OPEN = 0
 local FAX_DOOR_FULLY_SHUT = 22
 
@@ -608,9 +605,7 @@ function UIBottomPanel:createMessageWindow(index)
     onClose, message_info.type, message_info.message, message_info.owner, message_info.timeout, message_info.default_choice, message_info.callback)
   message_windows[#message_windows + 1] = alert_window
   self:addWindow(alert_window)
-  self.factory_direction = FACTORY_DIR_CLOSING
   self.show_animation = true
-  self.factory_counter = -50                -- Delay close of message factory
   table.remove(self.message_queue, index)   -- Delete the last element of the queue
 end
 
