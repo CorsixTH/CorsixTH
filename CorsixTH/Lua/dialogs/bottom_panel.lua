@@ -642,13 +642,13 @@ function UIBottomPanel:_faxDoorTick()
 
   local msg_to_show = self:_findMessageToShow()
 
-  if msg_to_show and self.fax_door.closed_amount == 0 then
+  if msg_to_show and self.fax_door.closed_amount == FAX_DOOR_FULLY_OPEN then
     self:createMessageWindow()
     self.fax_door.next_action_delay = 9
     return
   end
 
-  if msg_to_show and self.fax_door.closed_amount > 0 then
+  if msg_to_show and self.fax_door.closed_amount > FAX_DOOR_FULLY_OPEN then
     self.fax_door.closed_amount = self.fax_door.closed_amount - 1
   elseif not msg_to_show and self.fax_door.closed_amount < FAX_DOOR_FULLY_SHUT then
     self.fax_door.closed_amount = self.fax_door.closed_amount + 1
