@@ -43,7 +43,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.show_animation = true
 
   self.fax_door = {
-    closed_amount = FAX_DOOR_FULLY_OPEN, -- How open or shut the door is
+    closed_amount = FAX_DOOR_FULLY_SHUT,
     next_action_delay = 0
   }
 
