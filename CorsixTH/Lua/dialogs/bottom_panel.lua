@@ -271,18 +271,17 @@ function UIBottomPanel:draw(canvas, x, y)
     self:drawDynamicInfo(canvas, x + 364 * s, y)
   end
 
-  if self.fax_door.closed_amount >= 1 then
-      self.panel_sprites:draw(canvas, 40, x + 177 * s, y + 1, { scaleFactor = s })
-  end
+  -- Draw the fax door if it is not fully open
+  if self.fax_door.closed_amount ~= FAX_DOOR_FULLY_OPEN then
+    self.panel_sprites:draw(canvas, 40, x + 177 * s, y + 1, { scaleFactor = s })
 
-  if self.fax_door.closed_amount > 1 then
     for dx = 0, self.fax_door.closed_amount do
       self.panel_sprites:draw(canvas, 41, x + 179 * s + dx * s, y + 1 * s, { scaleFactor = s })
     end
-  end
 
-  if self.fax_door.closed_amount == FAX_DOOR_FULLY_SHUT then
-    self.panel_sprites:draw(canvas, 42, x + 201 * s, y + 1 * s, { scaleFactor = s })
+    if self.fax_door.closed_amount == FAX_DOOR_FULLY_SHUT then
+      self.panel_sprites:draw(canvas, 42, x + 201 * s, y + 1 * s, { scaleFactor = s })
+    end
   end
 
   self:drawReputationMeter(canvas, x + 55 * s, y + 35 * s)
