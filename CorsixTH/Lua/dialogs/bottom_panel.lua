@@ -39,9 +39,6 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:setDefaultPosition(0.5, -0.1)
   self:_initFonts(app.gfx)
 
-  -- State relating to fax notification messages
-  self.show_animation = true
-
   self.fax_door = {
     closed_amount = FAX_DOOR_FULLY_SHUT,
     next_action_delay = 0
@@ -604,7 +601,6 @@ function UIBottomPanel:createMessageWindow(index)
     onClose, message_info.type, message_info.message, message_info.owner, message_info.timeout, message_info.default_choice, message_info.callback)
   message_windows[#message_windows + 1] = alert_window
   self:addWindow(alert_window)
-  self.show_animation = true
   table.remove(self.message_queue, index)   -- Delete the last element of the queue
 end
 
@@ -1010,6 +1006,7 @@ function UIBottomPanel:afterLoad(old, new)
     }
     self.factory_counter = nil
     self.factory_direction = nil
+    self.show_animation = nil
   end
   -- Hotfix to force re-calculation of the money font (see issue #1193)
   self.money_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font05V", nil, nil, { apply_ui_scale = true })
