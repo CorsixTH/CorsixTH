@@ -802,6 +802,7 @@ function Object:onClick(ui, button, data)
 
     self.picked_up = true
     if not room_editing_mode then
+      self:setInvisible(true)
       self:onPickUp()
       window = UIPlaceObjects(ui, object_list, false) -- don't pay for
       ui:addWindow(window)
@@ -852,7 +853,6 @@ end
 function Object:onPickUp()
   self:resetUsageAndReservaton()
   Entity.onPickUp(self)
-  self:setInvisible(true)
 end
 
 function Object:resetUsageAndReservaton()
