@@ -403,10 +403,10 @@ end
 function PlayerHospital:msgCured()
   self.world.ui:playSound("cheer.wav") -- This sound is always heard
 
-  if self.num_cured == 1 then -- First cure is always reported.
+  local num_cured = math.floor(self.num_cured)
+  if num_cured == 1 then -- First cure is always reported.
     self:giveAdvice({_A.information.first_cure})
-  elseif self.num_cured > 1 and not self.adviser_data.cured_died_message then
-    local num_cured = math.floor(self.num_cured)
+  elseif num_cured > 1 and not self.adviser_data.cured_died_message then
     local cured_msgs = {
       _A.level_progress.another_patient_cured:format(num_cured),
       _A.praise.patients_cured:format(num_cured)
