@@ -1703,8 +1703,6 @@ end
 --! Update the 'cured' counts of the hospital.
 --!param patient Patient that was cured.
 function Hospital:updateCuredCounts(patient)
-  self:msgCured()
-
   if not patient.is_debug then
     self:changeReputation("cured", patient.disease)
   end
@@ -1718,6 +1716,8 @@ function Hospital:updateCuredCounts(patient)
   if patient.is_emergency then
     self.emergency.cured_emergency_patients = self.emergency.cured_emergency_patients + 1
   end
+
+  self:msgCured()
 end
 
 --! Update the 'not cured' counts of the hospital.
