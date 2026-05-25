@@ -461,7 +461,9 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
       -- If icon position found
       if this_icon_index ~= nil then
         -- Shift all icons that are on the right to the left
-        icon:setXLimit(1 + (i - 2) * FACTORY_ICON_WIDTH)
+        -- The '_factoryIconWitdh()' call is used for compatibility with 0.69 saves and older
+        -- where FACTORY_ICON_WIDTH was not yet declared when the closure was created.
+        icon:setXLimit(1 + (i - 2) * self._factoryIconWitdh())
       elseif icon == this_icon then
         this_icon_index = i
       end
@@ -493,6 +495,10 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
   else
     self:cancelFax(message_info.type)
   end
+end
+
+function UIBottomPanel:_factoryIconWitdh()
+  return FACTORY_ICON_WIDTH
 end
 
 --[[ A fax can be queued if the event the fax causes does not affect
