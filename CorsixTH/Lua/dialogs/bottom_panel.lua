@@ -610,12 +610,11 @@ function UIBottomPanel:_showMessageIcon(index)
   if not message_info then
     return
   end
-  -- Create the message window, note this does not show it to the player on creation.
-  local alert_window = UIMessage(self.ui, 175, 1 + #message_windows * 30,
-    onClose, message_info.type, message_info.message, message_info.owner, message_info.timeout, message_info.default_choice, message_info.callback)
-  message_windows[#message_windows + 1] = alert_window
-  self:addWindow(alert_window)
-  table.remove(self.message_queue, index)   -- Delete the last element of the queue
+  local drawer_icon = message_info.drawer_icon
+  drawer_icon:setXLimit(1 + #message_windows * FACTORY_ICON_WIDTH)
+  message_windows[#message_windows + 1] = drawer_icon
+  self:addWindow(drawer_icon)
+  table.remove(self.message_queue, index)   -- Delete element of the queue
 end
 
 function UIBottomPanel:onTick()
