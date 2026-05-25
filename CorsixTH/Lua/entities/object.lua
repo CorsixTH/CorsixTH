@@ -802,8 +802,8 @@ function Object:onClick(ui, button, data)
 
     self.picked_up = true
     if not room_editing_mode then
-      self:setInvisible(true)
       self:onPickUp()
+      self:setInvisible(true)
       window = UIPlaceObjects(ui, object_list, false) -- don't pay for
       ui:addWindow(window)
     else

@@ -243,24 +243,33 @@ end
 
 -- precondition: self.active_index has to correspond to the object to be removed
 function UIPlaceObjects:removeObject(object, dont_close_if_empty, placed, move_canceled)
-  if object.existing_object then
+  local existing_object = object.existing_object
+
+  local move_cancellation = not placed and existing_object and move_canceled
+  local purchase_cancellation = not placed and not existing_object
+  local sale_previously_placed = not placed and existing_object and not move_canceled
+
+  if purchase_cancellation or sale_previously_placed then
+    -- Object sell.
+    -- The player should be reimbursed for the cost of the item, i.e.
+    -- whether they were previously purchased. So do refund.
+    local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
+    local msg = _S.transactions.sell_object .. ": " .. object.object.name
+    self.ui.hospital:receiveMoney(build_cost, msg, build_cost)
+  end
+
+  if move_cancellation then
+    -- Move cancelled. Place object back. Restore coordinate and orientation.
+    self.object_cell_x = object.existing_object.tile_x
+    self.object_cell_y = object.existing_object.tile_y
+    self.object_orientation = object.existing_object.direction
+    self:placeObject(nil, true)
+  end
+
+  if sale_previously_placed then
     -- Previously grabbed an existing object so the object was not deleted
     -- from its previous location, but simply made invisible.
-    if move_canceled then
-      -- Object placed back. Restore coordinate and orientation.
-      self.object_cell_x = object.existing_object.tile_x
-      self.object_cell_y = object.existing_object.tile_y
-      self.object_orientation = object.existing_object.direction
-      self:placeObject()
-    elseif not placed then
-      -- Destroy object
-      -- The player should be reimbursed for the cost of the item, i.e.
-      -- whether they were previously purchased. So do refund.
-      local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
-      local msg = _S.transactions.sell_object .. ": " .. object.object.name
-      self.ui.hospital:receiveMoney(build_cost, msg, build_cost)
-      self.world:destroyEntity(object.existing_object)
-    end
+    self.world:destroyEntity(object.existing_object)
   end
 
   object.qty = object.qty - 1
@@ -508,7 +517,7 @@ function UIPlaceObjects:onMouseUp(button, x, y)
   return repaint
 end
 
-function UIPlaceObjects:placeObject(dont_close_if_empty)
+function UIPlaceObjects:placeObject(dont_close_if_empty, dont_remove)
   if not self.place_objects then
     -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
     return
@@ -564,7 +573,9 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
 
   self.ui:playSound("place_r.wav")
 
-  self:removeObject(object, dont_close_if_empty, true, false)
+  if not dont_remove then
+    self:removeObject(object, dont_close_if_empty, true, false)
+  end
   object.orientation_before = nil
 
   return real_obj
