@@ -193,6 +193,7 @@ function Audio:init()
     self.background_playlist = {}
     return
   end
+  self:playRandomBackgroundTrack()
 end
 
 function Audio:initMidiPlayer()
