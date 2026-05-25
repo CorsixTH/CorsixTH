@@ -101,9 +101,15 @@ object.orientations = {
       {0, -1, complete_cell = true}, {0, -2, complete_cell = true},
       {1, 0, complete_cell = true}, {1, -2, complete_cell = true},  {1, -1, only_passable = true},
     },
-    render_attach_position = {0, -1},
     slave_position = {1, -1},
     smoke_position = {0, 0},
+    render_attach_position = {
+      1, -2, crop_base = 1, crop_width = 1,
+      proxies = {
+        {1, -1, crop_base = 1, crop_width = 1},
+        {1, 0, crop_base = -2, crop_width = 4}
+      }
+    },
   },
   east = {
     use_position = {-2, -1},
@@ -115,8 +121,15 @@ object.orientations = {
       {0, 1, complete_cell = true}, {-2, 1, complete_cell = true},  {-1, 1, only_passable = true}, {0, 0}
     },
     slave_position = {-1, 1},
-    render_attach_position = {-1, 0},
     smoke_position = {0, 0},
+    render_attach_position = {
+      -1, -2, crop_base = 1, crop_width = 1,
+      proxies = {
+        {-1, 1, crop_base = 1, crop_width = 1},
+        {-1, 0, crop_base = 1, crop_width = 1},
+        {-2, 1, crop_base = 0, crop_width = 3}
+      }
+    },
   },
 }
 

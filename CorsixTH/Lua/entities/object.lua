@@ -58,8 +58,7 @@ function Object:Object(hospital, object_type, x, y, direction, etc)
   self:setTile(x, y)
 end
 
---! Initializes the footprint, finds out what to draw and checks for
---  split animations.
+--! Initializes the footprint.
 --!param direction The orientation in which the object is facing.
 function Object:initOrientation(direction)
   self.direction = direction
@@ -72,41 +71,18 @@ function Object:initOrientation(direction)
     anim = object_type.idle_animations[orient_mirror[direction]]
     flags = DrawFlags.FlipHorizontal
   end
+
   local footprint = object_type.orientations
   footprint = footprint and footprint[direction]
-  if footprint and footprint.early_list then
-    flags = flags + DrawFlags.EarlyList
-  end
 
   local rap = footprint and footprint.render_attach_position
-  if rap and rap[1] and type(rap[1]) == "table" then
-    self.split_anims = {self.th}
-    self.split_anim_positions = rap
-    self.th:setCrop(rap[1].column)
-    for i = 2, #rap do
-      local point = rap[i]
-      local th = TH.animation()
-      th:setCrop(point.column)
-      th:setHitTestResult(self)
-      th:setPosition(Map:WorldToScreen(1-point[1], 1-point[2]))
-      self.split_anims[i] = th
-    end
-  else
-    -- Make sure these variables aren't left behind. The object
-    -- might just have been moved and rotated.
-    self.split_anims = nil
-    self.split_anim_positions = nil
-  end
+
   if footprint and footprint.animation_offset then
     self:setPosition(unpack(footprint.animation_offset))
   end
-  footprint = footprint and footprint.footprint
-  if footprint then
-    self.footprint = footprint
-  else
-    self.footprint = nil
-  end
-  self:setAnimation(anim, flags)
+  self.footprint = footprint and footprint.footprint
+
+  self:setAnimation(anim, flags, rap)
 end
 
 --! Add methods to a class for creating and controlling a slave object
@@ -186,58 +162,26 @@ function Object.slaveMixinClass(class_method_table)
   return slave_to_master, master_to_slave
 end
 
-function Object:tick()
-  if self.split_anims then
-    if self.num_animation_ticks then
-      for i = 2, #self.split_anims do
-        local th = self.split_anims[i]
-        for _ = 1, self.num_animation_ticks do
-          th:tick()
-        end
-      end
-    else
-      for i = 2, #self.split_anims do
-        self.split_anims[i]:tick()
-      end
-    end
-  end
-  return Entity.tick(self)
-end
-
 function Object:setPosition(x, y)
-  if self.split_anims then
-    -- The given position is for the primary tile, so position non-primary
-    -- animations relative to the primary one.
-    local bx, by = unpack(self.split_anim_positions[1])
-    for i, th in ipairs(self.split_anims) do
-      local point = self.split_anim_positions[i]
-      local dx, dy = Map:WorldToScreen(1-point[1]+bx, 1-point[2]+by)
-      th:setPosition(x + dx, y + dy)
-    end
-  else
+  local orientation = self.object_type.orientations[self.direction]
+  local rap = orientation.render_attach_position
+  if rap then
+    -- Set cropping and position of the animation.
+    if rap.crop_base then self.th:setCrop(rap.crop_base, rap.crop_width) end
     self.th:setPosition(x, y)
-  end
-  return self
-end
 
-function Object:setAnimation(animation, flags)
-  if self.split_anims then
-    flags = (flags or 0) + DrawFlags.Crop
-    if self.permanent_flags then
-      flags = flags + self.permanent_flags
-    end
-    if animation ~= self.animation_idx or flags ~= self.animation_flags then
-      self.animation_idx = animation
-      self.animation_flags = flags
-      local anims = self.world.anims
-      for _, th in ipairs(self.split_anims) do
-        th:setAnimation(anims, animation, flags)
+    -- If there are proxies, add them as well.
+    if rap.proxies then
+      self.th:removeAllProxies()
+      -- From proxy to animation in map coordinates.
+      for _, proxy in ipairs(rap.proxies) do
+        local dx, dy = rap[1] - proxy[1], rap[2] - proxy[2]
+        self.th:addProxy(dx, dy, proxy.crop_base, proxy.crop_width)
       end
     end
-    return self
-  else
-    return Entity.setAnimation(self, animation, flags)
   end
+
+  return self
 end
 
 --! Get the primary tile which the object is attached to for rendering
@@ -251,9 +195,6 @@ function Object:getRenderAttachTile()
   local offset = self.object_type.orientations
   if x and offset then
     offset = offset[self.direction].render_attach_position
-    if self.split_anims then
-      offset = offset[1]
-    end
     x = x + offset[1]
     y = y + offset[2]
   end
@@ -552,21 +493,8 @@ function Object:setTile(x, y)
         end
       end
     end
-    if self.split_anims then
-      local map = self.world.map.th
-      local pos = self.split_anim_positions
-      for i = 2, #self.split_anims do
-        self.split_anims[i]:setTile(map, x + pos[i][1], y + pos[i][2],
-            self:getDrawingLayer())
-      end
-    end
   else
     self.th:setTile(nil)
-    if self.split_anims then
-      for i = 2, #self.split_anims do
-        self.split_anims[i]:setTile(nil)
-      end
-    end
   end
   self.world:clearCaches()
   return self
@@ -921,18 +849,21 @@ function Object.processTypeDefinition(object_type)
           details.slave_position[1] = details.slave_position[1] - x
           details.slave_position[2] = details.slave_position[2] - y
         end
-        local rx, ry = unpack(details.render_attach_position)
-        if type(rx) == "table" then
-          rx, ry = unpack(details.render_attach_position[1])
-          for _, point in ipairs(details.render_attach_position) do
-            point.column = point[1] - point[2]
-            point[1] = point[1] - x
-            point[2] = point[2] - y
+
+        -- Move render attach points.
+        local rap = details.render_attach_position
+        local rx, ry = rap[1], rap[2]
+        rap[1] = rap[1] - x
+        rap[2] = rap[2] - y
+
+        if rap.proxies then
+          for _, p in ipairs(rap.proxies) do
+            p[1] = p[1] - x
+            p[2] = p[2] - y
           end
-        else
-          details.render_attach_position[1] = rx - x
-          details.render_attach_position[2] = ry - y
         end
+
+        -- Adjust animation offset.
         x, y = Map:WorldToScreen(rx + 1, ry + 1)
         details.animation_offset[1] = details.animation_offset[1] - x
         details.animation_offset[2] = details.animation_offset[2] - y

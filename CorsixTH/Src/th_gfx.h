@@ -79,59 +79,12 @@ enum draw_flags : uint32_t {
   //! Draw the sprite with red and blue colours swapped.
   thdf_alt32_blue_red_swap = 2 << thdf_alt32_start,
 
-  //! Attach to the early sprite list (right-to-left pass)
-  /* (should be set prior to attaching to a tile) */
-  thdf_early_list = 1 << 10,
-
   //! Hit-test using bounding-box precision rather than pixel-perfect
   thdf_bound_box_hit_test = 1 << 12,
   //! Apply a cropping operation prior to drawing
   thdf_crop = 1 << 13,
   //! Draw using nearest pixel hinting
   thdf_nearest = 1 << 14,
-};
-
-// Integer 2D pair.
-struct xy_pair {
-  int x{};  ///< Value of the X coordinate.
-  int y{};  ///< Value of the Y coordinate.
-};
-
-/*!
-    Base class for a linked list of drawable objects.
-    Note that "object" is used as a generic term, not in specific reference to
-    game objects (though they are the most common thing in drawing lists).
-*/
-// TODO: Replace this struct with something cleaner
-struct drawable : public link_list {
-  drawable() = default;
-
-  //! Draw the object at a specific point on a render target
-  /*!
-      Can also "draw" the object to the speakers, i.e. play sounds.
-  */
-  virtual void draw_fn(render_target* canvas, const xy_pair& draw_pos) = 0;
-
-  //! Perform a hit test against the object
-  /*!
-      Should return true if when the object is drawn at \p draw_pos on a
-     canvas, the point \p obj_pos is within / on the object.
-  */
-  virtual bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) = 0;
-
-  /** Returns true if instance is a multiple frame animation.
-      Should be overloaded in derived class.
-  */
-  virtual bool is_multiple_frame_animation_fn() = 0;
-
-  int get_drawing_layer() { return drawing_layer; }
-  void set_drawing_layer(int layer) { drawing_layer = layer; }
-
-  //! Drawing flags (zero or more list flags from #draw_flags).
-  uint32_t flags{0};
-
- private:
-  int drawing_layer{0};
 };
 
 /*!
@@ -461,12 +414,65 @@ class animation_manager {
   void fix_next_frame(uint32_t iFirst, size_t iLength);
 };
 
+//! Integer 2D pair.
+struct xy_pair {
+  int x{};  ///< Value of the X coordinate.
+  int y{};  ///< Value of the Y coordinate.
+};
+
+/*!
+    Base class for a linked list of drawable objects.
+    Note that "object" is used as a generic term, not in specific reference to
+    game objects (though they are the most common thing in drawing lists).
+*/
+// TODO: Replace this struct with something cleaner
+struct drawable : public link_list {
+  drawable() = default;
+
+  //! Draw the object at a specific point on a render target
+  /*!
+      Can also "draw" the object to the speakers, i.e. play sounds.
+  */
+  virtual void draw_fn(render_target* canvas, const xy_pair& draw_pos) = 0;
+
+  //! Perform a hit test against the object
+  /*!
+      Should return true if when the object is drawn at \p draw_pos on a
+     canvas, the point \p obj_pos is within / on the object.
+  */
+  virtual bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) = 0;
+
+  /** Returns true if instance is a multiple frame animation.
+      Should be overloaded in derived class.
+  */
+  virtual bool is_multiple_frame_animation_fn() = 0;
+
+  int get_drawing_layer() { return drawing_layer; }
+  void set_drawing_layer(int layer) { drawing_layer = layer; }
+
+  //! Drawing flags (zero or more list flags from #draw_flags).
+  uint32_t flags{0};
+
+ private:
+  int drawing_layer{0};
+};
+
 class animation_base : public drawable {
  public:
   animation_base();
 
-  void remove_from_tile();
-  void attach_to_tile(const xy_pair& tile_pos, map_tile* node, int layer);
+  virtual void remove_from_tile();
+
+  //! Try to attach the animation to the map.
+  //! The default implementation performs connecting to a single tile.
+  /*!
+   * @param tile_pos Desired tile to attach to.
+   * @param the_map The map to attach to.
+   * @param layer Drawing layer of the animation.
+   * @return Whether attaching succeeded.
+   */
+  virtual bool attach_to_map(const xy_pair& tile_pos, level_map* the_map,
+                             int layer);
 
   uint32_t get_flags() const { return flags; }
   const xy_pair& get_pixel_offset() const { return pixel_offset; }
@@ -482,6 +488,14 @@ class animation_base : public drawable {
   void set_layers_from(const animation_base* pSrc) { layers = pSrc->layers; }
 
  protected:
+  //! Attach an animation to the given tile.
+  /*!
+   * @param tile_pos Desired tile to attach to.
+   * @param tile The map tile to attach to.
+   * @param layer Drawing layer of the animation.
+   */
+  void attach_to_tile(const xy_pair& tile_pos, map_tile* tile, int layer);
+
   //! Tile containing the animation. A negative x or y means it is not active.
   xy_pair tile{-1, -1};
 
@@ -489,6 +503,36 @@ class animation_base : public drawable {
   xy_pair pixel_offset{0, 0};
 
   ::layers layers{};
+};
+
+class animation;
+
+class animation_proxy : public animation_base {
+ public:
+  animation_proxy(animation* const parent_anim_value,
+                  const xy_pair& rel_pos_value, int8_t crop_base_value,
+                  int8_t crop_width_value);
+
+  xy_pair get_tile(const xy_pair& anim_pos) const {
+    return {anim_pos.x - rel_to_anim.x, anim_pos.y - rel_to_anim.y};
+  }
+
+  void draw_fn(render_target* canvas, const xy_pair& draw_pos) override;
+  bool hit_test_fn(const xy_pair& draw_pos, const xy_pair& obj_pos) override;
+  bool is_multiple_frame_animation_fn() override;
+
+ private:
+  //! Main animation object that performs the actual rendering.
+  animation* const parent_anim;
+
+  //! Relative position from the proxy to the parent animation in tiles.
+  const xy_pair rel_to_anim;
+
+  //! Left edge of the cropping area in number of half tiles relative to the
+  //! left edge of the tile containing the proxy object.
+  const int8_t crop_base;
+  //! Width of the cropping area in number of half tiles.
+  const int8_t crop_width;
 };
 
 //! The kind of animation.
@@ -501,15 +545,21 @@ class animation : public animation_base {
   void set_parent(animation* parent_anim, bool use_primary);
 
   void tick();
-  void draw(render_target* canvas, const xy_pair& draw_pos);
+  void draw(render_target* canvas, const xy_pair& draw_pos, int8_t crop_base,
+            int8_t crop_width);
   void draw_morph(render_target* canvas, const xy_pair& draw_pos);
   void draw_child(render_target* canvas, const xy_pair& draw_pos,
                   bool use_primary);
 
   void draw_fn(render_target* canvas, const xy_pair& draw_pos) override {
+    internal_draw(canvas, draw_pos, crop_base, crop_width);
+  }
+
+  void internal_draw(render_target* canvas, const xy_pair& draw_pos,
+                     int8_t crop_base, int8_t crop_width) {
     switch (anim_kind) {
       case animation_kind::normal:
-        draw(canvas, draw_pos);
+        draw(canvas, draw_pos, crop_base, crop_width);
         return;
       case animation_kind::primary_child:
         draw_child(canvas, draw_pos, true);
@@ -547,12 +597,23 @@ class animation : public animation_base {
     return next_frame != first_frame;
   }
 
+  bool attach_to_map(const xy_pair& tile_pos, level_map* the_map,
+                     int layer) override;
+
+  void remove_from_tile() override;
+
   link_list* get_previous() { return prev; }
   size_t get_animation() const { return animation_index; }
   bool get_primary_marker(int* pX, int* pY);
   bool get_secondary_marker(int* pX, int* pY);
   size_t get_frame() const { return frame_index; }
-  int get_crop_column() const { return crop_column; }
+
+  void set_crop(int8_t base, int8_t width) {
+    crop_base = base;
+    crop_width = width;
+  }
+  int8_t get_crop_base() const { return crop_base; }
+  int8_t get_crop_width() const { return crop_width; }
 
   void set_animation(animation_manager* mgr, size_t anim);
   void set_morph_target(animation* target, int duration = 1);
@@ -562,7 +623,6 @@ class animation : public animation_base {
     speed.x = x;
     speed.y = y;
   }
-  void set_crop_column(int column) { crop_column = column; }
 
   void persist(lua_persist_writer* writer) const;
   void depersist(lua_persist_reader* reader);
@@ -570,6 +630,10 @@ class animation : public animation_base {
   void set_patient_effect(animation_effect patient_effect);
   void set_animation_kind(animation_kind anim_kind);
   animation_kind get_animation_kind() { return anim_kind; }
+
+  void add_proxy(const xy_pair& rel_pos_value, int8_t crop_base_value,
+                 int8_t crop_width_value);
+  void remove_all_proxies();
 
   animation_manager* get_animation_manager() { return manager; }
 
@@ -587,12 +651,20 @@ class animation : public animation_base {
   };
 
   size_t sound_to_play{};
-  int crop_column{};
   animation_kind anim_kind{animation_kind::normal};
   animation_effect patient_effect{animation_effect::none};
   //! Number of game_ticks to offset animation by so they aren't all
   //! running in sync.
   size_t patient_effect_offset;
+
+  //! Base at the left of the cropped area. In half-tiles relative to the left
+  //! edge of the animation tile.
+  int8_t crop_base{};
+  //! Width of the cropped area in half-tiles.
+  int8_t crop_width{2};
+
+  //! The proxies of the animation.
+  std::vector<animation_proxy> proxies{};
 };
 
 class sprite_render_list : public animation_base {

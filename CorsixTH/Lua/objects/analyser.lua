@@ -48,10 +48,18 @@ object.usage_animations = copy_north_to_south {
 object.orientations = {
   north = {
     footprint = { {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0, only_passable = true}, {1, 0} },
+    render_attach_position = {
+      1, -1, crop_base = 1, crop_width = 1,
+      proxies = {{-1, 0, crop_base = 0, crop_width = 4}}
+    },
     use_position = {0, 0},
   },
   east = {
     footprint = { {-1, -1}, {0, -1}, {-1, 0}, {0, 0, only_passable = true}, {-1, 1}, {0, 1} },
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{0, 0, crop_base = 1, crop_width = 1}, {-1, 1, crop_base = 0, crop_width = 3}}
+    },
     use_position = {0, 0},
   },
 }

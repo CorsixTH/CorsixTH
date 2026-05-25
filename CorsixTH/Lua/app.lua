@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 243 -- Cache list of reception desks
+local SAVEGAME_VERSION = 244 -- Modify rendering
 
 class "App"
 

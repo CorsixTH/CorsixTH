@@ -80,6 +80,7 @@ return {
         setHitTestResult = function() end,
         setAnimation = function() end,
         setTile = function() end,
+        removeAllProxies = function() end,
       }
     end
 }

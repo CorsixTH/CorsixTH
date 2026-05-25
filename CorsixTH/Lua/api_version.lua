@@ -30,6 +30,10 @@ way incompatible with old Lua code, then the version number needs to change.
 
 Note: This file compiles as both Lua and C++. */
 
+***
+*** Change for this version: Add animation proxies.
+***
+
 #endif /*]] --*/
 
-return 2710;
+return 2711;

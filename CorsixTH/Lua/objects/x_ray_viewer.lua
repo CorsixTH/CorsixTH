@@ -44,12 +44,23 @@ object.orientations = {
     footprint = {
       {0, 0, need_west_side = true },
     },
+    render_attach_position = {
+      -1, -2, crop_base = 1, crop_width = 1,
+      proxies = {{1, -1, crop_base = 1, crop_width = 1}, {-2, 0, crop_base = 0, crop_width = 4}}
+    }
   },
   east = {
     footprint = {
       {0, 0, need_north_side = true},
     },
-    early_list = true,
+    render_attach_position = {
+      0, -2, crop_base = 1, crop_width = 1,
+      proxies = {
+        {0, -1, crop_base = 1, crop_width = 1},
+        {0, 0, crop_base = 1, crop_width = 1},
+        {-1, 1, crop_base = 0, crop_width = 3}
+      }
+    }
   },
 }
 
