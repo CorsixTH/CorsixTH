@@ -24,8 +24,8 @@ class "UIBottomPanel" (Window)
 ---@type UIBottomPanel
 local UIBottomPanel = _G["UIBottomPanel"]
 
-local FAX_DOOR_FULLY_OPEN = 0
-local FAX_DOOR_FULLY_SHUT = 22
+local MESSAGE_DOOR_FULLY_OPEN = 0
+local MESSAGE_DOOR_FULLY_SHUT = 22
 
 function UIBottomPanel:UIBottomPanel(ui)
   self:Window()
@@ -39,8 +39,8 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:setDefaultPosition(0.5, -0.1)
   self:_initFonts(app.gfx)
 
-  self.fax_door = {
-    closed_amount = FAX_DOOR_FULLY_SHUT,
+  self.message_door = {
+    closed_amount = MESSAGE_DOOR_FULLY_SHUT,
     next_action_delay = 0
   }
 
@@ -269,14 +269,14 @@ function UIBottomPanel:draw(canvas, x, y)
   end
 
   -- Draw the fax door if it is not fully open
-  if self.fax_door.closed_amount ~= FAX_DOOR_FULLY_OPEN then
+  if self.message_door.closed_amount ~= MESSAGE_DOOR_FULLY_OPEN then
     self.panel_sprites:draw(canvas, 40, x + 177 * s, y + 1, { scaleFactor = s })
 
-    for dx = 0, self.fax_door.closed_amount do
+    for dx = 0, self.message_door.closed_amount do
       self.panel_sprites:draw(canvas, 41, x + 179 * s + dx * s, y + 1 * s, { scaleFactor = s })
     end
 
-    if self.fax_door.closed_amount == FAX_DOOR_FULLY_SHUT then
+    if self.message_door.closed_amount == MESSAGE_DOOR_FULLY_SHUT then
       self.panel_sprites:draw(canvas, 42, x + 201 * s, y + 1 * s, { scaleFactor = s })
     end
   end
@@ -624,29 +624,29 @@ function UIBottomPanel:onTick()
     end
   end
 
-  self:_faxDoorTick()
+  self:_messageDoorTick()
 
   Window.onTick(self)
 end
 
-function UIBottomPanel:_faxDoorTick()
-  if self.fax_door.next_action_delay > 0 then
-    self.fax_door.next_action_delay = self.fax_door.next_action_delay - 1
+function UIBottomPanel:_messageDoorTick()
+  if self.message_door.next_action_delay > 0 then
+    self.message_door.next_action_delay = self.message_door.next_action_delay - 1
     return
   end
 
   local msg_to_show = self:_findMessageToShow()
 
-  if msg_to_show and self.fax_door.closed_amount == FAX_DOOR_FULLY_OPEN then
+  if msg_to_show and self.message_door.closed_amount == MESSAGE_DOOR_FULLY_OPEN then
     self:createMessageWindow()
-    self.fax_door.next_action_delay = 9
+    self.message_door.next_action_delay = 9
     return
   end
 
-  if msg_to_show and self.fax_door.closed_amount > FAX_DOOR_FULLY_OPEN then
-    self.fax_door.closed_amount = self.fax_door.closed_amount - 1
-  elseif not msg_to_show and self.fax_door.closed_amount < FAX_DOOR_FULLY_SHUT then
-    self.fax_door.closed_amount = self.fax_door.closed_amount + 1
+  if msg_to_show and self.message_door.closed_amount > MESSAGE_DOOR_FULLY_OPEN then
+    self.message_door.closed_amount = self.message_door.closed_amount - 1
+  elseif not msg_to_show and self.message_door.closed_amount < MESSAGE_DOOR_FULLY_SHUT then
+    self.message_door.closed_amount = self.message_door.closed_amount + 1
   end
 end
 
@@ -995,12 +995,12 @@ function UIBottomPanel:afterLoad(old, new)
   end
   if old < 244 then
     -- ignore the delay logic for save games, minor
-    if self.factory_counter < FAX_DOOR_FULLY_OPEN then
-      self.factory_counter = FAX_DOOR_FULLY_OPEN
-    elseif self.factory_counter > FAX_DOOR_FULLY_SHUT then
-      self.factory_counter = FAX_DOOR_FULLY_SHUT
+    if self.factory_counter == nil or self.factory_counter > MESSAGE_DOOR_FULLY_SHUT then
+      self.factory_counter = MESSAGE_DOOR_FULLY_SHUT
+    elseif self.factory_counter < MESSAGE_DOOR_FULLY_OPEN then
+      self.factory_counter = MESSAGE_DOOR_FULLY_OPEN
     end
-    self.fax_door = {
+    self.message_door = {
       closed_amount = self.factory_counter,
       next_action_delay = 0
     }
