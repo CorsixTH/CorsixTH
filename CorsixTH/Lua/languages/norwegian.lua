@@ -263,7 +263,6 @@ tooltip = {
       toggle_infected = "Slå av eller på ikoner for smittsomme pasienter for den aktive, oppdagede epidemien",
     },
   },
-
   customise_window = { --todo kanskje en opprensking her. få det mer konsekvent.
     movies = "Slår av alle videoer i spillet",
     paused = " I Theme Hospital ville spilleren kun få lov til å bruke toppmenyen om spillet var satt til pause. Dette er standard i CorsixTH også, men ved å slå denne på, så er alle bevegelser lov",
@@ -939,7 +938,6 @@ customise_window = {
   back = "Tilbake",
   paused = "Bygging i pause",
   intro = "Spill introvideo",
-  volume = "Hurtigtast volumsenking",
   caption = "Egendefinerte innstillinger",
   fractured_bones = "Benbrudd",
   average_contents = "Gjennomsnittlig rominnhold",

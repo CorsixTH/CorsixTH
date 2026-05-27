@@ -3377,9 +3377,6 @@ options_window = {
   apply = "应用",
   cancel = "取消",
   back = "返回",
-  scrollspeed = "滚动速度",
-  shift_scrollspeed = "加速滚动速度",
-  zoom_speed = "缩放速度",
   hotkey = "快捷键",
   check_for_updates = "自动检查更新",
 }
@@ -3400,15 +3397,6 @@ tooltip.options_window = {
   select_language = "选择语言",
   language_dropdown_item = "选择 %s 为语言",
   back = "关闭设置窗口",
-  scrollspeed = "将滚动速度设为1（最慢）到10（最快）。默认为2。",
-  shift_scrollspeed = "设定在滚动时按下 Shift 键时的滚动速度。1（最慢）到10（最快）。默认：4。",
-  zoom_speed = "将相机变焦速度设为10（最慢）到1000（最快）。默认值为80。",
-  apply_scrollspeed = "应用输入的滚动速度。",
-  cancel_scrollspeed = "返回而不更改滚动速度。",
-  apply_shift_scrollspeed = "应用输入的加速滚动速度。",
-  cancel_shift_scrollspeed = "返回而不更改加速滚动速度。",
-  apply_zoomspeed = "应用输入的缩放速度。",
-  cancel_zoomspeed = "返回而不更改缩放速度。",
   hotkey = "更改键盘热键。",
   check_for_updates = "游戏启动时自动检查更新",
 }
@@ -3423,6 +3411,24 @@ tooltip.audio_window = {
   audio_toggle = "切换开关",
 }
 
+accessibility_window = {
+  scrollspeed = "滚动速度",
+  shift_scrollspeed = "加速滚动速度",
+  zoom_speed = "缩放速度",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "将滚动速度设为1（最慢）到10（最快）。默认为2。",
+  shift_scrollspeed = "设定在滚动时按下 Shift 键时的滚动速度。1（最慢）到10（最快）。默认：4。",
+  zoom_speed = "将相机变焦速度设为10（最慢）到1000（最快）。默认值为80。",
+  apply_scrollspeed = "应用输入的滚动速度。",
+  cancel_scrollspeed = "返回而不更改滚动速度。",
+  apply_shift_scrollspeed = "应用输入的加速滚动速度。",
+  cancel_shift_scrollspeed = "返回而不更改加速滚动速度。",
+  apply_zoomspeed = "应用输入的缩放速度。",
+  cancel_zoomspeed = "返回而不更改缩放速度。",
+}
+
 customise_window = {
   caption = "自定义设置",
   option_on = "开",
@@ -3431,7 +3437,6 @@ customise_window = {
   movies = "全局 CG 控制",
   intro = "播放启动 CG",
   paused = "建造时暂停",
-  volume = "减小音量热键",
   aliens = "外星人只限紧急情况",
   fractured_bones = "骨折只限男性",
   average_contents = "房间常用物件",
