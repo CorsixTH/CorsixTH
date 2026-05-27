@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-CorsixTH 0.70.0 Beta 1 - Released xx 2025
+CorsixTH 0.70.0 Beta 1 - Released May 2026
 -------------------------------------------------------------------------------
 # New Features
 * Support for the official Russian edition of Theme Hospital has been added
@@ -17,7 +17,7 @@ CorsixTH 0.70.0 Beta 1 - Released xx 2025
 * Falling is now enabled for everyone
 * Multiple new cheats added
 * Newspaper headlines now in lose movies
-* Movies can now be paused with 'P
+* Movies can now be paused with 'P'
 * Research Policy window now plays its background sound effect
 
 # Improvements
