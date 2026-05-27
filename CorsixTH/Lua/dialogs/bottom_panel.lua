@@ -453,7 +453,9 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
         this_icon_index = i
       end
     end
-    table.remove(self.message_windows, this_icon_index)
+    if this_icon_index then
+      table.remove(self.message_windows, this_icon_index)
+    end
     self:deleteMessage(this_icon.owner)
   end
 
