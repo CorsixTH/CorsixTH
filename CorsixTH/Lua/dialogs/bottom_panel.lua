@@ -651,7 +651,7 @@ function UIBottomPanel:_messageDoorTick()
   local msg_to_show = self:_findMessageToShow()
 
   if msg_to_show and self.message_door.closed_amount == MESSAGE_DOOR_FULLY_OPEN then
-    self:createMessageWindow()
+    self:_showMessageIcon()
     self.message_door.next_action_delay = 9
     return
   end
