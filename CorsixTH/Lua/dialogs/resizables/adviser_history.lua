@@ -24,10 +24,11 @@ class "UIAdviserHistory" (UIResizable)
 ---@type UIAdviserHistory
 local UIAdviserHistory = _G["UIAdviserHistory"]
 
-local col_bg = { red = 60, green = 174, blue = 201, }
-local col_highlight = { red = 47, green = 154, blue = 190, }
-local col_shadow = { red = 36, green = 138, blue = 158 }
-local col_delete_button = { red = 219, green = 36, blue = 36 }
+
+local col_bg = Colours.AdviserPanelBackground
+local col_highlight = Colours.AdviserPanelHighlight
+local col_shadow = Colours.AdviserPanelShadow
+local col_delete_button = Colours.AdviserPanelDeleteButton
 
 function UIAdviserHistory:UIAdviserHistory(ui)
   local app = ui.app
@@ -158,7 +159,7 @@ function UIAdviserHistory:scrollbarMoved()
     local message = adviser_messages[i + scroll_pos - 1]
     local row = self.list_table[i]
     if message then
-      row.message_panel:setLabel(" " .. message, nil, "left"):setColour(col_bg)
+      row.message_panel:setLabel(message, nil, "left"):setColour(col_bg)
       row.delete_button:setLabel("X", self.white_font, "center"):setTooltip(_S.tooltip.adviser_history.delete_message)
       row.delete_button:enable(true)
     else
