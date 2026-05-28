@@ -1745,14 +1745,14 @@ function World:newEntity(class, animation, mood_marker)
   return entity
 end
 
-function World:destroyEntity(obj)
+function World:destroyEntity(entity)
   for i, e in ipairs(self.entities) do
-    if e == obj then
+    if e == entity then
       table.remove(self.entities, i)
       break
     end
   end
-  obj:onDestroy()
+  entity:onDestroy()
 end
 
 function World:newObjectType(new_object)
