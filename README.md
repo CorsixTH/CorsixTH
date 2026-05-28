@@ -49,12 +49,9 @@ Most features of the game are available -- and we're at a state where you can co
 There are some areas of the game still missing, and while we work to get them integrated any additional help from the community is always appreciated!
 - Multiplayer/LAN
 - AI Hospitals (and the components associated with it)
-- Level skipping cheat (on level progression board)
 - Rats (but rat holes are present) and the special rat level
 - Win level video/letter
-- Newspaper headlines on lose level
 - The original graphics do not have a complete set for Pregnancy, Alien DNA, and female Fractured Bones patients -- these may cause anomalies if you enable regular spawning in settings
-- Patients have an astounding ability to always remain upright (can't fall over in earthquakes)
 - Some objects in the game may glitch with walls
 
 ## Developers

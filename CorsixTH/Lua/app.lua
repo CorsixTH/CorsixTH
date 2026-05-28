@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 244 -- Advisor message history dialog
+local SAVEGAME_VERSION = 245 -- Advisor message history dialog
 
 class "App"
 

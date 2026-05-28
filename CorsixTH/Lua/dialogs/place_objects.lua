@@ -472,11 +472,15 @@ function UIPlaceObjects:onMouseUp(button, x, y)
       local s = TheApp.config.ui_scale
       if 0 <= x and x < self.width * s and 0 <= y and y < self.height * s then -- luacheck: ignore 542
         -- Click within window - do nothing
-      elseif self.object_cell_x and self.object_cell_y and self.object_blueprint_good then
-        self:placeObject()
-        repaint = true
-      elseif self.object_cell_x and self.object_cell_y and not self.object_blueprint_good then
-        self.ui:tutorialStep(3, {13, 15}, 14)
+      elseif self.object_cell_x and self.object_cell_y then
+        if self.object_blueprint_good then
+          if not self.world:anyHumanoidObscuringArea(self.object_cell_x, self.object_cell_y) then
+            self:placeObject()
+            repaint = true
+          end
+        else
+          self.ui:tutorialStep(3, {13, 15}, 14)
+        end
       end
     end
   end

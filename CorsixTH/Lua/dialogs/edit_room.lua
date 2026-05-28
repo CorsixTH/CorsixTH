@@ -256,31 +256,6 @@ function UIEditRoom:confirm(force)
   end
 end
 
-local function isHumanoidObscuringArea(humanoid, x1, x2, y1, y2)
-  if humanoid.tile_x then
-    if x1 <= humanoid.tile_x and humanoid.tile_x <= x2 and
-        y1 <= humanoid.tile_y and humanoid.tile_y <= y2 then
-      if (x1 == humanoid.tile_x or x2 == humanoid.tile_x) or
-          (y1 == humanoid.tile_y or y2 == humanoid.tile_y) then
-        -- Humanoid not in the rectangle, but might be walking into it
-        local action = humanoid:getCurrentAction()
-        if action.name ~= "walk" then
-          return false
-        end
-        if action.path_x then -- in a (rare) special case, path_x is nil (see action_walk_start)
-          local next_x = action.path_x[action.path_index]
-          local next_y = action.path_y[action.path_index]
-          if x1 >= next_x or next_x >= x2 or y1 >= next_y or next_y >= y2 then
-            return false
-          end
-        end
-      end
-      return true
-    end
-  end
-  return false
-end
-
 function UIEditRoom:clearArea()
   self.confirm_button:enable(false)
   local rect = self.blueprint_rect
@@ -294,7 +269,7 @@ function UIEditRoom:clearArea()
     local y2 = rect.y + rect.h
     for _, entity in ipairs(world.entities) do
       if class.is(entity, Humanoid) and
-          isHumanoidObscuringArea(entity, x1, x2, y1, y2) then
+          entity:isObscuringArea(x1, x2, y1, y2) then
         humanoids_to_watch[entity] = true
 
         -- Try to make the humanoid leave the area
@@ -366,7 +341,7 @@ function UIEditRoom:onTick()
           if not humanoid.hospital then
             self.humanoids_to_watch[humanoid] = nil
           end
-        elseif not isHumanoidObscuringArea(humanoid, x1, x2, y1, y2) then
+        elseif not humanoid:isObscuringArea(x1, x2, y1, y2) then
           self.humanoids_to_watch[humanoid] = nil
         end
       end
