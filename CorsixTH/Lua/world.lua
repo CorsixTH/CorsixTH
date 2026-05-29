@@ -757,7 +757,7 @@ end
 -- "Max speed", or "And then some more".
 function World:setSpeed(new_speed)
   if self:isCurrentSpeed(new_speed) then return end
-  if self:mustPause() and new_speed ~= "Pause" then return end -- System pause takes precedence
+  if self:mustPause() and new_speed ~= "Pause" then return end -- "Must pause" takes precedence
   tracy.Message("Changing speed to " .. new_speed)
 
   if new_speed == "Pause" then
@@ -802,8 +802,8 @@ function World:mustPauseWindowRemoved()
   end
 end
 
---! Check if we have any must pause windows open
---!return (bool) returns true if we have any must pause windows open
+--! Check if "Must Pause" mode enabled
+--!return (bool) returns true if "Must Pause" mode enabled
 function World:mustPause()
   return self.ui:anyMustPauseWindowOpen()
 end
@@ -819,7 +819,7 @@ end
 
 --! Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
-  if self:mustPause() then return end -- System pause takes precedence
+  if self:mustPause() then return end -- "Must pause" takes precedence
   if not self:isCurrentSpeed("Pause") then
     self:setSpeed("Pause")
   elseif self.prev_speed then
@@ -2789,6 +2789,9 @@ function World:afterLoad(old, new)
         entity:setIfHoverMoodsVisible()
       end
     end
+  end
+  if old < 244 then
+    self.system_pause = nil
   end
 
   -- Fix the initial of staff names
