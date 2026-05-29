@@ -193,9 +193,6 @@ function Audio:init()
     self.background_playlist = {}
     return
   end
-
-  -- Hack to early initialise the audio and reduce delay on Windows
-  self:playRandomBackgroundTrack()
 end
 
 function Audio:initMidiPlayer()
