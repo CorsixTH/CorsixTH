@@ -177,7 +177,7 @@ function Panel:Panel()
   self.colour = nil
   self.custom_draw = nil
   self.visible = nil
-  self.force_text_wrap = false
+  self.wrap_text = false
 end
 
 local panel_mt = permanent("Window.<panel_mt>", getmetatable(Panel()))
@@ -305,17 +305,17 @@ end
 --!return y and x end positions after drawing
 function Panel:drawLabel(canvas, x, y, limit)
   local text = self.label
-  local multi_line = type(text) == "table"
-  local wrapped = not self.auto_clip
   local center_y = false
-  local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
+  local wrapped = not self.auto_clip
 
+  local multi_line = type(text) == "table"
   if not multi_line then
     text = {text}
-    wrapped = self.force_text_wrap
     center_y = true
+    wrapped = (self.wrap_text ~= nil) and self.wrap_text or false
   end
 
+  local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
   local next_y = y + self.y * s + s
   local last_x = x + self.x * s + 2 * s
   for i, line in ipairs(text) do
@@ -366,10 +366,10 @@ function Panel:setVisible(visibility)
   return self
 end
 
---! Set whether text wrapping is forced for this panel.
---!param should_force_wrap (bool) Whether to force text wrapping.
-function Panel:setForceTextWrap(should_force_wrap)
-  self.force_text_wrap = should_force_wrap
+--! Set whether text wrapping is enabled for this panel.
+--!param enabled (bool) Whether to text wrapping enabled.
+function Panel:setTextWrap(enabled)
+  self.wrap_text = enabled
   return self
 end
 

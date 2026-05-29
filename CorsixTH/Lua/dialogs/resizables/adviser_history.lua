@@ -115,7 +115,7 @@ function UIAdviserHistory:createControls()
       x = x + self.delete_col_width
 
       local message_panel = self:addBevelPanel(x, y, self.message_col_width, self.row_height, col_bg)
-          :setTooltip(_S.tooltip.adviser_history.message):setForceTextWrap(true)
+          :setTooltip(_S.tooltip.adviser_history.message):setTextWrap(true)
       x = x + self.message_col_width
       y = y + self.row_height
 
