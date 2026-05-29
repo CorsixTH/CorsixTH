@@ -105,13 +105,10 @@ end
 
 --! Displays the fax/strike message to the player when opened from the bottom_panel.
 function UIMessage:openMessage()
-  if TheApp.world:isUserActionProhibited() and not self.ui:checkForMustPauseWindows() then
+  if TheApp.world:isUserActionProhibited() then
     self.ui:playSound("wrong2.wav")
     self:adjustToggle()
     return
-  end
-  if TheApp.world:isCurrentSpeed("Speed Up") then
-    TheApp.world:previousSpeed()
   end
   if self.type == "strike" then -- strikes are special cases, as they are not faxes
     self.ui:addWindow(UIStaffRise(self.ui, self.owner, self.message))

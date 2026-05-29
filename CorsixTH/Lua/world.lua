@@ -756,21 +756,19 @@ end
 -- One of: "Pause", "Slowest", "Slower", "Normal",
 -- "Max speed", or "And then some more".
 function World:setSpeed(new_speed)
-  local isSystemPause = self:isSystemPauseActive()
   if self:isCurrentSpeed(new_speed) then return end
-  if isSystemPause and new_speed ~= "Pause" then return end -- System pause takes precedence
+  if self:mustPause() and new_speed ~= "Pause" then return end -- System pause takes precedence
   tracy.Message("Changing speed to " .. new_speed)
 
-  if isSystemPause or new_speed == "Pause" then
+  if new_speed == "Pause" then
     self.ui.hospital:tickEarthquake("pause")
   end
 
   -- Actions are not allowed when the game is System paused.
-  self.user_actions_allowed = not isSystemPause and
+  self.user_actions_allowed = not self:mustPause() and
     (new_speed ~= "Pause" or TheApp.config.allow_user_actions_while_paused)
 
-  -- Set the blue filter according to whether the user can build or not.
-  TheApp.video:setBlueFilterActive(not isSystemPause and not self.user_actions_allowed)
+  self:updateScreenBlueFilter()
 
   local old_speed = self:getCurrentSpeed()
   if old_speed ~= "Pause" and old_speed ~= "Speed Up" then
@@ -794,23 +792,34 @@ function World:setSpeed(new_speed)
   return false
 end
 
-function World:systemPause()
+function World:mustPauseWindowAdd()
   self:setSpeed("Pause")
 end
 
-function World:systemUnpause()
-  if self:isCurrentSpeed("Pause") and not self:isSystemPauseActive() then
+function World:mustPauseWindowRemoved()
+  if self:isCurrentSpeed("Pause") then
     self:pauseOrUnpause()
   end
+end
+
+--! Check if we have any must pause windows open
+--!return (bool) returns true if we have any must pause windows open
+function World:mustPause()
+  return self.ui:anyMustPauseWindowOpen()
 end
 
 function World:isPaused()
   return self:isCurrentSpeed("Pause")
 end
 
+--! Set the blue filter according to whether the user can build or not.
+function World:updateScreenBlueFilter()
+  TheApp.video:setBlueFilterActive(not self:mustPause() and not self.user_actions_allowed)
+end
+
 --! Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
-  if self:isSystemPauseActive() then return end -- System pause takes precedence
+  if self:mustPause() then return end -- System pause takes precedence
   if not self:isCurrentSpeed("Pause") then
     self:setSpeed("Pause")
   elseif self.prev_speed then
@@ -818,16 +827,10 @@ function World:pauseOrUnpause()
   end
 end
 
---! Reports the system pause status
---!return (bool) true is system pause is active, else false
-function World:isSystemPauseActive()
-  return self.ui:checkForMustPauseWindows()
-end
-
 --! Function to check if player can perform actions when paused
 --!return (bool) Returns true if player hasn't allowed editing while paused
 function World:isUserActionProhibited()
-  if self:isSystemPauseActive() then return true end
+  if self:mustPause() then return true end
   return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
 end
 

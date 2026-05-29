@@ -1056,7 +1056,7 @@ function UI:addWindow(window)
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
   end
   Window.addWindow(self, window)
-  self:updateSystemPause(true, window)
+  self:_onAddWindow(window)
 end
 
 function UI:removeWindow(closing_window)
@@ -1068,30 +1068,34 @@ function UI:removeWindow(closing_window)
     if closing_window.modal_class == "main" or closing_window.modal_class == "fullscreen" then
       self.editing_allowed = true -- allow editing rooms again when main window is closed
     end
-    self:updateSystemPause(false, closing_window)
+    self:_onRemoveWindow(closing_window)
     return true
   else
     return false
   end
 end
 
---! Toggles system pause on and off if needed
---!param pause (bool) flag indicating whether to turn the pause state on or off
---!param window (object) window causing the status update
-function UI:updateSystemPause(pause, window)
-  if not self.app.world then return end
-  if window:mustPause() then
-    if pause then
-      self.app.world:systemPause()
-    else
-      self.app.world:systemUnpause()
-    end
+-- Function for signaling that the window is added.
+-- To pause game if the necessary requirements are met.
+--!param window (object) window added
+function UI:_onAddWindow(window)
+  if self.app.world and window:mustPause() then
+    self.app.world:mustPauseWindowAdd()
+  end
+end
+
+-- Function for signaling that the window is to be removed.
+-- To unpause game if the necessary requirements are met.
+--!param window (object) window to be removed
+function UI:_onRemoveWindow(window)
+  if self.app.world and window:mustPause() then
+    self.app.world:mustPauseWindowRemoved()
   end
 end
 
 --! Function to check if we have any must pause windows open
 --!return (bool) Returns true if a must pause window is found
-function UI:checkForMustPauseWindows()
+function UI:anyMustPauseWindowOpen()
   for _, window in pairs(self.windows) do
     if window:mustPause() then return true end
   end
