@@ -35,7 +35,7 @@ Copyright (C) 2011-2012 Sérgio "Get_It" Ribeiro
 Copyright (C) 2011 Sergei Larionov
 Copyright (C) 2011 Alexey Pinyagin
 Copyright (C) 2011-2019 Giordano "Viandante" Celeghin
-Copyright (C) 2012-2025 Stephen "TheCycoONE" Baker
+Copyright (C) 2012-2026 Stephen "TheCycoONE" Baker
 Copyright (C) 2012 Alex Ghiran
 Copyright (C) 2012-2013, 2021 Luis "driverpt" Duarte
 Copyright (C) 2012-2013 Ryan Hugh Dean
@@ -48,14 +48,14 @@ Copyright (C) 2013 YoungSeok Yoon
 Copyright (C) 2013-2015 Maarten Peters
 Copyright (C) 2013 nullstein
 Copyright (C) 2013 BuTcHeR (extragry.pl)
-Copyright (C) 2013-2025 Albert "Alberth" Hofkamp
+Copyright (C) 2013-2026 Albert "Alberth" Hofkamp
 Copyright (C) 2013, 2016-2017, 2025 Antoine Lemaire
 Copyright (C) 2014-2015 Joseph "J-Shep" Sheppard
 Copyright (C) 2014 Phillipp Röll
 Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman
 Copyright (C) 2015 Víctor "mccunyao" González
 Copyright (C) 2015 Josh Keegan
-Copyright (C) 2016-2025 Toby Lane
+Copyright (C) 2016-2026 Toby Lane
 Copyright (C) 2016-2020 Phil Morrell
 Copyright (C) 2017 Arne Zelasko
 Copyright (C) 2017 Víctor "IlDucci"
@@ -73,7 +73,7 @@ Copyright (C) 2018 Thilo Ettelt
 Copyright (C) 2018 "red031000"
 Copyright (C) 2018-2019 James "leiget" Russell
 Copyright (C) 2019 Artem Polishchuk
-Copyright (C) 2020-2025 "lewri"
+Copyright (C) 2020-2026 "lewri"
 Copyright (C) 2020-2021 "yangfl"
 Copyright (C) 2020 Jeremy Tellaa
 Copyright (C) 2020 Maxim Krivchikov
@@ -92,12 +92,12 @@ Copyright (C) 2022 Manuel K
 Copyright (C) 2022-2023 lokpro
 Copyright (C) 2022 Raven "Edgewurth" Penfold
 Copyright (C) 2022 "SilPho"
-Copyright (C) 2022-2025 Matthew "Matroftt"
+Copyright (C) 2022-2026 Matthew "Matroftt"
 Copyright (C) 2023 "dfghjkjhgr"
 Copyright (C) 2023 Bob "bobidle" Idle
 Copyright (C) 2023 Michael "RednibCoding" Binder
 Copyright (C) 2023 Nathan "nMustaki" Mustaki
-Copyright (C) 2023-2025 Damian "ShiroAka"
+Copyright (C) 2023-2026 Damian "ShiroAka"
 Copyright (C) 2024 Peppe "Inkub0" Malara
 Copyright (C) 2024 Sandow "Sanndow"
 Copyright (C) 2024 Tomás Domínguez "tombolano" Bolaño
@@ -108,16 +108,19 @@ Copryight (C) 2024 jetenergy
 Copyright (C) 2024 Yurii "JurecStrongman"
 Copyright (C) 2024 ShimaKen
 Copyright (C) 2024-2025 "MandrakeHorse"
-Copyright (C) 2024-2025 Artem Argus "ARGAMX" Gusakov
+Copyright (C) 2024-2026 Artem Argus "ARGAMX" Gusakov
 Copyright (C) 2025 Felipe Muñoz Mazur
 Copyright (C) 2025 "pizzadepollo"
 Copyright (C) 2025 "legluodunet"
 Copyright (C) 2025 "dodero4"
 Copyright (C) 2025 "PierreRic"
 Copyright (C) 2025 "jur4jmiklo5"
+Copyright (C) 2025 "goodusername123"
 Copyright (C) 2025 Aarón Rosa "sraaronrock" Díaz
-Copyright (C) 2025 "marcassin92"
+Copyright (C) 2025-2026 Quentin Marcassin "marcassin92" Sanglier
 Copyright (C) 2025-2026 "Fraggenard"
+Copyright (C) 2026 "ManoloMC002"
+
 
 et al.
 
