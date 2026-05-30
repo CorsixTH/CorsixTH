@@ -764,12 +764,6 @@ function World:setSpeed(new_speed)
     self.ui.hospital:tickEarthquake("pause")
   end
 
-  -- Actions are not allowed when the game is System paused.
-  self.user_actions_allowed = not self:mustPause() and
-    (new_speed ~= "Pause" or TheApp.config.allow_user_actions_while_paused)
-
-  self:updateScreenBlueFilter()
-
   local old_speed = self:getCurrentSpeed()
   if old_speed ~= "Pause" and old_speed ~= "Speed Up" then
     self.prev_speed = old_speed
@@ -788,6 +782,9 @@ function World:setSpeed(new_speed)
 
   self.hours_per_tick = new_hours_per_tick
   self.tick_rate = new_tick_rate
+
+  self:updateUserActionsAllowed()
+  self:updateScreenBlueFilter()
 
   return false
 end
@@ -812,14 +809,21 @@ function World:isPaused()
   return self:isCurrentSpeed("Pause")
 end
 
+--! Set the "actions allowed" flag according to whether the user can do some actions with UI or not.
+function World:updateUserActionsAllowed()
+  -- Actions are not allowed when the game in "Must Pause" mode.
+  self.user_actions_allowed = not self:mustPause() and
+    (not self:isCurrentSpeed("Pause") or TheApp.config.allow_user_actions_while_paused)
+end
+
 --! Set the blue filter according to whether the user can build or not.
 function World:updateScreenBlueFilter()
-  TheApp.video:setBlueFilterActive(not self:mustPause() and not self.user_actions_allowed)
+  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self:mustPause())
 end
 
 --! Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
-  if self:mustPause() then return end -- "Must pause" takes precedence
+  if self:mustPause() then return end -- "Must Pause" takes precedence
   if not self:isCurrentSpeed("Pause") then
     self:setSpeed("Pause")
   elseif self.prev_speed then
