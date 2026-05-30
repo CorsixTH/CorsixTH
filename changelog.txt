@@ -1,8 +1,121 @@
 -------------------------------------------------------------------------------
-CorsixTH 0.70.0 - ???
+CorsixTH 0.70.0 Beta 1 - Released May 2026
 -------------------------------------------------------------------------------
+# New Features
+* Support for the official Russian edition of Theme Hospital has been added
+  (Soft Club edition)
+* 2x and 3x UI Scaling is finally available, no more tiny text on 4k screens!
+* Accessibility improvements added, such as subtitles for the announcer, and
+  ability to turn off screen shake
+* Initial support for blocking off areas in the hospital has been added.
+  Currently this is limited to within rooms only
+* Support added for midi devices
+* Added automatic detection for music folders in CorsixTH's own directories
+  (game and config)
+* Added unicode font support out of the box for Windows users (for real this
+  time)
+* Falling is now enabled for everyone
+* Multiple new cheats added
+* Newspaper headlines now in lose movies
+* Movies can now be paused with 'P'
+* Research Policy window now plays its background sound effect
+
+# Improvements
+* Improved performance for large hospitals
+* Screenshots are now in png format and timestamped. Bye bye bitmap!
+* The staff management window can now be ordered by attribute
+* Windows can be removed during a room's build phase using right click
+* Active graph is now remembered in the graph window
+* Windows installer is now DPI aware, and ensures Start Menu and Desktop icons
+  show for all users
+* Missing hover sounds have been added
+* Improved machine menu
+* Improved finding player name
+* Improved rejection calculations for patient overcharging
+* Improved rat holes
+* Improved dying
+
+# Changes
+* Added shadow for truetype fonts
+* Machine menu button added to the bottom panel and machine dialogs
+* Patients will get up less often when changing queue position
+* The way doctors are trained has been overhauled
+* Some window layouts, texts, and behaviours in the settings menus have been
+  adjusted
+* Unavailable resolutions when UI scaled will be greyed out
+* Dropdowns lists now have scrollbars where appropriate
+* Autosave frequency can now be adjusted
+* After the win movie plays, the player will be returned to the main menu
+* Better aspect ratio for some movies
+* Disease start cure price is now properly applied from the level config
+* Last selected disease in the casebook is now remembered
+* Minimum threshold for average calculations adjusted
+* Suppress mood icons for VIP and Inspector
+* Ignored VIP requests now automatically invite them instead of refuse
+* Adjusted margins on the text area of the fax
+* Changed message drawer so only one fax of each type will populate it
+* Patients can now be vaccinated in epidemics without activating vaccination
+  mode
+* Players are no longer warned of empty action queues
+* Reworked nearby object calculations
+* Stopped emergency patients from drinking, vomiting, or using the toilet
+* Machine usage count no longer increases during earthquakes
+
+# Translations
+* Japanese announcement audio will now be used if available when playing in that
+  language
+* Spanish translation updated. Thanks @sraaronrock and @ShiroAka
+* Italian translation updated. Thanks @dodero4
+* French translation updated. Thanks @PierreRic
+* Czech translation updated. Thanks @jansakos
+
+# Bug Fixes
+* Better error handling for non-existent languages
+* Fixed some non-capitalised text in dialogs
+* Fixed some bugs with music playback
+* Fixed bug in diagnosis termination
+* Patients no longer try to enter a room if staff member is going to rest
+* Adjusted happiness impacts when staff are resting
+* Minimised disruption to rooms during change of staff
+* Fixed doctors being unable to return to training room
+* Fixed patients not leaving a bench when they die
+* Fixed a crash with exploded rooms and picked up staff
+* Game will no longer crash when hovering on an exploded room
+* Prevented patients visiting incorrect/same diagnosis room more than once
+* Undressing patients no longer crash game when editing a room
+* Machine repair icon is now shown when a handyman is sent to repair
+* Smoking positions for machines have been fixed
+* Handymen can no longer repair a machine while simultaneously still accepting
+  patients
+* Stopped multiple handyman taking the same task to repair a machine
+* Dead handymen no longer hold onto unfinished tasks
+* Fixed handyman tasks being orphaned when they were picked up
+* Fixed error with adviser message priority
+* The adviser no longer informs you of low prices if you have not lowered them
+* Fixed a decimal output issue with cured counts on the adviser
+* Fixed backslash not showing file/folder paths
+* Fixed crash on macOS regarding level completion
+* Reworked code used to handle the configuration file
+* Fixed some issues with incorrect colour presentation
+* Fixed instance of objects being placeable on a humanoid occupied tile
+* Fixed potential crash in Map Editor
+* Fixed heat maps in town map
+* Tiredness bar is now properly aligned to the right
+* Fixed inability to open faxes tied to a humanoid but not visible in the
+  drawer
+
 # Packager Notes
-* Now supports big-endian systems (tested on s390x)
+* Lua 5.5 is now supported. Lua 5.2 - 5.3 are deprecated
+* C++ version bumped to 17
+* Big endian systems are now supported
+* A cmake option WITH_MIDI_DEVICE has been added to allow support for midi
+  synthesisers, using RtMidi
+* A cmake option FETCH_UNICODE_FONT has been added that can be used to bundle
+  the default CorsixTH unicode font (GoNoto Sans Kurrent Regular). Do not use this
+  alongside the WITH_FONT cmake option
+* A cmake option WITH_TRACY has been added for Tracy profiling (requires Tracy
+  0.13.1). This should always be off unless you are specifically debugging
+performance
 
 CorsixTH 0.69.2 - released January 2026
 -------------------------------------------------------------------------------

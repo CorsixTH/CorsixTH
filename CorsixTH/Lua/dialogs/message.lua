@@ -144,8 +144,9 @@ function UIMessage:removeMessage(choice_number)
       self.owner.message_callback = nil
     end
     if self.onClose then
-      self:onClose(false)
+      local onClose = self.onClose
       self.onClose = nil
+      onClose(self)
     end
     self:close()
   end
@@ -162,7 +163,6 @@ function UIMessage:dismissMessage()
 end
 
 function UIMessage:setXLimit(stop_x)
-  assert(stop_x <= self.stop_x, "UIMessage moved in wrong direction")
   self.stop_x = stop_x
 end
 

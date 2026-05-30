@@ -178,7 +178,7 @@ int l_error_handler(lua_State* L) {
   lua_getglobal(L, "TheApp");
   lua_getfield(L, -1, "errorHandler");
   lua_pushvalue(L, -2);  // TheApp
-  lua_pushvalue(L, luaT_upvalueindex(1));
+  lua_pushvalue(L, lua_upvalueindex(1));
   lua_pushvalue(L, -5);  // The traceback result
 
   err = lua_pcall(L, 3, 0, 0);
@@ -198,7 +198,7 @@ int l_error_handler(lua_State* L) {
  */
 void push_app_dispatch(lua_State* L, std::string_view dispatch_event) {
   lua_pushlstring(L, dispatch_event.data(), dispatch_event.size());
-  luaT_pushcclosure(L, &l_error_handler, 1);
+  lua_pushcclosure(L, &l_error_handler, 1);
   lua_getglobal(L, "TheApp");
   lua_getfield(L, -1, "dispatch");
   lua_pushvalue(L, -2);
@@ -398,7 +398,7 @@ void mainloop(lua_State* L) {
         case SDL_USEREVENT_MUSIC_LOADED:
           last_dispatch = dispatch_callback;
           lua_pushlstring(L, last_dispatch.data(), last_dispatch.size());
-          luaT_pushcclosure(L, &l_error_handler, 1);
+          lua_pushcclosure(L, &l_error_handler, 1);
           lua_pushcfunction(L, &l_load_music_async_callback);
           lua_pushlightuserdata(L, e.user.data1);
           if (lua_pcall(L, 1, 0, -3) != LUA_OK) {

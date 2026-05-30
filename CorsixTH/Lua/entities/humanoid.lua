@@ -1160,3 +1160,39 @@ function Humanoid:unexpectFromRoom(dest_room)
 function Humanoid:getAttribute(attribute, default_value)
   return self.attributes[attribute] or default_value or 0
 end
+
+--! Checks whether a humanoid is within the specified area or is currently
+-- walking into it. To properly check whether a humanoid is entering an area,
+-- pass coordinates 1 tile outside the square where actually need to build.
+-- For example, if the intended wall of the room being built is outside the
+-- perimeter (x1, y1) (x2, y2), then need to pass (x1-1, y1-1) (x2+1, y2+1).
+-- Example input parameters: (50, 55, 60, 65).
+--!param x1 (int) north-west X position of target area.
+--!param x2 (int) south-east X position of target area.
+--!param y1 (int) north-west Y position of target area.
+--!param y2 (int) south-east Y position of target area.
+--!return (bool) true if obscuring given area.
+function Humanoid:isObscuringArea(x1, x2, y1, y2)
+  if self.tile_x then
+    if x1 <= self.tile_x and self.tile_x <= x2 and
+        y1 <= self.tile_y and self.tile_y <= y2 then
+      if (x1 == self.tile_x or x2 == self.tile_x) or
+          (y1 == self.tile_y or y2 == self.tile_y) then
+        -- Humanoid not in the rectangle, but might be walking into it
+        local action = self:getCurrentAction()
+        if action.name ~= "walk" then
+          return false
+        end
+        if action.path_x then -- in a (rare) special case, path_x is nil (see action_walk_start)
+          local next_x = action.path_x[action.path_index]
+          local next_y = action.path_y[action.path_index]
+          if x1 >= next_x or next_x >= x2 or y1 >= next_y or next_y >= y2 then
+            return false
+          end
+        end
+      end
+      return true
+    end
+  end
+  return false
+end
