@@ -2821,7 +2821,7 @@ function World:afterLoad(old, new)
       end
     end
   end
-  if old < 244 then
+  if old < 245 then
     self.system_pause = nil
   end
 
