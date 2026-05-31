@@ -43,9 +43,15 @@
  <a href="_0_1_window.html#_0_1_window_1add_key_handler">addKeyHandler</a>(<span class="p">key</span>, <span class="p">handler</span>, <span class="p">...</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1add_message_to_history">addMessageToHistory</a>(<span class="p">speech</span>)
+ </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">apply_ui_scale</span>, <span class="p">draw_flags</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1add_queued_messages_to_history">addQueuedMessagesToHistory</a>()
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1add_window">addWindow</a>(<span class="p">window</span>)
@@ -69,6 +75,9 @@
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1close">close</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1delete_all_messages_from_history">deleteAllMessagesFromHistory</a>()
  </li>
  <li class="self">
  <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
@@ -136,6 +145,9 @@
  <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>, <span class="p">apply_ui_scale</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1message_index_in_history">messageIndexInHistory</a>(<span class="p">message</span>)
+ </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1must_pause">mustPause</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
@@ -183,6 +195,9 @@
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1remove_key_handler">removeKeyHandler</a>(<span class="p">keys</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1remove_message_from_history">removeMessageFromHistory</a>(<span class="p">index</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1remove_window">removeWindow</a>(<span class="p">window</span>)
@@ -290,6 +305,10 @@
  <li><span class="p">key_handlers</span>
  (*)
  </li>
+ <li><span class="p">message_history</span>
+ </li>
+ <li><span class="p">message_history_limit</span>
+ </li>
  <li><span class="p">modal_class</span>
  </li>
  <li><span class="p">number_frames</span>
@@ -369,6 +388,30 @@
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1add_message_to_history">function UIAdviser:addMessageToHistory(<span class="p">speech</span>)</a></h5>
+ <p>
+ Adds a message to the adviser's message history.<br/><br/>
+ If the history exceeds a certain limit, the oldest messages are removed.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">speech</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L73">line 73 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1add_queued_messages_to_history">function UIAdviser:addQueuedMessagesToHistory()</a></h5>
+ <p>
+ Adds all queued messages to the adviser's message history.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L92">line 92 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_u_i_adviser_1after_load">function UIAdviser:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
@@ -386,7 +429,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L286">line 286 of Lua/dialogs/adviser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L338">line 338 of Lua/dialogs/adviser.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -402,7 +445,14 @@
  <td class="d"> Text to check</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L133">line 133 of Lua/dialogs/adviser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L183">line 183 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1delete_all_messages_from_history">function UIAdviser:deleteAllMessagesFromHistory()</a></h5>
+ <p>
+ Deletes all messages from the adviser's message history.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L105">line 105 of Lua/dialogs/adviser.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -428,14 +478,14 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L185">line 185 of Lua/dialogs/adviser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L235">line 235 of Lua/dialogs/adviser.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_adviser_1hide">function UIAdviser:hide()</a></h5>
  <p>
  Hides the adviser by running the appropriate animation.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L124">line 124 of Lua/dialogs/adviser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L174">line 174 of Lua/dialogs/adviser.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -443,7 +493,22 @@
  <p>
  Makes the adviser idle for a while before disappearing.
 This means that the text bubble is removed.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L112">line 112 of Lua/dialogs/adviser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L162">line 162 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1message_index_in_history">function UIAdviser:messageIndexInHistory(<span class="p">message</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">message</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L64">line 64 of Lua/dialogs/adviser.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -469,14 +534,30 @@ This means that the text bubble is removed.<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L210">line 210 of Lua/dialogs/adviser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L260">line 260 of Lua/dialogs/adviser.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_adviser_1on_tick">function UIAdviser:onTick()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L240">line 240 of Lua/dialogs/adviser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L292">line 292 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1remove_message_from_history">function UIAdviser:removeMessageFromHistory(<span class="p">index</span>)</a></h5>
+ <p>
+ Removes a message from the adviser's message history.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L100">line 100 of Lua/dialogs/adviser.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -504,7 +585,7 @@ until the next say() call is made. Useful for the tutorial.</td>
 and shows this new one instead.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L144">line 144 of Lua/dialogs/adviser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L194">line 194 of Lua/dialogs/adviser.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -512,7 +593,7 @@ and shows this new one instead.</td>
  <p>
  Shows the adviser by running the "popup" animation.
 Then moves on to the next phase automatically.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L61">line 61 of Lua/dialogs/adviser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L110">line 110 of Lua/dialogs/adviser.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -520,7 +601,7 @@ Then moves on to the next phase automatically.<br/><br/>
  <p>
  Displays the text bubble along with the next message
 from the queue.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L70">line 70 of Lua/dialogs/adviser.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L119">line 119 of Lua/dialogs/adviser.lua</a>.
  </p>
  </div>
 </div>
