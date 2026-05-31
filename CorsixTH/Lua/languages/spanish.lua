@@ -700,16 +700,17 @@ menu_options_wage_increase = {
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
 menu_charts = {
-  bank_manager  = "  (%1%) DIRECTOR DEL BANCO  ",
-  statement     = "  (%1%) ESTADO DE CUENTAS  ",
-  staff_listing = "  (%1%) LISTA DE PERSONAL  ",
-  town_map      = "  (%1%) MAPA DE LA CIUDAD  ",
-  casebook      = "  (%1%) HISTORIAL  ",
-  research      = "  (%1%) INVESTIGACION  ",
-  status        = "  (%1%) ESTADO  ",
-  graphs        = "  (%1%) GRAFICAS  ",
-  policy        = "  (%1%) NORMAS  ",
-  machine_menu  = "  (%1%) MENU DE MAQUINAS",
+  bank_manager    = "  (%1%) DIRECTOR DEL BANCO  ",
+  statement       = "  (%1%) ESTADO DE CUENTAS  ",
+  staff_listing   = "  (%1%) LISTA DE PERSONAL  ",
+  town_map        = "  (%1%) MAPA DE LA CIUDAD  ",
+  casebook        = "  (%1%) HISTORIAL  ",
+  research        = "  (%1%) INVESTIGACION  ",
+  status          = "  (%1%) ESTADO  ",
+  graphs          = "  (%1%) GRAFICAS  ",
+  policy          = "  (%1%) NORMAS  ",
+  machine_menu    = "  (%1%) MENU DE MAQUINAS",
+  adviser_history = "  (%1%) HISTORIAL DEL CONSEJERO  ",
 }
 
 menu_debug = {
@@ -1064,7 +1065,7 @@ tooltip.customise_window = {
   fractured_bones = "Debido a una animación deficiente, hemos hecho que no existan pacientes con Fracturas óseas femeninas. Para permitir que las pacientes con Fracturas óseas visiten tu hospital, desactiva esta opción.",
   average_contents = "Activa esta opción si quieres que el juego recuerde los objetos adicionales que sueles añadir cuando construyes habitaciones.",
   remove_destroyed_rooms = "Activa esta opcion si te gustaría poder eliminar habitaciones destruidas (por un precio)",
-  machine_menu_button = "Si quieres tener un botón para abrir el menú de máquinas en el panel inferior, activa esta opción. Tenga en cuenta que este botón no estará visible si la resolución de pantalla es pequeña.",
+  machine_menu_button = "Si quieres tener un botón para abrir el menú de máquinas en el panel inferior, activa esta opción. Ten en cuenta que este botón no estará visible si la resolución de pantalla es pequeña.",
   back = "Cerrar este menú y volver al menú de opciones.",
 }
 
@@ -1491,6 +1492,21 @@ tooltip.machine_menu = {
     times_used = "Cantidad de veces que se ha usado la máquina.",
   },
   close = "Cerrar la lista de máquinas",
+}
+
+adviser_history = {
+  message = "Mensaje",
+  close = "Cerrar",
+}
+
+tooltip.adviser_history = {
+  delete_message = "Haz clic para eliminar este mensaje",
+  message = "Lista de mensajes del consejero - los mensajes más nuevos aparecerán al principio",
+  header = {
+    message = "Mensajes del consejero",
+    delete_message = "Haz clic para eliminar todos los mensajes"
+  },
+  close = "Cerrar el diálogo de historial del consejero",
 }
 
 update_window = {
