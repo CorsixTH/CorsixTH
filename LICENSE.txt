@@ -35,7 +35,7 @@ Copyright (C) 2011-2012 Sérgio "Get_It" Ribeiro
 Copyright (C) 2011 Sergei Larionov
 Copyright (C) 2011 Alexey Pinyagin
 Copyright (C) 2011-2019 Giordano "Viandante" Celeghin
-Copyright (C) 2012-2025 Stephen "TheCycoONE" Baker
+Copyright (C) 2012-2026 Stephen "TheCycoONE" Baker
 Copyright (C) 2012 Alex Ghiran
 Copyright (C) 2012-2013, 2021 Luis "driverpt" Duarte
 Copyright (C) 2012-2013 Ryan Hugh Dean
@@ -48,14 +48,14 @@ Copyright (C) 2013 YoungSeok Yoon
 Copyright (C) 2013-2015 Maarten Peters
 Copyright (C) 2013 nullstein
 Copyright (C) 2013 BuTcHeR (extragry.pl)
-Copyright (C) 2013-2025 Albert "Alberth" Hofkamp
+Copyright (C) 2013-2026 Albert "Alberth" Hofkamp
 Copyright (C) 2013, 2016-2017, 2025 Antoine Lemaire
 Copyright (C) 2014-2015 Joseph "J-Shep" Sheppard
 Copyright (C) 2014 Phillipp Röll
 Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman
 Copyright (C) 2015 Víctor "mccunyao" González
 Copyright (C) 2015 Josh Keegan
-Copyright (C) 2016-2025 Toby Lane
+Copyright (C) 2016-2026 Toby Lane
 Copyright (C) 2016-2020 Phil Morrell
 Copyright (C) 2017 Arne Zelasko
 Copyright (C) 2017 Víctor "IlDucci"
@@ -73,7 +73,7 @@ Copyright (C) 2018 Thilo Ettelt
 Copyright (C) 2018 "red031000"
 Copyright (C) 2018-2019 James "leiget" Russell
 Copyright (C) 2019 Artem Polishchuk
-Copyright (C) 2020-2025 "lewri"
+Copyright (C) 2020-2026 "lewri"
 Copyright (C) 2020-2021 "yangfl"
 Copyright (C) 2020 Jeremy Tellaa
 Copyright (C) 2020 Maxim Krivchikov
@@ -92,12 +92,12 @@ Copyright (C) 2022 Manuel K
 Copyright (C) 2022-2023 lokpro
 Copyright (C) 2022 Raven "Edgewurth" Penfold
 Copyright (C) 2022 "SilPho"
-Copyright (C) 2022-2025 Matthew "Matroftt"
+Copyright (C) 2022-2026 Matthew "Matroftt"
 Copyright (C) 2023 "dfghjkjhgr"
 Copyright (C) 2023 Bob "bobidle" Idle
 Copyright (C) 2023 Michael "RednibCoding" Binder
 Copyright (C) 2023 Nathan "nMustaki" Mustaki
-Copyright (C) 2023-2025 Damian "ShiroAka"
+Copyright (C) 2023-2026 Damian "ShiroAka"
 Copyright (C) 2024 Peppe "Inkub0" Malara
 Copyright (C) 2024 Sandow "Sanndow"
 Copyright (C) 2024 Tomás Domínguez "tombolano" Bolaño
@@ -108,16 +108,19 @@ Copryight (C) 2024 jetenergy
 Copyright (C) 2024 Yurii "JurecStrongman"
 Copyright (C) 2024 ShimaKen
 Copyright (C) 2024-2025 "MandrakeHorse"
-Copyright (C) 2024-2025 Artem Argus "ARGAMX" Gusakov
+Copyright (C) 2024-2026 Artem Argus "ARGAMX" Gusakov
 Copyright (C) 2025 Felipe Muñoz Mazur
 Copyright (C) 2025 "pizzadepollo"
 Copyright (C) 2025 "legluodunet"
 Copyright (C) 2025 "dodero4"
 Copyright (C) 2025 "PierreRic"
 Copyright (C) 2025 "jur4jmiklo5"
+Copyright (C) 2025 "goodusername123"
 Copyright (C) 2025 Aarón Rosa "sraaronrock" Díaz
-Copyright (C) 2025 "marcassin92"
+Copyright (C) 2025-2026 Quentin Marcassin "marcassin92" Sanglier
 Copyright (C) 2025-2026 "Fraggenard"
+Copyright (C) 2026 "ManoloMC002"
+
 
 et al.
 
@@ -141,11 +144,11 @@ SOFTWARE.
 
 -------------------------------------------------------------------------------
 
-Uses the Lua 5.4 library, which is available from http://www.lua.org/ as well as
+Uses the Lua 5.5 library, which is available from http://www.lua.org/ as well as
 the lpeg, library available from http://www.inf.puc-rio.br/~roberto/lpeg, both
 under the following terms:
 
-Copyright © 1994-2021 Lua.org, PUC-Rio.
+Copyright © 1994-2025 Lua.org, PUC-Rio.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -170,6 +173,7 @@ Uses the luafilesystem library available at https://keplerproject.github.io
 under the following terms:
 
 Copyright © 2003-2014 Kepler Project.
+Copyright © 2010-2022 The LuaFileSystem authors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -458,7 +462,7 @@ Uses the SDL 2 and SDL_mixer 2 libraries, which are available from
 http://www.libsdl.org/ under the following terms (zlib license).
 
 
-Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+Copyright (C) 1997-2025 Sam Lantinga <slouken@libsdl.org>
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
@@ -489,7 +493,7 @@ license.
 -------------------------------------------------------------------------------
 
 Uses LAME, which is available from https://lame.sourceforge.io/ under the GNU
-LGPL 2.1
+LGPL 2.1 license.
 
 -------------------------------------------------------------------------------
 
@@ -531,7 +535,7 @@ Uses libFLAC, which is available from https://xiph.org/flac/ under the
 following terms:
 
 Copyright (C) 2000-2009  Josh Coalson
-Copyright (C) 2011-2022  Xiph.Org Foundation
+Copyright (C) 2011-2025  Xiph.Org Foundation
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -562,10 +566,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -------------------------------------------------------------------------------
 
-Uses libopus and opusfile, which is available from https://opus-codec.org
+Uses libopus which is available from https://opus-codec.org
 following terms:
 
-Copyright 2001-2011 Xiph.Org, Skype Limited, Octasic,
+Copyright 2001-2023 Xiph.Org, Skype Limited, Octasic,
                     Jean-Marc Valin, Timothy B. Terriberry,
                     CSIRO, Gregory Maxwell, Mark Borgerding,
                     Erik de Castro Lopo
@@ -612,10 +616,83 @@ https://datatracker.ietf.org/ipr/1526/
 
 -------------------------------------------------------------------------------
 
+Uses opusfile which is available from https://opus-codec.org
+following terms:
+
+Copyright (c) 1994-2013 Xiph.Org Foundation and contributors
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+- Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+- Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+- Neither the name of the Xiph.Org Foundation nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION
+OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-------------------------------------------------------------------------------
+
 Uses libmodplug which is available from https://github.com/Konstanty/libmodplug
 under the following terms:
 
 ModPlug-XMMS and libmodplug are now in the public domain.
+
+-------------------------------------------------------------------------------
+
+Uses libogg which is available from https://www.xiph.org/ogg/
+under the following terms:
+
+Copyright (c) 2002, Xiph.org Foundation
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+- Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+- Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+- Neither the name of the Xiph.org Foundation nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION
+OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-------------------------------------------------------------------------------
+
+Uses libxmp which is available from https://sourceforge.net/projects/xmp/
+under the GNU LGPL 2.1 license.
 
 -------------------------------------------------------------------------------
 
@@ -705,6 +782,68 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-------------------------------------------------------------------------------
+
+Uses zlib which is available from https://www.zlib.net/ under the
+following terms:
+
+ (C) 1995-2022 Jean-loup Gailly and Mark Adler
+
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+
+  Jean-loup Gailly        Mark Adler
+  jloup@gzip.org          madler@alumni.caltech.edu
+
+-------------------------------------------------------------------------------
+
+Uses libpng which is available from https://www.libpng.org/pub/png/libpng.html
+under the PNG Reference Library License version 2 with the following terms:
+
+ * Copyright (c) 1995-2026 The PNG Reference Library Authors.
+ * Copyright (c) 2018-2026 Cosmin Truta.
+ * Copyright (c) 2000-2002, 2004, 2006-2018 Glenn Randers-Pehrson.
+ * Copyright (c) 1996-1997 Andreas Dilger.
+ * Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
+
+The software is supplied "as is", without warranty of any kind,
+express or implied, including, without limitation, the warranties
+of merchantability, fitness for a particular purpose, title, and
+non-infringement.  In no event shall the Copyright owners, or
+anyone distributing the software, be liable for any damages or
+other liability, whether in contract, tort or otherwise, arising
+from, out of, or in connection with the software, or the use or
+other dealings in the software, even if advised of the possibility
+of such damage.
+
+Permission is hereby granted to use, copy, modify, and distribute
+this software, or portions hereof, for any purpose, without fee,
+subject to the following restrictions:
+
+ 1. The origin of this software must not be misrepresented; you
+    must not claim that you wrote the original software.  If you
+    use this software in a product, an acknowledgment in the product
+    documentation would be appreciated, but is not required.
+
+ 2. Altered source versions must be plainly marked as such, and must
+    not be misrepresented as being the original software.
+
+ 3. This Copyright notice may not be removed or altered from any
+    source or altered source distribution.
 
 -------------------------------------------------------------------------------
 
@@ -1440,3 +1579,34 @@ INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
 DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
+
+-------------------------------------------------------------------------------
+
+Uses the RtMidi library for realtime MIDI playback.
+
+RtMidi: realtime MIDI i/o C++ classes<BR>
+Copyright (c) 2003-2023 Gary P. Scavone
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation files
+(the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software,
+and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+Any person wishing to distribute modifications to the Software is
+asked to send the modifications to the original developer so that
+they can be incorporated into the canonical version.  This is,
+however, not a binding provision of this license.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
