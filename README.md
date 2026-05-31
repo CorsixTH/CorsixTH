@@ -15,10 +15,11 @@ A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as 
 You will need the following:
 
 - Grab the latest installer for your system:
-   - Windows and macOS builds can be downloaded directly from [releases](https://github.com/CorsixTH/CorsixTH/releases).
+   - Windows and macOS builds, and an AppImage for Linux can be downloaded directly from [releases](https://github.com/CorsixTH/CorsixTH/releases).
    - Linux and BSD repositories use either corsixth or corsix-th names [packaged versions](https://repology.org/metapackage/corsixth).
    - A Flatpak for Linux users is available on [Flathub](https://flathub.org/apps/details/com.corsixth.corsixth).
    - A Snap for Linux users is available on [Snapcraft](https://snapcraft.io/corsixth) [(support page)](https://github.com/snapcrafters/corsixth).
+   - An unofficial Anylinux AppImage is available from [Pkgforge](https://github.com/pkgforge-dev/CorsixTH-AppImage-Enhanced).
 - We use graphics, sound and other data from the original game so one of the following is required:
    - Original game CD from eBay etc. or your dusty bookshelf :smile:
    - A download from [GOG.com](https://www.gog.com/game/theme_hospital) or [EA](https://www.ea.com/games/theme/theme-hospital)

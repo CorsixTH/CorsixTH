@@ -76,10 +76,6 @@ function World:World(app, free_build_mode)
   -- This is false when the game is paused.
   self.user_actions_allowed = true
 
-  -- The system pause method is used as an additional layer to pause the game, where the user
-  -- needs to deal with a recoverable error
-  self.system_pause = false
-
   -- If set, do not create salary raise requests.
   self.debug_disable_salary_raise = self.free_build_mode
   self.idle_cache = {} -- Cached queue standing positions for all queues.
@@ -756,19 +752,16 @@ function World:getCurrentSpeed()
 end
 
 -- Set the (approximate) number of seconds per tick.
---!param speed (string) One of: "Pause", "Slowest", "Slower", "Normal",
+--!param new_speed (string) New speed to set.
+-- One of: "Pause", "Slowest", "Slower", "Normal",
 -- "Max speed", or "And then some more".
-function World:setSpeed(speed)
-  if self:isCurrentSpeed(speed) then
-    return
-  end
-  tracy.Message("Changing speed to " .. speed)
-  if speed == "Pause" or self.system_pause then
+function World:setSpeed(new_speed)
+  if self:isCurrentSpeed(new_speed) then return end
+  if self:mustPause() and new_speed ~= "Pause" then return end -- "Must pause" takes precedence
+  tracy.Message("Changing speed to " .. new_speed)
+
+  if new_speed == "Pause" then
     self.ui.hospital:tickEarthquake("pause")
-    -- By default actions are not allowed when the game is paused.
-    self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
-  elseif self:getCurrentSpeed() == "Pause" then
-    self.user_actions_allowed = true
   end
 
   local old_speed = self:getCurrentSpeed()
@@ -778,7 +771,7 @@ function World:setSpeed(speed)
 
   local was_paused = old_speed == "Pause"
   local old_tick_rate = self.tick_rate or 1
-  local new_hours_per_tick, new_tick_rate = unpack(tick_rates[speed])
+  local new_hours_per_tick, new_tick_rate = unpack(tick_rates[new_speed])
 
   if was_paused then
     TheApp.audio:onEndPause()
@@ -790,18 +783,47 @@ function World:setSpeed(speed)
   self.hours_per_tick = new_hours_per_tick
   self.tick_rate = new_tick_rate
 
-  -- Set the blue filter according to whether the user can build or not.
-  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self.ui:checkForMustPauseWindows())
+  self:updateUserActionsAllowed()
+  self:updateScreenBlueFilter()
+
   return false
+end
+
+function World:mustPauseWindowAdd()
+  self:setSpeed("Pause")
+end
+
+function World:mustPauseWindowRemoved()
+  if self:isCurrentSpeed("Pause") then
+    self:pauseOrUnpause()
+  end
+end
+
+--! Check if "Must Pause" mode enabled
+--!return (bool) returns true if "Must Pause" mode enabled
+function World:mustPause()
+  return self.ui:anyMustPauseWindowOpen()
 end
 
 function World:isPaused()
   return self:isCurrentSpeed("Pause")
 end
 
+--! Set the "actions allowed" flag according to whether the user can do some actions with UI or not.
+function World:updateUserActionsAllowed()
+  -- Actions are not allowed when the game in "Must Pause" mode.
+  self.user_actions_allowed = not self:mustPause() and
+    (not self:isCurrentSpeed("Pause") or TheApp.config.allow_user_actions_while_paused)
+end
+
+--! Set the blue filter according to whether the user can build or not.
+function World:updateScreenBlueFilter()
+  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self:mustPause())
+end
+
 --! Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
-  if self:isSystemPauseActive() then return end -- System pause takes precedence
+  if self:mustPause() then return end -- "Must Pause" takes precedence
   if not self:isCurrentSpeed("Pause") then
     self:setSpeed("Pause")
   elseif self.prev_speed then
@@ -809,22 +831,10 @@ function World:pauseOrUnpause()
   end
 end
 
---! Sets the system_pause parameter
---!param state (bool)
-function World:setSystemPause(state)
-  self.system_pause = state
-end
-
---! Reports the system pause status
---!return (bool) true is system pause is active, else false
-function World:isSystemPauseActive()
-  return self.system_pause
-end
-
 --! Function to check if player can perform actions when paused
 --!return (bool) Returns true if player hasn't allowed editing while paused
 function World:isUserActionProhibited()
-  if self:isSystemPauseActive() then return true end
+  if self:mustPause() then return true end
   return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
 end
 
@@ -1523,8 +1533,8 @@ function World:getFreeBench(x, y, distance)
   local object_type = self.object_types.bench
   x, y, distance = math.floor(x), math.floor(y), math.ceil(distance)
   self.pathfinder:findObject(x, y, object_type.thob, distance, function(xpos, ypos, d, dist)
-    local b = self:getObject(xpos, ypos, "bench")
-    if b and not b.user and not b.reserved_for then
+    local b = self:getObject(xpos, ypos, "bench", true)
+    if b and not b.user and not b.reserved_for and not b.picked_up then
       local orientation = object_type.orientations[b.direction]
       if orientation.pathfind_allowed_dirs[d] then
         rx = xpos + orientation.use_position[1]
@@ -1599,10 +1609,11 @@ then call findFreeObjectNearToUse instead.
 !param object_type_name The objects to search for
 !param distance Maximum L1 distance to search from humanoid. If nil then
        everywhere in range will be searched.
+!param only_usable Bool If true the object must be permitted for use
 !param callback Function to call for each result. If it returns true then
        the search will be ended.
 --]]
-function World:findObjectNear(humanoid, object_type_name, distance, callback)
+function World:findObjectNear(humanoid, object_type_name, distance, only_usable, callback)
   if not distance then
     distance = 2^30
   end
@@ -1610,26 +1621,28 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   if not callback then
     -- The default callback returns the first object found
     callback = function(x, y, d)
-      obj = self:getObject(x, y, object_type_name)
-      local orientation = obj.object_type.orientations
-      if orientation then
-        orientation = orientation[obj.direction]
-        if not orientation.pathfind_allowed_dirs[d] then
-          return
+      obj = self:getObject(x, y, object_type_name, only_usable)
+      if obj then
+        local orientation = obj.object_type.orientations
+        if orientation then
+          orientation = orientation[obj.direction]
+          if not orientation.pathfind_allowed_dirs[d] then
+            return
+          end
+          x = x + orientation.use_position[1]
+          y = y + orientation.use_position[2]
         end
-        x = x + orientation.use_position[1]
-        y = y + orientation.use_position[2]
+        ox = x
+        oy = y
+        return true
       end
-      ox = x
-      oy = y
-      return true
     end
   end
   local thob = 0
   if type(object_type_name) == "table" then
     local original_callback = callback
     callback = function(x, y, ...)
-      local cb_obj = self:getObject(x, y, object_type_name)
+      local cb_obj = self:getObject(x, y, object_type_name, only_usable)
       if cb_obj then
         return original_callback(x, y, ...)
       end
@@ -1655,9 +1668,9 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
   -- Other values for which may be added in the future.
   -- Specify current_object if you want to exclude the currently used object from the search
   local object, ox, oy
-  self:findObjectNear(humanoid, object_type_name, nil, function(x, y, d)
+  self:findObjectNear(humanoid, object_type_name, nil, true, function(x, y, d)
     local obj = self:getObject(x, y, object_type_name)
-    if obj.user or (obj.reserved_for and obj.reserved_for ~= humanoid) or (current_object and obj == current_object) then
+    if obj.user or obj.picked_up or (obj.reserved_for and obj.reserved_for ~= humanoid) or (current_object and obj == current_object) then
       return
     end
     local orientation = obj.object_type.orientations
@@ -2227,22 +2240,25 @@ end
 --!param x (int) X position of the object to retrieve.
 --!param y (int) Y position of the object to retrieve.
 --!param id Id to search, nil gets first object, string gets first object with
+--!param only_usable (bool) If true the object must be permitted for use
 --! that id, set of strings gets first object that matches an entry in the set.
 --!return (Object or nil) The found object, or nil if the object is not found.
-function World:getObject(x, y, id)
+function World:getObject(x, y, id, only_usable)
   local objects = self:getObjects(x, y)
   if objects then
     if not id then
-      return objects[1]
+      if not only_usable or not objects[1].picked_up then
+        return objects[1]
+      end
     elseif type(id) == "table" then
       for _, obj in ipairs(objects) do
-        if id[obj.object_type.id] then
+        if id[obj.object_type.id] and (not only_usable or not obj.picked_up) then
           return obj
         end
       end
     else
       for _, obj in ipairs(objects) do
-        if obj.object_type.id == id then
+        if obj.object_type.id == id  and (not only_usable or not obj.picked_up) then
           return obj
         end
       end
@@ -2815,6 +2831,9 @@ function World:afterLoad(old, new)
       end
     end
   end
+  if old < 245 then
+    self.system_pause = nil
+  end
 
   -- Fix the initial of staff names
   self:updateInitialsCache()
@@ -2843,7 +2862,6 @@ function World:afterLoad(old, new)
   end
   self.savegame_version = new
   self.release_version = TheApp:getReleaseString(new)
-  self:setSystemPause(false) -- Reset flag on load
 end
 
 function World:playLoadedEntitySounds()
@@ -2877,7 +2895,7 @@ passable tiles (the norm for most objects)]]
 --!return (boolean) indicating if exclusively passable or not
 function World:isTileExclusivelyPassable(x, y, distance)
   for o in pairs(self:findAllObjectsNear(x, y, distance)) do
-    if o and o.footprint then
+    if o and not o.picked_up and o.footprint then
       for _, footprint in pairs(o.footprint) do
         if footprint[1] + o.tile_x == x and footprint[2] + o.tile_y == y and footprint.only_passable and not footprint.shareable then
           return false
@@ -2886,7 +2904,8 @@ function World:isTileExclusivelyPassable(x, y, distance)
     else
       -- doors don't have a footprint but objects can't be built blocking them either
       for _, footprint in pairs(o:getWalkableTiles()) do
-        if o.object_type and o.object_type.thob ~= 62 and footprint[1] == x and footprint[2] == y then
+        -- 62 is a litter thob
+        if not o.picked_up and o.object_type and o.object_type.thob ~= 62 and footprint[1] == x and footprint[2] == y then
           return false
         end
       end

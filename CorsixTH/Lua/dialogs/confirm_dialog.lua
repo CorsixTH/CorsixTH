@@ -79,17 +79,11 @@ function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, call
   self.height = last_y + 63
 
   self:registerKeyHandlers()
-  if self.must_pause then self:systemPause() end
 end
 
 -- Confirm dialogs are used for errors, if it is an error then pause the game
 function UIConfirmDialog:mustPause()
   return self.must_pause
-end
-
---! Function to tell the game a system pause is needed
-function UIConfirmDialog:systemPause()
-  TheApp.world:setSystemPause(true)
 end
 
 function UIConfirmDialog:registerKeyHandlers()
@@ -109,7 +103,6 @@ end
 --!param confirmed (boolean or nil) whether to call the confirm callback (true) or cancel callback (false/nil)
 function UIConfirmDialog:close(confirmed)
   -- NB: Window is closed before executing the callback in order to not save the confirmation dialog in a savegame
-  if self.must_pause then TheApp.world:setSystemPause(false) end -- Error dealt with
   Window.close(self)
   if confirmed then
     if self.callback_ok then
