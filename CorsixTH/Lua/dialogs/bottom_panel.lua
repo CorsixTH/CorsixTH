@@ -108,44 +108,25 @@ function UIBottomPanel:drawPanels()
   -- Buttons that are shown instead of the dynamic info bar when hovering over it.
   local panels = {}
   local buttons = {}
-  local app = self.ui.app
   panels[1]  = self:addPanel(15, 364, 0) -- Staff management button
   buttons[1] = panels[1]:makeToggleButton(6, 6, 35, 36, 16, self.dialogStaffManagement):setTooltip(_S.tooltip.toolbar.staff_list)
-  if self:machineMenuButtonExists() then
-    -- Sprites for machine menu button doesn't exist in original game. Let's import them from aux_ui.dat and draw
-    local aux_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-    self:addPanel(0, 407, 0):makeToggleButton(2, 6, 36, 36, 0, self.dialogMachineMenu)
-      :setSound() -- override
-      :setTooltip(_S.tooltip.toolbar.machine_menu)
-      .panel_for_sprite.custom_draw = --[[persistable:machine_menu_buttons]] function(panel, canvas, x, y)
-      local s = TheApp.config.ui_scale
-      x = x + panel.x * s
-      y = y + panel.y * s
-      panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
-      local btn = panel.window.active_button
-      if panels[1].visible then
-        local w = self.ui:getWindow(UIMachineMenu)
-        if w or btn and btn.panel_for_sprite == panel and btn.active then
-          aux_sprites:draw(canvas, 23, x, y, { scaleFactor = s })
-        else
-          aux_sprites:draw(canvas, 22, x, y, { scaleFactor = s })
-        end
-      end
-    end
-  end
-  panels[2]  = self:addPanel(17, 407 + self.offset, 0) -- Town map button
+  panels[2]  = self:addPanel(17, 407, 0) -- Town map button
   buttons[2] = panels[2]:makeToggleButton(1, 6, 35, 36, 18, self.dialogTownMap):setTooltip(_S.tooltip.toolbar.town_map)
-  panels[3]  = self:addPanel(19, 445 + self.offset, 0) -- Casebook button
+  panels[3]  = self:addPanel(19, 445, 0) -- Casebook button
   buttons[3] = panels[3]:makeToggleButton(1, 6, 35, 36, 20, self.dialogDrugCasebook):setTooltip(_S.tooltip.toolbar.casebook)
-  panels[4]  = self:addPanel(21, 483 + self.offset, 0) -- Research button
+  panels[4]  = self:addPanel(21, 483, 0) -- Research button
   buttons[4] = panels[4]:makeToggleButton(1, 6, 35, 36, 22, self.dialogResearch)
     :setSound():setTooltip(_S.tooltip.toolbar.research) -- Remove default sound for this button
+  if self:machineMenuButtonExists() then
+    self:_addMachineButton(panels, 521) -- Machine menu button
+  end
   panels[5]  = self:addPanel(23, 521 + self.offset, 0) -- Status button
   buttons[5] = panels[5]:makeToggleButton(1, 6, 35, 36, 24, self.dialogStatus):setTooltip(_S.tooltip.toolbar.status)
   panels[6]  = self:addPanel(25, 559 + self.offset, 0) -- Charts button
   buttons[6] = panels[6]:makeToggleButton(1, 6, 35, 36, 26, self.dialogCharts):setTooltip(_S.tooltip.toolbar.charts)
   panels[7]  = self:addPanel(27, 597 + self.offset, 0) -- Policy button
   buttons[7] = panels[7]:makeToggleButton(1, 6, 35, 36, 28, self.dialogPolicy):setTooltip(_S.tooltip.toolbar.policy)
+
   for _, panel in ipairs(panels) do
     panel.visible = false
   end
@@ -158,6 +139,29 @@ function UIBottomPanel:drawPanels()
   return _S.tooltip.toolbar.reputation .. " (" .. self.ui.hospital.reputation .. ")"
   end, 41, 30, 137, 42)
 
+end
+
+function UIBottomPanel:_addMachineButton(panels, x_offset)
+  -- Sprites for machine menu button doesn't exist in original game. Let's import them from aux_ui.dat and draw
+  local aux_sprites = self.ui.app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
+  self:addPanel(0, x_offset, 0):makeToggleButton(2, 6, 36, 36, 0, self.dialogMachineMenu)
+    :setSound() -- override
+    :setTooltip(_S.tooltip.toolbar.machine_menu)
+    .panel_for_sprite.custom_draw = --[[persistable:machine_menu_buttons]] function(panel, canvas, x, y)
+    local s = TheApp.config.ui_scale
+    x = x + panel.x * s
+    y = y + panel.y * s
+    panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
+    local btn = panel.window.active_button
+    if panels[1].visible then
+      local w = self.ui:getWindow(UIMachineMenu)
+      if w or btn and btn.panel_for_sprite == panel and btn.active then
+        aux_sprites:draw(canvas, 23, x, y, { scaleFactor = s })
+      else
+        aux_sprites:draw(canvas, 22, x, y, { scaleFactor = s })
+      end
+    end
+  end
 end
 
 function UIBottomPanel:_initFonts(gfx)
