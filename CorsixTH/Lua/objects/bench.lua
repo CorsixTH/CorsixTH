@@ -172,8 +172,7 @@ function Bench:removeUser(user)
   return Object.removeUser(self, user)
 end
 
---Called when the player picks up a bench
-function Bench:onDestroy()
+function Bench:resetUsageAndReservaton()
   -- make sure that action:isStanding() will be true, see issue 404
   if self.user then
     for i, action in pairs(self.user.action_queue) do
@@ -183,15 +182,13 @@ function Bench:onDestroy()
     end
   end
 
-  -- if patient is heading for the destroyed bench then do the same
+  -- if patient is heading to a bench that is not serving then do the same
   -- things as if they were sitting on it
   if self.reserved_for ~= nil then
     self.reserved_for:handleRemovedObject(self)
     self:removeUser(self.reserved_for)
   end
-
-
-  Object.onDestroy(self)
+  Object.resetUsageAndReservaton(self)
 end
 
 --! This function is automatically called after loading a game and serves for compatibility.
