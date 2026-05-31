@@ -1052,14 +1052,11 @@ function UI:addWindow(window)
     end
     self.modal_windows[window.modal_class] = window
   end
-  if self.app.world and window:mustPause() then
-    self.app.world:setSpeed("Pause")
-    self.app.video:setBlueFilterActive(false) -- mustPause windows shouldn't cause tainting
-  end
   if window.modal_class == "main" or window.modal_class == "fullscreen" then
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
   end
   Window.addWindow(self, window)
+  self:_onAddWindow(window)
 end
 
 function UI:removeWindow(closing_window)
@@ -1068,24 +1065,37 @@ function UI:removeWindow(closing_window)
     if class and self.modal_windows[class] == closing_window then
       self.modal_windows[class] = nil
     end
-    if self.app.world and self.app.world:isCurrentSpeed("Pause") then
-      local pauseGame = self:checkForMustPauseWindows()
-      if not pauseGame and closing_window:mustPause() then
-        self.app.world:setSpeed(self.app.world.prev_speed)
-      end
-    end
     if closing_window.modal_class == "main" or closing_window.modal_class == "fullscreen" then
       self.editing_allowed = true -- allow editing rooms again when main window is closed
     end
+    self:_onRemoveWindow(closing_window)
     return true
   else
     return false
   end
 end
 
+-- Function for signaling that the window is added.
+-- To pause game if the necessary requirements are met.
+--!param window (object) window added
+function UI:_onAddWindow(window)
+  if self.app.world and window:mustPause() then
+    self.app.world:mustPauseWindowAdd()
+  end
+end
+
+-- Function for signaling that the window is to be removed.
+-- To unpause game if the necessary requirements are met.
+--!param window (object) window to be removed
+function UI:_onRemoveWindow(window)
+  if self.app.world and window:mustPause() then
+    self.app.world:mustPauseWindowRemoved()
+  end
+end
+
 --! Function to check if we have any must pause windows open
 --!return (bool) Returns true if a must pause window is found
-function UI:checkForMustPauseWindows()
+function UI:anyMustPauseWindowOpen()
   for _, window in pairs(self.windows) do
     if window:mustPause() then return true end
   end

@@ -76,10 +76,6 @@ function World:World(app, free_build_mode)
   -- This is false when the game is paused.
   self.user_actions_allowed = true
 
-  -- The system pause method is used as an additional layer to pause the game, where the user
-  -- needs to deal with a recoverable error
-  self.system_pause = false
-
   -- If set, do not create salary raise requests.
   self.debug_disable_salary_raise = self.free_build_mode
   self.idle_cache = {} -- Cached queue standing positions for all queues.
@@ -756,19 +752,16 @@ function World:getCurrentSpeed()
 end
 
 -- Set the (approximate) number of seconds per tick.
---!param speed (string) One of: "Pause", "Slowest", "Slower", "Normal",
+--!param new_speed (string) New speed to set.
+-- One of: "Pause", "Slowest", "Slower", "Normal",
 -- "Max speed", or "And then some more".
-function World:setSpeed(speed)
-  if self:isCurrentSpeed(speed) then
-    return
-  end
-  tracy.Message("Changing speed to " .. speed)
-  if speed == "Pause" or self.system_pause then
+function World:setSpeed(new_speed)
+  if self:isCurrentSpeed(new_speed) then return end
+  if self:mustPause() and new_speed ~= "Pause" then return end -- "Must pause" takes precedence
+  tracy.Message("Changing speed to " .. new_speed)
+
+  if new_speed == "Pause" then
     self.ui.hospital:tickEarthquake("pause")
-    -- By default actions are not allowed when the game is paused.
-    self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
-  elseif self:getCurrentSpeed() == "Pause" then
-    self.user_actions_allowed = true
   end
 
   local old_speed = self:getCurrentSpeed()
@@ -778,7 +771,7 @@ function World:setSpeed(speed)
 
   local was_paused = old_speed == "Pause"
   local old_tick_rate = self.tick_rate or 1
-  local new_hours_per_tick, new_tick_rate = unpack(tick_rates[speed])
+  local new_hours_per_tick, new_tick_rate = unpack(tick_rates[new_speed])
 
   if was_paused then
     TheApp.audio:onEndPause()
@@ -790,18 +783,47 @@ function World:setSpeed(speed)
   self.hours_per_tick = new_hours_per_tick
   self.tick_rate = new_tick_rate
 
-  -- Set the blue filter according to whether the user can build or not.
-  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self.ui:checkForMustPauseWindows())
+  self:updateUserActionsAllowed()
+  self:updateScreenBlueFilter()
+
   return false
+end
+
+function World:mustPauseWindowAdd()
+  self:setSpeed("Pause")
+end
+
+function World:mustPauseWindowRemoved()
+  if self:isCurrentSpeed("Pause") then
+    self:pauseOrUnpause()
+  end
+end
+
+--! Check if "Must Pause" mode enabled
+--!return (bool) returns true if "Must Pause" mode enabled
+function World:mustPause()
+  return self.ui:anyMustPauseWindowOpen()
 end
 
 function World:isPaused()
   return self:isCurrentSpeed("Pause")
 end
 
+--! Set the "actions allowed" flag according to whether the user can do some actions with UI or not.
+function World:updateUserActionsAllowed()
+  -- Actions are not allowed when the game in "Must Pause" mode.
+  self.user_actions_allowed = not self:mustPause() and
+    (not self:isCurrentSpeed("Pause") or TheApp.config.allow_user_actions_while_paused)
+end
+
+--! Set the blue filter according to whether the user can build or not.
+function World:updateScreenBlueFilter()
+  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self:mustPause())
+end
+
 --! Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
-  if self:isSystemPauseActive() then return end -- System pause takes precedence
+  if self:mustPause() then return end -- "Must Pause" takes precedence
   if not self:isCurrentSpeed("Pause") then
     self:setSpeed("Pause")
   elseif self.prev_speed then
@@ -809,22 +831,10 @@ function World:pauseOrUnpause()
   end
 end
 
---! Sets the system_pause parameter
---!param state (bool)
-function World:setSystemPause(state)
-  self.system_pause = state
-end
-
---! Reports the system pause status
---!return (bool) true is system pause is active, else false
-function World:isSystemPauseActive()
-  return self.system_pause
-end
-
 --! Function to check if player can perform actions when paused
 --!return (bool) Returns true if player hasn't allowed editing while paused
 function World:isUserActionProhibited()
-  if self:isSystemPauseActive() then return true end
+  if self:mustPause() then return true end
   return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
 end
 
@@ -2821,6 +2831,9 @@ function World:afterLoad(old, new)
       end
     end
   end
+  if old < 245 then
+    self.system_pause = nil
+  end
 
   -- Fix the initial of staff names
   self:updateInitialsCache()
@@ -2849,7 +2862,6 @@ function World:afterLoad(old, new)
   end
   self.savegame_version = new
   self.release_version = TheApp:getReleaseString(new)
-  self:setSystemPause(false) -- Reset flag on load
 end
 
 function World:playLoadedEntitySounds()

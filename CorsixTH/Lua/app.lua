@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 244 -- Fax door refactor
+local SAVEGAME_VERSION = 245 -- Prevent accidentally closed windows fax refactor
 
 class "App"
 
