@@ -173,6 +173,7 @@ Uses the luafilesystem library available at https://keplerproject.github.io
 under the following terms:
 
 Copyright © 2003-2014 Kepler Project.
+Copyright © 2010-2022 The LuaFileSystem authors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -461,7 +462,7 @@ Uses the SDL 2 and SDL_mixer 2 libraries, which are available from
 http://www.libsdl.org/ under the following terms (zlib license).
 
 
-Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+Copyright (C) 1997-2025 Sam Lantinga <slouken@libsdl.org>
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
