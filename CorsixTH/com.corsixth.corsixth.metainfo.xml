@@ -20,7 +20,7 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
-    <release version="0.70.0~beta1" date="2026-??-??" type="development">
+    <release version="0.70.0~beta1" date="2026-05-31" type="development">
       <description>
         <p>New Features:</p>
         <ul>
