@@ -61,6 +61,9 @@
  <a href="_0_1_entity.html#_0_1_entity_1on_destroy">onDestroy</a>()
  </li>
  <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1on_pick_up">onPickUp</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
  </li>
  <li class="self">
@@ -202,21 +205,21 @@ slow_animation is set.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L335">line 335 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L340">line 340 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_entity_1clear_dynamic_info">function Entity:clearDynamicInfo()</a></h5>
  <p>
  Completely clears the dynamic info.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L330">line 330 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L335">line 335 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_entity_1erase_object">function Entity:eraseObject()</a></h5>
  <p>
  Stub to be extended in subclasses, if needed.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L349">line 349 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L354">line 354 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -227,14 +230,14 @@ slow_animation is set.<br/><br/>
  Litter should have layer 0, side objects to the north layer 1, side objects to the west layer 2,
  normal objects should have layers between 3 and 7, east side object should have layer 8 and south side
  objects layer 9.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L359">line 359 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L364">line 364 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_entity_1get_dynamic_info">function Entity:getDynamicInfo()</a></h5>
  <p>
  Returns a table of hover info about an object.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L312">line 312 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L317">line 317 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -258,7 +261,7 @@ TODO Currently only used for benches placed nearby.
 TODO Maybe also pass the object tile coordinates?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L297">line 297 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L302">line 302 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -274,7 +277,7 @@ TODO Maybe also pass the object tile coordinates?</td>
  <td class="d"> The new room.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L304">line 304 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L309">line 309 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -286,9 +289,16 @@ the world.<br/><br/>
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_entity_1on_pick_up">function Entity:onPickUp()</a></h5>
+ <p>
+ Function which is called when entity is picked up<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L291">line 291 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_entity_1play_after_load_sound">function Entity:playAfterLoadSound()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L339">line 339 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L344">line 344 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -358,7 +368,7 @@ then use UI:playSound instead.<br/><br/>
  <div class="method">
  <h5><a name="_0_1_entity_1reset_animation">function Entity:resetAnimation()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L354">line 354 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L359">line 359 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -406,7 +416,7 @@ type could be 'text', 'progress' or 'dividers'<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L317">line 317 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L322">line 322 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -451,7 +461,7 @@ layer.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L309">line 309 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L314">line 314 of Lua/entity.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -622,7 +632,7 @@ recurring or long-duration tasks.<br/><br/>
  Function which is called at the end of each ingame day. Should be used to
 implement behaviours which happen regularly, but not as frequently as to
 need them in `tick`.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L291">line 291 of Lua/entity.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L296">line 296 of Lua/entity.lua</a>.
  </p>
  </div>
 </div>

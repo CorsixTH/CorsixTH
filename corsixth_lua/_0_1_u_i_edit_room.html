@@ -32,15 +32,23 @@
  <h4>Method Index</h4>
  <ul>
  <li class="inherited">
- <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1__is_non_side_object_placement_valid">_isNonSideObjectPlacementValid</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">object</span>, <span class="p">object_orientation</span>, <span class="p">room_id</span>, <span class="p">world</span>)
+ <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1__is_non_side_object_placement_valid">_isNonSideObjectPlacementValid</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">object</span>, <span class="p">object_orientation</span>, <span class="p">room_id</span>)
  (inherited from <a href="_0_1_u_i_place_objects.html">UIPlaceObjects</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1__is_side_object_placement_valid">_isSideObjectPlacementValid</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">room_id</span>, <span class="p">passable_flag</span>, <span class="p">map</span>, <span class="p">world</span>)
+ <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1__is_side_object_placement_valid">_isSideObjectPlacementValid</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">room_id</span>, <span class="p">passable_flag</span>, <span class="p">map</span>)
+ (inherited from <a href="_0_1_u_i_place_objects.html">UIPlaceObjects</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1__placement_available_here_and_other_objects_do_not_interfere">_placementAvailableHereAndOtherObjectsDoNotInterfere</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">object</span>, <span class="p">real_obj</span>, <span class="p">object_footprint</span>, <span class="p">room</span>, <span class="p">map</span>)
  (inherited from <a href="_0_1_u_i_place_objects.html">UIPlaceObjects</a>)
  </li>
  <li class="self">
  <a href="_0_1_u_i_edit_room.html#_0_1_u_i_edit_room_1__remove__wall__line">_remove_wall_line</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">step_x</span>, <span class="p">step_y</span>, <span class="p">n_steps</span>, <span class="p">layer</span>, <span class="p">neigh_x</span>, <span class="p">neigh_y</span>, <span class="p">world</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1__set_blueprint_partial_flags">_setBlueprintPartialFlags</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">map</span>, <span class="p">valid_placement</span>)
+ (inherited from <a href="_0_1_u_i_place_objects.html">UIPlaceObjects</a>)
  </li>
  <li class="self">
  <a href="_0_1_u_i_edit_room.html#_0_1_u_i_edit_room_1abort_room">abortRoom</a>()
@@ -252,7 +260,7 @@
  (overrides <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1register_key_handlers">UIPlaceObjects:registerKeyHandlers</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1remove_all_objects">removeAllObjects</a>(<span class="p">refund</span>)
+ <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1remove_all_objects">removeAllObjects</a>(<span class="p">move_canceled</span>)
  (inherited from <a href="_0_1_u_i_place_objects.html">UIPlaceObjects</a>)
  </li>
  <li class="inherited">
@@ -264,11 +272,11 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1remove_object">removeObject</a>(<span class="p">object</span>, <span class="p">dont_close_if_empty</span>, <span class="p">refund</span>)
+ <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1remove_object">removeObject</a>(<span class="p">object</span>, <span class="p">dont_close_if_empty</span>, <span class="p">placed</span>, <span class="p">move_canceled</span>)
  (inherited from <a href="_0_1_u_i_place_objects.html">UIPlaceObjects</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1remove_objects">removeObjects</a>(<span class="p">object_list</span>, <span class="p">refund</span>)
+ <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1remove_objects">removeObjects</a>(<span class="p">object_list</span>)
  (inherited from <a href="_0_1_u_i_place_objects.html">UIPlaceObjects</a>)
  </li>
  <li class="self">
@@ -353,6 +361,10 @@
  </li>
  <li class="self">
  <a href="_0_1_u_i_edit_room.html#_0_1_u_i_edit_room_1try_remove_window_from_wall">tryRemoveWindowFromWall</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_place_objects.html#_0_1_u_i_place_objects_1undo">undo</a>()
+ (inherited from <a href="_0_1_u_i_place_objects.html">UIPlaceObjects</a>)
  </li>
  <li class="self">
  <a href="_0_1_u_i_edit_room.html#_0_1_u_i_edit_room_1verify_or_abort_room">verifyOrAbortRoom</a>()

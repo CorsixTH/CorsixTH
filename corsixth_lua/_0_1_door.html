@@ -48,6 +48,10 @@
  <a href="_0_1_door.html#_0_1_door_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
  (overrides <a href="_0_1_object.html#_0_1_object_1after_load">Object:afterLoad</a>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1cancel_usage">cancelUsage</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
  <li class="self">
  <a href="_0_1_door.html#_0_1_door_1check_for_deadlock">checkForDeadlock</a>()
  </li>
@@ -57,6 +61,18 @@
  </li>
  <li class="self">
  <a href="_0_1_door.html#_0_1_door_1close_door">closeDoor</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1deny_reservation">denyReservation</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1deoccupy_tiles_by_object_footprint_at">deoccupyTilesByObjectFootprintAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1direction_parameters">directionParameters</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_object.html#_0_1_object_1erase_object">eraseObject</a>()
@@ -126,12 +142,20 @@
  <a href="_0_1_entity.html#_0_1_entity_1notify_new_room">notifyNewRoom</a>(<span class="p">room</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1occupy_tiles_by_object_footprint_at">occupyTilesByObjectFootprintAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
  <li class="self">
  <a href="_0_1_door.html#_0_1_door_1on_click">onClick</a>(<span class="p">ui</span>, <span class="p">button</span>)
  (overrides <a href="_0_1_object.html#_0_1_object_1on_click">Object:onClick</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_object.html#_0_1_object_1on_destroy">onDestroy</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1on_pick_up">onPickUp</a>()
  (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
  <li class="inherited">
@@ -162,6 +186,10 @@
  <a href="_0_1_object.html#_0_1_object_1reset_animation">resetAnimation</a>()
  (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1reset_usage_and_reservaton">resetUsageAndReservaton</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
  <li class="self">
  <a href="_0_1_door.html#_0_1_door_1set_animation">setAnimation</a>(<span class="p">animation</span>, <span class="p">flags</span>)
  (overrides <a href="_0_1_object.html#_0_1_object_1set_animation">Object:setAnimation</a>)
@@ -169,6 +197,10 @@
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_dynamic_info">setDynamicInfo</a>(<span class="p">type</span>, <span class="p">value</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_invisible">setInvisible</a>(<span class="p">invisible</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)

@@ -52,11 +52,27 @@
  <a href="_0_1_plant.html#_0_1_plant_1call_for_watering">callForWatering</a>()
  </li>
  <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1cancel_usage">cancelUsage</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="self">
  <a href="_0_1_plant.html#_0_1_plant_1create_handyman_actions">createHandymanActions</a>(<span class="p">handyman</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1deny_reservation">denyReservation</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1deoccupy_tiles_by_object_footprint_at">deoccupyTilesByObjectFootprintAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1direction_parameters">directionParameters</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_object.html#_0_1_object_1erase_object">eraseObject</a>()
@@ -138,13 +154,21 @@
  <a href="_0_1_entity.html#_0_1_entity_1notify_new_room">notifyNewRoom</a>(<span class="p">room</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1occupy_tiles_by_object_footprint_at">occupyTilesByObjectFootprintAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
  <li class="self">
  <a href="_0_1_plant.html#_0_1_plant_1on_click">onClick</a>(<span class="p">ui</span>, <span class="p">button</span>)
  (overrides <a href="_0_1_object.html#_0_1_object_1on_click">Object:onClick</a>)
  </li>
- <li class="self">
- <a href="_0_1_plant.html#_0_1_plant_1on_destroy">onDestroy</a>()
- (overrides <a href="_0_1_object.html#_0_1_object_1on_destroy">Object:onDestroy</a>)
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1on_destroy">onDestroy</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1on_pick_up">onPickUp</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
@@ -175,6 +199,10 @@
  (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
  <li class="self">
+ <a href="_0_1_plant.html#_0_1_plant_1reset_usage_and_reservaton">resetUsageAndReservaton</a>()
+ (overrides <a href="_0_1_object.html#_0_1_object_1reset_usage_and_reservaton">Object:resetUsageAndReservaton</a>)
+ </li>
+ <li class="self">
  <a href="_0_1_plant.html#_0_1_plant_1restore_to_full_health">restoreToFullHealth</a>()
  </li>
  <li class="inherited">
@@ -184,6 +212,10 @@
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_dynamic_info">setDynamicInfo</a>(<span class="p">type</span>, <span class="p">value</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_invisible">setInvisible</a>(<span class="p">invisible</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)
@@ -529,9 +561,9 @@ closest reachable tile within hospital buildings.<br/><br/>
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_plant_1on_destroy">function Plant:onDestroy()</a></h5>
+ <h5><a name="_0_1_plant_1reset_usage_and_reservaton">function Plant:resetUsageAndReservaton()</a></h5>
  <p>
- <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1on_destroy">Object:onDestroy</a>.<br/>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1reset_usage_and_reservaton">Object:resetUsageAndReservaton</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/plant.lua#L309">line 309 of Lua/objects/plant.lua</a>.
  </p>
  </div>

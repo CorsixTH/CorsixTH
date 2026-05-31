@@ -48,8 +48,24 @@
  (overrides <a href="_0_1_object.html#_0_1_object_1after_load">Object:afterLoad</a>)
  </li>
  <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1cancel_usage">cancelUsage</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1deny_reservation">denyReservation</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1deoccupy_tiles_by_object_footprint_at">deoccupyTilesByObjectFootprintAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1direction_parameters">directionParameters</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_object.html#_0_1_object_1erase_object">eraseObject</a>()
@@ -120,12 +136,20 @@
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1occupy_tiles_by_object_footprint_at">occupyTilesByObjectFootprintAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
  <a href="_0_1_object.html#_0_1_object_1on_click">onClick</a>(<span class="p">ui</span>, <span class="p">button</span>, <span class="p">data</span>)
  (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
- <li class="self">
- <a href="_0_1_bench.html#_0_1_bench_1on_destroy">onDestroy</a>()
- (overrides <a href="_0_1_object.html#_0_1_object_1on_destroy">Object:onDestroy</a>)
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1on_destroy">onDestroy</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1on_pick_up">onPickUp</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
@@ -155,6 +179,10 @@
  <a href="_0_1_object.html#_0_1_object_1reset_animation">resetAnimation</a>()
  (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_bench.html#_0_1_bench_1reset_usage_and_reservaton">resetUsageAndReservaton</a>()
+ (overrides <a href="_0_1_object.html#_0_1_object_1reset_usage_and_reservaton">Object:resetUsageAndReservaton</a>)
+ </li>
  <li class="inherited">
  <a href="_0_1_object.html#_0_1_object_1set_animation">setAnimation</a>(<span class="p">animation</span>, <span class="p">flags</span>)
  (inherited from <a href="_0_1_object.html">Object</a>)
@@ -162,6 +190,10 @@
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_dynamic_info">setDynamicInfo</a>(<span class="p">type</span>, <span class="p">value</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_invisible">setInvisible</a>(<span class="p">invisible</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)
@@ -371,15 +403,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1after_load">Object:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/bench.lua#L197">line 197 of Lua/objects/bench.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_bench_1on_destroy">function Bench:onDestroy()</a></h5>
- <p>
- Called when the player picks up a bench<br/><br/>
- <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1on_destroy">Object:onDestroy</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/bench.lua#L175">line 175 of Lua/objects/bench.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/bench.lua#L194">line 194 of Lua/objects/bench.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -398,6 +422,13 @@ Maybe related to Humanoid:removedObject(object)<br/><br/>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1remove_user">Object:removeUser</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/bench.lua#L155">line 155 of Lua/objects/bench.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_bench_1reset_usage_and_reservaton">function Bench:resetUsageAndReservaton()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1reset_usage_and_reservaton">Object:resetUsageAndReservaton</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/bench.lua#L175">line 175 of Lua/objects/bench.lua</a>.
  </p>
  </div>
 </div>
