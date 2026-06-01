@@ -72,13 +72,13 @@ function World:World(app, free_build_mode)
   self.tick_timer = 0
   self.game_date = Date() -- Current date in the game.
 
+  -- Some windows intentionally pause the game, record if the player was
+  -- already paused when those things happen.
+  self.user_paused = false
+
   self.room_information_dialogs = app.config.room_information_dialogs
   -- This is false when the game is paused.
   self.user_actions_allowed = true
-
-  -- Some windows intentionally pause the game, record if the player was
-  -- already paused when those things happen.
-  self.already_paused = false
 
   -- If set, do not create salary raise requests.
   self.debug_disable_salary_raise = self.free_build_mode
@@ -761,7 +761,8 @@ end
 -- "Max speed", or "And then some more".
 function World:setSpeed(new_speed)
   if self:isCurrentSpeed(new_speed) then return end
-  if self:mustPause() and new_speed ~= "Pause" then return end -- "Must pause" takes precedence
+  if self:isMustPauseActive() and new_speed ~= "Pause" then return end -- "Must pause" takes precedence
+  if new_speed == "Speed Up" and self:isPaused() then return end
   tracy.Message("Changing speed to " .. new_speed)
 
   if new_speed == "Pause" then
@@ -778,7 +779,7 @@ function World:setSpeed(new_speed)
   local new_hours_per_tick, new_tick_rate = unpack(tick_rates[new_speed])
 
   if was_paused then
-    self:setAlreadyPaused(false)
+    self:setUserPaused(false)
     TheApp.audio:onEndPause()
     self.tick_timer = new_tick_rate
   else
@@ -794,45 +795,59 @@ function World:setSpeed(new_speed)
   return false
 end
 
-function World:mustPauseWindowAdd()
+--! Called when a must pause window comes into existence and pauses the game
+function World:mustPauseWindowAdd(previous_must_pause_state)
+  -- Check if the player has already paused before this window condition
+  -- generated
+  if not previous_must_pause_state and self:isPaused() then
+    self:setUserPaused(true)
+  end
   self:setSpeed("Pause")
 end
 
+--! Called when a must pause window is closed and will attempt to unpause
+--! the game
 function World:mustPauseWindowRemoved()
-  if self:isCurrentSpeed("Pause") then
+  if self:isCurrentSpeed("Pause") and not self:isGameUserPaused() then
     self:pauseOrUnpause()
   end
 end
 
 --! Check if "Must Pause" mode enabled
 --!return (bool) returns true if "Must Pause" mode enabled
-function World:mustPause()
+function World:isMustPauseActive()
   return self.ui:anyMustPauseWindowOpen()
 end
 
+--! Check if game is currently paused
+--!return (boolean) True if paused
 function World:isPaused()
   return self:isCurrentSpeed("Pause")
+end
+
+function World:setUserPaused(state)
+  self.user_paused = state
+end
+
+function World:isGameUserPaused()
+  return self.user_paused
 end
 
 --! Set the "actions allowed" flag according to whether the user can do some actions with UI or not.
 function World:updateUserActionsAllowed()
   -- Actions are not allowed when the game in "Must Pause" mode.
-  self.user_actions_allowed = not self:mustPause() and
+  self.user_actions_allowed = not self:isMustPauseActive() and
     (not self:isCurrentSpeed("Pause") or TheApp.config.allow_user_actions_while_paused)
 end
 
 --! Set the blue filter according to whether the user can build or not.
 function World:updateScreenBlueFilter()
-  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self:mustPause())
-end
-
-function World:setAlreadyPaused(state)
-  self.already_paused = state
+  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self:isMustPauseActive())
 end
 
 --! Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
-  if self:mustPause() then return end -- "Must Pause" takes precedence
+  if self:isMustPauseActive() then return end -- "Must Pause" takes precedence
   if not self:isCurrentSpeed("Pause") then
     self:setSpeed("Pause")
   elseif self.prev_speed then
@@ -843,7 +858,7 @@ end
 --! Function to check if player can perform actions when paused
 --!return (bool) Returns true if player hasn't allowed editing while paused
 function World:isUserActionProhibited()
-  if self:mustPause() then return true end
+  if self:isMustPauseActive() then return true end
   return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
 end
 

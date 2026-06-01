@@ -1057,8 +1057,9 @@ function UI:addWindow(window)
   if window.modal_class == "main" or window.modal_class == "fullscreen" then
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
   end
+  local active_must_pauses = self:anyMustPauseWindowOpen()
   Window.addWindow(self, window)
-  self:_onAddWindow(window)
+  self:_onAddWindow(window, active_must_pauses)
 end
 
 --! Remove a window from the game
@@ -1083,9 +1084,9 @@ end
 -- Function for signaling that the window is added.
 -- To pause game if the necessary requirements are met.
 --!param window (object) window added
-function UI:_onAddWindow(window)
+function UI:_onAddWindow(window, previous_must_pause_state)
   if self.app.world and window:mustPause() then
-    self.app.world:mustPauseWindowAdd()
+    self.app.world:mustPauseWindowAdd(previous_must_pause_state)
   end
 end
 
@@ -1101,6 +1102,7 @@ end
 --! Function to check if we have any must pause windows open
 --!return (bool) Returns true if a must pause window is found
 function UI:anyMustPauseWindowOpen()
+  if not self.windows then return false end
   for _, window in pairs(self.windows) do
     if window:mustPause() then return true end
   end
