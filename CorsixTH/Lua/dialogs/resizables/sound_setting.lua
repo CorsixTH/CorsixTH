@@ -80,6 +80,7 @@ function UISoundSettings:UISoundSettings(ui, mode)
   self:setDefaultPosition(0.5, 0.25)
   self.default_button_sound = "selectx.wav"
   self.app = ui.app
+  local built_in = app.gfx:loadMenuFont()
 
 
   self.volume_options = { { text = _S.customise_window.option_off, volume = 0 } }
@@ -182,9 +183,11 @@ function UISoundSettings:UISoundSettings(ui, mode)
   local tooltip_soundfont = app.config.soundfont and
       _S.tooltip.audio_window.browse_soundfont:format(app.config.soundfont) or
       _S.tooltip.audio_window.no_soundfont_specified
+  local soundfont_path = app.config.soundfont
   local soundfont_button_panel = self:addBevelPanel(BTN_X, y, BTN_WIDTH, BTN_HEIGHT, col_bg)
   soundfont_button_panel
-      :setLabel(app.config.soundfont and app.config.soundfont or tooltip_soundfont)
+      :setLabel(soundfont_path or tooltip_soundfont,
+          soundfont_path and built_in)
       :setAutoClip(true)
       :setVisible(not app.config.midi_api)
   local soundfont_button = soundfont_button_panel
