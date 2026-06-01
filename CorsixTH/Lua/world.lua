@@ -72,8 +72,7 @@ function World:World(app, free_build_mode)
   self.tick_timer = 0
   self.game_date = Date() -- Current date in the game.
 
-  -- Some windows intentionally pause the game, record if the player was
-  -- already paused when those things happen.
+  -- Player pause intent. Only user-facing speed controls should change this.
   self.user_paused = false
 
   self.room_information_dialogs = app.config.room_information_dialogs
@@ -171,11 +170,11 @@ function World:setUI(ui)
   self.ui = ui
 
   self.ui:addKeyHandler("ingame_pause", self, self.pauseOrUnpause, "Pause")
-  self.ui:addKeyHandler("ingame_gamespeed_slowest", self, self.setSpeed, "Slowest")
-  self.ui:addKeyHandler("ingame_gamespeed_slower", self, self.setSpeed, "Slower")
-  self.ui:addKeyHandler("ingame_gamespeed_normal", self, self.setSpeed, "Normal")
-  self.ui:addKeyHandler("ingame_gamespeed_max", self, self.setSpeed, "Max speed")
-  self.ui:addKeyHandler("ingame_gamespeed_thensome", self, self.setSpeed, "And then some more")
+  self.ui:addKeyHandler("ingame_gamespeed_slowest", self, self.setUserSpeed, "Slowest")
+  self.ui:addKeyHandler("ingame_gamespeed_slower", self, self.setUserSpeed, "Slower")
+  self.ui:addKeyHandler("ingame_gamespeed_normal", self, self.setUserSpeed, "Normal")
+  self.ui:addKeyHandler("ingame_gamespeed_max", self, self.setUserSpeed, "Max speed")
+  self.ui:addKeyHandler("ingame_gamespeed_thensome", self, self.setUserSpeed, "And then some more")
 
   self.ui:addKeyHandler("ingame_zoom_in", self, self.adjustZoom,  1)
   self.ui:addKeyHandler("ingame_zoom_in_more", self, self.adjustZoom, 5)
@@ -755,6 +754,15 @@ function World:getCurrentSpeed()
   end
 end
 
+--! Set game speed from a user-facing control.
+--!param new_speed (string) New speed to set.
+function World:setUserSpeed(new_speed)
+  if self:isMustPauseActive() then return end
+  -- If player paused, remember it
+  self:setUserPaused(new_speed == "Pause")
+  return self:setSpeed(new_speed)
+end
+
 -- Set the (approximate) number of seconds per tick.
 --!param new_speed (string) New speed to set.
 -- One of: "Pause", "Slowest", "Slower", "Normal",
@@ -770,6 +778,8 @@ function World:setSpeed(new_speed)
   end
 
   local old_speed = self:getCurrentSpeed()
+  -- Remember the last normal gameplay speed. Pause and Speed Up are
+  -- transient states and should not replace the speed we return to.
   if old_speed ~= "Pause" and old_speed ~= "Speed Up" then
     self.prev_speed = old_speed
   end
@@ -779,7 +789,6 @@ function World:setSpeed(new_speed)
   local new_hours_per_tick, new_tick_rate = unpack(tick_rates[new_speed])
 
   if was_paused then
-    self:setUserPaused(false)
     TheApp.audio:onEndPause()
     self.tick_timer = new_tick_rate
   else
@@ -789,28 +798,36 @@ function World:setSpeed(new_speed)
   self.hours_per_tick = new_hours_per_tick
   self.tick_rate = new_tick_rate
 
-  self:updateUserActionsAllowed()
-  self:updateScreenBlueFilter()
+  self:updateUserInteractionState()
 
   return false
 end
 
+--! Refresh whether the user can interact with the game and presence of the
+-- blue filter
+function World:updateUserInteractionState()
+  self:updateUserActionsAllowed()
+  self:updateScreenBlueFilter()
+end
+
 --! Called when a must pause window comes into existence and pauses the game
-function World:mustPauseWindowAdd(previous_must_pause_state)
-  -- Check if the player has already paused before this window condition
-  -- generated
-  if not previous_must_pause_state and self:isPaused() then
-    self:setUserPaused(true)
-  end
+function World:mustPauseWindowAdd()
   self:setSpeed("Pause")
+  self:updateUserInteractionState()
 end
 
 --! Called when a must pause window is closed and will attempt to unpause
 --! the game
 function World:mustPauseWindowRemoved()
-  if self:isCurrentSpeed("Pause") and not self:isGameUserPaused() then
-    self:pauseOrUnpause()
+  if self:isMustPauseActive() then
+    return
   end
+
+  if self:isCurrentSpeed("Pause") and not self:isGameUserPaused() then
+    self:setSpeed(self.prev_speed or "Normal")
+  end
+
+  self:updateUserInteractionState()
 end
 
 --! Check if "Must Pause" mode enabled
@@ -825,10 +842,14 @@ function World:isPaused()
   return self:isCurrentSpeed("Pause")
 end
 
+--! Update state of if game has been paused by user
+--!param state (boolean)
 function World:setUserPaused(state)
   self.user_paused = state
 end
 
+--! Check whether user pause state applies
+--!return true is we are in a user pause
 function World:isGameUserPaused()
   return self.user_paused
 end
@@ -849,8 +870,10 @@ end
 function World:pauseOrUnpause()
   if self:isMustPauseActive() then return end -- "Must Pause" takes precedence
   if not self:isCurrentSpeed("Pause") then
+    self:setUserPaused(true)
     self:setSpeed("Pause")
   elseif self.prev_speed then
+    self:setUserPaused(false)
     self:setSpeed(self.prev_speed)
   end
 end

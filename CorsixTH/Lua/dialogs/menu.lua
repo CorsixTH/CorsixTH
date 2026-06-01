@@ -789,7 +789,7 @@ function UIMenuBar:makeGameMenu(app)
 
   local function rate(speed)
     return speed == "Normal", function()
-      app.world:setSpeed(speed)
+      app.world:setUserSpeed(speed)
     end, "", function()
       return app.world:isCurrentSpeed(speed)
     end

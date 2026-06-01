@@ -1057,9 +1057,8 @@ function UI:addWindow(window)
   if window.modal_class == "main" or window.modal_class == "fullscreen" then
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
   end
-  local active_must_pauses = self:anyMustPauseWindowOpen()
   Window.addWindow(self, window)
-  self:_onAddWindow(window, active_must_pauses)
+  self:_onAddWindow(window)
 end
 
 --! Remove a window from the game
