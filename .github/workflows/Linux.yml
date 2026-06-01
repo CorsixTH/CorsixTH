@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-24.04 # noble
     name: Linux apt-get ${{matrix.lua}} ${{inputs.animview == 'true' && 'with AnimView' || ''}}
     steps:
-      - uses: actions/checkout@v4  # Keeps the git OAuth token after checkout
+      - uses: actions/checkout@v6  # Keeps the git OAuth token after checkout
       - name: Checkout selected PR
         env:
           GH_TOKEN: ${{github.token}}
@@ -133,7 +133,7 @@ jobs:
     env:
       VCPKG_BINARY_SOURCES: clear;files,${{github.workspace}}/vcpkg_cache,readwrite
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Checkout selected PR
         env:
           GH_TOKEN: ${{github.token}}
@@ -147,13 +147,13 @@ jobs:
           sudo apt-get install libltdl-dev libx11-dev libxft-dev libxext-dev libxtst-dev \
             libxrandr-dev nasm clang-format-20 clang-tidy-20 autoconf-archive
       - name: Restore vcpkg cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/vcpkg_cache
           key: vcpkg-linux-${{hashFiles('vcpkg.json','vcpkg-configuration.json')}}
           restore-keys: vcpkg-linux-
       - name: Get CMake and Ninja
-        uses: lukka/get-cmake@v4.0.3
+        uses: lukka/get-cmake@v4.3.3
 
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
