@@ -20,7 +20,7 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
-    <release version="0.70.0~beta1" date="2026-??-??" type="development">
+    <release version="0.70.0~beta1" date="2026-05-31" type="development">
       <description>
         <p>New Features:</p>
         <ul>
@@ -42,6 +42,8 @@
           <li>Newspaper headlines now in lose movies</li>
           <li>Movies can now be paused with &apos;P&apos;</li>
           <li>Research Policy window now plays its background sound effect</li>
+          <li>You can now view adviser message history. This can be opened from
+              the charts menu or with a hotkey (default Ctrl + H)</li>
         </ul>
         <p>Improvements:</p>
         <ul>
@@ -60,6 +62,9 @@
           <li>Improved rejection calculations for patient overcharging</li>
           <li>Improved rat holes</li>
           <li>Improved dying</li>
+          <li>Added ability to cancel an accidentally grabbed object with
+              Escape. Selling a grabbed item also now has a hotkey (default
+              Delete)</li>
         </ul>
         <p>Changes:</p>
         <ul>
@@ -86,6 +91,8 @@
           <li>Adjusted margins on the text area of the fax</li>
           <li>Changed message drawer so only one fax of each type will
               populate it</li>
+          <li>Prevented some &apos;fullscreen&apos; windows from being unpaused
+              while present e.g. fax</li>
           <li>Patients can now be vaccinated in epidemics without
               activating vaccination mode</li>
           <li>Players are no longer warned of empty action queues</li>

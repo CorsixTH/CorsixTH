@@ -19,6 +19,8 @@ CorsixTH 0.70.0 Beta 1 - Released May 2026
 * Newspaper headlines now in lose movies
 * Movies can now be paused with 'P'
 * Research Policy window now plays its background sound effect
+* You can now view adviser message history. This can be opened from the charts
+  menu or with a hotkey (default Ctrl + H)
 
 # Improvements
 * Improved performance for large hospitals
@@ -34,6 +36,8 @@ CorsixTH 0.70.0 Beta 1 - Released May 2026
 * Improved rejection calculations for patient overcharging
 * Improved rat holes
 * Improved dying
+* Added ability to cancel an accidentally grabbed object with Escape. Selling
+  a grabbed item also now has a hotkey (default Delete)
 
 # Changes
 * Added shadow for truetype fonts
@@ -54,6 +58,7 @@ CorsixTH 0.70.0 Beta 1 - Released May 2026
 * Ignored VIP requests now automatically invite them instead of refuse
 * Adjusted margins on the text area of the fax
 * Changed message drawer so only one fax of each type will populate it
+* User actions are now always prevented in some 'fullscreen' windows e.g. fax
 * Patients can now be vaccinated in epidemics without activating vaccination
   mode
 * Players are no longer warned of empty action queues
@@ -103,6 +108,9 @@ CorsixTH 0.70.0 Beta 1 - Released May 2026
 * Tiredness bar is now properly aligned to the right
 * Fixed inability to open faxes tied to a humanoid but not visible in the
   drawer
+* Prevented some 'fullscreen' windows from being unpaused while present
+  e.g. fax
+* Fixed certtain faxes being accidentally dismissed, such as the win level fax
 
 # Packager Notes
 * Lua 5.5 is now supported. Lua 5.2 - 5.3 are deprecated
