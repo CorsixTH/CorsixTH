@@ -1083,9 +1083,9 @@ end
 -- Function for signaling that the window is added.
 -- To pause game if the necessary requirements are met.
 --!param window (object) window added
-function UI:_onAddWindow(window, previous_must_pause_state)
+function UI:_onAddWindow(window)
   if self.app.world and window:mustPause() then
-    self.app.world:mustPauseWindowAdd(previous_must_pause_state)
+    self.app.world:mustPauseWindowAdd()
   end
 end
 
