@@ -287,7 +287,7 @@ function App:init()
   self.audio:init()
 
   -- Hack to early initialise the audio and reduce delay on Windows
-  self:playRandomBackgroundTrack()
+  self.audio:playRandomBackgroundTrack()
   self.audio:stopBackgroundTrack()
 
   -- Load movie player
