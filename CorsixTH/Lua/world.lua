@@ -824,7 +824,7 @@ function World:mustPauseWindowRemoved()
   end
 
   if self:isCurrentSpeed("Pause") and not self:isGameUserPaused() then
-    self:setSpeed(self.prev_speed or "Normal")
+    self:setSpeed(self.prev_speed)
   end
 
   self:updateUserInteractionState()
