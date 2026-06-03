@@ -544,8 +544,8 @@ function UIPlaceObjects:placeObject(dont_close_if_empty, dont_remove)
       -- deleted from its previous location, but simply made invisible.
       real_obj:setTile(nil)
       real_obj:setInvisible(false)
-      real_obj.picked_up = false
     end
+    real_obj.picked_up = false
 
     if real_obj.orientation_before and real_obj.orientation_before ~= self.object_orientation then
       real_obj:initOrientation(self.object_orientation)
