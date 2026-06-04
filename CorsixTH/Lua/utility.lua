@@ -422,6 +422,16 @@ function table_merge(...)
   return result
 end
 
+--! Checks if the table contains item
+function is_contains(table, value)
+  for index, val in ipairs(table) do
+    if val == value then
+      return true
+    end
+  end
+  return false
+end
+
 local function serialize_string(val, options)
   local level = options and options.long_bracket_level_start or 0
   while string.find(val, ']' .. string.rep('=', level) .. ']') do
