@@ -819,6 +819,8 @@ end
 function UIBottomPanel:dialogResearch(enable)
   if not self.world.user_actions_allowed then
     self:updateButtonStates()
+    self.ui:playSound(self.ui.hospital.research_dep_built and
+        "selectx.wav" or "wrong2.wav")
     return
   end
   if TheApp.using_demo_files then
@@ -901,6 +903,11 @@ function UIBottomPanel:dialogPolicy(enable)
 end
 
 function UIBottomPanel:dialogMachineMenu(enable)
+  if not self.world.user_actions_allowed then
+    self:updateButtonStates()
+    self.ui:playSound("selectx.wav")
+    return
+  end
   local w = self.ui:getWindow(UIMachineMenu)
   if w then
     w:close()
