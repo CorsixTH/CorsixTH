@@ -724,10 +724,10 @@ function Audio:playBackgroundTrack(index)
         if music_data == nil then
           info.enabled = false
           local name, msg = (info.filename_music or info.filename)
-          if not self.warned then -- Warn once per session
-            self.app.ui:addWindow(UIInformation(self.app.ui, {_S.errors.music}))
+          if not self.warned and TheApp.ui then -- Warn once per session
+            TheApp.ui:addWindow(UIInformation(TheApp.ui, {_S.errors.music}))
+            self.warned = true
           end
-          self.warned = true
           if err == "No SoundFonts have been requested" then
             msg = "Required soundfont is not found, please download one. A suitable soundfont is linked from the CorsixTH wiki."
           elseif err == "XMP: Unrecognized file format" or err == "ModPlug_Load failed" then
@@ -815,7 +815,7 @@ end
 
 -- search for jukebox and notify it to update its play button
 function Audio:notifyJukebox()
-  local jukebox = self.app.ui:getWindow(UIJukebox)
+  local jukebox = TheApp.ui and TheApp.ui:getWindow(UIJukebox)
   if jukebox then
     jukebox:updatePlayButton()
   end

@@ -286,6 +286,10 @@ function App:init()
   self:initMusicDir()
   self.audio:init()
 
+  -- Hack to early initialise the audio and reduce delay on Windows
+  self.audio:playRandomBackgroundTrack()
+  self.audio:stopBackgroundTrack()
+
   -- Load movie player
   corsixth.require("movie_player")
   self.moviePlayer = MoviePlayer(self, self.audio, self.video)
