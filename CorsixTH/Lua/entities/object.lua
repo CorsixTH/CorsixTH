@@ -843,6 +843,10 @@ function Object:onDestroy()
   self:resetUsageAndReservaton()
   Entity.onDestroy(self)
 
+  self:rebuildPassableCellFlags()
+end
+
+function Object:rebuildPassableCellFlags()
   -- Issue 1105 - rebuild wall travel<dir> and pathfinding on side object removal
   if self.object_type.class == "SideObject" then
     self.world.map.th:updatePathfinding()
