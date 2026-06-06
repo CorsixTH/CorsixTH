@@ -1691,6 +1691,8 @@ void animation::add_proxy(const xy_pair& rel_pos_value, int8_t crop_base_value,
 void animation::remove_all_proxies() {
   remove_from_tile();
   proxies.clear();
+
+  flags &= ~thdf_crop;  // Disable cropping to avoid invisible animations.
 }
 
 bool animation::attach_to_map(const xy_pair& tile_pos, level_map* the_map,
