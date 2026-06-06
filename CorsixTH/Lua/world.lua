@@ -1781,7 +1781,7 @@ function World:newEntity(class, animation, mood_marker)
   local th = TH.animation()
   th:setAnimation(self.anims, animation)
   local entity = _G[class](th)
-  if not is_contains(self.entities, entity) then
+  if not table_contains(self.entities, entity) then
     self.entities[#self.entities + 1] = entity
   end
   entity.world = self
@@ -2180,7 +2180,7 @@ function World:objectPlaced(entity, id)
     id = entity.object_type.id
   end
 
-  if not is_contains(self.entities, entity) then
+  if not table_contains(self.entities, entity) then
     self.entities[#self.entities + 1] = entity
   end
 

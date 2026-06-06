@@ -423,8 +423,8 @@ function table_merge(...)
 end
 
 --! Checks if the table contains item
-function is_contains(table, value)
-  for index, val in ipairs(table) do
+function table_contains(table, value)
+  for _, val in pairs(table) do
     if val == value then
       return true
     end
