@@ -155,6 +155,17 @@ animation* l_map_updateblueprint_getnextanim(lua_State* L, int& iIndex) {
     lua_pushvalue(L, 12);
     lua_setfield(L, -2, "animator");
     lua_setfenv(L, -2);
+
+    // Blueprint wall animations are created directly, so add them to the weak
+    // animation lookup used by level_map::persist(); otherwise they save as nil
+    // and disappear after reload.
+    int anim_index = lua_gettop(L);
+    lua_rawgeti(L, luaT_upvalueindex(2), 2);
+    lua_pushlightuserdata(L, pAnim);
+    lua_pushvalue(L, anim_index);
+    lua_rawset(L, -3);
+    lua_pop(L, 1);
+
     lua_rawseti(L, 11, iIndex);
   } else {
     pAnim = luaT_testuserdata<animation>(L, -1, luaT_upvalueindex(2));
