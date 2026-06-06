@@ -1445,7 +1445,6 @@ void animation::persist(lua_persist_writer* writer) const {
   writer->write_int(static_cast<int>(patient_effect));
 
   if (flags & thdf_crop) {
-    // XXX Write something to say there are 2 values to read now.
     writer->write_int((int)crop_base);
     writer->write_int((int)crop_width);
   }
@@ -1524,28 +1523,16 @@ void animation::depersist(lua_persist_reader* reader) {
     if (!reader->read_int(iDummy)) break;
     patient_effect = static_cast<animation_effect>(iDummy);
 
-    // XXX Read something to know whether 1 or 2 values are to be expected.
+    // Assume the new file format with both a crop_base and a crop_width.
     if (flags & thdf_crop) {
       if (!reader->read_int(iDummy)) break;
       crop_base = static_cast<int8_t>(iDummy);
+      if (!reader->read_int(iDummy)) break;
+      crop_width = static_cast<int8_t>(iDummy);
     } else {
       crop_base = 0;
+      crop_width = 2;
     }
-
-    // Disabled completely, since the code checker doesn't like place-holder
-    // code.
-    //    if (flags & thdf_crop) {
-    //      // XXX  if (<<2-values-expected>>) {
-    //      //        if (!reader->read_int(iDummy)) break;
-    //      //        crop_width = static_cast<int8_t>(iDummy);
-    //      //      } else {
-    //      //        crop_width = 2; // Old version.
-    //      //      }
-    //      crop_width = 2;  // Good enough for testing.
-    //    } else {
-    //      crop_width = 2;
-    //    }
-    crop_width = 2;
 
     // Read the unioned fields
     if (anim_kind != animation_kind::primary_child &&
