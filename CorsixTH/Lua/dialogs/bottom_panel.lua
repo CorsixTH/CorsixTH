@@ -458,7 +458,7 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     if this_icon_index then
       table.remove(self.message_windows, this_icon_index)
     end
-    self:deleteMessage(this_icon.owner)
+    self:_deleteMessageByIcon(this_icon)
   end
 
   local message_info = {
@@ -581,6 +581,7 @@ end
 
 -- Removes a message from the message queue (for example if a room is built before the player
 -- says what to do with the patient.
+--!param owner (object) message owner
 function UIBottomPanel:deleteMessage(owner)
   for i, msg_info in ipairs(self.message_queue) do
     if msg_info.owner == owner then
@@ -599,6 +600,24 @@ function UIBottomPanel:deleteMessage(owner)
     end
   end
   return false
+end
+
+-- Removes a message from the message queue
+--!param icon (object) drawer icon object for target message
+function UIBottomPanel:_deleteMessageByIcon(icon)
+  for i, msg_info in ipairs(self.message_queue) do
+    if msg_info.drawer_icon == icon then
+      -- TODO: restructure message_queue to contain UIMessage objects already, so this special handling isn't required
+      table.remove(self.message_queue, i)
+      msg_info.drawer_icon.onClose = nil
+      msg_info.drawer_icon = nil
+    end
+  end
+  for index, drawer_icon in ipairs(self.message_windows) do
+    if drawer_icon == icon then
+      drawer_icon:removeMessage()
+    end
+  end
 end
 
 --! Pop the message with the given index from the message queue and turn it into
