@@ -458,7 +458,7 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     if this_icon_index then
       table.remove(self.message_windows, this_icon_index)
     end
-    self:_deleteMessageByIcon(this_icon)
+    self:deleteMessage(nil, this_icon)
   end
 
   local message_info = {
@@ -579,45 +579,39 @@ function UIBottomPanel:openFirstMessage()
   end
 end
 
--- Removes a message from the message queue (for example if a room is built before the player
+--! Removes a message from the message queue (for example if a room is built before the player
 -- says what to do with the patient.
---!param owner (object) message owner
-function UIBottomPanel:deleteMessage(owner)
+--!param owner (object) optional message owner
+--!param icon (object) optional drawer icon object
+--!return (boolean) true if message was removed
+function UIBottomPanel:deleteMessage(owner, icon)
+  assert(owner or icon, "Both owner and icon are nil!")
+  -- A message can only ever exist in either the message queue or in message windows. Once it
+  -- is found, we don't need to check the other.
   for i, msg_info in ipairs(self.message_queue) do
-    if msg_info.owner == owner then
-      -- TODO: restructure message_queue to contain UIMessage objects already, so this special handling isn't required
+    if (owner and msg_info.owner == owner) or
+        (icon and msg_info.drawer_icon == icon) then
       table.remove(self.message_queue, i)
+
+      -- TODO: restructure message_queue to contain UIMessage objects already,
+      -- so this special handling isn't required.
       msg_info.drawer_icon.onClose = nil
       msg_info.drawer_icon = nil
-      owner.message = nil
+
+      if msg_info.owner then
+        msg_info.owner.message = nil
+      end
       return true
     end
   end
-  for index, drawer_icon in ipairs(self.message_windows) do
-    if drawer_icon.owner == owner then
+
+  for _, drawer_icon in ipairs(self.message_windows) do
+    if (owner and drawer_icon.owner == owner) or (icon and drawer_icon == icon) then
       drawer_icon:removeMessage()
       return true
     end
   end
   return false
-end
-
--- Removes a message from the message queue
---!param icon (object) drawer icon object for target message
-function UIBottomPanel:_deleteMessageByIcon(icon)
-  for i, msg_info in ipairs(self.message_queue) do
-    if msg_info.drawer_icon == icon then
-      -- TODO: restructure message_queue to contain UIMessage objects already, so this special handling isn't required
-      table.remove(self.message_queue, i)
-      msg_info.drawer_icon.onClose = nil
-      msg_info.drawer_icon = nil
-    end
-  end
-  for index, drawer_icon in ipairs(self.message_windows) do
-    if drawer_icon == icon then
-      drawer_icon:removeMessage()
-    end
-  end
 end
 
 --! Pop the message with the given index from the message queue and turn it into
