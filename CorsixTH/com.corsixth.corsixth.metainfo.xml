@@ -20,6 +20,22 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.70.0~beta2" date="2026-06-xx" type="development">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Restored early loading functionality of music on Windows in
+              certain scenarios</li>
+          <li>Changed soundfont file path in Sound Settings to use unicode 
+              font, if available</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Fixed some objects being picked up becoming no longer usable</li>
+          <li>Fixed some consistency issues with the bottom panel</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.70.0~beta1" date="2026-05-31" type="development">
       <description>
         <p>New Features:</p>

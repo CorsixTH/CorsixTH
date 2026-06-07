@@ -1,4 +1,17 @@
 -------------------------------------------------------------------------------
+CorsixTH 0.70.0 Beta 2 - Release June 2026
+-------------------------------------------------------------------------------
+# Changes
+* Restored early loading functionality of music on Windows in certain scenarios
+* Changed soundfont file path in Sound Settings to use unicode font, if
+  available
+
+# Bug Fixes
+* Fixed some objects being picked up becoming no longer usable
+* Fixed some consistency issues with the bottom panel
+
+
+-------------------------------------------------------------------------------
 CorsixTH 0.70.0 Beta 1 - Released May 2026
 -------------------------------------------------------------------------------
 # New Features
@@ -125,6 +138,7 @@ CorsixTH 0.70.0 Beta 1 - Released May 2026
   0.13.1). This should always be off unless you are specifically debugging
 performance
 
+-------------------------------------------------------------------------------
 CorsixTH 0.69.2 - released January 2026
 -------------------------------------------------------------------------------
 # Bug Fixes
