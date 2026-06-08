@@ -323,6 +323,7 @@ function Object:usePositionNames()
   return {
     "use_position",
     "use_position_secondary",
+    "slave_position",
     "finish_use_position",
     "finish_use_position_secondary",
     "handyman_position",
