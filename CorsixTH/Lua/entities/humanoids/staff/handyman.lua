@@ -95,7 +95,7 @@ function Handyman:onPickup()
   Staff.onPickup(self)
 end
 
--- Deattaches the handyman from the task and forces him to search for a new one.
+-- Detaches the handyman from the task and forces him to search for a new one.
 --!param reset_action_queue (bool) Should the handyman interrupt
 -- the current action to search for a new task
 function Handyman:releaseHandymanFromTask(reset_action_queue)
@@ -122,7 +122,7 @@ function Handyman:searchForHandymanTask()
   else
     task_type_1, task_type_2, task_type_3 = "repairing", "watering", "cleaning"
   end
-  -- Let's search First priority type taks.
+  -- Let's search First priority type task.
   local index = self.hospital:searchForHandymanTask(self, task_type_1)
   if index ~= -1 then
     -- Found a task for the handyman

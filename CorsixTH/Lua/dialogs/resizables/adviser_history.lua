@@ -175,7 +175,7 @@ function UIAdviserHistory:onTick()
   -- New messages only get added to the top (it's a stack) or, if duplicate, a message
   -- gets moved from the middle to the top.
 
-  -- Checking the lenght of both lists would fail if a message was moved from the middle to the top due to duplication.
+  -- Checking the length of both lists would fail if a message was moved from the middle to the top due to duplication.
   -- So we just check if the top string between lists has changed to determine if we need to update
   local new_history_top = self.ui.adviser.message_history[1]
 

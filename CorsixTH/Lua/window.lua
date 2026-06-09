@@ -1742,7 +1742,7 @@ function Window:onMouseUp(button, x, y)
 end
 
 --! This function can be used to control mousewheel input (i.e. scrolling).
---! Override this function in dervied classes, with what you'd like to happen
+--! Override this function in derived classes, with what you'd like to happen
 --! on this event.
 --!param x (int) Mousewheel has moved on the horizontal axis (-1 is
 -- leftward movement, +1 is rightward movement)
