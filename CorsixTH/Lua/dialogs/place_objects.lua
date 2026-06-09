@@ -93,7 +93,7 @@ end
 function UIPlaceObjects:registerKeyHandlers()
   self:addKeyHandler("global_cancel", self.undo)
   self:addKeyHandler("global_cancel_alt", self.cancel)
-  self:addKeyHandler("ingame_sellPickedUpItem", self.cancel)
+  self:addKeyHandler("ingame_sellPickedUpItem", self.sell)
   self:addKeyHandler("ingame_rotateobject", self.tryNextOrientation)
 end
 
@@ -353,6 +353,13 @@ end
 
 function UIPlaceObjects:cancel()
   self:close(false)
+end
+
+--! Helper function to stop UIEditRoom going back to doors phase
+function UIPlaceObjects:sell()
+  if not self.ui:getWindow(UIEditRoom) then
+    self:close(false)
+  end
 end
 
 function UIPlaceObjects:undo()
