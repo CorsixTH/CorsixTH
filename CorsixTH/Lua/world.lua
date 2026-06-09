@@ -1781,7 +1781,9 @@ function World:newEntity(class, animation, mood_marker)
   local th = TH.animation()
   th:setAnimation(self.anims, animation)
   local entity = _G[class](th)
-  self.entities[#self.entities + 1] = entity
+  if not table_contains(self.entities, entity) then
+    self.entities[#self.entities + 1] = entity
+  end
   entity.world = self
   entity.mood_marker = mood_marker
   return entity
@@ -2178,7 +2180,9 @@ function World:objectPlaced(entity, id)
     id = entity.object_type.id
   end
 
-  self.entities[#self.entities + 1] = entity
+  if not table_contains(self.entities, entity) then
+    self.entities[#self.entities + 1] = entity
+  end
 
   -- Warn a hospital if that is possible.
   if not entity.tile_x or not entity.tile_y then return end
