@@ -740,7 +740,7 @@ end
 
 --! Called when the user presses a key on the keyboard
 --!param rawchar (string) The name of the key the user pressed.
---!param modifiers (table) The current applied modifers to key input e.g. numlock
+--!param modifiers (table) The current applied modifiers to key input e.g. numlock
 function UI:onKeyDown(rawchar, modifiers)
   local handled = false
   local rawchar_transformed, key = self:_determineKeyPressed(
@@ -789,7 +789,7 @@ end
 
 --! Called when the user releases a key on the keyboard
 --!param rawchar (string) The name of the key the user pressed.
---!param modifiers (table) The current applied modifers to key input e.g. numlock
+--!param modifiers (table) The current applied modifiers to key input e.g. numlock
 function UI:onKeyUp(rawchar, modifiers)
   local _, key = self:_determineKeyPressed(rawchar, modifiers)
   self.buttons_down[key] = nil
