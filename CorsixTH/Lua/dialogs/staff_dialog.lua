@@ -148,7 +148,7 @@ function UIStaff:UIStaff(ui, staff)
   self:makeTooltip(_S.tooltip.staff_window.salary, 90, 191 + offset, 204, 214 + offset)
   -- Non-rectangular tooltip has to be realized with dynamic tooltip at the moment
   self:makeDynamicTooltip(--[[persistable:staff_dialog_center_tooltip]]function(x, y)
-    if is_in_view_circle(x, y, class.is(staff, Handyman)) then
+    if is_in_view_circle(x, y, profile:isType("Handyman")) then
       return _S.tooltip.staff_window.center_view
     end
   end, 17, 211 + offset, 92, 286 + offset)
