@@ -9,7 +9,13 @@ CorsixTH 0.70.0 Beta 2 - Release June 2026
 # Bug Fixes
 * Fixed some objects being picked up becoming no longer usable
 * Fixed some consistency issues with the bottom panel
-
+* Stopped the sell hotkey making Edit Room going back to doors phase from placing objects
+* Fixed crash on loading a game after previously moving objects
+* Fixed a specific scenario where side objects could allow humanoids to walk through walls
+* Stopped crash in Staff Dialog window
+* Stopped faxes not related to a humanoid crashing the game (such as the new disease fax)
+* Fixed Operating Table beccoming unreachable for the second surgeon
+* Fixed some typos in the codebase
 
 -------------------------------------------------------------------------------
 CorsixTH 0.70.0 Beta 1 - Released May 2026

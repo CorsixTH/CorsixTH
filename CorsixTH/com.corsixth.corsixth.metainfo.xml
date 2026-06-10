@@ -20,19 +20,31 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
-    <release version="0.70.0~beta2" date="2026-06-xx" type="development">
+<releases>
+    <release version="0.70.0~beta2" date="2026-06-10" type="development">
       <description>
         <p>Changes:</p>
         <ul>
           <li>Restored early loading functionality of music on Windows in
               certain scenarios</li>
-          <li>Changed soundfont file path in Sound Settings to use unicode 
+          <li>Changed soundfont file path in Sound Settings to use unicode
               font, if available</li>
         </ul>
         <p>Bug Fixes:</p>
         <ul>
           <li>Fixed some objects being picked up becoming no longer usable</li>
           <li>Fixed some consistency issues with the bottom panel</li>
+          <li>Stopped the sell hotkey making Edit Room going back to doors
+              phase from placing objects</li>
+          <li>Fixed crash on loading a game after previously moving objects</li>
+          <li>Fixed a specific scenario where side objects could allow
+              humanoids to walk through walls</li>
+          <li>Stopped crash in Staff Dialog window</li>
+          <li>Stopped faxes not related to a humanoid crashing the game
+              (such as the new disease fax)</li>
+          <li>Fixed Operating Table becoming unreachable for the second
+              surgeon</li>
+          <li>Fixed some typos in the codebase</li>
         </ul>
       </description>
     </release>
