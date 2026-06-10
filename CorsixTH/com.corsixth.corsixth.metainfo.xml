@@ -26,24 +26,27 @@
         <p>Changes:</p>
         <ul>
           <li>Restored early loading functionality of music on Windows in
-              certain scenarios</li>
+              certain scenarios removed in Beta 1</li>
           <li>Changed soundfont file path in Sound Settings to use unicode
               font, if available</li>
         </ul>
-        <p>Bug Fixes:</p>
+        <p>Bug Fixes from Beta 1:</p>
         <ul>
-          <li>Fixed some objects being picked up becoming no longer usable</li>
-          <li>Fixed some consistency issues with the bottom panel</li>
-          <li>Stopped the sell hotkey making Edit Room going back to doors
-              phase from placing objects</li>
-          <li>Fixed crash on loading a game after previously moving objects</li>
-          <li>Fixed a specific scenario where side objects could allow
-              humanoids to walk through walls</li>
-          <li>Stopped crash in Staff Dialog window</li>
-          <li>Stopped faxes not related to a humanoid crashing the game
-              (such as the new disease fax)</li>
-          <li>Fixed Operating Table becoming unreachable for the second
-              surgeon</li>
+          <li>Fixed regression with some objects being picked up becoming
+              no longer usable</li>
+          <li>Fixed regression with some consistency issues with the bottom
+              panel</li>
+          <li>Stopped regression where the sell hotkey made Edit Room go back
+              to doors phase from placing objects</li>
+          <li>Fixed regression that led to crash on loading a game after
+              previously moving objects</li>
+          <li>Fixed regression in a specific scenario where side objects could
+              allow humanoids to walk through walls</li>
+          <li>Stopped regression in Staff Dialog window that led to a crash</li>
+          <li>Stopped regression where faxes not related to a humanoid
+              crashing the game (such as the new disease fax)</li>
+          <li>Fixed regression where Operating Table becoming unreachable for
+              the second surgeon</li>
           <li>Fixed some typos in the codebase</li>
         </ul>
       </description>
