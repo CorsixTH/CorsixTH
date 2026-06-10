@@ -81,7 +81,7 @@ end
 
 -- Find the palette with the longest common prefix with the sprite table path,
 -- as this is likely the correct palette to use for the sprite table.
--- Avoids hardcoding a mapping of sprites to palettes and accounts for THs
+-- Avoids hardcoding a mapping of sprites to palettes and accounts for the
 -- naming e.g. AWARD01.PAL and AWARD02.PAL used for AWARD03.TAB
 --
 --!param sprite_table_name (string) The name of the sprite table, without the

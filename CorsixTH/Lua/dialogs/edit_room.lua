@@ -1101,8 +1101,8 @@ function UIEditRoom:onLeftButtonDown(x, y)
 end
 
 --! Attempt to remove a window placed on the room blueprints
---!param x co-ordinate
---!param y co-ordinate
+--!param x coordinate
+--!param y coordinate
 function UIEditRoom:tryRemoveWindowFromWall(x, y)
   local cell_x, cell_y, wall_dir = self:screenToWall(self.x + x, self.y + y)
   if not cell_x then
