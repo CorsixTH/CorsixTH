@@ -890,7 +890,7 @@ function UIPlaceObjects:_isNonSideObjectPlacementValid(x, y, object, object_orie
           end
         else
           -- user not in a room editing mode.
-          -- as we are not in a room editing mode, then there possbile be humanoids in the room.
+          -- as we are not in a room editing mode, then there may be humanoids in the room.
           -- this means that placing object can block a humanoid's passage to the door.
           -- To prevent that case we fallback to strict placing approach.
           invalid_placement = world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, object_orientation, room_id)
