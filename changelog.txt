@@ -1,4 +1,28 @@
 -------------------------------------------------------------------------------
+CorsixTH 0.70.0 Beta 2 - Release June 2026
+-------------------------------------------------------------------------------
+# Changes
+* Restored early loading functionality of music on Windows in certain scenarios
+  removed in Beta 1
+* Changed soundfont file path in Sound Settings to use unicode font, if
+  available
+# Bug Fixes from Beta 1
+* Fixed regression with some objects being picked up becoming no longer usable
+* Fixed regression with some consistency issues with the bottom panel
+* Stopped regression where the sell hotkey made Edit Room go back to doors
+  phase from placing objects
+* Fixed regression that led to crash on loading a game after previously moving
+  objects
+* Fixed regression in a specific scenario where side objects could allow
+  humanoids to walk through walls
+* Stopped regression in Staff Dialog window that led to a crash
+* Stopped regression where faxes not related to a humanoid crashing the game
+  (such as the new disease fax)
+* Fixed regression where Operating Table becoming unreachable for the second
+  surgeon
+* Fixed some typos in the codebase
+
+-------------------------------------------------------------------------------
 CorsixTH 0.70.0 Beta 1 - Released May 2026
 -------------------------------------------------------------------------------
 # New Features
@@ -125,6 +149,7 @@ CorsixTH 0.70.0 Beta 1 - Released May 2026
   0.13.1). This should always be off unless you are specifically debugging
 performance
 
+-------------------------------------------------------------------------------
 CorsixTH 0.69.2 - released January 2026
 -------------------------------------------------------------------------------
 # Bug Fixes
