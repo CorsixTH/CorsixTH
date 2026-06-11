@@ -607,6 +607,7 @@ class sprite_render_list : public animation_base {
   void set_lifetime(int life_time);
   void set_use_intermediate_buffer();
   void append_sprite(size_t spr_num, int xpos, int ypos);
+  void set_scale_factor(int scale_factor);
   bool is_dead() const { return lifetime == 0; }
 
   void persist(lua_persist_writer* writer) const;
@@ -643,8 +644,10 @@ class sprite_render_list : public animation_base {
   //! Number of ticks until reports as dead (-1 = never dies)
   int lifetime{-1};
   //! Whether to draw to an intermediate buffer. This is used to preserve text
-  //! rendering quality when scaling.
+  //! rendering quality when scaling. Not persisted.
   bool use_intermediate_buffer{false};
+  //! Scale factor for the render list. Not persisted.
+  int scale_factor{1};
 };
 
 // Find the appropriate subclass of animation_base for a given
