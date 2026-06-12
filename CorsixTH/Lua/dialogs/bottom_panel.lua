@@ -631,6 +631,7 @@ function UIBottomPanel:_showMessageIcon(index)
   drawer_icon:setXLimit(1 + #message_windows * FACTORY_ICON_WIDTH)
   message_windows[#message_windows + 1] = drawer_icon
   self:addWindow(drawer_icon)
+  self.ui:playSound("NewFax.wav")
   table.remove(self.message_queue, index)   -- Delete element of the queue
 end
 
