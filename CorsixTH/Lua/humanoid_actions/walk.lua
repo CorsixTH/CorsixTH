@@ -222,8 +222,9 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
 
   -- Make sure the returned wall id of a cell flag is real
   local function hasWallId(value)
-    local offset = 1024 -- wall tiles have an early_list modifier
-    return value and value - offset > 0
+    -- Account for transparency setting
+    local transparency_offset = TheApp.ui.transparent_walls and 1024 or 0
+    return value and value - transparency_offset > 0
   end
 
   -- Helper function to check for a shared wall on adjacent tiles (here and there)
@@ -251,9 +252,8 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
       _, there_wall, _ = th:getCell(there_x, there_y + 1)
     end
 
-  return hasWallId(here_wall)
-      and hasWallId(there_wall)
-      and here_wall == there_wall
+    return hasWallId(here_wall) and hasWallId(there_wall) and
+        here_wall == there_wall
   end
 
   if recalc_route then
