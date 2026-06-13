@@ -28,7 +28,6 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeo
   self:Window()
 
   local app = ui.app
-  ui:playSound("NewFax.wav")
 
   self.esc_closes = false
   self.on_top = false
