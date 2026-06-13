@@ -1722,30 +1722,31 @@ void sprite_render_list::draw(render_target* canvas, const xy_pair& draw_pos) {
     return;
   }
 
-  int x = draw_pos.x + pixel_offset.x;
-  int y = draw_pos.y + pixel_offset.y;
+  int x = draw_pos.x + pixel_offset.x * scale_factor;
+  int y = draw_pos.y + pixel_offset.y * scale_factor;
 
   std::unique_ptr<render_target::scoped_buffer> intermediate_buffer;
   if (use_intermediate_buffer) {
     int minX = INT_MAX, minY = INT_MAX, maxX = INT_MIN, maxY = INT_MIN;
     for (const sprite& pSprite : sprites) {
-      int spriteX = x + pSprite.x;
-      int spriteY = y + pSprite.y;
+      int spriteX = x + pSprite.x * scale_factor;
+      int spriteY = y + pSprite.y * scale_factor;
       int spriteWidth, spriteHeight;
       sheet->get_sprite_size_unchecked(pSprite.index, &spriteWidth,
                                        &spriteHeight);
       minX = std::min(minX, spriteX);
       minY = std::min(minY, spriteY);
-      maxX = std::max(maxX, spriteX + spriteWidth);
-      maxY = std::max(maxY, spriteY + spriteHeight);
+      maxX = std::max(maxX, spriteX + spriteWidth * scale_factor);
+      maxY = std::max(maxY, spriteY + spriteHeight * scale_factor);
     }
     intermediate_buffer = canvas->begin_intermediate_drawing(
         minX, minY, maxX - minX, maxY - minY);
   }
 
   for (const sprite& pSprite : sprites) {
-    sheet->draw_sprite(canvas, pSprite.index, x + pSprite.x, y + pSprite.y,
-                       flags);
+    sheet->draw_sprite(canvas, pSprite.index, x + pSprite.x * scale_factor,
+                       y + pSprite.y * scale_factor, flags, 0,
+                       animation_effect::none, scale_factor);
   }
 }
 
@@ -1765,6 +1766,8 @@ void sprite_render_list::set_lifetime(int life_time) {
 void sprite_render_list::set_use_intermediate_buffer() {
   use_intermediate_buffer = true;
 }
+
+void sprite_render_list::set_scale_factor(int s) { scale_factor = s; }
 
 void sprite_render_list::append_sprite(size_t spr_num, int xpos, int ypos) {
   sprite s{spr_num, xpos, ypos};

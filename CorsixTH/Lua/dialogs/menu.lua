@@ -199,10 +199,8 @@ function UIMenuBar:drawMenu(menu, canvas)
   local panel_sprites_draw = panel_sprites.draw
   local x, y, w, h = menu.x * s, menu.y * s, menu.width * s, menu.height * s
 
-  -- It would be better if spriteList supported scaling directly
-  canvas:scale(s)
-  menu.render_list:draw(canvas, menu.x, menu.y)
-  canvas:scale(1)
+  menu.render_list:setScaleFactor(s)
+  menu.render_list:draw(canvas, x, y)
 
   local btmy = y + h - 6 * s
   panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10 * s, y, { scaleFactor = s })
