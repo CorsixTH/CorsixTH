@@ -11,7 +11,7 @@ body:
     id: subjectof
     attributes:
       label: What feature or enhancement would you like to add?
-      description: Include a description of what feature/enahcement you would like to see in CorsixTH
+      description: Include a description of what feature/enhancement you would like to see in CorsixTH
     validations:
       required: true
 # The benefits
