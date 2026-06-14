@@ -238,10 +238,8 @@ function UIAdviser:draw(canvas, x, y)
   local s = TheApp.config.ui_scale
   x, y = x + self.x * s, y + self.y * s
 
-  -- no scaleFactor for animation yet
-  canvas:scale(s)
-  self.th:draw(canvas, math.floor(x / s) + 200, math.floor(y / s))
-  canvas:scale(1)
+  self.th:setScaleFactor(s)
+  self.th:draw(canvas, x + 200 * s, y)
 
   if self.phase == 2 then
     -- Draw balloon only in the "talk" phase.

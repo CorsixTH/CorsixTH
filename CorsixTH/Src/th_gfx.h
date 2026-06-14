@@ -320,11 +320,12 @@ class animation_manager {
       @param patient_effect The animation effect to apply to the patient.
       @param patient_effect_offset The number of ticks to offset the effect
           animation by.
+      @param scale_factor
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
                   const ::layers& oLayers, int iX, int iY, uint32_t iFlags,
                   animation_effect patient_effect = animation_effect::none,
-                  size_t patient_effect_offset = 0) const;
+                  size_t patient_effect_offset = 0, int scale_factor = 1) const;
 
   void get_frame_extent(size_t iFrame, const ::layers& oLayers, int* pMinX,
                         int* pMaxX, int* pMinY, int* pMaxY,
@@ -480,6 +481,7 @@ class animation_base : public drawable {
   }
   void set_layer(int iLayer, int iId);
   void set_layers_from(const animation_base* pSrc) { layers = pSrc->layers; }
+  void set_scale_factor(int s) { scale_factor = s; }
 
  protected:
   //! Tile containing the animation. A negative x or y means it is not active.
@@ -489,6 +491,17 @@ class animation_base : public drawable {
   xy_pair pixel_offset{0, 0};
 
   ::layers layers{};
+
+  //! Scale factor for the animation.
+  /**
+   * For both animation and sprite_render_list scale_factor is currently only
+   * implemented for drawing. Support for hit_test should be implemented if
+   * a need to hit_test on a scaled sprite_render_list or animation arises.
+   *
+   * In all cases scale_factor is not persisted, and expected to be set
+   * according to the current game options before calling draw.
+   */
+  int scale_factor{1};
 };
 
 //! The kind of animation.
@@ -607,7 +620,6 @@ class sprite_render_list : public animation_base {
   void set_lifetime(int life_time);
   void set_use_intermediate_buffer();
   void append_sprite(size_t spr_num, int xpos, int ypos);
-  void set_scale_factor(int scale_factor);
   bool is_dead() const { return lifetime == 0; }
 
   void persist(lua_persist_writer* writer) const;
@@ -646,8 +658,6 @@ class sprite_render_list : public animation_base {
   //! Whether to draw to an intermediate buffer. This is used to preserve text
   //! rendering quality when scaling. Not persisted.
   bool use_intermediate_buffer{false};
-  //! Scale factor for the render list. Not persisted.
-  int scale_factor{1};
 };
 
 // Find the appropriate subclass of animation_base for a given
