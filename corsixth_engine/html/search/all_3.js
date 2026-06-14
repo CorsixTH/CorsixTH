@@ -51,7 +51,7 @@ var searchData=
   ['draw_5fchild_48',['draw_child',['../classanimation.html#a77d4727ada834035137a8f15d6f9a4ad',1,'animation']]],
   ['draw_5fflags_49',['draw_flags',['../th__gfx_8h.html#a43e9cb66d61948afed4b803a77a88bac',1,'th_gfx.h']]],
   ['draw_5ffn_50',['draw_fn',['../classsprite__render__list.html#a7c7e7b1ae6f1e2719426d4479f69dd66',1,'sprite_render_list::draw_fn()'],['../classanimation.html#a0bad0cfa81c2c9289031ceca9363cae4',1,'animation::draw_fn()'],['../structdrawable.html#a01d7aaa48b73ddceb5c644d638a8d792',1,'drawable::draw_fn()']]],
-  ['draw_5fframe_51',['draw_frame',['../classanimation__manager.html#a8030310eeb3a3ff13696c07285e9b541',1,'animation_manager']]],
+  ['draw_5fframe_51',['draw_frame',['../classanimation__manager.html#a5ca8b48530a27e39776d9820d3ad5b81',1,'animation_manager']]],
   ['draw_5fline_52',['draw_line',['../classrender__target.html#acb03e7bd95ba6439618d0d06cc271f68',1,'render_target']]],
   ['draw_5fmorph_53',['draw_morph',['../classanimation.html#aa58424a23d4a0a2be557a56984d42544',1,'animation']]],
   ['draw_5fsprite_54',['draw_sprite',['../classsprite__sheet.html#a9691e2da8cabd4ee21cab5e8842ed45e',1,'sprite_sheet']]],

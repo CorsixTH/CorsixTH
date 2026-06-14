@@ -27,7 +27,7 @@ var searchData=
   ['draw_5fcell_24',['draw_cell',['../classmap__overlay.html#a062d8dc06dc102527e436644772e2ca1',1,'map_overlay::draw_cell()'],['../classmap__overlay__pair.html#ad3a3ac82c2172572ab2632f20525de49',1,'map_overlay_pair::draw_cell()'],['../classmap__text__overlay.html#aaac049c535fc9484cf3babffd2eab8f4',1,'map_text_overlay::draw_cell()'],['../classmap__flags__overlay.html#a883b85a352581da1e7c57521976cb391',1,'map_flags_overlay::draw_cell()'],['../classmap__parcels__overlay.html#a589f6451b77a3a121105c1f77f69ec8b',1,'map_parcels_overlay::draw_cell()']]],
   ['draw_5fchild_25',['draw_child',['../classanimation.html#a77d4727ada834035137a8f15d6f9a4ad',1,'animation']]],
   ['draw_5ffn_26',['draw_fn',['../structdrawable.html#a01d7aaa48b73ddceb5c644d638a8d792',1,'drawable::draw_fn()'],['../classanimation.html#a0bad0cfa81c2c9289031ceca9363cae4',1,'animation::draw_fn()'],['../classsprite__render__list.html#a7c7e7b1ae6f1e2719426d4479f69dd66',1,'sprite_render_list::draw_fn()']]],
-  ['draw_5fframe_27',['draw_frame',['../classanimation__manager.html#a8030310eeb3a3ff13696c07285e9b541',1,'animation_manager']]],
+  ['draw_5fframe_27',['draw_frame',['../classanimation__manager.html#a5ca8b48530a27e39776d9820d3ad5b81',1,'animation_manager']]],
   ['draw_5fline_28',['draw_line',['../classrender__target.html#acb03e7bd95ba6439618d0d06cc271f68',1,'render_target']]],
   ['draw_5fmorph_29',['draw_morph',['../classanimation.html#aa58424a23d4a0a2be557a56984d42544',1,'animation']]],
   ['draw_5fsprite_30',['draw_sprite',['../classsprite__sheet.html#a9691e2da8cabd4ee21cab5e8842ed45e',1,'sprite_sheet']]],

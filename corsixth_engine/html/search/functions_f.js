@@ -54,7 +54,7 @@ var searchData=
   ['set_5fplayer_5fheliport_5ftile_51',['set_player_heliport_tile',['../classlevel__map.html#aab2cbca22c2dc5d0c05812195f9af72e',1,'level_map']]],
   ['set_5fposition_52',['set_position',['../classcursor.html#a5b525cacc3e85bf53c3e96c7aaab444d',1,'cursor']]],
   ['set_5frenderer_53',['set_renderer',['../classmovie__player.html#acaeae14a649f7f3300f7ce30189c4d6d',1,'movie_player']]],
-  ['set_5fscale_5ffactor_54',['set_scale_factor',['../classrender__target.html#a428b64258b49ce1c30cd786008854ddc',1,'render_target::set_scale_factor()'],['../classbitmap__font.html#a9044f290b25c2908881acaa7b843a4ba',1,'bitmap_font::set_scale_factor()'],['../classsprite__render__list.html#a7a0a3b9dbaa79066104b30f01b53eb3f',1,'sprite_render_list::set_scale_factor()']]],
+  ['set_5fscale_5ffactor_54',['set_scale_factor',['../classrender__target.html#a428b64258b49ce1c30cd786008854ddc',1,'render_target::set_scale_factor()'],['../classbitmap__font.html#a9044f290b25c2908881acaa7b843a4ba',1,'bitmap_font::set_scale_factor()'],['../classanimation__base.html#ad6e209aa92a2217d55858e540468c0cd',1,'animation_base::set_scale_factor()']]],
   ['set_5fsecond_55',['set_second',['../classmap__overlay__pair.html#a7ea967ffa9d0c0f777d7c9d499fe7af4',1,'map_overlay_pair']]],
   ['set_5fseparation_56',['set_separation',['../classbitmap__font.html#aec1bd02a6df9767eb10d2c3ebb179076',1,'bitmap_font']]],
   ['set_5fshadow_5foptions_57',['set_shadow_options',['../classfreetype__font.html#a1bd5e3a9c14ffe0cbe15483ddefe25d9',1,'freetype_font']]],
