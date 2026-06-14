@@ -230,9 +230,8 @@ function UIFurnishCorridor:draw(canvas, x, y)
     font:draw(canvas, o.qty, x + 306 * s, y + 20 * s + i * 19 * s, 19 * s, 0)
   end
 
-  canvas:scale(s)
-  self.preview_anim:draw(canvas, math.floor(x / s) + 72, math.floor(y / s) + 57)
-  canvas:scale(1)
+  self.preview_anim:setScaleFactor(s)
+  self.preview_anim:draw(canvas, x + 72 * s, y + 57 * s)
 end
 
 function UIFurnishCorridor:onMouseMove(x, y, dx, dy)

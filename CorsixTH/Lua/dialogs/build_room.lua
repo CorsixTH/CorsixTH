@@ -145,9 +145,8 @@ function UIBuildRoom:draw(canvas, x, y)
   self.white_font:draw(canvas, self.cost_box, x + 163 * s, y + 232 * s)
 
   if self.preview_anim then
-    canvas:scale(s)
-    self.preview_anim:draw(canvas, math.floor(x / s) + 70, math.floor(y / s) + 200)
-    canvas:scale(1)
+    self.preview_anim:setScaleFactor(s)
+    self.preview_anim:draw(canvas, x + 70 * s, y + 200 * s)
   end
 end
 

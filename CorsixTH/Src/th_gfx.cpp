@@ -920,7 +920,8 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
                                    const ::layers& oLayers, int iX, int iY,
                                    uint32_t iFlags,
                                    animation_effect patient_effect,
-                                   size_t patient_effect_offset) const {
+                                   size_t patient_effect_offset,
+                                   int scale_factor) const {
   if (iFrame >= frame_count) {
     return;
   }
@@ -963,20 +964,25 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
         (oElement.layer > 0 || oElement.layer_id > 0) ? patient_effect
                                                       : animation_effect::none;
     size_t effect_ticks = game_ticks + patient_effect_offset;
+    int oex = oElement.x * scale_factor;
+    int oey = oElement.y * scale_factor;
     if (iFlags & thdf_flip_horizontal) {
       int iWidth;
       int iHeight;
       oElement.element_sprite_sheet->get_sprite_size_unchecked(
           oElement.sprite, &iWidth, &iHeight);
+      iWidth *= scale_factor;
+      iHeight *= scale_factor;
 
       oElement.element_sprite_sheet->draw_sprite(
-          pCanvas, oElement.sprite, iX - oElement.x - iWidth, iY + oElement.y,
+          pCanvas, oElement.sprite, iX - oex - iWidth, iY + oey,
           iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), effect_ticks,
-          render_effect);
+          render_effect, scale_factor);
     } else {
       oElement.element_sprite_sheet->draw_sprite(
-          pCanvas, oElement.sprite, iX + oElement.x, iY + oElement.y,
-          iPassOnFlags | oElement.flags, effect_ticks, render_effect);
+          pCanvas, oElement.sprite, iX + oex, iY + oey,
+          iPassOnFlags | oElement.flags, effect_ticks, render_effect,
+          scale_factor);
     }
   }
 }
@@ -1190,8 +1196,8 @@ animation::animation() { patient_effect_offset = rand(); }
 void animation::draw(render_target* canvas, const xy_pair& draw_pos) {
   if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) return;
 
-  int x = draw_pos.x + pixel_offset.x;
-  int y = draw_pos.y + pixel_offset.y;
+  int x = draw_pos.x + pixel_offset.x * scale_factor;
+  int y = draw_pos.y + pixel_offset.y * scale_factor;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
     if (pSounds) pSounds->play_at(sound_to_play, x, y, 0);
@@ -1202,14 +1208,14 @@ void animation::draw(render_target* canvas, const xy_pair& draw_pos) {
       clip_rect rcNew;
       rcNew.y = 0;
       rcNew.h = canvas->get_height();
-      rcNew.x = x + (crop_column - 1) * 32;
-      rcNew.w = 64;
+      rcNew.x = x + (crop_column - 1) * 32 * scale_factor;
+      rcNew.w = 64 * scale_factor;
       render_target::scoped_clip clip(canvas, &rcNew);
       manager->draw_frame(canvas, frame_index, layers, x, y, flags,
-                          patient_effect, patient_effect_offset);
+                          patient_effect, patient_effect_offset, scale_factor);
     } else
       manager->draw_frame(canvas, frame_index, layers, x, y, flags,
-                          patient_effect, patient_effect_offset);
+                          patient_effect, patient_effect_offset, scale_factor);
   }
 }
 
@@ -1223,14 +1229,16 @@ void animation::draw_child(render_target* canvas, const xy_pair& draw_pos,
   else
     parent->get_secondary_marker(&x, &y);
 
-  x += pixel_offset.x + draw_pos.x;
-  y += pixel_offset.y + draw_pos.y;
+  x += pixel_offset.x * scale_factor + draw_pos.x;
+  y += pixel_offset.y * scale_factor + draw_pos.y;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
     if (pSounds) pSounds->play_at(sound_to_play, x, y, 0);
     sound_to_play = 0;
   }
-  if (manager) manager->draw_frame(canvas, frame_index, layers, x, y, flags);
+  if (manager)
+    manager->draw_frame(canvas, frame_index, layers, x, y, flags,
+                        animation_effect::none, 0, scale_factor);
 }
 
 bool animation::hit_test_child(const xy_pair& draw_pos,
@@ -1244,8 +1252,8 @@ void animation::draw_morph(render_target* canvas, const xy_pair& draw_pos) {
 
   if (!manager) return;
 
-  int x = draw_pos.x + pixel_offset.x;
-  int y = draw_pos.y + pixel_offset.y;
+  int x = draw_pos.x + pixel_offset.x * scale_factor;
+  int y = draw_pos.y + pixel_offset.y * scale_factor;
   if (sound_to_play) {
     sound_player* pSounds = sound_player::get_singleton();
     if (pSounds) pSounds->play_at(sound_to_play, x, y, 0);
@@ -1257,18 +1265,22 @@ void animation::draw_morph(render_target* canvas, const xy_pair& draw_pos) {
   // vertical clipping is applied.
   oMorphRect.x = 0;
   oMorphRect.w = canvas->get_width();
-  oMorphRect.y = y + morph_target->pixel_offset.x;
-  oMorphRect.h = morph_target->pixel_offset.y - morph_target->pixel_offset.x;
+  oMorphRect.y = y + morph_target->pixel_offset.x * scale_factor;
+  oMorphRect.h = (morph_target->pixel_offset.y - morph_target->pixel_offset.x) *
+                 scale_factor;
   {
     render_target::scoped_clip clip(canvas, &oMorphRect);
-    manager->draw_frame(canvas, frame_index, layers, x, y, flags);
+    manager->draw_frame(canvas, frame_index, layers, x, y, flags,
+                        animation_effect::none, 0, scale_factor);
   }
-  oMorphRect.y = y + morph_target->pixel_offset.y;
-  oMorphRect.h = morph_target->speed.x - morph_target->pixel_offset.y;
+  oMorphRect.y = y + morph_target->pixel_offset.y * scale_factor;
+  oMorphRect.h =
+      (morph_target->speed.x - morph_target->pixel_offset.y) * scale_factor;
   {
     render_target::scoped_clip clip(canvas, &oMorphRect);
     manager->draw_frame(canvas, morph_target->frame_index, morph_target->layers,
-                        x, y, morph_target->flags);
+                        x, y, morph_target->flags, animation_effect::none, 0,
+                        scale_factor);
   }
 }
 
@@ -1766,8 +1778,6 @@ void sprite_render_list::set_lifetime(int life_time) {
 void sprite_render_list::set_use_intermediate_buffer() {
   use_intermediate_buffer = true;
 }
-
-void sprite_render_list::set_scale_factor(int s) { scale_factor = s; }
 
 void sprite_render_list::append_sprite(size_t spr_num, int xpos, int ypos) {
   sprite s{spr_num, xpos, ypos};

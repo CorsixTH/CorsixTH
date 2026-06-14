@@ -626,6 +626,13 @@ int l_anim_set_patient_effect(lua_State* L) {
   return 1;
 }
 
+template <typename T>
+int l_anim_set_scale_factor(lua_State* L) {
+  T* anim = luaT_testuserdata<T>(L);
+  anim->set_scale_factor(static_cast<int>(luaL_checkinteger(L, 2)));
+  return 0;
+}
+
 int l_srl_set_sheet(lua_State* L) {
   sprite_render_list* pSrl = luaT_testuserdata<sprite_render_list>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -655,12 +662,6 @@ int l_srl_set_lifetime(lua_State* L) {
 int l_srl_set_use_intermediate_buffer(lua_State* L) {
   sprite_render_list* pSrl = luaT_testuserdata<sprite_render_list>(L);
   pSrl->set_use_intermediate_buffer();
-  return 0;
-}
-
-int l_srl_set_scale_factor(lua_State* L) {
-  sprite_render_list* srl = luaT_testuserdata<sprite_render_list>(L);
-  srl->set_scale_factor(static_cast<int>(luaL_checkinteger(L, 2)));
   return 0;
 }
 
@@ -744,6 +745,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_set_speed<animation>, "setSpeed");
     lcb.add_function(l_anim_set_layer<animation>, "setLayer");
     lcb.add_function(l_anim_set_layers_from, "setLayersFrom");
+    lcb.add_function(l_anim_set_scale_factor<animation>, "setScaleFactor");
     lcb.add_function(l_anim_set_hitresult, "setHitTestResult");
     lcb.add_function(l_anim_get_primary_marker, "getPrimaryMarker");
     lcb.add_function(l_anim_get_secondary_marker, "getSecondaryMarker");
@@ -778,7 +780,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_srl_set_lifetime, "setLifetime");
     lcb.add_function(l_srl_set_use_intermediate_buffer,
                      "setUseIntermediateBuffer");
-    lcb.add_function(l_srl_set_scale_factor, "setScaleFactor");
+    lcb.add_function(l_anim_set_scale_factor<sprite_render_list>,
+                     "setScaleFactor");
     lcb.add_function(l_srl_is_dead, "isDead");
     lcb.add_function(l_anim_set_tile<sprite_render_list>, "setTile",
                      lua_metatable::map);
