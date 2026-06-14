@@ -423,6 +423,10 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
   int iNumRows = 0;
   int iHandledRows = 0;
 
+  if (!sMessage || sMessage[0] == '\0') {
+    return oDrawArea;
+  }
+
   // Calculate an index into the cache to use for this piece of text.
   size_t iHash = iMessageLength +
                  (static_cast<size_t>(iMaxRows) << (cache_size_log2 / 8)) +
