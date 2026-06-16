@@ -112,6 +112,9 @@ if(NOT VCPKG_TARGET_TRIPLET)
   find_package(PkgConfig QUIET)
 endif()
 
+find_package(ZLIB REQUIRED)
+target_link_libraries(CorsixTH_lib PRIVATE ZLIB::ZLIB)
+
 # Find SDL
 if(VCPKG_TARGET_TRIPLET)
   find_package(SDL2 CONFIG REQUIRED)
@@ -256,10 +259,6 @@ endif()
 # Find libpng
 find_package(PNG REQUIRED)
 target_link_libraries(CorsixTH_lib PRIVATE PNG::PNG)
-
-# Find zlib
-find_package(ZLIB REQUIRED)
-target_link_libraries(CorsixTH_lib PRIVATE ZLIB::ZLIB)
 
 if(WITH_MIDI_DEVICE)
   find_package(RtMidi)
