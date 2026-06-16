@@ -190,3 +190,9 @@ function UIAdviserHistory:onTick()
   end
 end
 
+function UIAdviserHistory:afterLoad(old, new)
+  if old < 249 then
+    self:close()
+  end
+  Window.afterLoad(self, old, new)
+end
