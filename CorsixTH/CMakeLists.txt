@@ -308,6 +308,11 @@ if(FETCH_UNICODE_FONT)
 endif()
 
 if(WITH_TRACY)
+  # If tracy is compiled on a machine with rocprofiler installed it
+  # automatically adds it as a dependency. Using an optional find_package
+  # before finding Tracy allows that dependency to resolve.
+  find_package(rocprofiler-sdk QUIET)
+
   find_package(Tracy CONFIG REQUIRED)
   target_link_libraries(CorsixTH_lib PUBLIC Tracy::TracyClient)
 endif()
