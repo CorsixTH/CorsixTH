@@ -52,9 +52,9 @@
  <a href="_0_1_window.html#_0_1_window_1add_window">addWindow</a>(<span class="p">window</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <li class="self">
+ <a href="_0_1_u_i_adviser_history.html#_0_1_u_i_adviser_history_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1after_load">UIResizable:afterLoad</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
@@ -311,6 +311,8 @@
  <li><span class="p">key_handlers</span>
  (*)
  </li>
+ <li><span class="p">last_history_count</span>
+ </li>
  <li><span class="p">last_seen_history_top</span>
  </li>
  <li><span class="p">list_table</span>
@@ -399,9 +401,30 @@
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_u_i_adviser_history_1after_load">function UIAdviserHistory:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1after_load">UIResizable:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L193">line 193 of Lua/dialogs/resizables/adviser_history.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_u_i_adviser_history_1create_controls">function UIAdviserHistory:createControls()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L78">line 78 of Lua/dialogs/resizables/adviser_history.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L79">line 79 of Lua/dialogs/resizables/adviser_history.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -416,26 +439,26 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L70">line 70 of Lua/dialogs/resizables/adviser_history.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L71">line 71 of Lua/dialogs/resizables/adviser_history.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_adviser_history_1on_tick">function UIAdviserHistory:onTick()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L173">line 173 of Lua/dialogs/resizables/adviser_history.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L177">line 177 of Lua/dialogs/resizables/adviser_history.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_adviser_history_1scrollbar_moved">function UIAdviserHistory:scrollbarMoved()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L154">line 154 of Lua/dialogs/resizables/adviser_history.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L158">line 158 of Lua/dialogs/resizables/adviser_history.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_adviser_history_1update">function UIAdviserHistory:update()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L146">line 146 of Lua/dialogs/resizables/adviser_history.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/adviser_history.lua#L149">line 149 of Lua/dialogs/resizables/adviser_history.lua</a>.
  </p>
  </div>
 </div>
