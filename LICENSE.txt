@@ -107,7 +107,7 @@ Copyright (C) 2024 SebastianoPistore
 Copryight (C) 2024 jetenergy
 Copyright (C) 2024 Yurii "JurecStrongman"
 Copyright (C) 2024 ShimaKen
-Copyright (C) 2024-2025 "MandrakeHorse"
+Copyright (C) 2024-2026 "MandrakeHorse"
 Copyright (C) 2024-2026 Artem Argus "ARGAMX" Gusakov
 Copyright (C) 2025 Felipe Muñoz Mazur
 Copyright (C) 2025 "pizzadepollo"

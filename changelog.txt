@@ -1,4 +1,26 @@
 -------------------------------------------------------------------------------
+CorsixTH 0.70.0 Release Candidate 1 - Release June 2026
+-------------------------------------------------------------------------------
+# Translations
+* Russian translation updated. Thanks @ARGAMX
+
+# Bug Fixes from Beta 2
+* Fixed regression with in game menu bar and dynamic info panel having
+  unreadable text with unicode fonts when not using direct zoom
+* Fixed a misfire of the new fax sound when a message wasn't to be shown yet in
+  the bottom panel
+* Fixed the adviser history window breaking when deleting messages
+
+# Bug Fixes
+* Fixed a null pointer crash when trying to process an empty string
+* Fixed an issue when closing a window as part of the afterLoad code could skip
+  other windows' afterLoads
+* Fixed a crash in the Machine Menu when updating repair states
+
+# Packager Notes
+* vcpkg registry bumped to latest version
+
+-------------------------------------------------------------------------------
 CorsixTH 0.70.0 Beta 2 - Release June 2026
 -------------------------------------------------------------------------------
 # Changes
