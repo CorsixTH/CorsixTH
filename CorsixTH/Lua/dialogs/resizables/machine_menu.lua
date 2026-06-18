@@ -311,7 +311,10 @@ function UIMachineMenu:update()
       local assigned_handyman
       local repair_call = dispatcher.call_queue[machine]
       if repair_call then
-        assigned_handyman = repair_call["repair"].assigned
+        local repair = repair_call["repair"]
+        if repair and repair.assigned then
+          assigned_handyman = repair.assigned
+        end
       end
 
       local machine_for_list = machineForList(machine, assigned_handyman)
