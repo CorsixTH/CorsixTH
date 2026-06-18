@@ -40,6 +40,7 @@ function UIAdviserHistory:UIAdviserHistory(ui)
   self.resizable = false
 
   self.last_seen_history_top = nil  -- Stores the top message in the adviser's 'message_history' list at the time of the last update
+  self.last_history_count = nil -- Stores the messages count in the adviser's 'message_history' list at the time of the last update
   self.list_table = {}       -- List of controls in this dialog
 
   self.default_button_sound = "selectx.wav"
@@ -84,7 +85,9 @@ function UIAdviserHistory:createControls()
   if rows ~= self.rows_shown then
     local function delete_factory(num)
       return --[[persistable:adviser_history_delete_button]] function()
-        self:deleteButtonClicked(num)
+        local scrollbar_offset = self.scrollbar.value - 1
+        local message_index = scrollbar_offset + num
+        self:deleteButtonClicked(message_index)
       end
     end
     local scrollbarMovedCallback = --[[persistable:adviser_history_scrollbar]] function()
@@ -146,6 +149,7 @@ end
 function UIAdviserHistory:update()
   local adviser_messages = self.ui.adviser.message_history
   self.last_seen_history_top = adviser_messages[1]
+  self.last_history_count = #adviser_messages
 
   self.scrollbar:setRange(1, math.max(1, #adviser_messages), self.rows_shown, self.scrollbar.value)
   self:scrollbarMoved()
@@ -178,9 +182,17 @@ function UIAdviserHistory:onTick()
   -- Checking the length of both lists would fail if a message was moved from the middle to the top due to duplication.
   -- So we just check if the top string between lists has changed to determine if we need to update
   local new_history_top = self.ui.adviser.message_history[1]
+  local new_history_count = #self.ui.adviser.message_history
+  local out_of_date = self.last_seen_history_top ~= new_history_top or self.last_history_count ~= new_history_count
 
-  if self.last_seen_history_top ~= new_history_top then
+  if out_of_date then
     self:update()
   end
 end
 
+function UIAdviserHistory:afterLoad(old, new)
+  if old < 249 then
+    self:close()
+  end
+  Window.afterLoad(self, old, new)
+end

@@ -2151,14 +2151,23 @@ function Window:afterLoad(old, new)
     self.apply_ui_scale = true
   end
 
+  -- If a window or panel is asked to close during an afterLoad cycle we
+  -- can skip entries so use backwards iteration here instead
   if self.windows then
-    for _, w in pairs(self.windows) do
-      w:afterLoad(old, new)
+    for i = #self.windows, 1, -1 do
+      local window = self.windows[i]
+      if window then
+        window:afterLoad(old, new)
+      end
     end
   end
+
   if self.panels then
-    for _, p in pairs(self.panels) do
-      p:afterLoad(old, new)
+    for i = #self.panels, 1, -1 do
+      local panel = self.panels[i]
+      if panel then
+        panel:afterLoad(old, new)
+      end
     end
   end
 end
