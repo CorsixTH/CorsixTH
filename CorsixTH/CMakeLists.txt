@@ -112,6 +112,9 @@ if(NOT VCPKG_TARGET_TRIPLET)
   find_package(PkgConfig QUIET)
 endif()
 
+find_package(ZLIB REQUIRED)
+target_link_libraries(CorsixTH_lib PRIVATE ZLIB::ZLIB)
+
 # Find SDL
 if(VCPKG_TARGET_TRIPLET)
   find_package(SDL2 CONFIG REQUIRED)
@@ -257,10 +260,6 @@ endif()
 find_package(PNG REQUIRED)
 target_link_libraries(CorsixTH_lib PRIVATE PNG::PNG)
 
-# Find zlib
-find_package(ZLIB REQUIRED)
-target_link_libraries(CorsixTH_lib PRIVATE ZLIB::ZLIB)
-
 if(WITH_MIDI_DEVICE)
   find_package(RtMidi)
   if(NOT RtMidi_FOUND AND PkgConfig_FOUND)
@@ -309,6 +308,11 @@ if(FETCH_UNICODE_FONT)
 endif()
 
 if(WITH_TRACY)
+  # If tracy is compiled on a machine with rocprofiler installed it
+  # automatically adds it as a dependency. Using an optional find_package
+  # before finding Tracy allows that dependency to resolve.
+  find_package(rocprofiler-sdk QUIET)
+
   find_package(Tracy CONFIG REQUIRED)
   target_link_libraries(CorsixTH_lib PUBLIC Tracy::TracyClient)
 endif()
