@@ -128,8 +128,12 @@ local function use_staffroom_action_start(action, humanoid)
         humanoid:queueAction(room:createEnterAction(humanoid))
         humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
       else
-        -- Forget last room and send the staff out of the room
-        humanoid.last_room = nil
+        -- Send the staff out of the room
+        if room and room.is_active and
+          (room.room_info.id == "research" or room.room_info.id == "training") then
+          -- Clear the last room if it was training/research as we can't go back here anymore
+          humanoid.last_room = nil
+        end
         humanoid:queueAction(MeanderAction())
       end
     else
