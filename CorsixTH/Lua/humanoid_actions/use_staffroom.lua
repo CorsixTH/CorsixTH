@@ -128,7 +128,8 @@ local function use_staffroom_action_start(action, humanoid)
         humanoid:queueAction(room:createEnterAction(humanoid))
         humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
       else
-        -- Send the staff out of the room
+        -- Forget last room and send the staff out of the room
+        humanoid.last_room = nil
         humanoid:queueAction(MeanderAction())
       end
     else
