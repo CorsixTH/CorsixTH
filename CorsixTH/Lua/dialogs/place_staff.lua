@@ -57,6 +57,7 @@ function UIPlaceStaff:close()
   local play_placement_sound = true
   if employed_staff then
     employed_staff.pickup = false
+    employed_staff.staffroom_needed = nil
     employed_staff.going_to_staffroom = nil
     employed_staff:getCurrentAction().window = nil
     local room = self.world:getRoom(employed_staff.tile_x, employed_staff.tile_y)
