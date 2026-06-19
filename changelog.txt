@@ -10,15 +10,18 @@ CorsixTH 0.70.0 Release Candidate 1 - Release June 2026
 * Fixed a misfire of the new fax sound when a message wasn't to be shown yet in
   the bottom panel
 * Fixed the adviser history window breaking when deleting messages
+* Fixed regression where fully rested staff would not answer calls if unable
+  to return to Training or Research
 
 # Bug Fixes
 * Fixed a null pointer crash when trying to process an empty string
-* Fixed an issue when closing a window as part of the afterLoad code could skip
-  other windows' afterLoads
+* Fixed an issue handling multiple windows when loading save games
 * Fixed a crash in the Machine Menu when updating repair states
+* Fixed fully rested staff trying to return to the staffroom upon entering a
+  room
 
 # Packager Notes
-* vcpkg registry bumped to latest version
+* vcpkg registry bumped
 
 -------------------------------------------------------------------------------
 CorsixTH 0.70.0 Beta 2 - Release June 2026
