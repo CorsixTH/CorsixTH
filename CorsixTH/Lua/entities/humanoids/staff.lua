@@ -722,6 +722,16 @@ function Staff:afterLoad(old, new)
     self.mood_marker = 2
   end
 
+  if old < 250 then
+    -- Staff members picked up and moved to rest didn't reset the
+    -- staffroom_needed flag. If a staff member genuinely needed it they would
+    -- get it back again next tick.
+    if self:getAttribute("fatigue") < self.hospital.policies["goto_staffroom"] then
+      self.staffroom_needed = nil
+      self.going_to_staffroom = nil -- also clear for consistency
+    end
+  end
+
   self:updateDynamicInfo()
   Humanoid.afterLoad(self, old, new)
 end

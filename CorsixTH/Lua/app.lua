@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 249 -- Advisor message history dialog afterLoad close
+local SAVEGAME_VERSION = 250 -- Properly clear staffroom flags on pickup
 
 class "App"
 
