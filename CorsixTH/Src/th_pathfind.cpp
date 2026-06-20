@@ -104,9 +104,13 @@ void abstract_pathfinder::record_neighbour_if_passable(
     return;
   }
 
+  // Maximum tile cost: 31 bit integer at 128x128 tiles (14 bit) yields max
+  // 15 bit costs, or 32767 without overflowing.
+  int neighbour_cost = neighbour_flags.avoid_tile ? 128 : 1;
+
   if (pNeighbour->prev == pNeighbour) {
     pNeighbour->prev = pNode;
-    pNeighbour->cost = pNode->cost + 1;
+    pNeighbour->cost = pNode->cost + neighbour_cost;
     pNeighbour->distance = pNode->distance + 1;
 
     pNeighbour->guess = guess_distance(pNeighbour);
@@ -114,7 +118,7 @@ void abstract_pathfinder::record_neighbour_if_passable(
     parent->push_to_open_heap(pNeighbour);
   } else if (pNode->cost + 1 < pNeighbour->cost) {
     pNeighbour->prev = pNode;
-    pNeighbour->cost = pNode->cost + 1;
+    pNeighbour->cost = pNode->cost + neighbour_cost;
     pNeighbour->distance = pNode->distance + 1;
 
     /* guess doesn't change, and already in the dirty list */
