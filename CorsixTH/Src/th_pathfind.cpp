@@ -312,8 +312,8 @@ bool idle_tile_finder::find_idle_tile(const level_map* pMap, int iStartX,
     map_tile_flags flags = node_tile->flags;
 
     bool correct_parcel = parcelId == 0 || parcelId == node_tile->iParcelId;
-    if (!flags.do_not_idle && !flags.avoid_tile && flags.passable
-        && flags.hospital && correct_parcel) {
+    if (!flags.do_not_idle && !flags.avoid_tile && flags.passable &&
+        flags.hospital && correct_parcel) {
       // Try to delay returning an idle tile until we find the Nth tile.
       if (iN == 0) {
         parent->destination = pNode;
@@ -666,7 +666,7 @@ void pathfinder::depersist(lua_persist_reader* pReader) {
     }
     path_node* pPrevNode = &nodes[iY * iWidth + iX];
     pNode->distance = iLength - 1 - i;
-    pNode->cost = iLength - 1 - i; // Can be too optimistic.
+    pNode->cost = iLength - 1 - i;  // Can be too optimistic.
     pNode->prev = pPrevNode;
     dirty_node_list[dirty_node_count++] = pNode;
     pNode = pPrevNode;

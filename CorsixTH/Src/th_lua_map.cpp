@@ -1021,7 +1021,7 @@ int l_path_distance(lua_State* L) {
   int start_y = static_cast<int>(luaL_checkinteger(L, 3) - 1);
   int end_x = static_cast<int>(luaL_checkinteger(L, 4) - 1);
   int end_y = static_cast<int>(luaL_checkinteger(L, 5) - 1);
-  bool found = pPathfinder->find_path( nullptr, start_x, start_y, end_x, end_y);
+  bool found = pPathfinder->find_path(nullptr, start_x, start_y, end_x, end_y);
 
   if (found) {
     lua_pushinteger(L, pPathfinder->get_path_length());
@@ -1060,8 +1060,8 @@ int l_path_idle(lua_State* L) {
   int n = static_cast<int>(luaL_optinteger(L, 4, 0));
   int opt_parcel = static_cast<int>(luaL_optinteger(L, 5, 0));
 
-  bool found = pPathfinder->find_idle_tile(nullptr, queue_x, queue_y, n,
-      opt_parcel);
+  bool found =
+      pPathfinder->find_idle_tile(nullptr, queue_x, queue_y, n, opt_parcel);
   if (!found) {
     return 0;
   }
@@ -1084,7 +1084,8 @@ int l_path_visit(lua_State* L) {
   object_type obj_type = static_cast<object_type>(obj_number);
   int max_distance = static_cast<int>(luaL_checkinteger(L, 5));
   bool found = pPathfinder->visit_objects(nullptr, start_x, start_y, obj_type,
-      max_distance, L, 6, obj_number == 0 ? true : false);
+                                          max_distance, L, 6,
+                                          obj_number == 0 ? true : false);
 
   lua_pushboolean(L, found);
   return 1;
