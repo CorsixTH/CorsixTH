@@ -500,12 +500,12 @@ diseases = {
 }
 
 confirmation = {
-  quit = "Vous avez choisi Quitter. Voulez-vous vraiment quitter le jeu ?",
-  return_to_blueprint = "Êtes-vous sûr de vouloir revenir au mode Tracé ?",
-  restart_level = "Êtes-vous sûr de vouloir relancer ce niveau ?",
-  overwrite_save = "Il y a déjà une partie sauvegardée ici. Êtes-vous sûr de vouloir l'écraser ?",
+  quit = "Vous avez choisi Quitter. Voulez-vous vraiment quitter la partie ?",
+  return_to_blueprint = "Voulez-vous vraiment revenir au mode Tracé ?",
+  restart_level = "Voulez-vous vraiment relancer ce niveau ?",
+  overwrite_save = "Il y a déjà une partie sauvegardée ici. Voulez-vous vraiment l'écraser ?",
   delete_room = "Voulez-vous vraiment détruire cette salle ?",
-  sack_staff = "Êtes-vous sûr de vouloir licencier ?",
+  sack_staff = "Voulez-vous vraiment licencier ce membre du personnel ?",
 }
 
 -- The originals of these strings contain one space too much
@@ -543,7 +543,7 @@ tooltip.research_policy.research_progress = "Progrès vers la prochaine découve
 
 menu_file = {
   load = " (%1%) CHARGER   ",
-  save = " (%1%) ENREGISTRER   ",
+  save = " (%1%) SAUVEGARDER   ",
   restart = " (%1%) RELANCER",
   quit = " (%1%) QUITTER   "
 }
@@ -561,10 +561,10 @@ menu_options = {
 
 menu_options_game_speed = {
   pause = "  (%1%) PAUSE  ",
-  slowest = "  (%1%) AU PLUS LENT  ",
-  slower = "  (%1%) PLUS LENT  ",
-  normal = "  (%1%) NORMAL  ",
-  max_speed = "  (%1%) VITESSE MAXI  ",
+  slowest = "  (%1%) LA PLUS LENTE  ",
+  slower = "  (%1%) PLUS LENTE  ",
+  normal = "  (%1%) NORMALE  ",
+  max_speed = "  (%1%) VITESSE MAX  ",
   and_then_some_more = "  (%1%) ET ENCORE PLUS  "
 }
 
@@ -585,7 +585,7 @@ menu_charts = {
   statement = "  (%1%) DECLARATION  ",
   staff_listing = "  (%1%) LISTE DU PERSONNEL  ",
   town_map = "  (%1%) CARTE DE LA VILLE  ",
-  casebook = "  (%1%) MALLETTE  ",
+  casebook = "  (%1%) DOSSIER MEDICAL  ",
   research = "  (%1%) RECHERCHE  ",
   status = "  (%1%) STATUTS  ",
   graphs = "  (%1%) GRAPHIQUES  ",
@@ -770,12 +770,13 @@ tooltip.main_menu = {
   options = "Modifier quelques paramètres",
   exit = "Non, non, SVP, ne quittez pas !",
   map_edit = "Créer une carte personnalisée",
-  custom_campaign = "Jouer une campagne créée par la communauté"
+  custom_campaign = "Jouer une campagne créée par la communauté",
+  quit = "Vous êtes sur le point de quitter CorsixTH. Voulez-vous vraiment faire cela ?",
 }
 
 -- Load game window
 load_game_window = {
-  caption = "Charger une partie",
+  caption = "Charger une partie (%1%)",
   load_button = "Charger",
 }
 
@@ -811,8 +812,10 @@ tooltip.custom_campaign_window = {
 
 -- Save game window
 save_game_window = {
-  caption = "Enregistrer la partie",
-  new_save_game = "Nouvelle sauvegarde"
+  caption = "Sauvegarder la partie (%1%)",
+  new_save_game = "Nouvelle sauvegarde",
+  save_button = "Sauvegarder",
+  missing_filename = "Veuillez indiquer un nom pour la nouvelle sauvegarde ou sélectionner la sauvegarde à écraser.",
 }
 
 tooltip.save_game_window = {
@@ -822,12 +825,19 @@ tooltip.save_game_window = {
 
 save_map_window = {
   caption = "Sauvegarder la carte (%1%)",
-  new_map = "Nouvelle carte"
+  new_map = "Nouvelle carte",
+  save_button = "Sauvegarder",
+  missing_filename = "Veuillez indiquer un nom pour le fichier de carte ou sélectionner le fichier de carte à écraser.",
 }
 
 tooltip.save_map_window = {
   map = "Ecraser la carte %s",
   new_map = "Entrez le nom pour une sauvegarde de la carte"
+}
+
+load_map_window = {
+  caption = "Charger la carte (%1%)",
+  load_button = "Charger",
 }
 
 -- Menu list window
@@ -925,7 +935,7 @@ tooltip.options_window = {
   language_dropdown_no_font = "Sélectionnez une police d'écriture dans les paramètres pour activer ce langage",
   right_mouse_scrolling = "Activer le bouton qui est utilisé pour faire défiler la carte",
   sound = "Modifier les réglages audio",
-  autosave_frequency = "Définir la fréquence des sauvegardes automatiques.",  
+  autosave_frequency = "Définir la fréquence des sauvegardes automatiques.",
 }
 
 audio_window = {
@@ -987,16 +997,16 @@ customise_window = {
 tooltip.customise_window = {
   movies = "Sélectionnez si les cinématiques doivent être joués.",
   intro = "Passer la cinématique d'introduction lorsque vous démarrez le jeu. Le contrôle des cinématiques doit être activé si vous jouez la cinématique d'introduction à chaque fois que vous chargez CorsixTH",
-  paused = "Dans Theme Hospital, le joueur ne pouvait utiliser le menu principal que si le jeu était en pause. Il s'agit également du paramètre par défaut dans CorsixTH, mais en l'activant, tout est permis pendant que le jeu est en pause",
+  paused = "Dans Theme Hospital, le joueur ne pouvait utiliser le menu supérieur que si le jeu était en pause. Il s'agit également du paramètre par défaut dans CorsixTH, mais activant cette option, il est possible de construire des salles ou prendre des objets lorsque le jeu est en pause",
   volume = "Si la touche de réduction du volume ouvre également le journal de médecine, activer cette option pour modifier le raccourci des dossiers médicaux à Maj + C",
   aliens = "Comme il y a des animations appropriées, nous avons fait de sorte que les patients avec l'ADN extraterrestre montrent seulement comme des situations d'urgence. Désactivez cette option pour obtenir cas de l'ADN extraterrestre visites régulières",
   fractured_bones = "En raison de la faible qualité de l'animation, il n'y a pas de patientes avec des fractures. Désactivez cette option pour recevoir des femmes avec des fractures.",
   average_contents = "Si vous voulez que le jeu se rappelle des articles supplémentaires que vous avez tendance à normalement magasiner pour une nouvelle salle, activer cette option",
-  remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option",  
+  remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option",
   machine_menu_button = "Si vous désirez afficher un bouton pour le menu des machines dans le panneau inférieur, activez cette option. Gardez à l'esprit que ce bouton ne sera pas disponible sur des petites résolutions d'écran.",
   enable_screen_shake = "Les tremblements de terre feront vibrer tout l'écran. Si vous préférez que l'écran reste fixe, désactivez cette option",
   enable_announcer_subtitles = "Si vous souhaitez afficher des sous-titres pour les annonces de l'hôpital, activez cette option",
-  back = "Fermer ce menu et revenir au menu d'options",  
+  back = "Fermer ce menu et revenir au menu d'options",
 }
 
 folders_window = {
@@ -1113,11 +1123,13 @@ errors = {
 
 -- Confirmation dialog
 confirmation = {
-  needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Êtes-vous sûr de vouloir faire cela ?",
+  needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Voulez-vous vraiment faire cela ?",
   abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
-  maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Êtes-vous sûr de vouloir continuer?",
+  maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Voulez-vous vraiment continuer ?",
   remove_destroyed_room = "Souhaitez-vous supprimer la salle pour %d $ ?",
   replace_machine_extra_info = "La nouvelle machine aura une puissance de %d (actuellement %d).",
+  restart_mapeditor = "Voulez-vous vraiment relancer l'éditeur de cartes ?",
+  quit_mapeditor = "Voulez-vous vraiment quitter l'éditeur de cartes ?",
   very_old_save = "Il y a eu de nombreuses mises à jour du jeu depuis que vous avez commencé. Pour être sûr que toutes les fonctionnalités fonctionnent comme prévu, voudriez-vous recommencer ce niveau maintenant ?//"..
   "Votre ancienne sauvegarde ne sera pas supprimée à moins que vous ne l'écrasiez."
 }
@@ -1209,7 +1221,9 @@ cheats_window = {
     toggle_epidemic = "Active la possibilité d'épidémies",
     show_infected = "Montrer les icônes des infectés",
     toggle_earthquake = "Activer les tremblements de terre",
-    max_reputation = "Réputation de l'hôpital au maximum"
+    max_reputation = "Réputation de l'hôpital au maximum",
+    repair_all_machines = "Réparer toutes les machines",
+    toggle_invulnerable_machines = "Machines inusables on/off",
   },
   close = "Fermer"
 }
@@ -1232,10 +1246,12 @@ tooltip.cheats_window = {
     increase_prices = "Augmenter tous les prix de 50% (max. 200%)",
     decrease_prices = "Diminuer tous les prix de 50% (min. 50%)",
     reset_death_count = "Remettre à zéro le nombre de décès à l'hôpital",
-    toggle_epidemic = "Active la possibilité d'épidémies",
-    show_infected = "Montrer/cacher les icônes des infectés pour les épidémies découvertes et actives",
-    toggle_earthquake = "Activer les tremblements de terre",
-    max_reputation = "Mettre la réputation de l'hôpital au maximum"
+    toggle_epidemic = "Activer/Désactiver la possibilité d'épidémies",
+    show_infected = "Montrer/Cacher les icônes des infectés pour les épidémies découvertes et actives",
+    toggle_earthquake = "Activer/Désactiver les tremblements de terre",
+    max_reputation = "Augmenter la réputation de l'hôpital au maximum",
+    repair_all_machines = "Réparer toutes les machines dans l'hôpital",
+    toggle_invulnerable_machines = "Activer/Désactiver l'usure des machines lors de leur utilisation",
   }
 }
 
@@ -1272,6 +1288,7 @@ tooltip.calls_dispatcher = {
 machine_menu = {
   percentage = "%d%",
   machine = "Machine",
+  status = "Statut",
   remaining_strength = "Restant",
   total_strength = "Résistance",
   ratio = "Ratio",
@@ -1281,18 +1298,19 @@ machine_menu = {
 tooltip.machine_menu = {
   sort = "Cliquer pour trier selon cette valeur.",
   machine = "Liste des machines – Cliquer pour ouvrir la fenêtre de la machine et se rendre à son emplacement.",
-  smoking = "Cette case est cochée si la machine risque d’exploser. Cliquer pour acheter une nouvelle machine.",
-  assigned = "Cette case est cochée si un agent d’entretien est affecté à la réparation de la machine correspondante. Cliquer pour afficher l’agent assigné.",
+  smoking = "Cette case est cochée si la machine risque d'exploser. Cliquer pour acheter une nouvelle machine.",
+  assigned = "Cette case est cochée si un agent d'entretien est affecté à la réparation de la machine correspondante. Cliquer pour afficher l'agent assigné.",
   remaining_strength = "Cette valeur indique la résistance restante de la machine.",
   total_strength = "Cette valeur indique la résistance totale de la machine.",
   ratio = "Cette valeur indique le rapport entre la résistance restante et la résistance totale.",
   header = {
     smoking = "Indicateur de danger",
-    assigned = "Indicateur d’affectation à la réparation",
+    assigned = "Indicateur d'affectation à la réparation",
     machine = "Nom de la machine",
     remaining_strength = "Résistance restante des machines.",
     total_strength = "Résistance totale des machines.",
     ratio = "Pourcentage de résistance restante par rapport à la résistance totale des machines.",
+    status = "Statuts des machines.",
   },
   close = "Fermer la fenêtre de la liste des machines.",
 }
@@ -1303,7 +1321,7 @@ adviser_history = {
 }
 
 tooltip.adviser_history = {
-  delete_message = "cliquer pour supprimer ce message",
+  delete_message = "Cliquer pour supprimer ce message",
   message = "Liste des messages du conseiller - Les messages les plus récents sont en tête de liste",
   header = {
     message = "Messages du conseiller",
@@ -1328,8 +1346,8 @@ tooltip.update_window = {
 
 map_editor_window = {
   pages = {
-    inside = "À l'intérieur",
-    outside = "À l'extérieur",
+    inside = "Intérieur",
+    outside = "Extérieur",
     foliage = "Feuillage",
     hedgerow = "Haie",
     pond = "Étang",
@@ -1337,7 +1355,7 @@ map_editor_window = {
     north_wall = "Mur nord",
     west_wall = "Mur ouest",
     helipad = "Héliport",
-    delete_wall = "Supprimer des murs",
+    delete_wall = "Suppr. des murs",
     parcel = "Parcelle %d",
     parcel_0 = "Parcelle 0",
     parcel_1 = "Parcelle 1",
@@ -1400,20 +1418,20 @@ hotkey_window = {
   global_stop_movie_alt = "Arrêter le film",
   global_window_close_alt = "Fermer la fenêtre",
   ingame_gamespeed_max = "Max",
-  ingame_gamespeed_normal = "Normal",
-  ingame_gamespeed_slower = "Plus lent",
-  ingame_gamespeed_slowest = "Le plus lent",
+  ingame_gamespeed_normal = "Normale",
+  ingame_gamespeed_slower = "Plus lente",
+  ingame_gamespeed_slowest = "La plus lente",
   ingame_gamespeed_speedup = "Accélérer",
-  ingame_gamespeed_thensome = "Ensuite plus encore",
+  ingame_gamespeed_thensome = "Et encore plus",
   ingame_jukebox = "Jukebox",
-  ingame_loadMenu = "Charger le jeu",
+  ingame_loadMenu = "Charger une partie",
   ingame_openFirstMessage = "Message du niveau",
   ingame_panel_bankManager = "Gestionnaire de la banque",
   ingame_panel_bankStats = "Statistiques de la banque",
   ingame_panel_buildRoom = "Construire une salle",
   ingame_panel_casebook = "Dossier médical",
-  ingame_panel_casebook_alt = "Casebook 2",
-  ingame_panel_casebook_alt02 = "Casebook 3",
+  ingame_panel_casebook_alt = "Dossier médical 2",
+  ingame_panel_casebook_alt02 = "Dossier médical 3",
   ingame_panel_charts = "Graphiques",
   ingame_panel_editRoom = "Éditer la salle",
   ingame_panel_furnishCorridor = "Meubler le couloir",
@@ -1427,10 +1445,12 @@ hotkey_window = {
   ingame_panel_townMap = "Carte de la ville",
   ingame_panel_machineMenu = "Menu des machines",
   ingame_panel_adviserHistory = "Récapitulatif du conseiller",
-  ingame_patient_gohome = "Renvoyer chez lui",
+  ingame_toggleTransparent = "Transparent on-off",
+  ingame_sellPickedUpItem = "Vendre l'objet sélectionné",
+  ingame_patient_gohome = "Renvoyer au domicile",
   ingame_pause = "Pause",
-  ingame_poopLog = "Journal des incidents",
-  ingame_poopStrings = "Vider les chaînes",
+  ingame_poopLog = "Journal des événements",
+  ingame_poopStrings = "Extraire la traduction",
   ingame_quickLoad = "Chargement rapide",
   ingame_quickSave = "Sauvegarde rapide",
   ingame_quitLevel = "Quitter le niveau",
@@ -1447,7 +1467,7 @@ hotkey_window = {
   ingame_reset_zoom = "Réinitialiser le zoom",
   ingame_restartLevel = "Redémarrer le niveau",
   ingame_rotateobject = "Faire pivoter l'objet",
-  ingame_saveMenu = "Sauvegarder le jeu",
+  ingame_saveMenu = "Sauvegarder une partie",
   ingame_scroll_down = "Défiler vers le bas",
   ingame_scroll_left = "Défilement gauche",
   ingame_scroll_right = "Défilement droite",
