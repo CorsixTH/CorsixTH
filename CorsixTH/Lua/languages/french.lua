@@ -554,8 +554,8 @@ menu_options = {
   edge_scrolling = "  DEFILEMENT PAR BORD  ",
   adviser_disabled = "  (%1%) ASSISTANT  ",
   warmth_colors = "  COULEURS CHAUDES  ",
-  wage_increase = " AUGMENTATION DE SALAIRE ",
-  twentyfour_hour_clock = " HORLOGE 24 HEURES ",
+  wage_increase = "  AUGMENTATION DE SALAIRE  ",
+  twentyfour_hour_clock = "  HORLOGE 24 HEURES  ",
   capture_mouse = "  CAPTURER LE CURSEUR  "
 }
 
@@ -589,8 +589,9 @@ menu_charts = {
   research = "  (%1%) RECHERCHE  ",
   status = "  (%1%) STATUTS  ",
   graphs = "  (%1%) GRAPHIQUES  ",
-  policy = "  (%1%) POLITIQUE ",
+  policy = "  (%1%) POLITIQUE  ",
   machine_menu  = "  (%1%) MENU DES MACHINES",
+  adviser_history = "  (%1%) RECAP. CONSEILLER ",
 }
 
 tooltip.toolbar = {
@@ -852,11 +853,11 @@ options_window = {
   caption = "Paramètres",
   capture_mouse = "Capture de la souris",
   change_resolution = "Changer la résolution",
-  check_for_updates = "Vérifier les mises à jour",
+  check_for_updates = "Vérifier mises à jour",
   custom_resolution = "Personnaliser...",
   customise = "Personnaliser",
   folder = "Dossier",
-  fullscreen = "Plein Écran",
+  fullscreen = "Plein écran",
   height = "Hauteur",
   hotkey = "Touches de raccourci",
   language = "Langue du jeu",
@@ -866,12 +867,27 @@ options_window = {
   option_on = "Activer",
   resolution = "Résolution",
   scrollspeed = "Vitesse de défilement",
-  shift_scrollspeed = "Vitesse de défilement avec Maj",
+  shift_scrollspeed = "Vit. de défil. + Maj",
   width = "Largeur",
   zoom_speed = "Vitesse de zoom",
   right_mouse_scrolling = "Défilement Souris",
   right_mouse_scrolling_option_middle = "Bouton Milieu",
   right_mouse_scrolling_option_right = "Bouton Droit",
+  scale_ui = "Échelle d'interface",
+  sound = "Son",
+  autosave_frequency = "Fréquence sauv. auto.",
+}
+
+autosave_frequency = {
+    monthly = "Mensuelle",
+    weekly = "Hebdomadaire",
+    daily = "Quotidienne",
+}
+
+tooltip.autosave_frequency = {
+    monthly = "Sauvegarder une fois par mois, le premier jour de chaque mois. Un total de 12 sauvegardes sur une période d'un an.",
+    weekly = "Sauvegarder une fois par semaine le 1er, 7ème, 14ème, 21ème, et 28ème jour de chaque mois. Un total de 60 sauvegardes sur une période d'un an.",
+    daily = "Sauvegarder une fois par jour au début de chaque journée en jeu. Un total de 365 sauvegardes sur une période d'un an. Veuillez noter que qu'une sauvegarde classique peut avoir une poids de 1 Mo ou plus, votre dossier Autosaves pouvant donc peser 300-500 Mo.",
 }
 
 tooltip.options_window = {
@@ -879,6 +895,10 @@ tooltip.options_window = {
   fullscreen_button = "Basculer en mode plein écran/fenêtré",
   resolution = "La résolution vidéo pour le jeu",
   select_resolution = "Sélectionner une nouvelle résolution",
+  resolution_unavailable = "Résolution indisponible à cette échelle d'interface",
+  scale_ui = "Mise à l'échelle de l'interface. Seules les options d'échelle applicables à votre écran sont disponibles. Augmentez la résolution pour plus d'options.",
+  select_ui_scale = "Sélectionner une échelle d'interface",
+  ui_scale_unavailable = "Échelle d'interface indisponible, veuillez d'abord choisir une résolution plus élevée.",
   width = "Entrez la largeur désirée",
   height = "Entrez la hauteur désirée",
   change_resolution = "Changer la résolution pour les dimensions entrées à gauche",
@@ -890,9 +910,8 @@ tooltip.options_window = {
   select_language = "Sélectionner la langue du jeu",
   folder_button = "Dossier des paramètres",
   customise_button = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
-
   apply_shift_scrollspeed = "Appliquer la vitesse de défilement en mode Maj.",
-  shift_scrollspeed = "Définir la vitesse de défilement lorsque la touche Maj est enfoncée. De 1 (la plus lente) à 10 (la plus rapide). La valeur par  défaut est 4.",
+  shift_scrollspeed = "Définir la vitesse de défilement lorsque la touche Maj est enfoncée. De 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 4.",
   hotkey = "Modifier les touches de raccourci du clavier.",
   check_for_updates = "Choisir si le jeu doit rechercher des mises à jour au démarrage.",
   zoom_speed = "Définir la vitesse de zoom de la caméra de 10 (la plus lente) à 1000 (la plus rapide). La valeur par défaut est 80.",
@@ -905,47 +924,79 @@ tooltip.options_window = {
   capture_mouse = "Cliquez pour activer la capture du curseur dans la fenêtre du jeu.",
   language_dropdown_no_font = "Sélectionnez une police d'écriture dans les paramètres pour activer ce langage",
   right_mouse_scrolling = "Activer le bouton qui est utilisé pour faire défiler la carte",
+  sound = "Modifier les réglages audio",
+  autosave_frequency = "Définir la fréquence des sauvegardes automatiques.",  
 }
 
 audio_window = {
-  audio = "Audio Global",
+  caption = "Paramètres sonores",
+  audio = "Audio global",
+  sound_volume = "Volume des sons",
+  announcement_volume = "Volume des annonces",
+  music_volume = "Volume de la musique",
+  midi_api = "API MIDI",
+  midi_port = "Port MIDI",
+  soundfont = "SoundFont",
+  default_midi_api = "Défaut (Software)",
+  default_midi_port = "Défaut",
   jukebox = "Jukebox",
   back = "Précédent",
+  soundfont_location_caption = "Choisir la soundfont (%1%)",
 }
 
 tooltip.audio_window = {
   audio_button = "Activer ou désactiver le système audio dans le jeu",
   audio_toggle = "Activer ou désactiver",
-  jukebox = "Ouvrir le Jukebox pour changer la musique"
+  sound_volume = "Volume des effets sonores",
+  announcement_volume = "Volume des annonces",
+  music_volume = "Volume de la musique",
+  midi_api = "L'API utilisée pour la musique en jeu. Non disponible avec le dossier de musiques personnalisées.",
+  midi_port = "Port système à utiliser pour la musique en jeu.",
+  soundfont_location = "Emplacement du fichier Soundfont pour jouer la musique MIDI. Une Soundfont par défaut est utilisée si aucune n'est spécifiée.",
+  browse = "Parcourir les dossiers",
+  browse_soundfont = "Rechercher un autre fichier Soundfont (sf2, or sf3) ( Emplacement actuel: %1% ) ",
+  no_soundfont_specified = "Utiliser la soundfont par défaut",
+  jukebox = "Ouvrir le Jukebox pour changer la musique",
+  back = "Fermer la fenêtre",
 }
 
 customise_window = {
-  caption = "Paramètres Supplémentaires",
+  caption = "Paramètres Additionnels",
   option_on = "Activer",
   option_off = "Désactiver",
   back = "Retour",
   movies = "Contrôle des cinématiques",
-  intro = "Jouer la cinématique d'intro",
+  intro = "Jouer la cinémat. d'intro",
   paused = "Construction en pause",
-  volume = "Touche de raccourci pour diminuer le volume",
+  volume = "Raccourci baisse du volume",
   aliens = "Extraterrestres",
   fractured_bones = "Fractures",
   average_contents = "Achats mémorisés",
-  remove_destroyed_rooms = "Supprimer les salles détruites",
-  machine_menu_button = "Bouton du menu des machines",
+  remove_destroyed_rooms = "Suppr. les salles détruites",
+  machine_menu_button = "Bouton menu des machines",
+  every_month = "Chaque mois",
+  emergency_only = "Urgence seulement",
+  every_day = "Chaque jour",
+  enable_announcer_subtitles = "Sous-titres des annonces",
+  male_only = "Homme seulement",
+  regular_patients = "Patients normaux",
+  enable_screen_shake = "Vibration de l'écran",
+  male_and_female = "Homme et Femme",
 }
 
 tooltip.customise_window = {
   movies = "Sélectionnez si les cinématiques doivent être joués.",
   intro = "Passer la cinématique d'introduction lorsque vous démarrez le jeu. Le contrôle des cinématiques doit être activé si vous jouez la cinématique d'introduction à chaque fois que vous chargez CorsixTH",
-  paused = "Dans Theme Hospital le joueur ne sera autorisé à utiliser le menu principal que si le jeu est en pause. C'est le paramètre par défaut dans CorsixTH aussi, mais en l'activant tout est permis pendant que le jeu est en pause",
+  paused = "Dans Theme Hospital, le joueur ne pouvait utiliser le menu principal que si le jeu était en pause. Il s'agit également du paramètre par défaut dans CorsixTH, mais en l'activant, tout est permis pendant que le jeu est en pause",
   volume = "Si la touche de réduction du volume ouvre également le journal de médecine, activer cette option pour modifier le raccourci des dossiers médicaux à Maj + C",
   aliens = "Comme il y a des animations appropriées, nous avons fait de sorte que les patients avec l'ADN extraterrestre montrent seulement comme des situations d'urgence. Désactivez cette option pour obtenir cas de l'ADN extraterrestre visites régulières",
-  fractured_bones = "En raison de la qualité faible de l'animation il n'y a pas de patientes avec des fractures. Désactivez cette option si vous désirez avoir des femmes avec des fractures.",
+  fractured_bones = "En raison de la faible qualité de l'animation, il n'y a pas de patientes avec des fractures. Désactivez cette option pour recevoir des femmes avec des fractures.",
   average_contents = "Si vous voulez que le jeu se rappelle des articles supplémentaires que vous avez tendance à normalement magasiner pour une nouvelle salle, activer cette option",
-  back = "Fermer ce menu et revenir au menu d'options",
-  remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option",
-  machine_menu_button = "Si vous voulez avoir un bouton pour le menu des machines dans le panneau inférieur, activez cette option. Gardez à l'esprit que ce bouton ne sera pas disponible sur des petites résolutions d'écran.",
+  remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option",  
+  machine_menu_button = "Si vous désirez afficher un bouton pour le menu des machines dans le panneau inférieur, activez cette option. Gardez à l'esprit que ce bouton ne sera pas disponible sur des petites résolutions d'écran.",
+  enable_screen_shake = "Les tremblements de terre feront vibrer tout l'écran. Si vous préférez que l'écran reste fixe, désactivez cette option",
+  enable_announcer_subtitles = "Si vous souhaitez afficher des sous-titres pour les annonces de l'hôpital, activez cette option",
+  back = "Fermer ce menu et revenir au menu d'options",  
 }
 
 folders_window = {
@@ -1099,14 +1150,15 @@ totd_window = {
     "Les machines telles que le Gonflage ont besoin de maintenance. Embauchez un ou deux agents de maintenance pour réparer vos machines, ou vous risquerez d'avoir des blessés parmi le personnel ou les patients.",
     "Après un certain temps, vos employés seront fatigués. Pensez à construire une salle de repos où ils pourront se détendre.",
     "Placez suffisamment de radiateurs pour garder vos employés et patients au chaud, ou ils deviendront mécontents. Utilisez la carte de la ville pour localiser les endroits de votre hôpital qui nécessitent plus de chauffage.",
-    "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostiques. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostiques.",
+    "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostics. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostics.",
     "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications particulières (chirurgien, psychiatre ou chercheur), il transférera ses connaissances à ses élèves.",
     "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
     "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
-    "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
-    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé à coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre serveur Discord, Sub-Reddit or serveur Matrix. Les liens sont sur notre site internet (CorsixTH.com).",
+    "Vous avez choisi une autre langue que l'anglais, mais des textes en anglais s'affichent un peu partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
+    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé pour coder, traduire ou créer des graphismes pour CorsixTH ? Contactez-nous sur notre serveur Discord, Sub-Reddit ou serveur Matrix. Les liens sont sur notre site internet (CorsixTH.com).",
+    "Si vous rencontrez un bug, n'hésitez pas à nous le signaler à cette adresse : th-issues.corsix.org",
     "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de statuts pour voir votre progression dans les objectifs du niveau.",
-    "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils en bas.",
+    "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils inférieure.",
     "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.",
     "Cliquez sur la porte d'une pièce pour visualiser sa file d'attente. Vous pouvez faire des réglages très utiles ici, comme réorganiser la file d'attente ou envoyer un patient vers une autre pièce.",
     "Le personnel mécontent vous demandera des augmentations de salaires fréquemment. Assurez-vous de leur offrir un environnement de travail confortable pour éviter cela.",
@@ -1114,7 +1166,6 @@ totd_window = {
     "Vous pouvez interrompre le processus de diagnostic d'un patient et proposer un traitement, si vous avez déjà rencontré la maladie. Notez que cela peut accroître le risque d'erreur de traitement, et provoquer la mort du patient.",
     "Les urgences peuvent être une bonne source de revenus additionnels, à condition que vous ayez les capacités suffisantes pour traiter les patients à temps.",
     "Saviez-vous que vous pouvez affecter des Agents d'entretien à des parcelles spécifiques ? Cliquez simplement sur le texte 'Toutes les parcelles' dans leur profil du personnel pour les parcourir !",
-    "Saviez-vous que vous pouvez attribuer des Agents de Maintenance a bouts de terrain spécifiques ? Il suffit de cliquer sur la mention Tous bouts de terrain sur son profil d'employé pour faire le tour!"
   },
   previous = "Astuce précédente",
   next = "Astuce suivante"
@@ -1188,22 +1239,12 @@ tooltip.cheats_window = {
   }
 }
 
-tooltip.hotkey_window = {
-  button_accept = "Accepter et enregistrer les assignations des touches de raccourci",
-  button_recallPosKeys = "Ouvrir la fenêtre pour définir les touches pour stocker et rappeler les positions de la caméra",
-  button_defaults = "Réinitialiser toutes les touches de raccourci aux valeurs par défaut du programme",
-  button_cancel = "Annuler l'assignation et revenir au menu des options",
-  button_back_02 = "Retourner à la fenêtre principale des touches de raccourci. Les touches de raccourci modifiées dans cette fenêtre ,peuvent y être acceptées",
-  caption_panels = "Ouvrir la fenêtre pour attribuer les touches des panneaux",
-  button_gameSpeedKeys = "Ouvrir la fenêtre pour définir les touches pour contrôler la vitesse du jeu"
-}
-
 -- Introduction Texts
 introduction_texts = {
   demo = "Bienvenue dans l'hôpital de démonstration !// " .. "Malheureusement, la version démo ne contient que ce niveau. Malgré tout, il y a assez à faire ici pour vous occuper un moment !" .. "Vous allez rencontrer différentes maladies qui nécessitent des salles pour les soigner. De temps en temps, des urgences peuvent se produire. Et vous aurez besoin d'une salle de recherche pour trouver des nouvelles salles. " ..
       "Votre but est de gagner 100,000$, de faire monter la valeur de votre hôpital à 70,000$ et d'obtenir une réputation de 700, tout en ayant soigné au moins 75% de vos patients. " .. "Veillez à ce que votre réputation ne tombe pas en dessous de 300 et de ne pas tuer plus de 40% de vos patients, ou vous perdrez.//" .. "Bonne chance !",
   level1 = "Bienvenue dans votre premier hôpital !//Démarrez l'activité en installant un bureau de réception et " .. "en construisant un cabinet de médecine générale. Embauchez une réceptionniste et un médecin. Il vous " .. "suffit d'attendre des admissions. Il serait bon de construire un cabinet de psychiatrie et d'embaucher " .. "un médecin formé dans ce domaine. Une pharmacie et une infirmière sont également indispensables pour soigner " ..
-      "les patients. Attention aux cas d'encéphalantiasis : une salle de gonflage suffit pour traiter cette maladie. " .. "Il vous faut soigner 10 personnes et vous assurer que votre réputation ne tombe pas en-dessous de 200",
+      "les patients. Attention aux cas d'encéphalantiasis : une salle de gonflage suffit pour traiter cette maladie. " .. "Il vous faut soigner 10 personnes et vous assurer que votre réputation ne tombe pas en-dessous de 200.",
   level8 = "A vous de gérer l'hôpital le plus efficace et le plus rentable possible.//Les gens du coin sont bien nantis alors " .. "pompez-leur tout le fric que vous pourrez. Soigner les gens c'est bien joli mais vous avez BESOIN de l'argent que ça " .. "rapporte. Ratissez tous ces malades ! Amassez un joli paquet de $300.000 pour terminer ce niveau.",
   level12 = "Côté défi, vous allez être servi ! Impressionné par votre succès, le Ministère veut vous assigner une mission de confiance. " .. "Vous devrez construire un autre hôpital de pointe, gagner des sommes scandaleuses et vous faire une réputation fabuleuse. " .. "Vous devrez également acheter tout le terrain possible, soigner toutes les maladies (nous avons bien dit TOUTES) et remporter " ..
       "toutes les récompenses. Alors, heureux ? Gagnez $650.000, soignez 750 personnes et affichez une réputation de 800 pour gagner ce niveau.",
@@ -1254,6 +1295,21 @@ tooltip.machine_menu = {
     ratio = "Pourcentage de résistance restante par rapport à la résistance totale des machines.",
   },
   close = "Fermer la fenêtre de la liste des machines.",
+}
+
+adviser_history = {
+  message = "Messages",
+  close = "Fermer",
+}
+
+tooltip.adviser_history = {
+  delete_message = "cliquer pour supprimer ce message",
+  message = "Liste des messages du conseiller - Les messages les plus récents sont en tête de liste",
+  header = {
+    message = "Messages du conseiller",
+    delete_message = "Cliquer pour supprimer tous les messages"
+  },
+  close = "Fermer la fenêtre Récapitulatif du conseiller",
 }
 
 -- Updates
@@ -1323,11 +1379,11 @@ hotkey_window = {
   button_accept = "Accepter",
   button_back = "Retour",
   button_cancel = "Annuler",
-  button_defaults = "Réinitialiser aux valeurs par défaut",
+  button_defaults = "Réinit. aux valeurs par défaut",
   button_gameSpeedKeys = "Touches de vitesse du jeu",
   button_recallPosKeys = "Touches de rappel de position",
   button_toggleKeys = "Activer/désactiver les touches",
-  caption_main = "Assignation des touches de raccourci",
+  caption_main = "Définir les touches de raccourci",
   caption_panels = "Touches des panneaux",
   global_cancel = "Annuler",
   global_cancel_alt = "Annuler Alt",
@@ -1369,6 +1425,8 @@ hotkey_window = {
   ingame_panel_staffManage = "Gérer le personnel",
   ingame_panel_status = "Statut",
   ingame_panel_townMap = "Carte de la ville",
+  ingame_panel_machineMenu = "Menu des machines",
+  ingame_panel_adviserHistory = "Récapitulatif du conseiller",
   ingame_patient_gohome = "Renvoyer chez lui",
   ingame_pause = "Pause",
   ingame_poopLog = "Journal des incidents",
@@ -1425,8 +1483,24 @@ hotkey_window = {
   panel_recallPosKeys = "Touches de rappel de position",
   panel_scrollKeys = "Touches de défilement",
   panel_storePosKeys = "Touches de stockage de position",
-  panel_toggleKeys = "Touches d'activation/désactivation",
+  panel_toggleKeys = "Touches Activer/Désactiver",
   panel_zoomKeys = "Touches de zoom"
+}
+
+tooltip.hotkey_window = {
+  button_accept = "Accepter et enregistrer les assignations des touches de raccourci",
+  button_recallPosKeys = "Définir les touches pour stocker et rappeler les positions de la caméra",
+  button_defaults = "Réinitialiser toutes les touches de raccourci aux valeurs par défaut du programme",
+  button_cancel = "Annuler l'assignation et revenir au menu des options",
+  button_back_02 = "Retourner à la fenêtre principale des touches de raccourci. Les touches de raccourci modifiées dans cette fenêtre peuvent y être validées",
+  caption_panels = "Définir les touches des panneaux",
+  button_gameSpeedKeys = "Définir les touches pour contrôler la vitesse du jeu",
+  panel_globalKeys = "Définir les touches globales",
+  panel_generalInGameKeys = "Définir les touches générales en jeu",
+  panel_scrollKeys = "Définir les touches de défilement de l'écran",
+  panel_zoomKeys = "Définir les touches pour zoomer et dézoomer",
+  panel_toggleKeys = "Définir les touches pour activer/désactiver",
+  panel_debugKeys = "Définir les touches pour le débogage",
 }
 
 level_progress.hospital_value_enough = "Maintenez la valeur de votre hôpital au-dessus de %d et gérez vos autres problèmes pour remporter le niveau."
