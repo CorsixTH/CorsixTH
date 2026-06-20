@@ -21,6 +21,37 @@
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
 <releases>
+  <release version="0.70.0~rc1" date="2026-06-19" type="development">
+      <description>
+        <p>Translations:</p>
+        <ul>
+          <li>Russian translation updated. Thanks @ARGAMX</li>
+        </ul>
+        <p>Bug Fixes from Beta 2:</p>
+        <ul>
+          <li>Fixed regression with in game menu bar and dynamic info panel
+              having unreadable text with unicode fonts when not using direct
+              zoom</li>
+          <li>Fixed a misfire of the new fax sound when a message wasn&apos;t to be
+              shown yet in the bottom panel</li>
+          <li>Fixed the adviser history window breaking when deleting messages</li>
+          <li>Fixed regression where fully rested staff would not answer calls
+              if unable to return to Training or Research</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Fixed a null pointer crash when trying to process an empty string</li>
+          <li>Fixed an issue handling multiple windows when loading save games</li>
+          <li>Fixed a crash in the Machine Menu when updating repair states</li>
+          <li>Fixed fully rested staff trying to return to the staffroom upon
+              entering a room</li>
+        </ul>
+        <p>Packager Notes:</p>
+        <ul>
+          <li>vcpkg registry bumped</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.70.0~beta2" date="2026-06-10" type="development">
       <description>
         <p>Changes:</p>

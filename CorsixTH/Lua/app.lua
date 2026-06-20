@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 250 -- Properly clear staffroom flags on pickup
+local SAVEGAME_VERSION = 251 -- 0.70.0 Release Candidate 1
 
 class "App"
 
@@ -1722,6 +1722,7 @@ local release_table = {
   {major = 0, minor = 69, revision = 2, patch = "", version = 222},
   {major = 0, minor = 70, revision = 0, patch = "-beta1", version = 247},
   {major = 0, minor = 70, revision = 0, patch = "-beta2", version = 248},
+  {major = 0, minor = 70, revision = 0, patch = "-rc1", version = 251},
 }
 
 --! Retrieve the current savegame version as defined in the application.
