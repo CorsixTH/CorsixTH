@@ -514,6 +514,7 @@ const std::map<std::string, map_tile_flags::key> lua_tile_flag_map{
     {"buildableEast", map_tile_flags::key::buildable_e_mask},
     {"buildableSouth", map_tile_flags::key::buildable_s_mask},
     {"buildableWest", map_tile_flags::key::buildable_w_mask},
+    {"avoidTile", map_tile_flags::key::avoid_tile_mask},
 };
 
 /**
