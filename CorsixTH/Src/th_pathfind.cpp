@@ -89,12 +89,17 @@ bool abstract_pathfinder::search_neighbours(path_node* pNode,
 }
 
 void abstract_pathfinder::record_neighbour_if_passable(
-    path_node* pNode, map_tile_flags neighbour_flags, bool passable,
-    path_node* pNeighbour) {
+    path_node* pNode, map_tile_flags neighbour_flags, path_node* pNeighbour) {
   if (pNeighbour->visited) {
     return;
   }
-  if (passable && !neighbour_flags.passable) {
+
+  // Always refuse to move through an unpassable barrier!
+  //
+  // In the previous implementation this check was enabled only if the previous
+  // tile was passable, which caused that humanoids could walk through anything
+  // if they found themselves at an unpassable tile.
+  if (!neighbour_flags.passable) {
     return;
   }
 
@@ -123,8 +128,7 @@ bool basic_pathfinder::try_node(path_node* pNode, map_tile_flags flags,
                                 travel_direction direction) {
   map_tile_flags neighbour_flags =
       map->get_tile_unchecked(pNeighbour->x, pNeighbour->y)->flags;
-  record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                               pNeighbour);
+  record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
   return false;
 }
 
@@ -175,8 +179,7 @@ bool hospital_finder::try_node(path_node* pNode, map_tile_flags flags,
                                travel_direction direction) {
   map_tile_flags neighbour_flags =
       map->get_tile_unchecked(pNeighbour->x, pNeighbour->y)->flags;
-  record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                               pNeighbour);
+  record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
   return false;
 }
 
@@ -234,29 +237,25 @@ bool idle_tile_finder::try_node(path_node* pNode, map_tile_flags flags,
   switch (direction) {
     case travel_direction::north:
       if (!flags.door_north) {
-        record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                     pNeighbour);
+        record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
       }
       break;
 
     case travel_direction::east:
       if (!neighbour_flags.door_west) {
-        record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                     pNeighbour);
+        record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
       }
       break;
 
     case travel_direction::south:
       if (!neighbour_flags.door_north) {
-        record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                     pNeighbour);
+        record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
       }
       break;
 
     case travel_direction::west:
       if (!flags.door_west) {
-        record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                     pNeighbour);
+        record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
       }
       break;
   }
@@ -388,29 +387,25 @@ bool object_visitor::try_node(path_node* pNode, map_tile_flags flags,
     switch (direction) {
       case travel_direction::north:
         if (!flags.door_north) {
-          record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                       pNeighbour);
+          record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
         }
         break;
 
       case travel_direction::east:
         if (!neighbour_flags.door_west) {
-          record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                       pNeighbour);
+          record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
         }
         break;
 
       case travel_direction::south:
         if (!neighbour_flags.door_north) {
-          record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                       pNeighbour);
+          record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
         }
         break;
 
       case travel_direction::west:
         if (!flags.door_west) {
-          record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                       pNeighbour);
+          record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
         }
         break;
     }
