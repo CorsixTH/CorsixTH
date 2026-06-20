@@ -46,6 +46,7 @@ path_node* abstract_pathfinder::init(const level_map* pMap, int iStartX,
   parent->allocate_node_cache(iWidth, pMap->get_height());
   path_node* pNode = &parent->nodes.at(iStartY * iWidth + iStartX);
   pNode->prev = nullptr;
+  pNode->cost = 0;
   pNode->distance = 0;
   pNode->guess = guess_distance(pNode);
   pNode->visited = true;
@@ -105,13 +106,17 @@ void abstract_pathfinder::record_neighbour_if_passable(
 
   if (pNeighbour->prev == pNeighbour) {
     pNeighbour->prev = pNode;
+    pNeighbour->cost = pNode->cost + 1;
     pNeighbour->distance = pNode->distance + 1;
+
     pNeighbour->guess = guess_distance(pNeighbour);
     parent->dirty_node_list[parent->dirty_node_count++] = pNeighbour;
     parent->push_to_open_heap(pNeighbour);
-  } else if (pNode->distance + 1 < pNeighbour->distance) {
+  } else if (pNode->cost + 1 < pNeighbour->cost) {
     pNeighbour->prev = pNode;
+    pNeighbour->cost = pNode->cost + 1;
     pNeighbour->distance = pNode->distance + 1;
+
     /* guess doesn't change, and already in the dirty list */
     parent->open_heap_promote(pNeighbour);
   }
@@ -329,8 +334,7 @@ bool idle_tile_finder::find_idle_tile(const level_map* pMap, int iStartX,
 
     if (best_next_node) {
       // Promote the best neighbour to the front of the open list
-      // This causes sequential iN to give neighbouring results for most
-      // iN
+      // This causes sequential iN to give neighbouring results for most iN
       best_next_node->guess = -best_next_node->distance;
       parent->open_heap_promote(best_next_node);
     }
@@ -658,6 +662,7 @@ void pathfinder::depersist(lua_persist_reader* pReader) {
     }
     path_node* pPrevNode = &nodes[iY * iWidth + iX];
     pNode->distance = iLength - 1 - i;
+    pNode->cost = iLength - 1 - i; // Can be too optimistic.
     pNode->prev = pPrevNode;
     dirty_node_list[dirty_node_count++] = pNode;
     pNode = pPrevNode;

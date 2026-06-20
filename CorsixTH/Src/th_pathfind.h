@@ -60,6 +60,9 @@ struct path_node {
   //! Y-position of this cell (constant)
   int y;
 
+  //! Current lowest cost to this cell.
+  int cost;
+
   //! Current shortest distance to this cell
   /*!
       Defined as prev->distance + 1 (or 0 if prev == nullptr).
@@ -85,10 +88,10 @@ struct path_node {
 
   //! Total cost of this node.
   /*!
-      @return Total cost of the node, traveled distance and guess to the
+      @return Total cost of the node, traveled cost and the guess to the
      destination.
    */
-  inline int value() const { return distance + guess; }
+  inline int value() const { return cost + guess; }
 };
 
 /** Base class of the path finders. */
