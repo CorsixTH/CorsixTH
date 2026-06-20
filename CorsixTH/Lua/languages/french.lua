@@ -887,7 +887,7 @@ autosave_frequency = {
 tooltip.autosave_frequency = {
     monthly = "Sauvegarder une fois par mois, le premier jour de chaque mois. Un total de 12 sauvegardes sur une période d'un an.",
     weekly = "Sauvegarder une fois par semaine le 1er, 7ème, 14ème, 21ème, et 28ème jour de chaque mois. Un total de 60 sauvegardes sur une période d'un an.",
-    daily = "Sauvegarder une fois par jour au début de chaque journée en jeu. Un total de 365 sauvegardes sur une période d'un an. Veuillez noter que qu'une sauvegarde classique peut avoir une poids de 1 Mo ou plus, votre dossier Autosaves pouvant donc peser 300-500 Mo.",
+    daily = "Sauvegarder une fois par jour au début de chaque journée en jeu. Un total de 365 sauvegardes sur une période d'un an. Veuillez noter qu'une sauvegarde classique peut avoir un poids de 1 Mo ou plus, votre dossier Autosaves pourrait donc peser 300-500 Mo.",
 }
 
 tooltip.options_window = {
