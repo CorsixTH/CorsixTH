@@ -370,17 +370,17 @@ end
 
 --! Call on machine repaired.
 --!param room (object) machine room
-function Machine:machineRepaired(room, should_reduce_strength)
-  should_reduce_strength = should_reduce_strength or true
+--!param strength_reducible (bool) machine room
+function Machine:machineRepaired(room, strength_reducible)
+  strength_reducible = strength_reducible or true
+  if strength_reducible then
+    self:reduceStrengthOnRepair()
+  end
   room:unlockRoomOnRepair()
-  self.times_used = 0
   self:removeRepairingStatus()
   setSmoke(self, false)
   self:removeHandymanRepairTask()
-
-  if should_reduce_strength then
-    self:reduceStrengthOnRepair()
-  end
+  self.times_used = 0
 end
 
 --! Call on machine repaired. Removes repair task for that machine.
