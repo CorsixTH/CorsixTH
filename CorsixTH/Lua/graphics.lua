@@ -369,11 +369,12 @@ function Graphics:loadRaw(name, width, height, dir, _paldir, pal, _transparent_2
   width = width or 640
   height = height or 480
   dir = dir or "QData"
+  pal = pal or (name .. ".pal")
   local data = self.app:readDataFile(dir, name .. ".dat")
   data = data:sub(1, width * height)
 
   local bitmap = TH.bitmap()
-  local palette = self:getPalette(pal or name .. ".pal")
+  local palette = self:getPalette(pal)
   bitmap:setPalette(palette)
   assert(bitmap:load(data, width, self.target, flags))
 
@@ -386,7 +387,8 @@ function Graphics:loadRaw(name, width, height, dir, _paldir, pal, _transparent_2
   self.reload_functions[bitmap] = bitmap_reloader
 
   self.cache.raw[name] = bitmap
-  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, nil, pal, nil, flags}
+  -- 0 in place of nil so that unpack doesn't break
+  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, 0, pal, 0, flags}
   return bitmap
 end
 
