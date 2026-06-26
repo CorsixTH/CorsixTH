@@ -638,6 +638,17 @@ function Patient:_dailyWaitChecks()
   end
 end
 
+-- Define different thresholds for deteriorating health and their mood changes.
+-- First value is the mood to deactivate, the second to activate (as applicable).
+local health_treshold_rangemap = {
+  {upper = 0.06, value = {"dying4", "dying5"}}, -- Not looking good
+  {upper = 0.10, value = {"dying3", "dying4"}}, -- Fading fast
+  {upper = 0.14, value = {"dying2", "dying3"}}, -- Starts to take a turn for the worse
+  {upper = 0.18, value = {"dying1", "dying2"}}, -- Wishes they went to that other hospital
+  {upper = 0.22, value = {false, "dying1"}},    -- Getting rather unwell now
+  {value = false}
+}
+
 --! Handle processing of a patient's current health state and perform necessary actions
 --!return health (number) A patient's current health value, from 0 to 1.
 function Patient:_dailyHealthChecks()
@@ -648,16 +659,7 @@ function Patient:_dailyHealthChecks()
   -- death does not impact happiness.
 
   local health = self:getAttribute("health")
-  -- Define different thresholds for deteriorating health and their mood changes.
-  -- First value is the mood to deactivate, the second to activate (as applicable).
-  local health_treshold_rangemap = {
-    {upper = 0.06, value = {"dying4", "dying5"}}, -- Not looking good
-    {upper = 0.10, value = {"dying3", "dying4"}}, -- Fading fast
-    {upper = 0.14, value = {"dying2", "dying3"}}, -- Starts to take a turn for the worse
-    {upper = 0.18, value = {"dying1", "dying2"}}, -- Wishes they went to that other hospital
-    {upper = 0.22, value = {false, "dying1"}},    -- Getting rather unwell now
-    {value = false}
-  }
+
   -- Special handling for a patient almost passed.
   local almost_dead_value, dying_value = 0.01, 0.0
   if health < almost_dead_value then
@@ -672,7 +674,13 @@ function Patient:_dailyHealthChecks()
     return health
   end
 
-  local old_dying_mood, new_dying_mood = rangeMapLookup(health, health_treshold_rangemap, true)
+  local dying_moods = rangeMapLookup(health, health_treshold_rangemap, true)
+  -- Above 0.22 on health, lookup returns an index we can exit early on
+  if type(dying_moods) == "number" then
+    return health
+  end
+
+  local old_dying_mood, new_dying_mood = dying_moods[1], dying_moods[2]
   if not old_dying_mood then
     if new_dying_mood then
       -- Patient has entered the road of deterioration.
