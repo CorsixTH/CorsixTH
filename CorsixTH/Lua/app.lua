@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 251 -- 0.70.0 Release Candidate 1
+local SAVEGAME_VERSION = 252 -- 0.70.0 Release Candidate 2
 
 class "App"
 
@@ -1723,6 +1723,7 @@ local release_table = {
   {major = 0, minor = 70, revision = 0, patch = "-beta1", version = 247},
   {major = 0, minor = 70, revision = 0, patch = "-beta2", version = 248},
   {major = 0, minor = 70, revision = 0, patch = "-rc1", version = 251},
+  {major = 0, minor = 70, revision = 0, patch = "-rc2", version = 252},
 }
 
 --! Retrieve the current savegame version as defined in the application.

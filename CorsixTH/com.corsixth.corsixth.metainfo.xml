@@ -21,6 +21,32 @@
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
 <releases>
+  <release version="0.70.0~rc2" date="2026-06-xx" type="development">
+    <description>
+      <p>Changes:</p>
+      <ul>
+        <li>Panel keys in the hotkey assignment menu now utilise two pages</li>
+      </ul>
+      <p>Translations:</p>
+      <ul>
+        <li>French translation updated. Thanks @Ouaz</li>
+      </ul>
+      <p>Bug Fixes from RC1:</p>
+      <ul>
+        <li>Fixed regression where a machine&apos;s maximum strength never
+            decreased</li>
+        <li>Fixed regression where patient&apos;s dying moods were no longer
+            shown</li>
+        <li>Fixed regression where loading a save failed if the a window with
+            a staff profile photo was open (such as Staff Management)</li>
+      </ul>
+      <p>Bug Fixes:</p>
+      <ul>
+        <li>Fixed an issue where stopping music led to a crash on the level
+            progression movie</li>
+      </ul>
+    </description>
+  </release>
   <release version="0.70.0~rc1" date="2026-06-19" type="development">
       <description>
         <p>Translations:</p>
