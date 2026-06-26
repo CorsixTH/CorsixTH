@@ -35,6 +35,10 @@ else()
   set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/${CORSIX_TH_INTERPRETER_NAME})
 endif()
 
+if(FETCH_UNICODE_FONT OR FETCH_SDL_MIXER OR FETCH_SOUNDFONT)
+  include(FetchContent)
+endif()
+
 # Declaration of the executable
 if(APPLE)
   set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
@@ -116,27 +120,8 @@ find_package(ZLIB REQUIRED)
 target_link_libraries(CorsixTH_lib PRIVATE ZLIB::ZLIB)
 
 # Find SDL
-if(VCPKG_TARGET_TRIPLET)
-  find_package(SDL2 CONFIG REQUIRED)
-  target_link_libraries(CorsixTH_lib
-    PUBLIC
-      $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>)
-  target_link_libraries(CorsixTH PRIVATE SDL2::SDL2main)
-else()
-  find_package(SDL2 REQUIRED)
-  if(SDL_FOUND)
-    include_directories(${SDL_INCLUDE_DIR})
-    if(SDLMAIN_LIBRARY STREQUAL "")
-      message(FATAL_ERROR "Error: SDL2 was found but SDL2main was not")
-      message("Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
-    endif()
-    # No need to specify sdl2main separately, the FindSDL.cmake file will take care of that. If not we get an error about it
-    target_link_libraries(CorsixTH_lib PUBLIC ${SDL_LIBRARY})
-    message("  SDL2 found")
-  else()
-    message(FATAL_ERROR "Error: SDL2 library not found, it is required to build. Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
-  endif()
-endif()
+find_package(SDL3 CONFIG REQUIRED COMPONENTS SDL3)
+target_link_libraries(CorsixTH_lib PUBLIC SDL3::SDL3)
 
 # Find Lua
 if(VCPKG_TARGET_TRIPLET)
@@ -173,22 +158,20 @@ find_package(Threads)
 target_link_libraries(CorsixTH PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 
 # Find SDL_mixer
-if(VCPKG_TARGET_TRIPLET)
-  find_package(SDL2_mixer CONFIG REQUIRED)
-  target_link_libraries(
-    CorsixTH_lib
-    PUBLIC
-      $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)
+if(FETCH_SDL_MIXER)
+  fetchcontent_declare(
+          SDL3_mixer
+          GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+          GIT_TAG release-3.2.4)
+
+  fetchcontent_makeavailable(SDL3_mixer)
 else()
-  find_package(SDL2_mixer REQUIRED)
-  if(SDLMIXER_FOUND)
-    target_link_libraries(CorsixTH_lib PUBLIC ${SDLMIXER_LIBRARY})
-    include_directories(${SDLMIXER_INCLUDE_DIR})
-    message("  SDL_mixer found")
-  else()
-    message(FATAL_ERROR "Error: SDL_mixer library not found, it is required to build")
-  endif()
+  find_package(SDL3_mixer CONFIG REQUIRED)
 endif()
+target_link_libraries(
+  CorsixTH_lib
+  PUBLIC
+    $<IF:$<TARGET_EXISTS:SDL3_mixer::SDL3_mixer>,SDL3_mixer::SDL3_mixer,SDL3_mixer::SDL3_mixer-static>)
 
 # Find FFMPEG
 if(CORSIX_TH_USE_FFMPEG)
@@ -281,8 +264,6 @@ if(WITH_MIDI_DEVICE)
 endif()
 
 if(FETCH_SOUNDFONT)
-  include(FetchContent)
-
   fetchcontent_declare(
     FluidR3
     URL https://raw.githubusercontent.com/Jacalz/fluid-soundfont/master/SF3/FluidR3.sf3
@@ -294,8 +275,6 @@ if(FETCH_SOUNDFONT)
 endif()
 
 if(FETCH_UNICODE_FONT)
-  include(FetchContent)
-
   fetchcontent_declare(
     GoNoto
     URL https://github.com/satbyy/go-noto-universal/releases/download/v7.0/GoNotoKurrent-Regular.ttf
