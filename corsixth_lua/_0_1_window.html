@@ -61,6 +61,9 @@
  <a href="_0_1_window.html#_0_1_window_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
  </li>
  <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1get_real_x_y">getRealXY</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
  </li>
  <li class="self">
@@ -469,7 +472,7 @@ parent window.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2127">line 2127 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2134">line 2134 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -490,14 +493,14 @@ parent window.</td>
  <td class="d">The Y position of the cursor in window coordinates.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1789">line 1789 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1796">line 1796 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_window_1bring_to_top">function Window:bringToTop()</a></h5>
  <p>
  Bring the window to the top of its parent<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1944">line 1944 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1951">line 1951 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -529,6 +532,14 @@ parent window.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1504">line 1504 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1get_real_x_y">function Window:getRealXY()</a></h5>
+ <p>
+ Return the X and Y coordinates of the window as drawn on
+the screen after factoring in the ui_scale.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1497">line 1497 of Lua/window.lua</a>.
  </p>
  </div>
@@ -540,7 +551,7 @@ parent window.</td>
 then when any windows in the same group are opened in the future, the position
 of the new window is set to the saved position. By default, each window class
 is its own group, but by overriding this method, that can be changed.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1677">line 1677 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1684">line 1684 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -564,7 +575,7 @@ Returns tooltip in form of { text = .. , x = .. , y = .. } or nil for no tooltip
  <td class="d"> The Y coordinate relative to the top-left corner.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2078">line 2078 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2085">line 2085 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -590,7 +601,7 @@ Returns tooltip in form of { text = .. , x = .. , y = .. } or nil for no tooltip
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2052">line 2052 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2059">line 2059 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -647,7 +658,7 @@ top-left corner of the window.</td>
 top-left corner of the window.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1596">line 1596 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1603">line 1603 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -672,7 +683,7 @@ top-left corner of the window.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1559">line 1559 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1566">line 1566 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -718,7 +729,7 @@ top-left corner of the window.</td>
  <td class="d"> Maximum Y area</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1576">line 1576 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1583">line 1583 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -826,7 +837,7 @@ right-clicks the button.</td>
  <td class="d"> [optional] The Y coordinate to display the tooltip at.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2033">line 2033 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2040">line 2040 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -982,7 +993,7 @@ ToggleButton automatically, and handle keyboard input while active.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2014">line 2014 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2021">line 2021 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -995,7 +1006,7 @@ ToggleButton automatically, and handle keyboard input while active.<br/><br/>
  <div class="method">
  <h5><a name="_0_1_window_1on_change_language">function Window:onChangeLanguage()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1539">line 1539 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1546">line 1546 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1022,7 +1033,7 @@ ToggleButton automatically, and handle keyboard input while active.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1547">line 1547 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1554">line 1554 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1047,7 +1058,7 @@ ToggleButton automatically, and handle keyboard input while active.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1621">line 1621 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1628">line 1628 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1080,7 +1091,7 @@ corner of the window.</td>
  <td class="d"> The number of pixels which the cursor moved vertically.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1831">line 1831 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1838">line 1838 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1105,7 +1116,7 @@ corner of the window.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1687">line 1687 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1694">line 1694 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1129,21 +1140,21 @@ leftward movement, +1 is rightward movement)</td>
 movement, +1 is upward movement)</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1744">line 1744 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1751">line 1751 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_window_1on_tick">function Window:onTick()</a></h5>
  <p>
  Called regularly at a rate independent of the game speed.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1896">line 1896 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1903">line 1903 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_window_1on_world_tick">function Window:onWorldTick()</a></h5>
  <p>
  Called regularly at the same rate that entities are ticked.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1935">line 1935 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1942">line 1942 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1196,7 +1207,7 @@ previously passed to Window:addKeyHandler(keys).</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1982">line 1982 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1989">line 1989 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1212,7 +1223,7 @@ previously passed to Window:addKeyHandler(keys).</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1951">line 1951 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1958">line 1958 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1303,13 +1314,13 @@ Reals in [0, 1) -<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1995">line 1995 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2002">line 2002 of Lua/window.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_window_1stop_button_blinking">function Window:stopButtonBlinking()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2003">line 2003 of Lua/window.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2010">line 2010 of Lua/window.lua</a>.
  </p>
  </div>
 </div>
