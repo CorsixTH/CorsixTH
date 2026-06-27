@@ -121,7 +121,7 @@ local available_ui_scales = function()
   local res = {}
   local s = 1
   while s * App.MIN_WINDOW_WIDTH <= TheApp.config.width and
-      s * App.MIN_WINDOW_HEIGHT <= TheApp.config.height do
+      s * App.MIN_WINDOW_HEIGHT <= TheApp.config.height and s < 4 do
     res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
     s = s + 1
   end
