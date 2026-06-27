@@ -203,6 +203,19 @@ function Door:afterLoad(old, new)
       map:setCellFlags(self.tile_x, self.tile_y - 1, flags_to_set)
     end
   end
+
+  if old < 252 then
+    -- Clean up patients stuck in the queue's expected list.
+    -- Staff and VIPs can be ignored.
+    if self.queue and self.room and self.room.room_info.id ~= "toilets" then
+      for hum, _ in pairs(self.queue.expected) do
+        if hum.next_room_to_visit ~= self.room and
+            class.type(hum) == "Patient" then
+          self.queue:unexpect(hum)
+        end
+      end
+    end
+  end
   self:updateDynamicInfo()
   Object.afterLoad(self, old, new)
 end

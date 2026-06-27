@@ -53,6 +53,7 @@ end
 --!param callback - register a callback for when queue is 'destroyed'
 function Queue:expect(humanoid, callback)
   if not self.expected[humanoid] then
+    humanoid:expectInQueue(self)
     self.expected[humanoid] = callback
     -- only count patients in the expected count
     if class.is(humanoid, Patient) then
@@ -66,6 +67,9 @@ end
 function Queue:unexpect(humanoid)
   if self.expected[humanoid] then
     self.expected[humanoid] = nil
+    if self == humanoid.expected_queue then
+      humanoid.expected_queue = nil
+    end
     -- only count patients in the expected count
     if class.is(humanoid, Patient) then
       self.expected_count = self.expected_count - 1

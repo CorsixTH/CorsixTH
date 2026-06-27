@@ -1153,6 +1153,22 @@ function Humanoid:unexpectFromRoom(dest_room)
   end
  end
 
+--! Unexpects humanoid from his last queue
+function Humanoid:unexpectFromExpectedQueue()
+  if self.expected_queue then
+    self.expected_queue:unexpect(self)
+  end
+end
+
+--! Expect humanoid to the queue
+--!param queue (queue) target queue the humanoid expected at
+function Humanoid:expectInQueue(queue)
+  -- If humanoid already expected in another queue
+  -- unexpect from that other queue first.
+  self:unexpectFromExpectedQueue()
+  self.expected_queue = queue
+end
+
 -- Get attribute value
 --!param attribute (string)
 --!param default_value (float) Number to return if none found. If neither are present, 0 is returned
