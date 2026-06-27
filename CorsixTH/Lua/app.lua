@@ -1132,10 +1132,10 @@ function App:fixConfig()
     elseif key == "height" and (type(value) ~= "number" or value < App.MIN_WINDOW_HEIGHT) then
       self.config[key] = App.MIN_WINDOW_HEIGHT
 
-    -- For scale, clamp to integer scale >= 1
+    -- For scale, clamp to integer scale >= 1 and <= 3
     elseif key == "ui_scale" then
       if type(value) == "number" then
-        self.config[key] = math.max(math.floor(value), 1)
+        self.config[key] = math.min(math.max(math.floor(value), 1), 3)
       else
         self.config[key] = 1
       end
