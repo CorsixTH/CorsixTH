@@ -1494,6 +1494,13 @@ function Window:makeHotkeyBoxOnPanel(panel, confirm_callback, abort_callback)
   return hotkeybox
 end
 
+-- Return the X and Y coordinates of the window as drawn on
+-- the screen after factoring in the ui_scale.
+function Window:getRealXY()
+  local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
+  return self.x * s, self.y * s
+end
+
 function Window:draw(canvas, x, y)
   local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
   x, y = x + self.x * s, y + self.y * s

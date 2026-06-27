@@ -784,7 +784,8 @@ function GameUI:onMouseWheel(x, y)
   local inside_window = false
   if self.windows then
     for _, window in ipairs(self.windows) do
-      if window:hitTest(self.cursor_x - window.x, self.cursor_y - window.y) then
+      local wx, wy = window:getRealXY()
+      if window:hitTest(self.cursor_x - wx, self.cursor_y - wy) then
         inside_window = true
         break
       end
