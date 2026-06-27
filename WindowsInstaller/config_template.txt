@@ -13,9 +13,10 @@
 -- Screen size. Must be at least 640x480. Larger sizes will require better
 -- hardware in order to maintain a playable framerate. The fullscreen setting
 -- can be true or false, and the game will run windowed if not fullscreen.
--- ui_scale can be set to 1, 2, or 3 to scale the user interface for higher
--- resolution displays. For example, at 1920x1080 resolution, setting ui_scale
--- to 2 will make the interface elements twice as large.
+-- ui_scale. Default is 1. Increase by a whole number to scale the user interface for
+-- higher resolution displays (decimal values unsupported).
+-- For example, at 1920x1080 resolution, setting ui_scale to 2 will make the interface
+-- elements twice as large.
 --
 fullscreen = SCREEN_FULLSCREEN
 
