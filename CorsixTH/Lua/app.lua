@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 251 -- 0.70.0 Release Candidate 1
+local SAVEGAME_VERSION = 252 -- Unexpect patients when moving queues
 
 class "App"
 
