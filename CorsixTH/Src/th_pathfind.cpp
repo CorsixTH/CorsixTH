@@ -46,6 +46,7 @@ path_node* abstract_pathfinder::init(const level_map* pMap, int iStartX,
   parent->allocate_node_cache(iWidth, pMap->get_height());
   path_node* pNode = &parent->nodes.at(iStartY * iWidth + iStartX);
   pNode->prev = nullptr;
+  pNode->cost = 0;
   pNode->distance = 0;
   pNode->guess = guess_distance(pNode);
   pNode->visited = true;
@@ -89,24 +90,37 @@ bool abstract_pathfinder::search_neighbours(path_node* pNode,
 }
 
 void abstract_pathfinder::record_neighbour_if_passable(
-    path_node* pNode, map_tile_flags neighbour_flags, bool passable,
-    path_node* pNeighbour) {
+    path_node* pNode, map_tile_flags neighbour_flags, path_node* pNeighbour) {
   if (pNeighbour->visited) {
     return;
   }
-  if (passable && !neighbour_flags.passable) {
+
+  // Always refuse to move through an unpassable barrier!
+  //
+  // In the previous implementation this check was enabled only if the previous
+  // tile was passable, which caused that humanoids could walk through anything
+  // if they found themselves at an unpassable tile.
+  if (!neighbour_flags.passable) {
     return;
   }
 
+  // Maximum tile cost: 31 bit integer at 128x128 tiles (14 bit) yields max
+  // 15 bit costs, or 32767 without overflowing.
+  int neighbour_cost = neighbour_flags.avoid_tile ? 128 : 1;
+
   if (pNeighbour->prev == pNeighbour) {
     pNeighbour->prev = pNode;
+    pNeighbour->cost = pNode->cost + neighbour_cost;
     pNeighbour->distance = pNode->distance + 1;
+
     pNeighbour->guess = guess_distance(pNeighbour);
     parent->dirty_node_list[parent->dirty_node_count++] = pNeighbour;
     parent->push_to_open_heap(pNeighbour);
-  } else if (pNode->distance + 1 < pNeighbour->distance) {
+  } else if (pNode->cost + 1 < pNeighbour->cost) {
     pNeighbour->prev = pNode;
+    pNeighbour->cost = pNode->cost + neighbour_cost;
     pNeighbour->distance = pNode->distance + 1;
+
     /* guess doesn't change, and already in the dirty list */
     parent->open_heap_promote(pNeighbour);
   }
@@ -123,8 +137,7 @@ bool basic_pathfinder::try_node(path_node* pNode, map_tile_flags flags,
                                 travel_direction direction) {
   map_tile_flags neighbour_flags =
       map->get_tile_unchecked(pNeighbour->x, pNeighbour->y)->flags;
-  record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                               pNeighbour);
+  record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
   return false;
 }
 
@@ -175,8 +188,7 @@ bool hospital_finder::try_node(path_node* pNode, map_tile_flags flags,
                                travel_direction direction) {
   map_tile_flags neighbour_flags =
       map->get_tile_unchecked(pNeighbour->x, pNeighbour->y)->flags;
-  record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                               pNeighbour);
+  record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
   return false;
 }
 
@@ -234,29 +246,25 @@ bool idle_tile_finder::try_node(path_node* pNode, map_tile_flags flags,
   switch (direction) {
     case travel_direction::north:
       if (!flags.door_north) {
-        record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                     pNeighbour);
+        record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
       }
       break;
 
     case travel_direction::east:
       if (!neighbour_flags.door_west) {
-        record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                     pNeighbour);
+        record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
       }
       break;
 
     case travel_direction::south:
       if (!neighbour_flags.door_north) {
-        record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                     pNeighbour);
+        record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
       }
       break;
 
     case travel_direction::west:
       if (!flags.door_west) {
-        record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                     pNeighbour);
+        record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
       }
       break;
   }
@@ -304,8 +312,8 @@ bool idle_tile_finder::find_idle_tile(const level_map* pMap, int iStartX,
     map_tile_flags flags = node_tile->flags;
 
     bool correct_parcel = parcelId == 0 || parcelId == node_tile->iParcelId;
-    if (!flags.do_not_idle && flags.passable && flags.hospital &&
-        correct_parcel) {
+    if (!flags.do_not_idle && !flags.avoid_tile && flags.passable &&
+        flags.hospital && correct_parcel) {
       // Try to delay returning an idle tile until we find the Nth tile.
       if (iN == 0) {
         parent->destination = pNode;
@@ -330,8 +338,7 @@ bool idle_tile_finder::find_idle_tile(const level_map* pMap, int iStartX,
 
     if (best_next_node) {
       // Promote the best neighbour to the front of the open list
-      // This causes sequential iN to give neighbouring results for most
-      // iN
+      // This causes sequential iN to give neighbouring results for most iN
       best_next_node->guess = -best_next_node->distance;
       parent->open_heap_promote(best_next_node);
     }
@@ -388,29 +395,25 @@ bool object_visitor::try_node(path_node* pNode, map_tile_flags flags,
     switch (direction) {
       case travel_direction::north:
         if (!flags.door_north) {
-          record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                       pNeighbour);
+          record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
         }
         break;
 
       case travel_direction::east:
         if (!neighbour_flags.door_west) {
-          record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                       pNeighbour);
+          record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
         }
         break;
 
       case travel_direction::south:
         if (!neighbour_flags.door_north) {
-          record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                       pNeighbour);
+          record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
         }
         break;
 
       case travel_direction::west:
         if (!flags.door_west) {
-          record_neighbour_if_passable(pNode, neighbour_flags, flags.passable,
-                                       pNeighbour);
+          record_neighbour_if_passable(pNode, neighbour_flags, pNeighbour);
         }
         break;
     }
@@ -663,6 +666,7 @@ void pathfinder::depersist(lua_persist_reader* pReader) {
     }
     path_node* pPrevNode = &nodes[iY * iWidth + iX];
     pNode->distance = iLength - 1 - i;
+    pNode->cost = iLength - 1 - i;  // Can be too optimistic.
     pNode->prev = pPrevNode;
     dirty_node_list[dirty_node_count++] = pNode;
     pNode = pPrevNode;

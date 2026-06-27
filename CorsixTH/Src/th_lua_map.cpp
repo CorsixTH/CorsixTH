@@ -514,6 +514,7 @@ const std::map<std::string, map_tile_flags::key> lua_tile_flag_map{
     {"buildableEast", map_tile_flags::key::buildable_e_mask},
     {"buildableSouth", map_tile_flags::key::buildable_s_mask},
     {"buildableWest", map_tile_flags::key::buildable_w_mask},
+    {"avoidTile", map_tile_flags::key::avoid_tile_mask},
 };
 
 /**
@@ -709,22 +710,28 @@ int l_map_setwallflags(lua_State* L) {
 
 int l_map_setcell(lua_State* L) {
   level_map* pMap = luaT_testuserdata<level_map>(L);
-  int iX = static_cast<int>(luaL_checkinteger(L, 2) -
-                            1);  // Lua arrays start at 1 - pretend
-  int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);  // the map does too.
+
+  // Extract the position. Subtract 1 to arrive at 0-based C++ indexing.
+  int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1);
+  int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);
+
   map_tile* pNode = pMap->get_tile(iX, iY);
   if (pNode == nullptr) {
     return luaL_argerror(L, 2, "Map coordinates out of bounds");
   }
+
   if (lua_gettop(L) >= 7) {
-    pNode->tile_layers[tile_layer::ground] =
-        static_cast<uint16_t>(luaL_checkinteger(L, 4));
-    pNode->tile_layers[tile_layer::north_wall] =
-        static_cast<uint16_t>(luaL_checkinteger(L, 5));
-    pNode->tile_layers[tile_layer::west_wall] =
-        static_cast<uint16_t>(luaL_checkinteger(L, 6));
-    pNode->tile_layers[tile_layer::ui] =
-        static_cast<uint16_t>(luaL_checkinteger(L, 7));
+    uint16_t value = static_cast<uint16_t>(luaL_checkinteger(L, 4));
+    pNode->tile_layers[tile_layer::ground] = value;
+
+    value = static_cast<uint16_t>(luaL_checkinteger(L, 5));
+    pNode->tile_layers[tile_layer::north_wall] = value;
+
+    value = static_cast<uint16_t>(luaL_checkinteger(L, 6));
+    pNode->tile_layers[tile_layer::west_wall] = value;
+
+    value = static_cast<uint16_t>(luaL_checkinteger(L, 7));
+    pNode->tile_layers[tile_layer::ui] = value;
   } else {
     lua_Integer layer = luaL_checkinteger(L, 4) - 1;
     if (layer < tile_layer::ground || layer >= tile_layer::num_tile_layers)
@@ -797,10 +804,11 @@ int l_map_unmark_room(lua_State* L) {
 
   for (int iY = iY_; iY < iY_ + iH; ++iY) {
     for (int iX = iX_; iX < iX_ + iW; ++iX) {
+      const map_tile* orig_tile = pMap->get_original_tile_unchecked(iX, iY);
       map_tile* pNode = pMap->get_tile_unchecked(iX, iY);
+
       pNode->tile_layers[tile_layer::ground] =
-          pMap->get_original_tile_unchecked(iX, iY)
-              ->tile_layers[tile_layer::ground];
+          orig_tile->tile_layers[tile_layer::ground];
       pNode->flags.room = false;
       pNode->iRoomId = 0;
     }
@@ -901,11 +909,11 @@ int l_map_get_parcel_owner(lua_State* L) {
 
 int l_map_is_parcel_purchasable(lua_State* L) {
   level_map* pMap = luaT_testuserdata<level_map>(L);
-  lua_pushboolean(
-      L, pMap->is_parcel_purchasable(static_cast<int>(luaL_checkinteger(L, 2)),
-                                     static_cast<int>(luaL_checkinteger(L, 3)))
-             ? 1
-             : 0);
+  int parcel = static_cast<int>(luaL_checkinteger(L, 2));
+  int player = static_cast<int>(luaL_checkinteger(L, 3));
+
+  bool purchasable = pMap->is_parcel_purchasable(parcel, player);
+  lua_pushboolean(L, purchasable ? 1 : 0);
   return 1;
 }
 
@@ -987,9 +995,10 @@ int l_path_is_reachable_from_hospital(lua_State* L) {
 
   pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
 
-  bool found = pPathfinder->find_path_to_hospital(
-      nullptr, static_cast<int>(luaL_checkinteger(L, 2) - 1),
-      static_cast<int>(luaL_checkinteger(L, 3) - 1));
+  int start_x = static_cast<int>(luaL_checkinteger(L, 2) - 1);
+  int start_y = static_cast<int>(luaL_checkinteger(L, 3) - 1);
+  bool found = pPathfinder->find_path_to_hospital(nullptr, start_x, start_y);
+
   if (found) {
     lua_pushboolean(L, 1);
     int iX, iY;
@@ -1008,11 +1017,12 @@ int l_path_distance(lua_State* L) {
 
   pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
 
-  bool found = pPathfinder->find_path(
-      nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
-      static_cast<int>(luaL_checkinteger(L, 3)) - 1,
-      static_cast<int>(luaL_checkinteger(L, 4)) - 1,
-      static_cast<int>(luaL_checkinteger(L, 5)) - 1);
+  int start_x = static_cast<int>(luaL_checkinteger(L, 2) - 1);
+  int start_y = static_cast<int>(luaL_checkinteger(L, 3) - 1);
+  int end_x = static_cast<int>(luaL_checkinteger(L, 4) - 1);
+  int end_y = static_cast<int>(luaL_checkinteger(L, 5) - 1);
+  bool found = pPathfinder->find_path(nullptr, start_x, start_y, end_x, end_y);
+
   if (found) {
     lua_pushinteger(L, pPathfinder->get_path_length());
   } else {
@@ -1025,27 +1035,33 @@ int l_path_path(lua_State* L) {
   ZoneScoped;
 
   pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
-  pPathfinder->find_path(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
-                         static_cast<int>(luaL_checkinteger(L, 3)) - 1,
-                         static_cast<int>(luaL_checkinteger(L, 4)) - 1,
-                         static_cast<int>(luaL_checkinteger(L, 5)) - 1);
+
+  int start_x = static_cast<int>(luaL_checkinteger(L, 2) - 1);
+  int start_y = static_cast<int>(luaL_checkinteger(L, 3) - 1);
+  int end_x = static_cast<int>(luaL_checkinteger(L, 4) - 1);
+  int end_y = static_cast<int>(luaL_checkinteger(L, 5) - 1);
+  pPathfinder->find_path(nullptr, start_x, start_y, end_x, end_y);
   pPathfinder->push_result(L);
   return 2;
 }
 
+// findIdleTile(path_finder, queue_x, queue_y, tile_number, opt_parcel)
+// -> Either nothing is returned or the coordinates of the found tile.
+//
+// The tile_number should be a random number, to get the (random) Nth tile.
+// That gives more variation in returned positions.
 int l_path_idle(lua_State* L) {
   ZoneScoped;
 
   pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
 
-  bool found = pPathfinder->find_idle_tile(
-      nullptr,                                        // Default map.
-      static_cast<int>(luaL_checkinteger(L, 2)) - 1,  // X coordinate queue.
-      static_cast<int>(luaL_checkinteger(L, 3)) - 1,  // Y coordinate queue.
-      static_cast<int>(
-          luaL_optinteger(L, 4, 0)),  // Take Nth candidate tile, used for
-                                      // queueing and randomizing idling tiles.
-      static_cast<int>(luaL_optinteger(L, 5, 0)));  // Optional indoor parcel.
+  int queue_x = static_cast<int>(luaL_checkinteger(L, 2) - 1);
+  int queue_y = static_cast<int>(luaL_checkinteger(L, 3) - 1);
+  int n = static_cast<int>(luaL_optinteger(L, 4, 0));
+  int opt_parcel = static_cast<int>(luaL_optinteger(L, 5, 0));
+
+  bool found =
+      pPathfinder->find_idle_tile(nullptr, queue_x, queue_y, n, opt_parcel);
   if (!found) {
     return 0;
   }
@@ -1062,12 +1078,14 @@ int l_path_visit(lua_State* L) {
   pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
   luaL_checktype(L, 6, LUA_TFUNCTION);
 
-  bool found = pPathfinder->visit_objects(
-      nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
-      static_cast<int>(luaL_checkinteger(L, 3)) - 1,
-      static_cast<object_type>(luaL_checkinteger(L, 4)),
-      static_cast<int>(luaL_checkinteger(L, 5)), L, 6,
-      luaL_checkinteger(L, 4) == 0 ? true : false);
+  int start_x = static_cast<int>(luaL_checkinteger(L, 2) - 1);
+  int start_y = static_cast<int>(luaL_checkinteger(L, 3) - 1);
+  lua_Integer obj_number = luaL_checkinteger(L, 4);
+  object_type obj_type = static_cast<object_type>(obj_number);
+  int max_distance = static_cast<int>(luaL_checkinteger(L, 5));
+  bool found = pPathfinder->visit_objects(nullptr, start_x, start_y, obj_type,
+                                          max_distance, L, 6,
+                                          obj_number == 0 ? true : false);
 
   lua_pushboolean(L, found);
   return 1;
