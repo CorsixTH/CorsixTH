@@ -12,6 +12,8 @@ CorsixTH 0.70.0 Release Candidate 2 - Release June 2026
 * Fixed regression where patient's dying moods were no longer shown
 * Fixed regression where loading a save failed if the a window with a staff
   profile photo was open (such as Staff Management)
+* Fixed regression where mousewheel scroll did not work consistently with UI
+  Scaling enabled
 
 # Bug Fixes
 * Fixed an issue where stopping music led to a crash on the level progression

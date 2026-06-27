@@ -39,6 +39,8 @@
             shown</li>
         <li>Fixed regression where loading a save failed if the a window with
             a staff profile photo was open (such as Staff Management)</li>
+        <li>Fixed regression where mousewheel scroll did not work consistently
+            with UI Scaling enabled</li>
       </ul>
       <p>Bug Fixes:</p>
       <ul>
