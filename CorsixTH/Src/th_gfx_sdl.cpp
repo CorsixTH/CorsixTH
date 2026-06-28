@@ -394,7 +394,8 @@ render_target::scoped_target_texture::scoped_target_texture(
   }
 
   // Clear the new texture to transparent/black.
-  SDL_SetRenderLogicalPresentation(target->renderer, rect.w, rect.h);
+  SDL_SetRenderLogicalPresentation(target->renderer, rect.w, rect.h,
+                                   SDL_LOGICAL_PRESENTATION_LETTERBOX);
   SDL_SetRenderDrawColor(target->renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
   SDL_RenderClear(target->renderer);
   target->current_target = this;
@@ -420,7 +421,8 @@ render_target::scoped_target_texture::~scoped_target_texture() {
   SDL_SetRenderLogicalPresentation(
       target->renderer,
       previous_target ? previous_target->rect.w : target->width,
-      previous_target ? previous_target->rect.h : target->height);
+      previous_target ? previous_target->rect.h : target->height,
+      SDL_LOGICAL_PRESENTATION_LETTERBOX);
   SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
   target->current_target = previous_target;
   if (scale) {
@@ -437,7 +439,6 @@ render_target::render_target(const render_target_creation_params& params)
     : width{params.width},
       height{params.height},
       direct_zoom{params.direct_zoom} {
-  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
   pixel_format = SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_ABGR8888);
   window = SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
                             SDL_WINDOWPOS_UNDEFINED, width, height,
@@ -460,7 +461,8 @@ render_target::render_target(const render_target_creation_params& params)
                           sdlVersion.major == 2 && sdlVersion.minor == 0 &&
                           sdlVersion.patch < 4;
   SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
-  SDL_SetRenderLogicalPresentation(renderer, width, height);
+  SDL_SetRenderLogicalPresentation(renderer, width, height,
+                                   SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
   update(params);
 }
@@ -503,7 +505,8 @@ bool render_target::update(const render_target_creation_params& params) {
   }
 
   if (bUpdateSize) {
-    SDL_SetRenderLogicalPresentation(renderer, width, height);
+    SDL_SetRenderLogicalPresentation(renderer, width, height,
+                                     SDL_LOGICAL_PRESENTATION_LETTERBOX);
   }
 
   int old_min_width;
@@ -886,23 +889,25 @@ SDL_Texture* render_target::create_palettized_texture(
   full_colour_storing oRenderer(pARGBPixels, iWidth, iHeight);
   oRenderer.decode_image(pPixels, pPalette, iSpriteFlags);
 
-  if (iSpriteFlags & thdf_nearest)
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-  SDL_Texture* pTexture = create_texture(iWidth, iHeight, pARGBPixels);
-  if (iSpriteFlags & thdf_nearest)
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+  SDL_Texture* pTexture =
+      create_texture(iWidth, iHeight, pARGBPixels, iSpriteFlags);
   delete[] pARGBPixels;
   return pTexture;
 }
 
 SDL_Texture* render_target::create_texture(int iWidth, int iHeight,
-                                           const uint32_t* pPixels) const {
+                                           const uint32_t* pPixels,
+                                           uint32_t sprite_flags) const {
   SDL_Texture* pTexture =
       SDL_CreateTexture(renderer, pixel_format->format,
                         SDL_TEXTUREACCESS_STATIC, iWidth, iHeight);
 
   if (pTexture == nullptr) {
     throw std::runtime_error(SDL_GetError());
+  }
+
+  if (sprite_flags & thdf_nearest) {
+    SDL_SetTextureScaleMode(pTexture, SDL_SCALEMODE_NEAREST);
   }
 
   if (!SDL_UpdateTexture(pTexture, nullptr, pPixels,
@@ -1738,7 +1743,7 @@ void freetype_font::make_texture(const render_target* pEventualCanvas,
   }
 
   pCacheEntry->texture = pEventualCanvas->create_texture(
-      pCacheEntry->width, pCacheEntry->height, pPixels.data());
+      pCacheEntry->width, pCacheEntry->height, pPixels.data(), thdf_nearest);
 }
 
 void freetype_font::copy_pixel_data(
