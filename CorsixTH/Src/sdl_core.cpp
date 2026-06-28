@@ -296,16 +296,16 @@ void mainloop(lua_State* L) {
         case SDL_EVENT_KEY_DOWN:
           last_dispatch = dispatch_keydown;
           push_app_dispatch(L, last_dispatch);
-          lua_pushstring(L, SDL_GetKeyName(e.key.keysym.sym));
-          l_push_modifiers_table(L, e.key.keysym.mod);
+          lua_pushstring(L, SDL_GetKeyName(e.key.key));
+          l_push_modifiers_table(L, e.key.mod);
           lua_pushboolean(L, e.key.repeat != 0);
           nargs = 4;
           break;
         case SDL_EVENT_KEY_UP:
           last_dispatch = dispatch_keyup;
           push_app_dispatch(L, last_dispatch);
-          lua_pushstring(L, SDL_GetKeyName(e.key.keysym.sym));
-          l_push_modifiers_table(L, e.key.keysym.mod);
+          lua_pushstring(L, SDL_GetKeyName(e.key.key));
+          l_push_modifiers_table(L, e.key.mod);
           nargs = 3;
           break;
         case SDL_EVENT_TEXT_INPUT:
@@ -326,34 +326,35 @@ void mainloop(lua_State* L) {
           last_dispatch = dispatch_buttondown;
           push_app_dispatch(L, last_dispatch);
           lua_pushinteger(L, e.button.button);
-          lua_pushinteger(L, e.button.x);
-          lua_pushinteger(L, e.button.y);
+          lua_pushnumber(L, e.button.x);
+          lua_pushnumber(L, e.button.y);
           nargs = 4;
           break;
         case SDL_EVENT_MOUSE_BUTTON_UP:
           last_dispatch = dispatch_buttonup;
           push_app_dispatch(L, dispatch_buttonup);
           lua_pushinteger(L, e.button.button);
-          lua_pushinteger(L, e.button.x);
-          lua_pushinteger(L, e.button.y);
+          lua_pushnumber(L, e.button.x);
+          lua_pushnumber(L, e.button.y);
           nargs = 4;
           break;
         case SDL_EVENT_MOUSE_WHEEL:
           last_dispatch = dispatch_mousewheel;
           push_app_dispatch(L, last_dispatch);
-          lua_pushinteger(L, e.wheel.x);
-          lua_pushinteger(L, e.wheel.y);
+          lua_pushnumber(L, e.wheel.x);
+          lua_pushnumber(L, e.wheel.y);
           nargs = 3;
           break;
         case SDL_EVENT_MOUSE_MOTION:
           last_dispatch = dispatch_motion;
           push_app_dispatch(L, last_dispatch);
-          lua_pushinteger(L, e.motion.x);
-          lua_pushinteger(L, e.motion.y);
-          lua_pushinteger(L, e.motion.xrel);
-          lua_pushinteger(L, e.motion.yrel);
+          lua_pushnumber(L, e.motion.x);
+          lua_pushnumber(L, e.motion.y);
+          lua_pushnumber(L, e.motion.xrel);
+          lua_pushnumber(L, e.motion.yrel);
           nargs = 5;
           break;
+#ifdef GESTURE_SUPPORT
         case SDL_MULTIGESTURE:
           last_dispatch = dispatch_multigesture;
           push_app_dispatch(L, last_dispatch);
@@ -364,31 +365,25 @@ void mainloop(lua_State* L) {
           lua_pushnumber(L, e.mgesture.y);
           nargs = 6;
           break;
-        case SDL_WINDOWEVENT:
-          switch (e.window.event) {
-            case SDL_EVENT_WINDOW_FOCUS_GAINED:
-              last_dispatch = dispatch_active;
-              push_app_dispatch(L, last_dispatch);
-              lua_pushinteger(L, 1);
-              nargs = 2;
-              break;
-            case SDL_EVENT_WINDOW_FOCUS_LOST:
-              last_dispatch = dispatch_active;
-              push_app_dispatch(L, last_dispatch);
-              lua_pushinteger(L, 0);
-              nargs = 2;
-              break;
-            case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
-              last_dispatch = dispatch_window_resize;
-              push_app_dispatch(L, last_dispatch);
-              lua_pushinteger(L, e.window.data1);
-              lua_pushinteger(L, e.window.data2);
-              nargs = 3;
-              break;
-            default:
-              nargs = 0;
-              break;
-          }
+#endif
+        case SDL_EVENT_WINDOW_FOCUS_GAINED:
+          last_dispatch = dispatch_active;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushinteger(L, 1);
+          nargs = 2;
+          break;
+        case SDL_EVENT_WINDOW_FOCUS_LOST:
+          last_dispatch = dispatch_active;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushinteger(L, 0);
+          nargs = 2;
+          break;
+        case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+          last_dispatch = dispatch_window_resize;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushinteger(L, e.window.data1);
+          lua_pushinteger(L, e.window.data2);
+          nargs = 3;
           break;
         case SDL_USEREVENT_MUSIC_OVER:
           last_dispatch = dispatch_music_over;
