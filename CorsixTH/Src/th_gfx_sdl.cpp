@@ -201,8 +201,7 @@ class scoped_color_mod {
  public:
   scoped_color_mod(SDL_Texture* pTexture, int r, int g, int b)
       : texture(pTexture) {
-    int err = SDL_SetTextureColorMod(texture, r, g, b);
-    if (err < 0) {
+    if (!SDL_SetTextureColorMod(texture, r, g, b)) {
       throw std::runtime_error(SDL_GetError());
     }
   }
@@ -388,7 +387,7 @@ render_target::scoped_target_texture::scoped_target_texture(
 
   texture = SDL_CreateTexture(target->renderer, SDL_PIXELFORMAT_ABGR8888,
                               SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
-  if (SDL_SetRenderTarget(target->renderer, texture) != 0) {
+  if (!SDL_SetRenderTarget(target->renderer, texture)) {
     SDL_DestroyTexture(texture);
     texture = nullptr;
     return;
@@ -799,8 +798,7 @@ bool write_rgb_png(int width, int height, png_bytep pixels, int pitch,
 
 bool render_target::take_screenshot(const char* file_path) const {
   int width = 0, height = 0;
-  if (SDL_GetCurrentRenderOutputSize(renderer, &width, &height) == -1)
-    return false;
+  if (!SDL_GetCurrentRenderOutputSize(renderer, &width, &height)) return false;
 
   // Create a window-sized surface, RGB format (0 Rmask means RGB.)
   SDL_Surface* pRgbSurface =
@@ -810,7 +808,7 @@ bool render_target::take_screenshot(const char* file_path) const {
   bool ok = false;
 
   int readStatus = -1;
-  if (SDL_LockSurface(pRgbSurface) != -1) {
+  if (SDL_LockSurface(pRgbSurface)) {
     // Ask the renderer to (slowly) fill the surface with renderer
     // output data.
     readStatus =
@@ -907,25 +905,20 @@ SDL_Texture* render_target::create_texture(int iWidth, int iHeight,
     throw std::runtime_error(SDL_GetError());
   }
 
-  int err = 0;
-  err = SDL_UpdateTexture(pTexture, nullptr, pPixels,
-                          static_cast<int>(sizeof(*pPixels) * iWidth));
-  if (err < 0) {
+  if (!SDL_UpdateTexture(pTexture, nullptr, pPixels,
+                         static_cast<int>(sizeof(*pPixels) * iWidth))) {
     throw std::runtime_error(SDL_GetError());
   }
 
-  err = SDL_SetTextureBlendMode(pTexture, SDL_BLENDMODE_BLEND);
-  if (err < 0) {
+  if (!SDL_SetTextureBlendMode(pTexture, SDL_BLENDMODE_BLEND)) {
     throw std::runtime_error(SDL_GetError());
   }
 
-  err = SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
-  if (err < 0) {
+  if (!SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF)) {
     throw std::runtime_error(SDL_GetError());
   }
 
-  err = SDL_SetTextureAlphaMod(pTexture, 0xFF);
-  if (err < 0) {
+  if (!SDL_SetTextureAlphaMod(pTexture, 0xFF)) {
     throw std::runtime_error(SDL_GetError());
   }
 

@@ -56,7 +56,7 @@ int l_init(lua_State* L) {
     else
       luaL_argerror(L, i, "Expected SDL part name");
   }
-  if (SDL_Init(flags) != 0) {
+  if (!SDL_Init(flags)) {
     std::fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
     lua_pushboolean(L, 0);
     return 1;
@@ -283,9 +283,9 @@ void mainloop(lua_State* L) {
 #endif
 
   std::string_view last_dispatch;
-  int wait_error = 0;
+  bool wait_error = false;
 
-  while ((wait_error = SDL_WaitEvent(&e)) != 0) {
+  while ((wait_error = SDL_WaitEvent(&e))) {
     bool do_frame = false;
     bool do_timer = false;
     do {
@@ -436,7 +436,7 @@ void mainloop(lua_State* L) {
         do_frame = do_frame || (lua_toboolean(L, -1) != 0);
         lua_pop(L, 2);
       }
-    } while (SDL_PollEvent(&e) != 0);
+    } while (SDL_PollEvent(&e));
     if (do_timer) {
       last_dispatch = dispatch_timer;
       push_app_dispatch(L, last_dispatch);
@@ -464,7 +464,7 @@ void mainloop(lua_State* L) {
           lua_pop(L, 2);
         }
         infinite_loop_counter = 0;
-      } while (fps.limit_fps == false && SDL_PollEvent(nullptr) == 0);
+      } while (fps.limit_fps == false && !SDL_PollEvent(nullptr));
     }
 
     // No events pending - a good time to do a bit of garbage collection
@@ -472,7 +472,7 @@ void mainloop(lua_State* L) {
     infinite_loop_counter = 0;
   }
 
-  if (wait_error != 0) {
+  if (wait_error) {
     std::fprintf(stderr, "%s\n", SDL_GetError());
   }
 

@@ -175,8 +175,7 @@ void movie_picture_buffer::draw(SDL_Renderer* pRenderer,
     std::scoped_lock pictureLock(cur_pic.mutex);
     if (cur_pic.buffer) {
       SDL_UpdateTexture(texture, nullptr, cur_pic.buffer, cur_pic.width * 3);
-      int iError = SDL_RenderTexture(pRenderer, texture, nullptr, &dstrect);
-      if (iError < 0) {
+      if (!SDL_RenderTexture(pRenderer, texture, nullptr, &dstrect)) {
         std::cerr << "Error displaying movie frame: " << SDL_GetError() << "\n";
       }
     }
