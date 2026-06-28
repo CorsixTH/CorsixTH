@@ -284,6 +284,15 @@ void mainloop(lua_State* L) {
   while ((wait_error = SDL_WaitEvent(&e))) {
     bool do_frame = false;
     bool do_timer = false;
+
+    // TODO: Determine if SDL_ConvertEventToRenderCoordinates is needed.
+    // Migrating to SDL 3:
+    //"""
+    // Mouse and touch events are no longer filtered to change their
+    // coordinates, instead you can call SDL_ConvertEventToRenderCoordinates()
+    // to explicitly map event coordinates into the rendering viewport.
+    //"""
+
     do {
       int nargs;
       switch (e.type) {

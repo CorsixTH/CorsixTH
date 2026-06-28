@@ -48,20 +48,10 @@ SOFTWARE.
 #include "th_gfx_common.h"
 #include "th_gfx_font.h"
 
-#if SDL_VERSION_ATLEAST(2, 0, 10)
-
 //! How much to overdraw scaled sprites to ensure no gaps are visible.
 const float frect_overdraw = 0.01f;
 
 #define SDL_FRECT_UNIT float
-#else
-// On older SDL versions, floating point rendering was not available so we fall
-// back to integer methods / types.
-#define SDL_FRECT_UNIT int
-#define SDL_FRect SDL_Rect
-#define SDL_RenderTexture SDL_RenderTexture
-#define SDL_RenderTextureRotated SDL_RenderTextureRotated
-#endif
 
 full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
     : width(iWidth), height(iHeight) {}
@@ -388,6 +378,7 @@ render_target::scoped_target_texture::scoped_target_texture(
   texture = SDL_CreateTexture(target->renderer, SDL_PIXELFORMAT_ABGR8888,
                               SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
   if (!SDL_SetRenderTarget(target->renderer, texture)) {
+    std::fprintf(stderr, "scoped_target_texture error: %s", SDL_GetError());
     SDL_DestroyTexture(texture);
     texture = nullptr;
     return;
@@ -416,8 +407,12 @@ render_target::scoped_target_texture::~scoped_target_texture() {
   if (!texture) return;
 
   // Restore previous context.
-  SDL_SetRenderTarget(target->renderer,
-                      previous_target ? previous_target->texture : nullptr);
+  if (!SDL_SetRenderTarget(target->renderer, previous_target
+                                                 ? previous_target->texture
+                                                 : nullptr)) {
+    std::fprintf(stderr, "scoped_target_texture destructor error: %s",
+                 SDL_GetError());
+  }
   SDL_SetRenderLogicalPresentation(
       target->renderer,
       previous_target ? previous_target->rect.w : target->width,
@@ -428,7 +423,14 @@ render_target::scoped_target_texture::~scoped_target_texture() {
   if (scale) {
     // If the target texture is already scaled, skip the global scale factor
     // by drawing directly.
-    SDL_RenderTexture(target->renderer, texture, nullptr, &rect);
+
+    SDL_FRect frect;
+    SDL_RectToFRect(&rect, &frect);
+    if (!SDL_RenderTexture(target->renderer, texture, nullptr, &frect)) {
+      std::fprintf(stderr,
+                   "scoped_target_texture destructor failed to render: %s",
+                   SDL_GetError());
+    }
   } else {
     target->draw(texture, nullptr, &rect, 0);
   }
@@ -447,13 +449,27 @@ render_target::render_target(const render_target_creation_params& params)
     throw std::runtime_error(SDL_GetError());
   }
 
-  Uint32 iRendererFlags =
-      (params.present_immediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
-  renderer = SDL_CreateRenderer(window, -1, iRendererFlags);
+  SDL_PropertiesID renderProps = SDL_CreateProperties();
+  SDL_SetPointerProperty(renderProps, SDL_PROP_RENDERER_CREATE_WINDOW_POINTER,
+                         window);
+  SDL_SetNumberProperty(renderProps,
+                        SDL_PROP_RENDERER_CREATE_PRESENT_VSYNC_NUMBER,
+                        params.present_immediate ? 0 : 1);
+  renderer = SDL_CreateRendererWithProperties(renderProps);
+  SDL_DestroyProperties(renderProps);
+  if (!renderer) {
+    throw std::runtime_error(SDL_GetError());
+  }
 
-  SDL_RendererInfo info;
-  SDL_GetRendererInfo(renderer, &info);
-  supports_target_textures = (info.flags & SDL_RENDERER_TARGETTEXTURE) != 0;
+  auto testTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
+                                       SDL_TEXTUREACCESS_TARGET, 16, 16);
+  if (!testTexture) {
+    std::fprintf(stderr,
+                 "Could not create target texture, assuming unsupported: %s",
+                 SDL_GetError());
+  }
+  supports_target_textures = !!testTexture;
+  SDL_DestroyTexture(testTexture);
 
   SDL_version sdlVersion;
   SDL_GetVersion(&sdlVersion);
@@ -569,9 +585,7 @@ void render_target::set_caption(const char* sCaption) {
 }
 
 const char* render_target::get_renderer_details() const {
-  SDL_RendererInfo info = {};
-  SDL_GetRendererInfo(renderer, &info);
-  return info.name;
+  return SDL_GetRendererName(renderer);
 }
 
 const char* render_target::get_last_error() { return SDL_GetError(); }
@@ -638,7 +652,10 @@ bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
 
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   SDL_SetRenderDrawColor(renderer, r, g, b, a);
-  SDL_RenderFillRect(renderer, &rcDest);
+
+  SDL_FRect fdest;
+  SDL_RectToFRect(&rcDest, &fdest);
+  SDL_RenderFillRect(renderer, &fdest);
 
   return true;
 }
@@ -691,13 +708,13 @@ void render_target::pop_clip_rect() {
 
 int render_target::get_width() const {
   int w;
-  SDL_GetRenderLogicalPresentation(renderer, &w, nullptr);
+  SDL_GetRenderLogicalPresentation(renderer, &w, nullptr, nullptr);
   return static_cast<int>(std::ceil(w / draw_scale()));
 }
 
 int render_target::get_height() const {
   int h;
-  SDL_GetRenderLogicalPresentation(renderer, nullptr, &h);
+  SDL_GetRenderLogicalPresentation(renderer, nullptr, &h, nullptr);
   return static_cast<int>(std::ceil(h / draw_scale()));
 }
 
@@ -940,15 +957,28 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
 
   SDL_FRect scaledDstRect;
   getScaleRect(prcDstRect, draw_scale(), &scaledDstRect);
+
+  std::unique_ptr<SDL_FRect> fSrcRect;
+  if (prcSrcRect != nullptr) {
+    fSrcRect = std::make_unique<SDL_FRect>();
+    SDL_RectToFRect(prcSrcRect, fSrcRect.get());
+  }
   if (current_target) current_target->offset(scaledDstRect);
   if (iSDLFlip != 0) {
     // iSDLFlip may be 3 (HORIZONTAL | VERTICAL) but there is no enum value for
     // that
-    SDL_RenderTextureRotated(renderer, pTexture, prcSrcRect, &scaledDstRect, 0,
-                             nullptr,
-                             (SDL_FlipMode)iSDLFlip);  // NOLINT
+    if (!SDL_RenderTextureRotated(renderer, pTexture, fSrcRect.get(),
+                                  &scaledDstRect, 0, nullptr,
+                                  (SDL_FlipMode)iSDLFlip)) {  // NOLINT
+      std::fprintf(stderr, "draw, failed to render flipped texture: %s",
+                   SDL_GetError());
+    }
   } else {
-    SDL_RenderTexture(renderer, pTexture, prcSrcRect, &scaledDstRect);
+    if (!SDL_RenderTexture(renderer, pTexture, fSrcRect.get(),
+                           &scaledDstRect)) {
+      std::fprintf(stderr, "draw, failed to render texture: %s",
+                   SDL_GetError());
+    }
   }
 }
 
