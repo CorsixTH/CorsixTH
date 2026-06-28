@@ -21,7 +21,7 @@
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
 <releases>
-  <release version="0.70.0~rc2" date="2026-06-xx" type="development">
+  <release version="0.70.0~rc2" date="2026-06-28" type="development">
     <description>
       <p>Changes:</p>
       <ul>
@@ -30,6 +30,7 @@
       <p>Translations:</p>
       <ul>
         <li>French translation updated. Thanks @Ouaz</li>
+        <li>Czech translation updated. Thanks @jansakos</li>
       </ul>
       <p>Bug Fixes from RC1:</p>
       <ul>
