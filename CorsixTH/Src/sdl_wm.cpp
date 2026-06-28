@@ -57,7 +57,11 @@ int l_set_icon_win32(lua_State* L) {
 }
 
 int l_show_cursor(lua_State* L) {
-  SDL_ShowCursor(lua_toboolean(L, 1));
+  if (lua_toboolean(L, 1)) {
+    SDL_ShowCursor();
+  } else {
+    SDL_HideCursor();
+  }
   return 0;
 }
 
