@@ -24,8 +24,8 @@ SOFTWARE.
 #define CORSIX_TH_TH_SOUND_H_
 #include "config.h"
 
-#include <SDL_mixer.h>
-#include <SDL_rwops.h>
+#include <SDL3/SDL_rwops.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 #include <array>
 #include <mutex>
@@ -45,11 +45,11 @@ class sound_archive {
   //! Gets the duration (in milliseconds) of the sound at a given index
   size_t get_sound_duration(size_t iIndex);
 
-  //! Opens the sound at a given index into an SDL_RWops structure
+  //! Opens the sound at a given index into an SDL_IOStream structure
   /*!
       The caller is responsible for closing/freeing the result.
   */
-  SDL_RWops* load_sound(size_t iIndex);
+  SDL_IOStream* load_sound(size_t iIndex);
 
  private:
   struct sound_dat_sound_info {

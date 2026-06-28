@@ -23,12 +23,12 @@ SOFTWARE.
 #include "lua.hpp"
 #include "th_lua.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
-#include <SDL_syswm.h>
+#include <SDL3/SDL_syswm.h>
 #include <windows.h>
 
 #include "../resource.h"
 #endif
-#include <SDL_mouse.h>
+#include <SDL3/SDL_mouse.h>
 
 #include <array>
 
@@ -44,7 +44,7 @@ int l_set_icon_win32(lua_State* L) {
     SDL_SysWMinfo oWindowInfo;
     oWindowInfo.version.major = SDL_MAJOR_VERSION;
     oWindowInfo.version.minor = SDL_MINOR_VERSION;
-    oWindowInfo.version.patch = SDL_PATCHLEVEL;
+    oWindowInfo.version.patch = SDL_MICRO_VERSION;
     if(SDL_GetWindowWMInfo(window,&oWindowInfo) == 1)
     {
         HWND hWindow = oWindowInfo.info.win.window;
