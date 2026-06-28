@@ -471,11 +471,6 @@ render_target::~render_target() {
   zoom_buffer.reset();
   destroy_intermediate_textures();
 
-  if (pixel_format) {
-    SDL_FreeFormat(pixel_format);
-    pixel_format = nullptr;
-  }
-
   if (renderer) {
     SDL_DestroyRenderer(renderer);
     renderer = nullptr;
@@ -639,7 +634,7 @@ bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
   getEnclosingScaleRect(&rcDest, draw_scale(), &rcDest);
 
   Uint8 r, g, b, a;
-  SDL_GetRGBA(iColour, pixel_format, &r, &g, &b, &a);
+  SDL_GetRGBA(iColour, pixel_format, nullptr, &r, &g, &b, &a);
 
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   SDL_SetRenderDrawColor(renderer, r, g, b, a);

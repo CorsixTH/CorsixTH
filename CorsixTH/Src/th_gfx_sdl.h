@@ -410,7 +410,7 @@ class render_target {
   SDL_Renderer* renderer{nullptr};
   scoped_target_texture* current_target{nullptr};
   std::unique_ptr<scoped_target_texture> zoom_buffer;
-  SDL_PixelFormat* pixel_format{nullptr};
+  const SDL_PixelFormatDetails* pixel_format{nullptr};
   bool blue_filter_active{false};
   cursor* game_cursor{nullptr};
   double bitmap_scale_factor{1.0};  ///< Bitmap scale factor.
