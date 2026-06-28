@@ -38,13 +38,13 @@ extern "C" {
 #include <libswresample/version.h>
 #include <libswscale/swscale.h>
 }
-#include <SDL_error.h>
-#include <SDL_events.h>
-#include <SDL_mixer.h>
-#include <SDL_pixels.h>
-#include <SDL_rect.h>
-#include <SDL_render.h>
-#include <SDL_timer.h>
+#include <SDL3/SDL_error.h>
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_pixels.h>
+#include <SDL3/SDL_rect.h>
+#include <SDL3/SDL_render.h>
+#include <SDL3/SDL_timer.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 #include <cerrno>
 #include <chrono>
@@ -180,7 +180,7 @@ void movie_picture_buffer::draw(SDL_Renderer* pRenderer,
     std::scoped_lock pictureLock(cur_pic.mutex);
     if (cur_pic.buffer) {
       SDL_UpdateTexture(texture, nullptr, cur_pic.buffer, cur_pic.width * 3);
-      int iError = SDL_RenderCopy(pRenderer, texture, nullptr, &dstrect);
+      int iError = SDL_RenderTexture(pRenderer, texture, nullptr, &dstrect);
       if (iError < 0) {
         std::cerr << "Error displaying movie frame: " << SDL_GetError() << "\n";
       }

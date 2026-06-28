@@ -22,10 +22,10 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL_events.h>
-#include <SDL_mixer.h>
-#include <SDL_rwops.h>
-#include <SDL_thread.h>
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_rwops.h>
+#include <SDL3/SDL_thread.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 #include <array>
 #include <cmath>
@@ -97,7 +97,7 @@ int l_destroy(lua_State* L) {
 struct load_music_async_data {
   lua_State* L;
   Mix_Music* music;
-  SDL_RWops* rwop;
+  SDL_IOStream* rwop;
   char* err;
   SDL_Thread* thread;
 };
@@ -123,7 +123,7 @@ int l_load_music_async(lua_State* L) {
   size_t iLength;
   const uint8_t* pData = luaT_checkfile(L, 1, &iLength);
   luaL_checktype(L, 2, LUA_TFUNCTION);
-  SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
+  SDL_IOStream* rwop = SDL_IOFromConstMem(pData, (int)iLength);
   lua_settop(L, 2);
 
   load_music_async_data* async = luaT_new<load_music_async_data>(L);
@@ -164,7 +164,7 @@ int l_load_music_async(lua_State* L) {
 int l_load_music(lua_State* L) {
   size_t iLength;
   const uint8_t* pData = luaT_checkfile(L, 1, &iLength);
-  SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
+  SDL_IOStream* rwop = SDL_IOFromConstMem(pData, (int)iLength);
   Mix_Music* pMusic = Mix_LoadMUS_RW(rwop, 1);
   if (pMusic == nullptr) {
     lua_pushnil(L);

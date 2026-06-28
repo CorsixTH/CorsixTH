@@ -25,8 +25,8 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL_rect.h>
-#include <SDL_render.h>
+#include <SDL3/SDL_rect.h>
+#include <SDL3/SDL_render.h>
 
 #include <array>
 #include <atomic>
@@ -38,7 +38,7 @@ SOFTWARE.
 #include <thread>
 
 #ifdef CORSIX_TH_USE_FFMPEG
-#include <SDL_mixer.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 extern "C" {
 #ifndef INT64_C

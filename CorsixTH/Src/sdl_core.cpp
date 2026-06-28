@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "sdl_core.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 #ifdef TRACY_ENABLE
 #include <tracy/Tracy.hpp>
@@ -127,19 +127,19 @@ void l_infinite_loop_hook(lua_State* L, lua_Debug*) {
 
 void l_push_modifiers_table(lua_State* L, Uint16 mod) {
   lua_newtable(L);
-  if ((mod & KMOD_SHIFT) != 0) {
+  if ((mod & SDL_KMOD_SHIFT) != 0) {
     luaT_pushtablebool(L, "shift", true);
   }
-  if ((mod & KMOD_ALT) != 0) {
+  if ((mod & SDL_KMOD_ALT) != 0) {
     luaT_pushtablebool(L, "alt", true);
   }
-  if ((mod & KMOD_CTRL) != 0) {
+  if ((mod & SDL_KMOD_CTRL) != 0) {
     luaT_pushtablebool(L, "ctrl", true);
   }
-  if ((mod & KMOD_GUI) != 0) {
+  if ((mod & SDL_KMOD_GUI) != 0) {
     luaT_pushtablebool(L, "gui", true);
   }
-  if ((mod & KMOD_NUM) != 0) {
+  if ((mod & SDL_KMOD_NUM) != 0) {
     luaT_pushtablebool(L, "numlockactive", true);
   }
 }
@@ -151,7 +151,7 @@ int l_get_key_modifiers(lua_State* L) {
 
 int l_quit(lua_State*) {
   SDL_Event e;
-  e.type = SDL_QUIT;
+  e.type = SDL_EVENT_QUIT;
   SDL_PushEvent(&e);
   return 0;
 }
@@ -291,9 +291,9 @@ void mainloop(lua_State* L) {
     do {
       int nargs;
       switch (e.type) {
-        case SDL_QUIT:
+        case SDL_EVENT_QUIT:
           goto leave_loop;
-        case SDL_KEYDOWN:
+        case SDL_EVENT_KEY_DOWN:
           last_dispatch = dispatch_keydown;
           push_app_dispatch(L, last_dispatch);
           lua_pushstring(L, SDL_GetKeyName(e.key.keysym.sym));
@@ -301,20 +301,20 @@ void mainloop(lua_State* L) {
           lua_pushboolean(L, e.key.repeat != 0);
           nargs = 4;
           break;
-        case SDL_KEYUP:
+        case SDL_EVENT_KEY_UP:
           last_dispatch = dispatch_keyup;
           push_app_dispatch(L, last_dispatch);
           lua_pushstring(L, SDL_GetKeyName(e.key.keysym.sym));
           l_push_modifiers_table(L, e.key.keysym.mod);
           nargs = 3;
           break;
-        case SDL_TEXTINPUT:
+        case SDL_EVENT_TEXT_INPUT:
           last_dispatch = dispatch_textinput;
           push_app_dispatch(L, last_dispatch);
           lua_pushstring(L, e.text.text);
           nargs = 2;
           break;
-        case SDL_TEXTEDITING:
+        case SDL_EVENT_TEXT_EDITING:
           last_dispatch = dispatch_textediting;
           push_app_dispatch(L, dispatch_textediting);
           lua_pushstring(L, e.edit.text);
@@ -322,7 +322,7 @@ void mainloop(lua_State* L) {
           lua_pushinteger(L, e.edit.length);
           nargs = 4;
           break;
-        case SDL_MOUSEBUTTONDOWN:
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
           last_dispatch = dispatch_buttondown;
           push_app_dispatch(L, last_dispatch);
           lua_pushinteger(L, e.button.button);
@@ -330,7 +330,7 @@ void mainloop(lua_State* L) {
           lua_pushinteger(L, e.button.y);
           nargs = 4;
           break;
-        case SDL_MOUSEBUTTONUP:
+        case SDL_EVENT_MOUSE_BUTTON_UP:
           last_dispatch = dispatch_buttonup;
           push_app_dispatch(L, dispatch_buttonup);
           lua_pushinteger(L, e.button.button);
@@ -338,14 +338,14 @@ void mainloop(lua_State* L) {
           lua_pushinteger(L, e.button.y);
           nargs = 4;
           break;
-        case SDL_MOUSEWHEEL:
+        case SDL_EVENT_MOUSE_WHEEL:
           last_dispatch = dispatch_mousewheel;
           push_app_dispatch(L, last_dispatch);
           lua_pushinteger(L, e.wheel.x);
           lua_pushinteger(L, e.wheel.y);
           nargs = 3;
           break;
-        case SDL_MOUSEMOTION:
+        case SDL_EVENT_MOUSE_MOTION:
           last_dispatch = dispatch_motion;
           push_app_dispatch(L, last_dispatch);
           lua_pushinteger(L, e.motion.x);
@@ -366,19 +366,19 @@ void mainloop(lua_State* L) {
           break;
         case SDL_WINDOWEVENT:
           switch (e.window.event) {
-            case SDL_WINDOWEVENT_FOCUS_GAINED:
+            case SDL_EVENT_WINDOW_FOCUS_GAINED:
               last_dispatch = dispatch_active;
               push_app_dispatch(L, last_dispatch);
               lua_pushinteger(L, 1);
               nargs = 2;
               break;
-            case SDL_WINDOWEVENT_FOCUS_LOST:
+            case SDL_EVENT_WINDOW_FOCUS_LOST:
               last_dispatch = dispatch_active;
               push_app_dispatch(L, last_dispatch);
               lua_pushinteger(L, 0);
               nargs = 2;
               break;
-            case SDL_WINDOWEVENT_SIZE_CHANGED:
+            case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
               last_dispatch = dispatch_window_resize;
               push_app_dispatch(L, last_dispatch);
               lua_pushinteger(L, e.window.data1);

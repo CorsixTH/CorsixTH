@@ -24,8 +24,8 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL_mixer.h>
-#include <SDL_rwops.h>
+#include <SDL3/SDL_rwops.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 #include <algorithm>
 #include <chrono>
@@ -114,7 +114,7 @@ inline uint64_t mul64(A a, B b) {
 }  // namespace
 
 size_t sound_archive::get_sound_duration(size_t iIndex) {
-  SDL_RWops* pFile = load_sound(iIndex);
+  SDL_IOStream* pFile = load_sound(iIndex);
   if (!pFile) {
     return 0;
   }
@@ -131,16 +131,16 @@ size_t sound_archive::get_sound_duration(size_t iIndex) {
   uint32_t iFourCC;
   uint32_t iChunkLength;
   for (;;) {
-    if (SDL_RWread(pFile, &iFourCC, 4, 1) != 1) {
+    if (SDL_ReadIO(pFile, &iFourCC, 4, 1) != 1) {
       break;
     }
-    if (SDL_RWread(pFile, &iChunkLength, 4, 1) != 1) {
+    if (SDL_ReadIO(pFile, &iChunkLength, 4, 1) != 1) {
       break;
     }
     if (iFourCC == fourcc('R', 'I', 'F', 'F') ||
         iFourCC == fourcc('L', 'I', 'S', 'T')) {
       if (iChunkLength >= 4) {
-        if (SDL_RWread(pFile, &iFourCC, 4, 1) != 1) {
+        if (SDL_ReadIO(pFile, &iFourCC, 4, 1) != 1) {
           break;
         } else {
           continue;
@@ -148,22 +148,22 @@ size_t sound_archive::get_sound_duration(size_t iIndex) {
       }
     }
     if (iFourCC == fourcc('f', 'm', 't', ' ') && iChunkLength >= 16) {
-      if (SDL_RWread(pFile, &iWaveAudioFormat, 2, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveAudioFormat, 2, 1) != 1) {
         break;
       }
-      if (SDL_RWread(pFile, &iWaveChannelCount, 2, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveChannelCount, 2, 1) != 1) {
         break;
       }
-      if (SDL_RWread(pFile, &iWaveSampleRate, 4, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveSampleRate, 4, 1) != 1) {
         break;
       }
-      if (SDL_RWread(pFile, &iWaveByteRate, 4, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveByteRate, 4, 1) != 1) {
         break;
       }
-      if (SDL_RWread(pFile, &iWaveBlockAlign, 2, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveBlockAlign, 2, 1) != 1) {
         break;
       }
-      if (SDL_RWread(pFile, &iWaveBitsPerSample, 2, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveBitsPerSample, 2, 1) != 1) {
         break;
       }
       iChunkLength -= 16;
@@ -173,12 +173,12 @@ size_t sound_archive::get_sound_duration(size_t iIndex) {
       iWaveDataLength = iChunkLength;
       break;
     }
-    if (SDL_RWseek(pFile, iChunkLength + (iChunkLength & 1), RW_SEEK_CUR) ==
+    if (SDL_SeekIO(pFile, iChunkLength + (iChunkLength & 1), SDL_IO_SEEK_CUR) ==
         -1) {
       break;
     }
   }
-  SDL_RWclose(pFile);
+  SDL_CloseIO(pFile);
   if (iWaveAudioFormat != 1 || iWaveChannelCount == 0 || iWaveSampleRate == 0 ||
       iWaveDataLength == 0 || iWaveBitsPerSample == 0) {
     return 0;
@@ -189,13 +189,13 @@ size_t sound_archive::get_sound_duration(size_t iIndex) {
       mul64(mul64(iWaveBitsPerSample, iWaveChannelCount), iWaveSampleRate));
 }
 
-SDL_RWops* sound_archive::load_sound(size_t iIndex) {
+SDL_IOStream* sound_archive::load_sound(size_t iIndex) {
   if (iIndex >= sound_files.size()) {
     return nullptr;
   }
 
   sound_dat_sound_info pFile = sound_files[iIndex];
-  return SDL_RWFromConstMem(data.data() + pFile.position,
+  return SDL_IOFromConstMem(data.data() + pFile.position,
                             static_cast<int>(pFile.length));
 }
 
@@ -252,7 +252,7 @@ void sound_player::populate_from(sound_archive* pArchive) {
   sounds = new Mix_Chunk*[pArchive->get_number_of_sounds()];
   for (; sound_count < pArchive->get_number_of_sounds(); ++sound_count) {
     sounds[sound_count] = nullptr;
-    if (SDL_RWops* pRwop = pArchive->load_sound(sound_count)) {
+    if (SDL_IOStream* pRwop = pArchive->load_sound(sound_count)) {
       sounds[sound_count] = Mix_LoadWAV_RW(pRwop, 1);
       if (sounds[sound_count]) {
         Mix_VolumeChunk(sounds[sound_count], MIX_MAX_VOLUME);
