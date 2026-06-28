@@ -49,10 +49,6 @@ int l_init(lua_State* L) {
       flags |= SDL_INIT_VIDEO;
     else if (std::strcmp(s, "audio") == 0)
       flags |= SDL_INIT_AUDIO;
-    else if (std::strcmp(s, "timer") == 0)
-      flags |= SDL_INIT_TIMER;
-    else if (std::strcmp(s, "*") == 0)
-      flags |= SDL_INIT_EVERYTHING;
     else
       luaL_argerror(L, i, "Expected SDL part name");
   }
