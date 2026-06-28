@@ -380,8 +380,8 @@ class render_target {
                                          const uint8_t* pPixels,
                                          const ::palette* pPalette,
                                          uint32_t iSpriteFlags) const;
-  SDL_Texture* create_texture(int iWidth, int iHeight,
-                              const uint32_t* pPixels) const;
+  SDL_Texture* create_texture(int iWidth, int iHeight, const uint32_t* pPixels,
+                              uint32_t sprite_flags) const;
   void draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
             const SDL_Rect* prcDstRect, int iFlags);
   void draw_line(line_sequence* pLine, int iX, int iY);
