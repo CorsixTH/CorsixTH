@@ -155,14 +155,14 @@ int l_soundarc_data(lua_State* L) {
   if (iIndex == pArchive->get_number_of_sounds()) return 2;
   SDL_IOStream* pRWops = pArchive->load_sound(iIndex);
   if (!pRWops) return 0;
-  size_t iLength = SDL_SeekIO(pRWops, 0, SEEK_END);
-  SDL_SeekIO(pRWops, 0, SEEK_SET);
+  size_t iLength = SDL_SeekIO(pRWops, 0, SDL_IO_SEEK_END);
+  SDL_SeekIO(pRWops, 0, SDL_IO_SEEK_SET);
   // There is a potential leak of pRWops if either of these Lua calls cause
   // a memory error, but it isn't very likely, and this a debugging function
   // anyway, so it isn't very important.
   void* pBuffer = lua_newuserdata(L, iLength);
   lua_pushlstring(L, (const char*)pBuffer,
-                  SDL_ReadIO(pRWops, pBuffer, 1, iLength));
+                  SDL_ReadIO(pRWops, pBuffer, iLength));
   SDL_CloseIO(pRWops);
   return 1;
 }
