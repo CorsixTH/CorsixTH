@@ -530,7 +530,7 @@ void movie_player::togglePause() {
   if (!wasPaused) {
     pause_start_time = SDL_GetTicks();
   } else {
-    uint32_t pauseDuration = SDL_GetTicks() - pause_start_time;
+    uint64_t pauseDuration = SDL_GetTicks() - pause_start_time;
     current_sync_pts_system_time += pauseDuration;
   }
 }
@@ -572,8 +572,10 @@ double movie_player::refresh(const SDL_Rect& destination_rect) {
   SDL_Rect dest_rect = SDL_Rect{destination_rect.x, destination_rect.y,
                                 destination_rect.w, destination_rect.h};
 
-  double dCurTime = (paused.load() ? pause_start_time : SDL_GetTicks()) -
-                    current_sync_pts_system_time + current_sync_pts * 1000.0;
+  double dCurTime =
+      static_cast<double>((paused.load() ? pause_start_time : SDL_GetTicks()) -
+                          current_sync_pts_system_time) +
+      current_sync_pts * 1000.0;
 
   if (!movie_picture_buffer.empty()) {
     double dNextPts = movie_picture_buffer.get_next_pts();

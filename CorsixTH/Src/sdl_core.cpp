@@ -62,7 +62,8 @@ int l_init(lua_State* L) {
   return 1;
 }
 
-Uint32 timer_frame_callback(Uint32 interval, void* param) {
+// SDL TimerCallback
+Uint32 timer_frame_callback(void*, SDL_TimerID, Uint32 interval) {
   SDL_Event e;
   e.type = SDL_USEREVENT_TICK;
   SDL_PushEvent(&e);

@@ -41,7 +41,7 @@ namespace {
 struct map_timer_info {
   SDL_TimerID timer_id;
   Uint32 interval;
-  Uint32 start_time;
+  Uint64 start_time;
   int* callback_id_ptr;
 };
 
@@ -203,12 +203,14 @@ int l_soundfx_set_sound_effects_on(lua_State* L) {
   return 1;
 }
 
-Uint32 played_sound_callback(Uint32 interval, void* param) {
+// SDL TimerCallback
+Uint32 played_sound_callback(void* userdata, SDL_TimerID timer_id,
+                             Uint32 interval) {
   SDL_Event e;
   e.type = SDL_USEREVENT_SOUND_OVER;
-  e.user.data1 = param;
-  int iSoundID = *(static_cast<int*>(param));
-  SDL_RemoveTimer(map_sound_timers[iSoundID].timer_id);
+  e.user.data1 = userdata;
+  int iSoundID = *(static_cast<int*>(userdata));
+  SDL_RemoveTimer(timer_id);
   map_sound_timers.erase(iSoundID);
   SDL_PushEvent(&e);
 
@@ -284,7 +286,8 @@ int l_soundfx_toggle_pause(lua_State* L) {
       itr != map_sound_timers.end()) {
     switch (pauseResult) {
       case sound_player::toggle_pause_result::paused: {
-        Uint32 elapsed = SDL_GetTicks() - itr->second.start_time;
+        Uint32 elapsed =
+            static_cast<Uint32>(SDL_GetTicks() - itr->second.start_time);
         itr->second.interval -= elapsed;
         SDL_RemoveTimer(itr->second.timer_id);
         break;
