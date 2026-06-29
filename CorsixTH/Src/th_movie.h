@@ -446,7 +446,7 @@ class movie_player {
 
   //! Indicate that playback is paused
   std::atomic<bool> paused{};
-  uint32_t pause_start_time{};  ///< The time in SDL ticks at which we paused
+  uint64_t pause_start_time{};  ///< The time in SDL ticks at which we paused
 
   std::mutex decoding_audio_mutex;  ///< Synchronize access to #m_pAudioBuffer
 
@@ -467,7 +467,7 @@ class movie_player {
   ::movie_picture_buffer movie_picture_buffer;  ///< Buffer of processed video
 
   // clock sync parameters
-  std::uint32_t current_sync_pts_system_time;  ///< System time matching
+  std::uint64_t current_sync_pts_system_time;  ///< System time matching
                                                ///< #current_sync_pts
   double current_sync_pts;  ///< The current presentation time stamp (from the
                             ///< audio stream)
