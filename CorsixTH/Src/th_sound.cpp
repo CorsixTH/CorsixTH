@@ -131,16 +131,16 @@ size_t sound_archive::get_sound_duration(size_t iIndex) {
   uint32_t iFourCC;
   uint32_t iChunkLength;
   for (;;) {
-    if (SDL_ReadIO(pFile, &iFourCC, 4, 1) != 1) {
+    if (SDL_ReadIO(pFile, &iFourCC, 4) != 4) {
       break;
     }
-    if (SDL_ReadIO(pFile, &iChunkLength, 4, 1) != 1) {
+    if (SDL_ReadIO(pFile, &iChunkLength, 4) != 4) {
       break;
     }
     if (iFourCC == fourcc('R', 'I', 'F', 'F') ||
         iFourCC == fourcc('L', 'I', 'S', 'T')) {
       if (iChunkLength >= 4) {
-        if (SDL_ReadIO(pFile, &iFourCC, 4, 1) != 1) {
+        if (SDL_ReadIO(pFile, &iFourCC, 4) != 4) {
           break;
         } else {
           continue;
@@ -148,22 +148,22 @@ size_t sound_archive::get_sound_duration(size_t iIndex) {
       }
     }
     if (iFourCC == fourcc('f', 'm', 't', ' ') && iChunkLength >= 16) {
-      if (SDL_ReadIO(pFile, &iWaveAudioFormat, 2, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveAudioFormat, 2) != 2) {
         break;
       }
-      if (SDL_ReadIO(pFile, &iWaveChannelCount, 2, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveChannelCount, 2) != 2) {
         break;
       }
-      if (SDL_ReadIO(pFile, &iWaveSampleRate, 4, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveSampleRate, 4) != 4) {
         break;
       }
-      if (SDL_ReadIO(pFile, &iWaveByteRate, 4, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveByteRate, 4) != 4) {
         break;
       }
-      if (SDL_ReadIO(pFile, &iWaveBlockAlign, 2, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveBlockAlign, 2) != 2) {
         break;
       }
-      if (SDL_ReadIO(pFile, &iWaveBitsPerSample, 2, 1) != 1) {
+      if (SDL_ReadIO(pFile, &iWaveBitsPerSample, 2) != 2) {
         break;
       }
       iChunkLength -= 16;
