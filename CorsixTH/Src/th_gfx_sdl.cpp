@@ -440,9 +440,16 @@ render_target::render_target(const render_target_creation_params& params)
       height{params.height},
       direct_zoom{params.direct_zoom} {
   pixel_format = SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_ABGR8888);
-  window = SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
-                            SDL_WINDOWPOS_UNDEFINED, width, height,
-                            SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+
+  SDL_PropertiesID winProps = SDL_CreateProperties();
+  SDL_SetStringProperty(winProps, SDL_PROP_WINDOW_CREATE_TITLE_STRING,
+                        "CorsixTH");
+  SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width);
+  SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height);
+  SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER,
+                        SDL_WINDOW_RESIZABLE);
+  window = SDL_CreateWindowWithProperties(winProps);
+  SDL_DestroyProperties(winProps);
   if (!window) {
     throw std::runtime_error(SDL_GetError());
   }
@@ -496,12 +503,10 @@ bool render_target::update(const render_target_creation_params& params) {
   width = params.width;
   height = params.height;
 
-  bool bIsFullscreen =
-      ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
-       SDL_WINDOW_FULLSCREEN_DESKTOP);
+  bool bIsFullscreen = ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
+                        SDL_WINDOW_FULLSCREEN);
   if (bIsFullscreen != params.fullscreen) {
-    SDL_SetWindowFullscreen(
-        window, (params.fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+    SDL_SetWindowFullscreen(window, params.fullscreen);
   }
 
   if (bUpdateSize || bIsFullscreen != params.fullscreen) {
@@ -532,8 +537,8 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     return false;
   } else if (eWhatToScale == scaled_items::all && direct_zoom) {
     global_scale_factor = fScale;
-    if ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
-        SDL_WINDOW_FULLSCREEN_DESKTOP) {
+    if ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
+        SDL_WINDOW_FULLSCREEN) {
       // Drawing to an intermediate screen sized buffer when fullscreen results
       // in noticeably better text rendering quality.
       zoom_buffer =
@@ -632,7 +637,7 @@ void render_target::set_blue_filter_active(bool bActivate) {
 
 // Activate or Deactivate SDL function to capture mouse to window
 void render_target::set_window_grab(bool bActivate) {
-  SDL_SetWindowGrab(window, bActivate ? true : false);
+  SDL_SetWindowMouseGrab(window, bActivate);
 }
 
 bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
