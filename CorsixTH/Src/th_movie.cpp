@@ -38,12 +38,7 @@ extern "C" {
 #include <libswresample/version.h>
 #include <libswscale/swscale.h>
 }
-#include <SDL3/SDL_error.h>
-#include <SDL3/SDL_events.h>
-#include <SDL3/SDL_pixels.h>
-#include <SDL3/SDL_rect.h>
-#include <SDL3/SDL_render.h>
-#include <SDL3/SDL_timer.h>
+#include <SDL3/SDL.h>
 #include <SDL3_mixer/SDL_mixer.h>
 
 #include <cerrno>

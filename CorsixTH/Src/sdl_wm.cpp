@@ -23,12 +23,11 @@ SOFTWARE.
 #include "lua.hpp"
 #include "th_lua.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
-#include <SDL3/SDL_syswm.h>
 #include <windows.h>
 
 #include "../resource.h"
 #endif
-#include <SDL3/SDL_mouse.h>
+#include <SDL3/SDL.h>
 
 #include <array>
 

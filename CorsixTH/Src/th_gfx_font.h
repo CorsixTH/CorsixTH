@@ -24,7 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_TH_GFX_FONT_H_
 #include "config.h"
 
-#include <SDL3/SDL_render.h>
+#include <SDL3/SDL.h>
 #include <ft2build.h>  // IWYU pragma: keep
 // IWYU pragma: no_include "freetype/config/ftheader.h"
 
