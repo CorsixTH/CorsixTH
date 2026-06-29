@@ -469,11 +469,6 @@ render_target::render_target(const render_target_creation_params& params)
   supports_target_textures = !!testTexture;
   SDL_DestroyTexture(testTexture);
 
-  SDL_version sdlVersion;
-  SDL_GetVersion(&sdlVersion);
-  apply_opengl_clip_fix = std::strncmp(info.name, "opengl", 6) == 0 &&
-                          sdlVersion.major == 2 && sdlVersion.minor == 0 &&
-                          sdlVersion.patch < 4;
   SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
   SDL_SetRenderLogicalPresentation(renderer, width, height,
                                    SDL_LOGICAL_PRESENTATION_LETTERBOX);
@@ -684,12 +679,6 @@ void render_target::push_clip_rect(const clip_rect* pRect) {
   const SDL_Rect rcBogus = {-2, -2, 1, 1};
   if (SDL_RectEmpty(&clip)) {
     clip = rcBogus;
-  }
-
-  if (apply_opengl_clip_fix) {
-    int renderWidth, renderHeight;
-    SDL_GetRenderLogicalPresentation(renderer, &renderWidth, &renderHeight);
-    clip.y = renderHeight - clip.y - clip.h;
   }
 
   SDL_SetRenderClipRect(renderer, &clip);
