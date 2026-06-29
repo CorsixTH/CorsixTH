@@ -219,6 +219,43 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
       recalc_route = action.trimmed
     end
   end
+
+  -- Make sure the returned wall id of a cell flag is real
+  local function hasWallId(value)
+    -- Account for transparency setting
+    local transparency_offset = TheApp.ui.transparent_walls and 1024 or 0
+    return value and value - transparency_offset > 0
+  end
+
+  -- Helper function to check for a shared wall on adjacent tiles (here and there)
+  local function tilesHaveConcurrentWall(here_x, here_y, there_x, there_y)
+    local th = humanoid.world.map.th
+    local dx = there_x - here_x
+    local dy = there_y - here_y
+    local _, here_wall, there_wall
+
+    if dx == 1 then
+      -- Moving east: here east wall vs there west wall.
+      _, _, here_wall = th:getCell(here_x + 1, here_y)
+      _, _, there_wall = th:getCell(there_x, there_y)
+    elseif dx == -1 then
+      -- Moving west: here west wall vs there east wall.
+      _, _, here_wall = th:getCell(here_x, here_y)
+      _, _, there_wall = th:getCell(there_x + 1, there_y)
+    elseif dy == 1 then
+      -- Moving south: here south wall vs there north wall.
+      _, here_wall, _ = th:getCell(here_x, here_y + 1)
+      _, there_wall, _ = th:getCell(there_x, there_y)
+    elseif dy == -1 then
+      -- Moving north: here north wall vs there south wall.
+      _, here_wall, _ = th:getCell(here_x, here_y)
+      _, there_wall, _ = th:getCell(there_x, there_y + 1)
+    end
+
+    return hasWallId(here_wall) and hasWallId(there_wall) and
+        here_wall == there_wall
+  end
+
   if recalc_route then
     if map:getCellFlags(x1, y1).passable then
       humanoid:setTilePositionSpeed(x1, y1)
@@ -228,6 +265,12 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
       if action.trimmed then -- request new route
         humanoid:finishAction(action)
         return
+      end
+      return action:on_restart(humanoid)
+    elseif tilesHaveConcurrentWall(x1, y1, x2, y2) then
+      humanoid:setTilePositionSpeed(x1, y1)
+      if action.on_next_tile_set then
+        action.on_next_tile_set()
       end
       return action:on_restart(humanoid)
     end
