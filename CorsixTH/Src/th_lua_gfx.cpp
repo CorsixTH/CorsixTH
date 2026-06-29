@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL.h>
 #include <ft2build.h>  // IWYU pragma: keep
 // IWYU pragma: no_include "freetype/config/ftheader.h"
 #ifdef WITH_TRACY

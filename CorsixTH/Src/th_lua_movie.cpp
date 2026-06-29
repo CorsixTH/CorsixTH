@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL3/SDL_rect.h>
+#include <SDL3/SDL.h>
 
 #ifdef WITH_TRACY
 #include <tracy/Tracy.hpp>
