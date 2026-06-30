@@ -23,6 +23,7 @@ SOFTWARE.
 #include "sdl_core.h"
 
 #include <SDL3/SDL.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 #ifdef TRACY_ENABLE
 #include <tracy/Tracy.hpp>
@@ -54,6 +55,11 @@ int l_init(lua_State* L) {
   }
   if (!SDL_Init(flags)) {
     std::fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
+    lua_pushboolean(L, 0);
+    return 1;
+  }
+  if (!MIX_Init()) {
+    std::fprintf(stderr, "MIX_Init failed: %s\n", SDL_GetError());
     lua_pushboolean(L, 0);
     return 1;
   }

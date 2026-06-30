@@ -76,7 +76,6 @@ class av_packet_deleter {
     av_free(p);
   }
 };
-
 //! \brief unique_ptr for AVPackets
 using av_packet_unique_ptr = std::unique_ptr<AVPacket, av_packet_deleter>;
 
@@ -84,14 +83,12 @@ class av_frame_deleter {
  public:
   void operator()(AVFrame* f) { av_frame_free(&f); }
 };
-
 using av_frame_unique_ptr = std::unique_ptr<AVFrame, av_frame_deleter>;
 
 class av_codec_context_deleter {
  public:
   void operator()(AVCodecContext* c) { avcodec_free_context(&c); }
 };
-
 using av_codec_context_unique_ptr =
     std::unique_ptr<AVCodecContext, av_codec_context_deleter>;
 
@@ -99,12 +96,17 @@ using av_codec_context_unique_ptr =
 //!
 //! Should be moved to a common mixer header when uses of Mix_Chunk outside of
 //! movies are converted to unique_ptr.
-class mix_chunk_deleter {
+class mix_audio_deleter {
  public:
-  void operator()(Mix_Chunk* c) { Mix_FreeChunk(c); }
+  void operator()(MIX_Audio* c) { MIX_DestroyAudio(c); }
 };
+using mix_audio_unique_ptr = std::unique_ptr<MIX_Audio, mix_audio_deleter>;
 
-using mix_chunk_unique_ptr = std::unique_ptr<Mix_Chunk, mix_chunk_deleter>;
+class mix_track_deleter {
+ public:
+  void operator()(MIX_Track* t) const { MIX_DestroyTrack(t); }
+};
+using mix_track_unique_ptr = std::unique_ptr<MIX_Track, mix_track_deleter>;
 
 #if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(57, 24, 100)
 //! \brief Functor for deleting AVChannelLayout
@@ -323,9 +325,7 @@ class movie_player {
   void unload();
 
   //! Play the currently loaded movie
-  //!
-  //! \param requested_audio_channel The audio channel to use
-  void play(int requested_audio_channel);
+  void play();
 
   //! Stop the currently playing movie
   void stop();
@@ -391,7 +391,7 @@ class movie_player {
 
   //! Read audio from the audio packet queue, and copy it into the audio
   //! buffer for playback
-  void copy_audio_to_stream(uint8_t* pbStream, int iStreamSize);
+  void copy_audio_to_stream(uint8_t* pbStream, size_t iStreamSize);
 
  private:
 #ifdef CORSIX_TH_USE_FFMPEG
@@ -402,7 +402,7 @@ class movie_player {
   av_codec_context_unique_ptr get_codec_context_for_stream(
       av_codec_ptr codec, AVStream* stream) const;
 
-  void play_audio(int requested_audio_channel);
+  void play_audio();
 
   //! Get the time the given frame should be played (from the start of the
   //! stream)
@@ -414,7 +414,7 @@ class movie_player {
                                          int streamIndex) const;
 
   //! Decode audio from the movie into a format suitable for playback
-  int decode_audio_frame(uint8_t* stream, int stream_size);
+  size_t decode_audio_frame(uint8_t* stream, size_t stream_size);
 
   //! Convert packet data into frames
   //!
@@ -475,11 +475,11 @@ class movie_player {
   SwrContext* audio_resample_context;  ///< Context for resampling audio for
                                        ///< playback with ffmpeg
 
-  mix_chunk_unique_ptr empty_audio_chunk;  ///< Empty chunk needed for SDL_mixer
+  mix_audio_unique_ptr empty_audio_chunk;  ///< Empty chunk needed for SDL_mixer
   std::array<std::uint8_t, 1024>
       audio_chunk_buffer;  ///< 0'd out buffer for the SDL_mixer chunk
 
-  int audio_channel;    ///< The channel to play audio on, -1 for none
+  mix_track_unique_ptr audio_track;  ///< The track to play audio on
   int mixer_channels;   ///< How many channels to play on (1 - mono, 2 -
                         ///< stereo)
   int mixer_frequency;  ///< The frequency of audio expected by SDL_mixer

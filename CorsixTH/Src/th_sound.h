@@ -28,8 +28,28 @@ SOFTWARE.
 #include <SDL3_mixer/SDL_mixer.h>
 
 #include <array>
+#include <memory>
 #include <mutex>
 #include <vector>
+
+namespace th::sound {
+class track_deleter {
+ public:
+  void operator()(MIX_Track* track) const { MIX_DestroyTrack(track); }
+};
+using track_ptr = std::unique_ptr<MIX_Track, track_deleter>;
+
+class mixer_deleter {
+ public:
+  void operator()(MIX_Mixer* mixer) const { MIX_DestroyMixer(mixer); }
+};
+using mixer_ptr = std::unique_ptr<MIX_Mixer, mixer_deleter>;
+
+bool init(const char* sf);
+void quit();
+MIX_Mixer* get_mixer();
+const char* get_soundfont();
+}  // namespace th::sound
 
 //! Utility class for accessing Theme Hospital's SOUND-0.DAT
 class sound_archive {
@@ -152,28 +172,30 @@ class sound_player {
 
  private:
   static sound_player* singleton;
-  static void on_channel_finished(int iChannel);
+  static void on_channel_finished(void* userdata, MIX_Track*);
 
-  uint32_t play_raw(size_t iIndex, int iVolume, int loops);
+  uint32_t play_raw(size_t iIndex, float volume, int loops);
 
   //! Returns the channel that the handle is playing on or -1 if it is not
   //! playing.
   int playing_channel_for_handle(uint32_t handle);
 
-  Mix_Chunk** sounds;
+  MIX_Audio** sounds;
   size_t sound_count;
   int camera_x;
   int camera_y;
   double camera_radius;
   double master_volume;
   double sound_effect_volume;
-  int positionless_volume;
+  float positionless_volume;
   bool sound_effects_enabled;
 
   //! Each channel holds the handle of the track playing on it or null_handle
   //! if it is free.
   std::array<uint32_t, number_of_channels> channels{};
   uint32_t next_playing_track_handle{0};
+
+  std::array<th::sound::track_ptr, number_of_channels> tracks{};
 
   /// Mutex to protect access to channels array and next_playing_track_handle.
   ///

@@ -35,6 +35,7 @@ SOFTWARE.
 #include "../Src/lua.hpp"
 #include "../Src/sdl_core.h"
 #include "../Src/th_lua.h"
+#include "../Src/th_sound.h"
 #ifdef WITH_UPDATE_CHECK
 #include <curl/curl.h>
 #endif
@@ -166,9 +167,8 @@ int main(int argc, char** argv) {
     // Destroy the lua_State before SDL so that any SDL resource owned by
     // Lua can be freed first.
     L.reset(nullptr);
-    while (Mix_QuerySpec(nullptr, nullptr, nullptr)) {
-      Mix_CloseAudio();
-    }
+    th::sound::quit();
+    MIX_Quit();
     SDL_Quit();
 
     if (bRun) {
