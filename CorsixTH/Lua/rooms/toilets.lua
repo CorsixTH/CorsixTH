@@ -62,10 +62,11 @@ end
 function ToiletRoom:dealtWithPatient(patient)
   -- Continue going to the room before going to the toilets.
   patient:setNextAction(self:createLeaveAction())
-  if patient.next_room_to_visit then
+  if patient.next_room_to_visit and patient.next_room_to_visit.room_info.id ~= "toilets" then
     patient:queueAction(SeekRoomAction(patient.next_room_to_visit.room_info.id))
   else
-    patient:queueAction(SeekReceptionAction())
+    patient.next_room_to_visit = nil
+    patient:decideWhichRoomToGoToNext()
   end
 end
 
