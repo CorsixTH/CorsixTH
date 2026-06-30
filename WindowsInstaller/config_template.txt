@@ -10,13 +10,15 @@
 -------------------------------- SETTINGS MENU --------------------------------
 -- These settings can also be changed from within the game in the settings menu
 -------------------------------------------------------------------------------
--- Screen size. Must be at least 640x480. Larger sizes will require better
--- hardware in order to maintain a playable framerate. The fullscreen setting
--- can be true or false, and the game will run windowed if not fullscreen.
--- ui_scale. Default is 1. Increase by a whole number to scale the user interface for
--- higher resolution displays (decimal values unsupported).
--- For example, at 1920x1080 resolution, setting ui_scale to 2 will make the interface
--- elements twice as large.
+-- Screen size (width and height). At least: 640x480.
+-- Larger sizes will require better hardware in order to maintain a playable framerate.
+-- Fullscreen. Can be true or false.
+-- The game will run windowed if not fullscreen.
+-- ui_scale. Default: 1.
+-- Whole-number UI scaling for higher-resolution displays; decimals unsupported.
+-- Example: 1920x1080 with ui_scale = 2 makes UI elements twice as large.
+-- width/ui_scale and height/ui_scale must be at least 640x480.
+-- Example: ui_scale = 2 requires resolution >= 1280x960.
 --
 fullscreen = SCREEN_FULLSCREEN
 
@@ -36,6 +38,7 @@ ui_scale = 1
 --  Finnish               / Suomi / fi / fin
 --  French                / fr / fre / fra
 --  German                / de / ger / deu
+--  Greek                 / el / gre / ell
 --  Hungarian             / hu / hun
 --  Italian               / it / ita
 --  Japanese              / ja / jp
