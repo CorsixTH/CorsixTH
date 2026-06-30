@@ -175,6 +175,7 @@ end
 
 local flags_here, flags_there = {}, {}
 local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function(humanoid)
+  -- Called on every tile along the route
   local action = humanoid:getCurrentAction()
   local path_x = action.path_x
   local path_y = action.path_y
@@ -410,7 +411,31 @@ local function action_walk_start(action, humanoid)
   -- to somewhere outside the hospital (or from one building to another?), do
   -- pathfinding in two steps, with the building door as a middle node
   local path_x, path_y = humanoid.world:getPath(humanoid.tile_x, humanoid.tile_y, action.x, action.y)
-  if not path_x or #path_x == 1 then
+  if not path_x then
+    -- Happens when target tile has become inaccessible.
+    if humanoid:isMeandering() or not action.must_happen then
+      -- Humanoid unable to follow the route while wandering,
+      -- it is not a real problem. Just continue meandering.
+      -- If it is not obligation walk, also can be cancelled.
+      TheApp.humanoid_actions.idle(action, humanoid)
+      humanoid:setTimer(1, humanoid.finishAction)
+      return
+    else
+      -- TODO: Call to show "Someone has got stuck. Plan your hospital better" Adviser message should be here.
+      -- Humanoid unable to follow the route.
+      -- Wait a little and try to rebuild the route.
+      --
+      -- If you finish the walk action early at this step, and the humanoid's
+      -- next action in the queue is to use an object, either the object or the
+      -- humanoid will teleport. So ending it early isn't the best solution here.
+      action.stuck = true
+      humanoid:setTimer(20, humanoid.retryWalk)
+      return
+    end
+  elseif #path_x == 1 then
+    -- '#path_x == 1' (neighboring tile) is a completely normal and regular case,
+    -- for example when passing through a door or when repairing a machine.
+    --
     -- Finishing an action from within the start handler is a very bad idea, as
     -- it is normal when ordering several actions to setNextAction the first
     -- one, then queueAction the rest. If the first starts straight away, and
@@ -423,6 +448,7 @@ local function action_walk_start(action, humanoid)
     humanoid:setTimer(1, humanoid.finishAction)
     return
   end
+  action.stuck = false
   action.path_x = path_x
   action.path_y = path_y
   action.path_index = 1
