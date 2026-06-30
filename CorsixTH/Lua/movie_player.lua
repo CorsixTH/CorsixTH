@@ -85,10 +85,6 @@ local destroyMovie = function(me)
   if me.opengl_mode_index then
     me.app.modes[me.opengl_mode_index] = "opengl"
   end
-  if me.channel >= 0 then
-    me.audio:releaseChannel(me.channel)
-    me.channel = -1
-  end
   if me.holding_bg_music then
     -- If possible we want to continue playing music where we were
     me.audio:pauseBackgroundTrack()
@@ -163,7 +159,6 @@ function MoviePlayer:MoviePlayer(app, audio, video)
   self.video = video
   self.playing = false
   self.holding_bg_music = false
-  self.channel = -1
   self.sound = nil
   self.lose_movies = {}
   self.advance_movies = {}
@@ -321,7 +316,6 @@ function MoviePlayer:playMovie(filename, wait_for_stop, callback)
   -- Abort any loading of music
   self.audio.load_music = false
   if self.moviePlayer:hasAudioTrack() then
-    self.channel = self.audio:reserveChannel()
     if self.audio.background_music then
       self.holding_bg_music = self.audio:pauseBackgroundTrack()
     end
@@ -348,7 +342,7 @@ function MoviePlayer:playMovie(filename, wait_for_stop, callback)
     self.app.modes[self.opengl_mode_index] = ""
   end
 
-  warning = self.moviePlayer:play(self.channel)
+  warning = self.moviePlayer:play()
   if warning ~= nil and warning ~= "" then
     local message = "MoviePlayer:playMovie - Warning: " .. warning
     if self.app.world then
