@@ -72,6 +72,9 @@ function World:World(app, free_build_mode)
   self.tick_timer = 0
   self.game_date = Date() -- Current date in the game.
 
+  -- Player pause intent. Only user-facing speed controls should change this.
+  self.user_paused = false
+
   self.room_information_dialogs = app.config.room_information_dialogs
   -- This is false when the game is paused.
   self.user_actions_allowed = true
@@ -167,11 +170,11 @@ function World:setUI(ui)
   self.ui = ui
 
   self.ui:addKeyHandler("ingame_pause", self, self.pauseOrUnpause, "Pause")
-  self.ui:addKeyHandler("ingame_gamespeed_slowest", self, self.setSpeed, "Slowest")
-  self.ui:addKeyHandler("ingame_gamespeed_slower", self, self.setSpeed, "Slower")
-  self.ui:addKeyHandler("ingame_gamespeed_normal", self, self.setSpeed, "Normal")
-  self.ui:addKeyHandler("ingame_gamespeed_max", self, self.setSpeed, "Max speed")
-  self.ui:addKeyHandler("ingame_gamespeed_thensome", self, self.setSpeed, "And then some more")
+  self.ui:addKeyHandler("ingame_gamespeed_slowest", self, self.setUserSpeed, "Slowest")
+  self.ui:addKeyHandler("ingame_gamespeed_slower", self, self.setUserSpeed, "Slower")
+  self.ui:addKeyHandler("ingame_gamespeed_normal", self, self.setUserSpeed, "Normal")
+  self.ui:addKeyHandler("ingame_gamespeed_max", self, self.setUserSpeed, "Max speed")
+  self.ui:addKeyHandler("ingame_gamespeed_thensome", self, self.setUserSpeed, "And then some more")
 
   self.ui:addKeyHandler("ingame_zoom_in", self, self.adjustZoom,  1)
   self.ui:addKeyHandler("ingame_zoom_in_more", self, self.adjustZoom, 5)
@@ -751,13 +754,23 @@ function World:getCurrentSpeed()
   end
 end
 
+--! Set game speed from a user-facing control.
+--!param new_speed (string) New speed to set.
+function World:setUserSpeed(new_speed)
+  if self:isMustPauseActive() then return end
+  -- If player paused, remember it
+  self:setUserPaused(new_speed == "Pause")
+  return self:setSpeed(new_speed)
+end
+
 -- Set the (approximate) number of seconds per tick.
 --!param new_speed (string) New speed to set.
 -- One of: "Pause", "Slowest", "Slower", "Normal",
 -- "Max speed", or "And then some more".
 function World:setSpeed(new_speed)
   if self:isCurrentSpeed(new_speed) then return end
-  if self:mustPause() and new_speed ~= "Pause" then return end -- "Must pause" takes precedence
+  if self:isMustPauseActive() and new_speed ~= "Pause" then return end -- "Must pause" takes precedence
+  if new_speed == "Speed Up" and self:isPaused() then return end
   tracy.Message("Changing speed to " .. new_speed)
 
   if new_speed == "Pause" then
@@ -765,6 +778,8 @@ function World:setSpeed(new_speed)
   end
 
   local old_speed = self:getCurrentSpeed()
+  -- Remember the last normal gameplay speed. Pause and Speed Up are
+  -- transient states and should not replace the speed we return to.
   if old_speed ~= "Pause" and old_speed ~= "Speed Up" then
     self.prev_speed = old_speed
   end
@@ -783,50 +798,82 @@ function World:setSpeed(new_speed)
   self.hours_per_tick = new_hours_per_tick
   self.tick_rate = new_tick_rate
 
-  self:updateUserActionsAllowed()
-  self:updateScreenBlueFilter()
+  self:updateUserInteractionState()
 
   return false
 end
 
-function World:mustPauseWindowAdd()
-  self:setSpeed("Pause")
+--! Refresh whether the user can interact with the game and presence of the
+-- blue filter
+function World:updateUserInteractionState()
+  self:updateUserActionsAllowed()
+  self:updateScreenBlueFilter()
 end
 
+--! Called when a must pause window comes into existence and pauses the game
+function World:mustPauseWindowAdd()
+  self:setSpeed("Pause")
+  self:updateUserInteractionState()
+end
+
+--! Called when a must pause window is closed and will attempt to unpause
+--! the game
 function World:mustPauseWindowRemoved()
-  if self:isCurrentSpeed("Pause") then
-    self:pauseOrUnpause()
+  if self:isMustPauseActive() then
+    return
   end
+
+  if self:isCurrentSpeed("Pause") and not self:isGameUserPaused() then
+    self:setSpeed(self.prev_speed)
+  end
+
+  self:updateUserInteractionState()
 end
 
 --! Check if "Must Pause" mode enabled
 --!return (bool) returns true if "Must Pause" mode enabled
-function World:mustPause()
+function World:isMustPauseActive()
   return self.ui:anyMustPauseWindowOpen()
 end
 
+--! Check if game is currently paused
+--!return (boolean) True if paused
 function World:isPaused()
   return self:isCurrentSpeed("Pause")
+end
+
+--! Update state of if game has been paused by user
+--!param state (boolean)
+function World:setUserPaused(state)
+  self.user_paused = state
+end
+
+--! Check whether user pause state applies
+--!return true is we are in a user pause
+function World:isGameUserPaused()
+  return self.user_paused
 end
 
 --! Set the "actions allowed" flag according to whether the user can do some actions with UI or not.
 function World:updateUserActionsAllowed()
   -- Actions are not allowed when the game in "Must Pause" mode.
-  self.user_actions_allowed = not self:mustPause() and
+  self.user_actions_allowed = not self:isMustPauseActive() and
     (not self:isCurrentSpeed("Pause") or TheApp.config.allow_user_actions_while_paused)
 end
 
 --! Set the blue filter according to whether the user can build or not.
 function World:updateScreenBlueFilter()
-  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self:mustPause())
+  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self:isMustPauseActive())
 end
 
 --! Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
-  if self:mustPause() then return end -- "Must Pause" takes precedence
+  if self:isMustPauseActive() then return end -- "Must Pause" takes precedence
   if not self:isCurrentSpeed("Pause") then
+    self:setUserPaused(true)
     self:setSpeed("Pause")
   elseif self.prev_speed then
+    self:setUserPaused(false)
     self:setSpeed(self.prev_speed)
   end
 end
@@ -834,7 +881,7 @@ end
 --! Function to check if player can perform actions when paused
 --!return (bool) Returns true if player hasn't allowed editing while paused
 function World:isUserActionProhibited()
-  if self:mustPause() then return true end
+  if self:isMustPauseActive() then return true end
   return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
 end
 
