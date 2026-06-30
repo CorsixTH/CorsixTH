@@ -304,12 +304,15 @@ local function config_contents(config_values)
 -------------------------------- SETTINGS MENU --------------------------------
 -- These settings can also be changed from within the game in the settings menu
 -------------------------------------------------------------------------------
--- Screen size. Must be at least 640x480. Larger sizes will require better
--- hardware in order to maintain a playable framerate. The fullscreen setting
--- can be true or false, and the game will run windowed if not fullscreen.
--- ui_scale can be set to 1, 2, or 3 to scale the user interface for higher
--- resolution displays. For example, at 1920x1080 resolution, setting ui_scale
--- to 2 will make the interface elements twice as large.
+-- Screen size (width and height). At least: 640x480.
+-- Larger sizes will require better hardware in order to maintain a playable framerate.
+-- Fullscreen. Can be true or false.
+-- The game will run windowed if not fullscreen.
+-- ui_scale. Default: 1.
+-- Whole-number UI scaling for higher-resolution displays; decimals unsupported.
+-- Example: 1920x1080 with ui_scale = 2 makes UI elements twice as large.
+-- width/ui_scale and height/ui_scale must be at least 640x480.
+-- Example: ui_scale = 2 requires resolution >= 1280x960.
 --]=] .. '\n' ..
 param(config_values, 'fullscreen') ..
 '\n' ..
@@ -329,6 +332,7 @@ param(config_values, 'ui_scale') .. [=[
 --  Finnish               / Suomi / fi / fin
 --  French                / fr / fre / fra
 --  German                / de / ger / deu
+--  Greek                 / el / gre / ell
 --  Hungarian             / hu / hun
 --  Italian               / it / ita
 --  Japanese              / ja / jp
