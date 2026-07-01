@@ -51,9 +51,8 @@ extern "C" {
 
 namespace {
 
-void th_movie_audio_callback(void* userdata, MIX_Track*,
-                             const SDL_AudioSpec*, float* pcm,
-                             int samples) {
+void th_movie_audio_callback(void* userdata, MIX_Track*, const SDL_AudioSpec*,
+                             float* pcm, int samples) {
   movie_player* pMovie = static_cast<movie_player*>(userdata);
   std::size_t size = samples * sizeof(float);
   pMovie->copy_audio_to_stream(reinterpret_cast<uint8_t*>(pcm), size);

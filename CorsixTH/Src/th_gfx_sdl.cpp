@@ -46,11 +46,6 @@ SOFTWARE.
 #include "th_gfx_common.h"
 #include "th_gfx_font.h"
 
-//! How much to overdraw scaled sprites to ensure no gaps are visible.
-const float frect_overdraw = 0.01f;
-
-#define SDL_FRECT_UNIT float
-
 full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
     : width(iWidth), height(iHeight) {}
 
@@ -163,26 +158,17 @@ void getEnclosingScaleRect(const SDL_Rect* rect, double scale_factor,
 }
 
 //! Get the scaled rect of an SDL_Rect scaled by the given scale factor.
-//  On SDL < 2.0.10 this falls back to using getEnclosingScaleRect.
 /*!
     @param rect Pointer to the SDL_Rect to be scaled.
     @param scale_factor Scale to be applied to the rectangle.
     @param[out] dst_rect Enclosing SDL_FRect of rect scaled by scale_factor.
  */
-void getScaleRect(const SDL_Rect* rect, double scale_factor,
-                  SDL_FRect* dst_rect) {
-#if SDL_VERSION_ATLEAST(2, 0, 10)
-  // If using SDL 2.0.10 or newer, we can use floats to get better precision
-  // on scaled rendering.
-  dst_rect->x = static_cast<float>(rect->x * scale_factor) - frect_overdraw;
-  dst_rect->y = static_cast<float>(rect->y * scale_factor) - frect_overdraw;
-  dst_rect->w = static_cast<float>(rect->w * scale_factor) + 2 * frect_overdraw;
-  dst_rect->h = static_cast<float>(rect->h * scale_factor) + 2 * frect_overdraw;
-#else
-  // Prior to SDL 2.0.10, fallback to using the enclosing integer SDL_Rect for
-  // scaled rendering.
-  getEnclosingScaleRect(rect, scale_factor, dst_rect);
-#endif
+void get_scale_rect(const SDL_FRect* rect, double scale_factor,
+                    SDL_FRect* dst_rect) {
+  dst_rect->x = static_cast<float>(rect->x * scale_factor);
+  dst_rect->y = static_cast<float>(rect->y * scale_factor);
+  dst_rect->w = static_cast<float>(rect->w * scale_factor);
+  dst_rect->h = static_cast<float>(rect->h * scale_factor);
 }
 
 class scoped_color_mod {
@@ -365,11 +351,11 @@ void wx_storing::store_argb(uint32_t pixel) {
 }
 
 render_target::scoped_target_texture::scoped_target_texture(
-    render_target* pTarget, int iX, int iY, int iWidth, int iHeight,
+    render_target* pTarget, float iX, float iY, int iWidth, int iHeight,
     bool bScale)
     : target(pTarget),
       previous_target(target->current_target),
-      rect({iX, iY, iWidth, iHeight}),
+      rect({iX, iY, static_cast<float>(iWidth), static_cast<float>(iHeight)}),
       scale(bScale) {
   if (!target->supports_target_textures) return;
 
@@ -391,8 +377,8 @@ render_target::scoped_target_texture::scoped_target_texture(
 }
 
 void render_target::scoped_target_texture::offset(SDL_FRect& targetRect) const {
-  targetRect.x -= static_cast<SDL_FRECT_UNIT>(rect.x);
-  targetRect.y -= static_cast<SDL_FRECT_UNIT>(rect.y);
+  targetRect.x -= rect.x;
+  targetRect.y -= rect.y;
 }
 
 double render_target::scoped_target_texture::scale_factor() const {
@@ -422,9 +408,7 @@ render_target::scoped_target_texture::~scoped_target_texture() {
     // If the target texture is already scaled, skip the global scale factor
     // by drawing directly.
 
-    SDL_FRect frect;
-    SDL_RectToFRect(&rect, &frect);
-    if (!SDL_RenderTexture(target->renderer, texture, nullptr, &frect)) {
+    if (!SDL_RenderTexture(target->renderer, texture, nullptr, &rect)) {
       std::fprintf(stderr,
                    "scoped_target_texture destructor failed to render: %s",
                    SDL_GetError());
@@ -640,10 +624,10 @@ void render_target::set_window_grab(bool bActivate) {
   SDL_SetWindowMouseGrab(window, bActivate);
 }
 
-bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
-                              int iH) {
-  SDL_Rect rcDest = {iX, iY, iW, iH};
-  getEnclosingScaleRect(&rcDest, draw_scale(), &rcDest);
+bool render_target::fill_rect(uint32_t iColour, float iX, float iY, float iW,
+                              float iH) {
+  SDL_FRect rcDest = {iX, iY, iW, iH};
+  get_scale_rect(&rcDest, draw_scale(), &rcDest);
 
   Uint8 r, g, b, a;
   SDL_GetRGBA(iColour, pixel_format, nullptr, &r, &g, &b, &a);
@@ -651,9 +635,7 @@ bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   SDL_SetRenderDrawColor(renderer, r, g, b, a);
 
-  SDL_FRect fdest;
-  SDL_RectToFRect(&rcDest, &fdest);
-  SDL_RenderFillRect(renderer, &fdest);
+  SDL_RenderFillRect(renderer, &rcDest);
 
   return true;
 }
@@ -831,7 +813,7 @@ SDL_Texture* render_target::create_texture(int iWidth, int iHeight,
 }
 
 void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
-                         const SDL_Rect* prcDstRect, int iFlags) {
+                         const SDL_FRect* prcDstRect, int iFlags) {
   SDL_SetTextureAlphaMod(pTexture, 0xFF);
   if (iFlags & thdf_alpha_50) {
     SDL_SetTextureAlphaMod(pTexture, 0x80);
@@ -844,7 +826,7 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   if (iFlags & thdf_flip_vertical) iSDLFlip |= SDL_FLIP_VERTICAL;
 
   SDL_FRect scaledDstRect;
-  getScaleRect(prcDstRect, draw_scale(), &scaledDstRect);
+  get_scale_rect(prcDstRect, draw_scale(), &scaledDstRect);
 
   std::unique_ptr<SDL_FRect> fSrcRect;
   if (prcSrcRect != nullptr) {
@@ -870,7 +852,7 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   }
 }
 
-void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
+void render_target::draw_line(line_sequence* pLine, float iX, float iY) {
   SDL_SetRenderDrawColor(renderer, pLine->red, pLine->green, pLine->blue,
                          pLine->alpha);
 
@@ -882,10 +864,10 @@ void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
       // Not the true width, but good enough for graphs
       for (int i = 0; i < pLine->width; ++i) {
         int adjI = static_cast<int>(i - pLine->width / 2);
-        SDL_RenderLine(renderer, static_cast<int>((lastX + iX) * scale),
-                       static_cast<int>((lastY + iY + adjI) * scale),
-                       static_cast<int>((op.x + iX) * scale),
-                       static_cast<int>((op.y + iY + adjI) * scale));
+        SDL_RenderLine(renderer, static_cast<float>((lastX + iX) * scale),
+                       static_cast<float>((lastY + iY + adjI) * scale),
+                       static_cast<float>((op.x + iX) * scale),
+                       static_cast<float>((op.y + iY + adjI) * scale));
       }
     }
 
@@ -1010,11 +992,11 @@ bool testSprite(const uint8_t* pData, size_t iDataLength, int iWidth,
 
 }  // namespace
 
-void raw_bitmap::draw(render_target* pCanvas, int iX, int iY) {
+void raw_bitmap::draw(render_target* pCanvas, float iX, float iY) {
   draw(pCanvas, iX, iY, 0, 0, width, height);
 }
 
-void raw_bitmap::draw(render_target* pCanvas, int iX, int iY, int iSrcX,
+void raw_bitmap::draw(render_target* pCanvas, float iX, float iY, int iSrcX,
                       int iSrcY, int iWidth, int iHeight) {
   double fScaleFactor;
   if (texture == nullptr) return;
@@ -1024,8 +1006,8 @@ void raw_bitmap::draw(render_target* pCanvas, int iX, int iY, int iSrcX,
   }
 
   const SDL_Rect rcSrc = {iSrcX, iSrcY, iWidth, iHeight};
-  const SDL_Rect rcDest = {iX, iY, static_cast<int>(iWidth * fScaleFactor),
-                           static_cast<int>(iHeight * fScaleFactor)};
+  const SDL_FRect rcDest = {iX, iY, static_cast<float>(iWidth * fScaleFactor),
+                            static_cast<float>(iHeight * fScaleFactor)};
 
   pCanvas->draw(texture, &rcSrc, &rcDest, 0);
 }
@@ -1265,8 +1247,8 @@ bool sprite_sheet::is_sprite_visible(size_t iSprite) const {
   return false;
 }
 
-void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
-                               int iY, uint32_t iFlags, size_t effect_ticks,
+void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, float iX,
+                               float iY, uint32_t iFlags, size_t effect_ticks,
                                animation_effect effect, int scale_factor) {
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
@@ -1312,7 +1294,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // TODO: We could move this effect into render_target which is aware of the
     // screen scale and could optimize this further when zooming out.
     int y1 = 0;
-    int x_offset = 0;
+    float x_offset = 0;
     // Scale the effect up as it ramps in and down as it finishes.
     int scale =
         std::min(jelly_tick, std::min(jelly_effect_duration - jelly_tick, 2));
@@ -1321,7 +1303,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
       // the map location so that multiple layers have the same jelly offset
       // at the same vertical line. We can't just use iY because it varies as
       // the user scrolls or zooms or the character walks.
-      int offset = static_cast<int>(
+      float offset = static_cast<float>(
           sin((y2 / 16.0 + static_cast<double>(effect_ticks % 50) / 50) * 2 *
               pi) *
           scale);
@@ -1330,9 +1312,9 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
           // If the current offset rounds to a different value, render the
           // previous offset and start a new offset.
           SDL_Rect rcSrc = {0, y1, sprite.width, y2 - y1};
-          SDL_Rect rcDest = {iX + x_offset, iY + y1,
-                             sprite.width * scale_factor,
-                             (y2 - y1) * scale_factor};
+          SDL_FRect rcDest = {iX + x_offset, iY + static_cast<float>(y1),
+                              static_cast<float>(sprite.width * scale_factor),
+                              static_cast<float>((y2 - y1) * scale_factor)};
           pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
         }
         y1 = y2;
@@ -1341,8 +1323,8 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     }
   } else {
     SDL_Rect rcSrc = {0, 0, sprite.width, sprite.height};
-    SDL_Rect rcDest = {iX, iY, sprite.width * scale_factor,
-                       sprite.height * scale_factor};
+    SDL_FRect rcDest = {iX, iY, static_cast<float>(sprite.width * scale_factor),
+                        static_cast<float>(sprite.height * scale_factor)};
 
     pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
   }
@@ -1537,7 +1519,7 @@ void cursor::use(render_target* pTarget) {
 #endif
 }
 
-bool cursor::set_position(render_target* pTarget, int iX, int iY) {
+bool cursor::set_position(render_target* pTarget, float iX, float iY) {
 #if 0
     pTarget->setCursorPosition(iX, iY);
     return true;
@@ -1574,7 +1556,7 @@ void line_sequence::set_colour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA) {
   alpha = iA;
 }
 
-void line_sequence::draw(render_target* pCanvas, int iX, int iY) {
+void line_sequence::draw(render_target* pCanvas, float iX, float iY) {
   pCanvas->draw_line(this, iX, iY);
 }
 
@@ -1681,10 +1663,11 @@ void freetype_font::copy_pixel_data(
 }
 
 void freetype_font::draw_texture(render_target* pCanvas,
-                                 cached_text* pCacheEntry, int iX,
-                                 int iY) const {
+                                 cached_text* pCacheEntry, float iX,
+                                 float iY) const {
   if (pCacheEntry->texture == nullptr) return;
 
-  SDL_Rect rcDest = {iX, iY, pCacheEntry->width, pCacheEntry->height};
+  SDL_FRect rcDest = {iX, iY, static_cast<float>(pCacheEntry->width),
+                      static_cast<float>(pCacheEntry->height)};
   pCanvas->draw(pCacheEntry->texture, nullptr, &rcDest, 0);
 }

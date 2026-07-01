@@ -24,6 +24,8 @@ SOFTWARE.
 
 #include <SDL3/SDL.h>
 #include <ft2build.h>  // IWYU pragma: keep
+
+#include <cmath>
 // IWYU pragma: no_include "freetype/config/ftheader.h"
 #ifdef WITH_TRACY
 #include <tracy/Tracy.hpp>
@@ -135,15 +137,15 @@ int l_rawbitmap_draw(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
 
   if (lua_gettop(L) >= 8) {
-    pBitmap->draw(pCanvas, static_cast<int>(luaL_checkinteger(L, 3)),
-                  static_cast<int>(luaL_checkinteger(L, 4)),
+    pBitmap->draw(pCanvas, static_cast<float>(luaL_checknumber(L, 3)),
+                  static_cast<float>(luaL_checknumber(L, 4)),
                   static_cast<int>(luaL_checkinteger(L, 5)),
                   static_cast<int>(luaL_checkinteger(L, 6)),
                   static_cast<int>(luaL_checkinteger(L, 7)),
                   static_cast<int>(luaL_checkinteger(L, 8)));
   } else
-    pBitmap->draw(pCanvas, static_cast<int>(luaL_optinteger(L, 3, 0)),
-                  static_cast<int>(luaL_optinteger(L, 4, 0)));
+    pBitmap->draw(pCanvas, static_cast<float>(luaL_optnumber(L, 3, 0)),
+                  static_cast<float>(luaL_optnumber(L, 4, 0)));
 
   lua_settop(L, 1);
   return 1;
@@ -216,10 +218,10 @@ int l_spritesheet_draw(lua_State* L) {
   int iSprite =
       static_cast<int>(luaL_checkinteger(L, 3));  // No array adjustment
 
-  int x = static_cast<int>(luaL_optinteger(L, 4, 0));
-  int y = static_cast<int>(luaL_optinteger(L, 5, 0));
+  float x = static_cast<float>(luaL_optnumber(L, 4, 0));
+  float y = static_cast<float>(luaL_optnumber(L, 5, 0));
 
-  int scaleFactor = 1;
+  int scale_factor = 1;
   uint32_t flags = 0;
   int arg6type = lua_type(L, 6);
   if (arg6type == LUA_TTABLE) {
@@ -228,14 +230,15 @@ int l_spritesheet_draw(lua_State* L) {
     lua_pop(L, 1);
 
     lua_getfield(L, 6, "scaleFactor");
-    scaleFactor = static_cast<int>(luaL_optinteger(L, -1, 1));
+    scale_factor = static_cast<int>(luaL_optinteger(L, -1, 1));
     lua_pop(L, 1);
   } else if (arg6type != LUA_TNONE) {
     luaL_error(L, "Expected table for draw options");
   }
 
+  // TODO: Support float coordinates
   pSheet->draw_sprite(pCanvas, iSprite, x, y, flags, 0, animation_effect::none,
-                      scaleFactor);
+                      scale_factor);
 
   lua_settop(L, 1);
   return 1;
@@ -246,10 +249,14 @@ int l_spritesheet_hittest(lua_State* L) {
 
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
   size_t iSprite = luaL_checkinteger(L, 2);
-  int iX = static_cast<int>(luaL_checkinteger(L, 3));
-  int iY = static_cast<int>(luaL_checkinteger(L, 4));
+  float iX = static_cast<float>(luaL_checknumber(L, 3));
+  float iY = static_cast<float>(luaL_checknumber(L, 4));
   uint32_t iFlags = static_cast<uint32_t>(luaL_optinteger(L, 5, 0));
-  return pSheet->hit_test_sprite(iSprite, iX, iY, iFlags);
+
+  int x = static_cast<int>(std::roundf(iX));
+  int y = static_cast<int>(std::roundf(iY));
+
+  return pSheet->hit_test_sprite(iSprite, x, y, iFlags);
 }
 
 int l_spritesheet_isvisible(lua_State* L) {
@@ -521,8 +528,12 @@ int l_font_draw(lua_State* L) {
   }
   size_t iMsgLen;
   const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
-  int iX = static_cast<int>(luaL_checkinteger(L, 4));
-  int iY = static_cast<int>(luaL_checkinteger(L, 5));
+  float iX = static_cast<float>(luaL_checknumber(L, 4));
+  float iY = static_cast<float>(luaL_checknumber(L, 5));
+
+  // Keep font drawing pixel aligned to avoid blur
+  iX = std::roundf(iX);
+  iY = std::roundf(iY);
 
   text_alignment eAlign = text_alignment::center;
   if (!lua_isnoneornil(L, 8)) {
@@ -541,22 +552,24 @@ int l_font_draw(lua_State* L) {
   }
 
   text_layout oDrawArea = pFont->get_text_dimensions(sMsg, iMsgLen);
+  float area_endx = static_cast<float>(oDrawArea.end_x);
+  float area_endy = static_cast<float>(oDrawArea.end_y);
   if (!lua_isnoneornil(L, 7)) {
     int iW = static_cast<int>(luaL_checkinteger(L, 6));
     int iH = static_cast<int>(luaL_checkinteger(L, 7));
     if (iW > oDrawArea.end_x && eAlign != text_alignment::left) {
-      iX +=
-          (iW - oDrawArea.end_x) / ((eAlign == text_alignment::center) ? 2 : 1);
+      iX += std::ceilf((static_cast<float>(iW) - area_endx) /
+            ((eAlign == text_alignment::center) ? 2.0f : 1.0f));
     }
     if (iH > oDrawArea.end_y) {
-      iY += (iH - oDrawArea.end_y) / 2;
+      iY += std::ceilf((static_cast<float>(iH) - area_endy) / 2);
     }
   }
   if (pCanvas != nullptr) {
     pFont->draw_text(pCanvas, sMsg, iMsgLen, iX, iY);
   }
-  lua_pushinteger(L, iY + oDrawArea.end_y);
-  lua_pushinteger(L, iX + oDrawArea.end_x);
+  lua_pushnumber(L, iY + area_endy);
+  lua_pushnumber(L, iX + area_endx);
 
   return 2;
 }
@@ -571,8 +584,8 @@ int l_font_draw_wrapped(lua_State* L) {
   }
   size_t iMsgLen;
   const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
-  int iX = static_cast<int>(luaL_checkinteger(L, 4));
-  int iY = static_cast<int>(luaL_checkinteger(L, 5));
+  float iX = static_cast<float>(luaL_checknumber(L, 4));
+  float iY = static_cast<float>(luaL_checknumber(L, 5));
   int iW = static_cast<int>(luaL_checkinteger(L, 6));
 
   text_alignment eAlign = text_alignment::left;
@@ -617,25 +630,32 @@ int l_font_draw_tooltip(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
   size_t iMsgLen;
   const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
-  int iX = static_cast<int>(luaL_checkinteger(L, 4));
-  int iY = static_cast<int>(luaL_checkinteger(L, 5));
+  float iX = static_cast<float>(luaL_checknumber(L, 4));
+  float iY = static_cast<float>(luaL_checknumber(L, 5));
   int iW = static_cast<int>(luaL_optinteger(L, 6, 200));
-  int iScreenWidth = pCanvas->get_width();
+  float screen_width = static_cast<float>(pCanvas->get_width());
+
+  // Pixel align tooltips to avoid fuzzy text
+  iX = std::roundf(iX);
+  iY = std::roundf(iY);
 
   uint32_t iBlack = render_target::map_colour(0x00, 0x00, 0x00);
   uint32_t iWhite = render_target::map_colour(0xFF, 0xFF, 0xFF);
   text_layout oArea = pFont->draw_text_wrapped(nullptr, sMsg, iMsgLen, iX + 2,
                                                iY + 1, iW - 4, INT_MAX, 0);
-  int iLastX = iX + oArea.width + 3;
-  int iFirstY = iY - (oArea.end_y - iY) - 1;
 
-  int iXOffset = iLastX > iScreenWidth ? iScreenWidth - iLastX : 0;
-  int iYOffset = iFirstY < 0 ? -iFirstY : 0;
+  float area_width = static_cast<float>(oArea.width);
+  float area_endy = static_cast<float>(oArea.end_y);
+  float iLastX = iX + area_width + 3;
+  float iFirstY = iY - (area_endy - iY) - 1;
 
-  pCanvas->fill_rect(iBlack, iX + iXOffset, iFirstY + iYOffset, oArea.width + 3,
-                     oArea.end_y - iY + 2);
+  float iXOffset = iLastX > screen_width ? screen_width - iLastX : 0;
+  float iYOffset = iFirstY < 0 ? -iFirstY : 0;
+
+  pCanvas->fill_rect(iBlack, iX + iXOffset, iFirstY + iYOffset, area_width + 3,
+                     area_endy - iY + 2);
   pCanvas->fill_rect(iWhite, iX + iXOffset + 1, iFirstY + 1 + iYOffset,
-                     oArea.width + 1, oArea.end_y - iY);
+                     area_width + 1, area_endy - iY);
 
   pFont->draw_text_wrapped(pCanvas, sMsg, iMsgLen, iX + 2 + iXOffset,
                            iFirstY + 1 + iYOffset, iW - 4);
@@ -747,8 +767,8 @@ int l_cursor_position(lua_State* L) {
   render_target* pCanvas =
       luaT_testuserdata<render_target>(L, 1, luaT_upvalueindex(1));
   lua_pushboolean(L, cursor::set_position(
-                         pCanvas, static_cast<int>(luaL_checkinteger(L, 2)),
-                         static_cast<int>(luaL_checkinteger(L, 3)))
+                         pCanvas, static_cast<float>(luaL_checknumber(L, 2)),
+                         static_cast<float>(luaL_checknumber(L, 3)))
                          ? 1
                          : 0);
   return 1;
@@ -891,10 +911,10 @@ int l_surface_rect(lua_State* L) {
 
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
   if (pCanvas->fill_rect(static_cast<uint32_t>(luaL_checkinteger(L, 2)),
-                         static_cast<int>(luaL_checkinteger(L, 3)),
-                         static_cast<int>(luaL_checkinteger(L, 4)),
-                         static_cast<int>(luaL_checkinteger(L, 5)),
-                         static_cast<int>(luaL_checkinteger(L, 6)))) {
+                         static_cast<float>(luaL_checknumber(L, 3)),
+                         static_cast<float>(luaL_checknumber(L, 4)),
+                         static_cast<float>(luaL_checknumber(L, 5)),
+                         static_cast<float>(luaL_checknumber(L, 6)))) {
     lua_settop(L, 1);
     return 1;
   }
@@ -1045,8 +1065,8 @@ int l_line_draw(lua_State* L) {
 
   line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
-  pLine->draw(pCanvas, static_cast<int>(luaL_optinteger(L, 3, 0)),
-              static_cast<int>(luaL_optinteger(L, 4, 0)));
+  pLine->draw(pCanvas, static_cast<float>(luaL_optnumber(L, 3, 0)),
+              static_cast<float>(luaL_optnumber(L, 4, 0)));
 
   lua_settop(L, 1);
   return 1;
