@@ -369,8 +369,8 @@ render_target::scoped_target_texture::scoped_target_texture(
   }
 
   // Clear the new texture to transparent/black.
-  SDL_SetRenderLogicalPresentation(target->renderer, rect.w, rect.h,
-                                   SDL_LOGICAL_PRESENTATION_LETTERBOX);
+  // SDL_SetRenderLogicalPresentation(target->renderer, rect.w, rect.h,
+  //                                 SDL_LOGICAL_PRESENTATION_LETTERBOX);
   SDL_SetRenderDrawColor(target->renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
   SDL_RenderClear(target->renderer);
   target->current_target = this;
@@ -397,11 +397,11 @@ render_target::scoped_target_texture::~scoped_target_texture() {
     std::fprintf(stderr, "scoped_target_texture destructor error: %s",
                  SDL_GetError());
   }
-  SDL_SetRenderLogicalPresentation(
-      target->renderer,
-      previous_target ? previous_target->rect.w : target->width,
-      previous_target ? previous_target->rect.h : target->height,
-      SDL_LOGICAL_PRESENTATION_LETTERBOX);
+  // SDL_SetRenderLogicalPresentation(
+  //     target->renderer,
+  //     previous_target ? previous_target->rect.w : target->width,
+  //     previous_target ? previous_target->rect.h : target->height,
+  //     SDL_LOGICAL_PRESENTATION_LETTERBOX);
   SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
   target->current_target = previous_target;
   if (scale) {
@@ -428,14 +428,26 @@ render_target::render_target(const render_target_creation_params& params)
   SDL_PropertiesID winProps = SDL_CreateProperties();
   SDL_SetStringProperty(winProps, SDL_PROP_WINDOW_CREATE_TITLE_STRING,
                         "CorsixTH");
-  SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width);
-  SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height);
+  SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER,
+                        params.width);
+  SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER,
+                        params.height);
+  SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true);
+  SDL_SetBooleanProperty(
+      winProps, SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN, true);
   SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER,
                         SDL_WINDOW_RESIZABLE);
   window = SDL_CreateWindowWithProperties(winProps);
   SDL_DestroyProperties(winProps);
   if (!window) {
     throw std::runtime_error(SDL_GetError());
+  }
+
+  float scale = SDL_GetWindowPixelDensity(window);
+  if (scale != 1.0f) {
+    width = static_cast<int>(static_cast<float>(params.width) / scale);
+    height = static_cast<int>(static_cast<float>(params.height) / scale);
+    SDL_SetWindowSize(window, width, height);
   }
 
   SDL_PropertiesID renderProps = SDL_CreateProperties();
@@ -460,11 +472,12 @@ render_target::render_target(const render_target_creation_params& params)
   supports_target_textures = !!testTexture;
   SDL_DestroyTexture(testTexture);
 
-  SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
-  SDL_SetRenderLogicalPresentation(renderer, width, height,
-                                   SDL_LOGICAL_PRESENTATION_LETTERBOX);
+  int mw = static_cast<int>(static_cast<float>(params.min_width) / scale);
+  int mh = static_cast<int>(static_cast<float>(params.min_height) / scale);
+  SDL_SetWindowMinimumSize(window, mw, mh);
 
-  update(params);
+  SDL_ShowWindow(window);
+  SDL_SyncWindow(window);
 }
 
 render_target::~render_target() {
@@ -483,9 +496,15 @@ render_target::~render_target() {
 }
 
 bool render_target::update(const render_target_creation_params& params) {
-  bool bUpdateSize = (width != params.width) || (height != params.height);
-  width = params.width;
-  height = params.height;
+  float scale = SDL_GetWindowPixelDensity(window);
+  int pw = static_cast<int>(static_cast<float>(params.width) / scale);
+  int ph = static_cast<int>(static_cast<float>(params.height) / scale);
+  int mw = static_cast<int>(static_cast<float>(params.min_width) / scale);
+  int mh = static_cast<int>(static_cast<float>(params.min_height) / scale);
+
+  bool bUpdateSize = (width != pw) || (height != ph);
+  width = pw;
+  height = ph;
 
   bool bIsFullscreen = ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
                         SDL_WINDOW_FULLSCREEN);
@@ -497,17 +516,12 @@ bool render_target::update(const render_target_creation_params& params) {
     SDL_SetWindowSize(window, width, height);
   }
 
-  if (bUpdateSize) {
-    SDL_SetRenderLogicalPresentation(renderer, width, height,
-                                     SDL_LOGICAL_PRESENTATION_LETTERBOX);
-  }
-
   int old_min_width;
   int old_min_height;
   SDL_GetWindowMinimumSize(window, &old_min_width, &old_min_height);
   if (old_min_width != params.min_width ||
       old_min_height != params.min_height) {
-    SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
+    SDL_SetWindowMinimumSize(window, mw, mh);
   }
 
   return true;
@@ -682,13 +696,14 @@ void render_target::pop_clip_rect() {
 
 int render_target::get_width() const {
   int w;
-  SDL_GetRenderLogicalPresentation(renderer, &w, nullptr, nullptr);
+  SDL_GetRenderOutputSize(renderer, &w, nullptr);
   return static_cast<int>(std::ceil(w / draw_scale()));
 }
 
 int render_target::get_height() const {
   int h;
-  SDL_GetRenderLogicalPresentation(renderer, nullptr, &h, nullptr);
+  SDL_GetRenderOutputSize(renderer, &h, nullptr);
+  //SDL_GetRenderLogicalPresentation(renderer, nullptr, &h, nullptr);
   return static_cast<int>(std::ceil(h / draw_scale()));
 }
 

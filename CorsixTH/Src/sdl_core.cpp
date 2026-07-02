@@ -36,6 +36,7 @@ SOFTWARE.
 
 #include "lua.hpp"
 #include "lua_sdl.h"
+#include "th_gfx.h"
 #include "th_lua.h"
 
 namespace {
@@ -288,19 +289,17 @@ void mainloop(lua_State* L) {
   std::string_view last_dispatch;
   bool wait_error = false;
 
+  lua_getglobal(L, "TheApp");
+  lua_getfield(L, -1, "video");
+  render_target* target = static_cast<render_target*>(lua_touserdata(L, -1));
+
   while ((wait_error = SDL_WaitEvent(&e))) {
     bool do_frame = false;
     bool do_timer = false;
 
-    // TODO: Determine if SDL_ConvertEventToRenderCoordinates is needed.
-    // Migrating to SDL 3:
-    //"""
-    // Mouse and touch events are no longer filtered to change their
-    // coordinates, instead you can call SDL_ConvertEventToRenderCoordinates()
-    // to explicitly map event coordinates into the rendering viewport.
-    //"""
-
     do {
+      SDL_ConvertEventToRenderCoordinates(target->get_renderer(), &e);
+
       int nargs;
       switch (e.type) {
         case SDL_EVENT_QUIT:
@@ -395,7 +394,8 @@ void mainloop(lua_State* L) {
           push_app_dispatch(L, last_dispatch);
           lua_pushinteger(L, e.window.data1);
           lua_pushinteger(L, e.window.data2);
-          nargs = 3;
+          lua_pushnumber(L, SDL_GetWindowDisplayScale(target->get_window()));
+          nargs = 4;
           break;
         case SDL_USEREVENT_MUSIC_OVER:
           last_dispatch = dispatch_music_over;
