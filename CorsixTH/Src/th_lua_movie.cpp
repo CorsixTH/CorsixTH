@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL_rect.h>
+#include <SDL3/SDL.h>
 
 #ifdef WITH_TRACY
 #include <tracy/Tracy.hpp>
@@ -83,7 +83,7 @@ int l_movie_play(lua_State* L) {
   const char* warning;
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
   pMovie->clear_last_error();
-  pMovie->play(static_cast<int>(luaL_checkinteger(L, 2)));
+  pMovie->play();
   warning = pMovie->get_last_error();
   lua_pushstring(L, warning);
   return 1;

@@ -141,7 +141,7 @@ function App:init()
   self:initScreenshotsDir()
 
   -- Create the window
-  if not SDL.init("video", "timer", "audio") then
+  if not SDL.init("video", "audio") then
     return false, "Cannot initialise SDL"
   end
 

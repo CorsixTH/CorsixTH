@@ -587,7 +587,7 @@ function UI:unregisterHotkeyBox(box)
   end
 end
 
-function UI:changeResolution(width, height)
+function UI:changeResolution(width, height, display_scale)
   self.app:prepareVideoUpdate()
   local error_message = self.app.video:update(
       width,
@@ -987,11 +987,12 @@ function UI:getWindowActiveStatus()
 end
 
 --! Window has been resized by the user
---!param width (integer) New window width
---!param height (integer) New window height
-function UI:onWindowResize(width, height)
+--!param width (integer) New window width in physical pixels
+--!param height (integer) New window height in physical pixels
+--!param display_scale (number) The scale factor of the display (physical/logical pixels)
+function UI:onWindowResize(width, height, display_scale)
   if not self.app.config.fullscreen then
-    self:changeResolution(width, height)
+    self:changeResolution(width, height, display_scale)
   end
 end
 

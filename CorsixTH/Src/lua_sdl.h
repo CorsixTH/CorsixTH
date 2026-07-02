@@ -23,22 +23,22 @@ SOFTWARE.
 #ifndef CORSIX_TH_LUA_SDL_H_
 #define CORSIX_TH_LUA_SDL_H_
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 #include "lua.hpp"
 
 // SDL event codes used for delivering custom events to l_mainloop in
 // sdl_core.cpp
 // SDL_USEREVENT_TICK - informs script of a timer tick
-#define SDL_USEREVENT_TICK (SDL_USEREVENT + 0)
+#define SDL_USEREVENT_TICK (SDL_EVENT_USER + 0)
 // SDL_USEREVENT_MUSIC_OVER - informs script of SDL_Mixer music finishing
-#define SDL_USEREVENT_MUSIC_OVER (SDL_USEREVENT + 1)
+#define SDL_USEREVENT_MUSIC_OVER (SDL_EVENT_USER + 1)
 // SDL_USEREVENT_MUSIC_LOADED - informs script that async music is loaded
-#define SDL_USEREVENT_MUSIC_LOADED (SDL_USEREVENT + 2)
+#define SDL_USEREVENT_MUSIC_LOADED (SDL_EVENT_USER + 2)
 // SDL USEREVENT_MOVIE_OVER - informs script of THMovie movie finishing
-#define SDL_USEREVENT_MOVIE_OVER (SDL_USEREVENT + 3)
+#define SDL_USEREVENT_MOVIE_OVER (SDL_EVENT_USER + 3)
 // SDL_USEREVENT_SOUND_OVER - informs script of a played sound finishing.
-#define SDL_USEREVENT_SOUND_OVER (SDL_USEREVENT + 4)
+#define SDL_USEREVENT_SOUND_OVER (SDL_EVENT_USER + 4)
 
 constexpr int usertick_period_ms = 18;
 

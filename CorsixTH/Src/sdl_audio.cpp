@@ -22,10 +22,8 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL_events.h>
-#include <SDL_mixer.h>
-#include <SDL_rwops.h>
-#include <SDL_thread.h>
+#include <SDL3/SDL.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 #include <array>
 #include <cmath>
@@ -35,6 +33,7 @@ SOFTWARE.
 #include "lua.hpp"
 #include "lua_sdl.h"
 #include "th_lua.h"
+#include "th_sound.h"
 #include "xmi2mid.h"
 #ifdef _MSC_VER
 #pragma comment(lib, "SDL2_mixer")
@@ -42,13 +41,13 @@ SOFTWARE.
 
 class music {
  public:
-  Mix_Music* pMusic{nullptr};
+  MIX_Audio* pMusic{nullptr};
 
   music() = default;
 
   ~music() {
     if (pMusic) {
-      Mix_FreeMusic(pMusic);
+      MIX_DestroyAudio(pMusic);
       pMusic = nullptr;
     }
   }
@@ -56,61 +55,81 @@ class music {
 
 namespace {
 
-void audio_music_over_callback() {
+th::sound::track_ptr music_track;
+
+void audio_music_over_callback(void*, MIX_Track*) {
   SDL_Event e;
   e.type = SDL_USEREVENT_MUSIC_OVER;
   SDL_PushEvent(&e);
 }
 
 int l_init(lua_State* L) {
-  constexpr int chunk_size = 2048;
   size_t soundfont_path_len;
   const char* sound_font = luaL_optlstring(L, 4, nullptr, &soundfont_path_len);
 
-  // soundfont must be set before Mix_OpenAudio the first time or else
-  // fluidsynth is not loaded
-  if (sound_font != nullptr) {
-    Mix_SetSoundFonts(sound_font);
+  if (!th::sound::init(sound_font)) {
+    lua_pushboolean(L, 0);
+    lua_pushstring(L, SDL_GetError());
+    return 2;
   }
 
-  int err = Mix_OpenAudio(
-      static_cast<int>(luaL_optinteger(L, 1, MIX_DEFAULT_FREQUENCY)),
-      MIX_DEFAULT_FORMAT,
-      static_cast<int>(luaL_optinteger(L, 2, MIX_DEFAULT_CHANNELS)),
-      static_cast<int>(luaL_optinteger(L, 3, chunk_size)));
-  if (err != 0) {
+  music_track.reset(MIX_CreateTrack(th::sound::get_mixer()));
+  if (!music_track) {
     lua_pushboolean(L, 0);
-    lua_pushstring(L, Mix_GetError());
+    lua_pushstring(L, SDL_GetError());
     return 2;
-  } else {
-    lua_pushboolean(L, 1);
-    Mix_HookMusicFinished(audio_music_over_callback);
-    return 1;
   }
+
+  lua_pushboolean(L, 1);
+
+  MIX_SetTrackStoppedCallback(music_track.get(), audio_music_over_callback,
+                              nullptr);
+  return 1;
 }
 
 int l_destroy(lua_State* L) {
-  Mix_CloseAudio();
+  th::sound::quit();
   return 0;
 }
 
 struct load_music_async_data {
   lua_State* L;
-  Mix_Music* music;
-  SDL_RWops* rwop;
+  MIX_Audio* music;
+  SDL_IOStream* rwop;
   char* err;
   SDL_Thread* thread;
 };
 
+constexpr const char* mix_prop_soundfont_path_string =
+    "SDL_mixer.decoder.fluidsynth.soundfont_path";
+
+MIX_Audio* createMusicAudio(SDL_IOStream* stream) {
+  SDL_PropertiesID audioProps = SDL_CreateProperties();
+  SDL_SetPointerProperty(audioProps, MIX_PROP_AUDIO_LOAD_IOSTREAM_POINTER,
+                         stream);
+  SDL_SetBooleanProperty(audioProps, MIX_PROP_AUDIO_LOAD_CLOSEIO_BOOLEAN, true);
+  SDL_SetPointerProperty(audioProps,
+                         MIX_PROP_AUDIO_LOAD_PREFERRED_MIXER_POINTER,
+                         th::sound::get_mixer());
+  const char* sf = th::sound::get_soundfont();
+  if (sf) {
+    SDL_SetStringProperty(audioProps, mix_prop_soundfont_path_string, sf);
+  }
+  MIX_Audio* audio = MIX_LoadAudioWithProperties(audioProps);
+  SDL_DestroyProperties(audioProps);
+
+  return audio;
+}
+
 int load_music_async_thread(void* arg) {
   load_music_async_data* async = (load_music_async_data*)arg;
 
-  async->music = Mix_LoadMUS_RW(async->rwop, 1);
+  async->music = createMusicAudio(async->rwop);
   async->rwop = nullptr;
   if (async->music == nullptr) {
-    size_t iLen = std::strlen(Mix_GetError()) + 1;
+    size_t iLen = std::strlen(SDL_GetError()) + 1;
     async->err = (char*)malloc(iLen);
-    std::memcpy(async->err, Mix_GetError(), iLen);
+    std::memcpy(async->err, SDL_GetError(), iLen);
   }
   SDL_Event e;
   e.type = SDL_USEREVENT_MUSIC_LOADED;
@@ -123,7 +142,7 @@ int l_load_music_async(lua_State* L) {
   size_t iLength;
   const uint8_t* pData = luaT_checkfile(L, 1, &iLength);
   luaL_checktype(L, 2, LUA_TFUNCTION);
-  SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
+  SDL_IOStream* rwop = SDL_IOFromConstMem(pData, (int)iLength);
   lua_settop(L, 2);
 
   load_music_async_data* async = luaT_new<load_music_async_data>(L);
@@ -164,11 +183,11 @@ int l_load_music_async(lua_State* L) {
 int l_load_music(lua_State* L) {
   size_t iLength;
   const uint8_t* pData = luaT_checkfile(L, 1, &iLength);
-  SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
-  Mix_Music* pMusic = Mix_LoadMUS_RW(rwop, 1);
+  SDL_IOStream* rwop = SDL_IOFromConstMem(pData, (int)iLength);
+  MIX_Audio* pMusic = createMusicAudio(rwop);
   if (pMusic == nullptr) {
     lua_pushnil(L);
-    lua_pushstring(L, Mix_GetError());
+    lua_pushstring(L, SDL_GetError());
     return 2;
   }
   music* pLMusic = luaT_stdnew<music>(L, luaT_environindex, true);
@@ -179,25 +198,28 @@ int l_load_music(lua_State* L) {
 }
 
 int l_music_volume(lua_State* L) {
-  lua_Number fValue = luaL_checknumber(L, 1);
-  fValue = fValue * (lua_Number)MIX_MAX_VOLUME;
-  int iVolume = static_cast<int>(std::lround(fValue));
-  if (iVolume < 0) {
-    iVolume = 0;
-  } else if (iVolume > MIX_MAX_VOLUME) {
-    iVolume = MIX_MAX_VOLUME;
+  auto volume = static_cast<float>(luaL_checknumber(L, 1));
+  if (volume < 0) {
+    volume = 0;
   }
-  Mix_VolumeMusic(iVolume);
+  MIX_SetTrackGain(music_track.get(), volume);
   return 0;
 }
 
 int l_play_music(lua_State* L) {
   music* pLMusic = luaT_testuserdata<music>(L, -1);
-  int err = Mix_PlayMusic(pLMusic->pMusic,
-                          static_cast<int>(luaL_optinteger(L, 2, 1)));
-  if (err != 0) {
+  int loops = static_cast<int>(luaL_optinteger(L, 2, 1));
+
+  bool success = true;
+  success &= MIX_SetTrackAudio(music_track.get(), pLMusic->pMusic);
+  SDL_PropertiesID playProps = SDL_CreateProperties();
+  SDL_SetNumberProperty(playProps, MIX_PROP_PLAY_LOOPS_NUMBER, loops);
+  success &= MIX_PlayTrack(music_track.get(), playProps);
+  SDL_DestroyProperties(playProps);
+
+  if (!success) {
     lua_pushnil(L);
-    lua_pushstring(L, Mix_GetError());
+    lua_pushstring(L, SDL_GetError());
     return 2;
   }
   lua_pushboolean(L, 1);
@@ -205,19 +227,19 @@ int l_play_music(lua_State* L) {
 }
 
 int l_pause_music(lua_State* L) {
-  Mix_PauseMusic();
-  lua_pushboolean(L, Mix_PausedMusic() != 0 ? 1 : 0);
+  MIX_PauseTrack(music_track.get());
+  lua_pushboolean(L, MIX_TrackPaused(music_track.get()));
   return 1;
 }
 
 int l_resume_music(lua_State* L) {
-  Mix_ResumeMusic();
-  lua_pushboolean(L, Mix_PausedMusic() == 0 ? 1 : 0);
+  MIX_ResumeTrack(music_track.get());
+  lua_pushboolean(L, !MIX_TrackPaused(music_track.get()));
   return 1;
 }
 
 int l_stop_music(lua_State* L) {
-  Mix_HaltMusic();
+  MIX_StopTrack(music_track.get(), 0);
   return 0;
 }
 
