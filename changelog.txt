@@ -1,76 +1,5 @@
 -------------------------------------------------------------------------------
-CorsixTH 0.70.0 Release Candidate 2 - Release June 2026
--------------------------------------------------------------------------------
-# Changes
-* Panel keys in the hotkey assignment menu now utilise two pages
-
-# Translations
-* French translation updated. Thanks @Ouaz
-* Czech translation updated. Thanks @jansakos
-
-# Bug Fixes from RC1
-* Fixed regression where a machine's maximum strength never decreased
-* Fixed regression where patient's dying moods were no longer shown
-* Fixed regression where loading a save failed if the a window with a staff
-  profile photo was open (such as Staff Management)
-* Fixed regression where mousewheel scroll did not work consistently with UI
-  Scaling enabled
-
-# Bug Fixes
-* Fixed an issue where stopping music led to a crash on the level progression
-  movie
-
--------------------------------------------------------------------------------
-CorsixTH 0.70.0 Release Candidate 1 - Release June 2026
--------------------------------------------------------------------------------
-# Translations
-* Russian translation updated. Thanks @ARGAMX
-
-# Bug Fixes from Beta 2
-* Fixed regression with in game menu bar and dynamic info panel having
-  unreadable text with unicode fonts when not using direct zoom
-* Fixed a misfire of the new fax sound when a message wasn't to be shown yet in
-  the bottom panel
-* Fixed the adviser history window breaking when deleting messages
-* Fixed regression where fully rested staff would not answer calls if unable
-  to return to Training or Research
-
-# Bug Fixes
-* Fixed a null pointer crash when trying to process an empty string
-* Fixed an issue handling multiple windows when loading save games
-* Fixed a crash in the Machine Menu when updating repair states
-* Fixed fully rested staff trying to return to the staffroom upon entering a
-  room
-
-# Packager Notes
-* vcpkg registry bumped
-
--------------------------------------------------------------------------------
-CorsixTH 0.70.0 Beta 2 - Release June 2026
--------------------------------------------------------------------------------
-# Changes
-* Restored early loading functionality of music on Windows in certain scenarios
-  removed in Beta 1
-* Changed soundfont file path in Sound Settings to use unicode font, if
-  available
-# Bug Fixes from Beta 1
-* Fixed regression with some objects being picked up becoming no longer usable
-* Fixed regression with some consistency issues with the bottom panel
-* Stopped regression where the sell hotkey made Edit Room go back to doors
-  phase from placing objects
-* Fixed regression that led to crash on loading a game after previously moving
-  objects
-* Fixed regression in a specific scenario where side objects could allow
-  humanoids to walk through walls
-* Stopped regression in Staff Dialog window that led to a crash
-* Stopped regression where faxes not related to a humanoid crashing the game
-  (such as the new disease fax)
-* Fixed regression where Operating Table becoming unreachable for the second
-  surgeon
-* Fixed some typos in the codebase
-
--------------------------------------------------------------------------------
-CorsixTH 0.70.0 Beta 1 - Released May 2026
+CorsixTH 0.70.0 - Released July 2026
 -------------------------------------------------------------------------------
 # New Features
 * Support for the official Russian edition of Theme Hospital has been added
@@ -136,14 +65,16 @@ CorsixTH 0.70.0 Beta 1 - Released May 2026
 * Reworked nearby object calculations
 * Stopped emergency patients from drinking, vomiting, or using the toilet
 * Machine usage count no longer increases during earthquakes
+* Panel keys in the hotkey assignment menu now utilise two pages
 
 # Translations
 * Japanese announcement audio will now be used if available when playing in that
   language
 * Spanish translation updated. Thanks @sraaronrock and @ShiroAka
 * Italian translation updated. Thanks @dodero4
-* French translation updated. Thanks @PierreRic
+* French translation updated. Thanks @PierreRic and @Ouaz
 * Czech translation updated. Thanks @jansakos
+* Russian translation updated. Thanks @ARGAMX
 
 # Bug Fixes
 * Better error handling for non-existent languages
@@ -182,6 +113,14 @@ CorsixTH 0.70.0 Beta 1 - Released May 2026
 * Prevented some 'fullscreen' windows from being unpaused while present
   e.g. fax
 * Fixed certtain faxes being accidentally dismissed, such as the win level fax
+* Fixed an issue where stopping music led to a crash on the level progression
+  movie
+* Fixed inconsistent behaviour when using the bottom panel (e.g. Machine Menu)
+* Fixed a null pointer crash when trying to process an empty string
+* Fixed an issue handling multiple windows when loading save games
+* Fixed a crash in the Machine Menu when updating repair states
+* Fixed fully rested staff trying to return to the staffroom upon entering a
+  room
 
 # Packager Notes
 * Lua 5.5 is now supported. Lua 5.2 - 5.3 are deprecated
