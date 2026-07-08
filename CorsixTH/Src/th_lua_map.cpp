@@ -144,10 +144,11 @@ int l_map_save(lua_State* L) {
 animation* l_map_updateblueprint_getnextanim(lua_State* L, int& iIndex) {
   animation* pAnim;
   lua_rawgeti(L, 11, iIndex);
+  const int animation_upvalue = luaT_upvalueindex(2);
   if (lua_type(L, -1) == LUA_TNIL) {
     lua_pop(L, 1);
     pAnim = luaT_new<animation>(L);
-    lua_pushvalue(L, luaT_upvalueindex(2));
+    lua_pushvalue(L, animation_upvalue);
     lua_setmetatable(L, -2);
     lua_createtable(L, 0, 2);
     lua_pushvalue(L, 1);
@@ -160,7 +161,7 @@ animation* l_map_updateblueprint_getnextanim(lua_State* L, int& iIndex) {
     // animation lookup used by level_map::persist(); otherwise they save as nil
     // and disappear after reload.
     int anim_index = lua_gettop(L);
-    lua_rawgeti(L, luaT_upvalueindex(2), 2);
+    lua_rawgeti(L, animation_upvalue, 2);
     lua_pushlightuserdata(L, pAnim);
     lua_pushvalue(L, anim_index);
     lua_rawset(L, -3);
