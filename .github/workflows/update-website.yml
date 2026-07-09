@@ -3,7 +3,10 @@ name: Update website
 on:
   release:
     types:
-      - published
+      - created
+      - deleted
+      - released
+      - unpublished
 
 jobs:
   dispatch:
