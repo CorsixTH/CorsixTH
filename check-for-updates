@@ -1,7 +1,7 @@
 return {
   major = 0,
-  minor = 69,
-  revision = 2,
-  changelog_en = 'Fixes a stuck Operating Theatre when rerouting patients.',
+  minor = 70,
+  revision = 0,
+  changelog_en = 'This version provides long awaited UI scaling, ability to safely block off areas in rooms, and a host of accessible features. Additional things of note also include hardware MIDI support, customisable autosave frequency, PNG screenshots, and general performance improvements for large hospitals.',
   download_url = 'https://github.com/CorsixTH/CorsixTH/releases',
 }
