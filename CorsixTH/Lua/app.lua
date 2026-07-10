@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 253 -- 0.70.0
+local SAVEGAME_VERSION = 263 -- 0.70.0 post bump buffer
 
 class "App"
 
