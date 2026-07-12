@@ -1,7 +1,7 @@
 # Windows ARM64 Contribution Notes
 
 ## Scope
-This branch adds first-class Windows ARM64 configure/build/test support and prepares an in-repo FFmpeg workaround for ARM64 Windows builds.
+This branch adds first-class Windows ARM64 configure/build/test support and points ffmpeg resolution at the registry repo revision carrying the ARM64 Windows port updates.
 
 ## Changes in this branch
 
@@ -11,14 +11,12 @@ This branch adds first-class Windows ARM64 configure/build/test support and prep
 - Added `_arm64` artifact suffix for ARM64 workflow builds.
 - Fixed Windows workflow `if:` conditions to use `env.PRESET` for install/list/upload steps.
 
-### 2) In-repo FFmpeg ARM64 workaround
-- Added vcpkg overlay port at `vcpkg-overlays/ports/ffmpeg`.
-- Enabled overlay ports in `vcpkg-configuration.json`:
-  - `"overlay-ports": ["vcpkg-overlays/ports"]`
-- Overlay `build.sh.in` keeps ARM64 asm disabled on Windows (`--disable-asm --disable-x86asm`) to avoid the long configure/build stall observed during investigation.
+### 2) FFmpeg ARM64 registry wiring
+- Updated `vcpkg-configuration.json` to resolve `ffmpeg` and `ffmpeg-bin2c` from the registry repo revision containing the ARM64 Windows ffmpeg port updates.
+- The registry ffmpeg port keeps ARM64 asm disabled on Windows (`--disable-asm --disable-x86asm`) to avoid the long configure/build stall observed during investigation.
 
-## Why overlay the FFmpeg port?
-The original experiment edited a local cache file under `%LOCALAPPDATA%\vcpkg\registries\git-trees\...`, which is not tracked by git and cannot be reviewed/merged. The overlay makes the workaround explicit, reproducible, and reviewable in the repository.
+## Why move the FFmpeg port to the registry?
+The original experiment edited a local cache file under `%LOCALAPPDATA%\vcpkg\registries\git-trees\...`, which is not tracked by git and cannot be reviewed or merged. The port now lives in the vcpkg registry repository where packaging changes belong, while this repository only references that registry revision.
 
 ## Validation summary
 
@@ -67,7 +65,7 @@ Describe what changed:
 - Added Windows ARM64 CMake presets (`win-arm64-rel`) for configure/build/test.
 - Updated Windows workflow to accept ARM64 preset and name ARM64 artifacts distinctly.
 - Corrected workflow preset condition checks to use `env.PRESET`.
-- Added an in-repo ffmpeg overlay port and enabled overlay ports in vcpkg configuration so ARM64 Windows ffmpeg behavior is reproducible in version control.
+- Updated vcpkg registry configuration so ARM64 Windows ffmpeg behavior is reproducible through the registry revision that carries the ffmpeg port changes.
 
 ## Suggested PR labels
 - `PR:DevTools/Repo`
