@@ -727,7 +727,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 if(VCPKG_TARGET_IS_MINGW)
-    set(OPTIONS "${OPTIONS} --extra_cflags=-D_WIN32_WINNT=0x0601")
+    set(OPTIONS "${OPTIONS} --extra-cflags=-D_WIN32_WINNT=0x0601")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
 endif()
