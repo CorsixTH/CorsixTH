@@ -8,6 +8,7 @@
   "homepage": "https://ffmpeg.org",
   "license": "LGPL-2.1-or-later",
   "dependencies": [
+    {
       "name": "ffmpeg-bin2c",
       "host": true
     },
