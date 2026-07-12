@@ -53,7 +53,7 @@ merge_binaries() {
             COMMAND="$COMMAND -arch $ARCH $SOURCE/$ARCH/$BINARY"
         done
 
-        $($COMMAND)
+        eval "$COMMAND"
     done
 }
 
