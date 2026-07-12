@@ -1,7 +1,4 @@
 {
-  "overlay-ports": [
-    "vcpkg-overlays/ports"
-  ],
   "default-registry": {
     "kind": "git",
     "baseline": "bee87c32fcf25e81b0d9c312144475b5e34181a8",
@@ -15,8 +12,8 @@
     },
     {
       "kind": "git",
-      "repository": "https://github.com/CorsixTH/vcpkg-registry",
-      "baseline": "ddc4effddd5f69d77c2eae918d7f8ba55fc8ab37",
+      "repository": "https://github.com/allensmith81/vcpkg-registry-arm64",
+      "baseline": "3f0b556e93e2cc9730ed93a9125f551a4d34d997",
       "packages": [ "ffmpeg", "ffmpeg-bin2c" ]
     }
   ]
