@@ -37,17 +37,19 @@ Most features of the game are available -- and we're at a state where you can co
 - Cheats (naughty!)
 ##### New Features #####
 - Custom levels and campaigns
-- Full HD support
+- Full HD and 4K support
 - Zooming
 - UI scaling
 - Subtitles
-- Make your own maps and levels
+- Make your own maps and levels with built-in map editor
 - Unlimited save files
 - Play your own music!
 - Option to build rooms while paused
 - Option to remove destroyed rooms for a fee
 - Improved game logic
 - Full control over all hotkeys
+- Machine menu
+- Adviser messages history 
 
 ### What's missing/needs improvement? ###
 There are some areas of the game still missing, and while we work to get them integrated any additional help from the community is always appreciated!
