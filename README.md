@@ -33,14 +33,17 @@ Most features of the game are available -- and we're at a state where you can co
 - All diseases, objects, rooms are available (see below section for outstanding anomalies)
 - All events (emergencies, earthquakes, epidemics, VIP visits)
 - Management windows (managing staff, patients, policies etc.)
-- Music/Jukebox and gameplay videos (see below section for outstanding anomalies)
+- Music/Jukebox
+- Gameplay videos (see below section for outstanding anomalies)
 - Cheats (naughty!)
+  
 ##### New Features #####
 - Custom levels and campaigns
 - Full HD and 4K support
 - Zooming
 - UI scaling
 - Subtitles
+- More than 20 different languages
 - Make your own maps and levels with built-in map editor
 - Unlimited save files
 - Play your own music!
@@ -72,7 +75,7 @@ You can also [click here](https://github.com/CorsixTH/CorsixTH/issues?q=is%3Aiss
 We still have features to add and bugs to fix, check out the issue tracker [here](https://github.com/CorsixTH/CorsixTH/issues). Want to talk about adding a feature? post on our Google group or [contact us](#Contact).
 
 ###### Translation ######
-CorsixTH has translations for 19 languages, some need updates. Read our [wiki](https://github.com/CorsixTH/CorsixTH/wiki/Localization) for more information.
+CorsixTH has translations for more than 20 different languages, some of which need updating. Read our [wiki](https://github.com/CorsixTH/CorsixTH/wiki/Localization) for more information.
 
 ## More
 
