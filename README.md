@@ -44,6 +44,7 @@ Most features of the game are available -- and we're at a state where you can co
 - Make your own maps and levels
 - Unlimited save files
 - Play your own music!
+- Option to build rooms while paused
 - Option to remove destroyed rooms for a fee
 - Improved game logic
 - Full control over all hotkeys
@@ -52,7 +53,7 @@ Most features of the game are available -- and we're at a state where you can co
 There are some areas of the game still missing, and while we work to get them integrated any additional help from the community is always appreciated!
 - Multiplayer/LAN
 - AI Hospitals (and the components associated with it)
-- Rats (but rat holes are present) and the special rat level
+- Rats (but rat holes are present) and the bonus rat level
 - Vomit waves
 - Various end-of-year awards
 - Win level video/letter
