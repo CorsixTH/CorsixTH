@@ -12,8 +12,8 @@
     },
     {
       "kind": "git",
-      "repository": "https://github.com/allensmith81/vcpkg-registry-arm64",
-      "baseline": "3f0b556e93e2cc9730ed93a9125f551a4d34d997",
+      "repository": "https://github.com/CorsixTH/vcpkg-registry",
+      "baseline": "ddc4effddd5f69d77c2eae918d7f8ba55fc8ab37",
       "packages": [ "ffmpeg", "ffmpeg-bin2c" ]
     }
   ]
