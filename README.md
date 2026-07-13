@@ -39,9 +39,10 @@ Most features of the game are available -- and we're at a state where you can co
 - Custom levels and campaigns
 - Full HD support
 - Zooming
+- UI scaling
 - Subtitles
 - Make your own maps and levels
-- Unlimited saves and 12 autosave slots
+- Unlimited save files
 - Play your own music!
 - Option to remove destroyed rooms for a fee
 - Improved game logic
@@ -52,6 +53,8 @@ There are some areas of the game still missing, and while we work to get them in
 - Multiplayer/LAN
 - AI Hospitals (and the components associated with it)
 - Rats (but rat holes are present) and the special rat level
+- Vomit waves
+- Various end-of-year awards
 - Win level video/letter
 - The original graphics do not have a complete set for Pregnancy, Alien DNA, and female Fractured Bones patients -- these may cause anomalies if you enable regular spawning in settings
 - Some objects in the game may glitch with walls
