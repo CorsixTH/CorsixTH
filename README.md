@@ -39,6 +39,7 @@ Most features of the game are available -- and we're at a state where you can co
 - Custom levels and campaigns
 - Full HD support
 - Zooming
+- Subtitles
 - Make your own maps and levels
 - Unlimited saves and 12 autosave slots
 - Play your own music!
