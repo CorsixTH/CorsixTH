@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 252 -- Unexpect patients when moving queues
+local SAVEGAME_VERSION = 264 -- Unexpect patients when moving queues
 
 class "App"
 
@@ -1723,6 +1723,8 @@ local release_table = {
   {major = 0, minor = 70, revision = 0, patch = "-beta1", version = 247},
   {major = 0, minor = 70, revision = 0, patch = "-beta2", version = 248},
   {major = 0, minor = 70, revision = 0, patch = "-rc1", version = 251},
+  {major = 0, minor = 70, revision = 0, patch = "-rc2", version = 252},
+  {major = 0, minor = 70, revision = 0, patch = "", version = 253},
 }
 
 --! Retrieve the current savegame version as defined in the application.

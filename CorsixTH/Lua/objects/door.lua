@@ -204,7 +204,7 @@ function Door:afterLoad(old, new)
     end
   end
 
-  if old < 252 then
+  if old < 264 then
     -- Clean up patients stuck in the queue's expected list.
     -- Staff and VIPs can be ignored.
     if self.queue and self.room and self.room.room_info.id ~= "toilets" then
