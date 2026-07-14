@@ -257,7 +257,9 @@ constexpr std::string_view dispatch_buttondown("buttondown");
 constexpr std::string_view dispatch_buttonup("buttonup");
 constexpr std::string_view dispatch_mousewheel("mousewheel");
 constexpr std::string_view dispatch_motion("motion");
-constexpr std::string_view dispatch_multigesture("multigesture");
+constexpr std::string_view dispatch_pinch_begin("pinch_begin");
+constexpr std::string_view dispatch_pinch_update("pinch_update");
+constexpr std::string_view dispatch_pinch_end("pinch_end");
 constexpr std::string_view dispatch_active("active");
 constexpr std::string_view dispatch_music_over("music_over");
 constexpr std::string_view dispatch_movie_over("movie_over");
@@ -343,7 +345,9 @@ void mainloop(lua_State* L) {
           push_app_dispatch(L, last_dispatch);
           lua_pushnumber(L, e.wheel.x);
           lua_pushnumber(L, e.wheel.y);
-          nargs = 3;
+          lua_pushboolean(L, e.wheel.which == SDL_TOUCH_MOUSEID);
+          lua_pushboolean(L, e.wheel.direction == SDL_MOUSEWHEEL_FLIPPED);
+          nargs = 5;
           break;
         case SDL_EVENT_MOUSE_MOTION:
           last_dispatch = dispatch_motion;
@@ -354,18 +358,22 @@ void mainloop(lua_State* L) {
           lua_pushnumber(L, e.motion.yrel);
           nargs = 5;
           break;
-#ifdef GESTURE_SUPPORT
-        case SDL_MULTIGESTURE:
-          last_dispatch = dispatch_multigesture;
+        case SDL_EVENT_PINCH_BEGIN:
+          last_dispatch = dispatch_pinch_begin;
           push_app_dispatch(L, last_dispatch);
-          lua_pushinteger(L, e.mgesture.numFingers);
-          lua_pushnumber(L, e.mgesture.dTheta);
-          lua_pushnumber(L, e.mgesture.dDist);
-          lua_pushnumber(L, e.mgesture.x);
-          lua_pushnumber(L, e.mgesture.y);
-          nargs = 6;
+          nargs = 1;
           break;
-#endif
+        case SDL_EVENT_PINCH_UPDATE:
+          last_dispatch = dispatch_pinch_update;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushnumber(L, e.pinch.scale);
+          nargs = 2;
+          break;
+        case SDL_EVENT_PINCH_END:
+          last_dispatch = dispatch_pinch_end;
+          push_app_dispatch(L, last_dispatch);
+          nargs = 1;
+          break;
         case SDL_EVENT_WINDOW_FOCUS_GAINED:
           last_dispatch = dispatch_active;
           push_app_dispatch(L, last_dispatch);
