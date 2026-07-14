@@ -198,28 +198,33 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
   local map = humanoid.world.map.th
   map:getCellFlags(x1, y1, flags_here)
   map:getCellFlags(x2, y2, flags_there)
-  local recalc_route = not flags_there.passable and flags_here.passable
+  local avoid = (not flags_here.avoidTile) and flags_there.avoidTile
+  local not_passable = flags_here.passable and (not flags_there.passable)
+  local obstacle_on_the_way = not_passable or avoid -- approaching avoidable or impassable tile
+
   -- Also make sure that a room hasn't unexpectedly been built on top of the
   -- path since the route was calculated.
-  if not recalc_route and flags_here.roomId ~= flags_there.roomId then
+  if not obstacle_on_the_way and flags_here.roomId ~= flags_there.roomId then
     -- if going to the corridor we don't care as we are at the door
     -- as this will be false we won't bother checking for rerouting
-    recalc_route = flags_there.room
     local door = TheApp.objects.door.id
     local door2 = TheApp.objects.swing_door_right.id
     local doorcheck = {[door] = true, [door2] = true}
     -- but we should see if this is the same room id we want to go to and cancel the reroute
     -- ensure we still have a door on this route
-    if recalc_route and (humanoid.world:getObject(x1, y1, doorcheck) or
+    if flags_there.room and (humanoid.world:getObject(x1, y1, doorcheck) or
         humanoid.world:getObject(x2, y2, doorcheck)) and -- is there any door
         map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ==
         flags_there.roomId then
       -- A walk including a trimmed path could have the last tile inside a room, and
       -- might need a new route completely (e.g. seek reception)
-      recalc_route = action.trimmed
+      obstacle_on_the_way = action.trimmed
+    else
+      obstacle_on_the_way = flags_there.room
     end
   end
-  if recalc_route then
+
+  if obstacle_on_the_way then
     if map:getCellFlags(x1, y1).passable then
       humanoid:setTilePositionSpeed(x1, y1)
       if action.on_next_tile_set then
@@ -229,6 +234,7 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
         humanoid:finishAction(action)
         return
       end
+      -- find new path
       return action:on_restart(humanoid)
     end
   end

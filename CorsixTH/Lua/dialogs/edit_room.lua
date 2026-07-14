@@ -198,6 +198,7 @@ function UIEditRoom:cancel()
       self.ui:setDefaultCursor(nil)
       self.check_for_clear_area_timer = nil
       self.humanoids_to_watch = nil
+      self:_setCellFlagsOnBlueprint({avoidTile = false})
     end
     self.phase = "walls"
     self:returnToWallPhase()
@@ -262,6 +263,7 @@ function UIEditRoom:clearArea()
   local world = self.ui.app.world
   world:clearCaches() -- To invalidate idle tiles in case we need to move people
   local humanoids_to_watch = {}
+  self:_setCellFlagsOnBlueprint({avoidTile = true})
   do
     local x1 = rect.x - 1
     local x2 = rect.x + rect.w
@@ -363,6 +365,7 @@ function UIEditRoom:finishRoom()
   local map = self.ui.app.map.th
   local rect = self.blueprint_rect
   local door, door2
+  self:_setCellFlagsOnBlueprint({avoidTile = false})
   -- Add the transparency flag if it is set.
   local flag = 0
   if self.ui.transparent_walls then
@@ -379,7 +382,6 @@ function UIEditRoom:finishRoom()
       return  map:getCell(wall_x, wall_y, layer) == spr_num1
           or map:getCell(wall_x, wall_y, layer) == spr_num2
     end
-
 
     -- If a wall is built which is normal to an external window, then said
     -- window needs to be removed, otherwise it looks odd.
@@ -744,6 +746,7 @@ function UIEditRoom:returnToDoorPhase()
   rect.w = 0
   rect.h = 0
   self:setBlueprintRect(rect.x, rect.y, old_w, old_h)
+  self:_setCellFlagsOnBlueprint({avoidTile = false})
 
   -- We've gone all the way back to wall phase, so step forward to door phase
   self.phase = "door"
@@ -914,12 +917,11 @@ end
 
 function UIEditRoom:enterDoorPhase()
   self.ui:tutorialStep(3, 8, 9)
+  local rect = self.blueprint_rect
+  local map = self.ui.app.map.th
+
   -- make tiles impassable
-  for y = self.blueprint_rect.y, self.blueprint_rect.y + self.blueprint_rect.h - 1 do
-    for x = self.blueprint_rect.x, self.blueprint_rect.x + self.blueprint_rect.w - 1 do
-      self.ui.app.map:setCellFlags(x, y, {passable = false})
-    end
-  end
+  self:_setCellFlagsOnBlueprint({passable = false})
 
   -- check if all adjacent tiles of the rooms are still connected
   if not self:checkReachability() then
@@ -938,13 +940,15 @@ function UIEditRoom:enterDoorPhase()
     end
   end
 
+  -- make tiles passable back
+  self:_setCellFlagsOnBlueprint({passable = true})
+
   self.desc_text = _S.place_objects_window.place_door
   self.confirm_button:enable(false) -- Confirmation is via placing door
 
   -- Change the floor tiles to opaque blue
-  local map = self.ui.app.map.th
-  for y = self.blueprint_rect.y, self.blueprint_rect.y + self.blueprint_rect.h - 1 do
-    for x = self.blueprint_rect.x, self.blueprint_rect.x + self.blueprint_rect.w - 1 do
+  for y = rect.y, rect.y + rect.h - 1 do
+    for x = rect.x, rect.x + rect.w - 1 do
       map:setCell(x, y, 4, 24)
     end
   end
@@ -1636,6 +1640,16 @@ function UIEditRoom:placeObject()
   local obj = UIPlaceObjects.placeObject(self, true)
   if obj then
     self:checkEnableConfirm()
+  end
+end
+
+function UIEditRoom:_setCellFlagsOnBlueprint(flags)
+  local rect = self.blueprint_rect
+  local map = self.ui.app.map.th
+  for y = rect.y, rect.y + rect.h - 1 do
+    for x = rect.x, rect.x + rect.w - 1 do
+      map:setCellFlags(x, y, flags)
+    end
   end
 end
 
