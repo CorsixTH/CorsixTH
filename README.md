@@ -30,11 +30,11 @@ You will need the following:
 Most features of the game are available -- and we're at a state where you can complete the full campaign without issue.
 ##### Original Features #####
 - Single player campaign
-- All diseases, objects, rooms are available (see below section for outstanding anomalies)
+- All diseases, objects, rooms are available
 - All events (emergencies, earthquakes, epidemics, VIP visits)
 - Management windows (managing staff, patients, policies etc.)
 - Music/Jukebox
-- Gameplay videos (see below section for outstanding anomalies)
+- Gameplay videos
 - Cheats (naughty!)
   
 ##### New Features #####
