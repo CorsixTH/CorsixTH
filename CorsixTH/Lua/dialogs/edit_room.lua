@@ -271,43 +271,8 @@ function UIEditRoom:clearArea()
       if class.is(entity, Humanoid) and
           entity:isObscuringArea(x1, x2, y1, y2) then
         humanoids_to_watch[entity] = true
-
         -- Try to make the humanoid leave the area
-        local current_action = entity:getCurrentAction()
-        local meander = entity.action_queue[2]
-        if meander and meander.name == "meander" then
-          -- Interrupt the idle or walk, which will cause a new meander target
-          -- to be chosen, which will be outside the blueprint rectangle
-          meander.can_idle = false
-          local on_interrupt = current_action.on_interrupt
-          if on_interrupt then
-            current_action.on_interrupt = nil
-            on_interrupt(current_action, entity)
-          end
-        elseif current_action.name == "seek_room" or (meander and meander.name == "seek_room") then
-          -- Make sure that the humanoid doesn't stand idle waiting within the blueprint
-          if current_action.name == "seek_room" then
-            entity:queueAction(MeanderAction():setCount(1):setMustHappen(true), 0)
-          else
-            meander.done_walk = false
-          end
-        else
-          -- Look for a queue action and re-arrange the people in it, which
-          -- should cause anyone queueing within the blueprint to move
-          for _, action in ipairs(entity.action_queue) do
-            if action.name == "queue" then
-              for _, humanoid in ipairs(action.queue) do
-                local callbacks = action.queue.callbacks[humanoid]
-                if callbacks then
-                  callbacks:onChangeQueuePosition(humanoid)
-                end
-              end
-              break
-            end
-          end
-          -- TODO: Consider any other actions which might be causing the
-          -- humanoid to be staying within the rectangle for a long time.
-        end
+        entity:leaveArea()
       end
     end
   end
