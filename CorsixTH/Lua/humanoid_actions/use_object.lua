@@ -268,7 +268,7 @@ local function action_use_phase(action, humanoid, phase)
     humanoid.th:setMorph(morph_target, anim_length)
     anim = anim[3]
   else
-    humanoid:setAnimation(anim, flags)
+    humanoid:setAnimation(anim, flags, object.raps)
   end
 
   -- Set position (and speed) of the humanoid, and make it the user of the object.

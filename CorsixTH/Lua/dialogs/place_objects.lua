@@ -423,7 +423,7 @@ function UIPlaceObjects:setOrientation(orient)
     anim = object.idle_animations[orient_mirror[orient]]
     flag = 1
   end
-  self.object_anim:setAnimation(self.anims, anim, flag)
+  self.object_anim:setAnimation(self.anims, anim, flag, object.raps)
   if object.slave_type then
     local slave_flag = flag - (flag % 2)
     local slave_anim = object.slave_type.idle_animations[orient]
@@ -431,7 +431,7 @@ function UIPlaceObjects:setOrientation(orient)
       slave_anim = object.slave_type.idle_animations[orient_mirror[orient]]
       slave_flag = slave_flag + 1
     end
-    self.object_slave_anim:setAnimation(self.anims, slave_anim, slave_flag)
+    self.object_slave_anim:setAnimation(self.anims, slave_anim, slave_flag, object.raps)
   end
   local present_object
   if object_data.existing_objects and #object_data.existing_objects > 0 then
