@@ -110,6 +110,7 @@ Public Types</h2></td></tr>
 , <a class="el" href="structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fac3349c0f42d23a6e8fa19e60f9fcac9a">buildable_s_mask</a> = 1 &lt;&lt; 19
 , <br />
 &#160;&#160;<a class="el" href="structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa8dcd4cbd998b123dcd8eee6d85375cdc">buildable_w_mask</a> = 1 &lt;&lt; 20
+, <a class="el" href="structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa8f25cb72c0bf4ebd871a81cc042380f0">avoid_tile_mask</a> = 1 &lt;&lt; 21
 <br />
  }</td></tr>
 <tr class="separator:a37d390c893d636fe62bc1e22bb13782f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,6 +193,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a016e2be6852124bbe2f079370219df53" id="r_a016e2be6852124bbe2f079370219df53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmap__tile__flags.html#a016e2be6852124bbe2f079370219df53">buildable_w</a></td></tr>
 <tr class="memdesc:a016e2be6852124bbe2f079370219df53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can build on the west side of the tile.  <br /></td></tr>
 <tr class="separator:a016e2be6852124bbe2f079370219df53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80d7e9fcb06556b1329462a6abdfed85" id="r_a80d7e9fcb06556b1329462a6abdfed85"><td class="memItemLeft" align="right" valign="top"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmap__tile__flags.html#a80d7e9fcb06556b1329462a6abdfed85">avoid_tile</a></td></tr>
+<tr class="memdesc:a80d7e9fcb06556b1329462a6abdfed85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try (hard) not to use this tile for humanoids.  <br /></td></tr>
+<tr class="separator:a80d7e9fcb06556b1329462a6abdfed85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Map flags and object type The point of storing the object type here is to allow pathfinding code to use object types as pathfinding goals. </p>
@@ -237,6 +241,7 @@ Public Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="a37d390c893d636fe62bc1e22bb13782fa63660c915e11a0bbeb5ed148b1120977" name="a37d390c893d636fe62bc1e22bb13782fa63660c915e11a0bbeb5ed148b1120977"></a>buildable_e_mask&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a37d390c893d636fe62bc1e22bb13782fac3349c0f42d23a6e8fa19e60f9fcac9a" name="a37d390c893d636fe62bc1e22bb13782fac3349c0f42d23a6e8fa19e60f9fcac9a"></a>buildable_s_mask&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a37d390c893d636fe62bc1e22bb13782fa8dcd4cbd998b123dcd8eee6d85375cdc" name="a37d390c893d636fe62bc1e22bb13782fa8dcd4cbd998b123dcd8eee6d85375cdc"></a>buildable_w_mask&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a37d390c893d636fe62bc1e22bb13782fa8f25cb72c0bf4ebd871a81cc042380f0" name="a37d390c893d636fe62bc1e22bb13782fa8f25cb72c0bf4ebd871a81cc042380f0"></a>avoid_tile_mask&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -321,6 +326,22 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a80d7e9fcb06556b1329462a6abdfed85" name="a80d7e9fcb06556b1329462a6abdfed85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80d7e9fcb06556b1329462a6abdfed85">&#9670;&#160;</a></span>avoid_tile</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1d78dc8ed51214e518b5114fe24490ae">bool</a> map_tile_flags::avoid_tile</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Try (hard) not to use this tile for humanoids. </p>
+
+</div>
+</div>
 <a id="a52c125cc79a88f67fed85536a24c461f" name="a52c125cc79a88f67fed85536a24c461f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a52c125cc79a88f67fed85536a24c461f">&#9670;&#160;</a></span>buildable</h2>
 

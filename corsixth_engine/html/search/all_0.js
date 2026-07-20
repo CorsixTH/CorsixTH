@@ -16,7 +16,7 @@ var searchData=
   ['animation_5feffect_13',['animation_effect',['../th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870',1,'th_gfx_common.h']]],
   ['animation_5fkey_14',['animation_key',['../structanimation__key.html',1,'']]],
   ['animation_5fkind_15',['animation_kind',['../th__gfx_8h.html#a762973ebb25ec988b09557fc414c01ab',1,'th_gfx.h']]],
-  ['animation_5fmanager_16',['animation_manager',['../classanimation__manager.html#a5818f65757ec6be5673ebaddcab0cb3d',1,'animation_manager::animation_manager()'],['../classanimation__manager.html',1,'animation_manager']]],
+  ['animation_5fmanager_16',['animation_manager',['../classanimation__manager.html',1,'animation_manager'],['../classanimation__manager.html#a5818f65757ec6be5673ebaddcab0cb3d',1,'animation_manager::animation_manager()']]],
   ['animation_5fstart_5fframes_17',['animation_start_frames',['../structanimation__start__frames.html',1,'']]],
   ['anims_18',['anims',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a666821b4e0ab412117d5981094b078eb',1,'th_lua_internal.h']]],
   ['append_5fsprite_19',['append_sprite',['../classsprite__render__list.html#a1b875b8a44346e0401399ce9dde173b6',1,'sprite_render_list']]],
@@ -27,5 +27,7 @@ var searchData=
   ['are_5fparcels_5fadjacent_24',['are_parcels_adjacent',['../classlevel__map.html#a3200a67d20b2a15786a59b6a15ff389b',1,'level_map']]],
   ['argb_5fcolour_25',['argb_colour',['../th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8',1,'th_gfx_sdl.h']]],
   ['attach_5fto_5ftile_26',['attach_to_tile',['../classanimation__base.html#aa8fe0e83093420035367ac0102cab327',1,'animation_base']]],
-  ['autopsy_27',['autopsy',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abad1ad1fdcd016b866fee95390dde0b36a',1,'th_map.h']]]
+  ['autopsy_27',['autopsy',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abad1ad1fdcd016b866fee95390dde0b36a',1,'th_map.h']]],
+  ['avoid_5ftile_28',['avoid_tile',['../structmap__tile__flags.html#a80d7e9fcb06556b1329462a6abdfed85',1,'map_tile_flags']]],
+  ['avoid_5ftile_5fmask_29',['avoid_tile_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa8f25cb72c0bf4ebd871a81cc042380f0',1,'map_tile_flags']]]
 ];

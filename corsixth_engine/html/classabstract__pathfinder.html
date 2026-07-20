@@ -104,8 +104,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a61b7bf41d705d9461d4d772fe341acef" id="r_a61b7bf41d705d9461d4d772fe341acef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a61b7bf41d705d9461d4d772fe341acef">search_neighbours</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> flags, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">iWidth</a>)</td></tr>
 <tr class="memdesc:a61b7bf41d705d9461d4d772fe341acef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expand the <em>pNode</em> to its neighbours.  <br /></td></tr>
 <tr class="separator:a61b7bf41d705d9461d4d772fe341acef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13f96752966a2ed07f146cc9675b0041" id="r_a13f96752966a2ed07f146cc9675b0041"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a13f96752966a2ed07f146cc9675b0041">record_neighbour_if_passable</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">neighbour_flags</a>, <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a> passable, <a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNeighbour</a>)</td></tr>
-<tr class="separator:a13f96752966a2ed07f146cc9675b0041"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13a2c4694326f7578c498e269dd6394b" id="r_a13a2c4694326f7578c498e269dd6394b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a13a2c4694326f7578c498e269dd6394b">record_neighbour_if_passable</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>, <a class="el" href="structmap__tile__flags.html">map_tile_flags</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">neighbour_flags</a>, <a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNeighbour</a>)</td></tr>
+<tr class="memdesc:a13a2c4694326f7578c498e269dd6394b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Examine the neighbour tile, and add it to the heap if it can be entered.  <br /></td></tr>
+<tr class="separator:a13a2c4694326f7578c498e269dd6394b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f7db79fdb685cbfd955f49d3874bec5" id="r_a1f7db79fdb685cbfd955f49d3874bec5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">virtual</a> <a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classabstract__pathfinder.html#a1f7db79fdb685cbfd955f49d3874bec5">guess_distance</a> (<a class="el" href="structpath__node.html">path_node</a> *<a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">pNode</a>)=0</td></tr>
 <tr class="memdesc:a1f7db79fdb685cbfd955f49d3874bec5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Guess distance to the destination for <em>pNode</em>.  <br /></td></tr>
 <tr class="separator:a1f7db79fdb685cbfd955f49d3874bec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -250,8 +251,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a13f96752966a2ed07f146cc9675b0041" name="a13f96752966a2ed07f146cc9675b0041"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13f96752966a2ed07f146cc9675b0041">&#9670;&#160;</a></span>record_neighbour_if_passable()</h2>
+<a id="a13a2c4694326f7578c498e269dd6394b" name="a13a2c4694326f7578c498e269dd6394b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13a2c4694326f7578c498e269dd6394b">&#9670;&#160;</a></span>record_neighbour_if_passable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,12 +272,6 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classabstract__pathfinder.html#a0da0c37a87d0c5161eab7f25e68571c4">bool</a>&#160;</td>
-          <td class="paramname"><em>passable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype"><a class="el" href="structpath__node.html">path_node</a> *&#160;</td>
           <td class="paramname"><em>pNeighbour</em>&#160;</td>
         </tr>
@@ -287,6 +282,16 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Examine the neighbour tile, and add it to the heap if it can be entered. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pNode</td><td>Node to expand. </td></tr>
+    <tr><td class="paramname">neighbour_flags</td><td>Flags of the neighbour. </td></tr>
+    <tr><td class="paramname">pNeighbour</td><td>The node of the neighbour. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
