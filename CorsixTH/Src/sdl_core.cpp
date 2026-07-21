@@ -231,11 +231,29 @@ int l_get_ticks(lua_State* L) {
   return 1;
 }
 
-constexpr std::array<luaL_Reg, 8> sdllib{
+int l_start_text_input(lua_State* L) {
+  render_target* rt = luaT_testuserdata<render_target>(L, 1);
+  if (!SDL_StartTextInput(rt->get_window())) {
+    std::fprintf(stderr, "start_text_input error: %s", SDL_GetError());
+  }
+  return 0;
+}
+
+int l_stop_text_input(lua_State* L) {
+  render_target* rt = luaT_testuserdata<render_target>(L, 1);
+  if (!SDL_StopTextInput(rt->get_window())) {
+    std::fprintf(stderr, "stop_text_input error: %s", SDL_GetError());
+  }
+  return 0;
+}
+
+constexpr std::array<luaL_Reg, 10> sdllib{
     {{"init", l_init},
      {"quit", l_quit},
      {"getTicks", l_get_ticks},
      {"getKeyModifiers", l_get_key_modifiers},
+     {"startTextInput", l_start_text_input},
+     {"stopTextInput", l_stop_text_input},
      {"getFPS", l_get_fps},
      {"trackFPS", l_track_fps},
      {"limitFPS", l_limit_fps},

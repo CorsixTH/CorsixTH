@@ -368,6 +368,8 @@ class render_target {
 
   SDL_Renderer* get_renderer() const { return renderer; }
 
+  SDL_Window* get_window() const { return window; }
+
   //! Should bitmaps be scaled?
   /*!
       @param [out] pFactor If the function returns \c true, the factor to use
