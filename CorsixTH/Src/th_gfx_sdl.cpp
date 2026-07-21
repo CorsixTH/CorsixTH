@@ -467,6 +467,12 @@ render_target::render_target(const render_target_creation_params& params)
                                    SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
   update(params);
+
+  // Workaround for https://github.com/libsdl-org/SDL/issues/13920 on MacOS
+  SDL_Event evt;
+  while (SDL_PollEvent(&evt)) {
+  }
+  SDL_RaiseWindow(window);
 }
 
 render_target::~render_target() {
