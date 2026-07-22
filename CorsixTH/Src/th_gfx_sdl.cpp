@@ -663,13 +663,6 @@ void render_target::push_clip_rect(const clip_rect* pRect) {
     intersectRect(clip, *previous_clip, &clip);
   }
 
-  // For some reason, SDL treats an empty rect (h or w <= 0) as if you turned
-  // off clipping, so we replace it with a rect that's outside our viewport.
-  const SDL_Rect rcBogus = {-2, -2, 1, 1};
-  if (SDL_RectEmpty(&clip)) {
-    clip = rcBogus;
-  }
-
   SDL_SetRenderClipRect(renderer, &clip);
 }
 
