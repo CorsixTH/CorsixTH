@@ -60,7 +60,6 @@ There are some areas of the game still missing, and while we work to get them in
 - AI Hospitals (and the components associated with it)
 - Rats (but rat holes are present) and the bonus rat level
 - Vomit waves
-- Various end-of-year awards
 - Win level video/letter
 - The original graphics do not have a complete set for Pregnancy, Alien DNA, and female Fractured Bones patients -- these may cause anomalies if you enable regular spawning in settings
 - Some objects in the game may glitch with walls
