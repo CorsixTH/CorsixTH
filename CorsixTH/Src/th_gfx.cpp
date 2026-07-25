@@ -1556,7 +1556,7 @@ const sound_replacement_map frame_sound_replacements{
     {11153, sound_pair(35)},
     {11154, sound_pair(35)},
 
-    // Nurse desk typing (anim 3258)
+    // Nurse desk typing (anim 3258, east and south orientations)
     {7153, sound_pair(9)},
     {7155, sound_pair(9)},
     {7158, sound_pair(9)},
