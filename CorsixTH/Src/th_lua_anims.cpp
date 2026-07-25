@@ -157,14 +157,6 @@ int l_anims_getnext(lua_State* L) {
   return 1;
 }
 
-int l_anims_copy_sounds(lua_State* L) {
-  animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
-  size_t from_anim = static_cast<size_t>(luaL_checkinteger(L, 2));
-  size_t to_anim = static_cast<size_t>(luaL_checkinteger(L, 3));
-  pAnims->copy_animation_sounds(from_anim, to_anim);
-  return 0;
-}
-
 int l_anims_set_alt_pal(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   size_t iAnimation = luaL_checkinteger(L, 2);
@@ -693,7 +685,6 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anims_getanims, "getAnimations");
     lcb.add_function(l_anims_getfirst, "getFirstFrame");
     lcb.add_function(l_anims_getnext, "getNextFrame");
-    lcb.add_function(l_anims_copy_sounds, "copyAnimationSounds");
     lcb.add_function(l_anims_set_alt_pal, "setAnimationGhostPalette");
     lcb.add_function(l_anims_set_primary_marker, "setFramePrimaryMarker");
     lcb.add_function(l_anims_set_secondary_marker, "setFrameSecondaryMarker");

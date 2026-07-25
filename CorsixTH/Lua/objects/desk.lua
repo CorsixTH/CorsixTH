@@ -81,10 +81,6 @@ kf2, kf1 = {-0.8, -1}, {-1, -2}
 anim_mgr:setStaffMarker(  66, 0, kf3, 3, kf2, 8, kf1)
 anim_mgr:setStaffMarker(3250, 0, kf3, 3, kf2, 8, kf1)
 
--- East-facing nurse desk typing (anim 3258) is missing sound indices present
--- in the north-facing animation (3256). South-facing desks mirror to east.
-anim_mgr.anims:copyAnimationSounds(3256, 3258)
-
 object.orientations = {
   north = {
     footprint = { {-2, -1, complete_cell = true}, {-1, -1, complete_cell = true},
