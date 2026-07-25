@@ -31,6 +31,7 @@ SOFTWARE.
 #include <cstring>
 #include <memory>
 #include <new>
+#include <set>
 
 #include "persist_lua.h"
 #include "th_gfx_sdl.h"
@@ -992,6 +993,30 @@ size_t animation_manager::get_frame_sound(size_t iFrame) {
     return frames[iFrame].sound;
   } else {
     return 0;
+  }
+}
+
+void animation_manager::copy_animation_sounds(size_t from_anim,
+                                              size_t to_anim) {
+  size_t from_frame = get_first_frame(from_anim);
+  size_t to_frame = get_first_frame(to_anim);
+  if (from_frame >= frame_count || to_frame >= frame_count) {
+    return;
+  }
+
+  std::set<size_t> seen;
+  while (!seen.count(from_frame)) {
+    seen.insert(from_frame);
+    if (to_frame < frame_count && frames[from_frame].sound != 0 &&
+        frames[to_frame].sound == 0) {
+      frames[to_frame].sound = frames[from_frame].sound;
+    }
+    size_t next_from = get_next_frame(from_frame);
+    if (next_from == from_frame || seen.count(next_from)) {
+      break;
+    }
+    to_frame = get_next_frame(to_frame);
+    from_frame = next_from;
   }
 }
 

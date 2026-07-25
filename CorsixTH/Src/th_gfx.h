@@ -332,6 +332,9 @@ class animation_manager {
                         uint32_t iFlags) const;
   size_t get_frame_sound(size_t iFrame);
 
+  //! Copy non-zero frame sounds from one animation to another.
+  void copy_animation_sounds(size_t from_anim, size_t to_anim);
+
   bool hit_test(size_t iFrame, const ::layers& oLayers, int iX, int iY,
                 uint32_t iFlags, int iTestX, int iTestY) const;
 
