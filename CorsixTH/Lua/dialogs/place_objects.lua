@@ -19,8 +19,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
-local ipairs, math_floor
-    = ipairs, math.floor
 
 -- Visually, it looks better to have the object being placed not attached to a
 -- tile (so that it is always on top of walls, etc.), but for debugging it can
@@ -425,10 +423,7 @@ function UIPlaceObjects:setOrientation(orient)
     anim = object.idle_animations[orient_mirror[orient]]
     flag = 1
   end
-  if object.orientations[orient].early_list then
-    flag = flag + 1024
-  end
-  self.object_anim:setAnimation(self.anims, anim, flag)
+  self.object_anim:setAnimation(self.anims, anim, flag, object.raps)
   if object.slave_type then
     local slave_flag = flag - (flag % 2)
     local slave_anim = object.slave_type.idle_animations[orient]
@@ -436,7 +431,7 @@ function UIPlaceObjects:setOrientation(orient)
       slave_anim = object.slave_type.idle_animations[orient_mirror[orient]]
       slave_flag = slave_flag + 1
     end
-    self.object_slave_anim:setAnimation(self.anims, slave_anim, slave_flag)
+    self.object_slave_anim:setAnimation(self.anims, slave_anim, slave_flag, object.raps)
   end
   local present_object
   if object_data.existing_objects and #object_data.existing_objects > 0 then
@@ -445,19 +440,15 @@ function UIPlaceObjects:setOrientation(orient)
   if present_object and present_object.current_frame then
     self.object_anim:setFrame(present_object.current_frame)
   end
+
   local px, py = unpack(object.orientations[orient].render_attach_position)
-  if type(px) == "table" then
-    px, py = unpack(px)
-  end
   px, py = Map:WorldToScreen(px + 1, py + 1)
   px = object.orientations[orient].animation_offset[1] + px
   py = object.orientations[orient].animation_offset[2] + py
   self.object_anim:setPosition(px, py)
+
   if object.slave_type then
     px, py = unpack(object.slave_type.orientations[orient].render_attach_position)
-    if type(px) == "table" then
-      px, py = unpack(px)
-    end
     local offset = object.orientations[orient].slave_position
     if offset then
       px = px + offset[1]
@@ -654,7 +645,7 @@ function UIPlaceObjects:onMouseMove(x, y, dx, dy)
   if inside_objects_area then
     -- Check if player hovers over a button, not between.
     if (header_height + y) % bar_height < 21 * s then
-      current_hover_id = math_floor((y - header_height)/bar_height) + 1
+      current_hover_id = math.floor((y - header_height)/bar_height) + 1
       if self.active_hover_index ~= current_hover_id then
         if self.hover_sound then
           self.ui:stopSound(self.hover_sound)
@@ -1074,7 +1065,7 @@ function UIPlaceObjects:calculateBestPlacementPosition(x, y)
     end
     -- TODO: East, South
   end
-  bestx, besty = math_floor(bestx), math_floor(besty)
+  bestx, besty = math.floor(bestx), math.floor(besty)
   if bestx < 1 or besty < 1 or
       bestx > self.map.width or besty > self.map.height then
     bestx, besty = nil, nil

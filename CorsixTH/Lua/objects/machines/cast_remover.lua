@@ -129,7 +129,14 @@ object.orientations = {
                   {-1, 1, only_passable = true, need_west_side = true},
                   {-1, -2, only_passable = true, invisible = true, optional = true},
                   {-2, -1, only_passable = true, invisible = true, optional = true} },
-    render_attach_position = {-1, 1},
+    render_attach_position = {
+      -1, -2, crop_base = 1, crop_width = 1,
+      proxies = {
+        {1, -1, crop_base = 1, crop_width =1},
+        {0, 0, crop_base = 1, crop_width = 1},
+        {-1, 1, crop_base = 0, crop_width = 3}
+      }
+    },
     smoke_position = {0, 0},
   },
   east = {
@@ -143,8 +150,15 @@ object.orientations = {
                   {-1, 1, only_passable = true},
                   {-2, -1, only_passable = true, invisible = true, optional = true},
                   {-1, -2, only_passable = true, invisible = true, optional = true} },
-    early_list = true,
     smoke_position = {0, 0},
+    render_attach_position = {
+      -1, -2, crop_base = 1, crop_width = 1,
+      proxies = {
+        {1, -1, crop_base = 1, crop_width =1},
+        {0, 0, crop_base = 1, crop_width = 1},
+        {-1, 1, crop_base = 0, crop_width = 3}
+      }
+    }
   },
 }
 anim_mgr:setPatientMarker(object.idle_animations.north, {-1.6, -0.8})

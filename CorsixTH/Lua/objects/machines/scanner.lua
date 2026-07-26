@@ -211,14 +211,23 @@ object.orientations = {
   north = {
     use_position = {0, 0},
     footprint = { {-2, -1}, {-1, -1}, {0, -1}, {-2, 0}, {-1, 0, need_south_side = true},  {0, 0, complete_cell = true, only_passable = true} },
-    render_attach_position = {0, -1},
     smoke_position = {0, 0},
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{-2, 0, crop_base = 0, crop_width = 4}}
+    }
   },
   east = {
     use_position = {0, 0},
     footprint = { {-1, -2} , {0, -2}, {-1, -1}, {0, -1, need_east_side = true}, {-1, 0}, {0, 0, complete_cell = true, only_passable = true} },
-    render_attach_position = {-1, 0},
     smoke_position = {0, 0},
+    render_attach_position = {
+      0, -2, crop_base = 1, crop_width = 1,
+      proxies = {
+        {0, -1, crop_base = 1, crop_width = 1},
+        {-1, 0, crop_base = 0, crop_width = 3}
+      }
+    }
   },
 }
 local anim_mgr = TheApp.animation_manager

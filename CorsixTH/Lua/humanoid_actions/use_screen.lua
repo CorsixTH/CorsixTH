@@ -49,14 +49,16 @@ local finish = permanent"action_use_screen_finish"( function(humanoid)
 end)
 
 local patient_clothes_state = permanent"action_use_screen_patient_clothes_state"( function(humanoid)
-  humanoid.user_of:setAnimation(1204)
+  local screen = humanoid.user_of
+  humanoid.user_of:setAnimation(1204, 0, screen.raps)
   humanoid.user_of:setLayer(1, humanoid.layers[1])
   return finish(humanoid)
 end)
 
 local normal_state = permanent"action_use_screen_normal_state"( function(humanoid)
-  humanoid.user_of:setAnimation(1022)
-  humanoid.user_of:setLayer(1, 0)
+  local screen = humanoid.user_of
+  screen:setAnimation(1022, 0, screen.raps)
+  screen:setLayer(1, 0)
   return finish(humanoid)
 end)
 
@@ -174,7 +176,7 @@ local function action_use_screen_start(action, humanoid)
     error(class .. " trying to use screen")
   end
 
-  humanoid:setAnimation(anim)
+  humanoid:setAnimation(anim, 0, screen.raps)
   humanoid:setTile(screen:getRenderAttachTile())
   local offset = screen.object_type.orientations[screen.direction].animation_offset
   humanoid:setPosition(offset[1], offset[2])

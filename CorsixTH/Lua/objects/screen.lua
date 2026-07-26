@@ -33,8 +33,11 @@ object.idle_animations = {
 object.orientations = {
   north = {
     footprint = { {-1, -1, only_passable = true}, {-1, 0}, {0, -1}, {0, 0} },
-    render_attach_position = {-1, 0},
     use_position = "passable",
+    render_attach_position = {
+      0, -1, crop_base = 1, crop_width = 1,
+      proxies = {{-1, 0, crop_base = 0, crop_width = 3}}
+    }
   },
 }
 
