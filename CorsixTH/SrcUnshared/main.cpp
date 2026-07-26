@@ -112,6 +112,13 @@ int main(int argc, char** argv) {
     int number_is_double[types_equal<lua_Number, double>::result];
   };
 
+  // Match SDL2 window behavior in wayland temporarily, until we properly
+  // support HiDPI.
+  //
+  // Per the SDL documentation, "this forces the window to behave in a way that
+  // Wayland desktops were not designed to accommodate."
+  SDL_SetHint(SDL_HINT_VIDEO_WAYLAND_SCALE_TO_DISPLAY, "1");
+
 #ifdef WITH_UPDATE_CHECK
   curl_global_init(CURL_GLOBAL_DEFAULT);
 #endif
