@@ -1554,7 +1554,16 @@ const sound_replacement_map frame_sound_replacements{
     {11147, sound_pair(35)},
     {11152, sound_pair(35)},
     {11153, sound_pair(35)},
-    {11154, sound_pair(35)}};
+    {11154, sound_pair(35)},
+
+    // Nurse desk typing (anim 3258, east and south orientations)
+    {7153, sound_pair(9)},
+    {7155, sound_pair(9)},
+    {7158, sound_pair(9)},
+    {7159, sound_pair(9)},
+    {7162, sound_pair(9)},
+    {7163, sound_pair(9)},
+    {7166, sound_pair(9)}};
 }  // Namespace
 
 void animation::tick() {
