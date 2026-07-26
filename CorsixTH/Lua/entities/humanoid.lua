@@ -859,7 +859,7 @@ end
 
 --! Function attempts to expel the humanoid from the area.
 -- It does not require any input parameters since it expects that the area
--- to be left is already marked with tile flags.
+-- to be left is already marked with the `avoidTile` tile flag.
 function Humanoid:leaveArea()
   -- TODO: Currently, this function simply forces the humanoid to move.
   -- However, it doesn't take into account the specific area to be exited or
