@@ -1069,9 +1069,7 @@ void chunk_renderer::chunk_copy(int npixels, const uint8_t* in_data) {
 }
 
 void chunk_renderer::fix_n_pixels(int& npixels) const {
-  if (ptr + npixels > end) {
-    npixels = static_cast<int>(end - ptr);
-  }
+  npixels = std::min(npixels, static_cast<int>(end - ptr));
 }
 
 void chunk_renderer::increment_position(int npixels) {
