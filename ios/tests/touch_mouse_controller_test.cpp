@@ -49,6 +49,8 @@ void testPrimaryTap() {
   const auto actions = controller.fingerUp(1, 102, 81, 100);
   expectTypes(actions, {ActionType::move, ActionType::primary_down,
                         ActionType::primary_up});
+  assert(actions[0].xrel == 2);
+  assert(actions[0].yrel == 1);
   assert(actions[1].x == 102);
   assert(actions[1].y == 81);
 }
@@ -56,7 +58,10 @@ void testPrimaryTap() {
 void testPrimaryDrag() {
   TouchMouseController controller;
   controller.fingerDown(1, 100, 80, 0);
-  expectTypes(controller.fingerMove(1, 106, 84, 20), {ActionType::move});
+  const auto first_move = controller.fingerMove(1, 106, 84, 20);
+  expectTypes(first_move, {ActionType::move});
+  assert(first_move[0].xrel == 6);
+  assert(first_move[0].yrel == 4);
 
   const auto start_drag = controller.fingerMove(1, 120, 90, 40);
   expectTypes(start_drag,
@@ -64,9 +69,13 @@ void testPrimaryDrag() {
   assert(start_drag[0].x == 100);
   assert(start_drag[0].y == 80);
   assert(start_drag[1].primary_is_down);
+  assert(start_drag[1].xrel == 14);
+  assert(start_drag[1].yrel == 6);
 
   const auto end_drag = controller.fingerUp(1, 130, 100, 80);
   expectTypes(end_drag, {ActionType::move, ActionType::primary_up});
+  assert(end_drag[0].xrel == 10);
+  assert(end_drag[0].yrel == 10);
 }
 
 void testSecondaryTap() {

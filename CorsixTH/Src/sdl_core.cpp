@@ -30,7 +30,6 @@ SOFTWARE.
 
 #include <algorithm>
 #include <array>
-#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <string_view>
@@ -225,83 +224,41 @@ std::pair<int, int> touch_window_position(const SDL_TouchFingerEvent& touch) {
   int width = 1;
   int height = 1;
   if (window != nullptr) {
-    SDL_GetWindowSize(window, &width, &height);
+    SDL_Renderer* renderer = SDL_GetRenderer(window);
+    if (renderer != nullptr) {
+      SDL_RenderGetLogicalSize(renderer, &width, &height);
+    }
+    if (width <= 0 || height <= 0) {
+      SDL_GetWindowSize(window, &width, &height);
+    }
   }
   width = std::max(width, 1);
   height = std::max(height, 1);
 
+  // SDL's renderer event watcher has already normalised finger coordinates to
+  // the logical viewport by the time they reach the application event loop.
+  // Scale against that logical size and use SDL's own truncation semantics.
   const int x = std::clamp(
-      static_cast<int>(std::lround(touch.x * (width - 1))), 0, width - 1);
+      static_cast<int>(touch.x * static_cast<float>(width)), 0, width - 1);
   const int y = std::clamp(
-      static_cast<int>(std::lround(touch.y * (height - 1))), 0, height - 1);
+      static_cast<int>(touch.y * static_cast<float>(height)), 0, height - 1);
   return {x, y};
 }
 
-void push_touch_mouse_actions(
-    const std::vector<corsixth::TouchMouseController::Action>& actions,
-    Uint32 window_id, Uint32 timestamp) {
-  using ActionType = corsixth::TouchMouseController::ActionType;
-
-  for (const auto& action : actions) {
-    SDL_Event mouse_event{};
-    switch (action.type) {
-      case ActionType::move:
-        mouse_event.type = SDL_MOUSEMOTION;
-        mouse_event.motion.timestamp = timestamp;
-        mouse_event.motion.windowID = window_id;
-        mouse_event.motion.which = SDL_TOUCH_MOUSEID;
-        mouse_event.motion.state =
-            action.primary_is_down ? SDL_BUTTON_LMASK : 0;
-        mouse_event.motion.x = action.x;
-        mouse_event.motion.y = action.y;
-        break;
-      case ActionType::primary_down:
-      case ActionType::primary_up:
-      case ActionType::secondary_down:
-      case ActionType::secondary_up: {
-        const bool is_down = action.type == ActionType::primary_down ||
-                             action.type == ActionType::secondary_down;
-        const bool is_secondary =
-            action.type == ActionType::secondary_down ||
-            action.type == ActionType::secondary_up;
-        mouse_event.type =
-            is_down ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP;
-        mouse_event.button.timestamp = timestamp;
-        mouse_event.button.windowID = window_id;
-        mouse_event.button.which = SDL_TOUCH_MOUSEID;
-        mouse_event.button.button =
-            is_secondary ? SDL_BUTTON_RIGHT : SDL_BUTTON_LEFT;
-        mouse_event.button.state = is_down ? SDL_PRESSED : SDL_RELEASED;
-        mouse_event.button.clicks = 1;
-        mouse_event.button.x = action.x;
-        mouse_event.button.y = action.y;
-        break;
-      }
-    }
-    SDL_PushEvent(&mouse_event);
-  }
-}
-
-void handle_touch_event(corsixth::TouchMouseController& controller,
-                        const SDL_TouchFingerEvent& touch) {
+std::vector<corsixth::TouchMouseController::Action> handle_touch_event(
+    corsixth::TouchMouseController& controller,
+    const SDL_TouchFingerEvent& touch) {
   const auto [x, y] = touch_window_position(touch);
-  std::vector<corsixth::TouchMouseController::Action> actions;
   switch (touch.type) {
     case SDL_FINGERDOWN:
-      actions =
-          controller.fingerDown(touch.fingerId, x, y, touch.timestamp);
-      break;
+      return controller.fingerDown(touch.fingerId, x, y, touch.timestamp);
     case SDL_FINGERMOTION:
-      actions =
-          controller.fingerMove(touch.fingerId, x, y, touch.timestamp);
-      break;
+      return controller.fingerMove(touch.fingerId, x, y, touch.timestamp);
     case SDL_FINGERUP:
-      actions = controller.fingerUp(touch.fingerId, x, y, touch.timestamp);
-      break;
+      return controller.fingerUp(touch.fingerId, x, y, touch.timestamp);
     default:
-      return;
+      return {};
   }
-  push_touch_mouse_actions(actions, touch.windowID, touch.timestamp);
 }
 
 #endif
@@ -365,6 +322,61 @@ constexpr std::string_view dispatch_timer("timer");
 constexpr std::string_view dispatch_callback("callback");
 constexpr std::string_view dispatch_window_resize("window_resize");
 constexpr std::string_view dispatch_frame("frame");
+
+#ifdef CORSIXTH_IOS
+
+bool dispatch_touch_mouse_actions(
+    lua_State* L,
+    const std::vector<corsixth::TouchMouseController::Action>& actions,
+    std::string_view& last_dispatch) {
+  using ActionType = corsixth::TouchMouseController::ActionType;
+
+  bool repaint = false;
+  for (const auto& action : actions) {
+    int nargs;
+    switch (action.type) {
+      case ActionType::move:
+        last_dispatch = dispatch_motion;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushinteger(L, action.x);
+        lua_pushinteger(L, action.y);
+        lua_pushinteger(L, action.xrel);
+        lua_pushinteger(L, action.yrel);
+        nargs = 5;
+        break;
+      case ActionType::primary_down:
+      case ActionType::primary_up:
+      case ActionType::secondary_down:
+      case ActionType::secondary_up: {
+        const bool is_down = action.type == ActionType::primary_down ||
+                             action.type == ActionType::secondary_down;
+        const bool is_secondary =
+            action.type == ActionType::secondary_down ||
+            action.type == ActionType::secondary_up;
+        last_dispatch = is_down ? dispatch_buttondown : dispatch_buttonup;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushinteger(L,
+                        is_secondary ? SDL_BUTTON_RIGHT : SDL_BUTTON_LEFT);
+        lua_pushinteger(L, action.x);
+        lua_pushinteger(L, action.y);
+        nargs = 4;
+        break;
+      }
+    }
+
+    const int result = lua_pcall(L, nargs + 1, 1, -3 - nargs);
+    if (result != LUA_OK) {
+      std::fprintf(stderr, "Error in %.*s: %s\n",
+                   static_cast<int>(last_dispatch.size()),
+                   last_dispatch.data(), lua_tostring(L, -1));
+    }
+    repaint = repaint || (lua_toboolean(L, -1) != 0);
+    lua_pop(L, 2);
+  }
+  return repaint;
+}
+
+#endif
 
 void mainloop(lua_State* L) {
   SDL_TimerID timer =
@@ -460,7 +472,11 @@ void mainloop(lua_State* L) {
         case SDL_FINGERDOWN:
         case SDL_FINGERMOTION:
         case SDL_FINGERUP:
-          handle_touch_event(touch_mouse_controller, e.tfinger);
+          do_frame =
+              dispatch_touch_mouse_actions(
+                  L, handle_touch_event(touch_mouse_controller, e.tfinger),
+                  last_dispatch) ||
+              do_frame;
           nargs = 0;
           break;
 #endif
@@ -484,8 +500,10 @@ void mainloop(lua_State* L) {
               break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
 #ifdef CORSIXTH_IOS
-              push_touch_mouse_actions(touch_mouse_controller.cancel(),
-                                       e.window.windowID, e.window.timestamp);
+              do_frame = dispatch_touch_mouse_actions(
+                             L, touch_mouse_controller.cancel(),
+                             last_dispatch) ||
+                         do_frame;
 #endif
               last_dispatch = dispatch_active;
               push_app_dispatch(L, last_dispatch);

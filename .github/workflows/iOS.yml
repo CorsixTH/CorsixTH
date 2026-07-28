@@ -105,15 +105,15 @@ jobs:
           test ! -e "$APP_PATH/Icon.icns"
           test ! -e "$APP_PATH/Contents"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Info.plist")" = "org.corsixth.ios"
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Info.plist")" = "0.4.0"
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_PATH/Info.plist")" = "6"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Info.plist")" = "0.4.1"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_PATH/Info.plist")" = "7"
           test "$(/usr/libexec/PlistBuddy -c 'Print :MinimumOSVersion' "$APP_PATH/Info.plist")" = "16.0"
           test "$(/usr/libexec/PlistBuddy -c 'Print :UIFileSharingEnabled' "$APP_PATH/Info.plist")" = "true"
           test "$(/usr/libexec/PlistBuddy -c 'Print :LSSupportsOpeningDocumentsInPlace' "$APP_PATH/Info.plist")" = "true"
           strings "$APP_PATH/CorsixTH" | grep -Fq "Theme Hospital files needed"
           strings "$APP_PATH/CorsixTH" | grep -Fq "CorsixTH.log"
           strings "$APP_PATH/CorsixTH" | grep -Fq "CorsixTH startup error"
-          strings "$APP_PATH/CorsixTH" | grep -Fq "CorsixTH 0.4.0 startup log opened"
+          strings "$APP_PATH/CorsixTH" | grep -Fq "CorsixTH 0.4.1 startup log opened"
           grep -Fq 'documents .. pathsep .. "config.txt"' "$APP_PATH/Lua/app.lua"
           grep -Fq 'local function ios_tmpname()' "$APP_PATH/Lua/app.lua"
           grep -Fq 'return pathconcat(ios_documents, config_name)' "$APP_PATH/Lua/config_finder.lua"
@@ -121,12 +121,12 @@ jobs:
           mkdir -p package/Payload
           ditto "$APP_PATH" package/Payload/CorsixTH.app
           cd package
-          zip -qry ../CorsixTH-iOS-v0.4.0.ipa Payload
+          zip -qry ../CorsixTH-iOS-v0.4.1.ipa Payload
 
       - name: Upload unsigned IPA
         uses: actions/upload-artifact@v4
         with:
-          name: CorsixTH-iOS-v0.4.0
-          path: CorsixTH-iOS-v0.4.0.ipa
+          name: CorsixTH-iOS-v0.4.1
+          path: CorsixTH-iOS-v0.4.1.ipa
           if-no-files-found: error
           retention-days: 14

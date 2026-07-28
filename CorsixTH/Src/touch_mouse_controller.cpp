@@ -100,6 +100,8 @@ std::vector<TouchMouseController::Action> TouchMouseController::fingerMove(
     return actions;
   }
 
+  const int xrel = x - current->second.x;
+  const int yrel = y - current->second.y;
   current->second.x = x;
   current->second.y = y;
 
@@ -123,7 +125,8 @@ std::vector<TouchMouseController::Action> TouchMouseController::fingerMove(
                        current->second.down_y, true});
   }
 
-  actions.push_back({ActionType::move, x, y, primary_is_down_});
+  actions.push_back(
+      {ActionType::move, x, y, primary_is_down_, xrel, yrel});
   return actions;
 }
 
@@ -135,6 +138,8 @@ std::vector<TouchMouseController::Action> TouchMouseController::fingerUp(
     return actions;
   }
 
+  const int xrel = x - current->second.x;
+  const int yrel = y - current->second.y;
   current->second.x = x;
   current->second.y = y;
 
@@ -163,7 +168,8 @@ std::vector<TouchMouseController::Action> TouchMouseController::fingerUp(
   }
 
   if (has_primary_ && id == primary_id_) {
-    actions.push_back({ActionType::move, x, y, primary_is_down_});
+    actions.push_back(
+        {ActionType::move, x, y, primary_is_down_, xrel, yrel});
     if (primary_is_down_) {
       actions.push_back({ActionType::primary_up, x, y, false});
     } else {

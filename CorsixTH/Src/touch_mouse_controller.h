@@ -53,6 +53,8 @@ class TouchMouseController {
     int x;
     int y;
     bool primary_is_down;
+    int xrel{0};
+    int yrel{0};
   };
 
   TouchMouseController(int drag_threshold = 12,
