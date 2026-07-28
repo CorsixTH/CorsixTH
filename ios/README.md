@@ -32,3 +32,8 @@ The IPA still needs to be signed by the sideloading tool for the target device.
 The first port build intentionally disables FFmpeg movies, update checking and
 external MIDI-device access. SDL_mixer and FluidSynth remain enabled for sound
 effects, announcements and in-game music.
+
+The FluidSynth overlay carries a narrow iOS packaging fix for the vcpkg
+baseline pinned in `ios/vcpkg.json`. It does not change FluidSynth's library
+code. Local CMake builds must pass
+`-DVCPKG_OVERLAY_PORTS="$PWD/ios/vcpkg-overlays"`.

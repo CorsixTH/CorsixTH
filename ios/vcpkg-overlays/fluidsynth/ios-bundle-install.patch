@@ -1,0 +1,9 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 388e848..749d833 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -577,3 +577,4 @@ else ( MACOSX_FRAMEWORK )
+     EXPORT FluidSynthTargets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT ${PACKAGE}_program
++    BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT ${PACKAGE}_program
+   )
