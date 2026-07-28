@@ -27,7 +27,7 @@ if(USE_SOURCE_DATADIRS)
 elseif(MSVC)
   set(CORSIX_TH_DATADIR CorsixTH)
   set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_INTERPRETER_NAME})
-elseif(IOS)
+elseif(CORSIXTH_TARGET_IOS)
   # iOS application bundles keep resources at the bundle root rather than in
   # the macOS Contents/Resources hierarchy.
   set(CORSIX_TH_DATADIR CorsixTH.app/)
@@ -41,7 +41,7 @@ else()
 endif()
 
 # Declaration of the executable
-if(IOS)
+if(CORSIXTH_TARGET_IOS)
   add_executable(CorsixTH MACOSX_BUNDLE)
   target_compile_definitions(CorsixTH PRIVATE CORSIXTH_IOS=1)
 
@@ -106,7 +106,7 @@ endif()
 # Report operating system in compile_opts.os
 if(WIN32)
   set(CORSIX_TH_OS "windows")
-elseif(IOS)
+elseif(CORSIXTH_TARGET_IOS)
   set(CORSIX_TH_OS "ios")
 elseif(APPLE)
   set(CORSIX_TH_OS "macos")
@@ -266,7 +266,7 @@ else()
   if(FREETYPE_FOUND)
     target_link_libraries(CorsixTH_lib PUBLIC ${FREETYPE_LIBRARIES})
     include_directories(${FREETYPE_INCLUDE_DIRS})
-    if(APPLE AND NOT IOS)
+    if(APPLE AND NOT CORSIXTH_TARGET_IOS)
       target_link_libraries(CorsixTH_lib PRIVATE libz.dylib)
       target_link_libraries(CorsixTH_lib PRIVATE libbz2.dylib)
     endif()
@@ -370,7 +370,7 @@ endif()
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
   # Do not generate launch script. The default is fine for this case.
-elseif(XCODE AND NOT IOS)
+elseif(XCODE AND NOT CORSIXTH_TARGET_IOS)
   message(WARNING "By default you will not be able to run CorsixTH from Xcode. If you do not plan to deploy then run cmake with -DUSE_SOURCE_DATADIRS. If you want to both run and deploy from Xcode then set the command line arguments in your run scheme to --interpreter=${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.lua")
 elseif(APPLE)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in.apple ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
@@ -448,7 +448,7 @@ if(NOT USE_SOURCE_DATADIRS)
     install(FILES Original_Logo.svg DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/scalable/apps RENAME corsix-th.svg)
   endif()
 
-  if(APPLE AND NOT IOS)
+  if(APPLE AND NOT CORSIXTH_TARGET_IOS)
     # Fix the macOS bundle to include required libraries (create a redistributable app)
     install(CODE "
       INCLUDE(BundleUtilities)

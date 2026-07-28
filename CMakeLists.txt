@@ -68,6 +68,12 @@ endif()
 
 project(CorsixTH_Top_Level)
 
+if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+  set(CORSIXTH_TARGET_IOS ON)
+else()
+  set(CORSIXTH_TARGET_IOS OFF)
+endif()
+
 if(ENABLE_UNIT_TESTS)
   enable_testing()
 endif()
@@ -100,7 +106,7 @@ option(SEARCH_LOCAL_DATADIRS
   "Search resources in the working directory and the program directory where the executable stores."
   ${SEARCH_LOCAL_DATADIRS_DEFAULT})
 
-if(APPLE AND NOT IOS)
+if(APPLE AND NOT CORSIXTH_TARGET_IOS)
   set(WITH_FONT_DEFAULT "/Library/Fonts/Arial Unicode.ttf")
 else()
   set(WITH_FONT_DEFAULT "")

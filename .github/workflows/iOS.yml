@@ -85,11 +85,15 @@ jobs:
 
       - name: Package IPA
         run: |
-          APP_PATH="$(find build/ios -type d -name CorsixTH.app -path '*Release-iphoneos*' -print -quit)"
+          APP_PATH="$(find build/ios -type d -name CorsixTH.app -print -quit)"
           test -n "$APP_PATH"
           test -x "$APP_PATH/CorsixTH"
           test -f "$APP_PATH/CorsixTH.lua"
           test -d "$APP_PATH/Lua"
+          test -f "$APP_PATH/Assets.car"
+          test ! -e "$APP_PATH/Icon.icns"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Info.plist")" = "org.corsixth.ios"
+          lipo -verify_arch arm64 "$APP_PATH/CorsixTH"
           mkdir -p package/Payload
           ditto "$APP_PATH" package/Payload/CorsixTH.app
           cd package
