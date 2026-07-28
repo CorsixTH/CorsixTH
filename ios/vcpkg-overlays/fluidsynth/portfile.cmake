@@ -83,9 +83,18 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fluidsynth)
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_TARGET_IS_IOS)
-    file(REMOVE_RECURSE
+    file(MAKE_DIRECTORY
+        "${CURRENT_PACKAGES_DIR}/tools/fluidsynth"
+        "${CURRENT_PACKAGES_DIR}/debug/tools/fluidsynth")
+    file(RENAME
         "${CURRENT_PACKAGES_DIR}/bin/fluidsynth.app"
-        "${CURRENT_PACKAGES_DIR}/debug/bin/fluidsynth.app")
+        "${CURRENT_PACKAGES_DIR}/tools/fluidsynth/fluidsynth.app")
+    file(RENAME
+        "${CURRENT_PACKAGES_DIR}/debug/bin/fluidsynth.app"
+        "${CURRENT_PACKAGES_DIR}/debug/tools/fluidsynth/fluidsynth.app")
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin")
 else()
     vcpkg_copy_tools(TOOL_NAMES fluidsynth AUTO_CLEAN)
 endif()
