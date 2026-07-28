@@ -52,6 +52,9 @@ jobs:
       - name: Bootstrap vcpkg
         run: ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
+      - name: Prepare vcpkg cache
+        run: mkdir -p "$VCPKG_DEFAULT_BINARY_CACHE"
+
       - name: Configure iPhone target
         run: |
           cmake -S . -B build/ios -G Xcode \
