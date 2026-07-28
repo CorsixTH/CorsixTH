@@ -59,6 +59,14 @@ local function pathconcat(a, b)
 end
 
 local function find_config()
+  local config_name = "config.txt"
+  if is_ios then
+    local ios_documents = os.getenv("CORSIXTH_IOS_DOCUMENTS")
+    if ios_documents and ios_documents ~= "" then
+      return pathconcat(ios_documents, config_name), ios_documents, config_name
+    end
+  end
+
   local config_path
   -- Decide on a sensible place to put config.txt, etc.
   if pathsep == "\\" then
@@ -71,9 +79,6 @@ local function find_config()
   if config_path ~= ourpath then
     config_path = pathconcat(config_path, "CorsixTH")
   end
-
-  -- Config filename.
-  local config_name = "config.txt"
 
   -- Check for config.path.txt
   local fi = io.open(pathconcat(ourpath, "config.path.txt"), "r")
