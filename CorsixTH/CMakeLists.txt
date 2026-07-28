@@ -55,6 +55,12 @@ if(CORSIXTH_TARGET_IOS)
     XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
   )
 
+  if(CMAKE_OSX_DEPLOYMENT_TARGET)
+    set_target_properties(CorsixTH PROPERTIES
+      XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET
+        "${CMAKE_OSX_DEPLOYMENT_TARGET}")
+  endif()
+
   set(corsixth_ios_assets "${CMAKE_SOURCE_DIR}/ios/Assets.xcassets")
   target_sources(CorsixTH PRIVATE "${corsixth_ios_assets}")
   set_source_files_properties("${corsixth_ios_assets}"
@@ -294,10 +300,15 @@ if(CORSIX_TH_LINK_LUA_MODULES)
   find_package(unofficial-lpeg CONFIG REQUIRED)
   target_link_libraries(CorsixTH_lib PRIVATE unofficial::lpeg::lpeg)
 
+  set(CORSIX_TH_LPEG_COPY_DESTINATION "$<TARGET_FILE_DIR:CorsixTH>")
+  if(CORSIXTH_TARGET_IOS)
+    set(CORSIX_TH_LPEG_COPY_DESTINATION "$<TARGET_BUNDLE_DIR:CorsixTH>")
+  endif()
+
   add_custom_command(TARGET CorsixTH POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
     ${UNOFFICIAL_LPEG_LUA_FILES}
-    $<TARGET_FILE_DIR:CorsixTH>)
+    ${CORSIX_TH_LPEG_COPY_DESTINATION})
 
   if(NOT USE_SOURCE_DATADIRS)
     install(FILES ${UNOFFICIAL_LPEG_LUA_FILES} DESTINATION ${CORSIX_TH_DATADIR})

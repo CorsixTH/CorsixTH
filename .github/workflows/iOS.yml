@@ -90,10 +90,13 @@ jobs:
           test -n "$APP_PATH"
           test -x "$APP_PATH/CorsixTH"
           test -f "$APP_PATH/CorsixTH.lua"
+          test -f "$APP_PATH/re.lua"
           test -d "$APP_PATH/Lua"
           test -f "$APP_PATH/Assets.car"
           test ! -e "$APP_PATH/Icon.icns"
+          test ! -e "$APP_PATH/Contents"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Info.plist")" = "org.corsixth.ios"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :MinimumOSVersion' "$APP_PATH/Info.plist")" = "16.0"
           lipo "$APP_PATH/CorsixTH" -verify_arch arm64
           mkdir -p package/Payload
           ditto "$APP_PATH" package/Payload/CorsixTH.app
