@@ -100,7 +100,7 @@ option(SEARCH_LOCAL_DATADIRS
   "Search resources in the working directory and the program directory where the executable stores."
   ${SEARCH_LOCAL_DATADIRS_DEFAULT})
 
-if(APPLE)
+if(APPLE AND NOT IOS)
   set(WITH_FONT_DEFAULT "/Library/Fonts/Arial Unicode.ttf")
 else()
   set(WITH_FONT_DEFAULT "")

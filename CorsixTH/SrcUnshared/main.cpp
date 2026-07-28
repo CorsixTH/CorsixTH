@@ -28,7 +28,12 @@ SOFTWARE.
 #include <SDL_mixer.h>
 
 #include <cstdio>
+#include <cstdlib>
 #include <memory>
+
+#ifdef CORSIXTH_IOS
+#include <unistd.h>
+#endif
 
 #include "../Src/bootstrap.h"
 #include "../Src/lua.hpp"
@@ -109,6 +114,24 @@ int main(int argc, char** argv) {
     // 32 bits (floats only have 24 bits)
     int number_is_double[types_equal<lua_Number, double>::result];
   };
+
+#ifdef CORSIXTH_IOS
+  // SDL exposes the readable application-bundle directory here. Making it the
+  // working directory allows the existing resource loader to find
+  // CorsixTH.lua and the Lua/Bitmap/Campaigns/Levels directories unchanged.
+  if (char* base_path = SDL_GetBasePath(); base_path != nullptr) {
+    chdir(base_path);
+    SDL_free(base_path);
+  }
+
+  // iOS has no windowed mode. Touch events should act as the game's primary
+  // mouse while a connected Bluetooth/USB mouse remains a real mouse.
+  setenv("CORSIXTH_IOS", "1", 1);
+  SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+  SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "1");
+  SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
+  SDL_SetHint(SDL_HINT_IOS_HIDE_HOME_INDICATOR, "2");
+#endif
 
 #ifdef WITH_UPDATE_CHECK
   curl_global_init(CURL_GLOBAL_DEFAULT);

@@ -1,0 +1,24 @@
+{
+  "name": "corsixth-ios",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "freetype",
+    "libpng",
+    "lpeg",
+    "lua",
+    "luafilesystem",
+    {
+      "name": "sdl2",
+      "default-features": false
+    },
+    {
+      "name": "sdl2-mixer",
+      "default-features": false,
+      "features": [
+        "fluidsynth"
+      ]
+    },
+    "zlib"
+  ],
+  "builtin-baseline": "bee87c32fcf25e81b0d9c312144475b5e34181a8"
+}

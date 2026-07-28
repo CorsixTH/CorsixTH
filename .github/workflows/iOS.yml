@@ -1,0 +1,100 @@
+name: iOS
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ios-port
+    paths:
+      - ".github/workflows/iOS.yml"
+      - "ios/**"
+      - "CMakeLists.txt"
+      - "CorsixTH/**"
+      - "libs/**"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Unsigned iPhone IPA
+    runs-on: macos-15
+    timeout-minutes: 120
+
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg-cache
+
+    steps:
+      - name: Check out CorsixTH
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "16.4"
+
+      - name: Restore vcpkg cache
+        uses: actions/cache@v4
+        with:
+          path: vcpkg-cache
+          key: vcpkg-ios-${{ hashFiles('ios/vcpkg.json', 'vcpkg-configuration.json') }}
+          restore-keys: |
+            vcpkg-ios-
+
+      - name: Check out vcpkg
+        uses: actions/checkout@v4
+        with:
+          repository: microsoft/vcpkg
+          ref: bee87c32fcf25e81b0d9c312144475b5e34181a8
+          path: vcpkg
+
+      - name: Bootstrap vcpkg
+        run: ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+      - name: Configure iPhone target
+        run: |
+          cmake -S . -B build/ios -G Xcode \
+            -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
+            -DVCPKG_TARGET_TRIPLET=arm64-ios \
+            -DVCPKG_MANIFEST_DIR="${{ github.workspace }}/ios" \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=16.0 \
+            -DCMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH=NO \
+            -DWITH_MOVIES=OFF \
+            -DWITH_UPDATE_CHECK=OFF \
+            -DWITH_MIDI_DEVICE=OFF \
+            -DSEARCH_LOCAL_DATADIRS=ON \
+            -DENABLE_UNIT_TESTS=OFF \
+            -DBUILD_ANIMVIEW=OFF \
+            -DBUILD_TOOLS=OFF
+
+      - name: Build unsigned application
+        run: |
+          cmake --build build/ios \
+            --config Release \
+            --target CorsixTH \
+            -- \
+            -sdk iphoneos \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Package IPA
+        run: |
+          APP_PATH="$(find build/ios -type d -name CorsixTH.app -path '*Release-iphoneos*' -print -quit)"
+          test -n "$APP_PATH"
+          test -x "$APP_PATH/CorsixTH"
+          test -f "$APP_PATH/CorsixTH.lua"
+          test -d "$APP_PATH/Lua"
+          mkdir -p package/Payload
+          ditto "$APP_PATH" package/Payload/CorsixTH.app
+          cd package
+          zip -qry ../CorsixTH-iOS-unsigned.ipa Payload
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: CorsixTH-iOS-unsigned
+          path: CorsixTH-iOS-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 14

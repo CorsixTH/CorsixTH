@@ -27,6 +27,11 @@ if(USE_SOURCE_DATADIRS)
 elseif(MSVC)
   set(CORSIX_TH_DATADIR CorsixTH)
   set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_INTERPRETER_NAME})
+elseif(IOS)
+  # iOS application bundles keep resources at the bundle root rather than in
+  # the macOS Contents/Resources hierarchy.
+  set(CORSIX_TH_DATADIR CorsixTH.app/)
+  set(CORSIX_TH_INTERPRETER_PATH CorsixTH.lua)
 elseif(APPLE)
   set(CORSIX_TH_DATADIR CorsixTH.app/Contents/Resources/)
   set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_PREFIX}/${CORSIX_TH_DATADIR}/${CORSIX_TH_INTERPRETER_NAME})
@@ -36,7 +41,50 @@ else()
 endif()
 
 # Declaration of the executable
-if(APPLE)
+if(IOS)
+  add_executable(CorsixTH MACOSX_BUNDLE)
+  target_compile_definitions(CorsixTH PRIVATE CORSIXTH_IOS=1)
+
+  set_target_properties(CorsixTH PROPERTIES
+    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_SOURCE_DIR}/ios/Info.plist.in"
+    XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
+    XCODE_ATTRIBUTE_CODE_SIGN_STYLE "Automatic"
+    XCODE_ATTRIBUTE_DEVELOPMENT_TEAM ""
+    XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/Frameworks"
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "org.corsixth.ios"
+    XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
+  )
+
+  set(corsixth_ios_assets "${CMAKE_SOURCE_DIR}/ios/Assets.xcassets")
+  target_sources(CorsixTH PRIVATE "${corsixth_ios_assets}")
+  set_source_files_properties("${corsixth_ios_assets}"
+    PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+  # The game engine loads these resources dynamically from the application
+  # bundle. Keep them out of the executable so the unmodified Lua loader can
+  # continue to find its normal directory layout.
+  add_custom_command(TARGET CorsixTH POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+      "${CMAKE_SOURCE_DIR}/CorsixTH/Lua"
+      "$<TARGET_BUNDLE_DIR:CorsixTH>/Lua"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+      "${CMAKE_SOURCE_DIR}/CorsixTH/Bitmap"
+      "$<TARGET_BUNDLE_DIR:CorsixTH>/Bitmap"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+      "${CMAKE_SOURCE_DIR}/CorsixTH/Campaigns"
+      "$<TARGET_BUNDLE_DIR:CorsixTH>/Campaigns"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+      "${CMAKE_SOURCE_DIR}/CorsixTH/Levels"
+      "$<TARGET_BUNDLE_DIR:CorsixTH>/Levels"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      "${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.lua"
+      "$<TARGET_BUNDLE_DIR:CorsixTH>/CorsixTH.lua"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      "${CMAKE_SOURCE_DIR}/LICENSE.txt"
+      "$<TARGET_BUNDLE_DIR:CorsixTH>/LICENSE.txt"
+    VERBATIM
+  )
+elseif(APPLE)
   set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
   set_source_files_properties(
     ${corsixth_icon_file}
@@ -58,6 +106,8 @@ endif()
 # Report operating system in compile_opts.os
 if(WIN32)
   set(CORSIX_TH_OS "windows")
+elseif(IOS)
+  set(CORSIX_TH_OS "ios")
 elseif(APPLE)
   set(CORSIX_TH_OS "macos")
 else()
@@ -216,7 +266,7 @@ else()
   if(FREETYPE_FOUND)
     target_link_libraries(CorsixTH_lib PUBLIC ${FREETYPE_LIBRARIES})
     include_directories(${FREETYPE_INCLUDE_DIRS})
-    if(APPLE)
+    if(APPLE AND NOT IOS)
       target_link_libraries(CorsixTH_lib PRIVATE libz.dylib)
       target_link_libraries(CorsixTH_lib PRIVATE libbz2.dylib)
     endif()
@@ -320,7 +370,7 @@ endif()
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
   # Do not generate launch script. The default is fine for this case.
-elseif(XCODE)
+elseif(XCODE AND NOT IOS)
   message(WARNING "By default you will not be able to run CorsixTH from Xcode. If you do not plan to deploy then run cmake with -DUSE_SOURCE_DATADIRS. If you want to both run and deploy from Xcode then set the command line arguments in your run scheme to --interpreter=${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.lua")
 elseif(APPLE)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in.apple ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
@@ -398,7 +448,7 @@ if(NOT USE_SOURCE_DATADIRS)
     install(FILES Original_Logo.svg DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/scalable/apps RENAME corsix-th.svg)
   endif()
 
-  if(APPLE)
+  if(APPLE AND NOT IOS)
     # Fix the macOS bundle to include required libraries (create a redistributable app)
     install(CODE "
       INCLUDE(BundleUtilities)

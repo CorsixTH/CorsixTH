@@ -47,6 +47,7 @@ SOFTWARE. --]]
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
 local serialize = serialize -- from utility
+local is_ios = os.getenv("CORSIXTH_IOS") == "1"
 
 local function pathconcat(a, b)
   if a:sub(-1) == pathsep then
@@ -122,9 +123,9 @@ local function new_config_defaults()
   The following list is in the same order.
   ]]
   return {
-    fullscreen = false,
-    width = 800,
-    height = 600,
+    fullscreen = is_ios,
+    width = is_ios and 1280 or 800,
+    height = is_ios and 720 or 600,
     ui_scale = 1,
     language = [[English]],
     audio = true,
@@ -136,7 +137,7 @@ local function new_config_defaults()
     play_music = true,
     music_volume = 0.5,
     prevent_edge_scrolling = false,
-    capture_mouse = true,
+    capture_mouse = not is_ios,
     right_mouse_scrolling = false,
     adviser_disabled = false,
     scrolling_momentum = 0.8,
