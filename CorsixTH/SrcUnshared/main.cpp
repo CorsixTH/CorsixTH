@@ -32,6 +32,12 @@ SOFTWARE.
 #include <memory>
 
 #ifdef CORSIXTH_IOS
+#include <algorithm>
+#include <cctype>
+#include <filesystem>
+#include <fstream>
+#include <optional>
+#include <string>
 #include <unistd.h>
 #endif
 
@@ -98,6 +104,115 @@ void l_tracy_hook(lua_State* L, lua_Debug* ar) {
 
 #endif
 
+#ifdef CORSIXTH_IOS
+
+namespace {
+
+namespace fs = std::filesystem;
+
+std::string lowercase_ascii(std::string text) {
+  std::transform(text.begin(), text.end(), text.begin(), [](unsigned char c) {
+    return static_cast<char>(std::tolower(c));
+  });
+  return text;
+}
+
+std::optional<fs::path> find_child_case_insensitive(
+    const fs::path& parent, const std::string& wanted_name,
+    bool must_be_directory) {
+  std::error_code error;
+  if (!fs::is_directory(parent, error)) {
+    return std::nullopt;
+  }
+
+  const std::string wanted_lower = lowercase_ascii(wanted_name);
+  for (const fs::directory_entry& child :
+       fs::directory_iterator(parent, error)) {
+    if (error) {
+      return std::nullopt;
+    }
+    if (lowercase_ascii(child.path().filename().string()) != wanted_lower) {
+      continue;
+    }
+    if (must_be_directory ? child.is_directory(error)
+                          : child.is_regular_file(error)) {
+      return child.path();
+    }
+  }
+  return std::nullopt;
+}
+
+bool has_theme_hospital_data(const fs::path& game_directory) {
+  const auto data =
+      find_child_case_insensitive(game_directory, "DATA", true);
+  const auto levels =
+      find_child_case_insensitive(game_directory, "LEVELS", true);
+  const auto qdata =
+      find_child_case_insensitive(game_directory, "QDATA", true);
+  if (!data || !levels || !qdata) {
+    return false;
+  }
+
+  return find_child_case_insensitive(*data, "VBLK-0.TAB", false) &&
+         find_child_case_insensitive(*levels, "LEVEL.L1", false) &&
+         find_child_case_insensitive(*qdata, "SPOINTER.DAT", false);
+}
+
+fs::path prepare_ios_game_directory() {
+  const char* home = std::getenv("HOME");
+  if (home == nullptr || *home == '\0') {
+    return {};
+  }
+
+  const fs::path documents = fs::path(home) / "Documents";
+  const fs::path game_directory = documents / "Theme Hospital";
+  std::error_code error;
+  fs::create_directories(game_directory, error);
+  if (error) {
+    return {};
+  }
+
+  setenv("CORSIXTH_IOS_DOCUMENTS", documents.c_str(), 1);
+
+  if (!has_theme_hospital_data(game_directory)) {
+    std::ofstream instructions(
+        game_directory / "ADD THE GAME FILES HERE.txt",
+        std::ios::out | std::ios::trunc);
+    instructions
+        << "Copy the DATA, LEVELS and QDATA folders from your original "
+           "Theme Hospital installation directly into this folder.\n\n"
+        << "The final layout must be:\n"
+        << "Theme Hospital/DATA\n"
+        << "Theme Hospital/LEVELS\n"
+        << "Theme Hospital/QDATA\n\n"
+        << "Then close and reopen CorsixTH.\n";
+  }
+
+  return game_directory;
+}
+
+void show_ios_data_instructions(bool files_folder_ready) {
+  SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+    return;
+  }
+
+  const char* message =
+      files_folder_ready
+          ? "Open Files > On My iPhone > CorsixTH > Theme Hospital. "
+            "Copy the DATA, LEVELS and QDATA folders directly into that "
+            "folder, then close and reopen CorsixTH."
+          : "CorsixTH could not create its folder in Files. Please reinstall "
+            "the app and try again.";
+  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
+                           "Theme Hospital files needed", message, nullptr);
+  SDL_Quit();
+}
+
+}  // namespace
+
+#endif
+
 //! Program entry point
 /*!
     Prepares a Lua state for, and catches errors from, lua_init(). By
@@ -116,6 +231,12 @@ int main(int argc, char** argv) {
   };
 
 #ifdef CORSIXTH_IOS
+  const fs::path game_directory = prepare_ios_game_directory();
+  if (game_directory.empty() || !has_theme_hospital_data(game_directory)) {
+    show_ios_data_instructions(!game_directory.empty());
+    return 0;
+  }
+
   // SDL exposes the readable application-bundle directory here. Making it the
   // working directory allows the existing resource loader to find
   // CorsixTH.lua and the Lua/Bitmap/Campaigns/Levels directories unchanged.

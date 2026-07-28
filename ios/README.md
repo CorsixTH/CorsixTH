@@ -7,10 +7,13 @@ Hospital data.
 ## First launch and game data
 
 1. Install the unsigned IPA with AltStore or another personal signing tool.
-2. In the iOS Files app, open **On My iPhone > CorsixTH**.
-3. Copy or extract the original game into a folder named **Theme Hospital**.
-4. The resulting folder must contain `DATA`, `LEVELS` and `QDATA` directly.
-5. Launch CorsixTH. The existing game-data discovery code will find
+2. Launch CorsixTH once. If the game data is missing, the app creates its
+   import folder and shows the required folder layout.
+3. In the iOS Files app, open
+   **On My iPhone > CorsixTH > Theme Hospital**.
+4. Copy or extract the original game so that `DATA`, `LEVELS` and `QDATA` are
+   directly inside that folder.
+5. Close and reopen CorsixTH. The game-data discovery code will find
    `Documents/Theme Hospital` automatically.
 
 The GOG game directory works. The Windows `DOSBOX` directory and uninstaller
