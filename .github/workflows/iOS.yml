@@ -94,7 +94,7 @@ jobs:
           test -f "$APP_PATH/Assets.car"
           test ! -e "$APP_PATH/Icon.icns"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Info.plist")" = "org.corsixth.ios"
-          lipo -verify_arch arm64 "$APP_PATH/CorsixTH"
+          lipo "$APP_PATH/CorsixTH" -verify_arch arm64
           mkdir -p package/Payload
           ditto "$APP_PATH" package/Payload/CorsixTH.app
           cd package
