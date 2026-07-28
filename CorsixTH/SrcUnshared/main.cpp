@@ -213,7 +213,7 @@ bool redirect_ios_output(const fs::path& documents) {
   setvbuf(stdout, nullptr, _IOLBF, 0);
   setvbuf(stderr, nullptr, _IOLBF, 0);
   SDL_LogSetOutputFunction(ios_sdl_log, nullptr);
-  std::fprintf(stderr, "[iOS startup] CorsixTH 0.3.2 startup log opened\n");
+  std::fprintf(stderr, "[iOS startup] CorsixTH 0.4.0 startup log opened\n");
   return true;
 }
 
@@ -325,11 +325,11 @@ int main(int argc, char** argv) {
                  SDL_GetError());
   }
 
-  // iOS has no windowed mode. Touch events should act as the game's primary
-  // mouse while a connected Bluetooth/USB mouse remains a real mouse.
+  // iOS has no windowed mode. CorsixTH converts raw finger events into primary
+  // and secondary mouse actions while Bluetooth/USB mice remain real mice.
   setenv("CORSIXTH_IOS", "1", 1);
   SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
-  SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "1");
+  SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
   SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
   SDL_SetHint(SDL_HINT_IOS_HIDE_HOME_INDICATOR, "2");
   std::fprintf(stderr, "[iOS startup] Beginning Lua initialisation\n");

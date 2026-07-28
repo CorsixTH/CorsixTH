@@ -34,6 +34,7 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/th_pathfind.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/th_sound.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/th_strings.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/touch_mouse_controller.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.cpp
 )
 
@@ -63,6 +64,7 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/th_pathfind.h
     ${CMAKE_CURRENT_SOURCE_DIR}/th_sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/th_strings.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/touch_mouse_controller.h
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.h
 
     ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h

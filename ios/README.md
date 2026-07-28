@@ -23,7 +23,11 @@ send the `CorsixTH.log` file created in **On My iPhone > CorsixTH**.
 
 ## Input
 
-- One-finger touch acts as the primary mouse.
+- Tap with one finger for a primary (left) click.
+- Hold and move one finger for a primary-button drag.
+- Place one finger on the target and briefly tap with a second finger for a
+  secondary (right) click.
+- Move or pinch with two fingers to pan or zoom the map.
 - Bluetooth and USB mice are exposed through SDL's native iOS mouse support.
 - The app declares indirect-input support so primary and secondary mouse
   buttons can be delivered by iOS.
