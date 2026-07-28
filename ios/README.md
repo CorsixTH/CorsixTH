@@ -11,13 +11,15 @@ Hospital data.
    import folder and shows the required folder layout.
 3. In the iOS Files app, open
    **On My iPhone > CorsixTH > Theme Hospital**.
-4. Copy or extract the original game so that `DATA`, `LEVELS` and `QDATA` are
-   directly inside that folder.
+4. Copy or extract the complete contents of the original game folder so that
+   `DATA`, `LEVELS`, `QDATA` and `SOUND` are directly inside that folder.
+   Copy the other original game folders as well.
 5. Close and reopen CorsixTH. The game-data discovery code will find
    `Documents/Theme Hospital` automatically.
 
 The GOG game directory works. The Windows `DOSBOX` directory and uninstaller
-are not required by CorsixTH but are harmless if present.
+are not required by CorsixTH but are harmless if present. If startup fails,
+send the `CorsixTH.log` file created in **On My iPhone > CorsixTH**.
 
 ## Input
 

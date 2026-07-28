@@ -48,6 +48,7 @@ local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
 local serialize = serialize -- from utility
 local is_ios = os.getenv("CORSIXTH_IOS") == "1"
+local ios_game_directory = os.getenv("CORSIXTH_IOS_GAME_DIRECTORY")
 
 local function pathconcat(a, b)
   if a:sub(-1) == pathsep then
@@ -165,7 +166,7 @@ local function new_config_defaults()
     midi_api = nil,
     midi_port = nil,
     midi_sysex_master_volume = false,
-    theme_hospital_install = [[X:\ThemeHospital\hospital]],
+    theme_hospital_install = ios_game_directory or [[X:\ThemeHospital\hospital]],
     debug = false,
     track_fps = false,
     zoom_speed = 80,

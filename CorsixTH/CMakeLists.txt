@@ -138,6 +138,9 @@ set(CorsixTH_generated_src_dir ${CMAKE_BINARY_DIR}/CorsixTH/Src/)
 add_library(CorsixTH_lib STATIC ${CorsixTH_generated_src_dir})
 
 target_include_directories(CorsixTH_lib PUBLIC ${CorsixTH_generated_src_dir})
+if(CORSIXTH_TARGET_IOS)
+  target_compile_definitions(CorsixTH_lib PRIVATE CORSIXTH_IOS=1)
+endif()
 
 target_link_libraries(CorsixTH_lib PRIVATE RncLib)
 if(SEARCH_LOCAL_DATADIRS)

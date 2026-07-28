@@ -440,9 +440,15 @@ render_target::render_target(const render_target_creation_params& params)
       direct_zoom{params.direct_zoom} {
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
   pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
+  Uint32 window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+#ifdef CORSIXTH_IOS
+  // Let SDL select its native iOS renderer. Forcing an OpenGL window here can
+  // prevent the Metal renderer from attaching to the UIKit view.
+  window_flags = SDL_WINDOW_ALLOW_HIGHDPI;
+#endif
   window = SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
                             SDL_WINDOWPOS_UNDEFINED, width, height,
-                            SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+                            window_flags);
   if (!window) {
     throw std::runtime_error(SDL_GetError());
   }
@@ -450,9 +456,15 @@ render_target::render_target(const render_target_creation_params& params)
   Uint32 iRendererFlags =
       (params.present_immediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
   renderer = SDL_CreateRenderer(window, -1, iRendererFlags);
+  if (!renderer) {
+    throw std::runtime_error(SDL_GetError());
+  }
 
-  SDL_RendererInfo info;
-  SDL_GetRendererInfo(renderer, &info);
+  SDL_RendererInfo info{};
+  if (SDL_GetRendererInfo(renderer, &info) != 0) {
+    throw std::runtime_error(SDL_GetError());
+  }
+  SDL_Log("CorsixTH renderer selected: %s", info.name ? info.name : "unknown");
   supports_target_textures = (info.flags & SDL_RENDERER_TARGETTEXTURE) != 0;
 
   SDL_version sdlVersion;
@@ -460,7 +472,9 @@ render_target::render_target(const render_target_creation_params& params)
   apply_opengl_clip_fix = std::strncmp(info.name, "opengl", 6) == 0 &&
                           sdlVersion.major == 2 && sdlVersion.minor == 0 &&
                           sdlVersion.patch < 4;
+#ifndef CORSIXTH_IOS
   SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
+#endif
   SDL_RenderSetLogicalSize(renderer, width, height);
 
   update(params);
@@ -507,6 +521,7 @@ bool render_target::update(const render_target_creation_params& params) {
     SDL_RenderSetLogicalSize(renderer, width, height);
   }
 
+#ifndef CORSIXTH_IOS
   int old_min_width;
   int old_min_height;
   SDL_GetWindowMinimumSize(window, &old_min_width, &old_min_height);
@@ -514,6 +529,7 @@ bool render_target::update(const render_target_creation_params& params) {
       old_min_height != params.min_height) {
     SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
   }
+#endif
 
   return true;
 }

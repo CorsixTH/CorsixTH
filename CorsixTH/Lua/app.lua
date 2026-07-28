@@ -23,6 +23,14 @@ local rnc = require("rnc")
 local lfs = require("lfs")
 local TH = require("TH")
 local SDL = require("sdl")
+local is_ios = os.getenv("CORSIXTH_IOS") == "1"
+
+local function ios_startup_checkpoint(message)
+  if is_ios then
+    print("[iOS startup] " .. message)
+    io.stdout:flush()
+  end
+end
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
@@ -92,6 +100,7 @@ end
 
 function App:init()
   -- App initialisation 1st goal: Get the loading screen up
+  ios_startup_checkpoint("App:init entered")
 
   print("")
   print("")
@@ -119,6 +128,7 @@ function App:init()
         " fail to run until you recompile the binary.")
     end
   end
+  ios_startup_checkpoint("C++ and Lua API versions accepted")
 
   -- Prereq 2: Config file (for screen width / height / TH folder)
   -- Note: These errors cannot be translated, as the config file specifies the language
@@ -131,17 +141,37 @@ function App:init()
       "For reference, the error loading the config file was: " .. conf_err)
   end
   self:fixConfig()
+  if is_ios then
+    self.config.theme_hospital_install =
+        os.getenv("CORSIXTH_IOS_GAME_DIRECTORY") or self.config.theme_hospital_install
+    self.config.movies = false
+    self.config.play_intro = false
+    self.config.play_demo = false
+  end
+  ios_startup_checkpoint("Configuration loaded")
   corsixth.require("filesystem")
   local good_install_folder, error_message, charset = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
+  ios_startup_checkpoint("Theme Hospital data accepted")
   self.level_dir = self:getFullPath("Levels", true)
   self.campaign_dir = self:getFullPath("Campaigns", true)
   self:initUserDirectories()
   self:initSavegameDir()
   self:initScreenshotsDir()
+  ios_startup_checkpoint("User directories ready")
 
   -- Create the window
-  if not SDL.init("video", "timer", "audio") then
+  if is_ios then
+    if not SDL.init("video", "timer") then
+      return false, "Cannot initialise SDL video and timer services"
+    end
+    ios_startup_checkpoint("SDL video and timer ready")
+    if not SDL.init("audio") then
+      print("Notice: SDL audio could not initialise; continuing without audio.")
+    else
+      ios_startup_checkpoint("SDL audio service ready")
+    end
+  elseif not SDL.init("video", "timer", "audio") then
     return false, "Cannot initialise SDL"
   end
 
@@ -167,6 +197,8 @@ function App:init()
       App.MIN_WINDOW_WIDTH * self.config.ui_scale,
       App.MIN_WINDOW_HEIGHT * self.config.ui_scale,
       unpack(modes)))
+  ios_startup_checkpoint("Render surface created using " ..
+      tostring(self.video:getRendererDetails()))
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
 
@@ -179,12 +211,14 @@ function App:init()
 
   -- Create gamelog file.
   self:initGamelogFile()
+  ios_startup_checkpoint("CorsixTH gamelog created")
 
   -- Prereq 2: Load and initialise the graphics subsystem
   corsixth.require("persistance")
   corsixth.require("graphics")
   local gfx_set = good_install_folder and (self.using_demo_files and "demo" or "full") or "base"
   self.gfx = Graphics(self, gfx_set, charset)
+  ios_startup_checkpoint("Graphics system initialised")
 
   -- Put up the loading screen
   if good_install_folder then
@@ -192,6 +226,7 @@ function App:init()
     self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
       math.floor((self.config.width - 640) / 2), math.floor((self.config.height - 480) / 2))
     self.video:endFrame()
+    ios_startup_checkpoint("Loading screen displayed")
     -- Add some notices to the loading screen
     local notices = {}
     local font = self.gfx:loadBuiltinFont()
@@ -285,10 +320,13 @@ function App:init()
   self.audio = Audio(self)
   self:initMusicDir()
   self.audio:init()
+  ios_startup_checkpoint("Audio system initialisation completed")
 
   -- Hack to early initialise the audio and reduce delay on Windows
-  self.audio:playRandomBackgroundTrack()
-  self.audio:stopBackgroundTrack()
+  if not is_ios then
+    self.audio:playRandomBackgroundTrack()
+    self.audio:stopBackgroundTrack()
+  end
 
   -- Load movie player
   corsixth.require("movie_player")
@@ -296,6 +334,7 @@ function App:init()
   if good_install_folder then
     self.moviePlayer:init()
   end
+  ios_startup_checkpoint("Movie system initialised")
 
   -- Load strings before UI and before additional Lua
   corsixth.require("strings")
@@ -303,6 +342,7 @@ function App:init()
   self.strings = Strings(self)
   self.strings:init()
   local language_load_success, language_error = self:initLanguage()
+  ios_startup_checkpoint("Language and strings loaded")
   if (self.command_line.dump or ""):match("strings") then
     -- Specify --dump=strings on the command line to dump strings
     -- (or insert "true or" after the "if" in the above)
@@ -355,6 +395,7 @@ function App:init()
     -- Load world before UI
     corsixth.require("world")
   end
+  ios_startup_checkpoint("Game definitions loaded")
 
   -- Load UI
   corsixth.require("ui")
@@ -373,6 +414,7 @@ function App:init()
     self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
     return true
   end
+  ios_startup_checkpoint("User interface created")
 
 
   -- Load main menu (which creates UI)
@@ -424,6 +466,7 @@ function App:init()
   else
     callback_after_movie()
   end
+  ios_startup_checkpoint("Main menu ready")
   return true
 end
 

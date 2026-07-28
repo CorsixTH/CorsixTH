@@ -30,14 +30,15 @@ SOFTWARE.
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
+#include <string>
 
 #ifdef CORSIXTH_IOS
 #include <algorithm>
 #include <cctype>
 #include <filesystem>
+#include <fcntl.h>
 #include <fstream>
 #include <optional>
-#include <string>
 #include <unistd.h>
 #endif
 
@@ -149,13 +150,71 @@ bool has_theme_hospital_data(const fs::path& game_directory) {
       find_child_case_insensitive(game_directory, "LEVELS", true);
   const auto qdata =
       find_child_case_insensitive(game_directory, "QDATA", true);
-  if (!data || !levels || !qdata) {
+  const auto sound =
+      find_child_case_insensitive(game_directory, "SOUND", true);
+  if (!data || !levels || !qdata || !sound) {
+    return false;
+  }
+
+  const auto sound_data =
+      find_child_case_insensitive(*sound, "DATA", true);
+  if (!sound_data) {
     return false;
   }
 
   return find_child_case_insensitive(*data, "VBLK-0.TAB", false) &&
          find_child_case_insensitive(*levels, "LEVEL.L1", false) &&
-         find_child_case_insensitive(*qdata, "SPOINTER.DAT", false);
+         find_child_case_insensitive(*qdata, "SPOINTER.DAT", false) &&
+         find_child_case_insensitive(*qdata, "FONT00V.DAT", false) &&
+         find_child_case_insensitive(*sound_data, "SOUND-0.DAT", false);
+}
+
+void write_ios_game_instructions(const fs::path& game_directory) {
+  std::ofstream instructions(
+      game_directory / "ADD THE GAME FILES HERE.txt",
+      std::ios::out | std::ios::trunc);
+  instructions
+      << "Copy the complete contents of your original Theme Hospital folder "
+         "directly into this folder.\n\n"
+      << "DATA, LEVELS, QDATA and SOUND must all be directly inside "
+         "\"Theme Hospital\". Copy the other original folders too.\n\n"
+      << "The final layout must include:\n"
+      << "Theme Hospital/DATA\n"
+      << "Theme Hospital/LEVELS\n"
+      << "Theme Hospital/QDATA\n"
+      << "Theme Hospital/SOUND\n\n"
+      << "Then fully close and reopen CorsixTH.\n";
+}
+
+void ios_sdl_log(void*, int category, SDL_LogPriority priority,
+                 const char* message) {
+  std::fprintf(stderr, "[SDL category=%d priority=%d] %s\n", category,
+               static_cast<int>(priority), message ? message : "");
+  std::fflush(stderr);
+}
+
+bool redirect_ios_output(const fs::path& documents) {
+  const fs::path log_path = documents / "CorsixTH.log";
+  const int log_fd =
+      open(log_path.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+  if (log_fd < 0) {
+    return false;
+  }
+
+  const bool redirected =
+      dup2(log_fd, STDOUT_FILENO) >= 0 && dup2(log_fd, STDERR_FILENO) >= 0;
+  if (log_fd != STDOUT_FILENO && log_fd != STDERR_FILENO) {
+    close(log_fd);
+  }
+  if (!redirected) {
+    return false;
+  }
+
+  setvbuf(stdout, nullptr, _IOLBF, 0);
+  setvbuf(stderr, nullptr, _IOLBF, 0);
+  SDL_LogSetOutputFunction(ios_sdl_log, nullptr);
+  std::fprintf(stderr, "[iOS startup] CorsixTH 0.3.0 startup log opened\n");
+  return true;
 }
 
 fs::path prepare_ios_game_directory() {
@@ -173,20 +232,8 @@ fs::path prepare_ios_game_directory() {
   }
 
   setenv("CORSIXTH_IOS_DOCUMENTS", documents.c_str(), 1);
-
-  if (!has_theme_hospital_data(game_directory)) {
-    std::ofstream instructions(
-        game_directory / "ADD THE GAME FILES HERE.txt",
-        std::ios::out | std::ios::trunc);
-    instructions
-        << "Copy the DATA, LEVELS and QDATA folders from your original "
-           "Theme Hospital installation directly into this folder.\n\n"
-        << "The final layout must be:\n"
-        << "Theme Hospital/DATA\n"
-        << "Theme Hospital/LEVELS\n"
-        << "Theme Hospital/QDATA\n\n"
-        << "Then close and reopen CorsixTH.\n";
-  }
+  setenv("CORSIXTH_IOS_GAME_DIRECTORY", game_directory.c_str(), 1);
+  write_ios_game_instructions(game_directory);
 
   return game_directory;
 }
@@ -200,13 +247,30 @@ void show_ios_data_instructions(bool files_folder_ready) {
   const char* message =
       files_folder_ready
           ? "Open Files > On My iPhone > CorsixTH > Theme Hospital. "
-            "Copy the DATA, LEVELS and QDATA folders directly into that "
-            "folder, then close and reopen CorsixTH."
+            "Copy the complete contents of the original Theme Hospital "
+            "folder into it. DATA, LEVELS, QDATA and SOUND must be directly "
+            "inside Theme Hospital. Then fully close and reopen CorsixTH."
           : "CorsixTH could not create its folder in Files. Please reinstall "
             "the app and try again.";
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
                            "Theme Hospital files needed", message, nullptr);
   SDL_Quit();
+}
+
+void show_ios_runtime_error(const std::string& detail) {
+  if ((SDL_WasInit(SDL_INIT_VIDEO) & SDL_INIT_VIDEO) == 0 &&
+      SDL_Init(SDL_INIT_VIDEO) != 0) {
+    return;
+  }
+
+  const std::string short_detail =
+      detail.size() > 900 ? detail.substr(0, 900) + "..." : detail;
+  std::string message =
+      "CorsixTH could not finish starting.\n\n" + short_detail +
+      "\n\nA detailed log is in Files > On My iPhone > CorsixTH > "
+      "CorsixTH.log. Please send that file with your next message.";
+  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "CorsixTH startup error",
+                           message.c_str(), nullptr);
 }
 
 }  // namespace
@@ -232,17 +296,33 @@ int main(int argc, char** argv) {
 
 #ifdef CORSIXTH_IOS
   const fs::path game_directory = prepare_ios_game_directory();
+  if (!game_directory.empty()) {
+    redirect_ios_output(game_directory.parent_path());
+    std::fprintf(stderr, "[iOS startup] Game directory: %s\n",
+                 game_directory.c_str());
+  }
   if (game_directory.empty() || !has_theme_hospital_data(game_directory)) {
+    std::fprintf(stderr,
+                 "[iOS startup] Required Theme Hospital files are missing\n");
     show_ios_data_instructions(!game_directory.empty());
     return 0;
   }
+  std::fprintf(stderr,
+               "[iOS startup] Required Theme Hospital files validated\n");
 
   // SDL exposes the readable application-bundle directory here. Making it the
   // working directory allows the existing resource loader to find
   // CorsixTH.lua and the Lua/Bitmap/Campaigns/Levels directories unchanged.
   if (char* base_path = SDL_GetBasePath(); base_path != nullptr) {
-    chdir(base_path);
+    std::fprintf(stderr, "[iOS startup] Bundle resources: %s\n", base_path);
+    if (chdir(base_path) != 0) {
+      std::fprintf(stderr,
+                   "[iOS startup] Failed to enter bundle resource directory\n");
+    }
     SDL_free(base_path);
+  } else {
+    std::fprintf(stderr, "[iOS startup] SDL_GetBasePath failed: %s\n",
+                 SDL_GetError());
   }
 
   // iOS has no windowed mode. Touch events should act as the game's primary
@@ -252,6 +332,7 @@ int main(int argc, char** argv) {
   SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "1");
   SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
   SDL_SetHint(SDL_HINT_IOS_HIDE_HOME_INDICATOR, "2");
+  std::fprintf(stderr, "[iOS startup] Beginning Lua initialisation\n");
 #endif
 
 #ifdef WITH_UPDATE_CHECK
@@ -288,19 +369,32 @@ int main(int argc, char** argv) {
 
     if (lua_pcall(L.get(), argc, 0, 1) != 0) {
       const char* err = lua_tostring(L.get(), -1);
+      std::string error_message;
       if (err != nullptr) {
         std::fprintf(stderr, "%s\n", err);
+        error_message = err;
       } else {
         std::fprintf(stderr,
                      "An error has occurred in CorsixTH:\n"
                      "Uncaught non-string Lua error\n");
+        error_message = "An uncaught non-string Lua error occurred.";
       }
+#ifdef CORSIXTH_IOS
+      std::fprintf(stderr, "[iOS startup] Lua initialisation failed\n");
+      std::fflush(nullptr);
+      show_ios_runtime_error(error_message);
+      return 1;
+#else
       lua_pushcfunction(L.get(), bootstrap_lua_error_report);
       lua_insert(L.get(), -2);
       if (lua_pcall(L.get(), 1, 0, 0) != 0) {
         std::fprintf(stderr, "%s\n", lua_tostring(L.get(), -1));
       }
+#endif
     }
+#ifdef CORSIXTH_IOS
+    std::fprintf(stderr, "[iOS startup] Lua initialisation completed\n");
+#endif
     mainloop(L.get());
 
     lua_getfield(L.get(), LUA_REGISTRYINDEX, "_RESTART");
