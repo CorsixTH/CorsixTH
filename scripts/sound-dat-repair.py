@@ -2,9 +2,9 @@
 
 """CorsixTH SOUND-0.DAT Repair Utility
 
-Some localized versions of Theme Hospital included malformed WAV data in their
-SOUND-#.DAT files. This utility fixes an observed form of corruption where
-individual WAV entries included invalid data in their trailing tags.
+Some localized versions of Theme Hospital have malformed WAV data in some of
+their SOUND-#.DAT files. This utility fixes an observed form of corruption
+where individual WAV entries included invalid data in their trailing tags.
 
 The script iterates through all wav files in the DAT file and strips their
 trailing tags, rewriting the RIFF header with the updated length and generating
@@ -33,7 +33,8 @@ def fix_wav_buffer(raw_wav: bytes) -> bytes:
     and updates the main RIFF header length.
     """
     if len(raw_wav) < 12 or raw_wav[:4] != b'RIFF' or raw_wav[8:12] != b'WAVE':
-        return raw_wav
+        print("Error: Could not find the signature of a sound-file.", file=sys.stderr)
+        sys.exit(1)
 
     offset = 12
     data_found = False
@@ -53,7 +54,8 @@ def fix_wav_buffer(raw_wav: bytes) -> bytes:
         offset = chunk_data_start + chunk_size
 
     if not data_found:
-        return raw_wav
+        print("Error: Could not find the data in the sound-file.", file=sys.stderr)
+        sys.exit(1)
 
     # Slice off extra bytes past the data chunk payload
     cleaned_wav = bytearray(raw_wav[:true_end_offset])
@@ -66,14 +68,14 @@ def fix_wav_buffer(raw_wav: bytes) -> bytes:
 
 
 def process_dat(input_dat_path: str, output_dat_path: str):
-    if not os.path.exists(input_dat_path):
-        print(f"Error: Input file '{input_dat_path}' not found.")
+    if not os.path.isfile(input_dat_path):
+        print(f"Error: Input file '{input_dat_path}' not found.", file=sys.stderr)
         sys.exit(1)
 
     file_size = os.path.getsize(input_dat_path)
 
     if file_size < 4 + ARCHIVE_HEADER_SIZE:
-        print("Error: File is too small to be a valid sound archive.")
+        print("Error: File is too small to be a valid sound archive.", file=sys.stderr)
         sys.exit(1)
 
     with open(input_dat_path, 'rb') as f:
@@ -81,9 +83,9 @@ def process_dat(input_dat_path: str, output_dat_path: str):
         f.seek(-4, os.SEEK_END)
         header_position = struct.unpack('<I', f.read(4))[0]
 
-        # CorsixTH safety check
+        # Safety check.
         if header_position >= (file_size - ARCHIVE_HEADER_SIZE):
-            print(f"Error: Header position {header_position} out of bounds.")
+            print(f"Error: Header position {header_position} out of bounds.", file=sys.stderr)
             sys.exit(1)
 
         # 2. Read Archive Header values (using exact offsets 50 and 58)
@@ -108,7 +110,7 @@ def process_dat(input_dat_path: str, output_dat_path: str):
         for i in range(sound_file_count):
             entry_offset = table_position + i * SOUND_ENTRY_SIZE
             if entry_offset + SOUND_ENTRY_SIZE > file_size:
-                print(f"Error: Table entry {i} out of bounds.")
+                print(f"Error: Table entry {i} out of bounds.", file=sys.stderr)
                 sys.exit(1)
 
             f.seek(entry_offset)
@@ -146,7 +148,7 @@ def process_dat(input_dat_path: str, output_dat_path: str):
 
     print("-" * 70)
 
-    # 5. Repack file using exact CorsixTH structures
+    # 5. Repack file using exact soundfile structures
     with open(output_dat_path, 'wb') as out_f:
         # Write clean audio payloads
         out_f.write(new_audio_payload)
@@ -180,7 +182,7 @@ def process_dat(input_dat_path: str, output_dat_path: str):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
+    if len(sys.argv) != 3:
         print("Usage: python sound-dat-repair.py <input.dat> <output.dat>")
         sys.exit(1)
 
