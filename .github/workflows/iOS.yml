@@ -96,14 +96,16 @@ jobs:
           test ! -e "$APP_PATH/Icon.icns"
           test ! -e "$APP_PATH/Contents"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Info.plist")" = "org.corsixth.ios"
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Info.plist")" = "0.3.0"
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_PATH/Info.plist")" = "3"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Info.plist")" = "0.3.1"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_PATH/Info.plist")" = "4"
           test "$(/usr/libexec/PlistBuddy -c 'Print :MinimumOSVersion' "$APP_PATH/Info.plist")" = "16.0"
           test "$(/usr/libexec/PlistBuddy -c 'Print :UIFileSharingEnabled' "$APP_PATH/Info.plist")" = "true"
           test "$(/usr/libexec/PlistBuddy -c 'Print :LSSupportsOpeningDocumentsInPlace' "$APP_PATH/Info.plist")" = "true"
           strings "$APP_PATH/CorsixTH" | grep -Fq "Theme Hospital files needed"
           strings "$APP_PATH/CorsixTH" | grep -Fq "CorsixTH.log"
           strings "$APP_PATH/CorsixTH" | grep -Fq "CorsixTH startup error"
+          grep -Fq 'documents .. pathsep .. "config.txt"' "$APP_PATH/Lua/app.lua"
+          grep -Fq 'local function ios_tmpname()' "$APP_PATH/Lua/app.lua"
           lipo "$APP_PATH/CorsixTH" -verify_arch arm64
           mkdir -p package/Payload
           ditto "$APP_PATH" package/Payload/CorsixTH.app

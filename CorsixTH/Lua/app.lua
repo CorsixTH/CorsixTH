@@ -32,6 +32,23 @@ local function ios_startup_checkpoint(message)
   end
 end
 
+local function ios_tmpname()
+  local documents = os.getenv("CORSIXTH_IOS_DOCUMENTS")
+  if not documents or documents == "" then
+    return nil
+  end
+
+  local timestamp = tostring(os.time())
+  for suffix = 0, 99 do
+    local candidate = documents .. pathsep .. "CorsixTH-" ..
+        timestamp .. "-" .. tostring(suffix) .. ".tmp"
+    if not lfs.attributes(candidate) then
+      return candidate
+    end
+  end
+  return nil
+end
+
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
@@ -132,7 +149,15 @@ function App:init()
 
   -- Prereq 2: Config file (for screen width / height / TH folder)
   -- Note: These errors cannot be translated, as the config file specifies the language
+  if is_ios and not self.command_line["config-file"] then
+    local documents = os.getenv("CORSIXTH_IOS_DOCUMENTS")
+    if not documents or documents == "" then
+      error("CorsixTH could not locate its writable iOS Documents folder.")
+    end
+    self.command_line["config-file"] = documents .. pathsep .. "config.txt"
+  end
   local conf_path = self.command_line["config-file"] or "config.txt"
+  ios_startup_checkpoint("Configuration file: " .. conf_path)
   local _, conf_err = require('config_finder').load_config(conf_path, self.config)
   if conf_err then
     error("Unable to load the config file. Please ensure that CorsixTH " ..
@@ -1226,15 +1251,26 @@ end
 function App:writeToFileOrTmp(file, mode)
   local f, err = io.open(file, mode or "w")
   if err then
-    local tmp_file = os.tmpname()
-    f = io.open(tmp_file, mode or "w")
-    if self.ui then self.ui:addWindow(UIInformation(self.ui,
-        { _S.errors.save_to_tmp:format(file, tmp_file, err) }))
+    local tmp_file
+    if is_ios then
+      tmp_file = ios_tmpname()
     else
-      print("Attempt to write to " .. file .. " failed. File was written instead to temporary location " .. tmp_file .. " because of the error: " .. err)
+      tmp_file = os.tmpname()
+    end
+    local tmp_err
+    if tmp_file then
+      f, tmp_err = io.open(tmp_file, mode or "w")
+    end
+    if self.ui then self.ui:addWindow(UIInformation(self.ui,
+        { _S.errors.save_to_tmp:format(file, tmp_file or "unavailable", err) }))
+    else
+      print("Attempt to write to " .. file ..
+          " failed. Temporary location: " ..
+          (tmp_file or "unavailable") .. ". Original error: " .. err ..
+          (tmp_err and (". Temporary-file error: " .. tmp_err) or ""))
     end
   end
-  assert(f, "Error: cannot write to filesystem")
+  assert(f, "Error: cannot write to filesystem: " .. tostring(file))
   return f, not err
 end
 

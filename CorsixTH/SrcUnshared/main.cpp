@@ -213,7 +213,7 @@ bool redirect_ios_output(const fs::path& documents) {
   setvbuf(stdout, nullptr, _IOLBF, 0);
   setvbuf(stderr, nullptr, _IOLBF, 0);
   SDL_LogSetOutputFunction(ios_sdl_log, nullptr);
-  std::fprintf(stderr, "[iOS startup] CorsixTH 0.3.0 startup log opened\n");
+  std::fprintf(stderr, "[iOS startup] CorsixTH 0.3.1 startup log opened\n");
   return true;
 }
 
