@@ -68,11 +68,13 @@ endif()
 
 project(CorsixTH_Top_Level)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
-  set(CORSIXTH_TARGET_IOS ON)
-else()
-  set(CORSIXTH_TARGET_IOS OFF)
+set(CORSIXTH_TARGET_IOS_DEFAULT OFF)
+if(CMAKE_SYSTEM_NAME STREQUAL "iOS"
+    OR VCPKG_TARGET_TRIPLET MATCHES "(^|-)ios($|-)")
+  set(CORSIXTH_TARGET_IOS_DEFAULT ON)
 endif()
+option(CORSIXTH_TARGET_IOS "Build the native iOS application target"
+  ${CORSIXTH_TARGET_IOS_DEFAULT})
 
 if(ENABLE_UNIT_TESTS)
   enable_testing()

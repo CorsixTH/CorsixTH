@@ -36,4 +36,5 @@ effects, announcements and in-game music.
 The FluidSynth overlay carries a narrow iOS packaging fix for the vcpkg
 baseline pinned in `ios/vcpkg.json`. It does not change FluidSynth's library
 code. Local CMake builds must pass
-`-DVCPKG_OVERLAY_PORTS="$PWD/ios/vcpkg-overlays"`.
+`-DVCPKG_OVERLAY_PORTS="$PWD/ios/vcpkg-overlays"` and
+`-DCORSIXTH_TARGET_IOS=ON`.

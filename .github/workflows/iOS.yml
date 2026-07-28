@@ -62,6 +62,7 @@ jobs:
             -DVCPKG_TARGET_TRIPLET=arm64-ios \
             -DVCPKG_MANIFEST_DIR="${{ github.workspace }}/ios" \
             -DVCPKG_OVERLAY_PORTS="${{ github.workspace }}/ios/vcpkg-overlays" \
+            -DCORSIXTH_TARGET_IOS=ON \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=16.0 \
             -DCMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH=NO \
