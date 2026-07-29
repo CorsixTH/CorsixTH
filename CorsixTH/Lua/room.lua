@@ -256,7 +256,7 @@ function Room:getMissingStaff(criteria)
           not humanoid:isLeaving() and not humanoid.fired and
           not (humanoid.on_call and humanoid.on_call.object ~= self) and
           not humanoid.going_to_staffroom and
-          self:isHumanoidRoomStaffMember(humanoid) then
+          self:isRoomStaffMember(humanoid) then
         count = count - 1
       end
     end
@@ -1129,7 +1129,7 @@ end
 --! Function to check is the humanoid is attached as the serving patients in the room.
 --!param humanoid (Humanoid) humanoid to check.
 --!return (boolean) Whether the humanoid is attached.
-function Room:isHumanoidRoomStaffMember(humanoid)
+function Room:isRoomStaffMember(humanoid)
   -- The ward and operating theatre use staff_member_set. The other rooms use staff_member.
   return (humanoid == self.staff_member) or (self.staff_member_set and self.staff_member_set[humanoid])
 end
