@@ -28,13 +28,14 @@ SOUND_ENTRY_POS_OFFSET = 18
 SOUND_ENTRY_LEN_OFFSET = 26
 
 
-def fix_wav_buffer(raw_wav: bytes) -> bytes:
+def fix_wav_buffer(raw_wav: bytes, clean_name: str) -> bytes:
     """Parses internal RIFF sub-chunks, trims trailing junk after 'data',
     and updates the main RIFF header length.
     """
     if len(raw_wav) < 12 or raw_wav[:4] != b'RIFF' or raw_wav[8:12] != b'WAVE':
-        print("Error: Could not find the signature of a sound-file.", file=sys.stderr)
-        sys.exit(1)
+        print("Warning: Could not find the signature of sound "
+              f"'{clean_name}', skipping this entry.", file=sys.stderr)
+        return raw_wav
 
     offset = 12
     data_found = False
@@ -54,8 +55,9 @@ def fix_wav_buffer(raw_wav: bytes) -> bytes:
         offset = chunk_data_start + chunk_size
 
     if not data_found:
-        print("Error: Could not find the data in the sound-file.", file=sys.stderr)
-        sys.exit(1)
+        print(f"Warning: Could not find the data of sound '{clean_name}', "
+              "skipping this entry.", file=sys.stderr)
+        return raw_wav
 
     # Slice off extra bytes past the data chunk payload
     cleaned_wav = bytearray(raw_wav[:true_end_offset])
@@ -69,13 +71,15 @@ def fix_wav_buffer(raw_wav: bytes) -> bytes:
 
 def process_dat(input_dat_path: str, output_dat_path: str):
     if not os.path.isfile(input_dat_path):
-        print(f"Error: Input file '{input_dat_path}' not found.", file=sys.stderr)
+        print(f"Error: Input file '{input_dat_path}' not found.",
+              file=sys.stderr)
         sys.exit(1)
 
     file_size = os.path.getsize(input_dat_path)
 
     if file_size < 4 + ARCHIVE_HEADER_SIZE:
-        print("Error: File is too small to be a valid sound archive.", file=sys.stderr)
+        print("Error: File is too small to be a valid sound archive.",
+              file=sys.stderr)
         sys.exit(1)
 
     with open(input_dat_path, 'rb') as f:
@@ -85,7 +89,8 @@ def process_dat(input_dat_path: str, output_dat_path: str):
 
         # Safety check.
         if header_position >= (file_size - ARCHIVE_HEADER_SIZE):
-            print(f"Error: Header position {header_position} out of bounds.", file=sys.stderr)
+            print(f"Error: Header position {header_position} out of bounds.",
+                  file=sys.stderr)
             sys.exit(1)
 
         # 2. Read Archive Header values (using exact offsets 50 and 58)
@@ -102,7 +107,8 @@ def process_dat(input_dat_path: str, output_dat_path: str):
         # 3. Read Table Entries
         sound_file_count = table_length // SOUND_ENTRY_SIZE
         print(f"Header located at offset {header_position}.")
-        print(f"Table located at offset {table_position} (Length: {table_length} bytes, Count: {sound_file_count}).")
+        print(f"Table located at offset {table_position} (Length: "
+              f"{table_length} bytes, Count: {sound_file_count}).")
         print("-" * 70)
 
         entries_to_process = []
@@ -134,14 +140,15 @@ def process_dat(input_dat_path: str, output_dat_path: str):
             f.seek(pos)
             raw_sample = f.read(length)
 
-            fixed_sample = fix_wav_buffer(raw_sample)
+            fixed_sample = fix_wav_buffer(raw_sample, clean_name)
 
             new_pos = len(new_audio_payload)
             new_length = len(fixed_sample)
 
             trimmed_bytes = length - new_length
             status = f"Trimmed {trimmed_bytes:>4} bytes" if trimmed_bytes > 0 else "Clean"
-            print(f"[{idx:03d}/{sound_file_count}] {clean_name:<18} | Old Len: {length:<6} -> New Len: {new_length:<6} | {status}")
+            print(f"[{idx:03d}/{sound_file_count}] {clean_name:<18} | "
+                  f"Old Len: {length:<6} -> New Len: {new_length:<6} | {status}")
 
             new_audio_payload.extend(fixed_sample)
             repack_entries.append((orig_entry, new_pos, new_length))
