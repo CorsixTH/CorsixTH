@@ -266,13 +266,13 @@ tooltip = {
 
   customise_window = { --todo kanskje en opprensking her. få det mer konsekvent.
     movies = "Slår av alle videoer i spillet",
-    paused = " I Theme Hospital ville spilleren kun få lov til å bruke toppmenyen om spillet var satt til pause. Dette er standard i CorsixTH også, men ved å slå denne på, så er alle bevegelser lov",
+    allow_user_actions_while_paused = " I Theme Hospital ville spilleren kun få lov til å bruke toppmenyen om spillet var satt til pause. Dette er standard i CorsixTH også, men ved å slå denne på, så er alle bevegelser lov",
     back = "Gå tilbake",
-    intro = "Slå av eller på introfilmen. Den andre filminnstillingen må også være på for å spille av introfilmen hver ganger du starter spillet",
+    play_intro = "Slå av eller på introfilmen. Den andre filminnstillingen må også være på for å spille av introfilmen hver ganger du starter spillet",
     volume = "Om en fysisk volum ned-knapp åpner Medisinboka i spillet, så kan du slå på denne for å endre hurtigtasten til Shift+C",
-    fractured_bones = "På grunn av mangelfulle animasjoner har vi stilt standardoppsettet til å slå av kvinnelige benbrudd. For å tillate dette, slå denne av",
-    aliens = "På grunn av manglende animasjoner har vi slått av pasienter med Utenomjordisk DNA slik at de bare kan komme fra nödstilfeller. For å tillate pasienter med Utenomjordisk DNA å gå til sykehuset, slå denne av.",
-    average_contents = "Om du önsker at spillet skal huske hvilke objekter du vanligvis kjöper til hver rom (gjennomsnittlig), så bör du slå på denne",
+    disable_fractured_bones_females = "På grunn av mangelfulle animasjoner har vi stilt standardoppsettet til å slå av kvinnelige benbrudd. For å tillate dette, slå denne av",
+    alien_dna_only_by_emergency = "På grunn av manglende animasjoner har vi slått av pasienter med Utenomjordisk DNA slik at de bare kan komme fra nödstilfeller. For å tillate pasienter med Utenomjordisk DNA å gå til sykehuset, slå denne av.",
+    enable_avg_contents = "Om du önsker at spillet skal huske hvilke objekter du vanligvis kjöper til hver rom (gjennomsnittlig), så bör du slå på denne",
   },
 
   new_game_window = {
@@ -937,13 +937,13 @@ customise_window = {
   option_on = "På",
   option_off = "Av",
   back = "Tilbake",
-  paused = "Bygging i pause",
-  intro = "Spill introvideo",
+  allow_user_actions_while_paused = "Bygging i pause",
+  play_intro = "Spill introvideo",
   volume = "Hurtigtast volumsenking",
   caption = "Egendefinerte innstillinger",
-  fractured_bones = "Benbrudd",
-  average_contents = "Gjennomsnittlig rominnhold",
-  aliens = "Utenomjordiske pasienter",
+  disable_fractured_bones_females = "Benbrudd",
+  enable_avg_contents = "Gjennomsnittlig rominnhold",
+  alien_dna_only_by_emergency = "Utenomjordiske pasienter",
 }
 
 lua_console = {
@@ -959,8 +959,8 @@ errors = {
   map_file_missing = "Kunne ikke finne kartfilen %s for dette nivået!",
   minimum_screen_size = "Vennligst sett opplösningen til minst %dx%d.",
   unavailable_screen_size = "Skjermopplösningen du valgte er ikke tilgjengelig i fullskjermmodus.",
-  alien_dna = "Merk: Det er ingen originale animasjoner for utenomjordiske pasienter som sitter, åpner eller banker på dörer osv. Utenomjordiske vil bare komme på besök om det er slått på i levelfila", --todo: bedre beskrivelse? levelfila? var "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file"
-  fractured_bones = "Merk: De originale animasjonene for kvinnelige personer med benbrudd er ikke perfekte",
+  alien_dna_only_by_emergency = "Merk: Det er ingen originale animasjoner for utenomjordiske pasienter som sitter, åpner eller banker på dörer osv. Utenomjordiske vil bare komme på besök om det er slått på i levelfila", --todo: bedre beskrivelse? levelfila? var "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file"
+  disable_fractured_bones_females = "Merk: De originale animasjonene for kvinnelige personer med benbrudd er ikke perfekte",
   no_games_to_contine = "Det fins ingen lagrede spill",
   could_not_load_campaign = "Lasting av brettet feilet: %s", -- todo: skal det kalles "brett" her?
   could_not_find_first_campaign_level = "Kunne ikke finne det förste brettet i denne karrieren: %s", -- todo: skal det hete karrieren her?
