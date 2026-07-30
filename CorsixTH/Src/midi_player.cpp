@@ -148,7 +148,7 @@ bool api_supports_virtual_port(RtMidi::Api api) {
 bool test_midi_api(RtMidi::Api api) {
   try {
     RtMidiOut test_midi(api);
-    return test_midi.getPortCount() > 0 || api_supports_virtual_port(api);
+    return test_midi.getPortCount() > 0;
   } catch (const RtMidiError&) {
     std::printf("INFO: Cannot query %s", midi_api_to_name(api).c_str());
     return false;
