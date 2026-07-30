@@ -1196,3 +1196,18 @@ function Humanoid:isObscuringArea(x1, x2, y1, y2)
   end
   return false
 end
+
+--! Check whether humanoids (staff and Inspector) are meandering
+--!return true if they currently has a meander action
+function Humanoid:isMeandering()
+  if #self.action_queue < 2 then return false end
+
+  -- "meander" action always insert "move" or "idle" action before itself.
+  -- so when humanoid "meandering" his action queue usually looks like:
+  -- [1 idle, 2 meander] or [1 walk, 2 meander].
+  local idle_is_first = self.action_queue[1].name == "idle"
+  local walk_is_first = self.action_queue[1].name == "walk"
+  local meander_is_second = self.action_queue[2].name == "meander"
+
+  return (idle_is_first or walk_is_first) and meander_is_second
+end
