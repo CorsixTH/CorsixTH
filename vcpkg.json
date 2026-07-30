@@ -6,7 +6,7 @@
         "tools"
       ]
     },
-    "sdl2",
+    "sdl3",
     "luafilesystem",
     "lpeg",
     "libpng",
@@ -18,13 +18,15 @@
        ]
     },
     {
-      "name": "sdl2-mixer",
+      "name": "sdl3-mixer",
       "features": [
-        "libmodplug",
+        "libxmp",
         "fluidsynth",
         "libflac",
         "mpg123",
-        "opusfile"
+        "opusfile",
+        "libvorbis",
+        "wavpack"
       ]
     },
     "freetype"

@@ -25,7 +25,7 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 #include <array>
 #include <memory>
@@ -279,7 +279,7 @@ class render_target {
   void set_blue_filter_active(bool bActivate);
 
   //! Fill a rectangle of the render target with a solid colour
-  bool fill_rect(uint32_t iColour, int iX, int iY, int iW, int iH);
+  bool fill_rect(uint32_t iColour, float iX, float iY, float iW, float iH);
 
   //! Sets a minimum size for the render target
   int set_minimum_size(int width, int height);
@@ -349,8 +349,8 @@ class render_target {
 
   class scoped_target_texture final : public scoped_buffer {
    public:
-    scoped_target_texture(render_target* pTarget, int iX, int iY, int iWidth,
-                          int iHeight, bool bScale);
+    scoped_target_texture(render_target* pTarget, float iX, float iY,
+                          int iWidth, int iHeight, bool bScale);
     scoped_target_texture(scoped_target_texture&) = delete;
     scoped_target_texture& operator=(scoped_target_texture&) = delete;
     ~scoped_target_texture() override;
@@ -361,12 +361,14 @@ class render_target {
    private:
     render_target* target;
     scoped_target_texture* previous_target;
-    SDL_Rect rect;
+    SDL_FRect rect;
     bool scale;
     SDL_Texture* texture{nullptr};
   };
 
   SDL_Renderer* get_renderer() const { return renderer; }
+
+  SDL_Window* get_window() const { return window; }
 
   //! Should bitmaps be scaled?
   /*!
@@ -380,11 +382,11 @@ class render_target {
                                          const uint8_t* pPixels,
                                          const ::palette* pPalette,
                                          uint32_t iSpriteFlags) const;
-  SDL_Texture* create_texture(int iWidth, int iHeight,
-                              const uint32_t* pPixels) const;
+  SDL_Texture* create_texture(int iWidth, int iHeight, const uint32_t* pPixels,
+                              uint32_t sprite_flags) const;
   void draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
-            const SDL_Rect* prcDstRect, int iFlags);
-  void draw_line(line_sequence* pLine, int iX, int iY);
+            const SDL_FRect* prcDstRect, int iFlags);
+  void draw_line(line_sequence* pLine, float iX, float iY);
 
   //! Begin drawing to an intermediate unscaled texture targeting the given
   //! location and size. The intermediate drawing will be committed once
@@ -410,7 +412,7 @@ class render_target {
   SDL_Renderer* renderer{nullptr};
   scoped_target_texture* current_target{nullptr};
   std::unique_ptr<scoped_target_texture> zoom_buffer;
-  SDL_PixelFormat* pixel_format{nullptr};
+  const SDL_PixelFormatDetails* pixel_format{nullptr};
   bool blue_filter_active{false};
   cursor* game_cursor{nullptr};
   double bitmap_scale_factor{1.0};  ///< Bitmap scale factor.
@@ -428,11 +430,6 @@ class render_target {
 
   bool scale_bitmaps{false};  ///< Whether bitmaps should be scaled.
   bool supports_target_textures{};
-
-  // In SDL2 < 2.0.4 there is an issue with the y coordinates used for
-  // ClipRects in opengl and opengles.
-  // see: https://bugzilla.libsdl.org/show_bug.cgi?id=2700
-  bool apply_opengl_clip_fix{};
   bool direct_zoom{};
 };
 
@@ -468,7 +465,7 @@ class raw_bitmap {
       @param iX Destination x position.
       @param iY Destination y position.
   */
-  void draw(render_target* pCanvas, int iX, int iY);
+  void draw(render_target* pCanvas, float iX, float iY);
 
   //! Draw part of the image at a given position at the given canvas.
   /*!
@@ -480,7 +477,7 @@ class raw_bitmap {
       @param iWidth Width of the part to display.
       @param iHeight Height of the part to display.
   */
-  void draw(render_target* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
+  void draw(render_target* pCanvas, float iX, float iY, int iSrcX, int iSrcY,
             int iWidth, int iHeight);
 
  private:
@@ -611,7 +608,7 @@ class sprite_sheet {
       @param effect The animation effect to apply to the sprite.
       @param scale_factor How much to scale the sprite when drawing.
   */
-  void draw_sprite(render_target* pCanvas, size_t iSprite, int iX, int iY,
+  void draw_sprite(render_target* pCanvas, size_t iSprite, float iX, float iY,
                    uint32_t iFlags, size_t effect_ticks = 0u,
                    animation_effect effect = animation_effect::none,
                    int scale_factor = 1);
@@ -701,7 +698,7 @@ class cursor {
 
   void use(render_target* pTarget);
 
-  static bool set_position(render_target* pTarget, int iX, int iY);
+  static bool set_position(render_target* pTarget, float iX, float iY);
 
   void draw(render_target* pCanvas, int iX, int iY);
 
@@ -722,7 +719,7 @@ class line_sequence {
 
   void set_width(double lineWidth);
 
-  void draw(render_target* pCanvas, int iX, int iY);
+  void draw(render_target* pCanvas, float iX, float iY);
 
   void set_colour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA = 255);
 

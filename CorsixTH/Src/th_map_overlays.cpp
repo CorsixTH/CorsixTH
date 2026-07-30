@@ -53,8 +53,8 @@ void map_overlay_pair::set_second(map_overlay* pOverlay, bool bTakeOwnership) {
   owns_second = bTakeOwnership;
 }
 
-void map_overlay_pair::draw_cell(render_target* pCanvas, int iCanvasX,
-                                 int iCanvasY, const level_map* pMap,
+void map_overlay_pair::draw_cell(render_target* pCanvas, float iCanvasX,
+                                 float iCanvasY, const level_map* pMap,
                                  int iNodeX, int iNodeY) {
   if (first) {
     first->draw_cell(pCanvas, iCanvasX, iCanvasY, pMap, iNodeX, iNodeY);
@@ -68,8 +68,8 @@ void map_text_overlay::set_background_sprite(size_t iSprite) {
   background_sprite = iSprite;
 }
 
-void map_text_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
-                                 int iCanvasY, const level_map* pMap,
+void map_text_overlay::draw_cell(render_target* pCanvas, float iCanvasX,
+                                 float iCanvasY, const level_map* pMap,
                                  int iNodeX, int iNodeY) {
   if (sprites && background_sprite) {
     sprites->draw_sprite(pCanvas, background_sprite, iCanvasX, iCanvasY, 0);
@@ -91,8 +91,8 @@ map_typical_overlay::~map_typical_overlay() {
   set_font(nullptr, false);
 }
 
-void map_flags_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
-                                  int iCanvasY, const level_map* pMap,
+void map_flags_overlay::draw_cell(render_target* pCanvas, float iCanvasX,
+                                  float iCanvasY, const level_map* pMap,
                                   int iNodeX, int iNodeY) {
   const map_tile* pNode = pMap->get_tile(iNodeX, iNodeY);
   if (!pNode) {
@@ -155,8 +155,8 @@ constexpr std::array<parcel_edge_sprite, 4> parcel_edges{
 
 }  // namespace
 
-void map_parcels_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
-                                    int iCanvasY, const level_map* pMap,
+void map_parcels_overlay::draw_cell(render_target* pCanvas, float iCanvasX,
+                                    float iCanvasY, const level_map* pMap,
                                     int iNodeX, int iNodeY) {
   const map_tile* pNode = pMap->get_tile(iNodeX, iNodeY);
   if (!pNode) {
@@ -176,11 +176,12 @@ void map_parcels_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
   }
 }
 
-void map_typical_overlay::draw_text(render_target* pCanvas, int iX, int iY,
+void map_typical_overlay::draw_text(render_target* pCanvas, float iX, float iY,
                                     const std::string_view str) {
   text_layout oArea = font->get_text_dimensions(str.data(), str.length());
   font->draw_text(pCanvas, str.data(), str.length(),
-                  iX + (64 - oArea.end_x) / 2, iY + (32 - oArea.end_y) / 2);
+                  iX + static_cast<float>(64 - oArea.end_x) / 2,
+                  iY + static_cast<float>(32 - oArea.end_y) / 2);
 }
 
 void map_typical_overlay::set_sprites(sprite_sheet* pSheet,

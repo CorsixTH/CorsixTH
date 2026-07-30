@@ -181,11 +181,7 @@ function Audio:init()
 
   self:initMidiPlayer()
 
-  local status, err = SDL.audio.init(
-    self.app.config.audio_frequency,
-    self.app.config.audio_channels,
-    self.app.config.audio_buffer_size,
-    self.app:findSoundFont())
+  local status, err = SDL.audio.init(self.app:findSoundFont())
   if not status then
     print("Notice: Audio system could not initialise (SDL error: " .. tostring(err) .. ")")
     self.not_loaded = true

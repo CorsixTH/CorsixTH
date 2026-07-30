@@ -158,9 +158,6 @@ local function new_config_defaults()
     enable_screen_shake = true,
     enable_announcer_subtitles = false,
     autosave_frequency = 1,
-    audio_frequency = 22050,
-    audio_channels = 2,
-    audio_buffer_size = 2048,
     midi_api = nil,
     midi_port = nil,
     midi_sysex_master_volume = false,
@@ -642,17 +639,6 @@ param(config_values, 'midi_port', '[[Midi Through:Midi Through Port-0 14:0]]') .
 
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
--------------------------------------------------------------------------------
--- Audio playback settings.
--- These can be commented out to use the default values from the game binary.
--- Note: On some platforms, these settings may not effect MIDI playback - only
--- sound effects and music audio. If you are experiencing poor audio playback,
--- then try doubling the buffer size.
---]=] .. '\n' ..
-param(config_values, 'audio_frequency') ..
-param(config_values, 'audio_channels') ..
-param(config_values, 'audio_buffer_size') .. [=[
-
 -------------------------------------------------------------------------------
 -- Advanced MIDI settings.
 -- These settings can enable better MIDI playback on some systems but may also

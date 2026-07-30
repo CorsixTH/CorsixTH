@@ -31,15 +31,13 @@ local TH = require("TH")
 
 local Announcer = _G["Announcer"]
 
+-- Factor to multiply pinch_zoom scale by, bigger number results in
+-- faster zoom changes
+local pinch_zoom_sensitivity = 1
+
 -- The maximum distance to shake the screen from the origin during an
 -- earthquake with full intensity.
 local shake_screen_max_movement = 50 --pixels
-
--- 0.002 is about 5 pixels on a 1920 pixel display
-local multigesture_pinch_sensitivity_factor = 0.002
--- combined with the above, multiplying by 100 means minimum current_momentum.z for any detected pinch
--- will result in a call to adjustZoom in the onTick method
-local multigesture_pinch_amplification_factor = 100
 
 -- Speed of scrolling when using keys. Pixels / tick (18ms)
 -- This scroll speed is further adjusted by the configured scroll_speed
@@ -91,7 +89,6 @@ function GameUI:GameUI(app, local_hospital, map_editor)
 
   self.momentum = app.config.scrolling_momentum
   self.current_momentum = {x = 0.0, y = 0.0, z = 0.0}
-  self.multigesturemove = {x = 0.0, y = 0.0}
 
   self.recallpositions = {}
 
@@ -741,46 +738,36 @@ function GameUI:onMouseUp(code, x, y)
   return UI.onMouseUp(self, code, x, y)
 end
 
---! Process SDL_MULTIGESTURE events for zoom and map move functionality
---!param numfingers (integer) number of touch points, received from the SDL event
---!  This is still more info about param x.
---!param dTheta (float) rotation in radians of the gesture from the SDL event
---!param dDist (float) magnitude of pinch from the SDL event
---!param x (float) normalised x value of the gesture
---!param y (float) normalised y value of the gesture
+--! Process SDL_EVENT_PINCH_BEGIN.
+--!
 --!return (boolean) event processed indicator
-function GameUI:onMultiGesture(numfingers, dTheta, dDist, x, y)
-  -- only deal with 2 finger events for now
-  if numfingers == 2 then
-    -- calculate magnitude of pinch
-    local mag = math.abs(dDist)
-    if mag > multigesture_pinch_sensitivity_factor then
-      -- pinch action - constant needs to be tweaked
-      self.current_momentum.z = self.current_momentum.z + dDist * multigesture_pinch_amplification_factor
-      return true
-    else
-      -- scroll map
-      local normx = self.app.config.width * x
-      local normy = self.app.config.height * y
-
-      if self.multigesturemove.x == 0.0 then
-        self.multigesturemove.x = normx
-        self.multigesturemove.y = normy
-      else
-        local dx = normx - self.multigesturemove.x
-        local dy = normy - self.multigesturemove.y
-        self.current_momentum.x = self.current_momentum.x - dx
-        self.current_momentum.y = self.current_momentum.y - dy
-        self.multigesturemove.x = normx
-        self.multigesturemove.y = normy
-      end
-      return true
-    end
-  end
-  return false
+function UI:onPinchBegin()
+  self.current_momentum.z = 0
 end
 
-function GameUI:onMouseWheel(x, y)
+--! Process SDL_EVENT_PINCH_UPDATE.
+--!
+--!return (boolean) event processed indicator
+--!param scale (number) The scale change since the last SDL_EVENT_PINCH_UPDATE.
+--!                     Scale < 1 is "zoom out". Scale > 1 is "zoom in"
+function UI:onPinchUpdate(scale)
+  self.current_momentum.z = self.current_momentum.z + (scale - 1) * pinch_zoom_sensitivity
+  return true
+end
+
+--! Process SDL_EVENT_PINCH_END.
+--!
+--!return (boolean) event processed indicator
+function UI:onPinchEnd()
+end
+
+--! Process SDL_EVENT_MOUSE_WHEEL
+--!
+--!param x (number) the amount scrolled horizontally (+x = right, -x = left)
+--!param y (number) the amount scrolled vertically (+y = up/away, -y = down/towards)
+--!param touch (boolean) whether the mouse wheel is from a touch gesture
+--!param flipped (boolean) whether the axis are flipped such as MacOS natural scrolling
+function GameUI:onMouseWheel(x, y, touch, flipped)
   local inside_window = false
   if self.windows then
     for _, window in ipairs(self.windows) do
@@ -792,6 +779,9 @@ function GameUI:onMouseWheel(x, y)
     end
   end
   if not inside_window then
+    -- Consider making touch scrolling pan instead of zoom, you can pinch to zoom
+    -- on a touch pad.
+
     -- Apply momentum to the zoom
     if math.abs(self.current_momentum.z) < 12 then
       self.current_momentum.z = self.current_momentum.z + y
@@ -849,14 +839,10 @@ function GameUI:onTick()
       self.current_momentum.y = self.current_momentum.y * self.momentum
       self:scrollMap(self.current_momentum.x, self.current_momentum.y)
     end
-    if math.abs(self.current_momentum.z) < 0.2 then
-      self.current_momentum.z = 0.0
-    else
-      self.current_momentum.z = self.current_momentum.z * self.momentum
+    if math.abs(self.current_momentum.z) > 0.2 then
       self.app.world:adjustZoom(self.current_momentum.z)
     end
-    self.multigesturemove.x = 0.0
-    self.multigesturemove.y = 0.0
+    self.current_momentum.z = self.current_momentum.z * self.momentum
   end
   if self.tick_scroll_amount or self.tick_scroll_amount_mouse then
     -- The scroll amount per tick gradually increases as the duration of the
@@ -1307,9 +1293,6 @@ function GameUI:afterLoad(old, new)
   if old < 115 then
     self.shake_screen_intensity = 0
   end
-  if old < 122 then
-    self.multigesturemove = {x = 0.0, y = 0.0}
-  end
   if old < 129 then
     self.recallpositions = {}
   end
@@ -1320,6 +1303,9 @@ function GameUI:afterLoad(old, new)
   if old < 240 then
     self.subtitles = Subtitles(self)
     self:addWindow(self.subtitles)
+  end
+  if old < 264 then
+    self.multigesturemove = nil
   end
 
   self.announcer.playing = false

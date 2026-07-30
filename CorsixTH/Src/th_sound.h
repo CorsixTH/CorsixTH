@@ -24,12 +24,50 @@ SOFTWARE.
 #define CORSIX_TH_TH_SOUND_H_
 #include "config.h"
 
-#include <SDL_mixer.h>
-#include <SDL_rwops.h>
+#include <SDL3/SDL.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 #include <array>
+#include <memory>
 #include <mutex>
 #include <vector>
+
+namespace th::sound {
+class sdl_mixer {
+ public:
+  static constexpr int number_of_fx_channels = 32;
+
+  sdl_mixer();
+  ~sdl_mixer();
+  MIX_Track* get_music_track() const;
+  MIX_Track* get_movie_track() const;
+  MIX_Track* get_fx_track(int channel) const;
+
+  /**
+   * Get the MIX_Mixer out of this wrapper class
+   *
+   * Be careful how you use the resulting mixer and what you create with it.
+   * Do not create anything that has a lifetime tied to the mixer that may
+   * live longer than this class.
+   *
+   * Do not store the MIX_Mixer.
+   */
+  MIX_Mixer* get_mixer() const;
+
+ private:
+  MIX_Track* music_track;
+  MIX_Track* movie_track;
+  std::array<MIX_Track*, number_of_fx_channels> fx_channels;
+  MIX_Mixer* mixer;
+};
+
+using mixer_ptr = std::unique_ptr<sdl_mixer>;
+
+bool init();
+void quit();
+sdl_mixer* get_mixer();
+
+}  // namespace th::sound
 
 //! Utility class for accessing Theme Hospital's SOUND-0.DAT
 class sound_archive {
@@ -45,11 +83,11 @@ class sound_archive {
   //! Gets the duration (in milliseconds) of the sound at a given index
   size_t get_sound_duration(size_t iIndex);
 
-  //! Opens the sound at a given index into an SDL_RWops structure
+  //! Opens the sound at a given index into an SDL_IOStream structure
   /*!
       The caller is responsible for closing/freeing the result.
   */
-  SDL_RWops* load_sound(size_t iIndex);
+  SDL_IOStream* load_sound(size_t index);
 
  private:
   struct sound_dat_sound_info {
@@ -85,8 +123,6 @@ class sound_player {
   //! \param loops The number of times to play the sound, -1 for 'practically'
   //!              infinite.
   //! \return The sound handle
-  //! \see <a
-  //! href="https://wiki.libsdl.org/SDL2_mixer/Mix_PlayChannel">Mix_PlayChannel</a>
   uint32_t play(size_t iIndex, double dVolume, int loops);
 
   //! Plays the sound effect in the sound_archive with the given index with
@@ -148,31 +184,36 @@ class sound_player {
   int reserve_channel();
 
   //! Releases a previously reserved SDL_mixer channel.
-  void release_channel(int iChannel);
+  void release_channel(int channel);
 
  private:
-  static sound_player* singleton;
-  static void on_channel_finished(int iChannel);
+  struct channel_data {
+    int channel;
+    uint32_t handle;
+  };
 
-  uint32_t play_raw(size_t iIndex, int iVolume, int loops);
+  static sound_player* singleton;
+  static void on_channel_finished(void* userdata, MIX_Track*);
+
+  uint32_t play_raw(size_t iIndex, float volume, int loops);
 
   //! Returns the channel that the handle is playing on or -1 if it is not
   //! playing.
   int playing_channel_for_handle(uint32_t handle);
 
-  Mix_Chunk** sounds;
+  MIX_Audio** sounds;
   size_t sound_count;
   int camera_x;
   int camera_y;
   double camera_radius;
   double master_volume;
   double sound_effect_volume;
-  int positionless_volume;
+  float positionless_volume;
   bool sound_effects_enabled;
 
   //! Each channel holds the handle of the track playing on it or null_handle
   //! if it is free.
-  std::array<uint32_t, number_of_channels> channels{};
+  std::array<channel_data, number_of_channels> channels{};
   uint32_t next_playing_track_handle{0};
 
   /// Mutex to protect access to channels array and next_playing_track_handle.

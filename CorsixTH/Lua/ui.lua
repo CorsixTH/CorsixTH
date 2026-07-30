@@ -1019,10 +1019,24 @@ function UI:onMouseMove(x, y, dx, dy)
   return repaint
 end
 
---! Process SDL_MULTIGESTURE events.
+--! Process SDL_PINCH_BEGIN events.
 --!
 --!return (boolean) event processed indicator
-function UI:onMultiGesture()
+function UI:onPinchBegin()
+  return false
+end
+
+--! Process SDL_PINCH_UPDATE events.
+--!
+--!return (boolean) event processed indicator
+function UI:onPinchUpdate()
+  return false
+end
+
+--! Process SDL_PINCH_END events.
+--!
+--!return (boolean) event processed indicator
+function UI:onPinchEnd()
   return false
 end
 

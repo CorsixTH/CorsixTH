@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 263 -- 0.70.0 post bump buffer
+local SAVEGAME_VERSION = 264 -- SDL 3
 
 class "App"
 
@@ -61,7 +61,9 @@ function App:App()
     music_over = self.onMusicOver,
     movie_over = self.onMovieOver,
     sound_over = self.onSoundOver,
-    multigesture = self.onMultiGesture
+    pinch_begin = self.onPinchBegin,
+    pinch_update = self.onPinchUpdate,
+    pinch_end = self.onPinchEnd,
   }
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
@@ -141,7 +143,7 @@ function App:init()
   self:initScreenshotsDir()
 
   -- Create the window
-  if not SDL.init("video", "timer", "audio") then
+  if not SDL.init("video", "audio") then
     return false, "Cannot initialise SDL"
   end
 
@@ -744,6 +746,14 @@ end
 --! app.config.capture_mouse
 function App:setCaptureMouse()
   self.video:setCaptureMouse(self.config.capture_mouse)
+end
+
+function App:startTextInput()
+  SDL.startTextInput(self.video)
+end
+
+function App:stopTextInput()
+  SDL.stopTextInput(self.video)
 end
 
 --! Loads the first level of the specified campaign and prepares the world
@@ -1392,8 +1402,16 @@ function App:onSoundOver(...)
   return self.audio:onSoundPlayed(...)
 end
 
-function App:onMultiGesture(...)
-  return self.ui:onMultiGesture(...)
+function App:onPinchBegin(...)
+  return self.ui:onPinchUpdate(...)
+end
+
+function App:onPinchUpdate(...)
+  return self.ui:onPinchUpdate(...)
+end
+
+function App:onPinchEnd(...)
+  return self.ui:onPinchEnd(...)
 end
 
 function App:isThemeHospitalPath(path)

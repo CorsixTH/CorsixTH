@@ -24,7 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_TH_GFX_FONT_H_
 #include "config.h"
 
-#include <SDL_render.h>
+#include <SDL3/SDL.h>
 #include <ft2build.h>  // IWYU pragma: keep
 // IWYU pragma: no_include "freetype/config/ftheader.h"
 
@@ -110,7 +110,7 @@ class font {
           rectangle for the drawn text.
   */
   virtual void draw_text(render_target* pCanvas, const char* sMessage,
-                         size_t iMessageLength, int iX, int iY) const = 0;
+                         size_t iMessageLength, float iX, float iY) const = 0;
 
   //! Draw a single line of text, splitting it at word boundaries
   /*!
@@ -132,7 +132,7 @@ class font {
   */
   virtual text_layout draw_text_wrapped(
       render_target* pCanvas, const char* sMessage, size_t iMessageLength,
-      int iX, int iY, int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+      float iX, float iY, int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
       text_alignment eAlign = text_alignment::left) const = 0;
 };
 
@@ -167,11 +167,11 @@ class bitmap_font final : public font {
                                   int iMaxWidth = INT_MAX) const override;
 
   void draw_text(render_target* pCanvas, const char* sMessage,
-                 size_t iMessageLength, int iX, int iY) const override;
+                 size_t iMessageLength, float iX, float iY) const override;
 
   text_layout draw_text_wrapped(
       render_target* pCanvas, const char* sMessage, size_t iMessageLength,
-      int iX, int iY, int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+      float iX, float iY, int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
       text_alignment eAlign = text_alignment::left) const override;
 
  private:
@@ -256,11 +256,11 @@ class freetype_font final : public font {
                                   int iMaxWidth = INT_MAX) const override;
 
   void draw_text(render_target* pCanvas, const char* sMessage,
-                 size_t iMessageLength, int iX, int iY) const override;
+                 size_t iMessageLength, float iX, float iY) const override;
 
   text_layout draw_text_wrapped(
       render_target* pCanvas, const char* sMessage, size_t iMessageLength,
-      int iX, int iY, int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+      float iX, float iY, int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
       text_alignment eAlign = text_alignment::left) const override;
 
  private:
@@ -363,8 +363,8 @@ class freetype_font final : public font {
       @param iX The X position at which to draw the texture on the canvas.
       @param iY The Y position at which to draw the texture on the canvas.
   */
-  void draw_texture(render_target* pCanvas, cached_text* pCacheEntry, int iX,
-                    int iY) const;
+  void draw_texture(render_target* pCanvas, cached_text* pCacheEntry, float iX,
+                    float iY) const;
 };
 
 #endif  // CORSIX_TH_TH_GFX_FONT_H_

@@ -323,7 +323,7 @@ class animation_manager {
       @param scale_factor
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
-                  const ::layers& oLayers, int iX, int iY, uint32_t iFlags,
+                  const ::layers& oLayers, float iX, float iY, uint32_t iFlags,
                   animation_effect patient_effect = animation_effect::none,
                   size_t patient_effect_offset = 0, int scale_factor = 1) const;
 
