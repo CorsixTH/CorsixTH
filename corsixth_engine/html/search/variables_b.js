@@ -7,5 +7,6 @@ var searchData=
   ['nodes_4',['nodes',['../classpathfinder.html#a2aaa22b5c1de58d9f111779f3ead87eb',1,'pathfinder']]],
   ['north_5',['north',['../structanimation__start__frames.html#a05d3ded037549c56aaf91218cb61cfc1',1,'animation_start_frames']]],
   ['null_5fhandle_6',['null_handle',['../classsound__player.html#a1c342da818dd8503c82e1b3d85f01cf9',1,'sound_player']]],
-  ['number_5fof_5fchannels_7',['number_of_channels',['../classsound__player.html#a438428902d26b83ddb016410ee3cfbfc',1,'sound_player']]]
+  ['number_5fof_5fchannels_7',['number_of_channels',['../classsound__player.html#a438428902d26b83ddb016410ee3cfbfc',1,'sound_player']]],
+  ['number_5fof_5ffx_5fchannels_8',['number_of_fx_channels',['../classth_1_1sound_1_1sdl__mixer.html#acc209b98ba68842bb97ebf9e3abe5589',1,'th::sound::sdl_mixer']]]
 ];

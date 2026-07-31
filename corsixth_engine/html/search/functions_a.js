@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['mainloop_0',['mainloop',['../sdl__core_8h.html#a669e100c8d1448417d121d40c711fff6',1,'mainloop(lua_State *L):&#160;sdl_core.cpp'],['../sdl__core_8cpp.html#a669e100c8d1448417d121d40c711fff6',1,'mainloop(lua_State *L):&#160;sdl_core.cpp']]],
+  ['mainloop_0',['mainloop',['../sdl__core_8cpp.html#a669e100c8d1448417d121d40c711fff6',1,'mainloop(lua_State *L):&#160;sdl_core.cpp'],['../sdl__core_8h.html#a669e100c8d1448417d121d40c711fff6',1,'mainloop(lua_State *L):&#160;sdl_core.cpp']]],
   ['map_5fcolor_5fchannel_1',['map_color_channel',['../th__lua__ui_8h.html#a5778705921e3b5b335430b19e4a628a0',1,'th_lua_ui.h']]],
   ['map_5fcolour_2',['map_colour',['../classrender__target.html#a7731a5cb35fe9252408865c32faa186e',1,'render_target']]],
   ['map_5foverlay_5fpair_3',['map_overlay_pair',['../classmap__overlay__pair.html#a30949d5518d4133d480ccf2c29a74f89',1,'map_overlay_pair']]],
-  ['map_5fscanline_5fiterator_4',['map_scanline_iterator',['../classmap__scanline__iterator.html#a1af7e9b26cf271efc2324322b3091406',1,'map_scanline_iterator::map_scanline_iterator(const map_tile_iterator &amp;itrNodes, map_scanline_iterator_direction eDirection, int iXOffset=0, int iYOffset=0)'],['../classmap__scanline__iterator.html#a80f70e2913609809c46a9f4fd2621969',1,'map_scanline_iterator::map_scanline_iterator()']]],
+  ['map_5fscanline_5fiterator_4',['map_scanline_iterator',['../classmap__scanline__iterator.html#a80f70e2913609809c46a9f4fd2621969',1,'map_scanline_iterator::map_scanline_iterator()'],['../classmap__scanline__iterator.html#a1af7e9b26cf271efc2324322b3091406',1,'map_scanline_iterator::map_scanline_iterator(const map_tile_iterator &amp;itrNodes, map_scanline_iterator_direction eDirection, int iXOffset=0, int iYOffset=0)']]],
   ['map_5ftext_5foverlay_5',['map_text_overlay',['../classmap__text__overlay.html#a52a90ee7e1ea3f0c70b7c1bbe2e411ef',1,'map_text_overlay']]],
   ['map_5ftile_6',['map_tile',['../structmap__tile.html#abcba216a009a9e8136fa60b948df933b',1,'map_tile']]],
   ['map_5ftile_5fiterator_7',['map_tile_iterator',['../classmap__tile__iterator.html#a686454d2594dd8300850c18e465c26b3',1,'map_tile_iterator::map_tile_iterator()=delete'],['../classmap__tile__iterator.html#a7ed4b160f5df60bc9be1a9042f518619',1,'map_tile_iterator::map_tile_iterator(const level_map *pMap, int iScreenX, int iScreenY, int iWidth, int iHeight, map_scanline_iterator_direction eScanlineDirection=map_scanline_iterator_direction::forward)']]],

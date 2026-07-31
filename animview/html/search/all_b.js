@@ -18,8 +18,8 @@ var searchData=
   ['m_5fiwidth_15',['m_iWidth',['../classBitmap.html#ac4db4503340cd81398a4095d2483c377',1,'Bitmap']]],
   ['m_5flstsearchresults_16',['m_lstSearchResults',['../classfrmMain.html#ac0eba2ff6769220aed5fdfa0a6f3b4fa',1,'frmMain']]],
   ['m_5fmsklayers_17',['m_mskLayers',['../classfrmMain.html#a650e8434d63c64056f5ee8634d8d1b97',1,'frmMain']]],
-  ['m_5foanims_18',['m_oanims',['../classfrmSprites.html#a3ffca0556051a654688f92ac3cfb8403',1,'frmSprites::m_oAnims'],['../classfrmMain.html#a88059e3be6a4a33810e0e0379795d765',1,'frmMain::m_oAnims']]],
-  ['m_5fpanframe_19',['m_panframe',['../classfrmMain.html#ad7f771195b284025d8a72e0348ff1d76',1,'frmMain::m_panFrame'],['../classfrmSprites.html#a8721a800b527cd25a1af7a9c1923c456',1,'frmSprites::m_panFrame']]],
+  ['m_5foanims_18',['m_oAnims',['../classfrmMain.html#a88059e3be6a4a33810e0e0379795d765',1,'frmMain::m_oAnims'],['../classfrmSprites.html#a3ffca0556051a654688f92ac3cfb8403',1,'frmSprites::m_oAnims']]],
+  ['m_5fpanframe_19',['m_panFrame',['../classfrmMain.html#ad7f771195b284025d8a72e0348ff1d76',1,'frmMain::m_panFrame'],['../classfrmSprites.html#a8721a800b527cd25a1af7a9c1923c456',1,'frmSprites::m_panFrame']]],
   ['m_5fpdata_20',['m_pData',['../classBitmap.html#a6133849c6b01fa6fbd04d3699ba98e33',1,'Bitmap']]],
   ['m_5fsspritepath_21',['m_sSpritePath',['../classTHAnimations.html#a1f49989dd2b9a3a08e1dd8f9d54a8aa6',1,'THAnimations']]],
   ['m_5ftmranimate_22',['m_tmrAnimate',['../classfrmMain.html#a38344030885ba2d1b6dc127020e14a4c',1,'frmMain']]],
@@ -36,5 +36,5 @@ var searchData=
   ['m_5ftxtthpath_33',['m_txtTHPath',['../classfrmMain.html#a05ec440cd9253d47c0bbdde6dc7371e5',1,'frmMain']]],
   ['m_5fvsprites_34',['m_vSprites',['../classfrmSprites.html#a6ffb3c86eeb5ad7f1745aaa23fc49496',1,'frmSprites']]],
   ['markduplicates_35',['markDuplicates',['../classTHAnimations.html#aba837af1d5290e13d75682aacea60cda',1,'THAnimations']]],
-  ['myvscrolled_36',['myvscrolled',['../classMyVScrolled.html#a9f571a6a3d39e8194f0aa2079b0a6f50',1,'MyVScrolled::MyVScrolled()'],['../classMyVScrolled.html',1,'MyVScrolled']]]
+  ['myvscrolled_36',['MyVScrolled',['../classMyVScrolled.html',1,'MyVScrolled'],['../classMyVScrolled.html#a9f571a6a3d39e8194f0aa2079b0a6f50',1,'MyVScrolled::MyVScrolled()']]]
 ];

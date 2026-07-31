@@ -1,0 +1,24 @@
+var sdl__core_8cpp =
+[
+    [ "dispatch_active", "sdl__core_8cpp.html#ab00a9baba729bc6b07d00b7c2c3639e7", null ],
+    [ "dispatch_buttondown", "sdl__core_8cpp.html#a0c1ba0650cb38185c5ca75c53775ec62", null ],
+    [ "dispatch_buttonup", "sdl__core_8cpp.html#a02d66a40f90587c9d448eb52fe308472", null ],
+    [ "dispatch_callback", "sdl__core_8cpp.html#a7e48733c8a088372e5df7ab22f5a5c9f", null ],
+    [ "dispatch_frame", "sdl__core_8cpp.html#a26f5fc12e41f8e2fd590bfaf5ce8ad68", null ],
+    [ "dispatch_keydown", "sdl__core_8cpp.html#ad314baf2f1ba7563911ea939b5481e54", null ],
+    [ "dispatch_keyup", "sdl__core_8cpp.html#abeaf61f231a135b6f22851c89c5c88ed", null ],
+    [ "dispatch_motion", "sdl__core_8cpp.html#ac4dc8b4f20203a29e360fde02af27bfe", null ],
+    [ "dispatch_mousewheel", "sdl__core_8cpp.html#a732b5e2b4de1c4e39bf07e4c405aeb9d", null ],
+    [ "dispatch_movie_over", "sdl__core_8cpp.html#a1cc1a0d692a7eab3f8112e766f46fc16", null ],
+    [ "dispatch_music_over", "sdl__core_8cpp.html#ad5ba98201634a7cd9e5c6e9589edc22f", null ],
+    [ "dispatch_pinch_begin", "sdl__core_8cpp.html#adb035f22ba88a8e0182bcbde1bdd6f0f", null ],
+    [ "dispatch_pinch_end", "sdl__core_8cpp.html#af7c8c2ca49e883c59b5e7d950d8cc547", null ],
+    [ "dispatch_pinch_update", "sdl__core_8cpp.html#a382b8746d6302a4b03354b57bef4f9c8", null ],
+    [ "dispatch_sound_over", "sdl__core_8cpp.html#a1fdd0fcb13ee71914a612a254c3a32ae", null ],
+    [ "dispatch_textediting", "sdl__core_8cpp.html#ae7605c23a73336777a643e43a00e2aa5", null ],
+    [ "dispatch_textinput", "sdl__core_8cpp.html#a7aa077ded605ed2ec8a474b09645ff68", null ],
+    [ "dispatch_timer", "sdl__core_8cpp.html#a0358534c90ffc0652e2cdf38022d6905", null ],
+    [ "dispatch_window_resize", "sdl__core_8cpp.html#ad9e89db56bc72c4576d8b581fa0ad646", null ],
+    [ "luaopen_sdl", "sdl__core_8cpp.html#ae3e21cbeca8c1a3b181e91bc5c358931", null ],
+    [ "mainloop", "sdl__core_8cpp.html#a669e100c8d1448417d121d40c711fff6", null ]
+];

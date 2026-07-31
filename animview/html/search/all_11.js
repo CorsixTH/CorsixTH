@@ -8,7 +8,7 @@ var searchData=
   ['th_5felement_5ft_5',['th_element_t',['../structth__element__t.html',1,'']]],
   ['th_5fframe_5ft_6',['th_frame_t',['../structth__frame__t.html',1,'']]],
   ['th_5fsprite_5ft_7',['th_sprite_t',['../structth__sprite__t.html',1,'']]],
-  ['thanimations_8',['thanimations',['../classTHAnimations.html',1,'THAnimations'],['../classTHAnimations.html#aa3ceae18792693941ba0391e8dc9fe8e',1,'THAnimations::THAnimations()']]],
+  ['thanimations_8',['THAnimations',['../classTHAnimations.html',1,'THAnimations'],['../classTHAnimations.html#aa3ceae18792693941ba0391e8dc9fe8e',1,'THAnimations::THAnimations()']]],
   ['themehospitalanimviewapp_9',['ThemeHospitalAnimViewApp',['../classThemeHospitalAnimViewApp.html',1,'']]],
-  ['thlayermask_10',['thlayermask',['../classTHLayerMask.html',1,'THLayerMask'],['../classTHLayerMask.html#a778a1f1df80ff5878afad7ecfdce316c',1,'THLayerMask::THLayerMask()']]]
+  ['thlayermask_10',['THLayerMask',['../classTHLayerMask.html',1,'THLayerMask'],['../classTHLayerMask.html#a778a1f1df80ff5878afad7ecfdce316c',1,'THLayerMask::THLayerMask()']]]
 ];

@@ -1,0 +1,26 @@
+var xmi2mid_8h =
+[
+    [ "midi_token", "structmidi__token.html", "structmidi__token" ],
+    [ "midi_token_list", "xmi2mid_8h.html#a3ce2bb77118b5ee213650b45582c049f", null ],
+    [ "operator<", "xmi2mid_8h.html#a3f24ed1197d2d22d2ea8d6497f817abd", null ],
+    [ "transcode_xmi_to_midi", "xmi2mid_8h.html#aa7b66b866f8af87e72fc03aa0105b0d7", null ],
+    [ "xmi_to_midi_token_list", "xmi2mid_8h.html#acfc64fdf6d3ff9d3ddf2e2b355ccf159", null ],
+    [ "midi_channel_code_all_notes_off", "xmi2mid_8h.html#a999b915d826bf826c5c791c34f52c300", null ],
+    [ "midi_channel_code_all_sound_off", "xmi2mid_8h.html#a2303911802665a747076110ef02c5fdd", null ],
+    [ "midi_channel_code_reset_controllers", "xmi2mid_8h.html#a71cb09a1ae6950628aa46d5209e04475", null ],
+    [ "midi_control_code_volume", "xmi2mid_8h.html#a39841ec42f1f4c31fdf4fd9c8cce7910", null ],
+    [ "midi_event_channel_pressure", "xmi2mid_8h.html#aa6f89e9cb8d7493446f54556a23b5a8e", null ],
+    [ "midi_event_control_change", "xmi2mid_8h.html#a883dd46252077001f195947a85e96264", null ],
+    [ "midi_event_end_of_sysex", "xmi2mid_8h.html#ace963ec967b7205b3fbeaca21b82e413", null ],
+    [ "midi_event_meta", "xmi2mid_8h.html#ab488803ef48dcc7c68bfd090336f343e", null ],
+    [ "midi_event_note_off", "xmi2mid_8h.html#a1d85c6195bd967fdd96790a0412d7160", null ],
+    [ "midi_event_note_on", "xmi2mid_8h.html#a3681911af5a831765724481513ca03d8", null ],
+    [ "midi_event_pitch_bend", "xmi2mid_8h.html#adac778982a1fe54c0066906a5e06c503", null ],
+    [ "midi_event_poly_key_pressure", "xmi2mid_8h.html#af2dd3909e82d3c17a696a2ff2b5b3805", null ],
+    [ "midi_event_program_change", "xmi2mid_8h.html#a0537d6444da2f74e968afe46b66b5e27", null ],
+    [ "midi_event_sysex", "xmi2mid_8h.html#ab3dccd5ce67524ac17a87937d10fde00", null ],
+    [ "midi_meta_event_end_of_track", "xmi2mid_8h.html#aaea3ac8e675a247f5d5de78f8a998a6e", null ],
+    [ "midi_meta_event_set_tempo", "xmi2mid_8h.html#ab71f92ea8a4a90c85efd0af21478b717", null ],
+    [ "xmi_microseconds_per_tick", "xmi2mid_8h.html#a3d46d59bca3e24e21d966b1f2179a977", null ],
+    [ "xmi_ticks_per_microsecond", "xmi2mid_8h.html#a881b5e7c1428717c25c0fe36221c38f4", null ]
+];
