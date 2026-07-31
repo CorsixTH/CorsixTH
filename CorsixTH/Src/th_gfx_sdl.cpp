@@ -371,8 +371,6 @@ render_target::scoped_target_texture::scoped_target_texture(
   }
 
   // Clear the new texture to transparent/black.
-  SDL_SetRenderLogicalPresentation(target->renderer, rect.w, rect.h,
-                                   SDL_LOGICAL_PRESENTATION_LETTERBOX);
   SDL_SetRenderDrawColor(target->renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
   SDL_RenderClear(target->renderer);
   target->current_target = this;
@@ -399,11 +397,6 @@ render_target::scoped_target_texture::~scoped_target_texture() {
     std::fprintf(stderr, "scoped_target_texture destructor error: %s",
                  SDL_GetError());
   }
-  SDL_SetRenderLogicalPresentation(
-      target->renderer,
-      previous_target ? previous_target->rect.w : target->width,
-      previous_target ? previous_target->rect.h : target->height,
-      SDL_LOGICAL_PRESENTATION_LETTERBOX);
   SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
   target->current_target = previous_target;
   if (scale) {
