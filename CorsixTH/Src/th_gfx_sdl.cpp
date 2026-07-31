@@ -458,8 +458,11 @@ render_target::render_target(const render_target_creation_params& params)
   SDL_DestroyTexture(testTexture);
 
   SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
-  SDL_SetRenderLogicalPresentation(renderer, width, height,
-                                   SDL_LOGICAL_PRESENTATION_LETTERBOX);
+
+  SDL_RendererLogicalPresentation rlp = params.fullscreen
+                                            ? SDL_LOGICAL_PRESENTATION_LETTERBOX
+                                            : SDL_LOGICAL_PRESENTATION_DISABLED;
+  SDL_SetRenderLogicalPresentation(renderer, width, height, rlp);
 
   // Workaround for https://github.com/libsdl-org/SDL/issues/13920 on MacOS
   SDL_Event evt;
@@ -496,11 +499,10 @@ bool render_target::update(const render_target_creation_params& params) {
 
   if (bUpdateSize || bIsFullscreen != params.fullscreen) {
     SDL_SetWindowSize(window, width, height);
-  }
-
-  if (bUpdateSize) {
-    SDL_SetRenderLogicalPresentation(renderer, width, height,
-                                     SDL_LOGICAL_PRESENTATION_LETTERBOX);
+    SDL_RendererLogicalPresentation rlp =
+        params.fullscreen ? SDL_LOGICAL_PRESENTATION_LETTERBOX
+                          : SDL_LOGICAL_PRESENTATION_DISABLED;
+    SDL_SetRenderLogicalPresentation(renderer, width, height, rlp);
   }
 
   int old_min_width;
