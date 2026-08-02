@@ -43,7 +43,7 @@ local MoviePlayer = _G["MoviePlayer"]
 local calculateSize = function(me)
   -- calculate target dimensions
   local x, y, w, h, scale
-  local screen_w, screen_h = me.app.config.width, me.app.config.height
+  local screen_w, screen_h = me.app.video:getRenderSize()
   local native_w = me.moviePlayer:getNativeWidth()
   local native_h = me.moviePlayer:getNativeHeight()
   if native_w == 320 and native_h == 200 then

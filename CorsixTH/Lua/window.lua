@@ -82,8 +82,11 @@ function Window:setPosition(x, y)
   self.x_original = x
   self.y_original = y
   -- Convert x and y to absolute pixel positions with regard to top/left
-  local s = self.apply_ui_scale and TheApp.config.ui_scale or 1
-  local w, h = TheApp.config.width / s, TheApp.config.height / s
+  local w, h = TheApp.video:getRenderSize()
+  if self.apply_ui_scale then
+    w = w / TheApp.config.ui_scale
+    h = h / TheApp.config.ui_scale
+  end
   if x < 0 then
     x = math.ceil(w - self.width + x)
   elseif x < 1 then
@@ -1813,7 +1816,7 @@ function Window:beginDrag(x, y)
     sx = sx - x
     sy = sy - y
     -- Calculate best positioning
-    local w, h = TheApp.config.width, TheApp.config.height
+    local w, h = TheApp.video:getRenderSize()
     if TheApp.key_modifiers.ctrl then
       local px = round(sx / (w - self.width * s), 0.1)
       local py = round(sy / (h - self.height * s), 0.1)

@@ -44,9 +44,10 @@ end
 
 function UIFullscreen:onChangeResolution()
   local app = self.ui.app
+  local sw, sh = app.video:getRenderSize()
   local s = app.config.ui_scale
-  local sw = app.config.width / s
-  local sh = app.config.height / s
+  sw = sw / s
+  sh = sh / s
   if sw > self.width or sh > self.height then
     if not self.border_sprites then
       self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
