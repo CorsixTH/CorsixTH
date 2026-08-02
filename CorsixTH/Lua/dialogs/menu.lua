@@ -36,7 +36,7 @@ function UIMenuBar:UIMenuBar(ui, map_editor)
   self.on_top = true
   self.x = 0
   self.y = 0
-  self.width = app.config.width
+  self.width = app.video:getRenderDimensions()
   self.height = 16
   self.visible = false
   local selected_label_color = { red = 40, green = 40, blue = 250 }
@@ -103,7 +103,7 @@ function UIMenuBar:onTick()
 end
 
 function UIMenuBar:onChangeResolution()
-  self.width = self.ui.app.config.width
+  self.width = TheApp.video:getRenderDimensions()
 end
 
 function UIMenuBar:onChangeLanguage()

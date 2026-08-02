@@ -34,7 +34,8 @@ function UITipOfTheDay:UITipOfTheDay(ui)
   local app = ui.app
   -- If the application window is not wide enough,
   --  the tips window is narrower and taller to fit beside the main menu
-  local width = math.min(380, math.floor(app.config.width / 2) - 150)
+  local scr_w = app.video:getRenderDimensions()
+  local width = math.min(380, math.floor(scr_w / 2) - 150)
   local height = width > 290 and 110 or 210
   self:UIResizable(ui, width, height, col_bg)
 

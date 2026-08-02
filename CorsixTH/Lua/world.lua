@@ -184,7 +184,7 @@ function World:setUI(ui)
 end
 
 function World:adjustZoom(delta)
-  local scr_w = self.ui.app.config.width
+  local scr_w = TheApp.video:getRenderDimensions()
   local factor = self.ui.app.config.zoom_speed
   local virtual_width = scr_w / (self.ui.zoom_factor or 1)
 

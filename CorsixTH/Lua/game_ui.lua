@@ -48,7 +48,7 @@ local key_scroll_speed = 10
 --!param local_hospital Hospital to display
 --!param map_editor (bool) Whether the map is editable.
 function GameUI:GameUI(app, local_hospital, map_editor)
-  self:UI(app)
+  self:UI(app, false)
   self.app = app
 
   self.hospital = local_hospital
@@ -69,8 +69,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.subtitles = Subtitles(self)
   self:addWindow(self.subtitles)
 
-  local scr_w = app.config.width
-  local scr_h = app.config.height
+  local scr_w, scr_h = app.video:getRenderDimensions()
   self.visible_diamond = self:makeVisibleDiamond(scr_w, scr_h)
   if self.visible_diamond.w <= 0 or self.visible_diamond.h <= 0 then
     -- For a standard 128x128 map, screen size would have to be in the
@@ -196,8 +195,7 @@ end
 --! makeVisibleDiamond. This function calculates the minimum zoom_factor that
 --! would be allowed.
 function GameUI:calculateMinimumZoom()
-  local scr_w = self.app.config.width
-  local scr_h = self.app.config.height
+  local scr_w, scr_h = TheApp.video:getRenderDimensions()
   local map_h = self.app.map.height
 
   -- Minimum width:  0 = 32 * map_h - (scr_h/factor) - (scr_w/factor) / 2,
@@ -219,8 +217,7 @@ function GameUI:setZoom(factor)
     factor = 1
   end
 
-  local scr_w = self.app.config.width
-  local scr_h = self.app.config.height
+  local scr_w, scr_h = TheApp.video:getRenderDimensions()
   local new_diamond = self:makeVisibleDiamond(scr_w / factor, scr_h / factor)
   if new_diamond.w < 0 or new_diamond.h < 0 then
     return false
@@ -240,7 +237,7 @@ end
 
 function GameUI:draw(canvas)
   local app = self.app
-  local config = app.config
+  local scr_w, scr_h = canvas:getRenderDimensions()
   if self.map_editor or not self.in_visible_diamond then
     canvas:fillBlack()
   end
@@ -250,11 +247,11 @@ function GameUI:draw(canvas)
   local dy = self.screen_offset_y +
       math.floor((0.5 - math.random()) * self.shake_screen_intensity * shake_screen_max_movement * 2)
   if canvas:scale(zoom) then
-    app.map:draw(canvas, dx, dy, math.ceil(config.width / zoom), math.ceil(config.height / zoom), 0, 0)
+    app.map:draw(canvas, dx, dy, math.ceil(scr_w / zoom), math.ceil(scr_h / zoom), 0, 0)
     canvas:scale(1)
   else
     self:setZoom(1)
-    app.map:draw(canvas, dx, dy, config.width, config.height, 0, 0)
+    app.map:draw(canvas, dx, dy, scr_w, scr_h, 0, 0)
   end
   Window.draw(self, canvas, 0, 0) -- NB: not calling UI.draw on purpose
   self:drawTooltip(canvas)
@@ -270,8 +267,7 @@ function GameUI:onChangeResolution()
     self:setZoom(minimum_zoom)
   end
   -- Recalculate scrolling bounds
-  local scr_w = self.app.config.width
-  local scr_h = self.app.config.height
+  local scr_w, scr_h = TheApp.video:getRenderDimensions()
   self.visible_diamond = self:makeVisibleDiamond(scr_w / self.zoom_factor, scr_h / self.zoom_factor)
   self:scrollMap(0, 0)
 
@@ -611,21 +607,22 @@ function GameUI:onMouseMove(x, y, dx, dy)
     -- In windowed mode, a reasonable size is needed, though not too large.
     scroll_region_size = 8
   end
+  local scr_w, scr_h = TheApp.video:getRenderDimensions()
   if not self.app.config.prevent_edge_scrolling and
       (x < scroll_region_size or y < scroll_region_size or
-       x >= self.app.config.width - scroll_region_size or
-       y >= self.app.config.height - scroll_region_size) then
+       x >= scr_w - scroll_region_size or
+       y >= scr_h - scroll_region_size) then
     local scroll_dx = 0
     local scroll_dy = 0
     local scroll_power = 7
     if x < scroll_region_size then
       scroll_dx = -scroll_power
-    elseif x >= self.app.config.width - scroll_region_size then
+    elseif x >= scr_w - scroll_region_size then
       scroll_dx = scroll_power
     end
     if y < scroll_region_size then
       scroll_dy = -scroll_power
-    elseif y >= self.app.config.height - scroll_region_size then
+    elseif y >= scr_h - scroll_region_size then
       scroll_dy = scroll_power
     end
 
@@ -903,9 +900,9 @@ local abs, sqrt_5, floor = math.abs, math.sqrt(1 / 5), math.floor
 
 function GameUI:scrollMapTo(x, y)
   local zoom = 2 * self.zoom_factor
-  local config = self.app.config
-  return self:scrollMap(x - self.screen_offset_x - config.width / zoom,
-                        y - self.screen_offset_y - config.height / zoom)
+  local scr_w, scr_h = TheApp.video:getRenderDimensions()
+  return self:scrollMap(x - self.screen_offset_x - scr_w / zoom,
+                        y - self.screen_offset_y - scr_h / zoom)
 end
 
 function GameUI.limitPointToDiamond(dx, dy, visible_diamond, do_limit)
@@ -1227,7 +1224,8 @@ end
 --! Converts centre of screen coordinates to world tile positions and stores the values for later recall
 -- param index (integer) Position in recallpositions table
 function GameUI:setMapRecallPosition(index)
-  local cx, cy = self:ScreenToWorld(self.app.config.width / 2, self.app.config.height / 2)
+  local scr_w, scr_h = TheApp.video:getRenderDimensions()
+  local cx, cy = self:ScreenToWorld(scr_w / 2, scr_h / 2)
   self.recallpositions[index] = {x = cx, y = cy, z = self.zoom_factor}
 end
 
@@ -1235,8 +1233,9 @@ end
 -- param index (integer) Position in recallpositions table
 function GameUI:recallMapPosition(index)
   if self.recallpositions[index] ~= nil then
+    local scr_w, scr_h = TheApp.video:getRenderDimensions()
     local sx, sy = self.app.map:WorldToScreen(self.recallpositions[index].x,  self.recallpositions[index].y)
-    local dx, dy = self.app.map:ScreenToWorld(self.app.config.width / 2, self.app.config.height / 2)
+    local dx, dy = self.app.map:ScreenToWorld(scr_w / 2, scr_h / 2)
     self:setZoom(self.recallpositions[index].z)
     self:scrollMapTo(sx + dx, sy + dy)
   end

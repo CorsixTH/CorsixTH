@@ -299,11 +299,17 @@ class render_target {
   //! Restore the previous clip rectangle.
   void pop_clip_rect();
 
-  //! Get the width of the render target (in pixels)
+  //! Get the width of the render viewport (in pixels)
   int get_width() const;
 
-  //! Get the height of the render target (in pixels)
+  //! Get the height of the render viewport (in pixels)
   int get_height() const;
+
+  //! Get the width of the render target adjusted by the current scale factor
+  int get_scaled_width() const;
+
+  //! Get the height of the render target adjusted by the current scale factor
+  int get_scaled_height() const;
 
   //! Enable optimisations for non-overlapping draws
   void start_nonoverlapping_draws();
@@ -417,8 +423,6 @@ class render_target {
   cursor* game_cursor{nullptr};
   double bitmap_scale_factor{1.0};  ///< Bitmap scale factor.
   double global_scale_factor{1.0};  ///< Global scale factor.
-  int width{-1};
-  int height{-1};
   int cursor_x{};
   int cursor_y{};
 
