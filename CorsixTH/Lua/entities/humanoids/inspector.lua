@@ -66,6 +66,24 @@ function Inspector:announce()
   self.world.ui:playAnnouncement("vip008.wav", AnnouncementPriority.High)
 end
 
+function Inspector:tickDay()
+  if self.going_home then return end
+  if self.waiting then -- Aware that there is no desk where it used to be
+    self:setNextAction(SeekReceptionAction())
+    if self.action_queue[2] and self.action_queue[2].name == "seek_reception" then return end
+    -- Still no desk in the hospital
+    self.waiting = self.waiting - 1
+    if self.waiting == 0 then -- There was not a reception desk for five days
+      self.hospital.epidemic:handleInspectorArrival() -- Deliver results anyway
+      self:goHome()
+    end
+  elseif self.action_queue[2] and self.action_queue[2].name == "meander" then
+    -- Already spent one of their five waiting days meandering in the hospital, wait four more
+    self.waiting = 4
+  -- Else walking to a desk that existed at time of spawn
+  end
+end
+
 function Inspector:afterLoad(old, new)
   if old < 213 then
     self.mood_marker = 2
