@@ -873,7 +873,6 @@ adviser = {
     no_doctor_no_gp_office = "Deberias construir una Consulta y contratar un doctor en algun momento!",
     no_gp_office = "No has construido una Consulta donde tus doctores puedan diagnosticar a los pacientes!",
     money_low = "Te estás quedando sin dinero.",
-    
   },
   cheats = {
     th_cheat = "¡Felicidades, has desbloqueado los trucos!",
@@ -1085,8 +1084,6 @@ options_window = {
   autosave_frequency = "Frecuencia de autoguardado",
   hotkey = "Atajos de Teclado",
   check_for_updates = "Buscar Actualizaciones",
- 
-   
   sound = "Sonido",
 }
 
@@ -1153,8 +1150,6 @@ audio_window = {
     jukebox = "Reproductor",
     back = "Atrás",
     soundfont_location_caption = "Elegir SoundFont (%1%)",
-  
- 
 }
 
 tooltip.audio_window = {
