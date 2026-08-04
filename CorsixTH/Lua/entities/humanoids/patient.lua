@@ -524,13 +524,12 @@ function Patient:goHome(reason, disease_id)
   elseif reason == "kicked" then
     self:setMood("exit", "activate")
     hosp:updateNotCuredCounts(self, reason)
-
   elseif reason == "over_priced" then
-    self:setMood("sad_money", "activate")
-    self:changeAttribute("happiness", -0.5)
+      self:setMood("sad_money", "activate")
+      self:changeAttribute("happiness", -0.5)
 
     local treatment_name = self.hospital.disease_casebook[disease_id].disease.name
-    self.hospital:giveAdvice({_A.warnings.patient_not_paying:format(treatment_name)})
+    hosp:warnPatientNotPaying(treatment_name)
     hosp:updateNotCuredCounts(self, reason)
     self:clearDynamicInfo()
     self:setDynamicInfo('text', {"", _S.dynamic_info.patient.actions.prices_too_high})
@@ -597,7 +596,6 @@ end
 
 function Patient:tick()
   Humanoid.tick(self)
-
   if self.set_to_die and
     not self:getRoom() and
     not self:getCurrentAction().is_leaving and
