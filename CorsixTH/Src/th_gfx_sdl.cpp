@@ -487,6 +487,7 @@ render_target::render_target(const render_target_creation_params& params)
                         params.height);
   SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER,
                         SDL_WINDOW_RESIZABLE);
+  SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true);
   SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN,
                          params.fullscreen);
   window = SDL_CreateWindowWithProperties(winProps);
@@ -520,6 +521,9 @@ render_target::render_target(const render_target_creation_params& params)
   SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
 
   apply_letterbox(renderer, params.fullscreen, params.width, params.height);
+
+  SDL_ShowWindow(window);
+  SDL_SyncWindow(window);
 
   // Workaround for https://github.com/libsdl-org/SDL/issues/13920 on MacOS
   SDL_Event evt;
