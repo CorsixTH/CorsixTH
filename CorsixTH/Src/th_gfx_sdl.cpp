@@ -565,6 +565,8 @@ bool render_target::update(const render_target_creation_params& params) {
     SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
   }
 
+  SDL_SyncWindow(window);
+
   return true;
 }
 
