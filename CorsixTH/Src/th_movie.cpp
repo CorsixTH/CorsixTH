@@ -409,6 +409,11 @@ void movie_player::unload() {
 
   swr_free(&audio_resample_context);
 
+  th::sound::sdl_mixer* mixer = th::sound::get_mixer();
+  if (mixer) {
+    MIX_SetTrackCookedCallback(mixer->get_movie_track(), nullptr, nullptr);
+  }
+
   if (format_context) {
     avformat_close_input(&format_context);
   }
@@ -441,8 +446,13 @@ void movie_player::play_audio() {
     return;
   }
 
+  th::sound::sdl_mixer* mixer = th::sound::get_mixer();
+  if (!mixer) {
+    return;
+  }
+
   SDL_AudioSpec audio_spec;
-  if (!MIX_GetMixerFormat(th::sound::get_mixer()->get_mixer(), &audio_spec)) {
+  if (!MIX_GetMixerFormat(mixer->get_mixer(), &audio_spec)) {
     std::fprintf(stderr, "Problem getting mixer format for movie playback: %s",
                  SDL_GetError());
     return;
@@ -505,11 +515,11 @@ void movie_player::play_audio() {
       nullptr);
 #endif
   swr_init(audio_resample_context);
-  empty_audio_chunk.reset(MIX_LoadRawAudioNoCopy(
-      th::sound::get_mixer()->get_mixer(), audio_chunk_buffer.data(),
-      audio_chunk_buffer.size(), &audio_spec, false));
+  empty_audio_chunk.reset(
+      MIX_LoadRawAudioNoCopy(mixer->get_mixer(), audio_chunk_buffer.data(),
+                             audio_chunk_buffer.size(), &audio_spec, false));
 
-  MIX_Track* track = th::sound::get_mixer()->get_movie_track();
+  MIX_Track* track = mixer->get_movie_track();
 
   MIX_SetTrackAudio(track, empty_audio_chunk.get());
 
