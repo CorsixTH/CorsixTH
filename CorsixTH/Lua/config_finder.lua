@@ -126,6 +126,7 @@ local function new_config_defaults()
     width = 800,
     height = 600,
     ui_scale = 1,
+    cursor_scale = 1,
     language = [[English]],
     audio = true,
     free_build_mode = false,
@@ -315,7 +316,8 @@ param(config_values, 'fullscreen') ..
 '\n' ..
 param(config_values, 'width') ..
 param(config_values, 'height') ..
-param(config_values, 'ui_scale') .. [=[
+param(config_values, 'ui_scale') ..
+param(config_values, 'cursor_scale') .. [=[
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:

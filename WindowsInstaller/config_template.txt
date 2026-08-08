@@ -25,6 +25,7 @@ fullscreen = SCREEN_FULLSCREEN
 width = SCREEN_SIZE_WIDTH
 height = SCREEN_SIZE_HEIGHT
 ui_scale = 1
+cursor_scale = 1
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
