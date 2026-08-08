@@ -60,9 +60,10 @@ function UIBottomPanel:UIBottomPanel(ui)
 end
 
 function UIBottomPanel:machineMenuButtonExists()
-  local config = self.ui.app.config
+  local config = TheApp.config
+  local scr_w = TheApp.video:getRenderDimensions()
   -- Minimal screen width for a case where machine menu button exists is 676 pixels
-  if config.width / TheApp.config.ui_scale > 676 and config.machine_menu_button then
+  if scr_w > 676 * config.ui_scale and config.machine_menu_button then
     return true
   end
 

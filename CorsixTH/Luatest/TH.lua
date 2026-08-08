@@ -50,6 +50,9 @@ TheApp = {
     setPatientMarker = function(...) end,
     setStaffMarker = function(...) end,
   },
+  video = {
+    getRenderDimensions = function() return 0, 0 end
+  }
 }
 
 local sub_S = setmetatable({key = ''}, {

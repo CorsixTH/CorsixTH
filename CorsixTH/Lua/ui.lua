@@ -300,10 +300,9 @@ function UI:drawTooltip(canvas)
 end
 
 function UI:draw(canvas)
-  local app = self.app
   if self.background then
     local bg_w, bg_h = self.background_width, self.background_height
-    local screen_w, screen_h = app.config.width, app.config.height
+    local screen_w, screen_h = canvas:getRenderDimensions()
     local factor = math.max(screen_w / bg_w, screen_h / bg_h)
     if canvas:scale(factor, "bitmap") or canvas:scale(factor) then
       self.background:draw(canvas, math.floor((screen_w - bg_w * factor) / 2), math.floor((screen_h - bg_h * factor) / 2))
@@ -547,6 +546,11 @@ function UI:setMenuBackground()
 end
 
 function UI:onChangeResolution()
+  -- Redraw cursor
+  local cursor = self.cursor
+  self.cursor = nil
+  self:setCursor(cursor)
+
   -- If we are in the main menu (== no world), reselect the background
   if not self.app.world then
     self:setMenuBackground()
@@ -604,17 +608,16 @@ function UI:changeResolution(width, height)
     return false
   end
 
-  self.app.config.width = width
-  self.app.config.height = height
+  -- If changing the aspect ratio when fullscreen the window is not resized and
+  -- the pixel size doesn't change so we need to handle updating the config and
+  -- the render dimensions ourselves.
+  if self.app.config.fullscreen then
+    self.app.config.width = width
+    self.app.config.height = height
+    self.app:saveConfig()
 
-  -- Redraw cursor
-  local cursor = self.cursor
-  self.cursor = nil
-  self:setCursor(cursor)
-  -- Save new setting in config
-  self.app:saveConfig()
-
-  self:onChangeResolution()
+    self:onChangeResolution()
+  end
 
   return true
 end
@@ -701,11 +704,6 @@ function UI:toggleFullscreen()
     -- Revert fullscreen mode modifications
     toggleMode(index)
   end
-
-  -- Redraw cursor
-  local cursor = self.cursor
-  self.cursor = nil
-  self:setCursor(cursor)
 
   if success then
     -- Save new setting in config
@@ -886,8 +884,9 @@ function UI:onMouseDown(code, x, y)
     self:setCursor(self.down_cursor)
     repaint = true
   end
+  local scr_w, scr_h = self.app.video:getRenderDimensions()
   self.down_count = self.down_count + 1
-  if x >= 3 and y >= 3 and x < self.app.config.width - 3 and y < self.app.config.height - 3 then
+  if x >= 3 and y >= 3 and x < scr_w - 3 and y < scr_h - 3 then
     self.buttons_down["mouse_"..button] = true
   end
 
@@ -989,10 +988,26 @@ end
 --! Window has been resized by the user
 --!param width (integer) New window width
 --!param height (integer) New window height
-function UI:onWindowResize(width, height)
+function UI:onWindowResized(width, height)
   if not self.app.config.fullscreen then
-    self:changeResolution(width, height)
+    self.app.config.width = width
+    self.app.config.height = height
+
+    -- Save new setting in config
+    self.app:saveConfig()
   end
+end
+
+--! Render area size has been changed
+-- This could be because the user resized the window or updated the size
+-- through settings, or on a system where the window size is independent of the
+-- render size the window could have been dragged from a HiDPI monitor to a
+-- standard DPI monitor.
+--
+--!param width (integer) New renderer width
+--!param height (integer) New renderer height
+function UI:onWindowPixelSizeChanged(width, height)
+  self:onChangeResolution()
 end
 
 function UI:onMouseMove(x, y, dx, dy)
@@ -1146,6 +1161,7 @@ end
 function UI:afterLoad(old, new)
   -- Get rid of old key handlers from save file.
   self.key_handlers = {}
+
   if old < 5 then
     self.editing_allowed = true
   end
