@@ -124,7 +124,7 @@ function UICustomCampaign:buttonClicked(num)
   local item = self.items[num + self.scrollbar.value - 1]
   self.chosen_item = item
   if item.description then
-    local _, _, rows = self.label_font:sizeOf(item.description, details_width * TheApp.config.ui_scale)
+    local _, _, rows = self.label_font:sizeOf(item.description, details_width * TheApp.gfx:getUIScale())
     self.details_scrollbar:setRange(1, rows, 13, 1)
   else
     self.details_scrollbar:setRange(1, 13, 13, 1)
@@ -140,7 +140,7 @@ end
 
 function UICustomCampaign:draw(canvas, x, y)
   UIMenuList.draw(self, canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = self.x * s + x, self.y * s + y
 
   if self.chosen_item and self.chosen_item.name then

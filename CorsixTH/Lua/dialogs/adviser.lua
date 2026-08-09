@@ -235,7 +235,7 @@ end
 function UIAdviser:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = x + self.x * s, y + self.y * s
 
   self.th:setScaleFactor(s)
@@ -260,7 +260,7 @@ function UIAdviser:onMouseDown(button, x, y)
   if self.phase == 0 or self.phase == 4 then
     return Window.onMouseDown(self, button, x, y)
   end
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
 
   -- Normal operation outside the adviser bounds
   if x + self.balloon_width * s < 128 * s or x > 200 * s or

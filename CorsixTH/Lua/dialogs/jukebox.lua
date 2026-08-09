@@ -156,7 +156,7 @@ function UIJukebox:draw(canvas, x, y)
   for i, info in ipairs(TheApp.audio.background_playlist) do
     self.track_buttons[i]:setToggleState(not info.enabled)
   end
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   Window.draw(self, canvas, x, y)
   x, y = self.x * s + x, self.y * s + y
 

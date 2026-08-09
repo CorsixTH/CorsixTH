@@ -49,7 +49,7 @@ end
 
 function Subtitles:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
 
   if not self.queue:isEmpty() then
     if TheApp.config.enable_announcer_subtitles then

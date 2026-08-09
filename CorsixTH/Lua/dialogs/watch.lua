@@ -75,7 +75,7 @@ function UIWatch:UIWatch(ui, count_type)
 
     self:addPanel(end_sprite, 4, 0)
     .custom_draw = --[[persistable:epidemic_timer_button]] function(panel, canvas, x, y)
-      local s = TheApp.config.ui_scale
+      local s = TheApp.gfx:getUIScale()
       x = x + panel.x * s
       y = y + panel.y * s
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
@@ -99,7 +99,7 @@ function UIWatch:UIWatch(ui, count_type)
   else
     self:addPanel(timer_sprite, 0, 28):setTooltip(tooltips[count_type])
     .custom_draw = --[[persistable:open_hospital_timer_button]] function(panel, canvas, x, y)
-      local s = TheApp.config.ui_scale
+      local s = TheApp.gfx:getUIScale()
       x = x + panel.x * s
       y = y + panel.y * s
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
@@ -127,7 +127,7 @@ function UIWatch:onCountdownEnd()
 end
 
 function UIWatch:onMouseMove(x, y, dx, dy)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   self.active_hover = self:hoverTest(self.active_hover, x, y, 4 * s, 31 * s, 0, 29 * s)
   return Window:onMouseMove(x, y, dx, dy)
 end

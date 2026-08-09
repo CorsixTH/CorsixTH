@@ -333,7 +333,7 @@ function UIMachineMenu:draw(canvas, x, y)
   local panel_sprites = self.ui.app.gfx:loadSpriteTable("QData", "Req03V", true)
   local bitmap_sprites = self.ui.app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   local scroll_pos = self.scrollbar.value
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = self.x * s, self.y * s
   bitmap_sprites:draw(canvas, 25, x + 374 * s, y + (window_margin + 2) * s, { scaleFactor = s })
   bitmap_sprites:draw(canvas, 26, x + 407 * s, y + (window_margin + 2) * s, { scaleFactor = s })

@@ -204,7 +204,7 @@ function UICasebook:updateIcons()
 end
 
 function UICasebook:draw(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   canvas:scale(s, "bitmap")
   self.background:draw(canvas, self.x * s + x, self.y * s + y)
   canvas:scale(1, "bitmap")
@@ -347,7 +347,7 @@ function UICasebook:concentrateResearch()
 end
 
 function UICasebook:onMouseDown(button, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   -- Normal window operations if outside the disease list
   if x < 395 * s or x > 540 * s or y < 77 * s or y > 394 * s then
     return UIFullscreen.onMouseDown(self, button, x, y)

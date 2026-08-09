@@ -117,7 +117,7 @@ end
 function UIStaffRise:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   local profile = self.staff.profile
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = self.x * s + x, self.y * s + y
   local px, py = self:getStaffPosition(37, 61)
   local font = self.white_font
@@ -151,7 +151,7 @@ end
 
 function UIStaffRise:drawDoctorAttributes(canvas)
   local profile = self.staff.profile
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local x, y = self.x * s, self.y * s
 
   -- Junior / Doctor / Consultant marker

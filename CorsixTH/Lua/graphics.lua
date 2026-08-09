@@ -418,7 +418,7 @@ function Graphics:loadBuiltinFont()
     font = TH.bitmap_font()
     font:setSheet(sheet, charsets["cp437"]) -- CorsixTH only ships with a cp437 font
     font:setSeparation(1, 0)
-    font:setScaleFactor(TheApp.config.ui_scale)
+    font:setScaleFactor(self:getUIScale())
     self.load_info[font] = {self.loadBuiltinFont, self}
     self.builtin_font = font
   end
@@ -478,7 +478,7 @@ end
 
 function Graphics:onChangeUIScale()
   if self.builtin_font then
-    self.builtin_font:setScaleFactor(TheApp.config.ui_scale)
+    self.builtin_font:setScaleFactor(self:getUIScale())
   end
   -- Update / replace fonts
   self:onChangeLanguage()
@@ -629,14 +629,15 @@ function Graphics:_loadTrueTypeFont(name, sprite_table, font_options)
   local cache_key = language_font_cache_key(name, font_options)
   local cache = self.cache.language_fonts[cache_key]
   local font = cache and cache[sprite_table]
+  local s = self:getUIScale()
 
-  if font and font_options.apply_ui_scale and font_options.scale_factor ~= self.app.config.ui_scale then
-    font_options.scale_factor = self.app.config.ui_scale
+  if font and font_options.apply_ui_scale and font_options.scale_factor ~= s then
+    font_options.scale_factor = s
     font:setFontOptions(sprite_table, font_options)
     font:clearCache()
   elseif not font then
     if font_options.apply_ui_scale then
-      font_options.scale_factor = self.app.config.ui_scale
+      font_options.scale_factor = s
     end
 
     font = TH.freetype_font()
@@ -747,7 +748,7 @@ function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_b
     font:setSeparation(font_options.x_sep or 0, font_options.y_sep or 0)
     font:setSheet(sprite_table, self.th_charset)
     if font_options.apply_ui_scale then
-      font:setScaleFactor(TheApp.config.ui_scale)
+      font:setScaleFactor(self:getUIScale())
     end
   else
     font = self:_loadTrueTypeFont("unicode", sprite_table, font_options)
@@ -1062,4 +1063,8 @@ function Graphics:loadPalette(_, name)
     name = "Pref01V.pal"
   end
   return self:getPalette(name)
+end
+
+function Graphics:getUIScale()
+  return TheApp.config.ui_scale
 end

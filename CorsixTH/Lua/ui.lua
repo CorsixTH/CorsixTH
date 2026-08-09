@@ -295,7 +295,7 @@ function UI:drawTooltip(canvas)
   end
 
   if self.tooltip_font then
-    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y, 200 * TheApp.config.ui_scale)
+    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y, 200 * TheApp.gfx:getUIScale())
   end
 end
 
@@ -593,11 +593,12 @@ end
 
 function UI:changeResolution(width, height)
   self.app:prepareVideoUpdate()
+  local s = TheApp.gfx:getUIScale()
   local error_message = self.app.video:update(
       width,
       height,
-      App.MIN_WINDOW_WIDTH * TheApp.config.ui_scale,
-      App.MIN_WINDOW_HEIGHT * TheApp.config.ui_scale,
+      App.MIN_WINDOW_WIDTH * s,
+      App.MIN_WINDOW_HEIGHT * s,
       unpack(self.app.modes))
   self.app:finishVideoUpdate()
 
@@ -690,10 +691,11 @@ function UI:toggleFullscreen()
   toggleMode(index)
 
   local success = true
+  local s = TheApp.gfx:getUIScale()
   self.app:prepareVideoUpdate()
   local error_message = self.app.video:update(self.app.config.width, self.app.config.height,
-      self.app.MIN_WINDOW_WIDTH * self.app.config.ui_scale,
-      self.app.MIN_WINDOW_HEIGHT * self.app.config.ui_scale,
+      self.app.MIN_WINDOW_WIDTH * s,
+      self.app.MIN_WINDOW_HEIGHT * s,
       unpack(self.app.modes))
   self.app:finishVideoUpdate()
 

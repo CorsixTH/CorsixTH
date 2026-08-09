@@ -60,10 +60,9 @@ function UIBottomPanel:UIBottomPanel(ui)
 end
 
 function UIBottomPanel:machineMenuButtonExists()
-  local config = TheApp.config
   local scr_w = TheApp.video:getRenderSize()
   -- Minimal screen width for a case where machine menu button exists is 676 pixels
-  if scr_w > 676 * config.ui_scale and config.machine_menu_button then
+  if scr_w > 676 * TheApp.gfx:getUIScale() and TheApp.config.machine_menu_button then
     return true
   end
 
@@ -119,7 +118,7 @@ function UIBottomPanel:drawPanels()
       :setSound() -- override
       :setTooltip(_S.tooltip.toolbar.machine_menu)
       .panel_for_sprite.custom_draw = --[[persistable:machine_menu_buttons]] function(panel, canvas, x, y)
-      local s = TheApp.config.ui_scale
+      local s = TheApp.gfx:getUIScale()
       x = x + panel.x * s
       y = y + panel.y * s
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
@@ -250,7 +249,7 @@ function UIBottomPanel:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
   -- Draw balance with temporary offset in unicode languages
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = x + self.x * s, y + self.y * s
   local offset_x, offset_y = 0, 0
   if self.ui.app.gfx:drawNumbersFromUnicode() then
@@ -297,7 +296,7 @@ end
 -- x_left is the leftmost x-coordinate of the reputation meter
 -- y is the y-coordinate of the reputation meter
 function UIBottomPanel:drawReputationMeter(canvas, x_left, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local width = 65 * s -- Reputation meter width
   local step = width / (self.ui.hospital.reputation_max - self.ui.hospital.reputation_min)
   self.panel_sprites:draw(canvas, 36, x_left + math.floor(step * (self.ui.hospital.reputation - self.ui.hospital.reputation_min)), y, { scaleFactor = s })
@@ -308,7 +307,7 @@ end
 --!param x (num) coordinate
 --!param y (num) coordinate
 function UIBottomPanel:drawDynamicInfo(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   if self.world:isCurrentSpeed("Pause") then
     if not self.world.user_actions_allowed then
       -- Original pause behaviour, show pause text
@@ -413,7 +412,7 @@ function UIBottomPanel:showAdditionalButtons(x, y)
 end
 
 function UIBottomPanel:hitTest(x, y, x_offset)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   return x >= (x_offset and x_offset * s or 0) and y >= 0 and x < self.width * s and y < self.height * s
 end
 

@@ -215,7 +215,7 @@ end
 function UIFurnishCorridor:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = x + self.x * s, y + self.y * s
   self.white_font:draw(canvas, self.title_text, x + 163 * s, y + 18 * s)
   self.white_font:draw(canvas, self.price_text .. self.item_price, x + 24 * s, y + 173 * s)
@@ -237,7 +237,7 @@ end
 function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
   local repaint = Window.onMouseMove(self, x, y, dx, dy)
 
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local hover_idx = 0
   if 158 * s <= x and x < 346 * s and 34 * s <= y and y < 224 * s then
     hover_idx = math_floor((y - 15 * s) / (19 * s))

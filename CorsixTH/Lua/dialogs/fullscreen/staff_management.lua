@@ -257,7 +257,7 @@ function UIStaffManagement:selectStaff(staff)
 end
 
 function UIStaffManagement:draw(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   canvas:scale(s, "bitmap")
   self.background:draw(canvas, self.x * s + x, self.y * s + y)
   canvas:scale(1, "bitmap")
@@ -457,7 +457,7 @@ end
 
 function UIStaffManagement:onMouseDown(code, x, y)
   if code == "left" then
-    local s = TheApp.config.ui_scale
+    local s = TheApp.gfx:getUIScale()
     local inside_staff_list_area = (x > 50 * s and x < 624 * s) and (y > 82 * s and y < 351 * s)
     local inside_header_area = (x > 321 * s and x < 629 * s) and (y > 22 * s and y < 46 * s)
     if inside_staff_list_area then
@@ -495,7 +495,7 @@ function UIStaffManagement:onMouseDown(code, x, y)
 end
 
 function UIStaffManagement:onMouseMove(x, y, dx, dy)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local current_hover_id
   local inside_staff_list_area
   local header_height = 81 * s
@@ -530,7 +530,7 @@ end
 
 function UIStaffManagement:onMouseUp(code, x, y)
   if code == "left" then
-    local s = TheApp.config.ui_scale
+    local s = TheApp.gfx:getUIScale()
     local inside_view_of_the_staff_area = (x > 497 * s and x < 580 * s) and (y > 373 * s and y < 455 * s)
     if inside_view_of_the_staff_area and self.selected_staff then
       -- Hit in the view of the staff.
