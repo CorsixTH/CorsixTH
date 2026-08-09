@@ -128,6 +128,14 @@ local available_ui_scales = function()
   return res
 end
 
+local available_cursor_scales = function()
+  local res = {}
+  for s = 1, 4 do
+    res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
+  end
+  return res
+end
+
 local available_autosave_frequency = function()
   local options = {
     { text = _S.autosave_frequency.monthly, value = 1, tooltip = { _S.tooltip.autosave_frequency.monthly } },
@@ -240,6 +248,13 @@ function UIOptions:UIOptions(ui, mode)
       { bg = col.setting, active = col.setting_active },
       self.dropdownUIScale, false)
 
+  scale_label = TheApp.config.cursor_scale * 100 .. "%"
+  self.cursor_scale_panel, self.cursor_scale_button = createOptionsElement(
+      _S.options_window.cursor_scale, _S.tooltip.options_window.cursor_scale,
+      scale_label, nil,
+      { bg = col.setting, active = col.setting_active },
+      self.dropdownCursorScale, false)
+
   -- Now set the resolution button label and the ui scale button state
   self:processWindowResizeEvent()
 
@@ -250,7 +265,6 @@ function UIOptions:UIOptions(ui, mode)
       _S.options_window.capture_mouse, _S.tooltip.options_window.capture_mouse,
       capture_label, _S.tooltip.options_window.capture_mouse, { bg = col.setting },
       self.buttonMouseCapture, app.config.capture_mouse)
-
 
   -- Language
   -- Get language name in the language to normalize display.
@@ -371,6 +385,7 @@ function UIOptions:dropdownLanguage(activate)
   if activate then
     self:dropdownResolution(false)
     self:dropdownUIScale(false)
+    self:dropdownCursorScale(false)
     self:dropdownAutosaveFrequency(false)
     self.language_dropdown = UIDropdown(self.ui, self, self.language_button, self.available_languages, self.selectLanguage, col.setting_active, col.scrollbar, col.disabled)
     self:addWindow(self.language_dropdown)
@@ -396,6 +411,7 @@ function UIOptions:dropdownResolution(activate)
     self.available_resolutions = available_resolutions()
     self:dropdownLanguage(false)
     self:dropdownUIScale(false)
+    self:dropdownCursorScale(false)
     self:dropdownAutosaveFrequency(false)
     self.resolution_dropdown = UIDropdown(self.ui, self, self.resolution_button, self.available_resolutions, self.selectResolution, col.setting_active, col.scrollbar, col.disabled)
     self:addWindow(self.resolution_dropdown)
@@ -431,6 +447,7 @@ function UIOptions:dropdownUIScale(activate)
     self.available_ui_scales = available_ui_scales()
     self:dropdownLanguage(false)
     self:dropdownResolution(false)
+    self:dropdownCursorScale(false)
     self:dropdownAutosaveFrequency(false)
     self.scale_ui_dropdown = UIDropdown(self.ui, self, self.scale_ui_button, self.available_ui_scales, self.selectUIScale, col.setting_active, col.scrollbar)
     self:addWindow(self.scale_ui_dropdown)
@@ -443,7 +460,25 @@ function UIOptions:dropdownUIScale(activate)
   end
 end
 
--- Check if UI scale button should be enabled, and update the tooltip.
+function UIOptions:dropdownCursorScale(activate)
+  if activate then
+    self.available_cursor_scales = available_cursor_scales()
+    self:dropdownLanguage(false)
+    self:dropdownResolution(false)
+    self:dropdownUIScale(false)
+    self:dropdownAutosaveFrequency(false)
+    self.cursor_scale_dropdown = UIDropdown(self.ui, self, self.cursor_scale_button, self.available_cursor_scales, self.selectCursorScale, col.setting_active, col.scrollbar)
+    self:addWindow(self.cursor_scale_dropdown)
+  else
+    self.cursor_scale_button:setToggleState(false)
+    if self.cursor_scale_dropdown then
+      self.cursor_scale_dropdown:close()
+      self.cursor_scale_dropdown = nil
+    end
+  end
+end
+
+-- Check if UI scale scale button should be enabled, and update the tooltip.
 function UIOptions:updateUIScaleAvailabilityState()
   local ui_scales_available = #available_ui_scales() > 1
   self.scale_ui_button:enable(ui_scales_available)
@@ -461,11 +496,19 @@ function UIOptions:selectUIScale(number)
   TheApp.gfx:onChangeUIScale()
 end
 
+function UIOptions:selectCursorScale(number)
+  local res = self.available_cursor_scales[number]
+  TheApp.config.cursor_scale = res.scale
+  TheApp:saveConfig()
+  self.cursor_scale_panel:setLabel(res.text)
+end
+
 function UIOptions:dropdownAutosaveFrequency(activate)
   if activate then
     self:dropdownLanguage(false)
     self:dropdownResolution(false)
     self:dropdownUIScale(false)
+    self:dropdownCursorScale(false)
     self.autosave_dropdown = UIDropdown(self.ui, self, self.autosave_frequency_button, available_autosave_frequency(), self.selectAutosaveFrequency, col.setting_active, col.scrollbar)
     self:addWindow(self.autosave_dropdown)
   else
