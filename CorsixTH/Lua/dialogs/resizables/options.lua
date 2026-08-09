@@ -90,11 +90,9 @@ local available_resolutions = function()
     {text = "1920x1200 (16:10)", width = 1920, height = 1200 },
   }
 
-  local s = TheApp.config.ui_scale
   local enable_list, disable_list = {}, {}
   for _, opt in ipairs(suggested_resolutions) do
-    local enabled = App.MIN_WINDOW_WIDTH * s <= opt.width and
-        App.MIN_WINDOW_HEIGHT * s <= opt.height
+    local enabled = true -- It might be nice to filter sizes that don't fit the display
     opt.disabled = not enabled
     opt.tooltip = opt.disabled and { _S.tooltip.options_window.resolution_unavailable }
     if enabled then
@@ -119,11 +117,9 @@ end
 
 local available_ui_scales = function()
   local res = {}
-  local s = 1
-  while s * App.MIN_WINDOW_WIDTH <= TheApp.config.width and
-      s * App.MIN_WINDOW_HEIGHT <= TheApp.config.height do
+  res[1] = { text = _S.options_window.scale_ui_auto, scale = 0 }
+  for s = 1, 4 do
     res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
-    s = s + 1
   end
   return res
 end
@@ -241,7 +237,8 @@ function UIOptions:UIOptions(ui, mode)
       self.dropdownResolution, false)
 
   -- UI Scale
-  local scale_label = TheApp.config.ui_scale * 100 .. "%"
+  local scale_label = TheApp.config.ui_scale == 0 and
+      _S.options_window.scale_ui_auto or TheApp.config.ui_scale * 100 .. "%"
   self.scale_ui_panel, self.scale_ui_button = createOptionsElement(
       _S.options_window.scale_ui, _S.tooltip.options_window.scale_ui,
       scale_label, nil,
@@ -492,9 +489,8 @@ function UIOptions:selectUIScale(number)
   TheApp.config.ui_scale = res.scale
   TheApp:saveConfig()
   self.scale_ui_panel:setLabel(res.text)
-  self.ui:changeResolution(TheApp.config.width, TheApp.config.height)
-  self.ui:onChangeResolution()
   TheApp.gfx:onChangeUIScale()
+  self.ui:onChangeResolution()
 end
 
 function UIOptions:selectCursorScale(number)
@@ -681,9 +677,8 @@ end
 
 function UIResolution:ok()
   local width, height = tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0
-  local s = TheApp.config.ui_scale
-  local min_w = App.MIN_WINDOW_WIDTH * s
-  local min_h = App.MIN_WINDOW_HEIGHT * s
+  local min_w = App.MIN_WINDOW_WIDTH
+  local min_h = App.MIN_WINDOW_HEIGHT
   if width < min_w or height < min_h then
     local err = {_S.errors.minimum_screen_size:format(min_w, min_h)}
     self.ui:addWindow(UIInformation(self.ui, err))

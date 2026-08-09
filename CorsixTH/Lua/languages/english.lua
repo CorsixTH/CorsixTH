@@ -486,6 +486,7 @@ options_window = {
   fullscreen = "Fullscreen",
   resolution = "Resolution",
   scale_ui = "UI Scale",
+  scale_ui_auto = "Auto",
   cursor_scale = "Cursor Scale",
   capture_mouse = "Capture Mouse",
   right_mouse_scrolling = "Mouse Scrolling",

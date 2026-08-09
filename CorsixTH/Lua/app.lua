@@ -167,8 +167,8 @@ function App:init()
   self.video = assert(TH.surface(
       self.config.width,
       self.config.height,
-      App.MIN_WINDOW_WIDTH * self.config.ui_scale,
-      App.MIN_WINDOW_HEIGHT * self.config.ui_scale,
+      App.MIN_WINDOW_WIDTH,
+      App.MIN_WINDOW_HEIGHT,
       unpack(modes)))
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
@@ -1144,10 +1144,10 @@ function App:fixConfig()
     elseif key == "height" and (type(value) ~= "number" or value < App.MIN_WINDOW_HEIGHT) then
       self.config[key] = App.MIN_WINDOW_HEIGHT
 
-    -- For scale, clamp to integer scale >= 1
+    -- For scale, clamp to number >= 0
     elseif key == "ui_scale" then
-      if type(value) == "number" then
-        self.config[key] = math.max(math.floor(value), 1)
+      if type(value) == "number" and not self.config.fractional_scale then
+        self.config[key] = math.max(value, 0)
       else
         self.config[key] = 1
       end
@@ -1172,14 +1172,6 @@ function App:fixConfig()
       end
       self.config[key] = value
     end
-  end
-
-  -- clamp scale to suitable values for current resolution
-  if self.config.ui_scale * App.MIN_WINDOW_WIDTH > self.config.width or
-      self.config.ui_scale * App.MIN_WINDOW_HEIGHT > self.config.height then
-    self.config.ui_scale = math.floor(math.min(
-        self.config.width / App.MIN_WINDOW_WIDTH,
-        self.config.height / App.MIN_WINDOW_HEIGHT))
   end
 end
 

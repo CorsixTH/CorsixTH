@@ -546,6 +546,8 @@ function UI:setMenuBackground()
 end
 
 function UI:onChangeResolution()
+  TheApp.gfx:onChangeResolution()
+
   -- Redraw cursor
   local cursor = self.cursor
   self.cursor = nil
@@ -593,12 +595,11 @@ end
 
 function UI:changeResolution(width, height)
   self.app:prepareVideoUpdate()
-  local s = TheApp.gfx:getUIScale()
   local error_message = self.app.video:update(
       width,
       height,
-      App.MIN_WINDOW_WIDTH * s,
-      App.MIN_WINDOW_HEIGHT * s,
+      App.MIN_WINDOW_WIDTH,
+      App.MIN_WINDOW_HEIGHT,
       unpack(self.app.modes))
   self.app:finishVideoUpdate()
 
@@ -691,11 +692,10 @@ function UI:toggleFullscreen()
   toggleMode(index)
 
   local success = true
-  local s = TheApp.gfx:getUIScale()
   self.app:prepareVideoUpdate()
   local error_message = self.app.video:update(self.app.config.width, self.app.config.height,
-      self.app.MIN_WINDOW_WIDTH * s,
-      self.app.MIN_WINDOW_HEIGHT * s,
+      self.app.MIN_WINDOW_WIDTH,
+      self.app.MIN_WINDOW_HEIGHT,
       unpack(self.app.modes))
   self.app:finishVideoUpdate()
 
