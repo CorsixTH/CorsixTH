@@ -1,5 +1,7 @@
 var NAVTREEINDEX3 =
 {
+"main_8h.html#a82e10b54229f60c3518dbcfccd7443ca":[2,0,1,0,12,2],
+"main_8h.html#aaabf31c4cc92e0dc148072a14221219e":[2,0,1,0,12,1],
 "main_8h.html#ac824cd2ff95f59869c43b2f37dd49f01":[2,0,1,0,12,0],
 "main_8h_source.html":[2,0,1,0,12],
 "midi__player_8cpp.html":[2,0,1,0,13],
@@ -45,18 +47,19 @@ var NAVTREEINDEX3 =
 "sdl__core_8cpp.html#a1fdd0fcb13ee71914a612a254c3a32ae":[2,0,1,0,21,14],
 "sdl__core_8cpp.html#a26f5fc12e41f8e2fd590bfaf5ce8ad68":[2,0,1,0,21,4],
 "sdl__core_8cpp.html#a382b8746d6302a4b03354b57bef4f9c8":[2,0,1,0,21,13],
-"sdl__core_8cpp.html#a669e100c8d1448417d121d40c711fff6":[2,0,1,0,21,20],
+"sdl__core_8cpp.html#a669e100c8d1448417d121d40c711fff6":[2,0,1,0,21,21],
 "sdl__core_8cpp.html#a732b5e2b4de1c4e39bf07e4c405aeb9d":[2,0,1,0,21,8],
+"sdl__core_8cpp.html#a7708afae1135768f26c29171882ee13f":[2,0,1,0,21,18],
 "sdl__core_8cpp.html#a7aa077ded605ed2ec8a474b09645ff68":[2,0,1,0,21,16],
 "sdl__core_8cpp.html#a7e48733c8a088372e5df7ab22f5a5c9f":[2,0,1,0,21,3],
 "sdl__core_8cpp.html#ab00a9baba729bc6b07d00b7c2c3639e7":[2,0,1,0,21,0],
 "sdl__core_8cpp.html#abeaf61f231a135b6f22851c89c5c88ed":[2,0,1,0,21,6],
 "sdl__core_8cpp.html#ac4dc8b4f20203a29e360fde02af27bfe":[2,0,1,0,21,7],
+"sdl__core_8cpp.html#ac5fc332d485650cb819b284e3171acfe":[2,0,1,0,21,19],
 "sdl__core_8cpp.html#ad314baf2f1ba7563911ea939b5481e54":[2,0,1,0,21,5],
 "sdl__core_8cpp.html#ad5ba98201634a7cd9e5c6e9589edc22f":[2,0,1,0,21,10],
-"sdl__core_8cpp.html#ad9e89db56bc72c4576d8b581fa0ad646":[2,0,1,0,21,18],
 "sdl__core_8cpp.html#adb035f22ba88a8e0182bcbde1bdd6f0f":[2,0,1,0,21,11],
-"sdl__core_8cpp.html#ae3e21cbeca8c1a3b181e91bc5c358931":[2,0,1,0,21,19],
+"sdl__core_8cpp.html#ae3e21cbeca8c1a3b181e91bc5c358931":[2,0,1,0,21,20],
 "sdl__core_8cpp.html#ae7605c23a73336777a643e43a00e2aa5":[2,0,1,0,21,15],
 "sdl__core_8cpp.html#af7c8c2ca49e883c59b5e7d950d8cc547":[2,0,1,0,21,12],
 "sdl__core_8h.html":[2,0,1,0,22],
@@ -246,8 +249,5 @@ var NAVTREEINDEX3 =
 "th_8h.html":[2,0,1,0,25],
 "th_8h.html#a36582649efba94b9e0130b2bb88ede6d":[2,0,1,0,25,2],
 "th_8h.html#ac9041f33a078043b8fb0b1586161238b":[2,0,1,0,25,3],
-"th_8h_source.html":[2,0,1,0,25],
-"th__gfx_8cpp.html":[2,0,1,0,26],
-"th__gfx_8cpp.html#a970f32c2b2d6e96cb44556db62b77689":[2,0,1,0,26,3],
-"th__gfx_8h.html":[2,0,1,0,27]
+"th_8h_source.html":[2,0,1,0,25]
 };

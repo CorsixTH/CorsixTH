@@ -123,7 +123,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a1fdd0fcb13ee71914a612a254c3a32ae" id="r_a1fdd0fcb13ee71914a612a254c3a32ae"><td class="memItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1fdd0fcb13ee71914a612a254c3a32ae">dispatch_sound_over</a> (&quot;sound_over&quot;)</td></tr>
 <tr class="memitem:a0358534c90ffc0652e2cdf38022d6905" id="r_a0358534c90ffc0652e2cdf38022d6905"><td class="memItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0358534c90ffc0652e2cdf38022d6905">dispatch_timer</a> (&quot;timer&quot;)</td></tr>
 <tr class="memitem:a7e48733c8a088372e5df7ab22f5a5c9f" id="r_a7e48733c8a088372e5df7ab22f5a5c9f"><td class="memItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e48733c8a088372e5df7ab22f5a5c9f">dispatch_callback</a> (&quot;callback&quot;)</td></tr>
-<tr class="memitem:ad9e89db56bc72c4576d8b581fa0ad646" id="r_ad9e89db56bc72c4576d8b581fa0ad646"><td class="memItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9e89db56bc72c4576d8b581fa0ad646">dispatch_window_resize</a> (&quot;window_resize&quot;)</td></tr>
+<tr class="memitem:ac5fc332d485650cb819b284e3171acfe" id="r_ac5fc332d485650cb819b284e3171acfe"><td class="memItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5fc332d485650cb819b284e3171acfe">dispatch_window_resized</a> (&quot;window_resized&quot;)</td></tr>
+<tr class="memitem:a7708afae1135768f26c29171882ee13f" id="r_a7708afae1135768f26c29171882ee13f"><td class="memItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7708afae1135768f26c29171882ee13f">dispatch_window_pixel_size_changed</a> (&quot;window_pixel_size_changed&quot;)</td></tr>
 <tr class="memitem:a26f5fc12e41f8e2fd590bfaf5ce8ad68" id="r_a26f5fc12e41f8e2fd590bfaf5ce8ad68"><td class="memItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26f5fc12e41f8e2fd590bfaf5ce8ad68">dispatch_frame</a> (&quot;frame&quot;)</td></tr>
 <tr class="memitem:a669e100c8d1448417d121d40c711fff6" id="r_a669e100c8d1448417d121d40c711fff6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a669e100c8d1448417d121d40c711fff6">mainloop</a> (lua_State *L)</td></tr>
 <tr class="memitem:ae3e21cbeca8c1a3b181e91bc5c358931" id="r_ae3e21cbeca8c1a3b181e91bc5c358931"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3e21cbeca8c1a3b181e91bc5c358931">luaopen_sdl</a> (lua_State *L)</td></tr>
@@ -579,8 +580,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad9e89db56bc72c4576d8b581fa0ad646" name="ad9e89db56bc72c4576d8b581fa0ad646"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9e89db56bc72c4576d8b581fa0ad646">&#9670;&#160;</a></span>dispatch_window_resize()</h2>
+<a id="a7708afae1135768f26c29171882ee13f" name="a7708afae1135768f26c29171882ee13f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7708afae1135768f26c29171882ee13f">&#9670;&#160;</a></span>dispatch_window_pixel_size_changed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -589,9 +590,34 @@ Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string_view dispatch_window_resize </td>
+          <td class="memname">std::string_view dispatch_window_pixel_size_changed </td>
           <td>(</td>
-          <td class="paramtype">&quot;window_resize&quot;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">&quot;window_pixel_size_changed&quot;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac5fc332d485650cb819b284e3171acfe" name="ac5fc332d485650cb819b284e3171acfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5fc332d485650cb819b284e3171acfe">&#9670;&#160;</a></span>dispatch_window_resized()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string_view dispatch_window_resized </td>
+          <td>(</td>
+          <td class="paramtype">&quot;window_resized&quot;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

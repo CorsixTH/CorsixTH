@@ -20,6 +20,8 @@ var classrender__target =
     [ "get_last_error", "classrender__target.html#a1e482e67b31366344b3826306930e182", null ],
     [ "get_renderer", "classrender__target.html#a48d50db15329d94523a03c58ec8cdea5", null ],
     [ "get_renderer_details", "classrender__target.html#a08762520c431862015e6379a0726d839", null ],
+    [ "get_scaled_height", "classrender__target.html#aa23f8ab1dbf5703f23a120436464c645", null ],
+    [ "get_scaled_width", "classrender__target.html#a2c99ebb83209f09b8197fbf981e70ad4", null ],
     [ "get_width", "classrender__target.html#a7a963353eecb8c5f8648ddc5ec3a0359", null ],
     [ "get_window", "classrender__target.html#a83c1540da23b22399c4418a0e04746bc", null ],
     [ "operator=", "classrender__target.html#a829afe108cdc42aa697c63d2afab502c", null ],

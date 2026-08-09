@@ -130,9 +130,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8dfc514388265cf538da30d105581075" id="r_a8dfc514388265cf538da30d105581075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8dfc514388265cf538da30d105581075">pop_clip_rect</a> ()</td></tr>
 <tr class="memdesc:a8dfc514388265cf538da30d105581075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore the previous clip rectangle.  <br /></td></tr>
 <tr class="memitem:a7a963353eecb8c5f8648ddc5ec3a0359" id="r_a7a963353eecb8c5f8648ddc5ec3a0359"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a963353eecb8c5f8648ddc5ec3a0359">get_width</a> () const</td></tr>
-<tr class="memdesc:a7a963353eecb8c5f8648ddc5ec3a0359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the width of the render target (in pixels).  <br /></td></tr>
+<tr class="memdesc:a7a963353eecb8c5f8648ddc5ec3a0359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the width of the render viewport (in pixels).  <br /></td></tr>
 <tr class="memitem:a5819663984f6e46c1777bfd251b46d76" id="r_a5819663984f6e46c1777bfd251b46d76"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5819663984f6e46c1777bfd251b46d76">get_height</a> () const</td></tr>
-<tr class="memdesc:a5819663984f6e46c1777bfd251b46d76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the height of the render target (in pixels).  <br /></td></tr>
+<tr class="memdesc:a5819663984f6e46c1777bfd251b46d76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the height of the render viewport (in pixels).  <br /></td></tr>
+<tr class="memitem:a2c99ebb83209f09b8197fbf981e70ad4" id="r_a2c99ebb83209f09b8197fbf981e70ad4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c99ebb83209f09b8197fbf981e70ad4">get_scaled_width</a> () const</td></tr>
+<tr class="memdesc:a2c99ebb83209f09b8197fbf981e70ad4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the width of the render target adjusted by the current scale factor.  <br /></td></tr>
+<tr class="memitem:aa23f8ab1dbf5703f23a120436464c645" id="r_aa23f8ab1dbf5703f23a120436464c645"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa23f8ab1dbf5703f23a120436464c645">get_scaled_height</a> () const</td></tr>
+<tr class="memdesc:aa23f8ab1dbf5703f23a120436464c645"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the height of the render target adjusted by the current scale factor.  <br /></td></tr>
 <tr class="memitem:aaec844843dbd4ca7fc31730ff0e6c466" id="r_aaec844843dbd4ca7fc31730ff0e6c466"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaec844843dbd4ca7fc31730ff0e6c466">start_nonoverlapping_draws</a> ()</td></tr>
 <tr class="memdesc:aaec844843dbd4ca7fc31730ff0e6c466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable optimisations for non-overlapping draws.  <br /></td></tr>
 <tr class="memitem:ad95575ec31c54386dc63332fb3b716a2" id="r_ad95575ec31c54386dc63332fb3b716a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad95575ec31c54386dc63332fb3b716a2">finish_nonoverlapping_draws</a> ()</td></tr>
@@ -533,7 +537,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the height of the render target (in pixels). </p>
+<p>Get the height of the render viewport (in pixels). </p>
 
 </div>
 </div>
@@ -600,6 +604,44 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="aa23f8ab1dbf5703f23a120436464c645" name="aa23f8ab1dbf5703f23a120436464c645"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa23f8ab1dbf5703f23a120436464c645">&#9670;&#160;</a></span>get_scaled_height()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int render_target::get_scaled_height </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the height of the render target adjusted by the current scale factor. </p>
+
+</div>
+</div>
+<a id="a2c99ebb83209f09b8197fbf981e70ad4" name="a2c99ebb83209f09b8197fbf981e70ad4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c99ebb83209f09b8197fbf981e70ad4">&#9670;&#160;</a></span>get_scaled_width()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int render_target::get_scaled_width </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the width of the render target adjusted by the current scale factor. </p>
+
+</div>
+</div>
 <a id="a7a963353eecb8c5f8648ddc5ec3a0359" name="a7a963353eecb8c5f8648ddc5ec3a0359"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a963353eecb8c5f8648ddc5ec3a0359">&#9670;&#160;</a></span>get_width()</h2>
 
@@ -615,7 +657,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the width of the render target (in pixels). </p>
+<p>Get the width of the render viewport (in pixels). </p>
 
 </div>
 </div>
