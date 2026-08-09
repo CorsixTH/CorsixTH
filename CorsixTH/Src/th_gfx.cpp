@@ -1205,7 +1205,7 @@ void animation::draw(render_target* canvas, const xy_pair& draw_pos) {
     if (flags & thdf_crop) {
       clip_rect rcNew;
       rcNew.y = 0;
-      rcNew.h = canvas->get_height();
+      rcNew.h = canvas->get_scaled_height();
       rcNew.x = x + (crop_column - 1) * 32 * scale_factor;
       rcNew.w = 64 * scale_factor;
       render_target::scoped_clip clip(canvas, &rcNew);
@@ -1262,7 +1262,7 @@ void animation::draw_morph(render_target* canvas, const xy_pair& draw_pos) {
   // We set the morph rect x and w clip to the entire canvas, so that only
   // vertical clipping is applied.
   oMorphRect.x = 0;
-  oMorphRect.w = canvas->get_width();
+  oMorphRect.w = canvas->get_scaled_width();
   oMorphRect.y = y + morph_target->pixel_offset.x * scale_factor;
   oMorphRect.h = (morph_target->pixel_offset.y - morph_target->pixel_offset.x) *
                  scale_factor;

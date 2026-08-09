@@ -57,7 +57,8 @@ function App:App()
     mousewheel = self.onMouseWheel,
     motion = self.onMouseMove,
     active = self.onWindowActive,
-    window_resize = self.onWindowResize,
+    window_resized = self.onWindowResized,
+    window_pixel_size_changed = self.onWindowPixelSizeChanged,
     music_over = self.onMusicOver,
     movie_over = self.onMovieOver,
     sound_over = self.onSoundOver,
@@ -178,7 +179,6 @@ function App:init()
     SDL.limitFPS(false)
   end
 
-
   -- Create gamelog file.
   self:initGamelogFile()
 
@@ -188,11 +188,13 @@ function App:init()
   local gfx_set = good_install_folder and (self.using_demo_files and "demo" or "full") or "base"
   self.gfx = Graphics(self, gfx_set, charset)
 
+  local scr_w, scr_h = self.video:getRenderSize()
+
   -- Put up the loading screen
   if good_install_folder then
     self.video:startFrame()
     self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
-      math.floor((self.config.width - 640) / 2), math.floor((self.config.height - 480) / 2))
+      math.floor((scr_w - 640) / 2), math.floor((scr_h - 480) / 2))
     self.video:endFrame()
     -- Add some notices to the loading screen
     local notices = {}
@@ -205,9 +207,9 @@ function App:init()
     if notices ~= "" then
       self.video:startFrame()
       self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
-        math.floor((self.config.width - 640) / 2), math.floor((self.config.height - 480) / 2))
+        math.floor((scr_w - 640) / 2), math.floor((scr_h - 480) / 2))
       font:drawWrapped(self.video, notices, 32,
-        math.floor((self.config.height + 400) / 2), math.floor(self.config.width - 64), "center")
+        math.floor((scr_h + 400) / 2), math.floor(scr_w - 64), "center")
       self.video:endFrame()
     end
   end
@@ -725,7 +727,7 @@ function App:loadMainMenu(message)
   self.world = nil
   self.map = nil
 
-  self.ui = UI(self)
+  self.ui = UI(self, false)
   self.ui:setMenuBackground()
   self.ui:addWindow(UIMainMenu(self.ui))
   self.ui:addWindow(UITipOfTheDay(self.ui))
@@ -1385,9 +1387,15 @@ function App:onWindowActive(...)
 end
 
 --! Window has been resized by the user
---! Call the UI to handle the new window size
-function App:onWindowResize(...)
-  return self.ui:onWindowResize(...)
+--! Call the UI to report the new window size
+function App:onWindowResized(...)
+  return self.ui:onWindowResized(...)
+end
+
+--! Render size has changed
+--! Call the UI to adjust to the new render size
+function App:onWindowPixelSizeChanged(...)
+  return self.ui:onWindowPixelSizeChanged(...)
 end
 
 function App:onMusicOver(...)
