@@ -86,7 +86,7 @@ end
 
 function UIQueue:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = self.x * s + x, self.y * s + y
 
   local font = self.white_font
@@ -114,7 +114,7 @@ function UIQueue:draw(canvas, x, y)
 end
 
 local function isInsideQueueBoundingBox(x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local x_min = 219 * s
   local x_max = 534 * s
   local y_min = 15 * s
@@ -127,7 +127,7 @@ function UIQueue:onMouseDown(button, x, y)
   if not isInsideQueueBoundingBox(x, y) then
     return Window.onMouseDown(self, button, x, y)
   end
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local x_min = 219 * s
   self.hovered = self:getHoveredPatient(x - x_min)
   -- Select patient to drag - if left clicking.
@@ -157,7 +157,7 @@ function UIQueue:onMouseUp(button, x, y)
     end
   end
   if button == "left" then
-    local s = TheApp.config.ui_scale
+    local s = TheApp.gfx:getUIScale()
     local queue = self.queue
     local num_patients = queue:reportedSize()
     local width = 276 * s
@@ -222,7 +222,7 @@ function UIQueue:onMouseUp(button, x, y)
 end
 
 function UIQueue:onMouseMove(x, y, dx, dy)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local x_min = 219 * s
   if self.dragged then
     self.dragged.x = x + self.x * s
@@ -258,7 +258,7 @@ end
 function UIQueue:getHoveredPatient(x)
   local queue = self.queue
   local num_patients = queue:reportedSize()
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local width = 276 * s
   local gap = 10 * s
   x = x - 15 * s -- sprite offset
@@ -297,7 +297,7 @@ function UIQueue:getHoveredPatient(x)
 end
 
 function UIQueue:drawPatients(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local queue = self.queue
   local num_patients = queue:reportedSize()
   local width = 276 * s
@@ -341,7 +341,7 @@ function UIQueue:drawPatient(canvas, x, y, patient)
   for layer, id in pairs(patient.layers) do
     anim:setLayer(layer, id)
   end
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   canvas:scale(s)
   anim:draw(canvas, math.floor(x / s), math.floor(y / s))
   -- Also draw the mood of the patient, if any.

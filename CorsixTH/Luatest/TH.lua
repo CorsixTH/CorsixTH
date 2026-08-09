@@ -34,6 +34,7 @@ TheApp = {
     loadSpriteTable = function() end,
     loadFont = loadFont,
     loadFontAndSpriteTable = loadFont,
+    getUIScale = function() return 1 end,
   },
   runtime_config = {},
   config = {

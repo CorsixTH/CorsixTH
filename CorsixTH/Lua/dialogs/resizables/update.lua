@@ -94,7 +94,7 @@ function UIUpdate:draw(canvas, x, y)
   -- Draw window components
   UIResizable.draw(self, canvas, x, y)
 
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
 
   -- Draw description
   x, y = self.x * s + x, self.y * s + y

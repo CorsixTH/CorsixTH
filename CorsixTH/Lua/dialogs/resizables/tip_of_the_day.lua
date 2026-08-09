@@ -73,7 +73,7 @@ function UITipOfTheDay:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
 
   -- Draw tip
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = self.x * s + x, self.y * s + y
 
   local text = _S.totd_window.tips[self.tip_num]

@@ -97,7 +97,7 @@ end
 function UIResizable:draw(canvas, x, y)
   local sprites = self.border_sprites
   if sprites then
-    local s = TheApp.config.ui_scale
+    local s = TheApp.gfx:getUIScale()
     local xabs = self.x * s + x
     local yabs = self.y * s + y
 
@@ -129,7 +129,7 @@ function UIResizable:onMouseDown(button, x, y)
 end
 
 function UIResizable:hitTest(x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   if x >= 0 and y >= 0 and x < self.width * s and y < self.height * s then -- inside window
     return Window.hitTest(self, x, y)
   end
@@ -152,7 +152,7 @@ end
 --!return (boolean or string) false if not hit, else a string to denote which corner was hit (can be "ul", "ur", "ll" or "lr")
 function UIResizable:hitTestCorners(x, y)
   if self.border_sprites then
-    local s = TheApp.config.ui_scale
+    local s = TheApp.gfx:getUIScale()
     local yzone = (-9 * s <= y and y < 0) and "u" or (self.height * s <= y and y < self.height * s + 9 * s) and "l"
     local xzone = (-9 * s <= x and x < 0) and "l" or (self.width * s <= x and x < self.width * s + 9 * s) and "r"
 

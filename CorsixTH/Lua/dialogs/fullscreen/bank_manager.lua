@@ -226,7 +226,7 @@ end
 
 function UIBankManager:draw(canvas, x, y)
   local hospital = self.ui.hospital
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
 
   -- Either draw the statistics page or the normal bank page
   if self.showingStatistics then
@@ -315,7 +315,7 @@ end
 
 function UIBankManager:onMouseMove(x, y, dx, dy)
   local ui = self.ui
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
 
   if x > 0 and x < 640 * s and y > 0 and y < 480 * s then
     if self.showingStatistics then

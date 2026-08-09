@@ -132,7 +132,7 @@ function UIProgressReport:close()
 end
 
 function UIProgressReport:drawMarkers(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local x_min = 455 * s
   local x_max = 551 * s
 
@@ -176,7 +176,7 @@ function UIProgressReport:drawMarkers(canvas, x, y)
 end
 
 function UIProgressReport:draw(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   canvas:scale(s, "bitmap")
   self.background:draw(canvas, self.x * s + x, self.y * s + y)
   canvas:scale(1, "bitmap")

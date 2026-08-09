@@ -279,7 +279,7 @@ local function updateTextPositions(graph)
 end
 
 function UIGraphs:updateLines()
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   self.values = self:getHospitalStatistics()
 
   -- Construct meta data about each graph line.
@@ -382,7 +382,7 @@ function UIGraphs:draw(canvas, x, y)
     self:updateLines()
   end
 
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   canvas:scale(s, "bitmap")
   self.background:draw(canvas, self.x * s + x, self.y * s + y)
   canvas:scale(1, "bitmap")
