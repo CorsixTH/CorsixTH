@@ -72,6 +72,10 @@ if(ENABLE_UNIT_TESTS)
   enable_testing()
 endif()
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(MINGW)
   set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 endif()
