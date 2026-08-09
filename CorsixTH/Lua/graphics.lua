@@ -68,6 +68,8 @@ local charsets = {
 function Graphics:Graphics(app, gfx_set, charset)
   self.app = app
   self.target = self.app.video
+  self.actual_ui_scale = nil
+
   -- The cache is used to avoid reloading an object if it is already loaded
   self.cache = {
     raw = {},
@@ -476,7 +478,23 @@ function Graphics:onChangeLanguage()
   end, self)
 end
 
+-- Call when the configured ui_scale is changed
 function Graphics:onChangeUIScale()
+  self:onChangeResolution()
+end
+
+-- Call when the render size changes
+function Graphics:onChangeResolution()
+  local old_ui_scale = self.actual_ui_scale
+  self.actual_ui_scale = nil
+  local new_ui_scale = self:getUIScale()
+  if new_ui_scale ~= old_ui_scale then
+    self:_onChangeUIScale()
+  end
+end
+
+-- Reload any assets that depend on the actual ui scale
+function Graphics:_onChangeUIScale()
   if self.builtin_font then
     self.builtin_font:setScaleFactor(self:getUIScale())
   end
@@ -1066,5 +1084,16 @@ function Graphics:loadPalette(_, name)
 end
 
 function Graphics:getUIScale()
-  return TheApp.config.ui_scale
+  if self.actual_ui_scale ~= nil then
+    return self.actual_ui_scale
+  end
+  local scr_w, scr_h = self.target:getRenderSize()
+  local max_scale = math.floor(math.min(scr_w / App.MIN_WINDOW_WIDTH, scr_h / App.MIN_WINDOW_HEIGHT));
+  local cs = TheApp.config.ui_scale
+  if cs == 0 or cs > max_scale then
+    self.actual_ui_scale = max_scale
+  else
+    self.actual_ui_scale = cs
+  end
+  return self.actual_ui_scale
 end
