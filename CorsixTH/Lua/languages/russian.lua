@@ -24,7 +24,7 @@ SOFTWARE. --]]
 -- https://github.com/CorsixTH/CorsixTH/wiki/Localization
 -- Translators may use plain-character substitutions (for example, "e" for an
 -- accented "e").
--- If substitutions are unsuitable, change Font("cp437") to Font("unicode")
+-- If substitutions are unsuitable, change Font("mik") to Font("unicode")
 -- to use the Unicode font instead. You may translate this note into this
 -- file's language if that would help other translators.
 
