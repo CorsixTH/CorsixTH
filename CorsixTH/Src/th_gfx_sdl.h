@@ -45,18 +45,32 @@ struct clip_rect : public SDL_Rect {
   typedef Uint16 w_h_type;
 };
 
+/**
+ * A size (width x height) in Window coordinates
+ */
+struct window_size {
+  int width;
+  int height;
+};
+
+/**
+ * A size (width x height) in Render coordinates (pixels)
+ */
+struct render_size {
+  int width;
+  int height;
+};
+
 /** Helper structure with parameters to create a #render_target. */
 struct render_target_creation_params {
-  int width;               ///< Expected width of the render target.
-  int height;              ///< Expected height of the render target.
-  int bpp;                 ///< Expected colour depth of the render target.
-  bool fullscreen;         ///< Run full-screen.
-  bool present_immediate;  ///< Whether to present immediately to the user
-                           ///< (else wait for Vsync).
-  bool direct_zoom;  ///< Scale each texture when copying if true, otherwise
-                     ///< render to intermediate texture and scale.
-  int min_width;     ///< Minimum width of the render target.
-  int min_height;    ///< Minimum height of the render target.
+  window_size size{};        ///< Target size of the window.
+  bool fullscreen{};         ///< Run full-screen.
+  bool present_immediate{};  ///< Whether to present immediately to the user
+                             ///< (else wait for Vsync).
+  bool direct_zoom{};        ///< Scale each texture when copying if true,
+                             ///< otherwise render to intermediate texture and
+                             ///< scale.
+  window_size min_size{};    ///< Minimum size of the window.
 };
 
 enum class scaled_items;
@@ -299,11 +313,8 @@ class render_target {
   //! Restore the previous clip rectangle.
   void pop_clip_rect();
 
-  //! Get the width of the render viewport (in pixels)
-  int get_width() const;
-
-  //! Get the height of the render viewport (in pixels)
-  int get_height() const;
+  //! Get the size of the render viewport (in pixels)
+  render_size get_size() const;
 
   //! Get the width of the render target adjusted by the current scale factor
   int get_scaled_width() const;

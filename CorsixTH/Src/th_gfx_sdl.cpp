@@ -482,9 +482,9 @@ render_target::render_target(const render_target_creation_params& params)
   SDL_SetStringProperty(winProps, SDL_PROP_WINDOW_CREATE_TITLE_STRING,
                         "CorsixTH");
   SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER,
-                        params.width);
+                        params.size.width);
   SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER,
-                        params.height);
+                        params.size.height);
   SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER,
                         SDL_WINDOW_RESIZABLE);
   SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true);
@@ -518,9 +518,11 @@ render_target::render_target(const render_target_creation_params& params)
   supports_target_textures = !!testTexture;
   SDL_DestroyTexture(testTexture);
 
-  SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
+  SDL_SetWindowMinimumSize(window, params.min_size.width,
+                           params.min_size.height);
 
-  apply_letterbox(renderer, params.fullscreen, params.width, params.height);
+  apply_letterbox(renderer, params.fullscreen, params.size.width,
+                  params.size.height);
 
   SDL_ShowWindow(window);
   SDL_SyncWindow(window);
@@ -554,15 +556,17 @@ bool render_target::update(const render_target_creation_params& params) {
     SDL_SetWindowFullscreen(window, params.fullscreen);
   }
 
-  SDL_SetWindowSize(window, params.width, params.height);
-  apply_letterbox(renderer, params.fullscreen, params.width, params.height);
+  SDL_SetWindowSize(window, params.size.width, params.size.height);
+  apply_letterbox(renderer, params.fullscreen, params.size.width,
+                  params.size.height);
 
   int old_min_width;
   int old_min_height;
   SDL_GetWindowMinimumSize(window, &old_min_width, &old_min_height);
-  if (old_min_width != params.min_width ||
-      old_min_height != params.min_height) {
-    SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
+  if (old_min_width != params.min_size.width ||
+      old_min_height != params.min_size.height) {
+    SDL_SetWindowMinimumSize(window, params.min_size.width,
+                             params.min_size.height);
   }
 
   SDL_SyncWindow(window);
@@ -582,10 +586,9 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
         SDL_WINDOW_FULLSCREEN) {
       // Drawing to an intermediate screen sized buffer when fullscreen results
       // in noticeably better text rendering quality.
-      int w = get_width();
-      int h = get_height();
+      auto [width, height] = get_size();
       zoom_buffer =
-          std::make_unique<scoped_target_texture>(this, 0, 0, w, h,
+          std::make_unique<scoped_target_texture>(this, 0, 0, width, height,
                                                   /* bScale = */ true);
     }
     return true;
@@ -593,10 +596,9 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     // Draw everything from now until the next scale to zoom_texture
     // with the appropriate virtual size, which will be copied scaled to
     // fit the window.
-    int w = get_width();
-    int h = get_height();
-    int virtWidth = static_cast<int>(w / fScale);
-    int virtHeight = static_cast<int>(h / fScale);
+    auto [width, height] = get_size();
+    int virtWidth = static_cast<int>(width / fScale);
+    int virtHeight = static_cast<int>(height / fScale);
 
     zoom_buffer = std::make_unique<scoped_target_texture>(
         this, 0, 0, virtWidth, virtHeight, /* bScale = */ false);
@@ -734,25 +736,19 @@ void render_target::pop_clip_rect() {
   }
 }
 
-int render_target::get_width() const {
+render_size render_target::get_size() const {
   SDL_Rect rect;
   SDL_GetRenderViewport(renderer, &rect);
-  return rect.w;
-}
-
-int render_target::get_height() const {
-  SDL_Rect rect;
-  SDL_GetRenderViewport(renderer, &rect);
-  return rect.h;
+  return {rect.w, rect.h};
 }
 
 int render_target::get_scaled_width() const {
-  int w = get_width();
+  int w = get_size().width;
   return static_cast<int>(w / draw_scale());
 }
 
 int render_target::get_scaled_height() const {
-  int h = get_height();
+  int h = get_size().height;
   return static_cast<int>(h / draw_scale());
 }
 
