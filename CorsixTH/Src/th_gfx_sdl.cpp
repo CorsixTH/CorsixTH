@@ -752,6 +752,13 @@ int render_target::get_scaled_height() const {
   return static_cast<int>(h / draw_scale());
 }
 
+window_size render_target::get_max_window_size() const {
+  SDL_Rect rect;
+  SDL_DisplayID display = SDL_GetDisplayForWindow(window);
+  SDL_GetDisplayUsableBounds(display, &rect);
+  return {rect.w, rect.h};
+}
+
 void render_target::start_nonoverlapping_draws() {
   // SDL has no optimisations for drawing lots of non-overlapping sprites
 }

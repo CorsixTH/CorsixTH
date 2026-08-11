@@ -319,6 +319,9 @@ class render_target {
   //! Get the height of the render target adjusted by the current scale factor
   int get_scaled_height() const;
 
+  //! Get the maximum window size that fits on the usable display area
+  window_size get_max_window_size() const;
+
   //! Enable optimisations for non-overlapping draws
   void start_nonoverlapping_draws();
 
