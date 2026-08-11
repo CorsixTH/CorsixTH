@@ -20,7 +20,7 @@ a decision is made.
 **Decision: the project lives inside the fork, not in a separate repo.**
 - Considered: a dedicated separate repo plus the fork, as two repos
 - Chosen: a single `BrunosGits/CorsixTH` fork with a `devlog/` folder holding
-  the journal, decision log, plan, achievements and time tracker
+  the journal, decision log, plan and time tracker
 - Why: the fork is the project, and keeping the story next to the code avoids a
   second repo to maintain
 - Consequence: PR branches are always cut from `upstream/master` so the devlog
@@ -92,3 +92,10 @@ a decision is made.
   and #2469 (right mouse panning glitches), in that order after #1793
 - Backlog: #1738 (handymen do not water plants in the middle of benches)
 - Status: documented here and in `summary.md` and `plan.md`, not yet fixed
+
+## 2026-08-11 - Achievements removed
+
+**Decision: no achievements tracking in this project.**
+- Chosen: remove `achievements.md` and the achievements checker script
+- Why: achievements are not part of this contribution effort
+- Status: applied, file and script deleted, references scrubbed

@@ -14,8 +14,7 @@ and survive maintainer review.
 - `devlog/summary.md` — master plan: context, roadmap, status, tooling
 - `devlog/project-conception-log.md` — every decision, chosen or rejected, and why
 - `devlog/plan.md` — tick-box roadmap for the first contribution
-- `devlog/achievements.md` — running record of GitHub achievements earned by this account
-- `devlog/scripts/` — the Rust time tracker and the achievements checker
+- `devlog/scripts/` — the Rust time tracker
 
 The journal and the decision log live inside the fork so the code and the story
 of writing it stay together.
