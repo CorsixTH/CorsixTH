@@ -91,8 +91,16 @@ local available_resolutions = function()
   }
 
   local enable_list, disable_list = {}, {}
+  local max_window_width, max_window_height = TheApp.video:getMaxWindowSize()
+  if max_window_width == 0 then
+    max_window_width = 3000
+  end
+  if max_window_height == 0 then
+    max_window_height = 2000
+  end
+
   for _, opt in ipairs(suggested_resolutions) do
-    local enabled = true -- It might be nice to filter sizes that don't fit the display
+    local enabled = opt.width < max_window_width and opt.height < max_window_height
     opt.disabled = not enabled
     opt.tooltip = opt.disabled and { _S.tooltip.options_window.resolution_unavailable }
     if enabled then
