@@ -422,7 +422,19 @@ void mainloop(lua_State* L) {
           push_app_dispatch(L, last_dispatch);
           lua_pushinteger(L, e.window.data1);
           lua_pushinteger(L, e.window.data2);
-          nargs = 3;
+          {
+            SDL_WindowFlags flags = SDL_GetWindowFlags(target->get_window());
+            uint32_t window_state = 0;
+            if (flags & SDL_WINDOW_FULLSCREEN) {
+              window_state = 1;
+            } else if (flags & SDL_WINDOW_MAXIMIZED) {
+              window_state = 2;
+            } else if (flags & SDL_WINDOW_MINIMIZED) {
+              window_state = 3;
+            }
+            lua_pushinteger(L, window_state);
+          }
+          nargs = 4;
           break;
         case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
           last_dispatch = dispatch_window_pixel_size_changed;
