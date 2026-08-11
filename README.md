@@ -18,9 +18,7 @@ and survive maintainer review.
 - `devlog/scripts/` — the Rust time tracker and the achievements checker
 
 The journal and the decision log live inside the fork so the code and the story
-of writing it stay together. `time-tracker.json` and `session-log.md` are
-private and stay off git, and so do the agent instructions at the repo root
-(`AGENTS.md`, `opencode.json`, `.opencode/`).
+of writing it stay together.
 
 ## Status
 
