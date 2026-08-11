@@ -1,7 +1,7 @@
 # Journal
 
 Personal diary of the CorsixTH contribution effort: memories, feelings, stories.
-One entry per day, appended. This is not the session log (that's the private
+One entry per day, newest on top. This is not the session log (that's the private
 session log, kept local, for times/commands/verdicts).
 
 <p align="right"><b>Total time on the project: 0h 00m</b></p>

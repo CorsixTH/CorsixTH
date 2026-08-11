@@ -12,16 +12,25 @@ items are next.
 - [x] copy the Theme Hospital demo data to the VPS
 - [x] boot the dev build headless with the demo data
 - [x] scaffold the `devlog/` docs and push them to the fork
+- [x] pick the first issue: #1793, broken Lua docs links on GitHub Pages
 
-## First contribution
+## First contribution (issue #1793)
 
-- [ ] pick a small open bug from the Good First Issue list
-- [ ] read the code that owns the bug and understand the flow
-- [ ] reproduce the bug with the demo data on the VPS
-- [ ] write a fix, following the project coding conventions
+- [ ] read `LDocGen` and understand how the docs pages and links are generated
+- [ ] reproduce the broken links locally by building the docs
+- [ ] write the fix in `LDocGen`, following the project conventions
 - [ ] run the unit tests, lint and a fresh build on the VPS
 - [ ] open a pull request from a branch cut off `upstream/master`
 - [ ] respond to maintainer review
+
+## Issue queue
+
+Chosen order: #1793 first, then #1467 and #2469. #1738 stays in the backlog.
+
+- #1793 — Lua docs links broken on GitHub Pages
+- #1467 — entities table modified inside an `ipairs` loop over entities
+- #2469 — right mouse panning causes object placement glitches
+- #1738 — handymen do not water plants in the middle of benches (backlog)
 
 ## Skills to build along the way
 

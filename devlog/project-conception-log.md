@@ -71,3 +71,25 @@ a decision is made.
   in the journal, no invented facts.
 - **Demo is the legal free demo**: the Theme Hospital demo from the CorsixTH
   site is the data source. No pirated game data, ever.
+
+## 2026-08-11 - Docs and the first issue
+
+**Decision: the fork README carries a personal section above the upstream README.**
+- Considered: replacing the root README with an ai-lab-style landing page
+- Chosen: prepend a personal fork section and keep the upstream game README
+  below it
+- Why: the fork stays recognizably upstream while still telling the project story
+- Consequence: upstream syncs may conflict at the top of `README.md`, resolved by
+  keeping the personal section
+- Status: applied
+
+**Decision: the journal order is newest on top.**
+- Chosen: one entry per day, newest entry first, oldest at the bottom
+- Status: applied
+
+**Decision: the first issue is #1793, broken Lua docs links on GitHub Pages.**
+- Why: a docs-only fix, no gameplay risk, a good first read of the LDocGen tool
+- Considered for later: #1467 (entities table modified inside an `ipairs` loop)
+  and #2469 (right mouse panning glitches), in that order after #1793
+- Backlog: #1738 (handymen do not water plants in the middle of benches)
+- Status: documented here and in `summary.md` and `plan.md`, not yet fixed
