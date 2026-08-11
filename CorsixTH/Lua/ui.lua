@@ -990,8 +990,9 @@ end
 --! Window has been resized by the user
 --!param width (integer) New window width
 --!param height (integer) New window height
-function UI:onWindowResized(width, height)
-  if not self.app.config.fullscreen then
+--!param state (integer) Window state: 0 - window, 1 - fullscreen, 2 - maximized, 3 - minimized
+function UI:onWindowResized(width, height, state)
+  if state == 0 then
     self.app.config.width = width
     self.app.config.height = height
 

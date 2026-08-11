@@ -556,6 +556,10 @@ bool render_target::update(const render_target_creation_params& params) {
     SDL_SetWindowFullscreen(window, params.fullscreen);
   }
 
+  if (!params.fullscreen) {
+    SDL_RestoreWindow(window);
+  }
+
   SDL_SetWindowSize(window, params.size.width, params.size.height);
   apply_letterbox(renderer, params.fullscreen, params.size.width,
                   params.size.height);
