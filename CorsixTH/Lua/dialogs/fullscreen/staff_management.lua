@@ -274,10 +274,11 @@ function UIStaffManagement:draw(canvas, x, y)
 
   -- Number of employees
   local ney = y + 57 * s
-  titles:draw(canvas, #self.staff_members["Doctor"], x + 79 * s, ney)
-  titles:draw(canvas, #self.staff_members["Nurse"], x + 145 * s, ney)
-  titles:draw(canvas, #self.staff_members["Handyman"], x + 211 * s, ney)
-  titles:draw(canvas, #self.staff_members["Receptionist"], x + 277 * s, ney)
+  local ne_width = 58 * s
+  titles:draw(canvas, #self.staff_members["Doctor"], x + 53 * s, ney, ne_width, 0)
+  titles:draw(canvas, #self.staff_members["Nurse"], x + 119 * s, ney, ne_width, 0)
+  titles:draw(canvas, #self.staff_members["Handyman"], x + 185 * s, ney, ne_width, 0)
+  titles:draw(canvas, #self.staff_members["Receptionist"], x + 251 * s, ney, ne_width, 0)
 
   local total_happiness = 0
   local total_fatigue = 0

@@ -181,11 +181,7 @@ function Audio:init()
 
   self:initMidiPlayer()
 
-  local status, err = SDL.audio.init(
-    self.app.config.audio_frequency,
-    self.app.config.audio_channels,
-    self.app.config.audio_buffer_size,
-    self.app:findSoundFont())
+  local status, err = SDL.audio.init(self.app:findSoundFont())
   if not status then
     print("Notice: Audio system could not initialise (SDL error: " .. tostring(err) .. ")")
     self.not_loaded = true
@@ -197,15 +193,21 @@ end
 
 function Audio:initMidiPlayer()
   if self.midi_player then
-    self.midi_player:close()
+    pcall(self.midi_player.close, self.midi_player)
     self.midi_player = nil
   end
 
   if TH.GetCompileOptions().midi_device and self.app.config.midi_api then
-    self.midi_player = TH.midiPlayer(
+    local midi_ok, midi_player = pcall(
+      TH.midiPlayer,
       self.app.config.midi_api,
       self.app.config.midi_port,
       self.app.config.midi_sysex_master_volume)
+    if midi_ok then
+      self.midi_player = midi_player
+    else
+      print("Failed to create midi player: " .. midi_player)
+    end
   end
 end
 
@@ -280,7 +282,8 @@ end
 --! Set the visual area for sound effects playback
 function Audio:setSoundStage()
   if self.sound_fx then
-    local w, h = self.app.config.width / 2, self.app.config.height / 2
+    local scr_w, scr_h = self.app.video:getRenderSize()
+    local w, h = scr_w / 2, scr_h / 2
     self.sound_fx:setCamera(math.floor(w), math.floor(h), math.floor((w^2 + h^2)^0.5))
   end
 end
@@ -667,7 +670,7 @@ function Audio:stopBackgroundTrack()
   end
   SDL.audio.stopMusic()
   if self.midi_player then
-    self.midi_player:stop()
+    pcall(self.midi_player.stop, self.midi_player)
   end
   self.background_music = nil
 
@@ -701,8 +704,14 @@ function Audio:playBackgroundTrack(index)
       local data = self:getFileData(index)
       if info.is_xmi then
         if self.midi_player then
-          self.midi_player:setVolume(self.app.config.music_volume)
-          self.midi_player:playXmi(data)
+          local ok, err = pcall(self.midi_player.setVolume, self.midi_player, self.app.config.music_volume)
+          if ok then
+            ok, err = pcall(self.midi_player.playXmi, self.midi_player, data)
+          end
+          if not ok then
+            print("Failed to play midi: " .. err)
+            return
+          end
 
           -- info.music has to be equal to background_music and both values need
           -- to be truthy and unique for the jukebox to detect the track. Using

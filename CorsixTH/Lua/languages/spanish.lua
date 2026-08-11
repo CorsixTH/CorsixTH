@@ -25,6 +25,7 @@ Inherit("original_strings", 4)
 IsArabicNumerals(true)
 
 -------------------------------  OVERRIDE  ----------------------------------
+adviser.warnings.money_low = "¡Tu dinero se está agotando!"
 tooltip.graphs.reputation = "Cambiar reputación"
 tooltip.status.close = "Cerrar pantalla de estado"
 
@@ -34,6 +35,7 @@ tooltip.staff_list.prev_person = "Mostrar la página anterior"
 tooltip.status.reputation = "Tu reputación no debe estar por debajo de %d. Actualmente tienes %d"
 tooltip.status.balance = "No debes tener menos de $%d en el banco. Actualmente tienes $%d"
 
+-- The originals of these two contain one space too much
 fax.emergency.cure_not_possible_build = "Necesitas construir un %s"
 fax.emergency.cure_not_possible_build_and_employ = "Necesitas construir un %s y contratar un/a %s"
 fax.emergency.num_disease = "Hay %d personas con %s y necesitan ser atendidas inmediatamente."
@@ -42,6 +44,16 @@ adviser.goals.lose.kill = "Mata otros %d pacientes para perder el nivel!"
 -- Improve tooltips in staff window to mention hidden features
 tooltip.staff_window.face = "Rostro de la persona - pulsa para abrir la pantalla de personal."
 tooltip.staff_window.center_view = "Botón izquierdo para fijarse en la persona, botón derecho para rotar entre los miembros del personal."
+
+-- Improve tooltips in Build Rooms menu
+tooltip.rooms.inflation = "Un Doctor usa la Sala de Inflado para curar a pacientes cabezudos"
+tooltip.rooms.tongue_clinic = "Un Doctor usa la Clínica de Lengua caída para curar la Lengua caída"
+tooltip.rooms.fracture_clinic = "Una Enfermera usa la Clínica de Fracturas para reparar Huesos Fracturados"
+tooltip.rooms.hair_restoration = "Un Doctor usa la Sala de Restauración Capilar para curar la Calvicie"
+tooltip.rooms.decontamination = "Un Doctor usa la Ducha de Descontaminación para curar la Radiación Grave"
+tooltip.rooms.ward = "Las Salas son útiles tanto para diagnóstico como para tratamiento. Los pacientes se envían aquí para observación y también se preparan para operaciones en una Sala con una Enfermera"
+tooltip.rooms.research_room = "Los Doctores con habilidad de Investigación pueden descubrir nuevos medicamentos y máquinas en el Departamento de Investigación"
+tooltip.objects.reception_desk = "Recepción: requiere un Recepcionista que dirija a los pacientes a la oficina del Médico General"
 
 -- Improve tooltips in Research Screen
 tooltip.research.cure_dec = "Disminuir porcentaje de investigación de Curas"
@@ -59,6 +71,68 @@ tooltip.research.specialisation_inc = "Aumentar porcentaje de investigación de 
 confirmation.restart_level = "¿Seguro que quieres reiniciar el nivel?"
 -- TODO adviser.multiplayer.objective_completed
 -- TODO adviser.multiplayer.objective_failed
+
+
+
+
+
+
+
+-- An override for the squits becoming the the squits see issue 1646
+adviser.research.drug_improved_1 = "El medicamento %s ha sido mejorado por tu Departamento de Investigación."
+
+-- Disease overrides where there are typos
+diseases.golf_stones.cure = "Cura - Deben ser extraídas mediante una operación que requiere dos Cirujanos."
+diseases.ruptured_nodules.cure = "Cura - Dos Cirujanos calificados deben extraer los nódulos con mano firme."
+diseases.slack_tongue.cause = "Causa - Discusión crónica excesiva sobre telenovelas."
+diseases.slack_tongue.cure = "Cura - La lengua se coloca en la Máquina Cortadora y se extrae de forma rápida, eficiente y dolorosa."
+diseases.the_squits.cure = "Cura - Una mezcla glutinosa de compuestos farmacéuticos fibrosos solidifica las entrañas del paciente."
+diseases.bloaty_head.cure = "Cura - La cabeza hinchada se pincha y luego se vuelve a inflar hasta la presión correcta con una máquina inteligente."
+
+-- Rooms overrides where there are typos
+room_descriptions.inflation[2] = "Los pacientes con la dolorosa pero cómica condición de cabezudo deben acudir a la Clínica de Inflado, donde el cráneo agrandado será pinchado e inflado instantáneamente a la presión correcta.//"
+room_descriptions.staff_room[2] = "Tu personal se cansa al realizar sus tareas. Necesitan esta sala para relajarse y recuperarse. El personal cansado trabaja más lento, exige más dinero y eventualmente renunciará. También cometen más errores. Construir una sala de personal con suficientes actividades es muy provechoso. Asegúrate de que haya espacio para varios miembros del personal a la vez. "
+
+-- Staff description overrides where there are typos
+staff_descriptions.bad[14] = "Astuto, taimado y subversivo. "
+staff_descriptions.misc[11] = "Destila whisky. "
+
+-- Correction to a pay rise prompt with typos
+pay_rise.regular[1] = "Estoy totalmente agotado. Necesito un buen descanso, además de un aumento de %d si no quieres verme dejar este trabajo de mala muerte."
+
+-- Level description overrides where there are typos. Note: This is the only portion of the game that SHOULD use double space after fullstops etc.
+introduction_texts.level17 = " Última advertencia - mantén un ojo atento en tu Reputación - esto es lo que atraerá pacientes de todas partes a tu establecimiento.  Si no matas a demasiada gente y los mantienes razonablemente contentos, no deberías tener demasiados problemas en este nivel!// Ahora estás por tu cuenta.  Buena suerte y todo eso."
+introduction_texts.level11 = " Se te ha dado la oportunidad de construir el mejor de los hospitales.  Esta es un área extremadamente prestigiosa, y el Ministerio quisiera ver el mejor hospital posible.  Esperamos que generes mucho dinero, tengas una reputación excelente y cubras cualquier eventualidad posible.  Es un trabajo importante, este.  Tendrás que ser alguien especial para lograrlo.  Ten en cuenta, además, que ha habido avistamientos de ovnis en la zona.  Asegúrate de que tu personal esté preparado para algunas visitas inesperadas.  Tu hospital deberá valer $240,000, necesitarás $500,000 en el banco, y tu reputación deberá ser de 700."
+introduction_texts.level9 = " Habiendo llenado las arcas del Ministerio y pagado una nueva limusina para el propio Ministro, ahora puedes volver a crear un hospital cuidadoso y bien administrado en beneficio de los enfermos y necesitados.  Puedes esperar que surjan muchos problemas diferentes aquí.  Si tienes suficiente personal bien entrenado y salas, deberías tener todos los ángulos cubiertos.  Tu hospital deberá valer $200,000, y necesitarás $400,000 en el banco.  Con menos, no podrás terminar el nivel."
+introduction_texts.level16 = " Una vez que hayas diagnosticado a algunos de los pacientes, necesitarás construir instalaciones de tratamiento y clínicas para curarlos - una buena opción para empezar es la Farmacia.  También necesitarás una Enfermera para despachar los distintos medicamentos en la Farmacia."
+introduction_texts.level10 = " Además de cubrir todas las enfermedades que surgen en esta zona, el Ministerio solicita que dediques algo de tiempo a concentrarte en la eficiencia de tus medicamentos.  Ha habido algunas quejas de Ofsick, el Vigilante de la Salud, así que para quedar bien debes asegurarte de que todos tus medicamentos sean extremadamente eficientes.  Además, asegúrate de que tu hospital esté libre de reproches.  Mantén bajas esas muertes.  Como consejo, quizás quieras dejar espacio libre para un Tanque de Gelatina.  Desarrolla todos tus medicamentos a al menos 80 por ciento de eficiencia, consigue una reputación de 650 y guarda $500,000 en el banco para ganar."
+introduction_texts.level12 = " Ahora tienes el desafío de todos los desafíos.  Impresionado por tu éxito, el Ministerio tiene el trabajo más importante para ti; quieren que alguien construya otro hospital definitivo, gane una cantidad enorme de dinero y tenga una reputación increíble.  También se espera que compres toda la tierra que puedas, cures todo (y decimos todo) y ganes todos los premios.  ¿Crees que estás a la altura?  Gana $650,000, cura a 750 personas, y consigue una reputación de 800 para ganar este nivel."
+introduction_texts.level15 = " Bien, esa es la mecánica básica de armar un hospital.// Tus Doctores van a necesitar toda la ayuda posible para diagnosticar a algunos de estos pacientes.  Puedes ayudarlos construyendo otra instalación de diagnóstico como la Sala de Diagnóstico General."
+-- A small error in the introduction text of level 2
+introduction_texts.level2 = " Hay una mayor variedad de dolencias en esta zona.  Prepara tu hospital para atender a más pacientes, " ..
+                            "y planea construir un Departamento de Investigación.  Recuerda mantener tu establecimiento limpio, e intenta mantener tu " ..
+                            "reputación lo más alta posible - estarás lidiando con enfermedades como Lengua Caída, así que necesitarás una Clínica de " ..
+                            "Lengua Caída.  También puedes construir un Cardiograma para ayudarte a diagnosticar nuevas enfermedades.  Ambas salas " ..
+                            "necesitarán ser investigadas antes de que puedas construirlas.  Ahora también puedes comprar terrenos adicionales para expandir tu " ..
+                            "hospital - usa el mapa de la ciudad para esto.  Apunta a una reputación de 300, un saldo bancario de $10,000 y 40 personas curadas."
+
+-- Override for level progress typo
+level_progress.hospital_value_enough = "Mantén el valor de tu hospital por encima de %d y atiende tus otros problemas para ganar el nivel."
+level_progress.cured_enough_patients = "Has curado suficientes pacientes, pero necesitas poner tu hospital en mejor orden para ganar el nivel."
+
+-- Override for multiplayer typos
+multiplayer.players_failed = "Los siguientes jugadores no lograron alcanzar el último objetivo:"
+multiplayer.everyone_failed = "Todos fallaron en satisfacer ese último objetivo. ¡Así que todos pueden seguir jugando!"
+
+-- Override for a disease patient choice typo
+disease_discovered_patient_choice.need_to_employ = "Emplea a un %s para poder manejar esta situación."
+
+-- Override for shorter messages and a typo in 12.2
+letter[9][2] = "Has demostrado ser el mejor administrador de hospitales en la larga y accidentada historia de la medicina. Un logro tan trascendental no puede quedar sin recompensa, así que nos gustaría ofrecerte el puesto honorario de Jefe Supremo de Todos los Hospitales. Esto viene con un salario de $%d. Se te dará un desfile con confeti, y la gente mostrará su aprecio dondequiera que vayas.//"
+letter[10][2] = "Felicidades por dirigir exitosamente cada hospital que te asignamos. Un desempeño tan excelente te califica para la libertad de todas las ciudades del mundo. Se te otorgará una pensión de $%d, y lo único que pedimos es que viajes, gratis, por toda la nación, promoviendo el trabajo de todos los hospitales ante tu público admirador.//"
+letter[11][2] = "Tu carrera ha sido ejemplar, y eres una inspiración para todos nosotros. Gracias por dirigir tantos hospitales tan bien. Nos gustaría otorgarte un salario vitalicio de $%d, y solo pedimos que viajes en un auto oficial descapotable de ciudad en ciudad, dando conferencias sobre cómo lograste tanto tan rápido.//"
+letter[11][3] = "Eres un ejemplo para toda persona sabia, y sin excepción, todos en el mundo te consideran un activo supremo.//"
+letter[12][2] = "Tu exitosa carrera como el mejor administrador de hospitales desde Moisés se acerca a su fin. Acorde a tu impacto en la nación, el Ministerio te ofrece un salario de $%d simplemente por aparecer en nuestro nombre, inaugurando ferias, botando barcos y participando en programas de entrevistas. ¡Sería una excelente publicidad para todos nosotros!//"
 
 tooltip.handyman_window.close = "Cerrar ventana"
 tooltip.machine_window.close = "Cerrar ventana"
@@ -732,6 +806,11 @@ menu_debug = {
   map_overlay                 = "  SOBREPONER MAPA  ",
   sprite_viewer               = "  VISUALIZADOR DE ANIMACIONES  ",
 }
+menu_debug_overlay_blocking_off_areas = {
+  choice_1 = "  TOTALMENTE PROHIBIDO  ",
+  choice_2 = "  PARCIALMENTE PERMITIDO  ",
+  choice_3 = "  COMPLETAMENTE PERMITIDO  ",
+}
 menu_debug_overlay = {
   none                        = "  NADA  ",
   flags                       = "  MARCAS  ",
@@ -752,6 +831,12 @@ menu_player_count = {
   players_3 = "  3 JUGADORES  ",
   players_4 = "  4 JUGADORES  ",
 }
+
+
+tooltip.toolbar = {
+  machine_menu = "Menú de máquina",
+}
+
 adviser = {
   room_forbidden_non_reachable_parts = "Si colocas la habitación ahí bloquearás el acceso a ciertas partes del hospital.",
   warnings = {
@@ -764,6 +849,7 @@ adviser = {
     no_desk_6 = "Tienes una recepcionista, ¿qué tal si construyes una mesa de recepción para que pueda trabajar?",
     no_desk_7 = "Has construido una mesa de recepción, ¿y si contratas a una recepcionista? No verás a ningún paciente hasta que lo arregles, ¿lo sabes, no?",
   another_desk = "Necesitarás construir otro escritorio para la nueva recepcionista.",
+  cannot_buy = "¡No puedes comprar más de ese objeto!",
     cannot_afford = "¡No tienes dinero para contratar a esa persona!", -- I can't see anything like this in the original strings
     cannot_afford_2 = "¡No tienes dinero para comprar eso!",
     cannot_afford_machine = "Necesitas al menos $%1% en el banco para poder adquirir un nuevo %2%!",
@@ -787,7 +873,6 @@ adviser = {
     no_doctor_no_gp_office = "Deberias construir una Consulta y contratar un doctor en algun momento!",
     no_gp_office = "No has construido una Consulta donde tus doctores puedan diagnosticar a los pacientes!",
     money_low = "Te estás quedando sin dinero.",
-    cannot_buy = "¡No puedes comprar más de ese objeto!",
   },
   cheats = {
     th_cheat = "¡Felicidades, has desbloqueado los trucos!",
@@ -795,6 +880,10 @@ adviser = {
     roujin_off_cheat = "Desafío de Roujin desactivado. Todo volverá a la normalidad pronto.",
     norest_on_cheat = "Vaya! Parece que el personal consumió demasiada cafeína y ya no necesitan descansar.",
     norest_off_cheat = "Uf! Parece que el subidón se acabó. Tu personal ahora podrá descansar apropiadamente.",
+    queuejump_on_cheat = "Tus pacientes saben hacer cola. Dejan que los pacientes moribundos pasen al principio de la fila.",
+    queuejump_off_cheat = "La gente se ha vuelto egoísta y ya no deja que los pacientes moribundos se salten la cola.",
+    superdoctor_on_cheat = "¡Una excelente facultad de medicina te ha recomendado a sus graduados! Revisa el personal disponible para contratar.",
+    superdoctor_off_cheat = "El director de la facultad de medicina ya no te recomienda a sus graduados.",
   },
   staff_place_advice = {
     not_enough_lecture_chairs = "Cada estudiante necesita una silla donde sentarse!",
@@ -975,6 +1064,7 @@ options_window = {
   option_disabled = "Desactivado",
   fullscreen = "Pantalla Completa",
   resolution = "Resolución",
+  scale_ui = "Escala de interfaz",
   custom_resolution = "Personalizar...",
   capture_mouse = "Capturar Ratón",
   right_mouse_scrolling = "Desplazamiento con el Ratón",
@@ -991,57 +1081,102 @@ options_window = {
   scrollspeed = "Vel. de Desplazamiento",
   shift_scrollspeed = "Vel. de Despl. (Shift)",
   zoom_speed = "Vel. de Acercamiento",
+  autosave_frequency = "Frecuencia de autoguardado",
   hotkey = "Atajos de Teclado",
   check_for_updates = "Buscar Actualizaciones",
+  sound = "Sonido",
+}
+
+autosave_frequency = {
+    monthly = "Mensual",
+    weekly = "Semanal",
+    daily = "Diario",
+}
+
+tooltip.autosave_frequency = {
+    monthly = "Guarda automáticamente una vez al mes, el primer día de cada mes. Un total de 12 partidas guardadas con un historial de 1 año.",
+    weekly = "Guarda automáticamente una vez a la semana, los días 1, 7, 14, 21 y 28 de cada mes. Un total de 60 partidas guardadas con un historial de 1 año.",
+    daily = "Guarda automáticamente una vez al día al comienzo de cada día del juego. Un total de 365 partidas guardadas con un historial de 1 año. Ten en cuenta que un guardado típico puede ocupar hasta 1 megabyte o incluso más. De esta forma, tu carpeta de autoguardados puede llegar a ocupar entre 300 y 500 MB.",
 }
 
 tooltip.options_window = {
-  fullscreen = "Ejecuta el juego en pantalla completa o en una ventana.",
-  fullscreen_button = "Haz clic aquí para activar el modo de pantalla completa.",
-  resolution = "Cambia la resolución en la que funcionará el juego.",
-  select_resolution = "Selecciona una nueva resolución.",
-  capture_mouse = "Haz clic aquí para activar o desactivar la captura del cursor dentro del juego",
-  right_mouse_scrolling = "Cambiar el boton del ratón usado para desplazarse por el mapa",
-  width = "Introduce el ancho de la pantalla.",
-  height = "Introduce la altura de la pantalla.",
-  apply = "Aplica la resolución seleccionada.",
-  cancel = "Vuelve sin cambiar la resolución.",
-  customise_button = "Más opciones para personalizar tu experiencia de juego.",
-  folder_button = "Opciones de carpetas.",
-  language = "Selecciona el idioma de los textos.",
-  select_language = "Selecciona el idioma del juego.",
-  language_dropdown_item = "Seleccionar el idioma %s.",
-  language_dropdown_no_font = "Selecciona una fuente en las opciones de carpeta para habilitar este lenguaje.",
-  back = "Cierra la ventana de opciones.",
-  scrollspeed = "Establece la velocidad de desplazamiento de 1 (más lenta) a 10 (más rápida). El valor por defecto es 2.",
-  shift_scrollspeed = "Establece la velocidad de desplazamiento (cuando la tecla Shift se encuentra presionada) de 1 (más lenta) a 10 (más rápida). El valor por defecto es 4.",
-  zoom_speed = "Establece la velocidad de acercamiento de la cámara de 10 (más lenta) a 1000 (más rápida). El valor por defecto 80.",
-  apply_scrollspeed = "Aplica la velocidad de desplazamiento ingresada.",
-  cancel_scrollspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
-  apply_shift_scrollspeed = "Aplica la velocidad de desplazamiento (tecla Shift) ingresada.",
-  cancel_shift_scrollspeed = "Vuelve sin cambiar la velocidad de desplazamiento (tecla Shift).",
-  apply_zoomspeed = "Aplica la velocidad de acercamiento ingresada.",
-  cancel_zoomspeed = "Vuelve sin cambiar la velocidad de acercamiento.",
-  hotkey = "Cambia las teclas de acceso rápido.",
-  check_for_updates = "Establece si el juego debería buscar actualizaciones al iniciar.",
+  fullscreen = "Si el juego debe ejecutarse en pantalla completa o en modo ventana",
+    fullscreen_button = "Haz clic para activar o desactivar el modo de pantalla completa",
+    resolution = "La resolución en la que debe ejecutarse el juego",
+    select_resolution = "Selecciona una nueva resolución",
+    resolution_unavailable = "Resolución no disponible con la escala de interfaz actual",
+    scale_ui = "Escala la interfaz de usuario. Solo se muestran las opciones de escala que se ajustan a la pantalla; para ver más, aumenta la resolución.",
+    select_ui_scale = "Selecciona una nueva escala para la interfaz de usuario",
+    ui_scale_unavailable = "Escala de interfaz no disponible; por favor, selecciona primero una resolución más alta.",
+    capture_mouse = "Haz clic para activar o desactivar la captura del cursor durante el juego",
+    right_mouse_scrolling = "Cambia el botón del ratón que se utiliza para desplazarse por el mapa",
+    width = "Introduce el ancho de pantalla deseado",
+    height = "Introduce la altura de pantalla deseada",
+    apply = "Aplica la resolución ingresada",
+    cancel = "Vuelve sin cambiar la resolución",
+    customise_button = "Más ajustes que puedes cambiar para personalizar tu experiencia de juego",
+    folder_button = "Opciones de carpetas",
+    language = "El idioma en el que aparecerán los textos del juego",
+    select_language = "Selecciona el idioma del juego",
+    language_dropdown_item = "Elegir %s como idioma",
+    language_dropdown_no_font = "Selecciona una fuente en la configuración de carpetas para habilitar este idioma",
+    back = "Cierra la ventana de opciones",
+    scrollspeed = "Establece la velocidad de desplazamiento entre 1 (más lenta) y 10 (más rápida). El valor predeterminado es 2.",
+    shift_scrollspeed = "Establece la velocidad de desplazamiento al pulsar la tecla Mayús. De 1 (más lenta) a 10 (más rápida). El valor predeterminado es 4.",
+    zoom_speed = "Establece la velocidad de zoom de la cámara de 10 (más lenta) a 1000 (más rápida). El valor predeterminado es 80.",
+    autosave_frequency = "Establece la frecuencia con la que el juego realizará autoguardados.",
+    apply_scrollspeed = "Aplica la velocidad de desplazamiento ingresada.",
+    cancel_scrollspeed = "Vuelve sin cambiar la velocidad de desplazamiento.",
+    apply_shift_scrollspeed = "Aplica la velocidad de desplazamiento con Mayús ingresada.",
+    cancel_shift_scrollspeed = "Vuelve sin cambiar la velocidad de desplazamiento con Mayús.",
+    apply_zoomspeed = "Aplica la velocidad de zoom ingresada.",
+    cancel_zoomspeed = "Vuelve sin cambiar la velocidad de zoom.",
+    hotkey = "Cambia las teclas de acceso rápido del teclado.",
+    check_for_updates = "Establece si el juego debe buscar actualizaciones al iniciar.",
+    sound = "Cambia la configuración de audio",
 }
 
 audio_window = {
-  audio = "Sonido",
-  jukebox = "Reproductor",
-  back = "Atrás",
+  caption = "Ajustes de sonido",
+    audio = "Audio global",
+    sound_volume = "Volumen de sonido",
+    announcement_volume = "Volumen de anuncios",
+    music_volume = "Volumen de música",
+    midi_api = "API MIDI",
+    midi_port = "Puerto MIDI",
+    soundfont = "SoundFont",
+    default_midi_api = "Predeterminado (Software)",
+    default_midi_port = "Predeterminado",
+    jukebox = "Reproductor",
+    back = "Atrás",
+    soundfont_location_caption = "Elegir SoundFont (%1%)",
 }
 
 tooltip.audio_window = {
-  audio_button = "Activa o desactiva todos los sonidos del juego.",
-  audio_toggle = "Activa o desactiva el sonido.",
-  jukebox = "Abre el Reproductor para controlar la música",
+    audio_button = "Activa o desactiva todo el audio del juego",
+    audio_toggle = "Activa o desactiva",
+    sound_volume = "Volumen del sonido",
+    announcement_volume = "Volumen de los anuncios",
+    music_volume = "Volumen de la música",
+    midi_api = "La API que se utilizará para la música del juego. No se utiliza con la carpeta de música personalizada.",
+    midi_port = "Puerto del dispositivo a utilizar para la música del juego.",
+    soundfont_location = "Ubicación del archivo SoundFont para reproducir música MIDI. Se utiliza un SoundFont predeterminado si no se especifica ninguno.",
+    browse = "Buscar ubicación de la carpeta",
+    browse_soundfont = "Buscar otro archivo SoundFont (sf2 o sf3) ( Ubicación actual: %1% ) ",
+    no_soundfont_specified = "Usando SoundFont predeterminado",
+    jukebox = "Abre el Reproductor para controlar la música",
+    back = "Cierra la ventana",
 }
 
 customise_window = {
   caption = "Opciones personalizadas",
   option_on = "Activado",
   option_off = "Desactivado",
+  emergency_only = "Solo emergencias",
+  regular_patients = "Pacientes habituales",
+  male_only = "Solo hombres",
+  male_and_female = "Hombres y mujeres",
+  back = "Atrás",
   option_enabled = "Activado",
   option_disabled = "Desactivado",
   back = "Atrás",
@@ -1054,6 +1189,8 @@ customise_window = {
   average_contents = "Contenidos habituales",
   remove_destroyed_rooms = "Eliminar habitaciones destruidas",
   machine_menu_button = "Botón del menú de máquinas",
+  enable_screen_shake = "Temblor de pantalla",
+  enable_announcer_subtitles = "Subtítulos de megafonía",
 }
 
 tooltip.customise_window = {
@@ -1066,6 +1203,8 @@ tooltip.customise_window = {
   average_contents = "Activa esta opción si quieres que el juego recuerde los objetos adicionales que sueles añadir cuando construyes habitaciones.",
   remove_destroyed_rooms = "Activa esta opcion si te gustaría poder eliminar habitaciones destruidas (por un precio)",
   machine_menu_button = "Si quieres tener un botón para abrir el menú de máquinas en el panel inferior, activa esta opción. Ten en cuenta que este botón no estará visible si la resolución de pantalla es pequeña.",
+  enable_screen_shake = "Los terremotos harán que toda la pantalla tiemble. Desactiva esta opción si prefieres que la pantalla permanezca inmóvil.",
+  enable_announcer_subtitles = "Activa esta opción si deseas que el juego muestre subtítulos para los anuncios de tu hospital.",
   back = "Cerrar este menú y volver al menú de opciones.",
 }
 
@@ -1171,6 +1310,7 @@ hotkey_window = {
   ingame_panel_charts = "Charts",
   ingame_panel_policy = "Normas",
   ingame_panel_machineMenu = "Menu de Máquinas",
+  ingame_panel_adviserHistory = "Historial del Consejero",
   ingame_panel_map_alt = "Mapa de la Ciudad 2",
   ingame_panel_research_alt = "Investigación 2",
   ingame_panel_casebook_alt = "Historial 2",
@@ -1194,23 +1334,43 @@ hotkey_window = {
   ingame_poopLog = "Volcar registro del juego",
   ingame_poopStrings = "Volcar textos del juego",
   ingame_patient_gohome = "Enviar a casa",
+  ingame_sellPickedUpItem = "Vender objeto recogido",
+  ingame_storePosition_1 = "1",
+ingame_storePosition_2 = "2",
+ingame_storePosition_3 = "3",
+ingame_storePosition_4 = "4",
+ingame_storePosition_5 = "5",
+ingame_storePosition_6 = "6",
+ingame_storePosition_7 = "7",
+ingame_storePosition_8 = "8",
+ingame_storePosition_9 = "9",
+ingame_storePosition_0 = "10",
+ingame_recallPosition_1 = "1",
+ingame_recallPosition_2 = "2",
+ingame_recallPosition_3 = "3",
+ingame_recallPosition_4 = "4",
+ingame_recallPosition_5 = "5",
+ingame_recallPosition_6 = "6",
+ingame_recallPosition_7 = "7",
+ingame_recallPosition_8 = "8",
+ingame_recallPosition_9 = "9",
+ingame_recallPosition_0 = "10",
 }
 
 tooltip.hotkey_window = {
-  button_accept = "Aceptar y guardar las teclas de acceso rápido asignadas",
-  button_defaults = "Reestablecer las teclas de acceso rápido a los valores por defecto",
-  button_cancel = "Cancelar las teclas asignadas y volver al menú de opciones",
-  caption_panels = "Abre la ventana para asignar las teclas de acceso a los paneles",
-  panel_globalKeys = "Asignar atajos globales de teclado",
-  panel_generalInGameKeys = "Asignar atajos de teclado dentro del juego",
-  button_gameSpeedKeys = "Abre la ventana para configurar las teclas que controlan la velocidad del juego",
-  button_recallPosKeys = "Abre la ventana para configurar las teclas que permiten almacenar y recuperar posiciones de la cámara",
-  button_back_02 = "Volver a la ventana principal de teclás de acceso rápido. Las teclas de acceso rápido modificadas en esta ventana pueden ser aceptadas allí",
-  panel_scrollKeys = "Asignar atajos para desplazar la pantalla",
-  panel_zoomKeys = "Asigna atajos para acercar o alejar la vista",
-  panel_toggleKeys = "Asignar atajos para activar/desactivar opciones",
-  caption_panels = "Abre la ventana para asignar las teclas de acceso a los paneles",
-  panel_debugKeys = "Asignar atajos para depurar el juego",
+ button_accept = "Aceptar y guardar las teclas de acceso rápido asignadas",
+  button_defaults = "Restablecer todas las teclas de acceso rápido a los valores por defecto",
+  button_cancel = "Cancelar la asignación y volver al menú de opciones",
+  panel_globalKeys = "Asignar teclas de acceso rápido globales",
+  panel_generalInGameKeys = "Asignar teclas de acceso rápido generales dentro del juego",
+  button_gameSpeedKeys = "Asignar teclas de acceso rápido para controlar la velocidad del juego",
+  panel_scrollKeys = "Asignar teclas de acceso rápido para desplazar la pantalla",
+  panel_zoomKeys = "Asignar teclas de acceso rápido para acercar y alejar la vista",
+  panel_toggleKeys = "Asignar teclas de acceso rápido para activar o desactivar opciones",
+  caption_panels = "Asignar teclas de acceso rápido para abrir paneles",
+  button_recallPosKeys = "Asignar teclas de acceso rápido para guardar y recuperar posiciones de la cámara",
+  panel_debugKeys = "Asignar teclas de acceso rápido para depuración",
+  button_back_02 = "Volver a la ventana principal de teclas de acceso rápido. Las teclas modificadas en esta ventana se pueden aceptar allí",
 }
 
 font_location_window = {
@@ -1602,12 +1762,171 @@ multiplayer = {
 }
 
 disease_discovered_patient_choice.need_to_employ = "Emplea a un %s para poder manejar esta situación."
+subtitles = {
+  alien001 = "¡Alerta roja! ¡Ataque alienígena!", --unused
+  alien002 = "¡Los alienígenas han aterrizado, ayuda!", --unused
+  alien003 = "¡Los alienígenas existen y están en el edificio!", --unused
+  alien004 = "¡Se pide a los alienígenas que no perturben demasiado el hospital!", --unused
+  alien005 = "Alienígenas, por favor firmen el libro de visitas.", --unused
+  cheat001 = "¡El administrador del hospital está haciendo trampa!",
+  cheat002 = "¡Advertencia! ¡Un tramposo está dirigiendo el hospital!",
+  cheat003 = "¡Alerta de trampa! ¡Alerta de trampa!",
+  emerg001 = "Aviso al personal: llegan pacientes con Montones Amontonados.",
+  emerg002 = "Aviso al personal: pacientes con Las Corredoras están en camino.",
+  emerg003 = "Aviso al personal: llegan pacientes con Personalidades Televisivas.",
+  emerg004 = "Aviso al personal: pacientes con Resfriado Poco Común en camino.",
+  emerg005 = "Aviso al personal: llegan pacientes con Huesos Fracturados.",
+  emerg006 = "Aviso al personal: llegan pacientes con Invisibilidad.",
+  emerg007 = "Aviso al personal: llegan pacientes con Cabeza Hinchada.",
+  emerg008 = "Aviso al personal: pacientes con Peluditis en camino.",
+  emerg009 = "Aviso al personal: llegan pacientes con el Síndrome del Rey.",
+  emerg010 = "Aviso al personal: llegan pacientes con Radiación Grave.",
+  emerg011 = "Aviso al personal: llegan pacientes con Lengua Floja.",
+  emerg012 = "Aviso al personal: llegan pacientes con Calvicie.",
+  emerg013 = "Aviso al personal: pacientes con Picor Discreto llegando.",
+  emerg014 = "Aviso al personal: llegan pacientes con Gelatinitis.",
+  emerg015 = "Aviso al personal: llegan pacientes con Enfermedad del Sueño.",
+  emerg016 = "Aviso al personal: pacientes con Viento Roto llegando.",
+  emerg017 = "Aviso al personal: llegan pacientes con Palmas Sudorosas.",
+  emerg018 = "Aviso al personal: llegan pacientes con Hinchazón Inesperada.",
+  emerg019 = "Aviso al personal: pacientes con Podredumbre Estomacal llegando.",
+  emerg020 = "Aviso al personal: llegan pacientes con ADN Alienígena.",
+  emerg021 = "Aviso al personal: llegan pacientes con Embarazo.",
+  emerg022 = "Aviso al personal: llegan pacientes con Transparencia.",
+  emerg023 = "Aviso al personal: pacientes con Costillas de Repuesto llegando.",
+  emerg024 = "Aviso al personal: llegan pacientes con Frijoles Riñón.",
+  emerg025 = "Aviso al personal: pacientes con Corazones Rotos llegando.",
+  emerg026 = "Aviso al personal: llegan pacientes con Nódulos Reventados.",
+  emerg027 = "Aviso al personal: llegan pacientes con Risa Infecciosa.",
+  emerg028 = "Aviso al personal: pacientes con Tobillos Corrugados en camino.",
+  emerg029 = "Aviso al personal: llegan pacientes con Pelo Nasal Crónico.",
+  emerg030 = "Aviso al personal: llegan pacientes con Patillas de Tercer Grado.",
+  emerg031 = "Aviso al personal: pacientes con Sangre Falsa llegando.",
+  emerg032 = "Aviso al personal: llegan pacientes con Expulsiones Gástricas.",
+  emerg033 = "Aviso al personal: llegan pacientes con Pulmones de Hierro.",
+  emerg034 = "Aviso al personal: llegan pacientes con Piedras de Golf.",
+  epid001 = "¡Alerta de epidemia, prepárense!",
+  epid002 = "Aviso al personal: ¡alerta de epidemia!",
+  epid003 = "¡Advertencia, alerta de epidemia!",
+  epid004 = "¡Advertencia!",
+  epid005 = "Epidemia terminada, todo despejado.",
+  epid006 = "Epidemia bajo control.",
+  epid007 = "Epidemia contenida.",
+  epid008 = "Emergencia de epidemia finalizada.",
+  machwarn = "*Alarma de máquina*",
+  maint004 = "Se solicita al técnico reparar el Cortador de Lengua.",
+  maint005 = "Técnico, por favor repare la máquina de Rayos X.",
+  maint006 = "Se solicita al técnico reparar el Reparador de ADN.",
+  maint007 = "Se requiere mantenimiento en el Restaurador de Pelo.",
+  maint008 = "Técnico, por favor repare la máquina de Electrólisis.",
+  maint009 = "Se requiere mantenimiento en la Tina de Gelatina.",
+  maint010 = "Se solicita al técnico en la máquina de Cardio.",
+  maint011 = "Técnico, por favor repare la máquina de Diagnóstico.",
+  maint012 = "Se requiere mantenimiento en Descontaminación.",
+  maint013 = "Técnico, por favor dé mantenimiento al Inflador.",
+  maint014 = "Se requiere mantenimiento en la máquina de Fracturas.",
+  maint015 = "Se solicita al técnico en la Máquina de Sangre.",
+  maint016 = "Técnico, atienda el Ultraescáner.",
+  quake001 = "¡Advertencia! Se ha reportado un terremoto.",
+  quake002 = "¡Advertencia! Terremoto inminente.",
+  quake003 = "¡Atención! Alerta de terremoto.",
+  quake004 = "¡Atención! Terremoto en camino.",
+  rand001 = "Teléfono de cortesía blanco.",
+  rand002 = "Doctor Jekyll, preséntese en psiquiatría por favor.",
+  rand003 = "Prohibido fumar en el hospital, por favor.",
+  rand005 = "Se recuerda a los pacientes no morir en los pasillos.",
+  rand006 = "Toses y estornudos propagan enfermedades.",
+  rand008 = "Mensaje para pacientes: se requieren chequeras.",
+  rand009 = "Mensaje para pacientes: se requieren tarjetas de crédito.",
+  rand010 = "Silencio por favor, hay gente enferma.",
+  rand012 = "Se pide a los pacientes no vomitar demasiado.",
+  rand013 = "Advertencia: esto es una advertencia.",
+  rand016 = "Los pacientes están aquí bajo su propio riesgo.",
+  rand017 = "Se pide a los pacientes enfadados que estén lo más callados posible.",
+  rand018 = "Se pide a los pacientes tener paciencia.",
+  rand019 = "Se pide a los pacientes esperar en silencio.",
+  rand021 = "Por favor, no ensucien el hospital.",
+  rand022 = "Tirar basura va en contra de las reglas.",
+  rand024 = "Pacientes, por favor guárdense sus gérmenes.",
+  rand025 = "Los pacientes deben tener su chequera lista.",
+  rand026 = "Pacientes, tengan lista su tarjeta de crédito.",
+  rand027 = "Pacientes terminales al frente de la fila.",
+  rand028 = "Por favor, formen filas ordenadas.",
+  rand029 = "Estén atentos a otros productos de Bullfrog.",
+  rand030 = "Prohibido merodear.",
+  rand031 = "Prohibido tirar basura.",
+  rand032 = "Prohibido vomitar.",
+  rand033 = "Se recuerda al personal descansar con frecuencia.",
+  rand034 = "Oferta especial de hoy: trasplante de pelo a mitad de precio.",
+  rand035 = "Los señores Burke y Hare a la salida trasera, por favor.",
+  rand036 = "¡Por favor no alimenten a los roedores, gracias!",
+  rand037 = "¡Se pide amablemente a los pacientes gemir en voz baja, gracias!",
+  rand040 = "¡Advertencia de bomba de basura!",
+  rand041 = "Estoy harto de anunciar, quiero irme a casa.",
+  rand044 = "¿Podría la gente intentar no vomitar en los pasillos?",
+  rand045 = "Doctor Lecter, preséntese en seguridad por favor, Doctor Lecter a seguridad.",
+  rand046 = "Su tarjeta de sonido está funcionando.",
+  reqd001 = "Doctor, atienda de inmediato en Cardio por favor.",
+  reqd002 = "Doctor, atienda en la sala de Escáner por favor.",
+  reqd003 = "Doctor, atienda en Psiquiatría por favor.",
+  reqd004 = "Se requiere enfermera en la Clínica de Fracturas por favor.",
+  reqd005 = "Se necesita doctor en la clínica de Lengua Caida.",
+  reqd006 = "Se requiere doctor en la sala de la Máquina de Sangre.",
+  reqd007 = "Se busca doctor en Ultraescáner.",
+  reqd008 = "Se requiere doctor en la Consulta.",
+  reqd009 = "Se requiere enfermera en la Sala.",
+  reqd010 = "Se requieren dos cirujanos en el Quirófano.",
+  reqd011 = "Se requiere otro cirujano en el Quirófano.", --unused
+  reqd012 = "Se requiere enfermera en la Farmacia.",
+  reqd013 = "Se requiere doctor en Rayos X.",
+  reqd014 = "Se requiere doctor en la sala del Inflador.",
+  reqd015 = "Se requiere doctor en el Reparador de ADN.",
+  reqd016 = "Se necesita doctor en Restauración de Pelo.",
+  reqd017 = "Se requiere doctor en Formación.", --unused
+  reqd019 = "Se busca doctor en Electrólisis.",
+  reqd020 = "Se requiere doctor en la Tina de Gelatina.",
+  reqd021 = "Se requiere doctor en Diagnóstico General.",
+  reqd023 = "Se necesita investigador en el Departamento de Investigación.",
+  reqd024 = "Se requiere doctor en Descontaminación.",
+  sack001 = "Doctor despedido.",
+  sack002 = "El doctor se está yendo.",
+  sack003 = "El doctor está saliendo.",
+  sack004 = "La enfermera se está yendo.",
+  sack005 = "La enfermera se está yendo ahora.",
+  sack006 = "Técnico despedido está saliendo.",
+  sack007 = "Se le ha pedido a la recepcionista que se retire.",
+  sack008 = "La recepcionista se está yendo.",
+  sack009 = "Un miembro del personal ha sido reclutado por la competencia.", --unused
+  sack010 = "Un doctor ha sido reclutado por la competencia.", --unused
+  sorry001 = "Pedimos disculpas por la cantidad de basura.", --unused
+  sorry002 = "Pedimos disculpas por el frío extremo.",
+  sorry003 = "Lamentamos el calor excesivo.",
+  sorry004 = "Disculpas a los pacientes, los radiadores están fallando.",
+  sorry005 = "Advertencia de vómito, cuiden sus pies.", --unused
+  sorry006 = "Mantenimiento, alerta de vómito en el pasillo.", --unused
+  vip001 = "Atención, tenemos un VIP en el edificio.",
+  vip002 = "Un VIP ha entrado al edificio.",
+  vip003 = "Un VIP está de visita en este momento.",
+  vip004 = "Un VIP está recorriendo el edificio.",
+  vip005 = "Tenemos un VIP con nosotros.",
+  vip008 = "Un hombre del ministerio está en el hospital.",
+}
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 
 options_window.change_resolution = "Cambiar resolución"
 tooltip.options_window.change_resolution = "Cambia la resolución de la ventana utilizando la dimensión indicada a la izquierda."
-
+information.very_old_save = "Han habido muchas actualizaciones en el juego desde que comenzaste este nivel. Para asegurarte de que todas las funciones operen como se espera, considera reiniciarlo."
+machine_menu = {
+  ratio = "Proporción",
+  percentage = "%d%",
+}
+tooltip.machine_menu = {
+  ratio = "Este valor muestra la proporción entre la resistencia restante y la resistencia total",
+  header = {
+    ratio = "Proporción porcentual entre la resistencia restante y la resistencia total de las máquinas.",
+  }
+}
 cheats_window.cheats = {
  toggle_infected = show_infected,
 }

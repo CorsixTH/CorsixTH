@@ -202,7 +202,7 @@ local function Render(canvas)
   font:draw(canvas, msg, 0, y)
   y = y + fonth + sep
   local x = 0
-  local sw, sh = TheApp.config.width, TheApp.config.height
+  local sw, sh = canvas:getRenderSize()
   local tallest = 0
   for i = 0, #sprite_table - 1 do
     local w, h = sprite_table:size(i)

@@ -34,6 +34,7 @@ SOFTWARE.
 #include FT_IMAGE_H
 #include FT_TYPES_H
 #include <algorithm>
+#include <cmath>
 #include <cstring>
 #include <map>
 #include <utility>
@@ -80,7 +81,11 @@ text_layout bitmap_font::get_text_dimensions(const char* sMessage,
 }
 
 void bitmap_font::draw_text(render_target* pCanvas, const char* sMessage,
-                            size_t iMessageLength, int iX, int iY) const {
+                            size_t iMessageLength, float iX, float iY) const {
+  // Keep text pixel aligned for readability
+  iX = std::round(iX);
+  iY = std::round(iY);
+
   pCanvas->start_nonoverlapping_draws();
   if (iMessageLength != 0 && sheet != nullptr) {
     const unsigned int iFirstASCII = 31;
@@ -101,7 +106,7 @@ void bitmap_font::draw_text(render_target* pCanvas, const char* sMessage,
         sheet->get_sprite_size_unchecked(iChar, &iWidth, &iHeight);
         iWidth *= scale_factor;
         iHeight *= scale_factor;
-        iX += iWidth + scaled_letter_spacing;
+        iX += static_cast<float>(iWidth + scaled_letter_spacing);
       }
     }
   }
@@ -110,8 +115,8 @@ void bitmap_font::draw_text(render_target* pCanvas, const char* sMessage,
 
 text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
                                            const char* sMessage,
-                                           size_t iMessageLength, int iX,
-                                           int iY, int iWidth, int iMaxRows,
+                                           size_t iMessageLength, float iX,
+                                           float iY, int iWidth, int iMaxRows,
                                            int iSkipRows,
                                            text_alignment eAlign) const {
   text_layout oDrawArea = {};
@@ -173,24 +178,26 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
 
       if (iSkippedRows >= iSkipRows) {
         if (pCanvas) {
-          int iXOffset = 0;
+          float iXOffset = 0;
           if (iMsgBreakWidth < iWidth)
-            iXOffset = (iWidth - iMsgBreakWidth) * static_cast<int>(eAlign) / 2;
+            iXOffset = static_cast<float>((iWidth - iMsgBreakWidth) *
+                                          static_cast<int>(eAlign)) /
+                       2;
           draw_text(pCanvas, sMessage, sBreakPosition - sMessage, iX + iXOffset,
                     iY);
         }
-        iY += static_cast<int>(iTallest) + scaled_line_spacing;
+        iY += static_cast<float>(iTallest + scaled_line_spacing);
         oDrawArea.end_x = iMsgWidth;
         oDrawArea.row_count++;
         if (foundNewLine) {
-          iY += static_cast<int>(iTallest) + scaled_line_spacing;
+          iY += static_cast<float>(iTallest + scaled_line_spacing);
           oDrawArea.row_count++;
         }
       } else {
         iSkippedRows++;
         if (foundNewLine) {
           if (iSkippedRows == iSkipRows) {
-            iY += static_cast<int>(iTallest) + scaled_line_spacing;
+            iY += static_cast<float>(iTallest + scaled_line_spacing);
             oDrawArea.row_count++;
           }
           iSkippedRows++;
@@ -375,7 +382,7 @@ text_layout freetype_font::get_text_dimensions(const char* sMessage,
 }
 
 void freetype_font::draw_text(render_target* pCanvas, const char* sMessage,
-                              size_t iMessageLength, int iX, int iY) const {
+                              size_t iMessageLength, float iX, float iY) const {
   draw_text_wrapped(pCanvas, sMessage, iMessageLength, iX, iY, INT_MAX);
 }
 
@@ -415,8 +422,8 @@ FT_Pos pixel_align(FT_Pos position) { return ((position + 63) >> 6) << 6; }
 
 text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
                                              const char* sMessage,
-                                             size_t iMessageLength, int iX,
-                                             int iY, int iWidth, int iMaxRows,
+                                             size_t iMessageLength, float iX,
+                                             float iY, int iWidth, int iMaxRows,
                                              int iSkipRows,
                                              text_alignment eAlign) const {
   text_layout oDrawArea = {};
@@ -426,6 +433,10 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
   if (!sMessage || sMessage[0] == '\0') {
     return oDrawArea;
   }
+
+  // Keep text pixel aligned for readability
+  iX = std::round(iX);
+  iY = std::round(iY);
 
   // Calculate an index into the cache to use for this piece of text.
   size_t iHash = iMessageLength +
@@ -724,8 +735,8 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
     draw_texture(pCanvas, pEntry, iX, iY);
   }
   oDrawArea.width = pEntry->widest_line_width;
-  oDrawArea.end_x = iX + pEntry->last_x;
-  oDrawArea.end_y = iY + pEntry->height;
+  oDrawArea.end_x = static_cast<int>(iX) + pEntry->last_x;
+  oDrawArea.end_y = static_cast<int>(iY) + pEntry->height;
   oDrawArea.row_count = pEntry->row_count;
   return oDrawArea;
 }

@@ -78,9 +78,10 @@ function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_
   self.num_rows = (self.tree_rect.h - self.y_offset) / self.row_height
 
   -- Magic numbers used to find a static position across different screen resolutions.
-  local button1x = math.floor(TheApp.ui.app.config.width / 2 - 90)
+  local scr_w, scr_h = TheApp.video:getRenderSize()
+  local button1x = math.floor(scr_w / 2 - 90)
   local button2x = button1x + 210
-  local buttony = math.floor(TheApp.ui.app.config.height / 4 - 95)
+  local buttony = math.floor(scr_h / 4 - 95)
   -- Add the two column headers and make buttons on them.
   if show_dates then
     self:addBevelPanel(1, 1, width - 170, 13, col_bg):setLabel(_S.menu_list_window.name)

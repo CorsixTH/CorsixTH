@@ -24,7 +24,7 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL_events.h>
+#include <SDL3/SDL.h>
 
 #include <algorithm>
 #include <chrono>
@@ -94,6 +94,34 @@ RtMidi::Api midi_api_from_string(std::string_view apiName) {
   throw std::invalid_argument("Unknown API name");
 }
 
+std::string midi_api_to_name(RtMidi::Api api) {
+  switch (api) {
+    case RtMidi::LINUX_ALSA:
+      return {"ALSA"};
+    case RtMidi::UNIX_JACK:
+      return {"JACK"};
+    case RtMidi::MACOSX_CORE:
+      return {"CoreMIDI"};
+    case RtMidi::WINDOWS_MM:
+      return {"Windows MM"};
+    case RtMidi::WEB_MIDI_API:
+      return {"Web MIDI API"};
+#if RTMIDI_VERSION_MAJOR > 5
+    case RtMidi::WINDOWS_UWP:
+      return {"Windows UWP"};
+    case RtMidi::ANDROID_AMIDI:
+      return {"Android AMidi"};
+#endif
+    case RtMidi::RTMIDI_DUMMY:
+    case RtMidi::UNSPECIFIED:
+    case RtMidi::NUM_APIS:
+      return {""};
+  }
+
+  // Silences compiler warnings
+  return {""};
+}
+
 /**
  * Return whether the given RtMidi API supports the openVirtualPort method.
  *
@@ -107,6 +135,23 @@ bool api_supports_virtual_port(RtMidi::Api api) {
       return true;
     default:
       return false;
+  }
+}
+
+/**
+ * Test if the specified API is likely supported by the system runtime.
+ *
+ * The test currently attempts to establish a connection to the API to query the
+ * port count. If that fails, or there is no possible port for the API we
+ * return false.
+ */
+bool test_midi_api(RtMidi::Api api) {
+  try {
+    RtMidiOut test_midi(api);
+    return test_midi.getPortCount() > 0;
+  } catch (const RtMidiError&) {
+    std::printf("INFO: Cannot query %s", midi_api_to_name(api).c_str());
+    return false;
   }
 }
 
@@ -318,35 +363,13 @@ std::vector<std::string> midi_player::api_list() {
 
   std::vector<std::string> apiStrings;
   for (RtMidi::Api api : apis) {
-    switch (api) {
-      case RtMidi::LINUX_ALSA:
-        apiStrings.emplace_back("ALSA");
-        break;
-      case RtMidi::UNIX_JACK:
-        apiStrings.emplace_back("JACK");
-        break;
-      case RtMidi::MACOSX_CORE:
-        apiStrings.emplace_back("CoreMIDI");
-        break;
-      case RtMidi::WINDOWS_MM:
-        apiStrings.emplace_back("Windows MM");
-        break;
-      case RtMidi::WEB_MIDI_API:
-        apiStrings.emplace_back("Web MIDI API");
-        break;
-#if RTMIDI_VERSION_MAJOR > 5
-      case RtMidi::WINDOWS_UWP:
-        apiStrings.emplace_back("Windows UWP");
-        break;
-      case RtMidi::ANDROID_AMIDI:
-        apiStrings.emplace_back("Android AMidi");
-        break;
-#endif
-      case RtMidi::RTMIDI_DUMMY:
-      case RtMidi::UNSPECIFIED:
-      case RtMidi::NUM_APIS:
-        // These should not be selectable
-        break;
+    if (api == RtMidi::RTMIDI_DUMMY || api == RtMidi::NUM_APIS ||
+        api == RtMidi::UNSPECIFIED) {
+      continue;
+    }
+
+    if (test_midi_api(api)) {
+      apiStrings.push_back(std::move(midi_api_to_name(api)));
     }
   }
 

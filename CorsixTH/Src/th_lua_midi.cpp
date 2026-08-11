@@ -113,67 +113,92 @@ int l_midi_player_new(lua_State* L) {
   try {
     luaT_stdnew<th_lua_midi_player>(L, luaT_environindex, true, apiChoice,
                                     portChoice, sysexMasterVolume);
+    return 1;
   } catch (const std::invalid_argument& e) {
     return luaL_error(L, "Invalid MIDI API choice: %s", e.what());
+  } catch (const std::exception& e) {
+    return luaL_error(L, e.what());
   }
-
-  return 1;
 }
 
 int l_midi_port_list(lua_State* L) {
   th_lua_midi_player* midiPlayer = luaT_testuserdata<th_lua_midi_player>(L);
-  const std::vector<std::string> portList = midiPlayer->port_list();
-  lua_createtable(L, static_cast<int>(portList.size()), 0);
-  for (size_t i = 0; i < portList.size(); ++i) {
-    lua_pushinteger(L, static_cast<lua_Integer>(i) + 1);
-    lua_pushstring(L, portList[i].c_str());
-    lua_settable(L, -3);
+  try {
+    const std::vector<std::string> portList = midiPlayer->port_list();
+    lua_createtable(L, static_cast<int>(portList.size()), 0);
+    for (size_t i = 0; i < portList.size(); ++i) {
+      lua_pushinteger(L, static_cast<lua_Integer>(i) + 1);
+      lua_pushstring(L, portList[i].c_str());
+      lua_settable(L, -3);
+    }
+    return 1;
+  } catch (const std::exception& e) {
+    return luaL_error(L, e.what());
   }
-
-  return 1;
 }
 
 int l_midi_player_play_xmi(lua_State* L) {
   th_lua_midi_player* midiPlayer = luaT_testuserdata<th_lua_midi_player>(L);
+  try {
+    size_t xmiDataLength;
+    const uint8_t* xmiData = luaT_checkfile(L, 2, &xmiDataLength);
 
-  size_t xmiDataLength;
-  const uint8_t* xmiData = luaT_checkfile(L, 2, &xmiDataLength);
-
-  midiPlayer->play_xmi(xmiData, xmiDataLength);
-
-  return 0;
+    midiPlayer->play_xmi(xmiData, xmiDataLength);
+    return 0;
+  } catch (const std::exception& e) {
+    return luaL_error(L, e.what());
+  }
 }
 
 int l_midi_player_set_volume(lua_State* L) {
   th_lua_midi_player* midiPlayer = luaT_testuserdata<th_lua_midi_player>(L);
-  double volume = static_cast<double>(luaL_checknumber(L, 2));
-  midiPlayer->set_volume(volume);
 
-  return 0;
+  try {
+    double volume = static_cast<double>(luaL_checknumber(L, 2));
+    midiPlayer->set_volume(volume);
+    return 0;
+  } catch (const std::exception& e) {
+    return luaL_error(L, e.what());
+  }
 }
 
 int l_midi_player_stop(lua_State* L) {
   th_lua_midi_player* midiPlayer = luaT_testuserdata<th_lua_midi_player>(L);
-  midiPlayer->stop();
-
-  return 0;
+  try {
+    midiPlayer->stop();
+    return 0;
+  } catch (const std::exception& e) {
+    return luaL_error(L, e.what());
+  }
 }
 
 int l_midi_player_pause(lua_State* L) {
   th_lua_midi_player* midiPlayer = luaT_testuserdata<th_lua_midi_player>(L);
-  midiPlayer->pause();
-  return 0;
+  try {
+    midiPlayer->pause();
+    return 0;
+  } catch (const std::exception& e) {
+    return luaL_error(L, e.what());
+  }
 }
 
 int l_midi_player_resume(lua_State* L) {
   th_lua_midi_player* midiPlayer = luaT_testuserdata<th_lua_midi_player>(L);
-  midiPlayer->resume();
-  return 0;
+  try {
+    midiPlayer->resume();
+    return 0;
+  } catch (const std::exception& e) {
+    return luaL_error(L, e.what());
+  }
 }
 
 int l_midi_player_close(lua_State* L) {
   th_lua_midi_player* midiPlayer = luaT_testuserdata<th_lua_midi_player>(L);
-  midiPlayer->close();
+  try {
+    midiPlayer->close();
+  } catch (const std::exception& e) {
+    return luaL_error(L, e.what());
+  }
   return 0;
 }
 

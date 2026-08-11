@@ -22,14 +22,14 @@ jobs:
       matrix:
         include:
           - lua: LuaJIT
-            packages: cmake libluajit2-5.1-dev # CMake 4, Openresty's luajit
+            packages: cmake libluajit-5.1-dev # CMake 4, Openresty's luajit
             cmakejit: '-DWITH_LUAJIT=ON -DLUA_LIBRARY=/usr/lib/x86_64-linux-gnu/libluajit-5.1.so -DWITH_MOVIES=OFF -DWITH_MIDI_DEVICE=OFF'
           - lua: Lua 5.1
             packages: 'libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev librtmidi-dev'
             cmake: 1
             static_analysis: 1
             docs: 1
-    runs-on: ubuntu-24.04 # noble
+    runs-on: ubuntu-26.04 # resolute raccoon
     name: Linux apt-get ${{matrix.lua}} ${{inputs.animview == 'true' && 'with AnimView' || ''}}
     steps:
       - uses: actions/checkout@v6  # Keeps the git OAuth token after checkout
@@ -41,8 +41,8 @@ jobs:
       - name: Install CorsixTH and lua test requirements
         run: |
           sudo apt-get update
-          sudo apt-get install ${{matrix.packages}} liblua5.1-dev lua5.1 luarocks libsdl2-dev libfreetype-dev \
-           libsdl2-mixer-dev libcurl4-openssl-dev ${{inputs.animview == 'true' && 'libwxgtk3.0-gtk3-dev' || ''}}
+          sudo apt-get install ${{matrix.packages}} liblua5.1-dev lua5.1 luarocks libsdl3-dev libfreetype-dev \
+           libcurl4-openssl-dev ${{inputs.animview == 'true' && 'libwxgtk3.0-gtk3-dev' || ''}}
           # Required for lua lint check
           sudo luarocks install luacheck
           # Required for lua unit tests
@@ -55,16 +55,16 @@ jobs:
           sudo apt-get install doxygen yamllint
           sudo pip3 install -I codespell==2.2 cmakelint==1.4
           sudo luarocks install luafilesystem
-      - name: Install CMake 3.14
+      - name: Install CMake 3.16
         if: matrix.cmake
         run: |
-          # Install CMake version 3.14, the oldest CorsixTH-supported version, which does not support Lua 5.4
-          curl -L https://github.com/Kitware/CMake/releases/download/v3.14.6/cmake-3.14.6-Linux-x86_64.sh -o cmake.sh
+          # Install CMake version 3.16, the oldest CorsixTH-supported version, which does not support Lua 5.4
+          curl -L https://github.com/Kitware/CMake/releases/download/v3.16.9/cmake-3.16.9-Linux-x86_64.sh -o cmake.sh
           sudo bash cmake.sh --prefix=/usr/local/ --exclude-subdir --skip-license
           cmake --version
       - name: Create CorsixTH makefiles with ${{matrix.lua}}
         run: |
-          cmake . -G"Unix Makefiles" -Bbuild ${{matrix.cmakejit}} --debug-output -LA \
+          cmake . -G"Unix Makefiles" -Bbuild ${{matrix.cmakejit}} -DFETCH_SDL_MIXER=ON --debug-output -LA \
            -DBuILD_ANIMVIEW=${{inputs.animview == 'true' && 'ON' || 'OFF'}}
       - name: Build CorsixTH with ${{matrix.lua}}
         run: |
@@ -83,7 +83,7 @@ jobs:
         if: matrix.static_analysis
         run: |
           # Check if there is bad whitespace.
-          python3 scripts/check_whitespace.py -e scanner.cpp -e parser.cpp
+          python3 scripts/check_whitespace.py -e scanner.cpp -e parser.cpp -e build
           # Check for incorrectly encoded files.
           python3 scripts/check_language_files_not_BOM.py
           # Check if there are lua classes with invalid/improper declarations.
@@ -144,7 +144,8 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 20
-          sudo apt-get install libltdl-dev libx11-dev libxft-dev libxext-dev libxtst-dev \
+          sudo apt-get install libltdl-dev libx11-dev libxcursor-dev \
+            libxft-dev libxext-dev libxtst-dev \
             libxrandr-dev nasm clang-format-20 clang-tidy-20 autoconf-archive
       - name: Restore vcpkg cache
         uses: actions/cache@v5

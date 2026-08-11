@@ -36,7 +36,7 @@ function UIMenuBar:UIMenuBar(ui, map_editor)
   self.on_top = true
   self.x = 0
   self.y = 0
-  self.width = app.config.width
+  self.width = app.video:getRenderSize()
   self.height = 16
   self.visible = false
   local selected_label_color = { red = 40, green = 40, blue = 250 }
@@ -103,7 +103,7 @@ function UIMenuBar:onTick()
 end
 
 function UIMenuBar:onChangeResolution()
-  self.width = self.ui.app.config.width
+  self.width = TheApp.video:getRenderSize()
 end
 
 function UIMenuBar:onChangeLanguage()
@@ -787,7 +787,7 @@ function UIMenuBar:makeGameMenu(app)
 
   local function rate(speed)
     return speed == "Normal", function()
-      app.world:setSpeed(speed)
+      app.world:setUserSpeed(speed)
     end, "", function()
       return app.world:isCurrentSpeed(speed)
     end

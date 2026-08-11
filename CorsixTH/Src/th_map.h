@@ -138,6 +138,7 @@ struct map_tile_flags {
     buildable_e_mask = 1 << 18,
     buildable_s_mask = 1 << 19,
     buildable_w_mask = 1 << 20,
+    avoid_tile_mask = 1 << 21,
   };
 
   bool passable;      //!< Pathfinding: Can walk on this tile
@@ -161,6 +162,7 @@ struct map_tile_flags {
   bool buildable_e;  //!< Can build on the east side of the tile
   bool buildable_s;  //!< Can build on the south side of the tile
   bool buildable_w;  //!< Can build on the west side of the tile
+  bool avoid_tile;   //!< Try (hard) not to use this tile for humanoids.
 
   //! Convert the given uint32_t representation of the map_tile flags
   //! to a map_tile_flags instance.

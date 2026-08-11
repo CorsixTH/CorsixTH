@@ -83,6 +83,24 @@
       }
     },
     {
+      "name": "macos-arm64-dev",
+      "binaryDir": "${sourceDir}/build/macos-arm64-dev",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-osx",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "USE_SOURCE_DATADIRS": "ON",
+        "ENABLE_UNIT_TESTS": "ON",
+        "ENABLE_SANITIZERS": "ON",
+        "BUILD_ANIMVIEW": "ON",
+        "BUILD_TOOLS": "ON",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
       "name": "macos-arm64-rel",
       "binaryDir": "${sourceDir}/build/macos-arm64-rel",
       "generator": "Unix Makefiles",
@@ -95,8 +113,26 @@
       }
     },
     {
+      "name": "macos-x64-dev",
+      "binaryDir": "${sourceDir}/build/macos-x64-dev",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-osx",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "USE_SOURCE_DATADIRS": "ON",
+        "ENABLE_UNIT_TESTS": "ON",
+        "ENABLE_SANITIZERS": "ON",
+        "BUILD_ANIMVIEW": "ON",
+        "BUILD_TOOLS": "ON",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
       "name": "macos-x64-rel",
-      "binaryDir": "${sourceDir}/build/macos-arm64-rel",
+      "binaryDir": "${sourceDir}/build/macos-x64-rel",
       "generator": "Unix Makefiles",
       "cacheVariables": {
         "VCPKG_TARGET_TRIPLET": "x64-osx-release",

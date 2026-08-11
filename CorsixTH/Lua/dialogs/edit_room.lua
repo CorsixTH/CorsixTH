@@ -198,6 +198,7 @@ function UIEditRoom:cancel()
       self.ui:setDefaultCursor(nil)
       self.check_for_clear_area_timer = nil
       self.humanoids_to_watch = nil
+      self:_setCellFlagsOnBlueprint({avoidTile = false})
     end
     self.phase = "walls"
     self:returnToWallPhase()
@@ -262,6 +263,7 @@ function UIEditRoom:clearArea()
   local world = self.ui.app.world
   world:clearCaches() -- To invalidate idle tiles in case we need to move people
   local humanoids_to_watch = {}
+  self:_setCellFlagsOnBlueprint({avoidTile = true})
   do
     local x1 = rect.x - 1
     local x2 = rect.x + rect.w
@@ -271,43 +273,8 @@ function UIEditRoom:clearArea()
       if class.is(entity, Humanoid) and
           entity:isObscuringArea(x1, x2, y1, y2) then
         humanoids_to_watch[entity] = true
-
         -- Try to make the humanoid leave the area
-        local current_action = entity:getCurrentAction()
-        local meander = entity.action_queue[2]
-        if meander and meander.name == "meander" then
-          -- Interrupt the idle or walk, which will cause a new meander target
-          -- to be chosen, which will be outside the blueprint rectangle
-          meander.can_idle = false
-          local on_interrupt = current_action.on_interrupt
-          if on_interrupt then
-            current_action.on_interrupt = nil
-            on_interrupt(current_action, entity)
-          end
-        elseif current_action.name == "seek_room" or (meander and meander.name == "seek_room") then
-          -- Make sure that the humanoid doesn't stand idle waiting within the blueprint
-          if current_action.name == "seek_room" then
-            entity:queueAction(MeanderAction():setCount(1):setMustHappen(true), 0)
-          else
-            meander.done_walk = false
-          end
-        else
-          -- Look for a queue action and re-arrange the people in it, which
-          -- should cause anyone queueing within the blueprint to move
-          for _, action in ipairs(entity.action_queue) do
-            if action.name == "queue" then
-              for _, humanoid in ipairs(action.queue) do
-                local callbacks = action.queue.callbacks[humanoid]
-                if callbacks then
-                  callbacks:onChangeQueuePosition(humanoid)
-                end
-              end
-              break
-            end
-          end
-          -- TODO: Consider any other actions which might be causing the
-          -- humanoid to be staying within the rectangle for a long time.
-        end
+        entity:leaveArea()
       end
     end
   end
@@ -363,6 +330,7 @@ function UIEditRoom:finishRoom()
   local map = self.ui.app.map.th
   local rect = self.blueprint_rect
   local door, door2
+  self:_setCellFlagsOnBlueprint({avoidTile = false})
   -- Add the transparency flag if it is set.
   local flag = 0
   if self.ui.transparent_walls then
@@ -379,7 +347,6 @@ function UIEditRoom:finishRoom()
       return  map:getCell(wall_x, wall_y, layer) == spr_num1
           or map:getCell(wall_x, wall_y, layer) == spr_num2
     end
-
 
     -- If a wall is built which is normal to an external window, then said
     -- window needs to be removed, otherwise it looks odd.
@@ -744,6 +711,7 @@ function UIEditRoom:returnToDoorPhase()
   rect.w = 0
   rect.h = 0
   self:setBlueprintRect(rect.x, rect.y, old_w, old_h)
+  self:_setCellFlagsOnBlueprint({avoidTile = false})
 
   -- We've gone all the way back to wall phase, so step forward to door phase
   self.phase = "door"
@@ -914,12 +882,11 @@ end
 
 function UIEditRoom:enterDoorPhase()
   self.ui:tutorialStep(3, 8, 9)
+  local rect = self.blueprint_rect
+  local map = self.ui.app.map.th
+
   -- make tiles impassable
-  for y = self.blueprint_rect.y, self.blueprint_rect.y + self.blueprint_rect.h - 1 do
-    for x = self.blueprint_rect.x, self.blueprint_rect.x + self.blueprint_rect.w - 1 do
-      self.ui.app.map:setCellFlags(x, y, {passable = false})
-    end
-  end
+  self:_setCellFlagsOnBlueprint({passable = false})
 
   -- check if all adjacent tiles of the rooms are still connected
   if not self:checkReachability() then
@@ -938,13 +905,15 @@ function UIEditRoom:enterDoorPhase()
     end
   end
 
+  -- make tiles passable back
+  self:_setCellFlagsOnBlueprint({passable = true})
+
   self.desc_text = _S.place_objects_window.place_door
   self.confirm_button:enable(false) -- Confirmation is via placing door
 
   -- Change the floor tiles to opaque blue
-  local map = self.ui.app.map.th
-  for y = self.blueprint_rect.y, self.blueprint_rect.y + self.blueprint_rect.h - 1 do
-    for x = self.blueprint_rect.x, self.blueprint_rect.x + self.blueprint_rect.w - 1 do
+  for y = rect.y, rect.y + rect.h - 1 do
+    for x = rect.x, rect.x + rect.w - 1 do
       map:setCell(x, y, 4, 24)
     end
   end
@@ -1636,6 +1605,16 @@ function UIEditRoom:placeObject()
   local obj = UIPlaceObjects.placeObject(self, true)
   if obj then
     self:checkEnableConfirm()
+  end
+end
+
+function UIEditRoom:_setCellFlagsOnBlueprint(flags)
+  local rect = self.blueprint_rect
+  local map = self.ui.app.map.th
+  for y = rect.y, rect.y + rect.h - 1 do
+    for x = rect.x, rect.x + rect.w - 1 do
+      map:setCellFlags(x, y, flags)
+    end
   end
 end
 
