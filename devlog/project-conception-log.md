@@ -18,7 +18,7 @@ a decision is made.
 - Status: demo copied to the VPS, dev build boots headless against it
 
 **Decision: the project lives inside the fork, not in a separate repo.**
-- Considered: a dedicated ai-lab-style repo plus the fork, as two repos
+- Considered: a dedicated separate repo plus the fork, as two repos
 - Chosen: a single `BrunosGits/CorsixTH` fork with a `devlog/` folder holding
   the journal, decision log, plan, achievements and time tracker
 - Why: the fork is the project, and keeping the story next to the code avoids a
@@ -51,10 +51,9 @@ a decision is made.
 - Status: 63/63 busted tests green, luacheck clean, syntax valid
 
 **Decision: private and agent files stay off git.**
-- Chosen: `time-tracker.json` and `session-log.md` stay local like the AI Lab
-  project, and the agent instructions (`AGENTS.md`, `opencode.json`,
-  `.opencode/`) are gitignored so none of it is ever public
-- Status: applied, all of them added to the fork's `.gitignore`
+- Chosen: `time-tracker.json` and `session-log.md` stay local, and the agent instructions at the repo root are never tracked,
+  so none of it is ever public
+- Status: applied, none of those files appear in the fork's git
 
 ---
 
@@ -75,7 +74,7 @@ a decision is made.
 ## 2026-08-11 - Docs and the first issue
 
 **Decision: the fork README carries a personal section above the upstream README.**
-- Considered: replacing the root README with an ai-lab-style landing page
+- Considered: replacing the root README with a personal landing page
 - Chosen: prepend a personal fork section and keep the upstream game README
   below it
 - Why: the fork stays recognizably upstream while still telling the project story

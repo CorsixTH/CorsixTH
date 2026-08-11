@@ -15,8 +15,7 @@ session log, kept local, for times/commands/verdicts).
 **Story:** The plan was simple at first: install CorsixTH on the computer,
 download the free demo, and start poking at bugs. Then I decided the real work
 should happen on the VPS instead, with the computer reduced to an SSH terminal.
-So the project became a fork of CorsixTH with a devlog folder inside it, mirroring
-the AI Lab setup. The VPS needed the whole build chain, which turned out to be a
+So the project became a fork of CorsixTH with a devlog folder inside it. The VPS needed the whole build chain, which turned out to be a
 small saga: current CorsixTH master moved to SDL3, and Debian 13 ships an SDL3
 that is too old for the SDL_mixer version the project fetches. After two failed
 attempts with the pinned mixer tags I built SDL3 3.4.14 and SDL3_mixer 3.2.4 from

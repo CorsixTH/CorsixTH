@@ -227,7 +227,7 @@ fn cmd_summary(data: &Tracker) {
 }
 
 fn print_help() {
-    println!("AI Lab project time tracker.");
+    println!("Time tracker for the CorsixTH contribution.");
     println!();
     println!("Usage:");
     println!("  time-tracker start [START]  # mark start (default now), open session");

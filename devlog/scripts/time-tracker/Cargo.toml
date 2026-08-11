@@ -2,7 +2,7 @@
 name = "time-tracker"
 version = "0.1.0"
 edition = "2021"
-description = "AI Lab project time tracker (Rust rewrite of scripts/time-tracker.py)"
+description = "Time tracker for the CorsixTH contribution (Rust rewrite of scripts/time-tracker.py)"
 license = "MIT"
 
 [dependencies]

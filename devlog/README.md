@@ -5,8 +5,7 @@ open source reimplementation of the 1997 Bullfrog game Theme Hospital. The game
 logic is mostly Lua on a C++ engine, which makes it a good place to learn both.
 
 This folder lives inside the CorsixTH fork (`BrunosGits/CorsixTH`) so the code
-and the story of writing it stay together. It mirrors the structure used by the
-AI Lab project: journal, decision log, plan, achievements and a time tracker.
+and the story of writing it stay together. It keeps the journal, decision log, plan, achievements and a time tracker all in one place.
 
 ## Machine split
 
@@ -21,11 +20,10 @@ AI Lab project: journal, decision log, plan, achievements and a time tracker.
 - `project-conception-log.md` — every decision, chosen or rejected, and why
 - `plan.md` — the roadmap for the first contribution
 - `achievements.md` — running record of GitHub achievements earned by this account
-- `scripts/time-tracker/` — the Rust time tracker, same tool as the AI Lab project
+- `scripts/time-tracker/` — the Rust time tracker used for this project
 - `scripts/check-achievements.sh` — checks the GitHub achievements page against the log
 
-`time-tracker.json` and `session-log.md` are private and stay off git. So do the
-agent instructions at the repo root (`AGENTS.md`, `opencode.json`, `.opencode/`).
+`time-tracker.json` and `session-log.md` are private and stay off git.
 
 ## Status
 
