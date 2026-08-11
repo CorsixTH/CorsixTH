@@ -114,3 +114,11 @@ CorsixTH/corsix-th
 # Nix
 *.so
 /result*
+
+# Local project tooling (BrunosGits devlog), never pushed
+AGENTS.md
+opencode.json
+.opencode/
+devlog/time-tracker.json
+devlog/session-log.md
+devlog/scripts/time-tracker/target/

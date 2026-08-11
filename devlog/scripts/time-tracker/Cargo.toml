@@ -1,0 +1,11 @@
+[package]
+name = "time-tracker"
+version = "0.1.0"
+edition = "2021"
+description = "AI Lab project time tracker (Rust rewrite of scripts/time-tracker.py)"
+license = "MIT"
+
+[dependencies]
+chrono = "0.4"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
