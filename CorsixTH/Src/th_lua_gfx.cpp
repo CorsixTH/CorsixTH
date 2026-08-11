@@ -629,7 +629,7 @@ int l_font_draw_tooltip(lua_State* L) {
   float iX = static_cast<float>(luaL_checknumber(L, 4));
   float iY = static_cast<float>(luaL_checknumber(L, 5));
   int iW = static_cast<int>(luaL_optinteger(L, 6, 200));
-  float screen_width = static_cast<float>(pCanvas->get_width());
+  float screen_width = static_cast<float>(pCanvas->get_size().width);
 
   // Pixel align tooltips to avoid fuzzy text
   iX = std::roundf(iX);
@@ -773,15 +773,16 @@ int l_cursor_position(lua_State* L) {
 /** Construct the helper structure for making a #THRenderTarget. */
 render_target_creation_params l_surface_creation_params(lua_State* L,
                                                         int iArgStart) {
-  render_target_creation_params params;
-  params.width = static_cast<int>(luaL_checkinteger(L, iArgStart));
-  params.height = static_cast<int>(luaL_checkinteger(L, iArgStart + 1));
-  params.min_width = static_cast<int>(luaL_checkinteger(L, iArgStart + 2));
-  params.min_height = static_cast<int>(luaL_checkinteger(L, iArgStart + 3));
+  window_size size = {static_cast<int>(luaL_checkinteger(L, iArgStart)),
+                      static_cast<int>(luaL_checkinteger(L, iArgStart + 1))};
 
-  params.fullscreen = false;
-  params.present_immediate = false;
-  params.direct_zoom = false;
+  window_size min_size = {
+      static_cast<int>(luaL_checkinteger(L, iArgStart + 2)),
+      static_cast<int>(luaL_checkinteger(L, iArgStart + 3))};
+
+  render_target_creation_params params{};
+  params.size = size;
+  params.min_size = min_size;
 
   // Parse string arguments, looking for matching parameter names.
   for (int iArg = iArgStart + 4, iArgCount = lua_gettop(L); iArg <= iArgCount;
@@ -956,22 +957,13 @@ int l_surface_pop_clip(lua_State* L) {
   return 1;
 }
 
-int l_surface_get_width(lua_State* L) {
-  render_target* pCanvas = luaT_testuserdata<render_target>(L);
-  lua_pushinteger(L, pCanvas->get_width());
-  return 1;
-}
+int l_surface_get_render_size(lua_State* L) {
+  ZoneScoped;
 
-int l_surface_get_height(lua_State* L) {
   render_target* pCanvas = luaT_testuserdata<render_target>(L);
-  lua_pushinteger(L, pCanvas->get_height());
-  return 1;
-}
-
-int l_surface_get_render_dimensions(lua_State* L) {
-  render_target* pCanvas = luaT_testuserdata<render_target>(L);
-  lua_pushinteger(L, pCanvas->get_width());
-  lua_pushinteger(L, pCanvas->get_height());
+  auto [width, height] = pCanvas->get_size();
+  lua_pushinteger(L, width);
+  lua_pushinteger(L, height);
   return 2;
 }
 
@@ -1200,9 +1192,7 @@ void lua_register_gfx(const lua_register_state* pState) {
     lcb.add_function(l_surface_rect, "drawRect");
     lcb.add_function(l_surface_push_clip, "pushClip");
     lcb.add_function(l_surface_pop_clip, "popClip");
-    lcb.add_function(l_surface_get_width, "getWidth");
-    lcb.add_function(l_surface_get_height, "getHeight");
-    lcb.add_function(l_surface_get_render_dimensions, "getRenderSize");
+    lcb.add_function(l_surface_get_render_size, "getRenderSize");
     lcb.add_function(l_surface_screenshot, "takeScreenshot");
     lcb.add_function(l_surface_scale, "scale");
     lcb.add_function(l_surface_set_caption, "setCaption");
