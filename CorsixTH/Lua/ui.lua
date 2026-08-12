@@ -600,7 +600,7 @@ function UI:changeResolution(width, height)
       height,
       App.MIN_WINDOW_WIDTH,
       App.MIN_WINDOW_HEIGHT,
-      unpack(self.app.modes))
+      self.app.modes)
   self.app:finishVideoUpdate()
 
   if error_message then
@@ -651,7 +651,7 @@ end
 
 --! Dedicated hotkey function for toggling fullscreen
 function UI:fullscreenHotkey()
-  local toggle = self:toggleFullscreen()
+  local toggle = self:toggleVideoMode("fullscreen")
   if not toggle then
     local err = {_S.errors.unavailable_screen_size}
     self:addWindow(UIInformation(self, err))
@@ -660,56 +660,36 @@ function UI:fullscreenHotkey()
   local window = self:getWindow(UIOptions)
   if window then
     if toggle then window.fullscreen_button:toggle() end
-    window.fullscreen_panel:setLabel(self.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+    window.fullscreen_panel:setLabel(self.app.modes.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
   end
 end
 
---! Turns fullscreen on and off
+--! Turns a video mode on and off
 --!return success true if toggle succeeded
-function UI:toggleFullscreen()
+function UI:toggleVideoMode(mode)
   local modes = self.app.modes
-
-  local function toggleMode(index)
-    self.app.fullscreen = not self.app.fullscreen
-    if self.app.fullscreen then
-      modes[index] = "fullscreen"
-    else
-      modes[index] = ""
-    end
-  end
-
-  -- Search in modes table if it contains a fullscreen value and keep the index
-  -- If not found, we will add an index at end of table
-  local index = #modes + 1
-  for i=1, #modes do
-    if modes[i] == "fullscreen" then
-      index = i
-      break
-    end
-  end
-
-  -- Toggle Fullscreen mode
-  toggleMode(index)
+  modes[mode] = not modes[mode]
 
   local success = true
   self.app:prepareVideoUpdate()
   local error_message = self.app.video:update(self.app.config.width, self.app.config.height,
       self.app.MIN_WINDOW_WIDTH,
       self.app.MIN_WINDOW_HEIGHT,
-      unpack(self.app.modes))
+      modes)
   self.app:finishVideoUpdate()
 
   if error_message then
     success = false
-    local mode_string = modes[index] or "windowed"
-    print("Warning: Could not toggle to " .. mode_string .. " mode with resolution of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
+    local on_off = modes[mode] and "on" or "off"
+    print("Warning: Could not toggle " .. mode .. " " .. on_off .. " with resolution of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
     -- Revert fullscreen mode modifications
-    toggleMode(index)
+    modes[mode] = not modes[mode]
   end
 
   if success then
     -- Save new setting in config
-    self.app.config.fullscreen = self.app.fullscreen
+    self.app.config.fullscreen = modes.fullscreen
+    self.app.config.original_aspect_ratio = modes.aspect_ratio_4_3
     self.app:saveConfig()
   end
 

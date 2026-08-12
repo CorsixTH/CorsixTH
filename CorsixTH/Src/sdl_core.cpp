@@ -437,6 +437,8 @@ void mainloop(lua_State* L) {
           nargs = 4;
           break;
         case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+          target->on_pixel_size_change();
+
           last_dispatch = dispatch_window_pixel_size_changed;
           push_app_dispatch(L, last_dispatch);
           lua_pushinteger(L, e.window.data1);

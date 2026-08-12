@@ -201,11 +201,10 @@ class scoped_color_mod {
  * \param ar_h - The aspect ratio height, e.g. 9 in 16:9, or 3 in 4:3. Can use
  *               the target resolution height.
  */
-void apply_letterbox(SDL_Renderer* renderer, bool fullscreen, int ar_w,
-                     int ar_h) {
+void apply_letterbox(SDL_Renderer* renderer, bool apply_aspect_4_3) {
   // If not fullscreen we can assume a match and exit early
   SDL_SetRenderViewport(renderer, nullptr);
-  if (!fullscreen) {
+  if (!apply_aspect_4_3) {
     return;
   }
 
@@ -214,11 +213,10 @@ void apply_letterbox(SDL_Renderer* renderer, bool fullscreen, int ar_w,
   // Get the true render size (without any letterbox/logical voodoo)
   SDL_GetRenderOutputSize(renderer, &w, &h);
 
-  float real_ar = static_cast<float>(w) / static_cast<float>(h);
-  float target_ar = static_cast<float>(ar_w) / static_cast<float>(ar_h);
-
-  // Common target aspect ratios are 4:3, 16:10, and 16:9 which work out to
-  // 1.333, 1.6, and 1.777
+  float wf = static_cast<float>(w);
+  float hf = static_cast<float>(h);
+  float real_ar = wf / hf;
+  constexpr float target_ar = 4.0 / 3.0;
 
   // If we are closer than 0.01 to the target aspect ratio, assume we
   // meant to match.
@@ -236,11 +234,11 @@ void apply_letterbox(SDL_Renderer* renderer, bool fullscreen, int ar_w,
   // the screen is wider than the target - we want vertical bars.
   // Otherwise, we want horizontal bars.
   if (real_ar > target_ar) {
-    target_w = static_cast<int>(h * target_ar);
+    target_w = static_cast<int>(hf * target_ar);
     target_h = h;
   } else {
     target_w = w;
-    target_h = static_cast<int>(w / target_ar);
+    target_h = static_cast<int>(wf / target_ar);
   }
 
   SDL_Rect viewport = {(w - target_w) / 2, (h - target_h) / 2, target_w,
@@ -475,7 +473,8 @@ render_target::scoped_target_texture::~scoped_target_texture() {
 }
 
 render_target::render_target(const render_target_creation_params& params)
-    : direct_zoom{params.direct_zoom} {
+    : direct_zoom{params.direct_zoom},
+      aspect_ratio_4_3(params.aspect_ratio_4_3) {
   pixel_format = SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_ABGR8888);
 
   SDL_PropertiesID winProps = SDL_CreateProperties();
@@ -521,11 +520,12 @@ render_target::render_target(const render_target_creation_params& params)
   SDL_SetWindowMinimumSize(window, params.min_size.width,
                            params.min_size.height);
 
-  apply_letterbox(renderer, params.fullscreen, params.size.width,
-                  params.size.height);
-
   SDL_ShowWindow(window);
   SDL_SyncWindow(window);
+
+  // Apply after showing and syncing the window, otherwise the dimensions
+  // don't take into account fullscreen as seen on Wayland in SDL 3.6.10
+  apply_letterbox(renderer, params.aspect_ratio_4_3);
 
   // Workaround for https://github.com/libsdl-org/SDL/issues/13920 on MacOS
   SDL_Event evt;
@@ -550,6 +550,7 @@ render_target::~render_target() {
 }
 
 bool render_target::update(const render_target_creation_params& params) {
+  this->aspect_ratio_4_3 = params.aspect_ratio_4_3;
   bool bIsFullscreen = ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
                         SDL_WINDOW_FULLSCREEN);
   if (bIsFullscreen != params.fullscreen) {
@@ -561,8 +562,6 @@ bool render_target::update(const render_target_creation_params& params) {
   }
 
   SDL_SetWindowSize(window, params.size.width, params.size.height);
-  apply_letterbox(renderer, params.fullscreen, params.size.width,
-                  params.size.height);
 
   int old_min_width;
   int old_min_height;
@@ -575,7 +574,13 @@ bool render_target::update(const render_target_creation_params& params) {
 
   SDL_SyncWindow(window);
 
+  apply_letterbox(renderer, params.aspect_ratio_4_3);
+
   return true;
+}
+
+void render_target::on_pixel_size_change() {
+  apply_letterbox(renderer, aspect_ratio_4_3);
 }
 
 bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
