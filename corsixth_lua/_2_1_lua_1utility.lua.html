@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>utility.lua File - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li><a href="class_list.html">Classes</a></li>
+ <li class="active"><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li class="active"><a href="file_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="file_globals.html">Globals</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="file">utility.lua</h2>
+<div class="file_info">
+ <strong>Classes and functions defined:</strong>
+ <ul class="item_list">
+ <li>
+ <span class="item">array_join</span> function
+ - if the input is not an array it will be converted to a string and 
+ </li>
+ <li>
+ <span class="item">bitOr</span> function
+ - this is a pseudo bitwise OR operation
+assumes value2 is always a power of 2 (limits carry errors in the addition)
+mimics the logic of hasBit with the addition if bit not set 
+ </li>
+ <li>
+ <span class="item">canOpenDirectory</span> function
+ - param path (string) The path to check. 
+ </li>
+ <li>
+ <span class="item">compare_tables</span> function
+ - Compare values of two simple (non-nested) tables 
+ </li>
+ <li>
+ <span class="item">flag_clear</span> function
+ - Clear flag in flags and return new flags (unchanged if flag was already cleared). 
+ </li>
+ <li>
+ <span class="item">flag_isset</span> function
+ - Helper functions for flags
+NB: flag must be a SINGLE flag, i.e. a power of two: 1, 2, 4, 8, ...
+Check if flag is set in flags 
+ </li>
+ <li>
+ <span class="item">flag_set</span> function
+ - Set flag in flags and return new flags (unchanged if flag was already set). 
+ </li>
+ <li>
+ <span class="item">flag_toggle</span> function
+ - Toggle flag in flags, i.e. set if currently cleared, clear if currently set. 
+ </li>
+ <li>
+ <span class="item">getRandomEntryFromArray</span> function
+ - Get a random item from an array. 
+ </li>
+ <li>
+ <span class="item">hasBit</span> function
+ - Check bit is set 
+ </li>
+ <li>
+ <span class="item">inspect</span> function
+ - Simplified interface for serializing a value with option for depth
+See serialize for further explanation
+Output is dumped to the console 
+ </li>
+ <li>
+ <span class="item">isDirectory</span> function
+ - param path (string) The path to check. 
+ </li>
+ <li>
+ <span class="item">isTableEmpty</span> function
+ - Check whether the table is empty. 
+ </li>
+ <li>
+ <span class="item">list_to_set</span> function
+ - Convert a list to a set 
+ </li>
+ <li>
+ <span class="item">loadfile_envcall</span> function
+ - Variation on loadfile() which allows for the loaded file to have global
+references resolved in supplied tables. On failure, returns nil and an
+error. On success, returns the file as a function just like loadfile() does
+with the difference that the first argument to this function should be a
+table in which globals are looked up and written to.
+Note: Unlike normal loadfile, this version also accepts files which start
+with the UTF-8 byte order marker 
+ </li>
+ <li>
+ <span class="item">loadstring_envcall</span> function
+ </li>
+ <li>
+ <span class="item">loadstring_envcall</span> function
+ </li>
+ <li>
+ <span class="item">noop</span> function
+ </li>
+ <li>
+ <span class="item">pause_gc_and_use_weak_keys</span> function
+ - Note that the function is run as a pcall, so any error will be caught and 
+ </li>
+ <li>
+ <span class="item">rangeMapLookup</span> function
+ - Find the smallest bucket with its upper value less or equal to a given number, 
+ </li>
+ <li>
+ <span class="item">serialize</span> function
+ - Serialize a value. Call it with the value to serialize and print the output.
+By default it will end recursion when a cycle is detected. 
+ </li>
+ <li>
+ <span class="item">serialize_string</span> function
+ </li>
+ <li>
+ <span class="item">serialize_table</span> function
+ </li>
+ <li>
+ <span class="item">shallow_clone</span> function
+ - Clones a table, but only the first level. 
+ </li>
+ <li>
+ <span class="item">stripTrailingSlashes</span> function
+ - Strip trailing slashes from a path. 
+ </li>
+ <li>
+ <span class="item">table_contains</span> function
+ - Checks if the table contains item 
+ </li>
+ <li>
+ <span class="item">table_merge</span> function
+ - Merge tables in one table 
+ </li>
+ <li>
+ <span class="item">values</span> function
+ - Iterator factory for iterating over the deep children of a table.
+ For example: for fn in values(_G, "*.remove") do fn() end
+ Will call os.remove() and table.remove()
+ There can be multiple wildcards (asterisks).
+-- 
+ </li>
+ </ul>
+</div>
+ </div>
+ </body>
+</html>
