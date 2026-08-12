@@ -484,7 +484,7 @@ options_window = {
   option_enabled = "Enabled",
   option_disabled = "Disabled",
   fullscreen = "Fullscreen",
-  resolution = "Resolution",
+  resolution = "Window Size",
   original_aspect_ratio = "Original Aspect (4:3)",
   scale_ui = "UI Scale",
   scale_ui_auto = "Auto",
@@ -526,21 +526,20 @@ tooltip.autosave_frequency = {
 tooltip.options_window = {
   fullscreen = "Whether the game should run in fullscreen or windowed mode",
   fullscreen_button = "Click to toggle fullscreen mode",
-  resolution = "The resolution the game should run in",
-  select_resolution = "Select a new resolution",
+  resolution = "The window size the game should run in",
+  select_resolution = "Select a new window size",
   original_aspect_ratio = "Apply black bars if necessary to preserve the original game's 4:3 aspect ratio",
-  resolution_unavailable = "Resolution unavailable at current UI Scale",
-  scale_ui = "Scale the user interface. Only scale options that fit the display are shown, for more increase the resolution.",
+  resolution_unavailable = "The window size does not fit the current display",
+  scale_ui = "Scale the user interface.",
   select_ui_scale = "Select a new user interface scale",
-  ui_scale_unavailable = "User interface scaling not available, please select a higher resolution first.",
   cursor_scale = "Scale the cursor.",
   select_cursor_scale = "Select a new cursor scale",
   capture_mouse = "Click to toggle capturing the cursor while in game",
   right_mouse_scrolling = "Toggle the mouse button that is used to scroll the map",
-  width = "Enter desired screen width",
-  height = "Enter desired screen height",
-  apply = "Apply the entered resolution",
-  cancel = "Return without changing the resolution",
+  width = "Enter desired window width",
+  height = "Enter desired window height",
+  apply = "Apply the entered window size",
+  cancel = "Return without changing the window size",
   customise_button = "More settings you can change to customise your game play experience",
   folder_button = "Folder Options",
   language = "The language texts in the game will appear in",
@@ -889,7 +888,7 @@ warnings = {
 confirmation = {
   needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
   abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
-  maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000. Larger resolutions are possible but will require better hardware in order to maintain a playable frame rate. Are you sure you want to continue?",
+  maximum_screen_size = "The window size you have entered is greater than 3000 x 2000. Larger window sizes are possible but will require better hardware in order to maintain a playable frame rate. Are you sure you want to continue?",
   remove_destroyed_room = "Would you like to remove the room for $%d?",
   replace_machine_extra_info = "The new machine will have %d strength (currently %d).",
   restart_mapeditor = "Are you sure you want to restart the map editor?",
@@ -929,7 +928,7 @@ totd_window = {
     "A doctor's skill level greatly influences the quality and speed of his diagnoses. Place a skilled doctor in your GP's office, and you won't need as many additional diagnosis rooms.",
     "Juniors and doctors can improve their skills by learning from a consultant in the training room. If the consultant has a special qualification (surgeon, psychiatrist, or researcher), he will also pass on this knowledge to his pupil(s).",
     "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
-    "You can adjust some settings such as the resolution and language in the options window found both in the main menu and ingame.",
+    "You can adjust some settings such as the window size and language in the options window found both in the main menu and ingame.",
     "You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
     "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Discord Server, Sub-Reddit or Matrix Server. Links are on our website (CorsixTH.com).",
     "If you find a bug, please report it at our bugtracker: th-issues.corsix.org",
@@ -1306,7 +1305,6 @@ subtitles = {
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 
-options_window.change_resolution = "Change resolution"
 tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
 information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
 machine_menu = {
