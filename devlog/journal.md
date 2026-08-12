@@ -10,53 +10,14 @@ session log, kept local, for times/commands/verdicts).
 
 ## 2026-08-11: A working dev box and a first pull request
 
-**Mood:** focused, quietly pleased when the game finally booted headless, and then very pleased when the first issue turned out to be a real bug with a real fix
+**Mood:** focused, quietly pleased when the game first booted headless, and then very pleased when the first issue became a real fix
 
-**Story:** The plan was simple at first: install CorsixTH on the computer,
-download the free demo, and start poking at bugs. Then I decided the real work
-should happen on the VPS instead, with the computer reduced to an SSH terminal.
-So the project became a fork of CorsixTH with a devlog folder inside it. The VPS needed the whole build chain, which turned out to be a
-small saga: current CorsixTH master moved to SDL3, and Debian 13 ships an SDL3
-that is too old for the SDL_mixer version the project fetches. After two failed
-attempts with the pinned mixer tags I built SDL3 3.4.14 and SDL3_mixer 3.2.4 from
-source into /opt/SDL3, and the game compiled cleanly. Then the unit tests, 63
-green, luacheck clean, every Lua file passing the 5.1 syntax check. The last step
-was pointing the dev build at the demo data and running it with SDL's dummy video
-driver, and there it was, the welcome screen printed to a terminal with no display
-at all.
+**Story:** The plan was to do all the real work on the VPS over SSH, so the project became a fork of CorsixTH with a devlog folder inside it. The build chain was a small saga: master moved to SDL3, Debian 13 ships one too old for the mixer, so I built SDL3 3.4.14 and SDL3_mixer 3.2.4 from source into /opt/SDL3. The game compiled clean, 63 unit tests green, luacheck clean, and the welcome screen printed headless using the demo data.
 
-Then came the first issue, the Lua docs file hierarchy, and it turned into a real
-root-cause hunt. The reported symptom was dead links in the generated docs. My
-first theory, that GitHub Pages was quietly swallowing files, was wrong. The truth
-was simpler: LDocGen never generated a page per source file at all, only the class
-pages and the index pages, while the file tree links were built from path-based
-ids. Every link pointed at a page that was never created. So I extended LDocGen to
-write one page per file listing the classes and functions declared there, and made
-the directory entries in the tree plain text, since no directory pages exist. Then
-I rebuilt the docs and checked every generated page: 503 pages, 20465 local links,
-zero broken. The unit tests stayed 63 for 63 and luacheck stayed clean. I opened
-the pull request, wrote an explanation comment on the issue, and learned the labels
-on pull requests are the maintainers' to add, not the contributors'.
+Then came the first issue, dead links in the generated Lua docs. My first theory, that GitHub Pages was swallowing files, was wrong. The truth was simpler: LDocGen never generated a page per source file, only class pages and index pages, while the file tree links were built from path-based ids pointing at pages that never existed. So I made LDocGen write one page per file, listing the classes and functions there, with directory entries as plain text. Rebuilt the docs and checked every link: 503 pages, 20465 local links, zero broken. I opened the pull request and learned the labels are the maintainers' to add.
 
-**What I learned:** A game from 1997 with a modern engine is still just software,
-and the debug loop works headless once you stop trying to open a window. Version
-mismatches between a library a project fetches and the one the distro ships are
-normal, and building the newer one into a private prefix is a clean way out that
-does not touch the system packages. A working dev box turns a documentation bug
-into a checkable claim: I could rebuild the docs and run a script over every link
-instead of trusting a hunch. And a wrong theory is still useful if you hold it long
-enough to test it and drop it.
+**What I learned:** A headless dev box turns a docs bug into a checkable claim: rebuild, script over every link, done. A wrong theory is still useful if you test it and drop it.
 
-**Feelings / notes:** The moment the game said it was using the demo data files,
-over SSH, on a machine with no screen, felt like a small victory. The MIDI music
-still will not load because there is no synth on the box, but that is a cosmetic
-gap, not a blocker. Opening the first pull request on the real project felt like
-the point where the devlog setup paid for itself. Now it is a waiting game for the
-maintainers, and that is fine.
+**Feelings / notes:** The first headless boot felt like a small victory, and opening the first pull request felt like the devlog setup paying for itself. The MIDI music still will not load with no synth on the box, but that is a cosmetic gap. Now it is a waiting game for the maintainers.
 
-**Did:** created the fork, built SDL3 and SDL3_mixer from source into /opt/SDL3,
-compiled CorsixTH dev264 with CMake and Ninja, ran the Lua unit tests and lint,
-copied the demo to the VPS, and confirmed the dev build boots headless with the
-demo data. Root-caused issue #1793, extended LDocGen to generate one page per
-source file, rebuilt the docs and verified 20465 local links with none broken,
-opened pull request #3494, and posted an explanation comment on the issue.
+**Did:** set up the fork, built SDL3 and SDL3_mixer into /opt/SDL3, compiled the game, ran the Lua tests and lint, confirmed the headless boot, root-caused issue #1793, extended LDocGen to generate per-file pages, verified 20465 links, and opened pull request #3494.
