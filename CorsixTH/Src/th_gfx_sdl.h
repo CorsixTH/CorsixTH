@@ -65,6 +65,7 @@ struct render_size {
 struct render_target_creation_params {
   window_size size{};        ///< Target size of the window.
   bool fullscreen{};         ///< Run full-screen.
+  bool aspect_ratio_4_3{};   ///< Display the game letterboxed to 4:3
   bool present_immediate{};  ///< Whether to present immediately to the user
                              ///< (else wait for Vsync).
   bool direct_zoom{};        ///< Scale each texture when copying if true,
@@ -273,6 +274,9 @@ class render_target {
   //! Update the parameters for the render target
   bool update(const render_target_creation_params& params);
 
+  //! Update the render target when the size changes
+  void on_pixel_size_change();
+
   //! Get the reason for the last operation failing
   const char* get_last_error();
 
@@ -446,6 +450,7 @@ class render_target {
   bool scale_bitmaps{false};  ///< Whether bitmaps should be scaled.
   bool supports_target_textures{};
   bool direct_zoom{};
+  bool aspect_ratio_4_3{};
 };
 
 //! Stored image.

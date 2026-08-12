@@ -770,6 +770,13 @@ int l_cursor_position(lua_State* L) {
   return 1;
 }
 
+bool is_table_field_true(lua_State* L, int table_index, const char* key) {
+  lua_getfield(L, table_index, key);
+  bool result = lua_toboolean(L, -1);
+  lua_pop(L, 1);
+  return result;
+}
+
 /** Construct the helper structure for making a #THRenderTarget. */
 render_target_creation_params l_surface_creation_params(lua_State* L,
                                                         int iArgStart) {
@@ -784,22 +791,18 @@ render_target_creation_params l_surface_creation_params(lua_State* L,
   params.size = size;
   params.min_size = min_size;
 
-  // Parse string arguments, looking for matching parameter names.
-  for (int iArg = iArgStart + 4, iArgCount = lua_gettop(L); iArg <= iArgCount;
-       ++iArg) {
-    const char* sOption = luaL_checkstring(L, iArg);
-    if (sOption[0] == 0) continue;
-
-    if (std::strcmp(sOption, "fullscreen") == 0) {
-      params.fullscreen = true;
-    }
-    if (std::strcmp(sOption, "present immediate") == 0) {
-      params.present_immediate = true;
-    }
-    if (std::strcmp(sOption, "direct zoom") == 0) {
-      params.direct_zoom = true;
-    }
+  // Parse the modes
+  int modes_idx = iArgStart + 4;
+  if (!lua_istable(L, modes_idx)) {
+    return params;
   }
+  params.fullscreen = is_table_field_true(L, modes_idx, "fullscreen");
+  params.present_immediate =
+      is_table_field_true(L, modes_idx, "present_immediate");
+  params.direct_zoom = is_table_field_true(L, modes_idx, "direct_zoom");
+  params.aspect_ratio_4_3 =
+      is_table_field_true(L, modes_idx, "aspect_ratio_4_3");
+  lua_pop(L, 1);
 
   return params;
 }

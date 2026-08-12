@@ -151,25 +151,18 @@ function App:init()
   -- Report operating system (possible values: "windows", "macos", "unix")
   self.os = compile_opts.os
 
-  local modes = {}
-  self.fullscreen = false
-  if self.config.fullscreen then
-    self.fullscreen = true
-    modes[#modes + 1] = "fullscreen"
-  end
-  if self.config.track_fps then
-    modes[#modes + 1] = "present immediate"
-  end
-  if self.config.direct_zoom == nil or self.config.direct_zoom then
-    modes[#modes + 1] = "direct zoom"
-  end
-  self.modes = modes
+  self.modes = {
+    fullscreen = self.config.fullscreen,
+    present_immediate = self.config.track_fps,
+    direct_zoom = self.config.direct_zoom == nil or self.config.direct_zoom,
+    aspect_ratio_4_3 = self.config.original_aspect_ratio,
+  }
   self.video = assert(TH.surface(
       self.config.width,
       self.config.height,
       App.MIN_WINDOW_WIDTH,
       App.MIN_WINDOW_HEIGHT,
-      unpack(modes)))
+      self.modes))
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
 

@@ -125,6 +125,7 @@ local function new_config_defaults()
     fullscreen = false,
     width = 800,
     height = 600,
+    original_aspect_ratio = false,
     ui_scale = 1,
     cursor_scale = 1,
     language = [[English]],
@@ -302,20 +303,26 @@ local function config_contents(config_values)
 -------------------------------- SETTINGS MENU --------------------------------
 -- These settings can also be changed from within the game in the settings menu
 -------------------------------------------------------------------------------
--- Screen size (width and height). At least: 640x480.
--- Larger sizes will require better hardware in order to maintain a playable framerate.
--- Fullscreen. Can be true or false.
--- The game will run windowed if not fullscreen.
--- ui_scale. Default: 1.
--- Whole-number UI scaling for higher-resolution displays; decimals unsupported.
--- Example: 1920x1080 with ui_scale = 2 makes UI elements twice as large.
--- width/ui_scale and height/ui_scale must be at least 640x480.
--- Example: ui_scale = 2 requires resolution >= 1280x960.
+-- fullscreen: Can be true or false.
+--  The game will run windowed if not fullscreen.
+-- Window size (width and height): At least 640x480.
+--  Larger sizes will require better hardware in order to maintain a playable
+--  framerate.
+-- original_aspect_ratio: True or false
+--  If true then the game is letterboxed so that it is drawn at a 4:3 aspect
+--  ratio like the original game.
+-- ui_scale: Whole number.
+--  Pixel ratio to draw UI elements; decimals unsupported. 0 for automatic.
+--  Example: ui_scale = 2 makes UI elements twice as large.
+--  The ui_scale will be capped at runtime to the largest size that fits in the
+--  window; assuming an original size of 640x480.
+-- cursor_scale: Natural number (1, 2, 3...)
+--  Pixel ratio to draw the cursor.
 --]=] .. '\n' ..
 param(config_values, 'fullscreen') ..
-'\n' ..
 param(config_values, 'width') ..
 param(config_values, 'height') ..
+param(config_values, 'original_aspect_ratio') ..
 param(config_values, 'ui_scale') ..
 param(config_values, 'cursor_scale') .. [=[
 

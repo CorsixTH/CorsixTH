@@ -162,7 +162,7 @@ end
 
 function UIOptions:UIOptions(ui, mode)
   local width = 620
-  local height = 330
+  local height = 360
   self:UIResizable(ui, width, height, col.bg)
 
   local app = ui.app
@@ -228,12 +228,12 @@ function UIOptions:UIOptions(ui, mode)
   end
 
   -- Fullscreen
-  local fullscreen_label = app.fullscreen and _S.options_window.option_on
+  local fullscreen_label = app.modes.fullscreen and _S.options_window.option_on
     or _S.options_window.option_off
   self.fullscreen_panel, self.fullscreen_button = createOptionsElement(
       _S.options_window.fullscreen, _S.tooltip.options_window.fullscreen,
       fullscreen_label, _S.tooltip.options_window.fullscreen_button, { bg = col.setting },
-      self.buttonFullscreen, app.fullscreen)
+      self.buttonFullscreen, app.modes.fullscreen)
 
 
   -- Screen resolution
@@ -252,6 +252,7 @@ function UIOptions:UIOptions(ui, mode)
       { bg = col.setting, active = col.setting_active },
       self.dropdownUIScale, false)
 
+  -- Cursor Scale
   scale_label = TheApp.config.cursor_scale * 100 .. "%"
   self.cursor_scale_panel, self.cursor_scale_button = createOptionsElement(
       _S.options_window.cursor_scale, _S.tooltip.options_window.cursor_scale,
@@ -261,6 +262,16 @@ function UIOptions:UIOptions(ui, mode)
 
   -- Now set the resolution button label and the ui scale button state
   self:processWindowResizeEvent()
+
+  local aspect_label = app.config.original_aspect_ratio and
+          _S.options_window.option_on or _S.options_window.option_off
+  self.aspect_panel, self.aspect_button = createOptionsElement(
+          _S.options_window.original_aspect_ratio, _S.tooltip.options_window.original_aspect_ratio,
+          aspect_label, _S.tooltip.options_window.original_aspect_ratio, { bg = col.setting },
+          self.buttonOriginalAspectRatio, app.config.original_aspect_ratio)
+
+  -- Start a new column of buttons
+  self:_startNewColumn()
 
   -- Mouse capture
   local capture_label = app.config.capture_mouse and
@@ -279,9 +290,6 @@ function UIOptions:UIOptions(ui, mode)
   else
     lang = app.config.language
   end
-
-  -- Start a new column of buttons
-  self:_startNewColumn()
 
   -- Language setting.
   self.language_panel, self.language_button = createOptionsElement(
@@ -547,12 +555,21 @@ function UIOptions:buttonUpdates()
 end
 
 function UIOptions:buttonFullscreen()
-  if not self.ui:toggleFullscreen() then
+  if not self.ui:toggleVideoMode("fullscreen") then
       local err = {_S.errors.unavailable_screen_size}
       self.ui:addWindow(UIInformation(self.ui, err))
       self.fullscreen_button:toggle()
   end
-  self.fullscreen_panel:setLabel(self.ui.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+  self.fullscreen_panel:setLabel(self.ui.app.modes.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+end
+
+function UIOptions:buttonOriginalAspectRatio()
+  if not self.ui:toggleVideoMode("aspect_ratio_4_3") then
+    local err = {_S.errors.unavailable_screen_size}
+    self.ui:addWindow(UIInformation(self.ui, err))
+    self.aspect_button:toggle()
+  end
+  self.aspect_panel:setLabel(self.ui.app.modes.aspect_ratio_4_3 and _S.options_window.option_on or _S.options_window.option_off)
 end
 
 function UIOptions:buttonMouseCapture()
