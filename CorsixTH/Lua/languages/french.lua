@@ -915,7 +915,6 @@ tooltip.options_window = {
   fullscreen_button = "Basculer en mode plein écran/fenêtré",
   resolution = "La résolution vidéo pour le jeu",
   select_resolution = "Sélectionner une nouvelle résolution",
-  resolution_unavailable = "Résolution indisponible à cette échelle d'interface",
   scale_ui = "Mise à l'échelle de l'interface. Seules les options d'échelle applicables à votre écran sont disponibles. Augmentez la résolution pour plus d'options.",
   select_ui_scale = "Sélectionner une échelle d'interface",
   ui_scale_unavailable = "Échelle d'interface indisponible, veuillez d'abord choisir une résolution plus élevée.",
