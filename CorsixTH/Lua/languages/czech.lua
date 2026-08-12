@@ -1225,7 +1225,6 @@ tooltip = {
     right_mouse_scrolling = "Přepnout tlačítko myši, kterým lze posouvat kameru",
     language_dropdown_no_font = "Pro použití tohoto jazyka musíte vybrat font podporující tento jazyk v Nastavení > Umístění složek > Písmo",
     autosave_frequency = "Nastavuje, jak často bude hra automaticky ukládána.",
-    resolution_unavailable = "Rozlišení není podporována s tímto měřítkem UI.",
     scale_ui = "Měřítko UI. Zobrazeny jsou pouze možnosti podporované v aktuálním rozlišení, pro další možnosti zvyšte rozlišení hry.",
     select_ui_scale = "Vyberte nové měřítko UI",
     sound = "Změnit nastavení audia",

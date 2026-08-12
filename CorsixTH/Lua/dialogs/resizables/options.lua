@@ -102,7 +102,7 @@ local available_resolutions = function()
   for _, opt in ipairs(suggested_resolutions) do
     local enabled = opt.width < max_window_width and opt.height < max_window_height
     opt.disabled = not enabled
-    opt.tooltip = opt.disabled and { _S.tooltip.options_window.resolution_unavailable }
+    opt.tooltip = opt.disabled and { _S.tooltip.options_window.resolution_does_not_fit }
     if enabled then
       enable_list[#enable_list + 1] = opt
     else
@@ -243,6 +243,7 @@ function UIOptions:UIOptions(ui, mode)
       "", _S.tooltip.options_window.select_resolution,
       { bg = col.setting, active = col.setting_active },
       self.dropdownResolution, false)
+  self.resolution_button:enable(not app.modes.fullscreen)
 
   -- UI Scale
   local scale_label = TheApp.config.ui_scale * 100 .. "%"
@@ -561,6 +562,7 @@ function UIOptions:buttonFullscreen()
       self.fullscreen_button:toggle()
   end
   self.fullscreen_panel:setLabel(self.ui.app.modes.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+  self.resolution_button:enable(not self.ui.app.modes.fullscreen)
 end
 
 function UIOptions:buttonOriginalAspectRatio()
