@@ -10,21 +10,21 @@ session log, kept local, for times/commands/verdicts).
 
 ## 2026-08-12: Squeezing the entity-loop bug until it squeaked
 
-**Mood:** methodical, a little smug when the negative control proved the tests were actually catching something real, then properly surprised by the old-savegame crash
+**Mood:** methodical, then surprised by the old-savegame crash
 
-**Story:** The second issue, #1467, is a loop bug: the game walks world.entities with ipairs while some entity handlers destroy other entities, which shifts the table and skips whoever moves into the just-visited slot. The fix defers the removal to after the loop instead of deleting mid-iteration. That part was straightforward; the interesting work was proving it.
+**Story:** Issue #1467 is a loop bug: the game walks world.entities with ipairs while some handlers destroy other entities, shifting the table and skipping whoever moves into the just-visited slot. The fix defers removal to after the loop.
 
-I built a headless smoke test that reproduces the skip deterministically: three dummy entities at the end of the list, the middle one destroys the first from inside its tick, and the test fails if the third gets skipped. Then a GUI variant that renders every frame with the offscreen driver and the software renderer, because the headless run never drew a single frame. Then I hacked the fix back out and watched both the unit tests and the smoke test fail with exactly the message they were supposed to catch; a negative control that sounds silly but is the only way to be sure a test is not green by accident.
+A headless smoke test reproduced the skip deterministically (three dummies, the middle destroying the first mid-tick; the test fails if the third gets skipped), and a GUI variant rendered every frame. I hacked the fix back out and both failed with exactly the message they were meant to catch; the only way to be sure a test is not green by luck.
 
-The hunt for the less obvious cases found two real holes. First, a savegame made before the fix existed would load with no destruction queue and crash on the very first gameplay tick with an attempt to take the length of a nil value; the deserialiser restores fields but never re-runs the constructor, so old saves were missing the new field entirely. Second, the end-of-day loop dispatched plants through a branch that never set the "we are iterating" marker, leaving that path unprotected. Both fixed, both covered by tests now.
+Two hidden holes surfaced. An old savegame crashed on the first tick because the deserialiser never re-runs constructors, leaving the new queue missing. And the end-of-day loop never set the iterating marker for plants. Both fixed and covered by tests.
 
-The day closed with a decision to move the dev environment from the demo data to the full game for more reliable tests, since the demo only ships one bare level with no rooms or machines to break.
+The day closed with a move to the full game data for more reliable tests.
 
-**What I learned:** A regression test's job is to fail when the bug comes back; the negative control is what tells you it can. The obvious tests pass. The ones that catch you are about old savegames and the code path nobody remembers.
+**What I learned:** A regression test's job is to fail when the bug comes back; the negative control tells you it can. The tests that catch you are about old savegames and the code path nobody remembers.
 
-**Feelings / notes:** The skip-repro failing on cue, with my own printed failure string, is the closest thing to a high five a headless server has ever given me.
+**Feelings:** The skip-repro failing on cue, with my own failure string, is the closest thing to a high five a headless server has given me.
 
-**Did:** implemented the deferred-destruction fix for #1467, got the whole unit suite green (86 tests) and lint clean, ran headless and GUI smoke tests (966 rendered frames) plus a negative control, found and fixed the old-savegame crash and the end-of-day plant branch hole, and switched the dev box to the full game data for more reliable testing.
+**Did:** implemented the deferred-destruction fix, 86 unit tests green, headless and GUI smoke tests plus a negative control, fixed the old-savegame crash and the plant branch hole, moved to the full game data.
 
 ---
 
