@@ -30,7 +30,7 @@ fullscreen = SCREEN_FULLSCREEN
 width = SCREEN_SIZE_WIDTH
 height = SCREEN_SIZE_HEIGHT
 original_aspect_ratio = false
-ui_scale = 1
+ui_scale = 0
 cursor_scale = 1
 
 -------------------------------------------------------------------------------

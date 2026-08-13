@@ -126,7 +126,7 @@ local function new_config_defaults()
     width = 800,
     height = 600,
     original_aspect_ratio = false,
-    ui_scale = 1,
+    ui_scale = 0,
     cursor_scale = 1,
     language = [[English]],
     audio = true,
