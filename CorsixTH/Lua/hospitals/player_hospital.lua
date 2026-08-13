@@ -39,7 +39,7 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
     cured_died_message = nil, -- Whether the adviser reported about a cure or death.
 
     sitting_ratios = {}, -- Measurements of recent sitting/standing ratios.
-    sitting_index = 1 -- Next entry in 'sitting_ratios' to update.
+    sitting_index = 1, -- Next entry in 'sitting_ratios' to update.
     no_gp_office = nil, -- Whether advice was given about patients and doctors waiting for a GP's office
     no_doctor_no_gp_office = nil, -- Whether advice was given about patients waiting for a doctor and a GP's office
     last_patient_not_paying_month = nil, -- Whether advice was given about a patient leaving the hospital without paying
