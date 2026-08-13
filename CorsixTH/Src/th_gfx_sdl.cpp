@@ -248,6 +248,25 @@ void apply_letterbox(SDL_Renderer* renderer, bool apply_aspect_4_3) {
 
 }  // namespace
 
+void trigger_mouse_motion() {
+  float x, y;
+  SDL_MouseButtonFlags flags = SDL_GetMouseState(&x, &y);
+  SDL_Window* win = SDL_GetMouseFocus();
+  SDL_WindowID win_id = win ? SDL_GetWindowID(win) : 0;
+
+  SDL_Event evt;
+  SDL_zero(evt);
+  evt.type = SDL_EVENT_MOUSE_MOTION;
+  evt.motion.state = flags;
+  evt.motion.windowID = win_id;
+  evt.motion.timestamp = SDL_GetTicks();
+  evt.motion.x = x;
+  evt.motion.y = y;
+  evt.motion.xrel = 0.0f;
+  evt.motion.yrel = 0.0f;
+  SDL_PushEvent(&evt);
+}
+
 palette::palette(const uint8_t* pData, size_t iDataLength, bool is8bit) {
   int stride;
   if (iDataLength == 256 * 3) {
@@ -575,6 +594,7 @@ bool render_target::update(const render_target_creation_params& params) {
   SDL_SyncWindow(window);
 
   apply_letterbox(renderer, params.aspect_ratio_4_3);
+  trigger_mouse_motion();
 
   return true;
 }
