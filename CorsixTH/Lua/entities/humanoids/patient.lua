@@ -525,8 +525,8 @@ function Patient:goHome(reason, disease_id)
     self:setMood("exit", "activate")
     hosp:updateNotCuredCounts(self, reason)
   elseif reason == "over_priced" then
-      self:setMood("sad_money", "activate")
-      self:changeAttribute("happiness", -0.5)
+    self:setMood("sad_money", "activate")
+    self:changeAttribute("happiness", -0.5)
 
     local treatment_name = self.hospital.disease_casebook[disease_id].disease.name
     hosp:warnPatientNotPaying(treatment_name)
