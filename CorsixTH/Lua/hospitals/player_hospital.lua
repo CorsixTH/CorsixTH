@@ -43,7 +43,7 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
     no_gp_office = nil -- Whether advice was given about patients and doctors waiting for a GP's office
     no_doctor_no_gp_office = nill -- Whether advice was given about patients waiting for a doctor and a GP's office
     last_patient_not_paying_month = nil -- Whether advice was given about a patient leaving the hospital without paying
-   }
+  }
 
   self.win_declined = false -- Has not yet declined the level win fax
   self.announce_vip = 0 -- Number of spawned VIPs who need to be announced
