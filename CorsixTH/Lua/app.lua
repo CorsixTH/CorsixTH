@@ -59,6 +59,7 @@ function App:App()
     active = self.onWindowActive,
     window_resized = self.onWindowResized,
     window_pixel_size_changed = self.onWindowPixelSizeChanged,
+    window_display_scale_changed = self.onWindowDisplayScaleChanged,
     music_over = self.onMusicOver,
     movie_over = self.onMovieOver,
     sound_over = self.onSoundOver,
@@ -1140,8 +1141,15 @@ function App:fixConfig()
 
     -- For scale, clamp to number >= 0
     elseif key == "ui_scale" then
-      if type(value) == "number" and not self.config.fractional_scale then
+      if type(value) == "number" then
         self.config[key] = math.max(value, 0)
+      else
+        self.config[key] = 0
+      end
+
+    elseif key == "cursor_scale" then
+      if type(value) == "number" then
+        self.config[key] = math.max(value, 1)
       else
         self.config[key] = 1
       end
@@ -1166,6 +1174,11 @@ function App:fixConfig()
       end
       self.config[key] = value
     end
+  end
+
+  if not self.config.fractional_scale then
+    self.config.ui_scale = math.floor(self.config.ui_scale)
+    self.config.cursor_scale = math.floor(self.config.cursor_scale)
   end
 end
 
@@ -1382,6 +1395,10 @@ end
 --! Call the UI to adjust to the new render size
 function App:onWindowPixelSizeChanged(...)
   return self.ui:onWindowPixelSizeChanged(...)
+end
+
+function App:onWindowDisplayScaleChanged(...)
+  return self.ui:onWindowDisplayScaleChanged(...)
 end
 
 function App:onMusicOver(...)

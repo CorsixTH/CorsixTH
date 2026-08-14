@@ -167,6 +167,8 @@ local function new_config_defaults()
     debug = false,
     track_fps = false,
     hidpi = true,
+    apply_window_display_scale = true,
+    fractional_scaling = false,
     zoom_speed = 80,
     scroll_speed = 2,
     shift_scroll_speed = 4,
@@ -732,8 +734,23 @@ param(config_values, 'direct_zoom') .. [=[
 -- HiDPI: Inform the windowing system that the game is HiDPI aware. This will
 -- allow the game to be rendered at the native resolution of the display.
 -- The exact effect depends on the windowing system and the display.
+--
+-- In HiDPI mode the windowing system supplies the application with a display
+-- scale value which if applied will scale the cursor, ui, and default zoom in
+-- addition to the configured value for those fields.
 --]=] .. '\n' ..
-param(config_values, 'hidpi') .. [=[
+param(config_values, 'hidpi') ..
+param(config_values, 'apply_window_display_scale') .. [=[
+
+-- Fractional Scaling: Allows ui_scale and cursor scale to be a fractional
+-- number. With fractional_scaling enabled and apply_window_display_scale
+-- enabled CorsixTH will use the exact display scale provided by the
+-- windowing system instead of rounding down to the nearest whole number
+-- greater than zero.
+--
+-- THIS SETTING IS HIGHLY EXPERIMENTAL AND WILL CRASH YOUR GAME!!!
+--]=] .. '\n' ..
+param(config_values, 'fractional_scaling') .. [=[
 
 -------------------------------------------------------------------------------
 -- Replacing Machines: By default, you will see a new machines initial strength

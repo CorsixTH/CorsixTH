@@ -101,6 +101,9 @@ function GameUI:GameUI(app, local_hospital, map_editor)
 
   self.announcer = Announcer(app)
   self.app:setCaptureMouse()
+
+  local ds = app.gfx:getWindowDisplayScale()
+  self:setZoom(ds, false)
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -209,7 +212,7 @@ function GameUI:calculateMinimumZoom()
   return factor
 end
 
-function GameUI:setZoom(factor)
+function GameUI:setZoom(factor, follow_cursor)
   if factor <= 0 then
     return false
   end
@@ -224,7 +227,7 @@ function GameUI:setZoom(factor)
   end
 
   self.visible_diamond = new_diamond
-  local refx, refy = self.cursor_x or scr_w / 2, self.cursor_y or scr_h / 2
+  local refx, refy = follow_cursor and self.cursor_x or scr_w / 2, follow_cursor and self.cursor_y or scr_h / 2
   local cx, cy = self:ScreenToWorld(refx, refy)
   self.zoom_factor = factor
 
@@ -250,7 +253,7 @@ function GameUI:draw(canvas)
     app.map:draw(canvas, dx, dy, math.ceil(scr_w / zoom), math.ceil(scr_h / zoom), 0, 0)
     canvas:scale(1)
   else
-    self:setZoom(1)
+    self:setZoom(1, false)
     app.map:draw(canvas, dx, dy, scr_w, scr_h, 0, 0)
   end
   Window.draw(self, canvas, 0, 0) -- NB: not calling UI.draw on purpose
@@ -264,7 +267,7 @@ function GameUI:onChangeResolution()
   -- Calculate and enforce minimum zoom
   local minimum_zoom = self:calculateMinimumZoom()
   if self.zoom_factor < minimum_zoom then
-    self:setZoom(minimum_zoom)
+    self:setZoom(minimum_zoom, false)
   end
   -- Recalculate scrolling bounds
   local scr_w, scr_h = TheApp.video:getRenderSize()
@@ -738,7 +741,7 @@ end
 --! Process SDL_EVENT_PINCH_BEGIN.
 --!
 --!return (boolean) event processed indicator
-function UI:onPinchBegin()
+function GameUI:onPinchBegin()
   self.current_momentum.z = 0
 end
 
@@ -747,7 +750,7 @@ end
 --!return (boolean) event processed indicator
 --!param scale (number) The scale change since the last SDL_EVENT_PINCH_UPDATE.
 --!                     Scale < 1 is "zoom out". Scale > 1 is "zoom in"
-function UI:onPinchUpdate(scale)
+function GameUI:onPinchUpdate(scale)
   self.current_momentum.z = self.current_momentum.z + (scale - 1) * pinch_zoom_sensitivity
   return true
 end
@@ -755,7 +758,19 @@ end
 --! Process SDL_EVENT_PINCH_END.
 --!
 --!return (boolean) event processed indicator
-function UI:onPinchEnd()
+function GameUI:onPinchEnd()
+end
+
+function GameUI:onWindowDisplayScaleChanged(scale)
+  local gfx = self.app.gfx
+  local old_ds = gfx:getWindowDisplayScale()
+  UI.onWindowDisplayScaleChanged(self, scale)
+  local new_ds = gfx:getWindowDisplayScale()
+
+  if old_ds ~= new_ds then
+    local new_zf = self.zoom_factor * new_ds / old_ds
+    self:setZoom(new_zf, false)
+  end
 end
 
 --! Process SDL_EVENT_MOUSE_WHEEL
@@ -1236,7 +1251,7 @@ function GameUI:recallMapPosition(index)
     local scr_w, scr_h = TheApp.video:getRenderSize()
     local sx, sy = self.app.map:WorldToScreen(self.recallpositions[index].x,  self.recallpositions[index].y)
     local dx, dy = self.app.map:ScreenToWorld(scr_w / 2, scr_h / 2)
-    self:setZoom(self.recallpositions[index].z)
+    self:setZoom(self.recallpositions[index].z, false)
     self:scrollMapTo(sx + dx, sy + dy)
   end
 end

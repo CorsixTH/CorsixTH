@@ -993,6 +993,17 @@ function UI:onWindowPixelSizeChanged(width, height)
   self:onChangeResolution()
 end
 
+function UI:onWindowDisplayScaleChanged(scale)
+  self.app.gfx:onChangeWindowDisplayScale(scale)
+
+  -- Redundant if the windowing system preserves the size of the window and
+  -- calls onWindowPixelSizeChanged, but I was testing by setting the
+  -- display scale in the KDE Plasma 6.7.4 (Wayland) and in that situation the
+  -- window resized instead so the pixel size didn't change resulting in the
+  -- bottom panel moving. This is a rare event so the duplicate call is fine.
+  self:onChangeResolution()
+end
+
 function UI:onMouseMove(x, y, dx, dy)
   if self.mouse_released then
     return false

@@ -327,6 +327,10 @@ class render_target {
   //! Get the maximum window size that fits on the usable display area
   window_size get_max_window_size() const;
 
+  //! Get the display scale reported by the windowing system for the current
+  //! window
+  float get_display_scale() const;
+
   //! Enable optimisations for non-overlapping draws
   void start_nonoverlapping_draws();
 
