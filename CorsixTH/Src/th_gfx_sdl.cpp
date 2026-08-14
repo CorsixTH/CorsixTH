@@ -508,6 +508,9 @@ render_target::render_target(const render_target_creation_params& params)
   SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true);
   SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN,
                          params.fullscreen);
+  SDL_SetBooleanProperty(winProps,
+                         SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN,
+                         params.hidpi);
   window = SDL_CreateWindowWithProperties(winProps);
   SDL_DestroyProperties(winProps);
   if (!window) {

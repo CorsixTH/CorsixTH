@@ -430,6 +430,13 @@ blocking_off_areas = 2
 direct_zoom = nil
 
 -------------------------------------------------------------------------------
+-- HiDPI: Inform the windowing system that the game is HiDPI aware. This will
+-- allow the game to be rendered at the native resolution of the display.
+-- The exact effect depends on the windowing system and the display.
+--
+hidpi = true
+
+-------------------------------------------------------------------------------
 -- Replacing Machines: By default, you will see a new machines initial strength
 -- before purchasing it. If you don't want this change the value to false.
 --

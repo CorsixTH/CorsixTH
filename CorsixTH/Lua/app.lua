@@ -156,6 +156,7 @@ function App:init()
     present_immediate = self.config.track_fps,
     direct_zoom = self.config.direct_zoom == nil or self.config.direct_zoom,
     aspect_ratio_4_3 = self.config.original_aspect_ratio,
+    hidpi = self.config.hidpi,
   }
   self.video = assert(TH.surface(
       self.config.width,
