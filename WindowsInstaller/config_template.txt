@@ -434,7 +434,22 @@ direct_zoom = nil
 -- allow the game to be rendered at the native resolution of the display.
 -- The exact effect depends on the windowing system and the display.
 --
+-- In HiDPI mode the windowing system supplies the application with a display
+-- scale value which if applied will scale the cursor, ui, and default zoom in
+-- addition to the configured value for those fields.
+--
 hidpi = true
+apply_window_display_scale = true
+
+-- Fractional Scaling: Allows ui_scale and cursor scale to be a fractional
+-- number. With debug_fractional_scaling enabled and apply_window_display_scale
+-- enabled CorsixTH will use the exact display scale provided by the
+-- windowing system instead of rounding down to the nearest whole number
+-- greater than zero.
+--
+-- THIS SETTING IS HIGHLY EXPERIMENTAL AND WILL CRASH YOUR GAME!!!
+--
+debug_fractional_scaling = false
 
 -------------------------------------------------------------------------------
 -- Replacing Machines: By default, you will see a new machines initial strength

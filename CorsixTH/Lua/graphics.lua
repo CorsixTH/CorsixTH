@@ -69,6 +69,7 @@ function Graphics:Graphics(app, gfx_set, charset)
   self.app = app
   self.target = self.app.video
   self.actual_ui_scale = nil
+  self.display_scale = self:_adjustWindowDisplayScale(self.target:getWindowDisplayScale())
 
   -- The cache is used to avoid reloading an object if it is already loaded
   self.cache = {
@@ -256,7 +257,7 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
     if not cursor:load(sheet, index, hot_x, hot_y) then
       cursor = {
         draw = function(canvas, x, y)
-          local cs = TheApp.config.cursor_scale
+          local cs = TheApp.config.cursor_scale * self.display_scale
           sheet:draw(canvas, index, x - hot_x * cs, y - hot_y * cs, { scaleFactor = cs })
         end,
       }
@@ -476,6 +477,25 @@ function Graphics:onChangeLanguage()
     end
     g.load_info = load_info
   end, self)
+end
+
+function Graphics:onChangeWindowDisplayScale(scale)
+  scale = self:_adjustWindowDisplayScale(scale)
+  if scale == self.display_scale then return end
+  self.display_scale = scale
+
+  self:onChangeUIScale()
+end
+
+function Graphics:_adjustWindowDisplayScale(scale)
+  local config = self.app.config
+  if not config.apply_window_display_scale then
+    return 1
+  end
+  if not self.app.config.debug_fractional_scaling then
+    return math.max(math.floor(scale), 1)
+  end
+  return scale
 end
 
 -- Call when the configured ui_scale is changed
@@ -1089,11 +1109,15 @@ function Graphics:getUIScale()
   end
   local scr_w, scr_h = self.target:getRenderSize()
   local max_scale = math.floor(math.min(scr_w / App.MIN_WINDOW_WIDTH, scr_h / App.MIN_WINDOW_HEIGHT));
-  local cs = TheApp.config.ui_scale
+  local cs = TheApp.config.ui_scale * self.display_scale
   if cs == 0 or cs > max_scale then
     self.actual_ui_scale = max_scale
   else
     self.actual_ui_scale = cs
   end
   return self.actual_ui_scale
+end
+
+function Graphics:getWindowDisplayScale()
+  return self.display_scale
 end

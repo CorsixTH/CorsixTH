@@ -791,6 +791,15 @@ window_size render_target::get_max_window_size() const {
   return {rect.w, rect.h};
 }
 
+float render_target::get_display_scale() const {
+  float ds = SDL_GetWindowDisplayScale(window);
+  // Returns 0 on error, but we want to just not scale in that case.
+  if (ds == 0.0f) {
+    ds = 1.0f;
+  }
+  return ds;
+}
+
 void render_target::start_nonoverlapping_draws() {
   // SDL has no optimisations for drawing lots of non-overlapping sprites
 }

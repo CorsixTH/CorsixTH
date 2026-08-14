@@ -200,11 +200,12 @@ function World:adjustZoom(delta)
     return false
   end
 
-  return self.ui:setZoom(scr_w / virtual_width)
+  return self.ui:setZoom(scr_w / virtual_width, true)
 end
 
 function World:resetZoom()
-  return self.ui:setZoom(1)
+  local ds = TheApp.gfx:getWindowDisplayScale()
+  return self.ui:setZoom(ds, false)
 end
 
 --! Initialize the game level (available diseases, winning conditions).

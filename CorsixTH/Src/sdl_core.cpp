@@ -291,6 +291,8 @@ constexpr std::string_view dispatch_callback("callback");
 constexpr std::string_view dispatch_window_resized("window_resized");
 constexpr std::string_view dispatch_window_pixel_size_changed(
     "window_pixel_size_changed");
+constexpr std::string_view dispatch_window_display_scale_changed(
+    "window_display_scale_changed");
 constexpr std::string_view dispatch_frame("frame");
 
 void mainloop(lua_State* L) {
@@ -444,6 +446,12 @@ void mainloop(lua_State* L) {
           lua_pushinteger(L, e.window.data1);
           lua_pushinteger(L, e.window.data2);
           nargs = 3;
+          break;
+        case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
+          last_dispatch = dispatch_window_display_scale_changed;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushnumber(L, target->get_display_scale());
+          nargs = 2;
           break;
         case SDL_USEREVENT_MUSIC_OVER:
           last_dispatch = dispatch_music_over;
