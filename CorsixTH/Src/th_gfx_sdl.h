@@ -71,6 +71,7 @@ struct render_target_creation_params {
   bool direct_zoom{};        ///< Scale each texture when copying if true,
                              ///< otherwise render to intermediate texture and
                              ///< scale.
+  bool hidpi{};              ///< Enable HiDPI on the game window.
   window_size min_size{};    ///< Minimum size of the window.
 };
 

@@ -166,6 +166,7 @@ local function new_config_defaults()
     theme_hospital_install = [[X:\ThemeHospital\hospital]],
     debug = false,
     track_fps = false,
+    hidpi = true,
     zoom_speed = 80,
     scroll_speed = 2,
     shift_scroll_speed = 4,
@@ -726,6 +727,13 @@ param(config_values, 'blocking_off_areas') .. [=[
 -- Improves performance and reliability on some hardware.
 --]=] .. '\n' ..
 param(config_values, 'direct_zoom') .. [=[
+
+-------------------------------------------------------------------------------
+-- HiDPI: Inform the windowing system that the game is HiDPI aware. This will
+-- allow the game to be rendered at the native resolution of the display.
+-- The exact effect depends on the windowing system and the display.
+--]=] .. '\n' ..
+param(config_values, 'hidpi') .. [=[
 
 -------------------------------------------------------------------------------
 -- Replacing Machines: By default, you will see a new machines initial strength

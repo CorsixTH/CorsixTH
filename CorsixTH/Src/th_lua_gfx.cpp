@@ -802,6 +802,7 @@ render_target_creation_params l_surface_creation_params(lua_State* L,
   params.direct_zoom = is_table_field_true(L, modes_idx, "direct_zoom");
   params.aspect_ratio_4_3 =
       is_table_field_true(L, modes_idx, "aspect_ratio_4_3");
+  params.hidpi = is_table_field_true(L, modes_idx, "hidpi");
   lua_pop(L, 1);
 
   return params;
