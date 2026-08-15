@@ -117,6 +117,9 @@ function Plant:setNextState(restoring)
   end
 
   self.th:setFrame(self.base_frame + self.current_state)
+  -- Plants have a varying effect on happiness depending on their state
+  local room = self:getRoom() or self.world:getRoom(self.tile_x, self.tile_y)
+  if room then room:calculateHappinessFactor() end
 end
 
 local plant_restoring; plant_restoring = permanent"plant_restoring"( function(plant)

@@ -1084,9 +1084,6 @@ function Room:afterLoad(old, new)
     -- no longer using this so empty it
     self.humanoids_enroute = {}
   end
-  if old < 186 then
-    self:calculateHappinessFactor()
-  end
   if old < 233 then
     if self.waiting_staff_member then
       -- Cancel delayed replace existing staff member in room
@@ -1104,6 +1101,9 @@ function Room:afterLoad(old, new)
         room_name ~= "research" then
       self.staff_member_set = nil
     end
+  end
+  if old < 265 then
+    self:calculateHappinessFactor()
   end
 end
 
@@ -1180,10 +1180,11 @@ function Room:calculateRemovalCost()
   return cost
 end
 
---! Calculate the effect the room has on humanoid happiness
+--! Calculate the effect the room has on staff happiness
 function Room:calculateHappinessFactor()
   -- The number of windows affects happiness
-  local window_factor, space_factor, window_count = 0, 0, self:countWindows()
+  local window_factor, space_factor, object_factor = 0, 0, 0
+  local window_count = self:countWindows()
   if window_count > 0 then
     if self.room_info.id == "staff_room" then
       -- Staff are pleased to rest in a staff room with windows
@@ -1200,7 +1201,25 @@ function Room:calculateHappinessFactor()
     space_factor = math.round(math.log(extraspace)) / 1000
   end
 
-  self.happiness_factor = window_factor + space_factor
+  -- Various optional room items affect happiness
+  local room_objects = {
+    extinguisher = 0.002,
+    bin          = 0.001,
+    bookcase     = 0.003,
+    skeleton     = 0.002,
+    tv           = 0.0005,
+    plant  = function(plant) return -0.003 + (plant:isPleasingFactor() * 0.001) end,
+  }
+  for obj, _ in pairs(self.objects) do
+    local name = obj.object_type.id
+    if type(room_objects[name]) == "number" then
+      object_factor = object_factor + room_objects[name]
+    elseif room_objects[name] then
+      object_factor = object_factor + room_objects[name](obj)
+    end
+  end
+
+  self.happiness_factor = window_factor + space_factor + object_factor
 end
 
 --! Get this room machine, if it there

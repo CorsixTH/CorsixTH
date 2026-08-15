@@ -56,6 +56,8 @@ function Object:Object(hospital, object_type, x, y, direction, etc)
   self:updateDynamicInfo()
   self:initOrientation(direction)
   self:setTile(x, y)
+  local room = self:getRoom() or self.world:getRoom(x, y)
+  if room then room:calculateHappinessFactor() end
 end
 
 --! Initializes the footprint, finds out what to draw and checks for
@@ -858,6 +860,9 @@ end
 function Object:onPickUp()
   self:resetUsageAndReservaton()
   Entity.onPickUp(self)
+
+  local room = self:getRoom() or self.world:getRoom(self.tile_x, self.tile_y)
+  if room then room:calculateHappinessFactor() end
 end
 
 function Object:resetUsageAndReservaton()

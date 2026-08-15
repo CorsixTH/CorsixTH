@@ -243,6 +243,7 @@ end
 
 -- precondition: self.active_index has to correspond to the object to be removed
 function UIPlaceObjects:removeObject(object, dont_close_if_empty, placed, move_canceled)
+  local x, y = self.object_cell_x, self.object_cell_y
   local existing_object = object.existing_object
 
   local move_cancellation = not placed and existing_object and move_canceled
@@ -309,6 +310,9 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, placed, move_c
   if object.object.id == "reception_desk" then -- Rebuild cache of reception desks
     self.ui.hospital:buildReceptionDesksCache()
   end
+
+  local room = self.room or self.world:getRoom(x, y)
+  if room then room:calculateHappinessFactor() end
 end
 
 --! Remove all items from the menu.
@@ -590,6 +594,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty, dont_remove)
   end
   object.orientation_before = nil
 
+  if room then room:calculateHappinessFactor() end
   return real_obj
 end
 
