@@ -27,7 +27,7 @@ on:
 
 jobs:
   Windows:
-    runs-on: windows-2022
+    runs-on: ${{inputs.preset == 'win-arm64-rel' && 'windows-11-arm' || 'windows-2022'}}
     env:
       PRESET: ${{inputs.preset || 'win-x64-rel'}}
       ANIMVIEW: ${{inputs.animview && 'ON' || 'OFF'}}
