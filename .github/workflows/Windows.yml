@@ -1,5 +1,7 @@
 ---
 name: Windows
+permissions:
+  contents: read
 
 on:
   push:
