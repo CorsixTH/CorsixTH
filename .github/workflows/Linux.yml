@@ -1,6 +1,9 @@
 ---
 name: Linux and Tests
 
+permissions:
+  contents: read
+
 on:
   push:
     branches-ignore:
@@ -17,6 +20,9 @@ on:
 
 jobs:
   Linux-apt-get:
+    permissions:
+      contents: write
+      pull-requests: read
     strategy:
       fail-fast: false
       matrix:
@@ -128,6 +134,9 @@ jobs:
           fi
 
   Linux-vcpkg:
+    permissions:
+      contents: read
+      pull-requests: read
     runs-on: ubuntu-22.04
     name: Linux vcpkg Lua 5.5 ${{inputs.animview == 'true' && 'with AnimView' || ''}}
     env:
