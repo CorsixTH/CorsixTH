@@ -246,7 +246,8 @@ function UIOptions:UIOptions(ui, mode)
   self.resolution_button:enable(not app.modes.fullscreen)
 
   -- UI Scale
-  local scale_label = TheApp.config.ui_scale * 100 .. "%"
+  local scale_label = TheApp.config.ui_scale == 0 and
+      _S.options_window.scale_ui_auto or TheApp.config.ui_scale * 100 .. "%"
   self.scale_ui_panel, self.scale_ui_button = createOptionsElement(
       _S.options_window.scale_ui, _S.tooltip.options_window.scale_ui,
       scale_label, nil,
