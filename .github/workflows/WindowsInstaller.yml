@@ -13,6 +13,9 @@ on:
         required: true
         type: number
 
+permissions:
+  contents: read
+
 jobs:
   WindowsInstaller:
     runs-on: ubuntu-24.04
