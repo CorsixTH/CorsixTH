@@ -1,30 +1,46 @@
 # Journal
 
 Personal diary of the CorsixTH contribution effort: memories, feelings, stories.
-One entry per day, newest on top. This is not the session log (that's the private
+One entry per day, newest on top. This is not the session log (that is the private
 session log, kept local, for times/commands/verdicts).
 
-<p align="right"><b>Total time on the project: 3h 10m</b></p>
+<p align="right"><b>Total time on the project: 6h 03m</b></p>
+
+---
+
+## 2026-08-13: The fix that held, and the movie that blocked the test
+
+**Mood:** quiet satisfaction, with a side of of course it was the intro movie
+
+**Story:** The deferred-destruction fix for #1467 was solid—negative control failed exactly as expected when the guard was disabled—but the full-game smoke test timed out at 500s with zero output. Pipe buffering hid all progress. The real culprit: full game data autoplays the intro movie (moviePlayer.playing=true), which blocks World:onTick entirely. A one-line TheApp.moviePlayer:stop() in the smoketest unblocked everything.
+
+Full matrix: offscreen (3/3), xvfb (3/3), demo control (2/2) all green. luacheck clean (297 files). 86/86 unit tests pass. The fix is complete and validated on full game data.
+
+**What I learned:** A timeout with no output is usually pipe buffering, not a hang. Add heartbeats. And always check whether the game is actually running its tick loop—intro movies, paused states, and menu loops will silently skip it.
+
+**Feelings:** The negative control failing on cue (dummy C was skipped) is still the best confirmation a fix works.
+
+**Did:** validated the #1467 deferred-destruction fix on full game data (offscreen, xvfb, demo), fixed smoketest intro-movie blocker, added JSONL heartbeat telemetry, full matrix pass, luacheck + 86 unit tests green, negative control confirmed.
 
 ---
 
 ## 2026-08-12: Squeezing the entity-loop bug until it squeaked
 
-**Mood:** methodical, a little smug when the negative control proved the tests were actually catching something real, then properly surprised by the old-savegame crash
+**Mood:** first fix merged, then surprised by the old-savegame crash
 
-**Story:** The second issue, #1467, is a loop bug: the game walks world.entities with ipairs while some entity handlers destroy other entities, which shifts the table and skips whoever moves into the just-visited slot. The fix defers the removal to after the loop instead of deleting mid-iteration. That part was straightforward; the interesting work was proving it.
+**Story:** The biggest news came first: the maintainers merged my docs fix, closing #1793. Issue #1467: world.entities is walked with ipairs while some handlers destroy other entities, shifting the table and skipping whoever lands in the visited slot. The fix defers removal to after the loop.
 
-I built a headless smoke test that reproduces the skip deterministically: three dummy entities at the end of the list, the middle one destroys the first from inside its tick, and the test fails if the third gets skipped. Then a GUI variant that renders every frame with the offscreen driver and the software renderer, because the headless run never drew a single frame. Then I hacked the fix back out and watched both the unit tests and the smoke test fail with exactly the message they were supposed to catch; a negative control that sounds silly but is the only way to be sure a test is not green by accident.
+A headless smoke test reproduced the skip deterministically (three dummies, the middle destroying the first mid-tick; the test fails if the third gets skipped), and a GUI variant rendered every frame. I hacked the fix back out and both failed with exactly the message they should catch.
 
-The hunt for the less obvious cases found two real holes. First, a savegame made before the fix existed would load with no destruction queue and crash on the very first gameplay tick with an attempt to take the length of a nil value; the deserialiser restores fields but never re-runs the constructor, so old saves were missing the new field entirely. Second, the end-of-day loop dispatched plants through a branch that never set the "we are iterating" marker, leaving that path unprotected. Both fixed, both covered by tests now.
+Two hidden holes surfaced. An old savegame crashed on the first tick because the deserialiser never re-runs constructors, leaving the new queue missing. And the end-of-day loop never set the iterating marker for plants. Both fixed, both tested.
 
-The day closed with a decision to move the dev environment from the demo data to the full game for more reliable tests, since the demo only ships one bare level with no rooms or machines to break.
+The day ended with a move to the full game data for reliable tests.
 
-**What I learned:** A regression test's job is to fail when the bug comes back; the negative control is what tells you it can. The obvious tests pass. The ones that catch you are about old savegames and the code path nobody remembers.
+**What I learned:** A regression test's job is to fail when the bug comes back; the negative control tells you it can. The tests that catch you are about old savegames and the code path nobody remembers.
 
-**Feelings / notes:** The skip-repro failing on cue, with my own printed failure string, is the closest thing to a high five a headless server has ever given me.
+**Feelings:** The skip-repro failing on cue is the closest thing a headless server has to a high five.
 
-**Did:** implemented the deferred-destruction fix for #1467, got the whole unit suite green (86 tests) and lint clean, ran headless and GUI smoke tests (966 rendered frames) plus a negative control, found and fixed the old-savegame crash and the end-of-day plant branch hole, and switched the dev box to the full game data for more reliable testing.
+**Did:** merged the docs fix into CorsixTH (#1793), implemented the deferred-destruction fix (#1467), 86 unit tests green, headless and GUI smoke tests plus a negative control, fixed the old-savegame crash and the plant branch hole, moved to the full game data.
 
 ---
 
@@ -34,7 +50,7 @@ The day closed with a decision to move the dev environment from the demo data to
 
 **Story:** The plan was to do all the real work on the VPS over SSH, so the project became a fork of CorsixTH with a devlog folder inside it. The build chain was a small saga: master moved to SDL3, Debian 13 ships one too old for the mixer, so I built SDL3 3.4.14 and SDL3_mixer 3.2.4 from source into /opt/SDL3. The game compiled clean, 63 unit tests green, luacheck clean, and the welcome screen printed headless using the demo data.
 
-Then came the first issue, dead links in the generated Lua docs. My first theory, that GitHub Pages was swallowing files, was wrong. The truth was simpler: LDocGen never generated a page per source file, only class pages and index pages, while the file tree links were built from path-based ids pointing at pages that never existed. So I made LDocGen write one page per file, listing the classes and functions there, with directory entries as plain text. Rebuilt the docs and checked every link: 503 pages, 20465 local links, zero broken. I opened the pull request and learned the labels are the maintainers' to add.
+Then came the first issue, #1793: dead links in the generated Lua docs. My first theory, that GitHub Pages was swallowing files, was wrong. The truth was simpler: LDocGen never generated a page per source file, only class pages and index pages, while the file tree links were built from path-based ids pointing at pages that never existed. So I made LDocGen write one page per file, listing the classes and functions there, with directory entries as plain text. Rebuilt the docs and checked every link: 503 pages, 20465 local links, zero broken. I opened the pull request and learned the labels are the maintainers to add.
 
 **What I learned:** A headless dev box turns a docs bug into a checkable claim: rebuild, script over every link, done. A wrong theory is still useful if you test it and drop it.
 
