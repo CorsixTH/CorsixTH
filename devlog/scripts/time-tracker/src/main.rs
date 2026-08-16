@@ -140,7 +140,33 @@ fn cmd_start(data: &mut Tracker, start_arg: Option<&str>) {
     println!("Tracker started at {}", data.current_start.as_ref().unwrap());
 }
 
-fn cmd_close(data: &mut Tracker, end_arg: Option<&str>) {
+fn stop_services() {
+    let script = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("..")
+        .join("stop-services.sh");
+    if !script.exists() {
+        println!(
+            "  warning: {} not found, skipping service shutdown",
+            script.display()
+        );
+        return;
+    }
+    match process::Command::new("/usr/bin/env").arg("bash").arg(&script).output() {
+        Ok(output) => {
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            if !stdout.trim().is_empty() {
+                print!("{}", stdout);
+            }
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            if !stderr.trim().is_empty() {
+                print!("{}", stderr);
+            }
+        }
+        Err(e) => println!("  warning: could not stop services: {}", e),
+    }
+}
+
+fn cmd_close(data: &mut Tracker, end_arg: Option<&str>, skip_services: bool) {
     let start = match &data.current_start {
         Some(s) => s.clone(),
         None => {
@@ -184,6 +210,11 @@ fn cmd_close(data: &mut Tracker, end_arg: Option<&str>) {
         data.total_hours
     );
     cmd_journal(data);
+    if skip_services {
+        println!("Skipping service shutdown (--skip-services).");
+    } else {
+        stop_services();
+    }
 }
 
 fn cmd_status(data: &Tracker) {
@@ -232,6 +263,8 @@ fn print_help() {
     println!("Usage:");
     println!("  time-tracker start [START]  # mark start (default now), open session");
     println!("  time-tracker close [END]  # mark end (default now), compute hours");
+    println!("  time-tracker close --skip-services");
+    println!("                             # close without stopping dev services");
     println!("  time-tracker status   # show open session / totals");
     println!("  time-tracker summary  # show totals");
     println!("  time-tracker journal  # refresh the total time in journal.md");
@@ -248,7 +281,11 @@ fn main() {
     let mut data = load();
     match args[1].as_str() {
         "start" => cmd_start(&mut data, args.get(2).map(String::as_str)),
-        "close" => cmd_close(&mut data, args.get(2).map(String::as_str)),
+        "close" => {
+            let skip = args.get(2).map(String::as_str) == Some("--skip-services");
+            let end_arg = if skip { None } else { args.get(2).map(String::as_str) };
+            cmd_close(&mut data, end_arg, skip);
+        }
         "status" => cmd_status(&data),
         "summary" => cmd_summary(&data),
         "journal" => cmd_journal(&data),
