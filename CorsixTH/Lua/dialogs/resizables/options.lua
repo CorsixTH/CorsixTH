@@ -573,6 +573,7 @@ function UIOptions:buttonOriginalAspectRatio()
     self.aspect_button:toggle()
   end
   self.aspect_panel:setLabel(self.ui.app.modes.aspect_ratio_4_3 and _S.options_window.option_on or _S.options_window.option_off)
+  self.ui:onChangeResolution()
 end
 
 function UIOptions:buttonMouseCapture()
