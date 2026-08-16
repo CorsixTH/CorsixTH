@@ -267,7 +267,7 @@ function UIOptions:UIOptions(ui, mode)
       self.dropdownCursorScale, false)
 
   -- Now set the resolution button label and the ui scale button state
-  self:processWindowResizeEvent()
+  self:_processWindowResizeEvent()
 
   local aspect_label = app.config.original_aspect_ratio and
           _S.options_window.option_on or _S.options_window.option_off
@@ -642,16 +642,16 @@ function UIOptions:buttonZoomSpeed()
 end
 
 function UIOptions:onChangeResolution()
-  self:processWindowResizeEvent()
+  self:_processWindowResizeEvent()
   self:setDefaultPosition(0.5, 0.25)
 end
 
 -- Handle required button changes from a window resize event from the user (via UI
 -- or adjusting window boundaries)
-function UIOptions:processWindowResizeEvent()
+function UIOptions:_processWindowResizeEvent()
   self:updateUIScaleAvailabilityState()
-  self.resolution_panel:setLabel(self.ui.app.config.width .. "x" ..
-      self.ui.app.config.height)
+  local window_w, window_h = TheApp.video:getWindowSize()
+  self.resolution_panel:setLabel(window_w .. "x" .. window_h)
 end
 
 function UIOptions:close()
