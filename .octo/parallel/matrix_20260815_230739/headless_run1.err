@@ -1,0 +1,10 @@
+SDL_Init failed: No available video device
+An error has occurred in CorsixTH:
+/home/bruno/CorsixTH/CorsixTH/CorsixTH.lua:108: Cannot initialise SDL
+stack traceback:
+	[C]: in function 'assert'
+	/home/bruno/CorsixTH/CorsixTH/CorsixTH.lua:108: in main chunk
+	/home/bruno/CorsixTH/smoketest.lua:6: in main chunk
+	[C]: in ?
+SDL_Init failed: No available video device
+bootstrap.cpp:54: Unable to initialise video

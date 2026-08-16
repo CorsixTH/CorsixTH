@@ -1,0 +1,26 @@
+
+
+---------------------------------------------------------------
+
+Welcome to CorsixTH v0.70.0-dev264!
+
+---------------------------------------------------------------
+
+This window will display useful information if an error occurs.
+
+---------------------------------------------------------------
+
+Notice: Audio system could not initialise (SDL error: ALSA: Couldn't open audio device: No such file or directory)
+SMOKE: using_demo_files=false, difficulty=full
+Created game with savegame version 264.
+SMOKE: loadLevel returned ok=true, err=true
+SMOKE: TheApp.world = table: 0x564d4f78a310
+SMOKE: level loaded, entities=2
+SMOKE: added receptionist and doctor, entities=4
+SMOKE: warmup-with-patients ran 700 ticks, entities=32 (peak 32)
+SMOKE: saved to /home/bruno/.config/CorsixTH/Saves/smoketest.sav
+Savegame version is 264 (v0.70.0-dev264), originally it was 264 (v0.70.0-dev264).
+SMOKE: loaded savegame, entities=32 queue=0
+SMOKE: dummy indexes a=33 b=34 c=35
+SMOKE: skip-bug-repro ran 5 onTick calls (tick_rate=3)
+SMOKE FAIL: dummy A never ticked

@@ -1,0 +1,34 @@
+
+
+---------------------------------------------------------------
+
+Welcome to CorsixTH v0.70.0-dev264!
+
+---------------------------------------------------------------
+
+This window will display useful information if an error occurs.
+
+---------------------------------------------------------------
+
+Notice: Using data files from demo version of Theme Hospital.
+Consider purchasing a full copy of the game to support EA.
+Notice: Audio system could not initialise (SDL error: ALSA: Couldn't open audio device: No such file or directory)
+Will not check for updates since this is a development version.
+Created game with savegame version 264.
+SMOKE: level loaded, entities=6
+SMOKE: added receptionist and doctor, entities=8
+SMOKE: warmup-with-patients ran 700 ticks, entities=36 (peak 36)
+SMOKE: saved to /home/bruno/.config/CorsixTH/Saves/smoketest.sav
+Savegame version is 264 (v0.70.0-dev264), originally it was 264 (v0.70.0-dev264).
+SMOKE: loaded savegame, entities=36 queue=0
+SMOKE: dummy indexes a=37 b=38 c=39
+SMOKE: skip-bug-repro ran 3 onTick calls (tick_rate=3)
+SMOKE: mid-loop destroy of earlier entity worked, no entity was skipped
+SMOKE: self-destroy ran 3 onTick calls
+SMOKE: self-destroy during own tick worked
+SMOKE: after-dummy-destroy ran 200 ticks, entities=38 (peak 38)
+SMOKE: stale to_destroy flags=0
+SMOKE: entities_to_destroy queue=0
+SMOKE: old-save-sim (nil queue) ran 60 ticks, entities=38 (peak 38)
+SMOKE: old-save simulation OK, queue=0
+SMOKE: ALL CHECKS PASSED

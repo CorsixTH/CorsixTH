@@ -1,0 +1,13 @@
+
+
+---------------------------------------------------------------
+
+Welcome to CorsixTH v0.70.0-dev264!
+
+---------------------------------------------------------------
+
+This window will display useful information if an error occurs.
+
+---------------------------------------------------------------
+
+Notice: Audio system could not initialise (SDL error: ALSA: Couldn't open audio device: No such file or directory)

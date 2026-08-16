@@ -1,0 +1,31 @@
+[W][23:08:40.173546] pw.conf      | [          conf.c: 1182 try_load_conf()] can't load config client.conf: No such file or directory
+[E][23:08:40.174853] pw.conf      | [          conf.c: 1215 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+[W][23:08:40.182641] pw.conf      | [          conf.c: 1182 try_load_conf()] can't load config client.conf: No such file or directory
+[E][23:08:40.182798] pw.conf      | [          conf.c: 1215 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5728:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) Unknown PCM default
+Failed to initialize mixer: ALSA: Couldn't open audio device: No such file or directory{"phase":"load_complete","tick":0,"entities_alive":2,"to_destroy_flags":0,"queue_len":0,"mem_kb":14360.5,"load_ms":0}
+{"phase":"staff_added","tick":0,"entities_alive":4,"to_destroy_flags":0,"queue_len":0,"mem_kb":14392.1}
+{"phase":"warmup-with-patients","tick":0,"entities_alive":8,"to_destroy_flags":0,"queue_len":0,"mem_kb":18092.9,"tick_in_phase":100}
+{"phase":"warmup-with-patients","tick":0,"entities_alive":12,"to_destroy_flags":0,"queue_len":0,"mem_kb":21715.3,"tick_in_phase":200}
+{"phase":"warmup-with-patients","tick":0,"entities_alive":16,"to_destroy_flags":0,"queue_len":0,"mem_kb":25433.3,"tick_in_phase":300}
+{"phase":"warmup-with-patients","tick":0,"entities_alive":20,"to_destroy_flags":0,"queue_len":0,"mem_kb":15541.8,"tick_in_phase":400}
+{"phase":"warmup-with-patients","tick":0,"entities_alive":24,"to_destroy_flags":0,"queue_len":0,"mem_kb":19212.6,"tick_in_phase":500}
+{"phase":"warmup-with-patients","tick":0,"entities_alive":28,"to_destroy_flags":0,"queue_len":0,"mem_kb":22899.5,"tick_in_phase":600}
+{"phase":"warmup-with-patients","tick":0,"entities_alive":32,"to_destroy_flags":0,"queue_len":0,"mem_kb":26597.6,"tick_in_phase":700}
+{"phase":"warmup-with-patients_complete","tick":0,"entities_alive":32,"to_destroy_flags":0,"queue_len":0,"mem_kb":26598.2}
+{"phase":"save_complete","tick":0,"entities_alive":32,"to_destroy_flags":0,"queue_len":0,"mem_kb":16938.2}
+{"phase":"load_save_complete","tick":0,"entities_alive":32,"to_destroy_flags":0,"queue_len":0,"mem_kb":23707.3}
+{"phase":"skip_bug_repro_complete","tick":0,"entities_alive":34,"to_destroy_flags":0,"queue_len":0,"mem_kb":23824.0}
+{"phase":"self_destroy_complete","tick":0,"entities_alive":34,"to_destroy_flags":0,"queue_len":0,"mem_kb":23935.4}
+{"phase":"after-dummy-destroy","tick":0,"entities_alive":34,"to_destroy_flags":0,"queue_len":0,"mem_kb":27658.4,"tick_in_phase":100}
+{"phase":"after-dummy-destroy","tick":0,"entities_alive":34,"to_destroy_flags":0,"queue_len":0,"mem_kb":23961.7,"tick_in_phase":200}
+{"phase":"after-dummy-destroy_complete","tick":0,"entities_alive":34,"to_destroy_flags":0,"queue_len":0,"mem_kb":23962.3}
+{"phase":"old-save-sim (nil queue)_complete","tick":0,"entities_alive":34,"to_destroy_flags":0,"queue_len":0,"mem_kb":26171.1}
+{"phase":"all_passed","tick":0,"entities_alive":34,"to_destroy_flags":0,"queue_len":0,"mem_kb":26171.6}
