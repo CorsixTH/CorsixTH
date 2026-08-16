@@ -971,6 +971,16 @@ int l_surface_get_render_size(lua_State* L) {
   return 2;
 }
 
+int l_surface_get_window_size(lua_State* L) {
+  ZoneScoped;
+
+  render_target* canvas = luaT_testuserdata<render_target>(L);
+  auto [width, height] = canvas->get_window_size();
+  lua_pushinteger(L, width);
+  lua_pushinteger(L, height);
+  return 2;
+}
+
 int l_surface_get_max_window_size(lua_State* L) {
   ZoneScoped;
 
@@ -1213,6 +1223,7 @@ void lua_register_gfx(const lua_register_state* pState) {
     lcb.add_function(l_surface_push_clip, "pushClip");
     lcb.add_function(l_surface_pop_clip, "popClip");
     lcb.add_function(l_surface_get_render_size, "getRenderSize");
+    lcb.add_function(l_surface_get_window_size, "getWindowSize");
     lcb.add_function(l_surface_get_max_window_size, "getMaxWindowSize");
     lcb.add_function(l_surface_get_display_scale, "getWindowDisplayScale");
     lcb.add_function(l_surface_screenshot, "takeScreenshot");

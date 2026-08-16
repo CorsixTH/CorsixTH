@@ -784,6 +784,13 @@ int render_target::get_scaled_height() const {
   return static_cast<int>(h / draw_scale());
 }
 
+window_size render_target::get_window_size() const {
+  int w;
+  int h;
+  SDL_GetWindowSize(window, &w, &h);
+  return {w, h};
+}
+
 window_size render_target::get_max_window_size() const {
   SDL_Rect rect;
   SDL_DisplayID display = SDL_GetDisplayForWindow(window);
