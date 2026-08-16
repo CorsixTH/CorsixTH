@@ -4,25 +4,25 @@ Personal diary of the CorsixTH contribution effort: memories, feelings, stories.
 One entry per day, newest on top. This is not the session log (that is the private
 session log, kept local, for times/commands/verdicts).
 
-<p align="right"><b>Total time on the project: 6h 03m</b></p>
+<p align="right"><b>Total time on the project: 8h 03m</b></p>
 
----
+  
 
-## 2026-08-13: The fix that held, and the movie that blocked the test
+## 2026-08-16: The fix that held, and the movie that blocked the test
 
 **Mood:** quiet satisfaction, with a side of of course it was the intro movie
 
-**Story:** The deferred-destruction fix for #1467 was solid—negative control failed exactly as expected when the guard was disabled—but the full-game smoke test timed out at 500s with zero output. Pipe buffering hid all progress. The real culprit: full game data autoplays the intro movie (moviePlayer.playing=true), which blocks World:onTick entirely. A one-line TheApp.moviePlayer:stop() in the smoketest unblocked everything.
+**Story:** The deferred-destruction fix for #1467 was solid, negative control failed exactly as expected when the guard was disabled, but the full-game smoke test timed out at 500s with zero output. Pipe buffering hid all progress. The real culprit: full game data autoplays the intro movie (moviePlayer.playing=true), which blocks World:onTick entirely. A one-line TheApp.moviePlayer:stop() in the smoketest unblocked everything.
 
 Full matrix: offscreen (3/3), xvfb (3/3), demo control (2/2) all green. luacheck clean (297 files). 86/86 unit tests pass. The fix is complete and validated on full game data.
 
-**What I learned:** A timeout with no output is usually pipe buffering, not a hang. Add heartbeats. And always check whether the game is actually running its tick loop—intro movies, paused states, and menu loops will silently skip it.
+**What I learned:** A timeout with no output is usually pipe buffering, not a hang. Add heartbeats. And always check whether the game is actually running its tick loop, intro movies, paused states, and menu loops will silently skip it.
 
 **Feelings:** The negative control failing on cue (dummy C was skipped) is still the best confirmation a fix works.
 
 **Did:** validated the #1467 deferred-destruction fix on full game data (offscreen, xvfb, demo), fixed smoketest intro-movie blocker, added JSONL heartbeat telemetry, full matrix pass, luacheck + 86 unit tests green, negative control confirmed.
 
----
+  
 
 ## 2026-08-12: Squeezing the entity-loop bug until it squeaked
 
