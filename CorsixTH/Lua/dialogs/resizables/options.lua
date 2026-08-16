@@ -507,7 +507,6 @@ function UIOptions:selectUIScale(number)
   TheApp.config.ui_scale = res.scale
   TheApp:saveConfig()
   self.scale_ui_panel:setLabel(res.text)
-  self.ui:changeResolution(TheApp.config.width, TheApp.config.height)
   TheApp.gfx:onChangeUIScale()
   self.ui:onChangeResolution()
 end
