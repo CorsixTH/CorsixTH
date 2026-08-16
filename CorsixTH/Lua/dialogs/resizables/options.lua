@@ -92,11 +92,15 @@ local available_resolutions = function()
 
   local enable_list, disable_list = {}, {}
   local max_window_width, max_window_height = TheApp.video:getMaxWindowSize()
-  if max_window_width == 0 then
-    max_window_width = 3000
-  end
-  if max_window_height == 0 then
-    max_window_height = 2000
+
+  -- It is possible that getMaxWindowSize could fail to detect the actual
+  -- available display space, in which case it will return 0, 0.
+  -- In that case we don't have any information to hide a resolution from the
+  -- user, so set the maximum to large enough values that nothing in the list
+  -- will be disabled. The numbers below are arbitrarily large.
+  if max_window_width == 0 or max_window_height == 0 then
+    max_window_width = 4000
+    max_window_height = 3000
   end
 
   for _, opt in ipairs(suggested_resolutions) do
