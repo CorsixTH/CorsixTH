@@ -797,6 +797,7 @@ render_target_creation_params l_surface_creation_params(lua_State* L,
     return params;
   }
   params.fullscreen = is_table_field_true(L, modes_idx, "fullscreen");
+  params.maximized = is_table_field_true(L, modes_idx, "maximized");
   params.present_immediate =
       is_table_field_true(L, modes_idx, "present_immediate");
   params.direct_zoom = is_table_field_true(L, modes_idx, "direct_zoom");

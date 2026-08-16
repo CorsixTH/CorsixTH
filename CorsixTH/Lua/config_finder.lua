@@ -123,6 +123,7 @@ local function new_config_defaults()
   ]]
   return {
     fullscreen = false,
+    maximized = false,
     width = 800,
     height = 600,
     original_aspect_ratio = false,
@@ -307,10 +308,14 @@ local function config_contents(config_values)
 -- These settings can also be changed from within the game in the settings menu
 -------------------------------------------------------------------------------
 -- fullscreen: Can be true or false.
---  The game will run windowed if not fullscreen.
+--  If true then the game uses a full screen window. If false the game may be
+--  windowed or maximized.
+-- maximized: Can be true or false.
+--  If the game is not running full screen then it will be maximized if this
+--  is true otherwise it will be windowed.
 -- Window size (width and height): At least 640x480.
---  Larger sizes will require better hardware in order to maintain a playable
---  framerate.
+--  The window size the game runs at when it is not maximized or in full screen
+--  mode.
 -- original_aspect_ratio: True or false
 --  If true then the game is letterboxed so that it is drawn at a 4:3 aspect
 --  ratio like the original game.
@@ -323,6 +328,7 @@ local function config_contents(config_values)
 --  Pixel ratio to draw the cursor.
 --]=] .. '\n' ..
 param(config_values, 'fullscreen') ..
+param(config_values, 'maximized') ..
 param(config_values, 'width') ..
 param(config_values, 'height') ..
 param(config_values, 'original_aspect_ratio') ..

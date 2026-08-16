@@ -60,6 +60,8 @@ function App:App()
     window_resized = self.onWindowResized,
     window_pixel_size_changed = self.onWindowPixelSizeChanged,
     window_display_scale_changed = self.onWindowDisplayScaleChanged,
+    window_maximized = self.onWindowMaximized,
+    window_restored = self.onWindowRestored,
     music_over = self.onMusicOver,
     movie_over = self.onMovieOver,
     sound_over = self.onSoundOver,
@@ -154,6 +156,7 @@ function App:init()
 
   self.modes = {
     fullscreen = self.config.fullscreen,
+    maximized = self.config.maximized,
     present_immediate = self.config.track_fps,
     direct_zoom = self.config.direct_zoom == nil or self.config.direct_zoom,
     aspect_ratio_4_3 = self.config.original_aspect_ratio,
@@ -1399,6 +1402,18 @@ end
 
 function App:onWindowDisplayScaleChanged(...)
   return self.ui:onWindowDisplayScaleChanged(...)
+end
+
+--! Window has been maximize by the user
+--! Call the UI to report the new window mode
+function App:onWindowMaximized(...)
+  return self.ui:onWindowMaximized(...)
+end
+
+--! Window has been restored (remove maximize/minimize) by the user
+--! Call the UI to report the new window mode
+function App:onWindowRestored(...)
+  return self.ui:onWindowRestored(...)
 end
 
 function App:onMusicOver(...)
