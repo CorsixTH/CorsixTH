@@ -975,6 +975,7 @@ function UI:onWindowResized(width, height, state)
   if state == 0 then
     self.app.config.width = width
     self.app.config.height = height
+    self.app.config.maximized = false
 
     -- Save new setting in config
     self.app:saveConfig()
@@ -1002,6 +1003,26 @@ function UI:onWindowDisplayScaleChanged(scale)
   -- window resized instead so the pixel size didn't change resulting in the
   -- bottom panel moving. This is a rare event so the duplicate call is fine.
   self:onChangeResolution()
+end
+
+function UI:onWindowMaximized()
+  self.app.config.maximized = true
+  self.app.modes['maximized'] = true
+  self.app:saveConfig()
+end
+
+function UI:onWindowRestored()
+  -- The restored event fires when the window transitions from maximized to
+  -- full screen. We want to ignore that event so when we disable full screen
+  -- the window returns to a maximized state.
+  if self.app.config.fullscreen == true then
+    return
+  end
+
+  -- Otherwise record that the window is no longer maximized
+  self.app.config.maximized = false
+  self.app.modes['maximized'] = false
+  self.app:saveConfig()
 end
 
 function UI:onMouseMove(x, y, dx, dy)
