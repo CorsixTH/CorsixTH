@@ -60,6 +60,7 @@ function World:World(app, free_build_mode)
   self.pathfinder = TH.pathfinder()
   self.pathfinder:setMap(app.map.th)
   self.entities = {} -- List of entities in the world.
+  self.entities_to_destroy = {} -- Entities queued for destruction while iterating self.entities.
   self.dispatcher = CallsDispatcher(self)
   self.objects = {}
   self.objects_notify_occupants = {}
@@ -968,12 +969,13 @@ function World:onTick()
         end
       end
       for _, entity in ipairs(self.entities) do
-        if entity.ticks then
+        if entity.ticks and not entity.to_destroy then
           self.current_tick_entity = entity
           entity:tick()
         end
       end
       self.current_tick_entity = nil
+      self:_flushDestroyedEntities()
       self.map:onTick()
       self.map.th:updateTemperatures(outside_temperatures[self.game_date:monthOfYear()],
           0.25 + self.hospitals[1].heating.radiator_heat * 0.3)
@@ -1051,14 +1053,16 @@ end
 function World:onEndDay()
   local local_hospital = self:getLocalPlayerHospital()
   for _, entity in ipairs(self.entities) do
-    if entity.ticks and class.is(entity, Humanoid) then
+    if entity.ticks and class.is(entity, Humanoid) and not entity.to_destroy then
       self.current_tick_entity = entity
       entity:tickDay()
-    elseif class.is(entity, Plant) then
+    elseif class.is(entity, Plant) and not entity.to_destroy then
+      self.current_tick_entity = entity
       entity:tickDay()
     end
   end
   self.current_tick_entity = nil
+  self:_flushDestroyedEntities()
 
   --check if it's time for a VIP visit
   if self.game_date:isSameDay(self.next_vip_date) then
@@ -1173,12 +1177,13 @@ function World:onEndMonth()
 
   self:makeAvailableStaff(self.game_date:monthOfGame())
   for _, entity in ipairs(self.entities) do
-    if entity.checkForDeadlock then
+    if entity.checkForDeadlock and not entity.to_destroy then
       self.current_tick_entity = entity
       entity:checkForDeadlock()
     end
   end
   self.current_tick_entity = nil
+  self:_flushDestroyedEntities()
 end
 
 -- Called when a month ends. Decides on which dates patients arrive
@@ -1837,13 +1842,54 @@ function World:newEntity(class, animation, mood_marker)
 end
 
 function World:destroyEntity(entity)
-  for i, e in ipairs(self.entities) do
-    if e == entity then
+  if entity.to_destroy then
+    -- Already queued for destruction, so onDestroy has already run.
+    return
+  end
+  if self.current_tick_entity then
+    -- The caller is iterating over self.entities, so defer removing the
+    -- entity from that table to avoid skipping entities in the loop.
+    -- The entity is removed as soon as the iteration has finished.
+    entity.to_destroy = true
+    -- Loaded games created before the deferred destruction existed will
+    -- not have an entities_to_destroy table, so create it lazily.
+    local queue = self.entities_to_destroy
+    if not queue then
+      queue = {}
+      self.entities_to_destroy = queue
+    end
+    queue[#queue + 1] = entity
+    entity:onDestroy()
+  else
+    for i, e in ipairs(self.entities) do
+      if e == entity then
+        table.remove(self.entities, i)
+        break
+      end
+    end
+    entity:onDestroy()
+  end
+end
+
+--! Remove entities that were queued for destruction from self.entities.
+--! Entities are queued by World:destroyEntity while iterating over
+--! self.entities, so this must only be called once that iteration finished.
+function World:_flushDestroyedEntities()
+  local queue = self.entities_to_destroy
+  if not queue or #queue == 0 then
+    -- A missing queue means a game saved before deferred destruction was
+    -- added was loaded, in which case there is nothing to flush.
+    return
+  end
+  self.entities_to_destroy = {}
+  for i = #self.entities, 1, -1 do
+    if self.entities[i].to_destroy then
       table.remove(self.entities, i)
-      break
     end
   end
-  entity:onDestroy()
+  for _, entity in ipairs(queue) do
+    entity.to_destroy = nil
+  end
 end
 
 function World:newObjectType(new_object)
