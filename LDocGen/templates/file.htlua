@@ -1,0 +1,20 @@
+<h2 class="file"><!= file:getName() !></h2>
+<! if #items > 0 then !>
+<div class="file_info">
+  <strong>Classes and functions defined:</strong>
+  <ul class="item_list">
+    <! for i = 1, #items do local var = items[i] !>
+      <li>
+        <! if class.is(var, LuaClass) then !>
+          <a href="<!= var:getId() !>.html" class="item"><!= var:getName() !></a> class
+        <! else !>
+          <span class="item"><!= var:getName() !></span> function
+        <! end !>
+        <! if var:getShortDesc() then !> - <!= var:getShortDesc() !> <! end !>
+      </li>
+    <! end !>
+  </ul>
+</div>
+<! else !>
+<p>No classes or functions are documented in this file.</p>
+<! end !>
