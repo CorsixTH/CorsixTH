@@ -104,7 +104,7 @@ local available_resolutions = function()
   end
 
   for _, opt in ipairs(suggested_resolutions) do
-    local enabled = opt.width < max_window_width and opt.height < max_window_height
+    local enabled = opt.width <= max_window_width and opt.height <= max_window_height
     opt.disabled = not enabled
     opt.tooltip = opt.disabled and { _S.tooltip.options_window.resolution_does_not_fit }
     if enabled then
