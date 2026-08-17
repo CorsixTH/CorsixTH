@@ -1,5 +1,7 @@
 name: Update website
 
+permissions: {}
+
 on:
   release:
     types:
