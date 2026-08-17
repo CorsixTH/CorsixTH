@@ -28,7 +28,7 @@ local function hb(phase, extra)
   end
   local mem_kb = collectgarbage("count")
   local tick = world and world.tick_count or 0
-  local data = string.format('{"phase":"%s","tick":%d,"entities_alive":%d,"to_destroy_flags":%d,"queue_len":%d,"mem_kb":%.1f}', 
+  local data = string.format('{"phase":"%s","tick":%d,"entities_alive":%d,"to_destroy_flags":%d,"queue_len":%d,"mem_kb":%.1f}',
     phase, tick, entities_alive, to_destroy_flags, queue_len, mem_kb)
   if extra then
     for k, v in pairs(extra) do
