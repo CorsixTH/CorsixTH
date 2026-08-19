@@ -492,7 +492,7 @@ function Graphics:_adjustWindowDisplayScale(scale)
   if not config.apply_window_display_scale then
     return 1
   end
-  if not self.app.config.fractional_scaling then
+  if not self.app.config.debug_fractional_scaling then
     return math.max(math.floor(scale), 1)
   end
   return scale

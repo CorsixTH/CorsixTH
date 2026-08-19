@@ -1179,7 +1179,7 @@ function App:fixConfig()
     end
   end
 
-  if not self.config.fractional_scale then
+  if not self.config.debug_fractional_scaling then
     self.config.ui_scale = math.floor(self.config.ui_scale)
     self.config.cursor_scale = math.floor(self.config.cursor_scale)
   end
