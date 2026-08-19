@@ -258,6 +258,9 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
       cursor = {
         draw = function(canvas, x, y)
           local cs = TheApp.config.cursor_scale * self.display_scale
+          if cs == 0 then
+            cs = self:getUIScale()
+          end
           sheet:draw(canvas, index, x - hot_x * cs, y - hot_y * cs, { scaleFactor = cs })
         end,
       }

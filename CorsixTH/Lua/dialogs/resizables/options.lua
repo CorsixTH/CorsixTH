@@ -129,7 +129,7 @@ end
 
 local available_ui_scales = function()
   local res = {}
-  res[1] = { text = _S.options_window.scale_ui_auto, scale = 0 }
+  res[1] = { text = _S.options_window.scale_auto, scale = 0 }
   for s = 1, 4 do
     res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
   end
@@ -138,6 +138,7 @@ end
 
 local available_cursor_scales = function()
   local res = {}
+  res[1] = { text = _S.options_window.scale_auto, scale = 0 }
   for s = 1, 4 do
     res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
   end
@@ -251,7 +252,7 @@ function UIOptions:UIOptions(ui, mode)
 
   -- UI Scale
   local scale_label = TheApp.config.ui_scale == 0 and
-      _S.options_window.scale_ui_auto or TheApp.config.ui_scale * 100 .. "%"
+      _S.options_window.scale_auto or TheApp.config.ui_scale * 100 .. "%"
   self.scale_ui_panel, self.scale_ui_button = createOptionsElement(
       _S.options_window.scale_ui, _S.tooltip.options_window.scale_ui,
       scale_label, nil,
@@ -259,7 +260,8 @@ function UIOptions:UIOptions(ui, mode)
       self.dropdownUIScale, false)
 
   -- Cursor Scale
-  scale_label = TheApp.config.cursor_scale * 100 .. "%"
+  scale_label = TheApp.config.cursor_scale == 0 and
+      _S.options_window.scale_auto or TheApp.config.cursor_scale * 100 .. "%"
   self.cursor_scale_panel, self.cursor_scale_button = createOptionsElement(
       _S.options_window.cursor_scale, _S.tooltip.options_window.cursor_scale,
       scale_label, nil,
