@@ -128,7 +128,7 @@ local function new_config_defaults()
     height = 600,
     original_aspect_ratio = false,
     ui_scale = 0,
-    cursor_scale = 1,
+    cursor_scale = 0,
     language = [[English]],
     audio = true,
     free_build_mode = false,
@@ -324,8 +324,9 @@ local function config_contents(config_values)
 --  Example: ui_scale = 2 makes UI elements twice as large.
 --  The ui_scale will be capped at runtime to the largest size that fits in the
 --  window; assuming an original size of 640x480.
--- cursor_scale: Natural number (1, 2, 3...)
---  Pixel ratio to draw the cursor.
+-- cursor_scale: Whole number (0, 1, 2, 3...)
+--  Pixel ratio to draw the cursor. 0 is Auto and will match the current
+--  UI scale.
 --]=] .. '\n' ..
 param(config_values, 'fullscreen') ..
 param(config_values, 'maximized') ..
