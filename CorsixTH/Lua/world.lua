@@ -183,6 +183,8 @@ function World:setUI(ui)
   self.ui:addKeyHandler("ingame_reset_zoom", self, self.resetZoom)
 end
 
+--! Adjust the current zoom level by a delta
+-- TODO: This should live in game_ui not world
 function World:adjustZoom(delta)
   local scr_w = TheApp.video:getRenderSize()
   local factor = self.ui.app.config.zoom_speed
@@ -196,7 +198,7 @@ function World:adjustZoom(delta)
   end
 
   virtual_width = virtual_width - delta * factor * modifier
-  if virtual_width < 200 then
+  if virtual_width < 200 * TheApp.gfx:getWindowDisplayScale() then
     return false
   end
 
@@ -204,8 +206,7 @@ function World:adjustZoom(delta)
 end
 
 function World:resetZoom()
-  local ds = TheApp.gfx:getWindowDisplayScale()
-  return self.ui:setZoom(ds, false)
+  return self.ui:setZoom(1, false)
 end
 
 --! Initialize the game level (available diseases, winning conditions).
