@@ -601,7 +601,7 @@ function UIPlaceObjects:draw(canvas, x, y)
   if self.world.user_actions_allowed then
     if not ATTACH_BLUEPRINT_TO_TILE and self.object_cell_x and self.object_anim then
       local xpos, ypos = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
-      local zoom = self.ui.zoom_factor
+      local zoom = self.ui:getEffectiveZoom()
       if canvas:scale(zoom) then
         xpos = math.floor(xpos / zoom)
         ypos = math.floor(ypos / zoom)

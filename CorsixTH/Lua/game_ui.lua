@@ -69,19 +69,30 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.subtitles = Subtitles(self)
   self:addWindow(self.subtitles)
 
+  self.zoom_factor = 1
+  local efz = self.zoom_factor * TheApp.gfx:getWindowDisplayScale()
   local scr_w, scr_h = app.video:getRenderSize()
-  self.visible_diamond = self:makeVisibleDiamond(scr_w, scr_h)
+
+  -- With the zoom the game screen is the pixel size of the screen divided by
+  -- the effective zoom level (zoom_factor * display scale)
+  local wwz, hwz = scr_w / efz, scr_h / efz
+  self.visible_diamond = self:makeVisibleDiamond(wwz, hwz)
   if self.visible_diamond.w <= 0 or self.visible_diamond.h <= 0 then
-    -- For a standard 128x128 map, screen size would have to be in the
-    -- region of 3276x2457 in order to be too large.
+    -- For a standard 128x128 map, 3276x2457 at 1x effective zoom would be too
+    -- large and reveal the edges of the map. At 2x effective zoom this doubles
+    -- and so on. Currently we error out, but it should be possible to instead
+    -- automatically adjust the effective zoom factor until the map fits.
     if not self.map_editor then
-      error("Screen size too large for the map. Adjust your resolution in Settings.")
+      error("Window size too large for the map. " ..
+          "Adjust your window size in Settings or the scale of your display in your operating system.")
     end
   end
-  self.screen_offset_x, self.screen_offset_y = app.map:WorldToScreen(
-    app.map.th:getCameraTile(local_hospital:getPlayerIndex()))
-  self.zoom_factor = 1
-  self:scrollMap(-scr_w / 2, 16 - scr_h / 2)
+  -- move the map so the top,left corner is at the camera tile
+  local cx, cy = app.map.th:getCameraTile(local_hospital:getPlayerIndex())
+  self.screen_offset_x, self.screen_offset_y = app.map:WorldToScreen(cx, cy)
+
+  -- then adjust half a screen left/up to center the camera
+  self:scrollMap(-wwz / 2, 16 - hwz / 2)
   self.limit_to_visible_diamond = not self.map_editor
   self.transparent_walls = false
   self.do_world_hit_test = true
@@ -101,9 +112,6 @@ function GameUI:GameUI(app, local_hospital, map_editor)
 
   self.announcer = Announcer(app)
   self.app:setCaptureMouse()
-
-  local ds = app.gfx:getWindowDisplayScale()
-  self:setZoom(ds, false)
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -220,8 +228,10 @@ function GameUI:setZoom(factor, follow_cursor)
     factor = 1
   end
 
+  local ezf = factor * TheApp.gfx:getWindowDisplayScale()
+
   local scr_w, scr_h = TheApp.video:getRenderSize()
-  local new_diamond = self:makeVisibleDiamond(scr_w / factor, scr_h / factor)
+  local new_diamond = self:makeVisibleDiamond(scr_w / ezf, scr_h / ezf)
   if new_diamond.w < 0 or new_diamond.h < 0 then
     return false
   end
@@ -232,8 +242,8 @@ function GameUI:setZoom(factor, follow_cursor)
   self.zoom_factor = factor
 
   cx, cy = self.app.map:WorldToScreen(cx, cy)
-  cx = cx - self.screen_offset_x - refx / factor
-  cy = cy - self.screen_offset_y - refy / factor
+  cx = cx - self.screen_offset_x - refx / ezf
+  cy = cy - self.screen_offset_y - refy / ezf
   self:scrollMap(cx, cy)
   return true
 end
@@ -244,7 +254,7 @@ function GameUI:draw(canvas)
   if self.map_editor or not self.in_visible_diamond then
     canvas:fillBlack()
   end
-  local zoom = self.zoom_factor
+  local zoom = self:getEffectiveZoom()
   local dx = self.screen_offset_x +
       math.floor((0.5 - math.random()) * self.shake_screen_intensity * shake_screen_max_movement * 2)
   local dy = self.screen_offset_y +
@@ -271,7 +281,8 @@ function GameUI:onChangeResolution()
   end
   -- Recalculate scrolling bounds
   local scr_w, scr_h = TheApp.video:getRenderSize()
-  self.visible_diamond = self:makeVisibleDiamond(scr_w / self.zoom_factor, scr_h / self.zoom_factor)
+  local zoom = self:getEffectiveZoom()
+  self.visible_diamond = self:makeVisibleDiamond(scr_w / zoom, scr_h / zoom)
   self:scrollMap(0, 0)
 
   UI.onChangeResolution(self)
@@ -401,12 +412,12 @@ function GameUI:makeDebugFax()
 end
 
 function GameUI:ScreenToWorld(x, y)
-  local zoom = self.zoom_factor
+  local zoom = self:getEffectiveZoom()
   return self.app.map:ScreenToWorld(self.screen_offset_x + x / zoom, self.screen_offset_y + y / zoom)
 end
 
 function GameUI:WorldToScreen(x, y)
-  local zoom = self.zoom_factor
+  local zoom = self:getEffectiveZoom()
   x, y = self.app.map:WorldToScreen(x, y)
   x = x - self.screen_offset_x
   y = y - self.screen_offset_y
@@ -425,7 +436,7 @@ function GameUI:setWorldHitTest(mode)
 end
 
 function GameUI:onCursorWorldPositionChange()
-  local zoom = self.zoom_factor
+  local zoom = self:getEffectiveZoom()
   local x = math.floor(self.screen_offset_x + self.cursor_x / zoom)
   local y = math.floor(self.screen_offset_y + self.cursor_y / zoom)
   local entity = nil
@@ -579,7 +590,7 @@ function GameUI:onMouseMove(x, y, dx, dy)
   end
 
   if self:_isMouseScrollButtonDown() then
-    local zoom = self.zoom_factor
+    local zoom = self:getEffectiveZoom()
     self.current_momentum.x = self.current_momentum.x - dx/zoom
     self.current_momentum.y = self.current_momentum.y - dy/zoom
 
@@ -768,8 +779,7 @@ function GameUI:onWindowDisplayScaleChanged(scale)
   local new_ds = gfx:getWindowDisplayScale()
 
   if old_ds ~= new_ds then
-    local new_zf = self.zoom_factor * new_ds / old_ds
-    self:setZoom(new_zf, false)
+    self:setZoom(self.zoom_factor, false)
   end
 end
 
@@ -914,7 +924,7 @@ end
 local abs, sqrt_5, floor = math.abs, math.sqrt(1 / 5), math.floor
 
 function GameUI:scrollMapTo(x, y)
-  local zoom = 2 * self.zoom_factor
+  local zoom = 2 * self:getEffectiveZoom()
   local scr_w, scr_h = TheApp.video:getRenderSize()
   return self:scrollMap(x - self.screen_offset_x - scr_w / zoom,
                         y - self.screen_offset_y - scr_h / zoom)
@@ -1362,4 +1372,8 @@ end
 function GameUI:restartMapEditor()
   self:addWindow(UIConfirmDialog(self, false, _S.confirmation.restart_mapeditor,
     --[[persistable:app_hotkey_confirm_mapeditor_restart]] function() self.app:mapEdit() end))
+end
+
+function GameUI:getEffectiveZoom()
+  return self.zoom_factor * TheApp.gfx:getWindowDisplayScale()
 end

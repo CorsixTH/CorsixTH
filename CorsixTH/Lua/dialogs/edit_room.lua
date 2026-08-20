@@ -1007,7 +1007,7 @@ function UIEditRoom:draw(canvas, ...)
   if self.world.user_actions_allowed then
     local ui = self.ui
     local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
-    local zoom = self.ui.zoom_factor
+    local zoom = self.ui:getEffectiveZoom()
     if canvas:scale(zoom) then
       x = math.floor(x / zoom)
       y = math.floor(y / zoom)
