@@ -419,8 +419,8 @@ function Epidemic:finishCoverUp()
   self:turnOffVaccinationMode()
 end
 
---[[ Inspector had arrived at reception desk. Check if
-any infected still in hospital and determine final verdict.]]
+--[[ Inspector had arrived at reception desk, or a hospital without a desk.
+Check if any infected still in hospital and determine final verdict.]]
 function Epidemic:handleInspectorArrival()
   local still_infected = self:countInfectedPatients()
   self:determineFaxAndFines(still_infected)
