@@ -81,7 +81,8 @@ function GameUI:GameUI(app, local_hospital, map_editor)
     -- For a standard 128x128 map, screen size would have to be in the
     -- region of 3276x2457 in order to be too large.
     if not self.map_editor then
-      error("Screen size too large for the map. Adjust your resolution in Settings.")
+      error("Window size too large for the map. " ..
+          "Adjust your window size in Settings or the scale of your display in your operating system.")
     end
   end
   -- move the map so the top,left corner is at the camera tile
