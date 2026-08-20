@@ -966,10 +966,10 @@ function Patient:tickDay()
   -- Update health history.
   self:_dailyHealthHistoryRefresh()
 
-  -- Perform Happiness and nausea calculations from nearby objects when not interacting
-  -- with a room.
+  -- Perform Happiness and nausea calculations from nearby objects when in a corridor
   if not self:getRoom() and not self:getCurrentAction().is_entering and
-      not self:getCurrentAction().is_leaving then
+      not self:getCurrentAction().is_leaving and
+      self.world.map.th:getCellFlags(self.tile_x, self.tile_y).buildable then
     local num_nearby_vomit = self:_dailyObjectHappinessEffects()
     -- We only want to calculate vomit chance on patients who have the relevant animation
     -- and aren't an emergency.
