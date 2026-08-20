@@ -1851,14 +1851,7 @@ function World:destroyEntity(entity)
     -- entity from that table to avoid skipping entities in the loop.
     -- The entity is removed as soon as the iteration has finished.
     entity.to_destroy = true
-    -- Loaded games created before the deferred destruction existed will
-    -- not have an entities_to_destroy table, so create it lazily.
-    local queue = self.entities_to_destroy
-    if not queue then
-      queue = {}
-      self.entities_to_destroy = queue
-    end
-    queue[#queue + 1] = entity
+    self.entities_to_destroy[#self.entities_to_destroy + 1] = entity
     entity:onDestroy()
   else
     for i, e in ipairs(self.entities) do
@@ -1876,9 +1869,7 @@ end
 --! self.entities, so this must only be called once that iteration finished.
 function World:_flushDestroyedEntities()
   local queue = self.entities_to_destroy
-  if not queue or #queue == 0 then
-    -- A missing queue means a game saved before deferred destruction was
-    -- added was loaded, in which case there is nothing to flush.
+  if #queue == 0 then
     return
   end
   self.entities_to_destroy = {}
@@ -2947,6 +2938,11 @@ function World:afterLoad(old, new)
   self:previousSpeed()
 
   self.earthquake:afterLoad(old, new)
+
+  if old < 265 then
+    -- Deferred entity destruction queue (added in #1467 fix)
+    self.entities_to_destroy = {}
+  end
 
   -- Savegame version housekeeping
   if not self.original_savegame_version then

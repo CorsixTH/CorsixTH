@@ -426,34 +426,7 @@ describe("world.lua: ", function()
     assert.are.equal(2, #world.entities)
   end)
 
-  it("flush does nothing when the queue is missing (old savegame)", function()
-    local e1 = makeEntity("e1")
-    local world = makeWorld({e1})
-    world.entities_to_destroy = nil
 
-    world:_flushDestroyedEntities()
-
-    assert.are.equal(1, #world.entities)
-    assert.is_nil(world.entities_to_destroy)
-  end)
-
-  it("creates the queue lazily when destroying during a loop on an old savegame", function()
-    local e1, e2 = makeEntity("e1"), makeEntity("e2")
-    local world = makeWorld({e1, e2})
-    world.entities_to_destroy = nil
-    world.current_tick_entity = e1
-
-    world:destroyEntity(e2)
-
-    assert.is_true(e2.to_destroy)
-    assert.are.equal(1, #world.entities_to_destroy)
-    world.current_tick_entity = nil
-    world:_flushDestroyedEntities()
-    assert.are.equal(1, #world.entities)
-    assert.is.equal(e1, world.entities[1])
-    assert.is_nil(e2.to_destroy)
-    assert.are.equal(0, #world.entities_to_destroy)
-  end)
 
   it("destroys an entity not in the list during a loop without side effects", function()
     local e1, e2 = makeEntity("e1"), makeEntity("e2")
