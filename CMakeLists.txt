@@ -98,9 +98,11 @@ else()
   set(SEARCH_LOCAL_DATADIRS_DEFAULT OFF)
 endif()
 
-option(SEARCH_LOCAL_DATADIRS
+option(
+  SEARCH_LOCAL_DATADIRS
   "Search resources in the working directory and the program directory where the executable stores."
-  ${SEARCH_LOCAL_DATADIRS_DEFAULT})
+  ${SEARCH_LOCAL_DATADIRS_DEFAULT}
+)
 
 if(APPLE)
   set(WITH_FONT_DEFAULT "/Library/Fonts/Arial Unicode.ttf")

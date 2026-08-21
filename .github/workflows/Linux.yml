@@ -57,7 +57,7 @@ jobs:
           # Required for LDocGen
           sudo luarocks install lpeg
           sudo apt-get install doxygen yamllint
-          sudo pip3 install -I codespell==2.2 cmakelint==1.4
+          sudo pip3 install -I codespell==2.2 gersemi==0.26
           sudo luarocks install luafilesystem
       - name: Install CMake 3.16
         if: matrix.cmake
@@ -101,8 +101,8 @@ jobs:
             -L sav,unexpect,persistance,defin,uint,inout,currenty,blong,falsy,manuel \
             AnimView CorsixTH CorsixTH/Lua/languages/english.lua LevelEdit libs || true
           # Cmake file linter
-          cmakelint --filter=-linelength AnimView/CMakeLists.txt CMakeLists.txt CorsixTH/CMakeLists.txt \
-            CorsixTH/CppTest/CMakeLists.txt CorsixTH/Src/CMakeLists.txt CorsixTH/SrcUnshared/CMakeLists.txt \
+          gersemi --diff AnimView/CMakeLists.txt CMakeLists.txt CorsixTH/CMakeLists.txt \
+            CorsixTH/Src/CMakeLists.txt CorsixTH/SrcUnshared/CMakeLists.txt \
             libs/CMakeLists.txt libs/rnc/CMakeLists.txt CMake/GenerateDoc.cmake
           # Validate these build files
           yamllint --config-data "rules: {line-length: disable}" .github/workflows/*.yml
