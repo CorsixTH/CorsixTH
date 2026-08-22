@@ -20,6 +20,7 @@ on:
           - win-dev
           - win-x64-rel
           - win-x86-rel
+          - win-arm64-rel
       animview:
         description: 'Build AnimView?'
         default: 'false'
@@ -30,11 +31,11 @@ on:
 
 jobs:
   Windows:
-    runs-on: windows-2022
+    runs-on: ${{inputs.preset == 'win-arm64-rel' && 'windows-11-arm' || 'windows-2022'}}
     env:
       PRESET: ${{inputs.preset || 'win-x64-rel'}}
       ANIMVIEW: ${{inputs.animview && 'ON' || 'OFF'}}
-      NAME: CorsixTH${{inputs.animview && '_and_AnimView' || ''}}${{inputs.preset == 'win-x86-rel' && '_x86' || ''}}
+      NAME: CorsixTH${{inputs.animview && '_and_AnimView' || ''}}${{inputs.preset == 'win-x86-rel' && '_x86' || inputs.preset == 'win-arm64-rel' && '_arm64' || ''}}
       VCPKG_ROOT: ${{ github.workspace }}\vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg-bincache
     defaults:
@@ -101,18 +102,18 @@ jobs:
           ctest --preset "%PRESET%"
 
       - name: Run CMake install
-        if: inputs.PRESET != 'win-dev'
+        if: env.PRESET != 'win-dev'
         shell: cmd
         run: |
           cmake --install build/%PRESET% --prefix ./artifact --config RelWithDebInfo
 
       - name: List the artifact files
-        if: inputs.PRESET != 'win-dev'
+        if: env.PRESET != 'win-dev'
         run: |
           ls -R artifact
 
       - name: Upload build
-        if: inputs.PRESET != 'win-dev'
+        if: env.PRESET != 'win-dev'
         uses: actions/upload-artifact@v6
         with:
           path: ${{ inputs.animview && 'artifact' || 'artifact/CorsixTH' }}

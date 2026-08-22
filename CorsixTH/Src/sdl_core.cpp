@@ -301,7 +301,7 @@ void mainloop(lua_State* L) {
 #ifndef TRACY_ENABLE
   lua_Hook hookFn = lua_gethook(L);
   if (!hookFn) {
-    lua_sethook(L, l_infinite_loop_hook, LUA_MASKCOUNT, 1e7);
+    lua_sethook(L, l_infinite_loop_hook, LUA_MASKCOUNT, 10'000'000);
   } else {
     std::printf(
         "Warning: Infinite loop detection disabled due to existing Lua hook\n");
