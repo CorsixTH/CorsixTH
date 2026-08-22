@@ -2260,22 +2260,22 @@ customise_window = {
   option_off = "Wył",
   back = "Wróć",
   movies = "Zarządzanie filmami",
-  intro = "Odtwórz intro",
-  paused = "Budoowanie w czasie pauzy",
+  play_intro = "Odtwórz intro",
+  allow_user_actions_while_paused = "Budoowanie w czasie pauzy",
   volume = "Skrót ściszania",
-  aliens = "Pacjenci Obcy",
-  fractured_bones = "Pogruchotane kości",
-  average_contents = "Standardowe wyposarzenie",
+  alien_dna_only_by_emergency = "Pacjenci Obcy",
+  disable_fractured_bones_females = "Pogruchotane kości",
+  enable_avg_contents = "Standardowe wyposarzenie",
 }
 
 tooltip.customise_window = {
   movies = "Globalne zarządzanie filmami pozwoli Tobie na wyłączenie wszystkich filmików",
-  intro = "Włącz lub wyłącz intro. Filmiki muszą być globalnie włączone jeśli chcesz oglądać intro przy każdym uruchomieniu CorsixTH",
-  paused = "W grze Theme Hospital gracz mógł jedynie używać górnego menu podczas pauzy. Jest to również domyślne ustawianie CorsixTH, ale przez włączenie tej opcji wszystko jest dozwolone podczas pauzy",
+  play_intro = "Włącz lub wyłącz intro. Filmiki muszą być globalnie włączone jeśli chcesz oglądać intro przy każdym uruchomieniu CorsixTH",
+  allow_user_actions_while_paused = "W grze Theme Hospital gracz mógł jedynie używać górnego menu podczas pauzy. Jest to również domyślne ustawianie CorsixTH, ale przez włączenie tej opcji wszystko jest dozwolone podczas pauzy",
   volume = "Jeśli przycisk ściszania otwiera również 'Teczkę z lekami' , włącz tę opcję aby zmienić skrót do 'Teczki...' na Shift + C",
-  aliens = "Z powodu braku dobrych animacji dokonaliśmy zmian aby pacjęci z DNA Obcego domyślnie przybywali tylko z nagłych wypadków. Jeśli chcesz aby pacjensi z DNA Obcego mogli odwiedzać twój szpital nie tylko po nagłym wypadku wyłącz tę opcję",
-  fractured_bones = "Z powodu kiepskich animacji domyślnie wyłączyliśmy damskie modele pacjętów ze Zgruchotanymi Koścmi. Aby zezwolić, żeby pacjentki ze Zgruchotanymi koścmi odwiedzały twój szpital, wyłącz tę opcję",
-  average_contents = "Jeśli chcesz, żeby gra zapamiętała jakie dodatkowe wyposarzenie używasz zazwyczaj budując dany typ pomieszczenia, włącz tę opcję",
+  alien_dna_only_by_emergency = "Z powodu braku dobrych animacji dokonaliśmy zmian aby pacjęci z DNA Obcego domyślnie przybywali tylko z nagłych wypadków. Jeśli chcesz aby pacjensi z DNA Obcego mogli odwiedzać twój szpital nie tylko po nagłym wypadku wyłącz tę opcję",
+  disable_fractured_bones_females = "Z powodu kiepskich animacji domyślnie wyłączyliśmy damskie modele pacjętów ze Zgruchotanymi Koścmi. Aby zezwolić, żeby pacjentki ze Zgruchotanymi koścmi odwiedzały twój szpital, wyłącz tę opcję",
+  enable_avg_contents = "Jeśli chcesz, żeby gra zapamiętała jakie dodatkowe wyposarzenie używasz zazwyczaj budując dany typ pomieszczenia, włącz tę opcję",
   back = "Zamknij to menu i wróć do ustawień",
 }
 buy_objects_window = {

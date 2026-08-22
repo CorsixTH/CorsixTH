@@ -394,22 +394,22 @@ customise_window = {
   option_off = "Av",
   back = "Tillbaka",
   movies = "Global filmkontroll",
-  intro = "Spela introfilmen",
-  paused = "Bygg i pausläge",
+  play_intro = "Spela introfilmen",
+  allow_user_actions_while_paused = "Bygg i pausläge",
   volume = "Tangent: volym ner",
-  aliens = "Utomjordingar",
-  fractured_bones = "Krossad patient",
-  average_contents = "Genomsnittsinnehåll",
+  alien_dna_only_by_emergency = "Utomjordingar",
+  disable_fractured_bones_females = "Krossad patient",
+  enable_avg_contents = "Genomsnittsinnehåll",
 }
 
 tooltip.customise_window = {
   movies = "Välj om filmer ska spelas överhuvudtaget",
-  intro = "Skippa introfilmen när du startar spelet. Global filmkontroll måste vara påslagen om du spela introfilmen varje gång du laddar CorsixTH",
-  paused = "I Theme Hospital fick spelaren bara använda verktygsfältet längst upp när spelet var pausat. Så är det i CorsixTH också såvida du inte aktiverar funktionen att bygga även när spelet är pausat här",
+  play_intro = "Skippa introfilmen när du startar spelet. Global filmkontroll måste vara påslagen om du spela introfilmen varje gång du laddar CorsixTH",
+  allow_user_actions_while_paused = "I Theme Hospital fick spelaren bara använda verktygsfältet längst upp när spelet var pausat. Så är det i CorsixTH också såvida du inte aktiverar funktionen att bygga även när spelet är pausat här",
   volume = "Om du råkat ut för att tangenten som sänker volymen även öppnar medicinjournalen, slå på det här alternativet för att ändra snabbkommando till medicinjournalen till Shift + C",
-  aliens = "Eftersom det inte finns ordentliga animeringar har vi gjort så att patienter med utomjordiskt DNA endast dyker upp som akutfall. Stäng av det här för att kunna få utomjordiskt DNA-fall även som vanliga besök",
-  fractured_bones = "På grund av en dålig animering har vi stängt av kvinnliga patienter med frakturer (Krossad patient). Stäng av det här, så kommer det att dyka upp även kvinnor med den åkomman",
-  average_contents = "Om du vill att spelet ska komma ihåg vilka extra föremål du normalt sett brukar handla till nya rum, slå på detta alternativ",
+  alien_dna_only_by_emergency = "Eftersom det inte finns ordentliga animeringar har vi gjort så att patienter med utomjordiskt DNA endast dyker upp som akutfall. Stäng av det här för att kunna få utomjordiskt DNA-fall även som vanliga besök",
+  disable_fractured_bones_females = "På grund av en dålig animering har vi stängt av kvinnliga patienter med frakturer (Krossad patient). Stäng av det här, så kommer det att dyka upp även kvinnor med den åkomman",
+  enable_avg_contents = "Om du vill att spelet ska komma ihåg vilka extra föremål du normalt sett brukar handla till nya rum, slå på detta alternativ",
   back = "Stäng den här menyn och gå tillbaka till Alternativmenyn",
 }
 
@@ -494,8 +494,8 @@ errors = {
   map_file_missing = "Kunde inte hitta kartfilen %s till den här nivån!",
   minimum_screen_size = "Skärmupplösningen måste vara åtminstone %dx%d.",
   unavailable_screen_size = "Skärmupplösningen du valde finns inte i fullskärmsläge.",
-  alien_dna = "NOTERA: Det finns inga animeringar för patienter med utomjordiskt DNA när de sitter ner, öppnar dörrar osv. Precis som i Theme Hospital gör de därför det i mänsklig skepnad. Dessa patienter anländer som vanligt endast om nivån du spelar definierat att sjukdomen ska finnas",
-  fractured_bones = "NOTERA: Animeringen för kvinnliga Krossade patienter är inte perfekt",
+  alien_dna_only_by_emergency = "NOTERA: Det finns inga animeringar för patienter med utomjordiskt DNA när de sitter ner, öppnar dörrar osv. Precis som i Theme Hospital gör de därför det i mänsklig skepnad. Dessa patienter anländer som vanligt endast om nivån du spelar definierat att sjukdomen ska finnas",
+  disable_fractured_bones_females = "NOTERA: Animeringen för kvinnliga Krossade patienter är inte perfekt",
   could_not_load_campaign = "Kunde inte ladda kampanjen %s",
   could_not_find_first_campaign_level = "Kunde inte hitta den första nivån på den här kampanjen: %s",
 }

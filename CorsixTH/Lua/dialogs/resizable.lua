@@ -30,6 +30,26 @@ local border_offset_x = 9
 local border_offset_y = 9
 local border_size_x = 40
 local border_size_y = 40
+-- Horizontal distance from the label to its button
+local label_button_gap = 20
+-- Width of the title/caption label
+local title_width = 170
+-- Horizontal margin to the first and last elements
+local margin = 15
+local back_button_height = 40
+
+-- Colour definitions
+local col = {
+  bg             = Colours.PanelDefault,
+  button         = Colours.PanelDefault,
+  setting        = Colours.Setting,
+  setting_active = Colours.SettingActive,
+  scrollbar      = Colours.Scrollbar,
+  disabled       = Colours.Disabled,
+  title          = Colours.Title,
+  caption        = Colours.Caption,
+  textbox        = Colours.Textbox,
+}
 
 function UIResizable:UIResizable(ui, width, height, colour, no_borders, background_bevel)
   self:Window()
@@ -48,10 +68,21 @@ function UIResizable:UIResizable(ui, width, height, colour, no_borders, backgrou
     self.background_panel = self:addColourPanel(0, 0, 0, 0, 0, 0, 0)
   end
 
-  -- Minimum size. Can be changed per window, but should never be smaller than this
-  -- because it would result in visual glitches
+  -- These values can be changed per window in child classes
+  -- Minimum size. Should never be smaller than this because it would result in visual glitches
   self.min_width = 50
   self.min_height = 50
+
+  -- Distance of the first dialog element from the top border
+  self.starting_y_pos = 15
+  -- Distance from the bottom of one element to the top of the next below
+  self.element_spacing = 10
+
+  -- Standard width and height for labels and buttons
+  self.label_width = 135
+  self.label_height = 20
+  self.btn_width = 135
+  self.btn_height = 20
 
   self.border_pos = {}
   self.border_pos.left = -border_offset_x
@@ -60,6 +91,10 @@ function UIResizable:UIResizable(ui, width, height, colour, no_borders, backgrou
   -- NB: intentionally calling like this to allow subclasses to extend setSize without being called from here
   UIResizable.setSize(self, width, height)
   self:setColour(colour)
+
+  -- Tracks the current position of the object
+  self._current_option_index = 1
+  self.column_count = 1
 end
 
 --! Apply the initial width and height of the window
@@ -205,6 +240,133 @@ function UIResizable:beginResize(x, y, mode)
     if new_x or new_y then
       self:setPosition(new_x or orig_x, new_y or orig_y)
     end
+  end
+end
+
+--[[! Build the dialog from the information set in the dialog class creation
+This function uses the contents of the self.entry_list table, which are
+  name - The internal name of the entry, used for the name of the label, button, tooltip and error strings
+  func - The function that changes the setting(s). If missing, a minimal function is made by UIResizable:_buttonPressed
+  custom_labels - Boolean. For when there are custom on and off labels to be used on place of "On" and "Off"
+  raised - Boolean, for when the button should be raised, eg leads to a further dialog
+  info - Boolean, to show the user an info message after changing a setting
+]]
+function UIResizable:buildDialog()
+  local function get_button_label(value, name, custom_labels)
+    if type(value) == "boolean" then
+      if custom_labels then
+        return value and _S[self.strings_ref][name .. "_on"] or _S[self.strings_ref][name .. "_off"]
+      end
+      return value and _S.options_window.option_on or _S.options_window.option_off
+    elseif type(value) == "number" then return tostring(value)
+    else return value end
+  end
+  local width = margin + self.label_width + label_button_gap + self.btn_width
+  local height = #self.entry_list * (self.element_spacing + self.btn_height) + 100
+  self:overrideMinSize(width, height)
+  self:setSize(width, height)
+
+  self.on_top = self.mode == "menu"
+  self.esc_closes = true
+  self:setDefaultPosition(0.5, 0.25)
+  self.default_button_sound = "selectx.wav"
+  self.labels = {}
+  self.buttons = {}
+
+  -- Window parts definition
+  -- Title
+  local title_y_pos = self:_getOptionYPos()
+  local title_x_pos = math.floor((self.width - title_width) / 2)
+  self:addBevelPanel(title_x_pos, title_y_pos, title_width, 20, col.title):setLabel(_S[self.strings_ref].caption)
+    .lowered = true
+
+  -- Labels and buttons
+  for _, entry in ipairs(self.entry_list) do
+    local name = entry.name
+    local current_value = get_button_label(self.ui.app.config[name], name, entry.custom_labels)
+    self.labels[name], self.buttons[name] = self:createOptionsElement(
+      _S[self.strings_ref][name], _S.tooltip[self.strings_ref][name],
+      current_value, _S.tooltip[self.strings_ref][name],
+      { bg = col.setting, active = entry.raised and col.setting_active },
+      self:_buttonPressed(name, entry.func, entry.info and _S.errors[name]),
+      (not entry.raised) and self.ui.app.config[name])
+  end
+
+  -- Back
+  -- This button is either slightly separated from the other elements, or at a custom y level (eg under other buttons)
+  local back_button_y_pos = self.back_button_y_pos or (self:_getOptionYPos() + 5)
+  local back_button_width = self.width - margin * 2
+  self:addBevelPanel(margin, back_button_y_pos, back_button_width, back_button_height, col.bg)
+    :setLabel(_S.options_window.back)
+    :makeButton(0, 0, back_button_width, back_button_height, nil, self.buttonBack)
+    :setTooltip(_S.tooltip.options_window.back)
+end
+
+-- Create our setting items. This create a caption/label for the setting
+-- and the setting itself. We return both elements of the setting (panel
+-- and the button made from the panel)
+function UIResizable:createOptionsElement(option_label, option_tooltip,
+    setting_label, setting_tooltip, setting_colours, callback,
+    toggle_state)
+  local y_pos = self:_getOptionYPos()
+  local column_width = self.label_width + label_button_gap + self.btn_width
+  local x_offset = column_width * (self.column_count - 1)
+  local label_x, setting_x = margin + x_offset, self.label_width + label_button_gap + x_offset
+
+  -- Make the setting name panel
+  self:addBevelPanel(label_x, y_pos, self.label_width, self.label_height, col.caption, col.bg, col.bg)
+    :setLabel(option_label)
+    :setTooltip(option_tooltip)
+    .lowered = true
+  local s_col = setting_colours or { bg = col.setting }
+  -- Make the setting value panel
+  local setting_panel = self:addBevelPanel(setting_x, y_pos, self.btn_width,
+      self.btn_height, s_col.bg, s_col.highlight, s_col.shadow,
+      s_col.disabled, s_col.active)
+    :setLabel(setting_label)
+    :setTooltip(setting_tooltip)
+  -- Make the value panel a button
+  local setting_button = setting_panel:makeToggleButton(0, 0, self.btn_width,
+      self.btn_height, nil, callback)
+    :setToggleState(toggle_state)
+  -- Return the setting value info
+  return setting_panel, setting_button
+end
+
+--- Calculates the Y position for the dialog box in the option menu
+-- and increments along the current position for the next element
+-- @return The Y position to place the element at
+function UIResizable:_getOptionYPos()
+  -- Multiply by the index so that index=1 is at self.starting_y_pos
+  local calculated_pos = self.starting_y_pos +
+      (self.element_spacing + self.btn_height) * (self._current_option_index - 1)
+  self._current_option_index = self._current_option_index + 1
+  return calculated_pos
+end
+
+--! Resets the index to start at the top of a new column, below the title,
+-- for the Y position calculation.
+function UIResizable:_startNewColumn()
+  self._current_option_index = 2
+  self.column_count = self.column_count + 1
+end
+
+--! Creates the button press function
+--!param setting The internal name of the setting
+--!param func (function) A function from the dialog file for more complex needs
+--!param info A localised info message shown after changing a setting
+--!return function
+function UIResizable:_buttonPressed(setting, func, info)
+  return function()
+    local app = self.ui.app
+    if func then
+      func(self, app)
+    else
+      app.config[setting] = not app.config[setting]
+    end
+    self:reload()
+    app:saveConfig()
+    if info then self.ui:addWindow(UIInformation(self.ui, {info})) end
   end
 end
 
