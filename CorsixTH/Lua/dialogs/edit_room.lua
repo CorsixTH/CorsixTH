@@ -1043,7 +1043,7 @@ local window_floor_blueprint_markers = {
 }
 
 function UIEditRoom:onLeftButtonDown(x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   if self.phase == "walls" then
     if 0 <= x and x < self.width * s and 0 <= y and y < self.height * s then -- luacheck: ignore 542
     else

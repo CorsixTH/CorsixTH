@@ -123,10 +123,12 @@ local function new_config_defaults()
   ]]
   return {
     fullscreen = false,
+    maximized = false,
     width = 800,
     height = 600,
-    ui_scale = 1,
-    cursor_scale = 1,
+    original_aspect_ratio = false,
+    ui_scale = 0,
+    cursor_scale = 0,
     language = [[English]],
     audio = true,
     free_build_mode = false,
@@ -165,6 +167,9 @@ local function new_config_defaults()
     theme_hospital_install = [[X:\ThemeHospital\hospital]],
     debug = false,
     track_fps = false,
+    hidpi = true,
+    apply_window_display_scale = true,
+    debug_fractional_scaling = false,
     zoom_speed = 80,
     scroll_speed = 2,
     shift_scroll_speed = 4,
@@ -302,20 +307,32 @@ local function config_contents(config_values)
 -------------------------------- SETTINGS MENU --------------------------------
 -- These settings can also be changed from within the game in the settings menu
 -------------------------------------------------------------------------------
--- Screen size (width and height). At least: 640x480.
--- Larger sizes will require better hardware in order to maintain a playable framerate.
--- Fullscreen. Can be true or false.
--- The game will run windowed if not fullscreen.
--- ui_scale. Default: 1.
--- Whole-number UI scaling for higher-resolution displays; decimals unsupported.
--- Example: 1920x1080 with ui_scale = 2 makes UI elements twice as large.
--- width/ui_scale and height/ui_scale must be at least 640x480.
--- Example: ui_scale = 2 requires resolution >= 1280x960.
+-- fullscreen: Can be true or false.
+--  If true then the game uses a full screen window. If false the game may be
+--  windowed or maximized.
+-- maximized: Can be true or false.
+--  If the game is not running full screen then it will be maximized if this
+--  is true otherwise it will be windowed.
+-- Window size (width and height): At least 640x480.
+--  The window size the game runs at when it is not maximized or in full screen
+--  mode.
+-- original_aspect_ratio: True or false
+--  If true then the game is letterboxed so that it is drawn at a 4:3 aspect
+--  ratio like the original game.
+-- ui_scale: Whole number.
+--  Pixel ratio to draw UI elements; decimals unsupported. 0 for automatic.
+--  Example: ui_scale = 2 makes UI elements twice as large.
+--  The ui_scale will be capped at runtime to the largest size that fits in the
+--  window; assuming an original size of 640x480.
+-- cursor_scale: Whole number (0, 1, 2, 3...)
+--  Pixel ratio to draw the cursor. 0 is Auto and will match the current
+--  UI scale.
 --]=] .. '\n' ..
 param(config_values, 'fullscreen') ..
-'\n' ..
+param(config_values, 'maximized') ..
 param(config_values, 'width') ..
 param(config_values, 'height') ..
+param(config_values, 'original_aspect_ratio') ..
 param(config_values, 'ui_scale') ..
 param(config_values, 'cursor_scale') .. [=[
 
@@ -719,6 +736,28 @@ param(config_values, 'blocking_off_areas') .. [=[
 -- Improves performance and reliability on some hardware.
 --]=] .. '\n' ..
 param(config_values, 'direct_zoom') .. [=[
+
+-------------------------------------------------------------------------------
+-- HiDPI: Inform the windowing system that the game is HiDPI aware. This will
+-- allow the game to be rendered at the native resolution of the display.
+-- The exact effect depends on the windowing system and the display.
+--
+-- In HiDPI mode the windowing system supplies the application with a display
+-- scale value which if applied will scale the cursor, ui, and default zoom in
+-- addition to the configured value for those fields.
+--]=] .. '\n' ..
+param(config_values, 'hidpi') ..
+param(config_values, 'apply_window_display_scale') .. [=[
+
+-- Fractional Scaling: Allows ui_scale and cursor scale to be a fractional
+-- number. With debug_fractional_scaling enabled and apply_window_display_scale
+-- enabled CorsixTH will use the exact display scale provided by the
+-- windowing system instead of rounding down to the nearest whole number
+-- greater than zero.
+--
+-- THIS SETTING IS HIGHLY EXPERIMENTAL AND WILL CRASH YOUR GAME!!!
+--]=] .. '\n' ..
+param(config_values, 'debug_fractional_scaling') .. [=[
 
 -------------------------------------------------------------------------------
 -- Replacing Machines: By default, you will see a new machines initial strength

@@ -114,7 +114,7 @@ end
 
 function UIMainMenu:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = self.x * s + x, self.y * s + y
 
   -- The following strings are drawn in reverse order

@@ -68,6 +68,9 @@ local charsets = {
 function Graphics:Graphics(app, gfx_set, charset)
   self.app = app
   self.target = self.app.video
+  self.actual_ui_scale = nil
+  self.display_scale = self:_adjustWindowDisplayScale(self.target:getWindowDisplayScale())
+
   -- The cache is used to avoid reloading an object if it is already loaded
   self.cache = {
     raw = {},
@@ -254,7 +257,10 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
     if not cursor:load(sheet, index, hot_x, hot_y) then
       cursor = {
         draw = function(canvas, x, y)
-          local cs = TheApp.config.cursor_scale
+          local cs = TheApp.config.cursor_scale * self.display_scale
+          if cs == 0 then
+            cs = self:getUIScale()
+          end
           sheet:draw(canvas, index, x - hot_x * cs, y - hot_y * cs, { scaleFactor = cs })
         end,
       }
@@ -418,7 +424,7 @@ function Graphics:loadBuiltinFont()
     font = TH.bitmap_font()
     font:setSheet(sheet, charsets["cp437"]) -- CorsixTH only ships with a cp437 font
     font:setSeparation(1, 0)
-    font:setScaleFactor(TheApp.config.ui_scale)
+    font:setScaleFactor(self:getUIScale())
     self.load_info[font] = {self.loadBuiltinFont, self}
     self.builtin_font = font
   end
@@ -476,9 +482,44 @@ function Graphics:onChangeLanguage()
   end, self)
 end
 
+function Graphics:onChangeWindowDisplayScale(scale)
+  scale = self:_adjustWindowDisplayScale(scale)
+  if scale == self.display_scale then return end
+  self.display_scale = scale
+
+  self:onChangeUIScale()
+end
+
+function Graphics:_adjustWindowDisplayScale(scale)
+  local config = self.app.config
+  if not config.apply_window_display_scale then
+    return 1
+  end
+  if not self.app.config.debug_fractional_scaling then
+    return math.max(math.floor(scale), 1)
+  end
+  return scale
+end
+
+-- Call when the configured ui_scale is changed
 function Graphics:onChangeUIScale()
+  self:onChangeResolution()
+end
+
+-- Call when the render size changes
+function Graphics:onChangeResolution()
+  local old_ui_scale = self.actual_ui_scale
+  self.actual_ui_scale = nil
+  local new_ui_scale = self:getUIScale()
+  if new_ui_scale ~= old_ui_scale then
+    self:_onChangeUIScale()
+  end
+end
+
+-- Reload any assets that depend on the actual ui scale
+function Graphics:_onChangeUIScale()
   if self.builtin_font then
-    self.builtin_font:setScaleFactor(TheApp.config.ui_scale)
+    self.builtin_font:setScaleFactor(self:getUIScale())
   end
   -- Update / replace fonts
   self:onChangeLanguage()
@@ -629,14 +670,15 @@ function Graphics:_loadTrueTypeFont(name, sprite_table, font_options)
   local cache_key = language_font_cache_key(name, font_options)
   local cache = self.cache.language_fonts[cache_key]
   local font = cache and cache[sprite_table]
+  local s = self:getUIScale()
 
-  if font and font_options.apply_ui_scale and font_options.scale_factor ~= self.app.config.ui_scale then
-    font_options.scale_factor = self.app.config.ui_scale
+  if font and font_options.apply_ui_scale and font_options.scale_factor ~= s then
+    font_options.scale_factor = s
     font:setFontOptions(sprite_table, font_options)
     font:clearCache()
   elseif not font then
     if font_options.apply_ui_scale then
-      font_options.scale_factor = self.app.config.ui_scale
+      font_options.scale_factor = s
     end
 
     font = TH.freetype_font()
@@ -747,7 +789,7 @@ function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_b
     font:setSeparation(font_options.x_sep or 0, font_options.y_sep or 0)
     font:setSheet(sprite_table, self.th_charset)
     if font_options.apply_ui_scale then
-      font:setScaleFactor(TheApp.config.ui_scale)
+      font:setScaleFactor(self:getUIScale())
     end
   else
     font = self:_loadTrueTypeFont("unicode", sprite_table, font_options)
@@ -1062,4 +1104,23 @@ function Graphics:loadPalette(_, name)
     name = "Pref01V.pal"
   end
   return self:getPalette(name)
+end
+
+function Graphics:getUIScale()
+  if self.actual_ui_scale ~= nil then
+    return self.actual_ui_scale
+  end
+  local scr_w, scr_h = self.target:getRenderSize()
+  local max_scale = math.floor(math.min(scr_w / App.MIN_WINDOW_WIDTH, scr_h / App.MIN_WINDOW_HEIGHT));
+  local cs = TheApp.config.ui_scale * self.display_scale
+  if cs == 0 or cs > max_scale then
+    self.actual_ui_scale = max_scale
+  else
+    self.actual_ui_scale = cs
+  end
+  return self.actual_ui_scale
+end
+
+function Graphics:getWindowDisplayScale()
+  return self.display_scale
 end

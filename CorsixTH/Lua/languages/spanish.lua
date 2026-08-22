@@ -1114,7 +1114,6 @@ tooltip.options_window = {
     fullscreen_button = "Haz clic para activar o desactivar el modo de pantalla completa",
     resolution = "La resolución en la que debe ejecutarse el juego",
     select_resolution = "Selecciona una nueva resolución",
-    resolution_unavailable = "Resolución no disponible con la escala de interfaz actual",
     scale_ui = "Escala la interfaz de usuario. Solo se muestran las opciones de escala que se ajustan a la pantalla; para ver más, aumenta la resolución.",
     select_ui_scale = "Selecciona una nueva escala para la interfaz de usuario",
     ui_scale_unavailable = "Escala de interfaz no disponible; por favor, selecciona primero una resolución más alta.",

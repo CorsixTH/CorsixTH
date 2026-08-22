@@ -108,7 +108,7 @@ end
 
 local flag_cache = {}
 function UITownMap:onMouseMove(x, y, dx, dy)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local tx = math.floor((x - 227 * s) / (3 * s))
   local ty = math.floor((y - 25 * s) / (3 * s))
   self.hover_plot = nil
@@ -122,7 +122,7 @@ end
 
 function UITownMap:onMouseUp(button, x, y)
   local redraw = false
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   if button == "left" then
     local tx = math.floor((x - 227 * s) / (3 * s))
     local ty = math.floor((y - 25 * s) / (3 * s))
@@ -158,7 +158,7 @@ function UITownMap:onMouseUp(button, x, y)
 end
 
 function UITownMap:draw(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   canvas:scale(s, "bitmap")
   self.background:draw(canvas, self.x * s + x, self.y * s + y)
   canvas:scale(1, "bitmap")

@@ -291,6 +291,10 @@ constexpr std::string_view dispatch_callback("callback");
 constexpr std::string_view dispatch_window_resized("window_resized");
 constexpr std::string_view dispatch_window_pixel_size_changed(
     "window_pixel_size_changed");
+constexpr std::string_view dispatch_window_display_scale_changed(
+    "window_display_scale_changed");
+constexpr std::string_view dispatch_window_maximized("window_maximized");
+constexpr std::string_view dispatch_window_restored("window_restored");
 constexpr std::string_view dispatch_frame("frame");
 
 void mainloop(lua_State* L) {
@@ -422,14 +426,44 @@ void mainloop(lua_State* L) {
           push_app_dispatch(L, last_dispatch);
           lua_pushinteger(L, e.window.data1);
           lua_pushinteger(L, e.window.data2);
-          nargs = 3;
+          {
+            SDL_WindowFlags flags = SDL_GetWindowFlags(target->get_window());
+            uint32_t window_state = 0;
+            if (flags & SDL_WINDOW_FULLSCREEN) {
+              window_state = 1;
+            } else if (flags & SDL_WINDOW_MAXIMIZED) {
+              window_state = 2;
+            } else if (flags & SDL_WINDOW_MINIMIZED) {
+              window_state = 3;
+            }
+            lua_pushinteger(L, window_state);
+          }
+          nargs = 4;
           break;
         case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+          target->on_pixel_size_change();
+
           last_dispatch = dispatch_window_pixel_size_changed;
           push_app_dispatch(L, last_dispatch);
           lua_pushinteger(L, e.window.data1);
           lua_pushinteger(L, e.window.data2);
           nargs = 3;
+          break;
+        case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
+          last_dispatch = dispatch_window_display_scale_changed;
+          push_app_dispatch(L, last_dispatch);
+          lua_pushnumber(L, target->get_display_scale());
+          nargs = 2;
+          break;
+        case SDL_EVENT_WINDOW_MAXIMIZED:
+          last_dispatch = dispatch_window_maximized;
+          push_app_dispatch(L, last_dispatch);
+          nargs = 1;
+          break;
+        case SDL_EVENT_WINDOW_RESTORED:
+          last_dispatch = dispatch_window_restored;
+          push_app_dispatch(L, last_dispatch);
+          nargs = 1;
           break;
         case SDL_USEREVENT_MUSIC_OVER:
           last_dispatch = dispatch_music_over;

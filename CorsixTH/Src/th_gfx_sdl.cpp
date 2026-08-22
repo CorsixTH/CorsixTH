@@ -201,11 +201,10 @@ class scoped_color_mod {
  * \param ar_h - The aspect ratio height, e.g. 9 in 16:9, or 3 in 4:3. Can use
  *               the target resolution height.
  */
-void apply_letterbox(SDL_Renderer* renderer, bool fullscreen, int ar_w,
-                     int ar_h) {
+void apply_letterbox(SDL_Renderer* renderer, bool apply_aspect_4_3) {
   // If not fullscreen we can assume a match and exit early
   SDL_SetRenderViewport(renderer, nullptr);
-  if (!fullscreen) {
+  if (!apply_aspect_4_3) {
     return;
   }
 
@@ -214,11 +213,10 @@ void apply_letterbox(SDL_Renderer* renderer, bool fullscreen, int ar_w,
   // Get the true render size (without any letterbox/logical voodoo)
   SDL_GetRenderOutputSize(renderer, &w, &h);
 
-  float real_ar = static_cast<float>(w) / static_cast<float>(h);
-  float target_ar = static_cast<float>(ar_w) / static_cast<float>(ar_h);
-
-  // Common target aspect ratios are 4:3, 16:10, and 16:9 which work out to
-  // 1.333, 1.6, and 1.777
+  float wf = static_cast<float>(w);
+  float hf = static_cast<float>(h);
+  float real_ar = wf / hf;
+  constexpr float target_ar = 4.0 / 3.0;
 
   // If we are closer than 0.01 to the target aspect ratio, assume we
   // meant to match.
@@ -236,11 +234,11 @@ void apply_letterbox(SDL_Renderer* renderer, bool fullscreen, int ar_w,
   // the screen is wider than the target - we want vertical bars.
   // Otherwise, we want horizontal bars.
   if (real_ar > target_ar) {
-    target_w = static_cast<int>(h * target_ar);
+    target_w = static_cast<int>(hf * target_ar);
     target_h = h;
   } else {
     target_w = w;
-    target_h = static_cast<int>(w / target_ar);
+    target_h = static_cast<int>(wf / target_ar);
   }
 
   SDL_Rect viewport = {(w - target_w) / 2, (h - target_h) / 2, target_w,
@@ -249,6 +247,25 @@ void apply_letterbox(SDL_Renderer* renderer, bool fullscreen, int ar_w,
 }
 
 }  // namespace
+
+void trigger_mouse_motion() {
+  float x, y;
+  SDL_MouseButtonFlags flags = SDL_GetMouseState(&x, &y);
+  SDL_Window* win = SDL_GetMouseFocus();
+  SDL_WindowID win_id = win ? SDL_GetWindowID(win) : 0;
+
+  SDL_Event evt;
+  SDL_zero(evt);
+  evt.type = SDL_EVENT_MOUSE_MOTION;
+  evt.motion.state = flags;
+  evt.motion.windowID = win_id;
+  evt.motion.timestamp = SDL_GetTicks();
+  evt.motion.x = x;
+  evt.motion.y = y;
+  evt.motion.xrel = 0.0f;
+  evt.motion.yrel = 0.0f;
+  SDL_PushEvent(&evt);
+}
 
 palette::palette(const uint8_t* pData, size_t iDataLength, bool is8bit) {
   int stride;
@@ -475,21 +492,27 @@ render_target::scoped_target_texture::~scoped_target_texture() {
 }
 
 render_target::render_target(const render_target_creation_params& params)
-    : direct_zoom{params.direct_zoom} {
+    : direct_zoom{params.direct_zoom},
+      aspect_ratio_4_3(params.aspect_ratio_4_3) {
   pixel_format = SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_ABGR8888);
 
   SDL_PropertiesID winProps = SDL_CreateProperties();
   SDL_SetStringProperty(winProps, SDL_PROP_WINDOW_CREATE_TITLE_STRING,
                         "CorsixTH");
   SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER,
-                        params.width);
+                        params.size.width);
   SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER,
-                        params.height);
+                        params.size.height);
   SDL_SetNumberProperty(winProps, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER,
                         SDL_WINDOW_RESIZABLE);
   SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_HIDDEN_BOOLEAN, true);
   SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN,
                          params.fullscreen);
+  SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_MAXIMIZED_BOOLEAN,
+                         params.maximized);
+  SDL_SetBooleanProperty(winProps,
+                         SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN,
+                         params.hidpi);
   window = SDL_CreateWindowWithProperties(winProps);
   SDL_DestroyProperties(winProps);
   if (!window) {
@@ -518,12 +541,15 @@ render_target::render_target(const render_target_creation_params& params)
   supports_target_textures = !!testTexture;
   SDL_DestroyTexture(testTexture);
 
-  SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
-
-  apply_letterbox(renderer, params.fullscreen, params.width, params.height);
+  SDL_SetWindowMinimumSize(window, params.min_size.width,
+                           params.min_size.height);
 
   SDL_ShowWindow(window);
   SDL_SyncWindow(window);
+
+  // Apply after showing and syncing the window, otherwise the dimensions
+  // don't take into account fullscreen as seen on Wayland in SDL 3.6.10
+  apply_letterbox(renderer, params.aspect_ratio_4_3);
 
   // Workaround for https://github.com/libsdl-org/SDL/issues/13920 on MacOS
   SDL_Event evt;
@@ -548,26 +574,40 @@ render_target::~render_target() {
 }
 
 bool render_target::update(const render_target_creation_params& params) {
+  this->aspect_ratio_4_3 = params.aspect_ratio_4_3;
   bool bIsFullscreen = ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
                         SDL_WINDOW_FULLSCREEN);
   if (bIsFullscreen != params.fullscreen) {
     SDL_SetWindowFullscreen(window, params.fullscreen);
   }
 
-  SDL_SetWindowSize(window, params.width, params.height);
-  apply_letterbox(renderer, params.fullscreen, params.width, params.height);
+  if (!params.fullscreen && !params.maximized) {
+    SDL_RestoreWindow(window);
+  } else if (params.maximized) {
+    SDL_MaximizeWindow(window);
+  }
+
+  SDL_SetWindowSize(window, params.size.width, params.size.height);
 
   int old_min_width;
   int old_min_height;
   SDL_GetWindowMinimumSize(window, &old_min_width, &old_min_height);
-  if (old_min_width != params.min_width ||
-      old_min_height != params.min_height) {
-    SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
+  if (old_min_width != params.min_size.width ||
+      old_min_height != params.min_size.height) {
+    SDL_SetWindowMinimumSize(window, params.min_size.width,
+                             params.min_size.height);
   }
 
   SDL_SyncWindow(window);
 
+  apply_letterbox(renderer, params.aspect_ratio_4_3);
+  trigger_mouse_motion();
+
   return true;
+}
+
+void render_target::on_pixel_size_change() {
+  apply_letterbox(renderer, aspect_ratio_4_3);
 }
 
 bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
@@ -582,10 +622,9 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
         SDL_WINDOW_FULLSCREEN) {
       // Drawing to an intermediate screen sized buffer when fullscreen results
       // in noticeably better text rendering quality.
-      int w = get_width();
-      int h = get_height();
+      auto [width, height] = get_size();
       zoom_buffer =
-          std::make_unique<scoped_target_texture>(this, 0, 0, w, h,
+          std::make_unique<scoped_target_texture>(this, 0, 0, width, height,
                                                   /* bScale = */ true);
     }
     return true;
@@ -593,10 +632,9 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     // Draw everything from now until the next scale to zoom_texture
     // with the appropriate virtual size, which will be copied scaled to
     // fit the window.
-    int w = get_width();
-    int h = get_height();
-    int virtWidth = static_cast<int>(w / fScale);
-    int virtHeight = static_cast<int>(h / fScale);
+    auto [width, height] = get_size();
+    int virtWidth = static_cast<int>(width / fScale);
+    int virtHeight = static_cast<int>(height / fScale);
 
     zoom_buffer = std::make_unique<scoped_target_texture>(
         this, 0, 0, virtWidth, virtHeight, /* bScale = */ false);
@@ -734,26 +772,43 @@ void render_target::pop_clip_rect() {
   }
 }
 
-int render_target::get_width() const {
+render_size render_target::get_size() const {
   SDL_Rect rect;
   SDL_GetRenderViewport(renderer, &rect);
-  return rect.w;
-}
-
-int render_target::get_height() const {
-  SDL_Rect rect;
-  SDL_GetRenderViewport(renderer, &rect);
-  return rect.h;
+  return {rect.w, rect.h};
 }
 
 int render_target::get_scaled_width() const {
-  int w = get_width();
+  int w = get_size().width;
   return static_cast<int>(w / draw_scale());
 }
 
 int render_target::get_scaled_height() const {
-  int h = get_height();
+  int h = get_size().height;
   return static_cast<int>(h / draw_scale());
+}
+
+window_size render_target::get_window_size() const {
+  int w;
+  int h;
+  SDL_GetWindowSize(window, &w, &h);
+  return {w, h};
+}
+
+window_size render_target::get_max_window_size() const {
+  SDL_Rect rect;
+  SDL_DisplayID display = SDL_GetDisplayForWindow(window);
+  SDL_GetDisplayUsableBounds(display, &rect);
+  return {rect.w, rect.h};
+}
+
+float render_target::get_display_scale() const {
+  float ds = SDL_GetWindowDisplayScale(window);
+  // Returns 0 on error, but we want to just not scale in that case.
+  if (ds == 0.0f) {
+    ds = 1.0f;
+  }
+  return ds;
 }
 
 void render_target::start_nonoverlapping_draws() {

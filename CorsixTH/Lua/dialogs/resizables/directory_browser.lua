@@ -212,7 +212,7 @@ end
 
 function UIDirectoryBrowser:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = self.x * s + x, self.y * s + y
   if not self.mode then
     self.font:drawWrapped(canvas, _S.install.title, x + 5 * s, y + 5 * s, self.width * s - 10 * s, "center")

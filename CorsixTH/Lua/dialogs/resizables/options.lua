@@ -90,13 +90,23 @@ local available_resolutions = function()
     {text = "1920x1200 (16:10)", width = 1920, height = 1200 },
   }
 
-  local s = TheApp.config.ui_scale
   local enable_list, disable_list = {}, {}
+  local max_window_width, max_window_height = TheApp.video:getMaxWindowSize()
+
+  -- It is possible that getMaxWindowSize could fail to detect the actual
+  -- available display space, in which case it will return 0, 0.
+  -- In that case we don't have any information to hide a resolution from the
+  -- user, so set the maximum to large enough values that nothing in the list
+  -- will be disabled. The numbers below are arbitrarily large.
+  if max_window_width == 0 or max_window_height == 0 then
+    max_window_width = 4000
+    max_window_height = 3000
+  end
+
   for _, opt in ipairs(suggested_resolutions) do
-    local enabled = App.MIN_WINDOW_WIDTH * s <= opt.width and
-        App.MIN_WINDOW_HEIGHT * s <= opt.height
+    local enabled = opt.width <= max_window_width and opt.height <= max_window_height
     opt.disabled = not enabled
-    opt.tooltip = opt.disabled and { _S.tooltip.options_window.resolution_unavailable }
+    opt.tooltip = opt.disabled and { _S.tooltip.options_window.resolution_does_not_fit }
     if enabled then
       enable_list[#enable_list + 1] = opt
     else
@@ -119,17 +129,16 @@ end
 
 local available_ui_scales = function()
   local res = {}
-  local s = 1
-  while s * App.MIN_WINDOW_WIDTH <= TheApp.config.width and
-      s * App.MIN_WINDOW_HEIGHT <= TheApp.config.height do
+  res[1] = { text = _S.options_window.scale_auto, scale = 0 }
+  for s = 1, 4 do
     res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
-    s = s + 1
   end
   return res
 end
 
 local available_cursor_scales = function()
   local res = {}
+  res[1] = { text = _S.options_window.scale_auto, scale = 0 }
   for s = 1, 4 do
     res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
   end
@@ -158,7 +167,7 @@ end
 
 function UIOptions:UIOptions(ui, mode)
   local width = 620
-  local height = 330
+  local height = 360
   self:UIResizable(ui, width, height, col.bg)
 
   local app = ui.app
@@ -224,12 +233,12 @@ function UIOptions:UIOptions(ui, mode)
   end
 
   -- Fullscreen
-  local fullscreen_label = app.fullscreen and _S.options_window.option_on
+  local fullscreen_label = app.modes.fullscreen and _S.options_window.option_on
     or _S.options_window.option_off
   self.fullscreen_panel, self.fullscreen_button = createOptionsElement(
       _S.options_window.fullscreen, _S.tooltip.options_window.fullscreen,
       fullscreen_label, _S.tooltip.options_window.fullscreen_button, { bg = col.setting },
-      self.buttonFullscreen, app.fullscreen)
+      self.buttonFullscreen, app.modes.fullscreen)
 
 
   -- Screen resolution
@@ -239,16 +248,20 @@ function UIOptions:UIOptions(ui, mode)
       "", _S.tooltip.options_window.select_resolution,
       { bg = col.setting, active = col.setting_active },
       self.dropdownResolution, false)
+  self.resolution_button:enable(not app.modes.fullscreen)
 
   -- UI Scale
-  local scale_label = TheApp.config.ui_scale * 100 .. "%"
+  local scale_label = TheApp.config.ui_scale == 0 and
+      _S.options_window.scale_auto or TheApp.config.ui_scale * 100 .. "%"
   self.scale_ui_panel, self.scale_ui_button = createOptionsElement(
       _S.options_window.scale_ui, _S.tooltip.options_window.scale_ui,
       scale_label, nil,
       { bg = col.setting, active = col.setting_active },
       self.dropdownUIScale, false)
 
-  scale_label = TheApp.config.cursor_scale * 100 .. "%"
+  -- Cursor Scale
+  scale_label = TheApp.config.cursor_scale == 0 and
+      _S.options_window.scale_auto or TheApp.config.cursor_scale * 100 .. "%"
   self.cursor_scale_panel, self.cursor_scale_button = createOptionsElement(
       _S.options_window.cursor_scale, _S.tooltip.options_window.cursor_scale,
       scale_label, nil,
@@ -256,7 +269,17 @@ function UIOptions:UIOptions(ui, mode)
       self.dropdownCursorScale, false)
 
   -- Now set the resolution button label and the ui scale button state
-  self:processWindowResizeEvent()
+  self:_processWindowResizeEvent()
+
+  local aspect_label = app.config.original_aspect_ratio and
+          _S.options_window.option_on or _S.options_window.option_off
+  self.aspect_panel, self.aspect_button = createOptionsElement(
+          _S.options_window.original_aspect_ratio, _S.tooltip.options_window.original_aspect_ratio,
+          aspect_label, _S.tooltip.options_window.original_aspect_ratio, { bg = col.setting },
+          self.buttonOriginalAspectRatio, app.config.original_aspect_ratio)
+
+  -- Start a new column of buttons
+  self:_startNewColumn()
 
   -- Mouse capture
   local capture_label = app.config.capture_mouse and
@@ -275,9 +298,6 @@ function UIOptions:UIOptions(ui, mode)
   else
     lang = app.config.language
   end
-
-  -- Start a new column of buttons
-  self:_startNewColumn()
 
   -- Language setting.
   self.language_panel, self.language_button = createOptionsElement(
@@ -428,6 +448,7 @@ function UIOptions:selectResolution(number)
   local res = self.available_resolutions[number]
 
   local callback = --[[persistable:options_resolution_callback]] function(width, height)
+    self.app.modes.maximized = false
     if not self.ui:changeResolution(width, height) then
       local err = {_S.errors.unavailable_screen_size}
       self.ui:addWindow(UIInformation(self.ui, err))
@@ -492,9 +513,8 @@ function UIOptions:selectUIScale(number)
   TheApp.config.ui_scale = res.scale
   TheApp:saveConfig()
   self.scale_ui_panel:setLabel(res.text)
-  self.ui:changeResolution(TheApp.config.width, TheApp.config.height)
-  self.ui:onChangeResolution()
   TheApp.gfx:onChangeUIScale()
+  self.ui:onChangeResolution()
 end
 
 function UIOptions:selectCursorScale(number)
@@ -543,12 +563,23 @@ function UIOptions:buttonUpdates()
 end
 
 function UIOptions:buttonFullscreen()
-  if not self.ui:toggleFullscreen() then
+  if not self.ui:toggleVideoMode("fullscreen") then
       local err = {_S.errors.unavailable_screen_size}
       self.ui:addWindow(UIInformation(self.ui, err))
       self.fullscreen_button:toggle()
   end
-  self.fullscreen_panel:setLabel(self.ui.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+  self.fullscreen_panel:setLabel(self.ui.app.modes.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+  self.resolution_button:enable(not self.ui.app.modes.fullscreen)
+end
+
+function UIOptions:buttonOriginalAspectRatio()
+  if not self.ui:toggleVideoMode("aspect_ratio_4_3") then
+    local err = {_S.errors.unavailable_screen_size}
+    self.ui:addWindow(UIInformation(self.ui, err))
+    self.aspect_button:toggle()
+  end
+  self.aspect_panel:setLabel(self.ui.app.modes.aspect_ratio_4_3 and _S.options_window.option_on or _S.options_window.option_off)
+  self.ui:onChangeResolution()
 end
 
 function UIOptions:buttonMouseCapture()
@@ -614,16 +645,16 @@ function UIOptions:buttonZoomSpeed()
 end
 
 function UIOptions:onChangeResolution()
-  self:processWindowResizeEvent()
+  self:_processWindowResizeEvent()
   self:setDefaultPosition(0.5, 0.25)
 end
 
 -- Handle required button changes from a window resize event from the user (via UI
 -- or adjusting window boundaries)
-function UIOptions:processWindowResizeEvent()
+function UIOptions:_processWindowResizeEvent()
   self:updateUIScaleAvailabilityState()
-  self.resolution_panel:setLabel(self.ui.app.config.width .. "x" ..
-      self.ui.app.config.height)
+  local window_w, window_h = TheApp.video:getWindowSize()
+  self.resolution_panel:setLabel(window_w .. "x" .. window_h)
 end
 
 function UIOptions:close()
@@ -681,9 +712,8 @@ end
 
 function UIResolution:ok()
   local width, height = tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0
-  local s = TheApp.config.ui_scale
-  local min_w = App.MIN_WINDOW_WIDTH * s
-  local min_h = App.MIN_WINDOW_HEIGHT * s
+  local min_w = App.MIN_WINDOW_WIDTH
+  local min_h = App.MIN_WINDOW_HEIGHT
   if width < min_w or height < min_h then
     local err = {_S.errors.minimum_screen_size:format(min_w, min_h)}
     self.ui:addWindow(UIInformation(self.ui, err))

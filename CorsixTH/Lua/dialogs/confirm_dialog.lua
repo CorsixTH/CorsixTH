@@ -57,8 +57,9 @@ function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, call
   self.must_pause = must_pause
 
   -- Check how "high" the dialog must be
-  local _, text_height = self.white_font:sizeOf(text, text_width * TheApp.config.ui_scale)
-  text_height = text_height / TheApp.config.ui_scale -- Scale independent pixels
+  local s = TheApp.gfx:getUIScale()
+  local _, text_height = self.white_font:sizeOf(text, text_width * s)
+  text_height = text_height / s -- Scale independent pixels
 
   self:addPanel(top_frame, 0, 0)  -- Dialog header
   local last_y = top_frame_height
@@ -118,7 +119,7 @@ end
 function UIConfirmDialog:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = x + self.x * s, y + self.y * s
   self.white_font:drawWrapped(canvas, self.text, x + 17 * s, y + 17 * s, text_width * s)
 end

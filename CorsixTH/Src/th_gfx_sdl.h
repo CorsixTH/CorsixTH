@@ -45,18 +45,35 @@ struct clip_rect : public SDL_Rect {
   typedef Uint16 w_h_type;
 };
 
+/**
+ * A size (width x height) in Window coordinates
+ */
+struct window_size {
+  int width;
+  int height;
+};
+
+/**
+ * A size (width x height) in Render coordinates (pixels)
+ */
+struct render_size {
+  int width;
+  int height;
+};
+
 /** Helper structure with parameters to create a #render_target. */
 struct render_target_creation_params {
-  int width;               ///< Expected width of the render target.
-  int height;              ///< Expected height of the render target.
-  int bpp;                 ///< Expected colour depth of the render target.
-  bool fullscreen;         ///< Run full-screen.
-  bool present_immediate;  ///< Whether to present immediately to the user
-                           ///< (else wait for Vsync).
-  bool direct_zoom;  ///< Scale each texture when copying if true, otherwise
-                     ///< render to intermediate texture and scale.
-  int min_width;     ///< Minimum width of the render target.
-  int min_height;    ///< Minimum height of the render target.
+  window_size size{};        ///< Target size of the window.
+  bool fullscreen{};         ///< Run fullscreen.
+  bool maximized{};          ///< Run maximized (when not fullscreen).
+  bool aspect_ratio_4_3{};   ///< Display the game letterboxed to 4:3
+  bool present_immediate{};  ///< Whether to present immediately to the user
+                             ///< (else wait for Vsync).
+  bool direct_zoom{};        ///< Scale each texture when copying if true,
+                             ///< otherwise render to intermediate texture and
+                             ///< scale.
+  bool hidpi{};              ///< Enable HiDPI on the game window.
+  window_size min_size{};    ///< Minimum size of the window.
 };
 
 enum class scaled_items;
@@ -259,6 +276,9 @@ class render_target {
   //! Update the parameters for the render target
   bool update(const render_target_creation_params& params);
 
+  //! Update the render target when the size changes
+  void on_pixel_size_change();
+
   //! Get the reason for the last operation failing
   const char* get_last_error();
 
@@ -281,9 +301,6 @@ class render_target {
   //! Fill a rectangle of the render target with a solid colour
   bool fill_rect(uint32_t iColour, float iX, float iY, float iW, float iH);
 
-  //! Sets a minimum size for the render target
-  int set_minimum_size(int width, int height);
-
   class scoped_clip {
    public:
     scoped_clip(render_target*, const clip_rect* pRect);
@@ -299,17 +316,24 @@ class render_target {
   //! Restore the previous clip rectangle.
   void pop_clip_rect();
 
-  //! Get the width of the render viewport (in pixels)
-  int get_width() const;
-
-  //! Get the height of the render viewport (in pixels)
-  int get_height() const;
+  //! Get the size of the render viewport (in pixels)
+  render_size get_size() const;
 
   //! Get the width of the render target adjusted by the current scale factor
   int get_scaled_width() const;
 
   //! Get the height of the render target adjusted by the current scale factor
   int get_scaled_height() const;
+
+  //! Get the current window size (in window coordinates)
+  window_size get_window_size() const;
+
+  //! Get the maximum window size that fits on the usable display area
+  window_size get_max_window_size() const;
+
+  //! Get the display scale reported by the windowing system for the current
+  //! window
+  float get_display_scale() const;
 
   //! Enable optimisations for non-overlapping draws
   void start_nonoverlapping_draws();
@@ -435,6 +459,7 @@ class render_target {
   bool scale_bitmaps{false};  ///< Whether bitmaps should be scaled.
   bool supports_target_textures{};
   bool direct_zoom{};
+  bool aspect_ratio_4_3{};
 };
 
 //! Stored image.

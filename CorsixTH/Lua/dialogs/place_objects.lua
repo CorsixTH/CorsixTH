@@ -509,7 +509,7 @@ function UIPlaceObjects:onMouseUp(button, x, y)
     repaint = true
   elseif button == "left" then
     if #self.objects > 0 then
-      local s = TheApp.config.ui_scale
+      local s = TheApp.gfx:getUIScale()
       if 0 <= x and x < self.width * s and 0 <= y and y < self.height * s then -- luacheck: ignore 542
         -- Click within window - do nothing
       elseif self.object_cell_x and self.object_cell_y then
@@ -616,7 +616,7 @@ function UIPlaceObjects:draw(canvas, x, y)
 
   Window.draw(self, canvas, x, y)
 
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x, y = x + self.x * s, y + self.y * s
   self.white_font:draw(canvas, self.title_text, x + 17 * s, y + 21 * s, 153 * s, 0)
   self.white_font:drawWrapped(canvas, self.desc_text, x + 20 * s, y + 46 * s, 147 * s)
@@ -646,7 +646,7 @@ function UIPlaceObjects:draw(canvas, x, y)
 end
 
 function UIPlaceObjects:onMouseMove(x, y, dx, dy)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local current_hover_id
   local header_height = 159 * s
   local bar_height = 29 * s

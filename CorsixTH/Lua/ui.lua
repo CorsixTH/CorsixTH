@@ -295,7 +295,7 @@ function UI:drawTooltip(canvas)
   end
 
   if self.tooltip_font then
-    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y, 200 * TheApp.config.ui_scale)
+    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y, 200 * TheApp.gfx:getUIScale())
   end
 end
 
@@ -546,6 +546,8 @@ function UI:setMenuBackground()
 end
 
 function UI:onChangeResolution()
+  TheApp.gfx:onChangeResolution()
+
   -- Redraw cursor
   local cursor = self.cursor
   self.cursor = nil
@@ -596,9 +598,9 @@ function UI:changeResolution(width, height)
   local error_message = self.app.video:update(
       width,
       height,
-      App.MIN_WINDOW_WIDTH * TheApp.config.ui_scale,
-      App.MIN_WINDOW_HEIGHT * TheApp.config.ui_scale,
-      unpack(self.app.modes))
+      App.MIN_WINDOW_WIDTH,
+      App.MIN_WINDOW_HEIGHT,
+      self.app.modes)
   self.app:finishVideoUpdate()
 
   if error_message then
@@ -649,7 +651,7 @@ end
 
 --! Dedicated hotkey function for toggling fullscreen
 function UI:fullscreenHotkey()
-  local toggle = self:toggleFullscreen()
+  local toggle = self:toggleVideoMode("fullscreen")
   if not toggle then
     local err = {_S.errors.unavailable_screen_size}
     self:addWindow(UIInformation(self, err))
@@ -658,56 +660,36 @@ function UI:fullscreenHotkey()
   local window = self:getWindow(UIOptions)
   if window then
     if toggle then window.fullscreen_button:toggle() end
-    window.fullscreen_panel:setLabel(self.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+    window.fullscreen_panel:setLabel(self.app.modes.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
   end
 end
 
---! Turns fullscreen on and off
+--! Turns a video mode on and off
 --!return success true if toggle succeeded
-function UI:toggleFullscreen()
+function UI:toggleVideoMode(mode)
   local modes = self.app.modes
-
-  local function toggleMode(index)
-    self.app.fullscreen = not self.app.fullscreen
-    if self.app.fullscreen then
-      modes[index] = "fullscreen"
-    else
-      modes[index] = ""
-    end
-  end
-
-  -- Search in modes table if it contains a fullscreen value and keep the index
-  -- If not found, we will add an index at end of table
-  local index = #modes + 1
-  for i=1, #modes do
-    if modes[i] == "fullscreen" then
-      index = i
-      break
-    end
-  end
-
-  -- Toggle Fullscreen mode
-  toggleMode(index)
+  modes[mode] = not modes[mode]
 
   local success = true
   self.app:prepareVideoUpdate()
   local error_message = self.app.video:update(self.app.config.width, self.app.config.height,
-      self.app.MIN_WINDOW_WIDTH * self.app.config.ui_scale,
-      self.app.MIN_WINDOW_HEIGHT * self.app.config.ui_scale,
-      unpack(self.app.modes))
+      self.app.MIN_WINDOW_WIDTH,
+      self.app.MIN_WINDOW_HEIGHT,
+      modes)
   self.app:finishVideoUpdate()
 
   if error_message then
     success = false
-    local mode_string = modes[index] or "windowed"
-    print("Warning: Could not toggle to " .. mode_string .. " mode with resolution of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
+    local on_off = modes[mode] and "on" or "off"
+    print("Warning: Could not toggle " .. mode .. " " .. on_off .. " with resolution of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
     -- Revert fullscreen mode modifications
-    toggleMode(index)
+    modes[mode] = not modes[mode]
   end
 
   if success then
     -- Save new setting in config
-    self.app.config.fullscreen = self.app.fullscreen
+    self.app.config.fullscreen = modes.fullscreen
+    self.app.config.original_aspect_ratio = modes.aspect_ratio_4_3
     self.app:saveConfig()
   end
 
@@ -988,10 +970,12 @@ end
 --! Window has been resized by the user
 --!param width (integer) New window width
 --!param height (integer) New window height
-function UI:onWindowResized(width, height)
-  if not self.app.config.fullscreen then
+--!param state (integer) Window state: 0 - window, 1 - fullscreen, 2 - maximized, 3 - minimized
+function UI:onWindowResized(width, height, state)
+  if state == 0 then
     self.app.config.width = width
     self.app.config.height = height
+    self.app.config.maximized = false
 
     -- Save new setting in config
     self.app:saveConfig()
@@ -1008,6 +992,37 @@ end
 --!param height (integer) New renderer height
 function UI:onWindowPixelSizeChanged(width, height)
   self:onChangeResolution()
+end
+
+function UI:onWindowDisplayScaleChanged(scale)
+  self.app.gfx:onChangeWindowDisplayScale(scale)
+
+  -- Redundant if the windowing system preserves the size of the window and
+  -- calls onWindowPixelSizeChanged, but I was testing by setting the
+  -- display scale in the KDE Plasma 6.7.4 (Wayland) and in that situation the
+  -- window resized instead so the pixel size didn't change resulting in the
+  -- bottom panel moving. This is a rare event so the duplicate call is fine.
+  self:onChangeResolution()
+end
+
+function UI:onWindowMaximized()
+  self.app.config.maximized = true
+  self.app.modes['maximized'] = true
+  self.app:saveConfig()
+end
+
+function UI:onWindowRestored()
+  -- The restored event fires when the window transitions from maximized to
+  -- full screen. We want to ignore that event so when we disable full screen
+  -- the window returns to a maximized state.
+  if self.app.config.fullscreen == true then
+    return
+  end
+
+  -- Otherwise record that the window is no longer maximized
+  self.app.config.maximized = false
+  self.app.modes['maximized'] = false
+  self.app:saveConfig()
 end
 
 function UI:onMouseMove(x, y, dx, dy)

@@ -83,7 +83,8 @@ function UIMessage:draw(canvas, x, y)
   if self.on_top then
     Window.draw(self, canvas, x, y)
   else
-    canvas:pushClip(0, y + self.stop_y, canvas:getWidth(), self.height, true)
+    local width = canvas:getRenderSize()
+    canvas:pushClip(0, y + self.stop_y, width, self.height, true)
     Window.draw(self, canvas, x, y)
     canvas:popClip()
   end

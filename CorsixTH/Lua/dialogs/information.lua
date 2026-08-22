@@ -77,7 +77,7 @@ end
 
 function UIInformation:onChangeLanguage()
   local total_req_height = 0
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   for _, text in ipairs(self.text) do
     local _, req_height = self.black_font:sizeOf(text, self.text_width * s)
     total_req_height = total_req_height + math.ceil(req_height / s)
@@ -105,7 +105,7 @@ function UIInformation:onChangeLanguage()
   -- Close button
   self:addPanel(19, self.width - 28, self.height - 28, 18, 18, 1):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
   .panel_for_sprite.custom_draw = --[[persistable:information_close_button]] function(panel, canvas, x, y)
-      local ds = TheApp.config.ui_scale
+      local ds = TheApp.gfx:getUIScale()
       x = x + panel.x * ds
       y = y + panel.y * ds
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = ds })
@@ -116,7 +116,7 @@ function UIInformation:onChangeLanguage()
 end
 
 function UIInformation:draw(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local dx, dy = x + self.x * s, y + self.y * s
   local background = self.black_background and canvas:mapRGB(0, 0, 0) or canvas:mapRGB(255, 255, 255)
   canvas:drawRect(background, dx + 4 * s, dy + 4 * s, self.width * s - 8 * s, self.height * s - 8 * s)
@@ -129,7 +129,7 @@ function UIInformation:draw(canvas, x, y)
 end
 
 function UIInformation:onMouseMove(x, y, dx, dy)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   self.active_hover = self:hoverTest(
       self.active_hover,
       x, y,
@@ -139,7 +139,7 @@ function UIInformation:onMouseMove(x, y, dx, dy)
 end
 
 function UIInformation:hitTest(x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   if x >= 0 and y >= 0 and x < self.width * s and y < self.height * s then
     return true
   else
