@@ -69,7 +69,7 @@ jobs:
       - name: Create CorsixTH makefiles with ${{matrix.lua}}
         run: |
           cmake . -G"Unix Makefiles" -Bbuild ${{matrix.cmakejit}} -DFETCH_SDL_MIXER=ON --debug-output -LA \
-           -DBuILD_ANIMVIEW=${{inputs.animview == 'true' && 'ON' || 'OFF'}}
+           -DBUILD_ANIMVIEW=${{inputs.animview == 'true' && 'ON' || 'OFF'}}
       - name: Build CorsixTH with ${{matrix.lua}}
         run: |
           cmake --build build/ -- VERBOSE=1
@@ -115,14 +115,42 @@ jobs:
         if: matrix.docs
         run: |
           cmake --build build/ --target doc
-      - name: Upload documentation
-        if: github.ref == 'refs/heads/master' && github.repository == 'CorsixTH/CorsixTH' && matrix.docs
+      - name: Store generated documentation
+        if: >-
+          github.ref == 'refs/heads/master' &&
+          github.repository == 'CorsixTH/CorsixTH' &&
+          matrix.docs
+        uses: actions/upload-artifact@v6
+        with:
+          name: generated-documentation
+          path: build/doc/
+          if-no-files-found: error
+          retention-days: 1
+
+  Upload-documentation:
+    name: Upload documentation
+    needs: Linux-apt-get
+    if: >-
+      github.ref == 'refs/heads/master' &&
+      github.repository == 'CorsixTH/CorsixTH'
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Download generated documentation
+        uses: actions/download-artifact@v8
+        with:
+          name: generated-documentation
+          path: ${{runner.temp}}/generated-documentation
+      - name: Publish documentation
         run: |
           git config user.email "documentationbot@corsixth.com"
           git config user.name "Docs Bot"
           git fetch origin gh-pages
           git checkout --force gh-pages
-          rsync --recursive build/doc/ .
+          rsync --recursive "${{runner.temp}}/generated-documentation/" .
           git add animview/ corsixth_engine/ corsixth_lua/ index.html leveledit/
           if ! git diff --cached --exit-code; then
             git commit --message "Documentation from $(git rev-parse --short master) [no CI]"
