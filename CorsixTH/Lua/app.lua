@@ -1152,9 +1152,9 @@ function App:fixConfig()
 
     elseif key == "cursor_scale" then
       if type(value) == "number" then
-        self.config[key] = math.max(value, 1)
+        self.config[key] = math.max(value, 0)
       else
-        self.config[key] = 1
+        self.config[key] = 0
       end
 
     elseif (key == "scroll_speed" or key == "shift_scroll_speed") and
