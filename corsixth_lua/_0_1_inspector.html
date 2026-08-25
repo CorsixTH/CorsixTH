@@ -51,6 +51,9 @@
  <a href="_0_1_humanoid.html#_0_1_humanoid_1change_attribute">changeAttribute</a>(<span class="p">attribute</span>, <span class="p">amount</span>)
  (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_inspector.html#_0_1_inspector_1check_for_reception_desk">checkForReceptionDesk</a>()
+ </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
@@ -133,6 +136,10 @@
  </li>
  <li class="inherited">
  <a href="_0_1_humanoid.html#_0_1_humanoid_1is_leaving">isLeaving</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1is_meandering">isMeandering</a>()
  (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
  </li>
  <li class="inherited">
@@ -275,9 +282,9 @@
  <a href="_0_1_humanoid.html#_0_1_humanoid_1start_action">startAction</a>()
  (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_entity.html#_0_1_entity_1tick">tick</a>()
- (inherited from <a href="_0_1_entity.html">Entity</a>)
+ <li class="self">
+ <a href="_0_1_inspector.html#_0_1_inspector_1tick">tick</a>()
+ (overrides <a href="_0_1_entity.html#_0_1_entity_1tick">Entity:tick</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_humanoid.html#_0_1_humanoid_1tick_day">tickDay</a>()
@@ -552,13 +559,20 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1after_load">Humanoid:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L69">line 69 of Lua/entities/humanoids/inspector.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L89">line 89 of Lua/entities/humanoids/inspector.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_inspector_1announce">function Inspector:announce()</a></h5>
  <p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L65">line 65 of Lua/entities/humanoids/inspector.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_inspector_1check_for_reception_desk">function Inspector:checkForReceptionDesk()</a></h5>
+ <p>
+ React to reception desk status<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L74">line 74 of Lua/entities/humanoids/inspector.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -583,6 +597,13 @@
  Disable showing inspector mood on hover<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1set_if_hover_moods_visible">Humanoid:setIfHoverMoodsVisible</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L42">line 42 of Lua/entities/humanoids/inspector.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_inspector_1tick">function Inspector:tick()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1tick">Entity:tick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L69">line 69 of Lua/entities/humanoids/inspector.lua</a>.
  </p>
  </div>
  <div class="method">
