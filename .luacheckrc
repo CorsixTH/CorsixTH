@@ -64,10 +64,10 @@ globals = { -- Globals
             "UIMessage", "UINewGame", "UIOptions", "UIPatient", "UIMachineMenu",
             "UIPlaceObjects", "UIPlaceStaff", "UIPolicy", "UIProgressReport",
             "UIQueue", "UIQueuePopup", "UIResizable", "UIResearch",
-            "UIResolution", "UISaveGame", "UISaveMap", "UIScrollSpeed",
+            "UISaveGame", "UISaveMap", "UIScrollSpeed",
             "UIShiftScrollSpeed", "UISoundSettings", "UIStaff",
             "UIStaffManagement", "UIStaffRise", "UITipOfTheDay", "UITownMap",
-            "UIUpdate", "UIWatch", "UIZoomSpeed",
+            "UIUpdate", "UIWatch", "UIWindowSize", "UIZoomSpeed",
 
             -- Actions
             "AnswerCallAction", "CallCheckPointAction", "CheckWatchAction",

@@ -593,7 +593,7 @@ function UI:unregisterHotkeyBox(box)
   end
 end
 
-function UI:changeResolution(width, height)
+function UI:changeWindow(width, height)
   self.app:prepareVideoUpdate()
   local error_message = self.app.video:update(
       width,
@@ -604,7 +604,7 @@ function UI:changeResolution(width, height)
   self.app:finishVideoUpdate()
 
   if error_message then
-    print("Warning: Could not change resolution to " .. width .. "x" .. height .. ".")
+    print("Warning: Could not change window size to " .. width .. "x" .. height .. ".")
     print("The error was: ")
     print(error_message)
     return false
@@ -681,7 +681,7 @@ function UI:toggleVideoMode(mode)
   if error_message then
     success = false
     local on_off = modes[mode] and "on" or "off"
-    print("Warning: Could not toggle " .. mode .. " " .. on_off .. " with resolution of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
+    print("Warning: Could not toggle " .. mode .. " " .. on_off .. " with window size of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
     -- Revert fullscreen mode modifications
     modes[mode] = not modes[mode]
   end

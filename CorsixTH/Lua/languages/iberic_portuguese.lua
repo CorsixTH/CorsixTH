@@ -349,7 +349,6 @@ tooltip = {
   options_window = {
     fullscreen_button = "Clica para modo de tela cheia",
     browse = "Procura outra localizaçao da instalaçao original. %1%",
-    change_resolution = "Altera a resoluçao da janela para as dimensoes colocadas à esquerda",
     height = "Coloca a altura desejada.",
     width = "Coloca a largura desejada.",
     language = "Escolhe %s como a tua linguagem.",
@@ -499,7 +498,6 @@ options_window = {
   width = "Largura",
   height = "Altura",
   new_th_directory = "Aqui podes escolher uma nova localizaçao da instalaçao de Theme Hospital,assim que o fizeres o jogo será reiniciado.",
-  change_resolution = "Alterar resoluçao",
   back = "Voltar",
 }
 

@@ -1135,7 +1135,7 @@ function App:fixConfig()
     if key == "language" and type(value) == "string" then
       self.config[key] = value:lower()
 
-    -- For resolution, clamp resolution to at least 640x480
+    -- Clamp window size to at least 640x480
     elseif key == "width" and (type(value) ~= "number" or value < App.MIN_WINDOW_WIDTH) then
       self.config[key] = App.MIN_WINDOW_WIDTH
 

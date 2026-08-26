@@ -349,8 +349,6 @@ options_window = {
   option_on = "På",
   option_off = "Av",
   fullscreen = "Helskärm",
-  resolution = "Upplösning",
-  custom_resolution = "Anpassad...",
   width = "Bredd",
   height = "Höjd",
   customise = "Anpassa",
@@ -364,8 +362,6 @@ options_window = {
 tooltip.options_window = {
   fullscreen = "Om spelet ska köras i fullskärmsläge eller fönsterläge",
   fullscreen_button = "Klicka för att gå mellan fönster och helskärm",
-  resolution = "Upplösning spelet ska köras i",
-  select_resolution = "Välj en ny upplösning",
   width = "Fyll i önskad skärmbredd",
   height = "Fyll i önskad skärmhöjd",
   apply = "Tillämpa den valda upplösningen",
@@ -754,6 +750,3 @@ original_credits[361] = "."
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
-
-options_window.change_resolution = "Ändra upplösning"
-tooltip.options_window.change_resolution = "Ändra upplösning till de dimensioner ifyllda till vänster"

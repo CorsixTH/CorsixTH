@@ -168,12 +168,10 @@ options_window = {
   check_for_updates = "アップデートの確認",
   option_enabled = "オン",
   option_disabled = "オフ",
-  resolution = "解像度",
   capture_mouse = "カーソルの移動範囲",
   right_mouse_scrolling = "マップスクロール",
   right_mouse_scrolling_option_middle = "真ん中のボタン",
   right_mouse_scrolling_option_right = "右のボタン",
-  custom_resolution = "カスタム...",
   width = "横幅 / width",
   height = "高さ / Height",
   customise = "カスタム設定",
@@ -186,14 +184,11 @@ options_window = {
   shift_scrollspeed = "スクロール速度 (+Shift)",
   zoom_speed = "ズーム速度",
   hotkey = "ホットキーの設定",
-  change_resolution = "解像度の変更",
 }
 
 tooltip.options_window = {
   fullscreen = "ゲームをフルスクリーンモードとウィンドウモードのどちらで実行するかを設定できます",
   fullscreen_button = "オンにするとフルスクリーンモードになります",
-  resolution = "ゲームの解像度を設定できます",
-  select_resolution = "新しい解像度を選択してください",
   capture_mouse = "オンにするとマウスカーソルが画面外に出なくなります",
   right_mouse_scrolling = "マップをスクロールするマウスボタンを切り替えます",
   width = "ご希望の画面幅を入力してください",

@@ -458,12 +458,10 @@ options_window = {
   option_enabled = "Ativado",
   option_disabled = "Desativado",
   fullscreen = "Tela Cheia",
-  resolution = "Resoluçäo",
   capture_mouse = "Capturar Mouse",
   right_mouse_scrolling = "Rolagem do Mouse",
   right_mouse_scrolling_option_middle = "Botäo do Meio",
   right_mouse_scrolling_option_right = "Botäo Direito",
-  custom_resolution = "Personalizar...",
   width = "Largura",
   height = "Altura",
   customise = "Personalizar",
@@ -482,8 +480,6 @@ options_window = {
 tooltip.options_window = {
   fullscreen = "Se o jogo deve ser executado em tela cheia ou modo janela",
   fullscreen_button = "Clique para mudar para tela cheia",
-  resolution = "A resoluçäo que o jogo deve ser executado",
-  select_resolution = "Selecionar uma nova resoluçäo",
   capture_mouse = "Clique para alternar a captura do cursor na janela do jogo",
   right_mouse_scrolling = "Alterne o botäo do mouse que é usado para rolar o mapa",
   width = "Insira a largura da tela desejada",
@@ -1010,8 +1006,6 @@ transactions.remove_room = "Construir: Remover sala destruída"
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 
-options_window.change_resolution = "Alterar resoluçäo"
-tooltip.options_window.change_resolution = "Altera a resoluçäo de janela para as dimensöes digitadas na esquerda"
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------  MISSING STRINGS IN LANGUAGE "PORTUGUêS DO BRASIL":  -----------------------------------

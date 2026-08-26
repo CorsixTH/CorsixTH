@@ -3096,9 +3096,7 @@ options_window = {
   option_enabled = "已啟用",
   option_disabled = "已停用",
   fullscreen = "全螢幕",
-  resolution = "解析度",
   capture_mouse = "捕獲滑鼠",
-  custom_resolution = "自訂...",
   width = "寬度",
   height = "高度",
   customise = "自訂",
@@ -3117,8 +3115,6 @@ options_window = {
 tooltip.options_window = {
   fullscreen = "應該在全屏還是視窗模式執行",
   fullscreen_button = "點選切換全屏模式",
-  resolution = "在此解析度下運行遊戲",
-  select_resolution = "選擇新的解析度",
   capture_mouse = "點選切換是否將游標捕獲在遊戲視窗中",
   width = "輸入想要的螢幕寬度",
   height = "輸入想要的螢幕高度",
@@ -3610,6 +3606,3 @@ multiplayer.everyone_failed = "所有玩家都沒有完成最終目標。因此�
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
-
-options_window.change_resolution = "修改解析度"
-tooltip.options_window.change_resolution = "修改視窗解析度為左方的值"
