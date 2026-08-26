@@ -169,18 +169,41 @@ target_link_libraries(
 # Find FFMPEG
 if(CORSIX_TH_USE_FFMPEG)
   find_package(
-    FFmpeg
+    FFMPEG
     COMPONENTS AVFORMAT AVCODEC SWSCALE SWRESAMPLE AVUTIL
-    REQUIRED
+    QUIET
   )
   if(FFMPEG_FOUND)
     target_link_libraries(CorsixTH_lib PUBLIC ${FFMPEG_LIBRARIES})
     include_directories(${FFMPEG_INCLUDE_DIRS})
-    if(APPLE)
-      target_link_libraries(CorsixTH PRIVATE libz.dylib)
-      # These LDFLAGS are necessary for static ffmpeg, harmless for dynamic ffmpeg
-      set(CMAKE_EXE_LINKER_FLAGS "-liconv -framework CoreMedia -framework CoreVideo -framework VideoToolbox")
+  else()
+    pkg_check_modules(
+      FFmpeg
+      REQUIRED
+      IMPORTED_TARGET
+      libavformat
+      libavcodec
+      libswresample
+      libswscale
+      libavutil
+    )
+    if(pkgcfg_lib_FFmpeg_avcodec)
+      target_link_libraries(CorsixTH_lib PUBLIC PkgConfig::FFmpeg)
+      include_directories(PkgConfig::FFmpeg)
+      set(FFMPEG_FOUND TRUE)
     endif()
+  endif()
+
+  if(FFMPEG_FOUND)
+    if(APPLE)
+      # These frameworks are necessary for a full static build of ffmpeg.
+      # But they are weakly linked in case a dynamic or minimal build of ffmpeg is used
+      target_link_libraries(CorsixTH_lib PRIVATE iconv "-weak_framework CoreVideo")
+      # These frameworks were added: CoreVideo in 10.4, CoreMedia in 10.7, VideoToolbox in 10.8
+      if(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_GREATER_EQUAL "10.8" OR NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+        target_link_libraries(CorsixTH_lib PRIVATE "-weak_framework CoreMedia" "-weak_framework VideoToolbox")
+      endif()
+    endif(APPLE)
     message("  FFmpeg found")
   else()
     message(FATAL_ERROR "Error: FFmpeg library not found, even though it was selected to be included")
@@ -196,10 +219,6 @@ else()
   if(FREETYPE_FOUND)
     target_link_libraries(CorsixTH_lib PUBLIC ${FREETYPE_LIBRARIES})
     include_directories(${FREETYPE_INCLUDE_DIRS})
-    if(APPLE)
-      target_link_libraries(CorsixTH_lib PRIVATE libz.dylib)
-      target_link_libraries(CorsixTH_lib PRIVATE libbz2.dylib)
-    endif()
     message("  FreeType2 found")
   else()
     message(FATAL_ERROR "Error: FreeType2 library not found, it is required to build")
