@@ -83,6 +83,19 @@
       }
     },
     {
+      "name": "win-arm64-rel",
+      "binaryDir": "${sourceDir}/build/win-arm64-rel",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "ARM64",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "arm64-windows",
+        "ENABLE_UNIT_TESTS": "ON",
+        "FETCH_SOUNDFONT": "ON",
+        "FETCH_UNICODE_FONT": "ON"
+      }
+    },
+    {
       "name": "macos-arm64-dev",
       "binaryDir": "${sourceDir}/build/macos-arm64-dev",
       "generator": "Ninja",
@@ -170,6 +183,11 @@
       "configuration": "RelWithDebInfo"
     },
     {
+      "name": "win-arm64-rel",
+      "configurePreset": "win-arm64-rel",
+      "configuration": "RelWithDebInfo"
+    },
+    {
       "name": "macos-arm64-rel",
       "configurePreset": "macos-arm64-rel",
       "configuration": "RelWithDebInfo"
@@ -220,6 +238,15 @@
     {
       "name": "win-x86-rel",
       "configurePreset": "win-x86-rel",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "win-arm64-rel",
+      "configurePreset": "win-arm64-rel",
       "output": {
         "verbosity": "extra",
         "outputOnFailure": true

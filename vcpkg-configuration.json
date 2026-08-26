@@ -13,7 +13,7 @@
     {
       "kind": "git",
       "repository": "https://github.com/CorsixTH/vcpkg-registry",
-      "baseline": "ddc4effddd5f69d77c2eae918d7f8ba55fc8ab37",
+      "baseline": "ed17102a7d146fbcfa25095f5d2775723ac08560",
       "packages": [ "ffmpeg", "ffmpeg-bin2c" ]
     }
   ]
