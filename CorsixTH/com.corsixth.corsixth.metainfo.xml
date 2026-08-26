@@ -20,6 +20,23 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.70.1" date="2026-08-27" type="stable">
+      <description>
+        <p>Bug fixes:</p>
+        <ul>
+          <li>Prevent game crashes when using a MIDI API, such as JACK</li>
+          <li>Prevent game crashes when checking for missing staff in rooms,
+              such as Psychiatry</li>
+          <li>Prevented a game crash with the bottom drawer when loading a game
+              from 0.69.2 or earlier</li>
+        </ul>
+        <p>Packager Notes:</p>
+        <ul>
+          <li>Fixed a build error on Mac by linking libatomic if atomics are
+              not built in</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.70.0" date="2026-07-10" type="stable">
       <description>
         <p>New Features:</p>
