@@ -108,6 +108,35 @@ end
 
 function Litter:setLitterType(anim_type, mirrorFlag)
   if anim_type then
+    local objectsInTile = self.world:getObjects(self.tile_x, self.tile_y)
+
+    --This should ideally be a single item at most but older saves might still contain more than one item
+    local litterToSetPrecedence = litter_precedence[anim_type]
+    local to_remove = {}
+    for _, tileObject in ipairs(objectsInTile) do
+
+      -- List will contain this object as it was already registered so check for it
+      if tileObject.object_type.id == "litter" and tileObject ~= self then
+        local existing_type = litter_anim_to_type[tileObject.animation_idx]
+        local existing_precedence = existing_type and litter_precedence[existing_type] or 0
+        if existing_precedence >= litterToSetPrecedence then
+          -- If existing litter on the ground has higher precedence cleanup self and return early
+          self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
+          self.world:destroyEntity(self)
+          return
+        else
+          -- Litter on ground has lower precedence and it will be substituted, so mark
+          -- it for removal from world which will remove from Handyman task list as well
+          to_remove[#to_remove + 1] = tileObject
+        end
+      end
+    end
+
+    -- remove objects that are not relevant anymore
+    for _, obj in ipairs(to_remove) do
+      obj:remove()
+    end
+
     local anim = litter_types[anim_type]
     if anim then
       self:setAnimation(anim, mirrorFlag)
