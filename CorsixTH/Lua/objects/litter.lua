@@ -42,11 +42,38 @@ litter_types["soot_floor"] = 3416
 litter_types["soot_wall"] = 3408
 litter_types["soot_window"] = 3412
 
+-- Table for reverse lookup from animation set in world object
+local litter_anim_to_type = {}
+for k, v in pairs(litter_types) do
+  if type(k) == "string" then
+    litter_anim_to_type[v] = k
+  end
+end
+
 -- When randomising litter, only these should come up.
 litter_types[1] = 1894
 litter_types[2] = 1896
 litter_types[3] = 1898
 litter_types[4] = 1900
+
+-- Litter precedence to decide what is shown in tile
+local litter_precedence = {}
+
+-- Bio-hazard (highest)
+litter_precedence["puke"] = 4
+litter_precedence["dead_rat"] = 3
+litter_precedence["pee"] = 2
+
+-- Random Trash (lowest)
+litter_precedence["soda_can"] = 1
+litter_precedence["banana"] = 1
+litter_precedence["paper"] = 1
+litter_precedence["bottle"] = 1
+
+-- Explosion Damage (can't be cleaned by handyman so it can't be displaced by others)
+litter_precedence["soot_floor"] = 99
+litter_precedence["soot_wall"] = 99
+litter_precedence["soot_window"] = 99
 
 class "Litter" (Entity)
 
@@ -69,6 +96,7 @@ function Litter:setTile(x, y)
     self.world:addObjectToTile(self, x, y)
   end
 end
+
 -- Litter is an Entity and not an Object so it does not inherit this method
 -- This is an (effective) hack, see issue 918 --cgj
 function Litter:getWalkableTiles()
