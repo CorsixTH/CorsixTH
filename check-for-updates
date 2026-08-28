@@ -1,7 +1,7 @@
 return {
   major = 0,
   minor = 70,
-  revision = 0,
-  changelog_en = 'This version provides long awaited UI scaling, ability to safely block off areas in rooms, and a host of accessible features. Additional things of note also include hardware MIDI support, customisable autosave frequency, PNG screenshots, and general performance improvements for large hospitals.',
+  revision = 1,
+  changelog_en = 'This is a bugfix release following 0.70.0. Prevent game crashes when using a MIDI API, such as JACK. Prevent game crashes when checking for missing staff in rooms, such as Psychiatry. Prevented a game crash with the bottom drawer when loading a game from 0.69.2 or earlier.',
   download_url = 'https://github.com/CorsixTH/CorsixTH/releases',
 }
