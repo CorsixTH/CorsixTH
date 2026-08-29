@@ -18,6 +18,15 @@ if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
+include(CheckCXXSourceCompiles)
+check_cxx_source_compiles("
+#include <atomic>
+int main() {
+  std::atomic<double> d {0.0};
+  return static_cast<int>(d.load());
+}
+" ATOMIC_BUILTIN)
+
 set(CORSIX_TH_SEARCH_LOCAL_DATADIRS ${SEARCH_LOCAL_DATADIRS})
 
 set(CORSIX_TH_INTERPRETER_NAME CorsixTH.lua)
@@ -91,6 +100,10 @@ target_link_libraries(CorsixTH PRIVATE CorsixTH_lib)
 
 if(UNIX AND NOT APPLE)
   set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME corsix-th)
+endif()
+
+if(NOT ATOMIC_BUILTIN)
+  target_link_libraries(CorsixTH_lib PRIVATE atomic)
 endif()
 
 # Generate source files list
