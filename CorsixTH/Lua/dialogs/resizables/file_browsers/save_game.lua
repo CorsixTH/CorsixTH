@@ -111,3 +111,7 @@ function UISaveGame:doSave(filename)
     ui:addWindow(UIInformation(ui, {err}))
   end
 end
+
+function UISaveGame:afterLoad()
+  self:close()
+end

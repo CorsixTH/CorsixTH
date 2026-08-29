@@ -109,6 +109,44 @@ for name, var in globals:pairs() do
     })
   end
 end
+local file_globals = {}
+for _, var in globals:pairs() do
+  local file_name = var:getFile()
+  if file_name then
+    local list = file_globals[file_name]
+    if not list then
+      list = {}
+      file_globals[file_name] = list
+    end
+    list[#list + 1] = var
+  end
+end
+
+local function collect_files(directory, prefix, files)
+  for _, item in ipairs(directory.children) do
+    local path = prefix == "" and item.name or prefix .. "/" .. item.name
+    if class.is(item, LuaDirectory) then
+      collect_files(item, path, files)
+    else
+      files[#files + 1] = {file = item, path = path}
+    end
+  end
+end
+
+local files = {}
+collect_files(project.files, "", files)
+for _, entry in ipairs(files) do
+  WriteHTML(entry.file:getId(), template "page" {
+    title = entry.file:getName() .." File",
+    tab = "files",
+    section = "hierarchy",
+    content = template "file" {
+      file = entry.file,
+      items = file_globals[entry.path] or {},
+    },
+  })
+end
+
 WriteHTML("file_hierarchy", template "page" {
   title = "File Hierarchy",
   tab = "files",

@@ -486,6 +486,7 @@ options_window = {
   fullscreen = "Fullscreen",
   resolution = "Resolution",
   scale_ui = "UI Scale",
+  cursor_scale = "Cursor Scale",
   capture_mouse = "Capture Mouse",
   right_mouse_scrolling = "Mouse Scrolling",
   right_mouse_scrolling_option_middle = "Middle Button",
@@ -529,6 +530,8 @@ tooltip.options_window = {
   scale_ui = "Scale the user interface. Only scale options that fit the display are shown, for more increase the resolution.",
   select_ui_scale = "Select a new user interface scale",
   ui_scale_unavailable = "User interface scaling not available, please select a higher resolution first.",
+  cursor_scale = "Scale the cursor.",
+  select_cursor_scale = "Select a new cursor scale",
   capture_mouse = "Click to toggle capturing the cursor while in game",
   right_mouse_scrolling = "Toggle the mouse button that is used to scroll the map",
   width = "Enter desired screen width",
@@ -905,6 +908,7 @@ information = {
     cheat = "Hope you didn't click the Lose Level button by accident!",
     staff_happiness = "Your average staff happiness fell below %d%.",
     patient_happiness = "Your average patient happiness fell below %d%.",
+    months_played = "You didn't meet the level goals within %d months.",
   },
   cheat_not_possible = "You cannot use that cheat on this level.",
 }
@@ -1135,10 +1139,14 @@ tooltip.status = {
   over = {
     staff_happiness = "Your average staff happiness should be over %d%. Currently it's %d%",
     patient_happiness = "Your average patient happiness should be over %d%. Currently it's %d%",
+    months_played = "You need to reach the end of %s %d. Currently it's %s %d",
+    years_played = "You need to reach the year %d. Currently it's the year %d",
   },
   under = {
     staff_happiness = "Your average staff happiness should not be less than %d%. Currently it's %d%",
     patient_happiness = "Your average patient happiness should not be less than %d%. Currently it's %d%",
+    months_played = "You need to win by the end of %s %d. Currently it's %s %d",
+    years_played = "You need to reach the year %d. Currently it's the year %d",
   }
 }
 

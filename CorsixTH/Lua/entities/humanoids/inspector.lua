@@ -66,6 +66,26 @@ function Inspector:announce()
   self.world.ui:playAnnouncement("vip008.wav", AnnouncementPriority.High)
 end
 
+function Inspector:tick()
+  Humanoid.tick(self)
+  self:checkForReceptionDesk()
+end
+
+--! React to reception desk status
+function Inspector:checkForReceptionDesk()
+  if self.going_home then return end
+  -- When the inspector realises the hospital does not have a reception desk or
+  -- the desk they were aiming for is gone, they will either:
+  if self:isMeandering() then
+    if self.hospital:hasReceptionDesk(true) then
+      self:setNextAction(SeekReceptionAction()) -- Head towards an existing desk
+    else
+      self.hospital.epidemic:handleInspectorArrival() -- Deliver results anyway
+      self:goHome()
+    end
+  end
+end
+
 function Inspector:afterLoad(old, new)
   if old < 213 then
     self.mood_marker = 2

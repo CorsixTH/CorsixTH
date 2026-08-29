@@ -857,6 +857,51 @@ function Humanoid:walkTo(tile_x, tile_y, must_happen)
       :setMustHappen(not not must_happen))
 end
 
+--! Function attempts to expel the humanoid from the area.
+-- It does not require any input parameters since it expects that the area
+-- to be left is already marked with the `avoidTile` tile flag.
+function Humanoid:leaveArea()
+  -- TODO: Currently, this function simply forces the humanoid to move.
+  -- However, it doesn't take into account the specific area to be exited or
+  -- the direction in which it needs to exit.
+  -- As a result, the humanoid may exit the area in a less-than-optimal manner.
+  local current_action = self:getCurrentAction()
+  local meander = self.action_queue[2]
+  if meander and meander.name == "meander" then
+    -- Interrupt the idle or walk, which will cause a new meander target
+    -- to be chosen, which will be outside the blueprint rectangle
+    meander.can_idle = false
+    local on_interrupt = current_action.on_interrupt
+    if on_interrupt then
+      current_action.on_interrupt = nil
+      on_interrupt(current_action, self)
+    end
+  elseif current_action.name == "seek_room" or (meander and meander.name == "seek_room") then
+    -- Make sure that the humanoid doesn't stand idle waiting within the blueprint
+    if current_action.name == "seek_room" then
+      self:queueAction(MeanderAction():setCount(1):setMustHappen(true), 0)
+    else
+      meander.done_walk = false
+    end
+  else
+    -- Look for a queue action and re-arrange the people in it, which
+    -- should cause anyone queueing within the blueprint to move
+    for _, action in ipairs(self.action_queue) do
+      if action.name == "queue" then
+        for _, humanoid in ipairs(action.queue) do
+          local callbacks = action.queue.callbacks[humanoid]
+          if callbacks then
+            callbacks:onChangeQueuePosition(humanoid)
+          end
+        end
+        break
+      end
+    end
+    -- TODO: Consider any other actions which might be causing the
+    -- humanoid to be staying within the rectangle for a long time.
+  end
+end
+
 -- Stub functions for handling fatigue. These are overridden by the staff subclass,
 -- but also defined here, so we can just call it on any humanoid
 function Humanoid:tire(amount)
@@ -1195,4 +1240,19 @@ function Humanoid:isObscuringArea(x1, x2, y1, y2)
     end
   end
   return false
+end
+
+--! Check whether humanoids (staff and Inspector) are meandering
+--!return true if they currently has a meander action
+function Humanoid:isMeandering()
+  if #self.action_queue < 2 then return false end
+
+  -- "meander" action always insert "move" or "idle" action before itself.
+  -- so when humanoid "meandering" his action queue usually looks like:
+  -- [1 idle, 2 meander] or [1 walk, 2 meander].
+  local idle_is_first = self.action_queue[1].name == "idle"
+  local walk_is_first = self.action_queue[1].name == "walk"
+  local meander_is_second = self.action_queue[2].name == "meander"
+
+  return (idle_is_first or walk_is_first) and meander_is_second
 end

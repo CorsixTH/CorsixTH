@@ -60,6 +60,9 @@ struct path_node {
   //! Y-position of this cell (constant)
   int y;
 
+  //! Current lowest cost to this cell.
+  int cost;
+
   //! Current shortest distance to this cell
   /*!
       Defined as prev->distance + 1 (or 0 if prev == nullptr).
@@ -85,10 +88,10 @@ struct path_node {
 
   //! Total cost of this node.
   /*!
-      @return Total cost of the node, traveled distance and guess to the
+      @return Total cost of the node, traveled cost and the guess to the
      destination.
    */
-  inline int value() const { return distance + guess; }
+  inline int value() const { return cost + guess; }
 };
 
 /** Base class of the path finders. */
@@ -115,9 +118,15 @@ class abstract_pathfinder {
    */
   bool search_neighbours(path_node* pNode, map_tile_flags flags, int iWidth);
 
+  //! Examine the neighbour tile, and add it to the heap if it can be entered.
+  /*!
+      @param pNode Node to expand.
+      @param neighbour_flags Flags of the neighbour.
+      @param pNeighbour The node of the neighbour.
+   */
   void record_neighbour_if_passable(path_node* pNode,
                                     map_tile_flags neighbour_flags,
-                                    bool passable, path_node* pNeighbour);
+                                    path_node* pNeighbour);
 
   //! Guess distance to the destination for \a pNode.
   /*!

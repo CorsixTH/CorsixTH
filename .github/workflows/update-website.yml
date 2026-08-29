@@ -1,9 +1,14 @@
 name: Update website
 
+permissions: {}
+
 on:
   release:
     types:
-      - published
+      - created
+      - deleted
+      - released
+      - unpublished
 
 jobs:
   dispatch:

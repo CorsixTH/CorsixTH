@@ -126,6 +126,7 @@ local function new_config_defaults()
     width = 800,
     height = 600,
     ui_scale = 1,
+    cursor_scale = 1,
     language = [[English]],
     audio = true,
     free_build_mode = false,
@@ -158,9 +159,6 @@ local function new_config_defaults()
     enable_screen_shake = true,
     enable_announcer_subtitles = false,
     autosave_frequency = 1,
-    audio_frequency = 22050,
-    audio_channels = 2,
-    audio_buffer_size = 2048,
     midi_api = nil,
     midi_port = nil,
     midi_sysex_master_volume = false,
@@ -304,18 +302,22 @@ local function config_contents(config_values)
 -------------------------------- SETTINGS MENU --------------------------------
 -- These settings can also be changed from within the game in the settings menu
 -------------------------------------------------------------------------------
--- Screen size. Must be at least 640x480. Larger sizes will require better
--- hardware in order to maintain a playable framerate. The fullscreen setting
--- can be true or false, and the game will run windowed if not fullscreen.
--- ui_scale can be set to 1, 2, or 3 to scale the user interface for higher
--- resolution displays. For example, at 1920x1080 resolution, setting ui_scale
--- to 2 will make the interface elements twice as large.
+-- Screen size (width and height). At least: 640x480.
+-- Larger sizes will require better hardware in order to maintain a playable framerate.
+-- Fullscreen. Can be true or false.
+-- The game will run windowed if not fullscreen.
+-- ui_scale. Default: 1.
+-- Whole-number UI scaling for higher-resolution displays; decimals unsupported.
+-- Example: 1920x1080 with ui_scale = 2 makes UI elements twice as large.
+-- width/ui_scale and height/ui_scale must be at least 640x480.
+-- Example: ui_scale = 2 requires resolution >= 1280x960.
 --]=] .. '\n' ..
 param(config_values, 'fullscreen') ..
 '\n' ..
 param(config_values, 'width') ..
 param(config_values, 'height') ..
-param(config_values, 'ui_scale') .. [=[
+param(config_values, 'ui_scale') ..
+param(config_values, 'cursor_scale') .. [=[
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
@@ -329,6 +331,7 @@ param(config_values, 'ui_scale') .. [=[
 --  Finnish               / Suomi / fi / fin
 --  French                / fr / fre / fra
 --  German                / de / ger / deu
+--  Greek                 / el / gre / ell
 --  Hungarian             / hu / hun
 --  Italian               / it / ita
 --  Japanese              / ja / jp
@@ -638,17 +641,6 @@ param(config_values, 'midi_port', '[[Midi Through:Midi Through Port-0 14:0]]') .
 
 ------------------------------- SPECIAL SETTINGS ------------------------------
 -- These settings can only be changed here
--------------------------------------------------------------------------------
--- Audio playback settings.
--- These can be commented out to use the default values from the game binary.
--- Note: On some platforms, these settings may not effect MIDI playback - only
--- sound effects and music audio. If you are experiencing poor audio playback,
--- then try doubling the buffer size.
---]=] .. '\n' ..
-param(config_values, 'audio_frequency') ..
-param(config_values, 'audio_channels') ..
-param(config_values, 'audio_buffer_size') .. [=[
-
 -------------------------------------------------------------------------------
 -- Advanced MIDI settings.
 -- These settings can enable better MIDI playback on some systems but may also

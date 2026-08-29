@@ -24,8 +24,9 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <SDL.h>
-#include <SDL_mixer.h>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 #include <cstdio>
 #include <memory>
@@ -34,6 +35,7 @@ SOFTWARE.
 #include "../Src/lua.hpp"
 #include "../Src/sdl_core.h"
 #include "../Src/th_lua.h"
+#include "../Src/th_sound.h"
 #ifdef WITH_UPDATE_CHECK
 #include <curl/curl.h>
 #endif
@@ -110,6 +112,13 @@ int main(int argc, char** argv) {
     int number_is_double[types_equal<lua_Number, double>::result];
   };
 
+  // Match SDL2 window behavior in wayland temporarily, until we properly
+  // support HiDPI.
+  //
+  // Per the SDL documentation, "this forces the window to behave in a way that
+  // Wayland desktops were not designed to accommodate."
+  SDL_SetHint(SDL_HINT_VIDEO_WAYLAND_SCALE_TO_DISPLAY, "1");
+
 #ifdef WITH_UPDATE_CHECK
   curl_global_init(CURL_GLOBAL_DEFAULT);
 #endif
@@ -165,9 +174,8 @@ int main(int argc, char** argv) {
     // Destroy the lua_State before SDL so that any SDL resource owned by
     // Lua can be freed first.
     L.reset(nullptr);
-    while (Mix_QuerySpec(nullptr, nullptr, nullptr)) {
-      Mix_CloseAudio();
-    }
+    th::sound::quit();
+    MIX_Quit();
     SDL_Quit();
 
     if (bRun) {

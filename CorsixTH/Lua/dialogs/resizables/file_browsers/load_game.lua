@@ -60,3 +60,7 @@ function UILoadGame:close()
     self.ui:addWindow(UIMainMenu(self.ui))
   end
 end
+
+function UILoadGame:afterLoad()
+  self:close()
+end

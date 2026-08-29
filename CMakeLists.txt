@@ -18,6 +18,7 @@
 #   - FETCH_CATCH2 : Use FetchContent to obtain Catch2 if ENABLE_UNIT_TESTS=yes
 #   - FETCH_SOUNDFONT : Use FetchContent to download a soundfont to use (no)
 #   - FETCH_UNICODE_FONT: Use FetchContent to download the GoNoto Unicode font (no)
+#   - FETCH_SDL_MIXER: Use FetchContent to download SDL3_Mixer
 
 # Tests and debug options
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
@@ -28,7 +29,7 @@
 #   - BUILD_ANIMVIEW : Generate AnimView build files (no)
 #   - BUILD_TOOLS : Generate cli tools
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 
 # Define our options
 option(BUILD_CORSIXTH "Builds the main game" ON)
@@ -44,6 +45,7 @@ option(ENABLE_SANITIZERS "Build with ASan and UBSan enabled" OFF)
 option(WITH_TRACY "Build with Tracy profiling enabled" OFF)
 option(FETCH_SOUNDFONT "Download soundfont asset" OFF)
 option(FETCH_UNICODE_FONT "Download GoNoto Unicode font" OFF)
+option(FETCH_SDL_MIXER "Download SDL3_mixer" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
@@ -100,9 +102,11 @@ else()
   set(SEARCH_LOCAL_DATADIRS_DEFAULT OFF)
 endif()
 
-option(SEARCH_LOCAL_DATADIRS
+option(
+  SEARCH_LOCAL_DATADIRS
   "Search resources in the working directory and the program directory where the executable stores."
-  ${SEARCH_LOCAL_DATADIRS_DEFAULT})
+  ${SEARCH_LOCAL_DATADIRS_DEFAULT}
+)
 
 if(APPLE)
   set(WITH_FONT_DEFAULT "/Library/Fonts/Arial Unicode.ttf")

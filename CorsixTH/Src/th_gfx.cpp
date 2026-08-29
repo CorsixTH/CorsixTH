@@ -917,7 +917,7 @@ bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
 }
 
 void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
-                                   const ::layers& oLayers, int iX, int iY,
+                                   const ::layers& oLayers, float iX, float iY,
                                    uint32_t iFlags,
                                    animation_effect patient_effect,
                                    size_t patient_effect_offset,
@@ -964,8 +964,8 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
         (oElement.layer > 0 || oElement.layer_id > 0) ? patient_effect
                                                       : animation_effect::none;
     size_t effect_ticks = game_ticks + patient_effect_offset;
-    int oex = oElement.x * scale_factor;
-    int oey = oElement.y * scale_factor;
+    float oex = static_cast<float>(oElement.x * scale_factor);
+    float oey = static_cast<float>(oElement.y * scale_factor);
     if (iFlags & thdf_flip_horizontal) {
       int iWidth;
       int iHeight;
@@ -975,9 +975,9 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
       iHeight *= scale_factor;
 
       oElement.element_sprite_sheet->draw_sprite(
-          pCanvas, oElement.sprite, iX - oex - iWidth, iY + oey,
-          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), effect_ticks,
-          render_effect, scale_factor);
+          pCanvas, oElement.sprite, iX - oex - static_cast<float>(iWidth),
+          iY + oey, iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal),
+          effect_ticks, render_effect, scale_factor);
     } else {
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX + oex, iY + oey,
@@ -1069,9 +1069,7 @@ void chunk_renderer::chunk_copy(int npixels, const uint8_t* in_data) {
 }
 
 void chunk_renderer::fix_n_pixels(int& npixels) const {
-  if (ptr + npixels > end) {
-    npixels = static_cast<int>(end - ptr);
-  }
+  npixels = std::min(npixels, static_cast<int>(end - ptr));
 }
 
 void chunk_renderer::increment_position(int npixels) {
@@ -1207,7 +1205,7 @@ void animation::draw(render_target* canvas, const xy_pair& draw_pos) {
     if (flags & thdf_crop) {
       clip_rect rcNew;
       rcNew.y = 0;
-      rcNew.h = canvas->get_height();
+      rcNew.h = canvas->get_scaled_height();
       rcNew.x = x + (crop_column - 1) * 32 * scale_factor;
       rcNew.w = 64 * scale_factor;
       render_target::scoped_clip clip(canvas, &rcNew);
@@ -1264,7 +1262,7 @@ void animation::draw_morph(render_target* canvas, const xy_pair& draw_pos) {
   // We set the morph rect x and w clip to the entire canvas, so that only
   // vertical clipping is applied.
   oMorphRect.x = 0;
-  oMorphRect.w = canvas->get_width();
+  oMorphRect.w = canvas->get_scaled_width();
   oMorphRect.y = y + morph_target->pixel_offset.x * scale_factor;
   oMorphRect.h = (morph_target->pixel_offset.y - morph_target->pixel_offset.x) *
                  scale_factor;
@@ -1554,7 +1552,16 @@ const sound_replacement_map frame_sound_replacements{
     {11147, sound_pair(35)},
     {11152, sound_pair(35)},
     {11153, sound_pair(35)},
-    {11154, sound_pair(35)}};
+    {11154, sound_pair(35)},
+
+    // Nurse desk typing (anim 3258, east and south orientations)
+    {7153, sound_pair(9)},
+    {7155, sound_pair(9)},
+    {7158, sound_pair(9)},
+    {7159, sound_pair(9)},
+    {7162, sound_pair(9)},
+    {7163, sound_pair(9)},
+    {7166, sound_pair(9)}};
 }  // Namespace
 
 void animation::tick() {
@@ -1756,9 +1763,10 @@ void sprite_render_list::draw(render_target* canvas, const xy_pair& draw_pos) {
   }
 
   for (const sprite& pSprite : sprites) {
-    sheet->draw_sprite(canvas, pSprite.index, x + pSprite.x * scale_factor,
-                       y + pSprite.y * scale_factor, flags, 0,
-                       animation_effect::none, scale_factor);
+    sheet->draw_sprite(canvas, pSprite.index,
+                       static_cast<float>(x + pSprite.x * scale_factor),
+                       static_cast<float>(y + pSprite.y * scale_factor), flags,
+                       0, animation_effect::none, scale_factor);
   }
 }
 

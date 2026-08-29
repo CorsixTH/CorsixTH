@@ -181,11 +181,7 @@ function Audio:init()
 
   self:initMidiPlayer()
 
-  local status, err = SDL.audio.init(
-    self.app.config.audio_frequency,
-    self.app.config.audio_channels,
-    self.app.config.audio_buffer_size,
-    self.app:findSoundFont())
+  local status, err = SDL.audio.init(self.app:findSoundFont())
   if not status then
     print("Notice: Audio system could not initialise (SDL error: " .. tostring(err) .. ")")
     self.not_loaded = true
@@ -286,7 +282,8 @@ end
 --! Set the visual area for sound effects playback
 function Audio:setSoundStage()
   if self.sound_fx then
-    local w, h = self.app.config.width / 2, self.app.config.height / 2
+    local scr_w, scr_h = self.app.video:getRenderSize()
+    local w, h = scr_w / 2, scr_h / 2
     self.sound_fx:setCamera(math.floor(w), math.floor(h), math.floor((w^2 + h^2)^0.5))
   end
 end
