@@ -2897,11 +2897,11 @@ function World:afterLoad(old, new)
         local key = entity.tile_x * 10000 + entity.tile_y -- unique int key per tile
         local current_litter = litter_by_tile[key]
         if not current_litter then
-          current_litter = entity -- no entry was there
+          litter_by_tile[key] = entity -- no entry was there
         elseif entity:getPrecedence() > current_litter:getPrecedence() then
           -- when a tile has > 1 litter: keep highest-precedence item and call obj:remove() on the other
           if current_litter:isCleanable() then current_litter:remove() end
-          current_litter = entity
+          litter_by_tile[key] = entity
         else
           if entity:isCleanable() then entity:remove() end
         end
