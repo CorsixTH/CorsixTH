@@ -2720,8 +2720,8 @@ function World:afterLoad(old, new)
       obj:afterLoad(old, new)
     end
   end
-  -- update entity map if it exists, newly created one for saves older than 88
-  -- will be up to date
+  -- Migrate the entity map (older saves gain the rats layer). Saves before
+  -- version 88 have no entity map at this point; one is built complete below.
   if self.entity_map then
     self.entity_map:afterLoad(old, new)
   end
