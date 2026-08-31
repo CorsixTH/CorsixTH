@@ -106,6 +106,11 @@ function Litter:getWalkableTiles()
   return tiles
 end
 
+function Litter:getPrecedence(item)
+    local litter_type = litter_anim_to_type[self.animation_idx]
+    return litter_precedence[litter_type]
+end
+
 function Litter:setLitterType(anim_type, mirrorFlag)
   if anim_type then
     local objectsInTile = self.world:getObjects(self.tile_x, self.tile_y)

@@ -2886,6 +2886,29 @@ function World:afterLoad(old, new)
     self.system_pause = nil
   end
 
+  if old < 264 then
+    -- Avoid Stacking of Litter on the ground. Attached to a version to avoid re-work for games saved after
+    -- however this is a non-breaking change for savegames
+
+    -- iterate through self.entities and group litter by tile(x,y)
+    local litter_by_tile = {}
+    for _, entity in ipairs(self.entities) do
+      if class.is(entity, Litter) and entity.tile_x then
+        local key = entity.tile_x * 10000 + entity.tile_y -- unique int key per tile
+        local current_litter = litter_by_tile[key]
+        if not current_litter then
+          current_litter = entity -- no entry was there
+        elseif entity:getPrecedence() > current_litter:getPrecedence() then
+          -- when a tile has > 1 litter: keep highest-precedence item and call obj:remove() on the other
+          if current_litter:isCleanable() then current_litter:remove() end
+          current_litter = entity
+        else
+          if entity:isCleanable() then entity:remove() end
+        end
+      end
+    end
+  end
+
   -- Fix the initial of staff names
   self:updateInitialsCache()
   for _, staff_category in pairs(self.available_staff) do
