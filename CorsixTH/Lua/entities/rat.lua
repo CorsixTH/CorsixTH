@@ -1,4 +1,5 @@
 --[[ Copyright (c) 2021 Stephen "TheCycoONE" Baker
+Copyright (c) 2026 Joshua "gojomoso1" DeVries
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -51,9 +52,10 @@ local rat_walk_anims = {
   west = 1920,
 }
 
--- Hole animations. Only north-wall holes have a "leaving" animation, so it is
--- reused for every emergence; entering uses the animation for the hole's wall.
-local rat_leave_hole_anim = 1928
+-- Hole animations. Only north and west holes are visible and have animations;
+-- east and south holes exist but are hidden, so a rat simply appears at or
+-- vanishes from them.
+local rat_leave_hole_anim = 1928 -- only north holes have a leaving animation
 local rat_enter_hole_anims = {north = 1924, west = 1926}
 
 -- Rats scurry at roughly twice humanoid walking speed. One tile is crossed over
@@ -62,14 +64,6 @@ local rat_enter_hole_anims = {north = 1924, west = 1926}
 -- same 2x is the "fast" preset).
 local walk_factor = 2
 local walk_quantity = 4
-
--- Rats don't head straight home; they dart to a few random nearby tiles first
--- before finally running into a hole.
-local min_wander_legs = 3
-local max_wander_legs = 7
-local wander_radius = 5 -- tiles from the current position for a random dart
-
-local rat_bounty = 5 -- cash awarded for shooting a rat
 
 Rat.hover_cursor = TheApp.gfx:loadMainCursor("kill_rat_hover")
 Rat.proximity_cursor = TheApp.gfx:loadMainCursor("kill_rat")
@@ -81,113 +75,84 @@ function Rat:Rat(animation)
   self.permanent_flags = DrawFlags.BoundBoxHitTest
 end
 
---! Start the rat scurrying from its current tile towards a target tile. If no
--- target is given, a random rathole (or, failing that, a random reachable tile)
--- is chosen so the rat runs somewhere sensible.
---!param target_x (integer, optional) Destination tile X coordinate.
---!param target_y (integer, optional) Destination tile Y coordinate.
-function Rat:init(target_x, target_y)
-  local target_wall
-  if not target_x or not target_y then
-    target_x, target_y, target_wall = self:_chooseTarget()
-  end
-  -- Nowhere sensible to run to: the rat just disappears again.
-  if target_x == self.tile_x and target_y == self.tile_y then
+--! Send the rat scurrying from its hole, along the corridors, to another
+-- rathole where it disappears.
+--!param origin_wall (string or nil) The wall of the hole it emerges from, used
+--!  to pick the leaving animation (only north holes have one).
+function Rat:init(origin_wall)
+  self.origin_wall = origin_wall
+  local target_x, target_y, target_wall = self:_chooseTarget()
+  if not target_x or (target_x == self.tile_x and target_y == self.tile_y) then
     self.world:destroyEntity(self)
     return
   end
   self.target = {x = target_x, y = target_y, wall = target_wall}
-  self.wander_legs = math.random(min_wander_legs, max_wander_legs)
   self:_emerge()
 end
 
---! Play the "leaving hole" animation, then start scurrying.
+--! Play the leaving-hole animation when emerging from a north hole, then run.
+-- Other walls have no leaving animation, so the rat sets off immediately.
 function Rat:_emerge()
   self:setSpeed(0, 0)
-  self:setAnimation(rat_leave_hole_anim)
-  local duration = TheApp.animation_manager:getAnimLength(rat_leave_hole_anim)
-  self:setTimer(duration, --[[persistable:rat_emerged]] function(rat)
-    rat:_startNextLeg()
-  end)
+  if self.origin_wall == "north" then
+    self:setAnimation(rat_leave_hole_anim)
+    local duration = TheApp.animation_manager:getAnimLength(rat_leave_hole_anim)
+    self:setTimer(duration, --[[persistable:rat_emerged]] function(rat)
+      rat:_beginRun()
+    end)
+  else
+    self:_beginRun()
+  end
 end
 
---! Begin the next leg of the rat's journey: a random nearby dart while it still
--- has wandering to do, otherwise the final run to its target hole. On arrival at
--- a real rathole the rat enters it; otherwise it simply disappears.
-function Rat:_startNextLeg()
-  if self.wander_legs > 0 then
-    self.wander_legs = self.wander_legs - 1
-    local dx, dy = self:_chooseWanderTile()
-    self:_determinePath(dx, dy)
-    if self.path and self.path.xs[2] then
-      self:_walkToNextTile()
-      return
-    end
-    -- Couldn't dart anywhere; give up wandering and head for the hole.
-    self.wander_legs = 0
-  end
-
+--! Find a corridor path to the target hole and start following it, or leave if
+-- there is no route.
+function Rat:_beginRun()
   self:_determinePath(self.target.x, self.target.y)
   if self.path and self.path.xs[2] then
     self:_walkToNextTile()
-    return
+  else
+    self:_arrive()
   end
+end
 
-  if self.target.wall and self.tile_x == self.target.x and
-      self.tile_y == self.target.y then
+--! The rat has reached the end of its run: enter the target hole if it is a
+-- real rathole, otherwise just vanish.
+function Rat:_arrive()
+  if self.target.wall then
     self:_enterHole()
   else
     self.world:destroyEntity(self)
   end
 end
 
---! Pick a random reachable tile within `wander_radius` of the rat for an erratic
--- dart. Falls back to the final target if nothing nearby is reachable.
---!return (integer, integer) The chosen dart tile coordinates.
-function Rat:_chooseWanderTile()
-  local map = self.world.map
-  local hospital = self.world:getLocalPlayerHospital()
-  for _ = 1, 10 do
-    local tx = self.tile_x + math.random(-wander_radius, wander_radius)
-    local ty = self.tile_y + math.random(-wander_radius, wander_radius)
-    if tx >= 1 and ty >= 1 and tx <= map.width and ty <= map.height and
-        (tx ~= self.tile_x or ty ~= self.tile_y) and
-        hospital:isInHospital(tx, ty) then
-      local path_x, path_y = self.world:getPath(self.tile_x, self.tile_y, tx, ty)
-      if path_x and #path_x > 1 and self:_isCorridorPath(path_x, path_y) then
-        return tx, ty
-      end
-    end
-  end
-  return self.target.x, self.target.y
-end
-
---! Pick a destination for the rat: a random rathole if any exist, otherwise a
--- random reachable tile. Returns the rat's own tile if nothing is reachable.
---!return (integer, integer, string or nil) The chosen target tile, plus the
---!  hole's wall ("north"/"west") when the target is a rathole.
+--! Pick a destination: a rathole other than the one the rat started on, or a
+-- random reachable corridor tile if there is no other hole.
+--!return (integer, integer, string or nil) The target tile, and its hole wall
+--!  ("north"/"west"/"east"/"south") when the target is a rathole.
 function Rat:_chooseTarget()
   local hospital = self.world:getLocalPlayerHospital()
   local holes = hospital and hospital.ratholes
   if holes and #holes > 0 then
-    -- Prefer running to a different hole than the one we started on.
     local candidates = {}
     for _, hole in ipairs(holes) do
       if hole.x ~= self.tile_x or hole.y ~= self.tile_y then
         candidates[#candidates + 1] = hole
       end
     end
-    if #candidates == 0 then candidates = holes end
-    local hole = candidates[math.random(1, #candidates)]
-    return hole.x, hole.y, hole.wall
+    if #candidates > 0 then
+      local hole = candidates[math.random(1, #candidates)]
+      return hole.x, hole.y, hole.wall
+    end
   end
 
+  -- No other hole to aim for: dart to a random reachable corridor tile.
   local map = self.world.map
   for _ = 1, 10 do
     local tx, ty = math.random(1, map.width), math.random(1, map.height)
     if hospital:isInHospital(tx, ty) then
-      local path_x = self.world:getPath(self.tile_x, self.tile_y, tx, ty)
-      if path_x and #path_x > 0 then
+      local path_x, path_y = self.world:getPath(self.tile_x, self.tile_y, tx, ty)
+      if path_x and #path_x > 1 and self:_isCorridorPath(path_x, path_y) then
         return tx, ty
       end
     end
@@ -211,7 +176,8 @@ function Rat:_isCorridorPath(xs, ys)
   return true
 end
 
---! Compute and store a path from the rat's tile to the given destination.
+--! Compute and store a corridor-only path from the rat's tile to the given
+-- destination.
 --!param dest_x (integer) Destination tile X coordinate.
 --!param dest_y (integer) Destination tile Y coordinate.
 function Rat:_determinePath(dest_x, dest_y)
@@ -236,10 +202,9 @@ function Rat:_walkToNextTile()
   local x2, y2 = xs[i + 1], ys[i + 1]
 
   if not x2 then
-    -- Reached the end of this leg. Snap cleanly to the arrival tile and carry
-    -- straight on -- rats scurry continuously rather than pausing.
+    -- Reached the destination tile; snap cleanly to it and enter/leave.
     self:setTilePositionSpeed(x1, y1)
-    self:_startNextLeg()
+    self:_arrive()
     return
   end
 
@@ -267,21 +232,25 @@ function Rat:_walkToNextTile()
   end)
 end
 
---! Play the entering-hole animation for the target hole's wall, then remove the
--- rat from the world.
+--! Play the entering-hole animation for the target hole's wall (north and west
+-- have one; east and south holes are hidden), then remove the rat.
 function Rat:_enterHole()
   self:setSpeed(0, 0)
-  local anim = rat_enter_hole_anims[self.target.wall] or rat_enter_hole_anims.north
-  self:setAnimation(anim)
-  local duration = TheApp.animation_manager:getAnimLength(anim)
-  self:setTimer(duration, --[[persistable:rat_entered]] function(rat)
-    rat.world:destroyEntity(rat)
-  end)
+  local anim = rat_enter_hole_anims[self.target.wall]
+  if anim then
+    self:setAnimation(anim)
+    local duration = TheApp.animation_manager:getAnimLength(anim)
+    self:setTimer(duration, --[[persistable:rat_entered]] function(rat)
+      rat.world:destroyEntity(rat)
+    end)
+  else
+    self.world:destroyEntity(self)
+  end
 end
 
---! Shoot the rat when it is left-clicked: play the sounds, reward the player,
--- leave a dead-rat splat, and remove the rat. Guarded so a stale cursor entity
--- cannot shoot the same rat twice.
+--! Shoot the rat on left-click: play the sounds, leave a dead-rat splat where
+-- it was, and remove it. Guarded so a stale cursor entity cannot shoot the same
+-- rat twice.
 --!param ui (GameUI) The game UI.
 --!param button (string) The mouse button used.
 function Rat:onClick(ui, button)
@@ -291,8 +260,6 @@ function Rat:onClick(ui, button)
   self.shot = true
   ui:playSound("shotgun.wav")
   ui:playSound("deadrat2.wav")
-  local hospital = self.hospital or self.world:getLocalPlayerHospital()
-  hospital:receiveMoney(rat_bounty, _S.transactions.rats)
   local tile_x, tile_y = self.tile_x, self.tile_y
   local px, py = self.th:getPosition()
   self.world:destroyEntity(self)
