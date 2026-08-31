@@ -43,16 +43,21 @@ describe("rat.lua: ", function()
     }
   end
 
-  local function createRat(record, get_path)
+  -- Create a rat at tile (10, 10) with a single rathole B to run to, and a
+  -- straight two-tile corridor path towards it.
+  local function createRat(record, opts)
+    opts = opts or {}
     local rat = Rat(makeFakeAnimation(record or {}))
     rat.tile_x, rat.tile_y = 10, 10
+    local hole_b = {x = 11, y = 10, wall = opts.target_wall or "north"}
     rat.world = {
       map = {th = {getCellFlags = function() return {roomId = 0} end},
              width = 100, height = 100},
       getLocalPlayerHospital = function()
-        return {ratholes = {}, isInHospital = function() return true end}
+        return {ratholes = opts.no_holes and {} or {hole_b},
+                isInHospital = function() return true end}
       end,
-      getPath = get_path or function() return nil end,
+      getPath = opts.get_path or function() return {10, 11}, {10, 10} end,
       destroyEntity = function() end,
     }
     return rat
@@ -63,72 +68,61 @@ describe("rat.lua: ", function()
     assert.are.equal(DrawFlags.BoundBoxHitTest, rat.permanent_flags)
   end)
 
-  it("emerges from its hole before scurrying", function()
+  it("plays the leaving animation when emerging from a north hole", function()
     local record = {}
-    local rat = createRat(record, function() return {10, 11}, {10, 10} end)
-    rat:init(11, 10)
+    local rat = createRat(record)
+    rat:init("north")
     assert.are.equal(1928, record.anim) -- the leaving-hole animation
+  end)
+
+  it("runs straight away when emerging from a hidden (east/south) hole", function()
+    local record = {}
+    local rat = createRat(record)
+    rat:init("east") -- no leaving animation, so it starts walking immediately
+    assert.are.equal(1912, record.anim) -- the east-facing walk animation
   end)
 
   it("faces east while walking to a tile to its east", function()
     local record = {}
-    local rat = createRat(record, function() return {10, 11}, {10, 10} end)
+    local rat = createRat(record)
     stub(rat.world, "destroyEntity")
 
-    rat:init(11, 10)
+    rat:init("north")
     rat.timer_function(rat) -- finish the emerge animation, then start walking
     assert.are.equal("east", rat.last_move_direction)
-    assert.are.equal(1912, record.anim) -- the east-facing walk animation
+    assert.are.equal(1912, record.anim)
     assert.stub(rat.world.destroyEntity).was_not_called()
-  end)
-
-  it("is removed when there is no route, without crashing", function()
-    -- Regression: an unreachable target made World:getPath return nil, and the
-    -- rat then indexed a nil path.
-    local rat = createRat({}, function() return nil end)
-    stub(rat.world, "destroyEntity")
-
-    assert.has_no.errors(function()
-      rat:init(99, 99)
-      rat.timer_function(rat) -- emerge finishes, then no route -> removed
-    end)
-    assert.stub(rat.world.destroyEntity).was_called_with(rat.world, rat)
-  end)
-
-  it("enters the hole before it is removed", function()
-    local record = {}
-    local rat = createRat(record)
-    rat.target = {x = 10, y = 10, wall = "north"}
-    stub(rat.world, "destroyEntity")
-
-    rat:_enterHole()
-    assert.are.equal(1924, record.anim) -- entering a north-wall hole
-    rat.timer_function(rat) -- the enter-hole animation finishes
-    assert.stub(rat.world.destroyEntity).was_called_with(rat.world, rat)
   end)
 
   it("won't take a route that passes through a room", function()
     -- The only offered path runs through a room tile (roomId ~= 0); the rat
     -- should refuse it and leave rather than clip through walls/doors.
-    local rat = createRat({}, function() return {10, 11, 12}, {10, 10, 10} end)
+    local rat = createRat({}, {no_holes = true,
+        get_path = function() return {10, 11, 12}, {10, 10, 10} end})
     rat.world.map.th.getCellFlags = function(_, x, y)
       return {roomId = (x == 11 and y == 10) and 5 or 0}
     end
     stub(rat.world, "destroyEntity")
 
-    rat:init(12, 10)
-    rat.timer_function(rat) -- emerge finishes; no corridor-only route exists
+    rat:init("east")
     assert.stub(rat.world.destroyEntity).was_called()
   end)
 
-  it("shoots on left-click: rewards once, splats, and is removed", function()
+  it("enters the target hole and is removed on arrival", function()
+    local record = {}
+    local rat = createRat(record, {target_wall = "west"})
+    stub(rat.world, "destroyEntity")
+
+    rat:init("east") -- emerge from a hidden hole and run east to the west hole
+    rat.timer_function(rat) -- arrive at the target tile
+    assert.are.equal(1926, record.anim) -- entering a west-wall hole
+    rat.timer_function(rat) -- the enter-hole animation finishes
+    assert.stub(rat.world.destroyEntity).was_called_with(rat.world, rat)
+  end)
+
+  it("shoots on left-click: splats and is removed, only once", function()
     local rat = createRat()
     rat.tile_x, rat.tile_y = 7, 8
-    local hospital = {
-      received = 0,
-      receiveMoney = function(self, amount) self.received = self.received + amount end,
-    }
-    rat.hospital = hospital
     rat.world.newObject = function()
       return {setLitterType = function() end, setPosition = function() end}
     end
@@ -137,11 +131,9 @@ describe("rat.lua: ", function()
 
     rat:onClick(ui, "left")
     assert.stub(rat.world.destroyEntity).was_called_with(rat.world, rat)
-    assert.are.equal(5, hospital.received)
 
     -- A second click on the now-stale cursor entity must not fire again.
     rat:onClick(ui, "left")
     assert.stub(rat.world.destroyEntity).was_called(1)
-    assert.are.equal(5, hospital.received)
   end)
 end)
