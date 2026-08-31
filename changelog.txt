@@ -1,4 +1,16 @@
 -------------------------------------------------------------------------------
+CorsixTH 0.70.1 - Released August 2026
+-------------------------------------------------------------------------------
+# Bug Fixes
+* Prevent game crashes when using a MIDI API, such as JACK
+* Prevent game crashes when checking for missing staff in rooms, such as Psychiatry
+* Prevented a game crash with the bottom drawer when loading a game from
+  0.69.2 or earlier
+
+# Packager Notes
+* Fixed a build error on Mac by linking libatomic if atomics are not built in
+
+-------------------------------------------------------------------------------
 CorsixTH 0.70.0 - Released July 2026
 -------------------------------------------------------------------------------
 # New Features

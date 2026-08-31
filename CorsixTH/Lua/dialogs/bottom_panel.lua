@@ -443,6 +443,34 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     self.ui.hospital.message_popup = true
   end
 
+  local message_info = {
+    type = type,
+    message = message,
+    owner = owner,
+    timeout = timeout,
+    default_choice = default_choice,
+    callback = callback,
+  }
+
+  if self:canQueueFax(message_info) then
+    self.message_queue[#self.message_queue + 1] = message_info
+    self:_initMessageWithDrawerIcon(message_info)
+    -- Сreate reference to message in owner
+    if owner then
+      owner.message = message
+    end
+  else
+    self:cancelFax(message_info.type)
+  end
+end
+
+function UIBottomPanel:_factoryIconWitdh()
+  return FACTORY_ICON_WIDTH
+end
+
+--! Initialise fax message with an UIMessage object.
+--!param message_info (table) table with message metadata.
+function UIBottomPanel:_initMessageWithDrawerIcon(message_info)
   local --[[persistable:bottom_panel_message_window_close]] function onClose(this_icon)
     local this_icon_index
     for i, icon in ipairs(self.message_windows) do
@@ -462,33 +490,11 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     self:deleteMessage(nil, this_icon)
   end
 
-  local message_info = {
-    type = type,
-    message = message,
-    owner = owner,
-    timeout = timeout,
-    default_choice = default_choice,
-    callback = callback,
-  }
-
-  if self:canQueueFax(message_info) then
-    self.message_queue[#self.message_queue + 1] = message_info
-    -- Create the drawer message icon, note this does not show it to the player on creation.
-    local drawer_icon = UIMessage(self.ui, 175, nil,
-      onClose, message_info.type, message_info.message, message_info.owner,
-      message_info.timeout, message_info.default_choice, message_info.callback)
-    message_info["drawer_icon"] = drawer_icon
-    -- Сreate reference to message in owner
-    if owner then
-      owner.message = message
-    end
-  else
-    self:cancelFax(message_info.type)
-  end
-end
-
-function UIBottomPanel:_factoryIconWitdh()
-  return FACTORY_ICON_WIDTH
+  -- Create the drawer message icon, note this does not show it to the player on creation.
+  local drawer_icon = UIMessage(self.ui, 175, nil,
+    onClose, message_info.type, message_info.message, message_info.owner,
+    message_info.timeout, message_info.default_choice, message_info.callback)
+  message_info["drawer_icon"] = drawer_icon
 end
 
 --[[ A fax can be queued if the event the fax causes does not affect
@@ -1056,6 +1062,13 @@ function UIBottomPanel:afterLoad(old, new)
     self.factory_counter = nil
     self.factory_direction = nil
     self.show_animation = nil
+  end
+  if old < 254 then
+    for _, message_info in ipairs(self.message_queue) do
+      if message_info.drawer_icon == nil then
+        self:_initMessageWithDrawerIcon(message_info)
+      end
+    end
   end
   -- Hotfix to force re-calculation of the money font (see issue #1193)
   self.money_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font05V", nil, nil, { apply_ui_scale = true })
