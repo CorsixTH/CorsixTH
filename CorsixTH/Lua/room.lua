@@ -111,6 +111,11 @@ function Room:createLeaveAction()
   return WalkAction(x, y):setIsLeaving(true):truncateOnHighPriority()
 end
 
+--! The function creates an action for a humanoid to reach a room and enter it.
+-- Called at the moment when a humanoid is about to find a route to a certain room.
+-- Take into account, in the end the humanoid may never reach the that room.
+--!param humanoid_entering (humanoid) a humanoid who wants to get to the room.
+--!param callback (callback) callback for a case when target room/queue is 'destroyed'.
 function Room:createEnterAction(humanoid_entering, callback)
   local x, y = self:getEntranceXY(true)
   if not callback then

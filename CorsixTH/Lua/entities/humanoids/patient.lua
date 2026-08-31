@@ -372,6 +372,9 @@ function Patient:die()
   self.set_to_die = false
   if self.cured then return end
 
+  -- If humanoid expected in the queue, unexpect they from that queue.
+  self:unexpectFromExpectedQueue()
+
   -- It may happen that this patient was just cured and then the room blew up.
   self.hospital:humanoidDeath(self)
 
