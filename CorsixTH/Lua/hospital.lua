@@ -719,26 +719,16 @@ function Hospital:tryAddRathole()
 end
 
 --! Spawn a rat emerging from a rathole. It runs to another rathole and vanishes.
---!param hole (table, optional) The {x, y} hole to emerge from; a random existing
+--!param hole (table, optional) The hole to emerge from; a random existing
 --!  rathole is used when omitted.
 --!return (Rat or nil) The spawned rat, or nil if there is no hole to use.
 function Hospital:spawnRat(hole)
-  if not hole then
-    -- Emerge from a random north-wall hole (only north has a leaving anim);
-    -- fall back to any hole if there are no north ones.
-    local north_holes = {}
-    for _, h in ipairs(self.ratholes) do
-      if h.wall == "north" then north_holes[#north_holes + 1] = h end
-    end
-    local pool = #north_holes > 0 and north_holes or self.ratholes
-    if #pool == 0 then return nil end
-    hole = pool[math.random(1, #pool)]
-  end
+  hole = hole or (#self.ratholes > 0 and self.ratholes[math.random(1, #self.ratholes)])
+  if not hole then return nil end
   local rat = self.world:newEntity("Rat", 1928)
-  rat.hospital = self
   rat:setTile(hole.x, hole.y)
   rat:setTilePositionSpeed(hole.x, hole.y, 0, 0, 0, 0)
-  rat:init()
+  rat:init(hole.wall)
   return rat
 end
 
@@ -808,22 +798,41 @@ local function dailyUpdateRatholes(self)
   end
 end
 
--- Chance per day of a rat emerging, scaled by how littered the hospital is, up
--- to a small cap on simultaneously active rats.
-local rat_spawn_chance = 0.5
-local max_active_rats = 4
+-- Rats appear even in a spotless hospital, and more often as it gets littered.
+-- The daily spawn chance and the cap on simultaneous rats both scale with the
+-- size of the hospital.
+local base_rat_spawn_chance = 0.05 -- daily chance in a clean hospital
+local litter_rat_spawn_chance = 0.5 -- extra chance at full litter
+local tiles_per_rat = 200 -- hospital tiles allowed per simultaneous rat
+
+--! Total number of tiles across the hospital's owned plots, used to scale rat
+-- activity with hospital size.
+--!return (integer) The owned tile count.
+function Hospital:getOwnedTileCount()
+  local map = self.world.map
+  local tiles = 0
+  for _, plot in ipairs(self.ownedPlots) do
+    tiles = tiles + map:getParcelTileCount(plot)
+  end
+  return tiles
+end
+
+local function countActiveRats(self)
+  local count = 0
+  for _, entity in ipairs(self.world.entities) do
+    if class.is(entity, Rat) then count = count + 1 end
+  end
+  return count
+end
 
 local function dailyUpdateRats(self)
   if #self.ratholes == 0 then return end
 
-  local active = 0
-  for _, entity in ipairs(self.world.entities) do
-    if class.is(entity, Rat) then active = active + 1 end
-  end
-  if active >= max_active_rats then return end
+  local max_rats = math.max(1, math.floor(self:getOwnedTileCount() / tiles_per_rat))
+  if countActiveRats(self) >= max_rats then return end
 
   local litter = self.world.map.th:getLitterFraction(self:getPlayerIndex())
-  if math.random() < litter * rat_spawn_chance then
+  if math.random() < base_rat_spawn_chance + litter * litter_rat_spawn_chance then
     self:spawnRat()
   end
 end
