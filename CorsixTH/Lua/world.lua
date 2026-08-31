@@ -3021,5 +3021,9 @@ end
 --!param y (number) y-coordinate on the screen
 function World:isNearRat(x, y)
   local tile_x, tile_y = self.map:ScreenToWorld(x, y)
-  return #self.entity_map:getRatsAtCoordinate(math.floor(tile_x), math.floor(tile_y)) ~= 0
+  tile_x, tile_y = math.floor(tile_x), math.floor(tile_y)
+  if not self:isOnMap(tile_x, tile_y) then
+    return false
+  end
+  return #self.entity_map:getRatsAtCoordinate(tile_x, tile_y) ~= 0
 end

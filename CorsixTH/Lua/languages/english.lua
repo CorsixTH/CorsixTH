@@ -1135,6 +1135,7 @@ hotkeys_file_err = {
 }
 
 transactions.remove_room = "Build: Remove destroyed room"
+transactions.rats = "Rats"
 
 tooltip.status = {
   over = {

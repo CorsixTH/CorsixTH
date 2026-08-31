@@ -693,46 +693,138 @@ function Hospital:_fixBoiler()
   end
 end
 
---! Daily update of the ratholes.
---!param self (Hospital) hospital being updated.
-local function dailyUpdateRatholes(self)
+--! Attempt a single probe to add a rathole at a random suitable corridor wall
+-- inside the hospital.
+--!return (boolean) Whether a new rathole was added.
+function Hospital:tryAddRathole()
   local map = self.world.map
   local th = map.th
+  local x = math.random(1, map.width)
+  local y = math.random(1, map.height)
+  local flags = th:getCellFlags(x, y)
+  if self:isInHospital(x, y) and flags.roomId == 0 and flags.buildable then
+    local walls = self:getWallsAround(x, y)
+    if #walls > 0 then
+      local wall = walls[math.random(1, #walls)]
+      for _, hole in ipairs(self.ratholes) do
+        if hole.x == x and hole.y == y and hole.wall == wall.wall then
+          return false
+        end
+      end
+      self:addRathole(x, y, wall.wall, wall.parcel)
+      return true
+    end
+  end
+  return false
+end
 
-  local wanted_holes = math.round(th:getLitterFraction(self:getPlayerIndex()) * 200)
-  if #self.ratholes < wanted_holes then -- Not enough holes, find a new spot
-    -- Try to find a wall in a corridor, and add it if possible.
-    -- Each iteration does a few probes at a random position, most tries will
-    -- fail on not being on a free (non-built) tile in a corridor with a wall
-    -- in the right hospital.
-    -- Doing more iterations speeds up finding a suitable location, less
-    -- iterations is reduces needed processor time.
-    -- "6 + 2 * difference" is an arbitrary value that seems to work nicely, 12
-    -- is an arbitrary upper limit on the number of tries.
-    for _ = 1, math.min(12, 6 + 2 * (wanted_holes - #self.ratholes)) do
-      local x = math.random(1, map.width)
-      local y = math.random(1, map.height)
+--! Spawn a rat emerging from a rathole. It runs to another rathole and vanishes.
+--!param hole (table, optional) The {x, y} hole to emerge from; a random existing
+--!  rathole is used when omitted.
+--!return (Rat or nil) The spawned rat, or nil if there is no hole to use.
+function Hospital:spawnRat(hole)
+  if not hole then
+    -- Emerge from a random north-wall hole (only north has a leaving anim);
+    -- fall back to any hole if there are no north ones.
+    local north_holes = {}
+    for _, h in ipairs(self.ratholes) do
+      if h.wall == "north" then north_holes[#north_holes + 1] = h end
+    end
+    local pool = #north_holes > 0 and north_holes or self.ratholes
+    if #pool == 0 then return nil end
+    hole = pool[math.random(1, #pool)]
+  end
+  local rat = self.world:newEntity("Rat", 1928)
+  rat.hospital = self
+  rat:setTile(hole.x, hole.y)
+  rat:setTilePositionSpeed(hole.x, hole.y, 0, 0, 0, 0)
+  rat:init()
+  return rat
+end
+
+--! Find corridor wall tiles inside the hospital that are suitable for ratholes,
+-- nearest to the given point first.
+--!param count (integer) Maximum number of tiles to return.
+--!param near_x (integer) X coordinate to sort candidates by proximity to.
+--!param near_y (integer) Y coordinate to sort candidates by proximity to.
+--!return (list of {x, y, wall, parcel}) Up to `count` suitable tiles.
+function Hospital:findRatholeTiles(count, near_x, near_y)
+  local map = self.world.map
+  local th = map.th
+  local candidates = {}
+  for x = 1, map.width do
+    for y = 1, map.height do
       local flags = th:getCellFlags(x, y)
       if self:isInHospital(x, y) and flags.roomId == 0 and flags.buildable then
-        local walls = self:getWallsAround(x, y)
-        if #walls > 0 then
-          -- Found a wall, check it for not being used.
-          local wall = walls[math.random(1, #walls)]
-          local found = false
-          for _, hole in ipairs(self.ratholes) do
-            if hole.x == x and hole.y == y and hole.wall == wall.wall then
-              found = true
-              break
-            end
-          end
-
-          if not found then
-            self:addRathole(x, y, wall.wall, wall.parcel)
+        local pick
+        for _, wall in ipairs(self:getWallsAround(x, y)) do
+          if wall.wall == "north" then
+            pick = wall
             break
+          elseif wall.wall == "west" and not pick then
+            pick = wall
           end
+        end
+        if pick then
+          candidates[#candidates + 1] =
+              {x = x, y = y, wall = pick.wall, parcel = pick.parcel}
         end
       end
     end
+  end
+  table.sort(candidates, function(a, b)
+    return (a.x - near_x) ^ 2 + (a.y - near_y) ^ 2 <
+           (b.x - near_x) ^ 2 + (b.y - near_y) ^ 2
+  end)
+  local result = {}
+  for i = 1, math.min(count, #candidates) do result[i] = candidates[i] end
+  return result
+end
+
+--! Debug helper: generate two ratholes (A and B) near the given point and spawn
+-- a rat that emerges from A and runs to B.
+--!param near_x (integer) X coordinate near which to place the holes.
+--!param near_y (integer) Y coordinate near which to place the holes.
+function Hospital:makeDebugRat(near_x, near_y)
+  -- Ensure a few holes exist near the view so rats emerge from varied places.
+  if #self.ratholes < 3 then
+    for _, t in ipairs(self:findRatholeTiles(3, near_x, near_y)) do
+      self:addRathole(t.x, t.y, t.wall, t.parcel)
+    end
+  end
+  self:spawnRat()
+end
+
+local function dailyUpdateRatholes(self)
+  local th = self.world.map.th
+
+  local wanted_holes = math.round(th:getLitterFraction(self:getPlayerIndex()) * 200)
+  if #self.ratholes < wanted_holes then -- Not enough holes, find a new spot
+    -- Each iteration does a few probes; "6 + 2 * difference" is an arbitrary
+    -- value that works nicely, capped at 12 tries to bound processor time.
+    for _ = 1, math.min(12, 6 + 2 * (wanted_holes - #self.ratholes)) do
+      if self:tryAddRathole() then break end
+    end
+  end
+end
+
+-- Chance per day of a rat emerging, scaled by how littered the hospital is, up
+-- to a small cap on simultaneously active rats.
+local rat_spawn_chance = 0.5
+local max_active_rats = 4
+
+local function dailyUpdateRats(self)
+  if #self.ratholes == 0 then return end
+
+  local active = 0
+  for _, entity in ipairs(self.world.entities) do
+    if class.is(entity, Rat) then active = active + 1 end
+  end
+  if active >= max_active_rats then return end
+
+  local litter = self.world.map.th:getLitterFraction(self:getPlayerIndex())
+  if math.random() < litter * rat_spawn_chance then
+    self:spawnRat()
   end
 end
 
@@ -780,7 +872,10 @@ function Hospital:onEndDay()
   local heating_costs = (self.heating.radiator_heat * 10 * num_radiators * 7.50) / self.world:date():lastDayOfMonth()
   self.acc_heating = self.acc_heating + heating_costs
 
-  if self:isPlayerHospital() then dailyUpdateRatholes(self) end
+  if self:isPlayerHospital() then
+    dailyUpdateRatholes(self)
+    dailyUpdateRats(self)
+  end
 end
 
 -- Called at the end of each month.

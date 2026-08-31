@@ -397,6 +397,13 @@ function GameUI:makeDebugFax()
   self.bottom_panel:queueMessage(types[math.random(1, #types)], message)
 end
 
+--! Debug: spawn a rat near the centre of the current view.
+function GameUI:makeDebugRat()
+  local scr_w, scr_h = self.app.video:getRenderSize()
+  local x, y = self:ScreenToWorld(scr_w / 2, scr_h / 2)
+  self.hospital:makeDebugRat(math.floor(x), math.floor(y))
+end
+
 function GameUI:ScreenToWorld(x, y)
   local zoom = self.zoom_factor
   return self.app.map:ScreenToWorld(self.screen_offset_x + x / zoom, self.screen_offset_y + y / zoom)
@@ -437,7 +444,7 @@ function GameUI:onCursorWorldPositionChange()
           entity:getRoom() == room and entity ~= room.door and entity
     end
   end
-  if entity == nil then
+  if entity == nil and self.do_world_hit_test and not overwindow then
     is_near_rat = self.app.world:isNearRat(x, y)
   end
   if entity ~= self.cursor_entity or is_near_rat ~= self.cursor_near_rat then
@@ -742,17 +749,9 @@ function GameUI:onMouseUp(code, x, y)
     end
   end
 
-  if self.cursor_entity and class.is(self.cursor_entity, Rat)
-      and button == "left" then
-    self:playSound("shotgun.wav")
-    self:playSound("deadrat2.wav")
-    local rat_tx, rat_ty = self.cursor_entity:getTile()
-    local rat_px, rat_py = self.cursor_entity:getPosition()
-
-    TheApp.world:destroyEntity(self.cursor_entity)
-    local splat = TheApp.world:newObject("litter", rat_tx, rat_ty)
-    splat:setLitterType("dead_rat")
-  elseif self.cursor_entity == nil and self.cursor_near_rat then
+  -- A miss near a rat still makes the shotgun noise; a direct hit is handled by
+  -- Rat:onClick through the normal entity-click dispatch in UI:onMouseUp.
+  if button == "left" and not self.cursor_entity and self.cursor_near_rat then
     self:playSound("shotgun.wav")
   end
 

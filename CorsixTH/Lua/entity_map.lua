@@ -236,7 +236,7 @@ function EntityMap:getAdjacentFreeTiles(x, y)
 end
 
 function EntityMap:afterLoad(old, new)
-  if old < 164 then
+  if old < 265 then
     for x = 1, self.width do
       for y = 1, self.height do
         self.entity_map[x][y]["rats"] = {}
