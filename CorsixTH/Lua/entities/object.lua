@@ -922,7 +922,7 @@ function Object:afterLoad(old, new)
     -- Old saves keep pre-265 passable tiles; new saves use blocked tiles from ultrascanner.lua.
     -- Re-init with current definition would block tiles where humanoids may stand in old saves.
     -- Keep existing self.footprint/map flags for old saves (no re-occupation).
-    do end -- luacheck: ignore 541
+    self.footprint = self.footprint -- preserve old<265
   end
   self:updateDynamicInfo()
   return Entity.afterLoad(self, old, new)
