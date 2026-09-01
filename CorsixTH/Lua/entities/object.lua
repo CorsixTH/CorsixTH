@@ -917,6 +917,13 @@ function Object:afterLoad(old, new)
       self:setTile(self.tile_x, self.tile_y)
     end
   end
+  if old < 265 then
+    -- 3441: preserve ultrascanner footprint for old saves to avoid crash
+    -- Old saves keep pre-265 passable tiles; new saves use blocked tiles from ultrascanner.lua.
+    -- Re-init with current definition would block tiles where humanoids may stand in old saves.
+    -- Keep existing self.footprint/map flags for old saves (no re-occupation).
+    do end -- luacheck: ignore 541
+  end
   self:updateDynamicInfo()
   return Entity.afterLoad(self, old, new)
 end

@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 264 -- SDL 3
+local SAVEGAME_VERSION = 265 -- 3441 ultrascan footprint blocked tiles
 
 class "App"
 

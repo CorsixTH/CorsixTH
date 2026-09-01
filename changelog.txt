@@ -1,4 +1,10 @@
 -------------------------------------------------------------------------------
+CorsixTH 0.71.0 - Unreleased
+-------------------------------------------------------------------------------
+# Bug Fixes
+* Fixed Ultrascan room footprint so patients/doctors no longer walk through the scanner table gap (north {-1,1},{0,1} east {0,-1},{1,-1} now blocked). Old saves preserved via savegame version 265 (no periodic Lua crash) [3441]
+
+-------------------------------------------------------------------------------
 CorsixTH 0.70.1 - Released August 2026
 -------------------------------------------------------------------------------
 # Bug Fixes
