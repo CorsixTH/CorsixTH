@@ -106,9 +106,9 @@ function Litter:getWalkableTiles()
   return tiles
 end
 
-function Litter:getPrecedence(item)
-    local litter_type = litter_anim_to_type[self.animation_idx]
-    return litter_precedence[litter_type]
+function Litter:getPrecedence()
+  local litter_type = litter_anim_to_type[self.animation_idx]
+  return litter_precedence[litter_type]
 end
 
 function Litter:setLitterType(anim_type, mirrorFlag)
