@@ -1231,7 +1231,7 @@ local function validDoorTile(xpos, ypos, player_id, world)
   if tile_flags.thob ~= 0 and tile_flags.thob ~= 62 then return false end
   -- check if its passable that no object footprint blocks it
   if tile_flags.passable then return world:isTileExclusivelyPassable(xpos, ypos, 1) end
-  return true
+  return false
 end
 
 --! Calculate position offsets and door blueprint wall values
