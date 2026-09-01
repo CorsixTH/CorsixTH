@@ -2886,7 +2886,7 @@ function World:afterLoad(old, new)
     self.system_pause = nil
   end
 
-  if old < 264 then
+  if old < 265 then
     -- Avoid Stacking of Litter on the ground. Attached to a version to avoid re-work for games saved after
     -- however this is a non-breaking change for savegames
 
