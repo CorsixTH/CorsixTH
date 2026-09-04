@@ -90,6 +90,7 @@ var annotated_dup =
     [ "path_node", "structpath__node.html", "structpath__node" ],
     [ "pathfinder", "classpathfinder.html", "classpathfinder" ],
     [ "raw_bitmap", "classraw__bitmap.html", "classraw__bitmap" ],
+    [ "render_size", "structrender__size.html", "structrender__size" ],
     [ "render_target", "classrender__target.html", "classrender__target" ],
     [ "render_target_creation_params", "structrender__target__creation__params.html", "structrender__target__creation__params" ],
     [ "sound_archive", "classsound__archive.html", "classsound__archive" ],
@@ -103,6 +104,7 @@ var annotated_dup =
     [ "th_lua_midi_player", "classth__lua__midi__player.html", null ],
     [ "th_sprite_properties", "structth__sprite__properties.html", "structth__sprite__properties" ],
     [ "th_string_list", "classth__string__list.html", "classth__string__list" ],
+    [ "window_size", "structwindow__size.html", "structwindow__size" ],
     [ "wx_storing", "classwx__storing.html", "classwx__storing" ],
     [ "xy_pair", "structxy__pair.html", "structxy__pair" ]
 ];

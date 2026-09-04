@@ -97,6 +97,7 @@ var hierarchy =
     [ "path_node", "structpath__node.html", null ],
     [ "pathfinder", "classpathfinder.html", null ],
     [ "raw_bitmap", "classraw__bitmap.html", null ],
+    [ "render_size", "structrender__size.html", null ],
     [ "render_target", "classrender__target.html", null ],
     [ "render_target_creation_params", "structrender__target__creation__params.html", null ],
     [ "render_target::scoped_buffer", "classrender__target_1_1scoped__buffer.html", [
@@ -117,5 +118,6 @@ var hierarchy =
     [ "th_lua_midi_player", "classth__lua__midi__player.html", null ],
     [ "th_sprite_properties", "structth__sprite__properties.html", null ],
     [ "th_string_list", "classth__string__list.html", null ],
+    [ "window_size", "structwindow__size.html", null ],
     [ "xy_pair", "structxy__pair.html", null ]
 ];

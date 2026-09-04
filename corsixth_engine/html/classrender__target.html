@@ -109,6 +109,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4c451dfd6606d6694af5d555a6b4ae59" id="r_a4c451dfd6606d6694af5d555a6b4ae59"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c451dfd6606d6694af5d555a6b4ae59">~render_target</a> ()</td></tr>
 <tr class="memitem:a40efb9d8ea74051377fe4c6198cc4912" id="r_a40efb9d8ea74051377fe4c6198cc4912"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40efb9d8ea74051377fe4c6198cc4912">update</a> (const <a class="el" href="structrender__target__creation__params.html">render_target_creation_params</a> &amp;params)</td></tr>
 <tr class="memdesc:a40efb9d8ea74051377fe4c6198cc4912"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the parameters for the render target.  <br /></td></tr>
+<tr class="memitem:a5ae7f3d2ba1ae151e9db8c550e149dcb" id="r_a5ae7f3d2ba1ae151e9db8c550e149dcb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ae7f3d2ba1ae151e9db8c550e149dcb">on_pixel_size_change</a> ()</td></tr>
+<tr class="memdesc:a5ae7f3d2ba1ae151e9db8c550e149dcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the render target when the size changes.  <br /></td></tr>
 <tr class="memitem:a1e482e67b31366344b3826306930e182" id="r_a1e482e67b31366344b3826306930e182"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e482e67b31366344b3826306930e182">get_last_error</a> ()</td></tr>
 <tr class="memdesc:a1e482e67b31366344b3826306930e182"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the reason for the last operation failing.  <br /></td></tr>
 <tr class="memitem:a6111def8d036dfcec5066342142a69bc" id="r_a6111def8d036dfcec5066342142a69bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6111def8d036dfcec5066342142a69bc">start_frame</a> ()</td></tr>
@@ -123,20 +125,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab348bb8f923ca7520584dc5fd983e457"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a blue filter on the current surface.  <br /></td></tr>
 <tr class="memitem:ac9cdb9ed3991687e5574fb78241a3a19" id="r_ac9cdb9ed3991687e5574fb78241a3a19"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9cdb9ed3991687e5574fb78241a3a19">fill_rect</a> (uint32_t iColour, float iX, float iY, float iW, float iH)</td></tr>
 <tr class="memdesc:ac9cdb9ed3991687e5574fb78241a3a19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a rectangle of the render target with a solid colour.  <br /></td></tr>
-<tr class="memitem:a5fed5adddabb4bb8c8520e2bcf9b2b11" id="r_a5fed5adddabb4bb8c8520e2bcf9b2b11"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5fed5adddabb4bb8c8520e2bcf9b2b11">set_minimum_size</a> (int width, int height)</td></tr>
-<tr class="memdesc:a5fed5adddabb4bb8c8520e2bcf9b2b11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a minimum size for the render target.  <br /></td></tr>
 <tr class="memitem:a8f1f72e862826960014e72db8c38250b" id="r_a8f1f72e862826960014e72db8c38250b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f1f72e862826960014e72db8c38250b">push_clip_rect</a> (const <a class="el" href="structclip__rect.html">clip_rect</a> *pRect)</td></tr>
 <tr class="memdesc:a8f1f72e862826960014e72db8c38250b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push a new clip rectangle.  <br /></td></tr>
 <tr class="memitem:a8dfc514388265cf538da30d105581075" id="r_a8dfc514388265cf538da30d105581075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8dfc514388265cf538da30d105581075">pop_clip_rect</a> ()</td></tr>
 <tr class="memdesc:a8dfc514388265cf538da30d105581075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore the previous clip rectangle.  <br /></td></tr>
-<tr class="memitem:a7a963353eecb8c5f8648ddc5ec3a0359" id="r_a7a963353eecb8c5f8648ddc5ec3a0359"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a963353eecb8c5f8648ddc5ec3a0359">get_width</a> () const</td></tr>
-<tr class="memdesc:a7a963353eecb8c5f8648ddc5ec3a0359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the width of the render viewport (in pixels).  <br /></td></tr>
-<tr class="memitem:a5819663984f6e46c1777bfd251b46d76" id="r_a5819663984f6e46c1777bfd251b46d76"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5819663984f6e46c1777bfd251b46d76">get_height</a> () const</td></tr>
-<tr class="memdesc:a5819663984f6e46c1777bfd251b46d76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the height of the render viewport (in pixels).  <br /></td></tr>
+<tr class="memitem:a4c2f14e315c131eae08fe0f85a2eca49" id="r_a4c2f14e315c131eae08fe0f85a2eca49"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structrender__size.html">render_size</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c2f14e315c131eae08fe0f85a2eca49">get_size</a> () const</td></tr>
+<tr class="memdesc:a4c2f14e315c131eae08fe0f85a2eca49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the render viewport (in pixels).  <br /></td></tr>
 <tr class="memitem:a2c99ebb83209f09b8197fbf981e70ad4" id="r_a2c99ebb83209f09b8197fbf981e70ad4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c99ebb83209f09b8197fbf981e70ad4">get_scaled_width</a> () const</td></tr>
 <tr class="memdesc:a2c99ebb83209f09b8197fbf981e70ad4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the width of the render target adjusted by the current scale factor.  <br /></td></tr>
 <tr class="memitem:aa23f8ab1dbf5703f23a120436464c645" id="r_aa23f8ab1dbf5703f23a120436464c645"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa23f8ab1dbf5703f23a120436464c645">get_scaled_height</a> () const</td></tr>
 <tr class="memdesc:aa23f8ab1dbf5703f23a120436464c645"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the height of the render target adjusted by the current scale factor.  <br /></td></tr>
+<tr class="memitem:a923753ac369362fa5ddae0a59e09d3c7" id="r_a923753ac369362fa5ddae0a59e09d3c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structwindow__size.html">window_size</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a923753ac369362fa5ddae0a59e09d3c7">get_window_size</a> () const</td></tr>
+<tr class="memdesc:a923753ac369362fa5ddae0a59e09d3c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current window size (in window coordinates).  <br /></td></tr>
+<tr class="memitem:abb219be60b5edf8e7eba61ecd60cf957" id="r_abb219be60b5edf8e7eba61ecd60cf957"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structwindow__size.html">window_size</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb219be60b5edf8e7eba61ecd60cf957">get_max_window_size</a> () const</td></tr>
+<tr class="memdesc:abb219be60b5edf8e7eba61ecd60cf957"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum window size that fits on the usable display area.  <br /></td></tr>
+<tr class="memitem:a41c70945d95431027263bbb5e1997c39" id="r_a41c70945d95431027263bbb5e1997c39"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41c70945d95431027263bbb5e1997c39">get_display_scale</a> () const</td></tr>
 <tr class="memitem:aaec844843dbd4ca7fc31730ff0e6c466" id="r_aaec844843dbd4ca7fc31730ff0e6c466"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaec844843dbd4ca7fc31730ff0e6c466">start_nonoverlapping_draws</a> ()</td></tr>
 <tr class="memdesc:aaec844843dbd4ca7fc31730ff0e6c466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable optimisations for non-overlapping draws.  <br /></td></tr>
 <tr class="memitem:ad95575ec31c54386dc63332fb3b716a2" id="r_ad95575ec31c54386dc63332fb3b716a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad95575ec31c54386dc63332fb3b716a2">finish_nonoverlapping_draws</a> ()</td></tr>
@@ -522,22 +525,21 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a5819663984f6e46c1777bfd251b46d76" name="a5819663984f6e46c1777bfd251b46d76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5819663984f6e46c1777bfd251b46d76">&#9670;&#160;</a></span>get_height()</h2>
+<a id="a41c70945d95431027263bbb5e1997c39" name="a41c70945d95431027263bbb5e1997c39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41c70945d95431027263bbb5e1997c39">&#9670;&#160;</a></span>get_display_scale()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int render_target::get_height </td>
+          <td class="memname">float render_target::get_display_scale </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Get the height of the render viewport (in pixels). </p>
+<p>Get the display scale reported by the windowing system for the current window </p>
 
 </div>
 </div>
@@ -557,6 +559,25 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the reason for the last operation failing. </p>
+
+</div>
+</div>
+<a id="abb219be60b5edf8e7eba61ecd60cf957" name="abb219be60b5edf8e7eba61ecd60cf957"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb219be60b5edf8e7eba61ecd60cf957">&#9670;&#160;</a></span>get_max_window_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structwindow__size.html">window_size</a> render_target::get_max_window_size </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the maximum window size that fits on the usable display area. </p>
 
 </div>
 </div>
@@ -642,14 +663,14 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a7a963353eecb8c5f8648ddc5ec3a0359" name="a7a963353eecb8c5f8648ddc5ec3a0359"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a963353eecb8c5f8648ddc5ec3a0359">&#9670;&#160;</a></span>get_width()</h2>
+<a id="a4c2f14e315c131eae08fe0f85a2eca49" name="a4c2f14e315c131eae08fe0f85a2eca49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c2f14e315c131eae08fe0f85a2eca49">&#9670;&#160;</a></span>get_size()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int render_target::get_width </td>
+          <td class="memname"><a class="el" href="structrender__size.html">render_size</a> render_target::get_size </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -657,7 +678,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the width of the render viewport (in pixels). </p>
+<p>Get the size of the render viewport (in pixels). </p>
 
 </div>
 </div>
@@ -683,6 +704,25 @@ Friends</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a923753ac369362fa5ddae0a59e09d3c7" name="a923753ac369362fa5ddae0a59e09d3c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a923753ac369362fa5ddae0a59e09d3c7">&#9670;&#160;</a></span>get_window_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structwindow__size.html">window_size</a> render_target::get_window_size </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the current window size (in window coordinates). </p>
 
 </div>
 </div>
@@ -719,6 +759,25 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Encode an RGB triplet for fillRect(). </p>
+
+</div>
+</div>
+<a id="a5ae7f3d2ba1ae151e9db8c550e149dcb" name="a5ae7f3d2ba1ae151e9db8c550e149dcb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ae7f3d2ba1ae151e9db8c550e149dcb">&#9670;&#160;</a></span>on_pixel_size_change()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void render_target::on_pixel_size_change </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update the render target when the size changes. </p>
 
 </div>
 </div>
@@ -862,29 +921,6 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Update the cursor position (if the cursor is being simulated). </p>
-
-</div>
-</div>
-<a id="a5fed5adddabb4bb8c8520e2bcf9b2b11" name="a5fed5adddabb4bb8c8520e2bcf9b2b11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5fed5adddabb4bb8c8520e2bcf9b2b11">&#9670;&#160;</a></span>set_minimum_size()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int render_target::set_minimum_size </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>width</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>height</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sets a minimum size for the render target. </p>
 
 </div>
 </div>

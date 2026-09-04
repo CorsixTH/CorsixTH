@@ -1,6 +1,8 @@
 var th__gfx__sdl_8h =
 [
     [ "clip_rect", "structclip__rect.html", "structclip__rect" ],
+    [ "window_size", "structwindow__size.html", "structwindow__size" ],
+    [ "render_size", "structrender__size.html", "structrender__size" ],
     [ "render_target_creation_params", "structrender__target__creation__params.html", "structrender__target__creation__params" ],
     [ "palette", "classpalette.html", "classpalette" ],
     [ "full_colour_renderer", "classfull__colour__renderer.html", "classfull__colour__renderer" ],

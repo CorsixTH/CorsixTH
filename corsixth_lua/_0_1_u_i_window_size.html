@@ -4,7 +4,7 @@
  <head>
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  <meta http-equiv="Content-Language" content="en-gb" />
- <title>UIShiftScrollSpeed Class - CorsixTH Lua Documentation</title>
+ <title>UIWindowSize Class - CorsixTH Lua Documentation</title>
  <link rel="stylesheet" href="main.css" type="text/css" media="all" />
  </head>
  <body>
@@ -21,11 +21,11 @@
  <li class="last"><a href="class_index.html">Index</a></li>
  </ul>
  <div class="content">
- <h2 class="class">UIShiftScrollSpeed Class</h2>
-<h3 class="class">A window for setting the scroll speed of the camera while pressing the SHIFT key..</h3> 
+ <h2 class="class">UIWindowSize Class</h2>
+<h3 class="class">A custom window size selection window</h3> 
 <div class="class_info">
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L819">line 819 of Lua/dialogs/resizables/options.lua</a>.
- <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_shift_scroll_speed.html">UIShiftScrollSpeed</a>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L667">line 667 of Lua/dialogs/resizables/options.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_window_size.html">UIWindowSize</a>
  » <a href="_0_1_u_i_resizable.html">UIResizable</a>
  » <a href="_0_1_window.html">Window</a>
 </div>
@@ -69,10 +69,10 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="self">
- <a href="_0_1_u_i_shift_scroll_speed.html#_0_1_u_i_shift_scroll_speed_1cancel">cancel</a>()
+ <a href="_0_1_u_i_window_size.html#_0_1_u_i_window_size_1cancel">cancel</a>()
  </li>
  <li class="self">
- <a href="_0_1_u_i_shift_scroll_speed.html#_0_1_u_i_shift_scroll_speed_1close">close</a>(<span class="p">ok</span>)
+ <a href="_0_1_u_i_window_size.html#_0_1_u_i_window_size_1close">close</a>(<span class="p">ok</span>)
  (overrides <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>)
  </li>
  <li class="inherited">
@@ -148,7 +148,7 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="self">
- <a href="_0_1_u_i_shift_scroll_speed.html#_0_1_u_i_shift_scroll_speed_1ok">ok</a>()
+ <a href="_0_1_u_i_window_size.html#_0_1_u_i_window_size_1ok">ok</a>()
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
@@ -171,7 +171,7 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="self">
- <a href="_0_1_u_i_shift_scroll_speed.html#_0_1_u_i_shift_scroll_speed_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ <a href="_0_1_u_i_window_size.html#_0_1_u_i_window_size_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
  (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>)
  </li>
  <li class="inherited">
@@ -299,6 +299,8 @@
  <li><span class="p">height</span>
  (*)
  </li>
+ <li><span class="p">height_textbox</span>
+ </li>
  <li><span class="p">hotkeyboxes</span>
  (*)
  </li>
@@ -310,6 +312,8 @@
  </li>
  <li><span class="p">min_width</span>
  (*)
+ </li>
+ <li><span class="p">modal_class</span>
  </li>
  <li><span class="p">on_top</span>
  </li>
@@ -327,10 +331,6 @@
  <li><span class="p">scrollbars</span>
  (*)
  </li>
- <li><span class="p">shift_scrollspeed_temp</span>
- </li>
- <li><span class="p">shift_scrollspeed_textbox</span>
- </li>
  <li><span class="p">textboxes</span>
  (*)
  </li>
@@ -344,6 +344,8 @@
  </li>
  <li><span class="p">width</span>
  (*)
+ </li>
+ <li><span class="p">width_textbox</span>
  </li>
  <li><span class="p">windows</span>
  (*)
@@ -365,7 +367,7 @@
 </div>
 <div class="methods">
  <div class="method">
- <h5><a name="_0_1_u_i_shift_scroll_speed_1_u_i_shift_scroll_speed">function UIShiftScrollSpeed:UIShiftScrollSpeed(<span class="p">ui</span>, <span class="p">callback</span>)</a></h5>
+ <h5><a name="_0_1_u_i_window_size_1_u_i_window_size">function UIWindowSize:UIWindowSize(<span class="p">ui</span>, <span class="p">callback</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
@@ -381,39 +383,40 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L825">line 825 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L673">line 673 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_shift_scroll_speed_1cancel">function UIShiftScrollSpeed:cancel()</a></h5>
+ <h5><a name="_0_1_u_i_window_size_1cancel">function UIWindowSize:cancel()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L864">line 864 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L709">line 709 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_shift_scroll_speed_1close">function UIShiftScrollSpeed:close(<span class="p">ok</span>)</a></h5>
+ <h5><a name="_0_1_u_i_window_size_1close">function UIWindowSize:close(<span class="p">ok</span>)</a></h5>
  <p>
+ Closes the window size dialog<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">ok</td>
  <td class="t">boolean&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
- <td class="d"> whether the shift scroll speed was confirmed (true) or aborted (false)</td>
+ <td class="d"> whether the window size entry was confirmed (true) or aborted (false)</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L875">line 875 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L740">line 740 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_shift_scroll_speed_1ok">function UIShiftScrollSpeed:ok()</a></h5>
+ <h5><a name="_0_1_u_i_window_size_1ok">function UIWindowSize:ok()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L852">line 852 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L713">line 713 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_shift_scroll_speed_1on_mouse_up">function UIShiftScrollSpeed:onMouseUp(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <h5><a name="_0_1_u_i_window_size_1on_mouse_up">function UIWindowSize:onMouseUp(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
@@ -435,7 +438,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L868">line 868 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L733">line 733 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
 </div>

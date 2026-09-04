@@ -36,6 +36,9 @@
  <a href="_0_1_u_i_options.html#_0_1_u_i_options_1__get_option_y_pos">_getOptionYPos</a>()
  </li>
  <li class="self">
+ <a href="_0_1_u_i_options.html#_0_1_u_i_options_1__process_window_resize_event">_processWindowResizeEvent</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_u_i_options.html#_0_1_u_i_options_1__start_new_column">_startNewColumn</a>()
  </li>
  <li class="inherited">
@@ -93,6 +96,9 @@
  <a href="_0_1_u_i_options.html#_0_1_u_i_options_1button_mouse_capture">buttonMouseCapture</a>()
  </li>
  <li class="self">
+ <a href="_0_1_u_i_options.html#_0_1_u_i_options_1button_original_aspect_ratio">buttonOriginalAspectRatio</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_u_i_options.html#_0_1_u_i_options_1button_scroll_speed">buttonScrollSpeed</a>()
  </li>
  <li class="self">
@@ -128,10 +134,10 @@
  <a href="_0_1_u_i_options.html#_0_1_u_i_options_1dropdown_language">dropdownLanguage</a>(<span class="p">activate</span>)
  </li>
  <li class="self">
- <a href="_0_1_u_i_options.html#_0_1_u_i_options_1dropdown_resolution">dropdownResolution</a>(<span class="p">activate</span>)
+ <a href="_0_1_u_i_options.html#_0_1_u_i_options_1dropdown_u_i_scale">dropdownUIScale</a>(<span class="p">activate</span>)
  </li>
  <li class="self">
- <a href="_0_1_u_i_options.html#_0_1_u_i_options_1dropdown_u_i_scale">dropdownUIScale</a>(<span class="p">activate</span>)
+ <a href="_0_1_u_i_options.html#_0_1_u_i_options_1dropdown_window_size">dropdownWindowSize</a>(<span class="p">activate</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1get_real_x_y">getRealXY</a>()
@@ -205,9 +211,12 @@
  <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_resolution">onChangeResolution</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
  <li class="self">
- <a href="_0_1_u_i_options.html#_0_1_u_i_options_1on_change_resolution">onChangeResolution</a>()
- (overrides <a href="_0_1_window.html#_0_1_window_1on_change_resolution">Window:onChangeResolution</a>)
+ <a href="_0_1_u_i_options.html#_0_1_u_i_options_1on_change_window_size">onChangeWindowSize</a>()
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
@@ -241,9 +250,6 @@
  <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1override_min_size">overrideMinSize</a>(<span class="p">min_width</span>, <span class="p">min_height</span>)
  (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
- <li class="self">
- <a href="_0_1_u_i_options.html#_0_1_u_i_options_1process_window_resize_event">processWindowResizeEvent</a>()
- </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
@@ -266,10 +272,10 @@
  <a href="_0_1_u_i_options.html#_0_1_u_i_options_1select_language">selectLanguage</a>(<span class="p">number</span>)
  </li>
  <li class="self">
- <a href="_0_1_u_i_options.html#_0_1_u_i_options_1select_resolution">selectResolution</a>(<span class="p">number</span>)
+ <a href="_0_1_u_i_options.html#_0_1_u_i_options_1select_u_i_scale">selectUIScale</a>(<span class="p">number</span>)
  </li>
  <li class="self">
- <a href="_0_1_u_i_options.html#_0_1_u_i_options_1select_u_i_scale">selectUIScale</a>(<span class="p">number</span>)
+ <a href="_0_1_u_i_options.html#_0_1_u_i_options_1select_window_size">selectWindowSize</a>(<span class="p">number</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1send_to_bottom">sendToBottom</a>(<span class="p">window</span>)
@@ -327,6 +333,10 @@
  <li><span class="p">apply_ui_scale</span>
  (*)
  </li>
+ <li><span class="p">aspect_button</span>
+ </li>
+ <li><span class="p">aspect_panel</span>
+ </li>
  <li><span class="p">autosave_dropdown</span>
  </li>
  <li><span class="p">autosave_frequency_button</span>
@@ -337,9 +347,9 @@
  </li>
  <li><span class="p">available_languages</span>
  </li>
- <li><span class="p">available_resolutions</span>
- </li>
  <li><span class="p">available_ui_scales</span>
+ </li>
+ <li><span class="p">available_window_sizes</span>
  </li>
  <li><span class="p">background_panel</span>
  (*)
@@ -443,12 +453,6 @@
  </li>
  <li><span class="p">resizable</span>
  </li>
- <li><span class="p">resolution_button</span>
- </li>
- <li><span class="p">resolution_dropdown</span>
- </li>
- <li><span class="p">resolution_panel</span>
- </li>
  <li><span class="p">scale_ui_button</span>
  </li>
  <li><span class="p">scale_ui_dropdown</span>
@@ -483,6 +487,12 @@
  </li>
  <li><span class="p">width</span>
  (*)
+ </li>
+ <li><span class="p">window_size_button</span>
+ </li>
+ <li><span class="p">window_size_dropdown</span>
+ </li>
+ <li><span class="p">window_size_panel</span>
  </li>
  <li><span class="p">windows</span>
  (*)
@@ -524,7 +534,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L159">line 159 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L168">line 168 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -538,6 +548,14 @@ and increments along the current position for the next element
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_u_i_options_1__process_window_resize_event">function UIOptions:_processWindowResizeEvent()</a></h5>
+ <p>
+ Handle required button changes from a window resize event from the user (via UI
+or adjusting window boundaries)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L652">line 652 of Lua/dialogs/resizables/options.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_u_i_options_1__start_new_column">function UIOptions:_startNewColumn()</a></h5>
  <p>
  Resets the index to start at the top of a new column, below the title,
@@ -548,81 +566,87 @@ for the Y position calculation.<br/><br/>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_back">function UIOptions:buttonBack()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L603">line 603 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L634">line 634 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_customise">function UIOptions:buttonCustomise()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L561">line 561 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L592">line 592 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_folder">function UIOptions:buttonFolder()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L566">line 566 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L597">line 597 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_fullscreen">function UIOptions:buttonFullscreen()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L545">line 545 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L565">line 565 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_hotkey">function UIOptions:buttonHotkey()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L571">line 571 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L602">line 602 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_mouse_capture">function UIOptions:buttonMouseCapture()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L554">line 554 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L585">line 585 of Lua/dialogs/resizables/options.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_options_1button_original_aspect_ratio">function UIOptions:buttonOriginalAspectRatio()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L575">line 575 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_scroll_speed">function UIOptions:buttonScrollSpeed()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L581">line 581 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L612">line 612 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_shift_scroll_speed">function UIOptions:buttonShiftScrollSpeed()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L594">line 594 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L625">line 625 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_sound">function UIOptions:buttonSound()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L576">line 576 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L607">line 607 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_updates">function UIOptions:buttonUpdates()</a></h5>
  <p>
  Function handles button toggle of checking for updates<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L537">line 537 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L557">line 557 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1button_zoom_speed">function UIOptions:buttonZoomSpeed()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L607">line 607 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L638">line 638 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1check_for_available_languages">function UIOptions:checkForAvailableLanguages()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L362">line 362 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L382">line 382 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1close">function UIOptions:close()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L629">line 629 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L660">line 660 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -637,7 +661,7 @@ for the Y position calculation.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L507">line 507 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L527">line 527 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -652,7 +676,7 @@ for the Y position calculation.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L463">line 463 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L484">line 484 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -667,22 +691,7 @@ for the Y position calculation.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L384">line 384 of Lua/dialogs/resizables/options.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_options_1dropdown_resolution">function UIOptions:dropdownResolution(<span class="p">activate</span>)</a></h5>
- <p>
- <strong>Parameters:</strong>
- <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
- <tr>
- <td class="n">activate</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
- </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L409">line 409 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L404">line 404 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -697,22 +706,28 @@ for the Y position calculation.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L445">line 445 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L466">line 466 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_options_1on_change_resolution">function UIOptions:onChangeResolution()</a></h5>
+ <h5><a name="_0_1_u_i_options_1dropdown_window_size">function UIOptions:dropdownWindowSize(<span class="p">activate</span>)</a></h5>
  <p>
- <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_change_resolution">Window:onChangeResolution</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L616">line 616 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">activate</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L429">line 429 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_options_1process_window_resize_event">function UIOptions:processWindowResizeEvent()</a></h5>
+ <h5><a name="_0_1_u_i_options_1on_change_window_size">function UIOptions:onChangeWindowSize()</a></h5>
  <p>
- Handle required button changes from a window resize event from the user (via UI
-or adjusting window boundaries)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L621">line 621 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L647">line 647 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -727,7 +742,7 @@ or adjusting window boundaries)<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L524">line 524 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L544">line 544 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -742,7 +757,7 @@ or adjusting window boundaries)<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L500">line 500 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L520">line 520 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -757,22 +772,7 @@ or adjusting window boundaries)<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L401">line 401 of Lua/dialogs/resizables/options.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_options_1select_resolution">function UIOptions:selectResolution(<span class="p">number</span>)</a></h5>
- <p>
- <strong>Parameters:</strong>
- <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
- <tr>
- <td class="n">number</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
- </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L427">line 427 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L421">line 421 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -787,21 +787,36 @@ or adjusting window boundaries)<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L490">line 490 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L511">line 511 of Lua/dialogs/resizables/options.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_options_1select_window_size">function UIOptions:selectWindowSize(<span class="p">number</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">number</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L447">line 447 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1toggle_update_check">function UIOptions:toggleUpdateCheck()</a></h5>
  <p>
  Changes check for update setting to on/of<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L531">line 531 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L551">line 551 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_options_1update_u_i_scale_availability_state">function UIOptions:updateUIScaleAvailabilityState()</a></h5>
  <p>
  Check if UI scale scale button should be enabled, and update the tooltip.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L481">line 481 of Lua/dialogs/resizables/options.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/options.lua#L502">line 502 of Lua/dialogs/resizables/options.lua</a>.
  </p>
  </div>
 </div>

@@ -216,10 +216,19 @@
  <a href="_0_1_app.html#_0_1_app_1on_window_active">onWindowActive</a>(<span class="p">...</span>)
  </li>
  <li class="self">
+ <a href="_0_1_app.html#_0_1_app_1on_window_display_scale_changed">onWindowDisplayScaleChanged</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_app.html#_0_1_app_1on_window_maximized">onWindowMaximized</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_app.html#_0_1_app_1on_window_pixel_size_changed">onWindowPixelSizeChanged</a>(<span class="p">...</span>)
  </li>
  <li class="self">
  <a href="_0_1_app.html#_0_1_app_1on_window_resized">onWindowResized</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_app.html#_0_1_app_1on_window_restored">onWindowRestored</a>(<span class="p">...</span>)
  </li>
  <li class="self">
  <a href="_0_1_app.html#_0_1_app_1prepare_video_update">prepareVideoUpdate</a>()
@@ -311,8 +320,6 @@
  </li>
  <li><span class="p">fs</span>
  </li>
- <li><span class="p">fullscreen</span>
- </li>
  <li><span class="p">gamelog_path</span>
  </li>
  <li><span class="p">gfx</span>
@@ -396,7 +403,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1903">line 1903 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1921">line 1921 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -445,21 +452,21 @@ or nil for TH campaign or mapeditor</td>
 is a part of a campaign. if not part of a campaign then campaign_info is nil.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L908">line 908 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L906">line 906 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1abandon">function App:abandon()</a></h5>
  <p>
  Exits the game completely without saving the config i.e. Alt+F4 for Quit Application<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1985">line 1985 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2003">line 2003 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1after_load">function App:afterLoad()</a></h5>
  <p>
  This function is automatically called after loading a game and serves for compatibility.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1995">line 1995 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2013">line 2013 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -480,7 +487,7 @@ is a part of a campaign. if not part of a campaign then campaign_info is nil.</t
  <td class="d"> What graphics set is used</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1878">line 1878 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1896">line 1896 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -488,13 +495,13 @@ is a part of a campaign. if not part of a campaign then campaign_info is nil.</t
  <p>
  that any current version with a patch in its name (Beta, RC, etc) will be older<br/><br/>
  than the update table's version if their major, minor, and revision components match.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2061">line 2061 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2079">line 2079 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1check_install_folder">function App:checkInstallFolder()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1440">line 1440 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1458">line 1458 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -517,7 +524,7 @@ This will give translators an idea which strings are missing in their translatio
  <td class="d">The language to check against.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1058">line 1058 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1056">line 1056 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -548,7 +555,7 @@ This will give translators an idea which strings are missing in their translatio
 - method(version) reports the difference between two savegame versions</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1799">line 1799 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1817">line 1817 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -568,21 +575,21 @@ This will give translators an idea which strings are missing in their translatio
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1275">line 1275 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1277">line 1277 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1draw_frame">function App:drawFrame()</a></h5>
  <p>
  Used to loop through fps_history when [over]writing<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1326">line 1326 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1328">line 1328 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1dump_strings">function App:dumpStrings()</a></h5>
  <p>
  This is a useful debug and development aid<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L974">line 974 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L972">line 972 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -602,14 +609,14 @@ This will give translators an idea which strings are missing in their translatio
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1228">line 1228 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1230">line 1230 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1exit">function App:exit()</a></h5>
  <p>
  Exits the game completely (no confirmation window)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1977">line 1977 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1995">line 1995 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -630,77 +637,77 @@ This will give translators an idea which strings are missing in their translatio
  <td class="d"> Filename to search for.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L875">line 875 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L873">line 873 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1find_sound_font">function App:findSoundFont()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1579">line 1579 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1597">line 1597 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1finish_video_update">function App:finishVideoUpdate()</a></h5>
  <p>
  Update / start any resources relying on a video object<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2154">line 2154 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2172">line 2172 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1fix_config">function App:fixConfig()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1126">line 1126 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1124">line 1124 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1fix_hotkeys">function App:fixHotkeys()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1210">line 1210 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1212">line 1212 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1gamelog_header">function App:gamelogHeader()</a></h5>
  <p>
  Generate information about user's system and the program<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2170">line 2170 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2188">line 2188 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1get_bitmap_dir">function App:getBitmapDir()</a></h5>
  <p>
  Get the directory containing the bitmap files.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1600">line 1600 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1618">line 1618 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1get_config_path">function App:getConfigPath()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L458">line 458 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L456">line 456 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1get_current_version">function App:getCurrentVersion()</a></h5>
  <p>
  Retrieve the current savegame version as defined in the application.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1757">line 1757 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1775">line 1775 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1get_default_savegame_dir">function App:getDefaultSavegameDir()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L467">line 467 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L465">line 465 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1get_default_screenshots_dir">function App:getDefaultScreenshotsDir()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L462">line 462 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L460">line 460 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1get_f_p_s">function App:getFPS()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1347">line 1347 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1349">line 1349 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -721,7 +728,7 @@ This will give translators an idea which strings are missing in their translatio
  <td class="d"> Whether the path needs to end with a local path separator</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L86">line 86 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L89">line 89 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -737,7 +744,7 @@ This will give translators an idea which strings are missing in their translatio
  <td class="d"> What to lookup, uses application version if blank</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1762">line 1762 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1780">line 1780 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -754,7 +761,7 @@ This will give translators an idea which strings are missing in their translatio
  <td class="d"> The version to look up</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1787">line 1787 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1805">line 1805 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -762,33 +769,33 @@ This will give translators an idea which strings are missing in their translatio
  <p>
  Function for handling idle time in the main menu, which leads to playing the<br/><br/>
  demo gameplay trailer if left long enough<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1298">line 1298 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1300">line 1300 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1init">function App:init()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L96">line 96 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L99">line 99 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1init_gamelog_file">function App:initGamelogFile()</a></h5>
  <p>
  Create the gamelog, using the launch time in the filename, and write the system information.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L434">line 434 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L432">line 432 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1init_language">function App:initLanguage()</a></h5>
  <p>
  Initialises the application's language based on the player's choice.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L625">line 625 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L623">line 623 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1init_music_dir">function App:initMusicDir()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L543">line 543 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L541">line 541 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -796,13 +803,13 @@ This will give translators an idea which strings are missing in their translatio
  <p>
  Tries to initialize the savegame directory, returns true on success and<br/><br/>
  false on failure.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L503">line 503 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L501">line 501 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1init_screenshots_dir">function App:initScreenshotsDir()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L524">line 524 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L522">line 522 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -810,7 +817,7 @@ This will give translators an idea which strings are missing in their translatio
  <p>
  Tries to initialize the user level and campaign directories
 TODO: Integrate other directory initialisations into this function<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L472">line 472 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L470">line 470 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -825,19 +832,19 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1425">line 1425 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1443">line 1443 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1is_update_check_available">function App:isUpdateCheckAvailable()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2166">line 2166 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2184">line 2184 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1is_update_check_disabled_by_config">function App:isUpdateCheckDisabledByConfig()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2162">line 2162 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2180">line 2180 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -852,7 +859,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1860">line 1860 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1878">line 1878 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -869,7 +876,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d"> Full path of a CorsixTH Campaign definition Lua file.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L761">line 761 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L759">line 759 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -921,7 +928,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L890">line 890 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L888">line 888 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -946,7 +953,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1672">line 1672 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1690">line 1690 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -962,14 +969,14 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d"> Something to display to the user</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L715">line 715 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L713">line 713 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1map_edit">function App:mapEdit()</a></h5>
  <p>
  Begin the map editor<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1972">line 1972 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1990">line 1990 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -984,7 +991,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1361">line 1361 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1363">line 1363 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -999,7 +1006,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1353">line 1353 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1355">line 1355 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1014,7 +1021,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1357">line 1357 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1359">line 1359 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1029,7 +1036,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1373">line 1373 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1375">line 1375 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1044,7 +1051,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1377">line 1377 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1379">line 1379 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1059,7 +1066,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1369">line 1369 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1371">line 1371 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1074,7 +1081,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1381">line 1381 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1383">line 1383 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1089,7 +1096,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1405">line 1405 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1423">line 1423 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1104,7 +1111,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1401">line 1401 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1419">line 1419 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1119,7 +1126,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1413">line 1413 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1431">line 1431 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1134,7 +1141,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1421">line 1421 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1439">line 1439 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1149,7 +1156,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1417">line 1417 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1435">line 1435 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1164,7 +1171,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1409">line 1409 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1427">line 1427 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1179,7 +1186,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1365">line 1365 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1367">line 1367 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1194,7 +1201,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1288">line 1288 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1290">line 1290 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1209,7 +1216,39 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1385">line 1385 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1387">line 1387 of Lua/app.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_app_1on_window_display_scale_changed">function App:onWindowDisplayScaleChanged(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1403">line 1403 of Lua/app.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_app_1on_window_maximized">function App:onWindowMaximized(<span class="p">...</span>)</a></h5>
+ <p>
+ Window has been maximize by the user<br/><br/>
+ Call the UI to report the new window mode<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1407">line 1407 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1226,7 +1265,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1395">line 1395 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1397">line 1397 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1243,27 +1282,44 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1389">line 1389 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1391">line 1391 of Lua/app.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_app_1on_window_restored">function App:onWindowRestored(<span class="p">...</span>)</a></h5>
+ <p>
+ Window has been restored (remove maximize/minimize) by the user<br/><br/>
+ Call the UI to report the new window mode<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1413">line 1413 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1prepare_video_update">function App:prepareVideoUpdate()</a></h5>
  <p>
  Free up / stop any resources relying on the current video object<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2148">line 2148 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2166">line 2166 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1quick_load">function App:quickLoad()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1868">line 1868 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1886">line 1886 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1quick_save">function App:quickSave()</a></h5>
  <p>
  Omit the usual file extension so this file cannot be seen from the normal load and save screen and cannot be overwritten<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1854">line 1854 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1872">line 1872 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1279,7 +1335,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d">Name of the file to load.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1607">line 1607 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1625">line 1625 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1296,7 +1352,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <td class="d"> Full path of the file to read.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L805">line 805 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L803">line 803 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1319,7 +1375,7 @@ meta-directories, and get resolved to real directories in the function.</td>
 'dir' parameter is the filename in the "Data" directory.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1621">line 1621 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1639">line 1639 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1341,7 +1397,7 @@ meta-directories, and get resolved to real directories in the function.</td>
  <td class="d"> Folder of the parent campaign file</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L820">line 820 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L818">line 818 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1357,20 +1413,20 @@ meta-directories, and get resolved to real directories in the function.</td>
  <td class="d"> Full path of the level file, or a Theme Hospital level filename</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1643">line 1643 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1661">line 1661 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1reset">function App:reset()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1990">line 1990 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2008">line 2008 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1reset_idle">function App:resetIdle()</a></h5>
  <p>
  Reset the idle count<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1318">line 1318 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1320">line 1320 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1386,7 +1442,7 @@ meta-directories, and get resolved to real directories in the function.</td>
  <td class="d"> Optional message to the player</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1944">line 1944 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1962">line 1962 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1401,19 +1457,19 @@ meta-directories, and get resolved to real directories in the function.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1850">line 1850 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1868">line 1868 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1save_config">function App:saveConfig()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1186">line 1186 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1188">line 1188 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1save_hotkeys">function App:saveHotkeys()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1222">line 1222 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1224">line 1224 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1421,7 +1477,7 @@ meta-directories, and get resolved to real directories in the function.</td>
  <p>
  Sets the mouse capture to the state set within<br/><br/>
  app.config.capture_mouse<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L747">line 747 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L745">line 745 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1436,32 +1492,32 @@ meta-directories, and get resolved to real directories in the function.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L76">line 76 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L79">line 79 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1start_text_input">function App:startTextInput()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L753">line 753 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L751">line 751 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1stop_text_input">function App:stopTextInput()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L757">line 757 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L755">line 755 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1trim_logs">function App:trimLogs()</a></h5>
  <p>
  Trims the logs folder of old game logs down to ten files.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L444">line 444 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L442">line 442 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1world_exited">function App:worldExited()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L711">line 711 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L709">line 709 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1483,7 +1539,7 @@ Returns the file handler, and true if it was written to the intended file.<br/><
  <td class="d">The mode in which the file is opened, defaults to write</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1191">line 1191 of Lua/app.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1193">line 1193 of Lua/app.lua</a>.
  </p>
  </div>
 </div>
