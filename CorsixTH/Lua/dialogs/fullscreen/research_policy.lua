@@ -197,7 +197,7 @@ function UIResearch:onTick()
 end
 
 function UIResearch:draw(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   canvas:scale(s, "bitmap")
   self.background:draw(canvas, self.x * s + x, self.y * s + y)
   canvas:scale(1, "bitmap")

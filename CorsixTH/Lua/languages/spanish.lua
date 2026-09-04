@@ -1073,9 +1073,7 @@ options_window = {
   option_enabled = "Activado",
   option_disabled = "Desactivado",
   fullscreen = "Pantalla Completa",
-  resolution = "Resolución",
   scale_ui = "Escala de interfaz",
-  custom_resolution = "Personalizar...",
   capture_mouse = "Capturar Ratón",
   right_mouse_scrolling = "Desplazamiento con el Ratón",
   right_mouse_scrolling_option_middle = "Botón Central",
@@ -1112,9 +1110,6 @@ tooltip.autosave_frequency = {
 tooltip.options_window = {
   fullscreen = "Si el juego debe ejecutarse en pantalla completa o en modo ventana",
     fullscreen_button = "Haz clic para activar o desactivar el modo de pantalla completa",
-    resolution = "La resolución en la que debe ejecutarse el juego",
-    select_resolution = "Selecciona una nueva resolución",
-    resolution_unavailable = "Resolución no disponible con la escala de interfaz actual",
     scale_ui = "Escala la interfaz de usuario. Solo se muestran las opciones de escala que se ajustan a la pantalla; para ver más, aumenta la resolución.",
     select_ui_scale = "Selecciona una nueva escala para la interfaz de usuario",
     ui_scale_unavailable = "Escala de interfaz no disponible; por favor, selecciona primero una resolución más alta.",
@@ -1924,8 +1919,6 @@ subtitles = {
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 
-options_window.change_resolution = "Cambiar resolución"
-tooltip.options_window.change_resolution = "Cambia la resolución de la ventana utilizando la dimensión indicada a la izquierda."
 information.very_old_save = "Han habido muchas actualizaciones en el juego desde que comenzaste este nivel. Para asegurarte de que todas las funciones operen como se espera, considera reiniciarlo."
 machine_menu = {
   ratio = "Proporción",

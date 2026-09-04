@@ -474,9 +474,7 @@ options_window = {
   option_on = "Ein",
   option_off = "Aus",
   fullscreen = "Vollbild",
-  resolution = "Auflösung",
   capture_mouse = "Maus einfangen",
-  custom_resolution = "Benutzerdefiniert...",
   width = "Breite",
   height = "Höhe",
   customise = "Spezialeinstellungen",
@@ -494,8 +492,6 @@ options_window = {
 tooltip.options_window = {
   fullscreen = "Darstellung im Vollbild- oder Fenstermodus",
   fullscreen_button = "Klicken, um zwischen Vollbild- und Fenstermodus zu wechseln",
-  resolution = "Die Bildschirmauflösung, in der das Spiel läuft",
-  select_resolution = "Eine neue Auflösung auswählen",
   capture_mouse = "Ein- bzw. Ausschalten, ob der Mauszeiger das Fenster verlassen kann",
   width = "Gewünschte Bildschirmbreite eingeben",
   height = "Gewünschte Bildschirmhöhe eingeben",
@@ -1051,6 +1047,3 @@ original_credits[361] = " "
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
-
-options_window.change_resolution = "Auflösung ändern"
-tooltip.options_window.change_resolution = "Die Fensterauflösung auf die links eingegebenen Werte ändern"

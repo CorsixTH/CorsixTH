@@ -510,7 +510,7 @@ function UIAnnualReport:changePage(page_no)
 end
 
 function UIAnnualReport:draw(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   canvas:scale(s, "bitmap")
   self.background:draw(canvas, self.x * s + x, self.y * s + y)
   canvas:scale(1, "bitmap")
@@ -578,7 +578,7 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
 
   local font = self.stat_font
   local world = self.ui.app.world
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
 
   -- Draw titles
   -- world date year is + 1, so adding it to 1998 realigns it

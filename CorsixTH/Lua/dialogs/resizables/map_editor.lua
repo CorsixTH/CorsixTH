@@ -725,7 +725,7 @@ function UIMapEditor:buildSpriteButtons(buttons)
       bpanel.editor_button = button
 
       bpanel.custom_draw = --[[persistable:map_editor_draw_block_sprite]] function(panel, canvas, x, y)
-        local s = TheApp.config.ui_scale
+        local s = TheApp.gfx:getUIScale()
         x = x + panel.x * s + panel.editor_button.xorigin * s
         y = y + panel.y * s + panel.editor_button.yorigin * s
         for _, spr in ipairs(panel.editor_button.sprites) do
@@ -1001,7 +1001,7 @@ end
 --!return (int, int) Tile x,y coordinates, limited to the map.
 function UIMapEditor:mouseToWorld(mx, my)
   local ui = self.ui
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
 
   local wxr, wyr = ui:ScreenToWorld(self.x * s + mx, self.y * s + my)
   local wx = math.floor(wxr)

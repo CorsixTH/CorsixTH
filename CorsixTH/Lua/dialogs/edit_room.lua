@@ -1007,7 +1007,7 @@ function UIEditRoom:draw(canvas, ...)
   if self.world.user_actions_allowed then
     local ui = self.ui
     local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
-    local zoom = self.ui.zoom_factor
+    local zoom = self.ui:getEffectiveZoom()
     if canvas:scale(zoom) then
       x = math.floor(x / zoom)
       y = math.floor(y / zoom)
@@ -1043,7 +1043,7 @@ local window_floor_blueprint_markers = {
 }
 
 function UIEditRoom:onLeftButtonDown(x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   if self.phase == "walls" then
     if 0 <= x and x < self.width * s and 0 <= y and y < self.height * s then -- luacheck: ignore 542
     else

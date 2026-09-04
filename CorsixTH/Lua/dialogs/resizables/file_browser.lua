@@ -137,7 +137,7 @@ function FilteredTreeControl:drawExtraOnRow(canvas, node, x, y)
   if not node:hasChildren() and self.show_dates then
     local last_mod = node:getLastModification()
     local daytime = _S.date_format.daymonth:format(os.date("%d", last_mod), tonumber(os.date("%m", last_mod)))
-    local s = TheApp.config.ui_scale
+    local s = TheApp.gfx:getUIScale()
     self.font:draw(canvas, daytime .. " " .. os.date("%Y %X", last_mod), x + self.tree_rect.w * s - 140 * s, y)
   end
 end

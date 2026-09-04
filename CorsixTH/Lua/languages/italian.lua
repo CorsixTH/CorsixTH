@@ -370,9 +370,7 @@ options_window = {
   option_on = "On",
   option_off = "Off",
   fullscreen = "Schermo intero",
-  resolution = "Risoluzione",
   capture_mouse = "Cattura Mouse",
-  custom_resolution = "Personalizzata...",
   width = "Largh",
   option_enabled = "Attiv.",
   height = "Alt",
@@ -399,8 +397,6 @@ options_window = {
 tooltip.options_window = {
   fullscreen = "Decidi se il gioco verrà eseguito a schermo intero o in finestra",
   fullscreen_button = "Clicca per attivare o disattivare la modalità a schermo intero",
-  resolution = "La risoluzione alla quale verrà eseguito il gioco",
-  select_resolution = "Seleziona una nuova risoluzione",
   capture_mouse = "Clicca per attivare o disattivare la cattura del puntatore all'interno della finestra di gioco",
   width = "Inserisci la larghezza dello schermo desiderata",
   height = "Inserisci l'altezza dello schermo desiderata",
@@ -913,9 +909,6 @@ multiplayer.players_failed = "I seguenti giocatori non sono riusciti a raggiunge
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
-
-options_window.change_resolution = "Cambia risoluzione"
-tooltip.options_window.change_resolution = "Cambia la risoluzione della finestra con le dimensioni inserite a sinistra"
 
 -- I added those lines because I didn't like 'em to show up in every diff dump!
 original_credits[302] = ","

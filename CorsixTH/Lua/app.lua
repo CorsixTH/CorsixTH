@@ -59,6 +59,9 @@ function App:App()
     active = self.onWindowActive,
     window_resized = self.onWindowResized,
     window_pixel_size_changed = self.onWindowPixelSizeChanged,
+    window_display_scale_changed = self.onWindowDisplayScaleChanged,
+    window_maximized = self.onWindowMaximized,
+    window_restored = self.onWindowRestored,
     music_over = self.onMusicOver,
     movie_over = self.onMovieOver,
     sound_over = self.onSoundOver,
@@ -151,25 +154,20 @@ function App:init()
   -- Report operating system (possible values: "windows", "macos", "unix")
   self.os = compile_opts.os
 
-  local modes = {}
-  self.fullscreen = false
-  if self.config.fullscreen then
-    self.fullscreen = true
-    modes[#modes + 1] = "fullscreen"
-  end
-  if self.config.track_fps then
-    modes[#modes + 1] = "present immediate"
-  end
-  if self.config.direct_zoom == nil or self.config.direct_zoom then
-    modes[#modes + 1] = "direct zoom"
-  end
-  self.modes = modes
+  self.modes = {
+    fullscreen = self.config.fullscreen,
+    maximized = self.config.maximized,
+    present_immediate = self.config.track_fps,
+    direct_zoom = self.config.direct_zoom == nil or self.config.direct_zoom,
+    aspect_ratio_4_3 = self.config.original_aspect_ratio,
+    hidpi = self.config.hidpi,
+  }
   self.video = assert(TH.surface(
       self.config.width,
       self.config.height,
-      App.MIN_WINDOW_WIDTH * self.config.ui_scale,
-      App.MIN_WINDOW_HEIGHT * self.config.ui_scale,
-      unpack(modes)))
+      App.MIN_WINDOW_WIDTH,
+      App.MIN_WINDOW_HEIGHT,
+      self.modes))
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
 
@@ -1137,19 +1135,26 @@ function App:fixConfig()
     if key == "language" and type(value) == "string" then
       self.config[key] = value:lower()
 
-    -- For resolution, clamp resolution to at least 640x480
+    -- Clamp window size to at least 640x480
     elseif key == "width" and (type(value) ~= "number" or value < App.MIN_WINDOW_WIDTH) then
       self.config[key] = App.MIN_WINDOW_WIDTH
 
     elseif key == "height" and (type(value) ~= "number" or value < App.MIN_WINDOW_HEIGHT) then
       self.config[key] = App.MIN_WINDOW_HEIGHT
 
-    -- For scale, clamp to integer scale >= 1
+    -- For scale, clamp to number >= 0
     elseif key == "ui_scale" then
       if type(value) == "number" then
-        self.config[key] = math.max(math.floor(value), 1)
+        self.config[key] = math.max(value, 0)
       else
-        self.config[key] = 1
+        self.config[key] = 0
+      end
+
+    elseif key == "cursor_scale" then
+      if type(value) == "number" then
+        self.config[key] = math.max(value, 0)
+      else
+        self.config[key] = 0
       end
 
     elseif (key == "scroll_speed" or key == "shift_scroll_speed") and
@@ -1174,12 +1179,9 @@ function App:fixConfig()
     end
   end
 
-  -- clamp scale to suitable values for current resolution
-  if self.config.ui_scale * App.MIN_WINDOW_WIDTH > self.config.width or
-      self.config.ui_scale * App.MIN_WINDOW_HEIGHT > self.config.height then
-    self.config.ui_scale = math.floor(math.min(
-        self.config.width / App.MIN_WINDOW_WIDTH,
-        self.config.height / App.MIN_WINDOW_HEIGHT))
+  if not self.config.debug_fractional_scaling then
+    self.config.ui_scale = math.floor(self.config.ui_scale)
+    self.config.cursor_scale = math.floor(self.config.cursor_scale)
   end
 end
 
@@ -1396,6 +1398,22 @@ end
 --! Call the UI to adjust to the new render size
 function App:onWindowPixelSizeChanged(...)
   return self.ui:onWindowPixelSizeChanged(...)
+end
+
+function App:onWindowDisplayScaleChanged(...)
+  return self.ui:onWindowDisplayScaleChanged(...)
+end
+
+--! Window has been maximize by the user
+--! Call the UI to report the new window mode
+function App:onWindowMaximized(...)
+  return self.ui:onWindowMaximized(...)
+end
+
+--! Window has been restored (remove maximize/minimize) by the user
+--! Call the UI to report the new window mode
+function App:onWindowRestored(...)
+  return self.ui:onWindowRestored(...)
 end
 
 function App:onMusicOver(...)

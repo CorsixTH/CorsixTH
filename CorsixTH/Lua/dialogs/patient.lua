@@ -22,7 +22,7 @@ local TH = require("TH")
 
 -- Test for hit within the view circle
 local --[[persistable:patient_window_is_in_view_circle]] function is_in_view_circle(x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   return (x - 55 * s)^2 + (y - 254 * s)^2 < (39 * s)^2
 end
 
@@ -125,7 +125,7 @@ end
 --!param ypos Vertical offset.
 --!param value Fraction to draw.
 function UIPatient:drawBar(canvas, sprite, ybase, xpos, ypos, value)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local width = math.floor(value * 40 + 0.5)
   for dx = 0, width - 1 do
     self.panel_sprites:draw(canvas, sprite, xpos + 58 * s + dx * s, ypos + ybase * s, { scaleFactor = s })
@@ -133,7 +133,7 @@ function UIPatient:drawBar(canvas, sprite, ybase, xpos, ypos, value)
 end
 
 function UIPatient:draw(canvas, x_, y_)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   local x, y = self.x * s + x_, self.y * s + y_
   local map = self.ui.app.map
   local patient = self.patient
@@ -182,7 +182,7 @@ end
 --!param x (int) X position of the top of the list.
 --!param y (int) Y position of the top of the list.
 function UIPatient:drawTreatmentHistory(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   for _, room in ipairs(self.patient.treatment_history) do
     y = self.font:drawWrapped(canvas, room:upper(), x, y, 95 * s)
   end
@@ -193,7 +193,7 @@ end
 --!param x (int) X position of the top-left of the graph.
 --!param y (int) Y position of the top-left of the graph.
 function UIPatient:drawHealthHistory(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
 
   -- Sizes and positions of the graph in the window.
   local hor_length = 76 * s

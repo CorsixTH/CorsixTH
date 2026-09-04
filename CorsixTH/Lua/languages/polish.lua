@@ -596,8 +596,6 @@ tooltip = {
   options_window = {
     fullscreen = "Wybór pomiędzy trybem pełnoekranowym lub grą w oknie",
     fullscreen_button = "Kliknij aby włączyć tryb pełnoekranowy",
-    resolution = "Rozdzielczość w jakiej powinna działać gra",
-    select_resolution = "Wybierz nową rozdzielczość",
     folder_button = "Opcje folderów",
     customise_button = "Dodatkowe ustawienia modifikujące twoją rozgrywkę",
     width = "Wpisz żądaną szerokość ekranu",
@@ -2201,8 +2199,6 @@ options_window = {
   option_on = "Włączone",
   option_off = "Wyłączone",
   fullscreen = "Pełny ekran",
-  resolution = "Rozdzielczość",
-  custom_resolution = "Niestandardowa...",
   browse = "Przeglądaj...",
   width = "Szerokość",
   height = "Wysokość",
@@ -3279,6 +3275,3 @@ menu_player_count = {
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
-
-options_window.change_resolution = "Zmień rozdzielczość"
-tooltip.options_window.change_resolution = "Zmień rozdzielczość okna do rozmiarów wpisanych po lewo"

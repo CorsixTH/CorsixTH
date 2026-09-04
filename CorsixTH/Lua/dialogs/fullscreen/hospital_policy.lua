@@ -119,7 +119,7 @@ function UIPolicy:UIPolicy(ui)
 end
 
 function UIPolicy:draw(canvas, x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   canvas:scale(s, "bitmap")
   self.background:draw(canvas, self.x * s + x, self.y * s + y)
   canvas:scale(1, "bitmap")
@@ -157,7 +157,7 @@ end
 function UIPolicy:onMouseMove(x, y, dx, dy)
   local repaint = UIFullscreen.onMouseMove(self, x, y, dx, dy)
   if self.moving_panel then -- A slider is being moved.
-    local s = TheApp.config.ui_scale
+    local s = TheApp.gfx:getUIScale()
     local p = self.moving_panel
     self.moved_x = self.moved_x + dx / s
     local new_x = math.floor(self.moved_x + self.down_x - self.moving_panel.w / 2 - self.offset)
@@ -209,7 +209,7 @@ end
 --!param y (int) Y position of the mouse.
 --!return Slider that was detected at the given position, or nil
 function UIPolicy:panelHit(x, y)
-  local s = TheApp.config.ui_scale
+  local s = TheApp.gfx:getUIScale()
   x = x / s
   y = y / s
   for _, panel in ipairs(self.sliders_z) do
