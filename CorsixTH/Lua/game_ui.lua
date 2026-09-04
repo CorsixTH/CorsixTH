@@ -411,6 +411,13 @@ function GameUI:makeDebugFax()
   self.bottom_panel:queueMessage(types[math.random(1, #types)], message)
 end
 
+--! Debug: spawn a rat near the centre of the current view.
+function GameUI:makeDebugRat()
+  local scr_w, scr_h = self.app.video:getRenderSize()
+  local x, y = self:ScreenToWorld(scr_w / 2, scr_h / 2)
+  self.hospital:makeDebugRat(math.floor(x), math.floor(y))
+end
+
 function GameUI:ScreenToWorld(x, y)
   local zoom = self:getEffectiveZoom()
   return self.app.map:ScreenToWorld(self.screen_offset_x + x / zoom, self.screen_offset_y + y / zoom)
@@ -440,6 +447,7 @@ function GameUI:onCursorWorldPositionChange()
   local x = math.floor(self.screen_offset_x + self.cursor_x / zoom)
   local y = math.floor(self.screen_offset_y + self.cursor_y / zoom)
   local entity = nil
+  local is_near_rat = false
   local overwindow = self:hitTest(self.cursor_x, self.cursor_y)
   if self.do_world_hit_test and not overwindow then
     entity = self.app.map.th:hitTestObjects(x, y)
@@ -450,7 +458,10 @@ function GameUI:onCursorWorldPositionChange()
           entity:getRoom() == room and entity ~= room.door and entity
     end
   end
-  if entity ~= self.cursor_entity then
+  if entity == nil and self.do_world_hit_test and not overwindow then
+    is_near_rat = self.app.world:isNearRat(x, y)
+  end
+  if entity ~= self.cursor_entity or is_near_rat ~= self.cursor_near_rat then
     -- Stop displaying hoverable moods for the old entity
     if self.cursor_entity then
       self.cursor_entity:setMood(nil)
@@ -466,6 +477,7 @@ function GameUI:onCursorWorldPositionChange()
     local epidemic_cursor = TheApp.gfx:loadMainCursor("epidemic_hover")
 
     self.cursor_entity = entity
+    self.cursor_near_rat = is_near_rat
     if self.cursor ~= self.edit_room_cursor and self.cursor ~= self.waiting_cursor then
       local cursor = self.default_cursor
       if self.app.world.user_actions_allowed then
@@ -477,9 +489,14 @@ function GameUI:onCursorWorldPositionChange()
         elseif epidemic and epidemic.vaccination_mode_active then
           cursor = epidemic_cursor
           -- Otherwise just show the normal cursor and hover if appropriate
+        elseif entity and entity.hover_cursor then
+          cursor = entity.hover_cursor
+        elseif self.cursor_near_rat then
+          cursor = Rat.proximity_cursor
+        elseif self.down_count ~= 0 and self.down_cursor then
+          cursor = self.down_cursor
         else
-          cursor = entity and entity.hover_cursor or
-          (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
+          cursor = self.default_cursor
         end
       end
       self:setCursor(cursor)
@@ -744,6 +761,12 @@ function GameUI:onMouseUp(code, x, y)
       local watch = TheApp.ui:getWindow(UIWatch)
       watch:toggleVaccinationMode()
     end
+  end
+
+  -- A miss near a rat still makes the shotgun noise; a direct hit is handled by
+  -- Rat:onClick through the normal entity-click dispatch in UI:onMouseUp.
+  if button == "left" and not self.cursor_entity and self.cursor_near_rat then
+    self:playSound("shotgun.wav")
   end
 
   return UI.onMouseUp(self, code, x, y)

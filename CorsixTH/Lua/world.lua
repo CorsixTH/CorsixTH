@@ -30,6 +30,7 @@ corsixth.require("entities.humanoids.staff.receptionist")
 corsixth.require("entities.humanoids.vip")
 corsixth.require("entities.humanoids.grim_reaper")
 corsixth.require("entities.humanoids.inspector")
+corsixth.require("entities.rat")
 corsixth.require("staff_profile")
 corsixth.require("hospital")
 corsixth.require("hospitals.player_hospital")
@@ -2721,6 +2722,11 @@ function World:afterLoad(old, new)
       obj:afterLoad(old, new)
     end
   end
+  -- Migrate the entity map (older saves gain the rats layer). Saves before
+  -- version 88 have no entity map at this point; one is built complete below.
+  if self.entity_map then
+    self.entity_map:afterLoad(old, new)
+  end
 
   if old >= 87 then
     self:playLoadedEntitySounds()
@@ -2736,6 +2742,7 @@ function World:afterLoad(old, new)
       end
     end
   end
+
   if old < 108 then
     self.room_build_callbacks = nil
   end
@@ -3008,4 +3015,17 @@ end
 --! Returns whether the level being played is part of a campaign or not
 function World:isCampaign()
   return type(self.map.level_number) == "number" or self.campaign_info
+end
+
+--! Determine if any rats are near to the given screen coordinates
+--! relative to the map origin
+--!param x (number) x-coordinate on the screen
+--!param y (number) y-coordinate on the screen
+function World:isNearRat(x, y)
+  local tile_x, tile_y = self.map:ScreenToWorld(x, y)
+  tile_x, tile_y = math.floor(tile_x), math.floor(tile_y)
+  if not self:isOnMap(tile_x, tile_y) then
+    return false
+  end
+  return #self.entity_map:getRatsAtCoordinate(tile_x, tile_y) ~= 0
 end
