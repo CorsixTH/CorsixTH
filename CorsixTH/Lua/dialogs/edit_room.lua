@@ -198,9 +198,7 @@ function UIEditRoom:cancel()
       self.ui:setDefaultCursor(nil)
       self.check_for_clear_area_timer = nil
       self.humanoids_to_watch = nil
-      self:_setCellFlagsOnBlueprint({avoidTile = false})
     end
-    self.phase = "walls"
     self:returnToWallPhase()
   end
 end
@@ -217,19 +215,12 @@ function UIEditRoom:confirm(force)
     self.mouse_down_y = false
     self.move_rect_x = false
     self.move_rect_y = false
-    self.phase = "door"
     self:enterDoorPhase()
   elseif self.phase == "door" then
-    self.phase = "windows"
     self:enterWindowsPhase()
   elseif self.phase == "windows" then
-    self.phase = "clear_area"
-    self:clearArea()
+    self:enterWaitingClearAreaPhase()
   elseif self.phase == "clear_area" then
-    self.ui:setDefaultCursor(nil)
-    self.phase = "objects"
-    self:finishRoom()
-    self.world:resetSideObjects()
     self:enterObjectsPhase()
   else
     -- Pay for room (subtract cost of needed objects, which were already paid for)
@@ -257,8 +248,7 @@ function UIEditRoom:confirm(force)
   end
 end
 
-function UIEditRoom:clearArea()
-  self.confirm_button:enable(false)
+function UIEditRoom:clearAreaFromHumanoids()
   local rect = self.blueprint_rect
   local world = self.ui.app.world
   world:clearCaches() -- To invalidate idle tiles in case we need to move people
@@ -278,21 +268,17 @@ function UIEditRoom:clearArea()
       end
     end
   end
-
-  if next(humanoids_to_watch) == nil then
-    -- No humanoids within the area, so continue with the room placement
-    self:confirm(true)
-    return
-  end
-
-  self.check_for_clear_area_timer = 10
   self.humanoids_to_watch = humanoids_to_watch
-  self.ui:setCursor(self.ui.waiting_cursor)
 end
 
 function UIEditRoom:onTick()
   UIFurnishCorridor.onTick(self)
-  if self.check_for_clear_area_timer then
+  self:checkIsWaitingHumanoidsToLeaveArea()
+end
+
+function UIEditRoom:checkIsWaitingHumanoidsToLeaveArea()
+  -- Check if waiting for some humanoid to leave the construction site
+  if self.phase == "clear_area" and self.check_for_clear_area_timer then
     self.check_for_clear_area_timer = self.check_for_clear_area_timer - 1
     if self.check_for_clear_area_timer == 0 then
       local rect = self.blueprint_rect
@@ -323,7 +309,7 @@ function UIEditRoom:onTick()
   end
 end
 
-function UIEditRoom:finishRoom()
+function UIEditRoom:finishRoomFoundation()
   local room_type = self.room_type
   local wall_type = self.ui.app.walls[room_type.wall_type]
   local world = self.ui.app.world
@@ -582,7 +568,9 @@ function UIEditRoom:stopPickupItems()
 end
 
 function UIEditRoom:returnToWallPhase(early)
+  self.phase = "walls"
   self.ui:tutorialStep(3, {9, 10, 11, 12}, 4)
+  self:_setCellFlagsOnBlueprint({avoidTile = false})
   if not early then
     self.desc_text = _S.place_objects_window.drag_blueprint
     self.confirm_button:enable(true)
@@ -711,10 +699,8 @@ function UIEditRoom:returnToDoorPhase()
   rect.w = 0
   rect.h = 0
   self:setBlueprintRect(rect.x, rect.y, old_w, old_h)
-  self:_setCellFlagsOnBlueprint({avoidTile = false})
 
   -- We've gone all the way back to wall phase, so step forward to door phase
-  self.phase = "door"
   self:enterDoorPhase()
 end
 
@@ -880,63 +866,96 @@ function UIEditRoom:checkReachability()
   return true
 end
 
+function UIEditRoom:enterWaitingClearAreaPhase()
+  self.phase = "clear_area"
+  self.confirm_button:enable(false)
+  if next(self.humanoids_to_watch) == nil then
+    -- No humanoids within the area, so continue with the room placement
+    self:confirm(true)
+  else
+    -- Some humanoids within the area, so lets some wait
+    self.ui:setCursor(self.ui.waiting_cursor)
+    self.check_for_clear_area_timer = 1
+  end
+end
+
 function UIEditRoom:enterDoorPhase()
+  self.phase = "door"
   self.ui:tutorialStep(3, 8, 9)
   local rect = self.blueprint_rect
   local map = self.ui.app.map.th
+
+  if self:checkCanBuildRoomHere() then
+    self:clearAreaFromHumanoids()
+
+    self.desc_text = _S.place_objects_window.place_door
+    self.confirm_button:enable(false) -- Confirmation is via placing door
+
+    -- Change the floor tiles to opaque blue
+    for y = rect.y, rect.y + rect.h - 1 do
+      for x = rect.x, rect.x + rect.w - 1 do
+        map:setCell(x, y, 4, 24)
+      end
+    end
+
+    -- Re-organise wall anims to index by x and y
+    local walls = {}
+    for _, wall in ipairs(self.blueprint_wall_anims) do
+      local _, x, y = wall:getTile()
+      if not walls[x] then
+        walls[x] = {}
+      end
+      walls[x][y] = wall
+    end
+    self.blueprint_wall_anims = walls
+  else
+    -- Go back to walls phase
+    self:returnToWallPhase(true)
+    self.ui:playSound("wrong2.wav")
+    self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
+  end
+end
+
+--! Checks that the room will not block part of the hospital.
+--!return (bool) true if will not block part of the hospital.
+function UIEditRoom:checkCanBuildRoomHere()
+  local build_allowed
 
   -- make tiles impassable
   self:_setCellFlagsOnBlueprint({passable = false})
 
   -- check if all adjacent tiles of the rooms are still connected
-  if not self:checkReachability() then
+  if self:checkReachability() then
+    build_allowed = true
+  else
     if self.ui.app.config.blocking_off_areas == 3 then
       -- all-permissive placing approach
       -- This could lead to crashes, so we'll record this in the log so that during investigation
       -- we'll be able to know that safe placement was disabled.
-      TheApp.world:gameLog("Blocking off areas is allowed with room " .. self.blueprint_rect.x .. ", " .. self.blueprint_rect.y .. ".")
+      TheApp.world:gameLog("Warning: Blocking off areas is allowed with room at " .. self.blueprint_rect.x .. ", " .. self.blueprint_rect.y .. ".")
+      build_allowed = true
     else
-      -- undo passable flags and go back to walls phase
-      self.phase = "walls"
-      self:returnToWallPhase(true)
-      self.ui:playSound("wrong2.wav")
-      self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
-      return
+      build_allowed = false
     end
   end
 
   -- make tiles passable back
   self:_setCellFlagsOnBlueprint({passable = true})
 
-  self.desc_text = _S.place_objects_window.place_door
-  self.confirm_button:enable(false) -- Confirmation is via placing door
-
-  -- Change the floor tiles to opaque blue
-  for y = rect.y, rect.y + rect.h - 1 do
-    for x = rect.x, rect.x + rect.w - 1 do
-      map:setCell(x, y, 4, 24)
-    end
-  end
-
-  -- Re-organise wall anims to index by x and y
-  local walls = {}
-  for _, wall in ipairs(self.blueprint_wall_anims) do
-    local _, x, y = wall:getTile()
-    if not walls[x] then
-      walls[x] = {}
-    end
-    walls[x][y] = wall
-  end
-  self.blueprint_wall_anims = walls
+  return build_allowed
 end
 
 function UIEditRoom:enterWindowsPhase()
+  self.phase = "windows"
   self.ui:tutorialStep(3, {9, 10}, 11)
   self.desc_text = _S.place_objects_window.place_windows
   self.confirm_button:enable(true)
 end
 
 function UIEditRoom:enterObjectsPhase()
+  self.phase = "objects"
+  self:finishRoomFoundation()
+  self.world:resetSideObjects()
   self.ui:setCursor(self.ui.default_cursor)
   self.ui:tutorialStep(3, {11, 12}, 13)
   self.ui:setWorldHitTest(self.room)
@@ -1058,12 +1077,7 @@ function UIEditRoom:onLeftButtonDown(x, y)
       end
     end
   elseif self.phase == "door" then
-    if self.blueprint_door.valid then
-      self.ui:playSound("buildclk.wav")
-      self:confirm(true)
-    else
-      self.ui:tutorialStep(3, 9, 10)
-    end
+    self:placeDoorBlueprint()
   elseif self.phase == "windows" then
     self:placeWindowBlueprint()
   end
@@ -1388,6 +1402,15 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
   else
     map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4,
       door_floor_blueprint_markers[orig_wall])
+  end
+end
+
+function UIEditRoom:placeDoorBlueprint()
+  if self.blueprint_door.valid then
+    self.ui:playSound("buildclk.wav")
+    self:confirm(true)
+  else
+    self.ui:tutorialStep(3, 9, 10)
   end
 end
 
