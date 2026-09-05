@@ -883,6 +883,9 @@ function Humanoid:leaveArea()
     else
       meander.done_walk = false
     end
+  elseif current_action.name == "walk" then
+    -- Make the humanoid to reroute urgently to leave the blueprint
+    self:queueAction(MeanderAction():setCount(1):setMustHappen(true), 0)
   else
     -- Look for a queue action and re-arrange the people in it, which
     -- should cause anyone queueing within the blueprint to move
