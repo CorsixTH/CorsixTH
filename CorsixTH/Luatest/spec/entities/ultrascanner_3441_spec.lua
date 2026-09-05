@@ -25,7 +25,7 @@ describe("ultrascan 3441:", function()
     _G.TheApp = orig_TheApp
   end)
 
-  it("north {-1,1},{0,1} and east {0,-1},{1,-1} are blocked (no only_passable)", function()
+  it("north {-1,1},{0,1} and east {-1,1},{0,1} are blocked (no only_passable)", function()
     local paths = {"../Lua/objects/machines/ultrascanner.lua", "CorsixTH/Lua/objects/machines/ultrascanner.lua", "/home/bruno/CorsixTH/CorsixTH/Lua/objects/machines/ultrascanner.lua"}
     local f, obj
     for _, path in ipairs(paths) do
@@ -46,8 +46,8 @@ describe("ultrascan 3441:", function()
     assert.is_false(has_only_passable(north, -1, 1), "north {-1,1} should be blocked")
     assert.is_false(has_only_passable(north, 0, 1), "north {0,1} should be blocked")
     local east = obj.orientations.east.footprint
-    assert.is_false(has_only_passable(east, 0, -1), "east {0,-1} should be blocked")
-    assert.is_false(has_only_passable(east, 1, -1), "east {1,-1} should be blocked")
+    assert.is_false(has_only_passable(east, -1, 1), "east {-1,1} should be blocked")
+    assert.is_false(has_only_passable(east, 0, 1), "east {0,1} should be blocked")
     -- south copies north via copy_north_to_south for idle anims, orientations north/east only (south via mirror not stored)
     assert.is_nil(obj.orientations.south, "south orientation not stored, north is used via copy")
     assert.are.same({-1, 0, need_west_side = true}, obj.orientations.north.use_position)
