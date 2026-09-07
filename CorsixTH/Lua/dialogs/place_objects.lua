@@ -915,7 +915,7 @@ function UIPlaceObjects:_isNonSideObjectPlacementValid(x, y, object, object_orie
     -- all-permissive placing approach.
     -- This could lead to crashes, so we'll record this in the log so that during investigation
     -- we'll be able to know that safe placement was disabled.
-    TheApp.world:gameLog("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
+    TheApp.world:gameLog("Warning: Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
     return true
   end
   return false
@@ -1012,7 +1012,7 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
     -- all-permissive placing approach.
     -- This could lead to crashes, so we'll record this in the log so that during investigation
     -- we'll be able to know that safe placement was disabled.
-    TheApp.world:gameLog("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
+    TheApp.world:gameLog("Warning: Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
     return true
   end
   return false
