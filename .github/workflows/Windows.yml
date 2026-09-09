@@ -3,7 +3,6 @@ name: Windows
 
 permissions:
   contents: read
-  pull-requests: read
 
 on:
   push:
@@ -24,9 +23,6 @@ on:
         description: 'Build AnimView?'
         default: 'false'
         type: boolean
-      pr:
-        description: 'Build this PR (optional)'
-        type: number
 
 jobs:
   Windows:
@@ -42,13 +38,7 @@ jobs:
         shell: bash
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Checkout selected PR
-        env:
-          GH_TOKEN: ${{github.token}}
-        if: inputs.pr
-        run: gh pr checkout --repo CorsixTH/CorsixTH ${{inputs.pr}}
+        uses: actions/checkout@v7
 
       - name: Extract vcpkg baseline
         id: vcpkg-baseline
