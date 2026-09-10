@@ -297,6 +297,252 @@ constexpr std::string_view dispatch_window_maximized("window_maximized");
 constexpr std::string_view dispatch_window_restored("window_restored");
 constexpr std::string_view dispatch_frame("frame");
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+
+struct EmscriptenContext {
+  lua_State* L;
+  render_target* target;
+  SDL_TimerID timer;
+  Uint64 last_tick_ms;
+};
+
+static void emscripten_step(void* arg) {
+  auto* ctx = static_cast<EmscriptenContext*>(arg);
+  lua_State* L = ctx->L;
+  render_target* target = ctx->target;
+  SDL_Event e;
+  bool do_frame = false;
+  bool do_timer = false;
+  std::string_view last_dispatch;
+
+  Uint64 now = SDL_GetTicks();
+  if (now - ctx->last_tick_ms >= usertick_period_ms) {
+    do_timer = true;
+    ctx->last_tick_ms = now;
+  }
+
+  while (SDL_PollEvent(&e)) {
+    SDL_ConvertEventToRenderCoordinates(target->get_renderer(), &e);
+
+    int nargs = 0;
+    switch (e.type) {
+      case SDL_EVENT_QUIT:
+        emscripten_cancel_main_loop();
+        return;
+      case SDL_EVENT_KEY_DOWN:
+        last_dispatch = dispatch_keydown;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushstring(L, SDL_GetKeyName(e.key.key));
+        l_push_modifiers_table(L, e.key.mod);
+        lua_pushboolean(L, e.key.repeat != 0);
+        nargs = 4;
+        break;
+      case SDL_EVENT_KEY_UP:
+        last_dispatch = dispatch_keyup;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushstring(L, SDL_GetKeyName(e.key.key));
+        l_push_modifiers_table(L, e.key.mod);
+        nargs = 3;
+        break;
+      case SDL_EVENT_TEXT_INPUT:
+        last_dispatch = dispatch_textinput;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushstring(L, e.text.text);
+        nargs = 2;
+        break;
+      case SDL_EVENT_TEXT_EDITING:
+        last_dispatch = dispatch_textediting;
+        push_app_dispatch(L, dispatch_textediting);
+        lua_pushstring(L, e.edit.text);
+        lua_pushinteger(L, e.edit.start);
+        lua_pushinteger(L, e.edit.length);
+        nargs = 4;
+        break;
+      case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        last_dispatch = dispatch_buttondown;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushinteger(L, e.button.button);
+        lua_pushnumber(L, e.button.x);
+        lua_pushnumber(L, e.button.y);
+        nargs = 4;
+        break;
+      case SDL_EVENT_MOUSE_BUTTON_UP:
+        last_dispatch = dispatch_buttonup;
+        push_app_dispatch(L, dispatch_buttonup);
+        lua_pushinteger(L, e.button.button);
+        lua_pushnumber(L, e.button.x);
+        lua_pushnumber(L, e.button.y);
+        nargs = 4;
+        break;
+      case SDL_EVENT_MOUSE_WHEEL:
+        last_dispatch = dispatch_mousewheel;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushnumber(L, e.wheel.x);
+        lua_pushnumber(L, e.wheel.y);
+        lua_pushboolean(L, e.wheel.which == SDL_TOUCH_MOUSEID);
+        lua_pushboolean(L, e.wheel.direction == SDL_MOUSEWHEEL_FLIPPED);
+        nargs = 5;
+        break;
+      case SDL_EVENT_MOUSE_MOTION:
+        last_dispatch = dispatch_motion;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushnumber(L, e.motion.x);
+        lua_pushnumber(L, e.motion.y);
+        lua_pushnumber(L, e.motion.xrel);
+        lua_pushnumber(L, e.motion.yrel);
+        nargs = 5;
+        break;
+      case SDL_EVENT_PINCH_BEGIN:
+        last_dispatch = dispatch_pinch_begin;
+        push_app_dispatch(L, last_dispatch);
+        nargs = 1;
+        break;
+      case SDL_EVENT_PINCH_UPDATE:
+        last_dispatch = dispatch_pinch_update;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushnumber(L, e.pinch.scale);
+        nargs = 2;
+        break;
+      case SDL_EVENT_PINCH_END:
+        last_dispatch = dispatch_pinch_end;
+        push_app_dispatch(L, last_dispatch);
+        nargs = 1;
+        break;
+      case SDL_EVENT_WINDOW_FOCUS_GAINED:
+        last_dispatch = dispatch_active;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushinteger(L, 1);
+        nargs = 2;
+        break;
+      case SDL_EVENT_WINDOW_FOCUS_LOST:
+        last_dispatch = dispatch_active;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushinteger(L, 0);
+        nargs = 2;
+        break;
+      case SDL_EVENT_WINDOW_RESIZED:
+        last_dispatch = dispatch_window_resized;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushinteger(L, e.window.data1);
+        lua_pushinteger(L, e.window.data2);
+        {
+          SDL_WindowFlags flags = SDL_GetWindowFlags(target->get_window());
+          uint32_t window_state = 0;
+          if (flags & SDL_WINDOW_FULLSCREEN) {
+            window_state = 1;
+          } else if (flags & SDL_WINDOW_MAXIMIZED) {
+            window_state = 2;
+          } else if (flags & SDL_WINDOW_MINIMIZED) {
+            window_state = 3;
+          }
+          lua_pushinteger(L, window_state);
+        }
+        nargs = 4;
+        break;
+      case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+        target->on_pixel_size_change();
+        last_dispatch = dispatch_window_pixel_size_changed;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushinteger(L, e.window.data1);
+        lua_pushinteger(L, e.window.data2);
+        nargs = 3;
+        break;
+      case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
+        last_dispatch = dispatch_window_display_scale_changed;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushnumber(L, target->get_display_scale());
+        nargs = 2;
+        break;
+      case SDL_EVENT_WINDOW_MAXIMIZED:
+        last_dispatch = dispatch_window_maximized;
+        push_app_dispatch(L, last_dispatch);
+        nargs = 1;
+        break;
+      case SDL_EVENT_WINDOW_RESTORED:
+        last_dispatch = dispatch_window_restored;
+        push_app_dispatch(L, last_dispatch);
+        nargs = 1;
+        break;
+      case SDL_USEREVENT_MUSIC_OVER:
+        last_dispatch = dispatch_music_over;
+        push_app_dispatch(L, last_dispatch);
+        nargs = 1;
+        break;
+      case SDL_USEREVENT_MUSIC_LOADED:
+        last_dispatch = dispatch_callback;
+        lua_pushlstring(L, last_dispatch.data(), last_dispatch.size());
+        lua_pushcclosure(L, &l_error_handler, 1);
+        lua_pushcfunction(L, &l_load_music_async_callback);
+        lua_pushlightuserdata(L, e.user.data1);
+        if (lua_pcall(L, 1, 0, -3) != LUA_OK) {
+          SDL_RemoveTimer(ctx->timer);
+        }
+        lua_pop(L, 1);
+        nargs = 0;
+        break;
+      case SDL_USEREVENT_TICK:
+        do_timer = true;
+        nargs = 0;
+        break;
+      case SDL_USEREVENT_MOVIE_OVER:
+        last_dispatch = dispatch_movie_over;
+        push_app_dispatch(L, last_dispatch);
+        nargs = 1;
+        break;
+      case SDL_USEREVENT_SOUND_OVER:
+        last_dispatch = dispatch_sound_over;
+        push_app_dispatch(L, last_dispatch);
+        lua_pushinteger(L, *(static_cast<int*>(e.user.data1)));
+        nargs = 2;
+        break;
+      default:
+        nargs = 0;
+        break;
+    }
+    if (nargs != 0) {
+      int res = lua_pcall(L, nargs + 1, 1, -3 - nargs);
+      if (res != LUA_OK) {
+        std::fprintf(stderr, "Error in %.*s: %s\n",
+                     static_cast<int>(last_dispatch.size()),
+                     last_dispatch.data(), lua_tostring(L, -1));
+      }
+      do_frame = do_frame || (lua_toboolean(L, -1) != 0);
+      lua_pop(L, 2);
+    }
+  }
+
+  if (do_timer) {
+    last_dispatch = dispatch_timer;
+    push_app_dispatch(L, last_dispatch);
+    int res = lua_pcall(L, 2, 1, -4);
+    if (res != LUA_OK) {
+      std::fprintf(stderr, "Error in timer callback: %s\n",
+                   lua_tostring(L, -1));
+    }
+    do_frame = do_frame || (lua_toboolean(L, -1) != 0);
+    lua_pop(L, 2);
+  }
+
+  // Render frame
+  last_dispatch = dispatch_frame;
+  if (fps.track_fps) {
+    fps.count_frame();
+  }
+  push_app_dispatch(L, last_dispatch);
+  int res = lua_pcall(L, 2, 1, -4);
+  if (res != LUA_OK) {
+    std::fprintf(stderr, "Error in frame callback: %s\n", lua_tostring(L, -1));
+  } else {
+    lua_pop(L, 2);
+  }
+
+  lua_gc(L, LUA_GCSTEP, 2);
+  infinite_loop_counter = 0;
+}
+#endif
+
 void mainloop(lua_State* L) {
   SDL_TimerID timer =
       SDL_AddTimer(usertick_period_ms, timer_frame_callback, nullptr);
@@ -318,6 +564,17 @@ void mainloop(lua_State* L) {
   lua_getglobal(L, "TheApp");
   lua_getfield(L, -1, "video");
   render_target* target = static_cast<render_target*>(lua_touserdata(L, -1));
+
+#ifdef __EMSCRIPTEN__
+  static EmscriptenContext em_ctx;
+  em_ctx.L = L;
+  em_ctx.target = target;
+  em_ctx.timer = timer;
+  em_ctx.last_tick_ms = SDL_GetTicks();
+
+  emscripten_set_main_loop_arg(emscripten_step, &em_ctx, 0, 1);
+  return;
+#endif
 
   while ((wait_error = SDL_WaitEvent(&e))) {
     bool do_frame = false;
