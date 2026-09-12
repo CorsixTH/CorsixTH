@@ -693,13 +693,116 @@ function Hospital:_fixBoiler()
   end
 end
 
+--! Spawn a rat emerging from a rathole. It runs to another rathole and vanishes.
+--!param hole (table, optional) The hole to emerge from; a random existing
+--!  rathole is used when omitted.
+--!return (Rat or nil) The spawned rat, or nil if there is no hole to use.
+function Hospital:spawnRat(hole)
+  hole = hole or (#self.ratholes > 0 and self.ratholes[math.random(1, #self.ratholes)])
+  if not hole then return nil end
+  local rat = self.world:newEntity("Rat", 1928)
+  rat:setTile(hole.x, hole.y)
+  rat:setTilePositionSpeed(hole.x, hole.y, 0, 0, 0, 0)
+  rat:init(hole.wall)
+  return rat
+end
+
+local function isRatholeInView(map, hole, left, top, right, bottom)
+  if hole.wall ~= "north" and hole.wall ~= "west" then return false end
+  local x, y = map:WorldToScreen(hole.x, hole.y)
+  return x >= left and x <= right and y >= top and y <= bottom
+end
+
+--! Find visible corridor wall tiles inside the hospital that are suitable for
+-- ratholes, nearest to the centre of the current view first.
+--!param count (integer) Maximum number of tiles to return.
+--!param left (number) Left edge of the current view in map screen coordinates.
+--!param top (number) Top edge of the current view in map screen coordinates.
+--!param right (number) Right edge of the current view in map screen coordinates.
+--!param bottom (number) Bottom edge of the current view in map screen coordinates.
+--!return (list of {x, y, wall, parcel}) Up to `count` suitable tiles.
+function Hospital:findRatholeTiles(count, left, top, right, bottom)
+  local map = self.world.map
+  local th = map.th
+  local candidates = {}
+  local centre_x, centre_y = (left + right) / 2, (top + bottom) / 2
+  for x = 1, map.width do
+    for y = 1, map.height do
+      local flags = th:getCellFlags(x, y)
+      if self:isInHospital(x, y) and flags.roomId == 0 and flags.buildable then
+        local pick
+        for _, wall in ipairs(self:getWallsAround(x, y)) do
+          if wall.wall == "north" then
+            pick = wall
+            break
+          elseif wall.wall == "west" and not pick then
+            pick = wall
+          end
+        end
+        local hole = pick and {x = x, y = y, wall = pick.wall,
+            parcel = pick.parcel}
+        if hole and isRatholeInView(map, hole, left, top, right, bottom) then
+          local exists = false
+          for _, other in ipairs(self.ratholes) do
+            if other.x == x and other.y == y and other.wall == hole.wall then
+              exists = true
+              break
+            end
+          end
+          if not exists then
+            local screen_x, screen_y = map:WorldToScreen(x, y)
+            hole.distance = (screen_x - centre_x) ^ 2 +
+                (screen_y - centre_y) ^ 2
+            candidates[#candidates + 1] = hole
+          end
+        end
+      end
+    end
+  end
+  table.sort(candidates, function(a, b) return a.distance < b.distance end)
+  local result = {}
+  for i = 1, math.min(count, #candidates) do
+    candidates[i].distance = nil
+    result[i] = candidates[i]
+  end
+  return result
+end
+
+--! Debug helper: ensure two visible ratholes exist, then spawn a rat from one.
+--!param left (number) Left edge of the current view in map screen coordinates.
+--!param top (number) Top edge of the current view in map screen coordinates.
+--!param right (number) Right edge of the current view in map screen coordinates.
+--!param bottom (number) Bottom edge of the current view in map screen coordinates.
+function Hospital:makeDebugRat(left, top, right, bottom)
+  local visible_holes = {}
+  for _, hole in ipairs(self.ratholes) do
+    if isRatholeInView(self.world.map, hole, left, top, right, bottom) then
+      visible_holes[#visible_holes + 1] = hole
+    end
+  end
+
+  local emerge_hole
+  local needed = math.max(0, 2 - #visible_holes)
+  for _, tile in ipairs(self:findRatholeTiles(needed, left, top, right, bottom)) do
+    self:addRathole(tile.x, tile.y, tile.wall, tile.parcel)
+    local hole = self.ratholes[#self.ratholes]
+    visible_holes[#visible_holes + 1] = hole
+    emerge_hole = emerge_hole or hole
+  end
+  if not emerge_hole and #visible_holes > 0 then
+    emerge_hole = visible_holes[math.random(1, #visible_holes)]
+  end
+  self:spawnRat(emerge_hole)
+end
+
 --! Daily update of the ratholes.
 --!param self (Hospital) hospital being updated.
-local function dailyUpdateRatholes(self)
+local function dailyUpdateRatholes(self, minimum_holes)
   local map = self.world.map
   local th = map.th
 
-  local wanted_holes = math.round(th:getLitterFraction(self:getPlayerIndex()) * 200)
+  local wanted_holes = math.max(minimum_holes or 0,
+      math.round(th:getLitterFraction(self:getPlayerIndex()) * 200))
   if #self.ratholes < wanted_holes then -- Not enough holes, find a new spot
     -- Try to find a wall in a corridor, and add it if possible.
     -- Each iteration does a few probes at a random position, most tries will
@@ -732,6 +835,61 @@ local function dailyUpdateRatholes(self)
           end
         end
       end
+    end
+  end
+end
+
+-- Rats appear even in a spotless hospital, and more often as it gets littered.
+-- The daily spawn chance and the cap on simultaneous rats both scale with the
+-- size of the hospital.
+local base_rat_spawn_chance = 0.05 -- daily chance in a clean hospital
+local litter_rat_spawn_chance = 0.5 -- extra chance at full litter
+local tiles_per_rat = 200 -- hospital tiles allowed per simultaneous rat
+
+--! Total number of tiles across the hospital's owned plots, used to scale rat
+-- activity with hospital size.
+--!return (integer) The owned tile count.
+function Hospital:getOwnedTileCount()
+  local map = self.world.map
+  local tiles = 0
+  for _, plot in ipairs(self.ownedPlots) do
+    tiles = tiles + map:getParcelTileCount(plot)
+  end
+  return tiles
+end
+
+local function countActiveRats(self)
+  local count = 0
+  for _, entity in ipairs(self.world.entities) do
+    if class.is(entity, Rat) then count = count + 1 end
+  end
+  return count
+end
+
+local function hasRatholeRoute(self)
+  local first = self.ratholes[1]
+  if not first then return false end
+  for i = 2, #self.ratholes do
+    local hole = self.ratholes[i]
+    if hole.x ~= first.x or hole.y ~= first.y then return true end
+  end
+  return false
+end
+
+local function dailyUpdateRats(self)
+  local max_rats = math.max(1, math.floor(self:getOwnedTileCount() / tiles_per_rat))
+  if countActiveRats(self) >= max_rats then return end
+
+  local litter = self.world.map.th:getLitterFraction(self:getPlayerIndex())
+  if math.random() < base_rat_spawn_chance + litter * litter_rat_spawn_chance then
+    -- Clean hospitals normally have no ratholes. Add only enough for a rat to
+    -- run between real holes when a spawn attempt succeeds.
+    for _ = 1, 2 do
+      if hasRatholeRoute(self) then break end
+      dailyUpdateRatholes(self, #self.ratholes + 1)
+    end
+    if hasRatholeRoute(self) then
+      self:spawnRat()
     end
   end
 end
@@ -780,7 +938,10 @@ function Hospital:onEndDay()
   local heating_costs = (self.heating.radiator_heat * 10 * num_radiators * 7.50) / self.world:date():lastDayOfMonth()
   self.acc_heating = self.acc_heating + heating_costs
 
-  if self:isPlayerHospital() then dailyUpdateRatholes(self) end
+  if self:isPlayerHospital() then
+    dailyUpdateRatholes(self)
+    dailyUpdateRats(self)
+  end
 end
 
 -- Called at the end of each month.

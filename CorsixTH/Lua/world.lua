@@ -30,6 +30,7 @@ corsixth.require("entities.humanoids.staff.receptionist")
 corsixth.require("entities.humanoids.vip")
 corsixth.require("entities.humanoids.grim_reaper")
 corsixth.require("entities.humanoids.inspector")
+corsixth.require("entities.rat")
 corsixth.require("staff_profile")
 corsixth.require("hospital")
 corsixth.require("hospitals.player_hospital")
@@ -2758,6 +2759,11 @@ function World:afterLoad(old, new)
       obj:afterLoad(old, new)
     end
   end
+  -- Migrate the entity map (older saves gain the rats layer). Saves before
+  -- version 88 have no entity map at this point; one is built complete below.
+  if self.entity_map then
+    self.entity_map:afterLoad(old, new)
+  end
 
   if old >= 87 then
     self:playLoadedEntitySounds()
@@ -2773,6 +2779,7 @@ function World:afterLoad(old, new)
       end
     end
   end
+
   if old < 108 then
     self.room_build_callbacks = nil
   end
@@ -3050,4 +3057,37 @@ end
 --! Returns whether the level being played is part of a campaign or not
 function World:isCampaign()
   return type(self.map.level_number) == "number" or self.campaign_info
+end
+
+-- A rat is considered "near" the cursor for the crosshair when the cursor is
+-- within this many pixels of where the rat is actually drawn.
+local near_rat_pixel_radius = 24
+
+--! Determine if any rat is near the given screen coordinates (relative to the
+-- map origin). Compares against each nearby rat's drawn pixel position rather
+-- than the tile it is anchored to, which can be up to a tile away while it
+-- scurries.
+--!param x (number) x-coordinate on the screen
+--!param y (number) y-coordinate on the screen
+--!return (boolean) Whether a rat is near the cursor.
+function World:isNearRat(x, y)
+  local tile_x, tile_y = self.map:ScreenToWorld(x, y)
+  tile_x, tile_y = math.floor(tile_x), math.floor(tile_y)
+  local radius_sq = near_rat_pixel_radius * near_rat_pixel_radius
+  for dx = -2, 2 do
+    for dy = -2, 2 do
+      local tx, ty = tile_x + dx, tile_y + dy
+      if self:isOnMap(tx, ty) then
+        for _, rat in ipairs(self.entity_map:getRatsAtCoordinate(tx, ty)) do
+          local rx, ry = self.map:WorldToScreen(rat.tile_x, rat.tile_y)
+          local px, py = rat.th:getPosition()
+          local ddx, ddy = x - (rx + px), y - (ry + py)
+          if ddx * ddx + ddy * ddy <= radius_sq then
+            return true
+          end
+        end
+      end
+    end
+  end
+  return false
 end
