@@ -10,8 +10,9 @@ var searchData=
   ['find_5fpath_5fto_5fhospital_7',['find_path_to_hospital',['../classhospital__finder.html#abfdc7b51c739285fb7e72434d2beab45',1,'hospital_finder::find_path_to_hospital()'],['../classpathfinder.html#aa225342cd8e628caa3be28e7bf37bb6d',1,'pathfinder::find_path_to_hospital()']]],
   ['finish_8',['finish',['../classlua__persist__basic__writer.html#a3091b7892fc8a56e5c41eb2ba0964a4d',1,'lua_persist_basic_writer::finish()'],['../classlua__persist__basic__reader.html#aecddbc9cabb0ed290482b86d83e3493c',1,'lua_persist_basic_reader::finish()'],['../classinteger__run__length__encoder.html#af655560834ad235646008c6c1e0a834d',1,'integer_run_length_encoder::finish()']]],
   ['finish_5fnonoverlapping_5fdraws_9',['finish_nonoverlapping_draws',['../classrender__target.html#ad95575ec31c54386dc63332fb3b716a2',1,'render_target']]],
-  ['fourcc_10',['fourcc',['../th__sound_8cpp.html#a51a85b3fa13cf0e9b5047a83536f939c',1,'th_sound.cpp']]],
-  ['freetype_5ffont_11',['freetype_font',['../classfreetype__font.html#a459f3d18d684c66e531e8d32c7d82355',1,'freetype_font']]],
-  ['full_5fcolour_5frenderer_12',['full_colour_renderer',['../classfull__colour__renderer.html#a400036b7c2944f54de38ab0b4bc97de5',1,'full_colour_renderer']]],
-  ['full_5fcolour_5fstoring_13',['full_colour_storing',['../classfull__colour__storing.html#aacc35529f763a0342dd9199ec1cf035f',1,'full_colour_storing']]]
+  ['fluid_5fplayer_10',['fluid_player',['../classfluid__player.html#a52ef97a01053c991f0f7ab38f227da17',1,'fluid_player::fluid_player(const std::string &amp;soundfont)'],['../classfluid__player.html#ac7c8432ec374e60edc776d5df8029e47',1,'fluid_player::fluid_player(const fluid_player &amp;)=delete']]],
+  ['fourcc_11',['fourcc',['../th__sound_8cpp.html#a51a85b3fa13cf0e9b5047a83536f939c',1,'th_sound.cpp']]],
+  ['freetype_5ffont_12',['freetype_font',['../classfreetype__font.html#a459f3d18d684c66e531e8d32c7d82355',1,'freetype_font']]],
+  ['full_5fcolour_5frenderer_13',['full_colour_renderer',['../classfull__colour__renderer.html#a400036b7c2944f54de38ab0b4bc97de5',1,'full_colour_renderer']]],
+  ['full_5fcolour_5fstoring_14',['full_colour_storing',['../classfull__colour__storing.html#aacc35529f763a0342dd9199ec1cf035f',1,'full_colour_storing']]]
 ];

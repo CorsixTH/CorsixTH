@@ -63,7 +63,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('classth__lua__midi__player.html','',''); });
+$(function(){initNavTree('classth__lua__midi__player.html','','classth__lua__midi__player-members'); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -92,6 +92,276 @@ $(function(){initNavTree('classth__lua__midi__player.html','',''); });
   <div class="headertitle"><div class="title">th_lua_midi_player Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a8578ab4cdc6da9740ae7a0c583e6888f" id="r_a8578ab4cdc6da9740ae7a0c583e6888f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8578ab4cdc6da9740ae7a0c583e6888f">th_lua_midi_player</a> (const std::string &amp;soundfont)</td></tr>
+<tr class="memitem:a809beb5d729ce373c0c295220e4f36e3" id="r_a809beb5d729ce373c0c295220e4f36e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a809beb5d729ce373c0c295220e4f36e3">th_lua_midi_player</a> (const <a class="el" href="classth__lua__midi__player.html">th_lua_midi_player</a> &amp;)=delete</td></tr>
+<tr class="memitem:a207ee154b4cce4181ced39611655b010" id="r_a207ee154b4cce4181ced39611655b010"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classth__lua__midi__player.html">th_lua_midi_player</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a207ee154b4cce4181ced39611655b010">operator=</a> (const <a class="el" href="classth__lua__midi__player.html">th_lua_midi_player</a> &amp;)=delete</td></tr>
+<tr class="memitem:a5201f96b192d66d0160143c8f0d7958f" id="r_a5201f96b192d66d0160143c8f0d7958f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5201f96b192d66d0160143c8f0d7958f">port_list</a> () const</td></tr>
+<tr class="memitem:a3aaf8248b702bd5a9f22d1d75fff6591" id="r_a3aaf8248b702bd5a9f22d1d75fff6591"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3aaf8248b702bd5a9f22d1d75fff6591">play_xmi</a> (const unsigned char *xmiData, const size_t len)</td></tr>
+<tr class="memitem:ab5e213ebe0b6ef6de8f0d3bd9e3f5488" id="r_ab5e213ebe0b6ef6de8f0d3bd9e3f5488"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5e213ebe0b6ef6de8f0d3bd9e3f5488">set_volume</a> (const double volume)</td></tr>
+<tr class="memitem:a3f5e0694776369f771631807a9a0184d" id="r_a3f5e0694776369f771631807a9a0184d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f5e0694776369f771631807a9a0184d">stop</a> ()</td></tr>
+<tr class="memitem:a0de2fdd8a1f0f5419447f918bcfda85d" id="r_a0de2fdd8a1f0f5419447f918bcfda85d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0de2fdd8a1f0f5419447f918bcfda85d">pause</a> ()</td></tr>
+<tr class="memitem:a0a318e824a6a597cec5b900363706c99" id="r_a0a318e824a6a597cec5b900363706c99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a318e824a6a597cec5b900363706c99">resume</a> ()</td></tr>
+<tr class="memitem:ac091a63e96c4d3150c1538184b214512" id="r_ac091a63e96c4d3150c1538184b214512"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac091a63e96c4d3150c1538184b214512">close</a> ()</td></tr>
+</table>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a8578ab4cdc6da9740ae7a0c583e6888f" name="a8578ab4cdc6da9740ae7a0c583e6888f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8578ab4cdc6da9740ae7a0c583e6888f">&#9670;&#160;</a></span>th_lua_midi_player() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">th_lua_midi_player::th_lua_midi_player </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>soundfont</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a809beb5d729ce373c0c295220e4f36e3" name="a809beb5d729ce373c0c295220e4f36e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a809beb5d729ce373c0c295220e4f36e3">&#9670;&#160;</a></span>th_lua_midi_player() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">th_lua_midi_player::th_lua_midi_player </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classth__lua__midi__player.html">th_lua_midi_player</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel delete">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ac091a63e96c4d3150c1538184b214512" name="ac091a63e96c4d3150c1538184b214512"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac091a63e96c4d3150c1538184b214512">&#9670;&#160;</a></span>close()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void th_lua_midi_player::close </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a207ee154b4cce4181ced39611655b010" name="a207ee154b4cce4181ced39611655b010"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a207ee154b4cce4181ced39611655b010">&#9670;&#160;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classth__lua__midi__player.html">th_lua_midi_player</a> &amp; th_lua_midi_player::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classth__lua__midi__player.html">th_lua_midi_player</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel delete">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0de2fdd8a1f0f5419447f918bcfda85d" name="a0de2fdd8a1f0f5419447f918bcfda85d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0de2fdd8a1f0f5419447f918bcfda85d">&#9670;&#160;</a></span>pause()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void th_lua_midi_player::pause </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3aaf8248b702bd5a9f22d1d75fff6591" name="a3aaf8248b702bd5a9f22d1d75fff6591"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3aaf8248b702bd5a9f22d1d75fff6591">&#9670;&#160;</a></span>play_xmi()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void th_lua_midi_player::play_xmi </td>
+          <td>(</td>
+          <td class="paramtype">const unsigned char *</td>          <td class="paramname"><span class="paramname"><em>xmiData</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t</td>          <td class="paramname"><span class="paramname"><em>len</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5201f96b192d66d0160143c8f0d7958f" name="a5201f96b192d66d0160143c8f0d7958f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5201f96b192d66d0160143c8f0d7958f">&#9670;&#160;</a></span>port_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; th_lua_midi_player::port_list </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0a318e824a6a597cec5b900363706c99" name="a0a318e824a6a597cec5b900363706c99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a318e824a6a597cec5b900363706c99">&#9670;&#160;</a></span>resume()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void th_lua_midi_player::resume </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab5e213ebe0b6ef6de8f0d3bd9e3f5488" name="ab5e213ebe0b6ef6de8f0d3bd9e3f5488"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5e213ebe0b6ef6de8f0d3bd9e3f5488">&#9670;&#160;</a></span>set_volume()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void th_lua_midi_player::set_volume </td>
+          <td>(</td>
+          <td class="paramtype">const double</td>          <td class="paramname"><span class="paramname"><em>volume</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3f5e0694776369f771631807a9a0184d" name="a3f5e0694776369f771631807a9a0184d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f5e0694776369f771631807a9a0184d">&#9670;&#160;</a></span>stop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void th_lua_midi_player::stop </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/runner/work/CorsixTH/CorsixTH/CorsixTH/Src/<a class="el" href="th__lua__midi_8cpp.html">th_lua_midi.cpp</a></li>
 </ul>

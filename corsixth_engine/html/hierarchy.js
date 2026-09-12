@@ -12,6 +12,7 @@ var hierarchy =
     [ "animation_start_frames", "structanimation__start__frames.html", null ],
     [ "chunk_renderer", "classchunk__renderer.html", null ],
     [ "cursor", "classcursor.html", null ],
+    [ "fluid_player", "classfluid__player.html", null ],
     [ "font", "classfont.html", [
       [ "bitmap_font", "classbitmap__font.html", null ],
       [ "freetype_font", "classfreetype__font.html", null ]

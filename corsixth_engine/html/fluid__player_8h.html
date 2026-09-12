@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CorsixTH engine (the C++ part): /home/runner/work/CorsixTH/CorsixTH/CorsixTH/Src/th_lua_midi.cpp File Reference</title>
+<title>CorsixTH engine (the C++ part): /home/runner/work/CorsixTH/CorsixTH/CorsixTH/Src/fluid_player.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('th__lua__midi_8cpp.html','',''); });
+$(function(){initNavTree('fluid__player_8h.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -89,45 +89,33 @@ $(function(){initNavTree('th__lua__midi_8cpp.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">th_lua_midi.cpp File Reference</div></div>
+  <div class="headertitle"><div class="title">fluid_player.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdexcept&gt;</code><br />
-<code>#include &lt;type_traits&gt;</code><br />
-<code>#include &lt;variant&gt;</code><br />
-<code>#include &lt;vector&gt;</code><br />
-<code>#include &quot;<a class="el" href="fluid__player_8h_source.html">fluid_player.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="lua_8hpp_source.html">lua.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="midi__player_8h_source.html">midi_player.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="th__lua_8h_source.html">th_lua.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="th__lua__internal_8h_source.html">th_lua_internal.h</a>&quot;</code><br />
-</div><table class="memberdecls">
+<div class="textblock"><code>#include &lt;SDL3/SDL.h&gt;</code><br />
+<code>#include &lt;fluidsynth.h&gt;</code><br />
+<code>#include &lt;array&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
+</div>
+<p><a href="fluid__player_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:th_5Flua_5Fmidi_5Fplayer" id="r_th_5Flua_5Fmidi_5Fplayer"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classth__lua__midi__player.html">th_lua_midi_player</a></td></tr>
+<tr class="memitem:fluid_5Fplayer" id="r_fluid_5Fplayer"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfluid__player.html">fluid_player</a></td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:aa026e370ff7d0070f3fb0d41c6c82a76" id="r_aa026e370ff7d0070f3fb0d41c6c82a76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa026e370ff7d0070f3fb0d41c6c82a76">lua_register_midi</a> (const <a class="el" href="structlua__register__state.html">lua_register_state</a> *pState)</td></tr>
+<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:th" id="r_th"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceth.html">th</a></td></tr>
+<tr class="memitem:th_3A_3Afluid" id="r_th_3A_3Afluid"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceth_1_1fluid.html">th::fluid</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a3cacaf66252d4ecf4ffa416e05966a1c" id="r_a3cacaf66252d4ecf4ffa416e05966a1c"><td class="memItemLeft" align="right" valign="top">constexpr SDL_AudioFormat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceth_1_1fluid.html#a3cacaf66252d4ecf4ffa416e05966a1c">th::fluid::audio_format</a> = SDL_AUDIO_F32</td></tr>
+<tr class="memitem:ad87a10fa38daff89deea80ff568c5ff4" id="r_ad87a10fa38daff89deea80ff568c5ff4"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceth_1_1fluid.html#ad87a10fa38daff89deea80ff568c5ff4">th::fluid::audio_channels</a> = 2</td></tr>
+<tr class="memitem:ae9b6301438fbd9be147bf6d744233525" id="r_ae9b6301438fbd9be147bf6d744233525"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceth_1_1fluid.html#ae9b6301438fbd9be147bf6d744233525">th::fluid::audio_freq</a> = 44100</td></tr>
+<tr class="memitem:aef2802f78973c9c816c9f9240732cfe4" id="r_aef2802f78973c9c816c9f9240732cfe4"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceth_1_1fluid.html#aef2802f78973c9c816c9f9240732cfe4">th::fluid::frame_size</a> = sizeof(float) * <a class="el" href="namespaceth_1_1fluid.html#ad87a10fa38daff89deea80ff568c5ff4">audio_channels</a></td></tr>
+<tr class="memitem:a4fa8c0afd709d9ecdb01bc5e39493573" id="r_a4fa8c0afd709d9ecdb01bc5e39493573"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceth_1_1fluid.html#a4fa8c0afd709d9ecdb01bc5e39493573">th::fluid::period_size</a> = 2048</td></tr>
 </table>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="aa026e370ff7d0070f3fb0d41c6c82a76" name="aa026e370ff7d0070f3fb0d41c6c82a76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa026e370ff7d0070f3fb0d41c6c82a76">&#9670;&#160;</a></span>lua_register_midi()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void lua_register_midi </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structlua__register__state.html">lua_register_state</a> *</td>          <td class="paramname"><span class="paramname"><em>pState</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
@@ -142,7 +130,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_3d35694993993d52c89462d0a116fbed.html">CorsixTH</a></li><li class="navelem"><a href="dir_e5864bb6e3dbfc77985dc14503ba64b7.html">Src</a></li><li class="navelem"><a href="th__lua__midi_8cpp.html">th_lua_midi.cpp</a></li>
+    <li class="navelem"><a href="dir_3d35694993993d52c89462d0a116fbed.html">CorsixTH</a></li><li class="navelem"><a href="dir_e5864bb6e3dbfc77985dc14503ba64b7.html">Src</a></li><li class="navelem"><a href="fluid__player_8h.html">fluid_player.h</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a></li>

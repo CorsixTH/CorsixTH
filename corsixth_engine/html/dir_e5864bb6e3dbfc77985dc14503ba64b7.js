@@ -5,6 +5,8 @@ var dir_e5864bb6e3dbfc77985dc14503ba64b7 =
     [ "cp437_table.h", "cp437__table_8h.html", "cp437__table_8h" ],
     [ "cp936_table.h", "cp936__table_8h.html", "cp936__table_8h" ],
     [ "cpmik_table.h", "cpmik__table_8h.html", "cpmik__table_8h" ],
+    [ "fluid_player.cpp", "fluid__player_8cpp.html", null ],
+    [ "fluid_player.h", "fluid__player_8h.html", "fluid__player_8h" ],
     [ "iso_fs.cpp", "iso__fs_8cpp.html", null ],
     [ "iso_fs.h", "iso__fs_8h.html", "iso__fs_8h" ],
     [ "lua.hpp", "lua_8hpp.html", "lua_8hpp" ],
