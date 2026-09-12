@@ -1,4 +1,5 @@
 --[[ Copyright (c) 2026 Bruno Lima
+Copyright (c) 2026 Joshua "gojomoso1" DeVries
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -40,6 +41,7 @@ require("world")
 _G._A = saved_A
 
 local World = _G["World"]
+local EntityMap = _G["EntityMap"]
 
 describe("world.lua: ", function()
   local function makeWorld(entities)
@@ -480,5 +482,45 @@ describe("world.lua: ", function()
     assert.is_true(e3.destroyed)
     assert.are.equal(0, e3.tick_count)
     assert.are.equal(2, #world.entities)
+  end)
+
+  it("adds rat buckets when loading an upstream version 265 save", function()
+    local entity_map = {
+      width = 1,
+      height = 1,
+      entity_map = {{{humanoids = {}, objects = {}}}},
+    }
+    setmetatable(entity_map, {__index = EntityMap})
+
+    entity_map:afterLoad(265, 266)
+
+    assert.same({}, entity_map.entity_map[1][1].rats)
+
+    local rat = {}
+    entity_map.entity_map[1][1].rats = {rat}
+    entity_map:afterLoad(265, 266)
+    assert.is.equal(rat, entity_map.entity_map[1][1].rats[1])
+  end)
+
+  it("detects a moving rat across the full proximity radius", function()
+    local rat = {
+      tile_x = 64,
+      tile_y = 64,
+      th = {getPosition = function() return -32, -16 end},
+    }
+    local map = {width = 128, height = 128}
+    setmetatable(map, {__index = Map})
+    local world = makeWorld({rat})
+    world.map = map
+    world.entity_map = {
+      getRatsAtCoordinate = function(_, x, y)
+        return x == rat.tile_x and y == rat.tile_y and {rat} or {}
+      end,
+    }
+
+    -- The rat is drawn one tile west of its entity-map tile while moving.
+    -- This cursor is exactly 24 pixels farther west, crossing another tile.
+    assert.is_true(world:isNearRat(-56, 2000))
+    assert.is_false(world:isNearRat(-57, 2000))
   end)
 end)
