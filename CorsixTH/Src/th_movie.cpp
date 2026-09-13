@@ -42,7 +42,6 @@ extern "C" {
 #include <SDL3/SDL.h>
 #include <SDL3_mixer/SDL_mixer.h>
 
-#include <cerrno>
 #include <chrono>
 #include <cstring>
 #include <iostream>
@@ -51,11 +50,10 @@ extern "C" {
 
 namespace {
 
-void th_movie_audio_callback(void* userdata, MIX_Track*, const SDL_AudioSpec*,
-                             float* pcm, int samples) {
-  movie_player* pMovie = static_cast<movie_player*>(userdata);
-  std::size_t size = samples * sizeof(float);
-  pMovie->copy_audio_to_stream(reinterpret_cast<uint8_t*>(pcm), size);
+void th_movie_audio_callback(void* userdata, SDL_AudioStream* stream,
+                             int additional_amount, int /*total_amount*/) {
+  auto* player = static_cast<movie_player*>(userdata);
+  player->copy_audio_to_stream(stream, additional_amount);
 }
 
 }  // namespace
@@ -305,22 +303,34 @@ movie_player::movie_player()
       video_codec_context(nullptr),
       audio_codec_context(nullptr),
       audio_resample_context(nullptr),
-      empty_audio_chunk(nullptr),
       audio_chunk_buffer{},
       error_buffer{},
       aborting(false),
       video_stream_index(-1),
       audio_stream_index(-1),
       current_sync_pts(0.0),
-      current_sync_pts_system_time(0),
-      mixer_channels(0),
-      mixer_frequency(0) {
+      current_sync_pts_system_time(0) {
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100)
   av_register_all();
 #endif
+
+  SDL_AudioSpec spec;
+  spec.freq = audio_frequency;
+  spec.channels = audio_channels;
+  spec.format = audio_format;
+
+  audio_playback_stream = SDL_OpenAudioDeviceStream(
+      SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, th_movie_audio_callback, this);
 }
 
-movie_player::~movie_player() { unload(); }
+movie_player::~movie_player() noexcept {
+  try {
+    unload();
+  } catch (std::exception& e) {
+    std::fprintf(stderr, "Error destroying movie_player: %s\n", e.what());
+  }
+  SDL_DestroyAudioStream(audio_playback_stream);
+}
 
 void movie_player::set_renderer(SDL_Renderer* pRenderer) {
   renderer = pRenderer;
@@ -401,18 +411,13 @@ void movie_player::unload() {
 
   video_codec_context.reset();
 
-  empty_audio_chunk.reset();
-
-  std::scoped_lock audioLock(decoding_audio_mutex);
+  sdl_audio_mutex playback_mutex(audio_playback_stream);
+  std::scoped_lock playback_lock(playback_mutex);
+  SDL_PauseAudioStreamDevice(audio_playback_stream);
 
   audio_codec_context.reset();
 
   swr_free(&audio_resample_context);
-
-  th::sound::sdl_mixer* mixer = th::sound::get_mixer();
-  if (mixer) {
-    MIX_SetTrackCookedCallback(mixer->get_movie_track(), nullptr, nullptr);
-  }
 
   if (format_context) {
     avformat_close_input(&format_context);
@@ -446,59 +451,20 @@ void movie_player::play_audio() {
     return;
   }
 
-  th::sound::sdl_mixer* mixer = th::sound::get_mixer();
-  if (!mixer) {
-    return;
-  }
-
-  SDL_AudioSpec audio_spec;
-  if (!MIX_GetMixerFormat(mixer->get_mixer(), &audio_spec)) {
-    std::fprintf(stderr, "Problem getting mixer format for movie playback: %s",
-                 SDL_GetError());
-    return;
-  }
-  mixer_frequency = audio_spec.freq;
-  mixer_channels = audio_spec.channels;
-
-  if (mixer_channels == 0) {
-    return;
-  }
-
-  std::int64_t target_channel_layout;
-  switch (mixer_channels) {
-    case 1:
-      target_channel_layout = AV_CH_LAYOUT_MONO;
-      break;
-    case 2:
-      target_channel_layout = AV_CH_LAYOUT_STEREO;
-      break;
-    case 4:
-      target_channel_layout = AV_CH_LAYOUT_QUAD;
-      break;
-    case 6:
-      target_channel_layout = AV_CH_LAYOUT_5POINT1;
-      break;
-    case 8:
-      target_channel_layout = AV_CH_LAYOUT_7POINT1;
-      break;
-    default:
-      std::cerr << "WARN: unsupported channel layout " << mixer_channels
-                << ". Please report issue.";
-      target_channel_layout = 0;
-  }
+  std::int64_t target_channel_layout = AV_CH_LAYOUT_STEREO;
 
 #if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(57, 24, 100) && \
     LIBSWRESAMPLE_VERSION_INT >= AV_VERSION_INT(4, 5, 100)
   av_channel_layout_unique_ptr ch_layout(new AVChannelLayout{});
 
   if (target_channel_layout == 0) {
-    av_channel_layout_default(ch_layout.get(), mixer_channels);
+    av_channel_layout_default(ch_layout.get(), audio_channels);
   } else {
     av_channel_layout_from_mask(ch_layout.get(), target_channel_layout);
   }
 
   swr_alloc_set_opts2(&audio_resample_context, ch_layout.get(),
-                      AV_SAMPLE_FMT_FLT, mixer_frequency,
+                      AV_SAMPLE_FMT_FLT, audio_frequency,
                       &(audio_codec_context->ch_layout),
                       audio_codec_context->sample_fmt,
                       audio_codec_context->sample_rate, 0, nullptr);
@@ -515,24 +481,10 @@ void movie_player::play_audio() {
       nullptr);
 #endif
   swr_init(audio_resample_context);
-  empty_audio_chunk.reset(
-      MIX_LoadRawAudioNoCopy(mixer->get_mixer(), audio_chunk_buffer.data(),
-                             audio_chunk_buffer.size(), &audio_spec, false));
 
-  MIX_Track* track = mixer->get_movie_track();
-
-  MIX_SetTrackAudio(track, empty_audio_chunk.get());
-
-  SDL_PropertiesID playProps = SDL_CreateProperties();
-  SDL_SetNumberProperty(playProps, MIX_PROP_PLAY_LOOPS_NUMBER, -1);
-  bool played = MIX_PlayTrack(track, playProps);
-  SDL_DestroyProperties(playProps);
-
+  bool played = SDL_ResumeAudioStreamDevice(audio_playback_stream);
   if (!played) {
     last_error = std::string(SDL_GetError());
-    empty_audio_chunk.reset();
-  } else {
-    MIX_SetTrackCookedCallback(track, th_movie_audio_callback, this);
   }
 }
 
@@ -730,42 +682,47 @@ int movie_player::populate_frame(AVCodecContext& ctx, av_packet_queue& pq,
   return iError;
 }
 
-void movie_player::copy_audio_to_stream(uint8_t* pbStream,
-                                        std::size_t iStreamSize) {
-  std::scoped_lock audioLock(decoding_audio_mutex);
-
-  while (iStreamSize > 0 && !aborting) {
-    std::size_t audio_size = decode_audio_frame(pbStream, iStreamSize);
+void movie_player::copy_audio_to_stream(SDL_AudioStream* stream,
+                                        std::size_t requested_size) {
+  while (requested_size > 0 && !aborting) {
+    std::size_t audio_size = decode_audio_frame(requested_size);
 
     if (audio_size <= 0) {
-      std::memset(pbStream, 0, iStreamSize);
+      std::memset(audio_chunk_buffer.data(),
+                  SDL_GetSilenceValueForFormat(audio_format), requested_size);
       return;
     }
-    iStreamSize -= audio_size;
-    pbStream += audio_size;
+    SDL_PutAudioStreamData(stream, audio_chunk_buffer.data(),
+                           static_cast<int>(audio_size));
+    requested_size -= audio_size;
   }
 }
 
-size_t movie_player::decode_audio_frame(uint8_t* stream, size_t stream_size) {
+size_t movie_player::decode_audio_frame(size_t requested_size) {
+  size_t stream_size = std::min(requested_size, audio_chunk_buffer.size());
+
   // If we are paused, return silence
   if (paused.load()) {
-    std::memset(stream, 0, stream_size);
+    std::memset(audio_chunk_buffer.data(),
+                SDL_GetSilenceValueForFormat(audio_format), stream_size);
     return stream_size;
   }
 
   int iOutSamples = static_cast<int>(
       stream_size /
-      (av_get_bytes_per_sample(AV_SAMPLE_FMT_FLT) * mixer_channels));
+      (av_get_bytes_per_sample(AV_SAMPLE_FMT_FLT) * audio_channels));
+
+  uint8_t* out = audio_chunk_buffer.data();
 
   int actual_samples =
-      swr_convert(audio_resample_context, &stream, iOutSamples, nullptr, 0);
+      swr_convert(audio_resample_context, &out, iOutSamples, nullptr, 0);
   if (actual_samples < 0) {
     std::cerr << "WARN: Unexpected error " << actual_samples
               << " while converting audio\n";
     return 0;
   } else if (actual_samples > 0) {
     return actual_samples * av_get_bytes_per_sample(AV_SAMPLE_FMT_FLT) *
-           mixer_channels;
+           audio_channels;
   }
 
   av_frame_unique_ptr audio_frame(av_frame_alloc());
@@ -784,24 +741,22 @@ size_t movie_player::decode_audio_frame(uint8_t* stream, size_t stream_size) {
   current_sync_pts = dClockPts;
   current_sync_pts_system_time = SDL_GetTicks();
 
-  actual_samples =
-      swr_convert(audio_resample_context, &stream, iOutSamples,
-                  const_cast<const uint8_t**>(&audio_frame->data[0]),
-                  audio_frame->nb_samples);
+  actual_samples = swr_convert(audio_resample_context, &out, iOutSamples,
+                               &audio_frame->data[0], audio_frame->nb_samples);
   if (actual_samples < 0) {
     std::cerr << "WARN: Unexpected error " << actual_samples
               << " while converting audio\n";
     return 0;
   }
   return actual_samples * av_get_bytes_per_sample(AV_SAMPLE_FMT_FLT) *
-         mixer_channels;
+         audio_channels;
 }
 #else   // CORSIX_TH_USE_FFMPEG
 movie_player::movie_player() {}
 movie_player::~movie_player() {}
-void movie_player::set_renderer(SDL_Renderer* renderer) {}
+void movie_player::set_renderer(SDL_Renderer*) {}
 bool movie_player::movies_enabled() const { return false; }
-bool movie_player::load(const char* file_path) { return true; }
+bool movie_player::load(const char*) { return true; }
 void movie_player::unload() {}
 void movie_player::play() {
   SDL_Event endEvent;
@@ -816,10 +771,10 @@ bool movie_player::has_audio_track() const { return false; }
 double movie_player::get_movie_length() const { return 0; }
 const char* movie_player::get_last_error() const { return nullptr; }
 void movie_player::clear_last_error() {}
-double movie_player::refresh(const SDL_Rect& destination_rect) { return 0; }
+double movie_player::refresh(const SDL_Rect&) { return 0; }
 void movie_player::allocate_picture_buffer() {}
 void movie_player::deallocate_picture_buffer() {}
 void movie_player::read_streams() {}
 void movie_player::run_video() {}
-void movie_player::copy_audio_to_stream(uint8_t* stream, std::size_t length) {}
+void movie_player::copy_audio_to_stream(SDL_AudioStream*, std::size_t) {}
 #endif  // CORSIX_TH_USE_FFMPEG
