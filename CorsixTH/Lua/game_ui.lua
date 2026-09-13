@@ -368,8 +368,8 @@ function GameUI:onKeyDown(rawchar, modifiers, is_repeat)
   end
 end
 
-function GameUI:onKeyUp(rawchar)
-  if UI.onKeyUp(self, rawchar) then
+function GameUI:onKeyUp(rawchar, modifiers)
+  if UI.onKeyUp(self, rawchar, modifiers) then
     return true
   end
 
