@@ -1,10 +1,10 @@
 var classmovie__player =
 [
     [ "movie_player", "classmovie__player.html#af71e2f81a4bf7a851b06fb9aed330b0d", null ],
-    [ "~movie_player", "classmovie__player.html#aa4e74e478dfa2ec1f20e1e646b2ec411", null ],
+    [ "~movie_player", "classmovie__player.html#a005e86da7e746407c5e4f01069a0c668", null ],
     [ "allocate_picture_buffer", "classmovie__player.html#ae79634faafbdc511729354d054c6cdd7", null ],
     [ "clear_last_error", "classmovie__player.html#aaf1308e330a1b23c89aeeea729cdf7f6", null ],
-    [ "copy_audio_to_stream", "classmovie__player.html#ae7c89057efb2b214bf54e0797ad77399", null ],
+    [ "copy_audio_to_stream", "classmovie__player.html#aa95e405296ab2ccffc4c592dfaa03d4a", null ],
     [ "deallocate_picture_buffer", "classmovie__player.html#a2c15885cb389f7cd07bb374ca6865138", null ],
     [ "get_last_error", "classmovie__player.html#ab2539a09329647e5d6676a7433ebfa40", null ],
     [ "get_movie_length", "classmovie__player.html#ad1ab6e7ed0cddeaacdfdcd1081f272a2", null ],

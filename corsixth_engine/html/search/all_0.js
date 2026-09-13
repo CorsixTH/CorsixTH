@@ -28,10 +28,11 @@ var searchData=
   ['argb_5fcolour_25',['argb_colour',['../th__gfx__sdl_8h.html#a1d012a1f446c53db9b54034691b0cfe8',1,'th_gfx_sdl.h']]],
   ['aspect_5fratio_5f4_5f3_26',['aspect_ratio_4_3',['../structrender__target__creation__params.html#a5e39667d9a1ae288b6b03cc5c598c96a',1,'render_target_creation_params']]],
   ['attach_5fto_5ftile_27',['attach_to_tile',['../classanimation__base.html#aa8fe0e83093420035367ac0102cab327',1,'animation_base']]],
-  ['audio_5fchannels_28',['audio_channels',['../namespaceth_1_1fluid.html#ad87a10fa38daff89deea80ff568c5ff4',1,'th::fluid']]],
-  ['audio_5fformat_29',['audio_format',['../namespaceth_1_1fluid.html#a3cacaf66252d4ecf4ffa416e05966a1c',1,'th::fluid']]],
+  ['audio_5fchannels_28',['audio_channels',['../classmovie__player.html#a3ef273a817231b6175a3262935cb29bc',1,'movie_player::audio_channels'],['../namespaceth_1_1fluid.html#ad87a10fa38daff89deea80ff568c5ff4',1,'th::fluid::audio_channels']]],
+  ['audio_5fformat_29',['audio_format',['../classmovie__player.html#ae4af2778313919da6a41bc3a1dc51876',1,'movie_player::audio_format'],['../namespaceth_1_1fluid.html#a3cacaf66252d4ecf4ffa416e05966a1c',1,'th::fluid::audio_format']]],
   ['audio_5ffreq_30',['audio_freq',['../namespaceth_1_1fluid.html#ae9b6301438fbd9be147bf6d744233525',1,'th::fluid']]],
-  ['autopsy_31',['autopsy',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abad1ad1fdcd016b866fee95390dde0b36a',1,'th_map.h']]],
-  ['avoid_5ftile_32',['avoid_tile',['../structmap__tile__flags.html#a80d7e9fcb06556b1329462a6abdfed85',1,'map_tile_flags']]],
-  ['avoid_5ftile_5fmask_33',['avoid_tile_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa8f25cb72c0bf4ebd871a81cc042380f0',1,'map_tile_flags']]]
+  ['audio_5ffrequency_31',['audio_frequency',['../classmovie__player.html#a6741e96fd63234cb7ee918eff11b37f3',1,'movie_player']]],
+  ['autopsy_32',['autopsy',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abad1ad1fdcd016b866fee95390dde0b36a',1,'th_map.h']]],
+  ['avoid_5ftile_33',['avoid_tile',['../structmap__tile__flags.html#a80d7e9fcb06556b1329462a6abdfed85',1,'map_tile_flags']]],
+  ['avoid_5ftile_5fmask_34',['avoid_tile_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa8f25cb72c0bf4ebd871a81cc042380f0',1,'map_tile_flags']]]
 ];

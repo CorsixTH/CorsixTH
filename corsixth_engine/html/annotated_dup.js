@@ -94,6 +94,7 @@ var annotated_dup =
     [ "render_size", "structrender__size.html", "structrender__size" ],
     [ "render_target", "classrender__target.html", "classrender__target" ],
     [ "render_target_creation_params", "structrender__target__creation__params.html", "structrender__target__creation__params" ],
+    [ "sdl_audio_mutex", "classsdl__audio__mutex.html", "classsdl__audio__mutex" ],
     [ "sound_archive", "classsound__archive.html", "classsound__archive" ],
     [ "sound_player", "classsound__player.html", "classsound__player" ],
     [ "sprite_render_list", "classsprite__render__list.html", "classsprite__render__list" ],

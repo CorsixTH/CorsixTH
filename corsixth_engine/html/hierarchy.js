@@ -105,6 +105,7 @@ var hierarchy =
       [ "render_target::scoped_target_texture", "classrender__target_1_1scoped__target__texture.html", null ]
     ] ],
     [ "render_target::scoped_clip", "classrender__target_1_1scoped__clip.html", null ],
+    [ "sdl_audio_mutex", "classsdl__audio__mutex.html", null ],
     [ "th::sound::sdl_mixer", "classth_1_1sound_1_1sdl__mixer.html", null ],
     [ "SDL_Rect", null, [
       [ "clip_rect", "structclip__rect.html", null ]

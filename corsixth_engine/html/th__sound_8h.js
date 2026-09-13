@@ -1,5 +1,6 @@
 var th__sound_8h =
 [
+    [ "sdl_audio_mutex", "classsdl__audio__mutex.html", "classsdl__audio__mutex" ],
     [ "th::sound::sdl_mixer", "classth_1_1sound_1_1sdl__mixer.html", "classth_1_1sound_1_1sdl__mixer" ],
     [ "sound_archive", "classsound__archive.html", "classsound__archive" ],
     [ "sound_player", "classsound__player.html", "classsound__player" ],

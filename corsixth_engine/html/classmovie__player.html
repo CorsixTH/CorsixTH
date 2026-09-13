@@ -99,8 +99,8 @@ $(function(){initNavTree('classmovie__player.html','','classmovie__player-member
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af71e2f81a4bf7a851b06fb9aed330b0d" id="r_af71e2f81a4bf7a851b06fb9aed330b0d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af71e2f81a4bf7a851b06fb9aed330b0d">movie_player</a> ()</td></tr>
 <tr class="memdesc:af71e2f81a4bf7a851b06fb9aed330b0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classmovie__player.html">movie_player</a>.  <br /></td></tr>
-<tr class="memitem:aa4e74e478dfa2ec1f20e1e646b2ec411" id="r_aa4e74e478dfa2ec1f20e1e646b2ec411"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4e74e478dfa2ec1f20e1e646b2ec411">~movie_player</a> ()</td></tr>
-<tr class="memdesc:aa4e74e478dfa2ec1f20e1e646b2ec411"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy the <a class="el" href="classmovie__player.html">movie_player</a>.  <br /></td></tr>
+<tr class="memitem:a005e86da7e746407c5e4f01069a0c668" id="r_a005e86da7e746407c5e4f01069a0c668"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a005e86da7e746407c5e4f01069a0c668">~movie_player</a> () noexcept</td></tr>
+<tr class="memdesc:a005e86da7e746407c5e4f01069a0c668"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy the <a class="el" href="classmovie__player.html">movie_player</a>.  <br /></td></tr>
 <tr class="memitem:acaeae14a649f7f3300f7ce30189c4d6d" id="r_acaeae14a649f7f3300f7ce30189c4d6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acaeae14a649f7f3300f7ce30189c4d6d">set_renderer</a> (SDL_Renderer *pRenderer)</td></tr>
 <tr class="memitem:a516bc1ad23dc496fd0aca2776ed89f48" id="r_a516bc1ad23dc496fd0aca2776ed89f48"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a516bc1ad23dc496fd0aca2776ed89f48">movies_enabled</a> () const</td></tr>
 <tr class="memdesc:a516bc1ad23dc496fd0aca2776ed89f48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return whether movies were compiled into CorsixTH.  <br /></td></tr>
@@ -129,7 +129,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae79634faafbdc511729354d054c6cdd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate the picture buffer for the current renderer.  <br /></td></tr>
 <tr class="memitem:a5fd8a6413bf2d4a3730b6316802bcfa5" id="r_a5fd8a6413bf2d4a3730b6316802bcfa5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5fd8a6413bf2d4a3730b6316802bcfa5">read_streams</a> ()</td></tr>
 <tr class="memitem:a3e76aa43db63f7792efefa3b316fd269" id="r_a3e76aa43db63f7792efefa3b316fd269"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e76aa43db63f7792efefa3b316fd269">run_video</a> ()</td></tr>
-<tr class="memitem:ae7c89057efb2b214bf54e0797ad77399" id="r_ae7c89057efb2b214bf54e0797ad77399"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae7c89057efb2b214bf54e0797ad77399">copy_audio_to_stream</a> (uint8_t *pbStream, std::size_t iStreamSize)</td></tr>
+<tr class="memitem:aa95e405296ab2ccffc4c592dfaa03d4a" id="r_aa95e405296ab2ccffc4c592dfaa03d4a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa95e405296ab2ccffc4c592dfaa03d4a">copy_audio_to_stream</a> (SDL_AudioStream *stream, std::size_t requested_size)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a6741e96fd63234cb7ee918eff11b37f3" id="r_a6741e96fd63234cb7ee918eff11b37f3"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6741e96fd63234cb7ee918eff11b37f3">audio_frequency</a> = 44100</td></tr>
+<tr class="memitem:a3ef273a817231b6175a3262935cb29bc" id="r_a3ef273a817231b6175a3262935cb29bc"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ef273a817231b6175a3262935cb29bc">audio_channels</a> = 2</td></tr>
+<tr class="memitem:ae4af2778313919da6a41bc3a1dc51876" id="r_ae4af2778313919da6a41bc3a1dc51876"><td class="memItemLeft" align="right" valign="top">static constexpr SDL_AudioFormat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4af2778313919da6a41bc3a1dc51876">audio_format</a> = SDL_AUDIO_F32</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Movie player for CorsixTH</p>
@@ -154,11 +160,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa4e74e478dfa2ec1f20e1e646b2ec411" name="aa4e74e478dfa2ec1f20e1e646b2ec411"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4e74e478dfa2ec1f20e1e646b2ec411">&#9670;&#160;</a></span>~movie_player()</h2>
+<a id="a005e86da7e746407c5e4f01069a0c668" name="a005e86da7e746407c5e4f01069a0c668"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a005e86da7e746407c5e4f01069a0c668">&#9670;&#160;</a></span>~movie_player()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">movie_player::~movie_player </td>
@@ -167,6 +176,11 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Destroy the <a class="el" href="classmovie__player.html">movie_player</a>. </p>
@@ -211,8 +225,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae7c89057efb2b214bf54e0797ad77399" name="ae7c89057efb2b214bf54e0797ad77399"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7c89057efb2b214bf54e0797ad77399">&#9670;&#160;</a></span>copy_audio_to_stream()</h2>
+<a id="aa95e405296ab2ccffc4c592dfaa03d4a" name="aa95e405296ab2ccffc4c592dfaa03d4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa95e405296ab2ccffc4c592dfaa03d4a">&#9670;&#160;</a></span>copy_audio_to_stream()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -220,16 +234,23 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void movie_player::copy_audio_to_stream </td>
           <td>(</td>
-          <td class="paramtype">uint8_t *</td>          <td class="paramname"><span class="paramname"><em>pbStream</em></span>, </td>
+          <td class="paramtype">SDL_AudioStream *</td>          <td class="paramname"><span class="paramname"><em>stream</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>iStreamSize</em></span>&#160;)</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>requested_size</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Read audio from the audio packet queue, and copy it into the audio buffer for playback </p>
+<p>Read audio from the audio packet queue, and copy it into the audio buffer for playback</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stream</td><td>SDL audio stream to put the audio data in </td></tr>
+    <tr><td class="paramname">requested_size</td><td>The number of bytes being requested </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -542,6 +563,73 @@ Up to the size of the picture buffer frames may be lost during this process. </d
 </div><div class="memdoc">
 <p>Unload and free the currently loaded movie.</p>
 <dl class="section remark"><dt>Remarks</dt><dd>This is called by load before loading a new movie so it is unnecessary to explicitly call this method. There is no harm either. </dd></dl>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a3ef273a817231b6175a3262935cb29bc" name="a3ef273a817231b6175a3262935cb29bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ef273a817231b6175a3262935cb29bc">&#9670;&#160;</a></span>audio_channels</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int movie_player::audio_channels = 2</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae4af2778313919da6a41bc3a1dc51876" name="ae4af2778313919da6a41bc3a1dc51876"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4af2778313919da6a41bc3a1dc51876">&#9670;&#160;</a></span>audio_format</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_AudioFormat movie_player::audio_format = SDL_AUDIO_F32</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6741e96fd63234cb7ee918eff11b37f3" name="a6741e96fd63234cb7ee918eff11b37f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6741e96fd63234cb7ee918eff11b37f3">&#9670;&#160;</a></span>audio_frequency</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int movie_player::audio_frequency = 44100</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
