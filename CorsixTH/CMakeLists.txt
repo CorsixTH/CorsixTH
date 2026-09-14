@@ -202,22 +202,44 @@ endif()
 
 # Find FFMPEG
 if(CORSIX_TH_USE_FFMPEG)
-  find_package(
-    FFmpeg
-    COMPONENTS AVFORMAT AVCODEC SWSCALE SWRESAMPLE AVUTIL
-    REQUIRED
-  )
-  if(FFMPEG_FOUND)
+  if(VCPKG_TARGET_TRIPLET)
+    find_package(
+      FFMPEG
+      COMPONENTS AVFORMAT AVCODEC SWSCALE SWRESAMPLE AVUTIL
+      REQUIRED
+    )
     target_link_libraries(CorsixTH_lib PUBLIC ${FFMPEG_LIBRARIES})
     include_directories(${FFMPEG_INCLUDE_DIRS})
-    if(APPLE)
-      target_link_libraries(CorsixTH PRIVATE libz.dylib)
-      # These LDFLAGS are necessary for static ffmpeg, harmless for dynamic ffmpeg
-      set(CMAKE_EXE_LINKER_FLAGS "-liconv -framework CoreMedia -framework CoreVideo -framework VideoToolbox")
-    endif()
-    message("  FFmpeg found")
   else()
-    message(FATAL_ERROR "Error: FFmpeg library not found, even though it was selected to be included")
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(
+      FFmpeg
+      REQUIRED
+      IMPORTED_TARGET
+      libavformat
+      libavcodec
+      libswresample
+      libswscale
+      libavutil
+    )
+    if(pkgcfg_lib_FFmpeg_avcodec) # If Pkgconfig found FFmpeg
+      target_link_libraries(CorsixTH_lib PUBLIC PkgConfig::FFmpeg)
+      include_directories(PkgConfig::FFmpeg)
+      if(APPLE)
+        target_link_libraries(CorsixTH_lib PUBLIC iconv)
+        cmake_path(GET pkgcfg_lib_FFmpeg_avcodec EXTENSION LAST_ONLY ffmpeg_ext)
+        if("${ffmpeg_ext}" STREQUAL ".a")
+          # These LDFLAGS are necessary for static ffmpeg
+          target_link_libraries(
+            CorsixTH_lib
+            PUBLIC "-framework CoreMedia" "-framework CoreVideo" "-framework VideoToolbox"
+          )
+        endif()
+      endif()
+      message("  FFmpeg found")
+    else()
+      message(FATAL_ERROR "Error: FFmpeg library not found, even though it was selected to be included")
+    endif()
   endif()
 endif()
 
@@ -230,10 +252,6 @@ else()
   if(FREETYPE_FOUND)
     target_link_libraries(CorsixTH_lib PUBLIC ${FREETYPE_LIBRARIES})
     include_directories(${FREETYPE_INCLUDE_DIRS})
-    if(APPLE)
-      target_link_libraries(CorsixTH_lib PRIVATE libz.dylib)
-      target_link_libraries(CorsixTH_lib PRIVATE libbz2.dylib)
-    endif()
     message("  FreeType2 found")
   else()
     message(FATAL_ERROR "Error: FreeType2 library not found, it is required to build")
