@@ -577,8 +577,12 @@ end
 --!param path (string) The path to strip.
 --!return (string) The path without trailing slashes.
 function stripTrailingSlashes(path)
-  -- Remove one or more trailing / or \ characters
-  return path:gsub("[/\\]+$", "")
+  -- Remove one or more trailing / or \ characters, preserving root slash
+  local res = path:gsub("[/\\]+$", "")
+  if res == "" and path:sub(1, 1) == "/" then
+    return "/"
+  end
+  return res
 end
 
 --! Checks if a given path is a directory.

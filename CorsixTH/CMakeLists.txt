@@ -98,7 +98,30 @@ if(SEARCH_LOCAL_DATADIRS)
 endif()
 target_link_libraries(CorsixTH PRIVATE CorsixTH_lib)
 
-if(UNIX AND NOT APPLE)
+if(EMSCRIPTEN)
+  set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME corsix-th SUFFIX ".html")
+  target_link_options(CorsixTH PRIVATE
+    "-sUSE_SDL=3"
+    "-sUSE_FREETYPE=1"
+    "-sUSE_LIBPNG=1"
+    "-sUSE_ZLIB=1"
+    "--use-port=contrib.lua"
+    "-sALLOW_MEMORY_GROWTH=1"
+    "-sINITIAL_MEMORY=134217728"
+    "-sFORCE_FILESYSTEM=1"
+    "-sEXPORTED_RUNTIME_METHODS=ccall,cwrap,FS"
+  )
+  if(CORSIX_TH_PRELOAD_CORSIX_DIR)
+    target_link_options(CorsixTH PRIVATE "--preload-file=${CORSIX_TH_PRELOAD_CORSIX_DIR}@/corsix-th")
+  elseif(EXISTS "${CMAKE_SOURCE_DIR}/th_data/corsix-th")
+    target_link_options(CorsixTH PRIVATE "--preload-file=${CMAKE_SOURCE_DIR}/th_data/corsix-th@/corsix-th")
+  endif()
+  if(CORSIX_TH_PRELOAD_TH_DIR)
+    target_link_options(CorsixTH PRIVATE "--preload-file=${CORSIX_TH_PRELOAD_TH_DIR}@/theme_hospital")
+  elseif(EXISTS "${CMAKE_SOURCE_DIR}/th_data/theme_hospital")
+    target_link_options(CorsixTH PRIVATE "--preload-file=${CMAKE_SOURCE_DIR}/th_data/theme_hospital@/theme_hospital")
+  endif()
+elseif(UNIX AND NOT APPLE)
   set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME corsix-th)
 endif()
 
@@ -252,20 +275,24 @@ endif()
 
 if(CORSIX_TH_LINK_LUA_MODULES)
   message("Linking lua modules")
-  find_package(unofficial-luafilesystem CONFIG REQUIRED)
-  target_link_libraries(CorsixTH_lib PRIVATE unofficial::luafilesystem::lfs)
+  if(EMSCRIPTEN)
+    target_link_libraries(CorsixTH_lib PRIVATE lfs lpeg)
+  else()
+    find_package(unofficial-luafilesystem CONFIG REQUIRED)
+    target_link_libraries(CorsixTH_lib PRIVATE unofficial::luafilesystem::lfs)
 
-  find_package(unofficial-lpeg CONFIG REQUIRED)
-  target_link_libraries(CorsixTH_lib PRIVATE unofficial::lpeg::lpeg)
+    find_package(unofficial-lpeg CONFIG REQUIRED)
+    target_link_libraries(CorsixTH_lib PRIVATE unofficial::lpeg::lpeg)
 
-  add_custom_command(
-    TARGET CorsixTH
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${UNOFFICIAL_LPEG_LUA_FILES} $<TARGET_FILE_DIR:CorsixTH>
-  )
+    add_custom_command(
+      TARGET CorsixTH
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy ${UNOFFICIAL_LPEG_LUA_FILES} $<TARGET_FILE_DIR:CorsixTH>
+    )
 
-  if(NOT USE_SOURCE_DATADIRS)
-    install(FILES ${UNOFFICIAL_LPEG_LUA_FILES} DESTINATION ${CORSIX_TH_DATADIR})
+    if(NOT USE_SOURCE_DATADIRS)
+      install(FILES ${UNOFFICIAL_LPEG_LUA_FILES} DESTINATION ${CORSIX_TH_DATADIR})
+    endif()
   endif()
 else()
   message("Lua modules are not linked and will be loaded at runtime")
