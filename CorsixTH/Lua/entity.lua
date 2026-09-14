@@ -139,6 +139,13 @@ function Entity:setTile(x, y)
   return self
 end
 
+--[[ Get the map tile which the entity is on.
+!return (integer, integer) The 1-based X and Y coordinates of the tile.
+]]
+function Entity:getTile()
+  return self.tile_x, self.tile_y
+end
+
 function Entity:getRoom()
   if self.tile_x and self.tile_y then
     return self.world:getRoom(self.tile_x, self.tile_y)
