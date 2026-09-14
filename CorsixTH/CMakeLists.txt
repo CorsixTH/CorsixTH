@@ -297,28 +297,37 @@ if(WITH_MIDI_DEVICE)
 endif()
 
 if(FETCH_SOUNDFONT)
-  FetchContent_Declare(
-    FluidR3
-    URL https://raw.githubusercontent.com/Jacalz/fluid-soundfont/master/SF3/FluidR3.sf3
-    URL_HASH SHA256=32039e039c2f708467a6f171fbfd9fecdcadfe40a2327837c391490c8de70021
-    DOWNLOAD_NO_EXTRACT TRUE
+  set(SOUNDFONT_FILE "${CMAKE_BINARY_DIR}/GeneralUser-GS.sf2")
+  file(DOWNLOAD
+    https://raw.githubusercontent.com/mrbumpy409/GeneralUser-GS/684543d5e5efaef08d02be50dcda8d552478fa60/GeneralUser-GS.sf2
+    "${SOUNDFONT_FILE}"
+    EXPECTED_HASH SHA256=9575028c7a1f589f5770fccc8cff2734566af40cd26ed836944e9a5152688cfe
+    STATUS SOUNDFONT_STATUS
   )
 
-  FetchContent_MakeAvailable(FluidR3)
-  set(FLUIDR3_FILE ${fluidr3_SOURCE_DIR}/FluidR3.sf3)
+  list(GET SOUNDFONT_STATUS 0 SOUNDFONT_STATUS_CODE)
+  if(NOT SOUNDFONT_STATUS_CODE EQUAL 0)
+    message(FATAL_ERROR "Failed to download soundfont: ${SOUNDFONT_STATUS}")
+  else()
+    message("  Soundfont found")
+  endif()
 endif()
 
 if(FETCH_UNICODE_FONT)
-  FetchContent_Declare(
-    GoNoto
-    URL https://github.com/satbyy/go-noto-universal/releases/download/v7.0/GoNotoKurrent-Regular.ttf
-    URL_HASH SHA256=2f2cee5fbb2403df352ca2005247f6c4faa70f3086ebd31b6c62308b5f2f9865
-    DOWNLOAD_NO_EXTRACT TRUE
-    DOWNLOAD_NAME CorsixTHUnicode.ttf
+  set(GONOTO_FILE "${CMAKE_BINARY_DIR}/CorsixTHUnicode.ttf")
+  file(DOWNLOAD
+    https://github.com/satbyy/go-noto-universal/releases/download/v7.0/GoNotoKurrent-Regular.ttf
+    "${GONOTO_FILE}"
+    EXPECTED_HASH SHA256=2f2cee5fbb2403df352ca2005247f6c4faa70f3086ebd31b6c62308b5f2f9865
+    STATUS GONOTO_STATUS
   )
 
-  FetchContent_MakeAvailable(GoNoto)
-  set(GONOTO_FILE ${gonoto_SOURCE_DIR}/CorsixTHUnicode.ttf)
+  list(GET GONOTO_STATUS 0 GONOTO_STATUS_CODE)
+  if(NOT GONOTO_STATUS_CODE EQUAL 0)
+    message(FATAL_ERROR "Failed to download unicode font: ${GONOTO_STATUS}")
+  else()
+    message("  Unicode font found")
+  endif()
 endif()
 
 if(WITH_TRACY)
@@ -416,7 +425,7 @@ if(NOT USE_SOURCE_DATADIRS)
   install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
 
   if(FETCH_SOUNDFONT)
-    install(FILES ${FLUIDR3_FILE} DESTINATION ${CORSIX_TH_DATADIR})
+    install(FILES ${SOUNDFONT_FILE} DESTINATION ${CORSIX_TH_DATADIR})
   endif()
   if(FETCH_UNICODE_FONT)
     install(FILES ${GONOTO_FILE} DESTINATION ${CORSIX_TH_DATADIR})
