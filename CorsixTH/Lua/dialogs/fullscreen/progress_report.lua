@@ -203,15 +203,16 @@ function UIProgressReport:draw(canvas, x, y)
   local world    = self.ui.app.world
   local hospital = world.hospitals[self.selected]
 
-  local total_spawns = 0
+  -- for population calculation
+  local total_visitors = 0
 
   -- Names of the players playing
   local ly = 73 * s
-  for pnum, player in ipairs(world.hospitals) do
+  for pnum, hospital in ipairs(world.hospitals) do
     local font = (pnum == self.selected) and self.red_font or self.normal_font
-    font:draw(canvas, player.name:upper(), x + 272 * s, y + ly)
+    font:draw(canvas, hospital.name:upper(), x + 272 * s, y + ly)
     ly = ly + 25 * s
-    total_spawns = total_spawns + math.max(1, player.population)
+    total_visitors = total_visitors + hospital.num_visitors_pm
   end
 
   -- Draw the vertical bars for the selected conditions
@@ -248,8 +249,15 @@ function UIProgressReport:draw(canvas, x, y)
   self.normal_font:draw(canvas, _S.progress_report.header .. " " ..
       (world:date():year() + 1999), x + 227 * s, y + 40 * s, 400 * s, 0)
   self.small_font:draw(canvas, _S.progress_report.win_criteria:upper(), x + 263 * s, y + 172 * s)
+  -- population percent
+  -- TODO: `math.floor` may result in the total of all four hospitals not equal up to 100%.
+  print("# population", total_visitors, hospital.num_visitors_pm)
+  local population_percent = 100 / 4 -- default value: 25% for each hospital
+  if total_visitors > 0 then
+    population_percent = hospital.num_visitors_pm / total_visitors * 100
+  end
   self.small_font:draw(canvas, _S.progress_report.percentage_pop:upper() .. " " ..
-      math.floor(math.max(1, hospital.population) / total_spawns * 100) .. "%", x + 450 * s, y + 65 * s)
+      math.floor(population_percent) .. "%", x + 450 * s, y + 65 * s)
 end
 
 function UIProgressReport:afterLoad(old, new)

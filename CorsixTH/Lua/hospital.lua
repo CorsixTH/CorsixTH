@@ -122,6 +122,9 @@ function Hospital:Hospital(world, avail_rooms, name)
   }
   self:buildReceptionDesksCache()
 
+  self.spawn_attempts = 0 -- Count of total attempted spawned patients
+  self.num_visitors_tm = 0 -- Current month visitors count
+  self.num_visitors_pm = 0 -- Previous month visitors count
   self.num_visitors = 0 -- Count of actual spawned patients
   self.num_deaths = 0
   self.num_deaths_this_year = 0
@@ -132,7 +135,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.num_vips = 0 -- used to check if it's the user's first vip
   self.percentage_cured = 0
   self.percentage_killed = 0
-  self.population = 0 -- Count of total attempted spawned patients
 
   -- Statistics used in the graph dialog. Each entry is the month, inside it
   -- is "money in", "money out", wages, balance, visitors, cures, deaths, reputation
@@ -505,6 +507,12 @@ function Hospital:afterLoad(old, new)
   if old < 243 then
     self:buildReceptionDesksCache()
   end
+  if old < 266 then
+    self.population = nil
+    self.spawn_attempts = 0
+    self.num_visitors_tm = 0
+    self.num_visitors_pm = 0
+  end
 
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic:afterLoad(old, new) end
@@ -576,6 +584,12 @@ function Hospital:tick()
   end
 
   self:manageEpidemics()
+
+  if self.next_month_start then
+    self.num_visitors_pm = self.num_visitors_tm
+    self.num_visitors_tm = 0
+    self.next_month_start = false
+  end
 end
 
 function Hospital:purchasePlot(plot_number)
@@ -856,6 +870,7 @@ function Hospital:onEndMonth()
   }
   self.money_in = 0
   self.money_out = 0
+  self.next_month_start = true
 end
 
 --! Returns whether this hospital is controlled by a real person or not.
@@ -1405,12 +1420,16 @@ end
 
 function Hospital:addPatient(patient)
   self.patients[#self.patients + 1] = patient
+  self:countNewPatient()
+  -- Decide if the patient belongs in an epidemic
+  self:determineIfContagious(patient)
+end
+
+function Hospital:countNewPatient()
   -- Add to the hospital's visitor count
   self.num_visitors = self.num_visitors + 1
   self.num_visitors_ty = self.num_visitors_ty + 1
-
-  -- Decide if the patient belongs in an epidemic
-  self:determineIfContagious(patient)
+  self.num_visitors_tm = self.num_visitors_tm + 1
 end
 
 --! Humanoid has died, record the incident.

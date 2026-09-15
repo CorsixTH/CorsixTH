@@ -445,8 +445,12 @@ function World:spawnPatient(hospital)
 
   -- Still need to count them even though you haven't got a staffed desk
   -- and you also don't want to spawn them on the map
-  hospital.population = hospital.population + 1
+  hospital.spawn_attempts = hospital.spawn_attempts + 1
   if not hospital:hasReceptionDesk(true) then
+    if not hospital:isPlayerHospital() then
+      -- TODO: Count patients for AIHospital for now. But remove for AIHospital capable of building a reception desk.
+      hospital:countNewPatient()
+    end
     return
   end
 
@@ -3016,9 +3020,9 @@ end
 function World:chooseHospitalForPatient(disease)
   -- round robin if less than gbvAllocDelay
   if self.map.level_config.gbv.AllocDelay and self.game_date:monthOfGame() <= self.map.level_config.gbv.AllocDelay then
-    local total_population = 0
+    local total_spawn_attempts = 0
     for _, hospital in ipairs(self.hospitals) do
-      total_population = total_population + hospital.population
+      total_spawn_attempts = total_spawn_attempts + hospital.spawn_attempts
     end
     return self.hospitals[total_population % 4 + 1]
   end
