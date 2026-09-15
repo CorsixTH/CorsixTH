@@ -1175,8 +1175,7 @@ function World:updateSpawnDates()
   local local_hospital = self:getLocalPlayerHospital()
 
   -- Decide on number of visitors
-  -- Use ceil so that at least one patient arrives (unless population = 0)
-  local no_of_spawns = math.ceil(self.spawn_rate * local_hospital.population)
+  local no_of_spawns = math.ceil(self.spawn_rate)
   -- If Roujin's Challenge is on, add a fixed bonus to the spawn pool for this player.
   if local_hospital.hosp_cheats:isCheatActive("spawn_rate_cheat") then
     local roujin_bonus = 40
@@ -1186,7 +1185,7 @@ function World:updateSpawnDates()
   -- if feasible.
   self.spawn_dates = {}
 
-  if local_hospital.population > 0 then
+  if no_of_spawns > 0 then
     local day, last_day = 1, self.game_date:lastDayOfMonth()
     local force_arrival = true -- Ensure a patient arrives.
     local interval = last_day / no_of_spawns -- Lower interval = more visits.
