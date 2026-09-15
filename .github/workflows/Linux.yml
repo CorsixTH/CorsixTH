@@ -3,7 +3,6 @@ name: Linux and Tests
 
 permissions:
   contents: read
-  pull-requests: read
 
 on:
   push:
@@ -15,9 +14,6 @@ on:
       animview:
         description: 'AnimView?'
         type: boolean
-      pr:
-        description: 'Build this PR (optional)'
-        type: number
 
 jobs:
   Linux-apt-get:
@@ -36,12 +32,7 @@ jobs:
     runs-on: ubuntu-26.04 # resolute raccoon
     name: Linux apt-get ${{matrix.lua}} ${{inputs.animview == 'true' && 'with AnimView' || ''}}
     steps:
-      - uses: actions/checkout@v6  # Keeps the git OAuth token after checkout
-      - name: Checkout selected PR
-        env:
-          GH_TOKEN: ${{github.token}}
-        if: inputs.PR
-        run: gh pr checkout --repo CorsixTH/CorsixTH ${{inputs.pr}}
+      - uses: actions/checkout@v7
       - name: Install CorsixTH and lua test requirements
         run: |
           sudo apt-get update
@@ -139,7 +130,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7  # Keeps the git OAuth token after checkout
       - name: Download generated documentation
         uses: actions/download-artifact@v8
         with:
@@ -166,12 +157,7 @@ jobs:
     env:
       VCPKG_BINARY_SOURCES: clear;files,${{github.workspace}}/vcpkg_cache,readwrite
     steps:
-      - uses: actions/checkout@v6
-      - name: Checkout selected PR
-        env:
-          GH_TOKEN: ${{github.token}}
-        if: inputs.PR
-        run: gh pr checkout --repo CorsixTH/CorsixTH ${{inputs.pr}}
+      - uses: actions/checkout@v7
       - name: Install build dependencies
         run:  |
           wget https://apt.llvm.org/llvm.sh
