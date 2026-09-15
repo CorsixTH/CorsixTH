@@ -328,8 +328,8 @@ options_window = {
   right_mouse_scrolling = "Muis Scrollen",
   right_mouse_scrolling_option_middle = "Middelste Knop",
   right_mouse_scrolling_option_right = "Rechterknop",
-  scrollspeed = "Scrollsnelheid",
-  shift_scrollspeed = "Shift Scrollsnelheid",
+  scroll_speed = "Scrollsnelheid",
+  shift_scroll_speed = "Shift Scrollsnelheid",
   zoom_speed = "Zoomsnelheid",
 }
 audio_window = {
@@ -1321,8 +1321,8 @@ tooltip = {
     hotkey = "Pas sneltoetsen aan.",
     language_dropdown_no_font = "Selecteer een lettertype in de spelinstellingen om deze taal in te schakelen",
     right_mouse_scrolling = "Wissel de muisknop die wordt gebruikt om door de kaart te scrollen",
-    scrollspeed = "Stel de scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 2",
-    shift_scrollspeed = "Stel de shift-scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 4",
+    scroll_speed = "Stel de scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 2",
+    shift_scroll_speed = "Stel de shift-scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 4",
     zoom_speed = "Stel de zoomsnelheid van de camera in van 10 (langzaamst) en 1000 (snelst). De standaard waarde is 80",
   },
   audio_window = {
