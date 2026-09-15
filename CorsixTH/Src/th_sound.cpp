@@ -51,11 +51,6 @@ sdl_mixer::sdl_mixer() {
     throw std::runtime_error(SDL_GetError());
   }
 
-  movie_track = MIX_CreateTrack(mixer);
-  if (!movie_track) {
-    throw std::runtime_error(SDL_GetError());
-  }
-
   fx_channels = {};
   for (auto& track : fx_channels) {
     track = MIX_CreateTrack(mixer);
@@ -73,8 +68,6 @@ sdl_mixer::~sdl_mixer() {
 MIX_Track* sdl_mixer::get_fx_track(int channel) const {
   return fx_channels.at(channel);
 }
-
-MIX_Track* sdl_mixer::get_movie_track() const { return movie_track; }
 
 MIX_Track* sdl_mixer::get_music_track() const { return music_track; }
 

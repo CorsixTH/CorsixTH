@@ -197,17 +197,16 @@ function Audio:initMidiPlayer()
     self.midi_player = nil
   end
 
-  if TH.GetCompileOptions().midi_device and self.app.config.midi_api then
-    local midi_ok, midi_player = pcall(
-      TH.midiPlayer,
-      self.app.config.midi_api,
-      self.app.config.midi_port,
-      self.app.config.midi_sysex_master_volume)
-    if midi_ok then
-      self.midi_player = midi_player
-    else
-      print("Failed to create midi player: " .. midi_player)
-    end
+  local midi_ok, midi_player = pcall(
+    TH.midiPlayer,
+    self.app.config.midi_api or "",
+    self.app.config.midi_port,
+    self.app.config.midi_sysex_master_volume,
+    self.app:findSoundFont())
+  if midi_ok then
+    self.midi_player = midi_player
+  else
+    print("Failed to create midi player: " .. midi_player)
   end
 end
 

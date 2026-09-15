@@ -179,6 +179,27 @@ target_link_libraries(
   PUBLIC $<IF:$<TARGET_EXISTS:SDL3_mixer::SDL3_mixer>,SDL3_mixer::SDL3_mixer,SDL3_mixer::SDL3_mixer-static>
 )
 
+# Find FluidSynth
+# FluidSynth upstream provides a CMake config but not all distros seem to carry it.
+find_package(FluidSynth CONFIG)
+if(NOT FluidSynth_FOUND AND PkgConfig_FOUND)
+  pkg_search_module(FLUIDSYNTH REQUIRED fluidsynth)
+  if(FLUIDSYNTH_FOUND)
+    add_library(FluidSynth::libfluidsynth INTERFACE IMPORTED)
+    set_target_properties(
+            FluidSynth::libfluidsynth
+            PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${FLUIDSYNTH_INCLUDE_DIRS}" INTERFACE_LINK_LIBRARIES "${FLUIDSYNTH_LIBRARIES}"
+    )
+    set(FluidSynth_FOUND TRUE)
+  endif()
+endif()
+if(FluidSynth_FOUND)
+  message("  FluidSynth found")
+  target_link_libraries(CorsixTH_lib PRIVATE FluidSynth::libfluidsynth)
+else()
+  message(FATAL_ERROR "Error: FluidSynth was not found.")
+endif()
+
 # Find FFMPEG
 if(CORSIX_TH_USE_FFMPEG)
   find_package(

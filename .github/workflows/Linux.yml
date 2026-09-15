@@ -45,7 +45,8 @@ jobs:
       - name: Install CorsixTH and lua test requirements
         run: |
           sudo apt-get update
-          sudo apt-get install ${{matrix.packages}} liblua5.1-dev lua5.1 luarocks libsdl3-dev libfreetype-dev \
+          sudo apt-get install ${{matrix.packages}} liblua5.1-dev lua5.1 \
+           luarocks libsdl3-dev libfreetype-dev libfluidsynth-dev \
            libcurl4-openssl-dev ${{inputs.animview == 'true' && 'libwxgtk3.0-gtk3-dev' || ''}}
           # Required for lua lint check
           sudo luarocks install luacheck

@@ -30,7 +30,34 @@ SOFTWARE.
 #include <array>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
 #include <vector>
+
+// Wrapper class for SDL_AudioLock that covers the C++ BasicLockable requirement
+class sdl_audio_mutex {
+ public:
+  explicit sdl_audio_mutex(SDL_AudioStream* stream) noexcept
+      : stream(stream) {};
+  sdl_audio_mutex(const sdl_audio_mutex&) = delete;
+  sdl_audio_mutex& operator=(const sdl_audio_mutex&) = delete;
+
+  void lock() {
+    if (!SDL_LockAudioStream(stream)) {
+      throw std::runtime_error(SDL_GetError());
+    }
+  }
+
+  void unlock() noexcept {
+    // unlock is not allowed to fail in C++. As such there's nothing to do if
+    // it does here except abort.
+    if (!SDL_UnlockAudioStream(stream)) {
+      std::abort();
+    }
+  }
+
+ private:
+  SDL_AudioStream* stream;
+};
 
 namespace th::sound {
 class sdl_mixer {
@@ -40,7 +67,6 @@ class sdl_mixer {
   sdl_mixer();
   ~sdl_mixer();
   MIX_Track* get_music_track() const;
-  MIX_Track* get_movie_track() const;
   MIX_Track* get_fx_track(int channel) const;
 
   /**
@@ -56,7 +82,6 @@ class sdl_mixer {
 
  private:
   MIX_Track* music_track;
-  MIX_Track* movie_track;
   std::array<MIX_Track*, number_of_fx_channels> fx_channels;
   MIX_Mixer* mixer;
 };
