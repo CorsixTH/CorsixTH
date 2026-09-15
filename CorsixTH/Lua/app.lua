@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 265 -- Deferred entity destruction fix
+local SAVEGAME_VERSION = 266 -- Spawn changes
 
 class "App"
 
