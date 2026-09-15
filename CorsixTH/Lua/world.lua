@@ -156,7 +156,7 @@ function World:World(app, free_build_mode)
 
   self.spawn_hours = {} -- The number of patients that need to be spawned by hour for current day.
   self.spawn_dates = {} -- The number of patients that need to be spawned by day for current month.
-  self:prepareSpawnDates(true)
+  self:_prepareSpawnDates(true)
 
   self.cheat_announcements = {
     "cheat001.wav", "cheat002.wav", "cheat003.wav",
@@ -1107,18 +1107,11 @@ function World:onEndDay()
       end
     end
   end
-  -- Any patients tomorrow?
-  self.spawn_hours = {}
-  local day = self.game_date:dayOfMonth()
-  local next_day = day + 1
-  if self.spawn_dates[next_day] then
-    for _ = 1, self.spawn_dates[next_day] do
-      local hour = math.random(0, Date.hoursPerDay() - 1)
-      self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
-    end
-  end
+
+  self:_prepareSpawnHours()
 
   -- Autosave
+  local day = self.game_date:dayOfMonth()
   if self.app.config.autosave_frequency == 3 then
     -- Daily autosave
     self.autosave_next_tick = true
@@ -1158,7 +1151,7 @@ function World:onEndMonth()
   end
   -- Now set the new spawn rate
   self.spawn_rate = self.spawn_rate + self.monthly_spawn_increase
-  self:prepareSpawnDates(false)
+  self:_prepareSpawnDates(false)
 
   self:makeAvailableStaff(self.game_date:monthOfGame())
   for _, entity in ipairs(self.entities) do
@@ -1174,7 +1167,7 @@ end
 -- during the coming month.
 --!param first_game_month (bool) Is that the very first date distribution at the level
 -- TODO: Requires adjustment for AIHospital spawns; see PR 1986 for progress.
-function World:prepareSpawnDates(first_game_month)
+function World:_prepareSpawnDates(first_game_month)
   local local_hospital = self:getLocalPlayerHospital()
 
   -- Decide on number of visitors
@@ -1189,6 +1182,7 @@ function World:prepareSpawnDates(first_game_month)
   self.spawn_dates = {}
 
   if number_of_spawns > 0 then
+    -- Prepare a schedule for spawning patients by day.
     local target_month = self.game_date:resetDayToFirst():plusMonths(first_game_month and 0 or 1)
     local first_day, last_day = 1, target_month:lastDayOfMonth()
     local force_arrival = true -- Ensure a patient arrives.
@@ -1204,9 +1198,30 @@ function World:prepareSpawnDates(first_game_month)
       end
     end
 
-    -- Give the poor user a patient this month anyway.
+    -- Give the poor hospital a patient this month anyway.
     if force_arrival then
-      self.spawn_dates[math.floor(1 + math.random() * last_day)] = 1
+      self.spawn_dates[math.floor(math.random(first_day, last_day))] = 1
+    end
+
+    self:_prepareSpawnHours()
+  end
+end
+
+function World:_prepareSpawnHours()
+  self.spawn_hours = {}
+  -- Any patients tomorrow?
+  local date = self.game_date
+  local next_day = 1
+  if not date:isLastDayOfMonth() then
+    local day = date:dayOfMonth()
+    next_day = day + 1
+  end
+  if self.spawn_dates[next_day] then
+    -- Prepare a schedule for spawning patients by hour.
+    for _ = 1, self.spawn_dates[next_day] do
+      local hour = math.random(1, Date.hoursPerDay() - 1)
+      local count = self.spawn_hours[hour]
+      self.spawn_hours[hour] = count and count + 1 or 1
     end
   end
 end
@@ -2608,7 +2623,7 @@ function World:afterLoad(old, new)
     end
     self.spawn_hours = {}
     self.spawn_dates = {}
-    self:prepareSpawnDates(false)
+    self:_prepareSpawnDates(false)
   end
   if old < 45 then
     self:nextVip()
