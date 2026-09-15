@@ -154,9 +154,9 @@ function World:World(app, free_build_mode)
   self.spawn_rate = self.map.level_config.popn[0].Change
   self.monthly_spawn_increase = self.spawn_rate
 
-  self.spawn_hours = {}
-  self.spawn_dates = {}
-  self:updateSpawnDates()
+  self.spawn_hours = {} -- The number of patients that need to be spawned by hour for current day.
+  self.spawn_dates = {} -- The number of patients that need to be spawned by day for current month.
+  self:prepareSpawnDates(true)
 
   self.cheat_announcements = {
     "cheat001.wav", "cheat002.wav", "cheat003.wav",
@@ -956,6 +956,7 @@ function World:onTick()
       -- TODO: Multiplayer support.
       local spawn_count = self.spawn_hours[self.game_date:hourOfDay() + i - 1]
       if spawn_count and self.hospitals[1].opened then
+        -- TODO: Should check target hospital, not hospital 1
         for _ = 1, spawn_count do
           self:spawnPatient()
         end
@@ -1109,8 +1110,9 @@ function World:onEndDay()
   -- Any patients tomorrow?
   self.spawn_hours = {}
   local day = self.game_date:dayOfMonth()
-  if self.spawn_dates[day] then
-    for _ = 1, self.spawn_dates[day] do
+  local next_day = day + 1
+  if self.spawn_dates[next_day] then
+    for _ = 1, self.spawn_dates[next_day] do
       local hour = math.random(0, Date.hoursPerDay() - 1)
       self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
     end
@@ -1156,7 +1158,7 @@ function World:onEndMonth()
   end
   -- Now set the new spawn rate
   self.spawn_rate = self.spawn_rate + self.monthly_spawn_increase
-  self:updateSpawnDates()
+  self:prepareSpawnDates(false)
 
   self:makeAvailableStaff(self.game_date:monthOfGame())
   for _, entity in ipairs(self.entities) do
@@ -1170,31 +1172,34 @@ end
 
 -- Called when a month ends. Decides on which dates patients arrive
 -- during the coming month.
+--!param first_game_month (bool) Is that the very first date distribution at the level
 -- TODO: Requires adjustment for AIHospital spawns; see PR 1986 for progress.
-function World:updateSpawnDates()
+function World:prepareSpawnDates(first_game_month)
   local local_hospital = self:getLocalPlayerHospital()
 
   -- Decide on number of visitors
-  local no_of_spawns = math.ceil(self.spawn_rate)
+  local number_of_spawns = math.ceil(self.spawn_rate)
   -- If Roujin's Challenge is on, add a fixed bonus to the spawn pool for this player.
   if local_hospital.hosp_cheats:isCheatActive("spawn_rate_cheat") then
     local roujin_bonus = 40
-    no_of_spawns = no_of_spawns + roujin_bonus
+    number_of_spawns = number_of_spawns + roujin_bonus
   end
   -- Compute expected number of patients that arrive while forcing an arrival
   -- if feasible.
   self.spawn_dates = {}
 
-  if no_of_spawns > 0 then
-    local day, last_day = 1, self.game_date:lastDayOfMonth()
+  if number_of_spawns > 0 then
+    local target_month = self.game_date:resetDayToFirst():plusMonths(first_game_month and 0 or 1)
+    local first_day, last_day = 1, target_month:lastDayOfMonth()
     local force_arrival = true -- Ensure a patient arrives.
-    local interval = last_day / no_of_spawns -- Lower interval = more visits.
-    while day <= last_day do
+    local interval = last_day / number_of_spawns -- Lower interval = more visits.
+    local target_day = first_day
+    while target_day <= last_day do
       local x = math.p_random(interval)
-      day = day + x
-      if day <= last_day then
-        local count = self.spawn_dates[day]
-        self.spawn_dates[day] = count and count + 1 or 1
+      target_day = target_day + x
+      if target_day <= last_day then
+        local count = self.spawn_dates[target_day]
+        self.spawn_dates[target_day] = count and count + 1 or 1
         force_arrival = false
       end
     end
@@ -2603,7 +2608,7 @@ function World:afterLoad(old, new)
     end
     self.spawn_hours = {}
     self.spawn_dates = {}
-    self:updateSpawnDates()
+    self:prepareSpawnDates(false)
   end
   if old < 45 then
     self:nextVip()

@@ -105,6 +105,17 @@ function Date:lastDayOfMonth()
   return month_length[self._month]
 end
 
+--[[ Returns the first day of the current month
+
+! This method finds the first day for current month of self.
+
+!return (Date)
+]]
+function Date:resetDayToFirst()
+  local new_day = 1
+  return Date(self._year, self._month, new_day, self._hour)
+end
+
 --[[ Adds months
 
 ! Creates a copy of self with adjusted months.
@@ -189,7 +200,7 @@ end
 
 --[[ Returns the hour of the day
 
-! Finds out what is an hour of this date starting on 0
+! Finds out what is an tick of this date starting on 0 up to 49
 
 !return (number)
 ]]
