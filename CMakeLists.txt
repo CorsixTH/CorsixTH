@@ -11,6 +11,7 @@
 #       program directory where the executable stores. Makes the executable
 #       portable (yes for Apple)
 #   - WITH_MIDI_DEVICE : Enable MIDI device support (yes)
+#   - WITH_SAVE_COMPRESSION : Enable compression/decompression (zstd) of save game files
 
 # Dependency resolution
 #   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
@@ -37,6 +38,7 @@ option(WITH_MOVIES "Activate in game movies" ON)
 option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
 option(WITH_UPDATE_CHECK "Check for new versions" ON)
 option(WITH_MIDI_DEVICE "Enable MIDI device support" ON)
+option(WITH_SAVE_COMPRESSION "Enable save game compression/decompression" ON)
 option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
 option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
 option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
@@ -66,6 +68,9 @@ if(ENABLE_UNIT_TESTS)
 endif()
 if(WITH_TRACY)
   list(APPEND VCPKG_MANIFEST_FEATURES "tracy")
+endif()
+if (WITH_SAVE_COMPRESSION)
+  list(APPEND VCPKG_MANIFEST_FEATURES "compression")
 endif()
 
 project(CorsixTH_Top_Level)

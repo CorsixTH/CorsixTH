@@ -50,6 +50,12 @@
         }
       ]
     },
+    "compression": {
+      "description": "Support for compressing/decompressing saves",
+      "dependencies": [
+        "zstd"
+      ]
+    },
     "movies": {
       "description": "In game video support",
       "dependencies": [

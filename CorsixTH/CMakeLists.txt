@@ -331,6 +331,11 @@ if(WITH_TRACY)
   target_link_libraries(CorsixTH_lib PUBLIC Tracy::TracyClient)
 endif()
 
+if(WITH_SAVE_COMPRESSION)
+  find_package(zstd CONFIG REQUIRED)
+  target_link_libraries(CorsixTH_lib PRIVATE zstd::libzstd)
+endif()
+
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
   # Do not generate launch script. The default is fine for this case.
