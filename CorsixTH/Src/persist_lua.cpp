@@ -34,14 +34,20 @@ SOFTWARE.
 #include <new>
 #include <string>
 
+#ifdef WITH_SAVE_COMPRESSION
+#include <zstd.h>
+#endif
+
 #include "lua.hpp"
 #include "th_lua.h"
 #ifdef _MSC_VER
-#pragma warning( \
-    disable : 4996)  // Disable "std::strcpy unsafe" warnings under MSVC
+// Disable "std::strcpy unsafe" warnings under MSVC
+#pragma warning(disable : 4996)
 #endif
 
 namespace {
+
+constexpr int zstd_compression_level = 3;
 
 enum persist_type {
   //  LUA_TNIL = 0,
@@ -1309,6 +1315,53 @@ int l_persist_dofile(lua_State* L) {
   return lua_gettop(L) - 1;
 }
 
+int l_compress(lua_State* L) {
+  size_t src_length;
+  const uint8_t* src_data = luaT_checkfile(L, 1, &src_length);
+
+#ifdef WITH_SAVE_COMPRESSION
+  size_t dst_buffer_length = ZSTD_compressBound(src_length);
+  std::vector<uint8_t> dst_buffer(dst_buffer_length);
+
+  size_t dst_length =
+      ZSTD_compress(dst_buffer.data(), dst_buffer_length, src_data, src_length,
+                    zstd_compression_level);
+  if (ZSTD_isError(dst_length)) {
+    lua_pushstring(L, ZSTD_getErrorName(dst_length));
+    return 2;
+  }
+
+  lua_pushlstring(L, reinterpret_cast<char*>(dst_buffer.data()), dst_length);
+#endif
+
+  return 1;
+}
+
+int l_decompress(lua_State* L) {
+  size_t src_length;
+  const uint8_t* src_data = luaT_checkfile(L, 1, &src_length);
+
+#ifdef WITH_SAVE_COMPRESSION
+  size_t dst_length = ZSTD_getFrameContentSize(src_data, src_length);
+  if (dst_length == ZSTD_CONTENTSIZE_ERROR ||
+      dst_length == ZSTD_CONTENTSIZE_UNKNOWN) {
+    // silently return the original file if the frame is invalid, it's probably
+    // not a zstd compressed save game.
+    return 1;
+  }
+  std::vector<uint8_t> dst_buffer(dst_length);
+  size_t result =
+      ZSTD_decompress(dst_buffer.data(), dst_length, src_data, src_length);
+  if (ZSTD_isError(result)) {
+    lua_pushstring(L, ZSTD_getErrorName(result));
+    return 2;
+  }
+  lua_pushlstring(L, reinterpret_cast<char*>(dst_buffer.data()), dst_length);
+#endif
+
+  return 1;
+}
+
 int l_errcatch(lua_State* L) {
   // Dummy function for debugging - place a breakpoint on the following
   // return statement to inspect the full C call stack when a Lua error
@@ -1325,18 +1378,32 @@ constexpr std::array<luaL_Reg, 2> persist_lib{
 
 int luaopen_persist(lua_State* L) {
   luaT_register(L, "persist", persist_lib);
+
+  // upvalues
   lua_newuserdata(L, 512);  // buffer for dofile
-  lua_newtable(L);
-  lua_newtable(L);
-  lua_newtable(L);
+  lua_newtable(L);          // filename:line -> function
+  lua_newtable(L);          // function -> filename
+  lua_newtable(L);          // function -> code
+
+  // dump function with location->function table as upvalue(1)
   lua_pushvalue(L, -3);
   luaT_pushcclosure(L, l_dump_toplevel, 1);
   lua_setfield(L, -6, "dump");
+
+  // load function with function->filename and function->code upvalues
   lua_pushvalue(L, -2);
   lua_pushvalue(L, -2);
   luaT_pushcclosure(L, l_load_toplevel, 2);
   lua_setfield(L, -6, "load");
+
+  // dofile with all 4 upvalues in order
   luaT_pushcclosure(L, l_persist_dofile, 4);
   lua_setfield(L, -2, "dofile");
+
+  luaT_pushcclosure(L, l_compress, 0);
+  lua_setfield(L, -2, "compress");
+
+  luaT_pushcclosure(L, l_decompress, 0);
+  lua_setfield(L, -2, "decompress");
   return 1;
 }

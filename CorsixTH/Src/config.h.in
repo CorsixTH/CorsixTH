@@ -66,6 +66,10 @@ SOFTWARE.
 // If defined then the Tracy profiler is linked.
 #cmakedefine WITH_TRACY
 
+/** Save compression support */
+// If defined use zstd to compress or decompress save games
+#cmakedefine WITH_SAVE_COMPRESSION
+
 // Stubs for macros provided by Tracy when not linked.
 #ifndef WITH_TRACY
 #define FrameMark
