@@ -208,11 +208,11 @@ function UIProgressReport:draw(canvas, x, y)
 
   -- Names of the players playing
   local ly = 73 * s
-  for pnum, hospital in ipairs(world.hospitals) do
+  for pnum, player_hospital in ipairs(world.hospitals) do
     local font = (pnum == self.selected) and self.red_font or self.normal_font
-    font:draw(canvas, hospital.name:upper(), x + 272 * s, y + ly)
+    font:draw(canvas, player_hospital:upper(), x + 272 * s, y + ly)
     ly = ly + 25 * s
-    total_visitors = total_visitors + hospital.num_visitors_pm
+    total_visitors = total_visitors + player_hospital.num_visitors_pm
   end
 
   -- Draw the vertical bars for the selected conditions

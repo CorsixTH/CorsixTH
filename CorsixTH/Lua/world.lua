@@ -3066,7 +3066,7 @@ function World:chooseHospitalForPatient(disease)
     for _, hospital in ipairs(self.hospitals) do
       total_spawn_attempts = total_spawn_attempts + hospital.spawn_attempts
     end
-    return self.hospitals[total_population % 4 + 1]
+    return self.hospitals[total_spawn_attempts % 4 + 1]
   end
 
   -- sometimes randomly choose a hospital
