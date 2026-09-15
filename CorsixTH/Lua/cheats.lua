@@ -168,7 +168,7 @@ function Cheats:cheatVip()
 end
 
 function Cheats:cheatPatient()
-  self.hospital.world:spawnPatient()
+  self.hospital.world:spawnPatient(self.hospital)
 end
 
 function Cheats:cheatMonth()

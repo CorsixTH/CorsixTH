@@ -426,9 +426,11 @@ end
 --! Spawn a patient from a spawn point for the given hospital.
 --!param hospital (Hospital) Hospital that the new patient should visit.
 --!return (Patient entity) The spawned patient, or 'nil' if no patient spawned.
-function World:spawnPatient(hospital, disease)
+function World:spawnPatient(hospital)
+  local disease = self:getNewPatientDisease()
+
   if not hospital then
-    hospital = self:getLocalPlayerHospital()
+    hospital = self:chooseHospitalForPatient(disease)
   end
 
   -- The level might not contain any diseases
@@ -955,8 +957,7 @@ function World:onTick()
       local spawn_count = self.spawn_hours[self.game_date:hourOfDay() + i - 1]
       if spawn_count and self.hospitals[1].opened then
         for _ = 1, spawn_count do
-          local disease = self:getNewPatientDisease()
-          self:spawnPatient(self:chooseHospitalForPatient(disease), disease)
+          self:spawnPatient()
         end
       end
       for _, entity in ipairs(self.entities) do
