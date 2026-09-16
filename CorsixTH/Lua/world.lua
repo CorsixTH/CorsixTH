@@ -449,7 +449,8 @@ function World:spawnPatient(hospital)
   hospital.spawn_attempts = hospital.spawn_attempts + 1
   if not hospital:hasReceptionDesk(true) then
     if not hospital:isPlayerHospital() then
-      -- TODO: Count patients for AIHospital for now. But remove for AIHospital capable of building a reception desk.
+      -- TODO: Count patients for AIHospital for now.
+      -- But remove this count for AIHospital capable of building a reception desk.
       hospital:countNewPatient()
     end
     return
