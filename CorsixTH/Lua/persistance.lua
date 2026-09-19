@@ -257,6 +257,11 @@ end
 --!param filename (string) Path of the file to write.
 function SaveGameFile(filename)
   local data = SaveGame()
+  local err
+  data, err = persist.compress(data)
+  if err then
+    print(err)
+  end
   local f = TheApp:writeToFileOrTmp(filename, "wb")
   f:write(data)
   f:close()
@@ -324,5 +329,10 @@ function LoadGameFile(filename)
   local f = assert(io.open(filename, "rb"))
   local data = f:read("*a")
   f:close()
+  local err
+  data, err = persist.decompress(data)
+  if err then
+    print(err)
+  end
   LoadGame(data)
 end
