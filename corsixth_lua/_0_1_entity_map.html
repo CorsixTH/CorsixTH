@@ -32,6 +32,9 @@
  <a href="_0_1_entity_map.html#_0_1_entity_map_1add_entity">addEntity</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">entity</span>)
  </li>
  <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_entity_map.html#_0_1_entity_map_1get_adjacent_free_tiles">getAdjacentFreeTiles</a>(<span class="p">x</span>, <span class="p">y</span>)
  </li>
  <li class="self">
@@ -51,6 +54,9 @@
  </li>
  <li class="self">
  <a href="_0_1_entity_map.html#_0_1_entity_map_1get_patients_in_adjacent_squares">getPatientsInAdjacentSquares</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1get_rats_at_coordinate">getRatsAtCoordinate</a>(<span class="p">x</span>, <span class="p">y</span>)
  </li>
  <li class="self">
  <a href="_0_1_entity_map.html#_0_1_entity_map_1remove_entity">removeEntity</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">entity</span>)
@@ -120,6 +126,26 @@ may be empty or contain the entity/entities that currently exist in that tile.<b
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_entity_map_1after_load">function EntityMap:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L238">line 238 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_entity_map_1get_adjacent_free_tiles">function EntityMap:getAdjacentFreeTiles(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
  <p>
  Returns a map of coordinates {{x1, y1}, ... {xn, yn}} of
@@ -142,7 +168,7 @@ different room
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L199">line 199 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L218">line 218 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -167,7 +193,7 @@ adjacent to a given (x, y) coordinate - no diagonals
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L144">line 144 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L163">line 163 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -191,7 +217,7 @@ adjacent to a given (x, y) coordinate - no diagonals
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L97">line 97 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L101">line 101 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -222,7 +248,7 @@ which they is no longer visually located.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L116">line 116 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L125">line 125 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -246,7 +272,7 @@ to the given (x, y) coordinate - diagonals are not considered
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L168">line 168 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L187">line 187 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -270,7 +296,7 @@ to the given (x, y) coordinate - diagonals are not considered
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L133">line 133 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L152">line 152 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -294,7 +320,31 @@ to the given (x, y) coordinate - diagonals are not considered
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L183">line 183 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L202">line 202 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1get_rats_at_coordinate">function EntityMap:getRatsAtCoordinate(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Returns a table of all rats at a specified coordinate
+@param x (integer) the x coordinate to retrieve entities from
+@param y (integer) the y coordinate to retrieve entities from
+@return (table) containing the objects at the (x, y) coordinate<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L142">line 142 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -325,7 +375,7 @@ the assertion that the entity is contained in the map to fail.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L78">line 78 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L80">line 80 of Lua/entity_map.lua</a>.
  </p>
  </div>
 </div>

@@ -4,7 +4,7 @@
  <head>
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  <meta http-equiv="Content-Language" content="en-gb" />
- <title>Litter Class - CorsixTH Lua Documentation</title>
+ <title>Rat Class - CorsixTH Lua Documentation</title>
  <link rel="stylesheet" href="main.css" type="text/css" media="all" />
  </head>
  <body>
@@ -21,25 +21,47 @@
  <li class="last"><a href="class_index.html">Index</a></li>
  </ul>
  <div class="content">
- <h2 class="class">Litter Class</h2>
+ <h2 class="class">Rat Class</h2>
+<h3 class="class">A `Rat` which runs from hole to hole</h3> 
 <div class="class_info">
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L51">line 51 of Lua/objects/litter.lua</a>.
- <br/><strong>Inheritance:</strong> <a href="_0_1_litter.html">Litter</a>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L22">line 22 of Lua/entities/rat.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_rat.html">Rat</a>
  » <a href="_0_1_entity.html">Entity</a>
 </div>
 <div class="method_list">
  <h4>Method Index</h4>
  <ul>
+ <li class="self">
+ <a href="_0_1_rat.html#_0_1_rat_1__arrive">_arrive</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_rat.html#_0_1_rat_1__begin_run">_beginRun</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_rat.html#_0_1_rat_1__choose_target">_chooseTarget</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_rat.html#_0_1_rat_1__determine_path">_determinePath</a>(<span class="p">dest_x</span>, <span class="p">dest_y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_rat.html#_0_1_rat_1__emerge">_emerge</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_rat.html#_0_1_rat_1__enter_hole">_enterHole</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_rat.html#_0_1_rat_1__is_corridor_path">_isCorridorPath</a>(<span class="p">xs</span>, <span class="p">ys</span>)
+ </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1__tick">_tick</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="self">
- <a href="_0_1_litter.html#_0_1_litter_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
- (overrides <a href="_0_1_entity.html#_0_1_entity_1after_load">Entity:afterLoad</a>)
+ <a href="_0_1_rat.html#_0_1_rat_1__walk_to_next_tile">_walkToNextTile</a>()
  </li>
- <li class="self">
- <a href="_0_1_litter.html#_0_1_litter_1any_litter">anyLitter</a>()
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
@@ -49,9 +71,9 @@
  <a href="_0_1_entity.html#_0_1_entity_1erase_object">eraseObject</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
- <li class="self">
- <a href="_0_1_litter.html#_0_1_litter_1get_drawing_layer">getDrawingLayer</a>()
- (overrides <a href="_0_1_entity.html#_0_1_entity_1get_drawing_layer">Entity:getDrawingLayer</a>)
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1get_drawing_layer">getDrawingLayer</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1get_dynamic_info">getDynamicInfo</a>()
@@ -66,10 +88,7 @@
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="self">
- <a href="_0_1_litter.html#_0_1_litter_1get_walkable_tiles">getWalkableTiles</a>()
- </li>
- <li class="self">
- <a href="_0_1_litter.html#_0_1_litter_1is_cleanable">isCleanable</a>()
+ <a href="_0_1_rat.html#_0_1_rat_1init">init</a>(<span class="p">origin_wall</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">notifyNewObject</a>(<span class="p">id</span>)
@@ -78,6 +97,9 @@
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1notify_new_room">notifyNewRoom</a>(<span class="p">room</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_rat.html#_0_1_rat_1on_click">onClick</a>(<span class="p">ui</span>, <span class="p">button</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1on_destroy">onDestroy</a>()
@@ -99,9 +121,6 @@
  <a href="_0_1_entity.html#_0_1_entity_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
- <li class="self">
- <a href="_0_1_litter.html#_0_1_litter_1remove">remove</a>()
- </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1reset_animation">resetAnimation</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
@@ -117,9 +136,6 @@
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
- </li>
- <li class="self">
- <a href="_0_1_litter.html#_0_1_litter_1set_litter_type">setLitterType</a>(<span class="p">anim_type</span>, <span class="p">mirrorFlag</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_mood">setMood</a>(<span class="p">mood_name</span>, <span class="p">activate</span>)
@@ -137,9 +153,9 @@
  <a href="_0_1_entity.html#_0_1_entity_1set_speed">setSpeed</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
- <li class="self">
- <a href="_0_1_litter.html#_0_1_litter_1set_tile">setTile</a>(<span class="p">x</span>, <span class="p">y</span>)
- (overrides <a href="_0_1_entity.html#_0_1_entity_1set_tile">Entity:setTile</a>)
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_tile">setTile</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_tile_position_speed">setTilePositionSpeed</a>(<span class="p">tx</span>, <span class="p">ty</span>, <span class="p">px</span>, <span class="p">py</span>, <span class="p">sx</span>, <span class="p">sy</span>)
@@ -161,9 +177,6 @@
  <a href="_0_1_entity.html#_0_1_entity_1tick_day">tickDay</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
  </li>
- <li class="self">
- <a href="_0_1_litter.html#_0_1_litter_1vomit_inducing">vomitInducing</a>()
- </li>
  </ul>
 </div>
 <div class="member_list">
@@ -173,11 +186,12 @@
  (*)
  </li>
  <li><span class="p">animation_idx</span>
+ (*)
  </li>
  <li><span class="p">dynamic_info</span>
  (*)
  </li>
- <li><span class="p">hospital</span>
+ <li><span class="p">last_move_direction</span>
  </li>
  <li><span class="p">layers</span>
  (*)
@@ -191,10 +205,11 @@
  <li><span class="p">num_animation_ticks</span>
  (*)
  </li>
- <li><span class="p">object_type</span>
+ <li><span class="p">origin_wall</span>
+ </li>
+ <li><span class="p">path</span>
  </li>
  <li><span class="p">permanent_flags</span>
- (*)
  </li>
  <li><span class="p">playing_sounds_in_random_sequence</span>
  (*)
@@ -202,16 +217,20 @@
  <li><span class="p">random_sound_sequence_parameters</span>
  (*)
  </li>
+ <li><span class="p">shot</span>
+ </li>
  <li><span class="p">skip_next_tick</span>
  (*)
  </li>
  <li><span class="p">slow_animation</span>
  (*)
  </li>
+ <li><span class="p">target</span>
+ </li>
  <li><span class="p">th</span>
- (*)
  </li>
  <li><span class="p">ticks</span>
+ (*)
  </li>
  <li><span class="p">tile_x</span>
  </li>
@@ -236,135 +255,155 @@
 </div>
 <div class="methods">
  <div class="method">
- <h5><a name="_0_1_litter_1_litter">function Litter:Litter(<span class="p">hospital</span>, <span class="p">object_type</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <h5><a name="_0_1_rat_1_rat">function Rat:Rat(<span class="p">animation</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">hospital</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
- <tr>
- <td class="n">object_type</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
- <tr>
- <td class="n">x</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
- <tr>
- <td class="n">y</td>
+ <td class="n">animation</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L56">line 56 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L71">line 71 of Lua/entities/rat.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_litter_1after_load">function Litter:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <h5><a name="_0_1_rat_1__arrive">function Rat:_arrive()</a></h5>
  <p>
+ The rat has reached the end of its run: enter the target hole if it is a
+real rathole, otherwise just vanish.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L119">line 119 of Lua/entities/rat.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_rat_1__begin_run">function Rat:_beginRun()</a></h5>
+ <p>
+ Find a corridor path to the target hole and start following it, or leave if
+there is no route.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L108">line 108 of Lua/entities/rat.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_rat_1__choose_target">function Rat:_chooseTarget()</a></h5>
+ <p>
+ Pick a destination rathole other than the one the rat started on.<br/><br/>
+ ("north"/"west"/"east"/"south").<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L129">line 129 of Lua/entities/rat.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_rat_1__determine_path">function Rat:_determinePath(<span class="p">dest_x</span>, <span class="p">dest_y</span>)</a></h5>
+ <p>
+ Compute and store a corridor-only path from the rat's tile to the given
+destination.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">old</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="n">dest_x</td>
+ <td class="t">integer</td>
+ <td class="d"> Destination tile X coordinate.</td>
  </tr>
  <tr>
- <td class="n">new</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="n">dest_y</td>
+ <td class="t">integer</td>
+ <td class="d"> Destination tile Y coordinate.</td>
  </tr>
  </table></p><p>
- <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1after_load">Entity:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L139">line 139 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L166">line 166 of Lua/entities/rat.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_litter_1any_litter">function Litter:anyLitter()</a></h5>
+ <h5><a name="_0_1_rat_1__emerge">function Rat:_emerge()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L128">line 128 of Lua/objects/litter.lua</a>.
+ Play the leaving-hole animation when emerging from a north hole, then run.
+Other walls have no leaving animation, so the rat sets off immediately.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L93">line 93 of Lua/entities/rat.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_litter_1get_drawing_layer">function Litter:getDrawingLayer()</a></h5>
+ <h5><a name="_0_1_rat_1__enter_hole">function Rat:_enterHole()</a></h5>
  <p>
- <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1get_drawing_layer">Entity:getDrawingLayer</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L110">line 110 of Lua/objects/litter.lua</a>.
+ Play the entering-hole animation for the target hole's wall (north and west
+have one; east and south holes are hidden), then remove the rat.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L222">line 222 of Lua/entities/rat.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_litter_1get_walkable_tiles">function Litter:getWalkableTiles()</a></h5>
+ <h5><a name="_0_1_rat_1__is_corridor_path">function Rat:_isCorridorPath(<span class="p">xs</span>, <span class="p">ys</span>)</a></h5>
  <p>
- Litter is an Entity and not an Object so it does not inherit this method
-This is an (effective) hack, see issue 918 --cgj<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L72">line 72 of Lua/objects/litter.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_litter_1is_cleanable">function Litter:isCleanable()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L124">line 124 of Lua/objects/litter.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_litter_1remove">function Litter:remove()</a></h5>
- <p>
- Remove the litter from the world.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L95">line 95 of Lua/objects/litter.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_litter_1set_litter_type">function Litter:setLitterType(<span class="p">anim_type</span>, <span class="p">mirrorFlag</span>)</a></h5>
- <p>
+ Whether every tile on the given path is corridor (not inside a room), so the
+rat stays out of rooms and never squeezes through closed doors -- matching the
+original game, where rats scurry only in corridors.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">anim_type</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="n">xs</td>
+ <td class="t">list</td>
+ <td class="d"> Path tile X coordinates.</td>
  </tr>
  <tr>
- <td class="n">mirrorFlag</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="n">ys</td>
+ <td class="t">list</td>
+ <td class="d"> Path tile Y coordinates.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L81">line 81 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L150">line 150 of Lua/entities/rat.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_litter_1set_tile">function Litter:setTile(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <h5><a name="_0_1_rat_1__walk_to_next_tile">function Rat:_walkToNextTile()</a></h5>
  <p>
+ Walk the rat one tile further along its path, mirroring how humanoids move
+(see `action_walk_raw`). The rat animates across a single tile over
+`walk_quantity` ticks, then this runs again for the following tile until the
+destination hole is reached. Keeping the tile position authoritative means
+the rat stays clickable and detectable on the entity map.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L180">line 180 of Lua/entities/rat.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_rat_1init">function Rat:init(<span class="p">origin_wall</span>)</a></h5>
+ <p>
+ Send the rat scurrying from its hole, along the corridors, to another
+rathole where it disappears.<br/><br/>
+ to pick the leaving animation (only north holes have one).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">x</td>
- <td class="t">?</td>
- <td class="d">?</td>
- </tr>
- <tr>
- <td class="n">y</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="n">origin_wall</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> The wall of the hole it emerges from, used</td>
  </tr>
  </table></p><p>
- <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1set_tile">Entity:setTile</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L66">line 66 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L78">line 78 of Lua/entities/rat.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_litter_1vomit_inducing">function Litter:vomitInducing()</a></h5>
+ <h5><a name="_0_1_rat_1on_click">function Rat:onClick(<span class="p">ui</span>, <span class="p">button</span>)</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L114">line 114 of Lua/objects/litter.lua</a>.
+ Shoot the rat on left-click: play the sounds, leave a dead-rat splat where
+it was, and remove it. Guarded so a stale cursor entity cannot shoot the same
+rat twice.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">GameUI</td>
+ <td class="d"> The game UI.</td>
+ </tr>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">string</td>
+ <td class="d"> The mouse button used.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L238">line 238 of Lua/entities/rat.lua</a>.
  </p>
  </div>
 </div>
