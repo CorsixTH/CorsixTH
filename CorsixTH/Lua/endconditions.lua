@@ -318,6 +318,7 @@ local format_map = {
   target = list_to_set({ "reputation_good_enough", "financial_criteria_met", "hospital_value_enough" }),
   gap = list_to_set({ "improve_reputation", "close_to_win_increase_value", "financial_trouble",
     "financial_trouble2", "financial_trouble3" }),
+  -- todo: add strings that include the current criterion measure
   -- measure = list_to_set({""})
 }
 
@@ -337,6 +338,7 @@ function EndConditions:generateAdvice(hospital)
     end
     if format_map.target[string] then full_string = full_string:format(target)
     elseif format_map.gap[string] then full_string = full_string:format(gap)
+    --  todo: add strings that include the current criterion measure
     -- elseif format_map.measure[string] then full_string = full_string:format(measure)
     end
     table.insert(advice_tbl, {text = full_string})
