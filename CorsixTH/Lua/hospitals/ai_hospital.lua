@@ -43,6 +43,10 @@ function AIHospital:logTransaction()
   -- AI doesn't need a log of transactions, as it is only used for UI purposes
 end
 
+function AIHospital:hasStaffedDesk()
+  return true
+end
+
 function AIHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = nil
