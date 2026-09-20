@@ -124,6 +124,7 @@ function UIJukebox:toggleTrack(index)
     self.audio:stopBackgroundTrack()
     self.audio:playRandomBackgroundTrack()
   end
+  self.audio:updatePlaylistPreferences()
 end
 
 function UIJukebox:loopTrack()
