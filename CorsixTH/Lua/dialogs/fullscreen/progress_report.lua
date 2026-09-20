@@ -126,7 +126,7 @@ function UIProgressReport:UIProgressReport(ui)
     self:addPanel(0, 265, 71 + (num - 1) * 25)
       :makeButton(0, 0, 147, 20, 9, btn_handler(num))
       :setTooltip(tooltip(num))
-      :enable(true)
+      :enable(num == 1)
   end
 
   for i = 1, math.min(#world.hospitals, 4) do
@@ -249,8 +249,8 @@ function UIProgressReport:draw(canvas, x, y)
   self.normal_font:draw(canvas, _S.progress_report.header .. " " ..
       (world:date():year() + 1999), x + 227 * s, y + 40 * s, 400 * s, 0)
   self.small_font:draw(canvas, _S.progress_report.win_criteria:upper(), x + 263 * s, y + 172 * s)
-  -- population percent
-  local population_percent = 100 / #world.hospitals -- default value: 25% for each hospital
+  -- population percent. by default equal share per hospital
+  local population_percent = 100 / #world.hospitals
   if total_visitors > 0 then
     population_percent = selected_hospital.num_visitors_pm / total_visitors * 100
   end

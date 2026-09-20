@@ -1421,7 +1421,7 @@ end
 function Hospital:addPatient(patient)
   self.patients[#self.patients + 1] = patient
   self:countNewPatient()
-  -- Decide if the patient belongs in an epidemic
+  -- Decide if the patient belongs to an epidemic
   self:determineIfContagious(patient)
 end
 
@@ -2458,8 +2458,8 @@ function Hospital:getDiseaseReputation(disease)
 end
 
 --! Calculate value to influence spawn chance based on the price relative to reputation
---!param disease id (string) - name of the disease
---!return (float) Multiplier to apply for spawn chance
+--!param disease (string) name of the disease
+--!return (number) multiplier to apply for spawn chance
 function Hospital:getDiseaseReputationPriceFactor(disease)
   local reputation = self.disease_casebook[disease].reputation or self.reputation
   local percentage = self.disease_casebook[disease].price

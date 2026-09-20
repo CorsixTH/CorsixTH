@@ -200,7 +200,7 @@ end
 
 --[[ Returns the hour of the day
 
-! Finds out what is an tick of this date starting on 0 up to 49
+! Finds out what is an hour of this date starting on 0 up to 49
 
 !return (number)
 ]]
