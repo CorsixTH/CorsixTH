@@ -161,13 +161,9 @@ function App:init()
     direct_zoom = self.config.direct_zoom == nil or self.config.direct_zoom,
     aspect_ratio_4_3 = self.config.original_aspect_ratio,
     hidpi = self.config.hidpi,
+    override_resolution = self.config.override_resolution
   }
-  self.video = assert(TH.surface(
-      self.config.width,
-      self.config.height,
-      App.MIN_WINDOW_WIDTH,
-      App.MIN_WINDOW_HEIGHT,
-      self.modes))
+  self.video = assert(TH.surface(self:getVideoOptions()))
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
 
@@ -2180,6 +2176,19 @@ end
 
 function App:isUpdateCheckAvailable()
   return TH.GetCompileOptions().update_check
+end
+
+function App:getVideoOptions(overrides)
+  overrides = overrides or {}
+  return {
+      width = overrides.width or self.config.width,
+      height = overrides.height or self.config.height,
+      min_width = overrides.min_width or App.MIN_WINDOW_WIDTH,
+      min_height = overrides.min_height or App.MIN_WINDOW_HEIGHT,
+      modes = overrides.modes or self.modes,
+      resolution_width = overrides.override_resolution_width or self.config.override_resolution_width,
+      resolution_height = overrides.override_resolution_height or self.config.override_resolution_height,
+    }
 end
 
 --! Generate information about user's system and the program

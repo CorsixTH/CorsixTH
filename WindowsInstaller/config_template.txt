@@ -7,38 +7,8 @@
 -- If you wish to go back to the default settings for everything, you can delete
 -- this text file and it will be re-created when you play the game.
 --
--------------------------------- SETTINGS MENU --------------------------------
--- These settings can also be changed from within the game in the settings menu
--------------------------------------------------------------------------------
--- fullscreen: Can be true or false.
---  If true then the game uses a full screen window. If false the game may be
---  windowed or maximized.
--- maximized: Can be true or false.
---  If the game is not running full screen then it will be maximized if this
---  is true otherwise it will be windowed.
--- Window size (width and height): At least 640x480.
---  The window size the game runs at when it is not maximized or in full screen
---  mode.
--- original_aspect_ratio: True or false
---  If true then the game is letterboxed so that it is drawn at a 4:3 aspect
---  ratio like the original game.
--- ui_scale: Whole number.
---  Pixel ratio to draw UI elements; decimals unsupported. 0 for automatic.
---  Example: ui_scale = 2 makes UI elements twice as large.
---  The ui_scale will be capped at runtime to the largest size that fits in the
---  window; assuming an original size of 640x480.
--- cursor_scale: Whole number (0, 1, 2, 3...)
---  Pixel ratio to draw the cursor. 0 is Auto and will match the current
---  UI scale.
---
-fullscreen = SCREEN_FULLSCREEN
-maximized = false
-width = SCREEN_SIZE_WIDTH
-height = SCREEN_SIZE_HEIGHT
-original_aspect_ratio = false
-ui_scale = 0
-cursor_scale = 0
-
+--------------------------------- SETTINGS MENU --------------------------------
+--- These settings can also be changed from within the game in the settings menu
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
 --  Brazilian Portuguese  / pt_br / br
@@ -70,6 +40,58 @@ language = [[LANGUAGE_CHOSEN]]
 -- Audio global on/off switch.
 --
 audio = true
+
+------------------------------- DISPLAY SETTINGS ------------------------------
+-- These settings adjust the size and scale of CorsixTH
+-------------------------------------------------------------------------------
+-- Fullscreen
+--  If true then the game uses a full screen window. If false the game may be
+--  windowed or maximized.
+--
+fullscreen = SCREEN_FULLSCREEN
+
+-- Maximised
+--  If the game is not running full screen then it will be maximized if this
+--  is true otherwise it will be windowed.
+--
+maximized = false
+-- Window size
+--  The window size the game runs at when it is not maximized or in full screen
+--  mode. Must be at least 640x480.
+--
+width = SCREEN_SIZE_WIDTH
+height = SCREEN_SIZE_HEIGHT
+
+-- Original Aspect Ratio
+--  If true then the game is letterboxed so that it is drawn at a 4:3 aspect
+--  ratio like the original game.
+--
+original_aspect_ratio = false
+
+-- Resolution Override
+--  For less powerful devices that have a hard time rendering the game at
+--  native resolution. When enabled, the game is drawn at a fixed resolution
+--  defined below and scaled to fit the display.
+--  If enabled, original_aspect_ratio has no effect.
+--  Resolution must be at least 640 (width) x 480 (height).
+--
+override_resolution = false
+override_resolution_width = 640
+override_resolution_height = 480
+
+-- UI Scale
+--  Pixel ratio to draw UI elements; decimals unsupported. 0 for automatic.
+--  Example: ui_scale = 2 makes UI elements twice as large.
+--  The ui_scale will be capped at runtime to the largest size that fits in the
+--  window; assuming an original size of 640x480.
+--
+ui_scale = 0
+
+-- Cursor Scale
+--  Pixel ratio to draw the cursor. 0 is Auto and will match the current
+--  UI scale.
+--
+cursor_scale = 0
 
 ------------------------------ CUSTOM GAME MENU -------------------------------
 -- These settings can also be changed from the opening menu screen
