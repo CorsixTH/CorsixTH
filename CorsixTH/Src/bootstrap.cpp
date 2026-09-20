@@ -54,7 +54,7 @@ constexpr std::array<const char*, 45> bootstrap_code{
      "if not SDL.init('video') then error'Unable to initialise video' end",
      "local w, h = 640, 480",
      "local function dernc(x) return x:match'^RNC' and assert(rnc(x)) or x end",
-     "local video = TheApp and TheApp.video or TH.surface(w, h)",
+     "local video = TheApp and TheApp.video or TH.surface({width = w, height = h})",
      "video:setCaption('CorsixTH - Error during startup')",
      "local sheet, font = TH.sheet(), TH.bitmap_font()",
      "local palette = TH.palette(dernc(pal))",

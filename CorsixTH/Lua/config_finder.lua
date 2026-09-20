@@ -127,6 +127,9 @@ local function new_config_defaults()
     width = 800,
     height = 600,
     original_aspect_ratio = false,
+    override_resolution = false,
+    override_resolution_width = 640,
+    override_resolution_height = 480,
     ui_scale = 0,
     cursor_scale = 0,
     language = [[English]],
@@ -304,38 +307,8 @@ local function config_contents(config_values)
 -- If you wish to go back to the default settings for everything, you can delete
 -- this text file and it will be re-created when you play the game.
 --
--------------------------------- SETTINGS MENU --------------------------------
--- These settings can also be changed from within the game in the settings menu
--------------------------------------------------------------------------------
--- fullscreen: Can be true or false.
---  If true then the game uses a full screen window. If false the game may be
---  windowed or maximized.
--- maximized: Can be true or false.
---  If the game is not running full screen then it will be maximized if this
---  is true otherwise it will be windowed.
--- Window size (width and height): At least 640x480.
---  The window size the game runs at when it is not maximized or in full screen
---  mode.
--- original_aspect_ratio: True or false
---  If true then the game is letterboxed so that it is drawn at a 4:3 aspect
---  ratio like the original game.
--- ui_scale: Whole number.
---  Pixel ratio to draw UI elements; decimals unsupported. 0 for automatic.
---  Example: ui_scale = 2 makes UI elements twice as large.
---  The ui_scale will be capped at runtime to the largest size that fits in the
---  window; assuming an original size of 640x480.
--- cursor_scale: Whole number (0, 1, 2, 3...)
---  Pixel ratio to draw the cursor. 0 is Auto and will match the current
---  UI scale.
---]=] .. '\n' ..
-param(config_values, 'fullscreen') ..
-param(config_values, 'maximized') ..
-param(config_values, 'width') ..
-param(config_values, 'height') ..
-param(config_values, 'original_aspect_ratio') ..
-param(config_values, 'ui_scale') ..
-param(config_values, 'cursor_scale') .. [=[
-
+--------------------------------- SETTINGS MENU --------------------------------
+--- These settings can also be changed from within the game in the settings menu
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
 --  Brazilian Portuguese  / pt_br / br
@@ -366,7 +339,60 @@ param(config_values, 'language') .. [=[
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
 --]=] .. '\n' ..
-param(config_values, 'audio') .. '\n'
+param(config_values, 'audio') .. [=[
+
+------------------------------- DISPLAY SETTINGS ------------------------------
+-- These settings adjust the size and scale of CorsixTH
+-------------------------------------------------------------------------------
+-- Fullscreen
+--  If true then the game uses a full screen window. If false the game may be
+--  windowed or maximized.
+--]=] .. '\n' ..
+param(config_values, 'fullscreen') .. [=[
+
+-- Maximised
+--  If the game is not running full screen then it will be maximized if this
+--  is true otherwise it will be windowed.
+--]=] .. '\n' ..
+
+param(config_values, 'maximized') .. [=[
+-- Window size
+--  The window size the game runs at when it is not maximized or in full screen
+--  mode. Must be at least 640x480.
+--]=] .. '\n' ..
+param(config_values, 'width') ..
+param(config_values, 'height') .. [=[
+
+-- Original Aspect Ratio
+--  If true then the game is letterboxed so that it is drawn at a 4:3 aspect
+--  ratio like the original game.
+--]=] .. '\n' ..
+param(config_values, 'original_aspect_ratio') .. [=[
+
+-- Resolution Override
+--  For less powerful devices that have a hard time rendering the game at
+--  native resolution. When enabled, the game is drawn at a fixed resolution
+--  defined below and scaled to fit the display.
+--  If enabled, original_aspect_ratio has no effect.
+--  Resolution must be at least 640 (width) x 480 (height).
+--]=] .. '\n' ..
+param(config_values, 'override_resolution') ..
+param(config_values, 'override_resolution_width') ..
+param(config_values, 'override_resolution_height') .. [=[
+
+-- UI Scale
+--  Pixel ratio to draw UI elements; decimals unsupported. 0 for automatic.
+--  Example: ui_scale = 2 makes UI elements twice as large.
+--  The ui_scale will be capped at runtime to the largest size that fits in the
+--  window; assuming an original size of 640x480.
+--]=] .. '\n' ..
+param(config_values, 'ui_scale') .. [=[
+
+-- Cursor Scale
+--  Pixel ratio to draw the cursor. 0 is Auto and will match the current
+--  UI scale.
+--]=] .. '\n' ..
+param(config_values, 'cursor_scale') .. '\n'
 
 parts[2] = [=[
 ------------------------------ CUSTOM GAME MENU -------------------------------
