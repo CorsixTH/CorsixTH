@@ -1595,6 +1595,7 @@ function App:findSoundFont()
 
   local possible_locations = {
     self.config.soundfont or false,
+    data_dir .. "GeneralUser-GS.sf2",
     data_dir .. "FluidR3_GM.sf2",
     data_dir .. "FluidR3.sf3",
     "/usr/share/soundfonts/default.sf2", -- default linux
