@@ -3061,43 +3061,46 @@ end
 --!param disease (table) - the disease assigned to this patient
 --!return hospital (Hospital)
 function World:chooseHospitalForPatient(disease)
+  -- TODO: Until changes in competing hospitals' reputations are implemented,
+  -- use only the round-robin method. Otherwise, uncomment the other methods.
+
   -- round robin if less than gbvAllocDelay
-  if self.map.level_config.gbv.AllocDelay and self.game_date:monthOfGame() <= self.map.level_config.gbv.AllocDelay then
-    local total_spawn_attempts = 0
-    for _, hospital in ipairs(self.hospitals) do
-      total_spawn_attempts = total_spawn_attempts + hospital.spawn_attempts
-    end
-    return self.hospitals[total_spawn_attempts % 4 + 1]
+  --if self.map.level_config.gbv.AllocDelay and self.game_date:monthOfGame() <= self.map.level_config.gbv.AllocDelay then
+  local total_spawn_attempts = 0
+  for _, hospital in ipairs(self.hospitals) do
+    total_spawn_attempts = total_spawn_attempts + hospital.spawn_attempts
   end
+  return self.hospitals[total_spawn_attempts % 4 + 1]
+  --end
 
-  -- sometimes randomly choose a hospital
-  if self.map.level_config.gbv.AllocRand and math.random(1, self.map.level_config.gbv.AllocRand) == 1 then
-    return self.hospitals[math.random(1, 4)]
-  end
+  -- -- sometimes randomly choose a hospital
+  -- if self.map.level_config.gbv.AllocRand and math.random(1, self.map.level_config.gbv.AllocRand) == 1 then
+  --   return self.hospitals[math.random(1, 4)]
+  -- end
 
-  -- From all hospitals randomly select a hospital based on the reputation
-  -- and cost of treatment of the patients disease
-  local value_proposition = 0
-  local hosp_patient_value = {}
-  -- calculate the threshold values for each hospital
-  for s, hosp in ipairs(self.hospitals) do
-    local rep_multiplier = self.map.level_config.gbv.AllocIndRep and self.map.level_config.gbv.AllocIndRep or 2
-    local reputation = hosp:getDiseaseReputation(disease.id)
-    value_proposition = hosp:getDiseaseReputationPriceFactor(disease.id)
-    value_proposition = value_proposition * rep_multiplier * reputation
-    if s > 1 then
-      value_proposition = value_proposition + hosp_patient_value[s - 1]
-    end
-    hosp_patient_value[s] = value_proposition
-  end
+  -- -- From all hospitals randomly select a hospital based on the reputation
+  -- -- and cost of treatment of the patients disease
+  -- local value_proposition = 0
+  -- local hosp_patient_value = {}
+  -- -- calculate the threshold values for each hospital
+  -- for s, hosp in ipairs(self.hospitals) do
+  --   local rep_multiplier = self.map.level_config.gbv.AllocIndRep and self.map.level_config.gbv.AllocIndRep or 2
+  --   local reputation = hosp:getDiseaseReputation(disease.id)
+  --   value_proposition = hosp:getDiseaseReputationPriceFactor(disease.id)
+  --   value_proposition = value_proposition * rep_multiplier * reputation
+  --   if s > 1 then
+  --     value_proposition = value_proposition + hosp_patient_value[s - 1]
+  --   end
+  --   hosp_patient_value[s] = value_proposition
+  -- end
 
-  -- Check random value, against individual hospital thresholds
-  local threshold = math.random(0, math.floor(value_proposition - 1))
-  for i, hosp_value in ipairs(hosp_patient_value) do
-    if threshold < hosp_value then
-      return self.hospitals[i]
-    end
-  end
+  -- -- Check random value, against individual hospital thresholds
+  -- local threshold = math.random(0, math.floor(value_proposition - 1))
+  -- for i, hosp_value in ipairs(hosp_patient_value) do
+  --   if threshold < hosp_value then
+  --     return self.hospitals[i]
+  --   end
+  -- end
 end
 
 --! Returns whether the level being played is part of a campaign or not
