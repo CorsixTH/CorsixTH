@@ -17,7 +17,7 @@ var classsound__player =
     [ "release_channel", "classsound__player.html#a01d89dcbf03325def5883a577c5a425e", null ],
     [ "reserve_channel", "classsound__player.html#a161c2136e5ef64a9d40e7703b0958863", null ],
     [ "set_camera", "classsound__player.html#ad10af9d329495d402fcce97071d02b49", null ],
-    [ "set_sound_effect_volume", "classsound__player.html#ab5af500bea86470b88ca3d75dc1833f6", null ],
+    [ "set_sound_effect_volume", "classsound__player.html#ad3981e5c3fc921036b1665ea46432e8a", null ],
     [ "set_sound_effects_enabled", "classsound__player.html#ab3706925c1c24054ff5ac8e7b6d1954a", null ],
     [ "stop", "classsound__player.html#af63ebe4b21470848960e2a2412ae98fc", null ],
     [ "toggle_pause", "classsound__player.html#a5aa0598ecacfbc257e4ae7a4996aaf1f", null ]

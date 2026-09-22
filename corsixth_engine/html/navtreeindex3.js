@@ -51,8 +51,9 @@ var NAVTREEINDEX3 =
 "namespaceth_1_1sound.html":[0,0,0,1],
 "namespaceth_1_1sound.html#a4bfd58b6b135f9c6d3ff3026cadc342b":[0,0,0,1,3],
 "namespaceth_1_1sound.html#a5274cefc692cfdaf76d3e0a39b1eab10":[0,0,0,1,2],
-"namespaceth_1_1sound.html#a5ac6233328914426a23fc0cba1c54b41":[0,0,0,1,4],
+"namespaceth_1_1sound.html#a5ac6233328914426a23fc0cba1c54b41":[0,0,0,1,5],
 "namespaceth_1_1sound.html#a91deb613574ded59cba7fb3b611028e4":[0,0,0,1,1],
+"namespaceth_1_1sound.html#aa3b8e1c77288a778cba6b71eb9afb2ed":[0,0,0,1,4],
 "pages.html":[],
 "persist__lua_8cpp.html":[2,0,1,0,17],
 "persist__lua_8cpp.html#aab2dcf78b2e98f36d7acdf7e61c03db1":[2,0,1,0,17,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "structpath__node.html#af8d894dc00e3b7854dce893d30eb5720":[1,0,84,4],
 "structrender__size.html":[1,0,87],
 "structrender__size.html#a116871663db33ea1e2905ff5ed52ce0c":[1,0,87,0],
-"structrender__size.html#a837a8c286d77bd39a0f2ebe5fdc9f8b5":[1,0,87,1],
-"structrender__target__creation__params.html":[1,0,89]
+"structrender__size.html#a837a8c286d77bd39a0f2ebe5fdc9f8b5":[1,0,87,1]
 };

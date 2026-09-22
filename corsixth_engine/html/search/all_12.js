@@ -76,7 +76,7 @@ var searchData=
   ['set_5fshadow_5foptions_73',['set_shadow_options',['../classfreetype__font.html#a1bd5e3a9c14ffe0cbe15483ddefe25d9',1,'freetype_font']]],
   ['set_5fsheet_74',['set_sheet',['../classsprite__render__list.html#af29bb3805803d5d2d3987c48828dc7da',1,'sprite_render_list']]],
   ['set_5fsize_75',['set_size',['../classlevel__map.html#a256a2894a35a56b603eab1c5648aef59',1,'level_map']]],
-  ['set_5fsound_5feffect_5fvolume_76',['set_sound_effect_volume',['../classsound__player.html#ab5af500bea86470b88ca3d75dc1833f6',1,'sound_player']]],
+  ['set_5fsound_5feffect_5fvolume_76',['set_sound_effect_volume',['../classsound__player.html#ad3981e5c3fc921036b1665ea46432e8a',1,'sound_player']]],
   ['set_5fsound_5feffects_5fenabled_77',['set_sound_effects_enabled',['../classsound__player.html#ab3706925c1c24054ff5ac8e7b6d1954a',1,'sound_player']]],
   ['set_5fspeed_78',['set_speed',['../classanimation.html#a796f1edaed105fdc1855865cb19f3940',1,'animation::set_speed()'],['../classsprite__render__list.html#a9b319e9fb2a474601b693eb3d28c515d',1,'sprite_render_list::set_speed()']]],
   ['set_5fsprite_5falt_5fpalette_5fmap_79',['set_sprite_alt_palette_map',['../classsprite__sheet.html#a65aee32d8ab1e0559ba78448c9953bdd',1,'sprite_sheet']]],
