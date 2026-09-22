@@ -26,6 +26,7 @@ SOFTWARE.
 #include <memory>
 #include <stdexcept>
 
+#include "th_sound.h"
 #include "xmi2mid.h"
 
 fluid_player::fluid_player(const std::string& soundfont) {
@@ -79,7 +80,9 @@ fluid_player::~fluid_player() {
 }
 
 void fluid_player::set_volume(double volume) {
-  SDL_SetAudioStreamGain(audio_stream, static_cast<float>(volume));
+  float adj_vol =
+      th::sound::linear_to_logarithmic_volume(static_cast<float>(volume));
+  SDL_SetAudioStreamGain(audio_stream, adj_vol);
 }
 
 void fluid_player::play_xmi(const unsigned char* xmi_data, size_t xmi_length) {

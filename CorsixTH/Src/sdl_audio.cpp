@@ -194,6 +194,7 @@ int l_music_volume(lua_State* L) {
   if (volume < 0) {
     volume = 0;
   }
+  volume = th::sound::linear_to_logarithmic_volume(volume);
 
   th::sound::sdl_mixer* mixer = th::sound::get_mixer();
   if (mixer == nullptr) {
