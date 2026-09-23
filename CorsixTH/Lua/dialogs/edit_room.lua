@@ -198,9 +198,7 @@ function UIEditRoom:cancel()
       self.ui:setDefaultCursor(nil)
       self.check_for_clear_area_timer = nil
       self.humanoids_to_watch = nil
-      self:_setCellFlagsOnBlueprint({avoidTile = false})
     end
-    self.phase = "walls"
     self:returnToWallPhase()
   end
 end
@@ -217,20 +215,13 @@ function UIEditRoom:confirm(force)
     self.mouse_down_y = false
     self.move_rect_x = false
     self.move_rect_y = false
-    self.phase = "door"
-    self:enterDoorPhase()
+    self:_enterDoorPhase()
   elseif self.phase == "door" then
-    self.phase = "windows"
-    self:enterWindowsPhase()
+    self:_enterWindowsPhase()
   elseif self.phase == "windows" then
-    self.phase = "clear_area"
-    self:clearArea()
+    self:_enterWaitingClearAreaPhase()
   elseif self.phase == "clear_area" then
-    self.ui:setDefaultCursor(nil)
-    self.phase = "objects"
-    self:finishRoom()
-    self.world:resetSideObjects()
-    self:enterObjectsPhase()
+    self:_enterObjectsPhase()
   else
     -- Pay for room (subtract cost of needed objects, which were already paid for)
     if not self.paid then
@@ -257,42 +248,50 @@ function UIEditRoom:confirm(force)
   end
 end
 
-function UIEditRoom:clearArea()
-  self.confirm_button:enable(false)
-  local rect = self.blueprint_rect
+--! A function requests that the humanoids leave the room’s perimeter and
+-- saves a list of these humanoids in the `humanoids_to_watch` variable for
+-- subsequent monitoring.
+function UIEditRoom:_clearAreaOfHumanoids()
   local world = self.ui.app.world
   world:clearCaches() -- To invalidate idle tiles in case we need to move people
-  local humanoids_to_watch = {}
   self:_setCellFlagsOnBlueprint({avoidTile = true})
-  do
-    local x1 = rect.x - 1
-    local x2 = rect.x + rect.w
-    local y1 = rect.y - 1
-    local y2 = rect.y + rect.h
-    for _, entity in ipairs(world.entities) do
-      if class.is(entity, Humanoid) and
-          entity:isObscuringArea(x1, x2, y1, y2) then
-        humanoids_to_watch[entity] = true
-        -- Try to make the humanoid leave the area
-        entity:leaveArea()
-      end
+  local humanoids_in_perimeter = self:_humanoidsInArea()
+  local humanoids_to_watch = {}
+  for _, humanoid in ipairs(humanoids_in_perimeter) do
+    humanoids_to_watch[humanoid] = true
+    -- Try to make the humanoid leave the area
+    humanoid:leaveArea()
+  end
+  self.humanoids_to_watch = humanoids_to_watch
+end
+
+--! A function to retrieve humanoids located within the room’s perimeter.
+--!return (array) returns array with humanoids who inside room area
+function UIEditRoom:_humanoidsInArea()
+  local rect = self.blueprint_rect
+  local world = self.ui.app.world
+  local humanoids = {}
+  local x1 = rect.x - 1
+  local x2 = rect.x + rect.w
+  local y1 = rect.y - 1
+  local y2 = rect.y + rect.h
+  for _, entity in ipairs(world.entities) do
+    if class.is(entity, Humanoid) and
+        entity:isObscuringArea(x1, x2, y1, y2) then
+      table.insert(humanoids, entity)
     end
   end
-
-  if next(humanoids_to_watch) == nil then
-    -- No humanoids within the area, so continue with the room placement
-    self:confirm(true)
-    return
-  end
-
-  self.check_for_clear_area_timer = 10
-  self.humanoids_to_watch = humanoids_to_watch
-  self.ui:setCursor(self.ui.waiting_cursor)
+  return humanoids
 end
 
 function UIEditRoom:onTick()
   UIFurnishCorridor.onTick(self)
-  if self.check_for_clear_area_timer then
+  self:_checkIsWaitingHumanoidsToLeaveArea()
+end
+
+function UIEditRoom:_checkIsWaitingHumanoidsToLeaveArea()
+  -- Check if waiting for some humanoid to leave the construction site
+  if self.phase == "clear_area" and self.check_for_clear_area_timer then
     self.check_for_clear_area_timer = self.check_for_clear_area_timer - 1
     if self.check_for_clear_area_timer == 0 then
       local rect = self.blueprint_rect
@@ -309,6 +308,8 @@ function UIEditRoom:onTick()
             self.humanoids_to_watch[humanoid] = nil
           end
         elseif not humanoid:isObscuringArea(x1, x2, y1, y2) then
+          -- This humanoid has left the construction zone and
+          -- is no longer interfering with the construction site.
           self.humanoids_to_watch[humanoid] = nil
         end
       end
@@ -323,7 +324,7 @@ function UIEditRoom:onTick()
   end
 end
 
-function UIEditRoom:finishRoom()
+function UIEditRoom:_finishRoomFoundation()
   local room_type = self.room_type
   local wall_type = self.ui.app.walls[room_type.wall_type]
   local world = self.ui.app.world
@@ -582,7 +583,9 @@ function UIEditRoom:stopPickupItems()
 end
 
 function UIEditRoom:returnToWallPhase(early)
+  self.phase = "walls"
   self.ui:tutorialStep(3, {9, 10, 11, 12}, 4)
+  self:_setCellFlagsOnBlueprint({avoidTile = false})
   if not early then
     self.desc_text = _S.place_objects_window.drag_blueprint
     self.confirm_button:enable(true)
@@ -711,11 +714,9 @@ function UIEditRoom:returnToDoorPhase()
   rect.w = 0
   rect.h = 0
   self:setBlueprintRect(rect.x, rect.y, old_w, old_h)
-  self:_setCellFlagsOnBlueprint({avoidTile = false})
 
   -- We've gone all the way back to wall phase, so step forward to door phase
-  self.phase = "door"
-  self:enterDoorPhase()
+  self:_enterDoorPhase()
 end
 
 function UIEditRoom:screenToWall(x, y)
@@ -880,63 +881,111 @@ function UIEditRoom:checkReachability()
   return true
 end
 
-function UIEditRoom:enterDoorPhase()
+function UIEditRoom:_enterWaitingClearAreaPhase()
+  self.phase = "clear_area"
+  self.confirm_button:enable(false)
+  local waiting = true
+  if next(self.humanoids_to_watch) == nil then
+    -- The humanoids whose leaving from construction site we were
+    -- waiting for have left the construction zone.
+    -- Let’s also check that the new humanoids haven’t entered the
+    -- construction zone while we were waiting for the previous
+    -- humanoids to leave the area.
+    local humanoids_in_perimeter = self:_humanoidsInArea()
+    if #humanoids_in_perimeter == 0 then
+      -- No humanoids within the area, so continue with the room placement
+      self:confirm(true)
+      waiting = false
+    else
+      local humanoids_to_watch = {}
+      for _, humanoid in ipairs(humanoids_in_perimeter) do
+        humanoids_to_watch[humanoid] = true
+        -- Try to make the humanoid leave the area
+        humanoid:leaveArea()
+      end
+      self.humanoids_to_watch = humanoids_to_watch
+    end
+  end
+  if waiting then
+    -- Some humanoids within the area, so lets some wait
+    self.ui:setCursor(self.ui.waiting_cursor)
+    self.check_for_clear_area_timer = 1
+  end
+end
+
+function UIEditRoom:_enterDoorPhase()
+  self.phase = "door"
   self.ui:tutorialStep(3, 8, 9)
   local rect = self.blueprint_rect
   local map = self.ui.app.map.th
+
+  if self:_checkCanBuildRoomHere() then
+    self:_clearAreaOfHumanoids()
+
+    self.desc_text = _S.place_objects_window.place_door
+    self.confirm_button:enable(false) -- Confirmation is via placing door
+
+    -- Change the floor tiles to opaque blue
+    for y = rect.y, rect.y + rect.h - 1 do
+      for x = rect.x, rect.x + rect.w - 1 do
+        map:setCell(x, y, 4, 24)
+      end
+    end
+
+    -- Re-organise wall anims to index by x and y
+    local walls = {}
+    for _, wall in ipairs(self.blueprint_wall_anims) do
+      local _, x, y = wall:getTile()
+      if not walls[x] then
+        walls[x] = {}
+      end
+      walls[x][y] = wall
+    end
+    self.blueprint_wall_anims = walls
+  else
+    -- Go back to walls phase
+    self:returnToWallPhase(true)
+    self.ui:playSound("wrong2.wav")
+    self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
+  end
+end
+
+--! Checks that the room will not block part of the hospital.
+--!return (bool) true if will not block part of the hospital.
+function UIEditRoom:_checkCanBuildRoomHere()
+  local build_allowed = false
 
   -- make tiles impassable
   self:_setCellFlagsOnBlueprint({passable = false})
 
   -- check if all adjacent tiles of the rooms are still connected
-  if not self:checkReachability() then
-    if self.ui.app.config.blocking_off_areas == 3 then
-      -- all-permissive placing approach
-      -- This could lead to crashes, so we'll record this in the log so that during investigation
-      -- we'll be able to know that safe placement was disabled.
-      TheApp.world:gameLog("Blocking off areas is allowed with room " .. self.blueprint_rect.x .. ", " .. self.blueprint_rect.y .. ".")
-    else
-      -- undo passable flags and go back to walls phase
-      self.phase = "walls"
-      self:returnToWallPhase(true)
-      self.ui:playSound("wrong2.wav")
-      self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
-      return
-    end
+  if self:checkReachability() then
+    build_allowed = true
+  elseif self.ui.app.config.blocking_off_areas == 3 then
+    -- all-permissive placing approach
+    -- This could lead to crashes, so we'll record this in the log so that during investigation
+    -- we'll be able to know that safe placement was disabled.
+    TheApp.world:gameLog("Warning: Blocking off areas is allowed with room at " .. self.blueprint_rect.x .. ", " .. self.blueprint_rect.y .. ".")
+    build_allowed = true
   end
 
   -- make tiles passable back
   self:_setCellFlagsOnBlueprint({passable = true})
 
-  self.desc_text = _S.place_objects_window.place_door
-  self.confirm_button:enable(false) -- Confirmation is via placing door
-
-  -- Change the floor tiles to opaque blue
-  for y = rect.y, rect.y + rect.h - 1 do
-    for x = rect.x, rect.x + rect.w - 1 do
-      map:setCell(x, y, 4, 24)
-    end
-  end
-
-  -- Re-organise wall anims to index by x and y
-  local walls = {}
-  for _, wall in ipairs(self.blueprint_wall_anims) do
-    local _, x, y = wall:getTile()
-    if not walls[x] then
-      walls[x] = {}
-    end
-    walls[x][y] = wall
-  end
-  self.blueprint_wall_anims = walls
+  return build_allowed
 end
 
-function UIEditRoom:enterWindowsPhase()
+function UIEditRoom:_enterWindowsPhase()
+  self.phase = "windows"
   self.ui:tutorialStep(3, {9, 10}, 11)
   self.desc_text = _S.place_objects_window.place_windows
   self.confirm_button:enable(true)
 end
 
-function UIEditRoom:enterObjectsPhase()
+function UIEditRoom:_enterObjectsPhase()
+  self.phase = "objects"
+  self:_finishRoomFoundation()
+  self.world:resetSideObjects()
   self.ui:setCursor(self.ui.default_cursor)
   self.ui:tutorialStep(3, {11, 12}, 13)
   self.ui:setWorldHitTest(self.room)
@@ -1058,12 +1107,7 @@ function UIEditRoom:onLeftButtonDown(x, y)
       end
     end
   elseif self.phase == "door" then
-    if self.blueprint_door.valid then
-      self.ui:playSound("buildclk.wav")
-      self:confirm(true)
-    else
-      self.ui:tutorialStep(3, 9, 10)
-    end
+    self:placeDoorBlueprint()
   elseif self.phase == "windows" then
     self:placeWindowBlueprint()
   end
@@ -1388,6 +1432,15 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
   else
     map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4,
       door_floor_blueprint_markers[orig_wall])
+  end
+end
+
+function UIEditRoom:placeDoorBlueprint()
+  if self.blueprint_door.valid then
+    self.ui:playSound("buildclk.wav")
+    self:confirm(true)
+  else
+    self.ui:tutorialStep(3, 9, 10)
   end
 end
 
