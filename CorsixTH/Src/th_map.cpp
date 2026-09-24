@@ -1675,34 +1675,37 @@ void level_map::depersist(lua_persist_reader* pReader) {
   }
 
   if (iVersion >= 6) {
-    uint32_t v;
+    // Unchecked reads: a short read still fails the load through the
+    // reader end of input error, as with the RLE path below.
+    // Zero initialised so a failed read cannot leave v indeterminate.
+    uint32_t v = 0;
     for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
          pNode != pLimitNode; ++pNode) {
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->tile_layers[tile_layer::ground] = static_cast<uint16_t>(v);
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->tile_layers[tile_layer::north_wall] = static_cast<uint16_t>(v);
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->tile_layers[tile_layer::west_wall] = static_cast<uint16_t>(v);
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->tile_layers[tile_layer::ui] = static_cast<uint16_t>(v);
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->iParcelId = static_cast<uint16_t>(v);
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->iRoomId = static_cast<uint16_t>(v);
     }
     for (map_tile *pNode = original_cells,
                   *pLimitNode = original_cells + width * height;
          pNode != pLimitNode; ++pNode) {
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->tile_layers[tile_layer::ground] = static_cast<uint16_t>(v);
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->tile_layers[tile_layer::north_wall] = static_cast<uint16_t>(v);
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->tile_layers[tile_layer::west_wall] = static_cast<uint16_t>(v);
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->iParcelId = static_cast<uint16_t>(v);
-      if (!pReader->read_uint(v)) return;
+      pReader->read_uint(v);
       pNode->flags = v;
     }
   } else {
