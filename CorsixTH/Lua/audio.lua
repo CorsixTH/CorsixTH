@@ -140,7 +140,7 @@ function Audio:init()
       midi_txt = file
     end
   end
-  -- Enable music files and add them to the playlist, unless they were previously disabled
+  -- Add music files to the playlist and set their enabled state based on previous preferences
   local disabled_tracks = self:readPlaylistPreferences()
   for _, info in pairs(music_array) do
     if not (disabled_tracks and (disabled_tracks[info.filename] or disabled_tracks[info.filename_music])) then
