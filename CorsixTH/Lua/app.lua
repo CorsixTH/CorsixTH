@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 266 -- Rats
+local SAVEGAME_VERSION = 267 -- Add patient costs inflation
 
 class "App"
 
