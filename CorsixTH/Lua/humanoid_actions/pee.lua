@@ -29,8 +29,8 @@ function PeeAction:PeeAction()
 end
 
 local action_pee_end = permanent"action_pee_end"( function(humanoid)
-  local litter = humanoid.world:newObject("litter", humanoid.tile_x, humanoid.tile_y)
-  litter:setLitterType("pee", humanoid.last_move_direction == "south" and 0 or 1)
+  humanoid.world:newLitter("pee", humanoid.tile_x, humanoid.tile_y,
+      humanoid.last_move_direction == "south" and 0 or 1)
 
   humanoid:finishAction()
 end)

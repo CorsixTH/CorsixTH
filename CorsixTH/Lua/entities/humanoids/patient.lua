@@ -1028,8 +1028,7 @@ function Patient:setTile(x, y)
           (not self.world:findObjectNear(self, "bin", 8) or math.random() < 0.05) then
         -- Drop some litter!
         local trash = math.random(1, 4)
-        local litter = self.world:newObject("litter", x, y)
-        litter:setLitterType(trash, math.random(0, 1))
+        self.world:newLitter(trash, x, y, math.random(0, 1))
         if not self.hospital.hospital_littered then
           self.hospital.hospital_littered = true
 
