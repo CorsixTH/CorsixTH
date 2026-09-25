@@ -563,8 +563,11 @@ function App:initMusicDir()
     local waveform = list_to_set(self.audio.allowed_waveform_formats)
     local instructional = list_to_set(self.audio.allowed_instructional_formats)
 
+    local ok, iter, dir_obj = pcall(lfs.dir, path)
+    if not ok then return false end
+
     -- Scan directory for files with matching extensions
-    for file in lfs.dir(path) do
+    for file in iter, dir_obj do
       local ext = file:match("%.([^.]+)$")
       if ext and (waveform[ext:upper()] or instructional[ext:upper()]) then
         return true
@@ -577,15 +580,26 @@ function App:initMusicDir()
   -- Checks if the specified path contains a music directory and if it has music files
   -- If found, the directory's path is returned
   local function findMusicDir(path)
-    if path == nil or not isDirectory(path) then
+    if path == nil or path == "" or not isDirectory(path) or not canOpenDirectory(path) then
       return nil
     end
 
     local normalized_path = stripTrailingSlashes(path)
+    if normalized_path == "" then
+      normalized_path = "/"
+    end
+
+    local ok, iter, dir_obj = pcall(lfs.dir, normalized_path)
+    if not ok then return nil end
 
     -- Check every file and folder inside the given path
-    for entry in lfs.dir(normalized_path) do
-      local entry_path = normalized_path .. "/" .. entry -- paths with "/" work on all operating systems
+    for entry in iter, dir_obj do
+      local entry_path
+      if normalized_path == "/" then
+        entry_path = "/" .. entry
+      else
+        entry_path = normalized_path .. "/" .. entry
+      end
 
       if isValidMusicDirName(entry:lower()) and
          canOpenDirectory(entry_path) and
