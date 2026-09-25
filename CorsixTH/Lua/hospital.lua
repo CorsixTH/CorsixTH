@@ -81,6 +81,7 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- Initial values
   self.interest_rate = interest_rate_numerator / 10000
   self.inflation_rate = 0.045
+  self.current_inflation = 1 -- Sum of all inflation to date
   self.overdraft_interest_rate = self.interest_rate + overdraft_differential_numerator / 10000
   self.salary_incr = level_config.gbv.ScoreMaxInc or 300
   self.sal_min = level_config.gbv.ScoreMaxInc / 6 or 50
@@ -506,6 +507,9 @@ function Hospital:afterLoad(old, new)
   end
   if old < 243 then
     self:buildReceptionDesksCache()
+  end
+  if old < 267 then
+    self.current_inflation = (1 + self.inflation_rate) ^ (self.world.game_date:year() - 1)
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -1079,6 +1083,7 @@ function Hospital:onEndYear()
     -- adds the extra to salary in level 3 year 3
     self.player_salary = self.player_salary + math.random(8000,20000)
   end
+  self.current_inflation = self.current_inflation * self.inflation_rate
 end
 
 -- Creates complete emergency with patients, what disease they have, what's needed
@@ -1442,10 +1447,11 @@ function Hospital:getTreatmentPrice(disease)
   local reputation = self.disease_casebook[disease].reputation or self.reputation
   local percentage = self.disease_casebook[disease].price
   local raw_price  = self.disease_casebook[disease].disease.cure_price
+  local price = raw_price * self.current_inflation
   if reputation >= 500 then
-    return math.ceil(raw_price * (reputation / 500) * percentage)
+    return math.ceil(price * (reputation / 500) * percentage)
   else
-    return math.ceil(raw_price * percentage)
+    return math.ceil(price * percentage)
   end
 end
 
