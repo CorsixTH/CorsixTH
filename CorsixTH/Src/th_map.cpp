@@ -1489,7 +1489,10 @@ void level_map::update_shadows() {
 void level_map::persist(lua_persist_writer* pWriter) const {
   lua_State* L = pWriter->get_stack();
 
-  uint32_t iVersion = 5;
+  // Version 6: tile layers written raw, no RLE (#3545 experiment).
+  // zstd compression (#3534) handles size. Old saves (v<=5) still
+  // load via integer_run_length_decoder in depersist below.
+  uint32_t iVersion = 6;
   pWriter->write_uint(iVersion);
   pWriter->write_uint(player_count);
   for (int i = 0; i < player_count; ++i) {
@@ -1508,15 +1511,8 @@ void level_map::persist(lua_persist_writer* pWriter) const {
   pWriter->write_uint(width);
   pWriter->write_uint(height);
   pWriter->write_uint(current_temperature_index);
-  integer_run_length_encoder oEncoder(6);
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
-    oEncoder.write(pNode->tile_layers[tile_layer::ground]);
-    oEncoder.write(pNode->tile_layers[tile_layer::north_wall]);
-    oEncoder.write(pNode->tile_layers[tile_layer::west_wall]);
-    oEncoder.write(pNode->tile_layers[tile_layer::ui]);
-    oEncoder.write(pNode->iParcelId);
-    oEncoder.write(pNode->iRoomId);
     // Flags include THOB values, and other things which do not work
     // well with run-length encoding.
     pWriter->write_uint(static_cast<uint32_t>(pNode->flags));
@@ -1534,21 +1530,26 @@ void level_map::persist(lua_persist_writer* pWriter) const {
     pWriter->write_stack_object(-1);
     lua_pop(L, 2);
   }
-  oEncoder.finish();
-  oEncoder.pump_output(pWriter);
-
-  oEncoder = integer_run_length_encoder(5);
+  // Raw tile layers (no RLE): same order as the RLE block produced,
+  // depersist below reads them back in this order for version >= 6.
+  for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
+       pNode != pLimitNode; ++pNode) {
+    pWriter->write_uint(pNode->tile_layers[tile_layer::ground]);
+    pWriter->write_uint(pNode->tile_layers[tile_layer::north_wall]);
+    pWriter->write_uint(pNode->tile_layers[tile_layer::west_wall]);
+    pWriter->write_uint(pNode->tile_layers[tile_layer::ui]);
+    pWriter->write_uint(pNode->iParcelId);
+    pWriter->write_uint(pNode->iRoomId);
+  }
   for (map_tile *pNode = original_cells,
                 *pLimitNode = original_cells + width * height;
        pNode != pLimitNode; ++pNode) {
-    oEncoder.write(pNode->tile_layers[tile_layer::ground]);
-    oEncoder.write(pNode->tile_layers[tile_layer::north_wall]);
-    oEncoder.write(pNode->tile_layers[tile_layer::west_wall]);
-    oEncoder.write(pNode->iParcelId);
-    oEncoder.write(static_cast<uint32_t>(pNode->flags));
+    pWriter->write_uint(pNode->tile_layers[tile_layer::ground]);
+    pWriter->write_uint(pNode->tile_layers[tile_layer::north_wall]);
+    pWriter->write_uint(pNode->tile_layers[tile_layer::west_wall]);
+    pWriter->write_uint(pNode->iParcelId);
+    pWriter->write_uint(static_cast<uint32_t>(pNode->flags));
   }
-  oEncoder.finish();
-  oEncoder.pump_output(pWriter);
 }
 
 namespace {
@@ -1573,7 +1574,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     luaL_error(L,
                "TODO: Write code to load map data from earlier "
                "savegame versions (if really necessary).");
-  } else if (iVersion > 5) {
+  } else if (iVersion > 6) {
     luaL_error(L, "Cannot load savegame from a newer version.");
   }
   if (!pReader->read_uint(player_count)) return;
@@ -1673,32 +1674,69 @@ void level_map::depersist(lua_persist_reader* pReader) {
     lua_pop(L, 1);
   }
 
-  integer_run_length_decoder oDecoder(6, pReader);
-  for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
-       pNode != pLimitNode; ++pNode) {
-    pNode->tile_layers[tile_layer::ground] =
-        static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::north_wall] =
-        static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::west_wall] =
-        static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::ui] = static_cast<uint16_t>(oDecoder.read());
-    pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
-    pNode->iRoomId = static_cast<uint16_t>(oDecoder.read());
-  }
+  if (iVersion >= 6) {
+    // Unchecked reads: a short read still fails the load through the
+    // reader end of input error, as with the RLE path below.
+    // Zero initialised so a failed read cannot leave v indeterminate.
+    uint32_t v = 0;
+    for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
+         pNode != pLimitNode; ++pNode) {
+      pReader->read_uint(v);
+      pNode->tile_layers[tile_layer::ground] = static_cast<uint16_t>(v);
+      pReader->read_uint(v);
+      pNode->tile_layers[tile_layer::north_wall] = static_cast<uint16_t>(v);
+      pReader->read_uint(v);
+      pNode->tile_layers[tile_layer::west_wall] = static_cast<uint16_t>(v);
+      pReader->read_uint(v);
+      pNode->tile_layers[tile_layer::ui] = static_cast<uint16_t>(v);
+      pReader->read_uint(v);
+      pNode->iParcelId = static_cast<uint16_t>(v);
+      pReader->read_uint(v);
+      pNode->iRoomId = static_cast<uint16_t>(v);
+    }
+    for (map_tile *pNode = original_cells,
+                  *pLimitNode = original_cells + width * height;
+         pNode != pLimitNode; ++pNode) {
+      pReader->read_uint(v);
+      pNode->tile_layers[tile_layer::ground] = static_cast<uint16_t>(v);
+      pReader->read_uint(v);
+      pNode->tile_layers[tile_layer::north_wall] = static_cast<uint16_t>(v);
+      pReader->read_uint(v);
+      pNode->tile_layers[tile_layer::west_wall] = static_cast<uint16_t>(v);
+      pReader->read_uint(v);
+      pNode->iParcelId = static_cast<uint16_t>(v);
+      pReader->read_uint(v);
+      pNode->flags = v;
+    }
+  } else {
+    integer_run_length_decoder oDecoder(6, pReader);
+    for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
+         pNode != pLimitNode; ++pNode) {
+      pNode->tile_layers[tile_layer::ground] =
+          static_cast<uint16_t>(oDecoder.read());
+      pNode->tile_layers[tile_layer::north_wall] =
+          static_cast<uint16_t>(oDecoder.read());
+      pNode->tile_layers[tile_layer::west_wall] =
+          static_cast<uint16_t>(oDecoder.read());
+      pNode->tile_layers[tile_layer::ui] =
+          static_cast<uint16_t>(oDecoder.read());
+      pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
+      pNode->iRoomId = static_cast<uint16_t>(oDecoder.read());
+    }
 
-  oDecoder = integer_run_length_decoder(5, pReader);
-  for (map_tile *pNode = original_cells,
-                *pLimitNode = original_cells + width * height;
-       pNode != pLimitNode; ++pNode) {
-    pNode->tile_layers[tile_layer::ground] =
-        static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::north_wall] =
-        static_cast<uint16_t>(oDecoder.read());
-    pNode->tile_layers[tile_layer::west_wall] =
-        static_cast<uint16_t>(oDecoder.read());
-    pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
-    pNode->flags = oDecoder.read();
+    oDecoder = integer_run_length_decoder(5, pReader);
+    for (map_tile *pNode = original_cells,
+                  *pLimitNode = original_cells + width * height;
+         pNode != pLimitNode; ++pNode) {
+      pNode->tile_layers[tile_layer::ground] =
+          static_cast<uint16_t>(oDecoder.read());
+      pNode->tile_layers[tile_layer::north_wall] =
+          static_cast<uint16_t>(oDecoder.read());
+      pNode->tile_layers[tile_layer::west_wall] =
+          static_cast<uint16_t>(oDecoder.read());
+      pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
+      pNode->flags = oDecoder.read();
+    }
   }
 
   if (iVersion < 3) {
