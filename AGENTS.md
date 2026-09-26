@@ -11,9 +11,58 @@ Read `CONTRIBUTING.md` before making changes.
 CorsixTH is a faithful, open-source reimplementation of the 1997 game
 Theme Hospital in a modern engine.
 
-The project is primarily written in C++ and Lua and is built with CMake.
+Much of the project is written in Lua. C++ is used to handle the I/O
+(sound, movies and graphics) and to compute more complex functionality,
+such as pathfinding. The project uses CMake for build management, SDL3
+and other libraries for platform functionality, and vcpkg for dependency
+management.
 Before changing unfamiliar code, inspect nearby implementations, existing
 tests, repository configuration, and relevant project documentation.
+
+## Architecture and code layout
+
+CorsixTH has two main implementation layers:
+
+- `CorsixTH/Src/` and `CorsixTH/SrcUnshared/` contain the C++ engine
+  layer. It uses SDL3 to provide lower-level facilities including
+  graphics, animation playback, audio, video, input, and other
+  platform-facing functionality. C++ also implements performance-sensitive
+  functionality such as pathfinding and exposes engine facilities to Lua.
+  SDL3 events are passed to the Lua layer for handling.
+- `CorsixTH/Lua/` contains the game-logic layer, which is written in Lua.
+  Most gameplay changes should begin by locating the relevant code in this
+  directory.
+
+Important Lua entry points and subsystems include:
+
+- `CorsixTH/Lua/app.lua` is the high-level application controller. It
+  creates and starts game levels, scenarios, and the map editor, and
+  dispatches game ticks and SDL3 events to other Lua code.
+- `CorsixTH/Lua/world.lua` manages the game world. It creates hospitals
+  and coordinates shared systems including time and date tracking,
+  patient spawning, purchasable parcels, disasters, epidemics, and access
+  to pathfinding.
+- `CorsixTH/Lua/hospital.lua` contains the base `Hospital`
+  implementation.
+- `CorsixTH/Lua/hospitals/player_hospital.lua` contains
+  `PlayerHospital`, which implements the player's hospital.
+- `CorsixTH/Lua/hospitals/ai_hospital.lua` contains `AIHospital`, which
+  implements computer-controlled hospitals.
+- `CorsixTH/Lua/rooms/` contains room definitions.
+- `CorsixTH/Lua/entities/` contains entity implementations, including
+  patients, staff, objects, and machines.
+- `CorsixTH/Lua/humanoid_actions/` contains actions performed by
+  humanoid entities. Actions are managed through an action queue, but
+  may be suspended, interrupted, or have other actions inserted ahead of
+  them.
+- `CorsixTH/Lua/dialogs/` contains game-window implementations.
+- `CorsixTH/Lua/game_ui.lua` manages the in-game user interface.
+- `CorsixTH/Lua/window.lua` defines the widget classes used by user
+  interface windows.
+
+This is a navigation guide rather than an exhaustive description. Before
+making a change, inspect the relevant files, nearby implementations, and
+tests instead of relying on this summary alone.
 
 ## Original game and clean-room development
 
@@ -115,9 +164,9 @@ Lua 5.1 and LuaJIT are not recommended as the primary local
 development runtimes, but source changes must not unnecessarily break
 their compatibility.
 
-Do not assume that syntax, standard-library functions, or behaviour
-available in one Lua version is available or identical in every supported
-runtime.
+Expect differences between supported Lua runtimes: the same code may
+behave differently across runtimes, and a function available in one
+version may not exist in another.
 
 CorsixTH contains compatibility code which:
 
