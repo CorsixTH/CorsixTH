@@ -780,19 +780,36 @@ bool is_table_field_true(lua_State* L, int table_index, const char* key) {
 /** Construct the helper structure for making a #THRenderTarget. */
 render_target_creation_params l_surface_creation_params(lua_State* L,
                                                         int iArgStart) {
-  window_size size = {static_cast<int>(luaL_checkinteger(L, iArgStart)),
-                      static_cast<int>(luaL_checkinteger(L, iArgStart + 1))};
-
-  window_size min_size = {
-      static_cast<int>(luaL_checkinteger(L, iArgStart + 2)),
-      static_cast<int>(luaL_checkinteger(L, iArgStart + 3))};
+  if (!lua_istable(L, iArgStart)) {
+    luaL_error(L, "surface_params must be a table");
+  }
 
   render_target_creation_params params{};
+
+  lua_getfield(L, iArgStart, "width");
+  lua_getfield(L, iArgStart, "height");
+  window_size size = {static_cast<int>(luaL_optinteger(L, -2, 640)),
+                      static_cast<int>(luaL_optinteger(L, -1, 480))};
+  lua_pop(L, 2);
   params.size = size;
+
+  lua_getfield(L, iArgStart, "min_width");
+  lua_getfield(L, iArgStart, "min_height");
+  window_size min_size = {static_cast<int>(luaL_optinteger(L, -2, 640)),
+                          static_cast<int>(luaL_optinteger(L, -1, 480))};
+  lua_pop(L, 2);
   params.min_size = min_size;
 
+  lua_getfield(L, iArgStart, "resolution_width");
+  lua_getfield(L, iArgStart, "resolution_height");
+  render_size resolution = {static_cast<int>(luaL_optinteger(L, -2, 640)),
+                            static_cast<int>(luaL_optinteger(L, -1, 480))};
+  lua_pop(L, 2);
+  params.resolution = resolution;
+
   // Parse the modes
-  int modes_idx = iArgStart + 4;
+  lua_getfield(L, iArgStart, "modes");
+  int modes_idx = iArgStart + 1;
   if (!lua_istable(L, modes_idx)) {
     return params;
   }
@@ -804,6 +821,9 @@ render_target_creation_params l_surface_creation_params(lua_State* L,
   params.aspect_ratio_4_3 =
       is_table_field_true(L, modes_idx, "aspect_ratio_4_3");
   params.hidpi = is_table_field_true(L, modes_idx, "hidpi");
+  params.override_resolution =
+      is_table_field_true(L, modes_idx, "override_resolution");
+
   lua_pop(L, 1);
 
   return params;

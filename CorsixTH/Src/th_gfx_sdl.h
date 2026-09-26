@@ -63,17 +63,20 @@ struct render_size {
 
 /** Helper structure with parameters to create a #render_target. */
 struct render_target_creation_params {
-  window_size size{};        ///< Target size of the window.
-  bool fullscreen{};         ///< Run fullscreen.
-  bool maximized{};          ///< Run maximized (when not fullscreen).
-  bool aspect_ratio_4_3{};   ///< Display the game letterboxed to 4:3
-  bool present_immediate{};  ///< Whether to present immediately to the user
-                             ///< (else wait for Vsync).
-  bool direct_zoom{};        ///< Scale each texture when copying if true,
-                             ///< otherwise render to intermediate texture and
-                             ///< scale.
-  bool hidpi{};              ///< Enable HiDPI on the game window.
-  window_size min_size{};    ///< Minimum size of the window.
+  window_size size{};          ///< Target size of the window.
+  bool fullscreen{};           ///< Run fullscreen.
+  bool maximized{};            ///< Run maximized (when not fullscreen).
+  bool aspect_ratio_4_3{};     ///< Display the game letterboxed to 4:3
+  bool present_immediate{};    ///< Whether to present immediately to the user
+                               ///< (else wait for Vsync).
+  bool direct_zoom{};          ///< Scale each texture when copying if true,
+                               ///< otherwise render to intermediate texture and
+                               ///< scale.
+  bool hidpi{};                ///< Enable HiDPI on the game window.
+  window_size min_size{};      ///< Minimum size of the window.
+  bool override_resolution{};  ///< If true then use the specified resolution
+                               ///< instead of native
+  render_size resolution{};    ///< Target resolution if override is enabled
 };
 
 enum class scaled_items;

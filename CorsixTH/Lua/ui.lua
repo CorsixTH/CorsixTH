@@ -596,11 +596,7 @@ end
 function UI:changeWindow(width, height)
   self.app:prepareVideoUpdate()
   local error_message = self.app.video:update(
-      width,
-      height,
-      App.MIN_WINDOW_WIDTH,
-      App.MIN_WINDOW_HEIGHT,
-      self.app.modes)
+      self.app:getVideoOptions({width = width, height = height}))
   self.app:finishVideoUpdate()
 
   if error_message then
@@ -672,10 +668,7 @@ function UI:toggleVideoMode(mode)
 
   local success = true
   self.app:prepareVideoUpdate()
-  local error_message = self.app.video:update(self.app.config.width, self.app.config.height,
-      self.app.MIN_WINDOW_WIDTH,
-      self.app.MIN_WINDOW_HEIGHT,
-      modes)
+  local error_message = self.app.video:update(self.app:getVideoOptions())
   self.app:finishVideoUpdate()
 
   if error_message then

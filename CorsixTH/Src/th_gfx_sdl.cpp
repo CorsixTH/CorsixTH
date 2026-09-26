@@ -493,7 +493,7 @@ render_target::scoped_target_texture::~scoped_target_texture() {
 
 render_target::render_target(const render_target_creation_params& params)
     : direct_zoom{params.direct_zoom},
-      aspect_ratio_4_3(params.aspect_ratio_4_3) {
+      aspect_ratio_4_3{params.aspect_ratio_4_3 && !params.override_resolution} {
   pixel_format = SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_ABGR8888);
 
   SDL_PropertiesID winProps = SDL_CreateProperties();
@@ -549,7 +549,13 @@ render_target::render_target(const render_target_creation_params& params)
 
   // Apply after showing and syncing the window, otherwise the dimensions
   // don't take into account fullscreen as seen on Wayland in SDL 3.6.10
-  apply_letterbox(renderer, params.aspect_ratio_4_3);
+  apply_letterbox(renderer, aspect_ratio_4_3);
+
+  if (params.override_resolution) {
+    SDL_SetRenderLogicalPresentation(renderer, params.resolution.width,
+                                     params.resolution.height,
+                                     SDL_LOGICAL_PRESENTATION_LETTERBOX);
+  }
 
   // Workaround for https://github.com/libsdl-org/SDL/issues/13920 on MacOS
   SDL_Event evt;
@@ -574,7 +580,8 @@ render_target::~render_target() {
 }
 
 bool render_target::update(const render_target_creation_params& params) {
-  this->aspect_ratio_4_3 = params.aspect_ratio_4_3;
+  this->aspect_ratio_4_3 =
+      params.aspect_ratio_4_3 && !params.override_resolution;
   bool bIsFullscreen = ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
                         SDL_WINDOW_FULLSCREEN);
   if (bIsFullscreen != params.fullscreen) {
@@ -600,7 +607,16 @@ bool render_target::update(const render_target_creation_params& params) {
 
   SDL_SyncWindow(window);
 
-  apply_letterbox(renderer, params.aspect_ratio_4_3);
+  apply_letterbox(renderer, aspect_ratio_4_3);
+  if (params.override_resolution) {
+    SDL_SetRenderLogicalPresentation(renderer, params.resolution.width,
+                                     params.resolution.height,
+                                     SDL_LOGICAL_PRESENTATION_LETTERBOX);
+  } else {
+    SDL_SetRenderLogicalPresentation(renderer, params.resolution.width,
+                                     params.resolution.height,
+                                     SDL_LOGICAL_PRESENTATION_DISABLED);
+  }
   trigger_mouse_motion();
 
   return true;
