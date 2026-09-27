@@ -360,6 +360,7 @@ if(WITH_TRACY)
 endif()
 
 find_package(zstd CONFIG REQUIRED)
+add_library(zstd::libzstd ALIAS zstd::libzstd_shared)
 target_link_libraries(CorsixTH_lib PRIVATE zstd::libzstd)
 
 # Launch script to facilitate out of source builds
