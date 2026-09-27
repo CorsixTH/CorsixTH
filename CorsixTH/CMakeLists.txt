@@ -360,7 +360,17 @@ if(WITH_TRACY)
 endif()
 
 find_package(zstd CONFIG REQUIRED)
-target_link_libraries(CorsixTH_lib PRIVATE zstd::libzstd)
+if(TARGET zstd::libzstd)
+    set(CORSIXTH_ZSTD_TARGET zstd::libzstd)
+elseif(TARGET zstd::libzstd_shared)
+    set(CORSIXTH_ZSTD_TARGET zstd::libzstd_shared)
+elseif(TARGET zstd::libzstd_static)
+    set(CORSIXTH_ZSTD_TARGET zstd::libzstd_static)
+else()
+    message(FATAL_ERROR
+        "zstd was found, but no supported CMake target was exported")
+endif()
+target_link_libraries(CorsixTH_lib PRIVATE "${CORSIXTH_ZSTD_TARGET}")
 
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
