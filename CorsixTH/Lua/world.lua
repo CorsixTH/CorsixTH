@@ -2943,7 +2943,7 @@ function World:afterLoad(old, new)
     self.system_pause = nil
   end
 
-  if old < 265 then
+  if old < 267 then
     -- Multiple litter can no longer exist on a tile. Remove all but the highest order of litter.
 
     -- Group litter by tile, keeping the highest-ranked item per tile. The
