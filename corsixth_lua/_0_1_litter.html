@@ -23,7 +23,7 @@
  <div class="content">
  <h2 class="class">Litter Class</h2>
 <div class="class_info">
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L51">line 51 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L78">line 78 of Lua/objects/litter.lua</a>.
  <br/><strong>Inheritance:</strong> <a href="_0_1_litter.html">Litter</a>
  » <a href="_0_1_entity.html">Entity</a>
 </div>
@@ -56,6 +56,12 @@
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1get_dynamic_info">getDynamicInfo</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1get_rank">getRank</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1get_rank_for_type">getRankForType</a>(<span class="p">litter_type</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1get_room">getRoom</a>()
@@ -105,6 +111,9 @@
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1reset_animation">resetAnimation</a>()
  (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1resolve_tile_rank">resolveTileRank</a>(<span class="p">objects_in_tile</span>, <span class="p">litter_type</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1set_animation">setAnimation</a>(<span class="p">animation</span>, <span class="p">flags</span>)
@@ -262,7 +271,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L56">line 56 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L83">line 83 of Lua/objects/litter.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -283,20 +292,44 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1after_load">Entity:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L139">line 139 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L206">line 206 of Lua/objects/litter.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_litter_1any_litter">function Litter:anyLitter()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L128">line 128 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L195">line 195 of Lua/objects/litter.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_litter_1get_drawing_layer">function Litter:getDrawingLayer()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1get_drawing_layer">Entity:getDrawingLayer</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L110">line 110 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L177">line 177 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1get_rank">function Litter:getRank()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L109">line 109 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1get_rank_for_type">function Litter.getRankForType(<span class="p">litter_type</span>)</a></h5>
+ <p>
+ Accepts a type name ("puke", "soda_can", ...) or one of the numeric<br/><br/>
+ indices 1-4 used to pick a random piece of trash.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">litter_type</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;int</td>
+ <td class="d"> The litter type to look up.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L114">line 114 of Lua/objects/litter.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
  <div class="method">
@@ -304,25 +337,49 @@
  <p>
  Litter is an Entity and not an Object so it does not inherit this method
 This is an (effective) hack, see issue 918 --cgj<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L72">line 72 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L100">line 100 of Lua/objects/litter.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_litter_1is_cleanable">function Litter:isCleanable()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L124">line 124 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L191">line 191 of Lua/objects/litter.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_litter_1remove">function Litter:remove()</a></h5>
  <p>
  Remove the litter from the world.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L95">line 95 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L162">line 162 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1resolve_tile_rank">function Litter.resolveTileRank(<span class="p">objects_in_tile</span>, <span class="p">litter_type</span>)</a></h5>
+ <p>
+ litter already on it.<br/><br/>
+ created at all (the first return is then nil).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">objects_in_tile</td>
+ <td class="t">array&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> Objects currently on the tile</td>
+ </tr>
+ <tr>
+ <td class="n">litter_type</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;int</td>
+ <td class="d"> Type of the litter about to be created.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L126">line 126 of Lua/objects/litter.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_litter_1set_litter_type">function Litter:setLitterType(<span class="p">anim_type</span>, <span class="p">mirrorFlag</span>)</a></h5>
  <p>
+ Set the animation of the litter and register a cleaning task for it.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -337,7 +394,7 @@ This is an (effective) hack, see issue 918 --cgj<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L81">line 81 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L147">line 147 of Lua/objects/litter.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -358,13 +415,13 @@ This is an (effective) hack, see issue 918 --cgj<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1set_tile">Entity:setTile</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L66">line 66 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L93">line 93 of Lua/objects/litter.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_litter_1vomit_inducing">function Litter:vomitInducing()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L114">line 114 of Lua/objects/litter.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L181">line 181 of Lua/objects/litter.lua</a>.
  </p>
  </div>
 </div>
