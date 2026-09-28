@@ -510,7 +510,7 @@ render_target::render_target(const render_target_creation_params& params)
   SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN,
                          params.fullscreen);
   SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_MAXIMIZED_BOOLEAN,
-                         params.maximized);
+                         params.maximised);
   SDL_SetBooleanProperty(winProps,
                          SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN,
                          params.hidpi);
@@ -590,9 +590,9 @@ bool render_target::update(const render_target_creation_params& params) {
     SDL_SetWindowFullscreen(window, params.fullscreen);
   }
 
-  if (!params.fullscreen && !params.maximized) {
+  if (!params.fullscreen && !params.maximised) {
     SDL_RestoreWindow(window);
-  } else if (params.maximized) {
+  } else if (params.maximised) {
     SDL_MaximizeWindow(window);
   }
 

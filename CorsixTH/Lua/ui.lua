@@ -963,12 +963,12 @@ end
 --! Window has been resized by the user
 --!param width (integer) New window width
 --!param height (integer) New window height
---!param state (integer) Window state: 0 - window, 1 - fullscreen, 2 - maximized, 3 - minimized
+--!param state (integer) Window state: 0 - window, 1 - fullscreen, 2 - maximised, 3 - minimized
 function UI:onWindowResized(width, height, state)
   if state == 0 then
     self.app.config.width = width
     self.app.config.height = height
-    self.app.config.maximized = false
+    self.app.config.maximised = false
 
     -- Save new setting in config
     self.app:saveConfig()
@@ -998,23 +998,23 @@ function UI:onWindowDisplayScaleChanged(scale)
   self:onChangeResolution()
 end
 
-function UI:onWindowMaximized()
-  self.app.config.maximized = true
-  self.app.modes['maximized'] = true
+function UI:onWindowMaximised()
+  self.app.config.maximised = true
+  self.app.modes['maximised'] = true
   self.app:saveConfig()
 end
 
 function UI:onWindowRestored()
-  -- The restored event fires when the window transitions from maximized to
+  -- The restored event fires when the window transitions from maximised to
   -- full screen. We want to ignore that event so when we disable full screen
-  -- the window returns to a maximized state.
+  -- the window returns to a maximised state.
   if self.app.config.fullscreen == true then
     return
   end
 
-  -- Otherwise record that the window is no longer maximized
-  self.app.config.maximized = false
-  self.app.modes['maximized'] = false
+  -- Otherwise record that the window is no longer maximised
+  self.app.config.maximised = false
+  self.app.modes['maximised'] = false
   self.app:saveConfig()
 end
 

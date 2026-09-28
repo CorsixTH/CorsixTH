@@ -65,7 +65,7 @@ struct render_size {
 struct render_target_creation_params {
   window_size size{};          ///< Target size of the window.
   bool fullscreen{};           ///< Run fullscreen.
-  bool maximized{};            ///< Run maximized (when not fullscreen).
+  bool maximised{};            ///< Run maximised (when not fullscreen).
   bool aspect_ratio_4_3{};     ///< Display the game letterboxed to 4:3
   bool present_immediate{};    ///< Whether to present immediately to the user
                                ///< (else wait for Vsync).

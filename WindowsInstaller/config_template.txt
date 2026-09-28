@@ -46,17 +46,18 @@ audio = true
 -------------------------------------------------------------------------------
 -- Fullscreen
 --  If true then the game uses a full screen window. If false the game may be
---  windowed or maximized.
+--  windowed or maximised.
 --
 fullscreen = SCREEN_FULLSCREEN
 
 -- Maximised
---  If the game is not running full screen then it will be maximized if this
+--  If the game is not running full screen then it will be maximised if this
 --  is true otherwise it will be windowed.
 --
-maximized = false
+maximised = false
+
 -- Window size
---  The window size the game runs at when it is not maximized or in full screen
+--  The window size the game runs at when it is not maximised or in full screen
 --  mode. Must be at least 640x480.
 --
 width = SCREEN_SIZE_WIDTH

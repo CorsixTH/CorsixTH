@@ -293,7 +293,7 @@ constexpr std::string_view dispatch_window_pixel_size_changed(
     "window_pixel_size_changed");
 constexpr std::string_view dispatch_window_display_scale_changed(
     "window_display_scale_changed");
-constexpr std::string_view dispatch_window_maximized("window_maximized");
+constexpr std::string_view dispatch_window_maximised("window_maximised");
 constexpr std::string_view dispatch_window_restored("window_restored");
 constexpr std::string_view dispatch_frame("frame");
 
@@ -456,7 +456,7 @@ void mainloop(lua_State* L) {
           nargs = 2;
           break;
         case SDL_EVENT_WINDOW_MAXIMIZED:
-          last_dispatch = dispatch_window_maximized;
+          last_dispatch = dispatch_window_maximised;
           push_app_dispatch(L, last_dispatch);
           nargs = 1;
           break;

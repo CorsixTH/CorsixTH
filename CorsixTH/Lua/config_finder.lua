@@ -123,7 +123,7 @@ local function new_config_defaults()
   ]]
   return {
     fullscreen = false,
-    maximized = false,
+    maximised = false,
     width = 800,
     height = 600,
     original_aspect_ratio = false,
@@ -346,18 +346,18 @@ param(config_values, 'audio') .. [=[
 -------------------------------------------------------------------------------
 -- Fullscreen
 --  If true then the game uses a full screen window. If false the game may be
---  windowed or maximized.
+--  windowed or maximised.
 --]=] .. '\n' ..
 param(config_values, 'fullscreen') .. [=[
 
 -- Maximised
---  If the game is not running full screen then it will be maximized if this
+--  If the game is not running full screen then it will be maximised if this
 --  is true otherwise it will be windowed.
 --]=] .. '\n' ..
+param(config_values, 'maximised') .. [=[
 
-param(config_values, 'maximized') .. [=[
 -- Window size
---  The window size the game runs at when it is not maximized or in full screen
+--  The window size the game runs at when it is not maximised or in full screen
 --  mode. Must be at least 640x480.
 --]=] .. '\n' ..
 param(config_values, 'width') ..
