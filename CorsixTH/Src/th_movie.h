@@ -299,11 +299,15 @@ class av_packet_queue {
 //! movie_player::load the desired movie and finally movie_player::play it.
 class movie_player {
  public:
+  static constexpr int audio_frequency = 44100;
+  static constexpr int audio_channels = 2;
+  static constexpr SDL_AudioFormat audio_format = SDL_AUDIO_F32;
+
   //! Construct a new movie_player
   movie_player();
 
   //! Destroy the movie_player
-  ~movie_player();
+  ~movie_player() noexcept;
 
   //! Assign the renderer on which to draw the movie.
   //!
@@ -391,7 +395,11 @@ class movie_player {
 
   //! Read audio from the audio packet queue, and copy it into the audio
   //! buffer for playback
-  void copy_audio_to_stream(uint8_t* pbStream, std::size_t iStreamSize);
+  //!
+  //! \param stream SDL audio stream to put the audio data in
+  //! \param requested_size The number of bytes being requested
+  void copy_audio_to_stream(SDL_AudioStream* stream,
+                            std::size_t requested_size);
 
  private:
 #ifdef CORSIX_TH_USE_FFMPEG
@@ -414,7 +422,8 @@ class movie_player {
                                          int streamIndex) const;
 
   //! Decode audio from the movie into a format suitable for playback
-  size_t decode_audio_frame(uint8_t* stream, size_t stream_size);
+  //! Storing the result in the audio_chunk_buffer.
+  size_t decode_audio_frame(size_t request_size);
 
   //! Convert packet data into frames
   //!
@@ -448,8 +457,6 @@ class movie_player {
   std::atomic<bool> paused{};
   uint64_t pause_start_time{};  ///< The time in SDL ticks at which we paused
 
-  std::mutex decoding_audio_mutex;  ///< Synchronize access to #m_pAudioBuffer
-
   AVFormatContext* format_context;  ///< Information related to the loaded
                                     ///< movie and all of its streams
   int video_stream_index;           ///< The index of the video stream
@@ -475,13 +482,9 @@ class movie_player {
   SwrContext* audio_resample_context;  ///< Context for resampling audio for
                                        ///< playback with ffmpeg
 
-  mix_audio_unique_ptr empty_audio_chunk;  ///< Empty chunk needed for SDL_mixer
   std::array<std::uint8_t, 1024>
-      audio_chunk_buffer;  ///< 0'd out buffer for the SDL_mixer chunk
-
-  int mixer_channels;   ///< How many channels to play on (1 - mono, 2 -
-                        ///< stereo)
-  int mixer_frequency;  ///< The frequency of audio expected by SDL_mixer
+      audio_chunk_buffer{};                ///< buffer for the playback audio
+  SDL_AudioStream* audio_playback_stream;  ///< SDL stream to play audio on
 
   std::thread stream_thread;  ///< The thread responsible for reading the
                               ///< movie streams

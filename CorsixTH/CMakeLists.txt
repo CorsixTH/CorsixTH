@@ -179,21 +179,65 @@ target_link_libraries(
   PUBLIC $<IF:$<TARGET_EXISTS:SDL3_mixer::SDL3_mixer>,SDL3_mixer::SDL3_mixer,SDL3_mixer::SDL3_mixer-static>
 )
 
+# Find FluidSynth
+# FluidSynth upstream provides a CMake config but not all distros seem to carry it.
+find_package(FluidSynth CONFIG)
+if(NOT FluidSynth_FOUND AND PkgConfig_FOUND)
+  pkg_search_module(FLUIDSYNTH REQUIRED fluidsynth)
+  if(FLUIDSYNTH_FOUND)
+    add_library(FluidSynth::libfluidsynth INTERFACE IMPORTED)
+    set_target_properties(
+            FluidSynth::libfluidsynth
+            PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${FLUIDSYNTH_INCLUDE_DIRS}" INTERFACE_LINK_LIBRARIES "${FLUIDSYNTH_LIBRARIES}"
+    )
+    set(FluidSynth_FOUND TRUE)
+  endif()
+endif()
+if(FluidSynth_FOUND)
+  message("  FluidSynth found")
+  target_link_libraries(CorsixTH_lib PRIVATE FluidSynth::libfluidsynth)
+else()
+  message(FATAL_ERROR "Error: FluidSynth was not found.")
+endif()
+
 # Find FFMPEG
 if(CORSIX_TH_USE_FFMPEG)
   find_package(
-    FFmpeg
+    FFMPEG
     COMPONENTS AVFORMAT AVCODEC SWSCALE SWRESAMPLE AVUTIL
-    REQUIRED
+    QUIET
   )
   if(FFMPEG_FOUND)
     target_link_libraries(CorsixTH_lib PUBLIC ${FFMPEG_LIBRARIES})
     include_directories(${FFMPEG_INCLUDE_DIRS})
-    if(APPLE)
-      target_link_libraries(CorsixTH PRIVATE libz.dylib)
-      # These LDFLAGS are necessary for static ffmpeg, harmless for dynamic ffmpeg
-      set(CMAKE_EXE_LINKER_FLAGS "-liconv -framework CoreMedia -framework CoreVideo -framework VideoToolbox")
+  else()
+    pkg_check_modules(
+      FFmpeg
+      REQUIRED
+      IMPORTED_TARGET
+      libavformat
+      libavcodec
+      libswresample
+      libswscale
+      libavutil
+    )
+    if(pkgcfg_lib_FFmpeg_avcodec)
+      target_link_libraries(CorsixTH_lib PUBLIC PkgConfig::FFmpeg)
+      include_directories(PkgConfig::FFmpeg)
+      set(FFMPEG_FOUND TRUE)
     endif()
+  endif()
+
+  if(FFMPEG_FOUND)
+    if(APPLE)
+      # These frameworks are necessary for a full static build of ffmpeg.
+      # But they are weakly linked in case a dynamic or minimal build of ffmpeg is used
+      target_link_libraries(CorsixTH_lib PRIVATE iconv "-weak_framework CoreVideo")
+      # These frameworks were added: CoreVideo in 10.4, CoreMedia in 10.7, VideoToolbox in 10.8
+      if(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_GREATER_EQUAL "10.8" OR NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+        target_link_libraries(CorsixTH_lib PRIVATE "-weak_framework CoreMedia" "-weak_framework VideoToolbox")
+      endif()
+    endif(APPLE)
     message("  FFmpeg found")
   else()
     message(FATAL_ERROR "Error: FFmpeg library not found, even though it was selected to be included")
@@ -209,10 +253,6 @@ else()
   if(FREETYPE_FOUND)
     target_link_libraries(CorsixTH_lib PUBLIC ${FREETYPE_LIBRARIES})
     include_directories(${FREETYPE_INCLUDE_DIRS})
-    if(APPLE)
-      target_link_libraries(CorsixTH_lib PRIVATE libz.dylib)
-      target_link_libraries(CorsixTH_lib PRIVATE libbz2.dylib)
-    endif()
     message("  FreeType2 found")
   else()
     message(FATAL_ERROR "Error: FreeType2 library not found, it is required to build")
@@ -276,28 +316,37 @@ if(WITH_MIDI_DEVICE)
 endif()
 
 if(FETCH_SOUNDFONT)
-  FetchContent_Declare(
-    FluidR3
-    URL https://raw.githubusercontent.com/Jacalz/fluid-soundfont/master/SF3/FluidR3.sf3
-    URL_HASH SHA256=32039e039c2f708467a6f171fbfd9fecdcadfe40a2327837c391490c8de70021
-    DOWNLOAD_NO_EXTRACT TRUE
+  set(SOUNDFONT_FILE "${CMAKE_BINARY_DIR}/GeneralUser-GS.sf2")
+  file(DOWNLOAD
+    https://raw.githubusercontent.com/mrbumpy409/GeneralUser-GS/684543d5e5efaef08d02be50dcda8d552478fa60/GeneralUser-GS.sf2
+    "${SOUNDFONT_FILE}"
+    EXPECTED_HASH SHA256=9575028c7a1f589f5770fccc8cff2734566af40cd26ed836944e9a5152688cfe
+    STATUS SOUNDFONT_STATUS
   )
 
-  FetchContent_MakeAvailable(FluidR3)
-  set(FLUIDR3_FILE ${fluidr3_SOURCE_DIR}/FluidR3.sf3)
+  list(GET SOUNDFONT_STATUS 0 SOUNDFONT_STATUS_CODE)
+  if(NOT SOUNDFONT_STATUS_CODE EQUAL 0)
+    message(FATAL_ERROR "Failed to download soundfont: ${SOUNDFONT_STATUS}")
+  else()
+    message("  Soundfont found")
+  endif()
 endif()
 
 if(FETCH_UNICODE_FONT)
-  FetchContent_Declare(
-    GoNoto
-    URL https://github.com/satbyy/go-noto-universal/releases/download/v7.0/GoNotoKurrent-Regular.ttf
-    URL_HASH SHA256=2f2cee5fbb2403df352ca2005247f6c4faa70f3086ebd31b6c62308b5f2f9865
-    DOWNLOAD_NO_EXTRACT TRUE
-    DOWNLOAD_NAME CorsixTHUnicode.ttf
+  set(GONOTO_FILE "${CMAKE_BINARY_DIR}/CorsixTHUnicode.ttf")
+  file(DOWNLOAD
+    https://github.com/satbyy/go-noto-universal/releases/download/v7.0/GoNotoKurrent-Regular.ttf
+    "${GONOTO_FILE}"
+    EXPECTED_HASH SHA256=2f2cee5fbb2403df352ca2005247f6c4faa70f3086ebd31b6c62308b5f2f9865
+    STATUS GONOTO_STATUS
   )
 
-  FetchContent_MakeAvailable(GoNoto)
-  set(GONOTO_FILE ${gonoto_SOURCE_DIR}/CorsixTHUnicode.ttf)
+  list(GET GONOTO_STATUS 0 GONOTO_STATUS_CODE)
+  if(NOT GONOTO_STATUS_CODE EQUAL 0)
+    message(FATAL_ERROR "Failed to download unicode font: ${GONOTO_STATUS}")
+  else()
+    message("  Unicode font found")
+  endif()
 endif()
 
 if(WITH_TRACY)
@@ -309,6 +358,19 @@ if(WITH_TRACY)
   find_package(Tracy CONFIG REQUIRED)
   target_link_libraries(CorsixTH_lib PUBLIC Tracy::TracyClient)
 endif()
+
+find_package(zstd CONFIG REQUIRED)
+if(TARGET zstd::libzstd)
+    set(CORSIXTH_ZSTD_TARGET zstd::libzstd)
+elseif(TARGET zstd::libzstd_shared)
+    set(CORSIXTH_ZSTD_TARGET zstd::libzstd_shared)
+elseif(TARGET zstd::libzstd_static)
+    set(CORSIXTH_ZSTD_TARGET zstd::libzstd_static)
+else()
+    message(FATAL_ERROR
+        "zstd was found, but no supported CMake target was exported")
+endif()
+target_link_libraries(CorsixTH_lib PRIVATE "${CORSIXTH_ZSTD_TARGET}")
 
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
@@ -395,7 +457,7 @@ if(NOT USE_SOURCE_DATADIRS)
   install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
 
   if(FETCH_SOUNDFONT)
-    install(FILES ${FLUIDR3_FILE} DESTINATION ${CORSIX_TH_DATADIR})
+    install(FILES ${SOUNDFONT_FILE} DESTINATION ${CORSIX_TH_DATADIR})
   endif()
   if(FETCH_UNICODE_FONT)
     install(FILES ${GONOTO_FILE} DESTINATION ${CORSIX_TH_DATADIR})

@@ -140,10 +140,12 @@ function Audio:init()
       midi_txt = file
     end
   end
-
-  -- Enable music files and add them to the playlist.
+  -- Add music files to the playlist and set their enabled state based on previous preferences
+  local disabled_tracks = self:readPlaylistPreferences()
   for _, info in pairs(music_array) do
-    info.enabled = true
+    if not (disabled_tracks and (disabled_tracks[info.filename] or disabled_tracks[info.filename_music])) then
+      info.enabled = true
+    end
     self.background_playlist[#self.background_playlist + 1] = info
   end
 
@@ -197,17 +199,16 @@ function Audio:initMidiPlayer()
     self.midi_player = nil
   end
 
-  if TH.GetCompileOptions().midi_device and self.app.config.midi_api then
-    local midi_ok, midi_player = pcall(
-      TH.midiPlayer,
-      self.app.config.midi_api,
-      self.app.config.midi_port,
-      self.app.config.midi_sysex_master_volume)
-    if midi_ok then
-      self.midi_player = midi_player
-    else
-      print("Failed to create midi player: " .. midi_player)
-    end
+  local midi_ok, midi_player = pcall(
+    TH.midiPlayer,
+    self.app.config.midi_api or "",
+    self.app.config.midi_port,
+    self.app.config.midi_sysex_master_volume,
+    self.app:findSoundFont())
+  if midi_ok then
+    self.midi_player = midi_player
+  else
+    print("Failed to create midi player: " .. midi_player)
   end
 end
 
@@ -732,6 +733,7 @@ function Audio:playBackgroundTrack(index)
 
         if music_data == nil then
           info.enabled = false
+          self:updatePlaylistPreferences()
           local name, msg = (info.filename_music or info.filename)
           if not self.warned and TheApp.ui then -- Warn once per session
             TheApp.ui:addWindow(UIInformation(TheApp.ui, {_S.errors.music}))
@@ -850,4 +852,28 @@ function Audio:destroy()
   self.speech_file_name = nil
   self.sound_fx = nil
   SDL.audio.destroy()
+end
+
+-- Load the playlist disabled tracks file
+function Audio:readPlaylistPreferences()
+  local path = corsixth.require("config_finder").config_filename:sub(1, -11) .. "disabledtracks.txt"
+  local fi = io.open(path, "r")
+  if not fi then return end -- Fail silently
+  local disabled_tracks = {}
+  for line in fi:lines() do
+    disabled_tracks[line] = true
+  end
+  fi:close()
+  return disabled_tracks
+end
+
+-- Create a set of playlist filenames that are disabled and write this to file
+function Audio:updatePlaylistPreferences()
+  local path = corsixth.require("config_finder").config_filename:sub(1, -11) .. "disabledtracks.txt"
+  local fi, err = io.open(path, "w")
+  if err then return end -- Fail silently
+  for _, track in pairs(self.background_playlist) do
+    if not track.enabled then fi:write(track.filename or track.filename_music, '\n') end
+  end
+  fi:close()
 end

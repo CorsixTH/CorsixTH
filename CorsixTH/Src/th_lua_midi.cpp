@@ -20,80 +20,132 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <stdexcept>
+#include <type_traits>
+#include <variant>
+#include <vector>
+
+#include "fluid_player.h"
 #include "lua.hpp"
 #include "midi_player.h"
 #include "th_lua.h"
 #include "th_lua_internal.h"
 
-#ifdef WITH_MIDI_DEVICE
-
-// Delegate object around midi_player with a close method
+// Delegate object around midi_player or fluid_player with a close method
 // suitable for adapting C++ RAII to lua garbage collection.
 class th_lua_midi_player {
  public:
+  explicit th_lua_midi_player(const std::string& soundfont)
+      : player(std::in_place_type<fluid_player>, soundfont) {}
+
+#ifdef WITH_MIDI_DEVICE
   th_lua_midi_player(std::string_view api, std::string_view port,
                      bool use_sysex)
-      : player(std::in_place, api, port, use_sysex) {}
+      : player(std::in_place_type<midi_player>, api, port, use_sysex) {}
+#endif
   th_lua_midi_player(const th_lua_midi_player&) = delete;
   th_lua_midi_player& operator=(const th_lua_midi_player&) = delete;
 
   std::vector<std::string> port_list() const {
-    if (!player.has_value()) {
-      throw std::runtime_error("th_lua_midi_player instance is closed");
-    }
-    return player->port_list();
+    return std::visit(
+        [](const auto& player) -> std::vector<std::string> {
+          using player_type = std::decay_t<decltype(player)>;
+          if constexpr (std::is_same_v<player_type, std::monostate>) {
+            throw std::runtime_error("th_lua_midi_player instance is closed");
+          } else if constexpr (std::is_same_v<player_type, fluid_player>) {
+            return {};
+          } else {
+            return player.port_list();
+          }
+        },
+        player);
   }
 
   void play_xmi(const unsigned char* xmiData, const size_t len) {
-    if (!player.has_value()) {
-      throw std::runtime_error("th_lua_midi_player instance is closed");
-    }
-    player->play_xmi(xmiData, len);
+    std::visit(
+        [&](auto& player) {
+          using player_type = std::decay_t<decltype(player)>;
+          if constexpr (std::is_same_v<player_type, std::monostate>) {
+            throw std::runtime_error("th_lua_midi_player instance is closed");
+          } else {
+            player.play_xmi(xmiData, len);
+          }
+        },
+        player);
   }
 
   void set_volume(const double volume) {
-    if (!player.has_value()) {
-      throw std::runtime_error("th_lua_midi_player instance is closed");
-    }
-    player->set_volume(volume);
+    std::visit(
+        [&](auto& player) {
+          using player_type = std::decay_t<decltype(player)>;
+          if constexpr (std::is_same_v<player_type, std::monostate>) {
+            throw std::runtime_error("th_lua_midi_player instance is closed");
+          } else if constexpr (std::is_same_v<player_type, fluid_player>) {
+            player.set_volume(static_cast<float>(volume));
+          } else {
+            player.set_volume(volume);
+          }
+        },
+        player);
   }
 
   void stop() {
-    if (!player.has_value()) {
-      throw std::runtime_error("th_lua_midi_player instance is closed");
-    }
-    player->stop();
+    std::visit(
+        [](auto& player) {
+          using player_type = std::decay_t<decltype(player)>;
+          if constexpr (std::is_same_v<player_type, std::monostate>) {
+            throw std::runtime_error("th_lua_midi_player instance is closed");
+          } else {
+            player.stop();
+          }
+        },
+        player);
   }
 
   void pause() {
-    if (!player.has_value()) {
-      throw std::runtime_error("th_lua_midi_player instance is closed");
-    }
-    player->pause();
+    std::visit(
+        [](auto& player) {
+          using player_type = std::decay_t<decltype(player)>;
+          if constexpr (std::is_same_v<player_type, std::monostate>) {
+            throw std::runtime_error("th_lua_midi_player instance is closed");
+          } else {
+            player.pause();
+          }
+        },
+        player);
   }
 
   void resume() {
-    if (!player.has_value()) {
-      throw std::runtime_error("th_lua_midi_player instance is closed");
-    }
-    player->resume();
+    std::visit(
+        [](auto& player) {
+          using player_type = std::decay_t<decltype(player)>;
+          if constexpr (std::is_same_v<player_type, std::monostate>) {
+            throw std::runtime_error("th_lua_midi_player instance is closed");
+          } else {
+            player.resume();
+          }
+        },
+        player);
   }
 
-  void close() { player.reset(); }
+  void close() { player.emplace<std::monostate>(); }
 
  private:
-  std::optional<midi_player> player;
-};
+#ifdef WITH_MIDI_DEVICE
+  std::variant<std::monostate, fluid_player, midi_player> player;
 #else
-class th_lua_midi_player {};
+  std::variant<std::monostate, fluid_player> player;
 #endif
+};
 
 namespace {
 
-#ifdef WITH_MIDI_DEVICE
-
 int l_midi_player_api_list(lua_State* L) {
+#ifdef WITH_MIDI_DEVICE
   std::vector<std::string> apis = midi_player::api_list();
+#else
+  std::vector<std::string> apis{};
+#endif
 
   lua_createtable(L, static_cast<int>(apis.size()), 0);
   for (size_t i = 0; i < apis.size(); ++i) {
@@ -106,13 +158,30 @@ int l_midi_player_api_list(lua_State* L) {
 }
 
 int l_midi_player_new(lua_State* L) {
+  if (lua_gettop(L) == 2) {
+    const char* soundfont = luaL_checkstring(L, 2);
+    try {
+      luaT_stdnew<th_lua_midi_player>(L, luaT_environindex, true, soundfont);
+      return 1;
+    } catch (const std::exception& e) {
+      return luaL_error(L, e.what());
+    }
+  }
+
   const char* apiChoice = luaL_optlstring(L, 2, "", nullptr);
   const char* portChoice = luaL_optlstring(L, 3, "", nullptr);
   bool sysexMasterVolume = lua_toboolean(L, 4);
+  const char* soundfont = luaL_optlstring(L, 5, "", nullptr);
 
   try {
-    luaT_stdnew<th_lua_midi_player>(L, luaT_environindex, true, apiChoice,
-                                    portChoice, sysexMasterVolume);
+#ifdef WITH_MIDI_DEVICE
+    if (apiChoice[0] != '\0') {
+      luaT_stdnew<th_lua_midi_player>(L, luaT_environindex, true, apiChoice,
+                                      portChoice, sysexMasterVolume);
+      return 1;
+    }
+#endif
+    luaT_stdnew<th_lua_midi_player>(L, luaT_environindex, true, soundfont);
     return 1;
   } catch (const std::invalid_argument& e) {
     return luaL_error(L, "Invalid MIDI API choice: %s", e.what());
@@ -201,46 +270,6 @@ int l_midi_player_close(lua_State* L) {
   }
   return 0;
 }
-
-#else  // WITH_MIDI_DEVICE
-
-int l_midi_player_api_list(lua_State* L) {
-  lua_newtable(L);
-
-  return 1;
-}
-
-int l_midi_player_new(lua_State* L) {
-  return luaL_error(L, "MIDI support not compiled in");
-}
-
-int l_midi_port_list(lua_State* L) {
-  return luaL_error(L, "MIDI support not compiled in");
-}
-
-int l_midi_player_play_xmi(lua_State* L) {
-  return luaL_error(L, "MIDI support not compiled in");
-}
-
-int l_midi_player_set_volume(lua_State* L) {
-  return luaL_error(L, "MIDI support not compiled in");
-}
-
-int l_midi_player_stop(lua_State* L) {
-  return luaL_error(L, "MIDI support not compiled in");
-}
-
-int l_midi_player_pause(lua_State* L) {
-  return luaL_error(L, "MIDI support not compiled in");
-}
-
-int l_midi_player_resume(lua_State* L) {
-  return luaL_error(L, "MIDI support not compiled in");
-}
-
-int l_midi_player_close(lua_State* L) { return 0; }
-
-#endif  // WITH_MIDI_DEVICE
 
 }  // namespace
 

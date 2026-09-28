@@ -627,13 +627,15 @@ param(config_values, 'screenshots', '[[X:\\ThemeHospital\\Screenshots]]') .. [=[
 param(config_values, 'audio_music', '[[X:\\ThemeHospital\\Music]]') .. [=[
 
 -------------------------------------------------------------------------------
--- SoundFont: CorsixTH uses the FluidR3 SoundFont by default for playing MIDI music.
+-- SoundFont: CorsixTH uses the GeneralUser-GS or FluidR3 SoundFont by default
+-- where available for playing MIDI music.
+--
 -- Windows users, and other OS versions compiled with the FluidSynth software
 -- synthesiser can specify their own SoundFont file below (.sf2 or .sf3).
 -- Mac(OS) Source Ports build users, and OS versions compiled with TiMidity
 -- won't see any effect from this option. See our Wiki for alternative options.
 --]=] .. '\n' ..
-param(config_values, 'soundfont', '[[X:\\ThemeHospital\\FluidR3.sf3]]') .. '\n'
+param(config_values, 'soundfont', '[[X:\\ThemeHospital\\GeneralUser-GS.sf2]]') .. '\n'
 
   parts[6] = [=[
 -------------------------------------------------------------------------------

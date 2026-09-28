@@ -25,6 +25,7 @@ SOFTWARE.
 #include "config.h"
 
 #include <errno.h>
+#include <zstd.h>
 
 #include <array>
 #include <climits>
@@ -33,15 +34,53 @@ SOFTWARE.
 #include <cstring>
 #include <new>
 #include <string>
+#ifdef WITH_TRACY
+#include <tracy/Tracy.hpp>
+#endif
 
 #include "lua.hpp"
 #include "th_lua.h"
 #ifdef _MSC_VER
-#pragma warning( \
-    disable : 4996)  // Disable "std::strcpy unsafe" warnings under MSVC
+// Disable "std::strcpy unsafe" warnings under MSVC
+#pragma warning(disable : 4996)
 #endif
 
 namespace {
+
+constexpr int zstd_compression_level = 4;
+
+/**
+ * Wrapper class for ZSTD_CCtx and ZSTD_DCtx objects.
+ *
+ * These context objects are reused between ZSTD operations to avoid
+ * reallocating the data structures needed for compression and decompression
+ * between runs, providing a speedup.
+ *
+ * It is not safe to use zstd_context from multiple threads.
+ */
+class zstd_context {
+ public:
+  zstd_context() noexcept {
+    compression_ctx = ZSTD_createCCtx();
+    decompression_ctx = ZSTD_createDCtx();
+  }
+  zstd_context(const zstd_context&) = delete;
+  zstd_context(zstd_context&&) = delete;
+
+  ~zstd_context() {
+    ZSTD_freeCCtx(compression_ctx);
+    ZSTD_freeDCtx(decompression_ctx);
+  }
+
+  ZSTD_CCtx* get_compression_ctx() const { return compression_ctx; }
+  ZSTD_DCtx* get_decompression_ctx() const { return decompression_ctx; }
+
+ private:
+  ZSTD_CCtx* compression_ctx;
+  ZSTD_DCtx* decompression_ctx;
+};
+
+zstd_context save_zstd_context{};
 
 enum persist_type {
   //  LUA_TNIL = 0,
@@ -1102,6 +1141,8 @@ class lua_persist_basic_reader : public lua_persist_reader {
 namespace {
 
 int l_dump_toplevel(lua_State* L) {
+  ZoneScoped;
+
   luaL_checktype(L, 2, LUA_TTABLE);
   lua_settop(L, 2);
   lua_pushvalue(L, 1);
@@ -1115,6 +1156,8 @@ int l_dump_toplevel(lua_State* L) {
 }
 
 int l_load_toplevel(lua_State* L) {
+  ZoneScoped;
+
   size_t iDataLength;
   const uint8_t* pData = luaT_checkfile(L, 1, &iDataLength);
   luaL_checktype(L, 2, LUA_TTABLE);
@@ -1179,6 +1222,8 @@ const char* find_function_end(lua_State* L, const char* sStart) {
 }
 
 int l_persist_dofile(lua_State* L) {
+  ZoneScoped;
+
   const char* sFilename = luaL_checkstring(L, 1);
   lua_settop(L, 1);
 
@@ -1309,6 +1354,54 @@ int l_persist_dofile(lua_State* L) {
   return lua_gettop(L) - 1;
 }
 
+int l_compress(lua_State* L) {
+  ZoneScoped;
+
+  size_t src_length;
+  const uint8_t* src_data = luaT_checkfile(L, 1, &src_length);
+
+  size_t dst_buffer_length = ZSTD_compressBound(src_length);
+  std::vector<uint8_t> dst_buffer(dst_buffer_length);
+
+  size_t dst_length = ZSTD_compressCCtx(
+      save_zstd_context.get_compression_ctx(), dst_buffer.data(),
+      dst_buffer_length, src_data, src_length, zstd_compression_level);
+  if (ZSTD_isError(dst_length)) {
+    lua_pushstring(L, ZSTD_getErrorName(dst_length));
+    return 2;
+  }
+
+  lua_pushlstring(L, reinterpret_cast<char*>(dst_buffer.data()), dst_length);
+
+  return 1;
+}
+
+int l_decompress(lua_State* L) {
+  ZoneScoped;
+
+  size_t src_length;
+  const uint8_t* src_data = luaT_checkfile(L, 1, &src_length);
+
+  size_t dst_length = ZSTD_getFrameContentSize(src_data, src_length);
+  if (dst_length == ZSTD_CONTENTSIZE_ERROR ||
+      dst_length == ZSTD_CONTENTSIZE_UNKNOWN) {
+    // silently return the original file if the frame is invalid, it's probably
+    // not a zstd compressed save game.
+    return 1;
+  }
+  std::vector<uint8_t> dst_buffer(dst_length);
+  size_t result =
+      ZSTD_decompressDCtx(save_zstd_context.get_decompression_ctx(),
+                          dst_buffer.data(), dst_length, src_data, src_length);
+  if (ZSTD_isError(result)) {
+    lua_pushstring(L, ZSTD_getErrorName(result));
+    return 2;
+  }
+  lua_pushlstring(L, reinterpret_cast<char*>(dst_buffer.data()), dst_length);
+
+  return 1;
+}
+
 int l_errcatch(lua_State* L) {
   // Dummy function for debugging - place a breakpoint on the following
   // return statement to inspect the full C call stack when a Lua error
@@ -1325,18 +1418,32 @@ constexpr std::array<luaL_Reg, 2> persist_lib{
 
 int luaopen_persist(lua_State* L) {
   luaT_register(L, "persist", persist_lib);
+
+  // upvalues
   lua_newuserdata(L, 512);  // buffer for dofile
-  lua_newtable(L);
-  lua_newtable(L);
-  lua_newtable(L);
+  lua_newtable(L);          // filename:line -> function
+  lua_newtable(L);          // function -> filename
+  lua_newtable(L);          // function -> code
+
+  // dump function with location->function table as upvalue(1)
   lua_pushvalue(L, -3);
   luaT_pushcclosure(L, l_dump_toplevel, 1);
   lua_setfield(L, -6, "dump");
+
+  // load function with function->filename and function->code upvalues
   lua_pushvalue(L, -2);
   lua_pushvalue(L, -2);
   luaT_pushcclosure(L, l_load_toplevel, 2);
   lua_setfield(L, -6, "load");
+
+  // dofile with all 4 upvalues in order
   luaT_pushcclosure(L, l_persist_dofile, 4);
   lua_setfield(L, -2, "dofile");
+
+  luaT_pushcclosure(L, l_compress, 0);
+  lua_setfield(L, -2, "compress");
+
+  luaT_pushcclosure(L, l_decompress, 0);
+  lua_setfield(L, -2, "decompress");
   return 1;
 }

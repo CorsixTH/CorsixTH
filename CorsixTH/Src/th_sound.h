@@ -28,9 +28,37 @@ SOFTWARE.
 #include <SDL3_mixer/SDL_mixer.h>
 
 #include <array>
+#include <cmath>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
 #include <vector>
+
+// Wrapper class for SDL_AudioLock that covers the C++ BasicLockable requirement
+class sdl_audio_mutex {
+ public:
+  explicit sdl_audio_mutex(SDL_AudioStream* stream) noexcept
+      : stream(stream) {};
+  sdl_audio_mutex(const sdl_audio_mutex&) = delete;
+  sdl_audio_mutex& operator=(const sdl_audio_mutex&) = delete;
+
+  void lock() {
+    if (!SDL_LockAudioStream(stream)) {
+      throw std::runtime_error(SDL_GetError());
+    }
+  }
+
+  void unlock() noexcept {
+    // unlock is not allowed to fail in C++. As such there's nothing to do if
+    // it does here except abort.
+    if (!SDL_UnlockAudioStream(stream)) {
+      std::abort();
+    }
+  }
+
+ private:
+  SDL_AudioStream* stream;
+};
 
 namespace th::sound {
 class sdl_mixer {
@@ -40,7 +68,6 @@ class sdl_mixer {
   sdl_mixer();
   ~sdl_mixer();
   MIX_Track* get_music_track() const;
-  MIX_Track* get_movie_track() const;
   MIX_Track* get_fx_track(int channel) const;
 
   /**
@@ -56,7 +83,6 @@ class sdl_mixer {
 
  private:
   MIX_Track* music_track;
-  MIX_Track* movie_track;
   std::array<MIX_Track*, number_of_fx_channels> fx_channels;
   MIX_Mixer* mixer;
 };
@@ -66,6 +92,42 @@ using mixer_ptr = std::unique_ptr<sdl_mixer>;
 bool init();
 void quit();
 sdl_mixer* get_mixer();
+
+/**
+ * Convert linear volume from 0..1 to a logarithmic volume in the same
+ * range.
+ *
+ * The function below is based on the formulas and approach explained in:
+ * https://www.dr-lex.be/info-stuff/implement-a-volume-control.html
+ *
+ * Rather than use the fixed values in the table (which doesn't cover a low
+ * enough range) I calculate a and b for a desired dynamic range. I use
+ * a much lower dynamic range than even the lowest Dr. Lex accounts for,
+ * because I assume no is is playing CorsixTH with 100% volume set anywhere
+ * near their maximum speaker volume. This is part of the experience that
+ * we can only guess in software. To get the true a and b values for the
+ * formula we would need to measure the speaker volume of the user when the
+ * game is at 100%, as well as the volume floor (background noise) in their
+ * room.
+ */
+// Can be constexpr starting with C++26
+inline float linear_to_logarithmic_volume(float volume) {
+  // 0 is -Infinity in dB which the formula will not hit, so we compensate
+  if (volume == 0) {
+    return 0;
+  }
+
+  // Let r be the desired dynamic range.
+  // a and b can be computed with the following:
+  // constexpr double r = 40;
+  // const double b = std::log(std::pow(10, r / 20));
+  // const double a = 1 / std::pow(10, r / 20);
+
+  constexpr float a = 0.01f;
+  constexpr float b = 4.605170185988092f;
+
+  return a * std::exp(b * volume);
+}
 
 }  // namespace th::sound
 
@@ -166,7 +228,7 @@ class sound_player {
   bool is_playing(uint32_t handle);
 
   //! Sets the default volume for sound effects.
-  void set_sound_effect_volume(double dVolume);
+  void set_sound_effect_volume(float volume);
 
   //! Enables or disables sound effects.
   //! Note: Only affects sounds played via play_at(int, int, int).
@@ -205,10 +267,8 @@ class sound_player {
   size_t sound_count;
   int camera_x;
   int camera_y;
-  double camera_radius;
-  double master_volume;
-  double sound_effect_volume;
-  float positionless_volume;
+  float camera_radius;
+  float sound_effect_volume;
   bool sound_effects_enabled;
 
   //! Each channel holds the handle of the track playing on it or null_handle

@@ -54,6 +54,7 @@ add_dependencies(AllTests UnitTests)
 # List of all test files
 target_sources(UnitTests
     PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_sound.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua_map.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua_ui.cpp

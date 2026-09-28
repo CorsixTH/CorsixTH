@@ -6,6 +6,7 @@ target_sources(
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/random.c
     ${CMAKE_CURRENT_SOURCE_DIR}/bootstrap.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/fluid_player.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/iso_fs.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lua_rnc.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/midi_player.cpp
@@ -47,6 +48,7 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/cp437_table.h
     ${CMAKE_CURRENT_SOURCE_DIR}/cp936_table.h
     ${CMAKE_CURRENT_SOURCE_DIR}/cpmik_table.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/fluid_player.h
     ${CMAKE_CURRENT_SOURCE_DIR}/iso_fs.h
     ${CMAKE_CURRENT_SOURCE_DIR}/lua_rnc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/lua_sdl.h

@@ -557,16 +557,19 @@ function Humanoid:findObjectsInSquare(size, object_spec)
 
   -- Search the rectangle for as far as it is within the world.
   local width, height = world_map.th:size()
-  local entity_map = self.world.entity_map
 
   size = (size >= 0) and size or 0
   for x = self.tile_x - size, self.tile_x + size do
     if x >= 1 and x <= width then
       for y = self.tile_y - size, self.tile_y + size do
         if y >= 1 and y <= height and th_map:getRoomId(x, y) == self_room_id then
-          for _, obj in ipairs(entity_map:getObjectsAtCoordinate(x, y)) do
-            local entry = objs_table[obj.id]
-            if entry then entry[#entry + 1] = obj end
+          local index = (y - 1) * self.world.map.width + x
+          local objects = self.world.objects[index]
+          if objects then
+            for _, obj in ipairs(objects) do
+              local entry = objs_table[obj.object_type.id]
+              if entry then entry[#entry + 1] = obj end
+            end
           end
         end
       end

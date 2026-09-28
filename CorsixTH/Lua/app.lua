@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 267 -- Deferred entity destruction fix
+local SAVEGAME_VERSION = 267 -- remove litter layering
 
 class "App"
 
@@ -287,10 +287,6 @@ function App:init()
   self.audio = Audio(self)
   self:initMusicDir()
   self.audio:init()
-
-  -- Hack to early initialise the audio and reduce delay on Windows
-  self.audio:playRandomBackgroundTrack()
-  self.audio:stopBackgroundTrack()
 
   -- Load movie player
   corsixth.require("movie_player")
@@ -1599,6 +1595,7 @@ function App:findSoundFont()
 
   local possible_locations = {
     self.config.soundfont or false,
+    data_dir .. "GeneralUser-GS.sf2",
     data_dir .. "FluidR3_GM.sf2",
     data_dir .. "FluidR3.sf3",
     "/usr/share/soundfonts/default.sf2", -- default linux

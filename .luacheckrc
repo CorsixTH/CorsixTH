@@ -44,7 +44,7 @@ globals = { -- Globals
             "Graphics", "GrimReaper", "Hospital", "Humanoid", "HumanoidRawWalk",
             "Inspector", "LoadGame", "LoadGameFile", "Litter", "Machine",
             "Map", "MoviePlayer", "NoRealClass", "Object", "ParentClass",
-            "Patient", "Plant", "PlayerHospital", "Queue", "ResearchDepartment", "Room",
+            "Patient", "Plant", "PlayerHospital", "Queue", "Rat", "ResearchDepartment", "Room",
             "SaveGame", "SaveGameFile", "Staff", "StaffProfile", "StaffRoom",
             "Strings", "SwingDoor", "TheApp", "TreeControl", "Vip", "Window",
             "World", "Date", "Doctor", "Handyman", "Nurse", "Receptionist", "Subtitles",
