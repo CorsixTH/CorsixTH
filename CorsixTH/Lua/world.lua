@@ -2959,7 +2959,7 @@ function World:afterLoad(old, new)
     local litter_to_remove = {}
     for _, entity in ipairs(self.entities) do
       if class.is(entity, Litter) and entity.tile_x then
-        local key = entity.tile_x * 10000 + entity.tile_y -- unique int key per tile
+        local key = entity.tile_x * self.map.height + entity.tile_y -- unique int key per tile
         local current_litter = litter_by_tile[key]
         if not current_litter then
           litter_by_tile[key] = entity -- no entry was there
