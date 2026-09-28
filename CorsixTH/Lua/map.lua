@@ -854,6 +854,9 @@ function Map:_fixTiles()
 end
 
 function Map:afterLoad(old, new)
+  local level_config = self.level_config
+  local gbv = level_config.gbv
+
   if old < 6 then
     self.parcelTileCounts = {}
     for plot = 1,self.th:getPlotCount() do
@@ -864,40 +867,40 @@ function Map:afterLoad(old, new)
     self.difficulty = "full"
   end
   if old < 44 then
-    self.level_config.expertise[2].MaxDiagDiff = 700
-    self.level_config.expertise[3].MaxDiagDiff = 250
-    self.level_config.expertise[4].MaxDiagDiff = 250
-    self.level_config.expertise[5].MaxDiagDiff = 250
-    self.level_config.expertise[6].MaxDiagDiff = 250
-    self.level_config.expertise[7].MaxDiagDiff = 250
-    self.level_config.expertise[8].MaxDiagDiff = 350
-    self.level_config.expertise[9].MaxDiagDiff = 250
-    self.level_config.expertise[10].MaxDiagDiff = 250
-    self.level_config.expertise[11].MaxDiagDiff = 700
-    self.level_config.expertise[12].MaxDiagDiff = 1000
-    self.level_config.expertise[13].MaxDiagDiff = 700
-    self.level_config.expertise[14].MaxDiagDiff = 400
-    self.level_config.expertise[15].MaxDiagDiff = 350
-    self.level_config.expertise[16].MaxDiagDiff = 350
-    self.level_config.expertise[17].MaxDiagDiff = 1000
-    self.level_config.expertise[18].MaxDiagDiff = 350
-    self.level_config.expertise[19].MaxDiagDiff = 700
-    self.level_config.expertise[20].MaxDiagDiff = 700
-    self.level_config.expertise[21].MaxDiagDiff = 700
-    self.level_config.expertise[22].MaxDiagDiff = 350
-    self.level_config.expertise[23].MaxDiagDiff = 350
-    self.level_config.expertise[24].MaxDiagDiff = 700
-    self.level_config.expertise[25].MaxDiagDiff = 700
-    self.level_config.expertise[26].MaxDiagDiff = 700
-    self.level_config.expertise[27].MaxDiagDiff = 350
-    self.level_config.expertise[28].MaxDiagDiff = 700
-    self.level_config.expertise[29].MaxDiagDiff = 1000
-    self.level_config.expertise[30].MaxDiagDiff = 700
-    self.level_config.expertise[31].MaxDiagDiff = 1000
-    self.level_config.expertise[32].MaxDiagDiff = 700
-    self.level_config.expertise[33].MaxDiagDiff = 1000
-    self.level_config.expertise[34].MaxDiagDiff = 700
-    self.level_config.expertise[35].MaxDiagDiff = 700
+    level_config.expertise[2].MaxDiagDiff = 700
+    level_config.expertise[3].MaxDiagDiff = 250
+    level_config.expertise[4].MaxDiagDiff = 250
+    level_config.expertise[5].MaxDiagDiff = 250
+    level_config.expertise[6].MaxDiagDiff = 250
+    level_config.expertise[7].MaxDiagDiff = 250
+    level_config.expertise[8].MaxDiagDiff = 350
+    level_config.expertise[9].MaxDiagDiff = 250
+    level_config.expertise[10].MaxDiagDiff = 250
+    level_config.expertise[11].MaxDiagDiff = 700
+    level_config.expertise[12].MaxDiagDiff = 1000
+    level_config.expertise[13].MaxDiagDiff = 700
+    level_config.expertise[14].MaxDiagDiff = 400
+    level_config.expertise[15].MaxDiagDiff = 350
+    level_config.expertise[16].MaxDiagDiff = 350
+    level_config.expertise[17].MaxDiagDiff = 1000
+    level_config.expertise[18].MaxDiagDiff = 350
+    level_config.expertise[19].MaxDiagDiff = 700
+    level_config.expertise[20].MaxDiagDiff = 700
+    level_config.expertise[21].MaxDiagDiff = 700
+    level_config.expertise[22].MaxDiagDiff = 350
+    level_config.expertise[23].MaxDiagDiff = 350
+    level_config.expertise[24].MaxDiagDiff = 700
+    level_config.expertise[25].MaxDiagDiff = 700
+    level_config.expertise[26].MaxDiagDiff = 700
+    level_config.expertise[27].MaxDiagDiff = 350
+    level_config.expertise[28].MaxDiagDiff = 700
+    level_config.expertise[29].MaxDiagDiff = 1000
+    level_config.expertise[30].MaxDiagDiff = 700
+    level_config.expertise[31].MaxDiagDiff = 1000
+    level_config.expertise[32].MaxDiagDiff = 700
+    level_config.expertise[33].MaxDiagDiff = 1000
+    level_config.expertise[34].MaxDiagDiff = 700
+    level_config.expertise[35].MaxDiagDiff = 700
   end
   if old < 57 then
     local flags_to_set = {buildableNorth = true, buildableSouth = true, buildableWest = true, buildableEast = true}
@@ -915,13 +918,13 @@ function Map:afterLoad(old, new)
     -- Permanently fix the 0.65 trophy bug (#2004)
     -- make sure we erase the hofix variable too
     self.hotfix1 = nil
-    self.level_config.awards_trophies.TrophyAllCuredBonus = 20000
-    self.level_config.awards_trophies.AllCuresBonus = 5000
+    level_config.awards_trophies.TrophyAllCuredBonus = 20000
+    level_config.awards_trophies.AllCuresBonus = 5000
   end
   if old < 164 then
     -- New feature, by default non-visual illnesses were always available
     -- at the start
-    self.level_config.non_visuals_available = {
+    level_config.non_visuals_available = {
     [0] = {Value = 0}, -- I_UNCOMMON_COLD
     {Value = 0}, -- I_BROKEN_WIND
     {Value = 0}, -- I_SPARE_RIBS
@@ -946,20 +949,25 @@ function Map:afterLoad(old, new)
   end
   if old < 175 then
     -- Set max salary value for existing saves
-    self.level_config.payroll = {
+    level_config.payroll = {
       MaxSalary = 2000,
     }
   end
   if old < 187 then
-    local gbv = self.level_config.gbv
     gbv.Tired = gbv.Tired or 600
     gbv.VeryTired = gbv.VeryTired or 700
     gbv.CrackUpTired = gbv.CrackUpTired or 800
   end
   if old < 209 then
-    self.level_config.gbv.SodaPrice = 20
+    gbv.SodaPrice = 20
   end
   if old < 217 then
     self:_fixTiles()
+  end
+  if old < 266 then
+    -- Add population allocation variables, if not defined
+    gbv.AllocTotalRep = gbv.AllocTotalRep or 1
+    gbv.AllocIndRep   = gbv.AllocIndRep or 2
+    gbv.AllocRand     = gbv.AllocRand or 4
   end
 end

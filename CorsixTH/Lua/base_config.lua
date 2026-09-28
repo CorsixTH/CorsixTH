@@ -121,6 +121,15 @@ local configuration = {
     -- How many months until population allocation is done for real
     AllocDelay             = 3,
 
+    -- POPULATION ALLOCATIONS
+    -- A higher value increases effect of criterion.
+    -- Hospital reptuation weighting
+    AllocTotalRep          = 1,
+    -- Reputation weighting of treated disease
+    AllocIndRep            = 2,
+    -- Chance of random hospital selection
+    AllocRand              = 4,
+
     AbilityThreshold = {
       [0] = {Value = 75}, -- SURGEON
       {Value = 60}, -- PSYCHIATRIST
