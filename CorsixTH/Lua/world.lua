@@ -3122,8 +3122,9 @@ function World:isNearRat(x, y)
   for dx = -2, 2 do
     for dy = -2, 2 do
       local tx, ty = tile_x + dx, tile_y + dy
-      if self:isOnMap(tx, ty) then
-        for _, rat in ipairs(self.entity_map:getRatsAtCoordinate(tx, ty)) do
+      local rats_at_coord = self:isOnMap(tx, ty) and self.entity_map:getRatsAtCoordinate(tx, ty)
+      if rats_at_coord and #rats_at_coord > 0 then
+        for _, rat in ipairs(rats_at_coord) do
           local rx, ry = self.map:WorldToScreen(rat.tile_x, rat.tile_y)
           local px, py = rat.th:getPosition()
           local ddx, ddy = x - (rx + px), y - (ry + py)
