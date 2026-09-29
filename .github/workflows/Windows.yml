@@ -34,6 +34,7 @@ jobs:
       NAME: CorsixTH${{inputs.animview && '_and_AnimView' || ''}}${{inputs.preset == 'win-x86-rel' && '_x86' || inputs.preset == 'win-arm64-rel' && '_arm64' || ''}}
       VCPKG_ROOT: ${{ github.workspace }}\vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg-bincache
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg-bincache,readwrite"
     defaults:
       run:
         shell: bash
@@ -51,7 +52,7 @@ jobs:
           echo "baseline=$baseline" >> $env:GITHUB_OUTPUT
 
       - name: Checkout vcpkg
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: 'microsoft/vcpkg'
           ref: ${{ steps.vcpkg-baseline.outputs.baseline }}
@@ -65,7 +66,7 @@ jobs:
           bootstrap-vcpkg.bat -disableMetrics
 
       - name: Setup binary cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
           key: vcpkg-bincache-${{env.PRESET}}-${{hashFiles('vcpkg.json','vcpkg-configuration.json')}}
@@ -104,7 +105,7 @@ jobs:
 
       - name: Upload build
         if: env.PRESET != 'win-dev'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           path: ${{ inputs.animview && 'artifact' || 'artifact/CorsixTH' }}
           name: ${{env.NAME}}
