@@ -1530,8 +1530,6 @@ void level_map::persist(lua_persist_writer* pWriter) const {
     pWriter->write_stack_object(-1);
     lua_pop(L, 2);
   }
-  // Raw tile layers (no RLE): same order as the RLE block produced,
-  // depersist below reads them back in this order for version >= 6.
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
     pWriter->write_uint(pNode->tile_layers[tile_layer::ground]);
