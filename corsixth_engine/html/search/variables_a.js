@@ -5,7 +5,7 @@ var searchData=
   ['max_5fdistance_2',['max_distance',['../classobject__visitor.html#a48f119277253cb99fa7e4b73998aa679',1,'object_visitor']]],
   ['max_5fnumber_5fof_5flayers_3',['max_number_of_layers',['../th__gfx_8h.html#aa3a81ba06ab8a75f1cc57536beccbf97',1,'th_gfx.h']]],
   ['max_5fplayer_5fcount_4',['max_player_count',['../th__map_8cpp.html#a1235f6286c02c22d961056bef60ffc7f',1,'th_map.cpp']]],
-  ['maximized_5',['maximized',['../structrender__target__creation__params.html#ae21623f01d440b77daf0e66d565ce1a1',1,'render_target_creation_params']]],
+  ['maximised_5',['maximised',['../structrender__target__creation__params.html#ac1ceb29525f5b579a4079881fd1ed827',1,'render_target_creation_params']]],
   ['metatables_6',['metatables',['../structlua__register__state.html#ae3fa0ab3eea4eae3037c4f7cb49adcaa',1,'lua_register_state']]],
   ['midi_5fchannel_5fcode_5fall_5fnotes_5foff_7',['midi_channel_code_all_notes_off',['../xmi2mid_8h.html#a999b915d826bf826c5c791c34f52c300',1,'xmi2mid.h']]],
   ['midi_5fchannel_5fcode_5fall_5fsound_5foff_8',['midi_channel_code_all_sound_off',['../xmi2mid_8h.html#a2303911802665a747076110ef02c5fdd',1,'xmi2mid.h']]],

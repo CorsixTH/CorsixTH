@@ -19,7 +19,7 @@ var sdl__core_8cpp =
     [ "dispatch_textinput", "sdl__core_8cpp.html#a7aa077ded605ed2ec8a474b09645ff68", null ],
     [ "dispatch_timer", "sdl__core_8cpp.html#a0358534c90ffc0652e2cdf38022d6905", null ],
     [ "dispatch_window_display_scale_changed", "sdl__core_8cpp.html#aefe27dc2576c1429491b9edc46a4aee7", null ],
-    [ "dispatch_window_maximized", "sdl__core_8cpp.html#a0b5cafd7464e8b97716b13f90652a425", null ],
+    [ "dispatch_window_maximised", "sdl__core_8cpp.html#a5efcda912e6cd4eb27c38b14948dd5e3", null ],
     [ "dispatch_window_pixel_size_changed", "sdl__core_8cpp.html#a7708afae1135768f26c29171882ee13f", null ],
     [ "dispatch_window_resized", "sdl__core_8cpp.html#ac5fc332d485650cb819b284e3171acfe", null ],
     [ "dispatch_window_restored", "sdl__core_8cpp.html#a525761f30795928f56e40e5bbd72da3c", null ],

@@ -101,8 +101,8 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:acb445ef89c44fcfdcd10bbedb468bd26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Target size of the window.  <br /></td></tr>
 <tr class="memitem:a8f423f66296e62f779cf5b54af588b6c" id="r_a8f423f66296e62f779cf5b54af588b6c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f423f66296e62f779cf5b54af588b6c">fullscreen</a> {}</td></tr>
 <tr class="memdesc:a8f423f66296e62f779cf5b54af588b6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run fullscreen.  <br /></td></tr>
-<tr class="memitem:ae21623f01d440b77daf0e66d565ce1a1" id="r_ae21623f01d440b77daf0e66d565ce1a1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae21623f01d440b77daf0e66d565ce1a1">maximized</a> {}</td></tr>
-<tr class="memdesc:ae21623f01d440b77daf0e66d565ce1a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run maximized (when not fullscreen).  <br /></td></tr>
+<tr class="memitem:ac1ceb29525f5b579a4079881fd1ed827" id="r_ac1ceb29525f5b579a4079881fd1ed827"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1ceb29525f5b579a4079881fd1ed827">maximised</a> {}</td></tr>
+<tr class="memdesc:ac1ceb29525f5b579a4079881fd1ed827"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run maximised (when not fullscreen).  <br /></td></tr>
 <tr class="memitem:a5e39667d9a1ae288b6b03cc5c598c96a" id="r_a5e39667d9a1ae288b6b03cc5c598c96a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e39667d9a1ae288b6b03cc5c598c96a">aspect_ratio_4_3</a> {}</td></tr>
 <tr class="memdesc:a5e39667d9a1ae288b6b03cc5c598c96a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display the game letterboxed to 4:3.  <br /></td></tr>
 <tr class="memitem:aab53a7369291f16c8501f714ba2c8703" id="r_aab53a7369291f16c8501f714ba2c8703"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab53a7369291f16c8501f714ba2c8703">present_immediate</a> {}</td></tr>
@@ -111,6 +111,9 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a6fa445a2a44a7ba75d3773f2d8a42ad5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable HiDPI on the game window.  <br /></td></tr>
 <tr class="memitem:a903573947cd1ff27e3762e27d83813f6" id="r_a903573947cd1ff27e3762e27d83813f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structwindow__size.html">window_size</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a903573947cd1ff27e3762e27d83813f6">min_size</a> {}</td></tr>
 <tr class="memdesc:a903573947cd1ff27e3762e27d83813f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum size of the window.  <br /></td></tr>
+<tr class="memitem:a46bda17b38ea4ab6d3656a7917fe44da" id="r_a46bda17b38ea4ab6d3656a7917fe44da"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46bda17b38ea4ab6d3656a7917fe44da">override_resolution</a> {}</td></tr>
+<tr class="memitem:a082883e8b4a22a3454fb27f0b98e2da2" id="r_a082883e8b4a22a3454fb27f0b98e2da2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structrender__size.html">render_size</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a082883e8b4a22a3454fb27f0b98e2da2">resolution</a> {}</td></tr>
+<tr class="memdesc:a082883e8b4a22a3454fb27f0b98e2da2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Target resolution if override is enabled.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Helper structure with parameters to create a <a class="el" href="classrender__target.html">render_target</a>. </p>
@@ -178,19 +181,19 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae21623f01d440b77daf0e66d565ce1a1" name="ae21623f01d440b77daf0e66d565ce1a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae21623f01d440b77daf0e66d565ce1a1">&#9670;&#160;</a></span>maximized</h2>
+<a id="ac1ceb29525f5b579a4079881fd1ed827" name="ac1ceb29525f5b579a4079881fd1ed827"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1ceb29525f5b579a4079881fd1ed827">&#9670;&#160;</a></span>maximised</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool render_target_creation_params::maximized {}</td>
+          <td class="memname">bool render_target_creation_params::maximised {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Run maximized (when not fullscreen). </p>
+<p>Run maximised (when not fullscreen). </p>
 
 </div>
 </div>
@@ -210,6 +213,21 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a46bda17b38ea4ab6d3656a7917fe44da" name="a46bda17b38ea4ab6d3656a7917fe44da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46bda17b38ea4ab6d3656a7917fe44da">&#9670;&#160;</a></span>override_resolution</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool render_target_creation_params::override_resolution {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>If true then use the specified resolution instead of native </p>
+
+</div>
+</div>
 <a id="aab53a7369291f16c8501f714ba2c8703" name="aab53a7369291f16c8501f714ba2c8703"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aab53a7369291f16c8501f714ba2c8703">&#9670;&#160;</a></span>present_immediate</h2>
 
@@ -222,6 +240,22 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Whether to present immediately to the user (else wait for Vsync). </p>
+
+</div>
+</div>
+<a id="a082883e8b4a22a3454fb27f0b98e2da2" name="a082883e8b4a22a3454fb27f0b98e2da2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a082883e8b4a22a3454fb27f0b98e2da2">&#9670;&#160;</a></span>resolution</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structrender__size.html">render_size</a> render_target_creation_params::resolution {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Target resolution if override is enabled. </p>
 
 </div>
 </div>

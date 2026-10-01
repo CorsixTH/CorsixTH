@@ -26,7 +26,7 @@ var searchData=
   ['max_5fdistance_23',['max_distance',['../classobject__visitor.html#a48f119277253cb99fa7e4b73998aa679',1,'object_visitor']]],
   ['max_5fnumber_5fof_5flayers_24',['max_number_of_layers',['../th__gfx_8h.html#aa3a81ba06ab8a75f1cc57536beccbf97',1,'th_gfx.h']]],
   ['max_5fplayer_5fcount_25',['max_player_count',['../th__map_8cpp.html#a1235f6286c02c22d961056bef60ffc7f',1,'th_map.cpp']]],
-  ['maximized_26',['maximized',['../structrender__target__creation__params.html#ae21623f01d440b77daf0e66d565ce1a1',1,'render_target_creation_params']]],
+  ['maximised_26',['maximised',['../structrender__target__creation__params.html#ac1ceb29525f5b579a4079881fd1ed827',1,'render_target_creation_params']]],
   ['memory_5fbuffer_27',['memory_buffer',['../classmemory__buffer.html',1,'memory_buffer'],['../classmemory__buffer.html#a1c784e5ce690816642856e079f8e0a0a',1,'memory_buffer::memory_buffer()'],['../classmemory__buffer.html#a7c4b0ba0dbad3cfb600bdebb4d390cf0',1,'memory_buffer::memory_buffer(const uint8_t *pData, size_t iLength)']]],
   ['memory_5freader_28',['memory_reader',['../classmemory__reader.html',1,'memory_reader'],['../classmemory__reader.html#a517345caa6caa2a7f364cb08b7b8ee85',1,'memory_reader::memory_reader()']]],
   ['metatables_29',['metatables',['../structlua__register__state.html#ae3fa0ab3eea4eae3037c4f7cb49adcaa',1,'lua_register_state']]],

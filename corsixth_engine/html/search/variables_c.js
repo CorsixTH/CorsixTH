@@ -5,5 +5,6 @@ var searchData=
   ['offset_5fx_2',['offset_x',['../structth__element__properties.html#aebc7de4baee1af44d2626d898919333e',1,'th_element_properties::offset_x'],['../structfont__shadow__options.html#a94f51354c30f8a2812f2fa029c26ae74',1,'font_shadow_options::offset_x']]],
   ['offset_5fy_3',['offset_y',['../structth__element__properties.html#ac731a1b1729712b561d3147d83c4ab36',1,'th_element_properties::offset_y'],['../structfont__shadow__options.html#a52f2affba02aed9e9a69ea4508d0c7d0',1,'font_shadow_options::offset_y']]],
   ['open_5fheap_4',['open_heap',['../classpathfinder.html#a2a90dfe5df6e473c6622674b30ae4897',1,'pathfinder']]],
-  ['open_5fidx_5',['open_idx',['../structpath__node.html#af8d894dc00e3b7854dce893d30eb5720',1,'path_node']]]
+  ['open_5fidx_5',['open_idx',['../structpath__node.html#af8d894dc00e3b7854dce893d30eb5720',1,'path_node']]],
+  ['override_5fresolution_6',['override_resolution',['../structrender__target__creation__params.html#a46bda17b38ea4ab6d3656a7917fe44da',1,'render_target_creation_params']]]
 ];
