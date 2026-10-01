@@ -493,7 +493,8 @@ render_target::scoped_target_texture::~scoped_target_texture() {
 
 render_target::render_target(const render_target_creation_params& params)
     : direct_zoom{params.direct_zoom},
-      aspect_ratio_4_3(params.aspect_ratio_4_3) {
+      aspect_ratio_4_3{params.aspect_ratio_4_3 && !params.override_resolution},
+      override_resolution{params.override_resolution} {
   pixel_format = SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_ABGR8888);
 
   SDL_PropertiesID winProps = SDL_CreateProperties();
@@ -509,7 +510,7 @@ render_target::render_target(const render_target_creation_params& params)
   SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN,
                          params.fullscreen);
   SDL_SetBooleanProperty(winProps, SDL_PROP_WINDOW_CREATE_MAXIMIZED_BOOLEAN,
-                         params.maximized);
+                         params.maximised);
   SDL_SetBooleanProperty(winProps,
                          SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN,
                          params.hidpi);
@@ -549,7 +550,13 @@ render_target::render_target(const render_target_creation_params& params)
 
   // Apply after showing and syncing the window, otherwise the dimensions
   // don't take into account fullscreen as seen on Wayland in SDL 3.6.10
-  apply_letterbox(renderer, params.aspect_ratio_4_3);
+  apply_letterbox(renderer, aspect_ratio_4_3);
+
+  if (params.override_resolution) {
+    SDL_SetRenderLogicalPresentation(renderer, params.resolution.width,
+                                     params.resolution.height,
+                                     SDL_LOGICAL_PRESENTATION_LETTERBOX);
+  }
 
   // Workaround for https://github.com/libsdl-org/SDL/issues/13920 on MacOS
   SDL_Event evt;
@@ -574,16 +581,18 @@ render_target::~render_target() {
 }
 
 bool render_target::update(const render_target_creation_params& params) {
-  this->aspect_ratio_4_3 = params.aspect_ratio_4_3;
+  this->aspect_ratio_4_3 =
+      params.aspect_ratio_4_3 && !params.override_resolution;
+  this->override_resolution = params.override_resolution;
   bool bIsFullscreen = ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
                         SDL_WINDOW_FULLSCREEN);
   if (bIsFullscreen != params.fullscreen) {
     SDL_SetWindowFullscreen(window, params.fullscreen);
   }
 
-  if (!params.fullscreen && !params.maximized) {
+  if (!params.fullscreen && !params.maximised) {
     SDL_RestoreWindow(window);
-  } else if (params.maximized) {
+  } else if (params.maximised) {
     SDL_MaximizeWindow(window);
   }
 
@@ -600,7 +609,16 @@ bool render_target::update(const render_target_creation_params& params) {
 
   SDL_SyncWindow(window);
 
-  apply_letterbox(renderer, params.aspect_ratio_4_3);
+  apply_letterbox(renderer, aspect_ratio_4_3);
+  if (params.override_resolution) {
+    SDL_SetRenderLogicalPresentation(renderer, params.resolution.width,
+                                     params.resolution.height,
+                                     SDL_LOGICAL_PRESENTATION_LETTERBOX);
+  } else {
+    SDL_SetRenderLogicalPresentation(renderer, params.resolution.width,
+                                     params.resolution.height,
+                                     SDL_LOGICAL_PRESENTATION_DISABLED);
+  }
   trigger_mouse_motion();
 
   return true;
@@ -803,6 +821,10 @@ window_size render_target::get_max_window_size() const {
 }
 
 float render_target::get_display_scale() const {
+  if (override_resolution) {
+    return 1.0f;
+  }
+
   float ds = SDL_GetWindowDisplayScale(window);
   // Returns 0 on error, but we want to just not scale in that case.
   if (ds == 0.0f) {
