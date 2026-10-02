@@ -507,7 +507,7 @@ function Hospital:afterLoad(old, new)
   if old < 243 then
     self:buildReceptionDesksCache()
   end
-  if old < 266 then
+  if old < 268 then
     self.population = nil
     self.spawn_attempts = 0
     self.num_visitors_tm = 0

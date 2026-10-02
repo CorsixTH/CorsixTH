@@ -964,7 +964,7 @@ function Map:afterLoad(old, new)
   if old < 217 then
     self:_fixTiles()
   end
-  if old < 266 then
+  if old < 268 then
     -- Add population allocation variables, if not defined
     gbv.AllocTotalRep = gbv.AllocTotalRep or 1
     gbv.AllocIndRep   = gbv.AllocIndRep or 2
