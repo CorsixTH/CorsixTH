@@ -30,6 +30,7 @@ corsixth.require("entities.humanoids.staff.receptionist")
 corsixth.require("entities.humanoids.vip")
 corsixth.require("entities.humanoids.grim_reaper")
 corsixth.require("entities.humanoids.inspector")
+corsixth.require("entities.rat")
 corsixth.require("staff_profile")
 corsixth.require("hospital")
 corsixth.require("hospitals.player_hospital")
@@ -2361,6 +2362,24 @@ function World:removeAllLitter(x, y)
   for _, litter in ipairs(litters) do litter:remove() end
 end
 
+--! Create a piece of litter on a tile, respecting the rank of any litter
+--! already on that tile.
+--!
+--!param litter_type (string or int) Type passed on to Litter:setLitterType.
+--!param x (int) X position of the tile.
+--!param y (int) Y position of the tile.
+--!param mirror (int) Mirror flag passed on to Litter:setLitterType.
+--!return (Litter or nil) The new litter, or nil if it was outclassed.
+function World:newLitter(litter_type, x, y, mirror)
+  local displaced, outclassed = Litter.resolveTileRank(self:getObjects(x, y), litter_type)
+  if outclassed then return end
+  if displaced then displaced:remove() end
+
+  local litter = self:newObject("litter", x, y)
+  litter:setLitterType(litter_type, mirror)
+  return litter
+end
+
 --! Prepare all tiles of the footprint for build of an object.
 --!param object_footprint Footprint of the object being build.
 --!param x (int) X position of the object
@@ -2746,6 +2765,11 @@ function World:afterLoad(old, new)
       obj:afterLoad(old, new)
     end
   end
+  -- Migrate the entity map (older saves gain the rats layer). Saves before
+  -- version 88 have no entity map at this point; one is built complete below.
+  if self.entity_map then
+    self.entity_map:afterLoad(old, new)
+  end
 
   if old >= 87 then
     self:playLoadedEntitySounds()
@@ -2761,6 +2785,7 @@ function World:afterLoad(old, new)
       end
     end
   end
+
   if old < 108 then
     self.room_build_callbacks = nil
   end
@@ -2911,6 +2936,33 @@ function World:afterLoad(old, new)
   end
   if old < 245 then
     self.system_pause = nil
+  end
+
+  if old < 267 then
+    -- Multiple litter can no longer exist on a tile. Remove all but the highest order of litter.
+
+    -- Group litter by tile, keeping the highest-ranked item per tile. The
+    -- losers are collected and removed only afterwards otherwise it would lead to items being skipped.
+    local litter_by_tile = {}
+    local litter_to_remove = {}
+    for _, entity in ipairs(self.entities) do
+      if class.is(entity, Litter) and entity.tile_x then
+        local key = entity.tile_x * self.map.height + entity.tile_y -- unique int key per tile
+        local current_litter = litter_by_tile[key]
+        if not current_litter then
+          litter_by_tile[key] = entity -- no entry was there
+        elseif (entity:getRank() or 0) > (current_litter:getRank() or 0) then
+          -- keep the higher-ranked item, discard the one already stored
+          litter_to_remove[#litter_to_remove + 1] = current_litter
+          litter_by_tile[key] = entity
+        else
+          litter_to_remove[#litter_to_remove + 1] = entity
+        end
+      end
+    end
+    for _, entity in ipairs(litter_to_remove) do
+      if entity:isCleanable() then entity:remove() end
+    end
   end
 
   -- Fix the initial of staff names
@@ -3107,4 +3159,38 @@ end
 --! Returns whether the level being played is part of a campaign or not
 function World:isCampaign()
   return type(self.map.level_number) == "number" or self.campaign_info
+end
+
+-- A rat is considered "near" the cursor for the crosshair when the cursor is
+-- within this many pixels of where the rat is actually drawn.
+local near_rat_pixel_radius = 24
+
+--! Determine if any rat is near the given screen coordinates (relative to the
+-- map origin). Compares against each nearby rat's drawn pixel position rather
+-- than the tile it is anchored to, which can be up to a tile away while it
+-- scurries.
+--!param x (number) x-coordinate on the screen
+--!param y (number) y-coordinate on the screen
+--!return (boolean) Whether a rat is near the cursor.
+function World:isNearRat(x, y)
+  local tile_x, tile_y = self.map:ScreenToWorld(x, y)
+  tile_x, tile_y = math.floor(tile_x), math.floor(tile_y)
+  local radius_sq = near_rat_pixel_radius * near_rat_pixel_radius
+  for dx = -2, 2 do
+    for dy = -2, 2 do
+      local tx, ty = tile_x + dx, tile_y + dy
+      local rats_at_coord = self:isOnMap(tx, ty) and self.entity_map:getRatsAtCoordinate(tx, ty)
+      if rats_at_coord and #rats_at_coord > 0 then
+        for _, rat in ipairs(rats_at_coord) do
+          local rx, ry = self.map:WorldToScreen(rat.tile_x, rat.tile_y)
+          local px, py = rat.th:getPosition()
+          local ddx, ddy = x - (rx + px), y - (ry + py)
+          if ddx * ddx + ddy * ddy <= radius_sq then
+            return true
+          end
+        end
+      end
+    end
+  end
+  return false
 end

@@ -928,21 +928,19 @@ function Room:crashRoom()
   -- Make every floor tile have soot on them
   for x = self.x, self.x + self.width - 1 do
     for y = self.y, self.y + self.height - 1 do
-      local soot = self.world:newObject("litter", x, y)
-      soot:setLitterType("soot_floor", 0)
+      self.world:newLitter("soot_floor", x, y, 0)
     end
   end
   -- Make walls have soot on them too
   local ty = self.y
-  local soot_type, soot, block
+  local soot_type, block
   for x = self.x, self.x + self.width - 1 do
     block = map:getCell(x, ty, 2)
     soot_type = "soot_wall"
     if self.world:getWallSetFromBlockId(block) == "window_tiles" then
       soot_type = "soot_window"
     end
-    soot = self.world:newObject("litter", x, ty)
-    soot:setLitterType(soot_type, 1)
+    self.world:newLitter(soot_type, x, ty, 1)
   end
   local x = self.x
   for y = self.y, self.y + self.height - 1 do
@@ -951,8 +949,7 @@ function Room:crashRoom()
     if self.world:getWallSetFromBlockId(block) == "window_tiles" then
       soot_type = "soot_window"
     end
-    soot = self.world:newObject("litter", x, y)
-    soot:setLitterType(soot_type, 0)
+    self.world:newLitter(soot_type, x, y, 0)
   end
 
   self.hospital.num_explosions = self.hospital.num_explosions + 1

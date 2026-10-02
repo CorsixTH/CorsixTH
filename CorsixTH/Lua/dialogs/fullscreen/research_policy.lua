@@ -136,7 +136,9 @@ end
 function UIResearch:adjustResearch(area, mode)
   local res = self.research
   local amount = 1
-  if self.ui.app.key_modifiers.ctrl then
+  if self.ui.app.key_modifiers.ctrl and self.ui.app.key_modifiers.shift then
+    amount = amount * 100
+  elseif self.ui.app.key_modifiers.ctrl then
     amount = amount * 20
   elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5

@@ -448,7 +448,7 @@ function UIOptions:selectWindowSize(number)
   local res = self.available_window_sizes[number]
 
   local callback = --[[persistable:options_resolution_callback]] function(width, height)
-    self.app.modes.maximized = false
+    self.app.modes.maximised = false
     if not self.ui:changeWindow(width, height) then
       local err = {_S.errors.unavailable_screen_size}
       self.ui:addWindow(UIInformation(self.ui, err))

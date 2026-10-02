@@ -265,9 +265,7 @@ sound_player::sound_player()
       camera_x(0),
       camera_y(0),
       camera_radius(1.0),
-      master_volume(1.0),
       sound_effect_volume(0.5),
-      positionless_volume(1.0),
       sound_effects_enabled(true) {
   singleton = this;
 
@@ -328,8 +326,7 @@ uint32_t sound_player::play(size_t iIndex, double dVolume, int loops) {
     return null_handle;
   }
 
-  return play_raw(iIndex, static_cast<float>(positionless_volume * dVolume),
-                  loops);
+  return play_raw(iIndex, static_cast<float>(dVolume), loops);
 }
 
 uint32_t sound_player::play_at(size_t iIndex, int iX, int iY, int loops) {
@@ -351,7 +348,7 @@ uint32_t sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY,
   if (fDistance > camera_radius) return null_handle;
   fDistance = fDistance / camera_radius;
 
-  double fVolume = master_volume * (1.0 - fDistance * 0.8) * dVolume;
+  double fVolume = (1.0 - fDistance * 0.8) * dVolume;
 
   return play_raw(iIndex, static_cast<float>(fVolume), loops);
 }
@@ -385,8 +382,8 @@ bool sound_player::is_playing(uint32_t handle) {
   return playing_channel_for_handle(handle) >= 0;
 }
 
-void sound_player::set_sound_effect_volume(double dVolume) {
-  sound_effect_volume = dVolume;
+void sound_player::set_sound_effect_volume(float volume) {
+  sound_effect_volume = volume;
 }
 
 void sound_player::set_sound_effects_enabled(bool bOn) {
@@ -424,6 +421,7 @@ uint32_t sound_player::play_raw(size_t iIndex, float volume, int loops) {
 
   bool success = true;
 
+  volume = th::sound::linear_to_logarithmic_volume(volume);
   success &= MIX_SetTrackAudio(track, sounds[iIndex]);
   success &= MIX_SetTrackGain(track, volume);
 

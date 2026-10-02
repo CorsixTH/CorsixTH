@@ -29,8 +29,8 @@ function VomitAction:VomitAction()
 end
 
 local action_vomit_end = permanent"action_vomit_end"( function(humanoid)
-  local litter = humanoid.world:newObject("litter", humanoid.tile_x, humanoid.tile_y)
-  litter:setLitterType("puke", humanoid.last_move_direction == "south" and 0 or 1)  --For some reason the vomit is inverted.
+  humanoid.world:newLitter("puke", humanoid.tile_x, humanoid.tile_y,
+      humanoid.last_move_direction == "south" and 0 or 1)  --For some reason the vomit is inverted.
 
   humanoid:finishAction()
 end)

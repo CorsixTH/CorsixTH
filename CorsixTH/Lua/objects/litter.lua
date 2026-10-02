@@ -42,11 +42,38 @@ litter_types["soot_floor"] = 3416
 litter_types["soot_wall"] = 3408
 litter_types["soot_window"] = 3412
 
+-- Table for reverse lookup from animation set in world object
+local litter_anim_to_type = {}
+for k, v in pairs(litter_types) do
+  if type(k) == "string" then
+    litter_anim_to_type[v] = k
+  end
+end
+
 -- When randomising litter, only these should come up.
 litter_types[1] = 1894
 litter_types[2] = 1896
 litter_types[3] = 1898
 litter_types[4] = 1900
+
+-- Litter rank to decide what is shown in tile
+local litter_rank = {}
+
+-- Bio-hazard (highest)
+litter_rank["puke"] = 4
+litter_rank["dead_rat"] = 3
+litter_rank["pee"] = 2
+
+-- Random Trash (lowest)
+litter_rank["soda_can"] = 1
+litter_rank["banana"] = 1
+litter_rank["paper"] = 1
+litter_rank["bottle"] = 1
+
+-- Explosion Damage (can't be cleaned by handyman so it can't be displaced by others)
+litter_rank["soot_floor"] = 99
+litter_rank["soot_wall"] = 99
+litter_rank["soot_window"] = 99
 
 class "Litter" (Entity)
 
@@ -69,6 +96,7 @@ function Litter:setTile(x, y)
     self.world:addObjectToTile(self, x, y)
   end
 end
+
 -- Litter is an Entity and not an Object so it does not inherit this method
 -- This is an (effective) hack, see issue 918 --cgj
 function Litter:getWalkableTiles()
@@ -78,6 +106,45 @@ function Litter:getWalkableTiles()
   return tiles
 end
 
+function Litter:getRank()
+  local litter_type = litter_anim_to_type[self.animation_idx]
+  return litter_rank[litter_type]
+end
+
+--! Rank for a litter type before any Litter object exists.
+--! Accepts a type name ("puke", "soda_can", ...) or one of the numeric
+--! indices 1-4 used to pick a random piece of trash.
+--!param litter_type (string or int) The litter type to look up.
+--!return (int) Rank of that type, or 0 if unknown.
+function Litter.getRankForType(litter_type)
+  if type(litter_type) == "number" then
+    litter_type = litter_anim_to_type[litter_types[litter_type]]
+  end
+  return litter_rank[litter_type] or 0
+end
+
+--! Decide, for a tile that is about to receive new litter, what happens to the
+--! litter already on it.
+--!
+--!param objects_in_tile (array or nil) Objects currently on the tile
+--!param litter_type (string or int) Type of the litter about to be created.
+--!return (Litter or nil) Existing litter that must be removed to make room.
+--!return (bool) true if the incoming litter is outclassed and should not be
+--! created at all (the first return is then nil).
+function Litter.resolveTileRank(objects_in_tile, litter_type)
+  local incoming = Litter.getRankForType(litter_type)
+  for _, obj in ipairs(objects_in_tile or {}) do
+    if obj.object_type.id == "litter" then
+      if (obj:getRank() or 0) >= incoming then
+        return nil, true -- existing litter wins
+      end
+      return obj, false -- existing litter is outranked, displace it
+    end
+  end
+  return nil, false
+end
+
+--! Set the animation of the litter and register a cleaning task for it.
 function Litter:setLitterType(anim_type, mirrorFlag)
   if anim_type then
     local anim = litter_types[anim_type]
