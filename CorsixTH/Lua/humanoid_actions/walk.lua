@@ -198,9 +198,10 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
   local map = humanoid.world.map.th
   map:getCellFlags(x1, y1, flags_here)
   map:getCellFlags(x2, y2, flags_there)
-  local avoid = (not flags_here.avoidTile) and flags_there.avoidTile
-  local not_passable = flags_here.passable and (not flags_there.passable)
-  local obstacle_on_the_way = not_passable or avoid -- approaching avoidable or impassable tile
+  local avoid = (not flags_here.avoidTile) and flags_there.avoidTile -- approaching avoidable tile
+  local not_passable = flags_here.passable and (not flags_there.passable) -- approaching impassable tile
+  local obstacle_on_the_way = not_passable or avoid or
+      (humanoid.world:getPathDistance(x1, y1, x2, y2) ~= 1) -- path not valid anymore
 
   -- Also make sure that a room hasn't unexpectedly been built on top of the
   -- path since the route was calculated.
