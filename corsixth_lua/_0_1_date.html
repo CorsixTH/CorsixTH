@@ -93,6 +93,9 @@
  <a href="_0_1_date.html#_0_1_date_1plus_years">plusYears</a>(<span class="p">increment</span>)
  </li>
  <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1reset_day_to_first">resetDayToFirst</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_date.html#_0_1_date_1tostring">tostring</a>()
  </li>
  <li class="self">
@@ -153,7 +156,7 @@ default value is used.<br/><br/>
  <p>
  PRIVATE Adjusts the days overflows<br/><br/>
  Method to deal with day being more or less than valid value<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L322">line 322 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L333">line 333 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -161,7 +164,7 @@ default value is used.<br/><br/>
  <p>
  PRIVATE Adjusts the hours overflows<br/><br/>
  Method to deal with hour being more or less than valid value<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L304">line 304 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L315">line 315 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -169,7 +172,7 @@ default value is used.<br/><br/>
  <p>
  PRIVATE Adjusts the months overflows<br/><br/>
  Method to deal with month being more or less than valid value<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L339">line 339 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L350">line 350 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -178,7 +181,7 @@ default value is used.<br/><br/>
  PRIVATE Adjusts all the overflows<br/><br/>
  Normalize date to fix all the overflows of hours, days and months. This
 method is a key to date adjustments.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L349">line 349 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L360">line 360 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -186,7 +189,7 @@ method is a key to date adjustments.<br/><br/>
  <p>
  Clone the date<br/><br/>
  Creates another instance of date with a same value<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L244">line 244 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L255">line 255 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -194,7 +197,7 @@ method is a key to date adjustments.<br/><br/>
  <p>
  Returns the day of month<br/><br/>
  Finds out what is a current day in a date (1-31)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L170">line 170 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L181">line 181 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -221,15 +224,15 @@ method is a key to date adjustments.<br/><br/>
  <h5><a name="_0_1_date_1get_progress_in_months">function Date:getProgressInMonths()</a></h5>
  <p>
  Calculates the number of months played until a time an hour in the future. This is used in EndConditions<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L266">line 266 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L277">line 277 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_date_1hour_of_day">function Date:hourOfDay()</a></h5>
  <p>
  Returns the hour of the day<br/><br/>
- Finds out what is an hour of this date starting on 0<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L190">line 190 of Lua/date.lua</a>.
+ Finds out what is an hour of this date starting on 0 up to 49<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L201">line 201 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -247,7 +250,7 @@ method is a key to date adjustments.<br/><br/>
  Checks if date is a last day of a month<br/><br/>
  Finds out if the current day is a last day in current month with respect to
 different month lengths.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L210">line 210 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L221">line 221 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -256,7 +259,7 @@ different month lengths.<br/><br/>
  Checks if date is a last day of a year<br/><br/>
  Finds out if the current day is a last day in current month and current month
 is a last month in a year.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L221">line 221 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L232">line 232 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -273,7 +276,7 @@ is a last month in a year.<br/><br/>
  <td class="d"> The other day to be compared</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L254">line 254 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L265">line 265 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -292,7 +295,7 @@ is also the number of days within a month. Ignores leap years.<br/><br/>
  Returns the number of months started since the start of the game. This
 converts all the years to months and add them together with the started
 months.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L232">line 232 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L243">line 243 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -300,7 +303,7 @@ months.<br/><br/>
  <p>
  Returns the month of year<br/><br/>
  Finds out what is a month of this year (1-12)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L160">line 160 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L171">line 171 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -317,7 +320,7 @@ months.<br/><br/>
  <td class="d"> number to adjust, can be negative</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L121">line 121 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L132">line 132 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -334,7 +337,7 @@ months.<br/><br/>
  <td class="d"> number to adjust, can be negative</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L147">line 147 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L158">line 158 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -351,7 +354,7 @@ months.<br/><br/>
  <td class="d"> number to adjust, can be negative</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L108">line 108 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L119">line 119 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -368,7 +371,15 @@ months.<br/><br/>
  <td class="d"> number to adjust, can be negative</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L134">line 134 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L145">line 145 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1reset_day_to_first">function Date:resetDayToFirst()</a></h5>
+ <p>
+ Returns the first day of the current month<br/><br/>
+ This method finds the first day for current month of self.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L108">line 108 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -376,7 +387,7 @@ months.<br/><br/>
  <p>
  Return string representation<br/><br/>
  Returns string representation of the date in format y-mm-ddThh<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L200">line 200 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L211">line 211 of Lua/date.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -384,7 +395,7 @@ months.<br/><br/>
  <p>
  Returns the year<br/><br/>
  Finds out what is a current year of this date (1-X)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L180">line 180 of Lua/date.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L191">line 191 of Lua/date.lua</a>.
  </p>
  </div>
 </div>
