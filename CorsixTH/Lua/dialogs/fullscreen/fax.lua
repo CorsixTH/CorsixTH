@@ -269,6 +269,7 @@ function UIFax:validate()
     -- Original game cheat code
     self.ui.adviser:say(_A.cheats.th_cheat)
     self.ui:addWindow(UICheats(self.ui))
+    self.ui.menu_bar:unlockCheats(self.ui.app)
   elseif code == "112" then
     -- simple, unobfuscated cheat for everyone :)
     -- not that critical, but we want to make to make sure it's played fairly soon

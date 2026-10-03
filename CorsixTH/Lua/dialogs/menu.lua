@@ -853,7 +853,6 @@ function UIMenuBar:makeGameMenu(app)
       :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui:addWindow(UIMakeDebugPatient(self.ui)) end)
       :appendItem(_S.menu_debug.make_debug_rat, function() self.ui:makeDebugRat() end)
-      :appendItem(_S.menu_debug.cheats:format(hotkey_value_label("ingame_showCheatWindow", hotkeys)),             function() self.ui:addWindow(UICheats(self.ui)) end)
       :appendItem(_S.menu_debug.lua_console:format(hotkey_value_label("global_showLuaConsole", hotkeys)),        function() self.ui:addWindow(UILuaConsole(self.ui)) end)
       :appendItem(_S.menu_debug.debug_script:format(hotkey_value_label("global_runDebugScript", hotkeys)),       function() self.ui:runDebugScript() end)
       :appendItem(_S.menu_debug.calls_dispatcher,   function() self.ui:addWindow(UICallsDispatcher(self.ui)) end)
@@ -875,5 +874,12 @@ function UIMenuBar:makeGameMenu(app)
       )
       :appendItem(_S.menu_debug.sprite_viewer, function() corsixth.require("sprite_viewer")() end)
     )
+    self:unlockCheats(app)
   end
+end
+
+function UIMenuBar:unlockCheats(app)
+  self:addMenu(_S.menu.cheats_title, UIMenu():
+  appendItem(_S.menu.cheats:format(hotkey_value_label("ingame_showCheatWindow", app.hotkeys)),
+    function() self.ui:addWindow(UICheats(self.ui)) end))
 end
