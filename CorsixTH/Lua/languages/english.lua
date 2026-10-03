@@ -153,7 +153,11 @@ tooltip.casebook.cure_type.unknown = "You do not yet know how to treat this dise
 tooltip.research_policy.no_research = "No research is being carried out in this category at the moment"
 tooltip.research_policy.research_progress = "Progress towards the next discovery in this category: %1%/%2%"
 
-menu["player_count"] = "PLAYER COUNT"
+menu = {
+  player_count = "PLAYER COUNT",
+  cheats_title = "CHEATS",
+  cheats       = "  (%1%) CHEATS  ",
+}
 
 menu_file = {
   load =    "  (%1%) LOAD  ",
@@ -221,7 +225,6 @@ menu_debug = {
   make_debug_fax              = "  MAKE DEBUG FAX  ",
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
   make_debug_rat              = "  MAKE DEBUG RAT  ",
-  cheats                      = "  (%1%) CHEATS  ",
   lua_console                 = "  (%1%) LUA CONSOLE  ",
   debug_script                = "  (%1%) RUN DEBUG SCRIPT  ",
   calls_dispatcher            = "  CALLS DISPATCHER  ",
