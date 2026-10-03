@@ -37,7 +37,7 @@ elseif(MSVC)
   set(CORSIX_TH_DATADIR CorsixTH)
   set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_INTERPRETER_NAME})
 elseif(APPLE)
-  set(CORSIX_TH_DATADIR CorsixTH.app/Contents/Resources/)
+  set(CORSIX_TH_DATADIR CorsixTH.app/Contents/Resources)
   set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_PREFIX}/${CORSIX_TH_DATADIR}/${CORSIX_TH_INTERPRETER_NAME})
 else()
   set(CORSIX_TH_DATADIR ${CMAKE_INSTALL_DATADIR}/corsix-th)
@@ -372,6 +372,15 @@ else()
 endif()
 target_link_libraries(CorsixTH_lib PRIVATE "${CORSIXTH_ZSTD_TARGET}")
 
+# Fetch the CommunityContent levels and campaigns
+include(FetchContent)
+FetchContent_Declare(
+    community_content
+    GIT_REPOSITORY https://github.com/CorsixTH/CommunityContent
+    GIT_TAG        main
+)
+FetchContent_MakeAvailable(community_content)
+
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
   # Do not generate launch script. The default is fine for this case.
@@ -474,6 +483,11 @@ if(NOT USE_SOURCE_DATADIRS)
     )
   endif()
 
+  install(DIRECTORY "${community_content_SOURCE_DIR}/Levels/"
+          DESTINATION "${CORSIX_TH_DATADIR}/Levels")
+  
+  install(DIRECTORY "${community_content_SOURCE_DIR}/Campaigns/"
+          DESTINATION "${CORSIX_TH_DATADIR}/Campaigns")
   if(APPLE)
     # Fix the macOS bundle to include required libraries (create a redistributable app)
     install(
