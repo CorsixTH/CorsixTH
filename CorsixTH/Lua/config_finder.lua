@@ -699,7 +699,7 @@ param(config_values, 'midi_sysex_master_volume') .. [=[
 -------------------------------------------------------------------------------
 -- Debug settings.
 -- If set to true more detailed information will be printed in the terminal
--- and a debug menu will be visible.
+-- and ingame menus for debug and cheats will be visible.
 --]=] .. '\n' ..
 param(config_values, 'debug') .. [=[
 

@@ -482,6 +482,11 @@ function UIMenuBar:calculateMenuSize(menu)
   end
 end
 
+--!param id (number) The Nth menu
+function UIMenuBar:removeMenu(id)
+  table.remove(self.menus, id)
+end
+
 class "UIMenu"
 
 ---@type UIMenu
@@ -853,7 +858,6 @@ function UIMenuBar:makeGameMenu(app)
       :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui:addWindow(UIMakeDebugPatient(self.ui)) end)
       :appendItem(_S.menu_debug.make_debug_rat, function() self.ui:makeDebugRat() end)
-      :appendItem(_S.menu_debug.cheats:format(hotkey_value_label("ingame_showCheatWindow", hotkeys)),             function() self.ui:addWindow(UICheats(self.ui)) end)
       :appendItem(_S.menu_debug.lua_console:format(hotkey_value_label("global_showLuaConsole", hotkeys)),        function() self.ui:addWindow(UILuaConsole(self.ui)) end)
       :appendItem(_S.menu_debug.debug_script:format(hotkey_value_label("global_runDebugScript", hotkeys)),       function() self.ui:runDebugScript() end)
       :appendItem(_S.menu_debug.calls_dispatcher,   function() self.ui:addWindow(UICallsDispatcher(self.ui)) end)
@@ -876,4 +880,16 @@ function UIMenuBar:makeGameMenu(app)
       :appendItem(_S.menu_debug.sprite_viewer, function() corsixth.require("sprite_viewer")() end)
     )
   end
+  self:unlockCheats()
+end
+
+function UIMenuBar:unlockCheats()
+  local app = self.ui.app
+  local id = app.config.debug and 5 or 4
+  self:removeMenu(id)
+  if not (app.config.debug or app.cheats_menu_unlocked) then return end
+  self:addMenu(_S.menu.cheats_title, UIMenu()
+    :appendItem(_S.menu.cheats:format(hotkey_value_label("ingame_showCheatWindow", app.hotkeys)),
+      function() self.ui:addWindow(UICheats(self.ui)) end))
+  app.cheats_menu_unlocked = true
 end
