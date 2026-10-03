@@ -79,6 +79,11 @@ struct midi_token {
   midi_token(int time, uint8_t type) : time(time), type(type) {}
 };
 
+//! Order two tokens for playback.
+//!
+//! Tokens are ordered by time. Tokens which share a timestamp are ordered
+//! with note offs before note ons, so that a note ending exactly where the
+//! next note of the same pitch begins does not silence its successor.
 bool operator<(const midi_token& oLeft, const midi_token& oRight);
 
 using midi_token_list = std::vector<midi_token>;
