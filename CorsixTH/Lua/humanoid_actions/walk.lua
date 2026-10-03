@@ -199,7 +199,9 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
   map:getCellFlags(x1, y1, flags_here)
   map:getCellFlags(x2, y2, flags_there)
   local avoid = (not flags_here.avoidTile) and flags_there.avoidTile
-  local not_passable = flags_here.passable and (not flags_there.passable)
+  -- A wall ahead counts as an obstacle even when standing on an
+  -- unpassable tile (fix #3331: covered humanoid walked the stale path).
+  local not_passable = (not flags_there.passable)
   local obstacle_on_the_way = not_passable or avoid -- approaching avoidable or impassable tile
 
   -- Also make sure that a room hasn't unexpectedly been built on top of the
@@ -225,18 +227,16 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
   end
 
   if obstacle_on_the_way then
-    if map:getCellFlags(x1, y1).passable then
-      humanoid:setTilePositionSpeed(x1, y1)
-      if action.on_next_tile_set then
-        action.on_next_tile_set()
-      end
-      if action.trimmed then -- request new route
-        humanoid:finishAction(action)
-        return
-      end
-      -- find new path
-      return action:on_restart(humanoid)
+    humanoid:setTilePositionSpeed(x1, y1)
+    if action.on_next_tile_set then
+      action.on_next_tile_set()
     end
+    if action.trimmed then -- request new route
+      humanoid:finishAction(action)
+      return
+    end
+    -- find new path (also from unpassable tiles: escape or idle, #3331)
+    return action:on_restart(humanoid)
   end
 
   -- on_next_tile_set can be set in the call to action_walk_raw, but it is
