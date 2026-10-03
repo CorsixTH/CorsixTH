@@ -37,7 +37,7 @@ elseif(MSVC)
   set(CORSIX_TH_DATADIR CorsixTH)
   set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_INTERPRETER_NAME})
 elseif(APPLE)
-  set(CORSIX_TH_DATADIR CorsixTH.app/Contents/Resources/)
+  set(CORSIX_TH_DATADIR CorsixTH.app/Contents/Resources)
   set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_PREFIX}/${CORSIX_TH_DATADIR}/${CORSIX_TH_INTERPRETER_NAME})
 else()
   set(CORSIX_TH_DATADIR ${CMAKE_INSTALL_DATADIR}/corsix-th)
@@ -349,6 +349,17 @@ if(FETCH_UNICODE_FONT)
   endif()
 endif()
 
+if(FETCH_COMMUNITY_CONTENT)
+  # Fetch the CommunityContent levels and campaigns
+  include(FetchContent)
+  FetchContent_Declare(
+      community_content
+      GIT_REPOSITORY https://github.com/CorsixTH/CommunityContent
+      GIT_TAG        main
+  )
+  FetchContent_MakeAvailable(community_content)
+endif()
+
 if(WITH_TRACY)
   # If tracy is compiled on a machine with rocprofiler installed it
   # automatically adds it as a dependency. Using an optional find_package
@@ -461,6 +472,10 @@ if(NOT USE_SOURCE_DATADIRS)
   endif()
   if(FETCH_UNICODE_FONT)
     install(FILES ${GONOTO_FILE} DESTINATION ${CORSIX_TH_DATADIR})
+  endif()
+  if(FETCH_COMMUNITY_CONTENT)
+    install(DIRECTORY "${community_content_SOURCE_DIR}/Levels/" DESTINATION "${CORSIX_TH_DATADIR}/Levels")
+    install(DIRECTORY "${community_content_SOURCE_DIR}/Campaigns/" DESTINATION "${CORSIX_TH_DATADIR}/Campaigns")
   endif()
 
   if(UNIX AND NOT APPLE)
