@@ -7,6 +7,10 @@ type: Enhancement
 ### Questions
 # What is wanted?
 body:
+  - type: markdown 
+    attributes:
+      value: |
+        **If other people like your idea, they can give this ticket a thumbs up! 👍**
   - type: textarea
     id: subjectof
     attributes:
