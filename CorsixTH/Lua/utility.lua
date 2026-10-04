@@ -599,6 +599,19 @@ function canOpenDirectory(path)
   -- (it does the same job of the "isDirectory()" function, but also checks if the directory can be opened)
 end
 
+--! Open a URL shown in game in the OS's web browser, tailored to each OS variant
+--!param url(string) Web address to navigate to
+function openURL(url)
+  local platform = TheApp.os
+  if platform == "windows" then
+    os.execute(string.format('start "" "%s"', url))
+  elseif platform == "macos" then
+    os.execute(string.format('open "%s"', url))
+  else -- Unix like
+    os.execute(string.format('xdg-open "%s"', url))
+  end
+end
+
 -- Tracy Profiler stubs
 if not tracy then
   local function noop() end

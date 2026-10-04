@@ -34,7 +34,7 @@ globals = { -- Globals
             "staff_initials_cache", "hasBit", "bitOr", "inspect",
             "getRandomEntryFromArray", "isTableEmpty",
             "stripTrailingSlashes", "isDirectory",
-            "canOpenDirectory", "tracy",
+            "canOpenDirectory", "openURL", "tracy",
 
             -- Game classes
             "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
