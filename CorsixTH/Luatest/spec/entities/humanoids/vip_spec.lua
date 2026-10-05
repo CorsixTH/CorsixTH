@@ -221,6 +221,12 @@ describe("Vip", function()
 
     local base_vips = vip.hospital.num_vips_ty
 
+    -- Pin the starting rating. Vip:Vip picks it at random (12 - math.random(0,5)),
+    -- and setVIPRating only adjusts it, so the expected values below are keyed to
+    -- a base of 12. Without this the test passes only when the roll comes up
+    -- best, which is one run in six.
+    vip.vip_rating = 12
+
     -- Calculate VIP rating
     vip:setVIPRating()
 
