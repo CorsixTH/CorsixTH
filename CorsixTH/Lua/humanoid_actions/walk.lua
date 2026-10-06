@@ -288,10 +288,43 @@ navigateDoor = function(humanoid, x1, y1, dir)
     swinging = true
     door = humanoid.world:getObject(dx, dy, "swing_door_right")
   end
-  door.queue:unexpect(humanoid)
-  door:updateDynamicInfo()
   local room = door:getRoom()
   local is_entering_room = room and humanoid:getRoom() ~= room
+
+  --! Send a humanoid that has arrived at a destroyed room somewhere else.
+  -- A crashed room discards its door queue (Door:closeDoor) and deactivates
+  -- itself, so nobody may enter it and there is nothing to queue on. This mirrors
+  -- what Room:crashRoom already does for a humanoid holding a reservation, and
+  -- what Queue:rerouteAllPatients does for one already queuing.
+  local function rerouteFromDestroyedRoom()
+    if class.is(humanoid, Patient) and is_entering_room then
+      -- Idle first, so that the room is really gone before SeekRoom searches for
+      -- a replacement, as Room:crashRoom does.
+      humanoid:setNextAction(IdleAction():setCount(1))
+      humanoid:queueAction(SeekRoomAction(room.room_info.id))
+    else
+      -- Staff, and anything else that does not enter rooms, just wanders off.
+      humanoid:setNextAction(MeanderAction())
+    end
+
+    -- Then drop the walk itself. Humanoid:setNextAction skips over any action
+    -- which must happen, and a walk always must once started, so all the above
+    -- has done is flag the walk for interruption and queue the replacement behind
+    -- it. Without this the walk to the destroyed room stays as the current action
+    -- and the humanoid keeps trying to reach it forever. Room:crashRoom relies on
+    -- the same call to clear the humanoid holding the door reservation.
+    if humanoid:getCurrentAction() == action then
+      humanoid:finishAction(action)
+    end
+  end
+
+  if not door.queue then
+    rerouteFromDestroyedRoom()
+    return
+  end
+
+  door.queue:unexpect(humanoid)
+  door:updateDynamicInfo()
 
   if class.is(humanoid, Staff) and is_entering_room and
       not class.is(humanoid, Handyman) then
