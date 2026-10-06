@@ -95,7 +95,15 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
   if high_priority then
     local timer_function = humanoid.timer_function
     humanoid:setTimer(nil)
-    timer_function(humanoid)
+    -- There may be no timer pending. Entity:tick clears timer_function as soon as
+    -- a timer fires, so a walk which has just finished a step, or was force
+    -- finished by Room:crashRoom, has none. There is then nothing to run, and
+    -- Humanoid:setNextAction has already flagged the action for interruption, so
+    -- it gets replaced on its own. #3566 as an example of calling the nil function
+    -- in such a case.
+    if timer_function then
+      timer_function(humanoid)
+    end
   end
 
   if action.walking_to_vaccinate then
