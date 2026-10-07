@@ -218,6 +218,10 @@ Section "MainSection" SEC01
     CreateDirectory "$INSTDIR\Lua"
   ${EndIf}
 
+  ; Delete soundfonts before installing the current one
+  Delete "$INSTDIR\FluidR3_GM.sf2"
+  Delete "$INSTDIR\FluidR3.sf3"
+
   ${If} ${RunningX64}
     File /nonfatal /r x64\*.*
   ${Else}
