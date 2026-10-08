@@ -5,7 +5,7 @@
 ##### [Matrix Space](https://matrix.to/#/#CorsixTH:matrix.org) | [Matrix Chat](https://matrix.to/#/#corsixth-general:matrix.org) | [Discord](https://discord.gg/Mxeztvh) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new) | [Reddit](https://www.reddit.com/r/corsixth) | [Twitter/X](https://twitter.com/CorsixTH) | [Facebook](https://facebook.com/CorsixTH)
 ----
 
-A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original, CorsixTH adds support for modern operating systems (Windows, macOS, Linux and BSD), high resolutions and much more.
+A faithful reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original, CorsixTH adds support for modern operating systems (Windows, macOS, Linux and BSD), high resolutions and much more.
 
 <picture>![image](https://github.com/CorsixTH/CorsixTH/assets/20030128/71a42d5f-d486-4309-ba85-77e114880bcb)</picture>
 
