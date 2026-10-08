@@ -14,11 +14,12 @@
 
 # Dependency resolution
 #   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
-#   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
-#   - FETCH_CATCH2 : Use FetchContent to obtain Catch2 if ENABLE_UNIT_TESTS=yes
-#   - FETCH_SOUNDFONT : Use FetchContent to download a soundfont to use (no)
-#   - FETCH_UNICODE_FONT: Use FetchContent to download the GoNoto Unicode font (no)
-#   - FETCH_SDL_MIXER: Use FetchContent to download SDL3_Mixer
+#   - WITH_LUAROCKS : Install required luarocks in the macOS app (no, apple only, requires luarocks)
+#   - FETCH_CATCH2 : Use FetchContent to obtain Catch2 if ENABLE_UNIT_TESTS=yes (no)
+#   - FETCH_SOUNDFONT : Download a soundfont to use (no)
+#   - FETCH_UNICODE_FONT: Download the GoNoto Unicode font (no)
+#   - FETCH_SDL_MIXER: Use FetchContent to download SDL3_Mixer (no)
+#   - FETCH_COMMUNITY_CONTENT: Use FetchContent to download the CommunityContent repository (no)
 
 # Tests and debug options
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
@@ -46,6 +47,7 @@ option(WITH_TRACY "Build with Tracy profiling enabled" OFF)
 option(FETCH_SOUNDFONT "Download soundfont asset" OFF)
 option(FETCH_UNICODE_FONT "Download GoNoto Unicode font" OFF)
 option(FETCH_SDL_MIXER "Download SDL3_mixer" OFF)
+option(FETCH_COMMUNITY_CONTENT "Download CorsixTH's Community Content" OFF)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
