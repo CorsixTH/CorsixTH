@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "../Src/lua.hpp"
-#include "../Src/th_lua.h"
+#include "lua.hpp"
+#include "th_lua.h"
 
 TEST_CASE("luaT_rotate works", "[luaT_rotate]") {
   lua_state_unique_ptr L(luaL_newstate());

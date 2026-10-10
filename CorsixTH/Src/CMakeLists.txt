@@ -70,5 +70,6 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.h
     ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
 )
+target_include_directories(CorsixTH_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_sources(CorsixTH PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${CMAKE_CURRENT_SOURCE_DIR}/main.h)
