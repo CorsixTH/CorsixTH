@@ -1787,7 +1787,8 @@ end
 --! Setup an animated floating money amount above a patient.
 --!param patient Patient to float above.
 --!param amount Amount of money to display.
-function World:newFloatingDollarSign(patient, amount)
+--!param insurance (boolean) Whether the money was paid by an insurance company.
+function World:newFloatingDollarSign(patient, amount, insurance)
   if self.free_build_mode or patient.hospital ~= self:getLocalPlayerHospital() then
     return
   end
@@ -1797,7 +1798,7 @@ function World:newFloatingDollarSign(patient, amount)
   local spritelist = TH.spriteList()
   spritelist:setPosition(-17, -60)
   spritelist:setSpeed(0, -1):setLifetime(100)
-  spritelist:setSheet(TheApp.gfx:loadSpriteTable("Data", "Money01V"))
+  spritelist:setSheet(TheApp.gfx:getMoneySpriteTable(insurance))
   spritelist:setUseIntermediateBuffer()
   spritelist:append(1, 0, 0)
   local len = #("%i"):format(amount)

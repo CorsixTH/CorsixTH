@@ -1441,7 +1441,7 @@ function Hospital:receiveMoneyForTreatment(patient)
       self:receiveMoney(amount, reason)
     end
     casebook.money_earned = casebook.money_earned + amount
-    patient.world:newFloatingDollarSign(patient, amount)
+    patient.world:newFloatingDollarSign(patient, amount, patient.insurance_company ~= nil)
     patient.pay_amount = 0
   end
 end
