@@ -77,6 +77,7 @@ function Graphics:Graphics(app, gfx_set, charset)
     tabled = {},
     palette = {},
     palette_greyscale_ghost = {},
+    money_insurance_palette = nil,
     ghosts = {},
     anims = {},
     language_fonts = {},
@@ -859,8 +860,76 @@ function Graphics:loadAnimations(dir, prefix)
   return anims
 end
 
+--! Build a copy of the main palette with green hues rotated to blue.
+--!
+--!return (palette) The shifted palette
+function Graphics:_makeBluePalette()
+  -- Only entries where green clearly leads the other channels are touched, so
+  -- anything else - greys and the black background of the art in particular -
+  -- is left exactly as it was. A plain "green is not less than red and blue"
+  -- test would sweep up every neutral grey in the palette as well.
+  --
+  -- How far green has to lead the other channels, in six-bit units, before an
+  -- entry counts as green rather than as a neutral.
+  local green_lead = 4
+  local data = self.app:readDataFile("Data", "MPalette.dat")
+  if #data ~= 256 * 3 then
+    error("Unexpected MPalette.dat length: " .. #data)
+  end
+  local shifted = {}
+  for i = 0, 255 do
+    local o = i * 3 + 1
+    local r, g, b = data:byte(o, o + 2)
+    if g >= r + green_lead and g >= b + green_lead then
+      -- Carries the green channel's brightness onto blue, with enough red and
+      -- green to keep the hue reading as blue rather than pure primary.
+      shifted[#shifted + 1] = string.char(
+        math.min(63, math.floor(g * 0.35)),
+        math.min(63, math.floor(g * 0.55)),
+        g)
+    else
+      shifted[#shifted + 1] = string.char(r, g, b)
+    end
+  end
+  local palette = TH.palette(table.concat(shifted), false)
+  -- MPalette.dat is loaded with a transparent 255th entry, so match that.
+  palette:setEntry(255, 0xFF, 0x00, 0xFF)
+  return palette
+end
+
+--! The sprite sheet for floating banknote above a patient.
+--!
+--! Payments made through an insurance company are drawn in blue so that
+--! a player can tell at a glance that the money will not be directly
+--! credited to the balance. Original banknote art; only its palette differs.
+--!param insurance (boolean) Whether the payment went through insurance
+--!return (sheet) The sprite sheet to draw the amount with
+function Graphics:getMoneySpriteTable(insurance)
+  if not insurance then
+    return self:loadSpriteTable("Data", "Money01V")
+  end
+  local palette = self.cache.money_insurance_palette
+  if not palette then
+    palette = self:_makeBluePalette()
+    self.cache.money_insurance_palette = palette
+  end
+  return self:loadSpriteTable("Data", "Money01V", nil, palette)
+end
+
+--! Load a sprite table, optionally with a palette of its own.
+--!
+--!param dir (string) The directory of the sheet relative to the HOSPITAL directory
+--!param name (string) The name of the sheet file
+--!param complex (boolean) Whether the sheet needs the complex loading path
+--!param palette (palette) Palette to draw the sheet with, or nil for the default
+--!return (sheet) The loaded sprite sheet
 function Graphics:loadSpriteTable(dir, name, complex, palette)
-  local cached = self.cache.tabled[name]
+  -- A sheet with a custom palette is a distinct sheet from the same-named sheet
+  -- drawn with the default one, so the cache is keyed by palette as well as by
+  -- name. Without that, asking for the same art in two colours would hand back
+  -- whichever was loaded first and silently ignore the second palette.
+  local cache_key = palette and (name .. "\0" .. tostring(palette)) or name
+  local cached = self.cache.tabled[cache_key]
   if cached then
     return cached
   end
@@ -879,7 +948,7 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   sheet_reloader(sheet)
 
   if name ~= "SPointer" then
-    self.cache.tabled[name] = sheet
+    self.cache.tabled[cache_key] = sheet
   end
   self.load_info[sheet] = {self.loadSpriteTable, self, dir, name, complex, palette}
   return sheet
