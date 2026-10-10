@@ -1269,6 +1269,7 @@ function App:errorHandler(last_dispatch_type, st)
 
     self.ui:addWindow(UIFatalError(
       self.ui,
+      self.world.game_date:dayOfMonth(),
       self.world.game_date:monthOfYear(),
       self.gamelog_path,
       can_reset
