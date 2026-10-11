@@ -26,7 +26,9 @@ SOFTWARE.
 #include <fluidsynth.h>
 
 #include <array>
+#include <atomic>
 #include <string>
+#include <thread>
 
 namespace th::fluid {
 constexpr SDL_AudioFormat audio_format = SDL_AUDIO_F32;
@@ -84,6 +86,8 @@ class fluid_player {
   SDL_AudioStream* audio_stream;
   std::array<float, th::fluid::audio_channels * th::fluid::period_size>
       buffer{};
+  std::thread wait_for_track_thread{};
+  std::atomic_flag stopped_manually{};
 };
 
 #endif  // CORSIXTH_TOP_LEVEL_FLUID_PLAYER_H
