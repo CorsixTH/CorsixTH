@@ -259,7 +259,7 @@ function StaffProfile:getFairWage()
 end
 
 function StaffProfile:getRiseAmount()
-  local rise_amount = math.floor(math.max(self.wage * 1.1, (self:getFairWage(self.world) + self.wage) / 2) - self.wage)
+  local rise_amount = math.floor(math.max(self.wage * 1.1, (self:getFairWage() + self.wage) / 2) - self.wage)
   return rise_amount
 end
 

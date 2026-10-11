@@ -752,7 +752,7 @@ function Button:setPosition(x, y)
   self.x = x
   self.y = y
   if self.tooltip then
-    self.tooltip.tooltip_x = math.round((self.x + self.r) / 2, 1)
+    self.tooltip.tooltip_x = round((self.x + self.r) / 2, 1)
     self.tooltip.tooltip_y = self.y
   end
 end
@@ -765,7 +765,7 @@ function Button:setSize(width, height)
   self.r = self.x + width
   self.b = self.y + height
   if self.tooltip then
-    self.tooltip.tooltip_x = math.round((self.x + self.r) / 2, 1)
+    self.tooltip.tooltip_x = round((self.x + self.r) / 2, 1)
     self.tooltip.tooltip_y = self.y
   end
 end
