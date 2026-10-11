@@ -310,7 +310,10 @@ function CallsDispatcher:findSuitableStaff(call)
     self:executeCall(call, min_staff)
     return true
   else
-    if debug_enabled then CallsDispatcher.dumpCall(call, 'queued') self:dump(self.call_queue) end
+    if debug_enabled then
+      CallsDispatcher.dumpCall(call, 'queued')
+      self:dump()
+    end
     self:onChange()
     return false
   end
