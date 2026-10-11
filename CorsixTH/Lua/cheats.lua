@@ -136,7 +136,8 @@ end
 
 --! Toggles the possibility of epidemics. Cancel any ongoing or preparing epidemics.
 function Cheats:cheatToggleEpidemic()
-  local hosp, msg = self.hospital
+  local hosp = self.hospital
+  local msg
   if hosp.epidemics_disabled then
     msg = _S.misc.epidemics_on
   else
@@ -153,7 +154,8 @@ end
 
 --! Toggles the possibility of earthquakes
 function Cheats:cheatToggleEarthquake()
-  local world, msg = self.hospital.world
+  local world = self.hospital.world
+  local msg
   if world.earthquake.disabled then
     msg = _S.misc.earthquakes_on
   else

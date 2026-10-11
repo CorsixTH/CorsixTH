@@ -734,7 +734,8 @@ function Audio:playBackgroundTrack(index)
         if music_data == nil then
           info.enabled = false
           self:updatePlaylistPreferences()
-          local name, msg = (info.filename_music or info.filename)
+          local name = (info.filename_music or info.filename)
+          local msg
           if not self.warned and TheApp.ui then -- Warn once per session
             TheApp.ui:addWindow(UIInformation(TheApp.ui, {_S.errors.music}))
             self.warned = true
