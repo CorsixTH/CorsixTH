@@ -535,14 +535,14 @@ function Window:addWindow(window)
     table.insert(self.windows, 1, window)
   else
     -- Normal windows, are added in the first position after on_top windows
-    local pos = false
+    local pos = 0
     for i = 1, #self.windows do
       if not self.windows[i].on_top then
         pos = i
         break
       end
     end
-    pos = pos or #self.windows + 1
+    pos = pos > 0 and pos or #self.windows + 1
     table.insert(self.windows, pos, window)
   end
 end

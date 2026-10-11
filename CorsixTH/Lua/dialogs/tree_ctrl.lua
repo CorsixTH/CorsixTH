@@ -234,7 +234,7 @@ function FileTreeNode:getMostRecentlyModifiedChildFile(file_name_filter)
       -- 2. Get the most recently modified root directory file which matches the name filter:
       local matches_filter = true
       if(file_name_filter) then
-        matches_filter = string.find(root_child:getLabel(), file_name_filter)
+        matches_filter = not not string.find(root_child:getLabel(), file_name_filter)
       end
       -- End this for loop to begin step B:
       if matches_filter then

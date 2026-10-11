@@ -166,9 +166,9 @@ function UICasebook:updateIcons()
       self.not_curable.visible = true
 
       -- Strings for the tooltip
-      local research = false
-      local build = false
-      local staff = false
+      local research
+      local build
+      local staff
       -- Room requirements
       for _, room_id in ipairs(req.rooms) do
         -- Not researched yet?

@@ -177,7 +177,6 @@ function PlayerHospital:_adviseBenches()
   while index <= num_sitting_ratios do
     local ratio = self.adviser_data.sitting_ratios[index]
     if ratio == nil then
-      sum_ratios = nil
       break
     else
       sum_ratios = sum_ratios + ratio
@@ -186,7 +185,7 @@ function PlayerHospital:_adviseBenches()
     index = index + 1
   end
 
-  if sum_ratios ~= nil then -- Sufficient data available.
+  if sum_ratios ~= 0 then -- Sufficient data available.
     local ratio = sum_ratios / num_sitting_ratios
     if ratio < 0.7 then -- At least 30% standing.
       local bench_advice = {
