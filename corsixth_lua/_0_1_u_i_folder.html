@@ -32,8 +32,21 @@
 <div class="method_list">
  <h4>Method Index</h4>
  <ul>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1__button_pressed">_buttonPressed</a>(<span class="p">setting</span>, <span class="p">func</span>, <span class="p">info</span>)
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1__get_button_label">_getButtonLabel</a>(<span class="p">value</span>, <span class="p">name</span>, <span class="p">custom_labels</span>, <span class="p">default_string</span>)
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ </li>
  <li class="self">
  <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1__get_option_y_pos">_getOptionYPos</a>()
+ (overrides <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1__get_option_y_pos">UIResizable:_getOptionYPos</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1__start_new_column">_startNewColumn</a>()
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>, <span class="p">apply_ui_scale</span>)
@@ -71,8 +84,13 @@
  <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1build_dialog">buildDialog</a>()
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ </li>
  <li class="self">
  <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1button_back">buttonBack</a>()
+ (overrides <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1button_back">UIResizable:buttonBack</a>)
  </li>
  <li class="self">
  <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1button_browse_for_audio__music">buttonBrowseForAudio_music</a>()
@@ -92,6 +110,10 @@
  <li class="self">
  <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1close">close</a>()
  (overrides <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1create_options_element">createOptionsElement</a>(<span class="p">option_label</span>, <span class="p">option_tooltip</span>, <span class="p">setting_label</span>, <span class="p">setting_tooltip</span>, <span class="p">setting_colours</span>, <span class="p">callback</span>, <span class="p">toggle_state</span>, <span class="p">default_value</span>, <span class="p">reset_func</span>)
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
@@ -276,7 +298,13 @@
  <li><span class="p">apply_ui_scale</span>
  (*)
  </li>
+ <li><span class="p">autoclip</span>
+ (*)
+ </li>
  <li><span class="p">background_panel</span>
+ (*)
+ </li>
+ <li><span class="p">big_button_height</span>
  (*)
  </li>
  <li><span class="p">blink_counter</span>
@@ -291,7 +319,13 @@
  <li><span class="p">border_sprites</span>
  (*)
  </li>
+ <li><span class="p">btn_height</span>
+ (*)
+ </li>
  <li><span class="p">btn_repeat_delay</span>
+ (*)
+ </li>
+ <li><span class="p">btn_width</span>
  (*)
  </li>
  <li><span class="p">built_in_font</span>
@@ -308,10 +342,16 @@
  <li><span class="p">colour</span>
  (*)
  </li>
+ <li><span class="p">column_count</span>
+ (*)
+ </li>
  <li><span class="p">cursor_x</span>
  (*)
  </li>
  <li><span class="p">cursor_y</span>
+ (*)
+ </li>
+ <li><span class="p">custom_back_button</span>
  (*)
  </li>
  <li><span class="p">default_button_sound</span>
@@ -322,7 +362,13 @@
  <li><span class="p">dragging</span>
  (*)
  </li>
+ <li><span class="p">entry_list</span>
+ (*)
+ </li>
  <li><span class="p">esc_closes</span>
+ </li>
+ <li><span class="p">extra_height</span>
+ (*)
  </li>
  <li><span class="p">fonts_panel</span>
  </li>
@@ -333,6 +379,18 @@
  (*)
  </li>
  <li><span class="p">key_handlers</span>
+ (*)
+ </li>
+ <li><span class="p">label_height</span>
+ (*)
+ </li>
+ <li><span class="p">label_width</span>
+ (*)
+ </li>
+ <li><span class="p">labels</span>
+ (*)
+ </li>
+ <li><span class="p">margin</span>
  (*)
  </li>
  <li><span class="p">min_height</span>
@@ -358,6 +416,9 @@
  <li><span class="p">parent</span>
  (*)
  </li>
+ <li><span class="p">reload</span>
+ (*)
+ </li>
  <li><span class="p">resizable</span>
  </li>
  <li><span class="p">saves_panel</span>
@@ -365,6 +426,9 @@
  <li><span class="p">screenshots_panel</span>
  </li>
  <li><span class="p">scrollbars</span>
+ (*)
+ </li>
+ <li><span class="p">strings_ref</span>
  (*)
  </li>
  <li><span class="p">textboxes</span>
@@ -388,6 +452,9 @@
  (*)
  </li>
  <li><span class="p">x_original</span>
+ (*)
+ </li>
+ <li><span class="p">x_pos</span>
  (*)
  </li>
  <li><span class="p">y</span>
@@ -426,12 +493,14 @@
  - Calculates the Y position for the dialog box in the option menu
 and increments along the current position for the next element
 @return The Y position to place the element at<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1__get_option_y_pos">UIResizable:_getOptionYPos</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L35">line 35 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_folder_1button_back">function UIFolder:buttonBack()</a></h5>
  <p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1button_back">UIResizable:buttonBack</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L255">line 255 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
