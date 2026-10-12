@@ -25,7 +25,7 @@ class "UIFatalError" (Window)
 ---@type UIFatalError
 local UIFatalError = _G["UIFatalError"]
 
-local col_bg = {red = 54, green = 69, blue = 79}
+local col = { bg = Colours.FatalError }
 
 
 --! Constructor for the Fatal Error dialog.
@@ -43,7 +43,7 @@ function UIFatalError:UIFatalError(ui, day, month, gamelog_dir, can_reset)
   self.draggable = false
   self.must_pause = true
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PulldV", true)
-  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font04V", nil, nil, { apply_ui_scale = true })
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   self.file_path_font = app.gfx:loadMenuFont()
   self.file_path_cursor = app.gfx:loadMainCursor("kill_rat")
   self.file_path_cursor_active = app.gfx:loadMainCursor("kill_rat_hover")
@@ -56,16 +56,7 @@ function UIFatalError:UIFatalError(ui, day, month, gamelog_dir, can_reset)
     if autosave_frequency == 1 then -- Monthly
       autosave_day = 1
     elseif autosave_frequency == 2 then -- Weekly
-      -- It is possible to roll back to previous month
-      if day < 7 then
-        if month == 1 then
-          autosave_month = 12
-        else
-          autosave_month = month - 1
-        end
-        day = 28
-      end
-      autosave_day = math.min(math.ceil(day / 7) * 7, 28)
+      autosave_day = math.max(1, math.floor((day - 1) / 7) * 7)
     -- else Daily
     end
     return string.format("-%02d-%02d", autosave_month, autosave_day)
@@ -106,7 +97,7 @@ end
 
 function UIFatalError:onChangeLanguage()
   local s = TheApp.gfx:getUIScale()
-  local _, req_height_a = self.blue_font:sizeOf(
+  local _, req_height_a = self.white_font:sizeOf(
       self.text[1], self.text_width * s
   )
   local req_width_b, req_height_b = self.file_path_font:sizeOf(
@@ -141,11 +132,8 @@ function UIFatalError:onChangeLanguage()
 
   self.file_path_panel = self:addColourPanel(
       self.spacing.l, self.spacing.t + text_height_a,
-      text_width_b, text_height_b, 0, 0, 0
+      text_width_b, text_height_b, col.bg["red"], col.bg["green"], col.bg["blue"]
   )
-  self.file_path_panel.custom_draw =
-      --[[persistable:fatal_error_file_path_panel]] function()
-    end
   self.file_path_button = self.file_path_panel:makeButton(
       0, 0, text_width_b, text_height_b, nil, self.openFilePath
   )
@@ -168,7 +156,7 @@ local file_path = self.text[2]:gsub('"', '\\"')
 openURL(file_path)
 end
 
---! Change the cursor when hovering over the gamelog path.
+--! Override: Change the cursor when hovering over the gamelog path.
 function UIFatalError:onMouseMove(x, y)
   Window.onMouseMove(self, x, y)
 
@@ -177,6 +165,7 @@ function UIFatalError:onMouseMove(x, y)
   end
 end
 
+--! Override: Change cursor on clicking gamelog path
 function UIFatalError:onMouseDown(button, x, y)
   Window.onMouseDown(self, button, x, y)
   if self.file_path_button and self:hitTestPanel(x, y, self.file_path_panel) then
@@ -198,23 +187,23 @@ function UIFatalError:draw(canvas, x, y)
   local s = TheApp.gfx:getUIScale()
   local dx, dy = x + self.x * s, y + self.y * s
   local background = canvas:mapRGB(
-      col_bg["red"], col_bg["green"], col_bg["blue"]
+      col.bg["red"], col.bg["green"], col.bg["blue"]
   )
 
   canvas:drawRect(
       background, dx + 4 * s, dy + 4 * s, self.width * s - 8 * s, self.height * s - 8 * s
   )
 
+  Window.draw(self, canvas, x, y)
+
   local last_y = dy + self.spacing.t * s
-  last_y = self.blue_font:drawWrapped(
+  last_y = self.white_font:drawWrapped(
       canvas, self.text[1], dx + self.spacing.l * s, last_y, self.text_width * s
   )
 
   self.file_path_font:drawWrapped(
       canvas, self.text[2], dx + self.spacing.l * s, last_y, self.text_width * s
   )
-
-  Window.draw(self, canvas, x, y)
 end
 
 --! Diverges from Window:hitTest(x, y)
