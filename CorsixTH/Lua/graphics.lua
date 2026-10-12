@@ -586,6 +586,13 @@ local language_font_cache_key = function(name, font_options)
     font_options.apply_ui_scale and "s" or "f")
 end
 
+local sprite_table_cache_key = function(name, palette)
+  if palette then
+    return string.format("%s,%s", name, tostring(palette))
+  end
+  return name
+end
+
 --! Load a true type font
 --!
 --!param name (string) The name of the font from the language file. Always
@@ -863,7 +870,7 @@ end
 --! Build a copy of the main palette with green hues rotated to blue.
 --!
 --!return (palette) The shifted palette
-function Graphics:_makeBluePalette()
+function Graphics:_makeBluePaletteForFloatingBanknote()
   -- Only entries where green clearly leads the other channels are touched, so
   -- anything else - greys and the black background of the art in particular -
   -- is left exactly as it was. A plain "green is not less than red and blue"
@@ -904,13 +911,13 @@ end
 --! credited to the balance. Original banknote art; only its palette differs.
 --!param insurance (boolean) Whether the payment went through insurance
 --!return (sheet) The sprite sheet to draw the amount with
-function Graphics:getMoneySpriteTable(insurance)
+function Graphics:getFloatingBanknoteSpriteTable(insurance)
   if not insurance then
     return self:loadSpriteTable("Data", "Money01V")
   end
   local palette = self.cache.money_insurance_palette
   if not palette then
-    palette = self:_makeBluePalette()
+    palette = self:_makeBluePaletteForFloatingBanknote()
     self.cache.money_insurance_palette = palette
   end
   return self:loadSpriteTable("Data", "Money01V", nil, palette)
@@ -928,7 +935,7 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   -- drawn with the default one, so the cache is keyed by palette as well as by
   -- name. Without that, asking for the same art in two colours would hand back
   -- whichever was loaded first and silently ignore the second palette.
-  local cache_key = palette and (name .. "\0" .. tostring(palette)) or name
+  local cache_key = sprite_table_cache_key(name, palette)
   local cached = self.cache.tabled[cache_key]
   if cached then
     return cached
