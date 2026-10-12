@@ -615,6 +615,7 @@ customise_window = {
   machine_menu_button = "Machine menu button",
   enable_screen_shake = "Screen Shake",
   enable_announcer_subtitles = "Announcer Subtitles",
+  enable_insurance_blue_banknote = "Insurance Blue Banknote",
 }
 
 tooltip.customise_window = {
@@ -629,6 +630,7 @@ tooltip.customise_window = {
   machine_menu_button = "If you would like to have a machine menu button in bottom panel, turn this option on. Keep in mind that this button will not be available in small screen resolutions",
   enable_screen_shake = "Earthquakes will cause the entire screen to shake. If you would prefer the screen to remain still, turn this option off",
   enable_announcer_subtitles = "If you would like the game to display subtitles for your hospital's announcements, turn this option on",
+  enable_insurance_blue_banknote = "Patient payments made via an insurance company feature a blue floating banknote animation, allowing for immediate visual distinction from payments made directly to the hospital. If you prefer the original display style, where all payments are in green, you can disable this option",
   back = "Close this menu and go back to the Settings Menu",
 }
 
