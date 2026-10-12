@@ -43,7 +43,7 @@ local col_caption = {
 }
 
 function UICustomise:UICustomise(ui, mode)
-  self:UIResizable(ui, 340, 375, col_bg)
+  self:UIResizable(ui, 340, 395, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -147,8 +147,16 @@ function UICustomise:UICustomise(ui, mode)
   self.announcer_subtitles_button = self.announcer_subtitles_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonAnnouncer_subtitles)
     :setToggleState(app.config.enable_announcer_subtitles):setTooltip(_S.tooltip.customise_window.enable_announcer_subtitles)
 
+  -- Draw money paid by insurance in blue rather than green
+  self:addBevelPanel(15, 315, 165, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.customise_window.enable_insurance_blue_banknote):setTooltip(_S.tooltip.customise_window.enable_insurance_blue_banknote).lowered = true
+  self.insurance_payment_blue_banknote_panel =
+    self:addBevelPanel(185, 315, 140, 20, col_bg):setLabel(app.config.enable_insurance_blue_banknote and _S.customise_window.option_on or _S.customise_window.option_off)
+  self.insurance_payment_blue_banknote_button = self.insurance_payment_blue_banknote_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonInsurance_payment_blue_banknote)
+    :setToggleState(app.config.enable_insurance_blue_banknote):setTooltip(_S.tooltip.customise_window.enable_insurance_blue_banknote)
+
     -- "Back" button
-  self:addBevelPanel(15, 320, 310, 40, col_bg):setLabel(_S.customise_window.back)
+  self:addBevelPanel(15, 340, 310, 40, col_bg):setLabel(_S.customise_window.back)
     :makeButton(0, 0, 310, 40, nil, self.buttonBack):setTooltip(_S.tooltip.customise_window.back)
 end
 
@@ -258,6 +266,15 @@ function UICustomise:buttonAnnouncer_subtitles()
   app.config.enable_announcer_subtitles = not app.config.enable_announcer_subtitles
   self.announcer_subtitles_button:toggle()
   self.screen_shake_panel:setLabel(app.config.enable_announcer_subtitles and _S.customise_window.option_on or _S.customise_window.option_off)
+  app:saveConfig()
+  self:reload()
+end
+
+function UICustomise:buttonInsurance_payment_blue_banknote()
+  local app = self.ui.app
+  app.config.enable_insurance_blue_banknote = not app.config.enable_insurance_blue_banknote
+  self.insurance_payment_blue_banknote_button:toggle()
+  self.insurance_payment_blue_banknote_panel:setLabel(app.config.enable_insurance_blue_banknote and _S.customise_window.option_on or _S.customise_window.option_off)
   app:saveConfig()
   self:reload()
 end
