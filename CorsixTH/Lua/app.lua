@@ -74,6 +74,7 @@ function App:App()
   self.check_for_updates = TH.GetCompileOptions().update_check
   self.idle_tick = 0
   self.window_active_status = false -- whether window is in focus, set after App:init
+  self.last_save_name = nil
 end
 
 function App:setCommandLine(...)
@@ -1269,8 +1270,6 @@ function App:errorHandler(last_dispatch_type, st)
 
     self.ui:addWindow(UIFatalError(
       self.ui,
-      self.world.game_date:dayOfMonth(),
-      self.world.game_date:monthOfYear(),
       self.gamelog_path,
       can_reset
     ))
@@ -1879,6 +1878,14 @@ function App:compareVersions(version_a, version_b, method)
   end
 end
 
+function App:setLastSaveName(filename)
+  -- Eliminate full path and file extension
+  local name = (filename
+      :match("([^" .. pathsep .. "]+)$") or filename)
+      :gsub("%.[^.]*$", "")
+  self.last_save_name = name
+  print("Last save updated to ".. name)
+end
 
 function App:save(filename)
   return SaveGameFile(filename)

@@ -30,10 +30,9 @@ local col = { bg = Colours.FatalError }
 
 --! Constructor for the Fatal Error dialog.
 --!param ui (ui)
---!param month (number) The month we are in, used for the autosave version guesstimate.
 --!param gamelog_dir (string) Path to this session's gamelog.
 --!param can_reset (boolean) Determine if this crash allows for an app reset.
-function UIFatalError:UIFatalError(ui, day, month, gamelog_dir, can_reset)
+function UIFatalError:UIFatalError(ui, gamelog_dir, can_reset)
   self:Window()
   local app = ui.app
   self.modal_class = "information"
@@ -48,33 +47,19 @@ function UIFatalError:UIFatalError(ui, day, month, gamelog_dir, can_reset)
   self.file_path_cursor = app.gfx:loadMainCursor("kill_rat")
   self.file_path_cursor_active = app.gfx:loadMainCursor("kill_rat_hover")
 
-  -- Determine autosave name
-  local function getAutosaveSuffix()
-    local autosave_day = day
-    local autosave_month = month
-    local autosave_frequency = app.config.autosave_frequency
-    if autosave_frequency == 1 then -- Monthly
-      autosave_day = 1
-    elseif autosave_frequency == 2 then -- Weekly
-      autosave_day = math.max(1, math.floor((day - 1) / 7) * 7)
-    -- else Daily
-    end
-    return string.format("-%02d-%02d", autosave_month, autosave_day)
-  end
-
-  local autosave_date = getAutosaveSuffix()
+  local last_save = app.last_save_name
 
   -- Work out what error message to show
   local error_text
   if not can_reset then
     -- Fully unusable state
-    error_text = _S.errors.fatal_cant_reset:format(autosave_date)
+    error_text = _S.errors.fatal_cant_reset:format(last_save)
   elseif app.config.debug then
     -- Some key handlers are still working, some debugging may be possible
-    error_text = _S.errors.fatal_can_debug:format(autosave_date)
+    error_text = _S.errors.fatal_can_debug:format(last_save)
   else
     -- Some key handlers are working, as player is not in debug we can reset the program
-    error_text = _S.errors.fatal_can_reset:format(autosave_date)
+    error_text = _S.errors.fatal_can_reset:format(last_save)
   end
   self.text = {error_text, gamelog_dir}
   self.can_reset = can_reset
