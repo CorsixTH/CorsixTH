@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "CheckWatchAction" (HumanoidAction)
 
----@type CheckWatchAction
-local CheckWatchAction = _G["CheckWatchAction"]
+---@class CheckWatchAction : HumanoidAction
+CheckWatchAction = _G["CheckWatchAction"]
 
 function CheckWatchAction:CheckWatchAction()
   self:HumanoidAction("check_watch")

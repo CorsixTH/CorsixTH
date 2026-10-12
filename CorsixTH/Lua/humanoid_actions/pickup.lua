@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "PickupAction" (HumanoidAction)
 
----@type PickupAction
-local PickupAction = _G["PickupAction"]
+---@class PickupAction : HumanoidAction
+PickupAction = _G["PickupAction"]
 
 -- Construct a pick-up action
 --!param ui User interface

@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "TapFootAction" (HumanoidAction)
 
----@type TapFootAction
-local TapFootAction = _G["TapFootAction"]
+---@class TapFootAction : HumanoidAction
+TapFootAction = _G["TapFootAction"]
 
 function TapFootAction:TapFootAction()
   self:HumanoidAction("tap_foot")

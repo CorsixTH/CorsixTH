@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "ShakeFistAction" (HumanoidAction)
 
----@type ShakeFistAction
-local ShakeFistAction = _G["ShakeFistAction"]
+---@class ShakeFistAction : HumanoidAction
+ShakeFistAction = _G["ShakeFistAction"]
 
 function ShakeFistAction:ShakeFistAction()
   self:HumanoidAction("shake_fist")

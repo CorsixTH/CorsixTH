@@ -30,8 +30,8 @@ local ATTACH_BLUEPRINT_TO_TILE = false
 --! The dialog shown when placing objects.
 class "UIPlaceObjects" (Window)
 
----@type UIPlaceObjects
-local UIPlaceObjects = _G["UIPlaceObjects"]
+---@class UIPlaceObjects : Window
+UIPlaceObjects = _G["UIPlaceObjects"]
 
 --[[ Constructor for the class.
 !param ui (UI) The active ui.

@@ -50,8 +50,8 @@ room.call_sound = "reqd010.wav" -- TODO: There is also an unused sound
 
 class "OperatingTheatreRoom" (Room)
 
----@type OperatingTheatreRoom
-local OperatingTheatreRoom = _G["OperatingTheatreRoom"]
+---@class OperatingTheatreRoom : Room
+OperatingTheatreRoom = _G["OperatingTheatreRoom"]
 
 function OperatingTheatreRoom:OperatingTheatreRoom(...)
   self:Room(...)

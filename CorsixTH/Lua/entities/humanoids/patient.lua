@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! A `Humanoid` who is in the hospital for diagnosis and/or treatment.
 class "Patient" (Humanoid)
 
----@type Patient
-local Patient = _G["Patient"]
+---@class Patient : Humanoid
+Patient = _G["Patient"]
 
 function Patient:Patient(...)
   self:Humanoid(...)

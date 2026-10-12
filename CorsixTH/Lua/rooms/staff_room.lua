@@ -39,8 +39,8 @@ room.has_no_queue_dialog = true
 
 class "StaffRoom" (Room)
 
----@type StaffRoom
-local StaffRoom = _G["StaffRoom"]
+---@class StaffRoom : Room
+StaffRoom = _G["StaffRoom"]
 
 function StaffRoom:StaffRoom(...)
   self:Room(...)

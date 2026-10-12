@@ -44,8 +44,8 @@ room.handyman_call_sound = "maint014.wav"
 
 class "FractureRoom" (Room)
 
----@type FractureRoom
-local FractureRoom = _G["FractureRoom"]
+---@class FractureRoom : Room
+FractureRoom = _G["FractureRoom"]
 
 function FractureRoom:FractureRoom(...)
   self:Room(...)

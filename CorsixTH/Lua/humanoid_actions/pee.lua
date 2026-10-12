@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "PeeAction" (HumanoidAction)
 
----@type PeeAction
-local PeeAction = _G["PeeAction"]
+---@class PeeAction : HumanoidAction
+PeeAction = _G["PeeAction"]
 
 function PeeAction:PeeAction()
   self:HumanoidAction("pee")

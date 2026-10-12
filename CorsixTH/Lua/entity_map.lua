@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "EntityMap"
 
----@type EntityMap
-local EntityMap = _G["EntityMap"]
+---@class EntityMap
+EntityMap = _G["EntityMap"]
 
 --[[ An entity map is a structure is a 2 dimensional structure created from a
 game map, it has the same dimensions as the game map which intitalises it.

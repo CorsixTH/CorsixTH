@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Base class for 640x480px dialogs (fullscreen in original game resolution).
 class "UIFullscreen" (Window)
 
----@type UIFullscreen
-local UIFullscreen = _G["UIFullscreen"]
+---@class UIFullscreen : Window
+UIFullscreen = _G["UIFullscreen"]
 
 function UIFullscreen:UIFullscreen(ui)
   self:Window()

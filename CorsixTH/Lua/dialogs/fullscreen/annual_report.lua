@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Annual Report fullscreen window shown at the start of each year.
 class "UIAnnualReport" (UIFullscreen)
 
----@type UIAnnualReport
-local UIAnnualReport = _G["UIAnnualReport"]
+---@class UIAnnualReport : UIFullscreen
+UIAnnualReport = _G["UIAnnualReport"]
 
 --! Helper function that enables and makes visible button or table of buttons/panels.
 --!param button The button or table of buttons that should be activated/deactivated. If

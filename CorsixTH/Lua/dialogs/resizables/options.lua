@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Options window used in the main menu and ingame.
 class "UIOptions" (UIResizable)
 
----@type UIOptions
-local UIOptions = _G["UIOptions"]
+---@class UIOptions : UIResizable
+UIOptions = _G["UIOptions"]
 
 -- Constants for most button's width and height
 local BTN_WIDTH = 135
@@ -667,8 +667,8 @@ end
 --! A custom window size selection window
 class "UIWindowSize" (UIResizable)
 
----@type UIWindowSize
-local UIWindowSize = _G["UIWindowSize"]
+---@class UIWindowSize : UIResizable
+UIWindowSize = _G["UIWindowSize"]
 
 function UIWindowSize:UIWindowSize(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)
@@ -749,8 +749,8 @@ end
 --! A window for setting the scroll speed of the camera.
 class "UIScrollSpeed" (UIResizable)
 
----@type UIScrollSpeed
-local UIScrollSpeed = _G["UIScrollSpeed"]
+---@class UIScrollSpeed :UIResizable
+UIScrollSpeed = _G["UIScrollSpeed"]
 
 function UIScrollSpeed:UIScrollSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)
@@ -819,8 +819,8 @@ end
 --! A window for setting the scroll speed of the camera while pressing the SHIFT key..
 class "UIShiftScrollSpeed" (UIResizable)
 
----@type UIShiftScrollSpeed
-local UIShiftScrollSpeed = _G["UIShiftScrollSpeed"]
+---@class UIShiftScrollSpeed : UIResizable
+UIShiftScrollSpeed = _G["UIShiftScrollSpeed"]
 
 function UIShiftScrollSpeed:UIShiftScrollSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)
@@ -888,8 +888,8 @@ end
 --! Window to set the zoom speed of the scroll wheel while in-game.
 class "UIZoomSpeed" (UIResizable)
 
----@type UIZoomSpeed
-local UIZoomSpeed = _G["UIZoomSpeed"]
+---@class UIZoomSpeed : UIResizable
+UIZoomSpeed = _G["UIZoomSpeed"]
 
 function UIZoomSpeed:UIZoomSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)

@@ -21,8 +21,8 @@ SOFTWARE. --]]
 
 class "UIMapEditor" (UIResizable)
 
----@type UIMapEditor
-local UIMapEditor = _G["UIMapEditor"]
+---@class UIMapEditor : UIResizable
+UIMapEditor = _G["UIMapEditor"]
 
 local col_bg = {red = 154, green = 146, blue = 198}
 

@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "VomitAction" (HumanoidAction)
 
----@type VomitAction
-local VomitAction = _G["VomitAction"]
+---@class VomitAction : HumanoidAction
+VomitAction = _G["VomitAction"]
 
 function VomitAction:VomitAction()
   self:HumanoidAction("vomit")

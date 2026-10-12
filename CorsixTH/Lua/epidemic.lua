@@ -24,8 +24,8 @@ local AnnouncementPriority = _G["AnnouncementPriority"]
 
 class "Epidemic"
 
----@type Epidemic
-local Epidemic = _G["Epidemic"]
+---@class Epidemic
+Epidemic = _G["Epidemic"]
 
 --[[Manages the epidemics that occur in hospitals. Generally, any epidemic
 logic that happens outside this class will call functions contained here.]]
