@@ -253,7 +253,7 @@ local function hotkey_input(hotkey, hotkey_buttons_table, app)
   local hotkey_used, hotkey_used_key = is_hotkey_used(noted_keys, app)
 
   -- If this hotkey was used for a different action, swap with current assignment
-  if hotkey_used and hotkey ~= hotkey_used_key then
+  if hotkey_used and hotkey_used_key and hotkey ~= hotkey_used_key then
     app.hotkeys[hotkey_used_key] = shallow_clone(app.hotkeys[hotkey])
     if hotkey_buttons_table[hotkey_used_key] then
       hotkey_buttons_table[hotkey_used_key]:setText( string.upper(array_join(app.hotkeys[hotkey_used_key], "+")) )
