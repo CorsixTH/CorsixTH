@@ -44,10 +44,11 @@ function UIFatalError:UIFatalError(ui, gamelog_dir, can_reset)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PulldV", true)
   self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   self.file_path_font = app.gfx:loadMenuFont()
+  self.default_cursor = app.gfx:loadMainCursor("default")
   self.file_path_cursor = app.gfx:loadMainCursor("kill_rat")
   self.file_path_cursor_active = app.gfx:loadMainCursor("kill_rat_hover")
 
-  local last_save = app.last_save_name
+  local last_save = app.last_save_name or "N/A"
 
   -- Work out what error message to show
   local error_text
@@ -99,6 +100,11 @@ function UIFatalError:onChangeLanguage()
 
   self:removeAllPanels()
 
+  self:addColourPanel(
+    4, 4, self.width - 8, self.height - 8,
+    col.bg.red, col.bg.green, col.bg.blue
+  )
+
   for x = 4, self.width - 4, 4 do
     self:addPanel(12, x, 0, 0, 0, 1)  -- Dialog top and bottom borders
     self:addPanel(16, x, self.height - 4, 0, 0, 1)
@@ -137,16 +143,27 @@ end
 
 --! Open the gamelog in the operating system's default application.
 function UIFatalError:openFilePath()
-local file_path = self.text[2]:gsub('"', '\\"')
-openURL(file_path)
+  local file_path = self.text[2]:gsub('"', '\\"')
+  openURL(file_path)
 end
 
 --! Override: Change the cursor when hovering over the gamelog path.
+--! We must also restore the default cursor manually if another window
+--! affects the cursor.
 function UIFatalError:onMouseMove(x, y)
+  local s = TheApp.gfx:getUIScale()
+  self.active_hover = self:hoverTest(
+      self.active_hover, x, y,
+      self.width * s - 29 * s, self.width * s - 10 * s,
+      self.height * s - 29 * s, self.height * s - 10 * s
+  )
+
   Window.onMouseMove(self, x, y)
 
   if self.file_path_button and self:hitTestPanel(x, y, self.file_path_panel) then
     self.ui:setCursor(self.ui.down_count == 0 and self.file_path_cursor or self.file_path_cursor_active)
+  else
+    self.ui:setCursor(self.default_cursor)
   end
 end
 
@@ -171,13 +188,6 @@ end
 function UIFatalError:draw(canvas, x, y)
   local s = TheApp.gfx:getUIScale()
   local dx, dy = x + self.x * s, y + self.y * s
-  local background = canvas:mapRGB(
-      col.bg["red"], col.bg["green"], col.bg["blue"]
-  )
-
-  canvas:drawRect(
-      background, dx + 4 * s, dy + 4 * s, self.width * s - 8 * s, self.height * s - 8 * s
-  )
 
   Window.draw(self, canvas, x, y)
 
@@ -189,12 +199,6 @@ function UIFatalError:draw(canvas, x, y)
   self.file_path_font:drawWrapped(
       canvas, self.text[2], dx + self.spacing.l * s, last_y, self.text_width * s
   )
-end
-
---! Diverges from Window:hitTest(x, y)
---! Fake cursor positioning to always 'hit' Window to disable any other interaction
-function UIFatalError:hitTest(x, y)
-  return true
 end
 
 --! Closing this dialog must be via the 'x' button (if available)
