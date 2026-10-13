@@ -26,8 +26,24 @@ SOFTWARE.
 #include <memory>
 #include <stdexcept>
 
+#include "lua_sdl.h"
 #include "th_sound.h"
 #include "xmi2mid.h"
+
+namespace {
+void wait_for_end_of_track(fluid_player_t* player,
+                           std::atomic_flag& stopped_manually) {
+  fluid_player_join(player);
+
+  // join finishes on stop/pause/end of track, so we want to ensure we only
+  // fire the music over callback when the track completes.
+  if (!stopped_manually.test_and_set()) {
+    SDL_Event e;
+    e.type = SDL_USEREVENT_MUSIC_OVER;
+    SDL_PushEvent(&e);
+  }
+}
+}  // namespace
 
 fluid_player::fluid_player(const std::string& soundfont) {
   SDL_AudioSpec spec;
@@ -102,18 +118,46 @@ void fluid_player::play_xmi(const unsigned char* xmi_data, size_t xmi_length) {
   fluid_player_seek(player, 0);
   fluid_player_play(player);
   SDL_ResumeAudioStreamDevice(audio_stream);
+  stopped_manually.clear();
+  wait_for_track_thread =
+      std::thread(wait_for_end_of_track, player, std::ref(stopped_manually));
 }
 
-void fluid_player::pause() { fluid_player_stop(player); }
+void fluid_player::pause() {
+  if (player == nullptr) {
+    return;
+  }
+  stopped_manually.test_and_set();
+  fluid_player_stop(player);
+  if (wait_for_track_thread.joinable()) {
+    wait_for_track_thread.join();
+  }
+}
 
-void fluid_player::resume() { fluid_player_play(player); }
+void fluid_player::resume() {
+  if (player == nullptr) {
+    return;
+  }
+  // defensive, we expect the thread to have been joined by pause.
+  if (wait_for_track_thread.joinable()) {
+    wait_for_track_thread.join();
+  }
+  fluid_player_play(player);
+  stopped_manually.clear();
+  wait_for_track_thread =
+      std::thread(wait_for_end_of_track, player, std::ref(stopped_manually));
+}
 
 void fluid_player::stop() {
   if (player == nullptr) {
     return;
   }
 
+  stopped_manually.test_and_set();
   fluid_player_stop(player);
+  if (wait_for_track_thread.joinable()) {
+    wait_for_track_thread.join();
+  }
   fluid_synth_all_notes_off(synth, -1);
   delete_fluid_player(player);
   SDL_PauseAudioStreamDevice(audio_stream);
