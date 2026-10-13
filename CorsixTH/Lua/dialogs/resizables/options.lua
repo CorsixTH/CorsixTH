@@ -481,10 +481,6 @@ function UIOptions:buttonShiftScrollSpeed()
   self.ui:addWindow(UIShiftScrollSpeed(self.ui, callback))
 end
 
-function UIOptions:buttonBack()
-  self:close()
-end
-
 function UIOptions:buttonZoomSpeed()
   local callback = function(zoomspeed_number)
     self.buttons.zoom_speed:setLabel(tostring(zoomspeed_number)):setToggleState(false)

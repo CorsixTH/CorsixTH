@@ -1011,15 +1011,16 @@ function Object.processTypeDefinition(object_type)
           details.slave_position[1] = details.slave_position[1] - x
           details.slave_position[2] = details.slave_position[2] - y
         end
-        local rx, ry = unpack(details.render_attach_position)
-        if type(rx) == "table" then
-          rx, ry = unpack(details.render_attach_position[1])
+        local rx, ry
+        if type(details.render_attach_position[1]) == "table" then
+          rx, ry = details.render_attach_position[1][1], details.render_attach_position[1][2]
           for _, point in ipairs(details.render_attach_position) do
             point.column = point[1] - point[2]
             point[1] = point[1] - x
             point[2] = point[2] - y
           end
         else
+          rx, ry = unpack(details.render_attach_position)
           details.render_attach_position[1] = rx - x
           details.render_attach_position[2] = ry - y
         end

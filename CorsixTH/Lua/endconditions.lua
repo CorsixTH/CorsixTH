@@ -55,7 +55,8 @@ function EndConditions:EndConditions(level_config, level_number, freebuild)
   self.win_goals, self.lose_goals, self.highest_group = {}, {}, 0
   if freebuild then return end
 
-  local start, town = {}
+  local start = {}
+  local town
   if level_number and level_config.towns[level_number] then
     town = level_config.towns[level_number]
   else
@@ -181,7 +182,8 @@ end
 --!return Losing criteria name and the limit breached,
 -- or if report is true, the report table.
 function EndConditions:_checkLoseGroup(hospital, lose_table, report)
-  local report_table, met_count, total_count, reason, limit = {}, 0, 0
+  local report_table, met_count, total_count = {}, 0, 0
+  local reason, limit
   for crit_name, crit_table in pairs(lose_table) do
     local boundary, lose_value = crit_table.boundary, crit_table.lose_value
     local max_min = crit_table.max_min == 1 and 1 or -1
