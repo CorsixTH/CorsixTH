@@ -700,6 +700,7 @@ function App:initLanguage()
 end
 
 function App:worldExited()
+  self.last_save_name = nil
   self.audio:clearCallbacks()
 end
 
@@ -1884,7 +1885,6 @@ function App:setLastSaveName(filename)
       :match("([^" .. pathsep .. "]+)$") or filename)
       :gsub("%.[^.]*$", "")
   self.last_save_name = name
-  print("Last save updated to ".. name)
 end
 
 function App:save(filename)
