@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "GetUpAction" (HumanoidAction)
 
----@type GetUpAction
-local GetUpAction = _G["GetUpAction"]
+---@class GetUpAction : HumanoidAction
+GetUpAction = _G["GetUpAction"]
 
 function GetUpAction:GetUpAction()
   self:HumanoidAction("get_up")

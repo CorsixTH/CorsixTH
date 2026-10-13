@@ -70,8 +70,8 @@ corsixth.require("queue")
 
 class "ReceptionDesk" (Object)
 
----@type ReceptionDesk
-local ReceptionDesk = _G["ReceptionDesk"]
+---@class ReceptionDesk : Object
+ReceptionDesk = _G["ReceptionDesk"]
 
 function ReceptionDesk:ReceptionDesk(...)
   self:Object(...)

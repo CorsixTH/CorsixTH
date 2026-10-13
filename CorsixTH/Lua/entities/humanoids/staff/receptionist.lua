@@ -26,8 +26,8 @@ local AnnouncementPriority = _G["AnnouncementPriority"]
 --! A Doctor, Nurse, Receptionist, Handyman, or Surgeon
 class "Receptionist" (Staff)
 
----@type Receptionist
-local Receptionist = _G["Receptionist"]
+---@class Receptionist : Staff
+Receptionist = _G["Receptionist"]
 
 --!param ... Arguments to base class constructor.
 function Receptionist:Receptionist(...)

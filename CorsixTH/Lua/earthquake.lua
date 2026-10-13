@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Manages all earthquakes in the world
 class "Earthquake"
 
----@type Earthquake
-local Earthquake = _G["Earthquake"]
+---@class Earthquake
+Earthquake = _G["Earthquake"]
 
 --[[
 All fields relating to the current or next earthquake:

@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "SeekStaffRoomAction" (HumanoidAction)
 
----@type SeekStaffRoomAction
-local SeekStaffRoomAction = _G["SeekStaffRoomAction"]
+---@class SeekStaffRoomAction : HumanoidAction
+SeekStaffRoomAction = _G["SeekStaffRoomAction"]
 
 function SeekStaffRoomAction:SeekStaffRoomAction()
   self:HumanoidAction("seek_staffroom")

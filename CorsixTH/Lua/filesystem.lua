@@ -33,8 +33,8 @@ local ISO_FS = require("TH").iso_fs
 -- file system.
 class "FileSystem"
 
----@type FileSystem
-local FileSystem = _G["FileSystem"]
+---@class FileSystem
+FileSystem = _G["FileSystem"]
 
 function FileSystem:FileSystem()
   -- A mapping of normalized file names in the current directory to their

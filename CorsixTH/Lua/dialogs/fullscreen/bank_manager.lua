@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Bank manager (for loans / insurance companies) and bank statement fullscreen windows.
 class "UIBankManager" (UIFullscreen)
 
----@type UIBankManager
-local UIBankManager = _G["UIBankManager"]
+---@class UIBankManager : UIFullscreen
+UIBankManager = _G["UIBankManager"]
 
 function UIBankManager:UIBankManager(ui)
   self:UIFullscreen(ui)

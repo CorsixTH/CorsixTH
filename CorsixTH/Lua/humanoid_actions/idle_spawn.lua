@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "IdleSpawnAction" (HumanoidAction)
 
----@type IdleSpawnAction
-local IdleSpawnAction = _G["IdleSpawnAction"]
+---@class IdleSpawnAction : HumanoidAction
+IdleSpawnAction = _G["IdleSpawnAction"]
 
 function IdleSpawnAction:IdleSpawnAction(anim, point_dir)
   assert(type(anim) == "number", "Invalid value for parameter 'anim'")

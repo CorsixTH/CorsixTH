@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Customise window used in the main menu and ingame.
 class "UICustomise" (UIResizable)
 
----@type UICustomise
-local UICustomise = _G["UICustomise"]
+---@class UICustomise : UIResizable
+UICustomise = _G["UICustomise"]
 
 local col = {
   bg             = Colours.PanelDefault,

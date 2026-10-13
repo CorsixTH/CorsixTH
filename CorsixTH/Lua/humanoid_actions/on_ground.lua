@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "OnGroundAction" (HumanoidAction)
 
----@type OnGroundAction
-local OnGroundAction = _G["OnGroundAction"]
+---@class OnGroundAction : HumanoidAction
+OnGroundAction = _G["OnGroundAction"]
 
 function OnGroundAction:OnGroundAction()
   self:HumanoidAction("on_ground")

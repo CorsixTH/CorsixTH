@@ -44,8 +44,8 @@ local get_custom_criteria = {
 }
 
 class "EndConditions"
----@type EndConditions
-local EndConditions = _G["EndConditions"]
+---@class EndConditions
+EndConditions = _G["EndConditions"]
 
 --! Collect the end conditions for this level, if they exist
 --!param level_config (table) The map's level_config, containing criteria.

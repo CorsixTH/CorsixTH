@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "StaffReceptionAction" (HumanoidAction)
 
----@type StaffReceptionAction
-local StaffReceptionAction = _G["StaffReceptionAction"]
+---@class StaffReceptionAction : HumanoidAction
+StaffReceptionAction = _G["StaffReceptionAction"]
 
 -- Action class for the "staff reception desk" action.
 --!param desk (object) Desk to staff.

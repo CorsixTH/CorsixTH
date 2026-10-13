@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Humanoid action base class.
 class "HumanoidAction"
 
----@type HumanoidAction
-local HumanoidAction = _G["HumanoidAction"]
+---@class HumanoidAction
+HumanoidAction = _G["HumanoidAction"]
 
 --! Construct a humanoid action (base class constructor).
 --!param name (str) Name of the action.

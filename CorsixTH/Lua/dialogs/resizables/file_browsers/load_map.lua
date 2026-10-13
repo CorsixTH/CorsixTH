@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Load Map Window
 class "UILoadMap" (UIFileBrowser)
 
----@type UILoadMap
-local UILoadMap = _G["UILoadMap"]
+---@class UILoadMap : UIFileBrowser
+UILoadMap = _G["UILoadMap"]
 
 function UILoadMap:UILoadMap(ui, mode)
   local path = ui.app.user_level_dir

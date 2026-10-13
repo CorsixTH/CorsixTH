@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "IdleAction" (HumanoidAction)
 
----@type IdleAction
-local IdleAction = _G["IdleAction"]
+---@class IdleAction : HumanoidAction
+IdleAction = _G["IdleAction"]
 
 function IdleAction:IdleAction()
   self:HumanoidAction("idle")

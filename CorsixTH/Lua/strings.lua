@@ -24,8 +24,8 @@ local TH = require("TH")
 --! Layer which handles the loading of localised text.
 class "Strings"
 
----@type Strings
-local Strings = _G["Strings"]
+---@class Strings
+Strings = _G["Strings"]
 
 function Strings:Strings(app)
   self.app = app

@@ -155,8 +155,8 @@ object.orientations = {
 
 class "Chair" (Object)
 
----@type Chair
-local Chair = _G["Chair"]
+---@class Chair : Object
+Chair = _G["Chair"]
 
 function Chair:Chair(...)
   self:Object(...)

@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Custom key bindings
 class "UIHotkeyAssign" (UIResizable)
 
----@type UIHotkeyAssign
-local UIHotkeyAssign = _G["UIHotkeyAssign"]
+---@class UIHotkeyAssign : UIResizable
+UIHotkeyAssign = _G["UIHotkeyAssign"]
 
 local col_bg = {
   red = 154,
@@ -567,8 +567,8 @@ end
 --! Child window for setting key bindings
 class "UIHotkeyAssignKeyPane" (Window)
 
----@type UIHotkeyAssignKeyPane
-local UIHotkeyAssignKeyPane = _G["UIHotkeyAssignKeyPane"]
+---@class UIHotkeyAssignKeyPane : Window
+UIHotkeyAssignKeyPane = _G["UIHotkeyAssignKeyPane"]
 
 function UIHotkeyAssignKeyPane:UIHotkeyAssignKeyPane(x, y, ui, key_options, app_hotkeys)
   self:Window()

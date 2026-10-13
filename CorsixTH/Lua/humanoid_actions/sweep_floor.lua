@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "SweepFloorAction" (HumanoidAction)
 
----@type SweepFloorAction
-local SweepFloorAction = _G["SweepFloorAction"]
+---@class SweepFloorAction : HumanoidAction
+SweepFloorAction = _G["SweepFloorAction"]
 
 function SweepFloorAction:SweepFloorAction(litter)
   assert(class.is(litter, Litter), "Invalid value for parameter 'litter'")

@@ -23,8 +23,8 @@ local TH = require("TH")
 --! An `Object` which needs occasional repair (to prevent explosion).
 class "Machine" (Object)
 
----@type Machine
-local Machine = _G["Machine"]
+---@class Machine : Object
+Machine = _G["Machine"]
 
 function Machine:Machine(hospital, object_type, x, y, direction, etc)
   self:Object(hospital, object_type, x, y, direction, etc)

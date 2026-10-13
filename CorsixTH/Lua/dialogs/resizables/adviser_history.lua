@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Adviser message history
 class "UIAdviserHistory" (UIResizable)
 
----@type UIAdviserHistory
-local UIAdviserHistory = _G["UIAdviserHistory"]
+---@class UIAdviserHistory : UIResizable
+UIAdviserHistory = _G["UIAdviserHistory"]
 
 
 local col_bg = Colours.AdviserPanelBackground

@@ -26,8 +26,8 @@ local file_extensions = {".sf2", ".sf3"}
 --! Window where the user can choose a soundfont file.
 class "UIChooseSoundfont" (UIFileBrowser)
 
----@type UIChooseSoundfont
-local UIChooseSoundfont = _G["UIChooseSoundfont"]
+---@class UIChooseSoundfont : UIFileBrowser
+UIChooseSoundfont = _G["UIChooseSoundfont"]
 
 function UIChooseSoundfont:UIChooseSoundfont(ui, mode, soundOptionsUI, choiceCallback)
   self.soundOptionsUI = soundOptionsUI

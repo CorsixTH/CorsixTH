@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "UISoundSettings" (UIResizable)
 
----@type UISoundSettings
-local UISoundSettings = _G["UISoundSettings"]
+---@class UISoundSettings : UIResizable
+UISoundSettings = _G["UISoundSettings"]
 
 -- Constants for most button's width and height
 local LBL_X = 20

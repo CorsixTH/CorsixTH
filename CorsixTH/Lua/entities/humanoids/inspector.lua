@@ -25,8 +25,8 @@ local AnnouncementPriority = _G["AnnouncementPriority"]
 --[[ An `Inspector` is called to the hospital after an epidemic to issue a report]]
 class "Inspector" (Humanoid)
 
----@type Inspector
-local Inspector = _G["Inspector"]
+---@class Inspector : Humanoid
+Inspector = _G["Inspector"]
 
 function Inspector:Inspector(...)
   self:Humanoid(...)

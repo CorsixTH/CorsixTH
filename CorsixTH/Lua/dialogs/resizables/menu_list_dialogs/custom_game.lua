@@ -21,8 +21,8 @@ SOFTWARE. --]]
 --! Custom Game Window
 class "UICustomGame" (UIMenuList)
 
----@type UICustomGame
-local UICustomGame = _G["UICustomGame"]
+---@class UICustomGame : UIMenuList
+UICustomGame = _G["UICustomGame"]
 
 local col_scrollbar = {
   red = 164,

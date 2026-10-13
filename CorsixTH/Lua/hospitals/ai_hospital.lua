@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "AIHospital" (Hospital)
 
----@type AIHospital
-local AIHospital = _G["AIHospital"]
+---@class AIHospital : Hospital
+AIHospital = _G["AIHospital"]
 
 function AIHospital:AIHospital(competitor, world, avail_rooms, name)
   self:Hospital(world, avail_rooms, name)

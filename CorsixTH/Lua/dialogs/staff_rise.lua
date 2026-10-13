@@ -19,11 +19,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 
---! Dialog for staff member requesting a salaray raise.
+--! Dialog for staff member requesting a salary raise.
 class "UIStaffRise" (Window)
 
----@type UIStaffRise
-local UIStaffRise = _G["UIStaffRise"]
+---@class UIStaffRise : Window
+UIStaffRise = _G["UIStaffRise"]
 
 function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:Window()

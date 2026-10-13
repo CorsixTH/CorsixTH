@@ -31,8 +31,8 @@ stored for future use anyway.
 --! Manages all things related to research for one hospital.
 class "ResearchDepartment"
 
----@type ResearchDepartment
-local ResearchDepartment = _G["ResearchDepartment"]
+---@class ResearchDepartment
+ResearchDepartment = _G["ResearchDepartment"]
 
 function ResearchDepartment:ResearchDepartment(hospital)
   self.hospital = hospital

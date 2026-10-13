@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 class "VaccinateAction" (HumanoidAction)
 
----@type VaccinateAction
-local VaccinateAction = _G["VaccinateAction"]
+---@class VaccinateAction : HumanoidAction
+VaccinateAction = _G["VaccinateAction"]
 
 -- Vaccinate action constructor for a nurse.
 --!param patient (Patient) Patient to vaccinate.
