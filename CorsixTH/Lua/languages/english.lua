@@ -493,11 +493,9 @@ options_window = {
   right_mouse_scrolling_option_right = "Right Button",
   customise = "Customise",
   folder = "Folders",
+  accessibility = "Accessibility",
   language = "Game Language",
   back = "Back",
-  scroll_speed = "Scroll Speed",
-  shift_scroll_speed = "Shift Scroll Speed",
-  zoom_speed = "Zoom Speed",
   autosave_frequency = "Autosave Frequency",
   hotkey = "Hotkeys",
   check_for_updates = "Check for Updates",
@@ -540,21 +538,13 @@ tooltip.options_window = {
   right_mouse_scrolling = "Toggle the mouse button that is used to scroll the map",
   customise = "More settings you can change to customise your game play experience",
   folder = "Folder Options",
+  accessibility = "Accessibility Options",
   language = "The language texts in the game will appear in",
   select_language = "Select the game language",
   language_dropdown_item = "Choose %s as language",
   language_dropdown_no_font = "Select a font in the folders settings to enable this language",
   back = "Close the Settings window",
-  scroll_speed = "Set the scroll speed between 1 (slowest) to 10 (fastest). The default is 2.",
-  shift_scroll_speed = "Set the speed of scrolling while the shift key is pressed. 1 (slowest) to 10 (fastest). The default is 4.",
-  zoom_speed = "Set the camera zoom speed from 10 (slowest) to 1000 (fastest). The default is 80.",
   autosave_frequency = "Set how often the game will make autosaves.",
-  apply_scrollspeed = "Apply the entered scroll speed.",
-  cancel_scrollspeed = "Return without changing the scroll speed.",
-  apply_shift_scrollspeed = "Apply the entered shift scroll speed.",
-  cancel_shift_scrollspeed = "Return without changing the shift scroll speed.",
-  apply_zoomspeed = "Apply the entered zoom speed.",
-  cancel_zoomspeed = "Return without changing the zoom speed.",
   hotkey = "Change keyboard hotkeys.",
   check_for_updates = "Sets whether the game should look for updates on launch.",
   sound = "Change audio settings",
@@ -628,8 +618,6 @@ customise_window = {
   enable_avg_contents = "Average Contents",
   remove_destroyed_rooms = "Remove destroyed rooms",
   machine_menu_button = "Machine menu button",
-  enable_screen_shake = "Screen Shake",
-  enable_announcer_subtitles = "Announcer Subtitles",
   enable_insurance_blue_banknote = "Insurance Blue Banknote",
 }
 
@@ -642,8 +630,6 @@ tooltip.customise_window = {
   enable_avg_contents = "If you would like the game to remember which extra objects you usually add while building rooms, turn this option on",
   remove_destroyed_rooms = "In the original Theme Hospital, exploded machines made rooms permanently unusable. If you would like to be able to remove destroyed rooms for a fee, turn this option on",
   machine_menu_button = "If you would like to have a machine menu button in bottom panel, turn this option on. Keep in mind that this button will not be available in small screen resolutions",
-  enable_screen_shake = "Earthquakes will cause the entire screen to shake. If you would prefer the screen to remain still, turn this option off",
-  enable_announcer_subtitles = "If you would like the game to display subtitles for your hospital's announcements, turn this option on",
   enable_insurance_blue_banknote = "Patient payments made via an insurance company feature a blue floating banknote animation, allowing for immediate visual distinction from payments made directly to the hospital. If you prefer the original display style, where all payments are in green, you can disable this option",
   back = "Close this menu and go back to the Settings Menu",
 }
@@ -815,6 +801,29 @@ tooltip.hotkey_window = {
 
 font_location_window = {
   caption = "Choose font (%1%)",
+}
+
+accessibility_window = {
+  caption = "Accessibility Settings",
+  enable_screen_shake = "Screen Shake",
+  enable_announcer_subtitles = "Announcer Subtitles",
+  scroll_speed = "Scroll Speed",
+  shift_scroll_speed = "Shift Scroll Speed",
+  zoom_speed = "Zoom Speed",
+}
+
+tooltip.accessibility_window = {
+  enable_screen_shake = "Earthquakes will cause the entire screen to shake. If you would prefer the screen to remain still, turn this option off",
+  enable_announcer_subtitles = "If you would like the game to display subtitles for your hospital's announcements, turn this option on",
+  scroll_speed = "Set the scroll speed between 1 (slowest) to 10 (fastest). The default is 2.",
+  shift_scroll_speed = "Set the speed of scrolling while the shift key is pressed. 1 (slowest) to 10 (fastest). The default is 4.",
+  zoom_speed = "Set the camera zoom speed from 10 (slowest) to 1000 (fastest). The default is 80.",
+  apply_scrollspeed = "Apply the entered scroll speed.",
+  cancel_scrollspeed = "Return without changing the scroll speed.",
+  apply_shift_scrollspeed = "Apply the entered shift scroll speed.",
+  cancel_shift_scrollspeed = "Return without changing the shift scroll speed.",
+  apply_zoomspeed = "Apply the entered zoom speed.",
+  cancel_zoomspeed = "Return without changing the zoom speed.",
 }
 
 handyman_window = {
