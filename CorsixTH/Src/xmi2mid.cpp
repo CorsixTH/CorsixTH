@@ -25,9 +25,11 @@ SOFTWARE.
 #include "config.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstring>
 #include <new>
+#include <numeric>
 #include <stdexcept>
 #include <vector>
 
@@ -38,8 +40,27 @@ bool is_little_endian() {
   return *reinterpret_cast<uint8_t*>(&i) == 0x02;
 }
 
+namespace {
+
+//! Determines whether a token releases a note. A note on with a velocity of
+//! zero is a note off per the MIDI spec, and is the form this file generates.
+bool is_note_off(const midi_token& token) {
+  const uint8_t event = token.type & 0xF0;
+  if (event == midi_event_note_off) return true;
+  return event == midi_event_note_on && !token.buffer.empty() &&
+         token.buffer[0] == 0;
+}
+
+//! Ordering rank for tokens which share a timestamp. \see operator<
+int event_rank(const midi_token& token) { return is_note_off(token) ? 0 : 1; }
+
+}  // namespace
+
 bool operator<(const midi_token& oLeft, const midi_token& oRight) {
-  return oLeft.time < oRight.time;
+  if (oLeft.time != oRight.time) {
+    return oLeft.time < oRight.time;
+  }
+  return event_rank(oLeft) < event_rank(oRight);
 }
 
 /*!
@@ -205,6 +226,130 @@ class memory_buffer {
 
 void early_eof() { throw std::runtime_error("unexpected end of XMI data"); }
 
+namespace {
+
+constexpr int midi_channel_count = 16;
+constexpr int midi_note_count = 128;
+
+//! A note on event from the XMI along with the time it is due to be released.
+struct pending_note {
+  //! Note on status byte, with the channel in its low nibble.
+  uint8_t type;
+
+  uint8_t note;
+  int on_time;
+
+  //! When the note would be released if nothing overlaps it.
+  int off_time;
+};
+
+//! The release state of one (channel, note) pair while note offs are resolved.
+struct note_state {
+  bool sounding{false};
+
+  //! Extended when an overlapping note of the same pitch is struck.
+  int end_time{0};
+
+  int last_on_time{0};
+};
+
+//! Masked so that malformed XMI data cannot index outside the state table.
+size_t note_state_index(const pending_note& note) {
+  const size_t channel = note.type & 0x0F;
+  const size_t pitch = note.note & 0x7F;
+  return channel * midi_note_count + pitch;
+}
+
+//! Sort tokens into playback order, keeping equal elements in the order the
+//! XMI presented them. A control or program change sharing a timestamp with a
+//! note on has to stay ahead of it, or the note sounds with the wrong setting.
+//!
+//! Sorting a permutation rather than using std::stable_sort avoids the
+//! deprecated allocation helper some standard libraries call from it.
+void sort_tokens(midi_token_list& tokens) {
+  std::vector<size_t> order(tokens.size());
+  std::iota(order.begin(), order.end(), size_t{0});
+  std::sort(order.begin(), order.end(), [&tokens](size_t left, size_t right) {
+    if (tokens[left] < tokens[right]) {
+      return true;
+    }
+    if (tokens[right] < tokens[left]) {
+      return false;
+    }
+    return left < right;
+  });
+
+  midi_token_list sorted;
+  sorted.reserve(tokens.size());
+  for (size_t index : order) {
+    sorted.push_back(std::move(tokens[index]));
+  }
+  tokens = std::move(sorted);
+}
+
+void emit_note_off(midi_token_list& tokens, uint8_t type, uint8_t note,
+                   int time) {
+  midi_token& token = tokens.emplace_back(time, type);
+  token.data = note;
+  token.buffer.push_back(0);
+}
+
+/*!
+    Convert XMI note durations into MIDI note off events.
+
+    A MIDI note off applies to a whole (channel, note) pair, so emitting one per
+    note on would let an earlier note's duration cut short a later note of the
+    same pitch. Overlapping notes are instead merged into a run: re-struck at
+    each note on, released once at the end. Note ons at the same instant share a
+    release, so note offs may be fewer than note ons, but every run is released
+    and no voice is left sounding.
+
+    \param notes The pending notes, in ascending time order.
+*/
+void resolve_note_offs(midi_token_list& tokens,
+                       const std::vector<pending_note>& notes) {
+  // The caller collects notes as it reads the XMI, whose event clock only ever
+  // advances, so they already arrive in ascending time order.
+  std::array<note_state, midi_channel_count * midi_note_count> states{};
+  for (const pending_note& note : notes) {
+    note_state& state = states[note_state_index(note)];
+
+    if (state.sounding && state.end_time > note.on_time) {
+      // Release the sounding note so this one re-articulates, and carry the run
+      // on to the later end. Notes struck on the same tick get no release
+      // between them, which would land a tick late and cut the first to
+      // nothing.
+      if (note.on_time > state.last_on_time) {
+        emit_note_off(tokens, note.type, note.note, note.on_time);
+      }
+      state.end_time = std::max(state.end_time, note.off_time);
+    } else {
+      if (state.sounding) {
+        emit_note_off(tokens, note.type, note.note, state.end_time);
+      }
+      state.end_time = note.off_time;
+    }
+
+    state.sounding = true;
+    state.last_on_time = note.on_time;
+  }
+
+  // Release whatever is still sounding, recovering each channel and note from
+  // its position in the table.
+  for (size_t index = 0; index < states.size(); ++index) {
+    const note_state& state = states[index];
+    if (!state.sounding) {
+      continue;
+    }
+    const uint8_t type =
+        static_cast<uint8_t>(midi_event_note_on | (index / midi_note_count));
+    const uint8_t note = static_cast<uint8_t>(index % midi_note_count);
+    emit_note_off(tokens, type, note, state.end_time);
+  }
+}
+
+}  // namespace
+
 midi_token_list xmi_to_midi_token_list(const unsigned char* xmi_data,
                                        size_t xmi_length, uint32_t& iTempo) {
   if (xmi_data == nullptr) {
@@ -224,6 +369,7 @@ midi_token_list xmi_to_midi_token_list(const unsigned char* xmi_data,
   }
 
   midi_token_list lstTokens;
+  std::vector<pending_note> pending_notes;
   int iTokenTime = 0;
   iTempo = 500000;
   bool bTempoSet = false;
@@ -273,16 +419,16 @@ midi_token_list xmi_to_midi_token_list(const unsigned char* xmi_data,
         uint8_t velocity;
         if (!bufInput.read(velocity)) early_eof();
         token.buffer.push_back(velocity);
-        // Insert a note off event after the specified duration since MIDI
-        // does not support duration. A note on event with a velocity of zero
-        // is a note off (alternative to 0x8n) according to the MIDI spec.
-        midi_token& offToken = lstTokens.emplace_back(
-            iTokenTime +
-                static_cast<int>(bufInput.read_variable_length_uint()) *
-                    time_multiplier,
-            iTokenType);
-        offToken.data = note;
-        offToken.buffer.push_back(0);
+
+        // Recorded rather than released here, because a later note of the same
+        // pitch may change when it should be released. \see resolve_note_offs
+        const int duration =
+            static_cast<int>(bufInput.read_variable_length_uint()) *
+            time_multiplier;
+        // A zero length note would be released on the tick it is struck, which
+        // orders its note off ahead of its own note on.
+        pending_notes.push_back(
+            {iTokenType, note, iTokenTime, iTokenTime + std::max(duration, 1)});
       } break;
       case 0xF0:
         iExtendedType = 0;
@@ -320,7 +466,9 @@ midi_token_list xmi_to_midi_token_list(const unsigned char* xmi_data,
     }
   }
 
-  std::sort(lstTokens.begin(), lstTokens.end());
+  resolve_note_offs(lstTokens, pending_notes);
+
+  sort_tokens(lstTokens);
   return lstTokens;
 }
 
