@@ -876,6 +876,10 @@ errors = {
     missing_setting = "No difficulty and level number given in overlay field of custom level.",
   },
   cannot_restart_missing_files = "Sorry, but this level cannot be restarted because of missing files %s or %s.",
+  recoverable = "Sorry, but an error has occurred. There can be many reasons - see the console for details. Would you like to attempt a recovery?",
+  fatal_can_reset = "A fatal error occured with CorsixTH and it couldn't recover. Please press the 'X' to restart the program. Your last save was most likely %s.// If you want to report this to the developers the gamelog for this session is available at://",
+  fatal_can_debug = "A fatal error occured with CorsixTH and it couldn't recover. Your last save was most likely %s.// Developers can press 'X' to dismiss this message for debugging. The gamelog for this session is available at://",
+  fatal_cant_reset = "A fatal error occured with CorsixTH and it couldn't recover. Please close the program and launch it again. Your last save was most likely %s.// If you want to report this to the developers the gamelog for this session is available at://"
 }
 
 warnings = {
