@@ -169,10 +169,10 @@ end
 
 --! Override: Change cursor on clicking gamelog path
 function UIFatalError:onMouseDown(button, x, y)
-  Window.onMouseDown(self, button, x, y)
   if self.file_path_button and self:hitTestPanel(x, y, self.file_path_panel) then
     self.ui:setCursor(self.file_path_cursor_active)
   end
+  return Window.onMouseDown(self, button, x, y)
 end
 
 --! Diverges from Window:onMouseUp(button, x, y)
@@ -182,7 +182,12 @@ function UIFatalError:onMouseUp(button, x, y)
   if x < 0 or y < 0 or x >= self.width * s or y >= self.height * s then
     self.ui:playSound("wrong2.wav")
   end
-  Window.onMouseUp(self, button, x, y)
+  return Window.onMouseUp(self, button, x, y)
+end
+
+--! Override: Always hit this window
+function UIFatalError:hitTest(x, y)
+  return true
 end
 
 function UIFatalError:draw(canvas, x, y)
