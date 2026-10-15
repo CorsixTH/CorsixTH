@@ -311,6 +311,7 @@ function LoadGame(data)
   -- the depersisted ui value.
   TheApp.ui.menu_bar.ui = TheApp.ui
   TheApp.ui.menu_bar:onChangeLanguage()
+  TheApp.ui.menu_bar:unlockCheats()
   --end, persist.errcatch)
   TheApp.world.map:registerTemperatureDisplayMethod()
   -- TODO: sound effects on/off are saved too, but should be a global value?
