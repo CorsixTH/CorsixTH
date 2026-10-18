@@ -29,7 +29,7 @@ local col = {
 }
 
 function UICustomise:UICustomise(ui, mode)
-  self:UIResizable(ui, 340, 375, col.bg)
+  self:UIResizable(ui, 360, 375, col.bg)
 
   self.mode = mode
   self.modal_class = mode == "menu" and "main menu" or "options" or "customise"
@@ -59,7 +59,9 @@ function UICustomise:UICustomise(ui, mode)
     -- Allow user to disable screen shake during earthquakes
     { name = "enable_screen_shake" },
     -- Add subtitles for announcer messages
-    { name = "enable_announcer_subtitles" }
+    { name = "enable_announcer_subtitles" },
+    -- Draw money paid by insurance in blue rather than green
+    { name = "enable_insurance_blue_banknote" },
   }
 
   self:buildDialog()

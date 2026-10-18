@@ -268,6 +268,14 @@ enable_screen_shake = true
 enable_announcer_subtitles = false
 
 -------------------------------------------------------------------------------
+-- By default patient payments made via an insurance company feature a blue
+-- floating banknote animation, allowing for immediate visual distinction
+-- from payments made directly to the hospital. If you prefer the original
+-- display style, where all payments are in green, you can disable this option.
+--
+enable_insurance_blue_banknote = true
+
+-------------------------------------------------------------------------------
 -- By default, the game autosaves every in-game month. If you would like to
 -- autosave more often, every week or every day, change this setting to 2 or 3.
 -- Please note that a typical save can take up to 1 megabyte or even more.

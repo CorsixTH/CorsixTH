@@ -163,6 +163,7 @@ local function new_config_defaults()
     machine_menu_button = true,
     enable_screen_shake = true,
     enable_announcer_subtitles = false,
+    enable_insurance_blue_banknote = true,
     autosave_frequency = 1,
     midi_api = nil,
     midi_port = nil,
@@ -569,6 +570,14 @@ param(config_values, 'enable_screen_shake') .. [=[
 -- display subtitles for your hospital's announcements, turn this option on.
 --]=] .. '\n' ..
 param(config_values, 'enable_announcer_subtitles') .. [=[
+
+-------------------------------------------------------------------------------
+-- By default patient payments made via an insurance company feature a blue
+-- floating banknote animation, allowing for immediate visual distinction
+-- from payments made directly to the hospital. If you prefer the original
+-- display style, where all payments are in green, you can disable this option.
+--]=] .. '\n' ..
+param(config_values, 'enable_insurance_blue_banknote') .. [=[
 
 -------------------------------------------------------------------------------
 -- By default, the game autosaves every in-game month. If you would like to
