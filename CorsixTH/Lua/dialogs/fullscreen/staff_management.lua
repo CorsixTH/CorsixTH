@@ -203,6 +203,7 @@ function UIStaffManagement:updateStaffList(staff_member_removed)
       elseif self.list_order == "skill" then
         return a.profile.skill > b.profile.skill
       end
+      return false
     end)
   end
   self.staff_members = staff_members

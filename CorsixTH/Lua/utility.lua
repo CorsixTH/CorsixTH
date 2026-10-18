@@ -621,6 +621,6 @@ if not tracy then
     ZoneBeginS = noop,
     ZoneBeginNS = noop,
     ZoneEnd = noop,
-    Message = noop
+    Message = function(message) end
   }
 end

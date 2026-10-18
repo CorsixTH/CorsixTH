@@ -655,8 +655,7 @@ function Epidemic:getBestVaccinationTile(nurse, patient)
   -- Location of the nurse
   local nx, ny = nurse.tile_x, nurse.tile_y
 
-  local best_x, best_y = nil
-  local shortest_distance = nil
+  local best_x, best_y, shortest_distance
   local free_tiles = self.world.entity_map:getAdjacentFreeTiles(px, py)
 
   for _, coord in ipairs(free_tiles) do
