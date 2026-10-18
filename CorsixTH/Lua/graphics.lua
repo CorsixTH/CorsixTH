@@ -912,7 +912,7 @@ end
 --!param insurance (boolean) Whether the payment went through insurance
 --!return (sheet) The sprite sheet to draw the amount with
 function Graphics:getFloatingBanknoteSpriteTable(insurance)
-  if not insurance then
+  if not insurance or not self.app.config.enable_insurance_blue_banknote then
     return self:loadSpriteTable("Data", "Money01V")
   end
   local palette = self.cache.money_insurance_palette
