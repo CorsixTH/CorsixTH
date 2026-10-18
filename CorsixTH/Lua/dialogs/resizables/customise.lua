@@ -61,7 +61,7 @@ function UICustomise:UICustomise(ui, mode)
     -- Add subtitles for announcer messages
     { name = "enable_announcer_subtitles" },
     -- Draw money paid by insurance in blue rather than green
-    { name = "enable_insurance_blue_banknote" },    
+    { name = "enable_insurance_blue_banknote" },
   }
 
   self:buildDialog()
