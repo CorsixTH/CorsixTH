@@ -1072,19 +1072,13 @@ options_window = {
   option_off = "No",
   option_enabled = "Activado",
   option_disabled = "Desactivado",
-  fullscreen = "Pantalla Completa",
-  ui_scale = "Escala de interfaz",
   capture_mouse = "Capturar Ratón",
   right_mouse_scrolling = "Desplazamiento con el Ratón",
   right_mouse_scrolling_option_middle = "Botón Central",
   right_mouse_scrolling_option_right = "Botón Derecho",
-  width = "Ancho",
-  height = "Alto",
   customise = "Personalizar",
   folder = "Carpetas",
   language = "Idioma del juego",
-  apply = "Aplicar",
-  cancel = "Cancelar",
   back = "Atrás",
   scroll_speed = "Vel. de Desplazamiento",
   shift_scroll_speed = "Vel. de Despl. (Shift)",
@@ -1093,6 +1087,16 @@ options_window = {
   hotkey = "Atajos de Teclado",
   check_for_updates = "Buscar Actualizaciones",
   sound = "Sonido",
+}
+graphics_window = {
+  fullscreen = "Pantalla Completa",
+  ui_scale = "Escala de interfaz",
+  width = "Ancho",
+  height = "Alto",
+  option_on = "Sí",
+  option_off = "No",
+  apply = "Aplicar",
+  cancel = "Cancelar",
 }
 
 autosave_frequency = {
@@ -1108,19 +1112,11 @@ tooltip.autosave_frequency = {
 }
 
 tooltip.options_window = {
-  fullscreen = "Si el juego debe ejecutarse en pantalla completa o en modo ventana",
-    fullscreen_button = "Haz clic para activar o desactivar el modo de pantalla completa",
-    ui_scale = "Escala la interfaz de usuario. Solo se muestran las opciones de escala que se ajustan a la pantalla; para ver más, aumenta la resolución.",
-    select_ui_scale = "Selecciona una nueva escala para la interfaz de usuario",
     ui_scale_unavailable = "Escala de interfaz no disponible; por favor, selecciona primero una resolución más alta.",
     capture_mouse = "Haz clic para activar o desactivar la captura del cursor durante el juego",
     right_mouse_scrolling = "Cambia el botón del ratón que se utiliza para desplazarse por el mapa",
-    width = "Introduce el ancho de pantalla deseado",
-    height = "Introduce la altura de pantalla deseada",
-    apply = "Aplica la resolución ingresada",
-    cancel = "Vuelve sin cambiar la resolución",
-    customise_button = "Más ajustes que puedes cambiar para personalizar tu experiencia de juego",
-    folder_button = "Opciones de carpetas",
+    customise = "Más ajustes que puedes cambiar para personalizar tu experiencia de juego",
+    folder = "Opciones de carpetas",
     language = "El idioma en el que aparecerán los textos del juego",
     select_language = "Selecciona el idioma del juego",
     language_dropdown_item = "Elegir %s como idioma",
@@ -1139,6 +1135,16 @@ tooltip.options_window = {
     hotkey = "Cambia las teclas de acceso rápido del teclado.",
     check_for_updates = "Establece si el juego debe buscar actualizaciones al iniciar.",
     sound = "Cambia la configuración de audio",
+}
+tooltip.graphics_window = {
+  fullscreen = "Si el juego debe ejecutarse en pantalla completa o en modo ventana",
+  fullscreen_button = "Haz clic para activar o desactivar el modo de pantalla completa",
+  ui_scale = "Escala la interfaz de usuario. Solo se muestran las opciones de escala que se ajustan a la pantalla; para ver más, aumenta la resolución.",
+  select_ui_scale = "Selecciona una nueva escala para la interfaz de usuario",
+  width = "Introduce el ancho de pantalla deseado",
+  height = "Introduce la altura de pantalla deseada",
+  apply = "Aplica la resolución ingresada",
+  cancel = "Vuelve sin cambiar la resolución",
 }
 
 audio_window = {

@@ -473,32 +473,30 @@ options_window = {
   caption = "Einstellungen",
   option_on = "Ein",
   option_off = "Aus",
-  fullscreen = "Vollbild",
   capture_mouse = "Maus einfangen",
-  width = "Breite",
-  height = "Höhe",
   customise = "Spezialeinstellungen",
   folder = "Pfade",
   language = "Spielsprache",
-  apply = "Übernehmen",
-  cancel = "Abbrechen",
   back = "Zurück",
   scroll_speed = "Scrolling", -- "Scrolling-Geschwindigkeit" is too long
   shift_scroll_speed = "Scrolling (Mod.)", --"schnelles Scrollen" or "Umschalt-Scrolling-Geschwindigkeit" are worse
   zoom_speed = "Zoomen", --"Zoom-Geschwindigkeit" is too long
   hotkey = "Tastenkürzel",
 }
+graphics_window = {
+  fullscreen = "Vollbild",
+  width = "Breite",
+  height = "Höhe",
+  option_on = "Ein",
+  option_off = "Aus",
+  apply = "Übernehmen",
+  cancel = "Abbrechen",
+}
 
 tooltip.options_window = {
-  fullscreen = "Darstellung im Vollbild- oder Fenstermodus",
-  fullscreen_button = "Klicken, um zwischen Vollbild- und Fenstermodus zu wechseln",
   capture_mouse = "Ein- bzw. Ausschalten, ob der Mauszeiger das Fenster verlassen kann",
-  width = "Gewünschte Bildschirmbreite eingeben",
-  height = "Gewünschte Bildschirmhöhe eingeben",
-  apply = "Die eingegebene Auflösung übernehmen",
-  cancel = "Zurückkehren, ohne die Auflösung zu ändern",
-  customise_button = "Weitere Einstellungen, die Sie ändern können, um Ihr Spielerlebnis anzupassen",
-  folder_button = "Verzeichniseinstellungen",
+  customise = "Weitere Einstellungen, die Sie ändern können, um Ihr Spielerlebnis anzupassen",
+  folder = "Verzeichniseinstellungen",
   language = "Die Sprache, in der Texte im Spiel erscheinen",
   select_language = "Die Spielsprache ändern",
   language_dropdown_item = "%s als Sprache auswählen",
@@ -513,6 +511,14 @@ tooltip.options_window = {
   apply_zoomspeed = "Eingegebene Zoom-Geschwindigkeit anwenden.",
   cancel_zoomspeed = "Ohne Änderung der Zoom-Geschwindigkeit zurückkehren.",
   hotkey = "Tastenkürzel ändern.",
+}
+tooltip.graphics_window = {
+  fullscreen = "Darstellung im Vollbild- oder Fenstermodus",
+  fullscreen_button = "Klicken, um zwischen Vollbild- und Fenstermodus zu wechseln",
+  width = "Gewünschte Bildschirmbreite eingeben",
+  height = "Gewünschte Bildschirmhöhe eingeben",
+  apply = "Die eingegebene Auflösung übernehmen",
+  cancel = "Zurückkehren, ohne die Auflösung zu ändern",
 }
 
 audio_window = {

@@ -294,7 +294,7 @@ function UIResizable:buildDialog()
       num_cols = num_cols + 1
     end
   end
-  local width = (self.margin + self.label_width + label_button_gap + self.btn_width) * num_cols
+  local width = self.margin * 2 + (self.label_width + label_button_gap + self.btn_width) * num_cols
 
   -- Window parts definition
   -- Title
@@ -325,13 +325,6 @@ function UIResizable:buildDialog()
       :setLabel(_S.options_window.back)
       :makeButton(0, 0, big_button_width, self.big_button_height, nil, self.buttonBack)
       :setTooltip(_S.tooltip.options_window.back)
-  else -- X co-ord for the custom back button and other additional buttons
-    self.x_pos = {
-      self.margin,
-      self.margin + self.label_width + 5,
-      self.margin + self.label_width + label_button_gap + self.label_width,
-      self.margin + self.label_width + 5 + label_button_gap + self.label_width + self.btn_width,
-    }
   end
 
   -- After building the dialog contents, adjust size to fit around them

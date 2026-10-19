@@ -162,7 +162,6 @@ tooltip.customise_window = {
 
 options_window = {
   caption = "設定",
-  fullscreen = "フルスクリーン",
   option_on = "オン",
   option_off = "オフ",
   check_for_updates = "アップデートの確認",
@@ -172,31 +171,30 @@ options_window = {
   right_mouse_scrolling = "マップスクロール",
   right_mouse_scrolling_option_middle = "真ん中のボタン",
   right_mouse_scrolling_option_right = "右のボタン",
-  width = "横幅 / width",
-  height = "高さ / Height",
   customise = "カスタム設定",
   folder = "フォルダの場所",
   language = "言語",
-  apply = "決定",
-  cancel = "キャンセル",
   back = "戻る",
   scroll_speed = "スクロール速度",
   shift_scroll_speed = "スクロール速度 (+Shift)",
   zoom_speed = "ズーム速度",
   hotkey = "ホットキーの設定",
 }
+graphics_window = {
+  fullscreen = "フルスクリーン",
+  width = "横幅 / width",
+  height = "高さ / Height",
+  option_on = "オン",
+  option_off = "オフ",
+  apply = "決定",
+  cancel = "キャンセル",
+}
 
 tooltip.options_window = {
-  fullscreen = "ゲームをフルスクリーンモードとウィンドウモードのどちらで実行するかを設定できます",
-  fullscreen_button = "オンにするとフルスクリーンモードになります",
   capture_mouse = "オンにするとマウスカーソルが画面外に出なくなります",
   right_mouse_scrolling = "マップをスクロールするマウスボタンを切り替えます",
-  width = "ご希望の画面幅を入力してください",
-  height = "ご希望の画面高さを入力してください",
-  apply = "入力した解像度で決定する",
-  cancel = "解像度を変更せずに戻る",
-  customise_button = "ゲーム体験のためのより詳細な設定ができます",
-  folder_button = "フォルダオプションです",
+  customise = "ゲーム体験のためのより詳細な設定ができます",
+  folder = "フォルダオプションです",
   language = "ゲーム内の使用言語です",
   select_language = "言語を選択してください",
   language_dropdown_item = " %s を選択する",
@@ -213,6 +211,14 @@ tooltip.options_window = {
   cancel_zoomspeed = "ズーム速度を変更せずに戻る",
   hotkey = "ホットキーの設定を変更する",
   check_for_updates = "アップデートがないか確認する",
+}
+tooltip.graphics_window = {
+  fullscreen = "ゲームをフルスクリーンモードとウィンドウモードのどちらで実行するかを設定できます",
+  fullscreen_button = "オンにするとフルスクリーンモードになります",
+  width = "ご希望の画面幅を入力してください",
+  height = "ご希望の画面高さを入力してください",
+  apply = "入力した解像度で決定する",
+  cancel = "解像度を変更せずに戻る",
 }
 
 audio_window = {

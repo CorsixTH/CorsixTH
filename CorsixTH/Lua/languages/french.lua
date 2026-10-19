@@ -867,16 +867,12 @@ tooltip.menu_list_window = {
 
 -- Options window
 options_window = {
-  apply = "Appliquer",
   back = "Précédent",
-  cancel = "Annuler",
   caption = "Paramètres",
   capture_mouse = "Capture de la souris",
   check_for_updates = "Vérifier mises à jour",
   customise = "Personnaliser",
   folder = "Dossier",
-  fullscreen = "Plein écran",
-  height = "Hauteur",
   hotkey = "Touches de raccourci",
   language = "Langue du jeu",
   option_disabled = "Désactivé",
@@ -885,14 +881,22 @@ options_window = {
   option_on = "Activer",
   scroll_speed = "Vitesse de défilement",
   shift_scroll_speed = "Vit. de défil. + Maj",
-  width = "Largeur",
   zoom_speed = "Vitesse de zoom",
   right_mouse_scrolling = "Défilement Souris",
   right_mouse_scrolling_option_middle = "Bouton Milieu",
   right_mouse_scrolling_option_right = "Bouton Droit",
-  ui_scale = "Échelle d'interface",
   sound = "Son",
   autosave_frequency = "Fréquence sauv. auto.",
+}
+graphics_window = {
+  fullscreen = "Plein écran",
+  ui_scale = "Échelle d'interface",
+  width = "Largeur",
+  height = "Hauteur",
+  option_on = "Activer",
+  option_off = "Désactiver",
+  apply = "Appliquer",
+  cancel = "Annuler",
 }
 
 autosave_frequency = {
@@ -908,21 +912,13 @@ tooltip.autosave_frequency = {
 }
 
 tooltip.options_window = {
-  fullscreen = "Mode plein écran ou mode fenêtré",
-  fullscreen_button = "Basculer en mode plein écran/fenêtré",
-  ui_scale = "Mise à l'échelle de l'interface. Seules les options d'échelle applicables à votre écran sont disponibles. Augmentez la résolution pour plus d'options.",
-  select_ui_scale = "Sélectionner une échelle d'interface",
   ui_scale_unavailable = "Échelle d'interface indisponible, veuillez d'abord choisir une résolution plus élevée.",
-  width = "Entrez la largeur désirée",
-  height = "Entrez la hauteur désirée",
   language = "Utiliser la langue %s",
   back = "Fermer la fenêtre des options",
-  cancel = "Retour sans changement de résolution",
-  apply = "Appliquer la résolution choisie",
   language_dropdown_item = "Choisir %s comme langue",
   select_language = "Sélectionner la langue du jeu",
-  folder_button = "Dossier des paramètres",
-  customise_button = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
+  folder = "Dossier des paramètres",
+  customise = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
   apply_shift_scrollspeed = "Appliquer la vitesse de défilement en mode Maj.",
   shift_scroll_speed = "Définir la vitesse de défilement lorsque la touche Maj est enfoncée. De 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 4.",
   hotkey = "Modifier les touches de raccourci du clavier.",
@@ -939,6 +935,16 @@ tooltip.options_window = {
   right_mouse_scrolling = "Activer le bouton qui est utilisé pour faire défiler la carte",
   sound = "Modifier les réglages audio",
   autosave_frequency = "Définir la fréquence des sauvegardes automatiques.",
+}
+tooltip.graphics_window = {
+  fullscreen = "Mode plein écran ou mode fenêtré",
+  fullscreen_button = "Basculer en mode plein écran/fenêtré",
+  ui_scale = "Mise à l'échelle de l'interface. Seules les options d'échelle applicables à votre écran sont disponibles. Augmentez la résolution pour plus d'options.",
+  select_ui_scale = "Sélectionner une échelle d'interface",
+  width = "Entrez la largeur désirée",
+  height = "Entrez la hauteur désirée",
+  apply = "Appliquer la résolution choisie",
+  cancel = "Retour sans changement de résolution",
 }
 
 audio_window = {

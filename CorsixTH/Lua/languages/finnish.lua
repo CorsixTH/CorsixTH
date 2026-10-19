@@ -238,13 +238,15 @@ menu_list_window = {
 }
 
 options_window = {
+  browse                = "Selaa...",
+  new_th_directory      = "Tässä voit määrittää uuden Theme Hospital -pelin asennushakemiston. Kun olet valinnut uuden hakemiston, peli käynnistyy uudestaan.",
+  back                  = "Takaisin",
+}
+graphics_window = {
   fullscreen            = "Koko ruutu",
   width                 = "Leveys",
   height                = "Korkeus",
-  browse                = "Selaa...",
-  new_th_directory      = "Tässä voit määrittää uuden Theme Hospital -pelin asennushakemiston. Kun olet valinnut uuden hakemiston, peli käynnistyy uudestaan.",
   cancel                = "Peruuta",
-  back                  = "Takaisin",
 }
 
 errors = {
@@ -307,12 +309,14 @@ tooltip = {
   },
 
   options_window = {
-    fullscreen_button   = "Klikkaa kytkeäksesi koko ruudun -tilan päälle tai pois",
-    width               = "Syötä peli-ikkunan haluttu leveys",
-    height              = "Syötä peli-ikkunan haluttu korkeus",
     language            = "Valitse kieleksi %s",
     browse              = "Selaa hakemistoja valitaksesi uuden Theme Hospital -pelin asennushakemiston",
     back                = "Sulje tämä ikkuna",
+  },
+  graphics_window = {
+    fullscreen_button   = "Klikkaa kytkeäksesi koko ruudun -tilan päälle tai pois",
+    width               = "Syötä peli-ikkunan haluttu leveys",
+    height              = "Syötä peli-ikkunan haluttu korkeus",
   },
 
   new_game_window = {

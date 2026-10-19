@@ -226,22 +226,27 @@ tooltip.menu_list_window = {
 }
 
 options_window = {
+  browse = "Tallózás...",
+  new_th_directory = "Itt egy új Theme Hospital telepítési útvonalat adhatsz meg. Amint kiválasztottad az új könyvtárat, a játék újraindul.",
+  back = "Vissza",
+}
+graphics_window = {
+  caption = "Graphics",
   fullscreen = "Teljes képernyő",
   width = "Szélesség",
   height = "Magasság",
-  browse = "Tallózás...",
-  new_th_directory = "Itt egy új Theme Hospital telepítési útvonalat adhatsz meg. Amint kiválasztottad az új könyvtárat, a játék újraindul.",
   cancel = "Mégse",
-  back = "Vissza",
 }
 
 tooltip.options_window = {
-  fullscreen_button = "Kattints a teljes képernyős módba való váltáshoz",
-  width = "Add meg a kívánt szélességet",
-  height = "Add meg a kívánt magasságot",
   language = "%s nyelv kiválasztása",
   browse = "Másik elérési útvonal kiválasztása a Theme Hospital fájljaihoz",
   back = "Beállítások ablak bezárása",
+}
+tooltip.graphics_window = {
+  fullscreen_button = "Kattints a teljes képernyős módba való váltáshoz",
+  width = "Add meg a kívánt szélességet",
+  height = "Add meg a kívánt magasságot",
 }
 
 calls_dispatcher = {
@@ -1823,8 +1828,8 @@ menu_options_wage_increase.deny = " MEGTAGAD"
 menu_options_wage_increase.grant = " ENGEDÉLYEZ"
 tooltip.audio_window.audio_button = "Minden hang ki/be kapcsolása"
 tooltip.audio_window.audio_toggle = "Ki vagy bekapcsol"
-tooltip.options_window.folder_button = "Könyvtár opciók"
-tooltip.options_window.customise_button = "További beállítások, hogy finomhangolhasd a játékélményt"
+tooltip.options_window.folder = "Könyvtár opciók"
+tooltip.options_window.customise = "További beállítások, hogy finomhangolhasd a játékélményt"
 tooltip.update_window.download = "Látogasd meg a letöltőoldalt, hogy megszerezhesd a CorsixTH legfrissebb verzióját"
 tooltip.update_window.ignore = "A frissítés kihagyása. Újra értesítést fogsz kapni róla, amikor legközelebb elindítod a CorsixTH-t"
 tooltip.folders_window.browse_font = "Válassz másik betűtípusfile-t ( jelenlegi hely: %1% )"

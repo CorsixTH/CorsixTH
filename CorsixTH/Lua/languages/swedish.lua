@@ -348,30 +348,36 @@ options_window = {
   caption = "Alternativ",
   option_on = "På",
   option_off = "Av",
-  fullscreen = "Helskärm",
-  width = "Bredd",
-  height = "Höjd",
   customise = "Anpassa",
   folder = "Mappar",
   language = "Spelspråk",
+  back = "Tillbaka",
+}
+graphics_window = {
+  fullscreen = "Helskärm",
+  width = "Bredd",
+  height = "Höjd",
+  option_on = "På",
+  option_off = "Av",
   apply = "Tillämpa",
   cancel = "Avbryt",
-  back = "Tillbaka",
 }
 
 tooltip.options_window = {
+  customise = "Fler inställningar som kan ändras för att anpassa din spelupplevelse",
+  folder = "Mappinställningar",
+  language = "Text i spelet kommer att visas på det här språket",
+  select_language = "Väljs spelspråk",
+  language_dropdown_item = "Ändra till %s som språk",
+  back = "Stäng alternativmenyn",
+}
+tooltip.graphics_window = {
   fullscreen = "Om spelet ska köras i fullskärmsläge eller fönsterläge",
   fullscreen_button = "Klicka för att gå mellan fönster och helskärm",
   width = "Fyll i önskad skärmbredd",
   height = "Fyll i önskad skärmhöjd",
   apply = "Tillämpa den valda upplösningen",
   cancel = "Återvänd utan att ändra upplösning",
-  customise_button = "Fler inställningar som kan ändras för att anpassa din spelupplevelse",
-  folder_button = "Mappinställningar",
-  language = "Text i spelet kommer att visas på det här språket",
-  select_language = "Väljs spelspråk",
-  language_dropdown_item = "Ändra till %s som språk",
-  back = "Stäng alternativmenyn",
 }
 
 audio_window = {

@@ -457,18 +457,13 @@ options_window = {
   option_off = "Desligar",
   option_enabled = "Ativado",
   option_disabled = "Desativado",
-  fullscreen = "Tela Cheia",
   capture_mouse = "Capturar Mouse",
   right_mouse_scrolling = "Rolagem do Mouse",
   right_mouse_scrolling_option_middle = "Botäo do Meio",
   right_mouse_scrolling_option_right = "Botäo Direito",
-  width = "Largura",
-  height = "Altura",
   customise = "Personalizar",
   folder = "Pastas",
   language = "Idioma do Jogo",
-  apply = "Aplicar",
-  cancel = "Cancelar",
   back = "Voltar",
   scroll_speed = "Veloc. de Rolagem",
   shift_scroll_speed = "Veloc. Rolagem Acel.",
@@ -476,18 +471,21 @@ options_window = {
   hotkey = "Atalhos",
   check_for_updates = "Verificar Atualizaçöes",
 }
+graphics_window = {
+  fullscreen = "Tela Cheia",
+  width = "Largura",
+  height = "Altura",
+  option_on = "Ligar",
+  option_off = "Desligar",
+  apply = "Aplicar",
+  cancel = "Cancelar",
+}
 
 tooltip.options_window = {
-  fullscreen = "Se o jogo deve ser executado em tela cheia ou modo janela",
-  fullscreen_button = "Clique para mudar para tela cheia",
   capture_mouse = "Clique para alternar a captura do cursor na janela do jogo",
   right_mouse_scrolling = "Alterne o botäo do mouse que é usado para rolar o mapa",
-  width = "Insira a largura da tela desejada",
-  height = "Insira a altura da tela desejada",
-  apply = "Aplicar a resoluçäo inserida",
-  cancel = "Retornar sem alterar a resoluçäo",
-  customise_button = "Você pode alterar mais configuraçöes para personalizar sua experiência de jogo",
-  folder_button = "Opçöes de pastas",
+  customise = "Você pode alterar mais configuraçöes para personalizar sua experiência de jogo",
+  folder = "Opçöes de pastas",
   language = "O idioma em que os textos do jogo apareceräo",
   select_language = "Selecione o idioma do jogo",
   language_dropdown_item = "Selecionar %s como idioma",
@@ -504,6 +502,14 @@ tooltip.options_window = {
   cancel_zoomspeed = "Retorne sem alterar a velocidade de aproximaçäo.",
   hotkey = "Altere as teclas de atalho do teclado.",
   check_for_updates = "Define se o jogo deve procurar atualizaçöes ao iniciar.",
+}
+tooltip.graphics_window = {
+  fullscreen = "Se o jogo deve ser executado em tela cheia ou modo janela",
+  fullscreen_button = "Clique para mudar para tela cheia",
+  width = "Insira a largura da tela desejada",
+  height = "Insira a altura da tela desejada",
+  apply = "Aplicar a resoluçäo inserida",
+  cancel = "Retornar sem alterar a resoluçäo",
 }
 
 audio_window = {

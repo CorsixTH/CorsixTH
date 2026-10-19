@@ -253,22 +253,26 @@ tooltip.menu_list_window = {
 }
 
 options_window = {
+  browse = "Gennemse",
+  new_th_directory = "Her kan du specificere en ny installationsmappe for Theme Hospital. Så snart du har gjort det vil spillet genstarte.",
+  back = "Tilbage",
+}
+graphics_window = {
   fullscreen = "Fuldskærm",
   width = "Bredde",
   height = "Höjde",
-  browse = "Gennemse",
-  new_th_directory = "Her kan du specificere en ny installationsmappe for Theme Hospital. Så snart du har gjort det vil spillet genstarte.",
   cancel = "Annullér",
-  back = "Tilbage",
 }
 
 tooltip.options_window = {
-  fullscreen_button = "Klik for at skifte imellem fuldskærmsvisning",
-  width = "Indtast den önskede skærmbrede",
-  height = "Indtast den önskede skærmhöjde",
   language = "Vælg %s som sprog",
   browse = "Gennemse et andet sted for installation af Theme Hospital. %1%",
   back = "Luk indstillingsvinduet",
+}
+tooltip.graphics_window = {
+  fullscreen_button = "Klik for at skifte imellem fuldskærmsvisning",
+  width = "Indtast den önskede skærmbrede",
+  height = "Indtast den önskede skærmhöjde",
 }
 
 new_game_window = {
@@ -2644,8 +2648,8 @@ menu_options_wage_increase.deny = "    AFVIS "
 menu_options_wage_increase.grant = "    TILLAD "
 tooltip.audio_window.audio_button = "Slå alle lyde til og fra i spillet "
 tooltip.audio_window.audio_toggle = "Slå til og fra"
-tooltip.options_window.folder_button = "Mappeindstillinger"
-tooltip.options_window.customise_button = "Flere indstillinger som du kan ændre for at tilpasse din spiloplevelse."
+tooltip.options_window.folder = "Mappeindstillinger"
+tooltip.options_window.customise = "Flere indstillinger som du kan ændre for at tilpasse din spiloplevelse."
 tooltip.update_window.download = "Gå til downloadsiden for den nyeste version af CorsixTH"
 tooltip.update_window.ignore = "Ignorer denne opdatering for nu. Du vil blive påmindet igen næste gang du åbner CorsixTH"
 tooltip.folders_window.browse_font = "Led efter en anden skrifttype fil ( nuværende placering: %1% )"

@@ -3095,15 +3095,10 @@ options_window = {
   option_off = "關",
   option_enabled = "已啟用",
   option_disabled = "已停用",
-  fullscreen = "全螢幕",
   capture_mouse = "捕獲滑鼠",
-  width = "寬度",
-  height = "高度",
   customise = "自訂",
   folder = "資料夾",
   language = "語言",
-  apply = "應用",
-  cancel = "取消",
   back = "返回",
   scroll_speed = "捲動速度",
   shift_scroll_speed = "加速捲動速度",
@@ -3111,17 +3106,20 @@ options_window = {
   hotkey = "熱鍵",
   check_for_updates = "自動檢查更新",
 }
+graphics_window = {
+  fullscreen = "全螢幕",
+  width = "寬度",
+  height = "高度",
+  option_on = "開",
+  option_off = "關",
+  apply = "應用",
+  cancel = "取消",
+}
 
 tooltip.options_window = {
-  fullscreen = "應該在全屏還是視窗模式執行",
-  fullscreen_button = "點選切換全屏模式",
   capture_mouse = "點選切換是否將游標捕獲在遊戲視窗中",
-  width = "輸入想要的螢幕寬度",
-  height = "輸入想要的螢幕高度",
-  apply = "應用此解析度",
-  cancel = "返回而不更改解析度",
-  customise_button = "更多可以改變遊戲體驗的選項",
-  folder_button = "資料夾選項",
+  customise = "更多可以改變遊戲體驗的選項",
+  folder = "資料夾選項",
   language = "遊戲文字使用的語言",
   select_language = "選擇語言",
   language_dropdown_item = "選擇 %s 為語言",
@@ -3137,6 +3135,14 @@ tooltip.options_window = {
   cancel_zoomspeed = "返回而不更改縮放速度",
   hotkey = "更改鍵盤熱鍵",
   check_for_updates = "遊戲啟動時自動檢查更新",
+}
+tooltip.graphics_window = {
+  fullscreen = "應該在全屏還是視窗模式執行",
+  fullscreen_button = "點選切換全屏模式",
+  width = "輸入想要的螢幕寬度",
+  height = "輸入想要的螢幕高度",
+  apply = "應用此解析度",
+  cancel = "返回而不更改解析度",
 }
 
 audio_window = {
