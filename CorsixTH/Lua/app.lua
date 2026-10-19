@@ -1464,6 +1464,8 @@ function App:checkInstallFolder()
     local mac_app_dir = debug.getinfo(1).short_src:match("(.*)/Contents/.")
     local user_dir = os.getenv("HOME") or os.getenv("USERPROFILE")
     local win_home_dir = nil;
+    local config_path =
+        corsixth.require("config_finder").config_filename:match("(.*[/\\])")
     if os.getenv("HOMEDRIVE") and os.getenv("HOMEPATH") then
       win_home_dir = os.getenv("HOMEDRIVE") .. os.getenv("HOMEPATH")
       if win_home_dir == user_dir then win_home_dir = nil; end
@@ -1472,7 +1474,7 @@ function App:checkInstallFolder()
       user_dir,
       user_dir and (user_dir .. pathsep .. "Documents"),
       win_home_dir,
-      corsixth.require("config_finder").config_filename:match("(.*[/\\])"):sub(1, -2),
+      config_path and config_path:sub(1, -2) or "",
       mac_app_dir,
       mac_app_dir and mac_app_dir:match("(.*)/.*%.app"),
       "/Applications/Theme Hospital.app/Contents/Resources/game/Theme Hospital.app/" ..
@@ -1491,7 +1493,7 @@ function App:checkInstallFolder()
       if status then break end
       for _, folder in pairs(possible_folders) do
         local _
-        local path = dir .. pathsep .. folder
+        local path = (dir == "") and folder or (dir .. pathsep .. folder)
         if lfs.attributes(path, "mode") == "directory" and self:isThemeHospitalPath(path) then
           print("Game data found at: " .. path)
           print("This will be written to the config file")
