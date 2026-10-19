@@ -49,7 +49,8 @@ local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
 local serialize = serialize -- from utility
 
 local function pathconcat(a, b)
-  if a:sub(-1) == pathsep then
+  -- Don't pathsep if a was empty
+  if a:sub(-1) == pathsep or string.len(a) == 0 then
     return a .. b
   else
     return a .. pathsep .. b
@@ -74,6 +75,7 @@ local function find_config()
   local config_name = "config.txt"
 
   -- Check for config.path.txt
+  -- On Windows, ourpath may be empty
   local fi = io.open(pathconcat(ourpath, "config.path.txt"), "r")
   if fi then
     local contents = fi:read("*a")
