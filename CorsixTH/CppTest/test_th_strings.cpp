@@ -3,7 +3,7 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <string>
 
-#include "../Src/th_strings.h"
+#include "th_strings.h"
 
 TEST_CASE("skip whitespace", "[skip_utf8_whitespace]") {
   const char* str = " \t \n  1234";

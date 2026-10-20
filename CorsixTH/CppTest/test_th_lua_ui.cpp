@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "../Src/th_lua_ui.h"
+#include "th_lua_ui.h"
 
 TEST_CASE("map_color_channel scales correctly", "[map_color_channel]") {
   REQUIRE(map_color_channel(0, 100, 0, 10, 20) == 10);

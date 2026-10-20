@@ -152,7 +152,7 @@ jobs:
           fi
 
   Linux-vcpkg:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     name: Linux vcpkg Lua 5.5 ${{inputs.animview == 'true' && 'with AnimView' || ''}}
     env:
       VCPKG_BINARY_SOURCES: clear;files,${{github.workspace}}/vcpkg_cache,readwrite

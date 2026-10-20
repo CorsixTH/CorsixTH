@@ -320,7 +320,7 @@ midi_token_list xmi_to_midi_token_list(const unsigned char* xmi_data,
     }
   }
 
-  std::sort(lstTokens.begin(), lstTokens.end());
+  std::stable_sort(lstTokens.begin(), lstTokens.end());
   return lstTokens;
 }
 

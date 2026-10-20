@@ -1,8 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "../Src/lua.hpp"
-#include "../Src/th_lua.h"
-#include "../Src/th_map.h"
+#include "lua.hpp"
+#include "th_lua.h"
+#include "th_map.h"
 
 TEST_CASE("test l_map_setcellflags", "[l_map_setcellflags]") {
   // Prepare lua bindings
