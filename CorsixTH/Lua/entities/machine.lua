@@ -372,15 +372,20 @@ end
 --!param room (object) machine room
 --!param strength_reducible (bool) machine room
 function Machine:machineRepaired(room, strength_reducible)
+  -- The sequence of actions inside function matters.
+  -- Changing the order can disrupt the machine repair logic.
   strength_reducible = strength_reducible or true
+  -- 1. First, perform a "reduce strength" operation.
   if strength_reducible then
     self:reduceStrengthOnRepair()
   end
+  -- 2. Next, after "reduce strength" reset the `times_used` value.
+  self.times_used = 0
   room:unlockRoomOnRepair()
+  -- 3. Finally, after reset the `times_used` update the DynamicInfo.
   self:removeRepairingStatus()
   setSmoke(self, false)
   self:removeHandymanRepairTask()
-  self.times_used = 0
 end
 
 --! Call on machine repaired. Removes repair task for that machine.
