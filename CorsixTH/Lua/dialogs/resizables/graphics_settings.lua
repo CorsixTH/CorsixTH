@@ -312,7 +312,7 @@ function UIGraphicSettings:_processOverrideResolution()
   self.buttons.original_aspect_ratio:enable(not config.override_resolution)
 end
 
-function UIGraphicSettings:onChangeWindowSize()
+function UIGraphicSettings:onChangeResolution()
   self:_processWindowResizeEvent()
   self:setDefaultPosition(0.5, 0.25)
 end
