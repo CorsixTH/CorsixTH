@@ -660,11 +660,21 @@ function UI:fullscreenHotkey()
   end
 end
 
---! Turns a video mode on and off
+--! Turns a video mode on if off and vice versa
 --!return success true if toggle succeeded
 function UI:toggleVideoMode(mode)
   local modes = self.app.modes
-  modes[mode] = not modes[mode]
+  local value = not modes[mode]
+
+  return self:setVideoMode(mode, value)
+end
+
+--! Turns a video mode on and off
+--!return success true if toggle succeeded
+function UI:setVideoMode(mode, value)
+  local modes = self.app.modes
+  local oldval = modes[mode]
+  modes[mode] = value
 
   local success = true
   self.app:prepareVideoUpdate()
@@ -674,15 +684,16 @@ function UI:toggleVideoMode(mode)
   if error_message then
     success = false
     local on_off = modes[mode] and "on" or "off"
-    print("Warning: Could not toggle " .. mode .. " " .. on_off .. " with window size of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
+    print("Warning: Could not set " .. mode .. " " .. on_off .. " with window size of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
     -- Revert fullscreen mode modifications
-    modes[mode] = not modes[mode]
+    modes[mode] = oldval
   end
 
   if success then
     -- Save new setting in config
     self.app.config.fullscreen = modes.fullscreen
     self.app.config.original_aspect_ratio = modes.aspect_ratio_4_3
+    self.app.config.override_resolution = modes.override_resolution
     self.app:saveConfig()
   end
 

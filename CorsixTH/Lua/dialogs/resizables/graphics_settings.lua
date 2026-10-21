@@ -35,6 +35,16 @@ local col = {
   textbox        = Colours.Textbox,
 }
 
+local available_override_resolutions = function()
+  return {
+    {text = _S.graphics_window.option_off },
+    {text = "640x480 (4:3)",     width = 640,  height = 480  },
+    {text = "800x600 (4:3)",     width = 800,  height = 600  },
+    {text = "720x480 (3:2)",     width = 720,  height = 480  },
+    {text = "1280x720 (16:9)",   width = 1280, height = 720  },
+  }
+end
+
 -- Generate predefined window sizes the player can choose from; as well as
 -- including the custom option at the bottom. Where UI scaling prevents a
 -- window size option from being selected, grey it out instead and move to
@@ -130,6 +140,7 @@ function UIGraphicSettings:UIGraphicSettings(ui, mode)
     { name = "ui_scale", func = self.dropdownUIScale, raised = true },
     { name = "cursor_scale", func = self.dropdownCursorScale, raised = true },
     { name = "original_aspect_ratio", func = self.buttonOriginalAspectRatio, raised = true },
+    { name = "override_resolution", func = self.dropdownOverrideResolution, raised = true },
   }
 
   self:buildDialog()
@@ -141,6 +152,7 @@ function UIGraphicSettings:UIGraphicSettings(ui, mode)
       _S.graphics_window.scale_auto or app.config.ui_scale * 100 .. "%")
   self.buttons.cursor_scale:setLabel(app.config.cursor_scale == 0 and
       _S.graphics_window.scale_auto or app.config.cursor_scale * 100 .. "%")
+  self:_processOverrideResolution()
 end
 
 function UIGraphicSettings:buttonFullscreen()
@@ -164,10 +176,11 @@ function UIGraphicSettings:buttonOriginalAspectRatio()
 end
 
 function UIGraphicSettings:dropdownWindowSize(activate)
-  if activate and not self.resolution_dropdown then
+  if activate and not self.window_size_dropdown then
     self.available_window_sizes = available_window_sizes()
     self:dropdownUIScale(false)
     self:dropdownCursorScale(false)
+    self:dropdownOverrideResolution(false)
     self.window_size_dropdown = UIDropdown(self.ui, self, self.buttons.window_size, self.available_window_sizes, self.selectWindowSize, col.setting_active, col.scrollbar, col.disabled)
     self:addWindow(self.window_size_dropdown)
   else
@@ -203,6 +216,7 @@ function UIGraphicSettings:dropdownUIScale(activate)
     self.available_ui_scales = available_ui_scales()
     self:dropdownWindowSize(false)
     self:dropdownCursorScale(false)
+    self:dropdownOverrideResolution(false)
     self.scale_ui_dropdown = UIDropdown(self.ui, self, self.buttons.ui_scale, self.available_ui_scales, self.selectUIScale, col.setting_active, col.scrollbar)
     self:addWindow(self.scale_ui_dropdown)
   else
@@ -219,6 +233,7 @@ function UIGraphicSettings:dropdownCursorScale(activate)
     self.available_cursor_scales = available_cursor_scales()
     self:dropdownWindowSize(false)
     self:dropdownUIScale(false)
+    self:dropdownOverrideResolution(false)
     self.cursor_scale_dropdown = UIDropdown(self.ui, self, self.buttons.cursor_scale, self.available_cursor_scales, self.selectCursorScale, col.setting_active, col.scrollbar)
     self:addWindow(self.cursor_scale_dropdown)
   else
@@ -253,6 +268,48 @@ function UIGraphicSettings:selectCursorScale(number)
   TheApp.config.cursor_scale = res.scale
   TheApp:saveConfig()
   self.buttons.cursor_scale:setLabel(res.text)
+end
+
+function UIGraphicSettings:dropdownOverrideResolution(activate)
+  if activate and not self.override_resolution_dropdown then
+    self.override_resolutions = available_override_resolutions()
+    self:dropdownWindowSize(false)
+    self:dropdownUIScale(false)
+    self:dropdownCursorScale(false)
+    self.override_resolution_dropdown = UIDropdown(self.ui, self, self.buttons.window_size, self.override_resolutions, self.selectOverrideResolution, col.setting_active, col.scrollbar, col.disabled)
+    self:addWindow(self.override_resolution_dropdown)
+  else
+    self.buttons.override_resolution:setToggleState(false)
+    if self.override_resolution_dropdown then
+      self.override_resolution_dropdown:close()
+      self.override_resolution_dropdown = nil
+    end
+  end
+end
+
+function UIGraphicSettings:selectOverrideResolution(number)
+  local res = self.override_resolutions[number]
+  local config = TheApp.config
+
+  if res.width then
+    config.override_resolution_width = res.width
+    config.override_resolution_height = res.height
+    self.ui:setVideoMode('override_resolution', true)
+  else
+    self.ui:setVideoMode('override_resolution', false)
+  end
+  self.ui:onChangeResolution()
+  self:_processOverrideResolution()
+end
+
+function UIGraphicSettings:_processOverrideResolution()
+  local config = TheApp.config
+  self.buttons.override_resolution:setLabel(
+        not config.override_resolution and
+            _S.graphics_window.option_off or
+            config.override_resolution_width .. 'x' .. config.override_resolution_height)
+
+  self.buttons.original_aspect_ratio:enable(not config.override_resolution)
 end
 
 function UIGraphicSettings:onChangeWindowSize()
