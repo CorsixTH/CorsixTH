@@ -157,9 +157,9 @@ end
 
 function UIGraphicSettings:buttonFullscreen()
   if not self.ui:toggleVideoMode("fullscreen") then
-      local err = {_S.errors.unavailable_screen_size}
-      self.ui:addWindow(UIInformation(self.ui, err))
-      self.buttons.fullscreen:toggle()
+    local err = {_S.errors.unavailable_screen_size}
+    self.ui:addWindow(UIInformation(self.ui, err))
+    self.buttons.fullscreen:toggle()
   end
   self.buttons.fullscreen:setLabel(self.ui.app.modes.fullscreen and _S.graphics_window.option_on or _S.graphics_window.option_off)
   self.buttons.window_size:enable(not self.ui.app.modes.fullscreen)
