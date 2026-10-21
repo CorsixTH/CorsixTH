@@ -159,7 +159,11 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "%s\n", lua_tostring(L.get(), -1));
       }
     }
+#ifdef __EMSCRIPTEN__
+    mainloop(L.release());
+#else
     mainloop(L.get());
+#endif
 
     lua_getfield(L.get(), LUA_REGISTRYINDEX, "_RESTART");
     bRun = lua_toboolean(L.get(), -1) != 0;
