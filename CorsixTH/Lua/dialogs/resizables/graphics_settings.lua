@@ -132,6 +132,7 @@ function UIGraphicSettings:UIGraphicSettings(ui, mode)
 
   self.app = app
   self.mode = mode
+  self.modal_class = mode == "menu" and "main menu" or "options" or "graphics"
   self.strings_ref = "graphics_window"
 
   self.entry_list = {
