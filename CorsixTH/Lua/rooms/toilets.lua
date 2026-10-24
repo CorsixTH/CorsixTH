@@ -180,8 +180,10 @@ function ToiletRoom:afterLoad(old, new)
   if old < 110 then
     room.free_loos = nil
   end
-  if self.door and self.door.queue and self.maximum_patients then
-    self.door.queue:setBenchThreshold(math.max(3, self.maximum_patients))
+  if old < 270 then
+    if self.built and self.door and self.door.queue and self.maximum_patients then
+      self.door.queue:setBenchThreshold(math.max(3, self.maximum_patients))
+    end
   end
   Room.afterLoad(self, old, new)
 end
