@@ -223,14 +223,10 @@ end
 
 --! Private function. Sets the new time (in ticks) when a random announcement should be played.
 function Announcer:_setRandomAnnouncementTarget()
-  -- Note that random announcement are measured in ticks.
-  -- This ensures that on fast game speeds random announcements aren't
-  -- spammed, or on lower game speeds random announcements are never played.
-
-  -- Every tick is 18ms, so ~3333 ticks is 1 minute at normal speed
-  local tick_chunk = 3333
-  -- Set a target of 4 - 6 minutes (chunks)
-  self.random_announcement_ticks_target = math.random(tick_chunk * 4, tick_chunk * 6)
+  -- Note that random announcement period is measured in SDL ticks (18ms).
+  -- Random announcements queue after every 90-120 seconds of 'silence'
+  local tick_chunk_lower, tick_chunk_upper = 5000, 6667 -- rounded
+  self.random_announcement_ticks_target = math.random(tick_chunk_lower, tick_chunk_upper)
 end
 
 --! Private function. Plays the actual sound of an announcement.
@@ -250,5 +246,16 @@ function Announcer:_onPlayed(entry)
 
   if entry.played_callback ~= nil then
     entry.played_callback()
+  end
+end
+
+function Announcer:afterLoad(old, new)
+  if old < 270 then
+    -- Refresh the random announcement target if not <120 seconds
+    local old_tick_chunk = self.random_announcement_ticks_target
+    local new_tick_chunk_max = 6667 -- rounded
+    if old_tick_chunk > new_tick_chunk_max then
+      self:_setRandomAnnouncementTarget()
+    end
   end
 end
