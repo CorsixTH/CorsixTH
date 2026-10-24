@@ -1357,6 +1357,7 @@ function GameUI:afterLoad(old, new)
     self.multigesturemove = nil
   end
 
+  self.announcer:afterLoad(old, new)
   self.announcer.playing = false
 
   self.app:setCaptureMouse()
