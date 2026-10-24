@@ -321,7 +321,7 @@ function UIPatient:viewQueue()
 end
 
 function UIPatient:goHome()
-  if self.patient.going_home then
+  if self.patient.going_home or self.patient.going_to_die or self.patient.dead then
     return
   end
   self:close()
