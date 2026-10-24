@@ -56,6 +56,9 @@ function ToiletRoom:roomFinished()
     end
   end
   self.maximum_patients = number
+  if self.door and self.door.queue then
+    self.door.queue:setBenchThreshold(math.max(3, number))
+  end
   Room.roomFinished(self)
 end
 
@@ -92,6 +95,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
           if humanoid:isType("Standard Female Patient") or
               humanoid:isType("Standard Male Patient") then
             local --[[persistable:toilets_find_sink]] function after_use()
+              self:tryAdvanceQueue()
               local sink, sx, sy = self.world:findFreeObjectNearToUse(humanoid, "sink")
               if sink then
                 humanoid:walkTo(sx, sy)
@@ -126,6 +130,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
             after_use()
           else
             self:dealtWithPatient(humanoid)
+            self:tryAdvanceQueue()
           end
         end
       end
@@ -143,33 +148,42 @@ function ToiletRoom:onHumanoidEnter(humanoid)
   return Room.onHumanoidEnter(self, humanoid)
 end
 
--- Override the standard way to count the number of patients to take into account
--- that some of them may not be using the loo, allowing others to enter the room earlier than normal;
--- but not if there is only one loo in the room, then it becomes a private toilet with only one person at a time.
+-- Override the standard way to count the number of patients to accurately reflect
+-- the number of loos currently in use or reserved, allowing waiting patients to enter
+-- as soon as a cubicle becomes available.
+-- If there is only one loo in the room, it remains a private toilet with only one person at a time.
 function ToiletRoom:getPatientCount()
-  local number_users = 0
-  local not_using_loo = 0
-  for humanoid in pairs(self.humanoids) do
-    if class.is(humanoid, Patient) then
-      number_users = number_users + 1
+  if self.maximum_patients == 1 then
+    local number_users = 0
+    for humanoid in pairs(self.humanoids) do
+      if class.is(humanoid, Patient) then
+        number_users = number_users + 1
+      end
+    end
+    return number_users
+  end
 
-      if humanoid:getCurrentAction().name == "use_object" and
-          humanoid:getCurrentAction().object.object_type.id ~= "loo" then
-        not_using_loo = not_using_loo + 1
+  local loos_in_use = 0
+  local fx, fy = self:getEntranceXY(true)
+  local objects = self.world:findAllObjectsNear(fx, fy)
+  for object in pairs(objects) do
+    if object.object_type.id == "loo" then
+      if object.user or object.reserved_for then
+        loos_in_use = loos_in_use + 1
       end
     end
   end
-
-  if self.maximum_patients == 1 then
-    return number_users
-  else
-    return number_users - not_using_loo
-  end
+  return loos_in_use
 end
 
 function ToiletRoom:afterLoad(old, new)
   if old < 110 then
     room.free_loos = nil
+  end
+  if old < 270 then
+    if self.built and self.door and self.door.queue and self.maximum_patients then
+      self.door.queue:setBenchThreshold(math.max(3, self.maximum_patients))
+    end
   end
   Room.afterLoad(self, old, new)
 end
