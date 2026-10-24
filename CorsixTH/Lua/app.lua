@@ -197,12 +197,12 @@ function App:init()
       notices[#notices + 1] = TH.freetype_font.getCopyrightNotice()
       font = self.gfx:loadLanguageFont("unicode", font:getSheet())
     end
-    notices = table.concat(notices)
-    if notices ~= "" then
+    local notices_text = table.concat(notices)
+    if notices_text ~= "" then
       self.video:startFrame()
       self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
         math.floor((scr_w - 640) / 2), math.floor((scr_h - 480) / 2))
-      font:drawWrapped(self.video, notices, 32,
+      font:drawWrapped(self.video, notices_text, 32,
         math.floor((scr_h + 400) / 2), math.floor(scr_w - 64), "center")
       self.video:endFrame()
     end
@@ -593,14 +593,11 @@ function App:initMusicDir()
     return nil
   end
 
-  local operating_system = self.os
-  local corsixth_path = lfs.currentdir()
-  local conf_path = self.command_line["config-file"] or nil  -- Gets the path of the config file ('nil' if it's in CorsixTH's dir)
-  conf_path = conf_path:match("^(.-)[^" .. pathsep .. "]*$") -- Removes the config file name from the above path
+  local corsixth_path = self.os ~= "macos" and lfs.currentdir() or nil
+  local conf_path = self.command_line["config-file"]
 
-  if(operating_system == "macos") then
-    -- On macOS skip checking the game's directory, since it's difficult to obtain and/or open
-    corsixth_path = nil
+  if conf_path then -- Get folder path
+    conf_path = conf_path:match("^(.-)[^" .. pathsep .. "]*$")
   end
 
   -- Check corsixth's install directory first, then the config file directory
@@ -1163,7 +1160,7 @@ function App:fixConfig()
       if value:len() == 0 then -- If empty, use computer user's name,
         value = os.getenv("USER") or os.getenv("USERNAME")
       end
-      value = value:match('^%s*(.*%S)') or ""
+      value = value and value:match('^%s*(.*%S)') or ""
       if value:len() == 0 then -- unless that is also empty
         value = "PLAYER"
       end
@@ -1524,9 +1521,9 @@ function App:checkInstallFolder()
   check("Levels" .. pathsep .. "Level.L1")
   check("QData" .. pathsep .. "SPointer.dat")
   if #missing ~= 0 then
-    missing = table.concat(missing, ", ")
+    local missing_text = table.concat(missing, ", ")
     message = "Invalid Theme Hospital folder specified in config file, " ..
-        "as at least the following files are missing: " .. missing .. ".\n" ..
+        "as at least the following files are missing: " .. missing_text .. ".\n" ..
         message
     print(message)
     print("Trying to let the user select a new one.")

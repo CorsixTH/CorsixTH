@@ -542,9 +542,9 @@ for cp437, codepoint in pairs(cp437_to_codepoints) do
   cp437_to_utf8_replacement[string.char(cp437)] = utf8encode(codepoint)
 end
 cp437_to_utf8_pattern[#cp437_to_utf8_pattern + 1] = "]"
-cp437_to_utf8_pattern = table.concat(cp437_to_utf8_pattern)
+local cp437_to_utf8_pattern_text = table.concat(cp437_to_utf8_pattern)
 cp437conv = function(s)
-  return (s:gsub(cp437_to_utf8_pattern, cp437_to_utf8_replacement))
+  return (s:gsub(cp437_to_utf8_pattern_text, cp437_to_utf8_replacement))
 end
 
 -- Table which maps a single character and a single unicode combining
