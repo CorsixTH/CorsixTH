@@ -3365,15 +3365,10 @@ options_window = {
   option_off = "关",
   option_enabled = "已启用",
   option_disabled = "已禁用",
-  fullscreen = "全屏幕",
   capture_mouse = "捕获鼠标",
-  width = "宽度",
-  height = "高度",
   customise = "自定义",
   folder = "文件夹",
   language = "语言",
-  apply = "应用",
-  cancel = "取消",
   back = "返回",
   scroll_speed = "滚动速度",
   shift_scroll_speed = "加速滚动速度",
@@ -3381,17 +3376,20 @@ options_window = {
   hotkey = "快捷键",
   check_for_updates = "自动检查更新",
 }
+graphics_window = {
+  fullscreen = "全屏幕",
+  width = "宽度",
+  height = "高度",
+  option_on = "开",
+  option_off = "关",
+  apply = "应用",
+  cancel = "取消",
+}
 
 tooltip.options_window = {
-  fullscreen = "应该在全屏还是窗口模式运行",
-  fullscreen_button = "点击切换全屏模式",
   capture_mouse = "点击切换是否将光标捕获在游戏窗口中",
-  width = "输入想要的屏幕宽度",
-  height = "输入想要的屏幕高度",
-  apply = "应用此分辨率",
-  cancel = "返回而不更改分辨率",
-  customise_button = "更多可以改变游戏体验的选项",
-  folder_button = "文件夹选项",
+  customise = "更多可以改变游戏体验的选项",
+  folder = "文件夹选项",
   language = "游戏文字使用的语言",
   select_language = "选择语言",
   language_dropdown_item = "选择 %s 为语言",
@@ -3407,6 +3405,14 @@ tooltip.options_window = {
   cancel_zoomspeed = "返回而不更改缩放速度。",
   hotkey = "更改键盘热键。",
   check_for_updates = "游戏启动时自动检查更新",
+}
+tooltip.graphics_window = {
+  fullscreen = "应该在全屏还是窗口模式运行",
+  fullscreen_button = "点击切换全屏模式",
+  width = "输入想要的屏幕宽度",
+  height = "输入想要的屏幕高度",
+  apply = "应用此分辨率",
+  cancel = "返回而不更改分辨率",
 }
 
 audio_window = {

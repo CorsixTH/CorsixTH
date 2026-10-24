@@ -58,8 +58,8 @@ menu_options_wage_increase.deny = "    NEGAR "
 menu_options_wage_increase.grant = "    PERMITIR "
 tooltip.audio_window.audio_button = "Ligar ou desligar todo o som do jogo"
 tooltip.audio_window.audio_toggle = "Ligar ou desligar"
-tooltip.options_window.folder_button = "Opções de pastas"
-tooltip.options_window.customise_button = "Mais opões que pode alterar para personalizar a sua experiência de jogo."
+tooltip.options_window.folder = "Opções de pastas"
+tooltip.options_window.customise = "Mais opões que pode alterar para personalizar a sua experiência de jogo."
 tooltip.update_window.download = "Vá para a página de transferências para a última versão de CorsixTH"
 tooltip.update_window.ignore = "Ignorar esta actualização agora. Será notificado de novo na próxima vez que inicializar CorsixTH"
 tooltip.folders_window.browse_font = "Procurar outro tipo de letra (localização actual: %1% )"
@@ -347,13 +347,15 @@ tooltip = {
 
 
   options_window = {
-    fullscreen_button = "Clica para modo de tela cheia",
     browse = "Procura outra localizaçao da instalaçao original. %1%",
-    height = "Coloca a altura desejada.",
-    width = "Coloca a largura desejada.",
     language = "Escolhe %s como a tua linguagem.",
     back = "Fecha a janela de opçoes.",
     },
+  graphics_window = {
+    fullscreen_button = "Clica para modo de tela cheia",
+    width = "Coloca a largura desejada.",
+    height = "Coloca a altura desejada.",
+  },
 
 }
 
@@ -492,13 +494,15 @@ new_game_window = {
 
 
 options_window = {
-  fullscreen = "Tela cheia",
-  cancel = "Cancelar",
   browse = "Procurar...",
-  width = "Largura",
-  height = "Altura",
   new_th_directory = "Aqui podes escolher uma nova localizaçao da instalaçao de Theme Hospital,assim que o fizeres o jogo será reiniciado.",
   back = "Voltar",
+}
+graphics_window = {
+  fullscreen = "Tela cheia",
+  width = "Largura",
+  height = "Altura",
+  cancel = "Cancelar",
 }
 
 audio_window = {

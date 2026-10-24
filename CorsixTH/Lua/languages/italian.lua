@@ -369,11 +369,8 @@ options_window = {
   caption = "Opzioni",
   option_on = "On",
   option_off = "Off",
-  fullscreen = "Schermo intero",
   capture_mouse = "Cattura Mouse",
-  width = "Largh",
   option_enabled = "Attiv.",
-  height = "Alt",
   scroll_speed = "Vel. scorrimento",
   shift_scroll_speed = "Vel. scorrimento veloce",
   zoom_speed = "Velocità zoom",
@@ -381,9 +378,7 @@ options_window = {
   customise = "Personalizza",
   folder = "Cartelle",
   language = "Lingua del gioco",
-  apply = "Applica",
   hotkey = "Scorciatoie",
-  cancel = "Cancella",
   back = "Indietro",
   option_disabled = "Disabilitato",
   hotkey = "Scorciatoie",
@@ -393,17 +388,20 @@ options_window = {
   right_mouse_scrolling_option_middle = "Bottone Centrale",
   right_mouse_scrolling = "Scorrimento con Mouse",
 }
+graphics_window = {
+  fullscreen = "Schermo intero",
+  width = "Largh",
+  height = "Alt",
+  option_on = "On",
+  option_off = "Off",
+  apply = "Applica",
+  cancel = "Cancella",
+}
 
 tooltip.options_window = {
-  fullscreen = "Decidi se il gioco verrà eseguito a schermo intero o in finestra",
-  fullscreen_button = "Clicca per attivare o disattivare la modalità a schermo intero",
   capture_mouse = "Clicca per attivare o disattivare la cattura del puntatore all'interno della finestra di gioco",
-  width = "Inserisci la larghezza dello schermo desiderata",
-  height = "Inserisci l'altezza dello schermo desiderata",
-  apply = "Applica la risoluzione inserita",
-  cancel = "Esci senza cambiare la risoluzione",
-  customise_button = "Altre impostazioni che puoi cambiare per personalizzare la tua esperienza di gioco",
-  folder_button = "Opzioni cartelle",
+  customise = "Altre impostazioni che puoi cambiare per personalizzare la tua esperienza di gioco",
+  folder = "Opzioni cartelle",
   language = "La lingua in cui verrà mostrato il testo",
   select_language = "Seleziona la lingua del gioco",
   language_dropdown_item = "Seleziona %s come lingua",
@@ -423,6 +421,14 @@ tooltip.options_window = {
   check_for_updates = "Imposta se il gioco deve cercare aggiornamenti all'avvio.",
   apply_zoomspeed = "Applica la velocità di zoom selezionata.",
   apply_scrollspeed = "Applica la velocità di scorrimento selezionata.",
+}
+tooltip.graphics_window = {
+  fullscreen = "Decidi se il gioco verrà eseguito a schermo intero o in finestra",
+  fullscreen_button = "Clicca per attivare o disattivare la modalità a schermo intero",
+  width = "Inserisci la larghezza dello schermo desiderata",
+  height = "Inserisci l'altezza dello schermo desiderata",
+  apply = "Applica la risoluzione inserita",
+  cancel = "Esci senza cambiare la risoluzione",
 }
 
 audio_window = {

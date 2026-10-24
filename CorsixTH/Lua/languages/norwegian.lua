@@ -180,19 +180,21 @@ tooltip = {
   },
 
   options_window = {
+    language = "Velg %s som språk",
+    back = "Lukk vinduet med innstillinger",
+    language_dropdown_item = "Velg %s som språk",
+    select_language = "Velg språk",
+    folder = "Mappeinnstillinger",
+    customise = "¨Flere innstillinger", --todo: mer utfyllende beskrivelse? var "More settings you can change to customise your game play experience"
+    capture_mouse = "Slå av eller på låsing av musepeker i spillvinduet",
+  },
+  graphics_window = {
+    fullscreen = "Om spillet skal kjöre i fullskjerm eller vindusmodus",
     fullscreen_button = "Klikk for å gå i fullskjermmodus",
     width = "Skriv inn önsket skjermbredde",
     height = "Skriv inn önsket skjermhöyde",
-    language = "Velg %s som språk",
-    back = "Lukk vinduet med innstillinger",
-    fullscreen = "Om spillet skal kjöre i fullskjerm eller vindusmodus",
-    cancel = "Returner uten å endre opplösning",
     apply = "Bruk den innskrevne opplösningen",
-    language_dropdown_item = "Velg %s som språk",
-    select_language = "Velg språk",
-    folder_button = "Mappeinnstillinger",
-    customise_button = "¨Flere innstillinger", --todo: mer utfyllende beskrivelse? var "More settings you can change to customise your game play experience"
-    capture_mouse = "Slå av eller på låsing av musepeker i spillvinduet",
+    cancel = "Returner uten å endre opplösning",
   },
   audio_window = {
     audio_button = "Slå av eller på all lyd",
@@ -833,19 +835,23 @@ menu_list_window = {
 }
 
 options_window = {
-  fullscreen = "Fullskjerm",
-  width = "Bredde",
-  height = "Höyde",
   back = "Tilbake",
-  cancel = "Avbryt",
   option_on = "På",
   option_off = "Av",
   caption = "Innstillinger",
   language = "Språk",
-  apply = "Bruk",
   folder = "Mapper",
   customise = "Tilpass",
   capture_mouse = "Lås musepeker",
+}
+graphics_window = {
+  fullscreen = "Fullskjerm",
+  width = "Bredde",
+  height = "Höyde",
+  option_on = "På",
+  option_off = "Av",
+  apply = "Bruk",
+  cancel = "Avbryt",
 }
 
 audio_window = {

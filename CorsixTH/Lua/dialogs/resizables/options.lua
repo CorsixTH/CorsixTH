@@ -39,85 +39,6 @@ local col = {
 
 -- Private functions
 
--- Generate predefined window sizes the player can choose from; as well as
--- including the custom option at the bottom. Where UI scaling prevents a
--- window size option from being selected, grey it out instead and move to
--- the bottom of the list.
-local available_window_sizes = function()
-  local suggested_window_sizes = {
-    {text = "640x480 (4:3)",     width = 640,  height = 480  },
-    {text = "800x600 (4:3)",     width = 800,  height = 600  },
-    {text = "1024x768 (4:3)",    width = 1024, height = 768  },
-    {text = "1280x960 (4:3)",    width = 1280, height = 960  },
-    {text = "1600x1200 (4:3)",   width = 1600, height = 1200 },
-    {text = "1920x1440 (4:3)",   width = 1920, height = 1440 },
-    {text = "1280x1024 (5:4)",   width = 1280, height = 1024 },
-    {text = "1280x720 (16:9)",   width = 1280, height = 720  },
-    {text = "1366x768 (16:9)",   width = 1366, height = 768  },
-    {text = "1600x900 (16:9)",   width = 1600, height = 900  },
-    {text = "1920x1080 (16:9)",  width = 1920, height = 1080 },
-    {text = "2560x1440 (16:9)",  width = 2560, height = 1440 },
-    {text = "3840x2160 (16:9)",  width = 3840, height = 2160 },
-    {text = "1280x800 (16:10)",  width = 1280, height = 800  },
-    {text = "1440x900 (16:10)",  width = 1440, height = 900  },
-    {text = "1680x1050 (16:10)", width = 1680, height = 1050 },
-    {text = "1920x1200 (16:10)", width = 1920, height = 1200 },
-  }
-
-  local enable_list, disable_list = {}, {}
-  local max_window_width, max_window_height = TheApp.video:getMaxWindowSize()
-
-  -- It is possible that getMaxWindowSize could fail to detect the actual
-  -- available display space, in which case it will return 0, 0.
-  -- In that case we don't have any information to hide a window size from the
-  -- user, so set the maximum to large enough values that nothing in the list
-  -- will be disabled. The numbers below are arbitrarily large.
-  if max_window_width == 0 or max_window_height == 0 then
-    max_window_width = 4000
-    max_window_height = 3000
-  end
-
-  for _, opt in ipairs(suggested_window_sizes) do
-    local enabled = opt.width <= max_window_width and opt.height <= max_window_height
-    opt.disabled = not enabled
-    opt.tooltip = opt.disabled and { _S.tooltip.options_window.window_size_does_not_fit }
-    if enabled then
-      enable_list[#enable_list + 1] = opt
-    else
-      disable_list[#disable_list + 1] = opt
-    end
-  end
-
-  local res = enable_list
-  -- Show custom button before disabled items
-  res[#res + 1] = {
-    text = _S.options_window.custom_window_size, custom = true
-  }
-
-  for i = 1, #disable_list do
-    res[#res + 1] = disable_list[i]
-  end
-
-  return res
-end
-
-local available_ui_scales = function()
-  local res = {}
-  res[1] = { text = _S.options_window.scale_auto, scale = 0 }
-  for s = 1, 4 do
-    res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
-  end
-  return res
-end
-
-local available_cursor_scales = function()
-  local res = {}
-  res[1] = { text = _S.options_window.scale_auto, scale = 0 }
-  for s = 1, 4 do
-    res[#res + 1] = { text = tostring(s * 100) .. '%', scale = s }
-  end
-  return res
-end
 
 local available_autosave_frequency = function()
   local options = {
@@ -150,20 +71,14 @@ function UIOptions:UIOptions(ui, mode)
   self.app = app
   self.strings_ref = "options_window"
   self.custom_back_button = true
-  self.extra_height = -30
+  self.extra_height = 200
 
   -- Tracks the current position of the object
   self._current_option_index = 1
   self.column_count = 1
 
   self.entry_list = {
-    { name = "fullscreen", func = self.buttonFullscreen },
-    { name = "window_size", func = self.dropdownWindowSize, raised = true },
-    { name = "ui_scale", func = self.dropdownUIScale, raised = true },
-    { name = "cursor_scale", func = self.dropdownCursorScale, raised = true },
-    { name = "original_aspect_ratio", func = self.buttonOriginalAspectRatio, raised = true },
-
-    { name = "capture_mouse", func = self.buttonMouseCapture, new_column = true },
+    { name = "capture_mouse", func = self.buttonMouseCapture },
     { name = "language", func = self.dropdownLanguage, raised = true },
     { name = "scroll_speed", func = self.buttonScrollSpeed, raised = true },
     { name = "shift_scroll_speed", func = self.buttonShiftScrollSpeed, raised = true },
@@ -173,15 +88,8 @@ function UIOptions:UIOptions(ui, mode)
   if app:isUpdateCheckAvailable() then
     table.insert(self.entry_list, 1, { name = "check_for_updates", func = self.buttonUpdates })
   end
-  self:buildDialog()
 
-  -- Post dialog build
-  -- Set the window size button and scale labels
-  self:_processWindowResizeEvent()
-  self.buttons.ui_scale:setLabel(app.config.ui_scale == 0 and
-      _S.options_window.scale_auto or app.config.ui_scale * 100 .. "%")
-  self.buttons.cursor_scale:setLabel(app.config.cursor_scale == 0 and
-      _S.options_window.scale_auto or app.config.cursor_scale * 100 .. "%")
+  self:buildDialog()
 
   -- Get language name in the language to normalize display.
   -- If it doesn't exist, keep displaying the current config option.
@@ -193,35 +101,34 @@ function UIOptions:UIOptions(ui, mode)
 
   self.buttons.autosave_frequency:setLabel(current_autosave_frequency())
 
-  local lower_row_y_pos = self:_getOptionYPos()
-  -- "Customise" button
-  self:addBevelPanel(self.x_pos[1], lower_row_y_pos, self.btn_width, self.big_button_height, col.button):setLabel(_S.options_window.customise)
-    :makeButton(0, 0, self.btn_width, self.big_button_height, nil, self.buttonCustomise)
-    :setTooltip(_S.tooltip.options_window.customise_button)
+  local big_button_padding = 5
+  local element_spacing = 10
+  local nav_buttons = {
+    { name = "graphics", func = self.buttonGraphics },
+    { name = "customise", func = self.buttonCustomise },
+    { name = "folder", func = self.buttonFolder },
+    { name = "hotkey", func = self.buttonHotkey },
+    { name = "sound", func = self.buttonSound },
+    { name = "back", func = self.buttonBack },
+  }
 
-  -- "Folders" button
-  self:addBevelPanel(self.x_pos[2], lower_row_y_pos, self.btn_width, self.big_button_height, col.button):setLabel(_S.options_window.folder)
-    :makeButton(0, 0, self.btn_width, self.big_button_height, nil, self.buttonFolder)
-    :setTooltip(_S.tooltip.options_window.folder_button)
+  width = self.width
+  local nav_y_pos = self:_getOptionYPos() + big_button_padding
+  local nav_x_pos = self.margin
+  for _, entry in ipairs(nav_buttons) do
+    local name, func = entry.name, entry.func
 
-  -- "Hotkeys" button
-  self:addBevelPanel(self.x_pos[3], lower_row_y_pos, self.btn_width, self.big_button_height, col.button):setLabel(_S.options_window.hotkey)
-    :makeButton(0, 0, self.btn_width, self.big_button_height, nil, self.buttonHotkey)
-    :setTooltip(_S.tooltip.options_window.hotkey)
+    self:addBevelPanel(nav_x_pos, nav_y_pos, self.btn_width, self.big_button_height, col.button)
+      :setLabel(_S[self.strings_ref][name])
+      :makeButton(0, 0, self.btn_width, self.big_button_height, nil, func)
+      :setTooltip(_S.tooltip[self.strings_ref][name])
 
-  -- "Sound Options" button
-  self:addBevelPanel(self.x_pos[4], lower_row_y_pos, self.btn_width, self.big_button_height, col.button):setLabel(_S.options_window.sound)
-    :makeButton(0, 0, self.btn_width, self.big_button_height, nil, self.buttonSound)
-    :setTooltip(_S.tooltip.options_window.sound)
-
-  -- "Back" button
-  -- Give some extra space to back button. This is fine as long as it is the last button in the options menu
-  local back_button_y_pos = self:_getOptionYPos() + 20
-  local back_button_width = self.label_width + 25 + self.btn_width
-  self:addBevelPanel(150, back_button_y_pos, back_button_width, self.big_button_height, col.button)
-    :setLabel(_S.options_window.back)
-    :makeButton(0, 0, back_button_width, self.big_button_height, nil, self.buttonBack)
-    :setTooltip(_S.tooltip.options_window.back)
+    nav_x_pos = nav_x_pos + self.btn_width + element_spacing
+    if nav_x_pos + self.btn_width + self.margin > width then
+      nav_x_pos = self.margin
+      nav_y_pos = nav_y_pos + self.big_button_height + element_spacing
+    end
+  end
 end
 
 -- Stubs for backward compatibility
@@ -255,9 +162,6 @@ end
 
 function UIOptions:dropdownLanguage(activate)
   if activate and not self.language_dropdown then
-    self:dropdownWindowSize(false)
-    self:dropdownUIScale(false)
-    self:dropdownCursorScale(false)
     self:dropdownAutosaveFrequency(false)
     self.language_dropdown = UIDropdown(self.ui, self, self.buttons.language, self.available_languages, self.selectLanguage, col.setting_active, col.scrollbar, col.disabled)
     self:addWindow(self.language_dropdown)
@@ -278,110 +182,9 @@ function UIOptions:selectLanguage(number)
   app:saveConfig()
 end
 
-function UIOptions:dropdownWindowSize(activate)
-  if activate and not self.resolution_dropdown then
-    self.available_window_sizes = available_window_sizes()
-    self:dropdownLanguage(false)
-    self:dropdownUIScale(false)
-    self:dropdownCursorScale(false)
-    self:dropdownAutosaveFrequency(false)
-    self.window_size_dropdown = UIDropdown(self.ui, self, self.buttons.window_size, self.available_window_sizes, self.selectWindowSize, col.setting_active, col.scrollbar, col.disabled)
-    self:addWindow(self.window_size_dropdown)
-  else
-    self.buttons.window_size:setToggleState(false)
-    if self.window_size_dropdown then
-      self.window_size_dropdown:close()
-      self.window_size_dropdown = nil
-    end
-  end
-end
-
-function UIOptions:selectWindowSize(number)
-  local res = self.available_window_sizes[number]
-
-  local callback = --[[persistable:options_resolution_callback]] function(width, height)
-    self.app.modes.maximised = false
-    if not self.ui:changeWindow(width, height) then
-      local err = {_S.errors.unavailable_screen_size}
-      self.ui:addWindow(UIInformation(self.ui, err))
-    end
-  end
-
-  if res.custom then
-    self.buttons.window_size:setLabel(self.ui.app.config.width .. "x" .. self.ui.app.config.height)
-    self.ui:addWindow(UIWindowSize(self.ui, callback))
-  else
-    callback(res.width, res.height)
-  end
-end
-
-function UIOptions:dropdownUIScale(activate)
-  if activate and not self.scale_ui_dropdown then
-    self.available_ui_scales = available_ui_scales()
-    self:dropdownLanguage(false)
-    self:dropdownWindowSize(false)
-    self:dropdownCursorScale(false)
-    self:dropdownAutosaveFrequency(false)
-    self.scale_ui_dropdown = UIDropdown(self.ui, self, self.buttons.ui_scale, self.available_ui_scales, self.selectUIScale, col.setting_active, col.scrollbar)
-    self:addWindow(self.scale_ui_dropdown)
-  else
-    self.buttons.ui_scale:setToggleState(false)
-    if self.scale_ui_dropdown then
-      self.scale_ui_dropdown:close()
-      self.scale_ui_dropdown = nil
-    end
-  end
-end
-
-function UIOptions:dropdownCursorScale(activate)
-  if activate and not self.cursor_scale_dropdown then
-    self.available_cursor_scales = available_cursor_scales()
-    self:dropdownLanguage(false)
-    self:dropdownWindowSize(false)
-    self:dropdownUIScale(false)
-    self:dropdownAutosaveFrequency(false)
-    self.cursor_scale_dropdown = UIDropdown(self.ui, self, self.buttons.cursor_scale, self.available_cursor_scales, self.selectCursorScale, col.setting_active, col.scrollbar)
-    self:addWindow(self.cursor_scale_dropdown)
-  else
-    self.buttons.cursor_scale:setToggleState(false)
-    if self.cursor_scale_dropdown then
-      self.cursor_scale_dropdown:close()
-      self.cursor_scale_dropdown = nil
-    end
-  end
-end
-
--- Check if UI scale scale button should be enabled, and update the tooltip.
-function UIOptions:updateUIScaleAvailabilityState()
-  local ui_scales_available = #available_ui_scales() > 1
-  self.buttons.ui_scale:enable(ui_scales_available)
-  self.buttons.ui_scale:setTooltip(ui_scales_available and
-      _S.tooltip.options_window.select_ui_scale or
-      _S.tooltip.options_window.ui_scale_unavailable)
-end
-
-function UIOptions:selectUIScale(number)
-  local res = self.available_ui_scales[number]
-  TheApp.config.ui_scale = res.scale
-  TheApp:saveConfig()
-  self.buttons.ui_scale:setLabel(res.text)
-  TheApp.gfx:onChangeUIScale()
-  self.ui:onChangeResolution()
-end
-
-function UIOptions:selectCursorScale(number)
-  local res = self.available_cursor_scales[number]
-  TheApp.config.cursor_scale = res.scale
-  TheApp:saveConfig()
-  self.buttons.cursor_scale:setLabel(res.text)
-end
-
 function UIOptions:dropdownAutosaveFrequency(activate)
   if activate and not self.autosave_dropdown then
     self:dropdownLanguage(false)
-    self:dropdownWindowSize(false)
-    self:dropdownUIScale(false)
-    self:dropdownCursorScale(false)
     self.autosave_dropdown = UIDropdown(self.ui, self, self.buttons.autosave_frequency, available_autosave_frequency(), self.selectAutosaveFrequency, col.setting_active, col.scrollbar)
     self:addWindow(self.autosave_dropdown)
   else
@@ -414,26 +217,6 @@ function UIOptions:buttonUpdates()
   self.buttons.check_for_updates:setLabel(new_updates_string)
 end
 
-function UIOptions:buttonFullscreen()
-  if not self.ui:toggleVideoMode("fullscreen") then
-      local err = {_S.errors.unavailable_screen_size}
-      self.ui:addWindow(UIInformation(self.ui, err))
-      self.buttons.fullscreen:toggle()
-  end
-  self.buttons.fullscreen:setLabel(self.ui.app.modes.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
-  self.buttons.window_size:enable(not self.ui.app.modes.fullscreen)
-end
-
-function UIOptions:buttonOriginalAspectRatio()
-  if not self.ui:toggleVideoMode("aspect_ratio_4_3") then
-    local err = {_S.errors.unavailable_screen_size}
-    self.ui:addWindow(UIInformation(self.ui, err))
-    self.buttons.original_aspect_ratio:toggle()
-  end
-  self.buttons.original_aspect_ratio:setLabel(self.ui.app.modes.aspect_ratio_4_3 and _S.options_window.option_on or _S.options_window.option_off)
-  self.ui:onChangeResolution()
-end
-
 function UIOptions:buttonMouseCapture()
   local app = self.ui.app
   app.config.capture_mouse = not app.config.capture_mouse
@@ -458,6 +241,11 @@ end
 
 function UIOptions:buttonSound()
   local window = UISoundSettings(self.ui, "menu")
+  self.ui:addWindow(window)
+end
+
+function UIOptions:buttonGraphics()
+  local window = UIGraphicSettings(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
@@ -489,105 +277,10 @@ function UIOptions:buttonZoomSpeed()
   self.ui:addWindow( UIZoomSpeed(self.ui, callback) )
 end
 
-function UIOptions:onChangeWindowSize()
-  self:_processWindowResizeEvent()
-  self:setDefaultPosition(0.5, 0.25)
-end
-
--- Handle required button changes from a window resize event from the user (via UI
--- or adjusting window boundaries)
-function UIOptions:_processWindowResizeEvent()
-  self:updateUIScaleAvailabilityState()
-  local window_w, window_h = TheApp.video:getWindowSize()
-  self.buttons.window_size:setLabel(window_w .. "x" .. window_h)
-end
-
 function UIOptions:close()
   UIResizable.close(self)
   if self.mode == "menu" then
     self.ui:addWindow(UIMainMenu(self.ui))
-  end
-end
-
---! A custom window size selection window
-class "UIWindowSize" (UIResizable)
-
----@type UIWindowSize
-local UIWindowSize = _G["UIWindowSize"]
-
-function UIWindowSize:UIWindowSize(ui, callback)
-  self:UIResizable(ui, 200, 140, col.bg)
-
-  local app = ui.app
-  self.modal_class = "window_size"
-  self.on_top = true
-  self.esc_closes = true
-  self.resizable = false
-  self:setDefaultPosition(0.5, 0.5)
-  self.default_button_sound = "selectx.wav"
-
-  self.callback = callback
-
-  -- Window parts definition
-  -- Title
-  self:addBevelPanel(20, 10, 160, 20, col.title):setLabel(_S.options_window.window_size)
-    .lowered = true
-
-  -- Textboxes
-  self:addBevelPanel(20, 40, 80, 20, col.caption, col.bg, col.bg):setLabel(_S.options_window.width)
-  self.width_textbox = self:addBevelPanel(100, 40, 80, 20, col.textbox, col.bg, col.bg)
-    :setTooltip(_S.tooltip.options_window.width)
-    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(app.config.width))
-
-  self:addBevelPanel(20, 60, 80, 20, col.caption, col.bg, col.bg):setLabel(_S.options_window.height)
-  self.height_textbox = self:addBevelPanel(100, 60, 80, 20, col.textbox, col.bg, col.bg)
-    :setTooltip(_S.tooltip.options_window.height)
-    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(app.config.height))
-
-  -- Apply and cancel
-  self:addBevelPanel(20, 90, 80, 40, col.button):setLabel(_S.options_window.apply)
-    :makeButton(0, 0, 80, 40, nil, self.ok):setTooltip(_S.tooltip.options_window.apply)
-  self:addBevelPanel(100, 90, 80, 40, col.button):setLabel(_S.options_window.cancel)
-    :makeButton(0, 0, 80, 40, nil, self.cancel):setTooltip(_S.tooltip.options_window.cancel)
-end
-
-function UIWindowSize:cancel()
-  self:close(false)
-end
-
-function UIWindowSize:ok()
-  local width, height = tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0
-  local min_w = App.MIN_WINDOW_WIDTH
-  local min_h = App.MIN_WINDOW_HEIGHT
-  if width < min_w or height < min_h then
-    local err = {_S.errors.minimum_screen_size:format(min_w, min_h)}
-    self.ui:addWindow(UIInformation(self.ui, err))
-  elseif width > 3000 or height > 2000 then
-    self.ui:addWindow(UIConfirmDialog(self.ui, false,
-      _S.confirmation.maximum_screen_size,
-      --[[persistable:maximum_screen_size_confirm_dialog]]function()
-      self:close(true)
-      self:close(false)
-      end
-      ))
-  else
-    self:close(true)
-  end
-end
-
-function UIWindowSize:onMouseUp(button, x, y)
-  if not self:hitTest(x, y) then
-    self:close(false)
-  end
-  UIResizable.onMouseUp(self, button, x, y)
-end
-
---! Closes the window size dialog
---!param ok (boolean or nil) whether the window size entry was confirmed (true) or aborted (false)
-function UIWindowSize:close(ok)
-  UIResizable.close(self)
-  if ok and self.callback then
-    self.callback(tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0)
   end
 end
 

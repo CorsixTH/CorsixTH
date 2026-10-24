@@ -57,7 +57,7 @@ globals = { -- Globals
             "UICustomCampaign", "UICustomGame", "UICustomise",
             "UIDirectoryBrowser", "UIDropdown", "UIEditRoom", "UIFax",
             "UIFileBrowser", "UIFolder", "UIFullscreen", "UIFurnishCorridor",
-            "UIGraphs", "UIHireStaff", "UIHotkeyAssign",
+            "UIGraphicSettings", "UIGraphs", "UIHireStaff", "UIHotkeyAssign",
             "UIHotkeyAssignKeyPane", "UIInformation", "UIJukebox", "UILoadGame",
             "UILoadMap", "UILuaConsole", "UIMachine", "UIMakeDebugPatient",
             "UIMainMenu", "UIMapEditor", "UIMenuBar", "UIMenuList",

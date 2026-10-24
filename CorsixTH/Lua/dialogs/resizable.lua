@@ -287,10 +287,19 @@ function UIResizable:buildDialog()
   self.labels = {}
   self.buttons = {}
 
+  -- Determine panel width, needed for centering.
+  local num_cols = 1
+  for _, entry in ipairs(self.entry_list) do
+    if entry.new_column then
+      num_cols = num_cols + 1
+    end
+  end
+  local width = self.margin * 2 + (self.label_width + label_button_gap + self.btn_width) * num_cols
+
   -- Window parts definition
   -- Title
   local title_y_pos = self:_getOptionYPos()
-  local title_x_pos = math.floor((self.width - title_width) / 2)
+  local title_x_pos = math.floor((width - title_width) / 2)
   self:addBevelPanel(title_x_pos, title_y_pos, title_width, self.label_height, col.title)
       :setLabel(_S[self.strings_ref].caption).lowered = true
 
@@ -309,8 +318,6 @@ function UIResizable:buildDialog()
   end
 
   -- Back
-  -- Recalculate width for accurate back button width
-  local width = (self.margin + self.label_width + label_button_gap + self.btn_width) * self.column_count
   if not self.custom_back_button then
     local big_button_y_pos = self:_getOptionYPos() + big_button_padding
     local big_button_width = width - self.margin * 2
@@ -318,13 +325,6 @@ function UIResizable:buildDialog()
       :setLabel(_S.options_window.back)
       :makeButton(0, 0, big_button_width, self.big_button_height, nil, self.buttonBack)
       :setTooltip(_S.tooltip.options_window.back)
-  else -- X co-ord for the custom back button and other additional buttons
-    self.x_pos = {
-      self.margin,
-      self.margin + self.label_width + 5,
-      self.margin + self.label_width + label_button_gap + self.label_width,
-      self.margin + self.label_width + 5 + label_button_gap + self.label_width + self.btn_width,
-    }
   end
 
   -- After building the dialog contents, adjust size to fit around them

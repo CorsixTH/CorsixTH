@@ -578,19 +578,21 @@ tooltip = {
     close = "요청을 취소하고 게임으로 돌아감",
   },
   options_window = {
-    fullscreen = "게임을 전체화면으로 플레이할 것인지 설정합니다",
-    cancel = "해상도를 변경하지 않고 돌아갑니다",
     back = "옵션 창을 닫습니다",
     language = "게임 내의 글을 표시할 언어",
-    apply = "입력된 해상도를 적용합니다",
-    fullscreen_button = "전체화면 설정을 변경하려면 클릭하세요",
-    width = "원하는 화면 너비를 입력하세요",
     language_dropdown_item = "%s 을(를) 언어로 선택합니다",
-    height = "원하는 화면 높이를 입력하세요",
     select_language = "게임 언어를 선택하세요",
     audio_button = "게임 전체의 오디오를 켜고 끕니다",
-    folder_button = "폴더 옵션",
-    customise_button = "게임 플레이 경험을 커스터마이즈 하기 위한 세부 설정",
+    folder = "폴더 옵션",
+    customise = "게임 플레이 경험을 커스터마이즈 하기 위한 세부 설정",
+  },
+  graphics_window = {
+    fullscreen = "게임을 전체화면으로 플레이할 것인지 설정합니다",
+    fullscreen_button = "전체화면 설정을 변경하려면 클릭하세요",
+    width = "원하는 화면 너비를 입력하세요",
+    height = "원하는 화면 높이를 입력하세요",
+    apply = "입력된 해상도를 적용합니다",
+    cancel = "해상도를 변경하지 않고 돌아갑니다",
   },
   audio_window = {
     audio_toggle = "켜고 끄기",
@@ -1697,18 +1699,22 @@ policy = {
   },
 }
 options_window = {
-  fullscreen = "전체화면",
-  cancel = "취소",
   option_on = "켜짐",
   option_off = "꺼짐",
   back = "뒤로",
   caption = "옵션",
   language = "게임 언어",
-  apply = "적용",
-  width = "너비",
-  height = "높이",
   folder = "폴더",
   customise = "커스터마이즈",
+}
+graphics_window = {
+  fullscreen = "전체화면",
+  width = "너비",
+  height = "높이",
+  option_on = "켜짐",
+  option_off = "꺼짐",
+  apply = "적용",
+  cancel = "취소",
 }
 audio_window = {
   audio = "오디오",
