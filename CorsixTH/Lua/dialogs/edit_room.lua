@@ -22,7 +22,8 @@ corsixth.require("dialogs.place_objects")
 
 class "UIEditRoom" (UIPlaceObjects)
 
----@type UIEditRoom
+---@class UIEditRoom: UIPlaceObjects
+---@operator call: UIEditRoom
 local UIEditRoom = _G["UIEditRoom"]
 
 function UIEditRoom:UIEditRoom(ui, room_type)

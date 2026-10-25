@@ -44,7 +44,8 @@ room.call_sound = "reqd003.wav"
 
 class "PsychRoom" (Room)
 
----@type PsychRoom
+---@class PsychRoom: Room
+---@operator call: PsychRoom
 local PsychRoom = _G["PsychRoom"]
 
 function PsychRoom:PsychRoom(...)

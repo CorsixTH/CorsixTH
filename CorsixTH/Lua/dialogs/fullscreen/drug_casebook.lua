@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Drug Casebook fullscreen window (view disease statistics and set prices).
 class "UICasebook" (UIFullscreen)
 
----@type UICasebook
+---@class UICasebook: UIFullscreen
+---@operator call: UICasebook
 local UICasebook = _G["UICasebook"]
 
 function UICasebook:UICasebook(ui, disease_selection)

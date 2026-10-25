@@ -40,7 +40,8 @@ room.has_no_queue_dialog = true
 
 class "TrainingRoom" (Room)
 
----@type TrainingRoom
+---@class TrainingRoom: Room
+---@operator call: TrainingRoom
 local TrainingRoom = _G["TrainingRoom"]
 
 function TrainingRoom:TrainingRoom(...)

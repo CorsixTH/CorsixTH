@@ -145,7 +145,8 @@ object.orientations = {
 
 class "Bench" (Object)
 
----@type Bench
+---@class Bench: Object
+---@operator call: Bench
 local Bench = _G["Bench"]
 
 function Bench:Bench(...)

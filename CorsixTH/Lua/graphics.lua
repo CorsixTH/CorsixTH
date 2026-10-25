@@ -28,7 +28,8 @@ local pathsep = package.config:sub(1, 1)
 -- the other Lua code.
 class "Graphics"
 
----@type Graphics
+---@class Graphics
+---@operator call: Graphics
 local Graphics = _G["Graphics"]
 
 local cursor_data = {
@@ -975,7 +976,8 @@ end
 --! Utility class for setting animation markers and querying animation length.
 class "AnimationManager"
 
----@type AnimationManager
+---@class AnimationManager
+---@operator call: AnimationManager
 local AnimationManager = _G["AnimationManager"]
 
 function AnimationManager:AnimationManager(anims)

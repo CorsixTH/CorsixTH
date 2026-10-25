@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "IdleSpawnAction" (HumanoidAction)
 
----@type IdleSpawnAction
+---@class IdleSpawnAction: HumanoidAction
+---@operator call: IdleSpawnAction
 local IdleSpawnAction = _G["IdleSpawnAction"]
 
 function IdleSpawnAction:IdleSpawnAction(anim, point_dir)

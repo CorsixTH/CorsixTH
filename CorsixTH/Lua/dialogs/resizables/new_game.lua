@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Class for the difficulty choice window.
 class "UINewGame" (UIResizable)
 
----@type UINewGame
+---@class UINewGame: UIResizable
+---@operator call: UINewGame
 local UINewGame = _G["UINewGame"]
 
 -- Colour definitions

@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "AIHospital" (Hospital)
 
----@type AIHospital
+---@class AIHospital: Hospital
+---@operator call: AIHospital
 local AIHospital = _G["AIHospital"]
 
 function AIHospital:AIHospital(competitor, world, avail_rooms, name)

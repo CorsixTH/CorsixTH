@@ -59,7 +59,8 @@ corsixth.require("utility")
 --! A `Vip` who is in the hospital to evaluate the hospital and produce a report
 class "Vip" (Humanoid)
 
----@type Vip
+---@class Vip: Humanoid
+---@operator call: Vip
 local Vip = _G["Vip"]
 
 function Vip:Vip(...)

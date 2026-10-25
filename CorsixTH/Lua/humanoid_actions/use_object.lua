@@ -23,7 +23,8 @@ local TH = require("TH")
 
 class "UseObjectAction" (HumanoidAction)
 
----@type UseObjectAction
+---@class UseObjectAction: HumanoidAction
+---@operator call: UseObjectAction
 local UseObjectAction = _G["UseObjectAction"]
 
 --! Construct a 'use object' action.

@@ -48,7 +48,8 @@ corsixth.require("earthquake")
 --! Manages entities, rooms, and the date.
 class "World"
 
----@type World
+---@class World
+---@operator call: World
 local World = _G["World"]
 
 function World:World(app, free_build_mode)

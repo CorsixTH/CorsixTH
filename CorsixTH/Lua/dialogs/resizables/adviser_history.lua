@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Adviser message history
 class "UIAdviserHistory" (UIResizable)
 
----@type UIAdviserHistory
+---@class UIAdviserHistory: UIResizable
+---@operator call: UIAdviserHistory
 local UIAdviserHistory = _G["UIAdviserHistory"]
 
 

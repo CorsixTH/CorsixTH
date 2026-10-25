@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "TapFootAction" (HumanoidAction)
 
----@type TapFootAction
+---@class TapFootAction: HumanoidAction
+---@operator call: TapFootAction
 local TapFootAction = _G["TapFootAction"]
 
 function TapFootAction:TapFootAction()

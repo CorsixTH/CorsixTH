@@ -26,7 +26,8 @@ local AnnouncementPriority = _G["AnnouncementPriority"]
 --! A Doctor, Nurse, Receptionist, Handyman, or Surgeon
 class "Nurse" (Staff)
 
----@type Nurse
+---@class Nurse: Staff
+---@operator call: Nurse
 local Nurse = _G["Nurse"]
 
 --!param ... Arguments to base class constructor.

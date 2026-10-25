@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Dialog that informs the player of for example what the goals for the level are.
 class "UIInformation" (Window)
 
----@type UIInformation
+---@class UIInformation: Window
+---@operator call: UIInformation
 local UIInformation = _G["UIInformation"]
 
 --! Constructor for the Information Dialog.

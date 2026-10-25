@@ -44,7 +44,8 @@ room.handyman_call_sound = "maint008.wav"
 
 class "ElectrolysisRoom" (Room)
 
----@type ElectrolysisRoom
+---@class ElectrolysisRoom: Room
+---@operator call: ElectrolysisRoom
 local ElectrolysisRoom = _G["ElectrolysisRoom"]
 
 function ElectrolysisRoom:ElectrolysisRoom(...)

@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Save Map Window
 class "UISaveMap" (UIFileBrowser)
 
----@type UISaveMap
+---@class UISaveMap: UIFileBrowser
+---@operator call: UISaveMap
 local UISaveMap = _G["UISaveMap"]
 
 local col_textbox = {

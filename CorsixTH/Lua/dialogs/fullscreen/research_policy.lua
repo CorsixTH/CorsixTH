@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "UIResearch" (UIFullscreen)
 
----@type UIResearch
+---@class UIResearch: UIFullscreen
+---@operator call: UIResearch
 local UIResearch = _G["UIResearch"]
 
 local research_categories = {

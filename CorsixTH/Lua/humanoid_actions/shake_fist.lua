@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "ShakeFistAction" (HumanoidAction)
 
----@type ShakeFistAction
+---@class ShakeFistAction: HumanoidAction
+---@operator call: ShakeFistAction
 local ShakeFistAction = _G["ShakeFistAction"]
 
 function ShakeFistAction:ShakeFistAction()

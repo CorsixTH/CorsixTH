@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Custom Campaign Window
 class "UICustomCampaign" (UIMenuList)
 
----@type UICustomCampaign
+---@class UICustomCampaign: UIMenuList
+---@operator call: UICustomCampaign
 local UICustomCampaign = _G["UICustomCampaign"]
 
 local col_scrollbar = {

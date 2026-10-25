@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "StaffProfile"
 
----@type StaffProfile
+---@class StaffProfile
+---@operator call: StaffProfile
 local StaffProfile = _G["StaffProfile"]
 
 function StaffProfile:StaffProfile(world, humanoid_class, local_string)

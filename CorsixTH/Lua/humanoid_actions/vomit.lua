@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "VomitAction" (HumanoidAction)
 
----@type VomitAction
+---@class VomitAction: HumanoidAction
+---@operator call: VomitAction
 local VomitAction = _G["VomitAction"]
 
 function VomitAction:VomitAction()

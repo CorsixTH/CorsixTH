@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "UIMachine" (Window)
 
----@type UIMachine
+---@class UIMachine: Window
+---@operator call: UIMachine
 local UIMachine = _G["UIMachine"]
 
 function UIMachine:UIMachine(ui, machine, room)

@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "SeekStaffRoomAction" (HumanoidAction)
 
----@type SeekStaffRoomAction
+---@class SeekStaffRoomAction: HumanoidAction
+---@operator call: SeekStaffRoomAction
 local SeekStaffRoomAction = _G["SeekStaffRoomAction"]
 
 function SeekStaffRoomAction:SeekStaffRoomAction()

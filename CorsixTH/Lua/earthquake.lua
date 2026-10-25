@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Manages all earthquakes in the world
 class "Earthquake"
 
----@type Earthquake
+---@class Earthquake
+---@operator call: Earthquake
 local Earthquake = _G["Earthquake"]
 
 --[[

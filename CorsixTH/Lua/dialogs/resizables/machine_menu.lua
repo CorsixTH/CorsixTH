@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Interactive Machine List
 class "UIMachineMenu" (UIResizable)
 
----@type UIMachineMenu
+---@class UIMachineMenu: UIResizable
+---@operator call: UIMachineMenu
 local UIMachineMenu = _G["UIMachineMenu"]
 
 local col_bg = { red = 219, green = 81, blue = 12, }

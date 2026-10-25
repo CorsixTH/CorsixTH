@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! The multi-purpose panel for launching dialogs / screens and dynamic information.
 class "UIBottomPanel" (Window)
 
----@type UIBottomPanel
+---@class UIBottomPanel: Window
+---@operator call: UIBottomPanel
 local UIBottomPanel = _G["UIBottomPanel"]
 
 local MESSAGE_DOOR_FULLY_OPEN = 0

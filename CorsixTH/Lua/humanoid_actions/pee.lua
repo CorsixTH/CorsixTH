@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "PeeAction" (HumanoidAction)
 
----@type PeeAction
+---@class PeeAction: HumanoidAction
+---@operator call: PeeAction
 local PeeAction = _G["PeeAction"]
 
 function PeeAction:PeeAction()

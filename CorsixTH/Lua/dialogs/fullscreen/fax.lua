@@ -24,7 +24,8 @@ local AnnouncementPriority = _G["AnnouncementPriority"]
 
 class "UIFax" (UIFullscreen)
 
----@type UIFax
+---@class UIFax: UIFullscreen
+---@operator call: UIFax
 local UIFax = _G["UIFax"]
 
 function UIFax:UIFax(ui, icon)

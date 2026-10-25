@@ -26,7 +26,8 @@ local AnnouncementPriority = _G["AnnouncementPriority"]
 --! A holder for all cheats in the game
 class "Cheats"
 
----@type Cheats
+---@class Cheats
+---@operator call: Cheats
 local Cheats = _G["Cheats"]
 
 -- Cheats System

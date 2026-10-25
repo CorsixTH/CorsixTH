@@ -24,7 +24,8 @@ corsixth.require("announcer")
 --! Variant of UI for running games
 class "GameUI" (UI)
 
----@type GameUI
+---@class GameUI: UI
+---@operator call: GameUI
 local GameUI = _G["GameUI"]
 
 local TH = require("TH")

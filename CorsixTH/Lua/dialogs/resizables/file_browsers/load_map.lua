@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Load Map Window
 class "UILoadMap" (UIFileBrowser)
 
----@type UILoadMap
+---@class UILoadMap: UIFileBrowser
+---@operator call: UILoadMap
 local UILoadMap = _G["UILoadMap"]
 
 function UILoadMap:UILoadMap(ui, mode)

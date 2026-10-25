@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Lua extensions to the C++ THMap class
 class "Map"
 
----@type Map
+---@class Map
+---@operator call: Map
 local Map = _G["Map"]
 
 local math_floor, tostring, table_concat

@@ -32,7 +32,8 @@ object.idle_animations = {
 
 class "SwingDoor" (Door)
 
----@type SwingDoor
+---@class SwingDoor: Door
+---@operator call: SwingDoor
 local SwingDoor = _G["SwingDoor"]
 
 function SwingDoor:SwingDoor(hospital, object_type, x, y, direction, etc)

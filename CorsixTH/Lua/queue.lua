@@ -30,7 +30,8 @@ SOFTWARE. --]]
 -- a queue via its methods rather than directly.
 class "Queue"
 
----@type Queue
+---@class Queue
+---@operator call: Queue
 local Queue = _G["Queue"]
 
 --! Constructor of a queue.

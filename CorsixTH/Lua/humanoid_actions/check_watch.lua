@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "CheckWatchAction" (HumanoidAction)
 
----@type CheckWatchAction
+---@class CheckWatchAction: HumanoidAction
+---@operator call: CheckWatchAction
 local CheckWatchAction = _G["CheckWatchAction"]
 
 function CheckWatchAction:CheckWatchAction()

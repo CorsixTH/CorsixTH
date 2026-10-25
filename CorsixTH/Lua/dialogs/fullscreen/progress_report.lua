@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Progress Report fullscreen window (check level goals, competitors and alerts).
 class "UIProgressReport" (UIFullscreen)
 
----@type UIProgressReport
+---@class UIProgressReport: UIFullscreen
+---@operator call: UIProgressReport
 local UIProgressReport = _G["UIProgressReport"]
 
 function UIProgressReport:UIProgressReport(ui)

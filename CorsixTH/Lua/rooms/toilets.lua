@@ -38,7 +38,8 @@ room.floor_tile = 21
 
 class "ToiletRoom" (Room)
 
----@type ToiletRoom
+---@class ToiletRoom: Room
+---@operator call: ToiletRoom
 local ToiletRoom = _G["ToiletRoom"]
 
 function ToiletRoom:ToiletRoom(...)

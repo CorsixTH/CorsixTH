@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "UIGraphicSettings" (UIResizable)
 
----@type UIGraphicSettings
+---@class UIGraphicSettings: UIResizable
+---@operator call: UIGraphicSettings
 local UIGraphicSettings = _G["UIGraphicSettings"]
 
 local col = {
@@ -337,7 +338,8 @@ end
 --! A custom window size selection window
 class "UIWindowSize" (UIResizable)
 
----@type UIWindowSize
+---@class UIWindowSize: UIResizable
+---@operator call: UIWindowSize
 local UIWindowSize = _G["UIWindowSize"]
 
 function UIWindowSize:UIWindowSize(ui, callback)

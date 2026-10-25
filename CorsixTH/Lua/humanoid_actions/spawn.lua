@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "SpawnAction" (HumanoidAction)
 
----@type SpawnAction
+---@class SpawnAction: HumanoidAction
+---@operator call: SpawnAction
 local SpawnAction = _G["SpawnAction"]
 
 --! Spawn an entity.

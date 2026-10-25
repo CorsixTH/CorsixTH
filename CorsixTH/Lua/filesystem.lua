@@ -33,7 +33,8 @@ local ISO_FS = require("TH").iso_fs
 -- file system.
 class "FileSystem"
 
----@type FileSystem
+---@class FileSystem
+---@operator call: FileSystem
 local FileSystem = _G["FileSystem"]
 
 function FileSystem:FileSystem()

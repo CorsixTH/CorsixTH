@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "IdleAction" (HumanoidAction)
 
----@type IdleAction
+---@class IdleAction: HumanoidAction
+---@operator call: IdleAction
 local IdleAction = _G["IdleAction"]
 
 function IdleAction:IdleAction()

@@ -77,7 +77,8 @@ litter_rank["soot_window"] = 99
 
 class "Litter" (Entity)
 
----@type Litter
+---@class Litter: Entity
+---@operator call: Litter
 local Litter = _G["Litter"]
 
 function Litter:Litter(hospital, object_type, x, y)

@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! An `Entity` which occupies a single tile and is capable of moving around the map.
 class "Humanoid" (Entity)
 
----@type Humanoid
+---@class Humanoid: Entity
+---@operator call: Humanoid
 local Humanoid = _G["Humanoid"]
 
 local walk_animations = permanent"humanoid_walk_animations"({})

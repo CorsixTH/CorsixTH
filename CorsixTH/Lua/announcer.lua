@@ -44,7 +44,8 @@ local default_announcement_decay_hours = {
 --! An announcement queue based on priority
 class "AnnouncementQueue"
 
----@type AnnouncementQueue
+---@class AnnouncementQueue
+---@operator call: AnnouncementQueue
 local AnnouncementQueue = _G["AnnouncementQueue"]
 
 --! Creates an announcement queue: a collection of announcements with queue semantics.
@@ -106,7 +107,8 @@ end
 --! An announcement.
 class "AnnouncementEntry"
 
----@type AnnouncementEntry
+---@class AnnouncementEntry
+---@operator call: AnnouncementEntry
 local AnnouncementEntry = _G["AnnouncementEntry"]
 
 --! Creates an announcement
@@ -126,7 +128,8 @@ end
 -- a worker at the reception desk and announcements are enabled in the settings.
 class "Announcer"
 
----@type Announcer
+---@class Announcer
+---@operator call: Announcer
 local Announcer = _G["Announcer"]
 
 --! Constructor.

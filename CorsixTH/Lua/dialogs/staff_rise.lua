@@ -22,7 +22,8 @@ SOFTWARE. --]]
 --! Dialog for staff member requesting a salaray raise.
 class "UIStaffRise" (Window)
 
----@type UIStaffRise
+---@class UIStaffRise: Window
+---@operator call: UIStaffRise
 local UIStaffRise = _G["UIStaffRise"]
 
 function UIStaffRise:UIStaffRise(ui, staff, rise_amount)

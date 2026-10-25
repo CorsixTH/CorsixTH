@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Options window used in the main menu and ingame.
 class "UIUpdate" (UIResizable)
 
----@type UIUpdate
+---@class UIUpdate: UIResizable
+---@operator call: UIUpdate
 local UIUpdate = _G["UIUpdate"]
 
 local col_bg = {

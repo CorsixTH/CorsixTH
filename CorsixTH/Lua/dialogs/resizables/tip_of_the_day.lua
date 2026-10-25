@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Tip of the Day Window
 class "UITipOfTheDay" (UIResizable)
 
----@type UITipOfTheDay
+---@class UITipOfTheDay: UIResizable
+---@operator call: UITipOfTheDay
 local UITipOfTheDay = _G["UITipOfTheDay"]
 
 local col_bg = {

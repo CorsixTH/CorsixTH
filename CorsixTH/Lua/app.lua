@@ -32,7 +32,8 @@ local SAVEGAME_VERSION = 269 -- Add patient costs inflation
 
 class "App"
 
----@type App
+---@class App
+---@operator call: App
 local App = _G["App"]
 
 App.MIN_WINDOW_WIDTH = 640

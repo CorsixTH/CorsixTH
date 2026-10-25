@@ -44,7 +44,8 @@ room.handyman_call_sound = "maint009.wav"
 
 class "JellyVatRoom" (Room)
 
----@type JellyVatRoom
+---@class JellyVatRoom: Room
+---@operator call: JellyVatRoom
 local JellyVatRoom = _G["JellyVatRoom"]
 
 function JellyVatRoom:JellyVatRoom(...)

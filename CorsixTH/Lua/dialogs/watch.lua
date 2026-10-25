@@ -22,7 +22,8 @@ SOFTWARE. --]]
 --! The timer lasts approximately 100 days, split into 13 segments
 class "UIWatch" (Window)
 
----@type UIWatch
+---@class UIWatch: Window
+---@operator call: UIWatch
 local UIWatch = _G["UIWatch"]
 
 local TICK_DAYS = 100

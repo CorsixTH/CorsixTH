@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "AnswerCallAction" (HumanoidAction)
 
----@type AnswerCallAction
+---@class AnswerCallAction: HumanoidAction
+---@operator call: AnswerCallAction
 local AnswerCallAction = _G["AnswerCallAction"]
 
 function AnswerCallAction:AnswerCallAction()

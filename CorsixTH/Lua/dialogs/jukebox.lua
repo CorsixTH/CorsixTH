@@ -23,7 +23,8 @@ local ipairs
 
 class "UIJukebox" (Window)
 
----@type UIJukebox
+---@class UIJukebox: Window
+---@operator call: UIJukebox
 local UIJukebox = _G["UIJukebox"]
 
 function UIJukebox:UIJukebox(app)

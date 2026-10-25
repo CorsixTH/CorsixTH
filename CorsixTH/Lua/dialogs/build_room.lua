@@ -22,7 +22,8 @@ local TH = require("TH")
 
 class "UIBuildRoom" (Window)
 
----@type UIBuildRoom
+---@class UIBuildRoom: Window
+---@operator call: UIBuildRoom
 local UIBuildRoom = _G["UIBuildRoom"]
 
 function UIBuildRoom:UIBuildRoom(ui)

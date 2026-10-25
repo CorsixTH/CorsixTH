@@ -44,7 +44,8 @@ room.handyman_call_sound = "maint005.wav"
 
 class "XRayRoom" (Room)
 
----@type XRayRoom
+---@class XRayRoom: Room
+---@operator call: XRayRoom
 local XRayRoom = _G["XRayRoom"]
 
 function XRayRoom:XRayRoom(...)

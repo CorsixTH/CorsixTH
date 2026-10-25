@@ -29,7 +29,8 @@ local ipairs
 --! Layer which handles the Lua-facing side of loading and playing audio.
 class "Audio"
 
----@type Audio
+---@class Audio
+---@operator call: Audio
 local Audio = _G["Audio"]
 
 function Audio:Audio(app)

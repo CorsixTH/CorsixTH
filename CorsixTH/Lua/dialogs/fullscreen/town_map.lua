@@ -23,7 +23,8 @@ local TH = require("TH")
 --! Town map fullscreen window (purchase land, set radiator levels, map overview).
 class "UITownMap" (UIFullscreen)
 
----@type UITownMap
+---@class UITownMap: UIFullscreen
+---@operator call: UITownMap
 local UITownMap = _G["UITownMap"]
 
 function UITownMap:UITownMap(ui)

@@ -28,7 +28,8 @@ end
 --! Individual staff information dialog
 class "UIStaff" (Window)
 
----@type UIStaff
+---@class UIStaff: Window
+---@operator call: UIStaff
 local UIStaff = _G["UIStaff"]
 
 --! Callback function for handyman to change his parcel.

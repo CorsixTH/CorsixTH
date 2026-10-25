@@ -44,7 +44,8 @@ local get_custom_criteria = {
 }
 
 class "EndConditions"
----@type EndConditions
+---@class EndConditions
+---@operator call: EndConditions
 local EndConditions = _G["EndConditions"]
 
 --! Collect the end conditions for this level, if they exist

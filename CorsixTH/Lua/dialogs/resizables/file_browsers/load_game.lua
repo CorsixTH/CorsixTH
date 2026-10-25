@@ -21,7 +21,8 @@ SOFTWARE. --]]
 --! Load Game Window
 class "UILoadGame" (UIFileBrowser)
 
----@type UILoadGame
+---@class UILoadGame: UIFileBrowser
+---@operator call: UILoadGame
 local UILoadGame = _G["UILoadGame"]
 
 function UILoadGame:UILoadGame(ui, mode)

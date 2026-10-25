@@ -24,7 +24,8 @@ local lfs = require("lfs")
 --  that meets a given file extension criterion.
 class "FilteredFileTreeNode" (FileTreeNode)
 
----@type FilteredFileTreeNode
+---@class FilteredFileTreeNode: FileTreeNode
+---@operator call: FilteredFileTreeNode
 local FilteredFileTreeNode = _G["FilteredFileTreeNode"]
 
 function FilteredFileTreeNode:FilteredFileTreeNode(path, filter)
@@ -69,7 +70,8 @@ end
 --  their last modification dates.
 class "FilteredTreeControl" (TreeControl)
 
----@type FilteredTreeControl
+---@class FilteredTreeControl: TreeControl
+---@operator call: FilteredTreeControl
 local FilteredTreeControl = _G["FilteredTreeControl"]
 
 function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_bg, col_fg, has_font, show_dates)
@@ -145,7 +147,8 @@ end
 --! A file browser with a scrollbar. Used by load_game and save_game.
 class "UIFileBrowser" (UIResizable)
 
----@type UIFileBrowser
+---@class UIFileBrowser: UIResizable
+---@operator call: UIFileBrowser
 local UIFileBrowser = _G["UIFileBrowser"]
 
 local col_caption = {

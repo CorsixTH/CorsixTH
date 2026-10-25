@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "PickupAction" (HumanoidAction)
 
----@type PickupAction
+---@class PickupAction: HumanoidAction
+---@operator call: PickupAction
 local PickupAction = _G["PickupAction"]
 
 -- Construct a pick-up action

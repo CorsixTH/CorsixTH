@@ -21,7 +21,8 @@ SOFTWARE. --]]
 
 class "SeekToiletsAction" (HumanoidAction)
 
----@type SeekToiletsAction
+---@class SeekToiletsAction: HumanoidAction
+---@operator call: SeekToiletsAction
 local SeekToiletsAction = _G["SeekToiletsAction"]
 
 function SeekToiletsAction:SeekToiletsAction()

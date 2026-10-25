@@ -50,7 +50,8 @@ room.call_sound = "reqd023.wav"
 
 class "ResearchRoom" (Room)
 
----@type ResearchRoom
+---@class ResearchRoom: Room
+---@operator call: ResearchRoom
 local ResearchRoom = _G["ResearchRoom"]
 
 function ResearchRoom:ResearchRoom(...)
