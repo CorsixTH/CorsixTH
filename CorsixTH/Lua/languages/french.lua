@@ -919,17 +919,8 @@ tooltip.options_window = {
   select_language = "Sélectionner la langue du jeu",
   folder = "Dossier des paramètres",
   customise = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
-  apply_shift_scrollspeed = "Appliquer la vitesse de défilement en mode Maj.",
-  shift_scroll_speed = "Définir la vitesse de défilement lorsque la touche Maj est enfoncée. De 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 4.",
   hotkey = "Modifier les touches de raccourci du clavier.",
   check_for_updates = "Choisir si le jeu doit rechercher des mises à jour au démarrage.",
-  zoom_speed = "Définir la vitesse de zoom de la caméra de 10 (la plus lente) à 1000 (la plus rapide). La valeur par défaut est 80.",
-  cancel_zoomspeed = "Revenir sans changer la vitesse de zoom.",
-  apply_zoomspeed = "Appliquer la vitesse de zoom choisie.",
-  cancel_scrollspeed = "Revenir sans changer la vitesse de défilement.",
-  cancel_shift_scrollspeed = "Revenir sans changer la vitesse de défilement de la touche Maj.",
-  scroll_speed = "Réglez la vitesse de défilement de 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 2.",
-  apply_scrollspeed = "Appliquer la vitesse de défilement entrée.",
   capture_mouse = "Cliquez pour activer la capture du curseur dans la fenêtre du jeu.",
   language_dropdown_no_font = "Sélectionnez une police d'écriture dans les paramètres pour activer ce langage",
   right_mouse_scrolling = "Activer le bouton qui est utilisé pour faire défiler la carte",
@@ -987,7 +978,6 @@ customise_window = {
   movies = "Contrôle des cinématiques",
   play_intro = "Jouer la cinémat. d'intro",
   allow_user_actions_while_paused = "Construction en pause",
-  volume = "Raccourci baisse du volume",
   alien_dna_only_by_emergency = "Extraterrestres",
   disable_fractured_bones_females = "Fractures",
   enable_avg_contents = "Achats mémorisés",
@@ -1007,7 +997,6 @@ tooltip.customise_window = {
   movies = "Sélectionnez si les cinématiques doivent être joués.",
   play_intro = "Passer la cinématique d'introduction lorsque vous démarrez le jeu. Le contrôle des cinématiques doit être activé si vous jouez la cinématique d'introduction à chaque fois que vous chargez CorsixTH",
   allow_user_actions_while_paused = "Dans Theme Hospital, le joueur ne pouvait utiliser le menu supérieur que si le jeu était en pause. Il s'agit également du paramètre par défaut dans CorsixTH, mais activant cette option, il est possible de construire des salles ou prendre des objets lorsque le jeu est en pause",
-  volume = "Si la touche de réduction du volume ouvre également le journal de médecine, activer cette option pour modifier le raccourci des dossiers médicaux à Maj + C",
   alien_dna_only_by_emergency = "Comme il y a des animations appropriées, nous avons fait de sorte que les patients avec l'ADN extraterrestre montrent seulement comme des situations d'urgence. Désactivez cette option pour obtenir cas de l'ADN extraterrestre visites régulières",
   disable_fractured_bones_females = "En raison de la faible qualité de l'animation, il n'y a pas de patientes avec des fractures. Désactivez cette option pour recevoir des femmes avec des fractures.",
   enable_avg_contents = "Si vous voulez que le jeu se rappelle des articles supplémentaires que vous avez tendance à normalement magasiner pour une nouvelle salle, activer cette option",
@@ -1050,6 +1039,24 @@ tooltip.folders_window = {
   default = "Emplacement par défaut",
   reset_to_default = "Réinitialiser le répertoire à son emplacement par défaut (%1%)",
   back = "Fermer ce menu et revenir au menu Paramètres"
+}
+
+accessibility_window = {
+  scrollspeed = "Vitesse de défilement",
+  shift_scrollspeed = "Vitesse de défilement avec Maj",
+  zoom_speed = "Zoom Speed",
+}
+
+tooltip.accessibility_window = {
+  apply_shift_scrollspeed = "Appliquer la vitesse de défilement en mode Maj.",
+  shift_scrollspeed = "Définir la vitesse de défilement lorsque la touche Maj est enfoncée. De 1 (la plus lente) à 10 (la plus rapide). La valeur par  défaut est 4.",
+  zoom_speed = "Définir la vitesse de zoom de la caméra de 10 (la plus lente) à 1000 (la plus rapide). La valeur par défaut est 80.",
+  cancel_zoomspeed = "Revenir sans changer la vitesse de zoom.",
+  apply_zoomspeed = "Appliquer la vitesse de zoom choisie.",
+  cancel_scrollspeed = "Revenir sans changer la vitesse de défilement.",
+  cancel_shift_scrollspeed = "Revenir sans changer la vitesse de défilement de la touche Maj.",
+  scrollspeed = "Réglez la vitesse de défilement de 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 2.",
+  apply_scrollspeed = "Appliquer la vitesse de défilement entrée.",
 }
 
 font_location_window = {
