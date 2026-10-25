@@ -1297,8 +1297,8 @@ function Hospital:determineIfContagious(patient)
   -- is a suitable epidemic which they can belong to
   local potentially_contagious = contRate > 0 and (math.random(1,contRate) == contRate)
   -- The patient isn't contagious if these conditions aren't passed
-  local reduce_months = level_config.ReduceContMonths or 14
-  local reduce_people = level_config.ReduceContPeepCount or 20
+  local reduce_months = level_config.gbv.ReduceContMonths or 14
+  local reduce_people = level_config.gbv.ReduceContPeepCount or 20
   local date_in_months = self.world:date():monthOfGame()
 
   if potentially_contagious and date_in_months > reduce_months and
