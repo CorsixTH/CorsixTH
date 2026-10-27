@@ -20,6 +20,18 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.70.2" date="2026-??-??" type="stable">
+      <description>
+        <p>Bug fixes:</p>
+        <ul>
+          <li>Dying patients can no longer be sent home</li>
+          <li>Machine dynamic information now correctly updates after repair</li>
+          <li>Fixed key input crash when using the numpad</li>
+          <li>Fixed side objects becoming passable after purchasing a plot</li>
+          <li>Fixed patient dialog not opening on epidemic patients</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.70.1" date="2026-08-27" type="stable">
       <description>
         <p>Bug fixes:</p>
