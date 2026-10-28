@@ -28,7 +28,7 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
-local SAVEGAME_VERSION = 269 -- Add patient costs inflation
+local SAVEGAME_VERSION = 270 -- Adjust toilet room queue bench threshold
 
 class "App"
 
