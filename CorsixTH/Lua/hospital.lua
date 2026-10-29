@@ -168,7 +168,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.rats_created = 0
   self.rats_killed_ty = 0
   self.rats_created_ty = 0
-  self.rats_adviser_shown = false
 
   self.ownedPlots = {1} -- Plots owned by the hospital
   self.ratholes = {} -- List of table {x, y, wall, parcel, optional object} for ratholes in the hospital corridors.
