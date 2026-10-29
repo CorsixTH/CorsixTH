@@ -76,7 +76,7 @@ function Audio:init()
     return
   end
 
-  local music = self.app.config.audio_music or self.app.config.audio_mp3
+  local music = self.app.config.audio_music
   local music_dir
   if music then
     music_dir = music
