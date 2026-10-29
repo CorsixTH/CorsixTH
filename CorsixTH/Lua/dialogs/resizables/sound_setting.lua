@@ -162,6 +162,23 @@ function UISoundSettings:UISoundSettings(ui, mode)
 
   y = y + 25
 
+  -- Play own music
+  -- Disable setting if no music folder set
+  self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
+      :setLabel(_S.audio_window.play_own_music)
+      :setTooltip(_S.tooltip.audio_window.play_own_music_label).lowered = true
+  self.play_own_music_panel = self:addBevelPanel(BTN_X, y, BTN_WIDTH, BTN_HEIGHT, col_bg)
+      :setLabel(app.config.play_own_music and _S.customise_window.option_on or _S.customise_window.option_off)
+  self.play_own_music_button = self.play_own_music_panel
+      :makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonPlayOwnMusic)
+      :setToggleState(app.config.play_own_music)
+      :setTooltip(app.config.audio_music and
+          _S.tooltip.audio_window.play_own_music_button or
+          _S.tooltip.audio_window.play_own_music_no_folder_set)
+      :enable(app.config.audio_music)
+
+  y = y + 25
+
   local midi_api_label = app.config.midi_api or _S.audio_window.default_midi_api
   self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
       :setLabel(_S.audio_window.midi_api)
@@ -378,6 +395,18 @@ function UISoundSettings:selectMusicVolume(index)
   end
   self.music_volume_panel:setLabel(self.volume_options[index].text)
   self.app:saveConfig()
+end
+
+--! Button function to switch between own music and TH97's
+function UISoundSettings:buttonPlayOwnMusic()
+  local app = self.ui.app
+  app.config.play_own_music = not app.config.play_own_music
+  app:saveConfig()
+  self.play_own_music_button:setLabel(app.config.play_own_music and
+      _S.customise_window.option_on or
+      _S.customise_window.option_off)
+  -- Reload audio system to start playing updated music choice
+  self:reinitAudio()
 end
 
 --! Triggered when a MIDI API is selected from the dropdown
