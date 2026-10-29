@@ -114,3 +114,8 @@ CorsixTH/corsix-th
 # Nix
 *.so
 /result*
+
+# WebAssembly & staging
+corsix-wasm/
+th_data/
+run_web.py
