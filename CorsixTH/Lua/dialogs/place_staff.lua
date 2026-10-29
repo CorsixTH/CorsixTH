@@ -27,7 +27,7 @@ class "UIPlaceStaff" (Window)
 
 ---@class UIPlaceStaff: Window
 ---@operator call: UIPlaceStaff
-local UIPlaceStaff = _G["UIPlaceStaff"]
+local UIPlaceStaff = _G["UIPlaceStaff"] ---@type UIPlaceStaff
 
 function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
   self.ui = ui

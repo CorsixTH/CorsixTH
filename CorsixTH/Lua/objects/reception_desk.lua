@@ -72,7 +72,7 @@ class "ReceptionDesk" (Object)
 
 ---@class ReceptionDesk: Object
 ---@operator call: ReceptionDesk
-local ReceptionDesk = _G["ReceptionDesk"]
+local ReceptionDesk = _G["ReceptionDesk"] ---@type ReceptionDesk
 
 function ReceptionDesk:ReceptionDesk(...)
   self:Object(...)

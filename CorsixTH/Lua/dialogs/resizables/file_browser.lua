@@ -26,7 +26,7 @@ class "FilteredFileTreeNode" (FileTreeNode)
 
 ---@class FilteredFileTreeNode: FileTreeNode
 ---@operator call: FilteredFileTreeNode
-local FilteredFileTreeNode = _G["FilteredFileTreeNode"]
+local FilteredFileTreeNode = _G["FilteredFileTreeNode"] ---@type FilteredFileTreeNode
 
 function FilteredFileTreeNode:FilteredFileTreeNode(path, filter)
   self:FileTreeNode(path)
@@ -72,7 +72,7 @@ class "FilteredTreeControl" (TreeControl)
 
 ---@class FilteredTreeControl: TreeControl
 ---@operator call: FilteredTreeControl
-local FilteredTreeControl = _G["FilteredTreeControl"]
+local FilteredTreeControl = _G["FilteredTreeControl"] ---@type FilteredTreeControl
 
 function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_bg, col_fg, has_font, show_dates)
   self:TreeControl(root, x, y, width, height, col_bg, col_fg, 14, has_font)
@@ -149,7 +149,7 @@ class "UIFileBrowser" (UIResizable)
 
 ---@class UIFileBrowser: UIResizable
 ---@operator call: UIFileBrowser
-local UIFileBrowser = _G["UIFileBrowser"]
+local UIFileBrowser = _G["UIFileBrowser"] ---@type UIFileBrowser
 
 local col_caption = {
   red = 174,

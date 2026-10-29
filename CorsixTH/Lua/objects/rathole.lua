@@ -54,7 +54,7 @@ class "Rathole" (Object)
 
 ---@class Rathole: Object
 ---@operator call: Rathole
-local Rathole = _G["Rathole"]
+local Rathole = _G["Rathole"] ---@type Rathole
 
 function Rathole:Rathole(hospital, oject_type, x, y, direction, etc)
   self:Object(hospital, oject_type, x, y, direction, etc)

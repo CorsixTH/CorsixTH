@@ -46,7 +46,7 @@ class "BloodMachineRoom" (Room)
 
 ---@class BloodMachineRoom: Room
 ---@operator call: BloodMachineRoom
-local BloodMachineRoom = _G["BloodMachineRoom"]
+local BloodMachineRoom = _G["BloodMachineRoom"] ---@type BloodMachineRoom
 
 function BloodMachineRoom:BloodMachineRoom(...)
   self:Room(...)

@@ -24,7 +24,7 @@ class "UIWatch" (Window)
 
 ---@class UIWatch: Window
 ---@operator call: UIWatch
-local UIWatch = _G["UIWatch"]
+local UIWatch = _G["UIWatch"] ---@type UIWatch
 
 local TICK_DAYS = 100
 local TICK_DAYS_EMERGENCY = 52

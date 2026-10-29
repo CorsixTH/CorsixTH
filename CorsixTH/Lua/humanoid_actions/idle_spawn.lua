@@ -22,7 +22,7 @@ class "IdleSpawnAction" (HumanoidAction)
 
 ---@class IdleSpawnAction: HumanoidAction
 ---@operator call: IdleSpawnAction
-local IdleSpawnAction = _G["IdleSpawnAction"]
+local IdleSpawnAction = _G["IdleSpawnAction"] ---@type IdleSpawnAction
 
 function IdleSpawnAction:IdleSpawnAction(anim, point_dir)
   assert(type(anim) == "number", "Invalid value for parameter 'anim'")

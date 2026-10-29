@@ -23,7 +23,7 @@ class "UIMenuList" (UIResizable)
 
 ---@class UIMenuList: UIResizable
 ---@operator call: UIMenuList
-local UIMenuList = _G["UIMenuList"]
+local UIMenuList = _G["UIMenuList"] ---@type UIMenuList
 
 local col_caption = {
   red = 174,

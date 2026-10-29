@@ -23,7 +23,7 @@ class "Patient" (Humanoid)
 
 ---@class Patient: Humanoid
 ---@operator call: Patient
-local Patient = _G["Patient"]
+local Patient = _G["Patient"] ---@type Patient
 
 function Patient:Patient(...)
   self:Humanoid(...)

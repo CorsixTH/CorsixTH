@@ -24,7 +24,7 @@ class "UIConfirmDialog" (Window)
 
 ---@class UIConfirmDialog: Window
 ---@operator call: UIConfirmDialog
-local UIConfirmDialog = _G["UIConfirmDialog"]
+local UIConfirmDialog = _G["UIConfirmDialog"] ---@type UIConfirmDialog
 
 local top_frame = 357
 local top_frame_height = 22

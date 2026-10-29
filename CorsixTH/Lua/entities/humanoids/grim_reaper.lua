@@ -22,7 +22,7 @@ class "GrimReaper" (Humanoid)
 
 ---@class GrimReaper: Humanoid
 ---@operator call: GrimReaper
-local GrimReaper = _G["GrimReaper"]
+local GrimReaper = _G["GrimReaper"] ---@type GrimReaper
 
 function GrimReaper:GrimReaper(...)
   self:Humanoid(...)

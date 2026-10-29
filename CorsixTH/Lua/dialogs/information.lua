@@ -23,7 +23,7 @@ class "UIInformation" (Window)
 
 ---@class UIInformation: Window
 ---@operator call: UIInformation
-local UIInformation = _G["UIInformation"]
+local UIInformation = _G["UIInformation"] ---@type UIInformation
 
 --! Constructor for the Information Dialog.
 --!param text The text to show, held in a table. All elements of the table will be written

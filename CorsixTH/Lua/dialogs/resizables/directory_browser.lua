@@ -28,7 +28,7 @@ class "DirTreeNode" (FileTreeNode)
 
 ---@class DirTreeNode: FileTreeNode
 ---@operator call: DirTreeNode
-local DirTreeNode = _G["DirTreeNode"]
+local DirTreeNode = _G["DirTreeNode"] ---@type DirTreeNode
 
 function DirTreeNode:DirTreeNode(path)
   self:FileTreeNode(path)
@@ -63,7 +63,7 @@ class "InstallDirTreeNode" (DirTreeNode)
 
 ---@class InstallDirTreeNode: DirTreeNode
 ---@operator call: InstallDirTreeNode
-local InstallDirTreeNode = _G["InstallDirTreeNode"]
+local InstallDirTreeNode = _G["InstallDirTreeNode"] ---@type InstallDirTreeNode
 
 function InstallDirTreeNode:InstallDirTreeNode(path)
   self:FileTreeNode(path)
@@ -121,7 +121,7 @@ class "UIDirectoryBrowser" (UIResizable)
 
 ---@class UIDirectoryBrowser: UIResizable
 ---@operator call: UIDirectoryBrowser
-local UIDirectoryBrowser = _G["UIDirectoryBrowser"]
+local UIDirectoryBrowser = _G["UIDirectoryBrowser"] ---@type UIDirectoryBrowser
 
 --! Creates a new directory browser window
 --!param ui The active UI to hook into.

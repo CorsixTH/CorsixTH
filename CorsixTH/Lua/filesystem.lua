@@ -35,7 +35,7 @@ class "FileSystem"
 
 ---@class FileSystem
 ---@operator call: FileSystem
-local FileSystem = _G["FileSystem"]
+local FileSystem = _G["FileSystem"] ---@type FileSystem
 
 function FileSystem:FileSystem()
   -- A mapping of normalized file names in the current directory to their

@@ -45,7 +45,7 @@ class "GeneralDiagRoom" (Room)
 
 ---@class GeneralDiagRoom: Room
 ---@operator call: GeneralDiagRoom
-local GeneralDiagRoom = _G["GeneralDiagRoom"]
+local GeneralDiagRoom = _G["GeneralDiagRoom"] ---@type GeneralDiagRoom
 
 function GeneralDiagRoom:GeneralDiagRoom(...)
   self:Room(...)

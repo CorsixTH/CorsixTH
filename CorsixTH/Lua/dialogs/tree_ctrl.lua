@@ -23,7 +23,7 @@ class "TreeNode"
 
 ---@class TreeNode
 ---@operator call: TreeNode
-local TreeNode = _G["TreeNode"]
+local TreeNode = _G["TreeNode"] ---@type TreeNode
 
 function TreeNode:TreeNode()
   self.is_expanded = false
@@ -187,7 +187,7 @@ class "FileTreeNode" (TreeNode)
 
 ---@class FileTreeNode: TreeNode
 ---@operator call: FileTreeNode
-local FileTreeNode = _G["FileTreeNode"]
+local FileTreeNode = _G["FileTreeNode"] ---@type FileTreeNode
 
 local pathsep = package.config:sub(1, 1)
 
@@ -454,7 +454,7 @@ class "DummyRootNode" (TreeNode)
 
 ---@class DummyRootNode: TreeNode
 ---@operator call: DummyRootNode
-local DummyRootNode = _G["DummyRootNode"]
+local DummyRootNode = _G["DummyRootNode"] ---@type DummyRootNode
 
 --!param roots (array) An array of `TreeNode`s which should be displayed as
 -- root nodes.
@@ -484,7 +484,7 @@ end
 
 --! A control (to be placed on a window) which allows the user to navigate a
 -- tree of items and select one item from it.
-class "TreeControl" (Window)
+class "TreeControl" (Window) ---@type TreeControl
 
 ---@class TreeControl: Window
 ---@operator call: TreeControl

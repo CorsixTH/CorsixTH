@@ -23,7 +23,7 @@ class "Earthquake"
 
 ---@class Earthquake
 ---@operator call: Earthquake
-local Earthquake = _G["Earthquake"]
+local Earthquake = _G["Earthquake"] ---@type Earthquake
 
 --[[
 All fields relating to the current or next earthquake:

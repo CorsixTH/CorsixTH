@@ -23,7 +23,7 @@ class "UIHotkeyAssign" (UIResizable)
 
 ---@class UIHotkeyAssign: UIResizable
 ---@operator call: UIHotkeyAssign
-local UIHotkeyAssign = _G["UIHotkeyAssign"]
+local UIHotkeyAssign = _G["UIHotkeyAssign"] ---@type UIHotkeyAssign
 
 local col_bg = {
   red = 154,
@@ -570,7 +570,7 @@ class "UIHotkeyAssignKeyPane" (Window)
 
 ---@class UIHotkeyAssignKeyPane: Window
 ---@operator call: UIHotkeyAssignKeyPane
-local UIHotkeyAssignKeyPane = _G["UIHotkeyAssignKeyPane"]
+local UIHotkeyAssignKeyPane = _G["UIHotkeyAssignKeyPane"] ---@type UIHotkeyAssignKeyPane
 
 function UIHotkeyAssignKeyPane:UIHotkeyAssignKeyPane(x, y, ui, key_options, app_hotkeys)
   self:Window()

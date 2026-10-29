@@ -42,7 +42,7 @@ class "TrainingRoom" (Room)
 
 ---@class TrainingRoom: Room
 ---@operator call: TrainingRoom
-local TrainingRoom = _G["TrainingRoom"]
+local TrainingRoom = _G["TrainingRoom"] ---@type TrainingRoom
 
 function TrainingRoom:TrainingRoom(...)
   self:Room(...)

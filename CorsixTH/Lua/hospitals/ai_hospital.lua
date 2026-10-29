@@ -22,7 +22,7 @@ class "AIHospital" (Hospital)
 
 ---@class AIHospital: Hospital
 ---@operator call: AIHospital
-local AIHospital = _G["AIHospital"]
+local AIHospital = _G["AIHospital"] ---@type AIHospital
 
 function AIHospital:AIHospital(competitor, world, avail_rooms, name)
   self:Hospital(world, avail_rooms, name)

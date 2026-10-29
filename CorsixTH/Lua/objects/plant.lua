@@ -92,7 +92,7 @@ class "Plant" (Object)
 
 ---@class Plant: Object
 ---@operator call: Plant
-local Plant = _G["Plant"]
+local Plant = _G["Plant"] ---@type Plant
 
 function Plant:Plant(hospital, object_type, x, y, direction, etc)
   -- It doesn't matter which direction the plant is facing. It will be rotated so that an approaching

@@ -46,7 +46,7 @@ class "UltrascanRoom" (Room)
 
 ---@class UltrascanRoom: Room
 ---@operator call: UltrascanRoom
-local UltrascanRoom = _G["UltrascanRoom"]
+local UltrascanRoom = _G["UltrascanRoom"] ---@type UltrascanRoom
 
 function UltrascanRoom:UltrascanRoom(...)
   self:Room(...)

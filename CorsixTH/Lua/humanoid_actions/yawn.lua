@@ -22,7 +22,7 @@ class "YawnAction" (HumanoidAction)
 
 ---@class YawnAction: HumanoidAction
 ---@operator call: YawnAction
-local YawnAction = _G["YawnAction"]
+local YawnAction = _G["YawnAction"] ---@type YawnAction
 
 function YawnAction:YawnAction()
   self:HumanoidAction("yawn")

@@ -30,7 +30,7 @@ class "Graphics"
 
 ---@class Graphics
 ---@operator call: Graphics
-local Graphics = _G["Graphics"]
+local Graphics = _G["Graphics"] ---@type Graphics
 
 local cursor_data = {
   default = { id = 1, x = 0, y = 0 }, -- 18x20
@@ -978,7 +978,7 @@ class "AnimationManager"
 
 ---@class AnimationManager
 ---@operator call: AnimationManager
-local AnimationManager = _G["AnimationManager"]
+local AnimationManager = _G["AnimationManager"] ---@type AnimationManager
 
 function AnimationManager:AnimationManager(anims)
   self.anim_length_cache = {}

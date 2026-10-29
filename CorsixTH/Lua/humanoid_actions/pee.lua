@@ -22,7 +22,7 @@ class "PeeAction" (HumanoidAction)
 
 ---@class PeeAction: HumanoidAction
 ---@operator call: PeeAction
-local PeeAction = _G["PeeAction"]
+local PeeAction = _G["PeeAction"] ---@type PeeAction
 
 function PeeAction:PeeAction()
   self:HumanoidAction("pee")

@@ -23,7 +23,7 @@ class "UIFullscreen" (Window)
 
 ---@class UIFullscreen: Window
 ---@operator call: UIFullscreen
-local UIFullscreen = _G["UIFullscreen"]
+local UIFullscreen = _G["UIFullscreen"] ---@type UIFullscreen
 
 function UIFullscreen:UIFullscreen(ui)
   self:Window()

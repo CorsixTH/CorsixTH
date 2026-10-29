@@ -22,7 +22,7 @@ class "OnGroundAction" (HumanoidAction)
 
 ---@class OnGroundAction: HumanoidAction
 ---@operator call: OnGroundAction
-local OnGroundAction = _G["OnGroundAction"]
+local OnGroundAction = _G["OnGroundAction"] ---@type OnGroundAction
 
 function OnGroundAction:OnGroundAction()
   self:HumanoidAction("on_ground")

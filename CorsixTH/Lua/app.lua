@@ -34,7 +34,7 @@ class "App"
 
 ---@class App
 ---@operator call: App
-local App = _G["App"]
+local App = _G["App"] ---@type App
 
 App.MIN_WINDOW_WIDTH = 640
 App.MIN_WINDOW_HEIGHT = 480

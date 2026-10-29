@@ -23,7 +23,7 @@ class "UIMainMenu" (UIResizable)
 
 ---@class UIMainMenu: UIResizable
 ---@operator call: UIMainMenu
-local UIMainMenu = _G["UIMainMenu"]
+local UIMainMenu = _G["UIMainMenu"] ---@type UIMainMenu
 
 local col_bg = {
   red = 154,

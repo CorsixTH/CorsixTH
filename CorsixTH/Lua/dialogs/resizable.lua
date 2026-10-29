@@ -25,7 +25,7 @@ class "UIResizable" (Window)
 
 ---@class UIResizable: Window
 ---@operator call: UIResizable
-local UIResizable = _G["UIResizable"]
+local UIResizable = _G["UIResizable"] ---@type UIResizable
 
 local border_offset_x = 9
 local border_offset_y = 9

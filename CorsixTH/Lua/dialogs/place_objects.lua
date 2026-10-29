@@ -32,7 +32,7 @@ class "UIPlaceObjects" (Window)
 
 ---@class UIPlaceObjects: Window
 ---@operator call: UIPlaceObjects
-local UIPlaceObjects = _G["UIPlaceObjects"]
+local UIPlaceObjects = _G["UIPlaceObjects"] ---@type UIPlaceObjects
 
 --[[ Constructor for the class.
 !param ui (UI) The active ui.

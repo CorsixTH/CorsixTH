@@ -28,7 +28,7 @@ class "UIChooseSoundfont" (UIFileBrowser)
 
 ---@class UIChooseSoundfont: UIFileBrowser
 ---@operator call: UIChooseSoundfont
-local UIChooseSoundfont = _G["UIChooseSoundfont"]
+local UIChooseSoundfont = _G["UIChooseSoundfont"] ---@type UIChooseSoundfont
 
 function UIChooseSoundfont:UIChooseSoundfont(ui, mode, soundOptionsUI, choiceCallback)
   self.soundOptionsUI = soundOptionsUI

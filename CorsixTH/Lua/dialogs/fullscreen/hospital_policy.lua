@@ -23,7 +23,7 @@ class "UIPolicy" (UIFullscreen)
 
 ---@class UIPolicy: UIFullscreen
 ---@operator call: UIPolicy
-local UIPolicy = _G["UIPolicy"]
+local UIPolicy = _G["UIPolicy"] ---@type UIPolicy
 
 function UIPolicy:UIPolicy(ui)
   self:UIFullscreen(ui)

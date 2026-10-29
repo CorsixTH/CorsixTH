@@ -22,7 +22,7 @@ class "PickupAction" (HumanoidAction)
 
 ---@class PickupAction: HumanoidAction
 ---@operator call: PickupAction
-local PickupAction = _G["PickupAction"]
+local PickupAction = _G["PickupAction"] ---@type PickupAction
 
 -- Construct a pick-up action
 --!param ui User interface

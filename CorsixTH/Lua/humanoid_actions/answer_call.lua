@@ -22,7 +22,7 @@ class "AnswerCallAction" (HumanoidAction)
 
 ---@class AnswerCallAction: HumanoidAction
 ---@operator call: AnswerCallAction
-local AnswerCallAction = _G["AnswerCallAction"]
+local AnswerCallAction = _G["AnswerCallAction"] ---@type AnswerCallAction
 
 function AnswerCallAction:AnswerCallAction()
   self:HumanoidAction("answer_call")

@@ -22,7 +22,7 @@ class "UIResearch" (UIFullscreen)
 
 ---@class UIResearch: UIFullscreen
 ---@operator call: UIResearch
-local UIResearch = _G["UIResearch"]
+local UIResearch = _G["UIResearch"] ---@type UIResearch
 
 local research_categories = {
   "cure",

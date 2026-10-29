@@ -45,7 +45,7 @@ class "GPRoom" (Room)
 
 ---@class GPRoom: Room
 ---@operator call: GPRoom
-local GPRoom = _G["GPRoom"]
+local GPRoom = _G["GPRoom"] ---@type GPRoom
 
 function GPRoom:GPRoom(...)
   self:Room(...)

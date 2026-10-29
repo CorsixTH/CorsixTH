@@ -157,7 +157,7 @@ class "Chair" (Object)
 
 ---@class Chair: Object
 ---@operator call: Chair
-local Chair = _G["Chair"]
+local Chair = _G["Chair"] ---@type Chair
 
 function Chair:Chair(...)
   self:Object(...)

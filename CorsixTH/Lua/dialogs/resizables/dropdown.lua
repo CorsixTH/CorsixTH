@@ -24,7 +24,7 @@ class "UIDropdown" (UIResizable)
 
 ---@class UIDropdown: UIResizable
 ---@operator call: UIDropdown
-local UIDropdown = _G["UIDropdown"]
+local UIDropdown = _G["UIDropdown"] ---@type UIDropdown
 
 --! Constructor for the dropdown "window"
 --!param ui (UI) The ui the window is created in

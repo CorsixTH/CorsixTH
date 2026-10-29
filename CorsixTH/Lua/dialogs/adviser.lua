@@ -25,7 +25,7 @@ class "UIAdviser" (Window)
 
 ---@class UIAdviser: Window
 ---@operator call: UIAdviser
-local UIAdviser = _G["UIAdviser"]
+local UIAdviser = _G["UIAdviser"] ---@type UIAdviser
 
 function UIAdviser:UIAdviser(ui)
   self:Window()

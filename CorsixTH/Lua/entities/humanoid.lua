@@ -23,7 +23,7 @@ class "Humanoid" (Entity)
 
 ---@class Humanoid: Entity
 ---@operator call: Humanoid
-local Humanoid = _G["Humanoid"]
+local Humanoid = _G["Humanoid"] ---@type Humanoid
 
 local walk_animations = permanent"humanoid_walk_animations"({})
 local door_animations = permanent"humanoid_door_animations"({})

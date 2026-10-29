@@ -25,7 +25,7 @@ class "UIJukebox" (Window)
 
 ---@class UIJukebox: Window
 ---@operator call: UIJukebox
-local UIJukebox = _G["UIJukebox"]
+local UIJukebox = _G["UIJukebox"] ---@type UIJukebox
 
 function UIJukebox:UIJukebox(app)
   self:Window()

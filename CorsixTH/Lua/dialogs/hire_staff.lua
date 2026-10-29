@@ -22,7 +22,7 @@ class "UIHireStaff" (Window)
 
 ---@class UIHireStaff: Window
 ---@operator call: UIHireStaff
-local UIHireStaff = _G["UIHireStaff"]
+local UIHireStaff = _G["UIHireStaff"] ---@type UIHireStaff
 
 function UIHireStaff:UIHireStaff(ui)
   self:Window()

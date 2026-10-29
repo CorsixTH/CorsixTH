@@ -23,7 +23,7 @@ class "UICallsDispatcher" (UIResizable)
 
 ---@class UICallsDispatcher: UIResizable
 ---@operator call: UICallsDispatcher
-local UICallsDispatcher = _G["UICallsDispatcher"]
+local UICallsDispatcher = _G["UICallsDispatcher"] ---@type UICallsDispatcher
 
 local col_bg = {
   red = 154,

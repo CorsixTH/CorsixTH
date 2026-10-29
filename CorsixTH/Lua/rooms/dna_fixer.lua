@@ -47,7 +47,7 @@ class "DNAFixerRoom" (Room)
 
 ---@class DNAFixerRoom: Room
 ---@operator call: DNAFixerRoom
-local DNAFixerRoom = _G["DNAFixerRoom"]
+local DNAFixerRoom = _G["DNAFixerRoom"] ---@type DNAFixerRoom
 
 function DNAFixerRoom:DNAFixerRoom(...)
   self:Room(...)

@@ -33,7 +33,7 @@ class "ResearchDepartment"
 
 ---@class ResearchDepartment
 ---@operator call: ResearchDepartment
-local ResearchDepartment = _G["ResearchDepartment"]
+local ResearchDepartment = _G["ResearchDepartment"] ---@type ResearchDepartment
 
 function ResearchDepartment:ResearchDepartment(hospital)
   self.hospital = hospital

@@ -46,7 +46,7 @@ class "SlackTongueRoom" (Room)
 
 ---@class SlackTongueRoom: Room
 ---@operator call: SlackTongueRoom
-local SlackTongueRoom = _G["SlackTongueRoom"]
+local SlackTongueRoom = _G["SlackTongueRoom"] ---@type SlackTongueRoom
 
 function SlackTongueRoom:SlackTongueRoom(...)
   self:Room(...)

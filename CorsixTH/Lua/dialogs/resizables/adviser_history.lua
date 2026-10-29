@@ -23,7 +23,7 @@ class "UIAdviserHistory" (UIResizable)
 
 ---@class UIAdviserHistory: UIResizable
 ---@operator call: UIAdviserHistory
-local UIAdviserHistory = _G["UIAdviserHistory"]
+local UIAdviserHistory = _G["UIAdviserHistory"] ---@type UIAdviserHistory
 
 
 local col_bg = Colours.AdviserPanelBackground

@@ -23,7 +23,7 @@ class "UIProgressReport" (UIFullscreen)
 
 ---@class UIProgressReport: UIFullscreen
 ---@operator call: UIProgressReport
-local UIProgressReport = _G["UIProgressReport"]
+local UIProgressReport = _G["UIProgressReport"] ---@type UIProgressReport
 
 function UIProgressReport:UIProgressReport(ui)
   self:UIFullscreen(ui)

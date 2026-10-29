@@ -26,7 +26,7 @@ class "CallsDispatcher"
 
 ---@class CallsDispatcher
 ---@operator call: CallsDispatcher
-local CallsDispatcher = _G["CallsDispatcher"]
+local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
 
 local debug_enabled = false -- Turn on for debug message
 

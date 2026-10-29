@@ -22,7 +22,7 @@ class "QueueAction" (HumanoidAction)
 
 ---@class QueueAction: HumanoidAction
 ---@operator call: QueueAction
-local QueueAction = _G["QueueAction"]
+local QueueAction = _G["QueueAction"] ---@type QueueAction
 
 --! Queue for something (door or reception desk).
 --!param x X position of the queue.

@@ -46,7 +46,7 @@ class "ElectrolysisRoom" (Room)
 
 ---@class ElectrolysisRoom: Room
 ---@operator call: ElectrolysisRoom
-local ElectrolysisRoom = _G["ElectrolysisRoom"]
+local ElectrolysisRoom = _G["ElectrolysisRoom"] ---@type ElectrolysisRoom
 
 function ElectrolysisRoom:ElectrolysisRoom(...)
   self:Room(...)

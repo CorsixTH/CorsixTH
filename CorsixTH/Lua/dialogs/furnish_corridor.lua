@@ -28,7 +28,7 @@ class "UIFurnishCorridor" (Window)
 
 ---@class UIFurnishCorridor: Window
 ---@operator call: UIFurnishCorridor
-local UIFurnishCorridor = _G["UIFurnishCorridor"]
+local UIFurnishCorridor = _G["UIFurnishCorridor"] ---@type UIFurnishCorridor
 
 function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:Window()

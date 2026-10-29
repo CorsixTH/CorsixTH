@@ -23,7 +23,7 @@ class "UITipOfTheDay" (UIResizable)
 
 ---@class UITipOfTheDay: UIResizable
 ---@operator call: UITipOfTheDay
-local UITipOfTheDay = _G["UITipOfTheDay"]
+local UITipOfTheDay = _G["UITipOfTheDay"] ---@type UITipOfTheDay
 
 local col_bg = {
   red = math.random(20, 200),

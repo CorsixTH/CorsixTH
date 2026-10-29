@@ -24,7 +24,7 @@ class "UIStaffRise" (Window)
 
 ---@class UIStaffRise: Window
 ---@operator call: UIStaffRise
-local UIStaffRise = _G["UIStaffRise"]
+local UIStaffRise = _G["UIStaffRise"] ---@type UIStaffRise
 
 function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:Window()

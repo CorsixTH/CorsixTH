@@ -23,7 +23,7 @@ class "UIOptions" (UIResizable)
 
 ---@class UIOptions: UIResizable
 ---@operator call: UIOptions
-local UIOptions = _G["UIOptions"]
+local UIOptions = _G["UIOptions"] ---@type UIOptions
 
 -- Colour definitions
 local col = {
@@ -290,7 +290,7 @@ class "UIScrollSpeed" (UIResizable)
 
 ---@class UIScrollSpeed: UIResizable
 ---@operator call: UIScrollSpeed
-local UIScrollSpeed = _G["UIScrollSpeed"]
+local UIScrollSpeed = _G["UIScrollSpeed"] ---@type UIScrollSpeed
 
 function UIScrollSpeed:UIScrollSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)
@@ -361,7 +361,7 @@ class "UIShiftScrollSpeed" (UIResizable)
 
 ---@class UIShiftScrollSpeed: UIResizable
 ---@operator call: UIShiftScrollSpeed
-local UIShiftScrollSpeed = _G["UIShiftScrollSpeed"]
+local UIShiftScrollSpeed = _G["UIShiftScrollSpeed"] ---@type UIShiftScrollSpeed
 
 function UIShiftScrollSpeed:UIShiftScrollSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)
@@ -431,7 +431,7 @@ class "UIZoomSpeed" (UIResizable)
 
 ---@class UIZoomSpeed: UIResizable
 ---@operator call: UIZoomSpeed
-local UIZoomSpeed = _G["UIZoomSpeed"]
+local UIZoomSpeed = _G["UIZoomSpeed"] ---@type UIZoomSpeed
 
 function UIZoomSpeed:UIZoomSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)

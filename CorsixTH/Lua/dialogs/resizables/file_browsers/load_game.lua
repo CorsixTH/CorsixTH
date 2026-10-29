@@ -23,7 +23,7 @@ class "UILoadGame" (UIFileBrowser)
 
 ---@class UILoadGame: UIFileBrowser
 ---@operator call: UILoadGame
-local UILoadGame = _G["UILoadGame"]
+local UILoadGame = _G["UILoadGame"] ---@type UILoadGame
 
 function UILoadGame:UILoadGame(ui, mode)
   local treenode = FilteredFileTreeNode(ui.app.savegame_dir, ".sav")

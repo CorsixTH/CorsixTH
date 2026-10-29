@@ -40,7 +40,7 @@ class "ToiletRoom" (Room)
 
 ---@class ToiletRoom: Room
 ---@operator call: ToiletRoom
-local ToiletRoom = _G["ToiletRoom"]
+local ToiletRoom = _G["ToiletRoom"] ---@type ToiletRoom
 
 function ToiletRoom:ToiletRoom(...)
   self:Room(...)

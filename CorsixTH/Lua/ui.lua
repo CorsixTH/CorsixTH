@@ -25,7 +25,7 @@ class "UI" (Window)
 
 ---@class UI: Window
 ---@operator call: UI
-local UI = _G["UI"]
+local UI = _G["UI"] ---@type UI
 
 local TH = require("TH")
 local SDL = require("sdl")

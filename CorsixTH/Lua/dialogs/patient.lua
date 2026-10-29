@@ -31,7 +31,7 @@ class "UIPatient" (Window)
 
 ---@class UIPatient: Window
 ---@operator call: UIPatient
-local UIPatient = _G["UIPatient"]
+local UIPatient = _G["UIPatient"] ---@type UIPatient
 
 function UIPatient:UIPatient(ui, patient)
   self:Window()

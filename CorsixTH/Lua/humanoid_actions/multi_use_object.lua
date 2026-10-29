@@ -22,7 +22,7 @@ class "MultiUseObjectAction" (HumanoidAction)
 
 ---@class MultiUseObjectAction: HumanoidAction
 ---@operator call: MultiUseObjectAction
-local MultiUseObjectAction = _G["MultiUseObjectAction"]
+local MultiUseObjectAction = _G["MultiUseObjectAction"] ---@type MultiUseObjectAction
 
 --! Construct a multi-use object action.
 --!param object (Object) Object being used.

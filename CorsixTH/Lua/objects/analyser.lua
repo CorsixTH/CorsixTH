@@ -60,7 +60,7 @@ class "AtomAnalyser" (Object)
 
 ---@class AtomAnalyser: Object
 ---@operator call: AtomAnalyser
-local AtomAnalyser = _G["AtomAnalyser"]
+local AtomAnalyser = _G["AtomAnalyser"] ---@type AtomAnalyser
 
 function AtomAnalyser:AtomAnalyser(...)
   self:Object(...)

@@ -22,7 +22,7 @@ class "StaffProfile"
 
 ---@class StaffProfile
 ---@operator call: StaffProfile
-local StaffProfile = _G["StaffProfile"]
+local StaffProfile = _G["StaffProfile"] ---@type StaffProfile
 
 function StaffProfile:StaffProfile(world, humanoid_class, local_string)
   self.world = world

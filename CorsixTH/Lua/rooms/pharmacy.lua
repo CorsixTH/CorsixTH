@@ -45,7 +45,7 @@ class "PharmacyRoom" (Room)
 
 ---@class PharmacyRoom: Room
 ---@operator call: PharmacyRoom
-local PharmacyRoom = _G["PharmacyRoom"]
+local PharmacyRoom = _G["PharmacyRoom"] ---@type PharmacyRoom
 
 function PharmacyRoom:PharmacyRoom(...)
   self:Room(...)

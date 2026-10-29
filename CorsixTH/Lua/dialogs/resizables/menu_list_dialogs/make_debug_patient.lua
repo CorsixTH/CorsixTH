@@ -22,7 +22,7 @@ class "UIMakeDebugPatient" (UIMenuList)
 
 ---@class UIMakeDebugPatient: UIMenuList
 ---@operator call: UIMakeDebugPatient
-local UIMakeDebugPatient = _G["UIMakeDebugPatient"]
+local UIMakeDebugPatient = _G["UIMakeDebugPatient"] ---@type UIMakeDebugPatient
 
 function UIMakeDebugPatient:UIMakeDebugPatient(ui)
   local items = {}

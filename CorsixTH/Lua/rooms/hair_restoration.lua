@@ -46,7 +46,7 @@ class "HairRestorationRoom" (Room)
 
 ---@class HairRestorationRoom: Room
 ---@operator call: HairRestorationRoom
-local HairRestorationRoom = _G["HairRestorationRoom"]
+local HairRestorationRoom = _G["HairRestorationRoom"] ---@type HairRestorationRoom
 
 function HairRestorationRoom:HairRestorationRoom(...)
   self:Room(...)

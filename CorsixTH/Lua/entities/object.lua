@@ -25,7 +25,7 @@ class "Object" (Entity)
 
 ---@class Object: Entity
 ---@operator call: Object
-local Object = _G["Object"]
+local Object = _G["Object"] ---@type Object
 
 local orient_mirror = {
   north = "west",
@@ -1078,7 +1078,7 @@ class "SideObject" (Object)
 
 ---@class SideObject: Object
 ---@operator call: SideObject
-local SideObject = _G["SideObject"]
+local SideObject = _G["SideObject"] ---@type SideObject
 
 function SideObject:SideObject(...)
   self:Object(...)

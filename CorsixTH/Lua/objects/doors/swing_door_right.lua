@@ -34,7 +34,7 @@ class "SwingDoor" (Door)
 
 ---@class SwingDoor: Door
 ---@operator call: SwingDoor
-local SwingDoor = _G["SwingDoor"]
+local SwingDoor = _G["SwingDoor"] ---@type SwingDoor
 
 function SwingDoor:SwingDoor(hospital, object_type, x, y, direction, etc)
   self.is_master = object_type == object

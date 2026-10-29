@@ -20,14 +20,14 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
-local AnnouncementPriority = _G["AnnouncementPriority"]
+local AnnouncementPriority = _G["AnnouncementPriority"] ---@type AnnouncementPriority
 
 --[[ An `Inspector` is called to the hospital after an epidemic to issue a report]]
 class "Inspector" (Humanoid)
 
 ---@class Inspector: Humanoid
 ---@operator call: Inspector
-local Inspector = _G["Inspector"]
+local Inspector = _G["Inspector"] ---@type Inspector
 
 function Inspector:Inspector(...)
   self:Humanoid(...)

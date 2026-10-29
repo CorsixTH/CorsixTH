@@ -24,7 +24,7 @@ class "UIGraphs" (UIFullscreen)
 
 ---@class UIGraphs: UIFullscreen
 ---@operator call: UIGraphs
-local UIGraphs = _G["UIGraphs"]
+local UIGraphs = _G["UIGraphs"] ---@type UIGraphs
 
 local TH = require("TH")
 

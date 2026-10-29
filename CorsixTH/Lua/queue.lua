@@ -32,7 +32,7 @@ class "Queue"
 
 ---@class Queue
 ---@operator call: Queue
-local Queue = _G["Queue"]
+local Queue = _G["Queue"] ---@type Queue
 
 --! Constructor of a queue.
 function Queue:Queue()

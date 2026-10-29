@@ -27,7 +27,7 @@ class "UILuaConsole" (UIResizable)
 
 ---@class UILuaConsole: UIResizable
 ---@operator call: UILuaConsole
-local UILuaConsole = _G["UILuaConsole"]
+local UILuaConsole = _G["UILuaConsole"] ---@type UILuaConsole
 
 local col_bg = {
   red = 46,

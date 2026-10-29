@@ -26,7 +26,7 @@ class "Strings"
 
 ---@class Strings
 ---@operator call: Strings
-local Strings = _G["Strings"]
+local Strings = _G["Strings"] ---@type Strings
 
 function Strings:Strings(app)
   self.app = app

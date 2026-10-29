@@ -23,7 +23,7 @@ class "UICasebook" (UIFullscreen)
 
 ---@class UICasebook: UIFullscreen
 ---@operator call: UICasebook
-local UICasebook = _G["UICasebook"]
+local UICasebook = _G["UICasebook"] ---@type UICasebook
 
 function UICasebook:UICasebook(ui, disease_selection)
   self:UIFullscreen(ui)

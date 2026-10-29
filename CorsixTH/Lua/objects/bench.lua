@@ -147,7 +147,7 @@ class "Bench" (Object)
 
 ---@class Bench: Object
 ---@operator call: Bench
-local Bench = _G["Bench"]
+local Bench = _G["Bench"] ---@type Bench
 
 function Bench:Bench(...)
   self:Object(...)

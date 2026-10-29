@@ -23,7 +23,7 @@ class "UINewGame" (UIResizable)
 
 ---@class UINewGame: UIResizable
 ---@operator call: UINewGame
-local UINewGame = _G["UINewGame"]
+local UINewGame = _G["UINewGame"] ---@type UINewGame
 
 -- Colour definitions
 local col = {

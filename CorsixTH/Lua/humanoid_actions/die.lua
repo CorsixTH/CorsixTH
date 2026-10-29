@@ -22,7 +22,7 @@ class "DieAction" (HumanoidAction)
 
 ---@class DieAction: HumanoidAction
 ---@operator call: DieAction
-local DieAction = _G["DieAction"]
+local DieAction = _G["DieAction"] ---@type DieAction
 
 function DieAction:DieAction()
   self:HumanoidAction("die")

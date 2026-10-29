@@ -23,7 +23,7 @@ class "UILoadMap" (UIFileBrowser)
 
 ---@class UILoadMap: UIFileBrowser
 ---@operator call: UILoadMap
-local UILoadMap = _G["UILoadMap"]
+local UILoadMap = _G["UILoadMap"] ---@type UILoadMap
 
 function UILoadMap:UILoadMap(ui, mode)
   local path = ui.app.user_level_dir

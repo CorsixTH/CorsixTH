@@ -22,7 +22,7 @@ class "MeanderAction" (HumanoidAction)
 
 ---@class MeanderAction: HumanoidAction
 ---@operator call: MeanderAction
-local MeanderAction = _G["MeanderAction"]
+local MeanderAction = _G["MeanderAction"] ---@type MeanderAction
 
 function MeanderAction:MeanderAction()
   self:HumanoidAction("meander")

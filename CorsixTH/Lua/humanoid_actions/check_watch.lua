@@ -22,7 +22,7 @@ class "CheckWatchAction" (HumanoidAction)
 
 ---@class CheckWatchAction: HumanoidAction
 ---@operator call: CheckWatchAction
-local CheckWatchAction = _G["CheckWatchAction"]
+local CheckWatchAction = _G["CheckWatchAction"] ---@type CheckWatchAction
 
 function CheckWatchAction:CheckWatchAction()
   self:HumanoidAction("check_watch")

@@ -61,7 +61,7 @@ class "Vip" (Humanoid)
 
 ---@class Vip: Humanoid
 ---@operator call: Vip
-local Vip = _G["Vip"]
+local Vip = _G["Vip"] ---@type Vip
 
 function Vip:Vip(...)
   self:Humanoid(...)

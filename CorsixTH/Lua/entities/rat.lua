@@ -24,7 +24,7 @@ class "Rat" (Entity)
 
 ---@class Rat: Entity
 ---@operator call: Rat
-local Rat = _G["Rat"]
+local Rat = _G["Rat"] ---@type Rat
 
 -- anims
 -- rat moving north: 1908 (4)

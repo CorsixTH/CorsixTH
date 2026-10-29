@@ -22,7 +22,7 @@ class "IdleAction" (HumanoidAction)
 
 ---@class IdleAction: HumanoidAction
 ---@operator call: IdleAction
-local IdleAction = _G["IdleAction"]
+local IdleAction = _G["IdleAction"] ---@type IdleAction
 
 function IdleAction:IdleAction()
   self:HumanoidAction("idle")

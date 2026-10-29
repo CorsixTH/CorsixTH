@@ -23,7 +23,7 @@ class "UIUpdate" (UIResizable)
 
 ---@class UIUpdate: UIResizable
 ---@operator call: UIUpdate
-local UIUpdate = _G["UIUpdate"]
+local UIUpdate = _G["UIUpdate"] ---@type UIUpdate
 
 local col_bg = {
   red = 154,

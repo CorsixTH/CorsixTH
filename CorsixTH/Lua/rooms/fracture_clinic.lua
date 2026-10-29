@@ -46,7 +46,7 @@ class "FractureRoom" (Room)
 
 ---@class FractureRoom: Room
 ---@operator call: FractureRoom
-local FractureRoom = _G["FractureRoom"]
+local FractureRoom = _G["FractureRoom"] ---@type FractureRoom
 
 function FractureRoom:FractureRoom(...)
   self:Room(...)

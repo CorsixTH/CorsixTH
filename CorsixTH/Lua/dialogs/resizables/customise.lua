@@ -23,7 +23,7 @@ class "UICustomise" (UIResizable)
 
 ---@class UICustomise: UIResizable
 ---@operator call: UICustomise
-local UICustomise = _G["UICustomise"]
+local UICustomise = _G["UICustomise"] ---@type UICustomise
 
 local col = {
   bg             = Colours.PanelDefault,

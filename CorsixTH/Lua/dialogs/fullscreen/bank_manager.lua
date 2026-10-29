@@ -23,7 +23,7 @@ class "UIBankManager" (UIFullscreen)
 
 ---@class UIBankManager: UIFullscreen
 ---@operator call: UIBankManager
-local UIBankManager = _G["UIBankManager"]
+local UIBankManager = _G["UIBankManager"] ---@type UIBankManager
 
 function UIBankManager:UIBankManager(ui)
   self:UIFullscreen(ui)

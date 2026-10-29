@@ -23,7 +23,7 @@ class "UIFolder" (UIResizable)
 
 ---@class UIFolder: UIResizable
 ---@operator call: UIFolder
-local UIFolder = _G["UIFolder"]
+local UIFolder = _G["UIFolder"] ---@type UIFolder
 
 local col = {
    bg = Colours.PanelDefault,

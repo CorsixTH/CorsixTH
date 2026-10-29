@@ -22,7 +22,7 @@ class "VaccinateAction" (HumanoidAction)
 
 ---@class VaccinateAction: HumanoidAction
 ---@operator call: VaccinateAction
-local VaccinateAction = _G["VaccinateAction"]
+local VaccinateAction = _G["VaccinateAction"] ---@type VaccinateAction
 
 -- Vaccinate action constructor for a nurse.
 --!param patient (Patient) Patient to vaccinate.

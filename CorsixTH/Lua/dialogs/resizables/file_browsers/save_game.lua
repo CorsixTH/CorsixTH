@@ -23,7 +23,7 @@ class "UISaveGame" (UIFileBrowser)
 
 ---@class UISaveGame: UIFileBrowser
 ---@operator call: UISaveGame
-local UISaveGame = _G["UISaveGame"]
+local UISaveGame = _G["UISaveGame"] ---@type UISaveGame
 
 local col_textbox = {
   red = 0,

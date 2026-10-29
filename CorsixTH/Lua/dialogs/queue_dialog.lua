@@ -25,7 +25,7 @@ class "UIQueue" (Window)
 
 ---@class UIQueue: Window
 ---@operator call: UIQueue
-local UIQueue = _G["UIQueue"]
+local UIQueue = _G["UIQueue"] ---@type UIQueue
 
 function UIQueue:UIQueue(ui, queue)
   self:Window()
@@ -364,7 +364,7 @@ class "UIQueuePopup" (Window)
 
 ---@class UIQueuePopup: Window
 ---@operator call: UIQueuePopup
-local UIQueuePopup = _G["UIQueuePopup"]
+local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
 
 function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
   self:Window()

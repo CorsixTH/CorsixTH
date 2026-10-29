@@ -22,7 +22,7 @@ class "UIMachine" (Window)
 
 ---@class UIMachine: Window
 ---@operator call: UIMachine
-local UIMachine = _G["UIMachine"]
+local UIMachine = _G["UIMachine"] ---@type UIMachine
 
 function UIMachine:UIMachine(ui, machine, room)
   self:Window()

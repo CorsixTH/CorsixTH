@@ -46,7 +46,7 @@ class "AnnouncementQueue"
 
 ---@class AnnouncementQueue
 ---@operator call: AnnouncementQueue
-local AnnouncementQueue = _G["AnnouncementQueue"]
+local AnnouncementQueue = _G["AnnouncementQueue"] ---@type AnnouncementQueue
 
 --! Creates an announcement queue: a collection of announcements with queue semantics.
 function AnnouncementQueue:AnnouncementQueue()
@@ -109,7 +109,7 @@ class "AnnouncementEntry"
 
 ---@class AnnouncementEntry
 ---@operator call: AnnouncementEntry
-local AnnouncementEntry = _G["AnnouncementEntry"]
+local AnnouncementEntry = _G["AnnouncementEntry"] ---@type AnnouncementEntry
 
 --! Creates an announcement
 function AnnouncementEntry:AnnouncementEntry()
@@ -130,7 +130,7 @@ class "Announcer"
 
 ---@class Announcer
 ---@operator call: Announcer
-local Announcer = _G["Announcer"]
+local Announcer = _G["Announcer"] ---@type Announcer
 
 --! Constructor.
 --!param app (App) The CorsixTH app

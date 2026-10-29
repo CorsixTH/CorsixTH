@@ -23,7 +23,7 @@ class "UIMapEditor" (UIResizable)
 
 ---@class UIMapEditor: UIResizable
 ---@operator call: UIMapEditor
-local UIMapEditor = _G["UIMapEditor"]
+local UIMapEditor = _G["UIMapEditor"] ---@type UIMapEditor
 
 local col_bg = {red = 154, green = 146, blue = 198}
 

@@ -24,7 +24,7 @@ corsixth.require("entities.humanoids.staff")
 local AnnouncementPriority = _G["AnnouncementPriority"]
 
 --! A Doctor, Nurse, Receptionist, Handyman, or Surgeon
-class "Nurse" (Staff)
+class "Nurse" (Staff) ---@type Nurse
 
 ---@class Nurse: Staff
 ---@operator call: Nurse

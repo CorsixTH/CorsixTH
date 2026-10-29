@@ -46,7 +46,7 @@ class "JellyVatRoom" (Room)
 
 ---@class JellyVatRoom: Room
 ---@operator call: JellyVatRoom
-local JellyVatRoom = _G["JellyVatRoom"]
+local JellyVatRoom = _G["JellyVatRoom"] ---@type  JellyVatRoom
 
 function JellyVatRoom:JellyVatRoom(...)
   self:Room(...)

@@ -25,7 +25,7 @@ class "UITownMap" (UIFullscreen)
 
 ---@class UITownMap: UIFullscreen
 ---@operator call: UITownMap
-local UITownMap = _G["UITownMap"]
+local UITownMap = _G["UITownMap"] ---@type UITownMap
 
 function UITownMap:UITownMap(ui)
   self:UIFullscreen(ui)

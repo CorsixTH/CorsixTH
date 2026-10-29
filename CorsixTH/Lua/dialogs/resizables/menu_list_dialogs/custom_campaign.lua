@@ -23,7 +23,7 @@ class "UICustomCampaign" (UIMenuList)
 
 ---@class UICustomCampaign: UIMenuList
 ---@operator call: UICustomCampaign
-local UICustomCampaign = _G["UICustomCampaign"]
+local UICustomCampaign = _G["UICustomCampaign"] ---@type UICustomCampaign
 
 local col_scrollbar = {
   red = 164,

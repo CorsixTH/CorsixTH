@@ -23,7 +23,7 @@ class "UICustomGame" (UIMenuList)
 
 ---@class UICustomGame: UIMenuList
 ---@operator call: UICustomGame
-local UICustomGame = _G["UICustomGame"]
+local UICustomGame = _G["UICustomGame"] ---@type UICustomGame
 
 local col_scrollbar = {
   red = 164,

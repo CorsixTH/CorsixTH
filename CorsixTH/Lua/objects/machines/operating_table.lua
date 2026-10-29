@@ -124,7 +124,7 @@ class "OperatingTable" (Machine)
 
 ---@class OperatingTable: Machine
 ---@operator call: OperatingTable
-local OperatingTable = _G["OperatingTable"]
+local OperatingTable = _G["OperatingTable"] ---@type OperatingTable
 
 OperatingTable:slaveMixinClass()
 

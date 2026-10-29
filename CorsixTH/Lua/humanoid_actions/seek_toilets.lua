@@ -23,7 +23,7 @@ class "SeekToiletsAction" (HumanoidAction)
 
 ---@class SeekToiletsAction: HumanoidAction
 ---@operator call: SeekToiletsAction
-local SeekToiletsAction = _G["SeekToiletsAction"]
+local SeekToiletsAction = _G["SeekToiletsAction"] ---@type SeekToiletsAction
 
 function SeekToiletsAction:SeekToiletsAction()
   self:HumanoidAction("seek_toilets")

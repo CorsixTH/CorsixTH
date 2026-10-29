@@ -74,7 +74,7 @@ class "RadiationShield" (Object)
 
 ---@class RadiationShield: Object
 ---@operator call: RadiationShield
-local RadiationShield = _G["RadiationShield"]
+local RadiationShield = _G["RadiationShield"] ---@type RadiationShield
 
 RadiationShield:slaveMixinClass()
 

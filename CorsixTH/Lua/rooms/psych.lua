@@ -46,7 +46,7 @@ class "PsychRoom" (Room)
 
 ---@class PsychRoom: Room
 ---@operator call: PsychRoom
-local PsychRoom = _G["PsychRoom"]
+local PsychRoom = _G["PsychRoom"] ---@type PsychRoom
 
 function PsychRoom:PsychRoom(...)
   self:Room(...)

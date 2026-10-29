@@ -79,7 +79,7 @@ class "Litter" (Entity)
 
 ---@class Litter: Entity
 ---@operator call: Litter
-local Litter = _G["Litter"]
+local Litter = _G["Litter"] ---@type Litter
 
 function Litter:Litter(hospital, object_type, x, y)
   local th = TH.animation()

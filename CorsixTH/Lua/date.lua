@@ -30,7 +30,7 @@ class "Date"
 
 ---@class Date
 ---@operator call: Date
-local Date = _G["Date"]
+local Date = _G["Date"] ---@type Date
 
 local month_length = {
   31, -- Jan

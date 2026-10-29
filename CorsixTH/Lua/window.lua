@@ -25,7 +25,7 @@ class "Window"
 
 ---@class Window
 ---@operator call: Window
-local Window = _G["Window"]
+local Window = _G["Window"] ---@type Window
 
 -- NB: pressed mouse buttons are denoted with a "mouse_" prefix in buttons_down,
 -- i.e. mouse_left, mouse_middle, mouse_right
@@ -171,7 +171,7 @@ class "Panel"
 
 ---@class Panel
 ---@operator call: Panel
-local Panel = _G["Panel"]
+local Panel = _G["Panel"] ---@type Panel
 
 -- !dummy
 function Panel:Panel()
@@ -598,7 +598,7 @@ class "Button"
 
 ---@class Button
 ---@operator call: Button
-local Button = _G["Button"]
+local Button = _G["Button"] ---@type Button
 
 --!dummy
 function Button:Button()
@@ -839,7 +839,7 @@ class "Scrollbar"
 
 ---@class Scrollbar
 ---@operator call: Scrollbar
-local Scrollbar = _G["Scrollbar"]
+local Scrollbar = _G["Scrollbar"] ---@type Scrollbar
 
 --!dummy
 function Scrollbar:Scrollbar()
@@ -949,7 +949,7 @@ class "Textbox"
 
 ---@class Textbox
 ---@operator call: Textbox
-local Textbox = _G["Textbox"]
+local Textbox = _G["Textbox"] ---@type Textbox
 
 --!dummy
 function Textbox:Textbox()
@@ -1349,7 +1349,7 @@ class "HotkeyBox"
 
 ---@class HotkeyBox
 ---@operator call: HotkeyBox
-local HotkeyBox = _G["HotkeyBox"]
+local HotkeyBox = _G["HotkeyBox"] ---@type HotkeyBox
 
 --!dummy
 function HotkeyBox:HotkeyBox()

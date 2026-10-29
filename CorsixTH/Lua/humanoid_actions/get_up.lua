@@ -22,7 +22,7 @@ class "GetUpAction" (HumanoidAction)
 
 ---@class GetUpAction: HumanoidAction
 ---@operator call: GetUpAction
-local GetUpAction = _G["GetUpAction"]
+local GetUpAction = _G["GetUpAction"] ---@type GetUpAction
 
 function GetUpAction:GetUpAction()
   self:HumanoidAction("get_up")

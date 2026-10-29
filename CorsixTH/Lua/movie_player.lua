@@ -27,7 +27,7 @@ class "MoviePlayer"
 
 ---@class MoviePlayer
 ---@operator call: MoviePlayer
-local MoviePlayer = _G["MoviePlayer"]
+local MoviePlayer = _G["MoviePlayer"] ---@type MoviePlayer
 
 --! Calculate the position and size for a movie
 --!

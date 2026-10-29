@@ -25,7 +25,7 @@ class "Machine" (Object)
 
 ---@class Machine: Object
 ---@operator call: Machine
-local Machine = _G["Machine"]
+local Machine = _G["Machine"] ---@type Machine
 
 function Machine:Machine(hospital, object_type, x, y, direction, etc)
   self:Object(hospital, object_type, x, y, direction, etc)

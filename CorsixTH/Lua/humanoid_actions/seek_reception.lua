@@ -22,7 +22,7 @@ class "SeekReceptionAction" (HumanoidAction)
 
 ---@class SeekReceptionAction: HumanoidAction
 ---@operator call: SeekReceptionAction
-local SeekReceptionAction = _G["SeekReceptionAction"]
+local SeekReceptionAction = _G["SeekReceptionAction"] ---@type SeekReceptionAction
 
 -- Distance from queue that patient can join a reception desk queue.
 local can_join_queue_distance = 6

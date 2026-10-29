@@ -46,7 +46,7 @@ class "InflationRoom" (Room)
 
 ---@class InflationRoom: Room
 ---@operator call: InflationRoom
-local InflationRoom = _G["InflationRoom"]
+local InflationRoom = _G["InflationRoom"] ---@type InflationRoom
 
 function InflationRoom:InflationRoom(...)
   self:Room(...)

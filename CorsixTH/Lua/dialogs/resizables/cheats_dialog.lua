@@ -25,7 +25,7 @@ class "UICheats" (UIResizable)
 
 ---@class UICheats: UIResizable
 ---@operator call: UICheats
-local UICheats = _G["UICheats"]
+local UICheats = _G["UICheats"] ---@type UICheats
 
 local col_bg = {
   red = 154,

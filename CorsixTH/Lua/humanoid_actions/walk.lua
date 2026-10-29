@@ -22,7 +22,7 @@ class "WalkAction" (HumanoidAction)
 
 ---@class WalkAction: HumanoidAction
 ---@operator call: WalkAction
-local WalkAction = _G["WalkAction"]
+local WalkAction = _G["WalkAction"] ---@type WalkAction
 
 --! Action to walk to a given position.
 --!param x (int) X coordinate of the destination tile.

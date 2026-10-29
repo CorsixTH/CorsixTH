@@ -23,7 +23,7 @@ class "HumanoidAction"
 
 ---@class HumanoidAction
 ---@operator call: HumanoidAction
-local HumanoidAction = _G["HumanoidAction"]
+local HumanoidAction = _G["HumanoidAction"] ---@type HumanoidAction
 
 --! Construct a humanoid action (base class constructor).
 --!param name (str) Name of the action.

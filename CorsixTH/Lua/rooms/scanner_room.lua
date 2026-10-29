@@ -48,7 +48,7 @@ class "ScannerRoom" (Room)
 
 ---@class ScannerRoom: Room
 ---@operator call: ScannerRoom
-local ScannerRoom = _G["ScannerRoom"]
+local ScannerRoom = _G["ScannerRoom"] ---@type ScannerRoom
 
 function ScannerRoom:ScannerRoom(...)
   self:Room(...)

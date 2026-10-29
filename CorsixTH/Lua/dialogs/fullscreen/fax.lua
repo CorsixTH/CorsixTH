@@ -20,13 +20,13 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
-local AnnouncementPriority = _G["AnnouncementPriority"]
+local AnnouncementPriority = _G["AnnouncementPriority"] ---@type AnnouncementPriority
 
 class "UIFax" (UIFullscreen)
 
 ---@class UIFax: UIFullscreen
 ---@operator call: UIFax
-local UIFax = _G["UIFax"]
+local UIFax = _G["UIFax"] ---@type UIFax
 
 function UIFax:UIFax(ui, icon)
   self:UIFullscreen(ui)

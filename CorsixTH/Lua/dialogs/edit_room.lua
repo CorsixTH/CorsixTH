@@ -24,7 +24,7 @@ class "UIEditRoom" (UIPlaceObjects)
 
 ---@class UIEditRoom: UIPlaceObjects
 ---@operator call: UIEditRoom
-local UIEditRoom = _G["UIEditRoom"]
+local UIEditRoom = _G["UIEditRoom"] ---@type UIEditRoom
 
 function UIEditRoom:UIEditRoom(ui, room_type)
 

@@ -22,7 +22,7 @@ class "CallCheckPointAction" (HumanoidAction)
 
 ---@class CallCheckPointAction: HumanoidAction
 ---@operator call: CallCheckPointAction
-local CallCheckPointAction = _G["CallCheckPointAction"]
+local CallCheckPointAction = _G["CallCheckPointAction"] ---@type CallCheckPointAction
 
 function CallCheckPointAction:CallCheckPointAction(call, on_remove)
   assert(call == nil or

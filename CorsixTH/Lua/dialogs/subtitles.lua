@@ -23,7 +23,7 @@ class "Subtitles" (Window)
 
 ---@class Subtitles: Window
 ---@operator call: Subtitles
-local Subtitles = _G["Subtitles"]
+local Subtitles = _G["Subtitles"] ---@type Subtitles
 
 --! Subtitles constructor
 function Subtitles:Subtitles()
@@ -87,7 +87,7 @@ class "SubtitleQueue"
 
 ---@class SubtitleQueue
 ---@operator call: SubtitleQueue
-local SubtitleQueue = _G["SubtitleQueue"]
+local SubtitleQueue = _G["SubtitleQueue"] ---@type SubtitleQueue
 
 --! SubtitleQueue constructor
 function SubtitleQueue:SubtitleQueue()

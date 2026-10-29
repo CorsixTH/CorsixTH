@@ -22,7 +22,7 @@ class "UseStaffRoomAction" (HumanoidAction)
 
 ---@class UseStaffRoomAction: HumanoidAction
 ---@operator call: UseStaffRoomAction
-local UseStaffRoomAction = _G["UseStaffRoomAction"]
+local UseStaffRoomAction = _G["UseStaffRoomAction"] ---@type UseStaffRoomAction
 
 function UseStaffRoomAction:UseStaffRoomAction()
   self:HumanoidAction("use_staffroom")

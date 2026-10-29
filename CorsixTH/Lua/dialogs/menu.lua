@@ -27,7 +27,7 @@ class "UIMenuBar" (Window)
 
 ---@class UIMenuBar: Window
 ---@operator call: UIMenuBar
-local UIMenuBar = _G["UIMenuBar"]
+local UIMenuBar = _G["UIMenuBar"] ---@type UIMenuBar
 
 function UIMenuBar:UIMenuBar(ui, map_editor)
   self:Window()
@@ -487,7 +487,7 @@ class "UIMenu"
 
 ---@class UIMenu
 ---@operator call: UIMenu
-local UIMenu = _G["UIMenu"]
+local UIMenu = _G["UIMenu"] ---@type UIMenu
 
 function UIMenu:UIMenu()
   self.items = {}

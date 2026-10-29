@@ -104,7 +104,7 @@ class "SurgeonScreen" (Object)
 
 ---@class SurgeonScreen: Object
 ---@operator call: SurgeonScreen
-local SurgeonScreen = _G["SurgeonScreen"]
+local SurgeonScreen = _G["SurgeonScreen"] ---@type SurgeonScreen
 
 function SurgeonScreen:SurgeonScreen(...)
   self:Object(...)

@@ -23,7 +23,7 @@ class "UIMessage" (Window)
 
 ---@class UIMessage: Window
 ---@operator call: UIMessage
-local UIMessage = _G["UIMessage"]
+local UIMessage = _G["UIMessage"] ---@type UIMessage
 
 function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeout, default_choice, callback)
   self:Window()

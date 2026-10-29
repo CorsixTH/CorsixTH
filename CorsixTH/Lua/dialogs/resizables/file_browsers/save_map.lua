@@ -23,7 +23,7 @@ class "UISaveMap" (UIFileBrowser)
 
 ---@class UISaveMap: UIFileBrowser
 ---@operator call: UISaveMap
-local UISaveMap = _G["UISaveMap"]
+local UISaveMap = _G["UISaveMap"] ---@type UISaveMap
 
 local col_textbox = {
   red = 0,

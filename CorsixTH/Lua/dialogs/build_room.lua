@@ -24,7 +24,7 @@ class "UIBuildRoom" (Window)
 
 ---@class UIBuildRoom: Window
 ---@operator call: UIBuildRoom
-local UIBuildRoom = _G["UIBuildRoom"]
+local UIBuildRoom = _G["UIBuildRoom"] ---@type UIBuildRoom
 
 function UIBuildRoom:UIBuildRoom(ui)
   self:Window()

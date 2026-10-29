@@ -46,7 +46,7 @@ class "CardiogramRoom" (Room)
 
 ---@class CardiogramRoom: Room
 ---@operator call: CardiogramRoom
-local CardiogramRoom = _G["CardiogramRoom"]
+local CardiogramRoom = _G["CardiogramRoom"] ---@type CardiogramRoom
 
 function CardiogramRoom:CardiogramRoom(...)
   self:Room(...)

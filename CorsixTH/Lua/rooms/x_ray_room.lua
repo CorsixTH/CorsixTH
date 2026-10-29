@@ -46,7 +46,7 @@ class "XRayRoom" (Room)
 
 ---@class XRayRoom: Room
 ---@operator call: XRayRoom
-local XRayRoom = _G["XRayRoom"]
+local XRayRoom = _G["XRayRoom"] ---@type XRayRoom
 
 function XRayRoom:XRayRoom(...)
   self:Room(...)

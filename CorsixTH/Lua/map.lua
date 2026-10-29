@@ -23,7 +23,7 @@ class "Map"
 
 ---@class Map
 ---@operator call: Map
-local Map = _G["Map"]
+local Map = _G["Map"] ---@type Map
 
 local math_floor, tostring, table_concat
     = math.floor, tostring, table.concat

@@ -23,7 +23,7 @@ class "Entity"
 
 ---@class Entity
 ---@operator call: Entity
-local Entity = _G["Entity"]
+local Entity = _G["Entity"] ---@type Entity
 
 local TH = require("TH")
 

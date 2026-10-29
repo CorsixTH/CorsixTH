@@ -24,7 +24,7 @@ class "Hospital"
 
 ---@class Hospital
 ---@operator call: Hospital
-local Hospital = _G["Hospital"]
+local Hospital = _G["Hospital"] ---@type Hospital
 
 function Hospital:Hospital(world, avail_rooms, name)
   self.world = world
