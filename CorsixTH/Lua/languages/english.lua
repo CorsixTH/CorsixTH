@@ -662,7 +662,7 @@ folders_window = {
   -- next four are the captions for the browser window, which are called from the folder setting menu
   new_th_location = "Here you can specify a new Theme Hospital installation directory or ISO file. As soon as you choose the new directory the game will be restarted. Note that file extensions are not currently shown.",
   savegames_location = "Select the directory you want to use for Saves",
-  music_location = "Select the directory you want to use for your Music",
+  music_location = "Select the directory you want to use for your Music. Upon submission, your music will start playing. To switch back to the Theme Hospital original soundtrack later, you can do so from Sound Settings.",
   screenshots_location = "Select the directory you want to use for Screenshots",
   back  = "Back",
 }

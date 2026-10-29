@@ -162,6 +162,18 @@ function UIFolder:UIFolder(ui, mode)
   self.built_in_font = built_in
 end
 
+--! Reinitialize the game audio
+-- Allows all the changed audio settings to take effect by shutting down the
+-- game audio and starting it up again.
+function UIFolder:reinitAudio()
+  local app = self.app
+  app.audio:stopBackgroundTrack()
+  app.audio:destroy()
+  app.audio:init()
+  app:initLanguage()
+  app.audio:playRandomBackgroundTrack()
+end
+
 function UIFolder:resetSavegameDir()
   local app = TheApp
   local default_savegame_dir = app:getDefaultSavegameDir()
@@ -190,7 +202,7 @@ function UIFolder:resetMusicDir()
   local tooltip_music = _S.tooltip.folders_window.not_specified
   app.config.audio_music = nil
   app:saveConfig()
-  app.audio:init()
+  self:reinitAudio()
   self.music_panel:setLabel(label_music, self.built_in_font)
   self.music_panel:setTooltip(tooltip_music)
 end
@@ -246,7 +258,7 @@ function UIFolder:buttonBrowseForAudio_music()
     local app = TheApp
     app.config.audio_music = path
     app:saveConfig()
-    app.audio:init()
+    self:reinitAudio()
     self.music_panel:setLabel(app.config.audio_music, self.built_in_font)
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.music_location, "DirTreeNode", callback)
