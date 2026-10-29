@@ -368,6 +368,9 @@ function Map:setPlotOwner(plot_number, new_owner)
   end
   -- Refresh the map's paths and flags
   self.th:updatePathfinding()
+  if self.app.world then
+    self.app.world:resetSideObjects()
+  end
   self:_fixTiles()
 end
 
