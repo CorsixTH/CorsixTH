@@ -282,7 +282,6 @@ function App:init()
   -- Load audio
   corsixth.require("audio")
   self.audio = Audio(self)
-  self:initMusicDir()
   self.audio:init()
 
   -- Load movie player
@@ -529,85 +528,6 @@ function App:initScreenshotsDir()
     self.screenshot_dir = self.screenshot_dir .. pathsep
   end
   return true
-end
-
-function App:initMusicDir()
-  -- No need to set the music dir if it's already configured
-  if self.config.audio_music then
-    if isDirectory(self.config.audio_music) then
-      return
-    else
-      print("Warning: Configured music directory '" .. self.config.audio_music .. "' is not a valid directory.")
-      self.config.audio_music = nil
-    end
-  end
-
-  -- Checks if the given directory name is a valid music directory name
-  local function isValidMusicDirName(name)
-    local posible_dirs = {"music"}
-
-    for _, valid_name in ipairs(posible_dirs) do
-      if name == valid_name then
-        return true
-      end
-    end
-    return false
-  end
-
-  -- Checks if the specified directory has music files
-  local function dirHasMusic(path)
-    -- Build a lookup table of allowed extensions (waveform + instructional)
-    local waveform = list_to_set(self.audio.allowed_waveform_formats)
-    local instructional = list_to_set(self.audio.allowed_instructional_formats)
-
-    -- Scan directory for files with matching extensions
-    for file in lfs.dir(path) do
-      local ext = file:match("%.([^.]+)$")
-      if ext and (waveform[ext:upper()] or instructional[ext:upper()]) then
-        return true
-      end
-    end
-
-    return false
-  end
-
-  -- Checks if the specified path contains a music directory and if it has music files
-  -- If found, the directory's path is returned
-  local function findMusicDir(path)
-    if path == nil or not isDirectory(path) then
-      return nil
-    end
-
-    local normalized_path = stripTrailingSlashes(path)
-
-    -- Check every file and folder inside the given path
-    for entry in lfs.dir(normalized_path) do
-      local entry_path = normalized_path .. "/" .. entry -- paths with "/" work on all operating systems
-
-      if isValidMusicDirName(entry:lower()) and
-         canOpenDirectory(entry_path) and
-         dirHasMusic(entry_path)
-      then
-        return entry_path
-      end
-    end
-    return nil
-  end
-
-  local corsixth_path = self.os ~= "macos" and lfs.currentdir() or nil
-  local conf_path = self.command_line["config-file"]
-
-  if conf_path then -- Get folder path
-    conf_path = conf_path:match("^(.-)[^" .. pathsep .. "]*$")
-  end
-
-  -- Check corsixth's install directory first, then the config file directory
-  local music_dir = findMusicDir(conf_path) or findMusicDir(corsixth_path)
-  if music_dir then
-    self.config.audio_music = music_dir
-  end
-
-  -- self:saveConfig()  --> Don't save the config here, it'll get saved later in the app initialization process
 end
 
 --! Initialises the application's language based on the player's choice.
