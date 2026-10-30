@@ -57,7 +57,7 @@
  <a href="_0_1_hospital.html#_0_1_hospital_1add_to_epidemic">addToEpidemic</a>(<span class="p">patient</span>)
  </li>
  <li class="self">
- <a href="_0_1_hospital.html#_0_1_hospital_1advise_boiler_breakdown">adviseBoilerBreakdown</a>()
+ <a href="_0_1_hospital.html#_0_1_hospital_1advise_boiler_breakdown">adviseBoilerBreakdown</a>(<span class="p">broken_heat</span>)
  </li>
  <li class="self">
  <a href="_0_1_hospital.html#_0_1_hospital_1advise_cannot_afford_plot">adviseCannotAffordPlot</a>()
@@ -69,7 +69,7 @@
  <a href="_0_1_hospital.html#_0_1_hospital_1advise_no_g_p_office">adviseNoGPOffice</a>()
  </li>
  <li class="self">
- <a href="_0_1_hospital.html#_0_1_hospital_1advise_plants">advisePlants</a>()
+ <a href="_0_1_hospital.html#_0_1_hospital_1advise_plants">advisePlants</a>(<span class="p">placed</span>)
  </li>
  <li class="self">
  <a href="_0_1_hospital.html#_0_1_hospital_1advise_price_level_impact">advisePriceLevelImpact</a>(<span class="p">judgment</span>, <span class="p">name</span>)
@@ -863,9 +863,18 @@ possible. Use 1 as min_count to avoid compensating.</td>
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_hospital_1advise_boiler_breakdown">function Hospital:adviseBoilerBreakdown()</a></h5>
+ <h5><a name="_0_1_hospital_1advise_boiler_breakdown">function Hospital:adviseBoilerBreakdown(<span class="p">broken_heat</span>)</a></h5>
  <p>
  Select a relevant message to be displayed to the user<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">broken_heat</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2562">line 2562 of Lua/hospital.lua</a>.
  </p>
  </div>
@@ -899,9 +908,18 @@ possible. Use 1 as min_count to avoid compensating.</td>
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_hospital_1advise_plants">function Hospital:advisePlants()</a></h5>
+ <h5><a name="_0_1_hospital_1advise_plants">function Hospital:advisePlants(<span class="p">placed</span>)</a></h5>
  <p>
  Give advice to the user about maintenance of plants.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">placed</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2539">line 2539 of Lua/hospital.lua</a>.
  </p>
  </div>
