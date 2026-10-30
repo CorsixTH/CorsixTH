@@ -22,6 +22,9 @@ describe("Bottom Panel:", function()
   local bottom_panel;
   local mock_canvas;
   local font;
+  math.round = function(input)
+    return math.floor(input + 0.5)
+  end
 
   setup(function()
     require("corsixth")

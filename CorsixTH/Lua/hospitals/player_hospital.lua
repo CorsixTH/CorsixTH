@@ -171,37 +171,32 @@ end
 
 --! Private function to check if patients have adequate seating
 function PlayerHospital:_adviseBenches()
-  -- Compute average sitting ratio.
-  local sum_ratios = 0
-  local index = 1
-  while index <= num_sitting_ratios do
-    local ratio = self.adviser_data.sitting_ratios[index]
-    if ratio == nil then
-      sum_ratios = nil
-      break
-    else
-      sum_ratios = sum_ratios + ratio
+  -- Compute average sitting ratio across days with enough waiting patients in the last 30 days
+  local sum_ratios, days_counted = 0, 0
+  for _, day_ratio in pairs(self.adviser_data.sitting_ratios) do
+    if day_ratio then
+      sum_ratios = sum_ratios + day_ratio
+      days_counted = days_counted + 1
     end
-
-    index = index + 1
+  end
+  if days_counted == 0 then -- Insufficient data available.
+    return
   end
 
-  if sum_ratios ~= nil then -- Sufficient data available.
-    local ratio = sum_ratios / num_sitting_ratios
-    if ratio < 0.7 then -- At least 30% standing.
-      local bench_advice = {
-        _A.warnings.more_benches, _A.warnings.people_have_to_stand,
-      }
-      self:giveAdvice(bench_advice)
+  local ratio = sum_ratios / days_counted
+  if ratio < 0.7 then -- At least 30% standing.
+    local bench_advice = {
+      _A.warnings.more_benches, _A.warnings.people_have_to_stand,
+    }
+    self:giveAdvice(bench_advice)
 
-    elseif ratio > 0.9 then
-      -- Praise having enough well placed seats about once a year.
-      local bench_advice = {
-        _A.praise.many_benches, _A.praise.plenty_of_benches,
-        _A.praise.few_have_to_stand,
-      }
-      self:giveAdvice(bench_advice, 1 / 12)
-    end
+  elseif ratio > 0.9 then
+    -- Praise having enough well placed seats about once a year.
+    local bench_advice = {
+      _A.praise.many_benches, _A.praise.plenty_of_benches,
+      _A.praise.few_have_to_stand,
+    }
+    self:giveAdvice(bench_advice, 1 / 12)
   end
 end
 

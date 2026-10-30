@@ -539,9 +539,10 @@ end
 --! Utility function to return preferred font for main menu ui
 function Graphics:loadMenuFont()
   -- Use the defined unicode font if set
-  local font = self:hasLanguageFont("unicode")
-  if font then
-    font = self:loadLanguageFont(font, self:loadSpriteTable("QData", "Font01V"), { apply_ui_scale = true })
+  local font
+  local font_supported = self:hasLanguageFont("unicode")
+  if font_supported then
+    font = self:loadLanguageFont(font_supported, self:loadSpriteTable("QData", "Font01V"), { apply_ui_scale = true })
   -- Otherwise, fall back to the built in font
   else
     font = self:loadBuiltinFont()

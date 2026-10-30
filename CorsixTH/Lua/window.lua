@@ -535,14 +535,14 @@ function Window:addWindow(window)
     table.insert(self.windows, 1, window)
   else
     -- Normal windows, are added in the first position after on_top windows
-    local pos = false
+    local pos = 0
     for i = 1, #self.windows do
       if not self.windows[i].on_top then
         pos = i
         break
       end
     end
-    pos = pos or #self.windows + 1
+    pos = pos > 0 and pos or #self.windows + 1
     table.insert(self.windows, pos, window)
   end
 end
@@ -693,17 +693,13 @@ function Button:setSound(name)
   return self
 end
 
-local --[[persistable:window_drag_round]] function round(value, amount)
-  return amount * math.floor(value / amount + 0.5)
-end
-
 -- Specify a tooltip to be displayed when hovering this button.
 -- x and y are optional position of bottom left of the tooltip.
 -- If not specified, will default to top center of button.
 function Button:setTooltip(tooltip, x, y)
   self.tooltip = {
     text = tooltip,
-    tooltip_x = x or round((self.x + self.r) / 2, 1),
+    tooltip_x = x or math.round((self.x + self.r) / 2),
     tooltip_y = y or self.y,
   }
   return self
@@ -712,7 +708,7 @@ end
 function Button:setDynamicTooltip(callback, x, y)
   self.tooltip =  {
     callback = callback,
-    tooltip_x = x or round((self.x + self.r) / 2, 1),
+    tooltip_x = x or math.round((self.x + self.r) / 2),
     tooltip_y = y or self.y,
   }
   return self
@@ -752,7 +748,7 @@ function Button:setPosition(x, y)
   self.x = x
   self.y = y
   if self.tooltip then
-    self.tooltip.tooltip_x = math.round((self.x + self.r) / 2, 1)
+    self.tooltip.tooltip_x = math.round((self.x + self.r) / 2)
     self.tooltip.tooltip_y = self.y
   end
 end
@@ -765,7 +761,7 @@ function Button:setSize(width, height)
   self.r = self.x + width
   self.b = self.y + height
   if self.tooltip then
-    self.tooltip.tooltip_x = math.round((self.x + self.r) / 2, 1)
+    self.tooltip.tooltip_x = math.round((self.x + self.r) / 2)
     self.tooltip.tooltip_y = self.y
   end
 end
@@ -1799,6 +1795,10 @@ local --[[persistable:window_drag_position_representation]] function getNicestPo
   end
 end
 
+local --[[persistable:window_drag_round]] function round(value, amount)
+  return amount * math.floor(value / amount + 0.5)
+end
+
 --[[ Initiate dragging of the window.
 !param x The X position of the cursor in window coordinates.
 !param y The Y position of the cursor in window coordinates.
@@ -2036,7 +2036,7 @@ end
 function Window:makeTooltip(text, x, y, r, b, tooltip_x, tooltip_y, apply_ui_scale)
   local region = {
     text = text, x = x, y = y, r = r, b = b,
-    tooltip_x = tooltip_x or round((x + r) / 2, 1), -- optional
+    tooltip_x = tooltip_x or math.round((x + r) / 2), -- optional
     tooltip_y = tooltip_y or y,                     -- optional
   }
   self.tooltip_regions[#self.tooltip_regions + 1] = region
@@ -2055,7 +2055,7 @@ end
 function Window:makeDynamicTooltip(callback, x, y, r, b, tooltip_x, tooltip_y)
   local region = {
     callback = callback, x = x, y = y, r = r, b = b,
-    tooltip_x = tooltip_x or round((x + r) / 2, 1), -- optional
+    tooltip_x = tooltip_x or math.round((x + r) / 2), -- optional
     tooltip_y = tooltip_y or y,                     -- optional
   }
   self.tooltip_regions[#self.tooltip_regions + 1] = region

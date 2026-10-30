@@ -140,7 +140,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
    --If it's the VIP then there's been an explosion. Skip the exploded room
   if class.is(humanoid, Vip) then
     humanoid.waiting = 1
-    return
+    return false
   end
 
   -- If none of the diagnosis rooms can be built yet, go home anyway.
@@ -178,6 +178,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     end
     humanoid:finishAction()
   end
+  return false
 end
 
 local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( function(action, humanoid)

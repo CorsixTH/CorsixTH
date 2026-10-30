@@ -1713,7 +1713,9 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
   local object, ox, oy
   self:findObjectNear(humanoid, object_type_name, nil, true, function(x, y, d)
     local obj = self:getObject(x, y, object_type_name)
-    if obj.user or obj.picked_up or (obj.reserved_for and obj.reserved_for ~= humanoid) or (current_object and obj == current_object) then
+    if not obj or obj.user or obj.picked_up or
+        (obj.reserved_for and obj.reserved_for ~= humanoid) or
+        (current_object and obj == current_object) then
       return
     end
     local orientation = obj.object_type.orientations
