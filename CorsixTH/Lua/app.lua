@@ -24,6 +24,10 @@ local lfs = require("lfs")
 local TH = require("TH")
 local SDL = require("sdl")
 
+-- Load string globals early
+  strict_declare_global "_S"
+  strict_declare_global "_A"
+
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
@@ -282,6 +286,7 @@ function App:init()
   -- Load audio
   corsixth.require("audio")
   self.audio = Audio(self)
+  self:verifyPlayerMusicDir()
   self.audio:init()
 
   -- Load movie player
@@ -530,6 +535,47 @@ function App:initScreenshotsDir()
   return true
 end
 
+--! Check specified music directory is OK.
+--!param path Optional directory to check instead of configuration value
+--!return whether music folder is valid, and additional error message if not
+function App:verifyPlayerMusicDir(path)
+  -- Checks if the specified directory has music files
+  local function dirHasMusic(music_path)
+    -- Build a lookup table of allowed extensions (waveform + instructional)
+    local waveform = list_to_set(self.audio.allowed_waveform_formats)
+    local instructional = list_to_set(self.audio.allowed_instructional_formats)
+
+    -- Scan directory for files with matching extensions
+    for file in lfs.dir(music_path) do
+      local ext = file:match("%.([^.]+)$")
+      if ext and (waveform[ext:upper()] or instructional[ext:upper()]) then
+        return true
+      end
+    end
+
+    return false
+  end
+
+  local dir_to_check = path or self.config.audio_music
+  local msg
+  if not dir_to_check then return true end
+  if not isDirectory(dir_to_check) then
+      msg = _S and
+          _S.errors.custom_music_bad_path:format(path) or
+          print("Warning: Custom Music directory at '" .. dir_to_check ..
+          "' is not a valid directory!")
+      return false, msg
+    end
+  if not dirHasMusic(dir_to_check) then
+    msg = _S and
+        _S.errors.custom_music_no_tracks:format(path) or
+        print("Warning: Custom Music directory at '" .. dir_to_check ..
+        "' contains no playable music files!")
+    return false, msg
+  end
+  return true
+end
+
 --! Initialises the application's language based on the player's choice.
 --!return success (boolean) Whether the chosen language was initialised
 --!return err (string) What to report back to the player on failure
@@ -584,8 +630,6 @@ function App:initLanguage()
   end
 
   local strings, speech_file = self.strings:load(language)
-  strict_declare_global "_S"
-  strict_declare_global "_A"
   local old_S = _S
   _S = strings
   -- For immediate compatibility:

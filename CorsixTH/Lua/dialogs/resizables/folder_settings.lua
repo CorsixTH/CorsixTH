@@ -190,13 +190,10 @@ function UIFolder:resetMusicDir()
   local tooltip_music = _S.tooltip.folders_window.not_specified
   app.config.audio_music = nil
   -- Only reset audio system if we weren't already playing TH music
-  -- Or if target folder had no tracks
   local old_play_own_music = app.config.play_own_music
   app.config.play_own_music = false
   app:saveConfig()
-  if not app.audio.has_bg_music or old_play_own_music then
-    app.audio:reinitAudioSystem()
-  end
+  if old_play_own_music then app.audio:reinitAudioSystem() end
   self.music_panel:setLabel(label_music, self.built_in_font)
   self.music_panel:setTooltip(tooltip_music)
 end
@@ -250,8 +247,15 @@ end
 function UIFolder:buttonBrowseForAudio_music()
   local function callback(path)
     local app = TheApp
-    app.config.audio_music = path
-    app.config.play_own_music = true
+    local result, err = app:verifyPlayerMusicDir(path)
+    if result then
+      app.config.audio_music = path
+      app.config.play_own_music = true
+    else
+      self.ui:addWindow(UIInformation(self.ui, { err }))
+      app.config.audio_music = nil
+      app.config.play_own_music = false
+    end
     app:saveConfig()
     app.audio:reinitAudioSystem()
     self.music_panel:setLabel(app.config.audio_music, self.built_in_font)

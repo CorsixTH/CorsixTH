@@ -889,6 +889,8 @@ errors = {
     full_in_demo = "Sorry, you can't open a full game save with the demo files loaded. Please update your TH Data folder setting.",
   },
   music = "There are playback issues with one or more files in your music directory. Problematic files will be disabled in the jukebox. See the console window for more information.",
+  custom_music_bad_path = "Custom Music directory chosen is not a valid directory. Please check the directory and try again.// %s",
+  custom_music_no_tracks = "Custom Music directory chosen contains no playable music files. Please check the directory and try again.// %s",
   missing_corsixth_file = "Warning: Could not find file %s, try reinstalling CorsixTH.",
   missing_th_data_file = "Warning: Could not find file %s, the Theme Hospital data is incomplete.",
   missing_level_file = "Error: Could not find the chosen level file.",
