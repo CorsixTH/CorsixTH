@@ -223,6 +223,22 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
       self:addTrophy(_S.trophy_room.many_cured.trophies[math.random(1, 3)], "money", prices.TrophyCuresBonus)
       self.won_amount = self.won_amount + prices.TrophyCuresBonus
     end
+    -- Rats Killed Trophy
+    if anybody_cured and hosp.rats_killed_ty > prices.RatKillsAbsolute then
+      local win_value = prices.RatKillsAbsoluteBonus
+      self:addTrophy(_S.trophy_room.rats_killed.trophies[math.random(1, 3)], "reputation", win_value)
+      self.rep_amount = self.rep_amount + win_value
+    end
+    -- Rats Accuracy Trophy (only if killed enough rats for absolute trophy)
+    local min_for_accuracy = math.floor(prices.RatKillsAbsolute / 2)
+    if anybody_cured and hosp.rats_killed_ty >= min_for_accuracy and hosp.rats_created_ty > 0 then
+      local accuracy = math.floor((hosp.rats_killed_ty / hosp.rats_created_ty) * 100)
+      if accuracy > prices.RatKillsPercentage then
+        local win_value = prices.RatKillsPercentageBonus
+        self:addTrophy(_S.trophy_room.rats_accuracy.trophies[math.random(1, 3)], "money", win_value)
+        self.won_amount = self.won_amount + win_value
+      end
+    end
 
 
     -------------------- Certificate Awards or Penalties ---------------------
