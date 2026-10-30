@@ -43,6 +43,7 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
     no_gp_office = nil, -- Whether advice was given about patients and doctors waiting for a GP's office
     no_doctor_no_gp_office = nil, -- Whether advice was given about patients waiting for a doctor and a GP's office
     last_patient_not_paying_month = nil, -- Whether advice was given about a patient leaving the hospital without paying
+    end_conditions = nil, -- The last piece of advice relating to win/lose goal given, not to be repeated this month
   }
 
   self.win_declined = false -- Has not yet declined the level win fax
@@ -78,9 +79,7 @@ function PlayerHospital:dailyAdviceChecks()
     self:_adviseMoney()
   end
   if day == 2 then
-    local advice_tbl, priority_advice_tbl = self.world.endconditions:generateAdvice(self)
-    if #advice_tbl > 0 then self:giveAdvice(advice_tbl) end
-    if #priority_advice_tbl > 0 then self:giveAdvice(priority_advice_tbl) end
+    self:_adviseEndConditions(true)
   end
   if day == 3 then
     self:_adviseStaffRoom()
@@ -102,8 +101,7 @@ function PlayerHospital:dailyAdviceChecks()
     self:_adviseHeatingForPatients()
   end
   if day == 16 then
-    local _, priority_advice_tbl = self.world.endconditions:generateAdvice(self)
-    if #priority_advice_tbl > 0 then self:giveAdvice(priority_advice_tbl) end
+    self:_adviseEndConditions()
   end
   if day == 18 then
     self:advisePlants(false)
@@ -121,6 +119,7 @@ function PlayerHospital:dailyAdviceChecks()
     self.adviser_data.no_gp_office = false
     self.adviser_data.no_doctor_no_gp_office = false
     self.adviser_data.last_patient_not_paying_month = false
+    self.adviser_data.end_conditions = false
   end
 end
 
@@ -287,6 +286,29 @@ function PlayerHospital:_warnForLongQueues()
     self:giveAdvice(warn_msgs)
   else
     self.world.ui.adviser:say(_A.warnings.queues_too_long)
+  end
+end
+
+--! Give advice relating to progress towards winning or losing
+-- The same message cannot be given twice per month
+--!param regular (bool) If the regular advice should be given this time, alongside the priority advice
+function PlayerHospital:_adviseEndConditions(regular)
+  local advice_tbl, priority_advice_tbl = self.world.endconditions:generateAdvice(self)
+  if #priority_advice_tbl > 0 then
+    local selected_advice = getRandomEntryFromArray(priority_advice_tbl)
+    if not self.adviser_data.end_conditions or
+        selected_advice.text ~= self.adviser_data.end_conditions then
+      self:giveAdvice({selected_advice})
+      self.adviser_data.end_conditions = selected_advice.text
+    end
+  end
+  if regular and #advice_tbl > 0 then
+    local selected_advice = getRandomEntryFromArray(advice_tbl)
+    if not self.adviser_data.end_conditions or
+        selected_advice.text ~= self.adviser_data.end_conditions then
+      self:giveAdvice({selected_advice})
+      self.adviser_data.end_conditions = selected_advice.text
+    end
   end
 end
 
