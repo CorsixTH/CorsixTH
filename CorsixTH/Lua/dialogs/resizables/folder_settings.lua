@@ -162,18 +162,6 @@ function UIFolder:UIFolder(ui, mode)
   self.built_in_font = built_in
 end
 
---! Reinitialize the game audio
--- Allows all the changed audio settings to take effect by shutting down the
--- game audio and starting it up again.
-function UIFolder:reinitAudio()
-  local app = self.app
-  app.audio:stopBackgroundTrack()
-  app.audio:destroy()
-  app.audio:init()
-  app:initLanguage()
-  app.audio:playRandomBackgroundTrack()
-end
-
 function UIFolder:resetSavegameDir()
   local app = TheApp
   local default_savegame_dir = app:getDefaultSavegameDir()
@@ -201,8 +189,14 @@ function UIFolder:resetMusicDir()
   local label_music = _S.tooltip.folders_window.not_specified
   local tooltip_music = _S.tooltip.folders_window.not_specified
   app.config.audio_music = nil
+  -- Only reset audio system if we weren't already playing TH music
+  -- Or if target folder had no tracks
+  local old_play_own_music = app.config.play_own_music
+  app.config.play_own_music = false
   app:saveConfig()
-  self:reinitAudio()
+  if not app.audio.has_bg_music or old_play_own_music then
+    app.audio:reinitAudioSystem()
+  end
   self.music_panel:setLabel(label_music, self.built_in_font)
   self.music_panel:setTooltip(tooltip_music)
 end
@@ -257,8 +251,9 @@ function UIFolder:buttonBrowseForAudio_music()
   local function callback(path)
     local app = TheApp
     app.config.audio_music = path
+    app.config.play_own_music = true
     app:saveConfig()
-    self:reinitAudio()
+    app.audio:reinitAudioSystem()
     self.music_panel:setLabel(app.config.audio_music, self.built_in_font)
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.music_location, "DirTreeNode", callback)

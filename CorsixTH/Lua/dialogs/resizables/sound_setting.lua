@@ -248,18 +248,6 @@ function UISoundSettings:UISoundSettings(ui, mode)
       :setTooltip(_S.tooltip.audio_window.back)
 end
 
---! Reinitialize the game audio
--- Allows all the changed audio settings to take effect by shutting down the
--- game audio and starting it up again.
-function UISoundSettings:reinitAudio()
-  local app = self.ui.app
-  app.audio:stopBackgroundTrack()
-  app.audio:destroy()
-  app.audio:init()
-  app:initLanguage()
-  app.audio:playRandomBackgroundTrack()
-end
-
 --! Close any UIDropdown that may be open
 function UISoundSettings:closeAllDropdowns()
   self:dropdownVolume(false)
@@ -274,7 +262,7 @@ function UISoundSettings:buttonAudioGlobal()
   app.config.audio = not app.config.audio
   app:saveConfig()
   self.onoff_button:setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
-  self:reinitAudio()
+  app.audio:reinitAudioSystem()
 end
 
 --! Click action for any of the audio buttons
@@ -406,7 +394,7 @@ function UISoundSettings:buttonPlayOwnMusic()
       _S.customise_window.option_on or
       _S.customise_window.option_off)
   -- Reload audio system to start playing updated music choice
-  self:reinitAudio()
+  app.audio:reinitAudioSystem()
 end
 
 --! Triggered when a MIDI API is selected from the dropdown
