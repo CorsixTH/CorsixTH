@@ -22,8 +22,9 @@ SOFTWARE. --]]
 --! A `Rat` which runs from hole to hole
 class "Rat" (Entity)
 
----@type Rat
-local Rat = _G["Rat"]
+---@class Rat: Entity
+---@operator call: Rat
+local Rat = _G["Rat"] ---@type Rat
 
 -- anims
 -- rat moving north: 1908 (4)

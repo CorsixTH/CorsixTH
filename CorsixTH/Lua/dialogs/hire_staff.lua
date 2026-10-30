@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "UIHireStaff" (Window)
 
----@type UIHireStaff
-local UIHireStaff = _G["UIHireStaff"]
+---@class UIHireStaff: Window
+---@operator call: UIHireStaff
+local UIHireStaff = _G["UIHireStaff"] ---@type UIHireStaff
 
 function UIHireStaff:UIHireStaff(ui)
   self:Window()

@@ -24,12 +24,13 @@ corsixth.require("announcer")
 --! Variant of UI for running games
 class "GameUI" (UI)
 
----@type GameUI
-local GameUI = _G["GameUI"]
+---@class GameUI: UI
+---@operator call: GameUI
+local GameUI = _G["GameUI"] ---@type GameUI
 
 local TH = require("TH")
 
-local Announcer = _G["Announcer"]
+local Announcer = _G["Announcer"] ---@type Announcer
 
 -- Factor to multiply pinch_zoom scale by, bigger number results in
 -- faster zoom changes

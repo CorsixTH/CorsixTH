@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "Room"
 
----@type Room
-local Room = _G["Room"]
+---@class Room
+---@operator call: Room
+local Room = _G["Room"] ---@type Room
 
 local COST_RECOVERY = 0.40 -- Percentage cost recovery of destroyed room items
 

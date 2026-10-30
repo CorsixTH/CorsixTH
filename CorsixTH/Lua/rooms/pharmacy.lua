@@ -43,8 +43,9 @@ room.call_sound = "reqd012.wav"
 
 class "PharmacyRoom" (Room)
 
----@type PharmacyRoom
-local PharmacyRoom = _G["PharmacyRoom"]
+---@class PharmacyRoom: Room
+---@operator call: PharmacyRoom
+local PharmacyRoom = _G["PharmacyRoom"] ---@type PharmacyRoom
 
 function PharmacyRoom:PharmacyRoom(...)
   self:Room(...)

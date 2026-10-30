@@ -23,8 +23,9 @@ local TH = require("TH")
 --! Room / door / reception desk queue visualisation dialog.
 class "UIQueue" (Window)
 
----@type UIQueue
-local UIQueue = _G["UIQueue"]
+---@class UIQueue: Window
+---@operator call: UIQueue
+local UIQueue = _G["UIQueue"] ---@type UIQueue
 
 function UIQueue:UIQueue(ui, queue)
   self:Window()
@@ -361,8 +362,9 @@ end
 
 class "UIQueuePopup" (Window)
 
----@type UIQueuePopup
-local UIQueuePopup = _G["UIQueuePopup"]
+---@class UIQueuePopup: Window
+---@operator call: UIQueuePopup
+local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
 
 function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
   self:Window()

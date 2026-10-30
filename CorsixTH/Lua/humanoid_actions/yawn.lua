@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "YawnAction" (HumanoidAction)
 
----@type YawnAction
-local YawnAction = _G["YawnAction"]
+---@class YawnAction: HumanoidAction
+---@operator call: YawnAction
+local YawnAction = _G["YawnAction"] ---@type YawnAction
 
 function YawnAction:YawnAction()
   self:HumanoidAction("yawn")

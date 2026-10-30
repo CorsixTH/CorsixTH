@@ -20,12 +20,13 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
-local AnnouncementPriority = _G["AnnouncementPriority"]
+local AnnouncementPriority = _G["AnnouncementPriority"] ---@type AnnouncementPriority
 
 class "Epidemic"
 
----@type Epidemic
-local Epidemic = _G["Epidemic"]
+---@class Epidemic
+---@operator call: Epidemic
+local Epidemic = _G["Epidemic"] ---@type Epidemic
 
 --[[Manages the epidemics that occur in hospitals. Generally, any epidemic
 logic that happens outside this class will call functions contained here.]]

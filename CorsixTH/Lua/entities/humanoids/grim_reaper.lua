@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "GrimReaper" (Humanoid)
 
----@type GrimReaper
-local GrimReaper = _G["GrimReaper"]
+---@class GrimReaper: Humanoid
+---@operator call: GrimReaper
+local GrimReaper = _G["GrimReaper"] ---@type GrimReaper
 
 function GrimReaper:GrimReaper(...)
   self:Humanoid(...)

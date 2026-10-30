@@ -22,13 +22,14 @@ SOFTWARE. --]]
 corsixth.require("announcer")
 corsixth.require("entities.humanoids.staff")
 
-local AnnouncementPriority = _G["AnnouncementPriority"]
+local AnnouncementPriority = _G["AnnouncementPriority"] ---@type AnnouncementPriority
 
 --! A Doctor (Researcher,Surgan,Psychologist)
 class "Doctor" (Staff)
 
----@type Doctor
-local Doctor = _G["Doctor"]
+---@class Doctor: Staff
+---@operator call: Doctor
+local Doctor = _G["Doctor"] ---@type Doctor
 
 --!param ... Arguments to base class constructor.
 function Doctor:Doctor(...)

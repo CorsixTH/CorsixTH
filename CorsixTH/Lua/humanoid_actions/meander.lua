@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "MeanderAction" (HumanoidAction)
 
----@type MeanderAction
-local MeanderAction = _G["MeanderAction"]
+---@class MeanderAction: HumanoidAction
+---@operator call: MeanderAction
+local MeanderAction = _G["MeanderAction"] ---@type MeanderAction
 
 function MeanderAction:MeanderAction()
   self:HumanoidAction("meander")

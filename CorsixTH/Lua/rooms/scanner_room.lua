@@ -46,8 +46,9 @@ room.call_sound = "reqd002.wav"
 
 class "ScannerRoom" (Room)
 
----@type ScannerRoom
-local ScannerRoom = _G["ScannerRoom"]
+---@class ScannerRoom: Room
+---@operator call: ScannerRoom
+local ScannerRoom = _G["ScannerRoom"] ---@type ScannerRoom
 
 function ScannerRoom:ScannerRoom(...)
   self:Room(...)

@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "VipGoToNextRoomAction" (HumanoidAction)
 
----@type VipGoToNextRoomAction
-local VipGoToNextRoomAction = _G["VipGoToNextRoomAction"]
+---@class VipGoToNextRoomAction: HumanoidAction
+---@operator call: VipGoToNextRoomAction
+local VipGoToNextRoomAction = _G["VipGoToNextRoomAction"] ---@type VipGoToNextRoomAction
 
 function VipGoToNextRoomAction:VipGoToNextRoomAction()
   self:HumanoidAction("vip_go_to_next_room")

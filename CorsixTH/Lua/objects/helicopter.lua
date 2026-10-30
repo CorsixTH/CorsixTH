@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 corsixth.require("announcer")
-local AnnouncementPriority = _G["AnnouncementPriority"]
+local AnnouncementPriority = _G["AnnouncementPriority"] ---@type AnnouncementPriority
 
 local object = {}
 object.id = "helicopter"
@@ -40,8 +40,9 @@ object.orientations = {
 --! An `Object` which drops off emergency patients.
 class "Helicopter" (Object)
 
----@type Helicopter
-local Helicopter = _G["Helicopter"]
+---@class Helicopter: Object
+---@operator call: Helicopter
+local Helicopter = _G["Helicopter"] ---@type Helicopter
 
 function Helicopter:Helicopter(hospital, object_type, direction, etc)
   local x, y = hospital:getHeliportPosition()

@@ -29,8 +29,9 @@ end
 --! Individual patient information dialog
 class "UIPatient" (Window)
 
----@type UIPatient
-local UIPatient = _G["UIPatient"]
+---@class UIPatient: Window
+---@operator call: UIPatient
+local UIPatient = _G["UIPatient"] ---@type UIPatient
 
 function UIPatient:UIPatient(ui, patient)
   self:Window()

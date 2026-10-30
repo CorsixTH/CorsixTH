@@ -44,8 +44,9 @@ room.handyman_call_sound = "maint015.wav"
 
 class "BloodMachineRoom" (Room)
 
----@type BloodMachineRoom
-local BloodMachineRoom = _G["BloodMachineRoom"]
+---@class BloodMachineRoom: Room
+---@operator call: BloodMachineRoom
+local BloodMachineRoom = _G["BloodMachineRoom"] ---@type BloodMachineRoom
 
 function BloodMachineRoom:BloodMachineRoom(...)
   self:Room(...)

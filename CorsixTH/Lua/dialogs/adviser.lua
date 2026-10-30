@@ -23,8 +23,9 @@ local TH = require("TH")
 --! The (ideally) helpful advisor who pops up from the bottom dialog during a game.
 class "UIAdviser" (Window)
 
----@type UIAdviser
-local UIAdviser = _G["UIAdviser"]
+---@class UIAdviser: Window
+---@operator call: UIAdviser
+local UIAdviser = _G["UIAdviser"] ---@type UIAdviser
 
 function UIAdviser:UIAdviser(ui)
   self:Window()

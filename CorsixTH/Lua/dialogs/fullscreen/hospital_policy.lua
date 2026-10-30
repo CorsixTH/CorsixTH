@@ -21,8 +21,9 @@ SOFTWARE. --]]
 --! Hospital policy fullscreen window (set staff tiredness and patient cure thresholds, etc.).
 class "UIPolicy" (UIFullscreen)
 
----@type UIPolicy
-local UIPolicy = _G["UIPolicy"]
+---@class UIPolicy: UIFullscreen
+---@operator call: UIPolicy
+local UIPolicy = _G["UIPolicy"] ---@type UIPolicy
 
 function UIPolicy:UIPolicy(ui)
   self:UIFullscreen(ui)

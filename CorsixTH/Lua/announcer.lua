@@ -44,8 +44,9 @@ local default_announcement_decay_hours = {
 --! An announcement queue based on priority
 class "AnnouncementQueue"
 
----@type AnnouncementQueue
-local AnnouncementQueue = _G["AnnouncementQueue"]
+---@class AnnouncementQueue
+---@operator call: AnnouncementQueue
+local AnnouncementQueue = _G["AnnouncementQueue"] ---@type AnnouncementQueue
 
 --! Creates an announcement queue: a collection of announcements with queue semantics.
 function AnnouncementQueue:AnnouncementQueue()
@@ -106,8 +107,9 @@ end
 --! An announcement.
 class "AnnouncementEntry"
 
----@type AnnouncementEntry
-local AnnouncementEntry = _G["AnnouncementEntry"]
+---@class AnnouncementEntry
+---@operator call: AnnouncementEntry
+local AnnouncementEntry = _G["AnnouncementEntry"] ---@type AnnouncementEntry
 
 --! Creates an announcement
 function AnnouncementEntry:AnnouncementEntry()
@@ -126,8 +128,9 @@ end
 -- a worker at the reception desk and announcements are enabled in the settings.
 class "Announcer"
 
----@type Announcer
-local Announcer = _G["Announcer"]
+---@class Announcer
+---@operator call: Announcer
+local Announcer = _G["Announcer"] ---@type Announcer
 
 --! Constructor.
 --!param app (App) The CorsixTH app

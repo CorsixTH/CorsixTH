@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "CallCheckPointAction" (HumanoidAction)
 
----@type CallCheckPointAction
-local CallCheckPointAction = _G["CallCheckPointAction"]
+---@class CallCheckPointAction: HumanoidAction
+---@operator call: CallCheckPointAction
+local CallCheckPointAction = _G["CallCheckPointAction"] ---@type CallCheckPointAction
 
 function CallCheckPointAction:CallCheckPointAction(call, on_remove)
   assert(call == nil or

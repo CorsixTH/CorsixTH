@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "UIGraphicSettings" (UIResizable)
 
----@type UIGraphicSettings
-local UIGraphicSettings = _G["UIGraphicSettings"]
+---@class UIGraphicSettings: UIResizable
+---@operator call: UIGraphicSettings
+local UIGraphicSettings = _G["UIGraphicSettings"] ---@type UIGraphicSettings
 
 local col = {
   bg = Colours.PanelDefault,
@@ -337,8 +338,9 @@ end
 --! A custom window size selection window
 class "UIWindowSize" (UIResizable)
 
----@type UIWindowSize
-local UIWindowSize = _G["UIWindowSize"]
+---@class UIWindowSize: UIResizable
+---@operator call: UIWindowSize
+local UIWindowSize = _G["UIWindowSize"] ---@type UIWindowSize
 
 function UIWindowSize:UIWindowSize(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)

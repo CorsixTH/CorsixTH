@@ -44,8 +44,9 @@ room.handyman_call_sound = "maint004.wav"
 
 class "SlackTongueRoom" (Room)
 
----@type SlackTongueRoom
-local SlackTongueRoom = _G["SlackTongueRoom"]
+---@class SlackTongueRoom: Room
+---@operator call: SlackTongueRoom
+local SlackTongueRoom = _G["SlackTongueRoom"] ---@type SlackTongueRoom
 
 function SlackTongueRoom:SlackTongueRoom(...)
   self:Room(...)

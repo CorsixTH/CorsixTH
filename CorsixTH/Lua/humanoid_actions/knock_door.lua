@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "KnockDoorAction" (HumanoidAction)
 
----@type KnockDoorAction
-local KnockDoorAction = _G["KnockDoorAction"]
+---@class KnockDoorAction: HumanoidAction
+---@operator call: KnockDoorAction
+local KnockDoorAction = _G["KnockDoorAction"] ---@type KnockDoorAction
 
 --! Constructor for knocking on the door action.
 --!param door (Object) Door to knock on.

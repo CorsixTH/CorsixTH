@@ -22,8 +22,9 @@ SOFTWARE. --]]
 --! Charts fullscreen window
 class "UIGraphs" (UIFullscreen)
 
----@type UIGraphs
-local UIGraphs = _G["UIGraphs"]
+---@class UIGraphs: UIFullscreen
+---@operator call: UIGraphs
+local UIGraphs = _G["UIGraphs"] ---@type UIGraphs
 
 local TH = require("TH")
 

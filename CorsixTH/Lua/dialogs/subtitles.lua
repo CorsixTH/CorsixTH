@@ -21,8 +21,9 @@ SOFTWARE. --]]
 --! UI display area for announcer subtitles
 class "Subtitles" (Window)
 
----@type Subtitles
-local Subtitles = _G["Subtitles"]
+---@class Subtitles: Window
+---@operator call: Subtitles
+local Subtitles = _G["Subtitles"] ---@type Subtitles
 
 --! Subtitles constructor
 function Subtitles:Subtitles()
@@ -84,8 +85,9 @@ end
 --! First in, first out queue for concurrently displayed subtitles
 class "SubtitleQueue"
 
----@type SubtitleQueue
-local SubtitleQueue = _G["SubtitleQueue"]
+---@class SubtitleQueue
+---@operator call: SubtitleQueue
+local SubtitleQueue = _G["SubtitleQueue"] ---@type SubtitleQueue
 
 --! SubtitleQueue constructor
 function SubtitleQueue:SubtitleQueue()

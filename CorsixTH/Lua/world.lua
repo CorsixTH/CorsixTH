@@ -48,8 +48,11 @@ corsixth.require("earthquake")
 --! Manages entities, rooms, and the date.
 class "World"
 
----@type World
-local World = _G["World"]
+---@class World
+---@field app App The application.
+---@field free_build_mode boolean Whether the level is played without money.
+---@operator call: World
+local World = _G["World"] ---@type World
 
 function World:World(app, free_build_mode)
   self.app = app

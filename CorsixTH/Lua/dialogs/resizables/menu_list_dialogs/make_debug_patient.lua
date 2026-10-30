@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "UIMakeDebugPatient" (UIMenuList)
 
----@type UIMakeDebugPatient
-local UIMakeDebugPatient = _G["UIMakeDebugPatient"]
+---@class UIMakeDebugPatient: UIMenuList
+---@operator call: UIMakeDebugPatient
+local UIMakeDebugPatient = _G["UIMakeDebugPatient"] ---@type UIMakeDebugPatient
 
 function UIMakeDebugPatient:UIMakeDebugPatient(ui)
   local items = {}

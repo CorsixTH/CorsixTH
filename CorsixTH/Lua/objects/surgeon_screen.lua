@@ -102,8 +102,9 @@ anim_mgr:setPatientMarker(anims["Standard Female Patient"].gown_off, 0, kf1, 3, 
 
 class "SurgeonScreen" (Object)
 
----@type SurgeonScreen
-local SurgeonScreen = _G["SurgeonScreen"]
+---@class SurgeonScreen: Object
+---@operator call: SurgeonScreen
+local SurgeonScreen = _G["SurgeonScreen"] ---@type SurgeonScreen
 
 function SurgeonScreen:SurgeonScreen(...)
   self:Object(...)

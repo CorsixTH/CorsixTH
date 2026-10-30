@@ -96,7 +96,7 @@ corsixth.require("app")
 
 -- Create an instance of the App class and transfer control to it
 strict_declare_global "TheApp"
-TheApp = App()
+TheApp = App() ---@type App
 TheApp:setCommandLine(
   "--bitmap-dir=" ..base_dir.. "Bitmap",
   "--config-file=" .. corsixth.require("config_finder").config_filename,

@@ -44,8 +44,9 @@ room.handyman_call_sound = "maint012.wav"
 
 class "DecontaminationRoom" (Room)
 
----@type DecontaminationRoom
-local DecontaminationRoom = _G["DecontaminationRoom"]
+---@class DecontaminationRoom: Room
+---@operator call: DecontaminationRoom
+local DecontaminationRoom = _G["DecontaminationRoom"] ---@type DecontaminationRoom
 
 function DecontaminationRoom:DecontaminationRoom(...)
   self:Room(...)

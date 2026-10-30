@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "SeekRoomAction" (HumanoidAction)
 
----@type SeekRoomAction
-local SeekRoomAction = _G["SeekRoomAction"]
+---@class SeekRoomAction: HumanoidAction
+---@operator call: SeekRoomAction
+local SeekRoomAction = _G["SeekRoomAction"] ---@type SeekRoomAction
 
 --! Find another room (and go to it).
 --!param room_type Type of the new room.

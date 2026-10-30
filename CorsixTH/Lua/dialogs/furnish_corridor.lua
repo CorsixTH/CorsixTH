@@ -26,8 +26,9 @@ local math_floor
 --! Dialog for purchasing `Object`s (for the corridor or for rooms).
 class "UIFurnishCorridor" (Window)
 
----@type UIFurnishCorridor
-local UIFurnishCorridor = _G["UIFurnishCorridor"]
+---@class UIFurnishCorridor: Window
+---@operator call: UIFurnishCorridor
+local UIFurnishCorridor = _G["UIFurnishCorridor"] ---@type UIFurnishCorridor
 
 function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:Window()

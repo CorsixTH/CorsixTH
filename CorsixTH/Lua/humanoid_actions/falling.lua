@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "FallingAction" (HumanoidAction)
 
----@type FallingAction
-local FallingAction = _G["FallingAction"]
+---@class FallingAction: HumanoidAction
+---@operator call: FallingAction
+local FallingAction = _G["FallingAction"] ---@type FallingAction
 
 function FallingAction:FallingAction()
   self:HumanoidAction("falling")

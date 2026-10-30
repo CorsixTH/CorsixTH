@@ -44,8 +44,9 @@ room.handyman_call_sound = "maint010.wav"
 
 class "CardiogramRoom" (Room)
 
----@type CardiogramRoom
-local CardiogramRoom = _G["CardiogramRoom"]
+---@class CardiogramRoom: Room
+---@operator call: CardiogramRoom
+local CardiogramRoom = _G["CardiogramRoom"] ---@type CardiogramRoom
 
 function CardiogramRoom:CardiogramRoom(...)
   self:Room(...)

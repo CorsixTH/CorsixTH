@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "SpawnAction" (HumanoidAction)
 
----@type SpawnAction
-local SpawnAction = _G["SpawnAction"]
+---@class SpawnAction: HumanoidAction
+---@operator call: SpawnAction
+local SpawnAction = _G["SpawnAction"] ---@type SpawnAction
 
 --! Spawn an entity.
 --!param mode (str) Mode of spawning: "spawn" or "despawn"

@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "UseScreenAction" (HumanoidAction)
 
----@type UseScreenAction
-local UseScreenAction = _G["UseScreenAction"]
+---@class UseScreenAction: HumanoidAction
+---@operator call: UseScreenAction
+local UseScreenAction = _G["UseScreenAction"] ---@type UseScreenAction
 
 --! Action to use the screen.
 --!param screen (object) Screen to use.

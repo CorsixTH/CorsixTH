@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "DieAction" (HumanoidAction)
 
----@type DieAction
-local DieAction = _G["DieAction"]
+---@class DieAction: HumanoidAction
+---@operator call: DieAction
+local DieAction = _G["DieAction"] ---@type DieAction
 
 function DieAction:DieAction()
   self:HumanoidAction("die")

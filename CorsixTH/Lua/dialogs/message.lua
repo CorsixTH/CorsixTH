@@ -21,8 +21,9 @@ SOFTWARE. --]]
 --! Small fax notification window which sits on the bottom bar.
 class "UIMessage" (Window)
 
----@type UIMessage
-local UIMessage = _G["UIMessage"]
+---@class UIMessage: Window
+---@operator call: UIMessage
+local UIMessage = _G["UIMessage"] ---@type UIMessage
 
 function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeout, default_choice, callback)
   self:Window()

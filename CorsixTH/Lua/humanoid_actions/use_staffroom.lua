@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 class "UseStaffRoomAction" (HumanoidAction)
 
----@type UseStaffRoomAction
-local UseStaffRoomAction = _G["UseStaffRoomAction"]
+---@class UseStaffRoomAction: HumanoidAction
+---@operator call: UseStaffRoomAction
+local UseStaffRoomAction = _G["UseStaffRoomAction"] ---@type UseStaffRoomAction
 
 function UseStaffRoomAction:UseStaffRoomAction()
   self:HumanoidAction("use_staffroom")

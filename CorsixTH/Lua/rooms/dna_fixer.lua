@@ -45,8 +45,9 @@ room.handyman_call_sound = "maint006.wav"
 
 class "DNAFixerRoom" (Room)
 
----@type DNAFixerRoom
-local DNAFixerRoom = _G["DNAFixerRoom"]
+---@class DNAFixerRoom: Room
+---@operator call: DNAFixerRoom
+local DNAFixerRoom = _G["DNAFixerRoom"] ---@type DNAFixerRoom
 
 function DNAFixerRoom:DNAFixerRoom(...)
   self:Room(...)

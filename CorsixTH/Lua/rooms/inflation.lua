@@ -44,8 +44,9 @@ room.handyman_call_sound = "maint013.wav"
 
 class "InflationRoom" (Room)
 
----@type InflationRoom
-local InflationRoom = _G["InflationRoom"]
+---@class InflationRoom: Room
+---@operator call: InflationRoom
+local InflationRoom = _G["InflationRoom"] ---@type InflationRoom
 
 function InflationRoom:InflationRoom(...)
   self:Room(...)

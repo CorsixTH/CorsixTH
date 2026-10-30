@@ -32,8 +32,9 @@ local SAVEGAME_VERSION = 270 -- Adjust random announcement delay
 
 class "App"
 
----@type App
-local App = _G["App"]
+---@class App
+---@operator call: App
+local App = _G["App"] ---@type App
 
 App.MIN_WINDOW_WIDTH = 640
 App.MIN_WINDOW_HEIGHT = 480
@@ -317,7 +318,7 @@ function App:init()
   -- Load additional Lua before world
   if good_install_folder then
     self.anims = self.gfx:loadAnimations("Data", "V")
-    self.animation_manager = AnimationManager(self.anims)
+    self.animation_manager = AnimationManager(self.anims) ---@type AnimationManager
     self.walls = self:loadLuaFolder("walls")
     corsixth.require("entity")
     corsixth.require("entities.humanoid")

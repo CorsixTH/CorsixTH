@@ -33,8 +33,9 @@ object.supports_creation_for_map = true
 
 class "EntranceDoor" (Object)
 
----@type EntranceDoor
-local EntranceDoor = _G["EntranceDoor"]
+---@class EntranceDoor: Object
+---@operator call: EntranceDoor
+local EntranceDoor = _G["EntranceDoor"] ---@type EntranceDoor
 
 function EntranceDoor:EntranceDoor(hospital, object_type, x, y, direction, etc)
   self.is_master = object_type == object

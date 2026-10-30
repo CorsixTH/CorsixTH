@@ -44,8 +44,9 @@ room.handyman_call_sound = "maint007.wav"
 
 class "HairRestorationRoom" (Room)
 
----@type HairRestorationRoom
-local HairRestorationRoom = _G["HairRestorationRoom"]
+---@class HairRestorationRoom: Room
+---@operator call: HairRestorationRoom
+local HairRestorationRoom = _G["HairRestorationRoom"] ---@type HairRestorationRoom
 
 function HairRestorationRoom:HairRestorationRoom(...)
   self:Room(...)

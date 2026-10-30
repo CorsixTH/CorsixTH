@@ -21,13 +21,14 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
-local AnnouncementPriority = _G["AnnouncementPriority"]
+local AnnouncementPriority = _G["AnnouncementPriority"] ---@type AnnouncementPriority
 
 --! A holder for all cheats in the game
 class "Cheats"
 
----@type Cheats
-local Cheats = _G["Cheats"]
+---@class Cheats
+---@operator call: Cheats
+local Cheats = _G["Cheats"] ---@type Cheats
 
 -- Cheats System
 function Cheats:Cheats(hospital)
