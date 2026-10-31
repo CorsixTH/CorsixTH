@@ -77,7 +77,9 @@ function Audio:init()
     return
   end
 
-  local music = self.app.config.audio_music
+  -- Look for player's music directory if they asked to use it
+  local music = self.app.config.play_own_music and
+      self.app.config.audio_music
   local music_dir
   if music then
     music_dir = music
@@ -854,6 +856,17 @@ function Audio:destroy()
   self.speech_file_name = nil
   self.sound_fx = nil
   SDL.audio.destroy()
+end
+
+--! Restart the audio system. This may be because of a global audio change
+--! or changing music sources.
+function Audio:reinitAudioSystem()
+  self:stopBackgroundTrack()
+  self:destroy()
+  self:init()
+  -- Restore speech data and sound libraries
+  self.app:initLanguage()
+  self:playRandomBackgroundTrack()
 end
 
 -- Load the playlist disabled tracks file

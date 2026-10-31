@@ -162,6 +162,23 @@ function UISoundSettings:UISoundSettings(ui, mode)
 
   y = y + 25
 
+  -- Play own music
+  -- Disable setting if no music folder set
+  self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
+      :setLabel(_S.audio_window.play_own_music)
+      :setTooltip(_S.tooltip.audio_window.play_own_music_label).lowered = true
+  self.play_own_music_panel = self:addBevelPanel(BTN_X, y, BTN_WIDTH, BTN_HEIGHT, col_bg)
+      :setLabel(app.config.play_own_music and _S.customise_window.option_on or _S.customise_window.option_off)
+  self.play_own_music_button = self.play_own_music_panel
+      :makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonPlayOwnMusic)
+      :setToggleState(app.config.play_own_music)
+      :setTooltip(app.config.audio_music and
+          _S.tooltip.audio_window.play_own_music_button or
+          _S.tooltip.audio_window.play_own_music_no_folder_set)
+      :enable(app.config.audio_music)
+
+  y = y + 25
+
   local midi_api_label = app.config.midi_api or _S.audio_window.default_midi_api
   self:addBevelPanel(LBL_X, y, LBL_WIDTH, LBL_HEIGHT, col_shadow, col_bg, col_bg)
       :setLabel(_S.audio_window.midi_api)
@@ -231,18 +248,6 @@ function UISoundSettings:UISoundSettings(ui, mode)
       :setTooltip(_S.tooltip.audio_window.back)
 end
 
---! Reinitialize the game audio
--- Allows all the changed audio settings to take effect by shutting down the
--- game audio and starting it up again.
-function UISoundSettings:reinitAudio()
-  local app = self.ui.app
-  app.audio:stopBackgroundTrack()
-  app.audio:destroy()
-  app.audio:init()
-  app:initLanguage()
-  app.audio:playRandomBackgroundTrack()
-end
-
 --! Close any UIDropdown that may be open
 function UISoundSettings:closeAllDropdowns()
   self:dropdownVolume(false)
@@ -257,7 +262,7 @@ function UISoundSettings:buttonAudioGlobal()
   app.config.audio = not app.config.audio
   app:saveConfig()
   self.onoff_button:setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
-  self:reinitAudio()
+  app.audio:reinitAudioSystem()
 end
 
 --! Click action for any of the audio buttons
@@ -380,6 +385,18 @@ function UISoundSettings:selectMusicVolume(index)
   self.app:saveConfig()
 end
 
+--! Button function to switch between own music and TH97's
+function UISoundSettings:buttonPlayOwnMusic()
+  local app = self.ui.app
+  app.config.play_own_music = not app.config.play_own_music
+  app:saveConfig()
+  self.play_own_music_button:setLabel(app.config.play_own_music and
+      _S.customise_window.option_on or
+      _S.customise_window.option_off)
+  -- Reload audio system to start playing updated music choice
+  app.audio:reinitAudioSystem()
+end
+
 --! Triggered when a MIDI API is selected from the dropdown
 -- Sets the MIDI API in the config and resets the MIDI port selection,
 -- since the MIDI port is specific to the selected API.
@@ -391,7 +408,7 @@ function UISoundSettings:selectMidiApi(index)
   self.app.config.midi_port = nil
   self.app:saveConfig()
 
-  self:reinitAudio()
+  self.app.audio:reinitAudioSystem()
   self.midi_port_button:setLabel(_S.audio_window.default_midi_port)
   self.midi_port_options = midi_port_options(self.app)
 
@@ -416,7 +433,7 @@ function UISoundSettings:selectMidiPort(index)
   local value = self.midi_port_options[index].value
   self.app.config.midi_port = value
   self.app:saveConfig()
-  self:reinitAudio()
+  self.app.audio:reinitAudioSystem()
 end
 
 --! Button handler for soundfont
@@ -431,7 +448,7 @@ end
 function UISoundSettings:selectSoundfont(name)
   self.app.config.soundfont = name
   self.app:saveConfig()
-  self:reinitAudio()
+  self.app.audio:reinitAudioSystem()
 end
 
 --! Callback for Jukebox button
