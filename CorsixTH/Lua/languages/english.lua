@@ -928,6 +928,9 @@ information = {
     staff_happiness = "Your average staff happiness fell below %d%.",
     patient_happiness = "Your average patient happiness fell below %d%.",
     months_played = "You didn't meet the level goals within %d months.",
+    emergency_count = "You need to have completed more emergencies.",
+    emergency_cured = "You need to have cured more emergency patients.",
+    emergency_visitors = "You need to have had more patients from emergencies.",
   },
   cheat_not_possible = "You cannot use that cheat on this level.",
 }
@@ -1166,7 +1169,10 @@ tooltip.status = {
     patient_happiness = "Your average patient happiness should not be less than %d%. Currently it's %d%",
     months_played = "You need to win by the end of %s %d. Currently it's %s %d",
     years_played = "You need to reach the year %d. Currently it's the year %d",
-  }
+  },
+  emergency_count = "You need to have completed %d emergencies and have only had %d so far",
+  emergency_cured = "You need to have cured %d patients from emergencies, so far only %d",
+  emergency_visitors = "You need to have had %d patients from emergencies, so far only %d",
 }
 
 subtitles = {
