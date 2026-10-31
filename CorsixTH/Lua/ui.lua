@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 corsixth.require("window")
 
+local Window = _G['Window'] ---@type Window
+
 --! Top-level container for all other user-interface components.
 class "UI" (Window)
 

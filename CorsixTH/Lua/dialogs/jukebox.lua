@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local ipairs
     = ipairs
 
+local Window = _G['Window'] ---@type Window
+
 class "UIJukebox" (Window)
 
 ---@class UIJukebox: Window

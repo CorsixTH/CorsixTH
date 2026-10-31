@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
+local Window = _G['Window'] ---@type Window
+
 --! Room / door / reception desk queue visualisation dialog.
 class "UIQueue" (Window)
 

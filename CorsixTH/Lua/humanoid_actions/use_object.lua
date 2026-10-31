@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
+local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 
 class "UseObjectAction" (HumanoidAction)
 

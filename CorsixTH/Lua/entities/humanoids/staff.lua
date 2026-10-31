@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
-local AnnouncementPriority = _G["AnnouncementPriority"] ---@type AnnouncementPriority
+local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnoucementPriority]]
+local Humanoid = _G['Humanoid'] ---@type Humanoid
 
 --! A Doctor, Nurse, Receptionist, Handyman, or Surgeon
 class "Staff" (Humanoid)

@@ -25,6 +25,8 @@ local --[[persistable:staff_dialog_is_in_view_circle]] function is_in_view_circl
   return (x - 55 * s)^2 + (y - circle_center_y)^2 < (39 * s)^2
 end
 
+local Window = _G['Window'] ---@type Window
+
 --! Individual staff information dialog
 class "UIStaff" (Window)
 

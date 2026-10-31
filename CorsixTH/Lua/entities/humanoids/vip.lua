@@ -55,6 +55,7 @@ If rating exceeds values, it will be capped as necessary
 --[[ initialisation --]]
 corsixth.require("utility")
 
+local Humanoid = _G['Humanoid'] ---@type Humanoid
 
 --! A `Vip` who is in the hospital to evaluate the hospital and produce a report
 class "Vip" (Humanoid)

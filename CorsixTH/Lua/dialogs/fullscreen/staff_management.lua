@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local math_floor = math.floor
+local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 
 --! Staff management screen
 class "UIStaffManagement" (UIFullscreen)
