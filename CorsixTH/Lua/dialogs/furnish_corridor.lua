@@ -22,6 +22,7 @@ SOFTWARE. --]]
 local TH = require("TH")
 local math_floor
     = math.floor
+local Window = _G['Window'] ---@type Window
 
 --! Dialog for purchasing `Object`s (for the corridor or for rooms).
 class "UIFurnishCorridor" (Window)

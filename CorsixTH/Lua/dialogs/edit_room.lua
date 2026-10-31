@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 corsixth.require("dialogs.place_objects")
 
+local UIPlaceObjects = _G['UIPlaceObjects'] ---@type UIPlaceObjects
+
 class "UIEditRoom" (UIPlaceObjects)
 
 ---@class UIEditRoom: UIPlaceObjects

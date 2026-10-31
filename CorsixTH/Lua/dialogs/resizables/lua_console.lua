@@ -22,6 +22,8 @@ SOFTWARE. --]]
 strict_declare_global "_"
 _ = nil
 
+local UIResizable = _G['UIResizable'] ---@type UIResizable
+
 --! Interactive Lua Console for ingame debugging.
 class "UILuaConsole" (UIResizable)
 

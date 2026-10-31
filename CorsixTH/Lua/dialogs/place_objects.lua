@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local TH = require("TH")
 local ipairs, math_floor
     = ipairs, math.floor
+local Window = _G['Window'] ---@type Window
 
 -- Visually, it looks better to have the object being placed not attached to a
 -- tile (so that it is always on top of walls, etc.), but for debugging it can

@@ -21,6 +21,8 @@ SOFTWARE. --]]
 corsixth.require("ui")
 corsixth.require("announcer")
 
+local UI = _G['UI'] ---@type UI
+
 --! Variant of UI for running games
 class "GameUI" (UI)
 

@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 corsixth.require("date")
 
---! Pr
+---@enum AnnouncementPriority
 local AnnouncementPriority = {
   Critical = 1,
   High = 2,

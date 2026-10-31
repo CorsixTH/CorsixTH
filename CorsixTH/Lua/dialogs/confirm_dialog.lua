@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local Window = _G['Window'] ---@type Window
+
 --! Dialog for "Are you sure you want to quit?" and similar yes/no questions.
 --! This dialog is also used for errors and requires some special handling
 class "UIConfirmDialog" (Window)

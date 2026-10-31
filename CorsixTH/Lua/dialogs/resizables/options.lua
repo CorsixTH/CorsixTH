@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local UIResizable = _G['UIResizable'] ---@type UIResizable
+
 --! Options window used in the main menu and ingame.
 class "UIOptions" (UIResizable)
 

@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
+local Object = _G['Object'] ---@type Object
+
 --! An `Object` which needs occasional repair (to prevent explosion).
 class "Machine" (Object)
 
