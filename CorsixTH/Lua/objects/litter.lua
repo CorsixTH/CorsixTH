@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
+local Entity = _G['Entity'] ---@type Entity
 
 local object = {}
 object.id = "litter"

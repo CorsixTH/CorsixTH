@@ -26,6 +26,8 @@ local --[[persistable:patient_window_is_in_view_circle]] function is_in_view_cir
   return (x - 55 * s)^2 + (y - 254 * s)^2 < (39 * s)^2
 end
 
+local Window = _G['Window'] ---@type Window
+
 --! Individual patient information dialog
 class "UIPatient" (Window)
 

@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
+
 --! Hospital policy fullscreen window (set staff tiredness and patient cure thresholds, etc.).
 class "UIPolicy" (UIFullscreen)
 

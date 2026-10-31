@@ -18,9 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local TH = require("TH")
 local math_floor
     = math.floor
-local TH = require("TH")
+local Window = _G['Window'] ---@type Window
 
 --! Invisible window which handles placing a `Staff` member in the world.
 class "UIPlaceStaff" (Window)

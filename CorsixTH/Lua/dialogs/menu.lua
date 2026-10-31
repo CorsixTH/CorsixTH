@@ -18,9 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local TH = require("TH")
+
 local ipairs, math_floor, unpack, select, assert
     = ipairs, math.floor, unpack, select, assert
-local TH = require("TH")
+local Window = _G['Window'] ---@type Window
 
 --! The ingame menu bar which sits (nominally hidden) at the top of the screen.
 class "UIMenuBar" (Window)

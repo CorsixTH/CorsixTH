@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local Entity = _G['Entity'] ---@type Entity
+
 --! An `Entity` which occupies a single tile and is capable of moving around the map.
 class "Humanoid" (Entity)
 

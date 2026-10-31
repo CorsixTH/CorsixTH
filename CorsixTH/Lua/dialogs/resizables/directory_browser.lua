@@ -22,6 +22,9 @@ local lfs = require("lfs")
 local TH = require("TH")
 local iso_fs = TH.iso_fs
 local lfsext = TH.lfsExt()
+local FileTreeNode = _G['FileTreeNode'] ---@type FileTreeNode
+local TreeControl = _G['TreeControl'] ---@type TreeControl
+local UIResizable = _G['UIResizable'] ---@type UIResizable
 
 --! A tree node representing a directory in the physical file-system.
 class "DirTreeNode" (FileTreeNode)

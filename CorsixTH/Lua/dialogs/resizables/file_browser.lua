@@ -20,6 +20,10 @@ SOFTWARE. --]]
 
 local lfs = require("lfs")
 
+local FileTreeNode = _G['FileTreeNode'] ---@type FileTreeNode
+local TreeControl = _G['TreeControl'] ---@type TreeControl
+local UIResizable = _G['UIResizable'] ---@type UIResizable
+
 --! A tree node representing a file (or directory) in the physical file-system
 --  that meets a given file extension criterion.
 class "FilteredFileTreeNode" (FileTreeNode)

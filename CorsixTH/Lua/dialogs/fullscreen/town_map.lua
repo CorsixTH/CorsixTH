@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
+local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
+
 --! Town map fullscreen window (purchase land, set radiator levels, map overview).
 class "UITownMap" (UIFullscreen)
 

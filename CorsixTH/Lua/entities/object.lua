@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
+local Entity = _G['Entity'] ---@type Entity
+
 --! An `Entity` which occupies at least a single map tile and does not move.
 class "Object" (Entity)
 

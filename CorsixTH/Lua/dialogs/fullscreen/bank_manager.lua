@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
+
 --! Bank manager (for loans / insurance companies) and bank statement fullscreen windows.
 class "UIBankManager" (UIFullscreen)
 

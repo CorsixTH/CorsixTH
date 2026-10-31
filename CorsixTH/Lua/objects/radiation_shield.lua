@@ -22,6 +22,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local Object = _G['Object'] ---@type Object
+
 local object = {}
 object.id = "radiation_shield"
 object.slave_id = "radiation_shield_b"

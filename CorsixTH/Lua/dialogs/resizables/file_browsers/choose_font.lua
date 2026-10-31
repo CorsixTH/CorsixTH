@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local TH = require("TH")
 local lfsext = TH.lfsExt()
 
+local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
+
 --! Window where the user can choose a font file.
 class "UIChooseFont" (UIFileBrowser)
 

@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
+local Window = _G['Window'] ---@type Window
+
 class "UIBuildRoom" (Window)
 
 ---@class UIBuildRoom: Window

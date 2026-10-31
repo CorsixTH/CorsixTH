@@ -23,6 +23,8 @@ local lfsext = TH.lfsExt()
 
 local file_extensions = {".sf2", ".sf3"}
 
+local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
+
 --! Window where the user can choose a soundfont file.
 class "UIChooseSoundfont" (UIFileBrowser)
 
