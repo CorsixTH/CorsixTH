@@ -380,12 +380,16 @@ customise_window = {
   back = "Terug",
   allow_user_actions_while_paused = "Bouwen tijdens pause",
   play_intro = "Speel intro video",
-  volume = "Volume lager koppeling",
   caption = "Aangepaste instellingen",
   disable_fractured_bones_females = "Gebroken botten",
   enable_avg_contents = "Gemiddeld meubilair",
   alien_dna_only_by_emergency = "Alien patiënten",
   remove_destroyed_rooms = "Verwijder verwoeste kamers",
+}
+accessibility_window = {
+  scrollspeed = "Scrollsnelheid",
+  shift_scrollspeed = "Shift Scrollsnelheid",
+  zoom_speed = "Zoomsnelheid",
 }
 
 trophy_room = { --gebruik hiervoor meer formele tekst
@@ -1308,20 +1312,11 @@ tooltip = {
     back = "Sluit het instellingenvenster",
     folder = "Mapopties.",
     customise = "Meer instellingen om je spel aan te passen.",
-    apply_scrollspeed = "Pas de ingevoerde scrollsnelheid toe.",
-    apply_shift_scrollspeed = "Pas de ingevoerde shift-scrollsnelheid toe.",
-    apply_zoomspeed = "Pas de ingevoerde zoomsnelheid toe.",
-    cancel_scrollspeed = "Ga terug zonder de scrollsnelheid te wijzigen.",
-    cancel_shift_scrollspeed = "Ga terug zonder de shift-scrollsnelheid te wijzigen.",
-    cancel_zoomspeed = "Ga terug zonder de zoomsnelheid te wijzigen.",
     capture_mouse = "Klik om de cursor te vangen in het spelvenster",
     check_for_updates = "Stel in of het spel bij het opstarten naar updates moet zoeken.",
     hotkey = "Pas sneltoetsen aan.",
     language_dropdown_no_font = "Selecteer een lettertype in de spelinstellingen om deze taal in te schakelen",
     right_mouse_scrolling = "Wissel de muisknop die wordt gebruikt om door de kaart te scrollen",
-    scroll_speed = "Stel de scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 2",
-    shift_scroll_speed = "Stel de shift-scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 4",
-    zoom_speed = "Stel de zoomsnelheid van de camera in van 10 (langzaamst) en 1000 (snelst). De standaard waarde is 80",
   },
   graphics_window = {
     fullscreen = "Wil je het spel in volledig scherm of in een venster spelen?", --Hoe kun je ''Windowed mode'' het beste verwoorden? Omni: wat vind je hiervan?--
@@ -1344,7 +1339,6 @@ tooltip = {
     play_intro = "Zet de intro video aan of uit. Zet deze instelling aan om de intro video te tonen als CorsixTH wordt gestart.",
     disable_fractured_bones_females = "Omdat de animatie niet mooi is, zijn vrouwelijke patiëntien met gebroken botten standaard uitgeschakeld. Om vrouwelijke patiënten met gebroken botten in je ziekenhuis te ontvangen zet je deze instelling uit.",
     movies = "Met algemene video instellingen zet je alle video's aan of uit.",
-    volume = "Als de 'volume-lager' knop ook het behandelingenboek opent, zet deze instelling aan om de sneltoets naar het behandelingenboek te veranderen naar shift+C",
     alien_dna_only_by_emergency = "Vanwege de sleche animatie bezoeken patiënten met alien-DNA je ziekenhuis alleen bij een noodgeval. Om patiënten met alien-DNA ook buiten noodgevallen je ziekenhuis te laten bezoeken zet je deze instelling uit.",
     allow_user_actions_while_paused = "In Theme Hospital was het niet mogelijk de menubalk te gebruiken als het spel was gepauzeerd. De standaard instelling in CorsixTH is het zelfde, maar met deze instelling aan is dit tijdens pauze wel toegestaan.",
     enable_avg_contents = "Als het spel moet onthouden wat je gemiddeld genomen aan meubilair in een kamer bouwt, zet deze instelling aan.",
@@ -1372,6 +1366,11 @@ tooltip = {
     default = "Standaard locatie.",
     no_font_specified = "Nog geen lettertype locatie ingesteld!",
     music_location = "Selecteer de locatie van je MP3 bestanden. Deze moet van te voren zijn gemaakt, zoek vervolgens hier naar de locatie.",
+  },
+  accessibility_window = {
+    scrollspeed = "Stel de scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 2",
+    shift_scrollspeed = "Stel de shift-scrollsnelheid in tussen 1 (langzaamst) en 10 (snelst). De standaard waarde is 4",
+    zoom_speed = "Stel de zoomsnelheid van de camera in van 10 (langzaamst) en 1000 (snelst). De standaard waarde is 80",
   },
   debug_patient_window = {
     item = "Creëer een patiënt met %s",

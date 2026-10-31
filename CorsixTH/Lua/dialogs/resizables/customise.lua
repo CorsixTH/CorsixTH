@@ -57,10 +57,6 @@ function UICustomise:UICustomise(ui, mode)
     { name = "remove_destroyed_rooms" },
     -- Allow machine menu button in a toolbar
     { name = "machine_menu_button" },
-    -- Allow user to disable screen shake during earthquakes
-    { name = "enable_screen_shake" },
-    -- Add subtitles for announcer messages
-    { name = "enable_announcer_subtitles" },
     -- Draw money paid by insurance in blue rather than green
     { name = "enable_insurance_blue_banknote" },
   }

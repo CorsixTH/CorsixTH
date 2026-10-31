@@ -371,9 +371,6 @@ options_window = {
   option_off = "Off",
   capture_mouse = "Cattura Mouse",
   option_enabled = "Attiv.",
-  scroll_speed = "Vel. scorrimento",
-  shift_scroll_speed = "Vel. scorrimento veloce",
-  zoom_speed = "Velocità zoom",
   check_for_updates = "Cerca aggiornamenti",
   customise = "Personalizza",
   folder = "Cartelle",
@@ -383,7 +380,6 @@ options_window = {
   option_disabled = "Disabilitato",
   hotkey = "Scorciatoie",
   option_enabled = "Abilitato",
-  zoom_speed = "Velocità zoom",
   right_mouse_scrolling_option_right = "Bottone Destro",
   right_mouse_scrolling_option_middle = "Bottone Centrale",
   right_mouse_scrolling = "Scorrimento con Mouse",
@@ -405,22 +401,12 @@ tooltip.options_window = {
   language = "La lingua in cui verrà mostrato il testo",
   select_language = "Seleziona la lingua del gioco",
   language_dropdown_item = "Seleziona %s come lingua",
-  scroll_speed = "Imposta la velocità di scorrimento con il mouse tra 1 (più bassa) e 10 (più veloce). Il default è 2.",
-  shift_scroll_speed = "Imposta la velocità di scorrimento con il tasto MAIUSC premuto tra 1 (più bassa) e 10 (più veloce). Il default è 4.",
   back = "Chiudi la finestra delle opzioni",
-  scroll_speed = "Imposta la velocità di scorrimento tra 1 (minimo) e 10 (massimo). Il valore predefinito è 2.",
-  shift_scroll_speed = "Imposta la velocità di scorrimento mentre si tiene premuto il tasto Maiusc. Da 1 (minimo) a 10 (massimo). Il valore predefinito è 4.",
   hotkey = "Cambia le scorciatoie da tastiera.",
-  apply_shift_scrollspeed = "Applica la velocità di scorrimento dello spostamento selezionata.",
-  right_mouse_scrolling = "Attiva/disattiva il pulsante del mouse utilizzato per scorrere la mappa",
-  cancel_scrollspeed = "Esci senza cambiare la velocità di scorrimento.",
-  zoom_speed = "Imposta la velocità di zoom della telecamera da 10 (minimo) a 1000 (massimo). Il valore predefinito è 80.",
   language_dropdown_no_font = "Seleziona un font nelle impostazioni delle cartelle per abilitare questa lingua",
   cancel_zoomspeed = "Esci senza cambiare la velocità di zoom",
   cancel_shift_scrollspeed = "Esci senza cambiare la velocità di scorrimento con Maiusc.",
   check_for_updates = "Imposta se il gioco deve cercare aggiornamenti all'avvio.",
-  apply_zoomspeed = "Applica la velocità di zoom selezionata.",
-  apply_scrollspeed = "Applica la velocità di scorrimento selezionata.",
 }
 tooltip.graphics_window = {
   fullscreen = "Decidi se il gioco verrà eseguito a schermo intero o in finestra",
@@ -429,6 +415,26 @@ tooltip.graphics_window = {
   height = "Inserisci l'altezza dello schermo desiderata",
   apply = "Applica la risoluzione inserita",
   cancel = "Esci senza cambiare la risoluzione",
+}
+
+accessibility_window = {
+  scrollspeed = "Vel. scorrimento",
+  shift_scrollspeed = "Vel. scorrimento veloce",
+  zoom_speed = "Velocità zoom",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "Imposta la velocità di scorrimento con il mouse tra 1 (più bassa) e 10 (più veloce). Il default è 2.",
+  shift_scrollspeed = "Imposta la velocità di scorrimento con il tasto MAIUSC premuto tra 1 (più bassa) e 10 (più veloce). Il default è 4.",
+  scrollspeed = "Imposta la velocità di scorrimento tra 1 (minimo) e 10 (massimo). Il valore predefinito è 2.",
+  shift_scrollspeed = "Imposta la velocità di scorrimento mentre si tiene premuto il tasto Maiusc. Da 1 (minimo) a 10 (massimo). Il valore predefinito è 4.",
+  apply_shift_scrollspeed = "Applica la velocità di scorrimento dello spostamento selezionata.",
+  cancel_scrollspeed = "Esci senza cambiare la velocità di scorrimento.",
+  zoom_speed = "Imposta la velocità di zoom della telecamera da 10 (minimo) a 1000 (massimo). Il valore predefinito è 80.",
+  cancel_zoomspeed = "Esci senza cambiare la velocità di zoom",
+  cancel_shift_scrollspeed = "Esci senza cambiare la velocità di scorrimento con Maiusc.",
+  apply_zoomspeed = "Applica la velocità di zoom selezionata.",
+  apply_scrollspeed = "Applica la velocità di scorrimento selezionata.",
 }
 
 audio_window = {

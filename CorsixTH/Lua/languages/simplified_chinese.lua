@@ -3370,9 +3370,6 @@ options_window = {
   folder = "文件夹",
   language = "语言",
   back = "返回",
-  scroll_speed = "滚动速度",
-  shift_scroll_speed = "加速滚动速度",
-  zoom_speed = "缩放速度",
   hotkey = "快捷键",
   check_for_updates = "自动检查更新",
 }
@@ -3394,15 +3391,6 @@ tooltip.options_window = {
   select_language = "选择语言",
   language_dropdown_item = "选择 %s 为语言",
   back = "关闭设置窗口",
-  scroll_speed = "将滚动速度设为1（最慢）到10（最快）。默认为2。",
-  shift_scroll_speed = "设定在滚动时按下 Shift 键时的滚动速度。1（最慢）到10（最快）。默认：4。",
-  zoom_speed = "将相机变焦速度设为10（最慢）到1000（最快）。默认值为80。",
-  apply_scrollspeed = "应用输入的滚动速度。",
-  cancel_scrollspeed = "返回而不更改滚动速度。",
-  apply_shift_scrollspeed = "应用输入的加速滚动速度。",
-  cancel_shift_scrollspeed = "返回而不更改加速滚动速度。",
-  apply_zoomspeed = "应用输入的缩放速度。",
-  cancel_zoomspeed = "返回而不更改缩放速度。",
   hotkey = "更改键盘热键。",
   check_for_updates = "游戏启动时自动检查更新",
 }
@@ -3413,6 +3401,24 @@ tooltip.graphics_window = {
   height = "输入想要的屏幕高度",
   apply = "应用此分辨率",
   cancel = "返回而不更改分辨率",
+}
+
+accessibility_window = {
+  scrollspeed = "滚动速度",
+  shift_scrollspeed = "加速滚动速度",
+  zoom_speed = "缩放速度",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "将滚动速度设为1（最慢）到10（最快）。默认为2。",
+  shift_scrollspeed = "设定在滚动时按下 Shift 键时的滚动速度。1（最慢）到10（最快）。默认：4。",
+  zoom_speed = "将相机变焦速度设为10（最慢）到1000（最快）。默认值为80。",
+  apply_scrollspeed = "应用输入的滚动速度。",
+  cancel_scrollspeed = "返回而不更改滚动速度。",
+  apply_shift_scrollspeed = "应用输入的加速滚动速度。",
+  cancel_shift_scrollspeed = "返回而不更改加速滚动速度。",
+  apply_zoomspeed = "应用输入的缩放速度。",
+  cancel_zoomspeed = "返回而不更改缩放速度。",
 }
 
 audio_window = {
@@ -3433,7 +3439,6 @@ customise_window = {
   movies = "全局 CG 控制",
   play_intro = "播放启动 CG",
   allow_user_actions_while_paused = "建造时暂停",
-  volume = "减小音量热键",
   alien_dna_only_by_emergency = "外星人只限紧急情况",
   disable_fractured_bones_females = "骨折只限男性",
   enable_avg_contents = "房间常用物件",
@@ -3444,7 +3449,6 @@ tooltip.customise_window = {
   movies = "全局 CG 控制，这将允许您禁用所有 CG",
   play_intro = "关闭或打开启动 CG，如果您希望每次启动 CorsixTH 时都播放启动 CG，则必须打开全局 CG",
   allow_user_actions_while_paused = "在主题医院中，只有在游戏暂停的情况下，才允许玩家使用顶部菜单，这也是 CorsixTH 的默认设置。但是将此选项打开，游戏暂停时可以进行所有操作",
-  volume = "如果减小音量按钮同时打开了治疗手册，请将打开治疗手册的快捷键更改为 Shift + C",
   alien_dna_only_by_emergency = "因为缺少合适的动画，默认外星人 DNA 病人只会来自紧急事件。要允许紧急事件外出现外星人 DNA 病人，请关闭此选项",
   disable_fractured_bones_females = "由于动画效果不佳，默认不会有女性骨折患者。要允许女性骨折患者就诊，请关闭此功能",
   enable_avg_contents = "如果您想让游戏记住在建造房间时通常会添加哪些其他对象，请启用此选项。",

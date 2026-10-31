@@ -3100,9 +3100,6 @@ options_window = {
   folder = "資料夾",
   language = "語言",
   back = "返回",
-  scroll_speed = "捲動速度",
-  shift_scroll_speed = "加速捲動速度",
-  zoom_speed = "縮放速度",
   hotkey = "熱鍵",
   check_for_updates = "自動檢查更新",
 }
@@ -3124,15 +3121,6 @@ tooltip.options_window = {
   select_language = "選擇語言",
   language_dropdown_item = "選擇 %s 為語言",
   back = "關閉設定視窗",
-  scroll_speed = "將捲動速度設為1（最慢）到10（最快）。預設為2。",
-  shift_scroll_speed = "設定在捲動時按下 Shift 鍵時的捲動速度。1（最慢）到10（最快）。預設：4。",
-  zoom_speed = "將相機變焦速度設為10（最慢）到1000（最快）。預設值為80。",
-  apply_scrollspeed = "應用輸入的捲動速度",
-  cancel_scrollspeed = "返回而不更改捲動速度",
-  apply_shift_scrollspeed = "應用輸入的加速捲動速度",
-  cancel_shift_scrollspeed = "返回而不更改加速捲動速度",
-  apply_zoomspeed = "應用輸入的縮放速度",
-  cancel_zoomspeed = "返回而不更改縮放速度",
   hotkey = "更改鍵盤熱鍵",
   check_for_updates = "遊戲啟動時自動檢查更新",
 }
@@ -3214,6 +3202,24 @@ tooltip.folders_window = {
   default = "預設位置",
   reset_to_default = "重置到預設資料夾 (%1%）",
   back = "關閉此選單，並返回設定選單",
+}
+
+accessibility_window = {
+  scrollspeed = "捲動速度",
+  shift_scrollspeed = "加速捲動速度",
+  zoom_speed = "縮放速度",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "將捲動速度設為1（最慢）到10（最快）。預設為2。",
+  shift_scrollspeed = "設定在捲動時按下 Shift 鍵時的捲動速度。1（最慢）到10（最快）。預設：4。",
+  zoom_speed = "將相機變焦速度設為10（最慢）到1000（最快）。預設值為80。",
+  apply_scrollspeed = "應用輸入的捲動速度",
+  cancel_scrollspeed = "返回而不更改捲動速度",
+  apply_shift_scrollspeed = "應用輸入的加速捲動速度",
+  cancel_shift_scrollspeed = "返回而不更改加速捲動速度",
+  apply_zoomspeed = "應用輸入的縮放速度",
+  cancel_zoomspeed = "返回而不更改縮放速度",
 }
 
 hotkey_window = {

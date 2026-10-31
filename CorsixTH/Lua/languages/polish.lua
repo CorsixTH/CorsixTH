@@ -2263,7 +2263,6 @@ customise_window = {
   movies = "Zarządzanie filmami",
   play_intro = "Odtwórz intro",
   allow_user_actions_while_paused = "Budoowanie w czasie pauzy",
-  volume = "Skrót ściszania",
   alien_dna_only_by_emergency = "Pacjenci Obcy",
   disable_fractured_bones_females = "Pogruchotane kości",
   enable_avg_contents = "Standardowe wyposarzenie",

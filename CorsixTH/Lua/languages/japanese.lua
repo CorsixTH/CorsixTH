@@ -175,9 +175,6 @@ options_window = {
   folder = "フォルダの場所",
   language = "言語",
   back = "戻る",
-  scroll_speed = "スクロール速度",
-  shift_scroll_speed = "スクロール速度 (+Shift)",
-  zoom_speed = "ズーム速度",
   hotkey = "ホットキーの設定",
 }
 graphics_window = {
@@ -200,15 +197,6 @@ tooltip.options_window = {
   language_dropdown_item = " %s を選択する",
   language_dropdown_no_font = "この言語を選択するためにはフォルダの設定からフォントを選択してください",
   back = "ウインドウを閉じて戻ります",
-  scroll_speed = "スクロール速度を 1(遅い) から 10(速い) の間で設定します。デフォルトは2です。",
-  shift_scroll_speed = "Shiftキーを押した時のスクロール速度を 1(遅い) から 10(速い) の間で設定します。 デフォルトは4です。",
-  zoom_speed = "カメラのズーム速度を 10(遅い) から 1000(速い) の間で設定します。 デフォルトは80です。",
-  apply_scrollspeed = "入力したスクロール速度で決定する",
-  cancel_scrollspeed = "スクロール速度を変更せずに戻る",
-  apply_shift_scrollspeed = "入力した+Shiftスクロール速度で決定する",
-  cancel_shift_scrollspeed = "+Shiftスクロール速度を変更せずに戻る",
-  apply_zoomspeed = "入力したズーム速度で決定する",
-  cancel_zoomspeed = "ズーム速度を変更せずに戻る",
   hotkey = "ホットキーの設定を変更する",
   check_for_updates = "アップデートがないか確認する",
 }
@@ -219,6 +207,24 @@ tooltip.graphics_window = {
   height = "ご希望の画面高さを入力してください",
   apply = "入力した解像度で決定する",
   cancel = "解像度を変更せずに戻る",
+}
+
+accessibility_window = {
+  scrollspeed = "スクロール速度",
+  shift_scrollspeed = "スクロール速度 (+Shift)",
+  zoom_speed = "ズーム速度",
+}
+
+tooltip.accessibility_window = {
+  scrollspeed = "スクロール速度を 1(遅い) から 10(速い) の間で設定します。デフォルトは2です。",
+  shift_scrollspeed = "Shiftキーを押した時のスクロール速度を 1(遅い) から 10(速い) の間で設定します。 デフォルトは4です。",
+  zoom_speed = "カメラのズーム速度を 10(遅い) から 1000(速い) の間で設定します。 デフォルトは80です。",
+  apply_scrollspeed = "入力したスクロール速度で決定する",
+  cancel_scrollspeed = "スクロール速度を変更せずに戻る",
+  apply_shift_scrollspeed = "入力した+Shiftスクロール速度で決定する",
+  cancel_shift_scrollspeed = "+Shiftスクロール速度を変更せずに戻る",
+  apply_zoomspeed = "入力したズーム速度で決定する",
+  cancel_zoomspeed = "ズーム速度を変更せずに戻る",
 }
 
 audio_window = {
