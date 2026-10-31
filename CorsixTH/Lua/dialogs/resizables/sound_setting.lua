@@ -408,7 +408,7 @@ function UISoundSettings:selectMidiApi(index)
   self.app.config.midi_port = nil
   self.app:saveConfig()
 
-  self:reinitAudio()
+  self.app.audio:reinitAudioSystem()
   self.midi_port_button:setLabel(_S.audio_window.default_midi_port)
   self.midi_port_options = midi_port_options(self.app)
 
@@ -433,7 +433,7 @@ function UISoundSettings:selectMidiPort(index)
   local value = self.midi_port_options[index].value
   self.app.config.midi_port = value
   self.app:saveConfig()
-  self:reinitAudio()
+  self.app.audio:reinitAudioSystem()
 end
 
 --! Button handler for soundfont
@@ -448,7 +448,7 @@ end
 function UISoundSettings:selectSoundfont(name)
   self.app.config.soundfont = name
   self.app:saveConfig()
-  self:reinitAudio()
+  self.app.audio:reinitAudioSystem()
 end
 
 --! Callback for Jukebox button
