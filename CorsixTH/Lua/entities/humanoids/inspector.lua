@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
-local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnoucementPriority]]
+local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPriority]]
 local Humanoid = _G['Humanoid'] ---@type Humanoid
 
 --[[ An `Inspector` is called to the hospital after an epidemic to issue a report]]

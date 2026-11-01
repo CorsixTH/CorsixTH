@@ -55,8 +55,8 @@ local World = _G["World"] ---@type World
 function World:World(app, free_build_mode)
   local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
   local EntityMap = _G["EntityMap"] ---@type EntityMap
-  local Date = _G["Date"] --@type Date
-  local PlayerHospital = _G["PlayerHospital"] --@type PlayerHospital
+  local Date = _G["Date"] ---@type Date
+  local PlayerHospital = _G["PlayerHospital"] ---@type PlayerHospital
   local AIHospital = _G["AIHospital"] ---@type AIHospital
   local Earthquake = _G["Earthquake"] ---@type Earthquake
 
@@ -2877,7 +2877,7 @@ function World:afterLoad(old, new)
   end
 
   if old < 165 and new >= 165 then -- Add 'KnockDoorAction.humanoid' field.
-    local Humanoid = _G["huamnoid"] ---@type Humanoid
+    local Humanoid = _G["Humanoid"] ---@type Humanoid
     local KnockDoorAction = _G["KnockDoorAction"] ---@type KnockDoorAction
     for _, entity in ipairs(self.entities) do
       if entity.action_queue and class.is(entity, Humanoid) then
