@@ -166,6 +166,10 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.num_cured_ty = 0
   self.not_cured_ty = 0
   self.num_visitors_ty = 0
+  self.rats_killed = 0
+  self.rats_created = 0
+  self.rats_killed_ty = 0
+  self.rats_created_ty = 0
 
   self.ownedPlots = {1} -- Plots owned by the hospital
   self.ratholes = {} -- List of table {x, y, wall, parcel, optional object} for ratholes in the hospital corridors.
@@ -1086,6 +1090,8 @@ function Hospital:onEndYear()
   self.not_cured_ty = 0
   self.num_visitors_ty = 0
   self.num_deaths_this_year = 0
+  self.rats_killed_ty = 0
+  self.rats_created_ty = 0
 
   self.has_impressive_reputation = true
   self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
@@ -1453,6 +1459,18 @@ function Hospital:sellSodaToPatient(patient)
   local soda_price = self.world.map.level_config.gbv.SodaPrice
   self:receiveMoneyForProduct(patient, soda_price, _S.transactions.drinks)
   self.sodas_sold = self.sodas_sold + 1
+end
+
+--! Increment rats killed counters (total and this year)
+function Hospital:incrementRatsKilled()
+  self.rats_killed = self.rats_killed + 1
+  self.rats_killed_ty = self.rats_killed_ty + 1
+end
+
+--! Increment rats created/spawned counters (total and this year)
+function Hospital:incrementRatsCreated()
+  self.rats_created = self.rats_created + 1
+  self.rats_created_ty = self.rats_created_ty + 1
 end
 
 --! Function to determine the price for a treatment, modified by reputation and percentage

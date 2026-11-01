@@ -37,6 +37,11 @@ describe("hospital.lua: ", function()
       width = 10,
       height = 10,
       WorldToScreen = function(_, x, y) return x * 10, y * 10 end,
+      level_config = {
+        awards_trophies = {
+          Reputation = 400,
+        },
+      },
     }
     setmetatable(map, {__index = Map})
 
@@ -53,9 +58,29 @@ describe("hospital.lua: ", function()
             init = function() end,
           }
         end,
+        date = function() return {year = function() return 0 end} end,
       },
       isInHospital = function() return true end,
       getWallsAround = opts.get_walls_around or function() return {} end,
+      -- Initialize rat counters (normally done in Hospital:new())
+      rats_killed = 0,
+      rats_created = 0,
+      rats_killed_ty = 0,
+      rats_created_ty = 0,
+      rats_adviser_shown = false,
+      reputation = 500,
+      reputation_min = 0,
+      reputation_max = 1000,
+      has_impressive_reputation = true,
+      num_visitors = 0,
+      num_cured = 0,
+      sodas_sold = 0,
+      num_vips_ty = 0,
+      pleased_vips_ty = 0,
+      num_cured_ty = 0,
+      not_cured_ty = 0,
+      num_visitors_ty = 0,
+      num_deaths_this_year = 0,
     }, {__index = Hospital})
     return hospital, rat_spawns
   end
@@ -94,5 +119,49 @@ describe("hospital.lua: ", function()
     assert.are.equal(1, #rat_spawns)
     assert.is_true((rat_spawns[1].x == hole_a.x and rat_spawns[1].y == hole_a.y) or
         (rat_spawns[1].x == hole_b.x and rat_spawns[1].y == hole_b.y))
+  end)
+
+  it("initializes rat counters to zero", function()
+    local hospital, _ = createHospital()
+    assert.are.equal(0, hospital.rats_killed)
+    assert.are.equal(0, hospital.rats_created)
+    assert.are.equal(0, hospital.rats_killed_ty)
+    assert.are.equal(0, hospital.rats_created_ty)
+    assert.is_false(hospital.rats_adviser_shown)
+  end)
+
+  it("increments rat killed counters correctly", function()
+    local hospital, _ = createHospital()
+    hospital:incrementRatsKilled()
+    hospital:incrementRatsKilled()
+    assert.are.equal(2, hospital.rats_killed)
+    assert.are.equal(2, hospital.rats_killed_ty)
+  end)
+
+  it("increments rat created counters correctly", function()
+    local hospital, _ = createHospital()
+    hospital:incrementRatsCreated()
+    hospital:incrementRatsCreated()
+    hospital:incrementRatsCreated()
+    assert.are.equal(3, hospital.rats_created)
+    assert.are.equal(3, hospital.rats_created_ty)
+  end)
+
+  it("resets yearly counters on end of year but keeps totals", function()
+    local hospital, _ = createHospital()
+    hospital:incrementRatsKilled()
+    hospital:incrementRatsCreated()
+    hospital:onEndYear()
+    assert.are.equal(1, hospital.rats_killed)
+    assert.are.equal(1, hospital.rats_created)
+    assert.are.equal(0, hospital.rats_killed_ty)
+    assert.are.equal(0, hospital.rats_created_ty)
+  end)
+
+  it("does not reset adviser flag on end of year", function()
+    local hospital, _ = createHospital()
+    hospital.rats_adviser_shown = true
+    hospital:onEndYear()
+    assert.is_true(hospital.rats_adviser_shown)
   end)
 end)
