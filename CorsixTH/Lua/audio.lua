@@ -861,6 +861,8 @@ end
 --! Restart the audio system. This may be because of a global audio change
 --! or changing music sources.
 function Audio:reinitAudioSystem()
+  local jukebox_window = self.app.ui:getWindow(UIJukebox)
+  if jukebox_window then jukebox_window:close() end
   self:stopBackgroundTrack()
   self:destroy()
   self:init()

@@ -361,7 +361,6 @@ screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 --     ingame name on the next row.
 --
 play_own_music = false
-
 audio_music = nil -- [[X:\ThemeHospital\Music]]
 
 -------------------------------------------------------------------------------

@@ -286,7 +286,10 @@ function App:init()
   -- Load audio
   corsixth.require("audio")
   self.audio = Audio(self)
-  self:verifyPlayerMusicDir()
+  if not self:verifyPlayerMusicDir() then
+    self.config.audio_music = nil
+    self.config.play_own_music = false
+  end
   self.audio:init()
 
   -- Load movie player

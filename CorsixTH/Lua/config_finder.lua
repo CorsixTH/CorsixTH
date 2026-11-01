@@ -668,7 +668,7 @@ param(config_values, 'screenshots', '[[X:\\ThemeHospital\\Screenshots]]') .. [=[
 -- "names.txt" and write the file name on one row, followed by the desired
 --     ingame name on the next row.
 --]=] .. '\n' ..
-param(config_values, 'play_own_music') .. '\n' ..
+param(config_values, 'play_own_music') ..
 param(config_values, 'audio_music', '[[X:\\ThemeHospital\\Music]]') .. [=[
 
 -------------------------------------------------------------------------------
