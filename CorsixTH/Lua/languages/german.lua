@@ -263,7 +263,7 @@ menu_debug = {
   lua_console                 = "  (%1%) LUA-KONSOLE  ",
   debug_script                = "  (%1%) DEBUG-SKRIPT STARTEN  ",
   calls_dispatcher            = "  AUFRUF-VERTEILER  ",
-  dump_strings                = "  TEXTE ABSPEICHERN  ",
+  dump_strings                = "  (%1%) TEXTE ABSPEICHERN  ",
   dump_gamelog                = "  (STRG+D) SPIELPROTOKOLL ABSPEICHERN  ",
   map_overlay                 = "  KARTEN-OVERLAY  ",
   sprite_viewer               = "  SPRITE-BETRACHTER  ",
@@ -724,7 +724,22 @@ handyman_window = {
 }
 
 tooltip.toolbar = {
-  machine_menu = "Maschinenmenü",
+  machine_menu = "Maschinenmenü (%s)",
+  reputation = "Ihr Ruf (%s)",
+  edit = "Bearbeiten Sie Räume/Gegenstände (%s)",
+  bank_button = "Linksklick (%s) für den Bank-Manager, Rechtsklick (%s) für den Kontoauszug",
+  objects = "Plazieren Sie Flurausstattung (%s)",
+  date = "Das Datum (%s)",
+  staff_list = "Personal-Management (%s)",
+  hire = "Stellen Sie Personal ein (%s)",
+  town_map = "Übersichtskarte (%s)",
+  charts = "Grafik (%s)",
+  research = "Forschung (%s)",
+  policy = "Einstellungen (%s)",
+  casebook = "Behandlungsmappe (%s)",
+  status = "Status (%s)",
+  rooms = "Bauen Sie Räume (%s)",
+  balance = "Ihr Kontostand (%s)",
 }
 
 tooltip.handyman_window = {

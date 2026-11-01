@@ -487,6 +487,25 @@ tooltip.lua_console = {
   close = "Stäng terminalen",
 }
 
+tooltip.toolbar = {
+  status = "Status (%s)",
+  casebook = "Medicinjournal (%s)",
+  objects = "Placera ut prylar i korridorerna (%s)",
+  edit = "Redigera rum/föremål (%s)",
+  reputation = "Ditt anseende (%s)",
+  research = "Forskare (%s)",
+  date = "Datum (%s)",
+  bank_button = "Vänsterklicka (%s) för bankkamrer, högerklicka (%s) för kontoutdrag",
+  balance = "Ditt saldo (%s)",
+  machine_menu = "Machine menu (%s)",
+  town_map = "Stadskarta (%s)",
+  charts = "Diagram (%s)",
+  hire = "Anställ folk (%s)",
+  policy = "Policy (%s)",
+  staff_list = "Personalledning (%s)",
+  rooms = "Bygg ett rum (%s)",
+}
+
 errors = {
   dialog_missing_graphics = "Tyvärr innehåller demon inte den här dialogrutan.",
   save_prefix = "Fel när spelet skulle sparas: ",
