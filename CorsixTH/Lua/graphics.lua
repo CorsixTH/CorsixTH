@@ -22,10 +22,10 @@ local TH = require("TH")
 
 local pathsep = package.config:sub(1, 1)
 
---! Layer for loading (and subsequently caching) graphical resources.
---! The Graphics class handles loading and caching of graphics resources.
--- It can adapt as the API to C changes, and hide these changes from most of
--- the other Lua code.
+--- Layer for loading (and subsequently caching) graphical resources.
+--- The Graphics class handles loading and caching of graphics resources.
+--- It can adapt as the API to C changes, and hide these changes from most of
+--- the other Lua code.
 class "Graphics"
 
 ---@class Graphics
@@ -174,9 +174,9 @@ function Graphics:_loadPalettes(gfx_set)
   self:_loadPalette("QData", "Town01V.pal", true, false)
 end
 
---! Tries to load the font file given in the config file as unicode_font.
---! If it is not found it tries to use the font file from the compile setting WITH_FONT,
---!  or look for one in the CorsixTH folder, the grandparent of this file.
+--- Tries to load the font file given in the config file as unicode_font.
+--- If it is not found it tries to use the font file from the compile setting WITH_FONT,
+--- or look for one in the CorsixTH folder, the grandparent of this file.
 function Graphics:loadFontFile()
   local lfs = require("lfs")
   local function check(path) return lfs.attributes(path, "mode") == "file" end
@@ -312,11 +312,11 @@ local function makeGreyscaleGhost(pal)
   return table.concat(remap, "", 0, 255)
 end
 
---! Load a palette file
---!param dir (string) The directory of the palette relative to the HOSPITAL directory
---!param name (string) The name of the palette file
---!param transparent_255 (boolean) Whether the 255th entry in the palette should be transparent
---!return (palette, string) The palette and a string representing the palette converted to greyscale
+--- Load a palette file
+--- @param dir (string) The directory of the palette relative to the HOSPITAL directory
+--- @param name (string) The name of the palette file
+--- @param transparent_255 (boolean) Whether the 255th entry in the palette should be transparent
+--- @return string, string # The palette and a string representing the palette converted to greyscale
 function Graphics:_loadPalette(dir, name, transparent_255, pal8bit)
   name = name or "MPalette.dat"
 
@@ -367,16 +367,15 @@ function Graphics:loadGhost(dir, name, index)
   return cached:sub(index * 256 + 1, index * 256 + 256)
 end
 
---! Load a bitmap from a dat file and palette
---!
---!param name (string) The file name of the bitmap without the .dat extension
---!param width (int) The width of the bitmap. Defaults to 640
---!param height (int) The height of the bitmap. Defaults to 480
---!param dir (string) The directory of the bitmap. Defaults to QData
---!param _paldir (string) ignored
---!param pal (string) The name of the palette
---!param _transparent_255 (boolean) ignored
---!param flags (table) Additional flags for loading the bitmap
+--- Load a bitmap from a dat file and palette
+--- @param name (string) The file name of the bitmap without the .dat extension
+--- @param width (integer) The width of the bitmap. Defaults to 640
+--- @param height (integer) The height of the bitmap. Defaults to 480
+--- @param dir (string) The directory of the bitmap. Defaults to QData
+--- @param _paldir (string) ignored
+--- @param pal (string) The name of the palette
+--- @param _transparent_255 (boolean) ignored
+--- @param flags (table) Additional flags for loading the bitmap
 function Graphics:loadRaw(name, width, height, dir, _paldir, pal, _transparent_255, flags)
   if self.cache.raw[name] then
     return self.cache.raw[name]
@@ -445,7 +444,7 @@ function Graphics:hasLanguageFont(font)
   end
 end
 
---! Font proxy meta table wrapping the C++ class.
+--- Font proxy meta table wrapping the C++ class.
 local font_proxy_mt = {
   __index = {
     sizeOf = function(self, ...)
@@ -527,8 +526,8 @@ function Graphics:_onChangeUIScale()
   self:onChangeLanguage()
 end
 
---! Font reload function.
---!param font The font to (force) reloading.
+--- Font reload function.
+--- @param font # The font to (force) reloading.
 local function font_reloader(font)
   font:clearCache()
 end
@@ -537,7 +536,7 @@ function Graphics:_isLanguageSupportedByTHAssets()
   return self.language_font == nil or charsets[self.language_font] == self.th_charset
 end
 
---! Utility function to return preferred font for main menu ui
+--- Utility function to return preferred font for main menu ui
 function Graphics:loadMenuFont()
   -- Use the defined unicode font if set
   local font
@@ -595,37 +594,35 @@ local sprite_table_cache_key = function(name, palette)
   return name
 end
 
---! Load a true type font
---!
---!param name (string) The name of the font from the language file. Always
---  'unicode'.
---!param sprite_table (userdata) The sprite table of the font this font is
---  replacing. Used for default colour and metrics.
---!param font_options (table) A table of font options:
---  x_sep (integer) The horizontal separation of the font. Defaults to 0.
---  y_sep (integer) The vertical separation of the font. Defaults to 0.
---  ttf_color (table) The colour of the font in form .red, .green and .blue. If
---    nil, the colour will be detected from the sprite table.
---  force_bitmap (boolean) Whether to force the font to be a bitmap font. If
---    nil, this will be set to true for Font05V if the language uses Arabic
---    numerals.
---  ttf_width (integer) The nominal width of the font, in pixels. If nil, the
---    width will be detected from the sprite table.
---  ttf_height (integer) The nominal height of the font, in pixels. If nil, the
---    height will be detected from the sprite table.
---  ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
---    The color field has the same format as ttf_color. If this field is
---    present, the font will be drawn with a shadow of the specified colour and
---    offset. color is optional and defaults to opaque black. offset_x and
---    offset_y are optional and default to 1. If the field is omitted entirely,
---    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
---    shadow with default parameters, or false to disable any shadow.
---  apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
---    size.
---!param y_sep (int) Deprecated: use font_options.y_sep instead.
---!param ttf_color (table) Deprecated: use font_options.ttf_color instead.
---!param force_bitmap (boolean) Deprecated: use font_options.force_bitmap
---  instead.
+--- Load a true type font
+---
+--- The `font_options` are:
+--- * `x_sep` (integer) The horizontal separation of the font. Defaults to 0.
+--- * `y_sep` (integer) The vertical separation of the font. Defaults to 0.
+--- * `ttf_color` (table) The colour of the font in form .red, .green and .blue. If
+---   nil, the colour will be detected from the sprite table.
+--- * `force_bitmap` (boolean) Whether to force the font to be a bitmap font. If
+---   nil, this will be set to true for Font05V if the language uses Arabic
+---   numerals.
+--- * `ttf_width` (integer) The nominal width of the font, in pixels. If nil, the
+---   width will be detected from the sprite table.
+--- * `ttf_height` (integer) The nominal height of the font, in pixels. If nil, the
+---   height will be detected from the sprite table.
+--- * `ttf_shadow` (table|boolean) table with fields offset_x, offset_y and color.
+---   The color field has the same format as ttf_color. If this field is
+---   present, the font will be drawn with a shadow of the specified colour and
+---   offset. color is optional and defaults to opaque black. offset_x and
+---   offset_y are optional and default to 1. If the field is omitted entirely,
+---   no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+---   shadow with default parameters, or false to disable any shadow.
+--- * `apply_ui_scale` (boolean) Whether to apply the UI scale factor to the font
+---   size.
+--- @param name (string) The name of the font from the language file. Always `unicode`.
+--- @param sprite_table (userdata) The sprite table of the font this font is replacing. Used for default colour and metrics.
+--- @param font_options (table) A table with font options.
+--- @param y_sep (integer) **Deprecated**: use `font_options.y_sep` instead.
+--- @param ttf_color (table) **Deprecated**: use `font_options.ttf_color` instead.
+--- @param force_bitmap (boolean) **Deprecated**: use `font_options.force_bitmap` instead.
 function Graphics:loadLanguageFont(name, sprite_table, font_options, y_sep, ttf_color, force_bitmap)
   -- Afterload fix for saves before 232
   if font_options == nil or type(font_options) == "number" then
@@ -652,30 +649,32 @@ function Graphics:loadLanguageFont(name, sprite_table, font_options, y_sep, ttf_
   return font
 end
 
---! Load a true type font
---!
---!param name (string) The name of the font from the language file. Always
---  'unicode'.
---!param sprite_table (userdata) The sprite table of the font this font is
---  replacing. Used for default colour and metrics.
---!param font_options (table) A table of font options:
---  x_sep (integer) The horizontal separation of the font. Defaults to 0.
---  y_sep (integer) The vertical separation of the font. Defaults to 0.
---  ttf_color (table) The colour of the font in form .red, .green and .blue. If
---    nil, the colour will be detected from the sprite table.
---  ttf_width (integer) The nominal width of the font, in pixels. If nil, the
---    width will be detected from the sprite table.
---  ttf_height (integer) The nominal height of the font, in pixels. If nil, the
---    height will be detected from the sprite table.
---  ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
---    The color field has the same format as ttf_color. If this field is
---    present, the font will be drawn with a shadow of the specified colour and
---    offset. color is optional and defaults to opaque black. offset_x and
---    offset_y are optional and default to 1. If the field is omitted entirely,
---    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
---    shadow with default parameters, or false to disable any shadow.
---  apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
---    size.
+--- Load a true type font
+---
+--- The `font_options` are:
+--- * `x_sep` (integer) The horizontal separation of the font. Defaults to 0.
+--- * `y_sep` (integer) The vertical separation of the font. Defaults to 0.
+--- * `ttf_color` (table) The colour of the font in form .red, .green and .blue. If
+---   nil, the colour will be detected from the sprite table.
+--- * `force_bitmap` (boolean) Whether to force the font to be a bitmap font. If
+---   nil, this will be set to true for Font05V if the language uses Arabic
+---   numerals.
+--- * `ttf_width` (integer) The nominal width of the font, in pixels. If nil, the
+---   width will be detected from the sprite table.
+--- * `ttf_height` (integer) The nominal height of the font, in pixels. If nil, the
+---   height will be detected from the sprite table.
+--- * `ttf_shadow` (table|boolean) table with fields offset_x, offset_y and color.
+---   The color field has the same format as ttf_color. If this field is
+---   present, the font will be drawn with a shadow of the specified colour and
+---   offset. color is optional and defaults to opaque black. offset_x and
+---   offset_y are optional and default to 1. If the field is omitted entirely,
+---   no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+---   shadow with default parameters, or false to disable any shadow.
+--- * `apply_ui_scale` (boolean) Whether to apply the UI scale factor to the font
+---   size.
+--- @param name (string) The name of the font from the language file. Always 'unicode'.
+--- @param sprite_table (userdata) The sprite table of the font this font is replacing. Used for default colour and metrics.
+--- @param font_options (table) A table with font options.
 function Graphics:_loadTrueTypeFont(name, sprite_table, font_options)
   local cache_key = language_font_cache_key(name, font_options)
   local cache = self.cache.language_fonts[cache_key]
@@ -706,36 +705,37 @@ function Graphics:_loadTrueTypeFont(name, sprite_table, font_options)
   return font
 end
 
---! Load a font and the corresponding sprite sheet in one operation.
---!
---! This is the same as calling loadFont(Graphics:loadSpriteTable(dir, name, complex, palette), font_options)
---! except that force_bitmap is set to true automatically for some sprite tables.
---!
---!param dir (string) The directory of the sprite table relative to the HOSPITAL directory.
---!param name (string) The name of the sprite table file without the .dat extension.
---!param complex (boolean) Whether the sprite table is complex or not.
---!param palette (string) The name of the palette file. If nil, the default palette will be used.
---!param font_options (table) A table of font options:
---  x_sep (integer) The horizontal separation of the font. Defaults to 0.
---  y_sep (integer) The vertical separation of the font. Defaults to 0.
---  ttf_color (table) The colour of the font in form .red, .green and .blue. If
---    nil, the colour will be detected from the sprite table.
---  force_bitmap (boolean) Whether to force the font to be a bitmap font. If
---    nil, this will be set to true for Font05V if the language uses Arabic
---    numerals.
---  ttf_width (integer) The nominal width of the font, in pixels. If nil, the
---    width will be detected from the sprite table.
---  ttf_height (integer) The nominal height of the font, in pixels. If nil, the
---    height will be detected from the sprite table.
---  ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
---    The color field has the same format as ttf_color. If this field is
---    present, the font will be drawn with a shadow of the specified colour and
---    offset. color is optional and defaults to opaque black. offset_x and
---    offset_y are optional and default to 1. If the field is omitted entirely,
---    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
---    shadow with default parameters, or false to disable any shadow.
---  apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
---    size.
+--- Load a font and the corresponding sprite sheet in one operation.
+---
+--- This is the same as calling loadFont(Graphics:loadSpriteTable(dir, name, complex, palette), font_options)
+--- except that force_bitmap is set to true automatically for some sprite tables.
+---
+--- The `font_options` are:
+--- * `x_sep` (integer) The horizontal separation of the font. Defaults to 0.
+--- * `y_sep` (integer) The vertical separation of the font. Defaults to 0.
+--- * `ttf_color` (table) The colour of the font in form .red, .green and .blue. If
+---   nil, the colour will be detected from the sprite table.
+--- * `force_bitmap` (boolean) Whether to force the font to be a bitmap font. If
+---   nil, this will be set to true for Font05V if the language uses Arabic
+---   numerals.
+--- * `ttf_width` (integer) The nominal width of the font, in pixels. If nil, the
+---   width will be detected from the sprite table.
+--- * `ttf_height` (integer) The nominal height of the font, in pixels. If nil, the
+---   height will be detected from the sprite table.
+--- * `ttf_shadow` (table|boolean) table with fields offset_x, offset_y and color.
+---   The color field has the same format as ttf_color. If this field is
+---   present, the font will be drawn with a shadow of the specified colour and
+---   offset. color is optional and defaults to opaque black. offset_x and
+---   offset_y are optional and default to 1. If the field is omitted entirely,
+---   no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+---   shadow with default parameters, or false to disable any shadow.
+--- * `apply_ui_scale` (boolean) Whether to apply the UI scale factor to the font
+---   size.
+--- @param dir (string) The directory of the sprite table relative to the HOSPITAL directory.
+--- @param name (string) The name of the sprite table file without the .dat extension.
+--- @param complex (boolean) Whether the sprite table is complex or not.
+--- @param palette (string) The name of the palette file. If nil, the default palette will be used.
+--- @param font_options (table) A table with font options:
 function Graphics:loadFontAndSpriteTable(dir, name, complex, palette, font_options)
   local sprite_table = self:loadSpriteTable(dir, name, complex, palette)
 
@@ -747,30 +747,31 @@ function Graphics:loadFontAndSpriteTable(dir, name, complex, palette, font_optio
   return self:loadFont(sprite_table, font_options)
 end
 
---! Load a font for the given sprite table.
---!
---!param sprite_table (userdata) The sprite table of the font this font is replacing. Used for default colour and metrics.
---!param font_options (table) A table of font options:
---  x_sep (integer) The horizontal separation of the font. Defaults to 0.
---  y_sep (integer) The vertical separation of the font. Defaults to 0.
---  ttf_color (table) The colour of the font in form .red, .green and .blue. If
---    nil, the colour will be detected from the sprite table.
---  force_bitmap (boolean) Whether to force the font to be a bitmap font. If
---    nil, this will be set to true for Font05V if the language uses Arabic
---    numerals.
---  ttf_width (integer) The nominal width of the font, in pixels. If nil, the
---    width will be detected from the sprite table.
---  ttf_height (integer) The nominal height of the font, in pixels. If nil, the
---    height will be detected from the sprite table.
---  ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
---    The color field has the same format as ttf_color. If this field is
---    present, the font will be drawn with a shadow of the specified colour and
---    offset. color is optional and defaults to opaque black. offset_x and
---    offset_y are optional and default to 1. If the field is omitted entirely,
---    no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
---    shadow with default parameters, or false to disable any shadow.
---  apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
---    size.
+--- Load a font for the given sprite table.
+---
+--- The `font_options` are:
+--- * `x_sep` (integer) The horizontal separation of the font. Defaults to 0.
+--- * `y_sep` (integer) The vertical separation of the font. Defaults to 0.
+--- * `ttf_color` (table) The colour of the font in form .red, .green and .blue. If
+---   nil, the colour will be detected from the sprite table.
+--- * `force_bitmap` (boolean) Whether to force the font to be a bitmap font. If
+---   nil, this will be set to true for Font05V if the language uses Arabic
+---   numerals.
+--- * `ttf_width` (integer) The nominal width of the font, in pixels. If nil, the
+---   width will be detected from the sprite table.
+--- * `ttf_height` (integer) The nominal height of the font, in pixels. If nil, the
+---   height will be detected from the sprite table.
+--- * `ttf_shadow` (table|boolean) table with fields offset_x, offset_y and color.
+---   The color field has the same format as ttf_color. If this field is
+---   present, the font will be drawn with a shadow of the specified colour and
+---   offset. color is optional and defaults to opaque black. offset_x and
+---   offset_y are optional and default to 1. If the field is omitted entirely,
+---   no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+---   shadow with default parameters, or false to disable any shadow.
+--- * `apply_ui_scale` (boolean) Whether to apply the UI scale factor to the font
+---   size.
+--- @param sprite_table (userdata) The sprite table of the font this font is replacing. Used for default colour and metrics.
+--- @param font_options (table) A table with font options.
 function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_bitmap)
 
   -- afterLoad fix. Saves before 215 would double the y_sep argument, but did not have ttf_col
@@ -828,8 +829,8 @@ function Graphics:loadAnimations(dir, prefix)
     return self.cache.anims[prefix]
   end
 
-  --! Load a custom animation file (if it can be found)
-  --!param path Path to the file.
+  --- Load a custom animation file (if it can be found)
+  --- @param path (string) Path to the file.
   local function loadCustomAnims(path)
     local file, err = io.open(path, "rb")
     if not file then
@@ -869,9 +870,8 @@ function Graphics:loadAnimations(dir, prefix)
   return anims
 end
 
---! Build a copy of the main palette with green hues rotated to blue.
---!
---!return (palette) The shifted palette
+--- Build a copy of the main palette with green hues rotated to blue.
+--- @return (string) # The shifted palette
 function Graphics:_makeBluePaletteForFloatingBanknote()
   -- Only entries where green clearly leads the other channels are touched, so
   -- anything else - greys and the black background of the art in particular -
@@ -906,13 +906,13 @@ function Graphics:_makeBluePaletteForFloatingBanknote()
   return palette
 end
 
---! The sprite sheet for floating banknote above a patient.
---!
---! Payments made through an insurance company are drawn in blue so that
---! a player can tell at a glance that the money will not be directly
---! credited to the balance. Original banknote art; only its palette differs.
---!param insurance (boolean) Whether the payment went through insurance
---!return (sheet) The sprite sheet to draw the amount with
+--- The sprite sheet for floating banknote above a patient.
+---
+--- Payments made through an insurance company are drawn in blue so that
+--- a player can tell at a glance that the money will not be directly
+--- credited to the balance. Original banknote art; only its palette differs.
+--- @param insurance (boolean) Whether the payment went through insurance
+--- @return (string) # The sprite sheet to draw the amount with
 function Graphics:getFloatingBanknoteSpriteTable(insurance)
   if not insurance or not self.app.config.enable_insurance_blue_banknote then
     return self:loadSpriteTable("Data", "Money01V")
@@ -925,13 +925,12 @@ function Graphics:getFloatingBanknoteSpriteTable(insurance)
   return self:loadSpriteTable("Data", "Money01V", nil, palette)
 end
 
---! Load a sprite table, optionally with a palette of its own.
---!
---!param dir (string) The directory of the sheet relative to the HOSPITAL directory
---!param name (string) The name of the sheet file
---!param complex (boolean) Whether the sheet needs the complex loading path
---!param palette (palette) Palette to draw the sheet with, or nil for the default
---!return (sheet) The loaded sprite sheet
+--- Load a sprite table, optionally with a palette of its own.
+--- @param dir (string) The directory of the sheet relative to the HOSPITAL directory
+--- @param name (string) The name of the sheet file
+--- @param complex (boolean) Whether the sheet needs the complex loading path
+--- @param palette (palette) Palette to draw the sheet with, or nil for the default
+--- @return (string) # The loaded sprite sheet
 function Graphics:loadSpriteTable(dir, name, complex, palette)
   -- A sheet with a custom palette is a distinct sheet from the same-named sheet
   -- drawn with the default one, so the cache is keyed by palette as well as by
@@ -974,7 +973,7 @@ function Graphics:updateTarget(target)
   end, self)
 end
 
---! Utility class for setting animation markers and querying animation length.
+--- Utility class for setting animation markers and querying animation length.
 class "AnimationManager"
 
 ---@class AnimationManager
@@ -986,7 +985,7 @@ function AnimationManager:AnimationManager(anims)
   self.anims = anims
 end
 
---! For overriding animations which have builtin repeats or excess frames
+--- For overriding animations which have builtin repeats or excess frames
 function AnimationManager:setAnimLength(anim, length)
   self.anim_length_cache[anim] = length
 end
@@ -1055,22 +1054,23 @@ end
   The AnimView program can be used to easily obtain position information in frames.
 --]]
 
---! Define the centre of a patient at floor level in an animation.
+--- Define the centre of a patient at floor level in an animation.
 function AnimationManager:setPatientMarker(anim, ...)
   self:_unfoldAnims(anim, "setFramePrimaryMarker", ...)
 end
 
---! Define the centre of a staff member at floor level in an animation.
+--- Define the centre of a staff member at floor level in an animation.
 function AnimationManager:setStaffMarker(anim, ...)
   self:_unfoldAnims(anim, "setFrameSecondaryMarker", ...)
 end
 
---! Convert a humanoid position to a pixel offset.
---!param pos (table) Humanoid center position to convert. Is either a tile
---  position of the form {x, y} with floating point numbers, or a pixel
---  position of the form {x, y, "px"} with integer numbers. In both cases,
---  the origin is at the center of tile (0, 0), at floor level.
---!return (int, int) The computed offset wrt to the origin in pixels.
+--- Convert a humanoid position to a pixel offset.
+---
+--- The position is either a tile position of the form `{x, y}` with floating
+--- point numbers, or a pixel position of the form `{x, y, "px"}` with integer
+--- numbers. In both cases, the origin is at the center of tile `(0, 0)`, at floor level.
+--- @param pos (table) Humanoid center position to convert.
+--- @return integer, integer # The computed offset wrt to the origin in pixels.
 local function positionToXy(pos)
   if pos[3] == "px" then
     return pos[1], pos[2]
@@ -1080,7 +1080,7 @@ local function positionToXy(pos)
   end
 end
 
---! Unfold tables containing animation numbers.
+--- Unfold tables containing animation numbers.
 function AnimationManager:_unfoldAnims(anim, fn, ...)
   if not anim then return end
 
@@ -1097,11 +1097,13 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
   local anim_length = self:getAnimLength(anim)
   local frame = self.anims:getFirstFrame(anim)
 
-  --! Set marker position for frame
-  --!param x1y1 (boolean) use values given by x1 and y1 only if true, otherwise use
-  -- linear interpolation between x1/y1 and x2/y2
-  --!param x1, y1, x2 (optional), y2 (optional) pixel positions
-  --!param n fraction between start and end frame of linear interpolation
+  --- Set marker position for frame
+  --- param x1y1 (boolean) Use values given by `x1` and `y1` only if true, otherwise use linear interpolation between `x1/y1` and `x2/y2`.
+  --- @param x1 (integer) Tile or pixel position.
+  --- @param y1 (integer) Tile of pixels position.
+  --- @param x2 (integer?) Optional pixel postion.
+  --- @param y2 (integer?) Optional pixel postion.
+  --- @param n (number) Fraction between start and end frame of linear interpolation
   local function setMarkerFramePosition(x1y1, x1, y1, x2, y2, n)
     assert(type(x1) == "number" and type(y1) == "number",
         "Anim " .. anim .. ", frame " .. frame .. " has missing marker position")
@@ -1176,7 +1178,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
   end
 end
 
--- Kept for load compatibility
+--- Kept for load compatibility
 function Graphics:loadPalette(_, name)
   -- Was named PREF01V.PAL in ui.lua until version 240
   if name == "PREF01V.PAL" then

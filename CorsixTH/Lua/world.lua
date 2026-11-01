@@ -19,8 +19,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
-local ipairs, _G, table_remove
-    = ipairs, _G, table.remove
 
 corsixth.require("entities.humanoids.patient")
 corsixth.require("entities.humanoids.staff.doctor")
@@ -45,7 +43,7 @@ corsixth.require("announcer")
 corsixth.require("endconditions")
 corsixth.require("earthquake")
 
---! Manages entities, rooms, and the date.
+--- Manages entities, rooms, and the date.
 class "World"
 
 ---@class World
@@ -55,6 +53,13 @@ class "World"
 local World = _G["World"] ---@type World
 
 function World:World(app, free_build_mode)
+  local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
+  local EntityMap = _G["EntityMap"] ---@type EntityMap
+  local Date = _G["Date"] --@type Date
+  local PlayerHospital = _G["PlayerHospital"] --@type PlayerHospital
+  local AIHospital = _G["AIHospital"] ---@type AIHospital
+  local Earthquake = _G["Earthquake"] ---@type Earthquake
+
   self.app = app
   self.free_build_mode = free_build_mode
   self.map = app.map
@@ -170,7 +175,7 @@ function World:World(app, free_build_mode)
   self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
 end
 
---! Register key shortcuts for controlling the world (game speed, etc.)
+--- Register key shortcuts for controlling the world (game speed, etc.)
 function World:setUI(ui)
   self.ui = ui
 
@@ -188,10 +193,11 @@ function World:setUI(ui)
   self.ui:addKeyHandler("ingame_reset_zoom", self, self.resetZoom)
 end
 
---! Adjust the current zoom level by a delta
--- TODO: This should live in game_ui not world
+--- Adjust the current zoom level by a delta
+---
+--- TODO: This should live in game_ui not world
 function World:adjustZoom(delta)
-  local scr_w = TheApp.video:getRenderSize()
+  local scr_w = self.app.video:getRenderSize()
   local factor = self.ui.app.config.zoom_speed
   local virtual_width = scr_w / (self.ui.zoom_factor or 1)
 
@@ -203,7 +209,7 @@ function World:adjustZoom(delta)
   end
 
   virtual_width = virtual_width - delta * factor * modifier
-  if virtual_width < 200 * TheApp.gfx:getWindowDisplayScale() then
+  if virtual_width < 200 * self.app.gfx:getWindowDisplayScale() then
     return false
   end
 
@@ -214,9 +220,9 @@ function World:resetZoom()
   return self.ui:setZoom(1, false)
 end
 
---! Initialize the game level (available diseases, winning conditions).
---!param app Game application.
---!param avail_rooms (list) Available rooms in the level.
+--- Initialize the game level (available diseases, winning conditions).
+--- @param app App Game application.
+--- @param avail_rooms # Available rooms in the level.
 function World:initLevel(app, avail_rooms)
   local existing_rooms = {}
   for _, avail_room in ipairs(avail_rooms) do
@@ -264,7 +270,7 @@ function World:initLevel(app, avail_rooms)
   self:determineWinningConditions()
 end
 
--- Apply level-defined pricing to all available diseases.
+--- Apply level-defined pricing to all available diseases.
 function World:applyLevelStartPrices()
   local config = self.map and self.map.level_config
   if not (config and config.expertise and self.available_diseases) then return end
@@ -281,20 +287,21 @@ function World:toggleInformation()
   self.room_information_dialogs = not self.room_information_dialogs
 end
 
---! In EndConditions, collect and test the win and lose conditions of the level.
+--- In EndConditions, collect and test the win and lose conditions of the level.
 function World:determineWinningConditions()
+  local EndConditions = _G["EndConditions"] ---@type EndConditions
   self.endconditions = EndConditions(self.map.level_config,
       self.map.level_number, self.free_build_mode)
 end
 
---! Find the rooms available at the level.
---!return (list) Available rooms, with discovery state at start, and build_cost.
+--- Find the rooms available at the level.
+--- @return (list) Available rooms, with discovery state at start, and build_cost.
 function World:getAvailableRooms()
   local avail_rooms = {}
 
   local cfg_objects = self.map.level_config.objects
   local cfg_rooms = self.map.level_config.rooms
-  for _, room in ipairs(TheApp.rooms) do
+  for _, room in ipairs(self.app.rooms) do
     -- Add build cost based on level files for all rooms.
     -- For now, sum it up so that the result is the same as before.
     -- TODO: Change the whole build process so that this value is
@@ -304,7 +311,7 @@ function World:getAvailableRooms()
     local is_discovered = true
     -- Make sure that all objects needed for this room are available
     for name, no in pairs(room.objects_needed) do
-      local spec = cfg_objects[TheApp.objects[name].thob]
+      local spec = cfg_objects[self.app.objects[name].thob]
       if spec.AvailableForLevel == 0 then
         -- It won't be possible to build this room at all on the level.
         available = false
@@ -313,7 +320,7 @@ function World:getAvailableRooms()
         is_discovered = false
       end
       -- Add cost for this object.
-      build_cost = build_cost + cfg_objects[TheApp.objects[name].thob].StartCost * no
+      build_cost = build_cost + cfg_objects[self.app.objects[name].thob].StartCost * no
     end
 
     if available then
@@ -323,16 +330,16 @@ function World:getAvailableRooms()
   return avail_rooms
 end
 
---! Get the hospital controlled by the (single) player.
---!return (Hospital) The hospital controlled by the (single) player.
+--- Get the hospital controlled by the (single) player.
+--- @return (Hospital) # The hospital controlled by the (single) player.
 function World:getLocalPlayerHospital()
   -- NB: UI code can get the hospital to use via ui.hospital
   -- TODO: Make this work in multiplayer?
   return self.hospitals[1]
 end
 
---! Identify the tiles on the map suitable for spawning `Humanoid`s from.
---!return (table) 0-8 spawn points of the map.
+--- Identify the tiles on the map suitable for spawning `Humanoid`s from.
+--- @return ({x: integer, y: integer, direction: string}[]) 0-8 spawn points of the map.
 function World:calculateSpawnTiles()
   local spawn_points = {}
   local w, h = self.map.width, self.map.height
@@ -366,11 +373,11 @@ function World:calculateSpawnTiles()
   return spawn_points
 end
 
---! Function to determine whether a given disease is available for new patients.
---!param self (World) World object.
---!param disease (disease) Disease to test.
---!param hospital (Hospital) Hospital that needs a new patient.
---!return (boolean) Whether the disease is usable for new spawned patients.
+--- Function to determine whether a given disease is available for new patients.
+--- @param self (World) World object.
+--- @param disease (disease) Disease to test.
+--- @param hospital (Hospital) Hospital that needs a new patient.
+--- @return (boolean) Whether the disease is usable for new spawned patients.
 local function isDiseaseUsableForNewPatient(self, disease, hospital)
   if disease.only_emergency then return false end
   local level_config = self.map.level_config
@@ -397,10 +404,11 @@ local function isDiseaseUsableForNewPatient(self, disease, hospital)
   error("disease has neither visuals_id or non_visuals_id")
 end
 
---! Private function to assess the shortest path between all spawn points and desks
---!param staffed_desks (table) All staffed reception desks
---!param spawns (table) All available spawn points
---!return Optimal spawn point to the nearest reception desk or false on failure
+--- Private function to assess the shortest path between all spawn points and desks
+--- @param staffed_desks (table) All staffed reception desks
+--- @param spawns (table) All available spawn points
+--- @return ({x: integer, y:integer, direction: string} | boolean) # Optimal spawn point to the nearest reception desk or false on failure
+--- @private
 function World:_findClosestSpawnToDesk(staffed_desks, spawns)
   local best_spawn_point, distance
   local function testNewSpawnPath(desk, spawn)
@@ -428,17 +436,21 @@ function World:_findClosestSpawnToDesk(staffed_desks, spawns)
   return best_spawn_point
 end
 
---! Spawn a patient from a spawn point for the given hospital.
---!param hospital (Hospital) Hospital that the new patient should visit.
---!return (Patient entity) The spawned patient, or 'nil' if no patient spawned.
-function World:spawnPatient(hospital)
+--- Spawn a patient from a spawn point for the given hospital.
+--- @param opt_hospital (Hospital?) Hospital that the new patient should visit.
+--- @return (Patient | nil) entity The spawned patient, or 'nil' if no patient spawned.
+function World:spawnPatient(opt_hospital)
   local disease = self:getNewPatientDisease()
 
-  if not hospital then
+  local hospital
+  if not opt_hospital then
     hospital = self:chooseHospitalForPatient(disease)
+  else
+    hospital = opt_hospital
   end
 
   -- The level might not contain any diseases
+  local UIInformation = _G["UIInformation"] ---@type UIInformation
   if #self.available_diseases < 1 then
     self.ui:addWindow(UIInformation(self.ui, {"There are no diseases on this level! Please add some to your level."}))
     return
@@ -468,14 +480,15 @@ function World:spawnPatient(hospital)
       spawns[math.random(1, #spawns)]
 
   local patient = self:newEntity("Patient", 2, 1)
+  local SpawnAction = _G["SpawnAction"] ---@type SpawnAction
   patient:setDisease(disease)
   patient:setNextAction(SpawnAction("spawn", spawn_point))
   patient:setHospital(hospital)
   return patient
 end
 
---A VIP is invited (or he invited himself) to the player hospital.
---!param name Name of the VIP
+--- A VIP is invited (or he invited himself) to the player hospital.
+--- @param name (string) Name of the VIP
 function World:spawnVIP(name)
   local hospital = self:getLocalPlayerHospital()
 
@@ -493,6 +506,9 @@ function World:spawnVIP(name)
     vip.room_visit_chance = math.floor(#self.rooms / 40)
   end
 
+  local SpawnAction = _G["SpawnAction"] ---@type SpawnAction
+  local SeekReceptionAction = _G["SeekReceptionAction"] ---@type SeekReceptionAction
+
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   vip:setNextAction(SpawnAction("spawn", spawn_point))
   vip:setHospital(hospital)
@@ -501,8 +517,8 @@ function World:spawnVIP(name)
   vip:queueAction(SeekReceptionAction())
 end
 
---! Enable or disable salary raise events.
---!param mode (boolean) If true, do not create salary raise events.
+--- Enable or disable salary raise events.
+--- @param mode (boolean) If true, do not create salary raise events.
 function World:debugDisableSalaryRaise(mode)
   self.debug_disable_salary_raise = mode
 end
@@ -528,6 +544,8 @@ function World:makeAvailableStaff(month)
       num = cfg_staff_levels[ind][info.conf]
       ind = ind - 1
     end
+
+    local StaffProfile = _G["StaffProfile"] ---@type StaffProfile
     local group = {}
     for i = 1, num do
       group[i] = StaffProfile(self, info.class, _S.staff_class[info.name])
@@ -537,15 +555,15 @@ function World:makeAvailableStaff(month)
   end
 end
 
---[[ Register a callback for when `Humanoid`s enter or leave a given tile.
-! Note that only one callback may be registered to each tile.
-!param x (integer) The 1-based X coordinate of the tile to monitor.
-!param y (integer) The 1-based Y coordinate of the tile to monitor.
-!param object (Object) Something with an `onOccupantChange` method, which will
-be called whenever a `Humanoid` enters or leaves the given tile. The method
-will receive one argument (after `self`), which will be `1` for an enter event
-and `-1` for a leave event.
-]]
+--- Register a callback for when `Humanoid`s enter or leave a given tile.
+--- Note that only one callback may be registered to each tile.
+---
+--- Callback assumes the object has an `onOccupantChange` method that will be
+--- called with `+1` or `-1` whenever a `Humanoid` enters respectively leaves
+--- the given tile.
+--- @param x (integer) The 1-based X coordinate of the tile to monitor.
+--- @param y (integer) The 1-based Y coordinate of the tile to monitor.
+--- @param object (Object) Object that is called.
 function World:notifyObjectOfOccupants(x, y, object)
   local idx = (y - 1) * self.map.width + x
   self.objects_notify_occupants[idx] =  object or nil
@@ -556,8 +574,8 @@ function World:getObjectToNotifyOfOccupants(x, y)
   return self.objects_notify_occupants[idx]
 end
 
---! Place objects from a map file onto the map.
---!param objects Objects to place.
+--- Place objects from a map file onto the map.
+--- @param objects (Object[]) Objects to place.
 function World:createMapObjects(objects)
   self.delayed_map_objects = {}
 
@@ -567,8 +585,9 @@ function World:createMapObjects(objects)
 end
 
 local flag_cache = {}
---! Internal function for placing an object from the map file.
---!param object Object to place.
+--- Internal function for placing an object from the map file.
+--- @param object Object to place.
+--- @private
 function World:_createMapObject(object)
   local x, y, thob, flags = unpack(object)
   local object_id = self.object_id_by_thob[thob]
@@ -596,9 +615,9 @@ function World:_createMapObject(object)
   end
 end
 
---! Change owner of a plot.
---!param parcel (int) Plot to change.
---!param owner (int) New owner (may be 0).
+--- Change owner of a plot.
+--- @param parcel (integer) Plot to change.
+--- @param owner (integer) New owner (may be 0).
 function World:setPlotOwner(parcel, owner)
   self.map:setPlotOwner(parcel, owner)
   if owner ~= 0 and self.delayed_map_objects then
@@ -612,15 +631,14 @@ function World:setPlotOwner(parcel, owner)
   self.map.th:updateShadows()
 end
 
--- Register a function to be called whenever a room has been deactivated (crashed or edited).
---!param callback (function) A function taking one argument: a `Room`.
+--- Register a function to be called whenever a room has been deactivated (crashed or edited).
+--- @param callback (function) A function taking one argument: a `Room`.
 function World:registerRoomRemoveCallback(callback)
   self.room_remove_callbacks[callback] = true
 end
 
--- Unregister a function from being called whenever a room has been deactivated (crashed or edited).
---!param callback (function) A function previously passed to
--- `registerRoomRemoveCallback`.
+--- Unregister a function from being called whenever a room has been deactivated (crashed or edited).
+--- @param callback (function) A function previously passed to `registerRoomRemoveCallback`.
 function World:unregisterRoomRemoveCallback(callback)
   self.room_remove_callbacks[callback] = nil
 end
@@ -629,7 +647,7 @@ function World:newRoom(x, y, w, h, room_info, ...)
   local id = #self.rooms + 1
   -- Note: Room IDs will be unique, but they may not form continuous values
   -- from 1, as IDs of deleted rooms may not be re-issued for a while
-  local class = room_info.class and _G[room_info.class] or Room
+  local class = room_info.class and _G[room_info.class] or _G["Room"] ---@type Room
   local hospital = self:getHospital(x, y)
   local room = class(x, y, w, h, id, room_info, self, hospital, ...)
 
@@ -638,8 +656,8 @@ function World:newRoom(x, y, w, h, room_info, ...)
   return room
 end
 
---! Called when a room has been completely built and is ready to use.
---!param room (Room) The new room.
+--- Called when a room has been completely built and is ready to use.
+--- @param room (Room) The new room.
 function World:markRoomAsBuilt(room)
   room:roomFinished()
   local hosp = room.hospital
@@ -654,7 +672,7 @@ function World:markRoomAsBuilt(room)
   end
 end
 
---! Called when a room has been deactivated (crashed or edited)
+--- Called when a room has been deactivated (crashed or edited)
 function World:notifyRoomRemoved(room)
   self.dispatcher:dropFromQueue(room)
   for callback in pairs(self.room_remove_callbacks) do
@@ -662,7 +680,7 @@ function World:notifyRoomRemoved(room)
   end
 end
 
---! Clear all internal caches which are dependent upon map state / object position
+--- Clear all internal caches which are dependent upon map state / object position
 function World:clearCaches()
   self.idle_cache = {}
 end
@@ -742,13 +760,15 @@ function World:previousSpeed()
   end
 end
 
---! Return true if the given speed the same as the current speed.
+--- Test the given speed.
+--- @param speed (string) The speed to test.
+--- Return (boolean) # True if the given speed the same as the current speed.
 function World:isCurrentSpeed(speed)
   local hours_per_tick, tick_rate = unpack(tick_rates[speed])
   return self.hours_per_tick == hours_per_tick and self.tick_rate == tick_rate
 end
 
---! Return the name of the current speed, relating to a key in tick_rates.
+--- Return the name of the current speed, relating to a key in tick_rates.
 function World:getCurrentSpeed()
   for name, rate in pairs(tick_rates) do
     if rate[1] == self.hours_per_tick and rate[2] == self.tick_rate then
@@ -757,8 +777,8 @@ function World:getCurrentSpeed()
   end
 end
 
---! Set game speed from a user-facing control.
---!param new_speed (string) New speed to set.
+--- Set game speed from a user-facing control.
+--- @param new_speed (string) New speed to set.
 function World:setUserSpeed(new_speed)
   if self:isMustPauseActive() then return end
   -- If player paused, remember it
@@ -766,10 +786,11 @@ function World:setUserSpeed(new_speed)
   return self:setSpeed(new_speed)
 end
 
--- Set the (approximate) number of seconds per tick.
---!param new_speed (string) New speed to set.
--- One of: "Pause", "Slowest", "Slower", "Normal",
--- "Max speed", or "And then some more".
+--- Set the (approximate) number of seconds per tick.
+---
+--- Available speeds are "Pause", "Slowest", "Slower", "Normal",
+--- "Max speed", or "And then some more".
+--- @param new_speed (string) New speed to set.
 function World:setSpeed(new_speed)
   if self:isCurrentSpeed(new_speed) then return end
   if self:isMustPauseActive() and new_speed ~= "Pause" then return end -- "Must pause" takes precedence
@@ -792,7 +813,7 @@ function World:setSpeed(new_speed)
   local new_hours_per_tick, new_tick_rate = unpack(tick_rates[new_speed])
 
   if was_paused then
-    TheApp.audio:onEndPause()
+    self.app.audio:onEndPause()
     self.tick_timer = new_tick_rate
   else
     self.tick_timer = math.ceil((self.tick_timer or 0) / old_tick_rate * new_tick_rate)
@@ -806,21 +827,21 @@ function World:setSpeed(new_speed)
   return false
 end
 
---! Refresh whether the user can interact with the game and presence of the
--- blue filter
+--- Refresh whether the user can interact with the game and presence of the
+--- blue filter
 function World:updateUserInteractionState()
   self:updateUserActionsAllowed()
   self:updateScreenBlueFilter()
 end
 
---! Called when a must pause window comes into existence and pauses the game
+--- Called when a must pause window comes into existence and pauses the game
 function World:mustPauseWindowAdd()
   self:setSpeed("Pause")
   self:updateUserInteractionState()
 end
 
---! Called when a must pause window is closed and will attempt to unpause
---! the game
+--- Called when a must pause window is closed and will attempt to unpause
+--- the game
 function World:mustPauseWindowRemoved()
   if self:isMustPauseActive() then
     return
@@ -833,43 +854,43 @@ function World:mustPauseWindowRemoved()
   self:updateUserInteractionState()
 end
 
---! Check if "Must Pause" mode enabled
---!return (bool) returns true if "Must Pause" mode enabled
+--- Check if "Must Pause" mode enabled
+--- @return (bool) returns true if "Must Pause" mode enabled
 function World:isMustPauseActive()
   return self.ui:anyMustPauseWindowOpen()
 end
 
---! Check if game is currently paused
---!return (boolean) True if paused
+--- Check if game is currently paused
+--- @return (boolean) True if paused
 function World:isPaused()
   return self:isCurrentSpeed("Pause")
 end
 
---! Update state of if game has been paused by user
---!param state (boolean)
+--- Update state of if game has been paused by user
+--- @param state (boolean)
 function World:setUserPaused(state)
   self.user_paused = state
 end
 
---! Check whether user pause state applies
---!return true is we are in a user pause
+--- Check whether user pause state applies
+--- @return true is we are in a user pause
 function World:isGameUserPaused()
   return self.user_paused
 end
 
---! Set the "actions allowed" flag according to whether the user can do some actions with UI or not.
+--- Set the "actions allowed" flag according to whether the user can do some actions with UI or not.
 function World:updateUserActionsAllowed()
   -- Actions are not allowed when the game in "Must Pause" mode.
   self.user_actions_allowed = not self:isMustPauseActive() and
-    (not self:isCurrentSpeed("Pause") or TheApp.config.allow_user_actions_while_paused)
+    (not self:isCurrentSpeed("Pause") or self.app.config.allow_user_actions_while_paused)
 end
 
---! Set the blue filter according to whether the user can build or not.
+--- Set the blue filter according to whether the user can build or not.
 function World:updateScreenBlueFilter()
-  TheApp.video:setBlueFilterActive(not self.user_actions_allowed and not self:isMustPauseActive())
+  self.app.video:setBlueFilterActive(not self.user_actions_allowed and not self:isMustPauseActive())
 end
 
---! Dedicated function to allow unpausing by pressing 'p' again
+--- Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
   if self:isMustPauseActive() then return end -- "Must Pause" takes precedence
   if not self:isCurrentSpeed("Pause") then
@@ -881,8 +902,8 @@ function World:pauseOrUnpause()
   end
 end
 
---! Function to check if player can perform actions when paused
---!return (bool) Returns true if player hasn't allowed editing while paused
+--- Function to check if player can perform actions when paused
+--- @return (boolean) # Returns true if player hasn't allowed editing while paused
 function World:isUserActionProhibited()
   if self:isMustPauseActive() then return true end
   return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
@@ -905,10 +926,11 @@ local outside_temperatures = {
    4.75 / 50, -- December
 }
 
+local Date = _G["Date"] ---@type Date
 local start_date = Date()
 
---! World ticks (every 18ms) are translated to game ticks (or hours) depending
--- on the current speed of the game. There are 50 hours in a TH day.
+--- World ticks (every 18ms) are translated to game ticks (or hours) depending
+--- on the current speed of the game. There are 50 hours in a TH day.
 function World:onTick()
   if self.map.level_number == "MAP EDITOR" then return end
 
@@ -919,6 +941,7 @@ function World:onTick()
     end
     if self.game_date == start_date then
       if not self.ui.start_tutorial then
+        local UIWatch = _G["UIWatch"] ---@type UIWatch
         self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
       end
       self.ui:showBriefing()
@@ -950,6 +973,7 @@ function World:onTick()
         if self.game_date:isLastDayOfYear() then
           -- It is crucial that the annual report gets to initialize before onEndYear is called.
           -- Yearly statistics are reset there.
+          local UIAnnualReport = _G["UIAnnualReport"] ---@type UIAnnualReport
           self.ui:addWindow(UIAnnualReport(self.ui, self))
           self:onEndYear()
         end
@@ -1000,11 +1024,11 @@ function World:onTick()
   self.tick_timer = self.tick_timer - 1
 end
 
---! Creates a save file in the "Autosaves" folder, using the "Autosave-mm-dd.sav" name template for filename.
--- If the "Autosaves" folder does not exist, folder will be created.
+--- Creates a save file in the "Autosaves" folder, using the "Autosave-mm-dd.sav" name template for filename.
+--- If the "Autosaves" folder does not exist, folder will be created.
 function World:_executeAutosave()
   local pathsep = package.config:sub(1, 1)
-  local dir = TheApp.savegame_dir
+  local dir = self.app.savegame_dir
   if dir:sub(-1, -1) ~= pathsep then
     dir = dir .. pathsep
   end
@@ -1014,13 +1038,13 @@ function World:_executeAutosave()
   local month = string.format("%02d", self.game_date:monthOfYear())
   local day = string.format("%02d", self.game_date:dayOfMonth())
   local filename = "Autosave" .. "-" .. month .. "-" .. day .. ".sav"
-  local status, err = pcall(TheApp.save, TheApp, dir .. "Autosaves" .. pathsep .. filename)
+  local status, err = pcall(self.app.save, self.app, dir .. "Autosaves" .. pathsep .. filename)
   if not status then
     print("Error while autosaving game: " .. err)
   end
 end
 
---! Change the date of the game to the last hour of this month.
+--- Change the date of the game to the last hour of this month.
 function World:setEndMonth()
   local previous_date = self.game_date
   local first_day_of_next_month = Date(self.game_date:year(), self.game_date:monthOfYear() + 1)
@@ -1031,7 +1055,7 @@ function World:setEndMonth()
   end
 end
 
---! Change the date of the game to the last hour of this year.
+--- Change the date of the game to the last hour of this year.
 function World:setEndYear()
   local previous_date = self.game_date
   local first_day_of_next_year = Date(self.game_date:year() + 1)
@@ -1042,10 +1066,10 @@ function World:setEndYear()
   end
 end
 
---! Checks if a time jump caused an emergency to be missed
---!param prev_date (Date) Original game date before jump
---!param new_date (Date) Game date after time jump
---!return (boolean) true if emergency has been skipped
+--- Checks if a time jump caused an emergency to be missed
+--- @param prev_date (Date) Original game date before jump
+--- @param new_date (Date) Game date after time jump
+--- @return (boolean) true if emergency has been skipped
 function World:wasEmergencySkipped(prev_date, new_date)
   local emer_date = self.next_emergency_date
   return emer_date and emer_date < new_date and prev_date < emer_date
@@ -1055,6 +1079,7 @@ end
 -- Called immediately prior to the ingame day changing.
 function World:onEndDay()
   local local_hospital = self:getLocalPlayerHospital()
+  local Humanoid = _G["Humanoid"] ---@type Humanoid
   for _, entity in ipairs(self.entities) do
     if entity.ticks and class.is(entity, Humanoid) and not entity.to_destroy then
       self.current_tick_entity = entity
@@ -1083,6 +1108,7 @@ function World:onEndDay()
   if self.game_date:monthOfGame() == self.next_emergency_month and
       self.game_date:dayOfMonth() == self.next_emergency_day then
     -- Postpone it if anything clock related is already underway.
+    local UIWatch = _G["UIWatch"] ---@type UIWatch
     if self.ui:getWindow(UIWatch) then
       self.next_emergency_month = self.next_emergency_month + 1
       local month_of_year = 1 + ((self.next_emergency_month - 1) % 12)
@@ -1149,8 +1175,8 @@ function World:checkIfGameWon()
   end
 end
 
--- Called immediately prior to the ingame month changing.
--- returns true if the game was killed due to the player losing
+--- Called immediately prior to the ingame month changing.
+--- @return boolean # true if the game was killed due to the player losing
 function World:onEndMonth()
   -- Also possibly change world spawn rate according to the level configuration.
   local index = 0
@@ -1177,10 +1203,9 @@ function World:onEndMonth()
   self:_flushDestroyedEntities()
 end
 
--- Called when a month ends. Decides on which dates patients arrive
--- during the coming month.
---!param first_game_month (bool) Is that the very first date distribution at the level
--- TODO: Requires adjustment for AIHospital spawns; see PR 1986 for progress.
+--- Called when a month ends. Decides on which dates patients arrive during the coming month.
+--- @param first_game_month (boolean) Is that the very first date distribution at the level
+--- TODO: Requires adjustment for AIHospital spawns; see PR 1986 for progress.
 function World:_prepareSpawnDates(first_game_month)
   local local_hospital = self:getLocalPlayerHospital()
 
@@ -1240,7 +1265,7 @@ function World:_prepareSpawnHours()
   end
 end
 
--- Called when it is time to determine when the next emergency should happen
+--- Called when it is time to determine when the next emergency should happen
 function World:nextEmergency()
   local control = self.map.level_config.emergency_control
   -- Does this level use random emergencies?
@@ -1275,8 +1300,8 @@ function World:nextEmergency()
   end
 end
 
---! If a level file specifies random emergencies we make the next one as defined by the mean/variance given
---!param control (table) Contains emergency information from level file
+--- If a level file specifies random emergencies we make the next one as defined by the mean/variance given
+--- @param control (table) Contains emergency information from level file
 function World:scheduleRandomEmergency(control)
   -- Support standard values for mean and variance
   local mean = control[0].Mean or 180
@@ -1292,9 +1317,9 @@ function World:scheduleRandomEmergency(control)
   self.next_emergency_date = Date(1, self.next_emergency_month, self.next_emergency_day) -- TODO: Make more use of this
 end
 
---! Generate the dates for the next emergency
---!param emergency The next scheduled emergency to take place
---!return (boolean) true if emergency successfully scheduled
+--- Generate the dates for the next emergency
+--- @param emergency The next scheduled emergency to take place
+--- @return (boolean) true if emergency successfully scheduled
 function World:computeNextEmergencyDates(emergency)
   -- Generate the next month and day the emergency should occur at.
   -- Make sure it doesn't happen in the past.
@@ -1314,13 +1339,14 @@ function World:computeNextEmergencyDates(emergency)
   return self.game_date <= self.next_emergency_date
 end
 
--- Called when it is time to have another VIP
+--- Called when it is time to have another VIP
 function World:nextVip()
   self.next_vip_date = self:_generateNextVipDate()
 end
 
--- PRIVATE method to generate the next VIP date
--- Note: it is important we ensure this date always is in the future
+--- PRIVATE method to generate the next VIP date
+--- Note: it is important we ensure this date always is in the future
+--- @private
 function World:_generateNextVipDate()
   -- Support standard values for mean and bound
   local mean, bound = math.max(self.map.level_config.gbv.MayorLaunch, 1), 30
@@ -1330,8 +1356,8 @@ function World:_generateNextVipDate()
   return self.game_date:plusDays(days)
 end
 
---! Process that the given player number won the game.
---!param player_no (integer) Number of the player who just won.
+--- Process that the given player number won the game.
+--- @param player_no (integer) Number of the player who just won.
 function World:winGame(player_no)
   if player_no == 1 then -- Player won. TODO: Needs to be changed for multiplayer
     local text = {}
@@ -1342,7 +1368,7 @@ function World:winGame(player_no)
     if self:isCampaign() then
       text, choice_text, choice = self:getCampaignWinningText(player_no)
     else
-      local level_info = TheApp:readLevelFile(self.map.level_number)
+      local level_info = self.app:readLevelFile(self.map.level_number)
       text[1] = _S.letter.dear_player:format(self.hospitals[player_no].name)
       text[2] = level_info.end_praise and level_info.end_praise or _S.letter.custom_level_completed
       text[3] = _S.letter.return_to_main_menu
@@ -1374,11 +1400,13 @@ function World:winGame(player_no)
   end
 end
 
---! Finds what text the winning fax should contain, and which choices the player has.
---!param player_no (integer) Which player that will see the message.
---!return (string, string, string) Text to show in the fax, text that accompanies
---!       the "continue"-choice the player has, and whether it is the "return_to_main_menu"
---!       choice or the "accept_new_level" choice.
+--- Finds what text the winning fax should contain, and which choices the player has.
+---
+--- The three returned strings are:
+--- Text to show in the fax, text that accompanies the "continue"-choice the player
+--- has, and whether it is the "return_to_main_menu" choice or the "accept_new_level" choice.
+--- @param player_no (integer) Which player that will see the message.
+--- @return string, string, string # The texts.
 function World:getCampaignWinningText(player_no)
   local text = {}
   local choice_text, choice
@@ -1387,7 +1415,7 @@ function World:getCampaignWinningText(player_no)
   local has_next = false
   if type(self.map.level_number) == "number" then
     local no = tonumber(self.map.level_number)
-    has_next = no < 12 and not TheApp.using_demo_files
+    has_next = no < 12 and not self.app.using_demo_files
     -- Standard letters 1-4:  normal
     -- Standard letters 5-8:  repeated offer
     -- Standard letters 9-12: last level
@@ -1407,7 +1435,7 @@ function World:getCampaignWinningText(player_no)
         if filename == level then
           has_next = i < #campaign_info.levels
           if has_next then
-            next_level_info = TheApp:readLevelFile(campaign_info.levels[i + 1], campaign_info.folder)
+            next_level_info = self.app:readLevelFile(campaign_info.levels[i + 1], campaign_info.folder)
             if not next_level_info then
               return {_S.letter.campaign_level_missing:format(campaign_info.levels[i + 1]), "", ""},
                      _S.fax.choices.return_to_main_menu,
@@ -1419,7 +1447,7 @@ function World:getCampaignWinningText(player_no)
         end
       end
     end
-    local level_info = TheApp:readLevelFile(self.map.level_filename or self.map.level_number,
+    local level_info = self.app:readLevelFile(self.map.level_filename or self.map.level_number,
         campaign_info.folder)
     text[1] = _S.letter.dear_player:format(self.hospitals[player_no].name)
     if has_next then
@@ -1443,10 +1471,10 @@ function World:getCampaignWinningText(player_no)
   return text, choice_text, choice
 end
 
---! Cause the player with the player number player_no to lose.
---!param player_no (number) The number of the player which should lose.
---!param reason (string) [optional] The name of the criterion the player lost to.
---!param limit (number) [optional] The number the player went over/under which caused him to lose.
+--- Cause the player with the player number player_no to lose.
+--- @param player_no (number) The number of the player which should lose.
+--- @param reason (string) [optional] The name of the criterion the player lost to.
+--- @param limit (number) [optional] The number the player went over/under which caused him to lose.
 function World:loseGame(player_no, reason, limit)
   if player_no == 1 then -- TODO: Multiplayer
     self.ui.app.moviePlayer:playLoseMovie()
@@ -1461,7 +1489,7 @@ function World:loseGame(player_no, reason, limit)
   end
 end
 
--- Called immediately prior to the ingame year changing.
+--- Called immediately prior to the ingame year changing.
 function World:onEndYear()
   for _, hospital in ipairs(self.hospitals) do
     hospital:onEndYear()
@@ -1480,15 +1508,14 @@ function World:onEndYear()
   end
 end
 
--- Calculate the distance of the shortest path (along passable tiles) between
--- the two given map tiles. This operation is commutative (swapping (x1, y1)
--- with (x2, y2) has no effect on the result) if both tiles are passable.
---!param x1 (integer) X-cordinate of first tile's Lua tile coordinates.
---!param y1 (integer) Y-cordinate of first tile's Lua tile coordinates.
---!param x2 (integer) X-cordinate of second tile's Lua tile coordinates.
---!param y2 (integer) Y-cordinate of second tile's Lua tile coordinates.
---!return (integer, boolean) The distance of the shortest path, or false if
--- there is no path.
+--- Calculate the distance of the shortest path (along passable tiles) between
+--- the two given map tiles. This operation is commutative (swapping (x1, y1)
+--- with (x2, y2) has no effect on the result) if both tiles are passable.
+--- @param x1 (integer) X-cordinate of first tile's Lua tile coordinates.
+--- @param y1 (integer) Y-cordinate of first tile's Lua tile coordinates.
+--- @param x2 (integer) X-cordinate of second tile's Lua tile coordinates.
+--- @param y2 (integer) Y-cordinate of second tile's Lua tile coordinates.
+--- @return integer, boolean # The distance of the shortest path, or false if there is no path.
 function World:getPathDistance(x1, y1, x2, y2)
   return self.pathfinder:findDistance(x1, y1, x2, y2)
 end
@@ -1497,12 +1524,12 @@ function World:getPath(x, y, dest_x, dest_y)
   return self.pathfinder:findPath(x, y, dest_x, dest_y)
 end
 
--- Find an tile for idling.
--- !param x X coordinate of the queue position.
--- !param y Y coordinate of the queue position.
--- !param idx Randomization factor for the idle tile, returns Nth candidate tile.
--- !param parcel_id Optional parcel of the indoor returned idling tile.
--- !return Position of an idle tile if it exists.
+--- Find an tile for idling.
+--- @param x X coordinate of the queue position.
+--- @param y Y coordinate of the queue position.
+--- @param idx (integer) Randomization factor for the idle tile, returns Nth candidate tile.
+--- @param parcel_id (integer?) Optional parcel of the indoor returned idling tile.
+--- @return {x: integer, y: integer} # Position of an idle tile if it exists.
 function World:getIdleTile(x, y, idx, parcel_id)
   local cache_idx = (y - 1) * self.map.width + x
   local cache = self.idle_cache[cache_idx]
@@ -1524,14 +1551,12 @@ function World:getIdleTile(x, y, idx, parcel_id)
   return cache.x[idx], cache.y[idx]
 end
 
---[[
-This function checks if a tile has no entity on it and (optionally) if it is not
-in a room.
-!param x (integer) the queried tile's x coordinate.
-!param y (integer) the queried tile's y coordinate.
-!param not_in_room (boolean) If set, also check the tile is not in a room.
-!return (boolean) whether all checks hold.
---]]
+--- This function checks if a tile has no entity on it and (optionally) if it is not
+--- in a room.
+--- @param x (integer) the queried tile's x coordinate.
+--- @param y (integer) the queried tile's y coordinate.
+--- @param not_in_room (boolean) If set, also check the tile is not in a room.
+--- @return (boolean) # Whether all checks hold.
 function World:isTileEmpty(x, y, not_in_room)
   if self:atLeastOneHumanoidLocatedAtTile(x, y) or
     self:atLeastOneObjectLocatedAtTile(x, y) then
@@ -1543,26 +1568,26 @@ function World:isTileEmpty(x, y, not_in_room)
   return true
 end
 
---! Checks if any object is located on a tile.
---!param x (integer) the queried tile's x coordinate.
---!param y (integer) the queried tile's y coordinate.
---!return (boolean) true if any object is located on a tile.
+--- Checks if any object is located on a tile.
+--- @param x (integer) the queried tile's x coordinate.
+--- @param y (integer) the queried tile's y coordinate.
+--- @return (boolean) true if any object is located on a tile.
 function World:atLeastOneObjectLocatedAtTile(x, y)
   return #self.entity_map:getObjectsAtCoordinate(x, y) ~= 0
 end
 
---! Checks if any humanoid is located on a tile.
---!param x (integer) the queried tile's x coordinate.
---!param y (integer) the queried tile's y coordinate.
---!return (boolean) true if any humanoid is located on a tile.
+--- Checks if any humanoid is located on a tile.
+--- @param x (integer) the queried tile's x coordinate.
+--- @param y (integer) the queried tile's y coordinate.
+--- @return (boolean) true if any humanoid is located on a tile.
 function World:atLeastOneHumanoidLocatedAtTile(x, y)
   return #self.entity_map:getHumanoidsAtCoordinate(x, y) ~= 0
 end
 
---! Сhecks whether a tile is occupied by any humanoid.
---!param x (integer) the queried tile's x coordinate.
---!param y (integer) the queried tile's y coordinate.
---!return (boolean) true if any humanoid is occupy the tile.
+--- Сhecks whether a tile is occupied by any humanoid.
+--- @param x (integer) the queried tile's x coordinate.
+--- @param y (integer) the queried tile's y coordinate.
+--- @return (boolean) true if any humanoid is occupy the tile.
 function World:anyHumanoidObscuringArea(x, y)
   -- Search for humanoids on the given tile and all neighboring tiles, but not diagonal ones
   local humanoids = self.entity_map:getHumanoidsInSquareAndInAdjacentSquares(x, y)
@@ -1594,12 +1619,12 @@ function World:getFreeBench(x, y, distance)
   return bench, rx, ry, bench_distance
 end
 
---! Checks whether the given tile is part of a nearby object (walkable tiles
---  count as part of the object)
---!param x X position of the given tile.
---!param y Y position of the given tile.
---!param distance The number of tiles away from the tile to search.
---!return (boolean) Whether the tile is part of a nearby object.
+--- Checks whether the given tile is part of a nearby object (walkable tiles
+---  count as part of the object)
+--- @param x (integer) X position of the given tile.
+--- @param y (integer) Y position of the given tile.
+--- @param distance (integer) The number of tiles away from the tile to search.
+--- @return (boolean) # Whether the tile is part of a nearby object.
 function World:isTilePartOfNearbyObject(x, y, distance)
   for o in pairs(self:findAllObjectsNear(x, y, distance)) do
     for _, xy in ipairs(o:getWalkableTiles()) do
@@ -1611,11 +1636,12 @@ function World:isTilePartOfNearbyObject(x, y, distance)
   return false
 end
 
--- Returns a set of all objects near the given position but if supplied only of the given object type.
---!param x The x-coordinate at which to originate the search
---!param y The y-coordinate
---!param distance The number of tiles away from the origin to search
---!param object_type_name The name of the objects that are being searched for
+--- Returns a set of all objects near the given position but if supplied only of the given object type.
+--- @param x (integer) The x-coordinate at which to originate the search
+--- @param y (integer) The y-coordinate
+--- @param distance (integer) The number of tiles away from the origin to search
+--- @param object_type_name (string) The name of the objects that are being searched for
+--- @return Object[] # The found objects.
 function World:findAllObjectsNear(x, y, distance, object_type_name)
   if not distance then
     -- Note that regardless of distance, only the room which the humanoid is in
@@ -1642,23 +1668,19 @@ function World:findAllObjectsNear(x, y, distance, object_type_name)
   return objects
 end
 
---[[ Find all objects of the given type near the humanoid.
-Note that regardless of distance, only the room which the humanoid is in
-is searched (or the corridor if the humanoid is not in a room).
-
-When no callback is specified then the first object found is returned,
-along with its usage tile position. This may return an object already being
-used - if you want to find an object not in use (in order to use it),
-then call findFreeObjectNearToUse instead.
-
-!param humanoid The humanoid to search around
-!param object_type_name The objects to search for
-!param distance Maximum L1 distance to search from humanoid. If nil then
-       everywhere in range will be searched.
-!param only_usable Bool If true the object must be permitted for use
-!param callback Function to call for each result. If it returns true then
-       the search will be ended.
---]]
+--- Find all objects of the given type near the humanoid.
+--- Note that regardless of distance, only the room which the humanoid is in
+--- is searched (or the corridor if the humanoid is not in a room).
+---
+--- When no callback is specified then the first object found is returned,
+--- along with its usage tile position. This may return an object already being
+--- used - if you want to find an object not in use (in order to use it),
+--- then call findFreeObjectNearToUse instead.
+--- @param humanoid (Humanoid) The humanoid to search around
+--- @param object_type_name (string) The objects to search for
+--- @param distance (integer) Maximum L1 distance to search from humanoid. If nil then everywhere in range will be searched.
+--- @param only_usable (boolean) If true the object must be permitted for use
+--- @param callback (function) Function to call for each result. If it returns true then the search will be ended.
 function World:findObjectNear(humanoid, object_type_name, distance, only_usable, callback)
   if not distance then
     distance = 2^30
@@ -1707,12 +1729,18 @@ function World:findObjectNear(humanoid, object_type_name, distance, only_usable,
   return obj, ox, oy
 end
 
+--- Find a free near object to use.
+---
+--- The `which` parameter can be
+--- * `"near"`, then the nearest object is taken with 50% probability,
+---   the second nearest with 25%, and so on.
+--- * `"far"`, then the furthest object is taken.
+--- * `nil` or `false`, which act the same as `"near"`.
+--- @param humanoid (Humanoid) The humanoid to search around
+--- @param object_type_name (string) The name of the objects to search for
+--- @param which (string|nil|boolean) What to search for.
+--- @param current_object (Object?) Object to ignore in the search.
 function World:findFreeObjectNearToUse(humanoid, object_type_name, which, current_object)
-  -- If which == nil or false, then the nearest object is taken.
-  -- If which == "far", then the furthest object is taken.
-  -- If which == "near", then the nearest object is taken with 50% probability, the second nearest with 25%, and so on
-  -- Other values for which may be added in the future.
-  -- Specify current_object if you want to exclude the currently used object from the search
   local object, ox, oy
   self:findObjectNear(humanoid, object_type_name, nil, true, function(x, y, d)
     local obj = self:getObject(x, y, object_type_name)
@@ -1749,13 +1777,16 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
   return object, ox, oy
 end
 
---! Finds the most desirable room of a given room type for the provided humanoid.
---!param humanoid The queried NPC (start point)
---!param room_type_id (string) The room we are looking for
---!param max_distance (number) The maximum distance away a room will be considered from the humanoid
---!param mode (string) "nearest"/nil returns the nearest room, while
---! "advanced" prefers a near room but also takes into account queue size/staffing
---!return The best room for the huamnoid or nil if no room exists within the maximum distance
+--- Finds the most desirable room of a given room type for the provided humanoid.
+---
+--- The `mode` parameter can be:
+--- * `"nearest"` or `nil` to return the nearest room, or
+--- * `"advanced"` that prefers a near room but also takes into account queue size/staffing
+--- @param humanoid (Humanoid) The queried NPC (start point)
+--- @param room_type_id (string) The room we are looking for
+--- @param max_distance (number) The maximum distance away a room will be considered from the humanoid
+--- @param mode (string) How to select a room.
+--- @return (Room|nil) # The best room for the huamnoid or nil if no room exists within the maximum distance
 function World:findRoomNear(humanoid, room_type_id, max_distance, mode)
   assert(type(room_type_id) == "string", "Room type id given is not a string!")
   local room
@@ -1789,10 +1820,10 @@ function World:findRoomNear(humanoid, room_type_id, max_distance, mode)
   return room
 end
 
---! Setup an animated floating money amount above a patient.
---!param patient Patient to float above.
---!param amount Amount of money to display.
---!param insurance (boolean) Whether the money was paid by an insurance company.
+--- Setup an animated floating money amount above a patient.
+--- @param patient (Patient) Patient to float above.
+--- @param amount (integer) Amount of money to display.
+--- @param insurance (boolean) Whether the money was paid by an insurance company.
 function World:newFloatingDollarSign(patient, amount, insurance)
   if self.free_build_mode or patient.hospital ~= self:getLocalPlayerHospital() then
     return
@@ -1803,7 +1834,7 @@ function World:newFloatingDollarSign(patient, amount, insurance)
   local spritelist = TH.spriteList()
   spritelist:setPosition(-17, -60)
   spritelist:setSpeed(0, -1):setLifetime(100)
-  spritelist:setSheet(TheApp.gfx:getFloatingBanknoteSpriteTable(insurance))
+  spritelist:setSheet(self.app.gfx:getFloatingBanknoteSpriteTable(insurance))
   spritelist:setUseIntermediateBuffer()
   spritelist:append(1, 0, 0)
   local len = #("%i"):format(amount)
@@ -1819,10 +1850,10 @@ function World:newFloatingDollarSign(patient, amount, insurance)
   self.floating_dollars[spritelist] = true
 end
 
---! Create a new entity.
---!param class Class to use for the new entity.
---!param animation (int)Initial animation to use.
---!param mood_marker (int) Whether to use the first (default), or the second marker.
+--- Create a new entity.
+--- @param class (Entity) Class to use for the new entity.
+--- @param animation (integer)Initial animation to use.
+--- @param mood_marker (integer) Whether to use the first (default), or the second marker.
 function World:newEntity(class, animation, mood_marker)
   mood_marker = mood_marker and mood_marker or 1
   assert(mood_marker == 1 or mood_marker == 2, "mood_marker is neither 1 nor 2.")
@@ -1861,9 +1892,9 @@ function World:destroyEntity(entity)
   end
 end
 
---! Remove entities that were queued for destruction from self.entities.
---! Entities are queued by World:destroyEntity while iterating over
---! self.entities, so this must only be called once that iteration finished.
+--- Remove entities that were queued for destruction from self.entities.
+--- Entities are queued by World:destroyEntity while iterating over
+--- self.entities, so this must only be called once that iteration finished.
 function World:_flushDestroyedEntities()
   local queue = self.entities_to_destroy
   if #queue == 0 then
@@ -1884,14 +1915,14 @@ function World:newObjectType(new_object)
   self.object_types[new_object.id] = new_object
 end
 
---! Creates a new object by finding the object_type from the "id" variable and
---  calls its class constructor.
---!param id (string) The unique id of the object to be created.
---!param x X position of the new object.
---!param y Y position of the new object.
---!param flags Flags of the new object.
---!param name Name of the new object.
---!return The created object.
+--- Creates a new object by finding the object_type from the "id" variable and
+--- calls its class constructor.
+--- @param id (string) The unique id of the object to be created.
+--- @param x (integer) X position of the new object.
+--- @param y (integer) Y position of the new object.
+--- @param flags Flags of the new object.
+--- @param name (string) Name of the new object.
+--- @return (Object) # The created object.
 function World:newObject(id, x, y, flags, name)
   local object_type = self.object_types[id]
   local hospital = self:getLocalPlayerHospital()
@@ -1900,21 +1931,23 @@ function World:newObject(id, x, y, flags, name)
   if object_type.class then
     entity = _G[object_type.class](hospital, object_type, x, y, flags, name)
   elseif object_type.default_strength then
+    local Machine = _G["Machine"] ---@type Machine
     entity = Machine(hospital, object_type, x, y, flags, name)
     -- Tell the player if there is no handyman to take care of the new machinery.
     if hospital:countStaffOfCategory("Handyman", 1) == 0 then
       hospital:giveAdvice({_A.staff_advice.need_handyman_machines})
     end
   else
+    local Object = _G["Object"] ---@type Object
     entity = Object(hospital, object_type, x, y, flags, name)
   end
   self:objectPlaced(entity, id)
   return entity
 end
 
--- Checks whether object can be spawned at some coordinates.
--- For example, when searching for a suitable placement for "gates_to_hell".
--- 'NonSideObject' is a object that do occupy the tile entirely, not only one side of it.
+--- Checks whether object can be spawned at some coordinates.
+--- For example, when searching for a suitable placement for "gates_to_hell".
+--- 'NonSideObject' is a object that do occupy the tile entirely, not only one side of it.
 function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_rooms_id, player_id)
   local object = self.object_types[objects_id]
   local objects_footprint = object.orientations[orientation].footprint
@@ -1936,33 +1969,32 @@ function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_
   return not self:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, orientation, spawn_rooms_id)
 end
 
---! Test whether the given coordinate is on the map.
---!param x (int) X position of the coordinate to test.
---!param y (int) Y position of the coordinate to test.
---!return (boolean) Whether the provided position is on the map.
+--- Test whether the given coordinate is on the map.
+--- @param x (integer) X position of the coordinate to test.
+--- @param y (integer) Y position of the coordinate to test.
+--- @return (boolean) # Whether the provided position is on the map.
 function World:isOnMap(x, y)
   return x >= 1 and x <= self.map.width and y >= 1 and y <= self.map.height
 end
 
 ---
--- @param allowed_rooms_id_parameter Should be nil when the object is allowed to be placed in any room.
--- @return {within_room, roomId}
----
-function World:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, object, allowed_rooms_id_parameter)
+--- @param allowed_room (string?) Should be nil when the object is allowed to be placed in any room.
+--- @return {within_room: boolean, roomId: integer}
+function World:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, object, allowed_room)
   local xy_rooms_id = self.map.th:getCellFlags(x, y, {}).roomId
 
-  if allowed_rooms_id_parameter then
-    return {within_room = allowed_rooms_id_parameter == xy_rooms_id, roomId = allowed_rooms_id_parameter}
+  if allowed_room then
+    return {within_room = allowed_room == xy_rooms_id, roomId = allowed_room}
   elseif xy_rooms_id == 0 then
     return {within_room = object.corridor_object ~= nil, roomId = xy_rooms_id}
   else
     for _, additional_objects_name in pairs(self.rooms[xy_rooms_id].room_info.objects_additional) do
-      if TheApp.objects[additional_objects_name].thob == object.thob then
+      if self.app.objects[additional_objects_name].thob == object.thob then
         return {within_room = true, roomId = xy_rooms_id}
       end
     end
     for needed_objects_name, _ in pairs(self.rooms[xy_rooms_id].room_info.objects_needed) do
-      if TheApp.objects[needed_objects_name].thob == object.thob then
+      if self.app.objects[needed_objects_name].thob == object.thob then
         return {within_room = true, roomId = xy_rooms_id}
       end
     end
@@ -1970,11 +2002,9 @@ function World:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, o
   end
 end
 
----
--- A footprint tile will either need to be buildable or passable so this function
--- checks if its buildable/passable using the tile's appropriate flag and then returns this
--- flag's boolean value or false if the tile isn't valid.
----
+--- A footprint tile will either need to be buildable or passable so this function
+--- checks if its buildable/passable using the tile's appropriate flag and then returns this
+--- flag's boolean value or false if the tile isn't valid.
 function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, requirement_flag, player_id)
   local function isTileValid(xpos, ypos, complete_cell, flags, flag_name, need_side)
     if complete_cell or need_side then
@@ -2012,17 +2042,17 @@ function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, require
   end
 end
 
---! Check that pathfinding still works, i.e. that placing the object
---! wouldn't disconnect one part of the hospital from another. To do
---! this, we provisionally mark the footprint as unpassable (as it will
---! become when the object is placed), and then check that the cells
---! surrounding the footprint have not had their connectedness changed.
---!param x (integer) target tile x coordinate.
---!param y (integer) target tile y coordinate.
---!param object (object) target object for placing.
---!param objects_orientation (table) object orientations description with footprints.
---!param room_id (integer) target room for placing the object.
---!return (bool) will this placement break path finding.
+--- Check that pathfinding still works, i.e. that placing the object
+--- wouldn't disconnect one part of the hospital from another. To do
+--- this, we provisionally mark the footprint as unpassable (as it will
+--- become when the object is placed), and then check that the cells
+--- surrounding the footprint have not had their connectedness changed.
+--- @param x (integer) target tile x coordinate.
+--- @param y (integer) target tile y coordinate.
+--- @param object (Object) target object for placing.
+--- @param objects_orientation (table) object orientations description with footprints.
+--- @param room_id (integer) target room for placing the object.
+--- @return (boolean) # Will this placement break path finding.
 function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objects_orientation, room_id)
   local objects_footprint = object.orientations[objects_orientation].footprint
   local map = self.map.th
@@ -2092,16 +2122,16 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
   return not pathfinding_success
 end
 
---! Check that pathfinding between object and room door still works,
---! i.e. that placing the object wouldn't disconnect it from the world.
---! For that it mark the footprint as unpassable (as it will
---! become when the object is placed), and then check that the
---! "use_position" cells have path to the room door.
---!param object_x (integer) target tile x coordinate.
---!param object_y (integer) target tile y coordinate.
---!param room (object) target room for placing the object.
---!param object_layout (table) object orientation description with footprint.
---!return (bool) will this placement break path finding.
+--- Check that pathfinding between object and room door still works,
+--- i.e. that placing the object wouldn't disconnect it from the world.
+--- For that it mark the footprint as unpassable (as it will
+--- become when the object is placed), and then check that the
+--- "use_position" cells have path to the room door.
+--- @param object_x (integer) target tile x coordinate.
+--- @param object_y (integer) target tile y coordinate.
+--- @param room (Room) target room for placing the object.
+--- @param object_layout (table) object orientation description with footprint.
+--- @return (boolean) will this placement break path finding.
 function World:wouldNonSideObjectsNotHaveAccessToRoomDoor(object_x, object_y, room, object_layout)
   if not room.door or not room.door.tile_x or not room.door.tile_y then return true end
 
@@ -2163,21 +2193,21 @@ function World:wouldNonSideObjectsNotHaveAccessToRoomDoor(object_x, object_y, ro
   return not pathfinding_success
 end
 
---! Check that pathfinding between already placed in the room objects
---! and room door still works. i.e. that placing the target object
---! wouldn't disconnect the existing objects from the world.
---! For 'NonSideObject' it mark the footprint as unpassable
---! (as it will become when the object is placed).
---! For 'SideObject' this function expects that mark the footprint
---! as unpassable will be executed outside of this function.
---! And then this function check that the "use_position" cells
---! of existing objects have path to the room door.
---!param object_x (integer) target tile x coordinate.
---!param object_y (integer) target tile y coordinate.
---!param room (object) target room for placing the object.
---!param object_layout (table) object orientation description with footprint.
---!param is_side_object (bool) is that object is side object.
---!return (bool) will this placement break path finding.
+--- Check that pathfinding between already placed in the room objects
+--- and room door still works. i.e. that placing the target object
+--- wouldn't disconnect the existing objects from the world.
+--- For 'NonSideObject' it mark the footprint as unpassable
+--- (as it will become when the object is placed).
+--- For 'SideObject' this function expects that mark the footprint
+--- as unpassable will be executed outside of this function.
+--- And then this function check that the "use_position" cells
+--- of existing objects have path to the room door.
+--- @param object_x (integer) target tile x coordinate.
+--- @param object_y (integer) target tile y coordinate.
+--- @param room (Room) target room for placing the object.
+--- @param object_layout (table) object orientation description with footprint.
+--- @param is_side_object (boolean) is that object is side object.
+--- @return (boolean) # will this placement break path finding.
 function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y, room, object_layout, is_side_object)
   if not room.door or not room.door.tile_x or not room.door.tile_y then return true end
 
@@ -2249,10 +2279,10 @@ function World:wouldObjectBreakRoomObjectsAccessToTheRoomDoor(object_x, object_y
   return not pathfinding_success
 end
 
---! Notifies the world that an object has been placed, notifying
---  interested entities in the vicinity of the new arrival.
---!param entity (Entity) The entity that was just placed.
---!param id (optional string) That entity's id.
+--- Notifies the world that an object has been placed, notifying
+--- interested entities in the vicinity of the new arrival.
+--- @param entity (Entity) The entity that was just placed.
+--- @param id (string?) That entity's id.
 function World:objectPlaced(entity, id)
   -- If id is not supplied, we can use the entities internal id if it exists
   -- This is so the bench check below works
@@ -2271,11 +2301,11 @@ function World:objectPlaced(entity, id)
   if hosp then hosp:objectPlaced(entity, id) end
 end
 
---! Notify the world of an object being removed from a tile
---! See also `World:addObjectToTile`
---!param object (Object) The object being removed.
---!param x (integer) The X-coordinate of the tile which the object was on
---!param y (integer) The Y-coordinate of the tile which the object was on
+--- Notify the world of an object being removed from a tile
+--- See also `World:addObjectToTile`
+--- @param object (Object) The object being removed.
+--- @param x (integer) The X-coordinate of the tile which the object was on
+--- @param y (integer) The Y-coordinate of the tile which the object was on
 function World:removeObjectFromTile(object, x, y)
   local index = (y - 1) * self.map.width + x
   local objects = self.objects[index]
@@ -2283,7 +2313,7 @@ function World:removeObjectFromTile(object, x, y)
   if objects then
     for k, v in ipairs(objects) do
       if v == object then
-        table_remove(objects, k)
+        table.remove(objects, k)
         self.map.th:removeObjectType(x, y, thob)
         object.hospital:removeTileObject(object.object_type.count_category)
         return true
@@ -2293,11 +2323,11 @@ function World:removeObjectFromTile(object, x, y)
   return false
 end
 
---! Notify the world of a new object being placed somewhere in the world
---! See also `World:removeObjectFromTile`
---!param object (Object) The object being placed
---!param x (integer) The X-coordinate of the tile being placed upon
---!param y (integer) The Y-coordinate of the tile being placed upon
+--- Notify the world of a new object being placed somewhere in the world
+--- See also `World:removeObjectFromTile`
+--- @param object (Object) The object being placed
+--- @param x (integer) The X-coordinate of the tile being placed upon
+--- @param y (integer) The Y-coordinate of the tile being placed upon
 function World:addObjectToTile(object, x, y)
   local index = (y - 1) * self.map.width + x
   local objects = self.objects[index]
@@ -2313,21 +2343,21 @@ function World:addObjectToTile(object, x, y)
   return true
 end
 
---! Retrieve all objects from a given position.
---!param x (int) X position of the object to retrieve.
---!param y (int) Y position of the object to retrieve.
+--- Retrieve all objects from a given position.
+--- @param x (integer) X position of the object to retrieve.
+--- @param y (integer) Y position of the object to retrieve.
 function World:getObjects(x, y)
   local index = (y - 1) * self.map.width + x
   return self.objects[index]
 end
 
---! Retrieve one object from a given position.
---!param x (int) X position of the object to retrieve.
---!param y (int) Y position of the object to retrieve.
---!param id Id to search, nil gets first object, string gets first object with
---!param only_usable (bool) If true the object must be permitted for use
---! that id, set of strings gets first object that matches an entry in the set.
---!return (Object or nil) The found object, or nil if the object is not found.
+--- Retrieve one object from a given position.
+--- @param x (integer) X position of the object to retrieve.
+--- @param y (integer) Y position of the object to retrieve.
+--- @param id (string?) Id to search, nil gets first object, string gets first object with
+--- @param only_usable (boolean) If true the object must be permitted for use
+--- that id, set of strings gets first object that matches an entry in the set.
+--- @return (Object?) #The found object, or nil if the object is not found.
 function World:getObject(x, y, id, only_usable)
   local objects = self:getObjects(x, y)
   if objects then
@@ -2352,9 +2382,9 @@ function World:getObject(x, y, id, only_usable)
   return -- nil
 end
 
---! Remove all cleanable litter from a given tile.
---!param x (int) X position of the tile to clean.
---!param y (int) Y position of the tile to clean.
+--- Remove all cleanable litter from a given tile.
+--- @param x (integer) X position of the tile to clean.
+--- @param y (integer) Y position of the tile to clean.
 function World:removeAllLitter(x, y)
   local litters = {}
   local objects = self:getObjects(x, y)
@@ -2368,15 +2398,15 @@ function World:removeAllLitter(x, y)
   for _, litter in ipairs(litters) do litter:remove() end
 end
 
---! Create a piece of litter on a tile, respecting the rank of any litter
---! already on that tile.
---!
---!param litter_type (string or int) Type passed on to Litter:setLitterType.
---!param x (int) X position of the tile.
---!param y (int) Y position of the tile.
---!param mirror (int) Mirror flag passed on to Litter:setLitterType.
---!return (Litter or nil) The new litter, or nil if it was outclassed.
+--- Create a piece of litter on a tile, respecting the rank of any litter
+--- already on that tile.
+--- @param litter_type (string | integer) Type passed on to Litter:setLitterType.
+--- @param x (integer) X position of the tile.
+--- @param y (integer) Y position of the tile.
+--- @param mirror (integer) Mirror flag passed on to Litter:setLitterType.
+--- @return (Litter?) # The new litter, or nil if it was outclassed.
 function World:newLitter(litter_type, x, y, mirror)
+  local Litter = _G["Litter"] ---@type Litter
   local displaced, outclassed = Litter.resolveTileRank(self:getObjects(x, y), litter_type)
   if outclassed then return end
   if displaced then displaced:remove() end
@@ -2386,10 +2416,10 @@ function World:newLitter(litter_type, x, y, mirror)
   return litter
 end
 
---! Prepare all tiles of the footprint for build of an object.
---!param object_footprint Footprint of the object being build.
---!param x (int) X position of the object
---!param y (int) Y position of the object
+--- Prepare all tiles of the footprint for build of an object.
+--- @param object_footprint (table) Footprint of the object being build.
+--- @param x (integer) X position of the object
+--- @param y (integer) Y position of the object
 function World:prepareFootprintTilesForBuild(object_footprint, x, y)
   local hospital = self:getLocalPlayerHospital()
 
@@ -2401,11 +2431,11 @@ function World:prepareFootprintTilesForBuild(object_footprint, x, y)
   end
 end
 
---! Prepare all tiles in the given rectangle for building a room.
---!param x (int) Start x position of the area.
---!param y (int) Start y position of the area.
---!param w (int) Number of tiles in x direction.
---!param h (int) Number of tiles in y direction.
+--- Prepare all tiles in the given rectangle for building a room.
+--- @param x (integer) Start x position of the area.
+--- @param y (integer) Start y position of the area.
+--- @param w (integer) Number of tiles in x direction.
+--- @param h (integer) Number of tiles in y direction.
 function World:prepareRectangleTilesForBuild(x, y, w, h)
   local hospital = self:getLocalPlayerHospital()
 
@@ -2419,18 +2449,18 @@ function World:prepareRectangleTilesForBuild(x, y, w, h)
   end
 end
 
---! Get the room at a given tile location.
---!param x (int) X position of the queried tile.
---!param y (int) Y position of the queried tile.
---!return (Room) Room of the tile, or 'nil'.
+--- Get the room at a given tile location.
+--- @param x (integer) X position of the queried tile.
+--- @param y (integer) Y position of the queried tile.
+--- @return (Room) Room of the tile, or 'nil'.
 function World:getRoom(x, y)
   return self.rooms[self.map:getRoomId(x, y)]
 end
 
---! Get the hospital at a given tile location.
---!param x (int) X position of the queried tile.
---!param y (int) Y position of the queried tile.
---!return (Hospital) Hospital at the given location or 'nil'.
+--- Get the hospital at a given tile location.
+--- @param x (integer) X position of the queried tile.
+--- @param y (integer) Y position of the queried tile.
+--- @return (Hospital) Hospital at the given location or 'nil'.
 function World:getHospital(x, y)
   local th = self.map.th
 
@@ -2439,11 +2469,11 @@ function World:getHospital(x, y)
   return self.hospitals[flags.owner]
 end
 
---! Returns localized name of the room, internal required staff name
--- and localized name of staff required.
+--- Returns localized name of the room, internal required staff name
+--- and localized name of staff required.
 function World:getRoomNameAndRequiredStaffName(room_id)
   local room_name, required_staff
-  for _, room in ipairs(TheApp.rooms) do
+  for _, room in ipairs(self.app.rooms) do
     if room.id == room_id then
       room_name = room.long_name
       required_staff = room.required_staff
@@ -2454,15 +2484,17 @@ function World:getRoomNameAndRequiredStaffName(room_id)
   for key, _ in pairs(required_staff) do
     staff_name = key -- This is the "programmatic" name of the staff.
   end
+  local StaffProfile = _G["StaffProfile"] ---@type StaffProfile
   return room_name, staff_name, StaffProfile.translateStaffClass(staff_name)
 end
 
---! Gets a list of all the machines in the player's hospital.
+--- Gets a list of all the machines in the player's hospital.
 function World:getPlayerMachines()
   local world = self
   local hosp = world:getLocalPlayerHospital()
   local playerMachines = {}
 
+  local Machine = _G["Machine"] ---@type Machine
   for _, entity in ipairs(world.entities) do
     -- is entity a machine and not a slave (e.g. operating_table_b)
     if class.is(entity, Machine) and not entity.master then
@@ -2475,23 +2507,23 @@ function World:getPlayerMachines()
   return playerMachines
 end
 
---! Append a message to the game log.
---!param message (string) The message to add.
+--- Append a message to the game log.
+--- @param message (string) The message to add.
 function World:gameLog(message)
   self.game_log[#self.game_log + 1] = message
   -- If in debug mode also show it in the command prompt
-  if TheApp.config.debug then
+  if self.app.config.debug then
     print(message)
   end
 end
 
---! Dump the contents of the game log into a file.
--- This is automatically done on each error.
+--- Dump the contents of the game log into a file.
+--- This is automatically done on each error.
 function World:dumpGameLog()
-  local gamelog_path = TheApp.gamelog_path
+  local gamelog_path = self.app.gamelog_path
   local fi = self.app:writeToFileOrTmp(gamelog_path)
   -- Start the gamelog file with the system information
-  local sysinfo = TheApp:gamelogHeader()
+  local sysinfo = self.app:gamelogHeader()
   fi:write(sysinfo)
   for _, str in ipairs(self.game_log) do
     fi:write(str .. "\n")
@@ -2499,8 +2531,8 @@ function World:dumpGameLog()
   fi:close()
 end
 
---! Because the save file only saves one thob per tile if they are more that information
--- will be lost. To solve this after a load we need to set again all the thobs on each tile.
+--- Because the save file only saves one thob per tile if they are more that information
+--- will be lost. To solve this after a load we need to set again all the thobs on each tile.
 function World:resetAnimations()
   -- Erase entities from the map if they want.
   for _, entity in ipairs(self.entities) do
@@ -2524,7 +2556,7 @@ local function our_concat(t)
   return result
 end
 
---! Refresh cache of letters in current language to be used for staff member's initials
+--- Refresh cache of letters in current language to be used for staff member's initials
 function World:updateInitialsCache()
   local parts = tostring(our_concat(_S.humanoid_name_starts)
       .. our_concat(_S.humanoid_name_ends)):sub(33)
@@ -2536,25 +2568,25 @@ function World:updateInitialsCache()
   staff_initials_cache.initials = initials
 end
 
---! Change the staff name first letter to one from the current language
--- from the seed (generated here or in staff_profile.lua)
---!param profile (table) The profile of the staff member
+--- Change the staff name first letter to one from the current language
+--- from the seed (generated here or in staff_profile.lua)
+--- @param profile (StaffProfile) The profile of the staff member
 function World:localiseInitial(profile)
   if not profile.name_seed then
     profile.name_seed = math.random(1, 1009)
   end
-  if profile.initial and profile.name_lang == TheApp.config.language then return end
+  if profile.initial and profile.name_lang == self.app.config.language then return end
   -- Staff member doesn't have an initial in the current language
   local num = profile.name_seed % #staff_initials_cache.initials
   profile.initial = staff_initials_cache.initials[num]
-  profile.name_lang = TheApp.config.language
+  profile.name_lang = self.app.config.language
 end
 
---! Let the world react to and old save game. First it gets the chance to
--- do things for itself, and then it calls corresponding functions for
--- the hospitals, entities and rooms in that order.
---!param old (integer) The old version of the save game.
---!param new (integer) The current version of the save game format.
+--- Let the world react to and old save game. First it gets the chance to
+--- do things for itself, and then it calls corresponding functions for
+--- the hospitals, entities and rooms in that order.
+--- @param old (integer) The old version of the save game.
+--- @param new (integer) The current version of the save game format.
 function World:afterLoad(old, new)
   self:setUI(self.ui)
   -- Re-apply level-defined pricing when loading saves:
@@ -2575,13 +2607,14 @@ function World:afterLoad(old, new)
 
       -- Subtract values of objects in rooms to avoid calculating those object values twice
       for obj, num in pairs(room.room_info.objects_needed) do
-        valueChange = valueChange - num * TheApp.objects[obj].build_cost
+        valueChange = valueChange - num * self.app.objects[obj].build_cost
       end
       value = value + valueChange
     end
 
     -- Add up all object values
     for _, object in ipairs(self.entities) do
+      local Object = _G["Object"] ---@type Object
         if class.is(object, Object) and object.object_type.build_cost then
           value = value + object.object_type.build_cost
         end
@@ -2629,7 +2662,7 @@ function World:afterLoad(old, new)
     end
   end
   if old < 12 then
-    self.animation_manager = TheApp.animation_manager
+    self.animation_manager = self.app.animation_manager
     self.anim_length_cache = nil
   end
   if old < 17 then
@@ -2639,6 +2672,8 @@ function World:afterLoad(old, new)
     local _, shield_b = pcall(corsixth.require, "objects" .. pathsep .. "radiation_shield_b")
     shield.slave_type = shield_b
     shield.slave_type.master_type = shield
+
+    local Object = _G["Object"] ---@type Object
     Object.processTypeDefinition(shield)
     Object.processTypeDefinition(shield_b)
 
@@ -2653,6 +2688,7 @@ function World:afterLoad(old, new)
   end
   if old < 27 then
     -- Add callsDispatcher
+    local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
     self.dispatcher = CallsDispatcher(self)
   end
   if old < 30 then
@@ -2697,6 +2733,7 @@ function World:afterLoad(old, new)
   end
   if old < 52 then
     -- Litter was not properly removed from the world.
+    local Litter = _G["Litter"] ---@type Litter
     for i = #self.entities, 1, -1 do
       if class.is(self.entities[i], Litter) then
         if not self.entities[i].tile_x then
@@ -2783,6 +2820,7 @@ function World:afterLoad(old, new)
 
   if old < 88 then
     --Populate the entity map
+    local EntityMap = _G["EntityMap"] ---@type EntityMap
     self.entity_map = EntityMap(self.map)
     for _, e in ipairs(self.entities) do
       local x, y = e.tile_x, e.tile_y
@@ -2828,6 +2866,7 @@ function World:afterLoad(old, new)
       if self.game_date > next_emer_date:plusDays(69) then
         -- The date the emergency should've finished by has passed.
         -- Next check if the emergency could still be happening.
+        local UIWatch = _G["UIWatch"] ---@type UIWatch
         local watch = self.ui:getWindow(UIWatch)
         if not watch or watch.count_type ~= "emergency" then
           -- The emergency is likely stuck
@@ -2838,6 +2877,8 @@ function World:afterLoad(old, new)
   end
 
   if old < 165 and new >= 165 then -- Add 'KnockDoorAction.humanoid' field.
+    local Humanoid = _G["huamnoid"] ---@type Humanoid
+    local KnockDoorAction = _G["KnockDoorAction"] ---@type KnockDoorAction
     for _, entity in ipairs(self.entities) do
       if entity.action_queue and class.is(entity, Humanoid) then
         for _, action in ipairs(entity.action_queue) do
@@ -2884,6 +2925,7 @@ function World:afterLoad(old, new)
   end
   if old < 189 then
     -- Move existing and future earthquakes to the Earthquake class
+    local Earthquake = _G["Earthquake"] ---@type Earthquake
     self.earthquake = Earthquake(self, true)
   end
   if old < 208 then -- Adjust game speed and tick rates
@@ -2931,9 +2973,10 @@ function World:afterLoad(old, new)
     end
   end
   if old < 214 then
-    self.animation_manager = nil -- Use TheApp.animation_manager instead.
+    self.animation_manager = nil -- Use self.app.animation_manager instead.
   end
   if old < 239 then
+    local Humanoid = _G["Humanoid"] ---@type Humanoid
     for _, entity in ipairs(self.entities) do
       if class.is(entity, Humanoid) then
         entity:setIfHoverMoodsVisible()
@@ -2951,6 +2994,8 @@ function World:afterLoad(old, new)
     -- losers are collected and removed only afterwards otherwise it would lead to items being skipped.
     local litter_by_tile = {}
     local litter_to_remove = {}
+
+    local Litter = _G["Litter"] ---@type Litter
     for _, entity in ipairs(self.entities) do
       if class.is(entity, Litter) and entity.tile_x then
         local key = entity.tile_x * self.map.height + entity.tile_y -- unique int key per tile
@@ -2998,11 +3043,11 @@ function World:afterLoad(old, new)
   end
   -- If the original save game version is considerably lower than the current, ask
   -- the player if they want to restart the level.
-  if TheApp:compareVersions(new, old, "release") > 2 then
-    TheApp:restart(_S.confirmation.very_old_save)
+  if self.app:compareVersions(new, old, "release") > 2 then
+    self.app:restart(_S.confirmation.very_old_save)
   end
   self.savegame_version = new
-  self.release_version = TheApp:getReleaseString(new)
+  self.release_version = self.app:getReleaseString(new)
 end
 
 function World:playLoadedEntitySounds()
@@ -3030,10 +3075,10 @@ passable tiles. This presents problems with objects like Bench where the passabl
 is not for exclusive use of the Bench (another object can share that same tile)
 the footprint.shareable differentiates shareable passable tiles, and exclusive use
 passable tiles (the norm for most objects)]]
---!param x (int) x map tile position
---!param y (int) y map tile position
---!param distance (int) searchable distance for nearby objects
---!return (boolean) indicating if exclusively passable or not
+--- @param x (integer) x map tile position
+--- @param y (integer) y map tile position
+--- @param distance (integer) searchable distance for nearby objects
+--- @return (boolean) indicating if exclusively passable or not
 function World:isTileExclusivelyPassable(x, y, distance)
   for o in pairs(self:findAllObjectsNear(x, y, distance)) do
     if o and not o.picked_up and o.footprint then
@@ -3055,14 +3100,14 @@ function World:isTileExclusivelyPassable(x, y, distance)
   return true
 end
 
---! Get todays date.
---!return (Date) Current game date.
+--- Get todays date.
+--- @return (Date) Current game date.
 function World:date()
   return self.game_date:clone()
 end
 
---! Collect the settings that should be reused in the next world
---!return (table) world and hospital campaign data
+--- Collect the settings that should be reused in the next world
+--- @return (table) world and hospital campaign data
 function World:getCampaignData()
   local world = {
     room_built = self.room_built,
@@ -3072,8 +3117,8 @@ function World:getCampaignData()
   return { world = world, hospital = self:getLocalPlayerHospital():getCampaignData() }
 end
 
---! Restore the settings from the previous world
---!param campaign_data (table) world and hospital campaign data
+--- Restore the settings from the previous world
+--- @param campaign_data (table) world and hospital campaign data
 function World:setCampaignData(campaign_data)
   for key, value in pairs(campaign_data.world) do
     self[key] = value
@@ -3081,8 +3126,8 @@ function World:setCampaignData(campaign_data)
   self:getLocalPlayerHospital():setCampaignData(campaign_data.hospital)
 end
 
---! Perform validity tests on the map in world
---!return (string) The message relating to the first failed check
+--- Perform validity tests on the map in world
+--- @return (string) The message relating to the first failed check
 function World:validateMap()
   self.map.th:updatePathfinding()
   local spawn_points = self:calculateSpawnTiles()
@@ -3093,8 +3138,8 @@ function World:validateMap()
   end
 end
 
---! Find a valid disease that a patient can use
---!return disease (table)
+--- Find a valid disease that a patient can use
+--- @return (table) disease
 function World:getNewPatientDisease()
   -- Construct disease, take a random guess first, as a quick clear-sky attempt.
   local hospital = self:getLocalPlayerHospital()
@@ -3115,9 +3160,9 @@ function World:getNewPatientDisease()
   return disease
 end
 
---! Choose hospital for normal patient
---!param disease (table) - the disease assigned to this patient
---!return hospital (Hospital)
+--- Choose hospital for normal patient
+--- @param disease (table) - the disease assigned to this patient
+--- @return (Hospital) hospital
 function World:chooseHospitalForPatient(disease)
   -- TODO: Until changes in competing hospitals' reputations are implemented,
   -- use only the round-robin method. Otherwise, uncomment the other methods.
@@ -3162,7 +3207,7 @@ function World:chooseHospitalForPatient(disease)
   -- end
 end
 
---! Returns whether the level being played is part of a campaign or not
+--- Returns whether the level being played is part of a campaign or not
 function World:isCampaign()
   return type(self.map.level_number) == "number" or self.campaign_info
 end
@@ -3171,13 +3216,13 @@ end
 -- within this many pixels of where the rat is actually drawn.
 local near_rat_pixel_radius = 24
 
---! Determine if any rat is near the given screen coordinates (relative to the
--- map origin). Compares against each nearby rat's drawn pixel position rather
--- than the tile it is anchored to, which can be up to a tile away while it
--- scurries.
---!param x (number) x-coordinate on the screen
---!param y (number) y-coordinate on the screen
---!return (boolean) Whether a rat is near the cursor.
+--- Determine if any rat is near the given screen coordinates (relative to the
+--- map origin). Compares against each nearby rat's drawn pixel position rather
+--- than the tile it is anchored to, which can be up to a tile away while it
+--- scurries.
+--- @param x (number) x-coordinate on the screen
+--- @param y (number) y-coordinate on the screen
+--- @return (boolean) Whether a rat is near the cursor.
 function World:isNearRat(x, y)
   local tile_x, tile_y = self.map:ScreenToWorld(x, y)
   tile_x, tile_y = math.floor(tile_x), math.floor(tile_y)
