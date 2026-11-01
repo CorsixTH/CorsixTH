@@ -22,12 +22,12 @@
  </ul>
  <div class="content">
  <h2 class="class">Graphics Class</h2>
-<h3 class="class">Layer for loading (and subsequently caching) graphical resources.</h3> 
+<h3 class="class">- Layer for loading (and subsequently caching) graphical resources.
+- The Graphics class handles loading and caching of graphics resources.
+- It can adapt as the API to C changes, and hide these changes from most of
+- the other Lua code.</h3> 
 <div class="class_info">
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L25">line 25 of Lua/graphics.lua</a>.
- <br/><strong>Full description:</strong><br/> The Graphics class handles loading and caching of graphics resources.
-It can adapt as the API to C changes, and hide these changes from most of
-the other Lua code. 
 </div>
 <div class="method_list">
  <h4>Method Index</h4>
@@ -204,36 +204,40 @@ the other Lua code.
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L495">line 495 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L494">line 494 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1__is_language_supported_by_t_h_assets">function Graphics:_isLanguageSupportedByTHAssets()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L536">line 536 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L535">line 535 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1__load_palette">function Graphics:_loadPalette(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">transparent_255</span>, <span class="p">pal8bit</span>)</a></h5>
  <p>
- Load a palette file<br/><br/>
+ - Load a palette file
+- @param dir (string) The directory of the palette relative to the HOSPITAL directory
+- @param name (string) The name of the palette file
+- @param transparent_255 (boolean) Whether the 255th entry in the palette should be transparent
+- @return string, string # The palette and a string representing the palette converted to greyscale<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">dir</td>
- <td class="t">string</td>
- <td class="d"> The directory of the palette relative to the HOSPITAL directory</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">name</td>
- <td class="t">string</td>
- <td class="d"> The name of the palette file</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">transparent_255</td>
- <td class="t">boolean</td>
- <td class="d"> Whether the 255th entry in the palette should be transparent</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">pal8bit</td>
@@ -262,60 +266,67 @@ the other Lua code.
  <div class="method">
  <h5><a name="_0_1_graphics_1__load_true_type_font">function Graphics:_loadTrueTypeFont(<span class="p">name</span>, <span class="p">sprite_table</span>, <span class="p">font_options</span>)</a></h5>
  <p>
- Load a true type font<br/><br/>
+ - Load a true type font
+-
+- The `font_options` are:
+- * `x_sep` (integer) The horizontal separation of the font. Defaults to 0.
+- * `y_sep` (integer) The vertical separation of the font. Defaults to 0.
+- * `ttf_color` (table) The colour of the font in form .red, .green and .blue. If
+- nil, the colour will be detected from the sprite table.
+- * `force_bitmap` (boolean) Whether to force the font to be a bitmap font. If
+- nil, this will be set to true for Font05V if the language uses Arabic
+- numerals.
+- * `ttf_width` (integer) The nominal width of the font, in pixels. If nil, the
+- width will be detected from the sprite table.
+- * `ttf_height` (integer) The nominal height of the font, in pixels. If nil, the
+- height will be detected from the sprite table.
+- * `ttf_shadow` (table|boolean) table with fields offset_x, offset_y and color.
+- The color field has the same format as ttf_color. If this field is
+- present, the font will be drawn with a shadow of the specified colour and
+- offset. color is optional and defaults to opaque black. offset_x and
+- offset_y are optional and default to 1. If the field is omitted entirely,
+- no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+- shadow with default parameters, or false to disable any shadow.
+- * `apply_ui_scale` (boolean) Whether to apply the UI scale factor to the font
+- size.
+- @param name (string) The name of the font from the language file. Always 'unicode'.
+- @param sprite_table (userdata) The sprite table of the font this font is replacing. Used for default colour and metrics.
+- @param font_options (table) A table with font options.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">name</td>
- <td class="t">string</td>
- <td class="d"> The name of the font from the language file. Always
-'unicode'.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">sprite_table</td>
- <td class="t">userdata</td>
- <td class="d"> The sprite table of the font this font is
-replacing. Used for default colour and metrics.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">font_options</td>
- <td class="t">table</td>
- <td class="d"> A table of font options:
-x_sep (integer) The horizontal separation of the font. Defaults to 0.
-y_sep (integer) The vertical separation of the font. Defaults to 0.
-ttf_color (table) The colour of the font in form .red, .green and .blue. If
-nil, the colour will be detected from the sprite table.
-ttf_width (integer) The nominal width of the font, in pixels. If nil, the
-width will be detected from the sprite table.
-ttf_height (integer) The nominal height of the font, in pixels. If nil, the
-height will be detected from the sprite table.
-ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
-The color field has the same format as ttf_color. If this field is
-present, the font will be drawn with a shadow of the specified colour and
-offset. color is optional and defaults to opaque black. offset_x and
-offset_y are optional and default to 1. If the field is omitted entirely,
-no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
-shadow with default parameters, or false to disable any shadow.
-apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
-size.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L655">line 655 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L652">line 652 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1__make_blue_palette_for_floating_banknote">function Graphics:_makeBluePaletteForFloatingBanknote()</a></h5>
  <p>
- Build a copy of the main palette with green hues rotated to blue.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L872">line 872 of Lua/graphics.lua</a>.
+ - Build a copy of the main palette with green hues rotated to blue.
+- @return (string) # The shifted palette<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L873">line 873 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1__on_change_u_i_scale">function Graphics:_onChangeUIScale()</a></h5>
  <p>
  Reload any assets that depend on the actual ui scale<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L521">line 521 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L520">line 520 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -327,27 +338,32 @@ size.</td>
  <div class="method">
  <h5><a name="_0_1_graphics_1arabic_numerals">function Graphics:arabicNumerals()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L815">line 815 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L816">line 816 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1draw_numbers_from_unicode">function Graphics:drawNumbersFromUnicode()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L822">line 822 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L823">line 823 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1get_floating_banknote_sprite_table">function Graphics:getFloatingBanknoteSpriteTable(<span class="p">insurance</span>)</a></h5>
  <p>
- a player can tell at a glance that the money will not be directly<br/><br/>
- credited to the balance. Original banknote art; only its palette differs.<br/><br/>
+ - The sprite sheet for floating banknote above a patient.
+-
+- Payments made through an insurance company are drawn in blue so that
+- a player can tell at a glance that the money will not be directly
+- credited to the balance. Original banknote art; only its palette differs.
+- @param insurance (boolean) Whether the payment went through insurance
+- @return (string) # The sprite sheet to draw the amount with<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">insurance</td>
- <td class="t">boolean</td>
- <td class="d"> Whether the payment went through insurance</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L909">line 909 of Lua/graphics.lua</a>.
@@ -371,13 +387,13 @@ size.</td>
  <div class="method">
  <h5><a name="_0_1_graphics_1get_u_i_scale">function Graphics:getUIScale()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L1188">line 1188 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L1190">line 1190 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1get_window_display_scale">function Graphics:getWindowDisplayScale()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L1203">line 1203 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L1205">line 1205 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -392,7 +408,7 @@ size.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L436">line 436 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L435">line 435 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -412,13 +428,13 @@ size.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L826">line 826 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L827">line 827 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_builtin_font">function Graphics:loadBuiltinFont()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L411">line 411 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L410">line 410 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -454,39 +470,43 @@ size.</td>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_font">function Graphics:loadFont(<span class="p">sprite_table</span>, <span class="p">font_options</span>, <span class="p">y_sep</span>, <span class="p">ttf_color</span>, <span class="p">force_bitmap</span>)</a></h5>
  <p>
- Load a font for the given sprite table.<br/><br/>
+ - Load a font for the given sprite table.
+-
+- The `font_options` are:
+- * `x_sep` (integer) The horizontal separation of the font. Defaults to 0.
+- * `y_sep` (integer) The vertical separation of the font. Defaults to 0.
+- * `ttf_color` (table) The colour of the font in form .red, .green and .blue. If
+- nil, the colour will be detected from the sprite table.
+- * `force_bitmap` (boolean) Whether to force the font to be a bitmap font. If
+- nil, this will be set to true for Font05V if the language uses Arabic
+- numerals.
+- * `ttf_width` (integer) The nominal width of the font, in pixels. If nil, the
+- width will be detected from the sprite table.
+- * `ttf_height` (integer) The nominal height of the font, in pixels. If nil, the
+- height will be detected from the sprite table.
+- * `ttf_shadow` (table|boolean) table with fields offset_x, offset_y and color.
+- The color field has the same format as ttf_color. If this field is
+- present, the font will be drawn with a shadow of the specified colour and
+- offset. color is optional and defaults to opaque black. offset_x and
+- offset_y are optional and default to 1. If the field is omitted entirely,
+- no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+- shadow with default parameters, or false to disable any shadow.
+- * `apply_ui_scale` (boolean) Whether to apply the UI scale factor to the font
+- size.
+- @param sprite_table (userdata) The sprite table of the font this font is replacing. Used for default colour and metrics.
+- @param font_options (table) A table with font options.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">sprite_table</td>
- <td class="t">userdata</td>
- <td class="d"> The sprite table of the font this font is replacing. Used for default colour and metrics.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">font_options</td>
- <td class="t">table</td>
- <td class="d"> A table of font options:
-x_sep (integer) The horizontal separation of the font. Defaults to 0.
-y_sep (integer) The vertical separation of the font. Defaults to 0.
-ttf_color (table) The colour of the font in form .red, .green and .blue. If
-nil, the colour will be detected from the sprite table.
-force_bitmap (boolean) Whether to force the font to be a bitmap font. If
-nil, this will be set to true for Font05V if the language uses Arabic
-numerals.
-ttf_width (integer) The nominal width of the font, in pixels. If nil, the
-width will be detected from the sprite table.
-ttf_height (integer) The nominal height of the font, in pixels. If nil, the
-height will be detected from the sprite table.
-ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
-The color field has the same format as ttf_color. If this field is
-present, the font will be drawn with a shadow of the specified colour and
-offset. color is optional and defaults to opaque black. offset_x and
-offset_y are optional and default to 1. If the field is omitted entirely,
-no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
-shadow with default parameters, or false to disable any shadow.
-apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
-size.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">y_sep</td>
@@ -510,65 +530,75 @@ size.</td>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_font_and_sprite_table">function Graphics:loadFontAndSpriteTable(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">complex</span>, <span class="p">palette</span>, <span class="p">font_options</span>)</a></h5>
  <p>
- This is the same as calling loadFont(Graphics:loadSpriteTable(dir, name, complex, palette), font_options)<br/><br/>
- except that force_bitmap is set to true automatically for some sprite tables.<br/><br/>
+ - Load a font and the corresponding sprite sheet in one operation.
+-
+- This is the same as calling loadFont(Graphics:loadSpriteTable(dir, name, complex, palette), font_options)
+- except that force_bitmap is set to true automatically for some sprite tables.
+-
+- The `font_options` are:
+- * `x_sep` (integer) The horizontal separation of the font. Defaults to 0.
+- * `y_sep` (integer) The vertical separation of the font. Defaults to 0.
+- * `ttf_color` (table) The colour of the font in form .red, .green and .blue. If
+- nil, the colour will be detected from the sprite table.
+- * `force_bitmap` (boolean) Whether to force the font to be a bitmap font. If
+- nil, this will be set to true for Font05V if the language uses Arabic
+- numerals.
+- * `ttf_width` (integer) The nominal width of the font, in pixels. If nil, the
+- width will be detected from the sprite table.
+- * `ttf_height` (integer) The nominal height of the font, in pixels. If nil, the
+- height will be detected from the sprite table.
+- * `ttf_shadow` (table|boolean) table with fields offset_x, offset_y and color.
+- The color field has the same format as ttf_color. If this field is
+- present, the font will be drawn with a shadow of the specified colour and
+- offset. color is optional and defaults to opaque black. offset_x and
+- offset_y are optional and default to 1. If the field is omitted entirely,
+- no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+- shadow with default parameters, or false to disable any shadow.
+- * `apply_ui_scale` (boolean) Whether to apply the UI scale factor to the font
+- size.
+- @param dir (string) The directory of the sprite table relative to the HOSPITAL directory.
+- @param name (string) The name of the sprite table file without the .dat extension.
+- @param complex (boolean) Whether the sprite table is complex or not.
+- @param palette (string) The name of the palette file. If nil, the default palette will be used.
+- @param font_options (table) A table with font options:<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">dir</td>
- <td class="t">string</td>
- <td class="d"> The directory of the sprite table relative to the HOSPITAL directory.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">name</td>
- <td class="t">string</td>
- <td class="d"> The name of the sprite table file without the .dat extension.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">complex</td>
- <td class="t">boolean</td>
- <td class="d"> Whether the sprite table is complex or not.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">palette</td>
- <td class="t">string</td>
- <td class="d"> The name of the palette file. If nil, the default palette will be used.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">font_options</td>
- <td class="t">table</td>
- <td class="d"> A table of font options:
-x_sep (integer) The horizontal separation of the font. Defaults to 0.
-y_sep (integer) The vertical separation of the font. Defaults to 0.
-ttf_color (table) The colour of the font in form .red, .green and .blue. If
-nil, the colour will be detected from the sprite table.
-force_bitmap (boolean) Whether to force the font to be a bitmap font. If
-nil, this will be set to true for Font05V if the language uses Arabic
-numerals.
-ttf_width (integer) The nominal width of the font, in pixels. If nil, the
-width will be detected from the sprite table.
-ttf_height (integer) The nominal height of the font, in pixels. If nil, the
-height will be detected from the sprite table.
-ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
-The color field has the same format as ttf_color. If this field is
-present, the font will be drawn with a shadow of the specified colour and
-offset. color is optional and defaults to opaque black. offset_x and
-offset_y are optional and default to 1. If the field is omitted entirely,
-no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
-shadow with default parameters, or false to disable any shadow.
-apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
-size.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L709">line 709 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L708">line 708 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_font_file">function Graphics:loadFontFile()</a></h5>
  <p>
- If it is not found it tries to use the font file from the compile setting WITH_FONT,<br/><br/>
- or look for one in the CorsixTH folder, the grandparent of this file.<br/><br/>
+ - Tries to load the font file given in the config file as unicode_font.
+- If it is not found it tries to use the font file from the compile setting WITH_FONT,
+- or look for one in the CorsixTH folder, the grandparent of this file.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L177">line 177 of Lua/graphics.lua</a>.
  </p>
  </div>
@@ -600,65 +630,70 @@ size.</td>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_language_font">function Graphics:loadLanguageFont(<span class="p">name</span>, <span class="p">sprite_table</span>, <span class="p">font_options</span>, <span class="p">y_sep</span>, <span class="p">ttf_color</span>, <span class="p">force_bitmap</span>)</a></h5>
  <p>
- Load a true type font<br/><br/>
+ - Load a true type font
+-
+- The `font_options` are:
+- * `x_sep` (integer) The horizontal separation of the font. Defaults to 0.
+- * `y_sep` (integer) The vertical separation of the font. Defaults to 0.
+- * `ttf_color` (table) The colour of the font in form .red, .green and .blue. If
+- nil, the colour will be detected from the sprite table.
+- * `force_bitmap` (boolean) Whether to force the font to be a bitmap font. If
+- nil, this will be set to true for Font05V if the language uses Arabic
+- numerals.
+- * `ttf_width` (integer) The nominal width of the font, in pixels. If nil, the
+- width will be detected from the sprite table.
+- * `ttf_height` (integer) The nominal height of the font, in pixels. If nil, the
+- height will be detected from the sprite table.
+- * `ttf_shadow` (table|boolean) table with fields offset_x, offset_y and color.
+- The color field has the same format as ttf_color. If this field is
+- present, the font will be drawn with a shadow of the specified colour and
+- offset. color is optional and defaults to opaque black. offset_x and
+- offset_y are optional and default to 1. If the field is omitted entirely,
+- no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
+- shadow with default parameters, or false to disable any shadow.
+- * `apply_ui_scale` (boolean) Whether to apply the UI scale factor to the font
+- size.
+- @param name (string) The name of the font from the language file. Always `unicode`.
+- @param sprite_table (userdata) The sprite table of the font this font is replacing. Used for default colour and metrics.
+- @param font_options (table) A table with font options.
+- @param y_sep (integer) **Deprecated**: use `font_options.y_sep` instead.
+- @param ttf_color (table) **Deprecated**: use `font_options.ttf_color` instead.
+- @param force_bitmap (boolean) **Deprecated**: use `font_options.force_bitmap` instead.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">name</td>
- <td class="t">string</td>
- <td class="d"> The name of the font from the language file. Always
-'unicode'.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">sprite_table</td>
- <td class="t">userdata</td>
- <td class="d"> The sprite table of the font this font is
-replacing. Used for default colour and metrics.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">font_options</td>
- <td class="t">table</td>
- <td class="d"> A table of font options:
-x_sep (integer) The horizontal separation of the font. Defaults to 0.
-y_sep (integer) The vertical separation of the font. Defaults to 0.
-ttf_color (table) The colour of the font in form .red, .green and .blue. If
-nil, the colour will be detected from the sprite table.
-force_bitmap (boolean) Whether to force the font to be a bitmap font. If
-nil, this will be set to true for Font05V if the language uses Arabic
-numerals.
-ttf_width (integer) The nominal width of the font, in pixels. If nil, the
-width will be detected from the sprite table.
-ttf_height (integer) The nominal height of the font, in pixels. If nil, the
-height will be detected from the sprite table.
-ttf_shadow (table|boolean) table with fields offset_x, offset_y and color.
-The color field has the same format as ttf_color. If this field is
-present, the font will be drawn with a shadow of the specified colour and
-offset. color is optional and defaults to opaque black. offset_x and
-offset_y are optional and default to 1. If the field is omitted entirely,
-no shadow is drawn. Alternately ttf_shadow can be set to true to draw a
-shadow with default parameters, or false to disable any shadow.
-apply_ui_scale (boolean) Whether to apply the UI scale factor to the font
-size.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">y_sep</td>
- <td class="t">int</td>
- <td class="d"> Deprecated: use font_options.y_sep instead.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">ttf_color</td>
- <td class="t">table</td>
- <td class="d"> Deprecated: use font_options.ttf_color instead.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">force_bitmap</td>
- <td class="t">boolean</td>
- <td class="d"> Deprecated: use font_options.force_bitmap
-instead.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L598">line 598 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L597">line 597 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -679,14 +714,14 @@ instead.</td>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_menu_font">function Graphics:loadMenuFont()</a></h5>
  <p>
- Utility function to return preferred font for main menu ui<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L540">line 540 of Lua/graphics.lua</a>.
+ - Utility function to return preferred font for main menu ui<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L539">line 539 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_palette">function Graphics:loadPalette(<span class="p">_</span>, <span class="p">name</span>)</a></h5>
  <p>
- Kept for load compatibility<br/><br/>
+ - Kept for load compatibility<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -701,55 +736,63 @@ instead.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L1179">line 1179 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L1181">line 1181 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_raw">function Graphics:loadRaw(<span class="p">name</span>, <span class="p">width</span>, <span class="p">height</span>, <span class="p">dir</span>, <span class="p">_paldir</span>, <span class="p">pal</span>, <span class="p">_transparent_255</span>, <span class="p">flags</span>)</a></h5>
  <p>
- Load a bitmap from a dat file and palette<br/><br/>
+ - Load a bitmap from a dat file and palette
+- @param name (string) The file name of the bitmap without the .dat extension
+- @param width (integer) The width of the bitmap. Defaults to 640
+- @param height (integer) The height of the bitmap. Defaults to 480
+- @param dir (string) The directory of the bitmap. Defaults to QData
+- @param _paldir (string) ignored
+- @param pal (string) The name of the palette
+- @param _transparent_255 (boolean) ignored
+- @param flags (table) Additional flags for loading the bitmap<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">name</td>
- <td class="t">string</td>
- <td class="d"> The file name of the bitmap without the .dat extension</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">width</td>
- <td class="t">int</td>
- <td class="d"> The width of the bitmap. Defaults to 640</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">height</td>
- <td class="t">int</td>
- <td class="d"> The height of the bitmap. Defaults to 480</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">dir</td>
- <td class="t">string</td>
- <td class="d"> The directory of the bitmap. Defaults to QData</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">_paldir</td>
- <td class="t">string</td>
- <td class="d"> ignored</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">pal</td>
- <td class="t">string</td>
- <td class="d"> The name of the palette</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">_transparent_255</td>
- <td class="t">boolean</td>
- <td class="d"> ignored</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">flags</td>
- <td class="t">table</td>
- <td class="d"> Additional flags for loading the bitmap</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L370">line 370 of Lua/graphics.lua</a>.
@@ -758,29 +801,34 @@ instead.</td>
  <div class="method">
  <h5><a name="_0_1_graphics_1load_sprite_table">function Graphics:loadSpriteTable(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">complex</span>, <span class="p">palette</span>)</a></h5>
  <p>
- Load a sprite table, optionally with a palette of its own.<br/><br/>
+ - Load a sprite table, optionally with a palette of its own.
+- @param dir (string) The directory of the sheet relative to the HOSPITAL directory
+- @param name (string) The name of the sheet file
+- @param complex (boolean) Whether the sheet needs the complex loading path
+- @param palette (palette) Palette to draw the sheet with, or nil for the default
+- @return (string) # The loaded sprite sheet<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">dir</td>
- <td class="t">string</td>
- <td class="d"> The directory of the sheet relative to the HOSPITAL directory</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">name</td>
- <td class="t">string</td>
- <td class="d"> The name of the sheet file</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">complex</td>
- <td class="t">boolean</td>
- <td class="d"> Whether the sheet needs the complex loading path</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">palette</td>
- <td class="t">palette</td>
- <td class="d"> Palette to draw the sheet with, or nil for the default</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L928">line 928 of Lua/graphics.lua</a>.
@@ -789,21 +837,21 @@ instead.</td>
  <div class="method">
  <h5><a name="_0_1_graphics_1on_change_language">function Graphics:onChangeLanguage()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L469">line 469 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L468">line 468 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1on_change_resolution">function Graphics:onChangeResolution()</a></h5>
  <p>
  Call when the render size changes<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L511">line 511 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L510">line 510 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_graphics_1on_change_u_i_scale">function Graphics:onChangeUIScale()</a></h5>
  <p>
  Call when the configured ui_scale is changed<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L506">line 506 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L505">line 505 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -818,7 +866,7 @@ instead.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L487">line 487 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L486">line 486 of Lua/graphics.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -833,7 +881,7 @@ instead.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L966">line 966 of Lua/graphics.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L965">line 965 of Lua/graphics.lua</a>.
  </p>
  </div>
 </div>
