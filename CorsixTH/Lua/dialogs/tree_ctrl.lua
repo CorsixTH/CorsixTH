@@ -210,9 +210,8 @@ function FileTreeNode:isDirectory()
   return lfs.attributes(self.path, "mode") == "directory"
 end
 
----
---@param <file_name_filter> (optional) return the most recently modified child file which has this string in its name.
---@return nil if no child file is found otherwise return the FileTreedNode for mostly recently modified child file.
+--- @param file_name_filter (optional) return the most recently modified child file which has this string in its name.
+--- @return nil if no child file is found otherwise return the FileTreedNode for mostly recently modified child file.
 function FileTreeNode:getMostRecentlyModifiedChildFile(file_name_filter)
   self:checkForChildren()
   self:reSortChildren("date", "descending")
