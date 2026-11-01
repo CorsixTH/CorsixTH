@@ -35,32 +35,32 @@ class "UIPlaceObjects" (Window)
 ---@operator call: UIPlaceObjects
 local UIPlaceObjects = _G["UIPlaceObjects"] ---@type UIPlaceObjects
 
---[[ Constructor for the class.
-!param ui (UI) The active ui.
-!param object_list (table) a list of tables with objects to place. Keys are "object", "qty" and
-"existing_object". The first is the object_type of the object, the second how many, and if the key
-"existing_object" is set it should be an already existing object that is about to be moved.
-In particular, if that object has a variable called current_frame then that frame will be used
-when drawing the object as it is being moved.
-]]
+--- Constructor for the class.
+--- @param ui (UI) The active ui.
+--- @param object_list (table[]) A list of tables with objects to place. Keys are
+--- * `object`: The object_type of the object
+--- * `qty`: Number of objects.
+--- * `existing_object`: If not nil, an already existing object that is about to be moved.
+---   In particular, if that object has a variable called `current_frame` then that frame
+---   will be used when drawing the object as it is being moved.
 function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self:Window()
 
   object_list = object_list or {} -- Default argument
 
-  local app = ui.app
   self.modal_class = "main"
   self.ui = ui
-  self.map = app.map
-  self.anims = app.anims
-  self.world = app.world
+  self.app = ui.app
+  self.map = self.app.map
+  self.anims = self.app.anims
+  self.world = self.app.world
   self.width = 186
   self.height = 167 + #object_list * 29
   self:setDefaultPosition(0.9, 0.1)
   local selected_label_color = { red = 40, green = 40, blue = 250 }
-  self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
-  self.blue_font = app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
+  self.panel_sprites = self.app.gfx:loadSpriteTable("QData", "Req05V", true)
+  self.white_font = self.app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  self.blue_font = self.app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   self.title_text = _S.rooms_short.corridor_objects
   self.desc_text = _S.place_objects_window.place_objects_in_corridor
 
@@ -71,14 +71,14 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self:addPanel(114,   0, 90) -- Dialog mid-piece
   self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound("no4.wav"):setTooltip(_S.tooltip.place_objects_window.cancel)
   self.purchase_button =
-  self:addPanel(117,  50, 100):makeButton(1, 8, 41, 42, 118, self.purchaseItems):setTooltip(_S.tooltip.place_objects_window.buy_sell)
-    :setDisabledSprite(127):setSound("selectx.wav"):enable(false) -- Disabled purchase items button
+      self:addPanel(117,  50, 100):makeButton(1, 8, 41, 42, 118, self.purchaseItems):setTooltip(_S.tooltip.place_objects_window.buy_sell)
+        :setDisabledSprite(127):setSound("selectx.wav"):enable(false) -- Disabled purchase items button
   self.pickup_button =
-  self:addPanel(119,  92, 100):makeButton(1, 8, 41, 42, 120, self.pickupItems):setTooltip(_S.tooltip.place_objects_window.pick_up)
-    :setDisabledSprite(128):setSound("selectx.wav"):enable(false):makeToggle() -- Disabled pick up items button
+      self:addPanel(119,  92, 100):makeButton(1, 8, 41, 42, 120, self.pickupItems):setTooltip(_S.tooltip.place_objects_window.pick_up)
+        :setDisabledSprite(128):setSound("selectx.wav"):enable(false):makeToggle() -- Disabled pick up items button
   self.confirm_button =
-  self:addPanel(121, 134, 100):makeButton(1, 8, 43, 42, 122, self.confirm):setTooltip(_S.tooltip.place_objects_window.confirm)
-    :setDisabledSprite(129):enable(false):setSound("YesX.wav") -- Disabled confirm button
+      self:addPanel(121, 134, 100):makeButton(1, 8, 43, 42, 122, self.confirm):setTooltip(_S.tooltip.place_objects_window.confirm)
+        :setDisabledSprite(129):enable(false):setSound("YesX.wav") -- Disabled confirm button
 
   self.list_header = self:addPanel(123, 0, 146) -- Object list header
   self.list_header.visible = false
@@ -88,7 +88,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.num_slots = 0
 
   self:addObjects(object_list, pay_for)
-  ui:setWorldHitTest(false)
+  self.ui:setWorldHitTest(false)
   UIPlaceObjects.registerKeyHandlers(self)
 end
 
@@ -119,6 +119,7 @@ function UIPlaceObjects:resize(num_slots)
         window.place_objects = true
         window:setActiveIndex(i)
         -- Stop picking up items when user presses object in list
+        local UIEditRoom = _G["UIEditRoom"] ---@type UIEditRoom
         local edit_room_window = window.ui:getWindow(UIEditRoom)
         if edit_room_window and edit_room_window.in_pickup_mode then
           edit_room_window:stopPickupItems()
@@ -359,6 +360,7 @@ end
 
 --! Helper function to stop UIEditRoom going back to doors phase
 function UIPlaceObjects:sell()
+  local UIEditRoom = _G["UIEditRoom"] ---@type UIEditRoom
   if not self.ui:getWindow(UIEditRoom) then
     self:close(false)
   end
@@ -447,6 +449,8 @@ function UIPlaceObjects:setOrientation(orient)
   if present_object and present_object.current_frame then
     self.object_anim:setFrame(present_object.current_frame)
   end
+
+  local Map = _G["Map"] ---@type Map
   local px, py = unpack(object.orientations[orient].render_attach_position)
   if type(px) == "table" then
     px, py = unpack(px)
@@ -511,7 +515,7 @@ function UIPlaceObjects:onMouseUp(button, x, y)
     repaint = true
   elseif button == "left" then
     if #self.objects > 0 then
-      local s = TheApp.gfx:getUIScale()
+      local s = self.app.gfx:getUIScale()
       if 0 <= x and x < self.width * s and 0 <= y and y < self.height * s then -- luacheck: ignore 542
         -- Click within window - do nothing
       elseif self.object_cell_x and self.object_cell_y then
@@ -570,6 +574,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty, dont_remove)
       -- Machines may have some state like smoke and etc. Update it.
       real_obj:placed(room)
     end
+    local Machine = _G["Machine"] ---@type Machine
     if class.is(real_obj, Machine) then
       real_obj:setHandymanRepairPosition(self.object_orientation)
     end
@@ -618,7 +623,7 @@ function UIPlaceObjects:draw(canvas, x, y)
 
   Window.draw(self, canvas, x, y)
 
-  local s = TheApp.gfx:getUIScale()
+  local s = self.app.gfx:getUIScale()
   x, y = x + self.x * s, y + self.y * s
   self.white_font:draw(canvas, self.title_text, x + 17 * s, y + 21 * s, 153 * s, 0)
   self.white_font:drawWrapped(canvas, self.desc_text, x + 20 * s, y + 46 * s, 147 * s)
@@ -648,7 +653,7 @@ function UIPlaceObjects:draw(canvas, x, y)
 end
 
 function UIPlaceObjects:onMouseMove(x, y, dx, dy)
-  local s = TheApp.gfx:getUIScale()
+  local s = self.app.gfx:getUIScale()
   local current_hover_id
   local header_height = 159 * s
   local bar_height = 29 * s
@@ -741,7 +746,7 @@ function UIPlaceObjects:_placementAvailableHereAndOtherObjectsDoNotInterfere(
   local room_id = room
   local valid_placement = true
   local opt_tiles_blocked = 0
-  local world = self.ui.app.world
+  local world = self.world
   local player_id = self.ui.hospital:getPlayerIndex()
   local direction = self.object_orientation
   local direction_parameters = Object.directionParameters()
@@ -871,7 +876,7 @@ end
 --! param room_id (integer) room id if we in a build mode.
 --! return (bool) is this placement not going to break path finding.
 function UIPlaceObjects:_isNonSideObjectPlacementValid(x, y, object, object_orientation, room_id)
-  local world = self.ui.app.world
+  local world = self.world
   local invalid_placement
 
   if room_id > 0 and x and y then
@@ -917,7 +922,7 @@ function UIPlaceObjects:_isNonSideObjectPlacementValid(x, y, object, object_orie
     -- all-permissive placing approach.
     -- This could lead to crashes, so we'll record this in the log so that during investigation
     -- we'll be able to know that safe placement was disabled.
-    TheApp.world:gameLog("Warning: Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
+    self.world:gameLog("Warning: Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
     return true
   end
   return false
@@ -937,7 +942,7 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
   local along_wall = map:getCellFlags(x, y)[passable_flag] == false
   if along_wall then return true end
 
-  local world = self.ui.app.world
+  local world = self.world
   local invalid_placement
 
   -- Depending on the orientation of the side object, we will check the accessibility of the cell
@@ -1014,7 +1019,7 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
     -- all-permissive placing approach.
     -- This could lead to crashes, so we'll record this in the log so that during investigation
     -- we'll be able to know that safe placement was disabled.
-    TheApp.world:gameLog("Warning: Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
+    self.world:gameLog("Warning: Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
     return true
   end
   return false
@@ -1123,7 +1128,7 @@ function UIPlaceObjects:afterLoad(old, new)
 
   if old < 236 then
     local selected_label_color = { red = 40, green = 40, blue = 250 }
-    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
-    self.blue_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
+    self.white_font = self.app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+    self.blue_font = self.app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   end
 end

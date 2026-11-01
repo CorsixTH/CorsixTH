@@ -80,6 +80,7 @@ function Inspector:checkForReceptionDesk()
   -- the desk they were aiming for is gone, they will either:
   if self:isMeandering() then
     if self.hospital:hasReceptionDesk(true) then
+      local SeekReceptionAction = _G["SeekReceptionAction"] ---@type SeekReceptionAction
       self:setNextAction(SeekReceptionAction()) -- Head towards an existing desk
     else
       self.hospital.epidemic:handleInspectorArrival() -- Deliver results anyway

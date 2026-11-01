@@ -76,6 +76,10 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
   local mirror = humanoid.last_move_direction == "east" and 0 or 1
   local phase = action.phase
 
+  local IdleSpawnAction = _G["IdleSpawnAction"] ---@type IdleSpawnAction
+  local WalkAction = _G["WalkAction"] ---@type WalkAction
+  local UseObjectAction = _G["UseObjectAction"] ---@type UseObjectAction
+
   if phase == 0 then
     action.phase = 1
 

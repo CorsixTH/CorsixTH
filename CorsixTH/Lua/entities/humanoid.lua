@@ -414,6 +414,7 @@ function Humanoid:afterLoad(old, new)
 
   for _, action in pairs(self.action_queue) do
     -- Sometimes actions not actual instances of HumanoidAction
+    local HumanoidAction = _G["HumanoidAction"] ---@type HumanoidAction
     HumanoidAction.afterLoad(action, old, new)
   end
 
@@ -469,6 +470,7 @@ end
 --! Despawn the humanoid.
 function Humanoid:despawn()
   local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
+  local SpawnAction = _G["SpawnAction"] ---@type SpawnAction
   self:setNextAction(SpawnAction("despawn", spawn_point):setMustHappen(true))
 end
 
@@ -506,6 +508,7 @@ end
 
 function Humanoid:setCallCompleted()
   if self.on_call then
+    local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
     CallsDispatcher.onCheckpointCompleted(self.on_call)
   end
 end

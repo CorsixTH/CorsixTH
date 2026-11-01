@@ -127,6 +127,7 @@ function UIBottomPanel:drawPanels()
       panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y, { scaleFactor = s })
       local btn = panel.window.active_button
       if panels[1].visible then
+        local UIMachineMenu = _G["UIMachineMenu"] ---@type UIMachineMenu
         local w = self.ui:getWindow(UIMachineMenu)
         if w or btn and btn.panel_for_sprite == panel and btn.active then
           aux_sprites:draw(canvas, 23, x, y, { scaleFactor = s })
@@ -220,15 +221,18 @@ end
 
 function UIBottomPanel:openJukebox()
   if self.ui.app.config.audio then
+    local UIJukebox = _G["UIJukebox"] ---@type UIJukebox
     self.ui:addWindow(UIJukebox(self.ui.app))
   end
 end
 
 function UIBottomPanel:openSave()
+  local UISaveGame = _G["UISaveGame"] ---@type UISaveGame
   self.ui:addWindow(UISaveGame(self.ui))
 end
 
 function UIBottomPanel:openLoad()
+  local UILoadGame = _G["UILoadGame"] ---@type UILoadGame
   self.ui:addWindow(UILoadGame(self.ui, "game"))
 end
 
@@ -493,6 +497,7 @@ function UIBottomPanel:_initMessageWithDrawerIcon(message_info)
   end
 
   -- Create the drawer message icon, note this does not show it to the player on creation.
+  local UIMessage = _G["UIMessage"] ---@type UIMessage
   local drawer_icon = UIMessage(self.ui, 175, nil,
     onClose, message_info.type, message_info.message, message_info.owner,
     message_info.timeout, message_info.default_choice, message_info.callback)
@@ -707,6 +712,7 @@ function UIBottomPanel:dialogBankCommon(enable, stats)
   if enable then
     self:addDialog("UIBankManager", stats and "showStatistics")
   else
+    local UIBankManager = _G["UIBankManager"] ---@type UIBankManager
     local w = self.ui:getWindow(UIBankManager)
     if w then
       if not stats and w.showingStatistics then
@@ -723,6 +729,8 @@ end
 
 function UIBottomPanel:dialogBuildRoom()
   if self.world.user_actions_allowed then
+    local UIBuildRoom = _G["UIBuildRoom"] ---@type UIBuildRoom
+    local UIFullscreen = _G["UIFullscreen"] ---@type UIFullscreen
     local w = self.ui:getWindow(UIBuildRoom)
     local fullscreen = self.ui:getWindow(UIFullscreen)
 
@@ -747,6 +755,8 @@ end
 
 function UIBottomPanel:dialogFurnishCorridor()
   if self.world.user_actions_allowed then
+    local UIFurnishCorridor = _G["UIFurnishCorridor"] ---@type UIFurnishCorridor
+    local UIFullscreen = _G["UIFullscreen"] ---@type UIFullscreen
     local w = self.ui:getWindow(UIFurnishCorridor)
     local fullscreen = self.ui:getWindow(UIFullscreen)
 
@@ -771,6 +781,8 @@ end
 
 function UIBottomPanel:dialogHireStaff()
   if self.world.user_actions_allowed then
+    local UIHireStaff = _G["UIHireStaff"] ---@type UIHireStaff
+    local UIFullscreen = _G["UIFullscreen"] ---@type UIFullscreen
     local w = self.ui:getWindow(UIHireStaff)
     local fullscreen = self.ui:getWindow(UIFullscreen)
 
@@ -802,6 +814,7 @@ function UIBottomPanel:dialogStaffManagement(enable)
   if enable then
     self:addDialog("UIStaffManagement")
   else
+    local UIStaffManagement = _G["UIStaffManagement"] ---@type UIStaffManagement
     local w = self.ui:getWindow(UIStaffManagement)
     if w then
       w:close()
@@ -817,6 +830,7 @@ function UIBottomPanel:dialogTownMap(enable)
     if enable then
     self:addDialog("UITownMap")
     else
+    local UITownMap = _G["UITownMap"] ---@type UITownMap
     local w = self.ui:getWindow(UITownMap)
       if w then
         w:close()
@@ -832,6 +846,7 @@ end
   if enable then
     self:addDialog("UICasebook")
   else
+    local UICasebook = _G["UICasebook"] ---@type UICasebook
     local w = self.ui:getWindow(UICasebook)
     if w then
       w:close()
@@ -847,12 +862,14 @@ function UIBottomPanel:dialogResearch(enable)
     return
   end
   if TheApp.using_demo_files then
+    local UIInformation = _G["UIInformation"] ---@type UIInformation
     self.ui:addWindow(UIInformation(self.ui, {_S.errors.dialog_missing_graphics}))
   end
   if self.ui.hospital.research_dep_built then
     if enable then
       self:addDialog("UIResearch")
     else
+      local UIResearch = _G["UIResearch"] ---@type UIResearch
       local w = self.ui:getWindow(UIResearch)
       if w then
         w:close()
@@ -888,6 +905,7 @@ function UIBottomPanel:dialogStatus(enable)
   if enable then
     self:addDialog("UIProgressReport")
   else
+    local UIProgressReport = _G["UIProgressReport"] ---@type UIProgressReport
     local w = self.ui:getWindow(UIProgressReport)
     if w then
       w:close()
@@ -903,6 +921,7 @@ function UIBottomPanel:dialogCharts(enable)
   if enable then
     self:addDialog("UIGraphs")
   else
+    local UIGraphs = _G["UIGraphs"] ---@type UIGraphs
     local w = self.ui:getWindow(UIGraphs)
     if w then
       w:close()
@@ -918,6 +937,7 @@ function UIBottomPanel:dialogPolicy(enable)
   if enable then
     self:addDialog("UIPolicy")
   else
+    local UIPolicy = _G["UIPolicy"] ---@type UIPolicy
     local w = self.ui:getWindow(UIPolicy)
     if w then
       w:close()
@@ -931,6 +951,7 @@ function UIBottomPanel:dialogMachineMenu(enable)
     self.ui:playSound("selectx.wav")
     return
   end
+  local UIMachineMenu = _G["UIMachineMenu"] ---@type UIMachineMenu
   local w = self.ui:getWindow(UIMachineMenu)
   if w then
     w:close()
@@ -941,6 +962,7 @@ function UIBottomPanel:dialogMachineMenu(enable)
 end
 
 function UIBottomPanel:dialogAdviserHistory(enable)
+  local UIAdviserHistory = _G["UIAdviserHistory"] ---@type UIAdviserHistory
   local w = self.ui:getWindow(UIAdviserHistory)
   if w then
     w:close()
@@ -969,13 +991,16 @@ function UIBottomPanel:updateButtonStates()
   for i, button in ipairs(self.additional_buttons) do
     button:setToggleState(not not self.ui:getWindow(_G[fullscreen_dialogs[i]]))
   end
+  local UIBankManager = _G["UIBankManager"] ---@type UIBankManager
   self.bank_button:setToggleState(not not self.ui:getWindow(UIBankManager))
 end
 
 function UIBottomPanel:addDialog(dialog_class, extra_function)
+  local UIEditRoom = _G["UIEditRoom"] ---@type UIEditRoom
   local edit_window = self.ui:getWindow(UIEditRoom)
   -- If we are currently editing a room, ask for abortion before adding any dialog.
   if edit_window then
+    local UIConfirmDialog = _G["UIConfirmDialog"] ---@type UIConfirmDialog
     self.ui:addWindow(UIConfirmDialog(self.ui, false,
       _S.confirmation.abort_edit_room,
       --[[persistable:abort_edit_room_confirm_dialog]]function()
