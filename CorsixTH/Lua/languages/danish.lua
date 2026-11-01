@@ -1278,21 +1278,21 @@ tooltip = {
 
   -- Toolbar
   toolbar = {
-    bank_button        = "Venstreklik for bankkonsulent, höjreklik for kontoudskrift",
+    bank_button        = "Venstreklik (%s) for bankkonsulent, höjreklik (%s) for kontoudskrift",
     balance            = "Din Balance",
     reputation         = "Dit omdömme: ", -- NB: no %d! Append " ([reputation])".
     date               = "Dato",
-    rooms              = "Byg rum",
-    objects            = "Köb genstande",
-    edit               = "Ændre rum/genstande",
-    hire               = "Ansæt personale",
-    staff_list         = "Personalhåndtering",
-    town_map           = "Oversigtskort",
-    casebook           = "Medicinbog",
-    research           = "Forskning",
-    status             = "Status",
-    charts             = "Diagrammer",
-    policy             = "Politik",
+    rooms              = "Byg rum (%s)",
+    objects            = "Köb genstande (%s)",
+    edit               = "Ændre rum/genstande (%s)",
+    hire               = "Ansæt personale (%s)",
+    staff_list         = "Personalhåndtering (%s)",
+    town_map           = "Oversigtskort (%s)",
+    casebook           = "Medicinbog (%s)",
+    research           = "Forskning (%s)",
+    status             = "Status (%s)",
+    charts             = "Diagrammer (%s)",
+    policy             = "Politik (%s)",
   },
 
   -- Hire staff window
