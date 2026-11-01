@@ -33,12 +33,12 @@ function SeekReceptionAction:SeekReceptionAction()
   self:HumanoidAction("seek_reception")
 end
 
---! Can the humanoid join the reception queue at the given position?
---!param humanoid (Humanoid) Humanoid going to the reception.
---!param x (int) X coordinate of the tile to consider.
---!param y (int) Y coordinate of the tile to consider.
---!param dist (int) Distance of the tile to the reception.
---!return (bool) Whether the humanoid can start queueing.
+--- Can the humanoid join the reception queue at the given position?
+--- @param humanoid (Humanoid) Humanoid going to the reception.
+--- @param x (integer) X coordinate of the tile to consider.
+--- @param y (integer) Y coordinate of the tile to consider.
+--- @param dist (integer) Distance of the tile to the reception.
+--- @return (boolean) # Whether the humanoid can start queueing.
 local function can_join_queue_at(humanoid, x, y, dist)
   local flag_cache = humanoid.world.map.th:getCellFlags(x, y)
   return flag_cache.hospital and not flag_cache.room and
@@ -46,10 +46,10 @@ local function can_join_queue_at(humanoid, x, y, dist)
       flag_cache.owner == humanoid.hospital:getPlayerIndex()
 end
 
---! Trim the last part of the path when it is possible to join the reception queue.
---!param humanoid Humanoid that will walk the path.
---!param path_x (array of int) X coordinates of the path, modified in-place.
---!param path_y (array of int) Y coordinates of the path, modified in-place.
+--- Trim the last part of the path when it is possible to join the reception queue.
+--- @param humanoid Humanoid that will walk the path.
+--- @param path_x (integer[]) X coordinates of the path, modified in-place.
+--- @param path_y (integer[]) Y coordinates of the path, modified in-place.
 local function trimQueuingTail(humanoid, path_x, path_y)
   local pathindex = #path_x
   for i = pathindex - 1, 2, -1 do
@@ -117,6 +117,7 @@ local function action_seek_reception_start(action, humanoid)
       humanoid:setNextAction(QueueAction(x, y, best_desk.queue):setMustHappen(action.must_happen)
           :setFaceDirection(face_x, face_y))
     else
+      local WalkAction = _G["WalkAction"] ---@type WalkAction
       local walk = WalkAction(x, y, true):setMustHappen(action.must_happen)
       humanoid:queueAction(walk, 0)
 

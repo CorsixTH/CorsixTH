@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
-local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnoucementPriority]]
+local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPriority]]
 local Hospital = _G['Hospital'] ---@type Hospital
 
 class "PlayerHospital" (Hospital)

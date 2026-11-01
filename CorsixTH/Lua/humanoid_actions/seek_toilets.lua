@@ -64,6 +64,7 @@ local function seek_toilets_action_start(action, humanoid)
     if humanoid.next_room_to_visit then
       humanoid:setNextAction(SeekRoomAction(humanoid.next_room_to_visit.room_info.id))
     else
+      local SeekReceptionAction = _G["SeekReceptionAction"] ---@type SeekReceptionAction
       humanoid:queueAction(SeekReceptionAction())
     end
     humanoid.going_to_toilet = "no"

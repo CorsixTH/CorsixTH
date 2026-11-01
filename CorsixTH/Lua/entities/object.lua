@@ -26,6 +26,8 @@ local Entity = _G['Entity'] ---@type Entity
 class "Object" (Entity)
 
 ---@class Object: Entity
+---@field reserved_for (Humanoid?) Humanoid that has claimed the object.
+---@field permanent_flags (integer) Permanent drawing flags of the object.
 ---@operator call: Object
 local Object = _G["Object"] ---@type Object
 
@@ -91,6 +93,7 @@ function Object:initOrientation(direction)
       local th = TH.animation()
       th:setCrop(point.column)
       th:setHitTestResult(self)
+      local Map = _G["Map"] ---@type Map
       th:setPosition(Map:WorldToScreen(1-point[1], 1-point[2]))
       self.split_anims[i] = th
     end
@@ -212,6 +215,7 @@ function Object:setPosition(x, y)
     -- The given position is for the primary tile, so position non-primary
     -- animations relative to the primary one.
     local bx, by = unpack(self.split_anim_positions[1])
+    local Map = _G["Map"] ---@type Map
     for i, th in ipairs(self.split_anims) do
       local point = self.split_anim_positions[i]
       local dx, dy = Map:WorldToScreen(1-point[1]+bx, 1-point[2]+by)
@@ -761,6 +765,7 @@ end
 !param data (table) If some data should be retained after moving an object it is in this table.
 ]]
 function Object:onClick(ui, button, data)
+  local UIEditRoom = _G["UIEditRoom"] ---@type UIEditRoom
   local window = ui:getWindow(UIEditRoom)
   -- Flag 'in_pickup_mode' can be used if for example some things
   -- should only happen as long as the object is not picked up.
@@ -782,6 +787,7 @@ function Object:onClick(ui, button, data)
       return
     end
 
+    local UIFullscreen = _G["UIFullscreen"] ---@type UIFullscreen
     local fullscreen = ui:getWindow(UIFullscreen)
     if fullscreen then
       fullscreen:close()
@@ -808,6 +814,7 @@ function Object:onClick(ui, button, data)
     if not room_editing_mode then
       self:onPickUp()
       self:setInvisible(true)
+      local UIPlaceObjects = _G["UIPlaceObjects"] ---@type UIPlaceObjects
       window = UIPlaceObjects(ui, object_list, false) -- don't pay for
       ui:addWindow(window)
     else

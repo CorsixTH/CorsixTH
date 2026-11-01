@@ -24,6 +24,8 @@ local Humanoid = _G['Humanoid'] ---@type Humanoid
 class "Patient" (Humanoid)
 
 ---@class Patient: Humanoid
+---@field is_debug (boolean) Whether the patient is a debug patient.
+---@field is_emergency (boolean) Whether the patient came in by helicopter.
 ---@operator call: Patient
 local Patient = _G["Patient"] ---@type Patient
 
@@ -94,6 +96,7 @@ function Patient:onClick(ui, button)
             epidemic:markForVaccination(self)
           end
       else
+        local UIPatient = _G["UIPatient"] ---@type UIPatient
         ui:addWindow(UIPatient(ui, self))
       end
     end
@@ -174,6 +177,7 @@ function Patient:setDiagnosed()
   self.diagnosed = true
   self.treatment_history[#self.treatment_history + 1] = self.disease.name
 
+  local UIPatient = _G["UIPatient"] ---@type UIPatient
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
     window:updateInformation()
@@ -188,6 +192,7 @@ function Patient:modifyDiagnosisProgress(incrementValue)
   self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
     self.diagnosis_progress + incrementValue)
   self.diagnosis_progress = math.max(0.000, self.diagnosis_progress)
+  local UIPatient = _G["UIPatient"] ---@type UIPatient
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
     window:updateInformation()
@@ -238,6 +243,7 @@ function Patient:setHospital(hospital)
   end
   Humanoid.setHospital(self, hospital)
   if hospital.is_in_world and not self.is_debug and not self.is_emergency then
+    local SeekReceptionAction = _G["SeekReceptionAction"] ---@type SeekReceptionAction
     self:setNextAction(SeekReceptionAction())
   end
   hospital:addPatient(self)
@@ -385,6 +391,8 @@ function Patient:die()
   self:unregisterCallbacks()
 
   self.going_to_die = true
+  local MeanderAction = _G["MeanderAction"] ---@type MeanderAction
+  local DieAction = _G["DieAction"] ---@type DieAction
   if self:getRoom() then
     self:queueAction(MeanderAction():setCount(1))
   else
@@ -419,12 +427,16 @@ function Patient:falling(player_init)
   local current = self:getCurrentAction()
   current.keep_reserved = true
   if self.falling_anim and self:atFullyEmptyTile(current) and self.has_fallen == 1 then
+    local FallingAction = _G["FallingAction"] ---@type FallingAction
+    local OnGroundAction = _G["OnGroundAction"] ---@type OnGroundAction
+    local GetUpAction = _G["GetUpAction"] ---@type GetUpAction
     self.has_fallen = 2
     self:queueAction(FallingAction(), 1)
     self:queueAction(OnGroundAction(), 2)
     self:queueAction(GetUpAction(), 3)
     -- show the patient is annoyed, if possible
     if math.random(1, 5) == 3 and self.shake_fist_anim then
+      local ShakeFistAction = _G["ShakeFistAction"] ---@type ShakeFistAction
       self:queueAction(ShakeFistAction(), 4)
       self:interruptAndRequeueAction(current, 5)
     else
@@ -451,6 +463,7 @@ function Patient:vomit()
   local current = self:getCurrentAction()
   --Only vomit under these conditions. Maybe I should add a vomit for patients in queues too?
   if self:atFullyEmptyTile(current) and self.has_vomitted == 0 then
+    local VomitAction = _G["VomitAction"] ---@type VomitAction
     self:queueAction(VomitAction(), 1)
     self:interruptAndRequeueAction(current, 2)
     self.has_vomitted = self.has_vomitted + 1
@@ -464,6 +477,7 @@ function Patient:pee()
   local current = self:getCurrentAction()
   --Only pee under these conditions. As with vomit, should they also pee if in a queue?
   if self:atFullyEmptyTile(current) then
+    local PeeAction = _G["PeeAction"] ---@type PeeAction
     self:queueAction(PeeAction(), 1)
     self:interruptAndRequeueAction(current, 2)
     self:setMood("poo", "deactivate")
@@ -480,6 +494,7 @@ end
 function Patient:checkWatch()
   local action = self:getCurrentAction()
   if self.check_watch_anim and (action.name == "idle" or action.name == "seek_room") and not action.is_leaving then
+    local CheckWatchAction = _G["CheckWatchAction"] ---@type CheckWatchAction
     self:queueAction(CheckWatchAction(), 0)
   end
 end
@@ -487,6 +502,7 @@ end
 function Patient:yawn()
   local action = self:getCurrentAction()
   if self.yawn_anim and (action.name == "idle" or action.name == "seek_room") and not action.is_leaving then
+    local YawnAction = _G["YawnAction"] ---@type YawnAction
     self:queueAction(YawnAction(), 0)
   end
 end
@@ -494,6 +510,7 @@ end
 function Patient:tapFoot()
   local action = self:getCurrentAction()
   if self.tap_foot_anim and (action.name == "idle" or action.name == "seek_room") and not action.is_leaving then
+    local TapFootAction = _G["TapFootAction"] ---@type TapFootAction
     self:queueAction(TapFootAction(), 0)
   end
 end
@@ -771,6 +788,7 @@ function Patient:handleToiletNeed()
         self.going_to_toilet = "no-toilets" -- Gets reset when a new toilet is built (then, patient will try again).
       -- Otherwise we can queue the action, but only if not in any rooms right now.
       elseif not self:getRoom() and not self:getCurrentAction().is_leaving and not self:getCurrentAction().pee then
+        local SeekToiletsAction = _G["SeekToiletsAction"] ---@type SeekToiletsAction
         self:setNextAction(SeekToiletsAction():setMustHappen(true))
         self.going_to_toilet = "yes"
       end
@@ -852,6 +870,8 @@ function Patient:_constructGetSodaAction(machine, lx, ly)
     -- Go to the machine, use it, and then continue with
     -- whatever he/she was doing.
     current.keep_reserved = true
+    local WalkAction = _G["WalkAction"] ---@type WalkAction
+    local UseObjectAction = _G["UseObjectAction"] ---@type UseObjectAction
     self:queueAction(WalkAction(lx, ly):setMustHappen(true):disableTruncate(), 1)
     self:queueAction(UseObjectAction(machine):setAfterUse(after_use):setMustHappen(true), 2)
     machine:addReservedUser(self)
@@ -918,6 +938,7 @@ function Patient:_checkPatientIsStillQueueingForARoom()
         self.noqueue_ticks = 1
       elseif self.noqueue_ticks > 2 then
         self.world:gameLog("A patient has a queue action, but is not in the corresponding queue")
+        local SeekReceptionAction = _G["SeekReceptionAction"] ---@type SeekReceptionAction
         self:setNextAction(SeekReceptionAction())
       else
         self.noqueue_ticks = self.noqueue_ticks + 1
@@ -1169,6 +1190,7 @@ function Patient:updateMessage(choice)
             output_text = strings.need_to_build:format(room_name)
           end
         elseif #req.rooms == 0 and next(req.staff) then
+          local StaffProfile = _G["StaffProfile"] ---@type StaffProfile
           output_text = strings.need_to_employ:format(StaffProfile.translateStaffClass(next(req.staff)))
         end
         self.message[3].text = output_text
@@ -1345,6 +1367,7 @@ function Patient:interruptAndRequeueAction(current_action, queue_pos, meander_be
       self:queueAction(MeanderAction():setCount(1), queue_pos)
     end
   elseif current_action.name == "walk" then
+    local WalkAction = _G["WalkAction"] ---@type WalkAction
     requeue_action = WalkAction(current_action.x, current_action.y)
     requeue_action:setMustHappen(current_action.must_happen)
     if current_action.saved_must_happen ~= nil then

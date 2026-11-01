@@ -40,6 +40,7 @@ function UIWatch:UIWatch(ui, count_type)
 
   self.esc_closes = false
   self.modal_class = "open_countdown"
+  local Date= _G["Date"] ---@type Date
   if count_type == "emergency" then
     self.tick_rate = math.floor((TICK_DAYS_EMERGENCY * Date.hoursPerDay()) / TIMER_SEGMENTS)
     self.tick_timer = self.tick_rate
@@ -170,6 +171,7 @@ function UIWatch:cycleTimerEventPatient()
   self.ui:playSound("camclick.wav")
   local hospital = self.ui.hospital
 
+  local UIPatient = _G["UIPatient"] ---@type UIPatient
   if self.count_type == "emergency" then
     local patients = hospital.emergency_patients
 
@@ -201,6 +203,7 @@ function UIWatch:scrollToTimerEventPatient()
   local patient = self.lastCycledPatient
   if patient then
     -- Current open dialog
+    local UIPatient = _G["UIPatient"] ---@type UIPatient
     local current_patient_dialog = self.ui:getWindow(UIPatient)
     if not current_patient_dialog then
       -- Create the dialog but don't add it to the window

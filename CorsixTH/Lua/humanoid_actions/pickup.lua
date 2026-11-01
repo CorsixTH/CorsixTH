@@ -23,12 +23,16 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "PickupAction" (HumanoidAction)
 
 ---@class PickupAction: HumanoidAction
+---@field ui (UI) the user interface.
+---@field window (UIPlaceStaff?) Window instance for placing the staff member.
+---@field todo_close (Window?) Object to close afterwards.
 ---@operator call: PickupAction
 local PickupAction = _G["PickupAction"] ---@type PickupAction
 
 -- Construct a pick-up action
---!param ui User interface
+--- @param ui (UI) User interface
 function PickupAction:PickupAction(ui)
+  local UI = _G["UI"] ---@type UI
   assert(class.is(ui, UI), "Invalid value for parameter 'ui'")
 
   self:HumanoidAction("pickup")
@@ -38,6 +42,7 @@ function PickupAction:PickupAction(ui)
 end
 
 function PickupAction:setTodoClose(dialog)
+  local Window = _G["Window"] ---@type Window
   assert(class.is(dialog, Window), "Invalid value for parameter 'dialog'")
 
   self.todo_close = dialog
@@ -95,6 +100,7 @@ local function action_pickup_start(action, humanoid)
     action.on_interrupt = action_pickup_interrupt
   end
   local ui = action.ui
+  local UIPlaceStaff = _G["UIPlaceStaff"] ---@type UIPlaceStaff
   action.window = UIPlaceStaff(ui, humanoid, ui.cursor_x, ui.cursor_y)
   ui:addWindow(action.window)
   ui:playSound("pickup.wav")

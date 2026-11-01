@@ -2085,7 +2085,7 @@ function App:afterLoad()
   self.world.release_version = self:getReleaseString(new)
   self.world.savegame_version = new
 
-  local Object = _G["Object"] --@type Object
+  local Object = _G["Object"] ---@type Object
   if old < 87 then
     local new_object = corsixth.require("objects.gates_to_hell")
     Object.processTypeDefinition(new_object)

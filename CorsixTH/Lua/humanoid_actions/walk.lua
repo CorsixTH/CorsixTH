@@ -18,18 +18,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local TheApp = _G["TheApp"] ---@type App
 local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 
 class "WalkAction" (HumanoidAction)
 
 ---@class WalkAction: HumanoidAction
+---@field x_path (integer[]) X coordinates of the path.
+---@field y_path (integer[]) Y coordinates of the path.
+---@field x (integer) X coordinate of the destination tile.
+---@field y (integer) Y coordinate of the destination tile.
+---@field trimmed (boolean?) Optional parameter to finish action on re-route
 ---@operator call: WalkAction
 local WalkAction = _G["WalkAction"] ---@type WalkAction
 
---! Action to walk to a given position.
---!param x (int) X coordinate of the destination tile.
---!param y (int) Y coordinate of the destination tile.
---!param trimmed (boolean) Optional parameter to finish action on re-route
+--- Action to walk to a given position.
+--- @param x (integer) X coordinate of the destination tile.
+--- @param y (integer) Y coordinate of the destination tile.
+--- @param trimmed (boolean) Optional parameter to finish action on re-route
 function WalkAction:WalkAction(x, y, trimmed)
   assert(type(x) == "number", "Invalid value for parameter 'x'")
   assert(type(y) == "number", "Invalid value for parameter 'y'")
@@ -48,16 +54,16 @@ function WalkAction:truncateOnHighPriority()
   return self
 end
 
---! Nurse is walking with the intention to vaccinate.
---!return (action) self, for daisy-chaining.
+--- Nurse is walking with the intention to vaccinate.
+--- @return (WalkAction) # self, for daisy-chaining.
 function WalkAction:enableWalkingToVaccinate()
   self.walking_to_vaccinate = true
   return self
 end
 
---! Set a flag whether the walk enters a room.
---!param entering (bool) If set or nil, set the flag of entering the room.
---!return (action) self, for daisy-chaining.
+--- Set a flag whether the walk enters a room.
+--- @param entering (boolean) If set or nil, set the flag of entering the room.
+--- @return (WalkAction) # self, for daisy-chaining.
 function WalkAction:setIsEntering(entering)
   assert(type(entering) == "boolean", "Invalid value for parameter 'entering'")
 
@@ -80,6 +86,7 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
   -- Unreserve any door which we had reserved unless specifically told not to.
   if not action.keep_reserved then
     local door = action.reserve_on_resume
+    local Vip = _G["Vip"] ---@type Vip
     if door and (door.reserved_for == humanoid or class.is(humanoid, Vip)) then --  "or class.is(humanoid, Vip)" is added as a temporary fix
   -- TODO: find the cause of the "VIP bug", why does the door not get unreserved sometimes when the VIP has looked into a room? See issue 1025
       door.reserved_for = nil
@@ -263,6 +270,7 @@ strict_declare_global "HumanoidRawWalk"
 HumanoidRawWalk = action_walk_raw
 
 local action_walk_tick_door = permanent"action_walk_tick_door"( function(humanoid)
+  local SwingDoor = _G["SwingDoor"] ---@type SwingDoor
   local door = humanoid.user_of
   if not class.is(door, SwingDoor) then
     -- The doors will need to finish swinging before another humanoid can walk through.
@@ -290,7 +298,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
   local room = door:getRoom()
   local is_entering_room = room and humanoid:getRoom() ~= room
 
-  --! Send a humanoid that has arrived at a destroyed room somewhere else.
+  --- Send a humanoid that has arrived at a destroyed room somewhere else.
   -- A crashed room discards its door queue (Door:closeDoor) and deactivates
   -- itself, so nobody may enter it and there is nothing to queue on. This mirrors
   -- what Room:crashRoom already does for a humanoid holding a reservation, and
@@ -353,6 +361,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     if is_entering_room and queue:size() == 0 and not room:getPatient() and
         not door.user and not door.reserved_for and humanoid.should_knock_on_doors and
         room.room_info.required_staff and not swinging then
+      local KnockDoorAction = _G["KnockDoorAction"] ---@type KnockDoorAction
       humanoid:queueAction(KnockDoorAction(humanoid, door, dir), action_index)
       action_index = action_index + 1
     end
@@ -370,6 +379,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     action.reserve_on_resume = nil
   elseif is_entering_room and not action.done_knock and humanoid.should_knock_on_doors and
       room.room_info.required_staff and not swinging then
+    local KnockDoorAction = _G["KnockDoorAction"] ---@type KnockDoorAction
     humanoid:setTilePositionSpeed(x1, y1)
     humanoid:queueAction(KnockDoorAction(humanoid, door, dir), 0)
     action.reserve_on_resume = door
