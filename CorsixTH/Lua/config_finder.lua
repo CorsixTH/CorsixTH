@@ -142,6 +142,7 @@ local function new_config_defaults()
     play_announcements = true,
     announcement_volume = 0.5,
     play_music = true,
+    play_own_music = false,
     music_volume = 0.5,
     prevent_edge_scrolling = false,
     capture_mouse = true,
@@ -653,14 +654,21 @@ param(config_values, 'new_graphics_folder', '[[X:\\ThemeHospital\\Graphics]]') .
 param(config_values, 'screenshots', '[[X:\\ThemeHospital\\Screenshots]]') .. [=[
 
 -------------------------------------------------------------------------------
--- If you want to listen to non-Theme-Hospital music, then follow these steps:
---  1) Find updated versions of the original tracks (a link to ZR's Remixes can
---     be found on the CorsixTH wiki) or any other music you want to listen to.
---  2) Uncomment the next line and point it to where the music files are.
---  3) If you want to change the names of songs ingame, make a file called
---     "names.txt" and write the file name on one row, followed by the desired
+-- Custom music. If you want to listen to your own music, then follow the steps
+-- below:
+--
+--  1) Set play_own_music to true
+--  2) Remove the nil and dashes from audio_music and enter the path to your
+--    music in the square brackets.
+--
+-- You can also find enhanced versions Theme Hospital music online (such as
+-- ZR's Remixes mentioned in the CorsixTH wiki).
+--
+-- If you want to change the names of songs ingame, make a file called
+-- "names.txt" and write the file name on one row, followed by the desired
 --     ingame name on the next row.
 --]=] .. '\n' ..
+param(config_values, 'play_own_music') ..
 param(config_values, 'audio_music', '[[X:\\ThemeHospital\\Music]]') .. [=[
 
 -------------------------------------------------------------------------------

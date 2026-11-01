@@ -77,7 +77,9 @@ function Audio:init()
     return
   end
 
-  local music = self.app.config.audio_music
+  -- Look for player's music directory if they asked to use it
+  local music = self.app.config.play_own_music and
+      self.app.config.audio_music
   local music_dir
   if music then
     music_dir = music
@@ -699,73 +701,97 @@ end
 --!param index Index of the track to play in the playlist.
 function Audio:playBackgroundTrack(index)
   local info = self.background_playlist[index]
-  assert(info, "Index not valid")
-  if self.app.config.play_music then
-    local music = info.music
-    if not music or type(music) == 'number' then
-      local data = self:getFileData(index)
-      if info.is_xmi then
-        if self.midi_player then
-          local ok, err = pcall(self.midi_player.setVolume, self.midi_player, self.app.config.music_volume)
-          if ok then
-            ok, err = pcall(self.midi_player.playXmi, self.midi_player, data)
-          end
-          if not ok then
-            print("Failed to play midi: " .. err)
-            return
-          end
+  assert(info, "Index not valid: " .. tostring(index))
 
-          -- info.music has to be equal to background_music and both values need
-          -- to be truthy and unique for the jukebox to detect the track. Using
-          -- the index is just a convenient way to achieve this.
-          self.background_music = index
-          info.music = index
-          self:notifyJukebox()
+  -- Tokenise the request for each asynchrous call to play music to handle
+  -- a state change. Each call supersedes any earlier asynchronous request.
+  self.background_music_request = {}
+  local request = self.background_music_request
+
+  if not self.app.config.play_music then
+    return
+  end
+
+  local music = info.music
+  if not music or type(music) == "number" then
+    local data = self:getFileData(index)
+    if info.is_xmi then
+      if self.midi_player then
+        local ok, err = pcall(self.midi_player.setVolume, self.midi_player, self.app.config.music_volume)
+        if ok then
+          ok, err = pcall(self.midi_player.playXmi, self.midi_player, data)
+        end
+        if not ok then
+          print("Failed to play midi: " .. err)
           return
         end
-        data = SDL.audio.transcodeXmiToMid(data)
+
+        -- info.music has to be equal to background_music and both values need
+        -- to be truthy and unique for the jukebox to detect the track. Using
+        -- the index is just a convenient way to achieve this.
+        self.background_music = index
+        info.music = index
+        self:notifyJukebox()
+        return
       end
-      -- Loading of music files can incur a slight pause, which is why it is
-      -- done asynchronously.
-      -- Someone might want to stop the player from
-      -- starting to play once it's loaded though.
-      self.load_music = true
-      SDL.audio.loadMusicAsync(data, function(music_data, err)
-
-        if music_data == nil then
-          info.enabled = false
-          self:updatePlaylistPreferences()
-          local name = (info.filename_music or info.filename)
-          local msg
-          if not self.warned and TheApp.ui then -- Warn once per session
-            TheApp.ui:addWindow(UIInformation(TheApp.ui, {_S.errors.music}))
-            self.warned = true
-          end
-          if err == "No SoundFonts have been requested" then
-            msg = "Required soundfont is not found, please download one. A suitable soundfont is linked from the CorsixTH wiki."
-          elseif err == "XMP: Unrecognized file format" or err == "ModPlug_Load failed" then
-            msg = "Music format not supported for file " .. name
-          else
-            msg = "Could not load music file " .. name .. ". Error: " .. err
-          end
-          if self.app.world then self.app.world:gameLog(msg) end
-          if not self.app.world or not self.app.config.debug then print(msg) end
-        else
-          info.music = music_data
-          -- Do we still want it to play?
-          if self.load_music then
-            return self:playBackgroundTrack(index)
-          end
-        end
-      end)
-      return
+      data = SDL.audio.transcodeXmiToMid(data)
     end
-    assert(SDL.audio.playMusic(music))
-    SDL.audio.setMusicVolume(self.app.config.music_volume)
-    self.background_music = music
 
-    self:notifyJukebox()
+    -- Loading of music files can incur a slight pause, which is why it is
+    -- done asynchronously.
+    -- Someone might want to stop the player from
+    -- starting to play once it's loaded though.
+    self.load_music = true
+
+    SDL.audio.loadMusicAsync(data, function(music_data, err)
+      -- Ignore this result if another request has superseded it, or if the
+      -- playlist entry at this index has since been replaced.
+      if request ~= self.background_music_request
+          or self.background_playlist[index] ~= info then
+        return
+      end
+
+      if music_data == nil then
+        info.enabled = false
+        self:updatePlaylistPreferences()
+        local name = info.filename_music or info.filename
+        local msg
+        if not self.warned and TheApp.ui then -- Warn once per session
+          TheApp.ui:addWindow(UIInformation(TheApp.ui, {_S.errors.music}))
+          self.warned = true
+        end
+        if err == "No SoundFonts have been requested" then
+          msg = "Required soundfont is not found, please download one. A suitable soundfont is linked from the CorsixTH wiki."
+        elseif err == "XMP: Unrecognized file format" or err == "ModPlug_Load failed" then
+          msg = "Music format not supported for file " .. name
+        else
+          msg = "Could not load music file " .. name .. ". Error: " .. err
+        end
+
+        if self.app.world then self.app.world:gameLog(msg) end
+        if not self.app.world or not self.app.config.debug then print(msg) end
+        return
+      end
+
+      info.music = music_data
+      if not self.load_music or not self.app.config.play_music then
+        return
+      end
+
+      --! Attempt to play music now
+      assert(SDL.audio.playMusic(music_data))
+      SDL.audio.setMusicVolume(self.app.config.music_volume)
+      self.background_music = music_data
+      self:notifyJukebox()
+    end)
+
+    return
   end
+  assert(SDL.audio.playMusic(music))
+  SDL.audio.setMusicVolume(self.app.config.music_volume)
+  self.background_music = music
+
+  self:notifyJukebox()
 end
 
 function Audio:onMusicOver()
@@ -854,6 +880,24 @@ function Audio:destroy()
   self.speech_file_name = nil
   self.sound_fx = nil
   SDL.audio.destroy()
+end
+
+--! Restart the audio system. This may be because of a global audio change
+--! or changing music sources.
+function Audio:reinitAudioSystem()
+  local jukebox_window = self.app.ui:getWindow(UIJukebox)
+  if jukebox_window then
+    jukebox_window:close()
+  end
+  self:stopBackgroundTrack()
+  self:destroy()
+  self:init()
+  -- Restore speech data and sound libraries
+  self.app:initLanguage()
+  self:playRandomBackgroundTrack()
+  if jukebox_window then
+    self.app.ui:addWindow(UIJukebox(self.app))
+  end
 end
 
 -- Load the playlist disabled tracks file
