@@ -844,7 +844,22 @@ menu_player_count = {
 
 
 tooltip.toolbar = {
-  machine_menu = "Menú de máquina",
+  reputation = "Tu reputación (%s)",
+  edit = "Editar consultas-objetos (%s)",
+  bank_button = "Pulsa el botón izquierdo (%s) para el director del banco y el derecho (%s) par el saldo bancario",
+  objects = "Coloca objetos del pasillo (%s)",
+  date = "La fecha (%s)",
+  staff_list = "Dirección de personal (%s)",
+  hire = "Contrata personal (%s)",
+  town_map = "Mapa de la ciudad (%s)",
+  charts = "Gráficas (%s)",
+  research = "Investigación (%s)",
+  policy = "Normas (%s)",
+  casebook = "Botiquín (%s)",
+  status = "Condición (%s)",
+  rooms = "Construye consultas (%s)",
+  balance = "Tu saldo (%s)",
+  machine_menu = "Menú de máquina (%)",
 }
 
 adviser = {

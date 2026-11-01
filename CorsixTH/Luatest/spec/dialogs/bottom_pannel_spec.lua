@@ -22,6 +22,7 @@ describe("Bottom Panel:", function()
   local bottom_panel;
   local mock_canvas;
   local font;
+  local default_hotkeys
   math.round = function(input)
     return math.floor(input + 0.5)
   end
@@ -30,9 +31,11 @@ describe("Bottom Panel:", function()
     require("corsixth")
     require("class_test_base")
     require("TH")
+    require('utility')
 
     require("window")
     require("dialogs/bottom_panel")
+    default_hotkeys = require("config_finder").hotkeys_defaults()
   end)
 
   before_each(function()
@@ -55,6 +58,7 @@ describe("Bottom Panel:", function()
     mock(font, 'draw')
     mock(font, 'drawWrapped')
     mock(TheApp.world, 'gameLog')
+    TheApp.hotkeys = default_hotkeys
   end)
 
   it("Set nil dynamic info", function()

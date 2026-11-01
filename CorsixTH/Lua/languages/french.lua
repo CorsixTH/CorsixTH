@@ -605,7 +605,22 @@ menu_charts = {
 }
 
 tooltip.toolbar = {
-  machine_menu = "Menu des machines",
+  machine_menu = "Menu des machines (%s)",
+  hire = "Embaucher (%s)",
+  status = "Statut (%s)",
+  edit = "Modifier salles/objets (%s)",
+  bank_button = "Clic-gauche (%s) pour le directeur de banque ou clic-droit (%s) pour le relevé bancaire",
+  policy = "Organisation (%s)",
+  research = "Recherches (%s)",
+  casebook = "Registre (%s)",
+  reputation = "Votre réputation (%s)",
+  town_map = "Plan Ville (%s)",
+  rooms = "Construire des salles (%s)",
+  balance = "Votre solde (%s)",
+  date = "Date (%s)",
+  charts = "Graphique (%s)",
+  objects = "Aménager les couloirs (%s)",
+  staff_list = "Gestion de l'équipe (%s)",
 }
 
 -- Debug menu

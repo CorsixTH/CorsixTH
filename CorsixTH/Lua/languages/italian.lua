@@ -669,6 +669,25 @@ tooltip.lua_console = {
   close = "Chiudi la console",
 }
 
+tooltip.toolbar = {
+  status = "Riepilogo (%s)",
+  casebook = "Registro cure (%s)",
+  objects = "Sistemazione oggetti di corridoio (%s)",
+  edit = "Modifica stanze/oggetti (%s)",
+  reputation = "La tua reputazione (%s)",
+  research = "Ricerca (%s)",
+  date = "La data (%s)",
+  bank_button = "Tasto Sinistro (%s) per la Gestione Bancaria, Tasto Destro (%s) per il Rendiconto",
+  balance = "Il tuo bilancio (%s)",
+  machine_menu = "Machine menu (%s)",
+  town_map = "Pianta della città (%s)",
+  charts = "Grafici (%s)",
+  hire = "Assunzione personale (%s)",
+  policy = "Gestione (%s)",
+  staff_list = "Personale (%s)",
+  rooms = "Costruzione stanze (%s)",
+}
+
 errors = {
   dialog_missing_graphics = "I file dei dati della demo non contengono questa stringa.",
   save_prefix = "Errore durante il salvataggio: ",
