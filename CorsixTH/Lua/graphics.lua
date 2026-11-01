@@ -61,6 +61,7 @@ local cursors_palette = {
   [44] = "Stat01V.pal",
 }
 
+---@enum THFontCharset
 local charsets = {
   ["cp437"] = 1,
   ["mik"] = 2
