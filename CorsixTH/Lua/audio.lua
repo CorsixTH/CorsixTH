@@ -886,13 +886,18 @@ end
 --! or changing music sources.
 function Audio:reinitAudioSystem()
   local jukebox_window = self.app.ui:getWindow(UIJukebox)
-  if jukebox_window then jukebox_window:close() end
+  if jukebox_window then
+    jukebox_window:close()
+  end
   self:stopBackgroundTrack()
   self:destroy()
   self:init()
   -- Restore speech data and sound libraries
   self.app:initLanguage()
   self:playRandomBackgroundTrack()
+  if jukebox_window then
+    self.app.ui:addWindow(UIJukebox(self.app))
+  end
 end
 
 -- Load the playlist disabled tracks file

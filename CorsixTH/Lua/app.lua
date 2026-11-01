@@ -561,7 +561,7 @@ function App:verifyPlayerMusicDir(path)
 
   local dir_to_check = path or self.config.audio_music
   local msg
-  if not dir_to_check then return true end
+  if not dir_to_check then return false end
   if not isDirectory(dir_to_check) then
       msg = _S and
           _S.errors.custom_music_bad_path:format(path) or
