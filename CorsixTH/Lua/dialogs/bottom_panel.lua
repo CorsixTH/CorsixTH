@@ -76,19 +76,6 @@ function UIBottomPanel:onChangeResolution()
   self:drawPanels()
 end
 
--- A function to set the menu hotkey strings, whether a string or table.
--- Usage: hotkey_value_label(hotkey name as string)
--- Ex: hotkey_value_label("ingame_loadMenu") will produce (SHIFT+L) by default.
---!param hotkey_name (string) Name of hotkey to be converted to string.
---!return (string) The hotkey returned in this format: (KEY+KEY)
-local function hotkey_value_label(hotkey_name, hotkeys)
-  local hotkey_value = hotkeys and hotkeys[hotkey_name]
-  if hotkey_value == nil then
-    return ""
-  end
-  return string.upper(array_join(hotkey_value, "+"))
-end
-
 function UIBottomPanel:drawPanels()
   local hotkeys = self.ui.app.hotkeys
   self.bank_button = self:addPanel(1, 0, 0)
