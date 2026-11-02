@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "SpawnAction" (HumanoidAction)
 
 ---@class SpawnAction: HumanoidAction
----@field mode (string) Mode of spawning: "spawn" or "despawn"
+---@field mode ("spawn" | "despawn") Mode of spawning
 ---@field point ({x: integer, y: integer, direction: string?}) Position and optional face direction of spawning or despawning.
 ---@field offset ({x: integer, y: integer}?) Optional offset.
 ---@operator call: SpawnAction

@@ -28,7 +28,7 @@ class "UIAnnualReport" (UIFullscreen)
 local UIAnnualReport = _G["UIAnnualReport"] ---@type UIAnnualReport
 
 --- Helper function that enables and makes visible button or table of buttons/panels.
----@param button (Button|Button[]) The button or table of buttons that should be activated/deactivated. If a table is given it needs to have the `is_table` flag set to true.
+---@param button (Button | {[integer]: Button, is_table: true }) The button or table of buttons that should be activated/deactivated. If a table is given it needs to have the `is_table` flag set to true.
 ---@param active (boolean) Defines if the new state is active (true) or inactive (false).
 local function setActive(button, active)
   if button.is_table then
@@ -352,7 +352,7 @@ local trophy_prop = {
 
 --- Adds a trophy figure with some text if the player clicks on it.
 --- @param text (string) The text to show as motivation.
---- @param award_type (string) Should be one of "reputation" or "money"
+--- @param award_type ("reputation" | "money") Kind of award
 --- @param amount (integer) How much the player got/lost.
 function UIAnnualReport:addTrophy(text, award_type, amount)
   local no = self.no_trophies + 1

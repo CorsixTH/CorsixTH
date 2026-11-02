@@ -40,7 +40,7 @@ function UIWatch:UIWatch(ui, count_type)
 
   self.esc_closes = false
   self.modal_class = "open_countdown"
-  local Date= _G["Date"] ---@type Date
+  local Date = _G["Date"] ---@type Date
   if count_type == "emergency" then
     self.tick_rate = math.floor((TICK_DAYS_EMERGENCY * Date.hoursPerDay()) / TIMER_SEGMENTS)
     self.tick_timer = self.tick_rate

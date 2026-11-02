@@ -29,7 +29,7 @@ class "PickupAction" (HumanoidAction)
 ---@operator call: PickupAction
 local PickupAction = _G["PickupAction"] ---@type PickupAction
 
--- Construct a pick-up action
+--- Construct a pick-up action
 --- @param ui (UI) User interface
 function PickupAction:PickupAction(ui)
   local UI = _G["UI"] ---@type UI

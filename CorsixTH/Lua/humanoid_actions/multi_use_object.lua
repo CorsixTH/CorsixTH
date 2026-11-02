@@ -65,7 +65,7 @@ function MultiUseObjectAction:setProlongedUsage(prolonged)
   return self
 end
 
--- Set animation layer3 to the given value.
+--- Set animation layer3 to the given value.
 --- @param layer3 (integer) Value to set for animation layer 3.
 --- @return (MultiUseObjectAction) # self, for daisy-chaining.
 function MultiUseObjectAction:setLayer3(layer3)
