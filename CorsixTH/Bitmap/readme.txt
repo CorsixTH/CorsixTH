@@ -26,3 +26,4 @@ aux_ui sprite sheet (main palette)
 #15 - fullscreen_border_bottomleft.bmp
 #16 - fullscreen_border_bottom.bmp
 #17 - fullscreen_border_bottomright.bmp
+#27 - flag_avoid_tile.bmp (yellow passable-tile fill for pathfinding avoidance)

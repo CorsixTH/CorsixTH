@@ -26,6 +26,7 @@ local SPEC = {
     "machine_dialog_bar.bmp",
     "machine_dialog_used.bmp",
     "machine_dialog_strength.bmp",
+    "flag_avoid_tile.bmp",
   },
 
   -- Palette options
