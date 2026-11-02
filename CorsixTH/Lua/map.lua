@@ -680,8 +680,9 @@ function Map:_drawDebugTiles(canvas, x, y, xpos, ypos)
   local xy = y * self.width + x
   if self.debug_flags then
     local flags = self.debug_flags[xy]
-    if flags.passable then
-      self.cell_outline:draw(canvas, 3, xpos, ypos)
+    if flags.passable or flags.avoidTile then
+      -- Avoided tiles use yellow instead of the normal green passable fill.
+      self.cell_outline:draw(canvas, flags.avoidTile and 27 or 3, xpos, ypos)
     end
     if flags.hospital then
       self.cell_outline:draw(canvas, 8, xpos, ypos)
@@ -689,16 +690,16 @@ function Map:_drawDebugTiles(canvas, x, y, xpos, ypos)
     if flags.buildable then
       self.cell_outline:draw(canvas, 9, xpos, ypos)
     end
-    if flags.travelNorth and self.debug_flags[xy - self.width].passable then
+    if flags.travelNorth and y > 0 and self.debug_flags[xy - self.width].passable then
       self.cell_outline:draw(canvas, 4, xpos, ypos)
     end
-    if flags.travelEast and self.debug_flags[xy + 1].passable then
+    if flags.travelEast and x + 1 < self.width and self.debug_flags[xy + 1].passable then
       self.cell_outline:draw(canvas, 5, xpos, ypos)
     end
-    if flags.travelSouth and self.debug_flags[xy + self.width].passable then
+    if flags.travelSouth and y + 1 < self.height and self.debug_flags[xy + self.width].passable then
       self.cell_outline:draw(canvas, 6, xpos, ypos)
     end
-    if flags.travelWest and self.debug_flags[xy - 1].passable then
+    if flags.travelWest and x > 0 and self.debug_flags[xy - 1].passable then
       self.cell_outline:draw(canvas, 7, xpos, ypos)
     end
     if flags.thob ~= 0 then
