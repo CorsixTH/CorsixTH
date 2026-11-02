@@ -195,11 +195,12 @@ function GameUI:makeVisibleDiamond(scr_w, scr_h)
   -- The visible diamond is the region which the top-left corner of the screen
   -- is limited to, and ensures that the map always covers all of the screen.
   -- Its vertices are at (x + w, y), (x - w, y), (x, y + h), (x, y - h).
+  local margin = self.map_editor and math.max(scr_w / 2, scr_h) or 0
   return {
     x = - scr_w / 2,
     y = 16 * map_h - scr_h / 2,
-    w = 32 * map_h - scr_h - scr_w / 2,
-    h = 16 * map_h - scr_h / 2 - scr_w / 4,
+    w = 32 * map_h - scr_h - scr_w / 2 + margin,
+    h = 16 * map_h - scr_h / 2 - scr_w / 4 + margin / 2,
   }
 end
 
