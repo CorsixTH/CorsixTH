@@ -72,7 +72,7 @@ jobs:
           # Validate lua files
           find CorsixTH -name '*.lua' -print0 | xargs -0 -I{} luac5.1 -p {}
           # Run lua lint check
-          luacheck --quiet --codes --ranges CorsixTH
+          luacheck --quiet --codes --exclude-files '**/*.d.lua' --ranges CorsixTH
           # Run lua unit tests
           busted --verbose --directory=CorsixTH/Luatest
       - name: Run simple code tests
