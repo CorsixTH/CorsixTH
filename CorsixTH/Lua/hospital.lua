@@ -2141,23 +2141,23 @@ function Hospital:getWallsAround(x, y)
   local flags = th:getCellFlags(x, y)
 
   _, nw, ww = th:getCell(x, y) -- floor, north wall, west wall
-  if ww ~= 0 then
+  if (ww % 0x100) > 0 then
     walls[#walls + 1] = {wall = "west", parcel = flags.parcelId}
   end
-  if nw ~= 0 then
-    walls[#walls + 1] = {wall = "north",  parcel = flags.parcelId}
+  if (nw % 0x100) > 0 then
+    walls[#walls + 1] = {wall = "north", parcel = flags.parcelId}
   end
 
   if x ~= map.width then
     _, _, ww = th:getCell(x + 1, y)
-    if ww ~= 0 then
+    if (ww % 0x100) > 0 then
       walls[#walls + 1] = {wall = "east", parcel = flags.parcelId}
     end
   end
 
   if y ~= map.height then
     _, nw, _ = th:getCell(x, y + 1)
-    if nw ~= 0 then
+    if (nw % 0x100) > 0 then
       walls[#walls + 1] = {wall = "south", parcel = flags.parcelId}
     end
   end
