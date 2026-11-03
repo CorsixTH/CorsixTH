@@ -793,6 +793,28 @@ int WAI_PREFIX(getModulePath)(char* out, int capacity, int* dirname_length)
   return length;
 }
 
+#elif defined(__EMSCRIPTEN__)
+#include <string.h>
+
+WAI_NOINLINE
+int WAI_PREFIX(getExecutablePath)(char* out, int capacity, int* dirname_length)
+{
+  const char* path = "/corsix-th";
+  int length = 10;
+  if (capacity > 0 && out) {
+    int to_copy = (capacity < length + 1) ? capacity : length + 1;
+    strncpy(out, path, to_copy);
+  }
+  if (dirname_length) *dirname_length = 0;
+  return length;
+}
+
+WAI_NOINLINE
+int WAI_PREFIX(getModulePath)(char* out, int capacity, int* dirname_length)
+{
+  return WAI_PREFIX(getExecutablePath)(out, capacity, dirname_length);
+}
+
 #else
 
 #error unsupported platform
