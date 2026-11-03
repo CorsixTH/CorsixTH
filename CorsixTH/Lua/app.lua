@@ -324,7 +324,6 @@ function App:init()
   -- Load additional Lua before world
   if good_install_folder then
     local AnimationManager = _G["AnimationManager"] ---@type AnimationManager
-    local Object = _G["Object"] ---@type Object
 
     self.anims = self.gfx:loadAnimations("Data", "V")
     self.animation_manager = AnimationManager(self.anims)
@@ -333,6 +332,8 @@ function App:init()
     corsixth.require("entities.humanoid")
     corsixth.require("entities.object")
     corsixth.require("entities.machine")
+
+    local Object = _G["Object"] ---@type Object
 
     local objects = self:loadLuaFolder("objects")
     self.objects = self:loadLuaFolder("objects/machines", nil, objects)
