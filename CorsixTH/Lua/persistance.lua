@@ -265,6 +265,7 @@ function SaveGameFile(filename)
   local f = TheApp:writeToFileOrTmp(filename, "wb")
   f:write(data)
   f:close()
+  TheApp:setLastSaveName(filename)
 end
 
 --! Compatibility function to work out the game's graphics set
@@ -335,4 +336,5 @@ function LoadGameFile(filename)
     print(err)
   end
   LoadGame(data)
+  TheApp:setLastSaveName(filename)
 end

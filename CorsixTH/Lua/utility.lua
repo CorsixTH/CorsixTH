@@ -290,6 +290,9 @@ Colours.AdviserPanelShadow = {
 Colours.AdviserPanelDeleteButton = {
   red = 219, green = 036, blue = 036
 }
+Colours.FatalError = {
+  red = 054, green = 069, blue = 079
+}
 
 -- Include the standard colours also
 Colours.White = {
