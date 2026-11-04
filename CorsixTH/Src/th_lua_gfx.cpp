@@ -256,7 +256,8 @@ int l_spritesheet_hittest(lua_State* L) {
   int x = static_cast<int>(std::roundf(iX));
   int y = static_cast<int>(std::roundf(iY));
 
-  return pSheet->hit_test_sprite(iSprite, x, y, iFlags);
+  lua_pushboolean(L, pSheet->hit_test_sprite(iSprite, x, y, iFlags));
+  return 1;
 }
 
 int l_spritesheet_isvisible(lua_State* L) {
