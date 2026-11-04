@@ -102,6 +102,9 @@
  <a href="_0_1_u_i_sound_settings.html#_0_1_u_i_sound_settings_1button_jukebox">buttonJukebox</a>()
  </li>
  <li class="self">
+ <a href="_0_1_u_i_sound_settings.html#_0_1_u_i_sound_settings_1button_play_own_music">buttonPlayOwnMusic</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_u_i_sound_settings.html#_0_1_u_i_sound_settings_1close">close</a>()
  (overrides <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>)
  </li>
@@ -232,9 +235,6 @@
  <li class="inherited">
  <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1override_min_size">overrideMinSize</a>(<span class="p">min_width</span>, <span class="p">min_height</span>)
  (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
- </li>
- <li class="self">
- <a href="_0_1_u_i_sound_settings.html#_0_1_u_i_sound_settings_1reinit_audio">reinitAudio</a>()
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
@@ -464,6 +464,10 @@
  <li><span class="p">parent</span>
  (*)
  </li>
+ <li><span class="p">play_own_music_button</span>
+ </li>
+ <li><span class="p">play_own_music_panel</span>
+ </li>
  <li><span class="p">reload</span>
  (*)
  </li>
@@ -543,7 +547,7 @@ displayed from the main menu or in game.</td>
  <p>
  Click action for the global audio toggle
 Turns all game audio off or on.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L255">line 255 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L260">line 260 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -552,7 +556,7 @@ Turns all game audio off or on.<br/><br/>
  Callback for back button
 Opens the UIOptions window again.<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1button_back">UIResizable:buttonBack</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L447">line 447 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L464">line 464 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -560,7 +564,7 @@ Opens the UIOptions window again.<br/><br/>
  <p>
  Button handler for soundfont
 Opens a file chooser dialog for selecting a soundfont.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L424">line 424 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L441">line 441 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -568,7 +572,14 @@ Opens a file chooser dialog for selecting a soundfont.<br/><br/>
  <p>
  Callback for Jukebox button
 Opens the jukebox window.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L439">line 439 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L456">line 456 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_sound_settings_1button_play_own_music">function UISoundSettings:buttonPlayOwnMusic()</a></h5>
+ <p>
+ Button function to switch between own music and TH97's<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L390">line 390 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -576,14 +587,14 @@ Opens the jukebox window.<br/><br/>
  <p>
  Close window<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L455">line 455 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L472">line 472 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_sound_settings_1close_all_dropdowns">function UISoundSettings:closeAllDropdowns()</a></h5>
  <p>
  Close any UIDropdown that may be open<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L248">line 248 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L253">line 253 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -601,7 +612,7 @@ current build.<br/><br/>
  <td class="d">true when the control is is activated, false when deactivated</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L297">line 297 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L302">line 302 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -618,7 +629,7 @@ Shows a drop down list of the MIDI ports available for the selected API.<br/><br
  <td class="d">true when the control is is activated, false when deactivated</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L317">line 317 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L322">line 322 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -641,16 +652,7 @@ deactivated</td>
  <td class="d"> the button clicked to fire this event</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L265">line 265 of Lua/dialogs/resizables/sound_setting.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_sound_settings_1reinit_audio">function UISoundSettings:reinitAudio()</a></h5>
- <p>
- Reinitialize the game audio
-Allows all the changed audio settings to take effect by shutting down the
-game audio and starting it up again.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L236">line 236 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L270">line 270 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -667,7 +669,7 @@ Sets the announcement volume or turns announcements off in the config.<br/><br/>
  <td class="d"> the index of the option selected</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L351">line 351 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L356">line 356 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -685,7 +687,7 @@ since the MIDI port is specific to the selected API.<br/><br/>
  <td class="d"> the index of the option selected</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L385">line 385 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L402">line 402 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -702,7 +704,7 @@ Sets the MIDI port and resets the audio.<br/><br/>
  <td class="d"> the index of the option selected</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L414">line 414 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L431">line 431 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -719,7 +721,7 @@ Sets the music volume or turns announcements off in the config.<br/><br/>
  <td class="d"> the index of the option selected</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L366">line 366 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L371">line 371 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -736,7 +738,7 @@ Sets the sound volume or turns sound off in the config.<br/><br/>
  <td class="d"> the index of the option selected</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L336">line 336 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L341">line 341 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -753,7 +755,7 @@ Saves the soundfont and reinitializes audio.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L431">line 431 of Lua/dialogs/resizables/sound_setting.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/sound_setting.lua#L448">line 448 of Lua/dialogs/resizables/sound_setting.lua</a>.
  </p>
  </div>
 </div>
