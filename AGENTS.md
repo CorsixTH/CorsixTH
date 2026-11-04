@@ -64,32 +64,9 @@ This is a navigation guide rather than an exhaustive description. Before
 making a change, inspect the relevant files, nearby implementations, and
 tests instead of relying on this summary alone.
 
-## Original game and clean-room development
+## Clean-room development
 
-An agent may run the original game, including in DOSBox, and observe its
-externally visible behaviour. It may use those observations to help
-implement matching behaviour in CorsixTH.
-
-Observation must be limited to behaviour exposed through normal use of
-the game. An agent must not:
-- disassemble or decompile the original game;
-- inspect or modify its executable code;
-- inspect process memory to determine implementation details;
-- derive behaviour from machine code or internal data structures; or
-- reproduce original source code or non-public implementation details.
-
-An agent may:
-- observe the original game's visible and audible behaviour;
-- provide inputs and record the resulting game behaviour;
-- compare that behaviour with CorsixTH;
-- use existing CorsixTH code, tests, issues, and documentation;
-- investigate and debug CorsixTH itself; and
-- work with original game data files where the task involves reading,
-  mapping, or supporting data consumed by CorsixTH.
-
-If a task requires inspecting how the original executable implements a
-behaviour rather than observing what the game does, stop and ask the
-human contributor for guidance.
+Follow the clean-room development policy described in `CONTRIBUTING.md`.
 
 ## Documentation
 
@@ -262,52 +239,11 @@ Report:
 
 Never state or imply that unperformed validation passed.
 
-### Human responsibility
+## Pull requests
 
-AI-generated and AI-assisted work remains the responsibility of the
-human contributor. An agent must not present its output as a substitute
-for human understanding, testing, review, or approval.
-
-The agent must make it possible for the human contributor to assess the
-work by clearly reporting:
-- assumptions made during implementation;
-- compatibility or behavioural concerns;
-- validation that was and was not performed;
-- known limitations and unresolved concerns; and
-- files or areas requiring particular human attention.
-
-An agent must not state or imply that a change is safe, correct, approved,
-or ready for submission solely because it generated tests or because the
-checks it performed passed.
-
-## Pull requests and reviews
-
-Pull-request submission, review decisions, and communication with
-reviewers are exclusively human responsibilities.
-
-An agent must not:
-- open a pull request;
-- complete a pull-request template, description, or other submission text;
-- approve or merge a pull request;
-- write, draft, suggest, edit, or post a response to a review comment;
-- answer questions from reviewers;
-- represent itself as the contributor in project discussions;
-- mark a review conversation as resolved; or
-- make a review decision on behalf of the human contributor.
-
-These restrictions apply even if a human asks the agent to draft or post
-the communication.
-
-An agent may explain to the human what review feedback appears to mean,
-identify the code or behaviour to which it refers, and describe possible
-technical changes for the human to consider. It must not turn that
-analysis into suggested wording for a response.
-
-Only the human contributor may decide how to respond to review feedback
-and must write the response personally. After making that decision, the
-human may separately instruct the agent to modify local code or tests.
-The agent must treat this as a new implementation task, not as
-participation in the review conversation.
+Pull-request submission, review decisions, and communication with reviewers
+remain the responsibility of the human contributor. Follow the pull-request
+policy described in `CONTRIBUTING.md`.
 
 ## Completion summary
 
