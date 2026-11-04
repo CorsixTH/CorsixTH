@@ -30,6 +30,7 @@ local SDL = require("sdl")
 
 local SAVEGAME_VERSION = 270 -- Adjust random announcement delay
 
+--- Controls the main CorsixTH application
 class "App"
 
 ---@class App
