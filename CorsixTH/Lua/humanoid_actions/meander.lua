@@ -65,6 +65,8 @@ local function meander_action_start(action, humanoid)
   end
 
   -- Just wandering around
+  local Doctor = _G["Doctor"] ---@type Doctor
+  local Nurse = _G["Nurse"] ---@type Nurse
   if class.is(humanoid, Doctor) or class.is(humanoid, Nurse) then
     if not room then
       humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.wandering)
@@ -111,9 +113,11 @@ local function meander_action_start(action, humanoid)
   local procrastination
   if action.can_idle then
     action.can_idle = false
+    local IdleAction = _G["IdleAction"] ---@type IdleAction
     procrastination = IdleAction():setCount(math.random(5, 40)):setMustHappen(action.must_happen)
   else
     action.can_idle = true
+    local WalkAction = _G["WalkAction"] ---@type WalkAction
     procrastination = WalkAction(x, y):setMustHappen(action.must_happen)
   end
   humanoid:queueAction(procrastination, 0)

@@ -26,8 +26,8 @@ class "SeekRoomAction" (HumanoidAction)
 ---@operator call: SeekRoomAction
 local SeekRoomAction = _G["SeekRoomAction"] ---@type SeekRoomAction
 
---! Find another room (and go to it).
---!param room_type Type of the new room.
+--- Find another room (and go to it).
+--- @param room_type (string) Type of the new room.
 function SeekRoomAction:SeekRoomAction(room_type)
   assert(type(room_type) == "string", "Invalid value for parameter 'room_type'")
 
@@ -37,16 +37,15 @@ function SeekRoomAction:SeekRoomAction(room_type)
   self.diagnosis_room = nil
 end
 
---! Denote that the room being looked for is a treatment room.
---!return (action) self, for daisy-chaining.
+--- Denote that the room being looked for is a treatment room.
+--- @return (SeekRoomAction) # self, for daisy-chaining.
 function SeekRoomAction:enableTreatmentRoom()
   self.treatment_room = true
   return self
 end
 
---! Sets the index of the room to use from the disease's available diagnosis
--- rooms
---!param room (integer) key in the available diagnosis room list
+--- Sets the index of the room to use from the disease's available diagnosis rooms
+--- @param room (integer) key in the available diagnosis room list
 function SeekRoomAction:setDiagnosisRoom(room)
   assert(type(room) == "number", "Invalid value for parameter 'room'")
 
@@ -54,9 +53,9 @@ function SeekRoomAction:setDiagnosisRoom(room)
   return self
 end
 
---! Finds a relevant diagnosis/treatment room(s) for a patient
---! If diagnosis room, attempt to use GP's choice first, else select any other available
---! room at random.
+--- Finds a relevant diagnosis/treatment room(s) for a patient
+--- If diagnosis room, attempt to use GP's choice first, else select any other available
+--- room at random.
 local action_seek_room_find_room = permanent"action_seek_room_find_room"( function(action, humanoid)
   local room_type = action.room_type
   if action.diagnosis_room then
@@ -140,6 +139,7 @@ local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( functi
 end)
 
 local function action_seek_room_no_diagnosis_room_found(action, humanoid)
+  local Vip = _G["Vip"] ---@type Vip
    --If it's the VIP then there's been an explosion. Skip the exploded room
   if class.is(humanoid, Vip) then
     humanoid.waiting = 1
@@ -206,6 +206,7 @@ local function action_seek_room_start(action, humanoid)
   end
   -- Seeking for toilets is a special case with its own action.
   if action.room_type == "toilets" then
+    local SeekToiletsAction = _G["SeekToiletsAction"] ---@type SeekToiletsAction
     humanoid:queueAction(SeekToiletsAction(), 1)
     humanoid:finishAction()
     return
@@ -250,6 +251,8 @@ local function action_seek_room_start(action, humanoid)
     staff_change_callback = --[[persistable:action_seek_room_staff_change_callback]] function(staff)
       -- we might have hired or fired a staff member
       -- technically we don't care about Receptionist or Handyman
+      local Receptionist = _G["Receptionist"] ---@type Receptionist
+      local Handyman = _G["Handyman"] ---@type Handyman
       if class.is(staff, Receptionist) or class.is(staff, Handyman) then
         return
       end

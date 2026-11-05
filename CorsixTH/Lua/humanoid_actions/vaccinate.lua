@@ -27,8 +27,8 @@ class "VaccinateAction" (HumanoidAction)
 local VaccinateAction = _G["VaccinateAction"] ---@type VaccinateAction
 
 -- Vaccinate action constructor for a nurse.
---!param patient (Patient) Patient to vaccinate.
---!param fee Amount of money to pay.
+--- @param patient (Patient) Patient to vaccinate.
+--- @param fee (integer) Amount of money to pay.
 function VaccinateAction:VaccinateAction(patient, fee)
   assert(class.is(patient, Patient), "Invalid value for parameter 'patient'")
   assert(type(fee) == "number", "Invalid value for parameter 'fee'")
@@ -86,11 +86,15 @@ end)
 
 
 local function vaccinate(action, nurse)
+  local Nurse = _G["Nurse"] ---@type Nurse
   assert(class.is(nurse, Nurse))
 
   local patient = action.patient
 
   local perform_vaccination = --[[persistable:action_perform_vaccination]] function()
+    local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
+    local AnswerCallAction = _G["AnswerCallAction"] ---@type AnswerCallAction
+
     -- Check if they STILL are in an adjacent square
     if is_in_adjacent_square(nurse, patient) then
       CallsDispatcher.queueCallCheckpointAction(nurse)

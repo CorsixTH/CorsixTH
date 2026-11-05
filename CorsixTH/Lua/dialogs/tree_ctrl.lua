@@ -490,7 +490,7 @@ class "TreeControl" (Window) ---@type TreeControl
 
 ---@class TreeControl: Window
 ---@operator call: TreeControl
-local TreeControl = _G["TreeControl"]
+local TreeControl = _G["TreeControl"] ---@type TreeControl
 
 --!param root (TreeNode) The single root node of the tree (use a `DummyRootNode`
 -- here if multiple root nodes are desired).

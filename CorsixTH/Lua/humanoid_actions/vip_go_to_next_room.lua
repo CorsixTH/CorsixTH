@@ -43,6 +43,7 @@ local function action_vip_go_to_next_room_start(_, humanoid)
       humanoid:setNextAction(IdleAction())
       humanoid.waiting = 1
     end
+    local WalkAction = _G["WalkAction"] ---@type WalkAction
     humanoid:queueAction(WalkAction(x, y))
     -- What happens if the room disappears:
     humanoid.next_room.door.queue:expect(humanoid, {callback = callback})

@@ -21,7 +21,7 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
-local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnoucementPriority]]
+local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPriority]]
 
 --! A holder for all cheats in the game
 class "Cheats"

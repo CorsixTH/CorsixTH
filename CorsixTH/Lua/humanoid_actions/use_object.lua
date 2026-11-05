@@ -25,12 +25,18 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "UseObjectAction" (HumanoidAction)
 
 ---@class UseObjectAction: HumanoidAction
+---@field do_walk (boolean) Whether to first walk in and last walk out the object.
+---@field after_walk_in (function) Called after the walk-in phase.
+---@field old_tile_x (integer) Temporary stored orginal position
+---@field old_tile_y (integer) Temporary stored orginal position
+---@field destroy_user_after_use (boolean) Destroy the entity after using the object.
 ---@operator call: UseObjectAction
 local UseObjectAction = _G["UseObjectAction"] ---@type UseObjectAction
 
---! Construct a 'use object' action.
---!param object (Object) Object to use.
+--- Construct a 'use object' action.
+--- @param object (Object) Object to use.
 function UseObjectAction:UseObjectAction(object)
+  local Object = _G["Object"] ---@type Object
   assert(class.is(object, Object), "Invalid value for parameter 'object'")
 
   self:HumanoidAction("use_object")
@@ -39,16 +45,16 @@ function UseObjectAction:UseObjectAction(object)
   self.prolonged_usage = nil -- If true, the usage is prolonged.
 end
 
---! Set the 'watering plant' flag.
---!return (action) self, for daisy chaining.
+--- Set the 'watering plant' flag.
+--- @return (UseObjectAction) # self, for daisy chaining.
 function UseObjectAction:enableWateringPlant()
   self.watering_plant = true
   return self
 end
 
---! Set prolonged usage of the object.
---!param prolonged (bool or nil) If set, enable prolonged usage of the object.
---!return (action) self, for daisy-chaining.
+--- Set prolonged usage of the object.
+--- @param prolonged (boolean | nil) If set, enable prolonged usage of the object.
+--- @return (UseObjectAction) # self, for daisy-chaining.
 function UseObjectAction:setProlongedUsage(prolonged)
   assert(prolonged == nil or type(prolonged) == "boolean",
       "Invalid value for parameter 'prolonged'")
@@ -64,11 +70,10 @@ local orient_mirror = {
   south = "east",
 }
 
---! Find the next phase with an animation to show.
---!param action (UseObjectAction) The use_object action.
---!param phase The previous displayed phase or -100.
---!return The phase to show after the previous phase. Is 100 if there are no
---  phases with animations anymore.
+--- Find the next phase with an animation to show.
+--- @param action (UseObjectAction) The use_object action.
+--- @param phase (integer) The previous displayed phase or -100.
+--- @return (integer) # The phase to show after the previous phase. Is 100 if there are no phases with animations anymore.
 local function action_use_next_phase(action, phase)
   phase = phase + 1
   if phase < -6 then
@@ -119,10 +124,10 @@ local function action_use_next_phase(action, phase)
   return phase
 end
 
---! Compute and set the position of the animated humanoid from the footprint.
+--- Compute and set the position of the animated humanoid from the footprint.
 --  The humanoid does not move.
---!param action (UseObjectAction) Action being performed.
---!param humanoid (Humanoid) Person using the object.
+--- @param action (UseObjectAction) Action being performed.
+--- @param humanoid (Humanoid) Person using the object.
 local function setHumanoidTileSpeed(action, humanoid)
   local object = action.object
   local obj_orient = object.object_type.orientations[object.direction]
@@ -304,7 +309,7 @@ local function action_use_phase(action, humanoid, phase)
   end
 end
 
---! Setup split animations by copying the humanoid layers and hit-test
+--- Setup split animations by copying the humanoid layers and hit-test
 --  to the other animations.
 local function init_split_anims(object, humanoid)
   if object.split_anims then
@@ -317,7 +322,7 @@ local function init_split_anims(object, humanoid)
   end
 end
 
---! Cleanup function after usage.
+--- Cleanup function after usage.
 local function finish_using(object, humanoid)
   object:removeUser(humanoid) -- Disconnect the humanoid from the object.
   humanoid.user_of = nil
@@ -343,7 +348,7 @@ local function finish_using(object, humanoid)
   end
 end
 
---! Callback after an animation.
+--- Callback after an animation.
 action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   local action = humanoid:getCurrentAction()
   local object = action.object

@@ -23,6 +23,8 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "UseStaffRoomAction" (HumanoidAction)
 
 ---@class UseStaffRoomAction: HumanoidAction
+---@field target_obj (Object?) Object being used in the staff room.
+---@field next_target_obj (Object?) Next object to use in the staff room.
 ---@operator call: UseStaffRoomAction
 local UseStaffRoomAction = _G["UseStaffRoomAction"] ---@type UseStaffRoomAction
 
@@ -82,6 +84,7 @@ local relaxation = {
 
 -- main function of the staffroom action
 local function use_staffroom_action_start(action, humanoid)
+  local Receptionist = _G["Receptionist"] ---@type Receptionist
   assert(class.is(humanoid, Staff), "use_staffroom action called for non-staff humanoid")
   assert(not class.is(humanoid, Receptionist), "use_staffroom action called for receptionist")
 
@@ -158,9 +161,11 @@ local function use_staffroom_action_start(action, humanoid)
     end
   end
 
+  local UseObjectAction = _G["UseObjectAction"] ---@type UseObjectAction
   local obj_action = UseObjectAction(action.target_obj):setProlongedUsage(true)
       :setLoopCallback(loop_callback_use)
 
+  local WalkAction = _G["WalkAction"] ---@type WalkAction
   humanoid:queueAction(WalkAction(action.ox, action.oy), 0)
   humanoid:queueAction(obj_action, 1)
 end

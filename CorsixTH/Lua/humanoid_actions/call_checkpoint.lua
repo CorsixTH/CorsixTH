@@ -39,6 +39,7 @@ end
 
 local function action_call_checkpoint_start(action, humanoid)
   action.must_happen = true
+  local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
   CallsDispatcher.onCheckpointCompleted(action.call)
   humanoid:finishAction(action)
 end

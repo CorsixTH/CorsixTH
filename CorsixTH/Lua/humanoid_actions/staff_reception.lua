@@ -23,12 +23,14 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "StaffReceptionAction" (HumanoidAction)
 
 ---@class StaffReceptionAction: HumanoidAction
+---@field object (ReceptionDesk) The desk to staff.
 ---@operator call: StaffReceptionAction
 local StaffReceptionAction = _G["StaffReceptionAction"] ---@type StaffReceptionAction
 
 -- Action class for the "staff reception desk" action.
---!param desk (object) Desk to staff.
+--- @param desk (ReceptionDesk) Desk to staff.
 function StaffReceptionAction:StaffReceptionAction(desk)
+  local ReceptionDesk = _G["ReceptionDesk"] ---@type ReceptionDesk
   assert(class.is(desk, ReceptionDesk), "Invalid value for parameter 'desk'") -- luacheck: ignore 113
 
   self:HumanoidAction("staff_reception")

@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 corsixth.require("announcer")
-local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnoucementPriority]]
+local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPriority]]
 local Object = _G['Object'] ---@type Object
 
 local object = {}

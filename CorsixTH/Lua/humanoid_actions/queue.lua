@@ -26,11 +26,12 @@ class "QueueAction" (HumanoidAction)
 ---@operator call: QueueAction
 local QueueAction = _G["QueueAction"] ---@type QueueAction
 
---! Queue for something (door or reception desk).
---!param x X position of the queue.
---!param y Y position of the queue.
---!param queue (Queue) Queue to join
+--- Queue for something (door or reception desk).
+--- @param x (integer) X position of the queue.
+--- @param y (integer) Y position of the queue.
+--- @param queue (Queue) Queue to join
 function QueueAction:QueueAction(x, y, queue)
+  local Queue = _G["Queue"] ---@type Queue
   assert(type(x) == "number", "Invalid value for parameter 'x'")
   assert(type(y) == "number", "Invalid value for parameter 'y'")
   assert(class.is(queue, Queue), "Invalid value for parameter 'queue'")
@@ -44,20 +45,21 @@ function QueueAction:QueueAction(x, y, queue)
   self.reserve_when_done = nil -- Object to reserve when leaving the queue.
 end
 
---! Set the object to reserve when queueing is done.
---!param door (object) Object to reserve when leaving the queue.
---!return (action) self, for daisy-chaining.
+--- Set the object to reserve when queueing is done.
+--- @param door (Door) Object to reserve when leaving the queue.
+--- @return (QueueAction) # Self, for daisy-chaining.
 function QueueAction:setReserveWhenDone(door)
+  local Door = _G["Door"] ---@type Door
   assert(class.is(door, Door), "Invalid value for parameter 'door'")
 
   self.reserve_when_done = door
   return self
 end
 
---! Set the tile to face.
---!param face_x (int) X coordinate of the tile to face.
---!param face_y (int) Y coordinate of the tile to face.
---!return (action) self, for daisy-chaining.
+--- Set the tile to face.
+--- @param face_x (integer) X coordinate of the tile to face.
+--- @param face_y (integer) Y coordinate of the tile to face.
+--- @return (QueueAction) # Self, for daisy-chaining.
 function QueueAction:setFaceDirection(face_x, face_y)
   assert(type(face_x) == "number", "Invalid value for parameter 'face_x'")
   assert(type(face_y) == "number", "Invalid value for parameter 'face_y'")
@@ -252,6 +254,9 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
       else
         num_actions_prior = action_queue_leave_bench(action, humanoid)
       end
+
+      local WalkAction = _G["WalkAction"] ---@type WalkAction
+      local UseObjectAction = _G["UseObjectAction"] ---@type UseObjectAction
       action.current_bench_distance = new_dist
       humanoid:queueAction(WalkAction(bx, by):setMustHappen(true), num_actions_prior)
       humanoid:queueAction(UseObjectAction(bench):setMustHappen(true), num_actions_prior + 1)
@@ -296,10 +301,13 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
       end
     end
     humanoid.action_queue[idle_index].direction = idle_direction
+    local WalkAction = _G["WalkAction"] ---@type WalkAction
     humanoid:queueAction(WalkAction(ix, iy):setMustHappen(true):setIsLeaving(humanoid:isLeaving()), idle_index - 1)
   else
     action.current_bench_distance = nil
     local num_actions_prior = action_queue_leave_bench(action, humanoid)
+    local WalkAction = _G["WalkAction"] ---@type WalkAction
+    local IdleAction = _G["IdleAction"] ---@type IdleAction
     humanoid:queueAction(WalkAction(ix, iy):setMustHappen(true), num_actions_prior)
     humanoid:queueAction(IdleAction():setDirection(idle_direction):setMustHappen(true),
         num_actions_prior + 1)
@@ -347,6 +355,8 @@ function(action, humanoid, machine, mx, my, fun_after_use)
   end
 
   -- Walk to the machine and then use it.
+  local WalkAction = _G["WalkAction"] ---@type WalkAction
+  local UseObjectAction = _G["UseObjectAction"] ---@type UseObjectAction
   humanoid:queueAction(WalkAction(mx, my):setMustHappen(true), num_actions_prior)
   humanoid:queueAction(UseObjectAction(machine):setAfterUse(after_use)
       :setMustHappen(true), num_actions_prior + 1)

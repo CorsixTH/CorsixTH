@@ -145,6 +145,7 @@ function UIQueue:onMouseDown(button, x, y)
     self.just_added = true
     local px = self.x + math.floor(x / s)
     local py = self.y + math.floor(y / s)
+    local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
     self.ui:addWindow(UIQueuePopup(self.ui, px, py, self.hovered.patient))
   end
 end
@@ -154,6 +155,7 @@ function UIQueue:onMouseUp(button, x, y)
     self.just_added = false
   else
     -- Always remove any leftover popup windows
+    local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
     local window = self.ui:getWindow(UIQueuePopup)
     if window then
       window:close()
@@ -251,6 +253,7 @@ end
 
 function UIQueue:close()
   -- Always remove any leftover popup windows
+  local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
   local window = self.ui:getWindow(UIQueuePopup)
   if window then
     window:close()
@@ -401,6 +404,7 @@ function UIQueuePopup:draw(canvas, x, y)
 end
 
 function UIQueuePopup:sendToReception()
+  local SeekReceptionAction = _G["SeekReceptionAction"] ---@type SeekReceptionAction
   self.patient:setNextAction(SeekReceptionAction())
   self:close()
 end
