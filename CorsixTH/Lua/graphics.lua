@@ -903,6 +903,7 @@ function Graphics:_makeBluePaletteForFloatingBanknote()
   local palette = TH.palette(table.concat(shifted), false)
   -- MPalette.dat is loaded with a transparent 255th entry, so match that.
   palette:setEntry(255, 0xFF, 0x00, 0xFF)
+  self.load_info[palette] = {self._makeBluePaletteForFloatingBanknote, self}
   return palette
 end
 
