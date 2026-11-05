@@ -431,7 +431,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L46">line 46 of Lua/dialogs/fullscreen/annual_report.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L45">line 45 of Lua/dialogs/fullscreen/annual_report.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -463,24 +463,27 @@
  <div class="method">
  <h5><a name="_0_1_u_i_annual_report_1add_trophy">function UIAnnualReport:addTrophy(<span class="p">text</span>, <span class="p">award_type</span>, <span class="p">amount</span>)</a></h5>
  <p>
- Adds a trophy figure with some text if the player clicks on it.<br/><br/>
+ - Adds a trophy figure with some text if the player clicks on it.
+- @param text (string) The text to show as motivation.
+- @param award_type ("reputation" | "money") Kind of award
+- @param amount (integer) How much the player got/lost.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">text</td>
- <td class="t">string</td>
- <td class="d"> The text to show as motivation.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">award_type</td>
- <td class="t">string</td>
- <td class="d"> Should be one of "reputation" or "money"</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">amount</td>
- <td class="t">integer</td>
- <td class="d"> How much the player got/lost.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L353">line 353 of Lua/dialogs/fullscreen/annual_report.lua</a>.
@@ -504,7 +507,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1after_load">UIFullscreen:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L664">line 664 of Lua/dialogs/fullscreen/annual_report.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L666">line 666 of Lua/dialogs/fullscreen/annual_report.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -520,13 +523,13 @@
  <td class="d">The page to go to, either page 1, 2 or 3. Default is currently page 2.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L481">line 481 of Lua/dialogs/fullscreen/annual_report.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L483">line 483 of Lua/dialogs/fullscreen/annual_report.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_annual_report_1check_trophies_and_awards">function UIAnnualReport:checkTrophiesAndAwards(<span class="p">world</span>)</a></h5>
  <p>
- Finds out which awards and/or trophies the player has been awarded this year.<br/><br/>
+ - Finds out which awards and/or trophies the player has been awarded this year.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -570,7 +573,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_fullscreen.html#_0_1_u_i_fullscreen_1draw">UIFullscreen:draw</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L515">line 515 of Lua/dialogs/fullscreen/annual_report.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L517">line 517 of Lua/dialogs/fullscreen/annual_report.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -595,7 +598,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L580">line 580 of Lua/dialogs/fullscreen/annual_report.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L582">line 582 of Lua/dialogs/fullscreen/annual_report.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -609,14 +612,15 @@
  <div class="method">
  <h5><a name="_0_1_u_i_annual_report_1show_award_motivation">function UIAnnualReport:showAwardMotivation(<span class="p">text_index_to_show</span>)</a></h5>
  <p>
- Activates the motivation scroll with the given text on it.<br/><br/>
+ - Activates the motivation scroll with the given text on it.
+- @param text_index_to_show (integer) The index of the award to show info from.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">text_index_to_show</td>
  <td class="t">?</td>
- <td class="d">The index of the award to show info from.</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L431">line 431 of Lua/dialogs/fullscreen/annual_report.lua</a>.
@@ -625,14 +629,15 @@
  <div class="method">
  <h5><a name="_0_1_u_i_annual_report_1show_trophy_motivation">function UIAnnualReport:showTrophyMotivation(<span class="p">text_index_to_show</span>)</a></h5>
  <p>
- Activates the motivation plaque with the given text on it.<br/><br/>
+ - Activates the motivation plaque with the given text on it.
+- @param text_index_to_show (integer) The index of the trophy to show info from.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">text_index_to_show</td>
  <td class="t">?</td>
- <td class="d">The index of the trophy to show info from.</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/fullscreen/annual_report.lua#L453">line 453 of Lua/dialogs/fullscreen/annual_report.lua</a>.

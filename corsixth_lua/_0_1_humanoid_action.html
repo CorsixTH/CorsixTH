@@ -22,7 +22,7 @@
  </ul>
  <div class="content">
  <h2 class="class">HumanoidAction Class</h2>
-<h3 class="class">Humanoid action base class.</h3> 
+<h3 class="class">- Humanoid action base class.</h3> 
 <div class="class_info">
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L21">line 21 of Lua/humanoid_action.lua</a>.
  <br/><strong>Subclasses:</strong> <a href="_0_1_answer_call_action.html">AnswerCallAction</a>, <a href="_0_1_call_check_point_action.html">CallCheckPointAction</a>, <a href="_0_1_check_watch_action.html">CheckWatchAction</a>, <a href="_0_1_die_action.html">DieAction</a>, <a href="_0_1_falling_action.html">FallingAction</a>, <a href="_0_1_get_up_action.html">GetUpAction</a>, <a href="_0_1_idle_action.html">IdleAction</a>, <a href="_0_1_idle_spawn_action.html">IdleSpawnAction</a>, <a href="_0_1_knock_door_action.html">KnockDoorAction</a>, <a href="_0_1_meander_action.html">MeanderAction</a>, <a href="_0_1_multi_use_object_action.html">MultiUseObjectAction</a>, <a href="_0_1_on_ground_action.html">OnGroundAction</a>, <a href="_0_1_pee_action.html">PeeAction</a>, <a href="_0_1_pickup_action.html">PickupAction</a>, <a href="_0_1_queue_action.html">QueueAction</a>, <a href="_0_1_seek_reception_action.html">SeekReceptionAction</a>, <a href="_0_1_seek_room_action.html">SeekRoomAction</a>, <a href="_0_1_seek_staff_room_action.html">SeekStaffRoomAction</a>, <a href="_0_1_seek_toilets_action.html">SeekToiletsAction</a>, <a href="_0_1_shake_fist_action.html">ShakeFistAction</a>, <a href="_0_1_spawn_action.html">SpawnAction</a>, <a href="_0_1_staff_reception_action.html">StaffReceptionAction</a>, <a href="_0_1_sweep_floor_action.html">SweepFloorAction</a>, <a href="_0_1_tap_foot_action.html">TapFootAction</a>, <a href="_0_1_use_object_action.html">UseObjectAction</a>, <a href="_0_1_use_screen_action.html">UseScreenAction</a>, <a href="_0_1_use_staff_room_action.html">UseStaffRoomAction</a>, <a href="_0_1_vaccinate_action.html">VaccinateAction</a>, <a href="_0_1_vip_go_to_next_room_action.html">VipGoToNextRoomAction</a>, <a href="_0_1_vomit_action.html">VomitAction</a>, <a href="_0_1_walk_action.html">WalkAction</a>, <a href="_0_1_yawn_action.html">YawnAction</a>
@@ -89,15 +89,16 @@
  <div class="method">
  <h5><a name="_0_1_humanoid_action_1_humanoid_action">function HumanoidAction:HumanoidAction(<span class="p">name</span>)</a></h5>
  <p>
- -@type HumanoidAction<br/><br/>
- Construct a humanoid action (base class constructor).<br/><br/>
+ -@type HumanoidAction
+- Construct a humanoid action (base class constructor).
+- @param name (string) Name of the action.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">name</td>
- <td class="t">str</td>
- <td class="d"> Name of the action.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L26">line 26 of Lua/humanoid_action.lua</a>.
@@ -120,43 +121,48 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L113">line 113 of Lua/humanoid_action.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L112">line 112 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_action_1disable_truncate">function HumanoidAction:disableTruncate()</a></h5>
  <p>
- Do not allow truncating the action.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L106">line 106 of Lua/humanoid_action.lua</a>.
+ - Do not allow truncating the action.
+- @return (HumanoidAction) Returning self, for daisy-chaining.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L105">line 105 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_action_1set_after_use">function HumanoidAction:setAfterUse(<span class="p">after_use</span>)</a></h5>
  <p>
- Set the callback for performing updates afterwards.<br/><br/>
+ - Set the callback for performing updates afterwards.
+- @param after_use (function) Callback function that is called after the action ends.
+- @return (HumanoidAction) Returning self, for daisy-chaining.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">after_use</td>
- <td class="t">func</td>
- <td class="d"> Callback function that is called after the action ends.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L85">line 85 of Lua/humanoid_action.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L84">line 84 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_action_1set_count">function HumanoidAction:setCount(<span class="p">count</span>)</a></h5>
  <p>
- Set the number of times the action should happen.<br/><br/>
+ - Set the number of times the action should happen.
+- @param count (integer | nil) Set to 'nil' if 'forever', else integer count.
+- @return (HumanoidAction) Returning self, for daisy-chaining.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">count</td>
- <td class="t">int&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
- <td class="d"> Set to 'nil' if 'forever', else integer count.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L43">line 43 of Lua/humanoid_action.lua</a>.
@@ -165,31 +171,34 @@
  <div class="method">
  <h5><a name="_0_1_humanoid_action_1set_is_leaving">function HumanoidAction:setIsLeaving(<span class="p">is_leaving</span>)</a></h5>
  <p>
- Set whether the humanoid is leaving.<br/><br/>
+ - Set whether the humanoid is leaving.
+- @param is_leaving (boolean) Whether or not the humanoid is leaving. If not specified, value is true.
+- @return (HumanoidAction) Returning self, for daisy-chaining.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">is_leaving</td>
- <td class="t">bool</td>
- <td class="d"> Whether or not the humanoid is leaving. If not specified, value is true.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L96">line 96 of Lua/humanoid_action.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L95">line 95 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_humanoid_action_1set_loop_callback">function HumanoidAction:setLoopCallback(<span class="p">loop_callback</span>)</a></h5>
  <p>
- Set the callback for checking termination conditions.<br/><br/>
- termination conditions.<br/><br/>
+ - Set the callback for checking termination conditions.
+- @param loop_callback (function) Callback function that is called each iteration to check for termination conditions.
+- @return (HumanoidAction) Returning self, for daisy-chaining.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">loop_callback</td>
- <td class="t">func</td>
- <td class="d"> Callback function that is called each iteration to check for</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L73">line 73 of Lua/humanoid_action.lua</a>.
@@ -198,14 +207,16 @@
  <div class="method">
  <h5><a name="_0_1_humanoid_action_1set_must_happen">function HumanoidAction:setMustHappen(<span class="p">must_happen</span>)</a></h5>
  <p>
- Set the 'must happen' flag (that is, action cannot be skipped).<br/><br/>
+ - Set the 'must happen' flag (that is, action cannot be skipped).
+- @param must_happen (boolean) Whether or not the action must happen.
+- @return (HumanoidAction) Returning self, for daisy-chaining.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">must_happen</td>
- <td class="t">bool</td>
- <td class="d"> Whether or not the action must happen.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L53">line 53 of Lua/humanoid_action.lua</a>.
@@ -214,14 +225,16 @@
  <div class="method">
  <h5><a name="_0_1_humanoid_action_1set_uninterruptible">function HumanoidAction:setUninterruptible(<span class="p">uninterruptible</span>)</a></h5>
  <p>
- Set the 'uninterruptible' flag (that is, action cannot be canceled or truncated by pickup).<br/><br/>
+ - Set the 'uninterruptible' flag (that is, action cannot be canceled or truncated by pickup).
+- @param uninterruptible (boolean) Whether or not the action uninterruptible.
+- @return (HumanoidAction) Returning self, for daisy-chaining.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">uninterruptible</td>
- <td class="t">bool</td>
- <td class="d"> Whether or not the action uninterruptible.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L63">line 63 of Lua/humanoid_action.lua</a>.

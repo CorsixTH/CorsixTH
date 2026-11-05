@@ -123,15 +123,16 @@
  <div class="method">
  <h5><a name="_0_1_seek_room_action_1_seek_room_action">function SeekRoomAction:SeekRoomAction(<span class="p">room_type</span>)</a></h5>
  <p>
- -@type SeekRoomAction<br/><br/>
- Find another room (and go to it).<br/><br/>
+ -@type SeekRoomAction
+- Find another room (and go to it).
+- @param room_type (string) Type of the new room.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">room_type</td>
  <td class="t">?</td>
- <td class="d">Type of the new room.</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/seek_room.lua#L27">line 27 of Lua/humanoid_actions/seek_room.lua</a>.
@@ -140,22 +141,23 @@
  <div class="method">
  <h5><a name="_0_1_seek_room_action_1enable_treatment_room">function SeekRoomAction:enableTreatmentRoom()</a></h5>
  <p>
- Denote that the room being looked for is a treatment room.<br/><br/>
+ - Denote that the room being looked for is a treatment room.
+- @return (SeekRoomAction) # self, for daisy-chaining.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/seek_room.lua#L40">line 40 of Lua/humanoid_actions/seek_room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_seek_room_action_1set_diagnosis_room">function SeekRoomAction:setDiagnosisRoom(<span class="p">room</span>)</a></h5>
  <p>
- Sets the index of the room to use from the disease's available diagnosis
-rooms<br/><br/>
+ - Sets the index of the room to use from the disease's available diagnosis rooms
+- @param room (integer) key in the available diagnosis room list<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">room</td>
- <td class="t">integer</td>
- <td class="d"> key in the available diagnosis room list</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/seek_room.lua#L47">line 47 of Lua/humanoid_actions/seek_room.lua</a>.

@@ -129,25 +129,28 @@
  <div class="method">
  <h5><a name="_0_1_queue_action_1_queue_action">function QueueAction:QueueAction(<span class="p">x</span>, <span class="p">y</span>, <span class="p">queue</span>)</a></h5>
  <p>
- -@type QueueAction<br/><br/>
- Queue for something (door or reception desk).<br/><br/>
+ -@type QueueAction
+- Queue for something (door or reception desk).
+- @param x (integer) X position of the queue.
+- @param y (integer) Y position of the queue.
+- @param queue (Queue) Queue to join<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
- <td class="d">X position of the queue.</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">y</td>
  <td class="t">?</td>
- <td class="d">Y position of the queue.</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">queue</td>
- <td class="t">Queue</td>
- <td class="d"> Queue to join</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/queue.lua#L27">line 27 of Lua/humanoid_actions/queue.lua</a>.
@@ -156,38 +159,43 @@
  <div class="method">
  <h5><a name="_0_1_queue_action_1set_face_direction">function QueueAction:setFaceDirection(<span class="p">face_x</span>, <span class="p">face_y</span>)</a></h5>
  <p>
- Set the tile to face.<br/><br/>
+ - Set the tile to face.
+- @param face_x (integer) X coordinate of the tile to face.
+- @param face_y (integer) Y coordinate of the tile to face.
+- @return (QueueAction) # Self, for daisy-chaining.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">face_x</td>
- <td class="t">int</td>
- <td class="d"> X coordinate of the tile to face.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  <tr>
  <td class="n">face_y</td>
- <td class="t">int</td>
- <td class="d"> Y coordinate of the tile to face.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/queue.lua#L57">line 57 of Lua/humanoid_actions/queue.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/queue.lua#L59">line 59 of Lua/humanoid_actions/queue.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_queue_action_1set_reserve_when_done">function QueueAction:setReserveWhenDone(<span class="p">door</span>)</a></h5>
  <p>
- Set the object to reserve when queueing is done.<br/><br/>
+ - Set the object to reserve when queueing is done.
+- @param door (Door) Object to reserve when leaving the queue.
+- @return (QueueAction) # Self, for daisy-chaining.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">door</td>
- <td class="t">object</td>
- <td class="d"> Object to reserve when leaving the queue.</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/queue.lua#L47">line 47 of Lua/humanoid_actions/queue.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/queue.lua#L48">line 48 of Lua/humanoid_actions/queue.lua</a>.
  </p>
  </div>
 </div>
