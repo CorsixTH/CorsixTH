@@ -81,6 +81,7 @@ describe("hospital.lua: ", function()
       not_cured_ty = 0,
       num_visitors_ty = 0,
       num_deaths_this_year = 0,
+      inflation_rate = 0.045,
     }, {__index = Hospital})
     return hospital, rat_spawns
   end
