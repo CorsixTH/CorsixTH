@@ -984,21 +984,30 @@ function Hospital:_dailyUpdateRatholes(minimum_holes)
       math.round(th:getLitterFraction(self:getPlayerIndex()) * 200))
   local difference = wanted_holes - #self.ratholes
   if difference <= 0 then return false end
-  -- Not enough holes
-  -- The more ratholes wanted, the higher chance one is made.
-  -- difference^2 exponentially increases rathole chance, where 12 is the baseline
+  -- Not enough holes.
+  --[[
+  Rathole chance calculations:
+  The more ratholes wanted vs actual, the higher chance one is made.
+
+  Using 3 ^ difference, with baseline at 3% once a hole is wanted:
+  1 - 5 extra holes: 3%
+  6     ''    ''   : 4.45%
+  7     ''    ''   : 13.35%
+  8     ''    ''   : 40.05%
+  9     ''    ''   : 100% (capped)
+  ]]--
   local map_size = map.width * map.height
-  local rathole_chance = 2^difference
-  rathole_chance = math.max(12, rathole_chance)
+  local chance_baseline = 500
+  local rathole_chance = 3 ^ difference
+  rathole_chance = math.max(chance_baseline, rathole_chance)
   local roll = math.random(1, map_size)
 
   if roll > rathole_chance then return false end
   -- Try to find a new spot of a wall in a corridor, near a randomly placed litter.
   local litters = self.world:getAllLitter(self)
-  if not litters then return false end
+  if #litters == 0 then return false end
   local random_litter = litters[math.random(1, #litters)]
   local possible_holes = self:_getWallTilesWithoutRathole(false, random_litter.tile_x, random_litter.tile_y, 5)
-  --inspect(possible_holes, 3)
   -- There is a chance we did not hit any walls, so no hole will be made
   if #possible_holes == 0 then return false end
   local chosen_hole = possible_holes[math.random(1, #possible_holes)]
