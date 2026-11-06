@@ -49,6 +49,7 @@ You can:
 - provide inputs and record how the game responds;
 - compare those observations with CorsixTH;
 - use existing CorsixTH code, tests, issues, and documentation;
+- use existing Theme Hospital documentation and gemaplay content such as videos
 - investigate and debug CorsixTH itself; and
 - work with original game data files where needed to support data used by CorsixTH.
 
