@@ -65,7 +65,8 @@ function GPRoom:doStaffUseCycle(humanoid)
   local inv_skill = 1 - humanoid.profile.skill
   local desk_use_time = math.random(math.floor(3 +  5 * inv_skill),
                                     math.ceil (8 + 10 * inv_skill))
-  local gp_loop_callback = --[[persistable:gp_loop_callback]] function()
+  local start_next_cycle = false
+  local gp_loop_callback = --[[persistable:gp_loop_callback]] function(action)
     desk_use_time = desk_use_time - 1
     if desk_use_time == 0 then
       -- Consultants who aren't tired might not need to stretch their legs
@@ -75,7 +76,11 @@ function GPRoom:doStaffUseCycle(humanoid)
           math.random() >= humanoid:getAttribute("fatigue") then
         desk_use_time = math.random(7, 14)
       else
-        self:doStaffUseCycle(humanoid)
+        -- Finish using the desk before looking for the cabinet. While the
+        -- usage animation is playing, the humanoid's tile position can be
+        -- the desk's render attachment rather than a walkable tile.
+        action.prolonged_usage = false
+        start_next_cycle = true
       end
 
       local patient = self:getPatient()
@@ -91,7 +96,13 @@ function GPRoom:doStaffUseCycle(humanoid)
     end
   end
 
-  humanoid:queueAction(UseObjectAction(obj):setLoopCallback(gp_loop_callback))
+  local gp_after_use = --[[persistable:gp_after_use]] function()
+    if start_next_cycle then
+      self:doStaffUseCycle(humanoid)
+    end
+  end
+  humanoid:queueAction(UseObjectAction(obj):setLoopCallback(gp_loop_callback)
+      :setAfterUse(gp_after_use))
 end
 
 function GPRoom:commandEnteringStaff(humanoid)

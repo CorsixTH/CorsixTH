@@ -106,10 +106,12 @@ function WardRoom:doStaffUseCycle(humanoid)
     humanoid:walkTo(ox, oy)
     if obj.object_type.id == "desk" then
       local desk_use_time = math.random(7, 14)
-      local desk_loop = --[[persistable:ward_desk_loop_callback]] function()
+      local desk_loop = --[[persistable:ward_desk_loop_callback]] function(action)
         desk_use_time = desk_use_time - 1
         if desk_use_time == 0 then
-          self:doStaffUseCycle(humanoid)
+          -- Let the desk usage (including its finish animation) complete before
+          -- the queued meander action starts another staff use cycle.
+          action.prolonged_usage = false
         end
       end
 
