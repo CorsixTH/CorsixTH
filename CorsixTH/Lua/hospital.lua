@@ -2385,8 +2385,8 @@ function Hospital:roomNotYetResearched(disease)
   return false
 end
 
---! Function that returns true if concentrating research on the disease is possible.
---! @param disease (string): the disease to be checked.
+--- Function that returns true if concentrating research on the disease is possible.
+---@param disease (string) the disease to be checked.
 function Hospital:canConcentrateResearch(disease)
   local book = self.disease_casebook
   if not book[disease].pseudo and self:roomNotYetResearched(disease) then
