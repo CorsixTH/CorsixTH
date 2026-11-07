@@ -1590,6 +1590,7 @@ function World:getFreeBench(x, y, distance)
         return true
       end
     end
+    return false
   end)
   return bench, rx, ry, bench_distance
 end

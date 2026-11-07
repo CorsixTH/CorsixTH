@@ -68,8 +68,8 @@ function Map:setPlayerCount(count)
   self.th:setPlayerCount(count)
 end
 
-function Map:getPlayerCount(count)
-  return self.th:getPlayerCount(count)
+function Map:getPlayerCount()
+  return self.th:getPlayerCount()
 end
 
 --! Set the camera tile for the given player on the map

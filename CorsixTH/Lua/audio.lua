@@ -200,12 +200,13 @@ function Audio:initMidiPlayer()
     self.midi_player = nil
   end
 
-  local midi_ok, midi_player = pcall(
-    TH.midiPlayer,
-    self.app.config.midi_api or "",
-    self.app.config.midi_port,
-    self.app.config.midi_sysex_master_volume,
-    self.app:findSoundFont())
+  local midi_ok, midi_player = pcall(function()
+    return TH.midiPlayer(
+      self.app.config.midi_api or "",
+      self.app.config.midi_port,
+      self.app.config.midi_sysex_master_volume,
+      self.app:findSoundFont())
+    end)
   if midi_ok then
     self.midi_player = midi_player
   else
