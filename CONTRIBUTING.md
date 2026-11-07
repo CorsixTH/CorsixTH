@@ -28,12 +28,61 @@ suggestion or enhancement.
 ![image](https://user-images.githubusercontent.com/20030128/123638352-fc609400-d816-11eb-88ad-11030e041fc4.png)
 
 
+## Clean-Room Development ##
+  
+CorsixTH uses clean-room principles when reimplementing behaviour from Theme
+Hospital.
+
+You can use the original game, including through DOSBox or another compatible
+environment, to observe its visible and audible behaviour and compare it with
+CorsixTH.
+
+You must not:
+- disassemble or decompile the original game;
+- inspect or modify its executable code;
+- inspect process memory to discover implementation details;
+- derive behaviour from machine code or internal data structures; or
+- reproduce original source code or other non-public implementation details.
+
+You can:
+- observe the original game's visible and audible behaviour;
+- provide inputs and record how the game responds;
+- compare those observations with CorsixTH;
+- use existing CorsixTH code, tests, issues, and documentation;
+- use existing Theme Hospital documentation and gemaplay content such as videos
+- investigate and debug CorsixTH itself; and
+- work with original game data files where needed to support data used by CorsixTH.
+
+If reproducing a behaviour would require examining how the original executable
+works, please consult the project maintainers before continuing.
+
 ## Pull Requests (PRs) ##
 
-When providing a pull request ensure the description field describes the major
-changes from the request. If your pull request relates to any existing issues,
-link those issues to the description by referencing them with a `#` followed by the issue number.\
-The pull request provides a default layout to help you fill out this information.
+When submitting a pull request submit only a description of the major changes
+of your contribution.\
+Do not include unnecessasry information in your description, such as build or
+test results.
+
+If the pull request relates to any existing issues,
+link those issues to the description by referencing them with a `Fixes #` followed
+by the issue number (one `Fixes #` per line per issue).\
+The pull request form provides a default layout to help you fill out this information.
+
+### Pull Requests and Reviews ###
+  
+Submitting or managing a pull request, making review decisions, and
+communicating with reviewers are your responsibility.
+
+If you use AI tools, they must not submit, manage, approve, or merge pull requests,
+communicate on the your behalf, or draft or make review decisions. You must decide
+what to say and write yourself.
+
+AI tools can help you understand review feedback, find the relevant code or
+behaviour, consider possible technical changes, and identify points to
+address. You can always use an AI tool to translate something you have written
+into English.
+
+**Failure to follow these practices may result in your pull request being rejected**
 
 ### Pull Request Statuses ###
 CorsixTH encourages using the following labels inside your Pull Request's title
@@ -69,12 +118,32 @@ request that requires syncing/rebase with master before merge. It can be removed
 after a rebase.
 
 ## CONTRIBUTING CODE: ##
+
+### Codestyle ###
 **Important!**\
 Ensure you have read our [Coding Conventions](https://github.com/CorsixTH/CorsixTH/wiki/Coding-Conventions)
 before starting your work. CorsixTH may use styles different to your previous experience with ``Lua``
 and ``C++``. The [Wiki](https://github.com/CorsixTH/CorsixTH/wiki/) also contains other useful information
 that could be beneficial before contributing code.
 
+### AI-Assisted Contributions ###
+  
+AI tools can be used to help develop, review, document, test, or refactor
+CorsixTH, but must not be used to generate creative assets.
+
+Any AI-assisted work is still your responsibility. Make sure you understand and
+are able to explain the changes you submit.
+
+Before submitting your changes, check that any AI-assisted work follows the
+project conventions and standards. Additionally, check the
+tool's assumptions, the effect of the change, the validation carried out, and
+any known limitations.
+
+Generated tests or successful local checks do not on their own prove that a
+change is correct or suitable for inclusion.
+
+
+### Development Workflow ###
 *NB: If you're using GitHub Desktop ignore the git specific commands and follow
 guidance from [GitHub Docs](https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/overview/getting-started-with-github-desktop)*\
 **First Time**
