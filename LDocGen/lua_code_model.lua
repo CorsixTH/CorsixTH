@@ -120,6 +120,7 @@ function LuaFunction:LuaFunction()
   self:LuaVariable()
   self.type = "function"
   self.return_type = nil
+  self.return_desc = nil
   self.parameters = {}
   self.return_values = {}
   self.short_desc = nil
@@ -185,6 +186,24 @@ function LuaFunction:getParameter(name)
   if name == "..." then
     return self.vararg_parameter
   end
+end
+
+function LuaFunction:setReturnType(return_type)
+  self.return_type = return_type
+  return self
+end
+
+function LuaFunction:getReturnType()
+  return self.return_type
+end
+
+function LuaFunction:setReturnDesc(desc)
+  self.return_desc = desc
+  return self
+end
+
+function LuaFunction:getReturnDesc()
+  return self.return_desc
 end
 
 function LuaTable:LuaTable()
