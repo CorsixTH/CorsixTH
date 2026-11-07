@@ -242,6 +242,7 @@ DrawingLayers.EastSideObject = 8
 DrawingLayers.SouthSideObject = 9
 
 -- Keep in sync with animation_effect in th_gfx_common.h
+---@enum AnimationEffect
 AnimationEffect = {}
 AnimationEffect.None = 0
 AnimationEffect.Glowing = 1
