@@ -3140,7 +3140,7 @@ audio_window = {
 
 tooltip.audio_window = {
   audio_button = "開關所有的聲音",
-  audio_toggle = "切換開關",
+  audio = "切換開關",
 }
 
 customise_window = {
@@ -3172,11 +3172,11 @@ tooltip.customise_window = {
 
 folders_window = {
   caption = "資料夾位置",
-  data_label = "TH 資料",
-  font_label = "字型",
-  music_label = "音樂",
-  savegames_label = "存檔",
-  screenshots_label = "截圖",
+  theme_hospital_install = "TH 資料",
+  unicode_font = "字型",
+  audio_music = "音樂",
+  savegames = "存檔",
+  screenshots = "截圖",
   -- next four are the captions for the browser window, which are called from the folder setting menu
   new_th_location = "您可以在此處指定新的杏林也瘋狂安裝目錄。選擇新目錄後，遊戲將重新啟動。",
   savegames_location = "選擇要用於儲存的目錄",
@@ -3187,16 +3187,15 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "瀏覽資料夾位置",
-  data_location = "原版杏林也瘋狂安裝的目錄，CorsixTH 執行所必需",
-  font_location = "選擇可以顯示您的語言所需 Unicode 字型的位置。如果沒有指定，您將不能使用原遊戲提供字型之外的語言，例如中文和俄語。（你一定已經選了，要不怎麼可以看到這句話呢？）",
-  savegames_location = "預設情況下，遊戲存檔儲存在配置檔案旁邊的資料夾中。如果不合適，可以選擇自己的目錄，只需瀏覽到要使用的目錄即可。",
-  screenshots_location = "預設情況下，螢幕快照儲存在配置檔案旁邊的資料夾中。如果不合適，可以選擇自己的目錄，只需瀏覽到要使用的目錄即可。",
-  music_location = "選擇儲存音樂檔案的位置。此目錄必須已經存在，然後才能瀏覽到剛建立的目錄。",
-  browse_data = "瀏覽另一處杏林也瘋狂安裝位置（當前位置：%1%）",
-  browse_font = "瀏覽另一個字型（當前位置：%1%）",
-  browse_saves = "瀏覽另一處遊戲存檔儲存位置（當前位置：%1%）",
-  browse_screenshots = "瀏覽另一處螢幕截圖儲存位置（當前位置：%1%）",
-  browse_music = "瀏覽另一處音樂儲存位置（當前位置：%1%）",
+  theme_hospital_install = "原版杏林也瘋狂安裝的目錄，CorsixTH 執行所必需",
+  unicode_font = "選擇可以顯示您的語言所需 Unicode 字型的位置。如果沒有指定，您將不能使用原遊戲提供字型之外的語言，例如中文和俄語。（你一定已經選了，要不怎麼可以看到這句話呢？）",
+  savegames = "預設情況下，遊戲存檔儲存在配置檔案旁邊的資料夾中。如果不合適，可以選擇自己的目錄，只需瀏覽到要使用的目錄即可。",
+  screenshots = "預設情況下，螢幕快照儲存在配置檔案旁邊的資料夾中。如果不合適，可以選擇自己的目錄，只需瀏覽到要使用的目錄即可。",
+  audio_music = "選擇儲存音樂檔案的位置。此目錄必須已經存在，然後才能瀏覽到剛建立的目錄。",
+  browse_font = "瀏覽另一個字型",
+  browse_saves = "瀏覽另一處遊戲存檔儲存位置",
+  browse_screenshots = "瀏覽另一處螢幕截圖儲存位置",
+  browse_music = "瀏覽另一處音樂儲存位置",
   no_font_specified = "沒有指定字型的位置！",
   not_specified = "沒有指定資料夾位置！",
   default = "預設位置",

@@ -517,7 +517,7 @@ audio_window = {
 
 tooltip.audio_window = {
   audio_button = "Sämtliche Toneffekte des Spiels ein- bzw. ausschalten",
-  audio_toggle = "Ein- oder ausschalten",
+  audio = "Ein- oder ausschalten",
 }
 
 customise_window = {
@@ -549,11 +549,11 @@ tooltip.customise_window = {
 
 folders_window = {
   caption = "Pfade",
-  data_label = "TH-Daten",
-  font_label = "Schrift",
-  music_label = "Musik",
-  savegames_label = "Spielstände",
-  screenshots_label = "Screenshots",
+  theme_hospital_install = "TH-Daten",
+  unicode_font = "Schrift",
+  audio_music = "Musik",
+  savegames = "Spielstände",
+  screenshots = "Screenshots",
   --
   new_th_location = "Hier können Sie ein neues Theme-Hospital-Installationsverzeichnis auswählen. Sobald Sie das neue Verzeichnis auswählen, wird das Spiel neu gestartet.",
   savegames_location = "Wählen Sie das Verzeichnis aus, das für Spielstände benutzt werden soll.",
@@ -564,16 +564,15 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "Nach einem Verzeichnis durchsuchen",
-  data_location = "Das Verzeichnis der original Theme-Hospital-Installation, die benötigt wird, um CorsixTH zu spielen",
-  font_location = "Pfad einer Schrift-Datei, die Unicode-Zeichen Ihrer Sprache unterstützt. Wenn diese Einstellung nicht vorgenommen wird, können Sie keine Sprachen auswählen, die mehr Zeichen benötigen, als das Originalspiel unterstützt. Beispiel: Russisch und Chinesisch.",
-  savegames_location = "Standardmäßig wird das Spielstandsverzeichnis im selben Verzeichnis wie die Konfigurationsdatei gespeichert und es wird benutzt, um die Spielstände darin abzuspeichern. Sollte das nicht erwünscht sein, können Sie sich ihr eigenes Verzeichnis aussuchen, wählen Sie einfach das Verzeichnis, das Sie verwenden möchten",
-  screenshots_location = "Standardmäßig wird das Screenshotverzeichnis im selben Verzeichnis wie die Konfigurationsdatei gespeichert. Sollte das nicht erwünscht sein, können Sie sich ihr eigenes Verzeichnis aussuchen, wählen Sie einfach das Verzeichnis, das Sie verwenden möchten",
-  music_location = "Wählen Sie einen Ort für ihre Musikddateien aus. Das Verzeichnis muss bereits vorhanden sein.",
-  browse_data = "Nach einem anderem Ort einer Theme-Hospital-Installation durchsuchen (aktueller Ort: %1%)",
-  browse_font = "Nach einer anderen Schriftdatei suchen (aktueller Ort: %1%)",
-  browse_saves = "Nach einem anderem Ort für Ihr Spielstandsverzeichnis durchsuchen (aktueller Ort: %1%)",
-  browse_screenshots = "Nach einem anderem Ort für ihr Screenshotverzeichnis suchen (aktueller Ort: %1%)",
-  browse_music = "Nach einem anderem Ort für Ihr Musikverzeichnis durchsuchen (aktueller Ort: %1%)",
+  theme_hospital_install = "Das Verzeichnis der original Theme-Hospital-Installation, die benötigt wird, um CorsixTH zu spielen",
+  unicode_font = "Pfad einer Schrift-Datei, die Unicode-Zeichen Ihrer Sprache unterstützt. Wenn diese Einstellung nicht vorgenommen wird, können Sie keine Sprachen auswählen, die mehr Zeichen benötigen, als das Originalspiel unterstützt. Beispiel: Russisch und Chinesisch.",
+  savegames = "Standardmäßig wird das Spielstandsverzeichnis im selben Verzeichnis wie die Konfigurationsdatei gespeichert und es wird benutzt, um die Spielstände darin abzuspeichern. Sollte das nicht erwünscht sein, können Sie sich ihr eigenes Verzeichnis aussuchen, wählen Sie einfach das Verzeichnis, das Sie verwenden möchten",
+  screenshots = "Standardmäßig wird das Screenshotverzeichnis im selben Verzeichnis wie die Konfigurationsdatei gespeichert. Sollte das nicht erwünscht sein, können Sie sich ihr eigenes Verzeichnis aussuchen, wählen Sie einfach das Verzeichnis, das Sie verwenden möchten",
+  audio_music = "Wählen Sie einen Ort für ihre Musikddateien aus. Das Verzeichnis muss bereits vorhanden sein.",
+  browse_font = "Nach einer anderen Schriftdatei suchen",
+  browse_saves = "Nach einem anderem Ort für Ihr Spielstandsverzeichnis durchsuchen",
+  browse_screenshots = "Nach einem anderem Ort für ihr Screenshotverzeichnis suchen",
+  browse_music = "Nach einem anderem Ort für Ihr Musikverzeichnis durchsuchen",
   no_font_specified = "Kein Schriftverzeichnis festgelegt!",
   not_specified = "Kein Verzeichnis festgelegt!",
   default = "Standard",
