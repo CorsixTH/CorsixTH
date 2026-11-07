@@ -434,27 +434,24 @@
  <div class="method">
  <h5><a name="_0_1_u_i_place_objects_1_u_i_place_objects">function UIPlaceObjects:UIPlaceObjects(<span class="p">ui</span>, <span class="p">object_list</span>, <span class="p">pay_for</span>)</a></h5>
  <p>
- -@type UIPlaceObjects
-- Constructor for the class.
-- @param ui (UI) The active ui.
-- @param object_list (table[]) A list of tables with objects to place. Keys are
-- * `object`: The object_type of the object
-- * `qty`: Number of objects.
-- * `existing_object`: If not nil, an already existing object that is about to be moved.
-- In particular, if that object has a variable called `current_frame` then that frame
-- will be used when drawing the object as it is being moved.<br/><br/>
+ Constructor for the class.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">ui</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">UI</td>
+ <td class="d"> The active ui.</td>
  </tr>
  <tr>
  <td class="n">object_list</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">table</td>
+ <td class="d"> A list of tables with objects to place. Keys are
+* `object`: The object_type of the object
+* `qty`: Number of objects.
+* `existing_object`: If not nil, an already existing object that is about to be moved.
+In particular, if that object has a variable called `current_frame` then that frame
+will be used when drawing the object as it is being moved.</td>
  </tr>
  <tr>
  <td class="n">pay_for</td>
@@ -462,7 +459,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/place_objects.lua#L36">line 36 of Lua/dialogs/place_objects.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/place_objects.lua#L38">line 38 of Lua/dialogs/place_objects.lua</a>.
  </p>
  </div>
  <div class="method">

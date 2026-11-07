@@ -23,7 +23,7 @@
  <div class="content">
  <h2 class="class">App Class</h2>
 <h3 class="class">Adjust random announcement delay
-- Controls the main CorsixTH application</h3> 
+Controls the main CorsixTH application</h3> 
 <div class="class_info">
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L35">line 35 of Lua/app.lua</a>.
 </div>
@@ -392,17 +392,14 @@
  <div class="method">
  <h5><a name="_0_1_app_1__check_or_find">function App:_checkOrFind(<span class="p">test_file</span>, <span class="p">campaign_dir</span>)</a></h5>
  <p>
- - Check that a file at a full path exists, or find it, or expand filename to full paths
-- @param test_file (string) A full path or a filename of a level or map file
-- @return (string) # A full path that exists
-- @private<br/><br/>
+ Check that a file at a full path exists, or find it, or expand filename to full paths<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">test_file</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> A full path or a filename of a level or map file</td>
  </tr>
  <tr>
  <td class="n">campaign_dir</td>
@@ -416,56 +413,47 @@
  <div class="method">
  <h5><a name="_0_1_app_1__load_level">function App:_loadLevel(<span class="p">level</span>, <span class="p">difficulty</span>, <span class="p">level_name</span>, <span class="p">level_file</span>, <span class="p">level_intro</span>, <span class="p">map_editor</span>, <span class="p">campaign_info</span>)</a></h5>
  <p>
- - Private Function to load the level. Call via `App:loadLevel(...)`
-- Loads the specified level.
-- @private
-- @param level (string) Full path of a custom level, name of a TH level, or nil for mapeditor
-- @param difficulty (string) One of "easy, full, hard", or nil for custom levels
-- @param level_name (string) Display name of the level
-- @param level_file (string) Full path of a custom map, name of a TH level,
-or nil for TH campaign or mapeditor
-- @param level_intro (string) Introduction text displayed to the player
-- @param map_editor (boolean) True for opening the map editor
-- @param campaign_info (string[]) Information about campaign in case loading level
-is a part of a campaign. if not part of a campaign then campaign_info is nil.
-- @private<br/><br/>
+ Private Function to load the level. Call via `App:loadLevel(...)`
+Loads the specified level.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">level</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Full path of a custom level, name of a TH level, or nil for mapeditor</td>
  </tr>
  <tr>
  <td class="n">difficulty</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> One of "easy, full, hard", or nil for custom levels</td>
  </tr>
  <tr>
  <td class="n">level_name</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Display name of the level</td>
  </tr>
  <tr>
  <td class="n">level_file</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Full path of a custom map, name of a TH level,
+or nil for TH campaign or mapeditor</td>
  </tr>
  <tr>
  <td class="n">level_intro</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Introduction text displayed to the player</td>
  </tr>
  <tr>
  <td class="n">map_editor</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">boolean</td>
+ <td class="d"> True for opening the map editor</td>
  </tr>
  <tr>
  <td class="n">campaign_info</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Information about campaign in case loading level
+is a part of a campaign. if not part of a campaign then campaign_info is nil.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L885">line 885 of Lua/app.lua</a>.
@@ -474,36 +462,33 @@ is a part of a campaign. if not part of a campaign then campaign_info is nil.
  <div class="method">
  <h5><a name="_0_1_app_1abandon">function App:abandon()</a></h5>
  <p>
- - Exits the game completely without saving the config i.e. Alt+F4 for Quit Application<br/><br/>
+ Exits the game completely without saving the config i.e. Alt+F4 for Quit Application<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2008">line 2008 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1after_load">function App:afterLoad()</a></h5>
  <p>
- - This function is automatically called after loading a game and serves for compatibility.<br/><br/>
+ This function is automatically called after loading a game and serves for compatibility.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2018">line 2018 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1check_compatibility">function App:checkCompatibility(<span class="p">save_version</span>, <span class="p">gfx_set</span>)</a></h5>
  <p>
- - Function to check the loaded game is compatible with the program
-- @param save_version (integer)
-- @param gfx_set (string) What graphics set is used
-- @return boolean is_compatible<br/><br/>
+ Function to check the loaded game is compatible with the program<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">save_version</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"></td>
  </tr>
  <tr>
  <td class="n">gfx_set</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> What graphics set is used</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1897">line 1897 of Lua/app.lua</a>.
@@ -512,12 +497,12 @@ is a part of a campaign. if not part of a campaign then campaign_info is nil.
  <div class="method">
  <h5><a name="_0_1_app_1check_for_updates">function App:checkForUpdates()</a></h5>
  <p>
- - Runs a comparison between the current (installed) version and the reported
-- update table hosted by Github. If the update table is newer, it will generate
-- an update window.
-- As pre-releases are not announced on the update table, the checker also assumes
-- that any current version with a patch in its name (Beta, RC, etc) will be older
-- than the update table's version if their major, minor, and revision components match.<br/><br/>
+ Runs a comparison between the current (installed) version and the reported
+update table hosted by Github. If the update table is newer, it will generate
+an update window.
+As pre-releases are not announced on the update table, the checker also assumes
+that any current version with a patch in its name (Beta, RC, etc) will be older
+than the update table's version if their major, minor, and revision components match.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2086">line 2086 of Lua/app.lua</a>.
  </p>
  </div>
@@ -530,23 +515,21 @@ is a part of a campaign. if not part of a campaign then campaign_info is nil.
  <div class="method">
  <h5><a name="_0_1_app_1check_missing_strings_in_language">function App:checkMissingStringsInLanguage(<span class="p">dir</span>, <span class="p">language</span>)</a></h5>
  <p>
- - Compares strings provided by language file of given language WITHOUT inheritance
+ Compares strings provided by language file of given language WITHOUT inheritance
 with strings provided by english language with inheritance (i.e. all strings).
-This will give translators an idea which strings are missing in their translation.
-- @param dir (string) The directory where the file to write to should be.
-- @param language (string) The language to check against.<br/><br/>
+This will give translators an idea which strings are missing in their translation.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">dir</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The directory where the file to write to should be.</td>
  </tr>
  <tr>
  <td class="n">language</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The language to check against.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1041">line 1041 of Lua/app.lua</a>.
@@ -555,33 +538,29 @@ This will give translators an idea which strings are missing in their translatio
  <div class="method">
  <h5><a name="_0_1_app_1compare_versions">function App:compareVersions(<span class="p">version_a</span>, <span class="p">version_b</span>, <span class="p">method</span>)</a></h5>
  <p>
- - Reports a difference between two versions based on requested methodology.
-- * Method `release` reports the difference between the matching releases in steps,
-- revisions are not counted.
-- For development builds it will use the base release it started from when using
-- the release method.
-- * Method(version) reports the difference between two savegame versions.
-- @param version_a (number | table) The first (usually newer) version to test
-- @param version_b (number | table) The second (usually older) version to test
-- @param method (string) What method to compare by
-- @return integer # The step difference between release a and release b for release method or The raw savegame version difference for version method<br/><br/>
+ Reports a difference between two versions based on requested methodology.
+* Method `release` reports the difference between the matching releases in steps,
+revisions are not counted.
+For development builds it will use the base release it started from when using
+the release method.
+* Method(version) reports the difference between two savegame versions.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">version_a</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">number&nbsp;or&nbsp;table</td>
+ <td class="d"> The first (usually newer) version to test</td>
  </tr>
  <tr>
  <td class="n">version_b</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">number&nbsp;or&nbsp;table</td>
+ <td class="d"> The second (usually older) version to test</td>
  </tr>
  <tr>
  <td class="n">method</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> What method to compare by</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1818">line 1818 of Lua/app.lua</a>.
@@ -644,29 +623,26 @@ This will give translators an idea which strings are missing in their translatio
  <div class="method">
  <h5><a name="_0_1_app_1exit">function App:exit()</a></h5>
  <p>
- - Exits the game completely (no confirmation window)<br/><br/>
+ Exits the game completely (no confirmation window)<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2000">line 2000 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1find_file_in_dirs">function App:findFileInDirs(<span class="p">search_paths</span>, <span class="p">filename</span>)</a></h5>
  <p>
- - Searches in the given folders for the given filename
-- @param search_paths (table) List of folders (strings) to look through
-- @param filename (string) Filename to search for.
-- @return (string?) full_path_to_file<br/><br/>
+ Searches in the given folders for the given filename<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">search_paths</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">table</td>
+ <td class="d"> List of folders (strings) to look through</td>
  </tr>
  <tr>
  <td class="n">filename</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Filename to search for.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L850">line 850 of Lua/app.lua</a>.
@@ -700,16 +676,14 @@ This will give translators an idea which strings are missing in their translatio
  <div class="method">
  <h5><a name="_0_1_app_1gamelog_header">function App:gamelogHeader()</a></h5>
  <p>
- - Generate information about user's system and the program
-- @return string # System and program info as a string<br/><br/>
+ Generate information about user's system and the program<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L2209">line 2209 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1get_bitmap_dir">function App:getBitmapDir()</a></h5>
  <p>
- - Get the directory containing the bitmap files.
-- @return (string) # Name of the directory containing the bitmap files, ending with a directory path separator.<br/><br/>
+ Get the directory containing the bitmap files.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1623">line 1623 of Lua/app.lua</a>.
  </p>
  </div>
@@ -722,7 +696,7 @@ This will give translators an idea which strings are missing in their translatio
  <div class="method">
  <h5><a name="_0_1_app_1get_current_version">function App:getCurrentVersion()</a></h5>
  <p>
- - Retrieve the current savegame version as defined in the application.<br/><br/>
+ Retrieve the current savegame version as defined in the application.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1777">line 1777 of Lua/app.lua</a>.
  </p>
  </div>
@@ -747,22 +721,19 @@ This will give translators an idea which strings are missing in their translatio
  <div class="method">
  <h5><a name="_0_1_app_1get_full_path">function App:getFullPath(<span class="p">folders</span>, <span class="p">trailing_slash</span>)</a></h5>
  <p>
- - Returns the full path of the local path given
-- @param folders (string | table) A string of one segment or an set of many segments of the path
-- @param trailing_slash (boolean) Whether the path needs to end with a local path separator
-- @return (string) fullpath The OS dependent full path<br/><br/>
+ Returns the full path of the local path given<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">folders</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string&nbsp;or&nbsp;table</td>
+ <td class="d"> A string of one segment or an set of many segments of the path</td>
  </tr>
  <tr>
  <td class="n">trailing_slash</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">boolean</td>
+ <td class="d"> Whether the path needs to end with a local path separator</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L95">line 95 of Lua/app.lua</a>.
@@ -771,18 +742,14 @@ This will give translators an idea which strings are missing in their translatio
  <div class="method">
  <h5><a name="_0_1_app_1get_release_data">function App:getReleaseData(<span class="p">savegame_version</span>)</a></h5>
  <p>
- - Requests data regarding a given savegame version
-- @param savegame_version (number?) What to lookup, uses application version if blank
-- @return { major: integer, minor: integer, release: integer, path: integer? }
-If no releases match it returns the base release with the savegame version
-inserted<br/><br/>
+ Requests data regarding a given savegame version<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">savegame_version</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">number</td>
+ <td class="d"> What to lookup, uses application version if blank</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1782">line 1782 of Lua/app.lua</a>.
@@ -791,16 +758,14 @@ inserted<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1get_release_string">function App:getReleaseString(<span class="p">savegame_version</span>)</a></h5>
  <p>
- - Provides the release (or development) string for a given savegame version
-- @param savegame_version (number?) The version to look up
-- @return string # A string in the format `v<major>.<minor>.<revision>[patch]`. The `patch` is for development versions.<br/><br/>
+ Provides the release (or development) string for a given savegame version<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">savegame_version</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">number</td>
+ <td class="d"> The version to look up</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1807">line 1807 of Lua/app.lua</a>.
@@ -824,8 +789,8 @@ inserted<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1idle">function App:idle()</a></h5>
  <p>
- - Function for handling idle time in the main menu, which leads to playing the
-- demo gameplay trailer if left long enough<br/><br/>
+ Function for handling idle time in the main menu, which leads to playing the
+demo gameplay trailer if left long enough<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1296">line 1296 of Lua/app.lua</a>.
  </p>
  </div>
@@ -838,23 +803,22 @@ inserted<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1init_gamelog_file">function App:initGamelogFile()</a></h5>
  <p>
- - Create the gamelog, using the launch time in the filename, and write the system information.<br/><br/>
+ Create the gamelog, using the launch time in the filename, and write the system information.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L448">line 448 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1init_language">function App:initLanguage()</a></h5>
  <p>
- - Initialises the application's language based on the player's choice.
-- @return boolean, string? # Whether successful and possibly an error message<br/><br/>
+ Initialises the application's language based on the player's choice.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L598">line 598 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1init_savegame_dir">function App:initSavegameDir()</a></h5>
  <p>
- - Tries to initialize the savegame directory, returns true on success and
-- false on failure.<br/><br/>
+ Tries to initialize the savegame directory, returns true on success and
+false on failure.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L517">line 517 of Lua/app.lua</a>.
  </p>
  </div>
@@ -867,7 +831,7 @@ inserted<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1init_user_directories">function App:initUserDirectories()</a></h5>
  <p>
- - Tries to initialize the user level and campaign directories
+ Tries to initialize the user level and campaign directories
 TODO: Integrate other directory initialisations into this function<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L486">line 486 of Lua/app.lua</a>.
  </p>
@@ -917,16 +881,15 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1load_campaign">function App:loadCampaign(<span class="p">campaign_file</span>)</a></h5>
  <p>
- - Loads the first level of the specified campaign and prepares the world
-- to be able to progress through that campaign.
-- @param campaign_file (string) Full path of a CorsixTH Campaign definition Lua file.<br/><br/>
+ Loads the first level of the specified campaign and prepares the world
+to be able to progress through that campaign.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">campaign_file</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Full path of a CorsixTH Campaign definition Lua file.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L735">line 735 of Lua/app.lua</a>.
@@ -935,11 +898,9 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1load_level">function App:loadLevel(<span class="p">level</span>, <span class="p">difficulty</span>, <span class="p">level_name</span>, <span class="p">level_file</span>, <span class="p">level_intro</span>, <span class="p">map_editor</span>, <span class="p">error_prefix</span>, <span class="p">campaign_info</span>)</a></h5>
  <p>
- - Invokes a protected call of App:_loadLevel(...). See that function for more information.
-- This function should always be called to catch errors and properly pass the
-- error to the player
-- @param error_prefix (string) (Optional) Prefixes the error relevant to what was loaded
-- return (boolean) The outcome of the pcall<br/><br/>
+ Invokes a protected call of App:_loadLevel(...). See that function for more information.
+This function should always be called to catch errors and properly pass the
+error to the player<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -975,8 +936,9 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  </tr>
  <tr>
  <td class="n">error_prefix</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> (Optional) Prefixes the error relevant to what was loaded
+return (boolean) The outcome of the pcall</td>
  </tr>
  <tr>
  <td class="n">campaign_info</td>
@@ -1015,15 +977,14 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1load_main_menu">function App:loadMainMenu(<span class="p">message</span>)</a></h5>
  <p>
- - Initialise CorsixTH's main menu screen including relevant windows
-- @param message (string) Something to display to the user<br/><br/>
+ Initialise CorsixTH's main menu screen including relevant windows<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">message</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Something to display to the user</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L685">line 685 of Lua/app.lua</a>.
@@ -1032,7 +993,7 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1map_edit">function App:mapEdit()</a></h5>
  <p>
- - Begin the map editor<br/><br/>
+ Begin the map editor<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1995">line 1995 of Lua/app.lua</a>.
  </p>
  </div>
@@ -1294,8 +1255,8 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1on_window_maximised">function App:onWindowMaximised(<span class="p">...</span>)</a></h5>
  <p>
- - Window has been maximize by the user.
-- Call the UI to report the new window mode<br/><br/>
+ Window has been maximize by the user.
+Call the UI to report the new window mode<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -1311,8 +1272,8 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1on_window_pixel_size_changed">function App:onWindowPixelSizeChanged(<span class="p">...</span>)</a></h5>
  <p>
- - Render size has changed.
-- Call the UI to adjust to the new render size<br/><br/>
+ Render size has changed.
+Call the UI to adjust to the new render size<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -1328,8 +1289,8 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1on_window_resized">function App:onWindowResized(<span class="p">...</span>)</a></h5>
  <p>
- - Window has been resized by the user.
-- Call the UI to report the new window size<br/><br/>
+ Window has been resized by the user.
+Call the UI to report the new window size<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -1345,8 +1306,8 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1on_window_restored">function App:onWindowRestored(<span class="p">...</span>)</a></h5>
  <p>
- - Window has been restored (remove maximize/minimize) by the user.
-- Call the UI to report the new window mode<br/><br/>
+ Window has been restored (remove maximize/minimize) by the user.
+Call the UI to report the new window mode<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -1382,16 +1343,14 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1read_bitmap_data_file">function App:readBitmapDataFile(<span class="p">filename</span>)</a></h5>
  <p>
- - Load bitmap data into memory.
-- @param filename (string) Name of the file to load.
-- @return (string) # The loaded data.<br/><br/>
+ Load bitmap data into memory.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">filename</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Name of the file to load.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1629">line 1629 of Lua/app.lua</a>.
@@ -1400,17 +1359,15 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1read_campaign_file">function App:readCampaignFile(<span class="p">campaign_file</span>)</a></h5>
  <p>
- - Reads the given file name as a Lua chunk from the Campaign folders
-- A correct campaign definition contains "name", "description", "levels", and "winning_text".
-- @param campaign_file (string) Full path of the file to read.
-- @return (table?, string?) file_content, error_message<br/><br/>
+ Reads the given file name as a Lua chunk from the Campaign folders
+A correct campaign definition contains "name", "description", "levels", and "winning_text".<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">campaign_file</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Full path of the file to read.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L780">line 780 of Lua/app.lua</a>.
@@ -1419,21 +1376,19 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1read_data_file">function App:readDataFile(<span class="p">dir</span>, <span class="p">filename</span>)</a></h5>
  <p>
- - Read a data file of the application into memory (possibly with decompression).
-- @param dir (string) Directory to read from. "Bitmap" and "Levels" are meta-directories, and get resolved to real directories in the function.
-- @param filename (string?) If specified, the file to load. If 'nil', the dir' parameter is the filename in the "Data" directory.<br/><br/>
+ Read a data file of the application into memory (possibly with decompression).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">dir</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Directory to read from. "Bitmap" and "Levels" are meta-directories, and get resolved to real directories in the function.</td>
  </tr>
  <tr>
  <td class="n">filename</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> If specified, the file to load. If 'nil', the dir' parameter is the filename in the "Data" directory.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1643">line 1643 of Lua/app.lua</a>.
@@ -1442,23 +1397,20 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1read_level_file">function App:readLevelFile(<span class="p">level</span>, <span class="p">campaign_dir</span>)</a></h5>
  <p>
- - Opens the given file name and returns all Level definitions in a table.
-- Values in the returned table: "path", "level_file", "name", "map_file", "briefing", and "end_praise".
-- @param level (string) Full path or name of the file to read.
-- @param campaign_dir (string) Folder of the parent campaign file
-- @return (table?, string?) level_info, error_message<br/><br/>
+ Opens the given file name and returns all Level definitions in a table.
+Values in the returned table: "path", "level_file", "name", "map_file", "briefing", and "end_praise".<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">level</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Full path or name of the file to read.</td>
  </tr>
  <tr>
  <td class="n">campaign_dir</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Folder of the parent campaign file</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L795">line 795 of Lua/app.lua</a>.
@@ -1467,17 +1419,14 @@ TODO: Integrate other directory initialisations into this function<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1read_map_data_file">function App:readMapDataFile(<span class="p">path</span>)</a></h5>
  <p>
- - Get a level file.
-- @param path (string) Full path of the level file, or a Theme Hospital level filename
-- @return If the file could be found, the data of the file, else a
-tuple 'nil', and an error description<br/><br/>
+ Get a level file.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">path</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Full path of the level file, or a Theme Hospital level filename</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1663">line 1663 of Lua/app.lua</a>.
@@ -1499,15 +1448,14 @@ tuple 'nil', and an error description<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1restart">function App:restart(<span class="p">message</span>)</a></h5>
  <p>
- - Restarts the current level (offers confirmation window first)
-- @param message (string) Optional message to the player<br/><br/>
+ Restarts the current level (offers confirmation window first)<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">message</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> Optional message to the player</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1965">line 1965 of Lua/app.lua</a>.
@@ -1537,14 +1485,14 @@ tuple 'nil', and an error description<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1save_hotkeys">function App:saveHotkeys()</a></h5>
  <p>
- - Save the current hotkeys in the user-specified file.<br/><br/>
+ Save the current hotkeys in the user-specified file.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1212">line 1212 of Lua/app.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_app_1set_capture_mouse">function App:setCaptureMouse()</a></h5>
  <p>
- - Sets the mouse capture to the state set within `app.config.capture_mouse`.<br/><br/>
+ Sets the mouse capture to the state set within `app.config.capture_mouse`.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L722">line 722 of Lua/app.lua</a>.
  </p>
  </div>
@@ -1578,7 +1526,7 @@ tuple 'nil', and an error description<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1trim_logs">function App:trimLogs()</a></h5>
  <p>
- - Trims the logs folder of old game logs down to ten files.<br/><br/>
+ Trims the logs folder of old game logs down to ten files.<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L458">line 458 of Lua/app.lua</a>.
  </p>
  </div>
@@ -1607,23 +1555,20 @@ tuple 'nil', and an error description<br/><br/>
  <div class="method">
  <h5><a name="_0_1_app_1write_to_file_or_tmp">function App:writeToFileOrTmp(<span class="p">file</span>, <span class="p">mode</span>)</a></h5>
  <p>
- - Tries to open the given file or a file in OS's temp dir.
-Returns the file handler, and true if it was written to the intended file.
-- @param file (string) The full path of the intended file
-- @param mode (string) The mode in which the file is opened, defaults to write
-- @return any, boolean # File handle and whether the handle is valid.<br/><br/>
+ Tries to open the given file or a file in OS's temp dir.
+Returns the file handler, and true if it was written to the intended file.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">file</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The full path of the intended file</td>
  </tr>
  <tr>
  <td class="n">mode</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> The mode in which the file is opened, defaults to write</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/app.lua#L1178">line 1178 of Lua/app.lua</a>.
