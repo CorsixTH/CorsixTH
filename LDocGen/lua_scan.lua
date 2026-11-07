@@ -18,34 +18,56 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local ldoc_commands = {
+  dummy = true,
+  example = true,
+  param = true,
+  ["return"] = true
+}
+
 local function ParseComments(tokens, i, object)
-  -- Collect the comments prior to the given token
+  -- Collect the comments prior to the given token.
   local comment_parts = {}
   local was_short = false
   local decl_i = i
+
   while i > 1 do
     i = i - 1
     local tok = tokens[i]
+
     if tok[2] ~= "comment" then
       if tok[2] ~= "whitespace" then
         break
       end
     -- Ignore Unix Shebang and License comments
     elseif tok[1]:sub(1, 1) ~= "#" and not tok[1]:find[[THE SOFTWARE IS PROVIDED "AS IS"]] then
-      local part = tok[1]:sub(3, -1)
-      local mkr = part:match"^%[(=*)%["
+      -- Add compatibility for LuaLS with LDocgen until new system is adopted
+      local part = tok[1]:sub(tok[1]:sub(1, 3) == "---" and 4 or 3, -1)
+      local mkr = part:match("^%[(=*)%[")
+
       if mkr then
         part = part:sub(3 + #mkr, -3 - #mkr)
       end
+
       part = part:trim()
-      if (not mkr) and was_short and comment_parts[1]:sub(1, 1) ~= "!" then
-        -- Merge multiple short comments into a single comment part
-        comment_parts[1] = part .. "\n" .. comment_parts[1]
-      else
-        table.insert(comment_parts, 1, part)
+
+      local command = part:match("^@([%a_][%w_]*)")
+
+      -- Only pass LuaLS annotations understood by LDocGen.
+      if not command or ldoc_commands[command] then
+        part = part:gsub("^@", "!", 1)
+
+        if not mkr and was_short
+            and comment_parts[1]:sub(1, 1) ~= "!" then
+          -- Merge multiple short comments into a single comment part.
+          comment_parts[1] = part .. "\n" .. comment_parts[1]
+        else
+          table.insert(comment_parts, 1, part)
+        end
+
+        was_short = not mkr
+        decl_i = i
       end
-      was_short = not mkr
-      decl_i = i
     end
   end
   -- Set filename and line
