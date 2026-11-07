@@ -57,7 +57,7 @@ function ScannerRoom:ScannerRoom(...)
 end
 
 function ScannerRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
   local scanner, pat_x, pat_y = self.world:findObjectNear(patient, "scanner")
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
@@ -101,26 +101,20 @@ function ScannerRoom:commandEnteringPatient(patient)
   end
 
   local after_use_scan = --[[persistable:scanner_after_use]] function()
-    if not self.staff_member or patient.going_home then
+    local staff_member = self:getStaffMember()
+    if not staff_member or patient.going_home then
       -- If we aborted somehow, don't do anything here.
       -- The patient already has orders to change back if necessary and leave.
       -- makeHumanoidLeave() will make this function nil when it aborts the scanner's use.
       return
     end
-    self.staff_member:setNextAction(MeanderAction())
+    staff_member:setNextAction(MeanderAction())
     self:dealtWithPatient(patient)
   end
 
   patient:queueAction(UseObjectAction(scanner):setLoopCallback(loop_callback_scan)
       :setAfterUse(after_use_scan))
   return Room.commandEnteringPatient(self, patient)
-end
-
-function ScannerRoom:onHumanoidLeave(humanoid)
-  if self.staff_member == humanoid then
-    self.staff_member = nil
-  end
-  Room.onHumanoidLeave(self, humanoid)
 end
 
 function ScannerRoom:makeHumanoidLeave(humanoid)

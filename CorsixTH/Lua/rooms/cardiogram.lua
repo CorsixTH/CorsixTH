@@ -59,7 +59,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
   patient:walkTo(sx, sy)
 
   local screen_after_use = --[[persistable:cardiogram_screen_after_use1]] function()
-    local staff = self.staff_member
+    local staff = self:getStaffMember()
     local cardio, cx, cy = self.world:findObjectNear(patient, "cardio")
     staff:walkTo(cardio:getSecondaryUsageTile())
     local staff_idle = IdleAction()
@@ -114,13 +114,6 @@ end
 
 function CardiogramRoom:makeHumanoidLeave(humanoid)
   self:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
-end
-
-function CardiogramRoom:onHumanoidLeave(humanoid)
-  if self.staff_member == humanoid then
-    self.staff_member = nil
-  end
-  Room.onHumanoidLeave(self, humanoid)
 end
 
 function CardiogramRoom:shouldHavePatientReenter(patient)

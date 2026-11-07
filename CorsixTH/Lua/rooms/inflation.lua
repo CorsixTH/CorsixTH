@@ -55,7 +55,7 @@ function InflationRoom:InflationRoom(...)
 end
 
 function InflationRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local inflator, pat_x, pat_y = self.world:findObjectNear(patient, "inflator")
   local stf_x, stf_y = inflator:getSecondaryUsageTile()
 

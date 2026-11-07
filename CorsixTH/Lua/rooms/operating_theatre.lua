@@ -58,7 +58,6 @@ local OperatingTheatreRoom = _G["OperatingTheatreRoom"] ---@type OperatingTheatr
 
 function OperatingTheatreRoom:OperatingTheatreRoom(...)
   self:Room(...)
-  self.staff_member_set = {}
 end
 
 function OperatingTheatreRoom:roomFinished()
@@ -130,13 +129,12 @@ function OperatingTheatreRoom._buildTableAction2(multi_use, operation_table_b)
 end
 
 function OperatingTheatreRoom:commandEnteringStaff(staff)
+  self:setStaffMember(staff)
   -- Put surgeon outfit on
   local screen, screen_x, screen_y = self.world:findObjectNear(staff, "surgeon_screen")
   staff:walkTo(screen_x, screen_y)
   staff:queueAction(wait_for_object(staff, screen, false))
   staff:queueAction(UseScreenAction(screen))
-
-  self.staff_member_set[staff] = true
 
   -- Wait around for patients
   local loop_callback_more_patients = --[[persistable:operatring_theatre_after_surgeon_clothes_on]] function()
@@ -158,12 +156,6 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     :setIsLeaving(true))
 
   return Room.commandEnteringStaff(self, staff, true)
-end
-
-function OperatingTheatreRoom:setStaffMembersAttribute(attribute, value)
-  for staff_member, _ in pairs(self.staff_member_set) do
-    staff_member[attribute] = value
-  end
 end
 
 --! Builds the first operation action (i.e. with the surgeon whose we see the front).
@@ -347,8 +339,6 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
 end
 
 function OperatingTheatreRoom:onHumanoidLeave(humanoid)
-  self.staff_member_set[humanoid] = nil
-
   if class.is(humanoid, Patient) then
     -- Turn off x-ray viewer
     -- (FIXME: would be better when patient dress back?)

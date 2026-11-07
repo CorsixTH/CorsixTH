@@ -55,7 +55,7 @@ function ElectrolysisRoom:ElectrolysisRoom(...)
 end
 
 function ElectrolysisRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local electrolyser, pat_x, pat_y = self.world:findObjectNear(patient, "electrolyser")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
 
