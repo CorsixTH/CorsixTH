@@ -55,7 +55,7 @@ end
 
 -- Keep this callback independent of the GP cycle's local variables so it
 -- can also be attached to actions restored from older save games.
-gp_after_use = --[[persistable:gp_after_use]] function(action)
+local --[[persistable:gp_after_use]] function gp_after_use(action)
   if action.gp_restart_cycle then
     action.gp_room:doStaffUseCycle(action.gp_humanoid)
   end
