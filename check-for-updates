@@ -1,7 +1,7 @@
 return {
   major = 0,
   minor = 70,
-  revision = 1,
-  changelog_en = 'This is a bugfix release following 0.70.0. Prevent game crashes when using a MIDI API, such as JACK. Prevent game crashes when checking for missing staff in rooms, such as Psychiatry. Prevented a game crash with the bottom drawer when loading a game from 0.69.2 or earlier.',
+  revision = 2,
+  changelog_en = 'This is a bugfix release following 0.70.1. Dying patients can no longer be sent home. Fixed machine dynamic info bug. Fixed number pad crash. Fixed error when purchasing plots. Fixed patient dialog for epidemic patients.',
   download_url = 'https://github.com/CorsixTH/CorsixTH/releases',
 }
