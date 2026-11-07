@@ -334,21 +334,21 @@ tooltip = {
 
   -- Toolbar
   toolbar = {
-    bank_button        = "Venstreklikk for Bankmanager, höyreklikk for Kontoutskrift",
+    bank_button        = "Venstreklikk (%s) for Bankmanager, höyreklikk (%s) for Kontoutskrift",
     balance            = "Din Balanse",
     reputation         = "Ditt omdömme: ", -- NB: no %d! Append " ([reputation])".
     date               = "Dato",
-    rooms              = "Bygg rom",
-    objects            = "Kjöp gjenstander",
-    edit               = "Endre rom/gjenstander",
-    hire               = "Ansett personale",
-    staff_list         = "Personalbehandling",
-    town_map           = "Områdekart",
-    casebook           = "Medisinbok",
-    research           = "Forskning",
-    status             = "Status",
-    charts             = "Diagrammer",
-    policy             = "Sykehuspolicy",
+    rooms              = "Bygg rom (%s)",
+    objects            = "Kjöp gjenstander (%s)",
+    edit               = "Endre rom/gjenstander (%s)",
+    hire               = "Ansett personale (%s)",
+    staff_list         = "Personalbehandling (%s)",
+    town_map           = "Områdekart (%s)",
+    casebook           = "Medisinbok (%s)",
+    research           = "Forskning (%s)",
+    status             = "Status (%s)",
+    charts             = "Diagrammer (%s)",
+    policy             = "Sykehuspolicy (%s)",
   },
 
   -- Hire staff window

@@ -1420,21 +1420,21 @@ tooltip = {
 
   -- Toolbar
   toolbar = {
-    bank_button         = "Vasen klikkaus: pankinjohtaja, oikea klikkaus: tiliote",
+    bank_button         = "Vasen klikkaus (%s): pankinjohtaja, oikea klikkaus (%s): tiliote",
     balance             = "Tilin saldo",
     reputation          = "Maine:", -- NB: no %d! Append " ([reputation])".
     date                = "Päivä",
-    rooms               = "Rakenna huone",
-    objects             = "Osta kalusteita",
-    edit                = "Muuta huonetta/kalusteita",
-    hire                = "Palkkaa henkilökuntaa",
-    staff_list          = "Henkilökuntaluettelo",
-    town_map            = "Kartta",
-    casebook            = "Hoitokirja",
-    research            = "Tutkimus",
-    status              = "Tilanne",
-    charts              = "Kuvaajat",
-    policy              = "Sairaalan käytännöt",
+    rooms               = "Rakenna huone (%s)",
+    objects             = "Osta kalusteita (%s)",
+    edit                = "Muuta huonetta/kalusteita (%s)",
+    hire                = "Palkkaa henkilökuntaa (%s)",
+    staff_list          = "Henkilökuntaluettelo (%s)",
+    town_map            = "Kartta (%s)",
+    casebook            = "Hoitokirja (%s)",
+    research            = "Tutkimus (%s)",
+    status              = "Tilanne (%s)",
+    charts              = "Kuvaajat (%s)",
+    policy              = "Sairaalan käytännöt (%s)",
   },
 
   -- Hire staff window

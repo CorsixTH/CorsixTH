@@ -552,20 +552,6 @@ function UIMenu:appendMenu(text, menu)
   }
 end
 
--- A function to set the menu hotkey strings, whether a string or table.
--- Usage: hotkey_value_label(hotkey name as string)
--- Ex: hotkey_value_label("ingame_loadMenu") will produce (SHIFT+L) by default.
---!param hotkey_name (string) Name of hotkey to be converted to string.
---!param hotkeys (table) The app's hotkey table. I.E. app.hotkeys
---!return (string) The hotkey returned in this format: (KEY+KEY)
-local function hotkey_value_label(hotkey_name, hotkeys)
-  local hotkey_value = hotkeys[hotkey_name]
-  if hotkey_value == nil then
-    return ""
-  end
-  return string.upper(array_join(hotkey_value, "+"))
-end
-
 -- Add audio options to the menu. These are on/off and volume control for
 -- announcements, game sounds and music, and open the jukebox.
 --!param menu (object) The menu that the options are added to.

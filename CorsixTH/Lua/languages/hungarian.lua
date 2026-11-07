@@ -1024,21 +1024,21 @@ tooltip = {
 
   -- Toolbar
   toolbar = {
-    bank_button        = "Bal gombbal a bankmenedzser-ablakod nyitod meg, jobbal pedig a banki kimutatást",
+    bank_button        = "Bal gombbal (%s) a bankmenedzser-ablakod nyitod meg, jobbal pedig (%s) a banki kimutatást",
     balance            = "Egyenleged",
     reputation         = "Hírneved: ", -- NB: no %d! Append " ([reputation])".
     date               = "A dátum",
-    rooms              = "Szobák építése",
-    objects            = "Folyosók díszítése",
-    edit               = "Szobák/tárgyak szerkesztése",
-    hire               = "Alkalmazottak szerződtetése",
-    staff_list         = "Személyzetmenedzsment",
-    town_map           = "Várostérkép",
-    casebook           = "Esetnapló",
-    research           = "Kutatás",
-    status             = "Állapot",
-    charts             = "Grafikonok",
-    policy             = "Házirend",
+    rooms              = "Szobák építése (%s)",
+    objects            = "Folyosók díszítése (%s)",
+    edit               = "Szobák/tárgyak szerkesztése (%s)",
+    hire               = "Alkalmazottak szerződtetése (%s)",
+    staff_list         = "Személyzetmenedzsment (%s)",
+    town_map           = "Várostérkép (%s)",
+    casebook           = "Esetnapló (%s)",
+    research           = "Kutatás (%s)",
+    status             = "Állapot (%s)",
+    charts             = "Grafikonok (%s)",
+    policy             = "Házirend (%s)",
   },
 
   -- Hire staff window

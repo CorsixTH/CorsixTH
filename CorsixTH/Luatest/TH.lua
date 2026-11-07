@@ -58,6 +58,12 @@ TheApp = {
 
 local sub_S = setmetatable({key = ''}, {
   __index = function(t, k)
+    if k == 'format' then
+      return function(self, ...)
+        return tostring(self):format(...)
+      end
+    end
+
     t.key = t.key .. '.' .. k
     return t
   end,
