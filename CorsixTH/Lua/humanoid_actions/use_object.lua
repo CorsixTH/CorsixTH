@@ -407,7 +407,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
       -- In that case both the patient, staff member(s) and
       -- the actual object are already dead.
       if action.after_use then
-        action.after_use()
+        action.after_use(action)
       end
 
       if action.destroy_user_after_use then
