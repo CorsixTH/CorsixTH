@@ -1598,6 +1598,7 @@ function App:checkInstallFolder()
   return true, #corrupt ~= 0 and corrupt or nil, charset
 end
 
+---@return string?
 function App:findSoundFont()
   local data_dir = self:getFullPath()
 
