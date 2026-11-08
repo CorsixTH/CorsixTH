@@ -1406,7 +1406,9 @@ end
 --- Text to show in the fax, text that accompanies the "continue"-choice the player
 --- has, and whether it is the "return_to_main_menu" choice or the "accept_new_level" choice.
 --- @param player_no (integer) Which player that will see the message.
---- @return string, string, string # The texts.
+--- @return string[] choices The strings of the three choices.
+--- @return string next_text The string what to do next.
+--- @return string next_name The name of what to do next.
 function World:getCampaignWinningText(player_no)
   local text = {}
   local choice_text, choice
@@ -1515,7 +1517,7 @@ end
 --- @param y1 (integer) Y-cordinate of first tile's Lua tile coordinates.
 --- @param x2 (integer) X-cordinate of second tile's Lua tile coordinates.
 --- @param y2 (integer) Y-cordinate of second tile's Lua tile coordinates.
---- @return integer, boolean # The distance of the shortest path, or false if there is no path.
+--- @return (integer | boolean) # The distance of the shortest path, or false if there is no path.
 function World:getPathDistance(x1, y1, x2, y2)
   return self.pathfinder:findDistance(x1, y1, x2, y2)
 end

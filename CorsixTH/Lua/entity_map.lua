@@ -99,10 +99,10 @@ function EntityMap:removeEntity(x, y, entity)
 end
 
 
---[[Returns a map of all entities (objects and humanoids) at a specified coordinate
-@param x (integer) the x coordinate to retrieve entities from
-@param y (integer) the y coordinate to retrieve entities from
-@return entity_map (table) containing the entities at the (x, y) coordinate ]]
+--- Returns a map of all entities (objects and humanoids) at a specified coordinate
+--- @param x (integer) the x coordinate to retrieve entities from
+--- @param y (integer) the y coordinate to retrieve entities from
+--- @return (Entity) # Table containing the entities at the (x, y) coordinate
 function EntityMap:getEntitiesAtCoordinate(x, y)
   --Add all the humanoids
   local entity_table = {}
@@ -123,37 +123,38 @@ function EntityMap:getEntitiesAtCoordinate(x, y)
   return entity_table
 end
 
---[[Returns a table of all humanoids at a specified coordinate
-! Please note that when a humanoid moves, they will only be
-attached to one tile at the moment. When moving from tile to
-tile, they will only attach to the next tile after they has fully
-completed the animation for moving to the that next tile.
-Therefore, at the last frame of the transition animation from
-tile to tile, they will still attached to the previous one tile, on
-which they is no longer visually located.
-@param x (integer) the x coordinate to retrieve entities from
-@param y (integer) the y coordinate to retrieve entities from
-@return (table) containing the humanoids at the (x, y) coordinate ]]
+--- Returns a table of all humanoids at a specified coordinate
+---
+--- Please note that when a humanoid moves, they will only be
+--- attached to one tile at the moment. When moving from tile to
+--- tile, they will only attach to the next tile after they has fully
+--- completed the animation for moving to the that next tile.
+--- Therefore, at the last frame of the transition animation from
+--- tile to tile, they will still attached to the previous one tile, on
+--- which they is no longer visually located.
+--- @param x (integer) the x coordinate to retrieve entities from
+--- @param y (integer) the y coordinate to retrieve entities from
+--- @return (Humanoid[]) # The humanoids at the (x, y) coordinate
 function EntityMap:getHumanoidsAtCoordinate(x, y)
   assert(x >= 1 and y >= 1 and x <= self.width and y <= self.height,
   "Coordinate requested is out of the entity map bounds")
   return self.entity_map[x][y]["humanoids"]
 end
 
---[[Returns a table of all rats at a specified coordinate
-@param x (integer) the x coordinate to retrieve entities from
-@param y (integer) the y coordinate to retrieve entities from
-@return (table) containing the objects at the (x, y) coordinate ]]
+--- Returns a table of all rats at a specified coordinate
+--- @param x (integer) the x coordinate to retrieve entities from
+--- @param y (integer) the y coordinate to retrieve entities from
+--- @return (Rat[]) # The rats at the (x, y) coordinate
 function EntityMap:getRatsAtCoordinate(x, y)
   assert(x >= 1 and y >= 1 and x <= self.width and y <= self.height,
   "Coordinate requested is out of the entity map bounds")
   return self.entity_map[x][y]["rats"]
 end
 
---[[Returns a table of all objects at a specified coordinate
-@param x (integer) the x coordinate to retrieve entities from
-@param y (integer) the y coordinate to retrieve entities from
-@return (table) containing the objects at the (x, y) coordinate ]]
+--- Returns a table of all objects at a specified coordinate
+--- @param x (integer) the x coordinate to retrieve entities from
+--- @param y (integer) the y coordinate to retrieve entities from
+--- @return (Object[]) # The objects at the (x, y) coordinate
 function EntityMap:getObjectsAtCoordinate(x, y)
   assert(x >= 1 and y >= 1 and x <= self.width and y <= self.height,
   "Coordinate requested is out of the entity map bounds")
@@ -161,11 +162,11 @@ function EntityMap:getObjectsAtCoordinate(x, y)
 end
 
 
---[[ Returns a map of coordinates {{x1, y1}, ... {xn, yn}} directly
-adjacent to a given (x, y) coordinate - no diagonals
-@param x (integer) the x coordinate to obtain adjacent tiles from
-@param y (integer) the y coordinate to obtain adjacent tiles from
-@return (table) containing coordinates {x=integer, y=integer} ]]
+--- Returns a map of coordinates {{x1, y1}, ... {xn, yn}} directly
+--- adjacent to a given (x, y) coordinate - no diagonals
+--- @param x (integer) the x coordinate to obtain adjacent tiles from
+--- @param y (integer) the y coordinate to obtain adjacent tiles from
+--- @return ({x=integer, y=integer}[]) Table containing coordinates
 function EntityMap:getAdjacentSquares(x, y)
   local adjacent_squares = {}
   if x and y then
