@@ -1,4 +1,14 @@
 -------------------------------------------------------------------------------
+CorsixTH 0.70.2 - Released November 2026
+-------------------------------------------------------------------------------
+# Bug Fixes
+* Dying patients can no longer be sent home
+* Machine dynamic information now correctly updates after repair
+* Fixed key input crash when using the numpad
+* Fixed side objects becoming passable after purchasing a plots
+* Fixed patient dialog not opening on epidemic patients
+
+-------------------------------------------------------------------------------
 CorsixTH 0.70.1 - Released August 2026
 -------------------------------------------------------------------------------
 # Bug Fixes
