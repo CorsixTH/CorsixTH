@@ -326,7 +326,7 @@ end
 --- @param keys (string| string[]) The keyboard key which should trigger the callback (for
 --- @param window (Window) The UI window which should receive the callback.
 --- @param callback (function) The method to be called on `window` when `key` is pressed.
---- @param ... any # Additional arguments to `callback`.
+--- @param ... any Additional arguments to `callback`.
 function UI:addKeyHandler(keys, window, callback, ...)
   -- It is necessary to clone the key table into another temporary table, as if we don't the original table that we take it from will lose
   -- the last key of that table permanently in the next line of code after this one, until the program is restarted.
