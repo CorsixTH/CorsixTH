@@ -1071,8 +1071,9 @@ end
 --- The position is either a tile position of the form `{x, y}` with floating
 --- point numbers, or a pixel position of the form `{x, y, "px"}` with integer
 --- numbers. In both cases, the origin is at the center of tile `(0, 0)`, at floor level.
---- @param pos (table) Humanoid center position to convert.
---- @return integer, integer # The computed offset wrt to the origin in pixels.
+--- @param pos ({x: number, y: number} | {x: integer, y: integer, px: integer}) Humanoid center position to convert.
+--- @return integer # The computed `x` offset wrt to the origin in pixels.
+--- @return integer # The computed `y` offset wrt to the origin in pixels.
 local function positionToXy(pos)
   if pos[3] == "px" then
     return pos[1], pos[2]

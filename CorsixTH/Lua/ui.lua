@@ -22,7 +22,7 @@ corsixth.require("window")
 
 local Window = _G['Window'] ---@type Window
 
---! Top-level container for all other user-interface components.
+--- Top-level container for all other user-interface components.
 class "UI" (Window)
 
 ---@class UI: Window
@@ -227,31 +227,28 @@ function UI:setupGlobalKeyHandlers()
   self:addOrRemoveDebugModeKeyHandlers()
 end
 
---! Play a sound effect
---!param name (string) The name of the sound to be played. Can include
---  wildcards (*).
---!param played_callback (function) A function to be called when the sound has
---  finished playing. Can be nil.
---!param played_callback_delay (integer) An optional delay in milliseconds
---  before the played_callback is called.
---!param loops (integer) number of times to play the audio. -1 for infinite.
---!return (table) A `sound` table for passing into functions that act on the
---  playing sound. The fields are an implementation detail that should not be
---  used outside of the Audio class.
+--- Play a sound effect.
+---
+--- The fields are an implementation detail that should not be used outside of the Audio class.
+--- @param name (string) The name of the sound to be played. Can include wildcards (*).
+--- @param played_callback (function?) A function to be called when the sound has finished playing. Can be nil.
+--- @param played_callback_delay (integer?) An optional delay in milliseconds before the played_callback is called.
+--- @param loops (integer) Number of times to play the audio. -1 for infinite.
+--- @return (table) # A `sound` table for passing into functions that act on the playing sound.
 function UI:playSound(name, played_callback, played_callback_delay, loops)
   if self.app.config.play_sounds then
     return self.app.audio:playSound(name, nil, false, played_callback, played_callback_delay, loops)
   end
 end
 
---! Stop the given sound
--- see Audio:stopSound
---!param sound (table) sound to stop
+--- Stop the given sound
+--- @see Audio:stopSound
+--- @param sound (table) sound to stop
 function UI:stopSound(sound)
   self.app.audio:stopSound(sound)
 end
 
--- Stub with args for subclass GameUI.
+--- Stub with args for subclass GameUI.
 function UI:playAnnouncement(name, priority, played_callback, played_callback_delay)
 end
 
@@ -322,13 +319,14 @@ function UI:draw(canvas)
   end
 end
 
---! Register a key handler / hotkey for a window.
---!param keys (string or table) The keyboard key which should trigger the callback (for
--- example, "left" or "z" or "F9"), or a list with modifier(s) and the key (e.g. {"ctrl", "s"}).
---!param window (Window) The UI window which should receive the callback.
---!param callback (function) The method to be called on `window` when `key` is
--- pressed.
---!param ... Additional arguments to `callback`.
+--- Register a key handler / hotkey for a window.
+---
+--- The `keys` is either a single key as string like `"left"` or `"z"` or `"F9"`,
+--- or an array with modifier(s) and the key (e.g. {"ctrl", "s"}).
+--- @param keys (string| string[]) The keyboard key which should trigger the callback (for
+--- @param window (Window) The UI window which should receive the callback.
+--- @param callback (function) The method to be called on `window` when `key` is pressed.
+--- @param ... any Additional arguments to `callback`.
 function UI:addKeyHandler(keys, window, callback, ...)
   -- It is necessary to clone the key table into another temporary table, as if we don't the original table that we take it from will lose
   -- the last key of that table permanently in the next line of code after this one, until the program is restarted.
@@ -426,11 +424,9 @@ function UI:addKeyHandler(keys, window, callback, ...)
   end
 end
 
---! Unregister a key handler previously registered by `addKeyHandler`.
---!param keys (string or table) The key or list of modifiers+key of a key / window
--- pair previously passed to `addKeyHandler`.
---!param window (Window) The window of a key / window pair previously passed
--- to `addKeyHandler`.
+--- Unregister a key handler previously registered by `addKeyHandler`.
+--- @param keys (string | string[]) The key or list of modifiers+key of a key / window pair previously passed to `addKeyHandler`.
+--- @param window (Window) The window of a key / window pair previously passed
 function UI:removeKeyHandler(keys, window)
   local temp_keys = nil
 
@@ -518,11 +514,11 @@ function UI:removeKeyHandler(keys, window)
   end
 end
 
---! Set the menu background image
---!
---! The menu size closest to, but no larger than the height of the currently
---! set game window is selected. If no image fits that criteria the smallest
---! available image is used.
+--- Set the menu background image
+---
+--- The menu size closest to, but no larger than the height of the currently
+--- set game window is selected. If no image fits that criteria the smallest
+--- available image is used.
 function UI:setMenuBackground()
   local screen_h = self.app.config.height
   local bg_size_idx = 1
@@ -648,7 +644,7 @@ function UI:releaseMouse()
   self:setMouseReleased(true)
 end
 
---! Dedicated hotkey function for toggling fullscreen
+--- Dedicated hotkey function for toggling fullscreen
 function UI:fullscreenHotkey()
   local toggle = self:toggleVideoMode("fullscreen")
   if not toggle then
@@ -663,8 +659,8 @@ function UI:fullscreenHotkey()
   end
 end
 
---! Turns a video mode on if off and vice versa
---!return success true if toggle succeeded
+--- Turns a video mode on if off and vice versa
+--- @return (boolean) success true if toggle succeeded
 function UI:toggleVideoMode(mode)
   local modes = self.app.modes
   local value = not modes[mode]
@@ -672,8 +668,8 @@ function UI:toggleVideoMode(mode)
   return self:setVideoMode(mode, value)
 end
 
---! Turns a video mode on and off
---!return success true if toggle succeeded
+--- Turns a video mode on and off
+--- @return (boolean) success true if toggle succeeded
 function UI:setVideoMode(mode, value)
   local modes = self.app.modes
   local oldval = modes[mode]
@@ -703,13 +699,13 @@ function UI:setVideoMode(mode, value)
   return success
 end
 
---! Private function to determine the key pressed based on current modifiers
---!param rawchar (string) The key pressed as given by SDL
---!param modifiers (table) Current key modifiers, e.g. numlock
---!param btn_maps (table) Used for keydown events only, a table of keys that
--- are designated to perform mouse actions.
---!return (string, string) Modified raw character, or false if remapped to a button.
--- And lowercase or remapped key
+--- Private function to determine the key pressed based on current modifiers
+--- @param rawchar (string) The key pressed as given by SDL
+--- @param modifiers (table) Current key modifiers, e.g. numlock
+--- @param btn_maps (table) Used for keydown events only, a table of keys that are designated to perform mouse actions.
+--- @return (string | false) # Modified raw character, or false if remapped to a button.
+--- @return (string?) # And lowercase or remapped key
+--- @private
 function UI:_determineKeyPressed(rawchar, modifiers, btn_maps)
   -- Apply key-remapping and normalisation
   rawchar = string.sub(rawchar,1,6) == "Keypad" and
@@ -725,9 +721,9 @@ function UI:_determineKeyPressed(rawchar, modifiers, btn_maps)
   return rawchar, key
 end
 
---! Called when the user presses a key on the keyboard
---!param rawchar (string) The name of the key the user pressed.
---!param modifiers (table) The current applied modifiers to key input e.g. numlock
+--- Called when the user presses a key on the keyboard
+--- @param rawchar (string) The name of the key the user pressed.
+--- @param modifiers (table) The current applied modifiers to key input e.g. numlock
 function UI:onKeyDown(rawchar, modifiers)
   local handled = false
   local rawchar_transformed, key = self:_determineKeyPressed(
@@ -774,9 +770,9 @@ function UI:onKeyDown(rawchar, modifiers)
   return handled
 end
 
---! Called when the user releases a key on the keyboard
---!param rawchar (string) The name of the key the user pressed.
---!param modifiers (table) The current applied modifiers to key input e.g. numlock
+--- Called when the user releases a key on the keyboard
+--- @param rawchar (string) The name of the key the user pressed.
+--- @param modifiers (table) The current applied modifiers to key input e.g. numlock
 function UI:onKeyUp(rawchar, modifiers)
   local _, key = self:_determineKeyPressed(rawchar, modifiers)
   self.buttons_down[key] = nil
@@ -831,9 +827,9 @@ function UI:onEditingText(text, start, length)
   -- Does nothing at the moment. We are handling text input ourselves.
 end
 
---! Called in-between onKeyDown and onKeyUp. The argument 'text' is a
---! string containing the input localized according to the keyboard layout
---! the user uses.
+--- Called in-between onKeyDown and onKeyUp. The argument 'text' is a
+--- string containing the input localized according to the keyboard layout
+--- the user uses.
 function UI:onTextInput(text)
   -- It's time for any active textbox to get input.
   for _, box in ipairs(self.textboxes) do
@@ -913,9 +909,9 @@ function UI:onMouseWheel(x, y)
   Window.onMouseWheel(self, x, y)
 end
 
---[[ Determines if a cursor entity can be clicked
-@param entity (Entity,nil) cursor entity clicked on if any
-@return true if can be clicked on, false otherwise (boolean) ]]
+--- Determines if a cursor entity can be clicked
+--- @param entity (Entity?) cursor entity clicked on if any
+--- @return (boolean) # true if can be clicked on, false otherwise (boolean)
 function UI:ableToClickEntity(entity)
   if self.cursor_entity and self.cursor_entity.onClick then
     local hospital = entity.hospital
@@ -956,28 +952,28 @@ end
 
 local UpdateCursorPosition = TH.cursor.setPosition
 
---! Called when focus changes on game window.
---!param gain (number) 1 for in-focus, 0 for out-of-focus
+--- Called when focus changes on game window.
+--- @param gain (number) 1 for in-focus, 0 for out-of-focus
 function UI:onWindowActive(gain)
   self:setWindowActiveStatus(gain == 1)
 end
 
---! Stores the game window active status
---!param state (boolean) true for in-focus, false for out-of-focus
+--- Stores the game window active status
+--- @param state (boolean) true for in-focus, false for out-of-focus
 function UI:setWindowActiveStatus(state)
   self.app.window_active_status = state
 end
 
---! Gets the game window active status
---!return true for in-focus, false for out-of-focus
+--- Gets the game window active status
+--- @return true for in-focus, false for out-of-focus
 function UI:getWindowActiveStatus()
   return self.app.window_active_status
 end
 
---! Window has been resized by the user
---!param width (integer) New window width
---!param height (integer) New window height
---!param state (integer) Window state: 0 - window, 1 - fullscreen, 2 - maximised, 3 - minimized
+--- Window has been resized by the user
+--- @param width (integer) New window width
+--- @param height (integer) New window height
+--- @param state (integer) Window state: 0 - window, 1 - fullscreen, 2 - maximised, 3 - minimized
 function UI:onWindowResized(width, height, state)
   if state == 0 then
     self.app.config.width = width
@@ -989,14 +985,14 @@ function UI:onWindowResized(width, height, state)
   end
 end
 
---! Render area size has been changed
+--- Render area size has been changed
 -- This could be because the user resized the window or updated the size
 -- through settings, or on a system where the window size is independent of the
 -- render size the window could have been dragged from a HiDPI monitor to a
 -- standard DPI monitor.
 --
---!param width (integer) New renderer width
---!param height (integer) New renderer height
+--- @param width (integer) New renderer width
+--- @param height (integer) New renderer height
 function UI:onWindowPixelSizeChanged(width, height)
   self:onChangeResolution()
 end
@@ -1056,23 +1052,20 @@ function UI:onMouseMove(x, y, dx, dy)
   return repaint
 end
 
---! Process SDL_PINCH_BEGIN events.
---!
---!return (boolean) event processed indicator
+--- Process `SDL_PINCH_BEGIN` events.
+--- @return (boolean) event processed indicator
 function UI:onPinchBegin()
   return false
 end
 
---! Process SDL_PINCH_UPDATE events.
---!
---!return (boolean) event processed indicator
+--- Process `SDL_PINCH_UPDATE` events.
+--- @return (boolean) event processed indicator
 function UI:onPinchUpdate()
   return false
 end
 
---! Process SDL_PINCH_END events.
---!
---!return (boolean) event processed indicator
+--- Process `SDL_PINCH_END` events.
+--- @return (boolean) event processed indicator
 function UI:onPinchEnd()
   return false
 end
@@ -1091,9 +1084,9 @@ function UI:onTick()
   return repaint
 end
 
---! Adds a window to the game
---! This also handles pause and permitted interaction behaviour as required
---!param window (window) What is to be displayed
+--- Adds a window to the game.
+--- This also handles pause and permitted interaction behaviour as required
+--- @param window (Window) What is to be displayed
 function UI:addWindow(window)
   if window.closed then
     return
@@ -1112,9 +1105,9 @@ function UI:addWindow(window)
   self:_onAddWindow(window)
 end
 
---! Remove a window from the game
---! This also handles pause and permitted interaction behaviour as required
---!param closing_window (window) What is to be removed
+--- Remove a window from the game.
+--- This also handles pause and permitted interaction behaviour as required
+--- @param closing_window (Window) What is to be removed
 function UI:removeWindow(closing_window)
   if Window.removeWindow(self, closing_window) then
     local class = closing_window.modal_class
@@ -1131,26 +1124,26 @@ function UI:removeWindow(closing_window)
   end
 end
 
--- Function for signaling that the window is added.
--- To pause game if the necessary requirements are met.
---!param window (object) window added
+--- Function for signaling that the window is added.
+--- To pause game if the necessary requirements are met.
+--- @param window (Window) window added
 function UI:_onAddWindow(window)
   if self.app.world and window:mustPause() then
     self.app.world:mustPauseWindowAdd()
   end
 end
 
--- Function for signaling that the window is to be removed.
--- To unpause game if the necessary requirements are met.
---!param window (object) window to be removed
+--- Function for signaling that the window is to be removed.
+--- To unpause game if the necessary requirements are met.
+--- @param window (Window) window to be removed
 function UI:_onRemoveWindow(window)
   if self.app.world and window:mustPause() then
     self.app.world:mustPauseWindowRemoved()
   end
 end
 
---! Function to check if we have any must pause windows open
---!return (bool) Returns true if a must pause window is found
+--- Function to check if we have any must pause windows open
+--- @return (boolean) Returns true if a must pause window is found
 function UI:anyMustPauseWindowOpen()
   if not self.windows then return false end
   for _, window in pairs(self.windows) do
@@ -1215,7 +1208,7 @@ end
 function UI:tutorialStep(...)
 end
 
---! Perform the Screenshot action (usually by key bind 'global_screenshot')
+-- Perform the Screenshot action (usually by key bind 'global_screenshot')
 function UI:makeScreenshot()
   -- Generate filename
   local timestamp = os.date("%Y%m%d-%H%M%S")
@@ -1236,8 +1229,8 @@ function UI:makeScreenshot()
   end
 end
 
---! Closes one window (the topmost / active window, if possible)
---!return true if a window was closed
+--- Closes one window (the topmost / active window, if possible)
+--- @return (boolean) true if a window was closed
 function UI:closeWindow()
   if not self.windows then
     return false
@@ -1263,12 +1256,12 @@ function UI:closeWindow()
   end
 end
 
---! Shows the Lua console
+--- Shows the Lua console
 function UI:showLuaConsole()
   self:addWindow(UILuaConsole(self))
 end
 
---! Triggers reset of the application (reloads .lua files)
+--- Triggers reset of the application (reloads .lua files)
 function UI:resetApp()
   self.app:reset()
 end
@@ -1278,12 +1271,12 @@ function UI:exitApplication()
   self.app:abandon()
 end
 
---! Triggers quitting the application
+--- Triggers quitting the application
 function UI:quit()
   self.app:exit()
 end
 
---! Tries to stop a video, if one is currently playing
+--- Tries to stop a video, if one is currently playing
 function UI:stopMovie()
   if self.app.moviePlayer.playing then
     self.app.moviePlayer:stop()
@@ -1296,5 +1289,5 @@ function UI:pauseMovie()
   end
 end
 
--- Stub for compatibility with savegames r1896-1921
+--- Stub for compatibility with savegames r1896-1921
 function UI:stopVideo() end

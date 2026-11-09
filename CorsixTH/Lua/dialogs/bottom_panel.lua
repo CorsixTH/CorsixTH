@@ -517,16 +517,16 @@ function UIBottomPanel:_initMessageWithDrawerIcon(message_info)
   message_info["drawer_icon"] = drawer_icon
 end
 
---[[ A fax can be queued if the event the fax causes does not affect
-an event caused by any other fax that is queued. i.e both emergency
-and epidemics use the timer, so both faxes cannot appear at the same time.
-@param fax (table) the fax we want to determine if can be queued.
-@return true if fax can be queued, false otherwise (boolean) ]]
+--- A fax can be queued if the event the fax causes does not affect
+--- an event caused by any other fax that is queued. i.e both emergency
+--- and epidemics use the timer, so both faxes cannot appear at the same time.
+--- @param fax (table) the fax we want to determine if can be queued.
+--- @return (boolean) can_be_queued True if fax can be queued, false otherwise
 function UIBottomPanel:canQueueFax(fax)
-  --[[ Determine if fax of a particular type is queued either in the
-  message queue or the message window (ui)
-  @param fax_type (string) the fax type to check if any queued
-  @return true if any of fax_type is queued false otherwise (boolean) ]]
+  --- Determine if fax of a particular type is queued either in the
+  --- message queue or the message window (ui)
+  --- @param fax_type (string) the fax type to check if any queued
+  --- @return boolean is_queued True if any of fax_type is queued false otherwise
   local function isFaxTypeQueued(fax_type)
     -- Check the queued messages
     for _, fax_msg in ipairs(self.message_queue) do
