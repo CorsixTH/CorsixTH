@@ -329,14 +329,18 @@ local wilcard_cache = permanent "audio_wildcard_cache" {}
 --!param played_callback_delay (integer) An optional delay in milliseconds
 --  before the played_callback is called.
 --!param loops (integer) number of times to play the audio. -1 for infinite.
+--!param volume (number) [optional] the volume to play it at, instead of the
+--  sound or announcement volume setting (1 is as recorded, more is louder).
 --!return (table) A `sound` table for passing into functions that act on the
 --  playing sound. The fields are an implementation detail that should not be
 --  used outside of the Audio class.
-function Audio:playSound(name, where, is_announcement, played_callback, played_callback_delay, loops)
+function Audio:playSound(name, where, is_announcement, played_callback,
+    played_callback_delay, loops, volume)
   local sound_fx = self.sound_fx
   if sound_fx then
     name = self:resolveFilenameWildcard(name)
-    local volume = is_announcement and self.app.config.announcement_volume or self.app.config.sound_volume
+    volume = volume or (is_announcement and self.app.config.announcement_volume
+        or self.app.config.sound_volume)
     local x, y
     local played_callback_id = nil
     if played_callback then

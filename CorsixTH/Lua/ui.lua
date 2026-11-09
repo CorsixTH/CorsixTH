@@ -863,9 +863,11 @@ function UI:onMouseDown(code, x, y)
   local repaint = false
   local button = self.button_codes[code] or code
   if self.app.moviePlayer.playing then
-    if button == "left" then
+    -- (The win letter's buttons take the click: MoviePlayer:letterClick.)
+    if button == "left" and not self.app.moviePlayer:letterClick(x, y) then
       self.app.moviePlayer:stop()
     end
+    self.movie_click = true
     return true
   end
   if self.cursor_entity == nil and self.down_count == 0 and
@@ -895,6 +897,13 @@ function UI:onMouseUp(code, x, y)
     self.down_count = 0
   end
   self.buttons_down["mouse_"..button] = nil
+
+  -- The release of a click on a movie is not a click on the game behind it
+  -- (the win letter takes a few).
+  if self.movie_click then
+    self.movie_click = nil
+    return repaint
+  end
 
   if Window.onMouseUp(self, button, x, y) then
     repaint = true

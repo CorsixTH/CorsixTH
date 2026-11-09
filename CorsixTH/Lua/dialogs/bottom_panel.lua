@@ -568,12 +568,21 @@ function UIBottomPanel:cancelFax(fax_type)
   end
 end
 
--- Opens the last available message. Currently used to open the level completed message.
-function UIBottomPanel:openLastMessage()
-  if #self.message_queue > 0 then
-    self:_showMessageIcon(#self.message_queue)
+--! Show the icon of a queued message at once, at the end of the row of shown
+-- messages. Used for the level completed message.
+--!param icon (UIMessage) the message's icon
+--!return (UIMessage) the icon, or nil if the message is no longer there
+function UIBottomPanel:showMessageIcon(icon)
+  for i, message_info in ipairs(self.message_queue) do
+    if message_info.drawer_icon == icon then
+      self:_showMessageIcon(i)
+      return icon
+    end
   end
-  self.message_windows[#self.message_windows]:openMessage()
+  for _, shown in ipairs(self.message_windows) do
+    if shown == icon then return icon end
+  end
+  return nil
 end
 
 -- Return the index of the first fax message in the queue that is suitable to be
