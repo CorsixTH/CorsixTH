@@ -62,7 +62,6 @@ function PsychRoom:roomFinished()
 end
 
 function PsychRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
   local obj, ox, oy = self.world:findFreeObjectNearToUse(staff, "bookcase", "near")
   if not obj then
     staff:setNextAction(MeanderAction())
@@ -82,7 +81,7 @@ function PsychRoom:commandEnteringStaff(staff)
 end
 
 function PsychRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
 
   local obj, ox, oy = self.world:findObjectNear(patient, "couch")
   patient:walkTo(ox, oy)

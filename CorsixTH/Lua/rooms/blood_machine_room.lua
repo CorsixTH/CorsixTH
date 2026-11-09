@@ -55,7 +55,7 @@ function BloodMachineRoom:BloodMachineRoom(...)
 end
 
 function BloodMachineRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local machine, stf_x, stf_y = self.world:findObjectNear(patient, "blood_machine")
   local pat_x, pat_y = machine:getSecondaryUsageTile()
 

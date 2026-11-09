@@ -55,13 +55,12 @@ function DecontaminationRoom:DecontaminationRoom(...)
 end
 
 function DecontaminationRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
   staff:setNextAction(MeanderAction())
   return Room.commandEnteringStaff(self, staff)
 end
 
 function DecontaminationRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local shower, pat_x, pat_y = self.world:findObjectNear(patient, "shower")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
 
@@ -103,10 +102,11 @@ function DecontaminationRoom:commandEnteringPatient(patient)
   end
 
   local shower_after_use = --[[persistable:shower_after_use]] function()
-    if not self.staff_member then
+    local staff_member = self:getStaffMember()
+    if not staff_member then
       return
     end
-    self.staff_member:setNextAction(MeanderAction())
+    staff_member:setNextAction(MeanderAction())
     if not patient.going_home then
       self:dealtWithPatient(patient)
     end
@@ -116,13 +116,6 @@ function DecontaminationRoom:commandEnteringPatient(patient)
       :setLoopCallback(shower_loop_callback):setAfterUse(shower_after_use))
 
   return Room.commandEnteringPatient(self, patient)
-end
-
-function DecontaminationRoom:onHumanoidLeave(humanoid)
-  if self.staff_member == humanoid then
-    self.staff_member = nil
-  end
-  Room.onHumanoidLeave(self, humanoid)
 end
 
 return room

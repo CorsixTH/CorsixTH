@@ -55,7 +55,7 @@ function FractureRoom:FractureRoom(...)
 end
 
 function FractureRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local cast, pat_x, pat_y = self.world:findObjectNear(patient, "cast_remover")
   local stf_x, stf_y = cast:getSecondaryUsageTile()
 

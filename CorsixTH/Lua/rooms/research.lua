@@ -58,7 +58,6 @@ local ResearchRoom = _G["ResearchRoom"] ---@type ResearchRoom
 
 function ResearchRoom:ResearchRoom(...)
   self:Room(...)
-  self.staff_member_set = {}
 end
 
 local staff_usage_objects = {
@@ -128,7 +127,7 @@ function ResearchRoom:roomFinished()
       number = number + 1
     end
   end
-  self.maximum_staff = {
+  self.room_info.maximum_staff = {
     Researcher = number,
   }
   -- Is this the first research department built?
@@ -144,12 +143,8 @@ function ResearchRoom:roomFinished()
   return Room.roomFinished(self)
 end
 
-function ResearchRoom:getMaximumStaffCriteria()
-  return self.maximum_staff
-end
-
 function ResearchRoom:commandEnteringStaff(staff)
-  self.staff_member_set[staff] = true
+  self:setStaffMember(staff)
   self:doStaffUseCycle(staff)
   return Room.commandEnteringStaff(self, staff, true)
 end
@@ -191,21 +186,6 @@ function ResearchRoom:commandEnteringPatient(patient)
 
   staff:queueAction(MultiUseObjectAction(autopsy, patient):setAfterUse(after_use_autopsy))
   return Room.commandEnteringPatient(self, patient)
-end
-
-function ResearchRoom:setStaffMember(staff)
-  self.staff_member_set[staff] = true
-end
-
-function ResearchRoom:setStaffMembersAttribute(attribute, value)
-  for staff_member, _ in pairs(self.staff_member_set) do
-    staff_member[attribute] = value
-  end
-end
-
-function ResearchRoom:onHumanoidLeave(humanoid)
-  self.staff_member_set[humanoid] = nil
-  Room.onHumanoidLeave(self, humanoid)
 end
 
 function ResearchRoom:afterLoad(old, new)

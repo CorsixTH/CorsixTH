@@ -55,7 +55,7 @@ function UltrascanRoom:UltrascanRoom(...)
 end
 
 function UltrascanRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local ultrascan, pat_x, pat_y = self.world:findObjectNear(patient, "ultrascanner")
   local stf_x, stf_y = ultrascan:getSecondaryUsageTile()
 

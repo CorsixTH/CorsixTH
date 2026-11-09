@@ -61,7 +61,7 @@ function PharmacyRoom:roomFinished()
 end
 
 function PharmacyRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local cabinet, stf_x, stf_y = self.world:findObjectNear(patient, "pharmacy_cabinet")
   local pat_x, pat_y
   local orientation = cabinet.object_type.orientations[cabinet.direction]

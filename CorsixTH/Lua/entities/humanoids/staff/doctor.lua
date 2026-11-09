@@ -102,7 +102,7 @@ function Doctor:isLearning()
   -- Check that the doctor is a trainee (currently in a chair and not a consultant) in
   -- a training room.
   if self.profile.is_consultant then return false end
-  return room and room.room_info.id == "training" and room.staff_member and
+  return room and room.room_info.id == "training" and room:getStaffMember() and
       self:getCurrentAction().name == "use_object" and
       self:getCurrentAction().object.object_type.id == "lecture_chair"
 end

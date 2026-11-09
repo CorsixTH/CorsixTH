@@ -55,7 +55,7 @@ function HairRestorationRoom:HairRestorationRoom(...)
 end
 
 function HairRestorationRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = self:getStaffMember()
   local hair_restorer, pat_x, pat_y = self.world:findObjectNear(patient, "hair_restorer")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
 
