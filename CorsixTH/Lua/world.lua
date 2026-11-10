@@ -38,7 +38,7 @@ cth_require("epidemic")
 cth_require("calls_dispatcher")
 cth_require("research_department")
 cth_require("entity_map")
-cth_require("date")
+local Date = cth_require("date")
 cth_require("announcer")
 cth_require("endconditions")
 cth_require("earthquake")
@@ -55,7 +55,6 @@ local World = _G["World"] ---@type World
 function World:World(app, free_build_mode)
   local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
   local EntityMap = _G["EntityMap"] ---@type EntityMap
-  local Date = _G["Date"] ---@type Date
   local PlayerHospital = _G["PlayerHospital"] ---@type PlayerHospital
   local AIHospital = _G["AIHospital"] ---@type AIHospital
   local Earthquake = _G["Earthquake"] ---@type Earthquake
@@ -926,7 +925,6 @@ local outside_temperatures = {
    4.75 / 50, -- December
 }
 
-local Date = _G["Date"] ---@type Date
 local start_date = Date()
 
 --- World ticks (every 18ms) are translated to game ticks (or hours) depending
