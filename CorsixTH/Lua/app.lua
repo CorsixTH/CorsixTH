@@ -596,7 +596,8 @@ function App:verifyPlayerMusicDir(path)
 end
 
 --- Initialises the application's language based on the player's choice.
---- @return boolean, string? # Whether successful and possibly an error message
+--- @return boolean # Whether successful and possibly an error message
+--- @return string? # Possibly an error message
 function App:initLanguage()
   -- Make sure that we can actually show the desired language.
   -- If we can't, work out the most common issue and reset to a revert to a
@@ -780,7 +781,8 @@ end
 --- Reads the given file name as a Lua chunk from the Campaign folders
 --- A correct campaign definition contains "name", "description", "levels", and "winning_text".
 --- @param campaign_file (string) Full path of the file to read.
---- @return (table?, string?) file_content, error_message
+--- @return (table?) file_content
+--- @return (string?) error_message
 function App:readCampaignFile(campaign_file)
   local chunk, err = loadfile_envcall(campaign_file)
   if not chunk then
@@ -796,7 +798,8 @@ end
 --- Values in the returned table: "path", "level_file", "name", "map_file", "briefing", and "end_praise".
 --- @param level (string) Full path or name of the file to read.
 --- @param campaign_dir (string) Folder of the parent campaign file
---- @return (table?, string?) level_info, error_message
+--- @return (table?) level_info
+--- @return (string?) error_message
 function App:readLevelFile(level, campaign_dir)
   local filename = self:_checkOrFind(level, campaign_dir)
   local file, err = io.open(filename and filename or "")
@@ -1176,10 +1179,11 @@ function App:saveConfig()
 end
 
 --- Tries to open the given file or a file in OS's temp dir.
--- Returns the file handler, and true if it was written to the intended file.
+--- Returns the file handler, and true if it was written to the intended file.
 --- @param file (string) The full path of the intended file
 --- @param mode (string) The mode in which the file is opened, defaults to write
---- @return any, boolean # File handle and whether the handle is valid.
+--- @return any # File handle if data was written.
+--- @return boolean handle_is_valid
 function App:writeToFileOrTmp(file, mode)
   local f, err = io.open(file, mode or "w")
   if err then
@@ -1663,8 +1667,8 @@ end
 
 --- Get a level file.
 --- @param path (string) Full path of the level file, or a Theme Hospital level filename
---- @return If the file could be found, the data of the file, else a
---        tuple 'nil', and an error description
+--- @return string? # If the file could be found, the data of the file, else `nil`.
+--- @return string? # An error description in case the file could not be found.
 function App:readMapDataFile(path)
   local data
   if path:match(pathsep) then
