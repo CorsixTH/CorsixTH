@@ -33,7 +33,7 @@ describe("The win video's letter buttons", function()
     local chosen, stopped = {}, false
     local movie = setmetatable({}, {__index = MoviePlayer})
     movie.stop = function() stopped = true end
-    movie.letter = {shown = shown, typed = typed ~= false and shown,
+    movie.win_letter = {shown = shown, typed = typed ~= false and shown,
         x = 240, y = 0, vs = 2.25,
         choose = function(choice) chosen[#chosen + 1] = choice end}
     return movie, chosen, function() return stopped end
@@ -48,7 +48,7 @@ describe("The win video's letter buttons", function()
     assert.is_true(movie:letterClick(at(390, 401)))
     assert.same({1}, chosen)
     assert.is_true(stopped())
-    assert.is_nil(movie.letter)
+    assert.is_nil(movie.win_letter)
     -- The cross, on another letter.
     movie, chosen = player(true)
     movie:letterClick(at(340, 401))
@@ -73,7 +73,7 @@ describe("The win video's letter buttons", function()
     assert.is_nil(movie:letterButtonAt(at(390, 401)))
     -- A click on the tick's place: the letter is typed out.
     assert.is_true(movie:letterClick(at(390, 401)))
-    assert.is_true(movie.letter.typed)
+    assert.is_true(movie.win_letter.typed)
     assert.same({}, chosen)
     assert.is_false(stopped())
     assert.is_true(movie:letterClick(at(390, 401))) -- now the tick
@@ -82,10 +82,10 @@ describe("The win video's letter buttons", function()
 
   it("ends a letter without buttons with a click, once typed", function()
     local movie = player(false)
-    movie.letter.choose = nil
+    movie.win_letter.choose = nil
     -- Before the letter shows, the click ends the movie as for any movie.
     assert.is_false(movie:letterClick(100, 100))
-    movie.letter.shown = true
+    movie.win_letter.shown = true
     assert.is_true(movie:letterClick(100, 100)) -- typing: finished
     assert.is_false(movie:letterClick(100, 100)) -- typed: the movie ends
     assert.is_nil(movie:letterButtonAt(at(390, 401)))

@@ -97,7 +97,7 @@ local destroyMovie = function(me)
     me.sound = nil
   end
   me.refresh_overlay = nil
-  me.letter = nil
+  me.win_letter = nil
   if me.typing_sound then me.audio:stopSound(me.typing_sound) end
   me.typing_sound = nil
   me.playing = false
@@ -302,7 +302,7 @@ end
 --- @param me (MoviePlayer) the movie player, with the movie loaded
 --- @param paragraphs ((string|THStringProxy)[]) the paragraphs (strings or _S strings)
 --- @param choose (function?) called with the answer (1 tick, 2 cross); without it the letter has no buttons
---- @return (table?) # the letter, for MoviePlayer.letter, or nil if its font could not be loaded
+--- @return (table?) # the letter, for MoviePlayer.win_letter, or nil if its font could not be loaded
 local function makeWinLetter(me, paragraphs, choose)
   local gfx = me.app.gfx
   local ok, font, buttons = pcall(function()
@@ -437,7 +437,7 @@ function MoviePlayer:MoviePlayer(app, audio, video)
   self.movie_length = 0
   self.lose_font = nil
   self.lose_font_narrow = nil
-  self.letter = nil -- (the letter of the level won movie)
+  self.win_letter = nil
   self.typing_sound = nil
   self.mouse_x, self.mouse_y = nil, nil
 end
@@ -520,7 +520,7 @@ function MoviePlayer:playWinLevelMovie(callback, letter, choose)
   if not (self.playing and letter and #letter > 0) then return end
   local win_letter = makeWinLetter(self, letter, choose)
   if not win_letter then return end
-  self.letter = win_letter
+  self.win_letter = win_letter
   -- The mouse is where it was: the screen does not follow it during a movie
   -- (MoviePlayer:mouseMove does).
   local ui = self.app.ui
@@ -536,7 +536,7 @@ end
 --- @param my (number?) y on the screen
 --- @return (table?) # the button, or nil
 function MoviePlayer:letterButtonAt(mx, my)
-  local letter = self.letter
+  local letter = self.win_letter
   if not (letter and letter.shown and letter.typed and letter.choose) or
       not (mx and my) then
     return nil
@@ -584,7 +584,7 @@ end
 --- @param y (number) y on the screen
 --- @return (boolean) # true if the letter took the click (the movie goes on)
 function MoviePlayer:letterClick(x, y)
-  local letter = self.letter
+  local letter = self.win_letter
   if not letter then return false end
   if not letter.shown then return letter.choose ~= nil end
   if not letter.typed then
@@ -594,7 +594,7 @@ function MoviePlayer:letterClick(x, y)
   if not letter.choose then return false end
   local button = self:letterButtonAt(x, y)
   if button then
-    self.letter = nil
+    self.win_letter = nil
     letter.choose(button.choice)
     self:stop()
   end
