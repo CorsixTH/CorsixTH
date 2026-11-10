@@ -72,12 +72,6 @@ function UICustomise:buttonAliens(app)
   app.config.alien_dna_can_knock_on_doors = not app.config.alien_dna_can_knock_on_doors
 end
 
-function UICustomise:buttonBack()
-  self:close()
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
-end
-
 -- So that we can see the option has been changed reload the menu
 function UICustomise:reload()
   local window = UICustomise(self.ui, "menu")
@@ -86,7 +80,6 @@ end
 
 function UICustomise:close()
   UIResizable.close(self)
-  if self.mode == "menu" then
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
+  local window = UIOptions(self.ui, "menu")
+  self.ui:addWindow(window)
 end

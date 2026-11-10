@@ -266,15 +266,8 @@ function UIFolder:buttonBrowseForAudio_music()
   self.ui:addWindow(browser)
 end
 
-function UIFolder:buttonBack()
-  self:close()
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
-end
-
 function UIFolder:close()
   UIResizable.close(self)
-  if self.mode == "menu"  then
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
+  local window = UIOptions(self.ui, "menu")
+  self.ui:addWindow(window)
 end

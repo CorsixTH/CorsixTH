@@ -137,6 +137,7 @@ function UIGraphicSettings:UIGraphicSettings(ui, mode)
   self.mode = mode
   self.modal_class = mode == "menu" and "main menu" or "options" or "graphics"
   self.strings_ref = "graphics_window"
+  self.parent = "UIMainMenu"
 
   self.entry_list = {
     { name = "fullscreen", func = self.buttonFullscreen },
@@ -329,10 +330,9 @@ function UIGraphicSettings:_processWindowResizeEvent()
   self.buttons.window_size:setLabel(window_w .. "x" .. window_h)
 end
 
---! Callback for back button
--- Opens the UIOptions window again.
-function UIGraphicSettings:buttonBack()
-  self:close()
+--! Close window
+function UIGraphicSettings:close()
+  UIResizable.close(self)
   local window = UIOptions(self.ui, "menu")
   self.ui:addWindow(window)
 end

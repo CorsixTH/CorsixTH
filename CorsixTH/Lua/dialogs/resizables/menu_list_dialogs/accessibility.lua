@@ -101,8 +101,6 @@ end
 
 function UIAccessibility:buttonBack()
   self:close()
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
 end
 
 -- So that we can see the option has been changed reload the menu
@@ -113,9 +111,8 @@ end
 
 function UIAccessibility:close()
   UIResizable.close(self)
-  if self.mode == "menu" then
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
+  local window = UIOptions(self.ui, "menu")
+  self.ui:addWindow(window)
 end
 
 

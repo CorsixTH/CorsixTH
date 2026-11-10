@@ -414,6 +414,10 @@ function UIResizable:_buttonPressed(setting, func, info)
   end
 end
 
+function UIResizable:buttonBack()
+  self:close()
+end
+
 function UIResizable:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   if old < 65 then
