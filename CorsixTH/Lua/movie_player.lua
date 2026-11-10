@@ -190,9 +190,9 @@ local LETTER_TYPING_CPS = 45
 -- sound effects' gain is 0.01 * e^(4.6 * volume), 1 at a volume of 1).
 local LETTER_TYPING_VOLUME = 1.4
 
---! The UTF-8 characters of `text`, in a list.
---!param text (string) the text
---!return (table) its characters (strings)
+--- The UTF-8 characters of a text, in a list.
+--- @param text (string) the text
+--- @return (string[]) # its characters
 local function utf8Chars(text)
   local chars = {}
   for c in text:gmatch("[^\128-\191][\128-\191]*") do
@@ -201,14 +201,15 @@ local function utf8Chars(text)
   return chars
 end
 
---! `text` in lines of at most `width` pixels of `font`, broken between words.
--- A word wider than a line is broken between characters (Chinese and Japanese
--- have no spaces). The lines are laid out before the typing starts, so a word
--- being typed does not jump to the next line when it is complete.
---!param font (font) the font of the lines
---!param text (string) the text
---!param width (number) the widest a line may be, in pixels
---!return (table) the lines (strings)
+--- A text in lines no wider than the given width, broken between words.
+---
+--- A word wider than a line is broken between characters (Chinese and Japanese
+--- have no spaces). The lines are laid out before the typing starts, so a word
+--- being typed does not jump to the next line when it is complete.
+--- @param font (THFont) the font of the lines
+--- @param text (string) the text
+--- @param width (number) the widest a line may be, in pixels
+--- @return (string[]) # the lines
 local function wrapLines(font, text, width)
   local lines, line = {}, ""
   local function fits(t) return (font:sizeOf(t)) <= width end
@@ -236,13 +237,14 @@ local function wrapLines(font, text, width)
   return lines
 end
 
---! The rows of a letter: its paragraphs in lines of at most `width` pixels of
--- `font`, with a blank line between paragraphs.
---!param font (font) the font of the letter
---!param texts (table) the paragraphs (strings)
---!param width (number) the widest a line may be, in pixels
---!return (table, number, number) the rows ({text, chars, y}), their height
--- and how many characters they have
+--- The rows of a letter: its paragraphs in lines no wider than the given
+--- width, with a blank line between paragraphs.
+--- @param font (THFont) the font of the letter
+--- @param texts (string[]) the paragraphs
+--- @param width (number) the widest a line may be, in pixels
+--- @return ({text: string, chars: string[], y: integer}[]) rows # the rows
+--- @return (integer) height # their height, in pixels
+--- @return (integer) total # how many characters they have
 local function layoutLetter(font, texts, width)
   local _, line_h = font:sizeOf("Ag")
   local rows, y, total = {}, 0, 0
@@ -258,16 +260,17 @@ local function layoutLetter(font, texts, width)
   return rows, y, total
 end
 
---! The text of `letter` laid out for a screen with `vs` screen pixels per
--- pixel of the letter. Its pixel font is drawn at a whole number of screen
--- pixels per font pixel, as stretched by an uneven factor (such as 3.33) its
--- strokes come out in uneven widths: the nearest whole number at which the
--- text fits on the paper, else a smaller one, down to half the letter's
--- size. If none fits, the text is drawn smaller still, down to half size.
---!param letter (table) the letter (makeWinLetter)
---!param vs (number) screen pixels per pixel of the movie at 640x480
---!return (table) the text: its rows, total (characters) and scale (screen
--- pixels per font pixel)
+--- The text of a letter laid out for a screen with vs screen pixels per pixel
+--- of the letter.
+---
+--- Its pixel font is drawn at a whole number of screen pixels per font pixel,
+--- as stretched by an uneven factor (such as 3.33) its strokes come out in
+--- uneven widths: the nearest whole number at which the text fits on the
+--- paper, else a smaller one, down to half the letter's size. If none fits,
+--- the text is drawn smaller still, down to half size.
+--- @param letter (table) the letter (makeWinLetter)
+--- @param vs (number) screen pixels per pixel of the movie at 640x480
+--- @return ({rows: table[], total: integer, scale: number}) # the text: its rows (layoutLetter), total (characters) and scale (screen pixels per font pixel)
 local function layoutLetterText(letter, vs)
   local font, texts = letter.font, letter.texts
   local page_h = letter.bottom - LETTER_TOP
@@ -290,17 +293,16 @@ local function layoutLetterText(letter, vs)
   return {rows = rows, total = total, scale = vs * fit}
 end
 
---! The letter at the end of the level won movie (WINLEVEL), as the original
--- game writes it there: its paragraphs on the paper below the letter head,
--- in Font35V in the movie's own palette (winlevel.pl8), with a blank line
--- between them. It is laid out for the screen when it is drawn
--- (layoutLetterText).
---!param me (MoviePlayer) the movie player, with the movie loaded
---!param paragraphs (table) the paragraphs (strings or _S strings)
---!param choose (function) [optional] called with the answer (1 tick,
--- 2 cross); without it the letter has no buttons
---!return (table) the letter, for MoviePlayer.letter, or nil if its font
--- could not be loaded
+--- The letter at the end of the level won movie (WINLEVEL), as the original
+--- game writes it there.
+---
+--- Its paragraphs are on the paper below the letter head, in Font35V in the
+--- movie's own palette (winlevel.pl8), with a blank line between them. It is
+--- laid out for the screen when it is drawn (layoutLetterText).
+--- @param me (MoviePlayer) the movie player, with the movie loaded
+--- @param paragraphs ((string|THStringProxy)[]) the paragraphs (strings or _S strings)
+--- @param choose (function?) called with the answer (1 tick, 2 cross); without it the letter has no buttons
+--- @return (table?) # the letter, for MoviePlayer.letter, or nil if its font could not be loaded
 local function makeWinLetter(me, paragraphs, choose)
   local gfx = me.app.gfx
   local ok, font, buttons = pcall(function()
@@ -332,13 +334,13 @@ local function makeWinLetter(me, paragraphs, choose)
   }
 end
 
---! Draw the text of `letter`, as much of it as is typed.
---!param canvas (video) where to draw it
---!param letter (table) the letter (makeWinLetter), laid out for the screen
---!param x (number) the left of the movie on the screen
---!param y (number) the top of the movie on the screen
---!param vs (number) screen pixels per pixel of the movie at 640x480
---!param chars (number) how many characters are typed
+--- Draw the text of a letter, as much of it as is typed.
+--- @param canvas (THRenderTarget) where to draw it
+--- @param letter (table) the letter (makeWinLetter), laid out for the screen
+--- @param x (number) the left of the movie on the screen
+--- @param y (number) the top of the movie on the screen
+--- @param vs (number) screen pixels per pixel of the movie at 640x480
+--- @param chars (integer) how many characters are typed
 local function drawLetterText(canvas, letter, x, y, vs, chars)
   local s = letter.text.scale
   canvas:scale(s)
@@ -356,14 +358,14 @@ local function drawLetterText(canvas, letter, x, y, vs, chars)
   canvas:scale(1)
 end
 
---! Draw the win letter over the frame of the movie, typed as far as it is by
--- now (the overlay of MoviePlayer:playWinLevelMovie).
---!param player (MoviePlayer) the movie player
---!param letter (table) the letter (makeWinLetter)
---!param x (number) the left of the movie on the screen
---!param y (number) the top of the movie on the screen
---!param scale (number) screen pixels per pixel of the movie
---!param pts (number) the time in the movie, in milliseconds
+--- Draw the win letter over the frame of the movie, typed as far as it is by
+--- now (the overlay of MoviePlayer:playWinLevelMovie).
+--- @param player (MoviePlayer) the movie player
+--- @param letter (table) the letter (makeWinLetter)
+--- @param x (number) the left of the movie on the screen
+--- @param y (number) the top of the movie on the screen
+--- @param scale (number) screen pixels per pixel of the movie
+--- @param pts (number) the time in the movie, in milliseconds
 local function drawWinLetter(player, letter, x, y, scale, pts)
   if pts < letter.start_pts then return end
   -- Hold the movie on the letter until it is answered or skipped: its very
@@ -509,15 +511,10 @@ function MoviePlayer:playWinMovie()
   self:playMovie(self.win_game_movie, false)
 end
 
---! Play the movie for winning the level.
---!param callback (function) [optional] what to do after the movie ends (at
--- once if it cannot be played)
---!param letter (table) [optional] the paragraphs of the letter it ends with
--- (strings or _S strings), typed out on its paper; without them the letter
--- stays blank
---!param choose (function) [optional] with a letter, its cross and tick to
--- answer it: called with the answer (1 tick, 2 cross), after which the movie
--- ends (and `callback` follows)
+--- Play the movie for winning the level.
+--- @param callback (function?) what to do after the movie ends (at once if it cannot be played)
+--- @param letter ((string|THStringProxy)[]?) the paragraphs of the letter it ends with (strings or _S strings), typed out on its paper; without them the letter stays blank
+--- @param choose (function?) with a letter, its cross and tick to answer it: called with the answer (1 tick, 2 cross), after which the movie ends (and the callback follows)
 function MoviePlayer:playWinLevelMovie(callback, letter, choose)
   self:playMovie(self.win_level_movie, true, callback)
   if not (self.playing and letter and #letter > 0) then return end
@@ -533,11 +530,11 @@ function MoviePlayer:playWinLevelMovie(callback, letter, choose)
   end
 end
 
---! The button of the win letter (LETTER_BUTTONS) at screen position
--- (mx, my), or nil. The buttons are there once the letter is typed.
---!param mx (number) x on the screen
---!param my (number) y on the screen
---!return (table) the button, or nil
+--- The button of the win letter (LETTER_BUTTONS) at screen position
+--- (mx, my), or nil. The buttons are there once the letter is typed.
+--- @param mx (number?) x on the screen
+--- @param my (number?) y on the screen
+--- @return (table?) # the button, or nil
 function MoviePlayer:letterButtonAt(mx, my)
   local letter = self.letter
   if not (letter and letter.shown and letter.typed and letter.choose) or
@@ -554,10 +551,10 @@ function MoviePlayer:letterButtonAt(mx, my)
   return nil
 end
 
---! The typewriter while the win letter types itself out: the game's own key
--- strike (TYPING.WAV), over and over until the letter is typed, unless sound
--- effects are off.
---!param on (boolean) whether the letter is being typed
+--- The typewriter while the win letter types itself out: the game's own key
+--- strike (TYPING.WAV), over and over until the letter is typed, unless sound
+--- effects are off.
+--- @param on (boolean) whether the letter is being typed
 function MoviePlayer:letterTyping(on)
   if on and not self.typing_sound and self.app.config.play_sounds then
     self.typing_sound = self.audio:playSound("TYPING.WAV", nil, false, nil,
@@ -568,23 +565,24 @@ function MoviePlayer:letterTyping(on)
   end
 end
 
---! The mouse has moved while a movie plays (the buttons of the win letter
--- light up under it).
---!param x (number) x on the screen
---!param y (number) y on the screen
+--- The mouse has moved while a movie plays (the buttons of the win letter
+--- light up under it).
+--- @param x (number) x on the screen
+--- @param y (number) y on the screen
 function MoviePlayer:mouseMove(x, y)
   self.mouse_x, self.mouse_y = x, y
 end
 
---! A left click while a movie plays. While the win letter is being typed,
--- the click finishes it. Once it is typed, a click on a button answers it
--- and ends the movie, and a click anywhere else does nothing; a letter
--- without buttons ends with the click. Before a letter with buttons shows, a
--- click does nothing. (The key to stop movies still ends it without an
--- answer.)
---!param x (number) x on the screen
---!param y (number) y on the screen
---!return (boolean) true if the letter took the click (the movie goes on)
+--- A left click while a movie plays.
+---
+--- While the win letter is being typed, the click finishes it. Once it is
+--- typed, a click on a button answers it and ends the movie, and a click
+--- anywhere else does nothing; a letter without buttons ends with the click.
+--- Before a letter with buttons shows, a click does nothing. (The key to stop
+--- movies still ends it without an answer.)
+--- @param x (number) x on the screen
+--- @param y (number) y on the screen
+--- @return (boolean) # true if the letter took the click (the movie goes on)
 function MoviePlayer:letterClick(x, y)
   local letter = self.letter
   if not letter then return false end

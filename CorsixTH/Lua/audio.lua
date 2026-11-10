@@ -317,23 +317,18 @@ end
 local wilcard_cache = permanent "audio_wildcard_cache" {}
 
 
---! Play a sound from the sound archive
---!param name (string) The name of the sound to be played. Can include
---  wildcards (*).
---!param where (Entity) The entity that is the source of the sound, or nil if
---  the audio is not positional.
---!param is_announcement (boolean) Whether the sound is an announcement
---  (affects volume).
---!param played_callback (function) A function to be called when the sound has
---  finished playing. Can be nil.
---!param played_callback_delay (integer) An optional delay in milliseconds
---  before the played_callback is called.
---!param loops (integer) number of times to play the audio. -1 for infinite.
---!param volume (number) [optional] the volume to play it at, instead of the
---  sound or announcement volume setting (1 is as recorded, more is louder).
---!return (table) A `sound` table for passing into functions that act on the
---  playing sound. The fields are an implementation detail that should not be
---  used outside of the Audio class.
+--- Play a sound from the sound archive.
+---
+--- The fields of the returned table are an implementation detail that should
+--- not be used outside of the Audio class.
+--- @param name (string) The name of the sound to be played. Can include wildcards (*).
+--- @param where (Entity?) The entity that is the source of the sound, or nil if the audio is not positional.
+--- @param is_announcement (boolean) Whether the sound is an announcement (affects volume).
+--- @param played_callback (function?) A function to be called when the sound has finished playing. Can be nil.
+--- @param played_callback_delay (integer?) An optional delay in milliseconds before the played_callback is called.
+--- @param loops (integer?) Number of times to play the audio. -1 for infinite.
+--- @param volume (number?) The volume to play it at, instead of the sound or announcement volume setting (1 is as recorded, more is louder).
+--- @return (table?) # A sound table for passing into functions that act on the playing sound, or nil if there is no sound effects player.
 function Audio:playSound(name, where, is_announcement, played_callback,
     played_callback_delay, loops, volume)
   local sound_fx = self.sound_fx

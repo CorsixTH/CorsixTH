@@ -568,10 +568,10 @@ function UIBottomPanel:cancelFax(fax_type)
   end
 end
 
---! Show the icon of a queued message at once, at the end of the row of shown
--- messages. Used for the level completed message.
---!param icon (UIMessage) the message's icon
---!return (UIMessage) the icon, or nil if the message is no longer there
+--- Show the icon of a queued message at once, at the end of the row of shown
+--- messages. Used for the level completed message.
+--- @param icon (UIMessage) the message's icon
+--- @return (UIMessage?) # the icon, or nil if the message is no longer there
 function UIBottomPanel:showMessageIcon(icon)
   for i, message_info in ipairs(self.message_queue) do
     if message_info.drawer_icon == icon then
