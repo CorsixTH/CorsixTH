@@ -1502,7 +1502,7 @@ function App:checkInstallFolder()
     local possible_folders = { "ThemeHospital", "Theme Hospital", "HOSP", "TH97",
       [[GOG Galaxy\Games\Theme Hospital]], [[GOG.com\Theme Hospital]],
       [[GOG Games\Theme Hospital]], [[Origin Games\Theme Hospital\data\Game]],
-      [[EA Games\Theme Hospital\data\Game]]
+      [[EA Games\Theme Hospital\data\Game]], [[Steam\steamapps\common\Theme Hospital]]
     }
     for _, dir in pairs(possible_locations) do
       if status then break end
