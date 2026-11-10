@@ -298,8 +298,7 @@ function App:init()
   self.audio:init()
 
   -- Load movie player
-  cth_require("movie_player")
-  local MoviePlayer = _G["MoviePlayer"] ---@type MoviePlayer
+  local MoviePlayer = cth_require("movie_player")
   self.moviePlayer = MoviePlayer(self, self.audio, self.video)
   if good_install_folder then
     self.moviePlayer:init()

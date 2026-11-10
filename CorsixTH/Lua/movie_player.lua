@@ -415,3 +415,5 @@ function MoviePlayer:togglePause()
     self.audio:togglePauseSound(self.sound)
   end
 end
+
+return MoviePlayer
