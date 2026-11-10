@@ -142,7 +142,7 @@ may be empty or contain the entity/entities that currently exist in that tile.<b
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L239">line 239 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L240">line 240 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -168,53 +168,47 @@ different room
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L219">line 219 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L220">line 220 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_entity_map_1get_adjacent_squares">function EntityMap:getAdjacentSquares(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
  <p>
  Returns a map of coordinates {{x1, y1}, ... {xn, yn}} directly
-adjacent to a given (x, y) coordinate - no diagonals
-@param x (integer) the x coordinate to obtain adjacent tiles from
-@param y (integer) the y coordinate to obtain adjacent tiles from
-@return (table) containing coordinates {x=integer, y=integer}<br/><br/>
+adjacent to a given (x, y) coordinate - no diagonals<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">x</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> the x coordinate to obtain adjacent tiles from</td>
  </tr>
  <tr>
  <td class="n">y</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> the y coordinate to obtain adjacent tiles from</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L164">line 164 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L165">line 165 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_entity_map_1get_entities_at_coordinate">function EntityMap:getEntitiesAtCoordinate(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
  <p>
- Returns a map of all entities (objects and humanoids) at a specified coordinate
-@param x (integer) the x coordinate to retrieve entities from
-@param y (integer) the y coordinate to retrieve entities from
-@return entity_map (table) containing the entities at the (x, y) coordinate<br/><br/>
+ Returns a map of all entities (objects and humanoids) at a specified coordinate<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">x</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> the x coordinate to retrieve entities from</td>
  </tr>
  <tr>
  <td class="n">y</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> the y coordinate to retrieve entities from</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L102">line 102 of Lua/entity_map.lua</a>.
@@ -223,29 +217,26 @@ adjacent to a given (x, y) coordinate - no diagonals
  <div class="method">
  <h5><a name="_0_1_entity_map_1get_humanoids_at_coordinate">function EntityMap:getHumanoidsAtCoordinate(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
  <p>
- Returns a table of all humanoids at a specified coordinate<br/><br/>
- Please note that when a humanoid moves, they will only be
+ Returns a table of all humanoids at a specified coordinate
+Please note that when a humanoid moves, they will only be
 attached to one tile at the moment. When moving from tile to
 tile, they will only attach to the next tile after they has fully
 completed the animation for moving to the that next tile.
 Therefore, at the last frame of the transition animation from
 tile to tile, they will still attached to the previous one tile, on
-which they is no longer visually located.
-@param x (integer) the x coordinate to retrieve entities from
-@param y (integer) the y coordinate to retrieve entities from
-@return (table) containing the humanoids at the (x, y) coordinate<br/><br/>
+which they is no longer visually located.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">x</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> the x coordinate to retrieve entities from</td>
  </tr>
  <tr>
  <td class="n">y</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> the y coordinate to retrieve entities from</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L126">line 126 of Lua/entity_map.lua</a>.
@@ -272,31 +263,28 @@ to the given (x, y) coordinate - diagonals are not considered
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L188">line 188 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L189">line 189 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_entity_map_1get_objects_at_coordinate">function EntityMap:getObjectsAtCoordinate(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
  <p>
- Returns a table of all objects at a specified coordinate
-@param x (integer) the x coordinate to retrieve entities from
-@param y (integer) the y coordinate to retrieve entities from
-@return (table) containing the objects at the (x, y) coordinate<br/><br/>
+ Returns a table of all objects at a specified coordinate<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">x</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> the x coordinate to retrieve entities from</td>
  </tr>
  <tr>
  <td class="n">y</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> the y coordinate to retrieve entities from</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L153">line 153 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L154">line 154 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -320,31 +308,28 @@ to the given (x, y) coordinate - diagonals are not considered
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L203">line 203 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L204">line 204 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_entity_map_1get_rats_at_coordinate">function EntityMap:getRatsAtCoordinate(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
  <p>
- Returns a table of all rats at a specified coordinate
-@param x (integer) the x coordinate to retrieve entities from
-@param y (integer) the y coordinate to retrieve entities from
-@return (table) containing the objects at the (x, y) coordinate<br/><br/>
+ Returns a table of all rats at a specified coordinate<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">x</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> the x coordinate to retrieve entities from</td>
  </tr>
  <tr>
  <td class="n">y</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">integer</td>
+ <td class="d"> the y coordinate to retrieve entities from</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L143">line 143 of Lua/entity_map.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L144">line 144 of Lua/entity_map.lua</a>.
  </p>
  </div>
  <div class="method">

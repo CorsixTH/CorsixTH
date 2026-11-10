@@ -592,11 +592,10 @@
  <tr>
  <td class="n">btn_maps</td>
  <td class="t">table</td>
- <td class="d"> Used for keydown events only, a table of keys that
-are designated to perform mouse actions.</td>
+ <td class="d"> Used for keydown events only, a table of keys that are designated to perform mouse actions.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L706">line 706 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L702">line 702 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -609,11 +608,11 @@ To pause game if the necessary requirements are met.<br/><br/>
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">window</td>
- <td class="t">object</td>
+ <td class="t">Window</td>
  <td class="d"> window added</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1134">line 1134 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1127">line 1127 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -626,43 +625,42 @@ To unpause game if the necessary requirements are met.<br/><br/>
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">window</td>
- <td class="t">object</td>
+ <td class="t">Window</td>
  <td class="d"> window to be removed</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1143">line 1143 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1136">line 1136 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1able_to_click_entity">function UI:ableToClickEntity(<span class="p">entity</span>)</a></h5>
  <p>
- Determines if a cursor entity can be clicked
-@param entity (Entity,nil) cursor entity clicked on if any
-@return true if can be clicked on, false otherwise (boolean)<br/><br/>
+ Determines if a cursor entity can be clicked<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">entity</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">Entity</td>
+ <td class="d"> cursor entity clicked on if any</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L916">line 916 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L912">line 912 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1add_key_handler">function UI:addKeyHandler(<span class="p">keys</span>, <span class="p">window</span>, <span class="p">callback</span>, <span class="p">...</span>)</a></h5>
  <p>
- Register a key handler / hotkey for a window.<br/><br/>
+ Register a key handler / hotkey for a window.
+The `keys` is either a single key as string like `"left"` or `"z"` or `"F9"`,
+or an array with modifier(s) and the key (e.g. {"ctrl", "s"}).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">keys</td>
- <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
- <td class="d"> The keyboard key which should trigger the callback (for
-example, "left" or "z" or "F9"), or a list with modifier(s) and the key (e.g. {"ctrl", "s"}).</td>
+ <td class="t">string&nbsp;or&nbsp;string</td>
+ <td class="d"> The keyboard key which should trigger the callback (for</td>
  </tr>
  <tr>
  <td class="n">window</td>
@@ -672,41 +670,40 @@ example, "left" or "z" or "F9"), or a list with modifier(s) and the key (e.g. {"
  <tr>
  <td class="n">callback</td>
  <td class="t">function</td>
- <td class="d"> The method to be called on `window` when `key` is
-pressed.</td>
+ <td class="d"> The method to be called on `window` when `key` is pressed.</td>
  </tr>
  <tr>
  <td class="n">...</td>
  <td class="t">?</td>
- <td class="d">Additional arguments to `callback`.</td>
+ <td class="d">any Additional arguments to `callback`.</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1add_key_handler">Window:addKeyHandler</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L325">line 325 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L322">line 322 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1add_or_remove_debug_mode_key_handlers">function UI:addOrRemoveDebugModeKeyHandlers()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1174">line 1174 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1167">line 1167 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1add_window">function UI:addWindow(<span class="p">window</span>)</a></h5>
  <p>
- Adds a window to the game<br/><br/>
- This also handles pause and permitted interaction behaviour as required<br/><br/>
+ Adds a window to the game.
+This also handles pause and permitted interaction behaviour as required<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">window</td>
- <td class="t">window</td>
+ <td class="t">Window</td>
  <td class="d"> What is to be displayed</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1add_window">Window:addWindow</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1094">line 1094 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1087">line 1087 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -727,14 +724,14 @@ pressed.</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1183">line 1183 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1176">line 1176 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1any_must_pause_window_open">function UI:anyMustPauseWindowOpen()</a></h5>
  <p>
  Function to check if we have any must pause windows open<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1152">line 1152 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1145">line 1145 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -754,14 +751,14 @@ pressed.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L599">line 599 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L595">line 595 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1close_window">function UI:closeWindow()</a></h5>
  <p>
  Closes one window (the topmost / active window, if possible)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1239">line 1239 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1232">line 1232 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -777,7 +774,7 @@ pressed.</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L305">line 305 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L302">line 302 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -792,21 +789,21 @@ pressed.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L289">line 289 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L286">line 286 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1exit_application">function UI:exitApplication()</a></h5>
  <p>
  Added this function as quit does not exit the application, it only exits the game to the menu screen<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1276">line 1276 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1269">line 1269 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1fullscreen_hotkey">function UI:fullscreenHotkey()</a></h5>
  <p>
  Dedicated hotkey function for toggling fullscreen<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L651">line 651 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L647">line 647 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -821,20 +818,20 @@ pressed.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1162">line 1162 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1155">line 1155 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1get_screen_offset">function UI:getScreenOffset()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L931">line 931 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L927">line 927 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1get_window_active_status">function UI:getWindowActiveStatus()</a></h5>
  <p>
  Gets the game window active status<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L971">line 971 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L967">line 967 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -847,14 +844,14 @@ pressed.</td>
  <h5><a name="_0_1_u_i_1make_screenshot">function UI:makeScreenshot()</a></h5>
  <p>
  Perform the Screenshot action (usually by key bind 'global_screenshot')<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1218">line 1218 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1211">line 1211 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1on_change_resolution">function UI:onChangeResolution()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_change_resolution">Window:onChangeResolution</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L551">line 551 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L547">line 547 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -879,7 +876,7 @@ pressed.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L830">line 830 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L826">line 826 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -900,7 +897,7 @@ pressed.</td>
  <td class="d"> The current applied modifiers to key input e.g. numlock</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L728">line 728 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L724">line 724 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -921,7 +918,7 @@ pressed.</td>
  <td class="d"> The current applied modifiers to key input e.g. numlock</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L777">line 777 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L773">line 773 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -947,7 +944,7 @@ pressed.</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L861">line 861 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L857">line 857 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -978,7 +975,7 @@ pressed.</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1035">line 1035 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1031">line 1031 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1004,7 +1001,7 @@ pressed.</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L886">line 886 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L882">line 882 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1025,35 +1022,36 @@ pressed.</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">Window:onMouseWheel</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L912">line 912 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L908">line 908 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1on_pinch_begin">function UI:onPinchBegin()</a></h5>
  <p>
- Process SDL_PINCH_BEGIN events.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1059">line 1059 of Lua/ui.lua</a>.
+ Process `SDL_PINCH_BEGIN` events.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1055">line 1055 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1on_pinch_end">function UI:onPinchEnd()</a></h5>
  <p>
- Process SDL_PINCH_END events.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1073">line 1073 of Lua/ui.lua</a>.
+ Process `SDL_PINCH_END` events.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1067">line 1067 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1on_pinch_update">function UI:onPinchUpdate()</a></h5>
  <p>
- Process SDL_PINCH_UPDATE events.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1066">line 1066 of Lua/ui.lua</a>.
+ Process `SDL_PINCH_UPDATE` events.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1061">line 1061 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1on_text_input">function UI:onTextInput(<span class="p">text</span>)</a></h5>
  <p>
- string containing the input localized according to the keyboard layout<br/><br/>
- the user uses.<br/><br/>
+ Called in-between onKeyDown and onKeyUp. The argument 'text' is a
+string containing the input localized according to the keyboard layout
+the user uses.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -1063,14 +1061,14 @@ pressed.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L834">line 834 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L830">line 830 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1on_tick">function UI:onTick()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1080">line 1080 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1073">line 1073 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1086,7 +1084,7 @@ pressed.</td>
  <td class="d"> 1 for in-focus, 0 for out-of-focus</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L959">line 959 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L955">line 955 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1101,13 +1099,13 @@ pressed.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1004">line 1004 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1000">line 1000 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1on_window_maximised">function UI:onWindowMaximised()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1015">line 1015 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1011">line 1011 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1132,7 +1130,7 @@ standard DPI monitor.<br/><br/>
  <td class="d"> New renderer height</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L992">line 992 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L988">line 988 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1158,19 +1156,19 @@ standard DPI monitor.<br/><br/>
  <td class="d"> Window state: 0 - window, 1 - fullscreen, 2 - maximised, 3 - minimized</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L977">line 977 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L973">line 973 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1on_window_restored">function UI:onWindowRestored()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1021">line 1021 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1017">line 1017 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1pause_movie">function UI:pauseMovie()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1293">line 1293 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1286">line 1286 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1201,38 +1199,36 @@ standard DPI monitor.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L254">line 254 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L251">line 251 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1play_sound">function UI:playSound(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>, <span class="p">loops</span>)</a></h5>
  <p>
- Play a sound effect<br/><br/>
+ Play a sound effect.
+The fields are an implementation detail that should not be used outside of the Audio class.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">name</td>
  <td class="t">string</td>
- <td class="d"> The name of the sound to be played. Can include
-wildcards (*).</td>
+ <td class="d"> The name of the sound to be played. Can include wildcards (*).</td>
  </tr>
  <tr>
  <td class="n">played_callback</td>
  <td class="t">function</td>
- <td class="d"> A function to be called when the sound has
-finished playing. Can be nil.</td>
+ <td class="d"> A function to be called when the sound has finished playing. Can be nil.</td>
  </tr>
  <tr>
  <td class="n">played_callback_delay</td>
  <td class="t">integer</td>
- <td class="d"> An optional delay in milliseconds
-before the played_callback is called.</td>
+ <td class="d"> An optional delay in milliseconds before the played_callback is called.</td>
  </tr>
  <tr>
  <td class="n">loops</td>
  <td class="t">integer</td>
- <td class="d"> number of times to play the audio. -1 for infinite.</td>
+ <td class="d"> Number of times to play the audio. -1 for infinite.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L230">line 230 of Lua/ui.lua</a>.
@@ -1242,7 +1238,7 @@ before the played_callback is called.</td>
  <h5><a name="_0_1_u_i_1quit">function UI:quit()</a></h5>
  <p>
  Triggers quitting the application<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1281">line 1281 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1274">line 1274 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1257,7 +1253,7 @@ before the played_callback is called.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L586">line 586 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L582">line 582 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1272,13 +1268,13 @@ before the played_callback is called.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L573">line 573 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L569">line 569 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1release_mouse">function UI:releaseMouse()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L647">line 647 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L643">line 643 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1290,44 +1286,42 @@ before the played_callback is called.</td>
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">keys</td>
- <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
- <td class="d"> The key or list of modifiers+key of a key / window
-pair previously passed to `addKeyHandler`.</td>
+ <td class="t">string&nbsp;or&nbsp;string</td>
+ <td class="d"> The key or list of modifiers+key of a key / window pair previously passed to `addKeyHandler`.</td>
  </tr>
  <tr>
  <td class="n">window</td>
  <td class="t">Window</td>
- <td class="d"> The window of a key / window pair previously passed
-to `addKeyHandler`.</td>
+ <td class="d"> The window of a key / window pair previously passed</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1remove_key_handler">Window:removeKeyHandler</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L429">line 429 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L427">line 427 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1remove_window">function UI:removeWindow(<span class="p">closing_window</span>)</a></h5>
  <p>
- Remove a window from the game<br/><br/>
- This also handles pause and permitted interaction behaviour as required<br/><br/>
+ Remove a window from the game.
+This also handles pause and permitted interaction behaviour as required<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">closing_window</td>
- <td class="t">window</td>
+ <td class="t">Window</td>
  <td class="d"> What is to be removed</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1remove_window">Window:removeWindow</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1115">line 1115 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1108">line 1108 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1reset_app">function UI:resetApp()</a></h5>
  <p>
  Triggers reset of the application (reloads .lua files)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1271">line 1271 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1264">line 1264 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1348,7 +1342,7 @@ to `addKeyHandler`.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L271">line 271 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L268">line 268 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1363,15 +1357,17 @@ to `addKeyHandler`.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L258">line 258 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L255">line 255 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1set_menu_background">function UI:setMenuBackground()</a></h5>
  <p>
- set game window is selected. If no image fits that criteria the smallest<br/><br/>
- available image is used.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L521">line 521 of Lua/ui.lua</a>.
+ Set the menu background image
+The menu size closest to, but no larger than the height of the currently
+set game window is selected. If no image fits that criteria the smallest
+available image is used.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L517">line 517 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1386,7 +1382,7 @@ to `addKeyHandler`.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L631">line 631 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L627">line 627 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1407,7 +1403,7 @@ to `addKeyHandler`.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L675">line 675 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L671">line 671 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1423,7 +1419,7 @@ to `addKeyHandler`.</td>
  <td class="d"> true for in-focus, false for out-of-focus</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L965">line 965 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L961">line 961 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1436,21 +1432,20 @@ to `addKeyHandler`.</td>
  <h5><a name="_0_1_u_i_1show_lua_console">function UI:showLuaConsole()</a></h5>
  <p>
  Shows the Lua console<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1266">line 1266 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1259">line 1259 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1stop_movie">function UI:stopMovie()</a></h5>
  <p>
  Tries to stop a video, if one is currently playing<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1286">line 1286 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1279">line 1279 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1stop_sound">function UI:stopSound(<span class="p">sound</span>)</a></h5>
  <p>
- Stop the given sound
-see Audio:stopSound<br/><br/>
+ Stop the given sound<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -1460,14 +1455,14 @@ see Audio:stopSound<br/><br/>
  <td class="d"> sound to stop</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L247">line 247 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L244">line 244 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1stop_video">function UI:stopVideo()</a></h5>
  <p>
  Stub for compatibility with savegames r1896-1921<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1299">line 1299 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1292">line 1292 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1479,7 +1474,7 @@ see Audio:stopSound<br/><br/>
  <div class="method">
  <h5><a name="_0_1_u_i_1toggle_capture_mouse">function UI:toggleCaptureMouse()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L626">line 626 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L622">line 622 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1513,7 +1508,7 @@ see Audio:stopSound<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L666">line 666 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L662">line 662 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1530,7 +1525,7 @@ dialog without having to worry about a GameUI being present<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1213">line 1213 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1206">line 1206 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1545,7 +1540,7 @@ dialog without having to worry about a GameUI being present<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L590">line 590 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L586">line 586 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -1560,14 +1555,14 @@ dialog without having to worry about a GameUI being present<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L577">line 577 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L573">line 573 of Lua/ui.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_1update_tooltip">function UI:updateTooltip()</a></h5>
  <p>
  Amount of ticks until a tooltip is displayed<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L935">line 935 of Lua/ui.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L931">line 931 of Lua/ui.lua</a>.
  </p>
  </div>
 </div>
