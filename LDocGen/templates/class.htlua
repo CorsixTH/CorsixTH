@@ -66,15 +66,38 @@
           <! if not isIteratorEmpty(member:parameterPairs()) then !>
             <strong>Parameters:</strong>
             <table class="params">
-              <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+              <tr>
+                <th class="n">Name</th>
+                <th class="t">Type</th>
+                <th>Description</th>
+              </tr>
               <! for name, param in member:parameterPairs() do !>
                 <tr>
                   <td class="n"><!= name !></td>
-                  <td class="t"><!= param and param.type and param.type[1] and table.concat(param.type, "&nbsp;or&nbsp;") or "?" !></td>
-                  <td class="d"><!= (param and param:getLongDesc()) or (param and param:getShortDesc()) or "?" !></td>
+                  <td class="t"><!= param and param.type and param.type[1]
+                    and table.concat(param.type, "&nbsp;or&nbsp;") or "?" !></td>
+                  <td class="d"><!= (param and param:getLongDesc())
+                    or (param and param:getShortDesc()) or "?" !></td>
                 </tr>
               <! end !>
-            </table></p><p>
+            </table>
+
+            <! if member:getReturnType() then !>
+              <strong>&nbsp;Returns:</strong>
+              <table class="return">
+                <tr>
+                  <th class="n"></th>
+                  <th class="t">Type</th>
+                  <th>Description</th>
+                </tr>
+                <tr>
+                  <td class="n"></td>
+                  <td class="t"><!= member:getReturnType() !></td>
+                  <td class="d"><!= member:getReturnDesc() or "?" !></td>
+                </tr>
+              </table>
+            <! end !>
+          </p><p>
           <! end !>
           <! if super and super:get(name) then local existing = super:get(name) !>
             <strong>Overrides:</strong> <a href="<!= existing:getParent():getId() !>.html#<!= existing:getId() !>"><!= existing:getParent():getName() !><!= member:isMethod() and ":" or "." !><!= name !></a>.<br/>
