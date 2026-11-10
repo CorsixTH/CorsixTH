@@ -39,27 +39,54 @@ describe("The win letter's buttons", function()
   end
   -- The middle of a button at (bx, by) on the 640x480 letter, on the screen.
   local function at(bx, by) return 240 + (bx + 20) * 2.25, (by + 20) * 2.25 end
+  -- A left click: the press and the release at the same place.
+  local function click(win_letter, x, y)
+    local took = win_letter:onMouseDown("left", x, y)
+    win_letter:onMouseUp("left", x, y)
+    return took
+  end
 
   it("answer with the tick (first choice) or the cross (second)", function()
     local win_letter, chosen = letter(true)
     assert.equal(1, win_letter:buttonAt(at(390, 401)).choice)
     assert.equal(2, win_letter:buttonAt(at(340, 401)).choice)
-    assert.is_true(win_letter:onMouseDown("left", at(390, 401)))
+    assert.is_true(click(win_letter, at(390, 401)))
     assert.same({1}, chosen)
     -- The cross, on another letter.
     win_letter, chosen = letter(true)
-    win_letter:onMouseDown("left", at(340, 401))
+    click(win_letter, at(340, 401))
     assert.same({2}, chosen)
+  end)
+
+  it("answer on the release over the button pressed, as in a window", function()
+    local win_letter, chosen = letter(true)
+    -- Pressed: held down, no answer yet.
+    assert.is_true(win_letter:onMouseDown("left", at(390, 401)))
+    assert.same({}, chosen)
+    -- Released elsewhere: no answer.
+    win_letter:onMouseUp("left", at(200, 250))
+    -- Pressed on the tick, released on the cross: no answer.
+    win_letter:onMouseDown("left", at(390, 401))
+    win_letter:onMouseUp("left", at(340, 401))
+    -- Pressed on the paper, released on the tick: no answer.
+    win_letter:onMouseDown("left", at(200, 250))
+    win_letter:onMouseUp("left", at(390, 401))
+    assert.same({}, chosen)
+    -- Pressed and released on the tick.
+    win_letter:onMouseDown("left", at(390, 401))
+    win_letter:onMouseUp("left", at(390, 401))
+    assert.same({1}, chosen)
   end)
 
   it("take other clicks without an answer", function()
     local win_letter, chosen = letter(true)
-    assert.is_true(win_letter:onMouseDown("left", at(200, 250))) -- on the paper
-    assert.is_true(win_letter:onMouseDown("left", at(390, 360))) -- above the tick
+    assert.is_true(click(win_letter, at(200, 250))) -- on the paper
+    assert.is_true(click(win_letter, at(390, 360))) -- above the tick
     assert.is_false(win_letter:onMouseDown("right", at(390, 401)))
+    win_letter:onMouseUp("right", at(390, 401))
     -- Before the letter shows, a click on the tick's place does nothing.
     local early, early_chosen = letter(false)
-    assert.is_true(early:onMouseDown("left", at(390, 401)))
+    assert.is_true(click(early, at(390, 401)))
     assert.same({}, chosen)
     assert.same({}, early_chosen)
   end)
@@ -67,11 +94,12 @@ describe("The win letter's buttons", function()
   it("are there once a click has typed the letter out", function()
     local win_letter, chosen = letter(true, false)
     assert.is_nil(win_letter:buttonAt(at(390, 401)))
-    -- A click on the tick's place: the letter is typed out.
-    assert.is_true(win_letter:onMouseDown("left", at(390, 401)))
+    -- A click on the tick's place: the letter is typed out, and the release
+    -- of that click does not answer it.
+    assert.is_true(click(win_letter, at(390, 401)))
     assert.is_true(win_letter.typed)
     assert.same({}, chosen)
-    assert.is_true(win_letter:onMouseDown("left", at(390, 401))) -- now the tick
+    assert.is_true(click(win_letter, at(390, 401))) -- now the tick
     assert.same({1}, chosen)
   end)
 

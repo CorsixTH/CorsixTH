@@ -179,6 +179,7 @@ function WinLetter:WinLetter(app, paragraphs, choose)
   self.typed = false -- (all of it)
   self.typing_sound = nil
   self.mouse_x, self.mouse_y = nil, nil
+  self.pressed = nil -- (the button held down)
 
   local gfx = app.gfx
   local ok, font, buttons = pcall(function()
@@ -271,12 +272,16 @@ function WinLetter:_drawText(canvas, chars)
   canvas:scale(1)
 end
 
---- Draw the cross and the tick, the one under the mouse lit.
+--- Draw the cross and the tick, the one under the mouse lit. While a button
+--- is held down, only that one lights up.
 --- @param canvas (THRenderTarget) where to draw them
 function WinLetter:_drawButtons(canvas)
   local vs = self.vs
   canvas:scale(vs)
   local hover = self:buttonAt(self.mouse_x, self.mouse_y)
+  if self.pressed and hover ~= self.pressed then
+    hover = nil
+  end
   for _, button in ipairs(LETTER_BUTTONS) do
     local sprite = hover == button and button.lit or button.sprite
     self.buttons:draw(canvas, sprite, math.floor(self.x / vs) + button.x,
@@ -339,9 +344,10 @@ end
 --- A mouse button is pressed on the movie.
 ---
 --- While the letter is being typed, a left click finishes it. Once it is
---- typed, a left click on a button answers it (choose), and a click anywhere
---- else does nothing; a letter without buttons leaves the click to the movie.
---- Before a letter with buttons shows, a click does nothing.
+--- typed, a left press on a button holds it down until the release
+--- (onMouseUp), and a click anywhere else does nothing; a letter without
+--- buttons leaves the click to the movie. Before a letter with buttons shows,
+--- a click does nothing.
 --- @param button (string) the mouse button ("left", "right", ...)
 --- @param x (number) x on the screen
 --- @param y (number) y on the screen
@@ -355,11 +361,23 @@ function WinLetter:onMouseDown(button, x, y)
     return true
   end
   if not self.choose then return false end
-  local clicked = self:buttonAt(x, y)
-  if clicked then
-    self.choose(clicked.choice)
-  end
+  self.pressed = self:buttonAt(x, y)
   return true
+end
+
+--- A mouse button is released on the movie. As with the buttons of a window,
+--- the letter is answered (choose) if the left button is released over the
+--- button it was pressed on.
+--- @param button (string) the mouse button ("left", "right", ...)
+--- @param x (number) x on the screen
+--- @param y (number) y on the screen
+function WinLetter:onMouseUp(button, x, y)
+  if button ~= "left" then return end
+  local pressed = self.pressed
+  self.pressed = nil
+  if pressed and self:buttonAt(x, y) == pressed then
+    self.choose(pressed.choice)
+  end
 end
 
 --- The movie is over: stop the typewriter.

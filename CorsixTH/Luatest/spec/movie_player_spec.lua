@@ -81,7 +81,11 @@ describe("The level won movie", function()
     -- The letter is typed out on a 1920x1080 screen; a click on the tick.
     letter.shown, letter.typed = true, true
     letter.x, letter.y, letter.vs = 240, 0, 2.25
-    movie:onMouseDown("left", 240 + 410 * 2.25, 421 * 2.25)
+    local x, y = 240 + 410 * 2.25, 421 * 2.25
+    movie:onMouseDown("left", x, y)
+    assert.is_nil(chosen) -- (a button answers on the release)
+    assert.is_false(stopped())
+    movie:onMouseUp("left", x, y)
     assert.equal(1, chosen)
     assert.is_true(stopped())
     assert.is_nil(movie.win_letter)

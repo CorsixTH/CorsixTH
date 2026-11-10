@@ -895,10 +895,13 @@ function UI:onMouseUp(code, x, y)
   end
   self.buttons_down["mouse_"..button] = nil
 
-  -- The release of a click on a movie is not a click on the game behind it
-  -- (the win letter takes a few).
+  -- The release of a click on a movie goes to the movie (the win letter's
+  -- buttons act on it), not to the game behind it.
   if self.movie_click then
     self.movie_click = nil
+    if self.app.moviePlayer.playing then
+      self.app.moviePlayer:onMouseUp(button, x, y)
+    end
     return repaint
   end
 

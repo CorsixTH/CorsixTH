@@ -317,6 +317,17 @@ function MoviePlayer:onMouseDown(button, x, y)
   end
 end
 
+--- A mouse button is released while a movie plays (the win letter's buttons
+--- act on the release, as the buttons of a window do).
+--- @param button (string) the mouse button ("left", "right", ...)
+--- @param x (number) x on the screen
+--- @param y (number) y on the screen
+function MoviePlayer:onMouseUp(button, x, y)
+  if self.win_letter then
+    self.win_letter:onMouseUp(button, x, y)
+  end
+end
+
 --! Plays the level advance movie, which is going to the next level on the game board
 --! This is for the original campaign only.
 --!param level (number) What level we're going to.
