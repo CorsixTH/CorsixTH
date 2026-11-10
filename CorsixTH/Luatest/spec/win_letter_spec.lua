@@ -116,45 +116,84 @@ describe("The win letter's buttons", function()
 end)
 
 describe("The win letter's typewriter", function()
-  -- A letter whose audio notes what it is asked to do.
-  local function letter(play_sounds)
-    local calls = {}
+  local SDL = require("sdl")
+  local real_ticks = SDL.getTicks
+  local now = 0
+  before_each(function()
+    now = 0
+    SDL.getTicks = function() return now end
+  end)
+  after_each(function() SDL.getTicks = real_ticks end)
+
+  -- A letter of one paragraph, drawn on nothing, whose audio notes the
+  -- strikes.
+  local function letter(play_sounds, text)
+    local strikes = {}
     local audio = {
-      playSound = function(_, ...)
-        calls[#calls + 1] = {"play", ...}
-        return {handle = 1}
+      playSound = function(_, name, _, _, _, _, loops, volume, pitch)
+        strikes[#strikes + 1] =
+            {name = name, loops = loops, volume = volume, pitch = pitch}
       end,
-      stopSound = function(_, sound) calls[#calls + 1] = {"stop", sound} end,
     }
-    local win_letter = setmetatable({shown = true, typed = false,
-        app = {audio = audio, config = {play_sounds = play_sounds}}},
-        {__index = WinLetter})
-    return win_letter, calls
+    local font = {
+      sizeOf = function(_, t) return 7 * #t, 10 end,
+      draw = function() end,
+    }
+    local win_letter = setmetatable({shown = false, typed = false, struck = 0,
+        app = {audio = audio, config = {play_sounds = play_sounds}},
+        font = font, texts = {text}, bottom = 452}, {__index = WinLetter})
+    return win_letter, strikes
+  end
+  local canvas = {scale = function() end}
+  -- Frames 10 ms apart, for the given time.
+  local function run(win_letter, ms)
+    for _ = 1, ms / 10 do
+      win_letter:draw(canvas, 0, 0, 2)
+      now = now + 10
+    end
   end
 
-  it("strikes over and over, louder than recorded, until typed", function()
-    local win_letter, calls = letter(true)
-    win_letter:setTypewriter(true)
-    win_letter:setTypewriter(true) -- (still typing: not started again)
-    assert.equal(1, #calls)
-    assert.equal("TYPING.WAV", calls[1][2])
-    assert.equal(-1, calls[1][7]) -- (loops)
-    assert.is_true(calls[1][8] > 1) -- (volume)
-    win_letter:setTypewriter(false)
-    assert.equal("stop", calls[2][1])
-    assert.is_nil(win_letter.typing_sound)
+  it("strikes once for each character typed, at a random pitch", function()
+    local win_letter, strikes = letter(true, "Dear player") -- 11 characters
+    run(win_letter, 1000)
+    assert.is_true(win_letter.typed)
+    assert.equal(11, #strikes)
+    local pitches = {}
+    for _, strike in ipairs(strikes) do
+      assert.equal("TYPING.WAV", strike.name)
+      assert.equal(0, strike.loops) -- (once)
+      assert.is_true(strike.volume > 1) -- (louder than recorded)
+      assert.is_true(strike.pitch >= 0.9 and strike.pitch <= 1.1)
+      pitches[strike.pitch] = true
+    end
+    local different = 0
+    for _ in pairs(pitches) do different = different + 1 end
+    assert.is_true(different > 1)
   end)
 
-  it("stops at once when a click types the letter out", function()
-    local win_letter, calls = letter(true)
-    win_letter:setTypewriter(true)
-    win_letter:onMouseDown("left", 100, 100)
-    assert.equal("stop", calls[2][1])
+  it("types at the speed of the original game", function()
+    local win_letter = letter(true, "Dear player")
+    run(win_letter, 500)
+    win_letter:draw(canvas, 0, 0, 2)
+    -- 18 characters a second: 9 typed after half a second.
+    assert.equal(9, win_letter.struck)
+    assert.is_false(win_letter.typed)
+  end)
+
+  it("stops when a click types the letter out", function()
+    local win_letter, strikes = letter(true, "Dear player")
+    run(win_letter, 200)
+    local before = #strikes
+    win_letter:onMouseDown("left", 0, 0)
+    run(win_letter, 1000)
+    assert.is_true(win_letter.typed)
+    assert.equal(before, #strikes)
   end)
 
   it("is silent with sound effects off", function()
-    local win_letter, calls = letter(false)
-    win_letter:setTypewriter(true)
-    assert.same({}, calls)
+    local win_letter, strikes = letter(false, "Dear player")
+    run(win_letter, 1000)
+    assert.is_true(win_letter.typed)
+    assert.same({}, strikes)
   end)
 end)

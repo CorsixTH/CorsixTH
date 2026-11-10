@@ -321,12 +321,14 @@ void sound_player::populate_from(sound_archive* pArchive) {
   }
 }
 
-uint32_t sound_player::play(size_t iIndex, double dVolume, int loops) {
+uint32_t sound_player::play(size_t iIndex, double dVolume, int loops,
+                            double pitch) {
   if (iIndex >= sound_count || !sounds[iIndex]) {
     return null_handle;
   }
 
-  return play_raw(iIndex, static_cast<float>(dVolume), loops);
+  return play_raw(iIndex, static_cast<float>(dVolume), loops,
+                  static_cast<float>(pitch));
 }
 
 uint32_t sound_player::play_at(size_t iIndex, int iX, int iY, int loops) {
@@ -337,7 +339,7 @@ uint32_t sound_player::play_at(size_t iIndex, int iX, int iY, int loops) {
 }
 
 uint32_t sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY,
-                               int loops) {
+                               int loops, double pitch) {
   if (iIndex >= sound_count || !sounds[iIndex]) {
     return null_handle;
   }
@@ -350,7 +352,8 @@ uint32_t sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY,
 
   double fVolume = (1.0 - fDistance * 0.8) * dVolume;
 
-  return play_raw(iIndex, static_cast<float>(fVolume), loops);
+  return play_raw(iIndex, static_cast<float>(fVolume), loops,
+                  static_cast<float>(pitch));
 }
 
 sound_player::toggle_pause_result sound_player::toggle_pause(uint32_t handle) {
@@ -411,7 +414,8 @@ void sound_player::release_channel(int channel) {
   channels[channel].handle = null_handle;
 }
 
-uint32_t sound_player::play_raw(size_t iIndex, float volume, int loops) {
+uint32_t sound_player::play_raw(size_t iIndex, float volume, int loops,
+                                float pitch) {
   int channel = reserve_channel();
   if (channel < 0) {
     return null_handle;
@@ -424,6 +428,8 @@ uint32_t sound_player::play_raw(size_t iIndex, float volume, int loops) {
   volume = th::sound::linear_to_logarithmic_volume(volume);
   success &= MIX_SetTrackAudio(track, sounds[iIndex]);
   success &= MIX_SetTrackGain(track, volume);
+  // Set every time: the track is used again for other sounds.
+  success &= MIX_SetTrackFrequencyRatio(track, pitch);
 
   SDL_PropertiesID playProps = SDL_CreateProperties();
   SDL_SetNumberProperty(playProps, MIX_PROP_PLAY_LOOPS_NUMBER, loops);

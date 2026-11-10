@@ -49,9 +49,9 @@ local LETTER_BUTTON_W, LETTER_BUTTON_H = 41, 40
 local LETTER_LEFT, LETTER_TOP, LETTER_WIDTH = 187, 158, 258
 local LETTER_BOTTOM, LETTER_BOTTOM_NO_BUTTONS = 396, 452
 
--- The letter types itself out, as in the original game, at this many
--- characters a second.
-local LETTER_TYPING_CPS = 45
+-- The letter types itself out at this many characters a second, as in the
+-- original game (measured in a recording of it).
+local LETTER_TYPING_CPS = 18
 
 -- The typewriter is part of the movie, whose own sound plays at full volume
 -- whatever the volume settings, so it does not follow them either. Its
@@ -59,6 +59,11 @@ local LETTER_TYPING_CPS = 45
 -- -1 dB. This volume plays it 6.3 times (16 dB) louder (Audio:playSound; the
 -- sound effects' gain is 0.01 * e^(4.6 * volume), 1 at a volume of 1).
 local LETTER_TYPING_VOLUME = 1.4
+
+-- Each character typed strikes the typewriter once, as in the original game,
+-- at a pitch that differs at random by up to this much either way (0.1: from
+-- 0.9 to 1.1 times as high as recorded).
+local LETTER_TYPING_PITCH_SPREAD = 0.1
 
 --- The UTF-8 characters of a text, in a list.
 --- @param text (string) the text
@@ -177,7 +182,7 @@ function WinLetter:WinLetter(app, paragraphs, choose)
   self.choose = choose
   self.shown = false -- (on the screen yet)
   self.typed = false -- (all of it)
-  self.typing_sound = nil
+  self.struck = 0 -- (the characters typed so far with a strike)
   self.mouse_x, self.mouse_y = nil, nil
   self.pressed = nil -- (the button held down)
 
@@ -220,8 +225,12 @@ function WinLetter:draw(canvas, x, y, scale)
   if self.text_vs ~= vs then
     self.text, self.text_vs = layoutLetterText(self, vs), vs
   end
+  local typing = not self.typed
   local chars = self:_typedChars(now)
-  self:setTypewriter(not self.typed)
+  if typing and chars > self.struck then
+    self:strike()
+  end
+  self.struck = chars
 
   self:_drawText(canvas, chars)
   if self.buttons and self.typed then
@@ -320,18 +329,13 @@ function WinLetter:buttonAt(x, y)
   return nil
 end
 
---- The typewriter while the letter types itself out: the game's own key
---- strike (TYPING.WAV), over and over until the letter is typed, unless sound
---- effects are off.
---- @param on (boolean) whether the letter is being typed
-function WinLetter:setTypewriter(on)
-  if on and not self.typing_sound and self.app.config.play_sounds then
-    self.typing_sound = self.app.audio:playSound("TYPING.WAV", nil, false, nil,
-        nil, -1, LETTER_TYPING_VOLUME)
-  elseif not on and self.typing_sound then
-    self.app.audio:stopSound(self.typing_sound)
-    self.typing_sound = nil
-  end
+--- One strike of the typewriter for a character typed: the game's own key
+--- strike (TYPING.WAV) at a random pitch, unless sound effects are off.
+function WinLetter:strike()
+  if not self.app.config.play_sounds then return end
+  local pitch = 1 + (math.random() * 2 - 1) * LETTER_TYPING_PITCH_SPREAD
+  self.app.audio:playSound("TYPING.WAV", nil, false, nil, nil, 0,
+      LETTER_TYPING_VOLUME, pitch)
 end
 
 --- The mouse has moved (the button under it lights up).
@@ -357,7 +361,6 @@ function WinLetter:onMouseDown(button, x, y)
   if not self.shown then return self.choose ~= nil end
   if not self.typed then
     self.typed = true
-    self:setTypewriter(false)
     return true
   end
   if not self.choose then return false end
@@ -378,9 +381,4 @@ function WinLetter:onMouseUp(button, x, y)
   if pressed and self:buttonAt(x, y) == pressed then
     self.choose(pressed.choice)
   end
-end
-
---- The movie is over: stop the typewriter.
-function WinLetter:close()
-  self:setTypewriter(false)
 end

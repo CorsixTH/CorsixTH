@@ -1179,8 +1179,9 @@ function THSoundFx:setSoundArchive(archive) end
 ---@param callbackId integer?
 ---@param callbackDelay number? milliseconds to wait after finishing audio before callback
 ---@param loops integer? how many times to repeat, e.g. 1 plays audio twice, -1 for infinite
+---@param pitch number? frequency ratio, 1 (the default) as recorded, more is higher and faster
 ---@return integer? handle nil if failed
-function THSoundFx:play(idx, vol, x, y, callbackId, callbackDelay, loops) end
+function THSoundFx:play(idx, vol, x, y, callbackId, callbackDelay, loops, pitch) end
 
 --- Pause/resume the audio with the given handle
 ---@param handle integer

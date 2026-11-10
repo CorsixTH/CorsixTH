@@ -99,7 +99,6 @@ local destroyMovie = function(me)
     me.sound = nil
   end
   me.refresh_overlay = nil
-  if me.win_letter then me.win_letter:close() end
   me.win_letter = nil
   me.playing = false
   me.movie_over = false

@@ -328,9 +328,10 @@ local wilcard_cache = permanent "audio_wildcard_cache" {}
 --- @param played_callback_delay (integer?) An optional delay in milliseconds before the played_callback is called.
 --- @param loops (integer?) Number of times to play the audio. -1 for infinite.
 --- @param volume (number?) The volume to play it at, instead of the sound or announcement volume setting (1 is as recorded, more is louder).
+--- @param pitch (number?) The frequency ratio to play it at: 1 (the default) as recorded, more is higher and faster, less is lower and slower.
 --- @return (table?) # A sound table for passing into functions that act on the playing sound, or nil if there is no sound effects player.
 function Audio:playSound(name, where, is_announcement, played_callback,
-    played_callback_delay, loops, volume)
+    played_callback_delay, loops, volume, pitch)
   local sound_fx = self.sound_fx
   if sound_fx then
     name = self:resolveFilenameWildcard(name)
@@ -350,7 +351,8 @@ function Audio:playSound(name, where, is_announcement, played_callback,
       x = x + dx - ui.screen_offset_x
       y = y + dy - ui.screen_offset_y
     end
-    local handle, warning = sound_fx:play(name, volume, x, y, played_callback_id, played_callback_delay, loops)
+    local handle, warning = sound_fx:play(name, volume, x, y, played_callback_id, played_callback_delay, loops,
+        pitch)
 
     if warning then
       -- Indicates something happened
