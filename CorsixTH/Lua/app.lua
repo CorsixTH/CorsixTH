@@ -184,8 +184,7 @@ function App:init()
 
   -- Prereq 2: Load and initialise the graphics subsystem
   cth_require("persistance")
-  cth_require("graphics")
-  local Graphics = _G["Graphics"] ---@type Graphics
+  local Graphics = cth_require("graphics")
 
   local gfx_set = good_install_folder and (self.using_demo_files and "demo" or "full") or "base"
   self.gfx = Graphics(self, gfx_set, charset)
@@ -288,8 +287,7 @@ function App:init()
   end
 
   -- Load audio
-  cth_require("audio")
-  local Audio = _G["Audio"] ---@type Audio
+  local Audio = cth_require("audio")
   self.audio = Audio(self)
   if not self:verifyPlayerMusicDir() then
     self.config.audio_music = nil
@@ -305,9 +303,8 @@ function App:init()
   end
 
   -- Load strings before UI and before additional Lua
-  cth_require("strings")
+  local Strings = cth_require("strings")
   cth_require("string_extensions")
-  local Strings = _G["Strings"] ---@type Strings
   self.strings = Strings(self)
   self.strings:init()
   local language_load_success, language_error = self:initLanguage()

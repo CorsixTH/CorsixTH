@@ -924,3 +924,5 @@ function Audio:updatePlaylistPreferences()
   end
   fi:close()
 end
+
+return Audio

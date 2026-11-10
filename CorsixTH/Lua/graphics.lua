@@ -1207,3 +1207,5 @@ end
 function Graphics:getWindowDisplayScale()
   return self.display_scale
 end
+
+return Graphics
