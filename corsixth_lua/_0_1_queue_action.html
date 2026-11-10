@@ -131,7 +131,11 @@
  Queue for something (door or reception desk).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -147,7 +151,8 @@
  <td class="t">Queue</td>
  <td class="d"> Queue to join</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/queue.lua#L29">line 29 of Lua/humanoid_actions/queue.lua</a>.
  </p>
  </div>
@@ -157,7 +162,11 @@
  Set the tile to face.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">face_x</td>
  <td class="t">integer</td>
@@ -168,7 +177,21 @@
  <td class="t">integer</td>
  <td class="d"> Y coordinate of the tile to face.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">QueueAction</td>
+ <td class="d"># Self, for daisy-chaining.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/queue.lua#L59">line 59 of Lua/humanoid_actions/queue.lua</a>.
  </p>
  </div>
@@ -178,13 +201,31 @@
  Set the object to reserve when queueing is done.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">door</td>
  <td class="t">Door</td>
  <td class="d"> Object to reserve when leaving the queue.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">QueueAction</td>
+ <td class="d"># Self, for daisy-chaining.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/queue.lua#L48">line 48 of Lua/humanoid_actions/queue.lua</a>.
  </p>
  </div>

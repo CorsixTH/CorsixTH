@@ -560,7 +560,11 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">app</td>
  <td class="t">?</td>
@@ -571,7 +575,8 @@
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L141">line 141 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -581,7 +586,11 @@
  Private function to determine the key pressed based on current modifiers<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">rawchar</td>
  <td class="t">string</td>
@@ -597,7 +606,21 @@
  <td class="t">table</td>
  <td class="d"> Used for keydown events only, a table of keys that are designated to perform mouse actions.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">string?</td>
+ <td class="d"># And lowercase or remapped key</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L702">line 702 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -608,13 +631,18 @@
 To pause game if the necessary requirements are met.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">window</td>
  <td class="t">Window</td>
  <td class="d"> window added</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1127">line 1127 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -625,13 +653,18 @@ To pause game if the necessary requirements are met.<br/><br/>
 To unpause game if the necessary requirements are met.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">window</td>
  <td class="t">Window</td>
  <td class="d"> window to be removed</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1136">line 1136 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -641,13 +674,31 @@ To unpause game if the necessary requirements are met.<br/><br/>
  Determines if a cursor entity can be clicked<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">entity</td>
  <td class="t">Entity</td>
  <td class="d"> cursor entity clicked on if any</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d"># true if can be clicked on, false otherwise (boolean)</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L912">line 912 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -659,7 +710,11 @@ The `keys` is either a single key as string like `"left"` or `"z"` or `"F9"`,
 or an array with modifier(s) and the key (e.g. {"ctrl", "s"}).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">keys</td>
  <td class="t">string&nbsp;or&nbsp;string</td>
@@ -680,7 +735,8 @@ or an array with modifier(s) and the key (e.g. {"ctrl", "s"}).<br/><br/>
  <td class="t">?</td>
  <td class="d">any Additional arguments to `callback`.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1add_key_handler">Window:addKeyHandler</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L322">line 322 of Lua/ui.lua</a>.
  </p>
@@ -698,13 +754,18 @@ or an array with modifier(s) and the key (e.g. {"ctrl", "s"}).<br/><br/>
 This also handles pause and permitted interaction behaviour as required<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">window</td>
  <td class="t">Window</td>
  <td class="d"> What is to be displayed</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1add_window">Window:addWindow</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1087">line 1087 of Lua/ui.lua</a>.
  </p>
@@ -714,7 +775,11 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">old</td>
  <td class="t">?</td>
@@ -725,7 +790,8 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1176">line 1176 of Lua/ui.lua</a>.
  </p>
@@ -742,7 +808,11 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">width</td>
  <td class="t">?</td>
@@ -753,7 +823,8 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L595">line 595 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -769,13 +840,18 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">canvas</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L302">line 302 of Lua/ui.lua</a>.
  </p>
@@ -785,13 +861,18 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">canvas</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L286">line 286 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -814,13 +895,18 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">window</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1155">line 1155 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -862,7 +948,11 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">text</td>
  <td class="t">?</td>
@@ -878,7 +968,8 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L826">line 826 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -888,7 +979,11 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  Called when the user presses a key on the keyboard<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">rawchar</td>
  <td class="t">string</td>
@@ -899,7 +994,8 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <td class="t">table</td>
  <td class="d"> The current applied modifiers to key input e.g. numlock</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L724">line 724 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -909,7 +1005,11 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  Called when the user releases a key on the keyboard<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">rawchar</td>
  <td class="t">string</td>
@@ -920,7 +1020,8 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <td class="t">table</td>
  <td class="d"> The current applied modifiers to key input e.g. numlock</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L773">line 773 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -929,7 +1030,11 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">code</td>
  <td class="t">?</td>
@@ -945,7 +1050,8 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L857">line 857 of Lua/ui.lua</a>.
  </p>
@@ -955,7 +1061,11 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -976,7 +1086,8 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1031">line 1031 of Lua/ui.lua</a>.
  </p>
@@ -986,7 +1097,11 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">code</td>
  <td class="t">?</td>
@@ -1002,7 +1117,8 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L882">line 882 of Lua/ui.lua</a>.
  </p>
@@ -1012,7 +1128,11 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -1023,7 +1143,8 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">Window:onMouseWheel</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L908">line 908 of Lua/ui.lua</a>.
  </p>
@@ -1057,13 +1178,18 @@ string containing the input localized according to the keyboard layout
 the user uses.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">text</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L830">line 830 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1080,13 +1206,18 @@ the user uses.<br/><br/>
  Called when focus changes on game window.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">gain</td>
  <td class="t">number</td>
  <td class="d"> 1 for in-focus, 0 for out-of-focus</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L955">line 955 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1095,13 +1226,18 @@ the user uses.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">scale</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1000">line 1000 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1121,7 +1257,11 @@ render size the window could have been dragged from a HiDPI monitor to a
 standard DPI monitor.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">width</td>
  <td class="t">integer</td>
@@ -1132,7 +1272,8 @@ standard DPI monitor.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> New renderer height</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L988">line 988 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1142,7 +1283,11 @@ standard DPI monitor.<br/><br/>
  Window has been resized by the user<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">width</td>
  <td class="t">integer</td>
@@ -1158,7 +1303,8 @@ standard DPI monitor.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> Window state: 0 - window, 1 - fullscreen, 2 - maximised, 3 - minimized</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L973">line 973 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1180,7 +1326,11 @@ standard DPI monitor.<br/><br/>
  Stub with args for subclass GameUI.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">name</td>
  <td class="t">?</td>
@@ -1201,7 +1351,8 @@ standard DPI monitor.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L251">line 251 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1212,7 +1363,11 @@ standard DPI monitor.<br/><br/>
 The fields are an implementation detail that should not be used outside of the Audio class.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">name</td>
  <td class="t">string</td>
@@ -1233,7 +1388,21 @@ The fields are an implementation detail that should not be used outside of the A
  <td class="t">integer</td>
  <td class="d"> Number of times to play the audio. -1 for infinite.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">table</td>
+ <td class="d"># A `sound` table for passing into functions that act on the playing sound.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L230">line 230 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1249,13 +1418,18 @@ The fields are an implementation detail that should not be used outside of the A
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">box</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L582">line 582 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1264,13 +1438,18 @@ The fields are an implementation detail that should not be used outside of the A
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">box</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L569">line 569 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1286,7 +1465,11 @@ The fields are an implementation detail that should not be used outside of the A
  Unregister a key handler previously registered by `addKeyHandler`.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">keys</td>
  <td class="t">string&nbsp;or&nbsp;string</td>
@@ -1297,7 +1480,8 @@ The fields are an implementation detail that should not be used outside of the A
  <td class="t">Window</td>
  <td class="d"> The window of a key / window pair previously passed</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1remove_key_handler">Window:removeKeyHandler</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L427">line 427 of Lua/ui.lua</a>.
  </p>
@@ -1309,13 +1493,18 @@ The fields are an implementation detail that should not be used outside of the A
 This also handles pause and permitted interaction behaviour as required<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">closing_window</td>
  <td class="t">Window</td>
  <td class="d"> What is to be removed</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1remove_window">Window:removeWindow</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1108">line 1108 of Lua/ui.lua</a>.
  </p>
@@ -1338,13 +1527,18 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">cursor</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L268">line 268 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1353,13 +1547,18 @@ This also handles pause and permitted interaction behaviour as required<br/><br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">cursor</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L255">line 255 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1378,13 +1577,18 @@ available image is used.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">released</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L627">line 627 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1394,7 +1598,11 @@ available image is used.<br/><br/>
  Turns a video mode on and off<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">mode</td>
  <td class="t">?</td>
@@ -1405,7 +1613,21 @@ available image is used.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">success true if toggle succeeded</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L671">line 671 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1415,13 +1637,18 @@ available image is used.<br/><br/>
  Stores the game window active status<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">state</td>
  <td class="t">boolean</td>
  <td class="d"> true for in-focus, false for out-of-focus</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L961">line 961 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1451,13 +1678,18 @@ available image is used.<br/><br/>
  Stop the given sound<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">sound</td>
  <td class="t">table</td>
  <td class="d"> sound to stop</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L244">line 244 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1514,13 +1746,31 @@ Stub for compatibility with savegames r1896-1921<br/><br/>
  Turns a video mode on if off and vice versa<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">mode</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">success true if toggle succeeded</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L662">line 662 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1531,13 +1781,18 @@ Stub for compatibility with savegames r1896-1921<br/><br/>
 dialog without having to worry about a GameUI being present<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">...</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1206">line 1206 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1546,13 +1801,18 @@ dialog without having to worry about a GameUI being present<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">box</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L586">line 586 of Lua/ui.lua</a>.
  </p>
  </div>
@@ -1561,13 +1821,18 @@ dialog without having to worry about a GameUI being present<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">box</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L573">line 573 of Lua/ui.lua</a>.
  </p>
  </div>

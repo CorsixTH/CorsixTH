@@ -446,11 +446,14 @@
  <div class="method">
  <h5><a name="_0_1_u_i_directory_browser_1_u_i_directory_browser">function UIDirectoryBrowser:UIDirectoryBrowser(<span class="p">ui</span>, <span class="p">mode</span>, <span class="p">instruction</span>, <span class="p">treenode_class</span>, <span class="p">callback</span>)</a></h5>
  <p>
- valid are "menu" or "dir_browser".<br/><br/>
- a path string as argument.<br/><br/>
+ Creates a new directory browser window<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">ui</td>
  <td class="t">?</td>
@@ -459,7 +462,7 @@
  <tr>
  <td class="n">mode</td>
  <td class="t">?</td>
- <td class="d">Whether the dialog has been opened from the main_menu or somewhere else. Currently</td>
+ <td class="d">Whether the dialog has been opened from the main_menu or somewhere else. Currently valid are "menu" or "dir_browser".</td>
  </tr>
  <tr>
  <td class="n">instruction</td>
@@ -474,9 +477,10 @@
  <tr>
  <td class="n">callback</td>
  <td class="t">?</td>
- <td class="d">The function that is called when the user has chosen a directory. Gets</td>
+ <td class="d">The function that is called when the user has chosen a directory. Gets a path string as argument.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/directory_browser.lua#L129">line 129 of Lua/dialogs/resizables/directory_browser.lua</a>.
  </p>
  </div>
@@ -492,7 +496,11 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">canvas</td>
  <td class="t">?</td>
@@ -508,7 +516,8 @@
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">UIResizable:draw</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/directory_browser.lua#L219">line 219 of Lua/dialogs/resizables/directory_browser.lua</a>.
  </p>

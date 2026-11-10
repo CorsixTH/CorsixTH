@@ -69,7 +69,11 @@
  Collect the end conditions for this level, if they exist<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">level_config</td>
  <td class="t">table</td>
@@ -85,7 +89,8 @@
  <td class="t">boolean</td>
  <td class="d"> The free build status of the world</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L52">line 52 of Lua/endconditions.lua</a>.
  </p>
  </div>
@@ -94,7 +99,11 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">hospital</td>
  <td class="t">Hospital</td>
@@ -110,7 +119,8 @@
  <td class="t">boolean</td>
  <td class="d"> Whether a report table will be returned.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L181">line 181 of Lua/endconditions.lua</a>.
  </p>
  </div>
@@ -119,7 +129,11 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">hospital</td>
  <td class="t">Hospital</td>
@@ -130,7 +144,21 @@
  <td class="t">table</td>
  <td class="d"> A group of win conditions from level_config</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">number 0-1</td>
+ <td class="d">The score of this group. 0 is no goals met, 1 is all met</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L214">line 214 of Lua/endconditions.lua</a>.
  </p>
  </div>
@@ -140,13 +168,18 @@
  Find the group of win conditions best met by the hospital.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">hospital</td>
  <td class="t">Hospital</td>
  <td class="d"> The hospital of the tests.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L232">line 232 of Lua/endconditions.lua</a>.
  </p>
  </div>
@@ -160,7 +193,11 @@ These groups are often incomplete, possibly empty
 ie more groups of conditions that lead to loss than win.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">criteria_tbl</td>
  <td class="t">table</td>
@@ -181,7 +218,8 @@ ie more groups of conditions that lead to loss than win.<br/><br/>
  <td class="t">boolean</td>
  <td class="d"> If the win goals are being filled this time</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L74">line 74 of Lua/endconditions.lua</a>.
  </p>
  </div>
@@ -191,13 +229,18 @@ ie more groups of conditions that lead to loss than win.<br/><br/>
  Checks if the player has won or lost by meeting all of any one group.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">hospital</td>
  <td class="t">Hospital</td>
  <td class="d"> The hospital of the tests.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L109">line 109 of Lua/endconditions.lua</a>.
  </p>
  </div>
@@ -207,13 +250,18 @@ ie more groups of conditions that lead to loss than win.<br/><br/>
  Generate table for the Progress Report dialog and progress advice.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">hospital</td>
  <td class="t">Hospital</td>
  <td class="d"> The hospital of the tests.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L133">line 133 of Lua/endconditions.lua</a>.
  </p>
  </div>
@@ -224,7 +272,11 @@ ie more groups of conditions that lead to loss than win.<br/><br/>
 functions if there is one for this attribute.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">hospital</td>
  <td class="t">?</td>
@@ -235,7 +287,8 @@ functions if there is one for this attribute.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L247">line 247 of Lua/endconditions.lua</a>.
  </p>
  </div>

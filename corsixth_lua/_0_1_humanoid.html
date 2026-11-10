@@ -432,13 +432,18 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">...</td>
  <td class="t">?</td>
  <td class="d">Arguments for base class constructor.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L341">line 341 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -455,7 +460,11 @@
  Save game compatibility<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">old</td>
  <td class="t">?</td>
@@ -466,7 +475,8 @@
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1after_load">Entity:afterLoad</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L363">line 363 of Lua/entities/humanoid.lua</a>.
  </p>
@@ -477,7 +487,11 @@
  Adjusts one of the `Humanoid`'s attributes.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">attribute</td>
  <td class="t">string</td>
@@ -489,7 +503,8 @@
  <td class="d"> This amount is added to the existing value for the attribute,
 and is then capped to be between 0 and 1.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L961">line 961 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -512,7 +527,11 @@ and is then capped to be between 0 and 1.</td>
  Collect the objects in a square around the humanoid within the same room.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">size</td>
  <td class="t">int</td>
@@ -525,7 +544,23 @@ adds the 8 tiles around the humanoid (one tile in all directions), and so on.</t
  <td class="t">str&nbsp;or&nbsp;or&nbsp;or&nbsp;array&nbsp;or&nbsp;str</td>
  <td class="d"> Name(s) of objects to find.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">array objs, or table str -> array objects</td>
+ <td class="d">Found requested objects.
+One array is returned if an object name was supplied, else a table with
+object names to array of objects.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L541">line 541 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -534,13 +569,18 @@ adds the 8 tiles around the humanoid (one tile in all directions), and so on.</t
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">action</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L705">line 705 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -550,7 +590,11 @@ adds the 8 tiles around the humanoid (one tile in all directions), and so on.</t
  Get attribute value<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">attribute</td>
  <td class="t">string</td>
@@ -561,7 +605,21 @@ adds the 8 tiles around the humanoid (one tile in all directions), and so on.</t
  <td class="t">float</td>
  <td class="d"> Number to return if none found. If neither are present, 0 is returned</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">float</td>
+ <td class="d"></td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1213">line 1213 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -582,13 +640,18 @@ adds the 8 tiles around the humanoid (one tile in all directions), and so on.</t
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">humanoid_class</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L531">line 531 of Lua/entities/humanoid.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
@@ -606,13 +669,18 @@ adds the 8 tiles around the humanoid (one tile in all directions), and so on.</t
  Helper function that finds out if there is an action queued to use the specified object<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">object_type</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1028">line 1028 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -621,13 +689,18 @@ adds the 8 tiles around the humanoid (one tile in all directions), and so on.</t
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">object</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L929">line 929 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -679,13 +752,18 @@ adds the 8 tiles around the humanoid (one tile in all directions), and so on.</t
  Is the given mood in the list of active moods.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">mood</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L516">line 516 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -700,7 +778,11 @@ perimeter (x1, y1) (x2, y2), then need to pass (x1-1, y1-1) (x2+1, y2+1).
 Example input parameters: (50, 55, 60, 65).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x1</td>
  <td class="t">int</td>
@@ -721,7 +803,21 @@ Example input parameters: (50, 55, 60, 65).<br/><br/>
  <td class="t">int</td>
  <td class="d"> south-east Y position of target area.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">bool</td>
+ <td class="d">true if obscuring given area.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1221">line 1221 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -730,13 +826,18 @@ Example input parameters: (50, 55, 60, 65).<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">humanoid_class</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L851">line 851 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -754,13 +855,18 @@ to be left is already marked with the `avoidTile` tile flag.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">room</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1notify_new_room">Entity:notifyNewRoom</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1054">line 1054 of Lua/entities/humanoid.lua</a>.
  </p>
@@ -770,13 +876,18 @@ to be left is already marked with the `avoidTile` tile flag.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">staff</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1060">line 1060 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -786,7 +897,11 @@ to be left is already marked with the `avoidTile` tile flag.<br/><br/>
  Function which is called when the user clicks on the `Humanoid`.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">ui</td>
  <td class="t">GameUI</td>
@@ -797,7 +912,8 @@ to be left is already marked with the `avoidTile` tile flag.<br/><br/>
  <td class="t">string</td>
  <td class="d"> One of: "left", "middle", "right".</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L424">line 424 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -814,7 +930,11 @@ to be left is already marked with the `avoidTile` tile flag.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">action</td>
  <td class="t">?</td>
@@ -825,7 +945,8 @@ to be left is already marked with the `avoidTile` tile flag.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L692">line 692 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -835,13 +956,18 @@ to be left is already marked with the `avoidTile` tile flag.<br/><br/>
  Registers a new build callback for this humanoid.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">callback</td>
  <td class="t">function</td>
  <td class="d"> The callback to call when a room has been built.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1038">line 1038 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -851,13 +977,18 @@ to be left is already marked with the `avoidTile` tile flag.<br/><br/>
  Registers a new remove callback for this humanoid.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">callback</td>
  <td class="t">function</td>
  <td class="d"> The callback to call when a room has been removed.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1066">line 1066 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -867,13 +998,18 @@ to be left is already marked with the `avoidTile` tile flag.<br/><br/>
  Registers a new staff change callback for this humanoid.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">callback</td>
  <td class="t">function</td>
  <td class="d"> The callback to call when a staff member has been hired or fired</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1087">line 1087 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -891,14 +1027,19 @@ to be left is already marked with the `avoidTile` tile flag.<br/><br/>
 important in multiplayer games.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">hospital</td>
  <td class="t">Hospital</td>
  <td class="d"> The `Hospital` which should be responsible
 for the `Humanoid`.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L458">line 458 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -916,7 +1057,11 @@ for the `Humanoid`.</td>
 If mood_name is nil it is considered a refresh only.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">mood_name</td>
  <td class="t">?</td>
@@ -927,7 +1072,8 @@ If mood_name is nil it is considered a refresh only.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1set_mood">Entity:setMood</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L477">line 477 of Lua/entities/humanoid.lua</a>.
  </p>
@@ -937,7 +1083,11 @@ If mood_name is nil it is considered a refresh only.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">action</td>
  <td class="t">?</td>
@@ -948,7 +1098,8 @@ If mood_name is nil it is considered a refresh only.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L621">line 621 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -957,13 +1108,18 @@ If mood_name is nil it is considered a refresh only.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">humanoid_class</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L822">line 822 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -990,13 +1146,18 @@ feeling of warmth accordingly. Returns whether the calling function should proce
 but also defined here, so we can just call it on any humanoid<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">amount</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L917">line 917 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -1014,13 +1175,18 @@ but also defined here, so we can just call it on any humanoid<br/><br/>
  Unexpects humanoid from a room, if validly entering this room<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">dest_room</td>
  <td class="t">Room</td>
  <td class="d"> The room the humanoid maybe expected at</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1197">line 1197 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -1038,13 +1204,18 @@ further actions taken as a result of a callback<br/><br/>
  Unregisters a build callback for this humanoid.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">callback</td>
  <td class="t">function</td>
  <td class="d"> The callback to remove.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1048">line 1048 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -1054,13 +1225,18 @@ further actions taken as a result of a callback<br/><br/>
  Unregisters a remove callback for this humanoid.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">callback</td>
  <td class="t">function</td>
  <td class="d"> The callback to remove.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1077">line 1077 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -1070,13 +1246,18 @@ further actions taken as a result of a callback<br/><br/>
  Unregisters a staff change callback for this humanoid.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">callback</td>
  <td class="t">function</td>
  <td class="d"> The callback to remove.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L1097">line 1097 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -1091,13 +1272,18 @@ further actions taken as a result of a callback<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">amount</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L922">line 922 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>
@@ -1109,7 +1295,11 @@ a position on the map. Equivalent to calling `setNextAction` with a walk
 action.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">tile_x</td>
  <td class="t">integer</td>
@@ -1128,7 +1318,8 @@ tile to walk to.</td>
  <td class="d"> If true, then the walk action will not be
 interrupted.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoid.lua#L855">line 855 of Lua/entities/humanoid.lua</a>.
  </p>
  </div>

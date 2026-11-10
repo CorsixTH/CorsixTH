@@ -280,7 +280,7 @@ div.method_list ul li.self {
   font-weight: bold;
 }
 
-div.method_list span.p, div.member_list span.p, div.methods table.params td.n {
+div.method_list span.p, div.member_list span.p, div.methods table.params  td.n, div.methods table.return td.n {
   font-family: monospace;
   font-weight: normal;
 }
@@ -319,14 +319,14 @@ div.methods h5 a:target {
   font-size: 130%;
 }
 
-div.methods table.params th, div.methods table.params td {
+div.methods table.params th, div.methods table.params td, div.methods table.return th, div.methods table.return td{
   text-align: left;
   padding: 0;
   margin: 0;
   padding-left: 4px;
 }
 
-div.methods table.params .n {
+div.methods table.params .n, div.methods table.return .n {
   padding-left: 20px;
 }
 

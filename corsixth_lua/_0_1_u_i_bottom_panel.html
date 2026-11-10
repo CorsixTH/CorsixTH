@@ -484,13 +484,18 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">ui</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L34">line 34 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -515,13 +520,18 @@ already shown.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">gfx</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L180">line 180 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -531,13 +541,18 @@ already shown.<br/><br/>
  Initialise fax message with an UIMessage object.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">message_info</td>
  <td class="t">table</td>
  <td class="d"> table with message metadata.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L490">line 490 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -555,13 +570,18 @@ an actual message window; if no index is provided the first suitable message
 in the queue is popped.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">index</td>
  <td class="t">integer&nbsp;or&nbsp;nil</td>
  <td class="d"> the index in the message_queue to pop</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L644">line 644 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -570,7 +590,11 @@ in the queue is popped.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">dialog_class</td>
  <td class="t">?</td>
@@ -581,7 +605,8 @@ in the queue is popped.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L1011">line 1011 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -590,7 +615,11 @@ in the queue is popped.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">old</td>
  <td class="t">?</td>
@@ -601,7 +630,8 @@ in the queue is popped.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L1060">line 1060 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
@@ -614,13 +644,31 @@ an event caused by any other fax that is queued. i.e both emergency
 and epidemics use the timer, so both faxes cannot appear at the same time.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">fax</td>
  <td class="t">table</td>
  <td class="d"> the fax we want to determine if can be queued.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">can_be_queued True if fax can be queued, false otherwise</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L520">line 520 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -632,13 +680,18 @@ Handles the cancelling of the event which the fax pertains to.
 @param fax_type (string) type of fax event to be cancelled<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">fax_type</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L558">line 558 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -649,7 +702,11 @@ Handles the cancelling of the event which the fax pertains to.
 says what to do with the patient.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">owner</td>
  <td class="t">object</td>
@@ -660,7 +717,21 @@ says what to do with the patient.<br/><br/>
  <td class="t">object</td>
  <td class="d"> optional drawer icon object</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">true if message was removed</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L609">line 609 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -669,13 +740,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L977">line 977 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -684,7 +760,11 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
@@ -695,7 +775,8 @@ says what to do with the patient.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L719">line 719 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -704,13 +785,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L711">line 711 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -719,13 +805,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L715">line 715 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -740,13 +831,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L929">line 929 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -755,13 +851,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L854">line 854 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -782,13 +883,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L961">line 961 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -797,13 +903,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L945">line 945 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -812,13 +923,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L870">line 870 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -827,13 +943,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L822">line 822 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -842,13 +963,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L913">line 913 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -857,13 +983,18 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">enable</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L838">line 838 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -872,7 +1003,11 @@ says what to do with the patient.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">canvas</td>
  <td class="t">?</td>
@@ -888,7 +1023,8 @@ says what to do with the patient.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L268">line 268 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
@@ -899,7 +1035,11 @@ says what to do with the patient.<br/><br/>
  Adds dynamic text to the bottom panel based on cursor position<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">canvas</td>
  <td class="t">?</td>
@@ -915,7 +1055,8 @@ says what to do with the patient.<br/><br/>
  <td class="t">num</td>
  <td class="d"> coordinate</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L325">line 325 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -933,7 +1074,11 @@ x_left is the leftmost x-coordinate of the reputation meter
 y is the y-coordinate of the reputation meter<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">canvas</td>
  <td class="t">?</td>
@@ -949,7 +1094,8 @@ y is the y-coordinate of the reputation meter<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L315">line 315 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -970,7 +1116,11 @@ y is the y-coordinate of the reputation meter<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -986,7 +1136,8 @@ y is the y-coordinate of the reputation meter<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1hit_test">Window:hitTest</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L434">line 434 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
@@ -1009,7 +1160,11 @@ y is the y-coordinate of the reputation meter<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -1030,7 +1185,8 @@ y is the y-coordinate of the reputation meter<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L409">line 409 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
@@ -1077,21 +1233,16 @@ y is the y-coordinate of the reputation meter<br/><br/>
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1queue_message">function UIBottomPanel:queueMessage(<span class="p">type</span>, <span class="p">message</span>, <span class="p">owner</span>, <span class="p">timeout</span>, <span class="p">default_choice</span>, <span class="p">callback</span>)</a></h5>
  <p>
+ Queue a fax notification message to appear.<br/><br/>
  The arguments specify a message, which is added to a FIFO queue, and will
 appear on screen once there is space.<br/><br/>
- Structure of message (except strike):
-message = {
-{ text = "first line of text", offset (integer, optional) }
-{ text = "second line of text", offset (integer, optional) }
-...
-choices = {
-{ text = "first choice", choice = "choice_type", enabled = true or false (optional, defaults to true) }
-...
-}
-}<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">type</td>
  <td class="t">string</td>
@@ -1120,9 +1271,19 @@ choices = {
  <tr>
  <td class="n">callback</td>
  <td class="t">function&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
- <td class="d"> If given, it will be called when the message is closed.</td>
+ <td class="d"> If given, it will be called when the message is closed. Structure of message (except strike):
+message = {
+{ text = "first line of text", offset (integer, optional) }
+{ text = "second line of text", offset (integer, optional) }
+...
+choices = {
+{ text = "first choice", choice = "choice_type", enabled = true or false (optional, defaults to true) }
+...
+}
+}</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L439">line 439 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -1159,17 +1320,22 @@ choices = {
  <div class="method">
  <h5><a name="_0_1_u_i_bottom_panel_1set_dynamic_info">function UIBottomPanel:setDynamicInfo(<span class="p">info</span>)</a></h5>
  <p>
- dividers: { 25, 50, 75 }<br/><br/>
- }<br/><br/>
+ If the info is nil then a cooldown timer is used before removing the<br/><br/>
+ information from the display.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">info</td>
  <td class="t">table</td>
- <td class="d"> A table containing the information to display. The text</td>
+ <td class="d"> A table containing the information to display. The text key is required and contains an array of lines to show. An optional progress key may be given to draw a progress bar, following the text and and an array of dividers may be provided to draw extra vertical lines in the progress bar. info = { text: { "He's not the saviour", "He's very naughty boy" }, progress: 50, dividers: { 25, 50, 75 } }</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L374">line 374 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>
@@ -1178,7 +1344,11 @@ choices = {
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -1189,7 +1359,8 @@ choices = {
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1set_position">Window:setPosition</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L310">line 310 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
@@ -1199,7 +1370,11 @@ choices = {
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -1210,7 +1385,8 @@ choices = {
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L417">line 417 of Lua/dialogs/bottom_panel.lua</a>.
  </p>
  </div>

@@ -98,7 +98,11 @@ rooted in the directory that the directory the file is contained in.
 Otherwise return nil and an error message.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">virtual_path</td>
  <td class="t">?</td>
@@ -109,7 +113,8 @@ Otherwise return nil and an error message.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L241">line 241 of Lua/filesystem.lua</a>.
  </p>
  </div>
@@ -119,7 +124,11 @@ Otherwise return nil and an error message.<br/><br/>
  Determines if the given path points to a real file.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">virtual_path</td>
  <td class="t">string</td>
@@ -131,7 +140,8 @@ Otherwise return nil and an error message.<br/><br/>
  <td class="d"> the virtual_path may be split into separate arguments
 for each level in the filesystem.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L184">line 184 of Lua/filesystem.lua</a>.
  </p>
  </div>
@@ -141,7 +151,11 @@ for each level in the filesystem.</td>
  Get the size of the file at the given path.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">virtual_path</td>
  <td class="t">string</td>
@@ -153,7 +167,22 @@ for each level in the filesystem.</td>
  <td class="d"> the virtual_path may be split into separate arguments
 for each level in the filesystem.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">numeric</td>
+ <td class="d">Number of bytes in the given file. Nil if the file doesn't
+exist.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L204">line 204 of Lua/filesystem.lua</a>.
  </p>
  </div>
@@ -164,7 +193,11 @@ for each level in the filesystem.</td>
 The returned URI formats match those described by <https://ffmpeg.org/ffmpeg-protocols.html>.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">virtual_path</td>
  <td class="t">string</td>
@@ -176,7 +209,21 @@ The returned URI formats match those described by <https://ffmpeg.org/ffmpeg-pro
  <td class="d"> the virtual_path may be split into separate arguments
 for each level in the filesystem.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">string</td>
+ <td class="d">A uri representing the files location</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L224">line 224 of Lua/filesystem.lua</a>.
  </p>
  </div>
@@ -186,13 +233,18 @@ for each level in the filesystem.</td>
  Test if file name has an .iso or .dmg extension<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">name</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L78">line 78 of Lua/filesystem.lua</a>.
  </p>
  </div>
@@ -202,7 +254,11 @@ for each level in the filesystem.</td>
  list the files in the given path.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">virtual_path</td>
  <td class="t">string</td>
@@ -214,7 +270,21 @@ for each level in the filesystem.</td>
  <td class="d"> the virtual_path may be split into separate arguments
 for each level in the filesystem.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">object</td>
+ <td class="d">a map of normalized names to actual names of files.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L118">line 118 of Lua/filesystem.lua</a>.
  </p>
  </div>
@@ -224,7 +294,11 @@ for each level in the filesystem.</td>
  Return the contents of the file at the given path.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">virtual_path</td>
  <td class="t">string</td>
@@ -236,7 +310,8 @@ for each level in the filesystem.</td>
  <td class="d"> the virtual_path may be split into separate arguments
 for each level in the filesystem.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L160">line 160 of Lua/filesystem.lua</a>.
  </p>
  </div>
@@ -248,14 +323,19 @@ If the path is an ISO then set the provider. If the path is a directory
 then set the physical_path and populate the files and sub_dirs.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">physical_path</td>
  <td class="t">string</td>
  <td class="d"> a path on the filesystem to either a directory
 or theme hospital ISO file.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L88">line 88 of Lua/filesystem.lua</a>.
  </p>
  </div>

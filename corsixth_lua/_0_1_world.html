@@ -552,7 +552,11 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">app</td>
  <td class="t">?</td>
@@ -563,7 +567,8 @@
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L55">line 55 of Lua/world.lua</a>.
  </p>
  </div>
@@ -573,13 +578,18 @@
  Internal function for placing an object from the map file.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">object</td>
  <td class="t">?</td>
  <td class="d">Object to place.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L588">line 588 of Lua/world.lua</a>.
  </p>
  </div>
@@ -597,7 +607,11 @@ If the "Autosaves" folder does not exist, folder will be created.<br/><br/>
  Private function to assess the shortest path between all spawn points and desks<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">staffed_desks</td>
  <td class="t">table</td>
@@ -608,7 +622,21 @@ If the "Autosaves" folder does not exist, folder will be created.<br/><br/>
  <td class="t">table</td>
  <td class="d"> All available spawn points</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">{x: integer, y:integer, direction: string} | boolean</td>
+ <td class="d"># Optimal spawn point to the nearest reception desk or false on failure</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L407">line 407 of Lua/world.lua</a>.
  </p>
  </div>
@@ -635,14 +663,19 @@ Note: it is important we ensure this date always is in the future<br/><br/>
  Called when a month ends. Decides on which dates patients arrive during the coming month.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">first_game_month</td>
  <td class="t">boolean</td>
  <td class="d"> Is that the very first date distribution at the level
 TODO: Requires adjustment for AIHospital spawns; see PR 1986 for progress.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1206">line 1206 of Lua/world.lua</a>.
  </p>
  </div>
@@ -659,7 +692,11 @@ TODO: Requires adjustment for AIHospital spawns; see PR 1986 for progress.</td>
 See also `World:removeObjectFromTile`<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">object</td>
  <td class="t">Object</td>
@@ -675,7 +712,8 @@ See also `World:removeObjectFromTile`<br/><br/>
  <td class="t">integer</td>
  <td class="d"> The Y-coordinate of the tile being placed upon</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2329">line 2329 of Lua/world.lua</a>.
  </p>
  </div>
@@ -686,13 +724,18 @@ See also `World:removeObjectFromTile`<br/><br/>
 TODO: This should live in game_ui not world<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">delta</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L196">line 196 of Lua/world.lua</a>.
  </p>
  </div>
@@ -704,7 +747,11 @@ do things for itself, and then it calls corresponding functions for
 the hospitals, entities and rooms in that order.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">old</td>
  <td class="t">integer</td>
@@ -715,7 +762,8 @@ the hospitals, entities and rooms in that order.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> The current version of the save game format.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2588">line 2588 of Lua/world.lua</a>.
  </p>
  </div>
@@ -725,7 +773,11 @@ the hospitals, entities and rooms in that order.<br/><br/>
  Сhecks whether a tile is occupied by any humanoid.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -736,7 +788,21 @@ the hospitals, entities and rooms in that order.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> the queried tile's y coordinate.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">true if any humanoid is occupy the tile.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1589">line 1589 of Lua/world.lua</a>.
  </p>
  </div>
@@ -753,7 +819,11 @@ the hospitals, entities and rooms in that order.<br/><br/>
  Checks if any humanoid is located on a tile.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -764,7 +834,21 @@ the hospitals, entities and rooms in that order.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> the queried tile's y coordinate.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">true if any humanoid is located on a tile.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1581">line 1581 of Lua/world.lua</a>.
  </p>
  </div>
@@ -774,7 +858,11 @@ the hospitals, entities and rooms in that order.<br/><br/>
  Checks if any object is located on a tile.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -785,7 +873,21 @@ the hospitals, entities and rooms in that order.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> the queried tile's y coordinate.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">true if any object is located on a tile.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1573">line 1573 of Lua/world.lua</a>.
  </p>
  </div>
@@ -804,7 +906,11 @@ For example, when searching for a suitable placement for "gates_to_hell".
 'NonSideObject' is a object that do occupy the tile entirely, not only one side of it.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -835,7 +941,8 @@ For example, when searching for a suitable placement for "gates_to_hell".
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1951">line 1951 of Lua/world.lua</a>.
  </p>
  </div>
@@ -851,13 +958,31 @@ For example, when searching for a suitable placement for "gates_to_hell".
  Choose hospital for normal patient<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">disease</td>
  <td class="t">table</td>
  <td class="d"> - the disease assigned to this patient</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Hospital</td>
+ <td class="d">hospital</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L3166">line 3166 of Lua/world.lua</a>.
  </p>
  </div>
@@ -874,13 +999,31 @@ For example, when searching for a suitable placement for "gates_to_hell".
  Generate the dates for the next emergency<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">emergency</td>
  <td class="t">?</td>
  <td class="d">The next scheduled emergency to take place</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">true if emergency successfully scheduled</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1320">line 1320 of Lua/world.lua</a>.
  </p>
  </div>
@@ -890,13 +1033,18 @@ For example, when searching for a suitable placement for "gates_to_hell".
  Place objects from a map file onto the map.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">objects</td>
  <td class="t">Object</td>
  <td class="d"> Objects to place.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L577">line 577 of Lua/world.lua</a>.
  </p>
  </div>
@@ -913,13 +1061,18 @@ For example, when searching for a suitable placement for "gates_to_hell".
  Enable or disable salary raise events.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">mode</td>
  <td class="t">boolean</td>
  <td class="d"> If true, do not create salary raise events.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L520">line 520 of Lua/world.lua</a>.
  </p>
  </div>
@@ -928,13 +1081,18 @@ For example, when searching for a suitable placement for "gates_to_hell".
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">entity</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1875">line 1875 of Lua/world.lua</a>.
  </p>
  </div>
@@ -959,7 +1117,11 @@ This is automatically done on each error.<br/><br/>
  Returns a set of all objects near the given position but if supplied only of the given object type.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -980,7 +1142,8 @@ This is automatically done on each error.<br/><br/>
  <td class="t">string</td>
  <td class="d"> The name of the objects that are being searched for</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1642">line 1642 of Lua/world.lua</a>.
  </p>
  </div>
@@ -995,7 +1158,11 @@ the second nearest with 25%, and so on.
 * `nil` or `false`, which act the same as `"near"`.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">humanoid</td>
  <td class="t">Humanoid</td>
@@ -1016,7 +1183,8 @@ the second nearest with 25%, and so on.
  <td class="t">Object</td>
  <td class="d"> Object to ignore in the search.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1735">line 1735 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1032,7 +1200,11 @@ used - if you want to find an object not in use (in order to use it),
 then call findFreeObjectNearToUse instead.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">humanoid</td>
  <td class="t">Humanoid</td>
@@ -1058,7 +1230,8 @@ then call findFreeObjectNearToUse instead.<br/><br/>
  <td class="t">function</td>
  <td class="d"> Function to call for each result. If it returns true then the search will be ended.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1674">line 1674 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1071,7 +1244,11 @@ The `mode` parameter can be:
 * `"advanced"` that prefers a near room but also takes into account queue size/staffing<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">humanoid</td>
  <td class="t">Humanoid</td>
@@ -1092,7 +1269,21 @@ The `mode` parameter can be:
  <td class="t">string</td>
  <td class="d"> How to select a room.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Room|nil</td>
+ <td class="d"># The best room for the huamnoid or nil if no room exists within the maximum distance</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1783">line 1783 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1102,13 +1293,18 @@ The `mode` parameter can be:
  Append a message to the game log.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">message</td>
  <td class="t">string</td>
  <td class="d"> The message to add.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2513">line 2513 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1135,13 +1331,18 @@ Text to show in the fax, text that accompanies the "continue"-choice the player
 has, and whether it is the "return_to_main_menu" choice or the "accept_new_level" choice.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">player_no</td>
  <td class="t">integer</td>
  <td class="d"> Which player that will see the message.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1403">line 1403 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1157,7 +1358,11 @@ has, and whether it is the "return_to_main_menu" choice or the "accept_new_level
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -1173,7 +1378,8 @@ has, and whether it is the "return_to_main_menu" choice or the "accept_new_level
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1604">line 1604 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1183,7 +1389,11 @@ has, and whether it is the "return_to_main_menu" choice or the "accept_new_level
  Get the hospital at a given tile location.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -1194,7 +1404,21 @@ has, and whether it is the "return_to_main_menu" choice or the "accept_new_level
  <td class="t">integer</td>
  <td class="d"> Y position of the queried tile.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Hospital</td>
+ <td class="d">Hospital at the given location or 'nil'.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2463">line 2463 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1204,7 +1428,11 @@ has, and whether it is the "return_to_main_menu" choice or the "accept_new_level
  Find an tile for idling.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -1225,7 +1453,8 @@ has, and whether it is the "return_to_main_menu" choice or the "accept_new_level
  <td class="t">integer</td>
  <td class="d"> Optional parcel of the indoor returned idling tile.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1529">line 1529 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1249,7 +1478,11 @@ has, and whether it is the "return_to_main_menu" choice or the "accept_new_level
  Retrieve one object from a given position.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -1271,7 +1504,21 @@ has, and whether it is the "return_to_main_menu" choice or the "accept_new_level
  <td class="d"> If true the object must be permitted for use
 that id, set of strings gets first object that matches an entry in the set.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Object?</td>
+ <td class="d">#The found object, or nil if the object is not found.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2357">line 2357 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1280,7 +1527,11 @@ that id, set of strings gets first object that matches an entry in the set.</td>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -1291,7 +1542,8 @@ that id, set of strings gets first object that matches an entry in the set.</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L572">line 572 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1301,7 +1553,11 @@ that id, set of strings gets first object that matches an entry in the set.</td>
  Retrieve all objects from a given position.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -1312,7 +1568,8 @@ that id, set of strings gets first object that matches an entry in the set.</td>
  <td class="t">integer</td>
  <td class="d"> Y position of the object to retrieve.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2349">line 2349 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1321,7 +1578,11 @@ that id, set of strings gets first object that matches an entry in the set.</td>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -1342,7 +1603,8 @@ that id, set of strings gets first object that matches an entry in the set.</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1525">line 1525 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1354,7 +1616,11 @@ the two given map tiles. This operation is commutative (swapping (x1, y1)
 with (x2, y2) has no effect on the result) if both tiles are passable.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x1</td>
  <td class="t">integer</td>
@@ -1375,7 +1641,21 @@ with (x2, y2) has no effect on the result) if both tiles are passable.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> Y-cordinate of second tile's Lua tile coordinates.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">integer | boolean</td>
+ <td class="d"># The distance of the shortest path, or false if there is no path.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1513">line 1513 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1392,7 +1672,11 @@ with (x2, y2) has no effect on the result) if both tiles are passable.<br/><br/>
  Get the room at a given tile location.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -1403,7 +1687,21 @@ with (x2, y2) has no effect on the result) if both tiles are passable.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> Y position of the queried tile.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Room</td>
+ <td class="d">Room of the tile, or 'nil'.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2455">line 2455 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1414,13 +1712,18 @@ with (x2, y2) has no effect on the result) if both tiles are passable.<br/><br/>
 and localized name of staff required.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">room_id</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2475">line 2475 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1429,13 +1732,18 @@ and localized name of staff required.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">block_id</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L731">line 731 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1444,13 +1752,18 @@ and localized name of staff required.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">block_id</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L715">line 715 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1459,13 +1772,18 @@ and localized name of staff required.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">block_id</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L723">line 723 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1475,7 +1793,11 @@ and localized name of staff required.<br/><br/>
  Initialize the game level (available diseases, winning conditions).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">app</td>
  <td class="t">?</td>
@@ -1486,7 +1808,8 @@ and localized name of staff required.<br/><br/>
  <td class="t">?</td>
  <td class="d"># Available rooms in the level.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L223">line 223 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1509,14 +1832,19 @@ and localized name of staff required.<br/><br/>
  Test the given speed.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">speed</td>
  <td class="t">string</td>
  <td class="d"> The speed to test.
 Return (boolean) # True if the given speed the same as the current speed.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L763">line 763 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1528,7 +1856,11 @@ checks if its buildable/passable using the tile's appropriate flag and then retu
 flag's boolean value or false if the tile isn't valid.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -1559,7 +1891,8 @@ flag's boolean value or false if the tile isn't valid.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2008">line 2008 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1586,7 +1919,11 @@ than the tile it is anchored to, which can be up to a tile away while it
 scurries.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">number</td>
@@ -1597,7 +1934,21 @@ scurries.<br/><br/>
  <td class="t">number</td>
  <td class="d"> y-coordinate on the screen</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">Whether a rat is near the cursor.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L3222">line 3222 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1607,7 +1958,11 @@ scurries.<br/><br/>
  Test whether the given coordinate is on the map.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -1618,7 +1973,21 @@ scurries.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> Y position of the coordinate to test.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d"># Whether the provided position is on the map.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1975">line 1975 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1636,7 +2005,11 @@ scurries.<br/><br/>
 in a room.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -1652,7 +2025,21 @@ in a room.<br/><br/>
  <td class="t">boolean</td>
  <td class="d"> If set, also check the tile is not in a room.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d"># Whether all checks hold.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1556">line 1556 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1666,7 +2053,11 @@ the footprint.shareable differentiates shareable passable tiles, and exclusive u
 passable tiles (the norm for most objects)<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -1682,7 +2073,21 @@ passable tiles (the norm for most objects)<br/><br/>
  <td class="t">integer</td>
  <td class="d"> searchable distance for nearby objects</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">indicating if exclusively passable or not</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L3076">line 3076 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1693,7 +2098,11 @@ passable tiles (the norm for most objects)<br/><br/>
 count as part of the object)<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -1709,7 +2118,21 @@ count as part of the object)<br/><br/>
  <td class="t">integer</td>
  <td class="d"> The number of tiles away from the tile to search.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d"># Whether the tile is part of a nearby object.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1625">line 1625 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1727,13 +2150,18 @@ count as part of the object)<br/><br/>
 from the seed (generated here or in staff_profile.lua)<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">profile</td>
  <td class="t">StaffProfile</td>
  <td class="d"> The profile of the staff member</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2574">line 2574 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1743,7 +2171,11 @@ from the seed (generated here or in staff_profile.lua)<br/><br/>
  Cause the player with the player number player_no to lose.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">player_no</td>
  <td class="t">number</td>
@@ -1759,7 +2191,8 @@ from the seed (generated here or in staff_profile.lua)<br/><br/>
  <td class="t">number</td>
  <td class="d"> [optional] The number the player went over/under which caused him to lose.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1476">line 1476 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1768,13 +2201,18 @@ from the seed (generated here or in staff_profile.lua)<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">month</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L532">line 532 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1784,13 +2222,18 @@ from the seed (generated here or in staff_profile.lua)<br/><br/>
  Called when a room has been completely built and is ready to use.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">room</td>
  <td class="t">Room</td>
  <td class="d"> The new room.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L659">line 659 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1815,7 +2258,11 @@ the game<br/><br/>
  Create a new entity.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">class</td>
  <td class="t">Entity</td>
@@ -1831,7 +2278,8 @@ the game<br/><br/>
  <td class="t">integer</td>
  <td class="d"> Whether to use the first (default), or the second marker.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1856">line 1856 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1841,7 +2289,11 @@ the game<br/><br/>
  Setup an animated floating money amount above a patient.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">patient</td>
  <td class="t">Patient</td>
@@ -1857,7 +2309,8 @@ the game<br/><br/>
  <td class="t">boolean</td>
  <td class="d"> Whether the money was paid by an insurance company.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1826">line 1826 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1868,7 +2321,11 @@ the game<br/><br/>
 already on that tile.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">litter_type</td>
  <td class="t">string&nbsp;or&nbsp;integer</td>
@@ -1889,7 +2346,21 @@ already on that tile.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> Mirror flag passed on to Litter:setLitterType.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Litter?</td>
+ <td class="d"># The new litter, or nil if it was outclassed.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2404">line 2404 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1900,7 +2371,11 @@ already on that tile.<br/><br/>
 calls its class constructor.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">id</td>
  <td class="t">string</td>
@@ -1926,7 +2401,21 @@ calls its class constructor.<br/><br/>
  <td class="t">string</td>
  <td class="d"> Name of the new object.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Object</td>
+ <td class="d"># The created object.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1921">line 1921 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1935,13 +2424,18 @@ calls its class constructor.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">new_object</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1917">line 1917 of Lua/world.lua</a>.
  </p>
  </div>
@@ -1950,7 +2444,11 @@ calls its class constructor.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -1981,7 +2479,8 @@ calls its class constructor.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L646">line 646 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2009,7 +2508,11 @@ called with `+1` or `-1` whenever a `Humanoid` enters respectively leaves
 the given tile.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -2025,7 +2528,8 @@ the given tile.<br/><br/>
  <td class="t">Object</td>
  <td class="d"> Object that is called.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L558">line 558 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2035,13 +2539,18 @@ the given tile.<br/><br/>
  Called when a room has been deactivated (crashed or edited)<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">room</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L675">line 675 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2052,7 +2561,11 @@ the given tile.<br/><br/>
 interested entities in the vicinity of the new arrival.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">entity</td>
  <td class="t">Entity</td>
@@ -2063,7 +2576,8 @@ interested entities in the vicinity of the new arrival.<br/><br/>
  <td class="t">string</td>
  <td class="d"> That entity's id.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2285">line 2285 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2115,7 +2629,11 @@ on the current speed of the game. There are 50 hours in a TH day.<br/><br/>
  Prepare all tiles of the footprint for build of an object.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">object_footprint</td>
  <td class="t">table</td>
@@ -2131,7 +2649,8 @@ on the current speed of the game. There are 50 hours in a TH day.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> Y position of the object</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2422">line 2422 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2141,7 +2660,11 @@ on the current speed of the game. There are 50 hours in a TH day.<br/><br/>
  Prepare all tiles in the given rectangle for building a room.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -2162,7 +2685,8 @@ on the current speed of the game. There are 50 hours in a TH day.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> Number of tiles in y direction.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2437">line 2437 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2178,13 +2702,18 @@ on the current speed of the game. There are 50 hours in a TH day.<br/><br/>
  Register a function to be called whenever a room has been deactivated (crashed or edited).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">callback</td>
  <td class="t">function</td>
  <td class="d"> A function taking one argument: a `Room`.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L634">line 634 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2194,7 +2723,11 @@ on the current speed of the game. There are 50 hours in a TH day.<br/><br/>
  Remove all cleanable litter from a given tile.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -2205,7 +2738,8 @@ on the current speed of the game. There are 50 hours in a TH day.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> Y position of the tile to clean.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2388">line 2388 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2216,7 +2750,11 @@ on the current speed of the game. There are 50 hours in a TH day.<br/><br/>
 See also `World:addObjectToTile`<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">object</td>
  <td class="t">Object</td>
@@ -2232,7 +2770,8 @@ See also `World:addObjectToTile`<br/><br/>
  <td class="t">integer</td>
  <td class="d"> The Y-coordinate of the tile which the object was on</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2307">line 2307 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2266,13 +2805,18 @@ those flags again<br/><br/>
  If a level file specifies random emergencies we make the next one as defined by the mean/variance given<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">control</td>
  <td class="t">table</td>
  <td class="d"> Contains emergency information from level file</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1303">line 1303 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2282,13 +2826,18 @@ those flags again<br/><br/>
  Restore the settings from the previous world<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">campaign_data</td>
  <td class="t">table</td>
  <td class="d"> world and hospital campaign data</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L3123">line 3123 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2312,7 +2861,11 @@ those flags again<br/><br/>
  Change owner of a plot.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">parcel</td>
  <td class="t">integer</td>
@@ -2323,7 +2876,8 @@ those flags again<br/><br/>
  <td class="t">integer</td>
  <td class="d"> New owner (may be 0).</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L618">line 618 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2335,13 +2889,18 @@ Available speeds are "Pause", "Slowest", "Slower", "Normal",
 "Max speed", or "And then some more".<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">new_speed</td>
  <td class="t">string</td>
  <td class="d"> New speed to set.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L789">line 789 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2351,13 +2910,18 @@ Available speeds are "Pause", "Slowest", "Slower", "Normal",
  Register key shortcuts for controlling the world (game speed, etc.)<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">ui</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L178">line 178 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2367,13 +2931,18 @@ Available speeds are "Pause", "Slowest", "Slower", "Normal",
  Update state of if game has been paused by user<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">state</td>
  <td class="t">boolean</td>
  <td class="d"></td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L869">line 869 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2383,13 +2952,18 @@ Available speeds are "Pause", "Slowest", "Slower", "Normal",
  Set game speed from a user-facing control.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">new_speed</td>
  <td class="t">string</td>
  <td class="d"> New speed to set.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L780">line 780 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2399,13 +2973,31 @@ Available speeds are "Pause", "Slowest", "Slower", "Normal",
  Spawn a patient from a spawn point for the given hospital.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">opt_hospital</td>
  <td class="t">Hospital</td>
  <td class="d"> Hospital that the new patient should visit.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Patient | nil</td>
+ <td class="d">entity The spawned patient, or 'nil' if no patient spawned.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L439">line 439 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2415,13 +3007,18 @@ Available speeds are "Pause", "Slowest", "Slower", "Normal",
  A VIP is invited (or he invited himself) to the player hospital.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">name</td>
  <td class="t">string</td>
  <td class="d"> Name of the VIP</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L490">line 490 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2443,13 +3040,18 @@ Available speeds are "Pause", "Slowest", "Slower", "Normal",
  Unregister a function from being called whenever a room has been deactivated (crashed or edited).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">callback</td>
  <td class="t">function</td>
  <td class="d"> A function previously passed to `registerRoomRemoveCallback`.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L640">line 640 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2495,7 +3097,11 @@ blue filter<br/><br/>
  Checks if a time jump caused an emergency to be missed<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">prev_date</td>
  <td class="t">Date</td>
@@ -2506,7 +3112,21 @@ blue filter<br/><br/>
  <td class="t">Date</td>
  <td class="d"> Game date after time jump</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">true if emergency has been skipped</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1069">line 1069 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2515,7 +3135,11 @@ blue filter<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -2536,7 +3160,8 @@ blue filter<br/><br/>
  <td class="t">string</td>
  <td class="d"> Should be nil when the object is allowed to be placed in any room.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1983">line 1983 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2546,13 +3171,18 @@ blue filter<br/><br/>
  Process that the given player number won the game.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">player_no</td>
  <td class="t">integer</td>
  <td class="d"> Number of the player who just won.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1359">line 1359 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2566,7 +3196,11 @@ become when the object is placed), and then check that the cells
 surrounding the footprint have not had their connectedness changed.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -2592,7 +3226,21 @@ surrounding the footprint have not had their connectedness changed.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> target room for placing the object.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d"># Will this placement break path finding.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2048">line 2048 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2606,7 +3254,11 @@ become when the object is placed), and then check that the
 "use_position" cells have path to the room door.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">object_x</td>
  <td class="t">integer</td>
@@ -2627,7 +3279,21 @@ become when the object is placed), and then check that the
  <td class="t">table</td>
  <td class="d"> object orientation description with footprint.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">will this placement break path finding.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2128">line 2128 of Lua/world.lua</a>.
  </p>
  </div>
@@ -2645,7 +3311,11 @@ And then this function check that the "use_position" cells
 of existing objects have path to the room door.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">object_x</td>
  <td class="t">integer</td>
@@ -2671,7 +3341,21 @@ of existing objects have path to the room door.<br/><br/>
  <td class="t">boolean</td>
  <td class="d"> is that object is side object.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d"># will this placement break path finding.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2199">line 2199 of Lua/world.lua</a>.
  </p>
  </div>

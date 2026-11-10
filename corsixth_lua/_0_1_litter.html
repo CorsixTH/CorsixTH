@@ -249,7 +249,11 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">hospital</td>
  <td class="t">?</td>
@@ -270,7 +274,8 @@
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L85">line 85 of Lua/objects/litter.lua</a>.
  </p>
  </div>
@@ -279,7 +284,11 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">old</td>
  <td class="t">?</td>
@@ -290,7 +299,8 @@
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1after_load">Entity:afterLoad</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L208">line 208 of Lua/objects/litter.lua</a>.
  </p>
@@ -321,13 +331,31 @@
  indices 1-4 used to pick a random piece of trash.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">litter_type</td>
  <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;int</td>
  <td class="d"> The litter type to look up.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">int</td>
+ <td class="d">Rank of that type, or 0 if unknown.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L116">line 116 of Lua/objects/litter.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
@@ -360,7 +388,11 @@ This is an (effective) hack, see issue 918 --cgj<br/><br/>
  created at all (the first return is then nil).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">objects_in_tile</td>
  <td class="t">array&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
@@ -371,7 +403,21 @@ This is an (effective) hack, see issue 918 --cgj<br/><br/>
  <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;int</td>
  <td class="d"> Type of the litter about to be created.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">bool</td>
+ <td class="d">true if the incoming litter is outclassed and should not be</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L128">line 128 of Lua/objects/litter.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
@@ -382,7 +428,11 @@ This is an (effective) hack, see issue 918 --cgj<br/><br/>
  Set the animation of the litter and register a cleaning task for it.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">anim_type</td>
  <td class="t">?</td>
@@ -393,7 +443,8 @@ This is an (effective) hack, see issue 918 --cgj<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L149">line 149 of Lua/objects/litter.lua</a>.
  </p>
  </div>
@@ -402,7 +453,11 @@ This is an (effective) hack, see issue 918 --cgj<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -413,7 +468,8 @@ This is an (effective) hack, see issue 918 --cgj<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1set_tile">Entity:setTile</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L95">line 95 of Lua/objects/litter.lua</a>.
  </p>

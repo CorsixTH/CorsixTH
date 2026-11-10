@@ -259,13 +259,18 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">animation</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L74">line 74 of Lua/entities/rat.lua</a>.
  </p>
  </div>
@@ -300,7 +305,11 @@ there is no route.<br/><br/>
 destination.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">dest_x</td>
  <td class="t">integer</td>
@@ -311,7 +320,8 @@ destination.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> Destination tile Y coordinate.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L169">line 169 of Lua/entities/rat.lua</a>.
  </p>
  </div>
@@ -339,7 +349,11 @@ rat stays out of rooms and never squeezes through closed doors -- matching the
 original game, where rats scurry only in corridors.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">xs</td>
  <td class="t">list</td>
@@ -350,7 +364,21 @@ original game, where rats scurry only in corridors.<br/><br/>
  <td class="t">list</td>
  <td class="d"> Path tile Y coordinates.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d">True if the whole path runs through corridor tiles.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L153">line 153 of Lua/entities/rat.lua</a>.
  </p>
  </div>
@@ -370,16 +398,20 @@ the rat stays clickable and detectable on the entity map.<br/><br/>
  <p>
  Send the rat scurrying from its hole, along the corridors, to another
 rathole where it disappears.<br/><br/>
- to pick the leaving animation (only north holes have one).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">origin_wall</td>
  <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
- <td class="d"> The wall of the hole it emerges from, used</td>
+ <td class="d"> The wall of the hole it emerges from, used to pick the leaving animation (only north holes have one).</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L81">line 81 of Lua/entities/rat.lua</a>.
  </p>
  </div>
@@ -391,7 +423,11 @@ it was, and remove it. Guarded so a stale cursor entity cannot shoot the same
 rat twice.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">ui</td>
  <td class="t">GameUI</td>
@@ -402,7 +438,8 @@ rat twice.<br/><br/>
  <td class="t">string</td>
  <td class="d"> The mouse button used.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/rat.lua#L241">line 241 of Lua/entities/rat.lua</a>.
  </p>
  </div>

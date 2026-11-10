@@ -118,17 +118,21 @@
  <div class="method">
  <h5><a name="_0_1_textbox_1allowed_input">function Textbox:allowedInput(<span class="p">types</span>)</a></h5>
  <p>
- "misc": other characters, currently space and hyphen<br/><br/>
- "all": experimental category that allows, theoretically, all input<br/><br/>
+ Limit input handled by textbox to specific classes of characters<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">types</td>
  <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
- <td class="d"> One of, or an table of any number of input types</td>
+ <td class="d"> One of, or an table of any number of input types valid input types are: "alpha": Letters (lower and uppercase) "numbers": 0-9 "misc": other characters, currently space and hyphen "all": experimental category that allows, theoretically, all input</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1263">line 1263 of Lua/window.lua</a>.
  </p>
  </div>
@@ -138,13 +142,18 @@
  Limit input to a maximum of [limit] characters.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">limit</td>
  <td class="t">integer&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
  <td class="d"> Number of characters until the textbox will stop accepting input, or nil to deactivate limit.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1280">line 1280 of Lua/window.lua</a>.
  </p>
  </div>
@@ -166,7 +175,11 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">canvas</td>
  <td class="t">?</td>
@@ -182,7 +195,8 @@
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L981">line 981 of Lua/window.lua</a>.
  </p>
  </div>
@@ -193,7 +207,11 @@
  Note though that this function still returns true if it appears to be a characters being entered.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">char</td>
  <td class="t">?</td>
@@ -204,7 +222,8 @@
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1060">line 1060 of Lua/window.lua</a>.
  </p>
  </div>
@@ -222,13 +241,18 @@ additional things that need to be done: deactivate any other textboxes,
 handle blinking cursor, keyboard repeat on/off, set button state accordingly<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">active</td>
  <td class="t">boolean</td>
  <td class="d"> whether to activate (true) or deactivate (false) the box</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1015">line 1015 of Lua/window.lua</a>.
  </p>
  </div>
@@ -237,7 +261,11 @@ handle blinking cursor, keyboard repeat on/off, set button state accordingly<br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -248,7 +276,8 @@ handle blinking cursor, keyboard repeat on/off, set button state accordingly<br/
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1299">line 1299 of Lua/window.lua</a>.
  </p>
  </div>
@@ -257,7 +286,11 @@ handle blinking cursor, keyboard repeat on/off, set button state accordingly<br/
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">width</td>
  <td class="t">?</td>
@@ -268,7 +301,8 @@ handle blinking cursor, keyboard repeat on/off, set button state accordingly<br/
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1303">line 1303 of Lua/window.lua</a>.
  </p>
  </div>
@@ -279,13 +313,18 @@ handle blinking cursor, keyboard repeat on/off, set button state accordingly<br/
  Use table with empty string {""} to make it a multiline textbox.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">text</td>
  <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
  <td class="d"> The string or list of strings the textbox should contain.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1288">line 1288 of Lua/window.lua</a>.
  </p>
  </div>
@@ -295,13 +334,18 @@ handle blinking cursor, keyboard repeat on/off, set button state accordingly<br/
  Handles actual text input.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">text</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1243">line 1243 of Lua/window.lua</a>.
  </p>
  </div>

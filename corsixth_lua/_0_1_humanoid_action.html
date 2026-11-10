@@ -92,13 +92,18 @@
  Construct a humanoid action (base class constructor).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">name</td>
  <td class="t">string</td>
  <td class="d"> Name of the action.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L28">line 28 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
@@ -107,7 +112,11 @@
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">old</td>
  <td class="t">?</td>
@@ -118,7 +127,8 @@
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L112">line 112 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
@@ -135,13 +145,31 @@
  Set the callback for performing updates afterwards.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">after_use</td>
  <td class="t">function</td>
  <td class="d"> Callback function that is called after the action ends.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">HumanoidAction</td>
+ <td class="d">Returning self, for daisy-chaining.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L84">line 84 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
@@ -151,13 +179,31 @@
  Set the number of times the action should happen.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">count</td>
  <td class="t">integer&nbsp;or&nbsp;nil</td>
  <td class="d"> Set to 'nil' if 'forever', else integer count.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">HumanoidAction</td>
+ <td class="d">Returning self, for daisy-chaining.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L43">line 43 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
@@ -167,13 +213,31 @@
  Set whether the humanoid is leaving.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">is_leaving</td>
  <td class="t">boolean</td>
  <td class="d"> Whether or not the humanoid is leaving. If not specified, value is true.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">HumanoidAction</td>
+ <td class="d">Returning self, for daisy-chaining.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L95">line 95 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
@@ -183,13 +247,31 @@
  Set the callback for checking termination conditions.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">loop_callback</td>
  <td class="t">function</td>
  <td class="d"> Callback function that is called each iteration to check for termination conditions.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">HumanoidAction</td>
+ <td class="d">Returning self, for daisy-chaining.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L73">line 73 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
@@ -199,13 +281,31 @@
  Set the 'must happen' flag (that is, action cannot be skipped).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">must_happen</td>
  <td class="t">boolean</td>
  <td class="d"> Whether or not the action must happen.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">HumanoidAction</td>
+ <td class="d">Returning self, for daisy-chaining.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L53">line 53 of Lua/humanoid_action.lua</a>.
  </p>
  </div>
@@ -215,13 +315,31 @@
  Set the 'uninterruptible' flag (that is, action cannot be canceled or truncated by pickup).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">uninterruptible</td>
  <td class="t">boolean</td>
  <td class="d"> Whether or not the action uninterruptible.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">HumanoidAction</td>
+ <td class="d">Returning self, for daisy-chaining.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L63">line 63 of Lua/humanoid_action.lua</a>.
  </p>
  </div>

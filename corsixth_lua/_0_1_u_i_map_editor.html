@@ -520,13 +520,18 @@
  Height of a sprite button in pixels<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">ui</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L413">line 413 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -536,7 +541,11 @@
  Stay on world with the entire area, by moving the base position (if needed).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">xpos</td>
  <td class="t">int</td>
@@ -557,7 +566,21 @@
  <td class="t">int</td>
  <td class="d"> Vertical size.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">int, int</td>
+ <td class="d">Allowed base position</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1015">line 1015 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -568,13 +591,18 @@
  User clicked at a block (a button with a sprite).<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">num</td>
  <td class="t">?</td>
  <td class="d">Index block number.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L978">line 978 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -584,13 +612,18 @@
  Do layout of the sprite buttons of the page.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">buttons</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L703">line 703 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -601,7 +634,11 @@
 If they exist, return them or delete them.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">obj_type</td>
  <td class="t">str</td>
@@ -627,7 +664,21 @@ If they exist, return them or delete them.<br/><br/>
  <td class="t">bool</td>
  <td class="d"> If set, remove the found objects.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">list</td>
+ <td class="d">The objects that use the space, if they are not removed.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1217">line 1217 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -644,13 +695,18 @@ If they exist, return them or delete them.<br/><br/>
  Delete the walls at the given coordinates.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">coords</td>
  <td class="t">array&nbsp;or&nbsp;or&nbsp;or&nbsp;xpos&nbsp;or&nbsp;ypos&nbsp;or&nbsp;tables</td>
  <td class="d"> Coordinates to remove the walls.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1455">line 1455 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -660,7 +716,11 @@ If they exist, return them or delete them.<br/><br/>
  Draw the display (map editor window, and main world display)<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">canvas</td>
  <td class="t">draw&nbsp;or&nbsp;object</td>
@@ -671,7 +731,8 @@ If they exist, return them or delete them.<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">UIResizable:draw</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L944">line 944 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
@@ -682,13 +743,18 @@ If they exist, return them or delete them.<br/><br/>
  Draw the selected sprite at the given coordinates.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">coords</td>
  <td class="t">array&nbsp;or&nbsp;or&nbsp;or&nbsp;xpos&nbsp;or&nbsp;ypos&nbsp;or&nbsp;tables</td>
  <td class="d"> Coordinates to draw the selected sprite.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1311">line 1311 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -698,7 +764,11 @@ If they exist, return them or delete them.<br/><br/>
  Add an object to the map. Currently, only "entrance_door" is supported.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">obj_type</td>
  <td class="t">str</td>
@@ -719,7 +789,8 @@ If they exist, return them or delete them.<br/><br/>
  <td class="t">str</td>
  <td class="d"> Direction of the new object ("north" or "west").</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1184">line 1184 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -730,7 +801,11 @@ If they exist, return them or delete them.<br/><br/>
 the area is completely inside the world boundaries.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">canvas</td>
  <td class="t">?</td>
@@ -756,7 +831,8 @@ the area is completely inside the world boundaries.<br/><br/>
  <td class="t">int</td>
  <td class="d"> Vertical size in tiles.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L925">line 925 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -766,7 +842,11 @@ the area is completely inside the world boundaries.<br/><br/>
  Recognize objects in the collection of thob+tallWest entries<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">minx</td>
  <td class="t">int</td>
@@ -782,7 +862,21 @@ the area is completely inside the world boundaries.<br/><br/>
  <td class="t">table&nbsp;or&nbsp;xy&nbsp;or&nbsp;to&nbsp;or&nbsp;thob&nbsp;or&nbsp;tallWest</td>
  <td class="d"> Found thobs.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">array of {type, xpos, ypos, direction}</td>
+ <td class="d">Found objects.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1279">line 1279 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -807,7 +901,11 @@ the area is completely inside the world boundaries.<br/><br/>
  Convert mouse coordinates to tile coordinates in the world.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">mx</td>
  <td class="t">int</td>
@@ -818,7 +916,21 @@ the area is completely inside the world boundaries.<br/><br/>
  <td class="t">int</td>
  <td class="d"> Mouse y screen coordinate.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">int, int</td>
+ <td class="d">Tile x,y coordinates, limited to the map.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1001">line 1001 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -828,7 +940,11 @@ the area is completely inside the world boundaries.<br/><br/>
  Mouse button got pressed.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">button</td>
  <td class="t">string</td>
@@ -844,7 +960,21 @@ the area is completely inside the world boundaries.<br/><br/>
  <td class="t">int</td>
  <td class="d"> Vertical position of the mouse at the time of the mouse button press.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">bool</td>
+ <td class="d">Whether to repaint the display.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1on_mouse_down">UIResizable:onMouseDown</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1098">line 1098 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
@@ -855,7 +985,11 @@ the area is completely inside the world boundaries.<br/><br/>
  The user moved the mouse<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">int</td>
@@ -876,7 +1010,8 @@ the area is completely inside the world boundaries.<br/><br/>
  <td class="t">int</td>
  <td class="d"> Vertical shift in position of the mouse at the screen.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1054">line 1054 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
@@ -887,7 +1022,11 @@ the area is completely inside the world boundaries.<br/><br/>
  Mouse button was released.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">button</td>
  <td class="t">string</td>
@@ -903,7 +1042,21 @@ the area is completely inside the world boundaries.<br/><br/>
  <td class="t">int</td>
  <td class="d"> Vertical position of the mouse at the time of the mouse button release.</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">bool</td>
+ <td class="d">Whether to repaint the display.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1496">line 1496 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
@@ -932,13 +1085,18 @@ the area is completely inside the world boundaries.<br/><br/>
  Callback function of the page select buttons.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">name</td>
  <td class="t">string</td>
  <td class="d"> Name of the clicked page.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L638">line 638 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -961,13 +1119,18 @@ the area is completely inside the world boundaries.<br/><br/>
  Remove an entrance door from the world.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">door</td>
  <td class="t">?</td>
  <td class="d">Entrance door to remove.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1206">line 1206 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -983,7 +1146,11 @@ the area is completely inside the world boundaries.<br/><br/>
  Set parcel number at the given coordinates.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">coords</td>
  <td class="t">array&nbsp;or&nbsp;or&nbsp;or&nbsp;xpos&nbsp;or&nbsp;ypos&nbsp;or&nbsp;tables</td>
@@ -994,7 +1161,8 @@ the area is completely inside the world boundaries.<br/><br/>
  <td class="t">int</td>
  <td class="d"> Parcel number to set.</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1484">line 1484 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>
@@ -1003,13 +1171,18 @@ the area is completely inside the world boundaries.<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">count</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L600">line 600 of Lua/dialogs/resizables/map_editor.lua</a>.
  </p>
  </div>

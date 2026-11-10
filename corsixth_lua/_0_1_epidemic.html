@@ -217,7 +217,11 @@
 logic that happens outside this class will call functions contained here.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">hospital</td>
  <td class="t">?</td>
@@ -228,7 +232,8 @@ logic that happens outside this class will call functions contained here.<br/><b
  <td class="t">?</td>
  <td class="d">Patient</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L31">line 31 of Lua/epidemic.lua</a>.
  </p>
  </div>
@@ -260,13 +265,18 @@ logic that happens outside this class will call functions contained here.<br/><b
 not vaccinated or cured<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">patient</td>
  <td class="t">?</td>
  <td class="d">Patient</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L115">line 115 of Lua/epidemic.lua</a>.
  </p>
  </div>
@@ -275,7 +285,11 @@ not vaccinated or cured<br/><br/>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">old</td>
  <td class="t">?</td>
@@ -286,7 +300,8 @@ not vaccinated or cured<br/><br/>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L762">line 762 of Lua/epidemic.lua</a>.
  </p>
  </div>
@@ -319,13 +334,31 @@ determined when the cover up was completed (@see finishCoverUp)<br/><br/>
 Used to determine the initial declaration fine as the cover up fine.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">infected_count</td>
  <td class="t">integer</td>
  <td class="d"> Number of patients still infected</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">integer</td>
+ <td class="d">fine The fine amount</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L353">line 353 of Lua/epidemic.lua</a>.
  </p>
  </div>
@@ -406,7 +439,11 @@ infected<br/><br/>
 actions or deal with call if unable to vaccinate.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">patient</td>
  <td class="t">Patient</td>
@@ -417,7 +454,8 @@ actions or deal with call if unable to vaccinate.<br/><br/>
  <td class="t">Nurse</td>
  <td class="d"> the nurse attempting to vaccinate the patient</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L604">line 604 of Lua/epidemic.lua</a>.
  </p>
  </div>
@@ -428,13 +466,18 @@ actions or deal with call if unable to vaccinate.<br/><br/>
 result of a cover up, results are stored globally to the class to be applied later.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">still_infected</td>
  <td class="t">integer</td>
  <td class="d"> the number of patients still infected</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L442">line 442 of Lua/epidemic.lua</a>.
  </p>
  </div>
@@ -458,7 +501,11 @@ result of a cover up, results are stored globally to the class to be applied lat
  Find the best tile to stand on to vaccinate a patient<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">nurse</td>
  <td class="t">Nurse</td>
@@ -469,7 +516,21 @@ result of a cover up, results are stored globally to the class to be applied lat
  <td class="t">Patient</td>
  <td class="d"> the patient to be vaccinated</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">integer?</td>
+ <td class="d">best_y The best tiles to vaccinate from.</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L632">line 632 of Lua/epidemic.lua</a>.
  </p>
  </div>
@@ -503,13 +564,18 @@ them into an infected patient too.<br/><br/>
  When the nurse is interrupted unreserve the patient and unassign the call.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">nurse</td>
  <td class="t">Nurse</td>
  <td class="d"> the nurse whose vaccination actions we are interrupting</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L687">line 687 of Lua/epidemic.lua</a>.
  </p>
  </div>
@@ -522,13 +588,18 @@ possibly become a vaccination candidate. Marking is done by clicking
 the player and can only happen during a cover up.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">patient</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L309">line 309 of Lua/epidemic.lua</a>.
  </p>
  </div>

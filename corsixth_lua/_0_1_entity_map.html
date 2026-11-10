@@ -86,13 +86,18 @@ table {humanoids ={}, objects = {}} where the tables of humanoids/objects
 may be empty or contain the entity/entities that currently exist in that tile.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">map</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L27">line 27 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -105,7 +110,11 @@ may be empty or contain the entity/entities that currently exist in that tile.<b
 @param entity (Entity) the entity to be added to the map in the (x, y) position<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -121,7 +130,8 @@ may be empty or contain the entity/entities that currently exist in that tile.<b
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L48">line 48 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -130,7 +140,11 @@ may be empty or contain the entity/entities that currently exist in that tile.<b
  <p>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">old</td>
  <td class="t">?</td>
@@ -141,7 +155,8 @@ may be empty or contain the entity/entities that currently exist in that tile.<b
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L240">line 240 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -156,7 +171,11 @@ different room
 @param y (integer) the y coordinate to obtain free tiles from<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -167,7 +186,8 @@ different room
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L220">line 220 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -178,7 +198,11 @@ different room
 adjacent to a given (x, y) coordinate - no diagonals<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -189,7 +213,21 @@ adjacent to a given (x, y) coordinate - no diagonals<br/><br/>
  <td class="t">integer</td>
  <td class="d"> the y coordinate to obtain adjacent tiles from</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">{x=integer, y=integer}[]</td>
+ <td class="d">Table containing coordinates</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L165">line 165 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -199,7 +237,11 @@ adjacent to a given (x, y) coordinate - no diagonals<br/><br/>
  Returns a map of all entities (objects and humanoids) at a specified coordinate<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -210,7 +252,21 @@ adjacent to a given (x, y) coordinate - no diagonals<br/><br/>
  <td class="t">integer</td>
  <td class="d"> the y coordinate to retrieve entities from</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Entity</td>
+ <td class="d"># Table containing the entities at the (x, y) coordinate</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L102">line 102 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -227,7 +283,11 @@ tile to tile, they will still attached to the previous one tile, on
 which they is no longer visually located.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -238,7 +298,21 @@ which they is no longer visually located.<br/><br/>
  <td class="t">integer</td>
  <td class="d"> the y coordinate to retrieve entities from</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Humanoid[]</td>
+ <td class="d"># The humanoids at the (x, y) coordinate</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L126">line 126 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -251,7 +325,11 @@ to the given (x, y) coordinate - diagonals are not considered
 @param y (integer) the y coordinate to obtain adjacent patients from<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -262,7 +340,8 @@ to the given (x, y) coordinate - diagonals are not considered
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L189">line 189 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -272,7 +351,11 @@ to the given (x, y) coordinate - diagonals are not considered
  Returns a table of all objects at a specified coordinate<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -283,7 +366,21 @@ to the given (x, y) coordinate - diagonals are not considered
  <td class="t">integer</td>
  <td class="d"> the y coordinate to retrieve entities from</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Object[]</td>
+ <td class="d"># The objects at the (x, y) coordinate</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L154">line 154 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -296,7 +393,11 @@ to the given (x, y) coordinate - diagonals are not considered
 @param y (integer) the y coordinate to obtain adjacent patients from<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -307,7 +408,8 @@ to the given (x, y) coordinate - diagonals are not considered
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L204">line 204 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -317,7 +419,11 @@ to the given (x, y) coordinate - diagonals are not considered
  Returns a table of all rats at a specified coordinate<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">integer</td>
@@ -328,7 +434,21 @@ to the given (x, y) coordinate - diagonals are not considered
  <td class="t">integer</td>
  <td class="d"> the y coordinate to retrieve entities from</td>
  </tr>
- </table></p><p>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">Rat[]</td>
+ <td class="d"># The rats at the (x, y) coordinate</td>
+ </tr>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L144">line 144 of Lua/entity_map.lua</a>.
  </p>
  </div>
@@ -343,7 +463,11 @@ the assertion that the entity is contained in the map to fail.
 @param entity (Entity) the entity to be removed from the map in the (x, y) position<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
- <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
  <tr>
  <td class="n">x</td>
  <td class="t">?</td>
@@ -359,7 +483,8 @@ the assertion that the entity is contained in the map to fail.
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
- </table></p><p>
+ </table>
+ </p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L81">line 81 of Lua/entity_map.lua</a>.
  </p>
  </div>
