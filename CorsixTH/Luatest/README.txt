@@ -3,7 +3,7 @@ UNIT TESTING
 In order to run the unit test suite you need a unit test framework called Busted.
 The easiest way to get it is through Luarocks. All information can be found at
 
-http://olivinelabs.com/busted/
+https://lunarmodules.github.io/busted/
 
 The framework uses its own syntax, which is also described at the above location.
 
