@@ -863,10 +863,7 @@ function UI:onMouseDown(code, x, y)
   local repaint = false
   local button = self.button_codes[code] or code
   if self.app.moviePlayer.playing then
-    -- (The win letter's buttons take the click: MoviePlayer:letterClick.)
-    if button == "left" and not self.app.moviePlayer:letterClick(x, y) then
-      self.app.moviePlayer:stop()
-    end
+    self.app.moviePlayer:onMouseDown(button, x, y)
     self.movie_click = true
     return true
   end
