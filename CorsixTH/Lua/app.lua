@@ -120,7 +120,7 @@ function App:init()
 
   -- Prereq 1: C++ and lua sides are compatible
   local compile_opts = TH.GetCompileOptions()
-  local api_version = corsixth.require("api_version")
+  local api_version = cth_require("api_version")
   if api_version ~= compile_opts.api_version then
     api_version = api_version or 0
     compile_opts.api_version = compile_opts.api_version or 0
@@ -143,7 +143,7 @@ function App:init()
       "For reference, the error loading the config file was: " .. conf_err)
   end
   self:fixConfig()
-  corsixth.require("filesystem")
+  cth_require("filesystem")
   local good_install_folder, error_message, charset = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   self.level_dir = self:getFullPath("Levels", true)
@@ -183,8 +183,8 @@ function App:init()
   self:initGamelogFile()
 
   -- Prereq 2: Load and initialise the graphics subsystem
-  corsixth.require("persistance")
-  corsixth.require("graphics")
+  cth_require("persistance")
+  cth_require("graphics")
   local Graphics = _G["Graphics"] ---@type Graphics
 
   local gfx_set = good_install_folder and (self.using_demo_files and "demo" or "full") or "base"
@@ -288,7 +288,7 @@ function App:init()
   end
 
   -- Load audio
-  corsixth.require("audio")
+  cth_require("audio")
   local Audio = _G["Audio"] ---@type Audio
   self.audio = Audio(self)
   if not self:verifyPlayerMusicDir() then
@@ -298,7 +298,7 @@ function App:init()
   self.audio:init()
 
   -- Load movie player
-  corsixth.require("movie_player")
+  cth_require("movie_player")
   local MoviePlayer = _G["MoviePlayer"] ---@type MoviePlayer
   self.moviePlayer = MoviePlayer(self, self.audio, self.video)
   if good_install_folder then
@@ -306,8 +306,8 @@ function App:init()
   end
 
   -- Load strings before UI and before additional Lua
-  corsixth.require("strings")
-  corsixth.require("string_extensions")
+  cth_require("strings")
+  cth_require("string_extensions")
   local Strings = _G["Strings"] ---@type Strings
   self.strings = Strings(self)
   self.strings:init()
@@ -327,7 +327,7 @@ function App:init()
   self:fixHotkeys()
 
   -- Load map before world
-  corsixth.require("map")
+  cth_require("map")
 
   -- Load additional Lua before world
   if good_install_folder then
@@ -336,10 +336,10 @@ function App:init()
     self.anims = self.gfx:loadAnimations("Data", "V")
     self.animation_manager = AnimationManager(self.anims)
     self.walls = self:loadLuaFolder("walls")
-    corsixth.require("entity")
-    corsixth.require("entities.humanoid")
-    corsixth.require("entities.object")
-    corsixth.require("entities.machine")
+    cth_require("entity")
+    cth_require("entities.humanoid")
+    cth_require("entities.object")
+    cth_require("entities.machine")
 
     local Object = _G["Object"] ---@type Object
 
@@ -356,23 +356,23 @@ function App:init()
       Object.processTypeDefinition(v)
     end
 
-    corsixth.require("room")
+    cth_require("room")
     self.rooms = self:loadLuaFolder("rooms")
 
-    corsixth.require("humanoid_action")
+    cth_require("humanoid_action")
     self.humanoid_actions = self:loadLuaFolder("humanoid_actions")
 
     local diseases = self:loadLuaFolder("diseases")
     self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
 
     -- Load world before UI
-    corsixth.require("world")
+    cth_require("world")
   end
 
   -- Load UI
-  corsixth.require("ui")
+  cth_require("ui")
   if good_install_folder then
-    corsixth.require("game_ui")
+    cth_require("game_ui")
     self.ui = UI(self, true)
   else
     self.ui = UI(self, true)
@@ -1475,7 +1475,7 @@ function App:checkInstallFolder()
     local user_dir = os.getenv("HOME") or os.getenv("USERPROFILE")
     local win_home_dir = nil;
     local config_path =
-        corsixth.require("config_finder").config_filename:match("(.*[/\\])")
+        cth_require("config_finder").config_filename:match("(.*[/\\])")
     if os.getenv("HOMEDRIVE") and os.getenv("HOMEPATH") then
       win_home_dir = os.getenv("HOMEDRIVE") .. os.getenv("HOMEPATH")
       if win_home_dir == user_dir then win_home_dir = nil; end
@@ -1697,7 +1697,7 @@ function App:loadLuaFolder(dir, no_results, append_to)
 
   for file in lfs.dir(path) do
     if file:match("%.lua$") then
-      local status, result = pcall(corsixth.require, dir .. file:sub(1, -5))
+      local status, result = pcall(cth_require, dir .. file:sub(1, -5))
       if not status then
         print("Error loading " .. dir .. file .. ":\n" .. tostring(result))
       else
@@ -2058,14 +2058,14 @@ function App:afterLoad()
 
   local Object = _G["Object"] ---@type Object
   if old < 87 then
-    local new_object = corsixth.require("objects.gates_to_hell")
+    local new_object = cth_require("objects.gates_to_hell")
     Object.processTypeDefinition(new_object)
     self.objects[new_object.id] = new_object
     self.world:newObjectType(new_object)
   end
 
   if old < 114 then
-    local rathole_type = corsixth.require("objects.rathole")
+    local rathole_type = cth_require("objects.rathole")
     Object.processTypeDefinition(rathole_type)
     self.objects[rathole_type.id] = rathole_type
     self.world:newObjectType(rathole_type)
@@ -2220,7 +2220,7 @@ function App:gamelogHeader()
   local compiled = string.format("Compiled with %s\nSDL renderer: %s\n",
       table.concat(comp_details, ", "), self.video:getRendererDetails())
   local running = string.format("%s run with api version: %s, game version: %s, savegame version: %s\n",
-      compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
+      compile_opts.jit or _VERSION, tostring(cth_require("api_version")),
       self:getReleaseString(), tostring(SAVEGAME_VERSION))
   return (compiled .. running)
 end
@@ -2228,3 +2228,5 @@ end
 -- Do not remove, for savegame compatibility < r1891
 local app_confirm_quit_stub = --[[persistable:app_confirm_quit]] function()
 end
+
+return App

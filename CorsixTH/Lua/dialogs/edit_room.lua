@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-corsixth.require("dialogs.place_objects")
+cth_require("dialogs.place_objects")
 
 local UIPlaceObjects = _G['UIPlaceObjects'] ---@type UIPlaceObjects
 

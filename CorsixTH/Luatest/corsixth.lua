@@ -23,3 +23,4 @@ SOFTWARE. --]]
 
 _G['corsixth'] = {}
 corsixth.require = require;
+cth_require = require;

@@ -903,7 +903,7 @@ end
 
 -- Load the playlist disabled tracks file
 function Audio:readPlaylistPreferences()
-  local path = corsixth.require("config_finder").config_filename:sub(1, -11) .. "disabledtracks.txt"
+  local path = cth_require("config_finder").config_filename:sub(1, -11) .. "disabledtracks.txt"
   local fi = io.open(path, "r")
   if not fi then return end -- Fail silently
   local disabled_tracks = {}
@@ -916,7 +916,7 @@ end
 
 -- Create a set of playlist filenames that are disabled and write this to file
 function Audio:updatePlaylistPreferences()
-  local path = corsixth.require("config_finder").config_filename:sub(1, -11) .. "disabledtracks.txt"
+  local path = cth_require("config_finder").config_filename:sub(1, -11) .. "disabledtracks.txt"
   local fi, err = io.open(path, "w")
   if err then return end -- Fail silently
   for _, track in pairs(self.background_playlist) do
