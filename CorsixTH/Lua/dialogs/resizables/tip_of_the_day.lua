@@ -28,9 +28,9 @@ class "UITipOfTheDay" (UIResizable)
 local UITipOfTheDay = _G["UITipOfTheDay"] ---@type UITipOfTheDay
 
 local col_bg = {
-  red = math.cosmetic_random(20, 200),
-  green = math.cosmetic_random(20, 200),
-  blue = math.cosmetic_random(20, 200),
+  red = math.random(20, 200),
+  green = math.random(20, 200),
+  blue = math.random(20, 200),
 }
 
 function UITipOfTheDay:UITipOfTheDay(ui)
@@ -55,7 +55,7 @@ function UITipOfTheDay:UITipOfTheDay(ui)
     self:close()
     return
   end
-  self.tip_num = math.cosmetic_random(1, self.num_tips)
+  self.tip_num = math.random(1, self.num_tips)
 
   -- Previous button's y, next button's x, button width
   local function add_nav_buttons(y1, x2, btn_width)

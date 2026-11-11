@@ -568,7 +568,7 @@ function Audio:playRandomBackgroundTrack()
   if not enabled[1] then
     return
   end
-  local index = enabled[math.cosmetic_random(1, #enabled)]
+  local index = enabled[math.random(1, #enabled)]
   self:playBackgroundTrack(index)
 end
 
