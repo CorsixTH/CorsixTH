@@ -295,6 +295,37 @@ end
 --!param old Version of the loaded game.
 --!param new Version of the code being executed.
 function Hospital:afterLoad(old, new)
+  if old < 271 then
+    -- Reputation became a rating calculated from accumulated credit and weight.
+    -- Rebuild each accounting from the rating it was showing, at the scale its
+    -- own history implies.
+    --
+    -- The scale matters as much as the ratio. Every registered patient adds one
+    -- to the weight, so the number of outcomes already on record is what the
+    -- weight would have been had the accounting existed from the start. Without
+    -- it a long-established hospital is rebuilt as a brand new one, and a new
+    -- hospital's rating moves 25 points per patient, so a save at 1000 slides
+    -- away on the first few days of play for no reason the player caused.
+    local outcomes = (self.num_cured or 0) + (self.not_cured or 0)
+      + (self.num_deaths or 0)
+    local credit, weight = ReputationAccount.accountingForRating(self.reputation, outcomes)
+    self.reputation_account = ReputationAccount(credit, weight)
+
+    for _, casebook in pairs(self.disease_casebook) do
+      -- A disease counts its own outcomes, and a pseudo disease has none.
+      if casebook.reputation then
+        local seen = (casebook.recoveries or 0) + (casebook.turned_away or 0)
+        local disease_credit, disease_weight =
+            ReputationAccount.accountingForRating(casebook.reputation, seen)
+        casebook.reputation_account = ReputationAccount(disease_credit, disease_weight)
+      else
+        casebook.reputation_account = nil
+      end
+    end
+    self.reputation = nil
+    self:updateReputation()
+  end
+
   if old < 34 then
     -- New variable
     self.acc_overdraft = 0
