@@ -177,6 +177,7 @@ function Patient:setDiagnosed()
   self.diagnosed = true
   self.treatment_history[#self.treatment_history + 1] = self.disease.name
 
+  self.hospital:recordDiagnosis(self)
   local UIPatient = _G["UIPatient"] ---@type UIPatient
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
@@ -281,7 +282,7 @@ function Patient:getPriceDistortion(casebook)
   local effectiveness_weight = 0.3
 
   -- map the different variables to [0-1] and merge them
-  local reputation = casebook.reputation or self.hospital.reputation
+  local reputation = self.hospital:getDiseaseReputation(casebook.disease.id)
   local effectiveness = casebook.cure_effectiveness
 
   local weighted_happiness = happiness_weight * self:getAttribute("happiness")
@@ -561,6 +562,13 @@ function Patient:goHome(reason, disease_id)
 
   else
     TheApp.world:gameLog("Error: unknown reason " .. reason .. "!")
+  end
+
+  -- Leaving is the other point at which a patient is registered, for one that
+  -- went home without ever being diagnosed. A patient who refuses to pay is not
+  -- registered: nothing was taken on, so nothing is owed.
+  if reason ~= "over_priced" then
+    hosp:registerPatient(self)
   end
 
   hosp:updatePercentages()

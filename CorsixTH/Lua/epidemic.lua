@@ -19,8 +19,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 cth_require("announcer")
+cth_require("reputation")
 
 local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPriority]]
+
+---@type ReputationAccount
+local ReputationAccount = _G["ReputationAccount"]
 
 class "Epidemic"
 
@@ -51,12 +55,15 @@ function Epidemic:Epidemic(hospital, contagious_patient)
 
   -- Various values for the different outcomes - used when result fax is sent
   self.declare_fine = 0
-  self.reputation_hit = 0
   self.coverup_fine = 0
   self.compensation = 0
 
   -- Is the epidemic bad enough to deserve the whole hospital to be evacuated
   self.will_be_evacuated = false
+
+  -- Did the inspector's verdict land on one of the two severities the original
+  -- penalises, rather than on a minor failure or being cleared?
+  self.serious_coverup_failure = false
 
   -- Fax sent when the result of the cover up is revealed to the player
   self.cover_up_result_fax = {}
@@ -370,16 +377,12 @@ local function getBaseReputationFromFine(fine_amount)
   return math.round(fine_amount / 100)
 end
 
---- When the player chooses to declare the epidemic instead of trying
---- to cover up it from the initial faxes - ends the epidemic immediately
---- after applying fine.
 function Epidemic:resolveDeclaration()
   self:clearAllInfectedPatients()
 
-  --No fax for declaration just apply fines and rep hit
+  --No fax for declaration just apply fine and rep hit
   self.hospital:spendMoney(self.declare_fine, _S.transactions.epidemy_fine)
-  local reputation_hit = getBaseReputationFromFine(self.declare_fine)
-  self.hospital.reputation = self.hospital.reputation - reputation_hit
+  self.hospital:reputationEvent(ReputationAccount.epidemic_gave_up)
   self.hospital.epidemic = nil
 end
 
@@ -473,6 +476,9 @@ function Epidemic:determineFaxAndFines(still_infected)
       choices = {close_option}
     }
   elseif still_infected >= self.reputation_loss_minimum and still_infected < self.evacuation_minimum then
+    -- A serious failure. The original penalises this outcome and the next one,
+    -- but not a minor failure, so the flag is what decides.
+    self.serious_coverup_failure = true
     self.cover_up_result_fax = {
       {text = fail_text_1},
       {text = fail_text_2},
@@ -480,6 +486,7 @@ function Epidemic:determineFaxAndFines(still_infected)
       choices = {close_option}
     }
   else
+    self.serious_coverup_failure = true
     self.will_be_evacuated = true
     self.cover_up_result_fax = {
       {text = fail_text_1},
@@ -496,14 +503,14 @@ function Epidemic:applyOutcome()
   -- If there is no compensation to apply the epidemic has been failed
   if self.compensation == 0 then
     if self.will_be_evacuated then
-      self.reputation_hit = math.round(self.hospital.reputation * (1/3))
       self:evacuateHospital()
-    else
-      self.reputation_hit = getBaseReputationFromFine(self.coverup_fine)
     end
     -- Apply fine and reputation hit
     self.hospital:spendMoney(self.coverup_fine,_S.transactions.epidemy_coverup_fine)
-    self.hospital.reputation = self.hospital.reputation - self.reputation_hit
+    self.hospital:reputationEvent(ReputationAccount.epidemic_gave_up)
+    if self.serious_coverup_failure then
+      self.hospital:reputationEvent(ReputationAccount.epidemic_inspection_failed)
+    end
   else
     self.hospital:receiveMoney(self.compensation, _S.transactions.compensation)
   end

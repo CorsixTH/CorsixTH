@@ -18,6 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("reputation")
+
+---@type ReputationAccount
+local ReputationAccount = _G["ReputationAccount"]
+
 class "Room"
 
 ---@class Room
@@ -957,7 +962,7 @@ function Room:crashRoom()
 
   local value_change = self.hospital.research.research_progress[self.room_info].build_cost
   self.hospital:changeValue(value_change * -1)
-  self.hospital:changeReputation("room_crash")
+  self.hospital:reputationEvent(ReputationAccount.event_machine_explosion)
   self.crashed = true
   self:deactivate()
 end

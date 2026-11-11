@@ -236,7 +236,7 @@ function UICasebook:draw(canvas, x, y)
       titles:draw(canvas, _S.casebook.research, x + 245 * s, y + 398 * s)
     end
   end
-  local rep = book[disease].reputation or self.hospital.reputation
+  local rep = self.hospital:getDiseaseReputation(disease)
   if rep < self.hospital.reputation_min then
     rep = self.hospital.reputation_min
   elseif rep > self.hospital.reputation_max then

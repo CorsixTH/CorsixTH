@@ -18,6 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("reputation")
+
+---@type ReputationAccount
+local ReputationAccount = _G["ReputationAccount"]
+
 -- The "Winning and Losing Conditions" section of level files uses Criteria
 --   numbers from the order of this table. Any Criteria numbers higher than
 --   the size of this table will be silently ignored.
@@ -65,7 +70,8 @@ function EndConditions:EndConditions(level_config, level_number, freebuild)
     town = level_config.town
   end
   start.balance = town.StartCash
-  start.reputation = town.StartRep
+  -- Every hospital opens on the neutral rating, whatever the level.
+  start.reputation = ReputationAccount.rating_neutral
 
   self:_loadGoals(level_config.win_criteria, self.win_goals, start, true)
   self:_loadGoals(level_config.lose_criteria, self.lose_goals, start)
