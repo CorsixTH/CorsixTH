@@ -24,11 +24,14 @@ require("corsixth")
 require("entity")
 require("entities.humanoid")
 require("entities.humanoids.vip")
+require("reputation")
 
 local function getVip()
   local animation = {setHitTestResult = function() end}
   return Vip(animation)
 end
+
+local ReputationAccount = _G["ReputationAccount"]
 
 local function create_room(name, args)
   args = args or {}
@@ -201,6 +204,22 @@ describe("Vip", function()
   end)
 
 
+  it("maps the appraisal onto the three reputation bands", function()
+    -- The bands are 1-4 best, 5-9 middle and 10-15 poor.
+    local bands = {
+      [1] = ReputationAccount.event_vip_best,
+      [4] = ReputationAccount.event_vip_best,
+      [5] = ReputationAccount.event_vip_middle,
+      [9] = ReputationAccount.event_vip_middle,
+      [10] = ReputationAccount.event_vip_poor,
+      [15] = ReputationAccount.event_vip_poor,
+    }
+    for rating, expected in pairs(bands) do
+      vip.vip_rating = rating
+      assert.are.equal(expected, vip:getReputationEvent())
+    end
+  end)
+
   it("Calculate simple VIP rating", function()
     -- Create a new world + hospital for each case to test variation in VIP rating
     vip.world = create_world({num_rooms = 10})
@@ -233,7 +252,7 @@ describe("Vip", function()
     -- Check result
     assert.are.equal(15, vip.vip_rating)
     assert.are.equal(0,  vip.cash_reward)
-    assert.are.equal(-25, vip.rep_reward)
+    assert.are.equal(ReputationAccount.event_vip_poor, vip:getReputationEvent())
     assert.are.equal(15, vip.vip_message)
     assert.are.equal(base_vips + 1, vip.hospital.num_vips_ty)
   end)

@@ -251,7 +251,6 @@ function Staff:fire()
   self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
   self.fired = true
   self.going_home = true
-  self.hospital:changeReputation("kicked")
   self:despawn()
   self.hover_cursor = nil
   self.hospital:announceStaffLeave(self)

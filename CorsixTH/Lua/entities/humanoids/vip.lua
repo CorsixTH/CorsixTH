@@ -54,6 +54,10 @@ If rating exceeds values, it will be capped as necessary
 
 --[[ initialisation --]]
 cth_require("utility")
+cth_require("reputation")
+
+---@type ReputationAccount
+local ReputationAccount = _G["ReputationAccount"]
 
 local Humanoid = _G['Humanoid'] ---@type Humanoid
 
@@ -74,7 +78,6 @@ function Vip:Vip(...)
   self.vip_rating = 12 - math.random(0,5)
 
   self.cash_reward = 0
-  self.rep_reward = 0
   self.vip_message = 0
   self.enter_deaths = 0
   self.enter_visitors = 0
@@ -225,20 +228,37 @@ function Vip:evaluateRoom()
   self:getNextRoom()
 end
 
+--! The reputation event that follows from the appraisal.
+--! The appraisal falls in one of three bands, and the band is what the
+--! reputation event is: +4%, +2% or -4% of the weight. Which band it is comes
+--! from the appraisal alone, so a cash award and a good reputation event are not
+--! the same thing.
+--!return (integer) One of the ReputationAccount.event_vip_* values
+function Vip:getReputationEvent()
+  if self.vip_rating <= 4 then
+    return ReputationAccount.event_vip_best
+  elseif self.vip_rating <= 9 then
+    return ReputationAccount.event_vip_middle
+  end
+  return ReputationAccount.event_vip_poor
+end
+
 --[[--VIP has left--]]
 -- Called when the vip is out of the hospital grounds
 function Vip:onDestroy()
+  local hosp = self.last_hospital
   if self.world.free_build_mode then
-    self.last_hospital:unconditionalChangeReputation(20)
-  elseif self.vip_rating <= 7 then
-    self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
-    self.last_hospital:unconditionalChangeReputation(self.rep_reward)
-    self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty + 1
+    hosp:reputationEvent(ReputationAccount.event_vip_best)
   else
-    self.last_hospital:unconditionalChangeReputation(self.rep_reward)
+    hosp:reputationEvent(self:getReputationEvent())
+
+    if self.vip_rating <= 7 then
+      hosp:receiveMoney(self.cash_reward, _S.transactions.vip_award)
+      hosp.pleased_vips_ty = hosp.pleased_vips_ty + 1
+    end
   end
 
-  self.last_hospital:makeVipEndFax(self.vip_rating, self.name, self.cash_reward, self.vip_message)
+  hosp:makeVipEndFax(self.vip_rating, self.name, self.cash_reward, self.vip_message)
   self.world:nextVip()
 
   return Humanoid.onDestroy(self)
@@ -430,29 +450,10 @@ function Vip:setVIPRating()
     [7] = 200,
     [8] = 0,
   }
-  -- Documented reps
-  local rep_change = {
-    [1] = 50,
-    [2] = 45,
-    [3] = 40,
-    [4] = 35,
-    [5] = 30,
-    [6] = 25,
-    [7] = 20,
-    [8] = 15,
-    [9] = 10,
-    [10] = 5,
-    [11] = -5,
-    [12] = -10,
-    [13] = -15,
-    [14] = -20,
-    [15] = -25,
-  }
   -- Set rewards
   self.vip_rating = self.vip_rating > 15 and 15 or self.vip_rating
   self.vip_rating = self.vip_rating < 1 and 1 or self.vip_rating
   self.cash_reward = rewards[self.vip_rating] or 0
-  self.rep_reward = rep_change[self.vip_rating]
   self.vip_message = self.vip_rating
   self.hospital.num_vips_ty = self.hospital.num_vips_ty + 1
 end
@@ -494,7 +495,6 @@ function Vip:afterLoad(old, new)
       --award max from old code if VIP leaving
       self.vip_rating = 2
       self.cash_reward = 2000
-      self.rep_reward = 45
       self.vip_message = 2
     end
     for i, action in ipairs(self.action_queue) do

@@ -18,6 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("reputation")
+
+---@type ReputationAccount
+local ReputationAccount = _G["ReputationAccount"]
+
 local Room = _G['Room'] ---@type Room
 
 local room = {}
@@ -180,7 +185,7 @@ function ResearchRoom:commandEnteringPatient(patient)
       autopsy_discovered = math.random(1,3) == 1
     end
     if autopsy_discovered then
-      hosp:changeReputation("autopsy_discovered")
+      hosp:reputationEvent(ReputationAccount.event_autopsy_discovered)
       hosp:giveAdvice({_A.research.autopsy_discovered_rep_loss})
     end
     if patient.hospital then
