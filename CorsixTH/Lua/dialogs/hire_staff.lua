@@ -154,7 +154,7 @@ function UIHireStaff:cannotAfford()
     (_A.warnings.cash_low_consider_loan),
   }
   if msg then
-    self.world.ui.adviser:say(msg[math.random(1, #msg)])
+    self.world.ui.adviser:say(msg[math.cosmetic_random(1, #msg)])
   end
 end
 
