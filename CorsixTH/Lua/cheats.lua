@@ -23,14 +23,14 @@ cth_require("announcer")
 
 local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPriority]]
 
---! A holder for all cheats in the game
+--- A holder for all cheats in the game
 class "Cheats"
 
 ---@class Cheats
 ---@operator call: Cheats
 local Cheats = _G["Cheats"] ---@type Cheats
 
--- Cheats System
+--- Cheats System
 function Cheats:Cheats(hospital)
   self.hospital = hospital
   -- Cheats to appear specifically in the cheats window
@@ -61,18 +61,18 @@ function Cheats:Cheats(hospital)
   --[[ Toggle-based cheats are found at bottom of file]]
 end
 
---! Performs a cheat from the cheat_list (menu cheats)
---!param num (integer) The cheat from the cheat_list called
---!return true if cheat was successful, false otherwise
---!return message (optional string) The text message of the cheat.
+--- Performs a cheat from the cheat_list (menu cheats)
+--- @param num (integer) The cheat from the cheat_list called
+--- @return (boolean) # true if cheat was successful, false otherwise
+--- @return (string?) # message The text message of the cheat.
 function Cheats:performCheat(num)
   local cheat_success, message = self.cheat_list[num].func(self)
   cheat_success = cheat_success ~= false
   return cheat_success and self.cheat_list[num].name ~= "lose_level", message
 end
 
---! Updates the cheated status of the player, with a matching announcement
---!param speech (string) Optional text for the adviser to say
+--- Updates the cheated status of the player, with a matching announcement
+--- @param speech (string) Optional text for the adviser to say
 function Cheats:announceCheat(speech)
   local announcements = self.hospital.world.cheat_announcements
   local ui = self.hospital.world.ui
@@ -110,10 +110,10 @@ end
 
 function Cheats:cheatToggleInfected() end -- Stub of the old name of the function below
 
---[[ Before an epidemic has been revealed, show/hide the infected mood icons
-to easily distinguish the infected patients. This will show/hide icons
-for ALL future epidemics you cannot distinguish between epidemics
-by disease ]]--
+--- Before an epidemic has been revealed, show/hide the infected mood icons
+--- to easily distinguish the infected patients. This will show/hide icons
+--- for ALL future epidemics you cannot distinguish between epidemics
+--- by disease
 function Cheats:cheatShowInfected()
   local hosp = self.hospital
   if hosp.future_epidemics_pool and #hosp.future_epidemics_pool > 0 then
@@ -130,12 +130,12 @@ function Cheats:cheatShowInfected()
   end
 end
 
---[[ Creates a new contagious patient in the hospital - potentially an epidemic]]
+--- Creates a new contagious patient in the hospital - potentially an epidemic
 function Cheats:cheatEpidemic()
   return self.hospital:spawnContagiousPatient()
 end
 
---! Toggles the possibility of epidemics. Cancel any ongoing or preparing epidemics.
+--- Toggles the possibility of epidemics. Cancel any ongoing or preparing epidemics.
 function Cheats:cheatToggleEpidemic()
   local hosp = self.hospital
   local msg
@@ -153,7 +153,7 @@ function Cheats:cheatEarthquake()
   return self.hospital.world.earthquake:createEarthquake()
 end
 
---! Toggles the possibility of earthquakes
+--- Toggles the possibility of earthquakes
 function Cheats:cheatToggleEarthquake()
   local world = self.hospital.world
   local msg
@@ -223,7 +223,7 @@ function Cheats:cheatMaxReputation()
   hosp:unconditionalChangeReputation(hosp.reputation_max)
 end
 
---! Instantly repairs all of the player's machines (regardless of condition, without decreasing strength)
+--- Instantly repairs all of the player's machines (regardless of condition, without decreasing strength)
 function Cheats:cheatRepairAllMachines()
   local world = self.hospital.world
   local machines = world:getPlayerMachines()
@@ -233,7 +233,7 @@ function Cheats:cheatRepairAllMachines()
   end
 end
 
---! Toggles machine invulnerability (no wear or explosions)
+--- Toggles machine invulnerability (no wear or explosions)
 function Cheats:cheatToggleInvulnerableMachines()
   local msg
 
@@ -247,21 +247,21 @@ function Cheats:cheatToggleInvulnerableMachines()
   return true, msg
 end
 
---[[Begin toggle-based cheat functions]]
+--[[ Begin toggle-based cheat functions ]]
 
---! Enable Roujin's challenge (spawn rate cheat)
+--- Enable Roujin's challenge (spawn rate cheat)
 function Cheats:roujinOn()
   self.active_cheats["spawn_rate_cheat"] = true
 end
 
---! Disable Roujin's challenge (spawn rate cheat)
+--- Disable Roujin's challenge (spawn rate cheat)
 function Cheats:roujinOff()
   -- Clear the current month's spawns to give the player a break
   self.hospital.world.spawn_dates = {}
   self.active_cheats["spawn_rate_cheat"] = nil
 end
 
---! Enables no rest cheat (staff do not tire, fast movement)
+--- Enables no rest cheat (staff do not tire, fast movement)
 function Cheats:noRestOn()
   for _, staff in ipairs(self.hospital.staff) do
     if staff:getAttribute("fatigue") then
@@ -271,39 +271,38 @@ function Cheats:noRestOn()
   self.active_cheats["no_rest_cheat"] = true
 end
 
---! Disable no rest cheat (re-enable staff fatigue, and normal movement)
+--- Disable no rest cheat (re-enable staff fatigue, and normal movement)
 function Cheats:noRestOff()
   self.active_cheats["no_rest_cheat"] = nil
 end
 
---! Enable queue jump cheat (for nearly dead patients)
+--- Enable queue jump cheat (for nearly dead patients)
 function Cheats:queueJumpOn()
   self.active_cheats.queuejump = true
 end
 
---! Disable queue jump cheat (so that nearly dead patients queue regularly)
+--- Disable queue jump cheat (so that nearly dead patients queue regularly)
 function Cheats:queueJumpOff()
   self.active_cheats.queuejump = false
 end
 
---! Enable super doctors cheat (all doctors for hire have maximum skills)
+--- Enable super doctors cheat (all doctors for hire have maximum skills)
 function Cheats:superDoctorOn()
   self.active_cheats.super_doctor = true
   self.hospital.world:makeAvailableStaff(self.hospital.world.game_date:monthOfGame())
 end
 
---! Disable super doctors cheat (immediately return to the normal doctors available in the for hire dialog)
+--- Disable super doctors cheat (immediately return to the normal doctors available in the for hire dialog)
 function Cheats:superDoctorOff()
   self.active_cheats.super_doctor = false
   self.hospital.world:makeAvailableStaff(self.hospital.world.game_date:monthOfGame())
 end
 
---[[End toggle-based cheat functions]]
+--[[ End toggle-based cheat functions ]]
 
---[[ The toggle_cheats list (code operated cheats)
-These cheats do not appear in the Cheat UI menu, and are only accessed from fax code inputs currently.
-They contain adviser strings, so cannot be persisted.
-]]--
+--- The toggle_cheats list (code operated cheats)
+--- These cheats do not appear in the Cheat UI menu, and are only accessed from fax code inputs currently.
+--- They contain adviser strings, so cannot be persisted.
 local toggle_cheats = {
     ["spawn_rate_cheat"] = {
     enable = Cheats.roujinOn,
@@ -339,16 +338,16 @@ local toggle_cheats = {
   },
 }
 
---! Checks if a toggle cheat is activated
---!param name (string) Name of cheat to check
---!return Returns true if active
+--- Checks if a toggle cheat is activated
+--- @param name (string) Name of cheat to check
+--- @return (boolean) # Returns true if active
 function Cheats:isCheatActive(name)
   return self.active_cheats[name]
 end
 
---! Checks the obfuscated cheat code for a match and executes it
---!param num (number) The obfuscated cheat value
---!return Returns name of the cheat executed from the lookup table, or nil
+--- Checks the obfuscated cheat code for a match and executes it
+--- @param num (number) The obfuscated cheat value
+--- @return (string?) # Returns name of the cheat executed from the lookup table, or nil
 function Cheats:processCheatCode(num)
   local cheat_list = toggle_cheats
   for name, data in pairs(cheat_list) do
@@ -361,12 +360,13 @@ function Cheats:processCheatCode(num)
 end
 
 
---! Performs a cheat from fax_cheats
---!param name (string) The cheat called from the list
+--- Performs a cheat from fax_cheats
+--- @param name (string) The cheat called from the list
 function Cheats:toggleCheat(name)
   local ui = self.hospital.world.ui
   local cheat_list = toggle_cheats
   local cheat = cheat_list[name]
+  local UICheats = _G["UICheats"] ---@type UICheats
   local cheatWindow = ui:getWindow(UICheats)
   local speech
   if not self:isCheatActive(name) then

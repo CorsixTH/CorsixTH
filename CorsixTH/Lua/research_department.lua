@@ -28,7 +28,7 @@ get improved. On the other hand it appears that the research is
 stored for future use anyway.
 --]]
 
---! Manages all things related to research for one hospital.
+--- Manages all things related to research for one hospital.
 class "ResearchDepartment"
 
 ---@class ResearchDepartment
@@ -46,7 +46,7 @@ function ResearchDepartment:ResearchDepartment(hospital)
   self:initResearch()
 end
 
--- Initialize research for the level.
+--- Initialize research for the level.
 function ResearchDepartment:initResearch()
   local hospital = self.hospital
   local cfg_objects = self.world.map.level_config.objects
@@ -141,7 +141,7 @@ function ResearchDepartment:checkAutomaticDiscovery(month)
   end
 end
 
---! Find a disease (if it exists) on which research can be concentrated and concentrate on it.
+--- Find a disease (if it exists) on which research can be concentrated and concentrate on it.
 function ResearchDepartment:setResearchConcentration()
   local casebook = self.hospital.disease_casebook
   if self.research_policy.specialisation.current ~= self.drain then
@@ -155,8 +155,8 @@ function ResearchDepartment:setResearchConcentration()
   end
 end
 
---! Function that redistributes research points from a finished category to
---! all the other categories.
+--- Function that redistributes research points from a finished category to
+--- all the other categories.
 function ResearchDepartment:redistributeResearchPoints()
   local sum, all_finished = 0, true
   local policy = {"cure", "diagnosis", "drugs", "improvements"}
@@ -216,10 +216,8 @@ function ResearchDepartment:redistributeResearchPoints()
   end
 end
 
---[[! Finds out what to research next in the given research area.
-!param category The research area. One of cure, diagnosis, drugs,
-improvements and specialisation
---]]
+--- Finds out what to research next in the given research area.
+--- @param category ("cure" | "diagnosis" | "drugs" | "improvements" | "specialisation") The research area.
 function ResearchDepartment:nextResearch(category)
   local current = self.research_policy[category].current
   -- First make sure that the current research target actually has been discovered.
@@ -282,6 +280,7 @@ function ResearchDepartment:nextResearch(category)
       :format(_S.research.categories[category])})
 
     -- Notify any research window
+    local UIResearch = _G["UIResearch"] ---@type UIResearch
     local window = self.world.ui:getWindow(UIResearch)
     if window then
       window:updateCategories()
@@ -289,12 +288,11 @@ function ResearchDepartment:nextResearch(category)
   end
 end
 
---[[ Returns how many points are required to discover something
-about the given thing.
-It may be an object or a drug, being improved or researched.
-If this thing cannot be processed nil is returned.
-!param thing The thing to check, either a drug or an object.
---]]
+--- Returns how many points are required to discover something
+--- about the given thing.
+--- It may be an object or a drug, being improved or researched.
+--- If this thing cannot be processed nil is returned.
+--- @param thing any The thing to check, either a drug or an object.
 function ResearchDepartment:getResearchRequired(thing)
   local required
   local level_config = self.world.map.level_config
@@ -328,8 +326,8 @@ function ResearchDepartment:getResearchRequired(thing)
   return required
 end
 
---! This function will give research points to the treatment of the illness of an autopsied patient.
---!param target_room_id (string) The name of the room
+--- This function will give research points to the treatment of the illness of an autopsied patient.
+--- @param target_room_id (string) The name of the room
 function ResearchDepartment:addResearchPointsForAutopsy(target_room_id)
   local level_config = self.world.map.level_config
   local room_discovery = self.hospital.room_discoveries[target_room_id]
@@ -355,9 +353,9 @@ function ResearchDepartment:addResearchPointsForAutopsy(target_room_id)
   end
 end
 
---! Add some more research points to research progress.
---! It will be divided according to the research policy into the different research areas.
---!param points (integer) The total amount of points before applying any level specific divisors to add to research.
+--- Add some more research points to research progress.
+--- It will be divided according to the research policy into the different research areas.
+--- @param points (integer) The total amount of points before applying any level specific divisors to add to research.
 function ResearchDepartment:addResearchPoints(points)
   local level_config = self.world.map.level_config
   -- Divide the points into the different areas. If total is not at 100 %
@@ -401,9 +399,8 @@ function ResearchDepartment:addResearchPoints(points)
   end
 end
 
---[[ Called when it is time to improve a drug's strength or cost.
-!param drug The drug to improve, table taken from world.available_diseases
---]]
+--- Called when it is time to improve a drug's strength or cost.
+--- @param drug any The drug to improve, table taken from world.available_diseases
 function ResearchDepartment:improveDrug(drug)
   local disease = self.hospital.disease_casebook[drug.disease.id]
   local level_config = self.world.map.level_config
@@ -429,20 +426,20 @@ function ResearchDepartment:improveDrug(drug)
     return improvement
   end
 
-  -- Decrease the cost of the drug
-  -- Set to 10%, provides good balance vs number of steps on the effectiveness ladder
+  --- Decrease the cost of the drug
+  --- Set to 10%, provides good balance vs number of steps on the effectiveness ladder
   local function decreaseDrugCost()
     local new_cost = math.max(min_drug_cost, math.floor(disease.drug_cost * 0.9))
     disease.drug_cost = new_cost
   end
 
-  -- Improve a drug's effectiveness
+  --- Improve a drug's effectiveness
   local function improveEffectiveness()
     local improve_rate = level_config.gbv.DrugImproveRate
     disease.cure_effectiveness = math.min(100, disease.cure_effectiveness + improve_rate)
   end
 
-  -- Work out how to proceed with the next drug research
+  --- Work out how to proceed with the next drug research
   local function decideNextResearch()
     -- Check if the player's research specialisation is still valid.
     -- Note, once a drug is 100% effective, it can no longer be specialised.
@@ -477,9 +474,8 @@ function ResearchDepartment:improveDrug(drug)
   end
 end
 
---[[ Called when it is time to improve a machine's strength or cost.
-!param machine The machine to improve, table taken from TheApp.objects
---]]
+--- Called when it is time to improve a machine's strength or cost.
+--- @param machine (Machine) The machine to improve, table taken from TheApp.objects
 function ResearchDepartment:improveMachine(machine)
   local research_info = self.research_progress[machine]
   -- Improving strength and cost should alternate
@@ -527,10 +523,9 @@ function ResearchDepartment:improveMachine(machine)
   self.hospital:giveAdvice({_A.research.machine_improved:format(machine.name)})
 end
 
---[[ Updates the dynamic info for each matching machine found in the player's
-hospital rooms.
-!param machine_id The machine ID for determining matches.
---]]
+--- Updates the dynamic info for each matching machine found in the player's
+---hospital rooms.
+--- @param machine_id # The machine ID for determining matches.
 function ResearchDepartment:updateMachinesDynamicInfo(machine_id)
   for _, room in pairs(self.world.rooms) do
     if room.hospital == self.hospital then
@@ -544,12 +539,10 @@ function ResearchDepartment:updateMachinesDynamicInfo(machine_id)
   end
 end
 
---[[ Called when it is time to discover an object. This may currently only
-happen from research.
-!param object The object to discover, a table from TheApp.objects
-!param automatic If true the discovery was not made by
-the player's research department.
---]]
+--- Called when it is time to discover an object. This may currently only
+--- happen from research.
+--- @param object (Object) The object to discover, a table from `TheApp.objects`
+--- @param automatic (boolean) If true the discovery was not made by the player's research department.
 function ResearchDepartment:discoverObject(object, automatic)
   self.research_progress[object].discovered = true
 
@@ -598,9 +591,8 @@ function ResearchDepartment:discoverObject(object, automatic)
   self:nextResearch(object.research_category)
 end
 
---[[ Called when it is time to discover a disease (i.e. after diagnosis in the GP)
-!param disease The disease to discover, a table from world.available_diseases
---]]
+--- Called when it is time to discover a disease (i.e. after diagnosis in the GP)
+--- @param disease # The disease to discover, a table from world.available_diseases
 function ResearchDepartment:discoverDisease(disease)
   self.hospital.disease_casebook[disease.id].discovered = true
   local index = #self.hospital.discovered_diseases + 1
@@ -619,10 +611,9 @@ function ResearchDepartment:discoverDisease(disease)
   self:setResearchConcentration()
 end
 
---[[! It also costs to research.
-TODO: This is now just $3 per day and doctor (if at 100%),
-what should it be?
---]]
+--- It also costs to research.
+--- TODO: This is now just $3 per day and doctor (if at 100%),
+--- what should it be?
 function ResearchDepartment:researchCost()
   local acc_cost = self.hospital.acc_research_cost
   local fraction = 0
@@ -647,15 +638,14 @@ function ResearchDepartment:researchCost()
   self.hospital.acc_research_cost = acc_cost
 end
 
---[[ Concentrates research on a given disease.
-Concentrating on a machine will improve it if it's been discovered
-and help researching it otherwise.
-Concentrating on a drug will improve the drug provided the pharmacy
-is discovered. Otherwise it will research the cabinet.
-TODO: Make it possible to concentrate on psychological diseases
-if the psychiatry hasn't been discovered.
-!param disease_id The id of the disease to focus on.
---]]
+--- Concentrates research on a given disease.
+--- Concentrating on a machine will improve it if it's been discovered
+--- and help researching it otherwise.
+--- Concentrating on a drug will improve the drug provided the pharmacy
+--- is discovered. Otherwise it will research the cabinet.
+--- TODO: Make it possible to concentrate on psychological diseases
+--- if the psychiatry hasn't been discovered.
+--- @param disease_id any The id of the disease to focus on.
 function ResearchDepartment:concentrateResearch(disease_id)
   local book_entry = self.hospital.disease_casebook[disease_id]
   -- First set flags so that the casebook shows the right thing.
