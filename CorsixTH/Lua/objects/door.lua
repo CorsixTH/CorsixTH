@@ -32,7 +32,7 @@ object.idle_animations = {
   west = 106,
 }
 
-corsixth.require("queue")
+cth_require("queue")
 
 class "Door" (Object)
 

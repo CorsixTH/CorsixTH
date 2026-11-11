@@ -53,7 +53,7 @@ If rating exceeds values, it will be capped as necessary
 --]]
 
 --[[ initialisation --]]
-corsixth.require("utility")
+cth_require("utility")
 
 local Humanoid = _G['Humanoid'] ---@type Humanoid
 

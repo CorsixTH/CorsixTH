@@ -368,3 +368,5 @@ function Date:_adjustOverflow()
   self:_adjustDayOverflow()
   self:_adjustHoursOverflow()
 end
+
+return Date

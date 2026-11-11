@@ -22,7 +22,7 @@ self = false
 
 globals = { -- Globals
             "_A", "_S",
-            "corsixth",
+            "corsixth", "cth_require",
             "class", "Colours", "compare_tables", "DrawFlags",
             "DrawingLayers", "destrict", "flag_clear", "flag_isset",
             "flag_set", "flag_toggle", "lfs", "list_to_set",

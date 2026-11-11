@@ -68,7 +68,7 @@ object.orientations = {
   },
 }
 
-corsixth.require("queue")
+cth_require("queue")
 
 class "ReceptionDesk" (Object)
 

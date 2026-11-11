@@ -532,7 +532,7 @@ end
 
 function UIHotkeyAssign:buttonDefaults()
   -- Copy the default hotkeys into the app's current hotkey table.
-  self.app.hotkeys = corsixth.require("config_finder").hotkeys_defaults()
+  self.app.hotkeys = cth_require("config_finder").hotkeys_defaults()
 
   -- Reload all hotkey boxes' text.
   for _, v in pairs(self.key_windows) do

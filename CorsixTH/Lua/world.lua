@@ -20,28 +20,28 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
-corsixth.require("entities.humanoids.patient")
-corsixth.require("entities.humanoids.staff.doctor")
-corsixth.require("entities.humanoids.staff.nurse")
-corsixth.require("entities.humanoids.staff.handyman")
-corsixth.require("entities.humanoids.staff.receptionist")
-corsixth.require("entities.humanoids.vip")
-corsixth.require("entities.humanoids.grim_reaper")
-corsixth.require("entities.humanoids.inspector")
-corsixth.require("entities.rat")
-corsixth.require("staff_profile")
-corsixth.require("hospital")
-corsixth.require("hospitals.player_hospital")
-corsixth.require("hospitals.ai_hospital")
-corsixth.require("cheats")
-corsixth.require("epidemic")
-corsixth.require("calls_dispatcher")
-corsixth.require("research_department")
-corsixth.require("entity_map")
-corsixth.require("date")
-corsixth.require("announcer")
-corsixth.require("endconditions")
-corsixth.require("earthquake")
+cth_require("entities.humanoids.patient")
+cth_require("entities.humanoids.staff.doctor")
+cth_require("entities.humanoids.staff.nurse")
+cth_require("entities.humanoids.staff.handyman")
+cth_require("entities.humanoids.staff.receptionist")
+cth_require("entities.humanoids.vip")
+cth_require("entities.humanoids.grim_reaper")
+cth_require("entities.humanoids.inspector")
+cth_require("entities.rat")
+cth_require("staff_profile")
+cth_require("hospital")
+cth_require("hospitals.player_hospital")
+cth_require("hospitals.ai_hospital")
+cth_require("cheats")
+cth_require("epidemic")
+cth_require("calls_dispatcher")
+cth_require("research_department")
+cth_require("entity_map")
+local Date = cth_require("date")
+cth_require("announcer")
+cth_require("endconditions")
+cth_require("earthquake")
 
 --- Manages entities, rooms, and the date.
 class "World"
@@ -55,7 +55,6 @@ local World = _G["World"] ---@type World
 function World:World(app, free_build_mode)
   local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
   local EntityMap = _G["EntityMap"] ---@type EntityMap
-  local Date = _G["Date"] ---@type Date
   local PlayerHospital = _G["PlayerHospital"] ---@type PlayerHospital
   local AIHospital = _G["AIHospital"] ---@type AIHospital
   local Earthquake = _G["Earthquake"] ---@type Earthquake
@@ -926,7 +925,6 @@ local outside_temperatures = {
    4.75 / 50, -- December
 }
 
-local Date = _G["Date"] ---@type Date
 local start_date = Date()
 
 --- World ticks (every 18ms) are translated to game ticks (or hours) depending
@@ -2671,8 +2669,8 @@ function World:afterLoad(old, new)
   if old < 17 then
     -- Added another object
     local pathsep = package.config:sub(1, 1)
-    local _, shield = pcall(corsixth.require, "objects" .. pathsep .. "radiation_shield")
-    local _, shield_b = pcall(corsixth.require, "objects" .. pathsep .. "radiation_shield_b")
+    local _, shield = pcall(cth_require, "objects" .. pathsep .. "radiation_shield")
+    local _, shield_b = pcall(cth_require, "objects" .. pathsep .. "radiation_shield_b")
     shield.slave_type = shield_b
     shield.slave_type.master_type = shield
 

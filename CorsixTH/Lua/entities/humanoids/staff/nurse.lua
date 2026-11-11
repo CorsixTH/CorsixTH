@@ -18,8 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-corsixth.require("announcer")
-corsixth.require("entities.humanoids.staff")
+cth_require("announcer")
+cth_require("entities.humanoids.staff")
 
 local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPriority]]
 local Staff = _G['Staff'] ---@type Staff

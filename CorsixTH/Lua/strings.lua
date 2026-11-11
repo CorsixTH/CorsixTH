@@ -687,3 +687,5 @@ local orig_lower = string.lower
 function string.lower(s) -- luacheck: ignore 122
   return orig_lower(s:gsub(case_pattern, upper_to_lower))
 end
+
+return Strings
