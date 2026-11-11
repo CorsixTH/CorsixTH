@@ -19,6 +19,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 cth_require("announcer")
+cth_require("reputation")
+
+local ReputationAccount = _G["ReputationAccount"]
 
 class "Hospital"
 
@@ -30,17 +33,15 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.world = world
   local level_config = world.map.level_config
   local level = world.map.level_number
-  local balance, interest_rate_numerator, reputation, overdraft_differential_numerator
+  local balance, interest_rate_numerator, overdraft_differential_numerator
 
   if level_config.towns and level_config.towns[level] then
     balance = level_config.towns[level].StartCash
     interest_rate_numerator = level_config.towns[level].InterestRate
-    reputation = level_config.towns[level].StartRep
     overdraft_differential_numerator = level_config.towns[level].OverdraftDiff
   elseif level_config.town then
     balance = level_config.town.StartCash
     interest_rate_numerator = level_config.town.InterestRate
-    reputation = level_config.town.StartRep
     overdraft_differential_numerator = level_config.town.OverdraftDiff
   end
 
@@ -86,9 +87,16 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.overdraft_interest_rate = self.interest_rate + overdraft_differential_numerator / 10000
   self.salary_incr = level_config.gbv.ScoreMaxInc or 300
   self.sal_min = level_config.gbv.ScoreMaxInc / 6 or 50
+
+  -- The reputation rating is calculated rather than stored: it comes from the
+  -- accumulated credit and weight, which start neutral and diverge as the
+  -- hospital takes on work and earns outcomes back. `self.reputation` is kept
+  -- as the derived figure so that consumers can still directly reading it.
   self.reputation_min = 0
   self.reputation_max = 1000
-  self.reputation = math.min(math.max(reputation, self.reputation_min), self.reputation_max)
+  self.reputation_account = ReputationAccount()
+  self.reputation = ReputationAccount.calculate(
+      ReputationAccount.start_credit, ReputationAccount.start_weight)
 
   local difficulty = self.world.map:getDifficulty()
   -- Price distortion level under which the patients might consider the
@@ -158,7 +166,7 @@ function Hospital:Hospital(world, avail_rooms, name)
 
   -- Other statistics, back to zero each year
   self.has_impressive_reputation = true
-  self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
+  self:updateReputation() -- Reset self.has_impressive_reputation
 
   self.sodas_sold = 0
   self.num_vips_ty = 0 -- used to count how many VIP visits in the year for an award
@@ -239,7 +247,7 @@ function Hospital:Hospital(world, avail_rooms, name)
     end
     if world.available_diseases[disease.id] or disease.pseudo then
       local info = {
-        reputation = not disease.pseudo and 500 or nil,
+        reputation_account = not disease.pseudo and ReputationAccount() or nil,
         price = 1.0, -- user-set multiplier between 0.5 and 2.0
         money_earned = 0,
         recoveries = 0,
@@ -388,7 +396,7 @@ function Hospital:afterLoad(old, new)
   if old < 140 then
     self.has_impressive_reputation = self.reputation_above_threshold and true or false
     self.reputation_above_threshold = nil
-    self:unconditionalChangeReputation(0) -- Setup 'has_impressive_reputation'
+    self:updateReputation() -- Setup 'has_impressive_reputation'
   end
 
   if old < 142 then
@@ -1088,7 +1096,7 @@ function Hospital:onEndYear()
   self.num_deaths_this_year = 0
 
   self.has_impressive_reputation = true
-  self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
+  self:updateReputation() -- Reset self.has_impressive_reputation
 
   -- On third year of level 3 there is the large increase to salary
   -- this will replicate that. TODO: check other levels above 5 to
@@ -1151,10 +1159,13 @@ function Hospital:resolveEmergency()
   end
   self:makeEmergencyEndFax(rescued_patients, total, max_bonus, earned)
   if emergency_success then -- Reputation increased
-    self:changeReputation("emergency_success", emer.disease)
+    self:reputationEvent(ReputationAccount.event_emergency_won, emer.disease)
     self:receiveMoney(earned, _S.transactions.emergency_bonus)
   else -- Too few rescued, reputation hit
-    self:changeReputation("emergency_failed", emer.disease)
+    -- The hit is a rate per casualty that was not rescued, rather than one
+    -- figure for the emergency as a whole.
+    self:reputationEvent(ReputationAccount.event_emergency_lost,
+        emer.disease, total - rescued_patients)
   end
 
   self.world:nextEmergency()
@@ -1458,7 +1469,7 @@ end
 --! Function to determine the price for a treatment, modified by reputation and percentage
 -- Treatment charge should never be less than the starting price if reputation falls below 500
 function Hospital:getTreatmentPrice(disease)
-  local reputation = self.disease_casebook[disease].reputation or self.reputation
+  local reputation = self:getDiseaseReputation(disease)
   local percentage = self.disease_casebook[disease].price
   local raw_price  = self.disease_casebook[disease].disease.cure_price
   local price = raw_price * self.current_inflation
@@ -1587,6 +1598,30 @@ function Hospital:addStaff(staff)
   self:notifyOfStaffChange(staff)
 end
 
+--! Register a patient with the reputation system.
+--! Registering raises the weight without raising any credit, so the rating
+--! usually falls: the hospital has taken on an outcome it has not yet earned.
+--! The original registers a patient once only, at whichever of diagnosis or
+--! departure first reaches the patient, so this is a no-op after the first call.
+--!param patient (Patient) The patient to register
+function Hospital:registerPatient(patient)
+  if patient.is_debug or patient.reputation_registered then return end
+  patient.reputation_registered = true
+  self:reputationEvent(ReputationAccount.event_patient_registered, patient.disease)
+end
+
+--! Record that a patient has been diagnosed.
+--! A diagnosis is two things at once: an outcome the hospital earned, worth a
+--! credit, and the registration of a patient it has taken on, worth a weight.
+--! Because it moves both by one it pulls the rating towards neutral rather than
+--! far in either direction, so on its own a diagnosis barely moves the number.
+--!param patient (Patient) The diagnosed patient
+function Hospital:recordDiagnosis(patient)
+  if patient.is_debug then return end
+  self:reputationEvent(ReputationAccount.event_patient_diagnosed, patient.disease)
+  self:registerPatient(patient)
+end
+
 function Hospital:addPatient(patient)
   self.patients[#self.patients + 1] = patient
   self:countNewPatient()
@@ -1613,7 +1648,11 @@ function Hospital:humanoidDeath(patient)
   self.num_deaths = self.num_deaths + 1
   self.num_deaths_this_year = self.num_deaths_this_year + 1
 
-  self:changeReputation("death", patient.disease)
+  self:reputationEvent(ReputationAccount.event_patient_death, patient.disease)
+  -- Record the death and then, if the patient was not already registered,
+  -- registers them. A patient who dies before ever being diagnosed still counts
+  -- as one the hospital took on, and the death credit is applied before the weight.
+  self:registerPatient(patient)
   self:updatePercentages()
 
   if patient.is_emergency then
@@ -1788,55 +1827,46 @@ function Hospital:removeDebugPatient(patient)
   RemoveByValue(self.debug_patients, patient)
 end
 
--- TODO: This should depend on difficulty and level
-local reputation_changes = {
-  ["cured"]  =  1, -- a patient was successfully treated
-  ["death"]  = -4, -- a patient died due to bad treatment or waiting too long
-  ["kicked"] = -3, -- firing a staff member OR sending a patient home
-  ["emergency_success"] = 15,
-  ["emergency_failed"] = -20,
-  ["over_priced"] = -2,
-  ["under_priced"] = 1,
-  ["room_crash"] = -50,
-}
+--! Record a reputation event against the hospital and against a disease.
+--! Work out what an event is worth once and hands the same change
+--! to the hospital and to the disease it names. Because the two carry different
+--! histories they then move by different amounts, which is the whole reason for
+--! keeping them apart.
+--!param event (integer) One of the ReputationAccount.event_* values
+--!param disease (Disease) The disease the event belongs to, if any
+--!param amount (integer) The event's own signed figure, where it takes one
+function Hospital:reputationEvent(event, disease, amount)
+  local weight = self.reputation_account.weight
+  -- A pseudo disease has no outcomes of its own to weigh, and so no accounting
+  -- of its own: it shows the hospital's.
+  local casebook = disease and self.disease_casebook[disease.id] or nil
+  local disease_account = casebook and casebook.reputation_account or nil
 
---! Normally reputation is changed based on a reason, and the affected
---! disease also has its own reputation meter.
---!param reason (string) The reason for changing reputation, for example "cured" or "death".
---!param disease The disease, if any, that should be affected.
---!param valueChange (integer) In some cases, for example at year end, the amount varies a lot.
--- Then it is specified here.
-function Hospital:changeReputation(reason, disease, valueChange)
-  local amount
-  if reason == "autopsy_discovered" then
-    local rep_hit_perc = self.world.map.level_config.gbv.AutopsyRepHitPercent
-    amount = rep_hit_perc and math.floor(-self.reputation * rep_hit_perc / 100) or -70
-  elseif valueChange then
-    amount = valueChange
-  else
-    amount = reputation_changes[reason]
+  local delta_credit, delta_weight =
+      ReputationAccount.eventDelta(event, weight, amount)
+  self.reputation_account:applyDelta(delta_credit, delta_weight)
+
+  if disease_account then
+    disease_account:applyDelta(delta_credit, delta_weight)
   end
-  if self:isReputationChangeAllowed(amount) then
-    self:unconditionalChangeReputation(amount)
-  end
-  if disease then
-    local casebook = self.disease_casebook[disease.id]
-    casebook.reputation = casebook.reputation + amount
-  end
+
+  self:updateReputation()
 end
 
---! Unconditionally change the reputation.
---! In most cases, the better entry point for changing reputation
---! is 'Hospital:changeReputation'.
---!param valueChange (integer) Amount of change.
-function Hospital:unconditionalChangeReputation(valueChange)
-  self.reputation = self.reputation + valueChange
+--! Move the reputation by a number of points.
+--! Used for events for which the credit and weight values were never determined.
+--!param points (integer) The signed number of rating points
+function Hospital:changeReputationByPoints(points)
+  local delta_credit = ReputationAccount.pointsToCredit(
+      points, self.reputation_account.weight)
+  self.reputation_account:applyDelta(delta_credit, 0)
+  self:updateReputation()
+end
 
-  if self.reputation < self.reputation_min then
-    self.reputation = self.reputation_min
-  elseif self.reputation > self.reputation_max then
-    self.reputation = self.reputation_max
-  end
+--! Refresh the derived rating, and the trophy check that hangs off it.
+--! The rating is calculated, never stored. `self.reputation` is a copy of it.
+function Hospital:updateReputation()
+  self.reputation = self.reputation_account:rating()
 
   -- Check if criteria for trophy is still met
   if self.has_impressive_reputation then
@@ -1850,47 +1880,11 @@ function Hospital:unconditionalChangeReputation(valueChange)
   end
 end
 
---! Decide whether a reputation change is effective or not. As we approach 1000,
---! a gain is less likely. As we approach 0, a loss is less likely.
---! Under 500, a gain is always effective.  Over 500, a loss is always effective.
---!param amount (int): The amount of reputation change.
-function Hospital:isReputationChangeAllowed(amount)
-  if (amount > 0 and self.reputation <= 500) or (amount < 0 and self.reputation >= 500) or (amount == 0) then
-    return true
-  else
-    return math.random() <= self:getReputationChangeLikelihood()
-  end
-end
-
---! Compute the likelihood for a reputation change to be effective.
---! Likelihood gets smaller as hospital reputation gets closer to extreme values.
---!return (float) Likelihood of a reputation change.
-function Hospital:getReputationChangeLikelihood()
-  -- The result follows a quadratic function, for a curved and smooth evolution.
-  -- If reputation == 500, the result is 100%.
-  -- Between [380-720], the result is still over 80%.
-  -- At 100 or 900, it's under 40%.
-  -- At 0 or 1000, it's 0%.
-  --
-  -- The a, b and c coefficients have been computed to include points
-  -- (x=0, y=1), (x=500, y=0) and (x=1000, y=1) where x is the current
-  -- reputation and y the likelihood of the reputation change to be
-  -- refused, based a discriminant (aka "delta") == 0
-  local a = 0.000004008
-  local b = 0.004008
-  local c = 1
-
-  local x = self.reputation
-
-  -- The result is "reversed" for more readability
-  return 1 - (a * x * x - b * x + c)
-end
-
 --! Update the 'cured' counts of the hospital.
 --!param patient Patient that was cured.
 function Hospital:updateCuredCounts(patient)
   if not patient.is_debug then
-    self:changeReputation("cured", patient.disease)
+    self:reputationEvent(ReputationAccount.event_patient_cured, patient.disease)
   end
 
   self.num_cured = self.num_cured + 1
@@ -1914,7 +1908,6 @@ end
 function Hospital:updateNotCuredCounts(patient, reason)
   if patient.is_debug then return end
 
-  self:changeReputation(reason, patient.disease)
   self.not_cured = self.not_cured + 1
   self.not_cured_ty = self.not_cured_ty + 1
 
@@ -2417,9 +2410,10 @@ function Hospital:canConcentrateResearch(disease)
   return false
 end
 
---! Change patient happiness and hospital reputation based on price distortion.
---! The patient happiness is adjusted proportionally. The hospital reputation
---! can only be affected when the distortion level reaches some threshold.
+--! Change patient happiness, and advise on the price distortion.
+--! The distortion does not move the hospital's reputation in either direction.
+--! What it does move is the weight, via registering the patient, so a run of
+--! patients who cannot afford treatment still costs the hospital its rating.
 --!param patient (patient) The patient paying the bill. His/her happiness level
 --! is adjusted.
 --!param casebook (object) Disease casebook entry. It's used to display the
@@ -2432,12 +2426,10 @@ function Hospital:computePriceLevelImpact(patient, casebook)
       if casebook.price < 1 then
         self:advisePriceLevelImpact("under", casebook.disease.name)
       end
-      self:changeReputation("under_priced")
     end
   elseif price_distortion > self.over_priced_threshold then
     if math.random(1, 100) == 1 then
       self:advisePriceLevelImpact("over", casebook.disease.name)
-      self:changeReputation("over_priced")
     end
   elseif math.abs(price_distortion) <= 0.15 and math.random(1, 200) == 1 then
     -- When prices are well adjusted (i.e. abs(price distortion) <= 0.15)
@@ -2620,17 +2612,23 @@ function Hospital:playSound(sound)
 end
 
 --! Return reputation value for disease or hospital
+--! A disease keeps its own accounting, and holds a rating of its own alongside
+--! it. A pseudo disease has none of its own to keep, so it shows the hospital's.
 --!param disease id (string) - name of the disease
 --!return reputation (int)
 function Hospital:getDiseaseReputation(disease)
-  return self.disease_casebook[disease].reputation or self.reputation
+  local casebook = self.disease_casebook[disease]
+  if casebook.reputation_account then
+    return casebook.reputation_account:rating()
+  end
+  return self.reputation
 end
 
 --! Calculate value to influence spawn chance based on the price relative to reputation
 --!param disease (string) name of the disease
 --!return (number) multiplier to apply for spawn chance
 function Hospital:getDiseaseReputationPriceFactor(disease)
-  local reputation = self.disease_casebook[disease].reputation or self.reputation
+  local reputation = self:getDiseaseReputation(disease)
   local percentage = self.disease_casebook[disease].price
   return math.min(1.5, math.max(0.5, reputation / 500 / percentage))
 end
