@@ -26,5 +26,5 @@ corsixth.require = require;
 cth_require = require;
 
 -- App:init() sets up the cosmetic random stream; tests that load modules
--- directly get one with a fixed seed, so that their results repeat.
-math.cosmetic_random = math.cosmetic_random or require("cosmetic_random")(1)
+-- directly get one too, seeded from the clock as in the game.
+math.cosmetic_random = math.cosmetic_random or require("cosmetic_random")(os.time())
