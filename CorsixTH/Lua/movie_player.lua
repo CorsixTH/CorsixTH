@@ -255,7 +255,7 @@ end
 
 --- Play the movie for winning the level.
 --- @param callback (function?) what to do after the movie ends (at once if it cannot be played)
---- @param paragraphs ((string|THStringProxy)[]?) the paragraphs of the letter it ends with (strings or _S strings), typed out on its paper (WinLetter); without them the letter stays blank
+--- @param paragraphs (string[]?) the paragraphs of the letter it ends with, typed out on its paper (WinLetter); without them the letter stays blank
 --- @param choose (function?) with a letter, its cross and tick to answer it: called with the answer (1 tick, 2 cross), after which the movie ends (and the callback follows)
 function MoviePlayer:playWinLevelMovie(callback, paragraphs, choose)
   self:playMovie(self.win_level_movie, true, callback)

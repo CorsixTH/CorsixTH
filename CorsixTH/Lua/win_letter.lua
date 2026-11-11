@@ -175,7 +175,7 @@ end
 --- are laid out for the screen when the letter is drawn. If the font cannot
 --- be loaded, the letter has no font and is not shown.
 --- @param app (App) the app
---- @param paragraphs ((string|THStringProxy)[]) the paragraphs (strings or _S strings)
+--- @param paragraphs (string[]) the paragraphs
 --- @param choose (function?) called with the answer (1 tick, 2 cross); without it the letter has no buttons
 function WinLetter:WinLetter(app, paragraphs, choose)
   self.app = app

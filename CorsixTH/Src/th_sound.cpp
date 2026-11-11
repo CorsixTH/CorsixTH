@@ -428,7 +428,6 @@ uint32_t sound_player::play_raw(size_t iIndex, float volume, int loops,
   volume = th::sound::linear_to_logarithmic_volume(volume);
   success &= MIX_SetTrackAudio(track, sounds[iIndex]);
   success &= MIX_SetTrackGain(track, volume);
-  // Set every time: the track is used again for other sounds.
   success &= MIX_SetTrackFrequencyRatio(track, pitch);
 
   SDL_PropertiesID playProps = SDL_CreateProperties();
