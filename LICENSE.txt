@@ -49,7 +49,7 @@ Copyright (C) 2013-2015 Maarten Peters
 Copyright (C) 2013 nullstein
 Copyright (C) 2013 BuTcHeR (extragry.pl)
 Copyright (C) 2013-2026 Albert "Alberth" Hofkamp
-Copyright (C) 2013, 2016-2017, 2025 Antoine Lemaire
+Copyright (C) 2013, 2016-2017, 2025-2026 Antoine Lemaire
 Copyright (C) 2014-2015 Joseph "J-Shep" Sheppard
 Copyright (C) 2014 Phillipp Röll
 Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman
@@ -79,11 +79,11 @@ Copyright (C) 2020 Jeremy Tellaa
 Copyright (C) 2020 Maxim Krivchikov
 Copyright (C) 2020 Dimitrios Iliadis
 Copyright (C) 2021 Zany XDev
-Copyright (C) 2021 Romain "rmnvgr" Vigier
+Copyright (C) 2021, 2026 Romain "rmnvgr" Vigier
 Copyright (C) 2021-2024 Robert "flackr" Flack
 Copyright (C) 2021 Alexandre Lavoie
 Copyright (C) 2021, 2025-2026 Jan Sako
-Copyright (C) 2022 Colin Matthews
+Copyright (C) 2022, 2026 Colin Matthews
 Copyright (C) 2022 Frazer Smith
 Copyright (C) 2022 "RetroGamerFan"
 Copyright (C) 2022 "tomracer"
@@ -123,6 +123,15 @@ Copyright (C) 2026 "ManoloMC002"
 Copyright (C) 2026 Arya "algojogacor" Rizky
 Copyright (C) 2026 "saya-7"
 Copyright (C) 2026 "Ouaz"
+Copyright (C) 2026 Jay "Jay23606"
+Copyright (C) 2026 "allensmith81"
+Copyright (C) 2026 Florian "alloutflo" Meyer
+Copyright (C) 2026 Josh "gojomoso1" DeVries
+Copyright (C) 2026 "christopher92920"
+Copyright (C) 2026 "arimu1"
+Copyright (C) 2026 Rj "UncleUncleRj" Simas
+Copyright (C) 2026 Bruno "BrunoGits" Lima
+Copyright (C) 2026 Flavio "Flavsditz" Diez
 
 
 et al.
