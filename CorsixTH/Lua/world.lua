@@ -2383,6 +2383,21 @@ function World:getObject(x, y, id, only_usable)
   return -- nil
 end
 
+--- Retrieve all litter from a hospital
+---@param hospital Hospital # The hospital to query litter for
+---@return table hospital_litter # Found litter entries
+function World:getAllLitter(hospital)
+  assert(hospital, "Function called without a hospital")
+  local entities = self.entities
+  local hospital_litter = {}
+  for _, entity in pairs(entities) do
+    if entity.hospital == hospital and entity.object_type and entity.object_type.id == "litter" then
+      hospital_litter[#hospital_litter + 1] = entity
+    end
+  end
+  return hospital_litter
+end
+
 --- Remove all cleanable litter from a given tile.
 --- @param x (integer) X position of the tile to clean.
 --- @param y (integer) Y position of the tile to clean.
