@@ -298,7 +298,7 @@ function Cheats:superDoctorOff()
   self.hospital.world:makeAvailableStaff(self.hospital.world.game_date:monthOfGame())
 end
 
---[[ End toggle-based cheat functions ]]
+--[[End toggle-based cheat functions]]
 
 --- The toggle_cheats list (code operated cheats)
 --- These cheats do not appear in the Cheat UI menu, and are only accessed from fax code inputs currently.
