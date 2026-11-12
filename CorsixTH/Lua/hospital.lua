@@ -512,6 +512,14 @@ function Hospital:afterLoad(old, new)
     self:buildReceptionDesksCache()
   end
 
+  if old < 266 then
+    -- Rat counters introduced in version 266
+    self.rats_killed = self.rats_killed or 0
+    self.rats_created = self.rats_created or 0
+    self.rats_killed_ty = self.rats_killed_ty or 0
+    self.rats_created_ty = self.rats_created_ty or 0
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic:afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
@@ -708,6 +716,7 @@ function Hospital:spawnRat(hole)
   rat:setTile(hole.x, hole.y)
   rat:setTilePositionSpeed(hole.x, hole.y, 0, 0, 0, 0)
   rat:init(hole.wall)
+  self:incrementRatsCreated()
   return rat
 end
 
@@ -2114,6 +2123,12 @@ function Hospital:addRathole(x, y, wall, parcel)
     hole["object"] = self.world:newObject("rathole", hole.x, hole.y, hole.wall)
   end
   table.insert(self.ratholes, hole)
+
+  -- Trigger adviser message on first rathole placement
+  if self.adviser_data and not self.adviser_data.rats_adviser_shown then
+    self.adviser_data.rats_adviser_shown = true
+    self:giveAdvice({_A.information.initial_general_advice.rats_have_arrived})
+  end
 end
 
 --! Remove the provided rathole.
