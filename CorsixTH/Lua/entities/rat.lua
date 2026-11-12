@@ -260,10 +260,13 @@ function Rat:onClick(ui, button)
   -- Like the original, a rat shot outside the hospital (on the street) leaves
   -- no splat; only mark the floor indoors.
   local hospital = self.world:getLocalPlayerHospital()
-  if hospital and hospital:isInHospital(tile_x, tile_y) then
-    local splat = self.world:newObject("litter", tile_x, tile_y)
-    splat:setLitterType("dead_rat")
-    splat:setPosition(screen_x + px - tile_screen_x,
-        screen_y + py - tile_screen_y)
+  if hospital then
+    hospital:incrementRatsKilled()
+    if hospital:isInHospital(tile_x, tile_y) then
+      local splat = self.world:newObject("litter", tile_x, tile_y)
+      splat:setLitterType("dead_rat")
+      splat:setPosition(screen_x + px - tile_screen_x,
+          screen_y + py - tile_screen_y)
+    end
   end
 end
