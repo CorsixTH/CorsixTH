@@ -13,11 +13,11 @@
 local MODULUS = 2147483647
 local MULTIPLIER = 48271
 
---- Create a generator.
+--- Create a generator from a seed. The generator is called like math.random:
+--- () gives a number in [0, 1), (m) a whole number in [1, m] and (m, n) a
+--- whole number in [m, n].
 --- @param seed (number) any number; only its whole part modulo 2^31 - 1 is used
---- @return (fun(m: integer?, n: integer?): number) # a generator called like
---- math.random: () gives a number in [0, 1), (m) a whole number in [1, m] and
---- (m, n) a whole number in [m, n]
+--- @return (fun(m: integer?, n: integer?): number) # the generator
 local function newCosmeticRandom(seed)
   local state = math.floor(math.abs(seed or 0)) % MODULUS
   if state == 0 then state = 1 end
