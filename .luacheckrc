@@ -84,7 +84,7 @@ globals = { -- Globals
 
             -- Math extensions
             "math.n_random", "math.round", "math.randomdump", "math.t_random",
-            "math.p_random",
+            "math.p_random", "math.cosmetic_random",
 
             -- Unit Tests
             "assertion_matches"

@@ -426,7 +426,7 @@ end
 function Audio:resolveFilenameWildcard(name)
   if name:find("*") then
     local list = self:cacheSoundFilenamesAssociatedWithName(name)
-    name = list[1] and list[math.random(1, #list)] or name
+    name = list[1] and list[math.cosmetic_random(1, #list)] or name
   end
   return name
 end
@@ -450,7 +450,7 @@ local function getSilenceLengths(min_silence_lengths, max_silence_lengths, num_s
     silences[1] = min_silence
   else
     for i = 1, num_silences do
-      silences[i] = math.random(min_silence, max_silence)
+      silences[i] = math.cosmetic_random(min_silence, max_silence)
     end
   end
 
@@ -509,7 +509,7 @@ function Audio:entitySoundsHandler(sounds, entity, silences, silences_pointer)
       y = y + dy - self.app.ui.screen_offset_y
 
       self.played_sound_callbacks[tostring(self.unused_played_callback_id)] = sound_played_callback
-      self.sound_fx:play(sounds[math.random(1,#sounds)], self.app.config.sound_volume,
+      self.sound_fx:play(sounds[math.cosmetic_random(1,#sounds)], self.app.config.sound_volume,
           x, y, self.unused_played_callback_id, silences_pointer)
 
       self.unused_played_callback_id = self.unused_played_callback_id + 1
@@ -568,7 +568,7 @@ function Audio:playRandomBackgroundTrack()
   if not enabled[1] then
     return
   end
-  local index = enabled[math.random(1, #enabled)]
+  local index = enabled[math.cosmetic_random(1, #enabled)]
   self:playBackgroundTrack(index)
 end
 

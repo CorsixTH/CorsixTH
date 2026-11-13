@@ -259,10 +259,12 @@ function GameUI:draw(canvas)
     canvas:fillBlack()
   end
   local zoom = self:getEffectiveZoom()
-  local dx = self.screen_offset_x +
-      math.floor((0.5 - math.random()) * self.shake_screen_intensity * shake_screen_max_movement * 2)
-  local dy = self.screen_offset_y +
-      math.floor((0.5 - math.random()) * self.shake_screen_intensity * shake_screen_max_movement * 2)
+  local dx, dy = self.screen_offset_x, self.screen_offset_y
+  if self.shake_screen_intensity > 0 then
+    local shake = self.shake_screen_intensity * shake_screen_max_movement * 2
+    dx = dx + math.floor((0.5 - math.cosmetic_random()) * shake)
+    dy = dy + math.floor((0.5 - math.cosmetic_random()) * shake)
+  end
   if canvas:scale(zoom) then
     app.map:draw(canvas, dx, dy, math.ceil(scr_w / zoom), math.ceil(scr_h / zoom), 0, 0)
     canvas:scale(1)
@@ -412,7 +414,7 @@ function GameUI:makeDebugFax()
   }
   -- Don't use "strike" type here, as these open a different window and must have an owner
   local types = {"emergency", "epidemy", "personality", "information", "disease", "report"}
-  self.bottom_panel:queueMessage(types[math.random(1, #types)], message)
+  self.bottom_panel:queueMessage(types[math.cosmetic_random(1, #types)], message)
 end
 
 --! Debug: ensure two visible ratholes and spawn a rat from one.
@@ -854,7 +856,7 @@ function GameUI:playRandomAnnouncement(msgs, priority, chance_to_play, played_ca
     max_rnd = math.floor(max_rnd / chance_to_play)
   end
 
-  local index = (max_rnd == 1) and 1 or math.random(1, max_rnd)
+  local index = (max_rnd == 1) and 1 or math.cosmetic_random(1, max_rnd)
   if index <= #msgs then
     self:playAnnouncement(msgs[index], priority, played_callback, played_callback_delay)
     return true
