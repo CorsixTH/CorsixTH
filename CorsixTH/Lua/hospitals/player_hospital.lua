@@ -37,6 +37,7 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
     temperature_advice = nil, -- Whether the player received advice about room temp.
     reception_advice = nil, -- Whether advice was given about building the reception.
     cured_died_message = nil, -- Whether the adviser reported about a cure or death.
+    rats_adviser_shown = false, -- Whether the rats have arrived adviser message was shown
 
     sitting_ratios = {}, -- Measurements of recent sitting/standing ratios.
     sitting_index = 1, -- Next entry in 'sitting_ratios' to update.

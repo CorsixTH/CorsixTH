@@ -2097,6 +2097,12 @@ function Hospital:addRathole(x, y, wall, parcel)
     hole["object"] = self.world:newObject("rathole", hole.x, hole.y, hole.wall)
   end
   table.insert(self.ratholes, hole)
+
+  -- Trigger adviser message on first rathole placement
+  if self.adviser_data and not self.adviser_data.rats_adviser_shown then
+    self.adviser_data.rats_adviser_shown = true
+    self:giveAdvice({_A.information.initial_general_advice.rats_have_arrived})
+  end
 end
 
 --! Remove the provided rathole.
