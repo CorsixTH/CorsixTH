@@ -327,19 +327,18 @@ end
 
 --- A mouse button is pressed on the movie.
 ---
---- While the letter is being typed, a left click finishes it. Once it is
---- typed, a left press on a button holds it down until the release
---- (onMouseUp), and a click anywhere else does nothing; a letter without
---- buttons leaves the click to the movie. Before a letter with buttons shows,
---- a click does nothing.
+--- Before the letter shows, a left click has it come typed out in full (the
+--- movie skips to it). While it is being typed, a left click finishes it.
+--- Once it is typed, a left press on a button holds it down until the
+--- release (onMouseUp), and a click anywhere else does nothing; a letter
+--- without buttons leaves the click to the movie.
 --- @param button (string) the mouse button ("left", "right", ...)
 --- @param x (number) x on the screen
 --- @param y (number) y on the screen
 --- @return (boolean) # true if the letter took the click (the movie goes on)
 function WinLetter:onMouseDown(button, x, y)
   if button ~= "left" then return false end
-  if not self.shown then return self.choose ~= nil end
-  if not self.typed then
+  if not (self.shown and self.typed) then
     self.typed = true
     return true
   end
