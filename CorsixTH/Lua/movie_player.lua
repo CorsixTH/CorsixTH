@@ -119,7 +119,7 @@ local loseMovieOverlay = function(me, lose_movie_index)
 
   local start_pts = start_movie_pts[lose_movie_index]
   local headlines = _S.newspaper[lose_movie_index]
-  local headline = headlines[math.random(#headlines)]
+  local headline = headlines[math.cosmetic_random(#headlines)]
 
   -- The LOSE movies are 320x240 but are drawn in the original game at 640x480
   -- before drawing the font over them. The headline area at double size is 40px
@@ -275,7 +275,7 @@ end
 --! Plays one of the lose scenario movies at random
 function MoviePlayer:playLoseMovie()
   if #self.lose_movies > 0 then
-    local lose_movie_index = math.random(#self.lose_movies)
+    local lose_movie_index = math.cosmetic_random(#self.lose_movies)
     local filename = self.lose_movies[lose_movie_index]
     self:playMovie(filename, true)
     self.refresh_overlay = loseMovieOverlay(self, lose_movie_index)

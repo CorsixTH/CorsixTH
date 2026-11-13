@@ -221,7 +221,7 @@ function App:init()
   math.randomseed(os.time() + SDL.getTicks())
 
   -- Choices that only change what the player sees or hears (screen shake,
-  -- sounds, ...) draw from their own stream, so that drawing and audio
+  -- sounds, tips, ...) draw from their own stream, so that drawing and audio
   -- leave the game's random numbers alone. See cosmetic_random.lua.
   strict_declare_global "math.cosmetic_random"
   local newCosmeticRandom = cth_require("cosmetic_random")

@@ -1,5 +1,5 @@
 --- A random number stream for choices that only change what the player sees
---- or hears (screen shake, which sound to play, ...).
+--- or hears (screen shake, which sound or tip to play, ...).
 ---
 --- The game itself uses math.random, whose state is saved with the game, so
 --- that a loaded save goes on the same way each time. How often the screen
