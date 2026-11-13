@@ -437,6 +437,9 @@ void movie_player::play() {
                                 video_codec_context->height);
 
   paused = false;
+  skip_pts = 0;
+  skip_pending = false;
+  sound_skipped = false;
   current_sync_pts = 0;
   current_sync_pts_system_time = SDL_GetTicks();
 
@@ -506,6 +509,17 @@ void movie_player::togglePause() {
   }
 }
 
+void movie_player::skip_to(double ms) {
+  // Only ahead
+  if (ms <= get_playback_time() || ms / 1000.0 <= skip_pts) {
+    return;
+  }
+  skip_pts = ms / 1000.0;
+  skip_pending = true;
+  // The sound would be out of step, and it would set the clock back
+  sound_skipped = true;
+}
+
 int movie_player::get_native_height() const {
   int iHeight = 0;
 
@@ -539,14 +553,35 @@ const char* movie_player::get_last_error() const { return last_error.c_str(); }
 
 void movie_player::clear_last_error() { last_error.clear(); }
 
+double movie_player::get_playback_time() const {
+  return static_cast<double>(
+             (paused.load() ? pause_start_time : SDL_GetTicks()) -
+             current_sync_pts_system_time) +
+         current_sync_pts * 1000.0;
+}
+
 double movie_player::refresh(const SDL_Rect& destination_rect) {
   SDL_Rect dest_rect = SDL_Rect{destination_rect.x, destination_rect.y,
                                 destination_rect.w, destination_rect.h};
 
-  double dCurTime =
-      static_cast<double>((paused.load() ? pause_start_time : SDL_GetTicks()) -
-                          current_sync_pts_system_time) +
-      current_sync_pts * 1000.0;
+  if (skip_pending) {
+    // Go through the frames on the way to the time skipped to (skip_to). Once
+    // the frame for that time is on the screen, the playback clock jumps there
+    // (and stays there if paused).
+    double dNextPts = movie_picture_buffer.get_next_pts();
+    while (dNextPts > 0 && dNextPts <= skip_pts) {
+      movie_picture_buffer.advance();
+      dNextPts = movie_picture_buffer.get_next_pts();
+    }
+    if (dNextPts > skip_pts) {
+      skip_pending = false;
+      current_sync_pts = skip_pts;
+      current_sync_pts_system_time = SDL_GetTicks();
+      pause_start_time = current_sync_pts_system_time;
+    }
+  }
+
+  double dCurTime = get_playback_time();
 
   if (!movie_picture_buffer.empty()) {
     double dNextPts = movie_picture_buffer.get_next_pts();
@@ -592,7 +627,8 @@ void movie_player::read_streams() {
   }
 
   while (!aborting) {
-    if (video_queue.get_count() == 0 && audio_queue.get_count() == 0 &&
+    if (video_queue.get_count() == 0 &&
+        (audio_queue.get_count() == 0 || sound_skipped) &&
         movie_picture_buffer.get_next_pts() == 0) {
       break;
     }
@@ -607,6 +643,10 @@ void movie_player::read_streams() {
 
 void movie_player::run_video() {
   av_frame_unique_ptr pFrame(av_frame_alloc());
+  // The last frame decoded on the way to the time skipped to (skip_to)
+  av_frame_unique_ptr pSkippedFrame(av_frame_alloc());
+  bool bSkippedFrame = false;
+  double dSkippedPts = 0;
   double dClockPts;
   int iError;
 
@@ -624,11 +664,35 @@ void movie_player::run_video() {
     }
 
     dClockPts = get_presentation_time_for_frame(*pFrame, video_stream_index);
+
+    // The frames before the time skipped to are not shown, except the last
+    // of them: the one on the screen at that time.
+    if (dClockPts < skip_pts) {
+      av_frame_unref(pSkippedFrame.get());
+      av_frame_move_ref(pSkippedFrame.get(), pFrame.get());
+      dSkippedPts = dClockPts;
+      bSkippedFrame = true;
+      continue;
+    }
+    if (bSkippedFrame) {
+      bSkippedFrame = false;
+      iError = movie_picture_buffer.write(pSkippedFrame.get(), dSkippedPts);
+      av_frame_unref(pSkippedFrame.get());
+      if (iError < 0) {
+        break;
+      }
+    }
+
     iError = movie_picture_buffer.write(pFrame.get(), dClockPts);
 
     if (iError < 0) {
       break;
     }
+  }
+
+  // A skip past the last frame still shows it
+  if (bSkippedFrame) {
+    movie_picture_buffer.write(pSkippedFrame.get(), dSkippedPts);
   }
 
   avcodec_flush_buffers(video_codec_context.get());
@@ -701,8 +765,8 @@ void movie_player::copy_audio_to_stream(SDL_AudioStream* stream,
 size_t movie_player::decode_audio_frame(size_t requested_size) {
   size_t stream_size = std::min(requested_size, audio_chunk_buffer.size());
 
-  // If we are paused, return silence
-  if (paused.load()) {
+  // If we are paused, or the sound was skipped (skip_to), return silence
+  if (paused.load() || sound_skipped.load()) {
     std::memset(audio_chunk_buffer.data(),
                 SDL_GetSilenceValueForFormat(audio_format), stream_size);
     return stream_size;
@@ -765,6 +829,7 @@ void movie_player::play() {
 }
 void movie_player::stop() {}
 void movie_player::togglePause() {}
+void movie_player::skip_to(double) {}
 int movie_player::get_native_height() const { return 0; }
 int movie_player::get_native_width() const { return 0; }
 bool movie_player::has_audio_track() const { return false; }
