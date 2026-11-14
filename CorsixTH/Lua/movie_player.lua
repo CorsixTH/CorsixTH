@@ -23,6 +23,9 @@ SOFTWARE. --]]
 local TH = require("TH")
 local pathsep = package.config:sub(1, 1)
 
+corsixth.require("win_letter")
+local WinLetter = _G["WinLetter"] ---@type WinLetter
+
 class "MoviePlayer"
 
 ---@class MoviePlayer
@@ -96,6 +99,7 @@ local destroyMovie = function(me)
     me.sound = nil
   end
   me.refresh_overlay = nil
+  me.win_letter = nil
   me.playing = false
   me.movie_over = false
   if me.callback_on_destroy_movie then
@@ -154,6 +158,10 @@ local loseMovieOverlay = function(me, lose_movie_index)
   end
 end
 
+-- The letter of the level won movie shows once the paper has settled, this
+-- many milliseconds before the end of the movie.
+local LETTER_SHOWS_MS = 250
+
 function MoviePlayer:MoviePlayer(app, audio, video)
   self.app = app
   self.audio = audio
@@ -173,6 +181,7 @@ function MoviePlayer:MoviePlayer(app, audio, video)
   self.movie_length = 0
   self.lose_font = nil
   self.lose_font_narrow = nil
+  self.win_letter = nil
 end
 
 --! Initialises the different movies used in the game
@@ -244,9 +253,78 @@ function MoviePlayer:playWinMovie()
   self:playMovie(self.win_game_movie, false)
 end
 
---! Play the movie for winning the level
-function MoviePlayer:playWinLevelMovie()
-  self:playMovie(self.win_level_movie, true)
+--- Play the movie for winning the level.
+--- @param callback (function?) what to do after the movie ends (at once if it cannot be played)
+--- @param paragraphs (string[]?) the paragraphs of the letter it ends with, typed out on its paper (WinLetter); without them the letter stays blank
+--- @param choose (function?) with a letter, its cross and tick to answer it: called with the answer (1 tick, 2 cross), after which the movie ends (and the callback follows)
+function MoviePlayer:playWinLevelMovie(callback, paragraphs, choose)
+  self:playMovie(self.win_level_movie, true, callback)
+  if not (self.playing and paragraphs and #paragraphs > 0) then return end
+
+  -- An answer ends the movie. The letter is let go first, so a second click
+  -- before the movie is over cannot answer it again.
+  local answer = choose and function(choice)
+    self.win_letter = nil
+    choose(choice)
+    self:stop()
+  end
+  local letter = WinLetter(self.app, paragraphs, answer)
+  if not letter.font then return end
+  self.win_letter = letter
+  -- The mouse is where it was: the screen does not follow it during a movie
+  -- (MoviePlayer:onMouseMove does).
+  local ui = self.app.ui
+  letter:onMouseMove(ui and ui.cursor_x, ui and ui.cursor_y)
+
+  -- The letter shows once the paper has settled, and the movie is held on it
+  -- until it is answered or skipped: its very last frame is its first one
+  -- again (a Smacker ring frame, for looping, which shows the casebook). It is
+  -- paused again if the pause key lets it run on.
+  local shows_at = self.movie_length - LETTER_SHOWS_MS
+  local held_at
+  self.refresh_overlay = function(player, x, y, _, _, scale, pts)
+    if pts < shows_at then return end
+    if not held_at or pts > held_at + 40 then
+      player:togglePause()
+      held_at = pts
+    end
+    letter:draw(player.video, x, y, scale)
+  end
+end
+
+--- The mouse has moved while a movie plays (the buttons of the win letter
+--- light up under it).
+--- @param x (number) x on the screen
+--- @param y (number) y on the screen
+function MoviePlayer:onMouseMove(x, y)
+  if self.win_letter then
+    self.win_letter:onMouseMove(x, y)
+  end
+end
+
+--- A mouse button is pressed while a movie plays: the left button stops the
+--- movie, unless the win letter takes the click (WinLetter:onMouseDown).
+--- @param button (string) the mouse button ("left", "right", ...)
+--- @param x (number) x on the screen
+--- @param y (number) y on the screen
+function MoviePlayer:onMouseDown(button, x, y)
+  if self.win_letter and self.win_letter:onMouseDown(button, x, y) then
+    return
+  end
+  if button == "left" then
+    self:stop()
+  end
+end
+
+--- A mouse button is released while a movie plays (the win letter's buttons
+--- act on the release, as the buttons of a window do).
+--- @param button (string) the mouse button ("left", "right", ...)
+--- @param x (number) x on the screen
+--- @param y (number) y on the screen
+function MoviePlayer:onMouseUp(button, x, y)
+  if self.win_letter then
+    self.win_letter:onMouseUp(button, x, y)
+  end
 end
 
 --! Plays the level advance movie, which is going to the next level on the game board

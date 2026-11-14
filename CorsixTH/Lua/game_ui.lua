@@ -603,6 +603,7 @@ function GameUI:onMouseMove(x, y, dx, dy)
 
   local repaint = UpdateCursorPosition(self.app.video, x, y)
   if self.app.moviePlayer.playing then
+    self.app.moviePlayer:onMouseMove(x, y)
     return false
   end
 
@@ -700,7 +701,7 @@ function GameUI:onMouseMove(x, y, dx, dy)
 end
 
 function GameUI:onMouseUp(code, x, y)
-  if self.app.moviePlayer.playing then
+  if self.app.moviePlayer.playing or self.movie_click then
     return UI.onMouseUp(self, code, x, y)
   end
 

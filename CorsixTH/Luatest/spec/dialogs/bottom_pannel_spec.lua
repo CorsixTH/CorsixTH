@@ -86,4 +86,21 @@ describe("Bottom Panel:", function()
     assert.stub(TheApp.world.gameLog).was_not.called_with(TheApp.world, "Dynamic info is missing text!")
     assert.stub(font.drawWrapped).was.called_with(font, mock_canvas, "test text", 20, 10, 240)
   end)
+
+  it("Show the icon of a given queued message", function()
+    local function icon() return {setXLimit = function() end} end
+    local win, later = icon(), icon()
+    bottom_panel.ui.playSound = function() end
+    bottom_panel.message_queue = {{drawer_icon = win}, {drawer_icon = later}}
+
+    -- The given one, not the last one queued.
+    assert.equal(win, bottom_panel:showMessageIcon(win))
+    assert.same({win}, bottom_panel.message_windows)
+    assert.equal(1, #bottom_panel.message_queue)
+    assert.equal(later, bottom_panel.message_queue[1].drawer_icon)
+    -- Shown already, or gone.
+    assert.equal(win, bottom_panel:showMessageIcon(win))
+    assert.same({win}, bottom_panel.message_windows)
+    assert.is_nil(bottom_panel:showMessageIcon(icon()))
+  end)
 end)

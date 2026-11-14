@@ -1393,8 +1393,30 @@ function World:winGame(player_no)
     end
     self.hospitals[player_no].game_won = true
     self:previousSpeed()
-    self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
-    self.ui.bottom_panel:openLastMessage()
+    local bottom_panel = self.ui.bottom_panel
+    bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
+    local queued = bottom_panel.message_queue[#bottom_panel.message_queue]
+    local icon = queued and queued.message == message and queued.drawer_icon
+    -- As in the original game, the level won movie comes first, ending with
+    -- the letter typed out on its paper and answered there: the tick for the
+    -- first choice, the cross to stay on the level. If the movie is skipped,
+    -- or cannot be played, the letter is the fax.
+    local chosen
+    local function after_movie()
+      -- This fax (others may have come since), unless another game was
+      -- loaded meanwhile.
+      if not icon or self.ui.app.world ~= self or
+          not bottom_panel:showMessageIcon(icon) then
+        return
+      end
+      if chosen then
+        icon:removeMessage(chosen)
+      else
+        icon:openMessage()
+      end
+    end
+    self.ui.app.moviePlayer:playWinLevelMovie(after_movie,
+        {text[1], text[2], text[3]}, function(answer) chosen = answer end)
   end
 end
 

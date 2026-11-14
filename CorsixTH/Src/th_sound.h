@@ -184,8 +184,10 @@ class sound_player {
   //!        1.0.
   //! \param loops The number of times to play the sound, -1 for 'practically'
   //!              infinite.
+  //! \param pitch The frequency ratio to play the sound at: 1.0 as recorded,
+  //!        more is higher and faster, less is lower and slower.
   //! \return The sound handle
-  uint32_t play(size_t iIndex, double dVolume, int loops);
+  uint32_t play(size_t iIndex, double dVolume, int loops, double pitch = 1.0);
 
   //! Plays the sound effect in the sound_archive with the given index with
   //! volume attenuation based on the distance from the given position to the
@@ -210,8 +212,11 @@ class sound_player {
   //! \param iY Y coordinate of the sound effect.
   //! \param loops The number of times to play the sound, -1 for 'practically'
   //!              infinite.
+  //! \param pitch The frequency ratio to play the sound at: 1.0 as recorded,
+  //!        more is higher and faster, less is lower and slower.
   //! \return The sound handle or 0 on error
-  uint32_t play_at(size_t iIndex, double dVolume, int iX, int iY, int loops);
+  uint32_t play_at(size_t iIndex, double dVolume, int iX, int iY, int loops,
+                   double pitch = 1.0);
 
   //! Pause playback on a given channel if playing, or resume if paused.
   //!
@@ -257,7 +262,7 @@ class sound_player {
   static sound_player* singleton;
   static void on_channel_finished(void* userdata, MIX_Track*);
 
-  uint32_t play_raw(size_t iIndex, float volume, int loops);
+  uint32_t play_raw(size_t iIndex, float volume, int loops, float pitch);
 
   //! Returns the channel that the handle is playing on or -1 if it is not
   //! playing.
