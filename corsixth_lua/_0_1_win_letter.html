@@ -1,0 +1,463 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>WinLetter Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">WinLetter Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L29">line 29 of Lua/win_letter.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1__draw_buttons">_drawButtons</a>(<span class="p">canvas</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1__draw_cursor">_drawCursor</a>(<span class="p">canvas</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1__draw_text">_drawText</a>(<span class="p">canvas</span>, <span class="p">chars</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1__show">_show</a>(<span class="p">now</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1__typed_chars">_typedChars</a>(<span class="p">now</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1button_at">buttonAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">scale</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_win_letter.html#_0_1_win_letter_1strike">strike</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">app</span>
+ </li>
+ <li><span class="p">bottom</span>
+ </li>
+ <li><span class="p">buttons</span>
+ </li>
+ <li><span class="p">choose</span>
+ </li>
+ <li><span class="p">font</span>
+ </li>
+ <li><span class="p">mouse_x</span>
+ </li>
+ <li><span class="p">mouse_y</span>
+ </li>
+ <li><span class="p">pressed</span>
+ </li>
+ <li><span class="p">shown</span>
+ </li>
+ <li><span class="p">struck</span>
+ </li>
+ <li><span class="p">text</span>
+ </li>
+ <li><span class="p">text_vs</span>
+ </li>
+ <li><span class="p">texts</span>
+ </li>
+ <li><span class="p">typed</span>
+ </li>
+ <li><span class="p">typing_from</span>
+ </li>
+ <li><span class="p">vs</span>
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1_win_letter">function WinLetter:WinLetter(<span class="p">app</span>, <span class="p">paragraphs</span>, <span class="p">choose</span>)</a></h5>
+ <p>
+ Load the letter's graphics and take its paragraphs.
+The paragraphs go on the paper below the letter head, in Font35V in the
+movie's own palette (winlevel.pl8), with a blank line between them. They
+are laid out for the screen when the letter is drawn. If the font cannot
+be loaded, the letter has no font and is not shown.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">App</td>
+ <td class="d"> the app</td>
+ </tr>
+ <tr>
+ <td class="n">paragraphs</td>
+ <td class="t">string</td>
+ <td class="d"> the paragraphs</td>
+ </tr>
+ <tr>
+ <td class="n">choose</td>
+ <td class="t">function</td>
+ <td class="d"> called with the answer (1 tick, 2 cross); without it the letter has no buttons</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L171">line 171 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1__draw_buttons">function WinLetter:_drawButtons(<span class="p">canvas</span>)</a></h5>
+ <p>
+ Draw the cross and the tick, the one under the mouse lit. While a button
+is held down, only that one lights up.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">THRenderTarget</td>
+ <td class="d"> where to draw them</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L284">line 284 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1__draw_cursor">function WinLetter:_drawCursor(<span class="p">canvas</span>)</a></h5>
+ <p>
+ Draw the cursor if the game draws it itself (no hardware cursor), as the
+screen is not drawn during a movie.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">THRenderTarget</td>
+ <td class="d"> where to draw it</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L302">line 302 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1__draw_text">function WinLetter:_drawText(<span class="p">canvas</span>, <span class="p">chars</span>)</a></h5>
+ <p>
+ Draw the text of the letter, as much of it as is typed.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">THRenderTarget</td>
+ <td class="d"> where to draw it</td>
+ </tr>
+ <tr>
+ <td class="n">chars</td>
+ <td class="t">integer</td>
+ <td class="d"> how many characters are typed</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L264">line 264 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1__show">function WinLetter:_show(<span class="p">now</span>)</a></h5>
+ <p>
+ The letter comes on the screen: the typing starts.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">now</td>
+ <td class="t">integer</td>
+ <td class="d"> the time, in milliseconds</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L242">line 242 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1__typed_chars">function WinLetter:_typedChars(<span class="p">now</span>)</a></h5>
+ <p>
+ How many characters of the letter are typed by now.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">now</td>
+ <td class="t">integer</td>
+ <td class="d"> the time, in milliseconds</td>
+ </tr>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">integer</td>
+ <td class="d"># the number of characters</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L253">line 253 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1button_at">function WinLetter:buttonAt(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ The button (LETTER_BUTTONS) at screen position (x, y), or nil. The buttons
+are there once the letter is typed.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">number</td>
+ <td class="d"> x on the screen</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">number</td>
+ <td class="d"> y on the screen</td>
+ </tr>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">table?</td>
+ <td class="d"># the button, or nil</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L313">line 313 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1draw">function WinLetter:draw(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">scale</span>)</a></h5>
+ <p>
+ Draw the letter over the frame of the movie, typed as far as it is by now.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">THRenderTarget</td>
+ <td class="d"> where to draw it</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">number</td>
+ <td class="d"> the left of the movie on the screen</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">number</td>
+ <td class="d"> the top of the movie on the screen</td>
+ </tr>
+ <tr>
+ <td class="n">scale</td>
+ <td class="t">number</td>
+ <td class="d"> screen pixels per pixel of the movie</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L212">line 212 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1on_mouse_down">function WinLetter:onMouseDown(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ A mouse button is pressed on the movie.
+While the letter is being typed, a left click finishes it. Once it is
+typed, a left press on a button holds it down until the release
+(onMouseUp), and a click anywhere else does nothing; a letter without
+buttons leaves the click to the movie. Before a letter with buttons shows,
+a click does nothing.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">string</td>
+ <td class="d"> the mouse button ("left", "right", ...)</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">number</td>
+ <td class="d"> x on the screen</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">number</td>
+ <td class="d"> y on the screen</td>
+ </tr>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">boolean</td>
+ <td class="d"># true if the letter took the click (the movie goes on)</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L348">line 348 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1on_mouse_move">function WinLetter:onMouseMove(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ The mouse has moved (the button under it lights up).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">number</td>
+ <td class="d"> x on the screen</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">number</td>
+ <td class="d"> y on the screen</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L341">line 341 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1on_mouse_up">function WinLetter:onMouseUp(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ A mouse button is released on the movie. As with the buttons of a window,
+the letter is answered (choose) if the left button is released over the
+button it was pressed on.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">string</td>
+ <td class="d"> the mouse button ("left", "right", ...)</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">number</td>
+ <td class="d"> x on the screen</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">number</td>
+ <td class="d"> y on the screen</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L371">line 371 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_win_letter_1strike">function WinLetter:strike()</a></h5>
+ <p>
+ One strike of the typewriter for a character typed: the game's own key
+strike (TYPING.WAV) at a random pitch, unless sound effects are off.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/win_letter.lua#L332">line 332 of Lua/win_letter.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

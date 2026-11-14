@@ -109,9 +109,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab9cff49469bbf92ea769ff52b28f1acf" id="r_ab9cff49469bbf92ea769ff52b28f1acf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsound__player.html">sound_player</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9cff49469bbf92ea769ff52b28f1acf">operator=</a> (const <a class="el" href="classsound__player.html">sound_player</a> &amp;)=delete</td></tr>
 <tr class="memitem:a002ec77b9fd73012dee8f68ce480126d" id="r_a002ec77b9fd73012dee8f68ce480126d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a002ec77b9fd73012dee8f68ce480126d">~sound_player</a> ()</td></tr>
 <tr class="memitem:ae142d80dc6029651ed3bd1655c89350a" id="r_ae142d80dc6029651ed3bd1655c89350a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae142d80dc6029651ed3bd1655c89350a">populate_from</a> (<a class="el" href="classsound__archive.html">sound_archive</a> *pArchive)</td></tr>
-<tr class="memitem:ac52c6f87e9fd700fcd1add71a17b8059" id="r_ac52c6f87e9fd700fcd1add71a17b8059"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac52c6f87e9fd700fcd1add71a17b8059">play</a> (size_t iIndex, double dVolume, int loops)</td></tr>
+<tr class="memitem:a3edca0b644f230f6ac4789265c308fd2" id="r_a3edca0b644f230f6ac4789265c308fd2"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3edca0b644f230f6ac4789265c308fd2">play</a> (size_t iIndex, double dVolume, int loops, double pitch=1.0)</td></tr>
 <tr class="memitem:a890f368d707dd8f9245aa335b2dbf86f" id="r_a890f368d707dd8f9245aa335b2dbf86f"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a890f368d707dd8f9245aa335b2dbf86f">play_at</a> (size_t iIndex, int iX, int iY, int loops)</td></tr>
-<tr class="memitem:aba60453766cf0605a72d8f60aeb00024" id="r_aba60453766cf0605a72d8f60aeb00024"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba60453766cf0605a72d8f60aeb00024">play_at</a> (size_t iIndex, double dVolume, int iX, int iY, int loops)</td></tr>
+<tr class="memitem:aa5986d3510e0964e0deec84ef3b3a080" id="r_aa5986d3510e0964e0deec84ef3b3a080"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5986d3510e0964e0deec84ef3b3a080">play_at</a> (size_t iIndex, double dVolume, int iX, int iY, int loops, double pitch=1.0)</td></tr>
 <tr class="memitem:a5aa0598ecacfbc257e4ae7a4996aaf1f" id="r_a5aa0598ecacfbc257e4ae7a4996aaf1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ad150da33ef9938c98e785628b9deb229">toggle_pause_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5aa0598ecacfbc257e4ae7a4996aaf1f">toggle_pause</a> (uint32_t handle)</td></tr>
 <tr class="memitem:af63ebe4b21470848960e2a2412ae98fc" id="r_af63ebe4b21470848960e2a2412ae98fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af63ebe4b21470848960e2a2412ae98fc">stop</a> (uint32_t handle)</td></tr>
 <tr class="memitem:a0d661dee301fcefb14e716497613bbd4" id="r_a0d661dee301fcefb14e716497613bbd4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d661dee301fcefb14e716497613bbd4">is_playing</a> (uint32_t handle)</td></tr>
@@ -292,8 +292,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac52c6f87e9fd700fcd1add71a17b8059" name="ac52c6f87e9fd700fcd1add71a17b8059"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac52c6f87e9fd700fcd1add71a17b8059">&#9670;&#160;</a></span>play()</h2>
+<a id="a3edca0b644f230f6ac4789265c308fd2" name="a3edca0b644f230f6ac4789265c308fd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3edca0b644f230f6ac4789265c308fd2">&#9670;&#160;</a></span>play()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -311,7 +311,12 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>loops</em></span>&#160;)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>loops</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>pitch</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1.0</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -321,6 +326,7 @@ Static Public Attributes</h2></td></tr>
     <tr><td class="paramname">iIndex</td><td>Index of the sound effect to play. </td></tr>
     <tr><td class="paramname">dVolume</td><td>Volume to play the sound effect at, in the range 0.0 to 1.0. </td></tr>
     <tr><td class="paramname">loops</td><td>The number of times to play the sound, -1 for 'practically' infinite. </td></tr>
+    <tr><td class="paramname">pitch</td><td>The frequency ratio to play the sound at: 1.0 as recorded, more is higher and faster, less is lower and slower. </td></tr>
   </table>
   </dd>
 </dl>
@@ -328,8 +334,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aba60453766cf0605a72d8f60aeb00024" name="aba60453766cf0605a72d8f60aeb00024"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba60453766cf0605a72d8f60aeb00024">&#9670;&#160;</a></span>play_at() <span class="overload">[1/2]</span></h2>
+<a id="aa5986d3510e0964e0deec84ef3b3a080" name="aa5986d3510e0964e0deec84ef3b3a080"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5986d3510e0964e0deec84ef3b3a080">&#9670;&#160;</a></span>play_at() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -357,7 +363,12 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>loops</em></span>&#160;)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>loops</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>pitch</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1.0</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -369,6 +380,7 @@ Static Public Attributes</h2></td></tr>
     <tr><td class="paramname">iX</td><td>X coordinate of the sound effect. </td></tr>
     <tr><td class="paramname">iY</td><td>Y coordinate of the sound effect. </td></tr>
     <tr><td class="paramname">loops</td><td>The number of times to play the sound, -1 for 'practically' infinite. </td></tr>
+    <tr><td class="paramname">pitch</td><td>The frequency ratio to play the sound at: 1.0 as recorded, more is higher and faster, less is lower and slower. </td></tr>
   </table>
   </dd>
 </dl>
@@ -469,7 +481,7 @@ Static Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Reserves an SDL_mixer channel for exclusive use.</p>
-<p>Not necessary to use in conjunction with <a class="el" href="#ac52c6f87e9fd700fcd1add71a17b8059">play()</a> or <a class="el" href="#a890f368d707dd8f9245aa335b2dbf86f">play_at()</a>, as these methods will automatically reserve and release channels.</p>
+<p>Not necessary to use in conjunction with <a class="el" href="#a3edca0b644f230f6ac4789265c308fd2">play()</a> or <a class="el" href="#a890f368d707dd8f9245aa335b2dbf86f">play_at()</a>, as these methods will automatically reserve and release channels.</p>
 <dl class="section return"><dt>Returns</dt><dd>The reserved channel index, or -1 if no channels are available. </dd></dl>
 
 </div>
