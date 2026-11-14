@@ -33,6 +33,9 @@ local local_criteria_variable = {
   {name = "staff_happiness",  icon = 16, icon_file = "MPointer", formats = 2, two_tooltips = true},
   {name = "patient_happiness",icon = 18, icon_file = "MPointer", formats = 2, two_tooltips = true},
   {name = "months_played",    icon = 46, icon_file = "Font04V",  formats = 4, two_tooltips = true},
+  {name = "emergency_count",    icon = 38, icon_file = "Font04V",  formats = 2},
+  {name = "emergency_cured",    icon = 36, icon_file = "Font04V",  formats = 2},
+  {name = "emergency_visitors", icon = 55, icon_file = "Font04V",  formats = 2},
 }
 
 -- A table of functions for fetching criteria values that cannot be measured
