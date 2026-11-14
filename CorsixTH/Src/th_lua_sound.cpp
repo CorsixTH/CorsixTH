@@ -222,11 +222,11 @@ int l_soundfx_play(lua_State* L) {
 
   // Get the current sound_archive. We don't want to disrupt the lua stack
   // so we put this after any possible argument.
-  lua_settop(L, 8);
+  lua_settop(L, 9);
   lua_getfenv(L, 1);
   lua_pushliteral(L, "archive");
-  lua_rawget(L, 9);
-  sound_archive* pArchive = (sound_archive*)lua_touserdata(L, 10);
+  lua_rawget(L, 10);
+  sound_archive* pArchive = (sound_archive*)lua_touserdata(L, 11);
   if (pArchive == nullptr) {
     return 0;
   }
@@ -238,14 +238,17 @@ int l_soundfx_play(lua_State* L) {
 
   double volume = luaL_checknumber(L, 3);
   int loops = static_cast<int>(luaL_optinteger(L, 8, 0));
+  double pitch = luaL_optnumber(L, 9, 1.0);
+  luaL_argcheck(L, pitch >= 0.01 && pitch <= 100.0, 9,
+                "pitch must be between 0.01 and 100");
 
   uint32_t handle;
   if (lua_isnil(L, 4)) {
-    handle = pEffects->play(iIndex, volume, loops);
+    handle = pEffects->play(iIndex, volume, loops, pitch);
   } else {
     handle = pEffects->play_at(
         iIndex, volume, static_cast<int>(luaL_checkinteger(L, 4)),
-        static_cast<int>(luaL_checkinteger(L, 5)), loops);
+        static_cast<int>(luaL_checkinteger(L, 5)), loops, pitch);
   }
   // SDL SOUND_OVER Callback Timer:
   // 6: unusedPlayedCallbackID
@@ -262,9 +265,10 @@ int l_soundfx_play(lua_State* L) {
         static_cast<int>(luaL_checkinteger(L, 6));
     int& callback_id = played_sound_callback_ids[played_sound_callback_index];
 
-    Uint32 interval =
-        static_cast<Uint32>(pArchive->get_sound_duration(iIndex) * (loops + 1) +
-                            iPlayedCallbackDelay);
+    // (At another pitch the sound plays faster or slower.)
+    Uint32 interval = static_cast<Uint32>(pArchive->get_sound_duration(iIndex) *
+                                              (loops + 1) / pitch +
+                                          iPlayedCallbackDelay);
     SDL_TimerID timersID =
         SDL_AddTimer(interval, played_sound_callback, &callback_id);
     map_sound_timers.emplace(std::pair<int, map_timer_info>(
