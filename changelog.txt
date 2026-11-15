@@ -1,6 +1,15 @@
 -------------------------------------------------------------------------------
 CorsixTH 0.70.2 - Released November 2026
 -------------------------------------------------------------------------------
+# Improvements
+* Auto-detection of Hospital folder for Steam users on Windows
+
+# Bug Fixes
+* Crash with subtitles on after some announcements
+
+-------------------------------------------------------------------------------
+CorsixTH 0.70.2 - Released November 2026
+-------------------------------------------------------------------------------
 # Bug Fixes
 * Dying patients can no longer be sent home
 * Machine dynamic information now correctly updates after repair

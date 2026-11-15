@@ -20,6 +20,18 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.70.3" date="2026-11-22" type="stable">
+      <description>
+        <p>Improvements:</p>
+        <ul>
+          <li>Auto-detection of Hopsital folder for Steam users on Windows</li>
+        </ul>
+        <p>Bug fixes:</p>
+        <ul>
+          <li>Crash with subtitles on after some announcements</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.70.2" date="2026-11-08" type="stable">
       <description>
         <p>Bug fixes:</p>
