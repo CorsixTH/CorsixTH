@@ -5,7 +5,7 @@ CorsixTH 0.70.2 - Released November 2026
 * Auto-detection of Hospital folder for Steam users on Windows
 
 # Bug Fixes
-* Crash with subtitles on after some announcements
+* Crash with subtitles after some random announcements played on non-english localisations
 
 -------------------------------------------------------------------------------
 CorsixTH 0.70.2 - Released November 2026
