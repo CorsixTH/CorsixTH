@@ -62,7 +62,7 @@ tooltip.staff_list.prev_person = "Voir la page précédente"
 
 -- Improve tooltips in staff window to mention hidden features
 tooltip.staff_window.face = "Visage - cliquez pour ouvrir la fenêtre de gestion"
-tooltip.staff_window.center_view = "clic gauche pour focaliser sur la personne, pour faire défiler les membres du personnel"
+tooltip.staff_window.center_view = "clic gauche pour focaliser sur la personne, clic droit pour faire défiler les membres du personnel"
 
 -- Fix Winning texts
 letter = {
@@ -151,17 +151,17 @@ tooltip.objects = {
   pool_table = "Billard : pour la relaxation du personnel.",
   bed = "Lit : les cas graves ont besoin de rester couchés.",
   bookcase = "Étagère : pour les ouvrages de référence.",
-  drinks_machine = "Distributeurs : contre la soif et pour ramasser des gros sous.",
+  drinks_machine = "Distributeur : contre la soif et pour ramasser de gros sous.",
   skeleton = "Squelette : utile pour l'enseignement et pour Halloween.",
   computer = "Ordinateur : une composante essentielle de la recherche.",
   bin = "Poubelle : les patients y jettent leurs détritus.",
   pharmacy_cabinet = "Pharmacie : c'est là qu'on dispense les médicaments.",
   radiator = "Radiateur : permet de garder l'hôpital au chaud.",
-  atom_analyser = "Mélangeur : installé au Département Recherche, cette machine accélère tout le processus d'étude.",
+  atom_analyser = "Mélangeur : installée au Département Recherche, cette machine accélère tout le processus d'étude.",
   plant = "Plante : plaît aux patients et purifie l'air.",
   toilet = "Toilettes : les patients en ont, euh, besoin.",
   fire_extinguisher = "Extincteur : pour minimiser les dangers causés par des machines défectueuses.",
-  lecture_chair = "Chaise : les médecins en formation s'asseyent là pour prendre des notes et s'ennuyer. Plus vous mettrez des chaises, plus vous pourrez former de médecins.",
+  lecture_chair = "Chaise : les médecins en formation s'asseyent là pour prendre des notes et s'ennuyer. Plus vous mettrez de chaises, plus vous pourrez former de médecins.",
   toilet_sink = "Lavabo : s'il n'y en a pas assez, les patients qui apprécient l'hygiène seront mécontents.",
   cabinet = "Placard : dossiers des patients, notes de recherche.",
   rathole = "Domicile d'une famille de rats qui a trouvé votre hôpital suffisamment sale pour y vivre."
@@ -175,7 +175,7 @@ room_descriptions = {
     [2] = "Les patients dont le mal a été diagnostiqué et dont le traitement est un médicament peuvent se rendre à la pharmacie. Comme la recherche découvre toujours de nouveaux traitements, l'activité de cette salle est en constante évolution. Vous aurez à construire une autre pharmacie plus tard."
   },
   general_diag = {
-    [3] = "La salle de diagnostic nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique. "
+    [3] = "La salle de diagnostic nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique."
   },
   fracture_clinic = {
     [2] = "Les patients dont les os étaient en morceaux se rendront dans cette salle. Le déplâtreur dégagera les membres en ne causant qu'une faible douleur."
@@ -184,7 +184,7 @@ room_descriptions = {
     [2] = "Les patients souffrant de l'affreuse-mais-si-drôle encéphalantiasis sont soignés à la salle de gonflage, où leur tête démesurée sera dégonflée puis regonflée à la bonne taille."
   },
   hair_restoration = {
-    [2] = "Les patients souffrant de sévère calvitie se rendront dans cette salle équipée d'un moumouteur. Un médecin utilisera la machine pour donner aux patients une nouvelle chevelure."
+    [2] = "Les patients souffrant d'une sévère calvitie se rendront dans cette salle équipée d'un moumouteur. Un médecin utilisera la machine pour donner aux patients une nouvelle chevelure."
   },
   electrolysis = {
     [2] = "Les patients souffrant de pilose viennent dans cette salle où une machine arrache les poils et scelle les pores selon un procédé qui n'est pas sans rappeler la cimentation."
@@ -250,14 +250,6 @@ fax = {
     remarks = {
       free_build = {"C'est vraiment un bel hôpital que vous avez là ! Pas trop difficile d'y arriver sans limite d'argent, hein ?", "Je ne suis pas économiste, mais je pense que je pourrais faire tourner cet hôpital aussi si vous voyez ce que je veux dire...", "Un hôpital très bien tenu. Cependant, attention à la récession ! Ah oui... vous n'avez pas à vous soucier de cela."},
     },
-  },
-  diagnosis_failed = {
-    what_to_do_question = "Que faire du patient ?",
-    partial_diagnosis_percentage_name = "Il y a %d pour cent de chances que la maladie soit %s."
-  },
-  diagnosis_failed = {
-    what_to_do_question = "Que faire du patient ?",
-    partial_diagnosis_percentage_name = "Il y a %d pour cent de chances que la maladie soit %s."
   }
 }
 
@@ -279,7 +271,7 @@ transactions = {
   treat_colon = "Trait :",
   advance_colon = "Avance :",
   insurance_colon = "Assurance :",
-  remove_room = "Construction : Supprimer la salle détruite"
+  remove_room = "Construction : supprimer la salle détruite"
 }
 diseases = {
   third_degree_sideburns = {
@@ -289,7 +281,7 @@ diseases = {
     symptoms = "Symptômes : passion immodérée des pantalons à pattes d'éléphant et des paillettes."
   },
   discrete_itching = {
-    cause = "Cause : petits bestioles à dents aiguës.",
+    cause = "Cause : petites bestioles à dents aiguës.",
     cure = "Traitement : un sirop gluant est administré pour empêcher les démangeaisons.",
     name = "Morpionnite",
     symptoms = "Symptômes : le patient se gratte jusqu'au sang."
@@ -343,7 +335,7 @@ diseases = {
     cause = "Cause : exposition au gaz empoisonné contenu dans les balles de golf.",
     cure = "Traitement : résection des surplus par une équipe de deux chirurgiens.",
     name = "Pierres de golf",
-    symptoms = "Symptômes : formation nodules excédentaires."
+    symptoms = "Symptômes : formation de nodules excédentaires."
   },
   diag_general_diag = {
     name = "Diag Généraliste"
@@ -406,7 +398,7 @@ diseases = {
     symptoms = "Symptômes : le patient rejette par accès des bribes de nourriture mal digérée."
   },
   uncommon_cold = {
-    cause = "Cause : divers trucmuches volant dans l'air",
+    cause = "Cause : divers trucmuches volant dans l'air.",
     cure = "Traitement : absorption d'une grande rasade d'un sirop spécial élaboré à la pharmacie.",
     name = "Catarhume",
     symptoms = "Symptômes : nez qui coule, éternuements, poumons décolorés."
@@ -466,7 +458,7 @@ diseases = {
     symptoms = "Symptômes : douleur et fréquentes visites aux toilettes."
   },
   transparency = {
-    cause = "Cause : avoir léché le yaourt adhérent au couvercle à l'ouverture d'un pot.",
+    cause = "Cause : avoir léché le yaourt adhérant au couvercle à l'ouverture d'un pot.",
     cure = "Traitement : administration d'une potion fraîche et colorée préparée à la pharmacie.",
     name = "Transparence",
     symptoms = "Symptômes : la chair est horrible et transparente."
@@ -521,8 +513,20 @@ confirmation = {
 -- The originals of these strings contain one space too much
 trophy_room.sold_drinks.trophies[2] = "Vous recevez le prix Bubulles du Syndicat des Vendeurs de Limonade pour récompenser la quantité de sodas vendus dans votre hôpital au cours de l'année écoulée."
 
-tooltip.status.percentage_cured = "Vous devez soigner %d%% des visiteurs de l'hôpital. Actuellement, vous en avez soigné %d%%"
+tooltip.status.percentage_cured = "Vous devez soigner %d %% des visiteurs de l'hôpital. Actuellement, vous en avez soigné %d %%"
 tooltip.status.num_cured = "L'objectif est de soigner %d personnes. Pour le moment, vous en avez soigné %d"
+tooltip.status.over = {
+  staff_happiness = "La satisfaction moyenne de votre personnel doit dépasser %d %%. Actuellement, elle est de %d %%",
+  patient_happiness = "La satisfaction moyenne de vos patients doit dépasser %d %%. Actuellement, elle est de %d %%",
+  months_played = "Vous devez atteindre la fin de %s %d. Nous sommes actuellement en %s %d",
+  years_played = "Vous devez atteindre l'année %d. Nous sommes actuellement en %d",
+}
+tooltip.status.under = {
+  staff_happiness = "La satisfaction moyenne de votre personnel ne doit pas descendre en dessous de %d %%. Actuellement, elle est de %d %%",
+  patient_happiness = "La satisfaction moyenne de vos patients ne doit pas descendre en dessous de %d %%. Actuellement, elle est de %d %%",
+  months_played = "Vous devez gagner avant la fin de %s %d. Nous sommes actuellement en %s %d",
+  years_played = "Vous devez atteindre l'année %d. Nous sommes actuellement en %d",
+}
 dynamic_info.staff.actions.going_to_repair = "Pour réparer %s"
 adviser.staff_place_advice = {
   only_doctors_in_room = "Seuls les médecins peuvent travailler en %s",
@@ -530,7 +534,7 @@ adviser.staff_place_advice = {
   not_enough_lecture_chairs = "Chaque étudiant en médecine a besoin d'une chaise de conférence pour s'asseoir !"
 }
 pay_rise.definite_quit = "Rien ne me fera rester ici. J'en ai assez."
-place_objects_window.confirm_or_buy_objects = "Vous pouvez valider ainsi ou bien soit acheter soit déplacer des objets."
+place_objects_window.confirm_or_buy_objects = "Vous pouvez valider ainsi, ou bien acheter ou déplacer des objets."
 
 ----------------------------------------------------------- New strings -----------------------------------------------------------
 
@@ -539,7 +543,7 @@ date_format = {
 }
 
 -- Objects
-object.rathole = "Trou à rats."
+object.rathole = "Trou à rats"
 object.litter = "Déchet"
 tooltip.objects.litter = "Déchet : laissé sur le sol par un patient car il n'a pas trouvé de poubelle où le jeter."
 
@@ -560,6 +564,10 @@ menu_file = {
 
 -- Options menu
 menu_options = {
+  sound = "  (%1%) SON   ",
+  announcements = "  (%1%) ANNONCES   ",
+  music = "  (%1%) MUSIQUE   ",
+  jukebox = "  (%1%) JUKEBOX  ",
   lock_windows = "  FIGER LES FENETRES  ",
   edge_scrolling = "  DEFILEMENT PAR BORD  ",
   adviser_disabled = "  (%1%) ASSISTANT  ",
@@ -597,7 +605,7 @@ menu_charts = {
   town_map = "  (%1%) CARTE DE LA VILLE  ",
   casebook = "  (%1%) DOSSIER MEDICAL  ",
   research = "  (%1%) RECHERCHE  ",
-  status = "  (%1%) STATUTS  ",
+  status = "  (%1%) STATUT  ",
   graphs = "  (%1%) GRAPHIQUES  ",
   policy = "  (%1%) POLITIQUE  ",
   machine_menu  = "  (%1%) MENU DES MACHINES",
@@ -609,7 +617,7 @@ tooltip.toolbar = {
   hire = "Embaucher (%s)",
   status = "Statut (%s)",
   edit = "Modifier salles/objets (%s)",
-  bank_button = "Clic-gauche (%s) pour le directeur de banque ou clic-droit (%s) pour le relevé bancaire",
+  bank_button = "Clic gauche (%s) pour le directeur de banque ou clic droit (%s) pour le relevé bancaire",
   policy = "Organisation (%s)",
   research = "Recherches (%s)",
   casebook = "Registre (%s)",
@@ -626,21 +634,28 @@ tooltip.toolbar = {
 -- Debug menu
 menu_debug = {
   jump_to_level = "  ALLER AU NIVEAU  ",
-  connect_debugger = "  (%1%) CONNECTER AU SERVEUR DE DÉBOGUAGE ",
+  connect_debugger = "  (%1%) CONNECTER AU SERVEUR DE DÉBOGAGE  ",
   transparent_walls = "  (%1%) MURS TRANSPARENTS  ",
-  limit_camera = "  LIMITER LA CAMERA  ",
+  limit_camera = "  LIMITER LA CAMÉRA  ",
   disable_salary_raise = "  DÉSACTIVER LES AUGMENTATIONS DE SALAIRE  ",
   make_debug_fax = "  CRÉER UN FAX DE TEST  ",
   make_debug_patient = "  CRÉER UN PATIENT DE TEST  ",
+  make_debug_rat = "  CRÉER UN RAT DE TEST  ",
   cheats = "  (%1%) TRICHES  ",
   lua_console = "  (%1%) CONSOLE LUA  ",
-  debug_script = "  (%1%) ACTIVER LE DÉBOGUAGE PAR SCRIPT ",
+  debug_script = "  (%1%) ACTIVER LE DÉBOGAGE PAR SCRIPT  ",
   calls_dispatcher = "  RÉPARTITION DES TACHES  ", -- Â not supported by TH Font
   dump_strings = "  (%1%) EXTRAIRE LES TRADUCTIONS  ",
   dump_gamelog = "  (%1%) EXTRAIRE LE JOURNAL DE JEU  ",
   map_overlay = "  INCRUSTATIONS DE CARTE  ",
   sprite_viewer = "  VISIONNEUSE DE SPRITES  ",
   allow_blocking_off_areas = "  AUTORISER LE BLOCAGE DES ZONES  "
+}
+
+menu_debug_overlay_blocking_off_areas = {
+  choice_1 = "  TOTALEMENT INTERDIT  ",
+  choice_2 = "  PARTIELLEMENT AUTORISÉ  ",
+  choice_3 = "  TOTALEMENT AUTORISÉ  ",
 }
 
 menu_debug_overlay = {
@@ -667,28 +682,28 @@ menu_player_count = {
 
 -- Adviser
 adviser = {
-  room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit rendrait inaccessibles certaines parties de l'hôpital",
+  room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit rendrait inaccessibles certaines parties de l'hôpital.",
 
   warnings = {
     no_desk = "Vous devriez construire un bureau de réception et engager une réceptionniste un de ces jours !",
     no_desk_1 = "Si vous voulez que des patients viennent dans votre hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
     no_desk_2 = "Bien joué, ça doit être un record : presque un an et pas de patient ! Si vous voulez continuer comme directeur de cet hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
-    no_desk_3 = "C'est tout simplement génial, presque un an et vous n'avez pas embauché de réceptionniste ! Comment espérez obtenir le moindre patient ? Arrangez-ça et arrêtez de perdre votre temps !",
-    no_desk_4 = "Une réceptionniste aura besoin d'un bureau pour accueillir des patients",
+    no_desk_3 = "C'est tout simplement génial, presque un an et vous n'avez pas embauché de réceptionniste ! Comment espérez-vous obtenir le moindre patient ? Arrangez ça et arrêtez de perdre votre temps !",
+    no_desk_4 = "Une réceptionniste aura besoin d'un bureau pour accueillir des patients.",
     no_desk_5 = "Il était temps, maintenant les patients devraient commencer à arriver bientôt !",
-    no_desk_6 = "Vous avez une réceptionniste, peut-être il est temps de construire un bureau où elle peut travailler ?",
-    no_desk_7 = "Maintenant, que vous avez une réception, que diriez-vous d'embaucher une réceptionniste également ? Vous n'aurez pas de patients avant de l'avoir fait !",
+    no_desk_6 = "Vous avez une réceptionniste, peut-être est-il temps de construire un bureau où elle pourra travailler ?",
+    no_desk_7 = "Maintenant que vous avez une réception, que diriez-vous d'embaucher une réceptionniste également ? Vous n'aurez pas de patients avant de l'avoir fait !",
     cannot_afford = "Vous n'avez pas assez d'argent à la banque pour embaucher cette personne !", -- I can't see anything like this in the original strings
     cannot_afford_2 = "Vous n'avez pas assez d'argent à la banque pour effectuer l'achat !",
     research_screen_open_1 = "Vous devez construire une salle de recherche avant de pouvoir accéder à l'écran des recherches.",
     research_screen_open_2 = "La recherche est désactivée pour le niveau en cours.",
     researcher_needs_desk_1 = "Chaque chercheur a besoin d'un bureau pour travailler.",
-    researcher_needs_desk_2 = "Vos chercheurs sont heureux d'obtenir une pause bien méritée. Si vous voulez que plusieurs chercheurs puissent travailler en même temps.",
+    researcher_needs_desk_2 = "Vos chercheurs sont heureux d'obtenir une pause bien méritée. Si vous voulez que plusieurs chercheurs puissent travailler en même temps, vous devez leur construire un bureau à chacun.",
     researcher_needs_desk_3 = "Un chercheur a toujours besoin d'un bureau.",
     nurse_needs_desk_1 = "Chaque infirmière a besoin de son propre bureau.",
     nurse_needs_desk_2 = "Votre infirmière est heureuse d'avoir une pause. Si vous comptez y faire travailler plusieurs personnes en même temps, vous devez leur construire un bureau à chacune.",
     low_prices = "Vous facturez trop peu pour %s. Ça va amener des gens dans votre hôpital, mais vous ne ferez pas beaucoup de profit sur chacun d'eux.",
-    high_prices = "Votre tarif pour %s est trop élevé. Ça va générer plus de profit sur le court-terme, mais à la longue les gens vont fuir.",
+    high_prices = "Votre tarif pour %s est trop élevé. Ça va générer plus de profit à court terme, mais à la longue les gens vont fuir.",
     fair_prices = "Le prix pour %s semble juste et équilibré.",
     patient_not_paying = "Un patient est parti sans payer pour %s parce que c'est trop cher !",
     another_desk = "Vous devrez construire un autre bureau pour cette nouvelle réceptionniste.",
@@ -698,21 +713,28 @@ adviser = {
     bankruptcy_imminent = "Hé ! Vous courez à la faillite. Attention !",
     too_many_plants = "Il y a bien trop de plantes. C'est la jungle, ici !",
     many_killed = "Vous avez laissé mourir %d personnes. Idiot ! Vous êtes censé les soigner.",
-    falling_1 = "Hé ! Ce n'est pas drôle, regardez ou vous cliquez, quelqu'un pourrait être blessé !",
+    falling_1 = "Hé ! Ce n'est pas drôle, regardez où vous cliquez, quelqu'un pourrait être blessé !",
     falling_2 = "Arrêtez de faire n'importe quoi, qu'en penseriez-vous à leur place ?",
-    falling_3 = "Aïe, ça doit faire mal,  qu'on appelle un médecin !",
-    falling_4 = "C'est un hôpital, pas un parc d'attraction !",
+    falling_3 = "Aïe, ça doit faire mal, qu'on appelle un médecin !",
+    falling_4 = "C'est un hôpital, pas un parc d'attractions !",
     falling_5 = "Ce n'est pas un endroit pour bousculer les gens, ils sont malades vous savez ?",
     falling_6 = "Ce n'est pas un bowling, les gens malades ne devraient pas être traités comme ça !",
     handymen_tired = "Les agents de maintenance sont très fatigués. Laissez-les se reposer.", -- Add a missing letter
-    cannot_afford_machine = "Vous avez besoin de au moins $%1% dans la banque pour pouvoir acheter: %2%!",
+    cannot_afford_machine = "Vous avez besoin d'au moins $%1% à la banque pour pouvoir acheter : %2% !",
+    cannot_buy = "Vous ne pouvez pas acheter davantage de cet objet !",
+    no_doctor_no_gp_office = "Vous devriez construire un cabinet de médecine générale et embaucher un médecin un de ces jours !",
+    no_gp_office = "Vous n'avez pas construit de cabinet de médecine générale où vos médecins pourraient diagnostiquer les patients !",
   },
   cheats = {
     th_cheat = "Félicitations, vous avez débloqué les triches !",
     roujin_on_cheat = "Défi de Roujin activé ! Bonne chance...",
     roujin_off_cheat = "Défi de Roujin désactivé.",
     norest_on_cheat = "Oh non ! Il semble que votre personnel ait trop consommé de caféine et n'ait plus besoin de se reposer.",
-    norest_off_cheat = "Ouf ! On dirait que cette excitation s'est enfin dissipée. Votre personnel se reposera maintenant correctement."
+    norest_off_cheat = "Ouf ! On dirait que cette excitation s'est enfin dissipée. Votre personnel se reposera maintenant correctement.",
+    queuejump_on_cheat = "Vos patients savent faire la queue. Ils laissent passer en premier les patients presque mourants.",
+    queuejump_off_cheat = "Les gens sont devenus égoïstes et ne laissent plus les patients presque mourants passer devant dans les files d'attente.",
+    superdoctor_on_cheat = "Une excellente école de médecine vous a recommandé à ses diplômés ! Jetez un œil au personnel disponible à l'embauche.",
+    superdoctor_off_cheat = "Le directeur de l'école de médecine ne vous recommande plus à ses diplômés.",
   }
 }
 
@@ -721,7 +743,7 @@ dynamic_info.patient.actions.no_gp_available = "Attente d'un cabinet de médecin
 dynamic_info.staff.actions.heading_for = "Va vers %s"
 dynamic_info.staff.actions.fired = "Renvoyé"
 dynamic_info.patient.actions.epidemic_vaccinated = "Je ne suis plus contagieux"
-dynamic_info.object.strength_extra_info = "Force %d (Améliorable jusqu'à %d)"
+dynamic_info.object.strength_extra_info = "Force %d (améliorable jusqu'à %d)"
 dynamic_info.staff.actions.vaccine = "Vaccination d'un patient"
 
 -- Progress report
@@ -736,7 +758,7 @@ fax = {
   },
   emergency = {
     num_disease_singular = "Il y a 1 personne atteinte de %s qui a besoin de soins immédiats.",
-    free_build = "Si vous réussissez votre réputation augmentera mais si vous échouez votre réputation sera sérieusement entachée."
+    free_build = "Si vous réussissez, votre réputation augmentera, mais si vous échouez, elle sera sérieusement entachée."
   },
 }
 
@@ -745,9 +767,9 @@ letter = {
   dear_player = "Cher %s",
   custom_level_completed = "Félicitations ! Vous avez réussi tous les objectifs de ce niveau personnalisé !",
   return_to_main_menu = "Voulez-vous retourner au menu principal ou continuer la partie ?",
-  campaign_completed = "Incroyable ! Vous avez réussi à terminer tous les niveaux. Vous pouvez maintenant vous détendre et profiter de remplir des forums sur Internet de vos réalisations. Bonne chance !",
-  campaign_level_missing = "Désolé, mais le prochain niveau de cette campagne semble manquer. (Nom: %s)",
-  campaign_level_completed = "Bon travail ! Vous avez battu le niveau. Mais ce n'est pas fini !\n Aimeriez-vous un poste à l'hôpital %s ?"
+  campaign_completed = "Incroyable ! Vous avez réussi à terminer tous les niveaux. Vous pouvez maintenant vous détendre et vous amuser à raconter vos exploits sur les forums Internet. Bonne chance !",
+  campaign_level_missing = "Désolé, mais le prochain niveau de cette campagne semble manquer. (Nom : %s)",
+  campaign_level_completed = "Bon travail ! Vous avez terminé le niveau. Mais ce n'est pas fini !\n Aimeriez-vous un poste à l'hôpital %s ?"
 }
 
 -- Installation
@@ -767,9 +789,11 @@ misc = {
   epidemics_on = "Les épidémies sont activées",
   epidemic_no_receptionist = "Impossible de créer une épidémie - il n'y a pas de réceptionniste",
   epidemic_no_diseases = "Impossible de créer une épidémie - il n'y a pas de maladie contagieuse disponible",
-  epidemic_no_icon_to_toggle = "Impossible de montrer/cacher les icônes des infectés - il n'y a pas d'épidémies non-révélées",
+  epidemic_no_icon_to_toggle = "Impossible de montrer/cacher les icônes des infectés - il n'y a pas d'épidémies non révélées",
   earthquakes_off = "Les tremblements de terre sont désactivés",
-  earthquakes_on = "Les tremblements de terre sont activés"
+  earthquakes_on = "Les tremblements de terre sont activés",
+  invulnerable_machines_off = "Les machines vont de nouveau s'user et tomber en panne.",
+  invulnerable_machines_on = "Les machines ne s'useront plus et ne tomberont plus en panne.",
 }
 
 -- Main menu
@@ -827,12 +851,14 @@ tooltip.custom_game_window = {
 -- Custom campaign window
 custom_campaign_window = {
   caption = "Campagne personnalisée",
-  start_selected_campaign = "Démarrer la campagne"
+  start_selected_campaign = "Démarrer la campagne",
+  duplicates_warning = "%d campagne(s) portant un nom en double ont été masquée(s)",
 }
 
 tooltip.custom_campaign_window = {
   choose_campaign = "Choisissez une campagne pour en savoir plus à son sujet",
-  start_selected_campaign = "Charger le premier niveau de cette campagne"
+  start_selected_campaign = "Charger le premier niveau de cette campagne",
+  duplicates_warning = "Consultez la fenêtre de commande pour le détail des erreurs",
 }
 
 -- Save game window
@@ -856,7 +882,7 @@ save_map_window = {
 }
 
 tooltip.save_map_window = {
-  map = "Ecraser la carte %s",
+  map = "Écraser la carte %s",
   new_map = "Entrez le nom pour une sauvegarde de la carte"
 }
 
@@ -876,7 +902,7 @@ menu_list_window = {
 tooltip.menu_list_window = {
   back = "Fermer cette fenêtre",
   save_date = "Cliquez ici pour classer la liste par date de dernière modification",
-  name = "Cliquez ici pour classer la liste par par nom",
+  name = "Cliquez ici pour classer la liste par nom",
   ok = "Confirmer le choix"
 }
 
@@ -885,7 +911,7 @@ options_window = {
   back = "Précédent",
   caption = "Paramètres",
   capture_mouse = "Capture de la souris",
-  check_for_updates = "Vérifier mises à jour",
+  check_for_updates = "Vérifier les mises à jour",
   customise = "Personnaliser",
   folder = "Dossier",
   hotkey = "Touches de raccourci",
@@ -897,13 +923,22 @@ options_window = {
   scroll_speed = "Vitesse de défilement",
   shift_scroll_speed = "Vit. de défil. + Maj",
   zoom_speed = "Vitesse de zoom",
-  right_mouse_scrolling = "Défilement Souris",
-  right_mouse_scrolling_option_middle = "Bouton Milieu",
-  right_mouse_scrolling_option_right = "Bouton Droit",
+  right_mouse_scrolling = "Défilement souris",
+  right_mouse_scrolling_option_middle = "Bouton du milieu",
+  right_mouse_scrolling_option_right = "Bouton droit",
   sound = "Son",
   autosave_frequency = "Fréquence sauv. auto.",
+  accessibility = "Accessibilité",
+  graphics = "Graphismes",
 }
 graphics_window = {
+  caption = "Graphismes",
+  window_size = "Taille de la fenêtre",
+  original_aspect_ratio = "Format d'origine (4:3)",
+  scale_auto = "Auto",
+  cursor_scale = "Taille du curseur",
+  custom_window_size = "Personnalisée...",
+  override_resolution = "Forcer la résolution",
   fullscreen = "Plein écran",
   ui_scale = "Échelle d'interface",
   width = "Largeur",
@@ -922,7 +957,7 @@ autosave_frequency = {
 
 tooltip.autosave_frequency = {
     monthly = "Sauvegarder une fois par mois, le premier jour de chaque mois. Un total de 12 sauvegardes sur une période d'un an.",
-    weekly = "Sauvegarder une fois par semaine le 1er, 7ème, 14ème, 21ème, et 28ème jour de chaque mois. Un total de 60 sauvegardes sur une période d'un an.",
+    weekly = "Sauvegarder une fois par semaine les 1er, 7e, 14e, 21e et 28e jours de chaque mois. Un total de 60 sauvegardes sur une période d'un an.",
     daily = "Sauvegarder une fois par jour au début de chaque journée en jeu. Un total de 365 sauvegardes sur une période d'un an. Veuillez noter qu'une sauvegarde classique peut avoir un poids de 1 Mo ou plus, votre dossier Autosaves pourrait donc peser 300-500 Mo.",
 }
 
@@ -936,11 +971,13 @@ tooltip.options_window = {
   customise = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
   hotkey = "Modifier les touches de raccourci du clavier.",
   check_for_updates = "Choisir si le jeu doit rechercher des mises à jour au démarrage.",
-  capture_mouse = "Cliquez pour activer la capture du curseur dans la fenêtre du jeu.",
-  language_dropdown_no_font = "Sélectionnez une police d'écriture dans les paramètres pour activer ce langage",
-  right_mouse_scrolling = "Activer le bouton qui est utilisé pour faire défiler la carte",
+  capture_mouse = "Cliquez pour activer la capture du curseur pendant le jeu.",
+  language_dropdown_no_font = "Sélectionnez une police d'écriture dans les paramètres des dossiers pour activer cette langue",
+  right_mouse_scrolling = "Choisir le bouton utilisé pour faire défiler la carte",
   sound = "Modifier les réglages audio",
   autosave_frequency = "Définir la fréquence des sauvegardes automatiques.",
+  accessibility = "Options d'accessibilité",
+  graphics = "Modifier les paramètres d'affichage",
 }
 tooltip.graphics_window = {
   fullscreen = "Mode plein écran ou mode fenêtré",
@@ -951,6 +988,13 @@ tooltip.graphics_window = {
   height = "Entrez la hauteur désirée",
   apply = "Appliquer la résolution choisie",
   cancel = "Retour sans changement de résolution",
+  window_size = "La taille de la fenêtre dans laquelle le jeu doit s'afficher",
+  select_window_size = "Sélectionner une nouvelle taille de fenêtre",
+  original_aspect_ratio = "Ajouter des bandes noires si nécessaire pour conserver le format 4:3 du jeu original",
+  window_size_does_not_fit = "La taille de la fenêtre ne correspond pas à l'écran actuel",
+  cursor_scale = "Mise à l'échelle du curseur.",
+  select_cursor_scale = "Sélectionner une nouvelle taille de curseur",
+  override_resolution = "Indiquer une résolution à utiliser à la place de la résolution native de la fenêtre. Si cette option est désactivée, la résolution native de l'écran est utilisée.",
 }
 
 audio_window = {
@@ -959,11 +1003,12 @@ audio_window = {
   sound_volume = "Volume des sons",
   announcement_volume = "Volume des annonces",
   music_volume = "Volume de la musique",
+  play_own_music = "Jouer votre propre musique",
   midi_api = "API MIDI",
   midi_port = "Port MIDI",
   soundfont = "SoundFont",
-  default_midi_api = "Défaut (Software)",
-  default_midi_port = "Défaut",
+  default_midi_api = "Par défaut (logiciel)",
+  default_midi_port = "Par défaut",
   jukebox = "Jukebox",
   back = "Précédent",
   soundfont_location_caption = "Choisir la soundfont (%1%)",
@@ -975,18 +1020,21 @@ tooltip.audio_window = {
   sound_volume = "Volume des effets sonores",
   announcement_volume = "Volume des annonces",
   music_volume = "Volume de la musique",
+  play_own_music_label = "Choisissez entre votre propre musique ou la bande originale de Theme Hospital",
+  play_own_music_button = "Activez cette option pour écouter votre propre musique, ou désactivez-la pour écouter la bande originale de Theme Hospital",
+  play_own_music_no_folder_set = "Aucun dossier de musique personnelle n'est défini. Veuillez d'abord en indiquer un dans les paramètres des dossiers.",
   midi_api = "L'API utilisée pour la musique en jeu. Non disponible avec le dossier de musiques personnalisées.",
   midi_port = "Port système à utiliser pour la musique en jeu.",
   soundfont_location = "Emplacement du fichier Soundfont pour jouer la musique MIDI. Une Soundfont par défaut est utilisée si aucune n'est spécifiée.",
   browse = "Parcourir les dossiers",
-  browse_soundfont = "Rechercher un autre fichier Soundfont (sf2, or sf3) ( Emplacement actuel: %1% ) ",
+  browse_soundfont = "Rechercher un autre fichier Soundfont (sf2 ou sf3) (emplacement actuel : %1%)",
   no_soundfont_specified = "Utiliser la soundfont par défaut",
   jukebox = "Ouvrir le Jukebox pour changer la musique",
   back = "Fermer la fenêtre",
 }
 
 customise_window = {
-  caption = "Paramètres Additionnels",
+  caption = "Paramètres additionnels",
   option_on = "Activer",
   option_off = "Désactiver",
   back = "Retour",
@@ -1002,35 +1050,37 @@ customise_window = {
   alien_dna_only_by_emergency_on = "Urgence seulement",
   every_day = "Chaque jour",
   enable_announcer_subtitles = "Sous-titres des annonces",
-  disable_fractured_bones_females_on = "Homme seulement",
+  disable_fractured_bones_females_on = "Hommes seulement",
   alien_dna_only_by_emergency_off = "Patients normaux",
   enable_screen_shake = "Vibration de l'écran",
-  disable_fractured_bones_females_off = "Homme et Femme",
+  disable_fractured_bones_females_off = "Hommes et femmes",
+  enable_insurance_blue_banknote = "Billet bleu d'assurance",
 }
 
 tooltip.customise_window = {
-  movies = "Sélectionnez si les cinématiques doivent être joués.",
-  play_intro = "Passer la cinématique d'introduction lorsque vous démarrez le jeu. Le contrôle des cinématiques doit être activé si vous jouez la cinématique d'introduction à chaque fois que vous chargez CorsixTH",
-  allow_user_actions_while_paused = "Dans Theme Hospital, le joueur ne pouvait utiliser le menu supérieur que si le jeu était en pause. Il s'agit également du paramètre par défaut dans CorsixTH, mais activant cette option, il est possible de construire des salles ou prendre des objets lorsque le jeu est en pause",
-  alien_dna_only_by_emergency = "Comme il y a des animations appropriées, nous avons fait de sorte que les patients avec l'ADN extraterrestre montrent seulement comme des situations d'urgence. Désactivez cette option pour obtenir cas de l'ADN extraterrestre visites régulières",
+  movies = "Sélectionnez si les cinématiques doivent être jouées.",
+  play_intro = "Activer ou désactiver la cinématique d'introduction au démarrage du jeu. Le contrôle des cinématiques doit être activé pour qu'elle soit jouée à chaque lancement de CorsixTH",
+  allow_user_actions_while_paused = "Dans Theme Hospital, le joueur ne pouvait utiliser le menu supérieur que si le jeu était en pause. Il s'agit également du paramètre par défaut dans CorsixTH, mais en activant cette option, il est possible de construire des salles et de déplacer des objets lorsque le jeu est en pause",
+  alien_dna_only_by_emergency = "Les animations étant incomplètes, les patients avec l'ADN extraterrestre n'apparaissent par défaut que lors d'urgences. Pour qu'ils puissent aussi venir normalement dans votre hôpital, choisissez Patients normaux",
   disable_fractured_bones_females = "En raison de la faible qualité de l'animation, il n'y a pas de patientes avec des fractures. Désactivez cette option pour recevoir des femmes avec des fractures.",
-  enable_avg_contents = "Si vous voulez que le jeu se rappelle des articles supplémentaires que vous avez tendance à normalement magasiner pour une nouvelle salle, activer cette option",
+  enable_avg_contents = "Si vous voulez que le jeu se souvienne des objets supplémentaires que vous achetez habituellement pour une nouvelle salle, activez cette option",
   remove_destroyed_rooms = "Si vous souhaitez pouvoir retirer les salles détruites, moyennant paiement, activez cette option",
-  machine_menu_button = "Si vous désirez afficher un bouton pour le menu des machines dans le panneau inférieur, activez cette option. Gardez à l'esprit que ce bouton ne sera pas disponible sur des petites résolutions d'écran.",
+  machine_menu_button = "Si vous désirez afficher un bouton pour le menu des machines dans le panneau inférieur, activez cette option. Gardez à l'esprit que ce bouton ne sera pas disponible avec de petites résolutions d'écran.",
   enable_screen_shake = "Les tremblements de terre feront vibrer tout l'écran. Si vous préférez que l'écran reste fixe, désactivez cette option",
   enable_announcer_subtitles = "Si vous souhaitez afficher des sous-titres pour les annonces de l'hôpital, activez cette option",
   back = "Fermer ce menu et revenir au menu d'options",
+  enable_insurance_blue_banknote = "Les paiements de patients effectués via une compagnie d'assurance sont accompagnés d'une animation de billet bleu flottant, ce qui permet de les distinguer immédiatement des paiements versés directement à l'hôpital. Si vous préférez l'affichage d'origine, où tous les paiements sont en vert, vous pouvez désactiver cette option",
 }
 
 folders_window = {
   caption = "Paramètres de dossier",
   data_label = "Données de TH",
   font_label = "Police",
-  music_label = "MP3",
-  savegames_label = "Sauvegarde",
+  music_label = "Musique",
+  savegames_label = "Sauvegardes",
   screenshots_label = "Captures d'écran",
   -- next four are the captions for the browser window, which are called from the folder setting menu
-  new_th_location = "Ici vous pouvez spécifier un nouveau répertoire d'installation de Theme Hospital. Dès que vous choisissez le nouveau répertoire, le jeu sera redémarré.",
+  new_th_location = "Ici vous pouvez spécifier un nouveau répertoire d'installation de Theme Hospital ou un fichier ISO. Dès que vous choisissez le nouveau répertoire, le jeu sera redémarré. Remarque : les extensions de fichier ne sont pas affichées pour le moment.",
   savegames_location = "Sélectionner le répertoire que vous voulez utiliser pour les sauvegardes",
   music_location = "Sélectionner le répertoire que vous voulez utiliser pour la musique",
   screenshots_location = "Sélectionner le répertoire que vous voulez utiliser pour les captures d'écran",
@@ -1039,32 +1089,38 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "Parcourir l'emplacement du dossier",
-  data_location = "Le répertoire d'origine de l'installation de Theme Hospital, qui est requis pour faire fonctionner CorsixTH",
-  font_location = "Emplacement d'un fichier de police qui est capable d'afficher des caractères Unicode requises par votre langue. Si aucun emplacement n'est spécifié vous ne serez pas en mesure de choisir des langues qui ont des caractères que le jeu original ne peut pas fournir. Exemple : Russe et Chinois",
+  data_location = "Le répertoire d'origine ou le fichier ISO de l'installation de Theme Hospital, qui est requis pour faire fonctionner CorsixTH",
+  font_location = "Emplacement d'un fichier de police qui est capable d'afficher des caractères Unicode requis par votre langue. Si aucun emplacement n'est spécifié, vous ne serez pas en mesure de choisir des langues qui ont des caractères que le jeu original ne peut pas fournir. Exemple : russe et chinois",
   savegames_location = "Par défaut, le répertoire de sauvegardes est à côté du fichier de configuration et sera utilisé pour stocker les sauvegardes. Si cela n'est pas approprié vous pouvez modifier ce répertoire.",
-  screenshots_location = "Par défaut, les captures d'écran sont stockés dans un dossier avec le fichier de configuration. Si cela ne convient pas vous pouvez choisir votre propre dossier.",
+  screenshots_location = "Par défaut, les captures d'écran sont stockées dans un dossier à côté du fichier de configuration. Si cela ne convient pas, vous pouvez choisir votre propre dossier.",
   music_location = "Sélectionnez un emplacement pour vos fichiers MP3.",
   browse_data = "Parcourir un autre emplacement d'une installation de Theme Hospital (emplacement actuel : %1%)",
   browse_font = "Parcourir un autre fichier de police (emplacement actuel : %1%)",
   browse_saves = "Parcourir un autre répertoire de sauvegardes (emplacement actuel : %1%)",
-  browse_screenshots = "Parcourir un autre répertoire de captures d'écrans (emplacement actuel : %1%)",
+  browse_screenshots = "Parcourir un autre répertoire de captures d'écran (emplacement actuel : %1%)",
   browse_music = "Parcourir un autre répertoire de musique (emplacement actuel : %1%)",
-  no_font_specified = "Aucun répertoire de police spécifié !",
+  no_font_specified = "Aucun fichier de police spécifié !",
   not_specified = "Aucun répertoire spécifié !",
   default = "Emplacement par défaut",
   reset_to_default = "Réinitialiser le répertoire à son emplacement par défaut (%1%)",
-  back = "Fermer ce menu et revenir au menu Paramètres"
+  back = "Fermer ce menu et revenir au menu Paramètres",
+  clear_directory = "Effacer le dossier actuellement sélectionné",
 }
 
 accessibility_window = {
   scrollspeed = "Vitesse de défilement",
   shift_scrollspeed = "Vitesse de défilement avec Maj",
-  zoom_speed = "Zoom Speed",
+  zoom_speed = "Vitesse de zoom",
+  caption = "Paramètres d'accessibilité",
+  enable_screen_shake = "Vibration de l'écran",
+  enable_announcer_subtitles = "Sous-titres des annonces",
+  scroll_speed = "Vitesse de défilement",
+  shift_scroll_speed = "Vit. de défil. + Maj",
 }
 
 tooltip.accessibility_window = {
   apply_shift_scrollspeed = "Appliquer la vitesse de défilement en mode Maj.",
-  shift_scrollspeed = "Définir la vitesse de défilement lorsque la touche Maj est enfoncée. De 1 (la plus lente) à 10 (la plus rapide). La valeur par  défaut est 4.",
+  shift_scrollspeed = "Définir la vitesse de défilement lorsque la touche Maj est enfoncée. De 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 4.",
   zoom_speed = "Définir la vitesse de zoom de la caméra de 10 (la plus lente) à 1000 (la plus rapide). La valeur par défaut est 80.",
   cancel_zoomspeed = "Revenir sans changer la vitesse de zoom.",
   apply_zoomspeed = "Appliquer la vitesse de zoom choisie.",
@@ -1072,6 +1128,10 @@ tooltip.accessibility_window = {
   cancel_shift_scrollspeed = "Revenir sans changer la vitesse de défilement de la touche Maj.",
   scrollspeed = "Réglez la vitesse de défilement de 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 2.",
   apply_scrollspeed = "Appliquer la vitesse de défilement entrée.",
+  enable_screen_shake = "Les tremblements de terre feront vibrer tout l'écran. Si vous préférez que l'écran reste fixe, désactivez cette option",
+  enable_announcer_subtitles = "Si vous souhaitez afficher des sous-titres pour les annonces de l'hôpital, activez cette option",
+  scroll_speed = "Réglez la vitesse de défilement de 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 2.",
+  shift_scroll_speed = "Définir la vitesse de défilement lorsque la touche Maj est enfoncée. De 1 (la plus lente) à 10 (la plus rapide). La valeur par défaut est 4.",
 }
 
 font_location_window = {
@@ -1106,8 +1166,8 @@ new_game_window = {
 tooltip.new_game_window = {
   easy = "Si vous jouez pour la première fois à un jeu de simulation, cette option est pour vous",
   medium = "C'est la voie du milieu à prendre si vous ne savez pas quoi choisir",
-  hard = "Si vous êtes habitué à ce genre de jeu et que vous souhaitez plus d'un défi, choisissez cette option",
-  tutorial = "Si vous voulez un peu d'aide pour démarrer une fois dans le jeu, cochez cette case",
+  hard = "Si vous êtes habitué à ce genre de jeu et que vous souhaitez un plus grand défi, choisissez cette option",
+  tutorial = "Si vous voulez un peu d'aide pour bien démarrer dans le jeu, cochez cette case",
   cancel = "Oh, je n'avais pas vraiment l'intention de commencer une nouvelle partie !",
   difficulty = "Sélectionnez le niveau de difficulté que vous voulez dans le jeu",
   start = "Démarrer le jeu avec les paramètres sélectionnés",
@@ -1131,32 +1191,43 @@ errors = {
   dialog_missing_graphics = "Désolé, les données de démo ne contiennent pas cette boîte de dialogue.",
   save_prefix = "Erreur lors de la sauvegarde de la partie : ",
   load_prefix = "Erreur lors du chargement de la partie : ",
-  load_map_prefix = "Erreur pendant le chargement de la carte: ",
-  load_level_prefix = "Erreur pendant le chargement du niveau: ",
+  load_map_prefix = "Erreur pendant le chargement de la carte : ",
+  load_level_prefix = "Erreur pendant le chargement du niveau : ",
   no_games_to_contine = "Pas de parties sauvegardées.",
   map_file_missing = "Impossible de trouver le fichier de carte %s pour ce niveau !",
   minimum_screen_size = "Veuillez entrer une résolution supérieure à %dx%d.",
   unavailable_screen_size = "La résolution que vous avez demandée n'est pas disponible en plein écran.",
-  alien_dna_only_by_emergency = "NOTE : Il n'y a pas d'animations pour les patients étrangers pour s'asseoir, ouvrir ou de frapper aux portes, etc. Donc, comme avec Theme Hospital pour faire ces choses, ils semblent changer à la normale et ensuite changer de nouveau. Les patients avec l'ADN Alien apparaîtront seulement s'ils sont définis dans le fichier de niveau.",
+  alien_dna_only_by_emergency = "NOTE : Il n'y a pas d'animations permettant aux patients extraterrestres de s'asseoir, d'ouvrir les portes ou d'y frapper, etc. Comme dans Theme Hospital, pour effectuer ces actions, ils reprennent une apparence normale puis redeviennent extraterrestres. Les patients avec l'ADN extraterrestre n'apparaîtront que si le fichier de niveau le prévoit.",
   disable_fractured_bones_females = "NOTE : L'animation pour les patients de sexe féminin avec des os fracturés n'est pas parfaite.",
-  load_quick_save = "Erreur, impossible de charger la sauvegarde rapide car elle n'existe pas, ne vous inquiétez pas nous avons créé une pour vous !",
+  load_quick_save = "Erreur, impossible de charger la sauvegarde rapide car elle n'existe pas, ne vous inquiétez pas nous en avons créé une pour vous !",
   could_not_find_first_campaign_level = "Impossible de trouver le premier niveau de cette campagne : %s",
   save_to_tmp = "Le fichier à l'emplacement %s n'a pas pu être utilisé. Le jeu a été enregistré sous %s. Erreur : %s",
   could_not_load_campaign = "Échec du chargement de la campagne : %s",
   dialog_empty_queue = "Désolé, un être humain vient d'avoir une file d'actions vide, ce qui signifie qu'il ne savait pas quoi faire ensuite. Veuillez consulter la fenêtre de commande pour des informations plus détaillées. Un dialogue avec l'individu fautif a été ouvert. Souhaitez-vous qu'il quitte l'hôpital ?",
-
   compatibility_error = {
     new_in_old = "Désolé, cette sauvegarde a été créée avec une version plus récente de CorsixTH et n'est pas compatible. Veuillez mettre à jour vers une version plus récente.",
     full_in_demo = "Désolé, vous ne pouvez pas ouvrir une sauvegarde de jeu complet avec les fichiers de démonstration chargés. Veuillez mettre à jour votre paramètre de dossier TH Data.",
     demo_in_full = "Désolé, vous ne pouvez pas ouvrir une sauvegarde de démonstration avec les fichiers de jeu complet chargés. Veuillez mettre à jour votre paramètre de dossier TH Data."
-  }
+  },
+  music = "Un ou plusieurs fichiers de votre dossier de musique ne peuvent pas être lus correctement. Les fichiers problématiques seront désactivés dans le Jukebox. Consultez la fenêtre de commande pour plus d'informations.",
+    custom_music_bad_path = "Le dossier de musique personnalisée choisi n'est pas un dossier valide. Veuillez vérifier le dossier et réessayer.// %s",
+    custom_music_no_tracks = "Le dossier de musique personnalisée choisi ne contient aucun fichier musical lisible. Veuillez vérifier le dossier et réessayer.// %s",
+    missing_corsixth_file = "Attention : le fichier %s est introuvable, essayez de réinstaller CorsixTH.",
+    missing_th_data_file = "Attention : le fichier %s est introuvable, les données de Theme Hospital sont incomplètes.",
+    missing_level_file = "Erreur : le fichier du niveau choisi est introuvable.",
+    overlay = {
+      incorrect_difficulty = "La difficulté de l'overlay doit être easy, full ou hard. Valeur actuelle : ",
+      incorrect_level_number = "Le numéro de niveau de l'overlay doit être compris entre 1 et 12. Valeur actuelle : ",
+      missing_setting = "Aucune difficulté ni aucun numéro de niveau n'est indiqué dans le champ overlay du niveau personnalisé.",
+    },
+    cannot_restart_missing_files = "Désolé, ce niveau ne peut pas être redémarré car les fichiers %s ou %s sont manquants.",
 }
 
 -- Confirmation dialog
 confirmation = {
   needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Voulez-vous vraiment faire cela ?",
   abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
-  maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Voulez-vous vraiment continuer ?",
+  maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des résolutions plus élevées sont possibles, mais il faudra un meilleur matériel afin de maintenir une fréquence d'images jouable. Voulez-vous vraiment continuer ?",
   remove_destroyed_room = "Souhaitez-vous supprimer la salle pour %d $ ?",
   replace_machine_extra_info = "La nouvelle machine aura une puissance de %d (actuellement %d).",
   restart_mapeditor = "Voulez-vous vraiment relancer l'éditeur de cartes ?",
@@ -1176,9 +1247,12 @@ information = {
     "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
     "Voilà pourquoi vous avez perdu : ",
     reputation = "Votre réputation est tombée en dessous de %d.",
-    balance = "Votre solde bancaire est tombé en dessous %d.",
-    percentage_killed = "Vous avez tué plus de %d pourcents de vos patients.",
-    cheat = "J'espère que vous n'avez pas cliqué sur le bouton \" Perdre le niveau \" par accident !"
+    balance = "Votre solde bancaire est tombé en dessous de %d.",
+    percentage_killed = "Vous avez tué plus de %d pour cent de vos patients.",
+    cheat = "J'espère que vous n'avez pas cliqué sur le bouton \" Perdre le niveau \" par accident !",
+    staff_happiness = "La satisfaction moyenne de votre personnel est tombée en dessous de %d %%.",
+    patient_happiness = "La satisfaction moyenne de vos patients est tombée en dessous de %d %%.",
+    months_played = "Vous n'avez pas atteint les objectifs du niveau en moins de %d mois.",
   }
 }
 
@@ -1190,12 +1264,12 @@ tooltip.information = {
 totd_window = {
   tips = {
     "Chaque hôpital a besoin d'un bureau de réception et d'un cabinet de médecine générale. Après, tout dépend du type de patients qui visitent votre hôpital. Une pharmacie est toujours un bon choix malgré tout.",
-    "Les machines telles que le Gonflage ont besoin de maintenance. Embauchez un ou deux agents de maintenance pour réparer vos machines, ou vous risquerez d'avoir des blessés parmi le personnel ou les patients.",
+    "Les machines telles que le Gonfleur ont besoin de maintenance. Embauchez un ou deux agents de maintenance pour réparer vos machines, ou vous risquerez d'avoir des blessés parmi le personnel ou les patients.",
     "Après un certain temps, vos employés seront fatigués. Pensez à construire une salle de repos où ils pourront se détendre.",
     "Placez suffisamment de radiateurs pour garder vos employés et patients au chaud, ou ils deviendront mécontents. Utilisez la carte de la ville pour localiser les endroits de votre hôpital qui nécessitent plus de chauffage.",
-    "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostics. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostics.",
+    "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostics. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostic.",
     "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications particulières (chirurgien, psychiatre ou chercheur), il transférera ses connaissances à ses élèves.",
-    "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
+    "Avez-vous essayé d'entrer le numéro d'urgence européen (112) dans le fax ? Vérifiez que vous avez du son !",
     "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
     "Vous avez choisi une autre langue que l'anglais, mais des textes en anglais s'affichent un peu partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
     "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé pour coder, traduire ou créer des graphismes pour CorsixTH ? Contactez-nous sur notre serveur Discord, Sub-Reddit ou serveur Matrix. Les liens sont sur notre site internet (CorsixTH.com).",
@@ -1205,10 +1279,10 @@ totd_window = {
     "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.",
     "Cliquez sur la porte d'une pièce pour visualiser sa file d'attente. Vous pouvez faire des réglages très utiles ici, comme réorganiser la file d'attente ou envoyer un patient vers une autre pièce.",
     "Le personnel mécontent vous demandera des augmentations de salaires fréquemment. Assurez-vous de leur offrir un environnement de travail confortable pour éviter cela.",
-    "Les patients auront soif en attendant dans votre hôpital, encore plus si vous augmentez le chauffage ! Placez des distributeurs automatiques dans les points stratégiques pour un revenu d'appoint.",
+    "Les patients auront soif en attendant dans votre hôpital, encore plus si vous augmentez le chauffage ! Placez des distributeurs automatiques aux points stratégiques pour un revenu d'appoint.",
     "Vous pouvez interrompre le processus de diagnostic d'un patient et proposer un traitement, si vous avez déjà rencontré la maladie. Notez que cela peut accroître le risque d'erreur de traitement, et provoquer la mort du patient.",
     "Les urgences peuvent être une bonne source de revenus additionnels, à condition que vous ayez les capacités suffisantes pour traiter les patients à temps.",
-    "Saviez-vous que vous pouvez affecter des Agents d'entretien à des parcelles spécifiques ? Cliquez simplement sur le texte 'Toutes les parcelles' dans leur profil du personnel pour les parcourir !",
+    "Saviez-vous que vous pouvez affecter des agents de maintenance à des parcelles spécifiques ? Cliquez simplement sur le texte 'Partout' dans leur profil du personnel pour les parcourir !",
   },
   previous = "Astuce précédente",
   next = "Astuce suivante"
@@ -1220,7 +1294,7 @@ tooltip.totd_window = {
 }
 
 -- Debug patient window
-tooltip.debug_patient_window.item = "Créer un patient de débogage avec %s"
+tooltip.debug_patient_window.item = "Créer un patient de test avec %s"
 debug_patient_window = {
   caption = "Patient de test"
 }
@@ -1244,12 +1318,12 @@ cheats_window = {
     end_year = "Fin de l'année",
     lose_level = "Perdre le niveau",
     win_level = "Gagner le niveau",
-    epidemic = "Reproduire des patients contagieux",
-    toggle_infected = "Faire apparaître des patients contagieux.",
+    epidemic = "Faire apparaître un patient contagieux",
+    toggle_infected = "Montrer les icônes des infectés",
     increase_prices = "Augmenter les prix",
     decrease_prices = "Diminuer les prix",
     reset_death_count = "Remettre à zéro le nombre de décès",
-    toggle_epidemic = "Active la possibilité d'épidémies",
+    toggle_epidemic = "Activer la possibilité d'épidémies",
     show_infected = "Montrer les icônes des infectés",
     toggle_earthquake = "Activer les tremblements de terre",
     max_reputation = "Réputation de l'hôpital au maximum",
@@ -1260,7 +1334,7 @@ cheats_window = {
 }
 
 tooltip.cheats_window = {
-  close = "Fermer le dialogue de triches",
+  close = "Fermer la boîte de dialogue des triches",
   cheats = {
     money = "Ajoute $10.000 à votre solde bancaire.",
     all_research = "Termine toutes les recherches.",
@@ -1273,9 +1347,9 @@ tooltip.cheats_window = {
     lose_level = "Vous fait perdre le niveau actuel.",
     win_level = "Vous fait gagner le niveau actuel.",
     epidemic = "Crée un patient contagieux qui peut causer une épidémie.",
-    toggle_infected = "Bascule les icônes infectés pour l'épidémie, découverte active.",
-    increase_prices = "Augmenter tous les prix de 50% (max. 200%)",
-    decrease_prices = "Diminuer tous les prix de 50% (min. 50%)",
+    toggle_infected = "Montrer/Cacher les icônes des infectés pour les épidémies découvertes et actives",
+    increase_prices = "Augmenter tous les prix de 50 % (max. 200 %)",
+    decrease_prices = "Diminuer tous les prix de 50 % (min. 50 %)",
     reset_death_count = "Remettre à zéro le nombre de décès à l'hôpital",
     toggle_epidemic = "Activer/Désactiver la possibilité d'épidémies",
     show_infected = "Montrer/Cacher les icônes des infectés pour les épidémies découvertes et actives",
@@ -1288,22 +1362,22 @@ tooltip.cheats_window = {
 
 -- Introduction Texts
 introduction_texts = {
-  demo = "Bienvenue dans l'hôpital de démonstration !// " .. "Malheureusement, la version démo ne contient que ce niveau. Malgré tout, il y a assez à faire ici pour vous occuper un moment !" .. "Vous allez rencontrer différentes maladies qui nécessitent des salles pour les soigner. De temps en temps, des urgences peuvent se produire. Et vous aurez besoin d'une salle de recherche pour trouver des nouvelles salles. " ..
-      "Votre but est de gagner 100,000$, de faire monter la valeur de votre hôpital à 70,000$ et d'obtenir une réputation de 700, tout en ayant soigné au moins 75% de vos patients. " .. "Veillez à ce que votre réputation ne tombe pas en dessous de 300 et de ne pas tuer plus de 40% de vos patients, ou vous perdrez.//" .. "Bonne chance !",
+  demo = "Bienvenue dans l'hôpital de démonstration !// " .. "Malheureusement, la version démo ne contient que ce niveau. Malgré tout, il y a assez à faire ici pour vous occuper un moment ! " .. "Vous allez rencontrer différentes maladies qui nécessitent des salles pour les soigner. De temps en temps, des urgences peuvent se produire. Et vous aurez besoin d'une salle de recherche pour trouver de nouvelles salles. " ..
+      "Votre but est de gagner $100,000, de faire monter la valeur de votre hôpital à 70,000$ et d'obtenir une réputation de 700, tout en ayant soigné au moins 75 % de vos patients. " .. "Veillez à ce que votre réputation ne tombe pas en dessous de 300 et à ne pas tuer plus de 40 % de vos patients, ou vous perdrez.//" .. "Bonne chance !",
   level1 = "Bienvenue dans votre premier hôpital !//Démarrez l'activité en installant un bureau de réception et " .. "en construisant un cabinet de médecine générale. Embauchez une réceptionniste et un médecin. Il vous " .. "suffit d'attendre des admissions. Il serait bon de construire un cabinet de psychiatrie et d'embaucher " .. "un médecin formé dans ce domaine. Une pharmacie et une infirmière sont également indispensables pour soigner " ..
-      "les patients. Attention aux cas d'encéphalantiasis : une salle de gonflage suffit pour traiter cette maladie. " .. "Il vous faut soigner 10 personnes et vous assurer que votre réputation ne tombe pas en-dessous de 200.",
-  level8 = "A vous de gérer l'hôpital le plus efficace et le plus rentable possible.//Les gens du coin sont bien nantis alors " .. "pompez-leur tout le fric que vous pourrez. Soigner les gens c'est bien joli mais vous avez BESOIN de l'argent que ça " .. "rapporte. Ratissez tous ces malades ! Amassez un joli paquet de $300.000 pour terminer ce niveau.",
+      "les patients. Attention aux cas d'encéphalantiasis : une salle de gonflage suffit pour traiter cette maladie. " .. "Il vous faut soigner 10 personnes et vous assurer que votre réputation ne tombe pas en dessous de 200.",
+  level8 = "A vous de gérer l'hôpital le plus efficace et le plus rentable possible.//Les gens du coin sont bien nantis alors " .. "pompez-leur tout le fric que vous pourrez. Soigner les gens, c'est bien joli mais vous avez BESOIN de l'argent que ça " .. "rapporte. Ratissez tous ces malades ! Amassez un joli paquet de $300.000 pour terminer ce niveau.",
   level12 = "Côté défi, vous allez être servi ! Impressionné par votre succès, le Ministère veut vous assigner une mission de confiance. " .. "Vous devrez construire un autre hôpital de pointe, gagner des sommes scandaleuses et vous faire une réputation fabuleuse. " .. "Vous devrez également acheter tout le terrain possible, soigner toutes les maladies (nous avons bien dit TOUTES) et remporter " ..
       "toutes les récompenses. Alors, heureux ? Gagnez $650.000, soignez 750 personnes et affichez une réputation de 800 pour gagner ce niveau.",
   level13 = "Votre incroyable talent en tant que directeur d'hôpital a attiré l'attention de la Division Spéciale Secrète des " .. "Services Spéciaux Secrets. On vous propose un bonus : il y a un hôpital infesté de rats qui réclame un Nettoyeur efficace. " .. "Vous devez descendre le plus de rats possible avant que les agents de maintenance fassent leur boulot. Vous pensez y arriver ?",
-  level14 = "Et encore un défi ! Eh oui, voici l'hôpital-surprise ! Si vous réussissez cette épreuve, vous serez le gagnant des gagnants. " .. "Mais ça ne sera pas du gâteau car vous n'aviez encore rien vu de pareil... Bonne chance !",
+  level14 = "Et encore un défi ! Eh oui, voici l'hôpital-surprise ! Si vous réussissez cette épreuve, vous serez le gagnant des gagnants. " .. "Mais ça ne sera pas du gâteau car vous n'avez encore rien vu de pareil... Bonne chance !",
   level17 = "Un bon conseil : veillez à votre réputation car c'est elle qui vous garantira une clientèle. Si vous ne tuez pas trop de " .. "gens et les gardez raisonnablement satisfaits, vous n'aurez pas trop de difficultés à ce niveau. //A vous de jouer, maintenant. " .. "Bonne chance et tout ça, quoi !"
 }
 
 -- Calls Dispatcher Dialog
 calls_dispatcher = {
   -- Dispatcher description message. Visible in Calls Dispatcher dialog
-  summary = "%d appels; %d assignés",
+  summary = "%d appels ; %d assignés",
   staff = "%s - %s",
   watering = "Arrose @ %d,%d",
   repair = "Répare %s",
@@ -1313,7 +1387,7 @@ calls_dispatcher = {
 tooltip.calls_dispatcher = {
   task = "Liste des tâches - cliquez sur une tâche pour ouvrir la fenêtre du membre du personnel à qui elle est assignée et aller jusqu'à l'endroit où a lieu la tâche.",
   assigned = "Cette case est cochée si la tâche est assignée à quelqu'un.",
-  close = "Ferme la boîte de dialogue de répartitions des tâches"
+  close = "Fermer la boîte de dialogue de répartition des tâches."
 }
 
 machine_menu = {
@@ -1341,7 +1415,7 @@ tooltip.machine_menu = {
     remaining_strength = "Résistance restante des machines.",
     total_strength = "Résistance totale des machines.",
     ratio = "Pourcentage de résistance restante par rapport à la résistance totale des machines.",
-    status = "Statuts des machines.",
+    status = "Statut des machines.",
   },
   close = "Fermer la fenêtre de la liste des machines.",
 }
@@ -1372,7 +1446,7 @@ update_window = {
 
 tooltip.update_window = {
   download = "Accédez à la page de téléchargement pour la toute dernière version de CorsixTH",
-  ignore = "Ignorer cette mise à jour pour l'instant. Vous serez averti à nouveau lorsque vous ouvrez CorsixTH de nouveau"
+  ignore = "Ignorer cette mise à jour pour l'instant. Vous serez de nouveau averti la prochaine fois que vous ouvrirez CorsixTH"
 }
 
 map_editor_window = {
@@ -1407,17 +1481,19 @@ map_editor_window = {
     heliport_3 = "Héliport 3",
     heliport_4 = "Héliport 4",
     paste = "Coller la zone",
-    set_parcel_tooltip = "Choissisez un chiffre et appuyez sur Entrée.",
-    set_parcel = "Choisir le chiffre de la parcelle",
+    set_parcel_tooltip = "Choisissez un numéro et appuyez sur Entrée.",
+    set_parcel = "Choisir le numéro de la parcelle",
   },
   checks = {
-    spawn_points_and_path = "Attention: les patients ne peuvent pas arriver à l'hôpital. Ils ont besoin de carreaux 'route' ou carreaux gris 'dehors' au bord de la carte et un chemin avec ces carreaux jusqu'à l'entrée de l'hôpital."
+    spawn_points_and_path = "Attention : les patients ne peuvent pas arriver à l'hôpital. Ils ont besoin de carreaux 'route' ou de carreaux gris 'extérieur' au bord de la carte et d'un chemin avec ces carreaux jusqu'à l'entrée de l'hôpital."
   }
 }
 
-menu.player_count = "COMPTE DE JOUEURS"
-warnings.levelfile_variable_is_deprecated = "Remarque: Le niveau '%s' contient une définition de variable obsolète dans le fichier de niveau. '%LevelFile' a été renommé '%MapFile'. Veuillez aviser le créateur de la carte pour mettre à jour le niveau."
-warnings.newersave = "Avertissement, vous avez chargé une sauvegarde d'une version plus récente de CorsixTH. Il n'est pas recommandé de continuer car des plantages peuvent survenir. Jouez à vos propres risques."
+menu.player_count = "NOMBRE DE JOUEURS"
+menu.cheats_title = "TRICHES"
+menu.cheats = "  (%1%) TRICHES  "
+warnings.levelfile_variable_is_deprecated = "Remarque : le niveau '%s' contient une définition de variable obsolète dans le fichier de niveau. '%LevelFile' a été renommé en '%MapFile'. Veuillez aviser le créateur de la carte afin qu'il mette à jour le niveau."
+warnings.newersave = "Avertissement : vous avez chargé une sauvegarde d'une version plus récente de CorsixTH. Il n'est pas recommandé de continuer car des plantages peuvent survenir. Jouez à vos risques et périls."
 
 hotkeys_file_err = {
   file_err_02 = ", ou utilisez l'option de ligne de commande --hotkeys-file=nomdufichier pour spécifier un fichier inscriptible. Pour référence, l'erreur lors du chargement du fichier de raccourcis était : ",
@@ -1480,7 +1556,7 @@ hotkey_window = {
   ingame_sellPickedUpItem = "Vendre l'objet sélectionné",
   ingame_patient_gohome = "Renvoyer au domicile",
   ingame_pause = "Pause",
-  ingame_poopLog = "Journal des événements",
+  ingame_poopLog = "Exporter le journal",
   ingame_poopStrings = "Extraire la traduction",
   ingame_quickLoad = "Chargement rapide",
   ingame_quickSave = "Sauvegarde rapide",
@@ -1550,7 +1626,7 @@ tooltip.hotkey_window = {
   panel_generalInGameKeys = "Définir les touches générales en jeu",
   panel_scrollKeys = "Définir les touches de défilement de l'écran",
   panel_zoomKeys = "Définir les touches pour zoomer et dézoomer",
-  panel_toggleKeys = "Définir les touches pour activer/désactiver",
+  panel_toggleKeys = "Définir les touches pour activer/désactiver des options",
   panel_debugKeys = "Définir les touches pour le débogage",
 }
 
