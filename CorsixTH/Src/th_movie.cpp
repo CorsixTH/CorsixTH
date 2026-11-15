@@ -688,8 +688,7 @@ void movie_player::copy_audio_to_stream(SDL_AudioStream* stream,
     std::size_t audio_size = decode_audio_frame(requested_size);
 
     if (audio_size <= 0) {
-      std::memset(audio_chunk_buffer.data(),
-                  SDL_GetSilenceValueForFormat(audio_format), requested_size);
+      // No sound to give: SDL plays silence while the stream is empty.
       return;
     }
     SDL_PutAudioStreamData(stream, audio_chunk_buffer.data(),
