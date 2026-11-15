@@ -592,7 +592,7 @@ function ResearchDepartment:discoverObject(object, automatic)
 end
 
 --- Called when it is time to discover a disease (i.e. after diagnosis in the GP)
---- @param disease # The disease to discover, a table from world.available_diseases
+--- @param disease Disease The disease to discover, a table from world.available_diseases
 function ResearchDepartment:discoverDisease(disease)
   self.hospital.disease_casebook[disease.id].discovered = true
   local index = #self.hospital.discovered_diseases + 1
