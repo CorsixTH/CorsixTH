@@ -311,7 +311,6 @@ function UIAnnualReport:updateAwards()
     hosp:receiveMoney(self.award_won_amount, _S.transactions.eoy_bonus_penalty)
   end
   if self.rep_amount ~= 0 then
-    -- Worth the configured number of reputation points.
     hosp:changeReputationByPoints(math.floor(self.rep_amount))
   end
 end

@@ -205,13 +205,15 @@ describe("Vip", function()
 
 
   it("maps the appraisal onto the three reputation bands", function()
-    -- The bands are 1-4 best, 5-9 middle and 10-15 poor.
+    -- The bands are 1-5 best, 6-10 middle and 11-15 poor.
     local bands = {
       [1] = ReputationAccount.event_vip_best,
       [4] = ReputationAccount.event_vip_best,
-      [5] = ReputationAccount.event_vip_middle,
+      [5] = ReputationAccount.event_vip_best,
+      [6] = ReputationAccount.event_vip_middle,
       [9] = ReputationAccount.event_vip_middle,
-      [10] = ReputationAccount.event_vip_poor,
+      [10] = ReputationAccount.event_vip_middle,
+      [11] = ReputationAccount.event_vip_poor,
       [15] = ReputationAccount.event_vip_poor,
     }
     for rating, expected in pairs(bands) do

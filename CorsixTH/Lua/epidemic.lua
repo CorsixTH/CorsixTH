@@ -367,16 +367,6 @@ function Epidemic:calculateInfectedFine(infected_count)
   return math.max(2000, infected_count * fine_per_infected)
 end
 
---- Gets the amount of reputation to add/remove from the player
---- based on a given fine. Reputation gain/loss isn't specified
---- in the configs so we use a percentage of the fine as a base
---- value with extra being gained/lost for specific circumstances.
---- @param fine_amount (integer) amount the player will be fined
---- @return (integer) reputation_hit Reputation to be deducted relative to fine
-local function getBaseReputationFromFine(fine_amount)
-  return math.round(fine_amount / 100)
-end
-
 function Epidemic:resolveDeclaration()
   self:clearAllInfectedPatients()
 

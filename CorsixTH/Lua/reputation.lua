@@ -18,40 +18,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
---! The weighted reputation accounting of the original game.
---!
---! The original never adjusts the reputation a player sees. It keeps an
---! accumulated credit and an accumulated weight, and the rating is calculated
---! from the two:
---!
---!     rating = clamp(trunc(500 * credit / weight), 0, 1000)
---!
---! with a neutral 500 whenever the weight is not positive. Both start at 20, so
---! a new hospital opens at 500, and the non-zero starting weight is a buffer:
---! the first patient a hospital takes on moves it a long way, and the same
---! event matters less and less as the hospital grows. A single credit is worth
---! 500/weight points, so +1 credit is about +25 at weight 20 and about +2 at
---! weight 250.
---!
---! Two consequences of the model are easy to get wrong:
---!
---!   - Registering a patient raises the weight without raising credit, so
---!     reputation can *fall* without anything bad happening. That is the whole
---!     of the decline a hospital sees while it is taking on more work than it
---!     has yet cured.
---!   - Percentage events change credit by a percentage *of the weight*, not of
---!     the rating, and the figure truncates toward zero. A +4% event at weight
---!     20 is worth exactly nothing.
---!
---! The weight is only ever raised, so a rating that cannot be reached by
---! arithmetic should be treated as a bug in the caller rather than clamped
---! silently here.
+--- The weighted reputation accounting of the original game: credit and weight
+--- accumulate, and the visible rating is derived as clamp(trunc(500*credit/weight)).
 
 class "ReputationAccount"
 
 ---@class ReputationAccount
 ---@operator call: ReputationAccount
 local ReputationAccount = _G["ReputationAccount"] ---@type ReputationAccount
+
+-- The original never adjusts the reputation a player sees. It keeps an
+-- accumulated credit and an accumulated weight, and the rating is calculated
+-- from the two:
+--
+--     rating = clamp(trunc(500 * credit / weight), 0, 1000)
+--
+-- with a neutral 500 whenever the weight is not positive. Both start at 20, so
+-- a new hospital opens at 500, and the non-zero starting weight is a buffer:
+-- the first patient a hospital takes on moves it a long way, and the same
+-- event matters less and less as the hospital grows. A single credit is worth
+-- 500/weight points, so +1 credit is about +25 at weight 20 and about +2 at
+-- weight 250.
+--
+-- Two consequences of the model are easy to get wrong:
+--
+--   - Registering a patient raises the weight without raising credit, so
+--     reputation can *fall* without anything bad happening. That is the whole
+--     of the decline a hospital sees while it is taking on more work than it
+--     has yet cured.
+--   - Percentage events change credit by a percentage *of the weight*, not of
+--     the rating, and the figure truncates toward zero. A +4% event at weight
+--     20 is worth exactly nothing.
+--
+-- The weight is only ever raised, so a rating that cannot be reached by
+-- arithmetic should be treated as a bug in the caller rather than clamped
+-- silently here.
 
 -- The event identifiers, named for the call sites that use them.
 ReputationAccount.event_patient_registered = 1

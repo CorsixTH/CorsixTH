@@ -20,6 +20,10 @@ SOFTWARE. --]]
 
 local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 
+cth_require("reputation")
+---@type ReputationAccount
+local ReputationAccount = _G["ReputationAccount"]
+
 --! Drug Casebook fullscreen window (view disease statistics and set prices).
 class "UICasebook" (UIFullscreen)
 
@@ -237,10 +241,10 @@ function UICasebook:draw(canvas, x, y)
     end
   end
   local rep = self.hospital:getDiseaseReputation(disease)
-  if rep < self.hospital.reputation_min then
-    rep = self.hospital.reputation_min
-  elseif rep > self.hospital.reputation_max then
-    rep = self.hospital.reputation_max
+  if rep < ReputationAccount.rating_min then
+    rep = ReputationAccount.rating_min
+  elseif rep > ReputationAccount.rating_max then
+    rep = ReputationAccount.rating_max
   end
 
   titles:draw(canvas, rep, x + 248 * s, y + 92 * s, 114 * s, 0) -- Reputation

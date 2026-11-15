@@ -235,9 +235,9 @@ end
 --! the same thing.
 --!return (integer) One of the ReputationAccount.event_vip_* values
 function Vip:getReputationEvent()
-  if self.vip_rating <= 4 then
+  if self.vip_rating <= 5 then
     return ReputationAccount.event_vip_best
-  elseif self.vip_rating <= 9 then
+  elseif self.vip_rating <= 10 then
     return ReputationAccount.event_vip_middle
   end
   return ReputationAccount.event_vip_poor
