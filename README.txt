@@ -18,7 +18,9 @@ Briefly:
 2)  Ensure that you have either the demo of Theme Hospital or the original
     game CD/files.
     The demo can be found at: http://th.corsix.org/Demo.zip and the full game
-    can be found at https://www.gog.com/game/theme_hospital.
+    can be found at https://www.gog.com/game/theme_hospital ,
+    https://store.steampowered.com/app/2229820/Theme_Hospital/ or
+    https://www.ea.com/games/theme/theme-hospital
     The full game can also often be found on eBay.
 3)  Copy the resources folder (which contains the folders "ANIMS" and "LEVELS"
     among others, this is in some cases called "HOSP") from either the demo

@@ -22,7 +22,7 @@ You will need the following:
    - An unofficial Anylinux AppImage is available from [Pkgforge](https://github.com/pkgforge-dev/CorsixTH-AppImage-Enhanced).
 - We use graphics, sound and other data from the original game so one of the following is required:
    - Original game CD from eBay etc. or your dusty bookshelf :smile:
-   - A download from [GOG.com](https://www.gog.com/game/theme_hospital) or [EA](https://www.ea.com/games/theme/theme-hospital)
+   - A download from [GOG.com](https://www.gog.com/game/theme_hospital), [Steam](https://store.steampowered.com/app/2229820/Theme_Hospital/) or [EA](https://www.ea.com/games/theme/theme-hospital)
 
  Head over to our [getting started](https://github.com/CorsixTH/CorsixTH/wiki/Getting-Started) page for more detail.
 
