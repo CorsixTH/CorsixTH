@@ -28,7 +28,8 @@
         </ul>
         <p>Bug fixes:</p>
         <ul>
-          <li>Crash with subtitles on after some announcements</li>
+          <li>Crash with subtitles after some random announcements played on
+              non-english localisations</li>
         </ul>
       </description>
     </release>
