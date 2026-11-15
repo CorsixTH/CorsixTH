@@ -1629,11 +1629,9 @@ function Hospital:addStaff(staff)
   self:notifyOfStaffChange(staff)
 end
 
---! Register a patient with the reputation system.
---! Registering raises the weight without raising any credit, so the rating
+--! Register a patient with the reputation system. Once per patient.
+--! Registering raises the weight without allocating credit, so the rating
 --! usually falls: the hospital has taken on an outcome it has not yet earned.
---! The original registers a patient once only, at whichever of diagnosis or
---! departure first reaches the patient, so this is a no-op after the first call.
 --!param patient (Patient) The patient to register
 function Hospital:registerPatient(patient)
   if patient.is_debug or patient.reputation_registered then return end
