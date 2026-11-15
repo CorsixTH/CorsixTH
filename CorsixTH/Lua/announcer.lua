@@ -230,7 +230,7 @@ function Announcer:_setRandomAnnouncementTarget()
   -- This makes them gamespeed independent.
   -- Random announcements queue after every 90-120 seconds of 'silence'
   local tick_chunk_lower, tick_chunk_upper = 5000, 6667 -- rounded
-  self.random_announcement_ticks_target = math.random(tick_chunk_lower, tick_chunk_upper)
+  self.random_announcement_ticks_target = math.cosmetic_random(tick_chunk_lower, tick_chunk_upper)
 end
 
 --! Private function. Plays the actual sound of an announcement.
